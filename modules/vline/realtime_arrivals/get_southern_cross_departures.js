@@ -78,14 +78,16 @@ async function getDepartures(db) {
             operationDays: today
         });
 
+        // TODO: find a way to load in special services - maybe no stopping pattern?
+        if (!trip) return null;
+
         return {
             trip,
             estDeparturetime: service.actualDepartureTime,
             platform: service.platform,
             stopData: trip.stops[0]
         }
-    })).sort((a, b) => a.stopData.departureTimeMinutes - b.stopData.departureTimeMinutes);
-
+    })).filter(Boolean).sort((a, b) => a.stopData.departureTimeMinutes - b.stopData.departureTimeMinutes);
 }
 
 module.exports = getDepartures;

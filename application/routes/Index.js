@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
     }
     let departures = await getDepartures(station, res.db);
 
-    let text = ''
+    let text = '';
 
     text += 'Services departing ' + station.stationName + ' are:<br />';
     Object.values(departures).map(trip => {
