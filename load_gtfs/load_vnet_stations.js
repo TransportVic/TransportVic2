@@ -3,21 +3,20 @@ const config = require('../config.json');
 let database = new DatabaseConnection(config.databaseURL, 'TransportVic2');
 let vlineRailwayStations = null;
 
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
+const cheerio = require('cheerio');
 
 const fs = require('fs');
 const async = require('async');
 let data = fs.readFileSync('load_gtfs/all_vline_stations.xml').toString();
 data = data.replace(/a:/g, '');
-const dom = new JSDOM(data);
+const $ = cheerio.load(data);
 
 let completedStations = [];
 
-let stations = Array.from(dom.window.document.querySelectorAll('Location')).filter(location => {
-    return location.querySelector('StopType').textContent == 'Station';
+let stations = Array.from($('Location')).filter(location => {
+    return $('StopType', location).text() == 'Station';
 }).map(location => {
-    let vnetStationName = location.querySelector('LocationName').textContent;
+    let vnetStationName = $('LocationName', location).text();
     let stationName = vnetStationName.replace(/^Melbourne[^\w]+/, '').replace(/\(.+\)/g, '')
         .replace(/: .+/, '').replace(/Station.*/, '').replace(/Railway.*/, '').replace(/  +/, ' ')
         .trim() + ' Railway Station';

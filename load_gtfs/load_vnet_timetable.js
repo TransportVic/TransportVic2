@@ -172,7 +172,7 @@ async function loadTrips(csvData) {
         });
 
         let key = {
-            runID, operatingDaysToArray, destination, departureTime, origin
+            runID, operationDays, destination, departureTime, origin
         };
         let timetableData = {
             runID, operationDays, vehicle, formedBy, forming, stops, destination, departureTime, origin
