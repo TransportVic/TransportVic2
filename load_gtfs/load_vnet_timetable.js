@@ -127,24 +127,32 @@ async function loadTrips(csvData) {
             let station = await vlineRailwayStations.findDocument({ stationName: new RegExp(stationName + ' railway station', 'i') });
 
             let arrivalTime = null, departureTime = null;
+            if (!tripStops[stationName]) tripStops[stationName] = {
+                stationName: station.stationName,
+                gtfsStationID: station.gtfsStationID,
+                arrivalTime: null,
+                departureTime: null,
+                platform: null
+            };
+
             if (timing.includes('/')) {
                 timing = timing.split('/');
                 arrivalTime = timing[0];
                 departureTime = timing[1];
+                tripStops[stationName].arrivalTime = arrivalTime;
+                tripStops[stationName].departureTime = departureTime;
+
+                return;
             }
-            if (!station) console.log(stationName)
-            if (!tripStops[stationName]) tripStops[stationName] = {
-                stationName: station.stationName,
-                gtfsStationID: station.gtfsStationID,
-                arrivalTime: arrivalTime || timing,
-                departureTime: departureTime || timing,
-                platform: null
-            };
 
             if (timing.includes('*')) tripStops[stationName].express = true;
             if (fieldContents == 'Arr') tripStops[stationName].arrivalTime = timing;
-            if (fieldContents == 'Dep') tripStops[stationName].departureTime = timing;
-            if (fieldContents == 'Plat') tripStops[stationName].platform = timing;
+            else if (fieldContents == 'Dep') tripStops[stationName].departureTime = timing;
+            else if (fieldContents == 'Plat') tripStops[stationName].platform = timing;
+            else {
+                tripStops[stationName].arrivalTime = timing;
+                tripStops[stationName].departureTime = timing;
+            }
         });
 
         let stops = routeStops.map(name => tripStops[name]).filter(Boolean).filter(e => !e.express).filter(e => e.arrivalTime + e.departureTime !== '');
