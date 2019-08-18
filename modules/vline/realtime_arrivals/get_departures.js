@@ -2,6 +2,7 @@ const request = require('request-promise');
 const TimedCache = require('timed-cache');
 const async = require('async');
 const urls = require('../../../urls.json');
+const getSCDepartures = require('./get_southern_cross_departures');
 
 let departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 });
 
@@ -12,6 +13,12 @@ let daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat'];
 async function getDepartures(station, db) {
     if (departuresCache.get(station.stationName)) {
         return departuresCache.get(station.stationName);
+    }
+    if (station.stationName == 'Southern Cross Railway Station') {
+        let departures = await getSCDepartures(db);
+        departuresCache.put(station.stationName, departures);
+
+        return departures;
     }
 
     let vnetTimetables = db.getCollection('vnet timetables');
@@ -57,6 +64,7 @@ async function getDepartures(station, db) {
     }).sort((a, b) => a.stopData.departureTimeMinutes - b.stopData.departureTimeMinutes);
 
     departuresCache.put(station.stationName, departures);
+
     return departures;
 }
 
