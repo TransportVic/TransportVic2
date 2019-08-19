@@ -1,1 +1,1 @@
-module.exports = require('./mongo/MongoDatabaseConnection');
+module.exports = require('./mongo/MongoDatabaseConnection')
