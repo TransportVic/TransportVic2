@@ -122,13 +122,13 @@ async function loadTrips (csvData) {
       const stationName = stationMeta[0]
       const fieldContents = stationMeta[1]
 
-      const station = await vlineRailwayStations.findDocument({ stationName: new RegExp(stationName + ' railway station', 'i') })
+      const station = await vlineRailwayStations.findDocument({ name: new RegExp(stationName + ' railway station', 'i') })
 
       let arrivalTime = null; let departureTime = null
       if (!tripStops[stationName]) {
         tripStops[stationName] = {
-          stationName: station.stationName,
-          gtfsStationID: station.gtfsStationID,
+          stationName: station.name,
+          gtfsID: station.gtfsID,
           arrivalTime: null,
           departureTime: null,
           platform: null

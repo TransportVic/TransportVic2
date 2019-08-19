@@ -1,0 +1,88 @@
+.result {
+  width: 100vw;
+  display: flex;
+}
+
+.leftContainer {
+    width: calc(5vw + 5vh);
+    height: calc(7vw + 7vh);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    color: #d2d2d2;
+}
+
+.busStop .leftContainer {
+  background-color: #d7832c;
+}
+
+.busStop:nth-child(even) .leftContainer {
+  background-color: #c47625;
+}
+
+.metroStation .leftContainer {
+    background-color: #3483db;
+}
+
+.metroStation:nth-child(even) .leftContainer {
+    background-color: #2370c5;
+}
+
+.tramStop .leftContainer {
+    background-color: #1a942a;
+}
+
+.tramStop:nth-child(even) .leftContainer {
+    background-color: #20b734;
+}
+
+.vlineStation .leftContainer {
+    background-color: #6b4d9e;
+}
+
+.vlineStation:nth-child(even) .leftContainer {
+    background-color: #523d77;
+}
+
+.leftContainer img {
+    width: calc(3vw + 3vh);
+    height: calc(3vw + 3vh);
+}
+
+.resultDetails {
+    width: calc(95vw - 5vh);
+    display: flex;
+    align-items: left;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: calc(1vw + 1vh);
+    font-size: calc(2vh + 1.2vw);
+}
+
+.resultDetails > span:nth-child(1) {
+    color: #8f8f8f;
+    font-size: calc(1.6vh + 0.9vw);
+}
+
+.resultDetails > span:nth-child(2) {
+    font-size: calc(2vh + 1.2vw);
+    margin-top: calc(-0.4vh - 0.2vw);
+}
+
+.left-container span {
+    width: calc(5vw + 5vh);
+    text-align: center;
+}
+
+.serviceNumber {
+    font-size: calc(3vw + 3vh);
+    margin-top: calc(-0.5vw - 0.5vh);
+}
+
+.serviceVariant {
+    font-size: calc(2vw + 2vh);
+    margin-top: calc(-0.5vw - 0.5vh);
+}

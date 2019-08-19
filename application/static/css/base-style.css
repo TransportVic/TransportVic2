@@ -1,0 +1,38 @@
+@font-face {
+    font-family: BreeSerif;
+    font-display: fallback;
+    src: local('Bree Serif Regular'), local('BreeSerif-Regular'), url(/static/fonts/bree-serif.otf);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+
+    font-family: BreeSerif;
+    color: #c5c5c5;
+    background-color: #1e1e1e;
+
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+a, a:visited {
+    text-decoration: none;
+    color: #c5c5c5;
+}
+
+div#header {
+    background-color: #171717;
+    height: calc(4vw + 4vh);
+    width: 100vw;
+
+    display: flex;
+    align-items: center;
+    font-size: calc(1.5vw + 1.5vh);
+}
+
+div#header-right {
+  margin-left: auto;
+  margin-right: calc(1vw + 1vh);
+}

@@ -1,0 +1,23 @@
+extends ../textbar-layout
+
+block scripts
+  script(src='/static/scripts/filter-stops.js')
+  
+append style
+  link(rel='stylesheet' href='/static/css/timings/vline.css')
+  link(rel='stylesheet' href='/static/css/timings/base-style.css')
+
+append content
+  for departure in departures
+    div.departure
+      input(type='hidden' name='stops-at' value=JSON.stringify(departure.trip.stops.map(stop => stop.stationName)))
+      input(type='hidden' name='platform' value=departure.platform || departure.platform || "")
+      a.leftContainer.platform
+        span Platform
+        span=departure.platform || departure.platform || "?"
+      a.departureInfo
+        span="XXX Line towards"
+        span=departure.trip.destination
+      div.timings
+        a.timing.unknown
+          span=departure.prettyTimeToArrival

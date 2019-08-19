@@ -3,6 +3,8 @@ const TimedCache = require('timed-cache')
 const async = require('async')
 const urls = require('../../../urls.json')
 const getSCDepartures = require('./get_southern_cross_departures')
+const moment = require('moment')
+require('moment-timezone')
 
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
 
@@ -11,26 +13,27 @@ const cheerio = require('cheerio')
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 
 async function getDepartures (station, db) {
-  if (departuresCache.get(station.stationName)) {
-    return departuresCache.get(station.stationName)
+  if (departuresCache.get(station.name)) {
+    return departuresCache.get(station.name)
   }
-  if (station.stationName === 'Southern Cross Railway Station') {
-    const departures = await getSCDepartures(db)
-    departuresCache.put(station.stationName, departures)
+  if (station.name === 'Southern Cross Railway Station') {
+    let departures = await getSCDepartures(db)
+    departuresCache.put(station.name, departures)
 
     return departures
   }
 
-  const vnetTimetables = db.getCollection('vnet timetables')
+  let vnetTimetables = db.getCollection('vnet timetables')
 
-  const now = new Date()
-  const minutesPastMidnight = now.getHours() * 60 + now.getMinutes()
-  const today = daysOfWeek[now.getDay()]
+  let now = moment().tz('Australia/Melbourne')
+  let startOfToday = now.clone().startOf('day')
+  let minutesPastMidnight = now.diff(startOfToday, 'minutes')
+  let today = daysOfWeek[now.day()]
 
-  const trips = await vnetTimetables.findDocuments({
+  let trips = await vnetTimetables.findDocuments({
     stops: {
       $elemMatch: {
-        gtfsStationID: station.gtfsStationID,
+        gtfsID: station.gtfsID,
         departureTimeMinutes: {
           $gt: minutesPastMidnight,
           $lte: minutesPastMidnight + 60
@@ -39,31 +42,35 @@ async function getDepartures (station, db) {
     },
     operationDays: today
   })
-  const allTrips = {}
+  let allTrips = {}
   trips.forEach(trip => { allTrips[trip.runID] = { trip } })
 
   let body = await request(urls.vlinePlatformDepartures.format(station.vnetStationName))
   body = body.replace(/a:/g, '')
-  const $ = cheerio.load(body)
-  const allServices = Array.from($('PlatformService'))
+  let $ = cheerio.load(body)
+  let allServices = Array.from($('PlatformService'))
 
   await async.map(allServices, async service => {
-    const runID = $('ServiceIdentifier', service).text()
-    let estDeparturetime = new Date($('ActualArrivalTime', service).text())
-    const platform = $('Platform', service).text()
-    if (isNaN(estDeparturetime)) return
+    let runID = $('ServiceIdentifier', service).text()
 
-    estDeparturetime = new Date(estDeparturetime)
-    const timetable = await vnetTimetables.findDocument({ runID, operationDays: today })
-    allTrips[runID] = { trip: timetable, estDeparturetime, platform }
+    if (isNaN(new Date($('ActualArrivalTime', service).text()))) return
+    let estimatedDepartureTime = moment($('ActualArrivalTime', service).text()) // yes arrival cos vnet
+    let platform = $('Platform', service).text()
+
+    let timetable = await vnetTimetables.findDocument({ runID, operationDays: today })
+    allTrips[runID] = { trip: timetable, estimatedDepartureTime, platform }
   })
 
-  const departures = Object.values(allTrips).map(trip => {
-    trip.stopData = trip.trip.stops.filter(stop => stop.gtfsStationID === station.gtfsStationID)[0]
-    return trip
-  }).sort((a, b) => a.stopData.departureTimeMinutes - b.stopData.departureTimeMinutes)
+  let departures = Object.values(allTrips).map(departure => {
+    departure.stopData = departure.trip.stops.filter(stop => stop.gtfsID === station.gtfsID)[0]
+    departure.scheduledDepartureTime = startOfToday.clone().add(departure.stopData.departureTimeMinutes, 'minutes')
 
-  departuresCache.put(station.stationName, departures)
+    return departure
+  }).sort((a, b) => {
+    return (a.estimatedDepartureTime || a.scheduledDepartureTime) - (b.estimatedDepartureTime || b.scheduledDepartureTime)
+  })
+
+  departuresCache.put(station.name, departures)
 
   return departures
 }

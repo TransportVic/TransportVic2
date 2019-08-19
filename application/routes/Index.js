@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
   res.setHeader('Content-Type', 'text/html')
 
   const station = await res.db.getCollection('vline railway stations').findDocument({
-    stationName: new RegExp(stn, 'i')
+    name: new RegExp(stn, 'i')
   })
   if (!station) {
     res.end('Could not lookup timings for ' + stn + '. Are you sure V/Line trains stop there?')
@@ -22,9 +22,9 @@ router.post('/', async (req, res) => {
 
   let text = ''
 
-  text += 'Services departing ' + station.stationName + ' are:<br />'
+  text += 'Services departing ' + station.name + ' are:<br />'
   Object.values(departures).map(trip => {
-    trip.stopData = trip.trip.stops.filter(stop => stop.gtfsStationID === station.gtfsStationID)[0]
+    trip.stopData = trip.trip.stops.filter(stop => stop.gtfsID === station.gtfsID)[0]
     return trip
   }).sort((a, b) => a.stopData.departureTimeMinutes - b.stopData.departureTimeMinutes).forEach(trip => {
     const { stopData } = trip

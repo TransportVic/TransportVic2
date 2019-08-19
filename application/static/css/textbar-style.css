@@ -1,0 +1,25 @@
+#textbar-container {
+  height: calc(5vh + 5vw);
+  display: flex;
+  background-color: #0f0f0f;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#textbar {
+  width: 80vw;
+
+  height: calc(3.3vw + 3.3vh);
+  border: none;
+  border-radius: calc(1vw + 1vh);
+  outline: none;
+  text-align: center;
+  font-size: calc(2.2vw + 2.2vh);
+  padding-bottom: calc(.2vw + .2vh);
+  background-color: #e0e0e0;
+  appearance: none;
+  -moz-appearance: textfield;
+
+  font-family: BreeSerif;
+}

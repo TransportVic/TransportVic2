@@ -1,0 +1,7 @@
+for vlineStation in vlineStations
+  a(href=`/vline/timings/${vlineStation.codeName}`).vlineStation.result
+    div.leftContainer
+      img(src='/static/images/metro-icon.svg')
+    div.resultDetails
+      span='Train station in ' + vlineStation.suburb
+      span=vlineStation.name

@@ -24,7 +24,7 @@ const stations = Array.from($('Location')).filter(location => {
 
   completedStations.push(stationName)
   return {
-    stationName,
+    name: stationName,
     vnetStationName
   }
 }).filter(Boolean)
@@ -34,7 +34,7 @@ database.connect({
 }, async err => {
   vlineRailwayStations = database.getCollection('vline railway stations')
   await async.map(stations, async station => {
-    await vlineRailwayStations.updateDocument({ stationName: station.stationName }, {
+    await vlineRailwayStations.updateDocument({ name: station.name }, {
       $set: {
         vnetStationName: station.vnetStationName
       }

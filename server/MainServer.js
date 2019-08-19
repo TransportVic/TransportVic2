@@ -85,7 +85,9 @@ module.exports = class MainServer {
 
   configRoutes (app) {
     const routers = {
-      Index: '/'
+      Index: '/',
+      Search: '/search',
+      'timing-pages/VLine': '/vline/timings'
     }
 
     Object.keys(routers).forEach(routerName => {
@@ -103,6 +105,7 @@ module.exports = class MainServer {
     app.use((req, res, next) => {
       next(new Error('404'))
     })
+
     app.use((err, req, res, next) => {
       if (err.message === '404') {
         res.render('error', { code: 404 })

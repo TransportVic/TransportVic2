@@ -17,12 +17,14 @@
     "express-minify": "^1.0.0",
     "lokijs": "^1.5.7",
     "moment": "^2.24.0",
+    "moment-timezone": "^0.5.26",
     "mongodb": "^3.3.0-beta2",
     "pug": "^2.0.4",
     "querystring": "^0.2.0",
     "readline-sync": "^1.4.10",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "safe-regex": "^2.0.2",
     "timed-cache": "^1.1.2",
     "xml2js": "^0.4.19"
   }
