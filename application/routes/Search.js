@@ -7,11 +7,11 @@ router.get('/', (req, res) => {
   res.render('search/index', { placeholder: 'Enter a station' })
 })
 
-async function performSearch(db, query) {
-  let collections = {
+async function performSearch (db, query) {
+  const collections = {
     vlineStations: 'vline railway stations'
-  };
-  let results = {};
+  }
+  const results = {}
 
   await async.forEachOf(collections, async (value, key) => {
     results[key] = await db.getCollection(value).findDocuments({
@@ -30,7 +30,7 @@ router.post('/', async (req, res) => {
     return res.end('')
   }
 
-  let results = await performSearch(res.db, req.body.query)
+  const results = await performSearch(res.db, req.body.query)
 
   res.render('search/results', results)
 })

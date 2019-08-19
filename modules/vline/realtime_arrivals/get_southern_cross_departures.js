@@ -1,12 +1,13 @@
 const request = require('request-promise')
 const async = require('async')
 const urls = require('../../../urls.json')
-
 const cheerio = require('cheerio')
+const moment = require('moment')
+require('moment-timezone')
 
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 
-function parseTime (time, from) {
+function parseTimeFrom (time, from) {
   if (time === 'Now') return from
   const parts = time.match(/(\d+)/g)
 
@@ -18,8 +19,13 @@ function parseTime (time, from) {
     minutes = parts[0] * 1
   }
 
-  const resultantTime = +from + (hours * 60 + minutes) * 1000 * 60
-  return new Date(resultantTime)
+  return from.clone().add(hours, 'hours').add(minutes, 'minutes')
+}
+
+function parse24Time (time, from) {
+  const parts = time.split(':')
+
+  return from.clone().add(parts[0], 'hours').add(parts[1], 'minutes')
 }
 
 async function getDepartures (db) {
@@ -28,12 +34,16 @@ async function getDepartures (db) {
   const services = []
   const servicesIndex = []
 
+  const now = moment().tz('Australia/Melbourne')
+  const startOfToday = now.clone().startOf('day')
+  const today = daysOfWeek[now.day()]
+
   function insertService (service) {
     const serviceIndex = service.destination + service.scheduledDepartureTime
     if (servicesIndex.includes(serviceIndex)) return
     servicesIndex.push(serviceIndex)
 
-    service.actualDepartureTime = parseTime(service.actualDepartureTime, new Date())
+    service.estimatedDepartureTime = parseTimeFrom(service.estimatedDepartureTime, now)
 
     services.push(service)
   }
@@ -46,29 +56,27 @@ async function getDepartures (db) {
     const firstServicePlatform = $('.first-service .mPlatform', row).text().trim()
     const firstServiceActualTime = $('.first-service .mDepMin', row).text().trim()
 
-    if (!firstServicePlatform.toLowerCase().includes('coach')) {
-      insertService({
-        destination: firstServiceDestination,
-        scheduledDepartureTime: firstServiceScheduledTime,
-        platform: firstServicePlatform.slice(-6).trim(),
-        actualDepartureTime: firstServiceActualTime
-      })
-    }
+    const isCoachService = firstServicePlatform.includes('Coach')
+    insertService({
+      destination: firstServiceDestination,
+      scheduledDepartureTime: firstServiceScheduledTime,
+      platform: firstServicePlatform.slice(-6).trim(),
+      estimatedDepartureTime: firstServiceActualTime,
+      isCoachService
+    })
 
     const otherDepartures = Array.from($('.table.sub-module.shownormal'))
     otherDepartures.forEach(departure => {
       const scheduledDepartureTime = $('.scoDeptime', departure).text().trim()
       const destination = $('.scoDepDestination', departure).text().trim()
       const platform = $('.scoPlatform .platform', departure).text().trim()
-      const actualDepartureTime = $('.scoPlatform .departing-in', departure).text().trim()
+      const estimatedDepartureTime = $('.scoPlatform .departing-in', departure).text().trim()
+      const isCoachService = platform >= 17
       insertService({
-        destination, scheduledDepartureTime, platform, actualDepartureTime
+        destination, scheduledDepartureTime, platform, estimatedDepartureTime, isCoachService
       })
     })
   })
-
-  const now = new Date()
-  const today = daysOfWeek[now.getDay()]
 
   return (await async.map(services, async service => {
     const trip = await vnetTimetables.findDocument({
@@ -83,11 +91,15 @@ async function getDepartures (db) {
 
     return {
       trip,
-      estDeparturetime: service.actualDepartureTime,
+      estimatedDepartureTime: service.estimatedDepartureTime,
+      scheduledDepartureTime: parse24Time(service.scheduledDepartureTime, startOfToday),
       platform: service.platform,
-      stopData: trip.stops[0]
+      stopData: trip.stops[0],
+      isCoachService: service.isCoachService
     }
-  })).filter(Boolean).sort((a, b) => a.stopData.departureTimeMinutes - b.stopData.departureTimeMinutes)
+  })).filter(Boolean).sort((a, b) => {
+    return (a.estimatedDepartureTime || a.scheduledDepartureTime) - (b.estimatedDepartureTime || b.scheduledDepartureTime)
+  })
 }
 
 module.exports = getDepartures

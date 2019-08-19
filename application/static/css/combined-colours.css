@@ -1,0 +1,275 @@
+.cdc-melbourne {
+  background-color: #fc923d;
+}
+
+div.departure:nth-child(even) .cdc-melbourne {
+  background-color: #fb7b13;
+}
+
+.ventura-bus-lines {
+  background-color: #14315b;
+}
+
+div.departure:nth-child(even) .ventura-bus-lines {
+  background-color: #0c1d36;
+}
+
+.transdev-melbourne {
+  background-color: #e30613;
+}
+
+div.departure:nth-child(even) .transdev-melbourne {
+  background-color: #bc0510;
+}
+
+.dysons {
+  background-color: #2eb130;
+}
+
+div.departure:nth-child(even) .dysons {
+  background-color: #259027;
+}
+
+.panorama {
+  background-color: #d00071;
+}
+
+div.departure:nth-child(even) .panorama {
+  background-color: #930050;
+}
+
+.sita-bus-lines {
+  background-color: #ae6e00;
+}
+
+div.departure:nth-child(even) .sita-bus-lines {
+  background-color: #835300;
+}
+
+.kastoria-bus-lines {
+  background-color: #205878;
+}
+
+div.departure:nth-child(even) .kastoria-bus-lines {
+  background-color: #153b50;
+}
+
+.tullamarine-bus-lines {
+  background-color: #720016;
+}
+
+div.departure:nth-child(even) .tullamarine-bus-lines {
+  background-color: #4b000e;
+}
+
+.moonee-valley-bus-lines {
+  background-color: #f93a3a;
+}
+
+div.departure:nth-child(even) .moonee-valley-bus-lines {
+  background-color: #e80707;
+}
+
+.sunbury-bus-service {
+  background-color: #ab191f;
+}
+
+div.departure:nth-child(even) .sunbury-bus-service {
+  background-color: #7c1217;
+}
+
+.ryan-bros-bus-service {
+  background-color: #1080a3;
+}
+
+div.departure:nth-child(even) .ryan-bros-bus-service {
+  background-color: #0b5870;
+}
+
+.broadmeadows-bus-service {
+  background-color: #305fb3;
+}
+
+div.departure:nth-child(even) .broadmeadows-bus-service {
+  background-color: #1f3e74;
+}
+
+.moreland-bus-lines {
+  background-color: #50866d;
+}
+
+div.departure:nth-child(even) .moreland-bus-lines {
+  background-color: #325344;
+}
+
+.mckenzies-tourist-service {
+  background-color: #274523;
+}
+
+div.departure:nth-child(even) .mckenzies-tourist-service {
+  background-color: #192d17;
+}
+
+.martyrs-bus-service {
+  background-color: #71afc7;
+}
+
+div.departure:nth-child(even) .martyrs-bus-service {
+  background-color: #438daa;
+}
+
+.cranbourne-transit {
+  background-color: #fdce04;
+}
+
+div.departure:nth-child(even) .cranbourne-transit {
+  background-color: #cea802;
+}
+
+
+
+
+.glen-waverley-line {
+  background-color: #1c1e97;
+}
+
+div.departure:nth-child(even) .glen-waverley-line {
+  background-color: #151670;
+}
+
+.alamein-line {
+  background-color: #1c1e97;
+}
+
+div.departure:nth-child(even) .alamein-line {
+  background-color: #151670;
+}
+
+.belgrave-line {
+  background-color: #1c1e97;
+}
+
+div.departure:nth-child(even) .belgrave-line {
+  background-color: #151670;
+}
+
+.lilydale-line {
+  background-color: #1c1e97;
+}
+
+div.departure:nth-child(even) .lilydale-line {
+  background-color: #151670;
+}
+
+.mernda-line {
+  background-color: #ef2c20;
+}
+
+div.departure:nth-child(even) .mernda-line {
+  background-color: #c31e14;
+}
+
+.hurstbridge-line {
+  background-color: #ef2c20;
+}
+
+div.departure:nth-child(even) .hurstbridge-line {
+  background-color: #c31e14;
+}
+
+.upfield-line {
+  background-color: #a2a500;
+}
+
+div.departure:nth-child(even) .upfield-line {
+  background-color: #7d7f00;
+}
+
+.craigieburn-line {
+  background-color: #a2a500;
+}
+
+div.departure:nth-child(even) .craigieburn-line {
+  background-color: #7d7f00;
+}
+
+.sunbury-line {
+  background-color: #a2a500;
+}
+
+div.departure:nth-child(even) .sunbury-line {
+  background-color: #7d7f00;
+}
+
+.werribee-line {
+  background-color: #219f18;
+}
+
+div.departure:nth-child(even) .werribee-line {
+  background-color: #1b8013;
+}
+
+.williamstown-line {
+  background-color: #219f18;
+}
+
+div.departure:nth-child(even) .williamstown-line {
+  background-color: #1b8013;
+}
+
+.frankston-line {
+  background-color: #219f18;
+}
+
+div.departure:nth-child(even) .frankston-line {
+  background-color: #1b8013;
+}
+
+.stony-point-line {
+  background-color: #219f18;
+}
+
+div.departure:nth-child(even) .stony-point-line {
+  background-color: #1b8013;
+}
+
+.cranbourne-line {
+  background-color: #56b7d6;
+}
+
+div.departure:nth-child(even) .cranbourne-line {
+  background-color: #31a4c8;
+}
+
+.pakenham-line {
+  background-color: #56b7d6;
+}
+
+div.departure:nth-child(even) .pakenham-line {
+  background-color: #31a4c8;
+}
+
+.sandringham-line {
+  background-color: #ee67e6;
+}
+
+div.departure:nth-child(even) .sandringham-line {
+  background-color: #d639cc;
+}
+
+.showgrounds-flemington-line {
+  background-color: #8f8f8f;
+}
+
+div.departure:nth-child(even) .showgrounds-flemington-line {
+  background-color: #636363;
+}
+
+
+.vline {
+  background-color: #6b4d9e;
+}
+
+div.departure:nth-child(even) .vline {
+  background-color: #523d77;
+}

@@ -63,7 +63,7 @@ $.inputTimeout = function (element, callback) {
   let timeoutID = 0
 
   element.on('input', () => {
-      clearTimeout(timeoutID)
-      timeoutID = setTimeout(callback, 850, element.value)
+    clearTimeout(timeoutID)
+    timeoutID = setTimeout(callback, 850, element.value)
   })
 }
