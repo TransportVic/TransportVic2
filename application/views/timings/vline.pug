@@ -20,7 +20,7 @@ append content
         span=departure.platform || departure.platform || '?'
       a.departureInfo
         span='XXX Line towards'
-        span=departure.trip.destination
+        span=departure.trip.destination.slice(0, -16)
       div.timings
         a(class='timing ' + departure.headwayDevianceClass)
           span=departure.prettyTimeToArrival

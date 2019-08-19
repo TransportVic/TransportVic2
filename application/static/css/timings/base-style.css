@@ -90,6 +90,10 @@ a.timing {
   color: #101010;
 }
 
+a.timing span {
+  width: calc(5vw + 5vh);
+  text-align: center;
+}
 
 div.departure:nth-child(odd) a.timing.early:nth-child(odd) {
   background-color: #6fd6e7;
