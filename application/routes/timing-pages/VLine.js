@@ -3,6 +3,11 @@ const router = new express.Router()
 const getDepartures = require('../../../modules/vline/realtime_arrivals/get_departures')
 const moment = require('moment')
 
+let lineTypes = {
+  short: ['Geelong', 'Ballarat', 'Bendigo', 'Seymour', 'Traralgon'],
+  long: ['Warrnambool', 'Ararat', 'Maryborough', 'Swan Hill', 'Echuca', 'Albury', 'Shepparton', 'Bairnsdale']
+}
+
 router.get('/:stationName', async (req, res) => {
   const station = await res.db.getCollection('vline railway stations').findDocument({
     codeName: req.params.stationName
@@ -29,7 +34,10 @@ router.get('/:stationName', async (req, res) => {
       departure.headwayDeviance = departure.scheduledDepartureTime.diff(departure.estimatedDepartureTime, 'minutes')
 
       // trains cannot be early
-      if (departure.headwayDeviance <= -6) { // <= 6min counts as late
+      let lateThreshold = 6
+      if (lineTypes.long.includes(departure.trip.line))
+        lateThreshold = 11
+      if (departure.headwayDeviance <= -lateThreshold) { // <= 6min counts as late
         departure.headwayDevianceClass = 'late'
       } else {
         departure.headwayDevianceClass = 'on-time'

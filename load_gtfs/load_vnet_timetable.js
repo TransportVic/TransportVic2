@@ -85,7 +85,7 @@ let terminiToLines = {
 
   'Traralgon': 'Traralgon',
 
-  'Warnambool': 'Warnambool'
+  'Warrnambool': 'Warrnambool'
 }
 
 function operatingDaysToArray (days) {
