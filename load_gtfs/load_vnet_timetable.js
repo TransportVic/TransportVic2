@@ -69,6 +69,7 @@ let terminiToLines = {
   'Echuca': 'Echuca',
 
   'Geelong': 'Geelong',
+  'Marshall': 'Geelong',
   'South Geelong': 'Geelong',
   'Waurn Ponds': 'Geelong',
   'Wyndham Vale': 'Geelong',
