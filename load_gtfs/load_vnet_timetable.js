@@ -48,6 +48,46 @@ const files = [
   'FP50 Western Sunday 220319 - Down'
 ]
 
+let terminiToLines = {
+  'Albury': 'Albury',
+
+  'Ararat': 'Ararat',
+
+  'Bairnsdale': 'Bairnsdale',
+  'Sale': 'Bairnsdale',
+
+  'Bendigo': 'Bendigo',
+  'Eaglehawk': 'Bendigo',
+  'Epsom': 'Bendigo',
+  'Kyneton': 'Bendigo',
+
+  'Bacchus Marsh': 'Ballarat',
+  'Ballarat': 'Ballarat',
+  'Wendouree': 'Ballarat',
+  'Melton': 'Ballarat',
+
+  'Echuca': 'Echuca',
+
+  'Geelong': 'Geelong',
+  'South Geelong': 'Geelong',
+  'Waurn Ponds': 'Geelong',
+  'Wyndham Vale': 'Geelong',
+
+  'Maryborough': 'Maryborough',
+  'Maryborough-Ballarat': 'Maryborough',
+
+  'Seymour': 'Seymour',
+
+  'Shepparton': 'Shepparton',
+
+  'Swan Hill': 'Swan Hill',
+  'Swan Hill-Bendigo': 'Swan Hill',
+
+  'Traralgon': 'Traralgon',
+
+  'Warnambool': 'Warnambool'
+}
+
 function operatingDaysToArray (days) {
   if (days === 'MF') return ['Mon', 'Tues', 'Wed', 'Thur', 'Fri']
   if (days === 'Sat') return ['Sat']
@@ -171,11 +211,15 @@ async function loadTrips (csvData) {
       return stop
     })
 
+    const originDest = `${origin.slice(0, -16)}-${destination.slice(0, -16)}`
+    const dest = destination.slice(0, -16)
+    const line = terminiToLines[originDest] || terminiToLines[origin.slice(0, -16)] || terminiToLines[dest]
+
     const key = {
       runID, operationDays, destination, departureTime, origin
     }
     const timetableData = {
-      runID, operationDays, vehicle, formedBy, forming, stops, destination, departureTime, origin
+      runID, operationDays, vehicle, formedBy, forming, stops, destination, departureTime, origin, line
     }
 
     if (await vnetTimetables.countDocuments(key)) {

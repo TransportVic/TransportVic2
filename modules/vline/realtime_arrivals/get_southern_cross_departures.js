@@ -39,6 +39,8 @@ async function getDepartures (db) {
   const today = daysOfWeek[now.day()]
 
   function insertService (service) {
+    if (service.destination === 'er services today') return
+
     const serviceIndex = service.destination + service.scheduledDepartureTime
     if (servicesIndex.includes(serviceIndex)) return
     servicesIndex.push(serviceIndex)

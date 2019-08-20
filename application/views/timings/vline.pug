@@ -19,7 +19,7 @@ append content
         span=departure.isCoachService ? 'Coach Bay' : 'Platform'
         span=departure.platform || departure.platform || '?'
       a.departureInfo
-        span='XXX Line towards'
+        span=`${departure.trip.line} Line towards`
         span=departure.trip.destination.slice(0, -16)
       div.timings
         a(class='timing ' + departure.headwayDevianceClass)
