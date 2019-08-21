@@ -15,7 +15,6 @@ append content
     for departure in departures
       div.departure
         - let indexOfCurrentStation = departure.trip.stops.map(stop => stop.gtfsID).indexOf(station.gtfsID)
-        input(type='hidden' name='run' value=departure.trip.runID)
         input(type='hidden' name='stops-at' value=departure.trip.stops.filter((_, i) => i > indexOfCurrentStation).map(stop => stop.stationName).join(','))
         input(type='hidden' name='platform' value=departure.platform || departure.platform || '')
         a.leftContainer.platform.vline

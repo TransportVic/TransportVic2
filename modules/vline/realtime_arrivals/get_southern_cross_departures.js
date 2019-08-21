@@ -36,6 +36,7 @@ async function getDepartures (db) {
 
   const now = moment().tz('Australia/Melbourne')
   const startOfToday = now.clone().startOf('day')
+  const minutesPastMidnight = now.diff(startOfToday, 'minutes')
   const today = daysOfWeek[now.day()]
 
   function insertService (service) {
@@ -50,8 +51,7 @@ async function getDepartures (db) {
     services.push(service)
   }
 
-  const destinationRows = Array.from($('.table.departureboard-module tbody .rowModule'))
-  destinationRows.forEach(row => {
+  function loadFirstService(row) {
     const firstServiceSchedule = $('.first-service .tdeparture-destination', row)
     const firstServiceScheduledTime = $('.mdepartuertime', firstServiceSchedule).text().trim()
     const firstServiceDestination = $('.mtowardsdes', firstServiceSchedule).text().slice(8).trim()
@@ -66,9 +66,10 @@ async function getDepartures (db) {
       estimatedDepartureTime: firstServiceActualTime,
       isCoachService
     })
+  }
 
-    const otherDepartures = Array.from($('.table.sub-module.shownormal'))
-    otherDepartures.forEach(departure => {
+  function loadNext3Services(next3) {
+    next3.forEach(departure => {
       const scheduledDepartureTime = $('.scoDeptime', departure).text().trim()
       const destination = $('.scoDepDestination', departure).text().trim()
       const platform = $('.scoPlatform .platform', departure).text().trim()
@@ -78,9 +79,17 @@ async function getDepartures (db) {
         destination, scheduledDepartureTime, platform, estimatedDepartureTime, isCoachService
       })
     })
+  }
+
+  const destinationRows = Array.from($('.table.departureboard-module tbody .rowModule'))
+  destinationRows.forEach(row => {
+    if ($('.disruption-hatch', row).length) return
+
+    loadFirstService(row)
+    loadNext3Services(Array.from($('.table.sub-module.shownormal')))
   })
 
-  return (await async.map(services, async service => {
+  let allTrips = await async.map(services, async service => {
     const trip = await vnetTimetables.findDocument({
       origin: 'Southern Cross Railway Station',
       destination: service.destination + ' Railway Station',
@@ -99,7 +108,34 @@ async function getDepartures (db) {
       stopData: trip.stops[0],
       isCoachService: service.isCoachService
     }
-  })).filter(Boolean).sort((a, b) => {
+  })
+
+  (await vnetTimetables.findDocuments({
+    stops: {
+      $elemMatch: {
+        gtfsID: '20043',
+        departureTimeMinutes: {
+          $gt: minutesPastMidnight,
+          $lte: minutesPastMidnight + 120
+        }
+      }
+    },
+    operationDays: today
+  }).toArray()).forEach(trip => {
+    const tripID = trip.destination.slice(0, -16) + trip.departureTime
+    if (servicesIndex.includes(tripID)) return
+    servicesIndex.push(tripID)
+
+    allTrips.push({
+      trip,
+      scheduledDepartureTime: parse24Time(trip.departureTime, startOfToday),
+      platform: trip.stops[0].platform,
+      stopData: trip.stops[0],
+      isCoachService: false // need a way to check
+    })
+  })
+
+  return allTrips.filter(Boolean).sort((a, b) => {
     return (a.estimatedDepartureTime || a.scheduledDepartureTime) - (b.estimatedDepartureTime || b.scheduledDepartureTime)
   })
 }
