@@ -47,7 +47,7 @@ router.get('/:stationName', async (req, res) => {
     return departure
   })
 
-  res.render('timings/vline', { departures, station })
+  res.render('timings/vline', { departures, station, placeholder: "Destination or platform" })
 })
 
 module.exports = router

@@ -4,24 +4,27 @@ block title
   span=station.name
 
 block scripts
-  script(src='/static/scripts/filter-stops.js')
+  script(src='/static/scripts/timings.js')
   
 append style
   link(rel='stylesheet' href='/static/css/combined-colours.css')
   link(rel='stylesheet' href='/static/css/timings/base-style.css')
 
 append content
-  for departure in departures
-    div.departure
-      input(type='hidden' name='stops-at' value=JSON.stringify(departure.trip.stops.map(stop => stop.stationName)))
-      input(type='hidden' name='platform' value=departure.platform || departure.platform || '')
-      a.leftContainer.platform.vline
-        span=departure.isCoachService ? 'Coach Bay' : 'Platform'
-        span=departure.platform || departure.platform || '?'
-      a.departureInfo
-        span=`${departure.trip.line} Line towards`
-        span=departure.trip.destination.slice(0, -16)
-      div.timings
-        a(class='timing ' + departure.headwayDevianceClass)
-          span=departure.prettyTimeToArrival
-          span=departure.scheduledDepartureTime.format('HH:mm')
+  div#departures
+    for departure in departures
+      div.departure
+        - let indexOfCurrentStation = departure.trip.stops.map(stop => stop.gtfsID).indexOf(station.gtfsID)
+        input(type='hidden' name='run' value=departure.trip.runID)
+        input(type='hidden' name='stops-at' value=departure.trip.stops.filter((_, i) => i > indexOfCurrentStation).map(stop => stop.stationName).join(','))
+        input(type='hidden' name='platform' value=departure.platform || departure.platform || '')
+        a.leftContainer.platform.vline
+          span=departure.isCoachService ? 'Coach Bay' : 'Platform'
+          span=departure.platform || departure.platform || '?'
+        a.departureInfo
+          span=`${departure.trip.line} Line towards`
+          span=departure.trip.destination.slice(0, -16)
+        div.timings
+          a(class='timing ' + departure.headwayDevianceClass)
+            span=departure.prettyTimeToArrival
+            span=departure.scheduledDepartureTime.format('HH:mm')
