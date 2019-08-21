@@ -110,7 +110,7 @@ async function getDepartures (db) {
     }
   })
 
-  (await vnetTimetables.findDocuments({
+  const vnetDBTrips = (await vnetTimetables.findDocuments({
     stops: {
       $elemMatch: {
         gtfsID: '20043',
@@ -121,7 +121,9 @@ async function getDepartures (db) {
       }
     },
     operationDays: today
-  }).toArray()).forEach(trip => {
+  }).toArray())
+
+  vnetDBTrips.forEach(trip => {
     const tripID = trip.destination.slice(0, -16) + trip.departureTime
     if (servicesIndex.includes(tripID)) return
     servicesIndex.push(tripID)
