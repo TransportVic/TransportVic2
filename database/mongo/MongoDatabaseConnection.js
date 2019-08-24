@@ -14,10 +14,14 @@ module.exports = class MongoDatabaseConnection {
       callback = options
     }
 
-    MongoClient.connect(this.databaseURL, Object.assign(options, { useNewUrlParser: true }), (err, database) => {
-      this.database = database.db(this.databaseName)
+    return new Promise(resolve => {
+      MongoClient.connect(this.databaseURL, Object.assign(options, { useNewUrlParser: true, useUnifiedTopology: true }), (err, client) => {
+        this.database = client.db(this.databaseName)
 
-      callback(err)
+        resolve()
+        if (typeof callback == 'function')
+          callback(err)
+      })
     })
   }
 
