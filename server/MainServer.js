@@ -69,7 +69,7 @@ module.exports = class MainServer {
       let secureDomain = `http${config.useHTTPS ? 's' : ''}://${config.websiteDNSName}:* `
       secureDomain += 'https://*.mapbox.com/'
 
-      res.setHeader('Content-Security-Policy', `default-src blob: data: ${secureDomain}; script-src 'unsafe-inline' ${secureDomain}; style-src 'unsafe-inline' ${secureDomain}; img-src: 'unsafe-inline' ${secureDomain}`)
+      res.setHeader('Content-Security-Policy', `default-src blob: data: ${secureDomain}; script-src 'unsafe-inline' blob: ${secureDomain}; style-src 'unsafe-inline' ${secureDomain}; img-src: 'unsafe-inline' ${secureDomain}`)
       res.setHeader('X-Frame-Options', 'SAMEORIGIN')
       res.setHeader('X-Xss-Protection', '1; mode=block')
       res.setHeader('X-Content-Type-Options', 'nosniff')
