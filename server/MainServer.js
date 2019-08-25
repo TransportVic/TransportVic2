@@ -8,6 +8,9 @@ const fs = require('fs')
 const DatabaseConnection = require('../database/DatabaseConnection')
 
 const config = require('../config.json')
+let BusTracker
+if (config.busTrackerPath)
+  BusTracker = require(path.join(config.busTrackerPath, 'server.js'))
 
 module.exports = class MainServer {
   constructor () {
@@ -63,9 +66,10 @@ module.exports = class MainServer {
 
     app.use((req, res, next) => {
       res.setHeader('Strict-Transport-Security', 'max-age=31536000')
-      const secureDomain = `http${config.useHTTPS ? 's' : ''}://${config.websiteDNSName}:*`
+      let secureDomain = `http${config.useHTTPS ? 's' : ''}://${config.websiteDNSName}:* `
+      secureDomain += 'https://*.mapbox.com/'
 
-      res.setHeader('Content-Security-Policy', `default-src ${secureDomain}; script-src 'unsafe-inline' ${secureDomain}; style-src 'unsafe-inline' ${secureDomain}`)
+      res.setHeader('Content-Security-Policy', `default-src blob: data: ${secureDomain}; script-src 'unsafe-inline' ${secureDomain}; style-src 'unsafe-inline' ${secureDomain}; img-src: 'unsafe-inline' ${secureDomain}`)
       res.setHeader('X-Frame-Options', 'SAMEORIGIN')
       res.setHeader('X-Xss-Protection', '1; mode=block')
       res.setHeader('X-Content-Type-Options', 'nosniff')
@@ -94,6 +98,10 @@ module.exports = class MainServer {
       const router = require(`../application/routes/${routerName}`)
       app.use(routers[routerName], router)
     })
+
+    if (BusTracker) {
+      app.use('/tracker', BusTracker)
+    }
 
     // app.get('/sw.js', (req, res) => {
     //     res.setHeader('Cache-Control', 'no-cache');
