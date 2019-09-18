@@ -105,7 +105,7 @@ async function getDepartures (db) {
       trip,
       estimatedDepartureTime: service.estimatedDepartureTime,
       scheduledDepartureTime: parse24Time(service.scheduledDepartureTime, startOfToday),
-      platform: service.platform,
+      platform: service.platform === '-' ? trip.stopTimings[0].platform : service.platform,
       stopData: trip.stopTimings[0],
       isCoachService: service.isCoachService
     }
