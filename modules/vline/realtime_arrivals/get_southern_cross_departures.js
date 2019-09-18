@@ -114,7 +114,7 @@ async function getDepartures (db) {
   const vnetDBTrips = (await timetables.findDocuments({
     stops: {
       $elemMatch: {
-        stopGTFSID: '20043',
+        stopGTFSID: 20043,
         departureTimeMinutes: {
           $gt: minutesPastMidnight,
           $lte: minutesPastMidnight + 120

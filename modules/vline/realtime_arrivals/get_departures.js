@@ -16,11 +16,9 @@ async function getDepartures (station, db) {
   if (departuresCache.get(station.stopName)) {
     return departuresCache.get(station.stopName)
   }
+  let scDepartures = []
   if (station.stopName === 'Southern Cross Railway Station') {
-    const departures = await getSCDepartures(db)
-    departuresCache.put(station.stopName, departures)
-
-    return departures
+    scDepartures = await getSCDepartures(db)
   }
 
   let vlinePlatform = station.bays.filter(bay => bay.mode === 'regional train')[0]
@@ -69,7 +67,7 @@ async function getDepartures (station, db) {
     allTrips[runID] = { trip: timetable, estimatedDepartureTime, platform }
   })
 
-  const departures = Object.values(allTrips).map(departure => {
+  let departures = Object.values(allTrips).map(departure => {
     departure.stopData = departure.trip.stopTimings.filter(stop => stop.stopGTFSID === vlinePlatform.stopGTFSID)[0]
     let offset = 0
     if (minutesPastMidnight >= 1380 && departure.stopData.departureTimeMinutes <= 120) { // currently after 11pm and train leaves < 2am
@@ -78,7 +76,24 @@ async function getDepartures (station, db) {
     departure.scheduledDepartureTime = startOfToday.clone().add(departure.stopData.departureTimeMinutes + offset, 'minutes')
 
     return departure
-  }).sort((a, b) => {
+  })
+
+  let runIDs = departures.map(departure => departure.trip.runID);
+
+  scDepartures.forEach(departure => {
+    if (runIDs.includes(departure.trip.runID)) {
+      let departureIndex = runIDs.indexOf(departure.trip.runID);
+      if (!departures[departureIndex].estimatedDepartureTime) {
+        departures.splice(departureIndex, 1)
+        departures.push(departure)
+      }
+    } else {
+      runIDs.push(departure.trip.runID)
+      departures.push(departure)
+    }
+  })
+// console.log(departures)
+  departures = departures.sort((a, b) => {
     return (a.estimatedDepartureTime || a.scheduledDepartureTime) - (b.estimatedDepartureTime || b.scheduledDepartureTime)
   })
 
