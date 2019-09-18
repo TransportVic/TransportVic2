@@ -1,14 +1,13 @@
-const DatabaseConnection = require('../database/DatabaseConnection')
-const config = require('../config.json')
+const DatabaseConnection = require('../../database/DatabaseConnection')
+const config = require('../../config.json')
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
-let vlineRailwayStations = null
+let stops = null
 
 const cheerio = require('cheerio')
 
 const fs = require('fs')
 const async = require('async')
-let data = fs.readFileSync('load_gtfs/all_vline_stations.xml').toString()
-data = data.replace(/a:/g, '')
+let data = fs.readFileSync('load_gtfs/vline_trains/all_vline_stations.xml').toString().replace(/a:/g, '')
 const $ = cheerio.load(data)
 
 const completedStations = []
@@ -32,15 +31,19 @@ const stations = Array.from($('Location')).filter(location => {
 database.connect({
   poolSize: 100
 }, async err => {
-  vlineRailwayStations = database.getCollection('vline railway stations')
-  await async.map(stations, async station => {
-    await vlineRailwayStations.updateDocument({ name: station.name }, {
-      $set: {
-        vnetStationName: station.vnetStationName
-      }
+  stops = database.getCollection('stops')
+
+  await async.forEach(stations, async stop => {
+    let stopData = await stops.findDocument({ stopName: stop.name })
+
+    let index = stopData.bays.indexOf(stopData.bays.filter(bay => bay.mode === 'regional train')[0])
+    stopData.bays[index].vnetStationName = stop.vnetStationName
+
+    await stops.updateDocument({ stopName: stop.name }, {
+      $set: stopData
     })
   })
 
-  console.log('Completed updating ' + stations.length + ' V/Line station VNET names')
+  console.log('Completed updating ' + stations.length + ' V/Line stop VNET names')
   process.exit()
 })

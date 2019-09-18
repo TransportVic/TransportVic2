@@ -1,0 +1,52 @@
+{
+  "timetable": {
+    "mode": "string",
+    "operator": "string",
+    "lineName": "string",
+    "runID": "string",
+    "operationDays": ["number"],
+    "vehicle": "string",
+    "formedBy": "string",
+    "forming": "string",
+    "stopTimings": [{
+      "stopName": "string",
+      "stopGTFSID": "number",
+      "arrivalTime": "string",
+      "arrivalTimeMinutes": "number",
+      "departureTime": "string",
+      "departureTimeMinutes": "number",
+      "platform": "string",
+      "stopConditions": "string"
+    }],
+    "destination": "string",
+    "departureTime": "number",
+    "origin": "string"
+  },
+  "stop": {
+    "fullStopName": "string",
+    "stopName": "string",
+    "suburb": ["string"],
+    "codedName": "string",
+    "bays": [{
+      "stopGTFSID": "number",
+      "services": ["string"],
+      "location": "GeoJSON:Point",
+      "stopNumber": "string",
+      "mode": "string"
+    }]
+  },
+  "route": {
+    "routeName": "string",
+    "codedName": "string",
+    "routeGTFSIDs": ["string"],
+    "routePath": "GeoJSON:LineString",
+    "routeLength": "number",
+    "operators": ["string"],
+    "stops": [{
+      "stopName": "string",
+      "stopGTFSID": "number",
+      "stopNumber": "string"
+    }],
+    "mode": "string"
+  }
+}

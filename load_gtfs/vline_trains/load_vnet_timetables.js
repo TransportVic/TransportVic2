@@ -1,51 +1,51 @@
-const DatabaseConnection = require('../database/DatabaseConnection')
-const config = require('../config.json')
+const DatabaseConnection = require('../../database/DatabaseConnection')
+const config = require('../../config.json')
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
-let vlineRailwayStations = null
-let vnetTimetables = null
+let stops = null
+let timetables = null
 
 const fs = require('fs')
 const parseCSV = require('csv-parse')
 const async = require('async')
 
 const files = [
-  'FP50 Eastern Weekday 220319 - Up',
-  'FP50 Eastern Weekday 220319 - Down',
-  'FP50 Eastern Saturday 220319 - Up',
-  'FP50 Eastern Saturday 220319 - Down',
-  'FP50 Eastern Sunday 220319 - Up',
-  'FP50 Eastern Sunday 220319 - Down',
+  'FP50 Eastern Weekday - Up',
+  'FP50 Eastern Weekday - Down',
+  'FP50 Eastern Saturday - Up',
+  'FP50 Eastern Saturday - Down',
+  'FP50 Eastern Sunday - Up',
+  'FP50 Eastern Sunday - Down',
 
-  'FP50 NESG All Days 220319 - Up',
-  'FP50 NESG All Days 220319 - Down',
+  'FP50 NESG All Days - Up',
+  'FP50 NESG All Days - Down',
 
-  'FP50 North Eastern Weekday 220319 - Up',
-  'FP50 North Eastern Weekday 220319 - Down',
-  'FP50 North Eastern Saturday 220319 - Up',
-  'FP50 North Eastern Saturday 220319 - Down',
-  'FP50 North Eastern Sunday 220319 - Up',
-  'FP50 North Eastern Sunday 220319 - Down',
+  'FP50 North Eastern Weekday - Up',
+  'FP50 North Eastern Weekday - Down',
+  'FP50 North Eastern Saturday - Up',
+  'FP50 North Eastern Saturday - Down',
+  'FP50 North Eastern Sunday - Up',
+  'FP50 North Eastern Sunday - Down',
 
-  'FP50 Northern Weekday 220319 - Up',
-  'FP50 Northern Weekday 220319 - Down',
-  'FP50 Northern Saturday 220319 - Up',
-  'FP50 Northern Saturday 220319 - Down',
-  'FP50 Northern Sunday 220319 - Up',
-  'FP50 Northern Sunday 220319 - Down',
+  'FP50 Northern Weekday - Up',
+  'FP50 Northern Weekday - Down',
+  'FP50 Northern Saturday - Up',
+  'FP50 Northern Saturday - Down',
+  'FP50 Northern Sunday - Up',
+  'FP50 Northern Sunday - Down',
 
-  'FP50 South Western Weekday 290319 - Up',
-  'FP50 South Western Weekday 290319 - Down',
-  'FP50 South Western Saturday 290319 - Up',
-  'FP50 South Western Saturday 290319 - Down',
-  'FP50 South Western Sunday 290319 - Up',
-  'FP50 South Western Sunday 290319 - Down',
+  'FP50 South Western Weekday - Up',
+  'FP50 South Western Weekday - Down',
+  'FP50 South Western Saturday - Up',
+  'FP50 South Western Saturday - Down',
+  'FP50 South Western Sunday - Up',
+  'FP50 South Western Sunday - Down',
 
-  'FP50 Western Weekday 220319 - Up',
-  'FP50 Western Weekday 220319 - Down',
-  'FP50 Western Saturday 220319 - Up',
-  'FP50 Western Saturday 220319 - Down',
-  'FP50 Western Sunday 220319 - Up',
-  'FP50 Western Sunday 220319 - Down'
+  'FP50 Western Weekday - Up',
+  'FP50 Western Weekday - Down',
+  'FP50 Western Saturday - Up',
+  'FP50 Western Saturday - Down',
+  'FP50 Western Sunday - Up',
+  'FP50 Western Sunday - Down'
 ]
 
 let terminiToLines = {
@@ -110,7 +110,7 @@ function timingToMinutesAfterMidnight (timing) {
 let timetableCount = 0
 
 async function loadTimetableCSV (filename) {
-  let timetable = fs.readFileSync('vline_timetables/' + filename + '.csv').toString()
+  let timetable = fs.readFileSync('vnet_timetables/' + filename + '.csv').toString()
   timetable = await new Promise(resolve => parseCSV(timetable, {
     trim: true,
     skip_empty_lines: true
@@ -160,19 +160,23 @@ async function loadTrips (csvData) {
       if (timing === '…/…') timing = ''
 
       const stationMeta = leftColumns[i++]
-      const stationName = stationMeta[0]
+      const stopName = stationMeta[0]
       const fieldContents = stationMeta[1]
 
-      const station = await vlineRailwayStations.findDocument({ name: new RegExp(stationName + ' railway station', 'i') })
+      const stopData = await stops.findDocument({
+        stopName: new RegExp(stopName + ' railway station', 'i')
+      })
+      const bay = stopData.bays.filter(bay => bay.mode === 'regional train')[0];
 
       let arrivalTime = null; let departureTime = null
-      if (!tripStops[stationName]) {
-        tripStops[stationName] = {
-          stationName: station.name,
-          gtfsID: station.gtfsID,
+      if (!tripStops[stopName]) {
+        tripStops[stopName] = {
+          stopName: stopData.stopName,
+          stopGTFSID: bay.stopGTFSID,
           arrivalTime: null,
           departureTime: null,
-          platform: null
+          platform: null,
+          stopConditions: ""
         }
       }
 
@@ -180,30 +184,38 @@ async function loadTrips (csvData) {
         timing = timing.split('/')
         arrivalTime = timing[0]
         departureTime = timing[1]
-        tripStops[stationName].arrivalTime = arrivalTime
-        tripStops[stationName].departureTime = departureTime
+        tripStops[stopName].arrivalTime = arrivalTime.slice(0, 5)
+        tripStops[stopName].departureTime = departureTime.slice(0, 5)
+
+        let stopConditions = departureTime.match(/(\w)$/);
+        if (!stopConditions) stopConditions = [null]
+        tripStops[stopName].stopConditions = stopConditions[1];
 
         return
       }
 
-      if (timing.includes('*')) tripStops[stationName].express = true
-      if (fieldContents === 'Arr') tripStops[stationName].arrivalTime = timing
-      else if (fieldContents === 'Dep') tripStops[stationName].departureTime = timing
-      else if (fieldContents === 'Plat') tripStops[stationName].platform = timing
+      if (timing.includes('*')) tripStops[stopName].express = true
+      if (fieldContents === 'Arr') tripStops[stopName].arrivalTime = timing.slice(0, 5)
+      else if (fieldContents === 'Dep') tripStops[stopName].departureTime = timing.slice(0, 5)
+      else if (fieldContents === 'Plat') tripStops[stopName].platform = timing
       else {
-        tripStops[stationName].arrivalTime = timing
-        tripStops[stationName].departureTime = timing
+        tripStops[stopName].arrivalTime = timing.slice(0, 5)
+        tripStops[stopName].departureTime = timing.slice(0, 5)
+
+        let stopConditions = timing.match(/(\w)$/);
+        if (!stopConditions) stopConditions = [null]
+        tripStops[stopName].stopConditions = stopConditions[1];
       }
     })
 
-    let stops = routeStops.map(name => tripStops[name]).filter(Boolean).filter(e => !e.express).filter(e => e.arrivalTime + e.departureTime !== '')
+    let stopTimings = routeStops.map(name => tripStops[name]).filter(e => !e.express).filter(e => e.arrivalTime + e.departureTime !== '')
 
-    const destination = stops.slice(-1)[0].stationName
-    const departureTime = stops[0].departureTime
-    const origin = stops[0].stationName
+    const destination = stopTimings.slice(-1)[0].stopName
+    const departureTime = stopTimings[0].departureTime
+    const origin = stopTimings[0].stopName
 
-    const l = stops.length - 1
-    stops = stops.map((stop, i) => {
+    const l = stopTimings.length - 1
+    stopTimings = stopTimings.map((stop, i) => {
       if (i === 0) stop.arrivalTime = null
       if (i === l) stop.departureTime = null
       stop.arrivalTimeMinutes = timingToMinutesAfterMidnight(stop.arrivalTime)
@@ -212,36 +224,53 @@ async function loadTrips (csvData) {
       return stop
     })
 
-    const originDest = `${origin.slice(0, -16)}-${destination.slice(0, -16)}`
     const dest = destination.slice(0, -16)
+    const originDest = `${origin.slice(0, -16)}-${dest}`
     const line = terminiToLines[originDest] || terminiToLines[origin.slice(0, -16)] || terminiToLines[dest]
 
     const key = {
-      runID, operationDays, destination, departureTime, origin
+      mode: "regional train",
+      runID,
+      operationDays,
+      destination,
+      departureTime,
+      origin
     }
     const timetableData = {
-      runID, operationDays, vehicle, formedBy, forming, stops, destination, departureTime, origin, line
+      mode: "regional train",
+      operator: "V/Line",
+      lineName: line,
+      runID,
+      operationDays,
+      vehicle,
+      formedBy,
+      forming,
+      stopTimings,
+      destination,
+      departureTime,
+      origin
     }
 
-    if (await vnetTimetables.countDocuments(key)) {
-      await vnetTimetables.updateDocument(key, {
+    if (await timetables.countDocuments(key)) {
+      await timetables.updateDocument(key, {
         $set: timetableData
       })
     } else {
-      await vnetTimetables.createDocument(timetableData)
+      await timetables.createDocument(timetableData)
     }
   })
 }
 
 database.connect({
-  poolSize: 100
+  poolSize: 500
 }, async err => {
-  vlineRailwayStations = database.getCollection('vline railway stations')
-  vnetTimetables = database.getCollection('vnet timetables')
+  stops = database.getCollection('stops')
+  timetables = database.getCollection('timetables')
 
   await async.map(files, async filename => {
     const csvData = await loadTimetableCSV(filename)
     await loadTrips(csvData)
+    console.log('Completed ' + filename)
   })
   console.log('Completed loading in ' + timetableCount + ' VNET timetables')
   process.exit()
