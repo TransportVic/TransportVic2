@@ -9,8 +9,8 @@ let lineTypes = {
 }
 
 router.get('/:stationName', async (req, res) => {
-  const station = await res.db.getCollection('vline railway stations').findDocument({
-    codeName: req.params.stationName
+  const station = await res.db.getCollection('stops').findDocument({
+    codedName: req.params.stationName,
   })
 
   if (!station) {

@@ -8,21 +8,13 @@ router.get('/', (req, res) => {
 })
 
 async function performSearch (db, query) {
-  const collections = {
-    vlineStations: 'vline railway stations'
-  }
-  const results = {}
-
-  await async.forEachOf(collections, async (value, key) => {
-    results[key] = await db.getCollection(value).findDocuments({
-      $or: [
-        { gtfsID: query },
-        { name: new RegExp(query, 'i') }
-      ]
-    }).toArray()
-  })
-
-  return results
+  return await db.getCollection('stops').findDocuments({
+    $or: [
+      { 'bays.stopGTFSID': query },
+      { stopName: new RegExp(query, 'i') },
+      { stopSuburb: new RegExp(query, 'i') },
+    ]
+  }).toArray()
 }
 
 router.post('/', async (req, res) => {
@@ -31,8 +23,8 @@ router.post('/', async (req, res) => {
   }
 
   const results = await performSearch(res.db, req.body.query)
-
-  res.render('search/results', results)
+  
+  res.render('search/results', {results})
 })
 
 module.exports = router

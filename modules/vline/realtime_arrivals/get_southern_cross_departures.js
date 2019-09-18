@@ -29,7 +29,7 @@ function parse24Time (time, from) {
 }
 
 async function getDepartures (db) {
-  const vnetTimetables = db.getCollection('vnet timetables')
+  const timetables = db.getCollection('timetables')
   const $ = cheerio.load(await request(urls.southernCrossDepartures))
   const services = []
   const servicesIndex = []
@@ -90,11 +90,12 @@ async function getDepartures (db) {
   })
 
   let allTrips = await async.map(services, async service => {
-    const trip = await vnetTimetables.findDocument({
+    const trip = await timetables.findDocument({
       origin: 'Southern Cross Railway Station',
       destination: service.destination + ' Railway Station',
       departureTime: service.scheduledDepartureTime,
-      operationDays: today
+      operationDays: today,
+      mode: "regional train"
     })
 
     // TODO: find a way to load in special services - maybe no stopping pattern?
@@ -105,22 +106,23 @@ async function getDepartures (db) {
       estimatedDepartureTime: service.estimatedDepartureTime,
       scheduledDepartureTime: parse24Time(service.scheduledDepartureTime, startOfToday),
       platform: service.platform,
-      stopData: trip.stops[0],
+      stopData: trip.stopTimings[0],
       isCoachService: service.isCoachService
     }
   })
 
-  const vnetDBTrips = (await vnetTimetables.findDocuments({
+  const vnetDBTrips = (await timetables.findDocuments({
     stops: {
       $elemMatch: {
-        gtfsID: '20043',
+        stopGTFSID: '20043',
         departureTimeMinutes: {
           $gt: minutesPastMidnight,
           $lte: minutesPastMidnight + 120
         }
       }
     },
-    operationDays: today
+    operationDays: today,
+    mode: "regional train"
   }).toArray())
 
   vnetDBTrips.forEach(trip => {

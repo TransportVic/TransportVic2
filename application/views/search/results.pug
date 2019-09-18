@@ -1,7 +1,7 @@
-for vlineStation in vlineStations
-  a(href=`/vline/timings/${vlineStation.codeName}`).vlineStation.result
+for vlineStation in results.filter(stop => stop.bays.filter(bay => bay.mode === 'regional train').length)
+  a(href=`/vline/timings/${vlineStation.codedName}`).vlineStation.result
     div.leftContainer
       img(src='/static/images/metro-icon.svg')
     div.resultDetails
-      span='Train station in ' + vlineStation.suburb
-      span=vlineStation.name
+      span='Train station in ' + vlineStation.suburb[0]
+      span=vlineStation.stopName

@@ -13,39 +13,44 @@ const cheerio = require('cheerio')
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 
 async function getDepartures (station, db) {
-  if (departuresCache.get(station.name)) {
-    return departuresCache.get(station.name)
+  if (departuresCache.get(station.stopName)) {
+    return departuresCache.get(station.stopName)
   }
-  if (station.name === 'Southern Cross Railway Station') {
+  if (station.stopName === 'Southern Cross Railway Station') {
     const departures = await getSCDepartures(db)
-    departuresCache.put(station.name, departures)
+    departuresCache.put(station.stopName, departures)
 
     return departures
   }
 
-  const vnetTimetables = db.getCollection('vnet timetables')
+  let vlinePlatform = station.bays.filter(bay => bay.mode === 'regional train')[0]
+  let {vnetStationName} = vlinePlatform
+
+  const timetables = db.getCollection('timetables')
 
   const now = moment().tz('Australia/Melbourne')
   const startOfToday = now.clone().startOf('day')
   const minutesPastMidnight = now.diff(startOfToday, 'minutes')
   const today = daysOfWeek[now.day()]
 
-  const trips = await vnetTimetables.findDocuments({
-    stops: {
+  const trips = await timetables.findDocuments({
+    stopTimings: {
       $elemMatch: {
-        gtfsID: station.gtfsID,
+        stopGTFSID: vlinePlatform.stopGTFSID,
         departureTimeMinutes: {
           $gt: minutesPastMidnight,
           $lte: minutesPastMidnight + 60
         }
       }
     },
-    operationDays: today
-  })
+    operationDays: today,
+    mode: "regional train"
+  }).toArray()
+
   const allTrips = {}
   trips.forEach(trip => { allTrips[trip.runID] = { trip } })
 
-  let body = await request(urls.vlinePlatformDepartures.format(station.vnetStationName))
+  let body = await request(urls.vlinePlatformDepartures.format(vnetStationName))
   body = body.replace(/a:/g, '')
   const $ = cheerio.load(body)
   const allServices = Array.from($('PlatformService'))
@@ -57,21 +62,27 @@ async function getDepartures (station, db) {
     if (!isNaN(new Date($('ActualArrivalTime', service).text()))) { estimatedDepartureTime = moment($('ActualArrivalTime', service).text()) } // yes arrival cos vnet
     const platform = $('Platform', service).text()
 
-    const timetable = await vnetTimetables.findDocument({ runID, operationDays: today })
+    const timetable = await timetables.findDocument({
+      runID, operationDays: today, mode: "regional train"
+    })
 
     allTrips[runID] = { trip: timetable, estimatedDepartureTime, platform }
   })
 
   const departures = Object.values(allTrips).map(departure => {
-    departure.stopData = departure.trip.stops.filter(stop => stop.gtfsID === station.gtfsID)[0]
-    departure.scheduledDepartureTime = startOfToday.clone().add(departure.stopData.departureTimeMinutes, 'minutes')
+    departure.stopData = departure.trip.stopTimings.filter(stop => stop.stopGTFSID === vlinePlatform.stopGTFSID)[0]
+    let offset = 0
+    if (minutesPastMidnight >= 1380 && departure.stopData.departureTimeMinutes <= 120) { // currently after 11pm and train leaves < 2am
+      offset = 1440 // add 1 day to departure time from today
+    }
+    departure.scheduledDepartureTime = startOfToday.clone().add(departure.stopData.departureTimeMinutes + offset, 'minutes')
 
     return departure
   }).sort((a, b) => {
     return (a.estimatedDepartureTime || a.scheduledDepartureTime) - (b.estimatedDepartureTime || b.scheduledDepartureTime)
   })
 
-  departuresCache.put(station.name, departures)
+  departuresCache.put(station.stopName, departures)
 
   return departures
 }
