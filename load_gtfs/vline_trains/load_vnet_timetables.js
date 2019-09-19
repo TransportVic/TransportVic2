@@ -164,7 +164,7 @@ async function loadTrips (csvData) {
       const fieldContents = stationMeta[1]
 
       const stopData = await stops.findDocument({
-        stopName: new RegExp(stopName + ' railway station', 'i')
+        stopName: new RegExp('^' + stopName + ' railway station', 'i')
       })
       const bay = stopData.bays.filter(bay => bay.mode === 'regional train')[0];
 
