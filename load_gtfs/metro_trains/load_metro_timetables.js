@@ -92,7 +92,8 @@ async function parseTimetable(data, lineName) {
       stopTimings: [],
       destination: null,
       departureTime: null,
-      origin: null
+      origin: null,
+      direction: stop.to_city === '1' ? 'up' : 'down'
     }
 
     timetableByDays[tripDay][runID].stopTimings.push({

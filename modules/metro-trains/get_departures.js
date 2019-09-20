@@ -7,6 +7,13 @@ const ptvAPI = require('../../ptv-api')
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 
+let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central'];
+
+let burnleyGroup = [1, 2, 7, 9]; // alamein, belgrave, glen waverley, lilydale
+let caulfieldGroup = [4, 6, 11, 12]; // cranbourne, frankston, pakenham, sandringham
+let northenGroup = [3, 14, 15, 16, 17]; // craigieburn, sunbury, upfield, werribee, williamstown
+let cliftonHillGroup = [5, 8]; // mernda, hurstbridge
+
 function getMinutesPastMidnight(time) {
   const startOfToday = time.clone().startOf('day')
   return time.diff(startOfToday, 'minutes')
@@ -52,10 +59,53 @@ async function getDepartures(station, db) {
     }
 
     trip.vehicle = vehicle
+
+
+    let throughCityLoop = trip.runID.toString()[1] > 5 || cityLoopStations.includes(run.destination_name.toLowerCase());
+    let routeID = departure.route_id
+
+    if (routeID == 6 && run.destination_name.toLowerCase() == 'southern cross') {
+        throughCityLoop = false;
+    }
+    let stopsViaFlindersFirst = trip.runID.toString()[1] <= 5;
+    upService = trip.direction === 'up'
+
+    cityLoopConfig = [];
+
+    // assume up trains
+    if (northenGroup.includes(routeID)) {
+        if (stopsViaFlindersFirst && !throughCityLoop)
+            cityLoopConfig = ['NME', 'SSS', 'FSS'];
+        else if (stopsViaFlindersFirst && throughCityLoop)
+            cityLoopConfig = ['SSS', 'FSS', 'PAR', 'MCE', 'FGS'];
+        else if (!stopsViaFlindersFirst && throughCityLoop)
+            cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS'];
+    } else {
+        if (stopsViaFlindersFirst && throughCityLoop) { // flinders then loop
+            if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
+                cityLoopConfig = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR'];
+        } else if (!stopsViaFlindersFirst && throughCityLoop) { // loop then flinders
+            if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
+                cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS'];
+        } else if (stopsViaFlindersFirst && !throughCityLoop) { // direct to flinders
+            if (routeID == 6) // frankston
+                cityLoopConfig = ['RMD', 'FSS', 'SSS']
+            else if (burnleyGroup.concat(caulfieldGroup).includes(routeID))
+                cityLoopConfig = ['RMD', 'FSS'];
+            else if (cliftonHillGroup.includes(routeID))
+                cityLoopConfig = ['JLI', 'FSS']
+        }
+    }
+
+    if (!upService) { // down trains; away from city
+        cityLoopConfig.reverse();
+    }
+
+
     transformedDepartures.push({
       trip, scheduledDepartureTime, estimatedDepartureTime, platform, stopData,
       departureTimeMinutes: getMinutesPastMidnight(scheduledDepartureTime) + offset,
-      cancelled: run.status === 'cancelled'
+      cancelled: run.status === 'cancelled', cityLoopConfig
     })
   })
 

@@ -3,6 +3,7 @@ const router = new express.Router()
 const getDepartures = require('../../../modules/metro-trains/get_departures')
 const utils = require('../../../utils')
 const moment = require('moment')
+
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 
 router.get('/:stationName', async (req, res) => {
