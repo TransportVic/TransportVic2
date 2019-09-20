@@ -65,6 +65,8 @@ const trips=[]
       runID, operationDays: today, mode: "regional train"
     })
 
+    if (!timetable) return // footy trains?
+
     allTrips[runID] = { trip: timetable, estimatedDepartureTime, platform }
   })
 
@@ -89,14 +91,17 @@ const trips=[]
       let departureIndex = runIDs.indexOf(departure.trip.runID);
       if (!departures[departureIndex].estimatedDepartureTime) {
         departures.splice(departureIndex, 1)
+        runIDs.splice(departureIndex, 1)
+
         departures.push(departure)
+        runIDs.push(departure.trip.runID)
       }
     } else {
       runIDs.push(departure.trip.runID)
       departures.push(departure)
     }
   })
-// console.log(departures)
+
   departures = departures.sort((a, b) => {
     return (a.estimatedDepartureTime || a.scheduledDepartureTime) - (b.estimatedDepartureTime || b.scheduledDepartureTime)
   })
