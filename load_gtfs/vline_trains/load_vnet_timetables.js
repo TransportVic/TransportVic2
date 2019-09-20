@@ -262,6 +262,16 @@ database.connect({
   stops = database.getCollection('stops')
   timetables = database.getCollection('timetables')
 
+  timetables.createIndex({
+    mode: 1,
+    operator: 1,
+    lineName: 1,
+    runID: 1,
+    operationDays: 1,
+    origin: 1,
+    destination: 1
+  }, {unique: true})
+  
   await async.map(files, async filename => {
     const csvData = await loadTimetableCSV(filename)
     await loadTrips(csvData)

@@ -27,6 +27,10 @@ module.exports = class MongoDatabaseCollection {
     return this.collection.updateOne(query, update)
   }
 
+  replaceDocument (query, update, options) {
+    return this.collection.replaceOne(query, update, options)
+  }
+
   deleteDocument () {
 
   }

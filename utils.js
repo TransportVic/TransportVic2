@@ -1,6 +1,9 @@
 module.exports = {
   encodeName: name => name.toLowerCase().replace(/[^\w\d ]/g, '').replace(/  */g, '-').replace(/--+/g, '-'),
   adjustStopname: name => {
+    if (name.includes('Jolimont-MCG')) {
+      name = name.replace('Jolimont-MCG', 'Jolimont')
+    }
     if (name.includes('Railway Station')) {
       name = name.replace('Railway Station', 'Station');
     }
@@ -16,5 +19,6 @@ module.exports = {
   },
   parseGTFSData: data =>
     data.split('\r\n').slice(1).filter(Boolean).map(e => e.match(/"([^"]*)"/g).map(f => f.slice(1, -1))),
-  simplifyRouteGTFSID: id => id.replace(/(-\w)?-mjp-1$/, '')
+  simplifyRouteGTFSID: id => id.replace(/(-\w)?-mjp-1$/, ''),
+  pad: (data, length, filler='0') => Array(length).fill(filler).concat([...data.toString()]).slice(-length).join('')
 }
