@@ -228,7 +228,6 @@ async function loadTrips (csvData) {
       runID,
       operationDays,
       destination,
-      departureTime,
       origin
     }
     const timetableData = {
@@ -246,13 +245,9 @@ async function loadTrips (csvData) {
       origin
     }
 
-    if (await timetables.countDocuments(key)) {
-      await timetables.updateDocument(key, {
-        $set: timetableData
-      })
-    } else {
-      await timetables.createDocument(timetableData)
-    }
+    await timetables.replaceDocument(key, timetableData, {
+      upsert: true
+    })
   })
 }
 
@@ -271,12 +266,21 @@ database.connect({
     origin: 1,
     destination: 1
   }, {unique: true})
-  
-  await async.map(files, async filename => {
-    const csvData = await loadTimetableCSV(filename)
+
+  let i = -1
+  async function loadFile() {
+    if (i++ === files.length - 1) return
+
+    const fileName = files[i]
+
+    const csvData = await loadTimetableCSV(fileName)
     await loadTrips(csvData)
-    console.log('Completed ' + filename)
-  })
+
+    await loadFile()
+  }
+
+  await loadFile()
+
   console.log('Completed loading in ' + timetableCount + ' VNET timetables')
   process.exit()
 })

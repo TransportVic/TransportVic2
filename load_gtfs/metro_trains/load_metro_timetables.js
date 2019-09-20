@@ -129,7 +129,6 @@ async function parseTimetable(data, lineName) {
         runID,
         operationDays: timetableData.operationDays,
         destination: timetableData.destination,
-        departureTime: timetableData.departureTime,
         origin: timetableData.origin
       }
 
@@ -176,10 +175,7 @@ database.connect({
     if (i++ === lines.length - 1) return
 
     const lineName = lines[i]
-
-    console.log('Doing ' + lineName)
     await loadLineJSON(lineName)
-    console.log('Completed ' + lineName)
 
     await loadLine()
   }

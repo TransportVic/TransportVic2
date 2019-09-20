@@ -17,7 +17,7 @@ database.connect({
     stopName: 1,
     fullStopName: 1,
     'bays.stopGTFSID': 1
-  })
+  }, {unique: true})
 
   let stopCount = await loadStops(stopsData, stops, 'regional train')
 

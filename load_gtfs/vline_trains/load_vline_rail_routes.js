@@ -13,7 +13,7 @@ database.connect({
   poolSize: 100
 }, async err => {
   routes = database.getCollection('routes')
-  routes.createIndex({ routeName: 1 })
+  routes.createIndex({ routeName: 1 }, {unique: true})
 
   let routeCount = await loadRoutes(routeData, shapeData, routes, () => ['V/Line'], 'regional train', name => {
     if (name.match(/ - Melbourne/)) {

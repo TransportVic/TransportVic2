@@ -39,14 +39,9 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
   })
 
   await async.forEach(Object.values(mergedRoutes), async mergedRouteData => {
-
-    if (await routes.countDocuments({ routeName: mergedRouteData.routeName })) {
-      await routes.updateDocument({ routeName: mergedRouteData.routeName }, {
-        $set: mergedRouteData
-      })
-    } else {
-      await routes.createDocument(mergedRouteData)
-    }
+    await routes.replaceDocument({ routeName: mergedRouteData.routeName }, mergedRouteData, {
+      upsert: true
+    })
   })
 
   return Object.keys(mergedRoutes).length
