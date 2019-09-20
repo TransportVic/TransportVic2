@@ -91,7 +91,8 @@ module.exports = class MainServer {
     const routers = {
       Index: '/',
       Search: '/search',
-      'timing-pages/VLine': '/vline/timings'
+      'timing-pages/VLine': '/vline/timings',
+      'timing-pages/MetroTrains': '/metro/timings'
     }
 
     Object.keys(routers).forEach(routerName => {
