@@ -18,6 +18,7 @@ append content
         - let indexOfCurrentStation = departure.trip.stopTimings.map(stop => stop.stopGTFSID).indexOf(stopGTFSID)
         input(type='hidden' name='stops-at' value=departure.trip.stopTimings.filter((_, i) => i > indexOfCurrentStation).map(stop => stop.stopName).join(','))
         input(type='hidden' name='platform' value=departure.platform || '')
+        input(type='hidden' name='run' value=departure.trip.runID)
         a.leftContainer.platform.vline
           span=departure.isCoachService ? 'Coach Bay' : 'Platform'
           span=departure.platform || departure.platform || '?'

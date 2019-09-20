@@ -187,10 +187,7 @@ async function loadTrips (csvData) {
         tripStops[stopName].arrivalTime = arrivalTime.slice(0, 5)
         tripStops[stopName].departureTime = departureTime.slice(0, 5)
 
-        let stopConditions = departureTime.match(/(\w)$/);
-        if (!stopConditions) stopConditions = [null]
-        tripStops[stopName].stopConditions = stopConditions[1];
-
+        let stopConditions = departureTime.slice(5)
         return
       }
 
@@ -202,9 +199,7 @@ async function loadTrips (csvData) {
         tripStops[stopName].arrivalTime = timing.slice(0, 5)
         tripStops[stopName].departureTime = timing.slice(0, 5)
 
-        let stopConditions = timing.match(/(\w)$/);
-        if (!stopConditions) stopConditions = [null]
-        tripStops[stopName].stopConditions = stopConditions[1];
+        tripStops[stopName].stopConditions = timing.slice(5)
       }
     })
 
