@@ -25,7 +25,7 @@ append content
     for departure in departures
       div.departure
         -
-          let stopName = station.bays.filter(bay => bay.mode === 'metro train')[0].stopName
+          let stopName = station.stopName
           let indexOfCurrentStation = departure.trip.stopTimings.map(stop => stop.stopName).indexOf(stopName)
           let stopsAt = departure.trip.stopTimings.filter((_, i) => i > indexOfCurrentStation).map(stop => stop.stopName)
           let cityLoopStationFullNames = departure.cityLoopConfig.map(stn => cityLoopStationAbbreviations[stn])
@@ -47,7 +47,7 @@ append content
           span=departure.platform || '?'
         a.departureInfo
           span=`${departure.trip.lineName} Line towards`
-          span=departure.trip.destination.slice(0, -16)
+          span=departure.destination
           if departure.cancelled
             span.cancelled CANCELLED
           else

@@ -101,11 +101,10 @@ async function getDepartures(station, db) {
         cityLoopConfig.reverse();
     }
 
-
     transformedDepartures.push({
       trip, scheduledDepartureTime, estimatedDepartureTime, platform, stopData,
       departureTimeMinutes: getMinutesPastMidnight(scheduledDepartureTime) + offset,
-      cancelled: run.status === 'cancelled', cityLoopConfig
+      cancelled: run.status === 'cancelled', cityLoopConfig, destination: run.destination_name
     })
   })
 
