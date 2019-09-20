@@ -12,8 +12,9 @@ module.exports = {
     return name
   },
   extractStopName: name => {
-    return name.replace(/\/.+^/, '')
+    return name.replace(/\/.+$/, '')
   },
   parseGTFSData: data =>
-    data.split('\r\n').slice(1).filter(Boolean).map(e => e.match(/"([^"]*)"/g).map(f => f.slice(1, -1)))
+    data.split('\r\n').slice(1).filter(Boolean).map(e => e.match(/"([^"]*)"/g).map(f => f.slice(1, -1))),
+  simplifyRouteGTFSID: id => id.replace(/(-\w)?-mjp-1$/, '')
 }

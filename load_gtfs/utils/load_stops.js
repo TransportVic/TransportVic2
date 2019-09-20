@@ -27,7 +27,7 @@ module.exports = async function (stopsData, stops, mode) {
         coordinates: stop.location
       },
       stopNumber: null,
-      mode: mode
+      mode
     };
 
     let stopData;

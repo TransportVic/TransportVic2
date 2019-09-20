@@ -17,7 +17,11 @@ database.connect({
   routes = database.getCollection('routes')
   routes.createIndex({ routeName: 1 })
 
-  let routeCount = await loadRoutes(routeData, shapeData, routes, () => ['Metro Trains Melbourne'], 'metro train')
+  let routeCount = await loadRoutes(routeData, shapeData, routes, () => ['Metro Trains Melbourne'], 'metro train', name => {
+    name = name.replace('Flinders Street', '').replace('City ()', '').replace(' - ', '')
+    if (name === 'FrankstonStony Point') return 'Stony Point'
+    return name
+  })
 
   console.log('Completed loading in ' + routeCount + ' MTM routes')
   process.exit()

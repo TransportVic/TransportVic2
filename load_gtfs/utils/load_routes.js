@@ -1,28 +1,28 @@
 const async = require('async')
 const utils = require('../../utils')
 
-module.exports = async function(routeData, shapeData, routes, operator, mode) {
+module.exports = async function(routeData, shapeData, routes, operator, mode, adjustRouteName=n => n) {
   const allRoutes = routeData.map(values => {
     return {
-      routeGTFSID: values[0],
-      routeName: values[3]
+      routeGTFSID: utils.simplifyRouteGTFSID(values[0]),
+      routeName: adjustRouteName(values[3])
     }
   })
 
   const mergedRoutes = {}
 
   allRoutes.forEach(route => {
-    if (!mergedRoutes[route.routeName]) {
+    if (!mergedRoutes[route.routeGTFSID]) {
       let routeShapeData = shapeData.filter(data => data[0].startsWith(route.routeGTFSID))
       .sort((a, b) => a[3] - b[3])
 
       const routeLength = routeShapeData.slice(-1)[0][4]
       routeShapeData = routeShapeData.map(data => [data[2], data[1]])
 
-      mergedRoutes[route.routeName] = {
+      mergedRoutes[route.routeGTFSID] = {
         routeName: route.routeName,
         codedName: utils.encodeName(route.routeName),
-        routeGTFSIDs: [route.routeGTFSID],
+        routeGTFSIDs: route.routeGTFSID,
         routePath: {
           type: "LineString",
           coordinates: routeShapeData
@@ -30,10 +30,11 @@ module.exports = async function(routeData, shapeData, routes, operator, mode) {
         routeLength: parseFloat(routeLength),
         operators: operator(route.routeName),
         stops: [],
-        mode: 'regional train'
+        mode
       }
     } else {
-      mergedRoutes[route.routeName].routeGTFSIDs.push(route.routeGTFSID)
+      if (route.routeName.length > mergedRoutes[route.routeGTFSID].routeName.length)
+        mergedRoutes[route.routeGTFSID].routeName = route.routeName
     }
   })
 

@@ -15,7 +15,12 @@ database.connect({
   routes = database.getCollection('routes')
   routes.createIndex({ routeName: 1 })
 
-  let routeCount = await loadRoutes(routeData, shapeData, routes, () => ['V/Line'], 'regional train')
+  let routeCount = await loadRoutes(routeData, shapeData, routes, () => ['V/Line'], 'regional train', name => {
+    if (name.match(/ - Melbourne/)) {
+      name = 'Melbourne - ' + name.replace(' - Melbourne', '')
+    }
+    return name
+  })
 
   console.log('Completed loading in ' + routeCount + ' V/Line routes')
   process.exit()
