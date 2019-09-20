@@ -66,8 +66,15 @@ a.departureInfo span:nth-child(2) {
 
 a.departureInfo span:nth-child(3) {
   font-size: calc(0.9vw + 0.9vh);
+  line-height: calc(0.9vw + 0.9vh);
 
   color: #bababa;
+}
+a.departureInfo span.cancelled:nth-child(3) {
+  font-size: calc(1.1vw + 1.1vh);
+  line-height: calc(1.1vw + 1.1vh);
+
+  color: #e03549;
 }
 
 div.departure {

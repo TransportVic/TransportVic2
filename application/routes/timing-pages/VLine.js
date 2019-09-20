@@ -22,7 +22,7 @@ router.get('/:stationName', async (req, res) => {
   departures = departures.map(departure => {
     const timeDifference = moment.utc((departure.estimatedDepartureTime || departure.scheduledDepartureTime).diff(moment()))
 
-    if (+timeDifference <= 0) departure.prettyTimeToArrival = 'Now'
+    if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
     else {
       departure.prettyTimeToArrival = ''
       if (timeDifference.get('hours')) departure.prettyTimeToArrival += timeDifference.get('hours') + ' h '

@@ -14,17 +14,20 @@ append content
   div#departures
     for departure in departures
       div.departure
-        - let stopGTFSID = station.bays.filter(bay => bay.mode === 'regional train')[0].stopGTFSID
+        - let stopGTFSID = station.bays.filter(bay => bay.mode === 'metro train')[0].stopGTFSID
         - let indexOfCurrentStation = departure.trip.stopTimings.map(stop => stop.stopGTFSID).indexOf(stopGTFSID)
         input(type='hidden' name='stops-at' value=departure.trip.stopTimings.filter((_, i) => i > indexOfCurrentStation).map(stop => stop.stopName).join(','))
         input(type='hidden' name='platform' value=departure.platform || '')
         input(type='hidden' name='run' value=departure.trip.runID)
-        a.leftContainer.platform.vline
-          span=departure.isCoachService ? 'Coach Bay' : 'Platform'
+        input(type='hidden' name='cancelled' value=departure.cancelled)
+        a(class=`leftContainer platform ${departure.codedLineName}-line`)
+          span Platform
           span=departure.platform || '?'
         a.departureInfo
           span=`${departure.trip.lineName} Line towards`
           span=departure.trip.destination.slice(0, -16)
+          if departure.cancelled
+            span.cancelled CANCELLED
         div.timings
           a(class='timing ' + departure.headwayDevianceClass)
             span=departure.prettyTimeToArrival

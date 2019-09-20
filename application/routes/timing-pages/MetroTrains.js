@@ -1,5 +1,7 @@
 const express = require('express')
 const router = new express.Router()
+const getDepartures = require('../../../modules/metro-trains/get_departures')
+const utils = require('../../../utils')
 const moment = require('moment')
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 
@@ -13,29 +15,36 @@ router.get('/:stationName', async (req, res) => {
     return res.end('Could not lookup timings for ' + req.params.stationName + '. Are you sure Metro trains stop there?')
   }
 
-  const now = moment().tz('Australia/Melbourne')
-  const startOfToday = now.clone().startOf('day')
-  const minutesPastMidnight = now.diff(startOfToday, 'minutes')
-  const today = daysOfWeek[now.day()]
+  let departures = await getDepartures(station, res.db)
+  departures = departures.map(departure => {
+    const timeDifference = moment.utc((departure.estimatedDepartureTime || departure.scheduledDepartureTime).diff(moment()))
 
-  let metroPlatform = station.bays.filter(bay => bay.mode === 'metro train')[0]
+    if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
+    else {
+      departure.prettyTimeToArrival = ''
+      if (timeDifference.get('hours')) departure.prettyTimeToArrival += timeDifference.get('hours') + ' h '
+      if (timeDifference.get('minutes')) departure.prettyTimeToArrival += timeDifference.get('minutes') + ' min'
+    }
 
-  const timetables = res.db.getCollection('timetables')
-  const trips = await timetables.findDocuments({
-    stopTimings: {
-      $elemMatch: {
-        stopGTFSID: metroPlatform.stopGTFSID,
-        departureTimeMinutes: {
-          $gt: minutesPastMidnight,
-          $lte: minutesPastMidnight + 30
-        }
+    departure.headwayDevianceClass = 'unknown'
+    if (departure.estimatedDepartureTime) {
+      departure.headwayDeviance = departure.scheduledDepartureTime.diff(departure.estimatedDepartureTime, 'minutes')
+
+      // trains cannot be early
+      let lateThreshold = 5
+      if (departure.headwayDeviance <= -lateThreshold) { // <= 5min counts as late
+        departure.headwayDevianceClass = 'late'
+      } else {
+        departure.headwayDevianceClass = 'on-time'
       }
-    },
-    operationDays: today,
-    mode: "metro train"
-  }).toArray()
+    }
 
-  res.json(trips)
+    departure.codedLineName = utils.encodeName(departure.trip.lineName)
+
+    return departure
+  })
+
+  res.render('timings/metro-trains', { departures, station, placeholder: "Destination or platform" })
 })
 
 module.exports = router

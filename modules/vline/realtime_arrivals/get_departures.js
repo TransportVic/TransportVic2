@@ -73,7 +73,7 @@ const trips=[]
   let departures = Object.values(allTrips).map(departure => {
     departure.stopData = departure.trip.stopTimings.filter(stop => stop.stopGTFSID === vlinePlatform.stopGTFSID)[0]
     let offset = 0
-    if (departure.stopData.departureTimeMinutes < 180) { // currently after 11pm and train leaves < 2am
+    if (departure.stopData.departureTimeMinutes < 180) { // train leaves < 3am
       offset = 1440 // add 1 day to departure time from today
     }
     departure.scheduledDepartureTime = startOfToday.clone().add(departure.stopData.departureTimeMinutes + offset, 'minutes')
