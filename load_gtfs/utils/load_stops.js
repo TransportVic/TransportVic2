@@ -11,7 +11,7 @@ module.exports = async function (stopsData, stops, mode) {
     return {
       fullStopName,
       stopName,
-      stopGTFSID: values[0],
+      stopGTFSID: parseInt(values[0]),
       suburb: stopNameData[2],
       codedName: utils.encodeName(stopName.slice(0, -16)),
       location: [values[3], values[2]].map(parseFloat)
@@ -20,6 +20,7 @@ module.exports = async function (stopsData, stops, mode) {
 
   await async.forEach(allStops, async stop => {
     let bayData = {
+      fullStopName: stop.fullStopName,
       stopGTFSID: parseInt(stop.stopGTFSID),
       services: [],
       location: {
@@ -42,7 +43,6 @@ module.exports = async function (stopsData, stops, mode) {
       })
     } else {
       await stops.createDocument({
-        fullStopName: stop.fullStopName,
         stopName: stop.stopName,
         suburb: [stop.suburb],
         codedName: stop.codedName,

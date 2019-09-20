@@ -17,7 +17,7 @@ database.connect({
   stops.createIndex({
     'bays.location': '2dsphere',
     stopName: 1,
-    fullStopName: 1,
+    'bays.fullStopName': 1,
     'bays.stopGTFSID': 1
   }, {unique: true})
 
