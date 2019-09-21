@@ -22,12 +22,12 @@ module.exports = {
   simplifyRouteGTFSID: id => id.replace(/(-\w)?-mjp-1$/, ''),
   pad: (data, length, filler='0') => Array(length).fill(filler).concat([...data.toString()]).slice(-length).join(''),
   allDaysBetweenDates: (startDate, endDate) => {
-    startDate = startDate.clone().startOf('day')
+    startDate = startDate.clone().startOf('day').add(-1, 'days')
     endDate = endDate.startOf('day')
 
-    let dates = [startDate.clone()]
+    let dates = []
 
-    while(startDate.add(1, 'days').diff(endDate) < 0) {
+    while(startDate.add(1, 'days').diff(endDate) <= 0) {
         dates.push(startDate.clone())
     }
 
