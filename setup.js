@@ -1,3 +1,8 @@
+const moment = require('moment')
+require('moment-timezone')
+
+moment.tz.setDefault('Australia/Melbourne');
+
 String.prototype.format = (function (i, safe, arg) {
   function format () {
     var str = this; var len = arguments.length + 1

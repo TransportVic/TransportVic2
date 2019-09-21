@@ -22,7 +22,7 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
       mergedRoutes[route.routeGTFSID] = {
         routeName: route.routeName,
         codedName: utils.encodeName(route.routeName),
-        routeGTFSIDs: route.routeGTFSID,
+        routeGTFSID: route.routeGTFSID,
         routePath: {
           type: "LineString",
           coordinates: routeShapeData

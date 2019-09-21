@@ -1,4 +1,24 @@
 {
+  "gtfsTrip": {
+    "mode": "string",
+    "operator": "string",
+    "routeName": "string",
+    "tripID": "string",
+    "operationDays": ["Date"],
+    "stopTimings": [{
+      "stopName": "string",
+      "stopGTFSID": "number",
+      "arrivalTime": "string",
+      "arrivalTimeMinutes": "number",
+      "departureTime": "string",
+      "departureTimeMinutes": "number",
+      "stopConditions": "string",
+      "stopDistance": "number"
+    }],
+    "destination": "string",
+    "departureTime": "number",
+    "origin": "string"
+  },
   "timetable": {
     "mode": "string",
     "operator": "string",
@@ -23,11 +43,11 @@
     "origin": "string"
   },
   "stop": {
-    "fullStopName": "string",
     "stopName": "string",
     "suburb": ["string"],
     "codedName": "string",
     "bays": [{
+      "fullStopName": "string",
       "stopGTFSID": "number",
       "services": ["string"],
       "location": "GeoJSON:Point",
@@ -38,7 +58,7 @@
   "route": {
     "routeName": "string",
     "codedName": "string",
-    "routeGTFSIDs": ["string"],
+    "routeGTFSID": "string",
     "routePath": "GeoJSON:LineString",
     "routeLength": "number",
     "operators": ["string"],

@@ -20,5 +20,22 @@ module.exports = {
   parseGTFSData: data =>
     data.split('\r\n').slice(1).filter(Boolean).map(e => e.match(/"([^"]*)"/g).map(f => f.slice(1, -1))),
   simplifyRouteGTFSID: id => id.replace(/(-\w)?-mjp-1$/, ''),
-  pad: (data, length, filler='0') => Array(length).fill(filler).concat([...data.toString()]).slice(-length).join('')
+  pad: (data, length, filler='0') => Array(length).fill(filler).concat([...data.toString()]).slice(-length).join(''),
+  allDaysBetweenDates: (startDate, endDate) => {
+    startDate = startDate.clone().startOf('day')
+    endDate = endDate.startOf('day')
+
+    let dates = [startDate.clone()]
+
+    while(startDate.add(1, 'days').diff(endDate) < 0) {
+        dates.push(startDate.clone())
+    }
+
+    return dates
+  },
+  time24ToMinAftMidnight: time => {
+    if (!time) return null
+    const parts = time.slice(0, 5).split(':')
+    return parts[0] * 60 + parts[1] * 1
+  }
 }

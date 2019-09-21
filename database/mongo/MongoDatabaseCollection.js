@@ -46,4 +46,8 @@ module.exports = class MongoDatabaseCollection {
   aggregate (pipeline) {
     return this.collection.aggregate(pipeline)
   }
+
+  bulkWrite(operations) {
+    return this.collection.bulkWrite(operations)
+  }
 }
