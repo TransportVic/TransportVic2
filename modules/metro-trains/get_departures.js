@@ -19,6 +19,62 @@ function getMinutesPastMidnight(time) {
   return time.diff(startOfToday, 'minutes')
 }
 
+function getDayName(time) {
+  let minutesPastMidnight = getMinutesPastMidnight(time);
+  let offset = 0;
+
+  if (minutesPastMidnight < 180) offset = -1440;
+  return daysOfWeek[time.clone().add(offset, 'minutes').day()]
+}
+
+async function findTripFromStop(timetables, stopGTFSID, departureTimeMinutes, scheduledDepartureTime, lineName, direction, runID) {
+  direction = direction ? 'up' : 'down'
+  let possibleMatches = (await timetables.aggregate([
+    {
+      $match: {
+        $or: [
+          {runID},
+          {lineName},
+          {direction},
+          {
+            stopTimings: {
+              $elemMatch: {
+                stopGTFSID: stopGTFSID,
+                departureTimeMinutes
+              }
+            }
+          }
+        ],
+        mode: "metro train",
+        operationDays: getDayName(scheduledDepartureTime),
+        stopTimings: {
+          $elemMatch: {
+            stopGTFSID: stopGTFSID,
+            departureTimeMinutes
+          }
+        }
+      }
+    },
+    {
+      $project: {
+        _id: "$_id",
+        score: {
+          $add: [
+            { $cond: [ { $eq: ["$runID", runID] }, 1, 0 ] },
+            { $cond: [ { $eq: ["$lineName", lineName] }, 2, 0 ] },
+            { $cond: [ { $eq: ["$direction", direction] }, 2, 0 ] }
+          ]
+        }
+      }
+    }
+  ]).toArray()).sort((a, b) => b.score - a.score)
+  if (!possibleMatches.length) {
+    return null
+  }
+  let bestMatch = await timetables.findDocument({ _id: possibleMatches[0]._id })
+  return bestMatch
+}
+
 async function getDepartures(station, db) {
   if (departuresCache.get(station.stopName)) {
     return departuresCache.get(station.stopName)
@@ -33,10 +89,14 @@ async function getDepartures(station, db) {
   let transformedDepartures = []
 
   const metroPlatform = station.bays.filter(bay => bay.mode === 'metro train')[0]
-  let {departures, runs} = await ptvAPI(`/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=10&include_cancelled=true&expand=run`)
+  let {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=10&include_cancelled=true&expand=run&expand=route`)
 
   await async.forEach(departures, async departure => {
     let run = runs[departure.run_id]
+    let lineName = routes[departure.route_id].route_name
+    if (lineName === 'Showgrounds - Flemington Racecourse') return
+    // if (lineName === 'Showgrounds - Flemington Racecourse') lineName = 'Showgrounds/Flemington'
+    let routeID = departure.route_id
 
     let scheduledDepartureTime = moment(departure.scheduled_departure_utc)
     let estimatedDepartureTime = departure.estimated_departure_utc ? moment(departure.estimated_departure_utc) : null
@@ -47,22 +107,33 @@ async function getDepartures(station, db) {
     let runID = run.vehicle_descriptor.id
     let vehicle = run.vehicle_descriptor.description
 
-    let trip = await timetables.findDocument({
-      runID, operationDays: today, mode: "metro train"
-    })
+    let departureTimeMinutes = getMinutesPastMidnight(scheduledDepartureTime);
+    if (departureTimeMinutes < 180) departureTimeMinutes += 1440
 
-    if (!trip) return // footy too yay! when are we hooking it into GTFS data? probs never cos footy is over LOL
+    let tripDirection
+    tripDirection = cityLoopStations.includes(run.destination_name.toLowerCase()) || (routeID === 13 && run.destination_name === 'Frankston')
+
+    let trip
+    if (cityLoopStations.includes(station.stopName.toLowerCase().slice(0, -16)) && caulfieldGroup.includes(routeID)) {
+      trip = await findTripFromStop(timetables, metroPlatform.stopGTFSID, departureTimeMinutes, scheduledDepartureTime, lineName, !tripDirection, runID)
+    } else
+      trip = await findTripFromStop(timetables, metroPlatform.stopGTFSID, departureTimeMinutes, scheduledDepartureTime, lineName, tripDirection, runID)
+
+    if (!trip) return console.log(departure, run) // footy yay! when are we hooking it into GTFS data? probs never cos footy is over LOL
+    // hmm well seems like sss is really good at this, turning werribee trains into frankston trains before they actually change
+    // mtm timetable says starts from fss (Duh) but ptv says starts from sss
     let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === metroPlatform.stopGTFSID)[0]
-    let offset = 0
+    offset = 0
+
+    if (!stopData) return console.log(departure, run, trip)
+
     if (stopData.departureTimeMinutes < 180) { // train leaves < 3am
       offset = 1440 // add 1 day to departure time from today
     }
 
     trip.vehicle = vehicle
 
-
     let throughCityLoop = trip.runID.toString()[1] > 5 || cityLoopStations.includes(run.destination_name.toLowerCase());
-    let routeID = departure.route_id
 
     if (routeID == 6 && run.destination_name.toLowerCase() == 'southern cross') {
         throughCityLoop = false;

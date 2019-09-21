@@ -41,13 +41,14 @@ append content
         input(type='hidden' name='stops-at' value=stopsAt.join(','))
         input(type='hidden' name='platform' value=departure.platform || '')
         input(type='hidden' name='run' value=departure.trip.runID)
-        input(type='hidden' name='cancelled' value=departure.cancelled)
+        if departure.cancelled
+          input(type='hidden' name='cancelled')
         a(class=`leftContainer platform ${departure.codedLineName}-line`)
           span Platform
           span=departure.platform || '?'
         a.departureInfo
           span=`${departure.trip.lineName} Line towards`
-          span=departure.destination
+          span=departure.trip.destination.slice(0, -16)
           if departure.cancelled
             span.cancelled CANCELLED
           else
