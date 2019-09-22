@@ -13,8 +13,8 @@ const cheerio = require('cheerio')
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 
 async function getDepartures (station, db) {
-  if (departuresCache.get(station.stopName)) {
-    return departuresCache.get(station.stopName)
+  if (departuresCache.get(station.stopName + 'V')) {
+    return departuresCache.get(station.stopName + 'V')
   }
   let scDepartures = []
   if (station.stopName === 'Southern Cross Railway Station') {
@@ -31,22 +31,7 @@ async function getDepartures (station, db) {
   const minutesPastMidnight = now.diff(startOfToday, 'minutes')
   const today = daysOfWeek[now.day()]
 
-  // const trips = await timetables.findDocuments({
-  //   stopTimings: {
-  //     $elemMatch: {
-  //       stopGTFSID: vlinePlatform.stopGTFSID,
-  //       departureTimeMinutes: {
-  //         $gt: minutesPastMidnight,
-  //         $lte: minutesPastMidnight + 60
-  //       }
-  //     }
-  //   },
-  //   operationDays: today,
-  //   mode: "regional train"
-  // }).toArray()
-const trips=[]
   const allTrips = {}
-  trips.forEach(trip => { allTrips[trip.runID] = { trip } })
 
   let body = await request(urls.vlinePlatformDepartures.format(vnetStationName))
   body = body.replace(/a:/g, '')
@@ -106,7 +91,7 @@ const trips=[]
     return (a.estimatedDepartureTime || a.scheduledDepartureTime) - (b.estimatedDepartureTime || b.scheduledDepartureTime)
   })
 
-  departuresCache.put(station.stopName, departures)
+  departuresCache.put(station.stopName + 'V', departures)
 
   return departures
 }

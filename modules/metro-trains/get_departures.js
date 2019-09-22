@@ -59,8 +59,8 @@ function determineLoopRunning(routeID, runID, destination) {
 }
 
 async function getDepartures(station, db) {
-  if (departuresCache.get(station.stopName)) {
-    return departuresCache.get(station.stopName)
+  if (departuresCache.get(station.stopName + 'M')) {
+    return departuresCache.get(station.stopName + 'M')
   }
 
   const scheduledDepartures = await getScheduledDepartures(station, db)
@@ -116,7 +116,7 @@ async function getDepartures(station, db) {
     return (a.estimatedDepartureTime || a.scheduledDepartureTime) - (b.estimatedDepartureTime || b.scheduledDepartureTime)
   })
 
-  departuresCache.put(station.stopName, transformedDepartures)
+  departuresCache.put(station.stopName + 'M', transformedDepartures)
   return transformedDepartures
 }
 
