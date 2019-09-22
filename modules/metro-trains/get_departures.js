@@ -2,7 +2,6 @@ const TimedCache = require('timed-cache')
 const async = require('async')
 const ptvAPI = require('../../ptv-api')
 const utils = require('../../utils')
-const getScheduledDepartures = require('./get_scheduled_departures')
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
 const moment = require('moment')
 
@@ -20,7 +19,7 @@ function determineLoopRunning(routeID, runID, destination) {
   let throughCityLoop = runID[1] > 5 || upService
 
   if (routeID === 6 && destination == 'Southern Cross') {
-      throughCityLoop = false
+    throughCityLoop = false
   }
   let stopsViaFlindersFirst = runID[1] <= 5
 
@@ -28,31 +27,31 @@ function determineLoopRunning(routeID, runID, destination) {
 
   // assume up trains
   if (northenGroup.includes(routeID)) {
-      if (stopsViaFlindersFirst && !throughCityLoop)
-          cityLoopConfig = ['NME', 'SSS', 'FSS']
-      else if (stopsViaFlindersFirst && throughCityLoop)
-          cityLoopConfig = ['SSS', 'FSS', 'PAR', 'MCE', 'FGS']
-      else if (!stopsViaFlindersFirst && throughCityLoop)
-          cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
+    if (stopsViaFlindersFirst && !throughCityLoop)
+    cityLoopConfig = ['NME', 'SSS', 'FSS']
+    else if (stopsViaFlindersFirst && throughCityLoop)
+    cityLoopConfig = ['SSS', 'FSS', 'PAR', 'MCE', 'FGS']
+    else if (!stopsViaFlindersFirst && throughCityLoop)
+    cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
   } else {
-      if (stopsViaFlindersFirst && throughCityLoop) { // flinders then loop
-          if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
-              cityLoopConfig = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR']
-      } else if (!stopsViaFlindersFirst && throughCityLoop) { // loop then flinders
-          if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
-              cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
-      } else if (stopsViaFlindersFirst && !throughCityLoop) { // direct to flinders
-          if (routeID == 6) // frankston
-              cityLoopConfig = ['RMD', 'FSS', 'SSS']
-          else if (burnleyGroup.concat(caulfieldGroup).includes(routeID))
-              cityLoopConfig = ['RMD', 'FSS']
-          else if (cliftonHillGroup.includes(routeID))
-              cityLoopConfig = ['JLI', 'FSS']
-      }
+    if (stopsViaFlindersFirst && throughCityLoop) { // flinders then loop
+      if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
+      cityLoopConfig = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR']
+    } else if (!stopsViaFlindersFirst && throughCityLoop) { // loop then flinders
+      if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
+      cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
+    } else if (stopsViaFlindersFirst && !throughCityLoop) { // direct to flinders
+      if (routeID == 6) // frankston
+      cityLoopConfig = ['RMD', 'FSS', 'SSS']
+      else if (burnleyGroup.concat(caulfieldGroup).includes(routeID))
+      cityLoopConfig = ['RMD', 'FSS']
+      else if (cliftonHillGroup.includes(routeID))
+      cityLoopConfig = ['JLI', 'FSS']
+    }
   }
 
   if (!upService) { // down trains away from city
-      cityLoopConfig.reverse()
+    cityLoopConfig.reverse()
   }
 
   return cityLoopConfig
@@ -63,7 +62,7 @@ async function getDepartures(station, db) {
     return departuresCache.get(station.stopName + 'M')
   }
 
-  const scheduledDepartures = await getScheduledDepartures(station, db)
+  const gtfsTimetables = db.getCollection('gtfs timetables')
 
   const minutesPastMidnight = utils.getMinutesPastMidnightNow()
   let transformedDepartures = []
@@ -83,9 +82,9 @@ async function getDepartures(station, db) {
     }
 
     if (departure.route_id === 13) { // stony point platforms
-        if (station.stopName === 'Frankston Railway Station') platform = 3;
-        else platform = 1;
-        run.vehicle_descriptor = {}
+      if (station.stopName === 'Frankston Railway Station') platform = 3;
+      else platform = 1;
+      run.vehicle_descriptor = {} // ok maybe we should have kept the STY timetable but ah well
     }
 
     if (!platform) return // run too far away
@@ -96,12 +95,20 @@ async function getDepartures(station, db) {
 
     const estimatedDepartureTime = departure.estimated_departure_utc ? moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne') : null
 
-    let trip = scheduledDepartures.filter(scheduledDeparture => {
-      return scheduledDeparture.trip.routeName === routeName &&
-              scheduledDeparture.stopData.departureTimeMinutes === scheduledDepartureTimeMinutes
-    })[0]
+    let trip = (await gtfsTimetables.findDocuments({
+      stopTimings: {
+        $elemMatch: {
+          stopGTFSID: metroPlatform.stopGTFSID,
+          departureTimeMinutes: scheduledDepartureTimeMinutes
+        }
+      },
+      routeName,
+      operationDays: utils.getYYYYMMDDNow(),
+      mode: "metro train"
+    }).toArray())
+    trip = trip.sort((a, b) => utils.time24ToMinAftMidnight(b.departureTime) - utils.time24ToMinAftMidnight(a.departureTime))[0]
+
     if (!trip) return
-    trip = trip.trip
 
     const cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(departure.route_id, runID, run.destination_name) : []
 
