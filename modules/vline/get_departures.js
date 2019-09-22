@@ -110,6 +110,7 @@ async function getDepartures(station, db) {
     return (a.estimatedDepartureTime || a.scheduledDepartureTime) - (b.estimatedDepartureTime || b.scheduledDepartureTime)
   })
 
+  departuresCache.put(station.stopName + 'V', mergedDepartures)
   return mergedDepartures
 }
 

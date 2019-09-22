@@ -1,7 +1,5 @@
 const async = require('async')
-const moment = require('moment')
 const utils = require('../../utils')
-require('moment-timezone')
 
 async function getScheduledDepartures(station, db) {
   const gtfsTimetables = db.getCollection('gtfs timetables')
