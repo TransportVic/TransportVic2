@@ -30,17 +30,19 @@ append content
           let stopsAt = departure.trip.stopTimings.filter((_, i) => i > indexOfCurrentStation).map(stop => stop.stopName)
           let cityLoopStationFullNames = departure.cityLoopConfig.map(stn => cityLoopStationAbbreviations[stn])
           
-          // if (departure.trip.direction === 'up')
-          //   stopsAt = stopsAt.concat(cityLoopStationFullNames)
-          // else if (cityLoopStationNames.includes(station.stopName.slice(0, -16))) {
-          //   indexOfCurrentStation = cityLoopStationFullNames.indexOf(stopName)
-          //   stopsAt = cityLoopStationFullNames.filter((stn, i) => i > indexOfCurrentStation).concat(stopsAt)
-          // }
-            
+          stopsAt = stopsAt.filter(station => !cityLoopStationNames.includes(station))
+          
+          if (departure.trip.direction === 'Up')
+            stopsAt = stopsAt.concat(cityLoopStationFullNames)
+          else if (cityLoopStationNames.includes(station.stopName.slice(0, -16))) {
+            indexOfCurrentStation = cityLoopStationFullNames.indexOf(stopName)
+            stopsAt = cityLoopStationFullNames.filter((stn, i) => i > indexOfCurrentStation).concat(stopsAt)
+          }
+
           stopsAt = stopsAt.filter(Boolean).filter((e,i,a) => a.indexOf(e) === i)
         input(type='hidden' name='stops-at' value=stopsAt.join(','))
         input(type='hidden' name='platform' value=departure.platform || '')
-        input(type='hidden' name='run' value=departure.trip.runID)
+        input(type='hidden' name='run' value=departure.runID)
         if departure.cancelled
           input(type='hidden' name='cancelled')
         a(class=`leftContainer platform ${departure.codedLineName}-line`)

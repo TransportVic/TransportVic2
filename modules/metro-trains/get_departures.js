@@ -19,7 +19,7 @@ function determineLoopRunning(routeID, runID, destination) {
   let upService = cityLoopStations.includes(destination.toLowerCase()) || destination === 'Flinders Street'
   let throughCityLoop = runID[1] > 5 || upService
 
-  if (routeID === 6 && run.destination_name.toLowerCase() == 'southern cross') {
+  if (routeID === 6 && destination == 'Southern Cross') {
       throughCityLoop = false
   }
   let stopsViaFlindersFirst = runID[1] <= 5
@@ -108,7 +108,7 @@ async function getDepartures(station, db) {
     transformedDepartures.push({
       trip, scheduledDepartureTime, estimatedDepartureTime, platform,
       scheduledDepartureTimeMinutes, cancelled: run.status === 'cancelled', cityLoopConfig,
-      destination: run.destination_name
+      destination: run.destination_name, runID
     })
   })
 
