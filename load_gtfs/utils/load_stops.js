@@ -18,7 +18,8 @@ module.exports = async function (stopsData, stops, mode) {
     }
   });
 
-  await async.forEach(allStops, async stop => {
+  let mergedStops = {}
+  allStops.forEach(stop => {
     let bayData = {
       fullStopName: stop.fullStopName,
       stopGTFSID: parseInt(stop.stopGTFSID),
@@ -29,25 +30,39 @@ module.exports = async function (stopsData, stops, mode) {
       },
       stopNumber: null,
       mode
-    };
+    }
 
+    if (mergedStops[stop.stopName]) {
+      mergedStops[stop.stopName].bays = mergedStops[stop.stopName].bays.filter(bay =>
+        !(bay.stopGTFSID === stop.stopGTFSID && bay.mode === mode))
+      mergedStops[stop.stopName].bays.push(bayData)
+
+      if (!mergedStops[stop.stopName].suburb.includes(stop.suburb))
+        mergedStops[stop.stopName].suburb.push(stop.suburb);
+    } else {
+      mergedStops[stop.stopName] = {
+        stopName: stop.stopName,
+        suburb: [stop.suburb],
+        codedName: stop.codedName,
+        bays: [bayData]
+      }
+    }
+  })
+
+  await async.forEach(Object.values(mergedStops), async stop => {
     let stopData;
     if (stopData = await stops.findDocument({stopName: stop.stopName})) {
-      stopData.bays = stopData.bays.filter(bay => bay.stopGTFSID !== stop.stopGTFSID)
-      stopData.bays.push(bayData);
+      let baysToUpdate = stop.bays.map(bay => bay.stopGTFSID)
 
-      if (!stopData.suburb.includes(stop.suburb)) stopData.suburb.push(stop.suburb);
+      stopData.bays = stopData.bays
+        .filter(bay => !(baysToUpdate.includes(bay.stopGTFSID) && bay.mode === mode))
+        .concat(stop.bays)
 
       await stops.updateDocument({stopName: stop.stopName}, {
         $set: stopData
       })
     } else {
-      await stops.createDocument({
-        stopName: stop.stopName,
-        suburb: [stop.suburb],
-        codedName: stop.codedName,
-        bays: [bayData]
-      })
+      await stops.createDocument(stop)
     }
   });
 

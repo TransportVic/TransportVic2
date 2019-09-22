@@ -14,8 +14,7 @@ append content
   div#departures
     for departure in departures
       div.departure
-        - let stopGTFSID = station.bays.filter(bay => bay.mode === 'regional train')[0].stopGTFSID
-        - let indexOfCurrentStation = departure.trip.stopTimings.map(stop => stop.stopGTFSID).indexOf(stopGTFSID)
+        - let indexOfCurrentStation = departure.trip.stopTimings.map(stop => stop.stopName).indexOf(station.stopName)
         input(type='hidden' name='stops-at' value=departure.trip.stopTimings.filter((_, i) => i > indexOfCurrentStation).map(stop => stop.stopName).join(','))
         input(type='hidden' name='platform' value=departure.platform || '')
         input(type='hidden' name='run' value=departure.trip.runID)
