@@ -2,15 +2,13 @@ const request = require('request-promise')
 const TimedCache = require('timed-cache')
 const async = require('async')
 const urls = require('../../../urls.json')
+const utils = require('../../../utils')
 const getSCDepartures = require('./get_southern_cross_departures')
 const moment = require('moment')
-require('moment-timezone')
 
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
 
 const cheerio = require('cheerio')
-
-const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 
 async function getDepartures (station, db) {
   if (departuresCache.get(station.stopName + 'V')) {
@@ -26,10 +24,9 @@ async function getDepartures (station, db) {
 
   const timetables = db.getCollection('timetables')
 
-  const now = moment().tz('Australia/Melbourne')
-  const startOfToday = now.clone().startOf('day')
-  const minutesPastMidnight = now.diff(startOfToday, 'minutes')
-  const today = daysOfWeek[now.day()]
+  const startOfToday = moment().startOf('day')
+  const minutesPastMidnight = utils.getMinutesPastMidnightNow()
+  const today = utils.getPTDayName(startOfToday)
 
   const allTrips = {}
 
@@ -43,7 +40,9 @@ async function getDepartures (station, db) {
 
     let estimatedDepartureTime
 
-    if (!isNaN(new Date($('ActualArrivalTime', service).text()))) { estimatedDepartureTime = moment($('ActualArrivalTime', service).text()) } // yes arrival cos vnet
+    if (!isNaN(new Date($('ActualArrivalTime', service).text()))) {
+      estimatedDepartureTime = moment.tz($('ActualArrivalTime', service).text(), 'Australia/Melbourne')
+    } // yes arrival cos vnet
     const platform = $('Platform', service).text()
 
     const timetable = await timetables.findDocument({

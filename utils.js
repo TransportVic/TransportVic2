@@ -38,6 +38,9 @@ module.exports = {
 
     return dates
   },
+  minutesAftMidnightToMoment: (minutes, day) => {
+    return day.clone().add(minutes, 'minutes')
+  },
   time24ToMinAftMidnight: time => {
     if (!time) return null
     const parts = time.slice(0, 5).split(':')

@@ -1,11 +1,10 @@
 const request = require('request-promise')
 const async = require('async')
 const urls = require('../../../urls.json')
+const utils = require('../../../utils')
 const cheerio = require('cheerio')
 const moment = require('moment')
 require('moment-timezone')
-
-const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 
 function parseTimeFrom (time, from) {
   if (time === 'Now') return from
@@ -28,16 +27,16 @@ function parse24Time (time, from) {
   return from.clone().add(parts[0], 'hours').add(parts[1], 'minutes')
 }
 
+
 async function getDepartures (db) {
   const timetables = db.getCollection('timetables')
   const $ = cheerio.load(await request(urls.southernCrossDepartures))
   const services = []
   const servicesIndex = []
 
-  const now = moment().tz('Australia/Melbourne')
-  const startOfToday = now.clone().startOf('day')
-  const minutesPastMidnight = now.diff(startOfToday, 'minutes')
-  const today = daysOfWeek[now.day()]
+  const startOfToday = moment().startOf('day')
+  const minutesPastMidnight = utils.getMinutesPastMidnightNow()
+  const today = utils.getPTDayName(startOfToday)
 
   function insertService (service) {
     if (service.destination === 'er services today') return
@@ -46,7 +45,7 @@ async function getDepartures (db) {
     if (servicesIndex.includes(serviceIndex)) return
     servicesIndex.push(serviceIndex)
 
-    service.estimatedDepartureTime = parseTimeFrom(service.estimatedDepartureTime, now)
+    service.estimatedDepartureTime = parseTimeFrom(service.estimatedDepartureTime, moment())
 
     services.push(service)
   }
@@ -116,7 +115,7 @@ async function getDepartures (db) {
       $elemMatch: {
         stopGTFSID: 20043,
         departureTimeMinutes: {
-          $gt: minutesPastMidnight,
+          $gt: minutesPastMidnight + 1,
           $lte: minutesPastMidnight + 120
         }
       }
