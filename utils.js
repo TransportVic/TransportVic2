@@ -39,7 +39,7 @@ module.exports = {
     return dates
   },
   minutesAftMidnightToMoment: (minutes, day) => {
-    return day.clone().add(minutes, 'minutes')
+    return day.clone().startOf('day').add(minutes, 'minutes')
   },
   time24ToMinAftMidnight: time => {
     if (!time) return null
@@ -47,13 +47,13 @@ module.exports = {
     return parts[0] * 60 + parts[1] * 1
   },
   getMinutesPastMidnightNow: () => {
-    return module.exports.getMinutesPastMidnight(moment().tz('Australia/Melbourne'))
+    return module.exports.getMinutesPastMidnight(module.exports.now())
   },
   getPTMinutesPastMidnight: time => {
     let minutesPastMidnight = module.exports.getMinutesPastMidnight(time);
     let offset = 0;
 
-    if (minutesPastMidnight < 180) offset = -1440;
+    if (minutesPastMidnight < 180) offset = 1440;
 
     return minutesPastMidnight + offset
   },
@@ -69,5 +69,6 @@ module.exports = {
     return daysOfWeek[time.clone().add(offset, 'minutes').day()]
   },
   getYYYYMMDD: time => time.format('YYYYMMDD'),
-  getYYYYMMDDNow: () => module.exports.getYYYYMMDD(moment().tz('Australia/Melbourne')),
+  getYYYYMMDDNow: () => module.exports.getYYYYMMDD(module.exports.now()),
+  now: () => moment.tz('Australia/Melbourne')
 }

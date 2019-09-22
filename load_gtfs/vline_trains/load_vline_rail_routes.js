@@ -19,8 +19,11 @@ database.connect({
     if (name.match(/ - Melbourne/)) {
       name = 'Melbourne - ' + name.replace(' - Melbourne', '')
     }
-    return name
-  })
+
+    let shortName = name.replace('Melbourne - ', '').replace(/\/\w+/, '').replace(/ Via .+/, '')
+
+    return [name, shortName]
+  }, name => name !== 'Pakenham - City')
 
   console.log('Completed loading in ' + routeCount + ' V/Line routes')
   process.exit()

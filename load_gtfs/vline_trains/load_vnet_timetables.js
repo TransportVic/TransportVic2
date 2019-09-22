@@ -105,7 +105,7 @@ function timingToMinutesAfterMidnight (timing) {
   if (!timing) return null
   const parts = timing.slice(0, 5).split(':')
   if (parts[0] < 3) parts[0] += 24
-  
+
   return parts[0] * 60 + parts[1] * 1
 }
 

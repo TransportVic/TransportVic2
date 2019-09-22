@@ -1,6 +1,7 @@
 const express = require('express')
 const router = new express.Router()
-const getDepartures = require('../../../modules/vline/realtime_arrivals/get_departures')
+const getDepartures = require('../../../modules/vline/get_departures')
+const utils = require('../../../utils')
 const moment = require('moment')
 
 let lineTypes = {
@@ -19,8 +20,9 @@ router.get('/:stationName', async (req, res) => {
   }
 
   let departures = await getDepartures(station, res.db)
+  // console.log(departures)
   departures = departures.map(departure => {
-    const timeDifference = moment.utc((departure.estimatedDepartureTime || departure.scheduledDepartureTime).diff(moment()))
+    const timeDifference = moment.utc((departure.estimatedDepartureTime || departure.scheduledDepartureTime).diff(utils.now()))
 
     if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
     else {
