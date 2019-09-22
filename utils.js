@@ -1,3 +1,8 @@
+const moment = require('moment')
+require('moment-timezone')
+
+const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
+
 module.exports = {
   encodeName: name => name.toLowerCase().replace(/[^\w\d ]/g, '').replace(/  */g, '-').replace(/--+/g, '-'),
   adjustStopname: name => {
@@ -37,5 +42,29 @@ module.exports = {
     if (!time) return null
     const parts = time.slice(0, 5).split(':')
     return parts[0] * 60 + parts[1] * 1
-  }
+  },
+  getMinutesPastMidnightNow: () => {
+    return module.exports.getMinutesPastMidnight(moment().tz('Australia/Melbourne'))
+  },
+  getPTMinutesPastMidnight: time => {
+    let minutesPastMidnight = module.exports.getMinutesPastMidnight(time);
+    let offset = 0;
+
+    if (minutesPastMidnight < 180) offset = -1440;
+
+    return minutesPastMidnight + offset
+  },
+  getMinutesPastMidnight: time => {
+    const startOfToday = time.clone().startOf('day')
+    return time.diff(startOfToday, 'minutes')
+  },
+  getPTDayName: time => {
+    let minutesPastMidnight = module.exports.getMinutesPastMidnight(time);
+    let offset = 0;
+
+    if (minutesPastMidnight < 180) offset = -1440;
+    return daysOfWeek[time.clone().add(offset, 'minutes').day()]
+  },
+  getYYYYMMDD: time => time.format('YYYYMMDD'),
+  getYYYYMMDDNow: () => module.exports.getYYYYMMDD(moment().tz('Australia/Melbourne')),
 }

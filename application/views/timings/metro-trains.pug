@@ -13,11 +13,11 @@ append style
 append content
   - 
     let cityLoopStationAbbreviations = {
-      'FSS': 'Flinders Street',
-      'SSS': 'Southern Cross',
-      'FGS': 'Flagstaff',
-      'MCE': 'Melbourne Central',
-      'PAR': 'Parliament'
+      'FSS': 'Flinders Street Railway Station',
+      'SSS': 'Southern Cross Railway Station',
+      'FGS': 'Flagstaff Railway Station',
+      'MCE': 'Melbourne Central Railway Station',
+      'PAR': 'Parliament Railway Station'
     }
     let cityLoopStationNames = Object.values(cityLoopStationAbbreviations)
     
@@ -30,14 +30,14 @@ append content
           let stopsAt = departure.trip.stopTimings.filter((_, i) => i > indexOfCurrentStation).map(stop => stop.stopName)
           let cityLoopStationFullNames = departure.cityLoopConfig.map(stn => cityLoopStationAbbreviations[stn])
           
-          if (departure.trip.direction === 'up')
-            stopsAt = stopsAt.concat(cityLoopStationFullNames)
-          else if (cityLoopStationNames.includes(station.stopName.slice(0, -16))) {
-            indexOfCurrentStation = cityLoopStationFullNames.indexOf(stopName)
-            stopsAt = cityLoopStationFullNames.filter((stn, i) => i > indexOfCurrentStation).concat(stopsAt)
-          }
+          // if (departure.trip.direction === 'up')
+          //   stopsAt = stopsAt.concat(cityLoopStationFullNames)
+          // else if (cityLoopStationNames.includes(station.stopName.slice(0, -16))) {
+          //   indexOfCurrentStation = cityLoopStationFullNames.indexOf(stopName)
+          //   stopsAt = cityLoopStationFullNames.filter((stn, i) => i > indexOfCurrentStation).concat(stopsAt)
+          // }
             
-          stopsAt = stopsAt.filter(Boolean).filter((e,i,a)=>a.indexOf(e)===i)
+          stopsAt = stopsAt.filter(Boolean).filter((e,i,a) => a.indexOf(e) === i)
         input(type='hidden' name='stops-at' value=stopsAt.join(','))
         input(type='hidden' name='platform' value=departure.platform || '')
         input(type='hidden' name='run' value=departure.trip.runID)
@@ -47,12 +47,12 @@ append content
           span Platform
           span=departure.platform || '?'
         a.departureInfo
-          span=`${departure.trip.lineName} Line towards`
+          span=`${departure.trip.routeName} Line towards`
           span=departure.trip.destination.slice(0, -16)
           if departure.cancelled
             span.cancelled CANCELLED
           else
-            if cityLoopStationNames.includes(station.stopName.slice(0, -16)) || departure.trip.direction === 'up'
+            if cityLoopStationNames.includes(station.stopName.slice(0, -16)) || departure.trip.direction === 'Up'
               span=departure.cityLoopConfig.join(', ')
         div.timings
           a(class='timing ' + departure.headwayDevianceClass)

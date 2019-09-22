@@ -1,10 +1,8 @@
 const express = require('express')
 const router = new express.Router()
 const getDepartures = require('../../../modules/metro-trains/get_departures')
-const utils = require('../../../utils')
 const moment = require('moment')
-
-const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
+const utils = require('../../../utils')
 
 router.get('/:stationName', async (req, res) => {
   const station = await res.db.getCollection('stops').findDocument({
@@ -17,6 +15,7 @@ router.get('/:stationName', async (req, res) => {
   }
 
   let departures = await getDepartures(station, res.db)
+
   departures = departures.map(departure => {
     const timeDifference = moment.utc((departure.estimatedDepartureTime || departure.scheduledDepartureTime).diff(moment()))
 
@@ -26,7 +25,9 @@ router.get('/:stationName', async (req, res) => {
       if (timeDifference.get('hours')) departure.prettyTimeToArrival += timeDifference.get('hours') + ' h '
       if (timeDifference.get('minutes')) departure.prettyTimeToArrival += timeDifference.get('minutes') + ' min'
     }
-
+if (!departure.prettyTimeToArrival) {
+  console.log(departure)
+}
     departure.headwayDevianceClass = 'unknown'
     if (departure.estimatedDepartureTime) {
       departure.headwayDeviance = departure.scheduledDepartureTime.diff(departure.estimatedDepartureTime, 'minutes')
@@ -40,7 +41,7 @@ router.get('/:stationName', async (req, res) => {
       }
     }
 
-    departure.codedLineName = utils.encodeName(departure.trip.lineName)
+    departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
     return departure
   })

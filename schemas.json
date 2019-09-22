@@ -13,7 +13,8 @@
       "departureTime": "string",
       "departureTimeMinutes": "number",
       "stopConditions": "string",
-      "stopDistance": "number"
+      "stopDistance": "number",
+      "stopSequence": "number"
     }],
     "destination": "string",
     "departureTime": "number",

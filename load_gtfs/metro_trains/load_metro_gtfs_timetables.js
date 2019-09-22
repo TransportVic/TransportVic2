@@ -85,7 +85,8 @@ database.connect({
         serviceID = trip[1],
         tripID = gtfsUtils.simplifyRouteGTFSID(trip[2]),
         shapeID = gtfsUtils.simplifyRouteGTFSID(trip[3]),
-        direction = trip[4]
+        direction = trip[4].includes('Flinders Street') || (routeGTFSID === '2-SPT' && trip[4] === 'Frankston')
+    direction = direction ? 'Up' : 'Down'
 
     let route = await getRoute(routeGTFSID)
     if (!calendarDatesCache[serviceID])
@@ -96,11 +97,12 @@ database.connect({
       operator: "Metro Trains Melbourne",
       routeName: route.routeName,
       tripID,
-      operationDays: calendarDatesCache[serviceID].map(date => date.toDate()),
+      operationDays: calendarDatesCache[serviceID].map(date => date.format('YYYYMMDD')),
       stopTimings: [],
       destination: null,
       departureTime: null,
-      origin: null
+      origin: null,
+      direction
     }
   })
 
@@ -124,7 +126,8 @@ database.connect({
       departureTime,
       departureTimeMinutes: utils.time24ToMinAftMidnight(departureTime),
       stopConditions: "",
-      stopDistance: stopDistance
+      stopDistance: stopDistance,
+      stopSequence
     }
   })
 
@@ -162,7 +165,7 @@ database.connect({
   })
 
   await gtfsTimetables.bulkWrite(bulkOperations)
-  
+
   console.log('Completed loading in ' + Object.keys(allTrips).length + ' MTM trips')
   process.exit()
 })
