@@ -77,7 +77,8 @@ database.connect({
     routeName: 1,
     operationDays: 1,
     origin: 1,
-    destination: 1
+    destination: 1,
+    direction: 1
   }, {unique: true})
 
   await async.forEach(trips, async trip => {
@@ -85,7 +86,9 @@ database.connect({
         serviceID = trip[1],
         tripID = gtfsUtils.simplifyRouteGTFSID(trip[2]),
         shapeID = gtfsUtils.simplifyRouteGTFSID(trip[3]),
-        direction = ['city', 'melbourne'].includes(trip[4].toLowerCase())
+        direction = ['city', 'melbourne'].includes(trip[4].toLowerCase()),
+        gtfsDirection = trip[5]
+
     direction = direction ? 'Up' : 'Down'
 
     if (routeGTFSID === '1-vPK') return
@@ -105,7 +108,8 @@ database.connect({
       destination: null,
       departureTime: null,
       origin: null,
-      direction
+      direction,
+      gtfsDirection
     }
   })
 

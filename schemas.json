@@ -18,7 +18,8 @@
     }],
     "destination": "string",
     "departureTime": "number",
-    "origin": "string"
+    "origin": "string",
+    "gtfsDirection": "number"
   },
   "timetable": {
     "mode": "string",

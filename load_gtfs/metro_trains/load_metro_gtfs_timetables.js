@@ -77,7 +77,8 @@ database.connect({
     routeName: 1,
     operationDays: 1,
     origin: 1,
-    destination: 1
+    destination: 1,
+    direction: 1
   }, {unique: true})
 
   await async.forEach(trips, async trip => {
@@ -85,7 +86,9 @@ database.connect({
         serviceID = trip[1],
         tripID = gtfsUtils.simplifyRouteGTFSID(trip[2]),
         shapeID = gtfsUtils.simplifyRouteGTFSID(trip[3]),
-        direction = trip[4].includes('Flinders Street') || (routeGTFSID === '2-SPT' && trip[4] === 'Frankston')
+        direction = trip[4].includes('Flinders Street') || (routeGTFSID === '2-SPT' && trip[4] === 'Frankston'),
+        gtfsDirection = trip[5]
+
     direction = direction ? 'Up' : 'Down'
 
     let route = await getRoute(routeGTFSID)
@@ -102,7 +105,8 @@ database.connect({
       destination: null,
       departureTime: null,
       origin: null,
-      direction
+      direction,
+      gtfsDirection
     }
   })
 
