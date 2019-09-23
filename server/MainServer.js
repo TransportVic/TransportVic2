@@ -92,7 +92,10 @@ module.exports = class MainServer {
       Index: '/',
       Search: '/search',
       'timing-pages/VLine': '/vline/timings',
-      'timing-pages/MetroTrains': '/metro/timings'
+      'timing-pages/MetroTrains': '/metro/timings',
+
+
+      'mockups/FlindersStreetEscalator': '/mockups/fss-escalator'
     }
 
     Object.keys(routers).forEach(routerName => {

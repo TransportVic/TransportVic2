@@ -70,6 +70,27 @@ database.connect({
                   $eq: [ "Southern Cross Railway Station", "$destination" ]
                 }
               ]
+            },
+
+            {
+              $and: [
+                {
+                  $eq: [ { $concat: ["$routeName", " Railway Station"] }, "$destination" ]
+                },
+                {
+                  $eq: [ "Flinders Street Railway Station", "$origin" ]
+                }
+              ]
+            },
+            {
+              $and: [
+                {
+                  $eq: [ { $concat: ["$routeName", " Railway Station"] }, "$destination" ]
+                },
+                {
+                  $eq: [ "Southern Cross Railway Station", "$origin" ]
+                }
+              ]
             }
           ]
         }
@@ -121,7 +142,6 @@ database.connect({
     route.routeType = routeType
 
     route.stops = Object.values(route.stops)
-
     return route;
   })
 

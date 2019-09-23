@@ -1,0 +1,22 @@
+@font-face {
+  font-family: "NetworkSansMedium";
+  font-display: fallback;
+  src: local('Network Sans 2018 Medium'), url(/static/fonts/NetworkSans-Medium.ttf);
+}
+
+@font-face {
+  font-family: "NetworkSansBold";
+  font-display: fallback;
+  src: local('Network Sans 2018 Bold'), url(/static/fonts/NetworkSans-Bold.ttf);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+
+  font-family: NetworkSansMedium;
+
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}

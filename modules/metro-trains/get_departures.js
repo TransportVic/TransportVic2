@@ -57,9 +57,11 @@ function determineLoopRunning(routeID, runID, destination) {
   return cityLoopConfig
 }
 
-async function getDepartures(station, db) {
-  if (departuresCache.get(station.stopName + 'M')) {
-    return departuresCache.get(station.stopName + 'M')
+async function getDepartures(station, db, departuresCount=6, includeCancelled=true, platform=null) {
+  let cacheKey = station.stopName + 'M-' + departuresCount + '-' + includeCancelled + '-' + platform
+
+  if (departuresCache.get(cacheKey)) {
+    return departuresCache.get(cacheKey)
   }
 
   const gtfsTimetables = db.getCollection('gtfs timetables')
@@ -68,7 +70,7 @@ async function getDepartures(station, db) {
   let transformedDepartures = []
 
   const metroPlatform = station.bays.filter(bay => bay.mode === 'metro train')[0]
-  const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=6&include_cancelled=true&expand=run&expand=route`)
+  const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=${departuresCount}&include_cancelled=${includeCancelled}&expand=run&expand=route${platform ? `&platform_numbers=${platform}` : ''}`)
 
   await async.forEach(departures, async departure => {
     const run = runs[departure.run_id]
@@ -124,7 +126,7 @@ async function getDepartures(station, db) {
     return (a.estimatedDepartureTime || a.scheduledDepartureTime) - (b.estimatedDepartureTime || b.scheduledDepartureTime)
   })
 
-  departuresCache.put(station.stopName + 'M', transformedDepartures)
+  departuresCache.put(cacheKey, transformedDepartures)
   return transformedDepartures
 }
 

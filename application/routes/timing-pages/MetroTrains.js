@@ -25,9 +25,7 @@ router.get('/:stationName', async (req, res) => {
       if (timeDifference.get('hours')) departure.prettyTimeToArrival += timeDifference.get('hours') + ' h '
       if (timeDifference.get('minutes')) departure.prettyTimeToArrival += timeDifference.get('minutes') + ' min'
     }
-if (!departure.prettyTimeToArrival) {
-  console.log(departure)
-}
+
     departure.headwayDevianceClass = 'unknown'
     if (departure.estimatedDepartureTime) {
       departure.headwayDeviance = departure.scheduledDepartureTime.diff(departure.estimatedDepartureTime, 'minutes')
