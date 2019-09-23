@@ -103,6 +103,7 @@ async function getDepartures(station, db) {
         }
       },
       routeName,
+      destination: run.destination_name + ' Railway Station',
       operationDays: utils.getYYYYMMDDNow(),
       mode: "metro train"
     }).toArray())
