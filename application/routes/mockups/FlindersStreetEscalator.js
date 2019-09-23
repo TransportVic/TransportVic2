@@ -13,7 +13,7 @@ let northernGroup = [
   "2-WMN"
 ]
 
-router.get('/:platform', async (req, res) => {
+async function getData(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
     codedName: 'flinders-street'
   })
@@ -47,16 +47,20 @@ router.get('/:platform', async (req, res) => {
       .map(stop => stop.stopName.slice(0, -16))
 
     let tripStops = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
-    let viaCityLoop = tripStops.includes('Flagstaff');
 
-    let startingIndex = lineStops.indexOf(departure.trip.origin.slice(0, -16))
+    let startingIndex = tripStops.indexOf('Flinders Street')
+    tripStops = tripStops.filter((_, i) => (i >= startingIndex))
+    let viaCityLoop = tripStops.includes('Flagstaff')
+
+    startingIndex = lineStops.indexOf('Flinders Street')
     let endingIndex = lineStops.indexOf(departure.trip.destination.slice(0, -16))
-
     let tripPassesBy = lineStops.filter((_, i) => (i >= startingIndex) && (i <= endingIndex))
+
     if (!viaCityLoop) {
       if (!northernGroup.includes(departure.trip.routeGTFSID))
         tripPassesBy.splice(1, 4)
     }
+
 
     let screenStops = tripPassesBy.map(stop => {
       return {
@@ -76,9 +80,21 @@ router.get('/:platform', async (req, res) => {
     return departure
   })
 
-  if (!departures.length) return res.end('no departure need to do that screen')
+  return departures
+}
 
-  res.render('mockups/flinders-street/escalator', { departures })
+router.get('/:platform', async (req, res) => {
+  let departures = await getData(req, res)
+
+  if (!departures.length) return res.end('no departure need to do that screen')
+  res.render('mockups/flinders-street/escalator', { departures, bodyOnly: false })
+})
+
+router.post('/:platform', async (req, res) => {
+  let departures = await getData(req, res)
+
+  if (!departures.length) return res.end('no departure need to do that screen')
+  res.render('mockups/flinders-street/escalator', { departures, bodyOnly: true })
 })
 
 module.exports = router

@@ -1,95 +1,103 @@
-html
-  head
-    // script(src='/static/scripts/mockups/reload.js')
-    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
-    link(rel='stylesheet' href='/static/css/mockups/actual-line-colours.css')
-    link(rel='stylesheet' href='/static/css/mockups/fss-escalator.css')
-  body
-    -
-      let firstDeparture = departures[0]
-      let {additionalInfo} = firstDeparture
-    div.contents
-      div(class='topLineBanner ' + firstDeparture.codedLineName)
-      div.firstDepartureInfo
-        div.details
-          span.scheduledDepartureTime=firstDeparture.scheduledDepartureTime.format('h:mmA').toLowerCase()
-          br
-          span.destination=firstDeparture.trip.destination.slice(0, -16)
-          br
-          -
-            let stoppingPattern = ''
-            if (additionalInfo.expressCount === 0)
-              stoppingPattern = 'Stopping All Stations'
-            else if (additionalInfo.expressCount <= 2)
-              stoppingPattern='Ltd Express'
-            else stoppingPattern = 'Express'
-              
-            if (additionalInfo.viaCityLoop) stoppingPattern += ' via City Loop'
-          span.stoppingPattern=stoppingPattern
-        div.firstDepartureTime
-          div(class='platform ' + firstDeparture.codedLineName)
-            span=firstDeparture.platform
-          div.timeToDeparture
-            span=firstDeparture.prettyTimeToDeparture
-      div.greyLine
-      - let first15Stations = additionalInfo.screenStops.slice(0, 15)
-      - let next15Stations = additionalInfo.screenStops.slice(15)
-      div.stoppingAt
-        mixin stationRow(name, imgSource)
-          div.stationRow
-            img(src=`/static/images/mockups/station-${imgSource}.svg` class=firstDeparture.codedLineName)
-            p(class=imgSource)=name
+mixin body
+  -
+    let firstDeparture = departures[0]
+    let {additionalInfo} = firstDeparture
+  div.contents
+    div(class='topLineBanner ' + firstDeparture.codedLineName)
+    div.firstDepartureInfo
+      div.details
+        span.scheduledDepartureTime=firstDeparture.scheduledDepartureTime.format('h:mmA').toLowerCase()
+        br
+        span.destination=firstDeparture.trip.destination.slice(0, -16)
+        br
+        -
+          let stoppingPattern = ''
+          if (additionalInfo.expressCount === 0)
+            stoppingPattern = 'Stopping All Stations'
+          else if (additionalInfo.expressCount <= 2)
+            stoppingPattern='Ltd Express'
+          else stoppingPattern = 'Express'
             
-        div
-          +stationRow(" ", "express")
+          if (additionalInfo.viaCityLoop) stoppingPattern += ' via City Loop'
+        span.stoppingPattern=stoppingPattern
+      div.firstDepartureTime
+        div(class='platform ' + firstDeparture.codedLineName)
+          span=firstDeparture.platform
+        div.timeToDeparture
+          span=firstDeparture.prettyTimeToDeparture
+    div.greyLine
+    - let first15Stations = additionalInfo.screenStops.slice(0, 15)
+    - let next15Stations = additionalInfo.screenStops.slice(15)
+    div.stoppingAt
+      mixin stationRow(name, imgSource)
+        div.stationRow
+          img(src=`/static/images/mockups/station-${imgSource}.svg` class=firstDeparture.codedLineName)
+          p(class=imgSource)=name
           
-          - let hasTerminating = additionalInfo.screenStops.length <= 15
-          
-          div.stationRow
-            img(src=`/static/images/mockups/station-stops-at.svg` class=firstDeparture.codedLineName)
-            p(class=firstDeparture.codedLineName) Flinders Street
-            
-          for station in first15Stations.slice(1, hasTerminating ? -1 : 15)
-            +stationRow(station.stopName, station.isExpress ? "express" : "stops-at")
-          if hasTerminating
-            +stationRow(first15Stations.slice(-1)[0].stopName, "terminates")
-          else
-            +stationRow(" ", "filler")
-              
-        div
-          if next15Stations.length
-            +stationRow(" ", "filler")
-            for station in next15Stations.slice(0, -1)
-              +stationRow(station.stopName, station.isExpress ? "express" : "stops-at")
-            +stationRow(next15Stations.slice(-1)[0].stopName, "terminates")
+      div
+        +stationRow(" ", "express")
         
-      div.next3Departures    
-        div.blackLine
-        for departure in departures.concat([null, null, null, null]).slice(1, 5)
-          if !!departure
-            - let {additionalInfo} = departure
-            div.smallDeparture
-              div.left
-                div(class='sideBar ' + departure.codedLineName)
-                p=departure.scheduledDepartureTime.format('h:mmA').toLowerCase()
-              div.centre
-                p=departure.trip.destination.slice(0, -16)
-              div.right
-                div(class='platform ' + departure.codedLineName)
-                  p=departure.platform
-                div.timeToDeparture
-                  p=departure.prettyTimeToDeparture.replace(' ', '')
-            div.greyLine
-          else
+        - let hasTerminating = additionalInfo.screenStops.length <= 15
+        
+        div.stationRow
+          img(width="42px" height="64px" src=`/static/images/mockups/station-stops-at.svg` class=firstDeparture.codedLineName)
+          p(class=firstDeparture.codedLineName) Flinders Street
+          
+        for station in first15Stations.slice(1, hasTerminating ? -1 : 15)
+          +stationRow(station.stopName, station.isExpress ? "express" : "stops-at")
+        if hasTerminating
+          +stationRow(first15Stations.slice(-1)[0].stopName, "terminates")
+        else
+          +stationRow(" ", "filler")
             
-            div.smallDeparture
-              div.left
-                div(class='sideBar showgrounds-flemington')
-                p --
-              div.centre
-                p --
-              div.right
-                div(class='platform showgrounds-flemington')
-                  p &nbsp;
-                div.timeToDeparture
-                  p &nbsp;
+      div
+        if next15Stations.length
+          +stationRow(" ", "filler")
+          for station in next15Stations.slice(0, -1)
+            +stationRow(station.stopName, station.isExpress ? "express" : "stops-at")
+          +stationRow(next15Stations.slice(-1)[0].stopName, "terminates")
+      
+    div.next3Departures    
+      div.blackLine
+      for departure in departures.concat([null, null, null, null]).slice(1, 5)
+        if !!departure
+          - let {additionalInfo} = departure
+          div.smallDeparture
+            div.left
+              div(class='sideBar ' + departure.codedLineName)
+              p=departure.scheduledDepartureTime.format('h:mmA').toLowerCase()
+            div.centre
+              p=departure.trip.destination.slice(0, -16)
+            div.right
+              div(class='platform ' + departure.codedLineName)
+                p=departure.platform
+              div.timeToDeparture
+                p=departure.prettyTimeToDeparture.replace(' ', '')
+          div.greyLine
+        else
+          
+          div.smallDeparture
+            div.left
+              div(class='sideBar showgrounds-flemington')
+              p --
+            div.centre
+              p --
+            div.right
+              div(class='platform showgrounds-flemington')
+                p &nbsp;
+              div.timeToDeparture
+                p &nbsp;
+
+if bodyOnly
+  +body
+else
+  html
+    head
+      script(src='/static/scripts/util.js')
+      //- script(src='/static/scripts/mockups/reload.js' async)
+      //- find a way (maybe send json) to update screen w/o reloading images
+      link(rel='stylesheet' href='/static/css/mockups/base-style.css')
+      link(rel='stylesheet' href='/static/css/mockups/actual-line-colours.css')
+      link(rel='stylesheet' href='/static/css/mockups/fss-escalator.css')
+    body
+      +body

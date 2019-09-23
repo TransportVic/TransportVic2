@@ -179,4 +179,5 @@ div.smallDeparture div.right div.timeToDeparture {
 
 div.smallDeparture div.right > div p {
   padding: 0;
+  padding-left: 10px;
 }
