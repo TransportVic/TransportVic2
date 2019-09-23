@@ -4,6 +4,7 @@
     "operator": "string",
     "routeName": "string",
     "tripID": "string",
+    "routeGTFSID": "string",
     "operationDays": ["Date"],
     "stopTimings": [{
       "stopName": "string",
@@ -19,7 +20,7 @@
     "destination": "string",
     "departureTime": "number",
     "origin": "string",
-    "gtfsDirection": "number"
+    "gtfsDirection": "string"
   },
   "timetable": {
     "mode": "string",
@@ -64,10 +65,13 @@
     "routePath": "GeoJSON:LineString",
     "routeLength": "number",
     "operators": ["string"],
-    "stops": [{
-      "stopName": "string",
-      "stopGTFSID": "number",
-      "stopNumber": "string"
+    "directions": [{
+      "directionName": "string",
+      "stops": [{
+        "stopName": "string",
+        "stopGTFSID": "number",
+        "stopNumber": "string"
+      }]
     }],
     "mode": "string"
   }

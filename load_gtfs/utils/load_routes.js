@@ -39,7 +39,7 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
         },
         routeLength: parseFloat(routeLength),
         operators: operator(route.routeName),
-        stops: [],
+        directions: [],
         mode
       }
 

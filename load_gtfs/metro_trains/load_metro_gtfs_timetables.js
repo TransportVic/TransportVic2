@@ -74,11 +74,12 @@ database.connect({
     mode: 1,
     operator: 1,
     tripID: 1,
+    routeGTFSID: 1,
     routeName: 1,
     operationDays: 1,
     origin: 1,
     destination: 1,
-    direction: 1
+    gtfsDirection: 1
   }, {unique: true})
 
   await async.forEach(trips, async trip => {
@@ -100,6 +101,7 @@ database.connect({
       operator: "Metro Trains Melbourne",
       routeName: route.routeName,
       tripID,
+      routeGTFSID,
       operationDays: calendarDatesCache[serviceID].map(date => date.format('YYYYMMDD')),
       stopTimings: [],
       destination: null,
