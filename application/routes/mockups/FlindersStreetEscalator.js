@@ -10,8 +10,11 @@ let northernGroup = [
   "2-SYM",
   "2-UFD",
   "2-WBE",
-  "2-WMN"
+  "2-WMN",
+  "2-ain"
 ]
+
+let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 async function getData(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
@@ -33,7 +36,7 @@ async function getData(req, res) {
   departures = await async.map(departures, async departure => {
     const timeDifference = (departure.estimatedDepartureTime || departure.scheduledDepartureTime).diff(utils.now(), 'minutes')
 
-    if (+timeDifference <= 0) departure.prettyTimeToDeparture = 'Now'
+    if (+timeDifference <= 0) departure.prettyTimeToDeparture = 'NOW'
     else {
       departure.prettyTimeToDeparture = timeDifference + ' min'
     }
@@ -43,6 +46,7 @@ async function getData(req, res) {
     let line = await res.db.getCollection('routes').findDocument({
       routeGTFSID: departure.trip.routeGTFSID
     })
+
     let lineStops = line.directions.filter(dir => dir.directionName !== 'City')[0].stops
       .map(stop => stop.stopName.slice(0, -16))
 
@@ -58,9 +62,10 @@ async function getData(req, res) {
 
     if (!viaCityLoop) {
       if (!northernGroup.includes(departure.trip.routeGTFSID))
-        tripPassesBy.splice(1, 4)
+        tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop))
+      else
+        tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop) || stop === 'Southern Cross')
     }
-
 
     let screenStops = tripPassesBy.map(stop => {
       return {
@@ -93,8 +98,7 @@ router.get('/:platform', async (req, res) => {
 router.post('/:platform', async (req, res) => {
   let departures = await getData(req, res)
 
-  if (!departures.length) return res.end('no departure need to do that screen')
-  res.render('mockups/flinders-street/escalator', { departures, bodyOnly: true })
+  res.json(departures);
 })
 
 module.exports = router

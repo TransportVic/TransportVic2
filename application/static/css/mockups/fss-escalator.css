@@ -47,7 +47,6 @@ div.firstDepartureTime {
 
 div.firstDepartureTime div.platform {
   height: 100px;
-  color: #ffffff;
   font-size: 80px;
   display: flex;
   align-items: center;
@@ -72,7 +71,7 @@ div.greyLine {
   background: gray;
 }
 
-div.stoppingAt {
+div.stoppingAt > div {
   display: flex;
 }
 
@@ -99,13 +98,13 @@ div.stationRow img {
   height: 64px;
 }
 
-div.stoppingAt > div {
+div.stoppingAt > div > div {
   width: 503px;
 }
 
 div.next3Departures {
   position: absolute;
-  bottom: 10px;
+  top: 1560px;
   width: 1007px;
 }
 
@@ -179,5 +178,5 @@ div.smallDeparture div.right div.timeToDeparture {
 
 div.smallDeparture div.right > div p {
   padding: 0;
-  padding-left: 10px;
+  padding-left: 5px;
 }

@@ -22,7 +22,8 @@ let northernGroup = [
   "2-SYM",
   "2-UFD",
   "2-WBE",
-  "2-WMN"
+  "2-WMN",
+  "2-ain"
 ]
 
 let cliftonHillGroup = [
@@ -89,6 +90,33 @@ database.connect({
                 },
                 {
                   $eq: [ "Southern Cross Railway Station", "$origin" ]
+                }
+              ]
+            },
+
+            {
+              $and: [
+                {
+                  $eq: [ "Flemington Racecourse Railway Station", "$destination" ]
+                },
+                {
+                  $eq: [ "Southern Cross Railway Station", "$origin" ]
+                },
+                {
+                  $eq: [ "$routeName", "Showgrounds/Flemington" ]
+                }
+              ]
+            },
+            {
+              $and: [
+                {
+                  $eq: [ "Southern Cross Railway Station", "$destination" ]
+                },
+                {
+                  $eq: [ "Flemington Racecourse Railway Station", "$origin" ]
+                },
+                {
+                  $eq: [ "$routeName", "Showgrounds/Flemington" ]
                 }
               ]
             }
@@ -163,19 +191,31 @@ database.connect({
 
     if (richmondGroup.includes(route.routeGTFSID) || cliftonHillGroup.includes(route.routeGTFSID)) {
       cityLoopStops = [
-        [ "Parliament", 19843],
-        [ "Melbourne Central", 19842],
-        [ "Flagstaff", 19841],
-        [ "Southern Cross", 22180],
-        [ "Flinders Street", 19854]
+        [ "Parliament", 19843 ],
+        [ "Melbourne Central", 19842 ],
+        [ "Flagstaff", 19841 ],
+        [ "Southern Cross", 22180 ],
+
+        [ "Flinders Street", 19854 ],
+
+        [ "Southern Cross", 22180 ],
+        [ "Flagstaff", 19841 ],
+        [ "Melbourne Central", 19842 ],
+        [ "Parliament", 19843 ],
       ]
     } else if (northernGroup.includes(route.routeGTFSID)) {
       cityLoopStops = [
-        [ "Southern Cross", 22180],
-        [ "Flinders Street", 19854],
-        [ "Parliament", 19843],
-        [ "Melbourne Central", 19842],
-        [ "Flagstaff", 19841]
+        [ "Flagstaff", 19841 ],
+        [ "Melbourne Central", 19842 ],
+        [ "Parliament", 19843 ],
+        [ "Southern Cross", 22180 ],
+
+        [ "Flinders Street", 19854 ],
+        
+        [ "Southern Cross", 22180 ],
+        [ "Parliament", 19843 ],
+        [ "Melbourne Central", 19842 ],
+        [ "Flagstaff", 19841 ]
       ]
       sliceOffset = 2
     }

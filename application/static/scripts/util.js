@@ -12,7 +12,8 @@ Object.defineProperty(XMLHttpRequest.prototype, 'responseJSON', {
   enumerable: false
 })
 
-function $ (query) {
+function $ (query, elem) {
+  if (elem) return elem.querySelector(query)
   return document.querySelector(query)
 }
 

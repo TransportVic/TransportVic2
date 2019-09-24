@@ -2,14 +2,14 @@ const TimedCache = require('timed-cache')
 const async = require('async')
 const ptvAPI = require('../../ptv-api')
 const utils = require('../../utils')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
+const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1.5 })
 const moment = require('moment')
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
 
 let burnleyGroup = [1, 2, 7, 9] // alamein, belgrave, glen waverley, lilydale
 let caulfieldGroup = [4, 6, 11, 12] // cranbourne, frankston, pakenham, sandringham
-let northenGroup = [3, 14, 15, 16, 17] // craigieburn, sunbury, upfield, werribee, williamstown
+let northenGroup = [3, 14, 15, 16, 17, 1482] // craigieburn, sunbury, upfield, werribee, williamstown, flemington racecourse
 let cliftonHillGroup = [5, 8] // mernda, hurstbridge
 
 function determineLoopRunning(routeID, runID, destination) {
@@ -98,16 +98,16 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
     const estimatedDepartureTime = departure.estimated_departure_utc ? moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne') : null
 
     let trip = (await gtfsTimetables.findDocuments({
+      routeName,
+      destination: run.destination_name + ' Railway Station',
+      operationDays: utils.getYYYYMMDDNow(),
+      mode: "metro train",
       stopTimings: {
         $elemMatch: {
           stopGTFSID: metroPlatform.stopGTFSID,
           departureTimeMinutes: scheduledDepartureTimeMinutes
         }
-      },
-      routeName,
-      destination: run.destination_name + ' Railway Station',
-      operationDays: utils.getYYYYMMDDNow(),
-      mode: "metro train"
+      }
     }).toArray())
     trip = trip.sort((a, b) => utils.time24ToMinAftMidnight(b.departureTime) - utils.time24ToMinAftMidnight(a.departureTime))[0]
 

@@ -4,7 +4,7 @@ div.alamein, div.belgrave, div.lilydale, div.glen-waverley {
 
 div.cranbourne, div.pakenham {
   background-color: #009ecf;
-  color: #000000 !important;
+  color: #000000;
 }
 
 div.frankston, div.stony-point, div.werribee, div.williamstown {
@@ -13,7 +13,7 @@ div.frankston, div.stony-point, div.werribee, div.williamstown {
 
 div.craigieburn, div.sunbury, div.upfield {
   background-color: #f3b22c;
-  color: #000000 !important;
+  color: #000000;
 }
 
 div.hurstbridge, div.mernda {
@@ -22,7 +22,7 @@ div.hurstbridge, div.mernda {
 
 div.sandringham {
   background-color: #e578a5;
-  color: #000000 !important;
+  color: #000000;
 }
 
 div.showgrounds-flemington {
@@ -61,35 +61,76 @@ p.sandringham {
   color: #000000;
 }
 
-div.showgrounds-flemington {
+p.showgrounds-flemington {
   background-color: #8a8a8a;
+  color: #ffffff;
 }
 
 
-img.alamein, img.belgrave, img.lilydale, img.glen-waverley {
+.stoppingAt {
+  background-color: #ffffff !important;
+}
+
+.stoppingAt.alamein img, .stoppingAt.belgrave img, .stoppingAt.lilydale img, .stoppingAt.glen-waverley img {
   filter: invert(20%) sepia(92%) saturate(929%) hue-rotate(181deg) brightness(91%) contrast(88%);
 }
 
-img.cranbourne, img.pakenham {
+.stoppingAt.cranbourne img, .stoppingAt.pakenham img {
   filter: invert(44%) sepia(88%) saturate(570%) hue-rotate(150deg) brightness(94%) contrast(107%);
 }
 
-img.frankston, img.stony-point, img.werribee, img.williamstown {
+.stoppingAt.frankston img, .stoppingAt.stony-point img, .stoppingAt.werribee img, .stoppingAt.williamstown img {
   filter: invert(33%) sepia(100%) saturate(894%) hue-rotate(117deg) brightness(91%) contrast(102%);
 }
 
-img.craigieburn, img.sunbury, img.upfield {
+.stoppingAt.craigieburn img, .stoppingAt.sunbury img, .stoppingAt.upfield img {
   filter: invert(85%) sepia(48%) saturate(3910%) hue-rotate(341deg) brightness(109%) contrast(91%);
 }
 
-img.hurstbridge, img.mernda {
+.stoppingAt.hurstbridge img, .stoppingAt.mernda img {
   filter: invert(19%) sepia(81%) saturate(2062%) hue-rotate(334deg) brightness(99%) contrast(100%);
 }
 
-img.sandringham {
+.stoppingAt.sandringham img {
   filter: invert(84%) sepia(16%) saturate(6563%) hue-rotate(291deg) brightness(90%) contrast(99%);
 }
 
-img.showgrounds-flemington {
+.stoppingAt.showgrounds-flemington img {
   filter: invert(66%) sepia(0%) saturate(4%) hue-rotate(136deg) brightness(84%) contrast(88%);
+}
+
+
+div.platform.alamein, div.platform.belgrave, div.platform.lilydale, div.platform.glen-waverley {
+  background-color: #184977;
+  color: #ffffff;
+}
+
+div.platform.cranbourne, div.platform.pakenham {
+  background-color: #009ecf;
+  color: #000000;
+}
+
+div.platform.frankston, div.platform.stony-point, div.platform.werribee, div.platform.williamstown {
+  background-color: #008c44;
+  color: #ffffff;
+}
+
+div.platform.craigieburn, div.platform.sunbury, div.platform.upfield {
+  background-color: #f3b22c;
+  color: #000000;
+}
+
+div.platform.hurstbridge, div.platform.mernda {
+  background-color: #bc2431;
+  color: #ffffff;
+}
+
+div.platform.sandringham {
+  background-color: #e578a5;
+  color: #000000;
+}
+
+div.platform.showgrounds-flemington {
+  background-color: #8a8a8a;
+  color: #ffffff;
 }
