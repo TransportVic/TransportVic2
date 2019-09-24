@@ -3,7 +3,7 @@ function formatTime(time) {
   let minutes = time.getMinutes()
   let mainTime = ''
 
-  mainTime += hours % 12
+  mainTime += (hours % 12) || 12
   mainTime += ':'
   if (minutes < 10) mainTime += '0'
   mainTime += minutes
@@ -102,7 +102,15 @@ setInterval(() => {
 
         $('.right .timeToDeparture p', departureDIV).textContent = departure.prettyTimeToDeparture.replace(' ', '')
       } else {
+          $('.sideBar', departureDIV).className = 'sideBar showgrounds-flemington'
+          $('.sideBar~p', departureDIV).textContent = '--'
 
+          $('.centre p', departureDIV).textContent = '--'
+
+          $('.right .platform', departureDIV).className = 'platform showgrounds-flemington'
+          $('.right .platform p', departureDIV).innerHTML = '&nbsp;'
+
+          $('.right .timeToDeparture p', departureDIV).innerHTML = '&nbsp;'
       }
     })
   })
