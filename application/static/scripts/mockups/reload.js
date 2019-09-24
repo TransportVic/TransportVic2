@@ -5,6 +5,7 @@ function formatTime(time) {
 
   mainTime += hours % 12
   mainTime += ':'
+  if (minutes < 10) mainTime += '0'
   mainTime += minutes
 
   if (time.getHours() >= 12)
@@ -39,6 +40,7 @@ setInterval(() => {
   $.ajax({
     method: 'POST'
   }, (err, status, body) => {
+    if (!body.length) return
     let firstDeparture = body[0];
     let next4Departures = body.concat([null, null, null, null]).slice(1, 5)
 

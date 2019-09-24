@@ -11,7 +11,7 @@ let northernGroup = [
   "2-UFD",
   "2-WBE",
   "2-WMN",
-  "2-ain"
+  "2-ain" // showgrounds
 ]
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
@@ -20,11 +20,6 @@ async function getData(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
     codedName: 'flinders-street'
   })
-
-  if (!station) {
-    // TODO: create error page
-    return res.end('Could not lookup timings for ' + req.params.stationName + '. Are you sure Metro trains stop there?')
-  }
 
   let departures = (await getDepartures(station, res.db, 5, false, req.params.platform))
     .filter(departure => {

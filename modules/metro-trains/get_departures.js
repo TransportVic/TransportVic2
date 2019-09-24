@@ -94,6 +94,10 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
 
     const scheduledDepartureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
     const scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
+    
+    if (scheduledDepartureTime.diff(utils.now(), 'minutes') > 90) { // show only up to next 1.5 hr of departures
+      return
+    }
 
     const estimatedDepartureTime = departure.estimated_departure_utc ? moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne') : null
 
@@ -108,7 +112,8 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
           departureTimeMinutes: scheduledDepartureTimeMinutes
         }
       }
-    }).toArray())
+    }).limit(2).toArray())
+
     trip = trip.sort((a, b) => utils.time24ToMinAftMidnight(b.departureTime) - utils.time24ToMinAftMidnight(a.departureTime))[0]
 
     if (!trip) return
