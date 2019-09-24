@@ -2,7 +2,7 @@ const TimedCache = require('timed-cache')
 const async = require('async')
 const ptvAPI = require('../../ptv-api')
 const utils = require('../../utils')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1.5 })
+const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1 })
 const moment = require('moment')
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
