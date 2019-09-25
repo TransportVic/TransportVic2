@@ -26,7 +26,7 @@ async function getData(req, res) {
       let diff = (departure.estimatedDepartureTime || departure.scheduledDepartureTime)
       let minutesDifference = diff.diff(utils.now(), 'minutes')
       let secondsDifference = diff.diff(utils.now(), 'seconds')
-      return minutesDifference < 180 && secondsDifference >= 30
+      return minutesDifference < 180 && secondsDifference >= 10 // minutes round down
       return true
     })
 
