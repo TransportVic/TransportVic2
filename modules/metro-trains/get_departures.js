@@ -101,15 +101,19 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
 
     const estimatedDepartureTime = departure.estimated_departure_utc ? moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne') : null
 
+    let possibleDestinations = [run.destination_name]
+
     let destination = run.destination_name
     if (routeName === 'Frankston' && destination === 'Southern Cross')
-      destination = 'Flinders Street'
-
-    destination += ' Railway Station'
+      possibleDestinations.push('Flinders Street')
+    if ((!northenGroup.includes(departure.route_id)) && destination === 'Parliament')
+        possibleDestinations.push('Flinders Street')
 
     let trip = (await gtfsTimetables.findDocuments({
       routeName,
-      destination,
+      destination: {
+        $in: possibleDestinations.map(dest => dest + ' Railway Station')
+      },
       operationDays: utils.getYYYYMMDDNow(),
       mode: "metro train",
       stopTimings: {
