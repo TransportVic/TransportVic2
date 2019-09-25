@@ -34,7 +34,7 @@ div.firstDepartureInfo span.destination {
 
 div.firstDepartureInfo span.stoppingPattern {
   display: block;
-  margin-top: 27px;
+  margin-top: 17px;
   font-size: 46px;
   line-height: 46px;
 }
@@ -66,7 +66,7 @@ div.firstDepartureTime div.timeToDeparture {
 }
 
 div.greyLine {
-  margin-top: 20px;
+  margin-top: 15px;
   height: 2px;
   background: gray;
 }
@@ -81,6 +81,7 @@ div.stationRow {
 }
 
 div.stationRow p {
+  font-family: "NetworkSansBold";
   font-size: 46px;
   line-height: 46px;
   margin: 0;

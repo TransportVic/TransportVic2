@@ -21,6 +21,7 @@ async function getData(req, res) {
     codedName: req.params.station || 'flinders-street'
   })
 
+
   let departures = (await getDepartures(station, res.db, 6, false, req.params.platform))
     .filter(departure => {
       let diff = (departure.estimatedDepartureTime || departure.scheduledDepartureTime)
@@ -29,6 +30,16 @@ async function getData(req, res) {
       return minutesDifference < 180 && secondsDifference >= 10 // minutes round down
       return true
     })
+
+  let lineGroups = departures.map(departure => departure.trip.routeName)
+    .filter((e, i, a) => a.indexOf(e) === i)
+  let groupedDepartures = lineGroups.reduce((acc, group) => {
+    acc[group] = departures.filter(departure => departure.trip.routeName === group).slice(0, 3)
+    return acc
+  }, {})
+  departures = Object.values(groupedDepartures).reduce((acc, group) => {
+    return acc.concat(group)
+  }, [])
 
   departures = await async.map(departures, async departure => {
     const timeDifference = (departure.estimatedDepartureTime || departure.scheduledDepartureTime).diff(utils.now(), 'minutes')
@@ -68,6 +79,9 @@ async function getData(req, res) {
         tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop))
       else
         tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop) || stop === 'Southern Cross')
+    } else {
+      if (northernGroup.includes(departure.trip.routeGTFSID))
+        tripPassesBy = tripPassesBy.filter(stop => stop !== 'Southern Cross')
     }
 
     let screenStops = tripPassesBy.map(stop => {

@@ -1,3 +1,17 @@
+let northernGroup = [
+  "2-B31", // craigieburn
+  "2-SYM",
+  "2-UFD",
+  "2-WBE",
+  "2-WMN",
+  "2-ain"
+]
+
+let cliftonHillGroup = [
+  "2-MER",
+  "2-HBG"
+]
+
 function formatTime(time) {
   let hours = time.getHours()
   let minutes = time.getMinutes()
@@ -19,12 +33,18 @@ function formatTime(time) {
 function getStoppingPattern(additionalInfo) {
   let stoppingPattern = ''
   if (additionalInfo.expressCount === 0)
-    stoppingPattern = 'Stopping All Stations'
+    stoppingPattern = 'Stops All'
   else if (additionalInfo.expressCount <= 2)
     stoppingPattern='Ltd Express'
   else stoppingPattern = 'Express'
 
   if (additionalInfo.viaCityLoop) stoppingPattern += ' via City Loop'
+  else {
+    if (northernGroup.includes(firstDeparture.trip.routeGTFSID)) stoppingPattern += ' via Sthn Cross'
+    else if (cliftonHillGroup.includes(firstDeparture.trip.routeGTFSID)) stoppingPattern += ' via Jolimont' //?
+    else stoppingPattern += ' via Richmond'
+
+  }
 
   return stoppingPattern
 }
@@ -54,30 +74,30 @@ setInterval(() => {
     $('.firstDepartureInfo .timeToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
     $('.stoppingAt').className = 'stoppingAt ' + firstDeparture.codedLineName
 
-    let first15Stations = firstDeparture.additionalInfo.screenStops.slice(0, 15)
-    let next15Stations = firstDeparture.additionalInfo.screenStops.slice(15)
+    let first17Stations = firstDeparture.additionalInfo.screenStops.slice(0, 17)
+    let next17Stations = firstDeparture.additionalInfo.screenStops.slice(17)
 
     let stoppingHTML = `<div>` // left
     stoppingHTML += createStationRow(' ', 'express')
-    let hasTerminating = firstDeparture.additionalInfo.screenStops.length <= 15
+    let hasTerminating = firstDeparture.additionalInfo.screenStops.length <= 17
     stoppingHTML += `<div class="stationRow">
       <img src="/static/images/mockups/station-stops-at.svg" class="${firstDeparture.codedLineName}"/>
-      <p class="${firstDeparture.codedLineName}">${first15Stations[0].stopName}</p>
+      <p class="${firstDeparture.codedLineName}">${first17Stations[0].stopName}</p>
     </div>`
-    for (station of first15Stations.slice(1, hasTerminating ? -1 : 15))
+    for (station of first17Stations.slice(1, hasTerminating ? -1 : 17))
       stoppingHTML += createStationRow(station.stopName, station.isExpress ? 'express' : 'stops-at')
 
     if (hasTerminating)
-      stoppingHTML += createStationRow(first15Stations.slice(-1)[0].stopName, 'terminates')
+      stoppingHTML += createStationRow(first17Stations.slice(-1)[0].stopName, 'terminates')
     else
       stoppingHTML += createStationRow(' ', 'filler')
 
     stoppingHTML += `</div><div>` // right
-    if (next15Stations.length) {
+    if (next17Stations.length) {
       stoppingHTML += createStationRow(' ', 'filler')
-      for (station of next15Stations.slice(0, -1))
+      for (station of next17Stations.slice(0, -1))
         stoppingHTML += createStationRow(station.stopName, station.isExpress ? 'express' : 'stops-at')
-      stoppingHTML += createStationRow(next15Stations.slice(-1)[0].stopName, 'terminates')
+      stoppingHTML += createStationRow(next17Stations.slice(-1)[0].stopName, 'terminates')
     }
     stoppingHTML += `</div>`
 
@@ -103,16 +123,16 @@ setInterval(() => {
 
         $('.right .timeToDeparture p', departureDIV).textContent = departure.prettyTimeToDeparture.replace(' ', '')
       } else {
-          $('.sideBar', departureDIV).className = 'sideBar showgrounds-flemington'
+          $('.sideBar', departureDIV).className = 'sideBar no-line'
           $('.sideBar~p', departureDIV).textContent = '--'
 
           $('.centre p', departureDIV).textContent = '--'
 
-          $('.right .platform', departureDIV).className = 'platform showgrounds-flemington'
+          $('.right .platform', departureDIV).className = 'platform no-line'
           $('.right .platform p', departureDIV).innerHTML = '&nbsp;'
 
           $('.right .timeToDeparture p', departureDIV).innerHTML = '&nbsp;'
       }
     })
   })
-}, 1000 * 15)
+}, 1000 * 17)

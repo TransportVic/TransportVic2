@@ -8,6 +8,20 @@ html
     link(rel='stylesheet' href='/static/css/mockups/fss-escalator.css')
   body
     -
+      let northernGroup = [
+        "2-B31", // craigieburn
+        "2-SYM",
+        "2-UFD",
+        "2-WBE",
+        "2-WMN",
+        "2-ain"
+      ]
+
+      let cliftonHillGroup = [
+        "2-MER",
+        "2-HBG"
+      ]
+    
       let firstDeparture = departures[0]
       let {additionalInfo} = firstDeparture
     div.contents
@@ -21,12 +35,18 @@ html
           -
             let stoppingPattern = ''
             if (additionalInfo.expressCount === 0)
-              stoppingPattern = 'Stopping All Stations'
+              stoppingPattern = 'Stops All'
             else if (additionalInfo.expressCount <= 2)
               stoppingPattern='Ltd Express'
             else stoppingPattern = 'Express'
               
             if (additionalInfo.viaCityLoop) stoppingPattern += ' via City Loop'
+            else {
+              if (northernGroup.includes(firstDeparture.trip.routeGTFSID)) stoppingPattern += ' via Sthn Cross'
+              else if (cliftonHillGroup.includes(firstDeparture.trip.routeGTFSID)) stoppingPattern += ' via Jolimont' //?
+              else stoppingPattern += ' via Richmond'
+              
+            }
           span.stoppingPattern=stoppingPattern
         div.firstDepartureTime
           div(class='platform ' + firstDeparture.codedLineName)
@@ -34,8 +54,8 @@ html
           div.timeToDeparture
             span=firstDeparture.prettyTimeToDeparture
       div.greyLine
-      - let first15Stations = additionalInfo.screenStops.slice(0, 15)
-      - let next15Stations = additionalInfo.screenStops.slice(15)
+      - let first17Stations = additionalInfo.screenStops.slice(0, 17)
+      - let next17Stations = additionalInfo.screenStops.slice(17)
       div(class='stoppingAt ' + firstDeparture.codedLineName)
         div
           mixin stationRow(name, imgSource)
@@ -46,25 +66,25 @@ html
           div
             +stationRow(" ", "express")
             
-            - let hasTerminating = additionalInfo.screenStops.length <= 15
+            - let hasTerminating = additionalInfo.screenStops.length <= 17
             
             div.stationRow
               img(src=`/static/images/mockups/station-stops-at.svg` class=firstDeparture.codedLineName)
-              p(class=firstDeparture.codedLineName)=first15Stations[0].stopName
+              p(class=firstDeparture.codedLineName)=first17Stations[0].stopName
               
-            for station in first15Stations.slice(1, hasTerminating ? -1 : 15)
+            for station in first17Stations.slice(1, hasTerminating ? -1 : 17)
               +stationRow(station.stopName, station.isExpress ? "express" : "stops-at")
             if hasTerminating
-              +stationRow(first15Stations.slice(-1)[0].stopName, "terminates")
+              +stationRow(first17Stations.slice(-1)[0].stopName, "terminates")
             else
               +stationRow(" ", "filler")
                 
           div
-            if next15Stations.length
+            if next17Stations.length
               +stationRow(" ", "filler")
-              for station in next15Stations.slice(0, -1)
+              for station in next17Stations.slice(0, -1)
                 +stationRow(station.stopName, station.isExpress ? "express" : "stops-at")
-              +stationRow(next15Stations.slice(-1)[0].stopName, "terminates")
+              +stationRow(next17Stations.slice(-1)[0].stopName, "terminates")
         
       div.next3Departures    
         div.blackLine
@@ -85,12 +105,12 @@ html
           else    
             div.smallDeparture
               div.left
-                div(class='sideBar showgrounds-flemington')
+                div(class='sideBar no-line')
                 p --
               div.centre
                 p --
               div.right
-                div(class='platform showgrounds-flemington')
+                div(class='platform no-line')
                   p &nbsp;
                 div.timeToDeparture
                   p &nbsp;        

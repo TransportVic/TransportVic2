@@ -26,6 +26,10 @@ div.sandringham {
 }
 
 div.showgrounds-flemington {
+  background-color: #e4004d;
+}
+
+div.no-line {
   background-color: #8a8a8a;
 }
 
@@ -62,6 +66,11 @@ p.sandringham {
 }
 
 p.showgrounds-flemington {
+  background-color: #e4004d;
+  color: #ffffff;
+}
+
+p.no-line {
   background-color: #8a8a8a;
   color: #ffffff;
 }
@@ -96,6 +105,10 @@ p.showgrounds-flemington {
 }
 
 .stoppingAt.showgrounds-flemington img {
+  filter: invert(12%) sepia(96%) saturate(7358%) hue-rotate(335deg) brightness(89%) contrast(101%);
+}
+
+.stoppingAt.no-line img {
   filter: invert(66%) sepia(0%) saturate(4%) hue-rotate(136deg) brightness(84%) contrast(88%);
 }
 
@@ -131,6 +144,11 @@ div.platform.sandringham {
 }
 
 div.platform.showgrounds-flemington {
+  background-color: #e4004d;
+  color: #ffffff;
+}
+
+div.platform.no-line {
   background-color: #8a8a8a;
   color: #ffffff;
 }
