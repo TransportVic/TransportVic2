@@ -23,72 +23,122 @@ html
       ]
     
       let firstDeparture = departures[0]
-      let {additionalInfo} = firstDeparture
+      let noDepartures = !departures.length
+      let additionalInfo
+      
+      if (!noDepartures)
+        additionalInfo = firstDeparture.additionalInfo
+      else firstDeparture = { codedLineName: 'no-line' }
     div.contents
       div(class='topLineBanner ' + firstDeparture.codedLineName)
-      div.firstDepartureInfo
-        div.details
-          span.scheduledDepartureTime=firstDeparture.scheduledDepartureTime.format('h:mmA').toLowerCase()
-          br
-          span.destination=firstDeparture.trip.destination.slice(0, -16)
-          br
-          -
-            let stoppingPattern = ''
-            if (additionalInfo.expressCount === 0)
-              stoppingPattern = 'Stops All'
-            else if (additionalInfo.expressCount <= 2)
-              stoppingPattern='Ltd Express'
-            else stoppingPattern = 'Express'
-              
-            if (additionalInfo.viaCityLoop) stoppingPattern += ' via City Loop'
-            else {
-              if (northernGroup.includes(firstDeparture.trip.routeGTFSID)) stoppingPattern += ' via Sthn Cross'
-              else if (cliftonHillGroup.includes(firstDeparture.trip.routeGTFSID)) stoppingPattern += ' via Jolimont' //?
-              else stoppingPattern += ' via Richmond'
-              
-            }
-          span.stoppingPattern=stoppingPattern
+      div.noDepartures(style=noDepartures ? 'display: block;' : 'display: none;')
         div.firstDepartureTime
-          div(class='platform ' + firstDeparture.codedLineName)
-            span=firstDeparture.platform
-          div.timeToDeparture
-            span=firstDeparture.prettyTimeToDeparture
-      div.greyLine
-      - let first17Stations = additionalInfo.screenStops.slice(0, 17)
-      - let next17Stations = additionalInfo.screenStops.slice(17)
-      div(class='stoppingAt ' + firstDeparture.codedLineName)
-        div
-          mixin stationRow(name, imgSource)
-            div.stationRow
-              img(src=`/static/images/mockups/station-${imgSource}.svg`)
-              p(class=imgSource)=name
-              
-          div
-            +stationRow(" ", "express")
-            
-            - let hasTerminating = additionalInfo.screenStops.length <= 17
-            
-            div.stationRow
-              img(src=`/static/images/mockups/station-stops-at.svg` class=firstDeparture.codedLineName)
-              p(class=firstDeparture.codedLineName)=first17Stations[0].stopName
-              
-            for station in first17Stations.slice(1, hasTerminating ? -1 : 17)
-              +stationRow(station.stopName, station.isExpress ? "express" : "stops-at")
-            if hasTerminating
-              +stationRow(first17Stations.slice(-1)[0].stopName, "terminates")
-            else
-              +stationRow(" ", "filler")
+          div.platform.no-line
+            span=platform
+        div.textWrapper
+          img(src='/static/images/mockups/no-boarding-train.svg')
+          p No trains are departing from this platform
+      div.firstDepartureInfo(style=noDepartures ? 'display: none;' : 'display: flex;')
+        div.details
+          if !noDepartures
+            span.scheduledDepartureTime=firstDeparture.scheduledDepartureTime.format('h:mmA').toLowerCase()
+          else
+            span.scheduledDepartureTime
+          br
+          if !noDepartures
+            span.destination=firstDeparture.trip.destination.slice(0, -16)
+          else
+            span.destination
+          br
+          if !noDepartures
+            -
+              let stoppingPattern = ''
+              if (additionalInfo.expressCount === 0)
+                stoppingPattern = 'Stops All'
+              else if (additionalInfo.expressCount <= 2)
+                stoppingPattern='Ltd Express'
+              else stoppingPattern = 'Express'
                 
-          div
-            if next17Stations.length
-              +stationRow(" ", "filler")
-              for station in next17Stations.slice(0, -1)
+              if (additionalInfo.viaCityLoop) stoppingPattern += ' via City Loop'
+              else {
+                if (northernGroup.includes(firstDeparture.trip.routeGTFSID)) stoppingPattern += ' via Sthn Cross'
+                else if (cliftonHillGroup.includes(firstDeparture.trip.routeGTFSID)) stoppingPattern += ' via Jolimont' //?
+                else stoppingPattern += ' via Richmond'
+                
+              }
+            span.stoppingPattern=stoppingPattern
+          else
+            span.stoppingPattern
+        div.firstDepartureTime
+          if !noDepartures
+            div(class='platform ' + firstDeparture.codedLineName)
+              span=platform
+            div.timeToDeparture
+              span=firstDeparture.prettyTimeToDeparture
+          else
+            div.platform
+              span
+            div.timeToDeparture
+              span
+      div.greyLine(style=noDepartures ? 'display: none;' : 'display: block;')
+      div(class='stoppingAt ' + firstDeparture.codedLineName style=noDepartures ? 'display: none;' : 'display: block;')
+        div
+          if !noDepartures
+            -
+              let n
+              let stopCount = additionalInfo.screenStops.length
+              
+              if (stopCount >= 31) n = 20
+              else if (stopCount >= 27) n = 18
+              else if (stopCount >= 24) n = 17
+              else if (stopCount >= 16) n = 16
+              // else if (stopCount >= 12) n = 12
+              else n = 12
+              
+              let firstNStations = additionalInfo.screenStops.slice(0, n)
+              let nextNStations = additionalInfo.screenStops.slice(n)
+              
+            mixin stationRow(name, imgSource)
+              -let style = 'height: 16px !important;'
+              div.stationRow(style=(imgSource.includes('stub') ? style : ''))
+                if !imgSource.includes("stub")
+                  img(src=`/static/images/mockups/station-${imgSource}.svg`)
+                else
+                  img(src=`/static/images/mockups/station-${imgSource}.svg` height="16px" width="42px" style=style)
+                p(class=imgSource)=name
+                
+            div
+              +stationRow(" ", "stub")
+              
+              - let hasTerminating = additionalInfo.screenStops.length <= n
+              
+              div.stationRow
+                img(src=`/static/images/mockups/station-stops-at.svg` class=firstDeparture.codedLineName)
+                p(class=firstDeparture.codedLineName)=firstNStations[0].stopName
+
+              for station in firstNStations.slice(1, hasTerminating ? -1 : n)
                 +stationRow(station.stopName, station.isExpress ? "express" : "stops-at")
-              +stationRow(next17Stations.slice(-1)[0].stopName, "terminates")
+              if hasTerminating
+                +stationRow(firstNStations.slice(-1)[0].stopName, "terminates")
+              else
+                +stationRow(" ", "halfstub")
+                +stationRow(" ", "filler")
+                  
+            div
+              if nextNStations.length
+                +stationRow(" ", "halfstub")
+                +stationRow(" ", "filler")
+                for station in nextNStations.slice(0, -1)
+                  +stationRow(station.stopName, station.isExpress ? "express" : "stops-at")
+                +stationRow(nextNStations.slice(-1)[0].stopName, "terminates")
+          else
+            div
+            div
         
       div.next3Departures    
         div.blackLine
-        for departure in departures.concat([null, null, null, null]).slice(1, 5)
+        - let i = 0
+        for departure in departures.concat([null, null, null, null, null]).slice(1, 5)
           if !!departure
             - let {additionalInfo} = departure
             div.smallDeparture
@@ -99,7 +149,7 @@ html
                 p=departure.trip.destination.slice(0, -16)
               div.right
                 div(class='platform ' + departure.codedLineName)
-                  p=departure.platform
+                  p=platform
                 div.timeToDeparture
                   p=departure.prettyTimeToDeparture.replace(' ', '')
           else    
@@ -113,5 +163,6 @@ html
                 div(class='platform no-line')
                   p &nbsp;
                 div.timeToDeparture
-                  p &nbsp;        
-          div.greyLine
+                  p &nbsp;
+          if i++ !== 3
+            div.greyLine

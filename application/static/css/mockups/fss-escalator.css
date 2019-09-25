@@ -13,6 +13,26 @@ div.topLineBanner {
   margin-top: 13px;
 }
 
+div.textWrapper {
+  width: 1007px;
+  height: 1500px;
+  font-size: 140px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: -50px;
+}
+
+div.textWrapper img {
+  width: 350px;
+}
+
+div.textWrapper p {
+  margin: 0;
+}
+
 div.firstDepartureInfo {
   display: flex;
 }
@@ -103,9 +123,10 @@ div.stoppingAt > div > div {
   width: 503px;
 }
 
+/* irl the screens are taller but ah wahtever */
 div.next3Departures {
   position: absolute;
-  top: 1560px;
+  top: 1575px;
   width: 1007px;
 }
 

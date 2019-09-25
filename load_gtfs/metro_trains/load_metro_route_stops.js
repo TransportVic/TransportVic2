@@ -59,6 +59,9 @@ database.connect({
                 },
                 {
                   $eq: [ "Flinders Street Railway Station", "$destination" ]
+                },
+                {
+                  $ne: [ "$routeName", "Frankston" ]
                 }
               ]
             },
@@ -80,6 +83,9 @@ database.connect({
                 },
                 {
                   $eq: [ "Flinders Street Railway Station", "$origin" ]
+                },
+                {
+                  $ne: [ "$routeName", "Frankston" ]
                 }
               ]
             },
@@ -211,7 +217,7 @@ database.connect({
         [ "Southern Cross", 22180 ],
 
         [ "Flinders Street", 19854 ],
-        
+
         [ "Southern Cross", 22180 ],
         [ "Parliament", 19843 ],
         [ "Melbourne Central", 19842 ],

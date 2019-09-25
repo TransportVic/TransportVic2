@@ -10,12 +10,12 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="42mm"
-   height="64.000221mm"
-   viewBox="0 0 42 64.000221"
+   height="16mm"
+   viewBox="0 0 42.000001 16"
    version="1.1"
    id="svg8"
    inkscape:version="0.92.2 5c3e80d, 2017-08-06"
-   sodipodi:docname="station-filler.svg">
+   sodipodi:docname="station-stub.svg">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.9293452"
-     inkscape:cx="94.318305"
-     inkscape:cy="120.94531"
+     inkscape:zoom="2.0074734"
+     inkscape:cx="79.37009"
+     inkscape:cy="7.999971"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -44,7 +44,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -52,11 +52,13 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-15.54937,-53.750916)">
-    <path
-       style="opacity:1;vector-effect:none;fill:#303030;fill-opacity:1;stroke:none;stroke-width:3.02362204;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
-       d="M 52.914062 0 L 52.914062 30.076172 L 105.82617 30.076172 L 105.82617 0 L 52.914062 0 z M 52.914062 60.3125 L 52.914062 90.548828 L 105.82617 90.548828 L 105.82617 60.3125 L 52.914062 60.3125 z M 52.914062 120.78516 L 52.914062 151.02148 L 105.82617 151.02148 L 105.82617 120.78516 L 52.914062 120.78516 z M 52.914062 181.25781 L 52.914062 211.49219 L 105.82617 211.49219 L 105.82617 181.25781 L 52.914062 181.25781 z M 52.914062 241.72852 L 52.914062 241.89062 L 105.82617 241.89062 L 105.82617 241.72852 L 52.914062 241.72852 z "
-       transform="matrix(0.26458333,0,0,0.26458333,15.54937,53.750916)"
-       id="rect1453" />
+     transform="translate(-32.397854,-103.59334)">
+    <rect
+       style="opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.63104862;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect1545"
+       width="14"
+       height="16"
+       x="46.397854"
+       y="103.59334" />
   </g>
 </svg>

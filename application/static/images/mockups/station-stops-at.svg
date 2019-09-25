@@ -26,15 +26,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.5434815"
-     inkscape:cx="93.565497"
+     inkscape:cx="-22.406091"
      inkscape:cy="111.09519"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1440"
      inkscape:window-height="855"
-     inkscape:window-x="1080"
-     inkscape:window-y="508"
+     inkscape:window-x="0"
+     inkscape:window-y="1"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata5">
@@ -54,7 +54,7 @@
      id="layer1"
      transform="translate(-15.54937,-53.750916)">
     <rect
-       style="opacity:1;vector-effect:none;fill:#303030;fill-opacity:1;stroke:none;stroke-width:1.26209712;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       style="opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.26209712;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect931"
        width="14"
        height="64"
@@ -66,6 +66,6 @@
        height="15"
        width="14"
        id="rect3415"
-       style="opacity:1;vector-effect:none;fill:#303030;fill-opacity:1;stroke:none;stroke-width:0.61101013;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
+       style="opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.61101013;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
   </g>
 </svg>

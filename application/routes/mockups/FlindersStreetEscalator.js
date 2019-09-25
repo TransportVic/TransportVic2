@@ -39,7 +39,9 @@ async function getData(req, res) {
   }, {})
   departures = Object.values(groupedDepartures).reduce((acc, group) => {
     return acc.concat(group)
-  }, [])
+  }, []).sort((a, b) => {
+    return (a.estimatedDepartureTime || a.scheduledDepartureTime) - (b.estimatedDepartureTime || b.scheduledDepartureTime)
+  })
 
   departures = await async.map(departures, async departure => {
     const timeDifference = (departure.estimatedDepartureTime || departure.scheduledDepartureTime).diff(utils.now(), 'minutes')
@@ -59,7 +61,6 @@ async function getData(req, res) {
       .map(stop => stop.stopName.slice(0, -16))
 
     let tripStops = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
-
     let startingIndex = tripStops.indexOf(station.stopName.slice(0, -16))
     tripStops = tripStops.filter((_, i) => (i >= startingIndex))
     let viaCityLoop = tripStops.includes('Flagstaff')
@@ -72,7 +73,7 @@ async function getData(req, res) {
       startingIndex = lineStops.indexOf(station.stopName.slice(0, -16))
       endingIndex = lineStops.indexOf(departure.trip.destination.slice(0, -16))
     }
-    let tripPassesBy = lineStops.filter((_, i) => (i >= startingIndex) && (i <= endingIndex))
+    let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
 
     if (!viaCityLoop) {
       if (!northernGroup.includes(departure.trip.routeGTFSID))
@@ -108,14 +109,13 @@ async function getData(req, res) {
 router.get('/:platform/:station*?', async (req, res) => {
   let {departures, station} = await getData(req, res)
 
-  if (!departures.length) return res.end('no departure need to do that screen')
-  res.render('mockups/flinders-street/escalator', { departures, bodyOnly: false })
+  res.render('mockups/flinders-street/escalator', { departures, platform: req.params.platform })
 })
 
 router.post('/:platform/:station*?', async (req, res) => {
   let {departures, station} = await getData(req, res)
 
-  res.json({departures});
+  res.json({departures, platform: req.params.platform});
 })
 
 module.exports = router
