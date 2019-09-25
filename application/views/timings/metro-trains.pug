@@ -51,7 +51,7 @@ append content
           span=departure.platform || '?'
         a.departureInfo
           span=`${departure.trip.routeName} Line towards`
-          span=departure.trip.destination.slice(0, -16)
+          span=departure.destination
           if departure.cancelled
             span.cancelled CANCELLED
           else

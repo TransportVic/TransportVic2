@@ -18,7 +18,7 @@ let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne 
 
 async function getData(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
-    codedName: 'flinders-street'
+    codedName: req.params.station || 'flinders-street'
   })
 
   let departures = (await getDepartures(station, res.db, 5, false, req.params.platform))
@@ -47,12 +47,18 @@ async function getData(req, res) {
 
     let tripStops = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
 
-    let startingIndex = tripStops.indexOf('Flinders Street')
+    let startingIndex = tripStops.indexOf(station.stopName.slice(0, -16))
     tripStops = tripStops.filter((_, i) => (i >= startingIndex))
     let viaCityLoop = tripStops.includes('Flagstaff')
 
-    startingIndex = lineStops.indexOf('Flinders Street')
+    startingIndex = lineStops.indexOf(station.stopName.slice(0, -16))
     let endingIndex = lineStops.indexOf(departure.trip.destination.slice(0, -16))
+    if (startingIndex > endingIndex) {
+      lineStops.reverse()
+
+      startingIndex = lineStops.indexOf(station.stopName.slice(0, -16))
+      endingIndex = lineStops.indexOf(departure.trip.destination.slice(0, -16))
+    }
     let tripPassesBy = lineStops.filter((_, i) => (i >= startingIndex) && (i <= endingIndex))
 
     if (!viaCityLoop) {
@@ -80,20 +86,20 @@ async function getData(req, res) {
     return departure
   })
 
-  return departures
+  return {departures, station}
 }
 
-router.get('/:platform', async (req, res) => {
-  let departures = await getData(req, res)
+router.get('/:platform/:station*?', async (req, res) => {
+  let {departures, station} = await getData(req, res)
 
   if (!departures.length) return res.end('no departure need to do that screen')
   res.render('mockups/flinders-street/escalator', { departures, bodyOnly: false })
 })
 
-router.post('/:platform', async (req, res) => {
-  let departures = await getData(req, res)
+router.post('/:platform/:station*?', async (req, res) => {
+  let {departures, station} = await getData(req, res)
 
-  res.json(departures);
+  res.json({departures});
 })
 
 module.exports = router

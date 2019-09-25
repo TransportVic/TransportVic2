@@ -40,9 +40,10 @@ setInterval(() => {
   $.ajax({
     method: 'POST'
   }, (err, status, body) => {
-    if (!body.length) return
-    let firstDeparture = body[0];
-    let next4Departures = body.concat([null, null, null, null]).slice(1, 5)
+    let {departures} = body
+    if (!departures.length) return
+    let firstDeparture = departures[0]
+    let next4Departures = departures.concat([null, null, null, null]).slice(1, 5)
 
     $('.topLineBanner').className = 'topLineBanner ' + firstDeparture.codedLineName
     $('.firstDepartureInfo .scheduledDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
@@ -61,7 +62,7 @@ setInterval(() => {
     let hasTerminating = firstDeparture.additionalInfo.screenStops.length <= 15
     stoppingHTML += `<div class="stationRow">
       <img src="/static/images/mockups/station-stops-at.svg" class="${firstDeparture.codedLineName}"/>
-      <p class="${firstDeparture.codedLineName}">Flinders Street</p>
+      <p class="${firstDeparture.codedLineName}">${first15Stations[0].stopName}</p>
     </div>`
     for (station of first15Stations.slice(1, hasTerminating ? -1 : 15))
       stoppingHTML += createStationRow(station.stopName, station.isExpress ? 'express' : 'stops-at')
@@ -89,7 +90,7 @@ setInterval(() => {
 
 
     let departureDIVs = Array.from(document.querySelectorAll('.smallDeparture'))
-    body.concat([null, null, null, null]).slice(1, 5).forEach((departure, i) => {
+    departures.concat([null, null, null, null]).slice(1, 5).forEach((departure, i) => {
       let departureDIV = departureDIVs[i]
       if (!!departure) {
         $('.sideBar', departureDIV).className = 'sideBar ' + departure.codedLineName

@@ -50,7 +50,7 @@ html
             
             div.stationRow
               img(src=`/static/images/mockups/station-stops-at.svg` class=firstDeparture.codedLineName)
-              p(class=firstDeparture.codedLineName) Flinders Street
+              p(class=firstDeparture.codedLineName)=first15Stations[0].stopName
               
             for station in first15Stations.slice(1, hasTerminating ? -1 : 15)
               +stationRow(station.stopName, station.isExpress ? "express" : "stops-at")

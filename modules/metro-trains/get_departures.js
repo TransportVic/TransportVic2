@@ -94,16 +94,22 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
 
     const scheduledDepartureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
     const scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
-    
+
     if (scheduledDepartureTime.diff(utils.now(), 'minutes') > 90) { // show only up to next 1.5 hr of departures
       return
     }
 
     const estimatedDepartureTime = departure.estimated_departure_utc ? moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne') : null
 
+    let destination = run.destination_name
+    if (routeName === 'Frankston' && destination === 'Southern Cross')
+      destination = 'Flinders Street'
+
+    destination += ' Railway Station'
+
     let trip = (await gtfsTimetables.findDocuments({
       routeName,
-      destination: run.destination_name + ' Railway Station',
+      destination,
       operationDays: utils.getYYYYMMDDNow(),
       mode: "metro train",
       stopTimings: {
@@ -116,7 +122,7 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
 
     trip = trip.sort((a, b) => utils.time24ToMinAftMidnight(b.departureTime) - utils.time24ToMinAftMidnight(a.departureTime))[0]
 
-    if (!trip) return
+    if (!trip) return console.log(departure, run)
 
     const cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(departure.route_id, runID, run.destination_name) : []
 
