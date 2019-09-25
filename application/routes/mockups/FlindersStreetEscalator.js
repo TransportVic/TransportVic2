@@ -21,10 +21,12 @@ async function getData(req, res) {
     codedName: req.params.station || 'flinders-street'
   })
 
-  let departures = (await getDepartures(station, res.db, 5, false, req.params.platform))
+  let departures = (await getDepartures(station, res.db, 6, false, req.params.platform))
     .filter(departure => {
-      let minutesDifference = (departure.estimatedDepartureTime || departure.scheduledDepartureTime).diff(utils.now(), 'minutes')
-      // return minutesDifference < 180
+      let diff = (departure.estimatedDepartureTime || departure.scheduledDepartureTime)
+      let minutesDifference = diff.diff(utils.now(), 'minutes')
+      let secondsDifference = diff.diff(utils.now(), 'seconds')
+      return minutesDifference < 180 && secondsDifference >= 30
       return true
     })
 
