@@ -53,8 +53,8 @@ function getStoppingPattern(firstDeparture) {
 function createStationRow(name, imgSource) {
   let style = 'height: 16px !important;'
   return `<div class="stationRow" style="${imgSource.includes('stub') ? style : ''}">`
-  + (imgSource.includes('sub') ? `<img src="/static/images/mockups/station-${imgSource}.svg height="16px" width="42px" style="${style}">`
-  : `<img src="/static/images/mockups/station-${imgSource}.svg>`)
+  + (imgSource.includes('sub') ? `<img src="/static/images/mockups/station-${imgSource}.svg" height="16px" width="42px" style="${style}">`
+  : `<img src="/static/images/mockups/station-${imgSource}.svg">`)
   + `<p class="${imgSource}">${name}</p>
 </div>`
 }
