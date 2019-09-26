@@ -109,6 +109,7 @@ div.stationRow p {
   margin-left: 10px;
   padding-left: 10px;
   padding-right: 10px;
+  white-space: nowrap;
 }
 
 div.stationRow p.express {

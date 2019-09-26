@@ -2,7 +2,7 @@ const TimedCache = require('timed-cache')
 const async = require('async')
 const ptvAPI = require('../../ptv-api')
 const utils = require('../../utils')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1 })
+const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 100 })
 const moment = require('moment')
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
@@ -109,8 +109,20 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
     if ((!northenGroup.includes(departure.route_id)) && destination === 'Parliament')
         possibleDestinations.push('Flinders Street')
 
+    let possibleLines = [routeName]
+    if (routeName === 'Belgrave' && destination !== 'Belgrave')
+      possibleLines.push('Lilydale')
+    if (routeName === 'Lilydale' && destination !== 'Lilydale')
+      possibleLines.push('Belgrave')
+    if (routeName === 'Pakenham' && destination !== 'Pakenham')
+      possibleLines.push('Cranbourne')
+    if (routeName === 'Cranbourne' && destination !== 'Cranbourne')
+      possibleLines.push('Pakenham')
+
     let trip = (await gtfsTimetables.findDocuments({
-      routeName,
+      routeName: {
+        $in: possibleLines
+      },
       destination: {
         $in: possibleDestinations.map(dest => dest + ' Railway Station')
       },

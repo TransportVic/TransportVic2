@@ -126,7 +126,7 @@ setInterval(() => {
 
       stoppingHTML += `</div><div>` // right
       if (nextNStations.length) {
-        stoppingHTML += createStationRow(' ', 'stub')
+        stoppingHTML += createStationRow(' ', 'halfstub')
         stoppingHTML += createStationRow(' ', 'filler')
         for (station of nextNStations.slice(0, -1))
           stoppingHTML += createStationRow(station.stopName, station.isExpress ? 'express' : 'stops-at')
