@@ -98,6 +98,7 @@ html
               let firstNStations = additionalInfo.screenStops.slice(0, n)
               let nextNStations = additionalInfo.screenStops.slice(n)
               
+            // possible - load all icons at once? then switch (display=none & display=block) as needed?
             mixin stationRow(name, imgSource)
               -let style = 'height: 16px !important;'
               div.stationRow(style=(imgSource.includes('stub') ? style : ''))
