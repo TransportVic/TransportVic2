@@ -30,7 +30,8 @@ function formatTime(time) {
   return mainTime
 }
 
-function getStoppingPattern(additionalInfo) {
+function getStoppingPattern(firstDeparture) {
+  let {additionalInfo} = firstDeparture
   let stoppingPattern = ''
   if (additionalInfo.expressCount === 0)
     stoppingPattern = 'Stops All'
@@ -86,14 +87,14 @@ setInterval(() => {
       $('.topLineBanner').className = 'topLineBanner ' + firstDeparture.codedLineName
       $('.firstDepartureInfo .scheduledDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
       $('.firstDepartureInfo .destination').textContent = firstDeparture.trip.destination.slice(0, -16)
-      $('.firstDepartureInfo .stoppingPattern').textContent = getStoppingPattern(firstDeparture.additionalInfo)
+      $('.firstDepartureInfo .stoppingPattern').textContent = getStoppingPattern(firstDeparture)
       $('.firstDepartureInfo .platform').className = 'platform ' + firstDeparture.codedLineName
       $('.firstDepartureInfo .platform span').textContent = firstDeparture.platform
       $('.firstDepartureInfo .timeToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
       $('.stoppingAt').className = 'stoppingAt ' + firstDeparture.codedLineName
 
       let n
-      let stopCount = additionalInfo.screenStops.length
+      let stopCount = firstDeparture.additionalInfo.screenStops.length
 
       if (stopCount >= 31) n = 20
       else if (stopCount >= 28) n = 18
@@ -139,7 +140,7 @@ setInterval(() => {
         $('.stoppingAt').appendChild(containerDIV)
       }, hasTerminating ? 100 : 200)
     }
-    
+
     let departureDIVs = Array.from(document.querySelectorAll('.smallDeparture'))
     departures.concat([null, null, null, null, null]).slice(1, 5).forEach((departure, i) => {
       let departureDIV = departureDIVs[i]
