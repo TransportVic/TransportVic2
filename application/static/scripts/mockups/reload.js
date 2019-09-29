@@ -87,7 +87,7 @@ setInterval(() => {
 
       $('.topLineBanner').className = 'topLineBanner ' + firstDeparture.codedLineName
       $('.firstDepartureInfo .scheduledDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
-      $('.firstDepartureInfo .destination').textContent = firstDeparture.trip.destination.slice(0, -16)
+      $('.firstDepartureInfo .destination').textContent = firstDeparture.trip.destination
       $('.firstDepartureInfo .stoppingPattern').textContent = getStoppingPattern(firstDeparture)
       $('.firstDepartureInfo .platform').className = 'platform ' + firstDeparture.codedLineName
       $('.firstDepartureInfo .platform span').textContent = firstDeparture.platform
@@ -100,7 +100,7 @@ setInterval(() => {
       if (stopCount >= 31) n = 20
       else if (stopCount >= 28) n = 18
       else if (stopCount >= 24) n = 17
-      else if (stopCount >= 16) n = 16
+      else if (stopCount >= 12) n = 16
       // else if (stopCount >= 12) n = 12
       else n = 12
 
@@ -149,7 +149,7 @@ setInterval(() => {
         $('.sideBar', departureDIV).className = 'sideBar ' + departure.codedLineName
         $('.sideBar~p', departureDIV).textContent = formatTime(new Date(departure.scheduledDepartureTime))
 
-        $('.centre p', departureDIV).textContent = departure.trip.destination.slice(0, -16)
+        $('.centre p', departureDIV).textContent = departure.trip.destination
 
         $('.right .platform', departureDIV).className = 'platform ' + departure.codedLineName
         $('.right .platform p', departureDIV).textContent = departure.platform

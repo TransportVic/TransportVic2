@@ -1,0 +1,12 @@
+html
+  head
+    script(src='https://api.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js')
+    link(href='https://api.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css' rel='stylesheet')
+    
+    script(src='/static/scripts/util.js')
+  body
+    div#map(style='width: 100vw; height: 50vh;')
+    textarea(style='width: 100vw; height: 49vw;')#content
+    br
+    button#update Update
+    script(src='/static/scripts/geojson-visualise.js')

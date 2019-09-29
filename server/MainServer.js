@@ -94,6 +94,7 @@ module.exports = class MainServer {
       'timing-pages/VLine': '/vline/timings',
       'timing-pages/MetroTrains': '/metro/timings',
 
+      GeoJSONVisualiser: '/geojson-visualise',
 
       'mockups/FlindersStreetEscalator': '/mockups/fss-escalator'
     }

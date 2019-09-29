@@ -46,7 +46,7 @@ html
             span.scheduledDepartureTime
           br
           if !noDepartures
-            span.destination=firstDeparture.trip.destination.slice(0, -16)
+            span.destination=firstDeparture.trip.destination
           else
             span.destination
           br
@@ -91,7 +91,7 @@ html
               if (stopCount >= 31) n = 20
               else if (stopCount >= 27) n = 18
               else if (stopCount >= 24) n = 17
-              else if (stopCount >= 16) n = 16
+              else if (stopCount >= 12) n = 16 // ?? should really have checked but aw - moorabbin shorts
               // else if (stopCount >= 12) n = 12
               else n = 12
               
@@ -147,7 +147,7 @@ html
                 div(class='sideBar ' + departure.codedLineName)
                 p=departure.scheduledDepartureTime.format('h:mmA').toLowerCase()
               div.centre
-                p=departure.trip.destination.slice(0, -16)
+                p=departure.trip.destination
               div.right
                 div(class='platform ' + departure.codedLineName)
                   p=platform

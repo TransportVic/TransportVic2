@@ -66,12 +66,12 @@ async function getData(req, res) {
     let viaCityLoop = tripStops.includes('Flagstaff')
 
     startingIndex = lineStops.indexOf(station.stopName.slice(0, -16))
-    let endingIndex = lineStops.indexOf(departure.trip.destination.slice(0, -16))
+    let endingIndex = lineStops.indexOf(departure.trip.destination)
     if (startingIndex > endingIndex) {
       lineStops.reverse()
 
       startingIndex = lineStops.indexOf(station.stopName.slice(0, -16))
-      endingIndex = lineStops.indexOf(departure.trip.destination.slice(0, -16))
+      endingIndex = lineStops.indexOf(departure.trip.destination)
     }
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
 

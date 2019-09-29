@@ -12,6 +12,7 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
     }
     return {
       routeGTFSID: utils.simplifyRouteGTFSID(values[0]),
+      fullGTFSID: values[0],
       routeName: adjustedRouteName,
       shortRouteName
     }
@@ -23,21 +24,10 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
     // console.log(route.routeName, route.shortRouteName, route.routeGTFSID)
     if (!nameFilter(route.routeName)) return
     if (!mergedRoutes[route.routeGTFSID]) {
-      let routeShapeData = shapeData.filter(data => data[0].startsWith(route.routeGTFSID))
-      .sort((a, b) => a[3] - b[3])
-
-      const routeLength = routeShapeData.slice(-1)[0][4]
-      routeShapeData = routeShapeData.map(data => [data[2], data[1]])
-
       mergedRoutes[route.routeGTFSID] = {
         routeName: route.routeName,
         codedName: utils.encodeName(route.routeName),
         routeGTFSID: route.routeGTFSID,
-        routePath: {
-          type: "LineString",
-          coordinates: routeShapeData
-        },
-        routeLength: parseFloat(routeLength),
         operators: operator(route.routeName),
         directions: [],
         mode
@@ -53,6 +43,36 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
   })
 
   await async.forEach(Object.values(mergedRoutes), async mergedRouteData => {
+    let routeTypes = {}
+    let routeLengths = {}
+    let mergedRouteTypes = {}
+
+    shapeData.filter(data => data[0].startsWith(mergedRouteData.routeGTFSID)).forEach(line => {
+      if (!routeTypes[line[0]]) routeTypes[line[0]] = []
+      routeTypes[line[0]].push(line)
+    })
+
+    Object.keys(routeTypes).forEach(routeGTFSID => {
+      let shapeData = routeTypes[routeGTFSID].filter((line, i, a) => {
+        if (a[i - 1])
+          return a[i - 1][4] !== line[4]
+        return true
+      }).map(line => [line[2], line[1]])
+      let routeLength = routeTypes[routeGTFSID].slice(-1)[0][4]
+      routeTypes[routeGTFSID] = shapeData
+
+      if (!routeLengths[routeLength])
+        routeLengths[routeLength] = []
+
+      routeLengths[routeLength].push(routeGTFSID)
+    })
+
+    Object.keys(routeLengths).forEach(length => {
+      mergedRouteTypes[routeLengths[length].join(',')] = routeTypes[routeLengths[length][0]]
+    })
+
+    mergedRoutes[mergedRouteData.routeGTFSID].routePath = mergedRouteTypes
+
     await routes.replaceDocument({ routeName: mergedRouteData.routeName }, mergedRouteData, {
       upsert: true
     })
