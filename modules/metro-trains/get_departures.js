@@ -121,6 +121,8 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
         possibleLines = ['Frankston', 'Werribee', 'Williamstown']
       else if ([5, 8].includes(routeID))
         possibleLines = ['Mernda', 'Hurstbridge']
+      else if ([3, 15].includes(routeID))
+        possibleLines = ['Craigieburn', 'Upfield']
       if (routeID == 6)
         possibleLines = possibleLines.concat(['Cranbourne', 'Pakenham'])
 
