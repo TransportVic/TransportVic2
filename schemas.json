@@ -62,8 +62,12 @@
     "routeName": "string",
     "codedName": "string",
     "routeGTFSID": "string",
-    "routePath": "GeoJSON:LineString",
-    "routeLength": "number",
+    "routePath": [{
+      "fullGTFSIDs": ["string"],
+      "path": [
+        ["lng", "lat"]
+      ]
+    }],
     "operators": ["string"],
     "directions": [{
       "directionName": "string",

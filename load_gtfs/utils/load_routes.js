@@ -71,7 +71,12 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
       mergedRouteTypes[routeLengths[length].join(',')] = routeTypes[routeLengths[length][0]]
     })
 
-    mergedRoutes[mergedRouteData.routeGTFSID].routePath = mergedRouteTypes
+    mergedRoutes[mergedRouteData.routeGTFSID].routePath = Object.keys(mergedRouteTypes).reduce((acc, key) => {
+      return acc.concat({
+        fullGTFSIDs: key.split(','),
+        path: mergedRouteTypes[key]
+      })
+    }, [])
 
     await routes.replaceDocument({ routeName: mergedRouteData.routeName }, mergedRouteData, {
       upsert: true
