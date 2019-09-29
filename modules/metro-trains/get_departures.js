@@ -2,7 +2,7 @@ const TimedCache = require('timed-cache')
 const async = require('async')
 const ptvAPI = require('../../ptv-api')
 const utils = require('../../utils')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 100 })
+const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1 })
 const moment = require('moment')
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
@@ -70,20 +70,23 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
   let transformedDepartures = []
 
   const metroPlatform = station.bays.filter(bay => bay.mode === 'metro train')[0]
+  const stationName = station.stopName.slice(0, -16).toLowerCase()
   const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=${departuresCount}&include_cancelled=${includeCancelled}&expand=run&expand=route${platform ? `&platform_numbers=${platform}` : ''}`)
 
   await async.forEach(departures, async departure => {
     const run = runs[departure.run_id]
-    let routeName = routes[departure.route_id].route_name
+    let routeID = departure.route_id
+    let routeName = routes[routeID].route_name
     if (routeName === 'Showgrounds - Flemington Racecourse') routeName = 'Showgrounds/Flemington'
     let platform = departure.platform_number
+    let runDestination = run.destination_name
 
     if (platform == null) { // show replacement bus
       if (departure.flags.includes('RRB-RUN')) platform = 'RRB';
       run.vehicle_descriptor = {}
     }
 
-    if (departure.route_id === 13) { // stony point platforms
+    if (routeID === 13) { // stony point platforms
       if (station.stopName === 'Frankston Railway Station') platform = 3;
       else platform = 1;
       run.vehicle_descriptor = {} // ok maybe we should have kept the STY timetable but ah well
@@ -101,23 +104,28 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
 
     const estimatedDepartureTime = departure.estimated_departure_utc ? moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne') : null
 
-    let possibleDestinations = [run.destination_name]
+    let possibleDestinations = [runDestination]
 
-    let destination = run.destination_name
+    let destination = runDestination
     if (routeName === 'Frankston' && destination === 'Southern Cross')
       possibleDestinations.push('Flinders Street')
-    if ((!northenGroup.includes(departure.route_id)) && destination === 'Parliament')
-        possibleDestinations.push('Flinders Street')
 
     let possibleLines = [routeName]
-    if (routeName === 'Belgrave' && destination !== 'Belgrave')
-      possibleLines.push('Lilydale')
-    if (routeName === 'Lilydale' && destination !== 'Lilydale')
-      possibleLines.push('Belgrave')
-    if (routeName === 'Pakenham' && destination !== 'Pakenham')
-      possibleLines.push('Cranbourne')
-    if (routeName === 'Cranbourne' && destination !== 'Cranbourne')
-      possibleLines.push('Pakenham')
+    if (cityLoopStations.includes(stationName)) {
+
+      if ([1, 2, 7, 9].includes(routeID))
+        possibleLines = ['Alamein', 'Belgrave', 'Glen Waverley', 'Lilydale']
+      else if ([4, 11].includes(routeID))
+        possibleLines = ['Cranbourne', 'Pakenham', 'Frankston']
+      else if ([6, 16, 17].includes(routeID))
+        possibleLines = ['Frankston', 'Werribee', 'Williamstown']
+      else if ([5, 8].includes(routeID))
+        possibleLines = ['Mernda', 'Hurstbridge']
+      if (routeID == 6)
+        possibleLines = possibleLines.concat(['Cranbourne', 'Pakenham'])
+
+      possibleDestinations.push('Flinders Street')
+    }
 
     let trip = (await gtfsTimetables.findDocuments({
       routeName: {
@@ -138,14 +146,37 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
 
     trip = trip.sort((a, b) => utils.time24ToMinAftMidnight(b.departureTime) - utils.time24ToMinAftMidnight(a.departureTime))[0]
 
-    if (!trip) return console.log(departure, run)
+    if (!trip) return console.log(departure, run, {
+      routeName: {
+        $in: possibleLines
+      },
+      destination: {
+        $in: possibleDestinations.map(dest => dest + ' Railway Station')
+      },
+      operationDays: utils.getYYYYMMDDNow(),
+      mode: "metro train",
+      stopTimings: {
+        $elemMatch: {
+          stopGTFSID: metroPlatform.stopGTFSID,
+          departureTimeMinutes: scheduledDepartureTimeMinutes
+        }
+      }
+    })
 
-    const cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(departure.route_id, runID, run.destination_name) : []
+    let cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(routeID, runID, runDestination) : []
+
+    trip.destination = trip.destination.slice(0, -16)
+
+    if (cityLoopStations.includes(stationName) && run.destination !== trip.destination) {
+      // trip is towards at flinders, but ptv api already gave next trip
+      // really only seems to happen with cran/pak/frank lines
+      cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
+    }
 
     transformedDepartures.push({
       trip, scheduledDepartureTime, estimatedDepartureTime, platform,
       scheduledDepartureTimeMinutes, cancelled: run.status === 'cancelled', cityLoopConfig,
-      destination: run.destination_name, runID
+      destination: runDestination, runID
     })
   })
 

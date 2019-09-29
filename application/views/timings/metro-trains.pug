@@ -51,12 +51,16 @@ append content
           span=departure.platform || '?'
         a.departureInfo
           span=`${departure.trip.routeName} Line towards`
-          span=departure.destination
+          span=departure.trip.destination
           if departure.cancelled
             span.cancelled CANCELLED
           else
             if cityLoopStationNames.includes(station.stopName) || departure.trip.direction === 'Up'
-              span=departure.cityLoopConfig.join(', ')
+              -
+                let text = departure.cityLoopConfig.join(', ')
+                if (departure.destination !== departure.trip.destination)
+                  text += ' -> ' + departure.destination
+              span=text
         div.timings
           a(class='timing ' + departure.headwayDevianceClass)
             span=departure.prettyTimeToArrival
