@@ -97,8 +97,8 @@ setInterval(() => {
       let n
       let stopCount = firstDeparture.additionalInfo.screenStops.length
 
-      if (stopCount >= 31) n = 20
-      else if (stopCount >= 28) n = 18
+      if (stopCount >= 32) n = 20
+      else if (stopCount == 27) n = 18
       else if (stopCount >= 24) n = 17
       else if (stopCount >= 12) n = 16
       // else if (stopCount >= 12) n = 12
