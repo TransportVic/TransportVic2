@@ -112,7 +112,7 @@ function timingToMinutesAfterMidnight (timing) {
 let timetableCount = 0
 
 async function loadTimetableCSV (filename) {
-  let timetable = fs.readFileSync('vnet_timetables/' + filename + '.csv').toString()
+  let timetable = fs.readFileSync('load_gtfs/vline_trains/timetables/' + filename + '.csv').toString()
   timetable = await new Promise(resolve => parseCSV(timetable, {
     trim: true,
     skip_empty_lines: true
