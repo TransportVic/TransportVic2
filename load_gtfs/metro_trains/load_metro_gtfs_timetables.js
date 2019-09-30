@@ -86,7 +86,7 @@ database.connect({
     let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(trip[0]),
         serviceID = trip[1],
         tripID = gtfsUtils.simplifyRouteGTFSID(trip[2]),
-        shapeID = gtfsUtils.simplifyRouteGTFSID(trip[3]),
+        shapeID = trip[3],
         direction = trip[4].includes('Flinders Street') || (routeGTFSID === '2-SPT' && trip[4] === 'Frankston'),
         gtfsDirection = trip[5]
 
@@ -108,7 +108,8 @@ database.connect({
       departureTime: null,
       origin: null,
       direction,
-      gtfsDirection
+      gtfsDirection,
+      shapeID
     }
   })
 

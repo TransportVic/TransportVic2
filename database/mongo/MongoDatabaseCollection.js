@@ -35,8 +35,8 @@ module.exports = class MongoDatabaseCollection {
 
   }
 
-  distinct (field) {
-    return this.collection.distinct(field, { cursor: {} })
+  distinct (field, query) {
+    return this.collection.distinct(field, query, { cursor: {} })
   }
 
   countDocuments (query) {
