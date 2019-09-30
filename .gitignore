@@ -3,3 +3,4 @@
 /urls.json
 /node_modules
 /gtfs
+.DS_Store
