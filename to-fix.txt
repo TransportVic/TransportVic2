@@ -1,0 +1,36 @@
+{
+  stop_id: 1181,
+  route_id: 15,
+  run_id: 953054,
+  direction_id: 1,
+  disruption_ids: [ 186114, 183388 ],
+  scheduled_departure_utc: '2019-10-01T12:54:00Z',
+  estimated_departure_utc: '2019-10-01T12:56:00Z',
+  at_platform: false,
+  platform_number: '11',
+  flags: '',
+  departure_sequence: 0
+} {
+  run_id: 953054,
+  route_id: 15,
+  route_type: 0,
+  final_stop_id: 1071,
+  destination_name: 'Flinders Street',
+  status: 'updated',
+  direction_id: 1,
+  run_sequence: 0,
+  express_stop_count: 0,
+  vehicle_position: null,
+  vehicle_descriptor: {
+    operator: 'Metro Trains Melbourne',
+    id: '5054',
+    low_floor: null,
+    air_conditioned: null,
+    description: '6 Car Siemens',
+    supplier: 'CIS - Metro Trains Melbourne'
+  }
+}
+
+// problem: gtfs says this is next trip SCS -> UPF
+// ptv says this is UPF -> FSS
+// check static tt for runID, merge??

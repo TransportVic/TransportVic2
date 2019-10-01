@@ -69,7 +69,7 @@ function minutesPastMidnightTo24Time(minutesPastMidnight) {
   return utils.pad(hours, 2) + ':' + utils.pad(minutes, 2)
 }
 
-async function parseTimetable(data, lineName) {
+async function parseTimetable(data, routeName) {
   let timetableByDays = {0: {}, 1: {}, 2: {}, 3: {}};
   await async.forEach(data, async stop => {
     const runID = stop.trip_id,
@@ -83,7 +83,7 @@ async function parseTimetable(data, lineName) {
     if (!timetableByDays[tripDay][runID]) timetableByDays[tripDay][runID] = {
       mode: 'metro train',
       operator: 'Metro Trains Melbourne',
-      lineName,
+      routeName,
       runID,
       operationDays: dayCodeToArray(tripDay),
       vehicle: null,
@@ -93,7 +93,7 @@ async function parseTimetable(data, lineName) {
       destination: null,
       departureTime: null,
       origin: null,
-      direction: stop.to_city === '1' ? 'up' : 'down'
+      direction: stop.to_city === '1' ? 'Up' : 'Down'
     }
 
     timetableByDays[tripDay][runID].stopTimings.push({
@@ -142,8 +142,8 @@ async function parseTimetable(data, lineName) {
   })
 }
 
-async function loadLineJSON(lineName) {
-  let codedLineName = utils.encodeName(lineName)
+async function loadLineJSON(routeName) {
+  let codedLineName = utils.encodeName(routeName)
   let data = JSON.parse(fs.readFileSync('load_gtfs/metro_trains/timetables/' + codedLineName + '.json').toString())
   data = data.map(stop => {
     stop.time_seconds = parseInt(stop.time_seconds)
@@ -152,7 +152,7 @@ async function loadLineJSON(lineName) {
     return stop
   })
 
-  await parseTimetable(data, lineName);
+  await parseTimetable(data, routeName);
 }
 
 database.connect({
@@ -164,7 +164,7 @@ database.connect({
   timetables.createIndex({
     mode: 1,
     operator: 1,
-    lineName: 1,
+    routeName: 1,
     runID: 1,
     operationDays: 1,
     origin: 1,
@@ -175,8 +175,8 @@ database.connect({
   async function loadLine() {
     if (i++ === lines.length - 1) return
 
-    const lineName = lines[i]
-    await loadLineJSON(lineName)
+    const routeName = lines[i]
+    await loadLineJSON(routeName)
 
     await loadLine()
   }

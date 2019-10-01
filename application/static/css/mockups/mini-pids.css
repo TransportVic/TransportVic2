@@ -1,0 +1,68 @@
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+p {
+  margin: 0;
+}
+
+div.content {
+  width: 100vw;
+  height: 30vw;
+  background-color: black;
+  color: white;
+}
+
+div.topRow {
+  height: 10vw;
+  display: flex;
+  font-family: "NetworkSansBold";
+}
+
+p.firstDestination {
+  font-size: 9.5vw;
+  font-kerning: auto;
+  margin-left: 0.75vw;
+  letter-spacing: -0.5vw;
+  margin-top: -1vw;
+}
+
+div.firstDepartureInfo {
+  margin-left: auto;
+  text-align: center;
+  display: flex;
+}
+
+div.firstDepartureInfo > div {
+  margin-right: 3vw;
+}
+
+div.scheduled p:nth-child(1), div.actual > p:nth-child(1) {
+  font-family: "NetworkSansMedium";
+  font-size: 2vw;
+  margin-top: 1vw;
+}
+
+div.scheduled p:nth-child(2) {
+  font-size: 5vw;
+  margin-left: 0.4vw;
+  margin-top: -1vw;
+}
+
+div.actual div:nth-child(2) {
+  margin-top: -1vw;
+}
+
+div.actual div:nth-child(2) > span:nth-child(1) {
+  font-size: 5vw;
+  margin-left: 0.4vw;
+}
+
+div.actual div:nth-child(2) > span:nth-child(2) {
+  font-size: 2vw;
+  /* margin-left: 0.4vw; */
+}

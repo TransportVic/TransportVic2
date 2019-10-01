@@ -1,0 +1,29 @@
+html
+  head
+    script(src='/static/scripts/util.js')
+    //- script(src='/static/scripts/mockups/reload.js' async) 
+    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
+    link(rel='stylesheet' href='/static/css/mockups/mini-pids.css')
+  body
+    div.content
+      -
+        let firstDeparture = departures[0]
+      div.topRow
+        //- Flinders Street   Scheduled 9:40 Departing 1min
+        - if (firstDeparture.destination === 'Parliament') firstDeparture.destination = 'City Loop'
+        p.firstDestination=firstDeparture.destination
+        div.firstDepartureInfo
+          div.scheduled
+            p Scheduled
+            p=firstDeparture.scheduledDepartureTime.format('h:mm').toLowerCase()
+          div.actual
+            p Departing
+            div
+              if firstDeparture.minutesToDeparture > 0
+                span=firstDeparture.minutesToDeparture
+                span min
+              else
+                span NOW
+          div.actual
+      div.middleRow
+      div.whiteLine

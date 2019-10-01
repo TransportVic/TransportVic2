@@ -65,6 +65,7 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
   }
 
   const gtfsTimetables = db.getCollection('gtfs timetables')
+  const timetables = db.getCollection('timetables')
 
   const minutesPastMidnight = utils.getMinutesPastMidnightNow()
   let transformedDepartures = []
@@ -127,6 +128,10 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
         possibleLines = possibleLines.concat(['Cranbourne', 'Pakenham'])
 
       possibleDestinations.push('Flinders Street')
+    } else {
+      if (routeName === 'Pakenham' || routeName === 'Cranbourne' && destination === 'Parliament') {
+        possibleDestinations.push('Flinders Street')
+      }
     }
 
     let trip = (await gtfsTimetables.findDocuments({
@@ -145,6 +150,10 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
         }
       }
     }).limit(2).toArray())
+    if (!trip.length)
+      trip = [await timetables.findDocument({
+        runID
+      })]
 
     trip = trip.sort((a, b) => utils.time24ToMinAftMidnight(b.departureTime) - utils.time24ToMinAftMidnight(a.departureTime))[0]
 

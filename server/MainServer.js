@@ -96,7 +96,8 @@ module.exports = class MainServer {
 
       GeoJSONVisualiser: '/geojson-visualise',
 
-      'mockups/FlindersStreetEscalator': '/mockups/fss-escalator'
+      'mockups/FlindersStreetEscalator': '/mockups/fss-escalator',
+      'mockups/MiniLCD-PIDS': '/mockups/mini-lcd-pids'
     }
 
     Object.keys(routers).forEach(routerName => {
