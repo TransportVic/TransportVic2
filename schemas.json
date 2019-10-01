@@ -55,7 +55,8 @@
       "services": ["string"],
       "location": "GeoJSON:Point",
       "stopNumber": "string",
-      "mode": "string"
+      "mode": "string",
+      "mykiZones": ["number"]
     }]
   },
   "route": {

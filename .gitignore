@@ -3,4 +3,5 @@
 /urls.json
 /node_modules
 /gtfs
+/spatial_datamart
 .DS_Store

@@ -1,9 +1,16 @@
 const utils = require('../../utils')
 const async = require('async')
 
-module.exports = async function (stopsData, stops, mode) {
+module.exports = async function (stopsData, stops, mode, lookupTable) {
   const allStops = stopsData.map(values => {
-    const stopNameData = values[1].match(/([^(]+) \((.+)+\)/)
+    let matchedStop = lookupTable[values[0]]
+    if (!matchedStop) matchedStop = {
+      stopName: values[1] + ' (?)',
+      mykiZones: []
+    }
+    let { mykiZones } = matchedStop
+
+    const stopNameData = matchedStop.stopName.match(/([^(]+) \((.+)+\)/)
 
     let fullStopName = utils.adjustStopname(stopNameData[1]),
         stopName = utils.extractStopName(fullStopName);
@@ -14,7 +21,8 @@ module.exports = async function (stopsData, stops, mode) {
       stopGTFSID: parseInt(values[0]),
       suburb: stopNameData[2],
       codedName: utils.encodeName(stopName.slice(0, -16)),
-      location: [values[3], values[2]].map(parseFloat)
+      location: [values[3], values[2]].map(parseFloat),
+      mykiZones
     }
   });
 
@@ -29,7 +37,8 @@ module.exports = async function (stopsData, stops, mode) {
         coordinates: stop.location
       },
       stopNumber: null,
-      mode
+      mode,
+      mykiZones: stop.mykiZones
     }
 
     if (mergedStops[stop.stopName]) {
@@ -54,12 +63,12 @@ module.exports = async function (stopsData, stops, mode) {
     if (stopData = await stops.findDocument({stopName: stop.stopName})) {
       let baysToUpdate = stop.bays.map(bay => bay.stopGTFSID)
 
-      stopData.bays = stopData.bays
+      stop.bays = stopData.bays
         .filter(bay => !(baysToUpdate.includes(bay.stopGTFSID) && bay.mode === mode))
         .concat(stop.bays)
 
       await stops.updateDocument({stopName: stop.stopName}, {
-        $set: stopData
+        $set: stop
       })
     } else {
       await stops.createDocument(stop)
