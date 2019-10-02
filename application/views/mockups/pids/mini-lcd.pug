@@ -1,7 +1,7 @@
 html
   head
     script(src='/static/scripts/util.js')
-    //- script(src='/static/scripts/mockups/reload.js' async) 
+    script(src='/static/scripts/mockups/reload-mini-lcd.js' async) 
     link(rel='stylesheet' href='/static/css/mockups/base-style.css')
     link(rel='stylesheet' href='/static/css/mockups/mini-pids.css')
   body
@@ -25,12 +25,13 @@ html
           }
         })
         blocks.push({stops: currentBlock, isExpress: blockIsExpress})
+        blocks = blocks.filter(block => block.stops.length)
+
         if (additionalInfo.expressCount == 1)
-          return 'Not Stopping At ' + blocks[1][0]
+          return 'Not Stopping At ' + blocks[1].stops[0]
         if (additionalInfo.expressCount == 0)
           return 'Stops All Stations'
 
-        blocks = blocks.filter(block => block.stops.length)
         let previousExpress = false;
 
         blocks.forEach((block, i) => {
@@ -101,15 +102,16 @@ html
       div.topRow
         //- Flinders Street   Scheduled 9:40 Departing 1min
         -
-          if (firstDeparture.trip.destination === 'Parliament') firstDeparture.trip.destination = 'City Loop'
+          let firstDestination = firstDeparture.trip.destination
+          if (firstDestination === 'Parliament') firstDestination = 'City Loop'
           let style = ''
-          if (firstDeparture.trip.destination.length > 12)
+          if (firstDestination.length > 12)
             style = 'transform: translateX(-5%) scaleX(0.9)'
-        p(style=style).firstDestination=firstDeparture.trip.destination
+        p(style=style).firstDestination=firstDestination
         div.firstDepartureInfo
           div.scheduled
             p Scheduled
-            p=firstDeparture.scheduledDepartureTime.format('h:mm').toLowerCase()
+            p=firstDeparture.scheduledDepartureTime.format('h:mm')
           div.actual
             p Departing
             div
@@ -118,6 +120,7 @@ html
                 span min
               else
                 span Now
+                span
       div.middleRow
         - let stoppingPattern = getStoppingPattern(firstDeparture.additionalInfo)
         p=stoppingPattern
@@ -125,9 +128,11 @@ html
       div.bottomRow
         -
           let secondDeparture = departures[1]
+          let secondDestination = secondDeparture.destination
+          if (secondDestination === 'Parliament') secondDestination = 'City Loop'
         if secondDeparture
-          span=secondDeparture.scheduledDepartureTime.format('h:mm').toLowerCase()
-          span=secondDeparture.trip.destination
+          span=secondDeparture.scheduledDepartureTime.format('h:mm')
+          span=secondDestination
           span=getStoppingType(secondDeparture.additionalInfo)
           div
             span=secondDeparture.minutesToDeparture

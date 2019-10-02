@@ -6,7 +6,7 @@ const async = require('async')
 const utils = require('../../../utils')
 
 let northernGroup = [
-  "craigieburn", // craigieburn
+  "Craigieburn",
   "Sunbury",
   "Upfield",
   "Werribee",

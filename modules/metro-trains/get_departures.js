@@ -108,7 +108,7 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
     let possibleDestinations = [runDestination]
 
     let destination = runDestination
-    if (routeName === 'Frankston' && destination === 'Southern Cross')
+    if (routeName === 'Frankston' && (destination === 'Southern Cross' || destination === 'Parliament'))
       possibleDestinations.push('Flinders Street')
 
     let possibleLines = [routeName]

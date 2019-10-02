@@ -1,15 +1,15 @@
 let northernGroup = [
-  "2-B31", // craigieburn
-  "2-SYM",
-  "2-UFD",
-  "2-WBE",
-  "2-WMN",
-  "2-ain"
+  "Craigieburn",
+  "Sunbury",
+  "Upfield",
+  "Werribee",
+  "Williamstown",
+  "Showgrounds/Flemington"
 ]
 
 let cliftonHillGroup = [
-  "2-MER",
-  "2-HBG"
+  "Mernda",
+  "Hurstbridge"
 ]
 
 function formatTime(time) {
@@ -41,8 +41,8 @@ function getStoppingPattern(firstDeparture) {
 
   if (additionalInfo.viaCityLoop) stoppingPattern += ' via City Loop'
   else {
-    if (northernGroup.includes(firstDeparture.trip.routeGTFSID)) stoppingPattern += ' via Sthn Cross'
-    else if (cliftonHillGroup.includes(firstDeparture.trip.routeGTFSID)) stoppingPattern += ' via Jolimont' //?
+    if (northernGroup.includes(firstDeparture.trip.routeName)) stoppingPattern += ' via Sthn Cross'
+    else if (cliftonHillGroup.includes(firstDeparture.trip.routeName)) stoppingPattern += ' via Jolimont' //?
     else stoppingPattern += ' via Richmond'
 
   }

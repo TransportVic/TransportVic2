@@ -6,7 +6,7 @@ const async = require('async')
 const utils = require('../../../utils')
 
 let northernGroup = [
-  "craigieburn", // craigieburn
+  "Craigieburn",
   "Sunbury",
   "Upfield",
   "Werribee",
@@ -20,7 +20,6 @@ async function getData(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
     codedName: req.params.station
   })
-
 
   let departures = (await getDepartures(station, res.db, 3, false, req.params.platform))
     .filter(departure => {
@@ -47,6 +46,7 @@ async function getData(req, res) {
       .map(stop => stop.stopName.slice(0, -16))
 
     let tripStops = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
+
     let startingIndex = tripStops.indexOf(station.stopName.slice(0, -16))
     tripStops = tripStops.filter((_, i) => (i >= startingIndex))
     let viaCityLoop = tripStops.includes('Flagstaff')

@@ -83,7 +83,10 @@ div.middleRow p {
   font-size: 8vw;
   margin-left: 0.5vw;
   white-space: nowrap;
-  width: 100vw;
+  width: fit-content;
+  width: -moz-fit-content;
+  width: -o-fit-content;
+  width: -webkit-fit-content;
 }
 
 div.whiteLine {
@@ -101,6 +104,10 @@ div.bottomRow {
   font-family: "NetworkSansBold";
 }
 
+div.bottomRow > * {
+  margin-top: -0.5vw;
+}
+
 div.bottomRow > span:nth-child(1) {
   margin-left: 1vw;
   width: 7vw;
@@ -114,10 +121,11 @@ div.bottomRow > span:nth-child(2) {
 
 div.bottomRow > span:nth-child(3) {
   margin-left: 3vw;
-  width: 17vw;
+  width: 25vw;
   font-family: "NetworkSansMedium";
   letter-spacing: -0.1vw;
 }
+
 div.bottomRow > div:nth-child(4) {
   margin-left: auto;
   margin-right: 1vw;
@@ -133,6 +141,7 @@ div.bottomRow > div:nth-child(4) span:nth-child(2) {
 }
 
 div.timeNow {
+  margin-top: 0 !important;
   color: black;
   background-color: white;
   height: 7vw;

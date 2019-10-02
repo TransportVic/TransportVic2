@@ -40,7 +40,7 @@ $.ajax = function (options, callback) {
 }
 
 $.ready = function (callback) {
-  if (document.readyState !== 'loading') { process.nextTick(callback) } else { document.addEventListener('DOMContentLoaded', callback) }
+  if (document.readyState !== 'loading') { setTimeout(callback, 0) } else { document.addEventListener('DOMContentLoaded', callback) }
 }
 
 var query = location.query
