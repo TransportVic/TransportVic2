@@ -6,7 +6,6 @@ html
     link(rel='stylesheet' href='/static/css/mockups/mini-pids.css')
   body
     -
-      let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
       let firstDeparture = departures[0]
       function getStoppingPattern(additionalInfo) {
         let { screenStops } = additionalInfo
@@ -20,7 +19,6 @@ html
               blockIsExpress && stop.isExpress)
             currentBlock.push(stop.stopName)
           else {
-            if (cityLoopStations.includes(stop.stopName.toLowerCase())) return
             blocks.push({stops: currentBlock, isExpress: blockIsExpress})
             currentBlock = [stop.stopName]
             blockIsExpress = stop.isExpress
@@ -31,27 +29,50 @@ html
           return 'Not Stopping At ' + blocks[1][0]
         if (additionalInfo.expressCount == 0)
           return 'Stops All Stations'
-        
+
         blocks = blocks.filter(block => block.stops.length)
+        let previousExpress = false;
+
         blocks.forEach((block, i) => {
-          if (i > 0) 
+          if (i > 0 && i < blocks.length - 1 && !block.isExpress && blocks[i - 1].isExpress && blocks[i + 1].isExpress) {
+            previousExpress = true
+            return
+          } else if (i > 0 && i < blocks.length - 1 && block.isExpress && !blocks[i - 1].isExpress && !blocks[i + 1].isExpress) {
+            if (block.stops.length == 1) {
+              stoppingPattern += ', '
+              if (!previousExpress)
+                stoppingPattern += 'then runs express from '
+              stoppingPattern += blocks[i - 1].stops.slice(-1)[0] + ' to ' + blocks[i + 1].stops[0]
+           } else {
+             if (!previousExpress) {
+               stoppingPattern += ', then runs express from '
+               stoppingPattern += blocks[i - 1].stops.slice(-1)[0] + ' to ' + blocks[i + 1].stops[0]
+             }
+           }
+           return
+          }
+
+          previousExpress = false
+
+          if (i > 0)
             stoppingPattern += ', then '
+
           if (block.isExpress)
             stoppingPattern += 'runs express'
-          else
+          else if (block.stops.length > 1)
             stoppingPattern += 'stops all stations'
-          
+
           if (i == 0) {
             stoppingPattern += ' to ' + block.stops.slice(-1)[0]
           } else if (i < blocks.length - 1) {
-            stoppingPattern += ' from ' + blocks[i - 1].stops.slice(-1)[0] + ' to ' + blocks[i + 1].stops[0]
+            stoppingPattern += ', ' + blocks[i - 2].stops.slice(-1)[0] + ' to ' + block.stops.slice(-1)[0]
           } else {
             stoppingPattern += ' to ' + block.stops.slice(-1)[0]
           }
-          
+
           //stops all stations to x, then runs express to Y, then stops all stations to Z
         })
-        
+
         return stoppingPattern.slice(0, 1).toUpperCase() + stoppingPattern.slice(1)
       }
       
@@ -80,11 +101,11 @@ html
       div.topRow
         //- Flinders Street   Scheduled 9:40 Departing 1min
         -
-          if (firstDeparture.destination === 'Parliament') firstDeparture.destination = 'City Loop'
+          if (firstDeparture.trip.destination === 'Parliament') firstDeparture.trip.destination = 'City Loop'
           let style = ''
-          if (firstDeparture.destination.length > 12)
+          if (firstDeparture.trip.destination.length > 12)
             style = 'transform: translateX(-5%) scaleX(0.9)'
-        p(style=style).firstDestination=firstDeparture.destination
+        p(style=style).firstDestination=firstDeparture.trip.destination
         div.firstDepartureInfo
           div.scheduled
             p Scheduled
@@ -104,11 +125,21 @@ html
       div.bottomRow
         -
           let secondDeparture = departures[1]
-        span=secondDeparture.scheduledDepartureTime.format('h:mm').toLowerCase()
-        span=secondDeparture.destination
-        span=getStoppingType(secondDeparture.additionalInfo)
-        div
-          span=secondDeparture.minutesToDeparture
-          span min
+        if secondDeparture
+          span=secondDeparture.scheduledDepartureTime.format('h:mm').toLowerCase()
+          span=secondDeparture.trip.destination
+          span=getStoppingType(secondDeparture.additionalInfo)
+          div
+            span=secondDeparture.minutesToDeparture
+            span min
+        else
+          span --
+          span --
+          span --
+          div
+            span --
+            span
+          
         div.timeNow
           span=formatTime(new Date())
+            
