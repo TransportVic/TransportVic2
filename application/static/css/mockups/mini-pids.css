@@ -4,6 +4,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 p {
@@ -24,45 +25,121 @@ div.topRow {
 }
 
 p.firstDestination {
-  font-size: 9.5vw;
-  font-kerning: auto;
-  margin-left: 0.75vw;
-  letter-spacing: -0.5vw;
-  margin-top: -1vw;
+  font-size: 11.25vw;
+  margin-left: 0.5vw;
+  letter-spacing: -0.7vw;
+  margin-top: -0.75vw;
+  white-space: nowrap;
+  width: 50vw;
 }
 
 div.firstDepartureInfo {
   margin-left: auto;
   text-align: center;
   display: flex;
+  width: 36vw;
 }
 
-div.firstDepartureInfo > div {
-  margin-right: 3vw;
+div.scheduled {
+  width: 20vw;
 }
 
 div.scheduled p:nth-child(1), div.actual > p:nth-child(1) {
   font-family: "NetworkSansMedium";
-  font-size: 2vw;
+  font-size: 3vw;
   margin-top: 1vw;
+  letter-spacing: 0vw;
 }
 
 div.scheduled p:nth-child(2) {
-  font-size: 5vw;
+  font-size: 7.25vw;
   margin-left: 0.4vw;
-  margin-top: -1vw;
+  margin-top: -1.75vw;
+}
+
+div.actual {
+  width: 16vw
 }
 
 div.actual div:nth-child(2) {
-  margin-top: -1vw;
+  margin-top: -1.75vw;
 }
 
 div.actual div:nth-child(2) > span:nth-child(1) {
-  font-size: 5vw;
+  font-size: 7.25vw;
   margin-left: 0.4vw;
 }
 
 div.actual div:nth-child(2) > span:nth-child(2) {
+  font-size: 2.25vw;
+}
+
+div.middleRow {
+  margin-top: 1vw;
+  height: 8vw;
+}
+
+div.middleRow p {
+  font-size: 8vw;
+  margin-left: 0.5vw;
+  white-space: nowrap;
+  width: 100vw;
+}
+
+div.whiteLine {
+  width: 100vw;
+  height: 0.25vw;
+  background-color: white;
+  margin-top: 3.75vw;
+}
+
+div.bottomRow {
+  display: flex;
+  align-items: center;
+  height: 7vw;
+  font-size: 4vw;
+  font-family: "NetworkSansBold";
+}
+
+div.bottomRow > span:nth-child(1) {
+  margin-left: 1vw;
+  width: 7vw;
+}
+
+div.bottomRow > span:nth-child(2) {
+  margin-left: 6.5vw;
+  width: 25vw;
+  letter-spacing: -0.2vw;
+}
+
+div.bottomRow > span:nth-child(3) {
+  margin-left: 3vw;
+  width: 17vw;
+  font-family: "NetworkSansMedium";
+  letter-spacing: -0.1vw;
+}
+div.bottomRow > div:nth-child(4) {
+  margin-left: auto;
+  margin-right: 1vw;
+}
+
+div.bottomRow > div:nth-child(4) span:nth-child(1) {
+  width: 15vw;
+}
+
+div.bottomRow > div:nth-child(4) span:nth-child(2) {
   font-size: 2vw;
-  /* margin-left: 0.4vw; */
+  width: 15vw;
+}
+
+div.timeNow {
+  color: black;
+  background-color: white;
+  height: 7vw;
+  width: 17.5vw;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5vw;
 }

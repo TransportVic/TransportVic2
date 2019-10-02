@@ -6,12 +6,12 @@ const async = require('async')
 const utils = require('../../../utils')
 
 let northernGroup = [
-  "2-B31", // craigieburn
-  "2-SYM",
-  "2-UFD",
-  "2-WBE",
-  "2-WMN",
-  "2-ain" // showgrounds
+  "craigieburn", // craigieburn
+  "Sunbury",
+  "Upfield",
+  "Werribee",
+  "Williamstown",
+  "Showgrounds/Flemington"
 ]
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
@@ -54,7 +54,8 @@ async function getData(req, res) {
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
     let line = await res.db.getCollection('routes').findDocument({
-      routeGTFSID: departure.trip.routeGTFSID
+      routeName: departure.trip.routeName,
+      mode: 'metro train'
     })
 
     let lineStops = line.directions.filter(dir => dir.directionName !== 'City')[0].stops
@@ -76,12 +77,12 @@ async function getData(req, res) {
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
 
     if (!viaCityLoop) {
-      if (!northernGroup.includes(departure.trip.routeGTFSID))
+      if (!northernGroup.includes(departure.trip.routeName))
         tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop))
       else
         tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop) || stop === 'Southern Cross')
     } else {
-      if (northernGroup.includes(departure.trip.routeGTFSID))
+      if (northernGroup.includes(departure.trip.routeName))
         tripPassesBy = tripPassesBy.filter(stop => stop !== 'Southern Cross')
     }
 
