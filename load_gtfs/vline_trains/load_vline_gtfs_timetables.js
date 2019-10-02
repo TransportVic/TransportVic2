@@ -85,7 +85,7 @@ database.connect({
   await async.forEach(trips, async trip => {
     let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(trip[0]),
         serviceID = trip[1],
-        tripID = gtfsUtils.simplifyRouteGTFSID(trip[2]),
+        tripID = trip[2],
         shapeID = trip[3],
         direction = ['city', 'melbourne'].includes(trip[4].toLowerCase()),
         gtfsDirection = trip[5]
@@ -117,7 +117,7 @@ database.connect({
   })
 
   await async.forEach(tripTimesData, async stopTiming => {
-    let tripID = gtfsUtils.simplifyRouteGTFSID(stopTiming[0]),
+    let tripID = stopTiming[0],
         arrivalTime = stopTiming[1].slice(0, 5),
         departureTime = stopTiming[2].slice(0, 5),
         stopGTFSID = parseInt(stopTiming[3]),

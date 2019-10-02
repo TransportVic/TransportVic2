@@ -175,6 +175,8 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
     })
 
     let cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(routeID, runID, runDestination) : []
+    if (trip.direction == 'Up' && !(cityLoopStations.includes(destination.toLowerCase()) || destination === 'Flinders Street'))
+      cityLoopConfig = []
 
     trip.destination = trip.destination.slice(0, -16)
 
