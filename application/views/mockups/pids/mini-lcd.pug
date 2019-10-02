@@ -113,6 +113,8 @@ html
           let style = ''
           if (firstDestination.length > 12)
             style = 'transform: translateX(-5%) scaleX(0.9)'
+          if (firstDeparture.length > 15)
+            style = 'transform: translateX(-10%) scaleX(0.8)'
         p(style=style).firstDestination=firstDestination
         div.firstDepartureInfo
           div.scheduled

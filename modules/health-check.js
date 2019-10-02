@@ -7,7 +7,7 @@ var refreshRate = 2;
 
 async function refreshCache() {
   try {
-    const {status} = await ptvAPI('/v3/')
+    const {status} = await ptvAPI('/v3/disruptions')
     isOnline = true
   } catch (e) {
     console.log('Failed to pass health check, running offline')

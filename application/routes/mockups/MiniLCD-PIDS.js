@@ -85,6 +85,8 @@ async function getData(req, res) {
     }
 
     departure.additionalInfo = additionalInfo
+    if (departure.destination === 'North Melbourne')
+      departure.destination = 'Nth Melbourne'
 
     return departure
   })

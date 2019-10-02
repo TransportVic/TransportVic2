@@ -111,6 +111,8 @@ setInterval(() => {
 
     if (firstDeparture.destination.length > 12)
       style = 'transform: translateX(-5%) scaleX(0.9)'
+    if (firstDeparture.length > 15)
+      style = 'transform: translateX(-10%) scaleX(0.8)'
     $('.firstDestination').textContent = firstDeparture.destination
     $('.firstDestination').style = style
     $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
