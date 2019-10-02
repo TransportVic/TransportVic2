@@ -39,17 +39,10 @@ html
             previousExpress = true
             return
           } else if (i > 0 && i < blocks.length - 1 && block.isExpress && !blocks[i - 1].isExpress && !blocks[i + 1].isExpress) {
-            if (block.stops.length == 1) {
-              stoppingPattern += ', '
-              if (!previousExpress)
-                stoppingPattern += 'then runs express from '
-              stoppingPattern += blocks[i - 1].stops.slice(-1)[0] + ' to ' + blocks[i + 1].stops[0]
-           } else {
-             if (!previousExpress) {
-               stoppingPattern += ', then runs express from '
-               stoppingPattern += blocks[i - 1].stops.slice(-1)[0] + ' to ' + blocks[i + 1].stops[0]
-             }
-           }
+           stoppingPattern += ', '
+           if (!previousExpress)
+             stoppingPattern += 'then runs express from '
+           stoppingPattern += blocks[i - 1].stops.slice(-1)[0] + ' to ' + blocks[i + 1].stops[0]
            return
           }
 
