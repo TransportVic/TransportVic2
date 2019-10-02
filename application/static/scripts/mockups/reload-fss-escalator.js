@@ -87,7 +87,7 @@ setInterval(() => {
 
       $('.topLineBanner').className = 'topLineBanner ' + firstDeparture.codedLineName
       $('.firstDepartureInfo .scheduledDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
-      $('.firstDepartureInfo .destination').textContent = firstDeparture.trip.destination
+      $('.firstDepartureInfo .destination').textContent = firstDeparture.destination
       $('.firstDepartureInfo .stoppingPattern').textContent = getStoppingPattern(firstDeparture)
       $('.firstDepartureInfo .platform').className = 'platform ' + firstDeparture.codedLineName
       $('.firstDepartureInfo .platform span').textContent = firstDeparture.platform
@@ -149,7 +149,7 @@ setInterval(() => {
         $('.sideBar', departureDIV).className = 'sideBar ' + departure.codedLineName
         $('.sideBar~p', departureDIV).textContent = formatTime(new Date(departure.scheduledDepartureTime))
 
-        $('.centre p', departureDIV).textContent = departure.trip.destination
+        $('.centre p', departureDIV).textContent = departure.destination
 
         $('.right .platform', departureDIV).className = 'platform ' + departure.codedLineName
         $('.right .platform p', departureDIV).textContent = departure.platform

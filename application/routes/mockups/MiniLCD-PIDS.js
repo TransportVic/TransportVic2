@@ -21,9 +21,9 @@ async function getData(req, res) {
     codedName: req.params.station
   })
 
-  let departures = (await getDepartures(station, res.db, 3, false, req.params.platform))
+  let departures = (await getDepartures(station, res.db, 3, false, req.params.platform, 1))
     .filter(departure => {
-      let diff = (departure.estimatedDepartureTime || departure.scheduledDepartureTime)
+      let diff = departure.actualDepartureTime
       let minutesDifference = diff.diff(utils.now(), 'minutes')
       let secondsDifference = diff.diff(utils.now(), 'seconds')
       return minutesDifference < 180 && secondsDifference >= 10 // minutes round down
@@ -31,7 +31,7 @@ async function getData(req, res) {
     })
 
   departures = await async.map(departures, async departure => {
-    const timeDifference = (departure.estimatedDepartureTime || departure.scheduledDepartureTime).diff(utils.now(), 'minutes')
+    const timeDifference = departure.actualDepartureTime.diff(utils.now(), 'minutes')
 
     departure.minutesToDeparture = timeDifference
 
@@ -95,7 +95,6 @@ async function getData(req, res) {
 router.get('/:station/:platform', async (req, res) => {
   let {departures, station} = await getData(req, res)
 
-  // res.json({departures, platform: req.params.platform});
   res.render('mockups/pids/mini-lcd', { departures, platform: req.params.platform })
 })
 

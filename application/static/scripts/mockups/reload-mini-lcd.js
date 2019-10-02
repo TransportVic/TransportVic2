@@ -95,12 +95,11 @@ setInterval(() => {
     departures = body.departures
 
     let firstDeparture = departures[0]
-    if (firstDeparture.trip.destination === 'Parliament') firstDeparture.trip.destination = 'City Loop'
     let style = ''
 
-    if (firstDeparture.trip.destination.length > 12)
+    if (firstDeparture.destination.length > 12)
       style = 'transform: translateX(-5%) scaleX(0.9)'
-    $('.firstDestination').textContent = firstDeparture.trip.destination
+    $('.firstDestination').textContent = firstDeparture.destination
     $('.firstDestination').style = style
     $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
 
@@ -121,9 +120,8 @@ setInterval(() => {
 
     let secondDeparture = departures[1]
     if (secondDeparture) {
-      if (secondDeparture.trip.destination === 'Parliament') secondDeparture.trip.destination = 'City Loop'
       $('div.bottomRow > span:nth-child(1)').textContent = formatTime(new Date(secondDeparture.scheduledDepartureTime))
-      $('div.bottomRow > span:nth-child(2)').textContent = secondDeparture.trip.destination
+      $('div.bottomRow > span:nth-child(2)').textContent = secondDeparture.destination
       $('div.bottomRow > span:nth-child(3)').textContent = getStoppingType(secondDeparture.additionalInfo)
       $('div.bottomRow > div > span:nth-child(1)').textContent = secondDeparture.minutesToDeparture
       $('div.bottomRow > div > span:nth-child(2)').textContent = 'min'
@@ -142,7 +140,7 @@ setInterval(() => {
 }, 1000)
 
 let desiredFPS = 18
-let scrollRate = 180 // px/sec
+let scrollRate = window.innerWidth / 20 // px/sec
 let initialOffset = window.innerWidth / 200
 let stoppingPatternOffset = initialOffset;
 let stoppingPatternP = $('div.middleRow p')

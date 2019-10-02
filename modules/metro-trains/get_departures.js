@@ -2,7 +2,7 @@ const TimedCache = require('timed-cache')
 const async = require('async')
 const ptvAPI = require('../../ptv-api')
 const utils = require('../../utils')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1 })
+const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
 const moment = require('moment')
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
@@ -57,7 +57,7 @@ function determineLoopRunning(routeID, runID, destination) {
   return cityLoopConfig
 }
 
-async function getDepartures(station, db, departuresCount=6, includeCancelled=true, platform=null) {
+async function getDepartures(station, db, departuresCount=6, includeCancelled=true, platform=null, ttl=2) {
   let cacheKey = station.stopName + 'M-' + departuresCount + '-' + includeCancelled + '-' + platform
 
   if (departuresCache.get(cacheKey)) {
@@ -184,18 +184,32 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
       cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
     }
 
+    if (trip.direction === 'Up') {
+      if (cityLoopConfig[0] === 'FSS' || cityLoopConfig[1] === 'FSS')
+        destination = 'Flinders Street'
+      else if (cityLoopConfig[0] === 'PAR')
+        destination = 'City Loop'
+      else if (cityLoopConfig.slice(-1)[0] === 'SSS')
+        destination = 'Southern Cross'
+    }
+
+    let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
     transformedDepartures.push({
-      trip, scheduledDepartureTime, estimatedDepartureTime, platform,
+      trip, scheduledDepartureTime, estimatedDepartureTime, actualDepartureTime, platform,
       scheduledDepartureTimeMinutes, cancelled: run.status === 'cancelled', cityLoopConfig,
-      destination: runDestination, runID
+      destination, runID
     })
   })
 
   transformedDepartures = transformedDepartures.sort((a, b) => {
-    return (a.estimatedDepartureTime || a.scheduledDepartureTime) - (b.estimatedDepartureTime || b.scheduledDepartureTime)
-  })
+    return a.actualDepartureTime - b.actualDepartureTime
+  }).filter(departure =>
+    departure.actualDepartureTime.diff(utils.now(), 'seconds') > -30
+  )
 
-  departuresCache.put(cacheKey, transformedDepartures)
+  departuresCache.put(cacheKey, transformedDepartures, {
+    ttl: ttl * 1000 * 60
+  })
   return transformedDepartures
 }
 

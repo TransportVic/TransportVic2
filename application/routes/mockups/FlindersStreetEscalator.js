@@ -22,9 +22,9 @@ async function getData(req, res) {
   })
 
 
-  let departures = (await getDepartures(station, res.db, 6, false, req.params.platform))
+  let departures = (await getDepartures(station, res.db, 6, false, req.params.platform, 1))
     .filter(departure => {
-      let diff = (departure.estimatedDepartureTime || departure.scheduledDepartureTime)
+      let diff = departure.actualDepartureTime
       let minutesDifference = diff.diff(utils.now(), 'minutes')
       let secondsDifference = diff.diff(utils.now(), 'seconds')
       return minutesDifference < 180 && secondsDifference >= 10 // minutes round down
@@ -40,11 +40,11 @@ async function getData(req, res) {
   departures = Object.values(groupedDepartures).reduce((acc, group) => {
     return acc.concat(group)
   }, []).sort((a, b) => {
-    return (a.estimatedDepartureTime || a.scheduledDepartureTime) - (b.estimatedDepartureTime || b.scheduledDepartureTime)
+    return a.actualDepartureTime - b.actualDepartureTime
   })
 
   departures = await async.map(departures, async departure => {
-    const timeDifference = (departure.estimatedDepartureTime || departure.scheduledDepartureTime).diff(utils.now(), 'minutes')
+    const timeDifference = departure.actualDepartureTime.diff(utils.now(), 'minutes')
 
     if (+timeDifference <= 0) departure.prettyTimeToDeparture = 'NOW'
     else {

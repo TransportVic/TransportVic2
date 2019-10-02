@@ -45,7 +45,7 @@ html
             span.scheduledDepartureTime
           br
           if !noDepartures
-            span.destination=firstDeparture.trip.destination
+            span.destination=firstDeparture.destination
           else
             span.destination
           br
@@ -146,7 +146,7 @@ html
                 div(class='sideBar ' + departure.codedLineName)
                 p=departure.scheduledDepartureTime.format('h:mmA').toLowerCase()
               div.centre
-                p=departure.trip.destination
+                p=departure.destination
               div.right
                 div(class='platform ' + departure.codedLineName)
                   p=platform
