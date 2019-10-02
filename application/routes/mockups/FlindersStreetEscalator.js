@@ -85,7 +85,6 @@ async function getData(req, res) {
       if (northernGroup.includes(departure.trip.routeName))
         tripPassesBy = tripPassesBy.filter(stop => stop !== 'Southern Cross')
     }
-
     let screenStops = tripPassesBy.map(stop => {
       return {
         stopName: stop,
@@ -93,6 +92,7 @@ async function getData(req, res) {
       }
     })
 
+    if (!screenStops.length) return null
     let expressCount = screenStops.filter(stop => stop.isExpress).length
 
     let additionalInfo = {
@@ -103,6 +103,7 @@ async function getData(req, res) {
 
     return departure
   })
+  departures = departures.filter(Boolean)
 
   return {departures, station}
 }

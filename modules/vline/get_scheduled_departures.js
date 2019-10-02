@@ -26,6 +26,8 @@ module.exports = async function getScheduledDepartures(station, db) {
       let stopData = departure.stopTimings.filter(stop => stop.stopGTFSID === vlinePlatform.stopGTFSID)[0]
       let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
 
+      departure.destination = departure.destination.slice(0, -16)
+      
       return {
         trip: departure,
         scheduledDepartureTime: departureTime,

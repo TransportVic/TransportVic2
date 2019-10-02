@@ -26,6 +26,8 @@ module.exports = async function getScheduledDepartures(station, db) {
       let stopData = departure.stopTimings.filter(stop => stop.stopGTFSID === metroPlatform.stopGTFSID)[0]
       let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
 
+      departure.destination = departure.destination.slice(0, -16)
+
       return {
         trip: departure,
         scheduledDepartureTime: departureTime,
@@ -35,8 +37,8 @@ module.exports = async function getScheduledDepartures(station, db) {
         scheduledDepartureTimeMinutes: stopData.departureTimeMinutes,
         cancelled: false,
         cityLoopConfig: [],
-        destination: departure.destination.slice(0, -16),
-        runID: ''
+        destination: departure.destination,
+        runID: '',
       }
     }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }
