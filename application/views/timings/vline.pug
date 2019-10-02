@@ -25,7 +25,15 @@ append content
         a.departureInfo
           span=`${departure.trip.shortRouteName} Line towards`
           span=departure.trip.destination.slice(0, -16)
+          if departure.trip.isUncertain
+            span.cancelled Scheduled time may be differ by a few minutes - check platform displays
         div.timings
-          a(class='timing ' + departure.headwayDevianceClass)
+          -
+            let className = 'timing '
+            if (departure.trip.isUncertain)
+              className += 'uncertain'
+            else
+              className += departure.headwayDevianceClass
+          a(class=className)
             span=departure.prettyTimeToArrival
             span=departure.scheduledDepartureTime.format('HH:mm')

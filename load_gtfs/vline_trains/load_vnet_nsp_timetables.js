@@ -235,7 +235,8 @@ async function loadTrips (csvData) {
     const timetableData = {
       mode: "regional train",
       operator: "V/Line",
-      lineName: line,
+      routeName: line,
+      shortRouteName: line,
       runID,
       operationDays,
       vehicle,
@@ -262,7 +263,7 @@ database.connect({
   timetables.createIndex({
     mode: 1,
     operator: 1,
-    lineName: 1,
+    routeName: 1,
     runID: 1,
     operationDays: 1,
     origin: 1,

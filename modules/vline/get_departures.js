@@ -68,18 +68,19 @@ async function getDepartures(station, db) {
   const now = utils.now()
 
   const gtfsTimetables = db.getCollection('gtfs timetables')
+  const timetables = db.getCollection('timetables')
+
   const vnetDepartures = await getVNETDepartures(station, db)
   const vlinePlatform = station.bays.filter(bay => bay.mode === 'regional train')[0]
   const minutesPastMidnight = utils.getPTMinutesPastMidnight(now)
 
-  let mergedDepartures = await async.map(vnetDepartures, async vnetDeparture => {
-    const trip = await gtfsTimetables.findDocument({
+  let mergedDepartures = (await async.map(vnetDepartures, async vnetDeparture => {
+    let trip = await gtfsTimetables.findDocument({
       $and: [{
         stopTimings: { // origin
           $elemMatch: {
             stopGTFSID: vnetDeparture.originVLinePlatform.stopGTFSID,
             departureTimeMinutes: utils.getPTMinutesPastMidnight(vnetDeparture.originDepartureTime),
-            arrivalTime: null
           }
         }
       }, {
@@ -87,13 +88,26 @@ async function getDepartures(station, db) {
           $elemMatch: {
             stopGTFSID: vnetDeparture.destinationVLinePlatform.stopGTFSID,
             arrivalTimeMinutes: utils.getPTMinutesPastMidnight(vnetDeparture.destinationArrivalTime),
-            departureTime: null
           }
         }
       }],
       operationDays: utils.getYYYYMMDDNow(),
       mode: "regional train"
     })
+    if (!trip) {
+      trip = await timetables.findDocument({runID: vnetDeparture.runID}) // service disruption unaccounted for? like ptv not loading in changes into gtfs data :/
+      if (!trip) return void console.log(vnetDeparture)
+
+      let tripStops = trip.stopTimings.map(stop => stop.stopName)
+
+      let startingIndex = tripStops.indexOf(vnetDeparture.originVLinePlatform.fullStopName)
+      let endingIndex = tripStops.indexOf(vnetDeparture.destinationVLinePlatform.fullStopName)
+      trip.stopTimings = trip.stopTimings.slice(startingIndex, endingIndex + 1)
+      trip.origin = trip.stopTimings[0].stopName
+      trip.destination = trip.stopTimings.slice(-1)[0].stopName
+      trip.departureTime = trip.stopTimings[0].departureTimeMinutes
+      trip.isUncertain = true
+    }
 
     const stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === vlinePlatform.stopGTFSID)[0]
 
@@ -102,7 +116,7 @@ async function getDepartures(station, db) {
       stopData, scheduledDepartureTime: utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, now),
       departureTimeMinutes: stopData.departureTimeMinutes, runID: vnetDeparture.runID
     }
-  })
+  })).filter(Boolean)
 
   mergedDepartures = mergedDepartures.filter(departure => {
     return minutesPastMidnight > departure.departureTimeMinutes - 180
