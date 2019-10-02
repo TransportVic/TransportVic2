@@ -28,3 +28,5 @@ process.on('uncaughtException', (err) => {
 })
 
 console.err = console.error
+
+require('./modules/health-check')

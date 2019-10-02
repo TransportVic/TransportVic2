@@ -3,7 +3,9 @@ const async = require('async')
 const ptvAPI = require('../../ptv-api')
 const utils = require('../../utils')
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
+const healthCheck = require('../health-check')
 const moment = require('moment')
+const getScheduledDepartures = require('./get_scheduled_departures')
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
 
@@ -63,6 +65,8 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
   if (departuresCache.get(cacheKey)) {
     return departuresCache.get(cacheKey)
   }
+
+  if (!healthCheck.isOnline()) return await getScheduledDepartures(station, db)
 
   const gtfsTimetables = db.getCollection('gtfs timetables')
   const timetables = db.getCollection('timetables')

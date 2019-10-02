@@ -4,8 +4,10 @@ const async = require('async')
 const urls = require('../../urls.json')
 const utils = require('../../utils')
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
+const healthCheck = require('../health-check')
 const moment = require('moment')
 const cheerio = require('cheerio')
+const getScheduledDepartures = require('./get_scheduled_departures')
 
 async function getStationFromVNETName(vnetStationName, db) {
   const station = await db.getCollection('stops').findDocument({
@@ -64,6 +66,8 @@ async function getDepartures(station, db) {
   if (departuresCache.get(station.stopName + 'V')) {
     return departuresCache.get(station.stopName + 'V')
   }
+
+  if (!healthCheck.isOnline()) return await getScheduledDepartures(station, db)
 
   const now = utils.now()
 
