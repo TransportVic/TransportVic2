@@ -24,18 +24,26 @@ function getStoppingPattern(additionalInfo) {
   if (additionalInfo.expressCount == 0)
     return 'Stops All Stations'
 
-  blocks = blocks.filter(block => block.stops.length)
   let previousExpress = false;
 
+  if (blocks[0].stops.length == 1 && !blocks[0].isExpress)
+    blocks = blocks.slice(1)
+
   blocks.forEach((block, i) => {
-    if (i > 0 && i < blocks.length - 1 && !block.isExpress && blocks[i - 1].isExpress && blocks[i + 1].isExpress) {
-      previousExpress = true
+    if (i > 0 && i < blocks.length - 1 && !block.isExpress) {
+      if (block.stops.length > 1) {
+        stoppingPattern += ', then stops all stations from ' + block.stops[0] + ' to ' + block.stops.slice(-1)[0]
+        previousExpress = false
+      } else previousExpress = true
       return
-    } else if (i > 0 && i < blocks.length - 1 && block.isExpress && !blocks[i - 1].isExpress && !blocks[i + 1].isExpress) {
+    } else if (i > 0 && i < blocks.length - 1 && block.isExpress) {
      stoppingPattern += ', '
+
      if (!previousExpress)
        stoppingPattern += 'then runs express from '
      stoppingPattern += blocks[i - 1].stops.slice(-1)[0] + ' to ' + blocks[i + 1].stops[0]
+
+     previousExpress = true
      return
     }
 
@@ -44,13 +52,17 @@ function getStoppingPattern(additionalInfo) {
     if (i > 0)
       stoppingPattern += ', then '
 
-    if (block.isExpress)
+    if (block.isExpress) {
       stoppingPattern += 'runs express'
-    else if (block.stops.length > 1)
+      previousExpress = true
+    } else if (block.stops.length > 1)
       stoppingPattern += 'stops all stations'
 
     if (i == 0) {
-      stoppingPattern += ' to ' + block.stops.slice(-1)[0]
+      if (block.isExpress)
+        stoppingPattern += ' to ' + blocks[1].stops[0]
+      else
+        stoppingPattern += ' to ' + block.stops.slice(-1)[0]
     } else if (i < blocks.length - 1) {
       stoppingPattern += ', ' + blocks[i - 2].stops.slice(-1)[0] + ' to ' + block.stops.slice(-1)[0]
     } else {
