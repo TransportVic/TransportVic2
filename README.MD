@@ -1,9 +1,7 @@
 # TransportVic2
----
 Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne for a longer time and actually know the system through.
 
 ## Current features:
----
 - Loading in MTM timetables
 - Loading in V/Line train timetables
 - Showing live MTM departures when the services are running as timetabled
@@ -81,7 +79,6 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - myki manager if it's safe
 
 ## Me talking about how it works
----
 Realtime V/Line departures?
 
 -> Does their app do it? Yes, but actually no
