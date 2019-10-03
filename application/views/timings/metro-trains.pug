@@ -19,7 +19,7 @@ append content
       'MCE': 'Melbourne Central Railway Station',
       'PAR': 'Parliament Railway Station'
     }
-    let cityLoopStationNames = Object.values(cityLoopStationAbbreviations)
+    let cityLoopStationNames = Object.values(cityLoopStationAbbreviations).concat('City Loop Railway Station')
     
   div#departures
     for departure in departures

@@ -109,7 +109,7 @@ setInterval(() => {
     let firstDeparture = departures[0]
     let style = ''
 
-    if (firstDeparture.destination.length > 12)
+    if (firstDeparture.destination.length > 10)
       style = 'transform: translateX(-5%) scaleX(0.9)'
     if (firstDeparture.length > 15)
       style = 'transform: translateX(-10%) scaleX(0.8)'

@@ -3,7 +3,7 @@ const ptvAPI = require('../ptv-api')
 
 let isOnline = true
 
-var refreshRate = 2;
+var refreshRate = 10;
 
 async function refreshCache() {
   try {
