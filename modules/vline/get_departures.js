@@ -8,6 +8,7 @@ const healthCheck = require('../health-check')
 const moment = require('moment')
 const cheerio = require('cheerio')
 const getScheduledDepartures = require('./get_scheduled_departures')
+const terminiToLines = require('../../load_gtfs/vline_trains/termini_to_lines')
 
 async function getStationFromVNETName(vnetStationName, db) {
   const station = await db.getCollection('stops').findDocument({
@@ -100,12 +101,31 @@ async function getDepartures(station, db) {
     })
     if (!trip) {
       trip = await timetables.findDocument({runID: vnetDeparture.runID}) // service disruption unaccounted for? like ptv not loading in changes into gtfs data :/
-      if (!trip) return void console.log(vnetDeparture)
+      if (!trip) {
+        if (!vnetDeparture.estimatedDepartureTime) return null
+        let destination = vnetDeparture.destinationVLinePlatform.fullStopName
+        return {
+          trip: {
+            shortRouteName: terminiToLines[destination.slice(0, -16)] || "?",
+            stopTimings: [],
+            destination,
+            isUncertain: true,
+          },
+          estimatedDepartureTime: vnetDeparture.estimatedDepartureTime,
+          platform: vnetDeparture.platform,
+          stopData: {},
+          scheduledDepartureTime: vnetDeparture.estimatedDepartureTime,
+          departureTimeMinutes: utils.getPTMinutesPastMidnight(vnetDeparture.estimatedDepartureTime),
+          runID: vnetDeparture.runID,
+          unknownScheduledDepartureTime: true
+        }
+      }
 
       let tripStops = trip.stopTimings.map(stop => stop.stopName)
 
       let startingIndex = tripStops.indexOf(vnetDeparture.originVLinePlatform.fullStopName)
       let endingIndex = tripStops.indexOf(vnetDeparture.destinationVLinePlatform.fullStopName)
+      if (startingIndex == -1) return void console.log(vnetDeparture)
       trip.stopTimings = trip.stopTimings.slice(startingIndex, endingIndex + 1)
       trip.origin = trip.stopTimings[0].stopName
       trip.destination = trip.stopTimings.slice(-1)[0].stopName
