@@ -155,7 +155,6 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
     if (trip.length) {
       if (trip[0].type === 'suspension') {
         if (trip.length > 1) {
-
           trip = trip.sort((a, b) => b.stopTimings[0].departureTimeMinutes - a.stopTimings[0].departureTimeMinutes).slice(0, 1)
         }
 
@@ -192,19 +191,22 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
     trip = trip.sort((a, b) => utils.time24ToMinAftMidnight(b.departureTime) - utils.time24ToMinAftMidnight(a.departureTime))[0]
 
     if (!trip) {
-      return {
+      return transformedDepartures.push({
         trip: {
           routeName,
           stopTimings: [],
           destination,
-          isUncertain: true,
+          isUncertain: true
         },
         estimatedDepartureTime,
         platform,
         stopData: {},
         scheduledDepartureTime,
+        actualDepartureTime: estimatedDepartureTime || scheduledDepartureTime,
         runID,
-      }
+        cityLoopConfig: [],
+        destination: runDestination
+      })
     }
 
     let cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(routeID, runID, runDestination) : []
