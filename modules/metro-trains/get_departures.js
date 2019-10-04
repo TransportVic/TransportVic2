@@ -17,9 +17,8 @@ let cliftonHillGroup = [5, 8] // mernda, hurstbridge
 function determineLoopRunning(routeID, runID, destination) {
   if (routeID === 13) return []
 
-  let upService = cityLoopStations.includes(destination.toLowerCase()) || destination === 'Flinders Street'
-  let throughCityLoop = runID[1] > 5 || upService
-
+  let upService = !(runID[3] % 2)
+  let throughCityLoop = runID[1] > 5 || cityLoopStations.includes(destination.toLowerCase())
   if (routeID === 6 && destination == 'Southern Cross') {
     throughCityLoop = false
   }
@@ -84,7 +83,7 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
     let routeName = routes[routeID].route_name
     if (routeName === 'Showgrounds - Flemington Racecourse') routeName = 'Showgrounds/Flemington'
     let platform = departure.platform_number
-    let runDestination = run.destination_name
+    const runDestination = run.destination_name
 
     if (platform == null) { // show replacement bus
       if (departure.flags.includes('RRB-RUN')) platform = 'RRB';
@@ -178,31 +177,42 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
     }
 
     let cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(routeID, runID, runDestination) : []
-    if (trip.direction == 'Up' && !(cityLoopStations.includes(destination.toLowerCase()) || destination === 'Flinders Street'))
+
+    if (trip.direction == 'Up' && !(cityLoopStations.includes(stationName) || runDestination === 'Flinders Street'))
       cityLoopConfig = []
 
     trip.destination = trip.destination.slice(0, -16)
 
-    if (cityLoopStations.includes(stationName) && run.destination !== trip.destination) {
+    if (cityLoopStations.includes(stationName) && !cityLoopConfig.includes('SSS')) {
+      if (caulfieldGroup.includes(routeID))
+        cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
       // trip is towards at flinders, but ptv api already gave next trip
       // really only seems to happen with cran/pak/frank lines
-      cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
     }
 
-    if (trip.direction === 'Up') {
+    if (trip.direction === 'Up' && !cityLoopStations.includes(stationName)) {
       if (cityLoopConfig[0] === 'FSS' || cityLoopConfig[1] === 'FSS')
         destination = 'Flinders Street'
-      else if (cityLoopConfig[0] === 'PAR')
+      else if (cityLoopConfig[0] === 'PAR' && !cityLoopStations.includes(stationName))
         destination = 'City Loop'
       else if (cityLoopConfig.slice(-1)[0] === 'SSS')
         destination = 'Southern Cross'
+    }
+    let forming = null
+
+    if (cityLoopStations.includes(stationName) && destination !== trip.destination) {
+      forming = await timetables.findDocument({
+        runID
+      })
+      if (forming)
+        destination = forming.destination.slice(0, -16)
     }
 
     let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
     transformedDepartures.push({
       trip, scheduledDepartureTime, estimatedDepartureTime, actualDepartureTime, platform,
       cancelled: run.status === 'cancelled', cityLoopConfig,
-      destination, runID
+      destination, runID, forming
     })
   })
 

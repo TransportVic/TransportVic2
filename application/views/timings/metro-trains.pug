@@ -40,6 +40,10 @@ append content
           }
 
           stopsAt = stopsAt.filter(Boolean).filter((e,i,a) => a.indexOf(e) === i)
+          if (departure.forming) {
+            stopsAt = stopsAt.concat(departure.forming.stopTimings.map(stop => stop.stopName))
+              .filter((e, i, a) => a.indexOf(e) === i)
+          }
         input(type='hidden' name='stops-at' value=stopsAt.join(','))
         input(type='hidden' name='platform' value=departure.platform || '')
         input(type='hidden' name='run' value=departure.runID)
@@ -58,11 +62,7 @@ append content
             span.cancelled No stopping pattern data - check platform displays or click for more info
           else
             if cityLoopStationNames.includes(station.stopName) || departure.trip.direction === 'Up'
-              -
-                let text = departure.cityLoopConfig.join(', ')
-                if (departure.destination !== departure.trip.destination && !cityLoopStationNames.includes(departure.destination + ' Railway Station'))
-                  text += ' -> ' + departure.destination
-              span=text
+              span=departure.cityLoopConfig.join(', ')
         div.timings
           a(class='timing ' + departure.headwayDevianceClass)
             span=departure.prettyTimeToArrival
