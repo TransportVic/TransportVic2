@@ -86,6 +86,7 @@ async function getDepartures(station, db) {
           $elemMatch: {
             stopGTFSID: vnetDeparture.originVLinePlatform.stopGTFSID,
             departureTimeMinutes: utils.getPTMinutesPastMidnight(vnetDeparture.originDepartureTime),
+            arrivalTimeMinutes: null
           }
         }
       }, {
@@ -93,6 +94,7 @@ async function getDepartures(station, db) {
           $elemMatch: {
             stopGTFSID: vnetDeparture.destinationVLinePlatform.stopGTFSID,
             arrivalTimeMinutes: utils.getPTMinutesPastMidnight(vnetDeparture.destinationArrivalTime),
+            departureTimeMinutes: null
           }
         }
       }],
@@ -101,9 +103,9 @@ async function getDepartures(station, db) {
     })
     if (!trip) {
       trip = await timetables.findDocument({runID: vnetDeparture.runID}) // service disruption unaccounted for? like ptv not loading in changes into gtfs data :/
-      if (!trip) {
-        if (!vnetDeparture.estimatedDepartureTime) return null
+      function transformDeparture() {
         let destination = vnetDeparture.destinationVLinePlatform.fullStopName
+        if (!vnetDeparture.estimatedDepartureTime) return null
         return {
           trip: {
             shortRouteName: terminiToLines[destination.slice(0, -16)] || "?",
@@ -120,12 +122,13 @@ async function getDepartures(station, db) {
           unknownScheduledDepartureTime: true
         }
       }
+      if (!trip) return transformDeparture()
 
       let tripStops = trip.stopTimings.map(stop => stop.stopName)
 
       let startingIndex = tripStops.indexOf(vnetDeparture.originVLinePlatform.fullStopName)
       let endingIndex = tripStops.indexOf(vnetDeparture.destinationVLinePlatform.fullStopName)
-      if (startingIndex == -1) return void console.log(vnetDeparture)
+      if (startingIndex == -1) return transformDeparture()
       trip.stopTimings = trip.stopTimings.slice(startingIndex, endingIndex + 1)
       trip.origin = trip.stopTimings[0].stopName
       trip.destination = trip.stopTimings.slice(-1)[0].stopName
