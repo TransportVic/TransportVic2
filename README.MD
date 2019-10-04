@@ -19,7 +19,6 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - GeoJSON visualiser, cos why not
 
 ## Next up to be added:
----
 - Also add support for "ghost" MTM trips, also plaster warnings on it
 - Add a forms field for MTM departures in City Loop stations, concat next trip stops in stopping pattern
 - Reading English and creating a daily timetable update DB collection, can be used to mark services as coaches / cancelled (V/Line!!) as well as just MTM train types

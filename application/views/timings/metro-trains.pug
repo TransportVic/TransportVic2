@@ -54,6 +54,8 @@ append content
           span=departure.destination
           if departure.cancelled
             span.cancelled CANCELLED
+          else if departure.trip.isUncertain
+            span.cancelled No stopping pattern data - check platform displays or click for more info
           else
             if cityLoopStationNames.includes(station.stopName) || departure.trip.direction === 'Up'
               -

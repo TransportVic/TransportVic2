@@ -161,22 +161,21 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
 
     trip = trip.sort((a, b) => utils.time24ToMinAftMidnight(b.departureTime) - utils.time24ToMinAftMidnight(a.departureTime))[0]
 
-    if (!trip) return console.log(departure, run, {
-      routeName: {
-        $in: possibleLines
-      },
-      destination: {
-        $in: possibleDestinations.map(dest => dest + ' Railway Station')
-      },
-      operationDays: utils.getYYYYMMDDNow(),
-      mode: "metro train",
-      stopTimings: {
-        $elemMatch: {
-          stopGTFSID: metroPlatform.stopGTFSID,
-          departureTimeMinutes: scheduledDepartureTimeMinutes
-        }
+    if (!trip) {
+      return {
+        trip: {
+          routeName,
+          stopTimings: [],
+          destination,
+          isUncertain: true,
+        },
+        estimatedDepartureTime,
+        platform,
+        stopData: {},
+        scheduledDepartureTime,
+        runID,
       }
-    })
+    }
 
     let cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(routeID, runID, runDestination) : []
     if (trip.direction == 'Up' && !(cityLoopStations.includes(destination.toLowerCase()) || destination === 'Flinders Street'))
@@ -202,7 +201,7 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
     let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
     transformedDepartures.push({
       trip, scheduledDepartureTime, estimatedDepartureTime, actualDepartureTime, platform,
-      scheduledDepartureTimeMinutes, cancelled: run.status === 'cancelled', cityLoopConfig,
+      cancelled: run.status === 'cancelled', cityLoopConfig,
       destination, runID
     })
   })

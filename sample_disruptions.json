@@ -1,0 +1,236 @@
+[{
+  "disruption_id": 186469,
+  "title": "Belgrave and Lilydale lines: Buses replacing trains on Friday, 4 October 2019",
+  "url": "http://ptv.vic.gov.au/live-travel-updates/article/belgrave-and-lilydale-lines-buses-replacing-trains-on-friday-4-october-2019",
+  "description": "Passengers are advised that due to a train fault at Laburnum Station, buses are replacing train services between Box Hill and Ringwood stations.",
+  "disruption_status": "Current",
+  "disruption_type": "Part suspended",
+  "published_on": "2019-10-04T00:55:56Z",
+  "last_updated": "2019-10-04T00:56:03Z",
+  "from_date": "2019-10-04T00:49:00Z",
+  "to_date": null,
+  "routes": [
+   {
+     "route_type": 0,
+     "route_id": 2,
+     "route_name": "Belgrave",
+     "route_number": "",
+     "route_gtfs_id": "2-BEL",
+     "direction": null
+   },
+   {
+     "route_type": 0,
+     "route_id": 9,
+     "route_name": "Lilydale",
+     "route_number": "",
+     "route_gtfs_id": "2-LIL",
+     "direction": null
+   }
+  ],
+  "stops": [
+   {
+     "stop_id": 1018,
+     "stop_name": "Belgrave "
+   },
+   {
+     "stop_id": 1191,
+     "stop_name": "Tecoma "
+   },
+   {
+     "stop_id": 1200,
+     "stop_name": "Upwey "
+   },
+   {
+     "stop_id": 1199,
+     "stop_name": "Upper Ferntree Gully "
+   },
+   {
+     "stop_id": 1067,
+     "stop_name": "Ferntree Gully "
+   },
+   {
+     "stop_id": 1025,
+     "stop_name": "Boronia "
+   },
+   {
+     "stop_id": 1016,
+     "stop_name": "Bayswater "
+   },
+   {
+     "stop_id": 1092,
+     "stop_name": "Heathmont "
+   },
+   {
+     "stop_id": 1163,
+     "stop_name": "Ringwood "
+   },
+   {
+     "stop_id": 1091,
+     "stop_name": "Heatherdale "
+   },
+   {
+     "stop_id": 1128,
+     "stop_name": "Mitcham "
+   },
+   {
+     "stop_id": 1148,
+     "stop_name": "Nunawading "
+   },
+   {
+     "stop_id": 1023,
+     "stop_name": "Blackburn "
+   },
+   {
+     "stop_id": 1111,
+     "stop_name": "Laburnum "
+   },
+   {
+     "stop_id": 1026,
+     "stop_name": "Box Hill "
+   },
+   {
+     "stop_id": 1129,
+     "stop_name": "Mont Albert "
+   },
+   {
+     "stop_id": 1189,
+     "stop_name": "Surrey Hills "
+   },
+   {
+     "stop_id": 1037,
+     "stop_name": "Chatham "
+   },
+   {
+     "stop_id": 1033,
+     "stop_name": "Canterbury "
+   },
+   {
+     "stop_id": 1057,
+     "stop_name": "East Camberwell "
+   },
+   {
+     "stop_id": 1032,
+     "stop_name": "Camberwell "
+   },
+   {
+     "stop_id": 1012,
+     "stop_name": "Auburn "
+   },
+   {
+     "stop_id": 1080,
+     "stop_name": "Glenferrie "
+   },
+   {
+     "stop_id": 1090,
+     "stop_name": "Hawthorn "
+   },
+   {
+     "stop_id": 1030,
+     "stop_name": "Burnley "
+   },
+   {
+     "stop_id": 1059,
+     "stop_name": "East Richmond "
+   },
+   {
+     "stop_id": 1162,
+     "stop_name": "Richmond "
+   },
+   {
+     "stop_id": 1155,
+     "stop_name": "Parliament "
+   },
+   {
+     "stop_id": 1120,
+     "stop_name": "Melbourne Central "
+   },
+   {
+     "stop_id": 1068,
+     "stop_name": "Flagstaff "
+   },
+   {
+     "stop_id": 1181,
+     "stop_name": "Southern Cross "
+   },
+   {
+     "stop_id": 1071,
+     "stop_name": "Flinders Street "
+   },
+   {
+     "stop_id": 1164,
+     "stop_name": "Ringwood East "
+   },
+   {
+     "stop_id": 1048,
+     "stop_name": "Croydon "
+   },
+   {
+     "stop_id": 1133,
+     "stop_name": "Mooroolbark "
+   },
+   {
+     "stop_id": 1115,
+     "stop_name": "Lilydale "
+   }
+  ],
+  "colour": "#1f1f1f",
+  "display_on_board": true,
+  "display_status": true
+  },
+  {
+  "disruption_id": 186465,
+  "title": "Delays up to 20 minutes between Caulfield and Frankston due to an equipment fault near Seaford. Listen for announcements and check information displays as some services may be altered at short notice.",
+  "url": "http://ptv.vic.gov.au/live-travel-updates/",
+  "description": "Delays up to 20 minutes between Caulfield and Frankston due to an equipment fault near Seaford. Listen for announcements and check information displays as some services may be altered at short notice.",
+  "disruption_status": "Current",
+  "disruption_type": "Major Delays",
+  "published_on": "2019-10-03T23:53:58Z",
+  "last_updated": "2019-10-03T23:54:04Z",
+  "from_date": "2019-10-03T23:52:00Z",
+  "to_date": null,
+  "routes": [
+   {
+     "route_type": 0,
+     "route_id": 6,
+     "route_name": "Frankston",
+     "route_number": "",
+     "route_gtfs_id": "2-FKN",
+     "direction": null
+   }
+  ],
+  "stops": [],
+  "colour": "#e5492d",
+  "display_on_board": true,
+  "display_status": true
+  },
+  {
+  "disruption_id": 186464,
+  "title": "The 9.30am Craigieburn to Flinders Street service has been cancelled today.",
+  "url": "http://ptv.vic.gov.au/live-travel-updates/",
+  "description": "The 9.30am Craigieburn to Flinders Street service has been cancelled today.",
+  "disruption_status": "Current",
+  "disruption_type": "Major Delays",
+  "published_on": "2019-10-03T23:43:29Z",
+  "last_updated": "2019-10-03T23:43:35Z",
+  "from_date": "2019-10-03T23:42:00Z",
+  "to_date": null,
+  "routes": [
+   {
+     "route_type": 0,
+     "route_id": 3,
+     "route_name": "Craigieburn",
+     "route_number": "",
+     "route_gtfs_id": "2-B31",
+     "direction": {
+       "route_direction_id": 21,
+       "direction_id": 1,
+       "direction_name": "City (Flinders Street)",
+       "service_time": null
+     }
+   }
+  ],
+  "stops": [],
+  "colour": "#e5492d",
+  "display_on_board": true,
+  "display_status": true
+}]
