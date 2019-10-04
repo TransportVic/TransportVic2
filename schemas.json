@@ -25,9 +25,9 @@
   "timetable": {
     "mode": "string",
     "operator": "string",
-    "lineName": "string",
+    "routeName": "string",
     "runID": "string",
-    "operationDays": ["number"],
+    "operationDays": ["string"],
     "vehicle": "string",
     "formedBy": "string",
     "forming": "string",
@@ -44,6 +44,28 @@
     "destination": "string",
     "departureTime": "number",
     "origin": "string"
+  },
+  "liveTimetable": {
+    "mode": "string",
+    "operator": "string",
+    "routeName": "string",
+    "runID": "string",
+    "operationDay": "string",
+    "vehicle": "string",
+    "stopTimings": [{
+      "stopName": "string",
+      "stopGTFSID": "number",
+      "arrivalTime": "string",
+      "arrivalTimeMinutes": "number",
+      "departureTime": "string",
+      "departureTimeMinutes": "number",
+      "platform": "string",
+      "stopConditions": "string"
+    }],
+    "destination": "string",
+    "departureTime": "number",
+    "origin": "string",
+    "type": "string"
   },
   "stop": {
     "stopName": "string",

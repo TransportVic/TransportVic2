@@ -69,6 +69,7 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
 
   const gtfsTimetables = db.getCollection('gtfs timetables')
   const timetables = db.getCollection('timetables')
+  const liveTimetables = db.getCollection('live timetables')
 
   const minutesPastMidnight = utils.getMinutesPastMidnightNow()
   let transformedDepartures = []
@@ -83,7 +84,7 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
     let routeName = routes[routeID].route_name
     if (routeName === 'Showgrounds - Flemington Racecourse') routeName = 'Showgrounds/Flemington'
     let platform = departure.platform_number
-    const runDestination = run.destination_name
+    let runDestination = run.destination_name
 
     if (platform == null) { // show replacement bus
       if (departure.flags.includes('RRB-RUN')) platform = 'RRB';
@@ -106,7 +107,7 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
       return
     }
 
-    const estimatedDepartureTime = departure.estimated_departure_utc ? moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne') : null
+    let estimatedDepartureTime = departure.estimated_departure_utc ? moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne') : null
 
     let possibleDestinations = [runDestination]
 
@@ -115,7 +116,7 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
       possibleDestinations.push('Flinders Street')
 
     let possibleLines = [routeName]
-    if (cityLoopStations.includes(stationName)) {
+    if (cityLoopStations.includes(stationName) || destination !== routeName) {
 
       if ([1, 2, 7, 9].includes(routeID))
         possibleLines = ['Alamein', 'Belgrave', 'Glen Waverley', 'Lilydale']
@@ -137,14 +138,11 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
       }
     }
 
-    let trip = (await gtfsTimetables.findDocuments({
+    let trip = await liveTimetables.findDocuments({
       routeName: {
         $in: possibleLines
       },
-      destination: {
-        $in: possibleDestinations.map(dest => dest + ' Railway Station')
-      },
-      operationDays: utils.getYYYYMMDDNow(),
+      operationDay: utils.getYYYYMMDDNow(),
       mode: "metro train",
       stopTimings: {
         $elemMatch: {
@@ -152,7 +150,40 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
           departureTimeMinutes: scheduledDepartureTimeMinutes
         }
       }
-    }).limit(2).toArray())
+    }).toArray()
+
+    if (trip.length) {
+      if (trip[0].type === 'suspension') {
+        if (trip.length > 1) {
+
+          trip = trip.sort((a, b) => b.stopTimings[0].departureTimeMinutes - a.stopTimings[0].departureTimeMinutes).slice(0, 1)
+        }
+
+        destination = trip[0].destination.slice(0, -16)
+        runDestination = destination
+        if (trip[0].vehicle == 'Replacement Bus') {
+          platform = 'RRB'
+          estimatedDepartureTime = null
+        }
+      }
+    } else
+      trip = await gtfsTimetables.findDocuments({
+        routeName: {
+          $in: possibleLines
+        },
+        destination: {
+          $in: possibleDestinations.map(dest => dest + ' Railway Station')
+        },
+        operationDays: utils.getYYYYMMDDNow(),
+        mode: "metro train",
+        stopTimings: {
+          $elemMatch: {
+            stopGTFSID: metroPlatform.stopGTFSID,
+            departureTimeMinutes: scheduledDepartureTimeMinutes
+          }
+        }
+      }).limit(2).toArray()
+
     if (!trip.length)
       trip = [await timetables.findDocument({
         runID
@@ -178,7 +209,7 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
 
     let cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(routeID, runID, runDestination) : []
 
-    if (trip.direction == 'Up' && !(cityLoopStations.includes(stationName) || runDestination === 'Flinders Street'))
+    if (trip.direction === 'Up' && !cityLoopStations.includes(runDestination.toLowerCase()) && !(cityLoopStations.includes(stationName) || runDestination === 'Flinders Street'))
       cityLoopConfig = []
 
     trip.destination = trip.destination.slice(0, -16)
