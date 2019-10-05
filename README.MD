@@ -12,17 +12,20 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Showing live V/Line departures when the services are running as timetabled
 - Showing live V/Line departures when the services are NOT running as timetabled in GTFS, but falling back to NSP Run IDs. Currently no support for updated stopping patterns or stop times
 - Showing live V/Line departures when there's completely no timetable match, this plasters warnings all over the departure row
+- Showing live MTM departures when there's completely no timetable match (17:02 FSS ex Westall), also plasters warnings on the departure.
+- Looks for trips being formed next in City Loop stations, and joins it the the departure stops-at
 - Offline mode
 - Couple of mockup displays
   - Flinders Street Station escalator displays
   - 7x2 LCD PIDS displays found at suburban stations
 - GeoJSON visualiser, cos why not
+- Checks disruptions every 10min, currently handles suspensions
+  - Finds trips affected by suspension and breaks into 3 - first train leg, bus leg and second train leg.
+  - Currently only looks at end stations, should have it check all stations in between for those express services?
 
 ## Next up to be added:
-- Also add support for "ghost" MTM trips, also plaster warnings on it
-- Add a forms field for MTM departures in City Loop stations, concat next trip stops in stopping pattern
+- Added support for MTM "ghost trips", but since there's very few just do a /pattern and load into live DB
 - Reading English and creating a daily timetable update DB collection, can be used to mark services as coaches / cancelled (V/Line!!) as well as just MTM train types
-  - When lines get suspended automatically load in all trips affected and update destinations
   - could work with Yarra Trams too, mark tram number
   - but i guess i need to teach it tram models then
 - Showing stopping patterns for MTM and V/Line services

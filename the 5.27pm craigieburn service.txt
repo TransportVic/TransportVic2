@@ -1,0 +1,72 @@
+{
+  "stop_id": 1071,
+  "route_id": 3,
+  "run_id": 953275,
+  "direction_id": 2,
+  "disruption_ids": [
+    183388
+  ],
+  "scheduled_departure_utc": "2019-10-04T07:27:00Z",
+  "estimated_departure_utc": "2019-10-04T07:27:00Z",
+  "at_platform": false,
+  "platform_number": "9",
+  "flags": "",
+  "departure_sequence": 0
+},
+{
+  "stop_id": 1071,
+  "route_id": 3,
+  "run_id": 953845,
+  "direction_id": 2,
+  "disruption_ids": [
+    183388
+  ],
+  "scheduled_departure_utc": "2019-10-04T07:27:00Z",
+  "estimated_departure_utc": "2019-10-04T07:27:00Z",
+  "at_platform": false,
+  "platform_number": "5",
+  "flags": "",
+  "departure_sequence": 0
+},
+
+
+{
+  "run_id": 953275,
+  "route_id": 3,
+  "route_type": 0,
+  "final_stop_id": 1044,
+  "destination_name": "Craigieburn",
+  "status": "scheduled",
+  "direction_id": 2,
+  "run_sequence": 0,
+  "express_stop_count": 0,
+  "vehicle_position": null,
+  "vehicle_descriptor": {
+    "operator": "Metro Trains Melbourne",
+    "id": "5275",
+    "low_floor": null,
+    "air_conditioned": null,
+    "description": "6 Car Comeng",
+    "supplier": "CIS - Metro Trains Melbourne"
+  }
+},
+{
+  "run_id": 953845,
+  "route_id": 3,
+  "route_type": 0,
+  "final_stop_id": 1044,
+  "destination_name": "Craigieburn",
+  "status": "scheduled",
+  "direction_id": 2,
+  "run_sequence": 0,
+  "express_stop_count": 0,
+  "vehicle_position": null,
+  "vehicle_descriptor": {
+    "operator": "Metro Trains Melbourne",
+    "id": "5845",
+    "low_floor": null,
+    "air_conditioned": null,
+    "description": "6 Car Comeng",
+    "supplier": "CIS - Metro Trains Melbourne"
+  }
+},

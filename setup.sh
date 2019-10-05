@@ -16,3 +16,5 @@ sudo yum install -y mongodb-org git
 
 sudo amazon-linux-extras install epel -y
 sudo yum install certbot-apache -y
+
+pip install bs4

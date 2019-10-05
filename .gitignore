@@ -4,4 +4,8 @@
 /node_modules
 /gtfs
 /spatial_datamart
+/full_gunzel_mode/html_tables/*
+/full_gunzel_mode/timetables/*
+/load_gtfs/vline_trains/timetables
+/load_gtfs/metro_trains/timetables
 .DS_Store
