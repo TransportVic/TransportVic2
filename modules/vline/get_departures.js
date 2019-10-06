@@ -8,6 +8,7 @@ const healthCheck = require('../health-check')
 const moment = require('moment')
 const cheerio = require('cheerio')
 const getScheduledDepartures = require('./get_scheduled_departures')
+const getCoachReaplcements = require('./get_coach_replacement_trips')
 const terminiToLines = require('../../load_gtfs/vline_trains/termini_to_lines')
 
 async function getStationFromVNETName(vnetStationName, db) {
@@ -68,7 +69,9 @@ async function getDepartures(station, db) {
     return departuresCache.get(station.stopName + 'V')
   }
 
-  if (!healthCheck.isOnline()) return await getScheduledDepartures(station, db)
+  let coachTrips = await getCoachReaplcements(station, db)
+
+  if (!healthCheck.isOnline()) return (await getScheduledDepartures(station, db)).concat(coachTrips)
 
   const now = utils.now()
 
@@ -102,7 +105,10 @@ async function getDepartures(station, db) {
       mode: "regional train"
     })
     if (!trip) {
-      trip = await timetables.findDocument({runID: vnetDeparture.runID}) // service disruption unaccounted for? like ptv not loading in changes into gtfs data :/
+      trip = await timetables.findDocument({
+        runID: vnetDeparture.runID,
+        operationDays: utils.getPTDayName(utils.now())
+      }) // service disruption unaccounted for? like ptv not loading in changes into gtfs data :/
       function transformDeparture() {
         let destination = vnetDeparture.destinationVLinePlatform.fullStopName
         if (!vnetDeparture.estimatedDepartureTime) return null
@@ -147,7 +153,7 @@ async function getDepartures(station, db) {
 
   mergedDepartures = mergedDepartures.filter(departure => {
     return minutesPastMidnight > departure.departureTimeMinutes - 180
-  }).sort((a, b) => {
+  }).concat(coachTrips).sort((a, b) => {
     return (a.estimatedDepartureTime || a.scheduledDepartureTime) - (b.estimatedDepartureTime || b.scheduledDepartureTime)
   })
 

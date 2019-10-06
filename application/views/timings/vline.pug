@@ -20,8 +20,13 @@ append content
         input(type='hidden' name='run' value=departure.runID)
         input(type='hidden' name='line' value=departure.trip.shortRouteName)
         a.leftContainer.platform.vline
-          span=departure.isCoachService ? 'Coach Bay' : 'Platform'
-          span=departure.platform || '?'
+          if departure.isCoachService
+            span Coach Svc
+            //- img(src='/static/clear-icons/regional-coach.svg')
+            img(src='/static/images/clear-icons/bus-icon.svg')
+          else
+            span Platform
+            span=departure.platform || '?'
         a.departureInfo
           span=`${departure.trip.shortRouteName} Line towards`
           span=departure.trip.destination.slice(0, -16)

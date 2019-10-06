@@ -22,6 +22,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Checks disruptions every 10min, currently handles suspensions
   - Finds trips affected by suspension and breaks into 3 - first train leg, bus leg and second train leg.
   - Currently only looks at end stations, should have it check all stations in between for those express services?
+- Ability to detect when V/Line trains are scheduled to run as coaches. Currently no support for live disruptions.
 
 ## Next up to be added:
 - Added support for MTM "ghost trips", but since there's very few just do a /pattern and load into live DB

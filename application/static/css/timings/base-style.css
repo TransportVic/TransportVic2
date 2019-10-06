@@ -38,6 +38,12 @@ a.leftContainer.platform span:nth-child(2) {
   font-size: calc(2.5vw + 2.5vh);
 }
 
+a.leftContainer.platform img:nth-child(2) {
+  margin-top: calc(0.75vw + 0.75vh);
+  height: calc(3vw + 3vh);
+  padding-bottom: calc(0.25vw + 0.25vh);
+}
+
 a.departureInfo {
   display: flex;
   flex-direction: column;
