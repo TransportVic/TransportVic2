@@ -39,7 +39,7 @@ module.exports = {
     return dates
   },
   minutesAftMidnightToMoment: (minutes, day) => {
-    return day.clone().startOf('day').add(minutes, 'minutes')
+    return day.clone().startOf('day').set('hours', Math.floor(minutes / 60)).set('minutes', minutes % 60)
   },
   time24ToMinAftMidnight: time => {
     if (!time) return null
@@ -58,8 +58,7 @@ module.exports = {
     return minutesPastMidnight + offset
   },
   getMinutesPastMidnight: time => {
-    const startOfToday = time.clone().startOf('day')
-    return time.diff(startOfToday, 'minutes')
+    return time.get('hours') * 60 + time.get('minutes')
   },
   getPTDayName: time => {
     let minutesPastMidnight = module.exports.getMinutesPastMidnight(time);
