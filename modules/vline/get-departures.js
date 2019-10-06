@@ -7,9 +7,9 @@ const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
 const healthCheck = require('../health-check')
 const moment = require('moment')
 const cheerio = require('cheerio')
-const getScheduledDepartures = require('./get_scheduled_departures')
-const getCoachReaplcements = require('./get_coach_replacement_trips')
-const terminiToLines = require('../../load_gtfs/vline_trains/termini_to_lines')
+const getScheduledDepartures = require('./get-scheduled-departures')
+const getCoachReaplcements = require('./get-coach-replacement-trips')
+const terminiToLines = require('../../load-gtfs/vline-trains/termini-to-lines')
 
 async function getStationFromVNETName(vnetStationName, db) {
   const station = await db.getCollection('stops').findDocument({

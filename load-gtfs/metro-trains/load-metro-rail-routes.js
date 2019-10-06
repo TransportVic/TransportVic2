@@ -4,7 +4,7 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
 const utils = require('../../utils')
 const fs = require('fs')
-const loadRoutes = require('../utils/load_routes')
+const loadRoutes = require('../utils/load-routes')
 const routeData = utils.parseGTFSData(fs.readFileSync('gtfs/2/routes.txt').toString())
 const shapeData = utils.parseGTFSData(fs.readFileSync('gtfs/2/shapes.txt').toString())
 

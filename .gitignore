@@ -3,9 +3,9 @@
 /urls.json
 /node_modules
 /gtfs
-/spatial_datamart
-/full_gunzel_mode/html_tables/*
-/full_gunzel_mode/timetables/*
-/load_gtfs/vline_trains/timetables
-/load_gtfs/metro_trains/timetables
+/spatial-datamart
+/full-gunzel-mode/html-tables/*
+/full-gunzel-mode/timetables/*
+/load-gtfs/vline-trains/timetables
+/load-gtfs/metro-trains/timetables
 .DS_Store

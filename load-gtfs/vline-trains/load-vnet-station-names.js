@@ -7,7 +7,7 @@ const cheerio = require('cheerio')
 
 const fs = require('fs')
 const async = require('async')
-let data = fs.readFileSync('load_gtfs/vline_trains/all_vline_stations.xml').toString().replace(/a:/g, '')
+let data = fs.readFileSync('load-gtfs/vline-trains/all-vline-stations.xml').toString().replace(/a:/g, '')
 const $ = cheerio.load(data)
 
 const completedStations = []

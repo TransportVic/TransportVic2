@@ -5,7 +5,7 @@ const utils = require('../../utils')
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 200 })
 const healthCheck = require('../health-check')
 const moment = require('moment')
-const getScheduledDepartures = require('./get_scheduled_departures')
+const getScheduledDepartures = require('./get-scheduled-departures')
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
 

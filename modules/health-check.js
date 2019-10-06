@@ -2,7 +2,7 @@ const request = require('request-promise')
 const ptvAPI = require('../ptv-api')
 const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config.json')
-const handleMTMSuspensions = require('./disruption-management/handle_mtm_suspensions')
+const handleMTMSuspensions = require('./disruption-management/handle-mtm-suspensions')
 
 let isOnline = true
 var refreshRate = 10;

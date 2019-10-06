@@ -48,7 +48,7 @@ const files = [
   'FP50 Western Sunday - Down'
 ]
 
-let terminiToLines = require('./termini_to_lines')
+let terminiToLines = require('./termini-to-lines')
 
 function operatingDaysToArray (days) {
   if (days === 'MF') return ['Mon', 'Tues', 'Wed', 'Thur', 'Fri']
@@ -73,7 +73,7 @@ function timingToMinutesAfterMidnight (timing) {
 let timetableCount = 0
 
 async function loadTimetableCSV (filename) {
-  let timetable = fs.readFileSync('load_gtfs/vline_trains/timetables/' + filename + '.csv').toString()
+  let timetable = fs.readFileSync('load-gtfs/vline-trains/timetables/' + filename + '.csv').toString()
   timetable = await new Promise(resolve => parseCSV(timetable, {
     trim: true,
     skip_empty_lines: true

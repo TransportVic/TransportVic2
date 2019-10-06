@@ -4,8 +4,8 @@ from bs4 import BeautifulSoup
 from pathlib import Path
 import os
 
-for file_name in os.listdir('html_tables'):
-    html = Path('html_tables/' + file_name).read_text()
+for file_name in os.listdir('html-tables'):
+    html = Path('html-tables/' + file_name).read_text()
 
     soup = BeautifulSoup(html, features='html5lib')
     table = soup.find("table", attrs={"class":"waffle"})

@@ -25,7 +25,7 @@ function operatingDaysToArray (days) {
 let timetableCount = 0
 
 async function loadTimetableCSV (filename) {
-  let timetable = fs.readFileSync('full_gunzel_mode/timetables/' + filename).toString()
+  let timetable = fs.readFileSync('full-gunzel-mode/timetables/' + filename).toString()
   timetable = await new Promise(resolve => parseCSV(timetable, {
     trim: true,
     skip_empty_lines: true
@@ -194,7 +194,7 @@ async function loadTrips (csvData) {
 }
 
 (async function() {
-  let files = fs.readdirSync('full_gunzel_mode/timetables')
+  let files = fs.readdirSync('full-gunzel-mode/timetables')
 
   let allTrips = {}
 

@@ -1,5 +1,0 @@
-node load_gtfs/metro_trains/load_metro_rail_stations.js
-node load_gtfs/metro_trains/load_metro_rail_routes.js
-node load_gtfs/metro_trains/load_metro_gtfs_timetables.js
-node load_gtfs/metro_trains/load_metro_route_stops.js
-node load_gtfs/metro_trains/load_metro_static_timetables.js

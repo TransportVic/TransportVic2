@@ -144,7 +144,7 @@ async function parseTimetable(data, routeName) {
 
 async function loadLineJSON(routeName) {
   let codedLineName = utils.encodeName(routeName)
-  let data = JSON.parse(fs.readFileSync('load_gtfs/metro_trains/timetables/' + codedLineName + '.json').toString())
+  let data = JSON.parse(fs.readFileSync('load-gtfs/metro-trains/timetables/' + codedLineName + '.json').toString())
   data = data.map(stop => {
     stop.time_seconds = parseInt(stop.time_seconds)
     stop.arrivalTimeMinutes = stop.time_seconds / 60

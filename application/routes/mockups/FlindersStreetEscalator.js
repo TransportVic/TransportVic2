@@ -1,6 +1,6 @@
 const express = require('express')
 const router = new express.Router()
-const getDepartures = require('../../../modules/metro-trains/get_departures')
+const getDepartures = require('../../../modules/metro-trains/get-departures')
 const moment = require('moment')
 const async = require('async')
 const utils = require('../../../utils')
