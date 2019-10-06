@@ -30,10 +30,12 @@ append content
         a.departureInfo
           span=`${departure.trip.shortRouteName} Line towards`
           span=departure.trip.destination.slice(0, -16)
-          if departure.unknownScheduledDepartureTime
+          if departure.isCoachService
+            span.cancelled This service has been replaced by coaches - check platform displays
+          else if departure.unknownScheduledDepartureTime
             span.cancelled Unknown scheduled departure time/No stopping pattern info - check platform displays
           else if departure.trip.isUncertain
-            span.cancelled Stopping pattern may be wrong - check platform displays
+            span.cancelled Stopping pattern/times may be wrong - check platform displays
         div.timings
           -
             let className = 'timing '

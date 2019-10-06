@@ -1,7 +1,7 @@
 for metroStation in results.filter(stop => stop.bays.filter(bay => bay.mode === 'metro train').length)
   a(href=`/metro/timings/${metroStation.codedName}`).metroStation.result
     div.leftContainer
-      img(src='/static/images/metro-icon.svg')
+      img(src='/static/images/clear-icons/metro-icon.svg')
     div.resultDetails
       span='Metro train station in ' + metroStation.suburb[0]
       span=metroStation.stopName
@@ -9,7 +9,7 @@ for metroStation in results.filter(stop => stop.bays.filter(bay => bay.mode === 
 for vlineStation in results.filter(stop => stop.bays.filter(bay => bay.mode === 'regional train').length)
   a(href=`/vline/timings/${vlineStation.codedName}`).vlineStation.result
     div.leftContainer
-      img(src='/static/images/metro-icon.svg')
+      img(src='/static/images/clear-icons/vline-icon.svg')
     div.resultDetails
       span='V/Line train station in ' + vlineStation.suburb[0]
       span=vlineStation.stopName
