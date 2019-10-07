@@ -230,7 +230,7 @@ div.smallDeparture div.right > div p {
     color: #ffffff !important;
   }
 
-  .stoppingAt {
+  div.stoppingAt > * {
     background-color: #000000 !important;
   }
 
@@ -238,12 +238,16 @@ div.smallDeparture div.right > div p {
     color: #282828;
   }
 
-}
-
-@media(prefers-color-scheme: light) {
-
-  .stoppingAt {
-    background-color: #ffffff !important;
+  div.cranbourne, div.pakenham, div.craigieburn, div.sunbury, div.upfield, div.sandringham {
+    color: #ffffff;
   }
 
+  p.cranbourne, p.pakenham, p.craigieburn, p.sunbury, p.upfield, p.sandringham {
+    color: #ffffff;
+  }
+
+}
+
+div.stoppingAt > * {
+  background-color: #ffffff;
 }
