@@ -47,6 +47,9 @@ async function getVNETDepartures(station, db) {
     const runID = $('ServiceIdentifier', service).text()
     const originVNETName = $('Origin', service).text()
     const destinationVNETName = $('Destination', service).text()
+    let direction = $('Direction', service).text()
+    if (direction === 'D') direction = 'Down'
+    else direction = 'Up'
 
     const originStation = await getStationFromVNETName(originVNETName, db)
     const destinationStation = await getStationFromVNETName(destinationVNETName, db)
@@ -57,7 +60,8 @@ async function getVNETDepartures(station, db) {
     mappedServices.push({
       runID, originVLinePlatform, destinationVLinePlatform,
       originDepartureTime, destinationArrivalTime,
-      platform, estimatedDepartureTime
+      platform, estimatedDepartureTime,
+      direction
     })
   })
 
@@ -118,6 +122,7 @@ async function getDepartures(station, db) {
             stopTimings: [],
             destination,
             isUncertain: true,
+            direction: vnetDeparture.direction
           },
           estimatedDepartureTime: vnetDeparture.estimatedDepartureTime,
           platform: vnetDeparture.platform,
@@ -144,10 +149,13 @@ async function getDepartures(station, db) {
 
     const stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === vlinePlatform.stopGTFSID)[0]
 
+    let scheduledDepartureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, now)
+
     return {
       trip, estimatedDepartureTime: vnetDeparture.estimatedDepartureTime, platform: vnetDeparture.platform,
-      stopData, scheduledDepartureTime: utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, now),
-      departureTimeMinutes: stopData.departureTimeMinutes, runID: vnetDeparture.runID
+      stopData, scheduledDepartureTime,
+      departureTimeMinutes: stopData.departureTimeMinutes, runID: vnetDeparture.runID,
+      actualDepartureTime: vnetDeparture.estimatedDepartureTime || scheduledDepartureTime
     }
   })).filter(Boolean)
 

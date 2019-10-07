@@ -1,0 +1,143 @@
+html
+  head
+    script(src='/static/scripts/util.js')
+    link(rel='stylesheet' href='/static/css/jmss-screens/base-style.css')
+    link(rel='stylesheet' href='/static/css/jmss-screens/big-screen.css')
+    script.
+      setTimeout(() => location.reload(), 1000 * 60)
+  body
+    div.topRow
+      -
+        function formatTime(time) {
+          let hours = time.getHours()
+          let minutes = time.getMinutes()
+          let mainTime = ''
+
+          mainTime += (hours % 12) || 12
+          mainTime += ':'
+          if (minutes < 10) mainTime += '0'
+          mainTime += minutes
+          if (hours >= 12) mainTime += 'pm'
+          else mainTime += 'am'
+
+          return mainTime
+        }
+      
+      span Monash University PT Connections
+      span=formatTime(new Date())
+    div.headers
+      - for (let n = 0; n < 3; n++)
+        div.header
+          span Service
+          span Mins
+    div.departureColumns
+      -
+        function getDepartureText(departure) {
+          if (departure.minutesToDeparture < 1) return 'Now'
+          return departure.minutesToDeparture
+        }
+      - for (let n = 0; n < 3; n++)
+        - let nGroups = busDepartures.slice(n * 8, n * 8 + 8)
+        div.departureColumn
+          for group in nGroups
+            - group = group.sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+            - let {routeNumber, destination} = group[0]
+            div.departureRow
+              div.routeNumber
+                span=routeNumber
+              div.destination
+                span Towards
+                span=destination
+                
+              -
+                let waitingClass = 'cannot-make'
+                let minutesToFirstDeparture = group[0].minutesToDeparture
+                if (minutesToFirstDeparture >= 5)
+                  waitingClass = 'walk'
+                else if (minutesToFirstDeparture >= 3)
+                  waitingClass = 'run-fast'
+              div(class='departureMinutes ' + waitingClass)
+                span=getDepartureText(group[0])
+                span='Next: ' + group[1].minutesToDeparture
+            if n == 2
+              -
+                function getWaitingClass(departure) {
+                  let waitingClass = 'cannot-make'
+                  let minutesToFirstDeparture = departure.minutesToDeparture
+                  if (minutesToFirstDeparture >= 15)
+                    waitingClass = 'walk'
+                  else if (minutesToFirstDeparture >= 10)
+                    waitingClass = 'run-fast'
+                  return waitingClass
+                }
+              div.sub-heading
+                span Huntingdale Metro Train Departures
+              mixin departureTime(direction)
+                - let waitingClass = metroDepartures[direction] ? getWaitingClass(metroDepartures[direction][0]) : 'unknown'
+                div(class='departureMinutes ' + waitingClass)
+                  if metroDepartures[direction]
+                    span=getDepartureText(metroDepartures[direction][0])
+                    if metroDepartures[direction][1]
+                      span='Next: ' + metroDepartures[direction][1].minutesToDeparture
+                    else
+                      span Next: --
+                  else
+                    span --
+                    span Next: --
+              
+              div.departureRow
+                div.routeNumber.dandenong-group
+                  span 1
+                div.destination
+                  span Towards
+                  if metroDepartures.Up
+                    span=metroDepartures.Up[0].destination
+                  else
+                    span --
+                +departureTime('Up')
+                
+              for departure in metroDepartures.Down ? metroDepartures.Down.concat(null).slice(0, 2) : [null, null]
+                div.departureRow
+                  div.routeNumber.dandenong-group
+                    span 2
+                  div.destination
+                    span Towards
+                    if departure
+                      span=departure.destination
+                    else
+                      span --
+                  - let waitingClass = departure ? getWaitingClass(departure) : 'unknown'
+                  div(class='departureMinutes ' + waitingClass)
+                    if departure
+                      span=getDepartureText(departure)
+                    else
+                      span --
+              div.sub-heading
+                span Next Clayton V/Line Train Departure
+              div.departureRow
+                div.routeNumber.vline
+                  span 2
+                div.destination
+                  span Towards
+                  if nextVLineDeparture
+                    span=nextVLineDeparture.trip.destination.slice(0, -16)
+                  else
+                    span --
+                - let waitingClass = nextVLineDeparture ? getWaitingClass(nextVLineDeparture) : 'unknown'
+                div(class='departureMinutes ' + waitingClass)
+                  if nextVLineDeparture
+                    span=getDepartureText(nextVLineDeparture)
+                  else
+                    span --
+              div.departureRow.colour-guide
+                div
+                  div.walk
+                    span Sufficient time
+                  div.run-fast
+                    span Run for the bus/train
+                div
+                  div.cannot-make
+                    span Too late - wait for the next one
+                  div.unknown
+                    span No departure available
+                  
