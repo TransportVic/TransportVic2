@@ -51,12 +51,19 @@ append content
         if departure.cancelled
           input(type='hidden' name='cancelled')
         a(class=`leftContainer platform ${departure.codedLineName}-line`)
-          span Platform
-          span=departure.platform || '?'
+          if departure.platform === 'RRB'
+            span
+            span RRB
+          else
+            span Platform
+            span=departure.platform || '?'
         a.departureInfo
           span=`${departure.trip.routeName} Line towards`
           span=departure.destination
-          if departure.cancelled
+          
+          if departure.platform === 'RRB'
+            span.cancelled Rail Replacement Bus
+          else if departure.cancelled
             span.cancelled CANCELLED
           else if departure.trip.isUncertain
             span.cancelled No stopping pattern data - check platform displays or click for more info

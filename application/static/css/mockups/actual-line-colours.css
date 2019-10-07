@@ -75,11 +75,6 @@ p.no-line {
   color: #ffffff;
 }
 
-
-.stoppingAt {
-  background-color: #ffffff !important;
-}
-
 .stoppingAt.alamein img, .stoppingAt.belgrave img, .stoppingAt.lilydale img, .stoppingAt.glen-waverley img {
   filter: invert(13%) sepia(54%) saturate(2677%) hue-rotate(213deg) brightness(94%) contrast(98%);
 }
