@@ -78,8 +78,7 @@ database.connect({
     routeName: 1,
     operationDays: 1,
     origin: 1,
-    destination: 1,
-    gtfsDirection: 1
+    destination: 1
   }, {unique: true})
 
   await async.forEach(trips, async trip => {
