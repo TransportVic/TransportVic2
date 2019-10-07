@@ -83,7 +83,7 @@ async function loadTimetableCSV (filename) {
     else parts[0] = prevStation
 
     parts[0] = parts[0].toLowerCase()
-    parts[0] = parts[0].replace(/ st\.?/, ' Street')
+    parts[0] = parts[0].replace(/ st\.\b/, ' Street').replace(/ st\b/, ' Street')
     parts[0] = parts[0].replace(' yd', ' Yard')
     parts[0] = parts[0].replace(' sdg', ' Siding')
     parts[0] = parts[0].replace(' rd', ' Road')

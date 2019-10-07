@@ -5,6 +5,7 @@ const moment = require('moment')
 module.exports = async function(station, db) {
   if (!station.stopName.endsWith('Railway Station')) throw Error('Use regional_trains module instead')
   let coachStop = station.bays.filter(bay => bay.mode === 'regional coach')[0]
+  if (!coachStop) return []
   let vlinePlatform = station.bays.filter(bay => bay.mode === 'regional train')[0]
 
   if (!coachStop && station.stopName === 'Southern Cross Railway Station') {
