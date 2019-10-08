@@ -2,7 +2,7 @@ const TimedCache = require('timed-cache')
 const async = require('async')
 const ptvAPI = require('../../ptv-api')
 const utils = require('../../utils')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
+const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 3 })
 const healthCheck = require('../health-check')
 const moment = require('moment')
 const getScheduledDepartures = require('./get-scheduled-departures')
@@ -58,15 +58,7 @@ function determineLoopRunning(routeID, runID, destination) {
   return cityLoopConfig
 }
 
-async function getDepartures(station, db, departuresCount=6, includeCancelled=true, platform=null, ttl=2) {
-  let cacheKey = station.stopName + 'M-' + departuresCount + '-' + includeCancelled + '-' + platform
-
-  if (departuresCache.get(cacheKey)) {
-    return departuresCache.get(cacheKey)
-  }
-
-  if (!healthCheck.isOnline()) return await getScheduledDepartures(station, db)
-
+async function getDeparturesFromPTV(station, db, departuresCount, includeCancelled, platform, ttl) {
   const gtfsTimetables = db.getCollection('gtfs timetables')
   const timetables = db.getCollection('timetables')
   const liveTimetables = db.getCollection('live timetables')
@@ -103,7 +95,11 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
     const scheduledDepartureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
     const scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
 
-    if (scheduledDepartureTime.diff(utils.now(), 'minutes') > 90) { // show only up to next 1.5 hr of departures
+    let cutoff = 90
+    if (cityLoopStations.includes(stationName) || stationName == 'flinders street')
+      cutoff = 60
+
+    if (scheduledDepartureTime.diff(utils.now(), 'minutes') > cutoff) { // show only up to next 1.5 hr of departures
       return
     }
 
@@ -249,16 +245,32 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
     })
   })
 
-  transformedDepartures = transformedDepartures.sort((a, b) => {
+  return transformedDepartures
+}
+
+function filterDepartures(departures) {
+  return departures.sort((a, b) => {
     return a.actualDepartureTime - b.actualDepartureTime
   }).filter(departure =>
     departure.actualDepartureTime.diff(utils.now(), 'seconds') > -30
   )
+}
 
-  departuresCache.put(cacheKey, transformedDepartures, {
+async function getDepartures(station, db, departuresCount=6, includeCancelled=true, platform=null, ttl=2) {
+  let cacheKey = station.stopName + 'M-' + departuresCount + '-' + includeCancelled + '-' + platform
+
+  if (departuresCache.get(cacheKey)) {
+    return filterDepartures(departuresCache.get(cacheKey))
+  }
+
+  if (!healthCheck.isOnline()) return await getScheduledDepartures(station, db)
+
+  let departures = await getDeparturesFromPTV(station, db, departuresCount, includeCancelled, platform, ttl)
+  departuresCache.put(cacheKey, departures, {
     ttl: ttl * 1000 * 60
   })
-  return transformedDepartures
+
+  return filterDepartures(departures)
 }
 
 module.exports = getDepartures

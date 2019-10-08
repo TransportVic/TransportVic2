@@ -3,12 +3,12 @@ const TimedCache = require('timed-cache')
 const async = require('async')
 const urls = require('../../urls.json')
 const utils = require('../../utils')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
+const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 3 })
 const healthCheck = require('../health-check')
 const moment = require('moment')
 const cheerio = require('cheerio')
 const getScheduledDepartures = require('./get-scheduled-departures')
-const getCoachReaplcements = require('./get-coach-replacement-trips')
+const getCoachReplacements = require('./get-coach-replacement-trips')
 const terminiToLines = require('../../load-gtfs/vline-trains/termini-to-lines')
 
 async function getStationFromVNETName(vnetStationName, db) {
@@ -68,15 +68,7 @@ async function getVNETDepartures(station, db) {
   return mappedServices
 }
 
-async function getDepartures(station, db) {
-  if (departuresCache.get(station.stopName + 'V')) {
-    return departuresCache.get(station.stopName + 'V')
-  }
-
-  let coachTrips = await getCoachReaplcements(station, db)
-
-  if (!healthCheck.isOnline()) return (await getScheduledDepartures(station, db)).concat(coachTrips)
-
+async function getDeparturesFromVNET(station, db) {
   const now = utils.now()
 
   const gtfsTimetables = db.getCollection('gtfs timetables')
@@ -159,14 +151,34 @@ async function getDepartures(station, db) {
     }
   })).filter(Boolean)
 
-  mergedDepartures = mergedDepartures.filter(departure => {
-    return minutesPastMidnight > departure.departureTimeMinutes - 180
-  }).concat(coachTrips).sort((a, b) => {
-    return (a.estimatedDepartureTime || a.scheduledDepartureTime) - (b.estimatedDepartureTime || b.scheduledDepartureTime)
-  })
-
-  departuresCache.put(station.stopName + 'V', mergedDepartures)
   return mergedDepartures
+}
+
+function filterDepartures(departures) {
+  let now = utils.now()
+  let minutesPastMidnight = utils.getPTMinutesPastMidnight(now)
+
+  return departures.sort((a, b) => {
+    return a.actualDepartureTime - b.actualDepartureTime
+  }).filter(departure => {
+    return minutesPastMidnight > departure.departureTimeMinutes - 180 &&
+      departure.actualDepartureTime.diff(now, 'seconds') > -30
+  })
+}
+
+async function getDepartures(station, db) {
+  if (departuresCache.get(station.stopName + 'V')) {
+    return filterDepartures(departuresCache.get(station.stopName + 'V'))
+  }
+
+  let coachTrips = await getCoachReplacements(station, db)
+  if (!healthCheck.isOnline()) return (await getScheduledDepartures(station, db)).concat(coachTrips)
+
+  let departures = await getDeparturesFromVNET(station, db)
+  departures = departures.concat(coachTrips)
+
+  departuresCache.put(station.stopName + 'V', departures)
+  return filterDepartures(departures)
 }
 
 module.exports = getDepartures
