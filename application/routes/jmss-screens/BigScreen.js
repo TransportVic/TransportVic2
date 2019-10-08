@@ -33,6 +33,7 @@ async function getBusLoopDepartures() {
     let direction = run.direction_id
 
     mappedDepartures.push({
+      estimatedDepartureTime,
       actualDepartureTime,
       routeNumber,
       destination,

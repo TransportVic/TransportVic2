@@ -148,7 +148,8 @@ div.departureMinutes > span:nth-child(2) {
 }
 
 div.cannot-make {
-  background-color: #ef5143;
+  background-color: #bc2431;
+  color: #cccccc;
 }
 
 div.run-fast {

@@ -26,6 +26,16 @@ html
           if (departure.minutesToDeparture < 1) return 'Now'
           return departure.minutesToDeparture
         }
+        function getWaitingClass(departure, thresholds) {
+          if (!departure.estimatedDepartureTime) return 'unknown'
+          let waitingClass = 'cannot-make'
+          let minutesToFirstDeparture = departure.minutesToDeparture
+          if (minutesToFirstDeparture >= thresholds[0])
+            waitingClass = 'walk'
+          else if (minutesToFirstDeparture >= thresholds[1])
+            waitingClass = 'run-fast'
+          return waitingClass
+        }
       - for (let n = 0; n < 3; n++)
         - let nGroups = busDepartures.slice(n * 8, n * 8 + 8)
         div.departureColumn
@@ -38,32 +48,15 @@ html
               div.destination
                 span Towards
                 span=destination
-                
-              -
-                let waitingClass = 'cannot-make'
-                let minutesToFirstDeparture = group[0].minutesToDeparture
-                if (minutesToFirstDeparture >= 5)
-                  waitingClass = 'walk'
-                else if (minutesToFirstDeparture >= 3)
-                  waitingClass = 'run-fast'
-              div(class='departureMinutes ' + waitingClass)
+
+              div(class='departureMinutes ' + getWaitingClass(group[0], [5, 3]))
                 span=getDepartureText(group[0])
                 span='Next: ' + group[1].minutesToDeparture
             if n == 2
-              -
-                function getWaitingClass(departure) {
-                  let waitingClass = 'cannot-make'
-                  let minutesToFirstDeparture = departure.minutesToDeparture
-                  if (minutesToFirstDeparture >= 15)
-                    waitingClass = 'walk'
-                  else if (minutesToFirstDeparture >= 10)
-                    waitingClass = 'run-fast'
-                  return waitingClass
-                }
               div.sub-heading
                 span Huntingdale Metro Train Departures
               mixin departureTime(direction)
-                - let waitingClass = metroDepartures[direction] ? getWaitingClass(metroDepartures[direction][0]) : 'unknown'
+                - let waitingClass = metroDepartures[direction] ? getWaitingClass(metroDepartures[direction][0], [15, 10]) : 'unknown'
                 div(class='departureMinutes ' + waitingClass)
                   if metroDepartures[direction]
                     span=getDepartureText(metroDepartures[direction][0])
@@ -98,7 +91,7 @@ html
                       span=departure.destination
                     else
                       span --
-                  - let waitingClass = departure ? getWaitingClass(departure) : 'unknown'
+                  - let waitingClass = departure ? getWaitingClass(departure, [15, 10]) : 'unknown'
                   div(class='departureMinutes ' + waitingClass)
                     if departure
                       span=getDepartureText(departure)
@@ -116,7 +109,7 @@ html
                     span=nextVLineDeparture.trip.destination.slice(0, -16)
                   else
                     span --
-                - let waitingClass = nextVLineDeparture ? getWaitingClass(nextVLineDeparture) : 'unknown'
+                - let waitingClass = nextVLineDeparture ? getWaitingClass(nextVLineDeparture, [15, 10]) : 'unknown'
                 div(class='departureMinutes ' + waitingClass)
                   if nextVLineDeparture
                     span=getDepartureText(nextVLineDeparture)
@@ -132,5 +125,5 @@ html
                   div.cannot-make
                     span Too late - wait for the next one
                   div.unknown
-                    span No departure available
+                    span No realtime departure available
                   
