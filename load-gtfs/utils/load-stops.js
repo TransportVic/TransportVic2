@@ -20,7 +20,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable) {
       stopName,
       stopGTFSID: parseInt(values[0]),
       suburb: stopNameData[2],
-      codedName: utils.encodeName(stopName.slice(0, -16)),
+      codedName: utils.encodeName(stopName),
       location: [values[3], values[2]].map(parseFloat),
       mykiZones
     }

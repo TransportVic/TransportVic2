@@ -18,7 +18,7 @@ let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne 
 
 async function getData(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
-    codedName: req.params.station || 'flinders-street'
+    codedName: (req.params.station || 'flinders-street') + '-railway-station'
   })
 
 

@@ -6,7 +6,7 @@ const utils = require('../../../utils')
 
 router.get('/:stationName', async (req, res) => {
   const station = await res.db.getCollection('stops').findDocument({
-    codedName: req.params.stationName
+    codedName: req.params.stationName + '-railway-station'
   })
 
   if (!station) {
