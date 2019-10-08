@@ -65,7 +65,7 @@ div.departureColumns {
 
 div.departureColumn {
   width: calc(var(--width) / 3);
-  height: 800px;
+  height: 810px;
   background-color: #f1f1f1;
   display: flex;
   flex-direction: column;
