@@ -18,7 +18,7 @@
     "lokijs": "^1.5.7",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.26",
-    "mongodb": "^3.3.1",
+    "mongodb": "^3.3.2",
     "pug": "^2.0.4",
     "querystring": "^0.2.0",
     "readline-sync": "^1.4.10",
@@ -27,6 +27,6 @@
     "safe-regex": "^2.0.2",
     "timed-cache": "^1.1.2",
     "url": "^0.11.0",
-    "xml2js": "^0.4.19"
+    "xml2js": "^0.4.22"
   }
 }
