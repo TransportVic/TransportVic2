@@ -176,6 +176,20 @@ div.routeNumber.vline {
   color: #f1f1f1;
 }
 
+div.routeNumber.dandenong-group, div.routeNumber.vline {
+  display: flex;
+  flex-direction: column;
+}
+
+div.routeNumber.dandenong-group > span:nth-child(1), div.routeNumber.vline > span:nth-child(1) {
+  font-size: 20px;
+}
+
+div.routeNumber.dandenong-group > span:nth-child(2), div.routeNumber.vline > span:nth-child(2) {
+  font-size: 50px;
+  margin-top: -5px;
+}
+
 div.departureRow.colour-guide {
   overflow: hidden;
   display: flex;
