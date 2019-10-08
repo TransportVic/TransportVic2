@@ -7,24 +7,8 @@ html
       setTimeout(() => location.reload(), 1000 * 60)
   body
     div.topRow
-      -
-        function formatTime(time) {
-          let hours = time.getHours()
-          let minutes = time.getMinutes()
-          let mainTime = ''
-
-          mainTime += (hours % 12) || 12
-          mainTime += ':'
-          if (minutes < 10) mainTime += '0'
-          mainTime += minutes
-          if (hours >= 12) mainTime += 'pm'
-          else mainTime += 'am'
-
-          return mainTime
-        }
-      
       span Monash University PT Connections
-      span=formatTime(new Date())
+      span=currentTime
     div.headers
       - for (let n = 0; n < 3; n++)
         div.header

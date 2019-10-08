@@ -93,7 +93,9 @@ router.get('/', async (req, res) => {
     return departure.trip.direction === 'Down'
   })[0]
 
-  res.render('jmss-screens/big-screen', { busDepartures, metroDepartures, nextVLineDeparture })
+  let currentTime = utils.now().format('H:mmA').toLowerCase()
+
+  res.render('jmss-screens/big-screen', { busDepartures, metroDepartures, nextVLineDeparture, currentTime })
 })
 
 module.exports = router
