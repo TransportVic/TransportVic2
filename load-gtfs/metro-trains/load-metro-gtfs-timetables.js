@@ -124,7 +124,7 @@ async function loadBatchIntoDB(trips, db) {
 
   let bulkOperations = []
 
-  await async.forEach(Object.keys(allTrips), async tripID => {
+  Object.keys(allTrips).forEach(tripID => {
     allTrips[tripID].stopTimings = allTrips[tripID].stopTimings.filter(Boolean)
     let stopTimings = allTrips[tripID].stopTimings
 
@@ -178,14 +178,14 @@ database.connect({
   }, {unique: true})
 
   let loaded = 0
-
   let start = 0
+
   async function loadBatch() {
-    let tripsToLoad = trips.slice(start, start + 2500)
+    let tripsToLoad = trips.slice(start, start + 2000)
     if (!tripsToLoad.length) return
     loaded += await loadBatchIntoDB(tripsToLoad, database)
 
-    start += 2500
+    start += 2000
 
     await loadBatch()
   }
