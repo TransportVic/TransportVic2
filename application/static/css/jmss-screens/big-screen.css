@@ -1,5 +1,5 @@
 html {
-   transform: scale(0.75);
+   transform: scale(0.66667);
    transform-origin: top left;
    overflow: hidden;
 }
@@ -10,7 +10,7 @@ html {
 
 div.topRow {
   width: var(--width);
-  height: 100px;
+  height: 90px;
   font-size: 50px;
 
   background-color: #393939;
