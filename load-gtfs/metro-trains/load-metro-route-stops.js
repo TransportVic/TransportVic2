@@ -45,7 +45,7 @@ database.connect({
 
   await async.forEach(allRoutes, async routeGTFSID => {
     let routeVariants = (await routes.findDocument({ routeGTFSID })).routePath
-      .map(variant => variant.fullGTFSIDs)
+      .map(variant => variant.fullGTFSIDs.slice(0, 1))
       .reduce((acc, r) => acc.concat(r), [])
     let routeDirections = []
 
@@ -61,7 +61,7 @@ database.connect({
       let mergedStops = mergeStops(direction, (a, b) => a.stopName == b.stopName)
         .filter(stop => !cityLoopStations.includes(stop.stopName.toLowerCase()))
 
-      let directionName = mergedStops.slice(-1)[0].stopName
+      let directionName = mergedStops.slice(-1)[0].stopName.slice(0, -16)
 
       let flindersStreetIndex = 0
 
@@ -114,7 +114,6 @@ database.connect({
           directionName = 'City'
           mergedStops = mergedStops.slice(0, -1).concat(cityLoopStops)
         } else {
-          directionName = directionName.slice(0, -16)
           cityLoopStops.reverse()
           mergedStops = cityLoopStops.concat(mergedStops.slice(1))
         }

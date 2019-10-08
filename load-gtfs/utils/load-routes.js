@@ -48,8 +48,9 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
     let mergedRouteTypes = {}
 
     shapeData.filter(data => data[0].startsWith(mergedRouteData.routeGTFSID)).forEach(line => {
-      if (!routeTypes[line[0]]) routeTypes[line[0]] = []
-      routeTypes[line[0]].push(line)
+      let id = line[0]
+      if (!routeTypes[id]) routeTypes[id] = []
+      routeTypes[id].push(line)
     })
 
     Object.keys(routeTypes).forEach(routeGTFSID => {
@@ -58,13 +59,13 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
           return a[i - 1][4] !== line[4]
         return true
       }).map(line => [line[2], line[1]])
-      let routeLength = routeTypes[routeGTFSID].slice(-1)[0][4]
+      let routeKey = routeTypes[routeGTFSID].slice(-1)[0][4] + shapeData[0].join(',')
       routeTypes[routeGTFSID] = shapeData
 
-      if (!routeLengths[routeLength])
-        routeLengths[routeLength] = []
+      if (!routeLengths[routeKey])
+        routeLengths[routeKey] = []
 
-      routeLengths[routeLength].push(routeGTFSID)
+      routeLengths[routeKey].push(routeGTFSID)
     })
 
     Object.keys(routeLengths).forEach(length => {
