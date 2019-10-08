@@ -4,8 +4,8 @@
 
 div.topRow {
   width: var(--width);
-  height: 140px;
-  font-size: 80px;
+  height: 100px;
+  font-size: 50px;
 
   background-color: #393939;
   color: #f1f1f1;
@@ -22,11 +22,11 @@ div.topRow span:nth-child(2) {
   margin-left: auto;
   margin-right: 20px;
 }
-
+/* 961 */
 div.headers {
   width: 1920px;
-  height: 70px;
-  font-size: 45px;
+  height: 60px; /*-20*/
+  font-size: 40px;
 
   background-color: #2e2e2e;
   color: #f1f1f1;
@@ -59,7 +59,7 @@ div.departureColumns {
 
 div.departureColumn {
   width: calc(var(--width) / 3);
-  height: 870px;
+  height: 800px;
   background-color: #f1f1f1;
   display: flex;
   flex-direction: column;
@@ -73,7 +73,7 @@ div.departureColumn:nth-child(even) {
 div.departureRow {
   width: calc(var(--width) / 3 - 30px);
   height: 90px;
-  margin-top: 16.67px;
+  margin-top: 10px;
 
   display: flex;
 }
@@ -161,7 +161,7 @@ div.sub-heading {
   width: calc(var(--width) / 3);
   height: 90px;
   font-size: 38px;
-  margin-top: 16.67px;
+  margin-top: 10px;
 
   background-color: #2e2e2e;
   color: #f1f1f1;
