@@ -18,8 +18,6 @@ let gtfsTimetables = null
 
 let calendarDatesCache = {}
 
-let allTrips = {}
-
 let stationLoaders = {}
 let stationCache = {}
 let routeLoaders = {}
@@ -63,23 +61,8 @@ async function getRoute(routeGTFSID) {
   } else return routeCache[routeGTFSID]
 }
 
-database.connect({
-  poolSize: 500
-}, async err => {
-  stops = database.getCollection('stops')
-  routes = database.getCollection('routes')
-  gtfsTimetables = database.getCollection('gtfs timetables')
-
-  gtfsTimetables.createIndex({
-    mode: 1,
-    operator: 1,
-    tripID: 1,
-    routeGTFSID: 1,
-    routeName: 1,
-    operationDays: 1,
-    origin: 1,
-    destination: 1
-  }, {unique: true})
+async function loadBatchIntoDB(trips, db) {
+  let allTrips = {}
 
   await async.forEach(trips, async trip => {
     let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(trip[0]),
@@ -112,7 +95,7 @@ database.connect({
     }
   })
 
-  await async.forEach(tripTimesData, async stopTiming => {
+  await async.forEach(tripTimesData, async (stopTiming, i) => {
     let tripID = stopTiming[0],
         arrivalTime = stopTiming[1].slice(0, 5),
         departureTime = stopTiming[2].slice(0, 5),
@@ -123,6 +106,8 @@ database.connect({
         stopDistance = parseInt(stopTiming[8])
 
     let station = await getStation(stopGTFSID)
+
+    if (!allTrips[tripID]) return
 
     allTrips[tripID].stopTimings[stopSequence - 1] = {
       stopName: station.fullStopName,
@@ -171,7 +156,42 @@ database.connect({
   })
 
   await gtfsTimetables.bulkWrite(bulkOperations)
+  return Object.keys(allTrips).length
+}
 
-  console.log('Completed loading in ' + Object.keys(allTrips).length + ' MTM trips')
+database.connect({
+  poolSize: 500
+}, async err => {
+  stops = database.getCollection('stops')
+  routes = database.getCollection('routes')
+  gtfsTimetables = database.getCollection('gtfs timetables')
+
+  gtfsTimetables.createIndex({
+    mode: 1,
+    operator: 1,
+    tripID: 1,
+    routeGTFSID: 1,
+    routeName: 1,
+    operationDays: 1,
+    origin: 1,
+    destination: 1
+  }, {unique: true})
+
+  let loaded = 0
+
+  let start = 0
+  async function loadBatch() {
+    let tripsToLoad = trips.slice(start, start + 2500)
+    if (!tripsToLoad.length) return
+    loaded += await loadBatchIntoDB(tripsToLoad, database)
+
+    start += 2500
+
+    await loadBatch()
+  }
+
+  await loadBatch()
+
+  console.log('Completed loading in ' + loaded + ' MTM trips')
   process.exit()
 })
