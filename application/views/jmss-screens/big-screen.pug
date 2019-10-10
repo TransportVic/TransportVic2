@@ -51,7 +51,10 @@ html
 
               div(class='departureMinutes ' + getWaitingClass(group[0], [5, 3]))
                 span=getDepartureText(group[0])
-                span='Next: ' + group[1].minutesToDeparture
+                if group[1]
+                  span='Next: ' + group[1].minutesToDeparture
+                else
+                  span Next: --
             if n == 2
               div.sub-heading
                 span Huntingdale Metro Train Departures
