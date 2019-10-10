@@ -13,8 +13,8 @@ module.exports = async function (suspensions, db) {
     let toTime = suspension.to_date ? moment.tz(suspension.to_date, 'Australia/Melbourne') : fromTime.clone().endOf('day')
 
     let tripsAffected = await gtfsTimetables.findDocuments({
-      $or: [{
-        $and: [{
+      $and: [{
+        $or: [{
           stopTimings: { // origin
             $elemMatch: {
               stopName: startStation,
@@ -34,7 +34,7 @@ module.exports = async function (suspensions, db) {
           }
         }]
       }, {
-        $and: [{
+        $or: [{
           stopTimings: { // origin
             $elemMatch: {
               stopName: endStation,
