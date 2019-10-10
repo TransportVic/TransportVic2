@@ -102,7 +102,7 @@ async function loadTimetableCSV (filename) {
   return { trips, routeStops, leftColumns }
 }
 
-async function loadTrips (csvData) {
+async function loadTrips (csvData, direction) {
   const { trips, routeStops, leftColumns } = csvData
 
   await async.map(trips, async trip => {
@@ -206,7 +206,8 @@ async function loadTrips (csvData) {
       stopTimings,
       destination,
       departureTime,
-      origin
+      origin,
+      direction
     }
 
     await timetables.replaceDocument(key, timetableData, {

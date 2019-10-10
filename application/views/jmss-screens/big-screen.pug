@@ -9,7 +9,7 @@ html
     script.
       setTimeout(() => location.reload(), 1000 * 60)
       setInterval(() => {
-        $('.topRow span:nth-child(2)').textContent = moment.tz('Australia/Melbourne').format('H:mmA').toLowerCase()
+        $('.topRow span:nth-child(2)').textContent = moment.tz('Australia/Melbourne').format('h:mmA').toLowerCase()
       }, 1000)
   body
     div.topRow

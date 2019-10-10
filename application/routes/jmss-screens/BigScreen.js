@@ -91,10 +91,10 @@ router.get('/', async (req, res) => {
   let vlineDepartures = await getVLineDepartures(clayton, res.db)
   vlineDepartures = filterDepartures(vlineDepartures)
   let nextVLineDeparture = vlineDepartures.filter(departure => {
-    return departure.trip.direction === 'Down'
+    return departure.trip.direction === 'Down' || departure.trip.runID % 2 === 1
   })[0]
 
-  let currentTime = utils.now().format('H:mmA').toLowerCase()
+  let currentTime = utils.now().format('h:mmA').toLowerCase()
 
   res.render('jmss-screens/big-screen', { busDepartures, metroDepartures, nextVLineDeparture, currentTime })
 })
