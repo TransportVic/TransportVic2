@@ -10,7 +10,7 @@ module.exports = async function (suspensions, db) {
     let startStation = stationsAffected[1].trim() + ' Railway Station',
         endStation = stationsAffected[2].trim() + ' Railway Station'
     let fromTime = moment.tz(suspension.from_date, 'Australia/Melbourne')
-    let toTime = suspension.to_date ? moment.tz(suspension.to_date, 'Australia/Melbourne') : fromTime.clone().add(1.5, 'hour')
+    let toTime = suspension.to_date ? moment.tz(suspension.to_date, 'Australia/Melbourne') : fromTime.clone().endOf('day')
 
     let tripsAffected = await gtfsTimetables.findDocuments({
       $or: [{
