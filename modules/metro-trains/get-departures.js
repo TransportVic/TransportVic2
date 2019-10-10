@@ -77,6 +77,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     if (routeName === 'Showgrounds - Flemington Racecourse') routeName = 'Showgrounds/Flemington'
     let platform = departure.platform_number
     let runDestination = run.destination_name
+    let cancelled = run.status === 'cancelled'
 
     if (platform == null) { // show replacement bus
       if (departure.flags.includes('RRB-RUN')) platform = 'RRB';
@@ -134,7 +135,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
       }
     }
 
-    let trip = await liveTimetables.findDocuments({
+    let trip = cancelled ? [] : await liveTimetables.findDocuments({
       routeName: {
         $in: possibleLines
       },
@@ -240,7 +241,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
     transformedDepartures.push({
       trip, scheduledDepartureTime, estimatedDepartureTime, actualDepartureTime, platform,
-      cancelled: run.status === 'cancelled', cityLoopConfig,
+      cancelled, cityLoopConfig,
       destination, runID, forming
     })
   })
