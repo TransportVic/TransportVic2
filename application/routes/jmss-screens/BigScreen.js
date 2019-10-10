@@ -28,6 +28,8 @@ async function getBusLoopDepartures() {
     let destination = run.destination_name.split('/')[0]
     destination = destination.replace('Gardens', 'Gdns').replace('Shopping Centre', 'SC')
       .replace('Railway', '').replace('Station', 'Stn').replace('Middle', 'Mid')
+    if (destination === 'Knox City SC Interchange')
+      destination = 'Knox City SC'
     let routeNumber = route.route_number
     if (routeNumber.includes('combined')) return
     let direction = run.direction_id
