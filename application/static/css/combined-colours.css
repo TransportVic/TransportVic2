@@ -266,6 +266,15 @@ div.departure:nth-child(even) .showgrounds-flemington-line {
 }
 
 
+.city-loop-line {
+  background-color: #8f8f8f;
+}
+
+div.departure:nth-child(even) .city-loop-line {
+  background-color: #636363;
+}
+
+
 .vline {
   background-color: #6b4d9e;
 }
