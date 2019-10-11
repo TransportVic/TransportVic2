@@ -1,5 +1,8 @@
 extends ../textbar-layout
 
+block head
+  title=`TransportVic - ${station.stopName.slice(0, -16)}`
+
 block title
   span=station.stopName
 
