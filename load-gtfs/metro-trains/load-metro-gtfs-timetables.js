@@ -26,7 +26,7 @@ database.connect({
   }, {unique: true, name: "gtfs timetable index"})
 
   let tripsCount = await loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'metro train', (headsign, routeGTFSID) => {
-    return headsign.includes('Flinders Street') || (routeGTFSID === '2-SPT' && headsign === 'Frankston') ? 'Up': 'Down'
+    return (headsign.includes('flinders street') || (routeGTFSID === '2-SPT' && headsign === 'frankston')) ? 'Up': 'Down'
   }, routeGTFSID => true, () => "Metro Trains Melbourne")
 
   console.log('Completed loading in ' + tripsCount + ' MTM trips')
