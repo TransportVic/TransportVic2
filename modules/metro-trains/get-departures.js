@@ -227,7 +227,7 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
     return filterDepartures(departuresCache.get(cacheKey))
   }
 
-  if (!healthCheck.isOnline()) return await getScheduledDepartures(station, db)
+  if (!healthCheck.isOnline()) return await getScheduledDepartures(station, db, 'metro train', 90)
 
   let departures = await getDeparturesFromPTV(station, db, departuresCount, includeCancelled, platform, ttl)
   departuresCache.put(cacheKey, departures, {

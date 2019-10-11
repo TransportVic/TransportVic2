@@ -65,7 +65,7 @@ async function getScheduledDeparture(station, db, mode, possibleLines, scheduled
 }
 
 async function getStaticDeparture(runID, db) {
-  return await timetables.findDocument({
+  return await db.getCollection('timetables').findDocument({
     runID,
     operationDays: utils.getPTDayName(utils.now())
   })

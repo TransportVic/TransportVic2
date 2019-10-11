@@ -7,7 +7,7 @@ const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 3 })
 const healthCheck = require('../health-check')
 const moment = require('moment')
 const cheerio = require('cheerio')
-const getScheduledDepartures = require('./get-scheduled-departures')
+const departureUtils = require('../utils/get-train-timetables')
 const getCoachReplacements = require('./get-coach-replacement-trips')
 const terminiToLines = require('../../load-gtfs/vline-trains/termini-to-lines')
 
@@ -79,10 +79,8 @@ async function getDeparturesFromVNET(station, db) {
   const minutesPastMidnight = utils.getPTMinutesPastMidnight(now)
 
   let mergedDepartures = (await async.map(vnetDepartures, async vnetDeparture => {
-    let vnetTrip = await timetables.findDocument({
-      runID: vnetDeparture.runID,
-      operationDays: utils.getPTDayName(utils.now())
-    })
+    let vnetTrip = await departureUtils.getStaticDeparture(vnetDeparture.runID, db)
+
     let trip = await gtfsTimetables.findDocument({
       $and: [{
         stopTimings: { // origin
@@ -157,13 +155,11 @@ async function getDeparturesFromVNET(station, db) {
 
 function filterDepartures(departures) {
   let now = utils.now()
-  let minutesPastMidnight = utils.getPTMinutesPastMidnight(now)
-
+  
   return departures.sort((a, b) => {
     return a.actualDepartureTime - b.actualDepartureTime
   }).filter(departure => {
-    return minutesPastMidnight > departure.departureTimeMinutes - 180 &&
-      departure.actualDepartureTime.diff(now, 'seconds') > -30
+    return departure.actualDepartureTime.diff(now, 'seconds') > -30
   })
 }
 
@@ -173,7 +169,7 @@ async function getDepartures(station, db) {
   }
 
   let coachTrips = await getCoachReplacements(station, db)
-  if (!healthCheck.isOnline()) return (await getScheduledDepartures(station, db)).concat(coachTrips)
+  if (!healthCheck.isOnline()) return (await departureUtils.getScheduledDepartures(station, db, 'regional train', 180)).concat(coachTrips)
 
   let departures = await getDeparturesFromVNET(station, db)
   departures = departures.concat(coachTrips)
