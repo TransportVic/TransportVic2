@@ -12,7 +12,7 @@ const tripTimesData = utils.parseGTFSData(fs.readFileSync('gtfs/2/stop_times.txt
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
 
 database.connect({
-  poolSize: 500
+  poolSize: 100
 }, async err => {
   database.getCollection('gtfs timetables').createIndex({
     mode: 1,
@@ -22,7 +22,7 @@ database.connect({
     tripStartHour: 1,
     tripEndHour: 1,
     tripID: 1,
-    shapeID: 1
+    shapeID: 1,
   }, {unique: true, name: "gtfs timetable index"})
 
   let tripsCount = await loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'metro train', (headsign, routeGTFSID) => {

@@ -152,23 +152,23 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
   let gtfsTimetables = db.getCollection('gtfs timetables')
 
   await gtfsTimetables.deleteDocuments({mode})
-  let boundLoadBatch = loadBatchIntoDB.bind(null, db, calendar, calendarDates, tripTimesData, mode, determineDirection, routeFilter, operator, trips)
+  let boundLoadBatch = loadBatchIntoDB.bind(null, db, calendar, calendarDates, tripTimesData, mode, determineDirection, routeFilter, operator)
 
   let loaded = 0
   let start = 0
-  //
-  // async function loadBatch() {
-  //   let tripsToLoad = trips.slice(start, start + 5000)
-  //
-  //   if (!tripsToLoad.length) return
-  //   loaded += await boundLoadBatch(tripsToLoad)
-  //
-  //   start += 5000
-  //
-  //   await loadBatch()
-  // }
-  //
-  // await loadBatch()
 
-  return await boundLoadBatch(trips) // idk why batching doesn't work right now
+  async function loadBatch() {
+    let tripsToLoad = trips.slice(start, start + 1000)
+
+    if (!tripsToLoad.length) return
+    loaded += await boundLoadBatch(tripsToLoad)
+
+    start += 1000
+
+    await loadBatch()
+  }
+
+  await loadBatch()
+
+  return loaded
 }
