@@ -79,6 +79,10 @@ async function getDeparturesFromVNET(station, db) {
   const minutesPastMidnight = utils.getPTMinutesPastMidnight(now)
 
   let mergedDepartures = (await async.map(vnetDepartures, async vnetDeparture => {
+    let vnetTrip = await timetables.findDocument({
+      runID: vnetDeparture.runID,
+      operationDays: utils.getPTDayName(utils.now())
+    })
     let trip = await gtfsTimetables.findDocument({
       $and: [{
         stopTimings: { // origin
@@ -100,11 +104,8 @@ async function getDeparturesFromVNET(station, db) {
       operationDays: utils.getYYYYMMDDNow(),
       mode: "regional train"
     })
-    if (!trip) {
-      trip = await timetables.findDocument({
-        runID: vnetDeparture.runID,
-        operationDays: utils.getPTDayName(utils.now())
-      }) // service disruption unaccounted for? like ptv not loading in changes into gtfs data :/
+    if (!trip) { // service disruption unaccounted for? like ptv not loading in changes into gtfs data :/
+      trip = vnetTrip
       function transformDeparture() {
         let destination = vnetDeparture.destinationVLinePlatform.fullStopName
         if (!vnetDeparture.estimatedDepartureTime) return null
@@ -147,7 +148,7 @@ async function getDeparturesFromVNET(station, db) {
       trip, estimatedDepartureTime: vnetDeparture.estimatedDepartureTime, platform: vnetDeparture.platform,
       stopData, scheduledDepartureTime,
       departureTimeMinutes: stopData.departureTimeMinutes, runID: vnetDeparture.runID,
-      actualDepartureTime: vnetDeparture.estimatedDepartureTime || scheduledDepartureTime
+      actualDepartureTime: vnetDeparture.estimatedDepartureTime || scheduledDepartureTime, vnetTrip
     }
   })).filter(Boolean)
 

@@ -36,6 +36,8 @@ append content
             span.cancelled Unknown scheduled departure time/No stopping pattern info - check platform displays
           else if departure.trip.isUncertain
             span.cancelled Stopping pattern/times may be wrong - check platform displays
+          else if departure.vnetTrip
+            span=departure.vnetTrip.vehicle
         div.timings
           -
             let className = 'timing '

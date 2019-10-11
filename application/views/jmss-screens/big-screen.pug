@@ -1,18 +1,16 @@
 html
   head
     script(src='/static/scripts/util.js')
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js' async)
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.26/moment-timezone-with-data-10-year-range.min.js' async)
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.26/moment-timezone-with-data-10-year-range.min.js')
     link(rel='stylesheet' href='/static/css/jmss-screens/base-style.css')
     link(rel='stylesheet' href='/static/css/jmss-screens/big-screen.css')
     link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=swap')
     script.
-      document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => location.reload(), 1000 * 60)
-        setInterval(() => {
-          $('.topRow span:nth-child(2)').textContent = moment.tz('Australia/Melbourne').format('h:mmA').toLowerCase()
-        }, 1000)
-      })
+      setTimeout(() => location.reload(), 1000 * 60)
+      setInterval(() => {
+        $('.topRow span:nth-child(2)').textContent = moment.tz('Australia/Melbourne').format('h:mmA').toLowerCase()
+      }, 1000)
   body
     div.topRow
       span Monash University PT Connections
