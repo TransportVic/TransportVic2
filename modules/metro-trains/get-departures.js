@@ -96,6 +96,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     const scheduledDepartureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
     const scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
 
+    let departureHour = scheduledDepartureTime.get('hour')
+
     let cutoff = 90
     if (cityLoopStations.includes(stationName) || stationName == 'flinders street')
       cutoff = 60
@@ -162,7 +164,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
           estimatedDepartureTime = null
         }
       }
-    } else
+    } else 
       trip = await gtfsTimetables.findDocuments({
         routeName: {
           $in: possibleLines
@@ -177,8 +179,14 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
             stopGTFSID: metroPlatform.stopGTFSID,
             departureTimeMinutes: scheduledDepartureTimeMinutes
           }
+        },
+        tripStartHour: {
+          $lte: departureHour
+        },
+        tripEndHour: {
+          $gte: departureHour
         }
-      }).limit(2).toArray()
+      }, {tripStartHour: 0, tripEndHour: 0}).limit(2).toArray()
 
     if (!trip.length)
       trip = [await timetables.findDocument({

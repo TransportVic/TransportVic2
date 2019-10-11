@@ -72,14 +72,14 @@ database.connect({
 
   gtfsTimetables.createIndex({
     mode: 1,
-    tripID: 1,
-    routeGTFSID: 1,
     routeName: 1,
     operationDays: 1,
-    origin: 1,
     destination: 1,
+    tripStartHour: 1,
+    tripEndHour: 1,
+    tripID: 1,
     shapeID: 1
-  }, {unique: true})
+  }, {unique: true, name: "gtfs timetable index"})
 
   await async.forEach(trips, async trip => {
     let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(trip[0]),
@@ -160,6 +160,10 @@ database.connect({
 
     stopTimings[stopCount - 1].departureTime = null
     stopTimings[stopCount - 1].departureTimeMinutes = null
+
+    allTrips[tripID].tripStartHour = Math.floor(stopTimings[0].departureTimeMinutes / 60)
+    allTrips[tripID].tripEndHour = Math.floor(stopTimings[stopCount - 1].arrivalTimeMinutes / 60)
+
 
     const key = {
       mode: 'regional train',

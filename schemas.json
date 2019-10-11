@@ -43,6 +43,8 @@
     }],
     "destination": "string",
     "departureTime": "number",
+    "tripStartHour": "number",
+    "tripEndHour": "number",
     "origin": "string"
   },
   "liveTimetable": {

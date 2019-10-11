@@ -25,6 +25,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Ability to detect when V/Line trains are scheduled to run as coaches. Currently no support for live disruptions.
 
 ## Next up to be added:
+- refactor gtfs timetable loaders
 - Added support for MTM "ghost trips", but since there's very few just do a /pattern and load into live DB
 - Reading English and creating a daily timetable update DB collection, can be used to mark services as coaches / cancelled (V/Line!!) as well as just MTM train types
   - could work with Yarra Trams too, mark tram number

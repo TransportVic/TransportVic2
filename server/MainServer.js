@@ -35,6 +35,9 @@ module.exports = class MainServer {
 
   configMiddleware (app) {
     const stream = fs.createWriteStream('/tmp/log.txt', { flags: 'a' })
+    let excludedURLs = [
+      '/tracker/all'
+    ]
 
     app.use((req, res, next) => {
       const reqURL = req.url + ''
@@ -47,7 +50,9 @@ module.exports = class MainServer {
 
         const diff = end - start
 
-        if (diff > 5 && !reqURL.startsWith('/static/')) { stream.write(req.method + ' ' + reqURL + (res.loggingData ? ' ' + res.loggingData : '') + ' ' + diff + '\n', () => {}) }
+        if (diff > 5 && !reqURL.startsWith('/static/') && !excludedURLs.includes(reqURL)) {
+          stream.write(`${req.method} ${reqURL} ${res.loggingData} ${diff}\n`, () => {})
+        }
       }
 
       res.locals.hostname = config.websiteDNSName
