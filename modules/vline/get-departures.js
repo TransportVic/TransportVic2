@@ -105,7 +105,7 @@ async function getDeparturesFromVNET(station, db) {
     if (!trip) { // service disruption unaccounted for? like ptv not loading in changes into gtfs data :/
       trip = vnetTrip
       function transformDeparture() {
-        let destination = vnetDeparture.destinationVLinePlatform.fullStopName
+        let destination = vnetDeparture.destinationVLinePlatform.fullStopName.slice(0, -16)
         if (!vnetDeparture.estimatedDepartureTime) return null
         return {
           trip: {
@@ -119,6 +119,7 @@ async function getDeparturesFromVNET(station, db) {
           platform: vnetDeparture.platform,
           stopData: {},
           scheduledDepartureTime: vnetDeparture.estimatedDepartureTime,
+          actualDepartureTime: vnetDeparture.estimatedDepartureTime,
           departureTimeMinutes: utils.getPTMinutesPastMidnight(vnetDeparture.estimatedDepartureTime),
           runID: vnetDeparture.runID,
           unknownScheduledDepartureTime: true
