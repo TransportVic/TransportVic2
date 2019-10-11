@@ -92,6 +92,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
 
     if (!platform) return // run too far away
     const runID = run.vehicle_descriptor.id
+    const vehicleType = run.vehicle_descriptor.description
 
     const scheduledDepartureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
     const scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
@@ -164,7 +165,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
           estimatedDepartureTime = null
         }
       }
-    } else 
+    } else
       trip = await gtfsTimetables.findDocuments({
         routeName: {
           $in: possibleLines
@@ -210,7 +211,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
         actualDepartureTime: estimatedDepartureTime || scheduledDepartureTime,
         runID,
         cityLoopConfig: [],
-        destination: runDestination
+        destination: runDestination,
+        vehicleType
       })
     }
 
@@ -250,7 +252,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     transformedDepartures.push({
       trip, scheduledDepartureTime, estimatedDepartureTime, actualDepartureTime, platform,
       cancelled, cityLoopConfig,
-      destination, runID, forming
+      destination, runID, forming, vehicleType
     })
   })
 

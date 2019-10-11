@@ -70,6 +70,10 @@ append content
           else
             if cityLoopStationNames.includes(station.stopName) || departure.trip.direction === 'Up'
               span=departure.cityLoopConfig.join(', ')
+            else
+              span
+            if departure.vehicleType
+              span=departure.vehicleType
         div.timings
           a(class='timing ' + departure.headwayDevianceClass)
             span=departure.prettyTimeToArrival
