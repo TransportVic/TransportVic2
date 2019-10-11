@@ -144,21 +144,16 @@ async function loadBatchIntoDB(trips, db) {
     allTrips[tripID].tripStartHour = Math.floor(stopTimings[0].departureTimeMinutes / 60)
     allTrips[tripID].tripEndHour = Math.floor(stopTimings[stopCount - 1].arrivalTimeMinutes / 60)
 
-    const key = {
-      mode: 'metro train',
-      tripID: tripID
-    }
-
     bulkOperations.push({
-      replaceOne: {
-        filter: key,
-        replacement: allTrips[tripID],
-        upsert: true
+      insertOne: {
+        document: allTrips[tripID]
       }
     })
   })
 
-  await gtfsTimetables.bulkWrite(bulkOperations)
+  await gtfsTimetables.bulkWrite(bulkOperations, {
+    ordered: false
+  })
   return Object.keys(allTrips).length
 }
 
@@ -169,7 +164,7 @@ database.connect({
   routes = database.getCollection('routes')
   gtfsTimetables = database.getCollection('gtfs timetables')
 
-  gtfsTimetables.createIndex({
+  await gtfsTimetables.createIndex({
     mode: 1,
     routeName: 1,
     operationDays: 1,
@@ -180,22 +175,34 @@ database.connect({
     shapeID: 1
   }, {unique: true, name: "gtfs timetable index"})
 
-  let loaded = 0
-  // let start = 0
-  //
-  // async function loadBatch() {
-  //   let tripsToLoad = trips.slice(start, start + 2000)
-  //   if (!tripsToLoad.length) return
-  //   loaded += await loadBatchIntoDB(tripsToLoad, database)
-  //
-  //   start += 2000
-  //
-  //   await loadBatch()
-  // }
-  //
-  // await loadBatch()
+  await gtfsTimetables.deleteDocuments({mode: "metro train"})
 
-  loaded = await loadBatchIntoDB(trips, database)
+  let loaded = 0
+  let start = 0
+
+  async function loadBatch() {
+    let tripsToLoad = trips.slice(start, start + 5000)
+    if (!tripsToLoad.length) return
+    loaded += await loadBatchIntoDB(tripsToLoad, database)
+
+    start += 5000
+    await loadBatch()
+  }
+
+  await loadBatch()
+
+  // loaded = await loadBatchIntoDB(trips, database)
+
+    await gtfsTimetables.createIndex({
+      mode: 1,
+      routeName: 1,
+      operationDays: 1,
+      destination: 1,
+      tripStartHour: 1,
+      tripEndHour: 1,
+      tripID: 1,
+      shapeID: 1
+    }, {unique: true, name: "gtfs timetable index"})
 
   console.log('Completed loading in ' + loaded + ' MTM trips')
   process.exit()

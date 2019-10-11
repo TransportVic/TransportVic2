@@ -81,6 +81,8 @@ database.connect({
     shapeID: 1
   }, {unique: true, name: "gtfs timetable index"})
 
+  await gtfsTimetables.deleteDocuments({mode: "regional coach"})
+
   await async.forEach(trips, async trip => {
     let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(trip[0]),
         serviceID = trip[1],
@@ -156,17 +158,9 @@ database.connect({
     allTrips[tripID].tripStartHour = Math.floor(stopTimings[0].departureTimeMinutes / 60)
     allTrips[tripID].tripEndHour = Math.floor(stopTimings[stopCount - 1].arrivalTimeMinutes / 60)
 
-
-    const key = {
-      mode: 'regional coach',
-      tripID: tripID
-    }
-
     bulkOperations.push({
-      replaceOne: {
-        filter: key,
-        replacement: allTrips[tripID],
-        upsert: true
+      insertOne: {
+        document: allTrips[tripID]
       }
     })
   })
