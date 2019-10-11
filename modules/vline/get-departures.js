@@ -141,6 +141,7 @@ async function getDeparturesFromVNET(station, db) {
     const stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === vlinePlatform.stopGTFSID)[0]
 
     let scheduledDepartureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, now)
+    trip.destination = trip.destination.slice(0, -16)
 
     return {
       trip, estimatedDepartureTime: vnetDeparture.estimatedDepartureTime, platform: vnetDeparture.platform,
@@ -155,7 +156,7 @@ async function getDeparturesFromVNET(station, db) {
 
 function filterDepartures(departures) {
   let now = utils.now()
-  
+
   return departures.sort((a, b) => {
     return a.actualDepartureTime - b.actualDepartureTime
   }).filter(departure => {

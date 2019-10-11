@@ -107,7 +107,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
         cancelled: false,
         cityLoopConfig: [],
         destination: departure.destination,
-        runID: '',
+        runID: ''
       }
     }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }
