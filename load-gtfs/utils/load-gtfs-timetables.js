@@ -15,7 +15,7 @@ async function getStation(stopGTFSID, stops, mode) {
     return await new Promise(resolve => stationLoaders[stopGTFSID].on('loaded', resolve))
   } else if (!stationCache[stopGTFSID]) {
     stationLoaders[stopGTFSID] = new EventEmitter()
-    stationLoaders[stopGTFSID].setMaxListeners(5000)
+    stationLoaders[stopGTFSID].setMaxListeners(Infinity)
 
     let station = await stops.findDocument({
       'bays.stopGTFSID': stopGTFSID
@@ -36,7 +36,7 @@ async function getRoute(routeGTFSID, routes) {
     return await new Promise(resolve => routeLoaders[routeGTFSID].on('loaded', resolve))
   } else if (!routeCache[routeGTFSID]) {
     routeLoaders[routeGTFSID] = new EventEmitter()
-    routeLoaders[routeGTFSID].setMaxListeners(5000)
+    routeLoaders[routeGTFSID].setMaxListeners(Infinity)
 
     let route = await routes.findDocument({ routeGTFSID })
 
@@ -48,12 +48,10 @@ async function getRoute(routeGTFSID, routes) {
   } else return routeCache[routeGTFSID]
 }
 
-module.exports = async function(db, calendar, calendarDates, trips, tripTimesData, mode, determineDirection=()=>null, routeFilter=()=>true, operator=()=>null) {
+async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode, determineDirection, routeFilter, operator, trips) {
   let stops = db.getCollection('stops')
   let routes = db.getCollection('routes')
   let gtfsTimetables = db.getCollection('gtfs timetables')
-
-  await gtfsTimetables.deleteDocuments({mode})
 
   let allTrips = {}
 
@@ -62,7 +60,7 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
         serviceID = trip[1],
         tripID = trip[2],
         shapeID = trip[3],
-        direction = determineDirection(trip[4].toLowerCase())
+        direction = determineDirection(trip[4].toLowerCase(), routeGTFSID)
         gtfsDirection = trip[5]
 
     if (!routeFilter(routeGTFSID)) return
@@ -148,4 +146,29 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
   await gtfsTimetables.bulkWrite(bulkOperations)
 
   return Object.keys(allTrips).length
+}
+
+module.exports = async function(db, calendar, calendarDates, trips, tripTimesData, mode, determineDirection=()=>null, routeFilter=()=>true, operator=()=>null) {
+  let gtfsTimetables = db.getCollection('gtfs timetables')
+
+  await gtfsTimetables.deleteDocuments({mode})
+  let boundLoadBatch = loadBatchIntoDB.bind(null, db, calendar, calendarDates, tripTimesData, mode, determineDirection, routeFilter, operator, trips)
+
+  let loaded = 0
+  let start = 0
+  //
+  // async function loadBatch() {
+  //   let tripsToLoad = trips.slice(start, start + 5000)
+  //
+  //   if (!tripsToLoad.length) return
+  //   loaded += await boundLoadBatch(tripsToLoad)
+  //
+  //   start += 5000
+  //
+  //   await loadBatch()
+  // }
+  //
+  // await loadBatch()
+
+  return await boundLoadBatch(trips) // idk why batching doesn't work right now
 }
