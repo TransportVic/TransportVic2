@@ -5,7 +5,7 @@ const utils = require('../../utils')
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 3 })
 const healthCheck = require('../health-check')
 const moment = require('moment')
-const getScheduledDepartures = require('./get-scheduled-departures')
+const departureUtils = require('../utils/get-train-timetables')
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
 
@@ -97,13 +97,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     const scheduledDepartureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
     const scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
 
-    let departureHour = scheduledDepartureTime.get('hour')
-
-    let cutoff = 90
-    if (cityLoopStations.includes(stationName) || stationName == 'flinders street')
-      cutoff = 60
-
-    if (scheduledDepartureTime.diff(utils.now(), 'minutes') > cutoff) { // show only up to next 1.5 hr of departures
+    if (scheduledDepartureTime.diff(utils.now(), 'minutes') > 90) { // show only up to next 1.5 hr of departures
       return
     }
 
@@ -138,63 +132,22 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
       }
     }
 
-    let trip = cancelled ? [] : await liveTimetables.findDocuments({
-      routeName: {
-        $in: possibleLines
-      },
-      operationDay: utils.getYYYYMMDDNow(),
-      mode: "metro train",
-      stopTimings: {
-        $elemMatch: {
-          stopGTFSID: metroPlatform.stopGTFSID,
-          departureTimeMinutes: scheduledDepartureTimeMinutes
-        }
+    let trip = cancelled ? [] : await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines, scheduledDepartureTimeMinutes)
+
+    if (trip) {
+      destination = trip.destination.slice(0, -16)
+      runDestination = destination
+      if (trip.vehicle == 'Replacement Bus') {
+        platform = 'RRB'
+        estimatedDepartureTime = null
       }
-    }).toArray()
-
-    if (trip.length) {
-      if (trip[0].type === 'suspension') {
-        if (trip.length > 1) {
-          trip = trip.sort((a, b) => b.stopTimings[0].departureTimeMinutes - a.stopTimings[0].departureTimeMinutes).slice(0, 1)
-        }
-
-        destination = trip[0].destination.slice(0, -16)
-        runDestination = destination
-        if (trip[0].vehicle == 'Replacement Bus') {
-          platform = 'RRB'
-          estimatedDepartureTime = null
-        }
-      }
-    } else
-      trip = await gtfsTimetables.findDocuments({
-        routeName: {
-          $in: possibleLines
-        },
-        destination: {
-          $in: possibleDestinations.map(dest => dest + ' Railway Station')
-        },
-        operationDays: utils.getYYYYMMDDNow(),
-        mode: "metro train",
-        stopTimings: {
-          $elemMatch: {
-            stopGTFSID: metroPlatform.stopGTFSID,
-            departureTimeMinutes: scheduledDepartureTimeMinutes
-          }
-        },
-        tripStartHour: {
-          $lte: departureHour
-        },
-        tripEndHour: {
-          $gte: departureHour
-        }
-      }, {tripStartHour: 0, tripEndHour: 0}).limit(2).toArray()
-
-    if (!trip.length)
-      trip = [await timetables.findDocument({
-        runID
-      })]
-
-    trip = trip.sort((a, b) => utils.time24ToMinAftMidnight(b.departureTime) - utils.time24ToMinAftMidnight(a.departureTime))[0]
+    } else {
+      trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
+        scheduledDepartureTimeMinutes, possibleDestinations.map(dest => dest + ' Railway Station'))
+    }
+    if (!trip) {
+      trip = await departureUtils.getStaticDeparture(runID, db)
+    }
 
     if (!trip) {
       return transformedDepartures.push({
