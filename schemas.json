@@ -20,7 +20,8 @@
     "destination": "string",
     "departureTime": "number",
     "origin": "string",
-    "gtfsDirection": "string"
+    "gtfsDirection": "string",
+    "direction": "string"
   },
   "timetable": {
     "mode": "string",
