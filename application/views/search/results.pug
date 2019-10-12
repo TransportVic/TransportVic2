@@ -6,6 +6,14 @@ for metroStation in results.filter(stop => stop.bays.filter(bay => bay.mode === 
       span='Metro train station in ' + metroStation.suburb[0]
       span=metroStation.stopName
       
+for metroBusStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'metro bus').length)
+  a(href=`/coach/timings/${metroBusStop.codedName}`).busStop.result
+    div.leftContainer
+      img(src='/static/images/clear-icons/bus-icon.svg')
+    div.resultDetails
+      span='Metro bus stop in ' + metroBusStop.suburb[0]
+      span=metroBusStop.stopName
+      
 for vlineStation in results.filter(stop => stop.bays.filter(bay => bay.mode === 'regional train').length)
   a(href=`/vline/timings/${vlineStation.codedName.slice(0, -16)}`).vlineStation.result
     div.leftContainer
@@ -21,3 +29,4 @@ for regionalCoachStop in results.filter(stop => stop.bays.filter(bay => bay.mode
     div.resultDetails
       span='Regional coach stop in ' + regionalCoachStop.suburb[0]
       span=regionalCoachStop.stopName
+      

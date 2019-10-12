@@ -1,6 +1,11 @@
 .result {
   width: 100vw;
   display: flex;
+  background-color: #2a2a2a;
+}
+
+.result:nth-child(even) {
+  background-color: #202020;
 }
 
 .leftContainer {

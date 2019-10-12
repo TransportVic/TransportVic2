@@ -8,22 +8,23 @@ router.get('/', (req, res) => {
 })
 
 async function performSearch (db, query) {
-  return await db.getCollection('stops').findDocuments({
+  return (await db.getCollection('stops').findDocuments({
     $or: [
       { 'bays.stopGTFSID': query },
       { stopName: new RegExp(query, 'i') },
       { stopSuburb: new RegExp(query, 'i') },
     ]
-  }).toArray()
+  }).limit(15).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
 }
 
 router.post('/', async (req, res) => {
-  if (!safeRegex(req.body.query)) {
+  let query = req.body.query.trim()
+  if (!safeRegex(query) || query === '') {
     return res.end('')
   }
 
-  const results = await performSearch(res.db, req.body.query)
-  
+  const results = await performSearch(res.db, query)
+
   res.render('search/results', {results})
 })
 
