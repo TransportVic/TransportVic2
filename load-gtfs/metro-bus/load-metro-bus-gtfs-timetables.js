@@ -7,8 +7,6 @@ const lr = require('../../line-reader')
 
 const calendar = utils.parseGTFSData(fs.readFileSync('gtfs/4/calendar.txt').toString())
 const calendarDates = utils.parseGTFSData(fs.readFileSync('gtfs/4/calendar_dates.txt').toString())
-// const trips = utils.parseGTFSData(fs.readFileSync('gtfs/4/trips.txt').toString())
-// const tripTimesData = utils.parseGTFSData(fs.readFileSync('gtfs/4/stop_times.txt').toString())
 
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
 global.gc()
@@ -46,6 +44,7 @@ database.connect({
 
       start += length
       lines = null
+      global.gc()
 
       trips = utils.parseGTFSData(trips)
       let tripIDs = trips.map(trip => trip[2])
