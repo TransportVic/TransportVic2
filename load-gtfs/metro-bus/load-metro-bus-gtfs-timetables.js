@@ -3,13 +3,15 @@ const config = require('../../config.json')
 const utils = require('../../utils')
 const fs = require('fs')
 const loadGTFSTimetables = require('../utils/load-gtfs-timetables')
+const lr = require('../../line-reader')
 
 const calendar = utils.parseGTFSData(fs.readFileSync('gtfs/4/calendar.txt').toString())
 const calendarDates = utils.parseGTFSData(fs.readFileSync('gtfs/4/calendar_dates.txt').toString())
-const trips = utils.parseGTFSData(fs.readFileSync('gtfs/4/trips.txt').toString())
-const tripTimesData = utils.parseGTFSData(fs.readFileSync('gtfs/4/stop_times.txt').toString())
+// const trips = utils.parseGTFSData(fs.readFileSync('gtfs/4/trips.txt').toString())
+// const tripTimesData = utils.parseGTFSData(fs.readFileSync('gtfs/4/stop_times.txt').toString())
 
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+global.gc()
 
 database.connect({
   poolSize: 400
@@ -25,9 +27,54 @@ database.connect({
     shapeID: 1
   }, {unique: true, name: "gtfs timetable index"})
 
-  let tripsCount = await loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'metro bus',
-    headsign => null, routeGTFSID => true, () => "Operator")
+    let loaded = 0
+    let start = 0
 
+    let boundLoadBatch = (trips, tripTimesData) => loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'metro bus',
+      headsign => null, routeGTFSID => true, () => "Operator")
+
+    async function loadBatch() {
+      let {lines, length} = await lr.getLines('gtfs/4/trips.txt', 1000, start)
+      let lineCount = lines.length
+      if (!lineCount) return
+
+      let trips
+      if (start == 0)
+        trips = lines.join('\n')
+      else
+        trips = [''].concat(lines).join('\n')
+
+      start += length
+      lines = null
+
+      trips = utils.parseGTFSData(trips)
+      let tripIDs = trips.map(trip => trip[2])
+
+      console.log('read in trip data, reading timing data now')
+
+      let tripTimingLines = await lr.getLinesFilter('gtfs/4/stop_times.txt', line => {
+        return !!tripIDs.map(id => line.includes(id)).filter(Boolean).length
+      })
+      console.log('read ' + tripTimingLines.length + ' lines of timing data, parsing data now')
+      let tripTimesData = tripTimingLines.map(line => {
+        return line.match(/"([^"]*)"/g).map(f => f.slice(1, -1))
+      })
+      console.log('parsed data, loading it in now')
+
+      tripIDs = null
+      loaded += await boundLoadBatch(trips, tripTimesData)
+
+      trips = null
+      tripTimesData = null
+
+      console.log('completed 1000 lines')
+
+      global.gc()
+      await loadBatch()
+    }
+
+    await loadBatch()
+//60946
   console.log('Completed loading in ' + tripsCount + ' metro bus trips')
   process.exit()
 })
