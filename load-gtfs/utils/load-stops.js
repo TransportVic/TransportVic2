@@ -15,10 +15,13 @@ module.exports = async function (stopsData, stops, mode, lookupTable) {
     const stopNameData = matchedStop.stopName.match(/([^(]+) \((.+)\)/)
     const GTFSStopNameData = values[1].match(/([^(]+) \((.+)\)/)
 
-    let fullStopName = utils.adjustStopname(stopNameData[1]),
+    let fullStopName = utils.adjustStopname((GTFSStopNameData || stopNameData)[1]),
         stopName = utils.extractStopName(fullStopName);
 
+    let originalName = values[1]
+
     return {
+      originalName, // used for merging purposes - dandenong (railway) station/foster station for eg
       fullStopName,
       stopName,
       stopGTFSID: parseInt(values[0]),
@@ -32,6 +35,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable) {
   let mergedStops = {}
   allStops.forEach(stop => {
     let bayData = {
+      originalName: stop.originalName,
       fullStopName: stop.fullStopName,
       stopGTFSID: parseInt(stop.stopGTFSID),
       services: [],

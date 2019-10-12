@@ -75,6 +75,7 @@
     "suburb": ["string"],
     "codedName": "string",
     "bays": [{
+      "originalName": "string"
       "fullStopName": "string",
       "stopGTFSID": "number",
       "services": ["string"],

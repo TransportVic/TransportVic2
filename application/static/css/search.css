@@ -47,6 +47,14 @@
   background-color: #523d77;
 }
 
+.regionalCoachStop .leftContainer {
+  background-color: #9582b5;
+}
+
+.regionalCoachStop:nth-child(even) .leftContainer {
+  background-color: #866cb1;
+}
+
 .leftContainer img {
   width: calc(3vw + 3vh);
   height: calc(3vw + 3vh);
