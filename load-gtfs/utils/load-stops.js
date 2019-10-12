@@ -63,6 +63,12 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
     let stopHash = createStopHash(bayData.fullStopName)
     let bayCoordinates = bayData.location.coordinates
 
+    let mergeDistance = 100
+    if (mode === 'regional coach')
+      mergeDistance = 400
+    else if (shortName.includes('Railway Station') || shortName.includes('SC'))
+      mergeDistance = 300
+
     let checkStop
     if (!!(checkStop = mergedStops[stopHash])) {
       let checkCoordinates = checkStop.bays[0].location.coordinates
@@ -71,7 +77,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
         bayCoordinates[1], bayCoordinates[0],
         checkCoordinates[1], checkCoordinates[0]
       )
-      if (stopDistance < 400) {
+      if (stopDistance < mergeDistance) {
         return stopHash
       }
     }
@@ -88,7 +94,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
           checkCoordinates[1], checkCoordinates[0]
         )
 
-        if (stopDistance < 400) return checkStopHash
+        if (stopDistance < mergeDistance) return checkStopHash
       }
     }
 
@@ -129,7 +135,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
     }
   })
 
-  await async.forEach(Object.values(mergedStops), async stop => {
+  await async.forEachSeries(Object.values(mergedStops), async stop => {
     let uniqueFullStopNames = []
     stop.bays.forEach(bay => {
       if (!uniqueFullStopNames.includes(bay.fullStopName))
@@ -141,15 +147,19 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
       stop.codedName = utils.encodeName(stop.stopName)
     }
 
+    let key = { stopName: stop.stopName, suburb: {$in: stop.suburb} }
+
     let stopData
-    if (stopData = await stops.findDocument({stopName: stop.stopName})) {
+    if (stopData = await stops.findDocument(key)) {
       let baysToUpdate = stop.bays.map(bay => bay.stopGTFSID)
 
       stop.bays = stopData.bays
         .filter(bay => !(baysToUpdate.includes(bay.stopGTFSID) && bay.mode === mode))
         .concat(stop.bays)
 
-      await stops.updateDocument({stopName: stop.stopName}, {
+      stop.suburb = stopData.suburb.concat(stop.suburb).filter((e, i, a) => a.indexOf(e) === i)
+
+      await stops.updateDocument(key, {
         $set: stop
       })
     } else {
