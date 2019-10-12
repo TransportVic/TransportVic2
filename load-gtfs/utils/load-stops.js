@@ -4,13 +4,16 @@ const async = require('async')
 module.exports = async function (stopsData, stops, mode, lookupTable) {
   const allStops = stopsData.map(values => {
     let matchedStop = lookupTable[values[0]]
-    if (!matchedStop) matchedStop = {
+    let shouldOverride = !!matchedStop
+
+    if (!shouldOverride) matchedStop = {
       stopName: values[1] + ' (?)',
       mykiZones: []
     }
     let { mykiZones } = matchedStop
 
-    const stopNameData = matchedStop.stopName.match(/([^(]+) \((.+)+\)/)
+    const stopNameData = matchedStop.stopName.match(/([^(]+) \((.+)\)/)
+    const GTFSStopNameData = values[1].match(/([^(]+) \((.+)\)/)
 
     let fullStopName = utils.adjustStopname(stopNameData[1]),
         stopName = utils.extractStopName(fullStopName);
@@ -19,7 +22,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable) {
       fullStopName,
       stopName,
       stopGTFSID: parseInt(values[0]),
-      suburb: stopNameData[2],
+      suburb: shouldOverride ? stopNameData[2] : GTFSStopNameData[2],
       codedName: utils.encodeName(stopName),
       location: [values[3], values[2]].map(parseFloat),
       mykiZones

@@ -1,0 +1,27 @@
+extends ../layout
+
+block head
+  title=`TransportVic - ${stop.stopName.slice(0, -16)}`
+
+block title
+  span=stop.stopName
+
+block scripts
+  script(src='/static/scripts/timings.js' async)
+  
+append style
+  link(rel='stylesheet' href='/static/css/combined-colours.css')
+  link(rel='stylesheet' href='/static/css/timings/base-style.css')
+
+append content
+  div#departures
+    for departure in departures
+      div.departure.no-number
+        a.departureInfo
+          span=departure.trip.routeName
+          span Towards
+          span=departure.trip.destination
+        div.timings
+          a.timing.unknown
+            span=departure.prettyTimeToArrival
+            span=departure.scheduledDepartureTime.format('HH:mm')

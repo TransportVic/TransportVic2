@@ -97,6 +97,7 @@ module.exports = class MainServer {
       Search: '/search',
       'timing-pages/VLine': '/vline/timings',
       'timing-pages/MetroTrains': '/metro/timings',
+      'timing-pages/RegionalCoach': '/coach/timings',
 
       GeoJSONVisualiser: '/geojson-visualise',
 
