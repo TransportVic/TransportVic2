@@ -6,15 +6,19 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
     let adjustedRouteName = adjustRouteName(values[3])
     let shortRouteName = null
 
+    let routeNumber = values[2]
+
     if (adjustedRouteName instanceof Array) {
       shortRouteName = adjustedRouteName[1]
       adjustedRouteName = adjustedRouteName[0]
     }
+
     return {
       routeGTFSID: utils.simplifyRouteGTFSID(values[0]),
       fullGTFSID: values[0],
       routeName: adjustedRouteName,
-      shortRouteName
+      shortRouteName,
+      routeNumber
     }
   })
 
@@ -25,6 +29,7 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
     if (!nameFilter(route.routeName)) return
     if (!mergedRoutes[route.routeGTFSID]) {
       mergedRoutes[route.routeGTFSID] = {
+        routeNumber: route.routeNumber,
         routeName: route.routeName,
         codedName: utils.encodeName(route.routeName),
         routeGTFSID: route.routeGTFSID,
@@ -79,7 +84,7 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
       })
     }, [])
 
-    await routes.replaceDocument({ routeName: mergedRouteData.routeName }, mergedRouteData, {
+    await routes.replaceDocument({ routeGTFSID: mergedRouteData.routeGTFSID }, mergedRouteData, {
       upsert: true
     })
   })

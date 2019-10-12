@@ -4,6 +4,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 ## Current features:
 - Loading in MTM timetables
 - Loading in V/Line train timetables
+- Loading in Regional coach timetables
 - Showing live MTM departures when the services are running as timetabled
 - Predicting MTM City Loop configuration when services are running as timetabled
 - Show proper destination names for MTM departures that match station announcements
@@ -14,6 +15,8 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Showing live V/Line departures when there's completely no timetable match, this plasters warnings all over the departure row
 - Showing live MTM departures when there's completely no timetable match (17:02 FSS ex Westall), also plasters warnings on the departure.
 - Looks for trips being formed next in City Loop stations, and joins it the the departure stops-at
+- Showing Regional coach timetables. Does not consult PTV API for trips as this will get it confused between actual coach trips and train trips.
+  - Basic stop merging in place - if they have the same stop name, they are merged
 - Offline mode
 - Couple of mockup displays
   - Flinders Street Station escalator displays
@@ -25,7 +28,6 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Ability to detect when V/Line trains are scheduled to run as coaches. Currently no support for live disruptions.
 
 ## Next up to be added:
-- refactor getting timetables in modules/./get_departures
 - Added support for MTM "ghost trips", but since there's very few just do a /pattern and load into live DB
 - Reading English and creating a daily timetable update DB collection, can be used to mark services as coaches / cancelled (V/Line!!) as well as just MTM train types
   - could work with Yarra Trams too, mark tram number
@@ -34,9 +36,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - Show timings and stops most importantly
   - Show Run ID and vehicle type + icon (yay!)
 - Marking the current completely unknown trips in the live DB, and using more magic to get the stopping patterns for those
-- Load in regional coach services (but only for replacement runs first? idk tbh see how the implementation goes)
 - Homepage
-- Work out how to index the timetables better
 - Also find out how to ID replacement services
 - Make sure when it says 5:27pm Craigieburn it picks the correct one (maybe using loop heuristics)
 - Load in metropolitan bus timetables
@@ -51,9 +51,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Bookmarks
 - App mode
 - And everything else on TransportVic homepage (which is think there's nothing else)
-- Replace TransportVic
 - Fare calculator thingy
-- Full regional coach support if not yet done
 - Regional bus
   - Then show the town too, using suburb -> council/LGA list
   - Eg XXX: Regional Bus Stop in Suburb (Greater Geelong)

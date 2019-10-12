@@ -5,30 +5,30 @@ const EventEmitter = require('events')
 
 let calendarDatesCache = {}
 
-let stationLoaders = {}
-let stationCache = {}
+let stopLoaders = {}
+let stopCache = {}
 let routeLoaders = {}
 let routeCache = {}
 
-async function getStation(stopGTFSID, stops, mode) {
-  if (stationLoaders[stopGTFSID]) {
-    return await new Promise(resolve => stationLoaders[stopGTFSID].on('loaded', resolve))
-  } else if (!stationCache[stopGTFSID]) {
-    stationLoaders[stopGTFSID] = new EventEmitter()
-    stationLoaders[stopGTFSID].setMaxListeners(Infinity)
+async function getStop(stopGTFSID, stops, mode) {
+  if (stopLoaders[stopGTFSID]) {
+    return await new Promise(resolve => stopLoaders[stopGTFSID].on('loaded', resolve))
+  } else if (!stopCache[stopGTFSID]) {
+    stopLoaders[stopGTFSID] = new EventEmitter()
+    stopLoaders[stopGTFSID].setMaxListeners(Infinity)
 
-    let station = await stops.findDocument({
+    let stop = await stops.findDocument({
       'bays.stopGTFSID': stopGTFSID
     })
 
-    let metroStation = station.bays.filter(bay => bay.mode === mode)[0]
+    let bay = stop.bays.filter(bay => bay.stopGTFSID === stopGTFSID && bay.mode === mode)[0]
 
-    stationCache[stopGTFSID] = metroStation
-    stationLoaders[stopGTFSID].emit('loaded', metroStation)
-    delete stationLoaders[stopGTFSID]
+    stopCache[stopGTFSID] = bay
+    stopLoaders[stopGTFSID].emit('loaded', bay)
+    delete stopLoaders[stopGTFSID]
 
-    return metroStation
-  } else return stationCache[stopGTFSID]
+    return bay
+  } else return stopCache[stopGTFSID]
 }
 
 async function getRoute(routeGTFSID, routes) {
@@ -99,10 +99,10 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
 
     if (!allTrips[tripID]) return // filtered off unless gtfs data is whack
 
-    let station = await getStation(stopGTFSID, stops, mode)
+    let stop = await getStop(stopGTFSID, stops, mode)
 
     allTrips[tripID].stopTimings[stopSequence - 1] = {
-      stopName: station.fullStopName,
+      stopName: stop.fullStopName,
       stopGTFSID,
       arrivalTime,
       arrivalTimeMinutes: utils.time24ToMinAftMidnight(arrivalTime),
@@ -145,11 +145,22 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
 
   await gtfsTimetables.bulkWrite(bulkOperations)
 
-  return Object.keys(allTrips).length
+  let length = Object.keys(allTrips).length
+  allTrips = null
+  return length
 }
 
 module.exports = async function(db, calendar, calendarDates, trips, tripTimesData, mode, determineDirection=()=>null, routeFilter=()=>true, operator=()=>null) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
+
+  let services = {}
+  trips.forEach(trip => {
+    let tripGTIFSID = gtfsUtils.simplifyRouteGTFSID(trip[0])
+    if (!services[tripGTIFSID]) services[tripGTIFSID] = []
+    services[tripGTIFSID].push(trip)
+  })
+  services = Object.values(services)
+  trips = null
 
   await gtfsTimetables.deleteDocuments({mode})
   let boundLoadBatch = loadBatchIntoDB.bind(null, db, calendar, calendarDates, tripTimesData, mode, determineDirection, routeFilter, operator)
@@ -158,12 +169,23 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
   let start = 0
 
   async function loadBatch() {
-    let tripsToLoad = trips.slice(start, start + 1000)
+    let tripsToLoad = services.slice(start, start + 5)
+    let serviceCount = tripsToLoad.length
 
-    if (!tripsToLoad.length) return
+    tripsToLoad = tripsToLoad.reduce((acc, e) => acc.concat(e), [])
+
+    if (!serviceCount) return
     loaded += await boundLoadBatch(tripsToLoad)
 
-    start += 1000
+    console.log('completed ' + (start + serviceCount) + ' of ' + services.length + ' services')
+
+    start += 5
+
+    stopsCache = null
+    routeCache = null
+
+    stopCache = {} // help clear memory at the expense of speed
+    routeCache = {}
 
     await loadBatch()
   }

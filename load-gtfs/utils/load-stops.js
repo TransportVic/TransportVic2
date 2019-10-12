@@ -1,5 +1,30 @@
 const utils = require('../../utils')
 const async = require('async')
+const crypto = require('crypto')
+
+function createStopHash(stopName) {
+    let hash = crypto.createHash('sha1')
+    hash.update(stopName)
+    return hash.digest('hex').slice(0, 6)
+}
+
+function getDistanceFromLatLon(lat1, lon1, lat2, lon2) {
+  var R = 6371 // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1)  // deg2rad below
+  var dLon = deg2rad(lon2-lon1)
+  var a =
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+  var d = R * c // Distance in km
+  return Math.floor(d * 1000) // distance in m
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
 
 module.exports = async function (stopsData, stops, mode, lookupTable) {
   const allStops = stopsData.map(values => {
@@ -16,7 +41,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable) {
     const GTFSStopNameData = values[1].match(/([^(]+) \((.+)\)/)
 
     let fullStopName = utils.adjustStopname((GTFSStopNameData || stopNameData)[1]),
-        stopName = utils.extractStopName(fullStopName);
+        stopName = utils.extractStopName(fullStopName)
 
     let originalName = values[1]
 
@@ -30,9 +55,46 @@ module.exports = async function (stopsData, stops, mode, lookupTable) {
       location: [values[3], values[2]].map(parseFloat),
       mykiZones
     }
-  });
+  })
 
   let mergedStops = {}
+
+  function getStopHashID(bayData, shortName) {
+    let stopHash = createStopHash(bayData.fullStopName)
+    let bayCoordinates = bayData.location.coordinates
+
+    let checkStop
+    if (!!(checkStop = mergedStops[stopHash])) {
+      let checkCoordinates = checkStop.bays[0].location.coordinates
+
+      let stopDistance = getDistanceFromLatLon(
+        bayCoordinates[1], bayCoordinates[0],
+        checkCoordinates[1], checkCoordinates[0]
+      )
+      if (stopDistance < 400) {
+        return stopHash
+      }
+    }
+
+    for (let checkStopHash of Object.keys(mergedStops)) {
+      let stop = mergedStops[checkStopHash]
+      if (stop.stopName !== shortName) continue
+
+      for (let bay of stop.bays) {
+        let checkCoordinates = bay.location.coordinates
+
+        let stopDistance = getDistanceFromLatLon(
+          bayCoordinates[1], bayCoordinates[0],
+          checkCoordinates[1], checkCoordinates[0]
+        )
+
+        if (stopDistance < 400) return checkStopHash
+      }
+    }
+
+    return stopHash
+  }
+
   allStops.forEach(stop => {
     let bayData = {
       originalName: stop.originalName,
@@ -48,15 +110,17 @@ module.exports = async function (stopsData, stops, mode, lookupTable) {
       mykiZones: stop.mykiZones
     }
 
-    if (mergedStops[stop.stopName]) {
-      mergedStops[stop.stopName].bays = mergedStops[stop.stopName].bays.filter(bay =>
-        !(bay.stopGTFSID === stop.stopGTFSID && bay.mode === mode))
-      mergedStops[stop.stopName].bays.push(bayData)
+    let stopHash = getStopHashID(bayData, stop.stopName)
 
-      if (!mergedStops[stop.stopName].suburb.includes(stop.suburb))
-        mergedStops[stop.stopName].suburb.push(stop.suburb);
+    if (mergedStops[stopHash]) {
+      mergedStops[stopHash].bays = mergedStops[stopHash].bays.filter(bay =>
+        !(bay.stopGTFSID === stop.stopGTFSID && bay.mode === mode))
+      mergedStops[stopHash].bays.push(bayData)
+
+      if (!mergedStops[stopHash].suburb.includes(stop.suburb))
+        mergedStops[stopHash].suburb.push(stop.suburb)
     } else {
-      mergedStops[stop.stopName] = {
+      mergedStops[stopHash] = {
         stopName: stop.stopName,
         suburb: [stop.suburb],
         codedName: stop.codedName,
@@ -66,7 +130,18 @@ module.exports = async function (stopsData, stops, mode, lookupTable) {
   })
 
   await async.forEach(Object.values(mergedStops), async stop => {
-    let stopData;
+    let uniqueFullStopNames = []
+    stop.bays.forEach(bay => {
+      if (!uniqueFullStopNames.includes(bay.fullStopName))
+        uniqueFullStopNames.push(bay.fullStopName)
+    })
+
+    if (uniqueFullStopNames.length === 1) {
+      stop.stopName = uniqueFullStopNames[0]
+      stop.codedName = utils.encodeName(stop.stopName)
+    }
+
+    let stopData
     if (stopData = await stops.findDocument({stopName: stop.stopName})) {
       let baysToUpdate = stop.bays.map(bay => bay.stopGTFSID)
 
@@ -80,7 +155,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable) {
     } else {
       await stops.createDocument(stop)
     }
-  });
+  })
 
   return allStops.length
 }
