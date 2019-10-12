@@ -53,7 +53,7 @@ database.connect({
       console.log('read in trip data, reading timing data now')
 
       let tripTimingLines = await lr.getLinesFilter('gtfs/4/stop_times.txt', line => {
-        return !!tripIDs.map(id => line.includes(id)).filter(Boolean).length
+        return tripIDs.includes(line.slice(1, line.indexOf('"', 2)))
       })
       console.log('read ' + tripTimingLines.length + ' lines of timing data, parsing data now')
       let tripTimesData = tripTimingLines.map(line => {

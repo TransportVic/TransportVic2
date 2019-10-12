@@ -26,7 +26,7 @@ function getLinesFilter(filename, filter) {
   return new Promise((resolve, reject) => {
     let fileStream = fs.createReadStream(filename, {
       bufferSize: 4 * 1024 * 1024,
-      highWaterMark: 200 * 1024 * 1024
+      highWaterMark: 100 * 1024 * 1024
     })
     let lineStream = fileStream.pipe(grep(filter))
     let lines = []
