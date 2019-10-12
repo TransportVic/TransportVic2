@@ -22,7 +22,10 @@ database.connect({
   }, {unique: true})
 
   let stopsLookup = createStopsLookup(datamartStops)
-  let stopCount = await loadStops(stopsData, stops, 'metro bus', stopsLookup)
+  let stopCount = await loadStops(stopsData, stops, 'metro bus', stopsLookup, stopName => {
+    if (stopName === 'Monash University') return 'Monash University Bus Loop'
+    return stopName
+  })
 
   console.log('Completed loading in ' + stopCount + ' metro bus stops')
   process.exit()

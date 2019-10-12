@@ -26,7 +26,7 @@ function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
 
-module.exports = async function (stopsData, stops, mode, lookupTable) {
+module.exports = async function (stopsData, stops, mode, lookupTable, adjustStopName=_=>_) {
   const allStops = stopsData.map(values => {
     let matchedStop = lookupTable[values[0]]
     let shouldOverride = !!matchedStop
@@ -40,7 +40,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable) {
     const stopNameData = matchedStop.stopName.match(/([^(]+) \((.+)\)/)
     const GTFSStopNameData = values[1].match(/([^(]+) \((.+)\)/)
 
-    let fullStopName = utils.adjustStopname((GTFSStopNameData || stopNameData)[1]),
+    let fullStopName = adjustStopName(utils.adjustStopname((GTFSStopNameData || stopNameData)[1])),
         stopName = utils.extractStopName(fullStopName)
 
     let originalName = values[1]
