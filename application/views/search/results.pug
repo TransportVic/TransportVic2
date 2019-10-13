@@ -7,7 +7,7 @@ for metroStation in results.filter(stop => stop.bays.filter(bay => bay.mode === 
       span=metroStation.stopName
       
 for metroBusStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'metro bus').length)
-  a(href=`/coach/timings/${metroBusStop.codedName}`).busStop.result
+  a(href=`/bus/timings/${metroBusStop.codedName}`).busStop.result
     div.leftContainer
       img(src='/static/images/clear-icons/bus-icon.svg')
     div.resultDetails

@@ -9,7 +9,9 @@ router.get('/:stopName', async (req, res) => {
     codedName: req.params.stopName
   })
 
-  if (!stop) {
+  let coachBay = stop.bays.filter(bay => bay.mode === 'regional coach')
+
+  if (!stop || !coachBay.length) {
     // TODO: create error page
     return res.end('Could not lookup timings for ' + req.params.stopName + '. Are you sure regional coaches stop there?')
   }
@@ -27,7 +29,7 @@ router.get('/:stopName', async (req, res) => {
     }
 
     departure.headwayDevianceClass = 'unknown'
-    
+
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
     return departure
