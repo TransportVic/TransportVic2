@@ -64,10 +64,9 @@ function getLines (filename, lineCount, skip) {
       data += moreData
       lines = null
       lines = data.split('\n')
-      // probably that last line is 'corrupt' - halfway read - why > not >=
       if (lines.length > lineCount + 1) {
         stream.destroy()
-        lines = lines.slice(0, lineCount) // junk as above
+        lines = lines.slice(0, lineCount + 1)
         resolve(lines)
       }
     })
