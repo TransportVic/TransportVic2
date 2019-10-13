@@ -48,7 +48,7 @@ async function getRoute(routeGTFSID, routes) {
   } else return routeCache[routeGTFSID]
 }
 
-async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode, determineDirection, routeFilter, operator, trips) {
+async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode, determineDirection, routeFilter, trips) {
   let stops = db.getCollection('stops')
   let routes = db.getCollection('routes')
   let gtfsTimetables = db.getCollection('gtfs timetables')
@@ -71,7 +71,6 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
 
     allTrips[tripID] = {
       mode: mode,
-      operator: operator(routeGTFSID),
       routeName: route.routeName,
       shortRouteName: route.shortRouteName,
       tripID,
@@ -150,7 +149,7 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
   return length
 }
 
-module.exports = async function(db, calendar, calendarDates, trips, tripTimesData, mode, determineDirection=()=>null, routeFilter=()=>true, operator=()=>null) {
+module.exports = async function(db, calendar, calendarDates, trips, tripTimesData, mode, determineDirection=()=>null, routeFilter=()=>true, deleteAll=true) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
 
   let services = {}
@@ -162,8 +161,9 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
   services = Object.values(services)
   trips = null
 
-  await gtfsTimetables.deleteDocuments({mode})
-  let boundLoadBatch = loadBatchIntoDB.bind(null, db, calendar, calendarDates, tripTimesData, mode, determineDirection, routeFilter, operator)
+  if (deleteAll)
+    await gtfsTimetables.deleteDocuments({mode})
+  let boundLoadBatch = loadBatchIntoDB.bind(null, db, calendar, calendarDates, tripTimesData, mode, determineDirection, routeFilter)
 
   let loaded = 0
   let start = 0

@@ -27,7 +27,7 @@ database.connect({
 
   let tripsCount = await loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'regional train', headsign => {
     return ['city', 'melbourne'].includes(headsign) ? 'Up' : 'Down'
-  }, routeGTFSID => routeGTFSID !== '1-vPK', () => "V/Line")
+  }, routeGTFSID => routeGTFSID !== '1-vPK')
 
   console.log('Completed loading in ' + tripsCount + ' V/Line trips')
   process.exit()

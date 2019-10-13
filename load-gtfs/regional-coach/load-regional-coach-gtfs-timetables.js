@@ -26,7 +26,7 @@ database.connect({
   }, {unique: true, name: "gtfs timetable index"})
 
   let tripsCount = await loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'regional coach',
-    headsign => null, routeGTFSID => true, () => "V/Line Coach")
+    headsign => null, routeGTFSID => true)
 
   console.log('Completed loading in ' + tripsCount + ' V/Line Coach trips')
   process.exit()

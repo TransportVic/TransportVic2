@@ -25,7 +25,6 @@
   },
   "timetable": {
     "mode": "string",
-    "operator": "string",
     "routeName": "string",
     "runID": "string",
     "operationDays": ["string"],

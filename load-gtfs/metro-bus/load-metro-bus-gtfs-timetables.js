@@ -29,7 +29,7 @@ database.connect({
     let start = 0
 
     let boundLoadBatch = (trips, tripTimesData) => loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'metro bus',
-      headsign => null, routeGTFSID => true, () => "Operator")
+      headsign => null, routeGTFSID => true, false)
 
     async function loadBatch() {
       let {lines, length} = await lr.getLines('gtfs/4/trips.txt', 1000, start)

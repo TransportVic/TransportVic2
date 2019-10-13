@@ -27,7 +27,7 @@ database.connect({
 
   let tripsCount = await loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'metro train', (headsign, routeGTFSID) => {
     return (headsign.includes('flinders street') || (routeGTFSID === '2-SPT' && headsign === 'frankston')) ? 'Up': 'Down'
-  }, routeGTFSID => true, () => "Metro Trains Melbourne")
+  }, routeGTFSID => true)
 
   console.log('Completed loading in ' + tripsCount + ' MTM trips')
   process.exit()
