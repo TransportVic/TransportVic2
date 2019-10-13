@@ -1,33 +1,37 @@
 const fs = require('fs')
 
-var through2 = require('through2')
-var StringDecoder = require('string_decoder').StringDecoder
+const through2 = require('through2')
+const StringDecoder = require('string_decoder').StringDecoder
 
-function grep(filter) {
-    var decoder = new StringDecoder('utf8'),
-        last = ''
+function grep (filter) {
+  let decoder = new StringDecoder('utf8')
+  let last = ''
 
-    var stream = through2({}, function transform(chunk, enc, cb) {
-        var lines = decoder.write(last + chunk).split('\r\n'), i
-        last = lines.pop()
-        for (i = 0; i < lines.length; i++) {
-            if (filter(lines[i])) this.push(lines[i])
-        }
-        lines = null
-        cb()
-    }, function flush(cb) {
-        if (filter(last)) this.push(last)
-        cb()
-    })
-    stream._readableState.objectMode = true
-    return stream
+  let linesRead = 0
+
+  let stream = through2({}, function transform (chunk, enc, cb) {
+    let lines = decoder.write(last + chunk).split('\r\n'); let i
+    last = lines.pop()
+    for (i = 0; i < lines.length; i++) {
+      if (filter(lines[i])) this.push(lines[i])
+      if (++linesRead % 200000 == 0)
+        console.log('LineReader: read in ' + linesRead + ' lines')
+    }
+    lines = null
+    cb()
+  }, function flush (cb) {
+    if (filter(last)) this.push(last)
+    cb()
+  })
+  stream._readableState.objectMode = true
+  return stream
 }
 
-function getLinesFilter(filename, filter) {
+function getLinesFilter (filename, filter) {
   return new Promise((resolve, reject) => {
-    let fileStream = fs.createReadStream(filename, {
-      bufferSize: 2 * 1024 * 1024,
-      highWaterMark: 40 * 1024 * 1024
+    const fileStream = fs.createReadStream(filename, {
+      bufferSize: 4 * 1024 * 1024,
+      highWaterMark: 50 * 1024 * 1024
     })
     let lineStream = fileStream.pipe(grep(filter))
     let lines = []
@@ -44,9 +48,9 @@ function getLinesFilter(filename, filter) {
   })
 }
 
-function getLines(filename, lineCount, skip) {
+function getLines (filename, lineCount, skip) {
   return new Promise((resolve, reject) => {
-    let stream = fs.createReadStream(filename, {
+    const stream = fs.createReadStream(filename, {
       flags: 'r',
       encoding: 'utf-8',
       bufferSize: 64 * 1024,
@@ -64,7 +68,7 @@ function getLines(filename, lineCount, skip) {
       if (lines.length > lineCount + 1) {
         stream.destroy()
         lines = lines.slice(0, lineCount) // junk as above
-        resolve({lines, length: data.length})
+        resolve(lines)
       }
     })
 
@@ -73,7 +77,7 @@ function getLines(filename, lineCount, skip) {
     })
 
     stream.on('end', function () {
-      resolve({lines, length: data.length})
+      resolve(lines)
       lines = null
     })
   })
