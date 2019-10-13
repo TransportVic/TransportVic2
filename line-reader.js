@@ -25,8 +25,8 @@ function grep(filter) {
 function getLinesFilter(filename, filter) {
   return new Promise((resolve, reject) => {
     let fileStream = fs.createReadStream(filename, {
-      bufferSize: 4 * 1024 * 1024,
-      highWaterMark: 75 * 1024 * 1024
+      bufferSize: 2 * 1024 * 1024,
+      highWaterMark: 50 * 1024 * 1024
     })
     let lineStream = fileStream.pipe(grep(filter))
     let lines = []
@@ -37,6 +37,8 @@ function getLinesFilter(filename, filter) {
 
     lineStream.on('end', () => {
       resolve(lines)
+      lines = null
+      lineStream = null
     })
   })
 }
