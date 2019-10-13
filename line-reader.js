@@ -13,6 +13,7 @@ function grep(filter) {
         for (i = 0; i < lines.length; i++) {
             if (filter(lines[i])) this.push(lines[i])
         }
+        lines = null
         cb()
     }, function flush(cb) {
         if (filter(last)) this.push(last)
@@ -26,7 +27,7 @@ function getLinesFilter(filename, filter) {
   return new Promise((resolve, reject) => {
     let fileStream = fs.createReadStream(filename, {
       bufferSize: 2 * 1024 * 1024,
-      highWaterMark: 50 * 1024 * 1024
+      highWaterMark: 40 * 1024 * 1024
     })
     let lineStream = fileStream.pipe(grep(filter))
     let lines = []
@@ -73,6 +74,7 @@ function getLines(filename, lineCount, skip) {
 
     stream.on('end', function () {
       resolve({lines, length: data.length})
+      lines = null
     })
   })
 }

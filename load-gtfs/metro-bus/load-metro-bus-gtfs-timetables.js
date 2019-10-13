@@ -14,7 +14,8 @@ global.gc()
 database.connect({
   poolSize: 400
 }, async err => {
-  database.getCollection('gtfs timetables').createIndex({
+  let gtfsTimetables = database.getCollection('gtfs timetables')
+  gtfsTimetables.createIndex({
     mode: 1,
     routeName: 1,
     operationDays: 1,
@@ -25,55 +26,60 @@ database.connect({
     shapeID: 1
   }, {unique: true, name: "gtfs timetable index"})
 
-    let loaded = 0
-    let start = 0
+  await gtfsTimetables.deleteDocuments({mode: 'metro bus'})
 
-    let boundLoadBatch = (trips, tripTimesData) => loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'metro bus',
-      headsign => null, routeGTFSID => true, false)
+  let loaded = 0
+  let start = 0
 
-    async function loadBatch() {
-      let {lines, length} = await lr.getLines('gtfs/4/trips.txt', 1000, start)
-      let lineCount = lines.length
-      if (!lineCount) return
+  let iteration = 0
 
-      let trips
-      if (start == 0)
-        trips = lines.join('\n')
-      else
-        trips = [''].concat(lines).join('\n')
+  let boundLoadBatch = (trips, tripTimesData) => loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'metro bus',
+  headsign => null, routeGTFSID => true, false)
 
-      start += length
-      lines = null
-      global.gc()
+  async function loadBatch() {
+    let {lines, length} = await lr.getLines('gtfs/4/trips.txt', 5000, start)
+    let lineCount = lines.length
+    if (!lineCount) return
 
-      trips = utils.parseGTFSData(trips)
-      let tripIDs = trips.map(trip => trip[2])
+    let trips
+    if (start == 0)
+      trips = lines.join('\n')
+    else
+      trips = [''].concat(lines).join('\n')
 
-      console.log('read in trip data, reading timing data now')
+    start += length
+    lines = null
+    global.gc()
 
-      let tripTimingLines = await lr.getLinesFilter('gtfs/4/stop_times.txt', line => {
-        return tripIDs.includes(line.slice(1, line.indexOf('"', 2)))
-      })
-      console.log('read ' + tripTimingLines.length + ' lines of timing data, parsing data now')
-      let tripTimesData = tripTimingLines.map(line => {
-        return line.match(/"([^"]*)"/g).map(f => f.slice(1, -1))
-      })
-      console.log('parsed data, loading it in now')
+    trips = utils.parseGTFSData(trips)
+    let tripIDs = trips.map(trip => trip[2])
 
-      tripIDs = null
-      loaded += await boundLoadBatch(trips, tripTimesData)
+    console.log('read in trip data, reading timing data now')
 
-      trips = null
-      tripTimesData = null
+    let tripTimingLines = await lr.getLinesFilter('gtfs/4/stop_times.txt', line => {
+      return tripIDs.includes(line.slice(1, line.indexOf('"', 2)))
+    })
+    console.log('read ' + tripTimingLines.length + ' lines of timing data, parsing data now')
+    let tripTimesData = tripTimingLines.map(line => {
+      return line.match(/"([^"]*)"/g).map(f => f.slice(1, -1))
+    })
+    console.log('parsed data, loading it in now')
 
-      console.log('completed 1000 lines')
+    tripIDs = null
+    loaded += await boundLoadBatch(trips, tripTimesData)
 
-      global.gc()
-      await loadBatch()
-    }
+    trips = null
+    tripTimesData = null
+    tripTimingLines = null
 
+    console.log('completed 5000 lines: iteration ' + ++iteration)
+
+    global.gc()
     await loadBatch()
-//60946
+  }
+
+  await loadBatch()
+  //60946
   console.log('Completed loading in ' + tripsCount + ' metro bus trips')
   process.exit()
 })

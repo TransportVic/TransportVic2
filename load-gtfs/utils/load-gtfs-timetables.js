@@ -142,9 +142,13 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
     })
   })
 
-  await gtfsTimetables.bulkWrite(bulkOperations)
+  await gtfsTimetables.bulkWrite(bulkOperations, {
+    ordered: false
+  })
 
   let length = Object.keys(allTrips).length
+
+  bulkOperations = null
   allTrips = null
   return length
 }
@@ -186,6 +190,9 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
 
     stopCache = {} // help clear memory at the expense of speed
     routeCache = {}
+
+    if (global.gc)
+      global.gc()
 
     await loadBatch()
   }
