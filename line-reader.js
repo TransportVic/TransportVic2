@@ -14,7 +14,7 @@ function grep (filter) {
     last = lines.pop()
     for (i = 0; i < lines.length; i++) {
       if (filter(lines[i])) this.push(lines[i])
-      if (++linesRead % 200000 == 0)
+      if (++linesRead % 500000 == 0)
         console.log('LineReader: read in ' + linesRead + ' lines')
     }
     lines = null

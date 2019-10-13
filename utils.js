@@ -5,6 +5,25 @@ const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 
 module.exports = {
   encodeName: name => name.toLowerCase().replace(/[^\w\d ]/g, '-').replace(/  */g, '-').replace(/--+/g, '-'),
+  adjustRawStopName: name => {
+    let directionParts
+    if (directionParts = name.match(/\/(.*?) \((\w+)\) (.*?) \((.+)/)) {
+      name = name.replace(/\/.+/, '/')
+      let roadName1 = directionParts[1].trim(),
+      roadName2 = directionParts[3].trim(),
+      direction = directionParts[2].trim(),
+      remaining = directionParts[4]
+
+      direction = direction[0].toUpperCase() + direction.slice(1).toLowerCase()
+      name += `${roadName1} ${roadName2} - ${direction} (${remaining}`
+    }
+
+    if (name.match(/\(([\w ]+) \((\d{4})\)\)$/)) {
+      name = name.replace(/\(([\w ]+) \((\d{4})\)\)$/, '($1: $2)')
+    }
+
+    return name
+  },
   adjustStopname: name => {
     if (name.includes('Jolimont-MCG')) {
       name = name.replace('Jolimont-MCG', 'Jolimont')

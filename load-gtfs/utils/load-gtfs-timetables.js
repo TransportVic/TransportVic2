@@ -173,7 +173,7 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
   let start = 0
 
   async function loadBatch() {
-    let tripsToLoad = services.slice(start, start + 5)
+    let tripsToLoad = services.slice(start, start += 10)
     let serviceCount = tripsToLoad.length
 
     tripsToLoad = tripsToLoad.reduce((acc, e) => acc.concat(e), [])
@@ -182,8 +182,6 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
     loaded += await boundLoadBatch(tripsToLoad)
 
     console.log('completed ' + (start + serviceCount) + ' of ' + services.length + ' services')
-
-    start += 5
 
     stopsCache = null
     routeCache = null
