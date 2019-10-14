@@ -149,6 +149,28 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
       trip = await departureUtils.getStaticDeparture(runID, db)
     }
 
+    let isUpTrip = trip ? trip.direction === 'Up' : runID % 2 === 0
+    let cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(routeID, runID, runDestination) : []
+
+    if (isUpTrip && !cityLoopStations.includes(runDestination.toLowerCase()) && !(cityLoopStations.includes(stationName) || runDestination === 'Flinders Street'))
+      cityLoopConfig = []
+
+    if (cityLoopStations.includes(stationName) && !cityLoopConfig.includes('SSS')) {
+      if (caulfieldGroup.includes(routeID))
+        cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
+      // trip is towards at flinders, but ptv api already gave next trip
+      // really only seems to happen with cran/pak/frank lines
+    }
+
+    if (isUpTrip && !cityLoopStations.includes(stationName)) {
+      if (cityLoopConfig[0] === 'FSS' || cityLoopConfig[1] === 'FSS')
+        destination = 'Flinders Street'
+      else if (cityLoopConfig[0] === 'PAR' && !cityLoopStations.includes(stationName))
+        destination = 'City Loop'
+      else if (cityLoopConfig.slice(-1)[0] === 'SSS')
+        destination = 'Southern Cross'
+    }
+
     if (!trip) {
       return transformedDepartures.push({
         trip: {
@@ -164,39 +186,16 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
         actualDepartureTime: estimatedDepartureTime || scheduledDepartureTime,
         runID,
         cityLoopConfig: [],
-        destination: runDestination,
+        destination,
         vehicleType
       })
     }
 
-    let cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(routeID, runID, runDestination) : []
-
-    if (trip.direction === 'Up' && !cityLoopStations.includes(runDestination.toLowerCase()) && !(cityLoopStations.includes(stationName) || runDestination === 'Flinders Street'))
-      cityLoopConfig = []
-
     trip.destination = trip.destination.slice(0, -16)
-
-    if (cityLoopStations.includes(stationName) && !cityLoopConfig.includes('SSS')) {
-      if (caulfieldGroup.includes(routeID))
-        cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
-      // trip is towards at flinders, but ptv api already gave next trip
-      // really only seems to happen with cran/pak/frank lines
-    }
-
-    if (trip.direction === 'Up' && !cityLoopStations.includes(stationName)) {
-      if (cityLoopConfig[0] === 'FSS' || cityLoopConfig[1] === 'FSS')
-        destination = 'Flinders Street'
-      else if (cityLoopConfig[0] === 'PAR' && !cityLoopStations.includes(stationName))
-        destination = 'City Loop'
-      else if (cityLoopConfig.slice(-1)[0] === 'SSS')
-        destination = 'Southern Cross'
-    }
     let forming = null
 
     if (cityLoopStations.includes(stationName) && destination !== trip.destination) {
-      forming = await timetables.findDocument({
-        runID
-      })
+      forming = await departureUtils.getStaticDeparture(runID, db)
       if (forming)
         destination = forming.destination.slice(0, -16)
     }
