@@ -3,6 +3,10 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 
 ## Current features:
 - Loading in MTM timetables
+- Loading in Metropolitan bus timetables
+  - Multiple batching rounds in place to optimise memory usage:
+  - Repeated I/O preferred over massive 2GB memory usage, currently tops around 800MB
+  - Need to add flag for Mac which actually doesn't like batching and likes the big all-at-once method
 - Loading in V/Line train timetables
 - Loading in Regional coach timetables
 - Showing live MTM departures when the services are running as timetabled
@@ -16,7 +20,6 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Showing live MTM departures when there's completely no timetable match (17:02 FSS ex Westall), also plasters warnings on the departure.
 - Looks for trips being formed next in City Loop stations, and joins it the the departure stops-at
 - Showing Regional coach timetables. Does not consult PTV API for trips as this will get it confused between actual coach trips and train trips.
-  - Basic stop merging in place - if they have the same stop name, they are merged
 - Offline mode
 - Couple of mockup displays
   - Flinders Street Station escalator displays
@@ -26,8 +29,47 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - Finds trips affected by suspension and breaks into 3 - first train leg, bus leg and second train leg.
   - Currently only looks at end stations, should have it check all stations in between for those express services?
 - Ability to detect when V/Line trains are scheduled to run as coaches. Currently no support for live disruptions.
+- Stop merging in place
+  - Roads do not get merged, see commit [0c3cf46](https://github.com/TransportVic/TransportVic2/commit/0c3cf45222eb2d94bc1e26cc6a95b862218a441f)
+  - Looks for stops with the same primary stop name: Primary Stop Name/Road Name (Suburb)
+  - If the primary stop name matches and the 2 stops are within a set distance, varying for stop types, they are merged.
+  - When requesting stop timing data, the "bays" are filtered by mode, then grouped by originalName
+    - If online, the first stopGTFSID is taken from each group, and sent to PTV's server
+    - Otherwise, eash stopGTFSID is used and a getScheduledDepartures is called, with the results merged.
+- Icons for the various stopping pattern pages
+  - Completed:
+    - EDI Comeng (PTV) (Used for both types)
+    - X'Traps (PTV)
+    - N Locomotive (Mark 3)
+    - Sprinter (Mark 3)
+    - Velocity (PTV)
+    - Volgren CR228L (PTV/White)
+    - Volgren Optimus (PTV/White)
+  - To Do:
+    - Siemens (PTV)
+    - HCMT (PTV)
+    - Optare Solo (PTV/White)
+    - Coach, need to find a suitable one for drawing
+    - Trams (possibly do sideways rather than front?)
+      - A1/2
+      - B2 (looks the same as A1/2, which is why side)
+      - C1
+      - C2
+      - D1
+      - D2
+      - E1/2
+      - W8
+      - Z3
+  - Thoughts:
+    - MTM is easy enough, look at run.vehicle_descriptor.description: "6 Car Comeng", "6 Car Siemens", "3 Xtrapolis"...
+    - V/Line needs the trip to be known in the NSP - circularised trips will have unknown vehicle consists: "3x 2VL", "N+ 6H"
+    - Trams will use a simple lookup from the tram number to get the model
+    - Buses is difficult, integration with tracker? (needs a way to link block id to actual trips)
+      - Lookup bus DB, if bodywork is drawn then show it, otherwise just display fleet number
+      - Would really only work with Ventura services
 
 ## Next up to be added:
+- Knowing that showgrounds trains can form Craigieburn (maybe other northern grp too?) services upon reaching the city, helps reduce "unknown trip syndrome"
 - Added support for MTM "ghost trips", but since there's very few just do a /pattern and load into live DB
 - Reading English and creating a daily timetable update DB collection, can be used to mark services as coaches / cancelled (V/Line!!) as well as just MTM train types
   - could work with Yarra Trams too, mark tram number
@@ -35,11 +77,11 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Showing stopping patterns for MTM and V/Line services
   - Show timings and stops most importantly
   - Show Run ID and vehicle type + icon (yay!)
+- Do up bus timings pages
 - Marking the current completely unknown trips in the live DB, and using more magic to get the stopping patterns for those
 - Homepage
 - Also find out how to ID replacement services
 - Make sure when it says 5:27pm Craigieburn it picks the correct one (maybe using loop heuristics)
-- Load in metropolitan bus timetables
 - And of course the departure info
   - Look into merging bus stops (Eg. Clayton Railway Station can show both Clayton Road and Carnish Road timings)
   - Merge night bus timings too? Though only merge if its at night LOL
