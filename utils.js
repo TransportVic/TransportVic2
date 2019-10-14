@@ -45,7 +45,7 @@ module.exports = {
       name = name.replace('Jolimont-MCG', 'Jolimont')
     }
     if (name.includes('Railway Station')) {
-      name = name.replace('Railway Station', 'Station');
+      name = name.replace('Railway Station', 'Station')
     }
 
     if (name.includes('Station') && !name.includes('Bus Station')) {

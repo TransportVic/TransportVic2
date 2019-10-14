@@ -3,7 +3,8 @@ const utils = require('../../utils')
 
 module.exports = async function(routeData, shapeData, routes, operator, mode, adjustRouteName=n => n, nameFilter=()=>true) {
   const allRoutes = routeData.map(values => {
-    let adjustedRouteName = adjustRouteName(values[3])
+    let simplifiedRouteGTFSID = utils.simplifyRouteGTFSID(values[0])
+    let adjustedRouteName = adjustRouteName(values[3], simplifiedRouteGTFSID)
     let shortRouteName = null
 
     let routeNumber = values[2]
@@ -14,7 +15,7 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
     }
 
     return {
-      routeGTFSID: utils.simplifyRouteGTFSID(values[0]),
+      routeGTFSID: simplifiedRouteGTFSID,
       fullGTFSID: values[0],
       routeName: adjustedRouteName,
       shortRouteName,
