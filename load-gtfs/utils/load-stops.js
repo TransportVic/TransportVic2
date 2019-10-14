@@ -76,11 +76,11 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
 
     let bayCoordinates = bayData.location.coordinates
 
-    let mergeDistance = 100
+    let mergeDistance = 200
     if (mode === 'regional coach')
       mergeDistance = 400
     else if (shortName.includes('Railway Station') || shortName.includes('SC'))
-      mergeDistance = 300
+      mergeDistance = 350
 
     let checkStop
     if (!!(checkStop = mergedStops[stopHash])) {
