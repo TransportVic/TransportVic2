@@ -181,7 +181,7 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
     if (!serviceCount) return
     loaded += await boundLoadBatch(tripsToLoad)
 
-    console.log('completed ' + (start + serviceCount) + ' of ' + services.length + ' services')
+    console.log('completed ' + start + ' of ' + services.length + ' services')
 
     stopsCache = null
     routeCache = null
