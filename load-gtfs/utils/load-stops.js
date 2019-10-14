@@ -37,8 +37,8 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
     }
     let { mykiZones } = matchedStop
 
-    const stopNameData = utils.adjustRawStopName(matchedStop.stopName).match(/([^(]+) \((.+)\)/)
-    const GTFSStopNameData = utils.adjustRawStopName(values[1]).match(/([^(]+) \((.+)\)/)
+    const stopNameData = utils.adjustRawStopName(matchedStop.stopName).match(/([^(]*?) \((.*?)\)$/)
+    const GTFSStopNameData = utils.adjustRawStopName(values[1]).match(/([^(]*?) \((.*?)\)$/)
 
     let fullStopName = adjustStopName(utils.adjustStopname((GTFSStopNameData || stopNameData)[1])),
         stopName = utils.extractStopName(fullStopName)

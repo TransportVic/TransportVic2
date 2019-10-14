@@ -8,21 +8,37 @@ module.exports = {
   adjustRawStopName: name => {
     let directionParts
     if (directionParts = name.match(/\/(.*?) \((\w+)\) (.*?) \((.+)/)) {
+      // canberra st/lorwhatver (north) st (docklands)
       name = name.replace(/\/.+/, '/')
       let roadName1 = directionParts[1].trim(),
       roadName2 = directionParts[3].trim(),
       direction = directionParts[2].trim(),
-      remaining = directionParts[4]
+      remaining = directionParts[4].trim()
 
       direction = direction[0].toUpperCase() + direction.slice(1).toLowerCase()
       name += `${roadName1} ${roadName2} - ${direction} (${remaining}`
+    } else if (directionParts = name.match(/(.*?) \((\w+)(?: Side)?\) (.*?)\//)) {
+      //Albert (east) St/Stephensons Rd (Mount Waverley)
+      name = name.replace(/.*?\//, '/')
+      let roadName1 = directionParts[1].trim(),
+      roadName2 = directionParts[3].trim(),
+      direction = directionParts[2].trim()
+
+      direction = direction[0].toUpperCase() + direction.slice(1).toLowerCase()
+      name = `${roadName1} ${roadName2} - ${direction}` + name
+    } else if (name.match(/\(\w+\)\//)) {
+      // some st (south)/whatever rd (x)
+      name = name.replace(/\((\w+)\)\//, ' - $1/')
+    } else if (name.match(/\(\w+\) \(/)) {
+      // some st/whatever rd (south) (x)
+      name = name.replace(/\((\w+)\) \(/, ' - $1 (')
     }
 
     if (name.match(/\(([\w ]+) \((\d{4})\)\)$/)) {
       name = name.replace(/\(([\w ]+) \((\d{4})\)\)$/, '($1: $2)')
     }
 
-    return name
+    return name.replace(/  +/g, ' ')
   },
   adjustStopname: name => {
     if (name.includes('Jolimont-MCG')) {
