@@ -133,7 +133,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
       }
     }
 
-    let trip = cancelled ? [] : await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines, scheduledDepartureTimeMinutes)
+    let trip = cancelled ? null : await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines, scheduledDepartureTimeMinutes)
 
     if (trip) { // live timetables
       destination = trip.destination.slice(0, -16)
@@ -153,7 +153,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
       trip = await getStoppingPattern(db, departure.run_id, 'metro train')
     }
 
-    let isUpTrip = trip ? trip.direction === 'Up' : runID % 2 === 0
+    let isUpTrip = (trip || {}).direction === 'Up' || runID % 2 === 0
     let cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(routeID, runID, runDestination) : []
 
     if (isUpTrip && !cityLoopStations.includes(runDestination.toLowerCase()) && !(cityLoopStations.includes(stationName) || runDestination === 'Flinders Street'))

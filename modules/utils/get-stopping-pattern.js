@@ -46,7 +46,7 @@ module.exports = async function (db, ptvRunID, mode) {
       arrivalTimeMinutes: departureTimeMinutes,
       departureTime: scheduledDepartureTime.format("HH:mm"),
       departureTimeMinutes: departureTimeMinutes,
-      estimatedDepartureTime: estimatedDepartureTime,
+      estimatedDepartureTime: departure.estimated_departure_utc ? estimatedDepartureTime.toISOString() : null,
       platform: platform_number,
       stopConditions: ""
     }
