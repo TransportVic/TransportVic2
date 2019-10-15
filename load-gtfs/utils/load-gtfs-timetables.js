@@ -2,6 +2,7 @@ const async = require('async')
 const utils = require('../../utils')
 const gtfsUtils = require('../../gtfs-utils')
 const EventEmitter = require('events')
+const crypto = require('crypto')
 
 let calendarDatesCache = {}
 
@@ -48,6 +49,15 @@ async function getRoute(routeGTFSID, routes) {
   } else return routeCache[routeGTFSID]
 }
 
+function hashTrip(trip) {
+  let hash = crypto.createHash('sha1')
+  hash.update(trip.origin)
+  hash.update(trip.departureTime)
+  hash.update(trip.destination)
+  hash.update(trip.stopTimings.slice(-1)[0].arrivalTime)
+  return parseInt(hash.digest('hex'), 12)
+}
+
 async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode, determineDirection, routeFilter, trips) {
   let stops = db.getCollection('stops')
   let routes = db.getCollection('routes')
@@ -79,6 +89,7 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
       stopTimings: [],
       destination: null,
       departureTime: null,
+      destinationArrivalTime: null,
       origin: null,
       direction,
       gtfsDirection,
@@ -123,6 +134,7 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
     let stopCount = stopTimings.length
 
     allTrips[tripID].destination = stopTimings[stopCount - 1].stopName
+    allTrips[tripID].destinationArrivalTime = stopTimings[stopCount - 1].arrivalTime
     allTrips[tripID].departureTime = stopTimings[0].departureTime
     allTrips[tripID].origin = stopTimings[0].stopName
 

@@ -123,6 +123,7 @@ async function parseTimetable(data, routeName) {
 
       timetableData.origin = timetableData.stopTimings[0].stopName
       timetableData.departureTime = timetableData.stopTimings[0].departureTime
+      timetableData.destinationArrivalTime = timetableData.stopTimings[stopCount - 1].arrivalTime
       timetableData.destination = timetableData.stopTimings[stopCount - 1].stopName
 
       const key = {

@@ -18,6 +18,7 @@
       "stopSequence": "number"
     }],
     "destination": "string",
+    "destinationArrivalTime": "string",
     "departureTime": "number",
     "origin": "string",
     "gtfsDirection": "string",

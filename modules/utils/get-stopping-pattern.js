@@ -73,6 +73,7 @@ module.exports = async function (db, ptvRunID, mode) {
     vehicle: vehicleDescriptor.description,
     stopTimings,
     destination: stopTimings[stopTimings.length - 1].stopName,
+    destinationArrivalTime: stopTimings[stopTimings.length - 1].arrivalTime,
     departureTime: stopTimings[0].departureTime,
     origin: stopTimings[0].stopName,
     type: "timings"

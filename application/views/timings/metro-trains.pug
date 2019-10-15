@@ -71,7 +71,11 @@ append content
           else if departure.trip.isUncertain
             span.cancelled No stopping pattern data - check platform displays or click for more info
           else
-            if cityLoopStationNames.includes(station.stopName) || departure.trip.direction === 'Up'
+            
+            -
+              let {trip} = departure
+              let isUpTrip = (trip || {}).direction === 'Up' || trip.runID % 2 === 0
+            if cityLoopStationNames.includes(station.stopName) || isUpTrip
               span=departure.cityLoopConfig.join(', ')
             else
               span

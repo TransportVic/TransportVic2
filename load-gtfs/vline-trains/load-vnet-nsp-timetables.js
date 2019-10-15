@@ -169,6 +169,7 @@ async function loadTrips (csvData, direction) {
     let stopTimings = routeStops.map(name => tripStops[name]).filter(e => !e.express).filter(e => e.arrivalTime + e.departureTime !== '')
 
     const destination = stopTimings.slice(-1)[0].stopName
+    const destinationArrivalTime = stopTimings.slice(-1)[0].arrivalTime
     const departureTime = stopTimings[0].departureTime
     const origin = stopTimings[0].stopName
 
@@ -205,6 +206,7 @@ async function loadTrips (csvData, direction) {
       forming,
       stopTimings,
       destination,
+      destinationArrivalTime,
       departureTime,
       origin,
       direction

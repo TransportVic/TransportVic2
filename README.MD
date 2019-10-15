@@ -67,11 +67,15 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
     - Buses is difficult, integration with tracker? (needs a way to link block id to actual trips)
       - Lookup bus DB, if bodywork is drawn then show it, otherwise just display fleet number
       - Would really only work with Ventura services
+  - Searches up stopping pattern for trips not in any DB
 
 ## Next up to be added:
+- Unique trip IDs:
+  - `${trip.origin}/${trip.departureTime}/${trip.destination}/${trip.arrivalTime}`
+  - accounts for the 2 5.27 Craigieburn services
+  - Doesn't account for dates - specify separately
 - Refactor all moment.tz to a utils method
 - Knowing that showgrounds trains can form Craigieburn (maybe other northern grp too?) services upon reaching the city, helps reduce "unknown trip syndrome"
-- Added support for MTM "ghost trips", but since there's very few just do a /pattern and load into live DB
 - Reading English and creating a daily timetable update DB collection, can be used to mark services as coaches / cancelled (V/Line!!) as well as just MTM train types
   - could work with Yarra Trams too, mark tram number
   - but i guess i need to teach it tram models then
