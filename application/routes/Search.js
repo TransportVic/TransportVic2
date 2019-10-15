@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
 async function performSearch (db, query) {
   return (await db.getCollection('stops').findDocuments({
     $or: [
-      { 'bays.stopGTFSID': query },
+      { 'bays.stopGTFSID': parseInt(query) },
       { stopName: new RegExp(query, 'i') },
       { stopSuburb: new RegExp(query, 'i') },
     ]

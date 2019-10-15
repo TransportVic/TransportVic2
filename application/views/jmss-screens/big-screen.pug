@@ -109,7 +109,7 @@ html
                 div.destination
                   span Towards
                   if nextVLineDeparture
-                    span=nextVLineDeparture.trip.destination.slice(0, -16)
+                    span=nextVLineDeparture.trip.destination
                   else
                     span --
                 - let waitingClass = nextVLineDeparture ? getWaitingClass(nextVLineDeparture, [15, 10]) : 'unknown'
