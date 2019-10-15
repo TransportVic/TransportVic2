@@ -81,26 +81,22 @@ async function getDeparturesFromVNET(station, db) {
   let mergedDepartures = (await async.map(vnetDepartures, async vnetDeparture => {
     let vnetTrip = await departureUtils.getStaticDeparture(vnetDeparture.runID, db)
 
+    let departureHour = vnetDeparture.originDepartureTime.get('hours')
+    if (departureHour < 3) departureHour += 24 // 3am PT day
+
     let trip = await gtfsTimetables.findDocument({
-      $and: [{
-        stopTimings: { // origin
-          $elemMatch: {
-            stopGTFSID: vnetDeparture.originVLinePlatform.stopGTFSID,
-            departureTimeMinutes: utils.getPTMinutesPastMidnight(vnetDeparture.originDepartureTime),
-            arrivalTimeMinutes: null
-          }
-        }
-      }, {
-        stopTimings: { // dest
-          $elemMatch: {
-            stopGTFSID: vnetDeparture.destinationVLinePlatform.stopGTFSID,
-            arrivalTimeMinutes: utils.getPTMinutesPastMidnight(vnetDeparture.destinationArrivalTime),
-            departureTimeMinutes: null
-          }
-        }
-      }],
+      origin: vnetDeparture.originVLinePlatform.fullStopName,
+      destination: vnetDeparture.destinationVLinePlatform.fullStopName,
+      departureTime: utils.formatPTHHMM(vnetDeparture.originDepartureTime),
+      destinationArrivalTime: utils.formatPTHHMM(vnetDeparture.destinationArrivalTime),
       operationDays: utils.getYYYYMMDDNow(),
-      mode: "regional train"
+      mode: "regional train",
+      tripStartHour: {
+        $lte: departureHour
+      },
+      tripEndHour: {
+        $gte: departureHour
+      }
     })
     if (!trip) { // service disruption unaccounted for? like ptv not loading in changes into gtfs data :/
       trip = vnetTrip
@@ -161,6 +157,7 @@ function filterDepartures(departures) {
   return departures.sort((a, b) => {
     return a.actualDepartureTime - b.actualDepartureTime
   }).filter(departure => {
+    if (!departure.actualDepartureTime) console.log(departure)
     return departure.actualDepartureTime.diff(now, 'seconds') > -30
   })
 }

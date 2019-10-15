@@ -102,6 +102,12 @@ module.exports = {
     if (minutesPastMidnight < 180) offset = -1440;
     return daysOfWeek[time.clone().add(offset, 'minutes').day()]
   },
+  formatPTHHMM: time => {
+    let hours = time.get('hours'),
+      minutes = time.get('minutes')
+    if (hours < 3) hours += 24
+    return `${module.exports.pad(hours, 2)}:${module.exports.pad(minutes, 2)}`
+  },
   getYYYYMMDD: time => time.format('YYYYMMDD'),
   getYYYYMMDDNow: () => module.exports.getYYYYMMDD(module.exports.now()),
   now: () => moment.tz('Australia/Melbourne')

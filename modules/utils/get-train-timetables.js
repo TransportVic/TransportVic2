@@ -34,7 +34,8 @@ async function getLiveDeparture(station, db, mode, possibleLines, scheduledDepar
 
 async function getScheduledDeparture(station, db, mode, possibleLines, scheduledDepartureTimeMinutes, possibleDestinations) {
   const platform = getPlatform(station, mode)
-  const departureHour = Math.floor(scheduledDepartureTimeMinutes / 60)
+  let departureHour = Math.floor(scheduledDepartureTimeMinutes / 60)
+  if (departureHour < 3) departureHour += 24 // 3am PT day :(
 
   let timetables = await db.getCollection('gtfs timetables').findDocuments({
     routeName: {

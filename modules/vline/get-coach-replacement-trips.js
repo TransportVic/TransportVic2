@@ -55,10 +55,13 @@ module.exports = async function(station, db) {
   }).map(trip => {
     const stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === coachStop.stopGTFSID)[0]
 
+    let scheduledDepartureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
+
     return {
       trip, estimatedDepartureTime: null, platform: null,
-      stopData, scheduledDepartureTime: utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now()),
-      departureTimeMinutes: stopData.departureTimeMinutes, isCoachService: true
+      stopData, scheduledDepartureTime,
+      departureTimeMinutes: stopData.departureTimeMinutes, isCoachService: true,
+      actualDepartureTime: scheduledDepartureTime
     }
   })
 }
