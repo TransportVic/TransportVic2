@@ -50,7 +50,11 @@ module.exports = async function(station, db) {
   })
 
   return gtfsDepartures.filter(departure => {
-    let index = departure.departureTime + ' ' + departure.destination
+    let {destination} = departure
+    if (departure.destination === 'Southern Cross Coach Terminal/Spencer St')
+      destination = 'Southern Cross Railway Station'
+
+    let index = departure.departureTime + ' ' + destination
     return timetabledDeparturesIndex.includes(index)
   }).map(trip => {
     const stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === coachStop.stopGTFSID)[0]

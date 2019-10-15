@@ -41,7 +41,9 @@ async function getVNETDepartures(station, db) {
       estimatedDepartureTime = moment.tz($('ActualArrivalTime', service).text(), 'Australia/Melbourne')
     } // yes arrival cos vnet
 
-    const platform = $('Platform', service).text()
+    let platform = $('Platform', service).text()
+    if (platform.length > 4)
+      platform = null
     const originDepartureTime = moment.tz($('ScheduledDepartureTime', service).text(), 'Australia/Melbourne')
     const destinationArrivalTime = moment.tz($('ScheduledDestinationArrivalTime', service).text(), 'Australia/Melbourne')
     const runID = $('ServiceIdentifier', service).text()
@@ -139,6 +141,12 @@ async function getDeparturesFromVNET(station, db) {
 
     let scheduledDepartureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, now)
     trip.destination = trip.destination.slice(0, -16)
+
+    let platform = vnetDeparture.platform
+    if (!platform && vnetTrip) {
+      let vnetStopData = vnetTrip.stopTimings.filter(stop => stop.stopGTFSID === vlinePlatform.stopGTFSID)[0]
+      platform = vnetStopData.platform || '?'
+    }
 
     return {
       trip, estimatedDepartureTime: vnetDeparture.estimatedDepartureTime, platform: vnetDeparture.platform,
