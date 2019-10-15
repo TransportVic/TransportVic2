@@ -13,7 +13,6 @@ database.connect((err) => {
   let liveTimetables = database.getCollection('live timetables')
   liveTimetables.createIndex({
     mode: 1,
-    operator: 1,
     routeName: 1,
     operationDay: 1,
     origin: 1,
@@ -31,7 +30,7 @@ database.connect((err) => {
 
       let mtmSuspensions = disruptions.metro_train.filter(disruption => disruption.disruption_type.toLowerCase().includes('suspended'))
       if (mtmSuspensions.length) handleMTMSuspensions(mtmSuspensions, database)
-      else await liveTimetables.deleteDocuments({})
+      else await liveTimetables.deleteDocuments({ type: "suspension" })
     } catch (e) {
       console.log('Failed to pass health check, running offline')
       isOnline = false

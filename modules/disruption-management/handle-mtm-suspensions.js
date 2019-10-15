@@ -96,7 +96,6 @@ module.exports = async function (suspensions, db) {
       if (firstHalfStops.length) {
         let firstTrip = {
           mode: "metro train",
-          operator: "Metro Trains Melbourne",
           routeName: trip.routeName,
           runID: null,
           operationDay: utils.getYYYYMMDDNow(),

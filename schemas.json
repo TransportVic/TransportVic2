@@ -49,7 +49,6 @@
   },
   "liveTimetable": {
     "mode": "string",
-    "operator": "string",
     "routeName": "string",
     "runID": "string",
     "operationDay": "string",
@@ -61,6 +60,7 @@
       "arrivalTimeMinutes": "number",
       "departureTime": "string",
       "departureTimeMinutes": "number",
+      "estimatedDepartureTime": "Date",
       "platform": "string",
       "stopConditions": "string"
     }],

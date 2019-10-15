@@ -6,6 +6,7 @@ const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 3 })
 const healthCheck = require('../health-check')
 const moment = require('moment')
 const departureUtils = require('../utils/get-train-timetables')
+const getStoppingPattern = require('../utils/get-stopping-pattern')
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
 
@@ -120,8 +121,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
         possibleLines = ['Frankston', 'Werribee', 'Williamstown']
       else if ([5, 8].includes(routeID))
         possibleLines = ['Mernda', 'Hurstbridge']
-      else if ([3, 15].includes(routeID))
-        possibleLines = ['Craigieburn', 'Upfield']
+      else if ([3, 15, 1482].includes(routeID))
+        possibleLines = ['Craigieburn', 'Upfield', 'Showgrounds/Flemington']
       if (routeID == 6)
         possibleLines = possibleLines.concat(['Cranbourne', 'Pakenham'])
 
@@ -134,19 +135,22 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
 
     let trip = cancelled ? [] : await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines, scheduledDepartureTimeMinutes)
 
-    if (trip) {
+    if (trip) { // live timetables
       destination = trip.destination.slice(0, -16)
       runDestination = destination
       if (trip.vehicle == 'Replacement Bus') {
         platform = 'RRB'
         estimatedDepartureTime = null
       }
-    } else {
+    } else { // gtfs timetables
       trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
         scheduledDepartureTimeMinutes, possibleDestinations.map(dest => dest + ' Railway Station'))
     }
-    if (!trip) {
+    if (!trip) { // static dump
       trip = await departureUtils.getStaticDeparture(runID, db)
+    }
+    if (!trip) { // still no match - getStoppingPattern
+      trip = await getStoppingPattern(db, departure.run_id, 'metro train')
     }
 
     let isUpTrip = trip ? trip.direction === 'Up' : runID % 2 === 0
@@ -169,26 +173,6 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
         destination = 'City Loop'
       else if (cityLoopConfig.slice(-1)[0] === 'SSS')
         destination = 'Southern Cross'
-    }
-
-    if (!trip) {
-      return transformedDepartures.push({
-        trip: {
-          routeName,
-          stopTimings: [],
-          destination,
-          isUncertain: true
-        },
-        estimatedDepartureTime,
-        platform,
-        stopData: {},
-        scheduledDepartureTime,
-        actualDepartureTime: estimatedDepartureTime || scheduledDepartureTime,
-        runID,
-        cityLoopConfig: [],
-        destination,
-        vehicleType
-      })
     }
 
     trip.destination = trip.destination.slice(0, -16)

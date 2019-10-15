@@ -69,6 +69,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
       - Would really only work with Ventura services
 
 ## Next up to be added:
+- Refactor all moment.tz to a utils method
 - Knowing that showgrounds trains can form Craigieburn (maybe other northern grp too?) services upon reaching the city, helps reduce "unknown trip syndrome"
 - Added support for MTM "ghost trips", but since there's very few just do a /pattern and load into live DB
 - Reading English and creating a daily timetable update DB collection, can be used to mark services as coaches / cancelled (V/Line!!) as well as just MTM train types
