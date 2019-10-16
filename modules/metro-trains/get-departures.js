@@ -136,7 +136,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     let trip = cancelled ? null : await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines, scheduledDepartureTimeMinutes)
 
     if (trip) { // live timetables
-      destination = trip.destination.slice(0, -16)
+      destination = trip.destination
       runDestination = destination
       if (trip.vehicle == 'Replacement Bus') {
         platform = 'RRB'
@@ -175,14 +175,12 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
         destination = 'Southern Cross'
     }
 
-    trip.destination = trip.destination.slice(0, -16)
-    trip.origin = trip.origin.slice(0, -16)
     let forming = null
 
     if (cityLoopStations.includes(stationName) && destination !== trip.destination) {
       forming = await departureUtils.getStaticDeparture(runID, db)
       if (forming)
-        destination = forming.destination.slice(0, -16)
+        destination = forming.destination
     }
 
     let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime

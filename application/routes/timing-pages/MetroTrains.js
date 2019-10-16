@@ -17,7 +17,7 @@ router.get('/:stationName', async (req, res) => {
   let departures = await getDepartures(station, res.db)
 
   departures = departures.map(departure => {
-    const timeDifference = moment.utc((departure.estimatedDepartureTime || departure.scheduledDepartureTime).diff(utils.now()))
+    const timeDifference = moment.utc(departure.actualDepartureTime.diff(utils.now()))
 
     if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
     else {
@@ -42,8 +42,9 @@ router.get('/:stationName', async (req, res) => {
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
     let {trip} = departure
+    let destination = departure.runDestination || departure.trip.destination
     departure.tripURL = `${utils.encodeName(trip.origin)}/${trip.departureTime}/`
-      + `${utils.encodeName(departure.runDestination)}/${trip.destinationArrivalTime}/`
+      + `${utils.encodeName(destination)}/${trip.destinationArrivalTime}/`
       + utils.getYYYYMMDDNow()
 
     return departure

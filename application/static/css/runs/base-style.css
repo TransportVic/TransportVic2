@@ -1,0 +1,173 @@
+div.infoRow span {
+  font-size: calc(2vw + 2vh);
+  margin-top: calc(-0.2vw - 0.2vh);
+}
+
+div.infoRow {
+  width: 100vw;
+  height: calc(4vh + 4vw);
+  background-color: #0f0f0f;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+div.infoRow > span {
+  margin-left: calc(1vw + 1vh);
+}
+
+div.vehicle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  width: calc(6vw + 6vh);
+  margin-right: calc(1vw + 1vh);
+}
+
+div.vehicle img {
+  width: calc(3vw + 3vh);
+}
+
+div.timingRow {
+  background-color: #2a2a2a;
+
+  display: flex;
+  height: calc(5vw + 5vh);
+}
+
+div.timingRow:nth-child(even) {
+  background-color: #202020;
+}
+
+a.departureInfo {
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+
+  width: 100%;
+}
+
+a.departureInfo span {
+  margin-left: calc(1vw + 1vh);
+}
+
+div.timingRow a.departureInfo span:nth-child(1) {
+  font-size: calc(1.6vw + 1.6vh);
+  line-height: calc(1.6vw + 1.6vh);
+
+  color: #c5c5c5;
+}
+
+div.timingRow a.departureInfo span:nth-child(2) {
+  font-size: calc(0.7vw + 0.7vh);
+  margin-top: calc(0.1vw + 0.2vh);
+
+  color: #8f8f8f;
+}
+
+div.timing {
+  height: calc(5vw + 5vh);
+  width: calc(5vw + 5vh);
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: calc(1.05vw + 1.05vh);
+  color: #101010;
+}
+
+div.timing span {
+  width: calc(5vw + 5vh);
+  text-align: center;
+}
+
+
+
+
+div.timingRow:nth-child(odd) div.timing.early:nth-child(odd) {
+  background-color: #6fd6e7;
+}
+
+div.timingRow:nth-child(odd) div.timing.early:nth-child(even) {
+  background-color: #64c0cf;
+}
+
+div.timingRow:nth-child(odd) div.timing.on-time:nth-child(odd) {
+  background-color: #60bd29;
+}
+
+div.timingRow:nth-child(odd) div.timing.on-time:nth-child(even) {
+  background-color: #58ad25;
+}
+
+div.timingRow:nth-child(odd) div.timing.late:nth-child(odd) {
+  background-color: #c93e29;
+}
+
+div.timingRow:nth-child(odd) div.timing.late:nth-child(even) {
+  background-color: #bd3825;
+}
+
+div.timingRow:nth-child(odd) div.timing.unknown:nth-child(odd) {
+  background-color: #9c9c9c;
+}
+
+div.timingRow:nth-child(odd) div.timing.unknown:nth-child(even) {
+  background-color: #a8a8a8;
+}
+
+div.timingRow:nth-child(odd) div.timing.uncertain:nth-child(odd) {
+  background-color: #e87529;
+}
+
+div.timingRow:nth-child(odd) div.timing.uncertain:nth-child(even) {
+  background-color: #bf682d;
+}
+
+
+
+div.timingRow:nth-child(even) div.timing.early:nth-child(even) {
+  background-color: #6fd6e7;
+}
+
+div.timingRow:nth-child(even) div.timing.early:nth-child(odd) {
+  background-color: #64c0cf;
+}
+
+div.timingRow:nth-child(even) div.timing.on-time:nth-child(even) {
+  background-color: #60bd29;
+}
+
+div.timingRow:nth-child(even) div.timing.on-time:nth-child(odd) {
+  background-color: #58ad25;
+}
+
+div.timingRow:nth-child(even) div.timing.late:nth-child(even) {
+  background-color: #c93e29;
+}
+
+div.timingRow:nth-child(even) div.timing.late:nth-child(odd) {
+  background-color: #bd3825;
+}
+
+div.timingRow:nth-child(even) div.timing.unknown:nth-child(even) {
+  background-color: #9c9c9c;
+}
+
+div.timingRow:nth-child(even) div.timing.unknown:nth-child(odd) {
+  background-color: #a8a8a8;
+}
+
+div.timingRow:nth-child(even) div.timing.uncertain:nth-child(even) {
+  background-color: #e87529;
+}
+
+div.timingRow:nth-child(even) div.timing.uncertain:nth-child(odd) {
+  background-color: #bf682d;
+}

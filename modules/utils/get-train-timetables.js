@@ -29,6 +29,10 @@ async function getLiveDeparture(station, db, mode, possibleLines, scheduledDepar
       trip = timetables.sort((a, b) => b.stopTimings[0].departureTimeMinutes - a.stopTimings[0].departureTimeMinutes).slice(0, 1)
   }
 
+  if (trip) {
+    trip.destination = trip.destination.slice(0, -16)
+    trip.origin = trip.origin.slice(0, -16)
+  }
   return trip
 }
 
@@ -62,14 +66,25 @@ async function getScheduledDeparture(station, db, mode, possibleLines, scheduled
 
   let trip = timetables.sort((a, b) => utils.time24ToMinAftMidnight(b.departureTime) - utils.time24ToMinAftMidnight(a.departureTime))[0]
 
+  if (trip) {
+    trip.destination = trip.destination.slice(0, -16)
+    trip.origin = trip.origin.slice(0, -16)
+  }
   return trip
 }
 
 async function getStaticDeparture(runID, db) {
-  return await db.getCollection('timetables').findDocument({
+  let trip = await db.getCollection('timetables').findDocument({
     runID,
     operationDays: utils.getPTDayName(utils.now())
   })
+
+  if (trip) {
+    trip.destination = trip.destination.slice(0, -16)
+    trip.origin = trip.origin.slice(0, -16)
+  }
+
+  return trip
 }
 
 async function getScheduledDepartures(station, db, mode, timeout) {
@@ -97,6 +112,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
       let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
 
       departure.destination = departure.destination.slice(0, -16)
+      departure.origin = departure.origin.slice(0, -16)
 
       return {
         trip: departure,

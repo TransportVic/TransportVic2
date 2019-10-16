@@ -76,7 +76,7 @@ module.exports = async function (db, ptvRunID, mode, time) {
     runID: vehicleDescriptor.id,
     operationDay: utils.getYYYYMMDDNow(),
     vehicle: vehicleDescriptor.description,
-    stopTimings,
+    stopTimings: stopTimings.sort((a, b) => (a.arrivalTimeMinutes || a.departureTimeMinutes) - (b.arrivalTimeMinutes || b.departureTimeMinutes)),
     destination: stopTimings[stopTimings.length - 1].stopName,
     destinationArrivalTime: stopTimings[stopTimings.length - 1].arrivalTime,
     departureTime: stopTimings[0].departureTime,
@@ -93,5 +93,9 @@ module.exports = async function (db, ptvRunID, mode, time) {
   await liveTimetables.replaceDocument(key, timetable, {
     upsert: true
   })
+
+  timetable.destination = timetable.destination.slice(0, -16)
+  timetable.origin = timetable.origin.slice(0, -16)
+
   return timetable
 }

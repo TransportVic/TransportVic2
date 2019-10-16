@@ -28,14 +28,21 @@ async function pickBestTrip(data, db) {
   }
 
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
-  if (liveTrip) return liveTrip
+  if (liveTrip) {
+    liveTrip.destination = liveTrip.destination.slice(0, -16)
+    liveTrip.origin = liveTrip.origin.slice(0, -16)
+    return liveTrip
+  }
   let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
 
   query.tripStartHour = { $lte: operationHour }
   query.tripEndHour = { $gte: operationHour }
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
 
-  if (minutesToTripStart > 120 || minutesToTripStart < -80) { // later than 60min
+  if (gtfsTrip && minutesToTripStart > 120 || minutesToTripStart < -80) { // later than 60min
+    gtfsTrip.destination = gtfsTrip.destination.slice(0, -16)
+    gtfsTrip.origin = gtfsTrip.origin.slice(0, -16)
+
     return gtfsTrip
   }
 
@@ -61,8 +68,36 @@ async function pickBestTrip(data, db) {
 
 router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
   let trip = await pickBestTrip(req.params, res.db)
+  trip.stopTimings = trip.stopTimings.map(stop => {
+    stop.prettyTimeToArrival = ''
 
-  res.json(trip)
+    stop.headwayDevianceClass = 'unknown'
+    if (stop.estimatedDepartureTime) {
+      let scheduledDepartureTime =
+        moment.tz(`${req.params.operationDays} ${stop.departureTime || stop.arrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+      let headwayDeviance = scheduledDepartureTime.diff(stop.estimatedDepartureTime, 'minutes')
+
+      // trains cannot be early
+      let lateThreshold = 5
+      if (headwayDeviance <= -lateThreshold) { // <= 5min counts as late
+        stop.headwayDevianceClass = 'late'
+      } else {
+        stop.headwayDevianceClass = 'on-time'
+      }
+
+      const timeDifference = moment.utc(moment(stop.estimatedDepartureTime).diff(utils.now()))
+
+      if (+timeDifference < -30000) return stop
+      if (+timeDifference <= 60000) stop.prettyTimeToArrival = 'Now'
+      else {
+        stop.prettyTimeToArrival = ''
+        if (timeDifference.get('hours')) stop.prettyTimeToArrival += timeDifference.get('hours') + ' h '
+        if (timeDifference.get('minutes')) stop.prettyTimeToArrival += timeDifference.get('minutes') + ' min'
+      }
+    }
+    return stop
+  })
+  res.render('runs/metro', {trip})
 })
 
 module.exports = router
