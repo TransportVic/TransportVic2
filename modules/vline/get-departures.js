@@ -10,6 +10,7 @@ const cheerio = require('cheerio')
 const departureUtils = require('../utils/get-train-timetables')
 const getCoachReplacements = require('./get-coach-replacement-trips')
 const terminiToLines = require('../../load-gtfs/vline-trains/termini-to-lines')
+const getStoppingPattern = require('../utils/get-vline-stopping-pattern')
 
 async function getStationFromVNETName(vnetStationName, db) {
   const station = await db.getCollection('stops').findDocument({
@@ -80,62 +81,80 @@ async function getDeparturesFromVNET(station, db) {
   const vlinePlatform = station.bays.filter(bay => bay.mode === 'regional train')[0]
   const minutesPastMidnight = utils.getPTMinutesPastMidnight(now)
 
+  let liveTimetablesLoaded = 0
+
   let mergedDepartures = (await async.map(vnetDepartures, async vnetDeparture => {
     let vnetTrip = await departureUtils.getStaticDeparture(vnetDeparture.runID, db)
 
     let departureHour = vnetDeparture.originDepartureTime.get('hours')
     if (departureHour < 3) departureHour += 24 // 3am PT day
 
-    let trip = await gtfsTimetables.findDocument({
-      origin: vnetDeparture.originVLinePlatform.fullStopName,
-      destination: vnetDeparture.destinationVLinePlatform.fullStopName,
-      departureTime: utils.formatPTHHMM(vnetDeparture.originDepartureTime),
-      destinationArrivalTime: utils.formatPTHHMM(vnetDeparture.destinationArrivalTime),
+    let trip = await db.getCollection('live timetables').findDocument({
       operationDays: utils.getYYYYMMDDNow(),
-      mode: "regional train",
-      tripStartHour: {
-        $lte: departureHour
-      },
-      tripEndHour: {
-        $gte: departureHour
-      }
+      runID: vnetDeparture.runID,
+      mode: 'regional train'
     })
-    if (!trip) { // service disruption unaccounted for? like ptv not loading in changes into gtfs data :/
-      trip = vnetTrip
-      function transformDeparture() {
-        let destination = vnetDeparture.destinationVLinePlatform.fullStopName.slice(0, -16)
-        if (!vnetDeparture.estimatedDepartureTime) return null
-        return {
-          trip: {
-            shortRouteName: terminiToLines[destination.slice(0, -16)] || "?",
-            stopTimings: [],
-            destination,
-            isUncertain: true,
-            direction: vnetDeparture.direction
-          },
-          estimatedDepartureTime: vnetDeparture.estimatedDepartureTime,
-          platform: vnetDeparture.platform,
-          stopData: {},
-          scheduledDepartureTime: vnetDeparture.estimatedDepartureTime,
-          actualDepartureTime: vnetDeparture.estimatedDepartureTime,
-          departureTimeMinutes: utils.getPTMinutesPastMidnight(vnetDeparture.estimatedDepartureTime),
-          runID: vnetDeparture.runID,
-          unknownScheduledDepartureTime: true
+
+    if (!trip)
+      trip = await gtfsTimetables.findDocument({
+        origin: vnetDeparture.originVLinePlatform.fullStopName,
+        destination: vnetDeparture.destinationVLinePlatform.fullStopName,
+        departureTime: utils.formatPTHHMM(vnetDeparture.originDepartureTime),
+        destinationArrivalTime: utils.formatPTHHMM(vnetDeparture.destinationArrivalTime),
+        operationDays: utils.getYYYYMMDDNow(),
+        mode: 'regional train',
+        tripStartHour: {
+          $lte: departureHour
+        },
+        tripEndHour: {
+          $gte: departureHour
         }
-      }
-      if (!trip) return transformDeparture()
+      })
 
-      let tripStops = trip.stopTimings.map(stop => stop.stopName)
-
-      let startingIndex = tripStops.indexOf(vnetDeparture.originVLinePlatform.fullStopName)
-      let endingIndex = tripStops.indexOf(vnetDeparture.destinationVLinePlatform.fullStopName)
-      if (startingIndex == -1) return transformDeparture()
-      trip.stopTimings = trip.stopTimings.slice(startingIndex, endingIndex + 1)
-      trip.origin = trip.stopTimings[0].stopName
-      trip.destination = trip.stopTimings.slice(-1)[0].stopName
-      trip.departureTime = trip.stopTimings[0].departureTimeMinutes
-      trip.isUncertain = true
+    if (!trip) {
+      let originVNETName = vnetDeparture.originVLinePlatform.vnetStationName
+      let destinationVNETName = vnetDeparture.destinationVLinePlatform.vnetStationName
+      trip = await getStoppingPattern(db, originVNETName, destinationVNETName,
+        vnetDeparture.originDepartureTime.format().slice(0, 19), vnetDeparture.runID)
     }
+
+    // if (!trip) { // service disruption unaccounted for? like ptv not loading in changes into gtfs data :/
+    //   trip = vnetTrip
+    //   function transformDeparture() {
+    //     let destination = vnetDeparture.destinationVLinePlatform.fullStopName.slice(0, -16)
+    //     if (!vnetDeparture.estimatedDepartureTime) return null
+    //     return {
+    //       trip: {
+    //         shortRouteName: terminiToLines[destination.slice(0, -16)] || "?",
+    //         stopTimings: [],
+    //         destination,
+    //         isUncertain: true,
+    //         direction: vnetDeparture.direction
+    //       },
+    //       estimatedDepartureTime: vnetDeparture.estimatedDepartureTime,
+    //       platform: vnetDeparture.platform,
+    //       stopData: {},
+    //       scheduledDepartureTime: vnetDeparture.estimatedDepartureTime,
+    //       actualDepartureTime: vnetDeparture.estimatedDepartureTime,
+    //       departureTimeMinutes: utils.getPTMinutesPastMidnight(vnetDeparture.estimatedDepartureTime),
+    //       runID: vnetDeparture.runID,
+    //       unknownScheduledDepartureTime: true
+    //     }
+    //   }
+    //   if (!trip) return transformDeparture()
+    //
+    //   let tripStops = trip.stopTimings.map(stop => stop.stopName)
+    //
+    //   let startingIndex = tripStops.indexOf(vnetDeparture.originVLinePlatform.fullStopName)
+    //   let endingIndex = tripStops.indexOf(vnetDeparture.destinationVLinePlatform.fullStopName)
+    //   if (startingIndex == -1) return transformDeparture()
+    //   trip.stopTimings = trip.stopTimings.slice(startingIndex, endingIndex + 1)
+    //   trip.origin = trip.stopTimings[0].stopName
+    //   trip.destination = trip.stopTimings.slice(-1)[0].stopName
+    //   trip.departureTime = trip.stopTimings[0].departureTimeMinutes
+    //   trip.isUncertain = true
+    // }
+
 
     const stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === vlinePlatform.stopGTFSID)[0]
 

@@ -5,10 +5,10 @@ $.ready(() => {
     $('#departures').innerHTML = htmlData
     Array.from($('#departures').querySelectorAll('.departure')).forEach(departureDiv => {
       const stopsAt = departureDiv.querySelector('[name=stops-at]').value.toLowerCase().split(',')
-      const platform = departureDiv.querySelector('[name=platform]').value
+      const platform = departureDiv.querySelector('[name=platform]').value.toLowerCase()
       const line = departureDiv.querySelector('[name=line]').value.toLowerCase()
 
-      if (!(stopsAt.filter(stop => stop.includes(query)).length || query === platform || line.includes(query))) $('#departures').removeChild(departureDiv)
+      if (!(stopsAt.filter(stop => stop.includes(query)).length || platform.startsWith(query) || line.includes(query))) $('#departures').removeChild(departureDiv)
     })
   }
 

@@ -5,7 +5,7 @@ const urls = require('../../urls.json')
 const cheerio = require('cheerio')
 const request = require('request-promise')
 
-const terminiToLines = require('../load-gtfs/vline-trains/termini-to-lines')
+const terminiToLines = require('../../load-gtfs/vline-trains/termini-to-lines')
 
 let modes = {
   'metro train': 0
@@ -36,20 +36,23 @@ module.exports = async function (db, originVNETName, destinationVNETName, origin
     dbStops[locationID] = dbStop
   })
 
-  let stopTimings = departures.map(departure => {
+  let stopTimings = stops.map((departure, i) => {
     let arrivalTime = $('ArrivalTime', departure).text()
     let departureTime = $('DepartureTime', departure).text()
     if (arrivalTime === '0001-01-01T00:00:00') arrivalTime = null
     else arrivalTime = moment.tz(arrivalTime, 'Australia/Melbourne')
 
     if (departureTime === '0001-01-01T00:00:00') departureTime = null
-    else arrivalTime = moment.tz(departureTime, 'Australia/Melbourne')
+    else departureTime = moment.tz(departureTime, 'Australia/Melbourne')
 
-    let locationID = $('LocationID', stop).text()
+    let locationID = $('LocationID', departure).text()
     let stopData = dbStops[locationID]
-    let stopBay = stopData.filter(bay => bay.mode === 'regional train')[0]
+    let stopBay = stopData.bays.filter(bay => bay.mode === 'regional train')[0]
 
-    let departureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
+    let departureTimeMinutes = null
+
+    if (departureTime)
+      departureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime)
 
     let stopTiming = {
       stopName: stopBay.fullStopName,
@@ -63,19 +66,22 @@ module.exports = async function (db, originVNETName, destinationVNETName, origin
       stopConditions: ""
     }
 
-    if (arrivalTime) {
-      stopTiming.arrivalTime = arrivalTime.format('HH:mm')
-      stopTiming.arrivalTimeMinutes = utils.getPTMinutesPastMidnight(arrivalTime)
-    }
     if (departureTime) {
-      stopTiming.departureTime = departureTime.format('HH:mm')
+      stopTiming.departureTime = utils.formatPTHHMM(departureTime)
       stopTiming.departureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime)
+    }
+    if (arrivalTime) {
+      stopTiming.arrivalTime = utils.formatPTHHMM(arrivalTime)
+      stopTiming.arrivalTimeMinutes = utils.getPTMinutesPastMidnight(arrivalTime)
+    } else {
+      stopTiming.arrivalTime = stopTiming.departureTime
+      stopTiming.arrivalTimeMinutes = stopTiming.departureTimeMinutes
     }
 
     if (i == 0) {
       stopTiming.arrivalTime = null
       stopTiming.arrivalTimeMinutes = null
-    } else if (i == departures.length - 1) {
+    } else if (i == stops.length - 1) {
       stopTiming.departureTime = null
       stopTiming.departureTimeMinutes = null
     }
@@ -89,7 +95,8 @@ module.exports = async function (db, originVNETName, destinationVNETName, origin
   let routeName = terminiToLines[originDest] || terminiToLines[origin.slice(0, -16)] || terminiToLines[dest.slice(0, -16)]
 
   let timetable = {
-    mode: 'regional train', routeName,
+    mode: 'regional train',
+    routeName,
     runID,
     operationDay: utils.getYYYYMMDDNow(),
     vehicle: null,
@@ -102,7 +109,8 @@ module.exports = async function (db, originVNETName, destinationVNETName, origin
   }
 
   let key = {
-    mode, routeName: timetable.routeName,
+    mode: 'regional train',
+    routeName: timetable.routeName,
     operationDay: timetable.operationDay,
     runID: timetable.runID
   }
