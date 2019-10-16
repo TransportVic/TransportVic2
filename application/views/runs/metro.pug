@@ -25,7 +25,8 @@ block content
       div.timingRow
         a.departureInfo
           span=stop.stopName
-          span=`Platform ${stop.platform}`
+          if stop.platform
+            span=`Platform ${stop.platform}`
         div(class=`timing ${stop.headwayDevianceClass}`)
           span=stop.prettyTimeToArrival
           span=stop.departureTime || stop.arrivalTime
