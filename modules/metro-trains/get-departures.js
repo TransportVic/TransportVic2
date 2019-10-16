@@ -176,6 +176,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     }
 
     trip.destination = trip.destination.slice(0, -16)
+    trip.origin = trip.origin.slice(0, -16)
     let forming = null
 
     if (cityLoopStations.includes(stationName) && destination !== trip.destination) {
@@ -188,7 +189,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     transformedDepartures.push({
       trip, scheduledDepartureTime, estimatedDepartureTime, actualDepartureTime, platform,
       cancelled, cityLoopConfig,
-      destination, runID, forming, vehicleType
+      destination, runID, forming, vehicleType, runDestination
     })
   })
 

@@ -41,6 +41,11 @@ router.get('/:stationName', async (req, res) => {
 
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
+    let {trip} = departure
+    departure.tripURL = `${utils.encodeName(trip.origin)}/${trip.departureTime}/`
+      + `${utils.encodeName(departure.runDestination)}/${trip.destinationArrivalTime}/`
+      + utils.getYYYYMMDDNow()
+
     return departure
   })
 

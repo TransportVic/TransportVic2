@@ -7,10 +7,15 @@ let modes = {
   'metro train': 0
 }
 
-module.exports = async function (db, ptvRunID, mode) {
+module.exports = async function (db, ptvRunID, mode, time) {
   let stopsCollection = db.getCollection('stops')
   let liveTimetables = db.getCollection('live timetables')
-  let {departures, stops, runs, routes} = await ptvAPI(`/v3/pattern/run/${ptvRunID}/route_type/${modes[mode]}?expand=stop&expand=run&expand=route`)
+
+  let url = `/v3/pattern/run/${ptvRunID}/route_type/${modes[mode]}?expand=stop&expand=run&expand=route`
+  if (time)
+    url += `&date_utc=${time}`
+
+  let {departures, stops, runs, routes} = await ptvAPI(url)
   let run = Object.values(runs)[0]
 
   departures = departures.map(departure => {

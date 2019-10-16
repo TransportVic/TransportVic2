@@ -82,6 +82,6 @@ append content
             if departure.vehicleType
               span=departure.vehicleType
         div.timings
-          a(class='timing ' + departure.headwayDevianceClass)
+          a(class='timing ' + departure.headwayDevianceClass href=`/metro/run/${departure.tripURL}/`)
             span=departure.prettyTimeToArrival
             span=departure.scheduledDepartureTime.format('HH:mm')

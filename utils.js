@@ -108,7 +108,12 @@ module.exports = {
     if (hours < 3) hours += 24
     return `${module.exports.pad(hours, 2)}:${module.exports.pad(minutes, 2)}`
   },
-  getYYYYMMDD: time => time.format('YYYYMMDD'),
+  getYYYYMMDD: time => {
+    let cloned = time.clone()
+    if (cloned.get('hours') < 3) // 3am PT day :((((
+      cloned.add(-1, 'days')
+    return cloned.format('YYYYMMDD')
+  },
   getYYYYMMDDNow: () => module.exports.getYYYYMMDD(module.exports.now()),
   now: () => moment.tz('Australia/Melbourne')
 }

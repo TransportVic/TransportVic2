@@ -99,6 +99,8 @@ module.exports = class MainServer {
       'timing-pages/MetroTrains': '/metro/timings',
       'timing-pages/RegionalCoach': '/coach/timings',
 
+      'run-pages/MetroTrains': '/metro/run',
+
       GeoJSONVisualiser: '/geojson-visualise',
 
       'mockups/FlindersStreetEscalator': '/mockups/fss-escalator',

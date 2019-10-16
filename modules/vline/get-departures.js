@@ -160,6 +160,7 @@ async function getDeparturesFromVNET(station, db) {
 
     let scheduledDepartureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, now)
     trip.destination = trip.destination.slice(0, -16)
+    trip.origin = trip.origin.slice(0, -16)
 
     let platform = vnetDeparture.platform
     if (!platform && vnetTrip) {
