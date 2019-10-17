@@ -83,6 +83,8 @@ async function getDeparturesFromVNET(station, db) {
 
   let liveTimetablesLoaded = 0
 
+  let journeyCache = {}
+
   let mergedDepartures = (await async.map(vnetDepartures, async vnetDeparture => {
     let vnetTrip = await departureUtils.getStaticDeparture(vnetDeparture.runID, db)
 
@@ -112,10 +114,16 @@ async function getDeparturesFromVNET(station, db) {
       })
 
     if (!trip) {
-      let originVNETName = vnetDeparture.originVLinePlatform.vnetStationName
-      let destinationVNETName = vnetDeparture.destinationVLinePlatform.vnetStationName
-      trip = await getStoppingPattern(db, originVNETName, destinationVNETName,
-        vnetDeparture.originDepartureTime.format().slice(0, 19), vnetDeparture.runID)
+      if (vnetTrip) trip = vnetTrip
+      else {
+        let originVNETName = vnetDeparture.originVLinePlatform.vnetStationName
+        let destinationVNETName = vnetDeparture.destinationVLinePlatform.vnetStationName
+        trip = await getStoppingPattern(db, originVNETName, destinationVNETName,
+          vnetDeparture.originDepartureTime, vnetDeparture.runID, journeyCache)
+      }
+    } else {
+      trip.destination = trip.destination.slice(0, -16)
+      trip.origin = trip.origin.slice(0, -16)
     }
 
     // if (!trip) { // service disruption unaccounted for? like ptv not loading in changes into gtfs data :/
@@ -159,8 +167,6 @@ async function getDeparturesFromVNET(station, db) {
     const stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === vlinePlatform.stopGTFSID)[0]
 
     let scheduledDepartureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, now)
-    trip.destination = trip.destination.slice(0, -16)
-    trip.origin = trip.origin.slice(0, -16)
 
     let platform = vnetDeparture.platform
     if (!platform && vnetTrip) {
