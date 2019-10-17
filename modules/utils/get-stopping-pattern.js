@@ -28,10 +28,14 @@ module.exports = async function (db, ptvRunID, mode, time) {
 
   await async.forEach(Object.values(stops), async stop => {
     let stopName = stop.stop_name.trim()
-    if (mode === 'metro train')
-      stopName += ' Railway Station'
+    if (mode === 'metro train') {
+      if (stopName === 'Jolimont-MCG')
+        stopName = 'Jolimont'
+
+    stopName += ' Railway Station'
+    }
     let dbStop = await stopsCollection.findDocument({
-      stopName: stop.stop_name.trim(),
+      stopName,
       'bays.mode': mode
     })
     dbStops[stop.stop_id] = dbStop
