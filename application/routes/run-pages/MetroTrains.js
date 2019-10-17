@@ -38,13 +38,34 @@ async function pickBestTrip(data, db) {
     liveTrip.origin = liveTrip.origin.slice(0, -16)
     return liveTrip
   }
-  query.tripStartHour = { $lte: operationHour }
-  query.tripEndHour = { $gte: operationHour }
-  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
 
-  if (gtfsTrip && !useLive) {
+  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument({
+    origin: originStop.stopName,
+    departureTime: data.departureTime,
+    destination: destinationStop.stopName,
+    destinationArrivalTime: data.destinationArrivalTime,
+    tripStartHour: { $lte: operationHour },
+    tripEndHour: { $gte: operationHour }
+  })
+
+  let isStonyPoint = data.origin === 'stony-point' || data.destination === 'stony-point'
+
+  if (gtfsTrip && (!useLive || isStonyPoint)) {
     gtfsTrip.destination = gtfsTrip.destination.slice(0, -16)
     gtfsTrip.origin = gtfsTrip.origin.slice(0, -16)
+
+    if (isStonyPoint) {
+      let staticTrip = await db.getCollection('timetables').findDocument(query)
+      gtfsTrip.stopTimings = gtfsTrip.stopTimings.map(stop => {
+        if (stop.stopName === 'Frankston Railway Station')
+          stop.platform = '3'
+        else
+          stop.platform = '1'
+        return stop
+      })
+      gtfsTrip.runID = staticTrip.runID
+      gtfsTrip.vehicle = '2 Sprinter' // TODO: some peak services split into 1x sprinters
+    }
 
     return gtfsTrip
   }
