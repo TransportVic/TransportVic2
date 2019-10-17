@@ -10,6 +10,8 @@ async function pickBestTrip(data, db) {
   let tripDay = moment(data.operationDays, 'YYYYMMDD')
   let tripStartTime = moment.tz(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
+  let tripEndTime = moment.tz(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
   let operationHour = Math.floor(tripStartMinutes / 60)
 
   let originStop = await db.getCollection('stops').findDocument({
@@ -19,6 +21,7 @@ async function pickBestTrip(data, db) {
     codedName: data.destination + '-railway-station'
   })
   if (!originStop || !destinationStop) return null
+  let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
 
   let query = {
     origin: originStop.stopName,
@@ -27,19 +30,19 @@ async function pickBestTrip(data, db) {
     destinationArrivalTime: data.destinationArrivalTime
   }
 
+  let useLive = tripEndMinutes > -5 && minutesToTripStart < 120
+
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
-  if (liveTrip) {
+  if (liveTrip && useLive) {
     liveTrip.destination = liveTrip.destination.slice(0, -16)
     liveTrip.origin = liveTrip.origin.slice(0, -16)
     return liveTrip
   }
-  let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
-
   query.tripStartHour = { $lte: operationHour }
   query.tripEndHour = { $gte: operationHour }
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
 
-  if (gtfsTrip && minutesToTripStart > 120 || minutesToTripStart < -80) { // later than 60min
+  if (gtfsTrip && !useLive) {
     gtfsTrip.destination = gtfsTrip.destination.slice(0, -16)
     gtfsTrip.origin = gtfsTrip.origin.slice(0, -16)
 

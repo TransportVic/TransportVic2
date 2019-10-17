@@ -77,10 +77,6 @@ append content
               let isUpTrip = (trip || {}).direction === 'Up' || trip.runID % 2 === 0
             if cityLoopStationNames.includes(station.stopName) || isUpTrip
               span=departure.cityLoopConfig.join(', ')
-            else
-              span
-            if departure.vehicleType
-              span=departure.vehicleType
         div.timings
           a(class='timing ' + departure.headwayDevianceClass href=`/metro/run/${departure.tripURL}/`)
             span=departure.prettyTimeToArrival
