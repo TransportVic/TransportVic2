@@ -70,9 +70,22 @@ async function pickBestTrip(data, db) {
     return gtfsTrip
   }
 
-  let metroBay = originStop.bays.filter(bay => bay.mode === 'metro train')[0]
-  let isoDeparture = tripStartTime.toISOString()
-  let {departures, runs} = await ptvAPI(`/v3/departures/route_type/0/stop/${metroBay.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-1, 'minutes').toISOString()}&max_results=3&expand=run&expand=stop`)
+  let originStopID = originStop.bays.filter(bay => bay.mode === 'metro train')[0].stopGTFSID
+  let originTime = tripStartTime
+  if (gtfsTrip) {
+    let stops = gtfsTrip.stopTimings.map(stop => stop.stopName)
+    let flindersIndex = stops.indexOf('Flinders Street Railway Station')
+
+    if (flindersIndex && gtfsTrip.direction === 'Down') {
+      let stopAfterFlinders = gtfsTrip.stopTimings[flindersIndex + 1]
+      originStopID = stopAfterFlinders.stopGTFSID
+      originTime = moment.tz(`${data.operationDays} ${stopAfterFlinders.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+    }
+  }
+// get first stop after flinders, or if only 1 stop (nme  shorts) then flinders itself
+// should fix the dumb issue of trips sometimes showing as forming and sometimes as current with crazyburn
+  let isoDeparture = originTime.toISOString()
+  let {departures, runs} = await ptvAPI(`/v3/departures/route_type/0/stop/${originStopID}?gtfs=true&date_utc=${originTime.clone().add(-3, 'minutes').toISOString()}&max_results=3&expand=run&expand=stop`)
 
   let departure = departures.filter(departure => {
     let run = runs[departure.run_id]
@@ -92,6 +105,7 @@ async function pickBestTrip(data, db) {
 
 router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
   let trip = await pickBestTrip(req.params, res.db)
+  if (!trip) return res.end('Could not find trip :(')
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.prettyTimeToArrival = ''
 
