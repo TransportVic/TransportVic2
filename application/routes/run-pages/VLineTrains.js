@@ -52,7 +52,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     let scheduledDepartureTime =
       moment.tz(`${req.params.operationDays} ${stop.departureTime || stop.arrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
 
-    const timeDifference = moment.utc(moment(stop.estimatedDepartureTime).diff(utils.now()))
+    const timeDifference = moment.utc(moment(scheduledDepartureTime).diff(utils.now()))
 
     if (+timeDifference < -30000) return stop
     if (+timeDifference <= 60000) stop.prettyTimeToArrival = 'Now'
