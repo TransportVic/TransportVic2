@@ -100,6 +100,7 @@ module.exports = class MainServer {
       'timing-pages/RegionalCoach': '/coach/timings',
 
       'run-pages/MetroTrains': '/metro/run',
+      'run-pages/VLineTrains': '/vline/run',
 
       GeoJSONVisualiser: '/geojson-visualise',
 

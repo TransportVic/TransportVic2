@@ -46,6 +46,10 @@ router.get('/:stationName', async (req, res) => {
       }
     }
 
+    departure.tripURL = `/${departure.isCoachService ? 'regional-coach' : 'vline'}/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
+      + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
+      + utils.getYYYYMMDDNow()
+
     return departure
   })
 

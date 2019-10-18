@@ -48,7 +48,7 @@ append content
               className += 'uncertain'
             else
               className += departure.headwayDevianceClass
-          a(class=className)
+          a(class=className href=departure.tripURL)
             span=departure.prettyTimeToArrival
             if departure.unknownScheduledDepartureTime
               span ??
