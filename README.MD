@@ -36,17 +36,31 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - When requesting stop timing data, the "bays" are filtered by mode, then grouped by originalName
     - If online, the first stopGTFSID is taken from each group, and sent to PTV's server
     - Otherwise, eash stopGTFSID is used and a getScheduledDepartures is called, with the results merged.
+- Shows trip timings for MTM
+  - Includes timetabled train model & relevant icon
+  - Show run ID too
+    - Specially cross references static TT dump for stony point line. Hardcoded as 2x SP for all services, need to camp out and find those operating as 1x SP
+  - Can only account for the 5.27 crazyburn trip if its beyond 2 hours - loads static GTFS timetable which knows the difference
+    - Maybe auto-load all trips seen in a `/departures` load into the Live DB, including run number to help. Then add special code to request stop timings if its a 5.27 towards Craigieburn.
+
+## Next up to be added:
+- V/Line stopping pattern - only show timetabled as magical source doesn't provide est timings for stops along the way, only timetabled arr/dep
+  - reference live db then gtfs as backup
+  - use vnet dump for runID and model too
+- bus timings
+  - same as mtm for impl but without the city loop and short trip stuff
+- route view
 - Icons for the various stopping pattern pages
   - Completed:
     - EDI Comeng (PTV) (Used for both types)
     - X'Traps (PTV)
+    - Siemens (PTV)
     - N Locomotive (Mark 3)
     - Sprinter (Mark 3)
     - Velocity (PTV)
     - Volgren CR228L (PTV/White)
     - Volgren Optimus (PTV/White)
   - To Do:
-    - Siemens (PTV)
     - HCMT (PTV)
     - Optare Solo (PTV/White)
     - Coach, need to find a suitable one for drawing
@@ -68,12 +82,6 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
       - Lookup bus DB, if bodywork is drawn then show it, otherwise just display fleet number
       - Would really only work with Ventura services
   - Searches up stopping pattern for trips not in any DB
-
-## Next up to be added:
-- Unique trip IDs:
-  - `${trip.origin}/${trip.departureTime}/${trip.destination}/${trip.arrivalTime}`
-  - accounts for the 2 5.27 Craigieburn services
-  - Doesn't account for dates - specify separately
 - Refactor all moment.tz to a utils method
 - Knowing that showgrounds trains can form Craigieburn (maybe other northern grp too?) services upon reaching the city, helps reduce "unknown trip syndrome"
 - Reading English and creating a daily timetable update DB collection, can be used to mark services as coaches / cancelled (V/Line!!) as well as just MTM train types
