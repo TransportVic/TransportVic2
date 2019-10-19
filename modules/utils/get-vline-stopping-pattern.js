@@ -7,10 +7,6 @@ const request = require('request-promise')
 
 const terminiToLines = require('../../load-gtfs/vline-trains/termini-to-lines')
 
-let modes = {
-  'metro train': 0
-}
-
 async function getOriginRunID (originVNETName, destinationVNETName, originDepartureTime, journeyCache) {
   let now = utils.now()
   let hasPrevious = (originDepartureTime - now) <= 0

@@ -3,6 +3,8 @@ const utils = require('../../utils')
 const moment = require('moment')
 const getCoachDepartures = require('../regional-coach/get-departures')
 
+const terminiToLines = require('../../load-gtfs/vline-trains/termini-to-lines')
+
 module.exports = async function(station, db) {
   if (!station.stopName.endsWith('Railway Station')) throw Error('Use regional_trains module instead')
   let coachStop = station.bays.filter(bay => bay.mode === 'regional coach')[0]
@@ -56,6 +58,12 @@ module.exports = async function(station, db) {
 
     trip.destination = trip.destination.replace(' Railway Station', '')
     trip.origin = trip.origin.replace(' Railway Station', '')
+
+    let {origin, destination} = trip
+
+    let originDest = `${origin}-${destination}`
+    let routeName = terminiToLines[originDest] || terminiToLines[origin] || terminiToLines[destination]
+    trip.shortRouteName = routeName
 
     return {
       trip, estimatedDepartureTime: null, platform: null,
