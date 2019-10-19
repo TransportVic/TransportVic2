@@ -22,6 +22,7 @@ async function pickBestTrip(data, db) {
   })
   if (!originStop || !destinationStop) return null
   let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
+  let minutesToTripEnd = tripEndTime.diff(utils.now(), 'minutes')
 
   let query = {
     origin: originStop.stopName,
@@ -30,7 +31,7 @@ async function pickBestTrip(data, db) {
     destinationArrivalTime: data.destinationArrivalTime
   }
 
-  let useLive = tripEndMinutes > -5 && minutesToTripStart < 120
+  let useLive = minutesToTripEnd > -5 && minutesToTripStart < 120
 
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
   if (liveTrip && useLive) {
@@ -100,7 +101,10 @@ async function pickBestTrip(data, db) {
   let ptvRunID = departure.run_id
   let departureTime = departure.scheduled_departure_utc
 
-  return getStoppingPattern(db, ptvRunID, 'metro train', departureTime)
+  let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime)
+  trip.origin = trip.origin.slice(0, -16)
+  trip.destination = trip.destination.slice(0, -16)
+  return trip
 }
 
 router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
