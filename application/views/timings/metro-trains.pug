@@ -47,10 +47,13 @@ append content
             stopsAt = stopsAt.concat(departure.forming.stopTimings.map(stop => stop.stopName))
               .filter((e, i, a) => a.indexOf(e) === i)
           }
+          let routeName = departure.trip.routeName
+          if (departure.forming)
+            routeName = departure.forming.routeName
         input(type='hidden' name='stops-at' value=stopsAt.join(','))
         input(type='hidden' name='platform' value=departure.platform || '')
         input(type='hidden' name='run' value=departure.runID)
-        input(type='hidden' name='line' value=departure.trip.routeName)
+        input(type='hidden' name='line' value=routeName)
         if departure.cancelled
           input(type='hidden' name='cancelled')
         a(class=`leftContainer platform ${departure.codedLineName}-line`)
@@ -61,7 +64,7 @@ append content
             span Platform
             span=departure.platform || '?'
         a.departureInfo
-          span=`${departure.trip.routeName} Line towards`
+          span=`${routeName} Line towards`
           span=departure.destination
           
           if departure.platform === 'RRB'

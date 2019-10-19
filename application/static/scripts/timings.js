@@ -8,7 +8,13 @@ $.ready(() => {
       const platform = departureDiv.querySelector('[name=platform]').value.toLowerCase()
       const line = departureDiv.querySelector('[name=line]').value.toLowerCase()
 
-      if (!(stopsAt.filter(stop => stop.includes(query)).length || platform.startsWith(query) || line.includes(query))) $('#departures').removeChild(departureDiv)
+      let platformNumber = (platform.match(/(\d+)/) || ['', ''])[1]
+      let platformEnd = (platform.match(/\d+([A-Za-z])$/) || ['', ''])[1]
+
+      let platformMatches = query === platformNumber ||
+        (platformEnd ? platform.startsWith(query.toLowerCase()) : false)
+
+      if (!(stopsAt.filter(stop => stop.includes(query)).length || platformMatches || line.includes(query))) $('#departures').removeChild(departureDiv)
     })
   }
 
