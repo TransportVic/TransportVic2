@@ -151,6 +151,9 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     }
     if (!trip) { // still no match - getStoppingPattern
       trip = await getStoppingPattern(db, departure.run_id, 'metro train')
+
+      trip.destination = trip.destination.slice(0, -16)
+      trip.origin = trip.origin.slice(0, -16)
     }
 
     let isUpTrip = (trip || {}).direction === 'Up' || runID % 2 === 0

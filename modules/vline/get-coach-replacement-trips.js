@@ -1,37 +1,30 @@
 const async = require('async')
 const utils = require('../../utils')
 const moment = require('moment')
+const getCoachDepartures = require('../regional-coach/get-departures')
 
 module.exports = async function(station, db) {
   if (!station.stopName.endsWith('Railway Station')) throw Error('Use regional_trains module instead')
   let coachStop = station.bays.filter(bay => bay.mode === 'regional coach')[0]
-  if (!coachStop) return []
   let vlinePlatform = station.bays.filter(bay => bay.mode === 'regional train')[0]
 
   if (!coachStop && station.stopName === 'Southern Cross Railway Station') {
     // lookup scs coach terminal
-    coachStop = (await db.getCollection('stops').findDocument({
-      stopName: "Southern Cross Coach Terminal"
-    })).bays.filter(bay => bay.mode === 'regional coach')[0]
+    station = await db.getCollection('stops').findDocument({
+      stopName: "Southern Cross Coach Terminal/Spencer St"
+    })
+    coachStop = station.bays.filter(bay => bay.mode === 'regional coach')[0]
   }
+
+  if (!coachStop && !!vlinePlatform) coachStop = vlinePlatform
+  if (!coachStop) return []
 
   const gtfsTimetables = db.getCollection('gtfs timetables')
   const timetables = db.getCollection('timetables') // bold assumption that coach replacements don't occur with special services
   const minutesPastMidnight = utils.getMinutesPastMidnightNow()
 
-  let gtfsDepartures = await gtfsTimetables.findDocuments({
-    operationDays: utils.getYYYYMMDDNow(),
-    mode: "regional coach",
-    stopTimings: {
-      $elemMatch: {
-        stopGTFSID: coachStop.stopGTFSID,
-        departureTimeMinutes: {
-          $gte: minutesPastMidnight - 1,
-          $lte: minutesPastMidnight + 180
-        }
-      }
-    }
-  }).toArray()
+  let coachDepartures = (await getCoachDepartures(station, db)).map(departure => departure.trip)
+
   let timetabledDepartures = await timetables.findDocuments({
     operationDays: utils.getPTDayName(utils.now()),
     mode: "regional train",
@@ -49,7 +42,7 @@ module.exports = async function(station, db) {
     return departure.departureTime + ' ' + departure.destination
   })
 
-  return gtfsDepartures.filter(departure => {
+  return coachDepartures.filter(departure => {
     let {destination} = departure
     if (departure.destination === 'Southern Cross Coach Terminal/Spencer St')
       destination = 'Southern Cross Railway Station'
@@ -60,6 +53,9 @@ module.exports = async function(station, db) {
     const stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === coachStop.stopGTFSID)[0]
 
     let scheduledDepartureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
+
+    trip.destination = trip.destination.replace(' Railway Station', '')
+    trip.origin = trip.origin.replace(' Railway Station', '')
 
     return {
       trip, estimatedDepartureTime: null, platform: null,

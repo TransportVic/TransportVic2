@@ -26,13 +26,33 @@ function getUniqueGTFSIDs(station, mode, isOnline) {
   return gtfsIDs
 }
 
+async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, destination, mode) {
+  let query = {
+    $or: [{
+      operationDays: utils.getYYYYMMDDNow()
+    }, {
+      operationDay: utils.getYYYYMMDDNow()
+    }],
+    mode,
+    stopTimings: {
+      $elemMatch: {
+        stopGTFSID: stopGTFSID,
+        departureTimeMinutes: scheduledDepartureTimeMinutes
+      }
+    },
+    destination: utils.adjustStopname(destination)
+  }
+
+  return (await db.getCollection('live timetables').findDocument(query))|| (await db.getCollection('gtfs timetables').findDocument(query))
+}
+
 async function getScheduledDepartures(stopGTFSID, db, mode, timeout) {
     const gtfsTimetables = db.getCollection('gtfs timetables')
     const minutesPastMidnight = utils.getMinutesPastMidnightNow()
 
     let departures = await gtfsTimetables.findDocuments({
       operationDays: utils.getYYYYMMDDNow(),
-      mode: mode,
+      mode,
       stopTimings: {
         $elemMatch: {
           stopGTFSID: stopGTFSID,
@@ -61,5 +81,6 @@ async function getScheduledDepartures(stopGTFSID, db, mode, timeout) {
 
 module.exports = {
   getUniqueGTFSIDs,
-  getScheduledDepartures
+  getScheduledDepartures,
+  getDeparture
 }

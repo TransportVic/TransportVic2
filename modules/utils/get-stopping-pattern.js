@@ -4,7 +4,9 @@ const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 
 let modes = {
-  'metro train': 0
+  'metro train': 0,
+  'regional train': 3,
+  'regional coach': 3,
 }
 
 module.exports = async function (db, ptvRunID, mode, time) {
@@ -25,6 +27,8 @@ module.exports = async function (db, ptvRunID, mode, time) {
     return departure
   }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
   let dbStops = {}
+  let checkModes = [mode]
+  if (mode === 'regional coach') checkModes.push('regional train')
 
   await async.forEach(Object.values(stops), async stop => {
     let stopName = stop.stop_name.trim()
@@ -32,12 +36,14 @@ module.exports = async function (db, ptvRunID, mode, time) {
       if (stopName === 'Jolimont-MCG')
         stopName = 'Jolimont'
 
-    stopName += ' Railway Station'
+        stopName += ' Railway Station'
     }
+    stopName = utils.adjustStopname(stopName)
     let dbStop = await stopsCollection.findDocument({
       stopName,
-      'bays.mode': mode
+      'bays.mode': { $in: checkModes }
     })
+
     dbStops[stop.stop_id] = dbStop
   })
 
@@ -47,7 +53,7 @@ module.exports = async function (db, ptvRunID, mode, time) {
       stop_id, platform_number} = departure
 
     let stopBay = dbStops[stop_id].bays
-      .filter(bay => bay.mode === mode)[0] // TODO: properly pick out the stop GTFS ID
+      .filter(bay => checkModes.includes(bay.mode))[0] // TODO: properly pick out the stop GTFS ID
 
     let departureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
 
@@ -100,9 +106,6 @@ module.exports = async function (db, ptvRunID, mode, time) {
   await liveTimetables.replaceDocument(key, timetable, {
     upsert: true
   })
-
-  timetable.destination = timetable.destination.slice(0, -16)
-  timetable.origin = timetable.origin.slice(0, -16)
 
   return timetable
 }
