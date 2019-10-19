@@ -40,13 +40,17 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - Includes timetabled train model & relevant icon
   - Show run ID too
     - Specially cross references static TT dump for stony point line. Hardcoded as 2x SP for all services, need to camp out and find those operating as 1x SP
-  - Can only account for the 5.27 crazyburn trip if its beyond 2 hours - loads static GTFS timetable which knows the difference
+  - Takes the first trip past flinders for down trips - allows it to be clear of the loop forming nonsense and also be able to tell apart the 527 crazyburn service
     - Maybe auto-load all trips seen in a `/departures` load into the Live DB, including run number to help. Then add special code to request stop timings if its a 5.27 towards Craigieburn.
+- Shows trip timings for V/Line
+  - Includes timetabled train model & relevant icon & run ID
+  - No realtime info
+- V/Line coach replacement override
+  - Apparently PTV doesn't bother programming in some replacement operations into the regional coach thing so to the program it thinks nothing exists for those services
+  - Not sure accurate but at least it alerts the user to the disruption in their face, PTV doesn't even outright tell you
+  - Also calls up the PTV API cos they're lazy with releasing GTFS dumps meaning that some replacement ops get missed out :( (looking at you albury)
 
 ## Next up to be added:
-- V/Line stopping pattern - only show timetabled as magical source doesn't provide est timings for stops along the way, only timetabled arr/dep
-  - reference live db then gtfs as backup
-  - use vnet dump for runID and model too
 - bus timings
   - same as mtm for impl but without the city loop and short trip stuff
 - route view
@@ -75,8 +79,6 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
       - W8
       - Z3
   - Thoughts:
-    - MTM is easy enough, look at run.vehicle_descriptor.description: "6 Car Comeng", "6 Car Siemens", "3 Xtrapolis"...
-    - V/Line needs the trip to be known in the NSP - circularised trips will have unknown vehicle consists: "3x 2VL", "N+ 6H"
     - Trams will use a simple lookup from the tram number to get the model
     - Buses is difficult, integration with tracker? (needs a way to link block id to actual trips)
       - Lookup bus DB, if bodywork is drawn then show it, otherwise just display fleet number
