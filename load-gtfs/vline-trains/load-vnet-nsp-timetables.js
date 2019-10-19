@@ -113,6 +113,7 @@ async function loadTrips (csvData, direction) {
     const runID = tripMeta[0]
     if (!runID.startsWith('8')) return
     const operationDays = operatingDaysToArray(tripMeta[1])
+
     const vehicle = tripMeta[2]
     const formedBy = tripMeta[3]
     const forming = tripMeta[5]
@@ -126,7 +127,7 @@ async function loadTrips (csvData, direction) {
       const stationMeta = leftColumns[i++]
       const stopName = stationMeta[0]
       const fieldContents = stationMeta[1]
-      
+
       if (timing === '') return
 
       const stopData = await stops.findDocument({

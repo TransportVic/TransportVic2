@@ -120,7 +120,7 @@ async function getDeparturesFromVNET(station, db) {
         let destinationVNETName = vnetDeparture.destinationVLinePlatform.vnetStationName
         trip = await getStoppingPattern(db, originVNETName, destinationVNETName,
           vnetDeparture.originDepartureTime, vnetDeparture.runID, journeyCache)
-          
+
         trip.destination = trip.destination.slice(0, -16)
         trip.origin = trip.origin.slice(0, -16)
       }
