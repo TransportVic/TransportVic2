@@ -1,5 +1,5 @@
 global.startTime = +new Date()
-require('./setup')
+require('./utils')
 
 const config = require('./config.json')
 const HTTPServer = require('./server/HTTPServer')

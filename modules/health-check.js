@@ -58,6 +58,7 @@ async function processVLineCoachOverrides(db) {
       trip.type = 'vline coach replacement'
       trip.vehicle = 'Coach'
       trip.mode = 'regional coach'
+      trip.routeName += ' Line'
       delete trip._id
 
       return trip

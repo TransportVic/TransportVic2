@@ -258,11 +258,11 @@ div.departure:nth-child(even) .sandringham-line {
 }
 
 .showgrounds-flemington-line {
-  background-color: #8f8f8f;
+  background-color: #ce0058;
 }
 
 div.departure:nth-child(even) .showgrounds-flemington-line {
-  background-color: #636363;
+  background-color: #ba0352;
 }
 
 

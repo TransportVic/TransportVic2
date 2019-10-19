@@ -16,7 +16,7 @@ let northenGroup = [3, 14, 15, 16, 17, 1482] // craigieburn, sunbury, upfield, w
 let cliftonHillGroup = [5, 8] // mernda, hurstbridge
 
 function determineLoopRunning(routeID, runID, destination) {
-  if (routeID === 13) return []
+  if (routeID === 13) return [] // stony point
 
   let upService = !(runID[3] % 2)
   let throughCityLoop = runID[1] > 5 || cityLoopStations.includes(destination.toLowerCase())
@@ -26,29 +26,29 @@ function determineLoopRunning(routeID, runID, destination) {
   let stopsViaFlindersFirst = runID[1] <= 5
 
   cityLoopConfig = []
-
+  // doublecheck showgrounds trains: R466 should be nme sss off but it show as sss fgs loop fss
   // assume up trains
   if (northenGroup.includes(routeID)) {
     if (stopsViaFlindersFirst && !throughCityLoop)
-    cityLoopConfig = ['NME', 'SSS', 'FSS']
+      cityLoopConfig = ['NME', 'SSS', 'FSS']
     else if (stopsViaFlindersFirst && throughCityLoop)
-    cityLoopConfig = ['SSS', 'FSS', 'PAR', 'MCE', 'FGS']
+      cityLoopConfig = ['SSS', 'FSS', 'PAR', 'MCE', 'FGS']
     else if (!stopsViaFlindersFirst && throughCityLoop)
-    cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
+      cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
   } else {
     if (stopsViaFlindersFirst && throughCityLoop) { // flinders then loop
       if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
-      cityLoopConfig = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR']
+        cityLoopConfig = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR']
     } else if (!stopsViaFlindersFirst && throughCityLoop) { // loop then flinders
       if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
-      cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
+        cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
     } else if (stopsViaFlindersFirst && !throughCityLoop) { // direct to flinders
       if (routeID == 6) // frankston
-      cityLoopConfig = ['RMD', 'FSS', 'SSS']
+        cityLoopConfig = ['RMD', 'FSS', 'SSS']
       else if (burnleyGroup.concat(caulfieldGroup).includes(routeID))
-      cityLoopConfig = ['RMD', 'FSS']
+        cityLoopConfig = ['RMD', 'FSS']
       else if (cliftonHillGroup.includes(routeID))
-      cityLoopConfig = ['JLI', 'FSS']
+        cityLoopConfig = ['JLI', 'FSS']
     }
   }
 
@@ -159,14 +159,17 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     let isUpTrip = (trip || {}).direction === 'Up' || runID % 2 === 0
     let cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(routeID, runID, runDestination) : []
 
-    if (isUpTrip && !cityLoopStations.includes(runDestination.toLowerCase()) && !(cityLoopStations.includes(stationName) || runDestination === 'Flinders Street'))
+    if (isUpTrip && !cityLoopStations.includes(runDestination.toLowerCase()) &&
+      !cityLoopStations.includes(stationName) && runDestination !== 'Flinders Street')
       cityLoopConfig = []
 
-    if (cityLoopStations.includes(stationName) && !cityLoopConfig.includes('SSS')) {
+    if (cityLoopStations.includes(stationName) && !cityLoopConfig.includes('FGS')) {
       if (caulfieldGroup.includes(routeID))
         cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
-      // trip is towards at flinders, but ptv api already gave next trip
-      // really only seems to happen with cran/pak/frank lines
+        // trip is towards at flinders, but ptv api already gave next trip
+        // really only seems to happen with cran/pak/frank lines
+      if (northenGroup.includes(routeID) && routeID !== 1482) // all northern group except showgrounds
+        cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
     }
 
     if (isUpTrip && !cityLoopStations.includes(stationName)) {
