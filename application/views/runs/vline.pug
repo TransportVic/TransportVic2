@@ -17,21 +17,24 @@ block content
       -
         let {vehicle} = trip
         let parts
-        if (vehicle.startsWith('N'))
-          parts = [null, 'N']
-        else if (vehicle.includes('VL')) {
-          let count = (vehicle.match(/^(\d)x/) || [0, 1])[1]
-          parts = [count, 'velocity']
-        } else {
-          parts = vehicle.match(/(\d)x ([A-Za-z]+)/).slice(1, 3)
-          if (parts[1] === 'SP') parts[1] = 'sprinter'
+        if (vehicle) {
+          if (vehicle.startsWith('N'))
+            parts = [null, 'N']
+          else if (vehicle.includes('VL')) {
+            let count = (vehicle.match(/^(\d)x/) || [0, 1])[1]
+            parts = [count, 'velocity']
+          } else {
+            parts = vehicle.match(/(\d)x ([A-Za-z]+)/).slice(1, 3)
+            if (parts[1] === 'SP') parts[1] = 'sprinter'
+          }
         }
-      div.vehicle
-        if parts[0]
-          span=parts[0] + 'x'
-        else
-          span
-        img(src=`/static/images/icons/${parts[1].toLowerCase()}.svg`)
+      if vehicle
+        div.vehicle
+          if parts[0]
+            span=parts[0] + 'x'
+          else
+            span
+          img(src=`/static/images/icons/${parts[1].toLowerCase()}.svg`)
   div.timing-list
     for stop in trip.stopTimings
       div.timingRow
