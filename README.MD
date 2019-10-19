@@ -15,11 +15,11 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - RMD/NME/JLI -> FSS -> LOOP show up as Flinders Street services, though the loop config below makes it clear it still pass through the loop on the next trip
   - RMD/NME/JLI -> LOOP -> FSS show as City Loop
 - Showing live V/Line departures when the services are running as timetabled
-- Showing live V/Line departures when the services are NOT running as timetabled in GTFS, but falling back to NSP Run IDs. Currently no support for updated stopping patterns or stop times
-- Showing live V/Line departures when there's completely no timetable match, this plasters warnings all over the departure row
-- Showing live MTM departures when there's completely no timetable match (17:02 FSS ex Westall), also plasters warnings on the departure.
+- Showing live V/Line departures when the services are NOT running as timetabled in GTFS, but falling back to NSP Run IDs.
+- Showing live V/Line departures when there's completely no timetable match, this queries the trip stops and loads it in.
+- Showing live MTM departures when there's completely no timetable match (17:02 FSS ex Westall), also queries trip stops and loads it in.
 - Looks for trips being formed next in City Loop stations, and joins it the the departure stops-at
-- Showing Regional coach timetables. Does not consult PTV API for trips as this will get it confused between actual coach trips and train trips.
+- Showing Regional coach timetables. Consults the PTV API as some replacement trips are randomly excluded from the GTFS dump
 - Offline mode
 - Couple of mockup displays
   - Flinders Street Station escalator displays
@@ -93,15 +93,11 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - Show timings and stops most importantly
   - Show Run ID and vehicle type + icon (yay!)
 - Do up bus timings pages
-- Marking the current completely unknown trips in the live DB, and using more magic to get the stopping patterns for those
 - Homepage
 - Also find out how to ID replacement services
-- Make sure when it says 5:27pm Craigieburn it picks the correct one (maybe using loop heuristics)
 - And of course the departure info
-  - Look into merging bus stops (Eg. Clayton Railway Station can show both Clayton Road and Carnish Road timings)
   - Merge night bus timings too? Though only merge if its at night LOL
-  - Ohno just realised Monash University and Monash University/Wellington Road are different :/
-    - maybe add sub headings to clearly id which stop the timings belong to, though this may be confusing
+  - maybe add sub headings to clearly id which stop the timings belong to, though this may be confusing
 - Then show bus stopping patterns
 - And of course trams
 - Tram Tracker stop IDs
@@ -116,9 +112,8 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - idk if the damn stop info is still messed up
 - Night bus
   - Sorta goes under metropolitan bus but not quite
-- Interstate bus
-  - wtf is this even
-  - do it anyway
+- Interstate
+  - overland apparently
 - SkyBus
   - ah yes overpriced
 - Ferries
@@ -136,6 +131,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - jeez this list is long
 - journey planner if it takes the whole 2020 to impl this
 - myki manager if it's safe
+  - store login info on client side?
 
 ## Me talking about how it works
 Realtime V/Line departures?
