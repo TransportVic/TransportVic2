@@ -1,0 +1,8 @@
+[
+  {
+    "lines": ["Ballarat", "Ararat", "Maryborough"],
+    "services": "all",
+    "from_date": "2019-10-18T13:00:00.000Z",
+    "to_date": "2019-10-24T12:59:00.000Z"
+  }
+]

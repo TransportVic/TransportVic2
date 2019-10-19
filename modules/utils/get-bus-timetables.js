@@ -43,15 +43,19 @@ async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, desti
     destination: utils.adjustStopname(destination)
   }
 
-  return (await db.getCollection('live timetables').findDocument(query))|| (await db.getCollection('gtfs timetables').findDocument(query))
+  return (await db.getCollection('live timetables').findDocument(query)) || (await db.getCollection('gtfs timetables').findDocument(query))
 }
 
-async function getScheduledDepartures(stopGTFSID, db, mode, timeout) {
-    const gtfsTimetables = db.getCollection('gtfs timetables')
+async function getScheduledDepartures(stopGTFSID, db, mode, timeout, useLive) {
+    const timetables = db.getCollection((useLive ? 'live' : 'gtfs') + ' timetables')
     const minutesPastMidnight = utils.getMinutesPastMidnightNow()
 
-    let departures = await gtfsTimetables.findDocuments({
-      operationDays: utils.getYYYYMMDDNow(),
+    let departures = await timetables.findDocuments({
+      $or: [{
+        operationDays: utils.getYYYYMMDDNow()
+      }, {
+        operationDay: utils.getYYYYMMDDNow()
+      }],
       mode,
       stopTimings: {
         $elemMatch: {

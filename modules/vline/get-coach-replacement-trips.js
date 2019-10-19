@@ -50,7 +50,7 @@ module.exports = async function(station, db) {
       destination = 'Southern Cross Railway Station'
 
     let index = departure.departureTime + ' ' + destination
-    return timetabledDeparturesIndex.includes(index)
+    return timetabledDeparturesIndex.includes(index) || departure.isOverride
   }).map(trip => {
     const stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === coachStop.stopGTFSID)[0]
 

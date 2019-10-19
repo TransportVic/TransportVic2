@@ -105,12 +105,13 @@ async function loadTimetableCSV (filename) {
 async function loadTrips (csvData, direction) {
   const { trips, routeStops, leftColumns } = csvData
 
-  await async.map(trips, async trip => {
+  await async.forEach(trips, async trip => {
     timetableCount++
     const tripMeta = trip.slice(0, 5).concat(trip.slice(-1))
     const tripTimings = trip.slice(5, -1)
 
     const runID = tripMeta[0]
+    if (!runID.startsWith('8')) return
     const operationDays = operatingDaysToArray(tripMeta[1])
     const vehicle = tripMeta[2]
     const formedBy = tripMeta[3]
@@ -119,12 +120,14 @@ async function loadTrips (csvData, direction) {
     const tripStops = {}
 
     let i = 0
-    await async.map(tripTimings, async timing => {
+    await async.forEach(tripTimings, async timing => {
       if (timing === '…/…') timing = ''
 
       const stationMeta = leftColumns[i++]
       const stopName = stationMeta[0]
       const fieldContents = stationMeta[1]
+      
+      if (timing === '') return
 
       const stopData = await stops.findDocument({
         stopName: new RegExp('^' + stopName + ' railway station', 'i')
@@ -166,15 +169,13 @@ async function loadTrips (csvData, direction) {
       }
     })
 
-    let stopTimings = routeStops.map(name => tripStops[name]).filter(e => !e.express).filter(e => e.arrivalTime + e.departureTime !== '')
-
-    const destination = stopTimings.slice(-1)[0].stopName
-    const destinationArrivalTime = stopTimings.slice(-1)[0].arrivalTime
-    const departureTime = stopTimings[0].departureTime
-    const origin = stopTimings[0].stopName
+    let stopTimings = routeStops.map(name => tripStops[name]).filter(e => e && !e.express)
 
     const l = stopTimings.length - 1
     stopTimings = stopTimings.map((stop, i) => {
+      if (!stop.arrivalTime) stop.arrivalTime = stop.departureTime
+      if (!stop.departureTime) stop.departureTime = stop.arrivalTime
+
       if (i === 0) stop.arrivalTime = null
       if (i === l) stop.departureTime = null
       stop.arrivalTimeMinutes = timingToMinutesAfterMidnight(stop.arrivalTime)
@@ -182,6 +183,10 @@ async function loadTrips (csvData, direction) {
 
       return stop
     })
+    const destination = stopTimings.slice(-1)[0].stopName
+    const destinationArrivalTime = stopTimings.slice(-1)[0].arrivalTime
+    const departureTime = stopTimings[0].departureTime
+    const origin = stopTimings[0].stopName
 
     const dest = destination.slice(0, -16)
     const originDest = `${origin.slice(0, -16)}-${dest}`

@@ -45,17 +45,31 @@ async function getDeparturesFromPTV(station, db) {
   return mappedDepartures.sort((a, b) => a.destination.length - b.destination.length).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
 }
 
-async function getDepartures(station, db) {
-  if (healthCheck.isOnline())
-    return await getDeparturesFromPTV(station, db)
-
-  let gtfsIDs = departureUtils.getUniqueGTFSIDs(station, 'regional coach', false)
+async function getScheduledDepartures(station, db, useLive) {
+  let gtfsIDs = departureUtils.getUniqueGTFSIDs(station, 'regional coach')
 
   return (await async.map(gtfsIDs, async gtfsID => {
-    return await departureUtils.getScheduledDepartures(gtfsID, db, 'regional coach', 180)
+    return await departureUtils.getScheduledDepartures(gtfsID, db, 'regional coach', 180, useLive)
   })).reduce((acc, departures) => {
     return acc.concat(departures)
   }, [])
+}
+
+async function getDepartures(station, db) {
+  let departures
+  if (healthCheck.isOnline())
+    departures = await getDeparturesFromPTV(station, db)
+  else
+    departures = await getScheduledDepartures(station, db, false)
+
+  let coachOverrides = await getScheduledDepartures(station, db, true)
+
+  coachOverrides = coachOverrides.map(trip => {
+    trip.isOverride = true
+    return trip
+  }).filter(departure => departure.trip.type === 'vline coach replacement')
+
+  return departures.concat(coachOverrides)
 }
 
 module.exports = getDepartures
