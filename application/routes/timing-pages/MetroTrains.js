@@ -43,7 +43,15 @@ router.get('/:stationName', async (req, res) => {
 
     let {trip} = departure
     let destination = departure.runDestination || departure.trip.destination
-    departure.tripURL = `${utils.encodeName(trip.origin)}/${trip.departureTime}/`
+    let origin = trip.origin
+    let originDepartureTime = trip.departureTime
+    if (departure.forming) {
+      origin = 'flinders-street'
+      let flindersStreetTiming = departure.forming.stopTimings.filter(stop => stop.stopName === 'Flinders Street Railway Station')[0]
+      originDepartureTime = flindersStreetTiming.departureTime
+    }
+
+    departure.tripURL = `${utils.encodeName(origin)}/${originDepartureTime}/`
       + `${utils.encodeName(destination)}/${trip.destinationArrivalTime}/`
       + utils.getYYYYMMDDNow()
 
