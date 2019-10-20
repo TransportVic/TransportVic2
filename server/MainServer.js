@@ -121,10 +121,10 @@ module.exports = class MainServer {
       app.use('/tracker', BusTracker)
     }
 
-    // app.get('/sw.js', (req, res) => {
-    //     res.setHeader('Cache-Control', 'no-cache');
-    //     res.sendFile(path.join(__dirname, '../application/static/app-content/sw.js'));
-    // });
+    app.get('/sw.js', (req, res) => {
+        res.setHeader('Cache-Control', 'no-cache');
+        res.sendFile(path.join(__dirname, '../application/static/app-content/sw.js'));
+    });
 
     app.use('/500', (req, res) => { throw new Error('500') })
 
