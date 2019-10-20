@@ -110,16 +110,28 @@ module.exports = {
     return time.get('hours') * 60 + time.get('minutes')
   },
   getPTDayName: time => {
-    let minutesPastMidnight = module.exports.getMinutesPastMidnight(time);
-    let offset = 0;
+    let minutesPastMidnight = module.exports.getMinutesPastMidnight(time)
+    let offset = 0
 
-    if (minutesPastMidnight < 180) offset = -1440;
-    return daysOfWeek[time.clone().add(offset, 'minutes').day()]
+    if (minutesPastMidnight < 180) offset = 1440
+
+    return daysOfWeek[time.clone().subtract(offset, 'minutes').day()]
+  },
+  getDayName: time => {
+    return daysOfWeek[time.day()]
   },
   formatPTHHMM: time => {
     let hours = time.get('hours'),
       minutes = time.get('minutes')
     if (hours < 3) hours += 24
+    return `${module.exports.pad(hours, 2)}:${module.exports.pad(minutes, 2)}`
+  },
+  correctHHMMToPT: time => {
+    const parts = time.slice(0, 5).split(':')
+    let hours = parts[0] * 1,
+      minutes = parts[1]
+    if (hours < 3) hours += 24
+
     return `${module.exports.pad(hours, 2)}:${module.exports.pad(minutes, 2)}`
   },
   getYYYYMMDD: time => {

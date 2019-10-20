@@ -8,6 +8,8 @@ const fs = require('fs')
 const parseCSV = require('csv-parse')
 const async = require('async')
 
+const utils = require('../../utils')
+
 const files = [
   'FP50 Eastern Weekday - Up',
   'FP50 Eastern Weekday - Down',
@@ -60,14 +62,6 @@ function operatingDaysToArray (days) {
   if (days === 'FO') return ['Fri']
   if (days === 'Daily') return ['Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun']
   throw Error('Unknown date')
-}
-
-function timingToMinutesAfterMidnight (timing) {
-  if (!timing) return null
-  const parts = timing.slice(0, 5).split(':')
-  if (parts[0] < 3) parts[0] += 24
-
-  return parts[0] * 60 + parts[1] * 1
 }
 
 let timetableCount = 0
@@ -129,6 +123,7 @@ async function loadTrips (csvData, direction) {
       const fieldContents = stationMeta[1]
 
       if (timing === '') return
+      if (timing.includes('@')) return
 
       const stopData = await stops.findDocument({
         stopName: new RegExp('^' + stopName + ' railway station', 'i')
@@ -176,11 +171,14 @@ async function loadTrips (csvData, direction) {
     stopTimings = stopTimings.map((stop, i) => {
       if (!stop.arrivalTime) stop.arrivalTime = stop.departureTime
       if (!stop.departureTime) stop.departureTime = stop.arrivalTime
+      if (stop.arrivalTime == 'MD@17') console.log(runID)
+      stop.arrivalTime = utils.correctHHMMToPT(stop.arrivalTime)
+      stop.departureTime = utils.correctHHMMToPT(stop.departureTime)
 
       if (i === 0) stop.arrivalTime = null
       if (i === l) stop.departureTime = null
-      stop.arrivalTimeMinutes = timingToMinutesAfterMidnight(stop.arrivalTime)
-      stop.departureTimeMinutes = timingToMinutesAfterMidnight(stop.departureTime)
+      stop.arrivalTimeMinutes = utils.time24ToMinAftMidnight(stop.arrivalTime)
+      stop.departureTimeMinutes = utils.time24ToMinAftMidnight(stop.departureTime)
 
       return stop
     })

@@ -22,7 +22,7 @@ block content
             parts = [null, 'N']
           else if (vehicle.includes('VL')) {
             let count = (vehicle.match(/^(\d)x/) || [0, 1])[1]
-            parts = [count, 'velocity']
+            parts = [count, 'vlocity']
           } else {
             parts = vehicle.match(/(\d)x ([A-Za-z]+)/).slice(1, 3)
             if (parts[1] === 'SP') parts[1] = 'sprinter'

@@ -7,7 +7,7 @@ const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern'
 
 async function pickBestTrip(data, db) {
   data.mode = 'metro train'
-  let tripDay = moment(data.operationDays, 'YYYYMMDD')
+  let tripDay = moment.tz(data.operationDays, 'YYYYMMDD', 'Australia/Melbourne')
   let tripStartTime = moment.tz(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
   let tripEndTime = moment.tz(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')

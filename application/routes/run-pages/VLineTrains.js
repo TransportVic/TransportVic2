@@ -6,6 +6,7 @@ const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern'
 
 async function pickBestTrip(data, db) {
   data.mode = 'regional train'
+  let tripDay = moment.tz(data.operationDays, 'YYYYMMDD', 'Australia/Melbourne')
 
   let originStop = await db.getCollection('stops').findDocument({
     codedName: data.origin + '-railway-station'
@@ -29,8 +30,20 @@ async function pickBestTrip(data, db) {
     return liveTrip
   }
 
-  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
-  let vnetTrip = await db.getCollection('timetables').findDocument(query)
+  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument({
+    $and: [
+      query, {
+        operationDays: data.operationDays
+      }
+    ]
+  })
+  let vnetTrip = await db.getCollection('timetables').findDocument({
+    $and: [
+      query, {
+        operationDays: utils.getDayName(tripDay)
+      }
+    ]
+  })
 
   let {runID, vehicle} = vnetTrip || {}
 
