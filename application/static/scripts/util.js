@@ -68,3 +68,7 @@ $.inputTimeout = function (element, callback) {
     timeoutID = setTimeout(callback, 850, element.value)
   })
 }
+
+$.isPWA = function () {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone == true
+}

@@ -6,5 +6,11 @@ block head
 block title
   span TransportVic
 
+block scripts
+  script.
+    if ($.isPWA()) location.href = '/nearby'
+  
+block style
+
 block content
   a(href='/search') Search

@@ -61,8 +61,7 @@
 }
 
 .leftContainer img {
-  width: calc(3vw + 3vh);
-  height: calc(3vw + 3vh);
+  width: calc(3.5vw + 4vh);
 }
 
 .resultDetails {
