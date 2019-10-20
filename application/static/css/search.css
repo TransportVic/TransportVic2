@@ -60,6 +60,10 @@
   background-color: #866cb1;
 }
 
+.leftContainer.miniIcon img {
+  width: calc(2.5vw + 2.5vh);
+}
+
 .leftContainer img {
   width: calc(3.5vw + 4vh);
 }
@@ -67,6 +71,8 @@
 .leftContainer span.distance {
   margin-top: calc(0.3vw + 0.3vh);
   font-size: calc(0.8vw + 0.8vh);
+  
+  color: #ffffff;
 }
 
 .resultDetails {

@@ -19,8 +19,8 @@ for stop in stops
     if (stop.mode.endsWith('train'))
       codedName = codedName.slice(0, -16)
   a(href=`/${stopIcons[stop.mode]}/timings/${codedName}` class=`result ${stopCSSClasses[stop.mode]}`)
-    div.leftContainer
-      img(src=`/static/images/clear-icons/${stopIcons[stop.mode]}-icon.svg`)
+    div.leftContainer.miniIcon
+      img(src=`/static/images/clear-icons/${stopIcons[stop.mode]}.svg`)
       span.distance=stop.smallestDistance + ' metres'
     div.resultDetails
       span=stop.type + ' in ' + stop.suburb
