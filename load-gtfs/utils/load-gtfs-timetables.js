@@ -70,7 +70,7 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
         serviceID = trip[1],
         tripID = trip[2],
         shapeID = trip[3],
-        direction = determineDirection(trip[4].toLowerCase(), routeGTFSID)
+        direction = determineDirection(trip[4].toLowerCase(), routeGTFSID),
         gtfsDirection = trip[5]
 
     if (!routeFilter(routeGTFSID)) return
