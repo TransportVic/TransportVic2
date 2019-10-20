@@ -95,6 +95,8 @@ module.exports = class MainServer {
     const routers = {
       Index: '/',
       Search: '/search',
+      StopsNearby: '/nearby',
+
       'timing-pages/VLine': '/vline/timings',
       'timing-pages/MetroTrains': '/metro/timings',
       'timing-pages/RegionalCoach': '/coach/timings',
