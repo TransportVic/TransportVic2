@@ -4,7 +4,7 @@ const async = require('async')
 const safeRegex = require('safe-regex')
 
 router.get('/', (req, res) => {
-  res.render('search/index', { placeholder: 'Enter a station, stop or route' })
+  res.render('search/index', { placeholder: 'Station, stop or route' })
 })
 
 async function performSearch (db, query) {
