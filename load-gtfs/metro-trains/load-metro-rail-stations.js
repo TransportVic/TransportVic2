@@ -16,13 +16,6 @@ database.connect({
   poolSize: 100
 }, async err => {
   stops = database.getCollection('stops')
-  stops.createIndex({
-    'bays.location': '2dsphere',
-    stopName: 1,
-    'bays.fullStopName': 1,
-    'bays.stopGTFSID': 1,
-    'bays.mode': 1
-  }, {unique: true})
 
   let stopsLookup = createStopsLookup(datamartStops)
   let stopCount = await loadStops(stopsData, stops, 'metro train', stopsLookup)

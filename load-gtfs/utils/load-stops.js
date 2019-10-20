@@ -27,6 +27,14 @@ function deg2rad(deg) {
 }
 
 module.exports = async function (stopsData, stops, mode, lookupTable, adjustStopName=_=>_) {
+  stops.createIndex({
+    'location': '2dsphere',
+    stopName: 1,
+    'bays.fullStopName': 1,
+    'bays.stopGTFSID': 1,
+    'bays.mode': 1
+  }, {unique: true})
+
   const allStops = stopsData.map(values => {
     let matchedStop = lookupTable[values[0]]
     let shouldOverride = !!matchedStop
@@ -77,10 +85,8 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
     let bayCoordinates = bayData.location.coordinates
 
     let mergeDistance = 200
-    if (mode === 'regional coach')
+    if (shortName.includes('Railway Station') || shortName.includes('SC') || mode === 'regional coach')
       mergeDistance = 400
-    else if (shortName.includes('Railway Station') || shortName.includes('SC'))
-      mergeDistance = 350
 
     let checkStop
     if (!!(checkStop = mergedStops[stopHash])) {
@@ -143,7 +149,8 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
         stopName: stop.stopName,
         suburb: [stop.suburb],
         codedName: stop.codedName,
-        bays: [bayData]
+        bays: [bayData],
+        mergeName: stop.stopName
       }
     }
   })
@@ -155,12 +162,24 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
         uniqueFullStopNames.push(bay.fullStopName)
     })
 
+    let key = {
+      suburb: {$in: stop.suburb}
+    }
+    if (canMerge(stop.stopName)) {
+      key.mergeName = stop.mergeName
+    } else {
+      key.stopName = stop.stopName
+    }
+
+    let location = {
+      type: "MultiPoint",
+      coordinates: stop.bays.map(bay => bay.location.coordinates)
+    }
+
     if (uniqueFullStopNames.length === 1) {
       stop.stopName = uniqueFullStopNames[0]
       stop.codedName = utils.encodeName(stop.stopName)
     }
-
-    let key = { stopName: stop.stopName, suburb: {$in: stop.suburb} }
 
     let stopData
     if (stopData = await stops.findDocument(key)) {
@@ -170,12 +189,23 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
         .filter(bay => !(baysToUpdate.includes(bay.stopGTFSID) && bay.mode === mode))
         .concat(stop.bays)
 
+      stop.location = stopData.location
+
+      let locationsSeen = []
+      stop.location.coordinates = stop.location.coordinates.concat(location.coordinates)
+        .filter(location => {
+          let key = location[0] + '' + location[1]
+
+          return locationsSeen.includes(key) ? false : locationsSeen.push(key) || true
+        })
+
       stop.suburb = stopData.suburb.concat(stop.suburb).filter((e, i, a) => a.indexOf(e) === i)
 
       await stops.updateDocument(key, {
         $set: stop
       })
     } else {
+      stop.location = location
       await stops.createDocument(stop)
     }
   })

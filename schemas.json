@@ -83,7 +83,9 @@
       "stopNumber": "string",
       "mode": "string",
       "mykiZones": ["number"]
-    }]
+    }],
+    "location": "GeoJSON:MultiPoint",
+    "mergeName": "string"
   },
   "route": {
     "routeName": "string",
