@@ -27,7 +27,7 @@ function deg2rad(deg) {
 }
 
 module.exports = async function (stopsData, stops, mode, lookupTable, adjustStopName=_=>_) {
-  stops.createIndex({
+  await stops.createIndex({
     'location': '2dsphere',
     stopName: 1,
     'bays.fullStopName': 1,
@@ -192,6 +192,9 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
     let stopData
     if (stopData = await stops.findDocument(key)) {
       let baysToUpdate = stop.bays.map(bay => bay.stopGTFSID)
+
+      stop.stopName = stop.mergeName
+      stop.codedName = utils.encodeName(stop.stopName)
 
       stop.bays = stopData.bays
         .filter(bay => !(baysToUpdate.includes(bay.stopGTFSID) && bay.mode === mode))

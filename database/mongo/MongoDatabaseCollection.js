@@ -4,7 +4,7 @@ module.exports = class MongoDatabaseCollection {
   }
 
   createIndex (keys, options) {
-    this.collection.createIndex(keys, options)
+    return this.collection.createIndex(keys, options)
   }
 
   createDocument (document) {
