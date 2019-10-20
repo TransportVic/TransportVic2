@@ -71,8 +71,6 @@
 .leftContainer span.distance {
   margin-top: calc(0.3vw + 0.3vh);
   font-size: calc(0.8vw + 0.8vh);
-  
-  color: #ffffff;
 }
 
 .resultDetails {
