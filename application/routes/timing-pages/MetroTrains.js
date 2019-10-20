@@ -9,7 +9,7 @@ router.get('/:stationName', async (req, res) => {
     codedName: req.params.stationName + '-railway-station'
   })
 
-  if (!station) {
+  if (!station || !station.bays.filter(bay => bay.mode === 'metro train')) {
     // TODO: create error page
     return res.end('Could not lookup timings for ' + req.params.stationName + '. Are you sure Metro trains stop there?')
   }

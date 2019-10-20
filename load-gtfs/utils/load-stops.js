@@ -162,10 +162,23 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
         uniqueFullStopNames.push(bay.fullStopName)
     })
 
-    let key = {
-      suburb: {$in: stop.suburb}
+    if (uniqueFullStopNames.length === 1) {
+      stop.stopName = uniqueFullStopNames[0]
+      stop.codedName = utils.encodeName(stop.stopName)
     }
-    if (canMerge(stop.stopName)) {
+
+    let key = {
+      location: {
+        $nearSphere: {
+          $geometry: {
+            type: 'Point',
+            coordinates: stop.bays[0].location.coordinates
+          },
+          $maxDistance: 500
+        }
+      }
+    }
+    if (canMerge(stop.mergeName)) {
       key.mergeName = stop.mergeName
     } else {
       key.stopName = stop.stopName
@@ -174,11 +187,6 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
     let location = {
       type: "MultiPoint",
       coordinates: stop.bays.map(bay => bay.location.coordinates)
-    }
-
-    if (uniqueFullStopNames.length === 1) {
-      stop.stopName = uniqueFullStopNames[0]
-      stop.codedName = utils.encodeName(stop.stopName)
     }
 
     let stopData

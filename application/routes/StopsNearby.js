@@ -57,7 +57,7 @@ function expandStop(stop) {
 
 async function getNearbyStops(db, position) {
   let stops = await db.getCollection('stops').findDocuments({
-    'location': {
+    location: {
       $nearSphere: {
         $geometry: {
           type: 'Point',

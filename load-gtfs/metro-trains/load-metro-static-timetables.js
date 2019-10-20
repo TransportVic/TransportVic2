@@ -95,6 +95,7 @@ async function parseTimetable(data, routeName) {
       origin: null,
       direction: stop.to_city === '1' ? 'Up' : 'Down'
     }
+    if (!stationData) console.log(stationName)
 
     timetableByDays[tripDay][runID].stopTimings.push({
       stopName: stationName,
