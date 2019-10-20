@@ -1,0 +1,27 @@
+-
+  let stopCSSClasses = {
+    'metro bus': 'busStop',
+    'metro train': 'metroStation',
+    'regional train': 'vlineStation',
+    'regional coach': 'regionalCoachStop'
+  }
+
+  let stopIcons = {
+    'metro bus': 'bus',
+    'metro train': 'metro',
+    'regional train': 'vline',
+    'regional coach': 'bus'
+  }
+
+for stop in stops
+  -
+    let codedName = stop.codedName
+    if (stop.mode.endsWith('train'))
+      codedName = codedName.slice(0, -16)
+  a(href=`/${stopIcons[stop.mode]}/timings/${codedName}` class=`result ${stopCSSClasses[stop.mode]}`)
+    div.leftContainer
+      img(src=`/static/images/clear-icons/${stopIcons[stop.mode]}-icon.svg`)
+      span.distance=stop.smallestDistance + ' metres'
+    div.resultDetails
+      span=stop.type + ' in ' + stop.suburb
+      span=stop.stopName
