@@ -192,10 +192,19 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
     let stopData
     if (stopData = await stops.findDocument(key)) {
       let baysToUpdate = stop.bays.map(bay => bay.stopGTFSID)
+      stopData.bays.forEach(bay => {
+        if (!uniqueFullStopNames.includes(bay.fullStopName))
+          uniqueFullStopNames.push(bay.fullStopName)
+      })
 
-      stop.stopName = stop.mergeName
-      stop.codedName = utils.encodeName(stop.stopName)
-
+      if (uniqueFullStopNames.length === 1) {
+        stop.stopName = uniqueFullStopNames[0]
+        stop.codedName = utils.encodeName(stop.stopName)
+      } else {
+        stop.stopName = stop.mergeName
+        stop.codedName = utils.encodeName(stop.stopName)
+      }
+      
       stop.bays = stopData.bays
         .filter(bay => !(baysToUpdate.includes(bay.stopGTFSID) && bay.mode === mode))
         .concat(stop.bays)
