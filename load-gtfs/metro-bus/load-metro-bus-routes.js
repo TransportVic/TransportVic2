@@ -47,9 +47,9 @@ database.connect({
     acc[route.route_gtfs_id] = adjustRouteName(route.route_name)
     return acc
   }, {})
-console.log(ptvRoutes)
+
   let routeCount = await loadRoutes(routeData, shapeData, routes, () => ['Operator'], 'metro bus', (_, routeGTFSID) => {
-    return ptvRoutes[routeGTFSID]
+    return ptvRoutes[routeGTFSID] || _
   })
 
   console.log('Completed loading in ' + routeCount + ' metro bus routes')
