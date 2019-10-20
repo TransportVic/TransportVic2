@@ -44,7 +44,7 @@ module.exports = async function(station, db) {
     return departure.departureTime + ' ' + departure.destination
   })
 
-  return coachDepartures.filter(departure => {
+  let mappedCoachDepartures = coachDepartures.filter(departure => {
     let {destination} = departure
     if (departure.destination === 'Southern Cross Coach Terminal/Spencer St')
       destination = 'Southern Cross Railway Station'
@@ -69,7 +69,23 @@ module.exports = async function(station, db) {
       trip, estimatedDepartureTime: null, platform: null,
       stopData, scheduledDepartureTime,
       departureTimeMinutes: stopData.departureTimeMinutes, isCoachService: true,
-      actualDepartureTime: scheduledDepartureTime
+      actualDepartureTime: scheduledDepartureTime,
+      coachCount: 1
     }
   })
+
+  let serviceIDs = []
+  let mergedCoachDepartures = {}
+
+  mappedCoachDepartures.forEach(departure => {
+    let serviceID = departure.departureTimeMinutes + departure.trip.destination
+    if (serviceIDs.includes(serviceID))
+      mergedCoachDepartures[serviceID].coachCount++
+    else {
+      mergedCoachDepartures[serviceID] = departure
+      serviceIDs.push(serviceID)
+    }
+  })
+
+  return Object.values(mergedCoachDepartures)
 }

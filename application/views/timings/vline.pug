@@ -34,7 +34,7 @@ append content
           span=`${departure.trip.shortRouteName} Line towards`
           span=departure.trip.destination
           if departure.isCoachService
-            span.cancelled This service has been replaced by coaches - check platform displays
+            span.cancelled=`This service has been replaced by ${departure.coachCount} coach${departure.coachCount > 1 ? 'es' : ''} - check platform displays`
           else if departure.unknownScheduledDepartureTime
             span.cancelled Unknown scheduled departure time/No stopping pattern info - check platform displays
           else if departure.trip.isUncertain
