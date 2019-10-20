@@ -32,7 +32,11 @@ append content
             span=departure.platform || '?'
         a.departureInfo
           span=`${departure.trip.shortRouteName} Line towards`
-          span=departure.trip.destination
+          -
+            let {destination} = departure.trip
+            if (destination === 'Southern Cross Coach Terminal/Spencer St')
+              destination = 'Southern Cross Coach Ter'
+          span=destination
           if departure.isCoachService
             span.cancelled=`This service has been replaced by ${departure.coachCount} coach${departure.coachCount > 1 ? 'es' : ''} - check platform displays`
           else if departure.unknownScheduledDepartureTime

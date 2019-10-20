@@ -99,6 +99,7 @@ database.connect((err) => {
       else await liveTimetables.deleteDocuments({ type: "suspension" })
     } catch (e) {
       console.log('Failed to pass health check, running offline')
+      console.err(e)
       isOnline = false
     }
   }

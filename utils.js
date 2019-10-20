@@ -1,6 +1,7 @@
 const moment = require('moment')
 require('moment-timezone')
-moment.tz.setDefault('Australia/Melbourne');
+moment.tz.setDefault('Australia/Melbourne')
+const request = require('request-promise')
 
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 
@@ -141,5 +142,18 @@ module.exports = {
     return cloned.format('YYYYMMDD')
   },
   getYYYYMMDDNow: () => module.exports.getYYYYMMDD(module.exports.now()),
-  now: () => moment.tz('Australia/Melbourne')
+  now: () => moment.tz('Australia/Melbourne'),
+  request: async (...options) => {
+    let start = +new Date()
+
+    let body = await request(...options)
+
+    let url = typeof options[0] === 'string' ? options[0] : options[0].url
+
+    let end = +new Date()
+    let diff = end - start
+    console.log(`${diff}ms ${url}`)
+
+    return body
+  }
 }

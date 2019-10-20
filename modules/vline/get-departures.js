@@ -1,4 +1,3 @@
-const request = require('request-promise')
 const TimedCache = require('timed-cache')
 const async = require('async')
 const urls = require('../../urls.json')
@@ -29,7 +28,7 @@ async function getVNETDepartures(station, db) {
   const vlinePlatform = station.bays.filter(bay => bay.mode === 'regional train')[0]
   const {vnetStationName} = vlinePlatform
 
-  const body = (await request(urls.vlinePlatformDepartures.format(vnetStationName))).replace(/a:/g, '')
+  const body = (await utils.request(urls.vlinePlatformDepartures.format(vnetStationName))).replace(/a:/g, '')
   const $ = cheerio.load(body)
   const allServices = Array.from($('PlatformService'))
 

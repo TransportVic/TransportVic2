@@ -3,7 +3,6 @@ const moment = require('moment')
 const utils = require('../../utils')
 const urls = require('../../urls.json')
 const cheerio = require('cheerio')
-const request = require('request-promise')
 
 const terminiToLines = require('../../load-gtfs/vline-trains/termini-to-lines')
 
@@ -17,7 +16,7 @@ async function getOriginRunID (originVNETName, destinationVNETName, originDepart
   let body = journeyCache[key]
 
   if (!body) {
-    body = (await request(urls.vlineJourneys.format(originVNETName, destinationVNETName, hasPrevious)))
+    body = (await utils.request(urls.vlineJourneys.format(originVNETName, destinationVNETName, hasPrevious)))
       .replace(/a:/g, '')
     journeyCache[key] = body
   }
@@ -47,7 +46,7 @@ async function getStops(db, originVNETName, destinationVNETName, originDeparture
   let liveTimetables = db.getCollection('live timetables')
 
   let localOriginDepartureTime = originDepartureTime.format().slice(0, 19)
-  let body = (await request(urls.vlineServiceStops.format(originVNETName, destinationVNETName, localOriginDepartureTime, runID)))
+  let body = (await utils.request(urls.vlineServiceStops.format(originVNETName, destinationVNETName, localOriginDepartureTime, runID)))
     .replace(/a:/g, '')
   const $ = cheerio.load(body)
 

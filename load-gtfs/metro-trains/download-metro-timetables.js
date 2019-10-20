@@ -1,7 +1,7 @@
-const request = require('request-promise')
 const async = require('async')
 const fs = require('fs')
 const urls = require('../../urls.json')
+const utils = require('../../utils')
 require('../../setup')
 
 function getLineTimetableURL(lineID) {
@@ -31,7 +31,7 @@ async function downloadTimetables () {
   await async.forEach(Object.keys(lineIDs), async lineName => {
     const lineID = lineIDs[lineName]
     const requestURL = getLineTimetableURL(lineID)
-    const body = await request(requestURL)
+    const body = await utils.request(requestURL)
 
     await new Promise(resolve => fs.writeFile('load_gtfs/metro_trains/timetables/' + lineName + '.json', body, resolve))
   })

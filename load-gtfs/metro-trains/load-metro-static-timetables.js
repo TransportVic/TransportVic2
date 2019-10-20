@@ -8,7 +8,7 @@ let timetables = null
 const fs = require('fs')
 const async = require('async')
 
-const EventEmitter = require('events');
+const EventEmitter = require('events')
 
 const lines = [
   'Alamein',
@@ -27,7 +27,7 @@ const lines = [
   'Upfield',
   'Werribee',
   'Williamstown'
-];
+]
 
 let timetableCount = 0;
 

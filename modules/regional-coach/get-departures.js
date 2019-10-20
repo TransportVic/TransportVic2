@@ -7,6 +7,29 @@ const healthCheck = require('../health-check')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
+const EventEmitter = require('events')
+
+let tripLoader = {}
+let tripCache = {}
+
+async function getStation(db, coachDeparture, destination) {
+  let id = coachDeparture.scheduled_departure_utc + destination
+
+  if (tripLoader[id]) {
+    return await new Promise(resolve => tripLoader[id].on('loaded', resolve))
+  } else if (!tripCache[id]) {
+    tripLoader[id] = new EventEmitter()
+    tripLoader[id].setMaxListeners(1000)
+
+    let trip = await getStoppingPattern(db, coachDeparture.run_id, 'regional coach', coachDeparture.scheduled_departure_utc)
+
+    tripCache[id] = trip
+    tripLoader[id].emit('loaded', trip)
+    delete tripLoader[id]
+
+    return trip
+  } else return tripCache[id]
+}
 
 async function getDeparturesFromPTV(station, db) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
@@ -31,7 +54,7 @@ async function getDeparturesFromPTV(station, db) {
       if (departureTime.diff(now, 'minutes') > 180) return
 
       let trip = await departureUtils.getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, run.destination_name, 'regional coach')
-      if (!trip) trip = await getStoppingPattern(db, coachDeparture.run_id, 'regional coach', coachDeparture.scheduled_departure_utc)
+      if (!trip) trip = await getStation(db, coachDeparture, run.destination_name)
       mappedDepartures.push({
         trip,
         scheduledDepartureTime: departureTime,
