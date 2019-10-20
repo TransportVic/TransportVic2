@@ -7,13 +7,23 @@ block title
   span TransportVic
 
 block scripts
-  script.
-    if ($.isPWA()) location.href = '/nearby'
   
 block style
+  link(rel='stylesheet' href='/static/css/index.css')
 
 block content
-  a(href='/search') Search
-  br
-  br
-  a(href='/nearby') Nearby
+  div.wrap
+    //- a(href='/bookmarks').feature
+    a(href='#').feature
+      img(src='/static/images/home/smartbus.svg' alt='Bookmarks')
+      span Bookmarks
+    a(href='/search').feature
+      img(src='/static/images/home/search.svg' alt='Search')
+      span Search
+    a(href='/nearby').feature
+      img(src='/static/images/home/nearby.svg' alt='Nearby PT Stops')
+      span Nearby PT Stops
+    //- a(href='/about').feature
+    a(href='#').feature
+      img(src='/static/images/home/about.svg' alt='About')
+      span About
