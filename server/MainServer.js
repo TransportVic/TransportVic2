@@ -4,6 +4,7 @@ const compression = require('compression')
 const path = require('path')
 const minify = require('express-minify')
 const fs = require('fs')
+const uglifyEs = require('uglify-es')
 
 const DatabaseConnection = require('../database/DatabaseConnection')
 
@@ -61,7 +62,10 @@ module.exports = class MainServer {
     })
 
     app.use(compression())
-    app.use(minify())
+    app.use(minify({
+      uglifyJsModule: uglifyEs,
+      errorHandler: console.log
+    }))
 
     app.use('/static', express.static(path.join(__dirname, '../application/static')))
 

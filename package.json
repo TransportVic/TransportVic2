@@ -17,8 +17,8 @@
     "express-minify": "^1.0.0",
     "lokijs": "^1.5.7",
     "moment": "^2.24.0",
-    "moment-timezone": "^0.5.26",
-    "mongodb": "^3.3.2",
+    "moment-timezone": "^0.5.27",
+    "mongodb": "^3.3.3",
     "pug": "^2.0.4",
     "querystring": "^0.2.0",
     "readline-sync": "^1.4.10",
@@ -28,6 +28,7 @@
     "string_decoder": "^1.3.0",
     "through2": "^3.0.1",
     "timed-cache": "^1.1.2",
+    "uglify-es": "^3.3.9",
     "url": "^0.11.0",
     "xml2js": "^0.4.22"
   }
