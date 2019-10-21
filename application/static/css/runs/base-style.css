@@ -51,8 +51,12 @@ a.departureInfo {
   width: 100%;
 }
 
-a.departureInfo span {
+div.timingRow a.departureInfo span {
   margin-left: calc(1vw + 1vh);
+}
+
+div.timingRow a.departureInfo span.platform {
+  font-size: calc(0.8vw + 0.8vh);
 }
 
 div.timingRow a.departureInfo span.stopRoad {
