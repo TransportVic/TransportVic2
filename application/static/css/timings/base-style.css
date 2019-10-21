@@ -112,6 +112,13 @@ div.departure.no-number a.departureInfo span:nth-child(3) {
   color: #c5c5c5;
 }
 
+div.departure.no-number a.departureInfo span:nth-child(4) {
+  font-size: calc(1vw + 1vh);
+  line-height: calc(1.6vw + 1.6vh);
+
+  color: #c5c5c5;
+}
+
 
 
 div.departure {

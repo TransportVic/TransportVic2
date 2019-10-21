@@ -65,7 +65,8 @@ async function getDeparturesFromPTV(station, db) {
     })
   })
 
-  return mappedDepartures.sort((a, b) => a.destination.length - b.destination.length).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+  return mappedDepartures.sort((a, b) => a.destination.length - b.destination.length)
+    .sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
 }
 
 async function getScheduledDepartures(station, db, useLive) {
@@ -87,12 +88,28 @@ async function getDepartures(station, db) {
 
   let coachOverrides = await getScheduledDepartures(station, db, true)
 
-  coachOverrides = coachOverrides.map(trip => {
-    trip.isOverride = true
-    return trip
+  coachOverrides = coachOverrides.map(departure => {
+    departure.isOverride = true
+    return departure
   }).filter(departure => departure.trip.type === 'vline coach replacement')
 
-  return departures.concat(coachOverrides).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+  let mergedDepartures = departures.concat(coachOverrides).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+    .map(coach => { coach.coachCount = 1; return coach  })
+
+  let serviceIDs = []
+  let mergedCoachDepartures = {}
+
+  mergedDepartures.forEach(departure => {
+    let serviceID = departure.scheduledDepartureTime + departure.destination
+    if (serviceIDs.includes(serviceID))
+      mergedCoachDepartures[serviceID].coachCount++
+    else {
+      mergedCoachDepartures[serviceID] = departure
+      serviceIDs.push(serviceID)
+    }
+  })
+
+  return Object.values(mergedCoachDepartures)
 }
 
 module.exports = getDepartures

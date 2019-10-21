@@ -21,6 +21,8 @@ append content
           span=departure.trip.routeName
           span Towards
           span=departure.trip.destination
+          if departure.coachCount > 1
+            span=`This service has ${departure.coachCount} coaches`
         div.timings
           a(href=departure.tripURL).timing.unknown
             span=departure.prettyTimeToArrival

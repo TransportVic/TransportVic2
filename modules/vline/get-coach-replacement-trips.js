@@ -25,7 +25,7 @@ module.exports = async function(station, db) {
   const timetables = db.getCollection('timetables') // bold assumption that coach replacements don't occur with special services
   const minutesPastMidnight = utils.getMinutesPastMidnightNow()
 
-  let coachDepartures = (await getCoachDepartures(station, db)).map(departure => departure.trip)
+  let coachDepartures = (await getCoachDepartures(station, db))
 
   let timetabledDepartures = await timetables.findDocuments({
     operationDays: utils.getPTDayName(utils.now()),
@@ -41,18 +41,20 @@ module.exports = async function(station, db) {
     }
   }).toArray()
   let timetabledDeparturesIndex = timetabledDepartures.map(departure => {
-    return departure.departureTime + ' ' + departure.destination
+    return departure.departureTime + departure.destination
   })
 
   let mappedCoachDepartures = coachDepartures.filter(departure => {
+    let {trip} = departure
     let {destination} = departure
     if (departure.destination === 'Southern Cross Coach Terminal/Spencer St')
       destination = 'Southern Cross Railway Station'
 
-    let index = departure.departureTime + ' ' + destination
+    let index = departure.departureTime + destination
     return timetabledDeparturesIndex.includes(index) || departure.isOverride
-  }).map(trip => {
-    const stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === coachStop.stopGTFSID)[0]
+  }).map(departure => {
+    let {trip} = departure
+    let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === coachStop.stopGTFSID)[0]
 
     let scheduledDepartureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
 
@@ -67,22 +69,9 @@ module.exports = async function(station, db) {
       stopData, scheduledDepartureTime,
       departureTimeMinutes: stopData.departureTimeMinutes, isCoachService: true,
       actualDepartureTime: scheduledDepartureTime,
-      coachCount: 1
+      coachCount: departure.coachCount
     }
   })
 
-  let serviceIDs = []
-  let mergedCoachDepartures = {}
-
-  mappedCoachDepartures.forEach(departure => {
-    let serviceID = departure.departureTimeMinutes + departure.trip.destination
-    if (serviceIDs.includes(serviceID))
-      mergedCoachDepartures[serviceID].coachCount++
-    else {
-      mergedCoachDepartures[serviceID] = departure
-      serviceIDs.push(serviceID)
-    }
-  })
-
-  return Object.values(mergedCoachDepartures)
+  return mappedCoachDepartures
 }
