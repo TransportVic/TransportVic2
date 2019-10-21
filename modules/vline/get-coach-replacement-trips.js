@@ -10,7 +10,7 @@ module.exports = async function(station, db) {
   let coachStop = station.bays.filter(bay => bay.mode === 'regional coach')[0]
   let vlinePlatform = station.bays.filter(bay => bay.mode === 'regional train')[0]
 
-  if (!coachStop && station.stopName === 'Southern Cross Railway Station') {
+  if (station.stopName === 'Southern Cross Railway Station') {
     // lookup scs coach terminal
     station = await db.getCollection('stops').findDocument({
       stopName: "Southern Cross Coach Terminal/Spencer St"

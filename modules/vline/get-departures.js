@@ -2,6 +2,7 @@ const TimedCache = require('timed-cache')
 const async = require('async')
 const urls = require('../../urls.json')
 const utils = require('../../utils')
+const ptvAPI = require('../../ptv-api')
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 3 })
 const healthCheck = require('../health-check')
 const moment = require('moment')
@@ -198,6 +199,30 @@ function filterDepartures(departures) {
   })
 }
 
+async function getServiceFlags(station) {
+  let flags = []
+  const vlinePlatform = station.bays.filter(bay => bay.mode === 'regional train')[0]
+
+  const {departures, runs} = await ptvAPI(`/v3/departures/route_type/3/stop/${vlinePlatform.stopGTFSID}?gtfs=true&max_results=5&expand=run`)
+  departures.forEach(departure => {
+    let departureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
+    let id = departureTime.toISOString() + runs[departure.run_id].destination_name.replace(' Railway Station', '')
+    flags[id] = {}
+
+    if (departure.flags.includes('RER')) {
+      flags[id].reservationsOnly = true
+    }
+    if (departure.flags.includes('FCA')) {
+      flags[id].firstClassAvailable = true
+    }
+    if (departure.flags.includes('CAA')) {
+      flags[id].cateringAvailable = true
+    }
+  })
+
+  return flags
+}
+
 async function getDepartures(station, db) {
   if (departuresCache.get(station.stopName + 'V')) {
     return filterDepartures(departuresCache.get(station.stopName + 'V'))
@@ -208,6 +233,15 @@ async function getDepartures(station, db) {
 
   let departures = await getDeparturesFromVNET(station, db)
   departures = departures.concat(coachTrips)
+
+  let flags = await getServiceFlags(station)
+
+  departures = departures.map(departure => {
+    let id = departure.scheduledDepartureTime.toISOString() + departure.trip.destination
+
+    departure.flags = flags[id] || {}
+    return departure
+  })
 
   departuresCache.put(station.stopName + 'V', departures)
   return filterDepartures(departures)

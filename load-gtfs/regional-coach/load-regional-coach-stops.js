@@ -33,7 +33,7 @@ database.connect({
     }).length !== 0
     let stationPlatform = station.bays.filter(bay => bay.mode === 'regional train')[0]
 
-    if (!hasCoachStop) {
+    if (!hasCoachStop && station.stopName !== 'Southern Cross Railway Station') {
       let coachStop = JSON.parse(JSON.stringify(stationPlatform))
       coachStop.mode = 'regional coach'
       station.bays.push(coachStop)

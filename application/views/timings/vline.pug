@@ -30,7 +30,11 @@ append content
           else
             span Platform
             span=departure.platform || '?'
-        a.departureInfo
+        -
+          let departureClass = 'departureInfo'
+          if (departure.flags.reservationsOnly)
+            departureClass += ' reservationsOnly'
+        a(class=departureClass)
           span=`${departure.trip.shortRouteName} Line towards`
           -
             let {destination} = departure.trip
@@ -43,8 +47,21 @@ append content
             span.cancelled Unknown scheduled departure time/No stopping pattern info - check platform displays
           else if departure.trip.isUncertain
             span.cancelled Stopping pattern/times may be wrong - check platform displays
-          else if departure.vnetTrip
-            span=departure.vnetTrip.vehicle
+          else
+            -
+              let flags = ''
+              if (departure.flags.firstClassAvailable)
+                flags = 'First Class'
+              if (departure.flags.cateringAvailable) {
+                if (flags.length) flags += ' & '
+                flags += 'Catering'
+              }
+              if (flags.length) flags += ' Available'
+              if (departure.flags.reservationsOnly) {
+                if (flags.length) flags += ' - '
+                flags += 'Reservations Only'
+              }
+            span=flags
         div.timings
           -
             let className = 'timing '

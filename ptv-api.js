@@ -1,6 +1,8 @@
 const crypto = require('crypto')
 const {ptvKey, ptvDevID} = require('./config.json')
 const utils = require('./utils')
+const TimedCache = require('timed-cache')
+const requestCache = new TimedCache({ defaultTtl: 1000 * 30 })
 
 function getURL(request) {
   request += (request.includes('?') ? '&' : '?') + 'devid=' + ptvDevID
@@ -9,8 +11,15 @@ function getURL(request) {
 }
 
 async function makeRequest(url) {
+  let request
+  if (request = requestCache.get(url))
+    return JSON.parse(request)
+
   let fullURL = getURL(url)
-  return JSON.parse(await utils.request(fullURL))
+  let data = await utils.request(fullURL)
+  requestCache.put(url, data)
+
+  return JSON.parse(data)
 }
 
 module.exports = makeRequest

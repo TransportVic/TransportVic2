@@ -49,6 +49,8 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - Apparently PTV doesn't bother programming in some replacement operations into the regional coach thing so to the program it thinks nothing exists for those services
   - Not sure accurate but at least it alerts the user to the disruption in their face, PTV doesn't even outright tell you
   - Also calls up the PTV API cos they're lazy with releasing GTFS dumps meaning that some replacement ops get missed out :( (looking at you albury)
+- Homepage done up together with webapp
+  - Icon homepage remains, though it launches to `/nearby` if opened as a webapp
 
 ## Next up to be added:
 - bus timings
@@ -89,10 +91,6 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Reading English and creating a daily timetable update DB collection, can be used to mark services as coaches / cancelled (V/Line!!) as well as just MTM train types
   - could work with Yarra Trams too, mark tram number
   - but i guess i need to teach it tram models then
-- Showing stopping patterns for MTM and V/Line services
-  - Show timings and stops most importantly
-  - Show Run ID and vehicle type + icon (yay!)
-- Do up bus timings pages
 - Homepage
 - Also find out how to ID replacement services
 - And of course the departure info

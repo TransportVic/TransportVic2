@@ -9,6 +9,10 @@ div.departure:nth-child(even) {
   background-color: #202020;
 }
 
+div.departure:nth-child(even) a.departureInfo.reservationsOnly {
+  background-color: #43355b;
+}
+
 a.leftContainer {
   width: calc(5vw + 5vh);
   height: calc(7vw + 7vh);
@@ -51,6 +55,10 @@ a.departureInfo {
   justify-content: center;
 
   width: 100%;
+}
+
+a.departureInfo.reservationsOnly {
+  background-color: #594875;
 }
 
 a.departureInfo span {

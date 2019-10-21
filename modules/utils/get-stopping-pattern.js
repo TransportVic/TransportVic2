@@ -100,7 +100,8 @@ module.exports = async function (db, ptvRunID, mode, time) {
   let key = {
     mode, routeName: timetable.routeName,
     operationDay: timetable.operationDay,
-    runID: timetable.runID
+    departureTime: timetable.departureTime,
+    destinationArrivalTime: timetable.destinationArrivalTime
   }
 
   await liveTimetables.replaceDocument(key, timetable, {

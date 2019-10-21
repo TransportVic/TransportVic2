@@ -12,7 +12,7 @@ const EventEmitter = require('events')
 let tripLoader = {}
 let tripCache = {}
 
-async function getStation(db, coachDeparture, destination) {
+async function getStoppingPatternWithCache(db, coachDeparture, destination) {
   let id = coachDeparture.scheduled_departure_utc + destination
 
   if (tripLoader[id]) {
@@ -54,7 +54,7 @@ async function getDeparturesFromPTV(station, db) {
       if (departureTime.diff(now, 'minutes') > 180) return
 
       let trip = await departureUtils.getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, run.destination_name, 'regional coach')
-      if (!trip) trip = await getStation(db, coachDeparture, run.destination_name)
+      if (!trip) trip = await getStoppingPatternWithCache(db, coachDeparture, run.destination_name)
       mappedDepartures.push({
         trip,
         scheduledDepartureTime: departureTime,
@@ -92,7 +92,7 @@ async function getDepartures(station, db) {
     return trip
   }).filter(departure => departure.trip.type === 'vline coach replacement')
 
-  return departures.concat(coachOverrides)
+  return departures.concat(coachOverrides).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
 }
 
 module.exports = getDepartures
