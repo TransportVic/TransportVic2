@@ -56,9 +56,6 @@ module.exports = async function(station, db) {
 
     let scheduledDepartureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
 
-    trip.destination = trip.destination.replace(' Railway Station', '')
-    trip.origin = trip.origin.replace(' Railway Station', '')
-
     let {origin, destination} = trip
 
     let originDest = `${origin}-${destination}`

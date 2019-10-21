@@ -1,0 +1,37 @@
+extends ../layout
+    
+block head
+  title=`TransportVic - ${trip.departureTime} ${trip.origin} to ${trip.destination}`
+  
+block title
+  span=`${trip.departureTime} ${trip.origin} to ${trip.destination}`
+  
+block style
+  link(rel='stylesheet' href='/static/css/runs/base-style.css')
+  link(rel='stylesheet' href='/static/css/runs/trains.css')
+
+block content
+  div.timing-list
+    for stop in trip.stopTimings
+      div.timingRow
+        a.departureInfo
+          -
+            let stopParts = stop.stopName.split('/')
+            let stopRoad, stopName
+            if (stopParts.length === 2) {
+              stopName = stopParts[0]
+              stopRoad = stopParts[1]
+            } else {
+              if (stopParts = stop.stopName.match(/^(\d+) (.+)$/)) {
+                stopName = stopParts[1]
+                stopRoad = stopParts[2]
+              } else {
+                stopName = stop.stopName
+                stopRoad = ''
+              }
+            }
+          span.stopRoad=stopRoad
+          span.stopName=stopName
+        div.timing.unknown
+          span=stop.prettyTimeToArrival
+          span=stop.departureTime || stop.arrivalTime

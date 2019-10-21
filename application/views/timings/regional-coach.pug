@@ -22,6 +22,6 @@ append content
           span Towards
           span=departure.trip.destination
         div.timings
-          a.timing.unknown
+          a(href=departure.tripURL).timing.unknown
             span=departure.prettyTimeToArrival
             span=departure.scheduledDepartureTime.format('HH:mm')

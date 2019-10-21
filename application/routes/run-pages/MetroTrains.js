@@ -25,6 +25,7 @@ async function pickBestTrip(data, db) {
   let minutesToTripEnd = tripEndTime.diff(utils.now(), 'minutes')
 
   let query = {
+    mode: 'metro train',
     origin: originStop.stopName,
     departureTime: data.departureTime,
     destination: destinationStop.stopName,
@@ -41,6 +42,7 @@ async function pickBestTrip(data, db) {
   }
 
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument({
+    mode: 'metro train',
     origin: originStop.stopName,
     departureTime: data.departureTime,
     destination: destinationStop.stopName,

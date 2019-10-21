@@ -55,18 +55,18 @@ a.departureInfo span {
   margin-left: calc(1vw + 1vh);
 }
 
-div.timingRow a.departureInfo span:nth-child(1) {
+div.timingRow a.departureInfo span.stopRoad {
+  font-size: calc(0.8vw + 0.8vh);
+  margin-top: calc(0.1vw + 0.2vh);
+
+  color: #8f8f8f;
+}
+
+div.timingRow a.departureInfo span.stopName {
   font-size: calc(1.6vw + 1.6vh);
   line-height: calc(1.6vw + 1.6vh);
 
   color: #c5c5c5;
-}
-
-div.timingRow a.departureInfo span:nth-child(2) {
-  font-size: calc(0.7vw + 0.7vh);
-  margin-top: calc(0.1vw + 0.2vh);
-
-  color: #8f8f8f;
 }
 
 div.timing {

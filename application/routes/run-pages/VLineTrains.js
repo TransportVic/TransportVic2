@@ -17,6 +17,7 @@ async function pickBestTrip(data, db) {
   if (!originStop || !destinationStop) return null
 
   let query = {
+    mode: 'regional train',
     origin: originStop.stopName,
     departureTime: data.departureTime,
     destination: destinationStop.stopName,
