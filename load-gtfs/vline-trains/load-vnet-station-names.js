@@ -14,9 +14,16 @@ let data = fs.readFileSync('load-gtfs/vline-trains/all-vline-stations.xml').toSt
 const $ = cheerio.load(data)
 
 const completedStations = []
+const coachOverrides = [
+  'Nhill: Station',
+  'Dimboola Station',
+  'Stawell Station',
+  'Horsham Station'
+]
 
 const stations = Array.from($('Location')).filter(location => {
   return $('StopType', location).text() === 'Station'
+    || coachOverrides.includes($('LocationName', location).text().trim())
 }).map(location => {
   const vnetStationName = $('LocationName', location).text()
   const stationName = vnetStationName.replace(/^Melbourne[^\w]+/, '').replace(/\(.+\)/g, '')
