@@ -12,7 +12,7 @@ const calendarDates = utils.parseGTFSData(fs.readFileSync('gtfs/4/calendar_dates
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
 const updateStats = require('../utils/gtfs-stats')
 
-let start = new Date()
+let benchmarkStart = new Date()
 
 // check flag exists
 global.gc()
@@ -96,7 +96,7 @@ database.connect({
 
   await loadBatch()
 
-  await updateStats('mbus-gtfs-timetables', loaded, new Date() - start)
+  await updateStats('mbus-gtfs-timetables', loaded, new Date() - benchmarkStart)
   console.log('Completed loading in ' + loaded + ' metro bus trips')
   process.exit()
 })
