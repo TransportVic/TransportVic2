@@ -10,6 +10,9 @@ const trips = utils.parseGTFSData(fs.readFileSync('gtfs/5/trips.txt').toString()
 const tripTimesData = utils.parseGTFSData(fs.readFileSync('gtfs/5/stop_times.txt').toString())
 
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const updateStats = require('../utils/gtfs-stats')
+
+let start = new Date()
 
 database.connect({
   poolSize: 500
@@ -29,6 +32,7 @@ database.connect({
   let tripsCount = await loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'regional coach',
     headsign => null, routeGTFSID => true)
 
+  await updateStats('coach-gtfs-timetables', tripsCount, new Date() - start)
   console.log('Completed loading in ' + tripsCount + ' V/Line Coach trips')
   process.exit()
 })

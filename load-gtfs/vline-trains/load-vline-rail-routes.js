@@ -7,6 +7,9 @@ const routeData = utils.parseGTFSData(fs.readFileSync('gtfs/1/routes.txt').toStr
 const shapeData = utils.parseGTFSData(fs.readFileSync('gtfs/1/shapes.txt').toString())
 
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const updateStats = require('../utils/gtfs-stats')
+
+let start = new Date()
 let routes = null
 
 database.connect({
@@ -28,6 +31,7 @@ database.connect({
     return [name, shortName]
   }, name => name !== 'Pakenham - City')
 
+  await updateStats('vline-routes', routeCount, new Date() - start)
   console.log('Completed loading in ' + routeCount + ' V/Line routes')
   process.exit()
 });

@@ -4,6 +4,9 @@ const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
 let stops = null
 
 const cheerio = require('cheerio')
+const updateStats = require('../utils/gtfs-stats')
+
+let start = new Date()
 
 const fs = require('fs')
 const async = require('async')
@@ -44,6 +47,7 @@ database.connect({
     })
   })
 
+  await updateStats('vnet-stop-names', stations.length, new Date() - start)
   console.log('Completed updating ' + stations.length + ' V/Line stop VNET names')
   process.exit()
 })

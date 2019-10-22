@@ -3,6 +3,9 @@ const fs = require('fs')
 const urls = require('../../urls.json')
 const utils = require('../../utils')
 require('../../setup')
+const updateStats = require('../utils/gtfs-stats')
+
+let start = new Date()
 
 function getLineTimetableURL(lineID) {
   return urls.metroTrainsTimetable.format(lineID)
@@ -36,7 +39,9 @@ async function downloadTimetables () {
     await new Promise(resolve => fs.writeFile('load_gtfs/metro_trains/timetables/' + lineName + '.json', body, resolve))
   })
 
-  console.log('Completed downloading ' + Object.keys(lineIDs).length + ' MTM timetables')
+  let count = Object.keys(lineIDs).length
+  await updateStats('mtm-timetables-dl', count, new Date() - start)
+  console.log('Completed downloading ' + count + ' MTM timetables')
   process.exit()
 }
 

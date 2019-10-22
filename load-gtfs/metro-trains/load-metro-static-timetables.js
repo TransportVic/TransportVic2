@@ -9,6 +9,9 @@ const fs = require('fs')
 const async = require('async')
 
 const EventEmitter = require('events')
+const updateStats = require('../utils/gtfs-stats')
+
+let start = new Date()
 
 const lines = [
   'Alamein',
@@ -185,6 +188,7 @@ database.connect({
 
   await loadLine()
 
+  await updateStats('mtm-timetables', timetableCount, new Date() - start)
   console.log('Completed loading in ' + timetableCount + ' MTM timetables')
   process.exit()
 })

@@ -3,8 +3,11 @@ const config = require('../../config.json')
 const async = require('async')
 
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const updateStats = require('../utils/gtfs-stats')
+
+let start = new Date()
 let gtfsTimetables = null
-let routes
+let routes = null
 
 database.connect({
   poolSize: 500
@@ -104,6 +107,7 @@ database.connect({
 
   await routes.bulkWrite(bulkOperations)
 
+  await updateStats('vline-route-stops', bulkOperations.length, new Date() - start)
   console.log('Completed loading in ' + bulkOperations.length + ' route stops')
   process.exit()
 });

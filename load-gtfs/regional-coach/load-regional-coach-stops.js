@@ -9,6 +9,9 @@ const stopsData = utils.parseGTFSData(fs.readFileSync('gtfs/5/stops.txt').toStri
 const datamartStops = require('../../spatial-datamart/regional-coach-stops.json').features
 
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const updateStats = require('../utils/gtfs-stats')
+
+let start = new Date()
 let stops = null
 
 database.connect({
@@ -44,6 +47,7 @@ database.connect({
     }
   })
 
+  await updateStats('coach-stops', stopCount, new Date() - start)
   console.log('Completed loading in ' + stopCount + ' V/Line coach stops')
   process.exit()
 });

@@ -9,6 +9,9 @@ const routeData = utils.parseGTFSData(fs.readFileSync('gtfs/2/routes.txt').toStr
 const shapeData = utils.parseGTFSData(fs.readFileSync('gtfs/2/shapes.txt').toString())
 
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const updateStats = require('../utils/gtfs-stats')
+
+let start = new Date()
 let routes = null
 
 database.connect({
@@ -25,6 +28,7 @@ database.connect({
     if (name === 'FrankstonStony Point') return 'Stony Point'
     return name
   })
+  await updateStats('mtm-route', routeCount, new Date() - start)
 
   console.log('Completed loading in ' + routeCount + ' MTM routes')
   process.exit()

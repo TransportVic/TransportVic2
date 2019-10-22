@@ -9,6 +9,9 @@ const datamartStops = require('../../spatial-datamart/metro-bus-stops.json').fea
 
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
 let stops = null
+const updateStats = require('../utils/gtfs-stats')
+
+let start = new Date()
 
 database.connect({
   poolSize: 100
@@ -22,6 +25,7 @@ database.connect({
     return stopName
   })
 
+  await updateStats('mbus-stops', stopCount, new Date() - start)
   console.log('Completed loading in ' + stopCount + ' metro bus stops')
   process.exit()
 });

@@ -8,4 +8,6 @@
 /full-gunzel-mode/timetables/*
 /load-gtfs/vline-trains/timetables
 /load-gtfs/metro-trains/timetables
+/gtfs-loader.log
+/load-gtfs/stats.json
 .DS_Store

@@ -9,6 +9,9 @@ const ptvAPI = require('../../ptv-api')
 
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
 let routes = null
+const updateStats = require('../utils/gtfs-stats')
+
+let start = new Date()
 
 database.connect({
   poolSize: 100
@@ -52,6 +55,7 @@ database.connect({
     return ptvRoutes[routeGTFSID] || _
   })
 
+  await updateStats('mbus-routes', routeCount, new Date() - start)
   console.log('Completed loading in ' + routeCount + ' metro bus routes')
   process.exit()
 });

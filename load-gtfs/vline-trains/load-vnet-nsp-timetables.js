@@ -9,6 +9,9 @@ const parseCSV = require('csv-parse')
 const async = require('async')
 
 const utils = require('../../utils')
+const updateStats = require('../utils/gtfs-stats')
+
+let start = new Date()
 
 const files = [
   'FP50 Eastern Weekday - Up',
@@ -252,6 +255,7 @@ database.connect({
 
   await loadFile()
 
+  await updateStats('vline-timetables', timetableCount, new Date() - start)
   console.log('Completed loading in ' + timetableCount + ' VNET timetables')
   process.exit()
 })

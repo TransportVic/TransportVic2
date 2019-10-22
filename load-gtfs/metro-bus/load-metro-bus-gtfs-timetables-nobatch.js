@@ -10,6 +10,9 @@ const trips = utils.parseGTFSData(fs.readFileSync('gtfs/4/trips.txt').toString()
 const tripTimesData = utils.parseGTFSData(fs.readFileSync('gtfs/4/stop_times.txt').toString())
 
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const updateStats = require('../utils/gtfs-stats')
+
+let start = new Date()
 
 database.connect({}, async err => {
   database.getCollection('gtfs timetables').createIndex({
@@ -27,6 +30,7 @@ database.connect({}, async err => {
   let tripsCount = await loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'metro bus',
     headsign => null, routeGTFSID => true)
 
+  await updateStats('mbus-gtfs-timetables', tripsCount, new Date() - start)
   console.log('Completed loading in ' + tripsCount + ' Metro bus trips')
   process.exit()
 })

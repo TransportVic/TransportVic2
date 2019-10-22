@@ -9,6 +9,10 @@ let routes = null
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
   .map(e => e + ' railway station')
 
+const updateStats = require('../utils/gtfs-stats')
+
+let start = new Date()
+
 let richmondGroup = [
   "2-ALM",
   "2-BEL",
@@ -140,6 +144,7 @@ database.connect({
   })
 
   await routes.bulkWrite(bulkOperations)
+  await updateStats('mtm-route-stops', bulkOperations.length, new Date() - start)
 
   console.log('Completed loading in ' + bulkOperations.length + ' route stops')
   process.exit()
