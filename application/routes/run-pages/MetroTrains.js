@@ -99,7 +99,9 @@ async function pickBestTrip(data, db) {
       utils.encodeName(destinationName) === data.destination
   })[0]
 
-  if (!departure) return null
+  // interrim workaround cos when services start from a later stop they're really cancelled
+  // in the stops before, but PTV thinks otherwise...
+  if (!departure) return gtfsTrip
   let ptvRunID = departure.run_id
   let departureTime = departure.scheduled_departure_utc
 

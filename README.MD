@@ -1,4 +1,4 @@
-# TransportVic2
+# [TransportVic2](https://vic.transportsg.me)
 Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne for a longer time and actually know the system through.
 
 ## Current features:
@@ -6,7 +6,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Loading in Metropolitan bus timetables
   - Multiple batching rounds in place to optimise memory usage:
   - Repeated I/O preferred over massive 2GB memory usage, currently tops around 800MB
-  - Need to add flag for Mac which actually doesn't like batching and likes the big all-at-once method
+  - Takes 30min to load on the mini T3.micro server
 - Loading in V/Line train timetables
 - Loading in Regional coach timetables
 - Showing live MTM departures when the services are running as timetabled
@@ -51,6 +51,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - Also calls up the PTV API cos they're lazy with releasing GTFS dumps meaning that some replacement ops get missed out :( (looking at you albury)
 - Homepage done up together with webapp
   - Icon homepage remains, though it launches to `/nearby` if opened as a webapp
+- Pings V/Line's disruption feed every 10-20 minutes as part of its health check, and attempts to mark the services as cancelled / replaced by coaches. Doesn't always work if the service is already disrupted but not programmed in by PTV
 
 ## Next up to be added:
 - change live db to use operationDays just like static dumps
