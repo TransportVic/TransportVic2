@@ -50,6 +50,11 @@ router.get('/:stationName', async (req, res) => {
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
       + utils.getYYYYMMDDNow()
 
+    if (departure.isCoachService) {
+      departure.trip.origin = departure.trip.origin.replace(' Railway Station', '')
+      departure.trip.destination = departure.trip.destination.replace(' Railway Station', '')
+    }
+
     return departure
   })
 

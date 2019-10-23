@@ -40,7 +40,11 @@ module.exports = async function (db, ptvRunID, mode, time) {
     }
     stopName = utils.adjustStopname(stopName)
     let dbStop = await stopsCollection.findDocument({
-      stopName,
+      $or: [{
+        'bays.fullStopName': stopName,
+      }, {
+        stopName,
+      }],
       'bays.mode': { $in: checkModes }
     })
 

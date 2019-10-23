@@ -32,7 +32,7 @@ append content
             span=departure.platform || '?'
         -
           let departureClass = 'departureInfo'
-          if (departure.flags.reservationsOnly)
+          if (departure.flags && departure.flags.reservationsOnly)
             departureClass += ' reservationsOnly'
         a(class=departureClass)
           span=`${departure.trip.shortRouteName} Line towards`
@@ -42,11 +42,13 @@ append content
               destination = 'Southern Cross Coach Ter'
           span=destination
           if departure.isCoachService
-            span.cancelled=`This service has been replaced by ${departure.coachCount} coach${departure.coachCount > 1 ? 'es' : ''} - check platform displays`
-          else if departure.unknownScheduledDepartureTime
-            span.cancelled Unknown scheduled departure time/No stopping pattern info - check platform displays
-          else if departure.trip.isUncertain
-            span.cancelled Stopping pattern/times may be wrong - check platform displays
+            span.cancelled=`This service has been replaced by ${departure.coachCount} coach${departure.coachCount !== 1 ? 'es' : ''} - check platform displays`
+          else if departure.cancelled
+            span.cancelled This service has been cancelled
+          //- else if departure.unknownScheduledDepartureTime
+          //-   span.cancelled Unknown scheduled departure time/No stopping pattern info - check platform displays
+          //- else if departure.trip.isUncertain
+          //-   span.cancelled Stopping pattern/times may be wrong - check platform displays
           else
             -
               let flags = ''

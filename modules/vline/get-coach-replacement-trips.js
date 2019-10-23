@@ -54,11 +54,14 @@ module.exports = async function(station, db) {
     return timetabledDeparturesIndex.includes(index) || departure.isOverride
   }).map(departure => {
     let {trip} = departure
-    let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === coachStop.stopGTFSID)[0]
+    let stopData = trip.stopTimings.filter(stop =>
+      stop.stopGTFSID === coachStop.stopGTFSID || stop.stopGTFSID === vlinePlatform.stopGTFSID)[0]
 
     let scheduledDepartureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
 
     let {origin, destination} = trip
+    origin = origin.replace(' Railway Station', '').replace(' Coach Ter', '')
+    destination = destination.replace(' Railway Station', '').replace(' Coach Ter', '')
 
     let originDest = `${origin}-${destination}`
     let routeName = terminiToLines[originDest] || terminiToLines[origin] || terminiToLines[destination]

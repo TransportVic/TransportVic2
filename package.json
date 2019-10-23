@@ -24,6 +24,7 @@
     "readline-sync": "^1.4.10",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "rss-parser": "^3.7.3",
     "safe-regex": "^2.0.2",
     "string_decoder": "^1.3.0",
     "through2": "^3.0.1",

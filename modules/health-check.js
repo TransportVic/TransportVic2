@@ -5,8 +5,11 @@ const moment = require('moment')
 const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config.json')
 const utils = require('../utils')
+const urls = require('../urls.json')
 const handleMTMSuspensions = require('./disruption-management/handle-mtm-suspensions')
 const replacedServices = require('./vline/coach-replacement-overrides')
+const RSSParser = require('rss-parser')
+let rssParser = new RSSParser()
 
 let isOnline = true
 var refreshRate = 10;
@@ -59,6 +62,7 @@ async function processVLineCoachOverrides(db) {
       trip.vehicle = 'Coach'
       trip.mode = 'regional coach'
       trip.routeName += ' Line'
+
       delete trip._id
 
       return trip
@@ -70,6 +74,69 @@ async function processVLineCoachOverrides(db) {
         insertOne: trip
       }
     }))
+  })
+}
+
+async function watchPTVDisruptions(db) {
+  let liveTimetables = db.getCollection('live timetables')
+  let {status, disruptions} = await ptvAPI('/v3/disruptions')
+  if (status.health === 0) throw new Error('PTV down')
+
+  currentDisruptions = disruptions
+  isOnline = true
+
+  let mtmSuspensions = disruptions.metro_train.filter(disruption => disruption.disruption_type.toLowerCase().includes('suspended'))
+  if (mtmSuspensions.length) handleMTMSuspensions(mtmSuspensions, db)
+  else await liveTimetables.deleteDocuments({ type: "suspension" })
+}
+
+async function setServiceAsCancelled(db, query, operationDay, isCoach) {
+  let liveTimetables = database.getCollection('live timetables')
+  let gtfsTimetables = database.getCollection('gtfs timetables')
+  let timetables = database.getCollection('timetables')
+
+  let timetable = await gtfsTimetables.findDocument(query)
+    || await liveTimetables.findDocument(query) || await liveTimetables.findDocument(query)
+  if (timetable) {
+    timetable.operationDay = operationDay
+    delete timetable.operationDays
+    delete timetable._id
+    timetable.type = 'cancelled'
+    if (isCoach) timetable.mode = 'regional coach'
+
+    await liveTimetables.replaceDocument(query, timetable, {
+      upsert: true
+    })
+  }
+}
+
+async function watchVLineDisruptions(db) {
+  let data = await utils.request(urls.vlineDisruptions)
+  let feed = await rssParser.parseString(data)
+  let items = feed.items.filter(item => item.title !== '')
+  await async.forEach(items, async item => {
+    let text = item.contentSnippet
+    if (text.includes('will not run')) {
+      let service = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) to ([\w ]*?) service will not run /)
+      let departureTime = service[1],
+          origin = service[2] + ' Railway Station',
+          destination = service[3] + ' Railway Station'
+      let isCoach = text.includes('replacement coaches')
+
+      let operationDay = utils.getYYYYMMDDNow()
+
+      let query = {
+        departureTime, origin, destination,
+        mode: 'regional train',
+        $or: [{
+          operationDay
+        }, {
+          operationDays: operationDay
+        }]
+      }
+
+      setServiceAsCancelled(db, query, operationDay)
+    }
   })
 }
 
@@ -88,15 +155,8 @@ database.connect((err) => {
 
   async function refreshCache() {
     try {
-      const {status, disruptions} = await ptvAPI('/v3/disruptions')
-      if (status.health === 0) throw new Error('')
-
-      currentDisruptions = disruptions
-      isOnline = true
-
-      let mtmSuspensions = disruptions.metro_train.filter(disruption => disruption.disruption_type.toLowerCase().includes('suspended'))
-      if (mtmSuspensions.length) handleMTMSuspensions(mtmSuspensions, database)
-      else await liveTimetables.deleteDocuments({ type: "suspension" })
+      watchPTVDisruptions(database)
+      watchVLineDisruptions(database)
     } catch (e) {
       console.log('Failed to pass health check, running offline')
       console.err(e)

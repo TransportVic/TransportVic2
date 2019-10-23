@@ -53,6 +53,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - Icon homepage remains, though it launches to `/nearby` if opened as a webapp
 
 ## Next up to be added:
+- change live db to use operationDays just like static dumps
 - bus timings
   - same as mtm for impl but without the city loop and short trip stuff
 - route view

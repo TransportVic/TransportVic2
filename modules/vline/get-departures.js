@@ -228,8 +228,9 @@ async function getDepartures(station, db) {
     return filterDepartures(departuresCache.get(station.stopName + 'V'))
   }
 
+  let scheduledDepartures = (await departureUtils.getScheduledDepartures(station, db, 'regional train', 180))
   let coachTrips = await getCoachReplacements(station, db)
-  if (!healthCheck.isOnline()) return (await departureUtils.getScheduledDepartures(station, db, 'regional train', 180)).concat(coachTrips)
+  if (!healthCheck.isOnline()) return scheduledDepartures.concat(coachTrips)
 
   let departures = await getDeparturesFromVNET(station, db)
   departures = departures.concat(coachTrips)
@@ -241,7 +242,7 @@ async function getDepartures(station, db) {
 
     departure.flags = flags[id] || {}
     return departure
-  })
+  }).concat(scheduledDepartures.filter(departure => departure.cancelled))
 
   departuresCache.put(station.stopName + 'V', departures)
   return filterDepartures(departures)

@@ -89,12 +89,17 @@ async function getStaticDeparture(runID, db) {
 
 async function getScheduledDepartures(station, db, mode, timeout) {
     const gtfsTimetables = db.getCollection('gtfs timetables')
+    const liveTimetables = db.getCollection('live timetables')
     const minutesPastMidnight = utils.getMinutesPastMidnightNow()
 
     const platform = getPlatform(station, mode)
 
-    let departures = await gtfsTimetables.findDocuments({
-      operationDays: utils.getYYYYMMDDNow(),
+    let query = {
+      $or: [{
+        operationDays: utils.getYYYYMMDDNow()
+      }, {
+        operationDay: utils.getYYYYMMDDNow()
+      }],
       mode: mode,
       stopTimings: {
         $elemMatch: {
@@ -105,17 +110,33 @@ async function getScheduledDepartures(station, db, mode, timeout) {
           }
         }
       }
-    }).toArray()
+    }
 
-    return departures.map(departure => {
-      let stopData = departure.stopTimings.filter(stop => stop.stopGTFSID === platform.stopGTFSID)[0]
+    let gtfsDepartures = await gtfsTimetables.findDocuments(query).toArray()
+    let liveDepartures = await liveTimetables.findDocuments(query).toArray()
+
+    function getID(departure) { return departure.departureTime + departure.origin + departure.destination }
+
+    let serviceIndex = []
+    let departures = []
+
+    liveDepartures.concat(gtfsDepartures).forEach(departure => {
+      let id = getID(departure)
+      if (!serviceIndex.includes(id)) {
+        serviceIndex.push(id)
+        departures.push(departure)
+      }
+    })
+
+    return departures.map(trip => {
+      let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === platform.stopGTFSID)[0]
       let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
 
-      departure.destination = departure.destination.slice(0, -16)
-      departure.origin = departure.origin.slice(0, -16)
+      trip.destination = trip.destination.slice(0, -16)
+      trip.origin = trip.origin.slice(0, -16)
 
       return {
-        trip: departure,
+        trip,
         scheduledDepartureTime: departureTime,
         estimatedDepartureTime: null,
         actualDepartureTime: departureTime,
@@ -123,8 +144,9 @@ async function getScheduledDepartures(station, db, mode, timeout) {
         scheduledDepartureTimeMinutes: stopData.departureTimeMinutes,
         cancelled: false,
         cityLoopConfig: [],
-        destination: departure.destination,
-        runID: ''
+        destination: trip.destination,
+        runID: '',
+        cancelled: trip.type === 'cancelled'
       }
     }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }
