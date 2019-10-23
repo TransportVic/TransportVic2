@@ -16,7 +16,6 @@ module.exports = async function (db, ptvRunID, mode, time) {
   let url = `/v3/pattern/run/${ptvRunID}/route_type/${modes[mode]}?expand=stop&expand=run&expand=route`
   if (time)
     url += `&date_utc=${time}`
-
   let {departures, stops, runs, routes} = await ptvAPI(url)
   let run = Object.values(runs)[0]
 

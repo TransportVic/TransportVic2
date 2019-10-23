@@ -7,6 +7,7 @@ module.exports = async function (suspensions, db) {
   suspensions.forEach(async suspension => {
 
     let stationsAffected = suspension.description.match(/between ([ \w]+) and ([ \w]+) stations/)
+    if (!stationsAffected) return
     let startStation = stationsAffected[1].trim() + ' Railway Station',
         endStation = stationsAffected[2].trim() + ' Railway Station'
     let fromTime = moment.tz(suspension.from_date, 'Australia/Melbourne')

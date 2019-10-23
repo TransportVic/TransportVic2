@@ -31,13 +31,21 @@ async function getStoppingPatternWithCache(db, coachDeparture, destination) {
   } else return tripCache[id]
 }
 
-async function getDeparturesFromPTV(station, db) {
+function getAllStopGTFSIDs(stop) {
+  let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional coach', false)
+  let coachGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional train', false)
+  return gtfsIDs.concat(coachGTFSIDs).filter((e, i, a) => a.indexOf(e) == i)
+}
+
+async function getDeparturesFromPTV(stop, db) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
-  let gtfsIDs = departureUtils.getUniqueGTFSIDs(station, 'regional coach', healthCheck.isOnline())
-  let coachGTFSIDs = departureUtils.getUniqueGTFSIDs(station, 'regional train', healthCheck.isOnline())
+  let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional coach', healthCheck.isOnline())
+  let coachGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional train', healthCheck.isOnline())
   gtfsIDs = gtfsIDs.concat(coachGTFSIDs).filter((e, i, a) => a.indexOf(e) == i)
   let mappedDepartures = []
   let now = utils.now()
+
+  let allGTFSIDs = getAllStopGTFSIDs(stop)
 
   await async.forEach(gtfsIDs, async stopGTFSID => {
     const {departures, runs} = await ptvAPI(`/v3/departures/route_type/3/stop/${stopGTFSID}?gtfs=true&max_results=5&expand=run`)
@@ -53,7 +61,7 @@ async function getDeparturesFromPTV(station, db) {
       let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime)
       if (departureTime.diff(now, 'minutes') > 180) return
 
-      let trip = await departureUtils.getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, run.destination_name, 'regional coach')
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, run.destination_name, 'regional coach')
       if (!trip) trip = await getStoppingPatternWithCache(db, coachDeparture, run.destination_name)
       mappedDepartures.push({
         trip,
@@ -69,8 +77,8 @@ async function getDeparturesFromPTV(station, db) {
     .sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
 }
 
-async function getScheduledDepartures(station, db, useLive) {
-  let gtfsIDs = departureUtils.getUniqueGTFSIDs(station, 'regional coach')
+async function getScheduledDepartures(stop, db, useLive) {
+  let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional coach')
 
   return (await async.map(gtfsIDs, async gtfsID => {
     return await departureUtils.getScheduledDepartures(gtfsID, db, 'regional coach', 180, useLive)
@@ -79,14 +87,16 @@ async function getScheduledDepartures(station, db, useLive) {
   }, [])
 }
 
-async function getDepartures(station, db) {
+async function getDepartures(stop, db) {
+  if (departuresCache.get(stop.stopName + 'C')) return departuresCache.get(stop.stopName + 'C')
+
   let departures
   if (healthCheck.isOnline())
-    departures = await getDeparturesFromPTV(station, db)
+    departures = await getDeparturesFromPTV(stop, db)
   else
-    departures = await getScheduledDepartures(station, db, false)
+    departures = await getScheduledDepartures(stop, db, false)
 
-  let coachOverrides = await getScheduledDepartures(station, db, true)
+  let coachOverrides = await getScheduledDepartures(stop, db, true)
 
   coachOverrides = coachOverrides.map(departure => {
     departure.isOverride = true
@@ -109,6 +119,7 @@ async function getDepartures(station, db) {
     }
   })
 
+  departuresCache.put(stop.stopName + 'C', departures)
   return Object.values(mergedCoachDepartures)
 }
 

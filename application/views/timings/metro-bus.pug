@@ -1,0 +1,33 @@
+extends ../layout
+
+block head
+  title=`TransportVic - ${stop.stopName}`
+
+block title
+  span=stop.stopName
+
+block scripts
+  script(src='/static/scripts/timings.js' async)
+  
+append style
+  link(rel='stylesheet' href='/static/css/combined-colours.css')
+  link(rel='stylesheet' href='/static/css/timings/base-style.css')
+
+append content
+  div#departures
+    // todo do up by route-by dir page
+    for departure in departures
+      div.departure
+        // todo route colours
+        a(class=`leftContainer platform cdc-melbourne`)
+          span
+          span=departure.routeNumber
+        a.departureInfo
+          span Towards
+          span=departure.trip.destination
+          if departure.vehicleDescriptor.supplier === 'Smartrak'
+            span=`Smartrak ID: ${departure.vehicleDescriptor.id}`
+        div.timings
+          a(href=departure.tripURL class=`timing ${departure.headwayDevianceClass}`)
+            span=departure.prettyTimeToArrival
+            span=departure.actualDepartureTime.format('HH:mm')

@@ -104,6 +104,7 @@ module.exports = class MainServer {
       'timing-pages/VLine': '/vline/timings',
       'timing-pages/MetroTrains': '/metro/timings',
       'timing-pages/RegionalCoach': '/coach/timings',
+      'timing-pages/MetroBus': '/bus/timings',
 
       'run-pages/MetroTrains': '/metro/run',
       'run-pages/VLineTrains': '/vline/run',
