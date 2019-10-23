@@ -8,6 +8,7 @@ const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
+const busStopNameModifier = require('../../load-gtfs/metro-bus/bus-stop-name-modifier')
 
 let tripLoader = {}
 let tripCache = {}
@@ -59,8 +60,10 @@ async function getDeparturesFromPTV(stop, db) {
 
       if (actualDepartureTime.diff(now, 'minutes') > 120) return
 
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, run.destination_name, 'metro bus')
-      if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, run.destination_name)
+      let destination = busStopNameModifier(run.destination_name)
+
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'metro bus')
+      if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, destination)
       let vehicleDescriptor = run.vehicle_descriptor || {}
 
       mappedDepartures.push({
