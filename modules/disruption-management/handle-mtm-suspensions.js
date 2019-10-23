@@ -157,24 +157,9 @@ module.exports = async function (suspensions, db) {
       },
       type: "suspension"
     })
-    await liveTimetables.bulkWrite(splitTrips.map(trip => {
-      let key = {
-        mode: "metro train",
-        routeName: trip.routeName,
-        origin: trip.origin,
-        destination: trip.destination,
-        departureTime: trip.departureTime,
-        type: "suspension",
-        operationDay: trip.operationDay
-      }
-
-      return {
-        replaceOne: {
-          filter: key,
-          replacement: trip,
-          upsert: true
-        }
-      }
-    }))
+    if (splitTrips.length)
+      await liveTimetables.bulkWrite(splitTrips.map(trip => {
+        return { insertOne: trip }
+      }))
   })
 }
