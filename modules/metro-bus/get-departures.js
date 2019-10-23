@@ -79,7 +79,7 @@ async function getDeparturesFromPTV(stop, db) {
   })
 
   return mappedDepartures.sort((a, b) => a.destination.length - b.destination.length)
-    .sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+    .sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }
 
 async function getScheduledDepartures(stop, db) {
