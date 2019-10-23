@@ -140,6 +140,38 @@ async function watchVLineDisruptions(db) {
   })
 }
 
+// during peak an increased update freq of 10min is used - 24req during both peaks combined
+// 4 hours peak time
+function isPeak() {
+  let minutes = utils.getMinutesPastMidnightNow()
+
+  let isAMPeak = 360 <= minutes && minutes <= 510 // 0630 - 0830
+  let isPMPeak = 1020 <= minutes && minutes <= 1140 // 1700 - 1900
+
+  return isAMPeak || isPMPeak
+}
+
+// during night a reduced frequency of 20min is used - 24req during night time
+// 8 hours night time
+function isNight() {
+  let minutes = utils.getMinutesPastMidnightNow()
+
+  let isPast2130 = minutes > 1290 // past 2130
+  let isBefore0530 = minutes < 330 // before 0530
+
+  return isPast2130 || isBefore0530
+}
+
+// 4hr peak -> 24req
+// 8hr night-> 24req
+// 12hr left-> 48req
+// total      96req per endpoint not account restarts
+function updateRefreshRate() {
+  if (isNight()) refreshRate = 20
+  else if (isPeak()) refreshRate = 10
+  else refreshRate = 15
+}
+
 database.connect((err) => {
   let liveTimetables = database.getCollection('live timetables')
   liveTimetables.createIndex({
@@ -153,19 +185,23 @@ database.connect((err) => {
 
   processVLineCoachOverrides(database)
 
+  let functions = [watchPTVDisruptions, watchVLineDisruptions]
+
   async function refreshCache() {
     try {
-      watchPTVDisruptions(database)
-      watchVLineDisruptions(database)
+      await async.forEach(functions, async fn => {
+        await fn(database)
+      })
     } catch (e) {
       console.log('Failed to pass health check, running offline')
-      console.err(e)
       isOnline = false
+    } finally {
+      updateRefreshRate()
+      setTimeout(refreshCache, refreshRate * 60 * 1000)
     }
   }
 
-  setInterval(refreshCache, refreshRate * 60 * 1000);
-  refreshCache();
+  refreshCache()
 })
 
 module.exports = {
