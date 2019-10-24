@@ -24,7 +24,7 @@ for regionalCoachStop in results.filter(stop => stop.bays.filter(bay => bay.mode
       span=regionalCoachStop.stopName
       
 for metroBusStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'metro bus').length)
-  a(href=`/bus/timings/${metroBusStop.codedName}`).busStop.result
+  a(href=`/bus/timings/${metroBusStop.codedSuburb[0]}/${metroBusStop.codedName}`).busStop.result
     div.leftContainer
       img(src='/static/images/clear-icons/bus.svg')
     div.resultDetails

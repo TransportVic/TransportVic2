@@ -18,7 +18,11 @@ for stop in stops
     let codedName = stop.codedName
     if (stop.mode.endsWith('train'))
       codedName = codedName.slice(0, -16)
-  a(href=`/${stopIcons[stop.mode]}/timings/${codedName}` class=`result ${stopCSSClasses[stop.mode]}`)
+    let url = `/${stopIcons[stop.mode]}/`
+    if (stop.mode.includes('bus'))
+      url += `${stop.suburb}/`
+    url += `timings/${codedName}`
+  a(href=url class=`result ${stopCSSClasses[stop.mode]}`)
     div.leftContainer.miniIcon
       img(src=`/static/images/clear-icons/${stopIcons[stop.mode]}.svg`)
       span.distance=stop.smallestDistance + ' metres'

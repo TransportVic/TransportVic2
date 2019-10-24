@@ -4,9 +4,10 @@ const getDepartures = require('../../../modules/metro-bus/get-departures')
 const moment = require('moment')
 const utils = require('../../../utils')
 
-router.get('/:stopName', async (req, res) => {
+router.get('/:suburb/:stopName', async (req, res) => {
   const stop = await res.db.getCollection('stops').findDocument({
-    codedName: req.params.stopName
+    codedName: req.params.stopName,
+    codedSuburb: req.params.suburb
   })
 
   if (!stop || !stop.bays.filter(bay => bay.mode === 'metro bus')) {

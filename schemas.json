@@ -73,6 +73,7 @@
   "stop": {
     "stopName": "string",
     "suburb": ["string"],
+    "codedSuburb": ["string"],
     "codedName": "string",
     "bays": [{
       "originalName": "string"

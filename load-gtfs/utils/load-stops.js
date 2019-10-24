@@ -178,6 +178,8 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
       coordinates: stop.bays.map(bay => bay.location.coordinates)
     }
 
+    stop.codedSuburb = stop.suburb.map(utils.encodeName)
+
     let stopData
     if (stopData = await stops.findDocument(key)) {
       let baysToUpdate = stop.bays.map(bay => bay.stopGTFSID)
@@ -209,6 +211,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
         })
 
       stop.suburb = stopData.suburb.concat(stop.suburb).filter((e, i, a) => a.indexOf(e) === i)
+      stop.codedSuburb = stop.suburb.map(utils.encodeName)
 
       await stops.updateDocument(key, {
         $set: stop

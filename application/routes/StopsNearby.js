@@ -44,7 +44,7 @@ function expandStop(stop) {
       stops[bay.mode] = {
         stopName: stop.stopName,
         mode: bay.mode,
-        suburb: stop.suburb[0],
+        suburb: stop.codedSuburb[0],
         type: typeMap[bay.mode],
         location: stop.location,
         codedName: stop.codedName
