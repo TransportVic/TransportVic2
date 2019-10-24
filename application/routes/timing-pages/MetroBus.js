@@ -46,7 +46,7 @@ router.get('/:stopName', async (req, res) => {
     let destinationShortName = departure.trip.destination.split('/')[0]
     let {destination} = departure.trip
     if (!utils.isStreet(destinationShortName)) destination = destinationShortName
-    departure.destination = destination
+    departure.destination = destination.replace('Shopping Centre', 'SC')
 
     return departure
   })
