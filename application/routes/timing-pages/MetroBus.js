@@ -21,9 +21,8 @@ router.get('/:stopName', async (req, res) => {
 
     if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
     else {
-      departure.prettyTimeToArrival = ''
-      if (timeDifference.get('hours')) departure.prettyTimeToArrival += timeDifference.get('hours') + ' h '
-      if (timeDifference.get('minutes')) departure.prettyTimeToArrival += timeDifference.get('minutes') + ' min'
+      let minutesToDeparture = timeDifference.get('hours') * 60 + timeDifference.get('minutes')
+      departure.prettyTimeToArrival = minutesToDeparture + ' m'
     }
 
     departure.headwayDevianceClass = 'unknown'
@@ -47,7 +46,32 @@ router.get('/:stopName', async (req, res) => {
     return departure
   })
 
-  res.render('timings/metro-bus', { departures, stop })
+  let services = []
+  let groupedDepartures = {}
+
+  departures.forEach(departure => {
+    if (!services.includes(departure.routeNumber)) {
+      services.push(departure.routeNumber)
+      groupedDepartures[departure.routeNumber] = {}
+    }
+  })
+  services.forEach(service => {
+    let serviceDepartures = departures.filter(d => d.routeNumber === service)
+    let serviceDestinations = []
+
+    serviceDepartures.forEach(departure => {
+      let {destination} = departure.trip
+      if (!serviceDestinations.includes(destination)) {
+        serviceDestinations.push(destination)
+        groupedDepartures[service][destination] =
+          serviceDepartures.filter(d => d.trip.destination === destination)
+      }
+    })
+  })
+
+  services = services.sort((a, b) => a - b)
+
+  res.render('timings/metro-bus', { services, groupedDepartures, stop })
 })
 
 module.exports = router
