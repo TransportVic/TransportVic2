@@ -9,6 +9,7 @@ const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
 const busStopNameModifier = require('../../load-gtfs/metro-bus/bus-stop-name-modifier')
+const smartrakIDs = require('../../known-smartrak-ids')
 
 let tripLoader = {}
 let tripCache = {}
@@ -66,6 +67,12 @@ async function getDeparturesFromPTV(stop, db) {
       if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, destination)
       let vehicleDescriptor = run.vehicle_descriptor || {}
 
+      let busRego
+      if (vehicleDescriptor.supplier === 'Smartrak') {
+        let smartrakID = vehicleDescriptor.id
+        busRego = smartrakIDs[smartrakID]
+      }
+
       mappedDepartures.push({
         trip,
         scheduledDepartureTime,
@@ -73,7 +80,8 @@ async function getDeparturesFromPTV(stop, db) {
         actualDepartureTime,
         destination: trip.destination,
         vehicleDescriptor,
-        routeNumber: route.route_number
+        routeNumber: route.route_number,
+        busRego
       })
     })
   })
