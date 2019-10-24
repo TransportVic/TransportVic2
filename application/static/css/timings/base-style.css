@@ -145,9 +145,12 @@ a.timing.mini {
   font-size: calc(1vw + 1vh);
 }
 
+a.timing.mini span {
+  width: calc(3vw + 3vh);
+}
+
 a.timing.mini span:nth-child(3) {
   position: absolute;
-  width: calc(3vw + 3vh);
   font-size: calc(0.75vw + 0.75vh);
 
   margin-top: calc((7vw + 7vh) / 2 - (0.75vw + 0.75vh));
