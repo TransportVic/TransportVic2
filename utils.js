@@ -155,5 +155,16 @@ module.exports = {
     console.log(`${diff}ms ${url}`)
 
     return body
+  },
+  isStreet: shortName => {
+    return (shortName.endsWith('St') || shortName.endsWith('Rd')
+      || shortName.endsWith('Pde') || shortName.endsWith('Cl')
+      || shortName.endsWith('Dr') || shortName.endsWith('Ave')
+      || shortName.endsWith('Gr') || shortName.endsWith('Ct')
+      || shortName.endsWith('Hwy') || shortName.endsWith('Tce')
+      || shortName.endsWith('Wat') || shortName.endsWith('Cl')
+      || shortName.endsWith('Crst') || shortName.endsWith('Pl')
+      || shortName.endsWith('Bvd') || shortName.endsWith('Cres'))
   }
+
 }

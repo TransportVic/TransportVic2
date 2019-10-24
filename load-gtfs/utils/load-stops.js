@@ -67,20 +67,9 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
 
   let mergedStops = {}
 
-  function canMerge(shortName) {
-    return !(shortName.endsWith('St') || shortName.endsWith('Rd')
-      || shortName.endsWith('Pde') || shortName.endsWith('Cl')
-      || shortName.endsWith('Dr') || shortName.endsWith('Ave')
-      || shortName.endsWith('Gr') || shortName.endsWith('Ct')
-      || shortName.endsWith('Hwy') || shortName.endsWith('Tce')
-      || shortName.endsWith('Wat') || shortName.endsWith('Cl')
-      || shortName.endsWith('Crst') || shortName.endsWith('Pl')
-      || shortName.endsWith('Bvd') || shortName.endsWith('Cres'))
-  }
-
   function getStopHashID(bayData, shortName) {
     let stopHash = createStopHash(bayData.fullStopName)
-    if (!canMerge(shortName)) return stopHash
+    if (utils.isStreet(shortName)) return stopHash
 
     let bayCoordinates = bayData.location.coordinates
 
@@ -178,7 +167,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
         }
       }
     }
-    if (canMerge(stop.mergeName)) {
+    if (!utils.isStreet(stop.mergeName)) {
       key.mergeName = stop.mergeName
     } else {
       key.stopName = stop.stopName
@@ -204,7 +193,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
         stop.stopName = stop.mergeName
         stop.codedName = utils.encodeName(stop.stopName)
       }
-      
+
       stop.bays = stopData.bays
         .filter(bay => !(baysToUpdate.includes(bay.stopGTFSID) && bay.mode === mode))
         .concat(stop.bays)

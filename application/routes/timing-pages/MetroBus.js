@@ -43,6 +43,11 @@ router.get('/:stopName', async (req, res) => {
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
       + utils.getYYYYMMDDNow()
 
+    let destinationShortName = departure.trip.destination.split('/')[0]
+    let {destination} = departure.trip
+    if (!utils.isStreet(destinationShortName)) destination = destinationShortName
+    departure.destination = destination
+
     return departure
   })
 
@@ -60,11 +65,11 @@ router.get('/:stopName', async (req, res) => {
     let serviceDestinations = []
 
     serviceDepartures.forEach(departure => {
-      let {destination} = departure.trip
+      let {destination} = departure
       if (!serviceDestinations.includes(destination)) {
         serviceDestinations.push(destination)
         groupedDepartures[service][destination] =
-          serviceDepartures.filter(d => d.trip.destination === destination)
+          serviceDepartures.filter(d => d.destination === destination)
       }
     })
   })
