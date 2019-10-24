@@ -117,7 +117,7 @@ async function watchVLineDisruptions(db) {
   await async.forEach(items, async item => {
     let text = item.contentSnippet
     if (text.includes('will not run')) {
-      let service = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) to ([\w ]*?) service will not run /)
+      let service = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (:?to|-) ([\w ]*?) service will not run /)
       let departureTime = service[1],
           origin = service[2] + ' Railway Station',
           destination = service[3] + ' Railway Station'
