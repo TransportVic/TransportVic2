@@ -30,4 +30,4 @@ append content
         div.timings
           a(href=departure.tripURL class=`timing ${departure.headwayDevianceClass}`)
             span=departure.prettyTimeToArrival
-            span=departure.actualDepartureTime.format('HH:mm')
+            span=departure.scheduledDepartureTime.format('HH:mm')
