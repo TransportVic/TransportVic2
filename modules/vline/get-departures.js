@@ -231,21 +231,24 @@ async function getDepartures(station, db) {
   let scheduledDepartures = (await departureUtils.getScheduledDepartures(station, db, 'regional train', 180))
   let coachTrips = await getCoachReplacements(station, db)
   if (!healthCheck.isOnline()) return scheduledDepartures.concat(coachTrips)
+  try {
+    let departures = await getDeparturesFromVNET(station, db)
+    departures = departures.concat(coachTrips)
 
-  let departures = await getDeparturesFromVNET(station, db)
-  departures = departures.concat(coachTrips)
+    let flags = await getServiceFlags(station)
 
-  let flags = await getServiceFlags(station)
+    departures = departures.map(departure => {
+      let id = departure.scheduledDepartureTime.toISOString() + departure.trip.destination
 
-  departures = departures.map(departure => {
-    let id = departure.scheduledDepartureTime.toISOString() + departure.trip.destination
+      departure.flags = flags[id] || {}
+      return departure
+    }).concat(scheduledDepartures.filter(departure => departure.cancelled))
 
-    departure.flags = flags[id] || {}
-    return departure
-  }).concat(scheduledDepartures.filter(departure => departure.cancelled))
-
-  departuresCache.put(station.stopName + 'V', departures)
-  return filterDepartures(departures)
+    departuresCache.put(station.stopName + 'V', departures)
+    return filterDepartures(departures)
+  } catch (e) {
+    return scheduledDepartures.concat(coachTrips)
+  }
 }
 
 module.exports = getDepartures
