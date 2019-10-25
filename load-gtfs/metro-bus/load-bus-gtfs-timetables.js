@@ -5,6 +5,7 @@ const fs = require('fs')
 const loadGTFSTimetables = require('../utils/load-gtfs-timetables')
 const lr = require('../../line-reader')
 const crypto = require('crypto')
+let gtfsNumberMapping = require('./gtfs-number-map')
 
 const calendar = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/calendar.txt`).toString())
 const calendarDates = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/calendar_dates.txt`).toString())
@@ -97,7 +98,7 @@ database.connect({
 
   await loadBatch()
 
-  await updateStats('bus-gtfs-timetables', loaded, new Date() - benchmarkStart)
+  await updateStats(gtfsNumberMapping[gtfsNumber] + '-gtfs-timetables', loaded, new Date() - benchmarkStart)
   console.log('Completed loading in ' + loaded + ' bus trips')
   process.exit()
 })

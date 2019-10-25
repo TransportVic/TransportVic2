@@ -5,13 +5,7 @@ const fs = require('fs')
 const loadStops = require('../utils/load-stops')
 const { createStopsLookup } = require('../utils/datamart-utils')
 let gtfsNumber = process.argv[2]
-let gtfsNumberMapping = {
-  4: 'metro-bus',
-  6: 'regional-bus',
-  7: 'metro-bus',
-  8: 'night-bus',
-  11: 'skybus'
-}
+let gtfsNumberMapping = require('./gtfs-number-map')
 
 const stopsData = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/stops.txt`).toString())
 const datamartStops = require(`../../spatial-datamart/${gtfsNumberMapping[gtfsNumber]}-stops.json`).features
@@ -31,7 +25,7 @@ database.connect({
   let stopsLookup = createStopsLookup(datamartStops)
   let stopCount = await loadStops(stopsData, stops, 'bus', stopsLookup, busStopNameModifier)
 
-  await updateStats('bus-stops', stopCount, new Date() - start)
+  await updateStats(gtfsNumberMapping[gtfsNumber] + '-stops', stopCount, new Date() - start)
   console.log('Completed loading in ' + stopCount + ' bus stops')
   process.exit()
 });

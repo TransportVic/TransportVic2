@@ -4,6 +4,7 @@ const utils = require('../../utils')
 const fs = require('fs')
 const loadRoutes = require('../utils/load-routes')
 let gtfsNumber = process.argv[2]
+let gtfsNumberMapping = require('./gtfs-number-map')
 
 const routeData = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/routes.txt`).toString())
 const shapeData = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/shapes.txt`).toString())
@@ -57,7 +58,7 @@ database.connect({
     return ptvRoutes[routeGTFSID] || _
   })
 
-  await updateStats('bus-routes', routeCount, new Date() - start)
+  await updateStats(gtfsNumberMapping[gtfsNumber] + '-routes', routeCount, new Date() - start)
   console.log('Completed loading in ' + routeCount + ' bus routes')
   process.exit()
 });
