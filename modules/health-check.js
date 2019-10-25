@@ -102,7 +102,11 @@ async function setServiceAsCancelled(db, query, operationDay, isCoach) {
     delete timetable.operationDays
     delete timetable._id
     timetable.type = 'cancelled'
-    if (isCoach) timetable.mode = 'regional coach'
+    if (isCoach) {
+      timetable.mode = 'regional coach'
+      query.mode = 'regional coach'
+      timetable.type = 'vline coach replacement'
+    }
 
     await liveTimetables.replaceDocument(query, timetable, {
       upsert: true
@@ -128,7 +132,7 @@ async function watchVLineDisruptions(db) {
             let parts = service.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (:?to|-) ([\w ]*?) /)
             departureTime = parts[1]
             origin = parts[2] + ' Railway Station'
-            destination = parts[3] + ' Railway Station'
+            destination = parts[4] + ' Railway Station'
             isCoach = text.includes('coaches') && text.includes('replace')
             matches.push({departureTime, origin, destination, isCoach})
           })
@@ -136,14 +140,14 @@ async function watchVLineDisruptions(db) {
       } else {
         departureTime = service[1]
         origin = service[2] + ' Railway Station'
-        destination = service[3] + ' Railway Station'
+        destination = service[4] + ' Railway Station'
         isCoach = text.includes('replacement coaches')
         matches.push({departureTime, origin, destination, isCoach})
       }
 
       let operationDay = utils.getYYYYMMDDNow()
 
-      matches.forEach(match => {
+      await async.forEach(matches, async match => {
         let {departureTime, origin, destination, isCoach} = match
 
         let query = {
@@ -156,7 +160,7 @@ async function watchVLineDisruptions(db) {
           }]
         }
 
-        setServiceAsCancelled(db, query, operationDay, isCoach)
+        await setServiceAsCancelled(db, query, operationDay, isCoach)
       })
     }
   })
@@ -216,6 +220,7 @@ database.connect((err) => {
       })
     } catch (e) {
       console.log('Failed to pass health check, running offline')
+      console.err(e)
       isOnline = false
     } finally {
       updateRefreshRate()
