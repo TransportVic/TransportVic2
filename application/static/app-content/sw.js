@@ -1,4 +1,4 @@
-const version = "0.0.8"
+const version = "0.0.8b"
 const cacheName = `transportvic-${version}`
 
 function cacheFiles(files) {
@@ -82,7 +82,7 @@ self.addEventListener('install', e => {
       '/static/scripts/mockups/reload-fss-escalator.js',
       '/static/scripts/mockups/reload-mini-lcd.js',
 
-      '/static/scripts/vendor/plotly.js',
+      // '/static/scripts/vendor/plotly.js',
 
       '/static/scripts/geojson-visualise.js',
       '/static/scripts/nearby.js',
