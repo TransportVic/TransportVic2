@@ -5,6 +5,6 @@ global.preserve = process.argv[3] === 'true'
 global.gtfsMode = 'bus'
 
 if (config.gtfsBatcher)
-  require('../generic/load-bus-gtfs-timetables-batched')
+  require('../generic/load-gtfs-timetables-batched')
 else
   require('./load-bus-gtfs-timetables-nobatch')
