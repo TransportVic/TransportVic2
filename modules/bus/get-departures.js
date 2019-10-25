@@ -37,7 +37,9 @@ async function getDeparturesFromPTV(stop, db) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', true, false)
   let nightbusGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', true, true)
-  let allGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', false)
+
+  let allGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', false, false)
+    .concat(departureUtils.getUniqueGTFSIDs(stop, 'bus', false, true))
   let mappedDepartures = []
   let now = utils.now()
 
@@ -70,7 +72,11 @@ async function getDeparturesFromPTV(stop, db) {
 
       let destination = busStopNameModifier(utils.adjustStopname(run.destination_name.trim()))
 
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', utils.getYYYYMMDD(scheduledDepartureTime))
+      let day = utils.getYYYYMMDD(scheduledDepartureTime)
+      if (isNightBus && (scheduledDepartureTimeMinutes % 1440) < 180)
+        day = utils.getYYYYMMDD(scheduledDepartureTime.clone().add(1, 'day'))
+
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', day)
       if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
       let vehicleDescriptor = run.vehicle_descriptor || {}
 
@@ -88,7 +94,8 @@ async function getDeparturesFromPTV(stop, db) {
         destination: trip.destination,
         vehicleDescriptor,
         routeNumber: route.route_number,
-        busRego
+        busRego,
+        isNightBus
       })
     })
   })

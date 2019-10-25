@@ -29,8 +29,7 @@ function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
 }
 
 async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, destination, mode, day) {
-  let departureHour = Math.floor(scheduledDepartureTimeMinutes / 60)
-  if (departureHour < 3) departureHour += 24 // 3am PT day :(
+  let departureHour = Math.floor(scheduledDepartureTimeMinutes / 60) % 24
 
   let query = {
     operationDays: day || utils.getYYYYMMDDNow(),
@@ -40,19 +39,19 @@ async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, desti
         stopGTFSID: {
           $in: stopGTFSID
         },
-        departureTimeMinutes: scheduledDepartureTimeMinutes
+        departureTimeMinutes: scheduledDepartureTimeMinutes % 1440
       }
     },
-    destination: utils.adjustStopname(destination),
-    tripStartHour: {
-      $lte: departureHour
-    },
-    tripEndHour: {
-      $gte: departureHour
-    }
+    destination: utils.adjustStopname(destination)
   }
 
-  return await db.getCollection('live timetables').findDocument(query) || await db.getCollection('gtfs timetables').findDocument(query)
+  let live = await db.getCollection('live timetables').findDocument(query)
+  if (live) return live
+
+  query.tripStartHour = { $lte: departureHour }
+  query.tripEndHour = { $gte: departureHour }
+
+  return await db.getCollection('gtfs timetables').findDocument(query)
 }
 
 async function getScheduledDepartures(stopGTFSID, db, mode, timeout, useLive) {

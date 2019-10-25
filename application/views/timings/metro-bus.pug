@@ -19,14 +19,18 @@ append content
       -
         let serviceDepartures = groupedDepartures[service]
         let destinations = Object.keys(serviceDepartures).sort((a, b) => a.length - b.length)
+        let hasNumber = service !== ''
       for destination in destinations
         - let destinationDepartures = serviceDepartures[destination]
-        div.departure
+        div(class=`departure${hasNumber ? '' : ' no-number'}`)
           // todo route colours
-          a(class=`leftContainer platform cdc-melbourne`)
-            span
-            span=service
+          if hasNumber
+            a(class=`leftContainer platform cdc-melbourne`)
+              span
+              span=service
           a.departureInfo
+            if !hasNumber
+              span=destinationDepartures[0].trip.routeName
             span Towards
             span=destination
           div.timings
