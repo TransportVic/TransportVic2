@@ -3,8 +3,10 @@ const config = require('../../config.json')
 const utils = require('../../utils')
 const fs = require('fs')
 const loadRoutes = require('../utils/load-routes')
-const routeData = utils.parseGTFSData(fs.readFileSync('gtfs/4/routes.txt').toString())
-const shapeData = utils.parseGTFSData(fs.readFileSync('gtfs/4/shapes.txt').toString())
+let gtfsNumber = process.argv[2]
+
+const routeData = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/routes.txt`).toString())
+const shapeData = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/shapes.txt`).toString())
 const ptvAPI = require('../../ptv-api')
 
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
@@ -45,7 +47,7 @@ database.connect({
 
   let ptvRoutes = (await ptvAPI('/v3/routes?route_types=2')).routes
   ptvRoutes = ptvRoutes.filter(route => {
-    return route.route_gtfs_id.startsWith('4-')
+    return route.route_gtfs_id.startsWith(`${gtfsNumber}-`)
   }).reduce((acc, route) => {
     acc[route.route_gtfs_id] = adjustRouteName(route.route_name)
     return acc

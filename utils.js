@@ -63,7 +63,7 @@ module.exports = {
       name = name.replace('Railway Station', 'Station')
     }
 
-    if (name.includes('Station') && !name.includes('Bus Station')) {
+    if (name.includes('Station') && !name.includes('Bus Station') && !name.startsWith('Station')) {
       name = name.replace('Station', 'Railway Station')
     }
 

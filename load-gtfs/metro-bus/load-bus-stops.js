@@ -4,7 +4,9 @@ const utils = require('../../utils')
 const fs = require('fs')
 const loadStops = require('../utils/load-stops')
 const { createStopsLookup } = require('../utils/datamart-utils')
-const stopsData = utils.parseGTFSData(fs.readFileSync('gtfs/4/stops.txt').toString())
+let gtfsNumber = process.argv[2]
+
+const stopsData = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/stops.txt`).toString())
 const datamartStops = require('../../spatial-datamart/metro-bus-stops.json').features
 const busStopNameModifier = require('./bus-stop-name-modifier')
 

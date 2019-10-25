@@ -6,8 +6,8 @@ const loadGTFSTimetables = require('../utils/load-gtfs-timetables')
 const lr = require('../../line-reader')
 const crypto = require('crypto')
 
-const calendar = utils.parseGTFSData(fs.readFileSync('gtfs/4/calendar.txt').toString())
-const calendarDates = utils.parseGTFSData(fs.readFileSync('gtfs/4/calendar_dates.txt').toString())
+const calendar = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/calendar.txt`).toString())
+const calendarDates = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/calendar_dates.txt`).toString())
 
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
 const updateStats = require('../utils/gtfs-stats')
@@ -50,7 +50,7 @@ database.connect({
   headsign => null, routeGTFSID => true, false)
 
   async function loadBatch() {
-    let lines = await lr.getLines('gtfs/4/trips.txt', 5000, start)
+    let lines = await lr.getLines(`gtfs/${gtfsNumber}/trips.txt`, 5000, start)
     let lineCount = lines.length
     if (!lineCount) return
 
@@ -69,7 +69,7 @@ database.connect({
     // console.log('read in trip data, reading timing data now - ' + rawTripTimesData.length + ' lines to check, ' + tripIDs.length + ' trips to match')
     console.log('read in trip data, reading timing data now ' + tripIDs.length + ' trips to match')
     let tstart = new Date()
-    let tripTimingLines = await lr.getLinesFilter('gtfs/4/stop_times.txt', line => {
+    let tripTimingLines = await lr.getLinesFilter(`gtfs/${gtfsNumber}/stop_times.txt`, line => {
       let tripID = line.slice(1, line.indexOf('"', 2))
 
       return tripIDs.indexOf(shaHash(tripID)) !== -1 // indexOf faster than includes

@@ -55,9 +55,6 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 
 ## Next up to be added:
 - refactor out on-time stuff
-- change live db to use operationDays just like static dumps
-- bus timings
-  - same as mtm for impl but without the city loop and short trip stuff
 - route view
 - Icons for the various stopping pattern pages
   - Completed:
