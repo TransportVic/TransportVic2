@@ -22,6 +22,7 @@ module.exports = async function (db, ptvRunID, mode, time) {
 
   let {departures, stops, runs, routes} = await ptvAPI(url)
   let run = Object.values(runs)[0]
+  if (mode === 'nbus') mode = 'bus'
 
   departures = departures.map(departure => {
     departure.actualDepartureTime = moment.tz(departure.estimated_departure_utc || departure.scheduled_departure_utc, 'Australia/Melbourne')
@@ -32,7 +33,6 @@ module.exports = async function (db, ptvRunID, mode, time) {
   let dbStops = {}
   let checkModes = [mode]
   if (mode === 'regional coach') checkModes.push('regional train')
-  if (mode === 'nbus') checkModes = ['bus']
 
   await async.forEach(Object.values(stops), async stop => {
     let stopName = stop.stop_name.trim()
