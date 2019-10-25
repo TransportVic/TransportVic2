@@ -30,7 +30,11 @@ append content
             span Towards
             span=destination
           div.timings
-            for departure in destinationDepartures.slice(0, 4)
+            - let departures = destinationDepartures.slice(0, 4)
+              
+            for i in Array(4 - departures.length)
+              div.timing.mini(style='display: none')
+            for departure in departures
               a(href=departure.tripURL class=`timing mini ${departure.headwayDevianceClass}`)
                 span=departure.prettyTimeToArrival
                 span=departure.scheduledDepartureTime.format('HH:mm')

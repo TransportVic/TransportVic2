@@ -57,6 +57,8 @@ async function getDeparturesFromPTV(stop, db) {
       let estimatedDepartureTime = busDeparture.estimated_departure_utc ? moment.tz(busDeparture.estimated_departure_utc, 'Australia/Melbourne') : null
       let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
 
+      if (actualDepartureTime.diff(now, 'minutes') > 90) return
+
       let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
 
       let destination = busStopNameModifier(utils.adjustStopname(run.destination_name.trim()))
