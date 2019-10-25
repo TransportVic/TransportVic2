@@ -116,26 +116,48 @@ async function watchVLineDisruptions(db) {
   let items = feed.items.filter(item => item.title !== '')
   await async.forEach(items, async item => {
     let text = item.contentSnippet
-    if (text.includes('will not run')) {
-      let service = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (:?to|-) ([\w ]*?) service will not run /)
-      let departureTime = service[1],
-          origin = service[2] + ' Railway Station',
-          destination = service[3] + ' Railway Station'
-      let isCoach = text.includes('replacement coaches')
+    if (text.includes('will not run') || text.includes('has been cancelled')) {
+      let service = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (:?to|-) ([\w ]*?) service (:?will not run|has been cancelled) /)
+      let departureTime, origin, destination, isCoach
+      let matches = []
+
+      if (!service) {
+        if (text.match(/services (:?will not run|has been cancelled)/)) {
+          let services = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (:?to|-) ([\w ]*?) /g)
+          services.forEach(service => {
+            let parts = service.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (:?to|-) ([\w ]*?) /)
+            departureTime = parts[1]
+            origin = parts[2] + ' Railway Station'
+            destination = parts[3] + ' Railway Station'
+            isCoach = text.includes('coaches') && text.includes('replace')
+            matches.push({departureTime, origin, destination, isCoach})
+          })
+        }
+      } else {
+        departureTime = service[1]
+        origin = service[2] + ' Railway Station'
+        destination = service[3] + ' Railway Station'
+        isCoach = text.includes('replacement coaches')
+        matches.push({departureTime, origin, destination, isCoach})
+      }
 
       let operationDay = utils.getYYYYMMDDNow()
 
-      let query = {
-        departureTime, origin, destination,
-        mode: 'regional train',
-        $or: [{
-          operationDay
-        }, {
-          operationDays: operationDay
-        }]
-      }
+      matches.forEach(match => {
+        let {departureTime, origin, destination, isCoach} = match
 
-      setServiceAsCancelled(db, query, operationDay)
+        let query = {
+          departureTime, origin, destination,
+          mode: 'regional train',
+          $or: [{
+            operationDay
+          }, {
+            operationDays: operationDay
+          }]
+        }
+
+        setServiceAsCancelled(db, query, operationDay, isCoach)
+      })
     }
   })
 }

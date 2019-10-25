@@ -59,8 +59,6 @@ async function getDeparturesFromPTV(stop, db) {
 
       let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
 
-      if (actualDepartureTime.diff(now, 'minutes') > 120) return
-
       let destination = busStopNameModifier(run.destination_name)
 
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'metro bus')
@@ -107,7 +105,10 @@ async function getDepartures(stop, db) {
   if (healthCheck.isOnline())
     departures = await getDeparturesFromPTV(stop, db)
   else
-    departures = await getScheduledDepartures(stop, db, false)
+    departures = (await getScheduledDepartures(stop, db, false)).map(departure => {
+      departure.vehicleDescriptor = {}
+      return departure
+    })
 
   departuresCache.put(stop.stopName + 'B', departures)
   return departures
