@@ -97,7 +97,8 @@ module.exports = async function (db, ptvRunID, mode, time) {
     destinationArrivalTime: stopTimings[stopTimings.length - 1].arrivalTime,
     departureTime: stopTimings[0].departureTime,
     origin: stopTimings[0].stopName,
-    type: "timings"
+    type: "timings",
+    updateTime: new Date()
   }
 
   let key = {

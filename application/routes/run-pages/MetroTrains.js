@@ -32,13 +32,13 @@ async function pickBestTrip(data, db) {
     destinationArrivalTime: data.destinationArrivalTime
   }
 
-  let useLive = minutesToTripEnd > -5 && minutesToTripStart < 120
-
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
-  if (liveTrip && useLive) {
-    liveTrip.destination = liveTrip.destination.slice(0, -16)
-    liveTrip.origin = liveTrip.origin.slice(0, -16)
-    return liveTrip
+  if (liveTrip) {
+    if (!(liveTrip.type === 'timings' && new Date() - liveTrip.updateTime > 2 * 60 * 1000)) {
+      liveTrip.destination = liveTrip.destination.slice(0, -16)
+      liveTrip.origin = liveTrip.origin.slice(0, -16)
+      return liveTrip
+    }
   }
 
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument({
@@ -53,7 +53,7 @@ async function pickBestTrip(data, db) {
 
   let isStonyPoint = data.origin === 'stony-point' || data.destination === 'stony-point'
 
-  if (gtfsTrip && (!useLive || isStonyPoint)) {
+  if (gtfsTrip && isStonyPoint) {
     gtfsTrip.destination = gtfsTrip.destination.slice(0, -16)
     gtfsTrip.origin = gtfsTrip.origin.slice(0, -16)
 
