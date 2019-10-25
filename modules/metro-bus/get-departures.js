@@ -61,7 +61,7 @@ async function getDeparturesFromPTV(stop, db) {
 
       let destination = busStopNameModifier(run.destination_name)
 
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'metro bus')
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'metro bus', utils.getYYYYMMDD(scheduledDepartureTime))
       if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, destination)
       let vehicleDescriptor = run.vehicle_descriptor || {}
 
