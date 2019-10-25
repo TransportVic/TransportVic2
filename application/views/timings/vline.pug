@@ -52,14 +52,15 @@ append content
           else
             -
               let flags = ''
-              if (departure.flags.firstClassAvailable)
+              let checkFlags = departure.flags || {}
+              if (checkFlags.firstClassAvailable)
                 flags = 'First Class'
-              if (departure.flags.cateringAvailable) {
+              if (checkFlags.cateringAvailable) {
                 if (flags.length) flags += ' & '
                 flags += 'Catering'
               }
               if (flags.length) flags += ' Available'
-              if (departure.flags.reservationsOnly) {
+              if (checkFlags.reservationsOnly) {
                 if (flags.length) flags += ' - '
                 flags += 'Reservations Only'
               }

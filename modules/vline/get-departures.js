@@ -231,6 +231,7 @@ async function getDepartures(station, db) {
   let scheduledDepartures = (await departureUtils.getScheduledDepartures(station, db, 'regional train', 180))
   let coachTrips = await getCoachReplacements(station, db)
   if (!healthCheck.isOnline()) return scheduledDepartures.concat(coachTrips)
+
   try {
     let departures = await getDeparturesFromVNET(station, db)
     departures = departures.concat(coachTrips)
