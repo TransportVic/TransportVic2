@@ -36,7 +36,8 @@ async function pickBestTrip(data, db) {
     origin: originName,
     departureTime: data.departureTime,
     destination: destinationName,
-    destinationArrivalTime: data.destinationArrivalTime
+    destinationArrivalTime: data.destinationArrivalTime,
+    operationDays: data.operationDays
   }
 
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
@@ -53,7 +54,8 @@ async function pickBestTrip(data, db) {
     destination: destinationName,
     destinationArrivalTime: data.destinationArrivalTime,
     tripStartHour: { $lte: operationHour },
-    tripEndHour: { $gte: operationHour }
+    tripEndHour: { $gte: operationHour },
+    operationDays: data.operationDays
   })
 
   return gtfsTrip

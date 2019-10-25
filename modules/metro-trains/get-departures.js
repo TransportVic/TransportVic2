@@ -10,7 +10,7 @@ const getStoppingPattern = require('../utils/get-stopping-pattern')
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
 
-let burnleyGroup = [1, 2, 7, 9] // alamein, belgrave, glen waverley, lilydale
+let burnleyGroup = [1, 2, 7, 9, 99] // alamein, belgrave, glen waverley, lilydale
 let caulfieldGroup = [4, 6, 11, 12] // cranbourne, frankston, pakenham, sandringham
 let northenGroup = [3, 14, 15, 16, 17, 1482] // craigieburn, sunbury, upfield, werribee, williamstown, flemington racecourse
 let cliftonHillGroup = [5, 8] // mernda, hurstbridge

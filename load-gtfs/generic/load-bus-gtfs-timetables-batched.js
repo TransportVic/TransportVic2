@@ -41,14 +41,14 @@ database.connect({
   }, {unique: true, name: "gtfs timetable index"})
 
   if (!preserve)
-    await gtfsTimetables.deleteDocuments({mode: 'bus'})
+    await gtfsTimetables.deleteDocuments({mode: gtfsMode})
 
   let loaded = 0
   let start = 0
 
   let iteration = 0
 
-  let boundLoadBatch = (trips, tripTimesData) => loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'bus',
+  let boundLoadBatch = (trips, tripTimesData) => loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, gtfsMode,
   headsign => null, routeGTFSID => true, false)
 
   async function loadBatch() {

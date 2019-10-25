@@ -31,7 +31,8 @@ async function pickBestTrip(data, db) {
     origin: originStop.stopName,
     departureTime: data.departureTime,
     destination: destinationStop.stopName,
-    destinationArrivalTime: data.destinationArrivalTime
+    destinationArrivalTime: data.destinationArrivalTime,
+    operationDays: data.operationDays
   }
 
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
@@ -50,7 +51,8 @@ async function pickBestTrip(data, db) {
     destination: destinationStop.stopName,
     destinationArrivalTime: data.destinationArrivalTime,
     tripStartHour: { $lte: operationHour },
-    tripEndHour: { $gte: operationHour }
+    tripEndHour: { $gte: operationHour },
+    operationDays: data.operationDays
   })
 
   let isStonyPoint = data.origin === 'stony-point' || data.destination === 'stony-point'

@@ -23,7 +23,8 @@ async function pickBestTrip(data, db) {
     origin: originStop.stopName,
     departureTime: data.departureTime,
     destination: destinationStop.stopName,
-    destinationArrivalTime: data.destinationArrivalTime
+    destinationArrivalTime: data.destinationArrivalTime,
+    operationDays: data.operationDays
   }
 
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
@@ -34,20 +35,10 @@ async function pickBestTrip(data, db) {
   }
 
   // TODO: improve this
-  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument({
-    $and: [
-      query, {
-        operationDays: data.operationDays
-      }
-    ]
-  })
-  let vnetTrip = await db.getCollection('timetables').findDocument({
-    $and: [
-      query, {
-        operationDays: utils.getDayName(tripDay)
-      }
-    ]
-  })
+  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
+  
+  query.operationDays = utils.getDayName(tripDay)
+  let vnetTrip = await db.getCollection('timetables').findDocument(query)
 
   let {runID, vehicle} = vnetTrip || {}
 

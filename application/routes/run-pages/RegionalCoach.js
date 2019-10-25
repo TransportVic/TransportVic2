@@ -24,19 +24,14 @@ async function pickBestTrip(data, db) {
     origin: originStop.stopName,
     departureTime: data.departureTime,
     destination: destinationStop.stopName,
-    destinationArrivalTime: data.destinationArrivalTime
+    destinationArrivalTime: data.destinationArrivalTime,
+    operationDays: data.operationDays
   }
 
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
   if (liveTrip) return liveTrip
 
-  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument({
-    $and: [
-      query, {
-        operationDays: data.operationDays
-      }
-    ]
-  })
+  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
 
   return gtfsTrip
 }
