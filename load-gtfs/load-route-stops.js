@@ -2,10 +2,13 @@ const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config.json')
 const async = require('async')
 const mergeStops = require('./utils/merge-stops')
+const updateStats = require('./utils/gtfs-stats')
 
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
 let gtfsTimetables = null
 let routes = null
+
+let start = new Date()
 
 database.connect({}, async err => {
   gtfsTimetables = database.getCollection('gtfs timetables')
@@ -59,6 +62,7 @@ database.connect({}, async err => {
   })
 
   await routes.bulkWrite(bulkOperations)
+  await updateStats('route-stops', bulkOperations.length, new Date() - start)
 
   console.log('Completed loading in ' + bulkOperations.length + ' route stops')
   process.exit()
