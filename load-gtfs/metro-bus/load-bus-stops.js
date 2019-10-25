@@ -5,9 +5,16 @@ const fs = require('fs')
 const loadStops = require('../utils/load-stops')
 const { createStopsLookup } = require('../utils/datamart-utils')
 let gtfsNumber = process.argv[2]
+let gtfsNumberMapping = {
+  4: 'metro-bus',
+  6: 'regional-bus',
+  7: 'metro-bus',
+  8: 'night-bus',
+  11: 'skybus'
+}
 
 const stopsData = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/stops.txt`).toString())
-const datamartStops = require('../../spatial-datamart/metro-bus-stops.json').features
+const datamartStops = require(`../../spatial-datamart/${gtfsNumberMapping[gtfsNumber]}-stops.json`).features
 const busStopNameModifier = require('./bus-stop-name-modifier')
 
 const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')

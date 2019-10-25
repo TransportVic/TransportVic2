@@ -39,7 +39,8 @@ database.connect({
     shapeID: 1
   }, {unique: true, name: "gtfs timetable index"})
 
-  await gtfsTimetables.deleteDocuments({mode: 'bus'})
+  if (!preserve)
+    await gtfsTimetables.deleteDocuments({mode: 'bus'})
 
   let loaded = 0
   let start = 0
