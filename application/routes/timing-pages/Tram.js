@@ -1,6 +1,6 @@
 const express = require('express')
 const router = new express.Router()
-const getDepartures = require('../../../modules/bus/get-departures')
+const getDepartures = require('../../../modules/tram/get-departures')
 const moment = require('moment')
 const utils = require('../../../utils')
 
@@ -10,9 +10,9 @@ router.get('/:suburb/:stopName', async (req, res) => {
     codedSuburb: req.params.suburb
   })
 
-  if (!stop || !stop.bays.filter(bay => bay.mode === 'bus')) {
+  if (!stop || !stop.bays.filter(bay => bay.mode === 'tram')) {
     // TODO: create error page
-    return res.end('Could not lookup timings for ' + req.params.stopName + '. Are you sure buses stop there?')
+    return res.end('Could not lookup timings for ' + req.params.stopName + '. Are you sure trams stop there?')
   }
 
   let departures = await getDepartures(stop, res.db)
@@ -38,20 +38,10 @@ router.get('/:suburb/:stopName', async (req, res) => {
         departure.headwayDevianceClass = 'on-time'
       }
     }
-    departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
-    let day = utils.getYYYYMMDD(departure.scheduledDepartureTime)
-    if (departure.isNightBus && departure.scheduledDepartureTime.get('minutes') < 180)
-      day = utils.getYYYYMMDD(departure.scheduledDepartureTime.clone().add(1, 'day'))
-
-    departure.tripURL = `/bus/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
+    departure.tripURL = `/tram/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + day
-
-    let destinationShortName = departure.trip.destination.split('/')[0]
-    let {destination} = departure.trip
-    if (!utils.isStreet(destinationShortName)) destination = destinationShortName
-    departure.destination = destination.replace('Shopping Centre', 'SC')
+      + utils.getYYYYMMDDNow()
 
     return departure
   })
@@ -81,7 +71,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
 
   services = services.sort((a, b) => a - b)
 
-  res.render('timings/grouped', { services, groupedDepartures, stop, leftClass: 'cdc-melbourne' })
+  res.render('timings/grouped', { services, groupedDepartures, stop, leftClass: 'dysons' })
 })
 
 module.exports = router

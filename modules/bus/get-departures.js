@@ -108,7 +108,7 @@ async function getScheduledDepartures(stop, db) {
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus')
 
   return (await async.map(gtfsIDs, async gtfsID => {
-    return await departureUtils.getScheduledDepartures(gtfsID, db, 'bus', 120, false)
+    return await departureUtils.getScheduledDepartures(gtfsID, db, 'bus', 90, false)
   })).reduce((acc, departures) => {
     return acc.concat(departures)
   }, [])

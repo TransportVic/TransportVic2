@@ -25,7 +25,7 @@ append content
         div(class=`departure${hasNumber ? '' : ' no-number'}`)
           // todo route colours
           if hasNumber
-            a(class=`leftContainer platform cdc-melbourne`)
+            a(class=`leftContainer platform ${leftClass}`)
               span
               span=service
           a.departureInfo
@@ -42,8 +42,11 @@ append content
               a(href=departure.tripURL class=`timing mini ${departure.headwayDevianceClass}`)
                 span=departure.prettyTimeToArrival
                 span=departure.scheduledDepartureTime.format('HH:mm')
-                if departure.vehicleDescriptor.supplier === 'Smartrak'
-                  if departure.busRego
-                    span=`#${departure.busRego}`
-                  else
-                    span=`${departure.vehicleDescriptor.id}`
+                if departure.vehicleDescriptor
+                  if departure.vehicleDescriptor.supplier === 'Smartrak'
+                    if departure.busRego
+                      span=`#${departure.busRego}`
+                    else
+                      span=`${departure.vehicleDescriptor.id}`
+                  else if departure.vehicleDescriptor.operator === 'Yarra Trams'
+                    span=departure.vehicleDescriptor.id

@@ -5,7 +5,7 @@ const fs = require('fs')
 const loadGTFSTimetables = require('../utils/load-gtfs-timetables')
 const lr = require('../../line-reader')
 const crypto = require('crypto')
-let gtfsNumberMapping = require('./gtfs-number-map')
+let gtfsNumberMapping = require('../metro-bus/gtfs-number-map')
 
 const calendar = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/calendar.txt`).toString())
 const calendarDates = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/calendar_dates.txt`).toString())

@@ -105,11 +105,13 @@ module.exports = class MainServer {
       'timing-pages/MetroTrains': '/metro/timings',
       'timing-pages/RegionalCoach': '/coach/timings',
       'timing-pages/Bus': '/bus/timings',
+      'timing-pages/Tram': '/tram/timings',
 
       'run-pages/MetroTrains': '/metro/run',
       'run-pages/VLineTrains': '/vline/run',
       'run-pages/RegionalCoach': '/coach/run', // TODO: refactor as GenericRun
-      'run-pages/Bus': '/bus/run', // TODO: move all metro/regional bus as a single group
+      'run-pages/Bus': '/bus/run',
+      // 'run-pages/Tram': '/tram/run',
 
       GeoJSONVisualiser: '/geojson-visualise',
 

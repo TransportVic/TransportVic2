@@ -26,7 +26,7 @@ function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
 
-module.exports = async function (stopsData, stops, mode, lookupTable, adjustStopName=_=>_, flagSetter=_=>null) {
+module.exports = async function (stopsData, stops, mode, lookupTable, adjustStopName=_=>_, flagSetter=_=>null, isTram=false) {
   await stops.createIndex({
     'location': '2dsphere',
     stopName: 1,
@@ -53,6 +53,14 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
         stopName = utils.extractStopName(fullStopName)
 
     let originalName = values[1]
+    let stopNumber
+    if (isTram) {
+      let parts = stopName.match(/^(D?[\d]+[A-Za-z]?)-(.+)/)
+      if (!parts && stopName === 'Dandenong Rd') parts = [null, '48A', 'Dandenong Rd']
+      stopNumber = parts[1]
+      stopName = parts[2]
+      fullStopName = fullStopName.replace(/^(D?[\d]+[A-Za-z]?)-/, '')
+    }
 
     return {
       originalName, // used for merging purposes - dandenong (railway) station/foster station for eg
@@ -62,7 +70,8 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
       suburb: shouldOverride ? stopNameData[2] : GTFSStopNameData[2],
       codedName: utils.encodeName(stopName),
       location: [values[3], values[2]].map(parseFloat),
-      mykiZones
+      mykiZones,
+      stopNumber
     }
   })
 
@@ -120,7 +129,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
         type: 'Point',
         coordinates: stop.location
       },
-      stopNumber: null,
+      stopNumber: stop.stopNumber,
       mode,
       mykiZones: stop.mykiZones
     }

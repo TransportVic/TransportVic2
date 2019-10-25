@@ -1,3 +1,3 @@
-node --max-old-space-size=2048 load-gtfs/tram/load-tram-stops.js
-node --max-old-space-size=2048 load-gtfs/tram/load-tram-routes.js
-node --max-old-space-size=4096 --expose-gc --harmony load-gtfs/tram/gtfs-loader-wrapper.js
+node --max-old-space-size=2048 load-gtfs/metro-bus/load-bus-stops.js 4
+node --max-old-space-size=2048 load-gtfs/metro-bus/load-bus-routes.js 4
+node --max-old-space-size=4096 --expose-gc --harmony load-gtfs/metro-bus/gtfs-loader-wrapper.js 4

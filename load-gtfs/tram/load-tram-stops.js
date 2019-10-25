@@ -19,7 +19,7 @@ database.connect({
   stops = database.getCollection('stops')
 
   let stopsLookup = createStopsLookup(datamartStops)
-  let stopCount = await loadStops(stopsData, stops, 'tram', stopsLookup)
+  let stopCount = await loadStops(stopsData, stops, 'tram', stopsLookup, undefined, undefined, true)
 
   await updateStats('tram-stops', stopCount, new Date() - start)
   console.log('Completed loading in ' + stopCount + ' tram stops')
