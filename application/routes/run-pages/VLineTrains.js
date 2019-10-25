@@ -33,6 +33,7 @@ async function pickBestTrip(data, db) {
     return liveTrip
   }
 
+  // TODO: improve this
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument({
     $and: [
       query, {

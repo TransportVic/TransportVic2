@@ -57,7 +57,7 @@ async function processVLineCoachOverrides(db) {
         trip.destination = 'Southern Cross Coach Terminal/Spencer St'
       }
 
-      trip.operationDay = operationDays // use operationDays for live too?
+      trip.operationDays = operationDays
       trip.type = 'vline coach replacement'
       trip.vehicle = 'Coach'
       trip.mode = 'regional coach'
@@ -98,7 +98,7 @@ async function setServiceAsCancelled(db, query, operationDay, isCoach) {
   let timetable = await gtfsTimetables.findDocument(query)
     || await liveTimetables.findDocument(query) || await liveTimetables.findDocument(query)
   if (timetable) {
-    timetable.operationDay = operationDay
+    timetable.operationDays = [operationDay]
     delete timetable.operationDays
     delete timetable._id
     timetable.type = 'cancelled'
@@ -153,11 +153,7 @@ async function watchVLineDisruptions(db) {
         let query = {
           departureTime, origin, destination,
           mode: 'regional train',
-          $or: [{
-            operationDay
-          }, {
-            operationDays: operationDay
-          }]
+          operationDays: operationDay
         }
 
         await setServiceAsCancelled(db, query, operationDay, isCoach)
@@ -203,7 +199,7 @@ database.connect((err) => {
   liveTimetables.createIndex({
     mode: 1,
     routeName: 1,
-    operationDay: 1,
+    operationDays: 1,
     origin: 1,
     destination: 1,
     departureTime: 1

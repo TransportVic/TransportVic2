@@ -136,7 +136,7 @@ async function getStops(db, originVNETName, destinationVNETName, originDeparture
     routeName,
     shortRouteName: routeName,
     runID: runIDs,
-    operationDay: utils.getYYYYMMDDNow(),
+    operationDays: [utils.getYYYYMMDDNow()],
     vehicle: null,
     stopTimings,
     destination: dest,
@@ -149,7 +149,7 @@ async function getStops(db, originVNETName, destinationVNETName, originDeparture
   let key = {
     mode: 'regional train',
     routeName: timetable.routeName,
-    operationDay: timetable.operationDay,
+    operationDays: [timetable.operationDay],
     runID: timetable.runID
   }
 

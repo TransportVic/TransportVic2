@@ -31,7 +31,7 @@ async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, desti
   if (departureHour < 3) departureHour += 24 // 3am PT day :(
 
   let query = {
-    operationDay: day || utils.getYYYYMMDDNow(),
+    operationDays: day || utils.getYYYYMMDDNow(),
     mode,
     stopTimings: {
       $elemMatch: {
@@ -50,12 +50,7 @@ async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, desti
     }
   }
 
-  let live = await db.getCollection('live timetables').findDocument(query)
-  if (live) return live
-  delete query.operationDay
-  query.operationDays = day || utils.getYYYYMMDDNow()
-
-  return await db.getCollection('gtfs timetables').findDocument(query)
+  return await db.getCollection('live timetables').findDocument(query) || await db.getCollection('gtfs timetables').findDocument(query)
 }
 
 async function getScheduledDepartures(stopGTFSID, db, mode, timeout, useLive) {

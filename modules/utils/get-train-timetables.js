@@ -12,7 +12,7 @@ async function getLiveDeparture(station, db, mode, possibleLines, scheduledDepar
     routeName: {
       $in: possibleLines
     },
-    operationDay: utils.getYYYYMMDDNow(),
+    operationDays: utils.getYYYYMMDDNow(),
     mode: mode,
     stopTimings: {
       $elemMatch: {
@@ -95,12 +95,8 @@ async function getScheduledDepartures(station, db, mode, timeout) {
     const platform = getPlatform(station, mode)
 
     let query = {
-      $or: [{
-        operationDays: utils.getYYYYMMDDNow()
-      }, {
-        operationDay: utils.getYYYYMMDDNow()
-      }],
-      mode: mode,
+      operationDays: utils.getYYYYMMDDNow(),
+      mode,
       stopTimings: {
         $elemMatch: {
           stopGTFSID: platform.stopGTFSID,

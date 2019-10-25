@@ -93,7 +93,7 @@ module.exports = async function (db, ptvRunID, mode, time) {
   let timetable = {
     mode, routeName: routeData.route_name.trim(),
     runID: vehicleDescriptor.id,
-    operationDay: utils.getYYYYMMDDNow(),
+    operationDays: [utils.getYYYYMMDDNow()],
     vehicle: vehicleDescriptor.description,
     stopTimings: stopTimings.sort((a, b) => (a.arrivalTimeMinutes || a.departureTimeMinutes) - (b.arrivalTimeMinutes || b.departureTimeMinutes)),
     destination: stopTimings[stopTimings.length - 1].stopName,
@@ -106,7 +106,7 @@ module.exports = async function (db, ptvRunID, mode, time) {
 
   let key = {
     mode, routeName: timetable.routeName,
-    operationDay: timetable.operationDay,
+    operationDays: timetable.operationDays,
     departureTime: timetable.departureTime,
     destinationArrivalTime: timetable.destinationArrivalTime
   }
