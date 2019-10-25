@@ -2,11 +2,13 @@ const async = require('async')
 const moment = require('moment')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
+const busStopNameModifier = require('../../load-gtfs/metro-bus/bus-stop-name-modifier')
 
 let modes = {
   'metro train': 0,
   'regional train': 3,
   'regional coach': 3,
+  'metro bus': 2
 }
 
 module.exports = async function (db, ptvRunID, mode, time) {
@@ -16,6 +18,7 @@ module.exports = async function (db, ptvRunID, mode, time) {
   let url = `/v3/pattern/run/${ptvRunID}/route_type/${modes[mode]}?expand=stop&expand=run&expand=route`
   if (time)
     url += `&date_utc=${time}`
+
   let {departures, stops, runs, routes} = await ptvAPI(url)
   let run = Object.values(runs)[0]
 
@@ -35,9 +38,9 @@ module.exports = async function (db, ptvRunID, mode, time) {
       if (stopName === 'Jolimont-MCG')
         stopName = 'Jolimont'
 
-        stopName += ' Railway Station'
+      stopName += ' Railway Station'
     }
-    stopName = utils.adjustStopname(stopName)
+    stopName = busStopNameModifier(utils.adjustStopname(stopName))
     let dbStop = await stopsCollection.findDocument({
       $or: [{
         'bays.fullStopName': stopName,
@@ -46,7 +49,7 @@ module.exports = async function (db, ptvRunID, mode, time) {
       }],
       'bays.mode': { $in: checkModes }
     })
-
+    if (!dbStop) console.log(stopName)
     dbStops[stop.stop_id] = dbStop
   })
 

@@ -4,7 +4,7 @@ block head
   title=`TransportVic - ${trip.departureTime} ${trip.origin} to ${trip.destination}`
   
 block title
-  span=`${trip.departureTime} ${trip.origin} to ${trip.destination}`
+  span=`${trip.departureTime} ${trip.origin.split('/')[0]} to ${trip.destination.split('/')[0]}`
   
 block style
   link(rel='stylesheet' href='/static/css/runs/base-style.css')
@@ -23,8 +23,8 @@ block content
               stopRoad = stopParts[1]
             } else {
               if (stopParts = stop.stopName.match(/^(\d+) (.+)$/)) {
-                stopName = stopParts[1]
                 stopRoad = stopParts[2]
+                stopName = stopParts[1] + ' ' + stopRoad
               } else {
                 stopName = stop.stopName
                 stopRoad = ''

@@ -179,6 +179,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
     }
 
     stop.codedSuburb = stop.suburb.map(utils.encodeName)
+    stop.codedName = stop.bays.map(bay => utils.encodeName(bay.fullStopName)).filter((e, i, a) => a.indexOf(e) === i)
 
     let stopData
     if (stopData = await stops.findDocument(key)) {
@@ -199,6 +200,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
       stop.bays = stopData.bays
         .filter(bay => !(baysToUpdate.includes(bay.stopGTFSID) && bay.mode === mode))
         .concat(stop.bays)
+      stop.codedName = stop.bays.map(bay => utils.encodeName(bay.fullStopName)).filter((e, i, a) => a.indexOf(e) === i)
 
       stop.location = stopData.location
 

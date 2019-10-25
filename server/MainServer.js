@@ -108,7 +108,8 @@ module.exports = class MainServer {
 
       'run-pages/MetroTrains': '/metro/run',
       'run-pages/VLineTrains': '/vline/run',
-      'run-pages/RegionalCoach': '/regional-coach/run', // TODO: refactor as GenericRun
+      'run-pages/RegionalCoach': '/coach/run', // TODO: refactor as GenericRun
+      'run-pages/MetroBus': '/bus/run', // TODO: move all metro/regional bus as a single group
 
       GeoJSONVisualiser: '/geojson-visualise',
 

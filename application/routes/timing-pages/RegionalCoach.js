@@ -32,7 +32,7 @@ router.get('/:stopName', async (req, res) => {
 
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
-    departure.tripURL = `/regional-coach/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
+    departure.tripURL = `/coach/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
       + utils.getYYYYMMDDNow()
 
