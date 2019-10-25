@@ -20,7 +20,7 @@ for stop in stops
       codedName = codedName.slice(0, -16)
     let url = `/${stopIcons[stop.mode]}/timings/`
     if (stop.mode === 'bus')
-      url += `${stop.suburb}/`
+      url += `${stop.codedSuburb}/`
     url += `${codedName}`
   a(href=url class=`result ${stopCSSClasses[stop.mode]}`)
     div.leftContainer.miniIcon
