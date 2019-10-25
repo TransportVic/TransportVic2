@@ -27,10 +27,10 @@ database.connect({}, async err => {
     shapeID: 1
   }, {unique: true, name: "gtfs timetable index"})
 
-  let tripsCount = await loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'metro bus',
+  let tripsCount = await loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'bus',
     headsign => null, routeGTFSID => true)
 
-  await updateStats('mbus-gtfs-timetables', tripsCount, new Date() - start)
-  console.log('Completed loading in ' + tripsCount + ' Metro bus trips')
+  await updateStats('bus-gtfs-timetables', tripsCount, new Date() - start)
+  console.log('Completed loading in ' + tripsCount + ' bus trips')
   process.exit()
 })

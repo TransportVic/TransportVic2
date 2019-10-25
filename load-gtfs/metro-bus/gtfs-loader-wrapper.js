@@ -1,6 +1,6 @@
 const config = require('../../config')
 
 if (config.gtfsBatcher)
-  require('./load-metro-bus-gtfs-timetables')
+  require('./load-bus-gtfs-timetables')
 else
-  require('./load-metro-bus-gtfs-timetables-nobatch')
+  require('./load-bus-gtfs-timetables-nobatch')

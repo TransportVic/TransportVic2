@@ -8,7 +8,7 @@ let modes = {
   'metro train': 0,
   'regional train': 3,
   'regional coach': 3,
-  'metro bus': 2
+  'bus': 2
 }
 
 module.exports = async function (db, ptvRunID, mode, time) {

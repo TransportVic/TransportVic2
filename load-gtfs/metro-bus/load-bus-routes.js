@@ -51,11 +51,11 @@ database.connect({
     return acc
   }, {})
 
-  let routeCount = await loadRoutes(routeData, shapeData, routes, () => ['Operator'], 'metro bus', (_, routeGTFSID) => {
+  let routeCount = await loadRoutes(routeData, shapeData, routes, () => ['Operator'], 'bus', (_, routeGTFSID) => {
     return ptvRoutes[routeGTFSID] || _
   })
 
-  await updateStats('mbus-routes', routeCount, new Date() - start)
-  console.log('Completed loading in ' + routeCount + ' metro bus routes')
+  await updateStats('bus-routes', routeCount, new Date() - start)
+  console.log('Completed loading in ' + routeCount + ' bus routes')
   process.exit()
 });

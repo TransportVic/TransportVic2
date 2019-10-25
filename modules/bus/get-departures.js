@@ -23,7 +23,7 @@ async function getStoppingPatternWithCache(db, busDeparture, destination) {
     tripLoader[id] = new EventEmitter()
     tripLoader[id].setMaxListeners(1000)
 
-    let trip = await getStoppingPattern(db, busDeparture.run_id, 'metro bus', busDeparture.scheduled_departure_utc)
+    let trip = await getStoppingPattern(db, busDeparture.run_id, 'bus', busDeparture.scheduled_departure_utc)
 
     tripCache[id] = trip
     tripLoader[id].emit('loaded', trip)
@@ -35,8 +35,8 @@ async function getStoppingPatternWithCache(db, busDeparture, destination) {
 
 async function getDeparturesFromPTV(stop, db) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
-  let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'metro bus', true)
-  let allGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'metro bus', false)
+  let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', true)
+  let allGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', false)
   let mappedDepartures = []
   let now = utils.now()
 
@@ -61,7 +61,7 @@ async function getDeparturesFromPTV(stop, db) {
 
       let destination = busStopNameModifier(utils.adjustStopname(run.destination_name.trim()))
 
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'metro bus', utils.getYYYYMMDD(scheduledDepartureTime))
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', utils.getYYYYMMDD(scheduledDepartureTime))
       if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, destination)
       let vehicleDescriptor = run.vehicle_descriptor || {}
 
@@ -89,10 +89,10 @@ async function getDeparturesFromPTV(stop, db) {
 }
 
 async function getScheduledDepartures(stop, db) {
-  let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'metro bus')
+  let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus')
 
   return (await async.map(gtfsIDs, async gtfsID => {
-    return await departureUtils.getScheduledDepartures(gtfsID, db, 'metro bus', 120, false)
+    return await departureUtils.getScheduledDepartures(gtfsID, db, 'bus', 120, false)
   })).reduce((acc, departures) => {
     return acc.concat(departures)
   }, [])

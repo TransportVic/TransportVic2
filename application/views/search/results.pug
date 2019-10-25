@@ -23,11 +23,11 @@ for regionalCoachStop in results.filter(stop => stop.bays.filter(bay => bay.mode
       span='Regional coach stop in ' + regionalCoachStop.suburb[0]
       span=regionalCoachStop.stopName
       
-for metroBusStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'metro bus').length)
-  a(href=`/bus/timings/${metroBusStop.codedSuburb[0]}/${metroBusStop.codedName}`).busStop.result
+for busStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'bus').length)
+  a(href=`/bus/timings/${busStop.codedSuburb[0]}/${busStop.codedName}`).busStop.result
     div.leftContainer
       img(src='/static/images/clear-icons/bus.svg')
     div.resultDetails
-      span='Metro bus stop in ' + metroBusStop.suburb[0]
-      span=metroBusStop.stopName
+      span='Bus stop in ' + busStop.suburb[0]
+      span=busStop.stopName
       

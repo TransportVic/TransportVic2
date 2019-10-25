@@ -39,14 +39,14 @@ database.connect({
     shapeID: 1
   }, {unique: true, name: "gtfs timetable index"})
 
-  await gtfsTimetables.deleteDocuments({mode: 'metro bus'})
+  await gtfsTimetables.deleteDocuments({mode: 'bus'})
 
   let loaded = 0
   let start = 0
 
   let iteration = 0
 
-  let boundLoadBatch = (trips, tripTimesData) => loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'metro bus',
+  let boundLoadBatch = (trips, tripTimesData) => loadGTFSTimetables(database, calendar, calendarDates, trips, tripTimesData, 'bus',
   headsign => null, routeGTFSID => true, false)
 
   async function loadBatch() {
@@ -96,7 +96,7 @@ database.connect({
 
   await loadBatch()
 
-  await updateStats('mbus-gtfs-timetables', loaded, new Date() - benchmarkStart)
-  console.log('Completed loading in ' + loaded + ' metro bus trips')
+  await updateStats('bus-gtfs-timetables', loaded, new Date() - benchmarkStart)
+  console.log('Completed loading in ' + loaded + ' bus trips')
   process.exit()
 })

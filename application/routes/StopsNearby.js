@@ -27,7 +27,7 @@ function getClosestDistance(userPosition, positions) {
 }
 
 let typeMap = {
-  'metro bus': 'Metro Bus Stop',
+  'bus': 'Bus Stop',
   'metro train': 'Metro Train Station',
   'regional train': 'V/Line train Station',
   'regional coach': 'V/Line Coach Stop'

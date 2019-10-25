@@ -7,7 +7,7 @@ const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern'
 const busStopNameModifier = require('../../../load-gtfs/metro-bus/bus-stop-name-modifier')
 
 async function pickBestTrip(data, db) {
-  data.mode = 'metro bus'
+  data.mode = 'bus'
   let tripDay = moment.tz(data.operationDays, 'YYYYMMDD', 'Australia/Melbourne')
   let tripStartTime = moment.tz(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
@@ -17,12 +17,12 @@ async function pickBestTrip(data, db) {
 
   let originStop = await db.getCollection('stops').findDocument({
     codedNames: data.origin,
-    'bays.mode': 'metro bus'
+    'bays.mode': 'bus'
   })
 
   let destinationStop = await db.getCollection('stops').findDocument({
     codedNames: data.destination,
-    'bays.mode': 'metro bus'
+    'bays.mode': 'bus'
   })
   if (!originStop || !destinationStop) return null
   let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
@@ -32,7 +32,7 @@ async function pickBestTrip(data, db) {
   let destinationName = destinationStop.bays.filter(bay => utils.encodeName(bay.fullStopName) === data.destination)[0].fullStopName
 
   let query = {
-    mode: 'metro bus',
+    mode: 'bus',
     origin: originName,
     departureTime: data.departureTime,
     destination: destinationName,
@@ -47,7 +47,7 @@ async function pickBestTrip(data, db) {
   }
 
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument({
-    mode: 'metro bus',
+    mode: 'bus',
     origin: originName,
     departureTime: data.departureTime,
     destination: destinationName,
@@ -78,7 +78,7 @@ async function pickBestTrip(data, db) {
   // let ptvRunID = departure.run_id
   // let departureTime = departure.scheduled_departure_utc
   //
-  // let trip = await getStoppingPattern(db, ptvRunID, 'metro bus', departureTime)
+  // let trip = await getStoppingPattern(db, ptvRunID, 'bus', departureTime)
   // return trip
 }
 

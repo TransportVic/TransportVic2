@@ -1,6 +1,6 @@
 const express = require('express')
 const router = new express.Router()
-const getDepartures = require('../../../modules/metro-bus/get-departures')
+const getDepartures = require('../../../modules/bus/get-departures')
 const moment = require('moment')
 const utils = require('../../../utils')
 
@@ -10,7 +10,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
     codedSuburb: req.params.suburb
   })
 
-  if (!stop || !stop.bays.filter(bay => bay.mode === 'metro bus')) {
+  if (!stop || !stop.bays.filter(bay => bay.mode === 'bus')) {
     // TODO: create error page
     return res.end('Could not lookup timings for ' + req.params.stopName + '. Are you sure buses stop there?')
   }
