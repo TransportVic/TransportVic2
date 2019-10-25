@@ -216,7 +216,7 @@ database.connect((err) => {
   async function refreshCache() {
     try {
       await async.forEach(functions, async fn => {
-        // await fn(database)
+        await fn(database)
       })
     } catch (e) {
       console.log('Failed to pass health check, running offline')

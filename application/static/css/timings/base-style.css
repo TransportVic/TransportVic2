@@ -150,10 +150,10 @@ a.timing.mini span {
 }
 
 a.timing.mini span:nth-child(3) {
-  position: absolute;
+  position: relative;
   font-size: calc(0.75vw + 0.75vh);
-
-  margin-top: calc((7vw + 7vh) / 2 - (0.75vw + 0.75vh));
+  top: calc(0.75vw + 0.75vh);
+  height: 0
 }
 
 a.timing span {

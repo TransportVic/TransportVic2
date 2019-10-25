@@ -10,10 +10,12 @@ async function pickBestTrip(data, db) {
   let tripDay = moment.tz(data.operationDays, 'YYYYMMDD', 'Australia/Melbourne')
 
   let originStop = await db.getCollection('stops').findDocument({
-    codedName: data.origin
+    codedName: data.origin,
+    'bays.mode': 'regional coach'
   })
   let destinationStop = await db.getCollection('stops').findDocument({
-    codedName: data.destination
+    codedName: data.destination,
+    'bays.mode': 'regional coach'
   })
   if (!originStop || !destinationStop) return null
 

@@ -15,10 +15,12 @@ async function pickBestTrip(data, db) {
   let operationHour = Math.floor(tripStartMinutes / 60)
 
   let originStop = await db.getCollection('stops').findDocument({
-    codedName: data.origin + '-railway-station'
+    codedName: data.origin + '-railway-station',
+    'bays.mode': 'metro train'
   })
   let destinationStop = await db.getCollection('stops').findDocument({
-    codedName: data.destination + '-railway-station'
+    codedName: data.destination + '-railway-station',
+    'bays.mode': 'metro train'
   })
   if (!originStop || !destinationStop) return null
   let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
