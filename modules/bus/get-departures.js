@@ -14,7 +14,7 @@ const smartrakIDs = require('../../known-smartrak-ids')
 let tripLoader = {}
 let tripCache = {}
 
-async function getStoppingPatternWithCache(db, busDeparture, destination) {
+async function getStoppingPatternWithCache(db, busDeparture, destination, isNightBus) {
   let id = busDeparture.scheduled_departure_utc + destination
 
   if (tripLoader[id]) {
@@ -23,7 +23,7 @@ async function getStoppingPatternWithCache(db, busDeparture, destination) {
     tripLoader[id] = new EventEmitter()
     tripLoader[id].setMaxListeners(1000)
 
-    let trip = await getStoppingPattern(db, busDeparture.run_id, 'bus', busDeparture.scheduled_departure_utc)
+    let trip = await getStoppingPattern(db, busDeparture.run_id, isNightBus ? 'nbus' : 'bus', busDeparture.scheduled_departure_utc)
 
     tripCache[id] = trip
     tripLoader[id].emit('loaded', trip)
@@ -35,14 +35,21 @@ async function getStoppingPatternWithCache(db, busDeparture, destination) {
 
 async function getDeparturesFromPTV(stop, db) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
-  let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', true)
+  let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', true, false)
+  let nightbusGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', true, true)
   let allGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', false)
   let mappedDepartures = []
   let now = utils.now()
 
-  await async.forEach(gtfsIDs, async stopGTFSID => {
+  // TODO: only do nightbus if within op hours (11pm - 6.30am?)
+  let gtfsIDPairs = gtfsIDs.map(s => [s, false])
+    .concat(nightbusGTFSIDs.map(s => [s, true]))
+
+  await async.forEach(gtfsIDPairs, async stopGTFSIDPair => {
+    let stopGTFSID = stopGTFSIDPair[0],
+        isNightBus = stopGTFSIDPair[1]
     //todo put route number as part of route and timetable db
-    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/2/stop/${stopGTFSID}?gtfs=true&max_results=5&expand=run&expand=route`)
+    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/${isNightBus ? 4 : 2}/stop/${stopGTFSID}?gtfs=true&max_results=5&expand=run&expand=route`)
 
     let seenIDs = []
     await async.forEach(departures, async busDeparture => {
@@ -64,7 +71,7 @@ async function getDeparturesFromPTV(stop, db) {
       let destination = busStopNameModifier(utils.adjustStopname(run.destination_name.trim()))
 
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', utils.getYYYYMMDD(scheduledDepartureTime))
-      if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, destination)
+      if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
       let vehicleDescriptor = run.vehicle_descriptor || {}
 
       let busRego

@@ -26,7 +26,7 @@ function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
 
-module.exports = async function (stopsData, stops, mode, lookupTable, adjustStopName=_=>_) {
+module.exports = async function (stopsData, stops, mode, lookupTable, adjustStopName=_=>_, flagSetter=_=>null) {
   await stops.createIndex({
     'location': '2dsphere',
     stopName: 1,
@@ -124,6 +124,9 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
       mode,
       mykiZones: stop.mykiZones
     }
+
+    let flags = flagSetter(stop.stopGTFSID)
+    if (flags) bayData.flags = flags
 
     let stopHash = getStopHashID(bayData, stop.stopName)
 

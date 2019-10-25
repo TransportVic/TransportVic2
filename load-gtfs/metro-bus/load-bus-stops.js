@@ -23,7 +23,9 @@ database.connect({
   stops = database.getCollection('stops')
 
   let stopsLookup = createStopsLookup(datamartStops)
-  let stopCount = await loadStops(stopsData, stops, 'bus', stopsLookup, busStopNameModifier)
+  let stopCount = await loadStops(stopsData, stops, 'bus', stopsLookup, busStopNameModifier, stopGTFSID => {
+    if (gtfsNumber === '8') return { isNightBus: true }
+  })
 
   await updateStats(gtfsNumberMapping[gtfsNumber] + '-stops', stopCount, new Date() - start)
   console.log('Completed loading in ' + stopCount + ' bus stops')

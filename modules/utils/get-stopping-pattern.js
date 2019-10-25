@@ -8,7 +8,8 @@ let modes = {
   'metro train': 0,
   'regional train': 3,
   'regional coach': 3,
-  'bus': 2
+  'bus': 2,
+  'nbus': 4
 }
 
 module.exports = async function (db, ptvRunID, mode, time) {
@@ -31,6 +32,7 @@ module.exports = async function (db, ptvRunID, mode, time) {
   let dbStops = {}
   let checkModes = [mode]
   if (mode === 'regional coach') checkModes.push('regional train')
+  if (mode === 'nbus') checkModes = ['bus']
 
   await async.forEach(Object.values(stops), async stop => {
     let stopName = stop.stop_name.trim()

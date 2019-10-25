@@ -7,9 +7,11 @@ const utils = require('../../utils')
   if online: merge by raw ptv stop name, get first
 
 */
-function getUniqueGTFSIDs(station, mode, isOnline) {
+function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
   let gtfsIDs = []
   let bays = station.bays.filter(bay => bay.mode === mode)
+
+  bays = bays.filter(bay => nightBus ^ !(bay.flags && bay.flags.isNightBus))
 
   if (isOnline) {
     let stopNamesSeen = []
