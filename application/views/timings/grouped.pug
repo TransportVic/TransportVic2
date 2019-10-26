@@ -49,4 +49,4 @@ append content
                     else
                       span=`${departure.vehicleDescriptor.id}`
                   else if departure.vehicleDescriptor.operator === 'Yarra Trams'
-                    span=departure.vehicleDescriptor.id
+                    span=`${departure.tram.model}.${departure.tram.id}`
