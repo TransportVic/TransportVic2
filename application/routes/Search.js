@@ -12,7 +12,8 @@ async function performSearch (db, query) {
     $or: [
       { 'bays.stopGTFSID': parseInt(query) },
       { stopName: new RegExp(query, 'i') },
-      { stopSuburb: new RegExp(query, 'i') },
+      { suburb: new RegExp(query, 'i') },
+      { tramTrackerIDs: parseInt(query) },
     ]
   }).limit(15).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
 }

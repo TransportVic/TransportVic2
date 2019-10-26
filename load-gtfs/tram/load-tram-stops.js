@@ -19,7 +19,13 @@ database.connect({
   stops = database.getCollection('stops')
 
   let stopsLookup = createStopsLookup(datamartStops)
-  let stopCount = await loadStops(stopsData, stops, 'tram', stopsLookup, undefined, undefined, true)
+  let stopCount = await loadStops(stopsData, stops, 'tram', stopsLookup, undefined, (_, stopName) => {
+
+    return {
+      tramtrackerName: stopName.split('/')[0],
+      services: stopsLookup[_] ? stopsLookup[_].services : []
+    }
+  }, true)
 
   await updateStats('tram-stops', stopCount, new Date() - start)
   console.log('Completed loading in ' + stopCount + ' tram stops')

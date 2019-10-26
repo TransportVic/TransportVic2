@@ -40,6 +40,15 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
     'bays.mode': 1
   }, {name: 'gtfs id index'})
 
+  await stops.createIndex({
+    'suburb': 1,
+    'stopName': 1
+  }, {name: 'search index'})
+
+  await stops.createIndex({
+    'tramTrackerIDs': 1
+  }, {name: 'tramtracker id index'})
+
   const allStops = stopsData.map(values => {
     let matchedStop = lookupTable[values[0]]
     let shouldOverride = !!matchedStop
@@ -141,7 +150,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
       mykiZones: stop.mykiZones
     }
 
-    let flags = flagSetter(stop.stopGTFSID)
+    let flags = flagSetter(stop.stopGTFSID, stop.fullStopName)
     if (flags) bayData.flags = flags
 
     let stopHash = getStopHashID(bayData, stop.stopName)

@@ -187,6 +187,12 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
     shapeID: 1
   }, {name: 'shapeID index'})
 
+  await gtfsTimetables.createIndex({
+    mode: 1,
+    routeGTFSID: 1,
+    'stopTimings.stopGTFSID': 1
+  }, {name: 'timings index'})
+
   let services = {}
   trips.forEach(trip => {
     let tripGTIFSID = gtfsUtils.simplifyRouteGTFSID(trip[0])
