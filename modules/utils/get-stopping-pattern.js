@@ -44,6 +44,8 @@ module.exports = async function (db, ptvRunID, mode, time) {
       stopName += ' Railway Station'
     }
     stopName = busStopNameModifier(utils.adjustStopname(stopName))
+      .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
+      
     let dbStop = await stopsCollection.findDocument({
       $or: [{
         'bays.fullStopName': stopName,
