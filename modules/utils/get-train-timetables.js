@@ -53,7 +53,7 @@ async function getScheduledDeparture(station, db, mode, possibleLines, scheduled
     stopTimings: {
       $elemMatch: {
         stopGTFSID: platform.stopGTFSID,
-        departureTimeMinutes: scheduledDepartureTimeMinutes
+        departureTimeMinutes: scheduledDepartureTimeMinutes % 1440
       }
     },
     tripStartHour: {

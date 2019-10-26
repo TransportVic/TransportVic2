@@ -48,8 +48,15 @@ async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, desti
   let live = await db.getCollection('live timetables').findDocument(query)
   if (live) return live
 
-  query.tripStartHour = { $lte: departureHour }
-  query.tripEndHour = { $gte: departureHour }
+  if (departureHour < 3)
+    query.tripStartHour = { $lte: 24 - departureHour }
+  else
+    query.tripStartHour = { $lte: departureHour }
+
+  if (departureHour > 21)
+    query.tripEndHour = { $gte: 24 - departureHour }
+  else
+    query.tripEndHour = { $gte: departureHour }
 
   return await db.getCollection('gtfs timetables').findDocument(query)
 }

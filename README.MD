@@ -54,6 +54,8 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Pings V/Line's disruption feed every 10-20 minutes as part of its health check, and attempts to mark the services as cancelled / replaced by coaches. Doesn't always work if the service is already disrupted but not programmed in by PTV
 
 ## Next up to be added:
+- update this file
+- fix the 3am PT day stuff, except that is actually 8am for nightbus timetables
 - refactor out on-time stuff
 - route view
 - Icons for the various stopping pattern pages

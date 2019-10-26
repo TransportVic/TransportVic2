@@ -33,6 +33,20 @@ async function getStoppingPatternWithCache(db, busDeparture, destination, isNigh
   } else return tripCache[id]
 }
 
+function shouldGetNightbus(now) {
+  let minutesAfterMidnight = utils.getPTMinutesPastMidnight(now)
+  let dayOfWeek = utils.getDayName(now)
+
+  // 11pm - 7.55am (last 969 runs 6.30am - 7.35am, give some buffer for lateness?)
+  if (dayOfWeek == 'Fri')
+    return minutesAfterMidnight >= 1380
+  if (dayOfWeek == 'Sat')
+    return minutesAfterMidnight >= 1380 || minutesAfterMidnight <= 475
+  if (dayOfWeek == 'Sun')
+    return minutesAfterMidnight <= 475
+  return false
+}
+
 async function getDeparturesFromPTV(stop, db) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', true, false)
@@ -43,9 +57,9 @@ async function getDeparturesFromPTV(stop, db) {
   let mappedDepartures = []
   let now = utils.now()
 
-  // TODO: only do nightbus if within op hours (11pm - 6.30am?)
   let gtfsIDPairs = gtfsIDs.map(s => [s, false])
-    .concat(nightbusGTFSIDs.map(s => [s, true]))
+  if (shouldGetNightbus(now))
+    gtfsIDPairs = gtfsIDPairs.concat(nightbusGTFSIDs.map(s => [s, true]))
 
   await async.forEach(gtfsIDPairs, async stopGTFSIDPair => {
     let stopGTFSID = stopGTFSIDPair[0],
