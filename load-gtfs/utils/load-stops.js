@@ -33,7 +33,12 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
     'bays.fullStopName': 1,
     'bays.stopGTFSID': 1,
     'bays.mode': 1
-  }, {unique: true})
+  }, {unique: true, name: 'stops index'})
+
+  await stops.createIndex({
+    'bays.stopGTFSID': 1,
+    'bays.mode': 1
+  }, {name: 'gtfs id index'})
 
   const allStops = stopsData.map(values => {
     let matchedStop = lookupTable[values[0]]

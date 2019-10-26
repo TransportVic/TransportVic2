@@ -114,7 +114,7 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
     if (!allTrips[tripID]) return // filtered off unless gtfs data is whack
 
     let stop = await getStop(stopGTFSID, stops, mode)
-if (!stop) console.log(stop)
+
     allTrips[tripID].stopTimings[stopSequence - 1] = {
       stopName: stop.fullStopName,
       stopGTFSID,
@@ -171,6 +171,21 @@ if (!stop) console.log(stop)
 
 module.exports = async function(db, calendar, calendarDates, trips, tripTimesData, mode, determineDirection=()=>null, routeFilter=()=>true, deleteAll=true) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
+  await gtfsTimetables.createIndex({
+    mode: 1,
+    routeName: 1,
+    routeGTFSID: 1,
+    operationDays: 1,
+    destination: 1,
+    tripStartHour: 1,
+    tripEndHour: 1,
+    tripID: 1,
+    shapeID: 1
+  }, {unique: true, name: "gtfs timetable index"})
+
+  await gtfsTimetables.createIndex({
+    shapeID: 1
+  }, {name: 'shapeID index'})
 
   let services = {}
   trips.forEach(trip => {
