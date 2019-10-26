@@ -63,6 +63,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
     let parts
     if ((parts = stopName.match(/^(D?[\d]+[A-Za-z]?)-(.+)/)) || isTram) {
       if (!parts && stopName === 'Dandenong Rd') parts = [null, '48A', 'Dandenong Rd']
+      if (!parts && stopName === 'Preston Depot') return null
       stopNumber = parts[1]
       stopName = parts[2]
       fullStopName = fullStopName.replace(/^(D?[\d]+[A-Za-z]?)-/, '')
@@ -125,7 +126,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
     return stopHash
   }
 
-  allStops.forEach(stop => {
+  allStops.filter(Boolean).forEach(stop => {
     let bayData = {
       originalName: stop.originalName,
       fullStopName: stop.fullStopName,
