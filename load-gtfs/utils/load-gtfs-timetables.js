@@ -19,7 +19,11 @@ async function getStop(stopGTFSID, stops, mode) {
     stopLoaders[stopGTFSID].setMaxListeners(Infinity)
 
     let stop = await stops.findDocument({
-      'bays.stopGTFSID': stopGTFSID
+      bays: {
+        $elemMatch: {
+          stopGTFSID, mode
+        }
+      }
     })
 
     let bay = stop.bays.filter(bay => bay.stopGTFSID === stopGTFSID && bay.mode === mode)[0]
@@ -110,7 +114,7 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
     if (!allTrips[tripID]) return // filtered off unless gtfs data is whack
 
     let stop = await getStop(stopGTFSID, stops, mode)
-
+if (!stop) console.log(stop)
     allTrips[tripID].stopTimings[stopSequence - 1] = {
       stopName: stop.fullStopName,
       stopGTFSID,

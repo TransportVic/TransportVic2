@@ -6,4 +6,5 @@
 ./load-gtfs/telebus/load-all.sh
 ./load-gtfs/skybus/load-all.sh
 ./load-gtfs/regional-bus/load-all.sh
+./load-gtfs/tram/load-all.sh
 node load-gtfs/load-route-stops.js

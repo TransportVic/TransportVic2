@@ -54,8 +54,9 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
 
     let originalName = values[1]
     let stopNumber
-    if (isTram) {
-      let parts = stopName.match(/^(D?[\d]+[A-Za-z]?)-(.+)/)
+
+    let parts
+    if ((parts = stopName.match(/^(D?[\d]+[A-Za-z]?)-(.+)/)) || isTram) {
       if (!parts && stopName === 'Dandenong Rd') parts = [null, '48A', 'Dandenong Rd']
       stopNumber = parts[1]
       stopName = parts[2]
