@@ -3,12 +3,16 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 
 ## Current features:
 - Loading in MTM timetables
-- Loading in Metropolitan bus timetables
+- Loading in bus timetables
   - Multiple batching rounds in place to optimise memory usage:
   - Repeated I/O preferred over massive 2GB memory usage, currently tops around 800MB
   - Takes 30min to load on the mini T3.micro server
 - Loading in V/Line train timetables
 - Loading in Regional coach timetables
+- Loading in tram timetables, batching in place too
+- Stats
+  - High intensity bus ops GTFS dataset takes just under 50min to fully load
+  - Loader stats stored in /load-gtfs/stats.json, need to add a visualiser for this
 - Showing live MTM departures when the services are running as timetabled
 - Predicting MTM City Loop configuration when services are running as timetabled
 - Show proper destination names for MTM departures that match station announcements
@@ -28,7 +32,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Checks disruptions every 10min, currently handles suspensions
   - Finds trips affected by suspension and breaks into 3 - first train leg, bus leg and second train leg.
   - Currently only looks at end stations, should have it check all stations in between for those express services?
-- Ability to detect when V/Line trains are scheduled to run as coaches. Currently no support for live disruptions.
+- Ability to detect when V/Line trains are scheduled to run as coaches.
 - Stop merging in place
   - Roads do not get merged, see commit [0c3cf46](https://github.com/TransportVic/TransportVic2/commit/0c3cf45222eb2d94bc1e26cc6a95b862218a441f)
   - Looks for stops with the same primary stop name: Primary Stop Name/Road Name (Suburb)
@@ -41,7 +45,6 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - Show run ID too
     - Specially cross references static TT dump for stony point line. Hardcoded as 2x SP for all services, need to camp out and find those operating as 1x SP
   - Takes the first trip past flinders for down trips - allows it to be clear of the loop forming nonsense and also be able to tell apart the 527 crazyburn service
-    - Maybe auto-load all trips seen in a `/departures` load into the Live DB, including run number to help. Then add special code to request stop timings if its a 5.27 towards Craigieburn.
 - Shows trip timings for V/Line
   - Includes timetabled train model & relevant icon & run ID
   - No realtime info
@@ -52,10 +55,18 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Homepage done up together with webapp
   - Icon homepage remains, though it launches to `/nearby` if opened as a webapp
 - Pings V/Line's disruption feed every 10-20 minutes as part of its health check, and attempts to mark the services as cancelled / replaced by coaches. Doesn't always work if the service is already disrupted but not programmed in by PTV
+- Bus timings
+  - Same implementation as coach except that it has a service number & realtime data.
+  - Supports all types: metro, regional, skybus, telebus, nightbus
+  - Does stop merging as well, only checks nightbus from 11pm - 8am
+- Tram timings
+  - Same implementation as buses, with merging as well
+  - Has support for TramTrackerIDs printed on stops, using old merger algorithm to merge.
+    - Matcher needs to be optimised, currently loads tonnes of matches for a stop
 
 ## Next up to be added:
-- update this file
 - fix the 3am PT day stuff, except that is actually 8am for nightbus timetables
+  - includes normalising timings to what a decent human being would use - 31:35 is unacceptable for most people
 - refactor out on-time stuff
 - route view
 - Icons for the various stopping pattern pages
@@ -68,8 +79,8 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
     - Velocity (PTV)
     - Volgren CR228L (PTV/White)
     - Volgren Optimus (PTV/White)
-  - To Do:
     - HCMT (PTV)
+  - To Do:
     - Optare Solo (PTV/White)
     - Coach, need to find a suitable one for drawing
     - Trams (possibly do sideways rather than front?)
@@ -84,38 +95,15 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
       - Z3
   - Thoughts:
     - Trams will use a simple lookup from the tram number to get the model
-    - Buses is difficult, integration with tracker? (needs a way to link block id to actual trips)
-      - Lookup bus DB, if bodywork is drawn then show it, otherwise just display fleet number
-      - Would really only work with Ventura services
-  - Searches up stopping pattern for trips not in any DB
+    - Buses use smartrak ids
 - Refactor all moment.tz to a utils method
-- Knowing that showgrounds trains can form Craigieburn (maybe other northern grp too?) services upon reaching the city, helps reduce "unknown trip syndrome"
-- Reading English and creating a daily timetable update DB collection, can be used to mark services as coaches / cancelled (V/Line!!) as well as just MTM train types
-  - could work with Yarra Trams too, mark tram number
-  - but i guess i need to teach it tram models then
-- Homepage
 - Also find out how to ID replacement services
-- And of course the departure info
-  - Merge night bus timings too? Though only merge if its at night LOL
-  - maybe add sub headings to clearly id which stop the timings belong to, though this may be confusing
-- Then show bus stopping patterns
-- And of course trams
-- Tram Tracker stop IDs
 - Bookmarks
-- App mode
-- And everything else on TransportVic homepage (which is think there's nothing else)
+- About page, make it actually better
+- And everything else on TransportVic homepage (which i think there's nothing else)
 - Fare calculator thingy
-- Regional bus
-  - Then show the town too, using suburb -> council/LGA list
-  - Eg XXX: Regional Bus Stop in Suburb (Greater Geelong)
-- Telebus
-  - idk if the damn stop info is still messed up
-- Night bus
-  - Sorta goes under metropolitan bus but not quite
 - Interstate
   - overland apparently
-- SkyBus
-  - ah yes overpriced
 - Ferries
 - Tourist trains
   - MAKE SURE PUFFING BILLY IS SHOWN LAST
