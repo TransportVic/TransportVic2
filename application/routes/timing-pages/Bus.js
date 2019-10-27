@@ -81,7 +81,10 @@ router.get('/:suburb/:stopName', async (req, res) => {
 
   services = services.sort((a, b) => a - b)
 
-  res.render('timings/grouped', { services, groupedDepartures, stop, leftClass: 'cdc-melbourne' })
+  res.render('timings/grouped', {
+    services, groupedDepartures, stop,
+    classGen: () => 'cdc-melbourne'
+  })
 })
 
 module.exports = router

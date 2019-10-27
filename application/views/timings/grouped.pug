@@ -25,7 +25,7 @@ append content
         div(class=`departure${hasNumber ? '' : ' no-number'}`)
           // todo route colours
           if hasNumber
-            a(class=`leftContainer platform ${leftClass}`)
+            a(class=`leftContainer platform ${classGen(destinationDepartures[0])}`)
               span
               span=service
           a.departureInfo
