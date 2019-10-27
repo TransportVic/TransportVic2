@@ -42,7 +42,7 @@ append content
               a(href=departure.tripURL class=`timing mini ${departure.headwayDevianceClass}`)
                 div.stats
                   if departure.vehicleDescriptor.operator === 'Yarra Trams'
-                    if departure.tram.data.lf
+                    if departure.tram.data.ac
                       img(src='/static/images/decals/ac.svg')
                     if departure.tram.data.lf
                       img(src='/static/images/decals/wheelchair.svg')
