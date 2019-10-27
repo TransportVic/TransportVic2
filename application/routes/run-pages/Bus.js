@@ -41,6 +41,8 @@ async function pickBestTrip(data, db) {
   }
 
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
+  // let useLive = minutesToTripEnd > -5 && minutesToTripStart < 120
+
   if (liveTrip) {
     if (!(liveTrip.type === 'timings' && new Date() - liveTrip.updateTime > 2 * 60 * 1000)) {
       return liveTrip

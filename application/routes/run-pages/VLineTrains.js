@@ -36,7 +36,7 @@ async function pickBestTrip(data, db) {
 
   // TODO: improve this
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
-  
+
   query.operationDays = utils.getDayName(tripDay)
   let vnetTrip = await db.getCollection('timetables').findDocument(query)
 

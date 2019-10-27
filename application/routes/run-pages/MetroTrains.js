@@ -36,10 +36,10 @@ async function pickBestTrip(data, db) {
   }
 
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
+  let useLive = minutesToTripEnd > -5 && minutesToTripStart < 120
+
   if (liveTrip) {
     if (!(liveTrip.type === 'timings' && new Date() - liveTrip.updateTime > 2 * 60 * 1000)) {
-      liveTrip.destination = liveTrip.destination.slice(0, -16)
-      liveTrip.origin = liveTrip.origin.slice(0, -16)
       return liveTrip
     }
   }
@@ -58,9 +58,6 @@ async function pickBestTrip(data, db) {
   let isStonyPoint = data.origin === 'stony-point' || data.destination === 'stony-point'
 
   if (gtfsTrip && isStonyPoint) {
-    gtfsTrip.destination = gtfsTrip.destination.slice(0, -16)
-    gtfsTrip.origin = gtfsTrip.origin.slice(0, -16)
-
     if (isStonyPoint) {
       query.operationDays = utils.getPTDayName(tripStartTime)
       let staticTrip = await db.getCollection('timetables').findDocument(query)
@@ -78,9 +75,13 @@ async function pickBestTrip(data, db) {
     return gtfsTrip
   }
 
+  if (!useLive) return gtfsTrip
+
   let originStopID = originStop.bays.filter(bay => bay.mode === 'metro train')[0].stopGTFSID
   let originTime = tripStartTime
+  let expressCount = undefined
   if (gtfsTrip) {
+    expressCount = 0
     let stops = gtfsTrip.stopTimings.map(stop => stop.stopName)
     let flindersIndex = stops.indexOf('Flinders Street Railway Station')
 
@@ -89,20 +90,33 @@ async function pickBestTrip(data, db) {
       originStopID = stopAfterFlinders.stopGTFSID
       originTime = moment.tz(`${data.operationDays} ${stopAfterFlinders.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
     }
+
+    gtfsTrip.stopTimings.forEach((stop, i) => {
+      if (i === 0) return
+      expressCount += stop.stopSequence - gtfsTrip.stopTimings[i - 1].stopSequence -1
+    })
   }
-// get first stop after flinders, or if only 1 stop (nme  shorts) then flinders itself
-// should fix the dumb issue of trips sometimes showing as forming and sometimes as current with crazyburn
+
+  // get first stop after flinders, or if only 1 stop (nme  shorts) then flinders itself
+  // should fix the dumb issue of trips sometimes showing as forming and sometimes as current with crazyburn
   let isoDeparture = originTime.toISOString()
   let {departures, runs} = await ptvAPI(`/v3/departures/route_type/0/stop/${originStopID}?gtfs=true&date_utc=${originTime.clone().add(-3, 'minutes').toISOString()}&max_results=3&expand=run&expand=stop`)
 
-  let departure = departures.filter(departure => {
+  let departure
+  let possibleDepartures = departures.filter(departure => {
     let run = runs[departure.run_id]
     let destinationName = run.destination_name.trim()
     let scheduledDepartureTime = moment(departure.scheduled_departure_utc).toISOString()
 
     return scheduledDepartureTime === isoDeparture &&
       utils.encodeName(destinationName) === data.destination
-  })[0]
+  })
+
+  if (possibleDepartures.length > 1) {
+    departure = possibleDepartures.filter(departure => {
+      return runs[departure.run_id].express_stop_count === expressCount
+    })[0]
+  } else departure = possibleDepartures[0]
 
   // interrim workaround cos when services start from a later stop they're really cancelled
   // in the stops before, but PTV thinks otherwise...
@@ -111,14 +125,16 @@ async function pickBestTrip(data, db) {
   let departureTime = departure.scheduled_departure_utc
 
   let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime)
-  trip.origin = trip.origin.slice(0, -16)
-  trip.destination = trip.destination.slice(0, -16)
   return trip
 }
 
 router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
   let trip = await pickBestTrip(req.params, res.db)
   if (!trip) return res.end('Could not find trip :(')
+
+  trip.destination = trip.destination.slice(0, -16)
+  trip.origin = trip.origin.slice(0, -16)
+
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.prettyTimeToArrival = ''
 
