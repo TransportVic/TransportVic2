@@ -63,8 +63,9 @@ async function getDeparturesFromPTV(stop, db) {
         .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
 
       let day = utils.getYYYYMMDD(scheduledDepartureTime)
+      let routeGTFSID = route.route_gtfs_id.replace(/-0+/, '-')
 
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'tram', day)
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'tram', day, routeGTFSID)
       if (!trip) trip = await getStoppingPatternWithCache(db, tramDeparture, run.destination_name)
       let vehicleDescriptor = run.vehicle_descriptor || {}
       let tram = {}

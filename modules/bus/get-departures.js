@@ -90,7 +90,7 @@ async function getDeparturesFromPTV(stop, db) {
       if (isNightBus && (scheduledDepartureTimeMinutes % 1440) < 180)
         day = utils.getYYYYMMDD(scheduledDepartureTime.clone().add(1, 'day'))
 
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', day)
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', day, route.route_gtfs_id)
       if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
       let vehicleDescriptor = run.vehicle_descriptor || {}
 
