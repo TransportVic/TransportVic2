@@ -4,7 +4,7 @@ const async = require('async')
 const mergeStops = require('./utils/merge-stops')
 const updateStats = require('./utils/gtfs-stats')
 
-const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let gtfsTimetables = null
 let routes = null
 

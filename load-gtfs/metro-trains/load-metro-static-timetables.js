@@ -1,7 +1,7 @@
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
 const utils = require('../../utils')
-const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let stops = null
 let timetables = null
 

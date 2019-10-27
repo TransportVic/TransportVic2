@@ -23,7 +23,7 @@ module.exports = class MainServer {
   }
 
   initDatabaseConnection (app, callback) {
-    const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+    const database = new DatabaseConnection(config.databaseURL, config.databaseName)
     database.connect((err) => {
       app.use((req, res, next) => {
         res.db = database

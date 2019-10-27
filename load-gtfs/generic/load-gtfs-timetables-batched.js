@@ -10,7 +10,7 @@ let gtfsNumberMapping = require('../metro-bus/gtfs-number-map')
 const calendar = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/calendar.txt`).toString())
 const calendarDates = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/calendar_dates.txt`).toString())
 
-const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/gtfs-stats')
 
 let benchmarkStart = new Date()

@@ -7,7 +7,7 @@ const { createStopsLookup } = require('../utils/datamart-utils')
 const stopsData = utils.parseGTFSData(fs.readFileSync('gtfs/3/stops.txt').toString())
 const datamartStops = require('../../spatial-datamart/metro-tram-stops.json').features
 
-const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let stops = null
 const updateStats = require('../utils/gtfs-stats')
 

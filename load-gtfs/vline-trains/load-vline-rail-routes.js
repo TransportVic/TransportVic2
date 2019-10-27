@@ -6,7 +6,7 @@ const loadRoutes = require('../utils/load-routes')
 const routeData = utils.parseGTFSData(fs.readFileSync('gtfs/1/routes.txt').toString())
 const shapeData = utils.parseGTFSData(fs.readFileSync('gtfs/1/shapes.txt').toString())
 
-const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/gtfs-stats')
 
 let start = new Date()

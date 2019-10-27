@@ -10,7 +10,7 @@ const routeData = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/routes
 const shapeData = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/shapes.txt`).toString())
 const ptvAPI = require('../../ptv-api')
 
-const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let routes = null
 const updateStats = require('../utils/gtfs-stats')
 

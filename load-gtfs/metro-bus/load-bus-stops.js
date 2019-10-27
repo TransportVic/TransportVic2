@@ -11,7 +11,7 @@ const stopsData = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/stops.
 const datamartStops = require(`../../spatial-datamart/${gtfsNumberMapping[gtfsNumber]}-stops.json`).features
 const busStopNameModifier = require('./bus-stop-name-modifier')
 
-const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let stops = null
 const updateStats = require('../utils/gtfs-stats')
 

@@ -9,7 +9,7 @@ const calendarDates = utils.parseGTFSData(fs.readFileSync('gtfs/1/calendar_dates
 const trips = utils.parseGTFSData(fs.readFileSync('gtfs/1/trips.txt').toString())
 const tripTimesData = utils.parseGTFSData(fs.readFileSync('gtfs/1/stop_times.txt').toString())
 
-const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/gtfs-stats')
 
 let start = new Date()

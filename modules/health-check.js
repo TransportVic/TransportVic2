@@ -15,7 +15,7 @@ let isOnline = true
 var refreshRate = 10;
 let currentDisruptions
 
-const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 
 async function processVLineCoachOverrides(db) {

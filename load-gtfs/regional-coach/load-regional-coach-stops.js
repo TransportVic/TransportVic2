@@ -8,7 +8,7 @@ const { createStopsLookup } = require('../utils/datamart-utils')
 const stopsData = utils.parseGTFSData(fs.readFileSync('gtfs/5/stops.txt').toString())
 const datamartStops = require('../../spatial-datamart/regional-coach-stops.json').features
 
-const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/gtfs-stats')
 
 let start = new Date()

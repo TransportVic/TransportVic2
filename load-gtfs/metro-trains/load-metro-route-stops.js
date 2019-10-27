@@ -3,7 +3,7 @@ const config = require('../../config.json')
 const async = require('async')
 const mergeStops = require('../utils/merge-stops')
 
-const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let gtfsTimetables = null
 let routes = null
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
