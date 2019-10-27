@@ -145,15 +145,32 @@ a.timing.mini {
   font-size: calc(1vw + 1vh);
 }
 
+a.timing.mini > div.stats {
+  height: calc(1vw + 1vh);
+  width: calc(3vw + 3vh);
+
+  position: relative;
+  margin-top: calc(-1vw - 1vh);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+a.timing.mini > div.stats > img {
+  width: calc(1vw + 1vh);
+  margin-bottom: calc(0.75vw + 0.75vh);
+}
+
 a.timing.mini span {
   width: calc(3vw + 3vh);
 }
 
-a.timing.mini span:nth-child(3) {
+a.timing.mini span:nth-child(4) {
   position: relative;
   font-size: calc(0.75vw + 0.75vh);
   top: calc(0.75vw + 0.75vh);
-  height: 0
+  height: 0;
 }
 
 a.timing span {

@@ -14,7 +14,7 @@ let data = {
   B2: { ac: true, lf: false },
   C: { ac: true, lf: true },
   C2: { ac: true, lf: true },
-  D: { ac: true, lf: true },
+  D1: { ac: true, lf: true },
   D2: { ac: true, lf: true },
   E1: { ac: true, lf: true },
   E2: { ac: true, lf: true },

@@ -40,6 +40,12 @@ append content
               div.timing.mini(style='display: none')
             for departure in departures
               a(href=departure.tripURL class=`timing mini ${departure.headwayDevianceClass}`)
+                div.stats
+                  if departure.vehicleDescriptor.operator === 'Yarra Trams'
+                    if departure.tram.data.lf
+                      img(src='/static/images/decals/ac.svg')
+                    if departure.tram.data.lf
+                      img(src='/static/images/decals/wheelchair.svg')
                 span=departure.prettyTimeToArrival
                 span=departure.scheduledDepartureTime.format('HH:mm')
                 if departure.vehicleDescriptor
