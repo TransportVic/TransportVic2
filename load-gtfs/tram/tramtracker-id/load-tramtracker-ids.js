@@ -6,7 +6,7 @@ const async = require('async')
 const tramtrackerStops = require('./tramtracker-stops')
 const levenshtein = require('fast-levenshtein').get
 const updateStats = require('../../utils/gtfs-stats')
-const database = new DatabaseConnection(config.databaseURL, 'TransportVic2')
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let stops
 let start = new Date()
 
