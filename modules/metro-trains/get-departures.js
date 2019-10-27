@@ -2,7 +2,7 @@ const TimedCache = require('timed-cache')
 const async = require('async')
 const ptvAPI = require('../../ptv-api')
 const utils = require('../../utils')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 3 })
+const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
 const healthCheck = require('../health-check')
 const moment = require('moment')
 const departureUtils = require('../utils/get-train-timetables')
@@ -219,11 +219,27 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
     return await departureUtils.getScheduledDepartures(station, db, 'metro train', 90)
 
   let departures = await getDeparturesFromPTV(station, db, departuresCount, includeCancelled, platform, ttl)
-  departuresCache.put(cacheKey, departures, {
+
+  let serviceIDs = []
+  let mergedDepartures = {}
+
+  departures.forEach(departure => {
+    let serviceID = departure.scheduledDepartureTime.format('HH:mm') + departure.trip
+    .destination
+    if (serviceIDs.includes(serviceID))
+      mergedDepartures[serviceID].busCount++
+    else {
+      departure.busCount = 1
+      mergedDepartures[serviceID] = departure
+      serviceIDs.push(serviceID)
+    }
+  })
+
+  departuresCache.put(cacheKey, Object.values(mergedDepartures), {
     ttl: ttl * 1000 * 60
   })
 
-  return filterDepartures(departures)
+  return filterDepartures(Object.values(mergedDepartures))
 }
 
 module.exports = getDepartures

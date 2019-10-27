@@ -119,7 +119,7 @@ async function getDepartures(stop, db) {
     }
   })
 
-  departuresCache.put(stop.stopName + 'C', departures)
+  departuresCache.put(stop.stopName + 'C', Object.values(mergedCoachDepartures))
   return Object.values(mergedCoachDepartures)
 }
 

@@ -68,7 +68,8 @@ append content
           span=departure.destination
           
           if departure.platform === 'RRB'
-            span.cancelled Rail Replacement Bus
+            - let busCount = departure.busCount || 1
+            span.cancelled=`Rail Replacement Bus${busCount > 1 ? ` - This trip has ${busCount} buses` : ''}`
           else if departure.cancelled
             span.cancelled CANCELLED
           else if departure.trip.isUncertain
