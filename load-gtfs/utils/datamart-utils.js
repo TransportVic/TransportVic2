@@ -5,7 +5,7 @@ function transformBusStop(inputStop) {
     stopGTFSID: inputStop.properties.STOP_ID,
     mykiZones: ticketZones.split(',').map(e => parseInt(e)).filter(Boolean),
     stopName: inputStop.properties.STOP_NAME,
-    services: inputStop.properties.ROUTEUSSP.split(',')
+    services: (inputStop.properties.ROUTEUSSP || '').split(',')
   }
 }
 
