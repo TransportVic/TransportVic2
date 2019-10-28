@@ -231,15 +231,17 @@ database.connect({
   stops = database.getCollection('stops')
   timetables = database.getCollection('timetables')
 
-  timetables.createIndex({
+  await timetables.createIndex({
     mode: 1,
-    operator: 1,
-    routeName: 1,
-    runID: 1,
     operationDays: 1,
+    runID: 1,
     origin: 1,
     destination: 1
-  }, {unique: true})
+  }, {name: 'timetable index', unique: true})
+
+  await timetables.createIndex({
+    runID: 1,
+  }, {name: 'runID index', unique: true})
 
   let i = -1
   async function loadFile() {
