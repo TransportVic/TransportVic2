@@ -22,6 +22,13 @@ $.ready(() => {
         family: 'BreeSerif',
         size: 20,
         color: '#3c3c3c'
+      },
+      hoverlabel: {
+        font: {
+          family: 'BreeSerif',
+          size: 20,
+          color: '#ffffff'
+        }
       }
     })
 
@@ -37,6 +44,13 @@ $.ready(() => {
         family: 'BreeSerif',
         size: 20,
         color: '#3c3c3c'
+      },
+      hoverlabel: {
+        font: {
+          family: 'BreeSerif',
+          size: 20,
+          color: '#ffffff'
+        }
       }
     })
   })
@@ -85,6 +99,13 @@ $.ready(() => {
         family: 'BreeSerif',
         size: 20,
         color: '#3c3c3c'
+      },
+      hoverlabel: {
+        font: {
+          family: 'BreeSerif',
+          size: 20,
+          color: '#ffffff'
+        }
       }
     })
 
@@ -111,7 +132,14 @@ $.ready(() => {
         size: 20,
         color: '#3c3c3c'
       },
-      barmode: 'stack'
+      barmode: 'stack',
+      hoverlabel: {
+        font: {
+          family: 'BreeSerif',
+          size: 20,
+          color: '#ffffff'
+        }
+      }
     })
   })
 })
