@@ -71,21 +71,22 @@ module.exports = async function (suspensions, db) {
         firstSuspendedStopIndex = tripStops.indexOf(endStation)
         lastSuspendedStopIndex = tripStops.indexOf(startStation)
       }
+
       let firstHalfStops = [], busReplacement = [], secondHalfStops = []
-      if (firstSuspendedStopIndex == -1) { // starts/ends after the first suspended stop
+      if (firstSuspendedStopIndex < 1) { // starts after/at the first suspended stop
         if (trip.direction == 'Up') {
           busReplacement = trip.stopTimings.slice(lastSuspendedStopIndex)
-          secondHalfStops = trip.stopTimings.slice(0, lastSuspendedStopIndex + 1)
+          secondHalfStops = trip.stopTimings.slice(lastSuspendedStopIndex, trip.stopTimings.length)
         } else {
-          busReplacement = trip.stopTimings.slice(0, lastSuspendedStopIndex + 1)
+          busReplacement = trip.stopTimings.slice(lastSuspendedStopIndex, trip.stopTimings.length)
           secondHalfStops = trip.stopTimings.slice(lastSuspendedStopIndex)
         }
-      } else if (lastSuspendedStopIndex == -1) { // starts/ends before the last suspended stop
+      } else if (lastSuspendedStopIndex < 1) { // ends before/at the last suspended stop
         if (trip.direction == 'Up') {
           firstHalfStops = trip.stopTimings.slice(firstSuspendedStopIndex)
-          busReplacement = trip.stopTimings.slice(0, firstSuspendedStopIndex + 1)
+          busReplacement = trip.stopTimings.slice(firstSuspendedStopIndex, trip.stopTimings.length + 1)
         } else {
-          firstHalfStops = trip.stopTimings.slice(0, firstSuspendedStopIndex + 1)
+          firstHalfStops = trip.stopTimings.slice(firstSuspendedStopIndex, trip.stopTimings.length + 1)
           busReplacement = trip.stopTimings.slice(firstSuspendedStopIndex)
         }
       } else {

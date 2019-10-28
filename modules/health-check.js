@@ -99,7 +99,6 @@ async function setServiceAsCancelled(db, query, operationDay, isCoach) {
     || await liveTimetables.findDocument(query) || await liveTimetables.findDocument(query)
   if (timetable) {
     timetable.operationDays = [operationDay]
-    delete timetable.operationDays
     delete timetable._id
     timetable.type = 'cancelled'
     if (isCoach) {
