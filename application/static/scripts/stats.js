@@ -17,7 +17,12 @@ $.ready(() => {
       type: 'pie'
     }], {
       height: innerHeight,
-      width: innerWidth
+      width: innerWidth,
+      font: {
+        family: 'BreeSerif',
+        size: 20,
+        color: '#3c3c3c'
+      }
     })
 
     Plotly.newPlot('percentageDocuments', [{
@@ -27,7 +32,12 @@ $.ready(() => {
       type: 'pie'
     }], {
       height: innerHeight,
-      width: innerWidth
+      width: innerWidth,
+      font: {
+        family: 'BreeSerif',
+        size: 20,
+        color: '#3c3c3c'
+      }
     })
   })
 })

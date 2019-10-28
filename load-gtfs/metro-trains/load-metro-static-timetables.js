@@ -176,6 +176,7 @@ database.connect({
 
   await timetables.createIndex({
     runID: 1,
+    operationDays: 1
   }, {name: 'runID index', unique: true})
 
   let i = -1
