@@ -9,7 +9,6 @@ const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
 const busStopNameModifier = require('../../load-gtfs/metro-bus/bus-stop-name-modifier')
-const smartrakIDs = require('../../known-smartrak-ids')
 
 let tripLoader = {}
 let tripCache = {}
@@ -49,6 +48,7 @@ function shouldGetNightbus(now) {
 
 async function getDeparturesFromPTV(stop, db) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
+  let smartrakIDs = db.getCollection('smartrak ids')
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', true, false)
   let nightbusGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', true, true)
 
@@ -96,8 +96,9 @@ async function getDeparturesFromPTV(stop, db) {
 
       let busRego
       if (vehicleDescriptor.supplier === 'Smartrak') {
-        let smartrakID = vehicleDescriptor.id
-        busRego = smartrakIDs[smartrakID]
+        busRego = (await smartrakIDs.findDocument({
+          smartrakID: parseInt(vehicleDescriptor.id)
+        }) || {}).fleetNumber
       }
 
       mappedDepartures.push({

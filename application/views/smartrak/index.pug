@@ -1,0 +1,20 @@
+extends ../layout
+
+block head
+  title TransportVic - Smartrak IDs
+  
+block title
+  span Smartrak IDs
+
+block scripts
+  script(src='/static/scripts/smartrak.js')
+  
+block style
+  link(rel='stylesheet' href='/static/css/smartrak.css')
+
+block content
+  div#container
+    textarea#textbar(placeholder=placeholder autocorrect="off" resizable="false")
+    button#submit Enter
+
+  

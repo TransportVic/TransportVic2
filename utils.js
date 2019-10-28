@@ -22,7 +22,16 @@ module.exports = {
   encodeName: name => name.toLowerCase().replace(/[^\w\d ]/g, '-').replace(/  */g, '-').replace(/--+/g, '-'),
   adjustRawStopName: name => {
     let directionParts
-    if (directionParts = name.match(/\/(.*?) \((\w+)\) (.*?) \((.+)/)) {
+    if (directionParts = name.match(/\/\((.*?)\) (.*?) \((.+)/)) {
+      name = name.replace(/\/.+/, '/')
+      let roadName = directionParts[2],
+      direction = directionParts[1],
+      remaining = directionParts[3]
+
+      direction = direction[0].toUpperCase() + direction.slice(1).toLowerCase()
+
+      name += `${roadName} - ${direction} (${remaining}`
+    } else if (directionParts = name.match(/\/(.*?) \((\w+)\) (.*?) \((.+)/)) {
       // canberra st/lorwhatver (north) st (docklands)
       name = name.replace(/\/.+/, '/')
       let roadName1 = directionParts[1].trim(),

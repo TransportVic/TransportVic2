@@ -24,11 +24,16 @@ module.exports = class MainServer {
 
   initDatabaseConnection (app, callback) {
     const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-    database.connect((err) => {
+    database.connect(async err => {
       app.use((req, res, next) => {
         res.db = database
         next()
       })
+
+      await database.getCollection('smartrak ids').createIndex({
+        smartrakID: 1,
+        fleetNumber: 1
+      }, {unique: true})
 
       callback()
     })
@@ -114,6 +119,7 @@ module.exports = class MainServer {
       // 'run-pages/Tram': '/tram/run',
 
       GeoJSONVisualiser: '/geojson-visualise',
+      SmartrakIDs: '/smartrak',
 
       'mockups/FlindersStreetEscalator': '/mockups/fss-escalator',
       'mockups/MiniLCD-PIDS': '/mockups/mini-lcd-pids',

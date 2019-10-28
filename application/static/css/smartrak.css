@@ -1,0 +1,33 @@
+#container {
+  height: calc(15vh + 15vw);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#textbar {
+  width: 78vw;
+
+  height: calc(13vw + 13vh);
+  border: none;
+  border-radius: calc(1vw + 1vh);
+  outline: none;
+  font-size: calc(1vw + 1vh);
+  padding-bottom: calc(.2vw + .2vh);
+  padding-top: 0.8vw;
+  padding-left: 1vw;
+  padding-right: 1vw;
+  background-color: #e0e0e0;
+  appearance: none;
+  -moz-appearance: textfield;
+  resize: none;
+
+  font-family: BreeSerif;
+}
+
+#submit {
+  width: 10vw;
+  height: calc(4vw + 4vh);
+  margin-top: calc(2vw + 2vh);
+}
