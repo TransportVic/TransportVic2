@@ -19,7 +19,7 @@ router.post('/load', async (req, res) => {
 
     let parts
 
-    if (!(smartrakID && fleetNumber && parts = fleetNumber.match(/^([A-Z]{1,2})\d+$/))) {
+    if (!(smartrakID && fleetNumber && (parts = fleetNumber.match(/^([A-Z]{1,2})\d+$/)))) {
       if (fleetNumber === '-') {
         await smartrakIDs.deleteDocument({ smartrakID })
       } else
