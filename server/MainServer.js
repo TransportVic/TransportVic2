@@ -31,8 +31,7 @@ module.exports = class MainServer {
       })
 
       await database.getCollection('smartrak ids').createIndex({
-        smartrakID: 1,
-        fleetNumber: 1
+        smartrakID: 1
       }, {unique: true})
 
       callback()

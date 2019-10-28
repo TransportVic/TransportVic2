@@ -31,8 +31,10 @@ router.post('/load', async (req, res) => {
     }
   })
 
+  let count = await smartrakIDs.countDocuments()
+
   if (failedMessage) res.end(failedMessage)
-  else res.end('Ok')
+  else res.end(`Ok - ${count} Smartrak IDs in DB`)
 })
 
 module.exports = router
