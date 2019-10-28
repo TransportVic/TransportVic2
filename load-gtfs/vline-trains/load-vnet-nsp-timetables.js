@@ -100,7 +100,11 @@ async function loadTimetableCSV (filename) {
 }
 
 async function loadTrips (csvData, direction) {
-  const { trips, routeStops, leftColumns } = csvData
+  let { trips, routeStops, leftColumns } = csvData
+
+  routeStops = routeStops.map(stop =>
+    stop.split(' ').map(e =>
+      e[0].toUpperCase() + e.slice(1).toLowerCase()).join(' '))
 
   await async.forEach(trips, async trip => {
     timetableCount++
@@ -122,14 +126,18 @@ async function loadTrips (csvData, direction) {
       if (timing === '…/…') timing = ''
 
       const stationMeta = leftColumns[i++]
-      const stopName = stationMeta[0]
+      let stopName = stationMeta[0]
       const fieldContents = stationMeta[1]
 
       if (timing === '') return
       if (timing.includes('@')) return
 
+      stopName = stopName.split(' ').map(e =>
+        e[0].toUpperCase() + e.slice(1).toLowerCase()).join(' ')
+
       const stopData = await stops.findDocument({
-        stopName: new RegExp('^' + stopName + ' railway station', 'i')
+        mergeName: stopName + ' Railway Station',
+        'bays.mode': 'regional train'
       })
       const bay = stopData.bays.filter(bay => bay.mode === 'regional train')[0];
 
@@ -225,9 +233,7 @@ async function loadTrips (csvData, direction) {
   })
 }
 
-database.connect({
-  poolSize: 500
-}, async err => {
+database.connect({}, async err => {
   stops = database.getCollection('stops')
   timetables = database.getCollection('timetables')
 
