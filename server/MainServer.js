@@ -33,10 +33,12 @@ module.exports = class MainServer {
       await database.getCollection('smartrak ids').createIndex({
         smartrakID: 1
       }, {name: 'smartrak id index', unique: true})
-
       await database.getCollection('smartrak ids').createIndex({
         fleetNumber: 1
       }, {name: 'fleet number index', unique: true})
+      await database.getCollection('smartrak ids').createIndex({
+        operator: 1
+      }, {name: 'operator index', unique: true})
 
       callback()
     })
@@ -146,7 +148,7 @@ module.exports = class MainServer {
     })
 
     app.use('/500', (req, res) => { throw new Error('500') })
-    
+
     app.use((req, res, next) => {
       next(new Error('404'))
     })

@@ -1,7 +1,8 @@
 {
   "smartrakMap": {
     "smartrakID": "number",
-    "fleetNumber": "string"
+    "fleetNumber": "string",
+    "operator": "string"
   },
   "gtfsTrip": {
     "mode": "string",

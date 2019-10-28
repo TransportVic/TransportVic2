@@ -17,16 +17,19 @@ router.post('/load', async (req, res) => {
     let smartrakID = parseInt(line[0]),
         fleetNumber = line[1]
 
-    if (!(smartrakID && fleetNumber && fleetNumber.match(/^[A-Z]{1,2}\d+$/))) {
+    let parts
+
+    if (!(smartrakID && fleetNumber && parts = fleetNumber.match(/^([A-Z]{1,2})\d+$/))) {
       if (fleetNumber === '-') {
         await smartrakIDs.deleteDocument({ smartrakID })
       } else
         failedMessage += `Line ${i} ${line} failed: did not match format`
     } else {
+      let operator = parts[1]
       await smartrakIDs.replaceDocument({
         smartrakID
       }, {
-        smartrakID, fleetNumber
+        smartrakID, fleetNumber, operator
       }, { upsert: true })
     }
   })
