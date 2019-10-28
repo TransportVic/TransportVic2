@@ -11,7 +11,7 @@ const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config.json')
 let BusTracker
 if (config.busTrackerPath)
-  BusTracker = require(path.join(config.busTrackerPath, 'server.js'))
+BusTracker = require(path.join(config.busTrackerPath, 'server.js'))
 
 module.exports = class MainServer {
   constructor () {
@@ -32,7 +32,11 @@ module.exports = class MainServer {
 
       await database.getCollection('smartrak ids').createIndex({
         smartrakID: 1
-      }, {unique: true})
+      }, {name: 'smartrak id index', unique: true})
+
+      await database.getCollection('smartrak ids').createIndex({
+        fleetNumber: 1
+      }, {name: 'fleet number index', unique: true})
 
       callback()
     })
@@ -119,6 +123,7 @@ module.exports = class MainServer {
 
       GeoJSONVisualiser: '/geojson-visualise',
       SmartrakIDs: '/smartrak',
+      Statistics: '/stats',
 
       'mockups/FlindersStreetEscalator': '/mockups/fss-escalator',
       'mockups/MiniLCD-PIDS': '/mockups/mini-lcd-pids',
@@ -136,12 +141,12 @@ module.exports = class MainServer {
     }
 
     app.get('/sw.js', (req, res) => {
-        res.setHeader('Cache-Control', 'no-cache');
-        res.sendFile(path.join(__dirname, '../application/static/app-content/sw.js'));
-    });
+      res.setHeader('Cache-Control', 'no-cache')
+      res.sendFile(path.join(__dirname, '../application/static/app-content/sw.js'))
+    })
 
     app.use('/500', (req, res) => { throw new Error('500') })
-
+    
     app.use((req, res, next) => {
       next(new Error('404'))
     })

@@ -65,7 +65,8 @@ async function getDeparturesFromPTV(stop, db) {
     let stopGTFSID = stopGTFSIDPair[0],
         isNightBus = stopGTFSIDPair[1]
     //todo put route number as part of route and timetable db
-    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/${isNightBus ? 4 : 2}/stop/${stopGTFSID}?gtfs=true&max_results=5&expand=run&expand=route`)
+    let requestTime = now.clone().add(-1, 'mintues').toISOString()
+    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/${isNightBus ? 4 : 2}/stop/${stopGTFSID}?gtfs=true&max_results=5&expand=run&expand=route&date_utc=${requestTime}`)
 
     let seenIDs = []
     await async.forEach(departures, async busDeparture => {

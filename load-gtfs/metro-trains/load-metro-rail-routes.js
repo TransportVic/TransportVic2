@@ -24,7 +24,7 @@ database.connect({
     if (name === 'FrankstonStony Point') return 'Stony Point'
     return name
   })
-  await updateStats('mtm-route', routeCount, new Date() - start)
+  await updateStats('mtm-routes', routeCount, new Date() - start)
 
   console.log('Completed loading in ' + routeCount + ' MTM routes')
   process.exit()

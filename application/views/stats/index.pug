@@ -1,0 +1,19 @@
+extends ../layout
+
+block head
+  title TransportVic - Site Statistics
+  
+block title
+  span Site Statistics
+
+block scripts
+  script(src='/static/scripts/stats.js')
+  script(src='/static/scripts/vendor/plotly.js')
+  
+//- block style
+//-   link(rel='stylesheet' href='/static/css/stats.css')
+
+block content
+  div#timeSpent
+  div#percentageDocuments
+  
