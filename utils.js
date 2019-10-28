@@ -31,6 +31,15 @@ module.exports = {
       direction = direction[0].toUpperCase() + direction.slice(1).toLowerCase()
 
       name += `${roadName} - ${direction} (${remaining}`
+    } else if (directionParts = name.match(/^\((.*?)\) ([^/]+)\/(.+)/)) {
+      name = name.replace(/\/.+/, '/')
+      let roadName1 = directionParts[2],
+      remaining = directionParts[3],
+      direction = directionParts[1]
+
+      direction = direction[0].toUpperCase() + direction.slice(1).toLowerCase()
+
+      name = `${roadName1} - ${direction}/${remaining}`
     } else if (directionParts = name.match(/\/(.*?) \((\w+)\) (.*?) \((.+)/)) {
       // canberra st/lorwhatver (north) st (docklands)
       name = name.replace(/\/.+/, '/')
@@ -50,12 +59,18 @@ module.exports = {
 
       direction = direction[0].toUpperCase() + direction.slice(1).toLowerCase()
       name = `${roadName1} ${roadName2} - ${direction}` + name
-    } else if (name.match(/\(\w+\)\//)) {
+    } else if (directionParts = name.match(/\((\w+)\)\//)) {
       // some st (south)/whatever rd (x)
-      name = name.replace(/\((\w+)\)\//, ' - $1/')
-    } else if (name.match(/\(\w+\) \(/)) {
+      direction = directionParts[1]
+      direction = direction[0].toUpperCase() + direction.slice(1).toLowerCase()
+
+      name = name.replace(/\(\w+\)\//, ` - ${direction}/`)
+    } else if (directionParts = name.match(/\((\w+)\) \(/)) {
       // some st/whatever rd (south) (x)
-      name = name.replace(/\((\w+)\) \(/, ' - $1 (')
+      direction = directionParts[1]
+      direction = direction[0].toUpperCase() + direction.slice(1).toLowerCase()
+
+      name = name.replace(/\((\w+)\) \(/, ` - ${direction} (`)
     }
 
     if (name.match(/\(([\w ]+) \((\d{4})\)\)$/)) {

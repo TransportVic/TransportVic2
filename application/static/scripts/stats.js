@@ -1,3 +1,25 @@
+function createLayout(title) {
+  return {
+    title,
+    height: screenHeight,
+    width: screenWidth,
+    font: {
+      family: 'BreeSerif',
+      size: 20,
+      color: '#3c3c3c'
+    },
+    hoverlabel: {
+      font: {
+        family: 'BreeSerif',
+        size: 15,
+        color: '#ffffff'
+      }
+    },
+    plot_bgcolor: '#1e1e1e',
+    paper_bgcolor: '#1e1e1e'
+  }
+}
+
 $.ready(() => {
   let screenWidth = window.innerWidth
   let screenHeight = window.innerHeight
@@ -14,45 +36,13 @@ $.ready(() => {
       values: timeSpent,
       labels,
       type: 'pie'
-    }], {
-      title: 'Time spent on each GTFS loader',
-      height: screenHeight,
-      width: screenWidth,
-      font: {
-        family: 'BreeSerif',
-        size: 20,
-        color: '#3c3c3c'
-      },
-      hoverlabel: {
-        font: {
-          family: 'BreeSerif',
-          size: 20,
-          color: '#ffffff'
-        }
-      }
-    })
+    }], createLayout('Time spent on each GTFS loader'))
 
     Plotly.newPlot('percentageDocuments', [{
       values: objectCount,
       labels,
       type: 'pie'
-    }], {
-      title: 'Number of GTFS objects by type',
-      height: screenHeight,
-      width: screenWidth,
-      font: {
-        family: 'BreeSerif',
-        size: 20,
-        color: '#3c3c3c'
-      },
-      hoverlabel: {
-        font: {
-          family: 'BreeSerif',
-          size: 20,
-          color: '#ffffff'
-        }
-      }
-    })
+    }], createLayout('Number of GTFS objects by type'))
   })
 
   let operators = {
@@ -91,23 +81,7 @@ $.ready(() => {
       values: operatorCounts,
       labels,
       type: 'pie'
-    }], {
-      title: 'Known Smartrak IDs by operator',
-      height: screenHeight,
-      width: screenWidth,
-      font: {
-        family: 'BreeSerif',
-        size: 20,
-        color: '#3c3c3c'
-      },
-      hoverlabel: {
-        font: {
-          family: 'BreeSerif',
-          size: 20,
-          color: '#ffffff'
-        }
-      }
-    })
+    }], createLayout('Known Smartrak IDs by operator'))
 
     Plotly.newPlot('operatorCompletion', [{
       x: labels,
@@ -123,23 +97,6 @@ $.ready(() => {
       }),
       type: 'bar',
       name: 'Remaining Smartrak IDs'
-    }], {
-      title: 'Smartrak ID completion by operator',
-      height: screenHeight,
-      width: screenWidth,
-      font: {
-        family: 'BreeSerif',
-        size: 20,
-        color: '#3c3c3c'
-      },
-      barmode: 'stack',
-      hoverlabel: {
-        font: {
-          family: 'BreeSerif',
-          size: 20,
-          color: '#ffffff'
-        }
-      }
-    })
+    }], createLayout('Smartrak ID completion by operator'))
   })
 })
