@@ -20,10 +20,6 @@ database.connect({
   poolSize: 100
 }, async err => {
   routes = database.getCollection('routes')
-  routes.createIndex({
-    routeName: 1,
-    routeGTFSID: 1
-  }, {unique: true})
 
   function adjustRouteName(routeName) {
     let loopPostfix = ''

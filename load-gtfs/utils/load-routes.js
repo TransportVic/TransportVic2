@@ -2,6 +2,19 @@ const async = require('async')
 const utils = require('../../utils')
 
 module.exports = async function(routeData, shapeData, routes, operator, mode, adjustRouteName=n => n, nameFilter=()=>true) {
+  await routes.createIndex({
+    routeName: 1
+  }, {name: 'route name index'})
+
+  await routes.createIndex({
+    routeNumber: 1
+  }, {name: 'route number index'})
+
+  await routes.createIndex({
+    routeGTFSID: 1
+  }, {name: 'route gtfs id index', unique: true})
+
+
   const allRoutes = routeData.map(values => {
     let simplifiedRouteGTFSID = utils.simplifyRouteGTFSID(values[0])
     let adjustedRouteName = adjustRouteName(values[3], simplifiedRouteGTFSID)

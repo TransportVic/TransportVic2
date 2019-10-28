@@ -18,11 +18,6 @@ database.connect({
   poolSize: 100
 }, async err => {
   routes = database.getCollection('routes')
-  routes.createIndex({
-    routeName: 1,
-    routeGTFSID: 1
-  }, {unique: true})
-
 
   let routeCount = await loadRoutes(routeData, shapeData, routes, () => ['Yarra Trams'], 'tram')
 
