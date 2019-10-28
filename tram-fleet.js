@@ -21,6 +21,7 @@ let data = {
 }
 
 function getModel(number) {
+  number = parseInt(number)
   if (number <= 100) return 'Z1'
   if (number <= 115) return 'Z2'
   if (number <= 230) return 'Z3'

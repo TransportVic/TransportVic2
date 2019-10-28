@@ -285,30 +285,32 @@ div.departure:nth-child(even) .vline {
 
 .tram-1 {
     background-color: #6e811f;
-    color: #c6c6c6 !important;
+    color: #e8e8e8 !important;
 }
 
 div.departure:nth-child(even) .tram-1 {
     background-color: #607216;
-    color: #c6c6c6 !important;
+    color: #e8e8e8 !important;
 }
 
 .tram-3-3a, .tram-3a {
     background-color: #0c8aa7;
-    color: #c6c6c6 !important;
+    color: #e8e8e8 !important;
 }
 
 div.departure:nth-child(even) .tram-3-3a, div.departure:nth-child(even) .tram-3a {
     background-color: #0e7991;
-    color: #c6c6c6 !important;
+    color: #e8e8e8 !important;
 }
 
 .tram-5 {
     background-color: #ff0100;
+    color: #d7d7d7 !important;
 }
 
 div.departure:nth-child(even) .tram-5 {
     background-color: #b80100;
+    color: #d7d7d7 !important;
 }
 
 .tram-6 {
@@ -320,11 +322,13 @@ div.departure:nth-child(even) .tram-6 {
 }
 
 .tram-11 {
-    background-color: #52c49c;
+    background-color: #46af8b;
+    color: #e8e8e8 !important;
 }
 
 div.departure:nth-child(even) .tram-11 {
     background-color: #227b5b;
+    color: #e8e8e8 !important;
 }
 
 .tram-12 {
@@ -336,13 +340,13 @@ div.departure:nth-child(even) .tram-12 {
 }
 
 .tram-16 {
-    background-color: #ae8600;
-    color: #c6c6c6 !important;
+    background-color: #d3a306;
+    color: #e8e8e8 !important;
 }
 
 div.departure:nth-child(even) .tram-16 {
-    background-color: #d3a306;
-    color: #c6c6c6 !important;
+    background-color: #ae8600;
+    color: #e8e8e8 !important;
 }
 
 .tram-19 {
@@ -378,7 +382,7 @@ div.departure:nth-child(even) .tram-48 {
 }
 
 .tram-57 {
-    background-color: #00ccd1;
+    background-color: #01b2b5;
 }
 
 div.departure:nth-child(even) .tram-57 {
@@ -402,11 +406,11 @@ div.departure:nth-child(even) .tram-59 {
 }
 
 .tram-64 {
-    background-color: #006f45;
+    background-color: #00AB8E;
 }
 
 div.departure:nth-child(even) .tram-64 {
-    background-color: #02603c;
+    background-color: #019e84;
 }
 
 .tram-67 {
@@ -414,35 +418,37 @@ div.departure:nth-child(even) .tram-64 {
 }
 
 div.departure:nth-child(even) .tram-67 {
-    background-color: #7e4533;
+    background-color: #703c2c;
 }
 
 .tram-70 {
-    background-color: #ff78bd;
-    color: #c6c6c6 !important;
+    background-color: #e560a5;
+    color: #d7d7d7 !important;
 }
 
 div.departure:nth-child(even) .tram-70 {
-    background-color: #ff2f99;
-    color: #c6c6c6 !important;
+    background-color: #ea2a8d;
+    color: #d7d7d7 !important;
 }
 
 .tram-72 {
-    background-color: #4e876e;
-    color: #c6c6c6 !important;
+    background-color: #607c6d;
+    color: #e8e8e8 !important;
 }
 
 div.departure:nth-child(even) .tram-72 {
-    background-color: #3f6d59ff;
-    color: #c6c6c6 !important;
+    background-color: #5a7566;
+    color: #e8e8e8 !important;
 }
 
 .tram-75 {
-    background-color: #00a9e3;
+    background-color: #049fd3;
+    color: #d7d7d7 !important;
 }
 
 div.departure:nth-child(even) .tram-75 {
-    background-color: #005c7b;
+    background-color: #017399;
+    color: #d7d7d7 !important;
 }
 
 .tram-78 {
@@ -464,17 +470,17 @@ div.departure:nth-child(even) .tram-82 {
 }
 
 .tram-86 {
-    background-color: #ffb700;
-    color: #c6c6c6 !important;
+    background-color: #d89c04;
+    color: #e8e8e8 !important;
 }
 
 div.departure:nth-child(even) .tram-86 {
     background-color: #b88400;
-    color: #c6c6c6 !important;
+    color: #e8e8e8 !important;
 }
 
 .tram-96 {
-    background-color: #ff0089;
+    background-color: #f20081;
 }
 
 div.departure:nth-child(even) .tram-96 {
@@ -482,7 +488,7 @@ div.departure:nth-child(even) .tram-96 {
 }
 
 .tram-109 {
-    background-color: #f06800;
+    background-color: #ea6500;
 }
 
 div.departure:nth-child(even) .tram-109 {
