@@ -70,8 +70,9 @@ async function matchTramStop(tramtrackerStopName, stopNumber, services, suburb) 
 Known tram stops to ignore:
 Waterfront City #11 - 7099, 8008
 East Preston Tram Depot #46 - 1846, 2846
+Victoria St #26 - 1526
 */
-let ignore = [7099, 8008, 1846, 2846]
+let ignore = [7099, 8008, 1846, 2846, 1526]
 
 database.connect({}, async err => {
   stops = database.getCollection('stops')
