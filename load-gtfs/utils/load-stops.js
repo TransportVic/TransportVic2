@@ -49,6 +49,18 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
     'tramTrackerIDs': 1
   }, {name: 'tramtracker id index'})
 
+  await stops.createIndex({
+    'bays.flags.tramtrackerName': 1
+  }, {name: 'tramtracker name index'})
+
+  await stops.createIndex({
+    'bays.stopNumber': 1
+  }, {name: 'stop number index'})
+
+  await stops.createIndex({
+    'bays.routes': 1
+  }, {name: 'routes index'})
+
   const allStops = stopsData.map(values => {
     let matchedStop = lookupTable[values[0]]
     let shouldOverride = !!matchedStop

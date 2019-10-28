@@ -37,7 +37,7 @@ async function matchTramStop(tramtrackerStopName, stopNumber, services, suburb) 
         }
       }
     ]
-  }).toArray()
+  }, { codedSuburb: 0, codedName: 0, codedNames: 0, location: 0, mergeName: 0, stopName: 0 }).toArray()
 
   let bestStop = stopsMatched.map(stop => {
     let score = 0

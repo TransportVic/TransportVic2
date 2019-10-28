@@ -43,6 +43,11 @@ router.get('/:suburb/:stopName', async (req, res) => {
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
       + utils.getYYYYMMDDNow()
 
+    let destinationShortName = departure.trip.destination.split('/')[0]
+    let {destination} = departure.trip
+    if (!utils.isStreet(destinationShortName)) destination = destinationShortName
+    departure.destination = destination
+
     return departure
   })
 

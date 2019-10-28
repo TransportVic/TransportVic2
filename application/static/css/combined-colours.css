@@ -293,12 +293,12 @@ div.departure:nth-child(even) .tram-1 {
     color: #e8e8e8 !important;
 }
 
-.tram-3-3a, .tram-3a {
+.tram-3 {
     background-color: #0c8aa7;
     color: #e8e8e8 !important;
 }
 
-div.departure:nth-child(even) .tram-3-3a, div.departure:nth-child(even) .tram-3a {
+div.departure:nth-child(even) .tram-3 {
     background-color: #0e7991;
     color: #e8e8e8 !important;
 }

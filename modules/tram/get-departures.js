@@ -82,7 +82,7 @@ async function getDeparturesFromPTV(stop, db) {
         actualDepartureTime,
         destination: trip.destination,
         vehicleDescriptor,
-        routeNumber: route.route_number,
+        routeNumber: route.route_number === '3-3a' ? '3' : route.route_number,
         tram
       })
     })

@@ -107,7 +107,7 @@ async function getDeparturesFromPTV(stop, db) {
         actualDepartureTime,
         destination: trip.destination,
         vehicleDescriptor,
-        routeNumber: route.route_number,
+        routeNumber: route.route_number.replace(/_x$/, ''),
         busRego,
         isNightBus
       })
