@@ -38,7 +38,7 @@ module.exports = class MainServer {
       }, {name: 'fleet number index', unique: true})
       await database.getCollection('smartrak ids').createIndex({
         operator: 1
-      }, {name: 'operator index', unique: true})
+      }, {name: 'operator index'})
 
       callback()
     })
