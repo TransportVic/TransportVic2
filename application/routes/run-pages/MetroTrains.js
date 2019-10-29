@@ -44,16 +44,7 @@ async function pickBestTrip(data, db) {
     }
   }
 
-  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument({
-    mode: 'metro train',
-    origin: originStop.stopName,
-    departureTime: data.departureTime,
-    destination: destinationStop.stopName,
-    destinationArrivalTime: data.destinationArrivalTime,
-    tripStartHour: { $lte: operationHour },
-    tripEndHour: { $gte: operationHour },
-    operationDays: data.operationDays
-  })
+  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
 
   let isStonyPoint = data.origin === 'stony-point' || data.destination === 'stony-point'
 
