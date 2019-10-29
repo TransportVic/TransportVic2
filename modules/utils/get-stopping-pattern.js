@@ -45,12 +45,14 @@ module.exports = async function (db, ptvRunID, mode, time) {
     }
     stopName = busStopNameModifier(utils.adjustStopname(stopName))
       .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
-      
+
     let dbStop = await stopsCollection.findDocument({
       $or: [{
-        'bays.fullStopName': stopName,
+        'bays.fullStopName': stopName
       }, {
         stopName,
+      }, {
+        'bays.originalName': stopName
       }],
       'bays.mode': { $in: checkModes }
     })

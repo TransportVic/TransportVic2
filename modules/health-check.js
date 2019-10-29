@@ -86,8 +86,8 @@ async function watchPTVDisruptions(db) {
   isOnline = true
 
   let mtmSuspensions = disruptions.metro_train.filter(disruption => disruption.disruption_type.toLowerCase().includes('suspended'))
-  if (mtmSuspensions.length) handleMTMSuspensions(mtmSuspensions, db)
-  else await liveTimetables.deleteDocuments({ type: "suspension" })
+  // if (mtmSuspensions.length) handleMTMSuspensions(mtmSuspensions, db)
+  // else await liveTimetables.deleteDocuments({ type: "suspension" })
 }
 
 async function setServiceAsCancelled(db, query, operationDay, isCoach) {
@@ -193,7 +193,7 @@ function updateRefreshRate() {
   else refreshRate = 15
 }
 
-database.connect((err) => {
+database.connect(async (err) => {
   let liveTimetables = database.getCollection('live timetables')
   await liveTimetables.createIndex({
     mode: 1,
@@ -238,7 +238,7 @@ database.connect((err) => {
     }
   }
 
-  refreshCache()
+  await refreshCache()
 })
 
 module.exports = {
