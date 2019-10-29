@@ -8,7 +8,9 @@ let gtfsNumber = process.argv[2]
 let gtfsNumberMapping = require('./gtfs-number-map')
 
 const stopsData = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/stops.txt`).toString())
-const datamartStops = require(`../../spatial-datamart/${gtfsNumberMapping[gtfsNumber]}-stops.json`).features
+let datamartName = gtfsNumberMapping[gtfsNumber]
+if (datamartName === 'telebus') datamartName = 'metro-bus'
+const datamartStops = require(`../../spatial-datamart/${datamartName}-stops.json`).features
 const busStopNameModifier = require('./bus-stop-name-modifier')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
