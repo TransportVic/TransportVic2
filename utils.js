@@ -189,6 +189,7 @@ module.exports = {
       || shortName.endsWith('Wat') || shortName.endsWith('Cl')
       || shortName.endsWith('Crst') || shortName.endsWith('Pl')
       || shortName.endsWith('Bvd') || shortName.endsWith('Cres'))
-  }
-
+  },
+  isCheckpointStop: stopName => stopName.includes('University')
+    || stopName.includes('Railway Station')
 }

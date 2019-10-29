@@ -61,6 +61,8 @@ async function getDeparturesFromPTV(stop, db) {
   if (shouldGetNightbus(now))
     gtfsIDPairs = gtfsIDPairs.concat(nightbusGTFSIDs.map(s => [s, true]))
 
+  let isCheckpointStop = utils.isCheckpointStop(stop.stopName)
+
   await async.forEach(gtfsIDPairs, async stopGTFSIDPair => {
     let stopGTFSID = stopGTFSIDPair[0],
         isNightBus = stopGTFSIDPair[1]
@@ -80,6 +82,14 @@ async function getDeparturesFromPTV(stop, db) {
       let scheduledDepartureTime = moment.tz(busDeparture.scheduled_departure_utc, 'Australia/Melbourne')
       let estimatedDepartureTime = busDeparture.estimated_departure_utc ? moment.tz(busDeparture.estimated_departure_utc, 'Australia/Melbourne') : null
       let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
+
+      // if early at checkpoint set to on time
+      if (estimatedDepartureTime && isCheckpointStop) {
+        if (scheduledDepartureTime - estimatedDepartureTime > 0) {
+          estimatedDepartureTime = scheduledDepartureTime
+          actualDepartureTime = estimatedDepartureTime
+        }
+      }
 
       if (actualDepartureTime.diff(now, 'minutes') > 90) return
 
