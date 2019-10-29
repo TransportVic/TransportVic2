@@ -250,6 +250,19 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
         stop.codedName = utils.encodeName(stop.stopName)
       }
 
+      let nightBusBays = stop.bays.filter(b => b.flags && b.flags.isNightBus)
+      if (mode === 'bus' && nightBusBays.length) {
+        let existingRegularBays = stopData.bays.filter(b => !b.flags || (b.flags && !b.flags.isNightBus && b.flags.hasRegularBus))
+          .map(bay => bay.stopGTFSID)
+
+        stop.bays = stop.bays.map(bay => {
+          if (bay.flags && bay.flags.isNightBus) {
+            bay.flags.hasRegularBus = existingRegularBays.includes(bay.stopGTFSID)
+          }
+          return bay
+        })
+      }
+
       stop.bays = stopData.bays
         .filter(bay => !(baysToUpdate.includes(bay.stopGTFSID) && bay.mode === mode))
         .concat(stop.bays)
