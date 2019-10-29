@@ -22,7 +22,7 @@ async function performSearch (db, query) {
     ]
   }
   search.push({ stopName: new RegExp(query, 'i') })
-  console.log(search)
+
   return (await db.getCollection('stops').findDocuments({
     $or: search
   }).limit(15).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)

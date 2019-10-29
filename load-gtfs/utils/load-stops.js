@@ -87,8 +87,16 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
 
     if (!values[1].endsWith(')') && !matchedStop.stopName.endsWith(')'))
       matchedStop.stopName += ' (?)'
-    const stopNameData = utils.adjustRawStopName(matchedStop.stopName).match(/(.+) \((.*?)\)$/)
-    const GTFSStopNameData = utils.adjustRawStopName(values[1]).match(/(.+) \((.*?)\)$/)
+    let matchedStopName = utils.adjustRawStopName(matchedStop.stopName)
+    let stopNameData = matchedStopName.match(/(.+) \((.+ \(.+\))\)$/)
+    if (!stopNameData)
+      stopNameData = matchedStopName.match(/(.+) \((.*?)\)$/)
+
+    let gtfsStopName = utils.adjustRawStopName(values[1])
+    let GTFSStopNameData = gtfsStopName.match(/(.+) \((.+ \(.+\))\)$/)
+    if (!GTFSStopNameData)
+      GTFSStopNameData = gtfsStopName.match(/(.+) \((.*?)\)$/)
+
     let fullStopName = adjustStopName(utils.adjustStopname((GTFSStopNameData || stopNameData)[1])),
         stopName = utils.extractStopName(fullStopName)
 
