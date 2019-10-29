@@ -195,14 +195,29 @@ function updateRefreshRate() {
 
 database.connect((err) => {
   let liveTimetables = database.getCollection('live timetables')
-  liveTimetables.createIndex({
+  await liveTimetables.createIndex({
     mode: 1,
     routeName: 1,
     operationDays: 1,
     origin: 1,
+    departureTime: 1,
     destination: 1,
-    departureTime: 1
-  }, {unique: true})
+    arrivalTime: 1
+  }, {unique: true, name: 'live timetable index'})
+
+  await liveTimetables.createIndex({
+    destination: 1
+  }, {name: 'destination index'})
+  await liveTimetables.createIndex({
+    mode: 1,
+    routeGTFSID: 1
+  }, {name: 'mode/routeGTFSID index'})
+  await liveTimetables.createIndex({
+    operationDays: 1
+  }, {name: 'operationDays index'})
+  await liveTimetables.createIndex({
+    stopTimings: 1,
+  }, {name: 'timings index'})
 
   processVLineCoachOverrides(database)
 

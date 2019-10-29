@@ -122,7 +122,7 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
       arrivalTimeMinutes: utils.time24ToMinAftMidnight(arrivalTime) % 1440,
       departureTime,
       departureTimeMinutes: utils.time24ToMinAftMidnight(departureTime) % 1440,
-      stopConditions: "",
+      stopConditions: '',
       stopDistance: stopDistance,
       stopSequence
     }
@@ -181,16 +181,24 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
     tripEndHour: 1,
     tripID: 1,
     shapeID: 1
-  }, {unique: true, name: "gtfs timetable index"})
+  }, {unique: true, name: 'gtfs timetable index'})
 
   await gtfsTimetables.createIndex({
     shapeID: 1
   }, {name: 'shapeID index'})
 
   await gtfsTimetables.createIndex({
+    destination: 1
+  }, {name: 'destination index'})
+  await gtfsTimetables.createIndex({
     mode: 1,
-    routeGTFSID: 1,
-    'stopTimings.stopGTFSID': 1
+    routeGTFSID: 1
+  }, {name: 'mode/routeGTFSID index'})
+  await gtfsTimetables.createIndex({
+    operationDays: 1
+  }, {name: 'operationDays index'})
+  await gtfsTimetables.createIndex({
+    stopTimings: 1,
   }, {name: 'timings index'})
 
   let services = {}
