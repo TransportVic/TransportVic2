@@ -1,29 +1,29 @@
-function createLayout(title) {
-  return {
-    title,
-    height: screenHeight,
-    width: screenWidth,
-    font: {
-      family: 'BreeSerif',
-      size: 20,
-      color: '#3c3c3c'
-    },
-    hoverlabel: {
-      font: {
-        family: 'BreeSerif',
-        size: 15,
-        color: '#ffffff'
-      }
-    },
-    plot_bgcolor: '#1e1e1e',
-    paper_bgcolor: '#1e1e1e'
-  }
-}
-
 $.ready(() => {
   let screenWidth = window.innerWidth
   let screenHeight = window.innerHeight
 
+  function createLayout(title) {
+    return {
+      title,
+      height: screenHeight,
+      width: screenWidth,
+      font: {
+        family: 'BreeSerif',
+        size: 20,
+        color: '#3c3c3c'
+      },
+      hoverlabel: {
+        font: {
+          family: 'BreeSerif',
+          size: 15,
+          color: '#ffffff'
+        }
+      },
+      plot_bgcolor: '#1e1e1e',
+      paper_bgcolor: '#1e1e1e'
+    }
+  }
+  
   $.ajax({
     url: '/stats/gtfs-stats',
     method: 'GET'
