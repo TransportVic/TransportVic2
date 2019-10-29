@@ -87,6 +87,6 @@ database.connect({
   await loadBatch()
 
   await updateStats(gtfsNumberMapping[gtfsNumber] + '-gtfs-timetables', loaded, new Date() - benchmarkStart)
-  console.log('Completed loading in ' + loaded + ' bus trips')
+  console.log(`Completed loading in ${loaded} ${gtfsNumberMapping[gtfsNumber]} trips`)
   process.exit()
 })

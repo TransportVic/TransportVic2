@@ -27,7 +27,8 @@
     "departureTime": "number",
     "origin": "string",
     "gtfsDirection": "string",
-    "direction": "string"
+    "direction": "string",
+    "shapeID": "string"
   },
   "timetable": {
     "mode": "string",
