@@ -10,7 +10,7 @@ $.ready(() => {
       font: {
         family: 'BreeSerif',
         size: 20,
-        color: '#3c3c3c'
+        color: '#e8e8e8'
       },
       hoverlabel: {
         font: {
@@ -23,7 +23,7 @@ $.ready(() => {
       paper_bgcolor: '#1e1e1e'
     }
   }
-  
+
   $.ajax({
     url: '/stats/gtfs-stats',
     method: 'GET'
@@ -97,6 +97,8 @@ $.ready(() => {
       }),
       type: 'bar',
       name: 'Remaining Smartrak IDs'
-    }], createLayout('Smartrak ID completion by operator'))
+    }], Object.assign(createLayout('Smartrak ID completion by operator'), {
+     barmode: 'stack'
+    }))
   })
 })
