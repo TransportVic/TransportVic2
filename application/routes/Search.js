@@ -8,13 +8,23 @@ router.get('/', (req, res) => {
 })
 
 async function performSearch (db, query) {
-  return (await db.getCollection('stops').findDocuments({
-    $or: [
+  let search
+
+  let nquery = parseInt(query)
+  if (nquery) {
+    search = [
       { 'bays.stopGTFSID': parseInt(query) },
-      { stopName: new RegExp(query, 'i') },
-      { suburb: new RegExp(query, 'i') },
-      { tramTrackerIDs: parseInt(query) },
+      { tramTrackerIDs: parseInt(query) }
     ]
+  } else {
+    search = [
+      { suburb: new RegExp(query, 'i') }
+    ]
+  }
+  search.push({ stopName: new RegExp(query, 'i') })
+  console.log(search)
+  return (await db.getCollection('stops').findDocuments({
+    $or: search
   }).limit(15).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
 }
 
