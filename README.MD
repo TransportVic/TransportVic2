@@ -122,7 +122,25 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - myki manager if it's safe
   - store login info on client side?
 
-## Me talking about how it works
-Realtime V/Line departures?
 
--> Does their app do it? Yes, but actually no
+## Setting up
+Create a config.json looking like
+```
+{
+    "useHTTPS": false,
+    "sslCertPath": "",
+    "httpPort": 8000,
+    "databaseURL": "mongodb://localhost:27017",
+    "databaseName": "TransportVic",
+    "websiteDNSName": "localhost",
+    "webrootPath": "",
+    "useLetsEncrypt": false,
+    "busTrackerPath": "",
+
+    "ptvKey": "",
+    "ptvDevID": "",
+
+    "gtfsBatcher": false
+}
+```
+with the appropriate fields filled

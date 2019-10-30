@@ -148,8 +148,8 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
     stopTimings[stopCount - 1].departureTime = null
     stopTimings[stopCount - 1].departureTimeMinutes = null
 
-    allTrips[tripID].tripStartHour = Math.floor(stopTimings[0].departureTimeMinutes / 60)
-    allTrips[tripID].tripEndHour = Math.floor(stopTimings[stopCount - 1].arrivalTimeMinutes / 60)
+    allTrips[tripID].tripStartHour = Math.floor(stopTimings[0].departureTimeMinutes / 60) % 1440
+    allTrips[tripID].tripEndHour = Math.floor(stopTimings[stopCount - 1].arrivalTimeMinutes / 60) % 1440
 
     bulkOperations.push({
       insertOne: {
