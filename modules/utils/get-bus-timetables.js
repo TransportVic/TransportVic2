@@ -63,11 +63,7 @@ async function getScheduledDepartures(stopGTFSID, db, mode, timeout, useLive) {
     const minutesPastMidnight = utils.getMinutesPastMidnightNow()
 
     let departures = await timetables.findDocuments({
-      $or: [{
-        operationDays: utils.getYYYYMMDDNow()
-      }, {
-        operationDay: utils.getYYYYMMDDNow()
-      }],
+      operationDays: utils.getYYYYMMDDNow(),
       mode,
       stopTimings: {
         $elemMatch: {

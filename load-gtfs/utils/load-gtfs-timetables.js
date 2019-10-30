@@ -29,10 +29,12 @@ async function getStop(stopGTFSID, stops, mode) {
     let bay = stop.bays.filter(bay => bay.stopGTFSID === stopGTFSID && bay.mode === mode)[0]
 
     stopCache[stopGTFSID] = bay
-    stopLoaders[stopGTFSID].emit('loaded', bay)
+
+    let data = {stop: bay, id: stop._id}
+    stopLoaders[stopGTFSID].emit('loaded', data)
     delete stopLoaders[stopGTFSID]
 
-    return bay
+    return data
   } else return stopCache[stopGTFSID]
 }
 
@@ -113,10 +115,11 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
 
     if (!allTrips[tripID]) return // filtered off unless gtfs data is whack
 
-    let stop = await getStop(stopGTFSID, stops, mode)
+    let {stop, id} = await getStop(stopGTFSID, stops, mode)
 
     allTrips[tripID].stopTimings[stopSequence - 1] = {
       stopName: stop.fullStopName,
+      stopID: id,
       stopGTFSID,
       arrivalTime,
       arrivalTimeMinutes: utils.time24ToMinAftMidnight(arrivalTime) % 1440,
