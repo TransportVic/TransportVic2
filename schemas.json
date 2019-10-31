@@ -93,7 +93,8 @@
       "mykiZones": ["number"]
     }],
     "location": "GeoJSON:MultiPoint",
-    "mergeName": "string"
+    "mergeName": "string",
+    "service": ["string"]
   },
   "route": {
     "routeName": "string",

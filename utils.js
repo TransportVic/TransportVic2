@@ -83,12 +83,12 @@ module.exports = {
     if (name.includes('Jolimont-MCG')) {
       name = name.replace('Jolimont-MCG', 'Jolimont')
     }
-    if (name.includes('Railway Station')) {
-      name = name.replace('Railway Station', 'Station')
+    if (name.includes(' Railway Station')) {
+      name = name.replace(' Railway Station', ' Station')
     }
 
-    if (name.includes('Station') && !name.includes('Bus Station') && !name.startsWith('Station')) {
-      name = name.replace('Station', 'Railway Station')
+    if (name.includes(' Station') && !name.includes(' Bus Station') && !name.startsWith('Station')) {
+      name = name.replace(' Station', ' Railway Station')
     }
 
     return name.replace(/  +/g, ' ')

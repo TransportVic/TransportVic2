@@ -198,11 +198,13 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
     routeGTFSID: 1
   }, {name: 'mode/routeGTFSID index'})
   await gtfsTimetables.createIndex({
-    operationDays: 1
-  }, {name: 'operationDays index'})
+    'stopTimings.stopID': 1,
+    'stopTimings.departureTimeMinutes': 1
+  }, {name: 'stop timings index'})
   await gtfsTimetables.createIndex({
-    stopTimings: 1,
-  }, {name: 'timings index'})
+    'stopTimings.stopID': 1,
+    routeGTFSID: 1
+  }, {name: 'route gtfs id+stop timings index'})
 
   let services = {}
   trips.forEach(trip => {
@@ -221,7 +223,7 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
   let start = 0
 
   async function loadBatch() {
-    let tripsToLoad = services.slice(start, start += 5)
+    let tripsToLoad = services.slice(start, start += 10)
     let serviceCount = tripsToLoad.length
 
     tripsToLoad = tripsToLoad.reduce((acc, e) => acc.concat(e), [])

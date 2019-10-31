@@ -25,7 +25,7 @@ function shaHash(data) {
 }
 
 database.connect({
-  poolSize: 400
+  poolSize: 150
 }, async err => {
   let gtfsTimetables = database.getCollection('gtfs timetables')
   if (!preserve)
