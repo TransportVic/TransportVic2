@@ -44,12 +44,12 @@ async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, desti
     },
     routeGTFSID,
     destination: utils.adjustStopname(destination),
-    tripStartHour: {
-      $lte: departureHour
-    },
-    tripEndHour: {
-      $gte: departureHour
-    }
+    // tripStartHour: {
+    //   $lte: departureHour
+    // },
+    // tripEndHour: {
+    //   $gte: departureHour
+    // }
   }
 
   // let live = await db.getCollection('live timetables').findDocument(query)

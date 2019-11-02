@@ -125,7 +125,10 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
       arrivalTimeMinutes: utils.time24ToMinAftMidnight(arrivalTime) % 1440,
       departureTime,
       departureTimeMinutes: utils.time24ToMinAftMidnight(departureTime) % 1440,
-      stopConditions: '',
+      stopConditions: {
+        pickup: pickupFlags,
+        dropoff: dropoffFlags
+      },
       stopDistance: stopDistance,
       stopSequence
     }
@@ -151,8 +154,8 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
     stopTimings[stopCount - 1].departureTime = null
     stopTimings[stopCount - 1].departureTimeMinutes = null
 
-    allTrips[tripID].tripStartHour = Math.floor(stopTimings[0].departureTimeMinutes / 60) % 1440
-    allTrips[tripID].tripEndHour = Math.floor(stopTimings[stopCount - 1].arrivalTimeMinutes / 60) % 1440
+    allTrips[tripID].tripStartHour = Math.floor(stopTimings[0].departureTimeMinutes / 60) % 24
+    allTrips[tripID].tripEndHour = Math.floor(stopTimings[stopCount - 1].arrivalTimeMinutes / 60) % 24
 
     bulkOperations.push({
       insertOne: {
@@ -202,8 +205,10 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
     'stopTimings.departureTimeMinutes': 1
   }, {name: 'stop timings index'})
   await gtfsTimetables.createIndex({
+    routeGTFSID: 1,
+    gtfsDirection: 1,
     'stopTimings.stopID': 1,
-    routeGTFSID: 1
+    'stopTimings.departureTimeMinutes': 1,
   }, {name: 'route gtfs id+stop timings index'})
 
   let services = {}

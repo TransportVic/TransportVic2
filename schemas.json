@@ -18,7 +18,10 @@
       "arrivalTimeMinutes": "number",
       "departureTime": "string",
       "departureTimeMinutes": "number",
-      "stopConditions": "string",
+      "stopConditions": {
+        "pickup": "number",
+        "dropoff": "number",
+      },
       "stopDistance": "number",
       "stopSequence": "number"
     }],
