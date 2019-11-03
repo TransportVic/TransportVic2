@@ -117,7 +117,7 @@ async function getDeparturesFromPTV(stop, db) {
       let busRoute = await dbRoutes.findDocument({ routeGTFSID: route.route_gtfs_id })
       let operator = busRoute.operators.sort((a, b) => a.length - b.length)[0]
 
-      let importantStops = trip.stopTimings.slice(1).map(stop => stop.stopName)
+      let importantStops = trip.stopTimings.slice(1, -1).map(stop => stop.stopName)
         .filter(utils.isCheckpointStop)
         .map(utils.shorternStopName)
 
