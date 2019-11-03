@@ -192,6 +192,9 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
   await gtfsTimetables.createIndex({
     shapeID: 1
   }, {name: 'shapeID index'})
+  await gtfsTimetables.createIndex({
+    operationDays: 1
+  }, {name: 'operationDays index'})
 
   await gtfsTimetables.createIndex({
     destination: 1

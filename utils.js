@@ -91,7 +91,7 @@ module.exports = {
       name = name.replace(' Station', ' Railway Station')
     }
 
-    return name.replace(/  +/g, ' ')
+    return name.replace(/  +/g, ' ').replace(' SC', 'Shopping Centre')
   },
   extractStopName: name => {
     return name.replace(/\/.+$/, '')
@@ -191,7 +191,8 @@ module.exports = {
       || shortName.endsWith('Bvd') || shortName.endsWith('Cres'))
   },
   isCheckpointStop: stopName => stopName.includes('University')
-    || stopName.includes('Railway Station'), //SC
+    || stopName.includes('Railway Station')
+    || stopName.includes('SC') || stopName.includes('Shopping Centre'),
 
   getDistanceFromLatLon: (lat1, lon1, lat2, lon2) => {
     var R = 6371 // Radius of the earth in km
