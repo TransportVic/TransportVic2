@@ -1,5 +1,10 @@
 module.exports = {
   "4-PMC-0": ["Ventura Bus Lines"],
+  "4-PMC-2": ["Ventura Bus Lines"],
+  "4-PMC-4": ["Ventura Bus Lines"],
+  "4-PMC-6": ["Ventura Bus Lines"],
+  "4-PMC-7": ["Ventura Bus Lines"],
+  "4-PMC-9": ["Ventura Bus Lines"],
   "4-PMC": ["Ventura Bus Lines"],
   "4-216": ["Transdev Melbourne"],
   "4-220": ["Transdev Melbourne"],
