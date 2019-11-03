@@ -87,7 +87,7 @@ div.departure:nth-child(even) .tullamarine-bus-lines {
 }
 
 div.departure:nth-child(even) .moonee-valley-bus-lines {
-  background-color: #941010;
+  background-color: #a41717;
 }
 
 .sunbury-bus-service {
@@ -268,11 +268,11 @@ div.departure:nth-child(even) .fallons-bus-service {
   background-color: #10332e;
 }
 
-.castlemaine-bus-lines, .whitmores-bus-lines {
+.castlemaine-bus-lines, .whitmores-bus-lines, .maryborough-transit {
   background-color: #06345f;
 }
 
-div.departure:nth-child(even) .castlemaine-bus-lines, div.departure:nth-child(even) .whitmores-bus-lines {
+div.departure:nth-child(even) .castlemaine-bus-lines, div.departure:nth-child(even) .whitmores-bus-lines, div.departure:nth-child(even) .maryborough-transit {
   background-color: #052747;
 }
 
@@ -404,6 +404,73 @@ div.departure:nth-child(even) .warrnambool-bus-lines, div.departure:nth-child(ev
 
 div.departure:nth-child(even) .sovereign-hill {
   background-color: #141d27;
+}
+
+.kingstons-tours {
+  background-color: #e80d0d;
+}
+
+div.departure:nth-child(even) .kingstons-tours {
+  background-color: #c90f0f;
+}
+
+.shire-of-central-goldfields {
+  background-color: #067e4a;
+}
+
+div.departure:nth-child(even) .shire-of-central-goldfields {
+  background-color: #045f38;
+}
+
+.henty-highway-coach {
+  background-color: #518ab7;
+}
+
+div.departure:nth-child(even) .henty-highway-coach {
+  background-color: #4879a0;
+}
+
+/* TODO: find colours */
+/* .boyles-bus-services {
+  background-color: #518ab7;
+}
+
+div.departure:nth-child(even) .boyles-bus-services {
+  background-color: #4879a0;
+} */
+
+.organ-s-coaches {
+  background-color: #75d4b1;
+  color: #f9f9f9 !important;
+}
+
+div.departure:nth-child(even) .organ-s-coaches {
+  background-color: #5fb092;
+  color: #f9f9f9 !important;
+}
+
+.trotters-coaches {
+  background-color: #28ab0e;
+}
+
+div.departure:nth-child(even) .trotters-coaches {
+  background-color: #23910d;
+}
+
+.cann-s-bus-lines {
+  background-color: #047172;
+}
+
+div.departure:nth-child(even) .cann-s-bus-lines {
+  background-color: #055758;
+}
+
+.warragul-bus-lines {
+  background-color: #4263cd;
+}
+
+div.departure:nth-child(even) .warragul-bus-lines {
+  background-color: #3856b7;
 }
 
 

@@ -50,6 +50,7 @@ function shouldGetNightbus(now) {
 async function getDeparturesFromPTV(stop, db) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let smartrakIDs = db.getCollection('smartrak ids')
+  let dbRoutes = db.getCollection('routes')
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', true, false)
   let nightbusGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', true, true)
 
@@ -113,6 +114,9 @@ async function getDeparturesFromPTV(stop, db) {
         }) || {}).fleetNumber
       }
 
+      let busRoute = await dbRoutes.findDocument({ routeGTFSID: route.route_gtfs_id })
+      let operator = busRoute.operators.sort((a, b) => a.length - b.length)[0]
+
       mappedDepartures.push({
         trip,
         scheduledDepartureTime,
@@ -122,7 +126,9 @@ async function getDeparturesFromPTV(stop, db) {
         vehicleDescriptor,
         routeNumber: route.route_number.replace(/_x$/, ''),
         busRego,
-        isNightBus
+        isNightBus,
+        operator,
+        codedOperator: utils.encodeName(operator)
       })
     })
   })

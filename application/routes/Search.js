@@ -23,7 +23,7 @@ async function performSearch (db, query) {
   }
 
   let possibleStopNames = [query]
-  possibleStopNames.push(query.replace(/st?a?t?i?o?n?/i, 'railway station'))
+  possibleStopNames.push(query.replace(/ (station|statio|stati|stat|sta|st|s)/i, ' railway station'))
   possibleStopNames.push(query.replace(/ sc/i, ' shopping centre'))
 
   search = search.concat(possibleStopNames.map(name => ({stopName: new RegExp(name, 'i')}) ))

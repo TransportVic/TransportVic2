@@ -83,7 +83,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
 
   res.render('timings/grouped', {
     services, groupedDepartures, stop,
-    classGen: () => 'cdc-melbourne'
+    classGen: departure => departure.codedOperator
   })
 })
 
