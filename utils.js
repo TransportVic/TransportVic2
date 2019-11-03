@@ -91,7 +91,7 @@ module.exports = {
       name = name.replace(' Station', ' Railway Station')
     }
 
-    return name.replace(/  +/g, ' ').replace(' SC', 'Shopping Centre')
+    return name.replace(/  +/g, ' ').replace(' SC', ' Shopping Centre')
   },
   extractStopName: name => {
     return name.replace(/\/.+$/, '')

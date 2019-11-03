@@ -28,7 +28,7 @@ function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
   return gtfsIDs
 }
 
-async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, destination, mode, day, routeGTFSID) {
+async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, destination, mode, day, routeGTFSID) {
   let departureHour = Math.floor(scheduledDepartureTimeMinutes / 60) % 24
 
   let query = {
@@ -37,7 +37,7 @@ async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, desti
     stopTimings: {
       $elemMatch: {
         stopGTFSID: {
-          $in: stopGTFSID
+          $in: stopGTFSIDs
         },
         departureTimeMinutes: scheduledDepartureTimeMinutes % 1440
       }
@@ -54,15 +54,24 @@ async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, desti
 
   // let live = await db.getCollection('live timetables').findDocument(query)
   // if (live) return live
-
-  return await db.getCollection('gtfs timetables').findDocument(query)
+  let trip = await db.getCollection('gtfs timetables').findDocument(query)
+  if (trip) {
+    let hasSeenStop = false
+    trip.stopTimings = trip.stopTimings.filter(stop => {
+      if (stopGTFSIDs.includes(stop.stopGTFSID)) {
+        hasSeenStop = true
+      }
+      return hasSeenStop
+    })
+  }
+  return trip
 }
 
 async function getScheduledDepartures(stopGTFSID, db, mode, timeout, useLive) {
     const timetables = db.getCollection((useLive ? 'live' : 'gtfs') + ' timetables')
     const minutesPastMidnight = utils.getMinutesPastMidnightNow()
 
-    let departures = await timetables.findDocuments({
+    let trips = await timetables.findDocuments({
       operationDays: utils.getYYYYMMDDNow(),
       mode,
       stopTimings: {
@@ -76,17 +85,25 @@ async function getScheduledDepartures(stopGTFSID, db, mode, timeout, useLive) {
       }
     }).toArray()
 
-    return departures.map(departure => {
-      let stopData = departure.stopTimings.filter(stop => stop.stopGTFSID === stopGTFSID)[0]
+    return trips.map(trip => {
+      let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === stopGTFSID)[0]
       let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
 
+      let hasSeenStop = false
+      trip.stopTimings = trip.stopTimings.filter(stop => {
+        if (stopGTFSIDs.includes(stop.stopGTFSID)) {
+          hasSeenStop = true
+        }
+        return hasSeenStop
+      })
+
       return {
-        trip: departure,
+        trip,
         scheduledDepartureTime: departureTime,
         estimatedDepartureTime: null,
         actualDepartureTime: departureTime,
         scheduledDepartureTimeMinutes: stopData.departureTimeMinutes,
-        destination: departure.destination
+        destination: trip.destination
       }
     }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }

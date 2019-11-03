@@ -1,6 +1,12 @@
 # [TransportVic2](https://vic.transportsg.me)
 Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne for a longer time and actually know the system through.
 
+## Current mapping projects:
+- Smartrak ID mapping
+  - Enables the user to see at a glance what the bus rego of their bus will be, allowing for easier identification
+- Bus bay GTFS ID mapping
+  - Tells the user which bus bay the bus departs from, guiding them in interchanges
+
 ## Current features:
 - Loading in MTM timetables
 - Loading in bus timetables
@@ -59,13 +65,14 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - Same implementation as coach except that it has a service number & realtime data.
   - Supports all types: metro, regional, skybus, telebus, nightbus
   - Does stop merging as well, only checks nightbus from 11pm - 8am
+  - Attempts to show the bus fleet number for easier ID-ing
 - Tram timings
   - Same implementation as buses, with merging as well
   - Has support for TramTrackerIDs printed on stops, using old merger algorithm to merge.
     - Matcher needs to be optimised, currently loads tonnes of matches for a stop
 
 ## Next up to be added:
-- move smartrak ids to a DB, and have it a admin page to load it in
+- fix up casino tram stop
 - fix the 3am PT day stuff, except that is actually 8am for nightbus timetables
   - includes normalising timings to what a decent human being would use - 31:35 is unacceptable for most people
 - refactor out on-time stuff
@@ -121,7 +128,6 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - journey planner if it takes the whole 2020 to impl this
 - myki manager if it's safe
   - store login info on client side?
-
 
 ## Setting up
 Create a config.json looking like

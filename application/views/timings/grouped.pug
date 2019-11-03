@@ -33,6 +33,8 @@ append content
               span=destinationDepartures[0].trip.routeName
             span Towards
             span=destination
+            if destinationDepartures[0].guidanceText
+              span=destinationDepartures[0].guidanceText
           div.timings
             - let departures = destinationDepartures.slice(0, 4)
               

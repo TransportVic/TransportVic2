@@ -21,7 +21,12 @@ async function performSearch (db, query) {
       { suburb: new RegExp(query, 'i') }
     ]
   }
-  search.push({ stopName: new RegExp(query, 'i') })
+
+  let possibleStopNames = [query]
+  possibleStopNames.push(query.replace(/st?a?t?i?o?n?/i, 'railway station'))
+  possibleStopNames.push(query.replace(/ sc/i, ' shopping centre'))
+
+  search = search.concat(possibleStopNames.map(name => ({stopName: new RegExp(name, 'i')}) ))
 
   return (await db.getCollection('stops').findDocuments({
     $or: search

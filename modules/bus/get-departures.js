@@ -9,6 +9,7 @@ const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
 const busStopNameModifier = require('../../load-gtfs/metro-bus/bus-stop-name-modifier')
+const busBays = require('./bus-bays')
 
 let tripLoader = {}
 let tripCache = {}
@@ -151,6 +152,30 @@ async function getDepartures(stop, db) {
       departure.vehicleDescriptor = {}
       return departure
     })
+
+  let shouldShowRoad = departureUtils.getUniqueGTFSIDs(stop, 'bus', true, shouldGetNightbus(utils.now())).length > 1
+
+  departures = departures.map(departure => {
+    let {trip} = departure
+    let departureBayID = trip.stopTimings[0].stopGTFSID
+    let bay = busBays[departureBayID]
+    let departureRoad = trip.stopTimings[0].stopName.split('/')[1]
+
+    departure.bay = bay
+    departure.departureRoad = departureRoad
+
+    if (shouldShowRoad && departure.departureRoad) {
+      departure.guidanceText = 'Departing from ' + departure.departureRoad
+    }
+    if (departure.bay) {
+      if (departure.guidanceText)
+        departure.guidanceText += ' - ' + departure.bay
+      else
+        departure.guidanceText = 'Departing from ' + departure.bay
+    }
+
+    return departure
+  })
 
   departuresCache.put(stop.stopName + 'B', departures)
   return departures
