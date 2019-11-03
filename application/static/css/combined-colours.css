@@ -1,9 +1,29 @@
-.cdc-melbourne {
-  background-color: #fc923d;
+.metro-trains-melbourne {
+  background-color: #0570c3;
 }
 
-div.departure:nth-child(even) .cdc-melbourne {
+div.departure:nth-child(even) .metro-trains-melbourne {
+  background-color: #0a62a6;
+}
+
+.yarra-trams {
+  background-color: #7bc916;
+  color: #f9f9f9 !important;
+}
+
+div.departure:nth-child(even) .yarra-trams {
+  background-color: #72b31d;
+  color: #f9f9f9 !important;
+}
+
+.cdc-melbourne, .cdc-geelong, .cdc-ballarat {
+  background-color: #fc923d;
+  color: #f9f9f9 !important;
+}
+
+div.departure:nth-child(even) .cdc-melbourne, div.departure:nth-child(even) .cdc-geelong, div.departure:nth-child(even) .cdc-ballarat {
   background-color: #fb7b13;
+  color: #f9f9f9 !important;
 }
 
 .ventura-bus-lines {
@@ -67,15 +87,15 @@ div.departure:nth-child(even) .tullamarine-bus-lines {
 }
 
 div.departure:nth-child(even) .moonee-valley-bus-lines {
-  background-color: #e80707;
+  background-color: #941010;
 }
 
 .sunbury-bus-service {
-  background-color: #ab191f;
+  background-color: #cd0504;
 }
 
 div.departure:nth-child(even) .sunbury-bus-service {
-  background-color: #7c1217;
+  background-color: #9a0909;
 }
 
 .ryan-bros-bus-service {
@@ -112,19 +132,280 @@ div.departure:nth-child(even) .mckenzies-tourist-service {
 
 .martyrs-bus-service {
   background-color: #71afc7;
+  color: #d7d7d7 !important;
 }
 
 div.departure:nth-child(even) .martyrs-bus-service {
   background-color: #438daa;
+  color: #d7d7d7 !important;
 }
 
 .cranbourne-transit {
-  background-color: #fdce04;
+  background-color: #e5ba0d;
+  color: #f9f9f9 !important;
 }
 
 div.departure:nth-child(even) .cranbourne-transit {
-  background-color: #cea802;
+  background-color: #c4a011;
+  color: #f9f9f9 !important;
 }
+
+.skybus {
+  background-color: #e5392c;
+}
+
+div.departure:nth-child(even) .skybus {
+  background-color: #a62d24;
+}
+
+.horsham-transit, .wimmera-roadways {
+  background-color: #09633e;
+}
+
+div.departure:nth-child(even) .horsham-transit, div.departure:nth-child(even) .wimmera-roadways {
+  background-color: #03452a;
+}
+
+.south-coast-bus {
+  background-color: #f99d31;
+  color: #e8e8e8 !important;
+}
+
+div.departure:nth-child(even) .south-coast-bus {
+  background-color: #d2872f;
+  color: #e8e8e8 !important;
+}
+
+.turnbulls {
+  background-color: #f68b1f;
+  color: #e8e8e8 !important;
+}
+
+div.departure:nth-child(even) .turnbulls {
+  background-color: #de7814;
+  color: #e8e8e8 !important;
+}
+
+.latrobe-valley-bus-lines {
+  background-color: #b40e3a;
+}
+
+div.departure:nth-child(even) .latrobe-valley-bus-lines {
+  background-color: #8c1131;
+}
+
+.hutchinson-bus-lines {
+  background-color: #08426a;
+}
+
+div.departure:nth-child(even) .hutchinson-bus-lines {
+  background-color: #003457;
+}
+
+.mitchell-transit {
+  background-color: #2c4269;
+}
+
+div.departure:nth-child(even) .mitchell-transit {
+  background-color: #192a49;
+}
+
+.mcharrys {
+  background-color: #d50d0d;
+  color: #d7d7d7 !important;
+}
+
+div.departure:nth-child(even) .mcharrys {
+  background-color: #b51010;
+  color: #d7d7d7 !important;
+}
+
+.little-s-gippsland-coaches {
+  background-color: #272b69;
+}
+
+div.departure:nth-child(even) .little-s-gippsland-coaches {
+  background-color: #181d55;
+}
+
+.christians-bus-company {
+  background-color: #0559a6;
+}
+
+div.departure:nth-child(even) .christians-bus-company {
+  background-color: #0a4a85;
+}
+
+.benalla-bus-lines {
+  background-color: #31467f;
+}
+
+div.departure:nth-child(even) .benalla-bus-lines {
+  background-color: #1d2e5e;
+}
+
+.heard-buses {
+  background-color: #1d3988;
+}
+
+div.departure:nth-child(even) .heard-buses {
+  background-color: #162c6d;
+}
+
+.westernport-roadlines {
+  background-color: #00027f;
+}
+
+div.departure:nth-child(even) .westernport-roadlines {
+  background-color: #070966;
+}
+
+.fallons-bus-service {
+  background-color: #1f4d46;
+}
+
+div.departure:nth-child(even) .fallons-bus-service {
+  background-color: #10332e;
+}
+
+.castlemaine-bus-lines, .whitmores-bus-lines {
+  background-color: #06345f;
+}
+
+div.departure:nth-child(even) .castlemaine-bus-lines, div.departure:nth-child(even) .whitmores-bus-lines {
+  background-color: #052747;
+}
+
+.sunraysia-bus-lines {
+  background-color: #cd9e00;
+  color: #e8e8e8 !important;
+}
+
+div.departure:nth-child(even) .sunraysia-bus-lines {
+  background-color: #a78307;
+  color: #e8e8e8 !important;
+}
+
+.echuca-moama-transit {
+  background-color: #00a9e0;
+  color: #d7d7d7 !important;
+}
+
+div.departure:nth-child(even) .echuca-moama-transit {
+  background-color: #0997c6;
+  color: #d7d7d7 !important;
+}
+
+.jacobsons-bus-lines {
+  background-color: #003366;
+}
+
+div.departure:nth-child(even) .jacobsons-bus-lines {
+  background-color: #032242;
+}
+
+.coles-coaches {
+  background-color: #0c539b;
+}
+
+div.departure:nth-child(even) .coles-coaches {
+  background-color: #0c4987;
+}
+
+.paynesville-bus-lines {
+  background-color: #c31a08;
+}
+
+div.departure:nth-child(even) .paynesville-bus-lines {
+  background-color: #a91708;
+}
+
+.sunshine-tours {
+  background-color: #faa41a;
+  color: #f9f9f9 !important;
+}
+
+div.departure:nth-child(even) .sunshine-tours {
+  background-color: #e19216;
+  color: #f9f9f9 !important;
+}
+
+.little-s-coaches {
+  background-color: #711c2b;
+}
+
+div.departure:nth-child(even) .little-s-coaches {
+  background-color: #5e1824;
+}
+
+.harley-s-buslines {
+  background-color: #12377c;
+}
+
+div.departure:nth-child(even) .harley-s-buslines {
+  background-color: #0f2c61;
+}
+
+.bacchus-marsh-coaches {
+  background-color: #0e309f;
+}
+
+div.departure:nth-child(even) .bacchus-marsh-coaches {
+  background-color: #0d2882;
+}
+
+.gold-bus {
+  background-color: #cfb53b;
+  color: #f9f9f9 !important;
+}
+
+div.departure:nth-child(even) .gold-bus {
+  background-color: #b8a135;
+  color: #f9f9f9 !important;
+}
+
+.sandlant-buses {
+  background-color: #aaa07f;
+  color: #f9f9f9 !important;
+}
+
+div.departure:nth-child(even) .sandlant-buses {
+  background-color: #948b6b;
+  color: #f9f9f9 !important;
+}
+
+.swan-hill-bus-lines {
+  background-color: #2e2e8f;
+}
+
+div.departure:nth-child(even) .swan-hill-bus-lines {
+  background-color: #232370;
+}
+
+.quambatook-lalbert-community-bus-committee {
+  background-color: #67006b;
+}
+
+div.departure:nth-child(even) .quambatook-lalbert-community-bus-committee {
+  background-color: #4b034e;
+}
+
+.warrnambool-bus-lines, .portland-bus-lines {
+  background-color: #d51d2f;
+}
+
+div.departure:nth-child(even) .warrnambool-bus-lines, div.departure:nth-child(even) .portland-bus-lines {
+  background-color: #bc1726;
+}
+
+.sovereign-hill {
+  background-color: #1b2735;
+}
+
+div.departure:nth-child(even) .sovereign-hill {
+  background-color: #141d27;
+}
+
 
 
 
@@ -273,11 +554,11 @@ div.departure:nth-child(even) .city-loop-line {
   background-color: #636363;
 }
 
-.vline {
+.vline, .v-line {
   background-color: #6b4d9e;
 }
 
-div.departure:nth-child(even) .vline {
+div.departure:nth-child(even) .vline, div.departure:nth-child(even) .v-line {
   background-color: #523d77;
 }
 

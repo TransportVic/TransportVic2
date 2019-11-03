@@ -1,0 +1,61 @@
+extends layout
+
+block head
+  title=`TransportVic - Colours`
+
+block title
+  span Colours
+
+append style
+  link(rel='stylesheet' href='/static/css/combined-colours.css')
+  link(rel='stylesheet' href='/static/css/timings/base-style.css')
+
+append content
+  div#departures
+    for operatorData in operators
+      - let {cssName, originalName} = operatorData
+      for i in [1, 2]
+        div.departure
+          a(class=`leftContainer platform ${cssName}`)
+            span
+            span 77
+          a.departureInfo
+            span Operator
+            span=originalName
+            
+    for tramRoute in tramRoutes
+      for i in [1, 2]
+        div.departure
+          a(class=`leftContainer platform tram-${tramRoute}`)
+            span
+            span=tramRoute
+          a.departureInfo
+            span Tram
+            span Destination
+            
+    for trainLine in trainLines
+      - let {cssName, originalName} = trainLine
+      for i in [1, 2]
+        div.departure
+          a(class=`leftContainer platform ${cssName}-line`)
+            span Platform
+            span=42
+          a.departureInfo
+            span Metro Train
+            span=originalName
+            
+    div.departure
+      a(class=`leftContainer platform city-loop-line`)
+        span Platform
+        span=99
+      a.departureInfo
+        span Metro Train
+        span City Loop Line
+            
+    div.departure
+      a(class=`leftContainer platform city-loop-line`)
+        span Platform
+        span=99
+      a.departureInfo
+        span Metro Train
+        span City Loop Line

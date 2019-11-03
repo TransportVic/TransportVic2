@@ -35,7 +35,7 @@ module.exports = {
   "6-HT3": ["Horsham Transit"], // 3 Horsham - Wawunna Road
   "6-HT4": ["Horsham Transit"], // 4 Horsham - Williams Road South Bank
   "6-G45": ["McHarrys"], // 45 Armstrong Creek - Waurn Ponds SC
-  "6-HT5": ["Horsam Transit"], // 5 Horsham - Natimuk Road
+  "6-HT5": ["Horsham Transit"], // 5 Horsham - Natimuk Road
   "6-G6X": ["McHarrys"], // 60 Geelong Railway Station - St Leonards
   "6-G6L": ["McHarrys"], // 61 Geelong Railway Station - Drysdale
   "6-a31": ["Dysons (Wangaratta)"], // 7 Albury - Beechworth
@@ -58,5 +58,56 @@ module.exports = {
   "6-Ar2": ["Christians Bus Company (Ararat)"],
   "6-Ar3": ["Christians Bus Company (Ararat)"],
 
-  "6-CMO": ["Hutchinson Bus Lines"]
+  "6-CMO": ["Hutchinson Bus Lines"],
+
+  "6-b25": ["Horsham Transit"],
+
+  "8-965": ["McKenzies Tourist Service"],
+
+  "6-959": ["Dysons (Wangaratta)"],
+  "6-960": ["Dysons (Wangaratta)"],
+  "6-962": ["Dysons (Wangaratta)"],
+  "6-R53": ["Dysons (Wangaratta)"],
+  "6-a45": ["Dysons (Wangaratta)"],
+  "6-a46": ["Dysons (Wangaratta)"],
+
+  "6-WFR": ["Dysons (Kyneton)"],
+  "6-KY1": ["Dysons (Kyneton)"],
+  "6-KY2": ["Dysons (Kyneton)"],
+  "6-KY3": ["Dysons (Kyneton)"],
+  "6-KY4": ["Dysons (Kyneton)"],
+
+  "6-KeE": ["Dysons (Moama)"],
+
+  "6-SBO": ["Dysons (Shepparton)"],
+  "6-Sh1": ["Dysons (Shepparton)"],
+  "6-Sh2": ["Dysons (Shepparton)"],
+  "6-Sh3": ["Dysons (Shepparton)"],
+  "6-Sh4": ["Dysons (Shepparton)"],
+  "6-Sh5": ["Dysons (Shepparton)"],
+  "6-Sh6": ["Dysons (Shepparton)"],
+  "6-Sh7": ["Dysons (Shepparton)"],
+  "6-Sh8": ["Dysons (Shepparton)"],
+  "6-Sh9": ["Dysons (Shepparton)"],
+
+  "6-Sea": ["Dysons (Bairnsdale)"],
+  "6-ome": ["Dysons (Bairnsdale)"],
+  "6-La1": ["Dysons (Bairnsdale)"],
+  "6-73": ["Dysons (Bairnsdale)"],
+  "6-14": ["Dysons (Bairnsdale)"],
+  "6-a18": ["Dysons (Bairnsdale)"],
+  "6-La2": ["Dysons (Bairnsdale)"],
+  "6-a32": ["Dysons (Bairnsdale)"],
+  "6-La3": ["Dysons (Bairnsdale)"],
+  "6-a33": ["Dysons (Bairnsdale)"],
+
+  "6-a25": ["Warrnambool Bus Lines"],
+  "6-wr1": ["Warrnambool Bus Lines"],
+  "6-wr2": ["Warrnambool Bus Lines"],
+  "6-wr3": ["Warrnambool Bus Lines"],
+  "6-wr4": ["Warrnambool Bus Lines"],
+  "6-wr5": ["Warrnambool Bus Lines"],
+  "6-wr6": ["Warrnambool Bus Lines"],
+  "6-wr8": ["Warrnambool Bus Lines"],
+  "6-wr9": ["Warrnambool Bus Lines"]
 }
