@@ -1,3 +1,5 @@
+const utils = require('../../utils')
+
 function transformBusStop(inputStop) {
   let ticketZones = inputStop.properties.TICKETZONE || ''
 
@@ -20,6 +22,35 @@ function createStopsLookup(stopsJSON) {
   return lookupTable
 }
 
+function fixOperator(operator) {
+    operator = operator.trim()
+
+    if (operator === 'CDC') return 'CDC Melbourne'
+    if (operator.includes('Ventura')) return 'Ventura Bus Lines'
+    if (operator === 'Transdev') return 'Transdev Melbourne'
+
+    return operator.replace('Night Bus - ', '')
+}
+
+function createServiceLookup(serviceJSON) {
+  let lookupTable = {}
+  serviceJSON.forEach(service => {
+    let routeIDFull = service.properties.ROUTE_ID
+    let shapeID = service.properties.SHAPE_ID
+    let routeGTFSID = utils.simplifyRouteGTFSID(routeIDFull)
+
+    if (!lookupTable[routeGTFSID])
+      lookupTable[routeGTFSID] = {
+        operator: service.properties.OPERATOR.split(',').map(fixOperator),
+        routeNumber: service.properties.ROUTESHTNM,
+        routeName: utils.adjustRouteName(service.properties.ROUTELONGN)
+      }
+  })
+
+  return lookupTable
+}
+
 module.exports = {
-  createStopsLookup
+  createStopsLookup,
+  createServiceLookup
 }

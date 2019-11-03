@@ -47,7 +47,7 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
         routeName: route.routeName,
         codedName: utils.encodeName(route.routeName),
         routeGTFSID: route.routeGTFSID,
-        operators: operator(route.routeName),
+        operators: operator(route.routeName, route.routeGTFSID, route.routeNumber),
         directions: [],
         mode
       }
