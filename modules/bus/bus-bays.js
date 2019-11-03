@@ -16,5 +16,21 @@ module.exports={
   51587: "Bay B",
   51588: "Bay C",
   51589: "Bay D",
-  51590: "Bay E"
+  51590: "Bay E",
+
+  // Monash Uni Clayton
+  48368: "Bay A",
+  22969: "Bay B",
+  21611: "Bay C",
+  19815: "Bay D",
+  19814: "Bay E",
+  48471: "Bay F",
+  19813: "Bay I",
+  19812: "Bay J",
+  19811: "Bay K",
+  19810: "Bay L",
+  19809: "Bay M",
+  19808: "Bay N",
+  19807: "Bay O",
+  19806: "Bay P"
 }

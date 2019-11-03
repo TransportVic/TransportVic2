@@ -72,6 +72,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
     - Matcher needs to be optimised, currently loads tonnes of matches for a stop
 
 ## Next up to be added:
+- change online/offline mode to be stateless thing, run every request live and do offline fallback
 - fix up casino tram stop
 - fix the 3am PT day stuff, except that is actually 8am for nightbus timetables
   - includes normalising timings to what a decent human being would use - 31:35 is unacceptable for most people
