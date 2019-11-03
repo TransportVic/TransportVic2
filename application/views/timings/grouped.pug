@@ -32,9 +32,11 @@ append content
             if !hasNumber
               span=destinationDepartures[0].trip.routeName
             span Towards
-            span=destination
+            span=destinationDepartures[0].destination
             if destinationDepartures[0].guidanceText
               span=destinationDepartures[0].guidanceText
+            if destinationDepartures[0].viaText
+              span=destinationDepartures[0].viaText
           div.timings
             - let departures = destinationDepartures.slice(0, 4)
               

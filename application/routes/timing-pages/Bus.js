@@ -70,11 +70,11 @@ router.get('/:suburb/:stopName', async (req, res) => {
     let serviceDestinations = []
 
     serviceDepartures.forEach(departure => {
-      let {destination} = departure
+      let destination = departure.destination + departure.viaText
       if (!serviceDestinations.includes(destination)) {
         serviceDestinations.push(destination)
         groupedDepartures[service][destination] =
-          serviceDepartures.filter(d => d.destination === destination)
+          serviceDepartures.filter(d => d.destination === departure.destination)
       }
     })
   })

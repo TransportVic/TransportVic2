@@ -113,6 +113,16 @@ module.exports = {
 
     return name.replace(/  +/g, ' ').replace(' SC', ' Shopping Centre')
   },
+  shorternStopName: name => {
+    name = name.replace('Railway Station', 'RS')
+      .replace('Shopping Centre', 'SC')
+      .replace('University', 'Uni')
+      .replace(/\/.+/, '')
+    if (name === 'Monash Uni Bus Loop')
+      name = 'Monash Uni'
+
+    return name
+  },
   extractStopName: name => {
     return name.replace(/\/.+$/, '')
   },

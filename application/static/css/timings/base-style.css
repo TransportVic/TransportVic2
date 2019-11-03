@@ -74,7 +74,8 @@ a.departureInfo span:nth-child(1) {
 
 a.departureInfo span:nth-child(2) {
   font-size: calc(1.6vw + 1.6vh);
-  margin-top: calc(-0.4vw - 0.4vh);
+  margin-top: calc(-0.3vw - 0.3vh);
+  line-height: calc(1.9vw + 1.9vh);
 
   color: #c5c5c5;
 }
@@ -85,6 +86,20 @@ a.departureInfo span:nth-child(3) {
 
   color: #bababa;
 }
+
+a.departureInfo span:nth-child(4) {
+  width: calc(100vw - (3vw + 3vh) * 4 - (5vw + 5vh) - (1vw + 1vh) - 1.5vw);
+  overflow: hidden;
+
+  font-size: calc(0.7vw + 0.7vh);
+  line-height: calc(1.1vw + 1.1vh);
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  color: #bababa;
+}
+
 a.departureInfo span.cancelled:nth-child(3) {
   font-size: calc(1.1vw + 1.1vh);
   line-height: calc(1.1vw + 1.1vh);
