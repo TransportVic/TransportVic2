@@ -13,7 +13,6 @@ async function pickBestTrip(data, db) {
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
   let tripEndTime = moment.tz(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
-  let operationHour = Math.floor(tripStartMinutes / 60) % 24
 
   let originStop = await db.getCollection('stops').findDocument({
     codedNames: data.origin,
@@ -55,8 +54,6 @@ async function pickBestTrip(data, db) {
     departureTime: data.departureTime,
     destination: destinationName,
     destinationArrivalTime: data.destinationArrivalTime,
-    tripStartHour: { $lte: operationHour },
-    tripEndHour: { $gte: operationHour },
     operationDays: data.operationDays
   })
 
