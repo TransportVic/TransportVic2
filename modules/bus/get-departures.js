@@ -169,7 +169,11 @@ async function getDepartures(stop, db) {
       return departure
     })
 
-  let shouldShowRoad = departureUtils.getUniqueGTFSIDs(stop, 'bus', true, shouldGetNightbus(utils.now())).length > 1
+  let nightBusIncluded = shouldGetNightbus(utils.now())
+  let shouldShowRoad = stop.bays.filter(bay => {
+    return bay.mode === 'bus'
+      && (nightBusIncluded ^ !(bay.flags && bay.flags.isNightBus && !bay.flags.hasRegularBus))
+  }).map(bay => bay.fullStopName).filter((e, i, a) => a.indexOf(e) === i).length > 1
 
   departures = departures.map(departure => {
     let {trip} = departure
