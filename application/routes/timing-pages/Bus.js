@@ -47,7 +47,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
 
     departure.tripURL = `/bus/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + day
+      + `${day}#stop-${departure.trip.stopTimings[0].stopGTFSID}`
 
     let destinationShortName = departure.trip.destination.split('/')[0]
     let {destination} = departure.trip

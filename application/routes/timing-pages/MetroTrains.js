@@ -51,10 +51,11 @@ router.get('/:stationName', async (req, res) => {
       originDepartureTime = flindersStreetTiming.departureTime
     }
 
+    let stopGTFSID = trip.stopTimings.filter(stop => stop.stopName === station.stopName)[0].stopGTFSID
+
     departure.tripURL = `${utils.encodeName(origin)}/${originDepartureTime}/`
       + `${utils.encodeName(destination)}/${trip.destinationArrivalTime}/`
-      + utils.getYYYYMMDDNow()
-
+      + `${utils.getYYYYMMDDNow()}/#stop-${stopGTFSID}`
     return departure
   })
 

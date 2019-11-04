@@ -34,7 +34,7 @@ router.get('/:stopName', async (req, res) => {
 
     departure.tripURL = `/coach/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + utils.getYYYYMMDDNow()
+      + `${utils.getYYYYMMDDNow()}/#stop-${trip.stopTimings[0].stopGTFSID}`
 
     return departure
   })

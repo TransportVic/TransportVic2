@@ -46,9 +46,11 @@ router.get('/:stationName', async (req, res) => {
       }
     }
 
+    let stopGTFSID = departure.trip.stopTimings.filter(stop => stop.stopName === station.stopName)[0].stopGTFSID
+
     departure.tripURL = `/${departure.isCoachService ? 'regional-coach' : 'vline'}/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + utils.getYYYYMMDDNow()
+      + `${utils.getYYYYMMDDNow()}/#stop-${stopGTFSID}`
 
     if (departure.isCoachService) {
       departure.trip.origin = departure.trip.origin.replace(' Railway Station', '')

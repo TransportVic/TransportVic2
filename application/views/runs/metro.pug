@@ -22,7 +22,7 @@ block content
           img(src=`/static/images/icons/${parts[1].toLowerCase()}.svg`)
   div.timing-list
     for stop in trip.stopTimings
-      div.timingRow
+      div.timingRow(id='stop-' + stop.stopGTFSID)
         a.departureInfo
           span.stopName=stop.stopName
           if stop.platform
