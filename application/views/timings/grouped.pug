@@ -21,7 +21,9 @@ append content
         let destinations = Object.keys(serviceDepartures).sort((a, b) => a.length - b.length)
         let hasNumber = service !== ''
       for destination in destinations
-        - let destinationDepartures = serviceDepartures[destination]
+        -
+          let destinationDepartures = serviceDepartures[destination]
+          let departures = destinationDepartures.slice(0, 4)
         div(class=`departure${hasNumber ? '' : ' no-number'}`)
           // todo route colours
           if hasNumber
@@ -38,10 +40,8 @@ append content
             if destinationDepartures[0].guidanceText
               span.via=destinationDepartures[0].guidanceText
             if destinationDepartures[0].viaText
-              span.via=destinationDepartures[0].viaText
+              span.via(style=`width: calc(100vw - (3vw + 3vh) * ${departures.length} - (5vw + 5vh) - (1vw + 1vh) - 1.5vw)`)=destinationDepartures[0].viaText
           div.timings
-            - let departures = destinationDepartures.slice(0, 4)
-              
             for i in Array(4 - departures.length)
               div.timing.mini(style='display: none')
             for departure in departures

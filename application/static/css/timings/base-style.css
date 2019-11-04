@@ -91,9 +91,17 @@ a.departureInfo span:nth-child(3) {
   color: #bababa;
 }
 
+a.departureInfo span.via~span.via {
+  -webkit-line-clamp: 1;
+}
+
 a.departureInfo span.via {
   width: calc(100vw - (3vw + 3vh) * 4 - (5vw + 5vh) - (1vw + 1vh) - 1.5vw);
-  /* overflow: hidden; */
+  overflow: hidden;
+
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
 
   font-size: calc(0.9vw + 0.9vh);
   line-height: calc(1.2vw + 1.2vh);
