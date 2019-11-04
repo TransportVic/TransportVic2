@@ -28,15 +28,17 @@ append content
             a(class=`leftContainer platform ${classGen(destinationDepartures[0])}`)
               span
               span=service
+              if destinationDepartures[0].bay
+                span=destinationDepartures[0].bay
           a.departureInfo
             if !hasNumber
               span=destinationDepartures[0].trip.routeName
             span Towards
             span=destinationDepartures[0].destination
             if destinationDepartures[0].guidanceText
-              span=destinationDepartures[0].guidanceText
+              span.via=destinationDepartures[0].guidanceText
             if destinationDepartures[0].viaText
-              span=destinationDepartures[0].viaText
+              span.via=destinationDepartures[0].viaText
           div.timings
             - let departures = destinationDepartures.slice(0, 4)
               

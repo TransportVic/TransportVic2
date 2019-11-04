@@ -120,6 +120,7 @@ async function getDeparturesFromPTV(stop, db) {
       let importantStops = trip.stopTimings.slice(1, -1).map(stop => stop.stopName)
         .filter(utils.isCheckpointStop)
         .map(utils.shorternStopName)
+        .filter((e, i, a) => a.indexOf(e) === i)
 
       let viaText = ''
       if (importantStops.length)
@@ -180,13 +181,7 @@ async function getDepartures(stop, db) {
     departure.departureRoad = departureRoad
 
     if (shouldShowRoad && departure.departureRoad) {
-      departure.guidanceText = 'Departing from ' + departure.departureRoad
-    }
-    if (departure.bay) {
-      if (departure.guidanceText)
-        departure.guidanceText += ' - ' + departure.bay
-      else
-        departure.guidanceText = 'Departing from ' + departure.bay
+      departure.guidanceText = 'Departs ' + departure.departureRoad
     }
 
     return departure

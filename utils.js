@@ -107,7 +107,10 @@ module.exports = {
       name = name.replace(' Railway Station', ' Station')
     }
 
-    if (name.includes(' Station') && !name.includes(' Bus Station') && !name.startsWith('Station')) {
+    let expandStation = !(name.includes('Bus Station') || name.startsWith('Station')
+      || name.includes('Police Station'))
+
+    if (name.includes(' Station') && expandStation) {
       name = name.replace(' Station', ' Railway Station')
     }
 
@@ -117,6 +120,12 @@ module.exports = {
     name = name.replace('Railway Station', 'RS')
       .replace('Shopping Centre', 'SC')
       .replace('University', 'Uni')
+      .replace('Road', 'Rd')
+      .replace('Street', 'St')
+      .replace('Ferntree', 'FT')
+      .replace('South', 'Sth')
+      .replace('North', 'Nth')
+      .replace('Gardens', 'Gdns')
       .replace(/\/.+/, '')
     if (name === 'Monash Uni Bus Loop')
       name = 'Monash Uni'

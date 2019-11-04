@@ -16,7 +16,13 @@ sudo yum install -y mongodb-org git
 
 sudo amazon-linux-extras install epel -y
 sudo yum install certbot-apache -y
+sudo yum install python34 python34-pip -y
 
-pip install bs4
-pip install fiona
-pip install pymongo
+sudo yum install gdal-libs gdal libgdal-dev -y
+
+export CPLUS_INCLUDE_PATH=/usr/include/gdal
+export C_INCLUDE_PATH=/usr/include/gdal
+
+python3.4 -m pip install bs4
+python3.4 -m pip install fiona
+python3.4 -m pip install pymongo

@@ -9,13 +9,22 @@ client = pymongo.MongoClient(json_data['databaseURL'] + "/?retryWrites=true&w=ma
 db = client[json_data['databaseName']]
 addresses = db['vicmap addresses']
 
+addresses.delete_many({})
+
 addresses.create_index([
     ('address', pymongo.ASCENDING),
     ('location', pymongo.ASCENDING),
     ('pfi', pymongo.ASCENDING)
 ], unique=True)
 
-addresses.delete_many({})
+addresses.create_index([
+    ('address', pymongo.ASCENDING)
+])
+
+addresses.create_index([
+    ('road', pymongo.ASCENDING),
+    ('number', pymongo.ASCENDING),
+])
 
 shape = fiona.open('./data/address.shp')
 iterator = iter(shape)
@@ -30,11 +39,17 @@ while shape != None:
     address = properties['EZI_ADD']
     pfi = properties['PFI']
     location = shape['geometry']
+    road = properties['NUM_RD_ADD']
+    number = properties['NUM_ADD']
+    suburb = properties['LOCALITY']
 
     address_data = {
         'address': address,
         'location': location,
-        'pfi': pfi
+        'pfi': pfi,
+        'road': road,
+        'number': number,
+        'suburb': suburb,
     }
 
     bulk_operation.insert(address_data)
@@ -44,5 +59,11 @@ while shape != None:
         print('Completed ' + str(i) + ' addresses')
         bulk_operation = addresses.initialize_unordered_bulk_op()
 
-    shape = next(iterator)
+    try:
+        shape = next(iterator)
+    except:
+        break
     i += 1
+
+bulk_operation.execute()
+print('Completed ' + str(i) + ' addresses')
