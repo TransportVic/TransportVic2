@@ -18,3 +18,5 @@ sudo amazon-linux-extras install epel -y
 sudo yum install certbot-apache -y
 
 pip install bs4
+pip install fiona
+pip install pymongo

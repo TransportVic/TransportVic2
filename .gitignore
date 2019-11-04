@@ -11,3 +11,4 @@
 /gtfs-loader.log
 /load-gtfs/stats.json
 .DS_Store
+/load-vicmap-addresses/data
