@@ -110,13 +110,16 @@ module.exports = {
       name = name.replace(' Railway Station', ' Station')
     }
 
-    let expandStation = !(name.includes('Bus Station')
-      || name.includes('Police Station') || name.includes('Service Station')
+    let expandStation = !(
+         name.includes('Police Station') || name.includes('Service Station')
       || name.includes('Fire Station') || name.includes('Petrol Station')
       || name.includes('Caltex Station') || name.match(/Station (St|Rd)/)
-      || name.match(/CFA (Fire )?Station/) || name.match(/[\d]+\w? Station/) )
+      || name.match(/CFA (Fire )?Station/) || name.match(/[\d]+\w? Station/)
+    )
 
-    if (name.includes(' Station') && (expandStation || name.match(/Station\/Station/))) {
+    let isBusStation = name.includes('Bus Station')
+
+    if (name.includes(' Station') && !isBusStation && (expandStation || name.match(/Station\/Station/))) {
       name = name.replace(' Station', ' Railway Station')
     }
 
