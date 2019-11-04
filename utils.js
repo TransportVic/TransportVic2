@@ -103,12 +103,19 @@ module.exports = {
     if (name.includes('Jolimont-MCG')) {
       name = name.replace('Jolimont-MCG', 'Jolimont')
     }
+    if (name.includes('Jolimont Station-MCG')) {
+      name = name.replace('Jolimont Station-MCG', 'Jolimont Station')
+    }
     if (name.includes(' Railway Station')) {
       name = name.replace(' Railway Station', ' Station')
     }
 
     let expandStation = !(name.includes('Bus Station') || name.startsWith('Station')
-      || name.includes('Police Station'))
+      || name.includes('Police Station') || name.includes('Station St')
+      || name.includes('Service Station') || name.includes('Fire Station')
+      || name.includes('Petrol Station') || name.includes('Station Rd')
+      || name.includes('Caltex Station')
+      || name.match(/CFA (Fire )?Station/) || name.match(/[\d]+\w? Station/) )
 
     if (name.includes(' Station') && expandStation) {
       name = name.replace(' Station', ' Railway Station')
