@@ -93,13 +93,13 @@ a.departureInfo span:nth-child(3) {
 
 a.departureInfo span.via {
   width: calc(100vw - (3vw + 3vh) * 4 - (5vw + 5vh) - (1vw + 1vh) - 1.5vw);
-  overflow: hidden;
+  /* overflow: hidden; */
 
   font-size: calc(0.9vw + 0.9vh);
   line-height: calc(1.2vw + 1.2vh);
 
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  /* white-space: nowrap;
+  text-overflow: ellipsis; */
 
   color: #bababa;
 }

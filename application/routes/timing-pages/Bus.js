@@ -1,6 +1,7 @@
 const express = require('express')
 const router = new express.Router()
 const getDepartures = require('../../../modules/bus/get-departures')
+const busDestinations = require('../../../modules/bus/bus-destinations')
 const moment = require('moment')
 const utils = require('../../../utils')
 
@@ -52,6 +53,10 @@ router.get('/:suburb/:stopName', async (req, res) => {
     let {destination} = departure.trip
     if (!utils.isStreet(destinationShortName)) destination = destinationShortName
     departure.destination = destination.replace('Shopping Centre', 'SC')
+
+    let serviceData = busDestinations.service[departure.routeNumber] || {}
+    departure.destination = serviceData[departure.destination]
+      || busDestinations.generic[departure.destination] || departure.destination
 
     return departure
   })

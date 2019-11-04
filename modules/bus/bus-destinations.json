@@ -1,0 +1,23 @@
+{
+  "service": {
+    "302": {
+      "King St/Lonsdale St": "City (Lonsdale St)"
+    },
+    "605": {
+      "Begonia Rd/Gardenvale Rd": "Gardenvale"
+    },
+    "625": {
+      "Riddell Pde/Glenhuntly Rd": "Elsternwick"
+    },
+    "630": {
+      "St Kilda St/Bent Ave": "Elwood/Bent Ave"
+    },
+    "704": {
+      "Centre Rd/First St": "East Clayton"
+    }
+  },
+  "generic": {
+    "Monash University Bus Loop": "Monash Uni Clayton",
+    "Greensborough SC Para Rd/Main St": "Greensborough SC"
+  }
+}
