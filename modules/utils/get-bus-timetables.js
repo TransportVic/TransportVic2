@@ -91,7 +91,7 @@ async function getScheduledDepartures(stopGTFSID, db, mode, timeout, useLive) {
 
       let hasSeenStop = false
       trip.stopTimings = trip.stopTimings.filter(stop => {
-        if (stopGTFSIDs.includes(stop.stopGTFSID)) {
+        if (stopGTFSID === stop.stopGTFSID) {
           hasSeenStop = true
         }
         return hasSeenStop
