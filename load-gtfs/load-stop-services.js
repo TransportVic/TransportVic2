@@ -14,15 +14,20 @@ database.connect({}, async err => {
   stops = database.getCollection('stops')
 
   let stopIDs = await stops.distinct('_id')
-  await async.forEach(stopIDs, async stopID => {
+  let stopCount = stopIDs.length
+
+  await async.forEachOf(stopIDs, async (stopID, i) => {
     let routeGTFSIDs = await gtfsTimetables.distinct('routeGTFSID', {
       'stopTimings.stopID': stopID
     })
-    stops.updateDocument({ _id: stopID }, {
+    await stops.updateDocument({ _id: stopID }, {
       $set: {
         services: routeGTFSIDs
       }
     })
+    if (i % 5000) {
+      console.log('Completed ' + i / stopCount * 100 + ' stops')
+    }
   })
 
   await updateStats('stop-services', stopIDs.length, new Date() - start)

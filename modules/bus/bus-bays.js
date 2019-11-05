@@ -32,5 +32,18 @@ module.exports={
   19809: "Bay M",
   19808: "Bay N",
   19807: "Bay O",
-  19806: "Bay P"
+  19806: "Bay P",
+
+  // Cranbourne
+  21226: "Bay 1",
+  21227: "Bay 2",
+  51330: "Bay 3",
+  51331: "Bay 4",
+  51332: "Bay 5",
+  51333: "Bay 6",
+
+  // Cowes Transit Centre
+  51805: "Bay 1",
+  51806: "Bay 3",
+  51804: "Bay 4",
 }

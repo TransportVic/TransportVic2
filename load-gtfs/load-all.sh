@@ -8,3 +8,4 @@
 ./load-gtfs/regional-bus/load-all.sh
 ./load-gtfs/tram/load-all.sh
 node load-gtfs/load-route-stops.js
+node load-gtfs/load-stop-services.js
