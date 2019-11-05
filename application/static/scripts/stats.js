@@ -2,7 +2,10 @@ $.ready(() => {
   let screenWidth = window.innerWidth
   let screenHeight = window.innerHeight
 
+  let i = 0
+
   function createLayout(title) {
+    let bgColour = (i++ % 2 == 0 ? '#2a2a2a' : '#202020')
     return {
       title,
       height: screenHeight,
@@ -19,8 +22,8 @@ $.ready(() => {
           color: '#ffffff'
         }
       },
-      plot_bgcolor: '#1e1e1e',
-      paper_bgcolor: '#1e1e1e'
+      plot_bgcolor: bgColour,
+      paper_bgcolor: bgColour
     }
   }
 
@@ -114,7 +117,7 @@ $.ready(() => {
       type: 'bar',
       name: 'Remaining Smartrak IDs'
     }], Object.assign(createLayout('Smartrak ID completion by operator'), {
-     barmode: 'stack'
+      barmode: 'stack'
     }))
   })
 })
