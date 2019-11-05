@@ -21,6 +21,12 @@
     "796": {
       "Oroya Gr/Railway Rd": "Clyde"
     },
+    "812": {
+      "Boundary Rd/Lower Dandenong Rd": "Brighton"
+    },
+    "861": {
+      "Hensley Ct/Conran Ave": "Endeavour Hills"
+    },
     "897": {
       "Tuckers Rd/Pattersons Rd": "Clyde"
     },
@@ -30,6 +36,8 @@
   },
   "generic": {
     "Monash University Bus Loop": "Monash Uni Clayton",
-    "Greensborough SC Para Rd/Main St": "Greensborough SC"
+    "Greensborough SC Para Rd/Main St": "Greensborough SC",
+    "Doveton Pool In The Park": "Doveton",
+    "Maryrose Cres/Reema Bvd": "Mossgiel Park"
   }
 }
