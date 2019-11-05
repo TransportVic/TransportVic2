@@ -147,11 +147,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
         scheduledDepartureTimeMinutes, possibleDestinations.map(dest => dest + ' Railway Station'))
     }
     if (!trip) { // static dump
-      trip = await departureUtils.getStaticDeparture(runID, db)
+      if (cityLoopStations.includes(stationName) || stationName === 'flinders street')
+        trip = await departureUtils.getStaticDeparture(runID, db)
     }
     if (!trip) { // still no match - getStoppingPattern
       trip = await getStoppingPattern(db, departure.run_id, 'metro train')
-
       trip.destination = trip.destination.slice(0, -16)
       trip.origin = trip.origin.slice(0, -16)
     }
