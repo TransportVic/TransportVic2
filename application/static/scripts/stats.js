@@ -50,23 +50,39 @@ $.ready(() => {
     "CO": "CDC Oakleigh",
     "CS": "CDC Sunshine",
     "CW": "CDC Wyndham",
+    "CT": "CDC Tullamarine",
+    "CG": "CDC Geelong",
+    "CB": "CDC Ballarat",
     "T": "Transdev",
     "S": "Sita",
     "D": "Dysons",
-    "CT": "Cranbourne Transit",
-    "SB": "Sunbury"
+    "CR": "Cranbourne Transit",
+    "SB": "Sunbury",
+    "LT": "La Trobe Valley Bus Lines",
+    "MH": "McHarrys Bus Lines",
+    "MK": "McKenzie's Tourist Services",
+    "MT": "Martyrs Bus Lines",
+    "RB": "Ryan Brothers Bus Service"
   }
 
   let operatorSizes = {
-    "V": 885,
+    "V": 658,
     "CO": 87,
     "CS": 68,
     "CW": 170,
+    "CT": 32,
+    "CG": 72,
+    "CB": 76,
     "T": 564,
     "S": 97,
     "D": 261,
-    "CT": 81,
-    "SB": 63
+    "CR": 81,
+    "SB": 63,
+    "LT": 94, // need to exclude vline coaches?
+    "MH": 143,
+    "MK": 54,
+    "MT": 48,
+    "RB": 20
   }
 
   $.ajax({
