@@ -60,5 +60,18 @@ module.exports={
   20157: "Bay 12",
   21326: "Bay 13",
   19817: "Bay 14",
-  51295: "Bay 15"
+  51295: "Bay 15",
+
+  // Frankston
+  40396: "Bay A", // No bay B?
+  21208: "Bay C",
+  21209: "Bay D",
+  21210: "Bay E",
+  21212: "Bay F", // No bay G?
+  21214: "Bay H",
+  21216: "Bay I",
+  21217: "Bay J",
+  21218: "Bay K", // No bay L?
+  21213: "Bay M",
+  21215: null, // Fletcher Rd, no bay
 }
