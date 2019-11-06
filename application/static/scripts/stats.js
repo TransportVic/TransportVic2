@@ -65,7 +65,9 @@ $.ready(() => {
     "MH": "McHarrys Bus Lines",
     "MK": "McKenzie's Tourist Services",
     "MT": "Martyrs Bus Lines",
-    "RB": "Ryan Brothers Bus Service"
+    "RB": "Ryan Brothers Bus Service",
+    "ML": "Moreland Bus Lines",
+    "MV": "Moonee Valley Bus Lines"
   }
 
   let operatorSizes = {
@@ -85,7 +87,9 @@ $.ready(() => {
     "MH": 143,
     "MK": 54,
     "MT": 48,
-    "RB": 20
+    "RB": 20,
+    "ML": 12,
+    "MV": 12
   }
 
   $.ajax({

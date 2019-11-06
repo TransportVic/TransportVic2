@@ -147,8 +147,13 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
         scheduledDepartureTimeMinutes, possibleDestinations.map(dest => dest + ' Railway Station'))
     }
     if (!trip) { // static dump
-      if (cityLoopStations.includes(stationName) || stationName === 'flinders street')
+        // let isCityLoop = cityLoopStations.includes(stationName) || stationName === 'flinders street'
         trip = await departureUtils.getStaticDeparture(runID, db)
+        if (trip) {
+          let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === metroPlatform.stopGTFSID)[0]
+          if (!stopData || stopData.departureTimeMinutes !== scheduledDepartureTimeMinutes)
+            trip = null
+        }
     }
     if (!trip) { // still no match - getStoppingPattern
       trip = await getStoppingPattern(db, departure.run_id, 'metro train')
