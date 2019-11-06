@@ -193,6 +193,9 @@ module.exports = {
   getDayName: time => {
     return daysOfWeek[time.day()]
   },
+  isWeekday: dayOfWeek => {
+    return ['Mon', 'Tues', 'Wed', 'Thur', 'Fri'].includes(dayOfWeek)
+  },
   formatPTHHMM: time => {
     let hours = time.get('hours'),
       minutes = time.get('minutes')

@@ -4,6 +4,7 @@ const router = new express.Router()
 const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
+const stonyPointFormations = require('../../../modules/metro-trains/stony-point-formations')
 
 async function pickBestTrip(data, db) {
   data.mode = 'metro train'
@@ -60,7 +61,12 @@ async function pickBestTrip(data, db) {
         return stop
       })
       gtfsTrip.runID = staticTrip.runID
-      gtfsTrip.vehicle = '2 Sprinter' // TODO: some peak services split into 1x sprinters
+      if (utils.isWeekday(query.operationDays)) {
+        if (stonyPointFormations.weekday[gtfsTrip.runID]) {
+          gtfsTrip.vehicle = stonyPointFormations.weekday[gtfsTrip.runID]
+        }
+      }
+      gtfsTrip.vehicle = gtfsTrip.vehicle || '2 Car Sprinter'
     }
 
     return gtfsTrip
