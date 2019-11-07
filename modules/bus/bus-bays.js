@@ -74,4 +74,10 @@ module.exports={
   21218: "Bay K", // No bay L?
   21213: "Bay M",
   21215: null, // Fletcher Rd, no bay
+
+  // Berwick
+  21023: "Bay 1",
+  40315: "Bay 2",
+  21024: "Bay 3",
+  21025: "Bay 4"
 }

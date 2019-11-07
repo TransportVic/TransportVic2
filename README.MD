@@ -6,6 +6,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - Enables the user to see at a glance what the bus rego of their bus will be, allowing for easier identification
 - Bus bay GTFS ID mapping
   - Tells the user which bus bay the bus departs from, guiding them in interchanges
+- Bus desto mapping
 
 ## Current features:
 - Loading in MTM timetables
