@@ -112,7 +112,6 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
 
     let possibleLines = [routeName]
     if (cityLoopStations.includes(stationName) || destination !== routeName) {
-
       if ([1, 2, 7, 9].includes(routeID))
         possibleLines = ['Alamein', 'Belgrave', 'Glen Waverley', 'Lilydale']
       else if ([4, 11].includes(routeID))
@@ -128,7 +127,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
 
       possibleDestinations.push('Flinders Street')
     } else {
-      if (routeName === 'Pakenham' || routeName === 'Cranbourne' && destination === 'Parliament') {
+      if ((routeName === 'Pakenham' || routeName === 'Cranbourne') && destination === 'Parliament') {
         possibleDestinations.push('Flinders Street')
       }
     }
@@ -229,8 +228,8 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
   let mergedDepartures = {}
 
   departures.forEach(departure => {
-    let serviceID = departure.scheduledDepartureTime.format('HH:mm') + departure.trip + departure.trip.destinationArrivalTime
-    .destination
+    let serviceID = departure.scheduledDepartureTime.format('HH:mm') + departure.trip.destination + departure.trip.destinationArrivalTime
+
     if (serviceIDs.includes(serviceID))
       mergedDepartures[serviceID].busCount++
     else {

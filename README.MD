@@ -72,6 +72,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
     - Matcher needs to be optimised, currently loads tonnes of matches for a stop
 
 ## Next up to be added:
+- fix up trip/departure merging for merged stops (beaconsfield RS)
 - fix up search
 - change online/offline mode to be stateless thing, run every request live and do offline fallback
 - fix up casino tram stop
