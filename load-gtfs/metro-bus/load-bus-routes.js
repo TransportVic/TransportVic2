@@ -53,7 +53,7 @@ database.connect({
       console.log('Could not map operator for route ' + routeGTFSID + ': ' + routeNumber + ' ' + routeName)
       return ["Unknown operator"]
     }
-    return defaultOperator
+    return [defaultOperator]
   }, 'bus', (_, routeGTFSID) => {
     return ptvRoutes[routeGTFSID] || _
   })
