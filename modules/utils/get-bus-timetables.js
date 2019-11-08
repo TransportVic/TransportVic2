@@ -43,7 +43,7 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
       }
     },
     routeGTFSID,
-    destination: utils.adjustStopname(destination),
+    destination: utils.adjustRawStopName(utils.adjustStopname(destination)),
     // tripStartHour: {
     //   $lte: departureHour
     // },
