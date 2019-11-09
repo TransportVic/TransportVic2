@@ -16,7 +16,7 @@ database.connect({}, async err => {
   let stopIDs = await stops.distinct('_id')
   let stopCount = stopIDs.length
 
-  await async.forEachOf(stopIDs, async (stopID, i) => {
+  await async.forEachOfLimit(stopIDs, 100, async (stopID, i) => {
     let routeGTFSIDs = await gtfsTimetables.distinct('routeGTFSID', {
       'stopTimings.stopID': stopID
     })
@@ -26,7 +26,7 @@ database.connect({}, async err => {
       }
     })
     if (i % 5000) {
-      console.log('Completed ' + i / stopCount * 100 + ' stops')
+      console.log('Completed ' + (i / stopCount * 100).toFixed(2) + '% of stops')
     }
   })
 

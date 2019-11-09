@@ -119,6 +119,7 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
 
     allTrips[tripID].stopTimings[stopSequence - 1] = {
       stopName: stop.fullStopName,
+      stopNumber: stop.stopNumber,
       stopID: id,
       stopGTFSID,
       arrivalTime,

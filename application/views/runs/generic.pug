@@ -11,6 +11,13 @@ block style
   link(rel='stylesheet' href='/static/css/runs/trains.css')
 
 block content
+  if trip.vehicleData
+    div.infoRow
+      span=trip.vehicleData.name
+      div.vehicle
+        //- placeholder icon
+        span
+        img(src=`/static/images/icons/optimus.svg`)
   div.timing-list
     for stop in trip.stopTimings
       div.timingRow(id='stop-' + stop.stopGTFSID)
@@ -31,7 +38,11 @@ block content
               }
             }
           span.stopRoad=stopRoad
-          span.stopName=stopName
+          -
+            let displayName = stopName
+            if (stop.stopNumber)
+              displayName += ` #${stop.stopNumber}`
+          span.stopName=displayName
         div(class=`timing ${stop.headwayDevianceClass}`)
           span=stop.prettyTimeToArrival
           span=stop.departureTime || stop.arrivalTime

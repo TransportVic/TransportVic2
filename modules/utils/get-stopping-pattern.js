@@ -45,7 +45,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID) {
 
       stopName += ' Railway Station'
     }
-    stopName = busStopNameModifier(utils.adjustStopname(stopName))
+    stopName = utils.adjustRawStopName(busStopNameModifier(utils.adjustStopname(stopName)))
       .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
 
     let dbStop = await stopsCollection.findDocument({
@@ -66,12 +66,23 @@ module.exports = async function (db, ptvRunID, mode, time, stopID) {
       stop_id, platform_number} = departure
 
     let stopBay = dbStops[stop_id].bays
-      .filter(bay => checkModes.includes(bay.mode))[0] // TODO: properly pick out the stop GTFS ID
+      .filter(bay => {
+        let ptvStop = stops[stop_id]
+        let stopName = utils.adjustRawStopName(busStopNameModifier(utils.adjustStopname(ptvStop.stop_name.trim())))
+          .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
+
+        return checkModes.includes(bay.mode) && bay.fullStopName === stopName
+      })[0]
+    if (!stopBay) {
+      stopBay = dbStops[stop_id].bays
+        .filter(bay => checkModes.includes(bay.mode))[0]
+    }
 
     let departureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
 
     let stopTiming = {
       stopName: stopBay.fullStopName,
+      stopNumber: stopBay.stopNumber,
       stopGTFSID: stopBay.stopGTFSID,
       arrivalTime: scheduledDepartureTime.format("HH:mm"),
       arrivalTimeMinutes: departureTimeMinutes,
@@ -106,7 +117,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID) {
     routeGTFSID,
     runID: vehicleDescriptor.id,
     operationDays: [utils.getYYYYMMDDNow()],
-    vehicle: vehicleDescriptor.description,
+    vehicle: vehicleDescriptor.description || vehicleDescriptor.id,
     stopTimings: stopTimings.sort((a, b) => (a.arrivalTimeMinutes || a.departureTimeMinutes) - (b.arrivalTimeMinutes || b.departureTimeMinutes)),
     destination: stopTimings[stopTimings.length - 1].stopName,
     destinationArrivalTime: stopTimings[stopTimings.length - 1].arrivalTime,

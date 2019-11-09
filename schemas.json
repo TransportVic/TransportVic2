@@ -13,6 +13,7 @@
     "operationDays": ["Date"],
     "stopTimings": [{
       "stopName": "string",
+      "stopNumber": "string",
       "stopGTFSID": "number",
       "arrivalTime": "string",
       "arrivalTimeMinutes": "number",
@@ -36,6 +37,7 @@
   "timetable": {
     "mode": "string",
     "routeName": "string",
+    "routeGTFSID": "string",
     "runID": "string",
     "operationDays": ["string"],
     "vehicle": "string",
@@ -65,6 +67,7 @@
     "vehicle": "string",
     "stopTimings": [{
       "stopName": "string",
+      "stopNumber": "string",
       "stopGTFSID": "number",
       "arrivalTime": "string",
       "arrivalTimeMinutes": "number",

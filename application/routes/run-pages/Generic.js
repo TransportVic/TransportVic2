@@ -5,6 +5,7 @@ const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
 const busStopNameModifier = require('../../../load-gtfs/metro-bus/bus-stop-name-modifier')
+const tramFleet = require('../../../tram-fleet')
 
 async function pickBestTrip(data, db) {
   let tripDay = moment.tz(data.operationDays, 'YYYYMMDD', 'Australia/Melbourne')
@@ -69,7 +70,7 @@ async function pickBestTrip(data, db) {
     return stopTiming
   }).filter(stopTiming => {
     return stopTiming.actualDepartureTime.diff(utils.now(), 'minutes') > 0
-  }).slice(3)[0]
+  }).slice(1)[0]
 
   let checkStopTime = moment.tz(`${data.operationDays} ${checkStop.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
   let isoDeparture = checkStopTime.toISOString()
@@ -128,6 +129,26 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
     }
     return stop
   })
+
+  if (trip.vehicle) {
+    if (req.params.mode === 'tram') {
+      let tramModel = tramFleet.getModel(trip.vehicle)
+      trip.vehicleData = {
+        name: `Tram ${tramModel}.${trip.vehicle}`
+      }
+    } else if (req.params.mode === 'bus') {
+      let smartrakIDs = res.db.getCollection('smartrak ids')
+
+      let busRego = (await smartrakIDs.findDocument({
+        smartrakID: parseInt(trip.vehicle)
+      }) || {}).fleetNumber
+      if (busRego) {
+        trip.vehicleData = {
+          name: 'Bus #' + busRego
+        }
+      }
+    }
+  }
   res.render('runs/generic', {trip})
 })
 
