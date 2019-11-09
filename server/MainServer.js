@@ -120,8 +120,7 @@ module.exports = class MainServer {
       'run-pages/MetroTrains': '/metro/run',
       'run-pages/VLineTrains': '/vline/run',
       'run-pages/RegionalCoach': '/coach/run', // TODO: refactor as GenericRun
-      'run-pages/Bus': '/bus/run',
-      // 'run-pages/Tram': '/tram/run',
+      'run-pages/Generic': '/',
 
       GeoJSONVisualiser: '/geojson-visualise',
       SmartrakIDs: '/smartrak',

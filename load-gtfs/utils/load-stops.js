@@ -46,6 +46,9 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
   await stops.createIndex({
     'bays.stopGTFSID': 1
   }, {name: 'gtfs id index'})
+  await stops.createIndex({
+    'bays.fullStopName': 1
+  }, {name: 'full name index'})
 
   await stops.createIndex({
     'suburb': 1,

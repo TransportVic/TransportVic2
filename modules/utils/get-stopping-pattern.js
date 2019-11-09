@@ -13,13 +13,15 @@ let modes = {
   'tram': 1
 }
 
-module.exports = async function (db, ptvRunID, mode, time) {
+module.exports = async function (db, ptvRunID, mode, time, stopID) {
   let stopsCollection = db.getCollection('stops')
   let liveTimetables = db.getCollection('live timetables')
 
   let url = `/v3/pattern/run/${ptvRunID}/route_type/${modes[mode]}?expand=stop&expand=run&expand=route`
   if (time)
     url += `&date_utc=${time}`
+  if (stopID)
+    url += `&stop_id=${stopID}`
 
   let {departures, stops, runs, routes} = await ptvAPI(url)
   let run = Object.values(runs)[0]
@@ -51,8 +53,6 @@ module.exports = async function (db, ptvRunID, mode, time) {
         'bays.fullStopName': stopName
       }, {
         stopName,
-      }, {
-        'bays.originalName': stopName
       }],
       'bays.mode': { $in: checkModes }
     })

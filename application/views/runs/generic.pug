@@ -32,6 +32,6 @@ block content
             }
           span.stopRoad=stopRoad
           span.stopName=stopName
-        div.timing.unknown
+        div(class=`timing ${stop.headwayDevianceClass}`)
           span=stop.prettyTimeToArrival
           span=stop.departureTime || stop.arrivalTime

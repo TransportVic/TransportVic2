@@ -7,7 +7,6 @@ const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern'
 const busStopNameModifier = require('../../../load-gtfs/metro-bus/bus-stop-name-modifier')
 
 async function pickBestTrip(data, db) {
-  data.mode = 'bus'
   let tripDay = moment.tz(data.operationDays, 'YYYYMMDD', 'Australia/Melbourne')
   let tripStartTime = moment.tz(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
@@ -16,12 +15,12 @@ async function pickBestTrip(data, db) {
 
   let originStop = await db.getCollection('stops').findDocument({
     codedNames: data.origin,
-    'bays.mode': 'bus'
+    'bays.mode': data.mode
   })
 
   let destinationStop = await db.getCollection('stops').findDocument({
     codedNames: data.destination,
-    'bays.mode': 'bus'
+    'bays.mode': data.mode
   })
   if (!originStop || !destinationStop) return null
   let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
@@ -31,7 +30,7 @@ async function pickBestTrip(data, db) {
   let destinationName = destinationStop.bays.filter(bay => utils.encodeName(bay.fullStopName) === data.destination)[0].fullStopName
 
   let query = {
-    mode: 'bus',
+    mode: data.mode,
     origin: originName,
     departureTime: data.departureTime,
     destination: destinationName,
@@ -40,16 +39,16 @@ async function pickBestTrip(data, db) {
   }
 
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
-  // let useLive = minutesToTripEnd > -5 && minutesToTripStart < 120
+  let useLive = minutesToTripEnd > -5 && minutesToTripStart < 120
 
   if (liveTrip) {
-    if (!(liveTrip.type === 'timings' && new Date() - liveTrip.updateTime > 2 * 60 * 1000)) {
+    if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
       return liveTrip
     }
   }
 
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument({
-    mode: 'bus',
+    mode: data.mode,
     origin: originName,
     departureTime: data.departureTime,
     destination: destinationName,
@@ -57,33 +56,47 @@ async function pickBestTrip(data, db) {
     operationDays: data.operationDays
   })
 
-  return gtfsTrip
+  if (!useLive) return gtfsTrip
 
   // So PTV API only returns estimated timings for bus if stop_id is set and the bus hasn't reached yet...
-  // let referenceTrip = liveTrip || gtfsTrip
-  // originStop = referenceTrip.stopTimings[0]
-  //
-  // let isoDeparture = tripStartTime.toISOString()
-  // let {departures, runs} = await ptvAPI(`/v3/departures/route_type/2/stop/${originStop.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-3, 'minutes').toISOString()}&max_results=2&expand=run&expand=stop`)
-  //
-  // let departure = departures.filter(departure => {
-  //   let run = runs[departure.run_id]
-  //   let destinationName = busStopNameModifier(utils.adjustStopname(run.destination_name.trim()))
-  //   let scheduledDepartureTime = moment(departure.scheduled_departure_utc).toISOString()
-  //
-  //   return scheduledDepartureTime === isoDeparture &&
-  //     destinationName === referenceTrip.destination
-  // })[0]
-  //
-  // if (!departure) return gtfsTrip
-  // let ptvRunID = departure.run_id
-  // let departureTime = departure.scheduled_departure_utc
-  //
-  // let trip = await getStoppingPattern(db, ptvRunID, 'bus', departureTime)
-  // return trip
+  let referenceTrip = liveTrip || gtfsTrip
+  let startsBeforeMidnight = tripStartMinutes < 1440
+
+  let checkStop = referenceTrip.stopTimings.map(stopTiming => {
+    if (startsBeforeMidnight && stopTiming.departureTimeMinutes < 60 * 8)
+      stopTiming.departureTimeMinutes += 1440
+    stopTiming.actualDepartureTime = utils.now().startOf('day').add(stopTiming.departureTimeMinutes, 'minutes')
+    return stopTiming
+  }).filter(stopTiming => {
+    return stopTiming.actualDepartureTime.diff(utils.now(), 'minutes') > 0
+  }).slice(3)[0]
+
+  let checkStopTime = moment.tz(`${data.operationDays} ${checkStop.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let isoDeparture = checkStopTime.toISOString()
+  let mode = data.mode === 'bus' ? 2 : 1
+  let {departures, runs} = await ptvAPI(`/v3/departures/route_type/${mode}/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-3, 'minutes').toISOString()}&max_results=5&expand=run&expand=stop`)
+
+  let departure = departures.filter(departure => {
+    let run = runs[departure.run_id]
+    let destinationName = busStopNameModifier(utils.adjustStopname(run.destination_name.trim()))
+      .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
+    let scheduledDepartureTime = moment(departure.scheduled_departure_utc).toISOString()
+
+    return scheduledDepartureTime === isoDeparture &&
+      destinationName === referenceTrip.destination
+  })[0]
+
+  if (!departure) return gtfsTrip
+  let ptvRunID = departure.run_id
+  let departureTime = departure.scheduled_departure_utc
+
+  let trip = await getStoppingPattern(db, ptvRunID, data.mode, departureTime, departure.stop_id)
+  return trip
 }
 
-router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
+router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res, next) => {
+  if (!['bus', 'tram'].includes(req.params.mode)) return next()
+
   let trip = await pickBestTrip(req.params, res.db)
   if (!trip) return res.end('Could not find trip :(')
   trip.stopTimings = trip.stopTimings.map(stop => {
@@ -96,11 +109,11 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
       let headwayDeviance = scheduledDepartureTime.diff(stop.estimatedDepartureTime, 'minutes')
 
       if (headwayDeviance > 2) {
-        departure.headwayDevianceClass = 'early'
+        stop.headwayDevianceClass = 'early'
       } else if (headwayDeviance <= -5) {
-        departure.headwayDevianceClass = 'late'
+        stop.headwayDevianceClass = 'late'
       } else {
-        departure.headwayDevianceClass = 'on-time'
+        stop.headwayDevianceClass = 'on-time'
       }
 
       const timeDifference = moment.utc(moment(stop.estimatedDepartureTime).diff(utils.now()))

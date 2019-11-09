@@ -53,10 +53,10 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
   }
 
   // for the coaches
-  let live = await db.getCollection('live timetables').findDocument(query)
-  if (live) return live
+  let trip = await db.getCollection('live timetables').findDocument(query)
 
-  let trip = await db.getCollection('gtfs timetables').findDocument(query)
+  if (!trip)
+    trip = await db.getCollection('gtfs timetables').findDocument(query)
   if (trip) {
     let hasSeenStop = false
     trip.stopTimings = trip.stopTimings.filter(stop => {
