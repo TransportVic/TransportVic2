@@ -71,9 +71,15 @@ async function getDeparturesFromPTV(stop, db) {
       let vehicleDescriptor = run.vehicle_descriptor || {}
       let tram = {}
       if (vehicleDescriptor.id) {
-        tram.id = vehicleDescriptor.id
-        tram.model = tramFleet.getModel(vehicleDescriptor.id)
-        tram.data = tramFleet.data[tram.model]
+        if (vehicleDescriptor.id !== '0') {
+          tram.id = vehicleDescriptor.id
+          tram.model = tramFleet.getModel(vehicleDescriptor.id)
+          tram.data = tramFleet.data[tram.model]
+        } else {
+          vehicleDescriptor = {}
+          estimatedDepartureTime = null
+          actualDepartureTime = scheduledDepartureTime
+        }
       }
 
       mappedDepartures.push({
