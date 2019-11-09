@@ -189,8 +189,6 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
 
     if (cityLoopStations.includes(stationName) && destination !== trip.destination) {
       forming = await departureUtils.getStaticDeparture(runID, db)
-      if (forming)
-        destination = forming.destination
     }
 
     let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
