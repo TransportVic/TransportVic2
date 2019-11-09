@@ -120,8 +120,6 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Interstate
   - overland apparently
 - Ferries
-- Tourist trains
-  - MAKE SURE PUFFING BILLY IS SHOWN LAST
 - If disruption thing isn't implemented do a status board
 - Auto update of GTFS data?
 - Maps

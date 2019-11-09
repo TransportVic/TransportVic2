@@ -39,10 +39,11 @@ router.get('/:stationName', async (req, res) => {
       }
     }
 
-    departure.codedLineName = utils.encodeName(departure.trip.routeName)
+    let trip = departure.forming || departure.trip
 
-    let {trip} = departure
-    let destination = departure.runDestination || departure.trip.destination
+    departure.codedLineName = utils.encodeName(trip.routeName)
+
+    let destination = departure.runDestination || trip.destination
     let origin = trip.origin
     let originDepartureTime = trip.departureTime
     if (departure.forming) {
@@ -51,7 +52,7 @@ router.get('/:stationName', async (req, res) => {
       originDepartureTime = flindersStreetTiming.departureTime
     }
 
-    let stopGTFSID = trip.stopTimings.filter(stop => stop.stopName === station.stopName)[0].stopGTFSID
+    let stopGTFSID = departure.trip.stopTimings.filter(stop => stop.stopName === station.stopName)[0].stopGTFSID
 
     departure.tripURL = `${utils.encodeName(origin)}/${originDepartureTime}/`
       + `${utils.encodeName(destination)}/${trip.destinationArrivalTime}/`
