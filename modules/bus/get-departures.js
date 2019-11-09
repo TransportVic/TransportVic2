@@ -126,6 +126,14 @@ async function getDeparturesFromPTV(stop, db) {
       if (importantStops.length)
         viaText = `Via ${importantStops.slice(0, -1).join(', ')}${(importantStops.length > 1 ? ' & ' : '') + importantStops.slice(-1)[0]}`
 
+      let routeNumber = route.route_number.replace(/_x$/, '')
+      let sortNumber = routeNumber
+
+      if (route.route_gtfs_id.startsWith('7-')) {
+        routeNumber = route.route_gtfs_id.slice(2)
+        sortNumber = routeNumber.slice(2)
+      }
+
       mappedDepartures.push({
         trip,
         scheduledDepartureTime,
@@ -133,7 +141,8 @@ async function getDeparturesFromPTV(stop, db) {
         actualDepartureTime,
         destination: trip.destination,
         vehicleDescriptor,
-        routeNumber: route.route_number.replace(/_x$/, ''),
+        routeNumber,
+        sortNumber,
         busRego,
         isNightBus,
         operator,

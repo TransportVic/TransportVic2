@@ -76,11 +76,15 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - fix up trip/departure merging for merged stops (beaconsfield RS)
 - fix up search
 - change online/offline mode to be stateless thing, run every request live and do offline fallback
-- fix up casino tram stop
 - fix the 3am PT day stuff, except that is actually 8am for nightbus timetables
   - includes normalising timings to what a decent human being would use - 31:35 is unacceptable for most people
 - refactor out on-time stuff
 - route view
+- timetable view page
+- timetable query page
+  - enter departure time, service, origin, destination
+  - attempts to find best match
+  - enter run id
 - Icons for the various stopping pattern pages
   - Completed:
     - EDI Comeng (PTV) (Used for both types)

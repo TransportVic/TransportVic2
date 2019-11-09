@@ -65,13 +65,13 @@ router.get('/:suburb/:stopName', async (req, res) => {
   let groupedDepartures = {}
 
   departures.forEach(departure => {
-    if (!services.includes(departure.routeNumber)) {
-      services.push(departure.routeNumber)
-      groupedDepartures[departure.routeNumber] = {}
+    if (!services.includes(departure.sortNumber)) {
+      services.push(departure.sortNumber)
+      groupedDepartures[departure.sortNumber] = {}
     }
   })
   services.forEach(service => {
-    let serviceDepartures = departures.filter(d => d.routeNumber === service)
+    let serviceDepartures = departures.filter(d => d.sortNumber === service)
     let serviceDestinations = []
 
     serviceDepartures.forEach(departure => {
@@ -79,7 +79,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
       if (!serviceDestinations.includes(destination)) {
         serviceDestinations.push(destination)
         groupedDepartures[service][destination] =
-          serviceDepartures.filter(d => d.destination === departure.destination)
+          serviceDepartures.filter(d => d.destination + d.viaText === destination)
       }
     })
   })

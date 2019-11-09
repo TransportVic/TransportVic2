@@ -29,7 +29,7 @@ append content
           if hasNumber
             a(class=`leftContainer platform ${classGen(destinationDepartures[0])}`)
               span
-              span=service
+              span=destinationDepartures[0].routeNumber
               if destinationDepartures[0].bay
                 span=destinationDepartures[0].bay
           a.departureInfo
