@@ -22,22 +22,28 @@ router.post('/load', async (req, res) => {
     if (!(smartrakID && fleetNumber && (parts = fleetNumber.match(/^([A-Z]{1,2})\d+$/)))) {
       if (fleetNumber === '-') {
         await smartrakIDs.deleteDocument({ smartrakID })
-      } else
-        failedMessage += `Line ${i} ${line} failed: did not match format`
+        await smartrakIDs.deleteDocument({ fleetNumber: line[0] })
+      } else {
+        failedMessage += `Line ${i + 1} ${line.join(' ')} failed: did not match format\n`
+      }
     } else {
       let operator = parts[1]
-      await smartrakIDs.replaceDocument({
-        smartrakID
-      }, {
-        smartrakID, fleetNumber, operator
-      }, { upsert: true })
+      try {
+        await smartrakIDs.replaceDocument({
+          smartrakID
+        }, {
+          smartrakID, fleetNumber, operator
+        }, { upsert: true })
+      } catch (e) {
+        failedMessage += `Line ${i + 1} ${line.join(' ')} failed: ${fleetNumber} already exists\n`
+      }
     }
   })
 
   let count = await smartrakIDs.countDocuments()
 
   if (failedMessage) res.end(failedMessage)
-  else res.end(`Ok - ${count} Smartrak IDs in DB`)
+  else res.end(failedMessage + `Ok - ${count} Smartrak IDs in DB`)
 })
 
 module.exports = router
