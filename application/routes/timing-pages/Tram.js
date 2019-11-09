@@ -3,6 +3,7 @@ const router = new express.Router()
 const getDepartures = require('../../../modules/tram/get-departures')
 const moment = require('moment')
 const utils = require('../../../utils')
+const tramDestinations = require('../../../modules/tram/tram-destinations')
 
 router.get('/:suburb/:stopName', async (req, res) => {
   const stop = await res.db.getCollection('stops').findDocument({
@@ -48,7 +49,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
     let destinationShortName = departure.trip.destination.split('/')[0]
     let {destination} = departure.trip
     if (!utils.isStreet(destinationShortName)) destination = destinationShortName
-    departure.destination = destination
+    departure.destination = tramDestinations[destination] || destination
 
     return departure
   })
