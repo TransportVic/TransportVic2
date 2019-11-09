@@ -64,23 +64,23 @@ append content
             span Platform
             span=departure.platform || '?'
         a.departureInfo
-          span=`${routeName} Line towards`
-          span=departure.destination
+          span.towards=`${routeName} Line towards`
+          span.destination=departure.destination
           
           if departure.platform === 'RRB'
             - let busCount = departure.busCount || 1
-            span.cancelled=`Rail Replacement Bus${busCount > 1 ? ` - This trip has ${busCount} buses` : ''}`
+            span.info.cancelled=`Rail Replacement Bus${busCount > 1 ? ` - This trip has ${busCount} buses` : ''}`
           else if departure.cancelled
-            span.cancelled CANCELLED
+            span.info.cancelled CANCELLED
           else if departure.trip.isUncertain
-            span.cancelled No stopping pattern data - check platform displays or click for more info
+            span.info.cancelled No stopping pattern data - check platform displays or click for more info
           else
             
             -
               let {trip} = departure
               let isUpTrip = (trip || {}).direction === 'Up' || trip.runID % 2 === 0
             if cityLoopStationNames.includes(station.stopName) || isUpTrip
-              span=departure.cityLoopConfig.join(', ')
+              span.info=departure.cityLoopConfig.join(', ')
         div.timings
           a(class='timing ' + departure.headwayDevianceClass href=`/metro/run/${departure.tripURL}`)
             span=departure.prettyTimeToArrival

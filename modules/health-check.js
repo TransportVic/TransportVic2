@@ -11,7 +11,6 @@ const replacedServices = require('./vline/coach-replacement-overrides')
 const RSSParser = require('rss-parser')
 let rssParser = new RSSParser()
 
-let isOnline = true
 var refreshRate = 10;
 let currentDisruptions
 
@@ -83,7 +82,6 @@ async function watchPTVDisruptions(db) {
   if (status.health === 0) throw new Error('PTV down')
 
   currentDisruptions = disruptions
-  isOnline = true
 
   let mtmSuspensions = disruptions.metro_train.filter(disruption => disruption.disruption_type.toLowerCase().includes('suspended'))
   // if (mtmSuspensions.length) handleMTMSuspensions(mtmSuspensions, db)
@@ -231,7 +229,6 @@ database.connect(async (err) => {
     } catch (e) {
       console.log('Failed to pass health check, running offline')
       console.err(e)
-      isOnline = false
     } finally {
       updateRefreshRate()
       setTimeout(refreshCache, refreshRate * 60 * 1000)
@@ -242,6 +239,5 @@ database.connect(async (err) => {
 })
 
 module.exports = {
-  isOnline: () => isOnline,
   getDisruptions: () => currentDisruptions
 }

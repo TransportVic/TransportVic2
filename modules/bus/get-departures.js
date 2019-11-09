@@ -3,7 +3,6 @@ const async = require('async')
 const moment = require('moment')
 const TimedCache = require('timed-cache')
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1 })
-const healthCheck = require('../health-check')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
@@ -117,15 +116,6 @@ async function getDeparturesFromPTV(stop, db) {
       let busRoute = await dbRoutes.findDocument({ routeGTFSID: route.route_gtfs_id })
       let operator = busRoute.operators.sort((a, b) => a.length - b.length)[0]
 
-      let importantStops = trip.stopTimings.slice(1, -1).map(stop => stop.stopName)
-        .filter(utils.isCheckpointStop)
-        .map(utils.shorternStopName)
-        .filter((e, i, a) => a.indexOf(e) === i)
-
-      let viaText = ''
-      if (importantStops.length)
-        viaText = `Via ${importantStops.slice(0, -1).join(', ')}${(importantStops.length > 1 ? ' & ' : '') + importantStops.slice(-1)[0]}`
-
       let routeNumber = route.route_number.replace(/_x$/, '')
       let sortNumber = routeNumber
 
@@ -146,8 +136,7 @@ async function getDeparturesFromPTV(stop, db) {
         busRego,
         isNightBus,
         operator,
-        codedOperator: utils.encodeName(operator),
-        viaText
+        codedOperator: utils.encodeName(operator)
       })
     })
   })
@@ -159,24 +148,23 @@ async function getDeparturesFromPTV(stop, db) {
 async function getScheduledDepartures(stop, db) {
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus')
 
-  return (await async.map(gtfsIDs, async gtfsID => {
-    return await departureUtils.getScheduledDepartures(gtfsID, db, 'bus', 90, false)
-  })).reduce((acc, departures) => {
-    return acc.concat(departures)
-  }, [])
+  return await departureUtils.getScheduledDepartures(gtfsIDs, db, 'bus', 90, false)
 }
 
 async function getDepartures(stop, db) {
   if (departuresCache.get(stop.stopName + 'B')) return departuresCache.get(stop.stopName + 'B')
 
   let departures
-  if (healthCheck.isOnline())
+  let shouldCache = true
+  try {
     departures = await getDeparturesFromPTV(stop, db)
-  else
+  } catch (e) {
+    shouldCache = false
     departures = (await getScheduledDepartures(stop, db, false)).map(departure => {
       departure.vehicleDescriptor = {}
       return departure
     })
+  }
 
   let nightBusIncluded = shouldGetNightbus(utils.now())
   let shouldShowRoad = stop.bays.filter(bay => {
@@ -193,6 +181,14 @@ async function getDepartures(stop, db) {
     departure.bay = bay
     departure.departureRoad = departureRoad
 
+    let importantStops = trip.stopTimings.slice(1, -1).map(stop => stop.stopName)
+      .filter(utils.isCheckpointStop)
+      .map(utils.shorternStopName)
+      .filter((e, i, a) => a.indexOf(e) === i)
+
+    if (importantStops.length)
+      departure.viaText = `Via ${importantStops.slice(0, -1).join(', ')}${(importantStops.length > 1 ? ' & ' : '') + importantStops.slice(-1)[0]}`
+
     if (shouldShowRoad && departure.departureRoad) {
       departure.guidanceText = 'Departs ' + departure.departureRoad
     }
@@ -200,7 +196,8 @@ async function getDepartures(stop, db) {
     return departure
   })
 
-  departuresCache.put(stop.stopName + 'B', departures)
+  if (shouldCache)
+    departuresCache.put(stop.stopName + 'B', departures)
   return departures
 }
 

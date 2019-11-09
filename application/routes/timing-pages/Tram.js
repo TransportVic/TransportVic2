@@ -39,7 +39,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
       }
     }
 
-    let stopGTFSID = departure.trip.stopTimings.filter(tripStop => tripStop.stopName === stop.stopName)[0].stopGTFSID
+    let stopGTFSID = departure.trip.stopTimings.filter(tripStop => tripStop.stopName.includes(stop.stopName))[0].stopGTFSID
 
     departure.tripURL = `/tram/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`

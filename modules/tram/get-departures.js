@@ -96,26 +96,26 @@ async function getDeparturesFromPTV(stop, db) {
 async function getScheduledDepartures(stop, db) {
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'tram')
 
-  return (await async.map(gtfsIDs, async gtfsID => {
-    return await departureUtils.getScheduledDepartures(gtfsID, db, 'tram', 90, false)
-  })).reduce((acc, departures) => {
-    return acc.concat(departures)
-  }, [])
+  return await departureUtils.getScheduledDepartures(gtfsIDs, db, 'tram', 90, false)
 }
 
 async function getDepartures(stop, db) {
   if (departuresCache.get(stop.stopName + 'T')) return departuresCache.get(stop.stopName + 'T')
 
   let departures
-  if (healthCheck.isOnline())
+  let shouldCache = true
+  try {
     departures = await getDeparturesFromPTV(stop, db)
-  else
+  } catch (e) {
+    shouldCache = false
     departures = (await getScheduledDepartures(stop, db, false)).map(departure => {
       departure.vehicleDescriptor = {}
       return departure
     })
+  }
 
-  departuresCache.put(stop.stopName + 'T', departures)
+  if (shouldCache)
+    departuresCache.put(stop.stopName + 'T', departures)
   return departures
 }
 

@@ -18,11 +18,11 @@ append content
     for departure in departures
       div.departure.no-number
         a.departureInfo
-          span=departure.trip.routeName
-          span Towards
-          span=departure.trip.destination
+          span.routeName=departure.trip.routeName
+          span.towards Towards
+          span.destination=departure.trip.destination
           if departure.coachCount > 1
-            span=`This service has ${departure.coachCount} coaches`
+            span.info=`This service has ${departure.coachCount} coaches`
         div.timings
           a(href=departure.tripURL).timing.unknown
             span=departure.prettyTimeToArrival

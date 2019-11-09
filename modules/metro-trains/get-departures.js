@@ -219,31 +219,32 @@ async function getDepartures(station, db, departuresCount=6, includeCancelled=tr
     return filterDepartures(departuresCache.get(cacheKey))
   }
 
-  if (!healthCheck.isOnline())
+  try {
+    let departures = await getDeparturesFromPTV(station, db, departuresCount, includeCancelled, platform, ttl)
+
+    let serviceIDs = []
+    let mergedDepartures = {}
+
+    departures.forEach(departure => {
+      let serviceID = departure.scheduledDepartureTime.format('HH:mm') + departure.trip.destination + departure.trip.destinationArrivalTime
+
+      if (serviceIDs.includes(serviceID))
+        mergedDepartures[serviceID].busCount++
+      else {
+        departure.busCount = 1
+        mergedDepartures[serviceID] = departure
+        serviceIDs.push(serviceID)
+      }
+    })
+
+    departuresCache.put(cacheKey, Object.values(mergedDepartures), {
+      ttl: ttl * 1000 * 60
+    })
+
+    return filterDepartures(Object.values(mergedDepartures))
+  } catch (e) {
     return await departureUtils.getScheduledDepartures(station, db, 'metro train', 90)
-
-  let departures = await getDeparturesFromPTV(station, db, departuresCount, includeCancelled, platform, ttl)
-
-  let serviceIDs = []
-  let mergedDepartures = {}
-
-  departures.forEach(departure => {
-    let serviceID = departure.scheduledDepartureTime.format('HH:mm') + departure.trip.destination + departure.trip.destinationArrivalTime
-
-    if (serviceIDs.includes(serviceID))
-      mergedDepartures[serviceID].busCount++
-    else {
-      departure.busCount = 1
-      mergedDepartures[serviceID] = departure
-      serviceIDs.push(serviceID)
-    }
-  })
-
-  departuresCache.put(cacheKey, Object.values(mergedDepartures), {
-    ttl: ttl * 1000 * 60
-  })
-
-  return filterDepartures(Object.values(mergedDepartures))
+  }
 }
 
 module.exports = getDepartures

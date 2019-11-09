@@ -97,8 +97,13 @@ module.exports = async function (db, ptvRunID, mode, time) {
 
   let vehicleDescriptor = run.vehicle_descriptor || {}
 
+  let routeGTFSID = routeData.route_gtfs_id
+  if (mode === 'regional coach')
+    routeGTFSID = '5-' + routeGTFSID.slice(2)
+
   let timetable = {
     mode, routeName: routeData.route_name.trim(),
+    routeGTFSID,
     runID: vehicleDescriptor.id,
     operationDays: [utils.getYYYYMMDDNow()],
     vehicle: vehicleDescriptor.description,

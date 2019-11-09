@@ -52,8 +52,10 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
     // }
   }
 
-  // let live = await db.getCollection('live timetables').findDocument(query)
-  // if (live) return live
+  // for the coaches
+  let live = await db.getCollection('live timetables').findDocument(query)
+  if (live) return live
+
   let trip = await db.getCollection('gtfs timetables').findDocument(query)
   if (trip) {
     let hasSeenStop = false
@@ -67,45 +69,69 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
   return trip
 }
 
-async function getScheduledDepartures(stopGTFSID, db, mode, timeout, useLive) {
-    const timetables = db.getCollection((useLive ? 'live' : 'gtfs') + ' timetables')
-    const minutesPastMidnight = utils.getMinutesPastMidnightNow()
+async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
+  const timetables = db.getCollection((useLive ? 'live' : 'gtfs') + ' timetables')
+  const routes = db.getCollection('routes')
+  const minutesPastMidnight = utils.getMinutesPastMidnightNow()
 
-    let trips = await timetables.findDocuments({
-      operationDays: utils.getYYYYMMDDNow(),
-      mode,
-      stopTimings: {
-        $elemMatch: {
-          stopGTFSID: stopGTFSID,
-          departureTimeMinutes: {
-            $gte: minutesPastMidnight - 1,
-            $lte: minutesPastMidnight + timeout
-          }
+  let trips = await timetables.findDocuments({
+    operationDays: utils.getYYYYMMDDNow(),
+    mode,
+    stopTimings: {
+      $elemMatch: {
+        stopGTFSID: {
+          $in: stopGTFSIDs
+        },
+        departureTimeMinutes: {
+          $gte: minutesPastMidnight - 1,
+          $lte: minutesPastMidnight + timeout
         }
       }
-    }).toArray()
+    }
+  }).toArray()
 
-    return trips.map(trip => {
-      let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === stopGTFSID)[0]
-      let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
+  return (await async.map(trips, async trip => {
+    let stopData = trip.stopTimings.filter(stop => stopGTFSIDs.includes(stop.stopGTFSID))[0]
+    let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
 
-      let hasSeenStop = false
-      trip.stopTimings = trip.stopTimings.filter(stop => {
-        if (stopGTFSID === stop.stopGTFSID) {
-          hasSeenStop = true
-        }
-        return hasSeenStop
-      })
-
-      return {
-        trip,
-        scheduledDepartureTime: departureTime,
-        estimatedDepartureTime: null,
-        actualDepartureTime: departureTime,
-        scheduledDepartureTimeMinutes: stopData.departureTimeMinutes,
-        destination: trip.destination
+    let hasSeenStop = false
+    trip.stopTimings = trip.stopTimings.filter(stop => {
+      if (stopGTFSIDs.includes(stop.stopGTFSID)) {
+        hasSeenStop = true
       }
-    }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+      return hasSeenStop
+    })
+
+    let route = await routes.findDocument({ routeGTFSID: trip.routeGTFSID })
+    let opertor, routeNumber
+
+    if (route) {
+      operator = route.operators.sort((a, b) => a.length - b.length)[0]
+      routeNumber = route.routeNumber
+    } else {
+      operator = ''
+      routeNumber = ''
+    }
+
+    let sortNumber = routeNumber
+    if (trip.routeGTFSID.startsWith('7-')) {
+      routeNumber = routeNumber.slice(2)
+      sortNumber = routeNumber.slice(2)
+    }
+
+    return {
+      trip,
+      scheduledDepartureTime: departureTime,
+      estimatedDepartureTime: null,
+      actualDepartureTime: departureTime,
+      scheduledDepartureTimeMinutes: stopData.departureTimeMinutes,
+      destination: trip.destination,
+      routeNumber,
+      sortNumber,
+      operator,
+      codedOperator: utils.encodeName(operator)
+    }
+  })).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }
 
 module.exports = {

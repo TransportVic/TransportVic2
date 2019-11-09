@@ -208,6 +208,10 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
     'stopTimings.departureTimeMinutes': 1
   }, {name: 'stop timings index'})
   await gtfsTimetables.createIndex({
+    'stopTimings.stopGTFSID': 1,
+    'stopTimings.departureTimeMinutes': 1
+  }, {name: 'stop timings gtfs index'})
+  await gtfsTimetables.createIndex({
     routeGTFSID: 1,
     gtfsDirection: 1,
     'stopTimings.stopID': 1,

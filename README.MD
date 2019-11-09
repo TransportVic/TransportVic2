@@ -73,9 +73,8 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
     - Matcher needs to be optimised, currently loads tonnes of matches for a stop
 
 ## Next up to be added:
+- offline mode but client side
 - fix up trip/departure merging for merged stops (beaconsfield RS)
-- fix up search
-- change online/offline mode to be stateless thing, run every request live and do offline fallback
 - fix the 3am PT day stuff, except that is actually 8am for nightbus timetables
   - includes normalising timings to what a decent human being would use - 31:35 is unacceptable for most people
 - refactor out on-time stuff
