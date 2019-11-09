@@ -7,30 +7,70 @@ router.get('/', (req, res) => {
   res.render('search/index', { placeholder: 'Station, stop or route' })
 })
 
-async function performSearch (db, query) {
-  let search
-
-  let nquery = parseInt(query)
-  if (nquery) {
-    search = [
-      { 'bays.stopGTFSID': parseInt(query) },
-      { tramTrackerIDs: parseInt(query) }
-    ]
-  } else {
-    search = [
-      { suburb: new RegExp(query, 'i') }
-    ]
-  }
-
+async function prioritySearch(db, query) {
   let possibleStopNames = [query]
   possibleStopNames.push(query.replace(/ (station|statio|stati|stat|sta|st|s)/i, ' railway station'))
   possibleStopNames.push(query.replace(/ sc/i, ' shopping centre'))
 
-  search = search.concat(possibleStopNames.map(name => ({stopName: new RegExp(name, 'i')}) ))
+  let search = possibleStopNames.map(name => ({stopName: new RegExp(name, 'i')}))
 
-  return (await db.getCollection('stops').findDocuments({
+  let priorityStopsByName = (await db.getCollection('stops').findDocuments({
     $or: search
-  }).limit(15).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
+  }).toArray()).filter(stop => {
+    return stop.stopName.includes('Shopping Centre') || stop.stopName.includes('Railway Station')
+      || stop.stopName.includes('University')
+  }).sort((a, b) => a.length - b.length)
+  let nquery = parseInt(query)
+  let gtfsMatch = await db.getCollection('stops').findDocuments({
+    'bays.stopGTFSID': nquery
+  }).toArray()
+
+  let numericalMatchStops = (await db.getCollection('stops').findDocuments({
+    $or: [{
+      tramTrackerIDs: nquery
+    }, {
+      'bays.stopNumber': query.replace('#', '')
+    }]
+  }).toArray()).sort((a, b) => a.length - b.length)
+
+  return gtfsMatch.concat(numericalMatchStops).concat(priorityStopsByName)
+}
+
+async function performSearch (db, query) {
+  let search
+
+  let prioritySearchResults = await prioritySearch(db, query)
+  let excludedIDs = prioritySearchResults.map(stop => stop._id)
+
+  let queryRegex = new RegExp(query, 'i')
+
+  let remainingResults = (await db.getCollection('stops').findDocuments({
+    _id: {
+      $not: {
+        $in: excludedIDs
+      }
+    },
+    $or: [{
+      suburb: queryRegex
+    }, {
+      stopName: queryRegex
+    }]
+  }).limit(15 - prioritySearchResults.length).toArray()).sort((a, b) => a.length - b.length)
+
+  let lowPriorityResults = await db.getCollection('stops').findDocuments({
+    _id: {
+      $not: {
+        $in: excludedIDs.concat(remainingResults.map(stop => stop._id))
+      }
+    },
+    $or: [{
+      'bays.fullStopName': queryRegex
+    }, {
+      'bays.originalStopName': queryRegex
+    }]
+  }).limit(15 - prioritySearchResults.length - remainingResults.length).toArray()
+
+  return prioritySearchResults.concat(remainingResults).concat(lowPriorityResults)
 }
 
 router.post('/', async (req, res) => {

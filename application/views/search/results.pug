@@ -1,4 +1,4 @@
-for metroStation in results.filter(stop => stop.bays.filter(bay => bay.mode === 'metro train').length)
+for metroStation in results.filter(stop => stop.bays.filter(bay => bay.mode === 'metro train').length).slice(0, 3)
   a(href=`/metro/timings/${metroStation.codedName.slice(0, -16)}`).metroStation.result
     div.leftContainer
       img(src='/static/images/clear-icons/metro.svg')
@@ -6,7 +6,7 @@ for metroStation in results.filter(stop => stop.bays.filter(bay => bay.mode === 
       span='Metro train station in ' + metroStation.suburb[0]
       span=metroStation.stopName
       
-for vlineStation in results.filter(stop => stop.bays.filter(bay => bay.mode === 'regional train').length)
+for vlineStation in results.filter(stop => stop.bays.filter(bay => bay.mode === 'regional train').length).slice(0, 3)
   a(href=`/vline/timings/${vlineStation.codedName.slice(0, -16)}`).vlineStation.result
     div.leftContainer
       img(src='/static/images/clear-icons/vline.svg')
@@ -14,7 +14,7 @@ for vlineStation in results.filter(stop => stop.bays.filter(bay => bay.mode === 
       span='V/Line train station in ' + vlineStation.suburb[0]
       span=vlineStation.stopName
       
-for regionalCoachStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'regional coach').length)
+for regionalCoachStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'regional coach').length).slice(0, 3)
   a(href=`/coach/timings/${regionalCoachStop.codedName}`).regionalCoachStop.result
     div.leftContainer
       img(src='/static/images/clear-icons/bus.svg')
@@ -23,15 +23,22 @@ for regionalCoachStop in results.filter(stop => stop.bays.filter(bay => bay.mode
       span='Regional coach stop in ' + regionalCoachStop.suburb[0]
       span=regionalCoachStop.stopName
       
-for tramStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'tram').length)
+for tramStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'tram').length).slice(0, 3)
   a(href=`/tram/timings/${tramStop.codedSuburb[0]}/${tramStop.codedName}`).tramStop.result
     div.leftContainer
       img(src='/static/images/clear-icons/bus.svg')
     div.resultDetails
       span='Tram stop in ' + tramStop.suburb[0]
-      span=tramStop.stopName
+      -
+        let displayName = tramStop.stopName
+        let stopNumbers = tramStop.bays.filter(bay => bay.mode === 'tram')
+          .map(bay => bay.stopNumber).filter(Boolean)
+          .filter((e, i, a) => a.indexOf(e) === i)
+          .map(stopNumber => `#${stopNumber}`).join(', ')
+        displayName += ` ${stopNumbers}`
+      span=displayName
       
-for busStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'bus').length)
+for busStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'bus').length).slice(0, 3)
   a(href=`/bus/timings/${busStop.codedSuburb[0]}/${busStop.codedName}`).busStop.result
     div.leftContainer
       img(src='/static/images/clear-icons/bus.svg')
