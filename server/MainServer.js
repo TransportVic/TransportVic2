@@ -46,9 +46,7 @@ module.exports = class MainServer {
 
   configMiddleware (app) {
     const stream = fs.createWriteStream('/tmp/log.txt', { flags: 'a' })
-    let excludedURLs = [
-      '/tracker/all'
-    ]
+    let excludedURLs = []
 
     app.use((req, res, next) => {
       const reqURL = req.url + ''

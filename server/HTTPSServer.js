@@ -1,3 +1,4 @@
+const spdy = require('spdy')
 const https = require('https')
 const tls = require('tls')
 const fs = require('fs')
@@ -39,6 +40,12 @@ module.exports = {
     return https.createServer({
       SNICallback: module.exports.createSNICallback()
     }, app.app)
+    // return spdy.createServer({
+    //   SNICallback: module.exports.createSNICallback(),
+    //   spdy: {
+    //     protocols: [ 'h2', 'spdy/3.1', 'http/1.1' ]
+    //   }
+    // }, app.app)
   }
 
 }
