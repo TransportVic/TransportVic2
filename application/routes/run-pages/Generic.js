@@ -72,27 +72,33 @@ async function pickBestTrip(data, db) {
     return stopTiming.actualDepartureTime.diff(utils.now(), 'minutes') > 0
   }).slice(1)[0]
 
+  if (!checkStop) return gtfsTrip
+
   let checkStopTime = moment.tz(`${data.operationDays} ${checkStop.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
   let isoDeparture = checkStopTime.toISOString()
   let mode = data.mode === 'bus' ? 2 : 1
-  let {departures, runs} = await ptvAPI(`/v3/departures/route_type/${mode}/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-3, 'minutes').toISOString()}&max_results=5&expand=run&expand=stop`)
+  try {
+    let {departures, runs} = await ptvAPI(`/v3/departures/route_type/${mode}/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-3, 'minutes').toISOString()}&max_results=5&expand=run&expand=stop`)
 
-  let departure = departures.filter(departure => {
-    let run = runs[departure.run_id]
-    let destinationName = busStopNameModifier(utils.adjustStopname(run.destination_name.trim()))
-      .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
-    let scheduledDepartureTime = moment(departure.scheduled_departure_utc).toISOString()
+    let departure = departures.filter(departure => {
+      let run = runs[departure.run_id]
+      let destinationName = busStopNameModifier(utils.adjustStopname(run.destination_name.trim()))
+        .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
+      let scheduledDepartureTime = moment(departure.scheduled_departure_utc).toISOString()
 
-    return scheduledDepartureTime === isoDeparture &&
-      destinationName === referenceTrip.destination
-  })[0]
+      return scheduledDepartureTime === isoDeparture &&
+        destinationName === referenceTrip.destination
+    })[0]
 
-  if (!departure) return gtfsTrip
-  let ptvRunID = departure.run_id
-  let departureTime = departure.scheduled_departure_utc
+    if (!departure) return gtfsTrip
+    let ptvRunID = departure.run_id
+    let departureTime = departure.scheduled_departure_utc
 
-  let trip = await getStoppingPattern(db, ptvRunID, data.mode, departureTime, departure.stop_id)
-  return trip
+    let trip = await getStoppingPattern(db, ptvRunID, data.mode, departureTime, departure.stop_id)
+    return trip
+  } catch (e) {
+    return gtfsTrip
+  }
 }
 
 router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res, next) => {
@@ -149,7 +155,7 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
       }
     }
   }
-  res.render('runs/generic', {trip})
+  res.render('runs/generic', {trip, shorternStopName: utils.shorternStopName})
 })
 
 module.exports = router

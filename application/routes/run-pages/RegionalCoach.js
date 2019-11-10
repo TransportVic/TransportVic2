@@ -40,7 +40,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   let trip = await pickBestTrip(req.params, res.db)
   if (!trip) return res.end('Could not find trip :(')
 
-  res.render('runs/generic', {trip})
+  res.render('runs/generic', {trip, shorternStopName: utils.shorternStopName})
 })
 
 module.exports = router

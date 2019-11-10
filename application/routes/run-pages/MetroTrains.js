@@ -96,33 +96,37 @@ async function pickBestTrip(data, db) {
 
   // get first stop after flinders, or if only 1 stop (nme  shorts) then flinders itself
   // should fix the dumb issue of trips sometimes showing as forming and sometimes as current with crazyburn
-  let isoDeparture = originTime.toISOString()
-  let {departures, runs} = await ptvAPI(`/v3/departures/route_type/0/stop/${originStopID}?gtfs=true&date_utc=${originTime.clone().add(-3, 'minutes').toISOString()}&max_results=3&expand=run&expand=stop`)
+  try {
+    let isoDeparture = originTime.toISOString()
+    let {departures, runs} = await ptvAPI(`/v3/departures/route_type/0/stop/${originStopID}?gtfs=true&date_utc=${originTime.clone().add(-3, 'minutes').toISOString()}&max_results=3&expand=run&expand=stop`)
 
-  let departure
-  let possibleDepartures = departures.filter(departure => {
-    let run = runs[departure.run_id]
-    let destinationName = run.destination_name.trim()
-    let scheduledDepartureTime = moment(departure.scheduled_departure_utc).toISOString()
+    let departure
+    let possibleDepartures = departures.filter(departure => {
+      let run = runs[departure.run_id]
+      let destinationName = run.destination_name.trim()
+      let scheduledDepartureTime = moment(departure.scheduled_departure_utc).toISOString()
 
-    return scheduledDepartureTime === isoDeparture &&
-      utils.encodeName(destinationName) === data.destination
-  })
+      return scheduledDepartureTime === isoDeparture &&
+        utils.encodeName(destinationName) === data.destination
+    })
 
-  if (possibleDepartures.length > 1) {
-    departure = possibleDepartures.filter(departure => {
-      return runs[departure.run_id].express_stop_count === expressCount
-    })[0]
-  } else departure = possibleDepartures[0]
+    if (possibleDepartures.length > 1) {
+      departure = possibleDepartures.filter(departure => {
+        return runs[departure.run_id].express_stop_count === expressCount
+      })[0]
+    } else departure = possibleDepartures[0]
 
-  // interrim workaround cos when services start from a later stop they're really cancelled
-  // in the stops before, but PTV thinks otherwise...
-  if (!departure) return gtfsTrip
-  let ptvRunID = departure.run_id
-  let departureTime = departure.scheduled_departure_utc
+    // interrim workaround cos when services start from a later stop they're really cancelled
+    // in the stops before, but PTV thinks otherwise...
+    if (!departure) return gtfsTrip
+    let ptvRunID = departure.run_id
+    let departureTime = departure.scheduled_departure_utc
 
-  let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime)
-  return trip
+    let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime)
+    return trip
+  } catch (e) {
+    return gtfsTrip
+  }
 }
 
 router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
