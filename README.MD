@@ -73,6 +73,10 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
     - Matcher needs to be optimised, currently loads tonnes of matches for a stop
 
 ## Next up to be added:
+- busminder integration
+  - for cowes-dandy
+  - KWR - pakky
+  - telebuses
 - offline mode but client side
 - fix up trip/departure merging for merged stops (beaconsfield RS)
 - fix the 3am PT day stuff, except that is actually 8am for nightbus timetables
@@ -122,8 +126,13 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Ferries
 - If disruption thing isn't implemented do a status board
 - Auto update of GTFS data?
-- Maps
+  - etag of zip file maybe
+- Maps (openstreetmap looks good)
 - Weather if I can find a way to do it freely
+  - bom: use ftp://ftp.bom.gov.au/anon/gen/fwo/IDV10753.xml
+  - get nearest weather station, I HAD A LIST SOMEWHERE WITH COORDINATES TO SOMETHING LIKE 5DP |:<
+  - ftp://ftp.bom.gov.au/anon/home/adfd/spatial
+  - from nearest weather station use that list to check
 - Maybe add a gunzel mode: show freight train timetables?? knockoff TRIMS
 - At this point its better than PTV * big flex *
 - day mode

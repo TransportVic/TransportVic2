@@ -136,7 +136,7 @@ async function getDeparturesFromPTV(stop, db) {
         busRego,
         isNightBus,
         operator,
-        codedOperator: utils.encodeName(operator)
+        codedOperator: utils.encodeName(operator.replace(/ \(.+/, ''))
       })
     })
   })
