@@ -1,0 +1,105 @@
+[{
+  "departureTime": "0637",
+  "origin": "Dandenong Railway Station",
+  "destination": "Cowes Transit Centre/Church St",
+  "trackerID": "207"
+},
+
+{
+  "departureTime": "0638",
+  "origin": "Cowes Transit Centre/Church St",
+  "destination": "Dandenong Railway Station",
+  "trackerID": "262"
+}, {
+  "departureTime": "1125",
+  "origin": "Dandenong Railway Station",
+  "destination": "Cowes Transit Centre/Church St",
+  "trackerID": "262"
+},
+
+{
+  "departureTime": "1402",
+  "origin": "Pakenham Railway Station/Station St",
+  "destination": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "trackerID": "1292"
+}, {
+  "departureTime": "1525",
+  "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "destination": "Pakenham Railway Station/Station St",
+  "trackerID": "1292"
+}, {
+  "departureTime": "1600",
+  "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "destination": "Pakenham Railway Station/Station St",
+  "trackerID": "1292"
+},
+
+{
+  "departureTime": "1538",
+  "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "destination": "Pakenham Railway Station/Station St",
+  "trackerID": "1537"
+}, {
+  "departureTime": "1555",
+  "origin": "Pakenham Railway Station/Station St",
+  "destination": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "trackerID": "1537"
+}, {
+  "departureTime": "1740",
+  "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "destination": "Pakenham Railway Station/Station St",
+  "trackerID": "1537"
+}, {
+  "departureTime": "1805",
+  "origin": "Pakenham Railway Station/Station St",
+  "destination": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "trackerID": "1537"
+},
+
+
+{
+  "departureTime": "0650",
+  "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "destination": "Pakenham Railway Station/Station St",
+  "trackerID": "1723"
+}, {
+  "departureTime": "0707",
+  "origin": "Pakenham Railway Station/Station St",
+  "destination": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "trackerID": "1723"
+}, {
+  "departureTime": "0740",
+  "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "destination": "Pakenham Railway Station/Station St",
+  "trackerID": "1723"
+}, {
+  "departureTime": "0800",
+  "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "destination": "Pakenham Railway Station/Station St",
+  "trackerID": "1723"
+}, {
+  "departureTime": "0817",
+  "origin": "Pakenham Railway Station/Station St",
+  "destination": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "trackerID": "1723"
+}, {
+  "departureTime": "0900",
+  "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "destination": "Pakenham Railway Station/Station St",
+  "trackerID": "1723"
+}, {
+  "departureTime": "1002",
+  "origin": "Pakenham Railway Station/Station St",
+  "destination": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "trackerID": "1723"
+}, {
+  "departureTime": "1140",
+  "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "destination": "Pakenham Railway Station/Station St",
+  "trackerID": "1723"
+}, {
+  "departureTime": "1538",
+  "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "destination": "Pakenham Railway Station/Station St",
+  "trackerID": "1723"
+}]
