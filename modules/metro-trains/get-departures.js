@@ -132,19 +132,9 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
       }
     }
 
-    let trip = cancelled ? null : await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines, scheduledDepartureTimeMinutes)
-
-    if (trip) { // live timetables
-      destination = trip.destination
-      runDestination = destination
-      if (trip.vehicle == 'Replacement Bus') {
-        platform = 'RRB'
-        estimatedDepartureTime = null
-      }
-    } else { // gtfs timetables
-      trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
+    // gtfs timetables
+    let trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
         scheduledDepartureTimeMinutes, possibleDestinations.map(dest => dest + ' Railway Station'))
-    }
     if (!trip) { // static dump
         // let isCityLoop = cityLoopStations.includes(stationName) || stationName === 'flinders street'
         trip = await departureUtils.getStaticDeparture(runID, db)
@@ -153,6 +143,17 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
           if (!stopData || stopData.departureTimeMinutes !== scheduledDepartureTimeMinutes)
             trip = null
         }
+    }
+    if (!trip) {
+      trip = await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines, scheduledDepartureTimeMinutes)
+      if (trip) {
+        destination = trip.destination
+        runDestination = destination
+        if (trip.vehicle == 'Replacement Bus') {
+          platform = 'RRB'
+          estimatedDepartureTime = null
+        }
+      }
     }
     if (!trip) { // still no match - getStoppingPattern
       trip = await getStoppingPattern(db, departure.run_id, 'metro train')
