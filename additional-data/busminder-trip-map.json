@@ -15,6 +15,16 @@
   "origin": "Dandenong Railway Station",
   "destination": "Cowes Transit Centre/Church St",
   "trackerID": "262"
+}, {
+  "departureTime": "1418",
+  "origin": "Cowes Transit Centre/Church St",
+  "destination": "Dandenong Railway Station",
+  "trackerID": "262"
+}, {
+  "departureTime": "1918",
+  "origin": "Dandenong Railway Station",
+  "destination": "Cowes Transit Centre/Church St",
+  "trackerID": "262"
 },
 
 {
@@ -56,6 +66,20 @@
   "trackerID": "1537"
 },
 
+{
+  "routeGTFSID": "7-TB9",
+  "departureTime": "1330",
+  "origin": "Stud Park Shopping Centre",
+  "destination": "Stud Park Shopping Centre",
+  "trackerID": "1572"
+},
+{
+  "routeGTFSID": "7-TB7",
+  "departureTime": "1530",
+  "origin": "Stud Park Shopping Centre",
+  "destination": "Stud Park Shopping Centre",
+  "trackerID": "1572"
+},
 
 {
   "departureTime": "0650",
@@ -102,4 +126,54 @@
   "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "destination": "Pakenham Railway Station/Station St",
   "trackerID": "1723"
+},
+
+{
+  "routeGTFSID": "7-TB9",
+  "departureTime": "0725",
+  "origin": "Stud Park Shopping Centre",
+  "destination": "Stud Park Shopping Centre",
+  "trackerID": "1916"
+}, {
+  "routeGTFSID": "7-TB9",
+  "departureTime": "0950",
+  "origin": "Stud Park Shopping Centre",
+  "destination": "Stud Park Shopping Centre",
+  "trackerID": "1916"
+}, {
+  "routeGTFSID": "7-TB8",
+  "departureTime": "",
+  "origin": "",
+  "destination": "",
+  "trackerID": "1916"
+}, {
+  "routeGTFSID": "7-TB7",
+  "departureTime": "1037",
+  "origin": "Stud Park Shopping Centre",
+  "destination": "Stud Park Shopping Centre",
+  "trackerID": "1916"
+}, {
+  "routeGTFSID": "7-TB9",
+  "departureTime": "1150",
+  "origin": "Stud Park Shopping Centre",
+  "destination": "Stud Park Shopping Centre",
+  "trackerID": "1916"
+}, {
+  "routeGTFSID": "7-TB8",
+  "departureTime": "1400",
+  "origin": "Stud Park Shopping Centre",
+  "destination": "Stud Park Shopping Centre",
+  "trackerID": "1916"
+}, {
+  "routeGTFSID": "7-TB7",
+  "departureTime": "1445",
+  "origin": "Stud Park Shopping Centre",
+  "destination": "Stud Park Shopping Centre",
+  "trackerID": "1916"
+}, {
+  "routeGTFSID": "7-TB9",
+  "departureTime": "1650",
+  "origin": "Stud Park Shopping Centre",
+  "destination": "Stud Park Shopping Centre",
+  "trackerID": "1916"
 }]

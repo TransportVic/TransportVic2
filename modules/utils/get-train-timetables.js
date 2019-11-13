@@ -54,16 +54,10 @@ async function getScheduledDeparture(station, db, mode, possibleLines, scheduled
         stopGTFSID: platform.stopGTFSID,
         departureTimeMinutes: scheduledDepartureTimeMinutes % 1440
       }
-    },
-    tripStartHour: {
-      $lte: departureHour
-    },
-    tripEndHour: {
-      $gte: departureHour
     }
   }, {tripStartHour: 0, tripEndHour: 0}).limit(2).toArray()
 
-  let trip = timetables.sort((a, b) => utils.time24ToMinAftMidnight(b.departureTime) - utils.time24ToMinAftMidnight(a.departureTime))[0]
+  let trip = timetables.sort((a, b) => utils.time24ToMinAftMidnight(b.stopTimings[0].departureTimeMinutes) - utils.time24ToMinAftMidnight(a.stopTimings[0].departureTimeMinutes))[0]
 
   if (trip) {
     trip.destination = trip.destination.slice(0, -16)
