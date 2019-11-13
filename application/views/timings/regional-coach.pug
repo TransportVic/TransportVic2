@@ -27,3 +27,5 @@ append content
           a(href=departure.tripURL).timing.unknown
             span=departure.prettyTimeToArrival
             span=departure.scheduledDepartureTime.format('HH:mm')
+            if departure.busRego
+              span.rego=`#${departure.busRego}`

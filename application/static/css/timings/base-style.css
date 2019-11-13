@@ -186,10 +186,15 @@ a.timing.mini span {
   width: calc(3vw + 3vh);
 }
 
-a.timing.mini span:nth-child(4) {
+div.departure.no-number a.timing span.rego {
+  top: calc(0.5vw + 0.5vh);
+  font-size: calc(1vw + 1vh);
+}
+
+a.timing span.rego {
   position: relative;
-  font-size: calc(0.75vw + 0.75vh);
-  top: calc(0.75vw + 0.75vh);
+  font-size: calc(0.75vw + 0.75vh) !important;
+  top: calc(0.75vw + 0.75vh) !important;
   height: 0;
 }
 

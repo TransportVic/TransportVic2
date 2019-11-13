@@ -55,10 +55,10 @@ append content
                 span=departure.prettyTimeToArrival
                 span=departure.scheduledDepartureTime.format('HH:mm')
                 if departure.vehicleDescriptor
-                  if departure.vehicleDescriptor.supplier === 'Smartrak'
+                  if departure.vehicleDescriptor.supplier === 'Smartrak' || departure.isBusMinderOverride
                     if departure.busRego
-                      span=`#${departure.busRego}`
+                      span.rego=`#${departure.busRego}`
                     else
-                      span=`${departure.vehicleDescriptor.id}`
+                      span.rego=`${departure.vehicleDescriptor.id}`
                   else if departure.vehicleDescriptor.operator === 'Yarra Trams'
-                    span=`${departure.tram.model}.${departure.tram.id}`
+                    span.rego=`${departure.tram.model}.${departure.tram.id}`

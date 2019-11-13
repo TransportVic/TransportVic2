@@ -1,66 +1,88 @@
 [{
-  "departureTime": "0637",
+  "departureTime": "06:37",
   "origin": "Dandenong Railway Station",
   "destination": "Cowes Transit Centre/Church St",
   "trackerID": "207"
 },
 
 {
-  "departureTime": "0638",
+  "departureTime": "06:38",
   "origin": "Cowes Transit Centre/Church St",
   "destination": "Dandenong Railway Station",
   "trackerID": "262"
 }, {
-  "departureTime": "1125",
+  "departureTime": "11:25",
   "origin": "Dandenong Railway Station",
   "destination": "Cowes Transit Centre/Church St",
   "trackerID": "262"
 }, {
-  "departureTime": "1418",
+  "departureTime": "14:18",
   "origin": "Cowes Transit Centre/Church St",
   "destination": "Dandenong Railway Station",
   "trackerID": "262"
 }, {
-  "departureTime": "1918",
+  "departureTime": "19:18",
   "origin": "Dandenong Railway Station",
   "destination": "Cowes Transit Centre/Church St",
   "trackerID": "262"
 },
 
 {
-  "departureTime": "1402",
+  "departureTime": "07:07",
   "origin": "Pakenham Railway Station/Station St",
   "destination": "Koo Wee Rup Bus Interchange/Rossiter Rd",
-  "trackerID": "1292"
-}, {
-  "departureTime": "1525",
+  "trackerID": "568"
+},
+
+{
+  "departureTime": "06:50",
   "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "destination": "Pakenham Railway Station/Station St",
   "trackerID": "1292"
 }, {
-  "departureTime": "1600",
+  "departureTime": "07:07",
+  "origin": "Pakenham Railway Station/Station St",
+  "destination": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "trackerID": "1292"
+}, {
+  "departureTime": "08:00",
+  "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "destination": "Pakenham Railway Station/Station St",
+  "trackerID": "1292"
+}, {
+  "departureTime": "14:02",
+  "origin": "Pakenham Railway Station/Station St",
+  "destination": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "trackerID": "1292"
+}, {
+  "departureTime": "15:25",
+  "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
+  "destination": "Pakenham Railway Station/Station St",
+  "trackerID": "1292"
+}, {
+  "departureTime": "16:00",
   "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "destination": "Pakenham Railway Station/Station St",
   "trackerID": "1292"
 },
 
 {
-  "departureTime": "1538",
+  "departureTime": "15:38",
   "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "destination": "Pakenham Railway Station/Station St",
   "trackerID": "1537"
 }, {
-  "departureTime": "1555",
+  "departureTime": "15:55",
   "origin": "Pakenham Railway Station/Station St",
   "destination": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "trackerID": "1537"
 }, {
-  "departureTime": "1740",
+  "departureTime": "17:40",
   "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "destination": "Pakenham Railway Station/Station St",
   "trackerID": "1537"
 }, {
-  "departureTime": "1805",
+  "departureTime": "18:05",
   "origin": "Pakenham Railway Station/Station St",
   "destination": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "trackerID": "1537"
@@ -68,61 +90,61 @@
 
 {
   "routeGTFSID": "7-TB9",
-  "departureTime": "1330",
+  "departureTime": "13:30",
   "origin": "Stud Park Shopping Centre",
   "destination": "Stud Park Shopping Centre",
   "trackerID": "1572"
 },
 {
   "routeGTFSID": "7-TB7",
-  "departureTime": "1530",
+  "departureTime": "15:30",
   "origin": "Stud Park Shopping Centre",
   "destination": "Stud Park Shopping Centre",
   "trackerID": "1572"
 },
 
 {
-  "departureTime": "0650",
+  "departureTime": "06:50",
   "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "destination": "Pakenham Railway Station/Station St",
   "trackerID": "1723"
 }, {
-  "departureTime": "0707",
+  "departureTime": "07:07",
   "origin": "Pakenham Railway Station/Station St",
   "destination": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "trackerID": "1723"
 }, {
-  "departureTime": "0740",
+  "departureTime": "07:40",
   "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "destination": "Pakenham Railway Station/Station St",
   "trackerID": "1723"
 }, {
-  "departureTime": "0800",
+  "departureTime": "08:00",
   "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "destination": "Pakenham Railway Station/Station St",
   "trackerID": "1723"
 }, {
-  "departureTime": "0817",
+  "departureTime": "08:17",
   "origin": "Pakenham Railway Station/Station St",
   "destination": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "trackerID": "1723"
 }, {
-  "departureTime": "0900",
+  "departureTime": "09:00",
   "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "destination": "Pakenham Railway Station/Station St",
   "trackerID": "1723"
 }, {
-  "departureTime": "1002",
+  "departureTime": "10:02",
   "origin": "Pakenham Railway Station/Station St",
   "destination": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "trackerID": "1723"
 }, {
-  "departureTime": "1140",
+  "departureTime": "11:40",
   "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "destination": "Pakenham Railway Station/Station St",
   "trackerID": "1723"
 }, {
-  "departureTime": "1538",
+  "departureTime": "15:38",
   "origin": "Koo Wee Rup Bus Interchange/Rossiter Rd",
   "destination": "Pakenham Railway Station/Station St",
   "trackerID": "1723"
@@ -130,13 +152,13 @@
 
 {
   "routeGTFSID": "7-TB9",
-  "departureTime": "0725",
+  "departureTime": "07:25",
   "origin": "Stud Park Shopping Centre",
   "destination": "Stud Park Shopping Centre",
   "trackerID": "1916"
 }, {
   "routeGTFSID": "7-TB9",
-  "departureTime": "0950",
+  "departureTime": "09:50",
   "origin": "Stud Park Shopping Centre",
   "destination": "Stud Park Shopping Centre",
   "trackerID": "1916"
@@ -148,31 +170,31 @@
   "trackerID": "1916"
 }, {
   "routeGTFSID": "7-TB7",
-  "departureTime": "1037",
+  "departureTime": "10:37",
   "origin": "Stud Park Shopping Centre",
   "destination": "Stud Park Shopping Centre",
   "trackerID": "1916"
 }, {
   "routeGTFSID": "7-TB9",
-  "departureTime": "1150",
+  "departureTime": "11:50",
   "origin": "Stud Park Shopping Centre",
   "destination": "Stud Park Shopping Centre",
   "trackerID": "1916"
 }, {
   "routeGTFSID": "7-TB8",
-  "departureTime": "1400",
+  "departureTime": "14:00",
   "origin": "Stud Park Shopping Centre",
   "destination": "Stud Park Shopping Centre",
   "trackerID": "1916"
 }, {
   "routeGTFSID": "7-TB7",
-  "departureTime": "1445",
+  "departureTime": "14:45",
   "origin": "Stud Park Shopping Centre",
   "destination": "Stud Park Shopping Centre",
   "trackerID": "1916"
 }, {
   "routeGTFSID": "7-TB9",
-  "departureTime": "1650",
+  "departureTime": "16:50",
   "origin": "Stud Park Shopping Centre",
   "destination": "Stud Park Shopping Centre",
   "trackerID": "1916"

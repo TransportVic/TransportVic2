@@ -8,6 +8,7 @@ const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
+const busMinderIntegrator = require('../bus/busminder-integrator')
 
 let tripLoader = {}
 let tripCache = {}
@@ -66,12 +67,16 @@ async function getDeparturesFromPTV(stop, db) {
 
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, run.destination_name, 'regional coach', null, routeGTFSID)
       if (!trip) trip = await getStoppingPatternWithCache(db, coachDeparture, run.destination_name)
+
+      let busRego = await busMinderIntegrator(trip)
+
       mappedDepartures.push({
         trip,
         scheduledDepartureTime: departureTime,
         estimatedDepartureTime: null,
         actualDepartureTime: scheduledDepartureTimeMinutes,
-        destination: trip.destination
+        destination: trip.destination,
+        busRego
       })
     })
   })
@@ -112,10 +117,10 @@ async function getDepartures(stop, db) {
   let mergedCoachDepartures = {}
 
   mergedDepartures.forEach(departure => {
-    let serviceID = departure.scheduledDepartureTime + departure.destination
-    if (serviceIDs.includes(serviceID))
+    let serviceID = departure.scheduledDepartureTime + departure.destination + departure.trip.origin
+    if (serviceIDs.includes(serviceID)) {
       mergedCoachDepartures[serviceID].coachCount++
-    else {
+    } else {
       mergedCoachDepartures[serviceID] = departure
       serviceIDs.push(serviceID)
     }
