@@ -57,7 +57,7 @@ async function getScheduledDeparture(station, db, mode, possibleLines, scheduled
     }
   }, {tripStartHour: 0, tripEndHour: 0}).limit(2).toArray()
 
-  let trip = timetables.sort((a, b) => utils.time24ToMinAftMidnight(b.stopTimings[0].departureTimeMinutes) - utils.time24ToMinAftMidnight(a.stopTimings[0].departureTimeMinutes))[0]
+  let trip = timetables.sort((a, b) => b.stopTimings[0].departureTimeMinutes - a.stopTimings[0].departureTimeMinutes)[0]
 
   if (trip) {
     trip.destination = trip.destination.slice(0, -16)

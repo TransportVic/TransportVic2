@@ -127,4 +127,39 @@ module.exports={
   46698: "Bay 3",
   46700: "Bay 4",
   46701: "Bay 5"
+
+  // Next up:
+  // Laverton .
+  // Footscray .
+  // Doncaster shoppingtown
+  // Lilydale .
+  // Box Hill
+  // Glen Waverley
+  // Belgrave .
+  // Blackburn (ew)
+  // Geelong
+  // Southland
+  // Epping
+  // Footscray
+  // Fountain Gate SC
+  // South Morang
+  // Mernda
+  // Boronia
+  // Reservoir (how tho)
+  // Bendigo
+  // Craigieburn
+  // Ringwood .
+  // Tarneit apparently has bus bays
+  // Yarraville? don't think I saw bus numbers
+  // Sunbury maybe
+  // Melton
+  // Nuna?
+  // Mitcham .
+  // Croydon .
+  // Mooroolbark? .
+  // Watergardens maybe
+  // St albans
+  // Airport West SC?
+  // Altona Gate SC?
+  // Pacific Werribee/Werribee Plaza
 }
