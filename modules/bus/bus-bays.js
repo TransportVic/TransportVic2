@@ -196,6 +196,12 @@ module.exports={
   48031: "Bay 19",
   48032: "Bay 20",
 
+  // Laverton
+  20942: "Bay 1",
+  20945: "Bay 2",
+  20944: "Bay 3",
+  20947: "Bay 4"
+
   // check ringwood 901 bay, mitcham 738 bay
   // Next up:
   // Chirnside park sc, mon 18nov when reopens
