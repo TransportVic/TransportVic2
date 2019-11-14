@@ -30,7 +30,8 @@ let typeMap = {
   'bus': 'Bus Stop',
   'metro train': 'Metro Train Station',
   'regional train': 'V/Line train Station',
-  'regional coach': 'V/Line Coach Stop'
+  'regional coach': 'V/Line Coach Stop',
+  'tram': 'Tram Stop'
 }
 
 function expandStop(stop) {
