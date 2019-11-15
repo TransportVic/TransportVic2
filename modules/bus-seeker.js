@@ -35,12 +35,13 @@ function updateRefreshRate() {
     let minutes = utils.getMinutesPastMidnightNow()
     if (minutes < 300) minutes += 1440
 
-    return 1740 - minutes
+    refreshRate = 1740 - minutes + 1
+    console.log('Tracker going to sleep for ' + refreshRate + ' minutes')
   }
 }
 
 function pickRandomStops() {
-  return shuffle(stops).slice(0, 5)
+  return shuffle(stops).slice(0, 6)
 }
 
 async function requestTimings() {

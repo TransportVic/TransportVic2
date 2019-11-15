@@ -54,4 +54,18 @@ module.exports = [
   'melbourne-city/melbourne-central-lonsdale-st',
   'greensborough/greensborough-railway-station',
   'altona-north/altona-gate-shopping-centre',
+  'melbourne-city/king-st-lonsdale-st',
+  'melton-south/melton-railway-station',
+  'mount-dandenong/mount-dandenong-observatory-observatory-rd',
+  'hampton/hampton-railway-station',
+  'lara/lara-railway-station',
+  'traralgon/traralgon-railway-station',
+  'warragul/warragul-railway-station',
+  'moe/moe-railway-station',
+  'sydenham/watergardens-railway-station',
+  'eltham/eltham-railway-station',
+  'ivanhoe/ivanhoe-railway-station',
+  'sunbury/sunbury-railway-station',
+  'airport-west/airport-west-shopping-centre-louis-st',
+  'rye/hygeia-st-point-nepean-rd'
 ]

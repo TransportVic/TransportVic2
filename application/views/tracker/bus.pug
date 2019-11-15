@@ -17,5 +17,5 @@ block content
       span #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
 
   h2 Past deployments:
-  for date in Object.keys(servicesByDay)
-    span #{date} #{servicesByDay[date].join(', ')}
+  for date in Object.keys(servicesByDay).reverse()
+    p #{date} #{servicesByDay[date].join(', ')}

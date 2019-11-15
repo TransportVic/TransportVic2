@@ -1,6 +1,7 @@
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
 const utils = require('../../utils')
+const gtfsUtils = require('../../gtfs-utils')
 const fs = require('fs')
 const loadRoutes = require('../utils/load-routes')
 let gtfsNumber = process.argv[2]
@@ -41,7 +42,7 @@ database.connect({
   }, {})
 
   let routeCount = await loadRoutes(routeData, shapeData, routes, (routeName, routeGTFSID, routeNumber) => {
-    if (operatorOverrides[routeGTFSID]) return operatorOverrides[routeGTFSID]
+    if (operatorOverrides[gtfsUtils.simplifyRouteGTFSID(routeGTFSID)]) return operatorOverrides[routeGTFSID]
     if (routesLookup[routeGTFSID]) return routesLookup[routeGTFSID].operator
 
     let matches = Object.values(routesLookup).filter(route => {

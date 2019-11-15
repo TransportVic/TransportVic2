@@ -25,7 +25,7 @@ database.connect({}, async err => {
         services: routeGTFSIDs
       }
     })
-    if (i % 5000) {
+    if (i % 50000) {
       console.log('Completed ' + (i / stopCount * 100).toFixed(2) + '% of stops')
     }
   })
