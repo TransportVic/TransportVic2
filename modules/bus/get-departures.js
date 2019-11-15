@@ -47,10 +47,39 @@ function shouldGetNightbus(now) {
   return false
 }
 
+async function updateBusTrips(db, departures) {
+  let busTrips = db.getCollection('bus trips')
+
+  let date = utils.getYYYYMMDDNow()
+  let timestamp = +new Date()
+
+  let viableDepartures = departures.filter(d => d.vehicleDescriptor.id)
+
+  await async.forEach(viableDepartures, async departure => {
+    let {routeGTFSID, origin, destination, departureTime, destinationArrivalTime} = departure.trip
+    let smartrakID = parseInt(departure.vehicleDescriptor.id)
+    let {routeNumber} = departure
+
+    let data = {
+      date, timestamp,
+      routeGTFSID,
+      smartrakID, routeNumber,
+      origin, destination, departureTime, destinationArrivalTime
+    }
+
+    await busTrips.replaceDocument({
+      date, routeGTFSID, origin, destination, departureTime, destinationArrivalTime
+    }, data, {
+      upsert: true
+    })
+  })
+}
+
 async function getDeparturesFromPTV(stop, db) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let smartrakIDs = db.getCollection('smartrak ids')
   let dbRoutes = db.getCollection('routes')
+
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', true, false)
   let nightbusGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', true, true)
 
@@ -69,8 +98,8 @@ async function getDeparturesFromPTV(stop, db) {
     let stopGTFSID = stopGTFSIDPair[0],
         isNightBus = stopGTFSIDPair[1]
     //todo put route number as part of route and timetable db
-    let requestTime = now.clone().add(-1, 'mintues').toISOString()
-    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/${isNightBus ? 4 : 2}/stop/${stopGTFSID}?gtfs=true&max_results=5&expand=run&expand=route&date_utc=${requestTime}`)
+    // let requestTime = now.clone().add(-1, 'mintues').toISOString()
+    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/${isNightBus ? 4 : 2}/stop/${stopGTFSID}?gtfs=true&max_results=5&expand=run&expand=route`)
 
     let seenIDs = []
     await async.forEach(departures, async busDeparture => {
@@ -153,12 +182,15 @@ async function getDeparturesFromPTV(stop, db) {
     .sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 
   let tripIDs = []
-  return sortedDepartures.filter(d => {
+  let filteredDepartures = sortedDepartures.filter(d => {
     if (!tripIDs.includes(d.trip.tripID)) {
       tripIDs.push(d.trip.tripID)
       return true
     } else return false
   })
+
+  await updateBusTrips(db, filteredDepartures)
+  return filteredDepartures
 }
 
 async function getScheduledDepartures(stop, db) {
@@ -175,6 +207,7 @@ async function getDepartures(stop, db) {
   try {
     departures = await getDeparturesFromPTV(stop, db)
   } catch (e) {
+    console.log(e)
     shouldCache = false
     departures = (await getScheduledDepartures(stop, db, false)).map(departure => {
       departure.vehicleDescriptor = {}

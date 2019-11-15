@@ -1,0 +1,21 @@
+extends ../layout
+
+block head
+  title TransportVic - Tracker/Service
+  
+block title
+  span Buses by service
+
+//- block style
+//-   link(rel='stylesheet' href='/static/css/tracker.css')
+
+block content
+  h1 Bus deployments for service #{service}
+  h2 Deployments by trips today (#{date})
+  for trip in tripsToday
+    div.trip
+      span #{trip.fleetNumber}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]}
+
+  h2 Past deployments:
+  for date in Object.keys(busesByDay)
+    span #{date} #{busesByDay[date].join(', ')}

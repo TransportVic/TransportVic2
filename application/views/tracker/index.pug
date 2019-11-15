@@ -1,0 +1,22 @@
+extends ../layout
+
+block head
+  title TransportVic - Tracker
+  
+block title
+  span Tracker
+  
+//- block style
+//-   link(rel='stylesheet' href='/static/css/tracker.css')
+
+block content
+  a(href='/tracker2/view-all') view all buses
+  form(action='/tracker2/bus' method='get')
+    label search by fleet #
+    input(name='fleet')
+  form(action='/tracker2/service' method='get')
+    label search by service #
+    input(name='service')
+  //- form(action='/tracker/model' method='get')
+  //-   label search by model
+  //-   input(name='model')

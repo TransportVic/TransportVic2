@@ -30,15 +30,35 @@ module.exports = class MainServer {
         next()
       })
 
-      await database.getCollection('smartrak ids').createIndex({
+      let smartrakIDs = database.getCollection('smartrak ids')
+      let busTrips = database.getCollection('bus trips')
+
+      await smartrakIDs.createIndex({
         smartrakID: 1
       }, {name: 'smartrak id index', unique: true})
-      await database.getCollection('smartrak ids').createIndex({
+      await smartrakIDs.createIndex({
         fleetNumber: 1
       }, {name: 'fleet number index', unique: true})
-      await database.getCollection('smartrak ids').createIndex({
+      await smartrakIDs.createIndex({
         operator: 1
       }, {name: 'operator index'})
+
+      await busTrips.createIndex({
+        date: 1,
+        routeGTFSID: 1,
+        origin: 1,
+        destination: 1,
+        departureTime: 1
+      }, {name: 'trip index', unique: true})
+      await busTrips.createIndex({
+        smartrakID: 1
+      }, {name: 'smartrak id index'})
+      await busTrips.createIndex({
+        routeGTFSID: 1
+      }, {name: 'route index'})
+      await busTrips.createIndex({
+        routeNumber: 1
+      }, {name: 'route number index'})
 
       callback()
     })
@@ -127,7 +147,9 @@ module.exports = class MainServer {
       'mockups/FlindersStreetEscalator': '/mockups/fss-escalator',
       'mockups/MiniLCD-PIDS': '/mockups/mini-lcd-pids',
 
-      'jmss-screens/BigScreen': '/jmss-screens/big-screen'
+      'jmss-screens/BigScreen': '/jmss-screens/big-screen',
+
+      'bus-tracker/Index': '/tracker2'
     }
 
     Object.keys(routers).forEach(routerName => {

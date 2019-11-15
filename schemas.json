@@ -1,4 +1,15 @@
 {
+  "busTrip": {
+    "date": "Date",
+    "timestamp": "number",
+    "routeGTFSID": "string",
+    "origin": "string",
+    "destination": "string",
+    "departureTime": "string",
+    "destinationArrivalTime": "string",
+    "smartrakID": "number",
+    "routeNumber": "string"
+  },
   "smartrakMap": {
     "smartrakID": "number",
     "fleetNumber": "string",
