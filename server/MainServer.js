@@ -11,7 +11,10 @@ const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config.json')
 let BusTracker
 if (config.busTrackerPath)
-BusTracker = require(path.join(config.busTrackerPath, 'server.js'))
+  BusTracker = require(path.join(config.busTrackerPath, 'server.js'))
+
+if (config.seekBuses)
+  require('../modules/bus-seeker')
 
 module.exports = class MainServer {
   constructor () {

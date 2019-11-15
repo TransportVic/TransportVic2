@@ -11,7 +11,7 @@ const replacedServices = require('./vline/coach-replacement-overrides')
 const RSSParser = require('rss-parser')
 let rssParser = new RSSParser()
 
-var refreshRate = 10;
+var refreshRate = 10
 let currentDisruptions
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
@@ -224,7 +224,7 @@ database.connect(async (err) => {
   async function refreshCache() {
     try {
       await async.forEach(functions, async fn => {
-        // await fn(database)
+        await fn(database)
       })
     } catch (e) {
       console.log('Failed to pass health check, running offline')
