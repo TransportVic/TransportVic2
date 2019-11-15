@@ -35,6 +35,7 @@ module.exports = class MainServer {
 
       let smartrakIDs = database.getCollection('smartrak ids')
       let busTrips = database.getCollection('bus trips')
+      let liveTimetables = database.getCollection('live timetables')
 
       await smartrakIDs.createIndex({
         smartrakID: 1
@@ -62,6 +63,32 @@ module.exports = class MainServer {
       await busTrips.createIndex({
         routeNumber: 1
       }, {name: 'route number index'})
+
+      await liveTimetables.createIndex({
+        mode: 1,
+        routeName: 1,
+        routeGTFSID: 1,
+        operationDays: 1,
+        origin: 1,
+        destination: 1,
+        departureTime: 1,
+        destinationArrivalTime: 1
+      }, {unique: true, name: 'live timetable index'})
+
+      await liveTimetables.createIndex({
+        operationDays: 1
+      }, {name: 'operationDays index'})
+
+      await liveTimetables.createIndex({
+        destination: 1
+      }, {name: 'destination index'})
+
+      await liveTimetables.createIndex({
+        mode: 1,
+        routeGTFSID: 1,
+        'stopTimings.stopGTFSID': 1,
+        'stopTimings.departureTimeMinutes': 1
+      }, {name: 'stop timings gtfs index'})
 
       callback()
     })
