@@ -149,8 +149,16 @@ async function getDeparturesFromPTV(stop, db) {
     })
   })
 
-  return mappedDepartures.sort((a, b) => a.destination.length - b.destination.length)
+  let sortedDepartures = mappedDepartures.sort((a, b) => a.destination.length - b.destination.length)
     .sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+
+  let tripIDs = []
+  return sortedDepartures.filter(d => {
+    if (!tripIDs.includes(d.trip.tripID)) {
+      tripIDs.push(d.trip.tripID)
+      return true
+    } else return false
+  })
 }
 
 async function getScheduledDepartures(stop, db) {
