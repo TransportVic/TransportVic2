@@ -35,7 +35,6 @@ module.exports = class MainServer {
 
       let smartrakIDs = database.getCollection('smartrak ids')
       let busTrips = database.getCollection('bus trips')
-      let liveTimetables = database.getCollection('live timetables')
 
       await smartrakIDs.createIndex({
         smartrakID: 1

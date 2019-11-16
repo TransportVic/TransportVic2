@@ -67,5 +67,7 @@ module.exports = [
   'ivanhoe/ivanhoe-railway-station',
   'sunbury/sunbury-railway-station',
   'airport-west/airport-west-shopping-centre-louis-st',
-  'rye/hygeia-st-point-nepean-rd'
+  'rye/hygeia-st-point-nepean-rd',
+  'wheelers-hill/brandon-park-shopping-centre',
+  'mulgrave/waverley-gardens-shopping-centre-hansworth-st'
 ]
