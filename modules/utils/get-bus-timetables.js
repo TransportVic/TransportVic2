@@ -105,9 +105,14 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
     let route = await routes.findDocument({ routeGTFSID: trip.routeGTFSID })
     let opertor, routeNumber
 
+    let loopDirection
     if (route) {
       operator = route.operators.sort((a, b) => a.length - b.length)[0]
       routeNumber = route.routeNumber
+
+      if (route.flags)
+        loopDirection = route.flags[trip.gtfsDirection]
+
     } else {
       operator = ''
       routeNumber = ''
@@ -118,10 +123,6 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
       routeNumber = routeNumber.slice(2)
       sortNumber = routeNumber.slice(2)
     }
-
-    let loopDirection
-    if (busRoute.flags)
-      loopDirection = busRoute.flags[trip.gtfsDirection]
 
     return {
       trip,

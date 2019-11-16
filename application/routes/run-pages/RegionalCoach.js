@@ -40,6 +40,11 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   let trip = await pickBestTrip(req.params, res.db)
   if (!trip) return res.end('Could not find trip :(')
 
+  trip.stopTimings = trip.stopTimings.map(stop => {
+    stop.headwayDevianceClass = 'unknown'
+    return stop
+  })
+
   res.render('runs/generic', {trip, shorternStopName: utils.shorternStopName})
 })
 

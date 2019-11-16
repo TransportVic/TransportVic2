@@ -29,7 +29,7 @@ function isNight() {
 
 */
 function updateRefreshRate() {
-  if (isDay()) refreshRate = 6
+  if (isDay()) refreshRate = 7
   else if (isNight()) refreshRate = 10
   else {
     let minutes = utils.getMinutesPastMidnightNow()
@@ -41,7 +41,7 @@ function updateRefreshRate() {
 }
 
 function pickRandomStops() {
-  return shuffle(stops).slice(0, 6)
+  return shuffle(stops).slice(0, 10)
 }
 
 async function requestTimings() {
@@ -53,7 +53,7 @@ async function requestTimings() {
 
     setTimeout(async () => {
       await getDepartures(dbStop, database)
-    }, i * 100)
+    }, i * 1500)
   })
 
   updateRefreshRate()
