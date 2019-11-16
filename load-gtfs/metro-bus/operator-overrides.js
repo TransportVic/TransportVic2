@@ -11,6 +11,7 @@ module.exports = {
   "4-454": ["Sita Bus Lines"],
   "4-45S": ["Sita Bus Lines"], // 456
   "4-4X9": ["Sita Bus Lines"], // 459
+  "4-462": ["Kastoria Bus Lines"],
   "4-552": ["Dysons"],
   "4-556": ["Dysons"],
   "4-570": ["Dysons"],

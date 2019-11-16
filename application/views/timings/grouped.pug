@@ -28,13 +28,12 @@ append content
           // todo route colours
           if hasNumber
             a(class=`leftContainer platform ${classGen(destinationDepartures[0])}`)
-              span
+              span=destinationDepartures[0].loopDirection || ''
               span=destinationDepartures[0].routeNumber
-              if destinationDepartures[0].bay
-                span=destinationDepartures[0].bay
+              span=destinationDepartures[0].bay || ''
           a.departureInfo
             if !hasNumber
-              span=destinationDepartures[0].trip.routeName
+              span.routeName=destinationDepartures[0].trip.routeName
             span.towards Towards
             span.destination=destinationDepartures[0].destination
             if destinationDepartures[0].guidanceText

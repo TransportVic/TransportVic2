@@ -119,6 +119,10 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
       sortNumber = routeNumber.slice(2)
     }
 
+    let loopDirection
+    if (busRoute.flags)
+      loopDirection = busRoute.flags[trip.gtfsDirection]
+
     return {
       trip,
       scheduledDepartureTime: departureTime,
@@ -129,7 +133,8 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
       routeNumber,
       sortNumber,
       operator,
-      codedOperator: utils.encodeName(operator)
+      codedOperator: utils.encodeName(operator),
+      loopDirection
     }
   })).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }

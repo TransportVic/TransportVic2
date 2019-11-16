@@ -1,7 +1,7 @@
 const async = require('async')
 const utils = require('../../utils')
 
-module.exports = async function(routeData, shapeData, routes, operator, mode, adjustRouteName=n => n, nameFilter=()=>true) {
+module.exports = async function(routeData, shapeData, routes, operator, mode, adjustRouteName=n=>n, nameFilter=()=>true, getFlags=()=>null) {
   await routes.createIndex({
     routeName: 1
   }, {name: 'route name index'})
@@ -97,6 +97,10 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
         path: mergedRouteTypes[key]
       })
     }, [])
+
+    let flags = getFlags(mergedRouteData.routeGTFSID)
+    if (flags)
+      mergedRouteData.flags = flags
 
     await routes.replaceDocument({ routeGTFSID: mergedRouteData.routeGTFSID }, mergedRouteData, {
       upsert: true

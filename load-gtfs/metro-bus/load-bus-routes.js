@@ -15,6 +15,7 @@ try {
 } catch (e) {}
 const operatorOverrides = require('./operator-overrides')
 let defaultOperator = process.argv[3]
+let loopOverrides = require('./loop-overrides')
 
 const routeData = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/routes.txt`).toString())
 const shapeData = utils.parseGTFSData(fs.readFileSync(`gtfs/${gtfsNumber}/shapes.txt`).toString())
@@ -42,8 +43,9 @@ database.connect({
   }, {})
 
   let routeCount = await loadRoutes(routeData, shapeData, routes, (routeName, routeGTFSID, routeNumber) => {
-    if (operatorOverrides[gtfsUtils.simplifyRouteGTFSID(routeGTFSID)]) return operatorOverrides[routeGTFSID]
-    if (routesLookup[routeGTFSID]) return routesLookup[routeGTFSID].operator
+    let simpleRouteGTFSID = routeGTFSID.replace(/(\w)-\w$/, '$1')
+    if (operatorOverrides[simpleRouteGTFSID]) return operatorOverrides[simpleRouteGTFSID]
+    if (routesLookup[simpleRouteGTFSID]) return routesLookup[simpleRouteGTFSID].operator
 
     let matches = Object.values(routesLookup).filter(route => {
       return routeName === route.routeName && routeNumber === route.routeNumber
@@ -56,7 +58,12 @@ database.connect({
     }
     return [defaultOperator]
   }, 'bus', (_, routeGTFSID) => {
-    return ptvRoutes[routeGTFSID] || _
+    let simpleRouteGTFSID = routeGTFSID.replace(/(\d)-\w$/, '$1')
+    let routeName = ptvRoutes[simpleRouteGTFSID] || _
+    routeName = routeName.replace(/ \((From|Until) .+\)$/, '')
+    return utils.titleCase(routeName).replace(' To ', ' - ')
+  }, () => true, routeGTFSID => {
+    return loopOverrides[routeGTFSID]
   })
 
   await updateStats(gtfsNumberMapping[gtfsNumber] + '-routes', routeCount, new Date() - start)

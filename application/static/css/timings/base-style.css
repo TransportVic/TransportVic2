@@ -37,6 +37,7 @@ a.leftContainer span {
 
 a.leftContainer.platform span:nth-child(1) {
   font-size: calc(1vw + 1vh);
+  line-height: calc(1.1vw + 1.1vh);
 }
 
 a.leftContainer.platform span:nth-child(2) {

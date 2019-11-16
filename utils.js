@@ -23,8 +23,8 @@ module.exports = {
   adjustRouteName: routeName => {
     let loopPostfix = ''
     if (routeName.toLowerCase().includes('clockwise')) {
-      routeName = routeName.replace(/\(?(?:anti)? ?-? ?(?:clockwise)(?: loop)?\)?$/i, '')
       let hasAnti = routeName.toLowerCase().includes('anti')
+      routeName = routeName.replace(/\(?(?:anti)? ?-? ?(?:clockwise)(?: loop)?\)?$/i, '')
       loopPostfix = ' ('
       if (hasAnti) loopPostfix += 'Anti-'
       loopPostfix += 'Clockwise Loop)'
@@ -32,7 +32,7 @@ module.exports = {
 
     routeName = routeName.replace(/via .+/, '')
       .replace(/ \(SMARTBUS.+/g, '')
-      .replace(/  +/g, '')
+      .replace(/  +/g, ' ')
       .replace(/(\w) *- *(\w)/g, '$1 - $2')
       .replace(/Railway Station/g, 'Station')
       .replace(/Station/g, 'Railway Station')
@@ -260,5 +260,17 @@ module.exports = {
   },
   deg2rad: deg => {
     return deg * (Math.PI/180)
-  }
+  },
+  titleCase: str => str.replace(/\w\S*/g, txt => {
+    if (txt.length > 2)
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+    return txt
+  }).replace(/\S*\w/g, txt => {
+    let punctuation = (txt.match(/(\S*)/)||[,''])[1]
+    let text = txt.slice(punctuation.length)
+    if (text.length > 2)
+      return punctuation + text.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+
+    return txt
+  })
 }

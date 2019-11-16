@@ -160,6 +160,10 @@ async function getDeparturesFromPTV(stop, db) {
         sortNumber = routeNumber.slice(2)
       }
 
+      let loopDirection
+      if (busRoute.flags)
+        loopDirection = busRoute.flags[trip.gtfsDirection]
+
       mappedDepartures.push({
         trip,
         scheduledDepartureTime,
@@ -173,7 +177,8 @@ async function getDeparturesFromPTV(stop, db) {
         isNightBus,
         operator,
         codedOperator: utils.encodeName(operator.replace(/ \(.+/, '')),
-        isBusMinderOverride
+        isBusMinderOverride,
+        loopDirection
       })
     })
   })
@@ -240,6 +245,12 @@ async function getDepartures(stop, db) {
 
     if (shouldShowRoad && departure.departureRoad) {
       departure.guidanceText = 'Departs ' + departure.departureRoad
+    }
+
+    if (departure.loopDirection === 'Anti-clockwise') {
+      departure.loopDirection = 'AC/W'
+    } else if (departure.loopDirection === 'Clockwise') {
+      departure.loopDirection = 'C/W'
     }
 
     return departure
