@@ -41,7 +41,9 @@ function updateRefreshRate() {
 }
 
 function pickRandomStops() {
-  return shuffle(stops).slice(0, 10)
+  let size = 12
+  if (isNight()) size = 6
+  return shuffle(stops).slice(0, size)
 }
 
 async function requestTimings() {
@@ -53,7 +55,7 @@ async function requestTimings() {
 
     setTimeout(async () => {
       await getDepartures(dbStop, database)
-    }, i * 1500)
+    }, i * 5000)
   })
 
   updateRefreshRate()

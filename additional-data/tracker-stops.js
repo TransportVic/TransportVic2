@@ -89,5 +89,22 @@ module.exports = [
   'pakenham/cardinia-road-railway-station',
   'pakenham/princes-hwy-racecourse-rd',
   'noble-park/yarraman-railway-station',
-  'springvale/springvale-railway-station'
+  'springvale/springvale-railway-station',
+  'ormond/ormond-railway-station',
+  'caulfield-east/caulfield-railway-station',
+  'laverton/laverton-railway-station',
+  'forest-hill/forest-hill-shopping-centre-canterbury-rd',
+  'ferntree-gully/ferntree-gully-railway-station',
+  'upper-ferntree-gully/upper-ferntree-gully-railway-station',
+  'ringwood/eastland-shopping-centre',
+  'bundoora/bundoora-square-shopping-centre-plenty-rd',
+  'thomastown/thomastown-railway-station',
+  'ascot-vale/ascot-vale-railway-station',
+  'hastings/hastings-railway-station',
+  'cockatoo/fielder-railway-station-belgrave-gembrook-rd',
+  'vermont-south/vermont-south-shopping-centre',
+  'brighton/gardenvale-railway-station',
+  'st-kilda/st-kilda-junction',
+  'south-yarra/alfred-hospital',
+  'chelsea/chelsea-railway-station'
 ]
