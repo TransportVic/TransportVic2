@@ -106,5 +106,11 @@ module.exports = [
   'brighton/gardenvale-railway-station',
   'st-kilda/st-kilda-junction',
   'south-yarra/alfred-hospital',
-  'chelsea/chelsea-railway-station'
+  'chelsea/chelsea-railway-station',
+  'brighton/north-brighton-railway-station',
+  'cheltenham/cheltenham-railway-station',
+  'murrumbeena/murrumbeena-railway-station',
+  'altona-meadows/central-square-shopping-centre',
+  'vermont-south/vermont-retirement-village-burwood-hwy',
+  'boronia/boronia-railway-station'
 ]
