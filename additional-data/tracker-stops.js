@@ -118,6 +118,19 @@ module.exports = [
   'dandenong/dandenong-plaza-shopping-centre-mccrae-st',
   'lynbrook/lynbrook-village-shopping-centre',
   'mentone/thrift-park-shopping-centre-lower-dandenong-rd',
-  'mentone/mentone-railway-station',
-  'brighton/middle-brighton-railway-station'
+  'brighton/middle-brighton-railway-station',
+  'black-rock/tricks-reserve-bluff-rd',
+  'epsom/epsom-village-shopping-centre',
+  'flora-hill/la-trobe-university',
+  'kingsbury/la-trobe-university-medical-centre-plenty-rd',
+  'bendigo/mitchell-st-central-bay-a-mitchell-st',
+  'marshall/marshall-railway-station',
+  'beaconsfield/beaconsfield-railway-station',
+  'point-cook/sanctuary-lakes-shopping-centre-point-cook-rd',
+  'tarneit/wyndham-village-shopping-centre',
+  'point-cook/emmanuel-college',
+  'roxburgh-park/roxburgh-park-railway-station',
+  'roxburgh-park/roxburgh-park-shopping-centre',
+  'deer-park/deer-park-railway-station',
+  'bentleigh-east/east-boundary-rd-bellevue-rd'
 ]

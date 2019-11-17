@@ -123,6 +123,8 @@ module.exports = {
       name = name.replace(' Station', ' Railway Station')
     }
 
+    name.replace('Schhol', 'School')
+
     return name.replace(/  +/g, ' ').replace(' SC', ' Shopping Centre')
   },
   shorternStopName: name => {
