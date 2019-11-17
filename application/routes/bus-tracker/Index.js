@@ -60,7 +60,7 @@ router.get('/service', async (req, res) => {
   let rawTripsToday = await busTrips.findDocuments({
     routeNumber: service,
     date
-  }).sort({smartrakID: 1, departureTime: 1}).toArray()
+  }).sort({departureTime: 1, origin: 1}).toArray()
 
   let activeTripsNow = rawTripsToday.filter(trip => {
     let {departureTime, destinationArrivalTime} = trip
@@ -77,9 +77,9 @@ router.get('/service', async (req, res) => {
 
     let {origin, destination, departureTime} = rawTrip
 
-    rawTrip.fleetNumber = fleetNumber
+    rawTrip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + rawTrip.smartrakID
     return rawTrip
-  })).filter(t => t.fleetNumber)
+  }))
 
   let operationDays = await busTrips.distinct('date', {
     routeNumber: service
@@ -95,8 +95,8 @@ router.get('/service', async (req, res) => {
       let {fleetNumber} = await smartrakIDs.findDocument({
         smartrakID
       }) || {}
-      return fleetNumber
-    })).filter(Boolean)
+      return fleetNumber ? '#' + fleetNumber : '@' + smartrakID
+    })).sort((a, b) => a.replace(/[^\d]/g, '') - b.replace(/[^\d]/g, ''))
 
     busesByDay[date] = buses
   })
