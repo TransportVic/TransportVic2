@@ -5,7 +5,7 @@ const crypto = require('crypto')
 function createStopHash(stopName) {
     let hash = crypto.createHash('sha1')
     hash.update(stopName)
-    return hash.digest('hex').slice(0, 6)
+    return hash.digest('hex')
 }
 
 function getDistanceFromLatLon(lat1, lon1, lat2, lon2) {

@@ -112,5 +112,12 @@ module.exports = [
   'murrumbeena/murrumbeena-railway-station',
   'altona-meadows/central-square-shopping-centre',
   'vermont-south/vermont-retirement-village-burwood-hwy',
-  'boronia/boronia-railway-station'
+  'boronia/boronia-railway-station',
+  'notting-hill/blackburn-rd-ferntree-gully-rd',
+  'endeavour-hills/endeavour-hills-shopping-centre-matthew-flinders-ave',
+  'dandenong/dandenong-plaza-shopping-centre-mccrae-st',
+  'lynbrook/lynbrook-village-shopping-centre',
+  'mentone/thrift-park-shopping-centre-lower-dandenong-rd',
+  'mentone/mentone-railway-station',
+  'brighton/middle-brighton-railway-station'
 ]
