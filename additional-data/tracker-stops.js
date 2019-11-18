@@ -132,5 +132,18 @@ module.exports = [
   'roxburgh-park/roxburgh-park-railway-station',
   'roxburgh-park/roxburgh-park-shopping-centre',
   'deer-park/deer-park-railway-station',
-  'bentleigh-east/east-boundary-rd-bellevue-rd'
+  'bentleigh-east/east-boundary-rd-bellevue-rd',
+  'keilor/keilor-shopping-centre-old-calder-hwy',
+  'keilor-downs/keilor-shopping-centre-taylors-rd',
+  'st-albans/keilor-plains-railway-station',
+  'st-albans/st-albans-railway-station',
+  'st-albans/ginifer-railway-station',
+  'taylors-lakes/watergardens-shopping-centre',
+  'deer-park/brimbank-central-shopping-centre-neale-rd',
+  'edithvale/edithvale-railway-station',
+  'chelsea-heights/lynne-st-wells-rd',
+  'chelsea-heights/kennedy-ave-chelsea-park-dr',
+  'mordialloc/mordialloc-shopping-centre-centre-way',
+  'keysborough/parkmore-shopping-centre',
+  'highett/highett-railway-station'
 ]
