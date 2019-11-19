@@ -166,7 +166,7 @@ module.exports = [
   'burwood-east/burwood-hwy-blackburn-rd',
   'burwood/deakin-university',
   'hughesdale/hughesdale-railway-station',
-  'carnegie/carnegie-railway-station'
+  'carnegie/carnegie-railway-station',
   'craigieburn/craigieburn-central-shopping-centre',
   'essendon/essendon-railway-station',
   'keilor-east/milleara-shopping-centre',
