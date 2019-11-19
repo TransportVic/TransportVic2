@@ -190,5 +190,7 @@ module.exports = [
   'crib-point/crib-point-railway-station',
   'ashburton/ashburton-railway-station',
   'south-morang/south-morang-railway-station',
-  'glenroy/esperanto-ct-plumpton-ave'
+  'glenroy/esperanto-ct-plumpton-ave',
+  'moonee-ponds/maribyrnong-park',
+  'aberfeldie/combermere-st-alma-st'
 ]
