@@ -41,7 +41,7 @@ function updateRefreshRate() {
 }
 
 function pickRandomStops() {
-  let size = 12
+  let size = 13
   if (isNight()) size = 6
   return shuffle(stops).slice(0, size)
 }
