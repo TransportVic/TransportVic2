@@ -13,3 +13,4 @@
 .DS_Store
 /load-vicmap-addresses/data
 /https
+/bus_trips.csv
