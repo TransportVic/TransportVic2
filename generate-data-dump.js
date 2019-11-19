@@ -7,6 +7,7 @@ const fs = require('fs')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 let outputStream = fs.createWriteStream('./bus_trips.csv')
+outputStream.setMaxListeners(Infinity)
 
 async function write(data) {
   if (!outputStream.write(data)) {
@@ -30,7 +31,7 @@ database.connect(async () => {
   let iterationSize = 1000
   let iterationCount = Math.ceil(tripCount / iterationSize)
   let sets = [...Array(iterationCount).keys()].map(e => e * iterationSize)
-  await async.forEach(sets, async skip => {
+  await async.forEachLimit(sets, 1, async skip => {
     let trips = await busTrips.findDocuments().skip(skip).limit(iterationSize).toArray()
     await dumpTrips(trips)
   })
