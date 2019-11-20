@@ -192,5 +192,11 @@ module.exports = [
   'south-morang/south-morang-railway-station',
   'glenroy/esperanto-ct-plumpton-ave',
   'moonee-ponds/maribyrnong-park',
-  'aberfeldie/combermere-st-alma-st'
+  'aberfeldie/combermere-st-alma-st',
+  'east-melbourne/st-vincents-hospital-victoria-pde',
+  'bentleigh/bentleigh-library-jasper-rd',
+  'moonee-ponds/moonee-ponds-interchange-mt-alexander-rd',
+  'cranbourne/cranbourne-park-shopping-centre',
+  'frankston/nepean-hwy-playne-st',
+  'melbourne-city/bourke-st-queen-st'
 ]
