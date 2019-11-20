@@ -155,8 +155,11 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
     stopTimings[stopCount - 1].departureTime = null
     stopTimings[stopCount - 1].departureTimeMinutes = null
 
-    allTrips[tripID].tripStartHour = Math.floor(stopTimings[0].departureTimeMinutes / 60) % 24
-    allTrips[tripID].tripEndHour = Math.floor(stopTimings[stopCount - 1].arrivalTimeMinutes / 60) % 24
+    allTrips[tripID].tripStartMinute = stopTimings[0].departureTimeMinutes
+    allTrips[tripID].tripEndMinute = stopTimings[stopCount - 1].arrivalTimeMinutes
+    if (allTrips[tripID].tripEndMinute < allTrips[tripID].tripStartMinute) {
+      allTrips[tripID].tripEndMinute += 1440
+    }
 
     bulkOperations.push({
       insertOne: {
@@ -184,8 +187,8 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
     routeGTFSID: 1,
     operationDays: 1,
     destination: 1,
-    tripStartHour: 1,
-    tripEndHour: 1,
+    tripStartMinute: 1,
+    tripEndMinute: 1,
     tripID: 1,
     shapeID: 1
   }, {unique: true, name: 'gtfs timetable index'})
@@ -196,6 +199,13 @@ module.exports = async function(db, calendar, calendarDates, trips, tripTimesDat
   await gtfsTimetables.createIndex({
     operationDays: 1
   }, {name: 'operationDays index'})
+
+  await gtfsTimetables.createIndex({
+    operationDays: 1,
+    routeGTFSID: 1,
+    tripStartMinute: 1,
+    tripEndMinute: 1
+  }, {name: 'operationDays + routeGTFSID + start stop times index'})
 
   await gtfsTimetables.createIndex({
     destination: 1

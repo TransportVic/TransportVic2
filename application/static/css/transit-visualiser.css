@@ -1,0 +1,9 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+#map {
+  width: 100vw;
+  height: calc(100vh - (4vw + 4vh));
+}

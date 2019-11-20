@@ -93,10 +93,11 @@ module.exports = class MainServer {
     })
 
     app.use(compression())
-    app.use(minify({
-      uglifyJsModule: uglifyEs,
-      errorHandler: console.log
-    }))
+    if (!config.devMode)
+      app.use(minify({
+        uglifyJsModule: uglifyEs,
+        errorHandler: console.log
+      }))
 
     app.use('/static', express.static(path.join(__dirname, '../application/static')))
 
@@ -152,7 +153,9 @@ module.exports = class MainServer {
 
       'jmss-screens/BigScreen': '/jmss-screens/big-screen',
 
-      'bus-tracker/Index': '/tracker2'
+      'bus-tracker/Index': '/tracker2',
+
+      'transit-visualiser/Index': '/transit-visualiser'
     }
 
     Object.keys(routers).forEach(routerName => {

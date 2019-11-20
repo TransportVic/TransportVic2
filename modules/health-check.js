@@ -245,7 +245,8 @@ database.connect(async (err) => {
     }
   }
 
-  await refreshCache()
+  if (!config.devMode)
+    await refreshCache()
 })
 
 module.exports = {

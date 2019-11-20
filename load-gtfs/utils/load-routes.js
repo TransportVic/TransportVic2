@@ -77,8 +77,8 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
         if (a[i - 1])
           return a[i - 1][4] !== line[4]
         return true
-      }).map(line => [line[2], line[1]])
-      let routeKey = routeTypes[routeGTFSID].slice(-1)[0][4] + shapeData[0].join(',')
+      }).map(line => [parseFloat(line[2]), parseFloat(line[1])])
+      let routeKey = routeTypes[routeGTFSID].slice(-1)[0][4] + shapeData[0].join(',') + shapeData.slice(-1)[0].join(',')
       routeTypes[routeGTFSID] = shapeData
 
       if (!routeLengths[routeKey])
