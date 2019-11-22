@@ -118,13 +118,7 @@ async function getDeparturesFromVNET(station, db) {
         departureTime: utils.formatPTHHMM(vnetDeparture.originDepartureTime),
         destinationArrivalTime: utils.formatPTHHMM(vnetDeparture.destinationArrivalTime),
         operationDays: utils.getYYYYMMDDNow(),
-        mode: 'regional train',
-        tripStartHour: {
-          $lte: departureHour
-        },
-        tripEndHour: {
-          $gte: departureHour
-        }
+        mode: 'regional train'
       })
 
     if (!trip) {
