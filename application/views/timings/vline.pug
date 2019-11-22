@@ -64,9 +64,9 @@ append content
                 if (flags.length) flags += ' - '
                 flags += 'Reservations Only'
               }
-            span.info=flags
+            span.info.full=flags
             if departure.vehicle
-              span.vehicle='Vehicle: ' + departure.vehicle
+              span.vehicle.full='Vehicle: ' + departure.vehicle
         div.timings
           -
             let className = 'timing '

@@ -106,6 +106,10 @@ a.departureInfo span.info, a.departureInfo span.vehicle {
   color: #bababa;
 }
 
+a.departureInfo span.full {
+  width: calc(100vw - (5vw + 5vh) - (5vw + 5vh) - (1vw + 1vh) - 1.5vw);
+}
+
 a.departureInfo span.cancelled:nth-child(3) {
   font-size: calc(1.1vw + 1.1vh);
   line-height: calc(1.1vw + 1.1vh);
