@@ -1,4 +1,4 @@
-let route = '4-601'
+let route = '4-900'
 let routeData = {}
 let trips = {}
 let stops = {}
@@ -17,7 +17,9 @@ function fetchTimetables(cb) {
 }
 
 setInterval(() => {
-  fetchTimetables()
+  fetchTimetables(() => {
+    mapTrips()
+  })
 }, 60000)
 
 mapboxgl.accessToken = 'pk.eyJ1IjoidW5pa2l0dHkiLCJhIjoiY2p6bnVvYWJ4MDdlNjNlbWsxMzJwcjh4OSJ9.qhftGWgQBDdGlaz3jVGvUQ'
@@ -65,10 +67,12 @@ function setTripMarkers() {
 
     if (!nextStop || nextStop.i === 0) return
     let previousStop = trip.stopTimings[nextStop.i - 1]
+    if (!previousStop) console.log(nextStop)
     let timeSinceDeparture = millisecondsPastMidnight - previousStop.departureTimeMinutes * 60000
 
     let vehicleDistance = previousStop.distance + (nextStop.speed * timeSinceDeparture / 60000)
-    console.log(previousStop, nextStop)
+    if (vehicleDistance < 0) return
+
     let position = turf.along(shapeData, vehicleDistance, 'kilometers')
     tripMarkers.push(position)
   })
@@ -81,38 +85,41 @@ function setTripMarkers() {
   requestAnimationFrame(setTripMarkers)
 }
 
+function mapTrips() {
+  trips = trips.map(trip => {
+    let distanceData = stopDistances[Object.keys(stopDistances).find(k => k === trip.shapeID)]
+
+    trip.stopTimings = trip.stopTimings.map((stop, i, arr) => {
+      if (stop.departureTimeMinutes - stop.arrivalTimeMinutes < 0) {
+        stop.departureTimeMinutes += 1440
+      }
+
+      if (arr[i - 1]) {
+        stop.distance = distanceData[stop.stopGTFSID] - distanceData[arr[i - 1].stopGTFSID]
+        if (stop.arrivalTimeMinutes - arr[i - 1].departureTimeMinutes < 0) {
+          stop.arrivalTimeMinutes += 1440
+          stop.departureTimeMinutes += 1440
+        }
+        stop.dT = stop.arrivalTimeMinutes - arr[i - 1].departureTimeMinutes
+        if (stop.dT)
+          stop.speed = (stop.distance - arr[i - 1].distance) / stop.dT
+        else
+          stop.speed = (stop.distance - arr[i - 1].distance) * 2
+      } else {
+        stop.distance = 0
+        stop.dT = 0
+        stop.speed = 0
+      }
+      stop.i = i; return stop
+    })
+    return trip
+  })
+}
+
 map.on('load', function () {
   fetchTimetables(() => {
     drawPath()
-
-    trips = trips.map(trip => {
-      let distanceData = stopDistances[Object.keys(stopDistances).find(k => k === trip.shapeID)]
-
-      trip.stopTimings = trip.stopTimings.map((stop, i, arr) => {
-        if (stop.departureTimeMinutes - stop.arrivalTimeMinutes < 0) {
-          stop.departureTimeMinutes += 1440
-        }
-
-        if (arr[i - 1]) {
-          stop.distance = distanceData[stop.stopGTFSID] - distanceData[arr[i - 1].stopGTFSID]
-          if (stop.arrivalTimeMinutes - arr[i - 1].departureTimeMinutes < 0) {
-            stop.arrivalTimeMinutes += 1440
-            stop.departureTimeMinutes += 1440
-          }
-          stop.dT = stop.arrivalTimeMinutes - arr[i - 1].departureTimeMinutes
-          if (stop.dT)
-            stop.speed = (stop.distance - arr[i - 1].distance) / stop.dT
-          else
-            stop.speed = (stop.distance - arr[i - 1].distance) * 2
-        } else {
-          stop.distance = 0
-          stop.dT = 0
-          stop.speed = 0
-        }
-        stop.i = i; return stop
-      })
-      return trip
-    })
+    mapTrips()
 
     map.addSource('trips', { type: 'geojson', data: {
       type: 'FeatureCollection',

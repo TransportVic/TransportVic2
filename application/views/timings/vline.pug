@@ -65,6 +65,8 @@ append content
                 flags += 'Reservations Only'
               }
             span.info=flags
+            if departure.vehicle
+              span.vehicle='Vehicle: ' + departure.vehicle
         div.timings
           -
             let className = 'timing '

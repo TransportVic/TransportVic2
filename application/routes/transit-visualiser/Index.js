@@ -44,10 +44,10 @@ router.get('/timetables/:route', async (req, res) => {
   let operationDays = [utils.getYYYYMMDDNow()]
   let check = [{
     tripStartMinute: {
-      $lte: minutesPastMidnight
+      $lte: minutesPastMidnight - 5
     },
     tripEndMinute: {
-      $gte: minutesPastMidnight
+      $gte: minutesPastMidnight + 5
     }
   }]
   if (minutesPastMidnight < 240) {
@@ -57,7 +57,7 @@ router.get('/timetables/:route', async (req, res) => {
         $lte: minutesPastMidnight + 1440
       },
       tripEndMinute: {
-        $gte: minutesPastMidnight + 1440
+        $gte: minutesPastMidnight + 1450
       }
     })
   }

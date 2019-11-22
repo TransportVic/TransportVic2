@@ -25,11 +25,11 @@ async function getStationFromVNETName(vnetStationName, db) {
   return station
 }
 
-async function getVNETDepartures(station, db) {
+async function getVNETDepartures(station, direction, db) {
   const vlinePlatform = station.bays.filter(bay => bay.mode === 'regional train')[0]
   const {vnetStationName} = vlinePlatform
 
-  const body = (await utils.request(urls.vlinePlatformDepartures.format(vnetStationName))).replace(/a:/g, '')
+  const body = (await utils.request(urls.vlinePlatformDepartures.format(vnetStationName, direction))).replace(/a:/g, '')
   const $ = cheerio.load(body)
   const allServices = Array.from($('PlatformService'))
 
@@ -50,6 +50,17 @@ async function getVNETDepartures(station, db) {
     const runID = $('ServiceIdentifier', service).text()
     const originVNETName = $('Origin', service).text()
     const destinationVNETName = $('Destination', service).text()
+    let vehicle = $('Consist', service).text()
+    const vehicleConsist = $('ConsistVehicles', service).text()
+    let fullVehicle = vehicle
+
+    if (vehicle.startsWith('N'))
+      fullVehicle = vehicleConsist
+    else if (vehicle.includes('VL'))
+      fullVehicle = vehicle.replace(/\dVL/g, 'VL')
+
+    fullVehicle = fullVehicle.replace(/ /g, '-')
+
     let direction = $('Direction', service).text()
     if (direction === 'D') direction = 'Down'
     else direction = 'Up'
@@ -64,7 +75,8 @@ async function getVNETDepartures(station, db) {
       runID, originVLinePlatform, destinationVLinePlatform,
       originDepartureTime, destinationArrivalTime,
       platform, estimatedDepartureTime,
-      direction
+      direction,
+      vehicle: fullVehicle
     })
   })
 
@@ -77,7 +89,9 @@ async function getDeparturesFromVNET(station, db) {
   const gtfsTimetables = db.getCollection('gtfs timetables')
   const timetables = db.getCollection('timetables')
 
-  const vnetDepartures = await getVNETDepartures(station, db)
+  const vnetDeparturesUp = await getVNETDepartures(station, 'U', db)
+  const vnetDeparturesDown = await getVNETDepartures(station, 'D', db)
+  const vnetDepartures = vnetDeparturesUp.concat(vnetDeparturesDown)
   const vlinePlatform = station.bays.filter(bay => bay.mode === 'regional train')[0]
   const minutesPastMidnight = utils.getPTMinutesPastMidnight(now)
 
@@ -181,7 +195,8 @@ async function getDeparturesFromVNET(station, db) {
       trip, estimatedDepartureTime: vnetDeparture.estimatedDepartureTime, platform: vnetDeparture.platform,
       stopData, scheduledDepartureTime,
       departureTimeMinutes: stopData.departureTimeMinutes, runID: vnetDeparture.runID,
-      actualDepartureTime: vnetDeparture.estimatedDepartureTime || scheduledDepartureTime, vnetTrip
+      actualDepartureTime: vnetDeparture.estimatedDepartureTime || scheduledDepartureTime, vnetTrip,
+      vehicle: vnetDeparture.vehicle
     }
   })).filter(Boolean)
 

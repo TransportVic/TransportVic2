@@ -89,7 +89,7 @@ a.departureInfo span.info~span.info {
   -webkit-line-clamp: 1;
 }
 
-a.departureInfo span.info {
+a.departureInfo span.info, a.departureInfo span.vehicle {
   width: calc(100vw - (3vw + 3vh) * 4 - (5vw + 5vh) - (1vw + 1vh) - 1.5vw);
   overflow: hidden;
 
