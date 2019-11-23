@@ -44,5 +44,12 @@ for busStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'bus'
       img(src='/static/images/clear-icons/bus.svg')
     div.resultDetails
       span='Bus stop in ' + busStop.suburb[0]
-      span=busStop.stopName
+      -
+        let displayName = busStop.stopName
+        let stopNumbers = busStop.bays.filter(bay => bay.mode === 'bus')
+          .map(bay => bay.stopNumber).filter(Boolean)
+          .filter((e, i, a) => a.indexOf(e) === i)
+          .map(stopNumber => `#${stopNumber}`).join(', ')
+        displayName += ` ${stopNumbers}`
+      span=displayName
       
