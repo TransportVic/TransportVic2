@@ -52,6 +52,7 @@ module.exports = class MainServer {
         origin: 1,
         destination: 1,
         departureTime: 1,
+        destinationArrivalTime: 1,
         smartrakID: 1
       }, {name: 'trip index', unique: true})
       await busTrips.createIndex({
