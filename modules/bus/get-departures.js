@@ -97,7 +97,7 @@ async function getDeparturesFromPTV(stop, db) {
   await async.forEach(gtfsIDPairs, async stopGTFSIDPair => {
     let stopGTFSID = stopGTFSIDPair[0],
         isNightBus = stopGTFSIDPair[1]
-        
+
     const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/${isNightBus ? 4 : 2}/stop/${stopGTFSID}?gtfs=true&max_results=5&expand=run&expand=route`)
 
     let seenIDs = []
