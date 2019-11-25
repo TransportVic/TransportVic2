@@ -184,7 +184,7 @@ function animateScrollingText(callback) {
 function alternateTexts() {
   animateScrollingText(() => {
     if (departures)
-      stoppingPatternP.textContent = getStoppingType(departures[0].additionalInfo)
+      stoppingPatternP.textContent = getStoppingPattern(departures[0].additionalInfo)
     setTimeout(() => {
       alternateTexts()
     }, 5000)
