@@ -8,7 +8,7 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 database.connect(async err => {
   let busTrips = database.getCollection('bus trips')
   let allTrips = await busTrips.findDocuments().toArray()
-  await async.forEach(allTrips, async trip => {
+  await async.forEachLimit(allTrips, 200, async trip => {
     let {date, routeGTFSID, origin, destination, departureTime, destinationArrivalTime} = trip
     let key = {
       date, routeGTFSID, origin, destination, departureTime, destinationArrivalTime
