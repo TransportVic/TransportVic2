@@ -75,10 +75,12 @@ function minutesPastMidnightTo24Time(minutesPastMidnight) {
 async function parseTimetable(data, routeName) {
   let timetableByDays = {0: {}, 1: {}, 2: {}, 3: {}};
   await async.forEach(data, async stop => {
-    const runID = stop.trip_id,
+    let runID = stop.trip_id,
         tripDay = stop.day_type,
         stationName = stop.station,
         {arrivalTimeMinutes} = stop
+
+    stationName = utils.adjustStopname(stationName)
 
     const stationData = await getStation(stationName)
     const arrivalTime = minutesPastMidnightTo24Time(arrivalTimeMinutes)
