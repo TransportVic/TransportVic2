@@ -29,6 +29,7 @@ database.connect({}, async err => {
 
     await async.forEach(routeVariants, async variant => {
       let timetable = await gtfsTimetables.findDocument({shapeID: variant})
+      if (!timetable) return console.log('No timetable match for shapeID ' + variant)
 
       if (!routeDirections[timetable.gtfsDirection]) routeDirections[timetable.gtfsDirection] = []
 

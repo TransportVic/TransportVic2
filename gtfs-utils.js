@@ -27,5 +27,5 @@ module.exports = {
 
     return allDatesInbetween.sort((a, b) => +a - +b)
   },
-  simplifyRouteGTFSID: id => id.replace(/(-[A-Za-z0-9])?-mjp-1$/, '')
+  simplifyRouteGTFSID: id => id.replace(/^(\d\d?-\w{1,3}).+$/, '$1')
 }
