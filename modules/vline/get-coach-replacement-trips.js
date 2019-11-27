@@ -13,7 +13,7 @@ module.exports = async function(station, db) {
   if (station.stopName === 'Southern Cross Railway Station') {
     // lookup scs coach terminal
     station = await db.getCollection('stops').findDocument({
-      stopName: "Southern Cross Coach Terminal/Spencer St"
+      stopName: "Southern Cross Coach Terminal/Spencer Street"
     })
     coachStop = station.bays.filter(bay => bay.mode === 'regional coach')[0]
   }

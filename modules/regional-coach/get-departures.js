@@ -65,7 +65,9 @@ async function getDeparturesFromPTV(stop, db) {
 
       let routeGTFSID = route.route_gtfs_id.replace('1-', '5-')
 
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, run.destination_name, 'regional coach', null, routeGTFSID)
+      let destination = utils.adjustStopname(run.destination_name)
+
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'regional coach', null, routeGTFSID)
       if (!trip) trip = await getStoppingPatternWithCache(db, coachDeparture, run.destination_name)
 
       let busRego = await busMinderIntegrator(trip)
