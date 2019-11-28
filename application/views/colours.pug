@@ -20,8 +20,8 @@ append content
             span
             span 77
           a.departureInfo
-            span Operator
-            span=originalName
+            span.towards Operator
+            span.destination=originalName
             
     for tramRoute in tramRoutes
       for i in [1, 2]
@@ -30,8 +30,8 @@ append content
             span
             span=tramRoute
           a.departureInfo
-            span Tram
-            span Destination
+            span.towards Tram
+            span.destination Destination
             
     for trainLine in trainLines
       - let {cssName, originalName} = trainLine
@@ -41,21 +41,15 @@ append content
             span Platform
             span=42
           a.departureInfo
-            span Metro Train
-            span=originalName
+            span.towards Metro Train
+            span.destination=originalName
+          
+    for i in [1, 2]  
+      div.departure
+        a(class=`leftContainer platform city-loop-line`)
+          span Platform
+          span=99
+        a.departureInfo
+          span.towards Metro Train
+          span.destination City Loop Line
             
-    div.departure
-      a(class=`leftContainer platform city-loop-line`)
-        span Platform
-        span=99
-      a.departureInfo
-        span Metro Train
-        span City Loop Line
-            
-    div.departure
-      a(class=`leftContainer platform city-loop-line`)
-        span Platform
-        span=99
-      a.departureInfo
-        span Metro Train
-        span City Loop Line
