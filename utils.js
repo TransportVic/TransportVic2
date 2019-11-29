@@ -282,14 +282,14 @@ module.exports = {
     return body
   },
   isStreet: shortName => {
-    return (shortName.endsWith('St') || shortName.endsWith('Rd')
-      || shortName.endsWith('Pde') || shortName.endsWith('Cl')
-      || shortName.endsWith('Dr') || shortName.endsWith('Ave')
-      || shortName.endsWith('Gr') || shortName.endsWith('Ct')
-      || shortName.endsWith('Hwy') || shortName.endsWith('Tce')
-      || shortName.endsWith('Way') || shortName.endsWith('Crst')
-      || shortName.endsWith('Pl') || shortName.endsWith('Bvd')
-      || shortName.endsWith('Cres'))
+    return (shortName.endsWith('Street') || shortName.endsWith('Road')
+      || shortName.endsWith('Parade') || shortName.endsWith('Close')
+      || shortName.endsWith('Drive') || shortName.endsWith('Avenue')
+      || shortName.endsWith('Grove') || shortName.endsWith('Court')
+      || shortName.endsWith('Highway') || shortName.endsWith('Terrace')
+      || shortName.endsWith('Way') || shortName.endsWith('Cresent')
+      || shortName.endsWith('Place') || shortName.endsWith('Boulevard')
+      || shortName.endsWith('Cresent') || shortName.endsWith('Freeway'))
   },
   isCheckpointStop: stopName => stopName.includes('University')
     || stopName.includes('Railway Station')
@@ -311,14 +311,14 @@ module.exports = {
   deg2rad: deg => {
     return deg * (Math.PI/180)
   },
-  titleCase: str => str.replace(/\w\S*/g, txt => {
-    if (txt.length > 2)
+  titleCase: (str, anyLength=false) => str.replace(/\w\S*/g, txt => {
+    if (txt.length > 2 || anyLength)
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
     return txt
-  }).replace(/\S*\w/g, txt => {
-    let punctuation = (txt.match(/(\S*)/)||[,''])[1]
+  }).replace(/\b\w/g, txt => {
+    let punctuation = (txt.match(/(\b)/)||[,''])[1]
     let text = txt.slice(punctuation.length)
-    if (text.length > 2)
+    if (text.length > 2 || anyLength)
       return punctuation + text.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
 
     return txt

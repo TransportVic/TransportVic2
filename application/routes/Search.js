@@ -2,15 +2,17 @@ const express = require('express')
 const router = new express.Router()
 const async = require('async')
 const safeRegex = require('safe-regex')
+const utils = require('../../utils')
 
 router.get('/', (req, res) => {
   res.render('search/index', { placeholder: 'Station, stop or route' })
 })
 
 async function prioritySearch(db, query) {
-  let possibleStopNames = [query]
-  possibleStopNames.push(query.replace(/ (station|statio|stati|stat|sta|st|s)/i, ' railway station'))
-  possibleStopNames.push(query.replace(/ sc/i, ' shopping centre'))
+  let possibleStopNames = [
+    query,
+    utils.adjustStopname(utils.titleCase(query, true).replace('Sc', 'Shopping Centre'))
+  ]
 
   let search = possibleStopNames.map(name => ({stopName: new RegExp(name, 'i')}))
 
