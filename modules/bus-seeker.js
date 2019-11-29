@@ -52,6 +52,7 @@ async function requestTimings() {
     console.log('requesting timings for', stop)
     let [codedSuburb, codedName] = stop.split('/')
     let dbStop = await dbStops.findDocument({ codedName, codedSuburb })
+    if (!dbStop) return console.log('could not find', stop)
 
     setTimeout(async () => {
       await getDepartures(dbStop, database)
