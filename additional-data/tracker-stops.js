@@ -201,5 +201,17 @@ module.exports = [
   'melbourne-city/bourke-street-queen-street',
   'croydon/sturt-street-lacey-street',
   'montrose/mount-dandenong-road',
-  'emerald/emerald-monbulk-road-belgrave-gembrook-road'
+  // 'montrose/mount-dandenong-road-mount-dandenong-tourist-road',
+  'emerald/emerald-monbulk-road-belgrave-gembrook-road',
+  'lilydale/lillydale-lake-entrance-swansea-road',
+  'lilydale/lilydale-post-office-maroondah-highway',
+  'dandenong/dandenong-market',
+  'belgrave-south/wellington-road-belgrave-hallam-road',
+  'belgrave-south/gilmore-court-belgrave-hallam-road',
+  'healesville/don-road-maroondah-highway',
+  'healesville/pollard-parade-robin-parade',
+  'healesville/eleva-road-healesville-kinglake-road',
+  'upwey/upwey-railway-station',
+  'tecoma/tecoma-railway-station',
+  'upwey/upwey-rsl-mast-gully-road'
 ]
