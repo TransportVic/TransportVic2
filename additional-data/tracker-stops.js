@@ -198,5 +198,8 @@ module.exports = [
   'moonee-ponds/moonee-ponds-interchange-mount-alexander-road',
   'cranbourne/cranbourne-park-shopping-centre',
   'frankston/nepean-highway-playne-street',
-  'melbourne-city/bourke-street-queen-street'
+  'melbourne-city/bourke-street-queen-street',
+  'croydon/sturt-street-lacey-street',
+  'montrose/mount-dandenong-road',
+  'emerald/emerald-monbulk-road-belgrave-gembrook-road'
 ]

@@ -14,3 +14,5 @@ L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}.
     minZoom: 2,
     id: 'toner labels'
 }).addTo(map)
+
+L.control.scale().addTo(map)
