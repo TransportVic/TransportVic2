@@ -45,6 +45,7 @@ async function performSearch (db, query) {
   let excludedIDs = prioritySearchResults.map(stop => stop._id)
 
   let queryRegex = new RegExp(query, 'i')
+  let searchRegex = new RegExp(utils.adjustStopname(utils.titleCase(query, true).replace('Sc', 'Shopping Centre')), 'i')
 
   let remainingResults = (await db.getCollection('stops').findDocuments({
     _id: {
@@ -56,6 +57,8 @@ async function performSearch (db, query) {
       suburb: queryRegex
     }, {
       stopName: queryRegex
+    }, {
+      stopName: searchRegex
     }]
   }).limit(15 - prioritySearchResults.length).toArray()).sort((a, b) => a.length - b.length)
 
