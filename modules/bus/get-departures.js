@@ -98,7 +98,11 @@ async function getDeparturesFromPTV(stop, db) {
     let stopGTFSID = stopGTFSIDPair[0],
         isNightBus = stopGTFSIDPair[1]
 
-    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/${isNightBus ? 4 : 2}/stop/${stopGTFSID}?gtfs=true&max_results=5&expand=run&expand=route`)
+    let requestTime = now.clone()
+    if (!(stop.suburb.includes('Melbourne City'))) {
+      requestTime.add(-3, 'minutes')
+    }
+    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/${isNightBus ? 4 : 2}/stop/${stopGTFSID}?gtfs=true&max_results=5&expand=run&expand=route&date_utc=${requestTime.toISOString()}`)
 
     let seenIDs = []
     await async.forEach(departures, async busDeparture => {

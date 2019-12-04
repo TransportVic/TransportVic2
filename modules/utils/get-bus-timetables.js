@@ -43,13 +43,7 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
       }
     },
     routeGTFSID,
-    destination: utils.adjustRawStopName(utils.adjustStopname(destination)),
-    // tripStartHour: {
-    //   $lte: departureHour
-    // },
-    // tripEndHour: {
-    //   $gte: departureHour
-    // }
+    destination: utils.adjustRawStopName(utils.adjustStopname(destination))
   }
 
   // for the coaches
@@ -65,6 +59,10 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
       }
       return hasSeenStop
     })
+  }
+
+  if (!trip) {
+    console.err('Failed to find timetable: ', JSON.stringify(query, null, 1))
   }
   return trip
 }
