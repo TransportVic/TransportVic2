@@ -1,55 +1,55 @@
 {
   "service": {
     "191": {
-      "Anniversary Ave/Stanmore Cres": "Jubilee Estate"
+      "Anniversary Avenue/Stanmore Cresent": "Jubilee Estate"
     },
     "302": {
-      "King St/Lonsdale St": "City (Lonsdale St)"
+      "King Street/Lonsdale Street": "City (Lonsdale Street)"
     },
     "456": {
       "Woodgrove SC": "Melton"
     },
     "605": {
-      "Begonia Rd/Gardenvale Rd": "Gardenvale"
+      "Begonia Road/Gardenvale Road": "Gardenvale"
     },
     "625": {
-      "Riddell Pde/Glenhuntly Rd": "Elsternwick"
+      "Riddell Parade/Glenhuntly Road": "Elsternwick"
     },
     "630": {
-      "St Kilda St/Bent Ave": "Elwood/Bent Ave"
+      "Street Kilda Street/Bent Avenue": "Elwood/Bent Avenue"
     },
     "704": {
-      "Centre Rd/First St": "East Clayton"
+      "Centre Road/First Street": "East Clayton"
     },
     "792": {
-      "Baxter-Tooradin Rd/Pearcedale Rd": "Botanic Ridge/Pattersons Rd"
+      "Baxter-Tooradin Road/Pearcedale Road": "Botanic Ridge/Pattersons Road"
     },
     "796": {
-      "Oroya Gr/Railway Rd": "Clyde"
+      "Oroya Grove/Railway Road": "Clyde"
     },
     "812": {
-      "Boundary Rd/Lower Dandenong Rd": "Brighton"
+      "Boundary Road/Lower Dandenong Road": "Brighton"
     },
     "831": {
-      "Georgina Pl/Earlsfield Dr": "Kingsmere Estate"
+      "Georgina Place/Earlsfield Drive": "Kingsmere Estate"
     },
     "840": {
-      "Gembrook Rd/Main St": "Gembrook"
+      "Gembrook Road/Main Street": "Gembrook"
     },
     "861": {
-      "Hensley Ct/Conran Ave": "Endeavour Hills"
+      "Hensley Court/Conran Avenue": "Endeavour Hills"
     },
     "897": {
-      "Tuckers Rd/Pattersons Rd": "Clyde"
+      "Tuckers Road/Pattersons Road": "Clyde"
     },
     "898": {
-      "Archers Field Dr/Bradford Dr": "Cranbourne East"
+      "Archers Field Drive/Bradford Drive": "Cranbourne East"
     }
   },
   "generic": {
     "Monash University Bus Loop": "Monash Uni Clayton",
-    "Greensborough SC Para Rd/Main St": "Greensborough SC",
+    "Greensborough SC Para Road/Main Street": "Greensborough SC",
     "Doveton Pool In The Park": "Doveton",
-    "Maryrose Cres/Reema Bvd": "Mossgiel Park"
+    "Maryrose Cresent/Reema Boulevard": "Mossgiel Park"
   }
 }

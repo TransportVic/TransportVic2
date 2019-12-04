@@ -32,4 +32,8 @@ router.get('/maps', (req, res) => {
   res.render('maps')
 })
 
+router.get('/track-mapping', (req, res) => {
+  res.render('track-mapping')
+})
+
 module.exports = router

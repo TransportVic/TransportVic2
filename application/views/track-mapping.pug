@@ -1,0 +1,19 @@
+extends layout
+    
+block head
+  title TransportVic - Track Mapping Project
+  link(rel='stylesheet' href='https://unpkg.com/leaflet@1.6.0/dist/leaflet.css')
+  script(src='https://unpkg.com/leaflet@1.6.0/dist/leaflet.js')
+  style.
+    .leaflet-popup-content {
+      user-select: text
+    }
+  
+block title
+  span Track Mapping Project
+
+block scripts
+  script(src='/static/scripts/track-mapping.js')
+  
+block content
+  div#map(style='height: calc(100vh - (4vw + 4vh))')

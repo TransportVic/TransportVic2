@@ -128,5 +128,7 @@ module.exports = {
   "6-wr5": ["Warrnambool Bus Lines"],
   "6-wr6": ["Warrnambool Bus Lines"],
   "6-wr8": ["Warrnambool Bus Lines"],
-  "6-wr9": ["Warrnambool Bus Lines"]
+  "6-wr9": ["Warrnambool Bus Lines"],
+
+  "6-B7o": ["Whitmores Bus Lines"]
 }
