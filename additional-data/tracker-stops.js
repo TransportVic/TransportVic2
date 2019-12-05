@@ -212,5 +212,9 @@ module.exports = [
   'healesville/eleva-road-healesville-kinglake-road',
   'upwey/upwey-railway-station',
   'tecoma/tecoma-railway-station',
-  'upwey/upwey-rsl-mast-gully-road'
+  'upwey/upwey-rsl-mast-gully-road',
+  'narre-warren/maramba-primary-school-maramba-drive',
+  'berwick/berwick-shopping-centre-high-street',
+  'narre-warren/narre-warren-railway-station',
+  'hallam/hallam-railway-station'
 ]
