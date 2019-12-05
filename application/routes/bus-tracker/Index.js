@@ -71,7 +71,7 @@ router.get('/service', async (req, res) => {
     let departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime),
         destinationArrivalTimeMinutes = utils.time24ToMinAftMidnight(destinationArrivalTime)
 
-    return departureTimeMinutes <= minutesPastMidnightNow && minutesPastMidnightNow <= destinationArrivalTimeMinutes
+    return minutesPastMidnightNow <= destinationArrivalTimeMinutes
   })
 
   let tripsToday = (await async.map(activeTripsNow, async rawTrip => {
