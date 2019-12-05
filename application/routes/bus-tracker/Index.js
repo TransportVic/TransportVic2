@@ -57,6 +57,10 @@ router.get('/service', async (req, res) => {
   let {service} = querystring.parse(url.parse(req.url).query)
   if (!service) return res.end()
 
+  if (service.startsWith('/') && service.endsWith('/')) {
+    service = new RegExp(service.slice(1, -1), 'i')
+  }
+
   let rawTripsToday = await busTrips.findDocuments({
     routeNumber: service,
     date
