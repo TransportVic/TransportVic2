@@ -71,7 +71,8 @@ module.exports = class MainServer {
       await busTrips.createIndex({
         routeNumber: 1,
         date: 1,
-      }, {name: 'service operating days index'})
+        smartrakID: 1
+      }, {name: 'service operating days + smartrak id query index'})
 
       callback()
     })

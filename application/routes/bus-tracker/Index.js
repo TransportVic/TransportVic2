@@ -90,6 +90,7 @@ router.get('/service', async (req, res) => {
     routeNumber: service
   })
   let busesByDay = {}
+  let smartrakIDCache = {}
 
   await async.forEach(operationDays, async date => {
     let smartrakIDsByDate = await busTrips.distinct('smartrakID', {
@@ -97,9 +98,16 @@ router.get('/service', async (req, res) => {
       routeNumber: service
     })
     let buses = (await async.map(smartrakIDsByDate, async smartrakID => {
-      let {fleetNumber} = await smartrakIDs.findDocument({
-        smartrakID
-      }) || {}
+      let fleetNumber = smartrakIDCache[smartrakID]
+      if (!fleetNumber) {
+        let lookup = await smartrakIDs.findDocument({
+          smartrakID
+        })
+        if (lookup) {
+          fleetNumber = lookup.fleetNumber
+          smartrakIDCache[smartrakID] = fleetNumber
+        }
+      }
       return fleetNumber ? '#' + fleetNumber : '@' + smartrakID
     })).sort((a, b) => a.replace(/[^\d]/g, '') - b.replace(/[^\d]/g, ''))
 
