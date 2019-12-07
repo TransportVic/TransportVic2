@@ -68,6 +68,10 @@ module.exports = class MainServer {
         date: 1,
         routeNumber: 1
       }, {name: 'service index'})
+      await busTrips.createIndex({
+        routeNumber: 1,
+        date: 1,
+      }, {name: 'service operating days index'})
 
       callback()
     })
