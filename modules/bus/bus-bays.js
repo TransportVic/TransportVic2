@@ -200,7 +200,42 @@ module.exports={
   20942: "Bay 1",
   20945: "Bay 2",
   20944: "Bay 3",
-  20947: "Bay 4"
+  20947: "Bay 4",
+
+  // Newport
+  18740: "Bay 2",
+  18741: "Bay 5",
+  18742: "Bay 3",
+
+  // Geelong
+  30309: "Bay 1",
+  3252: "Bay 2",
+  20314: "Bay 2",
+  45539: "Bay 4",
+  45540: "Bay 5",
+  45541: "Bay 6",
+  30391: "Bay 11",
+
+  // Bendigo
+  16238: "Bay 1",
+  40713: "Bay 4",
+  36924: "Bay 6",
+  40715: "Bay 7",
+  40716: "Bay 8",
+  40644: "Bay 9",
+  40643: "Bay 10",
+  40717: "Bay 11",
+
+  // Heidelberg
+  21469: "Bay 1",
+  21470: "Bay 2",
+
+  // Tarneit
+  50255: "Bay 1",
+  50256: "Bay 2",
+  50257: "Bay 3",
+  50258: "Bay 4",
+  50259: "Bay 5",
 
   // check ringwood 901 bay, mitcham 738 bay
   // Next up:
@@ -212,18 +247,18 @@ module.exports={
   // Box Hill
   // Glen Waverley
   // Blackburn (ew)
-  // Geelong
+  // Geelong .
   // Southland
   // Epping
-  // Footscray
+  // Footscray .
   // Fountain Gate SC
   // South Morang
   // Mernda
   // Boronia
   // Reservoir (how tho)
-  // Bendigo
+  // Bendigo .
   // Craigieburn
-  // Tarneit apparently has bus bays
+  // Tarneit apparently has bus bays .
   // Yarraville? don't think I saw bus numbers
   // Sunbury maybe
   // Melton

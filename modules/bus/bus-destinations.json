@@ -1,5 +1,21 @@
 {
   "service": {
+    "5": {
+      "Windmill Street/Waratah Road": "Huntly",
+      "Boronia Road/Midland Highway": "Huntly"
+    },
+    "54": {
+      "Beckhams Road/Carolyn Way": "Maiden Gully"
+    },
+    "60": {
+      "Piper Lane": "East Bendigo"
+    },
+    "64": {
+      "Oak Street/High Street": "Golden Square"
+    },
+    "70": {
+      "Strathfieldsaye Road/Blucher Street": "Strathfieldaye"
+    },
     "191": {
       "Anniversary Avenue/Stanmore Cresent": "Jubilee Estate"
     },
@@ -48,8 +64,13 @@
   },
   "generic": {
     "Monash University Bus Loop": "Monash Uni Clayton",
-    "Greensborough SC Para Road/Main Street": "Greensborough SC",
+    "Greensborough SC Para Road": "Greensborough SC",
     "Doveton Pool In The Park": "Doveton",
-    "Maryrose Cresent/Reema Boulevard": "Mossgiel Park"
+    "Maryrose Cresent/Reema Boulevard": "Mossgiel Park",
+    "Bendigo Health/Arnold Street": "Bendigo Hospital",
+    "Information Centre/Godfrey Street": "Boort",
+    "Eaglehawk Road/Victoria Street": "Eaglehawk",
+    "Lansell Plaza SC": "Kangaroo Flat",
+    "Bendigo Retirement Village": "Spring Gully"
   }
 }
