@@ -216,5 +216,6 @@ module.exports = [
   'narre-warren/maramba-primary-school-maramba-drive',
   'berwick/berwick-shopping-centre-high-street',
   'narre-warren/narre-warren-railway-station',
-  'hallam/hallam-railway-station'
+  'hallam/hallam-railway-station',
+  'spring-gully/bendigo-retirement-village'
 ]
