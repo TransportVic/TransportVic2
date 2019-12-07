@@ -57,8 +57,9 @@ router.get('/service', async (req, res) => {
   let {service} = querystring.parse(url.parse(req.url).query)
   if (!service) return res.end()
 
-  if (service.startsWith('/') && service.endsWith('/')) {
-    service = new RegExp(service.slice(1, -1), 'i')
+  let originalService = service
+  service = {
+    $in: service.split('|')
   }
 
   let rawTripsToday = await busTrips.findDocuments({
@@ -105,7 +106,7 @@ router.get('/service', async (req, res) => {
     busesByDay[date] = buses
   })
 
-  res.render('tracker/service', {tripsToday, busesByDay, date, service})
+  res.render('tracker/service', {tripsToday, busesByDay, date, service: originalService})
 })
 
 module.exports = router
