@@ -8,25 +8,27 @@ const querystring = require('querystring')
 const operators = {
   "Ventura Bus Lines": "V",
   "CDC Melbourne": {
-    $in: ["CO", "CS", "CW", "CT"]
+    $in: ["CO", "CS", "CW"]
   },
+  "Tullamarine Bus Lines": "CT",
   "CDC Geelong": "CG",
   "CDC Ballarat": "CB",
   "Transdev Melbourne": "T",
   "Sita Bus Lines": "S",
   "Dysons": "D",
   "Cranbourne Transit": "CR",
-  "Sunbury Bus Lines": "SB",
+  "Sunbury Bus Service": "SB",
   "La Trobe Valley Bus Lines": "LT",
   "McHarrys Bus Lines": "MH",
-  "McKenzie's Tourist Services": "MK",
+  "McKenzies Tourist Service": "MK",
   "Martyrs Bus Lines": "MT",
-  "Ryan Brothers Bus Service": "RB",
+  "Ryan Bros Bus Service": "RB",
   "Moreland Bus Lines": "ML",
   "Moonee Valley Bus Lines": "MV",
   "Kastoia Bus Lines": "K",
   "Broadmeadows Bus Service": "B",
-  "Retired": "RR"
+  "Retired": "RR",
+  "Panorama": "P"
 }
 
 router.get('/', (req, res) => {
