@@ -10,4 +10,4 @@ block content
   h1 Unknown buses on track
   for trip in activeTripsNow
     div.trip
-      span #{trip.smartrakID}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]}
+      span #{trip.smartrakID}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
