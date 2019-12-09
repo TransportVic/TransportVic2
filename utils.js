@@ -167,6 +167,7 @@ module.exports = {
     .replace(/Gra(\b)/g, 'Grange$1')
     .replace(/Uni(\b)/g, 'University$1')
     .replace(/Sec Col(\b)/g, 'Secondary College$1')
+    .replace(/SC Senior Campus(\b)/g, 'Secondary College Senior Campus$1')
     .replace(/([\w ]+) - ([\w ]+) Road/g, '$1-$2 Road')
     .replace(/St(\b)/, 'St.$1')
     .replace('St..', 'St. ')

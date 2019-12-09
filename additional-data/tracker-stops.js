@@ -178,7 +178,6 @@ module.exports = [
   'epping/epping-railway-station',
   'epping/epping-plaza-shopping-centre',
   'mernda/mernda-village-shopping-centre',
-  'south-morang/south-morang-railway-station',
   'preston/preston-railway-station',
   'sunshine-north/albion-railway-station',
   'williamstown/north-williamstown-railway-station',
@@ -217,5 +216,19 @@ module.exports = [
   'berwick/berwick-shopping-centre-high-street',
   'narre-warren/narre-warren-railway-station',
   'hallam/hallam-railway-station',
-  'spring-gully/bendigo-retirement-village'
+  'spring-gully/bendigo-retirement-village',
+  'northcote/dennis-railway-station',
+  'reservoir/reservoir-shopping-centre-broadway',
+  'fairfield/fairfield-railway-station',
+  'doreen/laurimar-shopping-centre',
+  'south-morang/hawkstowe-railway-station',
+  'epping/mill-park-shopping-centre-senior-campus', // should be sec col
+  'bundoora/university-hill',
+  'bundoora/rmit-bundoora-campus-west-plenty-road',
+  'bundoora/rmit-bundoora-campus-east-plenty-road',
+  'mill-park/rmit-bundoora-campus-west-mckimmies-road',
+  'mill-park/mill-park-stables-shopping-centre',
+  'ringwood/burnt-bridge-shopping-centre-maroondah-highway',
+  'lilydale/lilydale-railway-station',
+  'mount-waverley/mount-waverley-railway-station'
 ]
