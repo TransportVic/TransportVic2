@@ -49,18 +49,18 @@ $.ready(() => {
   })
 
   let operators = {
-    "V": "Ventura",
+    "V": "Ventura Bus Lines",
     "CO": "CDC Oakleigh",
     "CS": "CDC Sunshine",
     "CW": "CDC Wyndham",
     "CT": "CDC Tullamarine",
     "CG": "CDC Geelong",
     "CB": "CDC Ballarat",
-    "T": "Transdev",
-    "S": "Sita",
+    "T": "Transdev Melbourne",
+    "S": "Sita Bus Lines",
     "D": "Dysons",
     "CR": "Cranbourne Transit",
-    "SB": "Sunbury",
+    "SB": "Sunbury Bus Lines",
     "LT": "La Trobe Valley Bus Lines",
     "MH": "McHarrys Bus Lines",
     "MK": "McKenzie's Tourist Services",
@@ -69,7 +69,8 @@ $.ready(() => {
     "ML": "Moreland Bus Lines",
     "MV": "Moonee Valley Bus Lines",
     "K": "Kastoia Bus Lines",
-    "B": "Broadmeadows Bus Service"
+    "B": "Broadmeadows Bus Service",
+    "RR": "Retired"
   }
 
   let operatorSizes = {

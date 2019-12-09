@@ -229,8 +229,6 @@ module.exports = [
   'mill-park/rmit-bundoora-campus-west-mckimmies-road',
   'mill-park/mill-park-stables-shopping-centre',
   'ringwood/burnt-bridge-shopping-centre-maroondah-highway',
-  'lilydale/lilydale-railway-station',
-  'mount-waverley/mount-waverley-railway-station',
   'camberwell/camberwell-shopping-centre',
   'bayswater-north/canterbury-gardens-shopping-centre',
   'canterbury/canterbury-railway-station',

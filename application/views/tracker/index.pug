@@ -17,6 +17,9 @@ block content
   form(action='/tracker2/service' method='get')
     label search by service #
     input(name='service')
-  //- form(action='/tracker/model' method='get')
-  //-   label search by model
-  //-   input(name='model')
+  form(action='/tracker2/unknown' method='get')
+    label search by operator
+    select(name='operator')
+      for operator in operators
+        option(value=operator)=operator
+    input(type='submit')

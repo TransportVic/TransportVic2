@@ -1,0 +1,13 @@
+extends ../layout
+
+block head
+  title TransportVic - Tracker/Unknown
+  
+block title
+  span Unknown buses
+
+block content
+  h1 Unknown buses on track
+  for trip in activeTripsNow
+    div.trip
+      span #{trip.smartrakID}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]}

@@ -5,15 +5,40 @@ const router = new express.Router()
 const url = require('url')
 const querystring = require('querystring')
 
+const operators = {
+  "Ventura Bus Lines": "V",
+  "CDC Melbourne": {
+    $in: ["CO", "CS", "CW", "CT"]
+  },
+  "CDC Geelong": "CG",
+  "CDC Ballarat": "CB",
+  "Transdev Melbourne": "T",
+  "Sita Bus Lines": "S",
+  "Dysons": "D",
+  "Cranbourne Transit": "CR",
+  "Sunbury Bus Lines": "SB",
+  "La Trobe Valley Bus Lines": "LT",
+  "McHarrys Bus Lines": "MH",
+  "McKenzie's Tourist Services": "MK",
+  "Martyrs Bus Lines": "MT",
+  "Ryan Brothers Bus Service": "RB",
+  "Moreland Bus Lines": "ML",
+  "Moonee Valley Bus Lines": "MV",
+  "Kastoia Bus Lines": "K",
+  "Broadmeadows Bus Service": "B",
+  "Retired": "RR"
+}
+
 router.get('/', (req, res) => {
-  res.render('tracker/index')
+  res.render('tracker/index', {
+    operators: Object.keys(operators)
+  })
 })
 
 router.get('/bus', async (req, res) => {
   let {db} = res
   let busTrips = db.getCollection('bus trips')
   let smartrakIDs = db.getCollection('smartrak ids')
-  let gtfsTimetables = db.getCollection('gtfs timetables')
   let date = utils.getYYYYMMDDNow()
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -50,7 +75,6 @@ router.get('/service', async (req, res) => {
   let {db} = res
   let busTrips = db.getCollection('bus trips')
   let smartrakIDs = db.getCollection('smartrak ids')
-  let gtfsTimetables = db.getCollection('gtfs timetables')
   let date = utils.getYYYYMMDDNow()
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -115,6 +139,47 @@ router.get('/service', async (req, res) => {
   })
 
   res.render('tracker/service', {tripsToday, busesByDay, date, service: originalService})
+})
+
+router.get('/unknown', async (req, res) => {
+  let {db} = res
+  let busTrips = db.getCollection('bus trips')
+  let smartrakIDs = db.getCollection('smartrak ids')
+  let routes = db.getCollection('routes')
+  let date = utils.getYYYYMMDDNow()
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let {operator} = querystring.parse(url.parse(req.url).query)
+  if (!operator) return res.end()
+
+  let operatorCode = operators[operator]
+  let operatorBuses = await smartrakIDs.distinct('smartrakID', {
+    operator: operatorCode
+  })
+
+  let operatorServices = await routes.distinct('routeNumber', {
+    operators: operator
+  })
+
+  let rawTripsToday = await busTrips.findDocuments({
+    date,
+    routeNumber: {
+      $in: operatorServices
+    },
+    smartrakID: {
+      $not: {
+        $in: operatorBuses
+      }
+    }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
+  let activeTripsNow = rawTripsToday.filter(trip => {
+    let destinationArrivalTimeMinutes = utils.time24ToMinAftMidnight(trip.destinationArrivalTime)
+
+    return minutesPastMidnightNow <= destinationArrivalTimeMinutes
+  })
+
+  res.render('tracker/unknown', {activeTripsNow})
 })
 
 module.exports = router
