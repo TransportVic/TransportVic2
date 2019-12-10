@@ -19,24 +19,25 @@ router.post('/load', async (req, res) => {
 
     let parts
 
-    if (!(smartrakID && fleetNumber && (parts = fleetNumber.match(/^([A-Z]{1,2})\d+$/)))) {
+    if (!smartrakID || !fleetNumber || !(parts = fleetNumber.match(/^([A-Z]{1,2})\d+$/))) {
       if (fleetNumber === '-') {
         await smartrakIDs.deleteDocument({ smartrakID })
         await smartrakIDs.deleteDocument({ fleetNumber: line[0] })
-      } else {
+      } else if (fleetNumber && !(parts = fleetNumber.match(/^(MK)(\d\d[A-Z][A-Z])$/))) {
         failedMessage += `Line ${i + 1} ${line.join(' ')} failed: did not match format\n`
+        return
       }
-    } else {
-      let operator = parts[1]
-      try {
-        await smartrakIDs.replaceDocument({
-          smartrakID
-        }, {
-          smartrakID, fleetNumber, operator
-        }, { upsert: true })
-      } catch (e) {
-        failedMessage += `Line ${i + 1} ${line.join(' ')} failed: ${fleetNumber} already exists\n`
-      }
+    }
+
+    let operator = parts[1]
+    try {
+      await smartrakIDs.replaceDocument({
+        smartrakID
+      }, {
+        smartrakID, fleetNumber, operator
+      }, { upsert: true })
+    } catch (e) {
+      failedMessage += `Line ${i + 1} ${line.join(' ')} failed: ${fleetNumber} already exists\n`
     }
   })
 
