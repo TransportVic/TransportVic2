@@ -247,5 +247,13 @@ module.exports = [
   'eltham/eltham-village-shopping-centre-main-road',
   'frankston/naranga-cresent-karingal-drive',
   'frankston/karingal-hub-shopping-centre-cranbourne-road',
-  'somerville/somerville-plaza-shopping-centre-eramosa-road'
+  'somerville/somerville-plaza-shopping-centre-eramosa-road',
+  'sunbury/pasley-street-gap-road',
+  'sunbury/evans-street-macedon-street',
+  'sunbury/sunbury-recreation-reserve-riddell-road',
+  'sunbury/jackson-street-brook-street',
+  'sunbury/st-annes-catholic-school',
+  'churchill/federation-university-northways-road',
+  'morwell/mid-valley-shopping-centre-mid-valley-drive',
+  'churchill/churchill-shopping-centre-georgina-place'
 ]

@@ -61,17 +61,17 @@ $.ready(() => {
     "D": "Dysons",
     "CR": "Cranbourne Transit",
     "SB": "Sunbury Bus Service",
-    "LT": "La Trobe Valley Bus Lines",
+    "LT": "Latrobe Valley Bus Lines",
     "MH": "McHarrys Bus Lines",
     "MK": "McKenzies Tourist Service",
-    "MT": "Martyrs Bus Lines",
+    "MT": "Martyrs Bus Service",
     "RB": "Ryan Bros Bus Service",
     "ML": "Moreland Bus Lines",
     "MV": "Moonee Valley Bus Lines",
-    "K": "Kastoia Bus Lines",
+    "K": "Kastoria Bus Lines",
     "B": "Broadmeadows Bus Service",
     "RR": "Retired",
-    "P": "Panorama"
+    "P": "Panorama Coaches"
   }
 
   let operatorSizes = {

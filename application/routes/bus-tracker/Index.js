@@ -18,17 +18,16 @@ const operators = {
   "Dysons": "D",
   "Cranbourne Transit": "CR",
   "Sunbury Bus Service": "SB",
-  "La Trobe Valley Bus Lines": "LT",
+  "Latrobe Valley Bus Lines": "LT",
   "McHarrys Bus Lines": "MH",
   "McKenzies Tourist Service": "MK",
-  "Martyrs Bus Lines": "MT",
+  "Martyrs Bus Service": "MT",
   "Ryan Bros Bus Service": "RB",
   "Moreland Bus Lines": "ML",
   "Moonee Valley Bus Lines": "MV",
-  "Kastoia Bus Lines": "K",
+  "Kastoria Bus Lines": "K",
   "Broadmeadows Bus Service": "B",
-  "Retired": "RR",
-  "Panorama": "P"
+  "Panorama Coaches": "P"
 }
 
 router.get('/', (req, res) => {
@@ -159,13 +158,13 @@ router.get('/unknown', async (req, res) => {
     operator: operatorCode
   })
 
-  let operatorServices = await routes.distinct('routeNumber', {
+  let operatorServices = await routes.distinct('routeGTFSID', {
     operators: operator
   })
 
   let rawTripsToday = await busTrips.findDocuments({
     date,
-    routeNumber: {
+    routeGTFSID: {
       $in: operatorServices
     },
     smartrakID: {
