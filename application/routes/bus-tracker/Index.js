@@ -27,7 +27,8 @@ const operators = {
   "Moonee Valley Bus Lines": "MV",
   "Kastoria Bus Lines": "K",
   "Broadmeadows Bus Service": "B",
-  "Panorama Coaches": "P"
+  "Panorama Coaches": "P",
+  "Christians Bus Co": "CC"
 }
 
 router.get('/', (req, res) => {
@@ -154,9 +155,7 @@ router.get('/unknown', async (req, res) => {
   if (!operator) return res.end()
 
   let operatorCode = operators[operator]
-  let operatorBuses = await smartrakIDs.distinct('smartrakID', {
-    operator: operatorCode
-  })
+  let allBuses = await smartrakIDs.distinct('smartrakID')
 
   let operatorServices = await routes.distinct('routeGTFSID', {
     operators: operator
@@ -169,7 +168,7 @@ router.get('/unknown', async (req, res) => {
     },
     smartrakID: {
       $not: {
-        $in: operatorBuses
+        $in: allBuses
       }
     }
   }).sort({departureTime: 1, origin: 1}).toArray()

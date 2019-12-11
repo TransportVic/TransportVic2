@@ -71,7 +71,8 @@ $.ready(() => {
     "K": "Kastoria Bus Lines",
     "B": "Broadmeadows Bus Service",
     "RR": "Retired",
-    "P": "Panorama Coaches"
+    "P": "Panorama Coaches",
+    "CC": "Christians Bus Co"
   }
 
   let operatorSizes = {

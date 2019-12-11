@@ -12,6 +12,7 @@ module.exports = {
   "4-45S": ["Sita Bus Lines"], // 456
   "4-4X9": ["Sita Bus Lines"], // 459
   "4-462": ["Kastoria Bus Lines"],
+  "4-525": ["Dysons"],
   "4-552": ["Dysons"],
   "4-556": ["Dysons"],
   "4-570": ["Dysons"],
@@ -23,6 +24,9 @@ module.exports = {
   "4-834": ["Ventura Bus Lines"],
   "4-900": ["CDC Melbourne", "Ventura Bus Lines"],
   "4-903": ["Transdev Melbourne"],
+
+  "4-SGM": ["Ventura Bus Lines"],
+  "4-SLD": ["Ventura Bus Lines"],
 
   "6-858": ["Dysons (Wangaratta)"], // Wangaratta - Myrtleford
   "6-LGs": ["Dysons (Kyneton)"], //  Lancefield - Gisborne
