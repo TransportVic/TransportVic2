@@ -72,7 +72,7 @@ $.ready(() => {
     "B": "Broadmeadows Bus Service",
     "RR": "Retired",
     "P": "Panorama Coaches",
-    "CC": "Christians Bus Co"
+    "CC": "Christians Bus Co (Bendigo)"
   }
 
   let operatorSizes = {

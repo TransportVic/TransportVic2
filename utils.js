@@ -125,6 +125,17 @@ module.exports = {
 
     name = name.replace('Schhol', 'School')
     .replace('Chrisholm Institute', 'Chisholm Institute')
+    .replace('Villag/', 'Village/')
+    .replace('MacISAAC/', 'MacIsaac/')
+    .replace('VUSC', 'Victoria University Secondary College')
+    .replace(/Freeburgh \w*? ?Hall/, 'Freeburgh Community Hall')
+
+    if (name === 'Dalgetty St/Holding St') {
+      name = 'Dalgetty Rd/Holding St'
+    }
+    if (name === 'Heathcliff Lane/Royal Tce') {
+      name = 'Heathcliffe Lane/Royal Tce'
+    }
     name = module.exports.expandStopName(name)
 
     return name
@@ -149,6 +160,7 @@ module.exports = {
     .replace(/Pl(\b)/g, 'Place$1')
     .replace(/Bl?vd(\b)/g, 'Boulevard$1')
     .replace(/Cres(\b)/g, 'Cresent$1')
+    .replace(/Crse(\b)/g, 'Cresent$1')
     .replace(/Ctr(\b)/g, 'Centre$1')
     .replace(/Lt(\b)/g, 'Little$1')
     .replace(/Lwr(\b)/g, 'Lower$1')
@@ -165,7 +177,16 @@ module.exports = {
     .replace(/Con(\b)/g, 'Concourse$1')
     .replace(/Ch(\b)/g, 'Chase$1')
     .replace(/Gra(\b)/g, 'Grange$1')
+    .replace(/Grn(\b)/g, 'Green$1')
+    .replace(/Gtwy(\b)/g, 'Gateway$1')
     .replace(/Uni(\b)/g, 'University$1')
+    .replace(/Plza(\b)/g, 'Plaza$1')
+    .replace(/Psge(\b)/g, 'Passage$1')
+    .replace(/Rdge(\b)/g, 'Ridge$1')
+    .replace(/Strp(\b)/g, 'Strip$1')
+    .replace(/Tafe(\b)/g, 'TAFE$1')
+    .replace(/Trk(\b)/g, 'Track$1')
+    .replace(/Vsta(\b)/g, 'Vista$1')
     .replace(/Sec Col(\b)/g, 'Secondary College$1')
     .replace(/SC Senior Campus(\b)/g, 'Secondary College Senior Campus$1')
     .replace(/([\w ]+) - ([\w ]+) Road/g, '$1-$2 Road')

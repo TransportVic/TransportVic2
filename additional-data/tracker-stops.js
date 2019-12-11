@@ -222,7 +222,7 @@ module.exports = [
   'fairfield/fairfield-railway-station',
   'doreen/laurimar-shopping-centre',
   'south-morang/hawkstowe-railway-station',
-  'epping/mill-park-shopping-centre-senior-campus', // should be sec col
+  'epping/mill-park-secondary-college-senior-campus',
   'bundoora/university-hill',
   'bundoora/rmit-bundoora-campus-west-plenty-road',
   'bundoora/rmit-bundoora-campus-east-plenty-road',
