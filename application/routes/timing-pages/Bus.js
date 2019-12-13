@@ -88,7 +88,8 @@ router.get('/:suburb/:stopName', async (req, res) => {
 
   res.render('timings/grouped', {
     services, groupedDepartures, stop,
-    classGen: departure => departure.codedOperator
+    classGen: departure => departure.codedOperator,
+    currentMode: 'bus'
   })
 })
 

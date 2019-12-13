@@ -1,3 +1,53 @@
+#modeSwitch {
+  width: 100vw;
+  display: flex;
+  height: calc(4vw + 4vh);
+  flex-direction: row;
+}
+
+.modeSwitchType.inactive {
+  opacity: 0.6;
+}
+
+.modeSwitchType.metro-train {
+  background-color: #0570c3;
+}
+
+.modeSwitchType.tram {
+  background-color: #20b734;
+}
+
+.modeSwitchType.regional-coach {
+  background-color: #9582b5;
+}
+
+.modeSwitchType.regional-train {
+  background-color: #6b4d9e;
+}
+
+.modeSwitchType.bus {
+  background-color: #d7832c;
+}
+
+.modeSwitchType img {
+  height: calc(2vw + 2vh);
+}
+
+@media (max-width: 500px) {
+  .modeSwitchType span {
+    display: none;
+  }
+}
+
+.modeSwitchType {
+  height: calc(4vw + 4vh);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 div.departure {
   background-color: #2a2a2a;
 

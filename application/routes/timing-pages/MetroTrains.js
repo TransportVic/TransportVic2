@@ -60,7 +60,7 @@ router.get('/:stationName', async (req, res) => {
     return departure
   })
 
-  res.render('timings/metro-trains', { departures, station, placeholder: "Destination or platform" })
+  res.render('timings/metro-trains', { departures, station, placeholder: 'Destination or platform' })
 })
 
 module.exports = router

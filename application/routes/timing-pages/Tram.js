@@ -82,7 +82,8 @@ router.get('/:suburb/:stopName', async (req, res) => {
   //todo check 3a
   res.render('timings/grouped', {
     services, groupedDepartures, stop,
-    classGen: departure => `tram-${departure.routeNumber}`
+    classGen: departure => `tram-${departure.routeNumber}`,
+    currentMode: 'tram'
   })
 })
 
