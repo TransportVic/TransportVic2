@@ -39,4 +39,19 @@ $.ajax({
       })
     }
   }).addTo(map)
+
+  $.ajax({
+    url: '/static/misc/station-platforms.json',
+    method: 'GET'
+  }, (err, status, data) => {
+    L.geoJSON(data.features, {
+      onEachFeature: (feature, layer) => {
+        layer.on('click', function (e) {
+          layer.bindPopup(JSON.stringify(feature.properties, null, 2))
+          this.openPopup()
+        })
+      }
+    }).addTo(map)
+  })
+
 })

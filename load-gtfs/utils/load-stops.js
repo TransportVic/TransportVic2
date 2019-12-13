@@ -80,9 +80,9 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
 
   const allStops = stopsData.map(values => {
     let matchedStop = lookupTable[values[0]]
-    let shouldOverride = !!matchedStop
+    let useGTFSData = !!matchedStop
 
-    if (!shouldOverride) matchedStop = {
+    if (!useGTFSData) matchedStop = {
       stopName: values[1],
       mykiZones: []
     }
@@ -115,12 +115,17 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
       fullStopName = fullStopName.replace(/^(D?[\d]+[A-Za-z]?)-/, '')
     }
 
+    let suburbOverride = null
+    if (fullStopName === 'Ascot Street/Sturt Street') {
+      suburbOverride = 'Ballarat Central'
+    }
+
     return {
       originalName, // used for merging purposes - dandenong (railway) station/foster station for eg
       fullStopName,
       stopName,
       stopGTFSID: parseInt(values[0]),
-      suburb: shouldOverride ? stopNameData[2] : GTFSStopNameData[2],
+      suburb: suburbOverride || (useGTFSData ? stopNameData[2] : GTFSStopNameData[2]),
       codedName: utils.encodeName(stopName),
       location: [values[3], values[2]].map(parseFloat),
       mykiZones,

@@ -255,5 +255,9 @@ module.exports = [
   'sunbury/st-annes-catholic-school',
   'churchill/federation-university-northways-road',
   'morwell/mid-valley-shopping-centre-mid-valley-drive',
-  'churchill/churchill-shopping-centre-georgina-place'
+  'churchill/churchill-shopping-centre-georgina-place',
+  'vermont-south/vermont-south-tram-terminus-burwood-highway',
+  'burwood-east/burwood-highway-blackburn-road',
+  'nunawading/nunawading-railway-station',
+  'lilydale/lillydale-lake-entrance-swansea-road'
 ]

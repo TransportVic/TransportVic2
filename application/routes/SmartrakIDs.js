@@ -23,6 +23,7 @@ router.post('/load', async (req, res) => {
       if (fleetNumber === '-') {
         await smartrakIDs.deleteDocument({ smartrakID })
         await smartrakIDs.deleteDocument({ fleetNumber: line[0] })
+        return
       } else if (fleetNumber && !(parts = fleetNumber.match(/^(MK)(\d\d[A-Z][A-Z])$/))) {
         failedMessage += `Line ${i + 1} ${line.join(' ')} failed: did not match format\n`
         return
