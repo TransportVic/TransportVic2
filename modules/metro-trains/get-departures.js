@@ -75,7 +75,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     const run = runs[departure.run_id]
     let routeID = departure.route_id
     let routeName = routes[routeID].route_name
-    if (routeName === 'Showgrounds - Flemington Racecourse') routeName = 'Showgrounds/Flemington'
+    if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
     let platform = departure.platform_number
     let runDestination = run.destination_name
     let cancelled = run.status === 'cancelled'

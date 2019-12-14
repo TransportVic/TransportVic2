@@ -604,11 +604,11 @@ div.departure:nth-child(even) .sandringham-line {
   background-color: #d639cc;
 }
 
-.showgrounds-flemington-racecourse-line {
+.showgrounds-flemington-line {
   background-color: #ce0058;
 }
 
-div.departure:nth-child(even) .showgrounds-flemington-racecourse-line {
+div.departure:nth-child(even) .showgrounds-flemington-line {
   background-color: #ba0352;
 }
 
