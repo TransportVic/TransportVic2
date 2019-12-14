@@ -50,11 +50,11 @@ div.departure:nth-child(even) .dysons {
   background-color: #259027;
 }
 
-.panorama {
+.panorama-coaches {
   background-color: #d00071;
 }
 
-div.departure:nth-child(even) .panorama {
+div.departure:nth-child(even) .panorama-coaches {
   background-color: #930050;
 }
 
@@ -210,12 +210,12 @@ div.departure:nth-child(even) .mitchell-transit {
   background-color: #192a49;
 }
 
-.mcharrys {
+.mcharrys-bus-lines {
   background-color: #d50d0d;
   color: #d7d7d7 !important;
 }
 
-div.departure:nth-child(even) .mcharrys {
+div.departure:nth-child(even) .mcharrys-bus-lines {
   background-color: #b51010;
   color: #d7d7d7 !important;
 }
@@ -430,14 +430,13 @@ div.departure:nth-child(even) .henty-highway-coach {
   background-color: #4879a0;
 }
 
-/* TODO: find colours */
-/* .boyles-bus-services {
-  background-color: #518ab7;
+.falls-creek-coach-service {
+  background-color: #2c99cc;
 }
 
-div.departure:nth-child(even) .boyles-bus-services {
-  background-color: #4879a0;
-} */
+div.departure:nth-child(even) .falls-creek-coach-service {
+  background-color: #2885af;
+}
 
 .organ-s-coaches {
   background-color: #75d4b1;
@@ -605,11 +604,11 @@ div.departure:nth-child(even) .sandringham-line {
   background-color: #d639cc;
 }
 
-.showgrounds-flemington-line {
+.showgrounds-flemington-racecourse-line {
   background-color: #ce0058;
 }
 
-div.departure:nth-child(even) .showgrounds-flemington-line {
+div.departure:nth-child(even) .showgrounds-flemington-racecourse-line {
   background-color: #ba0352;
 }
 

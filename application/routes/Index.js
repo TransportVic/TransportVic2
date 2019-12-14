@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
 })
 
 router.get('/colours', async (req, res) => {
-  let operators = await res.db.getCollection('routes').distinct('operators')
+  let operators = (await res.db.getCollection('routes').distinct('operators')).sort()
   let tramRoutes = await res.db.getCollection('routes').distinct('routeNumber', { mode: 'tram' })
   let trainLines = await res.db.getCollection('routes').distinct('routeName', { mode: 'metro train' })
 

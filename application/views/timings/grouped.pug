@@ -2,6 +2,9 @@ extends ../layout
 
 block head
   title=`TransportVic - ${stop.stopName}`
+  link(rel='preload' href='/static/images/clear-icons/bus.svg')
+  link(rel='preload' href='/static/images/clear-icons/metro.svg')
+  link(rel='preload' href='/static/images/clear-icons/vline.svg')
 
 block title
   span=stop.stopName

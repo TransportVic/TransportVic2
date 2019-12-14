@@ -2,6 +2,9 @@ extends ../textbar-layout
 
 block head
   title=`TransportVic - ${station.stopName.slice(0, -16)}`
+  link(rel='preload' href='/static/images/clear-icons/bus.svg')
+  link(rel='preload' href='/static/images/clear-icons/metro.svg')
+  link(rel='preload' href='/static/images/clear-icons/vline.svg')
 
 block title
   span=station.stopName
