@@ -14,15 +14,15 @@ async function prioritySearch(db, query) {
     utils.adjustStopname(utils.titleCase(query, true).replace('Sc', 'Shopping Centre'))
   ]
 
-  let search = possibleStopNames.map(name => ({stopName: new RegExp(name, 'i')}))
+  let search = possibleStopNames.map(name => ({mergeName: new RegExp(name, 'i')}))
 
   let priorityStopsByName = (await db.getCollection('stops').findDocuments({
     $or: search
   }).toArray()).filter(stop => {
-    return stop.stopName.includes('Shopping Centre') || stop.stopName.includes('Railway Station')
-      || stop.stopName.includes('University')
-  }).sort((a, b) => a.length - b.length)
-  let nquery = parseInt(query)
+    return stop.mergeName.includes('Shopping Centre') || stop.mergeName.includes('Railway Station')
+      || stop.mergeName.includes('University')
+  }).sort((a, b) => a.stopName.length - b.stopName.length)
+  let nquery = query.match(/^\d+$/) ? parseInt(query) : -1
   let gtfsMatch = await db.getCollection('stops').findDocuments({
     'bays.stopGTFSID': nquery
   }).toArray()
@@ -33,7 +33,7 @@ async function prioritySearch(db, query) {
     }, {
       'bays.stopNumber': query.replace('#', '')
     }]
-  }).toArray()).sort((a, b) => a.length - b.length)
+  }).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
 
   return gtfsMatch.concat(numericalMatchStops).concat(priorityStopsByName)
 }

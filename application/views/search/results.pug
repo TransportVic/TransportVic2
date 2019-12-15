@@ -23,7 +23,7 @@ for regionalCoachStop in results.filter(stop => stop.bays.filter(bay => bay.mode
       span='Regional coach stop in ' + regionalCoachStop.suburb[0]
       span=regionalCoachStop.stopName
       
-for tramStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'tram').length).slice(0, 3)
+for tramStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'tram').length).slice(0, 5)
   a(href=`/tram/timings/${tramStop.codedSuburb[0]}/${tramStop.codedName}`).tramStop.result
     div.leftContainer
       img(src='/static/images/clear-icons/bus.svg')
@@ -38,7 +38,7 @@ for tramStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'tra
         displayName += ` ${stopNumbers}`
       span=displayName
       
-for busStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'bus').length).slice(0, 3)
+for busStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'bus').length).slice(0, 10)
   a(href=`/bus/timings/${busStop.codedSuburb[0]}/${busStop.codedName}`).busStop.result
     div.leftContainer
       img(src='/static/images/clear-icons/bus.svg')
