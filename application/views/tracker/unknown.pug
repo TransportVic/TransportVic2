@@ -11,3 +11,7 @@ block content
   for trip in activeTripsNow
     div.trip
       span #{trip.smartrakID}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
+
+  h2 All time:
+  for smartrakID in Object.keys(busSummary)
+    p #{smartrakID}: #{Object.keys(busSummary[smartrakID]).join(', ')}

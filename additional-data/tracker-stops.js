@@ -264,5 +264,7 @@ module.exports = [
   'strathfieldsaye/ryalls-lane-waterford-drive',
   'strathfieldsaye/sinclairs-road-junortoun-road',
   'drouin/drouin-railway-station',
-  'drouin-east/lardners-track-princes-way'
+  'drouin-east/lardners-track-princes-way',
+  'wheelers-hill/wheelers-hill-shopping-centre-jells-road',
+  'glen-waverley/medina-road-high-street-road'
 ]

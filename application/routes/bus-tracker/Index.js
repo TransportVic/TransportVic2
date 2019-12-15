@@ -173,13 +173,30 @@ router.get('/unknown', async (req, res) => {
     }
   }).sort({departureTime: 1, origin: 1}).toArray()
 
+  let allTime = await busTrips.findDocuments({
+    routeGTFSID: {
+      $in: operatorServices
+    },
+    smartrakID: {
+      $not: {
+        $in: allBuses
+      }
+    }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
   let activeTripsNow = rawTripsToday.filter(trip => {
     let destinationArrivalTimeMinutes = utils.time24ToMinAftMidnight(trip.destinationArrivalTime)
 
     return minutesPastMidnightNow <= destinationArrivalTimeMinutes
   })
 
-  res.render('tracker/unknown', {activeTripsNow})
+  let busSummary = allTime.reduce((acc, trip) => {
+    if (!acc[trip.smartrakID]) acc[trip.smartrakID] = {}
+    acc[trip.smartrakID][trip.routeNumber] = ''
+    return acc
+  }, {})
+
+  res.render('tracker/unknown', {activeTripsNow, busSummary})
 })
 
 module.exports = router
