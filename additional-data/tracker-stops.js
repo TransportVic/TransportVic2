@@ -260,4 +260,9 @@ module.exports = [
   'burwood-east/burwood-highway-blackburn-road',
   'nunawading/nunawading-railway-station',
   'lilydale/lillydale-lake-entrance-swansea-road'
+  'strathfieldsaye/strathfieldsaye-road-blucher-street',
+  'strathfieldsaye/ryalls-lane-waterford-drive',
+  'strathfieldsaye/sinclairs-road-junortoun-road',
+  'drouin/drouin-railway-station',
+  'drouin-east/lardners-track-princes-way'
 ]
