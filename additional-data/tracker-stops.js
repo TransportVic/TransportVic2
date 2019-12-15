@@ -259,7 +259,7 @@ module.exports = [
   'vermont-south/vermont-south-tram-terminus-burwood-highway',
   'burwood-east/burwood-highway-blackburn-road',
   'nunawading/nunawading-railway-station',
-  'lilydale/lillydale-lake-entrance-swansea-road'
+  'lilydale/lillydale-lake-entrance-swansea-road',
   'strathfieldsaye/strathfieldsaye-road-blucher-street',
   'strathfieldsaye/ryalls-lane-waterford-drive',
   'strathfieldsaye/sinclairs-road-junortoun-road',
