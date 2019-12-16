@@ -237,6 +237,15 @@ module.exports={
   50258: "Bay 4",
   50259: "Bay 5",
 
+  // Sunbury
+  20816: "Bay 1",
+  18754: "Bay 2",
+  18755: "Bay 3",
+  18758: "Bay 4",
+  22341: "Bay 5",
+  18759: "Bay 6",
+  18760: "Bay 7",
+
   // check ringwood 901 bay, mitcham 738 bay
   // Next up:
   // Chirnside park sc, mon 18nov when reopens
@@ -260,7 +269,7 @@ module.exports={
   // Craigieburn
   // Tarneit apparently has bus bays .
   // Yarraville? don't think I saw bus numbers
-  // Sunbury maybe
+  // Sunbury maybe.
   // Melton
   // Nuna?
   // Mitcham .
