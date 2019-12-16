@@ -193,7 +193,7 @@ async function getDeparturesFromPTV(stop, db) {
     return a.actualDepartureTime - b.actualDepartureTime
   }).sort((a, b) => {
     let gtfsDirection = null
-    if (a.trip && b.trip)
+    if (a.trip && b.trip && a.trip.gtfsDirection && b.trip.gtfsDirection)
       gtfsDirection = a.trip.gtfsDirection - b.trip.gtfsDirection
     return gtfsDirection ||
       a.destination.length - b.destination.length
@@ -201,8 +201,11 @@ async function getDeparturesFromPTV(stop, db) {
 
   let tripIDs = []
   let filteredDepartures = sortedDepartures.filter(d => {
-    if (!tripIDs.includes(d.trip.tripID)) {
-      tripIDs.push(d.trip.tripID)
+    let {tripID} = d.trip
+    if (!tripID)
+      tripID = d.trip.origin + d.trip.departureTime + d.trip.destination + d.trip.destinationArrivalTime
+    if (!tripIDs.includes(tripID)) {
+      tripIDs.push(tripID)
       return true
     } else return false
   })
