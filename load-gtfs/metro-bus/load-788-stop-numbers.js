@@ -36,7 +36,7 @@ database.connect({
   parsedData.routes.filter(route => route.stops.length).forEach(route => {
     route.stops.forEach(stop => {
       let {name} = stop
-      let stopNameParts = name.match(/(\d+): Stop ([\w]+)/)
+      let stopNameParts = name.match(/(\d+): ?Stop ([\w]+)/)
       if (!stopNameParts) return
       let [_, stopGTFSID, stopNumber] = stopNameParts
       if (stopGTFSID === '13233') stopGTFSID = '21214'
@@ -45,7 +45,7 @@ database.connect({
     })
   })
 
-  await async.forEach(Object.keys(stopMapping), async stopGTFSID => {
+  await async.forEachSeries(Object.keys(stopMapping), async stopGTFSID => {
     let stopNumber = stopMapping[stopGTFSID]
     stopGTFSID = parseInt(stopGTFSID)
     let query = {'bays.stopGTFSID': stopGTFSID}
