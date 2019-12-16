@@ -266,5 +266,6 @@ module.exports = [
   'drouin/drouin-railway-station',
   'drouin-east/lardners-track-princes-way',
   'wheelers-hill/wheelers-hill-shopping-centre-jells-road',
-  'glen-waverley/medina-road-high-street-road'
+  'glen-waverley/medina-road-high-street-road',
+  'drouin/bank-place-princes-way'
 ]

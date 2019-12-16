@@ -8,7 +8,7 @@
       "Beckhams Road/Carolyn Way": "Maiden Gully"
     },
     "60": {
-      "Piper Lane": "East Bendigo"
+      "Piper Lane": "Bendigo East"
     },
     "64": {
       "Oak Street/High Street": "Golden Square"
@@ -34,11 +34,33 @@
     "630": {
       "St. Kilda Street/Bent Avenue": "Elwood/Bent Avenue"
     },
+    "703": {
+      "Luntar Road/Centre Road": "Oakleigh South"
+    },
     "704": {
-      "Centre Road/First Street": "East Clayton"
+      "Centre Road/First Street": "Clayton East"
+    },
+    "771": {
+      "Norwarran Way/Warrandyte Road": "Langwarrin"
+    },
+    "779": {
+      "Belvedere Park Primary School": "Belvedere"
+    },
+    "781": {
+      "Devon Court/Somerset Drive": "Mount Martha"
     },
     "782": {
+      "Hastings SC": "Hastings",
       "Wood Street/Cook Street": "Flinders"
+    },
+    "784": {
+      "Veda Avenue/Dunns Road": "Osborne"
+    },
+    "785": {
+      "Mornington-Tyabb Road/Dunns Road": "Mornington East"
+    },
+    "788": {
+      "Point Nepean National Park Entrance": "Portsea"
     },
     "792": {
       "Baxter-Tooradin Road/Pearcedale Road": "Botanic Ridge/Pattersons Road"
@@ -49,8 +71,17 @@
     "812": {
       "Boundary Road/Lower Dandenong Road": "Brighton"
     },
+    "824": {
+      "Parkmore SC": "Keysborough"
+    },
     "831": {
       "Georgina Place/Earlsfield Drive": "Kingsmere Estate"
+    },
+    "832": {
+      "Carrum Downs Retirement Village": "Carrum Downs"
+    },
+    "839": {
+      "Parkhill Plaza SC": "Berwick North"
     },
     "840": {
       "Gembrook Road/Main Street": "Gembrook"
@@ -63,6 +94,9 @@
     },
     "898": {
       "Archers Field Drive/Bradford Drive": "Cranbourne East"
+    },
+    "929": {
+      "Pakenham Hills Primary School": "Pakenham North"
     }
   },
   "generic": {
@@ -74,6 +108,9 @@
     "Information Centre/Godfrey Street": "Boort",
     "Eaglehawk Road/Victoria Street": "Eaglehawk",
     "Lansell Plaza SC": "Kangaroo Flat",
-    "Bendigo Retirement Village": "Spring Gully"
+    "Bendigo Retirement Village": "Spring Gully",
+    "Rosebud Village SC": "Rosebud",
+    "Mount Erin Secondary College": "Lakewood",
+    "McKays Road/Centre Road": "Langwarrin"
   }
 }

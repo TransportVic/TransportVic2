@@ -101,7 +101,10 @@ async function getDeparturesFromPTV(stop, db) {
     let requestTime = now.clone()
     if (!(stop.suburb.includes('Melbourne City'))) {
       requestTime.add(-30, 'second')
+    } else {
+      requestTime.add(30, 'second')
     }
+
     const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/${isNightBus ? 4 : 2}/stop/${stopGTFSID}?gtfs=true&max_results=6&expand=run&expand=route&date_utc=${requestTime.toISOString()}&look_backwards=false&include_cancelled=true`)
 
     let seenIDs = []
