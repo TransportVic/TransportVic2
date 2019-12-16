@@ -29,7 +29,7 @@ function deg2rad(deg) {
 module.exports = async function (stopsData, stops, mode, lookupTable, adjustStopName=_=>_, flagSetter=_=>null, isTram=false) {
   await stops.createIndex({
     stopName: 1,
-    suburb: 1
+    'bays.stopGTFSID': 1
   }, {unique: true, name: 'stops index'})
 
   await stops.createIndex({
