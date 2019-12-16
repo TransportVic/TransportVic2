@@ -59,6 +59,9 @@
     "785": {
       "Mornington-Tyabb Road/Dunns Road": "Mornington East"
     },
+    "787": {
+      "Ferry Terminal": "Sorrento"
+    },
     "788": {
       "Point Nepean National Park Entrance": "Portsea"
     },
@@ -110,7 +113,10 @@
     "Lansell Plaza SC": "Kangaroo Flat",
     "Bendigo Retirement Village": "Spring Gully",
     "Rosebud Village SC": "Rosebud",
+    "Rosebud Plaza": "Rosebud",
     "Mount Erin Secondary College": "Lakewood",
-    "McKays Road/Centre Road": "Langwarrin"
+    "McKays Road/Centre Road": "Langwarrin",
+    "Rye RSL": "Rye",
+    "Hygeia Street/Point Nepean Road": "Rye"
   }
 }
