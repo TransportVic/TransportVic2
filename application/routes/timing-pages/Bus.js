@@ -80,6 +80,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
         serviceDestinations.push(destination)
         groupedDepartures[service][destination] =
           serviceDepartures.filter(d => d.destination + d.viaText + d.loopDirection === destination)
+          .sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
       }
     })
   })

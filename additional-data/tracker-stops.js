@@ -245,7 +245,6 @@ module.exports = [
   'wattle-glen/wattle-glen-railway-station',
   'diamond-creek/diamond-creek-plaza-main-hurstbridge-road',
   'eltham/eltham-village-shopping-centre-main-road',
-  'frankston/naranga-cresent-karingal-drive',
   'frankston/karingal-hub-shopping-centre-cranbourne-road',
   'somerville/somerville-plaza-shopping-centre-eramosa-road',
   'sunbury/pasley-street-gap-road',
@@ -267,5 +266,12 @@ module.exports = [
   'drouin-east/lardners-track-princes-way',
   'wheelers-hill/wheelers-hill-shopping-centre-jells-road',
   'glen-waverley/medina-road-high-street-road',
-  'drouin/bank-place-princes-way'
+  'drouin/bank-place-princes-way',
+  'patterson-lakes/lakeview-shopping-centre-thompson-road',
+  'frankston/karingal-shopping-centre-karingal-drive',
+  'frankston-south/frankston-high-school-foot-street',
+  'frankston/epean-highway-playne-street',
+  'frankston/frankston-hospital-11-hastings-road',
+  'langwarrin/the-gateway-shopping-centre',
+  'frankston/williams-street-kars-street'
 ]

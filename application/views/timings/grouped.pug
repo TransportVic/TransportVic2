@@ -43,7 +43,7 @@ append content
         let serviceDepartures = groupedDepartures[service]
         let destinations = Object.keys(serviceDepartures).sort((a, b) => a.length - b.length)
         let hasNumber = service !== ''
-      for destination in destinations
+      for destination in destinations.sort((a, b) => serviceDepartures[a][0].actualDepartureTime - serviceDepartures[b][0].actualDepartureTime)
         -
           let destinationDepartures = serviceDepartures[destination]
           let departures = destinationDepartures.slice(0, 4)
