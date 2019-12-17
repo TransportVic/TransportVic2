@@ -60,9 +60,9 @@ append content
             span.towards Towards
             span.destination=destinationDepartures[0].destination
             if destinationDepartures[0].guidanceText
-              span.info=destinationDepartures[0].guidanceText
+              span.info.smaller=destinationDepartures[0].guidanceText
             if destinationDepartures[0].viaText
-              span.info(style=`width: calc(100vw - (3vw + 3vh) * ${departures.length} - (5vw + 5vh) - (1vw + 1vh) - 1.5vw)`)=destinationDepartures[0].viaText
+              span.info.smaller(style=`width: calc(100vw - (3vw + 3vh) * ${departures.length}${hasNumber ? ' - (5vw + 5vh)' : ''} - (1vw + 1vh) - 1.5vw)`)=destinationDepartures[0].viaText
           div.timings
             for i in Array(4 - departures.length)
               div.timing.mini(style='display: none')

@@ -246,6 +246,43 @@ module.exports={
   18759: "Bay 6",
   18760: "Bay 7",
 
+  // Watergardens
+  21129: "Bay 1",
+  21128: "Bay 2",
+  40693: "Bay 3",
+  21130: "Bay 4",
+  23278: "Bay 5",
+  23418: "Bay 6",
+  47644: "Bay 7",
+
+  // St. Albans
+  41461: "Bay 1",
+  41462: "Bay 2",
+  41463: "Bay 3",
+  41464: "Bay 4",
+  41465: "Bay 5",
+  41466: "Bay 6",
+
+  // Heidelberg
+  21469: "Bay 1",
+  21470: "Bay 2",
+  21471: "Bay 3",
+  40949: "Bay 4",
+
+  // Diamond Creek
+  51132: "Bay 1",
+  51133: "Bay 2",
+  51134: "Bay 3",
+
+  // Eltham
+  43683: "Bay 1",
+  42635: "Bay 2",
+  21490: "Bay 4",
+  20799: "Bay 5",
+  21492: "Bay 6",
+  48397: "Bay 7",
+  48396: "Bay 8",
+
   // check ringwood 901 bay, mitcham 738 bay
   // Next up:
   // Chirnside park sc, mon 18nov when reopens
@@ -255,7 +292,7 @@ module.exports={
   // Doncaster shoppingtown
   // Box Hill
   // Glen Waverley
-  // Blackburn (ew)
+  // Blackburn (ew) -
   // Geelong .
   // Southland
   // Epping
@@ -273,8 +310,8 @@ module.exports={
   // Melton
   // Nuna?
   // Mitcham .
-  // Watergardens maybe
-  // St albans
+  // Watergardens maybe.
+  // St albans.
   // Airport West SC?
   // Altona Gate SC?
   // Pacific Werribee/Werribee Plaza

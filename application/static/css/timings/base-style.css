@@ -139,6 +139,10 @@ a.departureInfo span.info~span.info {
   -webkit-line-clamp: 1;
 }
 
+a.departureInfo span.info.smaller {
+  line-height: calc(1.2vw + 1.2vh) !important;
+}
+
 a.departureInfo span.info, a.departureInfo span.vehicle {
   width: calc(100vw - (3vw + 3vh) * 4 - (5vw + 5vh) - (1vw + 1vh) - 1.5vw);
   overflow: hidden;
@@ -170,6 +174,12 @@ a.departureInfo span.cancelled:nth-child(3) {
 
 div.departure.no-number a.departureInfo span.routeName {
   font-size: calc(1vw + 1vh);
+
+  overflow: hidden;
+
+  -webkit-line-clamp: 1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
 
   color: #c5c5c5;
 }
