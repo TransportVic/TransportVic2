@@ -273,5 +273,9 @@ module.exports = [
   'frankston/epean-highway-playne-street',
   'frankston/frankston-hospital-11-hastings-road',
   'langwarrin/the-gateway-shopping-centre',
-  'frankston/williams-street-kars-street'
+  'frankston/williams-street-kars-street',
+  'richmond/west-richmond-railway-station',
+  'tullamarine/leicester-square-coventry-street',
+  'gladstone-park/gladstone-park-shopping-centre-gladstone-park-drive',
+  'airport-west/dromana-avenue-matthews-avenue'
 ]
