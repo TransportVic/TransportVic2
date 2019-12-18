@@ -72,7 +72,8 @@ $.ready(() => {
     "B": "Broadmeadows Bus Service",
     "RR": "Retired",
     "P": "Panorama Coaches",
-    "CC": "Christians Bus Company (Bendigo)"
+    "CC": "Christians Bus Company (Bendigo)",
+    "WM": "Whitemores Bus Lines"
   }
 
   let operatorSizes = {
@@ -96,7 +97,11 @@ $.ready(() => {
     "ML": 12,
     "MV": 12,
     "K": 39,
-    "B": 20
+    "B": 20,
+    "CC": 43,
+    "P": 17,
+    "RR": Infinity,
+    "WM": 3
   }
 
   $.ajax({
