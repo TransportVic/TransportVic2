@@ -94,7 +94,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
         $elemMatch: {
           stopGTFSID: platform.stopGTFSID,
           departureTimeMinutes: {
-            $gte: minutesPastMidnight - 1,
+            $gte: minutesPastMidnight - 5,
             $lte: minutesPastMidnight + timeout
           }
         }

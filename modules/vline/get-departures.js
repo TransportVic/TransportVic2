@@ -241,6 +241,7 @@ async function getDepartures(station, db) {
   let coachTrips = await getCoachReplacements(station, db)
 
   try {
+    if (!station.stopName.includes('Southern Cross')) throw new Error('Skip')
     let departures = await getDeparturesFromVNET(station, db)
     departures = departures.concat(coachTrips)
 

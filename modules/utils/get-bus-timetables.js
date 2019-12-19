@@ -42,8 +42,11 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
         departureTimeMinutes: scheduledDepartureTimeMinutes % 1440
       }
     },
-    routeGTFSID,
     destination: utils.adjustRawStopName(utils.adjustStopname(destination))
+  }
+
+  if (routeGTFSID) {
+    query.routeGTFSID = routeGTFSID
   }
 
   // for the coaches
@@ -81,7 +84,7 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
           $in: stopGTFSIDs
         },
         departureTimeMinutes: {
-          $gte: minutesPastMidnight - 1,
+          $gte: minutesPastMidnight - 5,
           $lte: minutesPastMidnight + timeout
         }
       }
