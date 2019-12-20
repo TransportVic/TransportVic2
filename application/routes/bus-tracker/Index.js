@@ -270,14 +270,14 @@ router.get('/highlights', async (req, res) => {
     smartrakID: { $in: sitaOld },
   }).sort({departureTime: 1, origin: 1}).toArray()
 
-  let allBuses = await smartrakIDs.distinct('smartrakID')
+  let allBuses = await smartrakIDs.findDocuments().toArray()
   let trackUnknownRoutes = await routes.distinct('routeGTFSID', {
     operators: { $in: highlightData.report_unknown }
   })
   let unknownBuses = await busTrips.findDocuments({
     date,
     routeGTFSID: { $in: trackUnknownRoutes },
-    smartrakID: { $not: { $in: allBuses } }
+    smartrakID: { $not: { $in: allBuses.map(bus => bus.smartrakID) } }
   }).sort({departureTime: 1, origin: 1}).toArray()
 
   res.render('tracker/highlights', {
@@ -289,7 +289,11 @@ router.get('/highlights', async (req, res) => {
     strayO405NH,
     strayLiveryBuses,
     straySitaOld,
-    unknownBuses
+    unknownBuses,
+    busMapping: allBuses.reduce((acc, bus) => {
+      acc[bus.smartrakID] = bus.fleetNumber
+      return acc
+    }, {})
   })
 })
 

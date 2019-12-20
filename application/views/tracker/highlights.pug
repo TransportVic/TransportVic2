@@ -12,7 +12,8 @@ block content
       h2=name
       for trip in trips
         div.trip
-          span #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
+          - let displayRego = busMapping[trip.smartrakID] ? `#${busMapping[trip.smartrakID]}` : `@${trip.smartrakID}`
+          span #{trip.departureTime} #{displayRego} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
       br
 
   +section('Stray Ventura Minibuses', strayMinibuses)
