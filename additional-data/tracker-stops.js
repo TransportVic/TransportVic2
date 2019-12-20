@@ -277,5 +277,8 @@ module.exports = [
   'richmond/west-richmond-railway-station',
   'tullamarine/leicester-square-coventry-street',
   'gladstone-park/gladstone-park-shopping-centre-gladstone-park-drive',
-  'airport-west/dromana-avenue-matthews-avenue'
+  'airport-west/dromana-avenue-matthews-avenue',
+  'beaconsfield/beaconsfield-plaza',
+  'emerald/emerald-village',
+  'berwick/edrington-park-retirement-village-princes-highway'
 ]

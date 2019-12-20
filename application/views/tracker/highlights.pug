@@ -1,0 +1,32 @@
+extends ../layout
+
+block head
+  title TransportVic - Tracker/Highlights
+
+block title
+  span Unusual Deployments
+  
+block content
+  mixin section(name, trips)
+    if trips.length
+      h2=name
+      for trip in trips
+        p #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
+      br
+
+  +section('Stray Ventura Minibuses', strayMinibuses)
+  +section('Stray Ventura Artics', strayArtics)
+  +section('Ventura Specials', straySpecials)
+  +section('828 B10BLE', strayB10BLEs)
+  
+  +section('Stray Non-Orbital Smartbuses', strayNonorbitals)
+  
+  +section('Stray Cranbourne O405NHs', strayO405NH)
+  
+  +section('Stray Liveried Buses', strayLiveryBuses)
+  
+  +section('Old Sita Buses', straySitaOld)
+  
+  +section('Unknown Buses', unknownBuses)
+  
+  

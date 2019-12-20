@@ -5,6 +5,8 @@ const router = new express.Router()
 const url = require('url')
 const querystring = require('querystring')
 
+const highlightData = require('../../../additional-data/tracker-highlights')
+
 const operators = {
   "Ventura Bus Lines": "V",
   "CDC Melbourne": {
@@ -197,6 +199,98 @@ router.get('/unknown', async (req, res) => {
   }, {})
 
   res.render('tracker/unknown', {activeTripsNow, busSummary})
+})
+
+router.get('/highlights', async (req, res) => {
+  let {db} = res
+  let busTrips = db.getCollection('bus trips')
+  let smartrakIDs = db.getCollection('smartrak ids')
+  let routes = db.getCollection('routes')
+  let date = utils.getYYYYMMDDNow()
+
+  async function getBuses(fleets) {
+    return await smartrakIDs.distinct('smartrakID', { fleetNumber: { $in: fleets } })
+  }
+
+  let venturaMinibuses = await getBuses(highlightData.ventura_minibus)
+  let strayMinibuses = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: venturaMinibuses },
+    routeNumber: { $in: highlightData.ventura_minibus_routes}
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
+  let venturaArtics = await getBuses(highlightData.ventura_artics)
+  let strayArtics = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: venturaArtics },
+    routeNumber: { $in: highlightData.ventura_artic_routes }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
+  let venturaSpecials = await getBuses(highlightData.ventura_specials)
+  let straySpecials = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: venturaSpecials }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
+  let venturaB10BLE = await getBuses(highlightData.ventura_b10ble)
+  let strayB10BLEs = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: venturaB10BLE },
+    routeNumber: '828'
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
+
+  let transdevNonorbitalSmartbus = await getBuses(highlightData.transdev_nonorbital_smartbuses)
+  let strayNonorbitals = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: transdevNonorbitalSmartbus },
+    routeNumber: { $in: highlightData.transdev_smartbus_orbital_routes }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
+
+  let cranbourneO405NH = await getBuses(highlightData.cranbourne_o405nh)
+  let strayO405NH = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: cranbourneO405NH },
+    routeNumber: { $in: highlightData.cranbourne_o405nh_unusual_services }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
+
+  let routeLiveryBuses = await getBuses(highlightData.route_livery_buses)
+  let strayLiveryBuses = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: routeLiveryBuses },
+    routeNumber: { $in: highlightData.route_livery_services }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
+
+  let sitaOld = await getBuses(highlightData.sita_old)
+  let straySitaOld = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: sitaOld },
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
+  let allBuses = await smartrakIDs.distinct('smartrakID')
+  let trackUnknownRoutes = await routes.distinct('routeGTFSID', {
+    operators: { $in: highlightData.report_unknown }
+  })
+  let unknownBuses = await busTrips.findDocuments({
+    date,
+    routeGTFSID: { $in: trackUnknownRoutes },
+    smartrakID: { $not: { $in: allBuses } }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
+  res.render('tracker/highlights', {
+    strayMinibuses,
+    strayArtics,
+    straySpecials,
+    strayB10BLEs,
+    strayNonorbitals,
+    strayO405NH,
+    strayLiveryBuses,
+    straySitaOld,
+    unknownBuses
+  })
 })
 
 module.exports = router
