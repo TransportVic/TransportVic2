@@ -11,7 +11,8 @@ block content
     if trips.length
       h2=name
       for trip in trips
-        p #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
+        div.trip
+          span #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
       br
 
   +section('Stray Ventura Minibuses', strayMinibuses)

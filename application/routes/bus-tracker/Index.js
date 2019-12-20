@@ -216,14 +216,14 @@ router.get('/highlights', async (req, res) => {
   let strayMinibuses = await busTrips.findDocuments({
     date,
     smartrakID: { $in: venturaMinibuses },
-    routeNumber: { $in: highlightData.ventura_minibus_routes}
+    routeNumber: { $not: { $in: highlightData.ventura_minibus_routes} }
   }).sort({departureTime: 1, origin: 1}).toArray()
 
   let venturaArtics = await getBuses(highlightData.ventura_artics)
   let strayArtics = await busTrips.findDocuments({
     date,
     smartrakID: { $in: venturaArtics },
-    routeNumber: { $in: highlightData.ventura_artic_routes }
+    routeNumber: { $not: { $in: highlightData.ventura_artic_routes } }
   }).sort({departureTime: 1, origin: 1}).toArray()
 
   let venturaSpecials = await getBuses(highlightData.ventura_specials)
@@ -260,7 +260,7 @@ router.get('/highlights', async (req, res) => {
   let strayLiveryBuses = await busTrips.findDocuments({
     date,
     smartrakID: { $in: routeLiveryBuses },
-    routeNumber: { $in: highlightData.route_livery_services }
+    routeNumber: { $not: { $in: highlightData.route_livery_services } }
   }).sort({departureTime: 1, origin: 1}).toArray()
 
 
