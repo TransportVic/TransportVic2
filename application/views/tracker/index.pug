@@ -6,11 +6,8 @@ block head
 block title
   span Tracker
   
-//- block style
-//-   link(rel='stylesheet' href='/static/css/tracker.css')
-
 block content
-  a(href='/tracker2/view-all') view all buses
+  a(href='/tracker2/highlights') highlights
   form(action='/tracker2/bus' method='get')
     label search by fleet #
     input(name='fleet')

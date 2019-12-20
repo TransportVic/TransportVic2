@@ -17,5 +17,6 @@ module.exports = {
 
   sita_old: ['S33', 'S64', 'S80', 'S81', 'S86', 'S91', 'S92', 'S93', 'S94', 'S95', 'S97', 'S99'],
 
-  report_unknown: ['Ventura Bus Lines', 'CDC Melbourne', 'Cranbourne Transit']
+  // report_unknown: ['Ventura Bus Lines', 'CDC Ballarat', 'CDC Melbourne', 'Cranbourne Transit']
+  report_unknown: ['Ventura Bus Lines', 'CDC Ballarat', 'Cranbourne Transit']
 }
