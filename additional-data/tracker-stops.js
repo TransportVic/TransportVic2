@@ -280,5 +280,6 @@ module.exports = [
   'airport-west/dromana-avenue-matthews-avenue',
   'beaconsfield/beaconsfield-plaza',
   'emerald/emerald-village',
-  'berwick/edrington-park-retirement-village-princes-highway'
+  'berwick/edrington-park-retirement-village-princes-highway',
+  'vermont/andrew-street-canterbury-road'
 ]

@@ -99,7 +99,7 @@ async function getDeparturesFromPTV(stop, db) {
         isNightBus = stopGTFSIDPair[1]
 
     let requestTime = now.clone()
-    requestTime.set('minutes', 5 * Math.floor(requestTime.get('minutes') / 5))
+    requestTime.add(-30, 'seconds')
 
     const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/${isNightBus ? 4 : 2}/stop/${stopGTFSID}?gtfs=true&max_results=6&expand=run&expand=route&date_utc=${requestTime.toISOString()}&look_backwards=false&include_cancelled=true`)
 
