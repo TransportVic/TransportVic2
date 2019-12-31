@@ -7,11 +7,17 @@ const querystring = require('querystring')
 
 const highlightData = require('../../../additional-data/tracker-highlights')
 
+let manualRoutes = {
+  "CO": ["4-601", "4-60S", "4-612", "4-623", "4-624", "4-625", "4-626", "4-630", "4-900"],
+  "CS": ["4-406", "4-407", "4-408", "4-409", "4-410", "4-418", "4-419", "4-421", "4-423", "4-424", "4-425", "4-461"],
+  "CW": ["4-150", "4-151", "4-153", "4-160", "4-161", "4-166", "4-167", "4-170", "4-180", "4-181", "4-190", "4-191", "4-192", "4-400", "4-411", "4-412", "4-414", "4-415", "4-417", "4-439", "4-441", "4-443", "4-494", "4-495", "4-496", "4-497", "4-498", "4-606"],
+}
+
 const operators = {
   "Ventura Bus Lines": "V",
-  "CDC Melbourne": {
-    $in: ["CO", "CS", "CW"]
-  },
+  "CDC Oakleigh": "CO",
+  "CDC Sunshine": "CS",
+  "CDC Wyndham": "CW",
   "Tullamarine Bus Lines": "CT",
   "CDC Geelong": "CG",
   "CDC Ballarat": "CB",
@@ -159,9 +165,9 @@ router.get('/unknown', async (req, res) => {
   let operatorCode = operators[operator]
   let allBuses = await smartrakIDs.distinct('smartrakID')
 
-  let operatorServices = await routes.distinct('routeGTFSID', {
+  let operatorServices = (await routes.distinct('routeGTFSID', {
     operators: operator
-  })
+  })).concat(manualRoutes[operatorCode] || [])
 
   let rawTripsToday = await busTrips.findDocuments({
     date,
@@ -239,7 +245,6 @@ router.get('/highlights', async (req, res) => {
     routeNumber: '828'
   }).sort({departureTime: 1, origin: 1}).toArray()
 
-
   let transdevNonorbitalSmartbus = await getBuses(highlightData.transdev_nonorbital_smartbuses)
   let strayNonorbitals = await busTrips.findDocuments({
     date,
@@ -270,10 +275,26 @@ router.get('/highlights', async (req, res) => {
     smartrakID: { $in: sitaOld },
   }).sort({departureTime: 1, origin: 1}).toArray()
 
+
+  let ninehundredPerms = await getBuses(highlightData.sita_old)
+  let stray900Perm = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: ninehundredPerms },
+    routeNumber: { $ne: '900' }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+  let non900Perm = await busTrips.findDocuments({
+    date,
+    smartrakID: { $not: { $in: ninehundredPerms } },
+    routeNumber: '900'
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
   let allBuses = await smartrakIDs.findDocuments().toArray()
   let trackUnknownRoutes = await routes.distinct('routeGTFSID', {
     operators: { $in: highlightData.report_unknown }
   })
+
+  trackUnknownRoutes = trackUnknownRoutes.concat(manualRoutes.CO)
+
   let unknownBuses = await busTrips.findDocuments({
     date,
     routeGTFSID: { $in: trackUnknownRoutes },
@@ -289,6 +310,8 @@ router.get('/highlights', async (req, res) => {
     strayO405NH,
     strayLiveryBuses,
     straySitaOld,
+    stray900Perm,
+    non900Perm,
     unknownBuses,
     busMapping: allBuses.reduce((acc, bus) => {
       acc[bus.smartrakID] = bus.fleetNumber
