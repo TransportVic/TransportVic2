@@ -276,7 +276,7 @@ router.get('/highlights', async (req, res) => {
   }).sort({departureTime: 1, origin: 1}).toArray()
 
 
-  let ninehundredPerms = await getBuses(highlightData.sita_old)
+  let ninehundredPerms = await getBuses(highlightData.ninehundred_perms)
   let stray900Perm = await busTrips.findDocuments({
     date,
     smartrakID: { $in: ninehundredPerms },
