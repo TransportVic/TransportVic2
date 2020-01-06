@@ -74,6 +74,9 @@
     "630": {
       "St. Kilda Street/Bent Avenue": "Elwood/Bent Avenue"
     },
+    "701": {
+      "Bent Street/Centre Road": "Bentleigh"
+    },
     "703": {
       "Luntar Road/Centre Road": "Oakleigh South"
     },
@@ -82,7 +85,7 @@
     },
     "770": {
       "Karingal SC": "Karingal",
-      "Corlett Street/Orwil Street": "Orwil Street (?)"
+      "Corlett Street/Orwil Street": "Orwil Street"
     },
     "771": {
       "Norwarran Way/Warrandyte Road": "Langwarrin"
