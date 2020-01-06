@@ -281,5 +281,6 @@ module.exports = [
   'beaconsfield/beaconsfield-plaza',
   'emerald/emerald-village',
   'berwick/edrington-park-retirement-village-princes-highway',
-  'vermont/andrew-street-canterbury-road'
+  'vermont/andrew-street-canterbury-road',
+  'timings/pakenham/racecourse-road-henry-street'
 ]
