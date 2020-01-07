@@ -282,5 +282,7 @@ module.exports = [
   'emerald/emerald-village',
   'berwick/edrington-park-retirement-village-princes-highway',
   'vermont/andrew-street-canterbury-road',
-  'timings/pakenham/racecourse-road-henry-street'
+  'pakenham/racecourse-road-henry-street',
+  'warrandyte/warrandyte-community-church-yarra-street',
+  'research/post-office-main-road'
 ]
