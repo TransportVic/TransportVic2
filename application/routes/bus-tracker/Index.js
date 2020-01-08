@@ -288,6 +288,25 @@ router.get('/highlights', async (req, res) => {
     routeNumber: '900'
   }).sort({departureTime: 1, origin: 1}).toArray()
 
+  let cdcHybrids = await getBuses(highlightData.cdc_oakleigh_hybrids)
+  let strayCOHybrids = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: cdcHybrids },
+    routeNumber: { $not: { $in: highlightData.cdc_oakleigh_hybrid_routes } }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
+  let tullaSpecialsBuses = await getBuses(highlightData.tulla_specials)
+  let tullaSpecials = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: tullaSpecialsBuses }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
+  let sunburySpecialsBuses = await getBuses(highlightData.sunbury_specials)
+  let sunburySpecials = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: sunburySpecialsBuses }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
   let allBuses = await smartrakIDs.findDocuments().toArray()
   let trackUnknownRoutes = await routes.distinct('routeGTFSID', {
     operators: { $in: highlightData.report_unknown }
@@ -313,6 +332,9 @@ router.get('/highlights', async (req, res) => {
     stray900Perm,
     non900Perm,
     unknownBuses,
+    strayCOHybrids,
+    tullaSpecials,
+    sunburySpecials,
     busMapping: allBuses.reduce((acc, bus) => {
       acc[bus.smartrakID] = bus.fleetNumber
       return acc

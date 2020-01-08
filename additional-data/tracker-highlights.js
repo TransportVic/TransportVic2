@@ -3,7 +3,7 @@ module.exports = {
   ventura_minibus_routes: ['526', '527', '548', '549', '550', '551', '670', '671', '672', '673', '676', '677', '680', '786', '787', '886', 'TB1', 'TB2', 'TB3', 'TB4', 'TB7', 'TB8', 'TB9'],
   ventura_artics: ['V100', 'V102', 'V136', 'V143', 'V190', 'V292', 'V293', 'V294', 'V730', 'V732', 'V733', 'V734', 'V735', 'V842', 'V1271', 'V1374', 'V1378', 'V1379', 'V1380', 'V1422', 'V1423'],
   ventura_artic_routes: ['811', '812', '813', '664', '670', '679', '788'],
-  ventura_specials: ['V287', 'V322', 'V329', 'V330', 'V343', 'V346', 'V372', 'V474', 'V491', 'V784', 'V785', 'V786', 'V787', 'V789', 'V1445'],
+  ventura_specials: ['V187', 'V287', 'V322', 'V329', 'V330', 'V343', 'V346', 'V372', 'V474', 'V491', 'V784', 'V785', 'V786', 'V787', 'V789', 'V1445'],
   ventura_b10ble: ['V10', 'V30', 'V31', 'V34', 'V35', 'V43', 'V44', 'V78', 'V114', 'V116', 'V137', 'V138', 'V139', 'V304'],
 
   transdev_smartbus_orbital_routes: ['901', '902', '903'],
@@ -19,6 +19,12 @@ module.exports = {
 
   ninehundred_perms: ['CO116', 'CO117', 'CO118', 'CO119', 'CO120', 'CO146', 'CO147', 'V1309', 'V1323', 'V8227', 'V8228', 'V8230', 'V8231', 'V8235', 'V8239', 'V8909'],
 
-  // report_unknown: ['Ventura Bus Lines', 'CDC Ballarat', 'CDC Melbourne', 'Cranbourne Transit']
-  report_unknown: ['Ventura Bus Lines', 'CDC Ballarat', 'Cranbourne Transit']
+  cdc_oakleigh_hybrids: ['CO152', 'CO157', 'CO158', 'CO159', 'CO160', 'CO161', 'CO162', 'CO163'],
+  cdc_oakleigh_hybrid_routes: ['605', '630'],
+
+  tulla_specials: ['CT8', 'CT13'],
+
+  sunbury_specials: ['SB43', 'SB48'],
+
+  report_unknown: ['Ventura Bus Lines', 'CDC Ballarat', 'Cranbourne Transit', 'Sunbury Bus Service', 'Martyrs Bus Service']
 }
