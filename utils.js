@@ -244,10 +244,10 @@ module.exports = {
     return module.exports.getMinutesPastMidnight(module.exports.now())
   },
   getPTMinutesPastMidnight: time => {
-    let minutesPastMidnight = module.exports.getMinutesPastMidnight(time);
-    let offset = 0;
+    let minutesPastMidnight = module.exports.getMinutesPastMidnight(time)
+    let offset = 0
 
-    if (minutesPastMidnight < 180) offset = 1440;
+    if (minutesPastMidnight < 180) offset = 1440
 
     return minutesPastMidnight + offset
   },

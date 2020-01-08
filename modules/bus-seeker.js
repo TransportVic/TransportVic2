@@ -13,13 +13,13 @@ let refreshRate = 10
 function isDay() {
   let minutes = utils.getMinutesPastMidnightNow()
 
-  return 300 <= minutes && minutes <= 1260 // 0500 - 2100
+  return 270 <= minutes && minutes <= 1260 // 0500 - 2100
 }
 
 function isNight() {
   let minutes = utils.getMinutesPastMidnightNow()
 
-  return 1261 <= minutes && minutes <= 1439 // 2101 - 2359
+  return 1261 <= minutes && minutes <= 1439 || minutes <= 120// 2101 - 0200
 }
 
 /*
@@ -41,7 +41,7 @@ function updateRefreshRate() {
 }
 
 function pickRandomStops() {
-  let size = 32
+  let size = 36
   if (isNight()) size = Math.floor(size / 2)
   return shuffle(stops).slice(0, size)
 }
