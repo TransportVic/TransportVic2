@@ -16,10 +16,13 @@ block content
             let displayRego = busMapping[trip.smartrakID] ? `#${busMapping[trip.smartrakID]}` : `@${trip.smartrakID}`
             let {origin, destination} = trip
             let serviceData = busDestinations.service[trip.routeNumber] || {}
-            destination = (serviceData[destination]
-              || busDestinations.generic[destination] || destination.split('/')[0]).replace('Shopping Centre', 'SC')
-            origin = (serviceData[origin]
-              || busDestinations.generic[origin] || origin.split('/')[0]).replace('Shopping Centre', 'SC')
+            let dA = destination, dB = destination.split('/')[0]
+            let oA = origin, oB = origin.split('/')[0]
+            
+            destination = (serviceData[dA || dB]
+              || busDestinations.generic[dA || dB] || dB).replace('Shopping Centre', 'SC')
+            origin = (serviceData[oA || oB]
+              || busDestinations.generic[oA || oB] || oB).replace('Shopping Centre', 'SC')
           
           span #{trip.departureTime} #{displayRego} #{origin} - #{destination} #{trip.routeNumber}
       br
