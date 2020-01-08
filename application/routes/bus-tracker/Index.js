@@ -54,7 +54,7 @@ function adjustTrip(trip) {
 
   trip.destination = (serviceData[dA] || serviceData[dB]
     || busDestinations.generic[dA] || busDestinations.generic[dB] || dB).replace('Shopping Centre', 'SC')
-  trip.origin = (serviceData[oA || oB]
+  trip.origin = (serviceData[oA] || serviceData[oB]
     || busDestinations.generic[oA] || busDestinations.generic[oB] || oB).replace('Shopping Centre', 'SC')
 
   return trip

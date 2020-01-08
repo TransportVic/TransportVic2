@@ -21,7 +21,7 @@ block content
 
             destination = (serviceData[dA] || serviceData[dB]
               || busDestinations.generic[dA] || busDestinations.generic[dB] || dB).replace('Shopping Centre', 'SC')
-            origin = (serviceData[oA || oB]
+            origin = (serviceData[oA] || serviceData[oB]
               || busDestinations.generic[oA] || busDestinations.generic[oB] || oB).replace('Shopping Centre', 'SC')
             
           span #{trip.departureTime} #{displayRego} #{origin} - #{destination} #{trip.routeNumber}
