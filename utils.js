@@ -126,6 +126,7 @@ module.exports = {
     name = name.replace('Schhol', 'School')
     .replace('Chrisholm Institute', 'Chisholm Institute')
     .replace('Villag/', 'Village/')
+    .replace('Esplande', 'Esplanade')
     .replace('MacISAAC/', 'MacIsaac/')
     .replace('VUSC', 'Victoria University Secondary College')
     .replace(/Freeburgh \w*? ?Hall/, 'Freeburgh Community Hall')
@@ -315,6 +316,7 @@ module.exports = {
   },
   isCheckpointStop: stopName => stopName.includes('University')
     || stopName.includes('Railway Station')
+    || stopName.includes('Bus Station')
     || stopName.includes('SC') || stopName.includes('Shopping Centre'),
 
   getDistanceFromLatLon: (lat1, lon1, lat2, lon2) => {

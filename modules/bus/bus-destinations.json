@@ -19,11 +19,37 @@
     "191": {
       "Anniversary Avenue/Stanmore Cresent": "Jubilee Estate"
     },
-    "302": {
-      "King Street/Lonsdale Street": "City (Lonsdale Street)"
+    "223": {
+      "154 Somerville Road": "Yarraville"
     },
-    "385": {
-      "Walnut Street/Church Street": "Whittlesea"
+    "293": {
+      "Para Road/Main Street": "Greensborough"
+    },
+    "356": {
+      "Saltlake Boulevard/Pine Park Drive": "Wollert East"
+    },
+    "357": {
+      "Harvest Home Road/Edgars Road": "Wollert West"
+    },
+    "358": {
+      "Evolve Esplanade": "Wollert",
+      "Evolve Esplande": "Wollert"
+    },
+    "400": {
+      "Pembroke Cresent/Westminster Parkway": "Brimbank Gardens",
+      "Pembroke Cresent/Westminster Pkwy": "Brimbank Gardens"
+    },
+    "402": {
+      "Carlton Gardens": "East Melbourne"
+    },
+    "406": {
+      "Eastleigh Avenue/Norwood Drive": "Keilor East"
+    },
+    "427": {
+      "Lovegrove Avenue/Callaway Boulevard": "Sunshine West"
+    },
+    "428": {
+      "Parry Drive/Callaway Boulevard": "Sunshine West"
     },
     "439": {
       "Rivercoast Road/Beach Road": "Werribee South"
@@ -65,8 +91,17 @@
     "490": {
       "Bluebell Cresent/Gowanbrae Drive": "Gowanbrae"
     },
+    "494": {
+      "Yellowbox Drive/Featherbrook Road": "Point Cook South"
+    },
+    "495": {
+      "Point Cook South Terminus": "Point Cook South"
+    },
     "496": {
       "Swingers Garden": "Sanctuary Lakes"
+    },
+    "497": {
+      "Jansar Street/Saltwater Promenade": "Saltwater Coast Estate"
     },
     "498": {
       "Dunnings Road": "Point Cook"
@@ -76,6 +111,21 @@
     },
     "518": {
       "Allumba Drive/Beales Road": "St. Helena West"
+    },
+    "553": {
+      "Gilbert Road/Regent Street": "West Preston",
+      "High Street/Miller Street": "Preston"
+    },
+    "556": {
+      "Plenty Road/Dunne Street": "La Trobe University",
+      "Broadway": "Reservoir Railway Station"
+    },
+    "569": {
+      "Northern Hospital": "Epping Plaza SC"
+    },
+    "561": {
+      "Coburg Primary School": "Coburg Railway Station",
+      "High Street/Broadway": "Reservoir Railway Station"
     },
     "605": {
       "Begonia Road/Gardenvale Road": "Gardenvale"
@@ -201,6 +251,10 @@
     "898": {
       "Archers Field Drive/Bradford Drive": "Cranbourne East"
     },
+    "903": {
+      "Keys Road/Warrigal Road": "Moorabbin Bus Depot",
+      "Holmesglen TAFE - Chadstone": "Holmesglen"
+    },
     "TB3": {
       "Chevalier Cresent/Landscape Drive": "Rolling Hills"
     },
@@ -237,6 +291,12 @@
     "Nicholson Street/Paisley Street": "Footscray",
     "Ferguson Street Pier": "Williamstown",
     "Boundary Road/William Angliss Drive": "Laverton North",
-    "Upwey CFA": "Upwey"
+    "Upwey CFA": "Upwey",
+    "Montrose CFA": "Montrose",
+    "King Street/Lonsdale Street": "City (Lonsdale Street)",
+    "Little Collins Street/Queen Street": "City (Queen Street)",
+    "Collins Street/Queen Street": "City (Queen Street)",
+    "Williamstown SLSC": "Williamstown",
+    "Walnut Street/Church Street": "Whittlesea"
   }
 }
