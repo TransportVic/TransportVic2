@@ -12,8 +12,16 @@ block content
       h2=name
       for trip in trips
         div.trip
-          - let displayRego = busMapping[trip.smartrakID] ? `#${busMapping[trip.smartrakID]}` : `@${trip.smartrakID}`
-          span #{trip.departureTime} #{displayRego} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
+          -
+            let displayRego = busMapping[trip.smartrakID] ? `#${busMapping[trip.smartrakID]}` : `@${trip.smartrakID}`
+            let {origin, destination} = trip
+            let serviceData = busDestinations.service[trip.routeNumber] || {}
+            destination = (serviceData[destination]
+              || busDestinations.generic[destination] || destination.split('/')[0]).replace('Shopping Centre', 'SC')
+            origin = (serviceData[origin]
+              || busDestinations.generic[origin] || origin.split('/')[0]).replace('Shopping Centre', 'SC')
+          
+          span #{trip.departureTime} #{displayRego} #{origin} - #{destination} #{trip.routeNumber}
       br
 
   +section('Stray Ventura Minibuses', strayMinibuses)

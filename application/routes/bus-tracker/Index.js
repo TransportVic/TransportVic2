@@ -4,6 +4,7 @@ const utils = require('../../../utils')
 const router = new express.Router()
 const url = require('url')
 const querystring = require('querystring')
+const busDestinations = require('../../../modules/bus/bus-destinations')
 
 const highlightData = require('../../../additional-data/tracker-highlights')
 
@@ -45,6 +46,17 @@ router.get('/', (req, res) => {
   })
 })
 
+function adjustTrip(trip) {
+  let {origin, destination} = trip
+  let serviceData = busDestinations.service[trip.routeNumber] || {}
+  trip.destination = (serviceData[destination]
+    || busDestinations.generic[destination] || destination.split('/')[0]).replace('Shopping Centre', 'SC')
+  trip.origin = (serviceData[origin]
+    || busDestinations.generic[origin] || origin.split('/')[0]).replace('Shopping Centre', 'SC')
+
+  return trip
+}
+
 router.get('/bus', async (req, res) => {
   let {db} = res
   let busTrips = db.getCollection('bus trips')
@@ -66,6 +78,8 @@ router.get('/bus', async (req, res) => {
   query.smartrakID = smartrakID
   let tripsToday = await busTrips.findDocuments(query)
     .sort({departureTime: 1}).toArray()
+
+  tripsToday = tripsToday.map(adjustTrip)
 
   let operationDays = await busTrips.distinct('date', {
     smartrakID
@@ -119,6 +133,8 @@ router.get('/service', async (req, res) => {
     rawTrip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + rawTrip.smartrakID
     return rawTrip
   }))
+
+  tripsToday = tripsToday.map(adjustTrip)
 
   let operationDays = await busTrips.distinct('date', {
     routeNumber: service
@@ -197,6 +213,8 @@ router.get('/unknown', async (req, res) => {
 
     return minutesPastMidnightNow <= destinationArrivalTimeMinutes
   })
+
+  activeTripsNow = activeTripsNow.map(adjustTrip)
 
   let busSummary = allTime.reduce((acc, trip) => {
     if (!acc[trip.smartrakID]) acc[trip.smartrakID] = {}
@@ -338,7 +356,8 @@ router.get('/highlights', async (req, res) => {
     busMapping: allBuses.reduce((acc, bus) => {
       acc[bus.smartrakID] = bus.fleetNumber
       return acc
-    }, {})
+    }, {}),
+    busDestinations
   })
 })
 
