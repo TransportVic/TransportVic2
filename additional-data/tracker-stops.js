@@ -284,5 +284,7 @@ module.exports = [
   'vermont/andrew-street-canterbury-road',
   'pakenham/racecourse-road-henry-street',
   'warrandyte/warrandyte-community-church-yarra-street',
-  'research/post-office-main-road'
+  'research/post-office-main-road',
+  'broadmeadows/broadmeadows-shopping-centre-tanderrum-way',
+  'gladstone-park/south-circular-road-gladstone-park-drive'
 ]

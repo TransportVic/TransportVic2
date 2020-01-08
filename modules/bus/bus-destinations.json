@@ -22,6 +22,9 @@
     "223": {
       "154 Somerville Road": "Yarraville"
     },
+    "237": {
+      "Sardine Street/Lorimer Street": "Fishermans Bend"
+    },
     "293": {
       "Para Road/Main Street": "Greensborough"
     },
@@ -122,7 +125,11 @@
       "High Street/Broadway": "Reservoir Railway Station"
     },
     "605": {
+      "North Road/Kooyong Road": "Gardenvale"
       "Begonia Road/Gardenvale Road": "Gardenvale"
+    },
+    "606": {
+      "Page Avenue/Williamstown Road": "Garden City"
     },
     "625": {
       "Riddell Parade/Glenhuntly Road": "Elsternwick"
@@ -293,6 +300,7 @@
     "Williamstown SLSC": "Williamstown",
     "Walnut Street/Church Street": "Whittlesea",
     "Killara Primary School": "Killara Heights",
-    "Killara Primary School - Opp": "Killara Heights"
+    "Killara Primary School - Opp": "Killara Heights",
+    "East Kew Junction": "Kew"
   }
 }
