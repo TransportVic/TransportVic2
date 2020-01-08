@@ -70,17 +70,11 @@
     "476": {
       "Sanctuary Road/Beattys Road": "Plumpton"
     },
-    "481": {
-      "Killara Primary School - Opp": "Mount Lion"
-    },
     "485": {
       "Gap Road/Wilsons Lane": "Wilsons Lane"
     },
     "486": {
       "The Hermitage": "Rolling Meadows"
-    },
-    "487": {
-      "Killara Primary School": "Killara Heights"
     },
     "488": {
       "Jacksons Hill Terminus": "Jacksons Hill"
@@ -297,6 +291,8 @@
     "Little Collins Street/Queen Street": "City (Queen Street)",
     "Collins Street/Queen Street": "City (Queen Street)",
     "Williamstown SLSC": "Williamstown",
-    "Walnut Street/Church Street": "Whittlesea"
+    "Walnut Street/Church Street": "Whittlesea",
+    "Killara Primary School": "Killara Heights",
+    "Killara Primary School - Opp": "Killara Heights"
   }
 }

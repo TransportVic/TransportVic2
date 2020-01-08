@@ -49,10 +49,13 @@ router.get('/', (req, res) => {
 function adjustTrip(trip) {
   let {origin, destination} = trip
   let serviceData = busDestinations.service[trip.routeNumber] || {}
-  trip.destination = (serviceData[destination]
-    || busDestinations.generic[destination] || destination.split('/')[0]).replace('Shopping Centre', 'SC')
-  trip.origin = (serviceData[origin]
-    || busDestinations.generic[origin] || origin.split('/')[0]).replace('Shopping Centre', 'SC')
+  let dA = destination, dB = destination.split('/')[0]
+  let oA = origin, oB = origin.split('/')[0]
+
+  trip.destination = (serviceData[dA] || serviceData[dB]
+    || busDestinations.generic[dA] || busDestinations.generic[dB] || dB).replace('Shopping Centre', 'SC')
+  trip.origin = (serviceData[oA || oB]
+    || busDestinations.generic[oA] || busDestinations.generic[oB] || oB).replace('Shopping Centre', 'SC')
 
   return trip
 }
