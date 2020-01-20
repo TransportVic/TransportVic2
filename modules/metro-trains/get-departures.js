@@ -173,8 +173,10 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
         cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
         // trip is towards at flinders, but ptv api already gave next trip
         // really only seems to happen with cran/pak/frank lines
-      if (northenGroup.includes(routeID) && routeID !== 1482) // all northern group except showgrounds
-        cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
+      if (northenGroup.includes(routeID) && routeID !== 1482) {// all northern group except showgrounds
+        if (runDestination !== 'Flinders Street')
+          cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
+      }
     }
 
     if (isUpTrip && !cityLoopStations.includes(stationName)) {
