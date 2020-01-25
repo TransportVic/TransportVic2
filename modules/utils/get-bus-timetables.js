@@ -66,6 +66,7 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
 
   if (!trip) {
     console.err('Failed to find timetable: ', JSON.stringify(query, null, 1))
+    return null
   }
   return trip
 }
@@ -121,7 +122,7 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
 
     let sortNumber = routeNumber
     if (trip.routeGTFSID.startsWith('7-')) {
-      routeNumber = routeNumber.slice(2)
+      routeNumber = trip.routeGTFSID.slice(2)
       sortNumber = routeNumber.slice(2)
     }
 

@@ -109,6 +109,12 @@
     "518": {
       "Allumba Drive/Beales Road": "St. Helena West"
     },
+    "537": {
+      "Craigieburn Road/Vantage Boulevard": "West Craigieburn"
+    },
+    "541": {
+      "Mount Ridley Road/Aitken Boulevard": "North Craigieburn"
+    },
     "553": {
       "Gilbert Road/Regent Street": "West Preston",
       "High Street/Miller Street": "Preston"
@@ -166,6 +172,9 @@
     "753": {
       "Stud Road/Ferntree Gully Road - Before": "Scoresby"
     },
+    "766": {
+      "Burwood Highway/Warrigal Road": "Burwood"
+    },
     "770": {
       "Karingal SC": "Karingal",
       "Corlett Street/Orwil Street": "Orwil Street"
@@ -202,7 +211,8 @@
       "Veda Avenue/Dunns Road": "Osborne"
     },
     "785": {
-      "Mornington-Tyabb Road/Dunns Road": "Mornington East"
+      "Mornington-Tyabb Road/Dunns Road": "Mornington East",
+      "Civic Reserve/Dunns Road": "Mornington East"
     },
     "787": {
       "Ferry Terminal": "Sorrento"

@@ -230,13 +230,6 @@ module.exports={
   21469: "Bay 1",
   21470: "Bay 2",
 
-  // Tarneit
-  50255: "Bay 1",
-  50256: "Bay 2",
-  50257: "Bay 3",
-  50258: "Bay 4",
-  50259: "Bay 5",
-
   // Sunbury
   20816: "Bay 1",
   18754: "Bay 2",
@@ -282,6 +275,50 @@ module.exports={
   21492: "Bay 6",
   48397: "Bay 7",
   48396: "Bay 8",
+
+  // Melb Airport
+  52172: "Bay 4",
+  47996: "Bay 16",
+  47997: "Bay 17",
+  47998: "Bay 18",
+  47999: "Bay 19",
+
+  // Broadmeadows
+  22314: "Bay 1",
+  21479: "Bay 2",
+  21478: "Bay 3",
+  21477: "Bay 4",
+  21476: "Bay 5",
+
+  // Swanston Street
+  19555: "Bay 2",
+
+  // Chirnside Park SC
+  21301: "Bay 1",
+  21298: "Bay 2",
+  21300: "Bay 3",
+  21299: "Bay 4",
+  21296: "Bay 5",
+
+  // Boronia
+  20995: "Bay 1",
+  20996: "Bay 2",
+  20997: "Bay 3",
+  20998: "Bay 4",
+  20999: "Bay 6",
+  21000: "Bay 7",
+  21001: "Bay 8",
+
+  // Craigieburn
+  40214: "Bay 1",
+
+  // Tarneit
+  50255: "Bay 1",
+  50256: "Bay 2",
+  50257: "Bay 3",
+  50258: "Bay 4",
+  50259: "Bay 5",
+  50260: "Bay 6",
 
   // check ringwood 901 bay, mitcham 738 bay
   // Next up:

@@ -286,5 +286,10 @@ module.exports = [
   'warrandyte/warrandyte-community-church-yarra-street',
   'research/post-office-main-road',
   'broadmeadows/broadmeadows-shopping-centre-tanderrum-way',
-  'gladstone-park/south-circular-road-gladstone-park-drive'
+  'gladstone-park/south-circular-road-gladstone-park-drive',
+  'olinda/parsons-lane-monash-avenue',
+  'coburg/urquhart-street-sydney-road',
+  'cranbourne-north/the-avenue-village-shopping-centre-linden-tree-way',
+  'brunswick/brunswick-railway-station',
+  'aintree/woodlea-boulevard-leakes-road'
 ]
