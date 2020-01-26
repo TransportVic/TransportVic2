@@ -61,7 +61,7 @@ function hashTrip(trip) {
   hash.update(trip.departureTime)
   hash.update(trip.destination)
   hash.update(trip.stopTimings.slice(-1)[0].arrivalTime)
-  return parseInt(hash.digest('hex'), 12)
+  return parseInt(hash.digest('hex'), 16)
 }
 
 async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode, determineDirection, routeFilter, trips) {

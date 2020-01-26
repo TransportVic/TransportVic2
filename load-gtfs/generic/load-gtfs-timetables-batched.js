@@ -40,7 +40,7 @@ database.connect({
   headsign => null, routeGTFSID => true, false)
 
   async function loadBatch() {
-    let lines = await lr.getLines(`gtfs/${gtfsNumber}/trips.txt`, 5000, start)
+    let lines = await lr.getLines(`gtfs/${gtfsNumber}/trips.txt`, 2500, start)
     let lineCount = lines.length
     if (!lineCount) return
 
@@ -62,7 +62,7 @@ database.connect({
     let tripTimingLines = await lr.getLinesFilter(`gtfs/${gtfsNumber}/stop_times.txt`, line => {
       let tripID = line.slice(1, line.indexOf('"', 2))
 
-      return tripIDs.indexOf(shaHash(tripID)) !== -1 // indexOf faster than includes
+      return tripIDs.indexOf(shaHash(tripID)) >= 0 // indexOf faster than includes
     })
     console.log('read ' + tripTimingLines.length + ' lines of timing data, parsing data now - took ' + (new Date() - tstart) / 1000 + 's')
     let tripTimesData = tripTimingLines.map(line => {
@@ -78,7 +78,7 @@ database.connect({
     trips = null
     tripTimesData = null
 
-    console.log('completed 5000 lines: iteration ' + ++iteration)
+    console.log('completed 2500 lines: iteration ' + ++iteration)
 
     global.gc()
     return await loadBatch()
