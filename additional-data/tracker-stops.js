@@ -291,5 +291,8 @@ module.exports = [
   'coburg/urquhart-street-sydney-road',
   'cranbourne-north/the-avenue-village-shopping-centre-linden-tree-way',
   'brunswick/brunswick-railway-station',
-  'aintree/woodlea-boulevard-leakes-road'
+  'aintree/woodlea-boulevard-leakes-road',
+  'rye/avon-road-shopping-centre-dundas-street',
+  'ringwood/heatherdale-railway-station',
+  'ballarat-central/ballarat-base-hospital'
 ]

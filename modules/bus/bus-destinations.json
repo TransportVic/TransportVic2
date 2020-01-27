@@ -151,11 +151,18 @@
       "Yarra View Retirement Village": "Warburton",
       "Whitegum Drive/Woods Point Road": "Warburton East"
     },
+    "684": {
+      "54 Grant Street": "Alexandra"
+    },
     "687": {
       "Heath Road/Old Chum Creek Road": "Chum Creek"
     },
     "689": {
       "Mount Dandenong Road/Montrose Road": "Montrose"
+    },
+    "694": {
+      "Mount Dandenong Observatory": "Mt Dandenong (Sky High)",
+      "Mount Dandenong Hotel": "Olinda"
     },
     "701": {
       "Bent Street/Centre Road": "Bentleigh"
@@ -192,6 +199,10 @@
     "774":{
       "Frankston High School": "Delacombe"
     },
+    "775": {
+      "Mount Erin College": "Lakewood"
+      "Mount Erin Secondary College": "Lakewood"
+    },
     "776": {
       "Ellwood Drive/Baxter-Tooradin Road": "Pearcedale"
     },
@@ -211,8 +222,7 @@
       "Veda Avenue/Dunns Road": "Osborne"
     },
     "785": {
-      "Mornington-Tyabb Road/Dunns Road": "Mornington East",
-      "Civic Reserve/Dunns Road": "Mornington East"
+      "Civic Reserve": "Mornington East"
     },
     "787": {
       "Ferry Terminal": "Sorrento"
@@ -285,7 +295,6 @@
     "Bendigo Retirement Village": "Spring Gully",
     "Rosebud Village SC": "Rosebud",
     "Rosebud Plaza": "Rosebud",
-    "Mount Erin Secondary College": "Lakewood",
     "McKays Road/Centre Road": "Langwarrin",
     "Rye RSL": "Rye",
     "Hygeia Street/Point Nepean Road": "Rye",
