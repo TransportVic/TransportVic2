@@ -294,5 +294,6 @@ module.exports = [
   'aintree/woodlea-boulevard-leakes-road',
   'rye/avon-road-shopping-centre-dundas-street',
   'ringwood/heatherdale-railway-station',
-  'ballarat-central/ballarat-base-hospital'
+  'ballarat-central/ballarat-base-hospital',
+  'rosebud/rosebud-plaza'
 ]
