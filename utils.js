@@ -167,7 +167,7 @@ module.exports = {
     .replace(/Lwr(\b)/g, 'Lower$1')
     .replace(/Prom(\b)/g, 'Promenade$1')
     .replace(/PS(\b)/g, 'Primary School$1')
-    .replace(/Esp(\b)/g, 'Esplande$1')
+    .replace(/Esp(\b)/g, 'Esplanade$1')
     .replace(/Cct(\b)/g, 'Circuit$1')
     .replace(/Mount\./g, 'Mount')
     .replace(/Sq(\b)/g, 'Square$1')
