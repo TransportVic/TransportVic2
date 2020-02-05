@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const compression = require('compression')
+const url = require('url')
 const path = require('path')
 const minify = require('express-minify')
 const fs = require('fs')
@@ -136,6 +137,23 @@ module.exports = class MainServer {
     if (process.env['NODE_ENV'] && process.env['NODE_ENV'] === 'prod') { app.set('view cache', true) }
     app.set('x-powered-by', false)
     app.set('strict routing', false)
+
+    app.use((req, res, next) => {
+      if (req.url.startsWith('/.well-known')) {
+        try {
+          let reqURL = new url.URL('https://transportsg.me' + req.url)
+          const filePath = path.join(config.webrootPath, reqURL.pathname.split('/')[2])
+
+          fs.createReadStream(filePath).pipe(res)
+
+          return
+        } catch (e) {console.log(e)
+        }
+      }
+      next()
+    })
+
+
   }
 
   configRoutes (app) {

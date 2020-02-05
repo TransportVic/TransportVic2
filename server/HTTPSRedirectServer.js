@@ -5,16 +5,16 @@ const config = require('../config.json')
 
 module.exports = class HTTPSRedirectServer {
   app (req, res) {
+    let reqURL = new url.URL('https://transportsg.me' + req.url)
     if (req.url.startsWith('/.well-known')) {
-      req.url = url.URL(req.url)
-      const filePath = path.join(config.webrootPath, req.url.path)
+      const filePath = path.join(config.webrootPath, reqURL.pathname.split('/')[2])
 
       fs.createReadStream(filePath).pipe(res)
 
       return
     }
 
-    const redirectedURL = `https://${config.websiteDNSName}${url.parse(req.url).path}`
+    const redirectedURL = `https://${config.websiteDNSName}${reqURL.pathname}`
 
     res.writeHead(308, { Location: redirectedURL })
     res.end()

@@ -150,7 +150,6 @@ module.exports = [
   'mount-martha/bentons-square-shopping-centre',
   'mount-eliza/mount-eliza-shopping-centre-mount-eliza-way',
   'mornington/barkly-street-bus-interchange-barkly-street',
-  'rosebud-west/point-nepean-arc-point-nepean-road',
   'hoppers-crossing/werribee-plaza-derrimut-road',
   'northcote/northcote-railway-station',
   'gembrook/gembrook-puffing-billy-railway-station-main-street',
@@ -295,5 +294,6 @@ module.exports = [
   'rye/avon-road-shopping-centre-dundas-street',
   'ringwood/heatherdale-railway-station',
   'ballarat-central/ballarat-base-hospital',
-  'rosebud/rosebud-plaza'
+  'rosebud/rosebud-plaza',
+  'st-andrews-beach/st-andrews-beach-bass-meadows-boulevard'
 ]

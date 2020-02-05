@@ -143,6 +143,9 @@
     "630": {
       "St. Kilda Street/Bent Avenue": "Elwood/Bent Avenue"
     },
+    "670": {
+      "Box Hill Institute": "Lilydale Lakeside"
+    },
     "679": {
       "Stradbroke Road/Mount Dandenong Road": "Montrose"
     },
@@ -224,6 +227,9 @@
     "785": {
       "Civic Reserve": "Mornington East"
     },
+    "786": {
+      "Sandy Road/Tiberius Road": "St. Andrews Beach (Loop)"
+    },
     "787": {
       "Ferry Terminal": "Sorrento"
     },
@@ -231,13 +237,16 @@
       "Point Nepean National Park Entrance": "Portsea"
     },
     "792": {
-      "Baxter-Tooradin Road/Pearcedale Road": "Botanic Ridge"
+      "Baxter-Tooradin Road/Pearcedale Road": "Pearcedale"
     },
     "796": {
       "Oroya Grove/Railway Road": "Clyde"
     },
+    "811": {
+      "Spring Park Golf Course": "Dingley Village"
+    },
     "812": {
-      "Boundary Road/Lower Dandenong Road": "Brighton"
+      "Boundary Road/Lower Dandenong Road": "Braeside"
     },
     "824": {
       "Parkmore SC": "Keysborough"
@@ -300,6 +309,7 @@
     "Hygeia Street/Point Nepean Road": "Rye",
     "Melbourne Hill Road/Heidelberg-Warrandyte Road": "Warrandyte",
     "Emerald Village": "Emerald",
+    "Emerald-Monbulk Road/Main Road": "Monbulk",
     "Pakenham Hills Primary School": "Pakenham North",
     "Gembrook Road/Main Street": "Gembrook",
     "Lockwood Road/Mount Morton Road - South": "Belgrave South",
