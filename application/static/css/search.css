@@ -9,7 +9,7 @@
 }
 
 .leftContainer {
-  width: calc(5vw + 5vh);
+  width: calc(5.25vw + 5.25vh);
   height: calc(7vw + 7vh);
 
   display: flex;
@@ -94,7 +94,7 @@
 }
 
 .left-container span {
-  width: calc(5vw + 5vh);
+  width: calc(5.25vw + 5.25vh);
   text-align: center;
 }
 

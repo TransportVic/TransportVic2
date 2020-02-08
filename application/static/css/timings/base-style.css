@@ -65,7 +65,7 @@ div.departure:nth-child(even) a.departureInfo.reservationsOnly {
 }
 
 a.leftContainer {
-  width: calc(5vw + 5vh);
+  width: calc(5.25vw + 5.25vh);
   height: calc(7vw + 7vh);
 
   display: flex;
@@ -81,7 +81,7 @@ a.leftContainer:visited {
 }
 
 a.leftContainer span {
-  width: calc(5vw + 5vh);
+  width: calc(5.25vw + 5.25vh);
   text-align: center;
 }
 
