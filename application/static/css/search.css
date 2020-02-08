@@ -9,7 +9,7 @@
 }
 
 .leftContainer {
-  width: calc(5.25vw + 5.25vh);
+  min-width: calc(5.25vw + 5.25vh);
   height: calc(7vw + 7vh);
 
   display: flex;
@@ -74,7 +74,7 @@
 }
 
 .resultDetails {
-  width: calc(95vw - 5vh);
+  width: calc(95vw - 5.25vh);
   display: flex;
   align-items: left;
   justify-content: center;
@@ -94,7 +94,7 @@
 }
 
 .left-container span {
-  width: calc(5.25vw + 5.25vh);
+  min-width: calc(5.25vw + 5.25vh);
   text-align: center;
 }
 

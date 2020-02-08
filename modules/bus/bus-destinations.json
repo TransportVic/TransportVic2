@@ -4,6 +4,42 @@
       "Windmill Street/Waratah Road": "Huntly",
       "Boronia Road/Midland Highway": "Huntly"
     },
+    "10": {
+      "Coltman Plaza": "Alfredton"
+    },
+    "13": {
+      "Northwood Court": "Invermay Park"
+    },
+    "14": {
+      "Howitt Street/Havelock Street": "Black Hill"
+    },
+    "15": {
+      "Ryan Street/Water Street": "Brown Hill"
+    },
+    "20": {
+      "Wilson Street/Kline Street": "Canadian"
+    },
+    "21": {
+      "Webbs Hills Road/Warrenheip Street": "Buninyong"
+    },
+    "23": {
+      "Cobden Street/Barkley Street": "Mount Pleasant"
+    },
+    "24": {
+      "Edwards Street/Victoria Street": "Sebastopol"
+    },
+    "25": {
+      "James Drive/Whitelaw Avenue": "Delacombe"
+    },
+    "26": {
+      "Parkview Drive/Cuthberts Road": "Alfredton"
+    },
+    "30": {
+      "Broomfield Road/Clunes-Creswick Road": "Creswick"
+    },
+    "31": {
+      "Miners Rest SC": "Miners Rest"
+    },
     "54": {
       "Beckhams Road/Carolyn Way": "Maiden Gully"
     },
@@ -330,7 +366,8 @@
     "Walnut Street/Church Street": "Whittlesea",
     "Killara Primary School": "Killara Heights",
     "Killara Primary School - Opp": "Killara Heights",
-    "East Kew Junction": "Kew",
-    "Brighton Town Hall": "Brighton"
+    "East Kew Terminus": "Kew",
+    "Brighton Town Hall": "Brighton",
+    "Doveton Cresent/Lydiard Street N": "Ballarat Railway Station"
   }
 }
