@@ -48,12 +48,13 @@ append content
           let destinationDepartures = serviceDepartures[destination]
           let departures = destinationDepartures.slice(0, 4)
         div(class=`departure${hasNumber ? '' : ' no-number'}`)
-          // todo route colours
           if hasNumber
             a(class=`leftContainer platform ${classGen(destinationDepartures[0])}`)
-              span=destinationDepartures[0].loopDirection || ''
-              span=destinationDepartures[0].routeNumber
-              span=destinationDepartures[0].bay || ''
+              if destinationDepartures[0].loopDirection
+                span.topText=destinationDepartures[0].loopDirection
+              span.bigNumber=destinationDepartures[0].routeNumber
+              if destinationDepartures[0].bay
+                span.bottomText=destinationDepartures[0].bay
           a.departureInfo
             if !hasNumber
               span.routeName=destinationDepartures[0].trip.routeName

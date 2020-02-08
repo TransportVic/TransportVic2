@@ -81,11 +81,11 @@ append content
           input(type='hidden' name='cancelled')
         a(class=`leftContainer platform ${departure.codedLineName}-line`)
           if departure.platform === 'RRB'
-            span Rail Bus
+            span.topText Rail Bus
             img(src='/static/images/clear-icons/bus.svg')
           else
-            span Platform
-            span=departure.platform || '?'
+            span.topText Platform
+            span.bigNumber=departure.platform || '?'
         a.departureInfo
           span.towards=`${routeName} Line towards`
           span.destination=departure.destination

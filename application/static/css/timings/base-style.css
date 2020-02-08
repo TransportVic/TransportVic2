@@ -85,20 +85,22 @@ a.leftContainer span {
   text-align: center;
 }
 
-a.leftContainer.platform span:nth-child(1) {
+a.leftContainer.platform span.topText {
   font-size: calc(1vw + 1vh);
   line-height: calc(1.1vw + 1.1vh);
 }
 
-a.leftContainer.platform span:nth-child(2) {
-  font-size: calc(2.5vw + 2.5vh);
+a.leftContainer.platform span.bigNumber {
+  font-size: calc(3vw + 3vh);
+  line-height: calc(3vw + 3vh);
 }
 
-a.leftContainer.platform span:nth-child(3) {
-  font-size: calc(1vw + 1vh);
+a.leftContainer.platform span.bottomText {
+  margin-top: calc(0.1vw + 0.1vh);
+  font-size: calc(0.9vw + 0.9vh);
 }
 
-a.leftContainer.platform img:nth-child(2) {
+a.leftContainer.platform img {
   margin-top: calc(0.75vw + 0.75vh);
   height: calc(3vw + 3vh);
   padding-bottom: calc(0.25vw + 0.25vh);

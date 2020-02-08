@@ -47,12 +47,12 @@ append content
         input(type='hidden' name='line' value=departure.trip.shortRouteName)
         a.leftContainer.platform.vline
           if departure.isCoachService
-            span Coach Svc
+            span.topText Coach Svc
             //- img(src='/static/clear-icons/regional-coach.svg')
             img(src='/static/images/clear-icons/bus.svg')
           else
-            span Platform
-            span=departure.platform || '?'
+            span.topText Platform
+            span.bigNumber=departure.platform || '?'
         -
           let departureClass = 'departureInfo'
           if (departure.flags && departure.flags.reservationsOnly)
