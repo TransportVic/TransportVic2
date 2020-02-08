@@ -47,23 +47,24 @@ append content
         -
           let destinationDepartures = serviceDepartures[destination]
           let departures = destinationDepartures.slice(0, 4)
+          let firstDeparture = destinationDepartures[0]
         div(class=`departure${hasNumber ? '' : ' no-number'}`)
           if hasNumber
-            a(class=`leftContainer platform ${classGen(destinationDepartures[0])}`)
-              if destinationDepartures[0].loopDirection
-                span.topText=destinationDepartures[0].loopDirection
-              span.bigNumber=destinationDepartures[0].routeNumber
-              if destinationDepartures[0].bay
-                span.bottomText=destinationDepartures[0].bay
-          a.departureInfo
+            a(class=`leftContainer platform ${classGen(firstDeparture)}`)
+              if firstDeparture.loopDirection
+                span.topText=firstDeparture.loopDirection
+              span.bigNumber=firstDeparture.routeNumber
+              if firstDeparture.bay
+                span.bottomText=firstDeparture.bay
+          a(href=firstDeparture.destinationURL).departureInfo
             if !hasNumber
-              span.routeName=destinationDepartures[0].trip.routeName
+              span.routeName=firstDeparture.trip.routeName
             span.towards Towards
-            span.destination=destinationDepartures[0].destination
-            if destinationDepartures[0].guidanceText
-              span.info.smaller=destinationDepartures[0].guidanceText
-            if destinationDepartures[0].viaText
-              span.info.smaller(style=`width: calc(100vw - (3vw + 3vh) * ${departures.length}${hasNumber ? ' - (5vw + 5vh)' : ''} - (1vw + 1vh) - 1.5vw)`)=destinationDepartures[0].viaText
+            span.destination=firstDeparture.destination
+            if firstDeparture.guidanceText
+              span.info.smaller=firstDeparture.guidanceText
+            if firstDeparture.viaText
+              span.info.smaller(style=`width: calc(100vw - (3vw + 3vh) * ${departures.length}${hasNumber ? ' - (5vw + 5vh)' : ''} - (1vw + 1vh) - 1.5vw)`)=firstDeparture.viaText
           div.timings
             for i in Array(4 - departures.length)
               div.timing.mini(style='display: none')

@@ -43,3 +43,7 @@ div#header-right {
   margin-left: auto;
   margin-right: calc(1vw + 1vh);
 }
+
+#content {
+  overflow-y: hidden;
+}

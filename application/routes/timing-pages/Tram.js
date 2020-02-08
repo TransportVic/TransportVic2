@@ -4,9 +4,11 @@ const getDepartures = require('../../../modules/tram/get-departures')
 const moment = require('moment')
 const utils = require('../../../utils')
 const tramDestinations = require('../../../modules/tram/tram-destinations')
+const async = require('async')
 
 router.get('/:suburb/:stopName', async (req, res) => {
-  const stop = await res.db.getCollection('stops').findDocument({
+  let stops = res.db.getCollection('stops')
+  let stop = await stops.findDocument({
     codedName: req.params.stopName,
     codedSuburb: req.params.suburb
   })
@@ -18,7 +20,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
 
   let departures = await getDepartures(stop, res.db)
 
-  departures = departures.map(departure => {
+  departures = await async.map(departures, async departure => {
     const timeDifference = moment.utc(departure.actualDepartureTime.diff(utils.now()))
 
     if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
@@ -50,6 +52,13 @@ router.get('/:suburb/:stopName', async (req, res) => {
     let {destination} = departure.trip
     if (!utils.isStreet(destinationShortName)) destination = destinationShortName
     departure.destination = tramDestinations[destination] || destination
+
+    let destinationStopTiming = departure.trip.stopTimings.slice(-1)[0]
+    let destinationStop = await stops.findDocument({
+      'bays.stopGTFSID': destinationStopTiming.stopGTFSID
+    })
+
+    departure.destinationURL = `/tram/timings/${destinationStop.codedSuburb[0]}/${destinationStop.codedName}`
 
     return departure
   })
