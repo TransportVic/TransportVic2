@@ -295,5 +295,8 @@ module.exports = [
   'ringwood/heatherdale-railway-station',
   'ballarat-central/ballarat-base-hospital',
   'rosebud/rosebud-plaza',
-  'st-andrews-beach/st-andrews-beach-bass-meadows-boulevard'
+  'st-andrews-beach/st-andrews-beach-bass-meadows-boulevard',
+  'coburg/reynard-street-gordon-street',
+  'whittlesea/whittlesea-showgrounds-yea-road',
+  'reservoir/edwardes-street-spring-street'
 ]

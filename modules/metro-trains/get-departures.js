@@ -85,7 +85,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
       run.vehicle_descriptor = {}
     }
 
-    if (routeID === 13) { // stony point platforms
+    if (routeID === 13 && platform != 'RRB') { // stony point platforms
       if (station.stopName === 'Frankston Railway Station') platform = 3;
       else platform = 1;
       run.vehicle_descriptor = {} // ok maybe we should have kept the STY timetable but ah well
