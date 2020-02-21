@@ -228,6 +228,31 @@ router.get('/unknown', async (req, res) => {
   res.render('tracker/unknown', {activeTripsNow, busSummary})
 })
 
+router.get('/by-date', async (req, res) => {
+  let {db} = res
+  let busTrips = db.getCollection('bus trips')
+  let smartrakIDs = db.getCollection('smartrak ids')
+
+  let {bus, date} = querystring.parse(url.parse(req.url).query)
+
+  let smartrakID = bus
+  let fleetNumber = '@' + bus
+  let lookup = await smartrakIDs.findDocument({
+    fleetNumber: bus
+  })
+  if (lookup) {
+    smartrakID = lookup.smartrakID
+    fleetNumber = '#' + fleetNumber
+  }
+
+  let trips = await busTrips.findDocuments({
+    date,
+    smartrakID
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
+  res.render('tracker/by-date', {fleetNumber, trips, date})
+})
+
 router.get('/highlights', async (req, res) => {
   let {db} = res
   let busTrips = db.getCollection('bus trips')
