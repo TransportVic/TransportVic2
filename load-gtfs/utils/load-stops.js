@@ -2,7 +2,7 @@ const utils = require('../../utils')
 const async = require('async')
 const crypto = require('crypto')
 
-function createStopHash(stopName) {
+function hash(stopName) {
     let hash = crypto.createHash('sha1')
     hash.update(stopName)
     return hash.digest('hex')
@@ -124,6 +124,7 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
     let suburbOverride = null
     if (fullStopName === 'Ascot Street/Sturt Street') {
       suburbOverride = 'Ballarat Central'
+      originalName += ' (Ballarat Central)'
     }
 
     return {
@@ -142,7 +143,9 @@ module.exports = async function (stopsData, stops, mode, lookupTable, adjustStop
   let mergedStops = {}
 
   function getStopHashID(bayData, shortName) {
-    let stopHash = createStopHash(bayData.fullStopName)
+    let suburb = bayData.originalName.match(/\((.+)\)$/)
+    if (!suburb) console.log(bayData)
+    let stopHash = hash(bayData.fullStopName + suburb)
     if (utils.isStreet(shortName)) return stopHash
 
     let bayCoordinates = bayData.location.coordinates
