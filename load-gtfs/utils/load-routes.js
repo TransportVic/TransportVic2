@@ -21,6 +21,8 @@ module.exports = async function(routeData, shapeData, routes, operator, mode, ad
     let shortRouteName = null
 
     let routeNumber = values[2]
+    if (routeNumber.includes('TeleBus '))
+      routeNumber = routeNumber.replace('TeleBus ', 'TB')
 
     if (adjustedRouteName instanceof Array) {
       shortRouteName = adjustedRouteName[1]

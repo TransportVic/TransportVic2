@@ -11,7 +11,7 @@ router.get('/:routeNumber', async (req, res, next) => {
   let matchingRoute = await routes.findDocument({
     mode: 'bus',
     routeNumber,
-    routeGTFSID: /4-/
+    routeGTFSID: /(4|7|8)-/
   })
 
   if (!matchingRoute) return next()
@@ -32,7 +32,7 @@ router.get('/:routeNumber/:directionName', async (req, res, next) => {
   let matchingRoute = await routes.findDocument({
     mode: 'bus',
     routeNumber,
-    routeGTFSID: /4-/
+    routeGTFSID: /(4|7|8)-/
   })
 
   if (!matchingRoute) return next()

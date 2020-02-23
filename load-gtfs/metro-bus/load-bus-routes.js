@@ -54,7 +54,7 @@ database.connect({
 
     if (!defaultOperator) {
       console.log('Could not map operator for route ' + routeGTFSID + ': ' + routeNumber + ' ' + routeName)
-      return ["Unknown operator"]
+      return ['Unknown operator']
     }
     return [defaultOperator]
   }, 'bus', (_, routeGTFSID) => {
