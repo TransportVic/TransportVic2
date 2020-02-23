@@ -14,11 +14,11 @@
 
 #routeSummary {
   display: flex;
-  height: calc(7vh + 6vw);
+  height: calc(6vw + 7vh);
 }
 
 #routeNumber {
-  width: calc(9vh + 9vw);
+  width: calc(9vw + 9vh);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,20 +26,20 @@
 }
 
 #routeText {
-  font-size: calc(3vh + 3vw);
-  margin-top: calc(-1vh - 0.6vw);
+  font-size: calc(3vw + 3vh);
+  margin-top: calc(-0.3vw - 0.3vh);
 }
 
 #terminals > a {
-  height: calc(3.5vh + 3vw);
+  height: calc(3vw + 3.5vh);
   display: flex;
   align-items: center;
-  font-size: calc(1.7vh + 1.3vw);
+  font-size: calc(1.3vw + 1.7vh);
   width: calc(100vw - 9vw - 9vh);
 }
 
 #terminals > a > span {
-  margin-left: calc(1.2vh + 0.5vw);
+  margin-left: calc(0.5vw + 1.2vh);
 }
 
 .table-header {
@@ -47,10 +47,10 @@
 }
 
 .table-data {
-  height: calc(3.3vh + 3.3vw);
+  height: calc(3.3vw + 3.3vh);
   display: flex;
   align-items: center;
-  font-size: calc(1.3vh + 1.4vw);
+  font-size: calc(1.3vw + 1.3vh);
   justify-content: center;
 }
 
@@ -71,12 +71,13 @@
 }
 
 .freqTime > span:nth-child(1) {
-  font-size: calc(1.1vh + 1.2vw);
+  font-size: calc(1.3vw + 1.5vh);
+  margin-top: calc(-0.2vh - 0.3vw);
 }
 
 .freqTime > span:nth-child(2) {
-  font-size: calc(0.5vh + 0.8vw);
-  margin-top: calc(-0.1vh - 0.3vw);
+  font-size: calc(0.8vw + 1vh);
+  margin-top: calc(-0.4vh - 0.3vw);
 }
 
 #keyTimings > div.coloured-row:nth-child(5) {
@@ -98,15 +99,15 @@
   }
 
   .table-header {
-    font-size: calc(1.2vh + 1vw);
+    font-size: calc(1vw + 1.2vh);
   }
 
-  #keyTimings > div.coloured-row:nth-child(5) {
-    display: block;
+  #keyTimings .coloured-row.table-data {
+    height: calc(5.5vw + 5.5vh);
   }
 
-  #keyTimings > div.coloured-row > :nth-child(1) {
-    font-size: calc(1vw + 1.1vh);
+  #keyTimings > div.coloured-row {
+    font-size: calc(1.5vw + 1.2vh);
   }
 
 }
