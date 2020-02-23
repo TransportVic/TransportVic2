@@ -3,6 +3,8 @@ const config = require('../config.json')
 const async = require('async')
 const mergeStops = require('./utils/merge-stops')
 const updateStats = require('./utils/gtfs-stats')
+const busDestinations = require('../additional-data/bus-destinations')
+const utils = require('../utils')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let gtfsTimetables = null
@@ -22,7 +24,8 @@ database.connect({}, async err => {
   let stopsByService = []
 
   await async.forEach(allRoutes, async routeGTFSID => {
-    let routeVariants = (await routes.findDocument({ routeGTFSID })).routePath
+    let routeData = await routes.findDocument({ routeGTFSID })
+    let routeVariants = routeData.routePath
       .map(variant => variant.fullGTFSIDs.slice(0, 1))
       .reduce((acc, r) => acc.concat(r), [])
     let routeDirections = []
@@ -36,14 +39,23 @@ database.connect({}, async err => {
       routeDirections[timetable.gtfsDirection].push(timetable.stopTimings.map(e => ({stopName: e.stopName, stopGTFSID: e.stopGTFSID})))
     })
 
-    routeDirections.forEach(direction => {
+    routeDirections.forEach((direction, gtfsDirection) => {
       let mergedStops = mergeStops(direction, (a, b) => a.stopName == b.stopName)
 
       let directionName = mergedStops.slice(-1)[0].stopName
 
+      let directionShortName = directionName.split('/')[0]
+      if (!utils.isStreet(directionShortName)) directionName = directionShortName
+
+      let serviceData = busDestinations.service[routeData.routeNumber] || busDestinations.service[routeGTFSID] || {}
+
+      directionName = serviceData[directionName]
+        || busDestinations.generic[directionName] || directionName
+
       if (!stopsByService[routeGTFSID]) stopsByService[routeGTFSID] = []
       stopsByService[routeGTFSID].push({
         directionName,
+        gtfsDirection,
         stops: mergedStops
       })
     })

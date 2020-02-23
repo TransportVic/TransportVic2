@@ -1,0 +1,77 @@
+extends ../layout
+
+block head
+  //- title=`TransportVic - ${trip.departureTime} ${trip.origin} to ${trip.destination}`
+  
+block title
+//- - function processName(name) { return shorternStopName(name.split('/')[0]) }
+//- span=`${trip.departureTime} ${processName(trip.origin)} to ${processName(trip.destination)}`
+
+block style
+  link(rel='stylesheet' href='/static/css/routes/base-style.css')
+  link(rel='stylesheet' href='/static/css/routes/bus.css')
+  link(rel='stylesheet' href='/static/css/combined-colours.css')
+      
+block content
+  div#routeSummary
+    a(class=operator href=url)#routeNumber
+      span#routeText #{route.routeNumber}
+    div#terminals
+      a().coloured-row
+        span=directionNames[1]
+      a().coloured-row
+        span=directionNames[0]
+  div#serviceTimings
+    div#keyTimings
+      div.table-header.table-data.spacing1
+        span Days
+        span First Bus
+        span Last Bus
+      div.coloured-row.table-data.spacing1
+        span Weekdays
+        span=firstLastBusMap.firstBus.weekday
+        span=firstLastBusMap.lastBus.weekday
+      div.coloured-row.table-data.spacing1
+        span Saturday
+        span=firstLastBusMap.firstBus.saturday
+        span=firstLastBusMap.lastBus.saturday
+      div.coloured-row.table-data.spacing1
+        span Sundays / PH
+        span=firstLastBusMap.firstBus.sunday
+        span=firstLastBusMap.lastBus.sunday
+      div.coloured-row.table-data
+    div#frequency
+      div.table-header.table-data.spacing1
+        span Time Of Day
+        span Min Frequency
+        span Max Frequency
+      div.coloured-row.table-data.spacing1
+        div.freqTime
+          span 0000 - 0600
+          span Early Morning
+        span=frequencyMap.weekday['Early Morning'].min || '-'
+        span=frequencyMap.weekday['Early Morning'].max || '-'
+      div.coloured-row.table-data.spacing1
+        div.freqTime
+          span 0600 - 1000
+          span Morning Peak
+        span=frequencyMap.weekday['Morning Peak'].min || '-'
+        span=frequencyMap.weekday['Morning Peak'].max || '-'
+      div.coloured-row.table-data.spacing1
+        div.freqTime
+          span 1000 - 1630
+          span Afternoon
+        span=frequencyMap.weekday['Afternoon'].min || '-'
+        span=frequencyMap.weekday['Afternoon'].max || '-'
+      div.coloured-row.table-data.spacing1
+        div.freqTime
+          span 1630 - 2030
+          span Evening Peak
+        span=frequencyMap.weekday['Evening Peak'].min || '-'
+        span=frequencyMap.weekday['Evening Peak'].max || '-'
+      div.coloured-row.table-data.spacing1
+        div.freqTime
+          span 2030 - 2400
+          span Night
+        span=frequencyMap.weekday['Night'].min || '-'
+        span=frequencyMap.weekday['Night'].max || '-'

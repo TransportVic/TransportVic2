@@ -4,7 +4,7 @@ const utils = require('../../../utils')
 const router = new express.Router()
 const url = require('url')
 const querystring = require('querystring')
-const busDestinations = require('../../../modules/bus/bus-destinations')
+const busDestinations = require('../../../additional-data/bus-destinations')
 
 const highlightData = require('../../../additional-data/tracker-highlights')
 
