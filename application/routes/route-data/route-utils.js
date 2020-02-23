@@ -196,7 +196,6 @@ function generateFrequencyMapOnDate(stopList, trips, round=false) {
       min: [],
       max: []
     }
-
     frequencies.forEach(frequency => {
       finalFrequency.min.push(frequency.min)
       finalFrequency.max.push(frequency.max)
@@ -210,8 +209,8 @@ function generateFrequencyMapOnDate(stopList, trips, round=false) {
       finalFrequency.max = finalFrequency.max.filter(e => e !== -1)
     }
 
-    finalFrequency.min = finalFrequency.min.reduce((a, e) => a + e, 0) / finalFrequency.min.length
-    finalFrequency.max = finalFrequency.max.reduce((a, e) => a + e, 0) / finalFrequency.max.length
+    finalFrequency.min = finalFrequency.min.sort((a, b) => a - b)[0]
+    finalFrequency.max = finalFrequency.max.sort((a, b) => b - a)[0]
 
     if (round) {
       finalFrequency.min = Math.round(finalFrequency.min)
@@ -254,7 +253,16 @@ async function generateFrequencyMap(gtfsTimetables, query, stopList) {
     })
   })
 
+
   Object.keys(weekdayFrequency).forEach(name => {
+    let has1Bus = !!weekdayFrequency[name].min.find(e => e === -1)
+    let hasMultipleBus = !!weekdayFrequency[name].min.find(e => e !== -1)
+
+    if (has1Bus && hasMultipleBus) {
+      weekdayFrequency[name].min = weekdayFrequency[name].min.filter(e => e !== -1)
+      weekdayFrequency[name].max = weekdayFrequency[name].max.filter(e => e !== -1)
+    }
+
     weekdayFrequency[name].min = Math.round(weekdayFrequency[name].min.reduce((a, e) => a + e, 0) / weekdayFrequency[name].min.length)
     weekdayFrequency[name].max = Math.round(weekdayFrequency[name].max.reduce((a, e) => a + e, 0) / weekdayFrequency[name].max.length)
   })
