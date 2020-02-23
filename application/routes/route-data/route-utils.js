@@ -147,7 +147,7 @@ function calculateFrequency(departureTimes) {
     return e - a[i - 1]
   }).slice(1).sort((a, b) => a - b)
 
-  if (departureTimes.length == 1) return {min: -1, max: -1}
+  if (departureTimes.length === 1) return {min: -1, max: -1}
 
   return {
     min: headways[0],
@@ -196,13 +196,22 @@ function generateFrequencyMapOnDate(stopList, trips, round=false) {
       min: [],
       max: []
     }
+
     frequencies.forEach(frequency => {
       finalFrequency.min.push(frequency.min)
       finalFrequency.max.push(frequency.max)
     })
 
-    finalFrequency.min = finalFrequency.min.reduce((a, e) => a + e, 0) / frequencies.length
-    finalFrequency.max = finalFrequency.max.reduce((a, e) => a + e, 0) / frequencies.length
+    let has1Bus = !!finalFrequency.min.find(e => e === -1)
+    let hasMultipleBus = !!finalFrequency.min.find(e => e !== -1)
+
+    if (has1Bus && hasMultipleBus) {
+      finalFrequency.min = finalFrequency.min.filter(e => e !== -1)
+      finalFrequency.max = finalFrequency.max.filter(e => e !== -1)
+    }
+
+    finalFrequency.min = finalFrequency.min.reduce((a, e) => a + e, 0) / finalFrequency.min.length
+    finalFrequency.max = finalFrequency.max.reduce((a, e) => a + e, 0) / finalFrequency.max.length
 
     if (round) {
       finalFrequency.min = Math.round(finalFrequency.min)
