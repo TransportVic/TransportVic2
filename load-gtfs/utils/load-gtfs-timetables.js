@@ -140,8 +140,19 @@ async function loadBatchIntoDB(db, calendar, calendarDates, tripTimesData, mode,
   await async.forEach(Object.keys(allTrips), async tripID => {
     allTrips[tripID].stopTimings = allTrips[tripID].stopTimings.filter(Boolean)
     let stopTimings = allTrips[tripID].stopTimings
-
     stopTimings = stopTimings.filter(Boolean)
+
+    stopTimings = stopTimings.map((e, i, a) => {
+      if (i === 0) return e
+      if (e.arrivalTimeMinutes < a[i - 1].departureTimeMinutes) {
+        e.arrivalTimeMinutes += 1440
+        e.departureTimeMinutes += 1440
+      }
+      if (e.departureTimeMinutes < a[i - 1].departureTimeMinutes) {
+        e.departureTimeMinutes += 1440
+      }
+      return e
+    })
     let stopCount = stopTimings.length
 
     allTrips[tripID].destination = stopTimings[stopCount - 1].stopName

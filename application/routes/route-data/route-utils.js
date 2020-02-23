@@ -2,11 +2,11 @@ const moment = require('moment')
 const async = require('async')
 
 let frequencyRanges = {
-  'Early Morning': [[0, 0], [6, 00]],
+  'Early Morning': [[3, 0], [6, 00]],
   'Morning Peak': [[6, 00], [10, 0]],
   'Afternoon': [[10, 0], [16, 30]],
   'Evening Peak': [[16, 30], [20, 30]],
-  'Night': [[20, 30], [24, 0]]
+  'Night': [[20, 30], [27, 0]]
 }
 
 function getDistantWeekdays(allAvailableDays) {
@@ -134,14 +134,16 @@ function splitDeparturesIntoFrequencyBands(bands, departureTimes) {
       let band = bands[bandName]
       return band[0] <= departureTime && departureTime < band[1]
     })
-    departureBands[departureBand].push(departureTime)
+
+    if (departureBand)
+      departureBands[departureBand].push(departureTime)
   })
   return departureBands
 }
 
 function calculateFrequency(departureTimes) {
-  let headways = departureTimes.map((e, i, a) => {
-    if (i === 0) return -1
+  let headways = departureTimes.sort((a, b) => a - b).map((e, i, a) => {
+    if (i === 0) return -100
     return e - a[i - 1]
   }).slice(1).sort((a, b) => a - b)
 
@@ -153,7 +155,7 @@ function calculateFrequency(departureTimes) {
   }
 }
 
-function generateFrequencyMapOnDate(stopList, trips) {
+function generateFrequencyMapOnDate(stopList, trips, round=false) {
   let stops = {}
   let overallFrequency = {}
 
@@ -202,6 +204,11 @@ function generateFrequencyMapOnDate(stopList, trips) {
     finalFrequency.min = finalFrequency.min.reduce((a, e) => a + e, 0) / frequencies.length
     finalFrequency.max = finalFrequency.max.reduce((a, e) => a + e, 0) / frequencies.length
 
+    if (round) {
+      finalFrequency.min = Math.round(finalFrequency.min)
+      finalFrequency.max = Math.round(finalFrequency.max)
+    }
+
     overallFrequency[bandName] = finalFrequency
   })
 
@@ -209,7 +216,6 @@ function generateFrequencyMapOnDate(stopList, trips) {
 }
 
 async function generateFrequencyMap(gtfsTimetables, query, stopList) {
-
   let operationDays = await getOperationDays(gtfsTimetables, query)
   let parsedOperationDays = parseOperationDays(operationDays)
 
@@ -232,8 +238,10 @@ async function generateFrequencyMap(gtfsTimetables, query, stopList) {
 
   Object.values(indvWeekdayFrequencies).forEach(freq => {
     Object.keys(freq).forEach(name => {
-      weekdayFrequency[name].min.push(freq[name].min)
-      weekdayFrequency[name].max.push(freq[name].max)
+      if (freq[name].min) {
+        weekdayFrequency[name].min.push(freq[name].min)
+        weekdayFrequency[name].max.push(freq[name].max)
+      }
     })
   })
 
@@ -241,8 +249,9 @@ async function generateFrequencyMap(gtfsTimetables, query, stopList) {
     weekdayFrequency[name].min = Math.round(weekdayFrequency[name].min.reduce((a, e) => a + e, 0) / weekdayFrequency[name].min.length)
     weekdayFrequency[name].max = Math.round(weekdayFrequency[name].max.reduce((a, e) => a + e, 0) / weekdayFrequency[name].max.length)
   })
-  let saturdayFrequency = generateFrequencyMapOnDate(stopList, saturdayTrips)
-  let sundayFrequency = generateFrequencyMapOnDate(stopList, sundayTrips)
+
+  let saturdayFrequency = generateFrequencyMapOnDate(stopList, saturdayTrips, true)
+  let sundayFrequency = generateFrequencyMapOnDate(stopList, sundayTrips, true)
 
   function check1Bus(frequencyMap) {
     Object.keys(frequencyMap).forEach(name => {
