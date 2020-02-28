@@ -301,7 +301,7 @@ router.get('/highlights', async (req, res) => {
   }).sort({departureTime: 1, origin: 1}).toArray()
 
   let transdevMinibuses = await getBuses(highlightData.transdev_minibuses)
-  let strayTrandevMinibuses = await busTrips.findDocuments({
+  let strayTransdevMinibuses = await busTrips.findDocuments({
     date,
     smartrakID: { $in: transdevMinibuses },
     routeNumber: { $not: { $in: highlightData.transdev_minibus_routes } }
