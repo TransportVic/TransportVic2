@@ -168,7 +168,8 @@
     },
     "605": {
       "North Road/Kooyong Road": "Gardenvale",
-      "Begonia Road/Gardenvale Road": "Gardenvale"
+      "Begonia Road/Gardenvale Road": "Gardenvale",
+      "A'Beckett Street/Queen Street": "City (Queen Street)"
     },
     "606": {
       "Page Avenue/Williamstown Road": "Garden City"
@@ -198,6 +199,10 @@
     },
     "689": {
       "Mount Dandenong Road/Montrose Road": "Montrose"
+    },
+    "693": {
+      "Sara Road/Ferntree Gully Road": "Scoresby",
+      "Stud Road/Ferntree Gully Road": "Scoresby",
     },
     "694": {
       "Mount Dandenong Observatory": "Mt Dandenong (Sky High)",
@@ -302,6 +307,10 @@
     "841": {
       "Claire Robinson Park": "Narre Warren North"
     },
+    "843": {
+      "John Strover Reserve": "Endeavour Hills",
+      "Maryrose Cresent/Reema Boulevard": "Endeavour Hills (Maryrose Cres)"
+    },
     "858": {
       "Egret Drive/Edithvale Road": "Aspendale Gardens"
     },
@@ -368,6 +377,7 @@
     "Killara Primary School - Opp": "Killara Heights",
     "East Kew Terminus": "Kew",
     "Brighton Town Hall": "Brighton",
-    "Doveton Cresent/Lydiard Street N": "Ballarat Railway Station"
+    "Doveton Cresent/Lydiard Street N": "Ballarat Railway Station",
+    "Belg Railway Station": "Belgrave Railway Station"
   }
 }
