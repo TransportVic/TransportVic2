@@ -1,6 +1,6 @@
 module.exports = {
   ventura_minibus: ['V376', 'V377', 'V719', 'V720', 'V721', 'V722', 'V724', 'V741', 'V744', 'V745', 'V826', 'V1074', 'V1075', 'V1076', 'V1077', 'V1079', 'V1080', 'V1081', 'V1082', 'V1083', 'V1084', 'V1085', 'V1086', 'V1087', 'V1268', 'V1269', 'V1270', 'V1310', 'V1311', 'V1377', 'V1408'],
-  ventura_minibus_routes: ['526', '527', '548', '549', '550', '551', '670', '671', '672', '673', '676', '677', '680', '786', '787', '886', 'TB1', 'TB2', 'TB3', 'TB4', 'TB7', 'TB8', 'TB9'],
+  ventura_minibus_routes: ['526', '527', '548', '549', '550', '551', '670', '671', '672', '673', '676', '677', '680', '786', '787', '886', '887', 'TB1', 'TB2', 'TB3', 'TB4', 'TB7', 'TB8', 'TB9'],
   ventura_artics: ['V100', 'V102', 'V136', 'V143', 'V190', 'V292', 'V293', 'V294', 'V730', 'V732', 'V733', 'V734', 'V735', 'V842', 'V1271', 'V1374', 'V1378', 'V1379', 'V1380', 'V1422', 'V1423'],
   ventura_artic_routes: ['811', '812', '813', '843', '664', '670', '679', '788'],
   ventura_specials: ['V187', 'V287', 'V322', 'V329', 'V330', 'V343', 'V346', 'V372', 'V474', 'V491', 'V784', 'V785', 'V786', 'V787', 'V789', 'V792', 'V1175', 'V1176', 'V1182', 'V1195', 'V1380', 'V1445'],
@@ -34,5 +34,5 @@ module.exports = {
 
   dysons_specials: ['D185', 'D321' ,'D758', 'D762', 'D763', 'D764'],
 
-  report_unknown: ['Ventura Bus Lines', 'CDC Ballarat', 'Cranbourne Transit', 'Sunbury Bus Service', 'Martyrs Bus Service', 'Dysons']
+  report_unknown: ['Ventura Bus Lines', 'CDC Ballarat', 'Cranbourne Transit', 'Sunbury Bus Service', 'Martyrs Bus Service', 'Dysons', 'Ryan Bros Bus Service', 'McKenzies Tourist Service']
 }
