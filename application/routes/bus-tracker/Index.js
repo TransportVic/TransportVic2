@@ -243,6 +243,8 @@ router.get('/by-date', async (req, res) => {
   if (lookup) {
     smartrakID = lookup.smartrakID
     fleetNumber = '#' + fleetNumber
+  } else {
+    smartrakID = parseInt(smartrakID)
   }
 
   let trips = await busTrips.findDocuments({
@@ -265,7 +267,7 @@ router.get('/highlights', async (req, res) => {
   }
 
   let venturaMinibuses = await getBuses(highlightData.ventura_minibus)
-  let strayMinibuses = await busTrips.findDocuments({
+  let strayVenturaMinibuses = await busTrips.findDocuments({
     date,
     smartrakID: { $in: venturaMinibuses },
     routeNumber: { $not: { $in: highlightData.ventura_minibus_routes} }
@@ -298,6 +300,17 @@ router.get('/highlights', async (req, res) => {
     routeNumber: { $in: highlightData.transdev_smartbus_orbital_routes }
   }).sort({departureTime: 1, origin: 1}).toArray()
 
+  let transdevMinibuses = await getBuses(highlightData.transdev_minibuses)
+  let strayTrandevMinibuses = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: transdevMinibuses },
+    routeNumber: { $not: { $in: highlightData.transdev_minibus_routes } }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+  let strayNonTrandevMinibuses = await busTrips.findDocuments({
+    date,
+    smartrakID: { $not: { $in: transdevMinibuses } },
+    routeNumber: { $in: highlightData.transdev_minibus_routes }
+  }).sort({departureTime: 1, origin: 1}).toArray()
 
   let cranbourneO405NH = await getBuses(highlightData.cranbourne_o405nh)
   let strayO405NH = await busTrips.findDocuments({
@@ -341,6 +354,13 @@ router.get('/highlights', async (req, res) => {
     routeNumber: { $not: { $in: highlightData.cdc_oakleigh_hybrid_routes } }
   }).sort({departureTime: 1, origin: 1}).toArray()
 
+  let cdcExDrivers = await getBuses(highlightData.cdc_ex_drivers)
+  let strayCDCExDrivers = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: cdcExDrivers },
+    routeNumber: { $in: highlightData.cdc_non_ex_drivers_routes }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
   let tullaSpecialsBuses = await getBuses(highlightData.tulla_specials)
   let tullaSpecials = await busTrips.findDocuments({
     date,
@@ -367,11 +387,13 @@ router.get('/highlights', async (req, res) => {
   }).sort({departureTime: 1, origin: 1}).toArray()
 
   res.render('tracker/highlights', {
-    strayMinibuses,
+    strayVenturaMinibuses,
     strayArtics,
     straySpecials,
     strayB10BLEs,
     strayNonorbitals,
+    strayTrandevMinibuses,
+    strayNonTrandevMinibuses,
     strayO405NH,
     strayLiveryBuses,
     straySitaOld,
@@ -379,6 +401,7 @@ router.get('/highlights', async (req, res) => {
     non900Perm,
     unknownBuses,
     strayCOHybrids,
+    strayCDCExDrivers,
     tullaSpecials,
     sunburySpecials,
     busMapping: allBuses.reduce((acc, bus) => {
