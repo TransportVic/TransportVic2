@@ -392,7 +392,7 @@ router.get('/highlights', async (req, res) => {
     straySpecials,
     strayB10BLEs,
     strayNonorbitals,
-    strayTrandevMinibuses,
+    strayTransdevMinibuses,
     strayNonTrandevMinibuses,
     strayO405NH,
     strayLiveryBuses,
