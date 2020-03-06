@@ -37,7 +37,8 @@ const operators = {
   "Kastoria Bus Lines": "K",
   "Broadmeadows Bus Service": "B",
   "Panorama Coaches": "P",
-  "Christians Bus Company (Bendigo)": "CC"
+  "Christians Bus Company (Bendigo)": "CC",
+  "Warragul Bus Lines": "W"
 }
 
 router.get('/', (req, res) => {

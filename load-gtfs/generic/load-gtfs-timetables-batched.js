@@ -14,6 +14,7 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/gtfs-stats')
 
 let benchmarkStart = new Date()
+let batchSize = 4000
 
 // check flag exists
 global.gc()
@@ -40,7 +41,7 @@ database.connect({
   headsign => null, routeGTFSID => true, false)
 
   async function loadBatch() {
-    let lines = await lr.getLines(`gtfs/${gtfsNumber}/trips.txt`, 2500, start)
+    let lines = await lr.getLines(`gtfs/${gtfsNumber}/trips.txt`, batchSize, start)
     let lineCount = lines.length
     if (!lineCount) return
 
@@ -57,6 +58,11 @@ database.connect({
     let tripIDs = trips.map(trip => shaHash(trip[2]))
 
     // console.log('read in trip data, reading timing data now - ' + rawTripTimesData.length + ' lines to check, ' + tripIDs.length + ' trips to match')
+    if (tripIDs.length === 0) {
+      global.gc()
+
+      return console.log('read in trip data, nothing to load, skipping.')
+    }
     console.log('read in trip data, reading timing data now ' + tripIDs.length + ' trips to match')
     let tstart = new Date()
     let tripTimingLines = await lr.getLinesFilter(`gtfs/${gtfsNumber}/stop_times.txt`, line => {
@@ -78,7 +84,7 @@ database.connect({
     trips = null
     tripTimesData = null
 
-    console.log('completed 2500 lines: iteration ' + ++iteration)
+    console.log('completed ' + batchSize + ' lines: iteration ' + ++iteration)
 
     global.gc()
     return await loadBatch()
