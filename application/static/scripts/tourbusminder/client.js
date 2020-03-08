@@ -2,9 +2,6 @@ mapboxgl.accessToken = 'pk.eyJ1IjoidW5pa2l0dHkiLCJhIjoiY2p6bnVvYWJ4MDdlNjNlbWsxM
 
 let nosleep, map
 
-let previousCoordinates = null
-let animationFramerate = 12
-
 function focusMapAt(position, duration) {
   let {coords} = position
   let easeTo = {
@@ -24,43 +21,12 @@ function positionWatcher(position) {
   let coordinates = [coords.longitude, coords.latitude]
   let timestamp = position.timestamp
 
-  if (previousCoordinates) {
-    let route = {
-      type: 'Feature',
-      geometry: {
-        type: 'LineString',
-        coordinates: [previousCoordinates.coordinates, coordinates]
-      }
-    }
+  map.getSource('point').setData({
+    type: 'Point',
+    coordinates
+  })
 
-    let lineDistance = turf.lineDistance(route, {units: 'kilometers'})
-    let timeDifference = timestamp - previousCoordinates.timestamp
-
-    let pointCount = Math.ceil(timeDifference * animationFramerate / 1000)
-    let pointDistance = lineDistance / pointCount
-
-    if (lineDistance > 0) {
-      for (let i = 0; i <= pointCount; i++) {
-        let point = turf.along(route, i * pointDistance, {units: 'kilometers'})
-
-        setTimeout(() => {
-          map.getSource('point').setData(point.geometry)
-        }, 1000 / animationFramerate * i)
-      }
-    }
-  } else {
-    map.getSource('point').setData({
-      type: 'Point',
-      coordinates
-    })
-  }
-
-  focusMapAt(position, (timestamp - previousCoordinates.timestamp) / 10)
-
-  previousCoordinates = {
-    coordinates,
-    timestamp
-  }
+  focusMapAt(position, 250)
 }
 
 function setupLayer(position) {
@@ -82,11 +48,6 @@ function setupLayer(position) {
       'circle-color': '#007cbf'
     }
   })
-
-  previousCoordinates = {
-    coordinates: [coords.longitude, coords.latitude],
-    timestamp: position.timestamp
-  }
 
   focusMapAt(position, 1000)
 }
