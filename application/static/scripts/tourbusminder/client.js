@@ -4,11 +4,16 @@ let nosleep, map
 
 function focusMapAt(position, duration) {
   let {coords} = position
-  map.flyTo({
+  let flyTo = {
     center: [coords.longitude, coords.latitude],
     zoom: 17,
-    duration
-  })
+    duration,
+  }
+
+  if (coords.heading)
+    flyTo.bearing = coords.heading
+
+  map.flyTo(flyTo)
 }
 
 function positionWatcher(position) {
@@ -43,20 +48,23 @@ function setupLayer(position) {
   focusMapAt(position, 1000)
 }
 
+function enableNoSleep() {
+  $('img#nosleep-icon').className = 'enabled'
+  nosleep.enable()
+}
+
+function disableNoSleep() {
+  $('img#nosleep-icon').className = ''
+  nosleep.disable()
+}
+
 $.ready(() => {
   nosleep = new NoSleep()
   let nosleepEnabled = false
-  let nosleepIcon = $('img#nosleep-icon')
 
-  nosleepIcon.on('click', () => {
-    nosleepEnabled = !nosleepEnabled
-    if (nosleepEnabled) {
-      nosleepIcon.className = ''
-      nosleep.enable()
-    } else {
-      nosleepIcon.className = 'enabled'
-      nosleep.disable()
-    }
+  $('img#nosleep-icon').on('click', () => {
+    if (nosleepEnabled = !nosleepEnabled) enableNoSleep()
+    else disableNoSleep()
   })
 
   map = new mapboxgl.Map({
