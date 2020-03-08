@@ -1,0 +1,14 @@
+img#nosleep-icon {
+  width: calc(2vw + 2vh);
+  margin-right: calc(0.5vw + 0.5vh);
+  cursor: pointer;
+}
+
+img#nosleep-icon.enabled {
+  filter: brightness(0) saturate(100%) invert(82%) sepia(40%) saturate(571%) hue-rotate(57deg) brightness(82%) contrast(88%);
+}
+
+div#map {
+  width: 100vw;
+  height: calc(100vh - (4vw + 4vh));
+}

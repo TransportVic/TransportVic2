@@ -42,6 +42,8 @@ div#header > span {
 div#header-right {
   margin-left: auto;
   margin-right: calc(1vw + 1vh);
+
+  display: flex;
 }
 
 #content {

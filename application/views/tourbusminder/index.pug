@@ -1,0 +1,24 @@
+extends ../layout
+
+block head
+  title TransportVic - TourBusMinder
+  
+block title
+  span TourBusMinder
+  
+block header-right
+  img#nosleep-icon(src='/static/images/clear-icons/nosleep.svg')
+
+block scripts
+  script(src='https://api.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js')
+  
+  script(src='/static/scripts/vendor/nosleep.js')
+  script(src='/static/scripts/tourbusminder/client.js')
+  
+block style
+  link(rel='stylesheet' href='/static/css/tourbusminder/client.css')
+  link(href='https://api.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css' rel='stylesheet')
+
+block content
+  div#map
+  

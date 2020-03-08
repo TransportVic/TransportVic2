@@ -176,6 +176,7 @@ module.exports = class MainServer {
       GeoJSONVisualiser: '/geojson-visualise',
       SmartrakIDs: '/smartrak',
       Statistics: '/stats',
+      TourBusMinder: '/tbm',
 
       'mockups/FlindersStreetEscalator': '/mockups/fss-escalator',
       'mockups/MiniLCD-PIDS': '/mockups/mini-lcd-pids',
@@ -186,7 +187,8 @@ module.exports = class MainServer {
 
       'transit-visualiser/Index': '/transit-visualiser',
 
-      'route-data/MetroBusRoute': '/bus/route'
+      'route-data/MetroBusRoute': '/bus/route',
+
     }
 
     Object.keys(routers).forEach(routerName => {
