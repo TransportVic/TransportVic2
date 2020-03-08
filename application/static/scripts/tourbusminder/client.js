@@ -41,8 +41,8 @@ function positionWatcher(position) {
 
     if (lineDistance > 0) {
       for (let i = 0; i <= pointCount; i++) {
-        let point = turf.along(route, pointDistance, {units: 'kilometers'})
-        console.log(1000 / animationFramerate * i)
+        let point = turf.along(route, i * pointDistance, {units: 'kilometers'})
+
         setTimeout(() => {
           map.getSource('point').setData(point.geometry)
         }, 1000 / animationFramerate * i)
@@ -55,12 +55,12 @@ function positionWatcher(position) {
     })
   }
 
+  focusMapAt(position, (timestamp - previousCoordinates.timestamp) / 10)
+
   previousCoordinates = {
     coordinates,
     timestamp
   }
-
-  focusMapAt(position, 100)
 }
 
 function setupLayer(position) {
@@ -82,6 +82,11 @@ function setupLayer(position) {
       'circle-color': '#007cbf'
     }
   })
+
+  previousCoordinates = {
+    coordinates: [coords.longitude, coords.latitude],
+    timestamp: position.timestamp
+  }
 
   focusMapAt(position, 1000)
 }
