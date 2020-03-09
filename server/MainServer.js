@@ -36,6 +36,7 @@ module.exports = class MainServer {
 
       let smartrakIDs = database.getCollection('smartrak ids')
       let busTrips = database.getCollection('bus trips')
+      let tbmTrips = database.getCollection('tbm trips')
 
       await smartrakIDs.createIndex({
         smartrakID: 1
@@ -74,6 +75,13 @@ module.exports = class MainServer {
         date: 1,
         smartrakID: 1
       }, {name: 'service operating days + smartrak id query index'})
+
+      await tbmTrips.createIndex({
+        date: 1,
+        rego: 1,
+        tripName: 1,
+        time: 1
+      }, {name: 'tbm trips'})
 
       callback()
     })
@@ -156,7 +164,7 @@ module.exports = class MainServer {
 
   }
 
-  configRoutes (app) {
+  async configRoutes (app) {
     const routers = {
       Index: '/',
       Search: '/search',

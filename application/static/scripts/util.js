@@ -47,8 +47,8 @@ var query = location.query
 
 window.search = {}
 
-search.hash = (location.hash.match(/#(\w+[=]\w+&?)+/) || []).slice(1).map(e => e.split('=')).reduce((a, e) => { a[e[0]] = e[1]; return a }, {})
-search.query = (location.search.match(/\?(\w+[=]\w+&?)+/) || []).slice(1).map(e => e.split('=')).reduce((a, e) => { a[e[0]] = e[1]; return a }, {})
+search.hash = location.hash.slice(1).split('&').filter(Boolean).map(e => e.split('=')).reduce((a, e) => { a[e[0]] = e[1]; return a }, {})
+search.query = location.search.slice(1).split('&').filter(Boolean).map(e => e.split('=')).reduce((a, e) => { a[e[0]] = e[1].replace(/\+/g, ' '); return a }, {})
 
 $.ready(() => {
   if (navigator.userAgent.toLowerCase().includes('mobile')) {

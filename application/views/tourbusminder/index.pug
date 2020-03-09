@@ -6,20 +6,13 @@ block head
 block title
   span TourBusMinder
   
-block header-right
-  img#nosleep-icon(src='/static/images/clear-icons/nosleep.svg')
-
-block scripts
-  script(src='https://api.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js')
-  script(src='https://npmcdn.com/@turf/turf/turf.min.js')
-  
-  script(src='/static/scripts/vendor/nosleep.js')
-  script(src='/static/scripts/tourbusminder/client.js')
-  
-block style
-  link(rel='stylesheet' href='/static/css/tourbusminder/client.css')
-  link(href='https://api.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css' rel='stylesheet')
-
 block content
-  div#map
-  
+  a(href='/tbm/server') view buses
+  form(action='/tbm/client' method='get')
+    label bus rego
+    input(name='rego')
+    br
+    label trip name
+    input(name='tripName')
+    br
+    input(type='submit' value='go')

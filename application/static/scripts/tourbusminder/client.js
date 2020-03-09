@@ -2,6 +2,8 @@ mapboxgl.accessToken = 'pk.eyJ1IjoidW5pa2l0dHkiLCJhIjoiY2p6bnVvYWJ4MDdlNjNlbWsxM
 
 let nosleep, map
 
+let rego, tripName
+
 function focusMapAt(position, duration) {
   let {coords} = position
   let easeTo = {
@@ -16,6 +18,24 @@ function focusMapAt(position, duration) {
   map.easeTo(easeTo)
 }
 
+let lastTimestamp = 0
+let websocket = new WebSocket('wss://' + location.host + '/loc/client')
+
+function recreate() {
+  websocket = null
+  setTimeout(() => {
+    try {
+      websocket = new WebSocket('wss://' + location.host + '/loc/client')
+
+      websocket.onclose = recreate
+    } catch (e) {
+      recreate()
+    }
+  }, 5000)
+}
+
+websocket.onclose = recreate
+
 function positionWatcher(position) {
   let {coords} = position
   let coordinates = [coords.longitude, coords.latitude]
@@ -25,6 +45,20 @@ function positionWatcher(position) {
     type: 'Point',
     coordinates
   })
+
+  let timeDiff = timestamp - lastTimestamp
+  if (timeDiff > 500) { // should really be websockets
+    websocket.send(JSON.stringify({
+      rego,
+      tripName,
+      position: {
+        type: 'Point',
+        coordinates
+      }
+    }))
+  }
+
+  lastTimestamp = timestamp
 
   focusMapAt(position, 250)
 }
@@ -65,6 +99,9 @@ function disableNoSleep() {
 $.ready(() => {
   nosleep = new NoSleep()
   let nosleepEnabled = false
+
+  rego = window.search.query.rego
+  tripName = window.search.query.tripName
 
   $('img#nosleep-icon').on('click', () => {
     if (nosleepEnabled = !nosleepEnabled) enableNoSleep()

@@ -20,6 +20,8 @@ if (config.useHTTPS) {
   httpServer = HTTPServer.createServer(mainServer)
 }
 
+require(`./application/routes/TourBusMinder`).setupWS(httpsServer || httpServer)
+
 httpServer.listen(config.httpPort)
 if (httpsServer) httpsServer.listen(443)
 
