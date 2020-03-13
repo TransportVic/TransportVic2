@@ -64,6 +64,9 @@ div.firstDepartureTime {
   margin-left: auto;
   width: 150px;
 }
+div.firstDepartureTime div.platform.no-line {
+  border-radius: 7px;
+}
 
 div.firstDepartureTime div.platform {
   height: 100px;
@@ -71,6 +74,9 @@ div.firstDepartureTime div.platform {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
 }
 
 div.firstDepartureTime div.timeToDeparture {
@@ -83,6 +89,9 @@ div.firstDepartureTime div.timeToDeparture {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
 }
 
 div.greyLine {
@@ -190,6 +199,9 @@ div.smallDeparture div.right > div {
 
 div.smallDeparture div.right div.platform {
   width: 70px;
+
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
 }
 
 div.smallDeparture div.right div.timeToDeparture {
@@ -197,6 +209,9 @@ div.smallDeparture div.right div.timeToDeparture {
   margin-left: 3px;
   background: #000000;
   color: #ffffff;
+
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
 }
 
 div.smallDeparture div.right > div p {
