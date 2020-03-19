@@ -59,7 +59,12 @@ database.connect({
 
       if (!routeDirections[timetable.gtfsDirection]) routeDirections[timetable.gtfsDirection] = []
 
-      routeDirections[timetable.gtfsDirection].push(timetable.stopTimings.map(e => ({stopName: e.stopName, stopGTFSID: e.stopGTFSID})))
+      let { stopTimings } = timetable
+
+      stopTimings = stopTimings.filter(s => !['Parliament', 'Southern Cross', 'Melbourne Central', 'Flagstaff'].includes(s.stopName.slice(0, -16)))
+      stopTimings = stopTimings.map(e => ({stopName: e.stopName, stopGTFSID: e.stopGTFSID}))
+
+      routeDirections[timetable.gtfsDirection].push(stopTimings)
     })
 
     routeDirections.forEach(direction => {
@@ -68,12 +73,7 @@ database.connect({
 
       let directionName = mergedStops.slice(-1)[0].stopName.slice(0, -16)
 
-      let flindersStreetIndex = 0
-
-      for (let stop of mergedStops) {
-        if (stop.stopName === 'Flinders Street Railway Station') break
-        flindersStreetIndex++
-      }
+      let towardsFSS = directionName === 'Flinders Street'
 
       let cityLoopStops = []
 
@@ -115,7 +115,7 @@ database.connect({
       })
 
       if (routeGTFSID !== '2-SPT')
-        if (flindersStreetIndex >= mergedStops.length - 3) {
+        if (towardsFSS) {
           directionName = 'City'
           mergedStops = mergedStops.slice(0, -1).concat(cityLoopStops)
         } else {
