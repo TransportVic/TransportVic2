@@ -1,0 +1,30 @@
+:root {
+  --font-scale: 1.3333;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+p {
+  margin: 0;
+}
+
+div.content {
+  width: 100vw;
+  height: 28vw; /* 32:9 ratio, 28.125 */
+  background-color: black;
+  color: white;
+
+  --width: 100vw;
+  --height: 28vw;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

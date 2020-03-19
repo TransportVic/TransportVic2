@@ -1,0 +1,74 @@
+div.timings {
+  width: 75vw;
+  margin-right: 2vw;
+}
+
+div.info {
+  width: calc(20vw);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#hotline {
+  width: 20vw;
+  height: calc(.55 * var(--height));
+  text-align: center;
+  background-color: #1e1e1e;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+div.info-circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+
+  width: 0.5vw;
+  height: 0.5vw;
+
+  background: #ffffff;
+  color: #000000;
+  border-radius: 10vw;
+  border: 1vw solid #ffffff;
+}
+
+span.information {
+  display: block;
+  font-size: calc(var(--height) * 0.035 * var(--font-scale));
+  transform: rotateY(180deg) skewX(10deg);
+  margin-top: -0.4vw;
+  font-family: NetworkSansBold;
+}
+
+.call-hotline {
+  font-size: calc(var(--height) * 0.05 * var(--font-scale));
+}
+
+.info .spacer {
+  height: calc(.20 * var(--height));
+  display: block;
+}
+
+#timebox {
+  width: 20vw;
+  height: calc(var(--height) * 0.20);
+  background-color: #1e1e1e;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#current-time {
+  font-size: calc(var(--height) * 0.15 * var(--font-scale));
+  height: calc(100% / var(--font-scale));
+  transform: translateY(-32.5%);
+  font-family: NetworkSansBold;
+}

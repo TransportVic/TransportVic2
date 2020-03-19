@@ -188,6 +188,7 @@ module.exports = class MainServer {
 
       'mockups/FlindersStreetEscalator': '/mockups/fss-escalator',
       'mockups/MiniLCD-PIDS': '/mockups/mini-lcd-pids',
+      'mockups/BusInt-PIDS': '/mockups/bus-int-pids',
 
       'jmss-screens/BigScreen': '/jmss-screens/big-screen',
 
