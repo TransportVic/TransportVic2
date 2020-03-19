@@ -1,5 +1,5 @@
 module.exports={
-  //Chadstone
+  // Chadstone
   47923: "Bay 1",
   47924: "Bay 2",
   47925: "Bay 3",
@@ -11,7 +11,14 @@ module.exports={
   47931: "Bay 9",
   47932: "Bay 10",
 
-  //Huntingdale
+  // Oakleigh
+  19803: "Bay A",
+  19804: "Bay B",
+  19805: "Bay C",
+  19800: "Bay D",
+  12964: "Bay E",
+
+  // Huntingdale
   51586: "Bay A",
   51587: "Bay B",
   51588: "Bay C",
@@ -322,7 +329,7 @@ module.exports={
 
   // check ringwood 901 bay, mitcham 738 bay
   // Next up:
-  // Chirnside park sc, mon 18nov when reopens
+  // Chirnside park sc, mon 18nov when reopens .
   // Eastland?
   // Laverton .
   // Footscray .
@@ -342,14 +349,14 @@ module.exports={
   // Bendigo .
   // Craigieburn
   // Tarneit apparently has bus bays .
-  // Yarraville? don't think I saw bus numbers-
-  // Sunbury maybe.
+  // Yarraville? don't think I saw bus numbers -
+  // Sunbury maybe .
   // Melton
   // Nuna?
   // Mitcham .
   // Watergardens maybe.
   // St albans.
-  // Airport West SC?
+  // Airport West SC? -
   // Altona Gate SC?
   // Pacific Werribee/Werribee Plaza
 }
