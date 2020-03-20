@@ -58,9 +58,8 @@ html
               else estimated += ' min'
               
             +row('metro-train', null, destination, departure.platform, scheduled, estimated)
-              
-            - for (let i = 0; i < 2 - trainDepartures.length; i++)
-              div.row
+          - for (let i = 0; i < 2 - trainDepartures.length; i++)
+            div.row
             
         
       div.info
