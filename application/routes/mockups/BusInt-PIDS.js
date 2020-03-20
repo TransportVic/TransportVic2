@@ -51,10 +51,12 @@ async function getData(req, res) {
   let busDepartures = (await getBusDepartures(stop, res.db))
     .sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
     .filter(departure => {
-      if (departure.bay) {
-        let bayID = departure.bay.slice(4)
-        if (bayID !== bay) return false
-      } else return false
+      if (bay !== '*') {
+        if (departure.bay) {
+          let bayID = departure.bay.slice(4)
+          if (bayID !== bay) return false
+        } else return false
+      }
 
       let actual = departure.actualDepartureTime
       let {routeGTFSID, gtfsDirection} = departure.trip

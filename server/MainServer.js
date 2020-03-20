@@ -186,6 +186,7 @@ module.exports = class MainServer {
       Statistics: '/stats',
       TourBusMinder: '/tbm',
 
+      'mockups/Index': '/mockups',
       'mockups/FlindersStreetEscalator': '/mockups/fss-escalator',
       'mockups/MiniLCD-PIDS': '/mockups/mini-lcd-pids',
       'mockups/BusInt-PIDS': '/mockups/bus-int-pids',

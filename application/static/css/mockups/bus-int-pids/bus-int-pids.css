@@ -118,7 +118,7 @@ div.info {
   width: 20vw;
   height: calc(.55 * var(--height));
   text-align: center;
-  background-color: #333434;
+  background-color: #1e1e1e;
 
   display: flex;
   flex-direction: column;
@@ -162,7 +162,7 @@ span.information {
 #timebox {
   width: 20vw;
   height: calc(var(--height) * 0.20);
-  background-color: #333434;
+  background-color: #1e1e1e;
   text-align: center;
   display: flex;
   align-items: center;
