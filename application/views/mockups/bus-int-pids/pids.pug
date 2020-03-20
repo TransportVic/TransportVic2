@@ -31,7 +31,7 @@ html
         for departure in busDepartures.slice(0, 4)
           -
             let shortDest = departure.destination.split('/')[0]
-            let scheduled = departure.scheduledDepartureTime.format('H:mm')
+            let scheduled = departure.scheduledDepartureTime.format('h:mm')
             let estimated = '--'
             if (departure.estimatedDepartureTime)
               estimated = departure.estimatedDepartureTime.diff(time, 'minutes')
@@ -45,7 +45,7 @@ html
           for departure in trainDepartures
             -
               let {destination} = departure
-              let scheduled = departure.scheduledDepartureTime.format('H:mm')
+              let scheduled = departure.scheduledDepartureTime.format('h:mm')
               let estimated = '--'
               if (departure.estimatedDepartureTime)
                 estimated = departure.estimatedDepartureTime.diff(time, 'minutes')
@@ -66,4 +66,4 @@ html
             p.call-hotline or call 1800 800 007
         div.spacer
         div#timebox
-          span#current-time #{time.format('H:mm')}
+          span#current-time #{time.format('h:mm')}
