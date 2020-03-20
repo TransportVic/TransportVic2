@@ -60,8 +60,9 @@ div.row > div.destination {
 
 div.row > div.destination > span.platform {
   margin-left: 1vw;
-  margin-top: calc(var(--height) * 0.022 * var(--font-scale));
+  margin-top: calc(var(--height) * 0.029 * var(--font-scale));
   font-size: calc(var(--height) * 0.05 * var(--font-scale));
+  line-height: calc(var(--height) * 0.05 * var(--font-scale));
 }
 
 div.row > span.scheduled {
