@@ -2,6 +2,7 @@ const express = require('express')
 const router = new express.Router()
 const getBusDepartures = require('../../../modules/bus/get-departures')
 const getTrainDepartures = require('../../../modules/metro-trains/get-departures')
+const busDestinations = require('../../../additional-data/bus-destinations')
 const moment = require('moment')
 const async = require('async')
 const utils = require('../../../utils')
@@ -55,6 +56,12 @@ async function getData(req, res) {
       let minutesDifference = scheduled.diff(utils.now(), 'minutes')
 
       return directionCount[id] <= 2 && -1 <= minutesDifference && minutesDifference < 120
+    }).map(departure => {
+      let serviceData = busDestinations.service[departure.routeNumber] || busDestinations.service[departure.trip.routeGTFSID] || {}
+      departure.destination = serviceData[departure.destination]
+        || busDestinations.generic[departure.destination] || departure.destination
+
+      return departure
     })
 
   return {trainDepartures, busDepartures, stop}
