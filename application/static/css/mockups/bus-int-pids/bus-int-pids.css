@@ -12,6 +12,17 @@ div.row.header span {
   margin-top: 0 !important;
 }
 
+div.row.train-header {
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+div.row.train-header span {
+  margin-left: 0.8vw;
+  margin-top: calc(var(--height) * 0.015 * var(--font-scale));
+  font-size: calc(var(--height) * 0.055 * var(--font-scale)) !important;
+}
+
 div.row.header span.route {
   margin-left: 0.8vw;
   width: 7vw;
@@ -19,7 +30,7 @@ div.row.header span.route {
 
 div.row.header span.dest {
   margin-left: 1.7vw;
-  width: 44vw;
+  width: 43vw;
 }
 
 div.row {
@@ -44,12 +55,12 @@ div.row > div.route-number {
 div.row > div.destination {
   display: inline-flex;
   margin-left: 1.7vw;
-  width: 44vw;
+  width: 43vw;
 }
 
 div.row > div.destination > span.platform {
   margin-left: 1vw;
-  margin-top: 0.8vw;
+  margin-top: calc(var(--height) * 0.022 * var(--font-scale));
   font-size: calc(var(--height) * 0.05 * var(--font-scale));
 }
 
@@ -63,7 +74,7 @@ div.row > span.scheduled {
 
 div.row > span.departing {
   display: inline-block;
-  margin-left: .5vw;
+  margin-left: 1.5vw;
   width: 10vw;
   text-align: right;
 }

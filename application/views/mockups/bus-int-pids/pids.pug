@@ -28,20 +28,25 @@ html
             span.scheduled #{scheduled}
             span.departing #{actual}
 
-        for departure in busDepartures.slice(0, 4)
+        - let maxBusDepartures = trainDepartures ? 4 : 7
+        for departure in busDepartures.slice(0, maxBusDepartures)
           -
             let shortDest = departure.destination.split('/')[0]
             let scheduled = departure.scheduledDepartureTime.format('h:mm')
             let estimated = '--'
             if (departure.estimatedDepartureTime)
               estimated = departure.estimatedDepartureTime.diff(time, 'minutes')
-            
-          +row('bus', departure.routeNumber, shortDest, null, scheduled, estimated + ' min')
+            if (estimated === 0) estimated = 'Now'
+            else estimated += ' min'
           
-        - for (let i = 0; i < 4 - busDepartures.length; i++)
+          +row('bus', departure.routeNumber, shortDest, null, scheduled, estimated)
+          
+        - for (let i = 0; i < maxBusDepartures - busDepartures.length; i++)
           div.row
         
         if trainDepartures
+          div.row.train-header
+            span Train Services
           for departure in trainDepartures
             -
               let {destination} = departure
@@ -49,11 +54,13 @@ html
               let estimated = '--'
               if (departure.estimatedDepartureTime)
                 estimated = departure.estimatedDepartureTime.diff(time, 'minutes')
+              if (estimated === 0) estimated = 'Now'
+              else estimated += ' min'
               
-            +row('metro-train', null, destination, departure.platform, scheduled, estimated + ' min')
+            +row('metro-train', null, destination, departure.platform, scheduled, estimated)
         else
-          div.row
-          div.row  
+          - for (let i = 0; i < maxBusDepartures - busDepartures.length - 3; i++)
+            div.row
             
         
       div.info

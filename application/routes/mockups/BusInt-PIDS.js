@@ -31,10 +31,11 @@ async function getData(req, res) {
 
         if (!directionsSeen.includes(direction)) {
           directionsSeen.push(direction)
+          departure.sortID = direction === 'Up' ? -1 : 1
           return true
         }
         return false
-      }).sort(a => a.direction === 'Up' ? -1 : 1)
+      }).sort((a, b) => a.sortID - b.sortID)
   }
 
   let directionCount = {}
@@ -46,17 +47,25 @@ async function getData(req, res) {
         if (bayID !== bay) return false
       } else return false
 
-      let scheduled = departure.scheduledDepartureTime
+      let actual = departure.actualDepartureTime
       let {routeGTFSID, gtfsDirection} = departure.trip
       let id = routeGTFSID + '.' + gtfsDirection
 
-      if (!directionCount[id]) directionCount[id] = 1
-      else directionCount[id]++
+      let minutesDifference = actual.diff(utils.now(), 'minutes')
 
-      let minutesDifference = scheduled.diff(utils.now(), 'minutes')
+      if (-2 <= minutesDifference && minutesDifference < 120) {
+        if (!directionCount[id]) directionCount[id] = 1
+        else directionCount[id]++
 
-      return directionCount[id] <= 2 && -1 <= minutesDifference && minutesDifference < 120
+        return directionCount[id] <= 2
+      }
+      return false
     }).map(departure => {
+      let destinationShortName = departure.trip.destination.split('/')[0]
+      let {destination} = departure.trip
+      if (!utils.isStreet(destinationShortName)) destination = destinationShortName
+      departure.destination = destination.replace('Shopping Centre', 'SC')
+
       let serviceData = busDestinations.service[departure.routeNumber] || busDestinations.service[departure.trip.routeGTFSID] || {}
       departure.destination = serviceData[departure.destination]
         || busDestinations.generic[departure.destination] || departure.destination
