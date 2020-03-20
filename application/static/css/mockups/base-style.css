@@ -10,6 +10,12 @@
   src: local('Network Sans 2018 Bold'), url(/static/fonts/NetworkSans-Bold.ttf);
 }
 
+@font-face {
+  font-family: "NetworkSansRegular";
+  font-display: fallback;
+  src: local('Network Sans 2018 Regular'), url(/static/fonts/NetworkSans-Regular.ttf);
+}
+
 html, body {
   margin: 0;
   padding: 0;

@@ -24,18 +24,27 @@ async function getData(req, res) {
   let trainDepartures
 
   if (stop.bays.find(bay => bay.mode === 'metro train')) {
-    let directionsSeen = []
-    trainDepartures = (await getTrainDepartures(stop, res.db))
-      .filter(departure => {
-        let {direction} = departure.trip
+    let tripCount = {Up: 0, Down: 0}
 
-        if (!directionsSeen.includes(direction)) {
-          directionsSeen.push(direction)
-          departure.sortID = direction === 'Up' ? -1 : 1
-          return true
-        }
-        return false
-      }).sort((a, b) => a.sortID - b.sortID)
+    trainDepartures = (await getTrainDepartures(stop, res.db))
+      .filter(departure => departure.platform !== 'RRB')
+
+    let downTrips = []
+    let upTrips = []
+
+    trainDepartures.forEach(departure => {
+      let {direction} = departure.trip
+
+      if (tripCount[direction]++ < 2) {
+        if (direction === 'Up') upTrips.push(departure)
+        else downTrips.push(departure)
+      }
+    })
+
+    if (downTrips.length === 0)
+      trainDepartures = upTrips
+    else
+      trainDepartures = [upTrips[0], downTrips[1]]
   }
 
   let directionCount = {}
