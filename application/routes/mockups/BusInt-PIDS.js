@@ -1,13 +1,14 @@
 const express = require('express')
 const router = new express.Router()
-const getDepartures = require('../../../modules/bus/get-departures')
+const getBusDepartures = require('../../../modules/bus/get-departures')
+const getTrainDepartures = require('../../../modules/metro-trains/get-departures')
 const moment = require('moment')
 const async = require('async')
 const utils = require('../../../utils')
 
 async function getData(req, res) {
   let stops = res.db.getCollection('stops')
-  let bay = rq.params.bay.toUpperCase()
+  let bay = req.params.bay.toUpperCase()
 
   let stop = await stops.findDocument({
     codedName: req.params.stopName,
@@ -19,35 +20,61 @@ async function getData(req, res) {
     return res.end('Could not lookup timings for ' + req.params.stopName + '. Are you sure buses stop there?')
   }
 
+  let trainDepartures
 
-  let departures = (await getDepartures(stop, res.db))
+  if (stop.bays.find(bay => bay.mode === 'metro train')) {
+    let directionsSeen = []
+    trainDepartures = (await getTrainDepartures(stop, res.db))
+      .filter(departure => {
+        let {direction} = departure.trip
+
+        if (!directionsSeen.includes(direction)) {
+          directionsSeen.push(direction)
+          return true
+        }
+        return false
+      }).sort(a => a.direction === 'Up' ? -1 : 1)
+  }
+
+  let directionCount = {}
+  let busDepartures = (await getBusDepartures(stop, res.db))
+    .sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
     .filter(departure => {
-      let diff = departure.actualDepartureTime
-      let minutesDifference = diff.diff(utils.now(), 'minutes')
-
       if (departure.bay) {
         let bayID = departure.bay.slice(4)
-        return bayID === bay
+        if (bayID !== bay) return false
       } else return false
 
-      return -1 <= minutesDifference && minutesDifference < 120
+      let scheduled = departure.scheduledDepartureTime
+      let {routeGTFSID, gtfsDirection} = departure.trip
+      let id = routeGTFSID + '.' + gtfsDirection
+
+      if (!directionCount[id]) directionCount[id] = 1
+      else directionCount[id]++
+
+      let minutesDifference = scheduled.diff(utils.now(), 'minutes')
+
+      return directionCount[id] <= 2 && -1 <= minutesDifference && minutesDifference < 120
     })
 
-  return {departures, stop}
+  return {trainDepartures, busDepartures, stop}
 }
 
 router.get('/:suburb/:stopName/:bay', async (req, res) => {
-  // let {departures, stop} = await getData(req, res)
+  let data = await getData(req, res)
 
-  // res.json({departures, stop})
-  res.render('mockups/bus-int/pids')
-  // res.render('mockups/bus-int/pids', { departures, stop })
+  let time = utils.now()
+
+  res.render('mockups/bus-int-pids/pids', {
+    time,
+    ...data
+  })
 })
 
 router.post('/:suburb/:stopName/:bay', async (req, res) => {
-  let {departures, stop} = await getData(req, res)
+  let data = await getData(req, res)
 
-  res.json({departures, stop})
+  res.json({busDepartures, stop})
 })
 
 module.exports = router
@@ -58,6 +85,13 @@ module.exports = router
 WIDTH
 whole screen is 1876px
 timings bit is 1426px 75%
+
+HEADER WIDTHS:
+ROUTE: width 124px 7%, margin left 16px 0.8%
+DESTINATION: width 818px 44%, margin left 32px 1.7%
+SCHEDULED: width 209px 11%
+DPEARTING: width 194px 10%  margin left 38px 2%
+
 
 info bit is 366px 20%
 mid spacing 40px 2%

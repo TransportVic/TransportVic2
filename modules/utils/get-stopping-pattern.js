@@ -112,6 +112,11 @@ module.exports = async function (db, ptvRunID, mode, time, stopID) {
   if (mode === 'regional coach')
     routeGTFSID = '5-' + routeGTFSID.slice(2)
 
+  let direction
+  if (mode === 'metro train') {
+    direction = (vehicleDescriptor.id[3] % 2) ? 'Down' : 'Up'
+  }
+
   let timetable = {
     mode, routeName: routeData.route_name.trim(),
     routeGTFSID,
@@ -124,7 +129,8 @@ module.exports = async function (db, ptvRunID, mode, time, stopID) {
     departureTime: stopTimings[0].departureTime,
     origin: stopTimings[0].stopName,
     type: "timings",
-    updateTime: new Date()
+    updateTime: new Date(),
+    direction
   }
 
   let key = {

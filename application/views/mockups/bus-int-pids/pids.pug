@@ -1,0 +1,69 @@
+html
+  head
+    script(src='/static/scripts/util.js')
+    script(src='/static/scripts/mockups/reload-bus-int-pids.js' async) 
+    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
+    link(rel='stylesheet' href='/static/css/mockups/bus-int-pids/bus-int-pids.css')
+    link(rel='stylesheet' href='/static/css/mockups/mini-pids-base.css')
+  body
+    div.content
+      div.timings
+        div.row.header
+          span.route Route
+          span.dest Bus Destination
+          span.scheduled Scheduled
+          span.departing Departing
+        mixin row(type, routeNumber, destination, platform, scheduled, actual)
+          div.row
+            div.route-number
+              div(class='type type-' + type)
+              if type === 'metro-train'
+                img.train-icon(src='/static/images/mockups/metro-train.svg')
+              else
+                span.route #{routeNumber}
+            div.destination
+              span.dest #{destination}
+              if platform
+                span.platform Platform #{platform}
+            span.scheduled #{scheduled}
+            span.departing #{actual}
+
+        for departure in busDepartures.slice(0, 4)
+          -
+            let shortDest = departure.destination.split('/')[0]
+            let scheduled = departure.scheduledDepartureTime.format('H:mm')
+            let estimated = '--'
+            if (departure.estimatedDepartureTime)
+              estimated = departure.estimatedDepartureTime.diff(time, 'minutes')
+            
+          +row('bus', departure.routeNumber, shortDest, null, scheduled, estimated + ' min')
+          
+        - for (let i = 0; i < 4 - busDepartures.length; i++)
+          div.row
+        
+        if trainDepartures
+          for departure in trainDepartures
+            -
+              let {destination} = departure
+              let scheduled = departure.scheduledDepartureTime.format('H:mm')
+              let estimated = '--'
+              if (departure.estimatedDepartureTime)
+                estimated = departure.estimatedDepartureTime.diff(time, 'minutes')
+              
+            +row('metro-train', null, destination, departure.platform, scheduled, estimated + ' min')
+        else
+          div.row
+          div.row  
+            
+        
+      div.info
+        div#hotline
+          div.info-circle
+            span.information j
+          div
+            p.call-hotline For more information 
+            p.call-hotline visit ptv.vic.gov.au
+            p.call-hotline or call 1800 800 007
+        div.spacer
+        div#timebox
+          span#current-time #{time.format('H:mm')}
