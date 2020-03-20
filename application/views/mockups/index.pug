@@ -9,12 +9,12 @@ block title
 block content
   form(action='/mockups/get' method='get')
     label Get FSS Escalator display for platform# 
-    input(name='value')
+    input(name='value' placeholder='platform')
     input(name='type' value='fss-escalator' type='hidden')
   form(action='/mockups/get' method='get')
     label Get Bus Interchange PIDs for bus stop URL
-    input(name='value')
-    input(name='bay')
+    input(name='value' placeholder='url')
+    input(name='bay' placeholder='bay (blank for all)')
     input(name='type' value='bus-int-pids' type='hidden')
     input(type='submit')
   //- form(action='/mockups/get' method='get')
