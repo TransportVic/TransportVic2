@@ -1,0 +1,28 @@
+html
+  head
+    script(src='/static/scripts/util.js')
+    script(src='/static/scripts/vendor/dot-matrix/fonts.js') 
+    script(src='/static/scripts/vendor/dot-matrix/matrix.js') 
+    script(src='/static/scripts/vendor/dot-matrix/renderer.js') 
+    
+    script(src='/static/scripts/mockups/reload-metro-led-pids.js' async) 
+    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
+    link(rel='stylesheet' href='/static/css/mockups/metro-led-pids/metro-led-pids.css')
+      
+    style#led-style
+  body
+    div.content
+      div.pids-box
+        div.top-panel
+          div.white-band
+          div.text-row
+            span.next-train Next Train
+            span.destination Destination
+            div.mins-to-depart
+              span Mins to
+              span Depart
+        div.led-panel-border
+          div.led-panel
+            div.matrix-container
+              div#top-pids.pids
+              div#bottom-pids.pids

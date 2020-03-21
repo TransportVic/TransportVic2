@@ -1,0 +1,131 @@
+html, body {
+  margin: 0;
+  padding: 0;
+
+  font-family: Helvetica;
+  --width: 100vw;
+  --height: calc(100vw / 2.7);
+
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+p {
+  margin: 0;
+}
+
+div.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.pids-box {
+  display: block;
+  background-color: #3d71b7;
+  width: var(--width);
+  height: var(--height);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.top-panel {
+  height: calc(var(--height) * 0.5);
+}
+
+.white-band {
+  display: block;
+  margin-top: calc(var(--height) * 0.06);
+  height: calc(var(--height) * 0.02);
+  background-color: #ffffff;
+}
+
+.text-row {
+  margin-top: calc(var(--height) * 0.22);
+  font-size: calc(var(--height) * 0.075);
+  color: #ffffff;
+}
+
+.next-train {
+  display: inline-block;
+  margin-top: calc(var(--height) * 0.083);
+  margin-left: calc(var(--width) * 0.04);
+  width: calc(var(--width) * 0.18);
+}
+
+.destination {
+  display: inline-block;
+  margin-top: calc(var(--height) * 0.083);
+  margin-left: calc(var(--width) * 0.03);
+  width: calc(var(--width) * 0.18);
+}
+
+.mins-to-depart {
+  display: inline-flex;
+  flex-direction: column;
+
+  margin-left: calc(var(--width) * 0.42);
+
+  top: calc(var(--height) * -0.083);
+  position: relative;
+}
+
+.led-panel-border {
+  height: calc(var(--height) * 0.5);
+  background-color: #1c1c1c;
+
+  display: flex;
+  justify-content: center;
+}
+
+.led-panel {
+  width: calc(var(--width) * 0.97);
+  height: calc(var(--height) * 0.45);
+  background-color: #252525;
+
+  display: flex;
+  justify-content: center;
+}
+
+.matrix-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.pids {
+    display: grid;
+    background-color: #202020;
+
+    padding-left: 1.5vw;
+    padding-right: 1.5vw;
+    padding-top: 1.1vw;
+    padding-bottom: 1.1vw;
+}
+
+.led-cell {
+    display: flex;
+    background-color: #202020;
+    justify-content: center;
+    align-items: center;
+}
+
+.led {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    display: block;
+}
+
+.led-off {
+    background-color: #303030;
+}
+
+.led-on {
+    background-color: orange;
+}

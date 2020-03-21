@@ -16,6 +16,12 @@
   src: local('Network Sans 2018 Regular'), url(/static/fonts/NetworkSans-Regular.ttf);
 }
 
+@font-face {
+  font-family: "Helvetica";
+  font-display: fallback;
+  src: local('Helvetica'), local('Helv'), local('Helvetica Neue'), url(/static/fonts/Helvetica-Regular.ttf);
+}
+
 html, body {
   margin: 0;
   padding: 0;
