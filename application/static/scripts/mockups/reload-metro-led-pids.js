@@ -48,6 +48,13 @@ function formatTime(time) {
   return mainTime
 }
 
+function shortenDestination(destination) {
+  if (destination === 'Flinders Street') {
+    return 'FLINDERS ST'
+  }
+  return destination.toUpperCase()
+}
+
 function checkAndUpdateTrains() {
   $.ajax({
     method: 'POST'
@@ -56,7 +63,7 @@ function checkAndUpdateTrains() {
     if (nextDeparture) {
       let {scheduledDepartureTime, estimatedDepartureTime, destination} = nextDeparture
 
-      legacyDrawText(topRow, `${formatTime(new Date(scheduledDepartureTime))} ${destination.toUpperCase()}`, 1, 0, 0)
+      legacyDrawText(topRow, `${formatTime(new Date(scheduledDepartureTime))} ${shortenDestination(destination)}`, 1, 0, 0)
 
       let timeDiff = new Date(estimatedDepartureTime) - new Date()
       let minutes = timeDiff / 1000 / 60
