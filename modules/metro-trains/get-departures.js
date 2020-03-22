@@ -182,7 +182,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     if (isUpTrip && !cityLoopStations.includes(stationName)) {
       if (cityLoopConfig[0] === 'FSS' || cityLoopConfig[1] === 'FSS')
         destination = 'Flinders Street'
-      else if (cityLoopConfig[0] === 'PAR' && !cityLoopStations.includes(stationName))
+      else if (['PAR', 'FGS'].includes(cityLoopConfig[0]) && !cityLoopStations.includes(stationName))
         destination = 'City Loop'
       else if (cityLoopConfig.slice(-1)[0] === 'SSS')
         destination = 'Southern Cross'
