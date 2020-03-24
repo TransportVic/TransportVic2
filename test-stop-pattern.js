@@ -1875,7 +1875,7 @@ function determineStoppingPattern(expressParts, destination, stops) {
 
   let lastStop = null
 
-  expressParts.forEach(expressSection => {
+  expressParts.forEach((expressSection, i) => {
     let firstExpressStop = expressSection[0]
     let lastExpressStop = expressSection.slice(-1)[0]
 
@@ -1885,18 +1885,18 @@ function determineStoppingPattern(expressParts, destination, stops) {
       if (lastStop === previousStop) {
         texts.push(`${previousStop.stopName} to ${nextStop.stopName}`)
       } else {
-        texts.push(`Stopping All Stations ${lastStop.stopName} to ${previousStop.stopName}`)
-        texts.push(`Running Express from ${previousStop.stopName} to ${nextStop.stopName}`)
+        texts.push(`Stops All Stations from ${lastStop.stopName} to ${previousStop.stopName}`)
+        texts.push(`Runs Express from ${previousStop.stopName} to ${nextStop.stopName}`)
       }
     } else {
-      texts.push(`Stoping All Stations to ${previousStop.stopName}`)
-      texts.push(`Running Express from ${previousStop.stopName} to ${nextStop.stopName}`)
+      texts.push(`Stops All Stations to ${previousStop.stopName}`)
+      texts.push(`Runs Express from ${previousStop.stopName} to ${nextStop.stopName}`)
     }
 
     lastStop = nextStop
   })
 
-  texts.push('Then Stops All to ' + destination)
+  texts.push('then Stops All Stations to ' + destination)
 
   return texts.join(', ').replace(/ Railway Station/g, '')
 }
@@ -1906,7 +1906,7 @@ pkmLim.stopTimings = pkmLim.stopTimings.filter(e => {
   return !['Malvern', 'Armadale', 'Toorak', 'Hawksburn'].includes(e.stopName.slice(0, -16))
 })
 
-let pattern = pkmLim
+let pattern = pkmExp
 let stops = pkmStops
 let expSection = findExpressStops(pattern,stops)
 console.log(determineStoppingPattern(expSection, pattern.destination, stops))

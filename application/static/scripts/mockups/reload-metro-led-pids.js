@@ -10,6 +10,11 @@ let height = 7
 let ledSize = 0.007
 let font
 
+let bottomRowTimeout = 0
+let pauseTimeout = 0
+let bottomRowText = []
+let stopScrolling = false
+
 function generateLEDCssCode() {
     let cssData =
 `
@@ -52,6 +57,9 @@ function shortenDestination(destination) {
   if (destination === 'Flinders Street') {
     return 'FLINDERS ST'
   }
+  if (destination === 'SOUTHERN CROSS') {
+    return 'STHN CROSS'
+  }
   return destination.toUpperCase()
 }
 
@@ -76,13 +84,75 @@ function checkAndUpdateTrains() {
         timeToDepart.position.x = 120 - timeToDepart.width - 3
         topRow.drawText(timeToDepart)
 
-        legacyDrawText(bottomRow, 'Stops All Stations', 1, 0, 0)
+        bottomRowText = [nextDeparture.stoppingType]
+        if (nextDeparture.stoppingType !== 'Stops All Stations') {
+          bottomRowText.push(nextDeparture.stoppingPattern)
+        }
       }
     } else {
-      legacyDrawText(topRow, 'NO TRAINS OPERATING', 1, 0, 0)
-      legacyDrawText(bottomRow, 'CHECK TIMETABLE', 1, 0, 0)
+      if (data.hasRRB) {
+        legacyDrawText(topRow, 'NO TRAINS OPERATING', 1, 0, 0)
+        bottomRowText = ['REPLACEMENT BUSES', 'HAVE BEEN ARRANGED']
+      } else if (data.hasDepartures) {
+        legacyDrawText(topRow, 'NO TRAINS DEPART', 1, 0, 0)
+        legacyDrawText(bottomRow, 'FROM THIS PLATFORM', 1, 0, 0)
+        bottomRowText = []
+      } else {
+        legacyDrawText(topRow, 'NO TRAINS DEPARTING', 1, 0, 0)
+        legacyDrawText(bottomRow, 'CHECK TIMETABLES', 1, 0, 0)
+        bottomRowText = []
+      }
     }
+
+    clearTimeout(bottomRowTimeout)
+    clearTimeout(pauseTimeout)
+    stopScrolling = true
+    drawBottomRow()
   })
+}
+
+function asyncPause(milliseconds) {
+  return new Promise(resolve => {
+    pauseTimeout = setTimeout(resolve, milliseconds)
+  })
+}
+
+async function animateScrollingText(matrix, text, spacing, xPosition=0) {
+  let textObj = new TextObject(text, font, new Position(xPosition, 0), spacing)
+  let textWidth = textObj.width
+  let iterationCount = matrix.width + textWidth - xPosition
+
+  for (let i = 0; i < iterationCount; i++) {
+    if (stopScrolling) {
+      stopScrolling = false
+      return
+    }
+    matrix.clearRectangle(xPosition, 0, 120, 7)
+    matrix.drawText(textObj)
+    textObj.position.x--
+    await asyncPause(5)
+  }
+}
+
+function drawBottomRow() {
+  let widths = bottomRowText.map(e => new TextObject(e, font, new Position(0, 0), 1).width)
+  if (bottomRowText.length === 0) return
+  if (bottomRowText.length === 1) {
+    legacyDrawText(bottomRow, bottomRowText[0], 1, 0, 0)
+  } else {
+    let spacingRequired = bottomRow.width - widths[0]
+    let spacesRequired = Math.ceil(spacingRequired / 5)
+    legacyDrawText(bottomRow, bottomRowText[0], 1, 0, 0)
+
+    let combinedText = bottomRowText[0]
+    for (let i = 0; i < spacesRequired; i++) combinedText += ' '
+    combinedText += bottomRowText[1]
+
+    bottomRowTimeout = setTimeout(async () => {
+      await animateScrollingText(bottomRow, combinedText, 1, 0)
+      drawBottomRow()
+    }, 4000)
+  }
 }
 
 $.ready(() => {
@@ -108,7 +178,7 @@ $.ready(() => {
   // legacyDrawText(bottomRow, 'NO SUBURBAN PASSENGERS', 1, 0, 0)
 
   checkAndUpdateTrains()
-  setInterval(checkAndUpdateTrains, 1000 * 30)
+  setInterval(checkAndUpdateTrains, 1000 * 60)
 })
 
 window.addEventListener('resize', generateLEDCssCode);

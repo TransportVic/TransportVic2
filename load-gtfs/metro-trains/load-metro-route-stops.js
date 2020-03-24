@@ -67,7 +67,7 @@ database.connect({
       routeDirections[timetable.gtfsDirection].push(stopTimings)
     })
 
-    routeDirections.forEach(direction => {
+    routeDirections.forEach((direction, gtfsDirection) => {
       let mergedStops = mergeStops(direction, (a, b) => a.stopName == b.stopName)
         .filter(stop => !cityLoopStations.includes(stop.stopName.toLowerCase()))
 
@@ -114,18 +114,27 @@ database.connect({
         }
       })
 
-      if (routeGTFSID !== '2-SPT')
+      let trainDirection
+
+      if (routeGTFSID !== '2-SPT') {
         if (towardsFSS) {
           directionName = 'City'
           mergedStops = mergedStops.slice(0, -1).concat(cityLoopStops)
+          trainDirection = 'Up'
         } else {
           cityLoopStops.reverse()
           mergedStops = cityLoopStops.concat(mergedStops.slice(1))
+          trainDirection = 'Down'
         }
+      } else {
+        trainDirection = (directionName === 'Franskston' ? 'Up' : 'Down')
+      }
 
       if (!stopsByService[routeGTFSID]) stopsByService[routeGTFSID] = []
       stopsByService[routeGTFSID].push({
         directionName,
+        gtfsDirection,
+        trainDirection,
         stops: mergedStops
       })
     })

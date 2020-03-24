@@ -13,24 +13,26 @@ const updateStats = require('../utils/gtfs-stats')
 
 let start = new Date()
 
-const lines = [
-  'Alamein',
-  'Belgrave',
-  'Craigieburn',
-  'Cranbourne',
-  'Mernda',
-  'Frankston',
-  'Glen Waverley',
-  'Hurstbridge',
-  'Lilydale',
-  'Pakenham',
-  'Sandringham',
-  'Stony Point',
-  'Sunbury',
-  'Upfield',
-  'Werribee',
-  'Williamstown'
-]
+let lineGTFSIDs = {
+  'Alamein': 'ALM',
+  'Belgrave': 'BEL',
+  'Craigieburn': 'B31',
+  'Cranbourne': 'CRB',
+  'Mernda': 'MER',
+  'Frankston': 'FKN',
+  'Glen Waverley': 'GLW',
+  'Hurstbridge': 'HBG',
+  'Lilydale': 'LIL',
+  'Pakenham': 'PKM',
+  'Sandringham': 'SDM',
+  'Stony Point': 'SPT',
+  'Sunbury': 'SYM',
+  'Upfield': 'UFD',
+  'Werribee': 'WBE',
+  'Williamstown': 'WMN'
+}
+
+let lines = Object.keys(lineGTFSIDs)
 
 let timetableCount = 0;
 
@@ -84,12 +86,14 @@ async function parseTimetable(data, routeName) {
 
     const stationData = await getStation(stationName)
     const arrivalTime = minutesPastMidnightTo24Time(arrivalTimeMinutes)
+    let routeGTFSID = '2-' + lineGTFSIDs[routeName]
 
     if (!timetableByDays[tripDay][runID]) timetableByDays[tripDay][runID] = {
       mode: 'metro train',
       operator: 'Metro Trains Melbourne',
       routeName,
       runID,
+      routeGTFSID,
       operationDays: dayCodeToArray(tripDay),
       vehicle: null,
       formedBy: null,

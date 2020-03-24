@@ -97,13 +97,13 @@ setInterval(() => {
       let n
       let stopCount = firstDeparture.additionalInfo.screenStops.length
 
-      if (stopCount >= 32) n = 20
-      else if (stopCount >= 24) n = 18 // honestly idk how tf this works
-      else if (stopCount >= 20) n = 17
+      if (stopCount >= 32) n = 17
+      // else if (stopCount >= 24) n = 18 // honestly idk how tf this works
+      // else if (stopCount >= 20) n = 16
       else if (stopCount >= 12) n = 16 // ?? should really have checked but aw - moorabbin shorts
       // else if (stopCount >= 12) n = 12
       else n = 12
-      
+
       let firstNStations = firstDeparture.additionalInfo.screenStops.slice(0, n)
       let nextNStations = firstDeparture.additionalInfo.screenStops.slice(n)
 
