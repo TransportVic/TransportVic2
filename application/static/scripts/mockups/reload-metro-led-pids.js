@@ -67,6 +67,16 @@ function checkAndUpdateTrains() {
   $.ajax({
     method: 'POST'
   }, (err, status, data) => {
+    if (!data) {
+      stopScrolling = true
+      clearTimeout(bottomRowTimeout)
+      clearTimeout(pauseTimeout)
+      bottomRowText = []
+
+      legacyDrawText(topRow, 'FAILED TO CHECK', 1, 0, 0)
+      legacyDrawText(bottomRow, 'DEPARTING TRAINS', 1, 0, 0)
+      return
+    }
     let nextDeparture = data.departures[0]
     if (nextDeparture) {
       let {scheduledDepartureTime, estimatedDepartureTime, destination} = nextDeparture
@@ -104,9 +114,9 @@ function checkAndUpdateTrains() {
       }
     }
 
+    stopScrolling = true
     clearTimeout(bottomRowTimeout)
     clearTimeout(pauseTimeout)
-    stopScrolling = true
     drawBottomRow()
   })
 }
