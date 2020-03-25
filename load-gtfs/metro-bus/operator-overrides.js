@@ -11,11 +11,13 @@ module.exports = {
   "4-409": ["CDC Melbourne"],
   "4-429": ["Transdev Melbourne"],
   "4-44t": ["Sita Bus Lines"], // 444 - new route? 454 too
+  "4-444": ["Sita Bus Lines"], // 444 - new route? 454 too
   "4-454": ["Sita Bus Lines"],
   "4-45S": ["Sita Bus Lines"], // 456
   "4-4X9": ["Sita Bus Lines"], // 459
   "4-462": ["Kastoria Bus Lines"],
   "4-525": ["Dysons"],
+  "4-52F": ["Dysons"],
   "4-552": ["Dysons"],
   "4-556": ["Dysons"],
   "4-570": ["Dysons"],
@@ -26,6 +28,8 @@ module.exports = {
   "4-70C": ["CDC Melbourne"],
   "4-70V": ["Ventura Bus Lines"],
   "4-834": ["Ventura Bus Lines"],
+  "4-84E": ["Ventura Bus Lines"],
+  "4-84F": ["Ventura Bus Lines"],
   "4-900": ["CDC Melbourne", "Ventura Bus Lines"],
   "4-903": ["Transdev Melbourne"],
 
