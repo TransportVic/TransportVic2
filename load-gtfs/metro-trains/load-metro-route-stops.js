@@ -68,7 +68,7 @@ database.connect({
     })
 
     routeDirections.forEach((direction, gtfsDirection) => {
-      let mergedStops = mergeStops(direction, (a, b) => a.stopName == b.stopName, routeGTFSID === '2-PKM' && gtfsDirection === 1)
+      let mergedStops = mergeStops(direction, (a, b) => a.stopName == b.stopName)
         .filter(stop => !cityLoopStations.includes(stop.stopName.toLowerCase()))
 
       let directionName = mergedStops.slice(-1)[0].stopName.slice(0, -16)

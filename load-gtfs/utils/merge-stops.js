@@ -1,9 +1,9 @@
-module.exports = function merge(variants, matched, d) {
+module.exports = function merge(variants, matched) {
   variants = variants.sort((a, b) => b.length - a.length)
 
   stopsList = variants[0]
   branch = []
-if (d)console.log(stopsList)
+
   variants.slice(1).forEach(variant => {
     let lastMainMatch = 0
 
