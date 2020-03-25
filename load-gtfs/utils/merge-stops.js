@@ -1,9 +1,9 @@
-module.exports = function merge(variants, matched) {
+module.exports = function merge(variants, matched, d) {
   variants = variants.sort((a, b) => b.length - a.length)
 
   stopsList = variants[0]
   branch = []
-
+if (d)console.log(stopsList)
   variants.slice(1).forEach(variant => {
     let lastMainMatch = 0
 
@@ -47,7 +47,7 @@ module.exports = function merge(variants, matched) {
       // look at where they deviated, and join it in between
 
       let firstHalf = stopsList.slice(0, lastMainMatch)
-      let backHalf = stopsList.slice(lastMainMatch + branch.length + 1)
+      let backHalf = stopsList.slice(lastMainMatch)
 
       stopsList = firstHalf.concat(branch).concat(backHalf)
       branch = []
