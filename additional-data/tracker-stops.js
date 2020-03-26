@@ -297,5 +297,7 @@ module.exports = [
   'st-andrews-beach/st-andrews-beach-bass-meadows-boulevard',
   'coburg/reynard-street-gordon-street',
   'whittlesea/whittlesea-showgrounds-yea-road',
-  'reservoir/edwardes-street-spring-street'
+  'reservoir/edwardes-street-spring-street',
+  'knoxfield/anne-road-o-connor-road',
+  'wantirna/old-stud-road-burwood-highway'
 ]
