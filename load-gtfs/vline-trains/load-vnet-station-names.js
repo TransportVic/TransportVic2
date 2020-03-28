@@ -23,9 +23,9 @@ const coachOverrides = [
 
 const stations = Array.from($('Location')).filter(location => {
   return $('StopType', location).text() === 'Station'
-    || coachOverrides.includes($('LocationName', location).text().trim())
+    && !coachOverrides.includes($('LocationName', location).text().trim())
 }).map(location => {
-  const vnetStationName = $('LocationName', location).text()
+  const vnetStationName = $('LocationName', location).text().trim()
   const stationName = vnetStationName.replace(/^Melbourne[^\w]+/, '').replace(/\(.+\)/g, '')
     .replace(/: .+/, '').replace(/Station.*/, '').replace(/Railway.*/, '').replace(/  +/, ' ')
     .trim() + ' Railway Station'
@@ -46,7 +46,7 @@ database.connect({
   await async.forEach(stations, async stop => {
     let stopData = await stops.findDocument({ stopName: stop.name })
 
-    let index = stopData.bays.indexOf(stopData.bays.filter(bay => bay.mode === 'regional train')[0])
+    let index = stopData.bays.indexOf(stopData.bays.find(bay => bay.mode === 'regional train'))
     stopData.bays[index].vnetStationName = stop.vnetStationName
 
     await stops.updateDocument({ stopName: stop.name }, {
