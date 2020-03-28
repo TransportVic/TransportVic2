@@ -15,6 +15,7 @@ module.exports = {
   "4-454": ["Sita Bus Lines"],
   "4-45S": ["Sita Bus Lines"], // 456
   "4-4X9": ["Sita Bus Lines"], // 459
+  "4-46z": ["Kastoria Bus Lines"],
   "4-462": ["Kastoria Bus Lines"],
   "4-525": ["Dysons"],
   "4-52F": ["Dysons"],
@@ -143,5 +144,13 @@ module.exports = {
   "6-wr9": ["Warrnambool Bus Lines"],
 
   "6-B70": ["Whitmores Bus Lines"],
-  "6-B7o": ["Whitmores Bus Lines"]
+  "6-B7o": ["Whitmores Bus Lines"],
+
+  // TNSW
+  "6-906": ["Transport NSW"],
+  "6-907": ["Transport NSW"],
+  "6-908": ["Transport NSW"],
+
+  "6-99x": ["Bacchus Marsh Coaches"],
+  "6-99y": ["Bacchus Marsh Coaches"]
 }
