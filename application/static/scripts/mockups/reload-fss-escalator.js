@@ -30,13 +30,13 @@ function formatTime(time) {
   return mainTime
 }
 
-function getStoppingPattern(firstDeparture) {
+function getStoppingPattern(firstDeparture, isCityStop) {
   let {additionalInfo} = firstDeparture
   let stoppingPattern = ''
   if (additionalInfo.expressCount === 0)
     stoppingPattern = 'Stops All'
   else if (additionalInfo.expressCount <= 2)
-    stoppingPattern='Ltd Express'
+    stoppingPattern = 'Ltd Express'
   else stoppingPattern = 'Express'
 
   if (isCityStop || additionalInfo.direction === 'Up') {
@@ -81,7 +81,7 @@ setInterval(() => {
   $.ajax({
     method: 'POST'
   }, (err, status, body) => {
-    let {departures} = body
+    let {departures, isCityStop} = body
 
     setNoDeparturesActive(!departures.length)
     if (departures.length) {
@@ -94,7 +94,7 @@ setInterval(() => {
       $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
       $('.firstDepartureInfo .scheduledDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
       $('.firstDepartureInfo .destination').textContent = firstDeparture.destination
-      $('.firstDepartureInfo .stoppingPattern').textContent = getStoppingPattern(firstDeparture)
+      $('.firstDepartureInfo .stoppingPattern').textContent = getStoppingPattern(firstDeparture, isCityStop)
       $('.firstDepartureInfo .platform').className = 'platform ' + firstDepartureClass
       $('.firstDepartureInfo .platform span').textContent = firstDeparture.platform
       $('.firstDepartureInfo .timeToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
@@ -152,7 +152,7 @@ setInterval(() => {
     departures.concat([null, null, null, null, null]).slice(1, 5).forEach((departure, i) => {
       let departureDIV = departureDIVs[i]
       if (!!departure) {
-        let departureClass = departureClass
+        let departureClass = departure.codedLineName
         if (departure.type === 'vline') departureClass = 'vline'
 
         $('.sideBar', departureDIV).className = 'sideBar ' + departureClass
