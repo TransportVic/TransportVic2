@@ -22,31 +22,36 @@ async function getData(req, res) {
     codedName: (req.params.station || 'flinders-street') + '-railway-station'
   })
 
-  let vlineDepartures = (await getVLineDepartures(station, res.db))
-    .map(departure => {
-      departure.platform = departure.platform.replace('?', '')
-      departure.type = 'vline'
+  let vlineDepartures = [], metroDepartures = []
+  try {
+    vlineDepartures = (await getVLineDepartures(station, res.db))
+      .map(departure => {
+        departure.platform = departure.platform.replace('?', '')
+        departure.type = 'vline'
 
-      return departure
-    }).filter(departure => {
-      if (departure.platform !== req.params.platform) return false
-      
-      let diff = departure.actualDepartureTime
-      let minutesDifference = diff.diff(utils.now(), 'minutes')
-      let secondsDifference = diff.diff(utils.now(), 'seconds')
+        return departure
+      }).filter(departure => {
+        if (departure.platform !== req.params.platform) return false
 
-      return minutesDifference < 180 && secondsDifference >= 10 // minutes round down
-    })
+        let diff = departure.actualDepartureTime
+        let minutesDifference = diff.diff(utils.now(), 'minutes')
+        let secondsDifference = diff.diff(utils.now(), 'seconds')
 
-  let departures = (await getDepartures(station, res.db, 6, false, req.params.platform, 1))
+        return minutesDifference < 180 && secondsDifference >= 10 // minutes round down
+      })
+  } catch (e) {}
+
+  try {
+    metroDepartures = (await getDepartures(station, res.db, 6, false, req.params.platform, 1))
     .filter(departure => {
       let diff = departure.actualDepartureTime
       let minutesDifference = diff.diff(utils.now(), 'minutes')
       let secondsDifference = diff.diff(utils.now(), 'seconds')
       return minutesDifference < 180 && secondsDifference >= 10 // minutes round down
     })
+  } catch (e) {}
 
-  departures = departures.concat(vlineDepartures)
+  let departures = metroDepartures.concat(vlineDepartures)
 
   let lineGroups = departures.map(departure => departure.trip.routeName)
     .filter((e, i, a) => a.indexOf(e) === i)
