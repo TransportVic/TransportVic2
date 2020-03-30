@@ -11,6 +11,7 @@ const departureUtils = require('../utils/get-train-timetables')
 const getCoachReplacements = require('./get-coach-replacement-trips')
 const terminiToLines = require('../../load-gtfs/vline-trains/termini-to-lines')
 const getStoppingPattern = require('../utils/get-vline-stopping-pattern')
+const guessPlatform = require('./guess-scheduled-platforms')
 
 async function getStationFromVNETName(vnetStationName, db) {
   const station = await db.getCollection('stops').findDocument({
@@ -238,6 +239,15 @@ async function getDepartures(station, db) {
   }
 
   let scheduledDepartures = (await departureUtils.getScheduledDepartures(station, db, 'regional train', 180))
+  scheduledDepartures = scheduledDepartures.map(departure => {
+    let dayOfWeek = departure.scheduledDepartureTime.day()
+    let isWeekday = dayOfWeek === 0 || dayOfWeek === 6
+    let platform = guessPlatform(station.stopName.slice(0, -16), departure.scheduledDepartureTimeMinutes,
+      departure.trip.shortRouteName, departure.trip.direction, departure.destination)
+
+    departure.platform = platform + '?'
+    return departure
+  })
   let coachTrips = await getCoachReplacements(station, db)
 
   try {
