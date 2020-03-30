@@ -1,6 +1,7 @@
 const express = require('express')
 const router = new express.Router()
 const getDepartures = require('../../../modules/metro-trains/get-departures')
+const getVLineDepartures = require('../../../modules/vline/get-departures')
 const moment = require('moment')
 const async = require('async')
 const utils = require('../../../utils')
@@ -21,6 +22,21 @@ async function getData(req, res) {
     codedName: (req.params.station || 'flinders-street') + '-railway-station'
   })
 
+  let vlineDepartures = (await getVLineDepartures(station, res.db))
+    .map(departure => {
+      departure.platform = departure.platform.replace('?', '')
+      departure.type = 'vline'
+
+      return departure
+    }).filter(departure => {
+      if (departure.platform !== req.params.platform) return false
+      
+      let diff = departure.actualDepartureTime
+      let minutesDifference = diff.diff(utils.now(), 'minutes')
+      let secondsDifference = diff.diff(utils.now(), 'seconds')
+
+      return minutesDifference < 180 && secondsDifference >= 10 // minutes round down
+    })
 
   let departures = (await getDepartures(station, res.db, 6, false, req.params.platform, 1))
     .filter(departure => {
@@ -28,8 +44,9 @@ async function getData(req, res) {
       let minutesDifference = diff.diff(utils.now(), 'minutes')
       let secondsDifference = diff.diff(utils.now(), 'seconds')
       return minutesDifference < 180 && secondsDifference >= 10 // minutes round down
-      return true
     })
+
+  departures = departures.concat(vlineDepartures)
 
   let lineGroups = departures.map(departure => departure.trip.routeName)
     .filter((e, i, a) => a.indexOf(e) === i)
@@ -54,9 +71,10 @@ async function getData(req, res) {
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
     let line = await res.db.getCollection('routes').findDocument({
-      routeName: departure.trip.routeName,
-      mode: 'metro train'
+      routeGTFSID: departure.trip.routeGTFSID
     })
+
+    if (!line) console.log(departure)
 
     let lineStops = line.directions.filter(dir => dir.directionName !== 'City')[0].stops
       .map(stop => stop.stopName.slice(0, -16))
@@ -96,7 +114,7 @@ async function getData(req, res) {
     let expressCount = screenStops.filter(stop => stop.isExpress).length
 
     let additionalInfo = {
-      screenStops, expressCount, viaCityLoop
+      screenStops, expressCount, viaCityLoop, direction: departure.trip.direction
     }
 
     departure.additionalInfo = additionalInfo
@@ -110,14 +128,18 @@ async function getData(req, res) {
 
 router.get('/:platform/:station*?', async (req, res) => {
   let {departures, station} = await getData(req, res)
+  let stationName = station.stopName.slice(0, -16)
+  let isCityStop = cityLoopStations.includes(stationName) || stationName === 'Flinders Street'
 
-  res.render('mockups/flinders-street/escalator', { departures, platform: req.params.platform })
+  res.render('mockups/flinders-street/escalator', { departures, platform: req.params.platform, isCityStop })
 })
 
 router.post('/:platform/:station*?', async (req, res) => {
   let {departures, station} = await getData(req, res)
+  let stationName = station.stopName.slice(0, -16)
+  let isCityStop = cityLoopStations.includes(stationName) || stationName === 'Flinders Street'
 
-  res.json({departures, platform: req.params.platform});
+  res.json({departures, platform: req.params.platform, isCityStop})
 })
 
 module.exports = router

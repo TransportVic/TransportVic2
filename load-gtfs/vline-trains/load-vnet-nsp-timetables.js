@@ -53,6 +53,8 @@ const files = [
   'FP50 Western Sunday - Down'
 ]
 
+let routeGTFSIDs = require('./route-gtfs-ids')
+
 let terminiToLines = require('./termini-to-lines')
 
 function operatingDaysToArray (days) {
@@ -224,7 +226,8 @@ async function loadTrips (csvData, direction) {
       destinationArrivalTime,
       departureTime,
       origin,
-      direction
+      direction,
+      routeGTFSID: routeGTFSIDs[line]
     }
 
     await timetables.replaceDocument(key, timetableData, {

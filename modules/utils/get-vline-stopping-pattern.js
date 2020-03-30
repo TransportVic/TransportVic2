@@ -4,6 +4,7 @@ const utils = require('../../utils')
 const urls = require('../../urls.json')
 const cheerio = require('cheerio')
 
+const routeGTFSIDs = require('../../load-gtfs/vline-trains/route-gtfs-ids')
 const terminiToLines = require('../../load-gtfs/vline-trains/termini-to-lines')
 
 async function getOriginRunID (originVNETName, destinationVNETName, originDepartureTime, journeyCache) {
@@ -100,7 +101,7 @@ async function getStops(db, originVNETName, destinationVNETName, originDeparture
       departureTimeMinutes: null,
       estimatedDepartureTime: null,
       platform: null,
-      stopConditions: ""
+      stopConditions: ''
     }
 
     if (departureTime) {
@@ -143,7 +144,8 @@ async function getStops(db, originVNETName, destinationVNETName, originDeparture
     destinationArrivalTime: stopTimings[stopTimings.length - 1].arrivalTime,
     departureTime: stopTimings[0].departureTime,
     origin,
-    type: 'timings'
+    type: 'timings',
+    routeGTFSID: routeGTFSIDs[routeName]
   }
 
   let key = {

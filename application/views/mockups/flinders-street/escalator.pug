@@ -28,8 +28,10 @@ html
       if (!noDepartures)
         additionalInfo = firstDeparture.additionalInfo
       else firstDeparture = { codedLineName: 'no-line' }
+      let firstDepartureClass = firstDeparture.codedLineName
+      if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
     div.contents
-      div(class='topLineBanner ' + firstDeparture.codedLineName)
+      div(class='topLineBanner ' + firstDepartureClass)
       div.noDepartures(style=noDepartures ? 'display: block;' : 'display: none;')
         div.firstDepartureTime
           div.platform.no-line
@@ -55,22 +57,24 @@ html
               if (additionalInfo.expressCount === 0)
                 stoppingPattern = 'Stops All'
               else if (additionalInfo.expressCount <= 2)
-                stoppingPattern='Ltd Express'
+                stoppingPattern = 'Ltd Express'
               else stoppingPattern = 'Express'
                 
-              if (additionalInfo.viaCityLoop) stoppingPattern += ' via City Loop'
-              else {
-                if (northernGroup.includes(firstDeparture.trip.routeName)) stoppingPattern += ' via Sthn Cross'
-                else if (cliftonHillGroup.includes(firstDeparture.trip.routeName)) stoppingPattern += ' via Jolimont' //?
-                else stoppingPattern += ' via Richmond'
-                
+              if (isCityStop || additionalInfo.direction === 'Up') {
+                if (additionalInfo.viaCityLoop) stoppingPattern += ' via City Loop'
+                else {
+                  if (northernGroup.includes(firstDeparture.trip.routeName)) stoppingPattern += ' via Sthn Cross'
+                  else if (cliftonHillGroup.includes(firstDeparture.trip.routeName)) stoppingPattern += ' via Jolimont' //?
+                  else stoppingPattern += ' via Richmond'
+                }
               }
+              if (firstDeparture.type === 'vline') stoppingPattern = 'No Suburban Passengers'
             span.stoppingPattern=stoppingPattern
           else
             span.stoppingPattern
         div.firstDepartureTime
           if !noDepartures
-            div(class='platform ' + firstDeparture.codedLineName)
+            div(class='platform ' + firstDepartureClass)
               span=platform
             div.timeToDeparture
               span=firstDeparture.prettyTimeToDeparture
@@ -80,7 +84,7 @@ html
             div.timeToDeparture
               span
       div.greyLine(style=noDepartures ? 'display: none;' : 'display: block;')
-      div(class='stoppingAt ' + firstDeparture.codedLineName style=noDepartures ? 'display: none;' : 'display: block;')
+      div(class='stoppingAt ' + firstDepartureClass style=noDepartures ? 'display: none;' : 'display: block;')
         div
           if !noDepartures
             -
@@ -113,8 +117,8 @@ html
               - let hasTerminating = additionalInfo.screenStops.length <= n
               
               div.stationRow
-                img(src=`/static/images/mockups/station-stops-at.svg` class=firstDeparture.codedLineName)
-                p(class=firstDeparture.codedLineName)=firstNStations[0].stopName
+                img(src=`/static/images/mockups/station-stops-at.svg` class=firstDepartureClass)
+                p(class=firstDepartureClass)=firstNStations[0].stopName
 
               for station in firstNStations.slice(1, hasTerminating ? -1 : n)
                 +stationRow(station.stopName, station.isExpress ? "express" : "stops-at")
@@ -140,15 +144,18 @@ html
         - let i = 0
         for departure in departures.concat([null, null, null, null, null]).slice(1, 5)
           if !!departure
-            - let {additionalInfo} = departure
+            -
+              let {additionalInfo} = departure
+              let departureClass = departure.codedLineName
+              if (departure.type === 'vline') departureClass = 'vline'
             div.smallDeparture
               div.left
-                div(class='sideBar ' + departure.codedLineName)
+                div(class='sideBar ' + departureClass)
                 p=departure.scheduledDepartureTime.format('h:mmA').toLowerCase()
               div.centre
                 p=departure.destination
               div.right
-                div(class='platform ' + departure.codedLineName)
+                div(class='platform ' + departureClass)
                   p=platform
                 div.timeToDeparture
                   p=departure.prettyTimeToDeparture.replace(' ', '')

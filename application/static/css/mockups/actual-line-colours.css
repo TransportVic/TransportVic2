@@ -33,6 +33,10 @@ div.no-line {
   background-color: #95979A;
 }
 
+div.vline {
+  background-color: #8F1A95;
+}
+
 
 p.alamein, p.belgrave, p.lilydale, p.glen-waverley {
   background-color: #152C6B;
@@ -74,6 +78,11 @@ p.no-line {
   color: #ffffff;
 }
 
+p.vline {
+  background-color: #8F1A95;
+  color: #ffffff;
+}
+
 .stoppingAt.alamein img, .stoppingAt.belgrave img, .stoppingAt.lilydale img, .stoppingAt.glen-waverley img {
   filter: invert(13%) sepia(54%) saturate(2677%) hue-rotate(213deg) brightness(94%) contrast(98%);
 }
@@ -104,6 +113,10 @@ p.no-line {
 
 .stoppingAt.no-line img {
   filter: invert(67%) sepia(9%) saturate(92%) hue-rotate(177deg) brightness(89%) contrast(85%);
+}
+
+.stoppingAt.vline img {
+  filter: invert(16%) sepia(78%) saturate(3474%) hue-rotate(286deg) brightness(88%) contrast(96%);
 }
 
 
@@ -144,5 +157,10 @@ div.platform.showgrounds-flemington {
 
 div.platform.no-line {
   background-color: #95979A;
+  color: #ffffff;
+}
+
+div.platform.vline {
+  background-color: #8F1A95;
   color: #ffffff;
 }

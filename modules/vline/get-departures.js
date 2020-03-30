@@ -62,6 +62,9 @@ async function getVNETDepartures(station, direction, db) {
 
     fullVehicle = fullVehicle.replace(/ /g, '-')
 
+    if ($('Consist', service).attr('i:nil'))
+      fullVehicle = ''
+
     let direction = $('Direction', service).text()
     if (direction === 'D') direction = 'Down'
     else direction = 'Up'
@@ -181,17 +184,18 @@ async function getDeparturesFromVNET(station, db) {
     let scheduledDepartureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, now)
 
     let platform = vnetDeparture.platform
-    if (!platform && vnetTrip) {
-      let vnetStopData = vnetTrip.stopTimings.filter(stop => stop.stopGTFSID === vlinePlatform.stopGTFSID)[0]
-      platform = vnetStopData.platform || '?'
-    }
+    // if (!platform && vnetTrip) {
+    //   let vnetStopData = vnetTrip.stopTimings.filter(stop => stop.stopGTFSID === vlinePlatform.stopGTFSID)[0]
+    //   platform = vnetStopData.platform || '?'
+    // }
 
     return {
-      trip, estimatedDepartureTime: vnetDeparture.estimatedDepartureTime, platform: vnetDeparture.platform,
+      trip, estimatedDepartureTime: vnetDeparture.estimatedDepartureTime, platform,
       stopData, scheduledDepartureTime,
       departureTimeMinutes: stopData.departureTimeMinutes, runID: vnetDeparture.runID,
       actualDepartureTime: vnetDeparture.estimatedDepartureTime || scheduledDepartureTime, vnetTrip,
-      vehicle: vnetDeparture.vehicle
+      vehicle: vnetDeparture.vehicle,
+      destination: trip.destination
     }
   })).filter(Boolean)
 
@@ -245,7 +249,9 @@ async function getDepartures(station, db) {
     let platform = guessPlatform(station.stopName.slice(0, -16), departure.scheduledDepartureTimeMinutes,
       departure.trip.shortRouteName, departure.trip.direction, departure.destination)
 
-    departure.platform = platform + '?'
+    if (departure.platform)
+      departure.platform = platform + '?'
+    else departure.platform = '?'
     return departure
   })
   let coachTrips = await getCoachReplacements(station, db)
