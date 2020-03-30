@@ -62,7 +62,7 @@ html
                 
               if (isCityStop || additionalInfo.direction === 'Up') {
                 if (additionalInfo.viaCityLoop) stoppingPattern += ' via City Loop'
-                else {
+                else if (additionalInfo.direction === 'Down') {
                   if (northernGroup.includes(firstDeparture.trip.routeName)) stoppingPattern += ' via Sthn Cross'
                   else if (cliftonHillGroup.includes(firstDeparture.trip.routeName)) stoppingPattern += ' via Jolimont' //?
                   else stoppingPattern += ' via Richmond'

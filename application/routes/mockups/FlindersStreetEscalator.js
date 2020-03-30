@@ -79,15 +79,36 @@ async function getData(req, res) {
       routeGTFSID: departure.trip.routeGTFSID
     })
 
-    if (!line) console.log(departure)
-
     let lineStops = line.directions.filter(dir => dir.directionName !== 'City')[0].stops
       .map(stop => stop.stopName.slice(0, -16))
 
     let tripStops = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
+    if (departure.trip.direction === 'Up') {
+      let hasSeenFSS = false
+      tripStops = tripStops.filter(e => {
+        if (hasSeenFSS) return false
+        if (e === 'Flinders Street') {
+          hasSeenFSS = true
+        }
+        return true
+      })
+    }
+
     let startingIndex = tripStops.indexOf(station.stopName.slice(0, -16))
-    tripStops = tripStops.filter((_, i) => (i >= startingIndex))
     let viaCityLoop = tripStops.includes('Flagstaff')
+    tripStops = tripStops.filter((_, i) => (i >= startingIndex))
+
+    if (viaCityLoop) {
+      let cityLoopStops = tripStops.filter(e => cityLoopStations.includes(e))
+      lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
+
+      if (departure.trip.direction === 'Up') {
+        lineStops = lineStops.slice(0, -1).concat(cityLoopStops)
+        lineStops.push('Flinders Street')
+      } else {
+        lineStops = ['Flinders Street', ...cityLoopStops, ...lineStops.slice(1)]
+      }
+    }
 
     startingIndex = lineStops.indexOf(station.stopName.slice(0, -16))
     let endingIndex = lineStops.indexOf(departure.trip.destination)
@@ -99,14 +120,16 @@ async function getData(req, res) {
     }
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
 
-    if (!viaCityLoop) {
-      if (!northernGroup.includes(departure.trip.routeName))
+    if (!viaCityLoop && departure.type !== 'vline') {
+      if (!northernGroup.includes(departure.trip.routeName)) {
         tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop))
-      else
+      } else {
         tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop) || stop === 'Southern Cross')
+      }
     } else {
-      if (northernGroup.includes(departure.trip.routeName))
+      if (northernGroup.includes(departure.trip.routeName)) {
         tripPassesBy = tripPassesBy.filter(stop => stop !== 'Southern Cross')
+      }
     }
     let screenStops = tripPassesBy.map(stop => {
       return {
