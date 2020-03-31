@@ -75,15 +75,24 @@ async function getData(req, res) {
 
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
+    let {routeGTFSID} = departure.trip
+
     let line = await res.db.getCollection('routes').findDocument({
-      routeGTFSID: departure.trip.routeGTFSID
+      routeGTFSID
     })
 
-    let lineStops = line.directions.filter(dir => dir.directionName !== 'City')[0].stops
-      .map(stop => stop.stopName.slice(0, -16))
+    let lineStops = line.directions.find(dir => {
+      if (routeGTFSID === '5-V27') { // maryborough run as shuttles to ballarat
+        return dir.directionName !== 'Ballarat Railway Station'
+      }
+      return dir.directionName !== 'City' && dir.directionName !== 'Southern Cross Railway Station'
+    }).stops.map(stop => stop.stopName.slice(0, -16))
 
     let tripStops = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
+
     if (departure.trip.direction === 'Up') {
+      lineStops.reverse()
+
       let hasSeenFSS = false
       tripStops = tripStops.filter(e => {
         if (hasSeenFSS) return false
@@ -103,8 +112,6 @@ async function getData(req, res) {
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
 
       if (departure.trip.direction === 'Up') {
-        lineStops.reverse()
-        
         lineStops = lineStops.slice(0, -1).concat(cityLoopStops)
         lineStops.push('Flinders Street')
       } else {
