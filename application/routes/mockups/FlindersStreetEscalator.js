@@ -103,6 +103,8 @@ async function getData(req, res) {
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
 
       if (departure.trip.direction === 'Up') {
+        lineStops.reverse()
+        
         lineStops = lineStops.slice(0, -1).concat(cityLoopStops)
         lineStops.push('Flinders Street')
       } else {
@@ -112,12 +114,7 @@ async function getData(req, res) {
 
     startingIndex = lineStops.indexOf(station.stopName.slice(0, -16))
     let endingIndex = lineStops.indexOf(departure.trip.destination)
-    if (startingIndex > endingIndex) {
-      lineStops.reverse()
 
-      startingIndex = lineStops.indexOf(station.stopName.slice(0, -16))
-      endingIndex = lineStops.indexOf(departure.trip.destination)
-    }
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
 
     if (!viaCityLoop && departure.type !== 'vline') {
@@ -149,6 +146,7 @@ async function getData(req, res) {
 
     return departure
   })
+
   departures = departures.filter(Boolean)
 
   return {departures, station}
