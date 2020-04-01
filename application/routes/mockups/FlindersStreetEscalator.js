@@ -81,7 +81,7 @@ async function getData(req, res) {
     return a.actualDepartureTime - b.actualDepartureTime
   })
 
-  departures = await async.map(departures.slice(2), async departure => {
+  departures = await async.map(departures, async departure => {
     const timeDifference = departure.actualDepartureTime.diff(utils.now(), 'minutes')
 
     if (+timeDifference <= 0) departure.prettyTimeToDeparture = 'NOW'
