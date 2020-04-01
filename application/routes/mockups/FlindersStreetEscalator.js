@@ -6,6 +6,8 @@ const moment = require('moment')
 const async = require('async')
 const utils = require('../../../utils')
 
+const getLineStops = require('./route-stops')
+
 let northernGroup = [
   "Craigieburn",
   "Sunbury",
@@ -37,17 +39,19 @@ async function getData(req, res) {
         let minutesDifference = diff.diff(utils.now(), 'minutes')
         let secondsDifference = diff.diff(utils.now(), 'seconds')
 
-        return minutesDifference < 180 && secondsDifference >= 10 // minutes round down
+        return minutesDifference < 120 && secondsDifference >= 10 // minutes round down
       })
   } catch (e) {}
 
   try {
-    metroDepartures = (await getDepartures(station, res.db, 6, false, req.params.platform, 1))
+    metroDepartures = (await getDepartures(station, res.db, 15, true))
     .filter(departure => {
+      if (departure.platform !== req.params.platform) return false
+
       let diff = departure.actualDepartureTime
       let minutesDifference = diff.diff(utils.now(), 'minutes')
       let secondsDifference = diff.diff(utils.now(), 'seconds')
-      return minutesDifference < 180 && secondsDifference >= 10 // minutes round down
+      return minutesDifference < 120 && secondsDifference >= 10 // minutes round down
     })
   } catch (e) {}
 
@@ -77,21 +81,22 @@ async function getData(req, res) {
 
     let {routeGTFSID} = departure.trip
 
-    let line = await res.db.getCollection('routes').findDocument({
-      routeGTFSID
-    })
+    // let line = await res.db.getCollection('routes').findDocument({
+    //   routeGTFSID
+    // })
 
-    let lineStops = line.directions.find(dir => {
-      if (routeGTFSID === '5-V27') { // maryborough run as shuttles to ballarat
-        return dir.directionName !== 'Ballarat Railway Station'
-      }
-      return dir.directionName !== 'City' && dir.directionName !== 'Southern Cross Railway Station'
-    }).stops.map(stop => stop.stopName.slice(0, -16))
+    // let lineStops = line.directions.find(dir => {
+    //   if (routeGTFSID === '5-V27') { // maryborough run as shuttles to ballarat
+    //     return dir.directionName !== 'Ballarat Railway Station'
+    //   }
+    //   return dir.directionName !== 'City' && dir.directionName !== 'Southern Cross Railway Station'
+    // }).stops.map(stop => stop.stopName.slice(0, -16))
 
+    let lineStops = getLineStops(departure.trip.shortRouteName || departure.trip.routeName)
     let tripStops = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
 
     if (departure.trip.direction === 'Up') {
-      lineStops.reverse()
+      lineStops = lineStops.slice(0).reverse()
 
       let hasSeenFSS = false
       tripStops = tripStops.filter(e => {
