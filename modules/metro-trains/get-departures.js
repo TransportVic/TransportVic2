@@ -14,13 +14,14 @@ let burnleyGroup = [1, 2, 7, 9, 99] // alamein, belgrave, glen waverley, lilydal
 let caulfieldGroup = [4, 6, 11, 12] // cranbourne, frankston, pakenham, sandringham
 let northenGroup = [3, 14, 15, 16, 17, 1482] // craigieburn, sunbury, upfield, werribee, williamstown, flemington racecourse
 let cliftonHillGroup = [5, 8] // mernda, hurstbridge
+let crossCityGroup = [6, 16, 17, 1482]
 
-function determineLoopRunning(routeID, runID, destination, isFormingNewTrip) {
+function determineLoopRunning(routeID, runID, destination, isFormingNewTrip, isSCS) {
   if (routeID === 13) return [] // stony point
 
   let upService = !(runID[3] % 2)
   let throughCityLoop = runID[1] > 5 || cityLoopStations.includes(destination.toLowerCase())
-  if (routeID === 6 && destination == 'Southern Cross' || isFormingNewTrip) {
+  if (routeID === 6 && destination == 'Southern Cross' && isFormingNewTrip) {
     throughCityLoop = false
   }
   let stopsViaFlindersFirst = runID[1] <= 5
@@ -52,7 +53,7 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip) {
     }
   }
 
-  if (!upService) { // down trains away from city
+  if (!upService || isFormingNewTrip) { // down trains away from city
     cityLoopConfig.reverse()
   }
 
@@ -162,20 +163,21 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     }
 
     let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== trip.destination
+    let isSCS = station.stopName.slice(0, -16) === 'Southern Cross'
 
-    let isUpTrip = (trip || {}).direction === 'Up' || runID % 2 === 0
-    let cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(routeID, runID, runDestination, isFormingNewTrip) : []
+    let isUpTrip = ((trip || {}).direction === 'Up' || runID % 2 === 0) && !isFormingNewTrip
+    let cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(routeID, runID, runDestination, isFormingNewTrip, isSCS) : []
 
     if (isUpTrip && !cityLoopStations.includes(runDestination.toLowerCase()) &&
       !cityLoopStations.includes(stationName) && runDestination !== 'Flinders Street')
       cityLoopConfig = []
 
     if (cityLoopStations.includes(stationName) && !cityLoopConfig.includes('FGS')) {
-      if (caulfieldGroup.includes(routeID) && (routeID !== 6 && !isFormingNewTrip) && !isUpTrip)
+      if (caulfieldGroup.includes(routeID) && isUpTrip)
         cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
         // trip is towards at flinders, but ptv api already gave next trip
         // really only seems to happen with cran/pak/frank lines
-      if (northenGroup.includes(routeID) && routeID !== 1482) {// all northern group except showgrounds
+      if (!crossCityGroup.includes(routeID) && northenGroup.includes(routeID)) {// all northern group except showgrounds & cross city
         if (runDestination !== 'Flinders Street')
           cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
       }

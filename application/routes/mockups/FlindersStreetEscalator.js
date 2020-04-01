@@ -17,6 +17,12 @@ let northernGroup = [
   "Showgrounds/Flemington"
 ]
 
+let crossCityGroup = [
+  "Werribee",
+  "Williamstown",
+  "Frankston"
+]
+
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 async function getData(req, res) {
@@ -75,7 +81,7 @@ async function getData(req, res) {
     return a.actualDepartureTime - b.actualDepartureTime
   })
 
-  departures = await async.map(departures, async departure => {
+  departures = await async.map(departures.slice(2), async departure => {
     const timeDifference = departure.actualDepartureTime.diff(utils.now(), 'minutes')
 
     if (+timeDifference <= 0) departure.prettyTimeToDeparture = 'NOW'
@@ -110,8 +116,9 @@ async function getData(req, res) {
     }
 
     // If there's a forming then consider it as a down trip
-    let isUp = departure.trip.direction === 'Up' && !departure.forming
-    let destination = departure.forming ? departure.destination : departure.trip.destination
+    let isFormingNewTrip = !!departure.forming
+    let isUp = departure.trip.direction === 'Up' && !isFormingNewTrip
+    let destination = isFormingNewTrip ? departure.destination : departure.trip.destination
 
     if (isUp) {
       lineStops = lineStops.slice(0).reverse()
@@ -126,7 +133,9 @@ async function getData(req, res) {
       })
     }
 
-    let startingIndex = tripStops.indexOf(station.stopName.slice(0, -16))
+    let stationName = station.stopName.slice(0, -16)
+
+    let startingIndex = tripStops.indexOf(stationName)
     let viaCityLoop = tripStops.includes('Flagstaff')
     tripStops = tripStops.slice(startingIndex)
 
@@ -145,7 +154,7 @@ async function getData(req, res) {
       lineStops = ['Southern Cross', ...lineStops]
     }
 
-    startingIndex = lineStops.indexOf(station.stopName.slice(0, -16))
+    startingIndex = lineStops.indexOf(stationName)
     let endingIndex = lineStops.indexOf(destination)
 
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
@@ -155,11 +164,18 @@ async function getData(req, res) {
       if (northernGroup.includes(relevantTrip.routeName)) {
         tripPassesBy = tripPassesBy.filter(stop => stop !== 'Southern Cross')
       }
+      if (stationName === 'Southern Cross') {
+        tripPassesBy = ['Southern Cross', ...tripPassesBy]
+      }
     } else {
       if (northernGroup.includes(relevantTrip.routeName)) {
         tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop) || stop === 'Southern Cross')
       } else if (departure.type !== 'vline') {
         tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop))
+      }
+
+      if (crossCityGroup.includes(relevantTrip.routeName) && isFormingNewTrip && stationName === 'Southern Cross') {
+        tripPassesBy = ['Southern Cross', ...tripPassesBy]
       }
     }
 
