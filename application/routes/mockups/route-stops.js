@@ -482,15 +482,7 @@ let lines = {
     'Alamein'
   ],
   Albury: [
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
     'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
     'North Melbourne',
     'Kensington',
     'Newmarket',

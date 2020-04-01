@@ -24,6 +24,8 @@ async function getData(req, res) {
     codedName: (req.params.station || 'flinders-street') + '-railway-station'
   })
 
+  let shouldFilterPlatform = req.params.platform !== '*'
+
   let vlineDepartures = [], metroDepartures = []
   try {
     vlineDepartures = (await getVLineDepartures(station, res.db))
@@ -33,7 +35,8 @@ async function getData(req, res) {
 
         return departure
       }).filter(departure => {
-        if (departure.platform !== req.params.platform) return false
+        let mainPlatform = departure.platform.replace(/[A-Z]/, '')
+        if (shouldFilterPlatform && mainPlatform !== req.params.platform) return false
 
         let diff = departure.actualDepartureTime
         let minutesDifference = diff.diff(utils.now(), 'minutes')
@@ -46,7 +49,10 @@ async function getData(req, res) {
   try {
     metroDepartures = (await getDepartures(station, res.db, 15, true))
     .filter(departure => {
-      if (departure.platform !== req.params.platform) return false
+      if (departure.cancelled) return false
+
+      if (shouldFilterPlatform && departure.platform !== req.params.platform) return false
+
 
       let diff = departure.actualDepartureTime
       let minutesDifference = diff.diff(utils.now(), 'minutes')
@@ -140,6 +146,7 @@ async function getData(req, res) {
         tripPassesBy = tripPassesBy.filter(stop => stop !== 'Southern Cross')
       }
     }
+
     let screenStops = tripPassesBy.map(stop => {
       return {
         stopName: stop,

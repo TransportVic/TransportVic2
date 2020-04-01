@@ -63,12 +63,16 @@ function createStationRow(name, imgSource) {
 }
 
 function setNoDeparturesActive(active) {
+  let platform = location.pathname.match(/fss-escalator\/([\w]+)/)[1]
+  if (platform === '*') platform = ' '
+
   if (active) {
     $('.topLineBanner').className = 'topLineBanner no-line'
     $('.noDepartures').style = 'display: block;'
     $('.firstDepartureInfo').style = 'display: none;'
     $('.firstDepartureInfo~.greyLine').style = 'display: none;'
     $('.stoppingAt').style = 'display: none;'
+    $('.firstDepartureInfo .platform span').textContent = platform
   } else {
     $('.noDepartures').style = 'display: none;'
     $('.firstDepartureInfo').style = 'display: flex;'

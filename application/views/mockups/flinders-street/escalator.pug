@@ -75,7 +75,7 @@ html
         div.firstDepartureTime
           if !noDepartures
             div(class='platform ' + firstDepartureClass)
-              span=platform
+              span=firstDeparture.platform || platform
             div.timeToDeparture
               span=firstDeparture.prettyTimeToDeparture
           else
@@ -156,7 +156,7 @@ html
                 p=departure.destination
               div.right
                 div(class='platform ' + departureClass)
-                  p=platform
+                  p=departure.platform
                 div.timeToDeparture
                   p=departure.prettyTimeToDeparture.replace(' ', '')
           else    
