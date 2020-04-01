@@ -109,11 +109,14 @@ async function getData(req, res) {
     let tripStops = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
 
     if (departure.forming) {
-      tripStops = [...tripStops, ...departure.forming.stopTimings.map(stop => stop.stopName.slice(0, -16))]
+      let prevTripCityLoop = tripStops.filter(e => cityLoopStations.includes(e))
+      tripStops = [...prevTripCityLoop, ...departure.forming.stopTimings.map(stop => stop.stopName.slice(0, -16))]
       tripStops = tripStops.filter((e, i, a) => a.indexOf(e) === i)
 
       lineStops = getLineStops(departure.forming.shortRouteName || departure.forming.routeName)
     }
+
+    lineStops = lineStops.slice(0)
 
     // If there's a forming then consider it as a down trip
     let isFormingNewTrip = !!departure.forming
@@ -121,7 +124,7 @@ async function getData(req, res) {
     let destination = isFormingNewTrip ? departure.destination : departure.trip.destination
 
     if (isUp) {
-      lineStops = lineStops.slice(0).reverse()
+      lineStops = lineStops.reverse()
 
       let hasSeenFSS = false
       tripStops = tripStops.filter(e => {
@@ -134,6 +137,8 @@ async function getData(req, res) {
     }
 
     let stationName = station.stopName.slice(0, -16)
+    let relevantTrip = departure.forming || departure.trip
+    let routeName = relevantTrip.shortRouteName || relevantTrip.routeName
 
     let startingIndex = tripStops.indexOf(stationName)
     let viaCityLoop = tripStops.includes('Flagstaff')
@@ -152,23 +157,41 @@ async function getData(req, res) {
     } else if (departure.type === 'vline') {
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
       lineStops = ['Southern Cross', ...lineStops]
+    } else {
+      lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
+
+      if (northernGroup.includes(routeName)) {
+        if (isUp) {
+          lineStops = [...lineStops.slice(0, -1), 'Southern Cross', 'Flinders Street']
+        } else {
+          lineStops = ['Flinders Street', 'Southern Cross', ...lineStops.slice(1)]
+        }
+      } else if (routeName === 'Frankston') {
+        if (isUp) {
+          lineStops = [...lineStops.slice(0, -1), 'Flinders Street', 'Southern Cross']
+        } else {
+          lineStops = ['Southern Cross', 'Flinders Street', ...lineStops.slice(1)]
+        }
+      }
     }
 
     startingIndex = lineStops.indexOf(stationName)
     let endingIndex = lineStops.indexOf(destination)
 
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
-    let relevantTrip = departure.forming || departure.trip
 
     if (viaCityLoop) {
-      if (northernGroup.includes(relevantTrip.routeName)) {
-        tripPassesBy = tripPassesBy.filter(stop => stop !== 'Southern Cross')
-      }
-      if (stationName === 'Southern Cross') {
-        tripPassesBy = ['Southern Cross', ...tripPassesBy]
+      if (northernGroup.includes(routeName)) {
+        if (isFormingNewTrip && stationName === 'Southern Cross') {
+          tripPassesBy = [
+            'Southern Cross', 'Flinders Street', ...tripPassesBy.slice(1)
+          ]
+        } else {
+          tripPassesBy = tripPassesBy.filter(stop => stop !== 'Southern Cross')
+        }
       }
     } else {
-      if (northernGroup.includes(relevantTrip.routeName)) {
+      if (northernGroup.includes(routeName)) {
         tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop) || stop === 'Southern Cross')
       } else if (departure.type !== 'vline') {
         tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop))
