@@ -98,10 +98,22 @@ async function getData(req, res) {
     //   return dir.directionName !== 'City' && dir.directionName !== 'Southern Cross Railway Station'
     // }).stops.map(stop => stop.stopName.slice(0, -16))
 
+
     let lineStops = getLineStops(departure.trip.shortRouteName || departure.trip.routeName)
     let tripStops = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
 
-    if (departure.trip.direction === 'Up') {
+    if (departure.forming) {
+      tripStops = [...tripStops, ...departure.forming.stopTimings.map(stop => stop.stopName.slice(0, -16))]
+      tripStops = tripStops.filter((e, i, a) => a.indexOf(e) === i)
+
+      lineStops = getLineStops(departure.forming.shortRouteName || departure.forming.routeName)
+    }
+
+    // If there's a forming then consider it as a down trip
+    let isUp = departure.trip.direction === 'Up' && !departure.forming
+    let destination = departure.forming ? departure.destination : departure.trip.destination
+
+    if (isUp) {
       lineStops = lineStops.slice(0).reverse()
 
       let hasSeenFSS = false
@@ -116,34 +128,38 @@ async function getData(req, res) {
 
     let startingIndex = tripStops.indexOf(station.stopName.slice(0, -16))
     let viaCityLoop = tripStops.includes('Flagstaff')
-    tripStops = tripStops.filter((_, i) => (i >= startingIndex))
+    tripStops = tripStops.slice(startingIndex)
 
     if (viaCityLoop) {
       let cityLoopStops = tripStops.filter(e => cityLoopStations.includes(e))
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
 
-      if (departure.trip.direction === 'Up') {
+      if (isUp) {
         lineStops = lineStops.slice(0, -1).concat(cityLoopStops)
         lineStops.push('Flinders Street')
       } else {
         lineStops = ['Flinders Street', ...cityLoopStops, ...lineStops.slice(1)]
       }
+    } else if (departure.type === 'vline') {
+      lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
+      lineStops = ['Southern Cross', ...lineStops]
     }
 
     startingIndex = lineStops.indexOf(station.stopName.slice(0, -16))
-    let endingIndex = lineStops.indexOf(departure.trip.destination)
+    let endingIndex = lineStops.indexOf(destination)
 
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
+    let relevantTrip = departure.forming || departure.trip
 
-    if (!viaCityLoop && departure.type !== 'vline') {
-      if (!northernGroup.includes(departure.trip.routeName)) {
-        tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop))
-      } else {
-        tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop) || stop === 'Southern Cross')
+    if (viaCityLoop) {
+      if (northernGroup.includes(relevantTrip.routeName)) {
+        tripPassesBy = tripPassesBy.filter(stop => stop !== 'Southern Cross')
       }
     } else {
-      if (northernGroup.includes(departure.trip.routeName)) {
-        tripPassesBy = tripPassesBy.filter(stop => stop !== 'Southern Cross')
+      if (northernGroup.includes(relevantTrip.routeName)) {
+        tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop) || stop === 'Southern Cross')
+      } else if (departure.type !== 'vline') {
+        tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop))
       }
     }
 
@@ -158,7 +174,7 @@ async function getData(req, res) {
     let expressCount = screenStops.filter(stop => stop.isExpress).length
 
     let additionalInfo = {
-      screenStops, expressCount, viaCityLoop, direction: departure.trip.direction
+      screenStops, expressCount, viaCityLoop, direction: isUp ? 'Up': 'Down'
     }
 
     departure.additionalInfo = additionalInfo

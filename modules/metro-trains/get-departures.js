@@ -15,12 +15,12 @@ let caulfieldGroup = [4, 6, 11, 12] // cranbourne, frankston, pakenham, sandring
 let northenGroup = [3, 14, 15, 16, 17, 1482] // craigieburn, sunbury, upfield, werribee, williamstown, flemington racecourse
 let cliftonHillGroup = [5, 8] // mernda, hurstbridge
 
-function determineLoopRunning(routeID, runID, destination) {
+function determineLoopRunning(routeID, runID, destination, isFormingNewTrip) {
   if (routeID === 13) return [] // stony point
 
   let upService = !(runID[3] % 2)
   let throughCityLoop = runID[1] > 5 || cityLoopStations.includes(destination.toLowerCase())
-  if (routeID === 6 && destination == 'Southern Cross') {
+  if (routeID === 6 && destination == 'Southern Cross' || isFormingNewTrip) {
     throughCityLoop = false
   }
   let stopsViaFlindersFirst = runID[1] <= 5
@@ -161,15 +161,17 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
       trip.origin = trip.origin.slice(0, -16)
     }
 
+    let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== trip.destination
+
     let isUpTrip = (trip || {}).direction === 'Up' || runID % 2 === 0
-    let cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(routeID, runID, runDestination) : []
+    let cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(routeID, runID, runDestination, isFormingNewTrip) : []
 
     if (isUpTrip && !cityLoopStations.includes(runDestination.toLowerCase()) &&
       !cityLoopStations.includes(stationName) && runDestination !== 'Flinders Street')
       cityLoopConfig = []
 
     if (cityLoopStations.includes(stationName) && !cityLoopConfig.includes('FGS')) {
-      if (caulfieldGroup.includes(routeID))
+      if (caulfieldGroup.includes(routeID) && (routeID !== 6 && !isFormingNewTrip) && !isUpTrip)
         cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
         // trip is towards at flinders, but ptv api already gave next trip
         // really only seems to happen with cran/pak/frank lines
@@ -189,8 +191,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     }
 
     let forming = null
-
-    if (cityLoopStations.includes(stationName) && destination !== trip.destination) {
+    if (isFormingNewTrip) {
       forming = await departureUtils.getStaticDeparture(runID, db)
     }
 
