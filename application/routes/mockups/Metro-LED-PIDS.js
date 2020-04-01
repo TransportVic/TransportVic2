@@ -5,6 +5,8 @@ const moment = require('moment')
 const async = require('async')
 const utils = require('../../../utils')
 
+const getLineStops = require('./route-stops')
+
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central', 'Flinders Street']
 
 function findExpressStops(stopTimings, stops) {
@@ -13,13 +15,12 @@ function findExpressStops(stopTimings, stops) {
   })
 
   let firstStop = stopTimings[0]
-  let firstStopGTFSID = firstStop.stopGTFSID
+  let firstStopName = firstStop.stopName
   let lastStop = stopTimings.slice(-1)[0]
-  let lastStopGTFSID = lastStop.stopGTFSID
-  let stopGTFSIDs = stops.map(e => e.stopGTFSID)
+  let lastStopName = lastStop.stopName
 
-  let firstStopIndex = stopGTFSIDs.indexOf(firstStopGTFSID)
-  let lastStopIndex = stopGTFSIDs.indexOf(lastStopGTFSID) + 1
+  let firstStopIndex = stops.indexOf(firstStopName)
+  let lastStopIndex = stops.indexOf(lastStopName) + 1
   let relevantStops = stops.slice(firstStopIndex, lastStopIndex)
 
   let expressParts = []
@@ -33,7 +34,7 @@ function findExpressStops(stopTimings, stops) {
     for (let stop of relevantStops) {
       matchIndex++
 
-      if (stop.stopGTFSID === scheduledStop.stopGTFSID) {
+      if (stop === scheduledStop.stopName) {
         if (matchIndex !== lastMainMatch) { // there has been a jump - exp section
           let expressPart = relevantStops.slice(lastMainMatch, matchIndex)
           expressParts.push(expressPart)
@@ -50,10 +51,8 @@ function findExpressStops(stopTimings, stops) {
 
 function determineStoppingPattern(expressParts, destination, stops) {
   if (expressParts.length === 0) return 'Stops All Stations'
-  if (expressParts.length === 1 && expressParts[0].length === 1) return 'All Except ' + expressParts[0][0].stopName.slice(0, -16)
+  if (expressParts.length === 1 && expressParts[0].length === 1) return 'All Except ' + expressParts[0][0].slice(0, -16)
   let texts = []
-
-  let stopGTFSIDs = stops.map(e => e.stopGTFSID)
 
   let lastStop = null
 
@@ -61,18 +60,18 @@ function determineStoppingPattern(expressParts, destination, stops) {
     let firstExpressStop = expressSection[0]
     let lastExpressStop = expressSection.slice(-1)[0]
 
-    let previousStop = stops[stopGTFSIDs.indexOf(firstExpressStop.stopGTFSID) - 1]
-    let nextStop = stops[stopGTFSIDs.indexOf(lastExpressStop.stopGTFSID) + 1]
+    let previousStop = stops[stops.indexOf(firstExpressStop) - 1]
+    let nextStop = stops[stops.indexOf(lastExpressStop) + 1]
     if (lastStop) {
       if (lastStop === previousStop) {
-        texts.push(`${previousStop.stopName} to ${nextStop.stopName}`)
+        texts.push(`${previousStop} to ${nextStop}`)
       } else {
-        texts.push(`Stops All Stations from ${lastStop.stopName} to ${previousStop.stopName}`)
-        texts.push(`Runs Express from ${previousStop.stopName} to ${nextStop.stopName}`)
+        texts.push(`Stops All Stations from ${lastStop} to ${previousStop}`)
+        texts.push(`Runs Express from ${previousStop} to ${nextStop}`)
       }
     } else {
-      texts.push(`Stops All Stations to ${previousStop.stopName}`)
-      texts.push(`Runs Express from ${previousStop.stopName} to ${nextStop.stopName}`)
+      texts.push(`Stops All Stations to ${previousStop}`)
+      texts.push(`Runs Express from ${previousStop} to ${nextStop}`)
     }
 
     lastStop = nextStop
@@ -116,17 +115,22 @@ async function getData(req, res) {
       }
       return false
     })
+    //
+    // let route = await routes.findDocument({
+    //   mode: 'metro train',
+    //   routeGTFSID
+    // })
+    //
+    // if (!route) console.log(trip)
 
-    let route = await routes.findDocument({
-      mode: 'metro train',
-      routeGTFSID
-    })
+    let routeStops = getLineStops(trip.shortRouteName || trip.routeName).map(e => e + ' Railway Station')
+    if (direction === 'Up') {
+      routeStops = routeStops.slice(0).reverse()
+    }
 
-    if (!route) console.log(trip)
-
-    let routeDirection = route.directions.find(d => d.trainDirection == direction)
-    if (!routeDirection) console.log(route.directions, direction)
-    let routeStops = routeDirection.stops
+    // let routeDirection = route.directions.find(d => d.trainDirection == direction)
+    // if (!routeDirection) console.log(route.directions, direction)
+    // let routeStops = routeDirection.stops
     let expresses = findExpressStops(stopTimings, routeStops)
     let stoppingPattern = determineStoppingPattern(expresses, destination, routeStops)
 
