@@ -18,6 +18,11 @@ let crossCityGroup = [
   'Frankston'
 ]
 
+let gippslandLines = [
+  'Bairnsdale',
+  'Traralgon'
+]
+
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 
@@ -118,8 +123,11 @@ module.exports = {
         lineStops = ['Flinders Street', ...cityLoopStops, ...lineStops.slice(1)]
       }
     } else if (departure.type === 'vline') {
-      lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
-      lineStops = ['Southern Cross', ...lineStops]
+      lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
+      if (gippslandLines.includes(routeName))
+        lineStops = ['Southern Cross', 'Flinders Street', ...lineStops]
+      else
+        lineStops = ['Southern Cross', ...lineStops]
     } else {
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
 
@@ -149,8 +157,6 @@ module.exports = {
           tripPassesBy = [
             'Southern Cross', 'Flinders Street', ...tripPassesBy.slice(1)
           ]
-        } else {
-          tripPassesBy = tripPassesBy.filter(stop => stop !== 'Southern Cross')
         }
       }
     } else {
@@ -185,6 +191,7 @@ module.exports = {
   },
   findExpressStops: (stopTimings, routeStops, routeName, isUp, isVLine) => {
     let viaCityLoop = stopTimings.includes('Flagstaff')
+
     if (!viaCityLoop) {
       routeStops = routeStops.filter(stop => !cityLoopStations.includes(stop))
       if (northernGroup.includes(routeName) || isVLine) {
@@ -193,6 +200,16 @@ module.exports = {
         } else {
           routeStops = ['Flinders Street', 'Southern Cross', ...routeStops.slice(1)]
         }
+      }
+    } else {
+      let cityLoopStops = stopTimings.filter(e => cityLoopStations.includes(e))
+      routeStops = routeStops.filter(e => !cityLoopStations.includes(e))
+
+      if (isUp) {
+        routeStops = routeStops.slice(0, -1).concat(cityLoopStops)
+        routeStops.push('Flinders Street')
+      } else {
+        routeStops = ['Flinders Street', ...cityLoopStops, ...routeStops.slice(1)]
       }
     }
 
@@ -203,6 +220,7 @@ module.exports = {
     let lastStopIndex = routeStops.indexOf(lastStop) + 1
     let relevantStops = routeStops.slice(firstStopIndex, lastStopIndex)
 
+    // console.log(routeStops, relevantStops)
     let expressParts = []
 
     let lastMainMatch = 0

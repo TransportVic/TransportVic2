@@ -141,7 +141,7 @@ async function animateScrollingText(matrix, text, spacing, xPosition=0) {
     matrix.clearRectangle(xPosition, 0, 120, 7)
     matrix.drawText(textObj)
     textObj.position.x--
-    await asyncPause(5)
+    await asyncPause(15)
   }
 }
 

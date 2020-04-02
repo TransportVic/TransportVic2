@@ -5,6 +5,18 @@ html
     link(rel='stylesheet' href='/static/css/mockups/base-style.css')
     link(rel='stylesheet' href='/static/css/mockups/actual-line-colours.css')
     link(rel='stylesheet' href='/static/css/mockups/fss-escalator.css')
+      
+    link(rel='preload' as='font' href='/static/fonts/NetworkSans-Regular.ttf')
+    link(rel='preload' as='font' href='/static/fonts/NetworkSans-Medium.ttf')
+    link(rel='preload' as='font' href='/static/fonts/NetworkSans-Bold.ttf')
+      
+    link(rel='preload' as='image' href='/static/images/mockups/no-boarding-train.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/station-express.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/station-filler.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/station-halfstub.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/station-stops-at.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/station-stub.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/station-terminates.svg')
   body
     -
       let northernGroup = [

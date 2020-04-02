@@ -26,7 +26,7 @@ async function getData(req, res) {
   platformDepartures = platformDepartures.map(departure => {
     let {trip, destination} = departure
     let {routeGTFSID, direction, stopTimings} = trip
-    let isUp = direction === 'Up'
+    let isUp = direction === 'Up' || departure.forming
     let routeName = trip.shortRouteName || trip.routeName
     let isVLine = departure.type === 'vline'
 
