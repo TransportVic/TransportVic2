@@ -11,6 +11,8 @@ div.contents {
 div.topLineBanner {
   height: 39px;
   margin-top: 13px;
+
+  border-radius: 7px;
 }
 
 div.textWrapper {
@@ -64,6 +66,7 @@ div.firstDepartureTime {
   margin-left: auto;
   width: 150px;
 }
+
 div.firstDepartureTime div.platform.no-line {
   border-radius: 7px;
 }
@@ -171,6 +174,8 @@ div.smallDeparture p {
 div.sideBar {
   height: 64px;
   width: 14px;
+
+  border-radius: 4px;
 }
 
 div.smallDeparture div.left {

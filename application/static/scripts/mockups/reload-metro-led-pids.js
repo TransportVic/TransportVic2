@@ -86,18 +86,19 @@ function checkAndUpdateTrains() {
       let timeDiff = new Date(estimatedDepartureTime) - new Date()
       let minutes = timeDiff / 1000 / 60
 
-      if (!isNaN(minutes)) {
+      if (!!estimatedDepartureTime) {
         minutes = Math.floor(minutes).toString()
         if (minutes === '0') minutes = 'NOW'
 
         let timeToDepart = new TextObject(minutes, font, new Position(0, 0), 1)
+
         timeToDepart.position.x = 120 - timeToDepart.width - 3
         topRow.drawText(timeToDepart)
+      }
 
-        bottomRowText = [nextDeparture.stoppingType]
-        if (nextDeparture.stoppingType !== 'Stops All Stations') {
-          bottomRowText.push(nextDeparture.stoppingPattern)
-        }
+      bottomRowText = [nextDeparture.stoppingType]
+      if (nextDeparture.stoppingType !== 'Stops All Stations') {
+        bottomRowText.push(nextDeparture.stoppingPattern)
       }
     } else {
       if (data.hasRRB) {

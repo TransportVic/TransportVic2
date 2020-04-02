@@ -1,145 +1,67 @@
 const express = require('express')
 const router = new express.Router()
-const getDepartures = require('../../../modules/metro-trains/get-departures')
 const moment = require('moment')
 const async = require('async')
 const utils = require('../../../utils')
 
+const TrainUtils = require('./TrainUtils')
 const getLineStops = require('./route-stops')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central', 'Flinders Street']
-
-function findExpressStops(stopTimings, stops) {
-  stopTimings = stopTimings.filter(stop => {
-    return !cityLoopStations.includes(stop.stopName.slice(0, -16))
-  })
-
-  let firstStop = stopTimings[0]
-  let firstStopName = firstStop.stopName
-  let lastStop = stopTimings.slice(-1)[0]
-  let lastStopName = lastStop.stopName
-
-  let firstStopIndex = stops.indexOf(firstStopName)
-  let lastStopIndex = stops.indexOf(lastStopName) + 1
-  let relevantStops = stops.slice(firstStopIndex, lastStopIndex)
-
-  let expressParts = []
-
-  let lastMainMatch = 0
-  let expressStops = 0
-
-  for (let scheduledStop of stopTimings) {
-    let matchIndex = -1
-
-    for (let stop of relevantStops) {
-      matchIndex++
-
-      if (stop === scheduledStop.stopName) {
-        if (matchIndex !== lastMainMatch) { // there has been a jump - exp section
-          let expressPart = relevantStops.slice(lastMainMatch, matchIndex)
-          expressParts.push(expressPart)
-        }
-
-        lastMainMatch = matchIndex + 1
-        break
-      }
-    }
-  }
-
-  return expressParts
-}
-
-function determineStoppingPattern(expressParts, destination, stops) {
-  if (expressParts.length === 0) return 'Stops All Stations'
-  if (expressParts.length === 1 && expressParts[0].length === 1) return 'All Except ' + expressParts[0][0].slice(0, -16)
-  let texts = []
-
-  let lastStop = null
-
-  expressParts.forEach((expressSection, i) => {
-    let firstExpressStop = expressSection[0]
-    let lastExpressStop = expressSection.slice(-1)[0]
-
-    let previousStop = stops[stops.indexOf(firstExpressStop) - 1]
-    let nextStop = stops[stops.indexOf(lastExpressStop) + 1]
-    if (lastStop) {
-      if (lastStop === previousStop) {
-        texts.push(`${previousStop} to ${nextStop}`)
-      } else {
-        texts.push(`Stops All Stations from ${lastStop} to ${previousStop}`)
-        texts.push(`Runs Express from ${previousStop} to ${nextStop}`)
-      }
-    } else {
-      texts.push(`Stops All Stations to ${previousStop}`)
-      texts.push(`Runs Express from ${previousStop} to ${nextStop}`)
-    }
-
-    lastStop = nextStop
-  })
-
-  texts.push('then Stops All Stations to ' + destination)
-
-  return texts.join(', ').replace(/ Railway Station/g, '')
-}
 
 async function getData(req, res) {
   let routes = res.db.getCollection('routes')
   let station = await res.db.getCollection('stops').findDocument({
     codedName: req.params.station + '-railway-station'
   })
+  let stationName = station.stopName.slice(0, -16)
 
   let {platform} = req.params
 
-  let allDepartures = await getDepartures(station, res.db, 10, false, null, 1)
+  let allDepartures = await TrainUtils.getCombinedDepartures(station, res.db)
   let hasRRB = !!allDepartures.find(d => d.platform === 'RRB')
   allDepartures = allDepartures.filter(d => d.platform !== 'RRB')
+  let platformDepartures = TrainUtils.filterPlatforms(allDepartures, req.params.platform)
 
-  let platformDepartures = await async.map(allDepartures.filter(departure => {
-    if (departure.platform !== platform) return false
-
-    let diff = departure.actualDepartureTime
-    let minutesDifference = diff.diff(utils.now(), 'minutes')
-    let secondsDifference = diff.diff(utils.now(), 'seconds')
-
-    return minutesDifference < 180 && secondsDifference >= 10 // minutes round down
-  }), async departure => {
+  platformDepartures = platformDepartures.map(departure => {
     let {trip, destination} = departure
     let {routeGTFSID, direction, stopTimings} = trip
+    let isUp = direction === 'Up'
+    let routeName = trip.shortRouteName || trip.routeName
+    let isVLine = departure.type === 'vline'
 
-    let hasSeenStop = false
-    stopTimings = stopTimings.filter(stop => {
-      if (hasSeenStop) return true
-      if (stop.stopName === station.stopName) {
-        hasSeenStop = true
-        return true
-      }
-      return false
-    })
-    //
-    // let route = await routes.findDocument({
-    //   mode: 'metro train',
-    //   routeGTFSID
-    // })
-    //
-    // if (!route) console.log(trip)
+    stopTimings = stopTimings.map(stop => stop.stopName.slice(0, -16))
 
-    let routeStops = getLineStops(trip.shortRouteName || trip.routeName).map(e => e + ' Railway Station')
-    if (direction === 'Up') {
+    let startIndex = stopTimings.indexOf(stationName)
+    let endIndex = stopTimings.length
+
+    let routeStops = getLineStops(routeName)
+    if (isUp) {
       routeStops = routeStops.slice(0).reverse()
+      let fssIndex = stopTimings.indexOf('Flinders Street')
+      if (fssIndex !== -1)
+        endIndex = fssIndex
     }
 
-    // let routeDirection = route.directions.find(d => d.trainDirection == direction)
-    // if (!routeDirection) console.log(route.directions, direction)
-    // let routeStops = routeDirection.stops
-    let expresses = findExpressStops(stopTimings, routeStops)
-    let stoppingPattern = determineStoppingPattern(expresses, destination, routeStops)
+    stopTimings = stopTimings.slice(startIndex, endIndex + 1)
+
+    if (destination === 'City Loop') destination = 'Flinders Street'
+
+    let expresses = TrainUtils.findExpressStops(stopTimings, routeStops, routeName, isUp, isVLine)
+    let stoppingPattern = TrainUtils.determineStoppingPattern(expresses, destination, routeStops, stationName)
+
+    departure.stoppingPattern = stoppingPattern
 
     let expressCount = expresses.reduce((a, e) => a + e.length, 0)
-    if (expressCount === 0) departure.stoppingType = 'Stops All Stations'
+
+    if (departure.type === 'vline') {
+      departure.stoppingType = 'V/Line Service'
+      departure.stoppingPattern += ', Not Taking Suburban Passengers'
+    } else if (expressCount === 0) departure.stoppingType = 'Stops All Stations'
     else if (expressCount < 5) departure.stoppingType = 'Limited Express'
     else departure.stoppingType = 'Express Service'
 
-    departure.stoppingPattern = stoppingPattern
+
     return departure
   })
 
