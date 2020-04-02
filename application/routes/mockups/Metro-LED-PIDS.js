@@ -32,22 +32,10 @@ async function getData(req, res) {
 
     stopTimings = stopTimings.map(stop => stop.stopName.slice(0, -16))
 
-    let startIndex = stopTimings.indexOf(stationName)
-    let endIndex = stopTimings.length
-
     let routeStops = getLineStops(routeName)
-    if (isUp) {
-      routeStops = routeStops.slice(0).reverse()
-      let fssIndex = stopTimings.indexOf('Flinders Street')
-      if (fssIndex !== -1)
-        endIndex = fssIndex
-    }
-
-    stopTimings = stopTimings.slice(startIndex, endIndex + 1)
-
     if (destination === 'City Loop') destination = 'Flinders Street'
 
-    let expresses = TrainUtils.findExpressStops(stopTimings, routeStops, routeName, isUp, isVLine)
+    let expresses = TrainUtils.findExpressStops(stopTimings, routeStops, routeName, isUp, isVLine, stationName)
     let stoppingPattern = TrainUtils.determineStoppingPattern(expresses, destination, routeStops, stationName)
 
     departure.stoppingPattern = stoppingPattern

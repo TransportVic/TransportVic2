@@ -189,7 +189,7 @@ module.exports = {
 
     return departure
   },
-  findExpressStops: (stopTimings, routeStops, routeName, isUp, isVLine) => {
+  findExpressStops: (stopTimings, routeStops, routeName, isUp, isVLine, stationName) => {
     let viaCityLoop = stopTimings.includes('Flagstaff')
 
     if (!viaCityLoop) {
@@ -213,6 +213,18 @@ module.exports = {
       }
     }
 
+    let startIndex = stopTimings.indexOf(stationName)
+    let endIndex = stopTimings.length
+
+    if (isUp) {
+      routeStops = routeStops.slice(0).reverse()
+      let fssIndex = stopTimings.indexOf('Flinders Street')
+      if (fssIndex !== -1)
+        endIndex = fssIndex
+    }
+
+    stopTimings = stopTimings.slice(startIndex, endIndex + 1)
+
     let firstStop = stopTimings[0]
     let lastStop = stopTimings.slice(-1)[0]
 
@@ -220,7 +232,6 @@ module.exports = {
     let lastStopIndex = routeStops.indexOf(lastStop) + 1
     let relevantStops = routeStops.slice(firstStopIndex, lastStopIndex)
 
-    // console.log(routeStops, relevantStops)
     let expressParts = []
 
     let lastMainMatch = 0
