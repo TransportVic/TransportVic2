@@ -34,5 +34,7 @@ module.exports = {
 
   dysons_specials: ['D185', 'D321' ,'D758', 'D762', 'D763', 'D764'],
 
+  dysons_509_buses: ['D895', 'D896'],
+
   report_unknown: ['Ventura Bus Lines', 'CDC Ballarat', 'Cranbourne Transit', 'Sunbury Bus Service', 'Martyrs Bus Service', 'Dysons', 'Ryan Bros Bus Service', 'McKenzies Tourist Service']
 }

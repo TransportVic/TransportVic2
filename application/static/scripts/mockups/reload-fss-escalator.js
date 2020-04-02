@@ -63,8 +63,8 @@ function createStationRow(name, imgSource) {
 }
 
 function setNoDeparturesActive(active) {
-  let platform = location.pathname.match(/fss-escalator\/([\w]+)/)[1]
-  if (platform === '*') platform = ' '
+  let platform = location.pathname.match(/fss-escalator\/([\w]+)/)
+  if (!platform || (platform[1] === '*')) platform = ' '
 
   if (active) {
     $('.topLineBanner').className = 'topLineBanner no-line'

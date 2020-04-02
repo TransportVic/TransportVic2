@@ -374,6 +374,12 @@ router.get('/highlights', async (req, res) => {
     smartrakID: { $in: sunburySpecialsBuses }
   }).sort({departureTime: 1, origin: 1}).toArray()
 
+  let dysons509Perm = await getBuses(highlightData.dysons_509_buses)
+  let dysons509Specials = await busTrips.findDocuments({
+    date,
+    smartrakID: { $not: { $in: sunburySpecialsBuses } }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
   let allBuses = await smartrakIDs.findDocuments().toArray()
   let trackUnknownRoutes = await routes.distinct('routeGTFSID', {
     operators: { $in: highlightData.report_unknown }
@@ -404,6 +410,7 @@ router.get('/highlights', async (req, res) => {
     strayCOHybrids,
     strayCDCExDrivers,
     tullaSpecials,
+    dysons509Specials,
     sunburySpecials,
     busMapping: allBuses.reduce((acc, bus) => {
       acc[bus.smartrakID] = bus.fleetNumber
