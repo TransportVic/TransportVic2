@@ -92,7 +92,7 @@ p.vline {
 }
 
 .stoppingAt.frankston img, .stoppingAt.stony-point img, .stoppingAt.werribee img, .stoppingAt.williamstown img {
-  filter: invert(21%) sepia(66%) saturate(5909%) hue-rotate(146deg) brightness(95%) contrast(98%);
+  filter: invert(20%) sepia(90%) saturate(4147%) hue-rotate(146deg) brightness(94%) contrast(98%);
 }
 
 .stoppingAt.craigieburn img, .stoppingAt.sunbury img, .stoppingAt.upfield img {
@@ -100,7 +100,7 @@ p.vline {
 }
 
 .stoppingAt.hurstbridge img, .stoppingAt.mernda img {
-  filter: invert(16%) sepia(35%) saturate(7497%) hue-rotate(347deg) brightness(97%) contrast(107%);
+  filter: invert(40%) sepia(50%) saturate(6648%) hue-rotate(336deg) brightness(73%) contrast(150%);
 }
 
 .stoppingAt.sandringham img {
