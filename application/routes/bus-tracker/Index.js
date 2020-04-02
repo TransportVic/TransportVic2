@@ -377,7 +377,8 @@ router.get('/highlights', async (req, res) => {
   let dysons509Perm = await getBuses(highlightData.dysons_509_buses)
   let dysons509Specials = await busTrips.findDocuments({
     date,
-    smartrakID: { $not: { $in: sunburySpecialsBuses } }
+    smartrakID: { $not: { $in: sunburySpecialsBuses } },
+    routeNumber: '509'
   }).sort({departureTime: 1, origin: 1}).toArray()
 
   let allBuses = await smartrakIDs.findDocuments().toArray()
