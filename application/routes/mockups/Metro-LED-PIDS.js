@@ -26,7 +26,7 @@ async function getData(req, res) {
   platformDepartures = platformDepartures.map(departure => {
     let {trip, destination} = departure
     let {routeGTFSID, direction, stopTimings} = trip
-    let isUp = direction === 'Up' || departure.forming
+    let isUp = direction === 'Up' || departure.forming || false
     let routeName = trip.shortRouteName || trip.routeName
     let isVLine = departure.type === 'vline'
 
@@ -36,7 +36,7 @@ async function getData(req, res) {
     if (destination === 'City Loop') destination = 'Flinders Street'
 
     if (isUp) routeStops = routeStops.slice(0).reverse()
-    
+
     let expresses = TrainUtils.findExpressStops(stopTimings, routeStops, routeName, isUp, isVLine, stationName)
     let stoppingPattern = TrainUtils.determineStoppingPattern(expresses, destination, routeStops, stationName)
 

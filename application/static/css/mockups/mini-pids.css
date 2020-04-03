@@ -12,16 +12,14 @@ p {
 }
 
 div.content {
-  width: 100vw;
-  height: 30vw;
-  background-color: black;
-  color: white;
+  display: block;
 }
 
 div.topRow {
-  height: 10vw;
+  height: 8vw;
   display: flex;
   font-family: "NetworkSansBold";
+  margin-top: -1vw;
 }
 
 p.firstDestination {
@@ -31,6 +29,11 @@ p.firstDestination {
   margin-top: -0.75vw;
   white-space: nowrap;
   width: 50vw;
+}
+
+p.firstDestination.smaller {
+  font-size: 10vw;
+  margin-top: 0.6vw;
 }
 
 div.firstDepartureInfo {
@@ -45,9 +48,9 @@ div.scheduled {
 }
 
 div.scheduled p:nth-child(1), div.actual > p:nth-child(1) {
-  font-family: "NetworkSansMedium";
+  font-family: "NetworkSansRegular";
   font-size: 3vw;
-  margin-top: 1vw;
+  margin-top: 1.75vw;
   letter-spacing: 0vw;
 }
 
@@ -75,12 +78,13 @@ div.actual div:nth-child(2) > span:nth-child(2) {
 }
 
 div.middleRow {
-  margin-top: 1vw;
-  height: 8vw;
+  margin-top: 5vw;
+  height: 5vw;
 }
 
 div.middleRow p {
-  font-size: 8vw;
+  font-family: "NetworkSansRegular";
+  font-size: 6.5vw;
   margin-left: 0.5vw;
   white-space: nowrap;
   width: fit-content;
@@ -121,9 +125,10 @@ div.bottomRow > span:nth-child(2) {
 }
 
 div.bottomRow > span:nth-child(3) {
+  margin-top: 0.5vw;
   margin-left: 3vw;
   width: 25vw;
-  font-family: "NetworkSansMedium";
+  font-family: "NetworkSansRegular";
   letter-spacing: -0.1vw;
 }
 

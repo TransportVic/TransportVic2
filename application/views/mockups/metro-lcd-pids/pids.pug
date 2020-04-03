@@ -3,6 +3,7 @@ html
     script(src='/static/scripts/util.js')
     script(src='/static/scripts/mockups/reload-mini-lcd.js' async) 
     link(rel='stylesheet' href='/static/css/mockups/base-style.css')
+    link(rel='stylesheet' href='/static/css/mockups/mini-pids-base.css')
     link(rel='stylesheet' href='/static/css/mockups/mini-pids.css')
       
     meta(name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, height=device-height')
@@ -35,12 +36,12 @@ html
         -
           let firstDeparture = departures[0]
           let firstDestination = firstDeparture.destination
-          let style = ''
-          if (firstDestination.length > 10)
-            style = 'transform: translateX(-5%) scaleX(0.9)'
-          if (firstDeparture.length > 15)
-            style = 'transform: translateX(-10%) scaleX(0.8)'
-        p(style=style).firstDestination=firstDestination
+          let classes = ''
+          if (firstDestination.length > 12)
+            classes = ' smaller'
+          // if (firstDeparture.length > 15)
+          //   style = 'transform: translateX(-10%) scaleX(0.8)'
+        p(class=`firstDestination${classes}`)=firstDestination
         div.firstDepartureInfo
           div.scheduled
             p Scheduled

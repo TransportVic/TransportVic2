@@ -31,15 +31,15 @@ setInterval(() => {
     departures = body.departures
 
     let firstDeparture = departures[0]
-    let style = ''
+    let classes = ''
 
-    if (firstDeparture.destination.length > 10)
-      style = 'transform: translateX(-5%) scaleX(0.9)'
-    if (firstDeparture.length > 15)
-      style = 'transform: translateX(-10%) scaleX(0.8)'
+    if (firstDeparture.destination.length > 12)
+      classes = ' smaller'
+    // if (firstDeparture.destination.length > 15)
+    //   classes = 'transform: translateX(-10%) scaleX(0.8)'
 
     $('.firstDestination').textContent = firstDeparture.destination
-    $('.firstDestination').style = style
+    $('.firstDestination').className = `firstDestination${classes}`
     $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
 
     if (firstDeparture.minutesToDeparture > 0) {

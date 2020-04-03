@@ -59,10 +59,10 @@ module.exports = {
       let minutesDifference = diff.diff(utils.now(), 'minutes')
       let secondsDifference = diff.diff(utils.now(), 'seconds')
 
-      return !departure.cancelled && minutesDifference < 120 && secondsDifference >= 10 // minutes round down
+      return !departure.cancelled && minutesDifference < 120 && secondsDifference >= -20 // minutes round down
     })
 
-    return departures
+    return departures.sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
   },
   addTimeToDeparture: departure => {
     let timeDifference = departure.actualDepartureTime.diff(utils.now(), 'minutes')
@@ -196,6 +196,7 @@ module.exports = {
     return departure
   },
   findExpressStops: (stopTimings, routeStops, routeName, isUp, isVLine, stationName) => {
+    // TODO: REFACTOR
     if (isUp) {
       let hasSeenFSS = false
       stopTimings = stopTimings.filter(e => {
@@ -205,6 +206,19 @@ module.exports = {
         }
         return true
       })
+    } else {
+      let hasFSS = stopTimings.includes('Flinders Street')
+      if (hasFSS) {
+        let hasSeenFSS = false
+        stopTimings = stopTimings.filter(e => {
+          if (hasSeenFSS) return true
+          if (e === 'Flinders Street') {
+            hasSeenFSS = true
+            return true
+          }
+          return false
+        })
+      }
     }
 
     let viaCityLoop = stopTimings.includes('Flagstaff')
@@ -313,13 +327,14 @@ module.exports = {
   },
   filterPlatforms: (departures, platform) => {
     let shouldFilterPlatform = platform !== '*'
+    if (!shouldFilterPlatform) return departures
 
     return departures.filter(departure => {
       if (departure.type === 'vline') {
         let mainPlatform = departure.platform.replace(/[A-Z]/, '')
-        return !(shouldFilterPlatform && mainPlatform !== platform)
+        return mainPlatform === platform
       } else {
-        return !(shouldFilterPlatform && departure.platform !== platform)
+        return departure.platform === platform
       }
     })
   }
