@@ -5,6 +5,8 @@ html
     link(rel='stylesheet' href='/static/css/mockups/base-style.css')
     link(rel='stylesheet' href='/static/css/mockups/mini-pids.css')
       
+    meta(name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, height=device-height')
+    
     script=`let firstDepartureScheduledTime = '${departures[0] ? departures[0].scheduledDepartureTime : ''}'`
   body
     //- TODO - make this just a template like the led PIDS, and have the webpage fill this out to reduce duplication

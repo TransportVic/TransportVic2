@@ -247,7 +247,7 @@ module.exports = {
     let firstStopIndex = routeStops.indexOf(firstStop)
     let lastStopIndex = routeStops.indexOf(lastStop) + 1
     let relevantStops = routeStops.slice(firstStopIndex, lastStopIndex)
-console.log(stopTimings, relevantStops)
+
     let expressParts = []
 
     let lastMainMatch = 0
