@@ -188,7 +188,7 @@ module.exports = class MainServer {
 
       'mockups/Index': '/mockups',
       'mockups/FlindersStreetEscalator': '/mockups/fss-escalator',
-      'mockups/MetroLCD-PIDS': '/mockups/metro-lcd-pids',
+      'mockups/Metro-LCD-PIDS': '/mockups/metro-lcd-pids',
       'mockups/BusInt-PIDS': '/mockups/bus-int-pids',
       'mockups/Metro-LED-PIDS': '/mockups/metro-led-pids',
       'mockups/PrideBox': '/mockups/pride',

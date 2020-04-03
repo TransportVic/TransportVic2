@@ -1,0 +1,81 @@
+html
+  head
+    script(src='/static/scripts/util.js')
+    script(src='/static/scripts/mockups/reload-mini-lcd.js' async) 
+    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
+    link(rel='stylesheet' href='/static/css/mockups/mini-pids.css')
+      
+    script=`let firstDepartureScheduledTime = '${departures[0] ? departures[0].scheduledDepartureTime : ''}'`
+  body
+    -
+      function formatTime(time) {
+        let hours = time.getHours()
+        let minutes = time.getMinutes()
+        let mainTime = ''
+
+        mainTime += (hours % 12) || 12
+        mainTime += ':'
+        if (minutes < 10) mainTime += '0'
+        mainTime += minutes
+
+        return mainTime
+      }
+      
+      function shortenStoppingType (type) {
+        if (type === 'Stops All Stations') return 'Stops All'
+        if (type === 'Limited Express') return 'Ltd Express'
+        if (type === 'Express Service') return 'Express'
+      }
+    div.content
+      div.topRow
+        //- Flinders Street   Scheduled 9:40 Departing 1min
+        -
+          let firstDeparture = departures[0]
+          let firstDestination = firstDeparture.destination
+          let style = ''
+          if (firstDestination.length > 10)
+            style = 'transform: translateX(-5%) scaleX(0.9)'
+          if (firstDeparture.length > 15)
+            style = 'transform: translateX(-10%) scaleX(0.8)'
+        p(style=style).firstDestination=firstDestination
+        div.firstDepartureInfo
+          div.scheduled
+            p Scheduled
+            p=firstDeparture.scheduledDepartureTime.format('h:mm')
+          div.actual
+            p Departing
+            div
+              if firstDeparture.minutesToDeparture > 0
+                span=firstDeparture.minutesToDeparture
+                span min
+              else
+                span Now
+                span
+      div.middleRow
+        p=firstDeparture.stoppingType
+        p(style='display: none;')=firstDeparture.stoppingPattern
+      div.whiteLine
+      div.bottomRow
+        - let secondDeparture = departures[1]
+        if secondDeparture
+          -
+            let secondDestination = secondDeparture.destination
+            if (secondDestination === 'Parliament') secondDestination = 'City Loop'
+            
+          span=secondDeparture.scheduledDepartureTime.format('h:mm')
+          span=secondDestination
+          span=shortenStoppingType(secondDeparture.stoppingType)
+          div
+            span=secondDeparture.minutesToDeparture
+            span min
+        else
+          span --
+          span --
+          span --
+          div
+            span --
+            span
+          
+        div.timeNow
+         span=formatTime(new Date())
+        
