@@ -47,6 +47,7 @@ html
       div.noDepartures(style=noDepartures ? 'display: block;' : 'display: none;')
         div.firstDepartureTime
           div.platform.no-line
+            - if (platform === '*') platform = ' '
             span=platform
         div.textWrapper
           img(src='/static/images/mockups/no-boarding-train.svg')

@@ -72,7 +72,7 @@ function setNoDeparturesActive(active) {
     $('.firstDepartureInfo').style = 'display: none;'
     $('.firstDepartureInfo~.greyLine').style = 'display: none;'
     $('.stoppingAt').style = 'display: none;'
-    $('.firstDepartureInfo .platform span').textContent = platform
+    $('.firstDepartureTime  div.platform span').textContent = platform
   } else {
     $('.noDepartures').style = 'display: none;'
     $('.firstDepartureInfo').style = 'display: flex;'
