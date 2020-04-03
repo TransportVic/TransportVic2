@@ -31,10 +31,16 @@ html
         return type
       }
     div.content
-      div(style='display: none;').message
-        span UM SO THERES THIS PERSON 
-      div.nextDepartures
-        - let firstDeparture = departures[0]
+      - let firstDeparture = departures[0]
+      div(style=firstDeparture ? 'display: none;' : 'display: flex;').message
+        if hasRRB
+          p NO TRAINS OPERATING
+          p REPLACEMENT BUSES
+          p HAVE BEEN ARRANGED
+        else
+          p No trains departing from
+          p this platform
+      div(style=firstDeparture ? 'display: block;' : 'display: none;').nextDepartures
         div.topRow
           //- Flinders Street   Scheduled 9:40 Departing 1min
           if firstDeparture

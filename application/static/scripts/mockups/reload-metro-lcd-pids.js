@@ -31,6 +31,22 @@ setInterval(() => {
     departures = body.departures
 
     let firstDeparture = departures[0]
+    let message = $('.message')
+    let main = $('.nextDepartures')
+
+    if (!firstDeparture) {
+      message.style = 'display: flex;'
+      main.style = 'display: none;'
+      if (body.hasRRB) {
+        message.innerHTML = '<p>NO TRAINS OPERATING</p><p>REPLACEMENT BUSES</p><p>HAVE BEEN ARRANGED</p>'
+      } else {
+        message.innerHTML = '<p>No trains departing from</p><p>this platform</p>'
+      }
+    } else {
+      message.style = 'display: none;'
+      main.style = 'display: block;'
+    }
+
     let classes = ''
 
     if (firstDeparture.destination.length > 12)

@@ -15,6 +15,19 @@ div.content {
   display: block;
 }
 
+div.message {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+div.message p {
+  font-size: 8.2vw;
+  line-height: 8.4vw;
+}
+
 div.topRow {
   height: 8vw;
   display: flex;
