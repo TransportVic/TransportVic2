@@ -87,6 +87,7 @@ div.middleRow p {
   width: -moz-fit-content;
   width: -o-fit-content;
   width: -webkit-fit-content;
+  height: 0
 }
 
 div.whiteLine {

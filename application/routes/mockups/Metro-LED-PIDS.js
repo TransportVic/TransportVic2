@@ -35,6 +35,8 @@ async function getData(req, res) {
     let routeStops = getLineStops(routeName)
     if (destination === 'City Loop') destination = 'Flinders Street'
 
+    if (isUp) routeStops = routeStops.slice(0).reverse()
+    
     let expresses = TrainUtils.findExpressStops(stopTimings, routeStops, routeName, isUp, isVLine, stationName)
     let stoppingPattern = TrainUtils.determineStoppingPattern(expresses, destination, routeStops, stationName)
 
@@ -48,7 +50,6 @@ async function getData(req, res) {
     } else if (expressCount === 0) departure.stoppingType = 'Stops All Stations'
     else if (expressCount < 5) departure.stoppingType = 'Limited Express'
     else departure.stoppingType = 'Express Service'
-
 
     return departure
   })

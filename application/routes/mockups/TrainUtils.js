@@ -31,37 +31,31 @@ module.exports = {
     let vlineDepartures = [], metroDepartures = []
 
     try {
-      vlineDepartures = (await getVLineDepartures(station, db))
-        .map(departure => {
-          departure.platform = departure.platform.replace('?', '')
-          departure.type = 'vline'
+      vlineDepartures = (await getVLineDepartures(station, db)).map(departure => {
+        departure.platform = departure.platform.replace('?', '')
+        departure.type = 'vline'
 
-          return departure
-        }).filter(departure => {
-          let diff = departure.actualDepartureTime
-          let minutesDifference = diff.diff(utils.now(), 'minutes')
-          let secondsDifference = diff.diff(utils.now(), 'seconds')
-
-          return minutesDifference < 120 && secondsDifference >= 10 // minutes round down
-        })
+        return departure
+      })
     } catch (e) {}
 
     try {
       metroDepartures = (await getMetroDepartures(station, db, 15, true))
-      .filter(departure => {
-        if (departure.cancelled) return false
-
-        let diff = departure.actualDepartureTime
-        let minutesDifference = diff.diff(utils.now(), 'minutes')
-        let secondsDifference = diff.diff(utils.now(), 'seconds')
-        return minutesDifference < 120 && secondsDifference >= 10 // minutes round down
-      })
     } catch (e) {}
 
-    return [...metroDepartures, ...vlineDepartures]
+    let departures = [...metroDepartures, ...vlineDepartures].filter(departure => {
+      let diff = departure.actualDepartureTime
+      let minutesDifference = diff.diff(utils.now(), 'minutes')
+      let secondsDifference = diff.diff(utils.now(), 'seconds')
+
+      return !departure.cancelled && minutesDifference < 120 && secondsDifference >= 10 // minutes round down
+    })
+
+    return departures
   },
   addTimeToDeparture: departure => {
     let timeDifference = departure.actualDepartureTime.diff(utils.now(), 'minutes')
+    departure.minutesToDeparture = timeDifference
 
     if (+timeDifference <= 0) departure.prettyTimeToDeparture = 'NOW'
     else {
@@ -90,6 +84,7 @@ module.exports = {
     let isFormingNewTrip = !!departure.forming
     let isUp = departure.trip.direction === 'Up' && !isFormingNewTrip
     let destination = isFormingNewTrip ? departure.destination : departure.trip.destination
+    if (destination === 'Parliament') destination = 'Flinders Street'
 
     if (isUp) {
       lineStops = lineStops.reverse()
@@ -217,7 +212,6 @@ module.exports = {
     let endIndex = stopTimings.length
 
     if (isUp) {
-      routeStops = routeStops.slice(0).reverse()
       let fssIndex = stopTimings.indexOf('Flinders Street')
       if (fssIndex !== -1)
         endIndex = fssIndex
@@ -271,6 +265,7 @@ module.exports = {
 
       let previousStop = routeStops[routeStops.indexOf(firstExpressStop) - 1]
       let nextStop = routeStops[routeStops.indexOf(lastExpressStop) + 1]
+
       if (lastStop) {
         if (lastStop === previousStop) {
           texts.push(`${previousStop} to ${nextStop}`)

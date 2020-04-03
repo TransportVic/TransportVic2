@@ -1,4 +1,4 @@
-const version = "0.0.28b"
+const version = "0.0.28c"
 const cacheName = `transportvic-${version}`
 
 function cacheFiles(files) {
@@ -25,9 +25,6 @@ self.addEventListener('install', e => {
 
   e.waitUntil(
     cacheFiles([
-      '/static/css/jmss-screens/base-style.css',
-      '/static/css/jmss-screens/big-screen.css',
-
       '/static/css/mockups/actual-line-colours.css',
       '/static/css/mockups/base-style.css',
       '/static/css/mockups/fss-escalator.css',
