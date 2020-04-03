@@ -31,60 +31,79 @@ html
         return type
       }
     div.content
-      div.topRow
-        //- Flinders Street   Scheduled 9:40 Departing 1min
+      div(style='display: none;').message
+        span UM SO THERES THIS PERSON 
+      div.nextDepartures
+        - let firstDeparture = departures[0]
+        div.topRow
+          //- Flinders Street   Scheduled 9:40 Departing 1min
+          if firstDeparture
+            -
+              let firstDestination = firstDeparture.destination
+              let classes = ''
+              if (firstDestination.length > 12)
+                classes = ' smaller'
+              // if (firstDeparture.length > 15)
+              //   style = 'transform: translateX(-10%) scaleX(0.8)'
+            p(class=`firstDestination${classes}`)=firstDestination
+            div.firstDepartureInfo
+              div.scheduled
+                p Scheduled
+                p=firstDeparture.scheduledDepartureTime.format('h:mm')
+              div.actual
+                p Departing
+                div
+                  if firstDeparture.minutesToDeparture > 0
+                    span=firstDeparture.minutesToDeparture
+                    span min
+                  else
+                    span Now
+                    span
+          else
+            p.firstDestination --
+            div.firstDepartureInfo
+              div.scheduled
+                p Scheduled
+                p --
+              div.actual
+                p Departing
+                div
+                  span --
+                  span min
+        div.middleRow
+          if firstDeparture
+            p=firstDeparture.stoppingType
+            p(style='display: none;')=firstDeparture.stoppingPattern
+          else
+            p --
+            p(style='display: none;') --
+        div.whiteLine
         -
-          let firstDeparture = departures[0]
-          let firstDestination = firstDeparture.destination
-          let classes = ''
-          if (firstDestination.length > 12)
-            classes = ' smaller'
-          // if (firstDeparture.length > 15)
-          //   style = 'transform: translateX(-10%) scaleX(0.8)'
-        p(class=`firstDestination${classes}`)=firstDestination
-        div.firstDepartureInfo
-          div.scheduled
-            p Scheduled
-            p=firstDeparture.scheduledDepartureTime.format('h:mm')
-          div.actual
-            p Departing
+          let secondDeparture = departures[1]
+          let secondClassName = ''
+          if (secondDeparture && secondDeparture.type === 'vline') {
+            secondClassName = ' vline'
+          }
+        div(class=`bottomRow${secondClassName}`)
+          if secondDeparture
+            -
+              let secondDestination = secondDeparture.destination
+              if (secondDestination === 'Parliament') secondDestination = 'City Loop'
+              
+            span=secondDeparture.scheduledDepartureTime.format('h:mm')
+            span=secondDestination
+            span=shortenStoppingType(secondDeparture.stoppingType)
             div
-              if firstDeparture.minutesToDeparture > 0
-                span=firstDeparture.minutesToDeparture
-                span min
-              else
-                span Now
-                span
-      div.middleRow
-        p=firstDeparture.stoppingType
-        p(style='display: none;')=firstDeparture.stoppingPattern
-      div.whiteLine
-      -
-        let secondDeparture = departures[1]
-        let secondClassName = ''
-        if (secondDeparture && secondDeparture.type === 'vline') {
-          secondClassName = ' vline'
-        }
-      div(class=`bottomRow${secondClassName}`)
-        if secondDeparture
-          -
-            let secondDestination = secondDeparture.destination
-            if (secondDestination === 'Parliament') secondDestination = 'City Loop'
-            
-          span=secondDeparture.scheduledDepartureTime.format('h:mm')
-          span=secondDestination
-          span=shortenStoppingType(secondDeparture.stoppingType)
-          div
-            span=secondDeparture.minutesToDeparture
-            span min
-        else
-          span --
-          span --
-          span --
-          div
+              span=secondDeparture.minutesToDeparture
+              span min
+          else
             span --
-            span
+            span --
+            span --
+            div
+              span --
+              span
+            
+          div.timeNow
+           span=formatTime(new Date())
           
-        div.timeNow
-         span=formatTime(new Date())
-        
