@@ -14,13 +14,15 @@ function formatTime(time) {
 function shortenStoppingType (type) {
   if (type === 'Stops All Stations') return 'Stops All'
   if (type === 'Limited Express') return 'Ltd Express'
-  if (type === 'Express Service') return 'Express'
+  return type
 }
 
 let stopScrolling = false
 
 let firstRowTimeout, firstRowPause
 let secondRowTimeout, secondRowPause
+
+let departures
 
 setInterval(() => {
   $.ajax({
@@ -95,7 +97,9 @@ let firstStoppingPatternP
 let stoppingPatternWidth = 0
 
 async function animateScrollingText() {
-  if (stoppingPatternWidth < window.innerWidth) return
+  if (stoppingPatternWidth < window.innerWidth) {
+    return await asyncPause(4000)
+  }
 
   let iterationCount = Math.ceil(stoppingPatternWidth / shiftWidth)
   let xPosition = shiftWidth

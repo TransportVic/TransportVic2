@@ -3,6 +3,17 @@ const getMetroDepartures = require('../../../modules/metro-trains/get-departures
 const getVLineDepartures = require('../../../modules/vline/get-departures')
 const utils = require('../../../utils')
 
+let defaultStoppingMap = {
+  stopsAll: 'Stops All Stations',
+  allExcept: 'All Except {0}',
+  expressAtoB: '{0} to {1}',
+  sasAtoB: 'Stops All Stations from {0} to {1}',
+  runsExpressAtoB: 'Runs Express from {0} to {1}',
+  runsExpressTo: 'Runs Express to {0}',
+  sasTo: 'Stops All Stations to {0}',
+  thenSASTo: 'then Stops All Stations to {0}'
+}
+
 let northernGroup = [
   'Craigieburn',
   'Sunbury',
@@ -252,9 +263,9 @@ module.exports = {
 
     return expressParts
   },
-  determineStoppingPattern: (expressParts, destination, routeStops, currentStation) => {
-    if (expressParts.length === 0) return 'Stops All Stations'
-    if (expressParts.length === 1 && expressParts[0].length === 1) return 'All Except ' + expressParts[0][0]
+  determineStoppingPattern: (expressParts, destination, routeStops, currentStation, textMap=defaultStoppingMap) => {
+    if (expressParts.length === 0) return textMap.stopsAll
+    if (expressParts.length === 1 && expressParts[0].length === 1) return textMap.allExcept.format(expressParts[0][0])
     let texts = []
 
     let lastStop = null
@@ -268,24 +279,24 @@ module.exports = {
 
       if (lastStop) {
         if (lastStop === previousStop) {
-          texts.push(`${previousStop} to ${nextStop}`)
+          texts.push(textMap.expressAtoB.format(previousStop, nextStop))
         } else {
-          texts.push(`Stops All Stations from ${lastStop} to ${previousStop}`)
-          texts.push(`Runs Express from ${previousStop} to ${nextStop}`)
+          texts.push(textMap.sasAtoB.format(lastStop, previousStop))
+          texts.push(textMap.runsExpressAtoB.format(previousStop, nextStop))
         }
       } else {
         if (currentStation === previousStop) {
-          texts.push(`Runs Express to ${nextStop}`)
+          texts.push(textMap.runsExpressTo.format(nextStop))
         } else {
-          texts.push(`Stops All Stations to ${previousStop}`)
-          texts.push(`Runs Express from ${previousStop} to ${nextStop}`)
+          texts.push(textMap.sasTo.format(previousStop))
+          texts.push(textMap.runsExpressAtoB.format(previousStop, nextStop))
         }
       }
 
       lastStop = nextStop
     })
 
-    texts.push('then Stops All Stations to ' + destination)
+    texts.push(textMap.thenSASTo.format(destination))
 
     return texts.join(', ').replace(/ Railway Station/g, '')
   },

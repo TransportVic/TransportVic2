@@ -7,6 +7,7 @@ html
       
     script=`let firstDepartureScheduledTime = '${departures[0] ? departures[0].scheduledDepartureTime : ''}'`
   body
+    //- TODO - make this just a template like the led PIDS, and have the webpage fill this out to reduce duplication
     -
       function formatTime(time) {
         let hours = time.getHours()
@@ -24,7 +25,7 @@ html
       function shortenStoppingType (type) {
         if (type === 'Stops All Stations') return 'Stops All'
         if (type === 'Limited Express') return 'Ltd Express'
-        if (type === 'Express Service') return 'Express'
+        return type
       }
     div.content
       div.topRow

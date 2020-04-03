@@ -5,6 +5,17 @@ const utils = require('../../../utils')
 const TrainUtils = require('./TrainUtils')
 const getLineStops = require('./route-stops')
 
+let stoppingTextMap = {
+  stopsAll: 'Stops All Stations',
+  allExcept: 'Not Stopping At {0}',
+  expressAtoB: '{0} to {1}',
+  sasAtoB: 'Stops All Stations from {0} to {1}',
+  runsExpressAtoB: 'Runs Express from {0} to {1}',
+  runsExpressTo: 'Runs Express to {0}',
+  sasTo: 'Stops All Stations to {0}',
+  thenSASTo: 'then Stops All Stations to {0}'
+}
+
 let northernGroup = [
   "Craigieburn",
   "Sunbury",
@@ -45,7 +56,7 @@ async function getData(req, res) {
     if (isUp) routeStops = routeStops.slice(0).reverse()
 
     let expresses = TrainUtils.findExpressStops(stopTimings, routeStops, routeName, isUp, isVLine, stationName)
-    let stoppingPattern = TrainUtils.determineStoppingPattern(expresses, destination, routeStops, stationName)
+    let stoppingPattern = TrainUtils.determineStoppingPattern(expresses, destination, routeStops, stationName, stoppingTextMap)
 
     departure.stoppingPattern = stoppingPattern
 
