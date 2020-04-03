@@ -1,4 +1,4 @@
-const version = "0.0.28c"
+const version = "0.0.29"
 const cacheName = `transportvic-${version}`
 
 function cacheFiles(files) {
@@ -25,11 +25,6 @@ self.addEventListener('install', e => {
 
   e.waitUntil(
     cacheFiles([
-      '/static/css/mockups/actual-line-colours.css',
-      '/static/css/mockups/base-style.css',
-      '/static/css/mockups/fss-escalator.css',
-      '/static/css/mockups/mini-pids.css',
-
       '/static/css/runs/base-style.css',
 
       '/static/css/timings/base-style.css',
@@ -78,9 +73,6 @@ self.addEventListener('install', e => {
       '/static/images/mockups/station-stopsat.svg',
       '/static/images/mockups/station-stub.svg',
       '/static/images/mockups/station-terminates.svg',
-
-      '/static/scripts/mockups/reload-fss-escalator.js',
-      '/static/scripts/mockups/reload-mini-lcd.js',
 
       'https://cdn.plot.ly/plotly-latest.min.js',
       'https://unpkg.com/leaflet@1.6.0/dist/leaflet.css',

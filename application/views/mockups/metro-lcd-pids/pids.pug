@@ -1,10 +1,10 @@
 html
   head
     script(src='/static/scripts/util.js')
-    script(src='/static/scripts/mockups/reload-mini-lcd.js' async) 
+    script(src='/static/scripts/mockups/reload-metro-lcd-pids.js' async) 
     link(rel='stylesheet' href='/static/css/mockups/base-style.css')
     link(rel='stylesheet' href='/static/css/mockups/mini-pids-base.css')
-    link(rel='stylesheet' href='/static/css/mockups/mini-pids.css')
+    link(rel='stylesheet' href='/static/css/mockups/metro-lcd-pids.css')
       
     meta(name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, height=device-height')
     
@@ -59,8 +59,13 @@ html
         p=firstDeparture.stoppingType
         p(style='display: none;')=firstDeparture.stoppingPattern
       div.whiteLine
-      div.bottomRow
-        - let secondDeparture = departures[1]
+      -
+        let secondDeparture = departures[1]
+        let secondClassName = ''
+        if (secondDeparture && secondDeparture.type === 'vline') {
+          secondClassName = ' vline'
+        }
+      div(class=`bottomRow${secondClassName}`)
         if secondDeparture
           -
             let secondDestination = secondDeparture.destination

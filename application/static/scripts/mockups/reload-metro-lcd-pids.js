@@ -54,12 +54,18 @@ setInterval(() => {
     $('.middleRow p:nth-child(2)').textContent = firstDeparture.stoppingPattern
 
     let secondDeparture = departures[1]
+    let secondClassName = ''
+
     if (secondDeparture) {
+      if (secondDeparture.type === 'vline') secondClassName = ' vline'
+
+      $('div.bottomRow').className = `bottomRow${secondClassName}`
       $('div.bottomRow > span:nth-child(1)').textContent = formatTime(new Date(secondDeparture.scheduledDepartureTime))
       $('div.bottomRow > span:nth-child(2)').textContent = secondDeparture.destination
       $('div.bottomRow > span:nth-child(3)').textContent = shortenStoppingType(secondDeparture.stoppingType)
       $('div.bottomRow > div > span:nth-child(1)').textContent = secondDeparture.minutesToDeparture
     } else {
+      $('div.bottomRow').className = `bottomRow`
       $('div.bottomRow > span:nth-child(1)').textContent = '--'
       $('div.bottomRow > span:nth-child(2)').textContent = '--'
       $('div.bottomRow > span:nth-child(3)').textContent = ''
