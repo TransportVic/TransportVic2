@@ -1,0 +1,67 @@
+html
+  head
+    script(src='/static/scripts/util.js')
+    script(src='/static/scripts/mockups/reload-metro-lcd-list-pids.js' async) 
+    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
+    link(rel='stylesheet' href='/static/css/mockups/mini-pids-base.css')
+    link(rel='stylesheet' href='/static/css/mockups/metro-lcd-pids/metro-lcd-list-pids.css')
+      
+    meta(name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, height=device-height')
+  body
+    -
+      function formatTime(time) {
+        let hours = time.getHours()
+        let minutes = time.getMinutes()
+        let mainTime = ''
+
+        mainTime += (hours % 12) || 12
+        mainTime += ':'
+        if (minutes < 10) mainTime += '0'
+        mainTime += minutes
+
+        return mainTime
+      }
+    div.content
+      div.left
+        div(style='display: none;').message
+        div(style='display: flex;').nextDeparture
+          div.departureInfo
+            span.firstDestination City Loop
+            div.scheduledDiv
+              span Scheduled
+              span 8:41
+            div.actualDiv
+              span Departing
+              div
+                span 5
+                span min
+          div.hozWhiteLine
+          div.stops
+      div.vertWhiteLine
+      div.right
+        div.headers
+          span.scheduled Schedule
+          span.destination Train To
+          span.actual Departing
+        div.followingDeparture
+          div
+            span.scheduled 9:21
+            span.destination City Loop
+            span.actual 47 min
+          span.stoppingType Ltd Express
+        div.followingDeparture
+          div
+            span.scheduled 10:01
+            span.destination City Loop
+            span.actual 87 min
+          span.stoppingType Ltd Express
+        div.followingDeparture
+          div
+            span.scheduled --
+            span.destination --
+            span.actual
+          span.stoppingType &nbsp;
+        div.time
+          div.timeContainer
+            span 8:38
+          

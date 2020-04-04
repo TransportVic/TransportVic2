@@ -49,7 +49,7 @@ setInterval(() => {
 
     let classes = ''
 
-    if (firstDeparture.destination.length > 12)
+    if (firstDeparture.destination.length >= 12)
       classes = ' smaller'
     // if (firstDeparture.destination.length > 15)
     //   classes = 'transform: translateX(-10%) scaleX(0.8)'
@@ -123,7 +123,7 @@ async function animateScrollingText() {
     return await asyncPause(4000)
   }
 
-  let iterationCount = Math.ceil(stoppingPatternWidth / shiftWidth)
+  let iterationCount = Math.ceil((stoppingPatternWidth) / shiftWidth)
   let xPosition = shiftWidth
 
   await asyncPause(2000)
@@ -149,7 +149,7 @@ function drawBottomRow() {
     firstStoppingTypeP.style = 'display: none;'
     firstStoppingPatternP.style = 'display: block;'
 
-    stoppingPatternWidth = parseInt(getComputedStyle(firstStoppingPatternP).width)
+    stoppingPatternWidth = parseInt(getComputedStyle(firstStoppingPatternP).width) + window.innerWidth * 0.05
 
     await animateScrollingText()
     drawBottomRow()

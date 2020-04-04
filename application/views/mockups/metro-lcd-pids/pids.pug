@@ -4,7 +4,7 @@ html
     script(src='/static/scripts/mockups/reload-metro-lcd-pids.js' async) 
     link(rel='stylesheet' href='/static/css/mockups/base-style.css')
     link(rel='stylesheet' href='/static/css/mockups/mini-pids-base.css')
-    link(rel='stylesheet' href='/static/css/mockups/metro-lcd-pids.css')
+    link(rel='stylesheet' href='/static/css/mockups/metro-lcd-pids/metro-lcd-pids.css')
       
     meta(name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, height=device-height')
     
@@ -47,7 +47,7 @@ html
             -
               let firstDestination = firstDeparture.destination
               let classes = ''
-              if (firstDestination.length > 12)
+              if (firstDestination.length >= 12)
                 classes = ' smaller'
               // if (firstDeparture.length > 15)
               //   style = 'transform: translateX(-10%) scaleX(0.8)'

@@ -1,0 +1,163 @@
+div.content > div {
+  height: var(--height);
+}
+
+div.left {
+  width: 71vw;
+}
+
+div.nextDeparture {
+  display: flex;
+  flex-direction: column;
+}
+
+div.departureInfo {
+  height: calc(0.25 * var(--height));
+  display: flex;
+  align-items: center;
+}
+
+div.departureInfo span.firstDestination {
+  font-size: calc(0.17 * var(--height));
+  font-family: "NetworkSansBold";
+}
+
+div.departureInfo > div {
+  display: flex;
+  flex-direction: column;
+}
+
+div.departureInfo div.scheduledDiv {
+  margin-left: auto;
+}
+
+div.departureInfo > div > span:nth-child(1) {
+  font-size: calc(0.035 * var(--height));
+  font-family: "NetworkSansRegular"
+}
+
+div.departureInfo > div > span:nth-child(2) {
+  font-size: calc(0.13 * var(--height));
+  line-height: calc(0.13 * var(--height));
+  font-family: "NetworkSansBold"
+}
+
+div.scheduledDiv {
+  width: 9vw;
+}
+
+div.actualDiv {
+  margin-left: 1vw;
+  width: 7vw;
+}
+
+div.departureInfo > div.actualDiv > div > span:nth-child(1) {
+  font-size: calc(0.13 * var(--height));
+  line-height: calc(0.13 * var(--height));
+  font-family: "NetworkSansBold"
+}
+
+div.departureInfo > div.actualDiv > div > span:nth-child(2) {
+  font-size: calc(0.07 * var(--height));
+  line-height: calc(0.07 * var(--height));
+}
+
+div.hozWhiteLine {
+  height: calc(0.01 * var(--height));
+  background: #ffffff;
+}
+
+div.stops {
+  height: calc(0.7 * var(--height));
+  background: #00000;
+}
+
+
+
+
+
+div.vertWhiteLine {
+  width: 0.5vw;
+  background-color: #ffffff;
+}
+
+div.right {
+  width: 28.5vw;
+}
+
+div.headers {
+  height: calc(0.09 * var(--height));
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+}
+
+div.headers span {
+  color: #000000;
+  font-size: calc(0.035 * var(--height));
+  line-height: calc(0.035 * var(--height));
+}
+
+div.followingDeparture {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: calc(0.22 * var(--height));
+}
+
+div.followingDeparture > div {
+  display: flex;
+  align-content: center;
+}
+
+div.right span.scheduled {
+  margin-left: 0.5vw;
+  width: 10vw;
+}
+
+div.right span.actual {
+  margin-left: auto;
+  margin-right: 0.5vw;
+  width: 7vw;
+  text-align: right;
+}
+
+div.followingDeparture span.stoppingType {
+  margin-left: 0.5vw;
+  margin-top: 0.5vw;
+}
+
+div.followingDeparture span {
+  font-size: calc(0.0625 * var(--height));
+  line-height: calc(0.0625 * var(--height));
+}
+
+div.followingDeparture:nth-child(3) {
+  border-top: 0.1vw solid grey;
+  border-bottom: 0.1vw solid grey;
+}
+
+div.time {
+  margin-top: calc(0.08 * var(--height));
+  height: calc(0.17 * var(--height));
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+div.timeContainer {
+  width: 28vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.1vw solid gray;
+  margin-right: 0.5vw;
+}
+
+div.time span {
+  color: #000000;
+  font-family: "NetworkSansBold";
+  font-size: calc(0.13 * var(--height));
+  line-height: calc(0.13 * var(--height));
+}

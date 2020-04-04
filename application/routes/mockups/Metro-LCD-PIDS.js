@@ -84,6 +84,12 @@ router.get('/:station/:platform', async (req, res) => {
   res.render('mockups/metro-lcd-pids/pids', departures)
 })
 
+router.get('/:station/:platform/list', async (req, res) => {
+  let departures = await getData(req, res)
+
+  res.render('mockups/metro-lcd-pids/list-pids', departures)
+})
+
 router.post('/:station/:platform', async (req, res) => {
   let departures = await getData(req, res)
 
@@ -91,3 +97,17 @@ router.post('/:station/:platform', async (req, res) => {
 })
 
 module.exports = router
+
+
+/*
+list style:
+width 1194px
+height 314px
+main stuff 845px 71vw
+sideways line 5px .5vw
+remaining stuff 28.5vw
+vert line 28px 0.09 * height
+timebar 54px .17 * height
+next stopping pattern 70px .22 * height, blank space below third
+firstinfo .25 * height
+*/
