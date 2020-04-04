@@ -6,8 +6,24 @@ div.left {
   width: 71vw;
 }
 
+div.message {
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+div.message p {
+  font-size: 6vw;
+  line-height: 6vw;
+}
+
+div.message p.large {
+  font-size: 7.5vw;
+  line-height: 7.5vw;
+}
+
 div.nextDeparture {
-  display: flex;
   flex-direction: column;
 }
 
@@ -130,6 +146,7 @@ div.followingDeparture span.stoppingType {
 div.followingDeparture span {
   font-size: calc(0.0625 * var(--height));
   line-height: calc(0.0625 * var(--height));
+  height: calc(0.0625 * var(--height));
 }
 
 div.followingDeparture:nth-child(3) {

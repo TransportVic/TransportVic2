@@ -23,17 +23,26 @@ html
       }
     div.content
       div.left
-        div(style='display: none;').message
-        div(style='display: flex;').nextDeparture
+        div(style='display: flex;').message
+          //- p NO TRAINS OPERATING
+          //- p REPLACEMENT BUSES
+          //- p HAVE BEEN ARRANGED
+          
+          //- p.large No trains departing
+          //- p.large from this platform
+          
+          p Checking departures
+          p Please wait...
+        div(style='display: none;').nextDeparture
           div.departureInfo
-            span.firstDestination City Loop
+            span.firstDestination --
             div.scheduledDiv
               span Scheduled
-              span 8:41
+              span --
             div.actualDiv
               span Departing
               div
-                span 5
+                span --
                 span min
           div.hozWhiteLine
           div.stops
@@ -45,23 +54,23 @@ html
           span.actual Departing
         div.followingDeparture
           div
-            span.scheduled 9:21
-            span.destination City Loop
-            span.actual 47 min
-          span.stoppingType Ltd Express
+            span.scheduled --
+            span.destination --
+            span.actual 
+          span.stoppingType 
         div.followingDeparture
           div
-            span.scheduled 10:01
-            span.destination City Loop
-            span.actual 87 min
-          span.stoppingType Ltd Express
+            span.scheduled --
+            span.destination --
+            span.actual 
+          span.stoppingType
         div.followingDeparture
           div
             span.scheduled --
             span.destination --
             span.actual
-          span.stoppingType &nbsp;
+          span.stoppingType
         div.time
           div.timeContainer
-            span 8:38
+            span=formatTime(new Date())
           
