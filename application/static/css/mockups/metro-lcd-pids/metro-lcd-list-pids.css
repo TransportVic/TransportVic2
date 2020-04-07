@@ -34,17 +34,15 @@ div.departureInfo {
 }
 
 div.departureInfo span.firstDestination {
+  margin-left: 0.5vw;
   font-size: calc(0.17 * var(--height));
   font-family: "NetworkSansBold";
+  letter-spacing: -0.22vw;
 }
 
 div.departureInfo > div {
   display: flex;
   flex-direction: column;
-}
-
-div.departureInfo div.scheduledDiv {
-  margin-left: auto;
 }
 
 div.departureInfo > div > span:nth-child(1) {
@@ -59,12 +57,14 @@ div.departureInfo > div > span:nth-child(2) {
 }
 
 div.scheduledDiv {
-  width: 9vw;
+  margin-left: auto;
+  min-width: 7vw;
 }
 
 div.actualDiv {
-  margin-left: 1vw;
-  width: 7vw;
+  margin-left: 2vw;
+  min-width: 7vw;
+  margin-right: 0.5vw;
 }
 
 div.departureInfo > div.actualDiv > div > span:nth-child(1) {
@@ -76,6 +76,7 @@ div.departureInfo > div.actualDiv > div > span:nth-child(1) {
 div.departureInfo > div.actualDiv > div > span:nth-child(2) {
   font-size: calc(0.07 * var(--height));
   line-height: calc(0.07 * var(--height));
+  margin-left: 0.2vw;
 }
 
 div.hozWhiteLine {

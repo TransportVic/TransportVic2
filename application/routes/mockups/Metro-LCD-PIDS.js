@@ -92,7 +92,11 @@ router.get('/:station/:platform/list', async (req, res) => {
 
 router.post('/:station/:platform', async (req, res) => {
   let departures = await getData(req, res)
+  res.json(departures)
+})
 
+router.post('/:station/:platform/list', async (req, res) => {
+  let departures = await getData(req, res)
   res.json(departures)
 })
 
