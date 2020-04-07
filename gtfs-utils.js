@@ -3,6 +3,7 @@ require('moment-timezone')
 const utils = require('./utils')
 
 module.exports = {
+  splitLine: line => line.match(/"([^"]*)"/g).map(f => f.slice(1, -1)),
   calendarToDates(calendar, calendarDates, service) {
     let calendarLine = calendar.filter(line => line[0] == service)[0]
     calendarDates = calendarDates.filter(line => line[0] == service).reduce((a, line) => {

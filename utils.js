@@ -94,7 +94,13 @@ module.exports = {
     }
 
     if (name.match(/\(([\w ]+) \((\d{4})\)\)$/)) {
+      // Suburbs with duplicate names: newton, hillside
       name = name.replace(/\(([\w ]+) \((\d{4})\)\)$/, '($1: $2)')
+    }
+
+    if (name.match(/\(([\w ]+) \(([A-Z]{2,4})\)\)$/)) {
+      // Suburbs in other states
+      name = name.replace(/\(([\w ]+) \(([A-Z]{2,4})\)\)$/, '($1, $2)')
     }
 
     return name.replace(/  +/g, ' ')
