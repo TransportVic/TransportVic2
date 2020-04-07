@@ -36,7 +36,9 @@ module.exports = class MongoDatabaseCollection {
   }
 
   deleteDocuments (query) {
-    return this.collection.deleteMany(query)
+    let bulk = this.collection.initializeUnorderedBulkOp()
+    bulk.find(query).remove()
+    return bulk.execute()
   }
 
   distinct (field, query) {

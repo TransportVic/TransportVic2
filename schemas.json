@@ -17,8 +17,8 @@
   },
   "gtfsTrip": {
     "mode": "string",
-    "operator": "string",
     "routeName": "string",
+    "routeNumber": "string",
     "tripID": "string",
     "routeGTFSID": "string",
     "operationDays": ["Date"],
@@ -43,7 +43,8 @@
     "origin": "string",
     "gtfsDirection": "string",
     "direction": "string",
-    "shapeID": "string"
+    "shapeID": "string",
+    "gtfsMode": "number"
   },
   "timetable": {
     "mode": "string",
@@ -107,21 +108,24 @@
       "location": "GeoJSON:Point",
       "stopNumber": "string",
       "mode": "string",
-      "mykiZones": ["number"]
+      "mykiZones": ["number"],
+      "suburb": "string"
     }],
     "location": "GeoJSON:MultiPoint",
     "mergeName": "string",
-    "service": ["string"]
+    "services": ["string"]
   },
   "route": {
     "routeName": "string",
     "codedName": "string",
+    "routeNumber": "string",
     "routeGTFSID": "string",
     "routePath": [{
       "fullGTFSIDs": ["string"],
       "path": [
         ["lng", "lat"]
-      ]
+      ],
+      "length": "number"
     }],
     "operators": ["string"],
     "directions": [{

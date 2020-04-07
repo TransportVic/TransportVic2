@@ -38,26 +38,48 @@ async function getLiveDeparture(station, db, mode, possibleLines, scheduledDepar
 
 async function getScheduledDeparture(station, db, mode, possibleLines, scheduledDepartureTimeMinutes, possibleDestinations) {
   const platform = getPlatform(station, mode)
-  let departureHour = Math.floor(scheduledDepartureTimeMinutes / 60)
 
-  let timetables = await db.getCollection('gtfs timetables').findDocuments({
-    routeName: {
-      $in: possibleLines
-    },
-    destination: {
-      $in: possibleDestinations
-    },
-    operationDays: utils.getYYYYMMDDNow(),
-    mode,
-    stopTimings: {
-      $elemMatch: {
-        stopGTFSID: platform.stopGTFSID,
-        departureTimeMinutes: scheduledDepartureTimeMinutes % 1440
+  let seen = []
+  let allTimetables = []
+  let today = utils.now()
+
+  for (let i = 0; i <= 1; i++) {
+    let day = today.clone().add(-i, 'days')
+    let timetables = await db.getCollection('gtfs timetables').findDocuments({
+      _id: {
+        $not: {
+          $in: seen
+        }
+      },
+      routeName: {
+        $in: possibleLines
+      },
+      destination: {
+        $in: possibleDestinations
+      },
+      operationDays: day.format('YYYYMMDD'),
+      mode,
+      stopTimings: {
+        $elemMatch: {
+          stopGTFSID: platform.stopGTFSID,
+          departureTimeMinutes: (scheduledDepartureTimeMinutes % 1440) + 1440 * i
+        }
       }
-    }
-  }, {tripStartHour: 0, tripEndHour: 0}).limit(2).toArray()
+    }).limit(2).toArray()
 
-  let trip = timetables.sort((a, b) => b.stopTimings[0].departureTimeMinutes - a.stopTimings[0].departureTimeMinutes)[0]
+    timetables = timetables.map(timetable => {
+      let startTime = day.startOf('day').add(timetable.stopTimings[0].departureTimeMinutes, 'minutes')
+      timetable.sortID = +startTime
+      return timetable
+    })
+    
+    seen = seen.concat(timetables.map(e => e._id))
+    allTimetables.push(timetables)
+  }
+
+  let timetables = allTimetables.reduce((a, e) => a.concat(e), [])
+
+  let trip = timetables[0]
 
   if (trip) {
     trip.destination = trip.destination.slice(0, -16)

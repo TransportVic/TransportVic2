@@ -3,7 +3,7 @@ const path = require('path')
 const BufferedLineReader = require('./BufferedLineReader')
 const gtfsUtils = require('../../gtfs-utils')
 const utils = require('../../utils')
-const gtfsModes = require('./gtfs-modes.json')
+const gtfsModes = require('../gtfs-modes.json')
 let gtfsID = process.argv[2]
 
 let gtfsMode = gtfsModes[gtfsID]
@@ -47,16 +47,16 @@ async function read5000Stops() {
     }
 
     let stop = {
-      stopGTFSID,
       originalName,
-      suburb,
       fullStopName,
-      stopNumber,
+      stopGTFSID,
       location: {
         type: 'Point',
         coordinates: [parseFloat(line[3]), parseFloat(line[2])]
       },
-      mode: gtfsMode
+      stopNumber,
+      mode: gtfsMode,
+      suburb
     }
     stops.push(stop)
   }
@@ -75,10 +75,11 @@ async function splitStops() {
   }
 
   await stopsLineReader.close()
+  stopsLineReader = null
 }
 
 // SHAPES
-async function read100RouteShapes() {
+async function readRouteShapes() {
   let shapes = []
   let routesSeen = []
 
@@ -87,6 +88,8 @@ async function read100RouteShapes() {
   let currentShape = []
   let currentLength = null
 
+  let batchSize = 50
+  if (['1', '5'].includes(gtfsID)) batchSize = 5
 
   while (shapesLineReader.available()) {
     let line = await shapesLineReader.nextLine()
@@ -94,7 +97,6 @@ async function read100RouteShapes() {
 
     let shapeID = line[0]
     let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(shapeID.split('.').slice(-3)[0])
-    currentLength = parseFloat(line[4])
 
     if (currentShapeID && currentShapeID !== shapeID) {
       shapesLineReader.unreadLine()
@@ -105,12 +107,13 @@ async function read100RouteShapes() {
         length: currentLength
       })
       currentShape = []
-      if (routesSeen.length === 100) return shapes
+      if (routesSeen.length === batchSize) return shapes
     } else {
+      currentLength = parseFloat(line[4])
       if (!routesSeen.includes(currentRouteGTFSID)) routesSeen.push(currentRouteGTFSID)
       currentShape.push([
-        parseFloat(line[3]),
-        parseFloat(line[2])
+        parseFloat(line[2]),
+        parseFloat(line[1])
       ])
     }
     currentShapeID = shapeID
@@ -119,6 +122,7 @@ async function read100RouteShapes() {
 
   shapes.push({
     shapeID: currentShapeID,
+    routeGTFSID: currentRouteGTFSID,
     path: currentShape,
     length: currentLength
   })
@@ -132,11 +136,12 @@ async function splitShapes() {
 
   let i = 0
   while (shapesLineReader.available()) {
-    let shapes = await read100RouteShapes()
+    let shapes = await readRouteShapes()
     fs.writeFileSync(path.join(splicedPath, `shapes.${i++}.json`), JSON.stringify(shapes))
   }
 
   await shapesLineReader.close()
+  shapesLineReader = null
 }
 
 // TRIP TIMES
@@ -201,6 +206,7 @@ async function splitTripTimings() {
   }
 
   await tripTimingsLineReader.close()
+  tripTimingsLineReader = null
 }
 
 // TRIPS
@@ -225,7 +231,7 @@ async function splitTrips() {
   }
 
   for (let n = 0; n < tripTimingFiles; n++) {
-    streams[n].close()
+    await new Promise(resolve => streams[n].close(resolve))
     let sortFile = path.join(folderPath, `${n}`)
 
     let fileData = fs.readFileSync(sortFile).toString().split('\n')
@@ -234,7 +240,7 @@ async function splitTrips() {
     fileData.forEach(lineData => {
       if (!lineData) return
       let line = gtfsUtils.splitLine(lineData)
-      let [fullRouteGTFSID, calendarID, tripID, shapeID, _, gtfsDirection] = line
+      let [fullRouteGTFSID, calendarID, tripID, shapeID, headsign, gtfsDirection] = line
       let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(fullRouteGTFSID)
       trips.push({
         mode: gtfsMode,
@@ -242,7 +248,8 @@ async function splitTrips() {
         routeGTFSID,
         calendarID,
         gtfsDirection,
-        shapeID
+        shapeID,
+        headsign
       })
     })
     fs.unlinkSync(sortFile)
@@ -253,6 +260,7 @@ async function splitTrips() {
   fs.rmdirSync(folderPath, {
     recursive: true
   })
+  tripsLineReader = null
 }
 
 async function main() {
