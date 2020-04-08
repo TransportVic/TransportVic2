@@ -121,8 +121,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
         possibleLines = ['Frankston', 'Werribee', 'Williamstown']
       else if ([5, 8].includes(routeID))
         possibleLines = ['Mernda', 'Hurstbridge']
-      else if ([3, 15, 1482].includes(routeID))
-        possibleLines = ['Craigieburn', 'Upfield', 'Showgrounds/Flemington']
+      else if ([3, 14, 15, 1482].includes(routeID))
+        possibleLines = ['Sunbury', 'Craigieburn', 'Upfield', 'Showgrounds/Flemington']
       if (routeID == 6)
         possibleLines = possibleLines.concat(['Cranbourne', 'Pakenham'])
 

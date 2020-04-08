@@ -68,7 +68,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID) {
     let stopBay = dbStops[stop_id].bays
       .filter(bay => {
         let ptvStop = stops[stop_id]
-        let stopName = utils.adjustRawStopName(busStopNameModifier(utils.adjustStopname(ptvStop.stop_name.trim())))
+        let stopName = utils.adjustRawStopName(nameModifier(utils.adjustStopname(ptvStop.stop_name.trim())))
           .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
 
         return checkModes.includes(bay.mode) && bay.fullStopName === stopName
@@ -117,8 +117,11 @@ module.exports = async function (db, ptvRunID, mode, time, stopID) {
     direction = (vehicleDescriptor.id[3] % 2) ? 'Down' : 'Up'
   }
 
+  let routeName = routeData.route_name.trim()
+  if (routeGTFSID === '2-ain') routeName = 'Showgrounds/Flemington'
+
   let timetable = {
-    mode, routeName: routeData.route_name.trim(),
+    mode, routeName,
     routeGTFSID,
     runID: vehicleDescriptor.id,
     operationDays: [utils.getYYYYMMDDNow()],

@@ -28,7 +28,10 @@ database.connect({
     let shapeJSON = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, shapeFile)))
     await loadRoutes(routes, gtfsID, routeData, shapeJSON, () => {
       return ['Metro Trains Melbourne']
-    }, shortRouteName => shortRouteName)
+    }, (shortRouteName, _, routeGTFSID) => {
+      if (routeGTFSID === '2-ain') return 'Showgrounds/Flemington'
+      return shortRouteName
+    })
   })
 
   // await updateStats('mtm-stations', stopCount, new Date() - start)
