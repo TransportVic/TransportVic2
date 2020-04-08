@@ -1,8 +1,11 @@
 const async = require('async')
 const utils = require('../../utils')
+const nameModifier = require('../../additional-data/bus-stop-name-modifier')
 
 module.exports = async function(stops, data, stopsLookup) {
   await async.forEachSeries(data, async stop => {
+    stop.fullStopName = nameModifier(stop.fullStopName)
+
     let datamartStop = stopsLookup[stop.stopGTFSID]
     if (!datamartStop) datamartStop = { mykiZones: [] }
 
@@ -52,6 +55,7 @@ module.exports = async function(stops, data, stopsLookup) {
 
         matchingStop.bays[index] = matchingBay
       } else {
+        stop.mode = actualMode
         matchingStop.bays.push({
           ...stop,
           mykiZones: datamartStop.mykiZones,
@@ -69,7 +73,7 @@ module.exports = async function(stops, data, stopsLookup) {
         type: 'MultiPoint',
         coordinates: matchingStop.bays.map(bay => bay.location.coordinates)
       }
-      if (matchingStop.codedName.length > 1) {
+      if (matchingStop.codedNames.length > 1) {
         matchingStop.stopName = matchingStop.mergeName
       }
 

@@ -47,7 +47,9 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
 
     let routeData = await getRouteData(routes, routeGTFSID, routeCache)
 
-    let stopTimings = await async.map(timings.stopTimings, async stopTiming => {
+    timings.stopTimings = timings.stopTimings.sort((a, b) => a.stopSequence - b.stopSequence)
+
+    let stopTimings = await async.mapSeries(timings.stopTimings, async stopTiming => {
       let {stopGTFSID, stopConditions, stopDistance, stopSequence} = stopTiming
 
       let stopData = await getStopData(stops, stopGTFSID, stopCache)

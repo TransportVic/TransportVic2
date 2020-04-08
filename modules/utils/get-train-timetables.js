@@ -72,7 +72,7 @@ async function getScheduledDeparture(station, db, mode, possibleLines, scheduled
       timetable.sortID = +startTime
       return timetable
     })
-    
+
     seen = seen.concat(timetables.map(e => e._id))
     allTimetables.push(timetables)
   }

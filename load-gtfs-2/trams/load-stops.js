@@ -5,7 +5,7 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
 const loadStops = require('../utils/load-stops')
 const { createStopsLookup } = require('../utils/datamart-utils')
-const datamartStops = require('../../spatial-datamart/metro-train-stations.json').features
+const datamartStops = require('../../spatial-datamart/metro-tram-stops.json').features
 let stopsLookup = createStopsLookup(datamartStops)
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)

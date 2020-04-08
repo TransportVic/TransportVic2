@@ -135,7 +135,17 @@ async function getDeparturesFromPTV(stop, db) {
         day = utils.getYYYYMMDD(scheduledDepartureTime.clone().add(1, 'day'))
 
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', day, route.route_gtfs_id)
-      if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
+      if (!trip) {
+        trip = await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
+
+        let hasSeenStop = false
+        trip.stopTimings = trip.stopTimings.filter(stop => {
+          if (allGTFSIDs.includes(stop.stopGTFSID)) {
+            hasSeenStop = true
+          }
+          return hasSeenStop
+        })
+      }
       let vehicleDescriptor = run.vehicle_descriptor || {}
 
       let busRego

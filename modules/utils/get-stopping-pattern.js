@@ -2,7 +2,7 @@ const async = require('async')
 const moment = require('moment')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
-const busStopNameModifier = require('../../load-gtfs/metro-bus/bus-stop-name-modifier')
+const nameModifier = require('../../additional-data/bus-stop-name-modifier')
 
 let modes = {
   'metro train': 0,
@@ -45,7 +45,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID) {
 
       stopName += ' Railway Station'
     }
-    stopName = utils.adjustRawStopName(busStopNameModifier(utils.adjustStopname(stopName)))
+    stopName = utils.adjustRawStopName(nameModifier(utils.adjustStopname(stopName)))
       .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
 
     let dbStop = await stopsCollection.findDocument({

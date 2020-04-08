@@ -49,7 +49,7 @@ database.connect({
     'bays.stopNumber': 1
   }, {name: 'stop number index'})
 
-
+  console.log('Created stops indices')
 
   await routes.createIndex({
     routeName: 1
@@ -63,6 +63,7 @@ database.connect({
     routeGTFSID: 1
   }, {name: 'route gtfs id index', unique: true})
 
+  console.log('Created route indices')
 
   await gtfsTimetables.createIndex({
     mode: 1,
@@ -85,14 +86,15 @@ database.connect({
   await gtfsTimetables.createIndex({
     operationDays: 1,
     routeGTFSID: 1,
-    tripStartMinute: 1,
-    tripEndMinute: 1
   }, {name: 'operationDays + routeGTFSID + start stop times index'})
 
   await gtfsTimetables.createIndex({
     mode: 1,
-    routeGTFSID: 1
-  }, {name: 'mode/routeGTFSID index'})
+    routeGTFSID: 1,
+    destination: 1,
+    'stopTimings.stopGTFSID': 1,
+    'stopTimings.departureTimeMinutes': 1
+  }, {name: 'mode+routeGTFSID index'})
 
   await gtfsTimetables.createIndex({
     'stopTimings.stopGTFSID': 1,
@@ -100,16 +102,10 @@ database.connect({
   }, {name: 'stop timings gtfs index'})
 
   await gtfsTimetables.createIndex({
-    routeGTFSID: 1,
-    gtfsDirection: 1,
-    'stopTimings.stopID': 1,
-    'stopTimings.departureTimeMinutes': 1,
-  }, {name: 'route gtfs id+stop timings index'})
-
-  await gtfsTimetables.createIndex({
     gtfsMode: 1
   }, {name: 'gtfs mode index'})
 
-  console.log('Created indexes')
+  console.log('Created GTFS timetables indexes')
+  
   process.exit()
 })
