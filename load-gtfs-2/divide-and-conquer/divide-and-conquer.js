@@ -33,7 +33,7 @@ async function read5000Stops() {
     }
 
     let adjustedOriginalStopName = utils.adjustRawStopName(originalName)
-    let suburbIndex = adjustedOriginalStopName.indexOf('(')
+    let suburbIndex = adjustedOriginalStopName.lastIndexOf('(')
     let adjustedStopName = adjustedOriginalStopName.slice(0, suburbIndex - 1)
     let suburb = adjustedOriginalStopName.slice(suburbIndex + 1, -1)
 
