@@ -5,15 +5,11 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
 const loadGTFSTimetables = require('../utils/load-gtfs-timetables')
 const utils = require('../../utils')
-const datamartModes = require('../datamart-modes')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../../load-gtfs/utils/gtfs-stats')
 
-let gtfsID = process.argv[2]
-let datamartMode = datamartModes[gtfsID]
-
-if (gtfsID === '7') datamartMode = 'telebus'
+let gtfsID = 3
 
 let start = new Date()
 
@@ -24,7 +20,7 @@ database.connect({
   let stops = database.getCollection('stops')
   let routes = database.getCollection('routes')
 
-  await gtfsTimetables.deleteDocuments({ gtfsMode: parseInt(gtfsID) })
+  await gtfsTimetables.deleteDocuments({ gtfsMode: gtfsID })
 
   let splicedGTFSPath = path.join(__dirname, '../spliced-gtfs-stuff', `${gtfsID}`)
   let gtfsPath = path.join(__dirname, '../../gtfs', `${gtfsID}`)
@@ -43,13 +39,13 @@ database.connect({
 
     tripCount += trips.length
 
-    await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, trips, tripTimings, calendarDays, calendarDates, null)
+    await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, trips, tripTimings, calendarDays, calendarDates)
 
     console.log(`GTFS Timetables: Completed iteration ${index + 1} of ${tripFiles.length}, loaded ${trips.length} trips`)
   })
 
   // await updateStats('mtm-stations', stopCount, new Date() - start)
-  console.log(`Completed loading in ${tripCount} ${datamartMode} trips`)
+  console.log(`Completed loading in ${tripCount} tram trips`)
   console.log(`Took: ${new Date() - start}ms`)
   process.exit()
 })

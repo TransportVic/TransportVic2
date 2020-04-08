@@ -70,8 +70,10 @@ database.connect({
     routeGTFSID: 1,
     operationDays: 1,
     destination: 1,
-    tripStartMinute: 1,
-    tripEndMinute: 1,
+    origin: 1,
+    departureTime: 1,
+    destination: 1,
+    destinationArrivalTime: 1,
     tripID: 1,
     shapeID: 1
   }, {unique: true, name: 'gtfs timetable index'})

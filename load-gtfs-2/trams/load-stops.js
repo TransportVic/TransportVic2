@@ -5,18 +5,13 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
 const loadStops = require('../utils/load-stops')
 const { createStopsLookup } = require('../utils/datamart-utils')
-const datamartModes = require('../datamart-modes')
+const datamartStops = require('../../spatial-datamart/metro-train-stations.json').features
+let stopsLookup = createStopsLookup(datamartStops)
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../../load-gtfs/utils/gtfs-stats')
 
-let gtfsID = process.argv[2]
-let datamartMode = datamartModes[gtfsID]
-
-const datamartStops = require(`../../spatial-datamart/${datamartMode}-stops.json`).features
-let stopsLookup = createStopsLookup(datamartStops)
-
-if (gtfsID === '7') datamartMode = 'telebus'
+let gtfsID = 3
 
 let start = new Date()
 
@@ -37,6 +32,6 @@ database.connect({
   })
 
   // await updateStats('mtm-stations', stopCount, new Date() - start)
-  console.log(`Completed loading in ${stopCount} ${datamartMode} stops`)
+  console.log('Completed loading in ' + stopCount + ' tram stops')
   process.exit()
 })
