@@ -25,10 +25,10 @@ async function read5000Stops() {
     let line = await stopsLineReader.nextLine()
     line = gtfsUtils.splitLine(line)
 
-    let stopGTFSID = line[0]
+    let stopGTFSID = parseInt(line[0])
     let originalName = line[1]
 
-    if (stopGTFSID === '35117') {
+    if (stopGTFSID === 35117) {
       originalName += ' (Ballarat Central)'
     }
 
@@ -168,7 +168,7 @@ async function read5000TripTimings() {
       if (trips.length === 5000) return trips
     } else {
       currentTrip.push({
-        stopGTFSID: line[3],
+        stopGTFSID: parseInt(line[3]),
         arrivalTime: line[1],
         departureTime: line[2],
         stopConditions: {
