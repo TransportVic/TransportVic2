@@ -12,6 +12,7 @@ let stoppingTextMap = {
   sasAtoB: 'Stops All Stations from {0} to {1}',
   runsExpressAtoB: 'Runs Express from {0} to {1}',
   runsExpressTo: 'Runs Express to {0}',
+  thenRunsExpressAtoB: 'then Runs Express from {0} to {1}',
   sasTo: 'Stops All Stations to {0}',
   thenSASTo: 'then Stops All Stations to {0}'
 }

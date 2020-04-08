@@ -82,11 +82,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     let cancelled = run.status === 'cancelled'
 
     if (platform == null) { // show replacement bus
-      if (departure.flags.includes('RRB-RUN')) platform = 'RRB';
+      if (departure.flags.includes('RRB-RUN')) platform = 'RRB'
       run.vehicle_descriptor = {}
     }
 
-    if (routeID === 13 && platform != 'RRB') { // stony point platforms
+    if (routeID === 13 && platform !== 'RRB') { // stony point platforms
       if (station.stopName === 'Frankston Railway Station') platform = '3'
       else platform = '1'
       run.vehicle_descriptor = {} // ok maybe we should have kept the STY timetable but ah well

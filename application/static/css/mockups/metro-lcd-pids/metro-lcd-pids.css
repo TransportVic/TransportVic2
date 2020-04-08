@@ -104,7 +104,11 @@ div.middleRow p {
   width: -moz-fit-content;
   width: -o-fit-content;
   width: -webkit-fit-content;
-  height: 0
+  height: 0;
+
+  opacity: 1;
+  -webkit-transition: opacity 250ms linear;
+  transition: opacity 250ms linear;
 }
 
 div.whiteLine {

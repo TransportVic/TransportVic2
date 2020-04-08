@@ -79,10 +79,10 @@ html
         div.middleRow
           if firstDeparture
             p=firstDeparture.stoppingType
-            p(style='display: none;')=firstDeparture.stoppingPattern
+            p(style='opacity: 0;' data-text=firstDeparture.stoppingPattern)=firstDeparture.stoppingPattern
           else
             p --
-            p(style='display: none;') --
+            p(style='opacity: 0;' data-text='') --
         div.whiteLine
         -
           let secondDeparture = departures[1]

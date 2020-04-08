@@ -68,6 +68,7 @@ setInterval(() => {
 
     $('.middleRow p:nth-child(1)').textContent = firstDeparture.stoppingType
     $('.middleRow p:nth-child(2)').textContent = firstDeparture.stoppingPattern
+    $('.middleRow p:nth-child(2)').setAttribute('data-text', firstDeparture.stoppingPattern)
 
     let secondDeparture = departures[1]
     let secondClassName = ''
@@ -142,12 +143,14 @@ async function animateScrollingText() {
 }
 
 function drawBottomRow() {
-  firstStoppingTypeP.style = 'display: block;'
-  firstStoppingPatternP.style = 'display: none;'
+  firstStoppingPatternP.textContent = ''
+  firstStoppingTypeP.style = 'opacity: 1;'
+  firstStoppingPatternP.style = 'opacity: 0;'
 
   firstRowPause = setTimeout(async () => {
-    firstStoppingTypeP.style = 'display: none;'
-    firstStoppingPatternP.style = 'display: block;'
+    firstStoppingPatternP.textContent = firstStoppingPatternP.getAttribute('data-text')
+    firstStoppingTypeP.style = 'opacity: 0;'
+    firstStoppingPatternP.style = 'opacity: 1;'
 
     stoppingPatternWidth = parseInt(getComputedStyle(firstStoppingPatternP).width) + window.innerWidth * 0.05
 

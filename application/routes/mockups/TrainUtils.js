@@ -10,6 +10,7 @@ let defaultStoppingMap = {
   sasAtoB: 'Stops All Stations from {0} to {1}',
   runsExpressAtoB: 'Runs Express from {0} to {1}',
   runsExpressTo: 'Runs Express to {0}',
+  thenRunsExpressAtoB: 'then Runs Express from {0} to {1}',
   sasTo: 'Stops All Stations to {0}',
   thenSASTo: 'then Stops All Stations to {0}'
 }
@@ -303,7 +304,9 @@ module.exports = {
       let nextStop = routeStops[routeStops.indexOf(lastExpressStop) + 1]
 
       if (lastStop) {
-        if (lastStop === previousStop) {
+        if (i === expressParts.length - 1 && nextStop === destination) {
+          texts.push(textMap.thenRunsExpressAtoB.format(previousStop, nextStop))
+        } if (lastStop === previousStop) {
           texts.push(textMap.expressAtoB.format(previousStop, nextStop))
         } else {
           texts.push(textMap.sasAtoB.format(lastStop, previousStop))
@@ -321,7 +324,9 @@ module.exports = {
       lastStop = nextStop
     })
 
-    texts.push(textMap.thenSASTo.format(destination))
+    if (routeStops[routeStops.indexOf(lastStop) + 1] !== destination) {
+      texts.push(textMap.thenSASTo.format(destination))
+    }
 
     return texts.join(', ').replace(/ Railway Station/g, '')
   },
