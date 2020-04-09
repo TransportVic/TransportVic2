@@ -21,6 +21,11 @@ database.connect({
   }, {name: 'stops location index'})
 
   await stops.createIndex({
+    'bays.mode': 1,
+    'bays.stopGTFSID': 1
+  }, {name: 'mode+gtfs id index'})
+
+  await stops.createIndex({
     'bays.stopGTFSID': 1,
     'bays.mode': 1
   }, {name: 'gtfs id+mode index'})
@@ -44,11 +49,21 @@ database.connect({
 
   await stops.createIndex({
     'tramTrackerIDs': 1
-  }, {name: 'tramtracker id index'})
+  }, {name: 'tramtracker id index', sparse: true})
 
   await stops.createIndex({
     'bays.stopNumber': 1
   }, {name: 'stop number index'})
+
+  await stops.createIndex({
+    'bays.vnetStationName': 1
+  }, {name: 'vnet station name index', sparse: true})
+
+  await stops.createIndex({
+    'bays.flags.tramtrackerName': 1,
+    'bays.flags.services': 1
+  }, {name: 'tramtracker name + services index', sparse: true})
+
 
   console.log('Created stops indices')
 
@@ -90,8 +105,8 @@ database.connect({
   }, {name: 'operationDays + routeGTFSID + start stop times index'})
 
   await gtfsTimetables.createIndex({
-    mode: 1,
     routeGTFSID: 1,
+    mode: 1,
     destination: 1,
     'stopTimings.stopGTFSID': 1,
     'stopTimings.departureTimeMinutes': 1

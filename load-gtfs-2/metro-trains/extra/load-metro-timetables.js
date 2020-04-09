@@ -148,6 +148,9 @@ function readFileData(filename, routeName, callback) {
       trip.destination = lastStop.stopName
       trip.destinationArrivalTime = lastStop.arrivalTime
 
+      let upService = !(trip.runID[3] % 2)
+      trip.direction = upService ? 'Up' : 'Down'
+
       await timetables.createDocument(trip)
     })
 

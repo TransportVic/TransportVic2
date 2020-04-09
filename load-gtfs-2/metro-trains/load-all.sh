@@ -5,5 +5,6 @@ node $DIRNAME/load-stops.js
 node $DIRNAME/load-routes.js
 node $DIRNAME/load-gtfs-timetables.js
 node $DIRNAME/extra/load-metro-timetables.js
+node $DIRNAME/extra/load-metro-route-stops.js
 
 rm -r $DIRNAME/../spliced-gtfs-stuff/2

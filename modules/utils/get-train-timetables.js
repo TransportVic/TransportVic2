@@ -66,7 +66,27 @@ async function getScheduledDeparture(station, db, mode, possibleLines, scheduled
         }
       }
     }).limit(2).toArray()
-
+console.log({
+  _id: {
+    $not: {
+      $in: seen
+    }
+  },
+  routeName: {
+    $in: possibleLines
+  },
+  destination: {
+    $in: possibleDestinations
+  },
+  operationDays: day.format('YYYYMMDD'),
+  mode,
+  stopTimings: {
+    $elemMatch: {
+      stopGTFSID: platform.stopGTFSID,
+      departureTimeMinutes: (scheduledDepartureTimeMinutes % 1440) + 1440 * i
+    }
+  }
+})
     timetables = timetables.map(timetable => {
       let startTime = day.startOf('day').add(timetable.stopTimings[0].departureTimeMinutes, 'minutes')
       timetable.sortID = +startTime
@@ -80,7 +100,7 @@ async function getScheduledDeparture(station, db, mode, possibleLines, scheduled
   let timetables = allTimetables.reduce((a, e) => a.concat(e), [])
 
   let trip = timetables[0]
-
+console.log(timetables)
   if (trip) {
     trip.destination = trip.destination.slice(0, -16)
     trip.origin = trip.origin.slice(0, -16)

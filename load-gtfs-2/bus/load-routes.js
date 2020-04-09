@@ -8,6 +8,8 @@ const { createServiceLookup } = require('../utils/datamart-utils')
 const utils = require('../../utils')
 const datamartModes = require('../datamart-modes')
 const operatorOverrides = require('../../additional-data/operator-overrides')
+const ptvAPI = require('../../ptv-api')
+const loopDirections = require('../../additional-data/loop-direction')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../../load-gtfs/utils/gtfs-stats')
@@ -27,6 +29,14 @@ database.connect({
 }, async err => {
   let routes = database.getCollection('routes')
 
+  let ptvRoutes = (await ptvAPI('/v3/routes?route_types=2')).routes
+  ptvRoutes = ptvRoutes.filter(route => {
+    return route.route_gtfs_id.startsWith(`${gtfsID}-`)
+  }).reduce((acc, route) => {
+    acc[route.route_gtfs_id] = utils.adjustRouteName(route.route_name)
+    return acc
+  }, {})
+
   let splicedGTFSPath = path.join(__dirname, '../spliced-gtfs-stuff', `${gtfsID}`)
   let gtfsPath = path.join(__dirname, '../../gtfs', `${gtfsID}`)
 
@@ -39,10 +49,29 @@ database.connect({
       if (serviceLookup[routeGTFSID]) return serviceLookup[routeGTFSID].operator
       if (operatorOverrides[routeGTFSID]) return operatorOverrides[routeGTFSID]
 
+      let routeMatch = Object.values(serviceLookup).find(route => {
+        return routeName === route.routeName && routeNumber === route.routeNumber
+      })
+      if (routeMatch) return routeMatch.operator
+
       console.log(`Could not map operator for ${routeGTFSID}: ${routeNumber} ${routeName}`)
 
       return ['Unknown Operator']
-    }, null)
+    }, (routeNumber, routeName, routeGTFSID) => {
+      let newRouteName = ptvRoutes[routeGTFSID] || routeName
+      if (loopDirections[routeGTFSID]) {
+        if (newRouteName.includes('Loop')) {
+          if (!loopDirections[routeGTFSID][1])
+            newRouteName += ` (${loopDirections[routeGTFSID][0]})`
+        } else {
+          if (loopDirections[routeGTFSID][1])
+            newRouteName += ' (Loop)'
+          else
+            newRouteName += ` (${loopDirections[routeGTFSID][0]} Loop)`
+        }
+      }
+      return newRouteName
+    })
   })
 
   // await updateStats('mtm-stations', stopCount, new Date() - start)

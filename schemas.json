@@ -69,7 +69,8 @@
     "origin": "string",
     "departureTime": "string",
     "destination": "string",
-    "destinationArrivalTime": "string"
+    "destinationArrivalTime": "string",
+    "direction": "string"
   },
   "liveTimetable": {
     "mode": "string",
@@ -109,13 +110,22 @@
       "stopNumber": "string",
       "mode": "string",
       "mykiZones": ["number"],
-      "suburb": "string"
+      "suburb": "string",
+      "services": [{
+        "routeGTFSID": "string",
+        "routeNumber": "string"
+      }],
+      "screenServices": [{
+        "routeGTFSID": "string",
+        "direction": "string",
+        "routeNumber": "string"
+      }]
     }],
     "location": "GeoJSON:MultiPoint",
-    "mergeName": "string",
-    "services": ["string"]
+    "mergeName": "string"
   },
   "route": {
+    "mode": "string",
     "routeName": "string",
     "codedName": "string",
     "routeNumber": "string",
@@ -136,6 +146,6 @@
         "stopNumber": "string"
       }]
     }],
-    "mode": "string"
+    "flags": "Object:optional"
   }
 }

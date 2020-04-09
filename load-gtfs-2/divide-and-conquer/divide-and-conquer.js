@@ -242,8 +242,10 @@ async function splitTrips() {
       let line = gtfsUtils.splitLine(lineData)
       let [fullRouteGTFSID, calendarID, tripID, shapeID, headsign, gtfsDirection] = line
       let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(fullRouteGTFSID)
+      let actualMode = gtfsMode === 'nbus' ? 'bus' : gtfsMode
+
       trips.push({
-        mode: gtfsMode,
+        mode: actualMode,
         tripID,
         routeGTFSID,
         calendarID,

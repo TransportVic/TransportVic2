@@ -7,7 +7,7 @@ module.exports = async function(stops, data, stopsLookup) {
     stop.fullStopName = nameModifier(stop.fullStopName)
 
     let datamartStop = stopsLookup[stop.stopGTFSID]
-    if (!datamartStop) datamartStop = { mykiZones: [] }
+    if (!datamartStop) datamartStop = { mykiZones: [], services: [] }
 
     let mergeName = stop.fullStopName.split('/')[0]
     if (utils.isStreet(mergeName) || !mergeName.includes(' ')) {
@@ -31,6 +31,11 @@ module.exports = async function(stops, data, stopsLookup) {
         isNightBus: stop.mode === 'nbus',
         hasRegularBus: stop.mode === 'bus'
       }
+    } else if (actualMode === 'tram') {
+      flags = {
+        tramtrackerName: stop.fullStopName.split('/')[0],
+        services: datamartStop.services
+      }
     }
 
     if (matchingStop) {
@@ -51,7 +56,7 @@ module.exports = async function(stops, data, stopsLookup) {
           }
         } else if (stop.mode === 'nbus') {
           matchingBay.flags.isNightBus = true
-        }
+        } else matchingBay.flags = flags
 
         matchingStop.bays[index] = matchingBay
       } else {

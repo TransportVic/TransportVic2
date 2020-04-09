@@ -270,7 +270,7 @@ async function getDepartures(stop, db) {
       departure.guidanceText = 'Departs ' + departure.departureRoad
     }
 
-    if (departure.loopDirection === 'Anti-clockwise') {
+    if (departure.loopDirection === 'Anti-Clockwise') {
       departure.loopDirection = 'AC/W'
     } else if (departure.loopDirection === 'Clockwise') {
       departure.loopDirection = 'C/W'

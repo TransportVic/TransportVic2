@@ -78,16 +78,26 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
       }
     })
 
+    let actualMode = (gtfsID === '8') ? 'bus' : gtfsModes[gtfsID]
+
+    let lastStop = stopTimings.slice(-1)[0]
+
+    stopTimings[0].arrivalTime = null
+    stopTimings[0].arrivalTimeMinutes = null
+
+    lastStop.departureTime = null
+    lastStop.departureTimeMinutes = null
+
     let tripData = {
-      mode: gtfsModes[gtfsID],
+      mode: actualMode,
       routeName: routeData.routeName,
       routeNumber: routeData.routeNumber,
       tripID,
       routeGTFSID,
       operationDays,
       stopTimings,
-      destination: stopTimings.slice(-1)[0].stopName,
-      destinationArrivalTime: stopTimings.slice(-1)[0].arrivalTime,
+      destination: lastStop.stopName,
+      destinationArrivalTime: lastStop.arrivalTime,
       origin: stopTimings[0].stopName,
       departureTime: stopTimings[0].departureTime,
       gtfsDirection: trip.gtfsDirection,

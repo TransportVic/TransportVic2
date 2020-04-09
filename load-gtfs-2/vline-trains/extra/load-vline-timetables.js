@@ -213,6 +213,10 @@ function readFileData(filename, allTrips, callback) {
 
     trips.forEach(trip => {
       if (!trip) return
+
+      let upService = !(trip.runID[3] % 2)
+      trip.direction = upService ? 'Up' : 'Down'
+
       let tripID = trip.runID + trip.operationDays.join('-')
       if (allTrips[tripID]) {
         let locationsSeen = allTrips[tripID].stopTimings.map(l => l.stopName.toLowerCase())
