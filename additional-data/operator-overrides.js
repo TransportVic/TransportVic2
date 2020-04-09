@@ -2,39 +2,32 @@ module.exports = {
   "4-PMC": ["Ventura Bus Lines"],
   "4-216": ["Transdev Melbourne"],
   "4-220": ["Transdev Melbourne"],
-  "4-27z": ["Transdev Melbourne"],
   "4-281": ["Transdev Melbourne"],
-  "4-30z": ["Transdev Melbourne"],
-  "4-30f": ["Transdev Melbourne"],
   "4-301": ["Dysons"],
   "4-35Z": ["Dysons"], // 357
   "4-406": ["CDC Melbourne"],
   "4-409": ["CDC Melbourne"],
   "4-429": ["Transdev Melbourne"],
-  "4-44t": ["Sita Bus Lines"], // 444 - new route? 454 too
-  "4-444": ["Sita Bus Lines"], // 444 - new route? 454 too
+  "4-44t": ["Sita Bus Lines"], // 444
+  "4-444": ["Sita Bus Lines"], // 444
   "4-454": ["Sita Bus Lines"],
   "4-45S": ["Sita Bus Lines"], // 456
   "4-4X9": ["Sita Bus Lines"], // 459
-  "4-46z": ["Kastoria Bus Lines"],
+  "4-46z": ["Kastoria Bus Lines"], // 462
   "4-462": ["Kastoria Bus Lines"],
-  "4-47b": ["Kastoria Bus Lines"],
+  "4-47b": ["Kastoria Bus Lines"], // 476
   "4-525": ["Dysons"],
-  "4-52F": ["Dysons"],
+  "4-52F": ["Dysons"], // 525
   "4-552": ["Dysons"],
   "4-556": ["Dysons"],
   "4-570": ["Dysons"],
   "4-603": ["Transdev Melbourne"],
   "4-604": ["Transdev Melbourne"],
-  "4-60S": ["CDC Melbourne"], // 605
-  "4-700": ["Transdev Melbourne"],
-  "4-70C": ["CDC Melbourne"],
-  "4-70V": ["Ventura Bus Lines"],
   "4-834": ["Ventura Bus Lines"],
-  "4-84E": ["Ventura Bus Lines"],
-  "4-84F": ["Ventura Bus Lines"],
-  "4-84Z": ["Ventura Bus Lines"],
-  "4-861": ["Ventura Bus Lines"],
+  "4-84E": ["Ventura Bus Lines"], // 843
+  "4-84F": ["Ventura Bus Lines"], // 845
+  "4-84Z": ["Ventura Bus Lines"], // 842
+  "4-86l": ["Ventura Bus Lines"], // 861
   "4-900": ["CDC Melbourne", "Ventura Bus Lines"],
   "4-903": ["Transdev Melbourne"],
 

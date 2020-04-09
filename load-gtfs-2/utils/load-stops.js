@@ -86,6 +86,7 @@ module.exports = async function(stops, data, stopsLookup) {
         _id: matchingStop._id
       }, matchingStop)
     } else {
+      stop.mode = actualMode
       let stopData = {
         stopName: stop.fullStopName,
         suburb: [stop.suburb],

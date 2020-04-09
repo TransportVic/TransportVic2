@@ -195,7 +195,7 @@ div.departure.no-number a.departureInfo span.towards {
 
 div.departure.no-number a.departureInfo span.destination {
   font-size: calc(1.6vw + 1.6vh);
-  line-height: calc(1.7vw + 1.7vh);
+  line-height: calc(1.9vw + 1.9vh);
 
   color: #c5c5c5;
 }
