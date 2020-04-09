@@ -29,31 +29,43 @@ function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
 }
 
 async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, destination, mode, day, routeGTFSID) {
-  let departureHour = Math.floor(scheduledDepartureTimeMinutes / 60) % 24
+  let trip
+  let today = utils.now()
+  let query
 
-  let query = {
-    operationDays: day || utils.getYYYYMMDDNow(),
-    mode,
-    stopTimings: {
-      $elemMatch: {
-        stopGTFSID: {
-          $in: stopGTFSIDs
-        },
-        departureTimeMinutes: scheduledDepartureTimeMinutes % 1440
-      }
-    },
-    destination: utils.adjustRawStopName(utils.adjustStopname(destination))
+  for (let i = 0; i <= 1; i++) {
+    let tripDay = today.clone().add(-i, 'days')
+    query = {
+      operationDays: day || tripDay.format('YYYYMMDD'),
+      mode,
+      stopTimings: {
+        $elemMatch: {
+          stopGTFSID: {
+            $in: stopGTFSIDs
+          },
+          departureTimeMinutes: scheduledDepartureTimeMinutes % 1440 + 1440 * i
+        }
+      },
+      destination: utils.adjustRawStopName(utils.adjustStopname(destination))
+    }
+
+    if (routeGTFSID) {
+      query.routeGTFSID = routeGTFSID
+    }
+
+    // for the coaches
+    let timetable = await db.getCollection('live timetables').findDocument(query)
+
+    if (!timetable) {
+      timetable = await db.getCollection('gtfs timetables').findDocument(query)
+    }
+
+    if (timetable) {
+      trip = timetable
+      break
+    }
   }
 
-  if (routeGTFSID) {
-    query.routeGTFSID = routeGTFSID
-  }
-
-  // for the coaches
-  let trip = await db.getCollection('live timetables').findDocument(query)
-
-  if (!trip)
-    trip = await db.getCollection('gtfs timetables').findDocument(query)
   if (trip) {
     let hasSeenStop = false
     trip.stopTimings = trip.stopTimings.filter(stop => {

@@ -63,7 +63,7 @@ append content
             span.destination=firstDeparture.destination
             if firstDeparture.guidanceText
               span.info.smaller=firstDeparture.guidanceText
-            //-if firstDeparture.viaText
+            if firstDeparture.viaText && hasNumber
               span.info.smaller(style=`width: calc(100vw - (3vw + 3vh) * ${departures.length}${hasNumber ? ' - (5vw + 5vh)' : ''} - (1vw + 1vh) - 1.5vw)`)=firstDeparture.viaText
           div.timings
             for i in Array(4 - departures.length)
