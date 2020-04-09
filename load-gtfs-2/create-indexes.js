@@ -8,6 +8,7 @@ database.connect({
 }, async err => {
   let stops = database.getCollection('stops')
   let routes = database.getCollection('routes')
+  let timetables = database.getCollection('timetables')
   let gtfsTimetables = database.getCollection('gtfs timetables')
 
   await stops.createIndex({
@@ -106,6 +107,22 @@ database.connect({
   }, {name: 'gtfs mode index'})
 
   console.log('Created GTFS timetables indexes')
-  
+
+  await timetables.createIndex({
+    mode: 1,
+    operationDays: 1,
+    runID: 1,
+    origin: 1,
+    destination: 1
+  }, {name: 'timetable index', unique: true})
+
+  await timetables.createIndex({
+    runID: 1,
+    operationDays: 1
+  }, {name: 'runID index', unique: true})
+
+  console.log('Created static timetable indexes')
+
+
   process.exit()
 })

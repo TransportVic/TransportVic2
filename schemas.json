@@ -55,6 +55,7 @@
     "vehicle": "string",
     "formedBy": "string",
     "forming": "string",
+    "operator": ["string"],
     "stopTimings": [{
       "stopName": "string",
       "stopGTFSID": "number",
@@ -65,11 +66,10 @@
       "platform": "string",
       "stopConditions": "string"
     }],
+    "origin": "string",
+    "departureTime": "string",
     "destination": "string",
-    "departureTime": "number",
-    "tripStartHour": "number",
-    "tripEndHour": "number",
-    "origin": "string"
+    "destinationArrivalTime": "string"
   },
   "liveTimetable": {
     "mode": "string",

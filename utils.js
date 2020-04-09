@@ -248,6 +248,20 @@ module.exports = {
     const parts = time.slice(0, 5).split(':')
     return parts[0] * 60 + parts[1] * 1
   },
+  minAftMidnightToTime24: (time, padHour=true) => {
+    let hours = Math.floor(time / 60)
+    let minutes = time % 60
+    let mainTime = ''
+
+    hours %= 24
+    if (hours < 10) mainTime += '0'
+    mainTime += hours
+    mainTime += ':'
+    if (minutes < 10) mainTime += '0'
+    mainTime += minutes
+
+    return mainTime
+  },
   getMinutesPastMidnightNow: () => {
     return module.exports.getMinutesPastMidnight(module.exports.now())
   },

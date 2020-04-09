@@ -16,3 +16,5 @@
 /bus_trips.csv
 /webroot
 /load-gtfs-2/spliced-gtfs-stuff
+/load-gtfs-2/metro-trains/extra/timetables
+/load-gtfs-2/vline-trains/extra/timetables

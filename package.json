@@ -23,6 +23,7 @@
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.27",
     "mongodb": "^3.4.0",
+    "pdf2json": "^0.7.1",
     "pug": "^2.0.4",
     "querystring": "^0.2.0",
     "readline-sync": "^1.4.10",
