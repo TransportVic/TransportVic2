@@ -8,6 +8,34 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - Tells the user which bus bay the bus departs from, guiding them in interchanges
 - Bus desto mapping
 
+## New GTFS Loader:
+Currently experimental, but should currently work as a drop in replacement for the current one. Have not taken timings but early results show its around 3x faster than the current one and can easily handle bigger GTFS updates. It also reads the file data less: O(n) -> O(1) now and should be swapping less stuff in and out of memory, so this should really help cut the number of swaps needed.
+- Bus:
+  - Loads standard GTFS components
+  - Loads 788 stop numbers
+  - Loads clockwise/anticlockwise loop directions
+  - Includes operators and myki zones
+  - Has all modes: metro bus, regional bus, telebus, nightbus, skybus
+- Metro trains:
+  - Loads standard GTFS components
+  - Loads static WTT dump from metro website
+    - Some trips seem to be faulty - some WMN shuttles have X run IDs which should only be for SDM
+  - Regional Coach:
+    - Loads standard GTFS components
+    - TODO: For routes in the format `5-V**`, map the corresponding train trip and also the route name
+    - Doesn't seem to be programmed very well to correspond with replacement trips
+  - Trams
+    - Loads standard GTFS components
+    - Loads TramTracker IDs on a stop-level
+  - V/Line Trains:
+    - Loads standard GTFS components
+    - Loads NSP static timetable dump
+    - TODO: Detect scheduled coach replacements
+      - Doesn't seem to be programmed very well in GTFS data, but works on PTV website. To ID: look for `1-V**` routes programmed as a coach flag, and if no match in coach but match in scheduled show that
+    - TODO: Detect cancelled services
+      - Read RSS feed to try and find services that are cancelled and mark them as cancelled in LiveDB
+  - TODO: Fix up stats updater
+
 ## Current features:
 - Loading in MTM timetables
 - Loading in bus timetables
@@ -33,8 +61,13 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Showing Regional coach timetables. Consults the PTV API as some replacement trips are randomly excluded from the GTFS dump
 - Offline mode
 - Couple of mockup displays
+  - Bus interchange LCD PIDS displays
   - Flinders Street Station escalator displays
-  - 7x2 LCD PIDS displays found at suburban stations
+  - 32:9 LCD PIDS displays found at suburban stations
+    - List format
+    - Text format
+  - LED PIDS display found at suburban stations like Pakenham, Lilydale and Croydon
+  
 - GeoJSON visualiser, cos why not
 - Checks disruptions every 10min, currently handles suspensions
   - Finds trips affected by suspension and breaks into 3 - first train leg, bus leg and second train leg.
@@ -73,10 +106,6 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
     - Matcher needs to be optimised, currently loads tonnes of matches for a stop
 
 ## Next up to be added:
-- busminder integration
-  - for cowes-dandy
-  - KWR - pakky
-  - telebuses
 - offline mode but client side
 - fix up trip/departure merging for merged stops (beaconsfield RS)
 - fix the 3am PT day stuff, except that is actually 8am for nightbus timetables
@@ -99,8 +128,8 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
     - Volgren CR228L (PTV/White)
     - Volgren Optimus (PTV/White)
     - HCMT (PTV)
-  - To Do:
     - Optare Solo (PTV/White)
+  - To Do:
     - Coach, need to find a suitable one for drawing
     - Trams (possibly do sideways rather than front?)
       - A1/2
@@ -123,6 +152,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Fare calculator thingy
 - Interstate
   - overland apparently
+  - check how its actually programmed in, AM8 trips don't seem to be in?
 - Ferries
 - If disruption thing isn't implemented do a status board
 - Auto update of GTFS data?
@@ -160,7 +190,10 @@ Create a config.json looking like
     "ptvKey": "",
     "ptvDevID": "",
 
-    "gtfsBatcher": false
+    "gtfsBatcher": false,
+
+    "seekBuses": false,
+    "devMode": true
 }
 ```
 with the appropriate fields filled

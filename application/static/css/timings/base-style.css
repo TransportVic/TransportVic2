@@ -211,6 +211,8 @@ div.departure.no-number a.departureInfo span.info {
 div.timings {
   display: flex;
   flex-direction: row;
+
+  margin-left: auto;
 }
 
 a.timing {

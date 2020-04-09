@@ -60,14 +60,14 @@ append content
             if !hasNumber
               span.routeName=firstDeparture.trip.routeName
             span.towards Towards
-            span.destination=firstDeparture.destination
+            span.destination(style=`width: calc(100vw - (3vw + 3vh) * ${departures.length}${hasNumber ? ' - (5vw + 5vh)' : ''} - (1vw + 1vh) - 1.5vw)`)=firstDeparture.destination
             if firstDeparture.guidanceText
               span.info.smaller=firstDeparture.guidanceText
             if firstDeparture.viaText && hasNumber
               span.info.smaller(style=`width: calc(100vw - (3vw + 3vh) * ${departures.length}${hasNumber ? ' - (5vw + 5vh)' : ''} - (1vw + 1vh) - 1.5vw)`)=firstDeparture.viaText
           div.timings
             for i in Array(4 - departures.length)
-              div.timing.mini(style='display: none')
+              a.timing.mini(style='display: none')
             for departure in departures
               a(href=departure.tripURL class=`timing mini ${departure.headwayDevianceClass}`)
                 div.stats

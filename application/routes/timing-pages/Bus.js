@@ -54,7 +54,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
     let destinationShortName = departure.trip.destination.split('/')[0]
     let {destination} = departure.trip
     if (!utils.isStreet(destinationShortName)) destination = destinationShortName
-    departure.destination = destination.replace('Shopping Centre', 'SC')
+    departure.destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
 
     let serviceData = busDestinations.service[departure.routeNumber] || busDestinations.service[departure.trip.routeGTFSID] || {}
     departure.destination = serviceData[departure.destination]

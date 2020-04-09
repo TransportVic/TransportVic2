@@ -10,9 +10,6 @@ const uglifyEs = require('uglify-es')
 const DatabaseConnection = require('../database/DatabaseConnection')
 
 const config = require('../config.json')
-let BusTracker
-if (config.busTrackerPath)
-  BusTracker = require(path.join(config.busTrackerPath, 'server.js'))
 
 if (config.seekBuses)
   require('../modules/bus-seeker')
@@ -207,10 +204,6 @@ module.exports = class MainServer {
       const router = require(`../application/routes/${routerName}`)
       app.use(routers[routerName], router)
     })
-
-    if (BusTracker) {
-      app.use('/tracker', BusTracker)
-    }
 
     app.get('/sw.js', (req, res) => {
       res.setHeader('Cache-Control', 'no-cache')
