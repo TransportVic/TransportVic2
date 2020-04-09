@@ -287,13 +287,6 @@ router.get('/highlights', async (req, res) => {
     smartrakID: { $in: venturaSpecials }
   }).sort({departureTime: 1, origin: 1}).toArray()
 
-  let venturaB10BLE = await getBuses(highlightData.ventura_b10ble)
-  let strayB10BLEs = await busTrips.findDocuments({
-    date,
-    smartrakID: { $in: venturaB10BLE },
-    routeNumber: '828'
-  }).sort({departureTime: 1, origin: 1}).toArray()
-
   let transdevNonorbitalSmartbus = await getBuses(highlightData.transdev_nonorbital_smartbuses)
   let strayNonorbitals = await busTrips.findDocuments({
     date,
@@ -398,7 +391,6 @@ router.get('/highlights', async (req, res) => {
     strayVenturaMinibuses,
     strayArtics,
     straySpecials,
-    strayB10BLEs,
     strayNonorbitals,
     strayTransdevMinibuses,
     strayNonTrandevMinibuses,
