@@ -161,8 +161,10 @@ async function getDeparturesFromPTV(stop, db) {
         isBusMinderOverride = !!busRego
       }
 
-      let busRoute = await dbRoutes.findDocument({ routeGTFSID: route.route_gtfs_id })
+      let busRoute = await dbRoutes.findDocument({ routeGTFSID: route.route_gtfs_id }, { routePath: 0 })
       let operator = busRoute.operators.sort((a, b) => a.length - b.length)[0]
+
+      if (!operator) operator = ''
 
       let routeNumber = route.route_number.replace(/_x$/, '')
       let sortNumber = routeNumber
@@ -231,12 +233,10 @@ async function getDepartures(stop, db) {
   if (departuresCache.get(stop.stopName + 'B')) return departuresCache.get(stop.stopName + 'B')
 
   let departures
-  let shouldCache = true
   try {
     departures = await getDeparturesFromPTV(stop, db)
   } catch (e) {
-    console.log(e)
-    shouldCache = false
+    console.log('Failed to get bus timetables', e)
     departures = (await getScheduledDepartures(stop, db, false)).map(departure => {
       departure.vehicleDescriptor = {}
       return departure
@@ -279,8 +279,7 @@ async function getDepartures(stop, db) {
     return departure
   })
 
-  if (shouldCache)
-    departuresCache.put(stop.stopName + 'B', departures)
+  departuresCache.put(stop.stopName + 'B', departures)
   return departures
 }
 

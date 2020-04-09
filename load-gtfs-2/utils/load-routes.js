@@ -4,6 +4,8 @@ const gtfsUtils = require('../../gtfs-utils')
 const gtfsModes = require('../gtfs-modes.json')
 
 module.exports = async function(routes, mode, routeData, shapeJSON, operator, name) {
+  let routeOperatorsSeen = []
+
   await async.forEachSeries(shapeJSON, async shapeFile => {
     let {shapeID, routeGTFSID} = shapeFile
 
@@ -26,7 +28,10 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
         })
       }
 
-      matchingRoute.operators = operator ? operator(routeGTFSID) : []
+      if (!routeOperatorsSeen.includes(routeGTFSID)) {
+        matchingRoute.operators = operator ? operator(routeGTFSID, matchingRoute.routeNumber, matchingRoute.routeName) : []
+        routeOperatorsSeen.push(routeGTFSID)
+      }
 
       await routes.replaceDocument({
         _id: matchingRoute._id

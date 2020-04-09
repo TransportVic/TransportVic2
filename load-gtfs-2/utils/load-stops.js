@@ -75,6 +75,11 @@ module.exports = async function(stops, data, stopsLookup) {
       }
       if (matchingStop.codedNames.length > 1) {
         matchingStop.stopName = matchingStop.mergeName
+        let codedStopName = utils.encodeName(matchingStop.stopName)
+        matchingStop.codedName = codedStopName
+
+        if (!matchingStop.codedNames.includes(codedStopName))
+          matchingStop.codedNames = [codedStopName, ...matchingStop.codedNames]
       }
 
       await stops.replaceDocument({

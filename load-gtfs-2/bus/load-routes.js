@@ -35,11 +35,13 @@ database.connect({
 
   await async.forEachSeries(shapeFiles, async shapeFile => {
     let shapeJSON = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, shapeFile)))
-    await loadRoutes(routes, gtfsID, routeData, shapeJSON, routeGTFSID => {
+    await loadRoutes(routes, gtfsID, routeData, shapeJSON, (routeGTFSID, routeNumber, routeName) => {
       if (serviceLookup[routeGTFSID]) return serviceLookup[routeGTFSID].operator
       if (operatorOverrides[routeGTFSID]) return operatorOverrides[routeGTFSID]
 
-      return []
+      console.log(`Could not map operator for ${routeGTFSID}: ${routeNumber} ${routeName}`)
+
+      return ['Unknown Operator']
     }, null)
   })
 
