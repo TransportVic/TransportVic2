@@ -1,0 +1,87 @@
+#loading {
+    display: block;
+    width: 100vw;
+    height: calc(0.1vw + 0.5vh);
+
+    position: absolute;
+
+    overflow-x: hidden;
+}
+
+#loading-bar {
+    display: block;
+    width: 50vw;
+    height: calc(0.1vw + 0.5vh);
+
+    background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+    background-size: 1800% 1800%;
+
+    animation: loading 1s infinite ease-in-out, rainbow 2s infinite ease;
+}
+
+@keyframes loading {
+    0% {
+        margin-left: -50vw;
+    }
+
+    100% {
+        margin-left: 100vw;
+    }
+}
+@-o-keyframes loading {
+    0% {
+        margin-left: -50vw;
+    }
+
+    100% {
+        margin-left: 100vw;
+    }
+}
+@-ms-keyframes loading {
+    0% {
+        margin-left: -50vw;
+    }
+
+    100% {
+        margin-left: 100vw;
+    }
+}
+@-webkit-keyframes loading {
+    0% {
+        margin-left: -50vw;
+    }
+
+    100% {
+        margin-left: 100vw;
+    }
+}
+@-moz-keyframes loading {
+    0% {
+        margin-left: -50vw;
+    }
+
+    100% {
+        margin-left: 100vw;
+    }
+}
+
+@-webkit-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+@-moz-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+@-o-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+@keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}

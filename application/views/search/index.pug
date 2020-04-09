@@ -14,6 +14,9 @@ block scripts
   
 append style
   link(rel='stylesheet' href='/static/css/search.css')
+  link(rel='stylesheet' href='/static/css/loading.css')
 
 append content
+  div#loading(style='display: none')
+    div#loading-bar
   div#search-results

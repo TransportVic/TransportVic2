@@ -168,7 +168,6 @@ let lines = {
     'Melbourne Central',
     'Parliament',
     'Richmond',
-    'Caulfield',
     'South Yarra',
     'Prahran',
     'Windsor',

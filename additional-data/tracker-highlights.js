@@ -26,7 +26,7 @@ module.exports = {
   cdc_oakleigh_hybrid_routes: ['605', '630'],
 
   cdc_ex_drivers: ['CO10', 'CO13', 'CO14', 'CO15', 'CO23', 'CO24', 'CO29', 'CO31', 'CO32', 'CO33', 'CO34', 'CO35', 'CO41', 'CO44', 'CO48', 'CO56', 'CO60', 'CO66', 'CO69', 'CO71', 'CO72', 'CO83', 'CO84', 'CO85', 'CO88', 'CO89', 'CO90', 'CO91', 'CO', ],
-  cdc_non_ex_drivers_routes: ['601', '605', '900'],
+  cdc_non_ex_drivers_routes: ['601', '605'],
 
   tulla_specials: ['CT6', 'CT7', 'CT8', 'CT13'],
 
