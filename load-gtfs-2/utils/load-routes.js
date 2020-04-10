@@ -33,12 +33,13 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
     let routeName = name ? name(gtfsRouteData[2], rawRouteName, routeGTFSID) : rawRouteName
 
     if (matchingRoute) {
-      let shapeFingerprint = `${shapeFile.length}-${shapeFile.path[0].join(',')}`
-      let matchingPath = matchingRoute.routePath.find(path => shapeFingerprint === `${path.length}-${path.path[0].join(',')}`)
+      let getFingerprint = shape => `${shape.length}-${shape.path[0].join(',')}-${shape.path.slice(-1)[0].join(',')}`
+
+      let shapeFingerprint = getFingerprint(shapeFile)
+      let matchingPath = matchingRoute.routePath.find(path => shapeFingerprint === getFingerprint(path))
       if (matchingPath) {
-        let pathIndex = matchingRoute.routePath.indexOf(matchingPath)
-        matchingPath.fullGTFSIDs.push(shapeID)
-        matchingRoute.routePath[pathIndex] = matchingPath
+        if (!matchingPath.fullGTFSIDs.includes(shapeID))
+          matchingPath.fullGTFSIDs.push(shapeID)
       } else {
         matchingRoute.routePath.push({
           fullGTFSIDs: [shapeID],

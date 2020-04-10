@@ -43,6 +43,7 @@ database.connect({}, async err => {
           $group: {
             _id: {
               routeGTFSID: "$routeGTFSID",
+              gtfsDirection: "$gtfsDirection",
               routeNumber: "$routeNumber"
             }
           }
@@ -66,7 +67,9 @@ database.connect({}, async err => {
           }
         }
       ]).toArray()
-      bay.screenServices = services.map(e => e._id)
+
+      bay.services = services.map(e => e._id)
+      bay.screenServices = screenServices.map(e => e._id)
 
       return bay
     })

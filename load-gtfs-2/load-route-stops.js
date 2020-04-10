@@ -4,6 +4,7 @@ const async = require('async')
 const mergeStops = require('./utils/merge-stops')
 const updateStats = require('./utils/stats')
 const busDestinations = require('../additional-data/bus-destinations')
+const coachDestinations = require('../additional-data/coach-destinations')
 const utils = require('../utils')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
@@ -55,7 +56,8 @@ database.connect({}, async err => {
       let serviceData = busDestinations.service[routeData.routeNumber] || busDestinations.service[routeGTFSID] || {}
 
       directionName = serviceData[directionName]
-        || busDestinations.generic[directionName] || directionName
+        || busDestinations.generic[directionName]
+        || coachDestinations[directionName] || directionName
 
       if (!stopsByService[routeGTFSID]) stopsByService[routeGTFSID] = []
       stopsByService[routeGTFSID].push({
