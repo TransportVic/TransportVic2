@@ -243,7 +243,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
 
     if (platform) platform += '?'
     else platform = '?'
-console.log(trainDeparture.flags)
+
     let departure = {
       shortRouteName,
       serviceID,
@@ -283,7 +283,7 @@ async function getDepartures(station, db) {
 
   let flagMap = {}
   let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train')
-  let departures, runs, routes
+  let departures = [], runs, routes
   try {
     body = await ptvAPI(`/v3/departures/route_type/3/stop/${vlinePlatform.stopGTFSID}?gtfs=true&max_results=5&expand=run&expand=route`)
     departures = body.departures, runs = body.runs, routes = body.routes
@@ -352,44 +352,42 @@ async function getDepartures(station, db) {
 
     return allDepartures
   } else {
+    let scheduled = await departureUtils.getScheduledDepartures(station, db, 'regional train', 180)
+    scheduled = scheduled.map(departure => {
+      departure.trip.origin += ' Railway Station'
+      departure.trip.destination += ' Railway Station'
+      let shortRouteName = getShortRouteName(departure.trip)
 
+      let dayOfWeek = departure.scheduledDepartureTime.day()
+      let isWeekday = dayOfWeek !== 0 && dayOfWeek !== 6
+      let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departure.scheduledDepartureTime) % 1440
+
+      let platform = guessPlatform(station.stopName.slice(0, -16), scheduledDepartureTimeMinutes,
+        shortRouteName, departure.trip.direction)
+
+      if (platform) platform += '?'
+      else platform = '?'
+
+      departure.shortRouteName = shortRouteName
+      departure.platform = platform
+
+      return departure
+    })
+
+    let coachServiceIDs = coachReplacements.map(coach => {
+      return coach.scheduledDepartureTime.format('HH:mm') + coach.destination
+    })
+
+    scheduled = scheduled.filter(train => {
+      let serviceID = train.scheduledDepartureTime.format('HH:mm') + train.destination
+      return !coachServiceIDs.includes(serviceID)
+    })
+
+    let allDepartures = scheduled.concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+    departuresCache.put(station.stopName + 'V', allDepartures)
+
+    return allDepartures
   }
-
-  // return departure
-  //
-  // let scheduledDepartures = (await departureUtils.getScheduledDepartures(station, db, 'regional train', 180))
-  // scheduledDepartures = scheduledDepartures.map(departure => {
-  //   let dayOfWeek = departure.scheduledDepartureTime.day()
-  //   let isWeekday = dayOfWeek === 0 || dayOfWeek === 6
-  //   let platform = guessPlatform(station.stopName.slice(0, -16), departure.scheduledDepartureTimeMinutes,
-  //     departure.trip.shortRouteName, departure.trip.direction, departure.destination)
-  //
-  //   if (departure.platform)
-  //     departure.platform = platform + '?'
-  //   else departure.platform = '?'
-  //   return departure
-  // })
-  // let coachTrips = await getCoachReplacements(station, db)
-  //
-  // try {
-  //   if (!station.stopName.includes('Southern Cross')) throw new Error('Skip')
-  //   let departures = await getDeparturesFromVNET(station, db)
-  //   departures = departures.concat(coachTrips)
-  //
-  //   let flags = await getServiceFlags(station)
-  //
-  //   departures = departures.map(departure => {
-  //     let id = departure.scheduledDepartureTime.toISOString() + departure.trip.destination
-  //
-  //     departure.flags = flags[id] || {}
-  //     return departure
-  //   }).concat(scheduledDepartures.filter(departure => departure.cancelled))
-  //
-  //   departuresCache.put(station.stopName + 'V', departures)
-  //   return filterDepartures(departures)
-  // } catch (e) {
-  //   return scheduledDepartures.concat(coachTrips)
-  // }
 }
 
 module.exports = getDepartures
