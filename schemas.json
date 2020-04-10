@@ -25,6 +25,7 @@
     "stopTimings": [{
       "stopName": "string",
       "stopNumber": "string",
+      "suburb": "string",
       "stopGTFSID": "number",
       "arrivalTime": "string",
       "arrivalTimeMinutes": "number",
@@ -59,6 +60,7 @@
     "stopTimings": [{
       "stopName": "string",
       "stopGTFSID": "number",
+      "suburb": "string",
       "arrivalTime": "string",
       "arrivalTimeMinutes": "number",
       "departureTime": "string",
@@ -81,6 +83,7 @@
     "stopTimings": [{
       "stopName": "string",
       "stopNumber": "string",
+      "suburb": "string",
       "stopGTFSID": "number",
       "arrivalTime": "string",
       "arrivalTimeMinutes": "number",

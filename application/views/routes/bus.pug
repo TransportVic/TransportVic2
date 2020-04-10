@@ -1,11 +1,10 @@
 extends ../layout
 
 block head
-  //- title=`TransportVic - ${trip.departureTime} ${trip.origin} to ${trip.destination}`
+  title TransportVic - Bus #{route.routeNumber}
   
 block title
-//- - function processName(name) { return shorternStopName(name.split('/')[0]) }
-//- span=`${trip.departureTime} ${processName(trip.origin)} to ${processName(trip.destination)}`
+  span Metropolitian Bus #{route.routeNumber}
 
 block style
   link(rel='stylesheet' href='/static/css/routes/base-style.css')
@@ -14,8 +13,8 @@ block style
       
 block content
   div#routeSummary
-    a(class=operator href=url)#routeNumber
-      span#routeText #{route.routeNumber}
+    a(class=operator href=`/bus/route/${route.routeNumber}/${codedDirectionNames[1]}`)#routeNumber
+      span#routeText=route.routeNumber
     div#terminals
       a().coloured-row
         span=directionNames[1]
@@ -74,3 +73,28 @@ block content
           span Night
         span=frequencyMap.weekday['Night'].min || '-'
         span=frequencyMap.weekday['Night'].max || '-'
+  div#stops
+    div.table-header.table-data.spacing2
+      span Stop #
+      span Suburb
+      span Bus Stop    
+    
+    - let i = 0
+    for stop in direction.stops
+      - i++
+      div.coloured-row
+        div.stop.table-data.spacing2
+          span=i
+          span=stop.suburb
+          div.stopNameData
+            -
+              let stopRoad = stop.stopName.replace(/^[^\/]+\//, '')
+              let stopName = stop.stopName.replace(/\/.+$/, '')
+              if ((stopRoad == stopName) && stopName.match(/\d+[A-Z]? .+$/)) {
+                stopRoad = stopName.match(/\d+[A-Z]? (.+)$/)[1]
+              }
+            if stopRoad !== stopName
+                span=stopRoad
+            else
+                span
+            span=stopName

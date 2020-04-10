@@ -111,3 +111,47 @@
   }
 
 }
+
+.table-data.spacing2 {
+    width: 100vw;
+    font-size: calc(1.2vh + 1.2vw);
+}
+
+.spacing2 > span:nth-child(1) {
+    margin-left: calc(1vw + 1vh);
+    width: calc(5vw + 5vh);
+}
+
+.spacing2 > span:nth-child(2) {
+    width: calc(15vw + 15vh);
+}
+
+.spacing2 > :nth-child(3) {
+    width: calc(100vw - (15vw + 15vh) - (5vw + 5vh) - (1vw + 1vh));
+}
+
+.stopNameData {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    text-align: left;
+}
+
+.stopNameData > :nth-child(1) {
+    color: #8f8f8f;
+    font-size: calc(1vh + 0.7vw);
+}
+
+.stopNameData > :nth-child(2) {
+    width: calc(100vw - (15vw + 15vh) - (5vw + 5vh) - (1vw + 1vh));
+    font-size: calc(1.1vh + 1.1vw);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+div.stop {
+    display: flex;
+    justify-content: center;
+}

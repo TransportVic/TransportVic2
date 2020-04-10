@@ -312,7 +312,17 @@ module.exports = {
   request: async (...options) => {
     let start = +new Date()
 
-    let body = await request(...options)
+    let body
+    if (typeof options[0] === 'string')
+      body = await request(options[0], {
+        timeout: 5000,
+        ...(options || {})
+      })
+    else
+      body = await request({
+        timeout: 5000,
+        ...options
+      })
 
     let url = typeof options[0] === 'string' ? options[0] : options[0].url
 

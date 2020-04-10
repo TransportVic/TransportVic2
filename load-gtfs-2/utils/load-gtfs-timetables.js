@@ -67,6 +67,7 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
       return {
         stopName: stopData.fullStopName,
         stopNumber: stopData.stopNumber,
+        suburb: stopData.suburb,
         stopGTFSID: stopGTFSID,
         arrivalTime,
         arrivalTimeMinutes,

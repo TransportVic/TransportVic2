@@ -124,30 +124,14 @@ async function generateFirstLastBusMap(gtfsTimetables, query) {
   }
 }
 
-function splitDeparturesIntoFrequencyBands(bands, departureTimes) {
-  let departureBands = {}
-  Object.keys(bands).forEach(bandName => {
-    departureBands[bandName] = []
-  })
-  departureTimes.forEach(departureTime => {
-    let departureBand = Object.keys(bands).find(bandName => {
-      let band = bands[bandName]
-      return band[0] <= departureTime && departureTime < band[1]
-    })
-
-    if (departureBand)
-      departureBands[departureBand].push(departureTime)
-  })
-  return departureBands
-}
-
 function calculateFrequency(departureTimes) {
+  if (departureTimes.length === 0) return {min: '-', max: '-'}
+  if (departureTimes.length === 1) return {min: -1, max: -1}
+
   let headways = departureTimes.sort((a, b) => a - b).map((e, i, a) => {
     if (i === 0) return -100
     return e - a[i - 1]
   }).slice(1).sort((a, b) => a - b)
-
-  if (departureTimes.length === 1) return {min: -1, max: -1}
 
   return {
     min: headways[0],
@@ -155,75 +139,39 @@ function calculateFrequency(departureTimes) {
   }
 }
 
-function generateFrequencyMapOnDate(stopList, trips, round=false) {
-  let stops = {}
+function generateFrequencyMapOnDate(trips, round=false) {
   let overallFrequency = {}
+  let boundedFrequency = {}
+  let bandDepartures = {}
+  let bands = Object.keys(frequencyRanges)
 
-  Object.keys(frequencyRanges).map(name => {
-    overallFrequency[name] = []
+  bands.forEach(name => {
+    let bounds = frequencyRanges[name].map(e => e[0] * 60 + e[1])
+
+    boundedFrequency[name] = bounds
+    bandDepartures[name] = []
   })
 
   trips.forEach(trip => {
-    trip.stopTimings.slice(0, -1).forEach(stop => {
-      let {stopGTFSID, departureTimeMinutes} = stop
-      if (!departureTimeMinutes) return
-      if (!stops[stopGTFSID]) stops[stopGTFSID] = []
-      stops[stopGTFSID].push(departureTimeMinutes)
-    })
-  })
+    let {departureTimeMinutes} = trip.stopTimings[0]
 
-  let boundedFrequency = {}
-
-  Object.keys(frequencyRanges).map(name => {
-    let bounds = frequencyRanges[name]
-    bounds = bounds.map(e => e[0] * 60 + e[1])
-    boundedFrequency[name] = bounds
-  })
-
-  Object.keys(stops).forEach(stopGTFSID => {
-    let departureTimes = stops[stopGTFSID]
-    stops[stopGTFSID] = splitDeparturesIntoFrequencyBands(boundedFrequency, departureTimes)
-    Object.keys(stops[stopGTFSID]).forEach(bandName => {
-      let frequency = calculateFrequency(stops[stopGTFSID][bandName])
-      if (frequency.min)
-        overallFrequency[bandName].push(frequency)
-    })
-  })
-
-  Object.keys(overallFrequency).forEach(bandName => {
-    let frequencies = overallFrequency[bandName]
-    let finalFrequency = {
-      min: [],
-      max: []
-    }
-    frequencies.forEach(frequency => {
-      finalFrequency.min.push(frequency.min)
-      finalFrequency.max.push(frequency.max)
+    let departureBand = bands.find(bandName => {
+      let band = boundedFrequency[bandName]
+      return band[0] <= departureTimeMinutes && departureTimeMinutes < band[1]
     })
 
-    let has1Bus = !!finalFrequency.min.find(e => e === -1)
-    let hasMultipleBus = !!finalFrequency.min.find(e => e !== -1)
+    if (departureBand && !bandDepartures[departureBand].includes(departureTimeMinutes))
+      bandDepartures[departureBand].push(departureTimeMinutes)
+  })
 
-    if (has1Bus && hasMultipleBus) {
-      finalFrequency.min = finalFrequency.min.filter(e => e !== -1)
-      finalFrequency.max = finalFrequency.max.filter(e => e !== -1)
-    }
-
-    finalFrequency.min = finalFrequency.min.sort((a, b) => a - b)[0]
-    finalFrequency.max = finalFrequency.max.sort((a, b) => b - a)[0]
-
-    if (round) {
-      finalFrequency.min = Math.round(finalFrequency.min)
-      finalFrequency.max = Math.round(finalFrequency.max)
-    }
-
-    overallFrequency[bandName] = finalFrequency
+  bands.forEach(band => {
+    overallFrequency[band] = calculateFrequency(bandDepartures[band])
   })
 
   return overallFrequency
 }
 
-async function generateFrequencyMap(gtfsTimetables, query, stopList) {
+async function generateFrequencyMap(gtfsTimetables, query) {
   let operationDays = await getOperationDays(gtfsTimetables, query)
   let parsedOperationDays = parseOperationDays(operationDays)
 
@@ -237,7 +185,7 @@ async function generateFrequencyMap(gtfsTimetables, query, stopList) {
   let indvWeekdayFrequencies = {}
   await async.forEach(distantWeekdays, async date => {
     let trips = await findTripsForDates(gtfsTimetables, query, [date])
-    let frequency = generateFrequencyMapOnDate(stopList, trips)
+    let frequency = generateFrequencyMapOnDate(trips)
     indvWeekdayFrequencies[date] = frequency
   })
 
@@ -263,12 +211,12 @@ async function generateFrequencyMap(gtfsTimetables, query, stopList) {
       weekdayFrequency[name].max = weekdayFrequency[name].max.filter(e => e !== -1)
     }
 
-    weekdayFrequency[name].min = Math.round(weekdayFrequency[name].min.reduce((a, e) => a + e, 0) / weekdayFrequency[name].min.length)
-    weekdayFrequency[name].max = Math.round(weekdayFrequency[name].max.reduce((a, e) => a + e, 0) / weekdayFrequency[name].max.length)
+    weekdayFrequency[name].min = Math.round(weekdayFrequency[name].min.reduce((a, e) => a + e, 0) / weekdayFrequency[name].min.length) || '-'
+    weekdayFrequency[name].max = Math.round(weekdayFrequency[name].max.reduce((a, e) => a + e, 0) / weekdayFrequency[name].max.length) || '-'
   })
 
-  let saturdayFrequency = generateFrequencyMapOnDate(stopList, saturdayTrips, true)
-  let sundayFrequency = generateFrequencyMapOnDate(stopList, sundayTrips, true)
+  let saturdayFrequency = generateFrequencyMapOnDate(saturdayTrips, true)
+  let sundayFrequency = generateFrequencyMapOnDate(sundayTrips, true)
 
   function check1Bus(frequencyMap) {
     Object.keys(frequencyMap).forEach(name => {

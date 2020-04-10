@@ -120,6 +120,7 @@ function readFileData(filename, routeName, callback) {
       trips[tripID].stopTimings[timing] = {
         stopName: stationPlatform.fullStopName,
         stopGTFSID: stationPlatform.stopGTFSID,
+        suburb: stationPlatform.suburb,
         arrivalTime: properTiming,
         arrivalTimeMinutes: minutesPastMidnight,
         departureTime: properTiming,

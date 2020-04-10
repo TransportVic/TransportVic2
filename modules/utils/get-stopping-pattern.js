@@ -63,11 +63,13 @@ module.exports = async function (db, ptvRunID, mode, time, stopID) {
   let stopTimings = departures.map((departure, i) => {
     let {
       estimatedDepartureTime, scheduledDepartureTime,
-      stop_id, platform_number} = departure
+      stop_id, platform_number
+    } = departure
 
+    let ptvStop = stops[stop_id]
+    
     let stopBay = dbStops[stop_id].bays
       .filter(bay => {
-        let ptvStop = stops[stop_id]
         let stopName = utils.adjustRawStopName(nameModifier(utils.adjustStopname(ptvStop.stop_name.trim())))
           .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
 
@@ -83,6 +85,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID) {
     let stopTiming = {
       stopName: stopBay.fullStopName,
       stopNumber: stopBay.stopNumber,
+      suburb: stopBay.suburb,
       stopGTFSID: stopBay.stopGTFSID,
       arrivalTime: scheduledDepartureTime.format("HH:mm"),
       arrivalTimeMinutes: departureTimeMinutes,

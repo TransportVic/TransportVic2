@@ -75,7 +75,7 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
         }],
         operators: operator ? operator(routeGTFSID) : [],
         directions: [],
-        mode: gtfsModes[mode]
+        mode: mode === '8' ? 'bus' : gtfsModes[mode]
       }
 
       if (loopDirections[routeGTFSID])

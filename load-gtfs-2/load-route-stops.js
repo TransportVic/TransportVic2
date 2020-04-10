@@ -36,7 +36,12 @@ database.connect({}, async err => {
 
       if (!routeDirections[timetable.gtfsDirection]) routeDirections[timetable.gtfsDirection] = []
 
-      routeDirections[timetable.gtfsDirection].push(timetable.stopTimings.map(e => ({stopName: e.stopName, stopGTFSID: e.stopGTFSID})))
+      routeDirections[timetable.gtfsDirection].push(timetable.stopTimings.map(e => ({
+        stopName: e.stopName,
+        stopNumber: e.stopNumber,
+        suburb: e.suburb,
+        stopGTFSID: e.stopGTFSID
+      })))
     })
 
     routeDirections.forEach((direction, gtfsDirection) => {

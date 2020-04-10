@@ -61,21 +61,17 @@ append content
           span.towards=`${departure.shortRouteName} Line towards`
           span.destination=departure.destination
           if departure.isTrainReplacement
-            span.info.cancelled This service has been replaced by coaches - check platform displays
+            span.info.cancelled Service replaced by coaches
           else if departure.cancelled
             span.info.cancelled This service has been cancelled
-          //- else if departure.unknownScheduledDepartureTime
-          //-   span.cancelled Unknown scheduled departure time/No stopping pattern info - check platform displays
-          //- else if departure.trip.isUncertain
-          //-   span.cancelled Stopping pattern/times may be wrong - check platform displays
           else
-          
+            
             -
               let flags = ''
               let checkFlags = departure.flags || {}
               if (checkFlags.firstClassAvailable)
                 flags = 'First Class'
-              if (checkFlags.barAvailable === true) { // scheduled and operating
+              if (checkFlags.barAvailable) {
                 if (flags.length) flags += ' & '
                 flags += 'Bar'
               }
@@ -83,9 +79,6 @@ append content
               if (checkFlags.reservationsOnly) {
                 if (flags.length) flags += ' - '
                 flags += 'Reservations Only'
-              }
-              if (checkFlags.barAvailable === null) { // scheduled but not operating
-                flags += ' BAR UNAVAILABLE'
               }
             span.info.full=flags
             if departure.vehicle

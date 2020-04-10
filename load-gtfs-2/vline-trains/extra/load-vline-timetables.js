@@ -112,6 +112,7 @@ async function parseTimings(names, types, trip) {
       locations[locationName] = {
         stopName: stationPlatform.fullStopName,
         stopGTFSID: stationPlatform.stopGTFSID,
+        suburb: stationPlatform.suburb,
         arrivalTime: timing.slice(0, 5),
         arrivalTimeMinutes: minutesAftMidnight,
         departureTime: timing.slice(0, 5),
