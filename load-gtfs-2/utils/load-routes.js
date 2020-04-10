@@ -59,8 +59,10 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
       }, matchingRoute)
     } else {
       let routeNumber = null
-      if (['4', '6', '7', '8'].includes(mode)) { // metro bus, regional bus, telebus, night bus
+      if (['4', '6', '8'].includes(mode)) { // metro bus, regional bus, telebus, night bus
         routeNumber = gtfsRouteData[2]
+      } else if (mode === '7') {
+        routeNumber = routeGTFSID.slice(2)
       }
 
       let newRoute = {

@@ -19,7 +19,7 @@ String.prototype.format = (function (i, safe, arg) {
 }())
 
 module.exports = {
-  encodeName: name => name.toLowerCase().replace(/[^\w\d ]/g, '-').replace(/  */g, '-').replace(/--+/g, '-'),
+  encodeName: name => name.toLowerCase().replace(/[^\w\d ]/g, '-').replace(/  */g, '-').replace(/--+/g, '-').replace(/-$/, '').replace(/^-/, ''),
   adjustRouteName: routeName => {
     routeName = routeName.replace(/via .+/, '')
       .replace(/\(?(?:anti)? ?-? ?(?:clockwise)(?: loop)?\)?$/i, '')
