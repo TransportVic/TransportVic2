@@ -76,7 +76,7 @@ function parse(pdfBuffer, callback) {
       })
 
       let colStarts = verticalFills.map(fill => fill.x)
-      let rowStarts = horizontalFills.map(fill => fill.y)
+      let rowStarts = horizontalFills.map(fill => fill.y).filter((e, i, a) => a.indexOf(e) === i).sort((a, b) => a - b)
       var rows = [] // store Texts and their x positions in rows
 
       for (var t = 0; t < page.Texts.length; t++) {
@@ -87,6 +87,9 @@ function parse(pdfBuffer, callback) {
         let currentRow = rowStarts.indexOf(firstYGreater) - 1
         if (currentRow < 0) continue
           // y value of Text falls within the y-value range, add text to row:
+
+        if (!['EMPTY', 'LIGHT_LO', 'PSNG_SRV'].includes(textContent) && currentRow === 4)
+          currentRow = 3
 
         let firstXGreater = colStarts.find(c => c > text.x + 0.1)
         let currentCol = colStarts.indexOf(firstXGreater) - 1
@@ -100,10 +103,11 @@ function parse(pdfBuffer, callback) {
           }
         }
 
-        rows[currentRow].data[currentCol] = {
-          text: textContent,
-          x: text.x
-        }
+        if (!rows[currentRow].data[currentCol])
+          rows[currentRow].data[currentCol] = {
+            text: textContent,
+            x: text.x
+          }
       }
 
       // rows = rows.filter(Boolean)
