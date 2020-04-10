@@ -174,9 +174,15 @@ async function getDepartures(stop, db) {
   let timetables = db.getCollection('timetables')
 
   departures = await async.map(departures, async departure => {
+    let destinationShortName = departure.trip.destination.split('/')[0]
+    let {destination} = departure.trip
+    if (!utils.isStreet(destinationShortName)) destination = destinationShortName
+    destination = destination.replace('Shopping Centre', 'SC')
 
-    if (destinationOverrides[departure.destination])
-      departure.destination = destinationOverrides[departure.destination]
+    if (destinationOverrides[destination])
+      departure.destination = destinationOverrides[destination]
+    else
+      departure.destination = destination
 
     if (departure.isTrainReplacement === null) {
       let {origin, destination, departureTime, destinationArrivalTime} = departure.trip

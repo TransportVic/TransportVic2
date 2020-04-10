@@ -55,16 +55,29 @@ async function getVNETDepartures(vlinePlatform, direction, db) {
     let accessibleTrain = $$('IsAccessibleAvailable') === 'true'
     let barAvailable = $$('IsBuffetAvailable') === 'true'
 
-    let vehicle = $$('Consist').text()
-    const vehicleConsist = $$('ConsistVehicles').text()
+    let vehicle = $$('Consist').text().replace(/ /g, '-')
+    const vehicleConsist = $$('ConsistVehicles').text().replace(/ /g, '-')
     let fullVehicle = vehicle
+    let vehicleType
 
-    if (vehicle.startsWith('N'))
+    if (vehicle.startsWith('N')) {
+      let carriages = vehicleConsist.slice(5).split('-')
       fullVehicle = vehicleConsist
-    else if (vehicle.includes('VL'))
+
+      vehicleType = 'N +'
+      vehicleType += carriages.length
+
+      if (carriages.includes('N')) vehicleType += 'N'
+      else vehicleType += 'H'
+    } else if (vehicle.includes('VL')) {
+      let cars = vehicle.split('-')
       fullVehicle = vehicle.replace(/\dVL/g, 'VL')
 
-    fullVehicle = fullVehicle.replace(/ /g, '-')
+      vehicleType = cars.length + 'x 3VL'
+    } else if (vehicle.match(/70\d\d/)) {
+      let cars = vehicle.split('-')
+      vehicleType = cars.length + 'x SP'
+    }
 
     if ($$('Consist').attr('i:nil'))
       fullVehicle = ''
@@ -90,7 +103,8 @@ async function getVNETDepartures(vlinePlatform, direction, db) {
       direction,
       vehicle: fullVehicle,
       barAvailable,
-      accessibleTrain
+      accessibleTrain,
+      vehicleType
     })
   })
 
@@ -110,17 +124,19 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
     let dayOfWeek = utils.getDayName(departure.originDepartureTime)
     let operationDay = departure.originDepartureTime.format('YYYYMMDD')
 
-    // let nspTrip = await timetables.findDocument({
-    //   operationDays: dayOfWeek,
-    //   runID: departure.runID,
-    //   mode: 'regional train'
-    // })
-
-    let trip = await db.getCollection('live timetables').findDocument({
-      operationDays: operationDay,
+    let nspTrip = await timetables.findDocument({
+      operationDays: dayOfWeek,
       runID: departure.runID,
       mode: 'regional train'
     })
+
+    let liveQuery = {
+      operationDays: operationDay,
+      runID: departure.runID,
+      mode: 'regional train'
+    }
+
+    let trip = await db.getCollection('live timetables').findDocument(liveQuery)
 
     if (!trip) {
       trip = await gtfsTimetables.findDocument({
@@ -132,6 +148,8 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
       })
     }
 
+    if (!trip && nspTrip) trip = nspTrip
+
     if (!trip) {
       console.log(departure)
       // let originVNETName = departure.vnetStationName
@@ -140,22 +158,36 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
       //   departure.originDepartureTime, departure.runID, journeyCache)
     }
 
-    const stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
     let platform = departure.platform
-
-    let originalServiceID = departure.originDepartureTime.format('HH:mm') + trip.destination
+    let originalServiceID = trip.originalServiceID || departure.originDepartureTime.format('HH:mm') + trip.destination
 
     if (trip.destination !== departure.destination) {
       let stoppingAt = trip.stopTimings.map(e => e.stopName)
-      let destinationIndex = stoppingAt.indexOf(trip.destination)
+      let destinationIndex = stoppingAt.indexOf(departure.destination)
       trip.stopTimings = trip.stopTimings.slice(0, destinationIndex + 1)
       let lastStop = trip.stopTimings[destinationIndex]
 
-      trip.destination = departure.destination
+      trip.destination = lastStop.stopName
       trip.destinationArrivalTime = lastStop.arrivalTime
       lastStop.departureTime = null
       lastStop.departureTimeMinutes = null
+
+      trip.runID = departure.runID
+      trip.originalServiceID = originalServiceID
+      trip.operationDays = operationDay
+
+      delete trip._id
+      await liveTimetables.replaceDocument({
+        operationDays: operationDay,
+        runID: departure.runID,
+        mode: 'regional train'
+      }, trip, {
+        upsert: true
+      })
     }
+
+    trip.vehicleType = departure.vehicleType
+    trip.vehicle = departure.vehicle
 
     return {
       originalServiceID,
