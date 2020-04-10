@@ -290,6 +290,9 @@ module.exports = {
     if (hours < 3) hours += 24
     return `${module.exports.pad(hours, 2)}:${module.exports.pad(minutes, 2)}`
   },
+  formatHHMM: time => {
+    return time.format('HH:mm')
+  },
   correctHHMMToPT: time => {
     const parts = time.slice(0, 5).split(':')
     let hours = parts[0] * 1,

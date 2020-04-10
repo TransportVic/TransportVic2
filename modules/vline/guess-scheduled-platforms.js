@@ -86,7 +86,7 @@ let singlePlatforms = [
   'Bairnsdale'
 ]
 
-module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday, destination) => {
+module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday) => {
   let isUp = direction === 'Up'
 
   if (line === 'The Overland') {

@@ -32,6 +32,7 @@ function getAllStopGTFSIDs(stop) {
 
 async function getDeparturesFromPTV(stop, db) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
+  let timetables = db.getCollection('timetables')
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional coach', true)
   let coachGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional train', true)
   gtfsIDs = gtfsIDs.concat(coachGTFSIDs).filter((e, i, a) => a.indexOf(e) == i)
@@ -41,51 +42,65 @@ async function getDeparturesFromPTV(stop, db) {
 
   let allGTFSIDs = getAllStopGTFSIDs(stop)
 
+  let runIDsSeen = []
+
   await async.forEach(gtfsIDs, async stopGTFSID => {
     const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/3/stop/${stopGTFSID}?gtfs=true&max_results=5&expand=run&expand=route`)
     let coachDepartures = departures.filter(departure => departure.flags.includes('VCH'))
 
     await async.forEach(coachDepartures, async coachDeparture => {
-      let run = runs[coachDeparture.run_id]
+      let runID = coachDeparture.run_id
+      if (runIDsSeen.includes(runID)) return
+      runIDsSeen.push(runID)
+
+      let run = runs[runID]
       let route = routes[coachDeparture.route_id]
 
       let departureTime = moment.tz(coachDeparture.scheduled_departure_utc, 'Australia/Melbourne')
-      let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime)
-      if (departureTime.diff(now, 'minutes') > 300) return
+      let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime) % 1440
+
+      if (departureTime.diff(now, 'minutes') > 180) return
 
       let coachRouteGTFSID = route.route_gtfs_id.replace('1-', '5-')
       let trainRouteGTFSID = route.route_gtfs_id
 
       let destination = utils.adjustStopname(run.destination_name)
+
+      // null: unknown, true: yes, false: no
       let isTrainReplacement = null
 
       if (!vlineTrainRoutes.includes(trainRouteGTFSID)) isTrainReplacement = false
 
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'regional coach', null, coachRouteGTFSID)
-      if (!trip && (isTrainReplacement !== null)) {
+
+      if (!trip && (isTrainReplacement !== false)) {
         let stopGTFSIDs = {
           $in: allGTFSIDs
         }
+        let checkDest = destination
+        if (destination === 'Southern Cross Coach Terminal/Spencer Street')
+          checkDest = 'Southern Cross Railway Station'
         if (stop.stopName === 'Southern Cross Coach Terminal/Spencer Street') {
           stopGTFSIDs = 20043
         }
 
         for (let i = 0; i <= 1; i++) {
           let tripDay = departureTime.clone().add(-i, 'days')
-          let query = {
+          let departureTimeMinutes = scheduledDepartureTimeMinutes + 1440 * i
+
+          trip = await gtfsTimetables.findDocument({
             routeGTFSID: trainRouteGTFSID,
             operationDays: tripDay.format('YYYYMMDD'),
             mode: 'regional train',
             stopTimings: {
               $elemMatch: {
                 stopGTFSID: stopGTFSIDs,
-                departureTimeMinutes: scheduledDepartureTimeMinutes % 1440 + 1440 * i
+                departureTimeMinutes
               }
             },
-            destination
-          }
+            destination: checkDest
+          })
 
-          trip = await gtfsTimetables.findDocument(query)
           if (trip) {
             console.log(`Mapped train trip as coach: ${trip.departureTime} to ${trip.destination}`)
             isTrainReplacement = true
@@ -96,10 +111,7 @@ async function getDeparturesFromPTV(stop, db) {
 
       // Its half trips that never show up properly
       if (!trip) return
-      // if (!trip) return console.err(`Failed to map trip: ${departureTime.format('HH:MM')} to ${destination}`)
-
-      if (destinationOverrides[destination])
-        destination = destinationOverrides[destination]
+      // if (!trip) return console.err(`Failed to map trip: ${departureTime.format('HH:mm')} to ${destination}`)
 
       mappedDepartures.push({
         trip,
@@ -123,18 +135,28 @@ async function getScheduledDepartures(stop, db, useLive) {
 }
 
 async function getDepartures(stop, db) {
-  if (departuresCache.get(stop.stopName + 'C')) return departuresCache.get(stop.stopName + 'C')
+  if (departuresCache.get(stop.stopName + 'C'))
+    return departuresCache.get(stop.stopName + 'C')
 
   let departures
   try {
     departures = await getDeparturesFromPTV(stop, db)
   } catch (e) {
+    console.log(e)
     departures = await getScheduledDepartures(stop, db, false)
+    departures = departures.map(departure => {
+      departure.isTrainReplacement = null
+      return departure
+    })
   }
 
   let timetables = db.getCollection('timetables')
 
   departures = await async.map(departures, async departure => {
+
+    if (destinationOverrides[departure.destination])
+      departure.destination = destinationOverrides[departure.destination]
+
     if (departure.isTrainReplacement === null) {
       let {origin, destination, departureTime, destinationArrivalTime} = departure.trip
       if (origin === 'Southern Cross Coach Terminal/Spencer Street') {

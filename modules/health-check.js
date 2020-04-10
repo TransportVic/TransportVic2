@@ -7,7 +7,8 @@ const config = require('../config.json')
 const utils = require('../utils')
 const urls = require('../urls.json')
 const handleMTMSuspensions = require('./disruption-management/handle-mtm-suspensions')
-const replacedServices = require('./vline/coach-replacement-overrides')
+const replacedServices = []
+// const replacedServices = require('./vline/coach-replacement-overrides')
 const RSSParser = require('rss-parser')
 let rssParser = new RSSParser()
 

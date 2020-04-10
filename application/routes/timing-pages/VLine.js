@@ -46,13 +46,17 @@ router.get('/:stationName', async (req, res) => {
       }
     }
 
-    let stopGTFSID = departure.trip.stopTimings.filter(stop => stop.stopName === station.stopName)[0].stopGTFSID
+    let stationName = station.stopName
+    if (stationName === 'Southern Cross Railway Station' && departure.isTrainReplacement)
+      stationName = 'Southern Cross Coach Terminal/Spencer Street'
 
-    departure.tripURL = `/${departure.isCoachService ? 'regional-coach' : 'vline'}/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
+    let stopGTFSID = departure.trip.stopTimings.find(stop => stop.stopName === stationName)
+
+    departure.tripURL = `/${departure.isTrainReplacement ? 'regional-coach' : 'vline'}/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
       + `${utils.getYYYYMMDDNow()}/#stop-${stopGTFSID}`
 
-    if (departure.isCoachService) {
+    if (departure.isTrainReplacement) {
       departure.trip.origin = departure.trip.origin.replace(' Railway Station', '')
       departure.trip.destination = departure.trip.destination.replace(' Railway Station', '')
     }

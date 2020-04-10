@@ -6,7 +6,7 @@ const DatabaseConnection = require('../../../database/DatabaseConnection')
 const config = require('../../../config.json')
 const utils = require('../../../utils')
 
-const termini = require('./termini-to-lines')
+const termini = require('../../../additional-data/termini-to-lines')
 const routeGTFSIDs = require('./route-gtfs-ids')
 
 const {tableToColumnOrder, expandName} = require('./timetable-utils')

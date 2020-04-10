@@ -3,15 +3,14 @@ const async = require('async')
 const urls = require('../../urls.json')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 3 })
-const healthCheck = require('../health-check')
+const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1 })
 const moment = require('moment')
 const cheerio = require('cheerio')
 const departureUtils = require('../utils/get-train-timetables')
-const getCoachReplacements = require('./get-coach-replacement-trips')
-const terminiToLines = require('../../load-gtfs/vline-trains/termini-to-lines')
 const getStoppingPattern = require('../utils/get-vline-stopping-pattern')
 const guessPlatform = require('./guess-scheduled-platforms')
+const termini = require('../../additional-data/termini-to-lines')
+const getCoachDepartures = require('../regional-coach/get-departures')
 
 async function getStationFromVNETName(vnetStationName, db) {
   const station = await db.getCollection('stops').findDocument({
@@ -26,33 +25,38 @@ async function getStationFromVNETName(vnetStationName, db) {
   return station
 }
 
-async function getVNETDepartures(station, direction, db) {
-  const vlinePlatform = station.bays.filter(bay => bay.mode === 'regional train')[0]
+async function getVNETDepartures(vlinePlatform, direction, db) {
   const {vnetStationName} = vlinePlatform
 
   const body = (await utils.request(urls.vlinePlatformDepartures.format(vnetStationName, direction))).replace(/a:/g, '')
   const $ = cheerio.load(body)
   const allServices = Array.from($('PlatformService'))
 
-  let mappedServices = []
+  let mappedDepartures = []
 
   await async.forEach(allServices, async service => {
     let estimatedDepartureTime
 
-    if (!isNaN(new Date($('ActualArrivalTime', service).text()))) {
-      estimatedDepartureTime = moment.tz($('ActualArrivalTime', service).text(), 'Australia/Melbourne')
+    function $$(q) {
+      return $(q, service)
+    }
+
+    if (!isNaN(new Date($$('ActualArrivalTime').text()))) {
+      estimatedDepartureTime = moment.tz($$('ActualArrivalTime').text(), 'Australia/Melbourne')
     } // yes arrival cos vnet
 
-    let platform = $('Platform', service).text()
-    if (platform.length > 4)
-      platform = null
-    const originDepartureTime = moment.tz($('ScheduledDepartureTime', service).text(), 'Australia/Melbourne')
-    const destinationArrivalTime = moment.tz($('ScheduledDestinationArrivalTime', service).text(), 'Australia/Melbourne')
-    const runID = $('ServiceIdentifier', service).text()
-    const originVNETName = $('Origin', service).text()
-    const destinationVNETName = $('Destination', service).text()
-    let vehicle = $('Consist', service).text()
-    const vehicleConsist = $('ConsistVehicles', service).text()
+    let platform = $$('Platform').text()
+    let originDepartureTime = moment.tz($$('ScheduledDepartureTime').text(), 'Australia/Melbourne')
+    let destinationArrivalTime = moment.tz($$('ScheduledDestinationArrivalTime').text(), 'Australia/Melbourne')
+    let runID = $$('ServiceIdentifier').text()
+    let originVNETName = $$('Origin').text()
+    let destinationVNETName = $$('Destination').text()
+
+    let accessibleTrain = $$('IsAccessibleAvailable') === 'true'
+    let barAvailable = $$('IsBuffetAvailable') === 'true'
+
+    let vehicle = $$('Consist').text()
+    const vehicleConsist = $$('ConsistVehicles').text()
     let fullVehicle = vehicle
 
     if (vehicle.startsWith('N'))
@@ -62,219 +66,330 @@ async function getVNETDepartures(station, direction, db) {
 
     fullVehicle = fullVehicle.replace(/ /g, '-')
 
-    if ($('Consist', service).attr('i:nil'))
+    if ($$('Consist').attr('i:nil'))
       fullVehicle = ''
 
-    let direction = $('Direction', service).text()
+    let direction = $$('Direction').text()
     if (direction === 'D') direction = 'Down'
     else direction = 'Up'
 
     const originStation = await getStationFromVNETName(originVNETName, db)
     const destinationStation = await getStationFromVNETName(destinationVNETName, db)
 
-    let originVLinePlatform = originStation.bays.filter(bay => bay.mode === 'regional train')[0]
-    let destinationVLinePlatform = destinationStation.bays.filter(bay => bay.mode === 'regional train')[0]
+    let originVLinePlatform = originStation.bays.find(bay => bay.mode === 'regional train')
+    let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train')
 
-    mappedServices.push({
-      runID, originVLinePlatform, destinationVLinePlatform,
+    mappedDepartures.push({
+      runID,
+      originVNETName: originVLinePlatform.vnetStationName,
+      destinationVNETName: destinationVLinePlatform.vnetStationName,
+      origin: originVLinePlatform.fullStopName,
+      destination: destinationVLinePlatform.fullStopName,
       originDepartureTime, destinationArrivalTime,
       platform, estimatedDepartureTime,
       direction,
-      vehicle: fullVehicle
+      vehicle: fullVehicle,
+      barAvailable,
+      accessibleTrain
     })
   })
 
-  return mappedServices
+  return mappedDepartures
 }
 
-async function getDeparturesFromVNET(station, db) {
-  const now = utils.now()
+async function getDeparturesFromVNET(vlinePlatform, db) {
+  let gtfsTimetables = db.getCollection('gtfs timetables')
+  let timetables = db.getCollection('timetables')
+  let liveTimetables = db.getCollection('live timetables')
 
-  const gtfsTimetables = db.getCollection('gtfs timetables')
-  const timetables = db.getCollection('timetables')
-
-  const vnetDeparturesUp = await getVNETDepartures(station, 'U', db)
-  const vnetDeparturesDown = await getVNETDepartures(station, 'D', db)
-  const vnetDepartures = vnetDeparturesUp.concat(vnetDeparturesDown)
-  const vlinePlatform = station.bays.filter(bay => bay.mode === 'regional train')[0]
-  const minutesPastMidnight = utils.getPTMinutesPastMidnight(now)
-
-  let liveTimetablesLoaded = 0
-
+  let vnetDepartures = await getVNETDepartures(vlinePlatform, 'D', db)
   let journeyCache = {}
+  let stopGTFSID = vlinePlatform.stopGTFSID
 
-  let mergedDepartures = (await async.map(vnetDepartures, async vnetDeparture => {
-    let vnetTrip = await departureUtils.getStaticDeparture(vnetDeparture.runID, db)
+  let departures = await async.map(vnetDepartures, async departure => {
+    let dayOfWeek = utils.getDayName(departure.originDepartureTime)
+    let operationDay = departure.originDepartureTime.format('YYYYMMDD')
 
-    let departureHour = vnetDeparture.originDepartureTime.get('hours')
-    if (departureHour < 3) departureHour += 24 // 3am PT day
+    // let nspTrip = await timetables.findDocument({
+    //   operationDays: dayOfWeek,
+    //   runID: departure.runID,
+    //   mode: 'regional train'
+    // })
 
     let trip = await db.getCollection('live timetables').findDocument({
-      operationDays: utils.getYYYYMMDDNow(),
-      runID: vnetDeparture.runID,
+      operationDays: operationDay,
+      runID: departure.runID,
       mode: 'regional train'
     })
 
-    if (!trip)
+    if (!trip) {
       trip = await gtfsTimetables.findDocument({
-        origin: vnetDeparture.originVLinePlatform.fullStopName,
-        destination: vnetDeparture.destinationVLinePlatform.fullStopName,
-        departureTime: utils.formatPTHHMM(vnetDeparture.originDepartureTime),
-        destinationArrivalTime: utils.formatPTHHMM(vnetDeparture.destinationArrivalTime),
-        operationDays: utils.getYYYYMMDDNow(),
+        origin: departure.origin,
+        destination: departure.destination,
+        departureTime: utils.formatHHMM(departure.originDepartureTime),
+        operationDays: operationDay,
         mode: 'regional train'
       })
+    }
 
     if (!trip) {
-      if (vnetTrip) trip = vnetTrip
-      else {
-        let originVNETName = vnetDeparture.originVLinePlatform.vnetStationName
-        let destinationVNETName = vnetDeparture.destinationVLinePlatform.vnetStationName
-        trip = await getStoppingPattern(db, originVNETName, destinationVNETName,
-          vnetDeparture.originDepartureTime, vnetDeparture.runID, journeyCache)
-
-        trip.destination = trip.destination.slice(0, -16)
-        trip.origin = trip.origin.slice(0, -16)
-      }
-    } else {
-      trip.destination = trip.destination.slice(0, -16)
-      trip.origin = trip.origin.slice(0, -16)
+      console.log(departure)
+      // let originVNETName = departure.vnetStationName
+      // let destinationVNETName = departure.vnetStationName
+      // trip = await getStoppingPattern(db, originVNETName, destinationVNETName,
+      //   departure.originDepartureTime, departure.runID, journeyCache)
     }
 
-    // if (!trip) { // service disruption unaccounted for? like ptv not loading in changes into gtfs data :/
-    //   trip = vnetTrip
-    //   function transformDeparture() {
-    //     let destination = vnetDeparture.destinationVLinePlatform.fullStopName.slice(0, -16)
-    //     if (!vnetDeparture.estimatedDepartureTime) return null
-    //     return {
-    //       trip: {
-    //         shortRouteName: terminiToLines[destination.slice(0, -16)] || "?",
-    //         stopTimings: [],
-    //         destination,
-    //         isUncertain: true,
-    //         direction: vnetDeparture.direction
-    //       },
-    //       estimatedDepartureTime: vnetDeparture.estimatedDepartureTime,
-    //       platform: vnetDeparture.platform,
-    //       stopData: {},
-    //       scheduledDepartureTime: vnetDeparture.estimatedDepartureTime,
-    //       actualDepartureTime: vnetDeparture.estimatedDepartureTime,
-    //       departureTimeMinutes: utils.getPTMinutesPastMidnight(vnetDeparture.estimatedDepartureTime),
-    //       runID: vnetDeparture.runID,
-    //       unknownScheduledDepartureTime: true
-    //     }
-    //   }
-    //   if (!trip) return transformDeparture()
-    //
-    //   let tripStops = trip.stopTimings.map(stop => stop.stopName)
-    //
-    //   let startingIndex = tripStops.indexOf(vnetDeparture.originVLinePlatform.fullStopName)
-    //   let endingIndex = tripStops.indexOf(vnetDeparture.destinationVLinePlatform.fullStopName)
-    //   if (startingIndex == -1) return transformDeparture()
-    //   trip.stopTimings = trip.stopTimings.slice(startingIndex, endingIndex + 1)
-    //   trip.origin = trip.stopTimings[0].stopName
-    //   trip.destination = trip.stopTimings.slice(-1)[0].stopName
-    //   trip.departureTime = trip.stopTimings[0].departureTimeMinutes
-    //   trip.isUncertain = true
-    // }
+    const stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+    let platform = departure.platform
 
+    let originalServiceID = departure.originDepartureTime.format('HH:mm') + trip.destination
 
-    const stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === vlinePlatform.stopGTFSID)[0]
+    if (trip.destination !== departure.destination) {
+      let stoppingAt = trip.stopTimings.map(e => e.stopName)
+      let destinationIndex = stoppingAt.indexOf(trip.destination)
+      trip.stopTimings = trip.stopTimings.slice(0, destinationIndex + 1)
+      let lastStop = trip.stopTimings[destinationIndex]
 
-    let scheduledDepartureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, now)
-
-    let platform = vnetDeparture.platform
-    // if (!platform && vnetTrip) {
-    //   let vnetStopData = vnetTrip.stopTimings.filter(stop => stop.stopGTFSID === vlinePlatform.stopGTFSID)[0]
-    //   platform = vnetStopData.platform || '?'
-    // }
+      trip.destination = departure.destination
+      trip.destinationArrivalTime = lastStop.arrivalTime
+      lastStop.departureTime = null
+      lastStop.departureTimeMinutes = null
+    }
 
     return {
-      trip, estimatedDepartureTime: vnetDeparture.estimatedDepartureTime, platform,
-      stopData, scheduledDepartureTime,
-      departureTimeMinutes: stopData.departureTimeMinutes, runID: vnetDeparture.runID,
-      actualDepartureTime: vnetDeparture.estimatedDepartureTime || scheduledDepartureTime, vnetTrip,
-      vehicle: vnetDeparture.vehicle,
-      destination: trip.destination
+      originalServiceID,
+      trip,
+      platform,
+      scheduledDepartureTime: departure.originDepartureTime,
+      runID: departure.runID,
+      vehicle: departure.vehicle,
+      destination: trip.destination.slice(0, -16),
+      flags: {
+        barAvailable: departure.barAvailable,
+        accessibleTrain: departure.accessibleTrain
+      }
     }
-  })).filter(Boolean)
+  })
 
-  return mergedDepartures
+  return departures
 }
 
-function filterDepartures(departures) {
+function getShortRouteName(trip) {
+  let origin = trip.origin.slice(0, -16)
+  let destination = trip.destination.slice(0, -16)
+  let originDest = `${origin}-${destination}`
+
+  return termini[originDest] || termini[origin] || termini[destination]
+}
+
+async function processPTVDepartures(departures, runs, routes, vlinePlatform, db) {
+  let {stopGTFSID, fullStopName} = vlinePlatform
+
+  let stationName = fullStopName.slice(0, -16)
+
+  let gtfsTimetables = db.getCollection('gtfs timetables')
+  let trainDepartures = departures.filter(departure => departure.flags.includes('VTR'))
+
+  let mappedDepartures = []
   let now = utils.now()
+  let runIDsSeen = []
 
-  return departures.sort((a, b) => {
-    return a.actualDepartureTime - b.actualDepartureTime
-  }).filter(departure => {
-    if (!departure.actualDepartureTime) console.log(departure)
-    return departure.actualDepartureTime.diff(now, 'seconds') > -30
+  await async.forEach(trainDepartures, async trainDeparture => {
+    let runID = trainDeparture.run_id
+    if (runIDsSeen.includes(runID)) return
+    runIDsSeen.push(runID)
+
+    let run = runs[runID]
+    let route = routes[trainDeparture.route_id]
+
+    let departureTime = moment.tz(trainDeparture.scheduled_departure_utc, 'Australia/Melbourne')
+    let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime) % 1440
+
+    if (departureTime.diff(now, 'minutes') > 180) return
+
+    let routeGTFSID = route.route_gtfs_id
+    let destination = utils.adjustStopname(run.destination_name)
+
+    for (let i = 0; i <= 1; i++) {
+      let tripDay = now.clone().add(-i, 'days')
+      let query = {
+        routeGTFSID: routeGTFSID,
+        operationDays: tripDay.format('YYYYMMDD'),
+        mode: 'regional train',
+        stopTimings: {
+          $elemMatch: {
+            stopGTFSID,
+            departureTimeMinutes: scheduledDepartureTimeMinutes + 1440 * i
+          }
+        },
+        destination
+      }
+
+      trip = await gtfsTimetables.findDocument(query)
+      if (trip) break
+    }
+
+    if (!trip) return // Same deal as coach - direction stuff creating non existent trips
+
+    let shortRouteName = getShortRouteName(trip)
+
+    let serviceID = departureTime.format('HH:mm') + destination
+    let dayOfWeek = departureTime.day()
+    let isWeekday = dayOfWeek !== 0 && dayOfWeek !== 6
+
+    let platform = guessPlatform(stationName, scheduledDepartureTimeMinutes,
+      shortRouteName, trip.direction)
+
+    if (platform) platform += '?'
+    else platform = '?'
+console.log(trainDeparture.flags)
+    let departure = {
+      shortRouteName,
+      serviceID,
+      trip,
+      platform,
+      scheduledDepartureTime: departureTime,
+      runID: null,
+      vehicle: null,
+      destination: trip.destination.slice(0, -16),
+      flags: findFlagMap(trainDeparture.flags)
+    }
+
+    mappedDepartures.push(departure)
   })
+
+  return mappedDepartures
 }
 
-async function getServiceFlags(station) {
-  let flags = []
-  const vlinePlatform = station.bays.filter(bay => bay.mode === 'regional train')[0]
-
-  const {departures, runs} = await ptvAPI(`/v3/departures/route_type/3/stop/${vlinePlatform.stopGTFSID}?gtfs=true&max_results=5&expand=run`)
-  departures.forEach(departure => {
-    let departureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
-    let id = departureTime.toISOString() + runs[departure.run_id].destination_name.replace(' Railway Station', '')
-    flags[id] = {}
-
-    if (departure.flags.includes('RER')) {
-      flags[id].reservationsOnly = true
-    }
-    if (departure.flags.includes('FCA')) {
-      flags[id].firstClassAvailable = true
-    }
-    if (departure.flags.includes('CAA')) {
-      flags[id].cateringAvailable = true
-    }
-  })
-
-  return flags
+function findFlagMap(flags) {
+  let map = {}
+  if (flags.includes('RER')) {
+    map.reservationsOnly = true
+  }
+  if (flags.includes('FCA')) {
+    map.firstClassAvailable = true
+  }
+  if (flags.includes('CAA')) {
+    map.barAvailable = true
+  }
+  return map
 }
 
 async function getDepartures(station, db) {
   if (departuresCache.get(station.stopName + 'V')) {
-    return filterDepartures(departuresCache.get(station.stopName + 'V'))
+    return departuresCache.get(station.stopName + 'V')
   }
 
-  let scheduledDepartures = (await departureUtils.getScheduledDepartures(station, db, 'regional train', 180))
-  scheduledDepartures = scheduledDepartures.map(departure => {
-    let dayOfWeek = departure.scheduledDepartureTime.day()
-    let isWeekday = dayOfWeek === 0 || dayOfWeek === 6
-    let platform = guessPlatform(station.stopName.slice(0, -16), departure.scheduledDepartureTimeMinutes,
-      departure.trip.shortRouteName, departure.trip.direction, departure.destination)
+  let flagMap = {}
+  let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train')
+  let departures, runs, routes
+  try {
+    body = await ptvAPI(`/v3/departures/route_type/3/stop/${vlinePlatform.stopGTFSID}?gtfs=true&max_results=5&expand=run&expand=route`)
+    departures = body.departures, runs = body.runs, routes = body.routes
+    departures.forEach(departure => {
+      let run = runs[departure.run_id]
+      let departureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
+      let destination = run.destination_name
+      let {flags} = departure
 
-    if (departure.platform)
-      departure.platform = platform + '?'
-    else departure.platform = '?'
-    return departure
-  })
-  let coachTrips = await getCoachReplacements(station, db)
+      let serviceID = departureTime.format('HH:mm') + destination
+      flagMap[serviceID] = findFlagMap(departure.flags)
+    })
+  } catch (e) {
+  }
+
+  let coachReplacements
+  let coachStop = station
+  if (station.stopName === 'Southern Cross Railway Station') {
+    coachStop = await db.getCollection('stops').findDocument({
+      stopName: 'Southern Cross Coach Terminal/Spencer Street'
+    })
+  }
 
   try {
-    if (!station.stopName.includes('Southern Cross')) throw new Error('Skip')
-    let departures = await getDeparturesFromVNET(station, db)
-    departures = departures.concat(coachTrips)
+    coachReplacements = (await getCoachDepartures(coachStop, db))
+      .filter(coach => coach.isTrainReplacement)
+      .map(coach => {
+        coach.shortRouteName = getShortRouteName(coach.trip)
+        coach.destination = coach.trip.destination.slice(0, -16)
 
-    let flags = await getServiceFlags(station)
-
-    departures = departures.map(departure => {
-      let id = departure.scheduledDepartureTime.toISOString() + departure.trip.destination
-
-      departure.flags = flags[id] || {}
-      return departure
-    }).concat(scheduledDepartures.filter(departure => departure.cancelled))
-
-    departuresCache.put(station.stopName + 'V', departures)
-    return filterDepartures(departures)
+        return coach
+      })
   } catch (e) {
-    return scheduledDepartures.concat(coachTrips)
   }
+
+  if (station.stopName === 'Southern Cross Railway Station') {
+    try {
+      let vnetDepartures = await getDeparturesFromVNET(vlinePlatform, db)
+      vnetDepartures = vnetDepartures.map(departure => {
+        let serviceID = departure.originalServiceID
+        let flags = flagMap[serviceID]
+        if (!flags) console.log(flagMap, serviceID)
+
+        if (flags.reservationsOnly) departure.flags.reservationsOnly = true
+        if (flags.firstClassAvailable) departure.flags.firstClassAvailable = true
+        if (flags.barAvailable && !departure.flags.barAvailable) departure.flags.barAvailable = null
+
+        departure.shortRouteName = getShortRouteName(departure.trip)
+
+        return departure
+      })
+
+      let allDepartures = vnetDepartures.concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+      departuresCache.put(station.stopName + 'V', allDepartures)
+
+      return allDepartures
+    } catch (e) {
+    }
+  }
+
+  if (departures.length) {
+    let scheduledTrains = await processPTVDepartures(departures, runs, routes, vlinePlatform, db)
+
+    let allDepartures = scheduledTrains.concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+    departuresCache.put(station.stopName + 'V', allDepartures)
+
+    return allDepartures
+  } else {
+
+  }
+
+  // return departure
+  //
+  // let scheduledDepartures = (await departureUtils.getScheduledDepartures(station, db, 'regional train', 180))
+  // scheduledDepartures = scheduledDepartures.map(departure => {
+  //   let dayOfWeek = departure.scheduledDepartureTime.day()
+  //   let isWeekday = dayOfWeek === 0 || dayOfWeek === 6
+  //   let platform = guessPlatform(station.stopName.slice(0, -16), departure.scheduledDepartureTimeMinutes,
+  //     departure.trip.shortRouteName, departure.trip.direction, departure.destination)
+  //
+  //   if (departure.platform)
+  //     departure.platform = platform + '?'
+  //   else departure.platform = '?'
+  //   return departure
+  // })
+  // let coachTrips = await getCoachReplacements(station, db)
+  //
+  // try {
+  //   if (!station.stopName.includes('Southern Cross')) throw new Error('Skip')
+  //   let departures = await getDeparturesFromVNET(station, db)
+  //   departures = departures.concat(coachTrips)
+  //
+  //   let flags = await getServiceFlags(station)
+  //
+  //   departures = departures.map(departure => {
+  //     let id = departure.scheduledDepartureTime.toISOString() + departure.trip.destination
+  //
+  //     departure.flags = flags[id] || {}
+  //     return departure
+  //   }).concat(scheduledDepartures.filter(departure => departure.cancelled))
+  //
+  //   departuresCache.put(station.stopName + 'V', departures)
+  //   return filterDepartures(departures)
+  // } catch (e) {
+  //   return scheduledDepartures.concat(coachTrips)
+  // }
 }
 
 module.exports = getDepartures

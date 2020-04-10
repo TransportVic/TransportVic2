@@ -201,8 +201,12 @@ module.exports = class MainServer {
     }
 
     Object.keys(routers).forEach(routerName => {
-      const router = require(`../application/routes/${routerName}`)
-      app.use(routers[routerName], router)
+      try {
+        const router = require(`../application/routes/${routerName}`)
+        app.use(routers[routerName], router)
+      } catch (e) {
+        console.err('Error registering', routerName, e)
+      }
     })
 
     app.get('/sw.js', (req, res) => {
