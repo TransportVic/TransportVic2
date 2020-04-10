@@ -312,8 +312,10 @@ async function getDepartures(station, db) {
       .filter(coach => coach.isTrainReplacement)
       .map(coach => {
         coach.shortRouteName = getShortRouteName(coach.trip)
-        coach.destination = coach.trip.destination.slice(0, -16)
 
+        if (coach.trip.destination !== 'Southern Cross Coach Terminal/Spencer Street')
+          coach.destination = coach.trip.destination.slice(0, -16)
+        else coach.destination = 'Southern Cross'
         return coach
       })
   } catch (e) {

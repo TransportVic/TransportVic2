@@ -32,6 +32,7 @@ function getAllStopGTFSIDs(stop) {
 
 async function getDeparturesFromPTV(stop, db) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
+  let liveTimetables = db.getCollection('live timetables')
   let timetables = db.getCollection('timetables')
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional coach', true)
   let coachGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional train', true)
@@ -103,6 +104,27 @@ async function getDeparturesFromPTV(stop, db) {
 
           if (trip) {
             console.log(`Mapped train trip as coach: ${trip.departureTime} to ${trip.destination}`)
+
+            trip.mode = 'regional coach'
+            trip.routeGTFSID = trip.routeGTFSID.replace('1-', '5-')
+
+            if (trip.origin === 'Southern Cross Railway Station') {
+              trip.origin = 'Southern Cross Coach Terminal/Spencer Street'
+              trip.stopTimings[0].stopGTFSID = 20836
+              trip.stopTimings[0].stopName = trip.origin
+            }
+
+            if (trip.destination === 'Southern Cross Railway Station') {
+              let lastStop = trip.stopTimings.slice(-1)[0]
+              trip.destination = 'Southern Cross Coach Terminal/Spencer Street'
+              lastStop.stopGTFSID = 20836
+              lastStop.stopName = trip.destination
+            }
+
+            delete trip._id
+            await liveTimetables.createDocument(trip)
+
+
             isTrainReplacement = true
             break
           }
@@ -142,7 +164,6 @@ async function getDepartures(stop, db) {
   try {
     departures = await getDeparturesFromPTV(stop, db)
   } catch (e) {
-    console.log(e)
     departures = await getScheduledDepartures(stop, db, false)
     departures = departures.map(departure => {
       departure.isTrainReplacement = null
@@ -161,6 +182,9 @@ async function getDepartures(stop, db) {
       let {origin, destination, departureTime, destinationArrivalTime} = departure.trip
       if (origin === 'Southern Cross Coach Terminal/Spencer Street') {
         origin = 'Southern Cross Railway Station'
+      }
+      if (destination === 'Southern Cross Coach Terminal/Spencer Street') {
+        destination = 'Southern Cross Railway Station'
       }
 
       let hasNSPDeparture = (await timetables.countDocuments({

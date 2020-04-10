@@ -20,9 +20,9 @@ router.get('/:stationName', async (req, res) => {
   }
 
   let departures = await getDepartures(station, res.db)
-  // console.log(departures)
+
   departures = departures.map(departure => {
-    const timeDifference = moment.utc((departure.estimatedDepartureTime || departure.scheduledDepartureTime).diff(utils.now()))
+    const timeDifference = moment.utc(departure.scheduledDepartureTime.diff(utils.now()))
 
     if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
     else {
@@ -32,19 +32,6 @@ router.get('/:stationName', async (req, res) => {
     }
 
     departure.headwayDevianceClass = 'unknown'
-    if (departure.estimatedDepartureTime) {
-      departure.headwayDeviance = departure.scheduledDepartureTime.diff(departure.estimatedDepartureTime, 'minutes')
-
-      // trains cannot be early
-      let lateThreshold = 6
-      if (lineTypes.long.includes(departure.trip.line))
-        lateThreshold = 11
-      if (departure.headwayDeviance <= -lateThreshold) { // <= 6min counts as late
-        departure.headwayDevianceClass = 'late'
-      } else {
-        departure.headwayDevianceClass = 'on-time'
-      }
-    }
 
     let stationName = station.stopName
     if (stationName === 'Southern Cross Railway Station' && departure.isTrainReplacement)
@@ -52,14 +39,9 @@ router.get('/:stationName', async (req, res) => {
 
     let stopGTFSID = departure.trip.stopTimings.find(stop => stop.stopName === stationName)
 
-    departure.tripURL = `/${departure.isTrainReplacement ? 'regional-coach' : 'vline'}/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
+    departure.tripURL = `/${departure.isTrainReplacement ? 'coach' : 'vline'}/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
       + `${utils.getYYYYMMDDNow()}/#stop-${stopGTFSID}`
-
-    if (departure.isTrainReplacement) {
-      departure.trip.origin = departure.trip.origin.replace(' Railway Station', '')
-      departure.trip.destination = departure.trip.destination.replace(' Railway Station', '')
-    }
 
     return departure
   })
