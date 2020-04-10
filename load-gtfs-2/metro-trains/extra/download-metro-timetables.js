@@ -2,7 +2,7 @@ const async = require('async')
 const fs = require('fs')
 const path = require('path')
 const utils = require('../../../utils')
-const updateStats = require('../utils/stats')
+const updateStats = require('../../utils/stats')
 
 const lineIDs = {
   'alamein': '82',
