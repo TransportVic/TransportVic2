@@ -6,6 +6,18 @@ const loopDirections = require('../../additional-data/loop-direction')
 
 module.exports = async function(routes, mode, routeData, shapeJSON, operator, name) {
   let routeOperatorsSeen = []
+  let rawRouteNames = {}
+
+  routeData.forEach(line => {
+    let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(line[0])
+    let rawRouteName = line[3]
+    if (rawRouteNames[routeGTFSID]) {
+      if (rawRouteNames[routeGTFSID].length < rawRouteName.length)
+        rawRouteNames[routeGTFSID] = rawRouteName
+    } else {
+      rawRouteNames[routeGTFSID] = rawRouteName
+    }
+  })
 
   await async.forEachSeries(shapeJSON, async shapeFile => {
     let {shapeID, routeGTFSID} = shapeFile
@@ -15,7 +27,10 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
     })
 
     let gtfsRouteData = routeData.find(line => gtfsUtils.simplifyRouteGTFSID(line[0]) === routeGTFSID)
-    let routeName = name ? name(gtfsRouteData[2], gtfsRouteData[3], routeGTFSID) : gtfsRouteData[3]
+
+    let rawRouteName = rawRouteNames[routeGTFSID]
+
+    let routeName = name ? name(gtfsRouteData[2], rawRouteName, routeGTFSID) : rawRouteName
 
     if (matchingRoute) {
       let shapeFingerprint = `${shapeFile.length}-${shapeFile.path[0].join(',')}`

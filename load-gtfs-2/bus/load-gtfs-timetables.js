@@ -8,14 +8,12 @@ const utils = require('../../utils')
 const datamartModes = require('../datamart-modes')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-const updateStats = require('../../load-gtfs/utils/gtfs-stats')
+const updateStats = require('../utils/stats')
 
 let gtfsID = process.argv[2]
 let datamartMode = datamartModes[gtfsID]
 
 if (gtfsID === '7') datamartMode = 'telebus'
-
-let start = new Date()
 
 database.connect({
   poolSize: 100
@@ -48,8 +46,8 @@ database.connect({
     console.log(`GTFS Timetables: Completed iteration ${index + 1} of ${tripFiles.length}, loaded ${trips.length} trips`)
   })
 
-  // await updateStats('mtm-stations', stopCount, new Date() - start)
+  await updateStats(datamartMode + '-timetables', tripCount)
   console.log(`Completed loading in ${tripCount} ${datamartMode} trips`)
-  console.log(`Took: ${new Date() - start}ms`)
+  console.log(`Took: ${utils.uptime()}ms`)
   process.exit()
 })

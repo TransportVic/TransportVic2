@@ -9,11 +9,9 @@ const datamartStops = require('../../spatial-datamart/metro-tram-stops.json').fe
 let stopsLookup = createStopsLookup(datamartStops)
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-const updateStats = require('../../load-gtfs/utils/gtfs-stats')
+const updateStats = require('../utils/stats')
 
 let gtfsID = 3
-
-let start = new Date()
 
 database.connect({
   poolSize: 100
@@ -31,7 +29,7 @@ database.connect({
     stopCount += data.length
   })
 
-  // await updateStats('mtm-stations', stopCount, new Date() - start)
+  await updateStats('tram-stops', stopCount)
   console.log('Completed loading in ' + stopCount + ' tram stops')
   process.exit()
 })

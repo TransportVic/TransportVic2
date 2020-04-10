@@ -6,11 +6,10 @@ const async = require('async')
 const tramtrackerStops = require('./tramtracker-stops')
 const levenshtein = require('fast-levenshtein').get
 
-// const updateStats = require('../../../utils/gtfs-stats')
+const updateStats = require('../../utils/stats')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 let stops
-let start = new Date()
 
 async function matchTramStop(tramtrackerStopName, stopNumber, services, suburb) {
   let stopsMatched = await stops.findDocuments({
@@ -113,7 +112,7 @@ database.connect({}, async err => {
     })
   })
 
-  // await updateStats('tramtracker-ids', filteredTramtrackerStops.length, new Date() - start)
+  await updateStats('tramtracker-ids', filteredTramtrackerStops.length)
   console.log('Completed loading in ' + filteredTramtrackerStops.length + ' tramtracker IDs')
   process.exit()
 })

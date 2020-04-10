@@ -4,9 +4,12 @@ const BufferedLineReader = require('./BufferedLineReader')
 const gtfsUtils = require('../../gtfs-utils')
 const utils = require('../../utils')
 const gtfsModes = require('../gtfs-modes.json')
+const datamartModes = require('../datamart-modes.json')
+const updateStats = require('../utils/stats')
 let gtfsID = process.argv[2]
 
 let gtfsMode = gtfsModes[gtfsID]
+let datamartMode = gtfsID === '7' ? 'telebus' : datamartModes[gtfsID]
 
 let basePath = path.join(__dirname, '../../gtfs', gtfsID)
 let splicedPath = path.join(__dirname, '../spliced-gtfs-stuff', gtfsID)
@@ -275,6 +278,8 @@ async function main() {
   console.log(`Completed splitting trip timings for GTFS ID ${gtfsID}: ${gtfsMode}`)
   await splitTrips()
   console.log(`Completed splitting trips for GTFS ID ${gtfsID}: ${gtfsMode}`)
+
+  updateStats('divide-' + datamartMode, gtfsID)
 }
 
 main()

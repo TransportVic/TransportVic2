@@ -5,6 +5,8 @@ const DatabaseConnection = require('../../../database/DatabaseConnection')
 const config = require('../../../config.json')
 const utils = require('../../../utils')
 
+const updateStats = require('../../utils/stats')
+
 let stops, timetables
 let stationCache = {}
 
@@ -182,6 +184,7 @@ database.connect({
     })
   })
 
+  updateStats('mtm-static-timetables', totalCount)
   console.log('Completed loading in ' + totalCount + ' MTM WTT trips')
   process.exit()
 })

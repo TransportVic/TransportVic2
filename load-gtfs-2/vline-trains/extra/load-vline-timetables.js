@@ -10,6 +10,7 @@ const termini = require('./termini-to-lines')
 const routeGTFSIDs = require('./route-gtfs-ids')
 
 const {tableToColumnOrder, expandName} = require('./timetable-utils')
+const updateStats = require('../../utils/stats')
 
 let stops, timetables
 
@@ -269,6 +270,7 @@ database.connect({
     insertOne: trip
   })))
 
+  updateStats('vline-static-timetables', trips.length)
   console.log('Completed loading in ' + trips.length + ' V/Line WTT passenger trips')
   process.exit()
 })

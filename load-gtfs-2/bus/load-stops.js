@@ -8,7 +8,7 @@ const { createStopsLookup } = require('../utils/datamart-utils')
 const datamartModes = require('../datamart-modes')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-const updateStats = require('../../load-gtfs/utils/gtfs-stats')
+const updateStats = require('../utils/stats')
 
 let gtfsID = process.argv[2]
 let datamartMode = datamartModes[gtfsID]
@@ -17,8 +17,6 @@ const datamartStops = require(`../../spatial-datamart/${datamartMode}-stops.json
 let stopsLookup = createStopsLookup(datamartStops)
 
 if (gtfsID === '7') datamartMode = 'telebus'
-
-let start = new Date()
 
 database.connect({
   poolSize: 100
@@ -36,7 +34,7 @@ database.connect({
     stopCount += data.length
   })
 
-  // await updateStats('mtm-stations', stopCount, new Date() - start)
+  await updateStats(datamartMode + '-stops', stopCount)
   console.log(`Completed loading in ${stopCount} ${datamartMode} stops`)
   process.exit()
 })

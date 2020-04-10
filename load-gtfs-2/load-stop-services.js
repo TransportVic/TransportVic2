@@ -1,7 +1,8 @@
 const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config.json')
 const async = require('async')
-// const updateStats = require('./utils/gtfs-stats')
+
+const updateStats = require('./utils/stats')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let gtfsTimetables = null
@@ -79,8 +80,7 @@ database.connect({}, async err => {
     }
   })
 
-  // await updateStats('stop-services', stopIDs.length, new Date() - start)
-
+  await updateStats('stop-services', stopIDs.length)
   console.log('Completed loading in services for ' + stopIDs.length + ' stops and ' + bayCount + ' bays')
   process.exit()
 })

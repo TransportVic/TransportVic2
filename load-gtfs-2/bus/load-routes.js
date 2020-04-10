@@ -12,7 +12,7 @@ const ptvAPI = require('../../ptv-api')
 const loopDirections = require('../../additional-data/loop-direction')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-const updateStats = require('../../load-gtfs/utils/gtfs-stats')
+const updateStats = require('../utils/stats')
 
 let gtfsID = process.argv[2]
 let datamartMode = datamartModes[gtfsID]
@@ -21,8 +21,6 @@ const datamartRoutes = require(`../../spatial-datamart/${datamartMode}-route.jso
 let serviceLookup = createServiceLookup(datamartRoutes)
 
 if (gtfsID === '7') datamartMode = 'telebus'
-
-let start = new Date()
 
 database.connect({
   poolSize: 100
@@ -74,7 +72,7 @@ database.connect({
     })
   })
 
-  // await updateStats('mtm-stations', stopCount, new Date() - start)
+  await updateStats(datamartMode + '-routes', routeData.length)
   console.log(`Completed loading in ${routeData.length} ${datamartMode} bus routes`)
   process.exit()
 })

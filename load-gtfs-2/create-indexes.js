@@ -1,6 +1,8 @@
 const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config.json')
 
+const updateStats = require('./utils/stats')
+
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 database.connect({
@@ -138,6 +140,6 @@ database.connect({
 
   console.log('Created static timetable indexes')
 
-
+  updateStats('create-indexes', 23)
   process.exit()
 })

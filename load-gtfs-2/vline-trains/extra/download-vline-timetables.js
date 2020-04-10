@@ -5,6 +5,8 @@ const fs = require('fs')
 const https = require('https')
 const path = require('path')
 
+const updateStats = require('../../utils/stats')
+
 let baseURL = 'https://corporate.vline.com.au'
 
 function wait500() {
@@ -23,7 +25,7 @@ async function main() {
 
   await async.forEachSeries(links, async link => {
     if (link[1].includes('Central')) return
-    
+
     let file = fs.createWriteStream(path.join(__dirname, 'timetables', link[1] + '.pdf'))
     let start = new Date()
     await new Promise(r => {
@@ -37,6 +39,7 @@ async function main() {
     await wait500()
   })
 
+  updateStats('download-vline-timetables', links.length)
   console.log('Completed downloading ' + links.length + ' PDF timetables from V/Line')
 }
 

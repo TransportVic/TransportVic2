@@ -2,6 +2,7 @@ const async = require('async')
 const fs = require('fs')
 const path = require('path')
 const utils = require('../../../utils')
+const updateStats = require('../utils/stats')
 
 const lineIDs = {
   'alamein': '82',
@@ -33,6 +34,8 @@ async function main () {
 
     await new Promise(resolve => fs.writeFile(filePath, body, resolve))
   })
+
+  updateStats('download-mtm-timetables', Object.keys(lineIDs).length)
 }
 
 main()

@@ -7,11 +7,9 @@ const loadRoutes = require('../utils/load-routes')
 const utils = require('../../utils')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-const updateStats = require('../../load-gtfs/utils/gtfs-stats')
+const updateStats = require('../utils/stats')
 
 let gtfsID = 1
-
-let start = new Date()
 
 database.connect({
   poolSize: 100
@@ -34,7 +32,7 @@ database.connect({
     }, null)
   })
 
-  // await updateStats('mtm-stations', stopCount, new Date() - start)
+  await updateStats('vline-routes', routeData.length)
   console.log('Completed loading in ' + routeData.length + ' V/Line rail routes')
   process.exit()
 })

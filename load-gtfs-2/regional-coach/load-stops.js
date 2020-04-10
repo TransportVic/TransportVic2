@@ -6,11 +6,9 @@ const config = require('../../config.json')
 const loadStops = require('../utils/load-stops')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-const updateStats = require('../../load-gtfs/utils/gtfs-stats')
+const updateStats = require('../utils/stats')
 
 let gtfsID = 5
-
-let start = new Date()
 
 database.connect({
   poolSize: 100
@@ -28,7 +26,7 @@ database.connect({
     stopCount += data.length
   })
 
-  // await updateStats('mtm-stations', stopCount, new Date() - start)
+  await updateStats('coach-stops', stopCount)
   console.log('Completed loading in ' + stopCount + ' regional coach stops')
   process.exit()
 })

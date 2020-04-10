@@ -8,7 +8,7 @@ let gtfsTimetables = null
 let routes = null
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central'].map(e => e + ' Railway Station')
 
-// const updateStats = require('../utils/gtfs-stats')
+const updateStats = require('../../utils/stats')
 
 let start = new Date()
 
@@ -153,7 +153,7 @@ database.connect({
   })
 
   await routes.bulkWrite(bulkOperations)
-  // await updateStats('mtm-route-stops', bulkOperations.length, new Date() - start)
+  await updateStats('mtm-route-stops', bulkOperations.length)
 
   console.log('Completed loading in ' + bulkOperations.length + ' route stops')
   process.exit()

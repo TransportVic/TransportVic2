@@ -8,9 +8,7 @@ const config = require('../../../config.json')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let stops = null
 
-// const updateStats = require('../../utils/gtfs-stats')
-
-let start = new Date()
+const updateStats = require('../../utils/stats')
 
 let data = fs.readFileSync(path.join(__dirname, 'all-vline-stations.xml')).toString().replace(/a:/g, '')
 const $ = cheerio.load(data)
@@ -57,7 +55,7 @@ database.connect({
     })
   })
 
-  // await updateStats('vnet-stop-names', stations.length, new Date() - start)
+  await updateStats('vnet-stop-names', stations.length)
   console.log('Completed updating ' + stations.length + ' V/Line stop VNET names')
   process.exit()
 })

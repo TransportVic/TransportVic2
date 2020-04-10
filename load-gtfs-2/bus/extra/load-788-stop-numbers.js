@@ -7,9 +7,7 @@ const config = require('../../../config.json')
 const utils = require('../../../utils')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-// const updateStats = require('../utils/gtfs-stats')
-
-let start = new Date()
+const updateStats = require('../../utils/stats')
 
 database.connect({
   poolSize: 100
@@ -64,7 +62,7 @@ database.connect({
 
   let stopCount = Object.keys(stopMapping).length
 
-  // await updateStats('788-stop-numbers', stopCount, new Date() - start)
+  await updateStats('788-stop-numbers', stopCount)
   console.log('Completed updating ' + stopCount + ' bus stop numbers for 788')
   process.exit()
 })
