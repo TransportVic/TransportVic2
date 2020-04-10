@@ -9,7 +9,6 @@ const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
 const busStopNameModifier = require('../../load-gtfs/metro-bus/bus-stop-name-modifier')
 const busBays = require('./bus-bays')
-const busMinderIntegrator = require('./busminder-integrator')
 
 let tripLoader = {}
 let tripCache = {}
@@ -155,12 +154,6 @@ async function getDeparturesFromPTV(stop, db) {
         }) || {}).fleetNumber
       }
 
-      let isBusMinderOverride = false
-      if (!busRego) {
-        busRego = await busMinderIntegrator(trip)
-        isBusMinderOverride = !!busRego
-      }
-
       let busRoute = await dbRoutes.findDocument({ routeGTFSID: route.route_gtfs_id }, { routePath: 0 })
       let operator = busRoute.operators.sort((a, b) => a.length - b.length)[0]
 
@@ -191,7 +184,6 @@ async function getDeparturesFromPTV(stop, db) {
         isNightBus,
         operator,
         codedOperator: utils.encodeName(operator.replace(/ \(.+/, '')),
-        isBusMinderOverride,
         loopDirection
       })
     })

@@ -43,12 +43,10 @@ append content
         a.departureInfo
           span.routeName=departure.trip.routeName
           span.towards Towards
-          span.destination=departure.trip.destination
-          if departure.coachCount > 1
-            span.info=`This service has ${departure.coachCount} coaches`
+          span.destination=departure.destination
+          if departure.isTrainReplacement
+            span.cancelled This is a train replacement coach
         div.timings
           a(href=departure.tripURL).timing.unknown
             span=departure.prettyTimeToArrival
             span=departure.scheduledDepartureTime.format('HH:mm')
-            if departure.busRego
-              span.rego=`#${departure.busRego}`

@@ -361,5 +361,6 @@ module.exports = {
       return punctuation + text.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
 
     return txt
-  })
+  }),
+  uptime: () => process.uptime() * 1000
 }

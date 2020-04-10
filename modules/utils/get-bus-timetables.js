@@ -77,7 +77,8 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
   }
 
   if (!trip) {
-    console.err('Failed to find timetable: ', JSON.stringify(query, null, 1))
+    if (mode !== 'regional coach')
+      console.err('Failed to find timetable: ', JSON.stringify(query, null, 1))
     return null
   }
   return trip
