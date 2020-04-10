@@ -105,7 +105,7 @@ async function readRouteShapes() {
       shapesLineReader.unreadLine()
       shapes.push({
         shapeID: currentShapeID,
-        routeGTFSID,
+        routeGTFSID: currentRouteGTFSID,
         path: currentShape,
         length: currentLength
       })
