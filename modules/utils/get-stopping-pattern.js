@@ -13,7 +13,7 @@ let modes = {
   'tram': 1
 }
 
-module.exports = async function (db, ptvRunID, mode, time, stopID) {
+module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip) {
   let stopsCollection = db.getCollection('stops')
   let liveTimetables = db.getCollection('live timetables')
 
@@ -67,7 +67,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID) {
     } = departure
 
     let ptvStop = stops[stop_id]
-    
+
     let stopBay = dbStops[stop_id].bays
       .filter(bay => {
         let stopName = utils.adjustRawStopName(nameModifier(utils.adjustStopname(ptvStop.stop_name.trim())))
@@ -126,6 +126,8 @@ module.exports = async function (db, ptvRunID, mode, time, stopID) {
   let timetable = {
     mode, routeName,
     routeGTFSID,
+    routeNumber: referenceTrip ? referenceTrip.routeNumber : null,
+    routeDetails: referenceTrip ? referenceTrip.routeDetails : null,
     runID: vehicleDescriptor.id,
     operationDays: [utils.getYYYYMMDDNow()],
     vehicle: vehicleDescriptor.description || vehicleDescriptor.id,

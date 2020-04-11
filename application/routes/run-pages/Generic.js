@@ -39,7 +39,9 @@ async function pickBestTrip(data, db) {
     operationDays: data.operationDays
   }
 
+  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
+
   let useLive = minutesToTripEnd > -5 && minutesToTripStart < 120
 
   if (liveTrip) {
@@ -47,15 +49,6 @@ async function pickBestTrip(data, db) {
       return liveTrip
     }
   }
-
-  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument({
-    mode: data.mode,
-    origin: originName,
-    departureTime: data.departureTime,
-    destination: destinationName,
-    destinationArrivalTime: data.destinationArrivalTime,
-    operationDays: data.operationDays
-  })
 
   if (!useLive) return gtfsTrip
 
@@ -94,7 +87,7 @@ async function pickBestTrip(data, db) {
     let ptvRunID = departure.run_id
     let departureTime = departure.scheduled_departure_utc
 
-    let trip = await getStoppingPattern(db, ptvRunID, data.mode, departureTime, departure.stop_id)
+    let trip = await getStoppingPattern(db, ptvRunID, data.mode, departureTime, departure.stop_id, gtfsTrip)
     return trip
   } catch (e) {
     return gtfsTrip

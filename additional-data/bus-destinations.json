@@ -8,7 +8,8 @@
     },
     "5": {
       "Windmill Street/Waratah Road": "Huntly",
-      "Boronia Road/Midland Highway": "Huntly"
+      "Boronia Road/Midland Highway": "Huntly",
+      "Rossmore Avenue/North Road": "Yallourn North"
     },
     "10": {
       "Coltman Plaza": "Alfredton"
@@ -443,6 +444,7 @@
     "Post Office/Calder Freeway": "Wycheproof",
     "McCallum Street/Campbell Street": "Swan Hill",
     "General Store/Mallee Highway": "Tooleybuc",
-    "Bridgekeepers Cottage/Murray Street": "Tooleybuc"
+    "Bridgekeepers Cottage/Murray Street": "Tooleybuc",
+    "Memorial Park/Grant Street": "Yarram"
   }
 }
