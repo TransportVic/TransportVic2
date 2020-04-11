@@ -19,6 +19,7 @@
     "mode": "string",
     "routeName": "string",
     "routeNumber": "string",
+    "routeDetails": "string:optional",
     "tripID": "string",
     "routeGTFSID": "string",
     "operationDays": ["Date"],

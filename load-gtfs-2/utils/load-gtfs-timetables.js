@@ -23,7 +23,7 @@ async function getStopData(stops, stopGTFSID, cache) {
   return bayData
 }
 
-module.exports = async function(collections, gtfsID, trips, tripTimings, calendarDays, calendarDates, direction) {
+module.exports = async function(collections, gtfsID, trips, tripTimings, calendarDays, calendarDates, direction, routeNumber, routeDetails) {
   let {gtfsTimetables, stops, routes} = collections
 
   let routeCache = {}, stopCache = {}
@@ -92,7 +92,8 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
     let tripData = {
       mode: actualMode,
       routeName: routeData.routeName,
-      routeNumber: routeData.routeNumber,
+      routeNumber: routeNumber ? routeNumber(routeGTFSID, trip.gtfsDirection, stopTimings, routeData.routeNumber) : routeData.routeNumber,
+      routeDetails: routeDetails ? routeDetails(routeGTFSID, trip.gtfsDirection) : null,
       tripID,
       routeGTFSID,
       operationDays,

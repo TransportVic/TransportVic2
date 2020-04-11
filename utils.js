@@ -92,8 +92,13 @@ module.exports = {
       name = name.replace(/\(([\w ]+) \((\d{4})\)\)$/, '($1: $2)')
     }
 
+    if (name.match(/\(([\w ]+) \(\w+ - ([A-Z]{2,4})\)\)$/)) {
+      // Suburbs in other states (Glenroy (Albury - NSW))
+      name = name.replace(/\(([\w ]+) \(\w+ - ([A-Z]{2,4})\)\)$/, '($1, $2)')
+    }
+
     if (name.match(/\(([\w ]+) \(([A-Z]{2,4})\)\)$/)) {
-      // Suburbs in other states
+      // Suburbs in other states (Albury (NSW))
       name = name.replace(/\(([\w ]+) \(([A-Z]{2,4})\)\)$/, '($1, $2)')
     }
 

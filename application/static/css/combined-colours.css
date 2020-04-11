@@ -472,7 +472,15 @@ div.departure:nth-child(even) .warragul-bus-lines {
   background-color: #3856b7;
 }
 
+.martin-s-albury {
+  background-color: #af9956;
+  color: #d7d7d7 !important;
+}
 
+div.departure:nth-child(even) .martin-s-albury {
+  background-color: #a08b4b;
+  color: #d7d7d7 !important;
+}
 
 
 

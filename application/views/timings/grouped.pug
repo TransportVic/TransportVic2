@@ -42,7 +42,7 @@ append content
       -
         let serviceDepartures = groupedDepartures[service]
         let destinations = Object.keys(serviceDepartures).sort((a, b) => a.length - b.length)
-        let hasNumber = service !== ''
+        let hasNumber = !!service
       for destination in destinations.sort((a, b) => serviceDepartures[a][0].actualDepartureTime - serviceDepartures[b][0].actualDepartureTime)
         -
           let destinationDepartures = serviceDepartures[destination]
@@ -53,6 +53,8 @@ append content
             a(class=`leftContainer platform ${classGen(firstDeparture)}`)
               if firstDeparture.loopDirection
                 span.topText=firstDeparture.loopDirection
+              else if firstDeparture.routeDetails
+                span.topText=firstDeparture.routeDetails
               span.bigNumber=firstDeparture.routeNumber
               if firstDeparture.bay
                 span.bottomText=firstDeparture.bay

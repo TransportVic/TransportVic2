@@ -159,11 +159,10 @@ async function getDeparturesFromPTV(stop, db) {
 
       if (!operator) operator = ''
 
-      let routeNumber = route.route_number.replace(/_x$/, '')
+      let {routeNumber} = trip
       let sortNumber = routeNumber
 
       if (route.route_gtfs_id.startsWith('7-')) {
-        routeNumber = route.route_gtfs_id.slice(2)
         sortNumber = routeNumber.slice(2)
       }
 
@@ -184,7 +183,8 @@ async function getDeparturesFromPTV(stop, db) {
         isNightBus,
         operator,
         codedOperator: utils.encodeName(operator.replace(/ \(.+/, '')),
-        loopDirection
+        loopDirection,
+        routeDetails: trip.routeDetails
       })
     })
   })

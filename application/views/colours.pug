@@ -17,8 +17,7 @@ append content
       for i in [1, 2]
         div.departure
           a(class=`leftContainer platform ${cssName}`)
-            span
-            span 77
+            span.bigNumber 77
           a.departureInfo
             span.towards Operator
             span.destination=originalName
@@ -27,8 +26,7 @@ append content
       for i in [1, 2]
         div.departure
           a(class=`leftContainer platform tram-${tramRoute}`)
-            span
-            span=tramRoute
+            span.bigNumber=tramRoute
           a.departureInfo
             span.towards Tram
             span.destination Destination
@@ -38,8 +36,8 @@ append content
       for i in [1, 2]
         div.departure
           a(class=`leftContainer platform ${cssName}-line`)
-            span Platform
-            span=42
+            span.topText Platform
+            span.bigNumber 42
           a.departureInfo
             span.towards Metro Train
             span.destination=originalName
@@ -47,8 +45,8 @@ append content
     for i in [1, 2]  
       div.departure
         a(class=`leftContainer platform city-loop-line`)
-          span Platform
-          span=99
+          span.topText Platform
+          span.bigNumber 99
         a.departureInfo
           span.towards Metro Train
           span.destination City Loop Line

@@ -141,9 +141,9 @@ module.exports = {
   "6-B7o": ["Whitmores Bus Lines"],
 
   // TNSW
-  "6-906": ["Transport NSW"],
-  "6-907": ["Transport NSW"],
-  "6-908": ["Transport NSW"],
+  "6-906": ["Martin's Albury"],
+  "6-907": ["Martin's Albury"],
+  "6-908": ["Martin's Albury"],
 
   "6-99x": ["Bacchus Marsh Coaches"],
   "6-99y": ["Bacchus Marsh Coaches"]

@@ -9,7 +9,7 @@ const utils = require('../../utils')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
 
-let gtfsID = 3
+let gtfsID = '3'
 
 database.connect({
   poolSize: 100
@@ -26,7 +26,7 @@ database.connect({
     let shapeJSON = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, shapeFile)))
     await loadRoutes(routes, gtfsID, routeData, shapeJSON, () => {
       return ['Yarra Trams']
-    }, shortRouteName => shortRouteName)
+    }, (routeNumber, routeName, routeGTFSID) => routeName)
   })
 
   await updateStats('tram-routes', routeData.length)

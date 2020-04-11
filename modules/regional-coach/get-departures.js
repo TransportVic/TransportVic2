@@ -176,7 +176,7 @@ async function getDepartures(stop, db) {
   departures = await async.map(departures, async departure => {
     let destinationShortName = departure.trip.destination.split('/')[0]
     let {destination} = departure.trip
-    if (!utils.isStreet(destinationShortName)) destination = destinationShortName
+    if (!(utils.isStreet(destinationShortName) || destinationShortName.includes('Information Centre'))) destination = destinationShortName
     destination = destination.replace('Shopping Centre', 'SC')
 
     if (destinationOverrides[destination])
