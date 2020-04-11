@@ -51,6 +51,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
       + `${day}#stop-${departure.trip.stopTimings[0].stopGTFSID}`
 
+    let fullDestination = departure.trip.destination
     let destinationShortName = departure.trip.destination.split('/')[0]
     let {destination} = departure.trip
     if (!utils.isStreet(destinationShortName)) destination = destinationShortName
@@ -58,7 +59,8 @@ router.get('/:suburb/:stopName', async (req, res) => {
 
     let serviceData = busDestinations.service[departure.routeNumber] || busDestinations.service[departure.trip.routeGTFSID] || {}
     departure.destination = serviceData[departure.destination]
-      || busDestinations.generic[departure.destination] || departure.destination
+      || busDestinations.generic[departure.destination]
+      || busDestinations.generic[fullDestination] || departure.destination
 
     let destinationStopTiming = departure.trip.stopTimings.slice(-1)[0]
     let destinationStop = await stops.findDocument({

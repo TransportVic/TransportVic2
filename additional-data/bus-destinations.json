@@ -1,5 +1,11 @@
 {
   "service": {
+    "1": {
+      "McCallum Street/Campbell Street": "Swan Hill North (Loop)"
+    },
+    "2": {
+      "McCallum Street/Campbell Street": "Swan Hill South (Loop)"
+    },
     "5": {
       "Windmill Street/Waratah Road": "Huntly",
       "Boronia Road/Midland Highway": "Huntly"
@@ -52,8 +58,14 @@
     "70": {
       "Strathfieldsaye Road/Blucher Street": "Strathfieldaye"
     },
+    "100": {
+      "Barclay Square Park": "Red Cliffs"
+    },
     "191": {
       "Anniversary Avenue/Stanmore Cresent": "Jubilee Estate"
+    },
+    "200": {
+      "Barclay Square Park": "Red Cliffs"
     },
     "223": {
       "154 Somerville Road": "Yarraville"
@@ -71,12 +83,10 @@
       "Harvest Home Road/Edgars Road": "Wollert West"
     },
     "358": {
-      "Evolve Esplanade": "Wollert",
-      "Evolve Esplande": "Wollert"
+      "Evolve Esplanade": "Wollert"
     },
     "400": {
-      "Pembroke Cresent/Westminster Parkway": "Brimbank Gardens",
-      "Pembroke Cresent/Westminster Pkwy": "Brimbank Gardens"
+      "Pembroke Cresent/Westminster Parkway": "Brimbank Gardens"
     },
     "402": {
       "Carlton Gardens": "East Melbourne"
@@ -414,10 +424,25 @@
     "East Kew Terminus": "Kew",
     "Brighton Town Hall": "Brighton",
     "Doveton Cresent/Lydiard Street N": "Ballarat Railway Station",
-    "Belg Railway Station": "Belgrave Railway Station",
     "Knox Place/Kathyrn Road": "Knoxfield Shops",
     "Kathryn Road/Ferntree Gully Road": "Knoxfield Shops",
     "Brice Grove/Kathryn Road": "Knoxfield Shops",
-    "Lakesfield Drive/Kelletts Road": "Lysterfield"
+    "Lakesfield Drive/Kelletts Road": "Lysterfield",
+    "Eighth Street/Deakin Avenue": "Mildura",
+    "Lime Avenue/Eighth Street": "Mildura",
+    "Merbein Post Office": "Merbein",
+    "QEII Square": "Albury",
+    "Dean Street/David Street": "Albury",
+    "Water Tower Park": "Wodonga",
+    "Wodonga Library": "Wodonga",
+    "Corinella Public Hall": "Coronet Bay",
+    "Miners Rest Hotel": "Wonthaggi",
+    "Chairo Christian School": "Leongatha",
+    "Surf Beach Road/Cape Paterson Road": "Cape Paterson",
+    "Newsagency/Best Street": "Sea Lake",
+    "Post Office/Calder Freeway": "Wycheproof",
+    "McCallum Street/Campbell Street": "Swan Hill",
+    "General Store/Mallee Highway": "Tooleybuc",
+    "Bridgekeepers Cottage/Murray Street": "Tooleybuc"
   }
 }
