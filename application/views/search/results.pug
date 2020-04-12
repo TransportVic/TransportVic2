@@ -26,7 +26,7 @@ for regionalCoachStop in results.filter(stop => stop.bays.filter(bay => bay.mode
 for tramStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'tram').length).slice(0, 5)
   a(href=`/tram/timings/${tramStop.codedSuburb[0]}/${tramStop.codedName}`).tramStop.result
     div.leftContainer
-      img(src='/static/images/clear-icons/bus.svg')
+      img(src='/static/images/clear-icons/tram.svg')
     div.resultDetails
       span='Tram stop in ' + tramStop.suburb[0]
       -

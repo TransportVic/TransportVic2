@@ -196,8 +196,7 @@ module.exports = class MainServer {
 
       'transit-visualiser/Index': '/transit-visualiser',
 
-      'route-data/MetroBusRoute': '/bus/route',
-
+      'route-data/MetroBusRoute': '/bus/route'
     }
 
     Object.keys(routers).forEach(routerName => {

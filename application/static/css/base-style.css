@@ -44,6 +44,8 @@ div#header-right {
   margin-right: calc(1vw + 1vh);
 
   display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 #content {

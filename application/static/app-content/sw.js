@@ -1,4 +1,4 @@
-const version = "32"
+const version = "33"
 const cacheName = `transportvic-${version}`
 
 function cacheFiles(files) {
@@ -43,6 +43,9 @@ self.addEventListener('install', e => {
       '/static/images/decals/ac.svg',
       '/static/images/decals/wheelchair.svg',
 
+      '/static/images/decals/bookmark.svg',
+      '/static/images/decals/bookmark-filled.svg',
+
       '/static/images/clear-icons/bus.svg',
       '/static/images/clear-icons/metro.svg',
       '/static/images/clear-icons/vline.svg',
@@ -79,6 +82,7 @@ self.addEventListener('install', e => {
       'https://unpkg.com/leaflet@1.6.0/dist/leaflet.css',
       'https://unpkg.com/leaflet@1.6.0/dist/leaflet.js',
 
+      '/static/scripts/bookmarks.js',
       '/static/scripts/geojson-visualise.js',
       '/static/scripts/nearby.js',
       '/static/scripts/search.js',

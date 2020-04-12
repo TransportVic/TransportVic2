@@ -42,6 +42,14 @@ database.connect({
   }, {name: 'search index'})
 
   await stops.createIndex({
+    'codedSuburb': 1
+  }, {name: 'coded suburb index'})
+
+  await stops.createIndex({
+    'codedName': 1
+  }, {name: 'coded name index'})
+
+  await stops.createIndex({
     'stopName': 1
   }, {name: 'stopName index'})
 

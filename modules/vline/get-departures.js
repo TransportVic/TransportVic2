@@ -341,8 +341,12 @@ async function getDepartures(station, db) {
 
   try {
     coachReplacements = (await getCoachDepartures(coachStop, db))
+    coachReplacements = JSON.parse(JSON.stringify(coachReplacements))
       .filter(coach => coach.isTrainReplacement)
       .map(coach => {
+        coach.scheduledDepartureTime = moment.tz(coach.scheduledDepartureTime, 'Australia/Melbourne')
+        coach.actualDepartureTime = moment.tz(coach.actualDepartureTime, 'Australia/Melbourne')
+
         coach.shortRouteName = getShortRouteName(coach.trip)
 
         if (coach.trip.destination !== 'Southern Cross Coach Terminal/Spencer Street')
@@ -350,6 +354,7 @@ async function getDepartures(station, db) {
         else coach.destination = 'Southern Cross'
         return coach
       })
+
   } catch (e) {
   }
 
