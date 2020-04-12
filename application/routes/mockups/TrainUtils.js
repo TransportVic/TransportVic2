@@ -44,8 +44,10 @@ module.exports = {
 
     try {
       vlineDepartures = (await getVLineDepartures(station, db)).map(departure => {
-        departure.platform = departure.platform.replace('?', '')
+        if (departure.platform)
+          departure.platform = departure.platform.replace('?', '')
         departure.type = 'vline'
+        departure.actualDepartureTime = departure.scheduledDepartureTime
 
         return departure
       })
@@ -79,7 +81,7 @@ module.exports = {
     departure = module.exports.addTimeToDeparture(departure)
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
-    let lineStops = getLineStops(departure.trip.shortRouteName || departure.trip.routeName)
+    let lineStops = getLineStops(departure.shortRouteName || departure.trip.routeName)
     let tripStops = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
 
     if (departure.forming) {
@@ -87,7 +89,7 @@ module.exports = {
       tripStops = [...prevTripCityLoop, ...departure.forming.stopTimings.map(stop => stop.stopName.slice(0, -16))]
       tripStops = tripStops.filter((e, i, a) => a.indexOf(e) === i)
 
-      lineStops = getLineStops(departure.forming.shortRouteName || departure.forming.routeName)
+      lineStops = getLineStops(departure.forming.routeName)
     }
 
     lineStops = lineStops.slice(0)
@@ -96,6 +98,7 @@ module.exports = {
     let isFormingNewTrip = !!departure.forming
     let isUp = departure.trip.direction === 'Up' && !isFormingNewTrip
     let destination = isFormingNewTrip ? departure.destination : departure.trip.destination
+    destination = destination.replace(' Railway Station', '') // TODO:  fix
     if (destination === 'Parliament') destination = 'Flinders Street'
 
     if (isUp) {
@@ -113,7 +116,7 @@ module.exports = {
 
     let stationName = station.stopName.slice(0, -16)
     let relevantTrip = departure.forming || departure.trip
-    let routeName = relevantTrip.shortRouteName || relevantTrip.routeName
+    let routeName = departure.shortRouteName || relevantTrip.routeName
 
     let startingIndex = tripStops.indexOf(stationName)
     let viaCityLoop = tripStops.includes('Flagstaff')
@@ -336,6 +339,7 @@ module.exports = {
 
     return departures.filter(departure => {
       if (departure.type === 'vline') {
+        if (!departure.platform) return null
         let mainPlatform = departure.platform.replace(/[A-Z]/, '')
         return mainPlatform === platform
       } else {

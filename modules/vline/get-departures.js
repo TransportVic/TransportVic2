@@ -388,8 +388,6 @@ async function getDepartures(station, db) {
   } else {
     let scheduled = await departureUtils.getScheduledDepartures(station, db, 'regional train', 180)
     scheduled = scheduled.map(departure => {
-      departure.trip.origin += ' Railway Station'
-      departure.trip.destination += ' Railway Station'
       let shortRouteName = getShortRouteName(departure.trip)
 
       let dayOfWeek = departure.scheduledDepartureTime.day()

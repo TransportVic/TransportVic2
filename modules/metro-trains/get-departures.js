@@ -148,7 +148,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     if (!trip) {
       trip = await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines, scheduledDepartureTimeMinutes)
       if (trip) {
-        destination = trip.destination
+        destination = trip.destination.slice(0, -16)
         runDestination = destination
         if (trip.vehicle == 'Replacement Bus') {
           platform = 'RRB'
@@ -158,11 +158,9 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     }
     if (!trip) { // still no match - getStoppingPattern
       trip = await getStoppingPattern(db, departure.run_id, 'metro train')
-      trip.destination = trip.destination.slice(0, -16)
-      trip.origin = trip.origin.slice(0, -16)
     }
 
-    let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== trip.destination
+    let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== trip.destination.slice(0, -16)
     let isSCS = station.stopName.slice(0, -16) === 'Southern Cross'
 
     let isUpTrip = ((trip || {}).direction === 'Up' || runID % 2 === 0) && !isFormingNewTrip

@@ -41,12 +41,13 @@ async function getData(req, res) {
   let hasRRB = !!allDepartures.find(d => d.platform === 'RRB')
   allDepartures = allDepartures.filter(d => d.platform !== 'RRB')
   let platformDepartures = TrainUtils.filterPlatforms(allDepartures, req.params.platform)
+
 // TODO: refactor into TrainUtils.appendTextualDepartureData
   platformDepartures = platformDepartures.map(departure => {
     let {trip, destination} = departure
     let {routeGTFSID, direction, stopTimings} = trip
     let isUp = direction === 'Up' || departure.forming || false
-    let routeName = trip.shortRouteName || trip.routeName
+    let routeName = departure.shortRouteName || trip.routeName
     let isVLine = departure.type === 'vline'
 
     stopTimings = stopTimings.map(stop => stop.stopName.slice(0, -16))

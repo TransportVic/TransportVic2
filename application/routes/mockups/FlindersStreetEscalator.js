@@ -13,7 +13,7 @@ async function getData(req, res) {
   })
 
   let departures = await TrainUtils.getCombinedDepartures(station, res.db)
-  departures = departures.filter(d => d.platform !== 'RRB')
+  departures = departures.filter(d => d.platform !== 'RRB' && !d.isTrainReplacement)
   departures = TrainUtils.filterPlatforms(departures, req.params.platform)
 
   let lineGroups = departures.map(departure => departure.trip.routeName)

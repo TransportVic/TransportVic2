@@ -1,4 +1,4 @@
-module.exports={
+module.exports = {
   // Chadstone
   47923: "Bay 1",
   47924: "Bay 2",
@@ -326,6 +326,9 @@ module.exports={
   50258: "Bay 4",
   50259: "Bay 5",
   50260: "Bay 6",
+
+  // Southern Cross
+  20836: "Bay 54"
 
   // check ringwood 901 bay, mitcham 738 bay
   // Next up:
