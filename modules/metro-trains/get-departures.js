@@ -245,7 +245,8 @@ async function getDepartures(station, db, departuresCount=15, includeCancelled=t
 
     return filterDepartures(Object.values(mergedDepartures))
   } catch (e) {
-    return await departureUtils.getScheduledDepartures(station, db, 'metro train', 90)
+    console.log(e)
+    let scheduled = await departureUtils.getScheduledDepartures(station, db, 'metro train', 90)
   }
 }
 

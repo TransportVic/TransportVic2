@@ -88,7 +88,7 @@ function readFileData(filename, routeName, callback) {
       if (!trips[tripID]) trips[tripID] = {
         mode: 'metro train',
         routeName,
-        routeGTFSID: lineGTFSIDs[routeName],
+        routeGTFSID: '2-' + lineGTFSIDs[routeName],
         runID,
         operationDays: days,
         vehicle: vehicleFormation,

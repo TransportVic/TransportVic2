@@ -97,8 +97,8 @@ module.exports = {
     // If there's a forming then consider it as a down trip
     let isFormingNewTrip = !!departure.forming
     let isUp = departure.trip.direction === 'Up' && !isFormingNewTrip
-    let destination = isFormingNewTrip ? departure.destination : departure.trip.destination
-    destination = destination.replace(' Railway Station', '') // TODO:  fix
+    let destination = isFormingNewTrip ? departure.destination : departure.trip.destination.slice(0, -16)
+
     if (destination === 'Parliament') destination = 'Flinders Street'
 
     if (isUp) {

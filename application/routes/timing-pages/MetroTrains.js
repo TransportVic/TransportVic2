@@ -43,12 +43,12 @@ router.get('/:stationName', async (req, res) => {
 
     departure.codedLineName = utils.encodeName(trip.routeName)
 
-    let destination = departure.runDestination || trip.destination
-    let origin = trip.origin
+    let destination = departure.destination || trip.destination.slice(0, -16)
+    let origin = trip.origin.slice(0, -16)
     let originDepartureTime = trip.departureTime
     if (departure.forming) {
       origin = 'flinders-street'
-      let flindersStreetTiming = departure.forming.stopTimings.filter(stop => stop.stopName === 'Flinders Street Railway Station')[0]
+      let flindersStreetTiming = departure.forming.stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
       originDepartureTime = flindersStreetTiming.departureTime
     }
 

@@ -29,10 +29,6 @@ async function getLiveDeparture(station, db, mode, possibleLines, scheduledDepar
       trip = timetables.sort((a, b) => b.stopTimings[0].departureTimeMinutes - a.stopTimings[0].departureTimeMinutes).slice(0, 1)
   }
 
-  if (trip) {
-    trip.destination = trip.destination.slice(0, -16)
-    trip.origin = trip.origin.slice(0, -16)
-  }
   return trip
 }
 
@@ -81,10 +77,6 @@ async function getScheduledDeparture(station, db, mode, possibleLines, scheduled
 
   let trip = timetables[0]
 
-  if (trip) {
-    trip.destination = trip.destination.slice(0, -16)
-    trip.origin = trip.origin.slice(0, -16)
-  }
   return trip
 }
 
@@ -93,11 +85,6 @@ async function getStaticDeparture(runID, db) {
     runID,
     operationDays: utils.getPTDayName(utils.now())
   })
-
-  if (trip) {
-    trip.destination = trip.destination.slice(0, -16)
-    trip.origin = trip.origin.slice(0, -16)
-  }
 
   return trip
 }
@@ -143,9 +130,6 @@ async function getScheduledDepartures(station, db, mode, timeout) {
       let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === platform.stopGTFSID)[0]
       let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
 
-      trip.destination = trip.destination.slice(0, -16)
-      trip.origin = trip.origin.slice(0, -16)
-
       return {
         trip,
         scheduledDepartureTime: departureTime,
@@ -155,7 +139,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
         scheduledDepartureTimeMinutes: stopData.departureTimeMinutes,
         cancelled: false,
         cityLoopConfig: [],
-        destination: trip.destination,
+        destination: trip.destination.slice(0, -16),
         runID: '',
         cancelled: trip.type === 'cancelled'
       }
