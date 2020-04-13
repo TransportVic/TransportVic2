@@ -89,7 +89,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
       run.vehicle_descriptor = {}
     }
 
-    if (routeID === 13 && platform !== 'RRB') { // stony point platforms
+    if (routeID === 13 && !isTrainReplacement) { // stony point platforms
       if (station.stopName === 'Frankston Railway Station') platform = '3'
       else platform = '1'
       run.vehicle_descriptor = {} // ok maybe we should have kept the STY timetable but ah well
@@ -172,7 +172,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     let isSCS = station.stopName.slice(0, -16) === 'Southern Cross'
 
     let isUpTrip = ((trip || {}).direction === 'Up' || runID % 2 === 0) && !isFormingNewTrip
-    let cityLoopConfig = platform !== 'RRB' ? determineLoopRunning(routeID, runID, runDestination, isFormingNewTrip, isSCS) : []
+    let cityLoopConfig = !isTrainReplacement ? determineLoopRunning(routeID, runID, runDestination, isFormingNewTrip, isSCS) : []
 
     if (isUpTrip && !cityLoopStations.includes(runDestination.toLowerCase()) &&
       !cityLoopStations.includes(stationName) && runDestination !== 'Flinders Street')
@@ -201,6 +201,10 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     let forming = null
     if (isFormingNewTrip) {
       forming = await departureUtils.getStaticDeparture(runID, db)
+      if (!forming || (forming.destination !== trip.destination + ' Railway Station')) {
+        trip = await getStoppingPattern(db, departure.run_id, 'metro train')
+        forming = null
+      }
     }
 
     let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
