@@ -43,17 +43,28 @@ async function getPHDayOfWeek(moment) {
     if (dayCache[day]) {
       return dayCache[day]
     } else {
-      let styCount = await gtfsTimetables.countDocuments({
+      let count782 = await gtfsTimetables.countDocuments({
         operationDays: day,
-        routeGTFSID: '2-SPT',
-        mode: 'metro train',
-        direction: 'Up'
+        routeGTFSID: '4-782',
+        mode: 'bus',
+        gtfsDirection: '0' // flinders - frankston
       })
+
+      let hasFlinders = await gtfsTimetables.countDocuments({
+        operationDays: day,
+        routeGTFSID: '4-782',
+        mode: 'bus',
+        gtfsDirection: '0', // flinders - frankston
+        origin: 'Wood Street/Cook Street',
+      })
+
       let phDay
-      if (styCount === 10) phDay = 'Weekday'
-      if (styCount === 12) phDay = 'Friday'
-      if (styCount === 8) phDay = 'Saturday'
-      if (styCount === 7) phDay = 'Sunday'
+
+      if (count782 === 15) phDay = 'Saturday'
+      if (count782 === 14) {
+        if (hasFlinders) phDay = 'Weekday'
+        else phDay = 'Sunday'
+      }
 
       dayCache[day] = phDay
       return phDay
