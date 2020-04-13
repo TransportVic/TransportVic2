@@ -1,6 +1,13 @@
 # [TransportVic2](https://vic.transportsg.me)
 Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne for a longer time and actually know the system through.
 
+## TODO:
+- Fix day of week getter:
+  - Use victorianholidays.ics file, on each holiday look at stony point timetable and count services on that day STY - FKN
+    - Weekday 10, Friday 12
+    - Saturday 8
+    - Sunday 7
+
 ## Current mapping projects:
 - Smartrak ID mapping
   - Enables the user to see at a glance what the bus rego of their bus will be, allowing for easier identification
@@ -67,7 +74,7 @@ Currently experimental, but should currently work as a drop in replacement for t
     - List format
     - Text format
   - LED PIDS display found at suburban stations like Pakenham, Lilydale and Croydon
-  
+
 - GeoJSON visualiser, cos why not
 - Checks disruptions every 10min, currently handles suspensions
   - Finds trips affected by suspension and breaks into 3 - first train leg, bus leg and second train leg.

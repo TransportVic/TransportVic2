@@ -135,17 +135,22 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
       runID: departure.runID,
       mode: 'regional train'
     }
+    let staticQuery = {
+      origin: departure.origin,
+      destination: departure.destination,
+      departureTime: utils.formatHHMM(departure.originDepartureTime),
+      operationDays: operationDay,
+      mode: 'regional train'
+    }
 
     let trip = await db.getCollection('live timetables').findDocument(liveQuery)
 
     if (!trip) {
-      trip = await gtfsTimetables.findDocument({
-        origin: departure.origin,
-        destination: departure.destination,
-        departureTime: utils.formatHHMM(departure.originDepartureTime),
-        operationDays: operationDay,
-        mode: 'regional train'
-      })
+    trip = await db.getCollection('live timetables').findDocument(staticQuery)
+    }
+
+    if (!trip) {
+      trip = await gtfsTimetables.findDocument(staticQuery)
     }
 
     if (!trip && nspTrip) trip = nspTrip
@@ -221,6 +226,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
   let stationName = fullStopName.slice(0, -16)
 
   let gtfsTimetables = db.getCollection('gtfs timetables')
+  let liveTimetables = db.getCollection('live timetables')
   let trainDepartures = departures.filter(departure => departure.flags.includes('VTR'))
 
   let mappedDepartures = []
@@ -258,6 +264,9 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
         destination
       }
 
+      // improve this
+      trip = await liveTimetables.findDocument(query)
+      if (trip) break
       trip = await gtfsTimetables.findDocument(query)
       if (trip) break
     }
@@ -276,6 +285,8 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     if (platform) platform += '?'
     else platform = '?'
 
+    if (trip.cancelled) platform = '-'
+
     let departure = {
       shortRouteName,
       serviceID,
@@ -285,7 +296,9 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
       runID: null,
       vehicle: null,
       destination: trip.destination.slice(0, -16),
-      flags: findFlagMap(trainDeparture.flags)
+      flags: findFlagMap(trainDeparture.flags),
+      isTrainReplacement: !!trip.isTrainReplacement,
+      cancelled: !!trip.cancelled
     }
 
     mappedDepartures.push(departure)
@@ -316,8 +329,10 @@ async function getDepartures(station, db) {
   let flagMap = {}
   let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train')
   let departures = [], runs, routes
+  let scheduledTrains, coachReplacements = [], cancelledTrains = []
+
   try {
-    body = await ptvAPI(`/v3/departures/route_type/3/stop/${vlinePlatform.stopGTFSID}?gtfs=true&max_results=5&expand=run&expand=route`)
+    body = await ptvAPI(`/v3/departures/route_type/3/stop/${vlinePlatform.stopGTFSID}?gtfs=true&max_results=7&expand=run&expand=route`)
     departures = body.departures, runs = body.runs, routes = body.routes
     departures.forEach(departure => {
       let run = runs[departure.run_id]
@@ -328,10 +343,14 @@ async function getDepartures(station, db) {
       let serviceID = departureTime.format('HH:mm') + destination
       flagMap[serviceID] = findFlagMap(departure.flags)
     })
+
+    scheduledTrains = await processPTVDepartures(departures, runs, routes, vlinePlatform, db)
+    coachReplacements = scheduledTrains.filter(departure => departure.isTrainReplacement)
+    cancelledTrains = scheduledTrains.filter(departure => departure.cancelled)
+    scheduledTrains = scheduledTrains.filter(departure => !departure.isTrainReplacement)
   } catch (e) {
   }
 
-  let coachReplacements
   let coachStop = station
   if (station.stopName === 'Southern Cross Railway Station') {
     coachStop = await db.getCollection('stops').findDocument({
@@ -340,8 +359,8 @@ async function getDepartures(station, db) {
   }
 
   try {
-    coachReplacements = (await getCoachDepartures(coachStop, db))
-    coachReplacements = JSON.parse(JSON.stringify(coachReplacements))
+    let scheduledCoachReplacements = (await getCoachDepartures(coachStop, db))
+    scheduledCoachReplacements = JSON.parse(JSON.stringify(scheduledCoachReplacements))
       .filter(coach => coach.isTrainReplacement)
       .map(coach => {
         coach.scheduledDepartureTime = moment.tz(coach.scheduledDepartureTime, 'Australia/Melbourne')
@@ -354,7 +373,7 @@ async function getDepartures(station, db) {
         else coach.destination = 'Southern Cross'
         return coach
       })
-
+    coachReplacements = [...coachReplacements, ...scheduledCoachReplacements]
   } catch (e) {
   }
 
@@ -364,7 +383,9 @@ async function getDepartures(station, db) {
       vnetDepartures = vnetDepartures.map(departure => {
         let serviceID = departure.originalServiceID
         let flags = flagMap[serviceID]
-        if (!flags) console.log(flagMap, serviceID)
+        if (!flags) {
+          return departure
+        }
 
         if (flags.reservationsOnly) departure.flags.reservationsOnly = true
         if (flags.firstClassAvailable) departure.flags.firstClassAvailable = true
@@ -375,17 +396,16 @@ async function getDepartures(station, db) {
         return departure
       })
 
-      let allDepartures = vnetDepartures.concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+      let allDepartures = vnetDepartures.concat(coachReplacements).concat(cancelledTrains).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
       departuresCache.put(station.stopName + 'V', allDepartures)
 
       return allDepartures
     } catch (e) {
+      console.log(e)
     }
   }
 
   if (departures.length) {
-    let scheduledTrains = await processPTVDepartures(departures, runs, routes, vlinePlatform, db)
-
     let allDepartures = scheduledTrains.concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
     departuresCache.put(station.stopName + 'V', allDepartures)
 

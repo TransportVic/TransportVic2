@@ -3,6 +3,7 @@ const config = require('../config.json')
 const utils = require('../utils')
 
 const mtmHealthCheck = require('./health-check/metro')
+const startVlineMailServer = require('./health-check/vline')
 
 var refreshRate = 10
 
@@ -104,4 +105,6 @@ if (!config.devMode) {
 
     await refreshCache()
   })
+  
+  startVlineMailServer()
 }

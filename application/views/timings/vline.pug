@@ -66,7 +66,9 @@ append content
           if departure.isTrainReplacement
             span.info.cancelled Service replaced by coaches
           else if departure.cancelled
-            span.info.cancelled This service has been cancelled
+            span.info.cancelled CANCELLED
+          else if departure.trip.type === 'change'
+            span.info.cancelled=departure.trip.message
           else
             
             -
@@ -84,8 +86,25 @@ append content
                 flags += 'Reservations Only'
               }
             span.info.full=flags
-            if departure.vehicle
-              span.vehicle.full='Vehicle: ' + departure.vehicle
+            
+          -
+            let vehicleData
+            let important = false
+            if (departure.vehicle) {
+              vehicleData = 'Vehicle: ' + departure.vehicle
+            }
+            
+            if (departure.trip.type === 'capacity reduction') {
+              important = true
+              vehicleData = `Reduced capacity of ${departure.trip.capacity} carriages`
+            }
+            
+          if vehicleData
+            if important
+              span.vehicle.cancelled=vehicleData
+            else
+              span.vehicle.full=vehicleData
+          
         div.timings
           -
             let className = 'timing '
