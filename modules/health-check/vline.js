@@ -44,6 +44,8 @@ module.exports = () => {
     }
   })
 
+  console.log('V/Line Email server started')
+
   nodeMailin.on('message', (connection, data, content) => {
     inboundMessage(data)
   })

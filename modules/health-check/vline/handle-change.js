@@ -33,6 +33,8 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
       tripID: trip.tripID
     }
 
+    console.log(`Marking ${departureTime} ${origin} - ${destination} train as changed. Now ${type}s at ${changePoint}`)
+
     await liveTimetables.replaceDocument(key, trip, {
       upsert: true
     })

@@ -33,6 +33,8 @@ async function setServicesAsCancelled(db, services) {
         tripID: trip.tripID
       }
 
+      console.log(`Marking ${departureTime} ${origin} - ${destination} train as cancelled.${isCoach ? ' Replacement coaches provided' : ''}`)
+
       await liveTimetables.replaceDocument(key, trip, {
         upsert: true
       })
