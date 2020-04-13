@@ -116,18 +116,18 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
 
     let possibleLines = [routeName]
     if (cityLoopStations.includes(stationName) || destination !== routeName) {
-      if ([1, 2, 7, 9].includes(routeID))
+      if (burnleyGroup.includes(routeID))
         possibleLines = ['Alamein', 'Belgrave', 'Glen Waverley', 'Lilydale']
-      else if ([4, 11].includes(routeID))
-        possibleLines = ['Cranbourne', 'Pakenham', 'Frankston']
-      else if ([6, 16, 17].includes(routeID))
+      else if (caulfieldGroup.includes(routeID))
+        possibleLines = ['Cranbourne', 'Pakenham', 'Frankston', 'Sandringham']
+      else if (crossCityGroup.includes(routeID))
         possibleLines = ['Frankston', 'Werribee', 'Williamstown']
-      else if ([5, 8].includes(routeID))
+      else if (cliftonHillGroup.includes(routeID))
         possibleLines = ['Mernda', 'Hurstbridge']
-      else if ([3, 14, 15, 1482].includes(routeID))
-        possibleLines = ['Sunbury', 'Craigieburn', 'Upfield', 'Showgrounds/Flemington']
+      if (northenGroup.includes(routeID))
+        possibleLines = [...possibleLines, 'Sunbury', 'Craigieburn', 'Upfield', 'Showgrounds/Flemington', 'Werribee', 'Williamstown']
       if (routeID == 6)
-        possibleLines = possibleLines.concat(['Cranbourne', 'Pakenham'])
+        possibleLines = [...possibleLines, 'Cranbourne', 'Pakenham']
 
       possibleDestinations.push('Flinders Street')
     } else {
