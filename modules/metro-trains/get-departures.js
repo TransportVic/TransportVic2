@@ -68,9 +68,10 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
   const minutesPastMidnight = utils.getMinutesPastMidnightNow()
   let transformedDepartures = []
 
-  const metroPlatform = station.bays.filter(bay => bay.mode === 'metro train')[0]
+  const metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
+  let {stopGTFSID} = metroPlatform
   const stationName = station.stopName.slice(0, -16).toLowerCase()
-  const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=${departuresCount}&include_cancelled=${includeCancelled}&expand=run&expand=route${platform ? `&platform_numbers=${platform}` : ''}`)
+  const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=${departuresCount}&include_cancelled=${includeCancelled}&expand=run&expand=route${platform ? `&platform_numbers=${platform}` : ''}`)
 
   await async.forEach(departures, async departure => {
     const run = runs[departure.run_id]
@@ -80,9 +81,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     let platform = departure.platform_number
     let runDestination = run.destination_name
     let cancelled = run.status === 'cancelled'
+    let isTrainReplacement = false
+    let scheduledTrainReplacement = true
 
     if (platform == null) { // show replacement bus
-      if (departure.flags.includes('RRB-RUN')) platform = 'RRB'
+      isTrainReplacement = departure.flags.includes('RRB-RUN')
       run.vehicle_descriptor = {}
     }
 
@@ -134,28 +137,33 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     }
 
     // gtfs timetables
-    let trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
-        scheduledDepartureTimeMinutes, possibleDestinations.map(dest => dest + ' Railway Station'))
+    possibleDestinations = possibleDestinations.map(dest => dest + ' Railway Station')
+    let trip = await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines,
+      scheduledDepartureTimeMinutes, possibleDestinations)
+
+    if (trip) {
+      if (trip.type === 'suspension') {
+        let affectedStops = trip.stopTimings.filter(stop => stop.showReplacementBus).map(stop => stop.stopGTFSID)
+        if (affectedStops.includes(stopGTFSID)) {
+          isTrainReplacement = true
+          scheduledTrainReplacement = false
+        }
+      }
+    } else {
+      trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
+        scheduledDepartureTimeMinutes, possibleDestinations)
+    }
+
     if (!trip) { // static dump
         // let isCityLoop = cityLoopStations.includes(stationName) || stationName === 'flinders street'
         trip = await departureUtils.getStaticDeparture(runID, db)
         if (trip) {
-          let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === metroPlatform.stopGTFSID)[0]
+          let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === stopGTFSID)[0]
           if (!stopData || stopData.departureTimeMinutes !== scheduledDepartureTimeMinutes)
             trip = null
         }
     }
-    if (!trip) {
-      trip = await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines, scheduledDepartureTimeMinutes)
-      if (trip) {
-        destination = trip.destination.slice(0, -16)
-        runDestination = destination
-        if (trip.vehicle == 'Replacement Bus') {
-          platform = 'RRB'
-          estimatedDepartureTime = null
-        }
-      }
-    }
+
     if (!trip) { // still no match - getStoppingPattern
       trip = await getStoppingPattern(db, departure.run_id, 'metro train')
     }
@@ -196,8 +204,15 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
     }
 
     let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
+
     transformedDepartures.push({
-      trip, scheduledDepartureTime, estimatedDepartureTime, actualDepartureTime, platform,
+      trip,
+      scheduledDepartureTime,
+      estimatedDepartureTime,
+      actualDepartureTime,
+      platform,
+      isTrainReplacement,
+      scheduledTrainReplacement,
       cancelled, cityLoopConfig,
       destination, runID, forming, vehicleType, runDestination
     })

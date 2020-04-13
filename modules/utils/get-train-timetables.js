@@ -5,35 +5,10 @@ function getPlatform(station, mode) {
   return station.bays.filter(bay => bay.mode === mode)[0]
 }
 
-async function getLiveDeparture(station, db, mode, possibleLines, scheduledDepartureTimeMinutes) {
+async function getDeparture(station, db, mode, possibleLines, scheduledDepartureTimeMinutes, possibleDestinations, live) {
   const platform = getPlatform(station, mode)
 
-  let timetables = await db.getCollection('live timetables').findDocuments({
-    routeName: {
-      $in: possibleLines
-    },
-    operationDays: utils.getYYYYMMDDNow(),
-    mode: mode,
-    stopTimings: {
-      $elemMatch: {
-        stopGTFSID: platform.stopGTFSID,
-        departureTimeMinutes: scheduledDepartureTimeMinutes
-      }
-    }
-  }).toArray()
-
-  let trip = timetables[0]
-
-  if (timetables.length && timetables[0].type === 'suspension') {
-    if (timetables.length > 1)
-      trip = timetables.sort((a, b) => b.stopTimings[0].departureTimeMinutes - a.stopTimings[0].departureTimeMinutes).slice(0, 1)
-  }
-
-  return trip
-}
-
-async function getScheduledDeparture(station, db, mode, possibleLines, scheduledDepartureTimeMinutes, possibleDestinations) {
-  const platform = getPlatform(station, mode)
+  let collection = db.getCollection(live ? 'live timetables' : 'gtfs timetables')
 
   let seen = []
   let allTimetables = []
@@ -41,7 +16,7 @@ async function getScheduledDeparture(station, db, mode, possibleLines, scheduled
 
   for (let i = 0; i <= 1; i++) {
     let day = today.clone().add(-i, 'days')
-    let timetables = await db.getCollection('gtfs timetables').findDocuments({
+    let timetables = await collection.findDocuments({
       _id: {
         $not: {
           $in: seen
@@ -75,9 +50,15 @@ async function getScheduledDeparture(station, db, mode, possibleLines, scheduled
 
   let timetables = allTimetables.reduce((a, e) => a.concat(e), [])
 
-  let trip = timetables[0]
+  return timetables[0]
+}
 
-  return trip
+function getScheduledDeparture(station, db, mode, possibleLines, scheduledDepartureTimeMinutes, possibleDestinations) {
+  return getDeparture(station, db, mode, possibleLines, scheduledDepartureTimeMinutes, possibleDestinations, false)
+}
+
+function getLiveDeparture(station, db, mode, possibleLines, scheduledDepartureTimeMinutes, possibleDestinations) {
+  return getDeparture(station, db, mode, possibleLines, scheduledDepartureTimeMinutes, possibleDestinations, true)
 }
 
 async function getStaticDeparture(runID, db) {

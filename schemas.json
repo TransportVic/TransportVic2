@@ -15,7 +15,7 @@
     "fleetNumber": "string",
     "operator": "string"
   },
-  "gtfsTrip": {
+  "gtfsTimetable": {
     "mode": "string",
     "routeName": "string",
     "routeNumber": "string",

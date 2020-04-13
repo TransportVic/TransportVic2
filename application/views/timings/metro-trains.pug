@@ -83,7 +83,7 @@ append content
         if departure.cancelled
           input(type='hidden' name='cancelled')
         a(class=`leftContainer platform ${departure.codedLineName}-line`)
-          if departure.platform === 'RRB'
+          if departure.isTrainReplacement
             span.topText Rail Bus
             img(src='/static/images/clear-icons/bus.svg')
           else
@@ -93,9 +93,10 @@ append content
           span.towards=`${routeName} Line towards`
           span.destination=departure.destination
           
-          if departure.platform === 'RRB'
-            - let busCount = departure.busCount || 1
-            span.info.cancelled=`Rail Replacement Bus${busCount > 1 ? ` - This trip has ${busCount} buses` : ''}`
+          if departure.trip.message
+            span.info.cancelled=departure.trip.message
+          else if departure.isTrainReplacement
+            span.info.cancelled Rail Replacement Bus
           else if departure.cancelled
             span.info.cancelled CANCELLED
           else if departure.trip.isUncertain
