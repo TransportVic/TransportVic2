@@ -94,7 +94,7 @@ append content
           span.destination=departure.destination
           
           if departure.trip.message
-            span.info.cancelled=departure.trip.message
+            span.info.cancelled.noClamp=departure.trip.message
           else if departure.isTrainReplacement
             span.info.cancelled Rail Replacement Bus
           else if departure.cancelled

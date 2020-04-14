@@ -147,6 +147,10 @@ a.departureInfo span.info~span.info {
   -webkit-line-clamp: 1;
 }
 
+a.departureInfo span.info.noClamp {
+  -webkit-line-clamp: unset;
+}
+
 a.departureInfo span.info.smaller {
   line-height: calc(1.2vw + 1.2vh) !important;
 }
