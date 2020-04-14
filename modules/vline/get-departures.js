@@ -233,12 +233,10 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
   let now = utils.now()
   let runIDsSeen = []
 
-  await async.forEach(trainDepartures, async trainDeparture => {
-    let runID = trainDeparture.run_id
-    if (runIDsSeen.includes(runID)) return
-    runIDsSeen.push(runID)
+  let sunburyGroup = ['1-V12', '1-V45', '1-Ech'] // bendigo, swanhill, echuca
 
-    let run = runs[runID]
+  await async.forEach(trainDepartures, async trainDeparture => {
+    let run = runs[trainDeparture.run_id]
     let route = routes[trainDeparture.route_id]
 
     let departureTime = moment.tz(trainDeparture.scheduled_departure_utc, 'Australia/Melbourne')
@@ -249,10 +247,19 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     let routeGTFSID = route.route_gtfs_id
     let destination = utils.adjustStopname(run.destination_name)
 
+    let runID = destination + scheduledDepartureTimeMinutes
+    if (runIDsSeen.includes(runID)) return
+    runIDsSeen.push(runID)
+
+    let possibleRouteGTFSIDs = [routeGTFSID]
+    if (sunburyGroup.includes(routeGTFSID)) possibleRouteGTFSIDs = sunburyGroup
+
     for (let i = 0; i <= 1; i++) {
       let tripDay = now.clone().add(-i, 'days')
       let query = {
-        routeGTFSID: routeGTFSID,
+        routeGTFSID: {
+          $in: possibleRouteGTFSIDs
+        },
         operationDays: tripDay.format('YYYYMMDD'),
         mode: 'regional train',
         stopTimings: {
@@ -349,6 +356,7 @@ async function getDepartures(station, db) {
     cancelledTrains = scheduledTrains.filter(departure => departure.cancelled)
     scheduledTrains = scheduledTrains.filter(departure => !departure.isTrainReplacement)
   } catch (e) {
+    console.log(e)
   }
 
   let coachStop = station
@@ -401,11 +409,10 @@ async function getDepartures(station, db) {
 
       return allDepartures
     } catch (e) {
-      console.log(e)
     }
   }
 
-  if (departures.length) {
+  if (scheduledTrains.length) {
     let allDepartures = scheduledTrains.concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
     departuresCache.put(station.stopName + 'V', allDepartures)
 
