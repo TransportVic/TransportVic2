@@ -24,8 +24,7 @@ async function runHealthCheck(db) {
     if (!stationsAffected) return
     let startStation = stationsAffected[1].trim() + ' Railway Station',
         endStation = stationsAffected[2].trim() + ' Railway Station'
-    let startTime = moment.tz(suspension.last_updated, 'Australia/Melbourne')
-    let startMinutesPastMidnight = utils.getMinutesPastMidnight(startTime)
+    let startMinutesPastMidnight = utils.getMinutesPastMidnight(utils.now())
     let endMinutesPastMidnight = startMinutesPastMidnight + 120
     let today = utils.getYYYYMMDDNow()
 
