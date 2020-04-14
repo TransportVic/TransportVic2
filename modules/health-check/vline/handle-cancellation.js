@@ -45,23 +45,23 @@ async function setServicesAsCancelled(db, services) {
 }
 
 async function cancellation(db, text) {
-  let service = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (:?to|-) ([\w ]*?) service (:?will not run|has been cancelled)/)
+  let service = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) service (?:will not run|has been cancelled)/)
   let matches = []
 
   if (service) {
     let departureTime = service[1]
     let origin = service[2] + ' Railway Station'
-    let destination = service[4] + ' Railway Station'
+    let destination = service[3] + ' Railway Station'
     let isCoach = text.includes('coaches') && text.includes('replace')
     matches.push({departureTime, origin, destination, isCoach})
   } else {
-    if (text.match(/services (:?will not run|has been cancelled)/)) {
-      let services = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (:?to|-) ([\w ]*?) /g)
+    if (text.match(/services (?:will not run|has been cancelled)/)) {
+      let services = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) /g)
       services.forEach(service => {
-        let parts = service.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (:?to|-) ([\w ]*?) /)
+        let parts = service.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) /)
         let departureTime = parts[1]
         let origin = parts[2] + ' Railway Station'
-        let destination = parts[4] + ' Railway Station'
+        let destination = parts[3] + ' Railway Station'
         let isCoach = text.includes('coaches') && text.includes('replace')
         matches.push({departureTime, origin, destination, isCoach})
       })

@@ -36,12 +36,12 @@ async function setServiceAsReducedCapacity(db, departureTime, origin, destinatio
 }
 
 function reduction(db, text) {
-  let service = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (:?to|-) ([\w ]*?) service will/)
+  let service = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) service will/)
 
   if (service) {
     let departureTime = service[1]
     let origin = service[2] + ' Railway Station'
-    let destination = service[4] + ' Railway Station'
+    let destination = service[3] + ' Railway Station'
     let capacity = text.match(/capacity of (\d+) carriages/)[1]
 
     setServiceAsReducedCapacity(db, departureTime, origin, destination, capacity)

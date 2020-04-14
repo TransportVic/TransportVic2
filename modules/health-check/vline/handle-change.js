@@ -46,14 +46,14 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
 function change(db, text) {
   if (text.includes('delay')) return
 
-  let service = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (:?to|-) ([\w ]*?) service will (\w+) at ([\w ]+)./)
+  let service = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) service will (\w+) (?:early )?(?:at|from) ([\w ]+)\./)
 
   if (service) {
     let departureTime = service[1]
     let origin = service[2] + ' Railway Station'
-    let destination = service[4] + ' Railway Station'
-    let type = service[5]
-    let changePoint = service[6]
+    let destination = service[3] + ' Railway Station'
+    let type = service[4]
+    let changePoint = service[5]
 
     setServiceAsChanged(db, departureTime, origin, destination, type, changePoint)
   } else {
