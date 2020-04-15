@@ -234,6 +234,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
   let runIDsSeen = []
 
   let sunburyGroup = ['1-V12', '1-V45', '1-Ech'] // bendigo, swanhill, echuca
+  let seymourGroup = ['1-V40', '1-Sht'] // seymour, shepparton
 
   await async.forEach(trainDepartures, async trainDeparture => {
     let run = runs[trainDeparture.run_id]
@@ -253,6 +254,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
 
     let possibleRouteGTFSIDs = [routeGTFSID]
     if (sunburyGroup.includes(routeGTFSID)) possibleRouteGTFSIDs = sunburyGroup
+    if (seymourGroup.includes(routeGTFSID)) possibleRouteGTFSIDs = seymourGroup
 
     for (let i = 0; i <= 1; i++) {
       let tripDay = now.clone().add(-i, 'days')
