@@ -42,7 +42,7 @@ function reduction(db, text) {
     let departureTime = service[1]
     let origin = service[2] + ' Railway Station'
     let destination = service[3] + ' Railway Station'
-    let capacity = text.match(/capacity of (\d+) carriages/)[1]
+    let capacity = text.match(/capacity of (\d+) carriages?/)[1]
 
     setServiceAsReducedCapacity(db, departureTime, origin, destination, capacity)
   } else {
