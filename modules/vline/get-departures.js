@@ -236,7 +236,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
   let sunburyGroup = ['1-V12', '1-V45', '1-Ech'] // bendigo, swanhill, echuca
   let seymourGroup = ['1-V40', '1-Sht'] // seymour, shepparton
 
-  await async.forEach(trainDepartures, async trainDeparture => {
+  await async.forEachSeries(trainDepartures, async trainDeparture => {
     let run = runs[trainDeparture.run_id]
     let route = routes[trainDeparture.route_id]
 
@@ -247,10 +247,6 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
 
     let routeGTFSID = route.route_gtfs_id
     let destination = utils.adjustStopname(run.destination_name)
-
-    let runID = destination + scheduledDepartureTimeMinutes
-    if (runIDsSeen.includes(runID)) return
-    runIDsSeen.push(runID)
 
     let possibleRouteGTFSIDs = [routeGTFSID]
     if (sunburyGroup.includes(routeGTFSID)) possibleRouteGTFSIDs = sunburyGroup
@@ -281,6 +277,10 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     }
 
     if (!trip) return // Same deal as coach - direction stuff creating non existent trips
+
+    let runID = destination + scheduledDepartureTimeMinutes
+    if (runIDsSeen.includes(runID)) return
+    runIDsSeen.push(runID)
 
     let shortRouteName = getShortRouteName(trip)
 

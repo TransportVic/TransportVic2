@@ -74,7 +74,7 @@ let singlePlatforms = [
   'Shepparton',
   'Wangaratta',
   'Wodonga',
-  'Byunip',
+  'Bunyip',
   'Longwarry',
   'Trafalgar',
   'Moe',
