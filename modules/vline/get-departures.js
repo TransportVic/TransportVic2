@@ -358,7 +358,6 @@ async function getDepartures(station, db) {
     cancelledTrains = scheduledTrains.filter(departure => departure.cancelled)
     scheduledTrains = scheduledTrains.filter(departure => !departure.isTrainReplacement)
   } catch (e) {
-    console.log(e)
   }
 
   let coachStop = station

@@ -309,7 +309,7 @@ module.exports = {
       if (lastStop) {
         if (i === expressParts.length - 1 && nextStop === destination) {
           texts.push(textMap.thenRunsExpressAtoB.format(previousStop, nextStop))
-        } if (lastStop === previousStop) {
+        } else if (lastStop === previousStop) {
           texts.push(textMap.expressAtoB.format(previousStop, nextStop))
         } else {
           texts.push(textMap.sasAtoB.format(lastStop, previousStop))
@@ -327,7 +327,7 @@ module.exports = {
       lastStop = nextStop
     })
 
-    if (routeStops[routeStops.indexOf(lastStop) + 1] !== destination) {
+    if (routeStops[routeStops.indexOf(lastStop)] !== destination) {
       texts.push(textMap.thenSASTo.format(destination))
     }
 
