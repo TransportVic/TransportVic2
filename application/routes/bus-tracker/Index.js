@@ -61,6 +61,30 @@ function adjustTrip(trip) {
   return trip
 }
 
+router.get('/bus-bot', async (req, res) => {
+  let {db} = res
+  let busTrips = db.getCollection('bus trips')
+  let smartrakIDs = db.getCollection('smartrak ids')
+  let date = utils.getYYYYMMDDNow()
+
+  let {fleet} = querystring.parse(url.parse(req.url).query)
+  if (!fleet) return res.end()
+
+  let bus = await smartrakIDs.findDocument({ fleetNumber: fleet })
+  let query = { date }
+
+  let smartrakID
+
+  if (bus) smartrakID = bus.smartrakID
+  else smartrakID = parseInt(fleet)
+
+  query.smartrakID = smartrakID
+  let tripsToday = await busTrips.findDocuments(query)
+    .sort({departureTime: 1}).toArray()
+
+  res.json(tripsToday.map(adjustTrip))
+})
+
 router.get('/bus', async (req, res) => {
   let {db} = res
   let busTrips = db.getCollection('bus trips')

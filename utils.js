@@ -321,11 +321,13 @@ module.exports = {
     if (typeof options[0] === 'string')
       body = await request(options[0], {
         timeout: 5000,
+        gzip: true,
         ...(options || {})
       })
     else
       body = await request({
         timeout: 5000,
+        gzip: true,
         ...options
       })
 
