@@ -67,22 +67,45 @@ router.get('/bus-bot', async (req, res) => {
   let smartrakIDs = db.getCollection('smartrak ids')
   let date = utils.getYYYYMMDDNow()
 
-  let {fleet} = querystring.parse(url.parse(req.url).query)
-  if (!fleet) return res.end()
+  let {fleet, service} = querystring.parse(url.parse(req.url).query)
 
-  let bus = await smartrakIDs.findDocument({ fleetNumber: fleet })
-  let query = { date }
+  if (fleet) {
+    let bus = await smartrakIDs.findDocument({ fleetNumber: fleet })
+    let query = { date }
 
-  let smartrakID
+    let smartrakID
 
-  if (bus) smartrakID = bus.smartrakID
-  else smartrakID = parseInt(fleet)
+    if (bus) smartrakID = bus.smartrakID
+    else smartrakID = parseInt(fleet)
 
-  query.smartrakID = smartrakID
-  let tripsToday = await busTrips.findDocuments(query)
-    .sort({departureTime: 1}).toArray()
+    query.smartrakID = smartrakID
+    let tripsToday = await busTrips.findDocuments(query)
+      .sort({departureTime: 1}).toArray()
 
-  res.json(tripsToday.map(adjustTrip))
+    res.json(tripsToday.map(adjustTrip))
+  } else if (service) {
+    let rawTripsToday = await busTrips.findDocuments({
+      date,
+      routeNumber: {
+        $in: service.split('|')
+      }
+    }).sort({departureTime: 1, origin: 1}).toArray()
+
+    let tripsToday = (await async.map(rawTripsToday, async rawTrip => {
+      let {fleetNumber} = await smartrakIDs.findDocument({
+        smartrakID: rawTrip.smartrakID
+      }) || {}
+
+      let {origin, destination, departureTime} = rawTrip
+
+      rawTrip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + rawTrip.smartrakID
+      return rawTrip
+    }))
+
+    res.json(tripsToday.map(adjustTrip))
+  } else {
+    res.json([])
+  }
 })
 
 router.get('/bus', async (req, res) => {
