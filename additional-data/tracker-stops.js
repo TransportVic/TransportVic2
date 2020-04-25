@@ -298,5 +298,13 @@ module.exports = [
   'whittlesea/whittlesea-showgrounds-yea-road',
   'reservoir/edwardes-street-spring-street',
   'knoxfield/anne-road-o-connor-road',
-  'wantirna/old-stud-road-burwood-highway'
+  'wantirna/old-stud-road-burwood-highway',
+  'gardenvale/north-road-kooyong-road',
+  'armadale/armadale-railway-station',
+  'oakleigh/oakleigh-shopping-centre',
+  'olinda/cuckoo-restaurant-mount-dandenong-tourist-road',
+  'clifton-hill/clifton-hill-railway-station',
+  'parkville/royal-park-railway-station',
+  'moonee-ponds/maribyrnong-road-ascot-vale-road',
+  'footscray/donald-street-moore-street'
 ]
