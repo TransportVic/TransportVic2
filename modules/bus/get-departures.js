@@ -139,7 +139,7 @@ async function getDeparturesFromPTV(stop, db) {
 
         let hasSeenStop = false
         trip.stopTimings = trip.stopTimings.filter(stop => {
-          if (stopGTFSIDs.includes(stop.stopGTFSID)) {
+          if (allGTFSIDs.includes(stop.stopGTFSID)) {
             hasSeenStop = true
           }
           return hasSeenStop
@@ -251,10 +251,11 @@ async function getDepartures(stop, db) {
     departure.bay = bay
     departure.departureRoad = departureRoad
 
-    let importantStops = trip.stopTimings.slice(1, -1).map(stop => stop.stopName)
+    let importantStops = trip.stopTimings.map(stop => stop.stopName)
+      .filter((e, i, a) => a.indexOf(e) === i)
+      .slice(1, -1)
       .filter(utils.isCheckpointStop)
       .map(utils.shorternStopName)
-      .filter((e, i, a) => a.indexOf(e) === i)
 
     if (importantStops.length)
       departure.viaText = `Via ${importantStops.slice(0, -1).join(', ')}${(importantStops.length > 1 ? ' & ' : '') + importantStops.slice(-1)[0]}`
