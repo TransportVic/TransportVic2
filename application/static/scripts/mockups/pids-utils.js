@@ -1,9 +1,9 @@
 /*
 
 FSS Escalator {
-  MAX_COLUMNS: 4,
+  MAX_COLUMNS: 2,
   MIN_COLUMN_SIZE: 5,
-  MAX_COLUMN_SIZE: 11
+  MAX_COLUMN_SIZE: 22
 }
 
 FSS Platform {
@@ -11,6 +11,13 @@ FSS Platform {
   CONNECTION_LOSS: 2,
   MIN_COLUMN_SIZE: 5,
   MAX_COLUMN_SIZE: 11
+}
+
+Suburban Platform {
+  MAX_COLUMNS: 3,
+  CONNECTION_LOSS: 2,
+  MIN_COLUMN_SIZE: 5,
+  MAX_COLUMN_SIZE: 10
 }
 
 */
