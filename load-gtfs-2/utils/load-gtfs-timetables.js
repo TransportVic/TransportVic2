@@ -23,6 +23,9 @@ async function getStopData(stops, stopGTFSID, cache) {
   return bayData
 }
 
+// Keep it consistent across iterations to prevent overrides and loss of data
+let routeDirections = {}
+
 module.exports = async function(collections, gtfsID, trips, tripTimings, calendarDays, calendarDates, direction, routeNumber, routeDetails) {
   let {gtfsTimetables, stops, routes} = collections
 
@@ -30,7 +33,6 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
   let calendarCache = {}
 
   let remainingTripTimings = tripTimings.slice(0)
-  let routeDirections = {}
 
   await async.forEachSeries(trips, async trip => {
     let {tripID, routeGTFSID, shapeID} = trip
