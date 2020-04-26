@@ -16,15 +16,19 @@ let modes = {
 module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip) {
   let stopsCollection = db.getCollection('stops')
   let liveTimetables = db.getCollection('live timetables')
+  let routesCollection = db.getCollection('routes')
 
-  let url = `/v3/pattern/run/${ptvRunID}/route_type/${modes[mode]}?expand=stop&expand=run&expand=route`
+  let url = `/v3/pattern/run/${ptvRunID}/route_type/${modes[mode]}?expand=stop&expand=run&expand=route&expand=direction`
   if (time)
     url += `&date_utc=${time}`
   if (stopID)
     url += `&stop_id=${stopID}`
 
-  let {departures, stops, runs, routes} = await ptvAPI(url)
+  let {departures, stops, runs, routes, directions} = await ptvAPI(url)
   let run = Object.values(runs)[0]
+  let ptvDirection = Object.values(directions)[0]
+  let routeData = Object.values(routes)[0]
+
   if (mode === 'nbus') mode = 'bus'
 
   departures = departures.map(departure => {
@@ -36,6 +40,10 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let dbStops = {}
   let checkModes = [mode]
   if (mode === 'regional coach') checkModes.push('regional train')
+
+  let routeGTFSID = routeData.route_gtfs_id
+  let route = await routesCollection.findDocument({ routeGTFSID })
+  let gtfsDirection = route.ptvDirections[ptvDirection.direction_name]
 
   await async.forEach(Object.values(stops), async stop => {
     let stopName = stop.stop_name.trim()
@@ -73,7 +81,9 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
         let stopName = utils.adjustRawStopName(nameModifier(utils.adjustStopname(ptvStop.stop_name.trim())))
           .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
 
-        return checkModes.includes(bay.mode) && bay.fullStopName === stopName
+        let matchingService = bay.services.find(s => s.routeGTFSID === routeGTFSID && s.gtfsDirection === gtfsDirection)
+
+        return checkModes.includes(bay.mode) && bay.fullStopName === stopName && matchingService
       })[0]
     if (!stopBay) {
       stopBay = dbStops[stop_id].bays
@@ -107,11 +117,8 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     return stopTiming
   })
 
-  let routeData = Object.values(routes)[0]
-
   let vehicleDescriptor = run.vehicle_descriptor || {}
 
-  let routeGTFSID = routeData.route_gtfs_id
   if (mode === 'regional coach')
     routeGTFSID = '5-' + routeGTFSID.slice(2)
 
@@ -138,6 +145,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     origin: stopTimings[0].stopName,
     type: "timings",
     updateTime: new Date(),
+    gtfsDirection,
     direction
   }
 

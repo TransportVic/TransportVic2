@@ -150,6 +150,9 @@
         "stopNumber": "string"
       }]
     }],
-    "flags": "Object:optional"
+    "flags": "Object:optional",
+    "ptvDirections": {
+      "<direction name>": "number"
+    }
   }
 }

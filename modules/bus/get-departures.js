@@ -92,7 +92,6 @@ async function getDeparturesFromPTV(stop, db) {
     gtfsIDPairs = gtfsIDPairs.concat(nightbusGTFSIDs.map(s => [s, true]))
 
   let isCheckpointStop = utils.isCheckpointStop(stop.stopName)
-  let checkStopName = stop.stopName.split('/')[0]
 
   await async.forEach(gtfsIDPairs, async stopGTFSIDPair => {
     let stopGTFSID = stopGTFSIDPair[0],
@@ -140,8 +139,7 @@ async function getDeparturesFromPTV(stop, db) {
 
         let hasSeenStop = false
         trip.stopTimings = trip.stopTimings.filter(stop => {
-          let stopName = stop.stopName.split('/')[0]
-          if (checkStopName === stopName) {
+          if (stopGTFSIDs.includes(stop.stopGTFSID)) {
             hasSeenStop = true
           }
           return hasSeenStop

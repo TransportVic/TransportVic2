@@ -30,6 +30,8 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
   let calendarCache = {}
 
   let remainingTripTimings = tripTimings.slice(0)
+  let routeDirections = {}
+
   await async.forEachSeries(trips, async trip => {
     let {tripID, routeGTFSID, shapeID} = trip
     let operationDays
@@ -38,6 +40,10 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
       operationDays = gtfsUtils.calendarToDates(calendarDays, calendarDates, trip.calendarID).map(date => date.format('YYYYMMDD'))
       calendarCache[trip.calendarID] = operationDays
     }
+
+    let ptvDirection = trip.headsign
+    if (!routeDirections[routeGTFSID]) routeDirections[routeGTFSID] = {}
+    routeDirections[routeGTFSID][ptvDirection] = trip.gtfsDirection
 
     let timingsIndex = remainingTripTimings.findIndex(tripTiming => tripTiming.tripID === tripID)
     let timings = remainingTripTimings[timingsIndex]
@@ -113,4 +119,15 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
 
   routeCache = null
   stopCache = null
+
+  await async.forEach(Object.keys(routeDirections), async routeGTFSID => {
+    let directions = routeDirections[routeGTFSID]
+    await routes.updateDocument({
+      routeGTFSID
+    }, {
+      $set: {
+        ptvDirections: directions
+      }
+    })
+  })
 }
