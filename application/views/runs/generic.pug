@@ -4,8 +4,13 @@ block head
   title=`TransportVic - ${trip.departureTime} ${trip.origin} to ${trip.destination}`
   
 block title
-  - function processName(name) { return shorternStopName(name.split('/')[0]) }
-  span=`${trip.departureTime} ${processName(trip.origin)} to ${processName(trip.destination)}`
+  -
+    function processName(name) { return shorternStopName(name.split('/')[0]) }
+    let title = `${trip.departureTime} ${processName(trip.origin)} to ${processName(trip.destination)}`
+    if (trip.routeNumber) {
+      title = `${trip.departureTime} ${trip.routeNumber} to ${processName(trip.destination)}`
+    }
+  span=title
   
 block style
   link(rel='stylesheet' href='/static/css/runs/base-style.css')

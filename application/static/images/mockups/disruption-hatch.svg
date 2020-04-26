@@ -5,15 +5,11 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   inkscape:version="1.1-dev (ddb55ca, 2020-02-02)"
-   sodipodi:docname="disruption-hatch.png.svg"
-   viewBox="0 0 64.32 453.76001"
-   height="453.76001"
-   width="64.32"
+   version="1.1"
    id="svg1030"
-   version="1.1">
+   width="63.982422"
+   height="129.60159"
+   viewBox="0 0 63.982422 129.60159">
   <metadata
      id="metadata1036">
     <rdf:RDF>
@@ -28,33 +24,8 @@
   </metadata>
   <defs
      id="defs1034" />
-  <sodipodi:namedview
-     inkscape:current-layer="g1038"
-     inkscape:window-maximized="1"
-     inkscape:window-y="23"
-     inkscape:window-x="0"
-     inkscape:cy="226.88"
-     inkscape:cx="32.16"
-     inkscape:zoom="1.008238"
-     showgrid="false"
-     id="namedview1032"
-     inkscape:window-height="855"
-     inkscape:window-width="1440"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0"
-     guidetolerance="10"
-     gridtolerance="10"
-     objecttolerance="10"
-     borderopacity="1"
-     bordercolor="#666666"
-     pagecolor="#ffffff" />
-  <g
-     id="g1038"
-     inkscape:label="Image"
-     inkscape:groupmode="layer">
-    <path
-       d="M -0.16015625 0.15625 L -0.16015625 453.75977 L -0.078125 453.75977 L 14.140625 439.43945 C 21.961229 431.56345 36.378786 416.99893 46.179688 407.07422 L 64 389.0293 L 64 356.59375 L 64 324.15625 L 48.554688 339.75781 C 40.059266 348.33903 25.69339 362.85675 16.632812 372.01953 L 0.16015625 388.67969 L 0.078125 356.4707 L -0.00390625 324.25977 L 3.1601562 321.08984 C 4.9001402 319.34625 19.30126 304.78587 35.162109 288.73242 L 64 259.54297 L 63.998047 227.13281 L 63.998047 194.7207 L 51.416016 207.35938 C 44.496208 214.31137 30.097535 228.85361 19.417969 239.67383 L 0 259.3457 L 0.005859375 227.0332 L 0.01171875 194.7207 L 31.988281 162.40039 L 63.964844 130.08008 L 63.974609 97.599609 L 63.986328 65.119141 L 41.373047 88 C 28.935948 100.584 14.538989 115.12831 9.3808594 120.32031 L 0.00390625 129.75977 L 0.017578125 97.439453 L 0.033203125 65.119141 L 31.996094 32.800781 L 63.958984 0.48046875 L 31.900391 0.31835938 L -0.16015625 0.15625 z "
-       style="fill:#000000;fill-opacity:1;stroke-width:5.23801"
-       id="rect1044" />
-  </g>
+  <path
+     id="path11141"
+     d="M 0.00781225,129.6016 63.960938,64.960938 63.982422,0 0,64.640625 Z"
+     style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
 </svg>
