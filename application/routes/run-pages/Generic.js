@@ -54,16 +54,19 @@ async function pickBestTrip(data, db) {
 
   // So PTV API only returns estimated timings for bus if stop_id is set and the bus hasn't reached yet...
   let referenceTrip = liveTrip || gtfsTrip
-  let startsBeforeMidnight = tripStartMinutes < 1440
+  let now = utils.now()
 
-  let checkStop = referenceTrip.stopTimings.map(stopTiming => {
-    if (startsBeforeMidnight && stopTiming.departureTimeMinutes < 60 * 8)
-      stopTiming.departureTimeMinutes += 1440
-    stopTiming.actualDepartureTime = utils.now().startOf('day').add(stopTiming.departureTimeMinutes, 'minutes')
+  let checkStops = referenceTrip.stopTimings.map(stopTiming => {
+    stopTiming.actualDepartureTime = now.clone().startOf('day').add(stopTiming.departureTimeMinutes, 'minutes')
     return stopTiming
   }).filter(stopTiming => {
-    return stopTiming.actualDepartureTime.diff(utils.now(), 'minutes') > 0
-  }).slice(1)[0]
+    return stopTiming.actualDepartureTime.diff(now, 'minutes') > 0
+  }).slice(0, -1)
+
+  let checkStop
+  if (checkStops.length === 1) {
+    checkStop = checkStops[0]
+  } else checkStop = checkStops[1]
 
   if (!checkStop) return gtfsTrip
 
@@ -71,7 +74,7 @@ async function pickBestTrip(data, db) {
   let isoDeparture = checkStopTime.toISOString()
   let mode = data.mode === 'bus' ? 2 : 1
   try {
-    let {departures, runs} = await ptvAPI(`/v3/departures/route_type/${mode}/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-3, 'minutes').toISOString()}&max_results=5&expand=run&expand=stop`)
+    let {departures, runs} = await ptvAPI(`/v3/departures/route_type/${mode}/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-3, 'minutes').startOf('minute').toISOString()}&max_results=5&expand=run&expand=stop`)
 
     let departure = departures.filter(departure => {
       let run = runs[departure.run_id]
