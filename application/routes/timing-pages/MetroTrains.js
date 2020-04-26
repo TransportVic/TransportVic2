@@ -43,19 +43,41 @@ router.get('/:stationName', async (req, res) => {
 
     departure.codedLineName = utils.encodeName(trip.routeName)
 
-    let destination = departure.destination || trip.destination.slice(0, -16)
-    let origin = trip.origin.slice(0, -16)
-    let originDepartureTime = trip.departureTime
-    if (departure.forming) {
-      origin = 'flinders-street'
-      let flindersStreetTiming = departure.forming.stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
-      originDepartureTime = flindersStreetTiming.departureTime
+    let destination, origin, originDepartureTime, destinationArrivalTime
+
+    let tripToUse = departure.forming || trip
+    let stops = tripToUse.stopTimings.map(e => e.stopName.slice(0, -16))
+
+    if (tripToUse.direction === 'Up') {
+      origin = tripToUse.origin.slice(0, -16)
+      originDepartureTime = tripToUse.departureTime
+
+      let fssIndex = stops.indexOf('Flinders Street')
+      if (fssIndex !== -1) {
+        destination = 'Flinders Street'
+        destinationArrivalTime = tripToUse.stopTimings[fssIndex].arrivalTime
+      } else {
+        destination = tripToUse.destination.slice(0, -16)
+        destinationArrivalTime = tripToUse.destinationArrivalTime
+      }
+    } else {
+      let fssIndex = stops.indexOf('Flinders Street')
+      if (fssIndex !== -1) {
+        origin = 'Flinders Street'
+        originDepartureTime = tripToUse.stopTimings[fssIndex].departureTime
+      } else {
+        origin = tripToUse.origin.slice(0, -16)
+        originDepartureTime = tripToUse.departureTime
+      }
+
+      destination = tripToUse.destination.slice(0, -16)
+      destinationArrivalTime = tripToUse.destinationArrivalTime
     }
 
     let stopGTFSID = departure.trip.stopTimings.filter(stop => stop.stopName === station.stopName)[0].stopGTFSID
 
     departure.tripURL = `${utils.encodeName(origin)}/${originDepartureTime}/`
-      + `${utils.encodeName(destination)}/${trip.destinationArrivalTime}/`
+      + `${utils.encodeName(destination)}/${destinationArrivalTime}/`
       + `${utils.getYYYYMMDDNow()}/#stop-${stopGTFSID}`
     return departure
   })

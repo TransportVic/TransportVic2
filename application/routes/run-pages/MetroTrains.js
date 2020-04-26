@@ -28,12 +28,24 @@ async function pickBestTrip(data, db) {
   let minutesToTripEnd = tripEndTime.diff(utils.now(), 'minutes')
 
   let query = {
-    mode: 'metro train',
-    origin: originStop.stopName,
-    departureTime: data.departureTime,
-    destination: destinationStop.stopName,
-    destinationArrivalTime: data.destinationArrivalTime,
-    operationDays: data.operationDays
+    $and: [{
+      mode: 'metro train',
+      operationDays: data.operationDays
+    }, {
+      stopTimings: {
+        $elemMatch: {
+          stopName: originStop.stopName,
+          departureTime: data.departureTime
+        }
+      }
+    }, {
+      stopTimings: {
+        $elemMatch: {
+        destination: destinationStop.stopName,
+        destinationArrivalTime: data.destinationArrivalTime,
+        }
+      }
+    }]
   }
 
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
