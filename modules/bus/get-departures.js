@@ -222,7 +222,8 @@ async function getScheduledDepartures(stop, db) {
 }
 
 async function getDepartures(stop, db) {
-  if (departuresCache.get(stop.stopName + 'B')) return departuresCache.get(stop.stopName + 'B')
+  let stopCacheName = stop.codedSuburb[0] + stop.stopName + 'B'
+  if (departuresCache.get(stopCacheName)) return departuresCache.get(stopCacheName)
 
   let departures
   try {
@@ -271,7 +272,7 @@ async function getDepartures(stop, db) {
     return departure
   })
 
-  departuresCache.put(stop.stopName + 'B', departures)
+  departuresCache.put(stopCacheName, departures)
   return departures
 }
 

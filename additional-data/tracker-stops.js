@@ -306,5 +306,10 @@ module.exports = [
   'clifton-hill/clifton-hill-railway-station',
   'parkville/royal-park-railway-station',
   'moonee-ponds/maribyrnong-road-ascot-vale-road',
-  'footscray/donald-street-moore-street'
+  'footscray/donald-street-moore-street',
+  'sunshine/victoria-university-ballarat-road',
+  'footscray/victoria-university-ballarat-road',
+  'melton-south/victoria-university-rees-road',
+  'melton/woodgrove-shopping-centre-high-street',
+  'melton/melton-bus-interchange-palmerston-street'
 ]
