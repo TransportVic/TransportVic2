@@ -251,7 +251,7 @@ async function getDepartures(stop, db) {
     departure.bay = bay
     departure.departureRoad = departureRoad
 
-    let importantStops = trip.stopTimings.map(stop => stop.stopName)
+    let importantStops = trip.stopTimings.map(stop => stop.stopName.split('/')[0])
       .filter((e, i, a) => a.indexOf(e) === i)
       .slice(1, -1)
       .filter(utils.isCheckpointStop)
