@@ -3,7 +3,7 @@ div.content > div {
 }
 
 div.left {
-  width: 71vw;
+  width: 70vw;
 }
 
 div.message {
@@ -51,7 +51,7 @@ div.departureInfo > div > span:nth-child(1) {
 }
 
 div.departureInfo > div > span:nth-child(2) {
-  font-size: calc(0.13 * var(--height));
+  font-size: calc(0.15 * var(--height));
   line-height: calc(0.13 * var(--height));
   font-family: "NetworkSansBold"
 }
@@ -68,7 +68,7 @@ div.actualDiv {
 }
 
 div.departureInfo > div.actualDiv > div > span:nth-child(1) {
-  font-size: calc(0.13 * var(--height));
+  font-size: calc(0.15 * var(--height));
   line-height: calc(0.13 * var(--height));
   font-family: "NetworkSansBold"
 }
@@ -80,26 +80,42 @@ div.departureInfo > div.actualDiv > div > span:nth-child(2) {
 }
 
 div.hozWhiteLine {
-  height: calc(0.01 * var(--height));
+  height: calc(0.005 * var(--height));
   background: #ffffff;
 }
 
 div.stops {
   height: calc(0.7 * var(--height));
   background: #00000;
+
+  display: flex;
+}
+
+div.stops div.stopsColumn {
+  margin-left: -0.375vw;
+  width: 16.5vw;
+}
+
+div.stops div.stopsColumn div {
+  border-left: 0.125vw solid white;
+  padding-left: 1vw;
+  margin-top: calc(0.04 * var(--height));
+  margin-left: 0.25vw;
+}
+
+div.stops div.stopsColumn div p {
+  font-size: calc(0.075 * var(--height));
+  line-height: calc(0.085 * var(--height));
+  font-family: NetworkSansRegular;
 }
 
 
 
 
-
-div.vertWhiteLine {
-  width: 0.5vw;
-  background-color: #ffffff;
-}
 
 div.right {
-  width: 28.5vw;
+  width: 29.75vw;
+  border-left: 0.25vw solid white;
 }
 
 div.headers {
@@ -119,7 +135,7 @@ div.followingDeparture {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  height: calc(0.22 * var(--height));
+  height: calc(0.21 * var(--height));
 }
 
 div.followingDeparture > div {
@@ -129,7 +145,7 @@ div.followingDeparture > div {
 
 div.right span.scheduled {
   margin-left: 0.5vw;
-  width: 10vw;
+  width: 7vw;
 }
 
 div.right span.actual {
@@ -156,7 +172,7 @@ div.followingDeparture:nth-child(3) {
 }
 
 div.time {
-  margin-top: calc(0.08 * var(--height));
+  margin-top: calc(0.11 * var(--height));
   height: calc(0.17 * var(--height));
   background-color: #ffffff;
   display: flex;
@@ -165,12 +181,13 @@ div.time {
 }
 
 div.timeContainer {
-  width: 28vw;
+  width: 29.25vw;
+  height: calc(0.145 * var(--height));
   display: flex;
   align-items: center;
   justify-content: center;
   border: 0.1vw solid gray;
-  margin-right: 0.5vw;
+  margin-right: 0.25vw;
 }
 
 div.time span {

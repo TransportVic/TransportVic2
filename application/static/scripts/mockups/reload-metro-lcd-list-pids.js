@@ -57,12 +57,31 @@ $.ready(() => {
       }
     }
 
-    for (let stop of firstDeparture.additionalInfo.screenStops.slice(1)) {
-      if (stop.isExpress)
-        $('.stops').innerHTML += '<p>&nbsp;&nbsp;---</p>'
-      else
-        $('.stops').innerHTML += `<p>${stop.stopName}</p>`
-    }
+    let stopColumns = splitStops(firstDeparture.additionalInfo.screenStops.slice(1), false, {
+      MAX_COLUMNS: 4,
+      CONNECTION_LOSS: 2,
+      MIN_COLUMN_SIZE: 5,
+      MAX_COLUMN_SIZE: 10
+    })
+
+    console.log(stopColumns)
+
+    stopColumns.forEach(stopColumn => {
+      let column = document.createElement('div')
+
+      stopColumn.forEach(stop => {
+        if (stop.isExpress)
+          column.innerHTML += '<p>&nbsp;&nbsp;---</p>'
+        else
+          column.innerHTML += `<p>${stop.stopName}</p>`
+      })
+
+      $('.stops').innerHTML += `
+<div class="stopsColumn">
+  ${column.outerHTML}
+</div>
+`
+    })
 
     setMessagesActive(false)
   })

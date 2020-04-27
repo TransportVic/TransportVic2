@@ -17,12 +17,12 @@ p {
 
 div.content {
   width: 100vw;
-  height: 28vw; /* 32:9 ratio, 28.125 */
+  height: calc(100vw * 9 / 32); /* 32:9 ratio, 28.125 */
   background-color: black;
   color: white;
 
   --width: 100vw;
-  --height: 28vw;
+  --height: calc(100vw * 9 / 32);
 
   display: flex;
   justify-content: center;

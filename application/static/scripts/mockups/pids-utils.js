@@ -14,7 +14,7 @@ FSS Platform {
 }
 
 Suburban Platform {
-  MAX_COLUMNS: 3,
+  MAX_COLUMNS: 4,
   CONNECTION_LOSS: 2,
   MIN_COLUMN_SIZE: 5,
   MAX_COLUMN_SIZE: 10
@@ -22,7 +22,7 @@ Suburban Platform {
 
 */
 
-function calculateLineNumber(stationsCount, hasConnections, options) {
+window.calculateLineNumber = function calculateLineNumber(stationsCount, hasConnections, options) {
   let MAX_COLUMNS = options.MAX_COLUMNS
   let CONNECTION_LOSS = options.CONNECTION_LOSS
   let MIN_COLUMN_SIZE = options.MIN_COLUMN_SIZE
@@ -35,5 +35,24 @@ function calculateLineNumber(stationsCount, hasConnections, options) {
     if (MAX_COLUMNS * columnSize >= totalStations) {
       return Math.floor((columnSize + MAX_COLUMN_SIZE) / 2)
     }
+  }
+}
+
+window.splitStops = function splitStops(stops, hasConnections, options) {
+  let size = calculateLineNumber(stops.length, hasConnections, options)
+
+  let parts = []
+
+  let start = 0
+  for (let i = 0; true; i++) {
+    let end = start + size
+    if (hasConnections) {
+      end -= i * options.CONNECTION_LOSS
+    }
+
+    let part = stops.slice(start, end)
+    if (part.length === 0) return parts
+    parts.push(part)
+    start = end
   }
 }
