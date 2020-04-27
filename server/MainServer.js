@@ -142,7 +142,7 @@ module.exports = class MainServer {
       if (req.url.startsWith('/.well-known')) {
         try {
           let reqURL = new url.URL('https://transportsg.me' + req.url)
-          const filePath = path.join(config.webrootPath, '.well-known', reqURL.pathname.split('/')[2])
+          const filePath = path.join(config.webrootPath, reqURL.pathname)
 
           fs.createReadStream(filePath).pipe(res)
 
