@@ -152,6 +152,10 @@ div.headers span {
   line-height: calc(0.035 * var(--height));
 }
 
+div.headers span.actual {
+  margin-right: 2vw !important;
+}
+
 div.followingDeparture {
   display: flex;
   justify-content: center;
