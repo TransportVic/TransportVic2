@@ -23,7 +23,10 @@ html
         return mainTime
       }
     div.content
-      div.left
+      div(style='display: none;').fullMessage
+        img(src='/static/images/mockups/announcements.svg')
+        p Please Listen for Announcements
+      div(style='display: block;').left
         div(style='display: flex;').message
           p Checking departures
           p Please wait...
@@ -40,7 +43,7 @@ html
                 span min
           div.hozWhiteLine
           div.stops
-      div.right
+      div(style='display: block;').right
         div.headers
           span.scheduled Schedule
           span.destination Train To

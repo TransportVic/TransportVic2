@@ -14,10 +14,31 @@ function formatTime(time) {
 function setMessagesActive(active) {
   if (active) {
     $('.message').style = 'display: flex;'
+    $('.fullMessage').style = 'display: none;'
     $('.nextDeparture').style = 'display: none;'
+    $('.left').style = 'display: block;'
+    $('.right').style = 'display: block;'
   } else {
     $('.message').style = 'display: none;'
+    $('.fullMessage').style = 'display: none;'
     $('.nextDeparture').style = 'display: flex;'
+    $('.left').style = 'display: block;'
+    $('.right').style = 'display: block;'
+  }
+}
+
+function setFullMessageActive(active) {
+  if (active) {
+    $('.message').style = 'display: none;'
+    $('.fullMessage').style = 'display: flex;'
+    $('.left').style = 'display: none;'
+    $('.right').style = 'display: none;'
+  } else {
+    $('.message').style = 'display: none;'
+    $('.fullMessage').style = 'display: none;'
+    $('.nextDeparture').style = 'display: flex;'
+    $('.left').style = 'display: block;'
+    $('.right').style = 'display: block;'
   }
 }
 
@@ -31,10 +52,19 @@ function setBusesReplaceTrains() {
   setMessagesActive(true)
 }
 
+function setListenAnnouncements() {
+  $('.fullMessage').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>'
+  setFullMessageActive(true)
+}
+
 function updateBody() {
   $.ajax({
     method: 'POST'
   }, (err, status, body) => {
+    if (err) {
+      return setListenAnnouncements()
+    }
+
     departures = body.departures
 
     let firstDeparture = departures[0]

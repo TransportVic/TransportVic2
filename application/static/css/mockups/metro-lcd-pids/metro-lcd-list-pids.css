@@ -2,6 +2,25 @@ div.content > div {
   height: var(--height);
 }
 
+div.fullMessage {
+  justify-content: center;
+  align-items: center;
+}
+
+div.fullMessage > img {
+  margin-top: 0.5vw;
+  height: calc(0.3 * var(--height));
+}
+
+div.fullMessage > * {
+  font-size: calc(0.175 * var(--height));
+  line-height: calc(0.175 * var(--height));
+  height: calc(0.175 * var(--height));
+  margin: 1vw;
+  font-family: "NetworkSansRegular";
+}
+
+
 div.left {
   width: 70vw;
 }
