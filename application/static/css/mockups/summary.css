@@ -18,11 +18,11 @@ div.container {
 
 div.platform {
   display: inline-block;
-  margin: 2vw;
+  margin: 1.5vw;
 }
 
 div.title {
-  width: 28.5vw;
+  width: 30vw;
   height: 3vw;
   background-color: #dddddd;
   border-top-left-radius: 0.5vw;
@@ -35,7 +35,7 @@ div.title {
 }
 
 div.platform iframe {
-  width: 28.5vw;
-  height: calc(28.5vw * 9 / 32);
+  width: 30vw;
+  height: calc(30vw * 9 / 32);
   border: none;
 }
