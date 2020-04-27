@@ -7,6 +7,9 @@ const healthCheck = require('../health-check')
 const moment = require('moment')
 const departureUtils = require('../utils/get-train-timetables')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
+const EventEmitter = require('events')
+
+let ptvAPILocks = {}
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
 
@@ -240,6 +243,23 @@ async function getDepartures(station, db, departuresCount=15, includeCancelled=t
     return filterDepartures(departuresCache.get(cacheKey))
   }
 
+  if (ptvAPILocks[cacheKey]) {
+    return await new Promise(resolve => {
+      ptvAPILocks.on('done', data => {
+        resolve(data)
+      })
+    })
+  }
+
+  ptvAPILocks[cacheKey] = new EventEmitter()
+
+  function returnDepartures(departures) {
+    ptvAPILocks[cacheKey].emit(cacheKey, departures)
+    delete ptvAPILocks[cacheKey]
+
+    return departures
+  }
+
   try {
     let departures = await getDeparturesFromPTV(station, db, departuresCount, includeCancelled, platform, ttl)
 
@@ -262,10 +282,11 @@ async function getDepartures(station, db, departuresCount=15, includeCancelled=t
       ttl: ttl * 1000 * 60
     })
 
-    return filterDepartures(Object.values(mergedDepartures))
+    return returnDepartures(filterDepartures(Object.values(mergedDepartures)))
   } catch (e) {
     console.log(e)
     let scheduled = await departureUtils.getScheduledDepartures(station, db, 'metro train', 90)
+    return returnDepartures(scheduled)
   }
 }
 
