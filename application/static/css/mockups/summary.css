@@ -1,0 +1,41 @@
+@font-face {
+  font-family: "NetworkSansMedium";
+  font-display: fallback;
+  src: local('Network Sans 2018 Medium'), url(/static/fonts/NetworkSans-Medium.ttf);
+}
+
+body {
+  display: table;
+  margin: 0;
+  padding: 0;
+}
+
+div.container {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+div.platform {
+  display: inline-block;
+  margin: 2vw;
+}
+
+div.title {
+  width: 28.5vw;
+  height: 3vw;
+  background-color: #dddddd;
+  border-top-left-radius: 0.5vw;
+  border-top-right-radius: 0.5vw;
+  font-family: "NetworkSansMedium";
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.platform iframe {
+  width: 28.5vw;
+  height: calc(28.5vw * 9 / 32);
+  border: none;
+}

@@ -81,15 +81,15 @@ async function getData(req, res) {
 }
 
 router.get('/:station/:platform', async (req, res) => {
-  let departures = await getData(req, res)
+  // let departures = await getData(req, res)
 
   res.render('mockups/metro-lcd-pids/pids', departures)
 })
 
 router.get('/:station/:platform/list', async (req, res) => {
-  let departures = await getData(req, res)
+  // let departures = await getData(req, res)
 
-  res.render('mockups/metro-lcd-pids/list-pids', departures)
+  res.render('mockups/metro-lcd-pids/list-pids')
 })
 
 router.post('/:station/:platform', async (req, res) => {

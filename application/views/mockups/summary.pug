@@ -1,0 +1,12 @@
+html
+  head
+    link(rel='stylesheet' href='/static/css/mockups/summary.css')
+  body
+    div.container
+      - for (let i = 1; i <= 14; i++) {
+      -  if (i == 11) continue
+        div.platform
+          div.title
+            span=`/FSS/platform/${i}`
+          iframe(src=`/mockups/metro-lcd-pids/flinders-street/${i}/list`)
+      - }

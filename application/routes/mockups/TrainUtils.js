@@ -43,18 +43,24 @@ module.exports = {
     let vlineDepartures = [], metroDepartures = []
 
     try {
-      vlineDepartures = (await getVLineDepartures(station, db)).map(departure => {
-        if (departure.platform)
-          departure.platform = departure.platform.replace('?', '')
-        departure.type = 'vline'
-        departure.actualDepartureTime = departure.scheduledDepartureTime
+      let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train')
+      if (vlinePlatform) {
+        vlineDepartures = (await getVLineDepartures(station, db)).map(departure => {
+          if (departure.platform)
+            departure.platform = departure.platform.replace('?', '')
+          departure.type = 'vline'
+          departure.actualDepartureTime = departure.scheduledDepartureTime
 
-        return departure
-      })
+          return departure
+        })
+      }
     } catch (e) {}
 
     try {
-      metroDepartures = (await getMetroDepartures(station, db, 15, true))
+      let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
+      if (metroPlatform) {
+        metroDepartures = (await getMetroDepartures(station, db, 15, true))
+      }
     } catch (e) {}
 
     let departures = [...metroDepartures, ...vlineDepartures].filter(departure => {
@@ -134,10 +140,17 @@ module.exports = {
       }
     } else if (departure.type === 'vline') {
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
-      if (gippslandLines.includes(routeName))
-        lineStops = ['Southern Cross', 'Flinders Street', ...lineStops]
-      else
-        lineStops = ['Southern Cross', ...lineStops]
+      if (isUp) {
+        if (gippslandLines.includes(routeName))
+          lineStops = [...lineStops, 'Flinders Street', 'Southern Cross']
+        else
+          lineStops = [...lineStops, 'Southern Cross']
+      } else {
+        if (gippslandLines.includes(routeName))
+          lineStops = ['Southern Cross', 'Flinders Street', ...lineStops]
+        else
+          lineStops = ['Southern Cross', ...lineStops]
+      }
     } else {
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
 

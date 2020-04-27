@@ -8,6 +8,10 @@ router.get('/', (req, res) => {
   res.render('mockups/index')
 })
 
+router.get('/summary', (req, res) => {
+  res.render('mockups/summary')
+})
+
 router.get('/get', async (req, res) => {
   let stops = res.db.getCollection('stops')
   let query = querystring.parse(url.parse(req.url).query)

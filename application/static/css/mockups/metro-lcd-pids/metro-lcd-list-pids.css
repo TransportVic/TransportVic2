@@ -231,3 +231,7 @@ div.time span {
   font-size: calc(0.13 * var(--height));
   line-height: calc(0.13 * var(--height));
 }
+
+div.vline {
+  background-color: #43157c;
+}

@@ -11,6 +11,9 @@ const getStoppingPattern = require('../utils/get-vline-stopping-pattern')
 const guessPlatform = require('./guess-scheduled-platforms')
 const termini = require('../../additional-data/termini-to-lines')
 const getCoachDepartures = require('../regional-coach/get-departures')
+const EventEmitter = require('events')
+
+let ptvAPILocks = {}
 
 async function getStationFromVNETName(vnetStationName, db) {
   const station = await db.getCollection('stops').findDocument({
@@ -331,8 +334,26 @@ function findFlagMap(flags) {
 }
 
 async function getDepartures(station, db) {
-  if (departuresCache.get(station.stopName + 'V')) {
-    return departuresCache.get(station.stopName + 'V')
+  let cacheKey = station.stopName + 'V'
+  if (departuresCache.get(cacheKey)) {
+    return departuresCache.get(cacheKey)
+  }
+
+  if (ptvAPILocks[cacheKey]) {
+    return await new Promise(resolve => {
+      ptvAPILocks[cacheKey].on('done', data => {
+        resolve(data)
+      })
+    })
+  }
+
+  ptvAPILocks[cacheKey] = new EventEmitter()
+
+  function returnDepartures(departures) {
+    ptvAPILocks[cacheKey].emit('done', departures)
+    delete ptvAPILocks[cacheKey]
+
+    return departures
   }
 
   let flagMap = {}
@@ -406,18 +427,18 @@ async function getDepartures(station, db) {
       })
 
       let allDepartures = vnetDepartures.concat(coachReplacements).concat(cancelledTrains).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
-      departuresCache.put(station.stopName + 'V', allDepartures)
+      departuresCache.put(cacheKey, allDepartures)
 
-      return allDepartures
+      return returnDepartures(allDepartures)
     } catch (e) {
     }
   }
 
   if (scheduledTrains.length) {
     let allDepartures = scheduledTrains.concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
-    departuresCache.put(station.stopName + 'V', allDepartures)
+    departuresCache.put(cacheKey, allDepartures)
 
-    return allDepartures
+    return returnDepartures(allDepartures)
   } else {
     let scheduled = await departureUtils.getScheduledDepartures(station, db, 'regional train', 180)
     scheduled = scheduled.map(departure => {
@@ -449,9 +470,9 @@ async function getDepartures(station, db) {
     })
 
     let allDepartures = scheduled.concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
-    departuresCache.put(station.stopName + 'V', allDepartures)
+    departuresCache.put(cacheKey, allDepartures)
 
-    return allDepartures
+    return returnDepartures(allDepartures)
   }
 }
 

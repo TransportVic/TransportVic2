@@ -6,6 +6,9 @@ const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 5 })
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const destinationOverrides = require('../../additional-data/coach-destinations')
+const EventEmitter = require('events')
+
+let ptvAPILocks = {}
 
 let vlineTrainRoutes = [
   '1-Ech',
@@ -157,8 +160,26 @@ async function getScheduledDepartures(stop, db, useLive) {
 }
 
 async function getDepartures(stop, db) {
-  if (departuresCache.get(stop.stopName + 'C'))
-    return departuresCache.get(stop.stopName + 'C')
+  let cacheKey = stop.stopName + 'C'
+  if (departuresCache.get(cacheKey))
+    return departuresCache.get(cacheKey)
+
+  if (ptvAPILocks[cacheKey]) {
+    return await new Promise(resolve => {
+      ptvAPILocks[cacheKey].on('done', data => {
+        resolve(data)
+      })
+    })
+  }
+
+  ptvAPILocks[cacheKey] = new EventEmitter()
+
+  function returnDepartures(departures) {
+    ptvAPILocks[cacheKey].emit('done', departures)
+    delete ptvAPILocks[cacheKey]
+
+    return departures
+  }
 
   let departures
   try {
@@ -201,12 +222,12 @@ async function getDepartures(stop, db) {
 
       departure.isTrainReplacement = hasNSPDeparture
     }
-    return departure
+    return returnDepartures(departure)
   })
 
-  departuresCache.put(stop.stopName + 'C', Object.values(departures))
+  departuresCache.put(cacheKey, Object.values(departures))
 
-  return Object.values(departures)
+  return returnDepartures(Object.values(departures))
 }
 
 module.exports = getDepartures

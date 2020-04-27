@@ -73,9 +73,15 @@ function updateBody() {
       else setNoDepartures()
       return
     }
-    console.log(firstDeparture)
+
     $('.firstDestination').textContent = firstDeparture.destination
     $('.scheduledDiv span:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+
+    if (firstDeparture.type === 'vline') {
+      $('.departureInfo').className = 'departureInfo vline'
+    } else {
+      $('.departureInfo').className = 'departureInfo'
+    }
 
     if (firstDeparture.estimatedDepartureTime) {
       if (firstDeparture.minutesToDeparture > 0) {
@@ -122,6 +128,12 @@ function updateBody() {
         $('.destination', div).textContent = departure.destination
         $('.actual', div).textContent = departure.minutesToDeparture
         $('.stoppingType', div).textContent = departure.stoppingType
+
+        if (departure.type === 'vline') {
+          div.className = 'followingDeparture vline'
+        } else {
+          div.className = 'followingDeparture'
+        }
       } else {
         $('.scheduled', div).textContent = '--'
         $('.destination', div).textContent = '--'
@@ -135,7 +147,7 @@ function updateBody() {
 }
 
 $.ready(() => {
-  setInterval(updateBody, 1000 * 60)
+  setInterval(updateBody, 1000 * 30)
   updateBody()
 
   setInterval(() => {

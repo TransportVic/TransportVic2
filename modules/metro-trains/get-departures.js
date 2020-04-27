@@ -239,22 +239,22 @@ function filterDepartures(departures) {
 async function getDepartures(station, db, departuresCount=15, includeCancelled=true, platform=null, ttl=1) {
   let cacheKey = station.stopName + 'M-' + departuresCount + '-' + includeCancelled + '-' + platform
 
-  if (departuresCache.get(cacheKey)) {
-    return filterDepartures(departuresCache.get(cacheKey))
-  }
-
   if (ptvAPILocks[cacheKey]) {
     return await new Promise(resolve => {
-      ptvAPILocks.on('done', data => {
+      ptvAPILocks[cacheKey].on('done', data => {
         resolve(data)
       })
     })
   }
 
+  if (departuresCache.get(cacheKey)) {
+    return filterDepartures(departuresCache.get(cacheKey))
+  }
+
   ptvAPILocks[cacheKey] = new EventEmitter()
 
   function returnDepartures(departures) {
-    ptvAPILocks[cacheKey].emit(cacheKey, departures)
+    ptvAPILocks[cacheKey].emit('done', departures)
     delete ptvAPILocks[cacheKey]
 
     return departures
