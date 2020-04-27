@@ -1,0 +1,247 @@
+let constants = {
+   "Zones":{
+      "1":"Zone 1",
+      "2":"Zone 2",
+      "3":"Zone 1+2"
+   },
+   "FareTypes":{
+      "1":"Full Fare",
+      "2":"Concession",
+      "3":"Senior"
+   },
+   "Durations":{
+      "1":"2 Hour",
+      "2":"Daily",
+      "3":"7d",
+      "4":"28d"
+   },
+   "Days":{
+      "1":"Weekday",
+      "2":"Weekend - Saturday",
+      "3":"Weekend - Sunday",
+      "4":"Public Holiday"
+   },
+   "Caps":{
+      "full":6.3,
+      "conc":3.15,
+      "senfree":0,
+      "senior":4.3
+   }
+};
+
+let fares = {
+	"Money": {
+		"Zone 1": {
+			"Full Fare": {
+				"Weekday": {
+					"2 Hour": 4.5,
+					"Daily": 9
+				},
+				"Weekend - Saturday": {
+					"2 Hour": 4.5,
+					"Daily": 6.5
+				},
+				"Weekend - Sunday": {
+					"2 Hour": 4.5,
+					"Daily": 6.5
+				},
+				"Public Holiday": {
+					"2 Hour": 4.5,
+					"Daily": 6.5
+				}
+			},
+			"Concession": {
+				"Weekday": {
+					"2 Hour": 2.25,
+					"Daily": 4.5
+				},
+				"Weekend - Saturday": {
+					"2 Hour": 2.25,
+					"Daily": 3.25
+				},
+				"Weekend - Sunday": {
+					"2 Hour": 2.25,
+					"Daily": 3.25
+				},
+				"Public Holiday": {
+					"2 Hour": 2.25,
+					"Daily": 3.25
+				}
+			},
+			"Senior": {
+				"Weekday": {
+					"2 Hour": 2.25,
+					"Daily": 4.5
+				},
+				"Weekend - Saturday": {
+					"2 Hour": 0,
+					"Daily": 0
+				},
+				"Weekend - Sunday": {
+					"2 Hour": 0,
+					"Daily": 0
+				},
+				"Public Holiday": {
+					"2 Hour": 2.25,
+					"Daily": 3.25
+				}
+			}
+		},
+		"Zone 2": {
+			"Full Fare": {
+				"Weekday": {
+					"2 Hour": 3,
+					"Daily": 6
+				},
+				"Weekend - Saturday": {
+					"2 Hour": 3,
+					"Daily": 6
+				},
+				"Weekend - Sunday": {
+					"2 Hour": 3,
+					"Daily": 6
+				},
+				"Public Holiday": {
+					"2 Hour": 3,
+					"Daily": 6
+				}
+			},
+			"Concession": {
+				"Weekday": {
+					"2 Hour": 1.5,
+					"Daily": 3
+				},
+				"Weekend - Saturday": {
+					"2 Hour": 1.5,
+					"Daily": 3
+				},
+				"Weekend - Sunday": {
+					"2 Hour": 1.5,
+					"Daily": 3
+				},
+				"Public Holiday": {
+					"2 Hour": 1.5,
+					"Daily": 3
+				}
+			},
+			"Senior": {
+				"Weekday": {
+					"2 Hour": 1.5,
+					"Daily": 3
+				},
+				"Weekend - Saturday": {
+					"2 Hour": 0,
+					"Daily": 0
+				},
+				"Weekend - Sunday": {
+					"2 Hour": 0,
+					"Daily": 0
+				},
+				"Public Holiday": {
+					"2 Hour": 1.5,
+					"Daily": 3
+				}
+			}
+		},
+		"Zone 1+2": {
+			"Full Fare": {
+				"Weekday": {
+					"2 Hour": 4.5,
+					"Daily": 9
+				},
+				"Weekend - Saturday": {
+					"2 Hour": 4.5,
+					"Daily": 6.5
+				},
+				"Weekend - Sunday": {
+					"2 Hour": 4.5,
+					"Daily": 6.5
+				},
+				"Public Holiday": {
+					"2 Hour": 4.5,
+					"Daily": 6.5
+				}
+			},
+			"Concession": {
+				"Weekday": {
+					"2 Hour": 2.25,
+					"Daily": 4.5
+				},
+				"Weekend - Saturday": {
+					"2 Hour": 2.25,
+					"Daily": 3.25
+				},
+				"Weekend - Sunday": {
+					"2 Hour": 2.25,
+					"Daily": 3.25
+				},
+				"Public Holiday": {
+					"2 Hour": 2.25,
+					"Daily": 3.25
+				}
+			},
+			"Senior": {
+				"Weekday": {
+					"2 Hour": 2.25,
+					"Daily": 4.5
+				},
+				"Weekend - Saturday": {
+					"2 Hour": 0,
+					"Daily": 0
+				},
+				"Weekend - Sunday": {
+					"2 Hour": 0,
+					"Daily": 0
+				},
+				"Public Holiday": {
+					"2 Hour": 2.25,
+					"Daily": 3.25
+				}
+			}
+		}
+	},
+	"Pass": {
+		"Zone 1": {
+			"Full Fare": {
+				"7d": 6.428571428571429,
+				"28d": 5.4
+			},
+			"Concession": {
+				"7d": 3.2142857142857144,
+				"28d": 2.7
+			},
+			"Senior": {
+				"7d": 3.2142857142857144,
+				"28d": 2.7
+			}
+		},
+		"Zone 2": {
+			"Full Fare": {
+				"7d": 4.285714285714286,
+				"28d": 3.6
+			},
+			"Concession": {
+				"7d": 2.142857142857143,
+				"28d": 1.8
+			},
+			"Senior": {
+				"7d": 2.142857142857143,
+				"28d": 1.8
+			}
+		},
+		"Zone 1+2": {
+			"Full Fare": {
+				"7d": 6.428571428571429,
+				"28d": 5.4
+			},
+			"Concession": {
+				"7d": 3.2142857142857144,
+				"28d": 2.7
+			},
+			"Senior": {
+				"7d": 3.2142857142857144,
+				"28d": 2.7
+			}
+		}
+	}
+}

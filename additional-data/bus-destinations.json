@@ -117,7 +117,6 @@
       "Caroline Springs Library": "Caroline Springs"
     },
     "462": {
-      "Lauriston Qy": "Caroline Springs South",
       "Lauriston Quay": "Caroline Springs South"
     },
     "476": {
@@ -275,7 +274,7 @@
       "Burwood Highway/Warrigal Road": "Burwood"
     },
     "770": {
-      "Karingal SC": "Karingal",
+      "Karingal SC": "Karingal SC",
       "Corlett Street/Orwil Street": "Orwil Street"
     },
     "771": {
@@ -285,8 +284,8 @@
       "Humphries Road/Rosedale Grove": "Eliza Heights"
     },
     "773": {
-      "Parkland Close/Baden Powell Drive": "Frankston South/Baden Powell (?)",
-      "Humphries Road/Overport Road": "Frankston South/Overport Road (?)"
+      "Parkland Close/Baden Powell Drive": "Frankston Sth (Baden Powell Res)",
+      "Humphries Road/Overport Road": "Frankston Sth (Overport Rd)"
     },
     "774": {
       "Frankston High School": "Delacombe"
@@ -337,6 +336,9 @@
     },
     "812": {
       "Boundary Road/Lower Dandenong Road": "Braeside"
+    },
+    "814": {
+      "Spring Valley Reserve": "Springvale South"
     },
     "824": {
       "Parkmore SC": "Keysborough"
@@ -448,6 +450,7 @@
     "McCallum Street/Campbell Street": "Swan Hill",
     "General Store/Mallee Highway": "Tooleybuc",
     "Bridgekeepers Cottage/Murray Street": "Tooleybuc",
-    "Memorial Park/Grant Street": "Yarram"
+    "Memorial Park/Grant Street": "Yarram",
+    "Jennings Street/Northern Highway": "Heathcote"
   }
 }
