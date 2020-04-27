@@ -7,7 +7,7 @@ module.exports = class HTTPSRedirectServer {
   app (req, res) {
     let reqURL = new url.URL('https://transportsg.me' + req.url)
     if (req.url.startsWith('/.well-known')) {
-      const filePath = path.join(config.webrootPath, reqURL.pathname.split('/')[2])
+      const filePath = path.join(config.webrootPath, '.well-known', reqURL.pathname.split('/')[2])
 
       fs.createReadStream(filePath).pipe(res)
 
