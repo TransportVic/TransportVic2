@@ -93,7 +93,8 @@ div.stops {
 
 div.stops div.stopsColumn {
   margin-left: -0.375vw;
-  width: 16.5vw;
+  min-width: 14vw;
+  padding-right: 2vw;
 }
 
 div.stops div.stopsColumn div {
@@ -107,6 +108,7 @@ div.stops div.stopsColumn div p {
   font-size: calc(0.075 * var(--height));
   line-height: calc(0.085 * var(--height));
   font-family: NetworkSansRegular;
+  white-space: nowrap;
 }
 
 
@@ -141,29 +143,43 @@ div.followingDeparture {
 div.followingDeparture > div {
   display: flex;
   align-content: center;
+  margin-top: calc(-0.02 * var(--height));
 }
 
 div.right span.scheduled {
   margin-left: 0.5vw;
-  width: 7vw;
+  width: 6.5vw;
+  font-family: "NetworkSansBold";
+}
+
+div.right span.destination {
+  font-family: "NetworkSansBold";
 }
 
 div.right span.actual {
   margin-left: auto;
   margin-right: 0.5vw;
-  width: 7vw;
   text-align: right;
+  width: 7vw;
+  font-family: "NetworkSansBold";
+}
+
+div.right span.min {
+  margin-right: 0.5vw;
+  text-align: right;
+  font-family: "NetworkSansRegular";
+  margin-top: 0.2vw;
 }
 
 div.followingDeparture span.stoppingType {
   margin-left: 0.5vw;
-  margin-top: 0.5vw;
+  font-family: "NetworkSansRegular";
 }
 
 div.followingDeparture span {
-  font-size: calc(0.0625 * var(--height));
-  line-height: calc(0.0625 * var(--height));
-  height: calc(0.0625 * var(--height));
+  font-size: calc(0.065 * var(--height));
+  line-height: calc(0.065 * var(--height));
+  height: calc(0.065 * var(--height));
 }
 
 div.followingDeparture:nth-child(3) {

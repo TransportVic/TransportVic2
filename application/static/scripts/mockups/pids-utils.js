@@ -36,6 +36,8 @@ window.calculateLineNumber = function calculateLineNumber(stationsCount, hasConn
       return Math.floor((columnSize + MAX_COLUMN_SIZE) / 2)
     }
   }
+
+  return MAX_COLUMN_SIZE // will probably spill but its fine - theres a reason some spots don't have a list PIDS
 }
 
 window.splitStops = function splitStops(stops, hasConnections, options) {

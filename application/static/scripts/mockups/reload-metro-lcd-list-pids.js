@@ -31,7 +31,7 @@ function setBusesReplaceTrains() {
   setMessagesActive(true)
 }
 
-$.ready(() => {
+function updateBody() {
   $.ajax({
     method: 'POST'
   }, (err, status, body) => {
@@ -43,7 +43,7 @@ $.ready(() => {
       else setNoDepartures()
       return
     }
-
+    console.log(firstDeparture)
     $('.firstDestination').textContent = firstDeparture.destination
     $('.scheduledDiv span:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
 
@@ -61,10 +61,10 @@ $.ready(() => {
       MAX_COLUMNS: 4,
       CONNECTION_LOSS: 2,
       MIN_COLUMN_SIZE: 5,
-      MAX_COLUMN_SIZE: 10
+      MAX_COLUMN_SIZE: 9
     })
 
-    console.log(stopColumns)
+    $('.stops').innerHTML = ''
 
     stopColumns.forEach(stopColumn => {
       let column = document.createElement('div')
@@ -77,14 +77,36 @@ $.ready(() => {
       })
 
       $('.stops').innerHTML += `
-<div class="stopsColumn">
+  <div class="stopsColumn">
   ${column.outerHTML}
-</div>
-`
+  </div>
+  `
+    })
+
+
+    let nextDepartures = [...departures.slice(1, 4), null, null, null].slice(0, 3)
+    nextDepartures.forEach((departure, i) => {
+      let div = $(`div.followingDeparture:nth-child(${i + 2})`)
+      if (departure) {
+        $('.scheduled', div).textContent = formatTime(new Date(departure.scheduledDepartureTime))
+        $('.destination', div).textContent = departure.destination
+        $('.actual', div).textContent = departure.minutesToDeparture
+        $('.stoppingType', div).textContent = departure.stoppingType
+      } else {
+        $('.scheduled', div).textContent = '--'
+        $('.destination', div).textContent = '--'
+        $('.actual', div).textContent = '--'
+        $('.stoppingType', div).textContent = ''
+      }
     })
 
     setMessagesActive(false)
   })
+}
+
+$.ready(() => {
+  setInterval(updateBody, 1000 * 60)
+  updateBody()
 
   setInterval(() => {
     $('div.timeContainer span').textContent = formatTime(new Date())

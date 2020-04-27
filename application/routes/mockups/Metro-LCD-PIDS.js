@@ -66,7 +66,7 @@ async function getData(req, res) {
 
     if (departure.type === 'vline') {
       departure.stoppingType = 'No Suburban Passengers'
-    } else if (expressCount === 0) departure.stoppingType = 'Stops All Stations'
+    } else if (expressCount === 0) departure.stoppingType = 'Stops All'
     else if (expressCount < 5) departure.stoppingType = 'Limited Express'
     else departure.stoppingType = 'Express'
 
