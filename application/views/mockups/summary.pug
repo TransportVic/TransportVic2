@@ -3,10 +3,10 @@ html
     link(rel='stylesheet' href='/static/css/mockups/summary.css')
   body
     div.container
-      - for (let i = 1; i <= 14; i++) {
-      -  if (i == 11) continue
+      - for (let i = 1; i <= 16; i++) {
+       - // if (i == 11) continue
         div.platform
           div.title
-            span=`/FSS/platform/${i}`
-          iframe(src=`/mockups/metro-lcd-pids/flinders-street/${i}/list`)
+            a(href=`/mockups/metro-lcd-pids/southern-cross/${i}/list`)=`/SSS/platform/${i}`
+          iframe(src=`/mockups/metro-lcd-pids/southern-cross/${i}/list`)
       - }

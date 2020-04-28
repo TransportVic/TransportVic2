@@ -93,7 +93,7 @@ function updateBody() {
       }
     }
 
-    let stopColumns = splitStops(firstDeparture.additionalInfo.screenStops.slice(1), false, {
+    let {stopColumns, size} = splitStops(firstDeparture.additionalInfo.screenStops.slice(1), false, {
       MAX_COLUMNS: 4,
       CONNECTION_LOSS: 2,
       MIN_COLUMN_SIZE: 5,
@@ -105,15 +105,19 @@ function updateBody() {
     stopColumns.forEach(stopColumn => {
       let column = document.createElement('div')
 
+      let hasStop = false
+
       stopColumn.forEach(stop => {
         if (stop.isExpress)
           column.innerHTML += '<p>&nbsp;&nbsp;---</p>'
-        else
+        else {
           column.innerHTML += `<p>${stop.stopName}</p>`
+          hasStop = true
+        }
       })
 
       $('.stops').innerHTML += `
-  <div class="stopsColumn">
+  <div class="stopsColumn columns-${size}${hasStop ? '' : ' expressRow'}">
   ${column.outerHTML}
   </div>
   `

@@ -34,6 +34,10 @@ div.title {
   align-items: center;
 }
 
+div.title a, div.title a:visited {
+  color: black;
+}
+
 div.platform iframe {
   width: 30vw;
   height: calc(30vw * 9 / 32);

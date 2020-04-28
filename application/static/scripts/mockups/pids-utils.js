@@ -53,7 +53,7 @@ window.splitStops = function splitStops(stops, hasConnections, options) {
     }
 
     let part = stops.slice(start, end)
-    if (part.length === 0) return parts
+    if (part.length === 0) return {stopColumns: parts, size}
     parts.push(part)
     start = end
   }

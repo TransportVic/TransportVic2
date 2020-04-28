@@ -111,9 +111,12 @@ div.stops {
 }
 
 div.stops div.stopsColumn {
-  margin-left: -0.375vw;
-  min-width: 14vw;
+  min-width: 12vw;
   padding-right: 2vw;
+}
+
+div.stops div.stopsColumn:nth-child(1) div {
+  border-left: none !important;
 }
 
 div.stops div.stopsColumn div {
@@ -130,6 +133,22 @@ div.stops div.stopsColumn div p {
   white-space: nowrap;
 }
 
+div.stopsColumn.expressRow {
+  min-width: unset !important;
+}
+
+div.stopsColumn.columns-9 {
+  min-width: unset !important;
+}
+
+div.stopsColumn.columns-9 div {
+  margin-top: calc(0.02 * var(--height)) !important;
+}
+
+div.stopsColumn.columns-9 div p {
+  font-size: calc(0.07 * var(--height)) !important;
+  line-height: calc(0.08 * var(--height)) !important;
+}
 
 
 
