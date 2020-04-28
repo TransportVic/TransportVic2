@@ -91,6 +91,9 @@ function updateBody() {
         $('.actualDiv div span:nth-child(1)').textContent = 'NOW'
         $('.actualDiv div span:nth-child(2)').textContent = ''
       }
+    } else {
+      $('.actualDiv div span:nth-child(1)').textContent = '--'
+      $('.actualDiv div span:nth-child(2)').textContent = 'min'
     }
 
     let {stopColumns, size} = splitStops(firstDeparture.additionalInfo.screenStops.slice(1), false, {
@@ -130,7 +133,8 @@ function updateBody() {
       if (departure) {
         $('.scheduled', div).textContent = formatTime(new Date(departure.scheduledDepartureTime))
         $('.destination', div).textContent = departure.destination
-        $('.actual', div).textContent = departure.minutesToDeparture
+        if (departure.estimatedDepartureTime)
+          $('.actual', div).textContent = departure.minutesToDeparture
         $('.stoppingType', div).textContent = departure.stoppingType
 
         if (departure.type === 'vline') {
@@ -143,6 +147,8 @@ function updateBody() {
         $('.destination', div).textContent = '--'
         $('.actual', div).textContent = '--'
         $('.stoppingType', div).textContent = ''
+
+        div.className = 'followingDeparture'
       }
     })
 
