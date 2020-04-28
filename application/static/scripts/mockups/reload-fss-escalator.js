@@ -179,10 +179,12 @@ function updateBody() {
         }
         index++
       }
+
+      if (expressPart.length)
+        expresses.push({stations: expressPart, col: 2})
       stoppingHTML += createStationRow(secondColumn.slice(-1)[0].stopName, 'terminates')
     }
     stoppingHTML += `</div>`
-
     let containerDIV = document.createElement('div')
     containerDIV.innerHTML = stoppingHTML
     $('.stoppingAt').innerHTML = ''
@@ -195,7 +197,7 @@ function updateBody() {
       let startingTop = firstStop.index * 64 + 64
       let endingTop = lastStop.index * 64 + 128
       let middle = (startingTop + endingTop) / 2 - 12
-      console.log(column, firstStop)
+
       column.innerHTML += `<div class="expressArrow" style="margin-top: ${middle}px">
         <img src="/static/images/mockups/express-arrow.svg" class="${firstDepartureClass}"/>
         <img src="/static/images/mockups/express-arrow.svg"/>

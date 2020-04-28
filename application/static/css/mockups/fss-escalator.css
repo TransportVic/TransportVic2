@@ -255,7 +255,7 @@ div.smallDeparture div.right > div p {
 @media(prefers-color-scheme: dark) {
 
   html {
-    background-color: #ffffff;
+    background-color: #000000;
   }
 
   body {
