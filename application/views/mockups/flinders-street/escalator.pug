@@ -20,16 +20,14 @@ html
   body
     div.contents
       div.topLineBanner.no-line
-      div(style='display: none;').messages
+      div(style='display: block;').messages
         div.firstDepartureTime
           div.platform.no-line
             span=platform
         div.textWrapper
           p Checking departures
           p Please wait...
-          //- img(src='/static/images/mockups/no-boarding-train.svg')
-          //- p No trains are departing from this platform
-      div(style='display: flex;').firstDepartureInfo
+      div(style='display: none;').firstDepartureInfo
         div.details
           span.scheduledDepartureTime --
           br

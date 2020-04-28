@@ -43,3 +43,11 @@ div.platform iframe {
   height: calc(30vw * 9 / 32);
   border: none;
 }
+
+div.platform.fss-escalator, div.platform.fss-escalator * {
+  width: 20vw;
+}
+
+div.platform.fss-escalator iframe {
+  height: calc(20vw / 9 * 16);
+}

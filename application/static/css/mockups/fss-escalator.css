@@ -1,3 +1,7 @@
+html {
+  transform-origin: top left;
+}
+
 body {
   width: 1080px;
   display: flex;
@@ -6,6 +10,7 @@ body {
 
 div.contents {
   width: 1007px;
+  height: 1920px;
 }
 
 div.topLineBanner {

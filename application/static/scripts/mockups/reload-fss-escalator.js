@@ -1,3 +1,30 @@
+let northernGroup = [
+  'Craigieburn',
+  'Sunbury',
+  'Upfield',
+  'Werribee',
+  'Williamstown',
+  'Showgrounds/Flemington'
+]
+
+let cliftonHillGroup = [
+  'Hurstbridge',
+  'Mernda'
+]
+
+let crossCityGroup = [
+  'Werribee',
+  'Williamstown',
+  'Frankston'
+]
+
+let gippslandLines = [
+  'Bairnsdale',
+  'Traralgon'
+]
+
+let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
+
 function formatTime(time) {
   let hours = time.getHours()
   let minutes = time.getMinutes()
@@ -20,7 +47,7 @@ function getStoppingType(firstDeparture, isCityStop) {
   let stoppingType = firstDeparture.stoppingType
 
   if (isCityStop || firstDeparture.trip.direction === 'Up') {
-    if (additionalInfo.viaCityLoop) stoppingType += ' via City Loop'
+    if (firstDeparture.additionalInfo.viaCityLoop) stoppingType += ' via City Loop'
     else {
       if (northernGroup.includes(firstDeparture.trip.routeName)) stoppingType += ' via Sthn Cross'
       else if (cliftonHillGroup.includes(firstDeparture.trip.routeName)) stoppingType += ' via Jolimont' //?
@@ -71,8 +98,8 @@ function updateBody() {
     let firstDeparture = departures[0]
     if (!firstDeparture) {
       // Expand for RRB?
-      return setNoDeparturesActive(!departures.length)
-    }
+      return setNoDepartures()
+    } else setMessagesActive(false)
 
     let firstDepartureClass = firstDeparture.codedLineName
     if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
@@ -166,7 +193,15 @@ function updateBody() {
   })
 }
 
+function setBodyScaling() {
+  let ratio = window.innerHeight / 1920
+  $('html').style = `transform: scale(${ratio});`
+}
+
+window.addEventListener('resize', setBodyScaling)
+
 $.ready(() => {
+  setBodyScaling()
   setInterval(updateBody, 1000 * 60)
   updateBody()
 })

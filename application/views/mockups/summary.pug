@@ -7,10 +7,11 @@ html
       -
         if (query.exclude.includes(i)) continue
         let url
-        if ('suburban-text' === query.type) url = `/mockups/metro-lcd-pids/${station}/${i}/`
-        if ('suburban-list' === query.type) url = `/mockups/metro-lcd-pids/${station}/${i}/list`
+        if (query.type === 'suburban-text') url = `/mockups/metro-lcd-pids/${station}/${i}/`
+        if (query.type === 'suburban-list') url = `/mockups/metro-lcd-pids/${station}/${i}/list`
+        if (query.type === 'fss-escalator') url = `/mockups/fss-escalator/${i}/${station}`
 
-      div.platform
+      div(class=`platform ${query.type}`)
         div.title
           a(href=url)=`/{STATION}/platform/${i}`
         iframe(src=url)
