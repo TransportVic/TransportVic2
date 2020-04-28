@@ -86,7 +86,7 @@ module.exports = {
   getFixedLineStops: (tripStops, lineStops, lineName, isUp, type) => {
     let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament')
     if (viaCityLoop) {
-      let cityLoopStops = lineStops.filter(e => cityLoopStations.includes(e))
+      let cityLoopStops = tripStops.filter(e => cityLoopStations.includes(e))
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
 
       if (isUp) {
@@ -98,7 +98,7 @@ module.exports = {
     } else if (type === 'vline') {
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
       if (isUp) {
-        if (gippslandLines.includes(routeName))
+        if (gippslandLines.includes(lineName))
           lineStops = [...lineStops, 'Flinders Street', 'Southern Cross']
         else
           lineStops = [...lineStops, 'Southern Cross']
@@ -363,8 +363,7 @@ module.exports = {
       if (isUp) lineStops = lineStops.slice(0).reverse()
 
       lineStops = module.exports.getFixedLineStops(tripStops, lineStops, routeName, isUp, departure.type)
-
-      let expresses = module.exports.findExpressStops(tripStops, lineStops, routeName, isUp, isVLine, stationName, departure.type)
+      let expresses = module.exports.findExpressStops(tripStops, lineStops, routeName, isUp, isVLine, stationName)
       let stoppingPattern = module.exports.determineStoppingPattern(expresses, destination, lineStops, stationName, stoppingTextMap)
 
       departure.stoppingPattern = stoppingPattern
