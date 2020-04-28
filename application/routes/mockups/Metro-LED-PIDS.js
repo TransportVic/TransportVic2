@@ -5,58 +5,35 @@ const async = require('async')
 const utils = require('../../../utils')
 
 const TrainUtils = require('./TrainUtils')
-const getLineStops = require('./route-stops')
 
-let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central', 'Flinders Street']
+let stoppingTextMap = {
+  stopsAll: 'Stops All Stations',
+  allExcept: 'All Except {0}',
+  expressAtoB: '{0} to {1}',
+  sasAtoB: 'Stops All Stations from {0} to {1}',
+  runsExpressAtoB: 'Runs Express from {0} to {1}',
+  runsExpressTo: 'Runs Express to {0}',
+  thenRunsExpressAtoB: 'then Runs Express from {0} to {1}',
+  sasTo: 'Stops All Stations to {0}',
+  thenSASTo: 'then Stops All Stations to {0}'
+}
+
+let stoppingTypeMap = {
+  vlineService: {
+    stoppingType: 'V/Line Service',
+    stoppingPatternPostfix: ', Not Taking Suburban Passengers'
+  },
+  sas: 'Stops All Stations',
+  limExp: 'Limited Express',
+  exp: 'Express Service'
+}
 
 async function getData(req, res) {
-  let routes = res.db.getCollection('routes')
   let station = await res.db.getCollection('stops').findDocument({
     codedName: req.params.station + '-railway-station'
   })
-  let stationName = station.stopName.slice(0, -16)
 
-  let {platform} = req.params
-
-  let allDepartures = await TrainUtils.getCombinedDepartures(station, res.db)
-  let hasRRB = !!allDepartures.find(d => d.platform === 'RRB')
-  allDepartures = allDepartures.filter(d => d.platform !== 'RRB')
-  let platformDepartures = TrainUtils.filterPlatforms(allDepartures, req.params.platform)
-
-  platformDepartures = platformDepartures.map(departure => {
-    let {trip, destination} = departure
-    let {routeGTFSID, direction, stopTimings} = trip
-    let isUp = direction === 'Up' || departure.forming || false
-    let routeName = departure.shortRouteName || trip.routeName
-    let isVLine = departure.type === 'vline'
-
-    stopTimings = stopTimings.map(stop => stop.stopName.slice(0, -16))
-
-    let routeStops = getLineStops(routeName)
-    if (destination === 'City Loop') destination = 'Flinders Street'
-
-    if (isUp) routeStops = routeStops.slice(0).reverse()
-
-    let expresses = TrainUtils.findExpressStops(stopTimings, routeStops, routeName, isUp, isVLine, stationName)
-    let stoppingPattern = TrainUtils.determineStoppingPattern(expresses, destination, routeStops, stationName)
-
-    departure.stoppingPattern = stoppingPattern
-
-    let expressCount = expresses.reduce((a, e) => a + e.length, 0)
-
-    if (departure.type === 'vline') {
-      departure.stoppingType = 'V/Line Service'
-      departure.stoppingPattern += ', Not Taking Suburban Passengers'
-    } else if (expressCount === 0) departure.stoppingType = 'Stops All Stations'
-    else if (expressCount < 5) departure.stoppingType = 'Limited Express'
-    else departure.stoppingType = 'Express Service'
-
-    return departure
-  })
-
-  let hasDepartures = allDepartures.length > 0
-
-  return { departures: platformDepartures, hasDepartures, hasRRB }
+  return await TrainUtils.getPIDSDepartures(res.db, station, req.params.platform, stoppingTextMap, stoppingTypeMap)
 }
 
 router.get('/:station/:platform', async (req, res) => {

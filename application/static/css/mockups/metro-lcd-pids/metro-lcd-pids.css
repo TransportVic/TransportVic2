@@ -15,8 +15,28 @@ div.content {
   display: block;
 }
 
-div.message {
+div.fullMessage {
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+div.fullMessage > img {
+  margin-top: 0.5vw;
+  height: calc(0.3 * var(--height));
+}
+
+div.fullMessage > * {
+  font-size: calc(0.175 * var(--height));
+  line-height: calc(0.175 * var(--height));
+  height: calc(0.175 * var(--height));
+  margin: 1vw;
+  font-family: "NetworkSansRegular";
+}
+
+div.message {
+  height: calc(var(--height) - 7.25vw);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,22 +44,26 @@ div.message {
 }
 
 div.message p {
-  font-size: 8.2vw;
-  line-height: 8.4vw;
+  font-size: 6vw;
+  line-height: 7vw;
+  height: 7vw;
+  text-align: center;
+}
+
+div.firstDeparture {
+  height: 21vw;
 }
 
 div.topRow {
   height: 8vw;
   display: flex;
   font-family: "NetworkSansBold";
-  margin-top: -1vw;
 }
 
 p.firstDestination {
   font-size: 11.25vw;
   margin-left: 0.5vw;
   letter-spacing: -0.7vw;
-  margin-top: -0.75vw;
   white-space: nowrap;
   width: 50vw;
 }
@@ -115,7 +139,6 @@ div.whiteLine {
   width: 100vw;
   height: 0.25vw;
   background-color: white;
-  margin-top: 3.75vw;
 }
 
 div.bottomRow {

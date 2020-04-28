@@ -61,9 +61,7 @@ function updateBody() {
   $.ajax({
     method: 'POST'
   }, (err, status, body) => {
-    if (err) {
-      return setListenAnnouncements()
-    }
+    if (err) return setListenAnnouncements()
 
     departures = body.departures
 

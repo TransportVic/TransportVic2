@@ -22,30 +22,73 @@ let stopScrolling = false
 let firstRowTimeout, firstRowPause
 let secondRowTimeout, secondRowPause
 
+let firstScheduledTime, firstStoppingPattern
+
 let departures
 
-setInterval(() => {
+function setMessagesActive(state) {
+  if (state) {
+    $('.message').style = 'display: flex;'
+    $('.fullMessage').style = 'display: none;'
+    $('.nextDepartures').style = 'display: block;'
+    $('.firstDeparture').style = 'display: none;'
+  } else {
+    $('.message').style = 'display: none;'
+    $('.fullMessage').style = 'display: none;'
+    $('.nextDepartures').style = 'display: block;'
+    $('.firstDeparture').style = 'display: block;'
+  }
+}
+
+function setFullMessageActive(state) {
+  if (state) {
+    $('.message').style = 'display: none;'
+    $('.fullMessage').style = 'display: flex;'
+    $('.nextDepartures').style = 'display: block;'
+    $('.firstDeparture').style = 'display: none;'
+  } else {
+    $('.message').style = 'display: none;'
+    $('.fullMessage').style = 'display: none;'
+    $('.nextDepartures').style = 'display: block;'
+    $('.firstDeparture').style = 'display: block;'
+  }
+}
+
+function setNoDepartures() {
+  $('.message').innerHTML = '<p>No trains departing from</p><p>this platform</p>'
+  setMessagesActive(true)
+}
+
+function setBusesReplaceTrains() {
+  $('.message').innerHTML = '<p>NO TRAINS OPERATING</p><p>REPLACEMENT BUSES</p><p>HAVE BEEN ARRANGED</p>'
+  setMessagesActive(true)
+}
+
+function setListenAnnouncements() {
+  $('.fullMessage').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>'
+  setFullMessageActive(true)
+}
+
+function updateBody(firstTime) {
   $.ajax({
     method: 'POST'
   }, (err, status, body) => {
-    departures = body.departures
+    if (err) return setListenAnnouncements()
+
+    departures = body.departures.map(d => {
+      if (d.stoppingType === 'Stops All') d.stoppingType = 'Stops All Stations'
+      return d
+    })
 
     let firstDeparture = departures[0]
     let message = $('.message')
     let main = $('.nextDepartures')
 
     if (!firstDeparture) {
-      message.style = 'display: flex;'
-      main.style = 'display: none;'
-      if (body.hasRRB) {
-        message.innerHTML = '<p>NO TRAINS OPERATING</p><p>REPLACEMENT BUSES</p><p>HAVE BEEN ARRANGED</p>'
-      } else {
-        message.innerHTML = '<p>No trains departing from</p><p>this platform</p>'
-      }
-    } else {
-      message.style = 'display: none;'
-      main.style = 'display: block;'
-    }
+      if (body.hasRRB) setBusesReplaceTrains()
+      else setNoDepartures()
+      return
+    } else setMessagesActive(false)
 
     let classes = ''
 
@@ -89,10 +132,13 @@ setInterval(() => {
       $('div.bottomRow > div > span:nth-child(1)').textContent = '--'
     }
 
-    if (firstDepartureScheduledTime !== firstDeparture.scheduledDepartureTime) {
-      firstDepartureScheduledTime = firstDeparture.scheduledDepartureTime
+    if (firstScheduledTime !== firstDeparture.scheduledDepartureTime
+    && firstStoppingPattern !== firstDeparture.stoppingPattern) {
+      firstScheduledTime = firstDeparture.scheduledDepartureTime
+      firstStoppingPattern = firstDeparture.stoppingPattern
 
-      stopScrolling = true
+      if (!firstTime)
+        stopScrolling = true
       clearTimeout(firstRowTimeout)
       clearTimeout(firstRowPause)
       clearTimeout(secondRowTimeout)
@@ -101,11 +147,8 @@ setInterval(() => {
       drawBottomRow()
     }
   })
-}, 1000 * 30)
+}
 
-setInterval(() => {
-  $('div.timeNow span').textContent = formatTime(new Date())
-}, 1000)
 
 function asyncPause(milliseconds) {
   return new Promise(resolve => {
@@ -149,6 +192,7 @@ function drawBottomRow() {
 
   firstRowPause = setTimeout(async () => {
     if (firstStoppingTypeP.textContent === 'Stops All Stations') return await asyncPause(4000)
+
     firstStoppingPatternP.textContent = firstStoppingPatternP.getAttribute('data-text')
     firstStoppingTypeP.style = 'opacity: 0;'
     firstStoppingPatternP.style = 'opacity: 1;'
@@ -161,9 +205,13 @@ function drawBottomRow() {
 }
 
 $.ready(() => {
+  setInterval(updateBody, 1000 * 30)
+  updateBody(true)
+
+  setInterval(() => {
+    $('div.timeNow span').textContent = formatTime(new Date())
+  }, 1000)
 
   firstStoppingTypeP = $('div.middleRow p:nth-child(1)')
   firstStoppingPatternP = $('div.middleRow p:nth-child(2)')
-
-  drawBottomRow()
 })

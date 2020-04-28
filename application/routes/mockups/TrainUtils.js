@@ -359,5 +359,52 @@ module.exports = {
         return departure.platform === platform
       }
     })
+  },
+  getPIDSDepartures: async (db, station, platform, stoppingTextMap, stoppingTypeMap) => {
+    let stationName = station.stopName.slice(0, -16)
+
+    let allDepartures = await module.exports.getCombinedDepartures(station, db)
+    let hasRRB = !!allDepartures.find(d => d.isTrainReplacement)
+    allDepartures = allDepartures.filter(d => !d.isTrainReplacement)
+    let platformDepartures = module.exports.filterPlatforms(allDepartures, platform)
+
+    platformDepartures = platformDepartures.map(departure => {
+      let {trip, destination} = departure
+      let {routeGTFSID, direction, stopTimings} = trip
+      let isUp = direction === 'Up' || departure.forming || false
+      let routeName = departure.shortRouteName || trip.routeName
+      let isVLine = departure.type === 'vline'
+
+      stopTimings = stopTimings.map(stop => stop.stopName.slice(0, -16))
+
+      let routeStops = getLineStops(routeName)
+      if (destination === 'City Loop') destination = 'Flinders Street'
+
+      if (isUp) routeStops = routeStops.slice(0).reverse()
+
+      let expresses = module.exports.findExpressStops(stopTimings, routeStops, routeName, isUp, isVLine, stationName)
+      let stoppingPattern = module.exports.determineStoppingPattern(expresses, destination, routeStops, stationName, stoppingTextMap)
+
+      departure.stoppingPattern = stoppingPattern
+
+      let expressCount = expresses.reduce((a, e) => a + e.length, 0)
+
+      if (departure.type === 'vline') {
+        departure.stoppingType = stoppingTypeMap.vlineService.stoppingType
+        if (stoppingTypeMap.vlineService.stoppingPatternPostfix) {
+          departure.stoppingPattern += stoppingTypeMap.vlineService.stoppingPatternPostfix
+        }
+      } else if (expressCount === 0) departure.stoppingType = stoppingTypeMap.sas
+      else if (expressCount < 5) departure.stoppingType = stoppingTypeMap.limExp
+      else departure.stoppingType = stoppingTypeMap.exp
+
+      departure = module.exports.appendScreenDataToDeparture(departure, station)
+
+      return departure
+    })
+
+    let hasDepartures = allDepartures.length > 0
+
+    return { departures: platformDepartures, hasDepartures, hasRRB }
   }
 }

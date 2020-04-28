@@ -7,10 +7,7 @@ html
     link(rel='stylesheet' href='/static/css/mockups/metro-lcd-pids/metro-lcd-pids.css')
       
     meta(name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, height=device-height')
-    
-    script=`let firstDepartureScheduledTime = '${departures[0] ? departures[0].scheduledDepartureTime : ''}'`
   body
-    //- TODO - make this just a template like the led PIDS, and have the webpage fill this out to reduce duplication
     -
       function formatTime(time) {
         let hours = time.getHours()
@@ -24,91 +21,37 @@ html
 
         return mainTime
       }
-      
-      function shortenStoppingType (type) {
-        if (type === 'Stops All Stations') return 'Stops All'
-        if (type === 'Limited Express') return 'Ltd Express'
-        return type
-      }
     div.content
-      - let firstDeparture = departures[0]
-      div(style=firstDeparture ? 'display: none;' : 'display: flex;').message
-        if hasRRB
-          p NO TRAINS OPERATING
-          p REPLACEMENT BUSES
-          p HAVE BEEN ARRANGED
-        else
-          p No trains departing from
-          p this platform
-      div(style=firstDeparture ? 'display: block;' : 'display: none;').nextDepartures
-        div.topRow
-          //- Flinders Street   Scheduled 9:40 Departing 1min
-          if firstDeparture
-            -
-              let firstDestination = firstDeparture.destination
-              let classes = ''
-              if (firstDestination.length >= 12)
-                classes = ' smaller'
-              // if (firstDeparture.length > 15)
-              //   style = 'transform: translateX(-10%) scaleX(0.8)'
-            p(class=`firstDestination${classes}`)=firstDestination
-            div.firstDepartureInfo
-              div.scheduled
-                p Scheduled
-                p=firstDeparture.scheduledDepartureTime.format('h:mm')
-              div.actual
-                p Departing
-                div
-                  if firstDeparture.minutesToDeparture > 0
-                    span=firstDeparture.minutesToDeparture
+      div(style='display: none;').fullMessage
+        img(src='/static/images/mockups/announcements.svg')
+        p Please Listen for Announcements
+      div(style='display: block;').nextDepartures
+        div.message(style='display: flex;')
+          p Checking departures
+          p Please wait...
+        div(style='display: none;').firstDeparture
+          div.topRow
+              p.firstDestination --
+              div.firstDepartureInfo
+                div.scheduled
+                  p Scheduled
+                  p --
+                div.actual
+                  p Departing
+                  div
+                    span --
                     span min
-                  else
-                    span Now
-                    span
-          else
-            p.firstDestination --
-            div.firstDepartureInfo
-              div.scheduled
-                p Scheduled
-                p --
-              div.actual
-                p Departing
-                div
-                  span --
-                  span min
-        div.middleRow
-          if firstDeparture
-            p=firstDeparture.stoppingType
-            p(style='opacity: 0;' data-text=firstDeparture.stoppingPattern)=firstDeparture.stoppingPattern
-          else
+          div.middleRow
             p --
-            p(style='opacity: 0;' data-text='') --
+            p(style='opacity: 0;' data-text='--') --
         div.whiteLine
-        -
-          let secondDeparture = departures[1]
-          let secondClassName = ''
-          if (secondDeparture && secondDeparture.type === 'vline') {
-            secondClassName = ' vline'
-          }
-        div(class=`bottomRow${secondClassName}`)
-          if secondDeparture
-            -
-              let secondDestination = secondDeparture.destination
-              if (secondDestination === 'Parliament') secondDestination = 'City Loop'
-              
-            span=secondDeparture.scheduledDepartureTime.format('h:mm')
-            span=secondDestination
-            span=shortenStoppingType(secondDeparture.stoppingType)
-            div
-              span=secondDeparture.minutesToDeparture
-              span min
-          else
+        div.bottomRow
+          span --
+          span --
+          span --
+          div
             span --
-            span --
-            span --
-            div
-              span --
-              span
+            span min
             
           div.timeNow
            span=formatTime(new Date())

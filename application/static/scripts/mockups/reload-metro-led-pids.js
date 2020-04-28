@@ -131,7 +131,8 @@ function asyncPause(milliseconds) {
 async function animateScrollingText(matrix, text, spacing, xPosition=0) {
   let textObj = new TextObject(text, font, new Position(xPosition, 0), spacing)
   let textWidth = textObj.width
-  let iterationCount = matrix.width + textWidth - xPosition
+
+  let iterationCount = textWidth - xPosition + 20
 
   for (let i = 0; i < iterationCount; i++) {
     if (stopScrolling) {
