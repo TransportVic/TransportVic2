@@ -126,7 +126,7 @@ module.exports = {
       }
     }
 
-    return lineStops
+    return lineStops.filter((e, i, a) => a.indexOf(e) === i)
   },
   trimTrip: (isUp, stopTimings) => {
     if (isUp) {
