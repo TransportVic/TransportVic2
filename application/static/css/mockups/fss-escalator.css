@@ -1,6 +1,5 @@
 html {
   transform-origin: top left;
-  background-color: #000000;
 }
 
 body {
@@ -232,6 +231,10 @@ div.smallDeparture div.right > div p {
 
 
 @media(prefers-color-scheme: dark) {
+
+  html {
+    background-color: #ffffff;
+  }
 
   body {
     background-color: #000000;
