@@ -61,7 +61,7 @@ function getStoppingType(firstDeparture, isCityStop) {
 
 function createStationRow(name, imgSource) {
   let style = 'height: 16px !important;'
-  return `<div class="stationRow" style="${imgSource.includes('stub') ? style : ''}">`
+  return `<div class="stationRow" style="${imgSource.includes('stub') ? style : ''}" data-name="${name}">`
   + (imgSource.includes('stub') ?
     `<img src="/static/images/mockups/station-${imgSource}.svg" height="16px" width="42px" style="${style}">`
   : `<img src="/static/images/mockups/station-${imgSource}.svg">`)
@@ -113,52 +113,94 @@ function updateBody() {
     $('.firstDepartureInfo .timeToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
     $('.stoppingAt').className = 'stoppingAt ' + firstDepartureClass
 
-    let n
     let stopCount = firstDeparture.additionalInfo.screenStops.length
+    let {stopColumns, size} = splitStops(firstDeparture.additionalInfo.screenStops, false, {
+      MAX_COLUMNS: 2,
+      MIN_COLUMN_SIZE: 5,
+      MAX_COLUMN_SIZE: 22
+    })
 
-    if (stopCount >= 32) n = 17
-    // else if (stopCount >= 24) n = 18 // honestly idk how tf this works
-    // else if (stopCount >= 20) n = 16
-    else if (stopCount >= 12) n = 16 // ?? should really have checked but aw - moorabbin shorts
-    // else if (stopCount >= 12) n = 12
-    else n = 12
-
-    let firstNStations = firstDeparture.additionalInfo.screenStops.slice(0, n)
-    let nextNStations = firstDeparture.additionalInfo.screenStops.slice(n)
+    let firstColumn = stopColumns[0]
+    let secondColumn = stopColumns[1] || []
 
     let stoppingHTML = `<div>` // left
     stoppingHTML += createStationRow(' ', 'stub')
-    let hasTerminating = firstDeparture.additionalInfo.screenStops.length <= n
-    stoppingHTML += `<div class="stationRow">
+    let hasTerminating = firstDeparture.additionalInfo.screenStops.length <= size
+    stoppingHTML += `<div class="stationRow" data-name="${firstColumn[0].stopName}">
       <img src="/static/images/mockups/station-stops-at.svg" class="${firstDepartureClass}"/>
-      <p class="${firstDepartureClass}">${firstNStations[0].stopName}</p>
+      <p class="${firstDepartureClass}">${firstColumn[0].stopName}</p>
     </div>`
-    for (station of firstNStations.slice(1, hasTerminating ? -1 : n))
+    let expresses = []
+    let expressPart = []
+
+    let index = 0
+    for (station of firstColumn.slice(1, hasTerminating ? -1 : stopCount)) {
       stoppingHTML += createStationRow(station.stopName, station.isExpress ? 'express' : 'stops-at')
 
+      if (station.isExpress) {
+        expressPart.push({name: station.stopName, index})
+      } else {
+        if (expressPart.length) {
+          if (expressPart.length > 1)
+            expresses.push({stations: expressPart, col: 1})
+          expressPart = []
+        }
+      }
+      index++
+    }
+
     if (hasTerminating)
-      stoppingHTML += createStationRow(firstNStations.slice(-1)[0].stopName, 'terminates')
+      stoppingHTML += createStationRow(firstColumn.slice(-1)[0].stopName, 'terminates')
     else {
       stoppingHTML += createStationRow(' ', 'halfstub')
       stoppingHTML += createStationRow(' ', 'filler')
+      if (expressPart.length)
+        expresses.push({stations: expressPart, col: 1})
     }
 
     stoppingHTML += `</div><div>` // right
-    if (nextNStations.length) {
+    if (secondColumn.length) {
+      expressPart = []
+      index = 0
+
       stoppingHTML += createStationRow(' ', 'halfstub')
       stoppingHTML += createStationRow(' ', 'filler')
-      for (station of nextNStations.slice(0, -1))
+      for (station of secondColumn.slice(0, -1)) {
         stoppingHTML += createStationRow(station.stopName, station.isExpress ? 'express' : 'stops-at')
-      stoppingHTML += createStationRow(nextNStations.slice(-1)[0].stopName, 'terminates')
+
+        if (station.isExpress) {
+          expressPart.push({name: station.stopName, index})
+        } else {
+          if (expressPart.length) {
+            if (expressPart.length > 1)
+              expresses.push({stations: expressPart, col: 2})
+            expressPart = []
+          }
+        }
+        index++
+      }
+      stoppingHTML += createStationRow(secondColumn.slice(-1)[0].stopName, 'terminates')
     }
     stoppingHTML += `</div>`
 
     let containerDIV = document.createElement('div')
     containerDIV.innerHTML = stoppingHTML
-    setTimeout(() => {
-      $('.stoppingAt').innerHTML = ''
-      $('.stoppingAt').appendChild(containerDIV)
-    }, hasTerminating ? 100 : 200)
+    $('.stoppingAt').innerHTML = ''
+    $('.stoppingAt').appendChild(containerDIV)
+
+    expresses.forEach(express => {
+      let column = $(`.stoppingAt > div > div:nth-child(${express.col})`)
+
+      let firstStop = express.stations[0], lastStop = express.stations.slice(-1)[0]
+      let startingTop = firstStop.index * 64 + 64
+      let endingTop = lastStop.index * 64 + 128
+      let middle = (startingTop + endingTop) / 2 - 12
+      console.log(column, firstStop)
+      column.innerHTML += `<div class="expressArrow" style="margin-top: ${middle}px">
+        <img src="/static/images/mockups/express-arrow.svg" class="${firstDepartureClass}"/>
+        <img src="/static/images/mockups/express-arrow.svg"/>
+      </div>`
+    })
 
     let departureDIVs = Array.from(document.querySelectorAll('.smallDeparture'))
     let next4Departures = departures.concat([null, null, null, null]).slice(1, 5)

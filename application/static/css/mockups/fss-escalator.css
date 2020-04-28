@@ -137,6 +137,28 @@ div.stationRow img {
   height: 64px;
 }
 
+div.expressArrow {
+  top: 322px;
+  position: absolute;
+  height: 0;
+}
+
+div.expressArrow img {
+  width: 63px;
+  position: absolute;
+  left: -10.5px;
+}
+
+div.expressArrow img:nth-child(1) {
+  z-index: 2;
+}
+
+div.expressArrow img:nth-child(2) {
+  margin-top: 10px;
+  filter: invert(100%);
+  z-index: 1;
+}
+
 div.stoppingAt > div > div {
   width: 503px;
 }
@@ -265,6 +287,11 @@ div.smallDeparture div.right > div p {
 
   div.stationRow p.express {
     color: #282828;
+  }
+
+  div.expressArrow img:nth-child(2) {
+    margin-top: 10px;
+    filter: unset !important;
   }
 
   div.cranbourne, div.pakenham, div.craigieburn, div.sunbury, div.upfield, div.sandringham {
