@@ -8,8 +8,12 @@ router.get('/', (req, res) => {
   res.render('mockups/index')
 })
 
-router.get('/summary', (req, res) => {
-  res.render('mockups/summary')
+router.get('/summary/:station', (req, res) => {
+  let query = querystring.parse(url.parse(req.url).query)
+
+  query.exclude = (query.exclude || '').split(',').map(e => parseInt(e))
+
+  res.render('mockups/summary', {query, station: req.params.station})
 })
 
 router.get('/get', async (req, res) => {

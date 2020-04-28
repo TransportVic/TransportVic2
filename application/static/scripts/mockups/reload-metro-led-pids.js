@@ -73,8 +73,8 @@ function checkAndUpdateTrains() {
       clearTimeout(pauseTimeout)
       bottomRowText = []
 
-      legacyDrawText(topRow, 'FAILED TO CHECK', 1, 0, 0)
-      legacyDrawText(bottomRow, 'DEPARTING TRAINS', 1, 0, 0)
+      legacyDrawText(topRow, 'LISTEN FOR', 1, 0, 0)
+      legacyDrawText(bottomRow, 'ANNOUNCEMENTS', 1, 0, 0)
       return
     }
     let nextDeparture = data.departures[0]
@@ -177,17 +177,6 @@ $.ready(() => {
 
   legacyDrawText(topRow, 'CHECKING TRAINS...', 1, 0, 0)
   legacyDrawText(bottomRow, 'PLEASE WAIT', 1, 0, 0)
-
-  // legacyDrawText(topRow, 'NO TRAINS OPERATING', 1, 0, 0)
-  // legacyDrawText(bottomRow, 'REPLACEMENT BUSES', 1, 0, 0)
-
-  // legacyDrawText(topRow, '7:41 BAIRNSDALE', 1, 0, 0)
-  //
-  // let timeToDepart = new TextObject('12', font, new Position(0, 0), 1)
-  // timeToDepart.position.x = 120 - timeToDepart.width - 3
-  // topRow.drawText(timeToDepart)
-  //
-  // legacyDrawText(bottomRow, 'NO SUBURBAN PASSENGERS', 1, 0, 0)
 
   checkAndUpdateTrains()
   setInterval(checkAndUpdateTrains, 1000 * 60)

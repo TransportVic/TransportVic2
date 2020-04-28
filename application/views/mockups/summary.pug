@@ -3,10 +3,15 @@ html
     link(rel='stylesheet' href='/static/css/mockups/summary.css')
   body
     div.container
-      - for (let i = 1; i <= 16; i++) {
-       - // if (i == 11) continue
-        div.platform
-          div.title
-            a(href=`/mockups/metro-lcd-pids/southern-cross/${i}/list`)=`/SSS/platform/${i}`
-          iframe(src=`/mockups/metro-lcd-pids/southern-cross/${i}/list`)
+      - for (let i = 1; i <= query.platforms; i++) {
+      -
+        if (query.exclude.includes(i)) continue
+        let url
+        if ('suburban-text' === query.type) url = `/mockups/metro-lcd-pids/${station}/${i}/`
+        if ('suburban-list' === query.type) url = `/mockups/metro-lcd-pids/${station}/${i}/list`
+
+      div.platform
+        div.title
+          a(href=url)=`/{STATION}/platform/${i}`
+        iframe(src=url)
       - }
