@@ -1,17 +1,3 @@
-let northernGroup = [
-  "Craigieburn",
-  "Sunbury",
-  "Upfield",
-  "Werribee",
-  "Williamstown",
-  "Showgrounds/Flemington"
-]
-
-let cliftonHillGroup = [
-  "Mernda",
-  "Hurstbridge"
-]
-
 function formatTime(time) {
   let hours = time.getHours()
   let minutes = time.getMinutes()
@@ -30,26 +16,20 @@ function formatTime(time) {
   return mainTime
 }
 
-function getStoppingPattern(firstDeparture, isCityStop) {
-  let {additionalInfo} = firstDeparture
-  let stoppingPattern = ''
-  if (additionalInfo.expressCount === 0)
-    stoppingPattern = 'Stops All'
-  else if (additionalInfo.expressCount <= 2)
-    stoppingPattern = 'Ltd Express'
-  else stoppingPattern = 'Express'
+function getStoppingType(firstDeparture, isCityStop) {
+  let stoppingType = firstDeparture.stoppingType
 
-  if (isCityStop || additionalInfo.direction === 'Up') {
-    if (additionalInfo.viaCityLoop) stoppingPattern += ' via City Loop'
+  if (isCityStop || firstDeparture.trip.direction === 'Up') {
+    if (additionalInfo.viaCityLoop) stoppingType += ' via City Loop'
     else {
-      if (northernGroup.includes(firstDeparture.trip.routeName)) stoppingPattern += ' via Sthn Cross'
-      else if (cliftonHillGroup.includes(firstDeparture.trip.routeName)) stoppingPattern += ' via Jolimont' //?
-      else stoppingPattern += ' via Richmond'
+      if (northernGroup.includes(firstDeparture.trip.routeName)) stoppingType += ' via Sthn Cross'
+      else if (cliftonHillGroup.includes(firstDeparture.trip.routeName)) stoppingType += ' via Jolimont' //?
+      else stoppingType += ' via Richmond'
     }
   }
-  if (firstDeparture.type === 'vline') stoppingPattern = 'No Suburban Passengers'
 
-  return stoppingPattern
+  if (firstDeparture.type === 'vline') stoppingType = 'No Suburban Passengers'
+  return stoppingType
 }
 
 function createStationRow(name, imgSource) {
@@ -62,99 +42,101 @@ function createStationRow(name, imgSource) {
 </div>`
 }
 
-function setNoDeparturesActive(active) {
-  let platform = location.pathname.match(/fss-escalator\/([\w]+)/)
-  if (!platform || (platform[1] === '*')) platform = ' '
-  else platform = platform[1]
-  
+function setNoDepartures() {
+  setMessagesActive(true)
+  $('.messages .textWrapper').innerHTML = '<img src="/static/images/mockups/no-boarding-train.svg" /><p>No trains are departing from this platform</p>'
+}
+
+function setMessagesActive(active) {
   if (active) {
     $('.topLineBanner').className = 'topLineBanner no-line'
-    $('.noDepartures').style = 'display: block;'
+    $('.messages').style = 'display: block;'
     $('.firstDepartureInfo').style = 'display: none;'
     $('.firstDepartureInfo~.greyLine').style = 'display: none;'
     $('.stoppingAt').style = 'display: none;'
-    $('.firstDepartureTime  div.platform span').textContent = platform
   } else {
-    $('.noDepartures').style = 'display: none;'
+    $('.messages').style = 'display: none;'
     $('.firstDepartureInfo').style = 'display: flex;'
     $('.firstDepartureInfo~.greyLine').style = 'display: block;'
     $('.stoppingAt').style = 'display: block;'
   }
 }
 
-setInterval(() => {
+function updateBody() {
   $.ajax({
     method: 'POST'
   }, (err, status, body) => {
     let {departures, isCityStop} = body
 
-    setNoDeparturesActive(!departures.length)
-    if (departures.length) {
-      let firstDeparture = departures[0]
-      let next4Departures = departures.concat([null, null, null, null]).slice(1, 5)
-
-      let firstDepartureClass = firstDeparture.codedLineName
-      if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
-
-      $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
-      $('.firstDepartureInfo .scheduledDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
-      $('.firstDepartureInfo .destination').textContent = firstDeparture.destination
-      $('.firstDepartureInfo .stoppingPattern').textContent = getStoppingPattern(firstDeparture, isCityStop)
-      $('.firstDepartureInfo .platform').className = 'platform ' + firstDepartureClass
-      $('.firstDepartureInfo .platform span').textContent = firstDeparture.platform
-      $('.firstDepartureInfo .timeToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
-      $('.stoppingAt').className = 'stoppingAt ' + firstDepartureClass
-
-      let n
-      let stopCount = firstDeparture.additionalInfo.screenStops.length
-
-      if (stopCount >= 32) n = 17
-      // else if (stopCount >= 24) n = 18 // honestly idk how tf this works
-      // else if (stopCount >= 20) n = 16
-      else if (stopCount >= 12) n = 16 // ?? should really have checked but aw - moorabbin shorts
-      // else if (stopCount >= 12) n = 12
-      else n = 12
-
-      let firstNStations = firstDeparture.additionalInfo.screenStops.slice(0, n)
-      let nextNStations = firstDeparture.additionalInfo.screenStops.slice(n)
-
-      let stoppingHTML = `<div>` // left
-      stoppingHTML += createStationRow(' ', 'stub')
-      let hasTerminating = firstDeparture.additionalInfo.screenStops.length <= n
-      stoppingHTML += `<div class="stationRow">
-        <img src="/static/images/mockups/station-stops-at.svg" class="${firstDepartureClass}"/>
-        <p class="${firstDepartureClass}">${firstNStations[0].stopName}</p>
-      </div>`
-      for (station of firstNStations.slice(1, hasTerminating ? -1 : n))
-        stoppingHTML += createStationRow(station.stopName, station.isExpress ? 'express' : 'stops-at')
-
-      if (hasTerminating)
-        stoppingHTML += createStationRow(firstNStations.slice(-1)[0].stopName, 'terminates')
-      else {
-        stoppingHTML += createStationRow(' ', 'halfstub')
-        stoppingHTML += createStationRow(' ', 'filler')
-      }
-
-      stoppingHTML += `</div><div>` // right
-      if (nextNStations.length) {
-        stoppingHTML += createStationRow(' ', 'halfstub')
-        stoppingHTML += createStationRow(' ', 'filler')
-        for (station of nextNStations.slice(0, -1))
-          stoppingHTML += createStationRow(station.stopName, station.isExpress ? 'express' : 'stops-at')
-        stoppingHTML += createStationRow(nextNStations.slice(-1)[0].stopName, 'terminates')
-      }
-      stoppingHTML += `</div>`
-
-      let containerDIV = document.createElement('div')
-      containerDIV.innerHTML = stoppingHTML
-      setTimeout(() => {
-        $('.stoppingAt').innerHTML = ''
-        $('.stoppingAt').appendChild(containerDIV)
-      }, hasTerminating ? 100 : 200)
+    let firstDeparture = departures[0]
+    if (!firstDeparture) {
+      // Expand for RRB?
+      return setNoDeparturesActive(!departures.length)
     }
 
+    let firstDepartureClass = firstDeparture.codedLineName
+    if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
+
+    $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
+    $('.firstDepartureInfo .scheduledDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+    $('.firstDepartureInfo .destination').textContent = firstDeparture.destination
+    $('.firstDepartureInfo .stoppingType').textContent = getStoppingType(firstDeparture, isCityStop)
+    $('.firstDepartureInfo .platform').className = 'platform ' + firstDepartureClass
+    $('.firstDepartureInfo .platform span').textContent = firstDeparture.platform
+    $('.firstDepartureInfo .timeToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
+    $('.stoppingAt').className = 'stoppingAt ' + firstDepartureClass
+
+    let n
+    let stopCount = firstDeparture.additionalInfo.screenStops.length
+
+    if (stopCount >= 32) n = 17
+    // else if (stopCount >= 24) n = 18 // honestly idk how tf this works
+    // else if (stopCount >= 20) n = 16
+    else if (stopCount >= 12) n = 16 // ?? should really have checked but aw - moorabbin shorts
+    // else if (stopCount >= 12) n = 12
+    else n = 12
+
+    let firstNStations = firstDeparture.additionalInfo.screenStops.slice(0, n)
+    let nextNStations = firstDeparture.additionalInfo.screenStops.slice(n)
+
+    let stoppingHTML = `<div>` // left
+    stoppingHTML += createStationRow(' ', 'stub')
+    let hasTerminating = firstDeparture.additionalInfo.screenStops.length <= n
+    stoppingHTML += `<div class="stationRow">
+      <img src="/static/images/mockups/station-stops-at.svg" class="${firstDepartureClass}"/>
+      <p class="${firstDepartureClass}">${firstNStations[0].stopName}</p>
+    </div>`
+    for (station of firstNStations.slice(1, hasTerminating ? -1 : n))
+      stoppingHTML += createStationRow(station.stopName, station.isExpress ? 'express' : 'stops-at')
+
+    if (hasTerminating)
+      stoppingHTML += createStationRow(firstNStations.slice(-1)[0].stopName, 'terminates')
+    else {
+      stoppingHTML += createStationRow(' ', 'halfstub')
+      stoppingHTML += createStationRow(' ', 'filler')
+    }
+
+    stoppingHTML += `</div><div>` // right
+    if (nextNStations.length) {
+      stoppingHTML += createStationRow(' ', 'halfstub')
+      stoppingHTML += createStationRow(' ', 'filler')
+      for (station of nextNStations.slice(0, -1))
+        stoppingHTML += createStationRow(station.stopName, station.isExpress ? 'express' : 'stops-at')
+      stoppingHTML += createStationRow(nextNStations.slice(-1)[0].stopName, 'terminates')
+    }
+    stoppingHTML += `</div>`
+
+    let containerDIV = document.createElement('div')
+    containerDIV.innerHTML = stoppingHTML
+    setTimeout(() => {
+      $('.stoppingAt').innerHTML = ''
+      $('.stoppingAt').appendChild(containerDIV)
+    }, hasTerminating ? 100 : 200)
+
     let departureDIVs = Array.from(document.querySelectorAll('.smallDeparture'))
-    departures.concat([null, null, null, null, null]).slice(1, 5).forEach((departure, i) => {
+    let next4Departures = departures.concat([null, null, null, null]).slice(1, 5)
+
+    next4Departures.forEach((departure, i) => {
       let departureDIV = departureDIVs[i]
       if (!!departure) {
         let departureClass = departure.codedLineName
@@ -182,4 +164,9 @@ setInterval(() => {
       }
     })
   })
-}, 1000 * 15)
+}
+
+$.ready(() => {
+  setInterval(updateBody, 1000 * 60)
+  updateBody()
+})

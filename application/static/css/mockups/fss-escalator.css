@@ -54,7 +54,7 @@ div.firstDepartureInfo span.destination {
   font-family: NetworkSansBold;
 }
 
-div.firstDepartureInfo span.stoppingPattern {
+div.firstDepartureInfo span.stoppingType {
   display: block;
   margin-top: 17px;
   font-size: 46px;
