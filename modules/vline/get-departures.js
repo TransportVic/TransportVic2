@@ -198,6 +198,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
     trip.vehicle = departure.vehicle
 
     return {
+      shortRouteName: getShortRouteName(trip),
       originalServiceID,
       trip,
       platform,
