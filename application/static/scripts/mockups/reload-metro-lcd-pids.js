@@ -148,6 +148,7 @@ function drawBottomRow() {
   firstStoppingPatternP.style = 'opacity: 0;'
 
   firstRowPause = setTimeout(async () => {
+    if (firstStoppingTypeP.textContent === 'Stops All Stations') return await asyncPause(4000)
     firstStoppingPatternP.textContent = firstStoppingPatternP.getAttribute('data-text')
     firstStoppingTypeP.style = 'opacity: 0;'
     firstStoppingPatternP.style = 'opacity: 1;'

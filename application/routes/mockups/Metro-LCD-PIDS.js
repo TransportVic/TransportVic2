@@ -81,7 +81,12 @@ async function getData(req, res) {
 }
 
 router.get('/:station/:platform', async (req, res) => {
-  // let departures = await getData(req, res)
+  let departures = await getData(req, res)
+
+  departures.departures = departures.departures.map(d => {
+    if (d.stoppingType === 'Stops All') d.stoppingType = 'Stops All Stations'
+    return d
+  })
 
   res.render('mockups/metro-lcd-pids/pids', departures)
 })
@@ -94,6 +99,12 @@ router.get('/:station/:platform/list', async (req, res) => {
 
 router.post('/:station/:platform', async (req, res) => {
   let departures = await getData(req, res)
+
+  departures.departures = departures.departures.map(d => {
+    if (d.stoppingType === 'Stops All') d.stoppingType = 'Stops All Stations'
+    return d
+  })
+
   res.json(departures)
 })
 
