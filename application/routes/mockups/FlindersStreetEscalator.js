@@ -5,51 +5,48 @@ const async = require('async')
 const TrainUtils = require('./TrainUtils')
 const getLineStops = require('./route-stops')
 
-let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
+let cityStations = ['southern-cross', 'parliament', 'flagstaff', 'melbourne-central', 'flinders-street']
+
+let stoppingTextMap = {
+  stopsAll: 'Stops All Stations',
+  allExcept: 'Not Stopping At {0}',
+  expressAtoB: '{0} to {1}',
+  sasAtoB: 'Stops All Stations from {0} to {1}',
+  runsExpressAtoB: 'Runs Express from {0} to {1}',
+  runsExpressTo: 'Runs Express to {0}',
+  thenRunsExpressAtoB: 'then Runs Express from {0} to {1}',
+  sasTo: 'Stops All Stations to {0}',
+  thenSASTo: 'then Stops All Stations to {0}'
+}
+
+let stoppingTypeMap = {
+  vlineService: {
+    stoppingType: 'No Suburban Passengers'
+  },
+  sas: 'Stops All',
+  limExp: 'Limited Express',
+  exp: 'Express'
+}
 
 async function getData(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
     codedName: (req.params.station || 'flinders-street') + '-railway-station'
   })
 
-  let departures = await TrainUtils.getCombinedDepartures(station, res.db)
-  departures = departures.filter(d => d.platform !== 'RRB' && !d.isTrainReplacement)
-  departures = TrainUtils.filterPlatforms(departures, req.params.platform)
-
-  let lineGroups = departures.map(departure => departure.trip.routeName)
-    .filter((e, i, a) => a.indexOf(e) === i)
-  let groupedDepartures = lineGroups.reduce((acc, group) => {
-    acc[group] = departures.filter(departure => departure.trip.routeName === group).slice(0, 3)
-    return acc
-  }, {})
-  departures = Object.values(groupedDepartures).reduce((acc, group) => {
-    return acc.concat(group)
-  }, []).sort((a, b) => {
-    return a.actualDepartureTime - b.actualDepartureTime
-  })
-
-  departures = departures.map(departure => {
-    return TrainUtils.appendScreenDataToDeparture(departure, station)
-  })
-  departures = departures.filter(Boolean)
-
-  return {departures, station}
+  return await TrainUtils.getPIDSDepartures(res.db, station, req.params.platform, stoppingTextMap, stoppingTypeMap)
 }
 
 router.get('/:platform/:station*?', async (req, res) => {
-  let {departures, station} = await getData(req, res)
-  let stationName = station.stopName.slice(0, -16)
-  let isCityStop = cityLoopStations.includes(stationName) || stationName === 'Flinders Street'
+  let departures = await getData(req, res)
 
-  res.render('mockups/flinders-street/escalator', { departures, platform: req.params.platform, isCityStop })
+  res.render('mockups/flinders-street/escalator', {platform: req.params.platform})
 })
 
 router.post('/:platform/:station*?', async (req, res) => {
-  let {departures, station} = await getData(req, res)
-  let stationName = station.stopName.slice(0, -16)
-  let isCityStop = cityLoopStations.includes(stationName) || stationName === 'Flinders Street'
+  let departures = await getData(req, res)
+  let isCityStop = cityStations.includes(req.params.station)
 
-  res.json({departures, platform: req.params.platform, isCityStop})
+  res.json({...departures, isCityStop})
 })
 
 module.exports = router

@@ -44,7 +44,7 @@ function setFullMessageActive(state) {
   if (state) {
     $('.message').style = 'display: none;'
     $('.fullMessage').style = 'display: flex;'
-    $('.nextDepartures').style = 'display: block;'
+    $('.nextDepartures').style = 'display: none;'
     $('.firstDeparture').style = 'display: none;'
   } else {
     $('.message').style = 'display: none;'
