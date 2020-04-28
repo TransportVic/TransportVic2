@@ -43,7 +43,7 @@ function setFullMessageActive(active) {
 }
 
 function setNoDepartures() {
-  $('.message').innerHTML = '<p class="large">No trains departing</p><p class="large"> fromthis platform</p>'
+  $('.message').innerHTML = '<p class="large">No trains departing</p><p class="large"> from this platform</p>'
   setMessagesActive(true)
 }
 
