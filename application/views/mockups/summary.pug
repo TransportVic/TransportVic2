@@ -9,7 +9,7 @@ html
         let url
         if (query.type === 'suburban-text') url = `/mockups/metro-lcd-pids/${station}/${i}/`
         if (query.type === 'suburban-list') url = `/mockups/metro-lcd-pids/${station}/${i}/list`
-        if (query.type === 'fss-escalator') url = `/mockups/fss-escalator/${i}/${station}`
+        if (query.type === 'fss-escalator') url = `/mockups/fss-escalator/${i}/${station}/?scale`
 
       div(class=`platform ${query.type}`)
         div.title

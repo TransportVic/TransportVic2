@@ -198,10 +198,11 @@ function setBodyScaling() {
   $('html').style = `transform: scale(${ratio});`
 }
 
-window.addEventListener('resize', setBodyScaling)
-
 $.ready(() => {
-  setBodyScaling()
+  if (location.search.includes('scale')) {
+    window.addEventListener('resize', setBodyScaling)
+    setBodyScaling()
+  }
   setInterval(updateBody, 1000 * 60)
   updateBody()
 })
