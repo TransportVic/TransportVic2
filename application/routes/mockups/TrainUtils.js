@@ -83,6 +83,78 @@ module.exports = {
     }
     return departure
   },
+  getFixedLineStops: (tripStops, lineStops, lineName, isUp, type) => {
+    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament')
+    if (viaCityLoop) {
+      let cityLoopStops = lineStops.filter(e => cityLoopStations.includes(e))
+      lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
+
+      if (isUp) {
+        lineStops = lineStops.slice(0, -1).concat(cityLoopStops)
+        lineStops.push('Flinders Street')
+      } else {
+        lineStops = ['Flinders Street', ...cityLoopStops, ...lineStops.slice(1)]
+      }
+    } else if (type === 'vline') {
+      lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
+      if (isUp) {
+        if (gippslandLines.includes(routeName))
+          lineStops = [...lineStops, 'Flinders Street', 'Southern Cross']
+        else
+          lineStops = [...lineStops, 'Southern Cross']
+      } else {
+        if (gippslandLines.includes(lineName))
+          lineStops = ['Southern Cross', 'Flinders Street', ...lineStops]
+        else
+          lineStops = ['Southern Cross', ...lineStops]
+      }
+    } else {
+      lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
+
+      if (northernGroup.includes(lineName)) {
+        if (isUp) {
+          lineStops = [...lineStops.slice(0, -1), 'Southern Cross', 'Flinders Street']
+        } else {
+          lineStops = ['Flinders Street', 'Southern Cross', ...lineStops.slice(1)]
+        }
+      } else if (lineName === 'Frankston') {
+        if (isUp) {
+          lineStops = [...lineStops.slice(0, -1), 'Flinders Street', 'Southern Cross']
+        } else {
+          lineStops = ['Southern Cross', 'Flinders Street', ...lineStops.slice(1)]
+        }
+      }
+    }
+
+    return lineStops
+  },
+  trimTrip: (isUp, stopTimings) => {
+    if (isUp) {
+      let hasSeenFSS = false
+      stopTimings = stopTimings.filter(e => {
+        if (hasSeenFSS) return false
+        if (e === 'Flinders Street') {
+          hasSeenFSS = true
+        }
+        return true
+      })
+    } else {
+      let hasFSS = stopTimings.includes('Flinders Street')
+      if (hasFSS) {
+        let hasSeenFSS = false
+        stopTimings = stopTimings.filter(e => {
+          if (hasSeenFSS) return true
+          if (e === 'Flinders Street') {
+            hasSeenFSS = true
+            return true
+          }
+          return false
+        })
+      }
+    }
+
+    return stopTimings
+  },
   appendScreenDataToDeparture: (departure, station) => {
     departure = module.exports.addTimeToDeparture(departure)
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
@@ -109,71 +181,24 @@ module.exports = {
 
     if (isUp) {
       lineStops = lineStops.reverse()
-
-      let hasSeenFSS = false
-      tripStops = tripStops.filter(e => {
-        if (hasSeenFSS) return false
-        if (e === 'Flinders Street') {
-          hasSeenFSS = true
-        }
-        return true
-      })
     }
+    tripStops = module.exports.trimTrip(isUp, tripStops)
 
     let stationName = station.stopName.slice(0, -16)
     let relevantTrip = departure.forming || departure.trip
     let routeName = departure.shortRouteName || relevantTrip.routeName
 
     let startingIndex = tripStops.indexOf(stationName)
-    let viaCityLoop = tripStops.includes('Flagstaff')
     tripStops = tripStops.slice(startingIndex)
 
-    if (viaCityLoop) {
-      let cityLoopStops = tripStops.filter(e => cityLoopStations.includes(e))
-      lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
-
-      if (isUp) {
-        lineStops = lineStops.slice(0, -1).concat(cityLoopStops)
-        lineStops.push('Flinders Street')
-      } else {
-        lineStops = ['Flinders Street', ...cityLoopStops, ...lineStops.slice(1)]
-      }
-    } else if (departure.type === 'vline') {
-      lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
-      if (isUp) {
-        if (gippslandLines.includes(routeName))
-          lineStops = [...lineStops, 'Flinders Street', 'Southern Cross']
-        else
-          lineStops = [...lineStops, 'Southern Cross']
-      } else {
-        if (gippslandLines.includes(routeName))
-          lineStops = ['Southern Cross', 'Flinders Street', ...lineStops]
-        else
-          lineStops = ['Southern Cross', ...lineStops]
-      }
-    } else {
-      lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
-
-      if (northernGroup.includes(routeName)) {
-        if (isUp) {
-          lineStops = [...lineStops.slice(0, -1), 'Southern Cross', 'Flinders Street']
-        } else {
-          lineStops = ['Flinders Street', 'Southern Cross', ...lineStops.slice(1)]
-        }
-      } else if (routeName === 'Frankston') {
-        if (isUp) {
-          lineStops = [...lineStops.slice(0, -1), 'Flinders Street', 'Southern Cross']
-        } else {
-          lineStops = ['Southern Cross', 'Flinders Street', ...lineStops.slice(1)]
-        }
-      }
-    }
+    lineStops = module.exports.getFixedLineStops(tripStops, lineStops, routeName, isUp, departure.type)
 
     startingIndex = lineStops.indexOf(stationName)
     let endingIndex = lineStops.indexOf(destination)
 
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
 
+    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament')
     if (viaCityLoop) {
       if (northernGroup.includes(routeName)) {
         if (isFormingNewTrip && stationName === 'Southern Cross') {
@@ -212,79 +237,33 @@ module.exports = {
 
     return departure
   },
-  findExpressStops: (stopTimings, routeStops, routeName, isUp, isVLine, stationName) => {
-    // TODO: REFACTOR
-    if (isUp) {
-      let hasSeenFSS = false
-      stopTimings = stopTimings.filter(e => {
-        if (hasSeenFSS) return false
-        if (e === 'Flinders Street') {
-          hasSeenFSS = true
-        }
-        return true
-      })
-    } else {
-      let hasFSS = stopTimings.includes('Flinders Street')
-      if (hasFSS) {
-        let hasSeenFSS = false
-        stopTimings = stopTimings.filter(e => {
-          if (hasSeenFSS) return true
-          if (e === 'Flinders Street') {
-            hasSeenFSS = true
-            return true
-          }
-          return false
-        })
-      }
-    }
+  findExpressStops: (tripStops, lineStops, routeName, isUp, isVLine, stationName) => {
+    tripStops = module.exports.trimTrip(isUp, tripStops)
 
-    let viaCityLoop = stopTimings.includes('Flagstaff')
-
-    if (!viaCityLoop) {
-      routeStops = routeStops.filter(stop => !cityLoopStations.includes(stop))
-      if (northernGroup.includes(routeName) || isVLine) {
-        if (isUp) {
-          routeStops = [...routeStops.slice(0, -1), 'Southern Cross', 'Flinders Street']
-        } else {
-          routeStops = ['Flinders Street', 'Southern Cross', ...routeStops.slice(1)]
-        }
-      }
-    } else {
-      let cityLoopStops = stopTimings.filter(e => cityLoopStations.includes(e))
-      routeStops = routeStops.filter(e => !cityLoopStations.includes(e))
-
-      if (isUp) {
-        routeStops = routeStops.slice(0, -1).concat(cityLoopStops)
-        routeStops.push('Flinders Street')
-      } else {
-        routeStops = ['Flinders Street', ...cityLoopStops, ...routeStops.slice(1)]
-      }
-    }
-
-    let startIndex = stopTimings.indexOf(stationName)
-    let endIndex = stopTimings.length
+    let startIndex = tripStops.indexOf(stationName)
+    let endIndex = tripStops.length
 
     if (isUp) {
-      let fssIndex = stopTimings.indexOf('Flinders Street')
+      let fssIndex = tripStops.indexOf('Flinders Street')
       if (fssIndex !== -1)
         endIndex = fssIndex
     }
 
-    stopTimings = stopTimings.slice(startIndex, endIndex + 1)
+    tripStops = tripStops.slice(startIndex, endIndex + 1)
 
-    let firstStop = stopTimings[0]
-    let lastStop = stopTimings.slice(-1)[0]
+    let firstStop = tripStops[0]
+    let lastStop = tripStops.slice(-1)[0]
 
-    let firstStopIndex = routeStops.indexOf(firstStop)
-    let lastStopIndex = routeStops.indexOf(lastStop) + 1
-    let relevantStops = routeStops.slice(firstStopIndex, lastStopIndex)
+    let firstStopIndex = lineStops.indexOf(firstStop)
+    let lastStopIndex = lineStops.indexOf(lastStop) + 1
+    let relevantStops = lineStops.slice(firstStopIndex, lastStopIndex)
 
     let expressParts = []
 
     let lastMainMatch = 0
     let expressStops = 0
 
-    for (let scheduledStop of stopTimings) {
+    for (let scheduledStop of tripStops) {
       let matchIndex = -1
 
       for (let stop of relevantStops) {
@@ -305,9 +284,10 @@ module.exports = {
 
     return expressParts
   },
-  determineStoppingPattern: (expressParts, destination, routeStops, currentStation, textMap=defaultStoppingMap) => {
+  determineStoppingPattern: (expressParts, destination, lineStops, currentStation, textMap=defaultStoppingMap) => {
     if (expressParts.length === 0) return textMap.stopsAll
     if (expressParts.length === 1 && expressParts[0].length === 1) return textMap.allExcept.format(expressParts[0][0])
+
     let texts = []
 
     let lastStop = null
@@ -316,8 +296,8 @@ module.exports = {
       let firstExpressStop = expressSection[0]
       let lastExpressStop = expressSection.slice(-1)[0]
 
-      let previousStop = routeStops[routeStops.indexOf(firstExpressStop) - 1]
-      let nextStop = routeStops[routeStops.indexOf(lastExpressStop) + 1]
+      let previousStop = lineStops[lineStops.indexOf(firstExpressStop) - 1]
+      let nextStop = lineStops[lineStops.indexOf(lastExpressStop) + 1]
 
       if (lastStop) {
         if (i === expressParts.length - 1 && nextStop === destination) {
@@ -340,7 +320,7 @@ module.exports = {
       lastStop = nextStop
     })
 
-    if (routeStops[routeStops.indexOf(lastStop)] !== destination) {
+    if (lineStops[lineStops.indexOf(lastStop)] !== destination) {
       texts.push(textMap.thenSASTo.format(destination))
     }
 
@@ -375,15 +355,17 @@ module.exports = {
       let routeName = departure.shortRouteName || trip.routeName
       let isVLine = departure.type === 'vline'
 
-      stopTimings = stopTimings.map(stop => stop.stopName.slice(0, -16))
+      let tripStops = stopTimings.map(stop => stop.stopName.slice(0, -16))
 
-      let routeStops = getLineStops(routeName)
+      let lineStops = getLineStops(routeName)
       if (destination === 'City Loop') destination = 'Flinders Street'
 
-      if (isUp) routeStops = routeStops.slice(0).reverse()
+      if (isUp) lineStops = lineStops.slice(0).reverse()
 
-      let expresses = module.exports.findExpressStops(stopTimings, routeStops, routeName, isUp, isVLine, stationName)
-      let stoppingPattern = module.exports.determineStoppingPattern(expresses, destination, routeStops, stationName, stoppingTextMap)
+      lineStops = module.exports.getFixedLineStops(tripStops, lineStops, routeName, isUp, departure.type)
+
+      let expresses = module.exports.findExpressStops(tripStops, lineStops, routeName, isUp, isVLine, stationName, departure.type)
+      let stoppingPattern = module.exports.determineStoppingPattern(expresses, destination, lineStops, stationName, stoppingTextMap)
 
       departure.stoppingPattern = stoppingPattern
 

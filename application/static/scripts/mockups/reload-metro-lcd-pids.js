@@ -101,12 +101,17 @@ function updateBody(firstTime) {
     $('.firstDestination').className = `firstDestination${classes}`
     $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
 
-    if (firstDeparture.minutesToDeparture > 0) {
-      $('div.actual div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
-      $('div.actual div span:nth-child(2)').textContent = 'min'
+    if (firstDeparture.estimatedDepartureTime) {
+      if (firstDeparture.minutesToDeparture > 0) {
+        $('div.actual div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
+        $('div.actual div span:nth-child(2)').textContent = 'min'
+      } else {
+        $('div.actual div span:nth-child(1)').textContent = 'Now'
+        $('div.actual div span:nth-child(2)').textContent = ''
+      }
     } else {
-      $('div.actual div span:nth-child(1)').textContent = 'Now'
-      $('div.actual div span:nth-child(2)').textContent = ''
+      $('div.actual div span:nth-child(1)').textContent = '--'
+      $('div.actual div span:nth-child(2)').textContent = 'min'
     }
 
     $('.middleRow p:nth-child(1)').textContent = firstDeparture.stoppingType
@@ -123,7 +128,9 @@ function updateBody(firstTime) {
       $('div.bottomRow > span:nth-child(1)').textContent = formatTime(new Date(secondDeparture.scheduledDepartureTime))
       $('div.bottomRow > span:nth-child(2)').textContent = secondDeparture.destination
       $('div.bottomRow > span:nth-child(3)').textContent = shortenStoppingType(secondDeparture.stoppingType)
-      $('div.bottomRow > div > span:nth-child(1)').textContent = secondDeparture.minutesToDeparture
+      if (secondDeparture.estimatedDepartureTime)
+        $('div.bottomRow > div > span:nth-child(1)').textContent = secondDeparture.minutesToDeparture
+      else $('div.bottomRow > div > span:nth-child(1)').textContent = '--'
     } else {
       $('div.bottomRow').className = `bottomRow`
       $('div.bottomRow > span:nth-child(1)').textContent = '--'
