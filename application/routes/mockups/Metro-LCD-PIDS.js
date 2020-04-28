@@ -20,7 +20,7 @@ let stoppingTypeMap = {
   },
   sas: 'Stops All',
   limExp: 'Limited Express',
-  exp: 'Express Service'
+  exp: 'Express'
 }
 
 async function getData(req, res) {
