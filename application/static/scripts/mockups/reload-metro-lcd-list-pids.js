@@ -16,12 +16,16 @@ function setMessagesActive(active) {
     $('.message').style = 'display: flex;'
     $('.fullMessage').style = 'display: none;'
     $('.nextDeparture').style = 'display: none;'
+    $('.serviceMessage').style = 'display: none;'
+    $('.stops').style = 'display: none';
     $('.left').style = 'display: block;'
     $('.right').style = 'display: block;'
   } else {
     $('.message').style = 'display: none;'
     $('.fullMessage').style = 'display: none;'
     $('.nextDeparture').style = 'display: flex;'
+    $('.serviceMessage').style = 'display: none;'
+    $('.stops').style = 'display: flex';
     $('.left').style = 'display: block;'
     $('.right').style = 'display: block;'
   }
@@ -31,15 +35,54 @@ function setFullMessageActive(active) {
   if (active) {
     $('.message').style = 'display: none;'
     $('.fullMessage').style = 'display: flex;'
+    $('.nextDeparture').style = 'display: none;'
+    $('.serviceMessage').style = 'display: none;'
+    $('.stops').style = 'display: none';
     $('.left').style = 'display: none;'
     $('.right').style = 'display: none;'
   } else {
     $('.message').style = 'display: none;'
     $('.fullMessage').style = 'display: none;'
+    $('.serviceMessage').style = 'display: none;'
     $('.nextDeparture').style = 'display: flex;'
+    $('.stops').style = 'display: flex';
     $('.left').style = 'display: block;'
     $('.right').style = 'display: block;'
   }
+}
+
+function setServiceMessageActive(active) {
+  if (active) {
+    $('.message').style = 'display: none;'
+    $('.fullMessage').style = 'display: none;'
+    $('.serviceMessage').style = 'display: flex;'
+    $('.nextDeparture').style = 'display: flex;'
+    $('.stops').style = 'display: none';
+    $('.left').style = 'display: block;'
+    $('.right').style = 'display: block;'
+  } else {
+    $('.message').style = 'display: none;'
+    $('.fullMessage').style = 'display: none;'
+    $('.serviceMessage').style = 'display: none;'
+    $('.nextDeparture').style = 'display: flex;'
+    $('.stops').style = 'display: flex';
+    $('.left').style = 'display: block;'
+    $('.right').style = 'display: block;'
+  }
+}
+
+function setDepartureInfoVisible(visible) {
+  if (visible) {
+    $('.departureInfo').style = ''
+  } else {
+    $('.departureInfo').style = 'opacity: 0;'
+  }
+}
+
+function setStandClear() {
+  $('.serviceMessage').innerHTML = '<p class="large">Stand Clear Train</p><p class="large">Departing</p>'
+  setServiceMessageActive(true)
+  setDepartureInfoVisible(false)
 }
 
 function setNoDepartures() {
@@ -57,6 +100,11 @@ function setListenAnnouncements() {
   setFullMessageActive(true)
 }
 
+let burnLinesShown = []
+let showBurnLineTimeout = 0
+let showingStandClear = false
+let previousDeparture = null
+
 function updateBody() {
   $.ajax({
     method: 'POST'
@@ -72,58 +120,63 @@ function updateBody() {
       return
     }
 
-    $('.firstDestination').textContent = firstDeparture.destination
-    $('.scheduledDiv span:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+    showingStandClear = showingStandClear && firstDeparture.scheduledDepartureTime === previousDeparture
 
-    if (firstDeparture.type === 'vline') {
-      $('.departureInfo').className = 'departureInfo vline'
-    } else {
-      $('.departureInfo').className = 'departureInfo'
-    }
+    if (!showingStandClear) {
+      $('.burnLine').className = 'burnLine reset'
+      setTimeout(() => {
+        $('.burnLine').className = 'burnLine'
+      }, 100)
+      setDepartureInfoVisible(true)
 
-    if (firstDeparture.estimatedDepartureTime) {
-      if (firstDeparture.minutesToDeparture > 0) {
-        $('.actualDiv div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
-        $('.actualDiv div span:nth-child(2)').textContent = 'min'
-      } else {
-        $('.actualDiv div span:nth-child(1)').textContent = 'NOW'
-        $('.actualDiv div span:nth-child(2)').textContent = ''
-      }
-    } else {
-      $('.actualDiv div span:nth-child(1)').textContent = '--'
-      $('.actualDiv div span:nth-child(2)').textContent = 'min'
-    }
+      $('.firstDestination').textContent = firstDeparture.destination
+      $('.scheduledDiv span:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
 
-    let {stopColumns, size} = splitStops(firstDeparture.additionalInfo.screenStops.slice(1), false, {
-      MAX_COLUMNS: 4,
-      CONNECTION_LOSS: 2,
-      MIN_COLUMN_SIZE: 5,
-      MAX_COLUMN_SIZE: 9
-    })
-
-    $('.stops').innerHTML = ''
-
-    stopColumns.forEach(stopColumn => {
-      let column = document.createElement('div')
-
-      let hasStop = false
-
-      stopColumn.forEach(stop => {
-        if (stop.isExpress)
-          column.innerHTML += '<p>&nbsp;&nbsp;---</p>'
-        else {
-          column.innerHTML += `<p>${stop.stopName}</p>`
-          hasStop = true
+      if (firstDeparture.estimatedDepartureTime) {
+        if (firstDeparture.minutesToDeparture > 0) {
+          $('.actualDiv div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
+          $('.actualDiv div span:nth-child(2)').textContent = 'min'
+        } else {
+          $('.actualDiv div span:nth-child(1)').textContent = 'NOW'
+          $('.actualDiv div span:nth-child(2)').textContent = ''
         }
+      } else {
+        $('.actualDiv div span:nth-child(1)').textContent = '--'
+        $('.actualDiv div span:nth-child(2)').textContent = 'min'
+      }
+
+      let {stopColumns, size} = splitStops(firstDeparture.additionalInfo.screenStops.slice(1), false, {
+        MAX_COLUMNS: 4,
+        CONNECTION_LOSS: 2,
+        MIN_COLUMN_SIZE: 5,
+        MAX_COLUMN_SIZE: 9
       })
 
-      $('.stops').innerHTML += `
-  <div class="stopsColumn columns-${size}${hasStop ? '' : ' expressRow'}">
-  ${column.outerHTML}
-  </div>
-  `
-    })
+      $('.stops').innerHTML = ''
 
+      stopColumns.forEach(stopColumn => {
+        let column = document.createElement('div')
+
+        let hasStop = false
+
+        stopColumn.forEach(stop => {
+          if (stop.isExpress)
+            column.innerHTML += '<p>&nbsp;&nbsp;---</p>'
+          else {
+            column.innerHTML += `<p>${stop.stopName}</p>`
+            hasStop = true
+          }
+        })
+
+        $('.stops').innerHTML += `
+    <div class="stopsColumn columns-${size}${hasStop ? '' : ' expressRow'}">
+    ${column.outerHTML}
+    </div>
+    `
+      })
+
+      setMessagesActive(false)
+    }
 
     let nextDepartures = [...departures.slice(1, 4), null, null, null].slice(0, 3)
     nextDepartures.forEach((departure, i) => {
@@ -150,7 +203,32 @@ function updateBody() {
       }
     })
 
-    setMessagesActive(false)
+    clearTimeout(showBurnLineTimeout)
+    previousDeparture = firstDeparture.scheduledDepartureTime
+
+    if (!showingStandClear) {
+      let actualDepartureTime = new Date(firstDeparture.actualDepartureTime)
+      let difference = actualDepartureTime - new Date()
+
+      showBurnLineTimeout = setTimeout(() => {
+        if (burnLinesShown.includes(firstDeparture.actualDepartureTime)) return
+        burnLinesShown.push(firstDeparture.actualDepartureTime)
+        burnLinesShown = burnLinesShown.slice(-10)
+
+        $('.burnLine').className = 'burnLine reset'
+        setTimeout(() => {
+          $('.burnLine').className = 'burnLine active'
+        }, 10)
+        $('.actualDiv div span:nth-child(1)').textContent = 'NOW'
+        $('.actualDiv div span:nth-child(2)').textContent = ''
+
+        showingStandClear = true
+
+        setTimeout(() => {
+          setStandClear()
+        }, 1000 * 15)
+      }, difference - 1000 * 30 - 10)
+    }
   })
 }
 

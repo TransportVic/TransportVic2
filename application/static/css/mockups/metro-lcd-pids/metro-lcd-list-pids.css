@@ -25,19 +25,19 @@ div.left {
   width: 70vw;
 }
 
-div.message {
+div.message, div.serviceMessage {
   height: 100%;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
 
-div.message p {
+div.message p, div.serviceMessage p {
   font-size: 6vw;
   line-height: 6vw;
 }
 
-div.message p.large {
+div.message p.large, div.serviceMessage p.large {
   font-size: 7.5vw;
   line-height: 7.5vw;
 }
@@ -46,10 +46,40 @@ div.nextDeparture {
   flex-direction: column;
 }
 
+@-webkit-keyframes burnLine {
+  0% {
+    width:0
+    }
+
+  100% {
+    width:100%
+  }
+}
+
+div.burnLine {
+  position: absolute;
+  background-color: #0074d9;
+  width: 0;
+  height: calc(0.25 * var(--height));
+  z-index: 0;
+  transition: burnLine 30s linear;
+  transition-property: width;
+}
+
+div.burnLine.active {
+  width: 70vw;
+}
+
+div.burnLine.reset {
+  width: 0;
+  transition: burnLine 0s linear;
+}
+
 div.departureInfo {
   height: calc(0.25 * var(--height));
   display: flex;
   align-items: center;
+  z-index: 1;
 }
 
 div.departureInfo span.firstDestination {
@@ -101,6 +131,10 @@ div.departureInfo > div.actualDiv > div > span:nth-child(2) {
 div.hozWhiteLine {
   height: calc(0.005 * var(--height));
   background: #ffffff;
+}
+
+div.serviceMessage {
+  height: calc(0.7 * var(--height));
 }
 
 div.stops {
