@@ -84,16 +84,15 @@ module.exports = {
     return departure
   },
   getFixedLineStops: (tripStops, lineStops, lineName, isUp, type) => {
-    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament')
+    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament') || tripStops.includes('Southern Cross')
     if (viaCityLoop) {
-      let cityLoopStops = tripStops.filter(e => cityLoopStations.includes(e))
-      lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
+      let cityLoopStops = tripStops.filter(e => cityLoopStations.includes(e) || e === 'Flinders Street')
+      lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
 
       if (isUp) {
-        lineStops = lineStops.slice(0, -1).concat(cityLoopStops)
-        lineStops.push('Flinders Street')
+        lineStops = lineStops.concat(cityLoopStops)
       } else {
-        lineStops = ['Flinders Street', ...cityLoopStops, ...lineStops.slice(1)]
+        lineStops = [...cityLoopStops, ...lineStops]
       }
     } else if (type === 'vline') {
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
@@ -128,7 +127,7 @@ module.exports = {
 
     return lineStops.filter((e, i, a) => a.indexOf(e) === i)
   },
-  trimTrip: (isUp, stopTimings) => {
+  trimTrip: (isUp, stopTimings, fromStation) => {
     if (isUp) {
       let hasSeenFSS = false
       stopTimings = stopTimings.filter(e => {
@@ -139,20 +138,12 @@ module.exports = {
         return true
       })
     } else {
-      let hasFSS = stopTimings.includes('Flinders Street')
-      if (hasFSS) {
-        let hasSeenFSS = false
-        stopTimings = stopTimings.filter(e => {
-          if (hasSeenFSS) return true
-          if (e === 'Flinders Street') {
-            hasSeenFSS = true
-            return true
-          }
-          return false
-        })
-      }
+      let fssIndex = stopTimings.indexOf('Flinders Street')
+      if (fssIndex === -1) fssIndex = Infinity
+      let stationIndex = stopTimings.indexOf(fromStation)
+      let startIndex = Math.min(fssIndex, stationIndex)
+      stopTimings = stopTimings.slice(startIndex)
     }
-
     return stopTimings
   },
   appendScreenDataToDeparture: (departure, station) => {
@@ -179,12 +170,13 @@ module.exports = {
 
     if (destination === 'Parliament') destination = 'Flinders Street'
 
+    let stationName = station.stopName.slice(0, -16)
     if (isUp) {
       lineStops = lineStops.reverse()
     }
-    tripStops = module.exports.trimTrip(isUp, tripStops)
 
-    let stationName = station.stopName.slice(0, -16)
+    tripStops = module.exports.trimTrip(isUp, tripStops, stationName)
+
     let relevantTrip = departure.forming || departure.trip
     let routeName = departure.shortRouteName || relevantTrip.routeName
 
@@ -198,26 +190,26 @@ module.exports = {
 
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
 
-    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament')
-    if (viaCityLoop) {
-      if (northernGroup.includes(routeName)) {
-        if (isFormingNewTrip && stationName === 'Southern Cross') {
-          tripPassesBy = [
-            'Southern Cross', 'Flinders Street', ...tripPassesBy.slice(1)
-          ]
-        }
-      }
-    } else {
-      if (northernGroup.includes(routeName)) {
-        tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop) || stop === 'Southern Cross')
-      } else if (departure.type !== 'vline') {
-        tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop))
-      }
-
-      if (crossCityGroup.includes(relevantTrip.routeName) && isFormingNewTrip && stationName === 'Southern Cross') {
-        tripPassesBy = ['Southern Cross', ...tripPassesBy]
-      }
-    }
+    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament') || tripStops.includes('Southern Cross')
+    // if (viaCityLoop) {
+    //   if (northernGroup.includes(routeName)) {
+    //     if (isFormingNewTrip && stationName === 'Southern Cross') {
+    //       tripPassesBy = [
+    //         'Southern Cross', 'Flinders Street', ...tripPassesBy.slice(1)
+    //       ]
+    //     }
+    //   }
+    // } else {
+    //   if (northernGroup.includes(routeName)) {
+    //     tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop) || stop === 'Southern Cross')
+    //   } else if (departure.type !== 'vline') {
+    //     tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop))
+    //   }
+    //
+    //   if (crossCityGroup.includes(relevantTrip.routeName) && isFormingNewTrip && stationName === 'Southern Cross') {
+    //     tripPassesBy = ['Southern Cross', ...tripPassesBy]
+    //   }
+    // }
 
     let screenStops = tripPassesBy.map(stop => {
       return {
@@ -238,7 +230,7 @@ module.exports = {
     return departure
   },
   findExpressStops: (tripStops, lineStops, routeName, isUp, isVLine, stationName) => {
-    tripStops = module.exports.trimTrip(isUp, tripStops)
+    tripStops = module.exports.trimTrip(isUp, tripStops, stationName)
 
     let startIndex = tripStops.indexOf(stationName)
     let endIndex = tripStops.length
@@ -351,11 +343,15 @@ module.exports = {
     platformDepartures = platformDepartures.map(departure => {
       let {trip, destination} = departure
       let {routeGTFSID, direction, stopTimings} = trip
-      let isUp = direction === 'Up' || departure.forming || false
+      let isUp = direction === 'Up' && !departure.forming
       let routeName = departure.shortRouteName || trip.routeName
       let isVLine = departure.type === 'vline'
 
       let tripStops = stopTimings.map(stop => stop.stopName.slice(0, -16))
+      if (departure.forming) {
+        tripStops = tripStops.concat(departure.forming.stopTimings.map(stop => stop.stopName.slice(0, -16)))
+          .filter((e, i, a) => a.indexOf(e) == i)
+      }
 
       let lineStops = getLineStops(routeName)
       if (destination === 'City Loop') destination = 'Flinders Street'
