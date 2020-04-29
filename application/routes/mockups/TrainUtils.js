@@ -127,12 +127,16 @@ module.exports = {
 
     return lineStops.filter((e, i, a) => a.indexOf(e) === i)
   },
-  trimTrip: (isUp, stopTimings, fromStation) => {
+  trimTrip: (isUp, stopTimings, fromStation, routeName) => {
     if (isUp) {
       let hasSeenFSS = false
+      let destStop = 'Flinders Street'
+      if (gippslandLines.includes(routeName)) {
+        destStop = 'Southern Cross'
+      }
       stopTimings = stopTimings.filter(e => {
         if (hasSeenFSS) return false
-        if (e === 'Flinders Street') {
+        if (e === destStop) {
           hasSeenFSS = true
         }
         return true
@@ -175,10 +179,10 @@ module.exports = {
       lineStops = lineStops.reverse()
     }
 
-    tripStops = module.exports.trimTrip(isUp, tripStops, stationName)
-
     let relevantTrip = departure.forming || departure.trip
     let routeName = departure.shortRouteName || relevantTrip.routeName
+
+    tripStops = module.exports.trimTrip(isUp, tripStops, stationName, routeName)
 
     let startingIndex = tripStops.indexOf(stationName)
     tripStops = tripStops.slice(startingIndex)
@@ -187,29 +191,9 @@ module.exports = {
 
     startingIndex = lineStops.indexOf(stationName)
     let endingIndex = lineStops.indexOf(destination)
-
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
 
     let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament') || tripStops.includes('Southern Cross')
-    // if (viaCityLoop) {
-    //   if (northernGroup.includes(routeName)) {
-    //     if (isFormingNewTrip && stationName === 'Southern Cross') {
-    //       tripPassesBy = [
-    //         'Southern Cross', 'Flinders Street', ...tripPassesBy.slice(1)
-    //       ]
-    //     }
-    //   }
-    // } else {
-    //   if (northernGroup.includes(routeName)) {
-    //     tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop) || stop === 'Southern Cross')
-    //   } else if (departure.type !== 'vline') {
-    //     tripPassesBy = tripPassesBy.filter(stop => !cityLoopStations.includes(stop))
-    //   }
-    //
-    //   if (crossCityGroup.includes(relevantTrip.routeName) && isFormingNewTrip && stationName === 'Southern Cross') {
-    //     tripPassesBy = ['Southern Cross', ...tripPassesBy]
-    //   }
-    // }
 
     let screenStops = tripPassesBy.map(stop => {
       return {
@@ -230,7 +214,7 @@ module.exports = {
     return departure
   },
   findExpressStops: (tripStops, lineStops, routeName, isUp, isVLine, stationName) => {
-    tripStops = module.exports.trimTrip(isUp, tripStops, stationName)
+    tripStops = module.exports.trimTrip(isUp, tripStops, stationName, routeName)
 
     let startIndex = tripStops.indexOf(stationName)
     let endIndex = tripStops.length
