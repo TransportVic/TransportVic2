@@ -2,6 +2,8 @@ const express = require('express')
 const router = new express.Router()
 const TrainUtils = require('./TrainUtils')
 const stationCodes = require('../../../additional-data/station-codes.json')
+const url = require('url')
+const querystring = require('querystring')
 
 let cityStations = ['southern-cross', 'parliament', 'flagstaff', 'melbourne-central', 'flinders-street']
 
@@ -53,6 +55,18 @@ router.get('/:platform/:type', async (req, res, next) => {
     } else if (type === 'fss-escalator') {
       res.render('mockups/flinders-street/escalator', { platform })
     }
+  }
+})
+
+router.get('/summary', async (req, res, next) => {
+  if (filter(req, next)) {
+    let query = querystring.parse(url.parse(req.url).query)
+    query.exclude = (query.exclude || '').split(',').map(e => parseInt(e))
+
+    let stationCode = req.headers.host.split('.')[0].toUpperCase()
+    let stationName = stationCodes[stationCode].toLowerCase().replace(/ /g, '-')
+
+    res.render('mockups/summary', {query, station: stationName, stationCode})
   }
 })
 
