@@ -48,11 +48,11 @@ div.nextDeparture {
 
 @-webkit-keyframes burnLine {
   0% {
-    width:0
+    width: 0
     }
 
   100% {
-    width:100%
+    width: 100%
   }
 }
 

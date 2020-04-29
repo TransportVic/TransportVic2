@@ -124,9 +124,6 @@ function updateBody() {
 
     if (!showingStandClear) {
       $('.burnLine').className = 'burnLine reset'
-      setTimeout(() => {
-        $('.burnLine').className = 'burnLine'
-      }, 100)
       setDepartureInfoVisible(true)
 
       $('.firstDestination').textContent = firstDeparture.destination
