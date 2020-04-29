@@ -158,6 +158,8 @@ module.exports = class MainServer {
 
   async configRoutes (app) {
     const routers = {
+      'mockups/PIDSView': '/',
+      
       Index: '/',
       Search: '/search',
       StopsNearby: '/nearby',
