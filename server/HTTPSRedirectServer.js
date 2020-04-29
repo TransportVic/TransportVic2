@@ -14,7 +14,7 @@ module.exports = class HTTPSRedirectServer {
       return
     }
 
-    const redirectedURL = `https://${config.websiteDNSName}${reqURL.pathname}`
+    const redirectedURL = req.url.replace('http://', 'https://')
 
     res.writeHead(308, { Location: redirectedURL })
     res.end()
