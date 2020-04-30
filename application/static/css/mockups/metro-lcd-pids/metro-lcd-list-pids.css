@@ -168,6 +168,12 @@ div.stops div.stopsColumn div p {
   white-space: nowrap;
 }
 
+div.stops div.stopsColumn div p.squish {
+  letter-spacing: -0.05vw;
+  transform: scaleX(0.98);
+  transform-origin: left;
+}
+
 div.stopsColumn.expressRow {
   min-width: unset !important;
 }

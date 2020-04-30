@@ -154,7 +154,12 @@ function updateBody() {
           if (stop.isExpress)
             column.innerHTML += '<p>&nbsp;&nbsp;---</p>'
           else {
-            column.innerHTML += `<p>${stop.stopName}</p>`
+            let {stopName} = stop
+            let isSmall = stopName.length > 13
+            if (isSmall)
+              column.innerHTML += `<p class="squish">${stop.stopName}</p>`
+            else
+              column.innerHTML += `<p>${stop.stopName}</p>`
             hasStop = true
           }
         })
