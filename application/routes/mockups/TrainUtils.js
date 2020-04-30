@@ -68,7 +68,7 @@ module.exports = {
       let minutesDifference = diff.diff(utils.now(), 'minutes')
       let secondsDifference = diff.diff(utils.now(), 'seconds')
 
-      return !departure.cancelled && minutesDifference < 120
+      return !departure.cancelled && minutesDifference < 120 && secondsDifference > -60
     })
 
     return departures.sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
