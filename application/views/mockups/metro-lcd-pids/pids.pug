@@ -31,19 +31,21 @@ html
           p Please wait...
         div(style='display: none;').firstDeparture
           div.topRow
-              p.firstDestination --
-              div.firstDepartureInfo
-                div.scheduled
-                  p Scheduled
-                  p --
-                div.actual
-                  p Departing
-                  div
-                    span --
-                    span min
+            div.burnLine.reset
+            p.firstDestination --
+            div.firstDepartureInfo
+              div.scheduled
+                p Scheduled
+                p --
+              div.actual
+                p Departing
+                div
+                  span --
+                  span min
           div.middleRow
-            p --
-            p(style='opacity: 0;' data-text='--') --
+            p.serviceMessage Stand Clear Train Departing
+            p.stoppingType --
+            p(style='opacity: 0;' data-text='--').stoppingPattern --
         div.whiteLine
         div.bottomRow
           span --

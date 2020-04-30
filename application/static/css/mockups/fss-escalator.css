@@ -130,7 +130,7 @@ div.stationRow p {
 }
 
 div.stationRow p.express {
-  color: #d7d7d7;
+  color: #707070;
 }
 
 div.stationRow img {
@@ -255,11 +255,11 @@ div.smallDeparture div.right > div p {
 @media(prefers-color-scheme: dark) {
 
   html {
-    background-color: #000000;
+    background-color: #222222;
   }
 
   body {
-    background-color: #000000;
+    background-color: #222222;
     color: #ffffff;
   }
 
@@ -282,16 +282,12 @@ div.smallDeparture div.right > div p {
   }
 
   div.stoppingAt > * {
-    background-color: #000000 !important;
-  }
-
-  div.stationRow p.express {
-    color: #282828;
+    background-color: #222222 !important;
   }
 
   div.expressArrow img:nth-child(2) {
     margin-top: 10px;
-    filter: unset !important;
+    filter: invert(13.3333%);
   }
 
   div.cranbourne, div.pakenham, div.craigieburn, div.sunbury, div.upfield, div.sandringham {

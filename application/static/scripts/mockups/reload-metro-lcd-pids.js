@@ -26,18 +26,48 @@ let firstScheduledTime, firstStoppingPattern
 
 let departures
 
+function setServiceMessageActive(state) {
+  if (state) {
+    $('.message').style = 'display: none;'
+    $('.fullMessage').style = 'display: none;'
+    $('.nextDepartures').style = 'display: block;'
+    $('.firstDeparture').style = 'display: block;'
+    $('.serviceMessage').style = 'display: block;'
+    $('div.middleRow .stoppingType').style = 'display: none;'
+    $('div.middleRow .stoppingPattern').style = 'display: none;'
+    $('.firstDestination').style = 'display: none;'
+    $('.firstDepartureInfo').style = 'display: none;'
+  } else {
+    $('.message').style = 'display: none;'
+    $('.fullMessage').style = 'display: none;'
+    $('.nextDepartures').style = 'display: block;'
+    $('.firstDeparture').style = 'display: block;'
+    $('.serviceMessage').style = 'display: none;'
+    $('div.middleRow .stoppingType').style = 'opacity: 1;'
+    $('div.middleRow .stoppingPattern').style = 'opacity: 0;'
+    $('.firstDestination').style = ''
+    $('.firstDepartureInfo').style = ''
+  }
+}
+
 function setMessagesActive(state) {
   if (state) {
     $('.message').style = 'display: flex;'
     $('.fullMessage').style = 'display: none;'
     $('.nextDepartures').style = 'display: block;'
     $('.firstDeparture').style = 'display: none;'
+    $('.serviceMessage').style = 'display: none;'
   } else {
     $('.message').style = 'display: none;'
     $('.fullMessage').style = 'display: none;'
     $('.nextDepartures').style = 'display: block;'
     $('.firstDeparture').style = 'display: block;'
+    $('.serviceMessage').style = 'display: none;'
   }
+  $('div.middleRow .stoppingType').style = 'opacity: 1;'
+  $('div.middleRow .stoppingPattern').style = 'opacity: 0;'
+  $('.firstDestination').style = ''
+  $('.firstDepartureInfo').style = ''
 }
 
 function setFullMessageActive(state) {
@@ -46,12 +76,18 @@ function setFullMessageActive(state) {
     $('.fullMessage').style = 'display: flex;'
     $('.nextDepartures').style = 'display: none;'
     $('.firstDeparture').style = 'display: none;'
+    $('.serviceMessage').style = 'display: none;'
   } else {
     $('.message').style = 'display: none;'
     $('.fullMessage').style = 'display: none;'
     $('.nextDepartures').style = 'display: block;'
     $('.firstDeparture').style = 'display: block;'
+    $('.serviceMessage').style = 'display: none;'
   }
+  $('div.middleRow .stoppingType').style = 'opacity: 1;'
+  $('div.middleRow .stoppingPattern').style = 'opacity: 0;'
+  $('.firstDestination').style = ''
+  $('.firstDepartureInfo').style = ''
 }
 
 function setNoDepartures() {
@@ -68,6 +104,12 @@ function setListenAnnouncements() {
   $('.fullMessage').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>'
   setFullMessageActive(true)
 }
+
+let burnLinesShown = []
+let showBurnLineTimeout = 0
+let showingBurnLine = false
+let showingStandClear = false
+let previousDeparture = null
 
 function updateBody(firstTime) {
   $.ajax({
@@ -88,35 +130,45 @@ function updateBody(firstTime) {
       if (body.hasRRB) setBusesReplaceTrains()
       else setNoDepartures()
       return
-    } else setMessagesActive(false)
-
-    let classes = ''
-
-    if (firstDeparture.destination.length >= 12)
-      classes = ' smaller'
-    // if (firstDeparture.destination.length > 15)
-    //   classes = 'transform: translateX(-10%) scaleX(0.8)'
-
-    $('.firstDestination').textContent = firstDeparture.destination
-    $('.firstDestination').className = `firstDestination${classes}`
-    $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
-
-    if (firstDeparture.estimatedDepartureTime) {
-      if (firstDeparture.minutesToDeparture > 0) {
-        $('div.actual div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
-        $('div.actual div span:nth-child(2)').textContent = 'min'
-      } else {
-        $('div.actual div span:nth-child(1)').textContent = 'Now'
-        $('div.actual div span:nth-child(2)').textContent = ''
-      }
-    } else {
-      $('div.actual div span:nth-child(1)').textContent = '--'
-      $('div.actual div span:nth-child(2)').textContent = 'min'
     }
 
-    $('.middleRow p:nth-child(1)').textContent = firstDeparture.stoppingType
-    $('.middleRow p:nth-child(2)').textContent = firstDeparture.stoppingPattern
-    $('.middleRow p:nth-child(2)').setAttribute('data-text', firstDeparture.stoppingPattern)
+    showingBurnLine = showingBurnLine && firstDeparture.scheduledDepartureTime === previousDeparture
+
+    if (!showingBurnLine) {
+      $('.burnLine').className = 'burnLine reset'
+      setServiceMessageActive(false)
+
+      showingStandClear = false
+
+      let classes = ''
+
+      if (firstDeparture.destination.length >= 12)
+        classes = ' smaller'
+      if (firstDeparture.destination.length > 18)
+        classes = ' smallest'
+
+      $('.firstDestination').textContent = firstDeparture.destination
+      $('.firstDestination').className = `firstDestination${classes}`
+      $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+
+      if (firstDeparture.estimatedDepartureTime) {
+        if (firstDeparture.minutesToDeparture > 0) {
+          $('div.actual div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
+          $('div.actual div span:nth-child(2)').textContent = 'min'
+        } else {
+          $('div.actual div span:nth-child(1)').textContent = 'Now'
+          $('div.actual div span:nth-child(2)').textContent = ''
+        }
+      } else {
+        $('div.actual div span:nth-child(1)').textContent = '--'
+        $('div.actual div span:nth-child(2)').textContent = 'min'
+      }
+
+      $('.middleRow p.stoppingType').textContent = firstDeparture.stoppingType
+      $('.middleRow p.stoppingPattern').textContent = firstDeparture.stoppingPattern
+      $('.middleRow p.stoppingPattern').setAttribute('data-text', firstDeparture.stoppingPattern)
+
+    }
 
     let secondDeparture = departures[1]
     let secondClassName = ''
@@ -152,6 +204,32 @@ function updateBody(firstTime) {
       clearTimeout(secondRowPause)
 
       drawBottomRow()
+    }
+
+    clearTimeout(showBurnLineTimeout)
+    previousDeparture = firstDeparture.scheduledDepartureTime
+
+    if (!showingBurnLine) {
+      let actualDepartureTime = new Date(firstDeparture.actualDepartureTime)
+      let difference = actualDepartureTime - new Date()
+
+      showBurnLineTimeout = setTimeout(() => {
+        if (burnLinesShown.includes(firstDeparture.actualDepartureTime)) return
+        burnLinesShown.push(firstDeparture.actualDepartureTime)
+        burnLinesShown = burnLinesShown.slice(-10)
+
+        showingBurnLine = true
+
+        $('.burnLine').className = 'burnLine active'
+        $('div.actual div span:nth-child(1)').textContent = 'Now'
+        $('div.actual div span:nth-child(2)').textContent = ''
+
+        setTimeout(() => {
+          showingStandClear = true
+          stopScrolling = true
+          setServiceMessageActive(true)
+        }, 1000 * 15)
+      }, difference - 1000 * 30)
     }
   })
 }
@@ -193,11 +271,16 @@ async function animateScrollingText() {
 }
 
 function drawBottomRow() {
+  if (showingStandClear) return
+
   firstStoppingPatternP.textContent = ''
   firstStoppingTypeP.style = 'opacity: 1;'
   firstStoppingPatternP.style = 'opacity: 0;'
 
+  if (stopScrolling) return
+
   firstRowPause = setTimeout(async () => {
+    if (showingStandClear) return
     if (firstStoppingTypeP.textContent === 'Stops All Stations') return await asyncPause(4000)
 
     firstStoppingPatternP.textContent = firstStoppingPatternP.getAttribute('data-text')
@@ -219,6 +302,6 @@ $.ready(() => {
     $('div.timeNow span').textContent = formatTime(new Date())
   }, 1000)
 
-  firstStoppingTypeP = $('div.middleRow p:nth-child(1)')
-  firstStoppingPatternP = $('div.middleRow p:nth-child(2)')
+  firstStoppingTypeP = $('div.middleRow p.stoppingType')
+  firstStoppingPatternP = $('div.middleRow p.stoppingPattern')
 })

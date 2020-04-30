@@ -22,7 +22,7 @@ div.platform {
 }
 
 div.title {
-  width: 30vw;
+  width: 20vw;
   height: 3vw;
   background-color: #dddddd;
   border-top-left-radius: 0.5vw;
@@ -39,15 +39,15 @@ div.title a, div.title a:visited {
 }
 
 div.platform iframe {
-  width: 30vw;
-  height: calc(30vw * 9 / 32);
+  width: 20vw;
+  height: calc(20vw * 9 / 32);
   border: none;
 }
 
 div.platform.fss-escalator, div.platform.fss-escalator * {
-  width: 20vw;
+  width: 15vw;
 }
 
 div.platform.fss-escalator iframe {
-  height: calc(20vw / 9 * 16);
+  height: calc(15vw / 9 * 16);
 }

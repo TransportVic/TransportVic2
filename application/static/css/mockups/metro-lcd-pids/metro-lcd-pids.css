@@ -54,14 +54,48 @@ div.firstDeparture {
   height: 21vw;
 }
 
+@-webkit-keyframes burnLine {
+  0% {
+    width: 0
+    }
+
+  100% {
+    width: 100%
+  }
+}
+
+div.burnLine {
+  position: absolute;
+  background-color: #0074d9;
+  width: 0;
+  height: 13vw;
+  z-index: 0;
+  transition: burnLine 30s linear;
+  transition-property: width;
+}
+
+div.burnLine.active {
+  width: 100vw;
+}
+
+div.burnLine.reset {
+  width: 0;
+  transition: burnLine 0s linear;
+}
+
 div.topRow {
-  height: 8vw;
+  height: 13vw;
   display: flex;
   font-family: "NetworkSansBold";
+  z-index: 1;
+}
+
+div.topRow > * {
+  z-index: 1;
 }
 
 p.firstDestination {
-  font-size: 11.25vw;
+  font-size: 10.75vw;
   margin-left: 0.5vw;
   letter-spacing: -0.7vw;
   white-space: nowrap;
@@ -70,7 +104,14 @@ p.firstDestination {
 
 p.firstDestination.smaller {
   font-size: 10vw;
-  margin-top: 0.6vw;
+  margin-top: 0.7vw;
+}
+
+p.firstDestination.smallest {
+  font-family: "NetworkSansMedium";
+  letter-spacing: -0.55vw;
+  font-size: 8vw;
+  margin-top: 2vw;
 }
 
 div.firstDepartureInfo {
@@ -115,13 +156,13 @@ div.actual div:nth-child(2) > span:nth-child(2) {
 }
 
 div.middleRow {
-  margin-top: 5vw;
+  margin-top: 1vw;
   height: 5vw;
 }
 
 div.middleRow p {
   font-family: "NetworkSansRegular";
-  font-size: 6.5vw;
+  font-size: 6.25vw;
   margin-left: 0.5vw;
   white-space: nowrap;
   width: fit-content;
@@ -133,6 +174,13 @@ div.middleRow p {
   opacity: 1;
   -webkit-transition: opacity 250ms linear;
   transition: opacity 250ms linear;
+}
+
+div.middleRow p.serviceMessage {
+  display: none;
+  width: 100vw;
+  text-align: center;
+  height: 0;
 }
 
 div.whiteLine {
