@@ -213,10 +213,8 @@ function updateBody() {
         burnLinesShown.push(firstDeparture.actualDepartureTime)
         burnLinesShown = burnLinesShown.slice(-10)
 
-        $('.burnLine').className = 'burnLine reset'
-        setTimeout(() => {
-          $('.burnLine').className = 'burnLine active'
-        }, 10)
+        $('.burnLine').className = 'burnLine active'
+
         $('.actualDiv div span:nth-child(1)').textContent = 'NOW'
         $('.actualDiv div span:nth-child(2)').textContent = ''
 
@@ -225,7 +223,7 @@ function updateBody() {
         setTimeout(() => {
           setStandClear()
         }, 1000 * 15)
-      }, difference - 1000 * 30 - 10)
+      }, difference - 1000 * 15)
     }
   })
 }

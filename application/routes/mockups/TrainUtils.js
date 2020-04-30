@@ -68,13 +68,13 @@ module.exports = {
       let minutesDifference = diff.diff(utils.now(), 'minutes')
       let secondsDifference = diff.diff(utils.now(), 'seconds')
 
-      return !departure.cancelled && minutesDifference < 120 && secondsDifference >= -20 // minutes round down
+      return !departure.cancelled && minutesDifference < 120
     })
 
     return departures.sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
   },
   addTimeToDeparture: departure => {
-    let timeDifference = departure.actualDepartureTime.diff(utils.now(), 'minutes')
+    let timeDifference = departure.actualDepartureTime.clone().add(30, 'seconds').diff(utils.now(), 'minutes')
     departure.minutesToDeparture = timeDifference
 
     if (+timeDifference <= 0) departure.prettyTimeToDeparture = 'NOW'

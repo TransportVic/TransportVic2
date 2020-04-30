@@ -226,7 +226,7 @@ function updateBody(firstTime) {
           stopScrolling = true
           setServiceMessageActive(true)
         }, 1000 * 15)
-      }, difference - 1000 * 30)
+      }, difference - 1000 * 20)
     }
   })
 }
