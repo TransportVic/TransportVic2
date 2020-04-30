@@ -183,6 +183,8 @@ function updateBody() {
         $('.destination', div).textContent = departure.destination
         if (departure.estimatedDepartureTime)
           $('.actual', div).textContent = departure.minutesToDeparture
+        else
+          $('.actual', div).textContent = '--'
         $('.stoppingType', div).textContent = departure.stoppingType
 
         if (departure.type === 'vline') {
