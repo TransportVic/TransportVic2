@@ -33,10 +33,11 @@ div.fullMessage > * {
   height: calc(0.175 * var(--height));
   margin: 1vw;
   font-family: "NetworkSansRegular";
+  white-space: nowrap;
 }
 
 div.message {
-  height: calc(var(--height) - 7.25vw);
+  height: calc(var(--height) - 7.25vw + 1px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,8 +51,8 @@ div.message p {
   text-align: center;
 }
 
-div.firstDeparture {
-  height: 21vw;
+div.firstDeparture  {
+  height: calc(var(--height) - 7.25vw + 1px);
 }
 
 @-webkit-keyframes burnLine {

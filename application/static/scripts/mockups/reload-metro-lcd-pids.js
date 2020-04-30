@@ -28,62 +28,59 @@ let departures
 
 function setServiceMessageActive(state) {
   if (state) {
-    $('.message').style = 'display: none;'
-    $('.fullMessage').style = 'display: none;'
-    $('.nextDepartures').style = 'display: block;'
-    $('.firstDeparture').style = 'display: block;'
     $('.serviceMessage').style = 'display: block;'
     $('div.middleRow .stoppingType').style = 'display: none;'
     $('div.middleRow .stoppingPattern').style = 'display: none;'
     $('.firstDestination').style = 'display: none;'
     $('.firstDepartureInfo').style = 'display: none;'
   } else {
-    $('.message').style = 'display: none;'
-    $('.fullMessage').style = 'display: none;'
-    $('.nextDepartures').style = 'display: block;'
-    $('.firstDeparture').style = 'display: block;'
     $('.serviceMessage').style = 'display: none;'
     $('div.middleRow .stoppingType').style = 'opacity: 1;'
     $('div.middleRow .stoppingPattern').style = 'opacity: 0;'
     $('.firstDestination').style = ''
     $('.firstDepartureInfo').style = ''
   }
+  $('.message').style = 'display: none;'
+  $('.fullMessage').style = 'display: none;'
+  $('.nextDepartures').style = 'display: block;'
+  $('.firstDeparture').style = 'display: block;'
+  $('.content').className = 'content'
 }
 
 function setMessagesActive(state) {
   if (state) {
     $('.message').style = 'display: flex;'
-    $('.fullMessage').style = 'display: none;'
-    $('.nextDepartures').style = 'display: block;'
     $('.firstDeparture').style = 'display: none;'
-    $('.serviceMessage').style = 'display: none;'
   } else {
     $('.message').style = 'display: none;'
-    $('.fullMessage').style = 'display: none;'
-    $('.nextDepartures').style = 'display: block;'
     $('.firstDeparture').style = 'display: block;'
-    $('.serviceMessage').style = 'display: none;'
   }
+  $('.fullMessage').style = 'display: none;'
+  $('.nextDepartures').style = 'display: block;'
+  $('.serviceMessage').style = 'display: none;'
+
   $('div.middleRow .stoppingType').style = 'opacity: 1;'
   $('div.middleRow .stoppingPattern').style = 'opacity: 0;'
   $('.firstDestination').style = ''
   $('.firstDepartureInfo').style = ''
+  $('.content').className = 'content'
 }
 
 function setFullMessageActive(state) {
   if (state) {
+    $('.content').className = 'content announcements'
     $('.message').style = 'display: none;'
     $('.fullMessage').style = 'display: flex;'
     $('.nextDepartures').style = 'display: none;'
     $('.firstDeparture').style = 'display: none;'
-    $('.serviceMessage').style = 'display: none;'
   } else {
+    $('.content').className = 'content'
     $('.message').style = 'display: none;'
     $('.fullMessage').style = 'display: none;'
     $('.nextDepartures').style = 'display: block;'
     $('.firstDeparture').style = 'display: block;'
-    $('.serviceMessage').style = 'display: none;'
   }
+  $('.serviceMessage').style = 'display: none;'
   $('div.middleRow .stoppingType').style = 'opacity: 1;'
   $('div.middleRow .stoppingPattern').style = 'opacity: 0;'
   $('.firstDestination').style = ''

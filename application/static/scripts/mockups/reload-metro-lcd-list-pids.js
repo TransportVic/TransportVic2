@@ -14,61 +14,55 @@ function formatTime(time) {
 function setMessagesActive(active) {
   if (active) {
     $('.message').style = 'display: flex;'
-    $('.fullMessage').style = 'display: none;'
     $('.nextDeparture').style = 'display: none;'
-    $('.serviceMessage').style = 'display: none;'
     $('.stops').style = 'display: none';
-    $('.left').style = 'display: block;'
-    $('.right').style = 'display: block;'
   } else {
     $('.message').style = 'display: none;'
-    $('.fullMessage').style = 'display: none;'
     $('.nextDeparture').style = 'display: flex;'
-    $('.serviceMessage').style = 'display: none;'
     $('.stops').style = 'display: flex';
-    $('.left').style = 'display: block;'
-    $('.right').style = 'display: block;'
   }
+  $('.fullMessage').style = 'display: none;'
+  $('.serviceMessage').style = 'display: none;'
+  $('.left').style = 'display: block;'
+  $('.right').style = 'display: block;'
+  $('.content').className = 'content'
 }
 
 function setFullMessageActive(active) {
   if (active) {
-    $('.message').style = 'display: none;'
+    $('.content').className = 'content announcements'
     $('.fullMessage').style = 'display: flex;'
-    $('.nextDeparture').style = 'display: none;'
-    $('.serviceMessage').style = 'display: none;'
     $('.stops').style = 'display: none';
     $('.left').style = 'display: none;'
     $('.right').style = 'display: none;'
   } else {
-    $('.message').style = 'display: none;'
+    $('.content').className = 'content'
     $('.fullMessage').style = 'display: none;'
-    $('.serviceMessage').style = 'display: none;'
     $('.nextDeparture').style = 'display: flex;'
     $('.stops').style = 'display: flex';
     $('.left').style = 'display: block;'
     $('.right').style = 'display: block;'
   }
+  $('.message').style = 'display: none;'
+  $('.serviceMessage').style = 'display: none;'
 }
 
 function setServiceMessageActive(active) {
   if (active) {
-    $('.message').style = 'display: none;'
-    $('.fullMessage').style = 'display: none;'
     $('.serviceMessage').style = 'display: flex;'
-    $('.nextDeparture').style = 'display: flex;'
     $('.stops').style = 'display: none';
     $('.left').style = 'display: block;'
     $('.right').style = 'display: block;'
   } else {
-    $('.message').style = 'display: none;'
-    $('.fullMessage').style = 'display: none;'
     $('.serviceMessage').style = 'display: none;'
-    $('.nextDeparture').style = 'display: flex;'
     $('.stops').style = 'display: flex';
     $('.left').style = 'display: block;'
     $('.right').style = 'display: block;'
   }
+  $('.message').style = 'display: none;'
+  $('.fullMessage').style = 'display: none;'
+  $('.nextDeparture').style = 'display: flex;'
+  $('.content').className = 'content'
 }
 
 function setDepartureInfoVisible(visible) {

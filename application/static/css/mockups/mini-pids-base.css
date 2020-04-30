@@ -15,14 +15,18 @@ p {
   margin: 0;
 }
 
-div.content {
-  width: 100vw;
-  height: calc(100vw * 9 / 32); /* 32:9 ratio, 28.125 */
-  background-color: #222222;
-  color: white;
+div.content.announcements {
+  background-color: #000000;
+}
 
+div.content {
   --width: 100vw;
   --height: calc(100vw * 9 / 32);
+
+  width: 100vw;
+  height: var(--height);
+  background-color: #222222;
+  color: white;
 
   display: flex;
   justify-content: center;

@@ -18,6 +18,7 @@ div.fullMessage > * {
   height: calc(0.175 * var(--height));
   margin: 1vw;
   font-family: "NetworkSansRegular";
+  white-space: nowrap;
 }
 
 
