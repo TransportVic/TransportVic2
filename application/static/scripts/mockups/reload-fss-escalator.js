@@ -59,11 +59,12 @@ function getStoppingType(firstDeparture, isCityStop) {
   return stoppingType
 }
 
-function createStationRow(name, imgSource) {
-  let style = 'height: 16px !important;'
+function createStationRow(name, imgSource, height) {
+  let style = `height: ${height || '16px'} !important;`
+
   return `<div class="stationRow" style="${imgSource.includes('stub') ? style : ''}" data-name="${name}">`
   + (imgSource.includes('stub') ?
-    `<img src="/static/images/mockups/station-${imgSource}.svg" height="16px" width="42px" style="${style}">`
+    `<img src="/static/images/mockups/station-${imgSource}.svg" height="${height || '16px'}" style="${style}">`
   : `<img src="/static/images/mockups/station-${imgSource}.svg">`)
   + `<p class="${imgSource}">${name}</p>
 </div>`
@@ -120,11 +121,18 @@ function updateBody() {
       MAX_COLUMN_SIZE: 22
     })
 
+    let iconSize = 64
+
+    if (size > 18) {
+      $('.stoppingAt').className += ' small'
+      iconSize = 53
+    }
+
     let firstColumn = stopColumns[0]
     let secondColumn = stopColumns[1] || []
 
     let stoppingHTML = `<div>` // left
-    stoppingHTML += createStationRow(' ', 'stub')
+    stoppingHTML += createStationRow(' ', 'stub', iconSize / 4 + 'px')
     let hasTerminating = firstDeparture.additionalInfo.screenStops.length <= size
     stoppingHTML += `<div class="stationRow" data-name="${firstColumn[0].stopName}">
       <img src="/static/images/mockups/station-stops-at.svg" class="${firstDepartureClass}"/>
@@ -152,7 +160,7 @@ function updateBody() {
     if (hasTerminating)
       stoppingHTML += createStationRow(firstColumn.slice(-1)[0].stopName, 'terminates')
     else {
-      stoppingHTML += createStationRow(' ', 'halfstub')
+      stoppingHTML += createStationRow(' ', 'halfstub', iconSize / 4 + 'px')
       stoppingHTML += createStationRow(' ', 'filler')
       if (expressPart.length)
         expresses.push({stations: expressPart, col: 1})
@@ -163,7 +171,7 @@ function updateBody() {
       expressPart = []
       index = 0
 
-      stoppingHTML += createStationRow(' ', 'halfstub')
+      stoppingHTML += createStationRow(' ', 'halfstub', iconSize / 4 + 'px')
       stoppingHTML += createStationRow(' ', 'filler')
       for (station of secondColumn.slice(0, -1)) {
         stoppingHTML += createStationRow(station.stopName, station.isExpress ? 'express' : 'stops-at')
@@ -187,6 +195,7 @@ function updateBody() {
     stoppingHTML += `</div>`
     let containerDIV = document.createElement('div')
     containerDIV.innerHTML = stoppingHTML
+
     $('.stoppingAt').innerHTML = ''
     $('.stoppingAt').appendChild(containerDIV)
 
@@ -194,9 +203,9 @@ function updateBody() {
       let column = $(`.stoppingAt > div > div:nth-child(${express.col})`)
 
       let firstStop = express.stations[0], lastStop = express.stations.slice(-1)[0]
-      let startingTop = firstStop.index * 64 + 64
-      let endingTop = lastStop.index * 64 + 128
-      let middle = (startingTop + endingTop) / 2 - 12
+      let startingTop = firstStop.index * iconSize + iconSize + iconSize / 4
+      let endingTop = lastStop.index * iconSize + 2 * iconSize + iconSize / 4
+      let middle = (startingTop + endingTop) / 2 - iconSize / 6
 
       column.innerHTML += `<div class="expressArrow" style="margin-top: ${middle}px">
         <img src="/static/images/mockups/express-arrow.svg" class="${firstDepartureClass}"/>
