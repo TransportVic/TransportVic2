@@ -192,11 +192,7 @@ function updateBody(firstTime) {
       $('div.bottomRow > div > span:nth-child(1)').textContent = '--'
     }
 
-    if (firstScheduledTime !== firstDeparture.scheduledDepartureTime
-    && firstStoppingPattern !== firstDeparture.stoppingPattern) {
-      firstScheduledTime = firstDeparture.scheduledDepartureTime
-      firstStoppingPattern = firstDeparture.stoppingPattern
-
+    if (firstDeparture.scheduledDepartureTime === previousDeparture) {
       if (!firstTime)
         stopScrolling = true
       clearTimeout(firstRowTimeout)

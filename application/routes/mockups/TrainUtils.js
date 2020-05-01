@@ -154,7 +154,21 @@ module.exports = {
     departure = module.exports.addTimeToDeparture(departure)
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
-    let lineStops = getLineStops(departure.shortRouteName || departure.trip.routeName)
+    let relevantTrip = departure.forming || departure.trip
+    let routeName = departure.shortRouteName || relevantTrip.routeName
+
+    // If there's a forming then consider it as a down trip
+    let isFormingNewTrip = !!departure.forming
+    let isUp = departure.trip.direction === 'Up' && !isFormingNewTrip
+    let destination = isFormingNewTrip ? departure.destination : departure.trip.destination.slice(0, -16)
+    if (destination === 'Parliament') destination = 'Flinders Street'
+
+    if (routeName === 'Bendigo') {
+      if (isUp && departure.trip.origin === 'Eaglehawk Railway Station') routeName = 'Swan Hill'
+      if (!isUp && departure.trip.destination === 'Eaglehawk Railway Station') routeName = 'Swan Hill'
+    }
+
+    let lineStops = getLineStops(routeName)
     let tripStops = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
 
     if (departure.forming) {
@@ -162,25 +176,15 @@ module.exports = {
       tripStops = [...prevTripCityLoop, ...departure.forming.stopTimings.map(stop => stop.stopName.slice(0, -16))]
       tripStops = tripStops.filter((e, i, a) => a.indexOf(e) === i)
 
-      lineStops = getLineStops(departure.forming.routeName)
+      lineStops = getLineStops(departure.forming.routeName, departure.destination)
     }
 
     lineStops = lineStops.slice(0)
-
-    // If there's a forming then consider it as a down trip
-    let isFormingNewTrip = !!departure.forming
-    let isUp = departure.trip.direction === 'Up' && !isFormingNewTrip
-    let destination = isFormingNewTrip ? departure.destination : departure.trip.destination.slice(0, -16)
-
-    if (destination === 'Parliament') destination = 'Flinders Street'
 
     let stationName = station.stopName.slice(0, -16)
     if (isUp) {
       lineStops = lineStops.reverse()
     }
-
-    let relevantTrip = departure.forming || departure.trip
-    let routeName = departure.shortRouteName || relevantTrip.routeName
 
     tripStops = module.exports.trimTrip(isUp, tripStops, stationName, routeName)
 
@@ -335,6 +339,11 @@ module.exports = {
       if (departure.forming) {
         tripStops = tripStops.concat(departure.forming.stopTimings.map(stop => stop.stopName.slice(0, -16)))
           .filter((e, i, a) => a.indexOf(e) == i)
+      }
+
+      if (routeName === 'Bendigo') {
+        if (isUp && departure.trip.origin === 'Eaglehawk Railway Station') routeName = 'Swan Hill'
+        if (!isUp && departure.trip.destination === 'Eaglehawk Railway Station') routeName = 'Swan Hill'
       }
 
       let lineStops = getLineStops(routeName)

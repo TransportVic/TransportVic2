@@ -621,7 +621,7 @@ let lines = {
   ]
 }
 
-function getLineStops(lineName) {
+function getLineStops(lineName, destination) {
   if (['Pakenham', 'Traralgon', 'Bairnsdale'].includes(lineName)) return lines.Gippsland
   if (lineName === 'Cranbourne') return lines.Cranbourne
   if (lineName === 'Belgrave') return lines.Belgrave
