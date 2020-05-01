@@ -139,13 +139,17 @@ function updateBody(firstTime) {
 
       let classes = ''
 
-      if (firstDeparture.destination.length >= 12)
-        classes = ' smaller'
-      if (firstDeparture.destination.length >= 15)
-        classes = ' smallest'
-
       $('.firstDestination').textContent = firstDeparture.destination
-      $('.firstDestination').className = `firstDestination${classes}`
+      $('.firstDestination').className = 'firstDestination'
+      let width = parseInt(getComputedStyle($('.firstDestination')).width)
+      let vw = window.innerWidth / 100
+      if (width > 70*vw) {
+        $('.firstDestination').className += ' smallest'
+      } else if (width > 50*vw) {
+        $('.firstDestination').className += ' smaller'
+      }
+
+
       $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
 
       if (firstDeparture.estimatedDepartureTime) {
