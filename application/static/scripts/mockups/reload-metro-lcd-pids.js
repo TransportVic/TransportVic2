@@ -141,7 +141,7 @@ function updateBody(firstTime) {
 
       if (firstDeparture.destination.length >= 12)
         classes = ' smaller'
-      if (firstDeparture.destination.length > 18)
+      if (firstDeparture.destination.length >= 15)
         classes = ' smallest'
 
       $('.firstDestination').textContent = firstDeparture.destination
