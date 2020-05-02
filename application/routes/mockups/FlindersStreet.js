@@ -36,13 +36,15 @@ async function getData(req, res) {
   return await TrainUtils.getPIDSDepartures(res.db, station, req.params.platform, stoppingTextMap, stoppingTypeMap)
 }
 
-router.get('/:platform/:station*?', async (req, res) => {
-  let departures = await getData(req, res)
-
+router.get('/escalator/:platform/:station*?', async (req, res) => {
   res.render('mockups/flinders-street/escalator', {platform: req.params.platform})
 })
 
-router.post('/:platform/:station*?', async (req, res) => {
+router.get('/platform/:platform/:station*?', async (req, res) => {
+  res.render('mockups/flinders-street/platform', {platform: req.params.platform})
+})
+
+router.post('/:type/:platform/:station*?', async (req, res) => {
   let departures = await getData(req, res)
   let isCityStop = cityStations.includes(req.params.station)
 

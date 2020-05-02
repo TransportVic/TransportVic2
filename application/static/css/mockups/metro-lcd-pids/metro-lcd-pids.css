@@ -128,14 +128,14 @@ div.scheduled {
 div.scheduled p:nth-child(1), div.actual > p:nth-child(1) {
   font-family: "NetworkSansRegular";
   font-size: 3vw;
-  margin-top: 1.75vw;
+  margin-top: 1vw;
   letter-spacing: 0vw;
 }
 
 div.scheduled p:nth-child(2) {
   font-size: 7.25vw;
   margin-left: 0.4vw;
-  margin-top: -1.75vw;
+  margin-top: -1.3vw;
 }
 
 div.actual {
@@ -143,7 +143,7 @@ div.actual {
 }
 
 div.actual div:nth-child(2) {
-  margin-top: -1.75vw;
+  margin-top: -1.3vw;
 }
 
 div.actual div:nth-child(2) > span:nth-child(1) {
@@ -156,7 +156,6 @@ div.actual div:nth-child(2) > span:nth-child(2) {
 }
 
 div.middleRow {
-  margin-top: 1vw;
   height: 5vw;
 }
 
@@ -217,7 +216,6 @@ div.bottomRow > span:nth-child(2) {
 }
 
 div.bottomRow > span:nth-child(3) {
-  margin-top: 0.5vw;
   margin-left: 1.5vw;
   width: 23.5vw;
   font-family: "NetworkSansRegular";

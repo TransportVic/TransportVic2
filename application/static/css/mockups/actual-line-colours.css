@@ -34,7 +34,7 @@ div.no-line {
 }
 
 div.vline {
-  background-color: #8F1A95;
+  background-color: #7946dd;
 }
 
 
@@ -79,7 +79,7 @@ p.no-line {
 }
 
 p.vline {
-  background-color: #8F1A95;
+  background-color: #7946dd;
   color: #ffffff;
 }
 
@@ -108,7 +108,7 @@ p.vline {
 }
 
 .stoppingAt.showgrounds-flemington img {
-  filter: invert(15%) sepia(78%) saturate(4267%) hue-rotate(322deg) brightness(85%) contrast(112%);
+  filter: invert(14%) sepia(84%) saturate(4369%) hue-rotate(322deg) brightness(100%) contrast(117%)
 }
 
 .stoppingAt.no-line img {
@@ -116,7 +116,7 @@ p.vline {
 }
 
 .stoppingAt.vline img {
-  filter: invert(16%) sepia(78%) saturate(3474%) hue-rotate(286deg) brightness(88%) contrast(96%);
+  filter: invert(34%) sepia(100%) saturate(1081%) hue-rotate(241deg) brightness(73%) contrast(108%);
 }
 
 
@@ -161,6 +161,6 @@ div.platform.no-line {
 }
 
 div.platform.vline {
-  background-color: #8F1A95;
+  background-color: #7946dd;
   color: #ffffff;
 }

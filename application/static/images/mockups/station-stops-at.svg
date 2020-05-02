@@ -24,22 +24,18 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <g
-     transform="translate(-15.54937,-53.750916)"
-     id="layer1">
-    <rect
-       y="53.750916"
-       x="29.54937"
-       height="64"
-       width="14"
-       id="rect931"
-       style="opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.26209712;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
-    <rect
-       style="opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.61101013;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect3415"
-       width="14"
-       height="15"
-       x="43.54937"
-       y="78.250916" />
-  </g>
+  <rect
+     style="vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.16913;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+     id="rect931"
+     width="14"
+     height="64.000061"
+     x="14"
+     y="0" />
+  <rect
+     y="24.5"
+     x="23.255173"
+     height="15"
+     width="18.744827"
+     id="rect3415"
+     style="vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.707009;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
 </svg>

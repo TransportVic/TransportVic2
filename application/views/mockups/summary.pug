@@ -9,7 +9,8 @@ html
         let url
         if (query.type === 'suburban-text') url = `/mockups/metro-lcd-pids/${station}/${i}/`
         if (query.type === 'suburban-list') url = `/mockups/metro-lcd-pids/${station}/${i}/list`
-        if (query.type === 'fss-escalator') url = `/mockups/fss-escalator/${i}/${station}/?scale`
+        if (query.type === 'fss-escalator') url = `/mockups/fss/escalator/${i}/${station}/?scale`
+        if (query.type === 'fss-paltform') url = `/mockups/fss/platform/${i}/${station}/`
 
       div(class=`platform ${query.type}`)
         div.title

@@ -159,7 +159,7 @@ module.exports = class MainServer {
   async configRoutes (app) {
     const routers = {
       'mockups/PIDSView': '/',
-      
+
       Index: '/',
       Search: '/search',
       StopsNearby: '/nearby',
@@ -181,7 +181,7 @@ module.exports = class MainServer {
       TourBusMinder: '/tbm',
 
       'mockups/Index': '/mockups',
-      'mockups/FlindersStreetEscalator': '/mockups/fss-escalator',
+      'mockups/FlindersStreet': '/mockups/fss',
       'mockups/Metro-LCD-PIDS': '/mockups/metro-lcd-pids',
       'mockups/BusInt-PIDS': '/mockups/bus-int-pids',
       'mockups/Metro-LED-PIDS': '/mockups/metro-led-pids',

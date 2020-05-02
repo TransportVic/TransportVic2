@@ -1,7 +1,3 @@
-:root {
-  --font-scale: 1.3333;
-}
-
 body {
   width: 100vw;
   height: 100vh;
@@ -9,6 +5,9 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+
+  --width: calc(100vh / 9 * 16);
+  --height: 100vh;
 }
 
 p {
@@ -20,15 +19,19 @@ div.content.announcements {
 }
 
 div.content {
-  --width: 100vw;
-  --height: calc(100vw * 9 / 32);
-
   width: var(--width);
   height: var(--height);
-  background-color: #222222;
-  color: white;
+  background-color: white;
+  color: black;
 
   display: flex;
-  justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+
+@media (max-aspect-ratio: 16/9) {
+  body {
+    --width: 100vw;
+    --height: calc(100vw * 9 / 16);
+  }
 }
