@@ -246,7 +246,7 @@ let stoppingPatternWidth = 0
 
 async function animateScrollingText() {
   if (stoppingPatternWidth < window.innerWidth) {
-    return await asyncPause(4000)
+    return await asyncPause(4000) || true
   }
 
   let iterationCount = Math.ceil((stoppingPatternWidth) / shiftWidth)
@@ -267,12 +267,17 @@ async function animateScrollingText() {
   await asyncPause(200)
 }
 
-function drawBottomRow() {
+function drawBottomRow(shouldPause=false) {
   if (showingStandClear) return
 
-  firstStoppingPatternP.textContent = ''
   firstStoppingTypeP.style = 'opacity: 1;'
   firstStoppingPatternP.style = 'opacity: 0;'
+  if (shouldPause)
+    setTimeout(() => {
+      firstStoppingPatternP.textContent = ''
+    }, 260)
+  else
+    firstStoppingPatternP.textContent = ''
 
   if (stopScrolling) return
 
@@ -286,8 +291,7 @@ function drawBottomRow() {
 
     stoppingPatternWidth = parseInt(getComputedStyle(firstStoppingPatternP).width) + window.innerWidth * 0.05
 
-    await animateScrollingText()
-    drawBottomRow()
+    drawBottomRow(await animateScrollingText())
   }, 4000)
 }
 
