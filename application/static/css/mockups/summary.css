@@ -18,7 +18,7 @@ div.container {
 
 div.platform {
   display: inline-block;
-  margin: 1.5vw;
+  margin: 1vw;
 }
 
 div.title {
@@ -32,6 +32,7 @@ div.title {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 1.2vw;
 }
 
 div.title a, div.title a:visited {
@@ -50,4 +51,12 @@ div.platform.fss-escalator, div.platform.fss-escalator * {
 
 div.platform.fss-escalator iframe {
   height: calc(15vw / 9 * 16);
+}
+
+div.platform.fss-platform, div.platform.fss-platform * {
+  width: 18vw;
+}
+
+div.platform.fss-platform iframe {
+  height: calc(18vw * 9 / 16);
 }

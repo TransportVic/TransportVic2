@@ -169,7 +169,7 @@ div.stopsColumn.row-8.column-1 div.stationRow p {
 }
 
 div.stopsColumn.row-8.column-1 div.stationRow img {
-  width: calc(var(--width) * 0.025);
+  width: calc(var(--width) * 0.024);
 }
 
 div.stopsColumn.row-10 div.stationRow p {
