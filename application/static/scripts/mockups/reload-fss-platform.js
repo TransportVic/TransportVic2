@@ -152,7 +152,7 @@ function updateBody() {
 
     addStoppingPattern(firstDeparture.additionalInfo.screenStops, firstDepartureClass)
 
-    let nextDepartures = [null, null].concat(departures.slice(1)).slice(-2)
+    let nextDepartures = (departures.slice(1).concat([null, null])).slice(0, 2)
     nextDepartures.forEach((departure, i) => {
       let departureRow = $(`.nextDeparture:nth-child(${2 * i + 1})`)
       if (!departure) {
