@@ -181,5 +181,5 @@ $.ready(() => {
   setupClock()
 
   updateBody()
-  setInterval(updateBody, 1000 * 60)
+  setInterval(updateBody, 1000 * 30)
 })
