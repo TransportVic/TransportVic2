@@ -143,9 +143,12 @@ function updateBody() {
     let firstDepartureClass = firstDeparture.codedLineName
     if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
 
+    let {destination} = departure
+    if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+
     $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
     $('.firstDepartureInfo .firstDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
-    $('.firstDepartureInfo .firstDestination').textContent = firstDeparture.destination
+    $('.firstDepartureInfo .firstDestination').textContent = destination
     $('.firstDepartureInfo .firstStoppingType').textContent = firstDeparture.stoppingType
     $('.firstDepartureInfo .minutesToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
     $('.stoppingPattern').className = 'stoppingPattern stoppingAt ' + firstDepartureClass
@@ -165,9 +168,13 @@ function updateBody() {
         let departureClass = departure.codedLineName
         if (departure.type === 'vline') departureClass = 'vline'
 
+        let {destination} = departure
+        if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
+        if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+
         $('.lineColour', departureRow).className = 'lineColour ' + departureClass
         $('.scheduledDepartureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
-        $('.destination', departureRow).textContent = departure.destination
+        $('.destination', departureRow).textContent = destination
         $('.stoppingType', departureRow).textContent = departure.stoppingType
         $('.minutesToDeparture span', departureRow).textContent = departure.prettyTimeToDeparture
       }

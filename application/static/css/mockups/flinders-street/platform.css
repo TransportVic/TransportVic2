@@ -220,7 +220,7 @@ div.nextDeparture span.scheduledDepartureTime {
 }
 
 div.nextDeparture span.destination {
-  width: calc(var(--width) * 0.2);
+  width: calc(var(--width) * 0.24);
   font-size: calc(var(--height) * 0.05);
   font-family: "NetworkSansBold";
 }
