@@ -185,7 +185,8 @@ module.exports = class MainServer {
       'mockups/Metro-LCD-PIDS': '/mockups/metro-lcd-pids',
       'mockups/BusInt-PIDS': '/mockups/bus-int-pids',
       'mockups/Metro-LED-PIDS': '/mockups/metro-led-pids',
-      'mockups/PrideBox': '/mockups/pride',
+      'mockups/SouthernCross': '/mockups/sss',
+      // 'mockups/PrideBox': '/mockups/pride',
 
       'jmss-screens/BigScreen': '/jmss-screens/big-screen',
 
