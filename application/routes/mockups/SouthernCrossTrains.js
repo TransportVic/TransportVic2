@@ -225,7 +225,7 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
         runID: departure.runID,
         mode: 'regional train'
       }, trip, {
-        upsert: isD
+        upsert: true
       })
     }
 
@@ -336,8 +336,8 @@ function getStoppingPattern(routeName, stopsAt, isUp, type) {
   let firstExpress = expresses[0]
   let firstExpressStop = firstExpress[0], lastExpressStop = firstExpress.slice(-1)[0]
 
-  let previousStop = shortenName(lineStops[lineStops.lindexOf(firstExpressStop) - 1])
-  let nextStop = shortenName(lineStops[lineStops.lindexOf(lastExpressStop) + 1])
+  let previousStop = shortenName(lineStops[lineStops.indexOf(firstExpressStop) - 1])
+  let nextStop = shortenName(lineStops[lineStops.indexOf(lastExpressStop) + 1])
   return `EXPRESS ${previousStop.toUpperCase()} -- ${nextStop.toUpperCase()}`
 }
 
