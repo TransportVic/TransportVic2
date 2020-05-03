@@ -62,6 +62,7 @@ function setNoDepartures() {
 }
 
 function processArrivals(arrivals, platformNumber, isLeft) {
+  if (!sssPlatforms[platformNumber]) return
   arrivals = arrivals.filter(arrival => {
     if (arrival.type === 'vline') {
       if (!arrival.platform) return null
@@ -83,7 +84,9 @@ function processArrivals(arrivals, platformNumber, isLeft) {
 
   let platformContainer = $(`div.${isLeft ? 'left' : 'right'}Platform.platformContainer`)
 
-  arrivals.forEach((arrival, i) => {
+  let nextArrivals = (arrivals.concat(Array(3).fill(null))).slice(0, 3)
+
+  nextArrivals.forEach((arrival, i) => {
     let arrivalRow = $(`.serviceRow:nth-child(${i + 8})`, platformContainer)
 
     if (arrival) {
@@ -95,14 +98,16 @@ function processArrivals(arrivals, platformNumber, isLeft) {
       else
         $('.dueIn span.actual', arrivalRow).textContent = '--'
       $('.dueIn span:nth-child(2)', arrivalRow).textContent = 'Min'
-      $('.platform', arrivalRow).textContent = arrival.platform
+      if (sssPlatforms[platformNumber])
+        $('.platform', arrivalRow).textContent = arrival.platform
     } else {
       arrivalRow.style = 'opacity: 0;'
       $('.scheduledDepartureTime', arrivalRow).textContent = ''
       $('.destination', arrivalRow).textContent = ''
       $('.dueIn span.actual', arrivalRow).textContent = ''
       $('.dueIn span:nth-child(2)', arrivalRow).textContent = ''
-      $('.platform', arrivalRow).textContent = ''
+      if (sssPlatforms[platformNumber])
+        $('.platform', arrivalRow).textContent = ''
     }
   })
 }
@@ -130,24 +135,24 @@ function processDepartures(departures, platformNumber, isLeft) {
   if (!departures) return setListenAnnouncements()
 
   let firstDeparture = departures[0]
-  if (!firstDeparture) return setNoDepartures()
 
   let platformContainer = $(`div.${isLeft ? 'left' : 'right'}Platform.platformContainer`)
+  if (firstDeparture) {
+    $('.topRow .firstDestination', platformContainer).textContent = firstDeparture.destination
+    $('.departureData .firstDepartureTime', platformContainer).textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
 
-  $('.topRow .firstDestination', platformContainer).textContent = firstDeparture.destination
-  $('.departureData .firstDepartureTime', platformContainer).textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
-
-  if (firstDeparture.minutesToDeparture > 0) {
-    if (firstDeparture.minutesToDeparture <= 120)
-      $('.departureData div.actual div span.actual', platformContainer).textContent = firstDeparture.minutesToDeparture
-    else
-      $('.departureData div.actual div span.actual', platformContainer).textContent = '--'
-    $('.departureData div.actual div span:nth-child(2)', platformContainer).textContent = 'Min'
-  } else {
-    $('.departureData div.actual div span.actual', platformContainer).textContent = 'Now'
-    $('.departureData div.actual div span:nth-child(2)', platformContainer).textContent = ''
+    if (firstDeparture.minutesToDeparture > 0) {
+      if (firstDeparture.minutesToDeparture <= 120)
+        $('.departureData div.actual div span.actual', platformContainer).textContent = firstDeparture.minutesToDeparture
+      else
+        $('.departureData div.actual div span.actual', platformContainer).textContent = '--'
+      $('.departureData div.actual div span:nth-child(2)', platformContainer).textContent = 'Min'
+    } else {
+      $('.departureData div.actual div span.actual', platformContainer).textContent = 'Now'
+      $('.departureData div.actual div span:nth-child(2)', platformContainer).textContent = ''
+    }
+    $('.departureData .platform span:nth-child(2)', platformContainer).textContent = firstDeparture.platform
   }
-  $('.departureData .platform span:nth-child(2)', platformContainer).textContent = firstDeparture.platform
 
   let departureCount = sssPlatforms[platformNumber] ? 5 : 9
   let nextDepartures = (departures.slice(1).concat(Array(10).fill(null))).slice(0, departureCount)
@@ -164,14 +169,16 @@ function processDepartures(departures, platformNumber, isLeft) {
       else
         $('.dueIn span.actual', departureRow).textContent = '--'
       $('.dueIn span:nth-child(2)', departureRow).textContent = 'Min'
-      $('.platform', departureRow).textContent = departure.platform
+      if (sssPlatforms[platformNumber])
+        $('.platform', departureRow).textContent = departure.platform
     } else {
       departureRow.style = 'opacity: 0;'
       $('.scheduledDepartureTime', departureRow).textContent = ''
       $('.destination', departureRow).textContent = ''
       $('.dueIn span.actual', departureRow).textContent = ''
       $('.dueIn span:nth-child(2)', departureRow).textContent = ''
-      $('.platform', departureRow).textContent = ''
+      if (sssPlatforms[platformNumber])
+        $('.platform', departureRow).textContent = ''
     }
   })
 }

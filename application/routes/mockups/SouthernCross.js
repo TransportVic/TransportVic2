@@ -33,7 +33,7 @@ router.get('/platform/:platforms/', async (req, res) => {
 router.post('/:type/:platforms/', async (req, res) => {
   let data = await getData(req.params.platforms.split('-'), res.db)
 
-  data.departures = data.departures.map(departure => {
+  let departures = data.departures.map(departure => {
     let {scheduledDepartureTime} = departure
 
     let timeDifference = departure.scheduledDepartureTime.clone().add(30, 'seconds').diff(utils.now(), 'minutes')
@@ -42,18 +42,19 @@ router.post('/:type/:platforms/', async (req, res) => {
     return departure
   })
 
-  data.arrivals = data.arrivals.map(arrival => {
+  let arrivals = data.arrivals.map(arrival => {
     let {scheduledDepartureTime} = arrival
 
     if (arrival.estimatedDepartureTime) {
       let timeDifference = arrival.estimatedDepartureTime.clone().add(30, 'seconds').diff(utils.now(), 'minutes')
+      if (timeDifference < 0) timeDifference = 0
       arrival.minutesToDeparture = timeDifference
     } else arrival.minutesToDeparture = null
 
     return arrival
   })
 
-  res.json(data)
+  res.json({ departures, arrivals })
 })
 
 module.exports = router

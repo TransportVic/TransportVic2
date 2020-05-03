@@ -16,6 +16,10 @@ router.get('/summary/:station', (req, res) => {
   res.render('mockups/summary', {query, station: req.params.station})
 })
 
+router.get('/sss-summary/', (req, res) => {
+  res.render('mockups/sss-summary')
+})
+
 router.get('/get', async (req, res) => {
   let stops = res.db.getCollection('stops')
   let query = querystring.parse(url.parse(req.url).query)

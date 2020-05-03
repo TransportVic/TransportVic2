@@ -60,3 +60,16 @@ div.platform.fss-platform, div.platform.fss-platform * {
 div.platform.fss-platform iframe {
   height: calc(18vw * 9 / 16);
 }
+
+
+div.platform.sss-platform {
+  margin: 1vh 1vw;
+}
+
+div.platform.sss-platform, div.platform.sss-platform * {
+  width: 30vw;
+}
+
+div.platform.sss-platform iframe {
+  height: calc(30vw * 9 / 16);
+}
