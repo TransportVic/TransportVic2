@@ -458,7 +458,7 @@ async function appendVLineData(departure, timetables) {
   if (destination === 'Shepparton') viaStops = ['Seymour']
 
   let via = stopTimings.filter(s => viaStops.includes(s)).map(e => e.toUpperCase())
-  let viaStopsText
+  let viaStopsText, viaText = ''
   if (via.length > 0) {
     if (via.length === 1) viaStopsText = via[0]
     else if (via.length === 2) viaStopsText = `${via[0]} & ${via[1]}`
@@ -467,9 +467,9 @@ async function appendVLineData(departure, timetables) {
       let last = via.slice(-1)[0]
       viaStopsText = `${initial} & ${last}`
     }
+    viaText = `via ${viaStopsText}`
   }
 
-  let viaText = `via ${viaStopsText}`
   let brokenVia = breakup(viaText)
 
   let tripDivideTypes = {
