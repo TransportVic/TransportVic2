@@ -143,7 +143,7 @@ function updateBody() {
     let firstDepartureClass = firstDeparture.codedLineName
     if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
 
-    let {destination} = departure
+    let {destination} = firstDeparture
     if (destination === 'Flemington Racecource') destination = 'Flemington Races'
 
     $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
