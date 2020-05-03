@@ -239,12 +239,14 @@ module.exports = {
 
     let via = ''
 
-    if (isCityStop || trip.direction === 'Up') {
-      if (viaCityLoop) via = 'via City Loop'
-      else {
-        if (northernGroup.includes(routeName)) via = 'via Sthn Cross'
-        else if (cliftonHillGroup.includes(routeName)) via = 'via Jolimont'
-        else via = 'via Richmond'
+    if (departure.type !== 'vline') {
+      if (isCityStop || relevantTrip.direction === 'Up') {
+        if (viaCityLoop) via = 'via City Loop'
+        else {
+          if (northernGroup.includes(routeName)) via = 'via Sthn Cross'
+          else if (cliftonHillGroup.includes(routeName)) via = 'via Jolimont'
+          else via = 'via Richmond'
+        }
       }
     }
 

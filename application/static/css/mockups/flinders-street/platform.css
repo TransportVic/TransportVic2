@@ -214,13 +214,13 @@ div.nextDeparture div.lineColour {
 
 div.nextDeparture span.scheduledDepartureTime {
   margin-left: calc(var(--width) * 0.01);
-  width: calc(var(--width) * 0.12);
+  width: calc(var(--width) * 0.11);
   font-size: calc(var(--height) * 0.04);
   font-family: "NetworkSansRegular";
 }
 
 div.nextDeparture span.destination {
-  min-width: calc(var(--width) * 0.15);
+  width: calc(var(--width) * 0.17);
   font-size: calc(var(--height) * 0.05);
   font-family: "NetworkSansBold";
 }
