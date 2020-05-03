@@ -244,7 +244,7 @@ function processDepartures(departures, platformNumber, isLeft) {
       departureRow.style = ''
       $('.scheduledDepartureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
       $('.destination', departureRow).textContent = departure.destination.toUpperCase()
-      if (departure.minutesToDeparture <= 120)
+      if (departure.minutesToDeparture <= 90)
         $('.dueIn span.actual', departureRow).textContent = departure.minutesToDeparture
       else
         $('.dueIn span.actual', departureRow).textContent = '--'
