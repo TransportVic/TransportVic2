@@ -38,6 +38,30 @@ async function getDeparture(station, db, mode, possibleLines, scheduledDeparture
       }
     }).limit(2).toArray()
 
+    if (!timetables.length) {
+      timetables = await collection.findDocuments({
+        _id: {
+          $not: {
+            $in: seen
+          }
+        },
+        routeName: {
+          $in: possibleLines
+        },
+        destination: {
+          $in: possibleDestinations
+        },
+        operationDays: day.format('YYYYMMDD'),
+        mode,
+        stopTimings: {
+          $elemMatch: {
+            stopGTFSID: platform.stopGTFSID,
+            departureTimeMinutes: scheduledDepartureTimeMinutes
+          }
+        }
+      }).limit(2).toArray()
+    }
+
     timetables = timetables.map(timetable => {
       let startTime = day.startOf('day').add(timetable.stopTimings[0].departureTimeMinutes, 'minutes')
       timetable.sortID = +startTime

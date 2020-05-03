@@ -55,9 +55,10 @@ async function findConnections(changeoverPoint) {
         trip.connections.push({
           runID: connection.runID,
           changeAt: changeoverPoint,
-          for: connection.destination
+          for: connection.destination,
+          from: trip.destination
         })
-        
+
         await timetables.updateDocument({
           _id: trip._id
         }, {

@@ -138,6 +138,13 @@ function processDepartures(departures, platformNumber, isLeft) {
 
   let platformContainer = $(`div.${isLeft ? 'left' : 'right'}Platform.platformContainer`)
   if (firstDeparture) {
+    let message = []
+    if (firstDeparture.connections.length) {
+      message = [firstDeparture.connections.map(e => `CHANGE AT ${e.changeAt.slice(0, -16).toUpperCase()} FOR ${e.for.slice(0, -16).toUpperCase()}`)]
+    } else {
+      message = [firstDeparture.viaText, firstDeparture.stoppingPattern]
+    }
+
     $('.topRow .firstDestination', platformContainer).textContent = firstDeparture.destination
     $('.departureData .firstDepartureTime', platformContainer).textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
 
@@ -152,6 +159,22 @@ function processDepartures(departures, platformNumber, isLeft) {
       $('.departureData div.actual div span:nth-child(2)', platformContainer).textContent = ''
     }
     $('.departureData .platform span:nth-child(2)', platformContainer).textContent = firstDeparture.platform
+    $('.bottom .message', platformContainer).innerHTML = message.map(e => `<p>${e}</p>`).join('')
+  }
+
+
+  let offset = 0
+  let length = departures.length
+  for (let i = 1; i < length; i++) {
+    let departure = departures[i + offset]
+    departure.connections.forEach(connection => {
+      offset += 1
+      let newDeparture = JSON.parse(JSON.stringify(departure))
+      newDeparture.type = 'CONNECTION'
+      newDeparture.message = [`TAKE ${connection.from.slice(0, -16).toUpperCase()} TRAIN`, `AND CHANGE AT ${connection.changeAt.slice(0, -16).toUpperCase()}`]
+      newDeparture.destination = connection.for.slice(0, -16)
+      departures = [...departures.slice(0, i + offset), newDeparture, ...departures.slice(i + offset)]
+    })
   }
 
   let departureCount = sssPlatforms[platformNumber] ? 5 : 9
@@ -161,6 +184,12 @@ function processDepartures(departures, platformNumber, isLeft) {
     let departureRow = $(`.serviceRow:nth-child(${i + 2})`, platformContainer)
 
     if (departure) {
+      let message = []
+      if (departure.type !== 'CONNECTION')
+        message = [departure.viaText, departure.stoppingPattern]
+      else
+        message = departure.message
+
       departureRow.style = ''
       $('.scheduledDepartureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
       $('.destination', departureRow).textContent = departure.destination.toUpperCase()
@@ -169,6 +198,10 @@ function processDepartures(departures, platformNumber, isLeft) {
       else
         $('.dueIn span.actual', departureRow).textContent = '--'
       $('.dueIn span:nth-child(2)', departureRow).textContent = 'Min'
+
+      $('.message', departureRow).innerHTML = message.map(e => `<p>${e}</p>`).join('')
+      if (message.length === 3) $('.message', departureRow).className = 'message small'
+
       if (sssPlatforms[platformNumber])
         $('.platform', departureRow).textContent = departure.platform
     } else {
@@ -177,6 +210,10 @@ function processDepartures(departures, platformNumber, isLeft) {
       $('.destination', departureRow).textContent = ''
       $('.dueIn span.actual', departureRow).textContent = ''
       $('.dueIn span:nth-child(2)', departureRow).textContent = ''
+
+      $('.message', departureRow).innerHTML = ''
+      $('.message', departureRow).className = 'message'
+
       if (sssPlatforms[platformNumber])
         $('.platform', departureRow).textContent = ''
     }

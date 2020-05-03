@@ -6,11 +6,40 @@ const moment = require('moment')
 const cheerio = require('cheerio')
 const termini = require('../../../additional-data/termini-to-lines')
 const getMetroDepartures = require('../../../modules/metro-trains/get-departures')
+const getLineStops = require('./route-stops')
+const TrainUtils = require('./TrainUtils')
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1.5 })
 
 const EventEmitter = require('events')
 
 let apiLock = null
+
+let northernGroup = [
+  'Craigieburn',
+  'Sunbury',
+  'Upfield',
+  'Werribee',
+  'Williamstown',
+  'Showgrounds/Flemington'
+]
+
+let crossCityGroup = [
+  'Werribee',
+  'Williamstown',
+  'Frankston'
+]
+
+let gippslandLines = [
+  'Bairnsdale',
+  'Traralgon'
+]
+
+let cliftonHillGroup = [
+  'Hurstbridge',
+  'Mernda'
+]
+
+let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 async function getStationFromVNETName(vnetStationName, db) {
   const station = await db.getCollection('stops').findDocument({
@@ -283,6 +312,91 @@ async function getScheduledArrivals(knownArrivals, db) {
   })
 }
 
+function shortenName(name) {
+  if (name === 'South Kensington') return 'S Kensington'
+  if (name === 'North Williamstown') return 'N Williamstwn'
+  if (name === 'Williamstown Beach') return 'Wilmstwn Bch'
+  if (name === 'South Kensington') return 'S Kensington'
+  if (name.includes('Flemington')) return name.replace('Flemington', 'Flemtn')
+  return name
+}
+
+function getStoppingPattern(routeName, stopsAt, isUp, type) {
+  if (routeName === 'Bendigo') {
+    if (!isUp && stopsAt.slice(-1)[0] === 'Eaglehawk') routeName = 'Swan Hill'
+  }
+
+  let lineStops = getLineStops(routeName)
+  if (isUp) lineStops = lineStops.slice(0).reverse()
+
+  lineStops = TrainUtils.getFixedLineStops(stopsAt, lineStops, routeName, isUp, type)
+  let expresses = TrainUtils.findExpressStops(stopsAt, lineStops, routeName, isUp, 'Southern Cross')
+  if (expresses.length === 0) return 'STOPPING ALL STATIONS'
+  if (expresses.length === 1 && expresses[0].length == 1) return `NOT STOPPING AT ${shortenName(expresses[0][0]).toUpperCase()}`
+  let firstExpress = expresses[0]
+  let firstExpressStop = firstExpress[0], lastExpressStop = firstExpress.slice(-1)[0]
+
+  let previousStop = shortenName(lineStops[lineStops.lindexOf(firstExpressStop) - 1])
+  let nextStop = shortenName(lineStops[lineStops.lindexOf(lastExpressStop) + 1])
+  return `EXPRESS ${previousStop.toUpperCase()} -- ${nextStop.toUpperCase()}`
+}
+
+async function appendMetroData(departure, timetables) {
+  let {runID} = departure
+  let today = utils.getPTDayName(utils.now())
+
+  let scheduled = await timetables.findDocument({
+    runID, operationDays: today
+  })
+
+  let connections = []
+
+  if (scheduled) connections = scheduled.connections
+
+  let stopTimings = departure.trip.stopTimings.map(e => e.stopName)
+  let routeName = departure.trip.routeName
+  let isUp = departure.trip.direction === 'Up'
+
+  if (departure.forming) {
+    isUp = departure.forming.direction === 'Up'
+    routeName = departure.forming.routeName
+    let sssIndex = stopTimings.indexOf('Southern Cross')
+    stopTimings = stopTimings.slice(sssIndex).concat(departure.forming.stopTimings.map(e => e.stopName))
+    stopTimings = stopTimings.filter((e, i, a) => a.indexOf(e) === i)
+  }
+  stopTimings = stopTimings.map(e => e.slice(0, -16))
+  let sssIndex = stopTimings.indexOf('Southern Cross')
+  let trimmedTimings = stopTimings.slice(sssIndex)
+
+  let via = []
+  trimmedTimings.slice(0, 6).forEach(stop => {
+    if (via.length === 2) return
+
+    if (stop === 'Flinders Street') {
+      via.push('Flinders St')
+    } else if (stop === 'Flagstaff') {
+      via.push('City Loop')
+    }
+    if (stop === 'North Melbourne') {
+      via.push('Nth Melbourne')
+    } else if (stop === 'Richmond') {
+      via.push('Richmond')
+    }
+  })
+
+  let message = []
+
+  let viaText = `VIA ${via[0].toUpperCase()}`
+  if (via[1]) viaText += ` AND ${via[1].toUpperCase()}`
+
+  departure.viaText = viaText
+  departure.connections = connections || []
+
+  departure.stoppingPattern = getStoppingPattern(routeName, trimmedTimings, isUp, 'metro')
+
+  return departure
+}
+
 module.exports = async (platforms, db) => {
   if (departuresCache.get('SSS')) {
     let data = departuresCache.get('SSS')
@@ -307,12 +421,16 @@ module.exports = async (platforms, db) => {
   let vlinePlatform = sss.bays.find(bay => bay.mode === 'regional train')
   let metroPlatform = sss.bays.find(bay => bay.mode === 'metro train')
 
+  let timetables = db.getCollection('timetables')
+
   let departures = await getServicesFromVNET(vlinePlatform, true, db)
   let arrivals = await getServicesFromVNET(vlinePlatform, false, db)
   let knownArrivals = arrivals.map(a => a.runID)
 
   let scheduledArrivals = await getScheduledArrivals(knownArrivals, db)
-  let mtmDepartures = await getMetroDepartures(sss, db, 15, true)
+  let mtmDepartures = await async.map(await getMetroDepartures(sss, db, 15, true), async d => {
+    return await appendMetroData(d, timetables)
+  })
 
   let allArrivals = arrivals.concat(scheduledArrivals).sort((a, b) => a.destinationArrivalTime - b.destinationArrivalTime)
 

@@ -259,7 +259,7 @@ module.exports = {
 
     return departure
   },
-  findExpressStops: (tripStops, lineStops, routeName, isUp, isVLine, stationName) => {
+  findExpressStops: (tripStops, lineStops, routeName, isUp, stationName) => {
     tripStops = module.exports.trimTrip(isUp, tripStops, stationName, routeName)
 
     let startIndex = tripStops.indexOf(stationName)
@@ -375,7 +375,6 @@ module.exports = {
       let {routeGTFSID, direction, stopTimings} = trip
       let isUp = direction === 'Up' && !departure.forming
       let routeName = departure.shortRouteName || trip.routeName
-      let isVLine = departure.type === 'vline'
 
       let tripStops = stopTimings.map(stop => stop.stopName.slice(0, -16))
       if (departure.forming) {
@@ -394,7 +393,7 @@ module.exports = {
       if (isUp) lineStops = lineStops.slice(0).reverse()
 
       lineStops = module.exports.getFixedLineStops(tripStops, lineStops, routeName, isUp, departure.type)
-      let expresses = module.exports.findExpressStops(tripStops, lineStops, routeName, isUp, isVLine, stationName)
+      let expresses = module.exports.findExpressStops(tripStops, lineStops, routeName, isUp, stationName)
       let stoppingPattern = module.exports.determineStoppingPattern(expresses, destination, lineStops, stationName, stoppingTextMap)
 
       departure.stoppingPattern = stoppingPattern

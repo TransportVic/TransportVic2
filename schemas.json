@@ -77,7 +77,8 @@
     "connections": [{
       "runID": "string",
       "changeAt": "string",
-      "for": "string"
+      "for": "string",
+      "from": "string"
     }]
   },
   "liveTimetable": {
