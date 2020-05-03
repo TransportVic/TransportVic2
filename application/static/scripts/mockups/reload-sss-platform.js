@@ -144,6 +144,7 @@ function processDepartures(departures, platformNumber, isLeft) {
     let {destination} = departure
     if (destination === 'Flemington Racecource') destination = 'Flemington Races'
     if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
+    if (destination === 'South Kensington') destination = 'Sth Kensington'
 
     departure.destination = destination.toUpperCase()
 
@@ -163,14 +164,22 @@ function processDepartures(departures, platformNumber, isLeft) {
       message = firstDeparture.connections.map(e => `CHANGE AT ${e.changeAt.slice(0, -16).toUpperCase()} FOR ${e.for.slice(0, -16).toUpperCase()}`)
     } else {
       if (firstDeparture.type === 'vline') {
-        let stoppingPattern = ''
-        if (firstDeparture.stoppingPattern !== 'STOPPING ALL STATIONS') stoppingPattern = firstDeparture.stoppingPattern
-        message = [firstDeparture.viaText, stoppingPattern]
+        if (firstDeparture.divideInfo) {
+          message = [firstDeparture.divideInfo.first]
+        } else {
+          let stoppingPattern = ''
+          if (firstDeparture.stoppingPattern !== 'STOPPING ALL STATIONS') stoppingPattern = firstDeparture.stoppingPattern
+          message = [firstDeparture.viaText, stoppingPattern]
+        }
       } else {
-        if (firstDeparture.viaText.includes('AND') || firstDeparture.stoppingPattern !== 'STOPPING ALL STATIONS')
+        if (firstDeparture.viaText.includes('AND') || firstDeparture.stoppingPattern !== 'STOPPING ALL STATIONS') {
           message = [firstDeparture.viaText, firstDeparture.stoppingPattern]
-        else
-          message = [firstDeparture.viaText + ', ' + firstDeparture.stoppingPattern]
+        } else {
+          if (firstDeparture.destination === 'FLINDERS STREET')
+            message = [firstDeparture.viaText]
+          else
+            message = [firstDeparture.viaText + ', ' + firstDeparture.stoppingPattern]
+        }
       }
     }
 
@@ -214,12 +223,18 @@ function processDepartures(departures, platformNumber, isLeft) {
 
     if (departure) {
       let message = []
-      if (departure.type === 'CONNECTION') {
+
+      if (departure.divideInfo) {
+        message = departure.divideInfo.next
+      } else if (departure.type === 'CONNECTION') {
         message = departure.message
       } else if (departure.type === 'vline') {
         message = departure.brokenVia
       } else {
-        message = [departure.viaText, departure.stoppingPattern]
+        if (departure.destination === 'FLINDERS STREET')
+          message = [departure.viaText, '']
+        else
+          message = [departure.viaText,  departure.stoppingPattern]
       }
 
       departureRow.style = ''

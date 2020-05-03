@@ -6,7 +6,8 @@ const moment = require('moment')
 const cheerio = require('cheerio')
 const termini = require('../../../additional-data/termini-to-lines')
 const getMetroDepartures = require('../../../modules/metro-trains/get-departures')
-const getLineStops = require('./route-stops')
+const getVLineStops = require('./SSS-Lines')
+const getMetroStops = require('./route-stops')
 const TrainUtils = require('./TrainUtils')
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1.5 })
 
@@ -248,6 +249,7 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
         barAvailable: departure.barAvailable,
         accessibleTrain: departure.accessibleTrain
       },
+      tripFlags: nspTrip ? nspTrip.flags : {},
       connections: []
     }
   })
@@ -313,7 +315,17 @@ async function getScheduledArrivals(knownArrivals, db) {
   })
 }
 
-function shortenName(name) {
+function shortenExpressName(name) {
+  if (name === 'North Melbourne') return 'Nth Melbourne'
+  if (name === 'South Kensington') return 'S Kensington'
+  if (name === 'North Williamstown') return 'N Williamstwn'
+  if (name === 'Williamstown Beach') return 'Wilmstwn Bch'
+  if (name === 'South Kensington') return 'S Kensington'
+  if (name.includes('Flemington')) return name.replace('Flemington', 'Flemtn')
+  return name
+}
+
+function shortenStopName(name) {
   if (name === 'South Kensington') return 'S Kensington'
   if (name === 'North Williamstown') return 'N Williamstwn'
   if (name === 'Williamstown Beach') return 'Wilmstwn Bch'
@@ -327,18 +339,23 @@ function getStoppingPattern(routeName, stopsAt, isUp, type) {
     if (!isUp && stopsAt.slice(-1)[0] === 'Eaglehawk') routeName = 'Swan Hill'
   }
 
-  let lineStops = getLineStops(routeName)
+  let lineStops
+  if (type === 'metro')
+    lineStops = getMetroStops(routeName)
+  else
+    lineStops = getVLineStops(routeName)
+
   if (isUp) lineStops = lineStops.slice(0).reverse()
 
   lineStops = TrainUtils.getFixedLineStops(stopsAt, lineStops, routeName, isUp, type)
   let expresses = TrainUtils.findExpressStops(stopsAt, lineStops, routeName, isUp, 'Southern Cross')
   if (expresses.length === 0) return 'STOPPING ALL STATIONS'
-  if (expresses.length === 1 && expresses[0].length == 1) return `NOT STOPPING AT ${shortenName(expresses[0][0]).toUpperCase()}`
+  if (expresses.length === 1 && expresses[0].length == 1) return `NOT STOPPING AT ${shortenExpressName(expresses[0][0]).toUpperCase()}`
   let firstExpress = expresses[0]
   let firstExpressStop = firstExpress[0], lastExpressStop = firstExpress.slice(-1)[0]
 
-  let previousStop = shortenName(lineStops[lineStops.indexOf(firstExpressStop) - 1])
-  let nextStop = shortenName(lineStops[lineStops.indexOf(lastExpressStop) + 1])
+  let previousStop = shortenExpressName(lineStops[lineStops.indexOf(firstExpressStop) - 1])
+  let nextStop = shortenExpressName(lineStops[lineStops.indexOf(lastExpressStop) + 1])
   return `EXPRESS ${previousStop.toUpperCase()} -- ${nextStop.toUpperCase()}`
 }
 
@@ -390,12 +407,31 @@ async function appendMetroData(departure, timetables) {
   let viaText = `VIA ${via[0].toUpperCase()}`
   if (via[1]) viaText += ` AND ${via[1].toUpperCase()}`
 
+  if (departure.destination === 'North Melbourne') viaText = 'VIA NTH MELBOURNE TO NTH MELBOURNE'
+  if (departure.destination === 'Flinders Street') viaText = 'DIRECT, STOPPING ALL STATIONS'
+
   departure.viaText = viaText
   departure.connections = connections || []
 
   departure.stoppingPattern = getStoppingPattern(routeName, trimmedTimings, isUp, 'metro')
 
   return departure
+}
+
+function breakup(text) {
+  let broken = ['', '']
+  let wordCount = 0
+
+  text.split(' ').forEach(word => {
+    wordCount += word.length
+    if (wordCount > 20) {
+      broken[1] += ` ${word}`
+    } else {
+      broken[0] += ` ${word}`
+    }
+  })
+
+  return broken
 }
 
 async function appendVLineData(departure, timetables) {
@@ -430,18 +466,26 @@ async function appendVLineData(departure, timetables) {
   }
 
   let viaText = `via ${viaStopsText}`
-  let viaWords = viaText.split(' ')
+  let brokenVia = breakup(viaText)
 
-  let brokenVia = ['', '']
-  let wordCount = 0
-  viaWords.forEach(word => {
-    wordCount += word.length
-    if (wordCount > 20) {
-      brokenVia[1] += ` ${word}`
-    } else {
-      brokenVia[0] += ` ${word}`
+  let tripDivideTypes = {
+    'Bacchus Marsh': 'FRONT',
+    'Bendigo': 'FRONT',
+    'Ballarat': 'REAR', // maryborough, ararat
+  }
+
+  if (departure.tripFlags.tripDivides) {
+    let type = tripDivideTypes[departure.tripFlags.tripDividePoint]
+    let remainingStops = stopTimings.slice(stopTimings.indexOf(departure.tripFlags.tripDividePoint) + 1)
+
+    let stopsList = `${remainingStops.slice(0, -1).join(' ')} or ${remainingStops.slice(-1)[0]}`
+    if (remainingStops.length === 1) stopsList = remainingStops[0]
+
+    departure.divideInfo = {
+      first: `${type} 3 carriages for ${stopsList}`,
+      next: breakup(`${stopsList} ${type} 3 carriages`)
     }
-  })
+  }
 
   departure.viaText = viaText
   departure.brokenVia = brokenVia
