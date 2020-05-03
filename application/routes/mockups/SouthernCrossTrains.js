@@ -247,7 +247,8 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
       flags: {
         barAvailable: departure.barAvailable,
         accessibleTrain: departure.accessibleTrain
-      }
+      },
+      connections: []
     }
   })
 
@@ -397,6 +398,59 @@ async function appendMetroData(departure, timetables) {
   return departure
 }
 
+async function appendVLineData(departure, timetables) {
+  let {runID} = departure
+  let today = utils.getPTDayName(utils.now())
+
+  let stopTimings = departure.trip.stopTimings.map(e => e.stopName.slice(0, -16))
+  let routeName = departure.shortRouteName
+  let isUp = false
+
+  let {destination} = departure
+
+  let viaStops = []
+  if (destination === 'South Geelong') viaStops = ['Deer Park', 'Tarneit', 'Wyndham Vale']
+  if (destination === 'Geelong') viaStops = ['Deer Park', 'Tarneit']
+  if (destination === 'Marshall') viaStops = ['Tarneit', 'Wyndham Vale']
+  if (destination === 'Epsom') viaStops = ['Bendigo']
+  if (destination === 'Melton') viaStops = ['Deer Park', 'Caroline Springs']
+  if (destination === 'Wyndham Vale') viaStops = ['Deer Park', 'Tarneit']
+  if (destination === 'Waurn Ponds') viaStops = ['Deer Park', 'Tarneit', 'Wyndham Vale']
+  if (destination === 'Wendouree') viaStops = ['Ballarat']
+  if (destination === 'Shepparton') viaStops = ['Seymour']
+
+  let via = stopTimings.filter(s => viaStops.includes(s)).map(e => e.toUpperCase())
+  let viaStopsText
+  if (via.length === 1) viaStopsText = via[0]
+  else if (via.length === 2) viaStopsText = `${via[0]} & ${via[1]}`
+  else {
+    let initial = via.slice(0, -1).join(' - ')
+    let last = via.slice(-1)[0]
+    return `${initial} & ${last}`
+  }
+
+  let viaText = `via ${viaStopsText}`
+  let viaWords = viaText.split(' ')
+
+  let brokenVia = ['', '']
+  let wordCount = 0
+  viaWords.forEach(word => {
+    wordCount += word.length
+    if (wordCount > 30) {
+      brokenVia[1] += ` ${word}`
+    } else {
+      brokenVia[0] += ` ${word}`
+    }
+  })
+
+  departure.viaText = viaText
+  departure.brokenVia = brokenVia
+
+  departure.stoppingPattern = getStoppingPattern(routeName, stopTimings, isUp, 'vline')
+
+  return departure
+}
+
 module.exports = async (platforms, db) => {
   if (departuresCache.get('SSS')) {
     let data = departuresCache.get('SSS')
@@ -423,7 +477,9 @@ module.exports = async (platforms, db) => {
 
   let timetables = db.getCollection('timetables')
 
-  let departures = await getServicesFromVNET(vlinePlatform, true, db)
+  let departures = await async.map(await getServicesFromVNET(vlinePlatform, true, db), async d => {
+    return await appendVLineData(d, timetables)
+  })
   let arrivals = await getServicesFromVNET(vlinePlatform, false, db)
   let knownArrivals = arrivals.map(a => a.runID)
 

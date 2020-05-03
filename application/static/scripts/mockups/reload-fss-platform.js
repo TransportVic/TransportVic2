@@ -106,21 +106,50 @@ function addStoppingPattern(stops, className) {
         column.innerHTML += createStationRow(' ', 'filler-2')
     }
 
+    let expresses = []
+    let expressPart = []
+
     stopColumn.forEach((stop, y) => {
       let {stopName} = stop
       let type = stop.isExpress ? 'express' : 'stops-at'
       if (lastRow && y === stopColumn.length - 1) type = 'terminates'
 
       let stopType = x == 0 && y == 0 ? className : ''
-      if (stop.isExpress) stopType = 'express'
+      if (stop.isExpress) {
+        stopType = 'express'
+        expressPart.push(y)
+      } else {
+        if (expressPart.length) {
+          expresses.push(expressPart)
+          expressPart = []
+        }
+      }
 
       column.innerHTML += createStationRow(stopName, type, stopType)
     })
+
+    if (expressPart.length) {
+      expresses.push(expressPart)
+      expressPart = []
+    }
 
     if (!lastRow) {
       for (let i = 0; i < 5; i++)
         column.innerHTML += createStationRow(' ', 'filler-2')
     }
+
+    expresses.forEach(express => {
+      let firstStop = express[0], lastStop = express.slice(-1)[0]
+
+      let startingTop = firstStop
+      let endingTop = lastStop
+      let middle = (startingTop + endingTop) / 2 - 2.5
+
+      column.innerHTML += `<div class="expressArrow" style="margin-top: calc(var(--arrow-height) * -${middle})">
+        <img src="/static/images/mockups/express-arrow.svg" class="${className}"/>
+        <img src="/static/images/mockups/express-arrow.svg"/>
+      </div>`
+    })
 
     $('.stoppingPattern').innerHTML += `
 <div class="stopsColumn row-${size} column-${stopColumns.length}">

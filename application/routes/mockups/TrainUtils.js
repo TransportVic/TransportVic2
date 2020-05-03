@@ -107,7 +107,7 @@ module.exports = {
   },
   getFixedLineStops: (tripStops, lineStops, lineName, isUp, type) => {
     let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament')
-    if (!northernGroup.includes(lineName) && !viaCityLoop)
+    if (!northernGroup.includes(lineName) && !viaCityLoop && type !== 'vline')
      viaCityLoop = tripStops.includes('Southern Cross')
     if (viaCityLoop) {
       let cityLoopStops = tripStops.filter(e => cityLoopStations.includes(e) || e === 'Flinders Street')
@@ -222,7 +222,7 @@ module.exports = {
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
 
     let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament')
-    if (!northernGroup.includes(routeName) && !viaCityLoop)
+    if (!northernGroup.includes(routeName) && !viaCityLoop && departure.type !== 'vline')
      viaCityLoop = tripStops.includes('Southern Cross')
 
     let screenStops = tripPassesBy.map(stop => {

@@ -139,6 +139,7 @@ function processDepartures(departures, platformNumber, isLeft) {
   let platformContainer = $(`div.${isLeft ? 'left' : 'right'}Platform.platformContainer`)
   if (firstDeparture) {
     let message = []
+
     if (firstDeparture.connections.length) {
       message = firstDeparture.connections.map(e => `CHANGE AT ${e.changeAt.slice(0, -16).toUpperCase()} FOR ${e.for.slice(0, -16).toUpperCase()}`)
     } else {
@@ -185,10 +186,13 @@ function processDepartures(departures, platformNumber, isLeft) {
 
     if (departure) {
       let message = []
-      if (departure.type !== 'CONNECTION')
-        message = [departure.viaText, departure.stoppingPattern]
-      else
+      if (departure.type === 'CONNECTION') {
         message = departure.message
+      } else if (departure.type === 'vline') {
+        message = departure.brokenVia
+      } else {
+        message = [departure.viaText, departure.stoppingPattern]
+      }
 
       departureRow.style = ''
       $('.scheduledDepartureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
