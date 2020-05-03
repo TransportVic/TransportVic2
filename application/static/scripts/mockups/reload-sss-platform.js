@@ -140,7 +140,7 @@ function processDepartures(departures, platformNumber, isLeft) {
   if (firstDeparture) {
     let message = []
     if (firstDeparture.connections.length) {
-      message = [firstDeparture.connections.map(e => `CHANGE AT ${e.changeAt.slice(0, -16).toUpperCase()} FOR ${e.for.slice(0, -16).toUpperCase()}`)]
+      message = firstDeparture.connections.map(e => `CHANGE AT ${e.changeAt.slice(0, -16).toUpperCase()} FOR ${e.for.slice(0, -16).toUpperCase()}`)
     } else {
       message = [firstDeparture.viaText, firstDeparture.stoppingPattern]
     }
