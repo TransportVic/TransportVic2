@@ -98,7 +98,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
       run.vehicle_descriptor = {} // ok maybe we should have kept the STY timetable but ah well
     }
 
-    if (!platform) return // run too far away
+    if (!platform && !isTrainReplacement) return // run too far away
     const runID = run.vehicle_descriptor.id
     const vehicleType = run.vehicle_descriptor.description
 
