@@ -24,7 +24,9 @@ function formatTime(time, includeSeconds=false, space=false) {
   let seconds = time.getSeconds()
   let mainTime = ''
 
-  mainTime += hours || '00'
+  if (hours < 10) mainTime += '0'
+  mainTime += hours
+
   mainTime += ':'
 
   if (minutes < 10) mainTime += '0'
