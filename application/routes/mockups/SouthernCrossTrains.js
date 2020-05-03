@@ -528,9 +528,9 @@ module.exports = async (platforms, db) => {
   let knownArrivals = arrivals.map(a => a.runID)
 
   let scheduledArrivals = await getScheduledArrivals(knownArrivals, db)
-  let mtmDepartures = await async.map(await getMetroDepartures(sss, db, 15, true), async d => {
+  let mtmDepartures = (await async.map(await getMetroDepartures(sss, db, 15, true), async d => {
     return await appendMetroData(d, timetables)
-  })
+  })).filter(e => !e.isTrainReplacement && !e.cancelled)
 
   let allArrivals = arrivals.concat(scheduledArrivals).sort((a, b) => a.destinationArrivalTime - b.destinationArrivalTime)
 
