@@ -54,6 +54,8 @@ router.get('/:platform/:type', async (req, res, next) => {
       res.render('mockups/metro-lcd-pids/pids')
     } else if (type === 'fss-escalator') {
       res.render('mockups/flinders-street/escalator', { platform })
+    } else if (type === 'fss-platform') {
+      res.render('mockups/flinders-street/platform')
     }
   }
 })
