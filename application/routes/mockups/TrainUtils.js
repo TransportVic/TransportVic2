@@ -109,6 +109,7 @@ module.exports = {
     let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament')
     if (!northernGroup.includes(lineName) && !viaCityLoop && type !== 'vline')
      viaCityLoop = tripStops.includes('Southern Cross')
+
     if (viaCityLoop) {
       let cityLoopStops = tripStops.filter(e => cityLoopStations.includes(e) || e === 'Flinders Street')
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')

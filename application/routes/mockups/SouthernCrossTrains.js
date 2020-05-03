@@ -241,6 +241,7 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
       scheduledDepartureTime: departure.originDepartureTime,
       destinationArrivalTime: departure.destinationArrivalTime,
       estimatedDepartureTime: departure.estimatedDepartureTime,
+      actualDepartureTime: departure.originDepartureTime,
       runID: departure.runID,
       vehicle: departure.vehicle,
       origin: trip.origin.slice(0, -16),
@@ -349,6 +350,7 @@ function getStoppingPattern(routeName, stopsAt, isUp, type) {
 
   lineStops = TrainUtils.getFixedLineStops(stopsAt, lineStops, routeName, isUp, type)
   let expresses = TrainUtils.findExpressStops(stopsAt, lineStops, routeName, isUp, 'Southern Cross')
+
   if (expresses.length === 0) return 'STOPPING ALL STATIONS'
   if (expresses.length === 1 && expresses[0].length == 1) return `NOT STOPPING AT ${shortenExpressName(expresses[0][0]).toUpperCase()}`
   let firstExpress = expresses[0]
@@ -383,7 +385,7 @@ async function appendMetroData(departure, timetables) {
     stopTimings = stopTimings.filter((e, i, a) => a.indexOf(e) === i)
   }
   stopTimings = stopTimings.map(e => e.slice(0, -16))
-  let sssIndex = stopTimings.indexOf('Southern Cross')
+  let sssIndex = stopTimings.lastIndexOf('Southern Cross')
   let trimmedTimings = stopTimings.slice(sssIndex)
 
   let via = []
@@ -457,12 +459,14 @@ async function appendVLineData(departure, timetables) {
 
   let via = stopTimings.filter(s => viaStops.includes(s)).map(e => e.toUpperCase())
   let viaStopsText
-  if (via.length === 1) viaStopsText = via[0]
-  else if (via.length === 2) viaStopsText = `${via[0]} & ${via[1]}`
-  else {
-    let initial = via.slice(0, -1).join(' - ')
-    let last = via.slice(-1)[0]
-    return `${initial} & ${last}`
+  if (via.length > 0) {
+    if (via.length === 1) viaStopsText = via[0]
+    else if (via.length === 2) viaStopsText = `${via[0]} & ${via[1]}`
+    else {
+      let initial = via.slice(0, -1).join(' - ')
+      let last = via.slice(-1)[0]
+      viaStopsText = `${initial} & ${last}`
+    }
   }
 
   let viaText = `via ${viaStopsText}`
@@ -524,6 +528,7 @@ module.exports = async (platforms, db) => {
   let departures = await async.map(await getServicesFromVNET(vlinePlatform, true, db), async d => {
     return await appendVLineData(d, timetables)
   })
+
   let arrivals = await getServicesFromVNET(vlinePlatform, false, db)
   let knownArrivals = arrivals.map(a => a.runID)
 
@@ -533,8 +538,8 @@ module.exports = async (platforms, db) => {
   })).filter(e => !e.isTrainReplacement && !e.cancelled)
 
   let allArrivals = arrivals.concat(scheduledArrivals).sort((a, b) => a.destinationArrivalTime - b.destinationArrivalTime)
+  let allDepartures = departures.concat(mtmDepartures).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 
-  let allDepartures = departures.concat(mtmDepartures)
   let rawData = { departures: allDepartures, arrivals: allArrivals }
   departuresCache.put('SSS', rawData)
 
