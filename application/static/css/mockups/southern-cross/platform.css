@@ -288,3 +288,18 @@ div.serviceRow div.dueIn > span:nth-child(1) {
 div.serviceRow div.dueIn > span:nth-child(2) {
   font-size: calc(var(--height) * 0.025);
 }
+
+div.fullMessage {
+  height: var(--height);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  font-size: calc(var(--height) * 0.12);
+  text-align: center;
+}
+
+div.fullMessage p {
+  transform: scaleX(0.8);
+}

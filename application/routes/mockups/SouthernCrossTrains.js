@@ -436,7 +436,7 @@ async function appendVLineData(departure, timetables) {
   let wordCount = 0
   viaWords.forEach(word => {
     wordCount += word.length
-    if (wordCount > 30) {
+    if (wordCount > 20) {
       brokenVia[1] += ` ${word}`
     } else {
       brokenVia[0] += ` ${word}`

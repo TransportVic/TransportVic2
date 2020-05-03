@@ -53,12 +53,29 @@ function setupClock() {
   }, msToNextSecond)
 }
 
-function setListenAnnouncements() {
-
+function setMessageActive(left, active) {
+  let container = $(`.platformContainer.${left ? 'left' : 'right'}Platform`)
+  if (active) {
+    $('.platformData', container).style = 'display: none;'
+    $('.fullMessage', container).style = 'display: flex;'
+  } else {
+    $('.platformData', container).style = 'display: block;'
+    $('.fullMessage', container).style = 'display: none;'
+  }
 }
 
-function setNoDepartures() {
+function setListenAnnouncements(left) {
+  let container = $(`.platformContainer.${left ? 'left' : 'right'}Platform`)
+  let fullMessage = $('.fullMessage', container)
+  fullMessage.innerHTML = '<p>LISTEN</p><p>FOR</p><p>ANNOUNCEMENT</p>'
+  setMessageActive(left, true)
+}
 
+function setNoDepartures(left) {
+  let container = $(`.platformContainer.${left ? 'left' : 'right'}Platform`)
+  let fullMessage = $('.fullMessage', container)
+  fullMessage.innerHTML = '<p>NO TRAINS</p><p>DEPART</p><p>FROM THIS</p><p>PLATFORM</p>'
+  setMessageActive(left, true)
 }
 
 function processArrivals(arrivals, platformNumber, isLeft) {
@@ -81,6 +98,7 @@ function processArrivals(arrivals, platformNumber, isLeft) {
 
     return arrival
   })
+  if (!arrivals.length) return true
 
   let platformContainer = $(`div.${isLeft ? 'left' : 'right'}Platform.platformContainer`)
 
@@ -132,7 +150,8 @@ function processDepartures(departures, platformNumber, isLeft) {
     return departure
   })
 
-  if (!departures) return setListenAnnouncements()
+  if (!departures) return true
+  setMessageActive(isLeft, false)
 
   let firstDeparture = departures[0]
 
@@ -150,7 +169,7 @@ function processDepartures(departures, platformNumber, isLeft) {
     $('.departureData .firstDepartureTime', platformContainer).textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
 
     if (firstDeparture.minutesToDeparture > 0) {
-      if (firstDeparture.minutesToDeparture <= 120)
+      if (firstDeparture.minutesToDeparture <= 90)
         $('.departureData div.actual div span.actual', platformContainer).textContent = firstDeparture.minutesToDeparture
       else
         $('.departureData div.actual div span.actual', platformContainer).textContent = '--'
@@ -228,15 +247,18 @@ function updateBody() {
   $.ajax({
     method: 'POST'
   }, (err, status, body) => {
-    if (err) return setListenAnnouncements()
+    if (err) return setListenAnnouncements(false) || setListenAnnouncements(true)
     let departures = body.departures || []
     let arrivals = body.arrivals || []
 
-    processDepartures(departures, platforms[0], true)
-    processDepartures(departures, platforms[1], false)
+    let leftNoDepartures = processDepartures(departures, platforms[0], true)
+    let rightNoDepartures = processDepartures(departures, platforms[1], false)
 
-    processArrivals(arrivals, platforms[0], true)
-    processArrivals(arrivals, platforms[1], false)
+    let leftNoArrivals = processArrivals(arrivals, platforms[0], true)
+    let rightNoArrivals = processArrivals(arrivals, platforms[1], false)
+
+    if (leftNoDepartures && leftNoArrivals) setNoDepartures(true, true)
+    if (rightNoDepartures && rightNoArrivals) setNoDepartures(false, true)
   })
 }
 
