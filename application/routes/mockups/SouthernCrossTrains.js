@@ -322,6 +322,7 @@ function shortenExpressName(name) {
   if (name === 'North Williamstown') return 'N Williamstwn'
   if (name === 'Williamstown Beach') return 'Wilmstwn Bch'
   if (name === 'South Kensington') return 'S Kensington'
+  if (name === 'Roal Park') return 'Royal Pk'
   if (name.includes('Flemington')) return name.replace('Flemington', 'Flemtn')
   return name
 }

@@ -171,7 +171,10 @@ function processDepartures(departures, platformNumber, isLeft) {
         } else {
           let stoppingPattern = ''
           if (firstDeparture.stoppingPattern !== 'STOPPING ALL STATIONS') stoppingPattern = firstDeparture.stoppingPattern
-          message = [firstDeparture.viaText, stoppingPattern]
+          if (firstDeparture.viaText)
+            message = [firstDeparture.viaText, stoppingPattern]
+          else
+            message = [stoppingPattern]
         }
       } else {
         if (firstDeparture.viaText.includes('AND') || firstDeparture.stoppingPattern !== 'STOPPING ALL STATIONS') {
@@ -252,6 +255,7 @@ function processDepartures(departures, platformNumber, isLeft) {
 
       $('.message', departureRow).innerHTML = message.map(e => `<p>${e}</p>`).join('')
       if (message.length === 3) $('.message', departureRow).className = 'message small'
+      else $('.message', departureRow).className = 'message'
 
       if (sssPlatforms[platformNumber])
         $('.platform', departureRow).textContent = departure.platform
