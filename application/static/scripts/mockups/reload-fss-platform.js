@@ -139,13 +139,15 @@ function addStoppingPattern(stops, className) {
     }
 
     expresses.forEach(express => {
+      if (express.length === 1) return
       let firstStop = express[0], lastStop = express.slice(-1)[0]
 
-      let startingTop = firstStop
-      let endingTop = lastStop
-      let middle = (startingTop + endingTop) / 2 - 2.5
+      let startingBottom = size - firstStop
+      let endingBottom = size - lastStop - 1.8
 
-      column.innerHTML += `<div class="expressArrow" style="margin-top: calc(var(--arrow-height) * -${middle})">
+      let middle = (startingBottom + endingBottom) / 2
+
+      column.innerHTML += `<div class="expressArrow" style="margin-top: calc(var(--arrow-height) * -1.333 / 0.5593 - var(--row-height) * ${middle})">
         <img src="/static/images/mockups/express-arrow.svg" class="${className}"/>
         <img src="/static/images/mockups/express-arrow.svg"/>
       </div>`
