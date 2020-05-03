@@ -233,6 +233,8 @@ function processDepartures(departures, platformNumber, isLeft) {
       } else {
         if (departure.destination === 'FLINDERS STREET')
           message = [departure.viaText, '']
+        else if (departure.destination === 'NORTH MELBOURNE')
+          message = ['VIA NTH MELBOURNE TO NTH', 'MELBOURNE, STOPPING ALL', 'STATIONS']
         else
           message = [departure.viaText,  departure.stoppingPattern]
       }
