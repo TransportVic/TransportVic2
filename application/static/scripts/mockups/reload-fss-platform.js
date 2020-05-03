@@ -183,10 +183,16 @@ function updateBody() {
         if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
         if (destination === 'Flemington Racecource') destination = 'Flemington Races'
 
+
+        let stoppingType = departure.stoppingType
+        if (departure.additionalInfo.via) {
+          stoppingType += ' ' + departure.additionalInfo.via
+        }
+
         $('.lineColour', departureRow).className = 'lineColour ' + departureClass
         $('.scheduledDepartureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
         $('.destination', departureRow).textContent = destination
-        $('.stoppingType', departureRow).textContent = departure.stoppingType
+        $('.stoppingType', departureRow).textContent = stoppingType
         $('.minutesToDeparture span', departureRow).textContent = departure.prettyTimeToDeparture
       }
     })
