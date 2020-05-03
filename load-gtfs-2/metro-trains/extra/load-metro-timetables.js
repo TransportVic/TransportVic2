@@ -95,7 +95,8 @@ function readFileData(filename, routeName, callback) {
         formedBy: '',
         forming: '',
         operator: ['Metro Trains Melbourne'],
-        stopTimings: {}
+        stopTimings: {},
+        connections: []
       }
 
       stationName = stationName.replace('St ', 'St. ')

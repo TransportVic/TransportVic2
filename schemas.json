@@ -73,7 +73,8 @@
     "departureTime": "string",
     "destination": "string",
     "destinationArrivalTime": "string",
-    "direction": "string"
+    "direction": "string",
+    "connections": ["string"]
   },
   "liveTimetable": {
     "mode": "string",

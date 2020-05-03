@@ -147,6 +147,12 @@ database.connect({
     operationDays: 1
   }, {name: 'runID index', unique: true})
 
+  await timetables.createIndex({
+    direction: 1,
+    'stopTimings.stopName': 1,
+    'stopTimings.departureTimeMinutes': 1
+  }, {name: 'connections index'})
+
   console.log('Created static timetable indexes')
 
   await liveTimetables.createIndex({
@@ -163,7 +169,7 @@ database.connect({
   await liveTimetables.createIndex({
     destination: 1
   }, {name: 'destination index'})
-  
+
   await liveTimetables.createIndex({
     mode: 1,
     routeGTFSID: 1
