@@ -2,6 +2,7 @@ const getLineStops = require('./route-stops')
 const getMetroDepartures = require('../../../modules/metro-trains/get-departures')
 const getVLineDepartures = require('../../../modules/vline/get-departures')
 const utils = require('../../../utils')
+const async = require('async')
 
 let defaultStoppingMap = {
   stopsAll: 'Stops All Stations',
@@ -35,11 +36,18 @@ let gippslandLines = [
   'Traralgon'
 ]
 
+let cliftonHillGroup = [
+  'Hurstbridge',
+  'Mernda'
+]
+
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 
 module.exports = {
   getCombinedDepartures: async (station, db) => {
+    let timetables = db.getCollection('timetables')
+
     let vlineDepartures = [], metroDepartures = []
 
     try {
@@ -60,6 +68,20 @@ module.exports = {
       let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
       if (metroPlatform) {
         metroDepartures = (await getMetroDepartures(station, db, 15, true))
+        metroDepartures = await async.map(metroDepartures, async departure => {
+          let {runID} = departure
+          let today = utils.getPTDayName(utils.now())
+
+          let scheduled = await timetables.findDocument({
+            runID, operationDays: today
+          })
+
+          if (scheduled) {
+            departure.connections = scheduled.connections
+          } else departure.connections = []
+
+          return departure
+        })
       }
     } catch (e) {}
 
@@ -84,7 +106,9 @@ module.exports = {
     return departure
   },
   getFixedLineStops: (tripStops, lineStops, lineName, isUp, type) => {
-    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament') || tripStops.includes('Southern Cross')
+    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament')
+    if (!northernGroup.includes(lineName) && !viaCityLoop)
+     viaCityLoop = tripStops.includes('Southern Cross')
     if (viaCityLoop) {
       let cityLoopStops = tripStops.filter(e => cityLoopStations.includes(e) || e === 'Flinders Street')
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
@@ -197,7 +221,9 @@ module.exports = {
     let endingIndex = lineStops.indexOf(destination)
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
 
-    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament') || tripStops.includes('Southern Cross')
+    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament')
+    if (!northernGroup.includes(routeName) && !viaCityLoop)
+     viaCityLoop = tripStops.includes('Southern Cross')
 
     let screenStops = tripPassesBy.map(stop => {
       return {
@@ -209,9 +235,23 @@ module.exports = {
     if (!screenStops.length) return null
     let expressCount = screenStops.filter(stop => stop.isExpress).length
 
-    let additionalInfo = {
-      screenStops, expressCount, viaCityLoop, direction: isUp ? 'Up': 'Down'
+    let isCityStop = cityLoopStations.includes(stationName) || stationName === 'Flinders Street'
+
+    let via = ''
+
+    if (isCityStop || trip.direction === 'Up') {
+      if (viaCityLoop) via = 'via City Loop'
+      else {
+        if (northernGroup.includes(routeName)) via = 'via Sthn Cross'
+        else if (cliftonHillGroup.includes(routeName)) via = 'via Jolimont'
+        else via = 'via Richmond'
+      }
     }
+
+    let additionalInfo = {
+      screenStops, expressCount, viaCityLoop, direction: isUp ? 'Up': 'Down', via
+    }
+
 
     departure.additionalInfo = additionalInfo
 

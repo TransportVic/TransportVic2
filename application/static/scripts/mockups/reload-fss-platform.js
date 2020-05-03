@@ -136,6 +136,7 @@ function updateBody() {
     if (err) return setListenAnnouncements()
 
     departures = body.departures
+    if (!departures) return setListenAnnouncements()
 
     let firstDeparture = departures[0]
     if (!firstDeparture) return setNoDepartures()
@@ -146,10 +147,20 @@ function updateBody() {
     let {destination} = firstDeparture
     if (destination === 'Flemington Racecource') destination = 'Flemington Races'
 
+    let firstStoppingType = firstDeparture.stoppingType
+    if (firstDeparture.additionalInfo.via) {
+      firstStoppingType += ' ' + firstDeparture.additionalInfo.via
+    }
+    if (firstDeparture.connections) {
+      firstStoppingType += firstDeparture.connections.map(connection => {
+        return `, Change at ${connection.changeAt.slice(0, -16)} for ${connection.for.slice(0, -16)}`
+      }).join('')
+    }
+
     $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
     $('.firstDepartureInfo .firstDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
     $('.firstDepartureInfo .firstDestination').textContent = destination
-    $('.firstDepartureInfo .firstStoppingType').textContent = firstDeparture.stoppingType
+    $('.firstDepartureInfo .firstStoppingType').textContent = firstStoppingType
     $('.firstDepartureInfo .minutesToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
     $('.stoppingPattern').className = 'stoppingPattern stoppingAt ' + firstDepartureClass
 

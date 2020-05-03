@@ -51,8 +51,13 @@ async function findConnections(changeoverPoint) {
     if (connection) {
       connectionsMade++
       if (!trip.connections) return // vline
-      if (!trip.connections.includes(connection.runID)) {
-        trip.connections.push(connection.runID)
+      if (!trip.connections.find(c => c.runID === connection.runID)) {
+        trip.connections.push({
+          runID: connection.runID,
+          changeAt: changeoverPoint,
+          for: connection.destination
+        })
+        
         await timetables.updateDocument({
           _id: trip._id
         }, {

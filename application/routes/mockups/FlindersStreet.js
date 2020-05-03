@@ -24,7 +24,7 @@ let stoppingTypeMap = {
     stoppingType: 'No Suburban Passengers'
   },
   sas: 'Stops All',
-  limExp: 'Limited Express',
+  limExp: 'Ltd Express',
   exp: 'Express'
 }
 
