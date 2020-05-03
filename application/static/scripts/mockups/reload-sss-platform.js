@@ -162,7 +162,16 @@ function processDepartures(departures, platformNumber, isLeft) {
     if (firstDeparture.connections.length) {
       message = firstDeparture.connections.map(e => `CHANGE AT ${e.changeAt.slice(0, -16).toUpperCase()} FOR ${e.for.slice(0, -16).toUpperCase()}`)
     } else {
-      message = [firstDeparture.viaText, firstDeparture.stoppingPattern]
+      if (firstDeparture.type === 'vline') {
+        let stoppingPattern = ''
+        if (firstDeparture.stoppingPattern !== 'STOPPING ALL STATIONS') stoppingPattern = firstDeparture.stoppingPattern
+        message = [firstDeparture.viaText, stoppingPattern]
+      } else {
+        if (firstDeparture.viaText.includes('AND') || firstDeparture.stoppingPattern !== 'STOPPING ALL STATIONS')
+          message = [firstDeparture.viaText, firstDeparture.stoppingPattern]
+        else
+          message = [firstDeparture.viaText + ', ' + firstDeparture.stoppingPattern]
+      }
     }
 
     $('.topRow .firstDestination', platformContainer).textContent = firstDeparture.destination

@@ -80,12 +80,18 @@ html
                     span.actual 
                     span 
       div.leftPlatform.platformContainer
-        div.platformData
+        div(style="display: none;").platformData
           +platform(platforms[0])
         div.fullMessage
+          p LISTEN
+          p FOR
+          p ANNOUNCEMENT
       div.rightPlatform.platformContainer
         div(style="display: none;").platformData
           +platform(platforms[1])
         div.fullMessage
+          p LISTEN
+          p FOR
+          p ANNOUNCEMENT
     div.clock
       span 12:34:56
