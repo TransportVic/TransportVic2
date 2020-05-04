@@ -193,15 +193,17 @@ function processDepartures(departures, platformNumber, isLeft) {
     $('.topRow .firstDestination', platformContainer).textContent = firstDeparture.destination
     $('.departureData .firstDepartureTime', platformContainer).textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
 
-    if (firstDeparture.minutesToDeparture > 0) {
-      if (firstDeparture.minutesToDeparture <= 90)
+    if (firstDeparture.minutesToDeparture && firstDeparture.minutesToDeparture <= 90) {
+      if (firstDeparture.minutesToDeparture > 0) {
         $('.departureData div.actual div span.actual', platformContainer).textContent = firstDeparture.minutesToDeparture
-      else
-        $('.departureData div.actual div span.actual', platformContainer).textContent = '--'
-      $('.departureData div.actual div span:nth-child(2)', platformContainer).textContent = 'Min'
+        $('.departureData div.actual div span:nth-child(2)', platformContainer).textContent = 'Min'
+      } else {
+        $('.departureData div.actual div span.actual', platformContainer).textContent = 'Now'
+        $('.departureData div.actual div span:nth-child(2)', platformContainer).textContent = ''
+      }
     } else {
-      $('.departureData div.actual div span.actual', platformContainer).textContent = 'Now'
-      $('.departureData div.actual div span:nth-child(2)', platformContainer).textContent = ''
+      $('.departureData div.actual div span.actual', platformContainer).textContent = '--'
+      $('.departureData div.actual div span:nth-child(2)', platformContainer).textContent = 'Min'
     }
     $('.departureData .platform span:nth-child(2)', platformContainer).textContent = firstDeparture.platform
     $('.bottom .message', platformContainer).innerHTML = message.map(e => `<p>${e}</p>`).join('')
@@ -249,7 +251,7 @@ function processDepartures(departures, platformNumber, isLeft) {
       departureRow.style = ''
       $('.scheduledDepartureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
       $('.destination', departureRow).textContent = departure.destination.toUpperCase()
-      if (departure.minutesToDeparture <= 90)
+      if (departure.minutesToDeparture && departure.minutesToDeparture <= 90)
         $('.dueIn span.actual', departureRow).textContent = departure.minutesToDeparture
       else
         $('.dueIn span.actual', departureRow).textContent = '--'

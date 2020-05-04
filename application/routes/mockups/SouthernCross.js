@@ -36,9 +36,17 @@ router.post('/:type/:platforms/', async (req, res) => {
   let departures = data.departures.map(departure => {
     let {scheduledDepartureTime} = departure
 
-    let timeDifference = departure.scheduledDepartureTime.clone().add(30, 'seconds').diff(utils.now(), 'minutes')
-    departure.minutesToDeparture = timeDifference
+    if (departure.type === 'vline') {
+      let timeDifference = departure.scheduledDepartureTime.clone().add(30, 'seconds').diff(utils.now(), 'minutes')
+      departure.minutesToDeparture = timeDifference
+    } else {
+      if (departure.estimatedDepartureTime) {
+        let timeDifference = departure.estimatedDepartureTime.clone().add(30, 'seconds').diff(utils.now(), 'minutes')
+        if (timeDifference < 0) timeDifference = 0
 
+        departure.minutesToDeparture = timeDifference
+      } else departure.minutesToDeparture = null
+    }
     return departure
   })
 
@@ -48,6 +56,7 @@ router.post('/:type/:platforms/', async (req, res) => {
     if (arrival.estimatedDepartureTime) {
       let timeDifference = arrival.estimatedDepartureTime.clone().add(30, 'seconds').diff(utils.now(), 'minutes')
       if (timeDifference < 0) timeDifference = 0
+
       arrival.minutesToDeparture = timeDifference
     } else arrival.minutesToDeparture = null
 
