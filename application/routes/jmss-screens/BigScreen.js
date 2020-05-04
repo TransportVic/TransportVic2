@@ -91,6 +91,10 @@ router.get('/', async (req, res) => {
   }, {})
 
   let vlineDepartures = await getVLineDepartures(clayton, res.db)
+  vlineDepartures = vlineDepartures.map(d => {
+    d.actualDepartureTime = d.scheduledDepartureTime
+    return d
+  })
   vlineDepartures = filterDepartures(vlineDepartures)
   let nextVLineDeparture = vlineDepartures.filter(departure => {
     return departure.trip.direction === 'Down' || departure.trip.runID % 2 === 1

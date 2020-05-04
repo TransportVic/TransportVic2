@@ -360,7 +360,7 @@ async function getDepartures(station, db) {
   let flagMap = {}
   let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train')
   let departures = [], runs, routes
-  let scheduledTrains, coachReplacements = [], cancelledTrains = []
+  let scheduledTrains = [], coachReplacements = [], cancelledTrains = []
 
   try {
     body = await ptvAPI(`/v3/departures/route_type/3/stop/${vlinePlatform.stopGTFSID}?gtfs=true&max_results=7&expand=run&expand=route`)
