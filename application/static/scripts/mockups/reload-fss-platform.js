@@ -141,9 +141,11 @@ function addStoppingPattern(stops, className) {
     expresses.forEach(express => {
       if (express.length === 1) return
       let firstStop = express[0], lastStop = express.slice(-1)[0]
+      let columnSize = stopColumn.length
+      if (lastRow) columnSize--
 
-      let startingBottom = size - firstStop
-      let endingBottom = size - lastStop - 1.8
+      let startingBottom = columnSize - firstStop
+      let endingBottom = columnSize - lastStop - 1.8
 
       let middle = (startingBottom + endingBottom) / 2
 
