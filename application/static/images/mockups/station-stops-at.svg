@@ -5,11 +5,11 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   id="svg8"
+   width="420.00092mm"
+   height="640.76764mm"
+   viewBox="0 0 420.00091 640.76764"
    version="1.1"
-   viewBox="0 0 42 64"
-   height="64mm"
-   width="42mm">
+   id="svg8">
   <defs
      id="defs2" />
   <metadata
@@ -25,17 +25,17 @@
     </rdf:RDF>
   </metadata>
   <rect
-     style="vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.16913;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+     y="0"
+     x="140.00031"
+     height="640.00061"
+     width="140.00031"
      id="rect931"
-     width="14"
-     height="64.000061"
-     x="14"
-     y="0" />
+     style="vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:11.6913;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
   <rect
-     y="24.5"
-     x="23.255173"
-     height="15"
-     width="18.744827"
+     style="vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:7.07009;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
      id="rect3415"
-     style="vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.707009;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
+     width="187.44867"
+     height="150"
+     x="232.55225"
+     y="245" />
 </svg>

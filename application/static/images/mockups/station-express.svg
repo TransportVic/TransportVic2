@@ -7,9 +7,9 @@
    xmlns="http://www.w3.org/2000/svg"
    id="svg8"
    version="1.1"
-   viewBox="0 0 42 64"
-   height="64mm"
-   width="42mm">
+   viewBox="0 0 419.99696 639.9953"
+   height="639.9953mm"
+   width="419.99695mm">
   <defs
      id="defs2" />
   <metadata
@@ -24,15 +24,11 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <g
-     transform="translate(-18.397854,-53.072128)"
-     id="layer1">
-    <rect
-       style="opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.26209712;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect3419"
-       width="14"
-       height="64"
-       x="32.397854"
-       y="53.072128" />
-  </g>
+  <rect
+     y="3.386406e-06"
+     x="139.99898"
+     height="639.9953"
+     width="139.99898"
+     id="rect3419"
+     style="vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:12.6209;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
 </svg>

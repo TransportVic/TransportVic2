@@ -7,9 +7,9 @@
    xmlns="http://www.w3.org/2000/svg"
    id="svg8"
    version="1.1"
-   viewBox="0 0 42 64"
-   height="64mm"
-   width="42mm">
+   viewBox="0 0 420 639.99999"
+   height="640mm"
+   width="420mm">
   <defs
      id="defs2" />
   <metadata
@@ -24,22 +24,18 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <g
-     transform="translate(-15.54937,-53.120609)"
-     id="layer1">
-    <rect
-       y="53.120609"
-       x="29.54937"
-       height="40"
-       width="14"
-       id="rect931"
-       style="opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.99777538;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
-    <rect
-       style="opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.02241552;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect3446"
-       width="42"
-       height="14"
-       x="15.54937"
-       y="79.120605" />
-  </g>
+  <rect
+     style="vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:9.97774;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+     id="rect931"
+     width="139.99986"
+     height="399.9996"
+     x="139.99986"
+     y="-3.6836811e-06" />
+  <rect
+     y="259.99969"
+     x="1.0714821e-06"
+     height="139.99986"
+     width="419.99957"
+     id="rect3446"
+     style="vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:10.2242;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
 </svg>

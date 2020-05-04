@@ -20,11 +20,17 @@ div.topRow {
   align-items: center;
 }
 
-div.topRow span:nth-child(1) {
+div.topRow div {
   margin-left: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-div.topRow span:nth-child(2) {
+div.topRow span.motd {
+  font-size: 20px;
+}
+
+div.topRow span.time {
   margin-left: auto;
   margin-right: 20px;
 }
@@ -149,17 +155,17 @@ div.departureMinutes > span:nth-child(2) {
 }
 
 div.cannot-make {
-  background-color: #bc2431;
+  background-color: #9f1d2a;
   color: #f1f1f1 !important;
 }
 
 div.run-fast {
-  background-color: #eac210;
-  color: #000000;
+  background-color: #c8a70f;
+  color: #ffffff !important;
 }
 
 div.walk {
-  background-color: #60bd29;
+  background-color: #55a226;
 }
 
 div.unknown {

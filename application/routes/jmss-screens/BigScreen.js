@@ -6,8 +6,11 @@ const moment = require('moment')
 const utils = require('../../../utils')
 const getMetroDepartures = require('../../../modules/metro-trains/get-departures')
 const getVLineDepartures = require('../../../modules/vline/get-departures')
+let EventEmitter = require('events')
 
 let cache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
+
+let lock = null
 
 async function getBusLoopDepartures() {
   if (cache.get('bus loop')) return cache.get('bus loop')
@@ -63,6 +66,16 @@ function filterDepartures(departures) {
 }
 
 router.get('/', async (req, res) => {
+  if (lock) {
+    return await new Promise(resolve => {
+      lock.on('done', data => {
+        res.render('jmss-screens/big-screen', data)
+      })
+    })
+  }
+
+  lock = new EventEmitter()
+
   let busLoopDepartures = filterDepartures(await getBusLoopDepartures())
 
   let busGroups = busLoopDepartures.map(departure => departure.routeNumber + '-' + departure.direction)
@@ -102,7 +115,11 @@ router.get('/', async (req, res) => {
 
   let currentTime = utils.now().format('h:mmA').toLowerCase()
 
-  res.render('jmss-screens/big-screen', { busDepartures, metroDepartures, nextVLineDeparture, currentTime })
+  let data = { busDepartures, metroDepartures, nextVLineDeparture, currentTime }
+  lock.emit('done', data)
+  lock = null
+
+  res.render('jmss-screens/big-screen', data)
 })
 
 module.exports = router
