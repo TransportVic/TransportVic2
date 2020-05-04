@@ -134,7 +134,7 @@ function processArrivals(arrivals, platformNumber, isLeft) {
 
 function processDepartures(departures, platformNumber, isLeft) {
   departures = departures.filter(departure => {
-    if (departure.type === 'vline') {
+    if (departure.type === 'vline' || departure.type === 'NOT IN SERVICE') {
       if (!departure.platform) return null
       let mainPlatform = departure.platform.replace(/[A-Z]/, '')
 
@@ -150,19 +150,28 @@ function processDepartures(departures, platformNumber, isLeft) {
 
     departure.destination = destination.toUpperCase()
 
+    if (departure.type === 'NOT IN SERVICE') {
+      departure.connections = []
+      departure.actualDepartureTime = departure.formingDepartureTime
+    }
+
     return departure
   })
 
   if (!departures) return true
   setMessageActive(isLeft, false)
 
+  departures = departures.sort((a, b) => new Date(a.actualDepartureTime) - new Date(b.actualDepartureTime))
   let firstDeparture = departures[0]
 
   let platformContainer = $(`div.${isLeft ? 'left' : 'right'}Platform.platformContainer`)
   if (firstDeparture) {
     let message = []
-
-    if (firstDeparture.connections.length) {
+    if (firstDeparture.type === 'NOT IN SERVICE') {
+      firstDeparture.destination = 'NOT IN SERVICE'
+      firstDeparture.scheduledDepartureTime = firstDeparture.formingDepartureTime
+      firstDeparture.message = ['TRAIN NOT TAKING PASSENGERS']
+    } else if (firstDeparture.connections.length) {
       message = firstDeparture.connections.map(e => `CHANGE AT ${e.changeAt.slice(0, -16).toUpperCase()} FOR ${e.for.slice(0, -16).toUpperCase()}`)
     } else {
       if (firstDeparture.type === 'vline') {
@@ -176,6 +185,7 @@ function processDepartures(departures, platformNumber, isLeft) {
           else
             message = [stoppingPattern]
         }
+
       } else {
         if (firstDeparture.viaText.includes('AND') || firstDeparture.stoppingPattern !== 'STOPPING ALL STATIONS') {
           message = [firstDeparture.viaText, firstDeparture.stoppingPattern]
@@ -233,7 +243,11 @@ function processDepartures(departures, platformNumber, isLeft) {
     if (departure) {
       let message = []
 
-      if (departure.divideInfo) {
+      if (departure.type === 'NOT IN SERVICE') {
+        departure.destination = 'NOT IN SERVICE'
+        departure.scheduledDepartureTime = departure.formingDepartureTime
+        message = ['TRAIN NOT TAKING', 'PASSENGERS']
+      } else if (departure.divideInfo) {
         message = departure.divideInfo.next
       } else if (departure.type === 'CONNECTION') {
         message = departure.message
@@ -286,6 +300,15 @@ function updateBody() {
     if (err) return setListenAnnouncements(false) || setListenAnnouncements(true)
     let departures = body.departures || []
     let arrivals = body.arrivals || []
+
+    let offArrivals = arrivals.filter(e => e.showDeparture === 'OFF')
+    let offDepartures = offArrivals.map(e => {
+      e.type = 'NOT IN SERVICE'
+      return e
+    })
+
+    departures = offDepartures.concat(departures)
+    // departures = departures.concat(offDepartures)
 
     let leftNoDepartures = processDepartures(departures, platforms[0], true)
     let rightNoDepartures = processDepartures(departures, platforms[1], false)

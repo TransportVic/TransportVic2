@@ -54,10 +54,16 @@ async function parseTimings(names, types, trip) {
   let headers = trip.slice(0, 5).concat(trip.slice(-1))
   let timings = trip.slice(5, -1)
 
+  let runID = headers[0].replace(/†/g, '').trim()
+  let upService = !(runID[3] % 2)
+
   let tripDivides = false
   let tripDividePoint = null
 
   let movementType = headers[4]
+  let vehicleFormation = headers[2],
+    formedBy = headers[3]
+
   if (movementType !== 'PSNG_SRV') return
 
   let offset = 0
@@ -145,10 +151,6 @@ async function parseTimings(names, types, trip) {
 
   let stopTimings = Object.values(locations).filter(stop => !isNaN(stop.arrivalTimeMinutes))
 
-  let vehicleFormation = headers[2],
-    formedBy = headers[3],
-    forms = headers[5]
-
   let lastStop = stopTimings.slice(-1)[0]
 
   let destination = lastStop.stopName.slice(0, -16)
@@ -162,15 +164,29 @@ async function parseTimings(names, types, trip) {
   lastStop.departureTime = null
   lastStop.departureTimeMinutes = null
 
+  let formingData = trip.slice(-2)
+  let forming
+  if (formingData[1] === 'OFF') forming = 'OFF'
+  else if (formingData[1].startsWith('DAP')) {
+    forming = formingData[1].slice(4).split(', ').map(e => (e.replace(',', '')))
+  } else {
+    if (formingData[0].length === 4) {
+      forming = [formingData[0]]
+    } else {
+      forming = [formingData[1]]
+    }
+  }
+
   return {
     mode: 'regional train',
+    movementType,
     routeName: line,
     routeGTFSID,
-    runID: headers[0].replace(/†/g, '').trim(),
+    runID,
     operationDays: operatingDaysToArray(headers[1]),
     vehicle: vehicleFormation,
     formedBy,
-    forming: forms,
+    forming,
     operator: 'V/Line',
     stopTimings,
     origin: origin + ' Railway Station',
@@ -180,7 +196,8 @@ async function parseTimings(names, types, trip) {
     flags: {
       tripDivides,
       tripDividePoint
-    }
+    },
+    direction: upService ? 'Up' : 'Down'
   }
 }
 
@@ -215,9 +232,6 @@ function readFileData(filename, allTrips, callback) {
 
     trips.forEach(trip => {
       if (!trip) return
-
-      let upService = !(trip.runID[3] % 2)
-      trip.direction = upService ? 'Up' : 'Down'
 
       let tripID = trip.runID + trip.operationDays.join('-')
       if (allTrips[tripID]) {

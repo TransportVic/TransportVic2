@@ -9,6 +9,7 @@ const getMetroDepartures = require('../../../modules/metro-trains/get-departures
 const getVLineStops = require('./SSS-Lines')
 const getMetroStops = require('./route-stops')
 const TrainUtils = require('./TrainUtils')
+const emptyCars = require('./empty-cars')
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1.5 })
 
 const EventEmitter = require('events')
@@ -500,6 +501,39 @@ async function appendVLineData(departure, timetables) {
   return departure
 }
 
+async function appendArrivalData(arrival, timetables) {
+  let {runID} = arrival
+  let dayOfWeek = utils.getDayName(arrival.destinationArrivalTime)
+  let operationDay = arrival.destinationArrivalTime.format('YYYYMMDD')
+
+  let nspTrip = await timetables.findDocument({
+    operationDays: dayOfWeek,
+    runID,
+    mode: 'regional train'
+  })
+
+  let formingID = nspTrip.forming
+
+  if (formingID === 'OFF') {
+    arrival.showDeparture = 'OFF'
+  } else {
+    if (dayOfWeek === 'Tues') dayOfWeek = 'TUE'
+    if (dayOfWeek === 'Thur') dayOfWeek = 'THU'
+
+    let forming = emptyCars.find(trip => {
+      return formingID.includes(trip.runID) && trip.days.includes(dayOfWeek.toUpperCase())
+    })
+
+    if (forming) { // only consider empty car movements
+      arrival.showDeparture = 'OFF'
+      let departureTime = forming.tripTimings[0].departureTime
+      let minutesPastMidnight = utils.time24ToMinAftMidnight(departureTime)
+      arrival.formingDepartureTime = utils.minutesAftMidnightToMoment(minutesPastMidnight, utils.now())
+    }
+  }
+  return arrival
+}
+
 module.exports = async (platforms, db) => {
   if (departuresCache.get('SSS')) {
     let data = departuresCache.get('SSS')
@@ -538,7 +572,9 @@ module.exports = async (platforms, db) => {
     return await appendMetroData(d, timetables)
   })).filter(e => !e.isTrainReplacement && !e.cancelled)
 
-  let allArrivals = arrivals.concat(scheduledArrivals).sort((a, b) => a.destinationArrivalTime - b.destinationArrivalTime)
+  let allArrivals = await async.map(arrivals.concat(scheduledArrivals).sort((a, b) => a.destinationArrivalTime - b.destinationArrivalTime), async d => {
+    return await appendArrivalData(d, timetables)
+  })
   let allDepartures = departures.concat(mtmDepartures).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 
   let rawData = { departures: allDepartures, arrivals: allArrivals }
