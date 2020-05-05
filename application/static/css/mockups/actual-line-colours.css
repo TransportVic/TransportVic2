@@ -34,7 +34,7 @@ div.no-line {
 }
 
 div.vline {
-  background-color: #7946dd;
+  background-color: #8F1A95;
 }
 
 
@@ -79,7 +79,7 @@ p.no-line {
 }
 
 p.vline {
-  background-color: #7946dd;
+  background-color: #8F1A95;
   color: #ffffff;
 }
 
@@ -116,7 +116,7 @@ p.vline {
 }
 
 .stoppingAt.vline img {
-  filter: invert(34%) sepia(100%) saturate(1081%) hue-rotate(241deg) brightness(73%) contrast(108%);
+  filter: invert(13%) sepia(46%) saturate(6740%) hue-rotate(289deg) brightness(102%) contrast(92%);
 }
 
 
@@ -161,6 +161,6 @@ div.platform.no-line {
 }
 
 div.platform.vline {
-  background-color: #7946dd;
+  background-color: #8F1A95;
   color: #ffffff;
 }
