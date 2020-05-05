@@ -222,7 +222,7 @@ async function getDepartures(stop, db) {
 
       departure.isTrainReplacement = hasNSPDeparture
     }
-    return returnDepartures(departure)
+    return departure
   })
 
   departuresCache.put(cacheKey, Object.values(departures))
