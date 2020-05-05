@@ -183,7 +183,10 @@ function updateBody() {
     if (!departures) return setListenAnnouncements()
 
     let firstDeparture = departures[0]
-    if (!firstDeparture) return setNoDepartures()
+    if (!firstDeparture) {
+      $('.topLineBanner').className = 'topLineBanner no-line'
+      return setNoDepartures()
+    }
 
     let firstDepartureClass = firstDeparture.codedLineName
     if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
