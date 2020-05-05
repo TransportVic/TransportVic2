@@ -203,7 +203,7 @@ function processDepartures(departures, platformNumber, isLeft) {
     $('.topRow .firstDestination', platformContainer).textContent = firstDeparture.destination
     $('.departureData .firstDepartureTime', platformContainer).textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
 
-    if (firstDeparture.minutesToDeparture && firstDeparture.minutesToDeparture <= 90) {
+    if (firstDeparture.minutesToDeparture !== null && firstDeparture.minutesToDeparture <= 90) {
       if (firstDeparture.minutesToDeparture > 0) {
         $('.departureData div.actual div span.actual', platformContainer).textContent = firstDeparture.minutesToDeparture
         $('.departureData div.actual div span:nth-child(2)', platformContainer).textContent = 'Min'

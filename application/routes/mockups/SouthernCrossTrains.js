@@ -528,6 +528,7 @@ async function appendArrivalData(arrival, timetables) {
       arrival.showDeparture = 'OFF'
       let departureTime = forming.tripTimings[0].departureTime
       let minutesPastMidnight = utils.time24ToMinAftMidnight(departureTime)
+      arrival.formingID = forming.runID
       arrival.formingDepartureTime = utils.minutesAftMidnightToMoment(minutesPastMidnight, utils.now())
     }
   }
@@ -572,8 +573,13 @@ module.exports = async (platforms, db) => {
     return await appendMetroData(d, timetables)
   })).filter(e => !e.isTrainReplacement && !e.cancelled)
 
-  let allArrivals = await async.map(arrivals.concat(scheduledArrivals).sort((a, b) => a.destinationArrivalTime - b.destinationArrivalTime), async d => {
+  let formingIDsSeen = []
+  let allArrivals = (await async.map(arrivals.concat(scheduledArrivals).sort((a, b) => a.destinationArrivalTime - b.destinationArrivalTime), async d => {
     return await appendArrivalData(d, timetables)
+  })).filter(arrival => {
+    if (formingIDsSeen.includes(arrival.formingID)) return false
+    formingIDsSeen.push(arrival.formingID)
+    return true
   })
   let allDepartures = departures.concat(mtmDepartures).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 
