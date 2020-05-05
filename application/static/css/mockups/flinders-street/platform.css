@@ -147,7 +147,7 @@ div.stationRow:not(:nth-child(1)) {
   margin-top: calc(var(--row-height) * -0.1);
 }
 
-div.stationRow.filler {
+div.stationRow.filler:not(:nth-child(1)) {
   margin-top: calc(var(--row-height) * -0.1 / 6);
 }
 
