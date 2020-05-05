@@ -96,7 +96,7 @@ function addStoppingPattern(stops, className) {
   if (currentPattern === newPatternID) return
 
   currentPattern = newPatternID
-  
+
   let {stopColumns, size} = splitStops(stops, false, {
     MAX_COLUMNS: 4,
     CONNECTION_LOSS: 2,
@@ -156,7 +156,7 @@ function addStoppingPattern(stops, className) {
       if (lastRow) columnSize--
 
       let startingBottom = columnSize - firstStop
-      let endingBottom = columnSize - lastStop - 1.8
+      let endingBottom = columnSize - lastStop - 2
 
       let middle = (startingBottom + endingBottom) / 2
 
