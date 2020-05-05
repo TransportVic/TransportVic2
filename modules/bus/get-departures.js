@@ -240,13 +240,18 @@ async function getDepartures(stop, db) {
   let shouldShowRoad = stop.bays.filter(bay => {
     return bay.mode === 'bus'
       && (nightBusIncluded ^ !(bay.flags && bay.flags.isNightBus && !bay.flags.hasRegularBus))
-  }).map(bay => bay.fullStopName).filter((e, i, a) => a.indexOf(e) === i).length > 1
+  }).map(bay => {
+    let {fullStopName} = bay
+    if (fullStopName.includes('/')) {
+      return fullStopName.replace(/\/\d+[a-zA-z]? /, '/')
+    } else return fullStopName
+  }).filter((e, i, a) => a.indexOf(e) === i).length > 1
 
   departures = departures.map(departure => {
     let {trip} = departure
     let departureBayID = trip.stopTimings[0].stopGTFSID
     let bay = busBays[departureBayID]
-    let departureRoad = trip.stopTimings[0].stopName.split('/')[1]
+    let departureRoad = trip.stopTimings[0].stopName.split('/')[1].replace(/^\d+[a-zA-z]? /)
 
     departure.bay = bay
     departure.departureRoad = departureRoad
