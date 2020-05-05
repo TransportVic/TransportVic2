@@ -251,7 +251,7 @@ async function getDepartures(stop, db) {
     let {trip} = departure
     let departureBayID = trip.stopTimings[0].stopGTFSID
     let bay = busBays[departureBayID]
-    let departureRoad = trip.stopTimings[0].stopName.split('/')[1].replace(/^\d+[a-zA-z]? /)
+    let departureRoad = (trip.stopTimings[0].stopName.split('/')[1] || '').replace(/^\d+[a-zA-z]? /)
 
     departure.bay = bay
     departure.departureRoad = departureRoad
