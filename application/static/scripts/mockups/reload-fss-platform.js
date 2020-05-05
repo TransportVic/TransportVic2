@@ -28,7 +28,7 @@ function formatTime(time, includeSeconds=false, space=false) {
 }
 
 function createStationRow(name, stoppingType, clazz) {
-  return `<div class="stationRow">`
+  return `<div class="stationRow ${stoppingType === 'filler-2' ? 'filler' : ''}">`
   + `<img src="/static/images/mockups/station-${stoppingType}.svg">`
   + `<p class="${clazz || ''}">${name}</p>`
   + `</div>`
@@ -160,7 +160,14 @@ function addStoppingPattern(stops, className) {
 
       let middle = (startingBottom + endingBottom) / 2
 
-      column.innerHTML += `<div class="expressArrow" style="margin-top: calc(var(--arrow-height) * -1.333 / 0.5593 - var(--row-height) * ${middle})">
+      let extra = ''
+      if (!lastRow) {
+        extra = `+ var(--row-height) * 0.1 / 2`
+      }
+
+      let marginTop = `calc(var(--arrow-height) * -1.333 / 0.5593 - var(--row-height) * ${middle} / 1.1 ${extra})`
+
+      column.innerHTML += `<div class="expressArrow" style="margin-top: ${marginTop}">
         <img src="/static/images/mockups/express-arrow.svg" class="${className}"/>
         <img src="/static/images/mockups/express-arrow.svg"/>
       </div>`

@@ -143,6 +143,14 @@ div.stationRow {
   align-items: center;
 }
 
+div.stationRow:not(:nth-child(1)) {
+  margin-top: calc(var(--row-height) * -0.1);
+}
+
+div.stationRow.filler {
+  margin-top: calc(var(--row-height) * -0.1 / 6);
+}
+
 div.stationRow p {
   font-size: calc(var(--height) * 0.04);
   padding-top: calc(var(--height) * 0.001);
