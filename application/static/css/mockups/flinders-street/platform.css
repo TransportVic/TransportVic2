@@ -161,11 +161,11 @@ div.stationRow p.express {
 }
 
 div.stopsColumn {
-  --arrow-height: calc(var(--width) * 0.02);
-  --row-height: calc(var(--width) * 0.02 / 0.656);
+  --arrow-height: calc(var(--width) * 0.0205);
+  --row-height: calc(var(--width) * 0.0205 / 0.656);
 }
 div.stationRow img {
-  width: calc(var(--width) * 0.02);
+  width: calc(var(--width) * 0.0205);
   image-rendering: crisp-edges;
 }
 
@@ -205,7 +205,7 @@ div.stopsColumn.row-11 div.stationRow img {
 div.expressArrow {
   position: absolute;
   height: 0;
-  margin-left: calc(var(--arrow-height) / 0.656 * -0.15 * 0.656);
+  margin-left: calc(var(--arrow-height) * -0.15);
 }
 
 div.expressArrow img {
@@ -219,7 +219,7 @@ div.expressArrow img:nth-child(1) {
 
 div.expressArrow img:nth-child(2) {
   margin-top: calc(var(--arrow-height) * 0.4 * 0.656);
-  filter: invert(100%);
+  filter: invert(94.1%);
   z-index: 1;
 }
 
