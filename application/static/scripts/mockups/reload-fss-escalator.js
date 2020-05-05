@@ -89,7 +89,6 @@ function setMessagesActive(active) {
     $('.stoppingAt').style = 'display: block;'
   }
 }
-
 function updateBody() {
   $.ajax({
     method: 'POST'

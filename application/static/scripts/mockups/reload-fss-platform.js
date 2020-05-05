@@ -85,7 +85,18 @@ function setListenAnnouncements() {
   setFullMessageActive(true)
 }
 
+function createStoppingPatternID(stoppingPattern) {
+  return stoppingPattern.map(e => `${e.stopName}${e.isExpress}`).join(',')
+}
+
+let currentPattern = null
+
 function addStoppingPattern(stops, className) {
+  let newPatternID = createStoppingPatternID(stops)
+  if (currentPattern === newPatternID) return
+
+  currentPattern = newPatternID
+  
   let {stopColumns, size} = splitStops(stops, false, {
     MAX_COLUMNS: 4,
     CONNECTION_LOSS: 2,
