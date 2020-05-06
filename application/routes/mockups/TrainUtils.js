@@ -251,10 +251,12 @@ module.exports = {
       }
     }
 
-    let additionalInfo = {
-      screenStops, expressCount, viaCityLoop, direction: isUp ? 'Up': 'Down', via
-    }
+    let stopData = departure.trip.stopTimings.find(stop => stop.stopName === station.stopName)
+    let notTakingPassengers = stopData.stopConditions.pickup === 1
 
+    let additionalInfo = {
+      screenStops, expressCount, viaCityLoop, direction: isUp ? 'Up': 'Down', via, notTakingPassengers
+    }
 
     departure.additionalInfo = additionalInfo
 

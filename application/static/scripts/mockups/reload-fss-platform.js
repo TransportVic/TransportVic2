@@ -47,17 +47,22 @@ function setupClock() {
   }, msToNextSecond)
 }
 
+let currentlyDisplaying = 'service'
+
 function setMessageActive(active) {
   if (active) {
+    currentlyDisplaying = 'message'
     $('.message').style = 'display: flex;'
     $('.content').style = 'display: flex;'
     $('.firstDeparture').style = 'display: none;'
     $('.fullMessage').style = 'display: none;'
   } else {
+    currentlyDisplaying = 'service'
     $('.message').style = 'display: none;'
     $('.content').style = 'display: flex;'
     $('.firstDeparture').style = 'display: flex;'
     $('.fullMessage').style = 'display: none;'
+    $('.stoppingPattern').className = 'stoppingPattern stoppingAt'
   }
 }
 
@@ -68,21 +73,38 @@ function setFullMessageActive(active) {
     $('.firstDeparture').style = 'display: none;'
     $('.fullMessage').style = 'display: flex;'
   } else {
+    currentlyDisplaying = 'service'
     $('.message').style = 'display: none;'
     $('.content').style = 'display: flex;'
     $('.firstDeparture').style = 'display: flex;'
     $('.fullMessage').style = 'display: none;'
+    $('.stoppingPattern').className = 'stoppingPattern stoppingAt'
   }
 }
 
 function setNoDepartures() {
-  $('.message').innerHTML = '<img src="/static/images/mockups/no-boarding-train.svg" /><p>No trains are departing from this platform</p>'
-  setMessageActive(true)
+  if (currentlyDisplaying !== 'no-departures') {
+    currentlyDisplaying = 'no-departures'
+    $('.message').innerHTML = '<img src="/static/images/mockups/no-boarding-train.svg" /><p>No trains are departing from this platform</p>'
+    setMessageActive(true)
+  }
+}
+
+function setArrival() {
+  if (currentlyDisplaying !== 'arrival') {
+    currentlyDisplaying = 'arrival'
+    $('.stoppingPattern').innerHTML = '<div class="arrivalMessage"><img src="/static/images/mockups/no-boarding-train.svg" /><div><p>This train is not taking passengers</p><p>Don\'t board this train</p></div></div>'
+    $('.stoppingPattern').className = 'stoppingPattern stoppingAt arrivalContainer'
+    setMessageActive(false)
+  }
 }
 
 function setListenAnnouncements() {
-  $('.message').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>'
-  setFullMessageActive(true)
+  if (currentlyDisplaying !== 'announcements') {
+    currentlyDisplaying = 'announcements'
+    $('.message').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>'
+    setFullMessageActive(true)
+  }
 }
 
 function createStoppingPatternID(stoppingPattern) {
@@ -180,6 +202,15 @@ function addStoppingPattern(stops, className) {
   })
 }
 
+function adjustDepartures(departure) {
+  if (departure.additionalInfo.notTakingPassengers) {
+    departure.destination = 'Arrival'
+    departure.stoppingType = 'Not Taking Passengers'
+    departure.isArrival = true
+  }
+  return departure
+}
+
 function updateBody() {
   $.ajax({
     method: 'POST'
@@ -188,12 +219,13 @@ function updateBody() {
 
     departures = body.departures
     if (!departures) return setListenAnnouncements()
+    departures = departures.map(adjustDepartures)
 
     let firstDeparture = departures[0]
     if (!firstDeparture) {
       $('.topLineBanner').className = 'topLineBanner no-line'
       return setNoDepartures()
-    }
+    } else setMessageActive(false)
 
     let firstDepartureClass = firstDeparture.codedLineName
     if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
@@ -218,7 +250,11 @@ function updateBody() {
     $('.firstDepartureInfo .minutesToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
     $('.stoppingPattern').className = 'stoppingPattern stoppingAt ' + firstDepartureClass
 
-    addStoppingPattern(firstDeparture.additionalInfo.screenStops, firstDepartureClass)
+    if (firstDeparture.isArrival) {
+      setArrival()
+    } else {
+      addStoppingPattern(firstDeparture.additionalInfo.screenStops, firstDepartureClass)
+    }
 
     let nextDepartures = (departures.slice(1).concat([null, null])).slice(0, 2)
     nextDepartures.forEach((departure, i) => {
@@ -251,8 +287,6 @@ function updateBody() {
         $('.minutesToDeparture span', departureRow).textContent = departure.prettyTimeToDeparture
       }
     })
-
-    setMessageActive(false)
   })
 }
 

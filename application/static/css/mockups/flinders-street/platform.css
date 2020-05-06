@@ -48,6 +48,31 @@ div.message p {
   font-size: calc(var(--height) * 0.09);
 }
 
+div.arrivalMessage {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: var(--width);
+}
+
+div.arrivalMessage img {
+  height: calc(var(--height) * 0.3);
+  filter: none;
+}
+
+div.arrivalMessage div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+div.arrivalMessage p {
+  font-size: calc(var(--height) * 0.09);
+  text-align: center;
+  font-family: "NetworkSansRegular";
+}
+
 div.firstDeparture {
   display: flex;
   align-items: center;
