@@ -152,7 +152,7 @@ div.stationRow.filler:not(:nth-child(1)) {
 }
 
 div.stationRow p {
-  font-size: calc(var(--height) * 0.04);
+  font-size: calc(var(--height) * 0.045);
   padding-top: calc(var(--height) * 0.001);
   padding-bottom: calc(var(--height) * 0.001);
   padding-left: calc(var(--height) * 0.01);
@@ -169,11 +169,11 @@ div.stationRow p.express {
 }
 
 div.stopsColumn {
-  --arrow-height: calc(var(--width) * 0.0205);
-  --row-height: calc(var(--width) * 0.0205 / 0.656);
+  --arrow-height: calc(var(--width) * 0.025);
+  --row-height: calc(var(--width) * 0.025 / 0.656);
 }
 div.stationRow img {
-  width: calc(var(--width) * 0.0205);
+  width: calc(var(--width) * 0.025);
   image-rendering: crisp-edges;
 }
 
@@ -181,33 +181,44 @@ div.stopsColumn.row-8.column-1 div.stationRow p {
   font-size: calc(var(--height) * 0.05);
 }
 div.stopsColumn.row-8.column-1 {
-  --arrow-height: calc(var(--width) * 0.024);
-  --row-height: calc(var(--width) * 0.024 / 0.656);
+  --arrow-height: calc(var(--width) * 0.028);
+  --row-height: calc(var(--width) * 0.028 / 0.656);
 }
 div.stopsColumn.row-8.column-1 div.stationRow img {
-  width: calc(var(--width) * 0.024);
+  width: calc(var(--width) * 0.028);
+}
+
+div.stopsColumn.row-9 div.stationRow p {
+  font-size: calc(var(--height) * 0.04);
+}
+div.stopsColumn.row-9 {
+  --arrow-height: calc(var(--width) * 0.022);
+  --row-height: calc(var(--width) * 0.022 / 0.656);
+}
+div.stopsColumn.row-9 div.stationRow img {
+  width: calc(var(--width) * 0.022);
 }
 
 div.stopsColumn.row-10 div.stationRow p {
-  font-size: calc(var(--height) * 0.033);
+  font-size: calc(var(--height) * 0.035);
 }
 div.stopsColumn.row-10 {
-  --arrow-height: calc(var(--width) * 0.018);
-  --row-height: calc(var(--width) * 0.018 / 0.656);
+  --arrow-height: calc(var(--width) * 0.02);
+  --row-height: calc(var(--width) * 0.02 / 0.656);
 }
 div.stopsColumn.row-10 div.stationRow img {
-  width: calc(var(--width) * 0.018);
+  width: calc(var(--width) * 0.02);
 }
 
 div.stopsColumn.row-11 div.stationRow p {
   font-size: calc(var(--height) * 0.033);
 }
 div.stopsColumn.row-11 {
-  --arrow-height: calc(var(--width) * 0.0165);
-  --row-height: calc(var(--width) * 0.0165 / 0.656);
+  --arrow-height: calc(var(--width) * 0.018);
+  --row-height: calc(var(--width) * 0.018 / 0.656);
 }
 div.stopsColumn.row-11 div.stationRow img {
-  width: calc(var(--width) * 0.0165);
+  width: calc(var(--width) * 0.018);
 }
 
 div.expressArrow {
@@ -236,10 +247,12 @@ div.bottomRow {
   border-top: solid calc(var(--height) * 0.0075) black;
   height: calc(var(--height) * 0.15);
   display: flex;
+  z-index: 1;
 }
 
 div.nextDepartures {
   width: calc(var(--width) * 0.77);
+  background-color: #f0f0f0;
 }
 
 div.nextDeparture {
