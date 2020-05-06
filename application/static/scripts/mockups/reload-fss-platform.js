@@ -247,11 +247,11 @@ function updateBody() {
     $('.firstDepartureInfo .firstDestination').textContent = destination
     $('.firstDepartureInfo .firstStoppingType').textContent = firstStoppingType
     $('.firstDepartureInfo .minutesToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
-    $('.stoppingPattern').className = 'stoppingPattern stoppingAt ' + firstDepartureClass
 
     if (firstDeparture.isArrival) {
       setArrival()
     } else {
+      $('.stoppingPattern').className = 'stoppingPattern stoppingAt ' + firstDepartureClass
       addStoppingPattern(firstDeparture.additionalInfo.screenStops, firstDepartureClass)
     }
 
@@ -263,7 +263,7 @@ function updateBody() {
         $('.scheduledDepartureTime', departureRow).textContent = '--'
         $('.destination', departureRow).textContent = '--'
         $('.stoppingType', departureRow).textContent = '--'
-        $('.minutesToDeparture', departureRow).textContent = ''
+        $('.minutesToDeparture span', departureRow).textContent = ''
       } else {
         let departureClass = departure.codedLineName
         if (departure.type === 'vline') departureClass = 'vline'
