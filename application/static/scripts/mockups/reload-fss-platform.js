@@ -51,7 +51,6 @@ let currentlyDisplaying = 'service'
 
 function setMessageActive(active) {
   if (active) {
-    currentlyDisplaying = 'message'
     $('.message').style = 'display: flex;'
     $('.content').style = 'display: flex;'
     $('.firstDeparture').style = 'display: none;'
@@ -92,10 +91,10 @@ function setNoDepartures() {
 
 function setArrival() {
   if (currentlyDisplaying !== 'arrival') {
-    currentlyDisplaying = 'arrival'
     $('.stoppingPattern').innerHTML = '<div class="arrivalMessage"><img src="/static/images/mockups/no-boarding-train.svg" /><div><p>This train is not taking passengers</p><p>Don\'t board this train</p></div></div>'
     $('.stoppingPattern').className = 'stoppingPattern stoppingAt arrivalContainer'
     setMessageActive(false)
+    currentlyDisplaying = 'arrival'
   }
 }
 
