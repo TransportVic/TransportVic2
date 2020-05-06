@@ -455,19 +455,35 @@ async function getDepartures(station, db) {
 
     return returnDepartures(allDepartures)
   } else {
+    let timetables = db.getCollection('timetables')
+    let {stopGTFSID} = vlinePlatform
+
     let scheduled = await departureUtils.getScheduledDepartures(station, db, 'regional train', 180)
-    scheduled = scheduled.map(departure => {
+    scheduled = await async.map(scheduled, async departure => {
       let shortRouteName = getShortRouteName(departure.trip)
 
       let dayOfWeek = departure.scheduledDepartureTime.day()
       let isWeekday = dayOfWeek !== 0 && dayOfWeek !== 6
       let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departure.scheduledDepartureTime) % 1440
 
-      let platform = guessPlatform(station.stopName.slice(0, -16), scheduledDepartureTimeMinutes,
-        shortRouteName, departure.trip.direction)
+      let {direction} = departure.trip
+      let realRouteGTFSID = departure.trip.routeGTFSID, originDepartureTime = departure.trip.departureTime
 
-      if (platform) platform += '?'
-      else platform = '?'
+      let nspTrip = await timetables.findDocument({
+        departureTime: originDepartureTime, direction, routeGTFSID: realRouteGTFSID
+      })
+
+      let platform
+      if (nspTrip) {
+        let stopTiming = nspTrip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+        platform = stopTiming.platform
+      }
+
+      if (!platform)
+        platform = guessPlatform(station.stopName.slice(0, -16), scheduledDepartureTimeMinutes,
+          shortRouteName, departure.trip.direction)
+
+      if (!platform) platform = '?'
 
       departure.shortRouteName = shortRouteName
       departure.platform = platform

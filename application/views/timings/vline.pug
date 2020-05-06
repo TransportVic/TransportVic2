@@ -55,12 +55,16 @@ append content
             img(src='/static/images/clear-icons/bus.svg')
           else
             span.topText Platform
-            span.bigNumber=departure.cancelled ? '-' : (departure.platform || '') + '?'
+            -
+              let platform = departure.platform
+              if (station.stopName !== 'Southern Cross Railway Station')
+                platform = departure.cancelled ? '-' : (departure.platform || '') + '?'
+            span.bigNumber=platform
         -
           let departureClass = 'departureInfo'
           if (departure.flags && departure.flags.reservationsOnly)
             departureClass += ' reservationsOnly'
-        a(class=departureClass)
+        a(class=departureClass href=`/vline/timings/${departure.destination.toLowerCase().replace(/ /g, '-')}`)
           span.towards=`${departure.shortRouteName} Line towards`
           span.destination=departure.destination
           if departure.isTrainReplacement
