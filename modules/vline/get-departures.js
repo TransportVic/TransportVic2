@@ -231,6 +231,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
 
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
+  let timetables = db.getCollection('timetables')
   let trainDepartures = departures.filter(departure => departure.flags.includes('VTR'))
 
   let mappedDepartures = []
@@ -292,8 +293,22 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     let dayOfWeek = departureTime.day()
     let isWeekday = dayOfWeek !== 0 && dayOfWeek !== 6
 
-    let platform = guessPlatform(stationName, scheduledDepartureTimeMinutes,
-      shortRouteName, trip.direction)
+    let {direction} = trip
+    let realRouteGTFSID = trip.routeGTFSID, originDepartureTime = trip.departureTime
+
+    let nspTrip = await timetables.findDocument({
+      departureTime: originDepartureTime, direction, routeGTFSID: realRouteGTFSID
+    })
+
+    let platform
+    if (nspTrip) {
+      let stopTiming = nspTrip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+      platform = stopTiming.platform
+    }
+
+    if (!platform)
+      platform = guessPlatform(stationName, scheduledDepartureTimeMinutes,
+        shortRouteName, trip.direction)
 
     if (platform) platform += '?'
     else platform = '?'
