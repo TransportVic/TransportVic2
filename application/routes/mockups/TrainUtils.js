@@ -3,6 +3,7 @@ const getMetroDepartures = require('../../../modules/metro-trains/get-departures
 const getVLineDepartures = require('../../../modules/vline/get-departures')
 const utils = require('../../../utils')
 const async = require('async')
+const emptyShunts = require('../../../additional-data/empty-shunts.json')
 
 let defaultStoppingMap = {
   stopsAll: 'Stops All Stations',
@@ -45,6 +46,59 @@ let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne 
 
 
 module.exports = {
+  getEmptyShunts: async (station, db) => {
+    let timetables = db.getCollection('timetables')
+    let today = utils.getPTDayName(utils.now())
+    let minutesPastMidnight = utils.getPTMinutesPastMidnight(utils.now())
+
+    let arrivals = await timetables.findDocuments({
+      $and: [{
+        destination: station.stopName,
+        operationDays: today,
+        stopTimings: {
+          $elemMatch: {
+            stopName: station.stopName,
+            arrivalTimeMinutes: {
+              $gt: minutesPastMidnight
+            }
+          }
+        }
+      }, {
+        $or: emptyShunts
+      }]
+    }).sort({ destinationArrivalTime: 1 }).limit(20).toArray()
+
+    return await async.map(arrivals, async arrival => {
+      let arrivalStop = arrival.stopTimings.slice(-1)[0]
+      let scheduledDepartureTime = utils.minutesAftMidnightToMoment(arrivalStop.arrivalTimeMinutes, utils.now())
+
+      // to get realtime: check if arriving less that 20min, then request runID + 948000
+
+      let actualDepartureTime = scheduledDepartureTime // use realtime
+
+      return module.exports.addTimeToDeparture({
+        trip: arrival,
+        type: 'arrival',
+        scheduledDepartureTime,
+        estimatedDepartureTime: null,
+        actualDepartureTime,
+        platform: arrivalStop.platform, // use realtime
+        cancelled: false, // use realtime
+        runID: arrival.runID,
+        stoppingPattern: 'Not Taking Passengers',
+        stoppingType: 'Not Taking Passengers',
+        codedLineName: utils.encodeName(arrival.routeName),
+        additionalInfo: {
+          screenStops: [],
+          expressCount: [],
+          viaCityLoop: false,
+          direction: 'Down',
+          via: '',
+          notTakingPassengers: true
+        }
+      })
+    })
+  },
   getCombinedDepartures: async (station, db) => {
     let timetables = db.getCollection('timetables')
 
@@ -373,6 +427,9 @@ module.exports = {
     allDepartures = allDepartures.filter(d => !d.isTrainReplacement)
     let platformDepartures = module.exports.filterPlatforms(allDepartures, platform)
 
+    let arrivals = await module.exports.getEmptyShunts(station, db)
+    let platformArrivals = module.exports.filterPlatforms(arrivals, platform)
+
     platformDepartures = platformDepartures.map(departure => {
       let {trip, destination} = departure
       let {routeGTFSID, direction, stopTimings} = trip
@@ -415,7 +472,7 @@ module.exports = {
       departure = module.exports.appendScreenDataToDeparture(departure, station)
 
       return departure
-    })
+    }).concat(platformArrivals).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 
     let hasDepartures = allDepartures.length > 0
 
