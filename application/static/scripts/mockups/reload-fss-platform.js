@@ -234,9 +234,10 @@ function updateBody() {
         if (departure.type === 'vline') departureClass = 'vline'
 
         let {destination} = departure
+
+        if (destination === 'North Melbourne') destination = 'Nth Melbourne'
         if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
         if (destination === 'Flemington Racecource') destination = 'Flemington Races'
-
 
         let stoppingType = departure.stoppingType
         if (departure.additionalInfo.via) {
