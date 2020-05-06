@@ -214,7 +214,7 @@ div.stopsColumn.row-8.column-1 div.stationRow img {
 }
 
 div.stopsColumn.row-9 div.stationRow p {
-  font-size: calc(var(--height) * 0.04);
+  font-size: calc(var(--height) * 0.039);
 }
 div.stopsColumn.row-9 {
   --arrow-height: calc(var(--width) * 0.022);
