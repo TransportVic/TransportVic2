@@ -95,6 +95,7 @@ function setArrival() {
     $('.stoppingPattern').className = 'stoppingPattern stoppingAt arrivalContainer'
     setMessageActive(false)
     currentlyDisplaying = 'arrival'
+    currentPattern = ''
   }
 }
 
