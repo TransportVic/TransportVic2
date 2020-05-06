@@ -253,10 +253,12 @@ div.bottomRow {
 div.nextDepartures {
   width: calc(var(--width) * 0.77);
   background-color: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 div.nextDeparture {
-  height: calc(var(--height) * 0.07);
   display: flex;
   align-items: center;
 }
