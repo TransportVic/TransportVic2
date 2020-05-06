@@ -1,7 +1,8 @@
 @font-face {
   font-family: "NetworkSansMedium";
   font-display: fallback;
-  src: local('Network Sans 2018 Medium'), url(/static/fonts/NetworkSans-Medium.ttf);
+  font-style: medium;
+  src: local('Network Sans 2018 Medium'), local('Network Sans K Medium'), local('Liberation Sans'), local('Helvetica'), local('Arial'), url(/static/fonts/NetworkSans-Medium.ttf);
 }
 
 body {

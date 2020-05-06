@@ -1,25 +1,28 @@
 @font-face {
-  font-family: "NetworkSansMedium";
+  font-family: "NetworkSansBold";
   font-display: fallback;
-  src: local('Network Sans 2018 Medium'), url(/static/fonts/NetworkSans-Medium.ttf);
+  font-style: bold;
+  src: local('Network Sans 2018 Bold'), local('Network Sans K Bold'), local('Liberation Sans'), local('Helvetica'), local('Arial');
 }
 
 @font-face {
-  font-family: "NetworkSansBold";
+  font-family: "NetworkSansMedium";
   font-display: fallback;
-  src: local('Network Sans 2018 Bold'), url(/static/fonts/NetworkSans-Bold.ttf);
+  font-style: medium;
+  src: local('Network Sans 2018 Medium'), local('Network Sans K Medium'), local('Liberation Sans'), local('Helvetica'), local('Arial');
 }
 
 @font-face {
   font-family: "NetworkSansRegular";
   font-display: fallback;
-  src: local('Network Sans 2018 Regular'), url(/static/fonts/NetworkSans-Regular.ttf);
+  font-style: normal;
+  src: local('Network Sans 2018 Regular'), local('Network Sans K Regular'), local('Liberation Sans'), local('Helvetica'), local('Arial');
 }
 
 @font-face {
   font-family: "Helvetica";
   font-display: fallback;
-  src: local('Helvetica'), local('Helv'), local('Helvetica Neue'), url(/static/fonts/Helvetica-Regular.ttf);
+  src: local('Helvetica'), local('Helv'), local('Helvetica Neue'), local("Arial"), url(/static/fonts/Helvetica-Regular.ttf);
 }
 
 html, body {
