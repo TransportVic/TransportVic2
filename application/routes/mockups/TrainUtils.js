@@ -55,7 +55,7 @@ module.exports = {
       if (vlinePlatform) {
         vlineDepartures = (await getVLineDepartures(station, db)).map(departure => {
           if (departure.platform)
-            departure.platform = departure.platform.replace('?', '')
+            departure.platform = departure.platform
           departure.type = 'vline'
           departure.actualDepartureTime = departure.scheduledDepartureTime
 

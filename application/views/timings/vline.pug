@@ -55,7 +55,7 @@ append content
             img(src='/static/images/clear-icons/bus.svg')
           else
             span.topText Platform
-            span.bigNumber=departure.platform || '?'
+            span.bigNumber=departure.cancelled ? '-' : (departure.platform || '') + '?'
         -
           let departureClass = 'departureInfo'
           if (departure.flags && departure.flags.reservationsOnly)

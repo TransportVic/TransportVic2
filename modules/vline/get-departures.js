@@ -310,8 +310,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
       platform = guessPlatform(stationName, scheduledDepartureTimeMinutes,
         shortRouteName, trip.direction)
 
-    if (platform) platform += '?'
-    else platform = '?'
+    if (!platform) platform = ''
 
     if (trip.cancelled) platform = '-'
 
