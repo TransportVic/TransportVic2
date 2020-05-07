@@ -51,21 +51,23 @@ module.exports = {
     let today = utils.getPTDayName(utils.now())
     let minutesPastMidnight = utils.getPTMinutesPastMidnight(utils.now())
 
+    let emptyShuntsToday = emptyShunts.filter(emptyShunt => emptyShunt.operationDays === today)
+    let runIDs = emptyShuntsToday.map(emptyShunt => emptyShunt.runID)
+
     let arrivals = await timetables.findDocuments({
-      $and: [{
-        destination: station.stopName,
-        operationDays: today,
-        stopTimings: {
-          $elemMatch: {
-            stopName: station.stopName,
-            arrivalTimeMinutes: {
-              $gt: minutesPastMidnight
-            }
+      destination: station.stopName,
+      operationDays: today,
+      stopTimings: {
+        $elemMatch: {
+          stopName: station.stopName,
+          arrivalTimeMinutes: {
+            $gt: minutesPastMidnight
           }
         }
-      }, {
-        $or: emptyShunts
-      }]
+      },
+      runID: {
+        $in: runIDs
+      }
     }).sort({ destinationArrivalTime: 1 }).limit(20).toArray()
 
     return await async.map(arrivals, async arrival => {
