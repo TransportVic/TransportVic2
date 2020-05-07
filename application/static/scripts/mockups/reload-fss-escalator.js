@@ -255,7 +255,6 @@ function updateBody() {
         $('.lineColour', departureRow).className = 'lineColour no-line'
         $('.scheduledDepartureTime', departureRow).textContent = '--'
         $('.destination', departureRow).textContent = '--'
-        $('.stoppingType', departureRow).textContent = '--'
         $('.platform', departureRow).className = 'platform no-line'
         $('.minutesToDeparture span', departureRow).textContent = '-- min'
       } else {

@@ -6,8 +6,6 @@ const stationPlatforms = require('../../../additional-data/station-platforms.jso
 const url = require('url')
 const querystring = require('querystring')
 
-let cityStations = ['southern-cross', 'parliament', 'flagstaff', 'melbourne-central', 'flinders-street']
-
 let stoppingTextMap = {
   stopsAll: 'Stops All Stations',
   allExcept: 'Not Stopping At {0}',
@@ -77,9 +75,7 @@ router.get('/summary', async (req, res, next) => {
 router.post('/:platform/:type', async (req, res, next) => {
   if (filter(req, next)) {
     let departures = await getData(req, res)
-    let isCityStop = cityStations.includes(req.params.station)
-
-    res.json({ ...departures, isCityStop })
+    res.json(departures)
   }
 })
 

@@ -28,7 +28,6 @@ async function getData(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
     codedName: (req.params.station || 'flinders-street') + '-railway-station'
   })
-
   return await TrainUtils.getPIDSDepartures(res.db, station, req.params.platform, stoppingTextMap, stoppingTypeMap)
 }
 
@@ -42,6 +41,7 @@ router.get('/platform/:platform/:station*?', async (req, res) => {
 
 router.post('/:type/:platform/:station*?', async (req, res) => {
   let departures = await getData(req, res)
+  res.json(departures)
 })
 
 module.exports = router
