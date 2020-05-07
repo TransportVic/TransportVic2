@@ -1,0 +1,1270 @@
+{
+  "Dimboola": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Dingee": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Pyramid": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Rockbank": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Melton": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Ballan": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Ballarat": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Ararat": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Castlemaine": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Maryborough": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Talbot": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Bendigo": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Kangaroo Flat": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Malmsbury": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Kyneton": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Woodend": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Macedon": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Riddells Creek": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Clarkefield": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Gisborne": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Sunbury": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Diggers Rest": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Craigieburn": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Roxburgh Park": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Upfield": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Coolaroo": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Watergardens": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Keilor Plains": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Gowrie": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Broadmeadows": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Jacana": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Glenroy": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Oak Park": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Fawkner": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Pascoe Vale": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Strathmore": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Glenbervie": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Essendon": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Brunswick": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Jewell": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Royal Park": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Moonee Ponds": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Ascot Vale": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Flemington Racecourse": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Newmarket": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Kensington": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "South Kensington": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Flemington Bridge": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Macaulay": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "North Melbourne": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Flagstaff": {
+    "platforms": 4,
+    "exclude": []
+  },
+  "Southern Cross": {
+    "platforms": 14,
+    "exclude": []
+  },
+  "Footscray": {
+    "platforms": 6,
+    "exclude": []
+  },
+  "Tottenham": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Middle Footscray": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "West Footscray": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Seddon": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Yarraville": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "St. Albans": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Ginifer": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Albion": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Sunshine": {
+    "platforms": 4,
+    "exclude": []
+  },
+  "Shepparton": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Murchison East": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Wodonga": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Bairnsdale": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Seymour": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Wandong": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Heathcote Junction": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Lilydale": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "South Morang": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Epping": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Darebin": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Box Hill": {
+    "platforms": 4,
+    "exclude": [
+      1
+    ]
+  },
+  "Mont Albert": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Surrey Hills": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Chatham": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Canterbury": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Auburn": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Moreland": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Northcote": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Merri": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Anstey": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Bell": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Thornbury": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Alphington": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Croxton": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Fairfield": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Dennis": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Westgarth": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Rushall": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Clifton Hill": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Victoria Park": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Glenferrie": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Hawthorn": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Collingwood": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "North Richmond": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "West Richmond": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Flinders Street": {
+    "platforms": 14,
+    "exclude": [
+      11
+    ]
+  },
+  "Parliament": {
+    "platforms": 4,
+    "exclude": []
+  },
+  "Jolimont": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Richmond": {
+    "platforms": 10,
+    "exclude": []
+  },
+  "Melbourne Central": {
+    "platforms": 4,
+    "exclude": []
+  },
+  "South Yarra": {
+    "platforms": 6,
+    "exclude": []
+  },
+  "Prahran": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Burnley": {
+    "platforms": 4,
+    "exclude": []
+  },
+  "East Richmond": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Heyington": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Kooyong": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Tooronga": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Toorak": {
+    "platforms": 4,
+    "exclude": []
+  },
+  "Hawksburn": {
+    "platforms": 4,
+    "exclude": []
+  },
+  "Lalor": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Hurstbridge": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Wattle Glen": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Diamond Creek": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Eltham": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Mooroolbark": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Croydon": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Ringwood": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Ringwood East": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Heatherdale": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Mitcham": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Nunawading": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Blackburn": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Laburnum": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Thomastown": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Keon Park": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Ruthven": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Reservoir": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Regent": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Preston": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Merlynston": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Batman": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Coburg": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Greensborough": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Montmorency": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Watsonia": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Macleod": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Heidelberg": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Ivanhoe": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Eaglemont": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Windsor": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Balaclava": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Armadale": {
+    "platforms": 4,
+    "exclude": []
+  },
+  "Malvern": {
+    "platforms": 4,
+    "exclude": []
+  },
+  "Caulfield": {
+    "platforms": 4,
+    "exclude": []
+  },
+  "Glenhuntly": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Ripponlea": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Elsternwick": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Camberwell": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "East Camberwell": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Riversdale": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Willison": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Burwood": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Hartwell": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Gardiner": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Jordanville": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Mount Waverley": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Holmesglen": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Glen Iris": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Darling": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Ashburton": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Alamein": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "East Malvern": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Murrumbeena": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Carnegie": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Yarraman": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Dandenong": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Narre Warren": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Hallam": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Lynbrook": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Merinda Park": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Cranbourne": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Carrum": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Seaford": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Kananook": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Mentone": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Parkdale": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Mordialloc": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Aspendale": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Edithvale": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Chelsea": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Bonbeach": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Tecoma": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Belgrave": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Tynong": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Garfield": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Nar Nar Goon": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Beaconsfield": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Berwick": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Cardinia Road": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Pakenham": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Officer": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Frankston": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Leawarra": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Baxter": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Somerville": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Tyabb": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Hastings": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Bittern": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Stony Point": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Morradoo": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Crib Point": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Drouin": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Longwarry": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Bunyip": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Trafalgar": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Moe": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Warragul": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Yarragon": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Stratford": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Sale": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Traralgon": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Rosedale": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Spotswood": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Newport": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Williamstown": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "North Williamstown": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Williamstown Beach": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "North Geelong": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Geelong": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "South Geelong": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Warrnambool": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Ormond": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Oakleigh": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "McKinnon": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Bentleigh": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Patterson": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Huntingdale": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Clayton": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Westall": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Moorabbin": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Highett": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Southland": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Cheltenham": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Brighton Beach": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Gardenvale": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "North Brighton": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Middle Brighton": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Hampton": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Sandringham": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Glen Waverley": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Syndal": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Heathmont": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Bayswater": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Boronia": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Ferntree Gully": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Upper Ferntree Gully": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Upwey": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Springvale": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Sandown Park": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Noble Park": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Little River": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Lara": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Corio": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "North Shore": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Aircraft": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Williams Landing": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Hoppers Crossing": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Werribee": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Westona": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Seaholme": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Altona": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Laverton": {
+    "platforms": 3,
+    "exclude": []
+  },
+  "Ardeer": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Deer Park": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Tarneit": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Wyndham Vale": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Bacchus Marsh": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Cobblebank": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Caroline Springs": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Donnybrook": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Wallan": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Kilmore East": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Broadford": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Tallarook": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Avenel": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Euroa": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Violet Town": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Springhurst": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Chiltern": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Benalla": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Albury": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Hughesdale": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Rosanna": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Middle Gorge": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Hawkstowe": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Mernda": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Wendouree": {
+    "platforms": 2,
+    "exclude": []
+  },
+  "Marshall": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Waurn Ponds": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Winchelsea": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Birregurra": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Colac": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Camperdown": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Terang": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Sherwood Park": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Warnambool": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Beaufort": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Creswick": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Clunes": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Eaglehawk": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Kerang": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Swan Hill": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Epsom": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Elmore": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Rochester": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Echuca": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Nagambie": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Mooroopna": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Wangaratta": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Morwell": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Horsham": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Nhill": {
+    "platforms": 1,
+    "exclude": []
+  },
+  "Stawell": {
+    "platforms": 1,
+    "exclude": []
+  }
+}

@@ -2,6 +2,7 @@ const express = require('express')
 const router = new express.Router()
 const TrainUtils = require('./TrainUtils')
 const stationCodes = require('../../../additional-data/station-codes.json')
+const stationPlatforms = require('../../../additional-data/station-platforms.json')
 const url = require('url')
 const querystring = require('querystring')
 
@@ -63,12 +64,13 @@ router.get('/:platform/:type', async (req, res, next) => {
 router.get('/summary', async (req, res, next) => {
   if (filter(req, next)) {
     let query = querystring.parse(url.parse(req.url).query)
-    query.exclude = (query.exclude || '').split(',').map(e => parseInt(e))
 
     let stationCode = req.headers.host.split('.')[0].toUpperCase()
-    let stationName = stationCodes[stationCode].toLowerCase().replace(/ /g, '-')
+    let stationName = stationCodes[stationCode]
+    let parsedStationName = stationName.toLowerCase().replace(/ /g, '-')
+    let stationPlatformData = stationPlatforms[stationName]
 
-    res.render('mockups/summary', {query, station: stationName, stationCode})
+    res.render('mockups/summary', {query, stationPlatformData, station: parsedStationName, stationCode})
   }
 })
 
