@@ -89,15 +89,31 @@ function setMessagesActive(active) {
     $('.stoppingAt').style = 'display: block;'
   }
 }
+
+function blankNextDeparture(departureDIV) {
+  $('.sideBar', departureDIV).className = 'sideBar no-line'
+  $('.sideBar~p', departureDIV).textContent = '--'
+
+  $('.centre p', departureDIV).textContent = '--'
+
+  $('.right .platform', departureDIV).className = 'platform no-line'
+  $('.right .platform p', departureDIV).innerHTML = '&nbsp;'
+
+  $('.right .timeToDeparture p', departureDIV).innerHTML = '&nbsp;'
+}
+
 function updateBody() {
   $.ajax({
     method: 'POST'
   }, (err, status, body) => {
     let {departures, isCityStop} = body
 
+    let departureDIVs = Array.from(document.querySelectorAll('.smallDeparture'))
     let firstDeparture = departures[0]
     if (!firstDeparture) {
       // Expand for RRB?
+      blankNextDeparture(departureDIV[0])
+      blankNextDeparture(departureDIV[1])
       return setNoDepartures()
     } else setMessagesActive(false)
 
@@ -212,7 +228,6 @@ function updateBody() {
       </div>`
     })
 
-    let departureDIVs = Array.from(document.querySelectorAll('.smallDeparture'))
     let next4Departures = departures.concat([null, null, null, null]).slice(1, 5)
 
     next4Departures.forEach((departure, i) => {
@@ -231,15 +246,7 @@ function updateBody() {
 
         $('.right .timeToDeparture p', departureDIV).textContent = departure.prettyTimeToDeparture.replace(' ', '')
       } else {
-        $('.sideBar', departureDIV).className = 'sideBar no-line'
-        $('.sideBar~p', departureDIV).textContent = '--'
-
-        $('.centre p', departureDIV).textContent = '--'
-
-        $('.right .platform', departureDIV).className = 'platform no-line'
-        $('.right .platform p', departureDIV).innerHTML = '&nbsp;'
-
-        $('.right .timeToDeparture p', departureDIV).innerHTML = '&nbsp;'
+        blankNextDeparture(departureDIV)
       }
     })
   })
