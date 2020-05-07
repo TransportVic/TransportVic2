@@ -1,11 +1,7 @@
 const express = require('express')
 const router = new express.Router()
 const async = require('async')
-
 const TrainUtils = require('./TrainUtils')
-const getLineStops = require('./route-stops')
-
-let cityStations = ['southern-cross', 'parliament', 'flagstaff', 'melbourne-central', 'flinders-street']
 
 let stoppingTextMap = {
   stopsAll: 'Stops All Stations',
@@ -46,9 +42,6 @@ router.get('/platform/:platform/:station*?', async (req, res) => {
 
 router.post('/:type/:platform/:station*?', async (req, res) => {
   let departures = await getData(req, res)
-  let isCityStop = cityStations.includes(req.params.station)
-
-  res.json({...departures, isCityStop})
 })
 
 module.exports = router

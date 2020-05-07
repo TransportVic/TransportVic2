@@ -6,6 +6,7 @@ const url = require('url')
 const querystring = require('querystring')
 
 let stationPlatforms = {}
+
 Object.keys(rawStationPlatforms).forEach(stationName => {
   stationPlatforms[utils.encodeName(stationName)] = rawStationPlatforms[stationName]
 })
