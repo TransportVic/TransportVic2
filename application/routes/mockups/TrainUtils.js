@@ -306,7 +306,10 @@ module.exports = {
     }
 
     let stopData = departure.trip.stopTimings.find(stop => stop.stopName === station.stopName)
-    let notTakingPassengers = stopData.stopConditions.pickup === 1
+
+    let notTakingPassengers = false
+    if (stopData.stopConditions) // trips matching using wtt timetables and live timetables don't have NTP
+      notTakingPassengers = stopData.stopConditions.pickup === 1
 
     let additionalInfo = {
       screenStops, expressCount, viaCityLoop, direction: isUp ? 'Up': 'Down', via, notTakingPassengers
