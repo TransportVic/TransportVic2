@@ -28,7 +28,7 @@ function formatTime(time, includeSeconds=false, space=false) {
 }
 
 function createStationRow(name, stoppingType, clazz) {
-  return `<div class="stationRow ${stoppingType === 'filler-2' ? 'filler' : ''}">`
+  return `<div class="stationRow ${stoppingType === 'filler' ? 'filler' : ''}">`
   + `<img src="/static/images/mockups/station-${stoppingType}.svg">`
   + `<p class="${clazz || ''}">${name}</p>`
   + `</div>`
@@ -61,7 +61,7 @@ function setMessageActive(active) {
     $('.content').style = 'display: flex;'
     $('.firstDeparture').style = 'display: flex;'
     $('.fullMessage').style = 'display: none;'
-    $('.stoppingPattern').className = 'stoppingPattern stoppingAt'
+    $('.stoppingPattern').className = 'stoppingPattern'
   }
 }
 
@@ -77,7 +77,7 @@ function setFullMessageActive(active) {
     $('.content').style = 'display: flex;'
     $('.firstDeparture').style = 'display: flex;'
     $('.fullMessage').style = 'display: none;'
-    $('.stoppingPattern').className = 'stoppingPattern stoppingAt'
+    $('.stoppingPattern').className = 'stoppingPattern'
   }
 }
 
@@ -92,7 +92,7 @@ function setNoDepartures() {
 function setArrival() {
   if (currentlyDisplaying !== 'arrival') {
     $('.stoppingPattern').innerHTML = '<div class="arrivalMessage"><img src="/static/images/mockups/no-boarding-train.svg" /><div><p>This train is not taking passengers</p><p>Don\'t board this train</p></div></div>'
-    $('.stoppingPattern').className = 'stoppingPattern stoppingAt arrivalContainer'
+    $('.stoppingPattern').className = 'stoppingPattern arrivalContainer'
     setMessageActive(false)
     currentlyDisplaying = 'arrival'
     currentPattern = ''
@@ -133,10 +133,10 @@ function addStoppingPattern(stops, className) {
     let lastRow = x + 1 === stopColumns.length
 
     if (x === 0) {
-      column.innerHTML += createStationRow('', 'stub-2')
+      column.innerHTML += createStationRow('', 'stub')
     } else {
       for (let i = 0; i < 3; i++)
-        column.innerHTML += createStationRow(' ', 'filler-2')
+        column.innerHTML += createStationRow(' ', 'filler')
     }
 
     let expresses = []
@@ -168,7 +168,7 @@ function addStoppingPattern(stops, className) {
 
     if (!lastRow) {
       for (let i = 0; i < 5; i++)
-        column.innerHTML += createStationRow(' ', 'filler-2')
+        column.innerHTML += createStationRow(' ', 'filler')
     }
 
     expresses.forEach(express => {
@@ -252,7 +252,7 @@ function updateBody() {
     if (firstDeparture.isArrival) {
       setArrival()
     } else {
-      $('.stoppingPattern').className = 'stoppingPattern stoppingAt ' + firstDepartureClass
+      $('.stoppingPattern').className = 'stoppingPattern ' + firstDepartureClass
       addStoppingPattern(firstDeparture.additionalInfo.screenStops, firstDepartureClass)
     }
 

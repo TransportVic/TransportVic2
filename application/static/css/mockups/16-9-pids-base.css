@@ -4,9 +4,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
 
   --width: calc(100vh / 9 * 16);
+  --height: 100vh;
+}
+
+body.rotated {
+  --width: calc(100vh / 16 * 9);
   --height: 100vh;
 }
 
@@ -33,5 +37,12 @@ div.content {
   body {
     --width: 100vw;
     --height: calc(100vw * 9 / 16);
+  }
+}
+
+@media (max-aspect-ratio: 9/16) {
+  body.rotated {
+    --width: 100vw;
+    --height: calc(100vw * 16 / 9);
   }
 }

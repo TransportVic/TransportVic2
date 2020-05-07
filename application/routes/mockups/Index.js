@@ -1,8 +1,15 @@
 const express = require('express')
 const router = new express.Router()
 const utils = require('../../../utils')
+const rawStationPlatforms = require('../../../additional-data/station-platforms.json')
 const url = require('url')
 const querystring = require('querystring')
+
+let stationPlatforms = {}
+Object.keys(rawStationPlatforms).forEach(stationName => {
+  stationPlatforms[utils.encodeName(stationName)] = rawStationPlatforms[stationName]
+})
+
 
 router.get('/', (req, res) => {
   res.render('mockups/index')
@@ -10,10 +17,9 @@ router.get('/', (req, res) => {
 
 router.get('/summary/:station', (req, res) => {
   let query = querystring.parse(url.parse(req.url).query)
+  let stationPlatformData = stationPlatforms[req.params.station]
 
-  query.exclude = (query.exclude || '').split(',').map(e => parseInt(e))
-
-  res.render('mockups/summary', {query, station: req.params.station})
+  res.render('mockups/summary', {query, stationPlatformData, station: req.params.station})
 })
 
 router.get('/sss-summary/', (req, res) => {

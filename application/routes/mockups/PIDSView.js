@@ -67,10 +67,9 @@ router.get('/summary', async (req, res, next) => {
 
     let stationCode = req.headers.host.split('.')[0].toUpperCase()
     let stationName = stationCodes[stationCode]
-    let parsedStationName = stationName.toLowerCase().replace(/ /g, '-')
     let stationPlatformData = stationPlatforms[stationName]
 
-    res.render('mockups/summary', {query, stationPlatformData, station: parsedStationName, stationCode})
+    res.render('mockups/summary', {query, stationPlatformData, stationCode})
   }
 })
 

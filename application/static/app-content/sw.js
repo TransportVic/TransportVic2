@@ -1,4 +1,4 @@
-const version = "36"
+const version = "37"
 const cacheName = `transportvic-${version}`
 
 function cacheFiles(files) {
@@ -40,10 +40,6 @@ self.addEventListener('install', e => {
       '/static/fonts/LiberationSans-Bold.otf',
       '/static/fonts/LiberationSans-Regular.otf',
 
-      '/static/fonts/NetworkSans-Regular.otf',
-      '/static/fonts/NetworkSans-Medium.otf',
-      '/static/fonts/NetworkSans-Bold.otf',
-
       '/static/images/decals/ac.svg',
       '/static/images/decals/wheelchair.svg',
 
@@ -74,14 +70,14 @@ self.addEventListener('install', e => {
       '/static/images/icons/cr228l.svg',
       '/static/images/icons/optimus.svg',
 
+      '/static/images/mockups/announcements.svg',
       '/static/images/mockups/no-boarding-train.svg',
+      '/static/images/mockups/express-arrow.svg',
       '/static/images/mockups/station-express.svg',
       '/static/images/mockups/station-filler.svg',
-      '/static/images/mockups/station-halfstub.svg',
-      '/static/images/mockups/station-stopsat.svg',
+      '/static/images/mockups/station-stops-at.svg',
       '/static/images/mockups/station-stub.svg',
       '/static/images/mockups/station-terminates.svg',
-      '/static/images/mockups/announcements.svg',
 
       'https://cdn.plot.ly/plotly-latest.min.js',
       'https://unpkg.com/leaflet@1.6.0/dist/leaflet.css',

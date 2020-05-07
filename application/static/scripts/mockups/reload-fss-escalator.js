@@ -1,30 +1,3 @@
-let northernGroup = [
-  'Craigieburn',
-  'Sunbury',
-  'Upfield',
-  'Werribee',
-  'Williamstown',
-  'Showgrounds/Flemington'
-]
-
-let cliftonHillGroup = [
-  'Hurstbridge',
-  'Mernda'
-]
-
-let crossCityGroup = [
-  'Werribee',
-  'Williamstown',
-  'Frankston'
-]
-
-let gippslandLines = [
-  'Bairnsdale',
-  'Traralgon'
-]
-
-let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
-
 function formatTime(time) {
   let hours = time.getHours()
   let minutes = time.getMinutes()
@@ -43,50 +16,73 @@ function formatTime(time) {
   return mainTime
 }
 
-function getStoppingType(firstDeparture, isCityStop) {
-  let stoppingType = firstDeparture.stoppingType
-
-  if (isCityStop || firstDeparture.trip.direction === 'Up') {
-    if (firstDeparture.additionalInfo.viaCityLoop) stoppingType += ' via City Loop'
-    else {
-      if (northernGroup.includes(firstDeparture.trip.routeName)) stoppingType += ' via Sthn Cross'
-      else if (cliftonHillGroup.includes(firstDeparture.trip.routeName)) stoppingType += ' via Jolimont' //?
-      else stoppingType += ' via Richmond'
-    }
-  }
-
-  if (firstDeparture.type === 'vline') stoppingType = 'No Suburban Passengers'
-  return stoppingType
+function createStationRow(name, stoppingType, clazz) {
+  return `<div class="stationRow ${stoppingType === 'filler' ? 'filler' : ''}">`
+  + `<img src="/static/images/mockups/station-${stoppingType}.svg">`
+  + `<p class="${clazz || ''}">${name}</p>`
+  + `</div>`
 }
 
-function createStationRow(name, imgSource, height) {
-  let style = `height: ${height || '16px'} !important;`
-
-  return `<div class="stationRow" style="${imgSource.includes('stub') ? style : ''}" data-name="${name}">`
-  + (imgSource.includes('stub') ?
-    `<img src="/static/images/mockups/station-${imgSource}.svg" height="${height || '16px'}" style="${style}">`
-  : `<img src="/static/images/mockups/station-${imgSource}.svg">`)
-  + `<p class="${imgSource}">${name}</p>
-</div>`
-}
+let currentlyDisplaying = ''
 
 function setNoDepartures() {
-  setMessagesActive(true)
-  $('.messages .textWrapper').innerHTML = '<img src="/static/images/mockups/no-boarding-train.svg" /><p>No trains are departing from this platform</p>'
+  if (currentlyDisplaying !== 'no-departures') {
+    currentlyDisplaying = 'no-departures'
+    setMessageActive(true)
+    showServiceData(false)
+    $('.serviceMessage').innerHTML = '<img src="/static/images/mockups/no-boarding-train.svg" /><p>No trains are departing from this platform</p>'
+  }
 }
 
-function setMessagesActive(active) {
+function setArrival() {
+  if (currentlyDisplaying !== 'arrival') {
+    currentlyDisplaying = 'arrival'
+    setMessageActive(true)
+    showServiceData(true)
+    $('.serviceMessage').innerHTML = '<img src="/static/images/mockups/no-boarding-train.svg" /><p>This train is not taking passengers</p><p>Don\'t board this train</p>'
+  }
+}
+
+function setListenAnnouncements() {
+  if (currentlyDisplaying !== 'announcements') {
+    currentlyDisplaying = 'announcements'
+    $('.fullMessage').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>'
+    setFullMessagesActive(true)
+  }
+}
+
+function showServiceData(active) {
   if (active) {
-    $('.topLineBanner').className = 'topLineBanner no-line'
-    $('.messages').style = 'display: block;'
-    $('.firstDepartureInfo').style = 'display: none;'
-    $('.firstDepartureInfo~.greyLine').style = 'display: none;'
-    $('.stoppingAt').style = 'display: none;'
+    $('.firstDepartureInfo').className = 'firstDepartureInfo'
   } else {
-    $('.messages').style = 'display: none;'
-    $('.firstDepartureInfo').style = 'display: flex;'
-    $('.firstDepartureInfo~.greyLine').style = 'display: block;'
-    $('.stoppingAt').style = 'display: block;'
+    $('.firstDepartureRight .platform').className = 'platform no-line'
+    $('.firstDepartureInfo').className = 'firstDepartureInfo messageActive'
+  }
+}
+
+function setMessageActive(active) {
+  if (active) {
+    $('.fullMessage').style = 'display: none;'
+    $('.content').style = 'display: flex;'
+    $('.topLineBanner').className = 'topLineBanner no-line'
+    $('.stoppingPattern').innerHTML = '<div class="serviceMessage"></div>'
+    currentPattern = ''
+  } else {
+    $('.fullMessage').style = 'display: none;'
+    $('.content').style = 'display: flex;'
+    showServiceData(true)
+    currentlyDisplaying = ''
+  }
+}
+
+function setFullMessagesActive(active) {
+  if (active) {
+    $('.fullMessage').style = 'display: flex;'
+    $('.content').style = 'display: none;'
+  } else {
+    $('.fullMessage').style = 'display: none;'
+    $('.content').style = 'display: flex;'
+    currentlyDisplaying = ''
   }
 }
 
@@ -102,166 +98,193 @@ function blankNextDeparture(departureDIV) {
   $('.right .timeToDeparture p', departureDIV).innerHTML = '&nbsp;'
 }
 
-function updateBody() {
-  $.ajax({
-    method: 'POST'
-  }, (err, status, body) => {
-    let {departures, isCityStop} = body
 
-    let departureDIVs = Array.from(document.querySelectorAll('.smallDeparture'))
-    let firstDeparture = departures[0]
-    if (!firstDeparture) {
-      // Expand for RRB?
-      blankNextDeparture(departureDIV[0])
-      blankNextDeparture(departureDIV[1])
-      return setNoDepartures()
-    } else setMessagesActive(false)
+function createStoppingPatternID(stoppingPattern) {
+  return stoppingPattern.map(e => `${e.stopName}${e.isExpress}`).join(',')
+}
 
-    let firstDepartureClass = firstDeparture.codedLineName
-    if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
+let currentPattern = null
 
-    $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
-    $('.firstDepartureInfo .scheduledDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
-    $('.firstDepartureInfo .destination').textContent = firstDeparture.destination
-    $('.firstDepartureInfo .stoppingType').textContent = getStoppingType(firstDeparture, isCityStop)
-    $('.firstDepartureInfo .platform').className = 'platform ' + firstDepartureClass
-    $('.firstDepartureInfo .platform span').textContent = firstDeparture.platform
-    $('.firstDepartureInfo .timeToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
-    $('.stoppingAt').className = 'stoppingAt ' + firstDepartureClass
+function addStoppingPattern(stops, className) {
+  let newPatternID = createStoppingPatternID(stops)
+  if (currentPattern === newPatternID) return
 
-    let stopCount = firstDeparture.additionalInfo.screenStops.length
-    let {stopColumns, size} = splitStops(firstDeparture.additionalInfo.screenStops, false, {
-      MAX_COLUMNS: 2,
-      MIN_COLUMN_SIZE: 5,
-      MAX_COLUMN_SIZE: 22
-    })
+  currentPattern = newPatternID
 
-    let iconSize = 64
+  let {stopColumns, size} = splitStops(stops, false, {
+    MAX_COLUMNS: 2,
+    MIN_COLUMN_SIZE: 5,
+    MAX_COLUMN_SIZE: 22
+  })
 
-    if (size > 18) {
-      $('.stoppingAt').className += ' small'
-      iconSize = 53
+  $('.stoppingPattern').innerHTML = ''
+
+  stopColumns.forEach((stopColumn, x) => {
+    let column = document.createElement('div')
+    let lastRow = x + 1 === stopColumns.length
+
+    if (x === 0) {
+      column.innerHTML += createStationRow('', 'stub')
+    } else {
+      for (let i = 0; i < 3; i++)
+        column.innerHTML += createStationRow(' ', 'filler')
     }
 
-    let firstColumn = stopColumns[0]
-    let secondColumn = stopColumns[1] || []
-
-    let stoppingHTML = `<div>` // left
-    stoppingHTML += createStationRow(' ', 'stub', iconSize / 4 + 'px')
-    let hasTerminating = firstDeparture.additionalInfo.screenStops.length <= size
-    stoppingHTML += `<div class="stationRow" data-name="${firstColumn[0].stopName}">
-      <img src="/static/images/mockups/station-stops-at.svg" class="${firstDepartureClass}"/>
-      <p class="${firstDepartureClass}">${firstColumn[0].stopName}</p>
-    </div>`
     let expresses = []
     let expressPart = []
 
-    let index = 0
-    for (station of firstColumn.slice(1, hasTerminating ? -1 : stopCount)) {
-      stoppingHTML += createStationRow(station.stopName, station.isExpress ? 'express' : 'stops-at')
+    stopColumn.forEach((stop, y) => {
+      let {stopName} = stop
+      let type = stop.isExpress ? 'express' : 'stops-at'
+      if (lastRow && y === stopColumn.length - 1) type = 'terminates'
 
-      if (station.isExpress) {
-        expressPart.push({name: station.stopName, index})
+      let stopType = x == 0 && y == 0 ? className : ''
+      if (stop.isExpress) {
+        stopType = 'express'
+        expressPart.push(y)
       } else {
         if (expressPart.length) {
-          if (expressPart.length > 1)
-            expresses.push({stations: expressPart, col: 1})
+          expresses.push(expressPart)
           expressPart = []
         }
       }
-      index++
-    }
 
-    if (hasTerminating)
-      stoppingHTML += createStationRow(firstColumn.slice(-1)[0].stopName, 'terminates')
-    else {
-      stoppingHTML += createStationRow(' ', 'halfstub', iconSize / 4 + 'px')
-      stoppingHTML += createStationRow(' ', 'filler')
-      if (expressPart.length)
-        expresses.push({stations: expressPart, col: 1})
-    }
+      column.innerHTML += createStationRow(stopName, type, stopType)
+    })
 
-    stoppingHTML += `</div><div>` // right
-    if (secondColumn.length) {
+    if (expressPart.length) {
+      expresses.push(expressPart)
       expressPart = []
-      index = 0
-
-      stoppingHTML += createStationRow(' ', 'halfstub', iconSize / 4 + 'px')
-      stoppingHTML += createStationRow(' ', 'filler')
-      for (station of secondColumn.slice(0, -1)) {
-        stoppingHTML += createStationRow(station.stopName, station.isExpress ? 'express' : 'stops-at')
-
-        if (station.isExpress) {
-          expressPart.push({name: station.stopName, index})
-        } else {
-          if (expressPart.length) {
-            if (expressPart.length > 1)
-              expresses.push({stations: expressPart, col: 2})
-            expressPart = []
-          }
-        }
-        index++
-      }
-
-      if (expressPart.length)
-        expresses.push({stations: expressPart, col: 2})
-      stoppingHTML += createStationRow(secondColumn.slice(-1)[0].stopName, 'terminates')
     }
-    stoppingHTML += `</div>`
-    let containerDIV = document.createElement('div')
-    containerDIV.innerHTML = stoppingHTML
 
-    $('.stoppingAt').innerHTML = ''
-    $('.stoppingAt').appendChild(containerDIV)
+    if (!lastRow) {
+      for (let i = 0; i < 5; i++)
+        column.innerHTML += createStationRow(' ', 'filler')
+    }
 
     expresses.forEach(express => {
-      let column = $(`.stoppingAt > div > div:nth-child(${express.col})`)
+      if (express.length === 1) return
+      let firstStop = express[0], lastStop = express.slice(-1)[0]
+      let columnSize = stopColumn.length
+      if (lastRow) columnSize--
 
-      let firstStop = express.stations[0], lastStop = express.stations.slice(-1)[0]
-      let startingTop = firstStop.index * iconSize + iconSize + iconSize / 4
-      let endingTop = lastStop.index * iconSize + 2 * iconSize + iconSize / 4
-      let middle = (startingTop + endingTop) / 2 - iconSize / 6
+      let startingBottom = columnSize - firstStop
+      let endingBottom = columnSize - lastStop - 2
 
-      column.innerHTML += `<div class="expressArrow" style="margin-top: ${middle}px">
-        <img src="/static/images/mockups/express-arrow.svg" class="${firstDepartureClass}"/>
+      let middle = (startingBottom + endingBottom) / 2
+
+      let extra = ''
+      if (!lastRow) {
+        extra = `+ var(--row-height) * 0.1 / 2`
+      }
+
+      let marginTop = `calc(var(--arrow-height) * -1.333 / 0.5593 - var(--row-height) * ${middle} / 1.1 ${extra})`
+
+      column.innerHTML += `<div class="expressArrow" style="margin-top: ${marginTop}">
+        <img src="/static/images/mockups/express-arrow.svg" class="${className}"/>
         <img src="/static/images/mockups/express-arrow.svg"/>
       </div>`
     })
 
-    let next4Departures = departures.concat([null, null, null, null]).slice(1, 5)
+    $('.stoppingPattern').innerHTML += `
+<div class="stopsColumn row-${size} column-${stopColumns.length}">
+  ${column.outerHTML}
+</div>`
+  })
+}
 
-    next4Departures.forEach((departure, i) => {
-      let departureDIV = departureDIVs[i]
-      if (!!departure) {
+function adjustDepartures(departure) {
+  if (departure.additionalInfo.notTakingPassengers) {
+    departure.destination = 'Arrival'
+    departure.stoppingType = 'Not Taking Passengers'
+    departure.isArrival = true
+  }
+  return departure
+}
+
+function updateBody() {
+  $.ajax({
+    method: 'POST'
+  }, (err, status, body) => {
+    if (err) return setListenAnnouncements()
+
+    departures = body.departures
+    if (!departures) return setListenAnnouncements()
+    departures = departures.map(adjustDepartures)
+
+    let firstDeparture = departures[0]
+    if (!firstDeparture) {
+      $('.topLineBanner').className = 'topLineBanner no-line'
+      return setNoDepartures()
+    } else setMessageActive(false)
+
+    let firstDepartureClass = firstDeparture.codedLineName
+    if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
+
+    let {destination} = firstDeparture
+    if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+
+    let firstStoppingType = firstDeparture.stoppingType
+    if (firstDeparture.additionalInfo.via) {
+      firstStoppingType += ' ' + firstDeparture.additionalInfo.via
+    }
+    if (firstDeparture.connections) {
+      firstStoppingType += firstDeparture.connections.map(connection => {
+        return `, Change at ${connection.changeAt.slice(0, -16)} for ${connection.for.slice(0, -16)}`
+      }).join('')
+    }
+
+    $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
+    $('.firstDepartureInfo .platform').className = 'platform ' + firstDepartureClass
+    $('.firstDepartureInfo .firstDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+    $('.firstDepartureInfo .firstDestination').textContent = destination
+    $('.firstDepartureInfo .firstStoppingType').textContent = firstStoppingType
+    $('.firstDepartureInfo .minutesToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
+
+    if (firstDeparture.isArrival) {
+      setArrival()
+    } else {
+      $('.stoppingPattern').className = 'stoppingPattern stoppingAt ' + firstDepartureClass
+      addStoppingPattern(firstDeparture.additionalInfo.screenStops, firstDepartureClass)
+    }
+
+    let nextDepartures = (departures.slice(1).concat([null, null, null, null])).slice(0, 4)
+    nextDepartures.forEach((departure, i) => {
+      let departureRow = $(`.nextDeparture:nth-child(${1 + i})`)
+      if (!departure) {
+        $('.lineColour', departureRow).className = 'lineColour no-line'
+        $('.scheduledDepartureTime', departureRow).textContent = '--'
+        $('.destination', departureRow).textContent = '--'
+        $('.stoppingType', departureRow).textContent = '--'
+        $('.platform', departureRow).className = 'platform no-line'
+        $('.minutesToDeparture span', departureRow).textContent = '-- min'
+      } else {
         let departureClass = departure.codedLineName
         if (departure.type === 'vline') departureClass = 'vline'
 
-        $('.sideBar', departureDIV).className = 'sideBar ' + departureClass
-        $('.sideBar~p', departureDIV).textContent = formatTime(new Date(departure.scheduledDepartureTime))
+        let {destination} = departure
 
-        $('.centre p', departureDIV).textContent = departure.destination
+        if (destination === 'North Melbourne') destination = 'Nth Melbourne'
+        if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
+        if (destination === 'Flemington Racecource') destination = 'Flemington Races'
 
-        $('.right .platform', departureDIV).className = 'platform ' + departureClass
-        $('.right .platform p', departureDIV).textContent = departure.platform
+        let stoppingType = departure.stoppingType
+        if (departure.additionalInfo.via) {
+          stoppingType += ' ' + departure.additionalInfo.via
+        }
 
-        $('.right .timeToDeparture p', departureDIV).textContent = departure.prettyTimeToDeparture.replace(' ', '')
-      } else {
-        blankNextDeparture(departureDIV)
+        $('.lineColour', departureRow).className = 'lineColour ' + departureClass
+        $('.scheduledDepartureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
+        $('.destination', departureRow).textContent = destination
+        $('.platform span', departureRow).textContent = departure.platform
+        $('.platform', departureRow).className = 'platform ' + departureClass
+        $('.minutesToDeparture span', departureRow).textContent = departure.prettyTimeToDeparture
       }
     })
   })
 }
 
-function setBodyScaling() {
-  let ratio = window.innerHeight / 1920
-  $('html').style = `transform: scale(${ratio});`
-}
-
 $.ready(() => {
-  if (location.search.includes('scale')) {
-    window.addEventListener('resize', setBodyScaling)
-    setBodyScaling()
-  }
-  setInterval(updateBody, 1000 * 60)
   updateBody()
+  setInterval(updateBody, 1000 * 30)
 })

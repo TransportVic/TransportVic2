@@ -83,39 +83,39 @@ p.vline {
   color: #ffffff;
 }
 
-.stoppingAt.alamein img, .stoppingAt.belgrave img, .stoppingAt.lilydale img, .stoppingAt.glen-waverley img {
+.stoppingPattern.alamein img, .stoppingPattern.belgrave img, .stoppingPattern.lilydale img, .stoppingPattern.glen-waverley img {
   filter: invert(13%) sepia(54%) saturate(2677%) hue-rotate(213deg) brightness(94%) contrast(98%);
 }
 
-.stoppingAt.cranbourne img, .stoppingAt.pakenham img {
+.stoppingPattern.cranbourne img, .stoppingPattern.pakenham img {
   filter: invert(61%) sepia(74%) saturate(2164%) hue-rotate(166deg) brightness(88%) contrast(89%);
 }
 
-.stoppingAt.frankston img, .stoppingAt.stony-point img, .stoppingAt.werribee img, .stoppingAt.williamstown img {
+.stoppingPattern.frankston img, .stoppingPattern.stony-point img, .stoppingPattern.werribee img, .stoppingPattern.williamstown img {
   filter: invert(20%) sepia(90%) saturate(4147%) hue-rotate(146deg) brightness(94%) contrast(98%);
 }
 
-.stoppingAt.craigieburn img, .stoppingAt.sunbury img, .stoppingAt.upfield img {
+.stoppingPattern.craigieburn img, .stoppingPattern.sunbury img, .stoppingPattern.upfield img {
   filter: invert(67%) sepia(62%) saturate(699%) hue-rotate(359deg) brightness(102%) contrast(107%);
 }
 
-.stoppingAt.hurstbridge img, .stoppingAt.mernda img {
+.stoppingPattern.hurstbridge img, .stoppingPattern.mernda img {
   filter: invert(40%) sepia(50%) saturate(6648%) hue-rotate(336deg) brightness(73%) contrast(150%);
 }
 
-.stoppingAt.sandringham img {
+.stoppingPattern.sandringham img {
   filter: invert(79%) sepia(39%) saturate(5792%) hue-rotate(296deg) brightness(105%) contrast(89%);
 }
 
-.stoppingAt.showgrounds-flemington img {
+.stoppingPattern.showgrounds-flemington img {
   filter: invert(14%) sepia(84%) saturate(4369%) hue-rotate(322deg) brightness(100%) contrast(117%)
 }
 
-.stoppingAt.no-line img {
+.stoppingPattern.no-line img {
   filter: invert(67%) sepia(9%) saturate(92%) hue-rotate(177deg) brightness(89%) contrast(85%);
 }
 
-.stoppingAt.vline img {
+.stoppingPattern.vline img {
   filter: invert(13%) sepia(46%) saturate(6740%) hue-rotate(289deg) brightness(102%) contrast(92%);
 }
 

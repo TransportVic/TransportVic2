@@ -15,10 +15,11 @@ html
     link(rel='preload' as='image' href='/static/images/mockups/announcements.svg')
     link(rel='preload' as='image' href='/static/images/mockups/no-boarding-train.svg')
     link(rel='preload' as='image' href='/static/images/mockups/station-express.svg')
-    link(rel='preload' as='image' href='/static/images/mockups/station-filler-2.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/station-filler.svg')
     link(rel='preload' as='image' href='/static/images/mockups/station-stops-at.svg')
-    link(rel='preload' as='image' href='/static/images/mockups/station-stub-2.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/station-stub.svg')
     link(rel='preload' as='image' href='/static/images/mockups/station-terminates.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/express-arrow.svg')
   body
     div(style='display: none;').fullMessage
       img(src='/static/images/mockups/announcements.svg')
@@ -38,7 +39,7 @@ html
             div.minutesToDeparture
               span --
           span.firstStoppingType --
-        div.stoppingPattern.stoppingAt.no-line
+        div.stoppingPattern.no-line
       div.bottomRow
         div.nextDepartures
           mixin nextDeparture()
