@@ -415,12 +415,14 @@ module.exports = {
     if (!shouldFilterPlatform) return departures
 
     return departures.filter(departure => {
+      let departurePlatform = departure.platform
+      if (!departurePlatform) return null
+      departurePlatform = departurePlatform.toString()
       if (departure.type === 'vline') {
-        if (!departure.platform) return null
-        let mainPlatform = departure.platform.replace(/[A-Z]/, '')
+        let mainPlatform = departurePlatform.replace(/[A-Z]/, '')
         return mainPlatform === platform
       } else {
-        return departure.platform === platform
+        return departurePlatform === platform
       }
     })
   },
