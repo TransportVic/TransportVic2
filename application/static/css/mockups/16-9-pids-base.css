@@ -1,12 +1,12 @@
 body {
-  width: 100vw;
-  height: 100vh;
+  --width: calc(100vh / 9 * 16);
+  --height: 100vh;
+
+  width: var(--width);
+  height: var(--height);
   display: flex;
   align-items: center;
   justify-content: center;
-
-  --width: calc(100vh / 9 * 16);
-  --height: 100vh;
 }
 
 body.rotated {
