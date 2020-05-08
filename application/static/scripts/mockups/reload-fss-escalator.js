@@ -234,7 +234,6 @@ function updateBody() {
       }).join('')
     }
 
-    $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
     $('.firstDepartureInfo .platform').className = 'platform ' + firstDepartureClass
     $('.firstDepartureInfo .firstDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
     $('.firstDepartureInfo .firstDestination').textContent = destination
@@ -244,9 +243,11 @@ function updateBody() {
     if (firstDeparture.isArrival) {
       setArrival()
     } else {
-      $('.stoppingPattern').className = 'stoppingPattern stoppingAt ' + firstDepartureClass
+      $('.stoppingPattern').className = 'stoppingPattern ' + firstDepartureClass
       addStoppingPattern(firstDeparture.additionalInfo.screenStops, firstDepartureClass)
     }
+
+    $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
 
     let nextDepartures = (departures.slice(1).concat([null, null, null, null])).slice(0, 4)
     nextDepartures.forEach((departure, i) => {
