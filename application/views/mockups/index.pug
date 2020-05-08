@@ -7,17 +7,40 @@ block title
   span Mockups
   
 block content
+  h1 yea sorry this page is a mess i'll fix it up soon
   form(action='/mockups/get' method='get')
     label Get FSS Escalator display for platform# 
-    input(name='value' placeholder='platform')
+    input(name='value' placeholder='platform' required)
+    input(name='station' placeholder='station (blank for fss)')
     input(name='type' value='fss-escalator' type='hidden')
+    input(type='submit')
+  form(action='/mockups/get' method='get')
+    label Get FSS Platform display for platform# 
+    input(name='value' placeholder='platform' required)
+    input(name='station' placeholder='station (blank for fss)')
+    input(name='type' value='fss-platform' type='hidden')
+    input(type='submit')
+  form(action='/mockups/get' method='get')
+    label Get Suburban List display for platform# 
+    input(name='value' placeholder='platform' required)
+    input(name='station' placeholder='station' required)
+    input(name='type' value='suburban-list' type='hidden')
+    input(type='submit')
+  form(action='/mockups/get' method='get')
+    label Get Suburban Text display for platform# 
+    input(name='value' placeholder='platform' required)
+    input(name='station' placeholder='station' required)
+    input(name='type' value='suburban-list' type='hidden')
+    input(type='submit')
   form(action='/mockups/get' method='get')
     label Get Bus Interchange PIDs for bus stop URL
-    input(name='value' placeholder='url')
+    input(name='value' placeholder='url' required)
     input(name='bay' placeholder='bay (blank for all)')
     input(name='type' value='bus-int-pids' type='hidden')
     input(type='submit')
-  //- form(action='/mockups/get' method='get')
-  //-   label Get FSS Escalator display for platform# 
-  //-   input(name='platform')
-  //-   input(name='type' value='fss-escalator' type='hidden')
+  form(action='/mockups/get' method='get')
+    label Get station summary page
+    input(name='station' placeholder='station' required)
+    input(name='value' placeholder='type (fss-escalator/platform, suburban-list/text)' required)
+    input(name='type' value='summary' type='hidden')
+    input(type='submit')
