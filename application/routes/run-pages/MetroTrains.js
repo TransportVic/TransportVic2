@@ -41,8 +41,8 @@ async function pickBestTrip(data, db) {
     }, {
       stopTimings: {
         $elemMatch: {
-        destination: destinationStop.stopName,
-        destinationArrivalTime: data.destinationArrivalTime,
+          stopName: destinationStop.stopName,
+          arrivalTime: data.destinationArrivalTime
         }
       }
     }]
@@ -113,13 +113,21 @@ async function pickBestTrip(data, db) {
     let {departures, runs} = await ptvAPI(`/v3/departures/route_type/0/stop/${originStopID}?gtfs=true&date_utc=${originTime.clone().add(-3, 'minutes').toISOString()}&max_results=3&expand=run&expand=stop`)
 
     let departure
+    let isUp = gtfsTrip.direction === 'Up'
     let possibleDepartures = departures.filter(departure => {
       let run = runs[departure.run_id]
       let destinationName = run.destination_name.trim()
       let scheduledDepartureTime = moment(departure.scheduled_departure_utc).toISOString()
 
-      return scheduledDepartureTime === isoDeparture &&
-        utils.encodeName(destinationName) === data.destination
+      let timeMatch = scheduledDepartureTime === isoDeparture
+      if (timeMatch) {
+        if (isUp && departure.direction_id === 1) {
+          return true
+        } else {
+          return utils.encodeName(destinationName) === data.destination
+        }
+      }
+      return false
     })
 
     if (possibleDepartures.length > 1) {
