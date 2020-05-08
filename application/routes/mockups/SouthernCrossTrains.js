@@ -574,7 +574,7 @@ module.exports = async (platforms, db) => {
 
   let scheduledArrivals = await getScheduledArrivals(knownArrivals, db)
 
-  let mtmDepartures = (await async.map(await getMetroDepartures(sss, db, 15, true), async d => {
+  let mtmDepartures = (await async.map(await getMetroDepartures(sss, db, false), async d => {
     return await appendMetroData(d, timetables)
   })).filter(e => !e.isTrainReplacement && !e.cancelled)
 

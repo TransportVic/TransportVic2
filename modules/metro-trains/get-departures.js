@@ -284,13 +284,22 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   return transformedDepartures
 }
 
-function sortDepartures(departures) {
+function filterDepartures(departures, filter) {
+  if (filter) {
+    let now = utils.now()
+    departures = departures.filter(departure => {
+      let secondsDiff = departure.actualDepartureTime.diff(now, 'seconds')
+
+      return -30 < secondsDiff && secondsDiff < 7200 // 2 hours
+    })
+  }
+
   return departures.sort((a, b) => {
     return a.actualDepartureTime - b.actualDepartureTime
   })
 }
 
-async function getDepartures(station, db) {
+async function getDepartures(station, db, filter=true) {
   let cacheKey = station.stopName + 'M'
 
   if (ptvAPILocks[cacheKey]) {
@@ -302,7 +311,7 @@ async function getDepartures(station, db) {
   }
 
   if (departuresCache.get(cacheKey)) {
-    return sortDepartures(departuresCache.get(cacheKey))
+    return filterDepartures(departuresCache.get(cacheKey), filter)
   }
 
   ptvAPILocks[cacheKey] = new EventEmitter()
@@ -333,10 +342,9 @@ async function getDepartures(station, db) {
     })
 
     departuresCache.put(cacheKey, Object.values(mergedDepartures))
-
-    return returnDepartures(sortDepartures(Object.values(mergedDepartures)))
-  } catch (e) {
-    let scheduled = await departureUtils.getScheduledDepartures(station, db, 'metro train', 90)
+    return returnDepartures(filterDepartures(Object.values(mergedDepartures), filter))
+  } catch (e) {console.log(e)
+    let scheduled = await departureUtils.getScheduledDepartures(station, db, 'metro train', 120)
     return returnDepartures(scheduled)
   }
 }

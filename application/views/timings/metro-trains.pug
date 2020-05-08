@@ -93,14 +93,12 @@ append content
           span.towards=`${routeName} Line towards`
           span.destination=departure.destination
           
-          if departure.trip.message
-            span.info.cancelled.noClamp=departure.trip.message
+          if departure.cancelled
+            span.info.cancelled CANCELLED
+          else if departure.trip.message
+              span.info.cancelled.noClamp=departure.trip.message
           else if departure.isTrainReplacement
             span.info.cancelled Rail Replacement Bus
-          else if departure.cancelled
-            span.info.cancelled CANCELLED
-          else if departure.trip.isUncertain
-            span.info.cancelled No stopping pattern data - check platform displays or click for more info
           else
             
             -
