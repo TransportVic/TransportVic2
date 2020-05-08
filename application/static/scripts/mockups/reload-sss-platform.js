@@ -308,7 +308,6 @@ function updateBody() {
     })
 
     departures = offDepartures.concat(departures)
-    // departures = departures.concat(offDepartures)
 
     let leftNoDepartures = processDepartures(departures, platforms[0], true)
     let rightNoDepartures = processDepartures(departures, platforms[1], false)
