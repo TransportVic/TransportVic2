@@ -20,7 +20,9 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
     trip.type = 'change'
     trip.tripID = trip.tripID + '-CHANGE'
 
-    if (type === 'originate') {
+    let terminateTypes = ['terminate']
+    let originateTypes = ['originate', 'begin']
+    if (originateTypes.includes(type)) {
       trip.message = `CHANGED: WILL ORIGINATE FROM ${changePoint.toUpperCase()}`
     } else if (type === 'terminate') {
       trip.message = `CHANGED: WILL TERMINIATE AT ${changePoint.toUpperCase()}`
@@ -46,7 +48,7 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
 function change(db, text) {
   if (text.includes('delay')) return
 
-  let service = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) service will (?:now )?(\w+) (?:early )?(?:at|from) ([\w ]*?)(?: at \d\d:\d\d [\w &]+)?(?:due.*?)?\./)
+  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) service will (?:now )?(\w+) (?:early )?(?:at|from) ([\w ]*?)(?: at.*?)?(?: due.*?)?(?: and.*?)?\./)
 
   if (service) {
     let departureTime = service[1]

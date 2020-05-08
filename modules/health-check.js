@@ -6,56 +6,7 @@ const mtmHealthCheck = require('./health-check/metro')
 const startVlineMailServer = require('./health-check/vline')
 
 var refreshRate = 10
-
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-
-async function watchVLineDisruptions(db) {
-  let data = await utils.request(urls.vlineDisruptions)
-  let feed = await rssParser.parseString(data)
-  let items = feed.items.filter(item => item.title !== '')
-  await async.forEach(items, async item => {
-    let text = item.contentSnippet
-    if (text.includes('will not run') || text.includes('has been cancelled')) {
-      let service = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (:?to|-) ([\w ]*?) service (:?will not run|has been cancelled) /)
-      let departureTime, origin, destination, isCoach
-      let matches = []
-
-      if (!service) {
-        if (text.match(/services (:?will not run|has been cancelled)/)) {
-          let services = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (:?to|-) ([\w ]*?) /g)
-          services.forEach(service => {
-            let parts = service.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (:?to|-) ([\w ]*?) /)
-            departureTime = parts[1]
-            origin = parts[2] + ' Railway Station'
-            destination = parts[4] + ' Railway Station'
-            isCoach = text.includes('coaches') && text.includes('replace')
-            matches.push({departureTime, origin, destination, isCoach})
-          })
-        }
-      } else {
-        departureTime = service[1]
-        origin = service[2] + ' Railway Station'
-        destination = service[4] + ' Railway Station'
-        isCoach = text.includes('replacement coaches')
-        matches.push({departureTime, origin, destination, isCoach})
-      }
-
-      let operationDay = utils.getYYYYMMDDNow()
-
-      await async.forEach(matches, async match => {
-        let {departureTime, origin, destination, isCoach} = match
-
-        let query = {
-          departureTime, origin, destination,
-          mode: 'regional train',
-          operationDays: operationDay
-        }
-
-        await setServiceAsCancelled(db, query, operationDay, isCoach)
-      })
-    }
-  })
-}
 
 // during peak an increased update freq of 10min is used - 24req during both peaks combined
 // 4 hours peak time

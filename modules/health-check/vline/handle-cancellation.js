@@ -45,7 +45,7 @@ async function setServicesAsCancelled(db, services) {
 }
 
 async function cancellation(db, text) {
-  let service = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) service (?:will not run|has been cancelled)/)
+  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) service (?:will not run|has been cancelled)/)
   let matches = []
 
   if (service) {
