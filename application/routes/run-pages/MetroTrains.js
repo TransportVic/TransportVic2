@@ -106,6 +106,8 @@ async function pickBestTrip(data, db) {
     })
   }
 
+  let referenceTrip = liveTrip || gtfsTrip
+
   // get first stop after flinders, or if only 1 stop (nme  shorts) then flinders itself
   // should fix the dumb issue of trips sometimes showing as forming and sometimes as current with crazyburn
   try {
@@ -113,7 +115,7 @@ async function pickBestTrip(data, db) {
     let {departures, runs} = await ptvAPI(`/v3/departures/route_type/0/stop/${originStopID}?gtfs=true&date_utc=${originTime.clone().add(-3, 'minutes').toISOString()}&max_results=3&expand=run&expand=stop`)
 
     let departure
-    let isUp = gtfsTrip.direction === 'Up'
+    let isUp = referenceTrip.direction === 'Up'
     let possibleDepartures = departures.filter(departure => {
       let run = runs[departure.run_id]
       let destinationName = run.destination_name.trim()
@@ -138,7 +140,7 @@ async function pickBestTrip(data, db) {
 
     // interrim workaround cos when services start from a later stop they're really cancelled
     // in the stops before, but PTV thinks otherwise...
-    if (!departure) return gtfsTrip
+    if (!departure) return referenceTrip
     let ptvRunID = departure.run_id
     let departureTime = departure.scheduled_departure_utc
 
