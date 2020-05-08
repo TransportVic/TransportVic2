@@ -63,7 +63,7 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip, isS
   return cityLoopConfig
 }
 
-async function getDeparturesFromPTV(station, db, departuresCount, includeCancelled, platform, ttl) {
+async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   const gtfsTimetables = db.getCollection('gtfs timetables')
   const timetables = db.getCollection('timetables')
   const liveTimetables = db.getCollection('live timetables')
@@ -74,7 +74,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, includeCancell
   const metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
   let {stopGTFSID} = metroPlatform
   const stationName = station.stopName.slice(0, -16).toLowerCase()
-  const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=${departuresCount}&include_cancelled=${includeCancelled}&expand=run&expand=route&expand=disruption${platform ? `&platform_numbers=${platform}` : ''}`)
+  const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=run&expand=route&expand=disruption`)
 
   await async.forEach(departures, async departure => {
     const run = runs[departure.run_id]
@@ -230,8 +230,8 @@ function sortDepartures(departures) {
   })
 }
 
-async function getDepartures(station, db, departuresCount=15, includeCancelled=true, platform=null, ttl=1) {
-  let cacheKey = station.stopName + 'M-' + departuresCount + '-' + includeCancelled + '-' + platform
+async function getDepartures(station, db) {
+  let cacheKey = station.stopName + 'M'
 
   if (ptvAPILocks[cacheKey]) {
     return await new Promise(resolve => {
@@ -255,7 +255,7 @@ async function getDepartures(station, db, departuresCount=15, includeCancelled=t
   }
 
   try {
-    let departures = await getDeparturesFromPTV(station, db, departuresCount, includeCancelled, platform, ttl)
+    let departures = await getDeparturesFromPTV(station, db)
 
     let serviceIDs = []
     let mergedDepartures = {}
@@ -272,9 +272,7 @@ async function getDepartures(station, db, departuresCount=15, includeCancelled=t
       }
     })
 
-    departuresCache.put(cacheKey, Object.values(mergedDepartures), {
-      ttl: ttl * 1000 * 60
-    })
+    departuresCache.put(cacheKey, Object.values(mergedDepartures))
 
     return returnDepartures(sortDepartures(Object.values(mergedDepartures)))
   } catch (e) {

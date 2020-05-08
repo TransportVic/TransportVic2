@@ -61,7 +61,7 @@ function filterDepartures(departures) {
 
     return departure
   }).filter(departure => {
-    return departure.secondsToDeparture > -30
+    return departure.secondsToDeparture > -30 && !departure.cancelled
   })
 }
 
@@ -94,7 +94,7 @@ router.get('/', async (req, res) => {
     stopName: 'Clayton Railway Station'
   }))
 
-  let huntingdaleDepartures = filterDepartures(await getMetroDepartures(huntingdale, res.db, 3, false))
+  let huntingdaleDepartures = filterDepartures(await getMetroDepartures(huntingdale, res.db))
 
   let metroGroups = huntingdaleDepartures.map(departure => departure.trip.direction)
     .filter((e, i, a) => a.indexOf(e) === i)

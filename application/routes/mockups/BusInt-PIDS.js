@@ -27,7 +27,7 @@ async function getData(req, res) {
     let tripCount = {Up: 0, Down: 0}
 
     trainDepartures = (await getTrainDepartures(stop, res.db))
-      .filter(departure => departure.platform !== 'RRB')
+      .filter(departure => !departure.isTrainReplacement && !departure.cancelled)
 
     let downTrips = []
     let upTrips = []

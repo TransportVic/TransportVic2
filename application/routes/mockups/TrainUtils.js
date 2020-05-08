@@ -123,7 +123,7 @@ module.exports = {
     try {
       let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
       if (metroPlatform) {
-        metroDepartures = (await getMetroDepartures(station, db, 15, true))
+        metroDepartures = (await getMetroDepartures(station, db))
         metroDepartures = await async.map(metroDepartures, async departure => {
           let {runID} = departure
           let today = utils.getPTDayName(utils.now())
