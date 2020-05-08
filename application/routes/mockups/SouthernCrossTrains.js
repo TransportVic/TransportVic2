@@ -512,6 +512,10 @@ async function appendArrivalData(arrival, timetables) {
     mode: 'regional train'
   })
 
+  if (!nspTrip) {
+    console.log(`Failed to find NSP trip for ${runID}`)
+    return arrival
+  }
   let formingID = nspTrip.forming
 
   if (formingID === 'OFF') {
