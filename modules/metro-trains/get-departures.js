@@ -63,6 +63,52 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip, isS
   return cityLoopConfig
 }
 
+function mapSuspension(suspension) {
+  let stationsAffected = suspension.description.match(/between ([ \w]+) and ([ \w]+) stations/)
+  if (!stationsAffected) return
+  let startStation = stationsAffected[1].trim() + ' Railway Station',
+      endStation = stationsAffected[2].trim() + ' Railway Station'
+
+  return {
+    stationA: startStation,
+    stationB: endStation
+  }
+}
+
+function adjustSuspension(suspension, trip, currentStation) {
+  let startStation, endStation
+
+  if (trip.direction === 'Up') {
+    startStation = suspension.stationB
+    endStation = suspension.stationA
+  } else {
+    startStation = suspension.stationA
+    endStation = suspension.stationB
+  }
+
+  let disruptionStatus = ''
+
+  let tripStops = trip.stopTimings.map(stop => stop.stopName)
+  let startIndex = tripStops.indexOf(startStation)
+  let currentIndex = tripStops.indexOf(currentStation)
+  let endIndex = tripStops.indexOf(endStation)
+
+  if (currentIndex < startIndex) { // we're approaching disruption
+    disruptionStatus = 'before'
+  } else if (currentIndex == endIndex) { // we are at end of disruption
+    disruptionStatus = 'passed'
+  } else if (currentIndex < endIndex) { // we're inside disruption
+    disruptionStatus = 'current'
+  } else { // already passed
+    disruptionStatus = 'passed'
+  }
+
+  return {
+    startStation, endStation,
+    disruptionStatus
+  }
+}
+
 async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   const gtfsTimetables = db.getCollection('gtfs timetables')
   const timetables = db.getCollection('timetables')
@@ -74,7 +120,15 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   const metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
   let {stopGTFSID} = metroPlatform
   const stationName = station.stopName.slice(0, -16).toLowerCase()
-  const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=run&expand=route&expand=disruption`)
+  const {departures, runs, routes, disruptions} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=run&expand=route&expand=disruption`)
+
+  let suspensionMap = {}
+  let suspensionIDs = Object.values(disruptions).filter(disruption => {
+    return disruption.disruption_type.toLowerCase().includes('suspend')
+  }).map(suspension => {
+    suspensionMap[suspension.disruption_id] = mapSuspension(suspension)
+    return suspension.disruption_id
+  })
 
   await async.forEach(departures, async departure => {
     const run = runs[departure.run_id]
@@ -86,6 +140,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let cancelled = run.status === 'cancelled'
     let isTrainReplacement = false
     let scheduledTrainReplacement = true
+
+    let suspensions = departure.disruption_ids.map(id => suspensionMap[id]).filter(Boolean)
 
     if (platform == null) { // show replacement bus
       isTrainReplacement = departure.flags.includes('RRB-RUN')
@@ -140,15 +196,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let trip = await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines,
       scheduledDepartureTimeMinutes, possibleDestinations)
 
-    if (trip) {
-      if (trip.type === 'suspension') {
-        let affectedStops = trip.stopTimings.filter(stop => stop.showReplacementBus).map(stop => stop.stopGTFSID)
-        if (affectedStops.includes(stopGTFSID)) {
-          isTrainReplacement = true
-          scheduledTrainReplacement = false
-        }
-      }
-    } else {
+    if (!trip) {
       trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
         scheduledDepartureTimeMinutes, possibleDestinations)
     }
@@ -207,6 +255,17 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     }
 
     let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
+    let mappedSuspensions = suspensions.map(e => adjustSuspension(e, forming || trip, station.stopName))
+    if (mappedSuspensions.length) {
+      let firstSuspension = mappedSuspensions.find(suspension => suspension.disruptionStatus !== 'passed')
+      if (firstSuspension) {
+        trip.message = `Buses replace trains from ${firstSuspension.startStation.slice(0, -16)} to ${firstSuspension.endStation.slice(0, -16)}`
+
+        if (!isTrainReplacement) {
+          isTrainReplacement = !!mappedSuspensions.find(suspension => suspension.disruptionStatus === 'current')
+        }
+      }
+    }
 
     transformedDepartures.push({
       trip,
@@ -217,7 +276,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       isTrainReplacement,
       scheduledTrainReplacement,
       cancelled, cityLoopConfig,
-      destination, runID, forming, vehicleType, runDestination
+      destination, runID, forming, vehicleType, runDestination,
+      suspensions: mappedSuspensions
     })
   })
 
