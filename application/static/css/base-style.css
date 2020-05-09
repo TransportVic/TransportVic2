@@ -1,14 +1,16 @@
 @font-face {
-  font-family: BreeSerif;
+  font-family: Default-Font;
   font-display: fallback;
-  src: local('Bree Serif Regular'), local('BreeSerif-Regular'), url(/static/fonts/bree-serif.otf);
+  src: local('Roboto Slab'), local('RobotoSlab'), url(/static/fonts/Nunito.ttf);
 }
 
 html, body {
   margin: 0;
   padding: 0;
 
-  font-family: BreeSerif;
+  font-family: Default-Font;
+  letter-spacing: calc(-0.025vw - 0.025vh);
+
   color: #c5c5c5;
   background-color: #1e1e1e;
 
@@ -66,7 +68,7 @@ div#header {
 
 div#header > span {
   font-size: calc((100vw + 100vh) * 0.013);
-  margin: calc(-0.3vw - 0.3vh) 0 0 calc(1vw + 1vh);
+  margin: calc(1vw + 1vh);
 }
 
 div#header-right {

@@ -16,10 +16,10 @@
   outline: none;
   text-align: center;
   font-size: calc(2.2vw + 2.2vh);
-  padding-bottom: calc(.2vw + .2vh);
+  padding-top: calc(.2vw + .2vh);
   background-color: #e0e0e0;
   appearance: none;
   -moz-appearance: textfield;
 
-  font-family: BreeSerif;
+  font-family: Default-Font;
 }

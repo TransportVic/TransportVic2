@@ -1,6 +1,5 @@
 div.infoRow span {
   font-size: calc(2vw + 2vh);
-  margin-top: calc(-0.2vw - 0.2vh);
 }
 
 div.infoRow {
@@ -61,7 +60,6 @@ div.timingRow a.departureInfo span.platform {
 
 div.timingRow a.departureInfo span.stopRoad {
   font-size: calc(0.8vw + 0.8vh);
-  margin-top: calc(0.1vw + 0.2vh);
 
   color: #8f8f8f;
 }
