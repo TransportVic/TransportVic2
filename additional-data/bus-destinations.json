@@ -384,6 +384,19 @@
       "Keys Road/Warrigal Road": "Moorabbin Bus Depot",
       "Holmesglen TAFE - Chadstone": "Holmesglen"
     },
+    "943": {
+      "High Street/Station Road": "Melton"
+    },
+    "944": {
+      "Broadwalk Boulevard/Dunnings Road": "Point Cook",
+      "Boardwalk Boulevard/Dunnings Road": "Point Cook"
+    },
+    "955": {
+      "Plenty Road/Bridge Inn Road": "Mernda"
+    },
+    "961": {
+      "Doncaster Junction": "Doncaster"
+    },
     "TB3": {
       "Chevalier Cresent/Landscape Drive": "Rolling Hills"
     },
@@ -455,6 +468,7 @@
     "Bridgekeepers Cottage/Murray Street": "Tooleybuc",
     "Memorial Park/Grant Street": "Yarram",
     "Jennings Street/Northern Highway": "Heathcote",
-    "Scots' Church/Russell Street": "Melbourne City"
+    "Scots' Church/Russell Street": "Melbourne City",
+    "Melbourne Town Hall": "Melbourne City"
   }
 }
