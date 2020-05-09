@@ -210,6 +210,11 @@ module.exports = class MainServer {
       res.sendFile(path.join(__dirname, '../application/static/app-content/sw.js'))
     })
 
+    app.get('/robots.txt', (req, res) => {
+      res.setHeader('Cache-Control', 'no-cache')
+      res.sendFile(path.join(__dirname, '../application/static/app-content/robots.txt'))
+    })
+
     app.use('/500', (req, res) => { throw new Error('500') })
 
     app.use((req, res, next) => {

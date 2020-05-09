@@ -103,7 +103,10 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
       departureTimeMinutes: departureTimeMinutes,
       estimatedDepartureTime: departure.estimated_departure_utc ? estimatedDepartureTime.toISOString() : null,
       platform: platform_number,
-      stopConditions: ""
+      stopConditions: {
+        pickup: departure.flags.includes('DOO') ? 1 : 0, // if dropoff onliy then pickup is unavailable
+        dropoff: departure.flags.includes('PUO') ? 1 : 0
+      }
     }
 
     if (i == 0) {

@@ -1,4 +1,4 @@
-const version = "37"
+const version = "37.5"
 const cacheName = `transportvic-${version}`
 
 function cacheFiles(files) {
@@ -78,10 +78,6 @@ self.addEventListener('install', e => {
       '/static/images/mockups/station-stops-at.svg',
       '/static/images/mockups/station-stub.svg',
       '/static/images/mockups/station-terminates.svg',
-
-      'https://cdn.plot.ly/plotly-latest.min.js',
-      'https://unpkg.com/leaflet@1.6.0/dist/leaflet.css',
-      'https://unpkg.com/leaflet@1.6.0/dist/leaflet.js',
 
       '/static/scripts/bookmarks.js',
       '/static/scripts/geojson-visualise.js',

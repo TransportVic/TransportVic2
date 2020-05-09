@@ -2,15 +2,15 @@ extends ../textbar-layout
 
 block head
   title=`TransportVic - ${station.stopName.slice(0, -16)}`
-  link(rel='preload' href='/static/images/clear-icons/bus.svg')
-  link(rel='preload' href='/static/images/clear-icons/metro.svg')
-  link(rel='preload' href='/static/images/clear-icons/vline.svg')
+  link(rel='preload' as='image' href='/static/images/clear-icons/bus.svg')
+  link(rel='preload' as='image' href='/static/images/clear-icons/metro.svg')
+  link(rel='preload' as='image' href='/static/images/clear-icons/vline.svg')
 
 block title
   span=station.stopName
   
 block header-right
-  img#bookmark(src='/static/images/decals/bookmark.svg')
+  img#bookmark(src='/static/images/decals/bookmark.svg' alt='bookmark icon')
 
 block scripts
   script(src='/static/scripts/timings.js' async)
@@ -38,7 +38,7 @@ append content
           if (mode.includes('train'))
             url = url.slice(0, -16)
         a(href=url class=`modeSwitchType ${mode.replace(' ', '-')} ${mode === 'regional train' ? '' : 'inactive'}`)
-          img(src=`/static/images/clear-icons/${iconMap[mode] || mode}.svg`)
+          img(src=`/static/images/clear-icons/${iconMap[mode] || mode}.svg` alt='')
           span=mode
   div#departures
     for departure in departures
