@@ -22,7 +22,3 @@ sudo yum install gdal-libs gdal libgdal-dev -y
 
 export CPLUS_INCLUDE_PATH=/usr/include/gdal
 export C_INCLUDE_PATH=/usr/include/gdal
-
-python3.4 -m pip install bs4
-python3.4 -m pip install fiona
-python3.4 -m pip install pymongo

@@ -8,22 +8,18 @@ div.departure:nth-child(even) .metro-trains-melbourne {
 
 .yarra-trams {
   background-color: #7bc916;
-  color: #f9f9f9 !important;
 }
 
 div.departure:nth-child(even) .yarra-trams {
   background-color: #72b31d;
-  color: #f9f9f9 !important;
 }
 
 .cdc-melbourne, .cdc-geelong, .cdc-ballarat {
   background-color: #fc923d;
-  color: #f9f9f9 !important;
 }
 
 div.departure:nth-child(even) .cdc-melbourne, div.departure:nth-child(even) .cdc-geelong, div.departure:nth-child(even) .cdc-ballarat {
   background-color: #fb7b13;
-  color: #f9f9f9 !important;
 }
 
 .ventura-bus-lines {
@@ -142,12 +138,10 @@ div.departure:nth-child(even) .martyrs-bus-service {
 
 .cranbourne-transit {
   background-color: #e5ba0d;
-  color: #f9f9f9 !important;
 }
 
 div.departure:nth-child(even) .cranbourne-transit {
   background-color: #c4a011;
-  color: #f9f9f9 !important;
 }
 
 .skybus {
@@ -322,12 +316,10 @@ div.departure:nth-child(even) .paynesville-bus-lines {
 
 .sunshine-tours {
   background-color: #faa41a;
-  color: #f9f9f9 !important;
 }
 
 div.departure:nth-child(even) .sunshine-tours {
   background-color: #e19216;
-  color: #f9f9f9 !important;
 }
 
 .little-s-coaches {
@@ -356,22 +348,18 @@ div.departure:nth-child(even) .bacchus-marsh-coaches {
 
 .gold-bus {
   background-color: #cfb53b;
-  color: #f9f9f9 !important;
 }
 
 div.departure:nth-child(even) .gold-bus {
   background-color: #b8a135;
-  color: #f9f9f9 !important;
 }
 
 .sandlant-buses {
   background-color: #aaa07f;
-  color: #f9f9f9 !important;
 }
 
 div.departure:nth-child(even) .sandlant-buses {
   background-color: #948b6b;
-  color: #f9f9f9 !important;
 }
 
 .swan-hill-bus-lines {
@@ -440,12 +428,10 @@ div.departure:nth-child(even) .falls-creek-coach-service {
 
 .organ-s-coaches {
   background-color: #75d4b1;
-  color: #f9f9f9 !important;
 }
 
 div.departure:nth-child(even) .organ-s-coaches {
   background-color: #5fb092;
-  color: #f9f9f9 !important;
 }
 
 .trotters-coaches {

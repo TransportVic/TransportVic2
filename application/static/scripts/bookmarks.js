@@ -38,9 +38,15 @@ let stopTypes = {
 
 $.ready(() => {
   let html = ''
-  getBookmarks().reverse().forEach(bookmark => {
+  let bookmarks = getBookmarks().reverse()
+
+  let bookmarked = 0
+
+  bookmarks.forEach(bookmark => {
     let {stopData} = bookmark
     bookmark.modes.reverse().forEach(mode => {
+      bookmarked++
+
       let link = `/${linkNames[mode]}/timings`
       if (['bus', 'tram'].includes(mode)) {
         link += `/${stopData.codedSuburb}`
@@ -64,5 +70,19 @@ $.ready(() => {
     })
   })
 
-  $('#results').innerHTML = html
+
+  if (!bookmarked.length) {
+    $('#content').className = 'none'
+    $('#content').innerHTML = `
+<h2>Whoops... You've got nothing bookmarked</h2>
+<img src="/static/images/home/404.svg" />
+<div>
+  <a href="/">Try going home</a>
+  <span>&nbsp;Or&nbsp;</span>
+  <a href="/search">Searching for a stop</a>
+</div>
+    `
+  } else {
+    $('#results').innerHTML = html
+  }
 })
