@@ -1,11 +1,12 @@
-./load-gtfs/metro-trains/load-all.sh
-./load-gtfs/vline-trains/load-all.sh
-./load-gtfs/regional-coach/load-all.sh
-./load-gtfs/metro-bus/load-all.sh
-./load-gtfs/night-bus/load-all.sh
-./load-gtfs/telebus/load-all.sh
-./load-gtfs/skybus/load-all.sh
-./load-gtfs/regional-bus/load-all.sh
-./load-gtfs/tram/load-all.sh
-node load-gtfs/load-route-stops.js
-node load-gtfs/load-stop-services.js
+DIRNAME=$(dirname "$0")
+
+node $DIRNAME/create-indexes.js
+
+$DIRNAME/metro-trains/load-all.sh
+$DIRNAME/vline-trains/load-all.sh
+$DIRNAME/regional-coach/load-all.sh
+$DIRNAME/bus/load-all.sh
+$DIRNAME/trams/load-all.sh
+
+node $DIRNAME/load-route-stops.js
+node $DIRNAME/load-stop-services.js

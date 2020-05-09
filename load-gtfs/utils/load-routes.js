@@ -1,113 +1,90 @@
 const async = require('async')
 const utils = require('../../utils')
+const gtfsUtils = require('../../gtfs-utils')
+const gtfsModes = require('../gtfs-modes.json')
+const loopDirections = require('../../additional-data/loop-direction')
 
-module.exports = async function(routeData, shapeData, routes, operator, mode, adjustRouteName=n=>n, nameFilter=()=>true, getFlags=()=>null) {
-  await routes.createIndex({
-    routeName: 1
-  }, {name: 'route name index'})
+module.exports = async function(routes, mode, routeData, shapeJSON, operator, name) {
+  let routeOperatorsSeen = []
+  let rawRouteNames = {}
 
-  await routes.createIndex({
-    routeNumber: 1
-  }, {name: 'route number index'})
-
-  await routes.createIndex({
-    routeGTFSID: 1
-  }, {name: 'route gtfs id index', unique: true})
-
-
-  const allRoutes = routeData.map(values => {
-    let simplifiedRouteGTFSID = utils.simplifyRouteGTFSID(values[0])
-    let adjustedRouteName = adjustRouteName(values[3], simplifiedRouteGTFSID)
-    let shortRouteName = null
-
-    let routeNumber = values[2]
-    if (routeNumber.includes('TeleBus '))
-      routeNumber = routeNumber.replace('TeleBus ', 'TB')
-
-    if (adjustedRouteName instanceof Array) {
-      shortRouteName = adjustedRouteName[1]
-      adjustedRouteName = adjustedRouteName[0]
-    }
-
-    return {
-      routeGTFSID: simplifiedRouteGTFSID,
-      fullGTFSID: values[0],
-      routeName: adjustedRouteName,
-      shortRouteName,
-      routeNumber
-    }
-  })
-
-  const mergedRoutes = {}
-
-  allRoutes.forEach(route => {
-    // console.log(route.routeName, route.shortRouteName, route.routeGTFSID)
-    if (!nameFilter(route.routeName)) return
-    if (!mergedRoutes[route.routeGTFSID]) {
-      mergedRoutes[route.routeGTFSID] = {
-        routeNumber: route.routeNumber,
-        routeName: route.routeName,
-        codedName: utils.encodeName(route.routeName),
-        routeGTFSID: route.routeGTFSID,
-        operators: operator(route.routeName, route.routeGTFSID, route.routeNumber),
-        directions: [],
-        mode
-      }
-
-      if (route.shortRouteName) mergedRoutes[route.routeGTFSID].shortRouteName = route.shortRouteName
+  routeData.forEach(line => {
+    let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(line[0])
+    let rawRouteName = line[3]
+    if (rawRouteNames[routeGTFSID]) {
+      if (rawRouteNames[routeGTFSID].length < rawRouteName.length)
+        rawRouteNames[routeGTFSID] = rawRouteName
     } else {
-      if (route.routeName.length > mergedRoutes[route.routeGTFSID].routeName.length) {
-        mergedRoutes[route.routeGTFSID].routeName = route.routeName
-        if (route.shortRouteName) mergedRoutes[route.routeGTFSID].shortRouteName = route.shortRouteName
-      }
+      rawRouteNames[routeGTFSID] = rawRouteName
     }
   })
 
-  await async.forEach(Object.values(mergedRoutes), async mergedRouteData => {
-    let routeTypes = {}
-    let routeLengths = {}
-    let mergedRouteTypes = {}
+  await async.forEachSeries(shapeJSON, async shapeFile => {
+    let {shapeID, routeGTFSID} = shapeFile
 
-    shapeData.filter(data => data[0].startsWith(mergedRouteData.routeGTFSID)).forEach(line => {
-      let id = line[0]
-      if (!routeTypes[id]) routeTypes[id] = []
-      routeTypes[id].push(line)
+    let matchingRoute = await routes.findDocument({
+      routeGTFSID
     })
 
-    Object.keys(routeTypes).forEach(routeGTFSID => {
-      let shapeData = routeTypes[routeGTFSID].filter((line, i, a) => {
-        if (a[i - 1])
-          return a[i - 1][4] !== line[4]
-        return true
-      }).map(line => [parseFloat(line[2]), parseFloat(line[1])])
-      let routeKey = routeTypes[routeGTFSID].slice(-1)[0][4] + shapeData[0].join(',') + shapeData.slice(-1)[0].join(',')
-      routeTypes[routeGTFSID] = shapeData
+    let gtfsRouteData = routeData.find(line => gtfsUtils.simplifyRouteGTFSID(line[0]) === routeGTFSID)
 
-      if (!routeLengths[routeKey])
-        routeLengths[routeKey] = []
+    let rawRouteName = rawRouteNames[routeGTFSID]
 
-      routeLengths[routeKey].push(routeGTFSID)
-    })
+    let routeName = name ? name(gtfsRouteData[2], rawRouteName, routeGTFSID) : rawRouteName
 
-    Object.keys(routeLengths).forEach(length => {
-      mergedRouteTypes[routeLengths[length].join(',')] = routeTypes[routeLengths[length][0]]
-    })
+    if (matchingRoute) {
+      let getFingerprint = shape => `${shape.length}-${shape.path[0].join(',')}-${shape.path.slice(-1)[0].join(',')}`
 
-    mergedRoutes[mergedRouteData.routeGTFSID].routePath = Object.keys(mergedRouteTypes).reduce((acc, key) => {
-      return acc.concat({
-        fullGTFSIDs: key.split(','),
-        path: mergedRouteTypes[key]
-      })
-    }, [])
+      let shapeFingerprint = getFingerprint(shapeFile)
+      let matchingPath = matchingRoute.routePath.find(path => shapeFingerprint === getFingerprint(path))
+      if (matchingPath) {
+        if (!matchingPath.fullGTFSIDs.includes(shapeID))
+          matchingPath.fullGTFSIDs.push(shapeID)
+      } else {
+        matchingRoute.routePath.push({
+          fullGTFSIDs: [shapeID],
+          path: shapeFile.path,
+          length: shapeFile.length
+        })
+      }
 
-    let flags = getFlags(mergedRouteData.routeGTFSID)
-    if (flags)
-      mergedRouteData.flags = flags
+      if (!routeOperatorsSeen.includes(routeGTFSID)) {
+        matchingRoute.operators = operator ? operator(routeGTFSID, matchingRoute.routeNumber, matchingRoute.routeName) : []
+        routeOperatorsSeen.push(routeGTFSID)
+      }
 
-    await routes.replaceDocument({ routeGTFSID: mergedRouteData.routeGTFSID }, mergedRouteData, {
-      upsert: true
-    })
+      matchingRoute.routeName = routeName
+
+      await routes.replaceDocument({
+        _id: matchingRoute._id
+      }, matchingRoute)
+    } else {
+      let routeNumber = null
+      if (['3', '4', '6', '8'].includes(mode)) { // tram, metro bus, regional bus, telebus, night bus
+        routeNumber = gtfsRouteData[2]
+      } else if (mode === '7') {
+        routeNumber = routeGTFSID.slice(2)
+      }
+
+      let newRoute = {
+        routeName,
+        codedName: utils.encodeName(routeName),
+        routeNumber,
+        routeGTFSID,
+        routePath: [{
+          fullGTFSIDs: [shapeID],
+          path: shapeFile.path,
+          length: shapeFile.length
+        }],
+        operators: operator ? operator(routeGTFSID) : [],
+        directions: [],
+        mode: mode === '8' ? 'bus' : gtfsModes[mode]
+      }
+
+      if (loopDirections[routeGTFSID])
+        newRoute.flags = loopDirections[routeGTFSID]
+
+      await routes.createDocument(newRoute)
+    }
   })
-
-  return Object.keys(mergedRoutes).length
 }

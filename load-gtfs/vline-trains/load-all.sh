@@ -1,5 +1,10 @@
-node load-gtfs/vline-trains/load-vline-rail-stations.js
-node --max-old-space-size=2048 load-gtfs/vline-trains/load-vline-rail-routes.js
-node --max-old-space-size=2048 load-gtfs/vline-trains/load-vline-gtfs-timetables.js
-node --max-old-space-size=2048 load-gtfs/vline-trains/load-vnet-station-names.js
-node --max-old-space-size=2048 load-gtfs/vline-trains/load-vnet-nsp-timetables.js
+DIRNAME=$(dirname "$0")
+
+node --max-old-space-size=2048 $DIRNAME/../divide-and-conquer/divide-and-conquer.js 1
+node $DIRNAME/load-stops.js
+node $DIRNAME/load-routes.js
+node $DIRNAME/load-gtfs-timetables.js
+node $DIRNAME/extra/load-vline-timetables.js
+node $DIRNAME/api-integration/load-vnet-station-names.js
+
+rm -r $DIRNAME/../spliced-gtfs-stuff/1

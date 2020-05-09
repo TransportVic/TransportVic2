@@ -46,8 +46,8 @@ module.exports = function merge(variants, matched) {
     if (branch.length) { // we're still on a branch after completing the stops, means they have different destiantions
       // look at where they deviated, and join it in between
 
-      let firstHalf = stopsList.slice(0, lastMainMatch)
-      let backHalf = stopsList.slice(lastMainMatch)
+      let firstHalf = stopsList.slice(0, lastMainMatch + 1)
+      let backHalf = stopsList.slice(lastMainMatch + 1)
 
       stopsList = firstHalf.concat(branch).concat(backHalf)
       branch = []

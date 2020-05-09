@@ -6,8 +6,6 @@
 /spatial-datamart
 /full-gunzel-mode/html-tables/*
 /full-gunzel-mode/timetables/*
-/load-gtfs/vline-trains/timetables
-/load-gtfs/metro-trains/timetables
 /gtfs-loader.log
 /load-gtfs/stats.json
 .DS_Store
@@ -15,8 +13,8 @@
 /https
 /bus_trips.csv
 /webroot
-/load-gtfs-2/spliced-gtfs-stuff
-/load-gtfs-2/metro-trains/extra/timetables
-/load-gtfs-2/vline-trains/extra/timetables
-/load-gtfs-2/stats.json
+/load-gtfs/spliced-gtfs-stuff
+/load-gtfs/metro-trains/extra/timetables
+/load-gtfs/vline-trains/extra/timetables
+/load-gtfs/stats.json
 /application/static/images

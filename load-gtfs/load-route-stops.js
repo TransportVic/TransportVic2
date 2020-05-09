@@ -2,8 +2,9 @@ const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config.json')
 const async = require('async')
 const mergeStops = require('./utils/merge-stops')
-const updateStats = require('./utils/gtfs-stats')
+const updateStats = require('./utils/stats')
 const busDestinations = require('../additional-data/bus-destinations')
+const coachDestinations = require('../additional-data/coach-destinations')
 const utils = require('../utils')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
@@ -36,7 +37,12 @@ database.connect({}, async err => {
 
       if (!routeDirections[timetable.gtfsDirection]) routeDirections[timetable.gtfsDirection] = []
 
-      routeDirections[timetable.gtfsDirection].push(timetable.stopTimings.map(e => ({stopName: e.stopName, stopGTFSID: e.stopGTFSID})))
+      routeDirections[timetable.gtfsDirection].push(timetable.stopTimings.map(e => ({
+        stopName: e.stopName,
+        stopNumber: e.stopNumber,
+        suburb: e.suburb,
+        stopGTFSID: e.stopGTFSID
+      })))
     })
 
     routeDirections.forEach((direction, gtfsDirection) => {
@@ -50,7 +56,8 @@ database.connect({}, async err => {
       let serviceData = busDestinations.service[routeData.routeNumber] || busDestinations.service[routeGTFSID] || {}
 
       directionName = serviceData[directionName]
-        || busDestinations.generic[directionName] || directionName
+        || busDestinations.generic[directionName]
+        || coachDestinations[directionName] || directionName
 
       if (!stopsByService[routeGTFSID]) stopsByService[routeGTFSID] = []
       stopsByService[routeGTFSID].push({
@@ -75,8 +82,8 @@ database.connect({}, async err => {
   })
 
   await routes.bulkWrite(bulkOperations)
-  await updateStats('route-stops', bulkOperations.length, new Date() - start)
 
+  await updateStats('route-stops', bulkOperations.length)
   console.log('Completed loading in ' + bulkOperations.length + ' route stops')
   process.exit()
 });

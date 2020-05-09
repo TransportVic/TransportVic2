@@ -1,5 +1,11 @@
-node load-gtfs/metro-trains/load-metro-rail-stations.js
-node load-gtfs/metro-trains/load-metro-rail-routes.js
-node --max-old-space-size=2048 load-gtfs/metro-trains/load-metro-gtfs-timetables.js
-node load-gtfs/metro-trains/load-metro-route-stops.js
-node --max-old-space-size=2048 load-gtfs/metro-trains/load-metro-static-timetables.js
+DIRNAME=$(dirname "$0")
+
+node --max-old-space-size=2048 $DIRNAME/../divide-and-conquer/divide-and-conquer.js 2
+node $DIRNAME/load-stops.js
+node $DIRNAME/load-routes.js
+node $DIRNAME/load-gtfs-timetables.js
+node $DIRNAME/extra/load-metro-timetables.js
+node $DIRNAME/extra/load-metro-route-stops.js
+node $DIRNAME/extra/find-guarenteed-connections.js
+
+rm -r $DIRNAME/../spliced-gtfs-stuff/2

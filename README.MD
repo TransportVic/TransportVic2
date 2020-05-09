@@ -16,7 +16,6 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Bus desto mapping
 
 ## New GTFS Loader:
-Currently experimental, but should currently work as a drop in replacement for the current one. Have not taken timings but early results show its around 3x faster than the current one and can easily handle bigger GTFS updates. It also reads the file data less: O(n) -> O(1) now and should be swapping less stuff in and out of memory, so this should really help cut the number of swaps needed.
 - Bus:
   - Loads standard GTFS components
   - Loads 788 stop numbers
@@ -26,35 +25,21 @@ Currently experimental, but should currently work as a drop in replacement for t
 - Metro trains:
   - Loads standard GTFS components
   - Loads static WTT dump from metro website
-    - Some trips seem to be faulty - some WMN shuttles have X run IDs which should only be for SDM
   - Regional Coach:
     - Loads standard GTFS components
-    - TODO: For routes in the format `5-V**`, map the corresponding train trip and also the route name
-    - Doesn't seem to be programmed very well to correspond with replacement trips
   - Trams
     - Loads standard GTFS components
     - Loads TramTracker IDs on a stop-level
   - V/Line Trains:
     - Loads standard GTFS components
     - Loads NSP static timetable dump
-    - TODO: Detect scheduled coach replacements
-      - Doesn't seem to be programmed very well in GTFS data, but works on PTV website. To ID: look for `1-V**` routes programmed as a coach flag, and if no match in coach but match in scheduled show that
-    - TODO: Detect cancelled services
-      - Read RSS feed to try and find services that are cancelled and mark them as cancelled in LiveDB
-  - TODO: Fix up stats updater
 
 ## Current features:
 - Loading in MTM timetables
 - Loading in bus timetables
-  - Multiple batching rounds in place to optimise memory usage:
-  - Repeated I/O preferred over massive 2GB memory usage, currently tops around 800MB
-  - Takes 30min to load on the mini T3.micro server
 - Loading in V/Line train timetables
 - Loading in Regional coach timetables
 - Loading in tram timetables, batching in place too
-- Stats
-  - High intensity bus ops GTFS dataset takes just under 50min to fully load
-  - Loader stats stored in /load-gtfs/stats.json, need to add a visualiser for this
 - Showing live MTM departures when the services are running as timetabled
 - Predicting MTM City Loop configuration when services are running as timetabled
 - Show proper destination names for MTM departures that match station announcements
@@ -63,23 +48,28 @@ Currently experimental, but should currently work as a drop in replacement for t
 - Showing live V/Line departures when the services are running as timetabled
 - Showing live V/Line departures when the services are NOT running as timetabled in GTFS, but falling back to NSP Run IDs.
 - Showing live V/Line departures when there's completely no timetable match, this queries the trip stops and loads it in.
+- Has the ability for live V/Line cancellations/alterations - this sets up an email server to get emails from V/Line Inform
 - Showing live MTM departures when there's completely no timetable match (17:02 FSS ex Westall), also queries trip stops and loads it in.
 - Looks for trips being formed next in City Loop stations, and joins it the the departure stops-at
-- Showing Regional coach timetables. Consults the PTV API as some replacement trips are randomly excluded from the GTFS dump
+- Showing Regional coach timetables.
+  - Searches up regional coach timetables for match
+  - If no match - try searching corresponding V/Line train timetables - if still no match discard it
+    - Some train replacement trips are only programmed on PTV's end
+  - This is due to PTV returning a new departure for every combined route sector
+  - Looks up matching departure timings in NSP - if there's a match its a coach replacement service
 - Offline mode
 - Couple of mockup displays
   - Bus interchange LCD PIDS displays
   - Flinders Street Station escalator displays
+  - Flinders Street Station platform displays
   - 32:9 LCD PIDS displays found at suburban stations
     - List format
     - Text format
+  - Southern Cross platform displays
   - LED PIDS display found at suburban stations like Pakenham, Lilydale and Croydon
 
 - GeoJSON visualiser, cos why not
-- Checks disruptions every 10min, currently handles suspensions
-  - Finds trips affected by suspension and breaks into 3 - first train leg, bus leg and second train leg.
-  - Currently only looks at end stations, should have it check all stations in between for those express services?
-- Ability to detect when V/Line trains are scheduled to run as coaches.
+- Checks disruptions whenever requesting for metro train departures - looks for suspended regions and adds a message / marks `isTrainReplacement` (need to rename to `isBusReplacement`)
 - Stop merging in place
   - Roads do not get merged, see commit [0c3cf46](https://github.com/TransportVic/TransportVic2/commit/0c3cf45222eb2d94bc1e26cc6a95b862218a441f)
   - Looks for stops with the same primary stop name: Primary Stop Name/Road Name (Suburb)
@@ -90,27 +80,21 @@ Currently experimental, but should currently work as a drop in replacement for t
 - Shows trip timings for MTM
   - Includes timetabled train model & relevant icon
   - Show run ID too
-    - Specially cross references static TT dump for stony point line. Hardcoded as 2x SP for all services, need to camp out and find those operating as 1x SP
-  - Takes the first trip past flinders for down trips - allows it to be clear of the loop forming nonsense and also be able to tell apart the 527 crazyburn service
+    - Specially cross references static TT dump for stony point line.
+  - Takes the first trip past flinders street for down trips - allows it to be clear of the loop forming nonsense and also be able to tell apart the 17:27 crazyburn service
 - Shows trip timings for V/Line
   - Includes timetabled train model & relevant icon & run ID
   - No realtime info
-- V/Line coach replacement override
-  - Apparently PTV doesn't bother programming in some replacement operations into the regional coach thing so to the program it thinks nothing exists for those services
-  - Not sure accurate but at least it alerts the user to the disruption in their face, PTV doesn't even outright tell you
-  - Also calls up the PTV API cos they're lazy with releasing GTFS dumps meaning that some replacement ops get missed out :( (looking at you albury)
 - Homepage done up together with webapp
   - Icon homepage remains, though it launches to `/nearby` if opened as a webapp
-- Pings V/Line's disruption feed every 10-20 minutes as part of its health check, and attempts to mark the services as cancelled / replaced by coaches. Doesn't always work if the service is already disrupted but not programmed in by PTV
 - Bus timings
   - Same implementation as coach except that it has a service number & realtime data.
+  - Also looks up Smartrak ID for fleet numbers
   - Supports all types: metro, regional, skybus, telebus, nightbus
-  - Does stop merging as well, only checks nightbus from 11pm - 8am
-  - Attempts to show the bus fleet number for easier ID-ing
+  - Does stop merging as well, only checks nightbus from 11pm - 8am on weekends
 - Tram timings
   - Same implementation as buses, with merging as well
-  - Has support for TramTrackerIDs printed on stops, using old merger algorithm to merge.
-    - Matcher needs to be optimised, currently loads tonnes of matches for a stop
+  - Has support for TramTrackerIDs printed on stops
 
 ## Next up to be added:
 - offline mode but client side
@@ -153,8 +137,6 @@ Currently experimental, but should currently work as a drop in replacement for t
     - Buses use smartrak ids
 - Refactor all moment.tz to a utils method
 - Also find out how to ID replacement services
-- Bookmarks
-- About page, make it actually better
 - And everything else on TransportVic homepage (which i think there's nothing else)
 - Fare calculator thingy
 - Interstate
@@ -206,4 +188,4 @@ Create a config.json looking like
 with the appropriate fields filled
 * Run `modules/optimise-svg.js` to run through all the raw svg files and remove unneeded fields from them
 * Run `update-gtfs.sh` to pull the latest GTFS data from PTV
-* Run `load-gtfs-2/load-all.sh` to load it all into the database (takes around 20min)
+* Run `load-gtfs/load-all.sh` to load it all into the database (takes around 20min)

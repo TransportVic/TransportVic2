@@ -31,6 +31,10 @@ function fixOperator(operator) {
     if (operator === 'McHarrys') return 'McHarrys Bus Lines'
     if (operator === 'Panorama') return 'Panorama Coaches'
 
+    if (operator.includes('Dysons ')) {
+      return `Dysons (${operator.slice(7)})`
+    }
+
     return operator.replace('Night Bus - ', '')
 }
 
@@ -54,5 +58,6 @@ function createServiceLookup(serviceJSON) {
 
 module.exports = {
   createStopsLookup,
-  createServiceLookup
+  createServiceLookup,
+  fixOperator
 }

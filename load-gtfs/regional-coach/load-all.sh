@@ -1,3 +1,8 @@
-node --max-old-space-size=2048 load-gtfs/regional-coach/load-regional-coach-stops.js
-node --max-old-space-size=2048 load-gtfs/regional-coach/load-regional-coach-routes.js
-node --max-old-space-size=4096 load-gtfs/regional-coach/load-regional-coach-gtfs-timetables.js
+DIRNAME=$(dirname "$0")
+
+node --max-old-space-size=2048 $DIRNAME/../divide-and-conquer/divide-and-conquer.js 5
+node $DIRNAME/load-stops.js
+node $DIRNAME/load-routes.js
+node $DIRNAME/load-gtfs-timetables.js
+
+rm -r $DIRNAME/../spliced-gtfs-stuff/5
