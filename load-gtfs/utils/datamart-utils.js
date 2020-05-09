@@ -38,6 +38,7 @@ function fixOperator(operator) {
   operator = operator.replace('Night Bus - ', '')
 
   if (operator === 'McKenzies') return 'McKenzies Tourist Service'
+  return operator
 }
 
 function createServiceLookup(serviceJSON) {
