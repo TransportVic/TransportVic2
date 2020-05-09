@@ -45,7 +45,7 @@ div.errorPage a, div.errorPage span {
 }
 
 div.errorPage img {
-  width: 90vw;
+  width: calc(20vw + 30vh);
   padding: calc(1vw + 1vh);
 }
 
