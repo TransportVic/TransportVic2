@@ -133,7 +133,10 @@ async function getDeparturesFromPTV(stop, db) {
       if (isNightBus && (scheduledDepartureTimeMinutes % 1440) < 180)
         day = utils.getYYYYMMDD(scheduledDepartureTime.clone().add(1, 'day'))
 
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', day, route.route_gtfs_id)
+      let routeGTFSID = route.route_gtfs_id
+      if (routeGTFSID === '4-965') routeGTFSID = '8-965'
+
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', day, routeGTFSID)
       if (!trip) {
         trip = await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
 
@@ -154,7 +157,7 @@ async function getDeparturesFromPTV(stop, db) {
         }) || {}).fleetNumber
       }
 
-      let busRoute = await dbRoutes.findDocument({ routeGTFSID: route.route_gtfs_id }, { routePath: 0 })
+      let busRoute = await dbRoutes.findDocument({ routeGTFSID }, { routePath: 0 })
       let operator = busRoute.operators.sort((a, b) => a.length - b.length)[0]
 
       if (!operator) operator = ''

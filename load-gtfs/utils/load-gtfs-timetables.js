@@ -33,6 +33,7 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
   let calendarCache = {}
 
   let remainingTripTimings = tripTimings.slice(0)
+  let isNightBus = gtfsID == 8
 
   await async.forEachSeries(trips, async trip => {
     let {tripID, routeGTFSID, shapeID} = trip
@@ -70,6 +71,11 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
       if (previousDepartureTime == -1) { // if first stop is already beyond midnight then keep it
         arrivalTimeMinutes = utils.time24ToMinAftMidnight(arrivalTime)
         departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime)
+
+        if (isNightBus && arrivalTimeMinutes < 600) {
+          arrivalTimeMinutes += 1440
+          departureTimeMinutes += 1440
+        }
       } else {
         arrivalTimeMinutes = utils.time24ToMinAftMidnight(arrivalTime) % 1440
         departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime) % 1440

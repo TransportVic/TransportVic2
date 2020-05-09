@@ -23,19 +23,21 @@ function createStopsLookup(stopsJSON) {
 }
 
 function fixOperator(operator) {
-    operator = operator.trim()
+  operator = operator.trim()
 
-    if (operator === 'CDC') return 'CDC Melbourne'
-    if (operator.includes('Ventura')) return 'Ventura Bus Lines'
-    if (operator === 'Transdev') return 'Transdev Melbourne'
-    if (operator === 'McHarrys') return 'McHarrys Bus Lines'
-    if (operator === 'Panorama') return 'Panorama Coaches'
+  if (operator === 'CDC') return 'CDC Melbourne'
+  if (operator.includes('Ventura')) return 'Ventura Bus Lines'
+  if (operator === 'Transdev') return 'Transdev Melbourne'
+  if (operator === 'McHarrys') return 'McHarrys Bus Lines'
+  if (operator === 'Panorama') return 'Panorama Coaches'
 
-    if (operator.includes('Dysons ')) {
-      return `Dysons (${operator.slice(7)})`
-    }
+  if (operator.includes('Dysons ')) {
+    return `Dysons (${operator.slice(7)})`
+  }
 
-    return operator.replace('Night Bus - ', '')
+  operator = operator.replace('Night Bus - ', '')
+
+  if (operator === 'McKenzies') return 'McKenzies Tourist Service'
 }
 
 function createServiceLookup(serviceJSON) {
