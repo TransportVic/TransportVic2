@@ -41,8 +41,6 @@ self.addEventListener('install', e => {
       // '/static/runs/base-style.css',
 
       '/static/fonts/Nunito.otf',
-      '/static/fonts/LiberationSans-Bold.otf',
-      '/static/fonts/LiberationSans-Regular.otf',
 
       '/static/images/decals/ac.svg',
       '/static/images/decals/wheelchair.svg',
