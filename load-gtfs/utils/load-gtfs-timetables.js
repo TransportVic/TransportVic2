@@ -73,8 +73,11 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
         departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime)
 
         if (isNightBus && arrivalTimeMinutes < 600) {
-          arrivalTimeMinutes += 1440
-          departureTimeMinutes += 1440
+          arrivalTimeMinutes %= 1440
+          departureTimeMinutes %= 1440
+
+          // arrivalTimeMinutes += 1440
+          // departureTimeMinutes += 1440
         }
       } else {
         arrivalTimeMinutes = utils.time24ToMinAftMidnight(arrivalTime) % 1440

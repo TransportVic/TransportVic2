@@ -43,8 +43,6 @@ router.get('/:suburb/:stopName', async (req, res) => {
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
     let day = utils.getYYYYMMDD(departure.scheduledDepartureTime)
-    if (departure.isNightBus && departure.scheduledDepartureTime.get('minutes') < 180)
-      day = utils.getYYYYMMDD(departure.scheduledDepartureTime.clone().add(1, 'day'))
 
     departure.tripURL = `/bus/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
