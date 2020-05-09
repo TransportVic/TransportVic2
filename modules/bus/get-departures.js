@@ -33,7 +33,7 @@ async function getStoppingPatternWithCache(db, busDeparture, destination, isNigh
 }
 
 function shouldGetNightbus(now) {
-  let minutesAfterMidnight = utils.getPTMinutesPastMidnight(now)
+  let minutesAfterMidnight = utils.getPTMinutesPastMidnight(now) % 1440
   let dayOfWeek = utils.getDayName(now)
 
   // 11pm - 7.55am (last 969 runs 6.30am - 7.35am, give some buffer for lateness?)
