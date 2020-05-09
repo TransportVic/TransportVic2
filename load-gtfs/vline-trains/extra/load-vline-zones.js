@@ -9,9 +9,9 @@ let stops
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
-async function updateStop(stopGTFSID, zone) {
+async function updateStop(stopName, zone) {
   let dbStop = await stops.findDocument({
-    'bays.stopGTFSID': parseInt(stopGTFSID)
+    stopName: stopName + ' Railway Station'
   })
 
   let vlinePlatform = dbStop.bays.find(b => b.mode === 'regional train')
@@ -32,15 +32,14 @@ database.connect({
     let {properties} = stop
     if (properties.STOPID_VLI && !properties.STOPID_MET && properties.STOP_ZONE) { // filter out overland stations
       let zone = properties.STOP_ZONE.slice(5)
-      let stopGTFSID = properties.STOPID_VLI
 
       if (zone === '') { // non-myki zone
-        await updateStop(stopGTFSID, 'Paper Ticketed')
+        await updateStop(properties.STATION, 'Paper Ticketed')
       } else {
         let zones = zone.split(', ').map(e=>parseInt(e)).sort((a, b) => a - b)
         if (zones.includes(1)) zones.pop()
 
-        await updateStop(stopGTFSID, zones)
+        await updateStop(properties.STATION, zones)
       }
 
       updated++
