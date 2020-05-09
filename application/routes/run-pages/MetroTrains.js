@@ -153,7 +153,7 @@ async function pickBestTrip(data, db) {
 
 router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
   let trip = await pickBestTrip(req.params, res.db)
-  if (!trip) return res.render('errors/no-trip')
+  if (!trip) return res.status(404).render('errors/no-trip')
 
   trip.destination = trip.destination.slice(0, -16)
   trip.origin = trip.origin.slice(0, -16)

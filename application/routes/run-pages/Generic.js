@@ -101,7 +101,7 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   if (!['bus', 'tram'].includes(req.params.mode)) return next()
 
   let trip = await pickBestTrip(req.params, res.db)
-  if (!trip) return res.render('errors/no-trip')
+  if (!trip) return res.status(404).render('errors/no-trip')
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.prettyTimeToArrival = ''
 

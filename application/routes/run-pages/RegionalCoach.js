@@ -38,10 +38,25 @@ async function pickBestTrip(data, db) {
 
 router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
   let trip = await pickBestTrip(req.params, res.db)
-  if (!trip) return res.render('errors/no-trip')
+  if (!trip) return res.status(404).render('errors/no-trip')
 
   trip.stopTimings = trip.stopTimings.map(stop => {
+    stop.prettyTimeToArrival = ''
     stop.headwayDevianceClass = 'unknown'
+    
+    let scheduledDepartureTime =
+      moment.tz(`${req.params.operationDays} ${stop.departureTime || stop.arrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+
+    const timeDifference = moment.utc(moment(scheduledDepartureTime).diff(utils.now()))
+
+    if (+timeDifference < -30000) return stop
+    if (+timeDifference <= 60000) stop.prettyTimeToArrival = 'Now'
+    else {
+      stop.prettyTimeToArrival = ''
+      if (timeDifference.get('hours')) stop.prettyTimeToArrival += timeDifference.get('hours') + ' h '
+      if (timeDifference.get('minutes')) stop.prettyTimeToArrival += timeDifference.get('minutes') + ' min'
+    }
+
     return stop
   })
 

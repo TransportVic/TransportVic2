@@ -14,7 +14,7 @@ router.get('/:routeNumber', async (req, res, next) => {
     routeGTFSID: /(4|7|8)-/
   })
 
-  if (!matchingRoute) return next()
+  if (!matchingRoute) return res.status(404).render('errors/no-route')
 
   let bestDirection = matchingRoute.directions.sort((a, b) => a.directionName.localeCompare(b.directionName))[0]
   let codedName = utils.encodeName(bestDirection.directionName)
@@ -35,7 +35,8 @@ router.get('/:routeNumber/:directionName', async (req, res, next) => {
     routeGTFSID: /(4|7|8)-/
   })
 
-  if (!matchingRoute) return next()
+  if (!matchingRoute) return res.status(404).render('errors/no-route')
+
   let direction = matchingRoute.directions.find(direction => {
     return utils.encodeName(direction.directionName) === directionName
   })

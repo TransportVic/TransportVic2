@@ -10,7 +10,7 @@ router.get('/:stationName', async (req, res) => {
   })
 
   if (!station || !station.bays.filter(bay => bay.mode === 'metro train')) {
-    return res.render('errors/no-stop')
+    return res.status(404).render('errors/no-stop')
   }
 
   let departures = await getDepartures(station, res.db)

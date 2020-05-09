@@ -12,7 +12,7 @@ router.get('/:stopName', async (req, res) => {
   let coachBay = stop.bays.filter(bay => bay.mode === 'regional coach')
 
   if (!stop || !coachBay.length) {
-    return res.render('errors/no-stop')
+    return res.status(404).render('errors/no-stop')
   }
 
   let departures = await getDepartures(stop, res.db)

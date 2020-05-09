@@ -14,7 +14,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
   })
 
   if (!stop || !stop.bays.filter(bay => bay.mode === 'tram')) {
-    return res.render('errors/no-stop')
+    return res.status(404).render('errors/no-stop')
   }
 
   let departures = await getDepartures(stop, res.db)

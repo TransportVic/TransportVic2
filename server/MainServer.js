@@ -223,9 +223,9 @@ module.exports = class MainServer {
 
     app.use((err, req, res, next) => {
       if (err.message === '404') {
-        res.render('errors/404')
+        res.status(404).render('errors/404')
       } else {
-        res.render('errors/500')
+        res.status(500).render('errors/500')
 
         if (process.env['NODE_ENV'] !== 'prod') {
           console.log(err)

@@ -1,7 +1,7 @@
 extends ../layout
 
 block head
-  title TransportVic - Couldn't find that stop
+  title TransportVic - Missing Stop
 
 block title
   span Missing Stop!
@@ -12,7 +12,7 @@ append style
 append content
   div.errorPage
     h2 404: Where's that stop gone off to?
-    img(src='/static/images/home/no-stop.svg').noStop
+    img(src='/static/images/home/no-stop.svg')
     div
       a(href='/search') Try searching for it
       span  Or 

@@ -1,20 +1,20 @@
 extends ../layout
 
 block head
-  title TransportVic - Missing Trip
+  title TransportVic - Missing Route
 
 block title
-  span Missing Trip!
+  span Missing Route!
 
 append style
   link(rel='stylesheet' href='/static/css/timings/base-style.css')
 
 append content
   div.errorPage
-    h2 404: Couldn't find that trip!
-    img(src='/static/images/home/no-trip.svg')
+    h2 404: Couldn't find that route!
+    img(src='/static/images/home/no-route.svg')
     div
-      a(href='/home') Try going home
+      a(href='/search') Try searching for it
       span  Or 
       a(href='javascript:history.back()') Going back a page
     
