@@ -158,7 +158,7 @@ a.departureInfo span.info.smaller {
 }
 
 a.departureInfo span.info, a.departureInfo span.vehicle {
-  width: calc(100vw - (3vw + 3vh) * 4 - (5vw + 5vh) - (1vw + 1vh) - 1.5vw);
+  width: calc(100vw - (3.2vw + 3.2vh) * 4 - (5.25vw + 5.25vh) - (1vw + 1vh) - 1.5vw);
   overflow: hidden;
 
   -webkit-line-clamp: 1;
@@ -175,7 +175,7 @@ a.departureInfo span.info, a.departureInfo span.vehicle {
 }
 
 a.departureInfo span.full {
-  width: calc(100vw - (5vw + 5vh) - (5vw + 5vh) - (1vw + 1vh) - 1.5vw);
+  width: calc(100vw - (5.25vw + 5.25vh) - (5vw + 5vh) - (1vw + 1vh) - 1.5vw);
 }
 
 a.departureInfo span.cancelled {
@@ -242,13 +242,13 @@ a.timing {
 }
 
 a.timing.mini {
-  width: calc(3vw + 3vh);
+  width: calc(3.2vw + 3.2vh);
   font-size: calc(1vw + 1vh);
 }
 
 a.timing.mini > div.stats {
   height: calc(1vw + 1vh);
-  width: calc(3vw + 3vh);
+  width: calc(3.2vw + 3.2vh);
 
   position: relative;
   margin-top: calc(-1vw - 1vh);
@@ -264,7 +264,7 @@ a.timing.mini > div.stats > img {
 }
 
 a.timing.mini span {
-  width: calc(3vw + 3vh);
+  width: calc(3.2vw + 3.2vh);
 }
 
 div.departure.no-number a.timing span.rego {

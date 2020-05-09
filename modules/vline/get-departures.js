@@ -133,35 +133,37 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
       mode: 'regional train'
     })
 
-    let liveQuery = {
-      operationDays: operationDay,
-      runID: departure.runID,
-      mode: 'regional train'
-    }
-    let staticQuery = {
-      origin: departure.origin,
-      destination: departure.destination,
-      departureTime: utils.formatHHMM(departure.originDepartureTime),
-      operationDays: operationDay,
-      mode: 'regional train'
-    }
+    let trip
+    let departureTime = departure.originDepartureTime
+    let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime) % 1440
 
-    let trip = await db.getCollection('live timetables').findDocument(liveQuery)
+    for (let i = 0; i <= 1; i++) {
+      let tripDay = departureTime.clone().add(-i, 'days')
+      let query = {
+        operationDays: tripDay.format('YYYYMMDD'),
+        mode: 'regional train',
+        stopTimings: {
+          $elemMatch: {
+            stopGTFSID,
+            departureTimeMinutes: scheduledDepartureTimeMinutes + 1440 * i
+          }
+        },
+        destination: departure.destination
+      }
 
-    if (!trip) {
-    trip = await db.getCollection('live timetables').findDocument(staticQuery)
-    }
-
-    if (!trip) {
-      trip = await gtfsTimetables.findDocument(staticQuery)
+      // improve this
+      trip = await liveTimetables.findDocument(query)
+      if (trip) break
+      trip = await gtfsTimetables.findDocument(query)
+      if (trip) break
     }
 
     if (!trip && nspTrip) trip = nspTrip
 
     if (!trip) {
-      console.log(departure)
-      // let originVNETName = departure.vnetStationName
-      // let destinationVNETName = departure.vnetStationName
+      console.log(departure, departure.originDepartureTime.format('HH:mm'))
+      // let originVNETName = departure.originVNETName
+      // let destinationVNETName = departure.destinationVNETName
       // trip = await getStoppingPattern(db, originVNETName, destinationVNETName,
       //   departure.originDepartureTime, departure.runID, journeyCache)
     }

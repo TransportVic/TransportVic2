@@ -51,7 +51,7 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
     let timings = remainingTripTimings[timingsIndex]
     remainingTripTimings.splice(timingsIndex, 1)
 
-    let previousDepartureTime = 0
+    let previousDepartureTime = -1
 
     let routeData = await getRouteData(routes, routeGTFSID, routeCache)
 
@@ -64,8 +64,16 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
 
       let arrivalTime = stopTiming.arrivalTime.slice(0, 5)
       let departureTime = stopTiming.departureTime.slice(0, 5)
-      let arrivalTimeMinutes = utils.time24ToMinAftMidnight(arrivalTime) % 1440
-      let departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime) % 1440
+
+      let arrivalTimeMinutes, departureTimeMinutes
+
+      if (previousDepartureTime == -1) { // if first stop is already beyond midnight then keep it
+        arrivalTimeMinutes = utils.time24ToMinAftMidnight(arrivalTime)
+        departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime)
+      } else {
+        arrivalTimeMinutes = utils.time24ToMinAftMidnight(arrivalTime) % 1440
+        departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime) % 1440
+      }
 
       if (arrivalTimeMinutes < previousDepartureTime) arrivalTimeMinutes += 1440
       if (departureTimeMinutes < arrivalTimeMinutes) departureTimeMinutes += 1440

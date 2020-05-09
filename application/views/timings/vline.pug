@@ -58,7 +58,7 @@ append content
           else
             span.topText Platform
             -
-              let platform = departure.platform
+              let platform = departure.platform || '?'
               if (station.stopName !== 'Southern Cross Railway Station')
                 platform = departure.cancelled ? '-' : (departure.platform || '') + '?'
             span.bigNumber=platform
