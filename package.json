@@ -34,6 +34,7 @@
     "safe-regex": "^2.1.1",
     "spdy": "^4.0.2",
     "string_decoder": "^1.3.0",
+    "svgo": "^1.3.2",
     "through2": "^3.0.1",
     "timed-cache": "^1.1.3",
     "uglify-es": "^3.3.9",

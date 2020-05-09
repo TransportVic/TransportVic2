@@ -105,6 +105,7 @@ module.exports = class MainServer {
     })
 
     app.use(compression())
+
     if (!config.devMode)
       app.use(minify({
         uglifyJsModule: uglifyEs,

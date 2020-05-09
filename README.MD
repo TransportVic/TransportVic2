@@ -204,3 +204,6 @@ Create a config.json looking like
 }
 ```
 with the appropriate fields filled
+* Run `modules/optimise-svg.js` to run through all the raw svg files and remove unneeded fields from them
+* Run `update-gtfs.sh` to pull the latest GTFS data from PTV
+* Run `load-gtfs-2/load-all.sh` to load it all into the database (takes around 20min)
