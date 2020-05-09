@@ -7,7 +7,7 @@ const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
-const busStopNameModifier = require('../../load-gtfs/metro-bus/bus-stop-name-modifier')
+const busStopNameModifier = require('../../additional-data/bus-stop-name-modifier')
 const busBays = require('./bus-bays')
 
 let tripLoader = {}

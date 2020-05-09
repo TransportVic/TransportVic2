@@ -4,7 +4,7 @@ const router = new express.Router()
 const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
-const busStopNameModifier = require('../../../load-gtfs/metro-bus/bus-stop-name-modifier')
+const busStopNameModifier = require('../../../additional-data/bus-stop-name-modifier')
 const tramFleet = require('../../../tram-fleet')
 
 async function pickBestTrip(data, db) {

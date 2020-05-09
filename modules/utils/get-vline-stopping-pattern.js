@@ -4,8 +4,8 @@ const utils = require('../../utils')
 const urls = require('../../urls.json')
 const cheerio = require('cheerio')
 
-const routeGTFSIDs = require('../../load-gtfs/vline-trains/route-gtfs-ids')
-const terminiToLines = require('../../load-gtfs/vline-trains/termini-to-lines')
+const routeGTFSIDs = require('../../load-gtfs/vline-trains/extra/route-gtfs-ids')
+const terminiToLines = require('../../additional-data/termini-to-lines')
 
 async function getOriginRunID (originVNETName, destinationVNETName, originDepartureTime, journeyCache) {
   let now = utils.now()
