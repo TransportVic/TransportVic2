@@ -100,9 +100,8 @@ a.leftContainer.platform span.topText {
 }
 
 a.leftContainer.platform span.bigNumber {
-  font-size: calc(3vw + 3vh);
+  font-size: calc(3.2vw + 2.5vh);
   letter-spacing: calc(-0.1vw - 0.1vh);
-  line-height: calc(3vw + 3vh);
 }
 
 a.leftContainer.platform span.bottomText {
@@ -167,6 +166,7 @@ a.departureInfo span.info, a.departureInfo span.vehicle {
   -webkit-box-orient: vertical;
 
   font-size: calc(0.9vw + 0.9vh);
+  letter-spacing: calc(-0.05vw - 0.05vh);
   line-height: calc(1.2vw + 1.2vh);
 
   /* white-space: nowrap;
