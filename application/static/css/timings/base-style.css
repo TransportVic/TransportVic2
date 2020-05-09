@@ -166,7 +166,6 @@ a.departureInfo span.info, a.departureInfo span.vehicle {
   -webkit-box-orient: vertical;
 
   font-size: calc(0.9vw + 0.9vh);
-  letter-spacing: calc(-0.05vw - 0.05vh);
   line-height: calc(1.2vw + 1.2vh);
 
   /* white-space: nowrap;
@@ -277,6 +276,7 @@ a.timing span.rego {
   position: relative;
   font-size: calc(0.75vw + 0.75vh) !important;
   top: calc(0.75vw + 0.75vh) !important;
+  letter-spacing: calc(-0.025vw - 0.025vh);
   height: 0;
 }
 
