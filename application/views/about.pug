@@ -1,0 +1,32 @@
+extends layout
+    
+block head
+  title TransportVic - About
+  
+block title
+  span About TransportVic
+
+block scripts
+  
+block style
+  link(rel='stylesheet' href='/static/css/about.css')
+
+block content
+  h1 TransportVic - A Transport Application for Victoria
+  h2 About
+  a(href='https://github.com/TransportVic/TransportVic2/commit/' + buildNumber) Version 2-#{buildNumber}: #{buildComment}
+  a(href='mailto:sbs9642p@gmail.com') Send feedback here
+  p All timetable data is sourced from 
+    a(href='https://ptv.vic.gov.au') Public Transport Victoria
+  p Geospatial data is sourced from 
+    a(href='http://services.land.vic.gov.au/SpatialDatamart/') Spatial Datamart Victoria
+  p HTTPS Certificates are from 
+    a(href='https://letsencrypt.org/') Let's Encrypt
+  p Built on 
+    a(href='https://nodejs.org/') NodeJS
+    span  and 
+    a(href='https://www.mongodb.com/') MongoDB
+  p All site icons are drawn by me
+  p With &lt;3 love from Unikitty
+  img(src='/static/images/home/rainbow.svg')
+  

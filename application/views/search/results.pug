@@ -17,7 +17,6 @@ for vlineStation in results.filter(stop => stop.bays.filter(bay => bay.mode === 
 for regionalCoachStop in results.filter(stop => stop.bays.filter(bay => bay.mode === 'regional coach').length).slice(0, 3)
   a(href=`/coach/timings/${regionalCoachStop.codedName}`).regionalCoachStop.result
     div.leftContainer
-      //- img(src='/static/images/clear-icons/bus.svg')
       img(src='/static/images/clear-icons/coach.svg')
     div.resultDetails
       span='Regional coach stop in ' + regionalCoachStop.suburb[0]

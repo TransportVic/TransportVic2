@@ -39,10 +39,7 @@ walk(path.join(__dirname, '../application/static/images-raw'), (err, results) =>
       fs.readFile(result, async (err, data) => {
         let optimised = await svgo.optimize(data, {path: result})
         let optimisedData = optimised.data
-
-        fs.stat(finalPath, (err, stat) => {
-          fs.writeFileSync(finalPath, optimisedData)
-        })
+        fs.writeFileSync(finalPath, optimisedData)
       })
     } else {
       fs.copyFileSync(result, finalPath)

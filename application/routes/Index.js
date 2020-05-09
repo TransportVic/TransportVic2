@@ -1,6 +1,21 @@
 const express = require('express')
 const utils = require('../../utils')
+const {exec} = require('child_process')
 const router = new express.Router()
+
+let buildNumber, buildComment
+
+exec('git describe --always', {
+    cwd: process.cwd()
+}, (err, stdout, stderr) => {
+  buildNumber = stdout.toString().trim();
+
+  exec('git log -1 --oneline --pretty=%B', {
+    cwd: process.cwd()
+  }, (err, stdout, stderr) => {
+    buildComment = stdout.toString().trim();
+  })
+})
 
 router.get('/', (req, res) => {
   res.render('index')
@@ -8,6 +23,10 @@ router.get('/', (req, res) => {
 
 router.get('/bookmarks', (req, res) => {
   res.render('bookmarks')
+})
+
+router.get('/about', (req, res) => {
+  res.render('about', {buildNumber, buildComment})
 })
 
 router.get('/stop-data', async (req, res) => {
