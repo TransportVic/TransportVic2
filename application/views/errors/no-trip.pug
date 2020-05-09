@@ -1,0 +1,20 @@
+extends ../layout
+
+block head
+  title TransportVic - Couldn't find that trip
+
+block title
+  span Missing Trip!
+
+append style
+  link(rel='stylesheet' href='/static/css/timings/base-style.css')
+
+append content
+  div.errorPage
+    h2 404: Couldn't find that trip!
+    img(src='/static/images/home/no-trip.svg')
+    div
+      a(href='/home') Try going home
+      span  Or 
+      a(href='javascript:history.back()') Going back a page
+    

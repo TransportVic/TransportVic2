@@ -54,6 +54,8 @@ async function pickBestTrip(data, db) {
 
 router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
   let trip = await pickBestTrip(req.params, res.db)
+  if (!trip) return res.render('errors/no-trip')
+  
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.prettyTimeToArrival = ''
 

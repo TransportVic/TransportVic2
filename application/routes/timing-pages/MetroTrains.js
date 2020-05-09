@@ -10,8 +10,7 @@ router.get('/:stationName', async (req, res) => {
   })
 
   if (!station || !station.bays.filter(bay => bay.mode === 'metro train')) {
-    // TODO: create error page
-    return res.end('Could not lookup timings for ' + req.params.stationName + '. Are you sure Metro trains stop there?')
+    return res.render('errors/no-stop')
   }
 
   let departures = await getDepartures(station, res.db)

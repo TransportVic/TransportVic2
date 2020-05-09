@@ -14,8 +14,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
   })
 
   if (!stop || !stop.bays.filter(bay => bay.mode === 'bus')) {
-    // TODO: create error page
-    return res.end('Could not lookup timings for ' + req.params.stopName + '. Are you sure buses stop there?')
+    return res.render('errors/no-stop')
   }
 
   let departures = await getDepartures(stop, res.db)

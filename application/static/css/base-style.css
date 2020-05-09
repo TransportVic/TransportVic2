@@ -19,6 +19,36 @@ html, body {
   overflow-x: hidden;
 }
 
+div.errorPage {
+  height: calc(96vh - 4vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+div.errorPage h2 {
+  font-size: calc(3vw + 4vh);
+  padding-left: calc(0.5vw + 0.5vh);
+  padding-right: calc(0.5vw + 0.5vh);
+  margin: 0;
+}
+
+div.errorPage a {
+  text-decoration: underline;
+}
+
+div.errorPage a, div.errorPage span {
+  font-size: calc(2vw + 2vh);
+  line-height: calc(1vw + 1vh);
+}
+
+div.errorPage img {
+  width: 90vw;
+  padding: calc(1vw + 1vh);
+}
+
 a, a:visited {
   text-decoration: none;
   color: #c5c5c5;

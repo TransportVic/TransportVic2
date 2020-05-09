@@ -1,0 +1,20 @@
+extends ../layout
+
+block head
+  title TransportVic - Couldn't find that stop
+
+block title
+  span Missing Stop!
+
+append style
+  link(rel='stylesheet' href='/static/css/timings/base-style.css')
+
+append content
+  div.errorPage
+    h2 404: Where's that stop gone off to?
+    img(src='/static/images/home/no-stop.svg').noStop
+    div
+      a(href='/search') Try searching for it
+      span  Or 
+      a(href='javascript:history.back()') Going back a page
+    
