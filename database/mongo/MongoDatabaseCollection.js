@@ -56,4 +56,8 @@ module.exports = class MongoDatabaseCollection {
   bulkWrite(operations) {
     return this.collection.bulkWrite(operations)
   }
+
+  dropCollection() {
+    return this.collection.drop()
+  }
 }

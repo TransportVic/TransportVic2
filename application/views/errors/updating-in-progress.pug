@@ -1,0 +1,18 @@
+extends ../layout
+
+block head
+  title TransportVic - Under maintenance...
+
+block title
+  span Under maintenance...
+
+append style
+  link(rel='stylesheet' href='/static/css/timings/base-style.css')
+
+append content
+  div.errorPage
+    h2 503: Undergoing automated maintenance :(
+    img(src='/static/images/home/website-down.svg')
+    div
+      span Please wait 10 - 15 minutes before trying to load this page again. Thanks!
+    

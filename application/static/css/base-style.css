@@ -37,13 +37,17 @@ div.errorPage h2 {
   margin: 0;
 }
 
+div.errorPage > div {
+  padding-left: calc(0.5vw + 0.5vh);
+  padding-right: calc(0.5vw + 0.5vh);
+}
+
 div.errorPage a {
   text-decoration: underline;
 }
 
 div.errorPage a, div.errorPage span {
   font-size: calc(2vw + 2vh);
-  line-height: calc(1vw + 1vh);
 }
 
 div.errorPage img {
