@@ -11,7 +11,11 @@ function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
   let gtfsIDs = []
   let bays = station.bays.filter(bay => bay.mode === mode)
 
-  bays = bays.filter(bay => nightBus ^ !(bay.flags && bay.flags.isNightBus && !bay.flags.hasRegularBus))
+  if (nightBus) {
+    bays = bays.filter(bay => (bay.flags && bay.flags.isNightBus))
+  } else {
+    bays = bays.filter(bay => (bay.flags && bay.flags.hasRegularBus))
+  }
 
   if (isOnline) {
     let stopNamesSeen = []
