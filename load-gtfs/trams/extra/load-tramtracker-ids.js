@@ -8,10 +8,11 @@ const levenshtein = require('fast-levenshtein').get
 
 const updateStats = require('../../utils/stats')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const upDowns = require('./up-downs.json')
 
 let stops
 
-async function matchTramStop(tramtrackerStopName, stopNumber, services, suburb) {
+async function matchTramStop(tramtrackerStopName, stopNumber, services, suburb, upStop) {
   let stopsMatched = await stops.findDocuments({
     $and: [
       {
@@ -42,15 +43,23 @@ async function matchTramStop(tramtrackerStopName, stopNumber, services, suburb) 
 
   let bestStop = stopsMatched.map(stop => {
     let score = 0
-    let stopTramtrackerName = stop.bays.filter(b => b.mode === 'tram')[0].flags.tramtrackerName.toLowerCase()
-    let stopNumbers = stop.bays.filter(b => b.mode === 'tram').map(b => b.stopNumber)
+    let tramStops = stop.bays.filter(b => b.mode === 'tram')
+
+    let stopTramtrackerName = tramStops[0].flags.tramtrackerName.toLowerCase()
+    let stopNumbers = tramStops.map(b => b.stopNumber)
       .filter(Boolean).map(e => e.replace(/^D/, ''))
-    let stopServices = stop.bays.filter(b => b.mode === 'tram').map(b => b.flags.services)
+    let stopServices = tramStops.map(b => b.flags.services)
       .reduce((a,e) => a.concat(e),[]).filter((e, i, a) => a.indexOf(e) === i)
       .map(v => v === '3/3a' ? '3-3a' : v)
 
+    let direction = tramStops[0].screenServices[0]
+
+    let stopIsUp = upDowns[direction.routeGTFSID][direction.gtfsDirection] === 'Up'
+    if (stopIsUp === upStop) score += 4
+    else score -= 3
+
     if (stopTramtrackerName === tramtrackerStopName.toLowerCase()) score += 3
-    if (stopNumbers.includes(stopNumber.replace(/^D/, ''))) score += 3
+    if (stopNumbers.includes(stopNumber)) score += 3
     else score -= 1
 
     if (stopServices.every(svc => services.includes(svc))) score += 3
@@ -60,11 +69,12 @@ async function matchTramStop(tramtrackerStopName, stopNumber, services, suburb) 
 
     stop.nameDistance = levenshtein(tramtrackerStopName.toLowerCase(), stopTramtrackerName)
     stop.score = score
-
+if (tramtrackerStopName === 'Alexandra Parade'&&stopNumber==15 &&stopIsUp === upStop)console.log(stop)
     return stop
-  }).sort((a, b) => b.score - a.score || a.nameDistance - b.nameDistance)[0]
-
-  return bestStop
+  }).sort((a, b) => b.score - a.score || a.nameDistance - b.nameDistance)
+// console.log(tramtrackerStopName, stopNumber)
+  if (tramtrackerStopName === 'Alexandra Parade'&&stopNumber==15 ) console.log(bestStop)
+  return bestStop[0]
 }
 
 /*
@@ -87,7 +97,7 @@ database.connect({}, async err => {
 
   await async.forEachSeries(filteredTramtrackerStops, async stop => {
     let tramtrackerName = utils.adjustStopname(stop.stopName.trim()).replace(/Gve?/, 'Gr')
-    let matchedStop = await matchTramStop(tramtrackerName, stop.stopNumber, stop.services, stop.suburb)
+    let matchedStop = await matchTramStop(tramtrackerName, stop.stopNumber, stop.services, stop.suburb, stop.up)
 
     // keep for showoff maybe
     // let matchedName = matchedStop.stopName.split('/')[0].toLowerCase()

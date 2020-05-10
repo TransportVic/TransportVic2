@@ -39,7 +39,7 @@ database.connect({
 
         stopName = stopName.replace('Road', 'Rd')
 
-        return {stopNumber, stopName, tramTrackerID, suburb}
+        return {stopNumber, stopName, tramTrackerID, suburb, up: direction}
       }).forEach(stop => {
         stops[JSON.stringify(stop)] = stop
 
@@ -47,7 +47,7 @@ database.connect({
         serviceByStops[stop.tramTrackerID].push(service)
       })
     })
-    
+
     await sleep()
   })
 
