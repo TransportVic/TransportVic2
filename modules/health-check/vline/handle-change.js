@@ -7,6 +7,10 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
 
+  if (departureTime.split(':')[0].length == 1) {
+    departureTime = `0${departureTime}`
+  }
+
   let query = {
     departureTime, origin, destination,
     mode: 'regional train',

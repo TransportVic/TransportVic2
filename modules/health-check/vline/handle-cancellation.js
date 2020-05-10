@@ -10,6 +10,10 @@ async function setServicesAsCancelled(db, services) {
   await async.forEach(services, async service => {
     let {departureTime, origin, destination, isCoach} = service
 
+    if (departureTime.split(':')[0].length == 1) {
+      departureTime = `0${departureTime}`
+    }
+    
     let query = {
       departureTime, origin, destination,
       mode: 'regional train',
