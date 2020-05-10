@@ -41,7 +41,11 @@ for busRoute in routes.filter(route => route.mode === 'bus')
   -
     let hasNumber = !!busRoute.routeNumber
     let url
-    if (hasNumber) url = `/bus/route/${busRoute.routeNumber}` 
+    if (busRoute.routeGTFSID.match(/(4|7|8)-/)) {
+      if (hasNumber) url = `/bus/route/${busRoute.routeNumber}`   
+    } else if (busRoute.routeGTFSID.startsWith('6-')) {
+      if (hasNumber) url = `/bus/route/regional/${busRoute.codedLGA}/${busRoute.routeNumber}`
+    }
   a(href=url).route.result
     if hasNumber
       div(class=`leftContainer platform ${encodeName(busRoute.operators[0])}`)

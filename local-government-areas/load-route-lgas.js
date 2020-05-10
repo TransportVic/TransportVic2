@@ -1,5 +1,6 @@
 const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config.json')
+const utils = require('../utils')
 const async = require('async')
 
 const updateStats = require('../load-gtfs/utils/stats')
@@ -60,7 +61,8 @@ database.connect({}, async err => {
       routeGTFSID: busRoute.routeGTFSID
     }, {
       $set: {
-        lgaID: best[0]
+        lgaID: best[0],
+        codedLGA: utils.encodeName(best[0])
       }
     })
 

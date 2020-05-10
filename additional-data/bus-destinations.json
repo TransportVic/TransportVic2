@@ -15,7 +15,8 @@
       "Coltman Plaza": "Alfredton"
     },
     "13": {
-      "Northwood Court/Slatey Creek Road": "Invermay Park"
+      "Northwood Court/Slatey Creek Road": "Invermay Park",
+      "Bailey Street - South": "Bairnsdale"
     },
     "14": {
       "Howitt Street/Havelock Street": "Black Hill"
@@ -58,6 +59,18 @@
     },
     "70": {
       "Strathfieldsaye Road/Blucher Street": "Strathfieldaye"
+    },
+    "80": {
+      "Fairfield Village Chapel": "Warragul South"
+    },
+    "81": {
+      "Myrtle Cresent/Bowen Street": "Warragul North"
+    },
+    "83": {
+      "Dawson Drive/Copelands Road": "Warragul East"
+    },
+     "89": {
+      "Noojee Primary School": "Noojee"
     },
     "100": {
       "Barclay Square Park": "Red Cliffs"

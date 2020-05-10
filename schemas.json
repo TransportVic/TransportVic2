@@ -161,6 +161,8 @@
     "flags": "Object:optional",
     "ptvDirections": {
       "<direction name>": "number"
-    }
+    },
+    "lgaID": "string:optional",
+    "codedLGA": "string:optional",
   }
 }

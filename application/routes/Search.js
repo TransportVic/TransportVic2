@@ -93,7 +93,7 @@ async function findRoutes(db, query) {
     }, {
       routeName: queryRegex
     }]
-  }).limit(5).toArray())
+  }).limit(15).toArray()).sort((a, b) => a.routeNumber - b.routeNumber || a.routeName.localeCompare(b.routeName)).slice(0, 5)
 
   return routes
 }

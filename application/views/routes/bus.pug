@@ -13,7 +13,12 @@ block style
       
 block content
   div#routeSummary
-    a(class=operator href=`/bus/route/${route.routeNumber}/${codedDirectionNames[1]}`)#routeNumber
+    -
+      let link = `/bus/route/${route.routeNumber}/${codedDirectionNames[1]}`
+      if (route.routeGTFSID.startsWith('6')) {
+        link = `/bus/route/regional/${route.codedLGA}/${route.routeNumber}/${codedDirectionNames[1]}`
+      }
+    a(class=operator href=link)#routeNumber
       span#routeText=route.routeNumber
     div#terminals
       a().coloured-row
