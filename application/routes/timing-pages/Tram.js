@@ -3,7 +3,7 @@ const router = new express.Router()
 const getDepartures = require('../../../modules/tram/get-departures')
 const moment = require('moment')
 const utils = require('../../../utils')
-const tramDestinations = require('../../../modules/tram/tram-destinations')
+const tramDestinations = require('../../../additional-data/tram-destinations')
 const async = require('async')
 
 router.get('/:suburb/:stopName', async (req, res) => {

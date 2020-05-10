@@ -75,7 +75,7 @@ div.departure:nth-child(even) a.departureInfo.reservationsOnly {
 }
 
 a.leftContainer {
-  min-width: calc(5.25vw + 5.25vh);
+  min-width: calc(5.2vw + 5.8vh);
   height: calc(7vw + 7vh);
 
   display: flex;

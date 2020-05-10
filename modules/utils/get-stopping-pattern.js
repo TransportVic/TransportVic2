@@ -42,6 +42,8 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   if (mode === 'regional coach') checkModes.push('regional train')
 
   let routeGTFSID = routeData.route_gtfs_id
+  if (mode === 'tram') routeGTFSID = `3-${parseInt(routeGTFSID.slice(2))}`
+
   let route = await routesCollection.findDocument({ routeGTFSID })
   let gtfsDirection = route.ptvDirections[ptvDirection.direction_name]
 
@@ -101,7 +103,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
       arrivalTimeMinutes: departureTimeMinutes,
       departureTime: scheduledDepartureTime.format("HH:mm"),
       departureTimeMinutes: departureTimeMinutes,
-      estimatedDepartureTime: departure.estimated_departure_utc ? estimatedDepartureTime.toISOString() : null,
+      estimatedDepartureTime: estimatedDepartureTime ? estimatedDepartureTime.toISOString() : null,
       platform: platform_number,
       stopConditions: {
         pickup: departure.flags.includes('DOO') ? 1 : 0, // if dropoff onliy then pickup is unavailable

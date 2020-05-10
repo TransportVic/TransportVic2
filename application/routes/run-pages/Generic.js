@@ -5,6 +5,8 @@ const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
 const busStopNameModifier = require('../../../additional-data/bus-stop-name-modifier')
+const busDestinations = require('../../../additional-data/bus-destinations')
+const tramDestinations = require('../../../additional-data/tram-destinations')
 const tramFleet = require('../../../tram-fleet')
 
 async function pickBestTrip(data, db) {
@@ -63,10 +65,7 @@ async function pickBestTrip(data, db) {
     return stopTiming.actualDepartureTime.diff(now, 'minutes') > 0
   }).slice(0, -1)
 
-  let checkStop
-  if (checkStops.length === 1) {
-    checkStop = checkStops[0]
-  } else checkStop = checkStops[1]
+  let checkStop = checkStops[0]
 
   if (!checkStop) return gtfsTrip
 
@@ -102,6 +101,47 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
 
   let trip = await pickBestTrip(req.params, res.db)
   if (!trip) return res.status(404).render('errors/no-trip')
+
+  let routes = res.db.getCollection('routes')
+  let tripRoute = await routes.findDocument({ routeGTFSID: trip.routeGTFSID }, { routePath: 0 })
+  let operator = tripRoute.operators[0]
+
+  let {destination} = trip
+  let fullDestination = destination
+  let destinationShortName = destination.split('/')[0]
+  if (!utils.isStreet(destinationShortName)) destination = destinationShortName
+
+  destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
+
+  let dataSet = trip.mode === 'tram' ? tramDestinations : busDestinations
+
+  if (trip.mode === 'tram') {
+    destination = dataSet[destination] || destination
+  } else {
+    let serviceData = dataSet.service[trip.routeNumber] || dataSet.service[trip.routeGTFSID] || {}
+
+    destination = serviceData[destination]
+      || dataSet.generic[destination]
+      || dataSet.generic[fullDestination] || destination
+  }
+
+  let loopDirection
+  if (tripRoute.flags)
+    loopDirection = tripRoute.flags[trip.gtfsDirection]
+
+  let importantStops = []
+
+  if (trip.mode === 'bus')
+    importantStops = trip.stopTimings.map(stop => stop.stopName.split('/')[0])
+      .filter((e, i, a) => a.indexOf(e) === i)
+      .slice(1, -1)
+      .filter(utils.isCheckpointStop)
+      .map(utils.shorternStopName)
+
+  let viaText
+  if (importantStops.length)
+    viaText = `Via ${importantStops.slice(0, -1).join(', ')}${(importantStops.length > 1 ? ' & ' : '') + importantStops.slice(-1)[0]}`
+
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.prettyTimeToArrival = ''
 
@@ -151,7 +191,15 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
       }
     }
   }
-  res.render('runs/generic', {trip, shorternStopName: utils.shorternStopName})
+
+  res.render('runs/generic', {
+    trip,
+    shorternStopName: utils.shorternStopName,
+    destination,
+    operator: utils.encodeName(operator),
+    loopDirection,
+    viaText
+  })
 })
 
 module.exports = router
