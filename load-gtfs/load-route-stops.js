@@ -69,11 +69,11 @@ database.connect({}, async err => {
         || coachDestinations[directionName] || directionName
 
       if (!stopsByService[routeGTFSID]) stopsByService[routeGTFSID] = []
-      stopsByService[routeGTFSID].push({
+      stopsByService[routeGTFSID][gtfsDirection] = {
         directionName,
         gtfsDirection,
         stops: mergedStops
-      })
+      }
     })
   })
 

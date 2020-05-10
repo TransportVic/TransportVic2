@@ -1,5 +1,13 @@
+function hash(stops) {
+  return stops.reduce((a, e) => a * e.stopGTFSID, 1)
+}
+
+function l(m) { return m.slice(-1)[0] }
+
 module.exports = function merge(variants, matched) {
-  variants = variants.sort((a, b) => b.length - a.length)
+  variants = variants.sort((a, b) => {
+    return b.length - a.length || l(a).stopName.length - l(b).stopName.length || hash(a) - hash(b)
+  })
 
   stopsList = variants[0]
   branch = []
