@@ -25,8 +25,8 @@ $.ready(() => {
     if (data.type === 'complete') {
       addLine('Complete!')
       setTimeout(() => {
-        location.refresh()
-      }, 1000)
+        location.reload()
+      }, 5000)
     }
   }
 
