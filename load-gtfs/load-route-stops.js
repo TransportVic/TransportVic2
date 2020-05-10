@@ -45,10 +45,19 @@ database.connect({}, async err => {
       })))
     })
 
-    routeDirections.forEach((direction, gtfsDirection) => {
+    await async.forEachOf(routeDirections, async (direction, gtfsDirection) => {
       let mergedStops = mergeStops(direction, (a, b) => a.stopName == b.stopName)
 
-      let directionName = mergedStops.slice(-1)[0].stopName
+      let mostCommonDestination = (await gtfsTimetables.aggregate([{
+          $match: {
+            routeGTFSID,
+            gtfsDirection: gtfsDirection.toString()
+          }
+        }, {
+          "$sortByCount": "$destination"
+      }]).toArray())[0]._id
+
+      let directionName = mostCommonDestination
 
       let directionShortName = directionName.split('/')[0]
       if (!utils.isStreet(directionShortName)) directionName = directionShortName

@@ -136,6 +136,11 @@ database.connect({
     gtfsMode: 1
   }, {name: 'gtfs mode index'})
 
+  await gtfsTimetables.createIndex({
+    routeGTFSID: 1,
+    gtfsDirection: 1
+  }, {name: 'route direction index'})
+
   console.log('Created GTFS timetables indexes')
 
   await timetables.createIndex({

@@ -8,18 +8,6 @@
   background-color: #202020;
 }
 
-.leftContainer {
-  min-width: calc(5.25vw + 5.25vh);
-  height: calc(7vw + 7vh);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-
-  color: #f9f9f9;
-}
-
 .busStop .leftContainer {
   background-color: #d7832c;
 }
@@ -91,19 +79,4 @@
 .resultDetails > span:nth-child(2) {
   font-size: calc(2vh + 1.2vw);
   margin-top: calc(-0.4vh - 0.2vw);
-}
-
-.left-container span {
-  min-width: calc(5.25vw + 5.25vh);
-  text-align: center;
-}
-
-.serviceNumber {
-  font-size: calc(3vw + 3vh);
-  margin-top: calc(-0.5vw - 0.5vh);
-}
-
-.serviceVariant {
-  font-size: calc(2vw + 2vh);
-  margin-top: calc(-0.5vw - 0.5vh);
 }

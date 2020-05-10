@@ -38,7 +38,7 @@ async function prioritySearch(db, query) {
   return gtfsMatch.concat(numericalMatchStops).concat(priorityStopsByName)
 }
 
-async function performSearch (db, query) {
+async function findStops(db, query) {
   let search
 
   let prioritySearchResults = await prioritySearch(db, query)
@@ -60,7 +60,7 @@ async function performSearch (db, query) {
     }, {
       stopName: searchRegex
     }]
-  }).limit(15 - prioritySearchResults.length).toArray()).sort((a, b) => a.length - b.length)
+  }).limit(15 - prioritySearchResults.length).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
 
   let lowPriorityResults = await db.getCollection('stops').findDocuments({
     _id: {
@@ -84,15 +84,30 @@ async function performSearch (db, query) {
   return prioritySearchResults.concat(remainingResults).concat(lowPriorityResults)
 }
 
+async function findRoutes(db, query) {
+  let queryRegex = new RegExp(query, 'i')
+  
+  let routes = (await db.getCollection('routes').findDocuments({
+    $or: [{
+      routeNumber: queryRegex
+    }, {
+      routeName: queryRegex
+    }]
+  }).limit(5).toArray())
+
+  return routes
+}
+
 router.post('/', async (req, res) => {
   let query = req.body.query.trim()
   if (!safeRegex(query) || query === '') {
     return res.end('')
   }
 
-  const results = await performSearch(res.db, query)
+  const stops = await findStops(res.db, query)
+  const routes = await findRoutes(res.db, query)
 
-  res.render('search/results', {results})
+  res.render('search/results', {stops, routes, encodeName: utils.encodeName})
 })
 
 module.exports = router

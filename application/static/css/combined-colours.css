@@ -2,7 +2,7 @@
   background-color: #0570c3;
 }
 
-div.departure:nth-child(even) .metro-trains-melbourne {
+:nth-child(even) > .metro-trains-melbourne {
   background-color: #0a62a6;
 }
 
@@ -10,7 +10,7 @@ div.departure:nth-child(even) .metro-trains-melbourne {
   background-color: #7bc916;
 }
 
-div.departure:nth-child(even) .yarra-trams {
+:nth-child(even) > .yarra-trams {
   background-color: #72b31d;
 }
 
@@ -18,7 +18,7 @@ div.departure:nth-child(even) .yarra-trams {
   background-color: #fc923d;
 }
 
-div.departure:nth-child(even) .cdc-melbourne, div.departure:nth-child(even) .cdc-geelong, div.departure:nth-child(even) .cdc-ballarat {
+:nth-child(even) > .cdc-melbourne, :nth-child(even) > .cdc-geelong, :nth-child(even) > .cdc-ballarat {
   background-color: #fb7b13;
 }
 
@@ -26,7 +26,7 @@ div.departure:nth-child(even) .cdc-melbourne, div.departure:nth-child(even) .cdc
   background-color: #14315b;
 }
 
-div.departure:nth-child(even) .ventura-bus-lines {
+:nth-child(even) > .ventura-bus-lines {
   background-color: #0c1d36;
 }
 
@@ -34,7 +34,7 @@ div.departure:nth-child(even) .ventura-bus-lines {
   background-color: #e30613;
 }
 
-div.departure:nth-child(even) .transdev-melbourne {
+:nth-child(even) > .transdev-melbourne {
   background-color: #bc0510;
 }
 
@@ -42,7 +42,7 @@ div.departure:nth-child(even) .transdev-melbourne {
   background-color: #2eb130;
 }
 
-div.departure:nth-child(even) .dysons {
+:nth-child(even) > .dysons {
   background-color: #259027;
 }
 
@@ -50,7 +50,7 @@ div.departure:nth-child(even) .dysons {
   background-color: #d00071;
 }
 
-div.departure:nth-child(even) .panorama-coaches {
+:nth-child(even) > .panorama-coaches {
   background-color: #930050;
 }
 
@@ -58,7 +58,7 @@ div.departure:nth-child(even) .panorama-coaches {
   background-color: #ae6e00;
 }
 
-div.departure:nth-child(even) .sita-bus-lines {
+:nth-child(even) > .sita-bus-lines {
   background-color: #835300;
 }
 
@@ -66,7 +66,7 @@ div.departure:nth-child(even) .sita-bus-lines {
   background-color: #205878;
 }
 
-div.departure:nth-child(even) .kastoria-bus-lines {
+:nth-child(even) > .kastoria-bus-lines {
   background-color: #153b50;
 }
 
@@ -74,7 +74,7 @@ div.departure:nth-child(even) .kastoria-bus-lines {
   background-color: #720016;
 }
 
-div.departure:nth-child(even) .tullamarine-bus-lines {
+:nth-child(even) > .tullamarine-bus-lines {
   background-color: #4b000e;
 }
 
@@ -82,7 +82,7 @@ div.departure:nth-child(even) .tullamarine-bus-lines {
   background-color: #f93a3a;
 }
 
-div.departure:nth-child(even) .moonee-valley-bus-lines {
+:nth-child(even) > .moonee-valley-bus-lines {
   background-color: #a41717;
 }
 
@@ -90,7 +90,7 @@ div.departure:nth-child(even) .moonee-valley-bus-lines {
   background-color: #cd0504;
 }
 
-div.departure:nth-child(even) .sunbury-bus-service {
+:nth-child(even) > .sunbury-bus-service {
   background-color: #9a0909;
 }
 
@@ -98,7 +98,7 @@ div.departure:nth-child(even) .sunbury-bus-service {
   background-color: #1080a3;
 }
 
-div.departure:nth-child(even) .ryan-bros-bus-service {
+:nth-child(even) > .ryan-bros-bus-service {
   background-color: #0b5870;
 }
 
@@ -106,7 +106,7 @@ div.departure:nth-child(even) .ryan-bros-bus-service {
   background-color: #305fb3;
 }
 
-div.departure:nth-child(even) .broadmeadows-bus-service {
+:nth-child(even) > .broadmeadows-bus-service {
   background-color: #1f3e74;
 }
 
@@ -114,7 +114,7 @@ div.departure:nth-child(even) .broadmeadows-bus-service {
   background-color: #50866d;
 }
 
-div.departure:nth-child(even) .moreland-bus-lines {
+:nth-child(even) > .moreland-bus-lines {
   background-color: #325344;
 }
 
@@ -122,7 +122,7 @@ div.departure:nth-child(even) .moreland-bus-lines {
   background-color: #274523;
 }
 
-div.departure:nth-child(even) .mckenzies-tourist-service {
+:nth-child(even) > .mckenzies-tourist-service {
   background-color: #192d17;
 }
 
@@ -131,7 +131,7 @@ div.departure:nth-child(even) .mckenzies-tourist-service {
   color: #d7d7d7 !important;
 }
 
-div.departure:nth-child(even) .martyrs-bus-service {
+:nth-child(even) > .martyrs-bus-service {
   background-color: #438daa;
   color: #d7d7d7 !important;
 }
@@ -140,7 +140,7 @@ div.departure:nth-child(even) .martyrs-bus-service {
   background-color: #e5ba0d;
 }
 
-div.departure:nth-child(even) .cranbourne-transit {
+:nth-child(even) > .cranbourne-transit {
   background-color: #c4a011;
 }
 
@@ -148,7 +148,7 @@ div.departure:nth-child(even) .cranbourne-transit {
   background-color: #e5392c;
 }
 
-div.departure:nth-child(even) .skybus {
+:nth-child(even) > .skybus {
   background-color: #a62d24;
 }
 
@@ -156,7 +156,7 @@ div.departure:nth-child(even) .skybus {
   background-color: #09633e;
 }
 
-div.departure:nth-child(even) .horsham-transit, div.departure:nth-child(even) .wimmera-roadways {
+:nth-child(even) > .horsham-transit, :nth-child(even) > .wimmera-roadways {
   background-color: #03452a;
 }
 
@@ -165,7 +165,7 @@ div.departure:nth-child(even) .horsham-transit, div.departure:nth-child(even) .w
   color: #e8e8e8 !important;
 }
 
-div.departure:nth-child(even) .south-coast-bus {
+:nth-child(even) > .south-coast-bus {
   background-color: #d2872f;
   color: #e8e8e8 !important;
 }
@@ -175,7 +175,7 @@ div.departure:nth-child(even) .south-coast-bus {
   color: #e8e8e8 !important;
 }
 
-div.departure:nth-child(even) .turnbulls {
+:nth-child(even) > .turnbulls {
   background-color: #de7814;
   color: #e8e8e8 !important;
 }
@@ -184,7 +184,7 @@ div.departure:nth-child(even) .turnbulls {
   background-color: #b40e3a;
 }
 
-div.departure:nth-child(even) .latrobe-valley-bus-lines {
+:nth-child(even) > .latrobe-valley-bus-lines {
   background-color: #8c1131;
 }
 
@@ -192,7 +192,7 @@ div.departure:nth-child(even) .latrobe-valley-bus-lines {
   background-color: #08426a;
 }
 
-div.departure:nth-child(even) .hutchinson-bus-lines {
+:nth-child(even) > .hutchinson-bus-lines {
   background-color: #003457;
 }
 
@@ -200,7 +200,7 @@ div.departure:nth-child(even) .hutchinson-bus-lines {
   background-color: #2c4269;
 }
 
-div.departure:nth-child(even) .mitchell-transit {
+:nth-child(even) > .mitchell-transit {
   background-color: #192a49;
 }
 
@@ -209,7 +209,7 @@ div.departure:nth-child(even) .mitchell-transit {
   color: #d7d7d7 !important;
 }
 
-div.departure:nth-child(even) .mcharrys-bus-lines {
+:nth-child(even) > .mcharrys-bus-lines {
   background-color: #b51010;
   color: #d7d7d7 !important;
 }
@@ -218,7 +218,7 @@ div.departure:nth-child(even) .mcharrys-bus-lines {
   background-color: #272b69;
 }
 
-div.departure:nth-child(even) .little-s-gippsland-coaches {
+:nth-child(even) > .little-s-gippsland-coaches {
   background-color: #181d55;
 }
 
@@ -226,7 +226,7 @@ div.departure:nth-child(even) .little-s-gippsland-coaches {
   background-color: #0559a6;
 }
 
-div.departure:nth-child(even) .christians-bus-company {
+:nth-child(even) > .christians-bus-company {
   background-color: #0a4a85;
 }
 
@@ -234,7 +234,7 @@ div.departure:nth-child(even) .christians-bus-company {
   background-color: #31467f;
 }
 
-div.departure:nth-child(even) .benalla-bus-lines {
+:nth-child(even) > .benalla-bus-lines {
   background-color: #1d2e5e;
 }
 
@@ -242,7 +242,7 @@ div.departure:nth-child(even) .benalla-bus-lines {
   background-color: #1d3988;
 }
 
-div.departure:nth-child(even) .heard-buses {
+:nth-child(even) > .heard-buses {
   background-color: #162c6d;
 }
 
@@ -250,7 +250,7 @@ div.departure:nth-child(even) .heard-buses {
   background-color: #00027f;
 }
 
-div.departure:nth-child(even) .westernport-roadlines {
+:nth-child(even) > .westernport-roadlines {
   background-color: #070966;
 }
 
@@ -258,7 +258,7 @@ div.departure:nth-child(even) .westernport-roadlines {
   background-color: #1f4d46;
 }
 
-div.departure:nth-child(even) .fallons-bus-service {
+:nth-child(even) > .fallons-bus-service {
   background-color: #10332e;
 }
 
@@ -266,7 +266,7 @@ div.departure:nth-child(even) .fallons-bus-service {
   background-color: #06345f;
 }
 
-div.departure:nth-child(even) .castlemaine-bus-lines, div.departure:nth-child(even) .whitmores-bus-lines, div.departure:nth-child(even) .maryborough-transit {
+:nth-child(even) > .castlemaine-bus-lines, :nth-child(even) > .whitmores-bus-lines, :nth-child(even) > .maryborough-transit {
   background-color: #052747;
 }
 
@@ -275,7 +275,7 @@ div.departure:nth-child(even) .castlemaine-bus-lines, div.departure:nth-child(ev
   color: #e8e8e8 !important;
 }
 
-div.departure:nth-child(even) .sunraysia-bus-lines {
+:nth-child(even) > .sunraysia-bus-lines {
   background-color: #a78307;
   color: #e8e8e8 !important;
 }
@@ -285,7 +285,7 @@ div.departure:nth-child(even) .sunraysia-bus-lines {
   color: #d7d7d7 !important;
 }
 
-div.departure:nth-child(even) .echuca-moama-transit {
+:nth-child(even) > .echuca-moama-transit {
   background-color: #0997c6;
   color: #d7d7d7 !important;
 }
@@ -294,7 +294,7 @@ div.departure:nth-child(even) .echuca-moama-transit {
   background-color: #003366;
 }
 
-div.departure:nth-child(even) .jacobsons-bus-lines {
+:nth-child(even) > .jacobsons-bus-lines {
   background-color: #032242;
 }
 
@@ -302,7 +302,7 @@ div.departure:nth-child(even) .jacobsons-bus-lines {
   background-color: #0c539b;
 }
 
-div.departure:nth-child(even) .coles-coaches {
+:nth-child(even) > .coles-coaches {
   background-color: #0c4987;
 }
 
@@ -310,7 +310,7 @@ div.departure:nth-child(even) .coles-coaches {
   background-color: #c31a08;
 }
 
-div.departure:nth-child(even) .paynesville-bus-lines {
+:nth-child(even) > .paynesville-bus-lines {
   background-color: #a91708;
 }
 
@@ -318,7 +318,7 @@ div.departure:nth-child(even) .paynesville-bus-lines {
   background-color: #faa41a;
 }
 
-div.departure:nth-child(even) .sunshine-tours {
+:nth-child(even) > .sunshine-tours {
   background-color: #e19216;
 }
 
@@ -326,7 +326,7 @@ div.departure:nth-child(even) .sunshine-tours {
   background-color: #711c2b;
 }
 
-div.departure:nth-child(even) .little-s-coaches {
+:nth-child(even) > .little-s-coaches {
   background-color: #5e1824;
 }
 
@@ -334,7 +334,7 @@ div.departure:nth-child(even) .little-s-coaches {
   background-color: #12377c;
 }
 
-div.departure:nth-child(even) .harley-s-buslines {
+:nth-child(even) > .harley-s-buslines {
   background-color: #0f2c61;
 }
 
@@ -342,7 +342,7 @@ div.departure:nth-child(even) .harley-s-buslines {
   background-color: #0e309f;
 }
 
-div.departure:nth-child(even) .bacchus-marsh-coaches {
+:nth-child(even) > .bacchus-marsh-coaches {
   background-color: #0d2882;
 }
 
@@ -350,7 +350,7 @@ div.departure:nth-child(even) .bacchus-marsh-coaches {
   background-color: #cfb53b;
 }
 
-div.departure:nth-child(even) .gold-bus {
+:nth-child(even) > .gold-bus {
   background-color: #b8a135;
 }
 
@@ -358,7 +358,7 @@ div.departure:nth-child(even) .gold-bus {
   background-color: #aaa07f;
 }
 
-div.departure:nth-child(even) .sandlant-buses {
+:nth-child(even) > .sandlant-buses {
   background-color: #948b6b;
 }
 
@@ -366,7 +366,7 @@ div.departure:nth-child(even) .sandlant-buses {
   background-color: #2e2e8f;
 }
 
-div.departure:nth-child(even) .swan-hill-bus-lines {
+:nth-child(even) > .swan-hill-bus-lines {
   background-color: #232370;
 }
 
@@ -374,7 +374,7 @@ div.departure:nth-child(even) .swan-hill-bus-lines {
   background-color: #67006b;
 }
 
-div.departure:nth-child(even) .quambatook-lalbert-community-bus-committee {
+:nth-child(even) > .quambatook-lalbert-community-bus-committee {
   background-color: #4b034e;
 }
 
@@ -382,7 +382,7 @@ div.departure:nth-child(even) .quambatook-lalbert-community-bus-committee {
   background-color: #d51d2f;
 }
 
-div.departure:nth-child(even) .warrnambool-bus-lines, div.departure:nth-child(even) .portland-bus-lines {
+:nth-child(even) > .warrnambool-bus-lines, :nth-child(even) > .portland-bus-lines {
   background-color: #bc1726;
 }
 
@@ -390,7 +390,7 @@ div.departure:nth-child(even) .warrnambool-bus-lines, div.departure:nth-child(ev
   background-color: #1b2735;
 }
 
-div.departure:nth-child(even) .sovereign-hill {
+:nth-child(even) > .sovereign-hill {
   background-color: #141d27;
 }
 
@@ -398,7 +398,7 @@ div.departure:nth-child(even) .sovereign-hill {
   background-color: #e80d0d;
 }
 
-div.departure:nth-child(even) .kingstons-tours {
+:nth-child(even) > .kingstons-tours {
   background-color: #c90f0f;
 }
 
@@ -406,7 +406,7 @@ div.departure:nth-child(even) .kingstons-tours {
   background-color: #067e4a;
 }
 
-div.departure:nth-child(even) .shire-of-central-goldfields {
+:nth-child(even) > .shire-of-central-goldfields {
   background-color: #045f38;
 }
 
@@ -414,7 +414,7 @@ div.departure:nth-child(even) .shire-of-central-goldfields {
   background-color: #518ab7;
 }
 
-div.departure:nth-child(even) .henty-highway-coach {
+:nth-child(even) > .henty-highway-coach {
   background-color: #4879a0;
 }
 
@@ -422,7 +422,7 @@ div.departure:nth-child(even) .henty-highway-coach {
   background-color: #2c99cc;
 }
 
-div.departure:nth-child(even) .falls-creek-coach-service {
+:nth-child(even) > .falls-creek-coach-service {
   background-color: #2885af;
 }
 
@@ -430,7 +430,7 @@ div.departure:nth-child(even) .falls-creek-coach-service {
   background-color: #75d4b1;
 }
 
-div.departure:nth-child(even) .organ-s-coaches {
+:nth-child(even) > .organ-s-coaches {
   background-color: #5fb092;
 }
 
@@ -438,7 +438,7 @@ div.departure:nth-child(even) .organ-s-coaches {
   background-color: #28ab0e;
 }
 
-div.departure:nth-child(even) .trotters-coaches {
+:nth-child(even) > .trotters-coaches {
   background-color: #23910d;
 }
 
@@ -446,7 +446,7 @@ div.departure:nth-child(even) .trotters-coaches {
   background-color: #047172;
 }
 
-div.departure:nth-child(even) .cann-s-bus-lines {
+:nth-child(even) > .cann-s-bus-lines {
   background-color: #055758;
 }
 
@@ -454,7 +454,7 @@ div.departure:nth-child(even) .cann-s-bus-lines {
   background-color: #4263cd;
 }
 
-div.departure:nth-child(even) .warragul-bus-lines {
+:nth-child(even) > .warragul-bus-lines {
   background-color: #3856b7;
 }
 
@@ -463,7 +463,7 @@ div.departure:nth-child(even) .warragul-bus-lines {
   color: #d7d7d7 !important;
 }
 
-div.departure:nth-child(even) .martin-s-albury {
+:nth-child(even) > .martin-s-albury {
   background-color: #a08b4b;
   color: #d7d7d7 !important;
 }
@@ -474,7 +474,7 @@ div.departure:nth-child(even) .martin-s-albury {
   background-color: #1c1e97;
 }
 
-div.departure:nth-child(even) .glen-waverley-line {
+:nth-child(even) > .glen-waverley-line {
   background-color: #151670;
 }
 
@@ -482,7 +482,7 @@ div.departure:nth-child(even) .glen-waverley-line {
   background-color: #1c1e97;
 }
 
-div.departure:nth-child(even) .alamein-line {
+:nth-child(even) > .alamein-line {
   background-color: #151670;
 }
 
@@ -490,7 +490,7 @@ div.departure:nth-child(even) .alamein-line {
   background-color: #1c1e97;
 }
 
-div.departure:nth-child(even) .belgrave-line {
+:nth-child(even) > .belgrave-line {
   background-color: #151670;
 }
 
@@ -498,7 +498,7 @@ div.departure:nth-child(even) .belgrave-line {
   background-color: #1c1e97;
 }
 
-div.departure:nth-child(even) .lilydale-line {
+:nth-child(even) > .lilydale-line {
   background-color: #151670;
 }
 
@@ -506,7 +506,7 @@ div.departure:nth-child(even) .lilydale-line {
   background-color: #ef2c20;
 }
 
-div.departure:nth-child(even) .mernda-line {
+:nth-child(even) > .mernda-line {
   background-color: #c31e14;
 }
 
@@ -514,7 +514,7 @@ div.departure:nth-child(even) .mernda-line {
   background-color: #ef2c20;
 }
 
-div.departure:nth-child(even) .hurstbridge-line {
+:nth-child(even) > .hurstbridge-line {
   background-color: #c31e14;
 }
 
@@ -522,7 +522,7 @@ div.departure:nth-child(even) .hurstbridge-line {
   background-color: #a2a500;
 }
 
-div.departure:nth-child(even) .upfield-line {
+:nth-child(even) > .upfield-line {
   background-color: #7d7f00;
 }
 
@@ -530,7 +530,7 @@ div.departure:nth-child(even) .upfield-line {
   background-color: #a2a500;
 }
 
-div.departure:nth-child(even) .craigieburn-line {
+:nth-child(even) > .craigieburn-line {
   background-color: #7d7f00;
 }
 
@@ -538,7 +538,7 @@ div.departure:nth-child(even) .craigieburn-line {
   background-color: #a2a500;
 }
 
-div.departure:nth-child(even) .sunbury-line {
+:nth-child(even) > .sunbury-line {
   background-color: #7d7f00;
 }
 
@@ -546,7 +546,7 @@ div.departure:nth-child(even) .sunbury-line {
   background-color: #219f18;
 }
 
-div.departure:nth-child(even) .werribee-line {
+:nth-child(even) > .werribee-line {
   background-color: #1b8013;
 }
 
@@ -554,7 +554,7 @@ div.departure:nth-child(even) .werribee-line {
   background-color: #219f18;
 }
 
-div.departure:nth-child(even) .williamstown-line {
+:nth-child(even) > .williamstown-line {
   background-color: #1b8013;
 }
 
@@ -562,7 +562,7 @@ div.departure:nth-child(even) .williamstown-line {
   background-color: #219f18;
 }
 
-div.departure:nth-child(even) .frankston-line {
+:nth-child(even) > .frankston-line {
   background-color: #1b8013;
 }
 
@@ -570,7 +570,7 @@ div.departure:nth-child(even) .frankston-line {
   background-color: #219f18;
 }
 
-div.departure:nth-child(even) .stony-point-line {
+:nth-child(even) > .stony-point-line {
   background-color: #1b8013;
 }
 
@@ -578,7 +578,7 @@ div.departure:nth-child(even) .stony-point-line {
   background-color: #56b7d6;
 }
 
-div.departure:nth-child(even) .cranbourne-line {
+:nth-child(even) > .cranbourne-line {
   background-color: #31a4c8;
 }
 
@@ -586,7 +586,7 @@ div.departure:nth-child(even) .cranbourne-line {
   background-color: #56b7d6;
 }
 
-div.departure:nth-child(even) .pakenham-line {
+:nth-child(even) > .pakenham-line {
   background-color: #31a4c8;
 }
 
@@ -594,7 +594,7 @@ div.departure:nth-child(even) .pakenham-line {
   background-color: #ee67e6;
 }
 
-div.departure:nth-child(even) .sandringham-line {
+:nth-child(even) > .sandringham-line {
   background-color: #d639cc;
 }
 
@@ -602,7 +602,7 @@ div.departure:nth-child(even) .sandringham-line {
   background-color: #ce0058;
 }
 
-div.departure:nth-child(even) .showgrounds-flemington-line {
+:nth-child(even) > .showgrounds-flemington-line {
   background-color: #ba0352;
 }
 
@@ -610,7 +610,7 @@ div.departure:nth-child(even) .showgrounds-flemington-line {
   background-color: #8f8f8f;
 }
 
-div.departure:nth-child(even) .city-loop-line {
+:nth-child(even) > .city-loop-line {
   background-color: #636363;
 }
 
@@ -618,7 +618,7 @@ div.departure:nth-child(even) .city-loop-line {
   background-color: #6b4d9e;
 }
 
-div.departure:nth-child(even) .vline, div.departure:nth-child(even) .v-line {
+:nth-child(even) > .vline, :nth-child(even) > .v-line {
   background-color: #523d77;
 }
 
@@ -629,7 +629,7 @@ div.departure:nth-child(even) .vline, div.departure:nth-child(even) .v-line {
     color: #e8e8e8 !important;
 }
 
-div.departure:nth-child(even) .tram-1 {
+:nth-child(even) > .tram-1 {
     background-color: #607216;
     color: #e8e8e8 !important;
 }
@@ -639,7 +639,7 @@ div.departure:nth-child(even) .tram-1 {
     color: #e8e8e8 !important;
 }
 
-div.departure:nth-child(even) .tram-3 {
+:nth-child(even) > .tram-3 {
     background-color: #0e7991;
     color: #e8e8e8 !important;
 }
@@ -649,7 +649,7 @@ div.departure:nth-child(even) .tram-3 {
     color: #d7d7d7 !important;
 }
 
-div.departure:nth-child(even) .tram-5 {
+:nth-child(even) > .tram-5 {
     background-color: #b80100;
     color: #d7d7d7 !important;
 }
@@ -658,7 +658,7 @@ div.departure:nth-child(even) .tram-5 {
     background-color: #00486c;
 }
 
-div.departure:nth-child(even) .tram-6 {
+:nth-child(even) > .tram-6 {
     background-color: #002233;
 }
 
@@ -667,7 +667,7 @@ div.departure:nth-child(even) .tram-6 {
     color: #e8e8e8 !important;
 }
 
-div.departure:nth-child(even) .tram-11 {
+:nth-child(even) > .tram-11 {
     background-color: #227b5b;
     color: #e8e8e8 !important;
 }
@@ -676,7 +676,7 @@ div.departure:nth-child(even) .tram-11 {
     background-color: #008d9d;
 }
 
-div.departure:nth-child(even) .tram-12 {
+:nth-child(even) > .tram-12 {
     background-color: #00626d;
 }
 
@@ -685,7 +685,7 @@ div.departure:nth-child(even) .tram-12 {
     color: #e8e8e8 !important;
 }
 
-div.departure:nth-child(even) .tram-16 {
+:nth-child(even) > .tram-16 {
     background-color: #ae8600;
     color: #e8e8e8 !important;
 }
@@ -694,7 +694,7 @@ div.departure:nth-child(even) .tram-16 {
     background-color: #953779;
 }
 
-div.departure:nth-child(even) .tram-19 {
+:nth-child(even) > .tram-19 {
     background-color: #5a2149;
 }
 
@@ -702,7 +702,7 @@ div.departure:nth-child(even) .tram-19 {
     background-color: #3e34a6;
 }
 
-div.departure:nth-child(even) .tram-30 {
+:nth-child(even) > .tram-30 {
     background-color: #231d5c;
 }
 
@@ -710,7 +710,7 @@ div.departure:nth-child(even) .tram-30 {
     background-color: #763113;
 }
 
-div.departure:nth-child(even) .tram-35 {
+:nth-child(even) > .tram-35 {
     background-color: #3a1809;
 }
 
@@ -718,7 +718,7 @@ div.departure:nth-child(even) .tram-35 {
     background-color: #45474d;
 }
 
-div.departure:nth-child(even) .tram-48 {
+:nth-child(even) > .tram-48 {
     background-color: #202124;
 }
 
@@ -726,7 +726,7 @@ div.departure:nth-child(even) .tram-48 {
     background-color: #01b2b5;
 }
 
-div.departure:nth-child(even) .tram-57 {
+:nth-child(even) > .tram-57 {
     background-color: #008083;
 }
 
@@ -734,7 +734,7 @@ div.departure:nth-child(even) .tram-57 {
     background-color: #878e94;
 }
 
-div.departure:nth-child(even) .tram-58 {
+:nth-child(even) > .tram-58 {
     background-color: #52575c;
 }
 
@@ -742,7 +742,7 @@ div.departure:nth-child(even) .tram-58 {
     background-color: #138a5a;
 }
 
-div.departure:nth-child(even) .tram-59 {
+:nth-child(even) > .tram-59 {
     background-color: #0c5739;
 }
 
@@ -750,7 +750,7 @@ div.departure:nth-child(even) .tram-59 {
     background-color: #00AB8E;
 }
 
-div.departure:nth-child(even) .tram-64 {
+:nth-child(even) > .tram-64 {
     background-color: #019e84;
 }
 
@@ -758,7 +758,7 @@ div.departure:nth-child(even) .tram-64 {
     background-color: #874b38;
 }
 
-div.departure:nth-child(even) .tram-67 {
+:nth-child(even) > .tram-67 {
     background-color: #703c2c;
 }
 
@@ -767,7 +767,7 @@ div.departure:nth-child(even) .tram-67 {
     color: #d7d7d7 !important;
 }
 
-div.departure:nth-child(even) .tram-70 {
+:nth-child(even) > .tram-70 {
     background-color: #ea2a8d;
     color: #d7d7d7 !important;
 }
@@ -777,7 +777,7 @@ div.departure:nth-child(even) .tram-70 {
     color: #e8e8e8 !important;
 }
 
-div.departure:nth-child(even) .tram-72 {
+:nth-child(even) > .tram-72 {
     background-color: #5a7566;
     color: #e8e8e8 !important;
 }
@@ -787,7 +787,7 @@ div.departure:nth-child(even) .tram-72 {
     color: #d7d7d7 !important;
 }
 
-div.departure:nth-child(even) .tram-75 {
+:nth-child(even) > .tram-75 {
     background-color: #017399;
     color: #d7d7d7 !important;
 }
@@ -796,7 +796,7 @@ div.departure:nth-child(even) .tram-75 {
     background-color: #8177c3;
 }
 
-div.departure:nth-child(even) .tram-78 {
+:nth-child(even) > .tram-78 {
     background-color: #51459e;
 }
 
@@ -805,7 +805,7 @@ div.departure:nth-child(even) .tram-78 {
     color: #c6c6c6 !important;
 }
 
-div.departure:nth-child(even) .tram-82 {
+:nth-child(even) > .tram-82 {
     background-color: #6d9118;
     color: #c6c6c6 !important;
 }
@@ -815,7 +815,7 @@ div.departure:nth-child(even) .tram-82 {
     color: #e8e8e8 !important;
 }
 
-div.departure:nth-child(even) .tram-86 {
+:nth-child(even) > .tram-86 {
     background-color: #b88400;
     color: #e8e8e8 !important;
 }
@@ -824,7 +824,7 @@ div.departure:nth-child(even) .tram-86 {
     background-color: #f20081;
 }
 
-div.departure:nth-child(even) .tram-96 {
+:nth-child(even) > .tram-96 {
     background-color: #a40058;
 }
 
@@ -832,6 +832,6 @@ div.departure:nth-child(even) .tram-96 {
     background-color: #ea6500;
 }
 
-div.departure:nth-child(even) .tram-109 {
+:nth-child(even) > .tram-109 {
     background-color: #a44700;
 }
