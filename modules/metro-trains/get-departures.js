@@ -136,10 +136,9 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let routeName = routes[routeID].route_name
     if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
     let platform = departure.platform_number
-    let runDestination = run.destination_name
+    let runDestination = utils.adjustStopname(run.destination_name)
     let cancelled = run.status === 'cancelled'
     let isTrainReplacement = false
-    let scheduledTrainReplacement = true
 
     let suspensions = departure.disruption_ids.map(id => suspensionMap[id]).filter(Boolean)
 
@@ -212,6 +211,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     }
 
     if (!trip) { // still no match - getStoppingPattern
+      if (isTrainReplacement && suspensions.length === 0) return // ok this is risky but bus replacements actually seem to do it the same way as vline
       trip = await getStoppingPattern(db, departure.run_id, 'metro train')
     }
 
@@ -274,7 +274,6 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       actualDepartureTime,
       platform,
       isTrainReplacement,
-      scheduledTrainReplacement,
       cancelled, cityLoopConfig,
       destination, runID, forming, vehicleType, runDestination,
       suspensions: mappedSuspensions
