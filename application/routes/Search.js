@@ -74,6 +74,10 @@ async function performSearch (db, query) {
       'bays.originalStopName': queryRegex
     }, {
       'bays.fullStopName': searchRegex
+    }, {
+      'tramTrackerNames': searchRegex
+    }, {
+      'tramTrackerNames': queryRegex
     }]
   }).limit(15 - prioritySearchResults.length - remainingResults.length).toArray()
 

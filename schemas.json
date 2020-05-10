@@ -132,7 +132,9 @@
       }]
     }],
     "location": "GeoJSON:MultiPoint",
-    "mergeName": "string"
+    "mergeName": "string",
+    "tramTrackerIDs": ["number:optional"],
+    "tramTrackerNames": ["string:optional"]
   },
   "route": {
     "mode": "string",

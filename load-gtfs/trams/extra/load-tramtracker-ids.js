@@ -82,9 +82,10 @@ database.connect({}, async err => {
   })
 
   let tramTrackerIDMap = {}
+  let tramTrackerNameMap = {}
   let objectIDMap = {}
 
-  await async.forEach(filteredTramtrackerStops, async stop => {
+  await async.forEachSeries(filteredTramtrackerStops, async stop => {
     let tramtrackerName = utils.adjustStopname(stop.stopName.trim()).replace(/Gve?/, 'Gr')
     let matchedStop = await matchTramStop(tramtrackerName, stop.stopNumber, stop.services, stop.suburb)
 
@@ -94,7 +95,10 @@ database.connect({}, async err => {
     //   console.log(matchedStop.bays.filter(e=>e.mode==='tram'), stop)
 
     if (!tramTrackerIDMap[matchedStop._id]) tramTrackerIDMap[matchedStop._id] = []
-      tramTrackerIDMap[matchedStop._id] = tramTrackerIDMap[matchedStop._id].concat(stop.tramTrackerID)
+    if (!tramTrackerNameMap[matchedStop._id]) tramTrackerNameMap[matchedStop._id] = []
+
+    tramTrackerIDMap[matchedStop._id] = tramTrackerIDMap[matchedStop._id].concat(stop.tramTrackerID)
+    tramTrackerNameMap[matchedStop._id] = tramTrackerNameMap[matchedStop._id].concat(stop.stopName)
 
     objectIDMap[matchedStop._id] = matchedStop._id
   })
@@ -103,12 +107,13 @@ database.connect({}, async err => {
 
   await async.forEach(Object.keys(tramTrackerIDMap), async id => {
     let tramTrackerIDs = tramTrackerIDMap[id].filter((e, i, a) => a.indexOf(e) === i)
+    let tramTrackerNames = tramTrackerNameMap[id].filter((e, i, a) => a.indexOf(e) === i)
     let oID = objectIDMap[id]
 
     await stops.updateDocument({
       _id: oID
     }, {
-      $set: { tramTrackerIDs }
+      $set: { tramTrackerIDs, tramTrackerNames }
     })
   })
 
