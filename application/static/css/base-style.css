@@ -74,7 +74,7 @@ div #updatingLog p {
   padding-left: 1em;
   text-indent: -1em;
 
-  font-size: calc(0.8vw + 0.8vw);
+  font-size: calc(0.5vw + 1.5vh);
 }
 
 div #updatingLog p:nth-child(even) {
