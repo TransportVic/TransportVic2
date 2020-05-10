@@ -77,11 +77,13 @@ async function findTripsForDates(gtfsTimetables, query, dates) {
       }
     }, {
       "$sortByCount": "$origin"
-  }]).toArray())[0]._id
+  }]).toArray())[0]
+
+  if (!mostCommonOrigin) return []
 
   let trips = await gtfsTimetables.findDocuments({
     ...query,
-    origin: mostCommonOrigin,
+    origin: mostCommonOrigin._id,
     operationDays: {
       $in: dates
     }
