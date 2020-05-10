@@ -23,6 +23,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  color: #f9f9f9;
 }
 
 #routeText {
@@ -59,8 +60,12 @@
   width: 30vw;
 }
 
-.table-data > span {
-  margin-top: calc(-0.3vh - 0.1vw);
+.table-data.spacing3 > * {
+  width: 24%;
+}
+
+.spacing3 > :nth-child(1) {
+  width: 28%;
 }
 
 .freqTime {
@@ -70,12 +75,12 @@
   align-items: center;
 }
 
-.freqTime > span:nth-child(1) {
-  font-size: calc(1.3vw + 1.5vh);
+.freqTime > span.time {
+  font-size: calc(1.2vw + 1.3vh);
   margin-top: calc(-0.2vh - 0.3vw);
 }
 
-.freqTime > span:nth-child(2) {
+.freqTime > span.desc {
   font-size: calc(0.8vw + 1vh);
   margin-top: calc(-0.4vh - 0.3vw);
 }
@@ -113,45 +118,38 @@
 }
 
 .table-data.spacing2 {
-    width: 100vw;
-    font-size: calc(1.2vh + 1.2vw);
+  width: 100vw;
+  font-size: calc(1.2vh + 1.2vw);
+
+  display: flex;
+  justify-content: flex-start;
 }
 
-.spacing2 > span:nth-child(1) {
-    margin-left: calc(1vw + 1vh);
-    width: calc(5vw + 5vh);
+.spacing2 > span.suburb {
+  width: calc(15vw + 15vh);
 }
 
-.spacing2 > span:nth-child(2) {
-    width: calc(15vw + 15vh);
-}
-
-.spacing2 > :nth-child(3) {
-    width: calc(100vw - (15vw + 15vh) - (5vw + 5vh) - (1vw + 1vh));
+.spacing2 > .stopName {
+  width: calc(100vw - (15vw + 15vh) - (5vw + 5vh) - (1vw + 1vh));
 }
 
 .stopNameData {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 
-    text-align: left;
+  text-align: left;
 }
 
 .stopNameData > :nth-child(1) {
-    color: #8f8f8f;
-    font-size: calc(1vh + 0.7vw);
+  color: #8f8f8f;
+  font-size: calc(1vh + 0.7vw);
 }
 
 .stopNameData > :nth-child(2) {
-    width: calc(100vw - (15vw + 15vh) - (5vw + 5vh) - (1vw + 1vh));
-    font-size: calc(1.1vh + 1.1vw);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-div.stop {
-    display: flex;
-    justify-content: center;
+  width: calc(100vw - (15vw + 15vh) - (5vw + 5vh) - (1vw + 1vh));
+  font-size: calc(1.1vh + 1.1vw);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

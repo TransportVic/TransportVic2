@@ -39,54 +39,65 @@ block content
         span=firstLastBusMap.firstBus.sunday
         span=firstLastBusMap.lastBus.sunday
     div#frequency
-      div.table-header.table-data.spacing1
+      div.table-header.table-data.spacing3
         span Time Of Day
-        span Min Frequency
-        span Max Frequency
-      div.coloured-row.table-data.spacing1
+        span Weekday
+        span Saturday
+        span Sunday
+      div.coloured-row.table-data.spacing3
+        -
+          function frequency(data) {
+            if (data.min === '-') return '-'
+            else {
+              if (data.min === '1 Bus') return '1 Bus'
+              else if (data.min === data.max) return data.min + 'min'
+              else return `${data.min}-${data.max}min`
+            }
+          }
         div.freqTime
-          span 03:00 - 06:00
-          span Early Morning
-        span=frequencyMap.weekday['Early Morning'].min || '-'
-        span=frequencyMap.weekday['Early Morning'].max || '-'
-      div.coloured-row.table-data.spacing1
+          span.time 03:00 - 06:00
+          span.desc Early Morning
+        span=frequency(frequencyMap.weekday['Early Morning'])
+        span=frequency(frequencyMap.saturday['Early Morning'])
+        span=frequency(frequencyMap.sunday['Early Morning'])
+      div.coloured-row.table-data.spacing3
         div.freqTime
-          span 06:00 - 10:00
-          span Morning Peak
-        span=frequencyMap.weekday['Morning Peak'].min || '-'
-        span=frequencyMap.weekday['Morning Peak'].max || '-'
-      div.coloured-row.table-data.spacing1
+          span.time 06:00 - 10:00
+          span.desc Morning Peak
+        span=frequency(frequencyMap.weekday['Morning Peak'])
+        span=frequency(frequencyMap.saturday['Morning Peak'])
+        span=frequency(frequencyMap.sunday['Morning Peak'])
+      div.coloured-row.table-data.spacing3
         div.freqTime
-          span 10:00 - 16:30
-          span Afternoon
-        span=frequencyMap.weekday['Afternoon'].min || '-'
-        span=frequencyMap.weekday['Afternoon'].max || '-'
-      div.coloured-row.table-data.spacing1
+          span.time 10:00 - 16:30
+          span.desc Afternoon
+        span=frequency(frequencyMap.weekday['Afternoon'])
+        span=frequency(frequencyMap.saturday['Afternoon'])
+        span=frequency(frequencyMap.sunday['Afternoon'])
+      div.coloured-row.table-data.spacing3
         div.freqTime
-          span 16:30 - 20:30
-          span Evening Peak
-        span=frequencyMap.weekday['Evening Peak'].min || '-'
-        span=frequencyMap.weekday['Evening Peak'].max || '-'
-      div.coloured-row.table-data.spacing1
+          span.time 16:30 - 20:30
+          span.desc Evening Peak
+        span=frequency(frequencyMap.weekday['Evening Peak'])
+        span=frequency(frequencyMap.saturday['Evening Peak'])
+        span=frequency(frequencyMap.sunday['Evening Peak'])
+      div.coloured-row.table-data.spacing3
         div.freqTime
-          span 20:30 - 03:00
-          span Night
-        span=frequencyMap.weekday['Night'].min || '-'
-        span=frequencyMap.weekday['Night'].max || '-'
+          span.time 20:30 - 03:00
+          span.desc Night
+        span=frequency(frequencyMap.weekday['Night'])
+        span=frequency(frequencyMap.saturday['Night'])
+        span=frequency(frequencyMap.sunday['Night'])
   div#stops
     div.table-header.table-data.spacing2
-      span Stop #
-      span Suburb
-      span Bus Stop    
+      span.suburb Suburb
+      span.stopName Bus Stop    
     
-    - let i = 0
     for stop in direction.stops
-      - i++
       div.coloured-row
         div.stop.table-data.spacing2
-          span=i
-          span=stop.suburb
-          div.stopNameData
+          span.suburb=stop.suburb
+          div.stopNameData.stopName
             -
               let stopRoad = stop.stopName.replace(/^[^\/]+\//, '')
               let stopName = stop.stopName.replace(/\/.+$/, '')
