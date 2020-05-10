@@ -22,6 +22,8 @@ if (config.useHTTPS) {
   httpServer = HTTPServer.createServer(mainServer)
 }
 
+global.server = httpsServer || httpServer
+
 httpServer.listen(config.httpPort)
 if (httpsServer) httpsServer.listen(443)
 

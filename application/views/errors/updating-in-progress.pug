@@ -8,6 +8,9 @@ block title
 
 append style
   link(rel='stylesheet' href='/static/css/timings/base-style.css')
+    
+append scripts
+  script(src='/static/scripts/updating.js')
 
 append content
   div.errorPage
@@ -15,4 +18,6 @@ append content
     img(src='/static/images/home/website-down.svg')
     div
       span Please wait 10 - 15 minutes before trying to load this page again. Thanks!
-    
+    span.small Scroll down for logs
+  div
+    pre#updatingLog

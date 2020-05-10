@@ -59,6 +59,9 @@ module.exports = class MainServer {
       res.sendFile(path.join(__dirname, '../application/static/app-content/robots.txt'))
     })
 
+    app.get('/log', (req, res) => {
+      res.json(global.gtfsUpdaterLog)
+    })
 
     app.use((req, res) => {
       res.status(503).render('errors/updating-in-progress')

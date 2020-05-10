@@ -50,9 +50,39 @@ div.errorPage a, div.errorPage span {
   font-size: calc(2vw + 2vh);
 }
 
+div.errorPage span.small {
+  font-size: calc(1.5vw + 1.5vh);
+}
+
 div.errorPage img {
   width: calc(20vw + 30vh);
   padding: calc(1vw + 1vh);
+}
+
+div #updatingLog {
+  width: 100%;
+  min-height: calc(96vh - 4vw);
+  text-align: left;
+}
+
+div #updatingLog p {
+  margin: 0;
+  padding: calc(0.5vw + 0.5vh) 0;
+  word-wrap: break-word;
+  text-overflow: clip;
+  white-space: initial;
+  padding-left: 1em;
+  text-indent: -1em;
+
+  font-size: calc(0.8vw + 0.8vw);
+}
+
+div #updatingLog p:nth-child(even) {
+  background-color: #2a2a2a;
+}
+
+div #updatingLog p:nth-child(odd) {
+  background-color: #202020;
 }
 
 a, a:visited {
