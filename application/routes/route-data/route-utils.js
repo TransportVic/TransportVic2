@@ -68,8 +68,20 @@ function parseOperationDays(operationDays) {
 }
 
 async function findTripsForDates(gtfsTimetables, query, dates) {
+  let mostCommonOrigin = (await gtfsTimetables.aggregate([{
+      $match: {
+        ...query,
+        operationDays: {
+          $in: dates
+        }
+      }
+    }, {
+      "$sortByCount": "$origin"
+  }]).toArray())[0]._id
+
   let trips = await gtfsTimetables.findDocuments({
     ...query,
+    origin: mostCommonOrigin,
     operationDays: {
       $in: dates
     }
