@@ -74,6 +74,8 @@ async function parseTimings(names, types, trip) {
     if (!timing || timing.includes('…')) return
     timing = timing.replace('*', '')
 
+    if (locationName === 'SEYMOUR SG Platform') locationName = 'Seymour'
+
     let stationData
     if (nonStations[locationName]) return
     if (stationCache[locationName]) stationData = stationCache[locationName]

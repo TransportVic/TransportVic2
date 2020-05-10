@@ -478,7 +478,7 @@ async function getDepartures(station, db) {
       let platform
       if (nspTrip) {
         let stopTiming = nspTrip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
-        platform = stopTiming.platform
+        if (stopTiming) platform = stopTiming.platform
       }
 
       if (!platform)
