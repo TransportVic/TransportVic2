@@ -2,7 +2,10 @@ const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config.json')
 const async = require('async')
 
+const updateStats = require('../load-gtfs/utils/stats')
+
 const fs = require('fs')
+const path = require('path')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
@@ -20,9 +23,9 @@ database.connect({}, async err => {
 
   let i = 0
 
-  let files = fs.readdirSync('./lga-data')
+  let files = fs.readdirSync(path.join(__dirname, 'lga-data'))
   await async.forEach(files, async fileName => {
-    let lgaData = require('./lga-data/' + fileName)
+    let lgaData = require(path.join(__dirname, 'lga-data', fileName))
 
     let lgaPolygons = {}
     let lgaIDs = {}
@@ -45,7 +48,6 @@ database.connect({}, async err => {
       lgaPolygons[name].push(geometry)
     })
     await async.forEach(Object.keys(lgaPolygons), async name => {
-      i++
       let id = lgaIDs[name]
       let polygons = lgaPolygons[name]
 
@@ -57,10 +59,14 @@ database.connect({}, async err => {
       await lgas.replaceDocument({ name, id }, { name, id, geometry }, {
         upsert: true
       })
+
+      if (++i % 20 === 0) console.log(`Load-LGAs: Completed ${i} LGAs`)
     })
 
     console.log('Completed loading LGAs from ' + fileName)
   })
+
+  await updateStats('load-lgas', i)
 
   console.log('Completed loading ' + i + ' LGA boundaries')
   process.exit()

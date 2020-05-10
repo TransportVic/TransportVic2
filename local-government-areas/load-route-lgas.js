@@ -2,7 +2,7 @@ const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config.json')
 const async = require('async')
 
-const updateStats = require('../load-gtfs/utils/gtfs-stats')
+const updateStats = require('../load-gtfs/utils/stats')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
@@ -19,7 +19,7 @@ database.connect({}, async err => {
 
   let stopCache = {}
 
-  await async.forEachOfLimit(regionalBusRoutes, 20, async busRoute => {
+  await async.forEachOfSeries(regionalBusRoutes, async (busRoute, i) => {
     let routeStops = busRoute.directions[0].stops
     let stopsByLGAs = {}
 
@@ -63,9 +63,11 @@ database.connect({}, async err => {
         lgaID: best[0]
       }
     })
+
+    if (i % 20 === 0 && i !== 0) console.log(`Route-LGAs: Completed ${i} routes`)
   })
 
-  // await updateStats('regional-bus-lgas', regionalBusRoutes.length, new Date() - start)
+  await updateStats('regional-bus-lgas', regionalBusRoutes.length)
 
   console.log('Completed loading in ' + regionalBusRoutes.length + ' route LGAs')
   process.exit()

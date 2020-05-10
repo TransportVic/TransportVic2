@@ -163,7 +163,8 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - store login info on client side?
 
 ## Setting up
-Create a config.json looking like
+* Standard `npm i -d`
+* Create a config.json looking like
 ```
 {
     "useHTTPS": false,
@@ -186,6 +187,26 @@ Create a config.json looking like
 }
 ```
 with the appropriate fields filled
+* You'll have to download additional data from Spatial Datamart Victoria and save it to `/spatial-datamart`
+  * These typically come as a Esri shapefile, I used `shp2json` to generate geojson
+  * metro-bus-route
+  * metro-bus-stops
+  * metro-train-stations
+  * metro-tram-stops
+  * night-bus-route
+  * night-bus-stops
+  * regional-bus-route
+  * regional-bus-stops
+  * regional-coach-routes
+  * regional-coach-stops
+  * skybus-route
+  * skybus-stops
+  * train-stations
+  * vline-train-stations
 * Run `modules/optimise-svg.js` to run through all the raw svg files and remove unneeded fields from them
 * Run `update-gtfs.sh` to pull the latest GTFS data from PTV
+* Run `node load-gtfs/metro-trains/extra/download-metro-timetables.js` and the v/line counterpart (do this just once unless the NSP/WTTs get updated)
+* Create a blank `load-gtfs/stats.json`. (I'll make this automatic)
 * Run `load-gtfs/load-all.sh` to load it all into the database (takes around 20min)
+* You'll need to populate `urls.json` with magic values (sorry I can't help you with that unless maybe I know you or something. but eh it mostly runs fine without that file and can fallback to offline mode without it)
+* You should be good to go!

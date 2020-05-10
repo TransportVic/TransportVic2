@@ -4,12 +4,8 @@
 /node_modules
 /gtfs
 /spatial-datamart
-/full-gunzel-mode/html-tables/*
-/full-gunzel-mode/timetables/*
-/gtfs-loader.log
 /load-gtfs/stats.json
 .DS_Store
-/load-vicmap-addresses/data
 /https
 /bus_trips.csv
 /webroot
