@@ -293,14 +293,15 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     let shortRouteName = getShortRouteName(trip)
 
     let serviceID = departureTime.format('HH:mm') + destination
-    let dayOfWeek = departureTime.day()
-    let isWeekday = dayOfWeek !== 0 && dayOfWeek !== 6
+    let dayOfWeek = utils.getDayName(departureTime)
 
-    let {direction} = trip
+    let {direction, origin} = trip
     let realRouteGTFSID = trip.routeGTFSID, originDepartureTime = trip.departureTime
 
     let nspTrip = await timetables.findDocument({
-      departureTime: originDepartureTime, direction, routeGTFSID: realRouteGTFSID
+      origin, direction, routeGTFSID: realRouteGTFSID,
+      operationDays: dayOfWeek,
+      mode: 'regional train'
     })
 
     let platform
@@ -482,15 +483,16 @@ async function getDepartures(station, db) {
     scheduled = await async.map(scheduled, async departure => {
       let shortRouteName = getShortRouteName(departure.trip)
 
-      let dayOfWeek = departure.scheduledDepartureTime.day()
-      let isWeekday = dayOfWeek !== 0 && dayOfWeek !== 6
+      let dayOfWeek = utils.getDayName(departure.scheduledDepartureTime)
       let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departure.scheduledDepartureTime) % 1440
 
-      let {direction} = departure.trip
-      let realRouteGTFSID = departure.trip.routeGTFSID, originDepartureTime = departure.trip.departureTime
+      let {direction, origin} = departure.trip
+      let realRouteGTFSID = departure.trip.routeGTFSID
 
       let nspTrip = await timetables.findDocument({
-        departureTime: originDepartureTime, direction, routeGTFSID: realRouteGTFSID
+        origin, direction, routeGTFSID: realRouteGTFSID,
+        operationDays: dayOfWeek,
+        mode: 'regional train'
       })
 
       let platform
