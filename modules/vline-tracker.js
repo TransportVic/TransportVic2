@@ -137,11 +137,11 @@ async function requestTimings() {
   console.log('requesting vline trips')
   await getDeparturesFromVNET(database)
 
-  if (shouldRun) {
+  if (shouldRun()) {
     setTimeout(requestTimings, 30 * 60 * 1000)
   } else {
     let minutesPastMidnight = utils.getMinutesPastMidnightNow()
-    let timeToStart = 1710 - minutesPastMidnight
+    let timeToStart = (1710 - minutesPastMidnight) % 1440
 
     setTimeout(requestTimings, timeToStart * 60 * 1000)
   }
