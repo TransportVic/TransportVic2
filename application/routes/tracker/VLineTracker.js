@@ -57,7 +57,7 @@ router.get('/by-consist', async (req, res) => {
   let trips = await vlineTrips.findDocuments({ consist, date })
     .sort({departureTime: 1, destination: 1}).toArray()
 
-  res.render('tracker/vline/by-consist', {trips, date})
+  res.render('tracker/vline/by-consist', {trips, consist, date})
 })
 
 module.exports = router
