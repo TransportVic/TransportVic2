@@ -72,7 +72,7 @@ for busRoute in routes.filter(route => route.mode === 'bus')
         } else {
           name = `${busRoute.directions[0].directionName} - ${busRoute.directions[1].directionName}`
         }
-        name = name.replace(/Interchange/g, '').replace(/Railway Station/g, '').replace('Shopping Centre', 'SC').replace(/  +/g, ' ').trim()
+        name = name.replace(/(Bus )?Interchange/g, '').replace(/Bus Station/g, '').replace(/Railway Station/g, '').replace(/Shopping Centre/g, 'SC').replace(/  +/g, ' ').trim()
       span=type
       span=name
 

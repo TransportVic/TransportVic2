@@ -12,6 +12,8 @@ module.exports = function merge(variants, matched) {
   stopsList = variants[0]
   branch = []
 
+  let origin = stopsList[0]
+
   variants.slice(1).forEach(variant => {
     let lastMainMatch = 0
 
@@ -33,9 +35,18 @@ module.exports = function merge(variants, matched) {
             if (mainBranchLength < branch.length)
               offset = mainBranchLength
 
+            let branchEnd = branch.slice(-1)[0]
+
             let firstHalf = stopsList.slice(0, matchIndex - offset)
             let backHalf = stopsList.slice(matchIndex - offset)
-            stopsList = firstHalf.concat(branch).concat(backHalf)
+
+            if (matched(branchEnd, origin)) {
+              stopsList = firstHalf.concat(backHalf).concat(branch)
+            } else {
+              stopsList = firstHalf.concat(branch).concat(backHalf)
+            }
+
+            origin = stopsList[0]
 
             branch = []
           } else { // otherwise we're on sync, all good
@@ -54,10 +65,19 @@ module.exports = function merge(variants, matched) {
     if (branch.length) { // we're still on a branch after completing the stops, means they have different destiantions
       // look at where they deviated, and join it in between
 
+      let branchEnd = branch.slice(-1)[0]
+
       let firstHalf = stopsList.slice(0, lastMainMatch + 1)
       let backHalf = stopsList.slice(lastMainMatch + 1)
 
-      stopsList = firstHalf.concat(branch).concat(backHalf)
+      if (matched(branchEnd, origin)) {
+        stopsList = firstHalf.concat(branch).concat(backHalf)
+      } else {
+        stopsList = firstHalf.concat(backHalf).concat(branch)
+      }
+
+      branchEnd = stopsList[0]
+
       branch = []
     }
   })

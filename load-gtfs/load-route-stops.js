@@ -48,16 +48,35 @@ database.connect({}, async err => {
     await async.forEachOf(routeDirections, async (direction, gtfsDirection) => {
       let mergedStops = mergeStops(direction, (a, b) => a.stopName == b.stopName)
 
-      let mostCommonDestination = (await gtfsTimetables.aggregate([{
+      let mostCommonOrigin = (await gtfsTimetables.aggregate([{
+          $match: {
+            routeGTFSID,
+            gtfsDirection: gtfsDirection.toString()
+          }
+        }, {
+          "$sortByCount": "$origin"
+      }]).toArray())[0]._id
+
+      let mostCommonDestinations = (await gtfsTimetables.aggregate([{
           $match: {
             routeGTFSID,
             gtfsDirection: gtfsDirection.toString()
           }
         }, {
           "$sortByCount": "$destination"
-      }]).toArray())[0]._id
+      }]).toArray()).map(e => e._id)
 
-      let directionName = mostCommonDestination
+      let mostCommonDestination
+
+      if (mostCommonDestinations[0] === mostCommonOrigin && mostCommonDestinations.length > 1) mostCommonDestinations.shift()
+      mostCommonDestination = mostCommonDestinations[0]
+
+      let lastStop = mergedStops.slice(-1)[0].stopName
+
+      let directionName
+
+      if (lastStop.includes('School') || lastStop.includes('College')) directionName = mostCommonDestination
+      else directionName = lastStop
 
       let directionShortName = directionName.split('/')[0]
       if (!utils.isStreet(directionShortName)) directionName = directionShortName
