@@ -54,7 +54,7 @@ let singlePlatforms = [
   'Camperdown',
   'Terang',
   'Sherwood Park',
-  'Warnambool',
+  'Warrnambool',
   'Beaufort',
   'Creswick',
   'Clunes',

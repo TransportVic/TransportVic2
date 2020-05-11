@@ -414,7 +414,8 @@ async function getDepartures(station, db) {
     coachReplacements = scheduledTrains.filter(departure => departure.isTrainReplacement)
     cancelledTrains = scheduledTrains.filter(departure => departure.cancelled)
     scheduledTrains = scheduledTrains.filter(departure => !departure.isTrainReplacement)
-  } catch (e) {console.log(e)
+  } catch (e) {
+    console.log(e)
   }
 
   let coachStop = station
@@ -441,6 +442,7 @@ async function getDepartures(station, db) {
       })
     coachReplacements = [...coachReplacements, ...scheduledCoachReplacements]
   } catch (e) {
+    console.log(e)
   }
 
   if (station.stopName === 'Southern Cross Railway Station') {
@@ -467,6 +469,7 @@ async function getDepartures(station, db) {
 
       return returnDepartures(allDepartures)
     } catch (e) {
+      console.log(e)
     }
   }
 
