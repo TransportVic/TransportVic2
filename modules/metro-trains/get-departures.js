@@ -130,6 +130,30 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     return suspension.disruption_id
   })
 
+  let stonyPointReplacements = Object.values(disruptions).filter(disruption => {
+    if (disruption.routes.find(r => r.route_gtfs_id === '2-SPT')) {
+      return disruption.description.includes('replace') && disruption.description.includes('fault')
+    }
+    return false
+  }).map(disruption => {
+    let text = disruption.description
+    let service = text.match(/the (\d+:\d+[ap]m) ([ \w]*?) to ([ \w]*?) (?:train|service)/)
+
+    if (service) {
+      let departureTime = service[1],
+          origin = service[2],
+          destination = service[3]
+
+      let minutesPastMidnight = utils.time24ToMinAftMidnight(departureTime.slice(0, -2))
+      if (departureTime.includes('pm')) minutesPastMidnight += 720
+
+      return {
+        departureTime: utils.minAftMidnightToTime24(minutesPastMidnight),
+        origin, destination
+      }
+    }
+  }).filter(Boolean)
+
   await async.forEach(departures, async departure => {
     const run = runs[departure.run_id]
     let routeID = departure.route_id
@@ -213,6 +237,13 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     if (!trip) { // still no match - getStoppingPattern
       if (isTrainReplacement && suspensions.length === 0) return // ok this is risky but bus replacements actually seem to do it the same way as vline
       trip = await getStoppingPattern(db, departure.run_id, 'metro train')
+    }
+
+    if (stonyPointReplacements.length) {
+      let replacement = stonyPointReplacements.find(r => {
+        return r.origin === trip.origin.slice(0, -16) && r.departureTime === trip.departureTime
+      })
+      if (replacement) isTrainReplacement = true
     }
 
     let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== trip.destination.slice(0, -16)
