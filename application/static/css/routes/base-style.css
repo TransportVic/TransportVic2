@@ -61,11 +61,12 @@
 }
 
 .table-data.spacing3 > * {
-  width: 24%;
+  width: 23%;
+  font-size: calc(1.2vw + 1.2vh);
 }
 
 .spacing3 > :nth-child(1) {
-  width: 28%;
+  width: 31%;
 }
 
 .freqTime {
@@ -76,13 +77,12 @@
 }
 
 .freqTime > span.time {
-  font-size: calc(1.2vw + 1.3vh);
-  margin-top: calc(-0.2vh - 0.3vw);
+  font-size: calc(1.2vw + 1.2vh);
 }
 
 .freqTime > span.desc {
-  font-size: calc(0.8vw + 1vh);
-  margin-top: calc(-0.4vh - 0.3vw);
+  font-size: calc(0.8vw + 0.9vh);
+  /* margin-top: calc(-0.4vh - 0.3vw); */
 }
 
 #keyTimings > div.coloured-row:nth-child(5) {
@@ -108,7 +108,7 @@
   }
 
   #keyTimings .coloured-row.table-data {
-    height: calc(5.5vw + 5.5vh);
+    height: calc(6.6vw + 6.6vh);
   }
 
   #keyTimings > div.coloured-row {

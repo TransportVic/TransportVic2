@@ -4,7 +4,15 @@ block head
   title TransportVic - Bus #{route.routeNumber}
   
 block title
-  span Metropolitian Bus #{route.routeNumber}
+  -
+    let type = ''
+    if (route.routeGTFSID.startsWith('4-')) type = 'Metropolitian Bus'
+    if (route.routeGTFSID.startsWith('6-')) type = 'Regional Bus'
+    if (route.routeGTFSID.startsWith('7-')) type = 'Telebus'
+    if (route.routeGTFSID.startsWith('8-')) type = 'Night Bus'
+    if (route.routeGTFSID.startsWith('11-')) type = 'SkyBus'
+    
+  span #{type} #{route.routeNumber}
 
 block style
   link(rel='stylesheet' href='/static/css/routes/base-style.css')
@@ -74,25 +82,32 @@ block content
         span=frequency(frequencyMap.sunday['Morning Peak'])
       div.coloured-row.table-data.spacing3
         div.freqTime
-          span.time 10:00 - 16:30
-          span.desc Afternoon
-        span=frequency(frequencyMap.weekday['Afternoon'])
-        span=frequency(frequencyMap.saturday['Afternoon'])
-        span=frequency(frequencyMap.sunday['Afternoon'])
+          span.time 10:00 - 15:00
+          span.desc Daytime Off Peak
+        span=frequency(frequencyMap.weekday['Daytime Off Peak'])
+        span=frequency(frequencyMap.saturday['Daytime Off Peak'])
+        span=frequency(frequencyMap.sunday['Daytime Off Peak'])
       div.coloured-row.table-data.spacing3
         div.freqTime
-          span.time 16:30 - 20:30
+          span.time 15:00 - 19:00
+          span.desc Afternoon Peak
+        span=frequency(frequencyMap.weekday['Afternoon Peak'])
+        span=frequency(frequencyMap.saturday['Afternoon Peak'])
+        span=frequency(frequencyMap.sunday['Afternoon Peak'])
+      div.coloured-row.table-data.spacing3
+        div.freqTime
+          span.time 19:00 - 22:00
           span.desc Evening Peak
         span=frequency(frequencyMap.weekday['Evening Peak'])
         span=frequency(frequencyMap.saturday['Evening Peak'])
         span=frequency(frequencyMap.sunday['Evening Peak'])
       div.coloured-row.table-data.spacing3
         div.freqTime
-          span.time 20:30 - 03:00
-          span.desc Night
-        span=frequency(frequencyMap.weekday['Night'])
-        span=frequency(frequencyMap.saturday['Night'])
-        span=frequency(frequencyMap.sunday['Night'])
+          span.time 22:00 - 03:00
+          span.desc Late Night
+        span=frequency(frequencyMap.weekday['Late Night'])
+        span=frequency(frequencyMap.saturday['Late Night'])
+        span=frequency(frequencyMap.sunday['Late Night'])
   div#stops
     div.table-header.table-data.spacing2
       span.suburb Suburb

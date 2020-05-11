@@ -4,9 +4,10 @@ const async = require('async')
 let frequencyRanges = {
   'Early Morning': [[3, 0], [6, 00]],
   'Morning Peak': [[6, 00], [10, 0]],
-  'Afternoon': [[10, 0], [16, 30]],
-  'Evening Peak': [[16, 30], [20, 30]],
-  'Night': [[20, 30], [27, 0]]
+  'Daytime Off Peak': [[10, 0], [15, 0]],
+  'Afternoon Peak': [[15, 0], [19, 0]],
+  'Evening Peak': [[19, 0], [22, 00]],
+  'Late Night': [[22, 00], [27, 0]]
 }
 
 function getDistantWeekdays(allAvailableDays) {

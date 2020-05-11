@@ -10,3 +10,6 @@ $DIRNAME/trams/load-all.sh
 
 node $DIRNAME/load-route-stops.js
 node $DIRNAME/load-stop-services.js
+
+node $DIRNAME/../lgas/load-lgas.js
+node $DIRNAME/../lgas/load-route-lgas.js
