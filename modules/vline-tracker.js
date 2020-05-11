@@ -30,7 +30,7 @@ async function getStationFromVNETName(vnetStationName, db) {
 }
 
 async function getVNETDepartures(direction, db) {
-  let url = urls.vlinePlatformDepartures.format('', direction).slice(-3) + '600'
+  let url = urls.vlinePlatformDepartures.format('', direction).slice(0, -3) + '600'
   const body = (await utils.request(url)).replace(/a:/g, '')
   const $ = cheerio.load(body)
   const allServices = Array.from($('PlatformService'))
