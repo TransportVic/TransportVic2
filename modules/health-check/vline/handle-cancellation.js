@@ -61,6 +61,8 @@ async function cancellation(db, text) {
   } else {
     if (text.match(/services (?:will not run|has been cancelled)/)) {
       let services = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) /g)
+      if (services.length === 0) return console.log('Could not find match', text)
+
       services.forEach(service => {
         let parts = service.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) /)
         let departureTime = parts[1]
