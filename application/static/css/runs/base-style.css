@@ -22,11 +22,10 @@ div.vehicle {
   justify-content: space-between;
 
   width: calc(6vw + 6vh);
-  margin-right: calc(1vw + 1vh);
+  margin-right: calc(1.2vw + 1.2vh);
 }
 
 div.vehicle img {
-  width: calc(3vw + 3vh);
   height: calc(3vw + 3vh);
 }
 

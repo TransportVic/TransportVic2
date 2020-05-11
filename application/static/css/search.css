@@ -49,7 +49,7 @@
 }
 
 .leftContainer.miniIcon img {
-  width: calc(2.5vw + 2.5vh);
+  width: calc(2.5vw + 2.5vh) !important;
 }
 
 .leftContainer img {
