@@ -37,6 +37,22 @@ for tramStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'tram'
         displayName += ` ${stopNumbers}`
       span=displayName
 
+for busStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'bus')).slice(0, 10)
+  a(href=`/bus/timings/${busStop.codedSuburb[0]}/${busStop.codedName}`).busStop.result
+    div.leftContainer
+      img(src='/static/images/clear-icons/bus.svg')
+    div.resultDetails
+      span='Bus stop in ' + busStop.suburb[0]
+      -
+        let displayName = busStop.stopName
+        let stopNumbers = busStop.bays.filter(bay => bay.mode === 'bus')
+          .map(bay => bay.stopNumber).filter(Boolean)
+          .filter((e, i, a) => a.indexOf(e) === i)
+          .map(stopNumber => `#${stopNumber}`).join(', ')
+        displayName += ` ${stopNumbers}`
+      span=displayName
+      
+      
 for busRoute in routes.filter(route => route.mode === 'bus')
   -
     let hasNumber = !!busRoute.routeNumber
@@ -79,19 +95,3 @@ for busRoute in routes.filter(route => route.mode === 'bus')
         name = name.replace(/(Bus )?Interchange/g, '').replace(/Bus Station/g, '').replace(/Railway Station/g, '').replace(/Shopping Centre/g, 'SC').replace(/  +/g, ' ').trim()
       span=type
       span=name
-
-for busStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'bus')).slice(0, 10)
-  a(href=`/bus/timings/${busStop.codedSuburb[0]}/${busStop.codedName}`).busStop.result
-    div.leftContainer
-      img(src='/static/images/clear-icons/bus.svg')
-    div.resultDetails
-      span='Bus stop in ' + busStop.suburb[0]
-      -
-        let displayName = busStop.stopName
-        let stopNumbers = busStop.bays.filter(bay => bay.mode === 'bus')
-          .map(bay => bay.stopNumber).filter(Boolean)
-          .filter((e, i, a) => a.indexOf(e) === i)
-          .map(stopNumber => `#${stopNumber}`).join(', ')
-        displayName += ` ${stopNumbers}`
-      span=displayName
-      
