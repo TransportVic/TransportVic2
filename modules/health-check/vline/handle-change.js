@@ -1,4 +1,5 @@
 const utils = require('../../../utils')
+const cancellation = require('./handle-cancellation')
 const async = require('async')
 
 async function setServiceAsChanged(db, departureTime, origin, destination, type, changePoint) {
@@ -63,7 +64,13 @@ function change(db, text) {
 
     setServiceAsChanged(db, departureTime, origin, destination, type, changePoint)
   } else {
-    console.log('Could not find match', text)
+    service = text.match(/(\d{1,2}[:.]\d{1,2}/)
+    if (service && service.includes('terminate')) {
+      cancellation(text, db)
+      console.log('Was told train was terminating early but not where, marking as cancelled')
+    } else {
+      console.log('Could not find match', text)
+    }
   }
 
 }
