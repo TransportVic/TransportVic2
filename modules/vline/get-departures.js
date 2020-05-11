@@ -234,6 +234,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
   let timetables = db.getCollection('timetables')
+  let vlineTrips = db.getCollection('vline trips')
   let trainDepartures = departures.filter(departure => departure.flags.includes('VTR'))
 
   let mappedDepartures = []
@@ -316,14 +317,31 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
 
     if (trip.cancelled) platform = '-'
 
+    let vehicle
+    if (nspTrip) {
+      let tripData = await vlineTrips.findDocument({
+        date: departureTime.format('YYYYMMDD'),
+        runID: nspTrip.runID
+      })
+
+      if (tripData) {
+        let first = tripData.consist[0]
+        if (first.startsWith('N')) {
+          vehicle = tripData.consist.join(' ')
+        } else {
+          vehicle = tripData.consist.join('-')
+        }
+      }
+    }
+
     let departure = {
       shortRouteName,
       serviceID,
       trip,
       platform,
       scheduledDepartureTime: departureTime,
-      runID: null,
-      vehicle: null,
+      runID: nspTrip ? nspTrip.runID : null,
+      vehicle,
       destination: trip.destination.slice(0, -16),
       flags: findFlagMap(trainDeparture.flags),
       isTrainReplacement: !!trip.isTrainReplacement,
