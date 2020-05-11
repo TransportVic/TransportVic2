@@ -16,14 +16,17 @@ async function pickBestTrip(data, db) {
   let tripEndTime = moment.tz(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
 
+  let trueMode = data.mode
+  if (trueMode === 'coach') trueMode = 'regional coach'
+
   let originStop = await db.getCollection('stops').findDocument({
     codedNames: data.origin,
-    'bays.mode': data.mode
+    'bays.mode': trueMode
   })
 
   let destinationStop = await db.getCollection('stops').findDocument({
     codedNames: data.destination,
-    'bays.mode': data.mode
+    'bays.mode': trueMode
   })
   if (!originStop || !destinationStop) return null
   let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
@@ -33,7 +36,7 @@ async function pickBestTrip(data, db) {
   let destinationName = destinationStop.bays.filter(bay => utils.encodeName(bay.fullStopName) === data.destination)[0].fullStopName
 
   let query = {
-    mode: data.mode,
+    mode: trueMode,
     origin: originName,
     departureTime: data.departureTime,
     destination: destinationName,
@@ -44,7 +47,7 @@ async function pickBestTrip(data, db) {
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
 
-  let useLive = minutesToTripEnd > -5 && minutesToTripStart < 120
+  let useLive = minutesToTripEnd > -5 && minutesToTripStart < 120 && data.mode !== 'coach'
 
   if (liveTrip) {
     if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
@@ -71,7 +74,7 @@ async function pickBestTrip(data, db) {
 
   let checkStopTime = moment.tz(`${data.operationDays} ${checkStop.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
   let isoDeparture = checkStopTime.toISOString()
-  let mode = data.mode === 'bus' ? 2 : 1
+  let mode = trueMode === 'bus' ? 2 : 1
   try {
     let {departures, runs} = await ptvAPI(`/v3/departures/route_type/${mode}/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-3, 'minutes').startOf('minute').toISOString()}&max_results=5&expand=run&expand=stop`)
 
@@ -89,7 +92,7 @@ async function pickBestTrip(data, db) {
     let ptvRunID = departure.run_id
     let departureTime = departure.scheduled_departure_utc
 
-    let trip = await getStoppingPattern(db, ptvRunID, data.mode, departureTime, departure.stop_id, gtfsTrip)
+    let trip = await getStoppingPattern(db, ptvRunID, trueMode, departureTime, departure.stop_id, gtfsTrip)
     return trip
   } catch (e) {
     return gtfsTrip
@@ -97,7 +100,7 @@ async function pickBestTrip(data, db) {
 }
 
 router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res, next) => {
-  if (!['bus', 'tram'].includes(req.params.mode)) return next()
+  if (!['coach', 'bus', 'tram'].includes(req.params.mode)) return next()
 
   let trip = await pickBestTrip(req.params, res.db)
   if (!trip) return res.status(404).render('errors/no-trip')
