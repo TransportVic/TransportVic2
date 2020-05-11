@@ -37,22 +37,43 @@
       "Edwards Street/Victoria Street": "Sebastopol"
     },
     "25": {
-      "James Drive/Whitelaw Avenue": "Delacombe"
+      "James Drive/Whitelaw Avenue": "Delacombe",
+      "Eagleview Cresent/Braund Avenue": "Bell Post Hill"
     },
     "26": {
       "Parkview Drive/Cuthberts Road": "Alfredton"
     },
     "30": {
-      "Broomfield Road/Clunes-Creswick Road": "Creswick"
+      "Broomfield Road/Clunes-Creswick Road": "Creswick",
+      "Tannoch Brae Retirement Village": "Whittington"
     },
     "31": {
-      "Miners Rest SC": "Miners Rest"
+      "Miners Rest SC": "Miners Rest",
+      "Tannoch Brae Retirement Village": "St. Albans Park"
+    },
+    "32": {
+      "Hammer Court/Hoddle Drive": "Leopold"
+    },
+    "50": {
+      "Camrose Court/Strathmore Drive": "Jan Juc",
+      "St. Andrews Drive/Duffields Road": "Jan Juc"
+    },
+    "51": {
+      "Camrose Court/Strathmore Drive": "Jan Juc",
+      "St. Andrews Drive/Duffields Road": "Jan Juc"
     },
     "54": {
       "Beckhams Road/Carolyn Way": "Maiden Gully"
     },
+    "55": {
+      "Ocean Grove Market Place/Kingston Downs Drive": "Ocean Grove"
+    },
+    "56": {
+      "Queenscliffe Marina": "Queenscliffe"
+    },
     "60": {
-      "Piper Lane": "Bendigo East"
+      "Piper Lane": "Bendigo East",
+      "Bluff Road/Leviens Road": "St. Leonards"
     },
     "64": {
       "Oak Street/High Street": "Golden Square"
@@ -494,6 +515,7 @@
     "Memorial Park/Grant Street": "Yarram",
     "Jennings Street/Northern Highway": "Heathcote",
     "Scots' Church/Russell Street": "Melbourne City",
-    "Melbourne Town Hall": "Melbourne City"
+    "Melbourne Town Hall": "Melbourne City",
+    "Lorne Hotel": "Apollo Bay"
   }
 }

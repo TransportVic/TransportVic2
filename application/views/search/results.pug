@@ -46,9 +46,13 @@ for busRoute in routes.filter(route => route.mode === 'bus')
     } else if (busRoute.routeGTFSID.startsWith('6-')) {
       if (hasNumber) url = `/bus/route/regional/${busRoute.codedLGA}/${busRoute.routeNumber}`
     }
+    
+    let operator = encodeName(busRoute.operators[0])
+    if (operator.startsWith('dysons')) operator = 'dysons'
+  
   a(href=url).route.result
     if hasNumber
-      div(class=`leftContainer platform ${encodeName(busRoute.operators[0])}`)
+      div(class=`leftContainer platform ${operator}`)
         span.bigNumber=busRoute.routeNumber
     div.resultDetails
       -

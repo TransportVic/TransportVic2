@@ -222,11 +222,20 @@
   background-color: #181d55;
 }
 
-.christians-bus-company {
+.christians-bus-company-bendigo {
   background-color: #0559a6;
 }
 
-:nth-child(even) > .christians-bus-company {
+:nth-child(even) > .christians-bus-company-bendigo {
+  background-color: #0a4a85;
+}
+}
+
+.christians-bus-company-ararat {
+  background-color: #0559a6;
+}
+
+:nth-child(even) > .christians-bus-company-ararat {
   background-color: #0a4a85;
 }
 

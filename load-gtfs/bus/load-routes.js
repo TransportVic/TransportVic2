@@ -69,6 +69,9 @@ database.connect({
         }
       }
       return newRouteName
+    }, (routeGTFSID, routeNumber) => {
+      if (routeGTFSID === '6-GVL') return null
+      return routeNumber
     })
   })
 

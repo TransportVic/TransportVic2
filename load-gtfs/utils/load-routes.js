@@ -4,7 +4,7 @@ const gtfsUtils = require('../../gtfs-utils')
 const gtfsModes = require('../gtfs-modes.json')
 const loopDirections = require('../../additional-data/loop-direction')
 
-module.exports = async function(routes, mode, routeData, shapeJSON, operator, name) {
+module.exports = async function(routes, mode, routeData, shapeJSON, operator, name, routeNumber) {
   let routeOperatorsSeen = []
   let rawRouteNames = {}
 
@@ -59,17 +59,17 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
         _id: matchingRoute._id
       }, matchingRoute)
     } else {
-      let routeNumber = null
+      let gtfsRouteNumber = null
       if (['3', '4', '6', '8'].includes(mode)) { // tram, metro bus, regional bus, telebus, night bus
-        routeNumber = gtfsRouteData[2]
+        gtfsRouteNumber = gtfsRouteData[2]
       } else if (mode === '7') {
-        routeNumber = routeGTFSID.slice(2)
+        gtfsRouteNumber = routeGTFSID.slice(2)
       }
 
       let newRoute = {
         routeName,
         codedName: utils.encodeName(routeName),
-        routeNumber,
+        routeNumber: routeNumber ? routeNumber(routeGTFSID, gtfsRouteNumber) : gtfsRouteNumber,
         routeGTFSID,
         routePath: [{
           fullGTFSIDs: [shapeID],
