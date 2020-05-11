@@ -306,7 +306,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     let platform
     if (nspTrip) {
       let stopTiming = nspTrip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
-      platform = stopTiming.platform
+      if (stopTiming) platform = stopTiming.platform
     }
 
     if (!platform)
@@ -413,7 +413,7 @@ async function getDepartures(station, db) {
     coachReplacements = scheduledTrains.filter(departure => departure.isTrainReplacement)
     cancelledTrains = scheduledTrains.filter(departure => departure.cancelled)
     scheduledTrains = scheduledTrains.filter(departure => !departure.isTrainReplacement)
-  } catch (e) {
+  } catch (e) {console.log(e)
   }
 
   let coachStop = station
