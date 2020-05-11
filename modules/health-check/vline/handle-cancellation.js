@@ -13,7 +13,7 @@ async function setServicesAsCancelled(db, services) {
     if (departureTime.split(':')[0].length == 1) {
       departureTime = `0${departureTime}`
     }
-    
+
     let query = {
       departureTime, origin, destination,
       mode: 'regional train',
@@ -49,7 +49,7 @@ async function setServicesAsCancelled(db, services) {
 }
 
 async function cancellation(db, text) {
-  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) service (?:will not run|has been cancelled)/)
+  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) (?:service|train) (?:will not run|has been cancelled)/)
   let matches = []
 
   if (service) {
