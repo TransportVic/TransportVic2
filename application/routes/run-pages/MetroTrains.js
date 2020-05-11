@@ -63,8 +63,10 @@ async function pickBestTrip(data, db) {
 
   if (gtfsTrip && isStonyPoint) {
     if (isStonyPoint) {
-      query.operationDays = utils.getPTDayName(tripStartTime)
+      query.$and[0] = { mode: 'metro train', operationDays: utils.getPTDayName(tripStartTime) }
       let staticTrip = await db.getCollection('timetables').findDocument(query)
+      if (!staticTrip) return gtfsTrip
+
       gtfsTrip.stopTimings = gtfsTrip.stopTimings.map(stop => {
         if (stop.stopName === 'Frankston Railway Station')
           stop.platform = '3'

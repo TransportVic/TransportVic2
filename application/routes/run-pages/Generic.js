@@ -149,6 +149,7 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
     stop.prettyTimeToArrival = ''
 
     stop.headwayDevianceClass = 'unknown'
+
     if (stop.estimatedDepartureTime) {
       let scheduledDepartureTime =
         moment.tz(`${req.params.operationDays} ${stop.departureTime || stop.arrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
