@@ -1,0 +1,16 @@
+extends ../../layout
+
+block head
+  title TransportVic - Tracker/V/Line trips by day
+  
+block title
+  span V/Line trips by day
+  
+//- block style
+//-   link(rel='stylesheet' href='/static/css/tracker.css')
+
+block content
+  h1 V/Line Trips On #{date}
+  for trip in trips
+    div.trip
+      span ##{trip.runID}: #{trip.departureTime} #{trip.origin} - #{trip.destination}: #{trip.consist.join('-')}

@@ -192,7 +192,8 @@ module.exports = class MainServer {
 
       'jmss-screens/BigScreen': '/jmss-screens/big-screen',
 
-      'bus-tracker/Index': '/tracker2',
+      'tracker/BusTracker': '/tracker2',
+      'tracker/VLineTracker': '/vline/tracker',
 
       'transit-visualiser/Index': '/transit-visualiser',
 

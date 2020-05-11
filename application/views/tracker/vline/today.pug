@@ -1,0 +1,16 @@
+extends ../../layout
+
+block head
+  title TransportVic - Tracker/Upcoming V/Line Trips Today
+  
+block title
+  span Upcoming V/Line Trips Today
+  
+//- block style
+//-   link(rel='stylesheet' href='/static/css/tracker.css')
+
+block content
+  h1 Upcoming V/Line Trips Today (#{date})
+  for trip in activeTripsNow
+    div.trip
+      span ##{trip.runID}: #{trip.departureTime} #{trip.origin} - #{trip.destination}: #{trip.consist.join('-')}

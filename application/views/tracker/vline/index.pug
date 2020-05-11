@@ -1,0 +1,28 @@
+extends ../../layout
+
+block head
+  title TransportVic - Tracker/V/Line
+  
+block title
+  span V/Line history
+  
+//- block style
+//-   link(rel='stylesheet' href='/static/css/tracker.css')
+
+block content
+  a(href='/vline/tracker/today') see all upcoming v/line trips today
+  form(action='/vline/tracker/by-date' method='get')
+    label search all deployment by date
+    br
+    label -- date
+    input(name='date')
+    input(type='submit' value='check by date')
+  form(action='/vline/tracker/by-consist' method='get')
+    label search consist deployment by date
+    br
+    label -- carriage / loco number
+    input(name='consist' placeholder='eg VL42,N464,7012,BRN37') 
+    br
+    label -- date
+    input(name='date' placeholder='blank for today')
+    input(type='submit' value='check by date')
