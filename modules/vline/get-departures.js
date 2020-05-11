@@ -55,8 +55,8 @@ async function getVNETDepartures(vlinePlatform, direction, db) {
     let originVNETName = $$('Origin').text()
     let destinationVNETName = $$('Destination').text()
 
-    let accessibleTrain = $$('IsAccessibleAvailable') === 'true'
-    let barAvailable = $$('IsBuffetAvailable') === 'true'
+    let accessibleTrain = $$('IsAccessibleAvailable').text() === 'true'
+    let barAvailable = $$('IsBuffetAvailable').text() === 'true'
 
     let vehicle = $$('Consist').text().replace(/ /g, '-')
     const vehicleConsist = $$('ConsistVehicles').text().replace(/ /g, '-')
@@ -510,3 +510,4 @@ async function getDepartures(station, db) {
 }
 
 module.exports = getDepartures
+module.exports.getDeparturesFromVNET = getDeparturesFromVNET

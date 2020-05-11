@@ -14,6 +14,9 @@ const config = require('../config.json')
 if (config.seekBuses)
   require('../modules/bus-seeker')
 
+if (config.trackVline)
+  require('../modules/vline-tracker')
+
 module.exports = class MainServer {
   constructor () {
     this.app = express()

@@ -13,6 +13,7 @@ database.connect({
   let timetables = database.getCollection('timetables')
   let gtfsTimetables = database.getCollection('gtfs timetables')
   let liveTimetables = database.getCollection('live timetables')
+  let vlineTrips = database.getCollection('vline trips')
 
   await stops.createIndex({
     stopName: 1,
@@ -199,8 +200,29 @@ database.connect({
     'stopTimings.departureTimeMinutes': 1
   }, {name: 'stop timings gtfs index'})
 
+
+
+  await vlineTrips.createIndex({
+    date: 1,
+    runID: 1,
+    origin: 1,
+    destination: 1,
+    departureTime: 1,
+    destinationArrivalTime: 1,
+    consist: 1
+  }, {name: 'vline trips index', unique: 1})
+
+  await vlineTrips.createIndex({
+    date: 1,
+    consist: 1
+  }, {name: 'consist index'})
+
+  await vlineTrips.createIndex({
+    consist: 1
+  }, {name: 'undated consist index'})
+
   console.log('Created live timetables index')
 
-  updateStats('create-indexes', 29)
+  updateStats('create-indexes', 36)
   process.exit()
 })
