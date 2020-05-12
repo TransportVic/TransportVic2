@@ -127,8 +127,8 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
     let serviceData = busDestinations.service[trip.routeNumber] || busDestinations.service[trip.routeGTFSID] || {}
 
     destination = serviceData[destination]
-      || dataSet.generic[destination]
-      || dataSet.generic[fullDestination] || destination
+      || busDestinations.generic[destination]
+      || busDestinations.generic[fullDestination] || destination
   }
 
   let loopDirection
