@@ -53,7 +53,7 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
 function change(db, text) {
   if (text.includes('delay')) return
 
-  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) service will (?:now )?(\w+) (?:early )?(?:at|from) ([\w ]*?)(?: at.*?)?(?: due.*?)?(?: and.*?)?\./)
+  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?)(?:service|train)? will (?:now )?(\w+) (?:early )?(?:at|from) ([\w ]*?)(?: at.*?)?(?: due.*?)?(?: and.*?)?\./)
 
   if (service) {
     let departureTime = service[1]
@@ -64,7 +64,7 @@ function change(db, text) {
 
     setServiceAsChanged(db, departureTime, origin, destination, type, changePoint)
   } else {
-    service = text.match(/(\d{1,2}[:.]\d{1,2}/)
+    service = text.match(/(\d{1,2}[:.]\d{1,2})/)
     if (service && service.includes('terminate')) {
       cancellation(text, db)
       console.log('Was told train was terminating early but not where, marking as cancelled')
