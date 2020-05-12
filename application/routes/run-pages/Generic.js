@@ -5,8 +5,11 @@ const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
 const busStopNameModifier = require('../../../additional-data/bus-stop-name-modifier')
+
 const busDestinations = require('../../../additional-data/bus-destinations')
+const coachDestinations = require('../../../additional-data/coach-destinations')
 const tramDestinations = require('../../../additional-data/tram-destinations')
+
 const tramFleet = require('../../../tram-fleet')
 
 async function pickBestTrip(data, db) {
@@ -116,12 +119,12 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
 
   destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
 
-  let dataSet = trip.mode === 'tram' ? tramDestinations : busDestinations
-
   if (trip.mode === 'tram') {
-    destination = dataSet[destination] || destination
+    destination = tramDestinations[destination] || destination
+  } else if (trip.mode === 'regional coach') {
+    destination = coachDestinations[destination] || destination
   } else {
-    let serviceData = dataSet.service[trip.routeNumber] || dataSet.service[trip.routeGTFSID] || {}
+    let serviceData = busDestinations.service[trip.routeNumber] || busDestinations.service[trip.routeGTFSID] || {}
 
     destination = serviceData[destination]
       || dataSet.generic[destination]
