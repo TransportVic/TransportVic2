@@ -25,7 +25,9 @@ block content
       div.timingRow(id='stop-' + stop.stopGTFSID)
         a.departureInfo
           span.stopName=stop.stopName
-          if stop.platform
+          if trip.cancelled
+            span.info.cancelled CANCELLED
+          else if stop.platform
             span.platform=`Platform ${stop.platform}`
         div(class=`timing ${stop.headwayDevianceClass}`)
           span=stop.prettyTimeToArrival

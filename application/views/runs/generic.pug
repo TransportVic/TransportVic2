@@ -42,6 +42,8 @@ block content
       span.destination=destination
       if viaText && hasNumber
         span.info.smaller=viaText
+      if trip.cancelled
+        span.info.cancelled CANCELLED
   div.infoRow
     span Bus stop
   div.timing-list

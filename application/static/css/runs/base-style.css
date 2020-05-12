@@ -63,6 +63,12 @@ div.timingRow a.departureInfo span.stopRoad {
   color: #8f8f8f;
 }
 
+div.timingRow a.departureInfo span.cancelled {
+  font-size: calc(1.1vw + 1.1vh);
+
+  color: #e03549;
+}
+
 div.timingRow a.departureInfo span.stopName {
   font-size: calc(1.6vw + 1.6vh);
   line-height: calc(1.6vw + 1.6vh);
@@ -124,11 +130,11 @@ div.timingRow:nth-child(odd) div.timing.unknown:nth-child(even) {
   background-color: #a8a8a8;
 }
 
-div.timingRow:nth-child(odd) div.timing.uncertain:nth-child(odd) {
+div.timingRow:nth-child(odd) div.timing.cancelled:nth-child(odd) {
   background-color: #e87529;
 }
 
-div.timingRow:nth-child(odd) div.timing.uncertain:nth-child(even) {
+div.timingRow:nth-child(odd) div.timing.cancelled:nth-child(even) {
   background-color: #bf682d;
 }
 
@@ -166,10 +172,10 @@ div.timingRow:nth-child(even) div.timing.unknown:nth-child(odd) {
   background-color: #a8a8a8;
 }
 
-div.timingRow:nth-child(even) div.timing.uncertain:nth-child(even) {
+div.timingRow:nth-child(even) div.timing.cancelled:nth-child(even) {
   background-color: #e87529;
 }
 
-div.timingRow:nth-child(even) div.timing.uncertain:nth-child(odd) {
+div.timingRow:nth-child(even) div.timing.cancelled:nth-child(odd) {
   background-color: #bf682d;
 }

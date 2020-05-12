@@ -28,6 +28,7 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
     let terminateTypes = ['terminate']
     let originateTypes = ['originate', 'begin']
     if (originateTypes.includes(type)) {
+      type = 'originate'
       trip.message = `CHANGED: WILL ORIGINATE FROM ${changePoint.toUpperCase()}`
     } else if (type === 'terminate') {
       trip.message = `CHANGED: WILL TERMINIATE AT ${changePoint.toUpperCase()}`
@@ -35,6 +36,31 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
 
     trip.changeType = type
     trip.changePoint = changePoint
+
+    let hasSeen = false
+    if (type === 'originate') {
+      trip.stopTimings = trip.stopTimings.map(stop => {
+        if (hasSeen) return stop
+        if (stop.stopName.slice(0, -16) === changePoint) {
+          hasSeen = true
+          return stop
+        }
+        stop.cancelled = true
+        return stop
+      })
+    } else {
+      trip.stopTimings = trip.stopTimings.map(stop => {
+        if (hasSeen) {
+          stop.cancelled = true
+          return stop
+        }
+        if (stop.stopName.slice(0, -16) === changePoint) {
+          hasSeen = true
+          return stop
+        }
+        return stop
+      })
+    }
 
     let key = {
       tripID: trip.tripID
@@ -53,12 +79,12 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
 function change(db, text) {
   if (text.includes('delay')) return
 
-  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?)(?:service|train)? will (?:now )?(\w+) (?:early )?(?:at|from) ([\w ]*?)(?: at.*?)?(?: due.*?)?(?: and.*?)?\./)
+  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?)(?:service|train)? will (?:now )?(\w+) (?:early )?(?:at|from) ([\w ]*?)(?: at.*?)?(?: today.*?)?(?: due.*?)?(?: and.*?)?\./)
 
   if (service) {
-    let departureTime = service[1]
-    let origin = service[2] + ' Railway Station'
-    let destination = service[3] + ' Railway Station'
+    let departureTime = service[1].replace('.', ':')
+    let origin = service[2].trim() + ' Railway Station'
+    let destination = service[3].trim() + ' Railway Station'
     let type = service[4]
     let changePoint = service[5]
 

@@ -53,7 +53,7 @@ async function cancellation(db, text) {
   let matches = []
 
   if (service) {
-    let departureTime = service[1]
+    let departureTime = service[1].replace('.', ':')
     let origin = service[2] + ' Railway Station'
     let destination = service[3] + ' Railway Station'
     let isCoach = text.includes('coaches') && text.includes('replace')
@@ -65,9 +65,9 @@ async function cancellation(db, text) {
 
       services.forEach(service => {
         let parts = service.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) /)
-        let departureTime = parts[1]
-        let origin = parts[2] + ' Railway Station'
-        let destination = parts[3] + ' Railway Station'
+        let departureTime = parts[1].replace('.', ':')
+        let origin = parts[2].trim() + ' Railway Station'
+        let destination = parts[3].trim() + ' Railway Station'
         let isCoach = text.includes('coaches') && text.includes('replace')
         matches.push({departureTime, origin, destination, isCoach})
       })

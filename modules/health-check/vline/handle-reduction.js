@@ -43,9 +43,9 @@ function reduction(db, text) {
   let service = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) service/)
 
   if (service) {
-    let departureTime = service[1]
-    let origin = service[2] + ' Railway Station'
-    let destination = service[3] + ' Railway Station'
+    let departureTime = service[1].replace('.', ':')
+    let origin = service[2].trim() + ' Railway Station'
+    let destination = service[3].trim() + ' Railway Station'
     let capacity = text.match(/capacity of (\d+) carriages?/)[1]
 
     setServiceAsReducedCapacity(db, departureTime, origin, destination, capacity)

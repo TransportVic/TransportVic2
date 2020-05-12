@@ -163,7 +163,14 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.prettyTimeToArrival = ''
 
-    stop.headwayDevianceClass = 'unknown'
+    if (trip.cancelled) {
+      stop.headwayDevianceClass = 'cancelled'
+
+      return stop
+    } else {
+      stop.headwayDevianceClass = 'unknown'
+    }
+
     if (stop.estimatedDepartureTime) {
       let scheduledDepartureTime =
         moment.tz(`${req.params.operationDays} ${stop.departureTime || stop.arrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')

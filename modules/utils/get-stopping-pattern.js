@@ -135,6 +135,11 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let routeName = routeData.route_name.trim()
   if (routeGTFSID === '2-ain') routeName = 'Showgrounds/Flemington'
 
+  let cancelled
+  if (mode === 'metro train') {
+    cancelled = run.status === 'cancelled'
+  }
+
   let timetable = {
     mode, routeName,
     routeGTFSID,
@@ -151,7 +156,8 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     type: "timings",
     updateTime: new Date(),
     gtfsDirection,
-    direction
+    direction,
+    cancelled
   }
 
   let key = {

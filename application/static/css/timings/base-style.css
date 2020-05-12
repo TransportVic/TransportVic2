@@ -322,11 +322,11 @@ div.departure:nth-child(odd) a.timing.unknown:nth-child(even) {
   background-color: #a8a8a8;
 }
 
-div.departure:nth-child(odd) a.timing.uncertain:nth-child(odd) {
+div.departure:nth-child(odd) a.timing.cancelled:nth-child(odd) {
   background-color: #e87529;
 }
 
-div.departure:nth-child(odd) a.timing.uncertain:nth-child(even) {
+div.departure:nth-child(odd) a.timing.cancelled:nth-child(even) {
   background-color: #bf682d;
 }
 
@@ -364,10 +364,10 @@ div.departure:nth-child(even) a.timing.unknown:nth-child(odd) {
   background-color: #a8a8a8;
 }
 
-div.departure:nth-child(even) a.timing.uncertain:nth-child(even) {
+div.departure:nth-child(even) a.timing.cancelled:nth-child(even) {
   background-color: #e87529;
 }
 
-div.departure:nth-child(even) a.timing.uncertain:nth-child(odd) {
+div.departure:nth-child(even) a.timing.cancelled:nth-child(odd) {
   background-color: #bf682d;
 }

@@ -151,7 +151,11 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.prettyTimeToArrival = ''
 
-    stop.headwayDevianceClass = 'unknown'
+    if (trip.cancelled) {
+      stop.headwayDevianceClass = 'cancelled'
+    } else {
+      stop.headwayDevianceClass = 'unknown'
+    }
 
     if (stop.estimatedDepartureTime) {
       let scheduledDepartureTime =
