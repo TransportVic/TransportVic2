@@ -21,14 +21,14 @@ async function inboundMessage(data) {
 
   let {subject, html} = data
   let $ = cheerio.load(html)
-  let textContent = $('center:nth-child(1) table table:nth-child(3) td p:nth-child(2)').text()
+  let textContent = $('center').text()
   textContent = textContent.replace(/SCS/g, 'Southern Cross')
 
   handleMessage(subject, textContent)
 }
 
 async function handleMessage(subject, text) {
-  stream.write(`Got mail: Subject: ${subject}. Text: ${text.replace(/\n/g, ' ')}`)
+  stream.write(`Got mail: Subject: ${subject}. Text: ${text.replace(/\n/g, ' ')}\n`)
 
   if (subject.includes('Service cancellation') || text.includes('will not run') || text.includes('has been cancelled')) {
     await handleCancellation(database, text)
