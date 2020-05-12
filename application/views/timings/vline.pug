@@ -91,26 +91,24 @@ append content
                 if (flags.length) flags += ' - '
                 flags += 'Reservations Only'
               }
+            
+              let vehicleData
+              let important = false
+              if (departure.vehicle) {
+                vehicleData = 'Vehicle: ' + departure.vehicle
+              }
+              
+              if (departure.trip.type === 'capacity reduction') {
+                important = true
+                vehicleData = `Reduced capacity of ${departure.trip.capacity} carriages`
+              }
             span.info.full=flags
+            if vehicleData
+              if important
+                span.vehicle.cancelled=vehicleData
+              else
+                span.vehicle.full=vehicleData
             
-          -
-            let vehicleData
-            let important = false
-            if (departure.vehicle) {
-              vehicleData = 'Vehicle: ' + departure.vehicle
-            }
-            
-            if (departure.trip.type === 'capacity reduction') {
-              important = true
-              vehicleData = `Reduced capacity of ${departure.trip.capacity} carriages`
-            }
-            
-          if vehicleData
-            if important
-              span.vehicle.cancelled=vehicleData
-            else
-              span.vehicle.full=vehicleData
-          
         div.timings
           -
             let className = 'timing '
