@@ -40,9 +40,11 @@ async function pickBestTrip(data, db) {
   let nspTrip = await db.getCollection('timetables').findDocument({
     mode: 'regional train',
     origin: gtfsTrip.origin,
+    destination: gtfsTrip.destination,
     direction: gtfsTrip.direction,
     routeGTFSID: gtfsTrip.routeGTFSID,
-    operationDays: utils.getDayName(tripDay)
+    operationDays: utils.getDayName(tripDay),
+    departureTime: gtfsTrip.departureTime,
   })
 
   let {runID, vehicle} = nspTrip || {}

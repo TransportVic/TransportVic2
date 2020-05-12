@@ -299,9 +299,10 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     let realRouteGTFSID = trip.routeGTFSID, originDepartureTime = trip.departureTime
 
     let nspTrip = await timetables.findDocument({
-      origin, direction, routeGTFSID: realRouteGTFSID,
+      origin, destination, direction, routeGTFSID: realRouteGTFSID,
       operationDays: dayOfWeek,
-      mode: 'regional train'
+      mode: 'regional train',
+      departureTime: originDepartureTime
     })
 
     let platform
@@ -319,19 +320,19 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     if (trip.cancelled) platform = '-'
 
     let vehicle
-    if (nspTrip) {
-      let tripData = await vlineTrips.findDocument({
-        date: departureTime.format('YYYYMMDD'),
-        runID: nspTrip.runID
-      })
+    let tripData = await vlineTrips.findDocument({
+      date: departureTime.format('YYYYMMDD'),
+      departureTime: originDepartureTime,
+      origin: origin.slice(0, -16),
+      destination: destination.slice(0, -16)
+    })
 
-      if (tripData) {
-        let first = tripData.consist[0]
-        if (first.startsWith('N')) {
-          vehicle = tripData.consist.join(' ')
-        } else {
-          vehicle = tripData.consist.join('-')
-        }
+    if (tripData) {
+      let first = tripData.consist[0]
+      if (first.startsWith('N')) {
+        vehicle = tripData.consist.join(' ')
+      } else {
+        vehicle = tripData.consist.join('-')
       }
     }
 
@@ -479,6 +480,7 @@ async function getDepartures(station, db) {
 
     return returnDepartures(allDepartures)
   } else {
+    let vlineTrips = db.getCollection('vline trips')
     let timetables = db.getCollection('timetables')
     let {stopGTFSID} = vlinePlatform
 
@@ -489,19 +491,36 @@ async function getDepartures(station, db) {
       let dayOfWeek = utils.getDayName(departure.scheduledDepartureTime)
       let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departure.scheduledDepartureTime) % 1440
 
-      let {direction, origin} = departure.trip
+      let {direction, origin, destination, departureTime} = departure.trip
       let realRouteGTFSID = departure.trip.routeGTFSID
 
       let nspTrip = await timetables.findDocument({
-        origin, direction, routeGTFSID: realRouteGTFSID,
+        origin, destination, direction, routeGTFSID: realRouteGTFSID,
         operationDays: dayOfWeek,
-        mode: 'regional train'
+        mode: 'regional train',
+        departureTime
       })
 
       let platform
       if (nspTrip) {
         let stopTiming = nspTrip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
         if (stopTiming) platform = stopTiming.platform
+      }
+
+      let tripData = await vlineTrips.findDocument({
+        date: departure.scheduledDepartureTime.format('YYYYMMDD'),
+        departureTime,
+        origin: origin.slice(0, -16),
+        destination: destination.slice(0, -16)
+      })
+
+      if (tripData) {
+        let first = tripData.consist[0]
+        if (first.startsWith('N')) {
+          departure.vehicle = tripData.consist.join(' ')
+        } else {
+          departure.vehicle = tripData.consist.join('-')
+        }
       }
 
       if (!platform)
