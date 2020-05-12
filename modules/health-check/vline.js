@@ -8,10 +8,12 @@ const handleReduction = require('./vline/handle-reduction')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
 
+const fs = require('fs')
+const stream = fs.createWriteStream('/tmp/mail.txt', { flags: 'a' })
+
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
-database.connect(async err => {
-})
+database.connect(async err => {})
 
 async function inboundMessage(data) {
   let sender = data.from.text
@@ -26,6 +28,8 @@ async function inboundMessage(data) {
 }
 
 async function handleMessage(subject, text) {
+  stream.write(`Got mail: Subject: ${subject}. Text: ${text.replace(/\n/g, ' ')}`)
+
   if (subject.includes('Service cancellation') || text.includes('will not run') || text.includes('has been cancelled')) {
     await handleCancellation(database, text)
   } else if (subject.includes('Service reduction') || text.includes('reduced capacity')) {
