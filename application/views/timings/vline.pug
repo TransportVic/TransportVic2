@@ -74,7 +74,7 @@ append content
           else if departure.cancelled
             span.info.cancelled CANCELLED
           else if departure.trip.type === 'change'
-            span.info.cancelled=departure.trip.message
+            span.info.cancelled.noClamp=departure.trip.message
           else
             
             -
