@@ -82,6 +82,10 @@ database.connect({}, async err => {
       let directionShortName = directionName.split('/')[0]
       if (!utils.isStreet(directionShortName)) directionName = directionShortName
 
+      if (routeData.flags && routeData.flags[1]) {
+        directionName += ` (${routeData.flags[gtfsDirection]})`
+      }
+
       let serviceData = busDestinations.service[routeData.routeNumber] || busDestinations.service[routeGTFSID] || {}
 
       directionName = serviceData[directionName]

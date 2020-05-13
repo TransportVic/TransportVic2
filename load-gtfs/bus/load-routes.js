@@ -48,8 +48,8 @@ database.connect({
   await async.forEachSeries(shapeFiles, async shapeFile => {
     let shapeJSON = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, shapeFile)))
     await loadRoutes(routes, gtfsID, routeData, shapeJSON, (routeGTFSID, routeNumber, routeName) => {
-      if (serviceLookup[routeGTFSID]) return serviceLookup[routeGTFSID].operator
       if (operatorOverrides[routeGTFSID]) return operatorOverrides[routeGTFSID]
+      if (serviceLookup[routeGTFSID]) return serviceLookup[routeGTFSID].operator
 
       let routeMatch = Object.values(serviceLookup).find(route => {
         return routeName === route.routeName && routeNumber === route.routeNumber

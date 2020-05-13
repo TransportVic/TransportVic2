@@ -43,8 +43,39 @@ async function render(params, res, matchingRoute) {
   let firstLastBusMap = await routeUtils.generateFirstLastBusMap(gtfsTimetables, query)
   let frequencyMap = await routeUtils.generateFrequencyMap(gtfsTimetables, query)
 
+  let showDualTermini = true
+  let {routeName} = matchingRoute
+  let terminiName = routeName.replace(/ Loop.*/, '').split(' - ')
+
+  if (matchingRoute.directions.length === 1 && routeName.includes('Loop')) {
+    if (terminiName[1]) {
+      directionNames[0] = terminiName[1]
+      if (matchingRoute.flags) {
+        directionNames[0] += ` (${matchingRoute.flags[0]} Loop)`
+      } else {
+        directionNames[0] += ` (Loop)`
+      }
+    } else {
+      showDualTermini = false
+      directionNames[0] = matchingRoute.routeName
+    }
+  } else if (routeName.includes('Loop')) {
+    directionNames[0] = terminiName[1]
+    if (matchingRoute.flags) {
+      directionNames[0] += ` (${matchingRoute.flags[direction.gtfsDirection]} Loop)`
+    } else {
+      directionNames[0] += ` (Loop)`
+    }
+
+    directionNames[1] = directionNames[1].replace(/ \(.+$/, '')
+  } else if (routeName.includes('Town Service')) {
+    showDualTermini = false
+    directionNames[0] = matchingRoute.routeName
+  }
+
   res.render('routes/bus', {
     route: matchingRoute,
+    showDualTermini,
     direction,
     operator,
     directionNames,

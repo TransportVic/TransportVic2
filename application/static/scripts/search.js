@@ -1,5 +1,5 @@
 $.ready(() => {
-  $.inputTimeout($('#textbar'), query => {
+  function search(query) {
     $('#loading').style = 'display: block;'
     $.ajax({
       url: '/search',
@@ -9,5 +9,9 @@ $.ready(() => {
       $('#loading').style = 'display: none;'
       $('#search-results').innerHTML = content
     })
-  })
+  }
+
+  $.inputTimeout($('#textbar'), search)
+
+  if ($('#textbar').value) search($('#textbar').value)
 })

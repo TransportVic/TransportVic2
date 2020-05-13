@@ -29,10 +29,16 @@ block content
     a(class=operator href=link)#routeNumber
       span#routeText=route.routeNumber
     div#terminals
-      a().coloured-row
-        span=directionNames[1]
-      a().coloured-row
-        span=directionNames[0]
+      if showDualTermini
+        a().coloured-row
+          span.destination=directionNames[1]
+        a().coloured-row
+          span.destination=directionNames[0]
+      else
+        
+        a().coloured-row.full
+          span.header Circular Loop
+          span.destination=directionNames[0]
   div#serviceTimings
     div#keyTimings
       div.table-header.table-data.spacing1
