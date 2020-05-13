@@ -11,6 +11,10 @@ module.exports = class MongoDatabaseCollection {
     return this.collection.insertOne(document)
   }
 
+  createDocuments (documents) {
+    return this.collection.insertMany(documents)
+  }
+
   findDocuments (query, projection) {
     return this.collection.find(query, projection)
   }

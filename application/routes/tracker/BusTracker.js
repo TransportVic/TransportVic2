@@ -8,6 +8,11 @@ const busDestinations = require('../../../additional-data/bus-destinations')
 
 const highlightData = require('../../../additional-data/tracker-highlights')
 
+const knownBuses = require('../../../additional-data/bus-lists')
+const serviceDepots = require('../../../additional-data/service-depots')
+
+let crossDepotQuery = null
+
 let manualRoutes = {
   "CO": ["4-601", "4-60S", "4-612", "4-623", "4-624", "4-625", "4-626", "4-630", "4-900"],
   "CS": ["4-406", "4-407", "4-408", "4-409", "4-410", "4-418", "4-419", "4-421", "4-423", "4-424", "4-425", "4-461"],
@@ -59,6 +64,47 @@ function adjustTrip(trip) {
     || busDestinations.generic[oA] || busDestinations.generic[oB] || oB).replace('Shopping Centre', 'SC')
 
   return trip
+}
+
+async function generateCrossDepotQuery(smartrakIDs) {
+  if (!crossDepotQuery) {
+    crossDepotQuery = { $or: [] }
+    await async.forEach(Object.keys(knownBuses), async fleet => {
+      let bus = await smartrakIDs.findDocument({fleetNumber: fleet})
+      let busDepot = knownBuses[fleet]
+
+      if (bus) {
+        let depotRoutes = serviceDepots[busDepot]
+        if (depotRoutes) {
+          crossDepotQuery.$or.push({
+            smartrakID: bus.smartrakID,
+            routeNumber: {
+              $not: {
+                $in: depotRoutes
+              }
+            }
+          })
+        }
+      }
+    })
+  }
+}
+
+async function findCrossDepot(busTrips, smartrakIDs) {
+  await generateCrossDepotQuery(smartrakIDs)
+
+  let today = utils.getYYYYMMDDNow()
+  let crossDepotQueryToday = {
+    $or: crossDepotQuery.$or.map(e => {
+      e.date = today
+      return e
+    })
+  }
+
+
+  let crossDepotTrips = await busTrips.findDocuments(crossDepotQueryToday).sort({departureTime: 1}).toArray()
+
+  return crossDepotTrips
 }
 
 router.get('/bus-bot', async (req, res) => {
@@ -434,7 +480,10 @@ router.get('/highlights', async (req, res) => {
     smartrakID: { $not: { $in: allBuses.map(bus => bus.smartrakID) } }
   }).sort({departureTime: 1, origin: 1}).toArray()
 
+  let crossDepotTrips = await findCrossDepot(busTrips, smartrakIDs)
+
   res.render('tracker/highlights', {
+    crossDepotTrips,
     strayVenturaMinibuses,
     strayArtics,
     straySpecials,

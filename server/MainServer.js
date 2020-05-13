@@ -63,7 +63,8 @@ module.exports = class MainServer {
       }, {name: 'smartrak id index'})
       await busTrips.createIndex({
         date: 1,
-        routeNumber: 1
+        routeNumber: 1,
+        smartrakID: 1,
       }, {name: 'service index'})
       await busTrips.createIndex({
         routeNumber: 1,
