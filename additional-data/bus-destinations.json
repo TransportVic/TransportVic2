@@ -118,7 +118,7 @@
       "Saltlake Boulevard/Pine Park Drive": "Wollert East"
     },
     "357": {
-      "Harvest Home Road/Edgars Road": "Wollert West"
+      "Edgars Creek Secondary College": "Wollert West"
     },
     "358": {
       "Evolve Esplanade": "Wollert"
@@ -224,6 +224,9 @@
     "561": {
       "Coburg Primary School": "Coburg Railway Station",
       "High Street/Broadway": "Reservoir Railway Station"
+    },
+    "570": {
+      "Japonica Street/Betula Avenue": "Bundoora RMIT"
     },
     "605": {
       "North Road/Kooyong Road": "Gardenvale",
@@ -423,9 +426,28 @@
     "898": {
       "Archers Field Drive/Bradford Drive": "Cranbourne East"
     },
+    "901": {
+      "Mereweather Avenue/Dandenong Road": "Frankston Railway Station"
+    },
+    "902": {
+      "Cheltenham Road/Springvale Road": "Keysborough",
+      "Hanrahan Street/Wood Street": "Thomastown",
+      "71 Williamsons Road": "Templestowe",
+      "Burwood Highway/Springvale Road": "Vermont South"
+    },
     "903": {
-      "Keys Road/Warrigal Road": "Moorabbin Bus Depot",
-      "Holmesglen TAFE - Chadstone": "Holmesglen"
+      "Keys Road/Warrigal Road": "Heatherton Bus Depot",
+      "Holmesglen TAFE - Chadstone": "Holmesglen Railway Station",
+      "Burwood Highway/Warrigal Road": "Burwood",
+      "Coburg Primary School": "Coburg",
+      "Keys Road/Warrigal Road": "Heatherton",
+      "Savona Street/Warrigal Road": "Mentone"
+    },
+    "906": {
+      "Doncaster Road/Blackburn Road": "East Doncaster"
+    },
+    "907": {
+      "Wetherby Road/Doncaster Road": "Doncaster Depot"
     },
     "943": {
       "High Street/Station Road": "Melton"
@@ -448,6 +470,21 @@
     },
     "TB4": {
       "Ervin Road/Kiloran Avenue": "Kiloran Park"
+    },
+    "11-SK1": {
+      "MCEC": "Docklands"
+    },
+    "11-SK2": {
+      "Wimmera Place/Alfred Square": "St. Kilda"
+    },
+    "11-SK4": {
+      "Rosebud Village SC": "Rosebud"
+    },
+    "11-SKa": {
+      "Skybus Coach Terminal": "Melbourne City"
+    },
+    "11-SKY": {
+      "Skybus Coach Terminal": "Melbourne City"
     }
   },
   "generic": {
@@ -516,6 +553,8 @@
     "Jennings Street/Northern Highway": "Heathcote",
     "Scots' Church/Russell Street": "Melbourne City",
     "Melbourne Town Hall": "Melbourne City",
-    "Lorne Hotel": "Apollo Bay"
+    "Lorne Hotel": "Apollo Bay",
+    "Melbourne Airport T1 Skybus": "Melbourne Airport (Skybus)",
+    "Melbourne Airport T4 Skybus": "Melbourne Airport (Skybus)"
   }
 }
