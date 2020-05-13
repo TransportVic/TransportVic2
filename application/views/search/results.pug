@@ -57,11 +57,17 @@ for busRoute in routes.filter(route => route.mode === 'bus')
   -
     let hasNumber = !!busRoute.routeNumber
     let url
+    let {operationDate} = busRoute
+    
     if (busRoute.routeGTFSID.match(/(4|7|8)-/)) {
       if (hasNumber) url = `/bus/route/${busRoute.routeNumber}`   
     } else if (busRoute.routeGTFSID.startsWith('6-')) {
       if (hasNumber) url = `/bus/route/regional/${busRoute.codedLGA}/${busRoute.routeNumber}`
     }
+    
+    url += `/${encodeName(busRoute.directions[0].directionName)}`
+    
+    if (operationDate) url += `/${operationDate.type}`
     
     let operator = encodeName(busRoute.operators[0])
     if (operator.startsWith('dysons')) operator = 'dysons'
@@ -84,6 +90,9 @@ for busRoute in routes.filter(route => route.mode === 'bus')
           name = busRoute.routeName
         } else {
           name = `${busRoute.directions[0].directionName} - ${busRoute.directions[1].directionName}`
+        }
+        if (operationDate) {
+          name += ` (${operationDate.type[0].toUpperCase()}${operationDate.type.slice(1)} ${operationDate.operationDateReadable})`
         }
         name = name.replace(/(Bus )?Interchange/g, '').replace(/Bus Station/g, '').replace(/Railway Station/g, '').replace(/Shopping Centre/g, 'SC').replace(/  +/g, ' ').trim()
       span=type

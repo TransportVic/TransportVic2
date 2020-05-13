@@ -50,11 +50,11 @@ block content
         span=firstLastBusMap.firstBus.weekday
         span=firstLastBusMap.lastBus.weekday
       div.coloured-row.table-data.spacing1
-        span Saturday
+        span Saturday / PH
         span=firstLastBusMap.firstBus.saturday
         span=firstLastBusMap.lastBus.saturday
       div.coloured-row.table-data.spacing1
-        span Sundays / PH
+        span Sundays
         span=firstLastBusMap.firstBus.sunday
         span=firstLastBusMap.lastBus.sunday
     div#frequency
@@ -103,10 +103,10 @@ block content
       div.coloured-row.table-data.spacing3
         div.freqTime
           span.time 19:00 - 22:00
-          span.desc Evening Peak
-        span=frequency(frequencyMap.weekday['Evening Peak'])
-        span=frequency(frequencyMap.saturday['Evening Peak'])
-        span=frequency(frequencyMap.sunday['Evening Peak'])
+          span.desc Early Evening
+        span=frequency(frequencyMap.weekday['Early Evening'])
+        span=frequency(frequencyMap.saturday['Early Evening'])
+        span=frequency(frequencyMap.sunday['Early Evening'])
       div.coloured-row.table-data.spacing3
         div.freqTime
           span.time 22:00 - 03:00

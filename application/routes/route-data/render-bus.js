@@ -73,6 +73,12 @@ async function render(params, res, matchingRoute) {
     directionNames[0] = matchingRoute.routeName
   }
 
+  if (matchingRoute.operationDate) {
+    let {operationDate} = matchingRoute
+    directionNames[0] += ` (${operationDate.type[0].toUpperCase()}${operationDate.type.slice(1)} ${operationDate.operationDateReadable})`
+  }
+
+
   res.render('routes/bus', {
     route: matchingRoute,
     showDualTermini,

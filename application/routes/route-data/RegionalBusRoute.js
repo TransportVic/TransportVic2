@@ -23,18 +23,19 @@ router.get('/:lga/:routeNumber', async (req, res, next) => {
   res.redirect(`/bus/route/regional/${lga}/${routeNumber}/${codedName}`)
 })
 
-router.get('/:lga/:routeNumber/:directionName', async (req, res, next) => {
+router.get('/:lga/:routeNumber/:directionName/:operationDateType*?', async (req, res, next) => {
   let {db} = res
   let routes = db.getCollection('routes')
   let gtfsTimetables = db.getCollection('gtfs timetables')
 
-  let {routeNumber, directionName, lga} = req.params
+  let {routeNumber, directionName, lga, operationDateType} = req.params
 
   let matchingRoute = await routes.findDocument({
     mode: 'bus',
     routeNumber,
     routeGTFSID: /6-/,
-    codedLGA: lga
+    codedLGA: lga,
+    'operationDate.type': operationDateType ? operationDateType : undefined
   })
 
   if (!matchingRoute) return res.status(404).render('errors/no-route')

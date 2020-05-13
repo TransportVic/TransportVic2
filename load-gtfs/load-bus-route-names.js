@@ -3,8 +3,10 @@ const path = require('path')
 const async = require('async')
 const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config.json')
+const ptvAPI = require('../ptv-api')
 const utils = require('../utils')
 const loopDirections = require('../additional-data/loop-direction')
+const moment = require('moment')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('./utils/stats')
@@ -14,6 +16,7 @@ database.connect({
 }, async err => {
   let routes = database.getCollection('routes')
   let updated = 0
+  let operationDateCount = 0
 
   let singleDirection = await routes.findDocuments({
     mode: 'bus',
@@ -79,7 +82,35 @@ database.connect({
     return await update(loopService.routeGTFSID, `${currentNameParts[0]} - ${currentNameParts[1]} ${postfix}`)
   })
 
+  let ptvRoutes = (await ptvAPI('/v3/routes?route_types=2')).routes
+  await async.forEach(ptvRoutes, async route => {
+    let routeGTFSID = route.route_gtfs_id, routeName = route.route_name
+    let now = utils.now()
+
+    if (routeName.includes('(From') || routeName.includes('(Until') || routeName.includes('(Discontinued')) {
+      let parts = routeName.match(/\((Until|From|Discontinued from) (\d{2}-\d{2}-\d{4})\)/)
+      let type = parts[1], date = parts[2]
+      if (type === 'Discontinued from') type = 'until'
+      else type = type.toLowerCase()
+
+      let dateMoment = moment.tz(date, 'DD-MM-YYYY', 'Australia/Melbourne')
+      if (dateMoment > now) {
+        operationDateCount++
+        await routes.updateDocument({ routeGTFSID }, {
+          $set: {
+            operationDate: {
+              type,
+              operationDate: dateMoment.toDate(),
+              operationDateReadable: date
+            }
+          }
+        })
+      }
+    }
+  })
+
   await updateStats('bus-route-names', updated)
   console.log('Completed loading in ' + updated + ' bus route names')
+  console.log('Completed loading in ' + operationDateCount + ' bus operation dates')
   process.exit(0)
 })

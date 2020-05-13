@@ -6,7 +6,7 @@ let frequencyRanges = {
   'Morning Peak': [[6, 00], [10, 0]],
   'Daytime Off Peak': [[10, 0], [15, 0]],
   'Afternoon Peak': [[15, 0], [19, 0]],
-  'Evening Peak': [[19, 0], [22, 00]],
+  'Early Evening': [[19, 0], [22, 00]],
   'Late Night': [[22, 00], [27, 0]]
 }
 
