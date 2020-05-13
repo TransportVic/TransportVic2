@@ -91,17 +91,17 @@ async function updateTimetables() {
 }
 
 console.log('Checking for updates...')
-updateTimetables()
-// request.head('http://data.ptv.vic.gov.au/downloads/gtfs.zip', async (err, resp, body) => {
-//   let {etag} = resp.headers
-//   if (etag !== lastEtag) {
-//     console.log('Outdated timetables: updating now...')
-//     spawnProcess(__dirname + '/../update-gtfs.sh', async () => {
-//       fs.writeFileSync(__dirname + '/last-etag', etag)
-//       await updateTimetables()
-//     })
-//   } else {
-//     console.log('Timetables all good, exiting')
-//     process.exit()
-//   }
-// })
+
+request.head('http://data.ptv.vic.gov.au/downloads/gtfs.zip', async (err, resp, body) => {
+  let {etag} = resp.headers
+  if (etag !== lastEtag) {
+    console.log('Outdated timetables: updating now...')
+    spawnProcess(__dirname + '/../update-gtfs.sh', async () => {
+      fs.writeFileSync(__dirname + '/last-etag', etag)
+      await updateTimetables()
+    })
+  } else {
+    console.log('Timetables all good, exiting')
+    process.exit()
+  }
+})
