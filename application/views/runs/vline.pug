@@ -40,8 +40,8 @@ block content
       div.timingRow(id='stop-' + stop.stopGTFSID)
         a.departureInfo
           span.stopName=stop.stopName
-          if stop.cancelled
+          if stop.cancelled || trip.cancelled
             span.info.cancelled CANCELLED
-        div(class=`timing${stop.cancelled ? ' cancelled' : ' unknown'}`)
+        div(class=`timing${stop.cancelled || trip.cancelled ? ' cancelled' : ' unknown'}`)
           span=stop.prettyTimeToArrival
           span=stop.departureTime || stop.arrivalTime
