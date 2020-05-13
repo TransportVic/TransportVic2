@@ -80,15 +80,8 @@ for busRoute in routes.filter(route => route.mode === 'bus')
         
         let name = ''
 
-        if (busRoute.directions.length === 1) {
-          if (busRoute.flags) {
-            name = `${busRoute.directions[0].directionName} Loop`
-            if (!busRoute.flags[1]) {
-              name += ` (${busRoute.flags[0]})`
-            }
-          } else {
-            name = busRoute.routeName
-          }
+        if (busRoute.directions.length === 1 || busRoute.routeName.includes('Loop')) {
+          name = busRoute.routeName
         } else {
           name = `${busRoute.directions[0].directionName} - ${busRoute.directions[1].directionName}`
         }

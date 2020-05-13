@@ -7,6 +7,7 @@ const loopDirections = require('../../additional-data/loop-direction')
 module.exports = async function(routes, mode, routeData, shapeJSON, operator, name, routeNumber) {
   let routeOperatorsSeen = []
   let rawRouteNames = {}
+  let routeDirectionCount = {}
 
   routeData.forEach(line => {
     let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(line[0])

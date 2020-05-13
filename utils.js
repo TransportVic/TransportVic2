@@ -25,6 +25,7 @@ module.exports = {
       .replace(/\(?(?:anti)? ?-? ?(?:clockwise)(?: loop)?\)?$/i, '')
       .replace(/ \(SMARTBUS.+/g, '')
       .replace(' To ', ' - ')
+      .replace(' to ', ' - ')
       .replace(/  +/g, ' ')
       .replace(/(\w) *- *(\w)/g, '$1 - $2')
       .replace(/Railway Station/g, 'Station')

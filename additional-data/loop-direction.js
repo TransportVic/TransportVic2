@@ -31,6 +31,12 @@ module.exports = {
   '4-682': { // lysterfield - knox city ac?
     '0': 'Anti-Clockwise'
   },
+  '4-834': {
+    '0': 'Anti-Clockwise'
+  },
+  '4-835': {
+    '0': 'Clockwise'
+  },
   '8-965': {
     '0': 'Clockwise',
     '1': 'Anti-Clockwise'

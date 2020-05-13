@@ -31,9 +31,13 @@ database.connect({
   ptvRoutes = ptvRoutes.filter(route => {
     return route.route_gtfs_id.startsWith(`${gtfsID}-`)
   }).reduce((acc, route) => {
-    acc[route.route_gtfs_id] = utils.adjustRouteName(route.route_name)
+    let adjusted = utils.adjustRouteName(route.route_name)
+
+    acc[route.route_gtfs_id.replace(/-0+/, '-')] = adjusted
     return acc
   }, {})
+
+  ptvRoutes['4-676'] = 'Lilydale East Loop'
 
   let splicedGTFSPath = path.join(__dirname, '../spliced-gtfs-stuff', `${gtfsID}`)
   let gtfsPath = path.join(__dirname, '../../gtfs', `${gtfsID}`)
