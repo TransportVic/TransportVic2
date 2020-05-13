@@ -31,6 +31,8 @@ async function setServiceAsReducedCapacity(db, departureTime, origin, destinatio
 
     console.log(`Marking ${departureTime} ${origin} - ${destination} train as reduced capacity - ${capacity} carriages.`)
 
+    trip.operationDays = [today]
+
     await liveTimetables.replaceDocument(key, trip, {
       upsert: true
     })
