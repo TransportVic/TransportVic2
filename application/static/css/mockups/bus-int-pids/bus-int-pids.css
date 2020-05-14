@@ -18,7 +18,7 @@ div.row.train-header span {
   font-family: NetworkSansRegular;
 
   margin-left: 0.8vw;
-  margin-top: calc(var(--height) * 0.0275 * var(--font-scale));
+  margin-top: calc(var(--height) * .01 * var(--font-scale));
   font-size: calc(var(--height) * 0.055 * var(--font-scale)) !important;
 }
 
