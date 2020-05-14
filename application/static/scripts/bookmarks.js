@@ -70,8 +70,7 @@ $.ready(() => {
     })
   })
 
-
-  if (!bookmarked.length) {
+  if (!bookmarked) {
     $('#content').className = 'none'
     $('#content').innerHTML = `
 <h2>Whoops... You've got nothing bookmarked</h2>
