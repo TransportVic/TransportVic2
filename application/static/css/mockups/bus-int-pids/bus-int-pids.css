@@ -3,10 +3,6 @@ div.timings {
   margin-right: 2vw;
 }
 
-div.row.header {
-  height: 3vw;
-}
-
 div.row.header span {
   font-family: NetworkSansRegular;
   font-size: calc(var(--height) * 0.06 * var(--font-scale)) !important;
@@ -56,7 +52,6 @@ div.row > div.route-number {
 }
 
 div.row > div.destination {
-  display: inline-flex;
   margin-left: 1.7vw;
   width: 43vw;
 }
@@ -64,9 +59,7 @@ div.row > div.destination {
 div.row > div.destination > span.platform {
   font-family: NetworkSansRegular;
   margin-left: 1vw;
-  margin-top: calc(var(--height) * 0.031 * var(--font-scale));
   font-size: calc(var(--height) * 0.05 * var(--font-scale));
-  line-height: calc(var(--height) * 0.05 * var(--font-scale));
 }
 
 div.row > span.scheduled {
