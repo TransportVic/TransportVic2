@@ -137,7 +137,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     return false
   }).map(disruption => {
     let text = disruption.description
-    let service = text.match(/the (\d+:\d+[ap]m) ([ \w]*?) to ([ \w]*?) (?:train|service)/)
+    let service = text.match(/the (\d+:\d+[ap]m) ([ \w]*?) to ([ \w]*?) (?:train|service)/i)
 
     if (service) {
       let departureTime = service[1],
