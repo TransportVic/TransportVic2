@@ -88,7 +88,7 @@ database.connect({
     let now = utils.now()
 
     if (routeName.includes('(From') || routeName.includes('(Until') || routeName.includes('(Discontinued')) {
-      let parts = routeName.match(/\((Until|From|Discontinued from) (\d{2}-\d{2}-\d{4})\)/)
+      let parts = routeName.match(/\((Until|From|Discontinued from) (\d{1,2}-\d{1,2}-\d{1,4})\)/)
       let type = parts[1], date = parts[2]
       if (type === 'Discontinued from') type = 'until'
       else type = type.toLowerCase()
