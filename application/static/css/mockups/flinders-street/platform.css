@@ -112,7 +112,6 @@ span.firstDestination {
 
   font-family: "NetworkSansBold";
   font-weight: 800;
-  letter-spacing: calc(var(--width) * -0.003);
   margin-left: calc(var(--width) * 0.015);
 }
 
