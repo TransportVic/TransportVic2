@@ -33,6 +33,7 @@ async function render(params, res, matchingRoute) {
   let codedDirectionNames = directionNames.map(utils.encodeName)
 
   let operator = utils.encodeName(matchingRoute.operators[0])
+  if (operator.includes('dysons')) operator = 'dysons'
 
   let query = {
     mode: 'bus',

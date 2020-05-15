@@ -12,6 +12,8 @@ database.connect({}, async () => {
   let stops = database.getCollection('stops')
   let routes = database.getCollection('routes')
 
+  let count = 0
+
   await async.forEachSeries(files, async file => {
     let parts = file.split('-')
     let routeGTFSID = `3-${parts[0]}`
@@ -36,13 +38,15 @@ database.connect({}, async () => {
       let remainingStops = routeStops.slice(startingIndex)
 
       await async.forEachOfSeries(remainingStops, async (remainingStop, i) => {
+        count++
+
         let gtfsStop = gtfsRouteStops[i]
         if (gtfsStop) {
           let {stopGTFSID} = gtfsStop
 
           let stopData = await stops.findDocument({ 'bays.stopGTFSID': stopGTFSID })
           let tramTrackerIDs = stopData.tramTrackerIDs || []
-        
+
           if (!tramTrackerIDs.includes(remainingStop.tramTrackerID)) {
             tramTrackerIDs.push(remainingStop.tramTrackerID)
           }
@@ -55,5 +59,7 @@ database.connect({}, async () => {
     }
   })
 
+  await updateStats('tramtracker-ids-old', count)
+  console.log('Completed loading in ' + count + ' tramtracker IDs using new method')
   process.exit()
 })
