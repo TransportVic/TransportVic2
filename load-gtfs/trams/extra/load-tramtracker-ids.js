@@ -3,121 +3,57 @@ const config = require('../../../config.json')
 const utils = require('../../../utils')
 const fs = require('fs')
 const async = require('async')
-const tramtrackerStops = require('./tramtracker-stops')
-const levenshtein = require('fast-levenshtein').get
 
 const updateStats = require('../../utils/stats')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
-let stops
+let files = fs.readdirSync(__dirname + '/routes')
+database.connect({}, async () => {
+  let stops = database.getCollection('stops')
+  let routes = database.getCollection('routes')
 
-async function matchTramStop(tramtrackerStopName, stopNumber, services, suburb) {
-  let stopsMatched = await stops.findDocuments({
-    $and: [
-      {
-        $or: [
-          { suburb },
-          {
-            bays: {
-              $elemMatch: {
-                $and: [{
-                  $or: [
-                    { 'flags.tramtrackerName': tramtrackerStopName },
-                    { stopNumber },
-                    { 'flags.services': services }
-                  ]
-                }, { mode: 'tram' }]
-              }
-            }
+  await async.forEachSeries(files, async file => {
+    let parts = file.split('-')
+    let routeGTFSID = `3-${parts[0]}`
+
+    let routeStops = JSON.parse(fs.readFileSync(__dirname + '/routes/' + file).toString())
+    let startingFew = routeStops.slice(0, 3).map(s => s.stopNumber.replace(/[^\d]/g, ''))
+
+    let gtfsRouteStops = (await routes.findDocument({ routeGTFSID })).directions.find(d => {
+      return startingFew.includes(d.stops[0].stopNumber.replace(/[^\d]/g, ''))
+    }).stops
+
+    if (routeGTFSID === '3-3') {
+      routeStops = routeStops.filter(e => e.stopNumber > 130)
+      gtfsRouteStops = gtfsRouteStops.filter(e => e.stopNumber > 130)
+    }
+
+    let stopNumbers = routeStops.map(s => s.stopNumber.replace(/[^\d]/g, ''))
+
+    if (Math.abs(routeStops.length - gtfsRouteStops.length) < 4) {
+      let startingNumber = gtfsRouteStops[0].stopNumber.replace(/[^\d]/g, '')
+      let startingIndex = stopNumbers.indexOf(startingNumber)
+      let remainingStops = routeStops.slice(startingIndex)
+
+      await async.forEachOfSeries(remainingStops, async (remainingStop, i) => {
+        let gtfsStop = gtfsRouteStops[i]
+        if (gtfsStop) {
+          let {stopGTFSID} = gtfsStop
+
+          let stopData = await stops.findDocument({ 'bays.stopGTFSID': stopGTFSID })
+          let tramTrackerIDs = stopData.tramTrackerIDs || []
+        
+          if (!tramTrackerIDs.includes(remainingStop.tramTrackerID)) {
+            tramTrackerIDs.push(remainingStop.tramTrackerID)
           }
-        ]
-      },
-      {
-        bays: {
-          $elemMatch: { mode: 'tram' }
+
+          await stops.updateDocument({ _id: stopData._id }, {
+            $set: { tramTrackerIDs }
+          })
         }
-      }
-    ]
-  }, { codedSuburb: 0, codedName: 0, codedNames: 0, location: 0, mergeName: 0, stopName: 0 }).toArray()
-
-  let bestStop = stopsMatched.map(stop => {
-    let score = 0
-    let stopTramtrackerName = stop.bays.filter(b => b.mode === 'tram')[0].flags.tramtrackerName.toLowerCase()
-    let stopNumbers = stop.bays.filter(b => b.mode === 'tram').map(b => b.stopNumber)
-      .filter(Boolean).map(e => e.replace(/^D/, ''))
-    let stopServices = stop.bays.filter(b => b.mode === 'tram').map(b => b.flags.services)
-      .reduce((a,e) => a.concat(e),[]).filter((e, i, a) => a.indexOf(e) === i)
-      .map(v => v === '3/3a' ? '3-3a' : v)
-
-    if (stopTramtrackerName === tramtrackerStopName.toLowerCase()) score += 3
-    if (stopNumbers.includes(stopNumber.replace(/^D/, ''))) score += 3
-    else score -= 1
-
-    if (stopServices.every(svc => services.includes(svc))) score += 3
-    else score -= 1
-
-    if (stop.suburb.includes(suburb)) score += 3
-
-    stop.nameDistance = levenshtein(tramtrackerStopName.toLowerCase(), stopTramtrackerName)
-    stop.score = score
-
-    return stop
-  }).sort((a, b) => b.score - a.score || a.nameDistance - b.nameDistance)[0]
-
-  return bestStop
-}
-
-/*
-Known tram stops to ignore:
-Waterfront City #11 - 7099, 8008
-East Preston Tram Depot #46 - 1846, 2846
-Victoria St #26 - 1526
-*/
-let ignore = [7099, 8008, 1846, 2846, 1526]
-
-database.connect({}, async err => {
-  stops = database.getCollection('stops')
-  let filteredTramtrackerStops = tramtrackerStops.filter(stop => {
-    return !ignore.includes(stop.tramTrackerID)
+      })
+    }
   })
 
-  let tramTrackerIDMap = {}
-  let tramTrackerNameMap = {}
-  let objectIDMap = {}
-
-  await async.forEachSeries(filteredTramtrackerStops, async stop => {
-    let tramtrackerName = utils.adjustStopname(stop.stopName.trim()).replace(/Gve?/, 'Gr')
-    let matchedStop = await matchTramStop(tramtrackerName, stop.stopNumber, stop.services, stop.suburb)
-
-    // keep for showoff maybe
-    // let matchedName = matchedStop.stopName.split('/')[0].toLowerCase()
-    // if (!(matchedName.includes(tramtrackerName.toLowerCase()) || tramtrackerName.toLowerCase().includes(matchedName)))
-    //   console.log(matchedStop.bays.filter(e=>e.mode==='tram'), stop)
-
-    if (!tramTrackerIDMap[matchedStop._id]) tramTrackerIDMap[matchedStop._id] = []
-    if (!tramTrackerNameMap[matchedStop._id]) tramTrackerNameMap[matchedStop._id] = []
-
-    tramTrackerIDMap[matchedStop._id] = tramTrackerIDMap[matchedStop._id].concat(stop.tramTrackerID)
-    tramTrackerNameMap[matchedStop._id] = tramTrackerNameMap[matchedStop._id].concat(stop.stopName)
-
-    objectIDMap[matchedStop._id] = matchedStop._id
-  })
-
-  console.log('Finished mapping of tramtracker ids to stops, loading it in now')
-
-  await async.forEach(Object.keys(tramTrackerIDMap), async id => {
-    let tramTrackerIDs = tramTrackerIDMap[id].filter((e, i, a) => a.indexOf(e) === i)
-    let tramTrackerNames = tramTrackerNameMap[id].filter((e, i, a) => a.indexOf(e) === i)
-    let oID = objectIDMap[id]
-
-    await stops.updateDocument({
-      _id: oID
-    }, {
-      $set: { tramTrackerIDs, tramTrackerNames }
-    })
-  })
-
-  await updateStats('tramtracker-ids', filteredTramtrackerStops.length)
-  console.log('Completed loading in ' + filteredTramtrackerStops.length + ' tramtracker IDs')
   process.exit()
 })
