@@ -86,7 +86,7 @@ async function findStops(db, query) {
 
 async function findRoutes(db, query) {
   let queryRegex = new RegExp(query, 'i')
-  
+
   let routes = (await db.getCollection('routes').findDocuments({
     $or: [{
       routeNumber: queryRegex

@@ -53,11 +53,16 @@ database.connect({
     let currentNameParts = routeName.replace(" - Demand Responsive", '').replace(/ Railway Station/g, '').replace(/\(.+\)/, '').split(' - ')
 
     let loopDirection = loopService.flags ? loopService.flags[0] : ''
-    let postfix = `Loop ${loopDirection ? `(${loopDirection})` : 'Service'}`
+    let postfix
+    if (loopDirection) {
+      postfix = `(${loopDirection} Loop)`
+    } else {
+      postfix = `(Loop Service)`
+    }
 
     if (currentNameParts.length === 1) {
-      let name = currentNameParts[0]
-      let origin = name
+      let name = currentNameParts[0].trim()
+      let origin = name.trim()
       for (let direction of ['North', 'South', 'East', 'West']) {
         origin = origin.replace(direction, '').trim()
       }
@@ -101,7 +106,7 @@ database.connect({
             operationDate: {
               type,
               operationDate: dateMoment.toDate(),
-              operationDateReadable: date
+              operationDateReadable: dateMoment.format('DD-MM-YYYY')
             }
           }
         })

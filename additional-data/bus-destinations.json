@@ -1,7 +1,13 @@
 {
   "service": {
     "1": {
-      "McCallum Street/Campbell Street": "Swan Hill North (Loop)"
+      "McCallum Street/Campbell Street": "Swan Hill North (Loop)",
+      "Edith Street/Shirley Street": "Shirley Street",
+      "Windsor Cresent/Mintern Cresent": "Natimuk Road",
+      "Hutchison Street/Patten Street": "Sale South",
+      "McSwains Road/Northern Highway": "Westwood Park",
+      "32 Harris Road": "Elliminyt",
+      "Doonan Street/McLennan Street": "Mooroopna"
     },
     "2": {
       "McCallum Street/Campbell Street": "Swan Hill South (Loop)"
@@ -13,6 +19,11 @@
     },
     "10": {
       "Coltman Plaza": "Alfredton"
+    },
+    "12": {
+      "Tulloch Ard Road/Gelantipy Road": "Gelantipy",
+      "Moorhen Drive/Westlakes Boulevard": "Lara West",
+      "Lapwing Drive/Eastlakes Boulevard": "Lara West"
     },
     "13": {
       "Northwood Court/Slatey Creek Road": "Invermay Park",
@@ -555,6 +566,8 @@
     "Melbourne Town Hall": "Melbourne City",
     "Lorne Hotel": "Apollo Bay",
     "Melbourne Airport T1 Skybus": "Melbourne Airport (Skybus)",
-    "Melbourne Airport T4 Skybus": "Melbourne Airport (Skybus)"
+    "Melbourne Airport T4 Skybus": "Melbourne Airport (Skybus)",
+    "Bailey Street - North": "Bairnsdale",
+    "Old Echuca Post Office": "Echuca"
   }
 }

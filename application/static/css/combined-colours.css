@@ -238,6 +238,14 @@
   background-color: #0a4a85;
 }
 
+.christians-bus-company-colac {
+  background-color: #0559a6;
+}
+
+:nth-child(even) > .christians-bus-company-colac {
+  background-color: #0a4a85;
+}
+
 .benalla-bus-lines {
   background-color: #31467f;
 }
