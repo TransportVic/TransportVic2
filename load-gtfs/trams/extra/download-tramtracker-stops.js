@@ -20,8 +20,7 @@ database.connect({
 }, async err => {
   let routes = database.getCollection('routes')
 
-  // let tramServices = (await routes.distinct('routeNumber', { mode: 'tram' })).map(e => e.match(/(\d+)/)[1]).concat('3a')
-  let tramServices = ['3', '3a']
+  let tramServices = (await routes.distinct('routeNumber', { mode: 'tram' })).map(e => e.match(/(\d+)/)[1]).concat('3a')
   let count = 0
 
   await async.forEachSeries(tramServices, async service => {
