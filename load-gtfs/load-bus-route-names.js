@@ -90,7 +90,7 @@ database.connect({
   let ptvRoutes = (await ptvAPI('/v3/routes?route_types=2')).routes
   await async.forEach(ptvRoutes, async route => {
     let routeGTFSID = route.route_gtfs_id, routeName = route.route_name
-    let now = utils.now()
+    let now = utils.now().startOf('day')
 
     if (routeName.includes('(From') || routeName.includes('(Until') || routeName.includes('(Discontinued')) {
       let parts = routeName.match(/\((Until|From|Discontinued from) (\d{1,2}-\d{1,2}-\d{1,4})\)/)
@@ -99,7 +99,7 @@ database.connect({
       else type = type.toLowerCase()
 
       let dateMoment = moment.tz(date, 'DD-MM-YYYY', 'Australia/Melbourne')
-      if (dateMoment > now) {
+      if (dateMoment >= now) {
         operationDateCount++
         await routes.updateDocument({ routeGTFSID }, {
           $set: {
