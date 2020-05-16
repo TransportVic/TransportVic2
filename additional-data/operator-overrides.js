@@ -28,6 +28,7 @@ module.exports = {
   "4-604": ["Transdev Melbourne"],
   "4-704": ["Ventura Bus Lines"],
   "4-800": ["Ventura Bus Lines"],
+  "4-80O": ["Ventura Bus Lines"],
   "4-834": ["Ventura Bus Lines"],
   "4-84E": ["Ventura Bus Lines"], // 843
   "4-84F": ["Ventura Bus Lines"], // 845
