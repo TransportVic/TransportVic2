@@ -66,7 +66,7 @@ database.connect({}, async err => {
       }
     })
 
-    if (i % 20 === 0 && i !== 0) console.log(`Route-LGAs: Completed ${i} routes`)
+    if (i % 30 === 0 && i !== 0) console.log(`Route-LGAs: Completed ${i} routes`)
   })
 
   await updateStats('regional-bus-lgas', regionalBusRoutes.length)

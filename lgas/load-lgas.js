@@ -60,7 +60,7 @@ database.connect({}, async err => {
         upsert: true
       })
 
-      if (++i % 20 === 0) console.log(`Load-LGAs: Completed ${i} LGAs`)
+      if (++i % 40 === 0) console.log(`Load-LGAs: Completed ${i} LGAs`)
     })
 
     console.log('Completed loading LGAs from ' + fileName)

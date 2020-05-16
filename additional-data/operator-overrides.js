@@ -5,6 +5,7 @@ module.exports = {
   "4-281": ["Transdev Melbourne"],
   "4-301": ["Dysons"],
   "4-35Z": ["Dysons"], // 357
+  '4-400': ['CDC Melbourne', 'Sita Bus Lines'],
   "4-406": ["CDC Melbourne"],
   "4-409": ["CDC Melbourne"],
   "4-429": ["Transdev Melbourne"],
@@ -26,6 +27,7 @@ module.exports = {
   "4-603": ["Transdev Melbourne"],
   "4-604": ["Transdev Melbourne"],
   "4-704": ["Ventura Bus Lines"],
+  "4-800": ["Ventura Bus Lines"],
   "4-834": ["Ventura Bus Lines"],
   "4-84E": ["Ventura Bus Lines"], // 843
   "4-84F": ["Ventura Bus Lines"], // 845

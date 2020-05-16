@@ -78,8 +78,8 @@ database.connect({}, async err => {
       $set: stop
     })
 
-    if (i % 500 === 0) {
-      console.log('Completed ' + (i / stopCount * 100).toFixed(2) + '% of stops')
+    if (i % 2000 === 0) {
+      console.log('Stop Services: Completed ' + (i / stopCount * 100).toFixed(2) + '% of stops')
     }
   })
 

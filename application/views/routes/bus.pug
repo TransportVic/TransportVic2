@@ -26,6 +26,9 @@ block content
       if (route.routeGTFSID.startsWith('6')) {
         link = `/bus/route/regional/${route.codedLGA}/${route.routeNumber}/${codedDirectionNames[1]}`
       }
+      if (route.operationDate) {
+        link += `/${route.operationDate.type}`
+      }
     a(class=operator href=link)#routeNumber
       span#routeText=route.routeNumber
     div#terminals
