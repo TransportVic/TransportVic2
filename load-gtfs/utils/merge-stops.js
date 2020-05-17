@@ -50,6 +50,15 @@ module.exports = function merge(variants, matched) {
 
             branch = []
           } else { // otherwise we're on sync, all good
+            if (matchIndex < lastMainMatch) {
+              let jumpPart = variant.slice(matchIndex, lastMainMatch)
+              let subBranch = []
+              for (let jumpStop of jumpPart) {
+                if (matched(jumpStop, variantStop)) break
+                subBranch.push(jumpStop)
+              }
+              branch = branch.concat(subBranch)
+            }
             lastMainMatch = matchIndex
           }
           break
@@ -64,7 +73,6 @@ module.exports = function merge(variants, matched) {
 
     if (branch.length) { // we're still on a branch after completing the stops, means they have different destiantions
       // look at where they deviated, and join it in between
-
       let firstHalf = stopsList.slice(0, lastMainMatch + 1)
       let backHalf = stopsList.slice(lastMainMatch + 1)
 
