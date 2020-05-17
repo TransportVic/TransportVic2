@@ -45,7 +45,7 @@ div.message p, div.serviceMessage p {
 }
 
 div.message p.large, div.serviceMessage p.large {
-  font-size: calc(0.08 * var(--width));
+  font-size: calc(0.075 * var(--width));
 }
 
 div.nextDeparture {
