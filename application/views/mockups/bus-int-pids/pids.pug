@@ -11,59 +11,29 @@ html
     link(rel='preload' href='/static/fonts/NetworkSans-Bold.ttf' as='font' crossorigin='anonymous')
   body
     div.content
+      div.message
+        div
+          div.info-circle
+            span.information j
+          div.text
+            p For more information 
+            p visit ptv.vic.gov.au
+            p or call 1800 800 007
       div.timings
         div.row.header
           span.route Route
           span.dest Bus Destination
           span.scheduled Scheduled
           span.departing Departing
-        mixin row(type, routeNumber, destination, platform, scheduled, actual)
-          div.row
-            div.route-number
-              div(class='type type-' + type)
-              if type === 'metro-train'
-                img.train-icon(src='/static/images/mockups/metro-train.svg')
-              else
-                span.route #{routeNumber}
-            div.destination
-              span.dest #{destination}
-              if platform
-                span.platform Platform #{platform}
-            span.scheduled #{scheduled}
-            span.departing #{actual}
 
-        - let maxBusDepartures = trainDepartures ? 4 : 7
-        for departure in busDepartures.slice(0, maxBusDepartures)
-          -
-            let shortDest = departure.destination.split('/')[0]
-            let scheduled = departure.scheduledDepartureTime.format('h:mm')
-            let estimated = '--'
-            if (departure.estimatedDepartureTime)
-              estimated = departure.estimatedDepartureTime.diff(time, 'minutes')
-            if (estimated === 0) estimated = 'Now'
-            else estimated += ' min'
-          
-          +row('bus', departure.routeNumber, shortDest, null, scheduled, estimated)
-          
-        - for (let i = 0; i < maxBusDepartures - busDepartures.length; i++)
+        - for (let i = 0; i < (trainDepartures ? 4 : 7); i++)
           div.row
         
         if trainDepartures
           div.row.train-header
             span Train Services
-          for departure in trainDepartures
-            -
-              let {destination} = departure
-              let scheduled = departure.scheduledDepartureTime.format('h:mm')
-              let estimated = '--'
-              if (departure.estimatedDepartureTime)
-                estimated = departure.estimatedDepartureTime.diff(time, 'minutes')
-              if (estimated === 0) estimated = 'Now'
-              else estimated += ' min'
-              
-            +row('metro-train', null, destination, departure.platform, scheduled, estimated)
-          - for (let i = 0; i < 2 - trainDepartures.length; i++)
-            div.row
+          div.row
+          div.row
             
         
       div.info

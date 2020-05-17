@@ -101,7 +101,7 @@ router.get('/:suburb/:stopName/:bay', async (req, res) => {
 router.post('/:suburb/:stopName/:bay', async (req, res) => {
   let data = await getData(req, res)
 
-  res.json({busDepartures, stop})
+  res.json(data)
 })
 
 module.exports = router

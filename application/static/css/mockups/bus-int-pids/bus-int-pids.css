@@ -1,3 +1,38 @@
+div.message {
+  width: 100vw;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+div.message > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+div.message div.info-circle {
+  transform: scale(1.5);
+  margin-bottom: calc(0.05 * var(--height));
+}
+
+div.message div.text {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  font-size: calc(0.15 * var(--height));
+}
+
+div.content.messages div.message {
+  display: flex;
+}
+
+div.content.messages div.timings, div.content.messages div.info {
+  display: none;
+}
+
 div.timings {
   width: 75vw;
   margin-right: 2vw;
@@ -140,6 +175,7 @@ span.information {
   transform: rotateY(180deg) skewX(10deg);
   margin-top: -0.4vw;
   font-family: NetworkSansBold;
+  margin-left: 0.09vw
 }
 
 .call-hotline {
