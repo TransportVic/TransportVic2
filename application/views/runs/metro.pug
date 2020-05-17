@@ -1,10 +1,16 @@
 extends ../layout
     
 block head
-  title=`TransportVic - ${trip.departureTime} ${trip.origin} to ${trip.destination}`
+  - let title = `${trip.departureTime} ${trip.origin} to ${trip.destination}`
+  title=`TransportVic - ${title}`
+  
+  meta(property='og:title' content=`TransportVic - ${title}`)
+  meta(property='twitter:title' content=`TransportVic - ${title}`)
+  meta(property='og:description' content=`Viewing the ${title}`)
+  meta(property='twitter:description' content=`Viewing the ${title}`)
   
 block title
-  span=`${trip.departureTime} ${trip.origin} to ${trip.destination}`
+  span=title
   
 block style
   link(rel='stylesheet' href='/static/css/runs/base-style.css')

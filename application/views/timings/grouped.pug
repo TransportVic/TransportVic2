@@ -2,6 +2,12 @@ extends ../layout
 
 block head
   title=`TransportVic - ${stop.stopName}`
+  
+  meta(property='og:title' content=`TransportVic - ${stop.stopName}`)
+  meta(property='twitter:title' content=`TransportVic - ${stop.stopName}`)
+  meta(property='og:description' content=`Viewing the Next 4 ${currentMode} departures from ${stop.stopName}`)
+  meta(property='twitter:description' content=`Viewing the Next 4 ${currentMode} departures from ${stop.stopName}`)
+    
   link(rel='preload' as='image' href='/static/images/clear-icons/bus.svg')
   link(rel='preload' as='image' href='/static/images/clear-icons/coach.svg')
   link(rel='preload' as='image' href='/static/images/clear-icons/tram.svg')

@@ -2,6 +2,12 @@ extends ../layout
 
 block head
   title TransportVic - Stops Nearby
+  
+  meta(property='og:title' content='TransportVic - Stops Nearby')
+  meta(property='twitter:title' content='TransportVic - Stops Nearby')
+  meta(property='og:description' content='Find Public Transport stops & stations near you')
+  meta(property='twitter:description' content='Find Public Transport stops & stations near you')
+    
   link(rel='preload' href='/static/images/clear-icons/bus.svg' as='image')
   link(rel='preload' href='/static/images/clear-icons/coach.svg' as='image')
   link(rel='preload' href='/static/images/clear-icons/tram.svg' as='image')

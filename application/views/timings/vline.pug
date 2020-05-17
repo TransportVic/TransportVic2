@@ -1,7 +1,14 @@
 extends ../textbar-layout
 
 block head
-  title=`TransportVic - ${station.stopName.slice(0, -16)}`
+  - let stationName = station.stopName.slice(0, -16)
+  title=`TransportVic - ${stationName}`
+  
+  meta(property='og:title' content=`TransportVic - ${stationName}`)
+  meta(property='twitter:title' content=`TransportVic - ${stationName}`)
+  meta(property='og:description' content=`Viewing the Next 3 hours of V/Line train departures from ${stationName}`)
+  meta(property='twitter:description' content=`Viewing the Next 3 hours of V/Line train departures from ${stationName}`)
+    
   link(rel='preload' as='image' href='/static/images/clear-icons/bus.svg')
   link(rel='preload' as='image' href='/static/images/clear-icons/coach.svg')
   link(rel='preload' as='image' href='/static/images/clear-icons/tram.svg')

@@ -1,15 +1,20 @@
 extends ../layout
     
 block head
-  title=`TransportVic - ${trip.departureTime} ${trip.origin} to ${trip.destination}`
-  
-block title
   -
     function processName(name) { return shorternStopName(name.split('/')[0]) }
     let title = `${trip.departureTime} ${processName(trip.origin)} to ${destination}`
     if (trip.routeNumber) {
       title = `${trip.departureTime} ${trip.routeNumber} to ${destination}`
     }
+  title=`TransportVic - ${title}`
+  
+  meta(property='og:title' content=`TransportVic - ${title}`)
+  meta(property='twitter:title' content=`TransportVic - ${title}`)
+  meta(property='og:description' content=`Viewing the ${title}`)
+  meta(property='twitter:description' content=`Viewing the ${title}`)
+  
+block title
   span=title
   
 block style

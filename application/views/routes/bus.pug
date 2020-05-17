@@ -3,7 +3,6 @@ extends ../layout
 block head
   title TransportVic - Bus #{route.routeNumber}
   
-block title
   -
     let type = ''
     if (route.routeGTFSID.startsWith('4-')) type = 'Metropolitian Bus'
@@ -11,6 +10,16 @@ block title
     if (route.routeGTFSID.startsWith('7-')) type = 'Telebus'
     if (route.routeGTFSID.startsWith('8-')) type = 'Night Bus'
     if (route.routeGTFSID.startsWith('11-')) type = 'SkyBus'
+    
+    let name = `${directionNames[1]} - ${directionNames[0]}`
+    if (!showDualTermini) name = directionNames[0]
+  
+  meta(property='og:title' content=`TransportVic - Bus ${route.routeNumber}`)
+  meta(property='twitter:title' content=`TransportVic - Bus ${route.routeNumber}`)
+  meta(property='og:description' content=`${type} ${route.routeNumber}: ${name}`)
+  meta(property='twitter:description' content=`${type} ${route.routeNumber}: ${name}`)
+  
+block title
     
   span #{type} #{route.routeNumber}
 
