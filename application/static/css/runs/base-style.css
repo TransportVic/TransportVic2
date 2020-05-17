@@ -11,6 +11,10 @@ div.infoRow {
   justify-content: space-between;
 }
 
+a.departureInfo span.info.smaller {
+  width: unset;
+}
+
 div.infoRow > span {
   margin-left: calc(1vw + 1vh);
 }
