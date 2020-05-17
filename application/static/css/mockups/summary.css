@@ -54,11 +54,11 @@ div.platform.fss-escalator iframe {
   height: calc(15vw / 9 * 16);
 }
 
-div.platform.fss-platform, div.platform.fss-platform * {
+div.platform.fss-platform, div.platform.fss-platform *, div.platform.suburban-16-9-list, div.platform.suburban-16-9-list * {
   width: 18vw;
 }
 
-div.platform.fss-platform iframe {
+div.platform.fss-platform iframe, div.platform.suburban-16-9-list iframe {
   height: calc(18vw * 9 / 16);
 }
 

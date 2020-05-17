@@ -39,12 +39,11 @@ router.get('/:station/:platform/list', async (req, res) => {
   res.render('mockups/metro-lcd-pids/list-pids')
 })
 
-router.post('/:station/:platform', async (req, res) => {
-  let departures = await getData(req, res)
-  res.json(departures)
+router.get('/:station/:platform/16-9-list', async (req, res) => {
+  res.render('mockups/metro-lcd-pids/16-9-list-pids')
 })
 
-router.post('/:station/:platform/list', async (req, res) => {
+router.post('/:station/:platform/:type*?', async (req, res) => {
   let departures = await getData(req, res)
   res.json(departures)
 })
