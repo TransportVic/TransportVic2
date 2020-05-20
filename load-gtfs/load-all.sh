@@ -9,7 +9,6 @@ $DIRNAME/bus/load-all.sh
 $DIRNAME/trams/load-all.sh
 
 node $DIRNAME/load-route-stops.js
-node $DIRNAME/trams/extra/load-tramtracker-ids.js
 node $DIRNAME/load-bus-route-names.js
 node $DIRNAME/load-stop-services.js
 

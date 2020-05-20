@@ -1,65 +1,107 @@
 const DatabaseConnection = require('../../../database/DatabaseConnection')
 const config = require('../../../config.json')
 const utils = require('../../../utils')
+const ptvStops = require('./tram-stops.json')
 const fs = require('fs')
 const async = require('async')
+const cheerio = require('cheerio')
 
 const updateStats = require('../../utils/stats')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 let files = fs.readdirSync(__dirname + '/routes')
+
+function sleep() {
+  return new Promise(resolve => {
+    setTimeout(resolve, 500)
+  })
+}
+
 database.connect({}, async () => {
   let stops = database.getCollection('stops')
   let routes = database.getCollection('routes')
 
+  let tramServices = (await routes.distinct('routeNumber', { mode: 'tram' })).map(e => e.match(/(\d+)/)[1]).concat('3a')
   let count = 0
 
-  await async.forEachSeries(files, async file => {
-    let parts = file.split('-')
-    let routeGTFSID = `3-${parts[0]}`
+  let stopIDs = {}
+  let stopNames = {}
+  let stopNumbers = {}
 
-    let routeStops = JSON.parse(fs.readFileSync(__dirname + '/routes/' + file).toString())
-    let startingFew = routeStops.slice(0, 3).map(s => s.stopNumber.replace(/[^\d]/g, ''))
+  await async.forEachSeries(tramServices, async service => {
+    await async.forEachSeries([0, 1], async direction => {
+      let data = await utils.request(`https://yarratrams.com.au/umbraco/surface/data/routestopsdata/?id=${service}&dir=${direction}`)
+      let $ = cheerio.load(data)
 
-    let gtfsRouteStops = (await routes.findDocument({ routeGTFSID })).directions.find(d => {
-      return startingFew.includes(d.stops[0].stopNumber.replace(/[^\d]/g, ''))
-    }).stops
+      let stops = Array.from($('table.route-view tbody > tr:not(.suburb):not(.suburb-section-first):not(.suburb-section):not([style])'))
+      stops.forEach(stop => {
+        let tramTrackerID = $('.stopid', stop).text()
+        let stopNumber = $('.stopno', stop).text().toUpperCase()
+        let tramTrackerName = utils.expandStopName(utils.adjustStopname($('.location', stop).text().split(/ ?[&\-,] ?/)[0].trim()))
+        let url = $('a', stop).attr('href')
 
-    if (routeGTFSID === '3-3') {
-      routeStops = routeStops.filter(e => e.stopNumber > 130)
-      gtfsRouteStops = gtfsRouteStops.filter(e => e.stopNumber > 130)
-    }
+        if (!url) return
 
-    let stopNumbers = routeStops.map(s => s.stopNumber.replace(/[^\d]/g, ''))
+        let stopID = url.match(/stopId=(\d+)/)[1]
 
-    if (Math.abs(routeStops.length - gtfsRouteStops.length) < 4) {
-      let startingNumber = gtfsRouteStops[0].stopNumber.replace(/[^\d]/g, '')
-      let startingIndex = stopNumbers.indexOf(startingNumber)
-      let remainingStops = routeStops.slice(startingIndex)
+        if (!tramTrackerID) return
 
-      await async.forEachOfSeries(remainingStops, async (remainingStop, i) => {
-        count++
+        if (!stopIDs[stopID]) {
+          stopIDs[stopID] = []
+          stopNames[stopID] = []
+          stopNumbers[stopID] = []
+        }
 
-        let gtfsStop = gtfsRouteStops[i]
-        if (gtfsStop) {
-          let {stopGTFSID} = gtfsStop
+        if (!stopIDs[stopID].includes(tramTrackerID)) stopIDs[stopID].push(tramTrackerID)
+        if (!stopNames[stopID].includes(tramTrackerName)) stopNames[stopID].push(tramTrackerName)
+        if (!stopNumbers[stopID].includes(stopNumber)) stopNumbers[stopID].push(stopNumber)
+      })
 
-          let stopData = await stops.findDocument({ 'bays.stopGTFSID': stopGTFSID })
-          let tramTrackerIDs = stopData.tramTrackerIDs || []
+      await sleep()
+    })
+  })
 
-          if (!tramTrackerIDs.includes(remainingStop.tramTrackerID)) {
-            tramTrackerIDs.push(remainingStop.tramTrackerID)
-          }
+  await async.forEach(Object.keys(stopIDs), async stopID => {
+    count++
 
-          await stops.updateDocument({ _id: stopData._id }, {
-            $set: { tramTrackerIDs }
-          })
+    let ptvStop = ptvStops.find(stop => stop.stopID === stopID)
+    let dbStop
+
+    if (ptvStop) {
+      dbStop = await stops.findDocument({
+        'bays.fullStopName': ptvStop.stopName,
+        'bays.stopNumber': {
+          $in: stopNumbers[stopID]
         }
       })
     }
+
+    if (!dbStop) {
+      dbStop = await stops.findDocument({
+        $or: stopNames[stopID].map(stopName => ({
+          'bays.fullStopName': new RegExp(stopName, 'i'),
+          'bays.stopNumber': {
+            $in: stopNumbers[stopID]
+          }
+        }))
+      })
+    }
+
+    if (dbStop) {
+      await stops.updateDocument({ _id: dbStop._id }, {
+        $set: {
+          tramTrackerIDs: stopIDs[stopID].map(e => parseInt(e)),
+          tramTrackerNames: stopNames[stopID]
+        }
+      })
+
+      return
+    }
+
+    console.log('Failed to map stop', stopID, stopIDs[stopID], stopNames[stopID], dbStop)
   })
 
-  await updateStats('tramtracker-ids-old', count)
+  await updateStats('tramtracker-ids', count)
   console.log('Completed loading in ' + count + ' tramtracker IDs using new method')
   process.exit()
 })
