@@ -12,7 +12,6 @@
 /load-gtfs/spliced-gtfs-stuff
 /load-gtfs/metro-trains/extra/timetables
 /load-gtfs/vline-trains/extra/timetables
-/load-gtfs/trams/extra/routes
 /load-gtfs/stats.json
 /application/static/images
 /timetable-updating-server/last-etag

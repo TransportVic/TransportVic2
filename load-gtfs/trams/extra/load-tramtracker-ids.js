@@ -2,14 +2,11 @@ const DatabaseConnection = require('../../../database/DatabaseConnection')
 const config = require('../../../config.json')
 const utils = require('../../../utils')
 const ptvStops = require('./tram-stops.json')
-const fs = require('fs')
 const async = require('async')
 const cheerio = require('cheerio')
 
 const updateStats = require('../../utils/stats')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-
-let files = fs.readdirSync(__dirname + '/routes')
 
 function sleep() {
   return new Promise(resolve => {
