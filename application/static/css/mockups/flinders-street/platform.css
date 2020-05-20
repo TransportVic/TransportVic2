@@ -77,6 +77,7 @@ div.firstDeparture {
   display: flex;
   align-items: center;
   flex-direction: column;
+  height: calc(var(--height) * .79);
 }
 
 div.firstDepartureInfo {
