@@ -1,7 +1,7 @@
 @font-face {
   font-family: Default-Font;
   font-display: fallback;
-  src: local('Roboto Slab'), local('RobotoSlab'), url(/static/fonts/Nunito.ttf);
+  src: local('Nunito Regular'), local('Nunito'), url(/static/fonts/Nunito.ttf);
 }
 
 html, body {

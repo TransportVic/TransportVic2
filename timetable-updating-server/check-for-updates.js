@@ -104,9 +104,7 @@ request.head('http://data.ptv.vic.gov.au/downloads/gtfs.zip', async (err, resp, 
       await updateTimetables()
     })
   } else {
-    console.log('Timetables all good, exiting')
+    console.log('Timetables all good, deleting old routes')
+    require('../load-gtfs/trim-old-routes')
   }
-
-  require('../load-gtfs/trim-old-routes')
-  process.exit()
 })
