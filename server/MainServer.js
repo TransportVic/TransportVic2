@@ -179,7 +179,6 @@ module.exports = class MainServer {
       'run-pages/VLineTrains': '/vline/run',
       'run-pages/Generic': '/',
 
-      GeoJSONVisualiser: '/geojson-visualise',
       SmartrakIDs: '/smartrak',
       Statistics: '/stats',
       TourBusMinder: '/tbm',
@@ -195,8 +194,6 @@ module.exports = class MainServer {
 
       'tracker/BusTracker': '/tracker2',
       'tracker/VLineTracker': '/vline/tracker',
-
-      'transit-visualiser/Index': '/transit-visualiser',
 
       'route-data/MetroBusRoute': '/bus/route',
       'route-data/RegionalBusRoute': '/bus/route/regional/'

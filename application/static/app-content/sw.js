@@ -89,7 +89,6 @@ self.addEventListener('install', e => {
       '/static/images/mockups/station-terminates.svg',
 
       '/static/scripts/bookmarks.js',
-      '/static/scripts/geojson-visualise.js',
       '/static/scripts/nearby.js',
       '/static/scripts/search.js',
       '/static/scripts/sw-load.js',
