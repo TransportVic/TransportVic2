@@ -11,10 +11,20 @@ const moment = require('moment')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('./utils/stats')
 
+async function deleteRoute(routeGTFSID, gtfsTimetables, routes) {
+  await Promise.all([
+    routes.deleteDocument({ routeGTFSID }),
+    gtfsTimetables.deleteDocuments({ routeGTFSID })
+  ])
+
+  console.log('Deleted route ' + routeGTFSID + ' as it was past the until date')
+}
+
 database.connect({
   poolSize: 100
 }, async err => {
   let routes = database.getCollection('routes')
+  let gtfsTimetables = database.getCollection('gtfs timetables')
   let updated = 0
   let operationDateCount = 0
 
@@ -110,6 +120,10 @@ database.connect({
             }
           }
         })
+      } else {
+        if (type === 'until') {
+          await deleteRoute(routeGTFSID, gtfsTimetables, routes)
+        }
       }
     }
   })
