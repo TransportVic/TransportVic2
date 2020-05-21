@@ -1,5 +1,9 @@
 {
+  "1": "metro-train",
+  "2": "regional-train",
+  "3": "tram",
   "4": "metro-bus",
+  "5": "regional-coach",
   "6": "regional-bus",
   "7": "metro-bus",
   "8": "night-bus",

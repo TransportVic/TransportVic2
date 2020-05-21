@@ -11,13 +11,13 @@ $.ready(() => {
       height: screenHeight,
       width: screenWidth,
       font: {
-        family: 'BreeSerif',
+        family: 'Default-Font',
         size: 20,
         color: '#e8e8e8'
       },
       hoverlabel: {
         font: {
-          family: 'BreeSerif',
+          family: 'Default-Font',
           size: 15,
           color: '#ffffff'
         }
@@ -39,7 +39,7 @@ $.ready(() => {
       values: timeSpent,
       labels,
       type: 'pie'
-    }], createLayout('Time spent on each GTFS loader'))
+    }], createLayout('Time spent on each GTFS loader (seconds)'))
 
     Plotly.newPlot('percentageDocuments', [{
       values: objectCount,
@@ -76,34 +76,6 @@ $.ready(() => {
     "WM": "Whitemores Bus Lines"
   }
 
-  let operatorSizes = {
-    "V": 658,
-    "CO": 87,
-    "CS": 68,
-    "CW": 170,
-    "CT": 32,
-    "CG": 72,
-    "CB": 76,
-    "T": 564,
-    "S": 97,
-    "D": 261,
-    "CR": 81,
-    "SB": 63,
-    "LT": 94, // need to exclude vline coaches?
-    "MH": 143,
-    "MK": 54,
-    "MT": 48,
-    "RB": 20,
-    "ML": 12,
-    "MV": 12,
-    "K": 39,
-    "B": 20,
-    "CC": 43,
-    "P": 17,
-    "RR": Infinity,
-    "WM": 3
-  }
-
   $.ajax({
     url: '/stats/smartrak-stats',
     method: 'GET'
@@ -113,27 +85,28 @@ $.ready(() => {
     let operatorCounts = Object.values(content)
 
     Plotly.newPlot('idsByOperator', [{
-      values: operatorCounts,
-      labels,
-      type: 'pie'
+      x: labels,
+      y: operatorCounts,
+      type: 'bar',
+      name: 'ID Count'
     }], createLayout('Known Smartrak IDs by operator'))
-
-    Plotly.newPlot('operatorCompletion', [{
-      x: labels,
-      y: operatorCounts.map((count, i) => {
-        return count / operatorSizes[operatorIDs[i]] * 100
-      }),
-      type: 'bar',
-      name: 'Completed Smartrak IDs'
-    }, {
-      x: labels,
-      y: operatorCounts.map((count, i) => {
-        return 100 - count / operatorSizes[operatorIDs[i]] * 100
-      }),
-      type: 'bar',
-      name: 'Remaining Smartrak IDs'
-    }], Object.assign(createLayout('Smartrak ID completion by operator'), {
-      barmode: 'stack'
-    }))
+      //
+      // Plotly.newPlot('operatorCompletion', [{
+      //   x: labels,
+      //   y: operatorCounts.map((count, i) => {
+      //     return count / operatorSizes[operatorIDs[i]] * 100
+      //   }),
+      //   type: 'bar',
+      //   name: 'Completed Smartrak IDs'
+      // }, {
+      //   x: labels,
+      //   y: operatorCounts.map((count, i) => {
+      //     return 100 - count / operatorSizes[operatorIDs[i]] * 100
+      //   }),
+      //   type: 'bar',
+      //   name: 'Remaining Smartrak IDs'
+      // }], Object.assign(createLayout('Smartrak ID completion by operator'), {
+      //   barmode: 'stack'
+      // }))
   })
 })
