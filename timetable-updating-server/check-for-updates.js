@@ -38,7 +38,10 @@ function spawnProcess(path, finish) {
   function processLines(data) {
     let lines = data.split('\n').map(e => e.trim()).filter(Boolean)
     lines.forEach(line => {
-      if (line.match(/\d+ms http/)) return
+      if (line.match(/\d+ms http/)) {
+        line = line.replace(/\&devid.+/, '')
+      }
+
       broadcast({
         type: 'log-newline',
         line
@@ -102,6 +105,8 @@ request.head('http://data.ptv.vic.gov.au/downloads/gtfs.zip', async (err, resp, 
     })
   } else {
     console.log('Timetables all good, exiting')
-    process.exit()
   }
+
+  require('../load-gtfs/trim-old-routes')
+  process.exit()
 })
