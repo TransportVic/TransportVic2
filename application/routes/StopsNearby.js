@@ -20,10 +20,10 @@ function deg2rad(deg) {
 }
 
 function getClosestDistance(userPosition, positions) {
-  let userLat = userPosition.latitude, userLong = userPosition.longitude;
-  let distances = positions.map(position => getDistanceFromLatLon(position[1], position[0], userLat, userLong));
+  let userLat = userPosition.latitude, userLong = userPosition.longitude
+  let distances = positions.map(position => getDistanceFromLatLon(position[1], position[0], userLat, userLong))
 
-  return distances.sort((a, b) => a - b)[0];
+  return distances.sort((a, b) => a - b)[0]
 }
 
 let typeMap = {

@@ -11,6 +11,7 @@
   "dependencies": {
     "@turf/turf": "^5.1.6",
     "async": "^3.2.0",
+    "braces": ">=2.3.1",
     "cheerio": "^1.0.0-rc.3",
     "compression": "^1.7.4",
     "csv-parse": "^4.10.1",
@@ -20,6 +21,7 @@
     "line-reader": "^0.4.0",
     "lodash.shuffle": "^4.2.0",
     "lokijs": "^1.5.8",
+    "minimist": ">=0.2.1",
     "moment": "^2.26.0",
     "moment-timezone": "^0.5.31",
     "mongodb": "^3.5.7",

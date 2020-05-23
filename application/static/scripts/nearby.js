@@ -6,8 +6,8 @@ function processPosition(position) {
   if ((now - lastUpdate) < updateInterval) return
   lastUpdate = now
 
-  let {coords} = position;
-  let {latitude, longitude} = coords;
+  let {coords} = position
+  let {latitude, longitude} = coords
 
   $.ajax({
     method: 'POST',
@@ -15,8 +15,8 @@ function processPosition(position) {
       latitude, longitude
     }
 }, (err, status, data) => {
-    $('#content').innerHTML = data;
-  });
+    $('#content').innerHTML = data
+  })
 }
 
 function onError(error) {
@@ -31,7 +31,7 @@ function onError(error) {
 <img src="/static/images/home/500.svg" />
 <div>
   <a href="/">Try going home</a>
-  <span>&nbsp;Or&nbsp;</span>
+  <span>&nbspOr&nbsp</span>
   <a href="/search">Searching for a stop</a>
 </div>`
 }
@@ -40,5 +40,5 @@ $.ready(() => {
   window.navigator.geolocation.watchPosition(processPosition, onError, {
     enableHighAccuracy: true,
     maximumAge: updateInterval
-  });
-});
+  })
+})
