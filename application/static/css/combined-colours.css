@@ -128,20 +128,18 @@
 
 .martyrs-bus-service {
   background-color: #71afc7;
-  color: #d7d7d7 !important;
 }
 
 :nth-child(even) > .martyrs-bus-service {
   background-color: #438daa;
-  color: #d7d7d7 !important;
 }
 
 .cranbourne-transit {
-  background-color: #e5ba0d;
+  background-color: #cea812;
 }
 
 :nth-child(even) > .cranbourne-transit {
-  background-color: #c4a011;
+  background-color: #bc9a12;
 }
 
 .skybus {
@@ -162,22 +160,18 @@
 
 .south-coast-bus {
   background-color: #f99d31;
-  color: #e8e8e8 !important;
 }
 
 :nth-child(even) > .south-coast-bus {
   background-color: #d2872f;
-  color: #e8e8e8 !important;
 }
 
 .turnbulls {
   background-color: #f68b1f;
-  color: #e8e8e8 !important;
 }
 
 :nth-child(even) > .turnbulls {
   background-color: #de7814;
-  color: #e8e8e8 !important;
 }
 
 .latrobe-valley-bus-lines {
@@ -206,12 +200,10 @@
 
 .mcharrys-bus-lines {
   background-color: #d50d0d;
-  color: #d7d7d7 !important;
 }
 
 :nth-child(even) > .mcharrys-bus-lines {
   background-color: #b51010;
-  color: #d7d7d7 !important;
 }
 
 .little-s-gippsland-coaches {
@@ -288,22 +280,18 @@
 
 .sunraysia-bus-lines {
   background-color: #cd9e00;
-  color: #e8e8e8 !important;
 }
 
 :nth-child(even) > .sunraysia-bus-lines {
   background-color: #a78307;
-  color: #e8e8e8 !important;
 }
 
 .echuca-moama-transit {
   background-color: #00a9e0;
-  color: #d7d7d7 !important;
 }
 
 :nth-child(even) > .echuca-moama-transit {
   background-color: #0997c6;
-  color: #d7d7d7 !important;
 }
 
 .jacobsons-bus-lines {
@@ -338,11 +326,11 @@
   background-color: #e19216;
 }
 
-.little-s-coaches {
+.little-s-coaches-daylesford {
   background-color: #711c2b;
 }
 
-:nth-child(even) > .little-s-coaches {
+:nth-child(even) > .little-s-coaches-daylesford {
   background-color: #5e1824;
 }
 
@@ -363,11 +351,11 @@
 }
 
 .gold-bus {
-  background-color: #cfb53b;
+  background-color: #bca436;
 }
 
 :nth-child(even) > .gold-bus {
-  background-color: #b8a135;
+  background-color: #aa9431;
 }
 
 .sandlant-buses {
@@ -443,11 +431,11 @@
 }
 
 .organ-s-coaches {
-  background-color: #75d4b1;
+  background-color: #65bc9c;
 }
 
 :nth-child(even) > .organ-s-coaches {
-  background-color: #5fb092;
+  background-color: #59a388;
 }
 
 .trotters-coaches {
@@ -476,12 +464,10 @@
 
 .martin-s-albury {
   background-color: #af9956;
-  color: #d7d7d7 !important;
 }
 
 :nth-child(even) > .martin-s-albury {
   background-color: #a08b4b;
-  color: #d7d7d7 !important;
 }
 
 
@@ -642,32 +628,26 @@
 
 .tram-1 {
     background-color: #6e811f;
-    color: #e8e8e8 !important;
 }
 
 :nth-child(even) > .tram-1 {
     background-color: #607216;
-    color: #e8e8e8 !important;
 }
 
 .tram-3 {
     background-color: #0c8aa7;
-    color: #e8e8e8 !important;
 }
 
 :nth-child(even) > .tram-3 {
     background-color: #0e7991;
-    color: #e8e8e8 !important;
 }
 
 .tram-5 {
     background-color: #ff0100;
-    color: #d7d7d7 !important;
 }
 
 :nth-child(even) > .tram-5 {
     background-color: #b80100;
-    color: #d7d7d7 !important;
 }
 
 .tram-6 {
@@ -680,12 +660,10 @@
 
 .tram-11 {
     background-color: #46af8b;
-    color: #e8e8e8 !important;
 }
 
 :nth-child(even) > .tram-11 {
     background-color: #227b5b;
-    color: #e8e8e8 !important;
 }
 
 .tram-12 {
@@ -698,12 +676,10 @@
 
 .tram-16 {
     background-color: #d3a306;
-    color: #e8e8e8 !important;
 }
 
 :nth-child(even) > .tram-16 {
     background-color: #ae8600;
-    color: #e8e8e8 !important;
 }
 
 .tram-19 {
@@ -763,7 +739,7 @@
 }
 
 .tram-64 {
-    background-color: #00AB8E;
+    background-color: #00ab8e;
 }
 
 :nth-child(even) > .tram-64 {
@@ -780,32 +756,26 @@
 
 .tram-70 {
     background-color: #e560a5;
-    color: #d7d7d7 !important;
 }
 
 :nth-child(even) > .tram-70 {
     background-color: #ea2a8d;
-    color: #d7d7d7 !important;
 }
 
 .tram-72 {
     background-color: #607c6d;
-    color: #e8e8e8 !important;
 }
 
 :nth-child(even) > .tram-72 {
     background-color: #5a7566;
-    color: #e8e8e8 !important;
 }
 
 .tram-75 {
     background-color: #049fd3;
-    color: #d7d7d7 !important;
 }
 
 :nth-child(even) > .tram-75 {
     background-color: #017399;
-    color: #d7d7d7 !important;
 }
 
 .tram-78 {
@@ -818,22 +788,18 @@
 
 .tram-82 {
     background-color: #79a11c;
-    color: #c6c6c6 !important;
 }
 
 :nth-child(even) > .tram-82 {
     background-color: #6d9118;
-    color: #c6c6c6 !important;
 }
 
 .tram-86 {
     background-color: #d89c04;
-    color: #e8e8e8 !important;
 }
 
 :nth-child(even) > .tram-86 {
     background-color: #b88400;
-    color: #e8e8e8 !important;
 }
 
 .tram-96 {
