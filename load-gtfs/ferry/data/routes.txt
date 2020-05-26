@@ -1,0 +1,5 @@
+route_id,agency_id,route_short_name,route_long_name,route_type,route_color,route_text_color
+"9-STY-mjp-1","","","Stony Point - French Island - Phillip Island","","","FFFFFF"
+"9-PMW-mjp-1","","","Port Melbourne - Spotswood","","","FFFFFF"
+"9-PPO-mjp-1","","","Docklands - Portarlington","","","FFFFFF"
+"9-PGL-mjp-1","","","Docklands - Geelong","","","FFFFFF"

@@ -65,7 +65,7 @@
     "stopGTFSID": 9000006,
     "location": {
       "type": "Point",
-      "coordinates": [144.895642, -37.8319663]
+      "coordinates": [144.945319, -37.817079]
     },
     "stopNumber": null,
     "mode": "ferry",
@@ -89,7 +89,7 @@
     "stopGTFSID": 9000008,
     "location": {
       "type": "Point",
-      "coordinates": [144.895642, -37.8319663]
+      "coordinates": [144.361879, -38.142534]
     },
     "stopNumber": null,
     "mode": "ferry",

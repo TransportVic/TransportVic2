@@ -23,8 +23,7 @@ for regionalCoachStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode =
       span=regionalCoachStop.stopName
       
 for ferryTerminal in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'ferry')).slice(0, 3)
-  //- a(href=`/ferry/timings/${ferryTerminal.codedName}`).ferryTerminal.result
-  a.ferryTerminal.result
+  a(href=`/ferry/timings/${ferryTerminal.codedName}`).ferryTerminal.result
     div.leftContainer
       img(src='/static/images/clear-icons/bus.svg')
     div.resultDetails

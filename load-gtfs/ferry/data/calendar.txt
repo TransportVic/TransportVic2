@@ -1,0 +1,10 @@
+service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date
+"WEEKDAY_MF","1","1","1","1","1","0","0","${START}","${END}"
+"WEEKDAY_MFO","1","0","0","0","1","0","0","${START}","${END}"
+"SATURDAY","0","0","0","0","0","1","0","${START}","${END}"
+"SUNDAY","0","0","0","0","0","0","1","${START}","${END}"
+"WEEKDAY_MTue","1","1","0","0","0","0","0","${START}","${END}"
+"WEEKDAY_WThuF","0","0","1","1","1","0","0","${START}","${END}"
+"WEEKEND_SatSun","0","0","0","0","0","1","1","${START}","${END}"
+"WEEKDAY_MTueW","1","1","1","0","0","0","0","${START}","${END}"
+"WEEKDAY_ThuF","0","0","0","1","1","0","0","${START}","${END}"
