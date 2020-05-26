@@ -130,7 +130,7 @@ function loadWesternPort($) {
 
         let prev = trip.stops[i - 1]
         if (prev && prev.stopGTFSID === stop.stopGTFSID) { // phillip island twice in a row
-          prev.departureTime = gtfsTime
+          timings[i - 1].departureTime = gtfsTime
         } else {
           timings.push({
             stopGTFSID: stop.stopGTFSID,
