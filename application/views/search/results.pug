@@ -22,6 +22,15 @@ for regionalCoachStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode =
       span='Regional coach stop in ' + regionalCoachStop.suburb[0]
       span=regionalCoachStop.stopName
       
+for ferryTerminal in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'ferry')).slice(0, 3)
+  //- a(href=`/ferry/timings/${ferryTerminal.codedName}`).ferryTerminal.result
+  a.ferryTerminal.result
+    div.leftContainer
+      img(src='/static/images/clear-icons/bus.svg')
+    div.resultDetails
+      span='Ferry Terminal in ' + ferryTerminal.suburb[0]
+      span=ferryTerminal.stopName
+      
 for tramStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'tram')).slice(0, 5)
   a(href=`/tram/timings/${tramStop.codedSuburb[0]}/${tramStop.codedName}`).tramStop.result
     div.leftContainer

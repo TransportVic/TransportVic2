@@ -16,6 +16,9 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - Bus desto mapping
 
 ## New GTFS Loader:
+- Ferry:
+  - Unused GTFS ID 9
+  - Reads timetable from https://www.ptv.vic.gov.au/more/travelling-on-the-network/ferries/
 - Bus:
   - Loads standard GTFS components
   - Loads 788 stop numbers

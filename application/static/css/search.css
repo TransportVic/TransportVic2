@@ -48,11 +48,11 @@
   background-color: #866cb1;
 }
 
-.ferry .leftContainer {
+.ferryTerminal .leftContainer {
   background-color: #03998f;
 }
 
-.ferry:nth-child(even) .leftContainer {
+.ferryTerminal:nth-child(even) .leftContainer {
   background-color: #028980;
 }
 
