@@ -5,7 +5,7 @@ const config = require('../config.json')
 
 function renew() {
     console.log(new Date(), 'renewing certs')
-    childProcess.exec('certbot renew --non-interactive', function(err, stdout, stderr) {
+    childProcess.exec('certbot renew --non-interactive -a manual --preferred-challenges dns --manual-auth-hook "/home/ec2-user/certbot-hook.sh auth" --manual-cleanup-hook "/home/ec2-user/certbot-hook.sh cleanup"', function(err, stdout, stderr) {
         stdout = stdout.toString().trim()
         stderr = stderr.toString().trim()
         if (stdout) console.log(stdout)
