@@ -18,19 +18,25 @@ function setBookmarked(mode, suburb, stopName, state, callback) {
     let existingStop = bookmarks.find(stop => stop.id === id)
     if (existingStop) {
       if (state) {
-        if (!existingStop.modes.includes(mode))
+        if (!existingStop.modes.includes(mode)) {
           existingStop.modes.push(mode)
+        }
       } else {
-        if (existingStop.modes.includes(mode))
+        if (existingStop.modes.includes(mode)) {
           existingStop.modes.splice(existingStop.modes.indexOf(mode), 1)
+        }
+        if (existingStop.modes.length === 0) {
+          bookmarks.splice(bookmarks.indexOf(existingStop), 1)
+        }
       }
     } else {
-      if (state)
+      if (state) {
         bookmarks.push({
           stopData,
           modes: [mode],
           id
         })
+      }
     }
 
     localStorage.setItem('bookmarks', JSON.stringify(bookmarks))

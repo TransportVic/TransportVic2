@@ -1,6 +1,9 @@
 function getBookmarks() {
   let bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]')
 
+  bookmarks = bookmarks.filter(e => e.modes.length > 0 && e.id !== 'undefined/undefined')
+  localStorage.setItem('bookmarks', JSON.stringify(bookmarks))
+
   return bookmarks
 }
 
