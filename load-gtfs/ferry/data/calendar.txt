@@ -8,3 +8,4 @@ service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,e
 "WEEKEND_SatSun","0","0","0","0","0","1","1","${START}","${END}"
 "WEEKDAY_MTueW","1","1","1","0","0","0","0","${START}","${END}"
 "WEEKDAY_ThuF","0","0","0","1","1","0","0","${START}","${END}"
+"EVERYDAY","1","1","1","1","1","1","1","${START}","${END}"
