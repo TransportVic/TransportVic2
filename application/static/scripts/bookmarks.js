@@ -9,7 +9,8 @@ let cssNames = {
   tram: 'tramStop',
   'regional coach': 'regionalCoachStop',
   'regional train': 'vlineStation',
-  'metro train': 'metroStation'
+  'metro train': 'metroStation',
+  ferry: 'ferryTerminal'
 }
 
 let iconNames = {
@@ -17,7 +18,8 @@ let iconNames = {
   tram: 'tram',
   'regional coach': 'bus',
   'regional train': 'vline',
-  'metro train': 'metro'
+  'metro train': 'metro',
+  ferry: 'ferry'
 }
 
 let linkNames = {
@@ -25,7 +27,8 @@ let linkNames = {
   tram: 'tram',
   'regional coach': 'coach',
   'regional train': 'vline',
-  'metro train': 'metro'
+  'metro train': 'metro',
+  ferry: 'ferry'
 }
 
 let stopTypes = {
@@ -33,7 +36,8 @@ let stopTypes = {
   tram: 'Tram stop',
   'regional coach': 'Regional coach stop',
   'regional train': 'V/Line train station',
-  'metro train': 'Metro train station'
+  'metro train': 'Metro train station',
+  ferry: 'Ferry Terminal'
 }
 
 $.ready(() => {

@@ -38,10 +38,10 @@ router.get('/stop-data', async (req, res) => {
     stop = await stops.findDocument({
       codedName: name + '-railway-station',
     })
-  } else if (mode === 'regional coach') {
+  } else if (['regional coach', 'ferry'].includes(mode)) {
     stop = await stops.findDocument({
       codedName: name,
-      'bays.mode': 'regional coach'
+      'bays.mode': mode
     })
   } else {
     stop = await stops.findDocument({
