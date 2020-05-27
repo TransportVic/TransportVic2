@@ -174,6 +174,7 @@ module.exports = class MainServer {
       'timing-pages/RegionalCoach': '/coach/timings',
       'timing-pages/Bus': '/bus/timings',
       'timing-pages/Tram': '/tram/timings',
+      'timing-pages/Ferry': '/Ferry/timings',
 
       'run-pages/MetroTrains': '/metro/run',
       'run-pages/VLineTrains': '/vline/run',

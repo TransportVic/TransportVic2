@@ -25,7 +25,7 @@ for regionalCoachStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode =
 for ferryTerminal in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'ferry')).slice(0, 3)
   a(href=`/ferry/timings/${ferryTerminal.codedName}`).ferryTerminal.result
     div.leftContainer
-      img(src='/static/images/clear-icons/bus.svg')
+      img(src='/static/images/clear-icons/ferry.svg')
     div.resultDetails
       span='Ferry Terminal in ' + ferryTerminal.suburb[0]
       span=ferryTerminal.stopName
