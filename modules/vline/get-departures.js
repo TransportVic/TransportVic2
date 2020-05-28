@@ -435,9 +435,9 @@ async function getDepartures(station, db) {
       let serviceID = departureTime.format('HH:mm') + destination
       flagMap[serviceID] = findFlagMap(departure.flags)
     })
-console.log('a')
+
     scheduledTrains = await processPTVDepartures(departures, runs, routes, vlinePlatform, db)
-console.log('b')
+
     coachReplacements = scheduledTrains.filter(departure => departure.isTrainReplacement)
     cancelledTrains = scheduledTrains.filter(departure => departure.cancelled)
     scheduledTrains = scheduledTrains.filter(departure => !departure.isTrainReplacement)
