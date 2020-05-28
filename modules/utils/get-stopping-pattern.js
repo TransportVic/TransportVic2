@@ -3,6 +3,7 @@ const moment = require('moment')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const nameModifier = require('../../additional-data/bus-stop-name-modifier')
+const cityLoopRoute = require('./city-loop.json')
 
 let modes = {
   'metro train': 0,
@@ -37,14 +38,20 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     departure.estimatedDepartureTime = moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne')
     return departure
   }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+
   let dbStops = {}
   let checkModes = [mode]
   if (mode === 'regional coach') checkModes.push('regional train')
 
   let routeGTFSID = routeData.route_gtfs_id
   if (mode === 'tram') routeGTFSID = `3-${parseInt(routeGTFSID.slice(2))}`
-
   let route = await routesCollection.findDocument({ routeGTFSID })
+
+  if (routeData.route_id === 99) {
+    route = cityLoopRoute
+    routeGTFSID = '2-CCL'
+  }
+
   let gtfsDirection = route.ptvDirections[ptvDirection.direction_name]
 
   await async.forEach(Object.values(stops), async stop => {

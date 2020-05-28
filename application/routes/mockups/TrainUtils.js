@@ -175,6 +175,9 @@ module.exports = {
       } else {
         lineStops = [...cityLoopStops, ...lineStops]
       }
+      if (lineName === 'City Loop') {
+        return lineStops
+      }
     } else if (type === 'vline') {
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
       if (isUp) {
@@ -209,6 +212,7 @@ module.exports = {
     return lineStops.filter((e, i, a) => a.indexOf(e) === i)
   },
   trimTrip: (isUp, stopTimings, fromStation, routeName) => {
+    if (routeName === 'City Loop') return stopTimings
     if (isUp) {
       let hasSeenFSS = false
       let destStop = 'Flinders Street'
@@ -275,7 +279,7 @@ module.exports = {
     lineStops = module.exports.getFixedLineStops(tripStops, lineStops, routeName, isUp, departure.type)
 
     startingIndex = lineStops.indexOf(stationName)
-    let endingIndex = lineStops.indexOf(destination)
+    let endingIndex = lineStops.lastIndexOf(destination)
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
 
     let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament')

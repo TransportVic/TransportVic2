@@ -618,6 +618,17 @@ let lines = {
     'Mount Waverley',
     'Syndal',
     'Glen Waverley'
+  ],
+  'City Loop': [
+    'Parliament',
+    'Melbourne Central',
+    'Flagstaff',
+    'Southern Cross',
+    'Flinders Street',
+    'Southern Cross',
+    'Flagstaff',
+    'Melbourne Central',
+    'Parliament'
   ]
 }
 
@@ -642,6 +653,8 @@ function getLineStops(lineName, destination) {
   if (lineName === 'Glen Waverley') return lines['Glen Waverley']
   if (lineName === 'Mernda') return lines.Mernda
   if (lineName === 'Hurstbridge') return lines.Hurstbridge
+  if (lineName === 'City Loop') return lines['City Loop']
+
 }
 
 module.exports = getLineStops

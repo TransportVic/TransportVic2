@@ -407,7 +407,8 @@ async function getDepartures(station, db) {
     })
   }
 
-  let ptvDepartures, scheduledCoachReplacements, vnetDepartures
+  let ptvDepartures, scheduledCoachReplacements
+  let vnetDepartures = []
   await Promise.all([new Promise(async resolve => {
     try {
       ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vlinePlatform.stopGTFSID}?gtfs=true&max_results=7&expand=run&expand=route`)
@@ -568,4 +569,3 @@ async function getDepartures(station, db) {
 }
 
 module.exports = getDepartures
-module.exports.getDeparturesFromVNET = getDeparturesFromVNET

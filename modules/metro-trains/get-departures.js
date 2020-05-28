@@ -13,7 +13,7 @@ let ptvAPILocks = {}
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
 
-let burnleyGroup = [1, 2, 7, 9, 99] // alamein, belgrave, glen waverley, lilydale
+let burnleyGroup = [1, 2, 7, 9] // alamein, belgrave, glen waverley, lilydale
 let caulfieldGroup = [4, 6, 11, 12] // cranbourne, frankston, pakenham, sandringham
 let northenGroup = [3, 14, 15, 16, 17, 1482] // craigieburn, sunbury, upfield, werribee, williamstown, flemington racecourse
 let cliftonHillGroup = [5, 8] // mernda, hurstbridge
@@ -41,10 +41,10 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip, isS
       cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
   } else {
     if (stopsViaFlindersFirst && throughCityLoop) { // flinders then loop
-      if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
+      if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID) || routeID === 99)
         cityLoopConfig = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR']
     } else if (!stopsViaFlindersFirst && throughCityLoop) { // loop then flinders
-      if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
+      if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID) || routeID === 99)
         cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
     } else if (stopsViaFlindersFirst && !throughCityLoop) { // direct to flinders
       if (routeID == 6) // frankston
@@ -208,6 +208,9 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
         possibleLines = [...possibleLines, 'Sunbury', 'Craigieburn', 'Upfield', 'Showgrounds/Flemington', 'Werribee', 'Williamstown']
       if (routeID == 6)
         possibleLines = [...possibleLines, 'Cranbourne', 'Pakenham']
+
+      if (routeID == 99)
+        possibleLines = ['City Loop']
 
       possibleDestinations.push('Flinders Street')
     } else {

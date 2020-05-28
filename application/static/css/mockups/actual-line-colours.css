@@ -37,6 +37,10 @@ div.vline {
   background-color: #8F1A95;
 }
 
+div.city-loop {
+  background-color: #000000;
+}
+
 
 p.alamein, p.belgrave, p.lilydale, p.glen-waverley {
   background-color: #152C6B;
@@ -80,6 +84,11 @@ p.no-line {
 
 p.vline {
   background-color: #8F1A95;
+  color: #ffffff;
+}
+
+p.city-loop {
+  background-color: #000000;
   color: #ffffff;
 }
 
@@ -162,5 +171,10 @@ div.platform.no-line {
 
 div.platform.vline {
   background-color: #8F1A95;
+  color: #ffffff;
+}
+
+div.platform.city-loop {
+  background-color: #000000;
   color: #ffffff;
 }
