@@ -34,51 +34,6 @@ module.exports = class MainServer {
         next()
       })
 
-      let smartrakIDs = database.getCollection('smartrak ids')
-      let busTrips = database.getCollection('bus trips')
-      let tbmTrips = database.getCollection('tbm trips')
-
-      await smartrakIDs.createIndex({
-        smartrakID: 1
-      }, {name: 'smartrak id index', unique: true})
-      await smartrakIDs.createIndex({
-        fleetNumber: 1
-      }, {name: 'fleet number index', unique: true})
-      await smartrakIDs.createIndex({
-        operator: 1
-      }, {name: 'operator index'})
-
-      await busTrips.createIndex({
-        date: 1,
-        routeGTFSID: 1,
-        origin: 1,
-        destination: 1,
-        departureTime: 1,
-        destinationArrivalTime: 1,
-        smartrakID: 1
-      }, {name: 'trip index', unique: true})
-      await busTrips.createIndex({
-        smartrakID: 1,
-        date: 1
-      }, {name: 'smartrak id index'})
-      await busTrips.createIndex({
-        date: 1,
-        routeNumber: 1,
-        smartrakID: 1,
-      }, {name: 'service index'})
-      await busTrips.createIndex({
-        routeNumber: 1,
-        date: 1,
-        smartrakID: 1
-      }, {name: 'service operating days + smartrak id query index'})
-
-      await tbmTrips.createIndex({
-        date: 1,
-        rego: 1,
-        tripName: 1,
-        time: 1
-      }, {name: 'tbm trips'})
-
       callback()
     })
   }
@@ -130,6 +85,7 @@ module.exports = class MainServer {
       // res.setHeader('Content-Security-Policy', `default-src blob: data: ${secureDomain}; script-src 'unsafe-inline' blob: ${secureDomain}; style-src 'unsafe-inline' ${secureDomain}; img-src: 'unsafe-inline' ${secureDomain}`)
       res.setHeader('X-Xss-Protection', '1; mode=block')
       res.setHeader('X-Content-Type-Options', 'nosniff')
+      res.setHeader('X-Download-Options', 'noopen')
 
       res.setHeader('Referrer-Policy', 'no-referrer')
       res.setHeader('Feature-Policy', "geolocation 'self'; document-write 'none'; microphone 'none'; camera 'none';")
@@ -157,8 +113,6 @@ module.exports = class MainServer {
       }
       next()
     })
-
-
   }
 
   async configRoutes (app) {

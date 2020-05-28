@@ -13,7 +13,12 @@ database.connect({
   let timetables = database.getCollection('timetables')
   let gtfsTimetables = database.getCollection('gtfs timetables')
   let liveTimetables = database.getCollection('live timetables')
+
   let vlineTrips = database.getCollection('vline trips')
+
+  let smartrakIDs = database.getCollection('smartrak ids')
+  let busTrips = database.getCollection('bus trips')
+  let tbmTrips = database.getCollection('tbm trips')
 
   await stops.createIndex({
     stopName: 1,
@@ -223,6 +228,54 @@ database.connect({
 
   console.log('Created live timetables index')
 
-  updateStats('create-indexes', 36)
+
+  await smartrakIDs.createIndex({
+    smartrakID: 1
+  }, {name: 'smartrak id index', unique: true})
+  await smartrakIDs.createIndex({
+    fleetNumber: 1
+  }, {name: 'fleet number index', unique: true})
+  await smartrakIDs.createIndex({
+    operator: 1
+  }, {name: 'operator index'})
+
+  console.log('Created smartrak IDs index')
+
+  await busTrips.createIndex({
+    date: 1,
+    routeGTFSID: 1,
+    origin: 1,
+    destination: 1,
+    departureTime: 1,
+    destinationArrivalTime: 1,
+    smartrakID: 1
+  }, {name: 'trip index', unique: true})
+  await busTrips.createIndex({
+    smartrakID: 1,
+    date: 1
+  }, {name: 'smartrak id index'})
+  await busTrips.createIndex({
+    date: 1,
+    routeNumber: 1,
+    smartrakID: 1,
+  }, {name: 'service index'})
+  await busTrips.createIndex({
+    routeNumber: 1,
+    date: 1,
+    smartrakID: 1
+  }, {name: 'service operating days + smartrak id query index'})
+
+  console.log('Created bus trips index')
+
+  await tbmTrips.createIndex({
+    date: 1,
+    rego: 1,
+    tripName: 1,
+    time: 1
+  }, {name: 'tbm trips'})
+
+  console.log('Created tourbusminder index')
+
+  updateStats('create-indexes', 44)
   process.exit()
 })

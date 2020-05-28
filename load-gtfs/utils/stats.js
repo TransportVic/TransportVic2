@@ -14,7 +14,7 @@ async function fsWrap(f, ...args) {
 module.exports = async function setStats(field, datasize) {
   let filePath = path.join(__dirname, '../stats.json')
   let data
-  
+
   try {
     data = JSON.parse(await fsWrap('readFile', filePath))
   } catch (e) {
