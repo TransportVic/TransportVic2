@@ -7,6 +7,7 @@ $DIRNAME/vline-trains/load-all.sh
 $DIRNAME/regional-coach/load-all.sh
 $DIRNAME/bus/load-all.sh
 $DIRNAME/trams/load-all.sh
+$DIRNAME/ferry/load-all.sh
 
 node $DIRNAME/load-route-stops.js
 node $DIRNAME/load-bus-route-names.js
