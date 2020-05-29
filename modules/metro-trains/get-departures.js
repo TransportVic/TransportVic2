@@ -43,9 +43,11 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip, isS
     if (stopsViaFlindersFirst && throughCityLoop) { // flinders then loop
       if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID) || routeID === 99)
         cityLoopConfig = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR']
+        if (routeID === 99) cityLoopConfig.push('FSS')
     } else if (!stopsViaFlindersFirst && throughCityLoop) { // loop then flinders
       if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID) || routeID === 99)
         cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
+      if (routeID === 99) cityLoopConfig = ['FSS', ...cityLoopConfig]
     } else if (stopsViaFlindersFirst && !throughCityLoop) { // direct to flinders
       if (routeID == 6) // frankston
         cityLoopConfig = ['RMD', 'FSS', 'SSS']
