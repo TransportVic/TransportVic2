@@ -434,6 +434,12 @@ router.get('/highlights', async (req, res) => {
     routeNumber: '900'
   }).sort({departureTime: 1, origin: 1}).toArray()
 
+  let cdcOakleighSpecialBuses = await getBuses(highlightData.cdc_oakleigh_specials)
+  let cdcOakleighSpecials = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: cdcOakleighSpecialBuses }
+  }).sort({departureTime: 1, origin: 1}).toArray()
+
   let cdcHybrids = await getBuses(highlightData.cdc_oakleigh_hybrids)
   let strayCOHybrids = await busTrips.findDocuments({
     date,
@@ -496,6 +502,7 @@ router.get('/highlights', async (req, res) => {
     stray900Perm,
     non900Perm,
     unknownBuses,
+    cdcOakleighSpecials,
     strayCOHybrids,
     strayCDCExDrivers,
     tullaSpecials,

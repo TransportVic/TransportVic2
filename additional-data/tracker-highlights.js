@@ -22,6 +22,7 @@ module.exports = {
 
   ninehundred_perms: ['CO116', 'CO117', 'CO118', 'CO119', 'CO120', 'CO121', 'CO146', 'CO147', 'V1309', 'V1323', 'V8227', 'V8228', 'V8229', 'V8230', 'V8231', 'V8235', 'V8239', 'V8909'],
 
+  cdc_oakleigh_specials: ['CO12'],
   cdc_oakleigh_hybrids: ['CO152', 'CO157', 'CO158', 'CO159', 'CO160', 'CO161', 'CO162', 'CO163'],
   cdc_oakleigh_hybrid_routes: ['605', '630'],
 
