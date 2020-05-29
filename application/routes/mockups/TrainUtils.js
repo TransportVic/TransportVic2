@@ -234,6 +234,7 @@ module.exports = {
       let startIndex = Math.min(fssIndex, stationIndex)
       stopTimings = stopTimings.slice(startIndex)
     }
+
     return stopTimings
   },
   appendScreenDataToDeparture: (departure, station) => {
@@ -281,6 +282,8 @@ module.exports = {
 
     startingIndex = lineStops.indexOf(stationName)
     let endingIndex = lineStops.lastIndexOf(destination)
+    if (departure.trip.routeGTFSID === '2-CCL') endingIndex-- // bring it back from fss to parliament or southern cross
+
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
 
     let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament')
@@ -323,6 +326,7 @@ module.exports = {
     }
 
     departure.additionalInfo = additionalInfo
+    if (departure.trip.routeGTFSID === '2-CCL') departure.destination = 'City Loop'
 
     return departure
   },
