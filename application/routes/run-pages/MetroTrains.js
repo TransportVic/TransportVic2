@@ -49,7 +49,7 @@ async function pickBestTrip(data, db) {
   }
 
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
-  let useLive = minutesToTripEnd > -5 && minutesToTripStart < 120
+  let useLive = minutesToTripEnd >= -15 && minutesToTripStart < 120
 
   if (liveTrip) {
     if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
@@ -58,6 +58,7 @@ async function pickBestTrip(data, db) {
   }
 
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
+  let referenceTrip = liveTrip || gtfsTrip
 
   let isStonyPoint = data.origin === 'stony-point' || data.destination === 'stony-point'
 
@@ -86,7 +87,7 @@ async function pickBestTrip(data, db) {
     return gtfsTrip
   }
 
-  if (!useLive) return gtfsTrip
+  if (!useLive) return gtfsTrip || liveTrip
 
   let originStopID = originStop.bays.filter(bay => bay.mode === 'metro train')[0].stopGTFSID
   let originTime = tripStartTime
@@ -107,8 +108,6 @@ async function pickBestTrip(data, db) {
       expressCount += stop.stopSequence - gtfsTrip.stopTimings[i - 1].stopSequence -1
     })
   }
-
-  let referenceTrip = liveTrip || gtfsTrip
 
   // get first stop after flinders, or if only 1 stop (nme  shorts) then flinders itself
   // should fix the dumb issue of trips sometimes showing as forming and sometimes as current with crazyburn
