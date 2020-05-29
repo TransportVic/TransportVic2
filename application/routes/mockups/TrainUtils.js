@@ -61,7 +61,8 @@ module.exports = {
         $elemMatch: {
           stopName: station.stopName,
           arrivalTimeMinutes: {
-            $gt: minutesPastMidnight
+            $gte: minutesPastMidnight,
+            $lte: minutesPastMidnight + 120,
           }
         }
       },
