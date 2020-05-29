@@ -45,6 +45,11 @@ async function findConnections(changeoverPoint) {
             }
           }]
         }
+      },
+      destination: {
+        $not: {
+          $eq: trip.destination
+        }
       }
     })
 
