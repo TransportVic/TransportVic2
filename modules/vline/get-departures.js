@@ -289,6 +289,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     if (!trip) return // Same deal as coach - direction stuff creating non existent trips
 
     let runID = destination + scheduledDepartureTimeMinutes
+
     if (runIDsSeen.includes(runID)) return
     runIDsSeen.push(runID)
 
@@ -465,29 +466,31 @@ async function getDepartures(station, db) {
     console.log(e)
   }
 
-  try {
-    vnetDepartures = vnetDepartures.map(departure => {
-      let serviceID = departure.originalServiceID
-      let flags = flagMap[serviceID]
-      if (!flags) {
+  if (vnetDepartures.length) {
+    try {
+      vnetDepartures = vnetDepartures.map(departure => {
+        let serviceID = departure.originalServiceID
+        let flags = flagMap[serviceID]
+        if (!flags) {
+          return departure
+        }
+
+        if (flags.reservationsOnly) departure.flags.reservationsOnly = true
+        if (flags.firstClassAvailable) departure.flags.firstClassAvailable = true
+        if (flags.barAvailable && !departure.flags.barAvailable) departure.flags.barAvailable = null
+
+        departure.shortRouteName = getShortRouteName(departure.trip)
+
         return departure
-      }
+      })
 
-      if (flags.reservationsOnly) departure.flags.reservationsOnly = true
-      if (flags.firstClassAvailable) departure.flags.firstClassAvailable = true
-      if (flags.barAvailable && !departure.flags.barAvailable) departure.flags.barAvailable = null
+      let allDepartures = vnetDepartures.concat(coachReplacements).concat(cancelledTrains).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+      departuresCache.put(cacheKey, allDepartures)
 
-      departure.shortRouteName = getShortRouteName(departure.trip)
-
-      return departure
-    })
-
-    let allDepartures = vnetDepartures.concat(coachReplacements).concat(cancelledTrains).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
-    departuresCache.put(cacheKey, allDepartures)
-
-    return returnDepartures(allDepartures)
-  } catch (e) {
-    console.log(e)
+      return returnDepartures(allDepartures)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
 
