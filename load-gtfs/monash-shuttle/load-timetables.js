@@ -75,7 +75,7 @@ function extractTrips($, table, tripTemplate, HstartStop, HendStop, headsigns, t
       allTrips.push({
         ...tripTemplate,
         tripID,
-        gtfsDirection,
+        gtfsDirection: gtfsDirection.toString(),
         shapeID: shapeType,
         headsign: headsigns[gtfsDirection]
       })
