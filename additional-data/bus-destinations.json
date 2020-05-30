@@ -199,6 +199,9 @@
       "Sanctuary Road/Beattys Road": "Plumpton",
       "Matthews Avenue/Keilor Road": "Niddrie"
     },
+    "484": {
+      "Kinloch Grove/Kirkham Drive": "Greenvale"
+    },
     "485": {
       "Gap Road/Wilsons Lane": "Wilsons Lane"
     },
@@ -495,13 +498,15 @@
     },
     "843": {
       "John Strover Reserve": "Endeavour Hills",
-      "Maryrose Cresent/Reema Boulevard": "Endeavour Hills (Maryrose Cres)"
+      "Maryrose Cresent/Reema Boulevard": "Endeavour Hills (Maryrose Cres)",
+      "Gleneagles Secondary College": "Endeavour Hills"
     },
     "858": {
       "Egret Drive/Edithvale Road": "Aspendale Gardens"
     },
     "861": {
-      "Hensley Court/Conran Avenue": "Endeavour Hills"
+      "Hensley Court/Conran Avenue": "Endeavour Hills",
+      "David Collins Pre School": "Endeavour Hills"
     },
     "895": {
       "Narre Warren South P-12 College": "Narre Warren South"
