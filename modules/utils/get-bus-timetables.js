@@ -22,7 +22,7 @@ function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
   if (isOnline) {
     let stopNamesSeen = []
     bays.forEach(bay => {
-      if (!stopNamesSeen.includes(bay.originalName)) {
+      if (!stopNamesSeen.includes(bay.originalName) && bay.stopGTFSID < 100000) { // filter out offline override stops
         stopNamesSeen.push(bay.originalName)
         gtfsIDs.push(bay.stopGTFSID)
       }

@@ -10,7 +10,7 @@ const updateStats = require('../utils/stats')
 
 let stopsData = require('./data/stops.json')
 
-let gtfsID = 9
+let gtfsID = 12
 
 database.connect({
   poolSize: 100
@@ -18,7 +18,7 @@ database.connect({
   let stops = database.getCollection('stops')
   await loadStops(stops, stopsData, {})
 
-  await updateStats('ferry-terminals', stopsData.length)
-  console.log('Completed loading in ' + stopsData.length + ' Ferry terminals')
+  await updateStats('monash-shuttle-stops', stopsData.length)
+  console.log('Completed loading in ' + stopsData.length + ' monash shuttle bus stops')
   process.exit()
 })

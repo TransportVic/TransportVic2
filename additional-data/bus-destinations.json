@@ -578,6 +578,17 @@
     },
     "11-SKY": {
       "Skybus Coach Terminal": "Melbourne City"
+    },
+    "12-MCC": {
+      "Monash University Bus Loop": "Monash University Clayton Campus",
+      "Monash University": "Monash University Caulfield Campus"
+    },
+    "12-MCP": {
+      "Monash University Bus Loop": "Monash University Clayton Campus",
+      "Monash University": "Monash University Peninsula Campus"
+    },
+    "12-MPF": {
+      "Monash University": "Monash University Peninsula Campus"
     }
   },
   "generic": {

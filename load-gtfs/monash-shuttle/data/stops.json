@@ -1,0 +1,50 @@
+[
+  {
+    "originalName": "Monash University Clayton Bay F (Clayton)",
+    "fullStopName": "Monash University Bus Loop",
+    "stopGTFSID": 12000001,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.131790, -37.914042]
+    },
+    "stopNumber": null,
+    "mode": "bus",
+    "suburb": "Clayton"
+  },
+  {
+    "originalName": "Monash University Clayton Bay G (Clayton)",
+    "fullStopName": "Monash University Bus Loop",
+    "stopGTFSID": 12000002,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.131759, -37.914229]
+    },
+    "stopNumber": null,
+    "mode": "bus",
+    "suburb": "Clayton"
+  },
+  {
+    "originalName": "Monash University Clayton Bay H (Clayton)",
+    "fullStopName": "Monash University Bus Loop",
+    "stopGTFSID": 12000003,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.131718, -37.914419]
+    },
+    "stopNumber": null,
+    "mode": "bus",
+    "suburb": "Clayton"
+  },
+  {
+    "originalName": "Monash University (Caulfield)",
+    "fullStopName": "Monash University/Dandenong Road",
+    "stopGTFSID": 12000004,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.044287, -37.876056]
+    },
+    "stopNumber": null,
+    "mode": "bus",
+    "suburb": "Caulfield"
+  }
+]
