@@ -151,7 +151,9 @@ module.exports = class MainServer {
       'tracker/VLineTracker': '/vline/tracker',
 
       'route-data/MetroBusRoute': '/bus/route',
-      'route-data/RegionalBusRoute': '/bus/route/regional/'
+      'route-data/RegionalBusRoute': '/bus/route/regional/',
+
+      StopPreview: '/stop-preview'
     }
 
     Object.keys(routers).forEach(routerName => {

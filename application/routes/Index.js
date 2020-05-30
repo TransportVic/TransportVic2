@@ -85,8 +85,4 @@ router.get('/colours', async (req, res) => {
   res.render('colours', {operators, tramRoutes, trainLines})
 })
 
-router.get('/maps', (req, res) => {
-  res.render('maps')
-})
-
 module.exports = router
