@@ -117,7 +117,7 @@ function loadWesternPort($) {
     let tripTimings = []
     let mappedTrips = uniqueTrips.map(trip => {
       let hasPhillipIsland = trip.stops.find(stop => stop.stopGTFSID === 9000003)
-      let shapeType = `9-STY-${hasPhillipIsland ? 'B' : 'A'}-mjp.1.1.H`
+      let shapeType = `9-STY-${hasPhillipIsland ? 'B' : 'A'}-mjp-1.1.H`
 
       let timings = []
       trip.stops.forEach((stop, i) => {
@@ -178,7 +178,7 @@ function loadWestgatePunt($) {
   let allTimings = []
 
   function processTrips(departureTimes, headsign, gtfsDirection) {
-    let shapeType = `9-PMW-mjp.1.1.${gtfsDirection === '0' ? 'H' : 'R'}`
+    let shapeType = `9-PMW-mjp-1.1.${gtfsDirection === '0' ? 'H' : 'R'}`
 
     departureTimes.forEach(departureTime => {
       let timingParts = departureTime.match(/(\d{1,2})[.:]?(\d{1,2})?/)
@@ -295,7 +295,7 @@ function loadPortPhillip($) {
       let departureTimeParts = timings[0].split(':')
       let departureTimeMinutes = departureTimeParts[0] * 60 + departureTimeParts[1] * 1
 
-      let shapeType = `9-${routeGTFSID}-mjp.1.1.${gtfsDirection === '0' ? 'H' : 'R'}`
+      let shapeType = `9-${routeGTFSID}-mjp-1.1.${gtfsDirection === '0' ? 'H' : 'R'}`
       let tripID = `${departureTimeMinutes}.${lastCalendarType}.${shapeType}`
 
       allTrips.push({
@@ -345,7 +345,7 @@ function loadPortPhillip($) {
   }
 
   processTrips(portarlington, 'Portarlington Ferry Terminal', 'PPO', 9000007)
-  // processTrips(geelong, 'Geelong Ferry Terminal', 'PGL', 9000008)
+  processTrips(geelong, 'Geelong Ferry Terminal', 'PGL', 9000008)
 
   return { trips: allTrips, timings: allTimings }
 }
