@@ -206,7 +206,7 @@ database.connect({
         mode: 'bus',
         routeGTFSID: '12-MCC',
         calendarID: calendarDayName,
-      }, 12000001, 12000004, ['Monash University Caulfield', 'Monash University Clayton'], 20, (note, gtfsDirection) => {
+      }, 12000001, 12000004, ['Monash University Caulfield', 'Monash University Clayton'], 25, (note, gtfsDirection) => {
         if (gtfsDirection === 0 && note.includes('Clayton')) return true
         if (gtfsDirection === 1 && note.includes('Caulfield')) return true
         return false
@@ -233,7 +233,7 @@ database.connect({
       mode: 'bus',
       routeGTFSID: '12-MPF',
       calendarID: calendarDayName,
-    }, 48017, 21215, ['Frankston Railway Station', 'Monash University Peninsula'], 50)
+    }, 48017, 21215, ['Frankston Railway Station', 'Monash University Peninsula'], 15)
 
     totalCount += frankstonShuttleTrips.trips.length
     await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, frankstonShuttleTrips.trips, frankstonShuttleTrips.timings, calendarDays, calendarDates)
