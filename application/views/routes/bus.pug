@@ -25,7 +25,7 @@ block title
 
 block style
   link(rel='stylesheet' href='/static/css/routes/base-style.css')
-  link(rel='stylesheet' href='/static/css/routes/bus.css')
+  //- link(rel='stylesheet' href='/static/css/routes/bus.css')
   link(rel='stylesheet' href='/static/css/combined-colours.css')
       
 block content
@@ -39,7 +39,10 @@ block content
         link += `/${route.operationDate.type}`
       }
     a(class=operator href=link)#routeNumber
+      span#routeType=type
       span#routeText=route.routeNumber
+      if route.operationDate
+        span#routeDetail=operationDate
     div#terminals
       if showDualTermini
         a().coloured-row

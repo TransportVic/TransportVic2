@@ -74,9 +74,10 @@ async function render(params, res, matchingRoute) {
     directionNames[0] = matchingRoute.routeName
   }
 
+  let operationDateText
   if (matchingRoute.operationDate) {
     let {operationDate} = matchingRoute
-    directionNames[0] += ` (${operationDate.type[0].toUpperCase()}${operationDate.type.slice(1)} ${operationDate.operationDateReadable})`
+    operationDateText = `${operationDate.type[0].toUpperCase()}${operationDate.type.slice(1)} ${operationDate.operationDateReadable}`
   }
 
 
@@ -89,6 +90,7 @@ async function render(params, res, matchingRoute) {
     codedDirectionNames,
     firstLastBusMap,
     frequencyMap,
+    operationDate: operationDateText,
     useStopNumbers: false
   })
 }

@@ -26,9 +26,17 @@
   color: #f9f9f9;
 }
 
+#routeNumber > span {
+  margin: calc(-0.2vw - 0.2vh);
+}
+
+#routeType, #routeDetail {
+  font-size: calc(1vw + 1vh);
+  text-align: center;
+}
+
 #routeText {
   font-size: calc(3vw + 3vh);
-  margin-top: calc(-0.3vw - 0.3vh);
 }
 
 #terminals > a {
