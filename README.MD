@@ -100,8 +100,6 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - Has support for TramTrackerIDs printed on stops
 
 ## Next up to be added:
-- offline mode but client side
-- fix up trip/departure merging for merged stops (beaconsfield RS)
 - fix the 3am PT day stuff, except that is actually 8am for nightbus timetables
   - includes normalising timings to what a decent human being would use - 31:35 is unacceptable for most people
 - refactor out on-time stuff
@@ -110,7 +108,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 - timetable query page
   - enter departure time, service, origin, destination
   - attempts to find best match
-  - enter run id
+  - enter run id (metro is +948000, 988000 for alphabetical prefixed runs)
 - Icons for the various stopping pattern pages
   - Completed:
     - EDI Comeng (PTV) (Used for both types)
@@ -139,29 +137,21 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
     - Trams will use a simple lookup from the tram number to get the model
     - Buses use smartrak ids
 - Refactor all moment.tz to a utils method
-- Also find out how to ID replacement services
 - And everything else on TransportVic homepage (which i think there's nothing else)
-- Fare calculator thingy
+- Fare calculator thingy (now a ptv api thing)
 - Interstate
   - overland apparently
   - check how its actually programmed in, AM8 trips don't seem to be in?
-- Ferries
 - If disruption thing isn't implemented do a status board
-- Auto update of GTFS data?
-  - etag of zip file maybe
 - Maps (openstreetmap looks good)
 - Weather if I can find a way to do it freely
   - bom: use ftp://ftp.bom.gov.au/anon/gen/fwo/IDV10753.xml
   - get nearest weather station, I HAD A LIST SOMEWHERE WITH COORDINATES TO SOMETHING LIKE 5DP |:<
   - ftp://ftp.bom.gov.au/anon/home/adfd/spatial
   - from nearest weather station use that list to check
-- Maybe add a gunzel mode: show freight train timetables?? knockoff TRIMS
-- At this point its better than PTV * big flex *
 - day mode
 - SCS arrivals
 - Timetable search
-- jeez this list is long
-- journey planner if it takes the whole 2020 to impl this
 - myki manager if it's safe
   - store login info on client side?
 
@@ -170,23 +160,21 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
 * Create a config.json looking like
 ```
 {
-    "useHTTPS": false,
-    "sslCertPath": "",
-    "httpPort": 8000,
-    "databaseURL": "mongodb://localhost:27017",
-    "databaseName": "TransportVic",
-    "websiteDNSName": "localhost",
-    "webrootPath": "",
-    "useLetsEncrypt": false,
-    "busTrackerPath": "",
+  "useHTTPS": false, // tells the server if you want to use the HTTPS server (runs on port 443)
+  "sslCertPath": "", // where to find the SSL certs for HTTPS. Ignored if useHTTPS is false
+  "httpPort": 8000, // The port to run the HTTP server on. Acts only as a redirect server if userHTTPS is true
+  "databaseURL": "mongodb://localhost:27017", // MongoDB database URL. This should work fine
+  "databaseName": "TransportVic", // MongoDB database name
+  "webrootPath": "", // Location of the let's encrypt webroot
+  "useLetsEncrypt": false, // Whether to use let's encrypt to automatically renew certs
+  "certbotFlags": "", // Any extra flags to pass to the certbot renew call. For example using dns challenge
 
-    "ptvKey": "",
-    "ptvDevID": "",
+  "ptvKey": "", // Your PTV dev key.
+  "ptvDevID": "", // Your PTV dev id. If left blank PTV api calls will not work and will fallback to gtfs timetable. This makes data less accurate
 
-    "gtfsBatcher": false,
-
-    "seekBuses": false,
-    "devMode": true
+  "seekBuses": false, // Whether to run the bus seeker.
+  "trackVline": false, // Whether to track v/line trips
+  "devMode": true // Disabling the v/line email server
 }
 ```
 with the appropriate fields filled
