@@ -114,11 +114,24 @@
     "200": {
       "Barclay Square Park": "Red Cliffs"
     },
+    "215": {
+      "Westwood Drive/Western Highway": "Burnside"
+    },
+    "216": {
+      "Xavier College Middle School": "Brighton Beach"
+    },
     "223": {
       "Bayview Road/Somerville Road": "Yarraville"
     },
     "237": {
       "Sardine Street/Lorimer Street": "Fishermans Bend"
+    },
+    "250": {
+      "Park Street/Rathdowne Street": "Carlton North",
+      "Waterdale Road/Dougharty Road": "Heidelberg West"
+    },
+    "271": {
+      "Mulsanne Way/Mitcham Road": "Donvale"
     },
     "279": {
       "Parker Street/Anderson Street": "Templestowe"
@@ -161,6 +174,15 @@
     "406": {
       "Eastleigh Avenue/Norwood Drive": "Keilor East"
     },
+    "415": {
+      "Maidstone Street/Civic Parade": "Altona Meadows"
+    },
+    "421": {
+      "Cocoparra Cresent/Apollo Road": "Taylors Lakes"
+    },
+    "426": {
+      "Lexington Drive/Westwood Drive": "Burnside"
+    },
     "427": {
       "Lovegrove Avenue/Callaway Boulevard": "Sunshine West"
     },
@@ -197,7 +219,8 @@
     },
     "476": {
       "Sanctuary Road/Beattys Road": "Plumpton",
-      "Matthews Avenue/Keilor Road": "Niddrie"
+      "Matthews Avenue/Keilor Road": "Niddrie",
+      "Parramatta Road/Old Calder Highway": "Keilor"
     },
     "484": {
       "Kinloch Grove/Kirkham Drive": "Greenvale"
@@ -238,6 +261,9 @@
     "503": {
       "Stewart Street/Nicholson Street": "Brunswick East"
     },
+    "504": {
+      "Sydney Road/Brunswick Road": "Brunswick"
+    },
     "506": {
       "Westgarth Street/High Street": "Westgarth"
     },
@@ -272,19 +298,32 @@
     "541": {
       "Mount Ridley Road/Aitken Boulevard": "North Craigieburn"
     },
+    "542": {
+      "Belair Avenue/Lytton Street": "Glenroy"
+    },
+    "543": {
+      "Ventura Way/Blossom Drive": "Greenvale Gardens"
+    },
     "548": {
       "Genazzano College": "Kew (Cotham Road)"
     },
     "552": {
-      "Teresa Court/Gertz Avenue": "North East Reservoir"
+      "Teresa Court/Gertz Avenue": "North East Reservoir",
+      "Station Street/Dundas Street": "Thornbury"
     },
     "553": {
       "Gilbert Road/Regent Street": "West Preston",
       "High Street/Miller Street": "Preston"
     },
+    "555": {
+      "Broadway": "Reservoir Railway Station"
+    },
     "556": {
       "Plenty Road/Dunne Street": "La Trobe University",
       "Broadway": "Reservoir Railway Station"
+    },
+    "558": {
+      "Edwardes Street/Spring Street": "Reservoir Railway Station"
     },
     "569": {
       "Northern Hospital": "Epping Plaza SC"
@@ -299,6 +338,12 @@
     },
     "570": {
       "Japonica Street/Betula Avenue": "Bundoora RMIT"
+    },
+    "600": {
+      "New Street/Bay Street": "Brighton"
+    },
+    "603": {
+      "Xavier College Middle School": "Brighton Beach"
     },
     "604": {
       "Gardenia Road/North Road": "Gardenvale"
@@ -323,7 +368,7 @@
       "St. Kilda Street/Bent Avenue": "Elwood/Bent Avenue"
     },
     "663": {
-      "Birmingham Rd/Wray Cres": "Mount Evelyn"
+      "Birmingham Road/Wray Cresent": "Mount Evelyn"
     },
     "670": {
       "Box Hill Institute": "Lilydale Lakeside"
@@ -332,7 +377,8 @@
       "Yarra Road/Plymouth Road": "Croydon Hills"
     },
     "679": {
-      "Stradbroke Road/Mount Dandenong Road": "Montrose"
+      "Stradbroke Road/Mount Dandenong Road": "Montrose",
+      "Birmingham Road/Wray Cresent": "Mount Evelyn"
     },
     "681": {
       "Greenhaven Court/Sovereign Crest Boulevard": "Lysterfield"
@@ -343,12 +389,17 @@
       "Whitegum Drive/Woods Point Road": "Warburton East"
     },
     "684": {
+      "Perkiins Street/Grant Street": "Alexandra",
       "54 Grant Street": "Alexandra"
+    },
+    "685": {
+      "North Gateway/Maroondah Highway": "Coldstream"
     },
     "687": {
       "Heath Road/Old Chum Creek Road": "Chum Creek"
     },
     "688": {
+      "Hawthory Road/Mount Dandenong Road": "Kilsyth",
       "Montrose Road/Mount Dandenong Road": "Montrose"
     },
     "689": {
@@ -371,29 +422,41 @@
       "Bent Street/Centre Road": "Bentleigh"
     },
     "703": {
-      "Luntar Road/Centre Road": "Oakleigh South"
+      "Luntar Road/Centre Road": "Oakleigh South",
+      "Warrigal Road/Centre Road": "Oakleigh South"
     },
     "704": {
       "Centre Road/First Street": "Clayton East"
     },
     "705": {
-      "Kingston Road/Boundary Road": "Heatherton Road"
+      "Governor Road/Industrial Drive": "Braeside",
+      "Kingston Road/Boundary Road": "Heatherton"
     },
     "708": {
       "Lynne Street/Wells Road": "Chelsea Heights Pri Sch"
     },
     "733": {
-      "Norma Avenue/Cameron Avenue": "Oakleigh South"
+      "Norma Avenue/Cameron Avenue": "Oakleigh South",
+      "Bakers Road/Centre Road": "Oakleigh South",
+      "Bellerive Avenue/Stephensons Road": "Mount Waverley"
+    },
+    "736": {
+      "Ray Road/Blackburn Road": "Burwood East"
     },
     "740": {
       "Beddoe Road/Centre Road": "Vermont"
+    },
+    "742": {
+      "Springvale Road/Ferntree Gully Road": "Brandon Park"
     },
     "753": {
       "Stud Road/Ferntree Gully Road - Before": "Scoresby",
       "Stud Road/Ferntree Gully Road": "Scoresby"
     },
     "755": {
-      "Conyers Street/Forest Road": "The Basin"
+      "Conyers Street/Forest Road": "The Basin",
+      "Forest Road/Mountain Highway": "The Basin",
+      "Mountain Highway/Forest Road": "The Basin"
     },
     "757": {
       "Ferntree Gully Road/Borg Cresent": "Scoresby"
@@ -504,12 +567,23 @@
     "845": {
       "Gleneagles Secondary College": "Endeavour Hills"
     },
+    "857": {
+      "Bangholme Road/Mark Anthony Drive": "Bangholme",
+      "Jennison Court/Chelsea Park Drive": "Chelsea Heights"
+    },
     "858": {
-      "Egret Drive/Edithvale Road": "Aspendale Gardens"
+      "Egret Drive/Edithvale Road": "Aspendale Gardens",
+      "Wells Road/Edithvale Road": "Aspendale Gardens"
     },
     "861": {
       "Hensley Court/Conran Avenue": "Endeavour Hills",
       "David Collins Pre School": "Endeavour Hills"
+    },
+    "887": {
+      "Jetty Road/Point Nepean Road": "Rosebud"
+    },
+    "894": {
+      "Narre Warren South P-12 College": "Amberly Park"
     },
     "895": {
       "Narre Warren South P-12 College": "Narre Warren South"
@@ -541,6 +615,9 @@
     },
     "907": {
       "Wetherby Road/Doncaster Road": "Doncaster Depot"
+    },
+    "922": {
+      "Balcombe Road/Ebden Avenue": "Black Rock"
     },
     "943": {
       "High Street/Station Road": "Melton"

@@ -25,6 +25,10 @@ module.exports = {
   '4-557': { // thomastown anticlockwise
     '0': 'Anti-Clockwise'
   },
+  '4-558': { // reservoir anticlockwise
+    '0': 'Clockwise',
+    '1': 'Anti-Clockwise'
+  },
   '4-681': { // lysterfield - knox city clockwise
     '0': 'Clockwise'
   },
