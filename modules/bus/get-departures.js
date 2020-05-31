@@ -237,9 +237,12 @@ async function getDepartures(stop, db) {
   try {
     departures = await getDeparturesFromPTV(stop, db)
 
-    let tripIDsSeen = departures.map(d => d.trip.tripID)
+    function i (trip) { return `${trip.routeGTFSID}${trip.origin}${trip.departureTime}` }
+    let tripIDsSeen = departures.map(d => i(d.trip))
+
     let now = utils.now()
-    let extraScheduledTrips = scheduledDepartures.filter(d => !tripIDsSeen.includes(d.trip.tripID) && d.actualDepartureTime.diff(now, 'seconds') > -75)
+    let extraScheduledTrips = scheduledDepartures.filter(d => !tripIDsSeen.includes(i(d.trip)) && d.actualDepartureTime.diff(now, 'seconds') > -75)
+    
     departures = departures.concat(extraScheduledTrips)
   } catch (e) {
     console.log('Failed to get bus timetables', e)
