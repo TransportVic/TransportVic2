@@ -25,11 +25,11 @@ wss.on('connection', async (conn, req) => {
 })
 
 
-let lastEtag
+let lastLastModified
 try {
-  lastEtag = fs.readFileSync(__dirname + '/last-etag').toString()
+  lastLastModified = fs.readFileSync(__dirname + '/last-lastModified').toString()
 } catch (e) {
-  console.log('No etag, downloading data')
+  console.log('No lastModified, downloading data')
 }
 
 function spawnProcess(path, finish) {
@@ -97,13 +97,13 @@ async function updateTimetables() {
 console.log('Checking for updates...')
 
 request.head('http://data.ptv.vic.gov.au/downloads/gtfs.zip', async (err, resp, body) => {
-  let {etag} = resp.headers
-  if (etag !== lastEtag) {
+  let lastModified = resp.headers['last-modified']
+  if (lastModified !== lastLastModified) {
     console.log('Outdated timetables: updating now...')
     console.log(new Date().toLocaleString())
     spawnProcess(__dirname + '/../update-gtfs.sh', async () => {
-      fs.writeFileSync(__dirname + '/last-etag', etag)
-      console.log('Wrote etag', etag)
+      fs.writeFileSync(__dirname + '/last-lastModified', lastModified)
+      console.log('Wrote lastModified', lastModified)
       await updateTimetables()
     })
   } else {
