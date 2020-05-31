@@ -82,6 +82,7 @@ async function updateTimetables() {
         await routes.dropCollection()
         await gtfsTimetables.dropCollection()
       } catch (e) {
+        console.log(e)
       }
 
       console.log('Dropped stops, routes and gtfs timetables')
@@ -99,12 +100,15 @@ request.head('http://data.ptv.vic.gov.au/downloads/gtfs.zip', async (err, resp, 
   let {etag} = resp.headers
   if (etag !== lastEtag) {
     console.log('Outdated timetables: updating now...')
+    console.log(new Date().toLocaleString())
     spawnProcess(__dirname + '/../update-gtfs.sh', async () => {
       fs.writeFileSync(__dirname + '/last-etag', etag)
+      console.log('Wrote etag', etag)
       await updateTimetables()
     })
   } else {
-    console.log('Timetables all good, deleting old routes')
-    require('../load-gtfs/trim-old-routes')
+    console.log('Timetables all good')
+    // console.log('Timetables all good, deleting old routes')
+    // require('../load-gtfs/trim-old-routes')
   }
 })

@@ -27,7 +27,7 @@ database.connect({
     'operationDate.type': 'until'
   }).toArray()
 
-  let now = utils.now()
+  let now = utils.now().startOf('day')
 
   let passed = untilRoutes.filter(route => {
     return route.operationDate.operationDate < now

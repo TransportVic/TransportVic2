@@ -122,7 +122,7 @@ database.connect({
         })
       } else {
         if (type === 'until') {
-          await deleteRoute(routeGTFSID, gtfsTimetables, routes)
+          // await deleteRoute(routeGTFSID, gtfsTimetables, routes)
         }
       }
     }

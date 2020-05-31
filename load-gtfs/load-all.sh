@@ -14,7 +14,7 @@ node $DIRNAME/load-route-stops.js
 node $DIRNAME/load-bus-route-names.js
 node $DIRNAME/load-stop-services.js
 
-node $DIRNAME/trim-old-routes.js
+# node $DIRNAME/trim-old-routes.js
 
 node $DIRNAME/../lgas/load-lgas.js
 node $DIRNAME/../lgas/load-route-lgas.js
