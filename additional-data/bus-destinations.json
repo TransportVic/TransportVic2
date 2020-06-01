@@ -8,10 +8,15 @@
       "McSwains Road/Northern Highway": "Westwood Park",
       "32 Harris Road": "Elliminyt",
       "Doonan Street/McLennan Street": "Mooroopna",
-      "Barkly Street/Ingor Street": "Ararat"
+      "Barkly Street/Ingor Street": "Ararat",
+      "Albatross Road/Point Road": "Kalimna"
     },
     "2": {
-      "McCallum Street/Campbell Street": "Swan Hill South (Loop)"
+      "McCallum Street/Campbell Street": "Swan Hill South (Loop)",
+      "Bronsdon Street/Capes Road": "Lakes Entrance North"
+    },
+    "3": {
+      "Thorpes Lane/McCullough Street": "Lakes Entrance East"
     },
     "5": {
       "Windmill Street/Waratah Road": "Huntly",
@@ -87,7 +92,7 @@
       "Queenscliffe Marina": "Queenscliffe"
     },
     "60": {
-      "Piper Lane": "Bendigo East",
+      "Piper Lane/Piper Road": "Bendigo East",
       "Bluff Road/Leviens Road": "St. Leonards"
     },
     "64": {
@@ -741,6 +746,7 @@
     "Melbourne Airport T1 Skybus": "Melbourne Airport (Skybus)",
     "Melbourne Airport T4 Skybus": "Melbourne Airport (Skybus)",
     "Bailey Street - North": "Bairnsdale",
-    "Old Echuca Post Office": "Echuca"
+    "Old Echuca Post Office": "Echuca",
+    "Post Office North": "Lakes Entrance"
   }
 }

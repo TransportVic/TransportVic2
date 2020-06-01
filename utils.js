@@ -349,6 +349,7 @@ module.exports = {
       || shortName.endsWith('Way') || shortName.endsWith('Cresent')
       || shortName.endsWith('Place') || shortName.endsWith('Boulevard')
       || shortName.endsWith('Cresent') || shortName.endsWith('Freeway'))
+      || shortName.endsWith('Lane')
   },
   isCheckpointStop: stopName => stopName.includes('University')
     || stopName.includes('Railway Station')
