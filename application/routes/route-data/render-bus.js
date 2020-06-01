@@ -3,7 +3,7 @@ const routeUtils = require('./route-utils')
 
 async function render(params, res, matchingRoute) {
   let {db} = res
-  let {routeNumber, directionName, lga} = params
+  let {routeNumber, directionName, suburb} = params
 
   let gtfsTimetables = db.getCollection('gtfs timetables')
 
@@ -15,7 +15,7 @@ async function render(params, res, matchingRoute) {
     if (matchingRoute.routeGTFSID.match(/(4|7|8)-/))
       return res.redirect(`/bus/route/${routeNumber}`)
     else
-      return res.redirect(`/bus/route/regional/${lga}/${routeNumber}`)
+      return res.redirect(`/bus/route/regional/${suburb}/${routeNumber}`)
   }
 
   let {gtfsDirection} = direction
