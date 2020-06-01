@@ -70,7 +70,7 @@ for busRoute in routes.filter(route => route.mode === 'bus')
     if (busRoute.routeGTFSID.match(/(4|7|8)-/)) {
       if (hasNumber) url = `/bus/route/${busRoute.routeNumber}`   
     } else if (busRoute.routeGTFSID.startsWith('6-')) {
-      if (hasNumber) url = `/bus/route/regional/${busRoute.codedLGA}/${busRoute.routeNumber}`
+      if (hasNumber) url = `/bus/route/regional/${busRoute.codedSuburb}/${busRoute.routeNumber}`
     }
     
     url += `/${encodeName(busRoute.directions[0].directionName)}`
