@@ -665,15 +665,13 @@
       "Skybus Coach Terminal": "Melbourne City"
     },
     "12-MCC": {
-      "Monash University Bus Loop": "Monash University Clayton Campus",
-      "Monash University": "Monash University Caulfield Campus"
+      "Monash University": "Monash Uni Caulfield"
     },
     "12-MCP": {
-      "Monash University Bus Loop": "Monash University Clayton Campus",
-      "Monash University": "Monash University Peninsula Campus"
+      "Monash University": "Monash Uni Peninsula"
     },
     "12-MPF": {
-      "Monash University": "Monash University Peninsula Campus"
+      "Monash University": "Monash Uni Peninsula"
     }
   },
   "generic": {

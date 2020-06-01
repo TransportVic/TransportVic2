@@ -242,7 +242,7 @@ async function getDepartures(stop, db) {
 
     let now = utils.now()
     let extraScheduledTrips = scheduledDepartures.filter(d => !tripIDsSeen.includes(i(d.trip)) && d.actualDepartureTime.diff(now, 'seconds') > -75)
-    
+
     departures = departures.concat(extraScheduledTrips)
   } catch (e) {
     console.log('Failed to get bus timetables', e)
@@ -278,6 +278,11 @@ async function getDepartures(stop, db) {
     if (importantStops.length)
       departure.viaText = `Via ${importantStops.slice(0, -1).join(', ')}${(importantStops.length > 1 ? ' & ' : '') + importantStops.slice(-1)[0]}`
 
+    if (departure.bay && !departure.routeNumber) {
+      if (departure.departureRoad) departure.departureRoad += `, ${departure.bay}`
+      else departure.departureRoad = departure.bay
+      shouldShowRoad = true
+    }
     if (shouldShowRoad && departure.departureRoad) {
       departure.guidanceText = 'Departs ' + departure.departureRoad
     }
