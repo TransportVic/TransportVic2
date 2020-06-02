@@ -1,7 +1,7 @@
 extends ../layout
     
 block head
-  - let title = `${trip.departureTime} ${trip.origin} to ${trip.destination}`
+  - let title = `${trip.departureTime} ${trip.origin.slice(0, -16)} to ${trip.destination.slice(0, -16)}`
   title=`TransportVic - ${title}`
   
   meta(property='og:title' content=`TransportVic - ${title}`)

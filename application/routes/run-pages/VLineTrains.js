@@ -27,66 +27,61 @@ async function pickBestTrip(data, db) {
     operationDays: data.operationDays
   }
 
+  let referenceTrip
+
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
   if (liveTrip) {
-    liveTrip.destination = liveTrip.destination.slice(0, -16)
-    liveTrip.origin = liveTrip.origin.slice(0, -16)
-    return liveTrip
+    referenceTrip = liveTrip
+  } else {
+    referenceTrip = await db.getCollection('gtfs timetables').findDocument(query)
+    if (!referenceTrip) return null
   }
-
-  // TODO: improve this
-  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
 
   let nspTrip = await db.getCollection('timetables').findDocument({
     mode: 'regional train',
-    origin: gtfsTrip.origin,
-    destination: gtfsTrip.destination,
-    direction: gtfsTrip.direction,
-    routeGTFSID: gtfsTrip.routeGTFSID,
+    origin: referenceTrip.origin,
+    destination: referenceTrip.destination,
+    direction: referenceTrip.direction,
+    routeGTFSID: referenceTrip.routeGTFSID,
     operationDays: utils.getDayName(tripDay),
-    departureTime: gtfsTrip.departureTime,
+    departureTime: referenceTrip.departureTime,
   })
 
   let {runID, vehicle} = nspTrip || {}
 
-  if (!gtfsTrip) return null
-
   let vlineTrips = db.getCollection('vline trips')
   let tripData = await vlineTrips.findDocument({
     date: data.operationDays,
-    departureTime: gtfsTrip.departureTime,
-    origin: gtfsTrip.origin.slice(0, -16),
-    destination: gtfsTrip.destination.slice(0, -16)
+    departureTime: referenceTrip.departureTime,
+    origin: referenceTrip.origin.slice(0, -16),
+    destination: referenceTrip.destination.slice(0, -16)
   })
 
   if (!tripData) {
     tripData = await vlineTrips.findDocument({
       date: data.operationDays,
-      departureTime: gtfsTrip.departureTime,
-      origin: gtfsTrip.origin.slice(0, -16)
+      departureTime: referenceTrip.departureTime,
+      origin: referenceTrip.origin.slice(0, -16)
     })
   }
 
   if (!tripData) {
     tripData = await vlineTrips.findDocument({
       date: data.operationDays,
-      destination: gtfsTrip.destination.slice(0, -16),
-      destinationArrivalTime: gtfsTrip.destinationArrivalTime
+      destination: referenceTrip.destination.slice(0, -16),
+      destinationArrivalTime: referenceTrip.destinationArrivalTime
     })
   }
 
-  gtfsTrip.destination = gtfsTrip.destination.slice(0, -16)
-  gtfsTrip.origin = gtfsTrip.origin.slice(0, -16)
-
-  gtfsTrip.runID = runID
-  gtfsTrip.vehicle = vehicle
+  referenceTrip.runID = runID
+  referenceTrip.vehicle = vehicle
 
   if (tripData) {
-    gtfsTrip.runID = tripData.runID
-    gtfsTrip.consist = tripData.consist
+    referenceTrip.runID = tripData.runID
+    referenceTrip.consist = tripData.consist
   }
 
-  return gtfsTrip
+  return referenceTrip
 }
 
 router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
