@@ -51,10 +51,40 @@ async function pickBestTrip(data, db) {
 
   if (!gtfsTrip) return null
 
+  let vlineTrips = db.getCollection('vline trips')
+  let tripData = await vlineTrips.findDocument({
+    date: data.operationDays,
+    departureTime: gtfsTrip.departureTime,
+    origin: gtfsTrip.origin.slice(0, -16),
+    destination: gtfsTrip.destination.slice(0, -16)
+  })
+
+  if (!tripData) {
+    tripData = await vlineTrips.findDocument({
+      date: data.operationDays,
+      departureTime: gtfsTrip.departureTime,
+      origin: gtfsTrip.origin.slice(0, -16)
+    })
+  }
+
+  if (!tripData) {
+    tripData = await vlineTrips.findDocument({
+      date: data.operationDays,
+      destination: gtfsTrip.destination.slice(0, -16),
+      destinationArrivalTime: gtfsTrip.destinationArrivalTime
+    })
+  }
+
   gtfsTrip.destination = gtfsTrip.destination.slice(0, -16)
   gtfsTrip.origin = gtfsTrip.origin.slice(0, -16)
+
   gtfsTrip.runID = runID
   gtfsTrip.vehicle = vehicle
+
+  if (tripData) {
+    gtfsTrip.runID = tripData.runID
+    gtfsTrip.consist = tripData.consist
+  }
 
   return gtfsTrip
 }

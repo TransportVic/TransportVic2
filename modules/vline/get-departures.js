@@ -323,12 +323,29 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     if (trip.cancelled) platform = '-'
 
     let vehicle
+
     let tripData = await vlineTrips.findDocument({
       date: departureTime.format('YYYYMMDD'),
       departureTime: originDepartureTime,
       origin: origin.slice(0, -16),
       destination: destination.slice(0, -16)
     })
+
+    if (!tripData) {
+      tripData = await vlineTrips.findDocument({
+        date: departureTime.format('YYYYMMDD'),
+        departureTime: originDepartureTime,
+        origin: origin.slice(0, -16)
+      })
+    }
+
+    if (!tripData) {
+      tripData = await vlineTrips.findDocument({
+        date: departureTime.format('YYYYMMDD'),
+        destination: destination.slice(0, -16),
+        destinationArrivalTime: trip.destinationArrivalTime
+      })
+    }
 
     if (tripData) {
       let first = tripData.consist[0]
@@ -528,11 +545,27 @@ async function getDepartures(station, db) {
       }
 
       let tripData = await vlineTrips.findDocument({
-        date: departure.scheduledDepartureTime.format('YYYYMMDD'),
-        departureTime,
+        date: departureTime.format('YYYYMMDD'),
+        departureTime: originDepartureTime,
         origin: origin.slice(0, -16),
         destination: destination.slice(0, -16)
       })
+
+      if (!tripData) {
+        tripData = await vlineTrips.findDocument({
+          date: departureTime.format('YYYYMMDD'),
+          departureTime: originDepartureTime,
+          origin: origin.slice(0, -16)
+        })
+      }
+
+      if (!tripData) {
+        tripData = await vlineTrips.findDocument({
+          date: departureTime.format('YYYYMMDD'),
+          destination: destination.slice(0, -16),
+          destinationArrivalTime: trip.destinationArrivalTime
+        })
+      }
 
       if (tripData) {
         let first = tripData.consist[0]

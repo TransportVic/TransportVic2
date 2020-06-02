@@ -21,7 +21,7 @@ block content
     div.infoRow
       span=`Run ${trip.runID}`
       -
-        let {vehicle} = trip
+        let {vehicle, consist} = trip
         let parts
         if (vehicle) {
           if (vehicle.startsWith('N'))
@@ -41,6 +41,10 @@ block content
           else
             span
           img(src=`/static/images/icons/${parts[1].toLowerCase()}.svg`)
+    if consist
+      div.liveConsist
+        span.header Live Tracking
+        span.consist=consist.join('-')
   div.timing-list
     for stop in trip.stopTimings
       div.timingRow(id='stop-' + stop.stopGTFSID)

@@ -36,7 +36,7 @@ router.get('/:stationName', async (req, res) => {
     if (stationName === 'Southern Cross Railway Station' && departure.isTrainReplacement)
       stationName = 'Southern Cross Coach Terminal/Spencer Street'
 
-    let stopGTFSID = departure.trip.stopTimings.find(stop => stop.stopName === stationName)
+    let stopGTFSID = departure.trip.stopTimings.find(stop => stop.stopName === stationName).stopGTFSID
 
     departure.tripURL = `/${departure.isTrainReplacement ? 'coach' : 'vline'}/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
