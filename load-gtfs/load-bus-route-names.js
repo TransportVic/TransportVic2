@@ -109,7 +109,7 @@ database.connect({
       else type = type.toLowerCase()
 
       let dateMoment = moment.tz(date, 'DD-MM-YYYY', 'Australia/Melbourne')
-      if (dateMoment >= now) {
+      // if (dateMoment >= now) {
         operationDateCount++
         await routes.updateDocument({ routeGTFSID }, {
           $set: {
@@ -120,11 +120,11 @@ database.connect({
             }
           }
         })
-      } else {
-        if (type === 'until') {
-          // await deleteRoute(routeGTFSID, gtfsTimetables, routes)
-        }
-      }
+      // } else {
+      //   if (type === 'until') {
+      //     // await deleteRoute(routeGTFSID, gtfsTimetables, routes)
+      //   }
+      // }
     }
   })
 

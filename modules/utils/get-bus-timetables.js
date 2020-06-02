@@ -134,6 +134,12 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
       if (route.flags)
         loopDirection = route.flags[trip.gtfsDirection]
 
+      if (route.operationDate) {
+        let cutoff = utils.now().startOf('day')
+        if (route.operationDate.type === 'until' && route.operationDate.operationDate < cutoff) {
+          return null
+        }
+      }
     } else {
       operator = ''
       routeNumber = ''
@@ -158,7 +164,7 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
       codedOperator: utils.encodeName(operator),
       loopDirection
     }
-  })).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+  })).filter(Boolean).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }
 
 module.exports = {

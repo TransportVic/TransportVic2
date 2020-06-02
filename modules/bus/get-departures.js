@@ -160,6 +160,13 @@ async function getDeparturesFromPTV(stop, db) {
       let busRoute = await dbRoutes.findDocument({ routeGTFSID }, { routePath: 0 })
       let operator = busRoute.operators.sort((a, b) => a.length - b.length)[0]
 
+      if (busRoute.operationDate) {
+        let cutoff = utils.now().startOf('day')
+        if (busRoute.operationDate.type === 'until' && busRoute.operationDate.operationDate < cutoff) {
+          return
+        }
+      }
+
       if (!operator) operator = ''
 
       let {routeNumber} = trip
@@ -248,6 +255,10 @@ async function getDepartures(stop, db) {
     console.log('Failed to get bus timetables', e)
     departures = scheduledDepartures
   }
+
+  departures = departures.filter(d => {
+    return true
+  })
 
   let nightBusIncluded = shouldGetNightbus(utils.now())
   let shouldShowRoad = stop.bays.filter(bay => {
