@@ -87,7 +87,6 @@ div.burnLine.reset {
 div.topRow {
   height: 13vw;
   display: flex;
-  font-family: "NetworkSansBold";
   z-index: 1;
 }
 
@@ -98,18 +97,21 @@ div.topRow > * {
 p.firstDestination {
   font-size: 10.75vw;
   margin-left: 0.5vw;
+  font-family: "NetworkSansBold";
   letter-spacing: -0.7vw;
   white-space: nowrap;
 }
 
 p.firstDestination.smaller {
-  font-size: 10vw;
+  font-family: "NetworkSansMedium";
+  letter-spacing: -0.15vw;
+  font-size: 9.5vw;
   margin-top: 0.7vw;
 }
 
 p.firstDestination.smallest {
   font-family: "NetworkSansMedium";
-  letter-spacing: -0.55vw;
+  letter-spacing: -0.1vw;
   font-size: 8vw;
   margin-top: 2vw;
 }
@@ -210,9 +212,9 @@ div.bottomRow > span:nth-child(1) {
 }
 
 div.bottomRow > span:nth-child(2) {
-  margin-left: 6vw;
+  margin-left: 3vw;
   width: 30.5vw;
-  letter-spacing: -0.2vw;
+  letter-spacing: -0.1vw;
 }
 
 div.bottomRow > span:nth-child(3) {
@@ -251,4 +253,5 @@ div.timeNow {
   align-items: center;
   justify-content: center;
   font-size: 5vw;
+  font-family: "NetworkSansRegular";
 }
