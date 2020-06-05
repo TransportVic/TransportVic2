@@ -7,6 +7,8 @@ const HTTPSServer = require('./server/HTTPSServer')
 const HTTPSRedirectServer = require('./server/HTTPSRedirectServer')
 const MainServer = require('./server/MainServer')
 
+const WebsocketServer = require('./server/WebsocketServer')
+
 let httpServer = null
 let httpsServer = null
 const mainServer = new MainServer()
@@ -20,7 +22,7 @@ if (config.useHTTPS) {
   httpServer = HTTPServer.createServer(mainServer)
 }
 
-require(`./application/routes/TourBusMinder`).setupWS(httpsServer || httpServer)
+let websocketServer = WebsocketServer.createServer(httpsServer || httpServer)
 
 httpServer.listen(config.httpPort)
 if (httpsServer) httpsServer.listen(443)

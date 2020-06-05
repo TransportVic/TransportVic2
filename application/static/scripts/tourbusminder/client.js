@@ -18,14 +18,16 @@ function focusMapAt(position, duration) {
   map.easeTo(easeTo)
 }
 
+let url = location.protocol.replace('http', 'ws') + '//' + location.host + '/loc/client'
+
 let lastTimestamp = 0
-let websocket = new WebSocket('wss://' + location.host + '/loc/client')
+let websocket = new WebSocket(url)
 
 function recreate() {
   websocket = null
   setTimeout(() => {
     try {
-      websocket = new WebSocket('wss://' + location.host + '/loc/client')
+      websocket = new WebSocket(url)
 
       websocket.onclose = recreate
     } catch (e) {

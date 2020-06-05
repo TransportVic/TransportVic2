@@ -1,6 +1,5 @@
 const express = require('express')
 const utils = require('../../utils')
-const ws = require('ws')
 const router = new express.Router()
 
 const DatabaseConnection = require('../../database/DatabaseConnection')
@@ -9,7 +8,6 @@ const config = require('../../config.json')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 let maxTripTimeout = 1000 * 60 * 10 // 10min
-let wsServer
 
 router.get('/', (req, res) => {
   res.render('tourbusminder/index')
@@ -24,7 +22,7 @@ router.get('/server', (req, res) => {
 })
 
 module.exports = router
-module.exports.setupWS = async function(server) {
+module.exports.setupWS = async function(wss) {
   await new Promise(r => database.connect({
     poolSize: 100
   }, r))
@@ -39,7 +37,6 @@ module.exports.setupWS = async function(server) {
     })
   }
 
-  const wss = new ws.Server({server})
   wss.on('connection', async (conn, req) => {
     let time = +new Date()
 
@@ -66,6 +63,7 @@ module.exports.setupWS = async function(server) {
         }
 
         let trip = await tbmTrips.findDocuments(query).sort({time: -1}).limit(1).next()
+
         if (trip && time - trip.time < maxTripTimeout) {
           if (data.quit) {
             broadcast({
@@ -102,7 +100,8 @@ module.exports.setupWS = async function(server) {
       let trips = await tbmTrips.findDocuments({
         time: {
           $gt: time - maxTripTimeout
-        }
+        },
+        active: true
       }).toArray()
 
       conn.send(JSON.stringify({

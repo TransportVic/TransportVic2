@@ -4,13 +4,15 @@ let nosleep, map
 
 let markers = {}
 
-let websocket = new WebSocket('wss://' + location.host + '/loc/server')
+let url = location.protocol.replace('http', 'ws') + '//' + location.host + '/loc/server'
+
+let websocket = new WebSocket(url)
 
 function recreate() {
   websocket = null
   setTimeout(() => {
     try {
-      websocket = new WebSocket('wss://' + location.host + '/loc/server')
+      websocket = new WebSocket(url)
 
       websocket.onclose = recreate
     } catch (e) {
@@ -25,7 +27,7 @@ websocket.onclose = recreate
 function createBus(bus) {
   let el = document.createElement('div')
   el.className = 'marker'
-
+console.log('creating bus', bus)
   let marker = new mapboxgl.Marker(el)
   let popup = new mapboxgl.Popup({ offset: 25 })
   .setHTML(`<h3> Bus ${bus.rego} </h3><p> ${bus.tripName} </p>`)
@@ -37,24 +39,30 @@ function createBus(bus) {
   markers[bus.rego] = marker
 }
 
+let hasInitialised = false
+
 websocket.addEventListener('message', data => {
   let buses = JSON.parse(data.data)
 
-  if (buses.initial)
+  if (buses.initial) {
     buses.initial.forEach(bus => {
       createBus(bus)
     })
-  else if (buses.update) {
-    let busData = buses.update
-    if (markers[busData.rego]) {
-      markers[busData.rego].setLngLat(busData.position.coordinates)
-    } else {
-      createBus(busData)
-    }
-  } else if (buses.quit) {
-    let busData = buses.quit
-    if (markers[busData.rego]) {
-      markers[busData.rego].remove()
+    hasInitialised = true
+  } else {
+    if (!hasInitialised) return
+    if (buses.update) {
+      let busData = buses.update
+      if (markers[busData.rego]) {
+        markers[busData.rego].setLngLat(busData.position.coordinates)
+      } else {
+        createBus(busData)
+      }
+    } else if (buses.quit) {
+      let busData = buses.quit
+      if (markers[busData.rego]) {
+        markers[busData.rego].remove()
+      }
     }
   }
 })
