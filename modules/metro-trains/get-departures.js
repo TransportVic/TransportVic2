@@ -384,9 +384,13 @@ async function getDepartures(station, db, filter=true) {
 
     departuresCache.put(cacheKey, Object.values(mergedDepartures))
     return returnDepartures(filterDepartures(Object.values(mergedDepartures), filter))
-  } catch (e) {console.log(e)
-    let scheduled = await departureUtils.getScheduledDepartures(station, db, 'metro train', 120)
-    return returnDepartures(scheduled)
+  } catch (e) {
+    try {
+      let scheduled = await departureUtils.getScheduledDepartures(station, db, 'metro train', 120)
+      return returnDepartures(scheduled)
+    } catch (ee) {
+      return returnDepartures(null)
+    }
   }
 }
 

@@ -13,6 +13,8 @@ const busBays = require('./bus-bays')
 let tripLoader = {}
 let tripCache = {}
 
+let ptvAPILocks = {}
+
 async function getStoppingPatternWithCache(db, busDeparture, destination, isNightBus) {
   let id = busDeparture.scheduled_departure_utc + destination
 
@@ -232,83 +234,103 @@ async function getScheduledDepartures(stop, db) {
 }
 
 async function getDepartures(stop, db) {
-  let stopCacheName = stop.codedSuburb[0] + stop.stopName + 'B'
-  if (departuresCache.get(stopCacheName)) return departuresCache.get(stopCacheName)
+  let cacheKey = stop.codedSuburb[0] + stop.stopName + 'B'
 
-  let scheduledDepartures = (await getScheduledDepartures(stop, db, false)).map(departure => {
-    departure.vehicleDescriptor = {}
-    return departure
-  })
-
-  let departures
-  try {
-    departures = await getDeparturesFromPTV(stop, db)
-
-    function i (trip) { return `${trip.routeGTFSID}${trip.origin}${trip.departureTime}` }
-    let tripIDsSeen = departures.map(d => i(d.trip))
-
-    let now = utils.now()
-    let extraScheduledTrips = scheduledDepartures.filter(d => !tripIDsSeen.includes(i(d.trip)) && d.actualDepartureTime.diff(now, 'seconds') > -75)
-
-    departures = departures.concat(extraScheduledTrips)
-  } catch (e) {
-    console.log('Failed to get bus timetables', e)
-    departures = scheduledDepartures
+  if (ptvAPILocks[cacheKey]) {
+    return await new Promise(resolve => {
+      ptvAPILocks[cacheKey].on('done', data => {
+        resolve(data)
+      })
+    })
   }
 
-  departures = departures.filter(d => {
-    return true
-  })
+  if (departuresCache.get(cacheKey)) {
+    return departuresCache.get(cacheKey)
+  }
 
-  let nightBusIncluded = shouldGetNightbus(utils.now())
-  let shouldShowRoad = stop.bays.filter(bay => {
-    return bay.mode === 'bus'
-      && (nightBusIncluded ^ !(bay.flags && bay.flags.isNightBus && !bay.flags.hasRegularBus))
-  }).map(bay => {
-    let {fullStopName} = bay
-    if (fullStopName.includes('/')) {
-      return fullStopName.replace(/\/\d+[a-zA-z]? /, '/')
-    } else return fullStopName
-  }).filter((e, i, a) => a.indexOf(e) === i).length > 1
+  ptvAPILocks[cacheKey] = new EventEmitter()
 
-  departures = departures.map(departure => {
-    let {trip} = departure
-    let departureBayID = trip.stopTimings[0].stopGTFSID
-    let bay = busBays[departureBayID]
-    let departureRoad = (trip.stopTimings[0].stopName.split('/')[1] || '').replace(/^\d+[a-zA-z]? /)
+  function returnDepartures(departures) {
+    ptvAPILocks[cacheKey].emit('done', departures)
+    delete ptvAPILocks[cacheKey]
 
-    departure.bay = bay
-    departure.departureRoad = departureRoad
+    return departures
+  }
 
-    let importantStops = trip.stopTimings.map(stop => stop.stopName.split('/')[0])
-      .filter((e, i, a) => a.indexOf(e) === i)
-      .slice(1, -1)
-      .filter(utils.isCheckpointStop)
-      .map(utils.shorternStopName)
+  try {
+    let scheduledDepartures = (await getScheduledDepartures(stop, db, false)).map(departure => {
+      departure.vehicleDescriptor = {}
+      return departure
+    })
 
-    if (importantStops.length)
-      departure.viaText = `Via ${importantStops.slice(0, -1).join(', ')}${(importantStops.length > 1 ? ' & ' : '') + importantStops.slice(-1)[0]}`
+    let departures
+    try {
+      departures = await getDeparturesFromPTV(stop, db)
 
-    if (departure.bay && !departure.routeNumber) {
-      if (departure.departureRoad) departure.departureRoad += `, ${departure.bay}`
-      else departure.departureRoad = departure.bay
-      shouldShowRoad = true
-    }
-    if (shouldShowRoad && departure.departureRoad) {
-      departure.guidanceText = 'Departs ' + departure.departureRoad
+      function i (trip) { return `${trip.routeGTFSID}${trip.origin}${trip.departureTime}` }
+      let tripIDsSeen = departures.map(d => i(d.trip))
+
+      let now = utils.now()
+      let extraScheduledTrips = scheduledDepartures.filter(d => !tripIDsSeen.includes(i(d.trip)) && d.actualDepartureTime.diff(now, 'seconds') > -75)
+
+      departures = departures.concat(extraScheduledTrips)
+    } catch (e) {
+      console.log('Failed to get bus timetables', e)
+      departures = scheduledDepartures
     }
 
-    if (departure.loopDirection === 'Anti-Clockwise') {
-      departure.loopDirection = 'AC/W'
-    } else if (departure.loopDirection === 'Clockwise') {
-      departure.loopDirection = 'C/W'
-    }
+    let nightBusIncluded = shouldGetNightbus(utils.now())
+    let shouldShowRoad = stop.bays.filter(bay => {
+      return bay.mode === 'bus'
+        && (nightBusIncluded ^ !(bay.flags && bay.flags.isNightBus && !bay.flags.hasRegularBus))
+    }).map(bay => {
+      let {fullStopName} = bay
+      if (fullStopName.includes('/')) {
+        return fullStopName.replace(/\/\d+[a-zA-z]? /, '/')
+      } else return fullStopName
+    }).filter((e, i, a) => a.indexOf(e) === i).length > 1
 
-    return departure
-  })
+    departures = departures.map(departure => {
+      let {trip} = departure
+      let departureBayID = trip.stopTimings[0].stopGTFSID
+      let bay = busBays[departureBayID]
+      let departureRoad = (trip.stopTimings[0].stopName.split('/')[1] || '').replace(/^\d+[a-zA-z]? /)
 
-  departuresCache.put(stopCacheName, departures)
-  return departures
+      departure.bay = bay
+      departure.departureRoad = departureRoad
+
+      let importantStops = trip.stopTimings.map(stop => stop.stopName.split('/')[0])
+        .filter((e, i, a) => a.indexOf(e) === i)
+        .slice(1, -1)
+        .filter(utils.isCheckpointStop)
+        .map(utils.shorternStopName)
+
+      if (importantStops.length)
+        departure.viaText = `Via ${importantStops.slice(0, -1).join(', ')}${(importantStops.length > 1 ? ' & ' : '') + importantStops.slice(-1)[0]}`
+
+      if (departure.bay && !departure.routeNumber) {
+        if (departure.departureRoad) departure.departureRoad += `, ${departure.bay}`
+        else departure.departureRoad = departure.bay
+        shouldShowRoad = true
+      }
+      if (shouldShowRoad && departure.departureRoad) {
+        departure.guidanceText = 'Departs ' + departure.departureRoad
+      }
+
+      if (departure.loopDirection === 'Anti-Clockwise') {
+        departure.loopDirection = 'AC/W'
+      } else if (departure.loopDirection === 'Clockwise') {
+        departure.loopDirection = 'C/W'
+      }
+
+      return departure
+    })
+
+    departuresCache.put(cacheKey, departures)
+    return returnDepartures(departures)
+  } catch (e) {
+    return returnDepartures(null)
+  }
 }
 
 module.exports = getDepartures

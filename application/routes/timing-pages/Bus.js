@@ -18,6 +18,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
   }
 
   let departures = await getDepartures(stop, res.db)
+  if (!departures) throw new Error('Failed to get bus timings?')
 
   departures = await async.map(departures, async departure => {
     const timeDifference = moment.utc(departure.actualDepartureTime.diff(utils.now()))

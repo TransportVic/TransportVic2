@@ -51,7 +51,7 @@ append content
   div#departures
     for departure in departures
       div.departure.no-number
-        a.departureInfo
+        a(href=departure.destinationURL).departureInfo
           span.routeName=departure.trip.routeName
           span.towards Towards
           span.destination=departure.destination

@@ -17,7 +17,7 @@ router.get('/:stopName', async (req, res) => {
 
   let departures = await getDepartures(stop, res.db)
 
-  departures = await async.map(departures, async departure => {
+  departures = departures.map(departure => {
     const timeDifference = moment.utc(departure.actualDepartureTime.diff(utils.now()))
 
     if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
@@ -36,13 +36,7 @@ router.get('/:stopName', async (req, res) => {
       + `${day}#stop-${departure.trip.stopTimings[0].stopGTFSID}`
 
     departure.destination = departure.trip.destination.split('/')[0]
-
-    let destinationStopTiming = departure.trip.stopTimings.slice(-1)[0]
-    let destinationStop = await stops.findDocument({
-      'bays.stopGTFSID': destinationStopTiming.stopGTFSID
-    })
-
-    departure.destinationURL = `/bus/timings/${destinationStop.codedSuburb[0]}/${destinationStop.codedName}`
+    departure.destinationURL = `/ferry/timings/${utils.encodeName(departure.trip.destination)}`
 
     return departure
   })

@@ -13,6 +13,8 @@ const tramFleet = require('../../tram-fleet')
 let tripLoader = {}
 let tripCache = {}
 
+let ptvAPILocks = {}
+
 async function getStoppingPatternWithCache(db, tramDeparture, destination) {
   let id = tramDeparture.scheduled_departure_utc + destination
 
@@ -106,22 +108,49 @@ async function getScheduledDepartures(stop, db) {
 }
 
 async function getDepartures(stop, db) {
-  if (departuresCache.get(stop.stopName + 'T')) return departuresCache.get(stop.stopName + 'T')
+  let cacheKey = stop.stopName + 'T'
 
-  let departures
-  let shouldCache = true
-  try {
-    departures = await getDeparturesFromPTV(stop, db)
-  } catch (e) {
-    shouldCache = false
-    departures = (await getScheduledDepartures(stop, db, false)).map(departure => {
-      departure.vehicleDescriptor = {}
-      return departure
+  if (ptvAPILocks[cacheKey]) {
+    return await new Promise(resolve => {
+      ptvAPILocks[cacheKey].on('done', data => {
+        resolve(data)
+      })
     })
   }
 
-  if (shouldCache)
-    departuresCache.put(stop.stopName + 'T', departures)
+  if (departuresCache.get(cacheKey)) {
+    return departuresCache.get(cacheKey)
+  }
+
+  ptvAPILocks[cacheKey] = new EventEmitter()
+
+  function returnDepartures(departures) {
+    ptvAPILocks[cacheKey].emit('done', departures)
+    delete ptvAPILocks[cacheKey]
+
+    return departures
+  }
+
+  let departures
+
+  try {
+    try {
+      departures = await getDeparturesFromPTV(stop, db)
+      departuresCache.put(cacheKey, departures)
+
+      return returnDepartures(departures)
+    } catch (e) {
+      departures = (await getScheduledDepartures(stop, db, false)).map(departure => {
+        departure.vehicleDescriptor = {}
+        return departure
+      })
+
+      return returnDepartures(departures)
+    }
+  } catch (e) {
+    return returnDepartures(null)
+  }
+
   return departures
 }
 

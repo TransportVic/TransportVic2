@@ -181,53 +181,56 @@ async function getDepartures(stop, db) {
     return departures
   }
 
-  let departures
   try {
-    departures = await getDeparturesFromPTV(stop, db)
-  } catch (e) {
-    departures = await getScheduledDepartures(stop, db, false)
-    departures = departures.map(departure => {
-      departure.isTrainReplacement = null
+    let departures
+    try {
+      departures = await getDeparturesFromPTV(stop, db)
+    } catch (e) {
+      departures = await getScheduledDepartures(stop, db, false)
+      departures = departures.map(departure => {
+        departure.isTrainReplacement = null
+        return departure
+      })
+    }
+
+    let timetables = db.getCollection('timetables')
+
+    departures = await async.map(departures, async departure => {
+      let destinationShortName = departure.trip.destination.split('/')[0]
+      let {destination} = departure.trip
+      if (!(utils.isStreet(destinationShortName) || destinationShortName.includes('Information Centre'))) destination = destinationShortName
+      destination = destination.replace('Shopping Centre', 'SC')
+
+      if (destinationOverrides[destination])
+        departure.destination = destinationOverrides[destination]
+      else
+        departure.destination = destination
+
+      if (departure.isTrainReplacement === null) {
+        let {origin, destination, departureTime, destinationArrivalTime} = departure.trip
+        if (origin === 'Southern Cross Coach Terminal/Spencer Street') {
+          origin = 'Southern Cross Railway Station'
+        }
+        if (destination === 'Southern Cross Coach Terminal/Spencer Street') {
+          destination = 'Southern Cross Railway Station'
+        }
+
+        let hasNSPDeparture = (await timetables.countDocuments({
+          mode: 'regional train',
+          origin, destination,
+          departureTime, destinationArrivalTime
+        })) > 0
+
+        departure.isTrainReplacement = hasNSPDeparture
+      }
       return departure
     })
+
+    departuresCache.put(cacheKey, Object.values(departures))
+    return returnDepartures(Object.values(departures))
+  } catch (e) {
+    return returnDepartures(null)
   }
-
-  let timetables = db.getCollection('timetables')
-
-  departures = await async.map(departures, async departure => {
-    let destinationShortName = departure.trip.destination.split('/')[0]
-    let {destination} = departure.trip
-    if (!(utils.isStreet(destinationShortName) || destinationShortName.includes('Information Centre'))) destination = destinationShortName
-    destination = destination.replace('Shopping Centre', 'SC')
-
-    if (destinationOverrides[destination])
-      departure.destination = destinationOverrides[destination]
-    else
-      departure.destination = destination
-
-    if (departure.isTrainReplacement === null) {
-      let {origin, destination, departureTime, destinationArrivalTime} = departure.trip
-      if (origin === 'Southern Cross Coach Terminal/Spencer Street') {
-        origin = 'Southern Cross Railway Station'
-      }
-      if (destination === 'Southern Cross Coach Terminal/Spencer Street') {
-        destination = 'Southern Cross Railway Station'
-      }
-
-      let hasNSPDeparture = (await timetables.countDocuments({
-        mode: 'regional train',
-        origin, destination,
-        departureTime, destinationArrivalTime
-      })) > 0
-
-      departure.isTrainReplacement = hasNSPDeparture
-    }
-    return departure
-  })
-
-  departuresCache.put(cacheKey, Object.values(departures))
-
-  return returnDepartures(Object.values(departures))
 }
 
 module.exports = getDepartures
