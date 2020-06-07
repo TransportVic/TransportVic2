@@ -89,6 +89,9 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
 
       previousDepartureTime = departureTimeMinutes
 
+      departureTime = utils.minAftMidnightToTime24(departureTimeMinutes)
+      arrivalTime = utils.minAftMidnightToTime24(arrivalTimeMinutes)
+
       return {
         stopName: stopData.fullStopName,
         stopNumber: stopData.stopNumber,
