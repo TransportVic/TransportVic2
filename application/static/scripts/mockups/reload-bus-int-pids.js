@@ -41,10 +41,49 @@ function updateBody() {
 
     let {busDepartures, trainDepartures} = body
 
-    let maxBusDepartures = trainDepartures ? 4 : 7
+    let services = []
+    let groupedDepartures = {}
 
-    let paddedBusDepartures = [...busDepartures, null, null, null, null, null, null, null].slice(0, maxBusDepartures)
-    let paddedTrainDepartures = [...trainDepartures, null, null].slice(0, 2)
+    busDepartures.forEach(departure => {
+      if (!services.includes(departure.sortNumber)) {
+        services.push(departure.sortNumber)
+        groupedDepartures[departure.sortNumber] = {}
+      }
+    })
+    services.forEach(service => {
+      let serviceDepartures = busDepartures.filter(d => d.sortNumber === service)
+      let serviceDestinations = []
+
+      serviceDepartures.forEach(departure => {
+        let destination = departure.destination + departure.loopDirection
+        if (!serviceDestinations.includes(destination)) {
+          serviceDestinations.push(destination)
+          groupedDepartures[service][destination] =
+            serviceDepartures.filter(d => d.destination + d.loopDirection === destination)
+            .sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+        }
+      })
+    })
+
+    let sortedBusDepartures = []
+    services = services.sort((a, b) => a - b)
+    services.forEach(service => {
+      let directions = groupedDepartures[service]
+      Object.keys(directions).forEach(direction => {
+        let departures = directions[direction]
+        sortedBusDepartures = sortedBusDepartures.concat(departures.slice(0, 2))
+      })
+    })
+
+    let maxBusDepartures = trainDepartures ? 4 : 7
+    let paddedBusDepartures
+
+    let bay = location.pathname.slice(-1)
+    if (trainDepartures && bay === '*') {
+      paddedBusDepartures = [...busDepartures, null, null, null, null, null, null, null].slice(0, maxBusDepartures)
+    } else {
+      paddedBusDepartures = [...sortedBusDepartures, null, null, null, null, null, null, null].slice(0, maxBusDepartures)
+    }
 
     paddedBusDepartures.forEach((busDeparture, i) => {
       let departureRow = $(`.timings .row:nth-child(${i + 2})`)
@@ -69,28 +108,31 @@ function updateBody() {
       }
     })
 
-    paddedTrainDepartures.forEach((trainDeparture, i) => {
-      let departureRow = $(`.timings .row:nth-child(${i + 7})`)
-      if (trainDeparture) {
-        let scheduled = formatTime(new Date(trainDeparture.scheduledDepartureTime))
-        let estimated = getEstimatedDepartureTime(trainDeparture.estimatedDepartureTime)
+    if (trainDepartures) {
+      let paddedTrainDepartures = [...trainDepartures, null, null].slice(0, 2)
+      paddedTrainDepartures.forEach((trainDeparture, i) => {
+        let departureRow = $(`.timings .row:nth-child(${i + 7})`)
+        if (trainDeparture) {
+          let scheduled = formatTime(new Date(trainDeparture.scheduledDepartureTime))
+          let estimated = getEstimatedDepartureTime(trainDeparture.estimatedDepartureTime)
 
-        departureRow.innerHTML = `
-<div class="route-number">
-  <div class="type type-metro-train"></div>
-  <img class="train-icon" src="/static/images/mockups/metro-train.svg">
-</div>
-<div class="destination">
-  <span class="dest">${trainDeparture.destination}</span>
-  <span class="platform">Platform ${trainDeparture.platform}</span>
-</div>
-<span class="scheduled">${scheduled}</span>
-<span class="departing">${estimated}</span>
-`
-      } else {
-        departureRow.innerHTML = ''
-      }
-    })
+          departureRow.innerHTML = `
+  <div class="route-number">
+    <div class="type type-metro-train"></div>
+    <img class="train-icon" src="/static/images/mockups/metro-train.svg">
+  </div>
+  <div class="destination">
+    <span class="dest">${trainDeparture.destination}</span>
+    <span class="platform">Platform ${trainDeparture.platform}</span>
+  </div>
+  <span class="scheduled">${scheduled}</span>
+  <span class="departing">${estimated}</span>
+  `
+        } else {
+          departureRow.innerHTML = ''
+        }
+      })
+    }
   })
 }
 
