@@ -61,6 +61,10 @@ database.connect({
       return ['Unknown Operator']
     }, (routeNumber, routeName, routeGTFSID) => {
       let newRouteName = ptvRoutes[routeGTFSID] || routeName
+      if (routeGTFSID === '11-SKl') {
+        return 'Skybus - Skybus Link'
+      }
+
       if (loopDirections[routeGTFSID]) {
         if (newRouteName.includes('Loop')) {
           if (!loopDirections[routeGTFSID][1])

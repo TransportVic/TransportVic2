@@ -309,12 +309,13 @@ async function getDepartures(stop, db) {
         departure.viaText = `Via ${importantStops.slice(0, -1).join(', ')}${(importantStops.length > 1 ? ' & ' : '') + importantStops.slice(-1)[0]}`
 
       if (departure.bay && !departure.routeNumber) {
-        if (departure.departureRoad) departure.departureRoad += `, ${departure.bay}`
-        else departure.departureRoad = departure.bay
-        shouldShowRoad = true
-      }
-      if (shouldShowRoad && departure.departureRoad) {
-        departure.guidanceText = 'Departs ' + departure.departureRoad
+        if (shouldShowRoad && departure.departureRoad) {
+          departure.guidanceText = `Departing ${departure.departureRoad}, ${departure.bay}`
+        } else {
+          departure.guidanceText = `Departing ${departure.bay}`
+        }
+      } else if (shouldShowRoad && departure.departureRoad) {
+        departure.guidanceText = `Departing ${departure.departureRoad}`
       }
 
       if (departure.loopDirection === 'Anti-Clockwise') {
