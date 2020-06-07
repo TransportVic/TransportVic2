@@ -1,4 +1,15 @@
 HTMLElement.prototype.on = HTMLElement.prototype.addEventListener
+HTMLElement.prototype.toggleClass = function(className) {
+  className = className.trim()
+  let classes = this.className
+  let matchingRegex = new RegExp(`\\b${className}\\b`)
+  if (classes.match(matchingRegex)) {
+    this.className = this.className.replace(matchingRegex, ' ').trim()
+  } else {
+    this.className += ` ${className}`
+  }
+}
+
 Window.prototype.on = Window.prototype.addEventListener
 
 Object.defineProperty(XMLHttpRequest.prototype, 'responseJSON', {
@@ -40,7 +51,11 @@ $.ajax = function (options, callback) {
 }
 
 $.ready = function (callback) {
-  if (document.readyState !== 'loading') { setTimeout(callback, 0) } else { document.addEventListener('DOMContentLoaded', callback) }
+  if (document.readyState !== 'loading') {
+    setTimeout(callback, 0)
+  } else {
+    document.addEventListener('DOMContentLoaded', callback)
+  }
 }
 
 var query = location.query
