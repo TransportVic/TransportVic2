@@ -8,7 +8,7 @@ const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
 const busStopNameModifier = require('../../additional-data/bus-stop-name-modifier')
-const busBays = require('./bus-bays')
+const busBays = require('../../additional-data/bus-bays')
 
 let tripLoader = {}
 let tripCache = {}

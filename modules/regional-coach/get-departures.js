@@ -7,6 +7,8 @@ const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const destinationOverrides = require('../../additional-data/coach-destinations')
 const EventEmitter = require('events')
+const busBays = require('../../additional-data/bus-bays')
+const southernCrossBays = require('../../additional-data/southern-cross-bays')
 
 let ptvAPILocks = {}
 
@@ -194,6 +196,7 @@ async function getDepartures(stop, db) {
     }
 
     let timetables = db.getCollection('timetables')
+    let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
     departures = await async.map(departures, async departure => {
       let destinationShortName = departure.trip.destination.split('/')[0]
@@ -205,6 +208,14 @@ async function getDepartures(stop, db) {
         departure.destination = destinationOverrides[destination]
       else
         departure.destination = destination
+
+      let departureBayID = departure.trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID)).stopGTFSID
+      let bay
+      if (departureBayID === 20836) { // southern cross
+        departure.bay = southernCrossBays[departure.trip.routeGTFSID]
+      } else {
+        departure.bay = busBays[departureBayID]
+      }
 
       if (departure.isTrainReplacement === null) {
         let {origin, destination, departureTime, destinationArrivalTime} = departure.trip

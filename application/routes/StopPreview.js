@@ -1,7 +1,7 @@
 const express = require('express')
 const utils = require('../../utils')
 const router = new express.Router()
-const bayData = require('../../modules/bus/bus-bays')
+const bayData = require('../../additional-data/bus-bays')
 const turf = require('@turf/turf')
 
 router.post('/:suburb/:stopName', async (req, res) => {

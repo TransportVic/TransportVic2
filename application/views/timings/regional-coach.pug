@@ -56,7 +56,13 @@ append content
           span.towards Towards
           span.destination=departure.destination
           if departure.isTrainReplacement
-            span.cancelled This is a train replacement coach
+            -
+              let message = 'This is a train replacement coach'
+              if (stop.stopName === 'Southern Cross Coach Terminal/Spencer Street') message += ', departing Bays 62 - 70'
+              else if (departure.bay) message += `, departing ${departure.bay}`
+            span.cancelled.noClamp=message
+          else if departure.bay
+            span.info Departing #{departure.bay}
         div.timings
           a(href=departure.tripURL).timing.unknown
             span=departure.prettyTimeToArrival

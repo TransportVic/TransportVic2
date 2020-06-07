@@ -180,8 +180,6 @@ a.departureInfo span.full {
 
 a.departureInfo span.cancelled {
   font-size: calc(1.1vw + 1.1vh);
-  line-height: calc(1.3vw + 1.3vh);
-
   color: #e03549;
 }
 

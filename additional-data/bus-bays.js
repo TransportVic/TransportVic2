@@ -57,7 +57,7 @@ module.exports = {
   51806: "Bay 3",
   51804: "Bay 4",
 
-  // Dandnong
+  // Dandenong
   19821: "Bay 1",
   19820: "Bay 2",
   19819: "Bay 3",
@@ -67,6 +67,8 @@ module.exports = {
   1612: "Bay 7",
   19824: "Bay 8",
   4251: "Bay 9",
+  22250: "Bay 10/11", // train station
+  20018: "Bay 10/11",
   20157: "Bay 12",
   21326: "Bay 13",
   19817: "Bay 14",
