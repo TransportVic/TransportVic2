@@ -430,7 +430,6 @@ async function getDepartures(station, db) {
     let vnetDepartures = []
     await Promise.all([new Promise(async resolve => {
       try {
-        throw Error('a')
         ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vlinePlatform.stopGTFSID}?gtfs=true&max_results=7&expand=run&expand=route`)
       } catch (e) {} finally { resolve() }
     }), new Promise(async resolve => {

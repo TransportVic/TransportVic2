@@ -239,10 +239,6 @@ module.exports = {
   40643: "Bay 10",
   40717: "Bay 11",
 
-  // Heidelberg
-  21469: "Bay 1",
-  21470: "Bay 2",
-
   // Sunbury
   20816: "Bay 1",
   18754: "Bay 2",
