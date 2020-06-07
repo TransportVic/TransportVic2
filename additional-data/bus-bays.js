@@ -335,38 +335,43 @@ module.exports = {
   50260: "Bay 6",
 
   // Southern Cross
-  20836: "Bay 54"
+  20836: "Bay 54",
+
+  // Southern Cross Skybus
+  23175: "Bay 51", // melb - avalon, tulla, shuttle arrivals
+  23176: "Bay 74", // city shuttle departures, needs confirmation
+  23183: "Bay 74", // melb - avalon departures
+  23173: "Bay 75", // melb - tulla departures
 
   // check ringwood 901 bay, mitcham 738 bay
   // Next up:
-  // Chirnside park sc, mon 18nov when reopens .
+  // Chirnside park sc, done
   // Eastland?
-  // Laverton .
-  // Footscray .
+  // Laverton done
   // Doncaster shoppingtown
   // Box Hill
   // Glen Waverley
-  // Blackburn (ew) -
-  // Geelong .
+  // Blackburn (ew) no bays
+  // Geelong done
   // Southland
   // Epping
-  // Footscray .
+  // Footscray done
   // Fountain Gate SC
   // South Morang
   // Mernda
-  // Boronia
+  // Boronia done
   // Reservoir (how tho)
-  // Bendigo .
-  // Craigieburn
+  // Bendigo done
+  // Craigieburn done
   // Tarneit apparently has bus bays .
   // Yarraville? don't think I saw bus numbers -
-  // Sunbury maybe .
+  // Sunbury done
   // Melton
   // Nuna?
-  // Mitcham .
-  // Watergardens maybe.
-  // St albans.
-  // Airport West SC? -
+  // Mitcham needs recheck
+  // Watergardens done
+  // St albans done
+  // Airport West SC? no bays
   // Altona Gate SC?
   // Pacific Werribee/Werribee Plaza
 }
