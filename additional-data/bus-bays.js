@@ -32,9 +32,8 @@ module.exports = {
   19815: "Bay D",
   19814: "Bay E",
   48471: "Bay F",
-  12000001: "Bay F",
-  12000002: "Bay G",
-  12000003: "Bay H",
+  48473: "Bay G",
+  48474: "Bay H",
   19813: "Bay I",
   19812: "Bay J",
   19811: "Bay K",
@@ -351,6 +350,7 @@ module.exports = {
   // Doncaster shoppingtown
   // Box Hill
   // Glen Waverley
+  // Knox City SC
   // Blackburn (ew) no bays
   // Geelong done
   // Southland
