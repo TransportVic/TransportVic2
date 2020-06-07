@@ -206,7 +206,7 @@ database.connect({
         mode: 'bus',
         routeGTFSID: '12-MCC',
         calendarID: calendarDayName,
-      }, 12000001, 12000004, ['Monash University Caulfield', 'Monash University Clayton'], 25, (note, gtfsDirection) => {
+      }, 48471, 12000001, ['Monash University Caulfield', 'Monash University Clayton'], 25, (note, gtfsDirection) => {
         if (gtfsDirection === 0 && note.includes('Clayton')) return true
         if (gtfsDirection === 1 && note.includes('Caulfield')) return true
         return false
@@ -222,7 +222,7 @@ database.connect({
       mode: 'bus',
       routeGTFSID: '12-MCP',
       calendarID: calendarDayName,
-    }, 12000002, 48017, ['Monash University Peninsula', 'Monash University Clayton'], 50)
+    }, 48473, 48017, ['Monash University Peninsula', 'Monash University Clayton'], 50)
 
     totalCount += peninsulaShuttleTrips.trips.length
     await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, peninsulaShuttleTrips.trips, peninsulaShuttleTrips.timings, calendarDays, calendarDates)
