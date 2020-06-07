@@ -426,22 +426,23 @@ async function getDepartures(station, db) {
       })
     }
 
-    let ptvDepartures, scheduledCoachReplacements
+    let ptvDepartures = [], scheduledCoachReplacements = []
     let vnetDepartures = []
     await Promise.all([new Promise(async resolve => {
       try {
+        throw Error('a')
         ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vlinePlatform.stopGTFSID}?gtfs=true&max_results=7&expand=run&expand=route`)
-      } finally { resolve() }
+      } catch (e) {} finally { resolve() }
     }), new Promise(async resolve => {
       try {
         scheduledCoachReplacements = (await getCoachDepartures(coachStop, db))
-      } finally { resolve() }
+      } catch (e) {} finally { resolve() }
     }), new Promise(async resolve => {
       try {
         if (station.stopName === 'Southern Cross Railway Station') {
           vnetDepartures = await getDeparturesFromVNET(vlinePlatform, db)
         }
-      } finally { resolve() }
+      } catch (e) {} finally { resolve() }
     })])
 
     try {
@@ -511,7 +512,6 @@ async function getDepartures(station, db) {
       }
     }
 
-
     if (scheduledTrains.length) {
       let allDepartures = scheduledTrains.concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
       departuresCache.put(cacheKey, allDepartures)
@@ -529,7 +529,7 @@ async function getDepartures(station, db) {
         let dayOfWeek = utils.getDayName(departure.scheduledDepartureTime)
         let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departure.scheduledDepartureTime) % 1440
 
-        let {direction, origin, destination, departureTime} = departure.trip
+        let {direction, origin, destination, departureTime, destinationArrivalTime} = departure.trip
         let realRouteGTFSID = departure.trip.routeGTFSID
 
         let nspTrip = await timetables.findDocument({
@@ -547,7 +547,7 @@ async function getDepartures(station, db) {
 
         let tripData = await vlineTrips.findDocument({
           date: departureTime.format('YYYYMMDD'),
-          departureTime: originDepartureTime,
+          departureTime,
           origin: origin.slice(0, -16),
           destination: destination.slice(0, -16)
         })
@@ -555,7 +555,7 @@ async function getDepartures(station, db) {
         if (!tripData) {
           tripData = await vlineTrips.findDocument({
             date: departureTime.format('YYYYMMDD'),
-            departureTime: originDepartureTime,
+            departureTime,
             origin: origin.slice(0, -16)
           })
         }
@@ -564,7 +564,7 @@ async function getDepartures(station, db) {
           tripData = await vlineTrips.findDocument({
             date: departureTime.format('YYYYMMDD'),
             destination: destination.slice(0, -16),
-            destinationArrivalTime: trip.destinationArrivalTime
+            destinationArrivalTime
           })
         }
 
@@ -604,6 +604,7 @@ async function getDepartures(station, db) {
       return returnDepartures(allDepartures)
     }
   } catch (e) {
+    console.log(e)
     return returnDepartures(null)
   }
 }
