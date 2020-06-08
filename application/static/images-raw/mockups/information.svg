@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.1-dev (ddb55ca, 2020-02-02)"
+   sodipodi:docname="information.svg"
+   xml:space="preserve"
+   style="enable-background:new 0 0 24 24;"
+   viewBox="0 0 24 24"
+   y="0px"
+   x="0px"
+   id="Artwork"
+   version="1.1"><metadata
+   id="metadata879"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title>MSG-PICTO-DIG-E04_Information-RGB-Rev-201117</dc:title></cc:Work></rdf:RDF></metadata><defs
+   id="defs877" /><sodipodi:namedview
+   inkscape:current-layer="Artwork"
+   inkscape:window-maximized="1"
+   inkscape:window-y="23"
+   inkscape:window-x="0"
+   inkscape:cy="12"
+   inkscape:cx="12"
+   inkscape:zoom="27.708333"
+   inkscape:snap-global="false"
+   showgrid="false"
+   id="namedview875"
+   inkscape:window-height="855"
+   inkscape:window-width="1440"
+   inkscape:pageshadow="2"
+   inkscape:pageopacity="0"
+   guidetolerance="10"
+   gridtolerance="10"
+   objecttolerance="10"
+   borderopacity="1"
+   bordercolor="#666666"
+   pagecolor="#ffffff" />
+<style
+   id="style866"
+   type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill:#333434;}
+</style>
+<title
+   id="title868">MSG-PICTO-DIG-E04_Information-RGB-Rev-201117</title>
+<path
+   id="path870"
+   d="M20.5,3.5c-4.7-4.7-12.3-4.7-17,0s-4.7,12.3,0,17s12.3,4.7,17,0c2.3-2.2,3.5-5.3,3.5-8.5  C24,8.8,22.7,5.8,20.5,3.5z"
+   class="st0" />
+<path
+   style="fill:#222222;fill-opacity:1"
+   d="M 13.425781 4.4960938 C 13.302405 4.4827554 13.16256 4.4834216 13.001953 4.5019531 C 11.703758 4.6517441 11.458051 5.4415347 11.494141 5.9648438 C 11.530231 6.4881517 11.810508 7.3170841 13.019531 7.0644531 C 14.228556 6.8118211 14.319547 5.8820041 14.310547 5.6113281 C 14.302662 5.3744858 14.289412 4.5894619 13.425781 4.4960938 z M 11.199219 8.9003906 L 9.8007812 16.699219 C 9.5007813 18.599219 10.3 19.5 12 19.5 C 12.4 19.5 12.799219 19.400781 13.199219 19.300781 L 13.800781 17.400391 C 13.500781 17.500391 13.200391 17.599609 12.900391 17.599609 C 12.100391 17.599609 11.999609 17.200391 12.099609 16.400391 L 13.400391 8.9003906 L 11.199219 8.9003906 z "
+   id="path872" />
+</svg>
