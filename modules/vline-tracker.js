@@ -57,7 +57,7 @@ async function getVNETDepartures(direction, db) {
     let fullVehicle = vehicle
     let vehicleType
 
-    if (vehicle.startsWith('N')) {
+    if (vehicle.match(/N\d{3}/)) {
       let carriages = vehicleConsist.slice(5).split('-')
       fullVehicle = vehicleConsist
 
