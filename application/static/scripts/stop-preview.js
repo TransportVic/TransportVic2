@@ -63,12 +63,26 @@ $.ready(() => {
           name += `Services: ${bay.screenServices.map(e => e.routeNumber).filter((e, i, a) => a.indexOf(e) === i).filter(Boolean).join(', ')}`
         }
 
-        let popup = L.popup()
-          .setLatLng(location)
-          .setContent(name)
-
         marker.bindPopup(name)
       })
+
+      if (stopData.trainReplacementBays) {
+        stopData.trainReplacementBays.forEach(bay => {
+          let coordinates = bay.location.coordinates
+          let location = [coordinates[1], coordinates[0]]
+
+          let icon = L.divIcon({className: 'stopIcon busReplacementBay'})
+
+          let marker = L.marker(location, {icon: icon}).addTo(map)
+
+          let name = `${stopData.stationName} Train Replacement Stop`
+          if (bay.bayDesignation) name += ` (${bay.bayDesignation})`
+          name += `<br>
+Towards: ${bay.towards}`
+
+          marker.bindPopup(name)
+        })
+      }
 
       let {bbox} = stopData
       map.fitBounds([bbox.geometry.coordinates[0][0].reverse(), bbox.geometry.coordinates[0][2].reverse()])
