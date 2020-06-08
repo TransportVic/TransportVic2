@@ -338,6 +338,31 @@ module.exports = {
   23183: "Bay 74", // melb - avalon departures
   23173: "Bay 75", // melb - tulla departures
 
+  // Glen Waverley
+  21011: "Bay 1",
+  21012: "Bay 2",
+  21013: "Bay 3",
+  21014: "Bay 4",
+  21015: "Bay 5",
+  21016: "Bay 6",
+  21017: "Bay 8",
+  21018: "Bay 9",
+  21019: "Bay 10",
+  21020: "Bay 11",
+  21182: "Bay 12",
+
+  // Knox City SC
+  40359: "Bay 1",
+  19637: "Bay 2",
+  19636: "Bay 3",
+  19635: "Bay 4",
+  19634: "Bay 5",
+  40358: "Bay 6",
+  19632: "Bay 7",
+  19631: "Bay 8",
+  19630: "Bay 9",
+  19629: "Bay 10"
+
   // check ringwood 901 bay, mitcham 738 bay
   // Next up:
   // Chirnside park sc, done
@@ -345,8 +370,8 @@ module.exports = {
   // Laverton done
   // Doncaster shoppingtown
   // Box Hill
-  // Glen Waverley
-  // Knox City SC
+  // Glen Waverley done
+  // Knox City SC done
   // Blackburn (ew) no bays
   // Geelong done
   // Southland
