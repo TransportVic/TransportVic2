@@ -169,13 +169,14 @@ div.info-circle {
   border: 1vw solid #ffffff;
 }
 
-span.information {
+img.information {
   display: block;
-  font-size: calc(var(--height) * 0.035 * var(--font-scale));
+  width: calc(var(--height) * 0.1);
+  /* font-size: calc(var(--height) * 0.035 * var(--font-scale));
   transform: rotateY(180deg) skewX(10deg);
   margin-top: -0.4vw;
   font-family: NetworkSansBold;
-  margin-left: 0.09vw
+  margin-left: 0.09vw */
 }
 
 .call-hotline {
