@@ -46,11 +46,12 @@ async function render(params, res, matchingRoute) {
 
   let showDualTermini = true
   let {routeName} = matchingRoute
-  let terminiName = routeName.replace(/\(Loop.*/, '').split(' - ')
+  let terminiName = routeName.replace(/\(.*/, '').split(' - ')
 
   if (matchingRoute.directions.length === 1 && routeName.includes('Loop')) {
     if (terminiName[1]) {
       directionNames[0] = terminiName[1]
+      directionNames[1] = terminiName[0]
       if (matchingRoute.flags) {
         directionNames[0] += ` (${matchingRoute.flags[0]} Loop)`
       } else {
