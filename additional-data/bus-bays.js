@@ -182,7 +182,6 @@ module.exports = {
   21048: "Bay 1",
   47109: "Bay 2",
   47110: "Bay 3",
-  // 47110: "Bay 4",
   47168: "Bay 4",
   47111: "Bay 5",
   47112: "Bay 6",
@@ -361,15 +360,32 @@ module.exports = {
   19632: "Bay 7",
   19631: "Bay 8",
   19630: "Bay 9",
-  19629: "Bay 10"
+  19629: "Bay 10",
 
-  // check ringwood 901 bay, mitcham 738 bay
+  // Box Hill
+  19651: "Bay 1",
+  19649: "Bay 2",
+  19650: "Bay 3",
+  19648: "Bay 4",
+  19647: "Bay 5",
+  19646: "Bay 6",
+  19645: "Bay 7",
+  19644: "Bay 8",
+  19643: "Bay 9",
+  19642: "Bay 10",
+  19641: "Bay 11",
+  19640: "Bay 13",
+  19639: "Bay 14"
+
+  // check ringwood 901 bay
   // Next up:
+  // Bayswater
+  // Upfield line stuff - coburg?
   // Chirnside park sc, done
   // Eastland?
   // Laverton done
   // Doncaster shoppingtown
-  // Box Hill
+  // Box Hill done
   // Glen Waverley done
   // Knox City SC done
   // Blackburn (ew) no bays
@@ -381,15 +397,15 @@ module.exports = {
   // South Morang
   // Mernda
   // Boronia done
-  // Reservoir (how tho)
+  // Reservoir
   // Bendigo done
   // Craigieburn done
-  // Tarneit apparently has bus bays .
+  // Tarneit apparently has bus bays
   // Yarraville? don't think I saw bus numbers -
   // Sunbury done
   // Melton
   // Nuna?
-  // Mitcham needs recheck
+  // Mitcham done
   // Watergardens done
   // St albans done
   // Airport West SC? no bays
