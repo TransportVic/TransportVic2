@@ -25,6 +25,7 @@
     "moment": "^2.26.0",
     "moment-timezone": "^0.5.31",
     "mongodb": "^3.5.8",
+    "natural": "^2.1.5",
     "node-ical": "^0.10.0",
     "node-mailin": "^2.4.0",
     "pdf2json": "^0.7.1",

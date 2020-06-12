@@ -3,6 +3,8 @@ const router = new express.Router()
 const async = require('async')
 const safeRegex = require('safe-regex')
 const utils = require('../../utils')
+const natural = require('natural')
+const metaphone = natural.Metaphone
 
 router.get('/', (req, res) => {
   res.render('search/index', { placeholder: 'Station, stop or route' })
@@ -47,6 +49,8 @@ async function findStops(db, query) {
   let queryRegex = new RegExp(query, 'i')
   let searchRegex = new RegExp(utils.adjustStopname(utils.titleCase(query, true).replace('Sc', 'Shopping Centre')), 'i')
 
+  let phoneticQuery = metaphone.process(query)
+
   let remainingResults = (await db.getCollection('stops').findDocuments({
     _id: {
       $not: {
@@ -78,6 +82,8 @@ async function findStops(db, query) {
       'tramTrackerNames': searchRegex
     }, {
       'tramTrackerNames': queryRegex
+    }, {
+      namePhonetic: new RegExp(phoneticQuery)
     }]
   }).limit(15 - prioritySearchResults.length - remainingResults.length).toArray()
 

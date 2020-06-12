@@ -65,6 +65,10 @@ database.connect({
   }, {name: 'mergeName index'})
 
   await stops.createIndex({
+    'namePhonetic': 1
+  }, {name: 'phonetic name index'})
+
+  await stops.createIndex({
     'tramTrackerIDs': 1
   }, {name: 'tramtracker id index', sparse: true})
 
