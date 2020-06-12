@@ -39,7 +39,8 @@ html
           return waitingClass
         }
       - for (let n = 0; n < 3; n++)
-        - let nGroups = busDepartures.slice(n * 8, n * 8 + 8)
+        - let size = 9
+        - let nGroups = busDepartures.slice(n * size, n * size + size)
         div.departureColumn
           for group in nGroups
             - group = group.sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
@@ -49,86 +50,86 @@ html
                 span=routeNumber
               div.destination
                 span Towards
-                span=destination
+                span=destination.split('/')[0]
 
-              div(class='departureMinutes ' + getWaitingClass(group[0], [5, 3]))
+              div(class='departureMinutes ' + getWaitingClass(group[0], [6, 4]))
                 span=getDepartureText(group[0])
                 if group[1]
                   span='Next: ' + group[1].minutesToDeparture
                 else
                   span Next: --
-            if n == 2
-              div.sub-heading
-                span Huntingdale Metro Train Departures
-              mixin departureTime(direction)
-                - let waitingClass = metroDepartures[direction] ? getWaitingClass(metroDepartures[direction][0], [15, 10]) : 'unknown'
-                div(class='departureMinutes ' + waitingClass)
-                  if metroDepartures[direction]
-                    span=getDepartureText(metroDepartures[direction][0])
-                    if metroDepartures[direction][1]
-                      span='Next: ' + metroDepartures[direction][1].minutesToDeparture
-                    else
-                      span Next: --
+          if n == 2
+            div.sub-heading
+              span Huntingdale Metro Train Departures
+            mixin departureTime(direction)
+              - let waitingClass = metroDepartures[direction] ? getWaitingClass(metroDepartures[direction][0], [15, 10]) : 'unknown'
+              div(class='departureMinutes ' + waitingClass)
+                if metroDepartures[direction]
+                  span=getDepartureText(metroDepartures[direction][0])
+                  if metroDepartures[direction][1]
+                    span='Next: ' + metroDepartures[direction][1].minutesToDeparture
                   else
-                    span --
                     span Next: --
+                else
+                  span --
+                  span Next: --
+            
+            div.departureRow
+              div.routeNumber.dandenong-group
+                span Platform
+                span 1
+              div.destination
+                span Towards
+                if metroDepartures.Up
+                  span=metroDepartures.Up[0].destination
+                else
+                  span --
+              +departureTime('Up')
               
+            for departure in metroDepartures.Down ? metroDepartures.Down.concat(null).slice(0, 2) : [null, null]
               div.departureRow
                 div.routeNumber.dandenong-group
-                  span Platform
-                  span 1
-                div.destination
-                  span Towards
-                  if metroDepartures.Up
-                    span=metroDepartures.Up[0].destination
-                  else
-                    span --
-                +departureTime('Up')
-                
-              for departure in metroDepartures.Down ? metroDepartures.Down.concat(null).slice(0, 2) : [null, null]
-                div.departureRow
-                  div.routeNumber.dandenong-group
-                    span Platform
-                    span 2
-                  div.destination
-                    span Towards
-                    if departure
-                      span=departure.destination
-                    else
-                      span --
-                  - let waitingClass = departure ? getWaitingClass(departure, [15, 10]) : 'unknown'
-                  div(class='departureMinutes ' + waitingClass)
-                    if departure
-                      span=getDepartureText(departure)
-                    else
-                      span --
-              div.sub-heading
-                span Next Clayton V/Line Train Departure
-              div.departureRow
-                div.routeNumber.vline
                   span Platform
                   span 2
                 div.destination
                   span Towards
-                  if nextVLineDeparture
-                    span=nextVLineDeparture.trip.destination.slice(0, -16)
+                  if departure
+                    span=departure.destination
                   else
                     span --
-                - let waitingClass = nextVLineDeparture ? getWaitingClass(nextVLineDeparture, [15, 10]) : 'unknown'
+                - let waitingClass = departure ? getWaitingClass(departure, [15, 10]) : 'unknown'
                 div(class='departureMinutes ' + waitingClass)
-                  if nextVLineDeparture
-                    span=getDepartureText(nextVLineDeparture)
+                  if departure
+                    span=getDepartureText(departure)
                   else
                     span --
-              div.departureRow.colour-guide
-                div
-                  div.walk
-                    span Sufficient time
-                  div.run-fast
-                    span Departing soon - leave now
-                div
-                  div.cannot-make
-                    span Too late - wait for the next one
-                  div.unknown
-                    span No realtime departure available
-                  
+            div.sub-heading
+              span Next Clayton V/Line Train Departure
+            div.departureRow
+              div.routeNumber.vline
+                span Platform
+                span 2
+              div.destination
+                span Towards
+                if nextVLineDeparture
+                  span=nextVLineDeparture.trip.destination.slice(0, -16)
+                else
+                  span --
+              - let waitingClass = nextVLineDeparture ? getWaitingClass(nextVLineDeparture, [15, 10]) : 'unknown'
+              div(class='departureMinutes ' + waitingClass)
+                if nextVLineDeparture
+                  span=getDepartureText(nextVLineDeparture)
+                else
+                  span --
+            div.departureRow.colour-guide
+              div
+                div.walk
+                  span Sufficient time
+                div.run-fast
+                  span Departing soon - leave now
+              div
+                div.cannot-make
+                  span Too late - wait for the next one
+                div.unknown
+                  span No realtime departure available
+                

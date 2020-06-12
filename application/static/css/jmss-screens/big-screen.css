@@ -40,7 +40,7 @@ div.headers {
   height: 60px; /*-20*/
   font-size: 40px;
 
-  background-color: #2e2e2e;
+  background-color: #1b1b1b;
   color: #f1f1f1;
 
   display: flex;
@@ -49,7 +49,7 @@ div.headers {
 
 div.header {
   width: calc(var(--width) / 3);
-  height: 70px;
+  height: 60px;
 
   display: flex;
   align-items: center;
@@ -84,7 +84,7 @@ div.departureColumn:nth-child(even) {
 
 div.departureRow {
   width: calc(var(--width) / 3 - 30px);
-  height: 90px;
+  height: calc((810px - 10px) / 9 - 10px);
   margin-top: 10px;
 
   display: flex;
@@ -93,7 +93,7 @@ div.departureRow {
 
 div.routeNumber {
   width: 120px;
-  height: 90px;
+  height: calc((810px - 10px) / 9 - 10px);
   font-size: 60px;
 
   background-color: #fc923d;
@@ -132,7 +132,7 @@ div.destination > span:nth-child(2) {
 
 div.departureMinutes {
   width: 100px;
-  height: 90px;
+  height: calc((810px - 10px) / 9 - 10px);
 
   margin-left: auto;
 
@@ -174,7 +174,7 @@ div.unknown {
 
 div.sub-heading {
   width: calc(var(--width) / 3);
-  height: 90px;
+  height: calc((810px - 10px) / 9 - 10px);
   font-size: 38px;
   margin-top: 10px;
 

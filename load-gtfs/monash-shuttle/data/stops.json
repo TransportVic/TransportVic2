@@ -1,6 +1,6 @@
 [
   {
-    "originalName": "Monash University Clayton Bay F (Clayton)",
+    "originalName": "Monash University (Clayton)",
     "fullStopName": "Monash University Bus Loop",
     "stopGTFSID": 48471,
     "location": {
@@ -12,7 +12,7 @@
     "suburb": "Clayton"
   },
   {
-    "originalName": "Monash University Clayton Bay G (Clayton)",
+    "originalName": "Monash University (Clayton)",
     "fullStopName": "Monash University Bus Loop",
     "stopGTFSID": 48473,
     "location": {
@@ -24,7 +24,7 @@
     "suburb": "Clayton"
   },
   {
-    "originalName": "Monash University Clayton Bay H (Clayton)",
+    "originalName": "Monash University (Clayton)",
     "fullStopName": "Monash University Bus Loop",
     "stopGTFSID": 48474,
     "location": {
