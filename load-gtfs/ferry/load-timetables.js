@@ -285,7 +285,8 @@ function loadPortPhillip($) {
       let header = $('th', row).text().trim()
       if (header) {
         lastCalendarType = dayType[header]
-        if (lastCalendarType == 'WEEKDAY_MF') {
+        if (i === 2) {
+        // if (lastCalendarType == 'WEEKDAY_MF') {
           isOut = true
           gtfsDirection = '0'
         }
