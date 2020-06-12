@@ -33,7 +33,7 @@ module.exports = {
 
   sunbury_specials: ['SB43', 'SB48'],
 
-  dysons_specials: ['D185', 'D321' ,'D758', 'D762', 'D763', 'D764'],
+  dysons_specials: ['D184', 'D185', 'D186', 'D321', 'D430', 'D431', 'D754', 'D758', 'D762', 'D763', 'D764'],
 
   dysons_509_buses: ['D895', 'D896'],
 
