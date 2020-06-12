@@ -15,32 +15,42 @@ function getURL(request) {
 }
 
 async function makeRequest(url) {
-  if (ptvAPILocks[url]) {
-    return await new Promise(resolve => {
-      ptvAPILocks[url].on('done', data => {
-        resolve(data)
+  try {
+    if (ptvAPILocks[url]) {
+      return await new Promise((resolve, reject) => {
+        ptvAPILocks[url].on('done', data => {
+          resolve(data)
+        })
+        ptvAPILocks[url].on('err', err => {
+          reject(err)
+        })
       })
-    })
-  }
+    }
 
-  ptvAPILocks[url] = new EventEmitter()
+    ptvAPILocks[url] = new EventEmitter()
 
-  function returnDepartures(departures) {
-    ptvAPILocks[url].emit('done', departures)
+    function returnData(departures) {
+      ptvAPILocks[url].emit('done', departures)
+      delete ptvAPILocks[url]
+
+      return departures
+    }
+
+    let request
+    if (request = requestCache.get(url))
+      return JSON.parse(request)
+
+    let fullURL = getURL(url)
+    let data = await utils.request(fullURL)
+    requestCache.put(url, data)
+
+    return returnData(JSON.parse(data))
+  } catch (e) {
+    ptvAPILocks[url].emit('err', e)
     delete ptvAPILocks[url]
 
-    return departures
+    throw e
   }
-
-  let request
-  if (request = requestCache.get(url))
-    return JSON.parse(request)
-
-  let fullURL = getURL(url)
-  let data = await utils.request(fullURL)
-  requestCache.put(url, data)
-
-  return returnDepartures(JSON.parse(data))
 }
 
 module.exports = makeRequest
