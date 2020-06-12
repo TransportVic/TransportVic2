@@ -222,7 +222,7 @@ module.exports = {
   // Geelong
   30309: "Bay 1",
   3252: "Bay 2",
-  20314: "Bay 2",
+  // 20314: "Bay 2",
   45539: "Bay 4",
   45540: "Bay 5",
   45541: "Bay 6",

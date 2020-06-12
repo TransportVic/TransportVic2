@@ -28,6 +28,7 @@ div.topRow div {
 
 div.topRow span.motd {
   font-size: 20px;
+  margin-top: -6px;
 }
 
 div.topRow span.time {
@@ -96,7 +97,8 @@ div.routeNumber {
   height: calc((810px - 10px) / 9 - 10px);
   font-size: 60px;
 
-  background-color: #fc923d;
+  background-color: #d7832c;
+  color: #f8f8f8;
 
   display: flex;
   justify-content: center;
@@ -128,6 +130,7 @@ div.destination > span:nth-child(1) {
 
 div.destination > span:nth-child(2) {
   font-size: 40px;
+  margin-top: -6px;
 }
 
 div.departureMinutes {
@@ -151,7 +154,7 @@ div.departureMinutes > span:nth-child(2) {
   margin-left: 3px;
   font-size: 20px;
   white-space: nowrap;
-  margin-top: -5px;
+  margin-top: -10px;
 }
 
 div.cannot-make {
@@ -193,7 +196,6 @@ div.routeNumber.dandenong-group {
 
 div.routeNumber.vline {
   background-color: #6b4d9e;
-  color: #f1f1f1;
 }
 
 div.routeNumber.dandenong-group, div.routeNumber.vline {
@@ -208,7 +210,7 @@ div.routeNumber.dandenong-group > span:nth-child(1), div.routeNumber.vline > spa
 
 div.routeNumber.dandenong-group > span:nth-child(2), div.routeNumber.vline > span:nth-child(2) {
   font-size: 50px;
-  margin-top: -5px;
+  margin-top: -10px;
 }
 
 div.departureRow.colour-guide {

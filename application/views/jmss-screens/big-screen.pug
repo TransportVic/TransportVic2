@@ -15,7 +15,7 @@ html
     div.topRow
       div
         span.title Monash University PT Connections
-        span.motd If you can read this you probably shouldn't be in school
+        span.motd Honestly just go and wash your hands
       span.time=currentTime
     div.headers
       - for (let n = 0; n < 3; n++)
@@ -39,25 +39,46 @@ html
           return waitingClass
         }
       - for (let n = 0; n < 3; n++)
-        - let size = 9
-        - let nGroups = busDepartures.slice(n * size, n * size + size)
+        -
+          let size = 9
+          let columnSize = n === 2 ? 2 : size 
+          let columnGroups = busDepartures.slice(n * size, n * size + size)
+          let padded = [...columnGroups, ...Array(size).fill([])].slice(0, columnSize)
+          
         div.departureColumn
-          for group in nGroups
-            - group = group.sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
-            - let {routeNumber, destination} = group[0]
+          for group in padded
+            -
+              group = group.sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+              let first = group[0]
+              let routeNumber, destination
+              
+              if (first) {
+                routeNumber = first.routeNumber
+                destination = first.destination
+              } else {
+                routeNumber = '---'
+                destination = '---'
+              }
             div.departureRow
               div.routeNumber
                 span=routeNumber
               div.destination
                 span Towards
                 span=destination.split('/')[0]
-
-              div(class='departureMinutes ' + getWaitingClass(group[0], [6, 4]))
-                span=getDepartureText(group[0])
-                if group[1]
-                  span='Next: ' + group[1].minutesToDeparture
-                else
-                  span Next: --
+              
+              if first
+                div(class='departureMinutes ' + getWaitingClass(first, [6, 4]))
+                  span=getDepartureText(first)
+                  if group[1]
+                    span='Next: ' + group[1].minutesToDeparture
+                  else
+                    span Next: --
+              else
+                
+                div(class='departureMinutes unknown')
+                  span --
+                  if group[1]
+                    span Next --
           if n == 2
             div.sub-heading
               span Huntingdale Metro Train Departures
