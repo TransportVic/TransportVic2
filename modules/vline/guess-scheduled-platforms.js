@@ -223,5 +223,7 @@ module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday)
     else return 1
   }
 
+  if (stationName === 'Southern Cross' || line === 'Melbourne - Sydney') return 1
+
   if (singlePlatforms.includes(stationName)) return 1
 }
