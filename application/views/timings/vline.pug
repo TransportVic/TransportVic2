@@ -77,7 +77,7 @@ append content
           span.towards=`${departure.shortRouteName} Line towards`
           span.destination=departure.destination
           if departure.isTrainReplacement
-            span.info.cancelled This service has been replaced by coaches
+            span.info.cancelled.noClamp This service has been replaced by coaches
           else if departure.cancelled
             span.info.cancelled CANCELLED
           else if departure.trip.type === 'change'
