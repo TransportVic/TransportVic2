@@ -1,0 +1,3 @@
+xpt: 13-XPT
+Direction H/0: to Melbourne
+Direction R/1: to Sydney
