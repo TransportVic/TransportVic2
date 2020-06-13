@@ -218,7 +218,7 @@ async function getDepartures(stop, db) {
       }
 
       if (departure.isTrainReplacement === null) {
-        let {origin, destination, departureTime, destinationArrivalTime} = departure.trip
+        let {origin, destination, departureTime} = departure.trip
         if (origin === 'Southern Cross Coach Terminal/Spencer Street') {
           origin = 'Southern Cross Railway Station'
         }
@@ -229,7 +229,7 @@ async function getDepartures(stop, db) {
         let hasNSPDeparture = (await timetables.countDocuments({
           mode: 'regional train',
           origin, destination,
-          departureTime, destinationArrivalTime
+          departureTime
         })) > 0
 
         departure.isTrainReplacement = hasNSPDeparture
