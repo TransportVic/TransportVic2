@@ -34,7 +34,9 @@ database.connect({
   let calendarDays = utils.parseGTFSData(parsedCalendarDays)
   let calendarDates = []
 
-  await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, trips, tripTimes, calendarDays, calendarDates)
+  await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, trips, tripTimes, calendarDays, calendarDates, (headsign, routeGTFSID) => {
+    return headsign === 'Melbourne' ? 'Up' : 'Down'
+  })
 
   await updateStats('xpt-timetables', trips.length)
   console.log('Completed loading in ' + trips.length + ' xpt timetables')

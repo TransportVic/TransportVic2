@@ -387,7 +387,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 19
+    "stopSequence": 1
   }, {
     "stopGTFSID": 22254,
     "arrivalTime": "08:54:00",
@@ -397,7 +397,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 18
+    "stopSequence": 2
   }, {
     "stopGTFSID": 20342,
     "arrivalTime": "09:48:00",
@@ -407,7 +407,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 17
+    "stopSequence": 3
   }, {
     "stopGTFSID": 20295,
     "arrivalTime": "10:41:00",
@@ -417,7 +417,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 16
+    "stopSequence": 4
   }, {
     "stopGTFSID": 20356,
     "arrivalTime": "11:06:00",
@@ -427,7 +427,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 15
+    "stopSequence": 5
   }, {
     "stopGTFSID": 20287,
     "arrivalTime": "11:49:00",
@@ -437,7 +437,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 14
+    "stopSequence": 6
   }, {
     "stopGTFSID": 13000013,
     "arrivalTime": "12:21:00",
@@ -447,7 +447,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 13
+    "stopSequence": 7
   }, {
     "stopGTFSID": 13000012,
     "arrivalTime": "12:32:00",
@@ -457,7 +457,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 12
+    "stopSequence": 8
   }, {
     "stopGTFSID": 13000011,
     "arrivalTime": "12:49:00",
@@ -467,7 +467,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 11
+    "stopSequence": 9
   }, {
     "stopGTFSID": 13000010,
     "arrivalTime": "13:07:00",
@@ -487,7 +487,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 9
+    "stopSequence": 11
   }, {
     "stopGTFSID": 13000008,
     "arrivalTime": "14:38:00",
@@ -497,7 +497,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 8
+    "stopSequence": 12
   }, {
     "stopGTFSID": 13000007,
     "arrivalTime": "15:14:00",
@@ -507,7 +507,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 7
+    "stopSequence": 13
   }, {
     "stopGTFSID": 13000006,
     "arrivalTime": "16:05:00",
@@ -517,7 +517,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 6
+    "stopSequence": 14
   }, {
     "stopGTFSID": 13000005,
     "arrivalTime": "16:37:00",
@@ -527,7 +527,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 5
+    "stopSequence": 15
   }, {
     "stopGTFSID": 13000004,
     "arrivalTime": "17:14:00",
@@ -537,7 +537,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 4
+    "stopSequence": 16
   }, {
     "stopGTFSID": 13000003,
     "arrivalTime": "18:02:00",
@@ -547,7 +547,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 3
+    "stopSequence": 17
   }, {
     "stopGTFSID": 13000002,
     "arrivalTime": "19:09:00",
@@ -557,7 +557,7 @@
       "dropoff": 1
     },
     "stopDistance": 0,
-    "stopSequence": 2
+    "stopSequence": 18
   }, {
     "stopGTFSID": 13000001,
     "arrivalTime": "19:47:00",
@@ -567,7 +567,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 1
+    "stopSequence": 19
   }]
 }, {
   "tripID": "1000.WEEKDAY.13-XPT-mjp-1.1.R",
@@ -580,7 +580,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 18
+    "stopSequence": 1
   }, {
     "stopGTFSID": 22254,
     "arrivalTime": "20:16:00",
@@ -590,7 +590,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 17
+    "stopSequence": 2
   }, {
     "stopGTFSID": 20342,
     "arrivalTime": "21:01:00",
@@ -600,7 +600,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 16
+    "stopSequence": 3
   }, {
     "stopGTFSID": 20295,
     "arrivalTime": "21:56:00",
@@ -610,7 +610,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 15
+    "stopSequence": 4
   }, {
     "stopGTFSID": 20356,
     "arrivalTime": "22:22:00",
@@ -620,7 +620,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 14
+    "stopSequence": 5
   }, {
     "stopGTFSID": 20287,
     "arrivalTime": "23:07:00",
@@ -630,7 +630,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 13
+    "stopSequence": 6
   }, {
     "stopGTFSID": 13000013,
     "arrivalTime": "23:36:00",
@@ -640,7 +640,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 12
+    "stopSequence": 7
   }, {
     "stopGTFSID": 13000012,
     "arrivalTime": "23:47:00",
@@ -650,7 +650,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 11
+    "stopSequence": 8
   }, {
     "stopGTFSID": 13000011,
     "arrivalTime": "00:04:00",
@@ -660,7 +660,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 10
+    "stopSequence": 9
   }, {
     "stopGTFSID": 13000010,
     "arrivalTime": "00:22:00",
@@ -670,7 +670,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 9
+    "stopSequence": 10
   }, {
     "stopGTFSID": 1300009,
     "arrivalTime": "00:48:00",
@@ -680,7 +680,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 8
+    "stopSequence": 11
   }, {
     "stopGTFSID": 13000008,
     "arrivalTime": "01:35:00",
@@ -690,7 +690,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 7
+    "stopSequence": 12
   }, {
     "stopGTFSID": 13000007,
     "arrivalTime": "02:16:00",
@@ -700,7 +700,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 6
+    "stopSequence": 13
   }, {
     "stopGTFSID": 13000006,
     "arrivalTime": "03:07:00",
@@ -710,7 +710,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 5
+    "stopSequence": 14
   }, {
     "stopGTFSID": 13000004,
     "arrivalTime": "04:13:00",
@@ -720,7 +720,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 4
+    "stopSequence": 15
   }, {
     "stopGTFSID": 13000003,
     "arrivalTime": "05:01:00",
@@ -730,7 +730,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 3
+    "stopSequence": 16
   }, {
     "stopGTFSID": 13000002,
     "arrivalTime": "06:10:00",
@@ -740,7 +740,7 @@
       "dropoff": 1
     },
     "stopDistance": 0,
-    "stopSequence": 2
+    "stopSequence": 17
   }, {
     "stopGTFSID": 13000001,
     "arrivalTime": "06:59:00",
@@ -750,7 +750,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 1
+    "stopSequence": 18
   }]
 },
 {
@@ -1142,7 +1142,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 19
+    "stopSequence": 1
   }, {
     "stopGTFSID": 22254,
     "arrivalTime": "08:54:00",
@@ -1152,7 +1152,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 18
+    "stopSequence": 2
   }, {
     "stopGTFSID": 20342,
     "arrivalTime": "09:48:00",
@@ -1162,7 +1162,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 17
+    "stopSequence": 3
   }, {
     "stopGTFSID": 20295,
     "arrivalTime": "10:41:00",
@@ -1172,7 +1172,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 16
+    "stopSequence": 4
   }, {
     "stopGTFSID": 20356,
     "arrivalTime": "11:06:00",
@@ -1182,7 +1182,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 15
+    "stopSequence": 5
   }, {
     "stopGTFSID": 20287,
     "arrivalTime": "11:49:00",
@@ -1192,7 +1192,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 14
+    "stopSequence": 6
   }, {
     "stopGTFSID": 13000013,
     "arrivalTime": "12:21:00",
@@ -1202,7 +1202,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 13
+    "stopSequence": 7
   }, {
     "stopGTFSID": 13000012,
     "arrivalTime": "12:32:00",
@@ -1212,7 +1212,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 12
+    "stopSequence": 8
   }, {
     "stopGTFSID": 13000011,
     "arrivalTime": "12:49:00",
@@ -1222,7 +1222,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 11
+    "stopSequence": 9
   }, {
     "stopGTFSID": 13000010,
     "arrivalTime": "13:07:00",
@@ -1242,7 +1242,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 9
+    "stopSequence": 11
   }, {
     "stopGTFSID": 13000008,
     "arrivalTime": "14:38:00",
@@ -1252,7 +1252,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 8
+    "stopSequence": 12
   }, {
     "stopGTFSID": 13000007,
     "arrivalTime": "15:14:00",
@@ -1262,7 +1262,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 7
+    "stopSequence": 13
   }, {
     "stopGTFSID": 13000006,
     "arrivalTime": "16:05:00",
@@ -1272,7 +1272,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 6
+    "stopSequence": 14
   }, {
     "stopGTFSID": 13000005,
     "arrivalTime": "16:37:00",
@@ -1282,7 +1282,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 5
+    "stopSequence": 15
   }, {
     "stopGTFSID": 13000004,
     "arrivalTime": "17:14:00",
@@ -1292,7 +1292,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 4
+    "stopSequence": 16
   }, {
     "stopGTFSID": 13000003,
     "arrivalTime": "18:02:00",
@@ -1302,7 +1302,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 3
+    "stopSequence": 17
   }, {
     "stopGTFSID": 13000002,
     "arrivalTime": "19:07:00",
@@ -1312,7 +1312,7 @@
       "dropoff": 1
     },
     "stopDistance": 0,
-    "stopSequence": 2
+    "stopSequence": 18
   }, {
     "stopGTFSID": 13000001,
     "arrivalTime": "19:45:00",
@@ -1322,7 +1322,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 1
+    "stopSequence": 19
   }]
 }, {
   "tripID": "1000.SATURDAY.13-XPT-mjp-1.1.R",
@@ -1335,7 +1335,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 18
+    "stopSequence": 1
   }, {
     "stopGTFSID": 22254,
     "arrivalTime": "20:16:00",
@@ -1345,7 +1345,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 17
+    "stopSequence": 2
   }, {
     "stopGTFSID": 20342,
     "arrivalTime": "20:59:00",
@@ -1355,7 +1355,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 16
+    "stopSequence": 3
   }, {
     "stopGTFSID": 20295,
     "arrivalTime": "21:54:00",
@@ -1365,7 +1365,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 15
+    "stopSequence": 4
   }, {
     "stopGTFSID": 20356,
     "arrivalTime": "22:20:00",
@@ -1375,7 +1375,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 14
+    "stopSequence": 5
   }, {
     "stopGTFSID": 20287,
     "arrivalTime": "23:05:00",
@@ -1385,7 +1385,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 13
+    "stopSequence": 6
   }, {
     "stopGTFSID": 13000013,
     "arrivalTime": "23:34:00",
@@ -1395,7 +1395,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 12
+    "stopSequence": 7
   }, {
     "stopGTFSID": 13000012,
     "arrivalTime": "23:45:00",
@@ -1405,7 +1405,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 11
+    "stopSequence": 8
   }, {
     "stopGTFSID": 13000011,
     "arrivalTime": "00:02:00",
@@ -1415,7 +1415,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 10
+    "stopSequence": 9
   }, {
     "stopGTFSID": 13000010,
     "arrivalTime": "00:22:00",
@@ -1425,7 +1425,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 9
+    "stopSequence": 10
   }, {
     "stopGTFSID": 1300009,
     "arrivalTime": "00:48:00",
@@ -1435,7 +1435,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 8
+    "stopSequence": 11
   }, {
     "stopGTFSID": 13000008,
     "arrivalTime": "01:35:00",
@@ -1445,7 +1445,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 7
+    "stopSequence": 12
   }, {
     "stopGTFSID": 13000007,
     "arrivalTime": "02:15:00",
@@ -1455,7 +1455,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 6
+    "stopSequence": 13
   }, {
     "stopGTFSID": 13000006,
     "arrivalTime": "03:06:00",
@@ -1465,7 +1465,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 5
+    "stopSequence": 14
   }, {
     "stopGTFSID": 13000004,
     "arrivalTime": "04:13:00",
@@ -1475,7 +1475,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 4
+    "stopSequence": 15
   }, {
     "stopGTFSID": 13000003,
     "arrivalTime": "05:01:00",
@@ -1485,7 +1485,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 3
+    "stopSequence": 16
   }, {
     "stopGTFSID": 13000002,
     "arrivalTime": "06:09:00",
@@ -1495,7 +1495,7 @@
       "dropoff": 1
     },
     "stopDistance": 0,
-    "stopSequence": 2
+    "stopSequence": 17
   }, {
     "stopGTFSID": 13000001,
     "arrivalTime": "06:47:00",
@@ -1505,7 +1505,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 1
+    "stopSequence": 18
   }]
 },
 {
@@ -1897,7 +1897,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 19
+    "stopSequence": 1
   }, {
     "stopGTFSID": 22254,
     "arrivalTime": "08:54:00",
@@ -1907,7 +1907,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 18
+    "stopSequence": 2
   }, {
     "stopGTFSID": 20342,
     "arrivalTime": "09:48:00",
@@ -1917,7 +1917,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 17
+    "stopSequence": 3
   }, {
     "stopGTFSID": 20295,
     "arrivalTime": "10:41:00",
@@ -1927,7 +1927,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 16
+    "stopSequence": 4
   }, {
     "stopGTFSID": 20356,
     "arrivalTime": "11:06:00",
@@ -1937,7 +1937,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 15
+    "stopSequence": 5
   }, {
     "stopGTFSID": 20287,
     "arrivalTime": "11:49:00",
@@ -1947,7 +1947,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 14
+    "stopSequence": 6
   }, {
     "stopGTFSID": 13000013,
     "arrivalTime": "12:21:00",
@@ -1957,7 +1957,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 13
+    "stopSequence": 7
   }, {
     "stopGTFSID": 13000012,
     "arrivalTime": "12:32:00",
@@ -1967,7 +1967,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 12
+    "stopSequence": 8
   }, {
     "stopGTFSID": 13000011,
     "arrivalTime": "12:49:00",
@@ -1977,7 +1977,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 11
+    "stopSequence": 9
   }, {
     "stopGTFSID": 13000010,
     "arrivalTime": "13:07:00",
@@ -1997,7 +1997,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 9
+    "stopSequence": 11
   }, {
     "stopGTFSID": 13000008,
     "arrivalTime": "14:38:00",
@@ -2007,7 +2007,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 8
+    "stopSequence": 12
   }, {
     "stopGTFSID": 13000007,
     "arrivalTime": "15:14:00",
@@ -2017,7 +2017,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 7
+    "stopSequence": 13
   }, {
     "stopGTFSID": 13000006,
     "arrivalTime": "16:05:00",
@@ -2027,7 +2027,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 6
+    "stopSequence": 14
   }, {
     "stopGTFSID": 13000005,
     "arrivalTime": "16:37:00",
@@ -2037,7 +2037,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 5
+    "stopSequence": 15
   }, {
     "stopGTFSID": 13000004,
     "arrivalTime": "17:14:00",
@@ -2047,7 +2047,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 4
+    "stopSequence": 16
   }, {
     "stopGTFSID": 13000003,
     "arrivalTime": "18:02:00",
@@ -2057,7 +2057,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 3
+    "stopSequence": 17
   }, {
     "stopGTFSID": 13000002,
     "arrivalTime": "19:07:00",
@@ -2067,7 +2067,7 @@
       "dropoff": 1
     },
     "stopDistance": 0,
-    "stopSequence": 2
+    "stopSequence": 18
   }, {
     "stopGTFSID": 13000001,
     "arrivalTime": "19:45:00",
@@ -2077,7 +2077,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 1
+    "stopSequence": 19
   }]
 }, {
   "tripID": "1000.SUNDAY.13-XPT-mjp-1.1.R",
@@ -2090,7 +2090,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 18
+    "stopSequence": 1
   }, {
     "stopGTFSID": 22254,
     "arrivalTime": "20:16:00",
@@ -2100,7 +2100,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 17
+    "stopSequence": 2
   }, {
     "stopGTFSID": 20342,
     "arrivalTime": "20:59:00",
@@ -2110,7 +2110,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 16
+    "stopSequence": 3
   }, {
     "stopGTFSID": 20295,
     "arrivalTime": "21:54:00",
@@ -2120,7 +2120,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 15
+    "stopSequence": 4
   }, {
     "stopGTFSID": 20356,
     "arrivalTime": "22:20:00",
@@ -2130,7 +2130,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 14
+    "stopSequence": 5
   }, {
     "stopGTFSID": 20287,
     "arrivalTime": "23:05:00",
@@ -2140,7 +2140,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 13
+    "stopSequence": 6
   }, {
     "stopGTFSID": 13000013,
     "arrivalTime": "23:34:00",
@@ -2150,7 +2150,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 12
+    "stopSequence": 7
   }, {
     "stopGTFSID": 13000012,
     "arrivalTime": "23:45:00",
@@ -2160,7 +2160,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 11
+    "stopSequence": 8
   }, {
     "stopGTFSID": 13000011,
     "arrivalTime": "00:02:00",
@@ -2170,7 +2170,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 10
+    "stopSequence": 9
   }, {
     "stopGTFSID": 13000010,
     "arrivalTime": "00:22:00",
@@ -2180,7 +2180,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 9
+    "stopSequence": 10
   }, {
     "stopGTFSID": 1300009,
     "arrivalTime": "00:48:00",
@@ -2190,7 +2190,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 8
+    "stopSequence": 11
   }, {
     "stopGTFSID": 13000008,
     "arrivalTime": "01:35:00",
@@ -2200,7 +2200,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 7
+    "stopSequence": 12
   }, {
     "stopGTFSID": 13000007,
     "arrivalTime": "02:15:00",
@@ -2210,7 +2210,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 6
+    "stopSequence": 13
   }, {
     "stopGTFSID": 13000006,
     "arrivalTime": "03:06:00",
@@ -2220,7 +2220,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 5
+    "stopSequence": 14
   }, {
     "stopGTFSID": 13000004,
     "arrivalTime": "04:13:00",
@@ -2230,7 +2230,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 4
+    "stopSequence": 15
   }, {
     "stopGTFSID": 13000003,
     "arrivalTime": "05:01:00",
@@ -2240,7 +2240,7 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 3
+    "stopSequence": 16
   }, {
     "stopGTFSID": 13000002,
     "arrivalTime": "06:09:00",
@@ -2250,7 +2250,7 @@
       "dropoff": 1
     },
     "stopDistance": 0,
-    "stopSequence": 2
+    "stopSequence": 17
   }, {
     "stopGTFSID": 13000001,
     "arrivalTime": "06:47:00",
@@ -2260,6 +2260,6 @@
       "dropoff": 0
     },
     "stopDistance": 0,
-    "stopSequence": 1
+    "stopSequence": 18
   }]
 }]

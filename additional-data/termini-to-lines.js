@@ -36,5 +36,8 @@ module.exports = {
 
   'Traralgon': 'Traralgon',
 
-  'Warrnambool': 'Warrnambool'
+  'Warrnambool': 'Warrnambool',
+
+  'Southern Cross-Sydney Central': 'Melbourne - Sydney',
+  'Sydney Central-Southern Cross': 'Melbourne - Sydney'
 }
