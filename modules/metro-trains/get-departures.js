@@ -158,7 +158,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
   let replacementBusDepartures = []
 
-  await async.forEach(departures, async departure => {
+  await async.forEachSeries(departures, async departure => {
     const run = runs[departure.run_id]
     let routeID = departure.route_id
     let routeName = routes[routeID].route_name

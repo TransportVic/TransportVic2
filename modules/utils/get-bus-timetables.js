@@ -34,7 +34,7 @@ function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
   return gtfsIDs
 }
 
-async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, destination, mode, day, routeGTFSID) {
+async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, destination, mode, day, routeGTFSID, excludedTripIDs) {
   let trip
   let today = utils.now()
   let query
@@ -53,6 +53,14 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
         }
       },
       destination: utils.adjustRawStopName(utils.adjustStopname(destination))
+    }
+
+    if (excludedTripIDs) {
+      query.tripID = {
+        $not: {
+          $in: excludedTripIDs
+        }
+      }
     }
 
     if (routeGTFSID) {

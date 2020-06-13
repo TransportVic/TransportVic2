@@ -54,7 +54,9 @@ async function getDeparturesFromPTV(stop, db) {
     const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/3/stop/${stopGTFSID}?gtfs=true&max_results=7&expand=run&expand=route`)
     let coachDepartures = departures.filter(departure => departure.flags.includes('VCH'))
 
-    await async.forEach(coachDepartures, async coachDeparture => {
+    let tripIDsSeen = []
+
+    await async.forEachSeries(coachDepartures, async coachDeparture => {
       let runID = coachDeparture.run_id
       if (runIDsSeen.includes(runID)) return
       runIDsSeen.push(runID)
@@ -77,7 +79,7 @@ async function getDeparturesFromPTV(stop, db) {
 
       if (!vlineTrainRoutes.includes(trainRouteGTFSID)) isTrainReplacement = false
 
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'regional coach', null, coachRouteGTFSID)
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'regional coach', null, coachRouteGTFSID, tripIDsSeen)
 
       if (!trip && (isTrainReplacement !== false)) {
         let stopGTFSIDs = {
@@ -104,7 +106,12 @@ async function getDeparturesFromPTV(stop, db) {
                 departureTimeMinutes
               }
             },
-            destination: checkDest
+            destination: checkDest,
+            tripID: {
+              $not: {
+                $in: tripIDsSeen
+              }
+            }
           })
 
           if (trip) {
@@ -139,6 +146,8 @@ async function getDeparturesFromPTV(stop, db) {
       // Its half trips that never show up properly
       if (!trip) return
       // if (!trip) return console.err(`Failed to map trip: ${departureTime.format('HH:mm')} to ${destination}`)
+
+      tripIDsSeen.push(trip.tripID)
 
       mappedDepartures.push({
         trip,
