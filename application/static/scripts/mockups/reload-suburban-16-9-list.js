@@ -171,18 +171,20 @@ function updateBody() {
         }
       })
 
-      check.forEach(container => {
-        let computed = getComputedStyle(container.parentElement)
-        let containerWidth = parseFloat(computed.width) + 0.2 * parseFloat(computed.marginRight)
-        let threshold = containerWidth * 0.8
+      setTimeout(() => {
+        check.forEach(container => {
+          let computed = getComputedStyle(container.parentElement)
+          let containerWidth = parseFloat(computed.width) + 0.3 * parseFloat(computed.marginRight)
+          let threshold = containerWidth * 0.9
 
-        Array.from(container.children).forEach(station => {
-          let childWidth = parseFloat(getComputedStyle(station).width)
-          if (childWidth > threshold) {
-            station.className = 'squish'
-          }
+          Array.from(container.children).forEach(station => {
+            let childWidth = parseFloat(getComputedStyle(station).width)
+            if (childWidth >= threshold) {
+              station.className = 'squish'
+            }
+          })
         })
-      })
+      }, 1)
 
       setMessagesActive(false)
     }

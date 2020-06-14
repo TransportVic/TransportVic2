@@ -89,6 +89,11 @@ function setBusesReplaceTrains() {
   setMessagesActive(true)
 }
 
+function setNotTakingPassengers() {
+  $('.message').innerHTML = '<p class="large">NOT TAKING</p><p class="large">SUBURBAN</p><p class="large">PASSENGERS</p>'
+  setMessagesActive(true)
+}
+
 function setListenAnnouncements() {
   $('.fullMessage').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>'
   setFullMessageActive(true)
@@ -117,61 +122,65 @@ function updateBody() {
     showingStandClear = showingStandClear && firstDeparture.scheduledDepartureTime === previousDeparture
 
     if (!showingStandClear) {
-      $('.burnLine').className = 'burnLine reset'
-      setDepartureInfoVisible(true)
-
-      $('.firstDestination').textContent = firstDeparture.destination
-      $('.scheduledDiv span:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
-
-      if (firstDeparture.estimatedDepartureTime) {
-        if (firstDeparture.minutesToDeparture > 0) {
-          $('.actualDiv div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
-          $('.actualDiv div span:nth-child(2)').textContent = 'min'
-        } else {
-          $('.actualDiv div span:nth-child(1)').textContent = 'NOW'
-          $('.actualDiv div span:nth-child(2)').textContent = ''
-        }
+      if (firstDeparture.additionalInfo.notTakingPassengers) {
+        setNotTakingPassengers()
       } else {
-        $('.actualDiv div span:nth-child(1)').textContent = '--'
-        $('.actualDiv div span:nth-child(2)').textContent = 'min'
-      }
+        $('.burnLine').className = 'burnLine reset'
+        setDepartureInfoVisible(true)
 
-      let {stopColumns, size} = splitStops(firstDeparture.additionalInfo.screenStops.slice(1), false, {
-        MAX_COLUMNS: 4,
-        CONNECTION_LOSS: 2,
-        MIN_COLUMN_SIZE: 5,
-        MAX_COLUMN_SIZE: 9
-      })
+        $('.firstDestination').textContent = firstDeparture.destination
+        $('.scheduledDiv span:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
 
-      $('.stops').innerHTML = ''
-
-      stopColumns.forEach(stopColumn => {
-        let column = document.createElement('div')
-
-        let hasStop = false
-
-        stopColumn.forEach(stop => {
-          if (stop.isExpress)
-            column.innerHTML += '<p>&nbsp;&nbsp;---</p>'
-          else {
-            let {stopName} = stop
-            let isSmall = stopName.length > 13
-            if (isSmall)
-              column.innerHTML += `<p class="squish">${stop.stopName}</p>`
-            else
-              column.innerHTML += `<p>${stop.stopName}</p>`
-            hasStop = true
+        if (firstDeparture.estimatedDepartureTime) {
+          if (firstDeparture.minutesToDeparture > 0) {
+            $('.actualDiv div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
+            $('.actualDiv div span:nth-child(2)').textContent = 'min'
+          } else {
+            $('.actualDiv div span:nth-child(1)').textContent = 'NOW'
+            $('.actualDiv div span:nth-child(2)').textContent = ''
           }
+        } else {
+          $('.actualDiv div span:nth-child(1)').textContent = '--'
+          $('.actualDiv div span:nth-child(2)').textContent = 'min'
+        }
+
+        let {stopColumns, size} = splitStops(firstDeparture.additionalInfo.screenStops.slice(1), false, {
+          MAX_COLUMNS: 4,
+          CONNECTION_LOSS: 2,
+          MIN_COLUMN_SIZE: 5,
+          MAX_COLUMN_SIZE: 9
         })
 
-        $('.stops').innerHTML += `
-    <div class="stopsColumn columns-${size}${hasStop ? '' : ' expressRow'}">
-    ${column.outerHTML}
-    </div>
-    `
-      })
+        $('.stops').innerHTML = ''
 
-      setMessagesActive(false)
+        stopColumns.forEach(stopColumn => {
+          let column = document.createElement('div')
+
+          let hasStop = false
+
+          stopColumn.forEach(stop => {
+            if (stop.isExpress)
+              column.innerHTML += '<p>&nbsp;&nbsp;---</p>'
+            else {
+              let {stopName} = stop
+              let isSmall = stopName.length > 13
+              if (isSmall)
+                column.innerHTML += `<p class="squish">${stop.stopName}</p>`
+              else
+                column.innerHTML += `<p>${stop.stopName}</p>`
+              hasStop = true
+            }
+          })
+
+          $('.stops').innerHTML += `
+      <div class="stopsColumn columns-${size}${hasStop ? '' : ' expressRow'}">
+      ${column.outerHTML}
+      </div>
+      `
+        })
+
+        setMessagesActive(false)
+      }
     }
 
     let nextDepartures = [...departures.slice(1, 4), null, null, null].slice(0, 3)
