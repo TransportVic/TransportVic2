@@ -1,6 +1,11 @@
+@font-face {
+  font-family: Nunito;
+  font-display: fallback;
+  src: local('Nunito Regular'), local('Nunito'), url(/static/fonts/Nunito.ttf);
+}
+
 html, body {
   margin: 0;
   padding: 0;
-  font-family: Roboto;
-  /* font-family: "Helvetica Neue", HelveticaNeue, "TeX Gyre Heros", TeXGyreHeros, FreeSans, "Nimbus Sans L", "Liberation Sans", Arimo, Helvetica, Arial, sans-serif; */
+  font-family: Nunito;
 }

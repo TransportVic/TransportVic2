@@ -98,7 +98,7 @@ div.routeNumber {
   font-size: 60px;
 
   background-color: #d7832c;
-  color: #f8f8f8;
+  color: #f9f9f9;
 
   display: flex;
   justify-content: center;
@@ -146,8 +146,8 @@ div.departureMinutes {
 }
 
 div.departureMinutes > span:nth-child(1) {
-  margin-left: 3px;
   font-size: 47px;
+  letter-spacing: -2px;
 }
 
 div.departureMinutes > span:nth-child(2) {
@@ -209,8 +209,9 @@ div.routeNumber.dandenong-group > span:nth-child(1), div.routeNumber.vline > spa
 }
 
 div.routeNumber.dandenong-group > span:nth-child(2), div.routeNumber.vline > span:nth-child(2) {
-  font-size: 50px;
-  margin-top: -10px;
+  font-size: 55px;
+  line-height: 58px;
+  margin-top: -5px;
 }
 
 div.departureRow.colour-guide {
