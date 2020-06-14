@@ -159,11 +159,17 @@ div.stops div.stopsColumn:nth-child(1) div {
   border-left: none !important;
 }
 
+div.stops div.stopsColumn.expressColumn:nth-child(1) div {
+  padding-left: 0;
+  margin-left: 0;
+}
+
 div.stops div.stopsColumn div {
   border-left: calc(0.00125 * var(--width)) solid white;
   padding-left: calc(0.01 * var(--width));
   margin-top: calc(0.02 * var(--height));
   margin-left: calc(0.0025 * var(--width));
+  display: block;
 }
 
 div.stops div.stopsColumn div p {
@@ -173,12 +179,13 @@ div.stops div.stopsColumn div p {
 
 div.stops div.stopsColumn div p.squish {
   letter-spacing: -0.05vw;
-  transform: scaleX(0.87);
+  transform: scaleX(0.95);
   transform-origin: left;
 }
 
-div.stopsColumn.expressRow {
+div.stopsColumn.expressColumn {
   min-width: unset !important;
+  margin-right: calc(0.02 * var(--width)) !important;
 }
 
 div.stopsColumn.columns-8 {
@@ -191,6 +198,15 @@ div.stopsColumn.columns-8 div {
 
 div.stopsColumn.columns-8 div p {
   font-size: calc(0.06 * var(--height)) !important;
+}
+
+
+div.stopsColumn.columns-9 div {
+  margin-top: calc(0.01 * var(--height)) !important;
+}
+
+div.stopsColumn.columns-9 div p {
+  font-size: calc(0.056 * var(--height)) !important;
 }
 
 

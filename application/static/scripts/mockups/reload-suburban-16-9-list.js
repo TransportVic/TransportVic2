@@ -100,7 +100,7 @@ function updateBody() {
   }, (err, status, body) => {
     if (err) return setListenAnnouncements()
 
-    departures = body.departures
+    departures = body.departures.slice(1)
 
     let firstDeparture = departures[0]
     if (!firstDeparture) {
@@ -140,32 +140,45 @@ function updateBody() {
 
       $('.stops').innerHTML = ''
 
-      stopColumns.forEach(stopColumn => {
-        let column = document.createElement('div')
+      stopColumns.forEach((stopColumn, i) => {
+        let outerColumn = document.createElement('div')
+        let html = ''
 
         let hasStop = false
 
         stopColumn.forEach(stop => {
           if (stop.isExpress)
-            column.innerHTML += '<p>&nbsp;&nbsp;---</p>'
+            html += '<p>&nbsp;---</p>'
           else {
             let {stopName} = stop
             if (stopName === 'Upper Ferntree Gully') stopName = 'Upper F.T Gully'
 
-            let isSmall = stopName.length > 10
-            if (isSmall)
-              column.innerHTML += `<p class="squish">${stopName}</p>`
-            else
-              column.innerHTML += `<p>${stopName}</p>`
+            html += `<p>${stopName}</p>`
+
             hasStop = true
           }
         })
 
-        $('.stops').innerHTML += `
-    <div class="stopsColumn columns-${size}${hasStop ? '' : ' expressRow'}">
-    ${column.outerHTML}
-    </div>
-    `
+        outerColumn.innerHTML = `<div>${html}</div>`
+        outerColumn.className = `stopsColumn columns-${size}${hasStop ? '' : ' expressColumn'}`
+
+        $('.stops').appendChild(outerColumn)
+
+        if (hasStop) {
+          setTimeout(() => {
+            let container = $('div', outerColumn)
+            let computed = getComputedStyle(container.parentElement)
+            let containerWidth = parseFloat(computed.width) + 0.2 * parseFloat(computed.marginRight)
+            let threshold = containerWidth * 0.8
+
+            Array.from(container.children).forEach(station => {
+              let childWidth = parseFloat(getComputedStyle(station).width)
+              if (childWidth > threshold) {
+                station.className = 'squish'
+              }
+            })
+          }, 1)
+        }
       })
 
       setMessagesActive(false)
