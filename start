@@ -1,0 +1,4 @@
+#!/bin/bash
+cd /home/ec2-user/TransportVic
+
+sudo /home/ec2-user/.nvm/versions/node/v14.2.0/bin/node index.js >> /home/ec2-user/log 2>> /home/ec2-user/err
