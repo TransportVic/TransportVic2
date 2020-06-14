@@ -150,12 +150,12 @@ function updateBody() {
 
         stopColumn.forEach(stop => {
           if (stop.isExpress)
-            html += '<p>&nbsp;---</p>'
+            html += '<span>&nbsp;---</span><br>'
           else {
             let {stopName} = stop
             if (stopName === 'Upper Ferntree Gully') stopName = 'Upper F.T Gully'
 
-            html += `<p>${stopName}</p>`
+            html += `<span>${stopName}</span><br>`
 
             hasStop = true
           }
@@ -178,7 +178,10 @@ function updateBody() {
           let threshold = containerWidth * 0.9
 
           Array.from(container.children).forEach(station => {
+            if (station.tagName === 'BR') return
+
             let childWidth = parseFloat(getComputedStyle(station).width)
+            console.log(childWidth, threshold, station.textContent)
             if (childWidth >= threshold) {
               station.className = 'squish'
             }
