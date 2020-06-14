@@ -7,6 +7,7 @@ const utils = require('../../../utils')
 const getMetroDepartures = require('../../../modules/metro-trains/get-departures')
 const getVLineDepartures = require('../../../modules/vline/get-departures')
 const getBusDepartures = require('../../../modules/bus/get-departures')
+const busDestinations = require('../../../additional-data/bus-destinations')
 let EventEmitter = require('events')
 
 let cache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
@@ -96,8 +97,18 @@ router.get('/', async (req, res) => {
   let allDepartures = filterDepartures([...busLoopDepartures, ...wellingtonDepartures, ...monash742Departures])
 
   allDepartures = allDepartures.map(departure => {
-    departure.destination = departure.destination.replace('Gardens', 'Gdns').replace('Shopping Centre', 'SC')
-      .replace('Railway', '').replace('Station', 'Stn').replace('Middle', 'Mid')
+    let serviceData = busDestinations.service[departure.routeNumber] || busDestinations.service[departure.trip.routeGTFSID] || {}
+
+    let fullDestination = departure.trip.destination
+    let destinationShortName = departure.trip.destination.split('/')[0]
+    let {destination} = departure.trip
+    if (!utils.isStreet(destinationShortName)) destination = destinationShortName
+    departure.destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
+
+    departure.destination = (serviceData[departure.destination]
+      || busDestinations.generic[departure.destination]
+      || busDestinations.generic[fullDestination] || departure.destination)
+      .replace('Gardens', 'Gdns').replace('Station', 'Stn').replace('Middle', 'Mid')
 
     return departure
   }).filter(departure => !!departure.routeNumber).sort((a, b) => a.routeNumber - b.routeNumber || a.destination.length - b.destination.length)
