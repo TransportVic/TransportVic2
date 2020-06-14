@@ -629,6 +629,27 @@ let lines = {
     'Flagstaff',
     'Melbourne Central',
     'Parliament'
+  ],
+  'Sydney': [
+    "Southern Cross",
+    "Broadmeadows",
+    "Seymour",
+    "Benalla",
+    "Wangaratta",
+    "Albury",
+    "Culcairn",
+    "Henty",
+    "The Rock",
+    "Wagga Wagga",
+    "Junee",
+    "Cootamundra",
+    "Harden",
+    "Yass Junction",
+    "Gunning",
+    "Goulburn",
+    "Moss Vale",
+    "Campbelltown",
+    "Sydney Central"
   ]
 }
 
@@ -654,7 +675,7 @@ function getLineStops(lineName, destination) {
   if (lineName === 'Mernda') return lines.Mernda
   if (lineName === 'Hurstbridge') return lines.Hurstbridge
   if (lineName === 'City Loop') return lines['City Loop']
-
+  if (lineName === 'Melbourne - Sydney') return lines.Sydney
 }
 
 module.exports = getLineStops
