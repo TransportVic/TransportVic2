@@ -1,17 +1,23 @@
-html {
-   transform: scale(0.66667);
-   transform-origin: top left;
-   overflow: hidden;
+body {
+  --width: 100vw;
+
+  --departurePadding: calc(var(--width) * 0.015625);
+  --departureMargin: calc(var(--width) * 0.005208);
+  --routeNumberWidth: calc(var(--width) * 0.0625);
+  --departureTimeWidth: calc(var(--width) * 0.05208);
+  --departureHeight: calc(var(--width) * 0.421875);
 }
 
-:root {
-  --width: 1920px;
+@media (min-aspect-ratio: 2/1) {
+  body {
+    --width: 200vh;
+  }
 }
 
 div.topRow {
   width: var(--width);
-  height: 90px;
-  font-size: 50px;
+  height: calc(var(--width) * 0.0468);
+  font-size: calc(var(--width) * 0.0260);
 
   background-color: #393939;
   color: #f1f1f1;
@@ -21,25 +27,25 @@ div.topRow {
 }
 
 div.topRow div {
-  margin-left: 20px;
+  margin-left: calc(var(--width) * 0.01041);
   display: flex;
   flex-direction: column;
 }
 
 div.topRow span.motd {
-  font-size: 20px;
-  margin-top: -6px;
+  font-size: calc(var(--width) * 0.01041);
+  margin-top: calc(var(--width) * -0.003125);
 }
 
 div.topRow span.time {
   margin-left: auto;
-  margin-right: 20px;
+  margin-right: calc(var(--width) * 0.01041);
 }
-/* 961 */
+
 div.headers {
-  width: 1920px;
-  height: 60px; /*-20*/
-  font-size: 40px;
+  width: var(--width);
+  height: calc(var(--width) * 0.03125);
+  font-size: calc(var(--width) * 0.0208333);
 
   background-color: #1b1b1b;
   color: #f1f1f1;
@@ -50,19 +56,19 @@ div.headers {
 
 div.header {
   width: calc(var(--width) / 3);
-  height: 60px;
+  height: calc(var(--width) * 0.03125);
 
   display: flex;
   align-items: center;
 }
 
 div.header span:nth-child(1) {
-  margin-left: 20px;
+  margin-left: calc(var(--width) * 0.01041);
 }
 
 div.header span:nth-child(2) {
   margin-left: auto;
-  margin-right: 20px;
+  margin-right: calc(var(--width) * 0.01041);
 }
 
 div.departureColumns {
@@ -72,7 +78,7 @@ div.departureColumns {
 
 div.departureColumn {
   width: calc(var(--width) / 3);
-  height: 810px;
+  height: var(--departureHeight);
   background-color: #3d3d3b;
   display: flex;
   flex-direction: column;
@@ -84,18 +90,18 @@ div.departureColumn:nth-child(even) {
 }
 
 div.departureRow {
-  width: calc(var(--width) / 3 - 30px);
-  height: calc((810px - 10px) / 9 - 10px);
-  margin-top: 10px;
+  width: calc(var(--width) / 3 - var(--departurePadding));
+  height: calc((var(--departureHeight) - var(--departureMargin)) / 9 - var(--departureMargin));
+  margin-top: var(--departureMargin);
 
   display: flex;
   color: #f1f1f1;
 }
 
 div.routeNumber {
-  width: 120px;
-  height: calc((810px - 10px) / 9 - 10px);
-  font-size: 60px;
+  width: var(--routeNumberWidth);
+  height: calc((var(--departureHeight) - var(--departureMargin)) / 9 - var(--departureMargin));
+  font-size: calc(var(--width) * 0.03125);
 
   background-color: #d7832c;
   color: #f9f9f9;
@@ -107,35 +113,35 @@ div.routeNumber {
 }
 
 div.routeNumber > span {
-  margin-left: 4px;
-  margin-top: 3px;
+  margin-left: calc(var(--width) * 0.002083);
+  margin-top: calc(var(--width) * 0.001562);
 }
 
 div.destination {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: calc(var(--width) / 3 - 30px - 120px - 100px);
+  width: calc(var(--width) / 3 - var(--departurePadding) - var(--routeNumberWidth) - var(--departureTimeWidth));
 
   background-color: #494949;
 }
 
 div.destination > span {
-  margin-left: 12px;
+  margin-left: calc(var(--width) * 0.00625);
 }
 
 div.destination > span:nth-child(1) {
-  font-size: 20px;
+  font-size: calc(var(--width) * 0.01041);
 }
 
 div.destination > span:nth-child(2) {
-  font-size: 40px;
-  margin-top: -6px;
+  font-size: calc(var(--width) * 0.0208333);
+  margin-top: calc(var(--width) * -0.003125);
 }
 
 div.departureMinutes {
-  width: 100px;
-  height: calc((810px - 10px) / 9 - 10px);
+  width: var(--departureTimeWidth);
+  height: calc((var(--departureHeight) - var(--departureMargin)) / 9 - var(--departureMargin));
 
   margin-left: auto;
 
@@ -146,15 +152,15 @@ div.departureMinutes {
 }
 
 div.departureMinutes > span:nth-child(1) {
-  font-size: 47px;
-  letter-spacing: -2px;
+  font-size: calc(var(--width) * 0.024479);
+  letter-spacing: calc(var(--width) * -0.0010416);
 }
 
 div.departureMinutes > span:nth-child(2) {
-  margin-left: 3px;
-  font-size: 20px;
+  margin-left: calc(var(--width) * 0.001562);
+  font-size: calc(var(--width) * 0.01041);
   white-space: nowrap;
-  margin-top: -10px;
+  margin-top: calc(var(--width) * -0.005208);
 }
 
 div.cannot-make {
@@ -177,9 +183,9 @@ div.unknown {
 
 div.sub-heading {
   width: calc(var(--width) / 3);
-  height: calc((810px - 10px) / 9 - 10px);
-  font-size: 38px;
-  margin-top: 10px;
+  height: calc((var(--departureHeight) - var(--departureMargin)) / 9 - var(--departureMargin));
+  font-size: calc(var(--width) * 0.0197916);
+  margin-top: var(--departureMargin);
 
   background-color: #2e2e2e;
   color: #f1f1f1;
@@ -204,14 +210,14 @@ div.routeNumber.dandenong-group, div.routeNumber.vline {
 }
 
 div.routeNumber.dandenong-group > span:nth-child(1), div.routeNumber.vline > span:nth-child(1) {
-  margin-left: 0px;
-  font-size: 20px;
+  margin-left: 0;
+  font-size: calc(var(--width) * 0.01041);
 }
 
 div.routeNumber.dandenong-group > span:nth-child(2), div.routeNumber.vline > span:nth-child(2) {
-  font-size: 55px;
-  line-height: 58px;
-  margin-top: -5px;
+  font-size: calc(var(--width) * 0.0286);
+  line-height: calc(var(--width) * 0.030208);
+  margin-top: calc(var(--width) * -0.002604);
 }
 
 div.departureRow.colour-guide {
@@ -237,13 +243,13 @@ div.departureRow.colour-guide > div {
 div.departureRow.colour-guide > div > div {
   width: 50%;
   height: 100%;
-  font-size: 20px;
+  font-size: calc(var(--width) * 0.01041);
   display: flex;
   align-items: center;
 }
 
 div.departureRow.colour-guide > div > div > span {
-  margin-left: 5px;
+  margin-left: calc(var(--width) * 0.002604);
   color: #000000;
 }
 
