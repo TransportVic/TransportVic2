@@ -90,7 +90,7 @@ router.get('/', async (req, res) => {
   })
 
   let busLoopDepartures = await getBusDepartures(busLoop, res.db)
-  let wellingtonDepartures = await getBusDepartures(wellington, res.db)
+  let wellingtonDepartures = (await getBusDepartures(wellington, res.db)).filter(d => d.routeNumber === '800')
   let monash742Departures = await getBusDepartures(monash742, res.db)
 
   let allDepartures = filterDepartures([...busLoopDepartures, ...wellingtonDepartures, ...monash742Departures])
