@@ -100,7 +100,7 @@ function updateBody() {
   }, (err, status, body) => {
     if (err) return setListenAnnouncements()
 
-    departures = body.departures.slice(1)
+    departures = body.departures
 
     let firstDeparture = departures[0]
     if (!firstDeparture) {
