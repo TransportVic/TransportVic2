@@ -140,6 +140,8 @@ function updateBody() {
 
       $('.stops').innerHTML = ''
 
+      let check = []
+
       stopColumns.forEach((stopColumn, i) => {
         let outerColumn = document.createElement('div')
         let html = ''
@@ -165,20 +167,21 @@ function updateBody() {
         $('.stops').appendChild(outerColumn)
 
         if (hasStop) {
-          setTimeout(() => {
-            let container = $('div', outerColumn)
-            let computed = getComputedStyle(container.parentElement)
-            let containerWidth = parseFloat(computed.width) + 0.2 * parseFloat(computed.marginRight)
-            let threshold = containerWidth * 0.8
-
-            Array.from(container.children).forEach(station => {
-              let childWidth = parseFloat(getComputedStyle(station).width)
-              if (childWidth > threshold) {
-                station.className = 'squish'
-              }
-            })
-          }, 1)
+          check.push($('div', outerColumn))
         }
+      })
+
+      check.forEach(container => {
+        let computed = getComputedStyle(container.parentElement)
+        let containerWidth = parseFloat(computed.width) + 0.2 * parseFloat(computed.marginRight)
+        let threshold = containerWidth * 0.8
+
+        Array.from(container.children).forEach(station => {
+          let childWidth = parseFloat(getComputedStyle(station).width)
+          if (childWidth > threshold) {
+            station.className = 'squish'
+          }
+        })
       })
 
       setMessagesActive(false)
