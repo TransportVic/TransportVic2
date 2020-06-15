@@ -9,3 +9,8 @@ html, body {
   padding: 0;
   font-family: Nunito;
 }
+
+html {
+  transform: scale(0.98);
+  transform-origin: top left;
+}
