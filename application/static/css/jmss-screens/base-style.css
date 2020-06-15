@@ -8,9 +8,5 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: Nunito;
-}
-
-html {
-  transform: scale(0.98);
-  transform-origin: top left;
+  overflow: hidden;
 }
