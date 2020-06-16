@@ -57,3 +57,28 @@
   width: 80%;
   height: 50%;
 }
+
+.popup {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  padding: calc(0.5vw + 0.5vh) 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100vw;
+  background-color: #171717;
+}
+
+.popup img {
+  width: calc(4vw + 4vh);
+  margin-right: calc(1vw + 1vh);
+}
+
+.popup span {
+  font-size: calc(1.1vw + 1.1vh);
+  max-width: 70%;
+  display: inline-block;
+}
