@@ -91,8 +91,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.prettyTimeToArrival = ''
 
-    let scheduledDepartureTime =
-      moment.tz(`${req.params.operationDays} ${stop.departureTime || stop.arrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+    let scheduledDepartureTime = moment.tz(req.params.operationDays, 'YYYYMMDD', 'Australia/Melbourne').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
 
     const timeDifference = moment.utc(moment(scheduledDepartureTime).diff(utils.now()))
 

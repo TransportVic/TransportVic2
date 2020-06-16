@@ -171,8 +171,8 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     }
 
     if (stop.estimatedDepartureTime) {
-      let scheduledDepartureTime =
-        moment.tz(`${req.params.operationDays} ${stop.departureTime || stop.arrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+      let scheduledDepartureTime = moment.tz(req.params.operationDays, 'YYYYMMDD', 'Australia/Melbourne').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
+
       let headwayDeviance = scheduledDepartureTime.diff(stop.estimatedDepartureTime, 'minutes')
 
       // trains cannot be early

@@ -631,25 +631,26 @@ let lines = {
     'Parliament'
   ],
   'Sydney': [
-    "Southern Cross",
-    "Broadmeadows",
-    "Seymour",
-    "Benalla",
-    "Wangaratta",
-    "Albury",
-    "Culcairn",
-    "Henty",
-    "The Rock",
-    "Wagga Wagga",
-    "Junee",
-    "Cootamundra",
-    "Harden",
-    "Yass Junction",
-    "Gunning",
-    "Goulburn",
-    "Moss Vale",
-    "Campbelltown",
-    "Sydney Central"
+    'Southern Cross',
+    'Broadmeadows',
+    'Seymour',
+    'Benalla',
+    'Wangaratta',
+    'Albury',
+    'Culcairn',
+    'Henty',
+    'The Rock',
+    'Wagga Wagga',
+    'Junee',
+    'Cootamundra',
+    'Harden',
+    'Yass Junction',
+    'Gunning',
+    'Goulburn',
+    'Moss Vale',
+    'Campbelltown',
+    'Glenfield', // I believe so
+    'Sydney Central'
   ]
 }
 

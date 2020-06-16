@@ -158,8 +158,8 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
     }
 
     if (stop.estimatedDepartureTime) {
-      let scheduledDepartureTime =
-        moment.tz(`${req.params.operationDays} ${stop.departureTime || stop.arrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+      let scheduledDepartureTime = moment.tz(req.params.operationDays, 'YYYYMMDD', 'Australia/Melbourne').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
+
       let headwayDeviance = scheduledDepartureTime.diff(stop.estimatedDepartureTime, 'minutes')
 
       if (headwayDeviance > 2) {
