@@ -124,35 +124,6 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   const stationName = station.stopName.slice(0, -16).toLowerCase()
   let {departures, runs, routes, disruptions} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=run&expand=route&expand=disruption`)
 
-  disruptions = {
-    "207388": {
-      "disruption_id": 207388,
-      "title": "",
-      "url": "http://ptv.vic.gov.au/live-travel-updates/article/tooronga-station-temporary-car-park-closures-from-wednesday-10-june-to-friday-10-july-2020",
-      "description": "The 2:29pm Flinders Street to Cranbourne train will now originate from Springvale.",
-      "disruption_status": "Current",
-      "disruption_type": "Planned Closure",
-      "published_on": "2020-06-02T23:00:58Z",
-      "last_updated": "2020-06-09T18:00:04Z",
-      "from_date": "2020-06-09T18:00:00Z",
-      "to_date": "2020-07-07T09:00:00Z",
-      "routes": [
-        {
-          "route_type": 0,
-          "route_id": 7,
-          "route_name": "Glen Waverley",
-          "route_number": "",
-          "route_gtfs_id": "2-GLW",
-          "direction": null
-        }
-      ],
-      "stops": [],
-      "colour": "#ffd500",
-      "display_on_board": false,
-      "display_status": false
-    }
-  }
-
   let suspensionMap = {}
   let suspensionIDs = Object.values(disruptions).filter(disruption => {
     return disruption.disruption_type.toLowerCase().includes('suspend')
