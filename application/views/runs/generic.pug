@@ -13,7 +13,23 @@ block head
   meta(property='twitter:title' content=`TransportVic - ${title}`)
   meta(property='og:description' content=`Viewing the ${title}`)
   meta(property='twitter:description' content=`Viewing the ${title}`)
-  
+  -
+    switch (trip.mode) {
+      case 'bus':
+        themeColour = '#d7832c'
+        break
+      case 'tram':
+        themeColour = '#20b734'
+        break
+      case 'regional coach':
+        themeColour = '#9582b5'
+        break
+      case 'ferry':
+        themeColour = '#03998f'
+        break
+    }
+    
+    
 block title
   span=title
   
