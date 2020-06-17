@@ -5,6 +5,8 @@ const DatabaseConnection = require('../../../database/DatabaseConnection')
 const config = require('../../../config.json')
 const utils = require('../../../utils')
 
+const fixTripDestinations = require('../../../modules/metro-trains/fix-trip-destinations.js')
+
 const updateStats = require('../../utils/stats')
 
 let stops, timetables
@@ -154,6 +156,8 @@ function readFileData(filename, routeName, callback) {
 
       let upService = !(trip.runID[3] % 2)
       trip.direction = upService ? 'Up' : 'Down'
+
+      trip = fixTripDestinations(trip)
 
       await timetables.createDocument(trip)
     })
