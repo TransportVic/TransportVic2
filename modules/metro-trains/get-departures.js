@@ -122,7 +122,36 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   const metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
   let {stopGTFSID} = metroPlatform
   const stationName = station.stopName.slice(0, -16).toLowerCase()
-  const {departures, runs, routes, disruptions} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=run&expand=route&expand=disruption`)
+  let {departures, runs, routes, disruptions} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=run&expand=route&expand=disruption`)
+
+  disruptions = {
+    "207388": {
+      "disruption_id": 207388,
+      "title": "",
+      "url": "http://ptv.vic.gov.au/live-travel-updates/article/tooronga-station-temporary-car-park-closures-from-wednesday-10-june-to-friday-10-july-2020",
+      "description": "The 2:29pm Flinders Street to Cranbourne train will now originate from Springvale.",
+      "disruption_status": "Current",
+      "disruption_type": "Planned Closure",
+      "published_on": "2020-06-02T23:00:58Z",
+      "last_updated": "2020-06-09T18:00:04Z",
+      "from_date": "2020-06-09T18:00:00Z",
+      "to_date": "2020-07-07T09:00:00Z",
+      "routes": [
+        {
+          "route_type": 0,
+          "route_id": 7,
+          "route_name": "Glen Waverley",
+          "route_number": "",
+          "route_gtfs_id": "2-GLW",
+          "direction": null
+        }
+      ],
+      "stops": [],
+      "colour": "#ffd500",
+      "display_on_board": false,
+      "display_status": false
+    }
+  }
 
   let suspensionMap = {}
   let suspensionIDs = Object.values(disruptions).filter(disruption => {
@@ -132,12 +161,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     return suspension.disruption_id
   })
 
-  let stonyPointReplacements = Object.values(disruptions).filter(disruption => {
-    if (disruption.routes.find(r => r.route_gtfs_id === '2-SPT')) {
-      return disruption.description.includes('replace') && disruption.description.includes('fault')
-    }
-    return false
-  }).map(disruption => {
+  function matchService(disruption) {
     let text = disruption.description
     let service = text.match(/the (\d+:\d+[ap]m) ([ \w]*?) to ([ \w]*?) (?:train|service)/i)
 
@@ -151,10 +175,34 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
       return {
         departureTime: utils.minAftMidnightToTime24(minutesPastMidnight),
-        origin, destination
+        origin, destination,
+        originalText: text
       }
     }
-  }).filter(Boolean)
+  }
+
+  let stonyPointReplacements = Object.values(disruptions).filter(disruption => {
+    if (disruption.routes.find(r => r.route_gtfs_id === '2-SPT')) {
+      return disruption.description.includes('replace') && disruption.description.includes('fault')
+    }
+    return false
+  }).map(matchService).filter(Boolean)
+
+  let shortMap = {}
+
+  Object.values(disruptions).filter(disruption => {
+    return disruption.description.includes('originate') || disruption.description.includes('terminate')
+  }).map(matchService).filter(Boolean).map(disruption => {
+    let parts = disruption.originalText.match(/now (\w+) (?:from|at) (.*)./)
+    if (parts) {
+      let type = parts[1]
+      let point = parts[2]
+
+      let serviceID = `${disruption.origin}-${disruption.destination}-${disruption.departureTime}`
+
+      shortMap[serviceID] = { type, point }
+    }
+  })
 
   let replacementBusDepartures = []
 
@@ -223,22 +271,27 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
     // gtfs timetables
     possibleDestinations = possibleDestinations.map(dest => dest + ' Railway Station')
+
+    let usedLive = false
+
     let trip = await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines,
       scheduledDepartureTimeMinutes, possibleDestinations)
 
     if (!trip) {
       trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
         scheduledDepartureTimeMinutes, possibleDestinations)
+    } else {
+      if (new Date() - trip.updateTime < 2 * 60 * 1000) usedLive = true
     }
 
     if (!trip) { // static dump
-        // let isCityLoop = cityLoopStations.includes(stationName) || stationName === 'flinders street'
-        trip = await departureUtils.getStaticDeparture(runID, db)
-        if (trip) {
-          let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === stopGTFSID)[0]
-          if (!stopData || stopData.departureTimeMinutes !== scheduledDepartureTimeMinutes)
-            trip = null
-        }
+      // let isCityLoop = cityLoopStations.includes(stationName) || stationName === 'flinders street'
+      trip = await departureUtils.getStaticDeparture(runID, db)
+      if (trip) {
+        let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === stopGTFSID)[0]
+        if (!stopData || stopData.departureTimeMinutes !== scheduledDepartureTimeMinutes)
+          trip = null
+      }
     }
 
     if (!trip) { // still no match - getStoppingPattern
@@ -246,8 +299,14 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
         if (isTrainReplacement && suspensions.length === 0) return // ok this is risky but bus replacements actually seem to do it the same way as vline
       }
       trip = await getStoppingPattern(db, departure.run_id, 'metro train')
+      usedLive = true
     } else {
       replacementBusDepartures.push(scheduledDepartureTimeMinutes)
+    }
+
+    if (!usedLive) {
+      let serviceID = `${trip.origin.slice(0, -16)}-${trip.destination.slice(0, -16)}-${trip.departureTime}`
+      if (shortMap[serviceID]) trip = await getStoppingPattern(db, departure.run_id, 'metro train')
     }
 
     if (stonyPointReplacements.length) {
