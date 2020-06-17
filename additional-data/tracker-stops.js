@@ -311,5 +311,7 @@ module.exports = [
   'footscray/victoria-university-ballarat-road',
   'melton-south/victoria-university-rees-road',
   'melton/woodgrove-shopping-centre-high-street',
-  'melton/melton-bus-interchange-palmerston-street'
+  'melton/melton-bus-interchange-palmerston-street',
+  'glen-waverley/glen-waverley-primary-school-high-street-road',
+  'glen-waverley/the-glen-shopping-centre'
 ]
