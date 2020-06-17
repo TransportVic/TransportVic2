@@ -216,7 +216,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       possibleDestinations.push('Flinders Street')
 
     let possibleLines = [routeName]
-    if (cityLoopStations.includes(stationName) || destination !== routeName) {
+    if (cityLoopStations.includes(stationName)) {
       if (burnleyGroup.includes(routeID))
         possibleLines = ['Alamein', 'Belgrave', 'Glen Waverley', 'Lilydale']
       else if (caulfieldGroup.includes(routeID))
