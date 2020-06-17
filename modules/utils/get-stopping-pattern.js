@@ -5,6 +5,8 @@ const ptvAPI = require('../../ptv-api')
 const nameModifier = require('../../additional-data/bus-stop-name-modifier')
 const cityLoopRoute = require('./city-loop.json')
 
+const fixTripDestination = require('../metro-trains/fix-trip-destinations')
+
 let modes = {
   'metro train': 0,
   'regional train': 3,
@@ -166,6 +168,8 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     direction,
     cancelled
   }
+
+  timetable = fixTripDestination(timetable)
 
   let key = {
     mode, routeName: timetable.routeName,

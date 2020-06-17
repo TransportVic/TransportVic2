@@ -276,7 +276,10 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     }
 
     if (!usedLive) {
-      let serviceID = `${trip.origin.slice(0, -16)}-${trip.destination.slice(0, -16)}-${trip.departureTime}`
+      let origin = trip.trueOrigin.slice(0, -16)
+      let destination = trip.trueDestination.slice(0, -16)
+
+      let serviceID = `${origin}-${destination}-${trip.trueDepartureTime}`
       if (shortMap[serviceID]) trip = await getStoppingPattern(db, departure.run_id, 'metro train')
     }
 

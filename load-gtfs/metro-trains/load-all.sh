@@ -7,5 +7,6 @@ node $DIRNAME/load-gtfs-timetables.js
 node $DIRNAME/extra/load-metro-timetables.js
 node $DIRNAME/extra/load-metro-route-stops.js
 node $DIRNAME/extra/find-guarenteed-connections.js
+node $DIRNAME/fix-destinations.js
 
 rm -r $DIRNAME/../spliced-gtfs-stuff/2
