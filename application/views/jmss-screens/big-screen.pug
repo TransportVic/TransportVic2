@@ -83,7 +83,7 @@ html
             div.sub-heading
               span Huntingdale Metro Train Departures
             mixin departureTime(direction)
-              - let waitingClass = metroDepartures[direction] ? getWaitingClass(metroDepartures[direction][0], [15, 10]) : 'unknown'
+              - let waitingClass = metroDepartures[direction] ? getWaitingClass(metroDepartures[direction][0], [20, 15]) : 'unknown'
               div(class='departureMinutes ' + waitingClass)
                 if metroDepartures[direction]
                   span=getDepartureText(metroDepartures[direction][0])
@@ -124,7 +124,7 @@ html
                     span=departure.destination
                   else
                     span --
-                - let waitingClass = departure ? getWaitingClass(departure, [15, 10]) : 'unknown'
+                - let waitingClass = departure ? getWaitingClass(departure, [20, 15]) : 'unknown'
                 div(class='departureMinutes ' + waitingClass)
                   if departure
                     span=getDepartureText(departure)
@@ -145,7 +145,7 @@ html
                   span=nextVLineDeparture.trip.destination.slice(0, -16)
                 else
                   span --
-              - let waitingClass = nextVLineDeparture ? getWaitingClass(nextVLineDeparture, [15, 10]) : 'unknown'
+              - let waitingClass = nextVLineDeparture ? getWaitingClass(nextVLineDeparture, [20, 15]) : 'unknown'
               div(class='departureMinutes ' + waitingClass)
                 if nextVLineDeparture
                   span=getDepartureText(nextVLineDeparture)
