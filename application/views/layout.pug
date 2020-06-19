@@ -1,6 +1,7 @@
 doctype html
 html(lang='en-GB')
   head
+    - let themeColour = '#171717'
     meta(charset='UTF-8')
       
     link(rel='preload' href='/static/fonts/Nunito.ttf' as='font' crossorigin='anonymous')
@@ -23,7 +24,6 @@ html(lang='en-GB')
     meta(name='application-name' content='TransportVic')
     meta(name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, height=device-height')
     meta(name='google' content='notranslate')
-    meta(name='theme-color' content='#171717')
     meta(name='apple-mobile-web-app-capable' content='yes')
     meta(name='mobile-web-app-capable' content='yes')
     meta(name='apple-mobile-web-app-status-bar-style' content='black-translucent')
@@ -34,6 +34,7 @@ html(lang='en-GB')
       
     link(rel='manifest' href='/static/app-content/manifest.json')
     block head
+    meta(name='theme-color' content=themeColour)
   body
     div#header
       block title
