@@ -390,6 +390,31 @@ module.exports = {
   19486: "Bay 6",
   19488: "Bay 7",
 
+  // South Morang
+  46393: "Bay 1",
+  46395: "Bay 2",
+  46396: "Bay 3",
+  46394: "Bay 5",
+  46398: "Bay 6",
+  46399: "Bay 7",
+  46397: "Bay 8",
+  51199: "Bay 9",
+  46401: "Bay 10",
+  46402: "Bay 11",
+  46403: "Bay 12",
+
+  // Hawkstowe
+  51735: "Bay 1",
+  51736: "Bay 2",
+
+  // Mernda
+  51732: "Bay 1",
+  51731: "Bay 2",
+  51733: "Bay 3",
+  51734: "Bay 4",
+
+
+
   // check ringwood 901 bay
   // Next up:
   // The pines SC
