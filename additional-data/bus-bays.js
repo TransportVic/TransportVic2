@@ -375,17 +375,30 @@ module.exports = {
   19642: "Bay 10",
   19641: "Bay 11",
   19640: "Bay 13",
-  19639: "Bay 14"
+  19639: "Bay 14",
+
+  // Bayswater
+  40183: "Bay 1",
+  40182: "Bay 2",
+
+  // Doncaster SC
+  19474: "Bay 1",
+  19483: "Bay 2",
+  19273: "Bay 3",
+  19485: "Bay 4",
+  19476: "Bay 5",
+  19486: "Bay 6",
+  19488: "Bay 7",
 
   // check ringwood 901 bay
   // Next up:
   // The pines SC
-  // Bayswater
+  // Bayswater done
   // Upfield line stuff - coburg?
   // Chirnside park sc, done
   // Eastland?
   // Laverton done
-  // Doncaster shoppingtown
+  // Doncaster sc done
   // Box Hill done
   // Glen Waverley done
   // Knox City SC done
