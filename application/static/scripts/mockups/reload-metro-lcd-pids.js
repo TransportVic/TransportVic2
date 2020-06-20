@@ -165,7 +165,12 @@ function updateBody(firstTime) {
         $('div.actual div span:nth-child(2)').textContent = 'min'
       }
 
-      $('.middleRow p.stoppingType').textContent = firstDeparture.stoppingType
+      let firstStoppingType = firstDeparture.stoppingType
+      if (firstDeparture.additionalInfo.via) {
+        firstStoppingType += ' ' + firstDeparture.additionalInfo.via
+      }
+
+      $('.middleRow p.stoppingType').textContent = firstStoppingType
       $('.middleRow p.stoppingPattern').textContent = firstDeparture.stoppingPattern
       $('.middleRow p.stoppingPattern').setAttribute('data-text', firstDeparture.stoppingPattern)
 
@@ -180,7 +185,11 @@ function updateBody(firstTime) {
       $('div.bottomRow').className = `bottomRow${secondClassName}`
       $('div.bottomRow > span:nth-child(1)').textContent = formatTime(new Date(secondDeparture.scheduledDepartureTime))
       $('div.bottomRow > span:nth-child(2)').textContent = secondDeparture.destination
-      $('div.bottomRow > span:nth-child(3)').textContent = shortenStoppingType(secondDeparture.stoppingType)
+      let secondStoppingType = shortenStoppingType(secondDeparture.stoppingType)
+      if (secondDeparture.additionalInfo.via) {
+        secondStoppingType += ' ' + secondDeparture.additionalInfo.via
+      }
+      $('div.bottomRow > span:nth-child(3)').textContent = secondStoppingType
       if (secondDeparture.estimatedDepartureTime)
         $('div.bottomRow > div > span:nth-child(1)').textContent = secondDeparture.minutesToDeparture
       else $('div.bottomRow > div > span:nth-child(1)').textContent = '--'
@@ -290,7 +299,7 @@ function drawBottomRow(shouldPause=false) {
 
   firstRowPause = setTimeout(async () => {
     if (showingStandClear) return
-    if (firstStoppingTypeP.textContent === 'Stops All Stations') return await asyncPause(4000)
+    if (firstStoppingTypeP.textContent.includes('Stops All Stations')) return await asyncPause(4000)
 
     firstStoppingPatternP.textContent = firstStoppingPatternP.getAttribute('data-text')
     firstStoppingTypeP.style = 'opacity: 0;'

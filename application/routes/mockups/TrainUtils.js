@@ -248,7 +248,7 @@ module.exports = {
     let isFormingNewTrip = !!departure.forming
     let isUp = departure.trip.direction === 'Up' && !isFormingNewTrip
     let destination = isFormingNewTrip ? departure.destination : departure.trip.destination.slice(0, -16)
-    if (destination === 'Parliament' || destination === 'Southern Cross') destination = 'Flinders Street'
+    if (destination === 'Parliament' || (departure.type !== 'vline' && destination === 'Southern Cross')) destination = 'Flinders Street'
 
     if (routeName === 'Bendigo') {
       if (isUp && departure.trip.origin === 'Eaglehawk Railway Station') routeName = 'Swan Hill'
@@ -304,9 +304,11 @@ module.exports = {
 
     let via = ''
 
+    let isUpService = relevantTrip.direction === 'Up'
+
     if (departure.type !== 'vline') {
-      if (isCityStop || relevantTrip.direction === 'Up') {
-        if (viaCityLoop) via = 'via City Loop'
+      if (isCityStop || isUp) {
+        if (viaCityLoop && !isUpService) via = 'via City Loop'
         else {
           if (northernGroup.includes(routeName)) via = 'via Sthn Cross'
           else if (cliftonHillGroup.includes(routeName)) via = 'via Jolimont'
