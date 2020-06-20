@@ -269,6 +269,13 @@ async function animateScrollingText() {
 
 function drawBottomRow(shouldPause=false) {
   if (showingStandClear) return
+  if (firstStoppingPatternP.textContent.includes('Not Stopping At')) {
+    firstStoppingTypeP.style = 'opacity: 0;'
+    firstStoppingPatternP.style = 'opacity: 1;'
+    firstStoppingTypeP.textContent = ''
+    firstStoppingPatternP.textContent = firstStoppingPatternP.getAttribute('data-text')
+    return
+  }
 
   firstStoppingTypeP.style = 'opacity: 1;'
   firstStoppingPatternP.style = 'opacity: 0;'
