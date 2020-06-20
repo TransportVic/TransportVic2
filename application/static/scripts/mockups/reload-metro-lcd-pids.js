@@ -26,6 +26,17 @@ let firstScheduledTime, firstStoppingPattern
 
 let departures
 
+function showStoppingType() {
+  if (firstStoppingPatternP.textContent.includes('Not Stopping At')) {
+    firstStoppingTypeP.style = 'opacity: 0;'
+    firstStoppingPatternP.style = 'opacity: 1;'
+    firstStoppingTypeP.textContent = ''
+  } else {
+    firstStoppingTypeP.style = 'opacity: 1;'
+    firstStoppingPatternP.style = 'opacity: 0;'
+  }
+}
+
 function setServiceMessageActive(state) {
   if (state) {
     $('.serviceMessage').style = 'display: block;'
@@ -35,8 +46,7 @@ function setServiceMessageActive(state) {
     $('.firstDepartureInfo').style = 'display: none;'
   } else {
     $('.serviceMessage').style = 'display: none;'
-    $('div.middleRow .stoppingType').style = 'opacity: 1;'
-    $('div.middleRow .stoppingPattern').style = 'opacity: 0;'
+    showStoppingType()
     $('.firstDestination').style = ''
     $('.firstDepartureInfo').style = ''
   }
@@ -59,8 +69,7 @@ function setMessagesActive(state) {
   $('.nextDepartures').style = 'display: block;'
   $('.serviceMessage').style = 'display: none;'
 
-  $('div.middleRow .stoppingType').style = 'opacity: 1;'
-  $('div.middleRow .stoppingPattern').style = 'opacity: 0;'
+  showStoppingType()
   $('.firstDestination').style = ''
   $('.firstDepartureInfo').style = ''
   $('.content').className = 'content'
@@ -81,8 +90,7 @@ function setFullMessageActive(state) {
     $('.firstDeparture').style = 'display: block;'
   }
   $('.serviceMessage').style = 'display: none;'
-  $('div.middleRow .stoppingType').style = 'opacity: 1;'
-  $('div.middleRow .stoppingPattern').style = 'opacity: 0;'
+  showStoppingType()
   $('.firstDestination').style = ''
   $('.firstDepartureInfo').style = ''
 }
@@ -149,7 +157,6 @@ function updateBody(firstTime) {
         $('.firstDestination').className += ' smaller'
       }
 
-
       $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
 
       if (firstDeparture.estimatedDepartureTime) {
@@ -170,10 +177,9 @@ function updateBody(firstTime) {
         firstStoppingType += ' ' + firstDeparture.additionalInfo.via
       }
 
-      $('.middleRow p.stoppingType').textContent = firstStoppingType
-      $('.middleRow p.stoppingPattern').textContent = firstDeparture.stoppingPattern
-      $('.middleRow p.stoppingPattern').setAttribute('data-text', firstDeparture.stoppingPattern)
-
+      firstStoppingTypeP.textContent = firstStoppingType
+      firstStoppingPatternP.textContent = firstDeparture.stoppingPattern
+      firstStoppingPatternP.setAttribute('data-text', firstDeparture.stoppingPattern)
     }
 
     let secondDeparture = departures[1]
@@ -185,11 +191,13 @@ function updateBody(firstTime) {
       $('div.bottomRow').className = `bottomRow${secondClassName}`
       $('div.bottomRow > span:nth-child(1)').textContent = formatTime(new Date(secondDeparture.scheduledDepartureTime))
       $('div.bottomRow > span:nth-child(2)').textContent = secondDeparture.destination
+
       let secondStoppingType = shortenStoppingType(secondDeparture.stoppingType)
       if (secondDeparture.additionalInfo.via) {
         secondStoppingType += ' ' + secondDeparture.additionalInfo.via
       }
       $('div.bottomRow > span:nth-child(3)').textContent = secondStoppingType
+
       if (secondDeparture.estimatedDepartureTime)
         $('div.bottomRow > div > span:nth-child(1)').textContent = secondDeparture.minutesToDeparture
       else $('div.bottomRow > div > span:nth-child(1)').textContent = '--'
@@ -278,11 +286,12 @@ async function animateScrollingText() {
 
 function drawBottomRow(shouldPause=false) {
   if (showingStandClear) return
+
   if (firstStoppingPatternP.textContent.includes('Not Stopping At')) {
     firstStoppingTypeP.style = 'opacity: 0;'
     firstStoppingPatternP.style = 'opacity: 1;'
     firstStoppingTypeP.textContent = ''
-    firstStoppingPatternP.textContent = firstStoppingPatternP.getAttribute('data-text')
+
     return
   }
 
