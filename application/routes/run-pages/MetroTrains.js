@@ -27,6 +27,14 @@ async function pickBestTrip(data, db) {
   let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
   let minutesToTripEnd = tripEndTime.diff(utils.now(), 'minutes')
 
+  let destinationArrivalTime = tripEndMinutes
+  if (data.destination === 'flinders-street') {
+    destinationArrivalTime = {
+      $gte: tripEndMinutes - 1,
+      $lte: tripEndMinutes + 3
+    }
+  }
+
   let query = {
     $and: [{
       mode: 'metro train',
@@ -42,7 +50,7 @@ async function pickBestTrip(data, db) {
       stopTimings: {
         $elemMatch: {
           stopName: destinationStop.stopName,
-          arrivalTime: data.destinationArrivalTime
+          arrivalTimeMinutes: destinationArrivalTime
         }
       }
     }]

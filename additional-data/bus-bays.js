@@ -437,7 +437,7 @@ module.exports = {
   // Bayswater done
   // Upfield line stuff - coburg?
   // Chirnside park sc, done
-  // Eastland?
+  // Eastland? - done, doesnt have
   // Laverton done
   // Doncaster sc done
   // Box Hill done
@@ -446,13 +446,13 @@ module.exports = {
   // Blackburn (ew) no bays
   // Geelong done
   // Southland
-  // Epping
+  // Epping done
   // Footscray done
   // Fountain Gate SC
-  // South Morang
-  // Mernda
+  // South Morang done
+  // Mernda done
   // Boronia done
-  // Reservoir
+  // Reservoir done
   // Bendigo done
   // Craigieburn done
   // Tarneit apparently has bus bays
