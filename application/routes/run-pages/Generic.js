@@ -112,23 +112,35 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   let tripRoute = await routes.findDocument({ routeGTFSID: trip.routeGTFSID }, { routePath: 0 })
   let operator = tripRoute.operators[0]
 
-  let {destination} = trip
+  let {destination, origin} = trip
   let fullDestination = destination
+  let fullOrigin = origin
+
   let destinationShortName = destination.split('/')[0]
-  if (!utils.isStreet(destinationShortName)) destination = destinationShortName
+  let originShortName = origin.split('/')[0]
+
+  if (!(utils.isStreet(destinationShortName) || (trip.mode === 'regional coach' && destinationShortName.includes('Information Centre')))) destination = destinationShortName
+  if (!(utils.isStreet(originShortName) || (trip.mode === 'regional coach' && originShortName.includes('Information Centre')))) origin = originShortName
 
   destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
+  origin = origin.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
 
   if (trip.mode === 'tram') {
     destination = tramDestinations[destination] || destination
+    origin = tramDestinations[origin] || origin
   } else if (trip.mode === 'regional coach') {
     destination = coachDestinations[destination] || destination
+    origin = coachDestinations[origin] || origin
   } else {
     let serviceData = busDestinations.service[trip.routeNumber] || busDestinations.service[trip.routeGTFSID] || {}
 
     destination = serviceData[destination]
       || busDestinations.generic[destination]
       || busDestinations.generic[fullDestination] || destination
+
+    origin = serviceData[origin]
+      || busDestinations.generic[origin]
+      || busDestinations.generic[fullOrigin] || origin
   }
 
   let loopDirection
@@ -206,6 +218,7 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   res.render('runs/generic', {
     trip,
     shorternStopName: utils.shorternStopName,
+    origin,
     destination,
     operator: utils.encodeName(operator),
     loopDirection,
