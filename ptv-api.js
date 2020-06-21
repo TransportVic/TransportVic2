@@ -27,6 +27,10 @@ async function makeRequest(url) {
       })
     }
 
+    let request
+    if (request = requestCache.get(url))
+
+      return JSON.parse(request)
     ptvAPILocks[url] = new EventEmitter()
 
     function returnData(departures) {
@@ -35,10 +39,6 @@ async function makeRequest(url) {
 
       return departures
     }
-
-    let request
-    if (request = requestCache.get(url))
-      return JSON.parse(request)
 
     let fullURL = getURL(url)
     let data = await utils.request(fullURL)
