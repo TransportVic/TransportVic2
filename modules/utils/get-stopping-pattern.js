@@ -79,11 +79,17 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     dbStops[stop.stop_id] = dbStop
   })
 
+  let tripOperationDay
+
   let stopTimings = departures.map((departure, i) => {
     let {
       estimatedDepartureTime, scheduledDepartureTime,
       stop_id, platform_number
     } = departure
+
+    if (i === 0) {
+      tripOperationDay = utils.getYYYYMMDD(scheduledDepartureTime)
+    }
 
     let ptvStop = stops[stop_id]
 
@@ -155,7 +161,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     routeNumber: referenceTrip ? referenceTrip.routeNumber : routeData.route_number,
     routeDetails: referenceTrip ? referenceTrip.routeDetails : null,
     runID: vehicleDescriptor.id,
-    operationDays: [utils.getYYYYMMDDNow()],
+    operationDays: [tripOperationDay],
     vehicle: vehicleDescriptor.description || vehicleDescriptor.id,
     stopTimings: stopTimings.sort((a, b) => (a.arrivalTimeMinutes || a.departureTimeMinutes) - (b.arrivalTimeMinutes || b.departureTimeMinutes)),
     destination: stopTimings[stopTimings.length - 1].stopName,

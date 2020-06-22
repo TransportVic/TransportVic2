@@ -23,7 +23,7 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip, isS
   if (routeID === 13) return [] // stony point
 
   let upService = !(runID[3] % 2)
-  let throughCityLoop = runID[1] > 5 || cityLoopStations.includes(destination.toLowerCase())
+  let throughCityLoop = runID[1] > 5 || cityLoopStations.includes(destination.toLowerCase()) && destination !== 'Southern Cross'
   if (routeID === 6 && destination == 'Southern Cross' && isFormingNewTrip) {
     throughCityLoop = false
   }
@@ -33,7 +33,9 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip, isS
   // doublecheck showgrounds trains: R466 should be nme sss off but it show as sss fgs loop fss
   // assume up trains
   if (northenGroup.includes(routeID)) {
-    if (stopsViaFlindersFirst && !throughCityLoop)
+    if (destination === 'Southern Cross')
+      cityLoopConfig = ['NME', 'SSS']
+    else if (stopsViaFlindersFirst && !throughCityLoop)
       cityLoopConfig = ['NME', 'SSS', 'FSS']
     else if (stopsViaFlindersFirst && throughCityLoop)
       cityLoopConfig = ['SSS', 'FSS', 'PAR', 'MCE', 'FGS']
@@ -246,13 +248,16 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     possibleDestinations = possibleDestinations.map(dest => dest + ' Railway Station')
 
     let usedLive = false
+    let isUpTrip = runID % 2 === 0
+
+    let direction = isUpTrip ? 'Up' : 'Down'
 
     let trip = await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines,
-      scheduledDepartureTimeMinutes, possibleDestinations)
+      scheduledDepartureTime, possibleDestinations, direction)
 
     if (!trip) {
       trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
-        scheduledDepartureTimeMinutes, possibleDestinations)
+        scheduledDepartureTime, possibleDestinations, direction)
     } else {
       if (new Date() - trip.updateTime < 2 * 60 * 1000) usedLive = true
     }
@@ -271,7 +276,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       if (replacementBusDepartures.includes(scheduledDepartureTimeMinutes)) {
         if (isTrainReplacement && suspensions.length === 0) return // ok this is risky but bus replacements actually seem to do it the same way as vline
       }
-      trip = await getStoppingPattern(db, departure.run_id, 'metro train')
+
+      trip = await getStoppingPattern(db, departure.run_id, 'metro train', scheduledDepartureTime.toISOString())
       usedLive = true
     } else {
       replacementBusDepartures.push(scheduledDepartureTimeMinutes)
@@ -282,7 +288,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       let destination = trip.trueDestination.slice(0, -16)
 
       let serviceID = `${origin}-${destination}-${trip.trueDepartureTime}`
-      if (shortMap[serviceID]) trip = await getStoppingPattern(db, departure.run_id, 'metro train')
+      if (shortMap[serviceID]) trip = await getStoppingPattern(db, departure.run_id, 'metro train', scheduledDepartureTime.toISOString())
     }
 
     if (stonyPointReplacements.length) {
@@ -295,7 +301,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== trip.destination.slice(0, -16)
     let isSCS = station.stopName.slice(0, -16) === 'Southern Cross'
 
-    let isUpTrip = ((trip || {}).direction === 'Up' || runID % 2 === 0) && !isFormingNewTrip
+    // let isUpTrip = ((trip || {}).direction === 'Up' || runID % 2 === 0) && !isFormingNewTrip
     let cityLoopConfig = !isTrainReplacement ? determineLoopRunning(routeID, runID, runDestination, isFormingNewTrip, isSCS) : []
 
     if (isUpTrip && !cityLoopStations.includes(runDestination.toLowerCase()) &&
@@ -325,8 +331,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let forming = null
     if (isFormingNewTrip) {
       forming = await departureUtils.getStaticDeparture(runID, db)
-      if (!forming || (forming.destination !== trip.destination + ' Railway Station')) {
-        trip = await getStoppingPattern(db, departure.run_id, 'metro train')
+      if (!forming || (forming.destination !== trip.destination)) {
+        trip = await getStoppingPattern(db, departure.run_id, 'metro train', scheduledDepartureTime.toISOString())
         forming = null
       }
     }
@@ -420,6 +426,7 @@ async function getDepartures(station, db, filter=true) {
     departuresCache.put(cacheKey, Object.values(mergedDepartures))
     return returnDepartures(filterDepartures(Object.values(mergedDepartures), filter))
   } catch (e) {
+    console.log(e)
     try {
       let scheduled = await departureUtils.getScheduledDepartures(station, db, 'metro train', 120)
       return returnDepartures(scheduled)
