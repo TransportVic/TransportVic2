@@ -306,11 +306,11 @@ div.departure:nth-child(odd) a.timing.on-time:nth-child(even) {
 }
 
 div.departure:nth-child(odd) a.timing.late:nth-child(odd) {
-  background-color: #db3d25;
+  background-color: #f51227;
 }
 
 div.departure:nth-child(odd) a.timing.late:nth-child(even) {
-  background-color: #c63825;
+  background-color: #d41b2d;
 }
 
 div.departure:nth-child(odd) a.timing.unknown:nth-child(odd) {
@@ -348,11 +348,11 @@ div.departure:nth-child(even) a.timing.on-time:nth-child(odd) {
 }
 
 div.departure:nth-child(even) a.timing.late:nth-child(even) {
-  background-color: #db3d25;
+  background-color: #f51227;
 }
 
 div.departure:nth-child(even) a.timing.late:nth-child(odd) {
-  background-color: #c63825;
+  background-color: #d41b2d;
 }
 
 div.departure:nth-child(even) a.timing.unknown:nth-child(even) {
