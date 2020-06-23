@@ -167,6 +167,8 @@ module.exports = {
     if (!northernGroup.includes(lineName) && !viaCityLoop && type !== 'vline')
      viaCityLoop = tripStops.includes('Southern Cross')
 
+    let destination = tripStops.slice(-1)[0]
+
     if (viaCityLoop) {
       let cityLoopStops = tripStops.filter(e => cityLoopStations.includes(e) || e === 'Flinders Street')
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
@@ -194,12 +196,19 @@ module.exports = {
       }
     } else {
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
-
       if (northernGroup.includes(lineName)) {
-        if (isUp) {
-          lineStops = [...lineStops.slice(0, -1), 'Southern Cross', 'Flinders Street']
+        if (destination === 'Flinders Street') {
+          if (isUp) {
+            lineStops = [...lineStops.slice(0, -1), 'Southern Cross', 'Flinders Street']
+          } else {
+            lineStops = ['Flinders Street', 'Southern Cross', ...lineStops.slice(1)]
+          }
         } else {
-          lineStops = ['Flinders Street', 'Southern Cross', ...lineStops.slice(1)]
+          if (isUp) {
+            lineStops = [...lineStops.slice(0, -1), 'Southern Cross']
+          } else {
+            lineStops = ['Southern Cross', ...lineStops.slice(1)]
+          }
         }
       } else if (lineName === 'Frankston') {
         if (isUp) {
@@ -248,7 +257,7 @@ module.exports = {
     let isFormingNewTrip = !!departure.forming
     let isUp = departure.trip.direction === 'Up' && !isFormingNewTrip
     let destination = isFormingNewTrip ? departure.destination : departure.trip.destination.slice(0, -16)
-    if (destination === 'Parliament' || (departure.type !== 'vline' && destination === 'Southern Cross')) destination = 'Flinders Street'
+    if (destination === 'Parliament' || (routeName === 'Frankston' && destination === 'Southern Cross')) destination = 'Flinders Street'
 
     if (routeName === 'Bendigo') {
       if (isUp && departure.trip.origin === 'Eaglehawk Railway Station') routeName = 'Swan Hill'
