@@ -251,6 +251,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let isUpTrip = runID % 2 === 0
 
     let direction = isUpTrip ? 'Up' : 'Down'
+    if (isTrainReplacement) direction = { $in: ['Up', 'Down'] }
 
     let trip = await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines,
       scheduledDepartureTime, possibleDestinations, direction)
