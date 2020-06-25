@@ -5,7 +5,7 @@ const TimedCache = require('timed-cache')
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 5 })
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
-const destinationOverrides = require('../../additional-data/coach-destinations')
+const destinationOverrides = require('../../additional-data/coach-stops')
 const EventEmitter = require('events')
 const busBays = require('../../additional-data/bus-bays')
 const southernCrossBays = require('../../additional-data/southern-cross-bays')
@@ -117,6 +117,9 @@ async function getDeparturesFromPTV(stop, db) {
           if (trip) {
             console.log(`Mapped train trip as coach: ${trip.departureTime} to ${trip.destination}`)
 
+            let operationDay = tripDay.format('YYYYMMDD')
+            trip.operationDays = [ operationDay ]
+
             trip.mode = 'regional coach'
             trip.routeGTFSID = trip.routeGTFSID.replace('1-', '5-')
 
@@ -133,9 +136,18 @@ async function getDeparturesFromPTV(stop, db) {
               lastStop.stopName = trip.destination
             }
 
-            delete trip._id
-            await liveTimetables.createDocument(trip)
+            let query = {
+              origin: trip.origin,
+              destination: trip.destination,
+              operationDays: operationDay,
+              departureTime: trip.departureTime,
+              destinationArrivalTime: trip.destinationArrivalTime
+            }
 
+            delete trip._id
+            await liveTimetables.replaceDocument(query, trip, {
+              $upsert: true
+            })
 
             isTrainReplacement = true
             break
@@ -208,15 +220,11 @@ async function getDepartures(stop, db) {
     let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
     departures = await async.map(departures, async departure => {
-      let destinationShortName = departure.trip.destination.split('/')[0]
       let {destination} = departure.trip
-      if (!(utils.isStreet(destinationShortName) || destinationShortName.includes('Information Centre'))) destination = destinationShortName
       destination = destination.replace('Shopping Centre', 'SC')
-
-      if (destinationOverrides[destination])
-        departure.destination = destinationOverrides[destination]
-      else
-        departure.destination = destination
+      destination = destinationOverrides[destination] || destination
+      if (!utils.isStreet(destination)) destination = destination.split('/')[0]
+      departure.destination = destination
 
       let departureBayID = departure.trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID)).stopGTFSID
       let bay

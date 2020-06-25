@@ -4,7 +4,7 @@ const async = require('async')
 const mergeStops = require('./utils/merge-stops')
 const updateStats = require('./utils/stats')
 const busDestinations = require('../additional-data/bus-destinations')
-const coachDestinations = require('../additional-data/coach-destinations')
+const coachDestinations = require('../additional-data/coach-stops')
 const tramDestinations = require('../additional-data/tram-destinations')
 const utils = require('../utils')
 
