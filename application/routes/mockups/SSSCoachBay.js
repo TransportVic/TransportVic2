@@ -14,7 +14,9 @@ router.post('/', async (req, res) => {
 
   let departures = await getCoachDepartures(southernCross, res.db)
   departures = departures.map(departure => {
-    let stopsAt = departure.trip.stopTimings.map(stop => {
+    let stopsAt = departure.trip.stopTimings.filter(stop => {
+      return stop.stopConditions.dropoff === 0
+    }).map(stop => {
       let stopname = stop.stopName.replace('Shopping Centre', 'SC')
       let humanName = destinationOverrides[stopname] || destinationOverrides[`${stopname} (${stop.suburb})`] || stopname
       if (humanName.includes('Railway Station')) {

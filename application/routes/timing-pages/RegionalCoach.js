@@ -20,6 +20,7 @@ router.get('/:stopName', async (req, res) => {
   departures = departures.map(departure => {
     const timeDifference = moment.utc(departure.scheduledDepartureTime.diff(utils.now()))
 
+    if (+timeDifference > 1000 * 60 * 180) return null
     if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
     else {
       departure.prettyTimeToArrival = ''
@@ -36,7 +37,7 @@ router.get('/:stopName', async (req, res) => {
       + `${utils.getYYYYMMDDNow()}/#stop-${departure.trip.stopTimings[0].stopGTFSID}`
 
     return departure
-  })
+  }).filter(Boolean)
 
   res.render('timings/regional-coach', { departures, stop })
 })

@@ -67,7 +67,7 @@ async function getDeparturesFromPTV(stop, db) {
       let departureTime = moment.tz(coachDeparture.scheduled_departure_utc, 'Australia/Melbourne')
       let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime) % 1440
 
-      if (departureTime.diff(now, 'minutes') > 180) return
+      if (departureTime.diff(now, 'minutes') > 60 * 12) return
 
       let coachRouteGTFSID = route.route_gtfs_id.replace('1-', '5-')
       let trainRouteGTFSID = route.route_gtfs_id

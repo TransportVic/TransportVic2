@@ -511,7 +511,9 @@ async function getDepartures(station, db) {
       } catch (e) {} finally { resolve() }
     }), new Promise(async resolve => {
       try {
-        scheduledCoachReplacements = (await getCoachDepartures(coachStop, db))
+        scheduledCoachReplacements = (await getCoachDepartures(coachStop, db)).filter(departure => {
+          return moment.utc(departure.scheduledDepartureTime.diff(utils.now())) < 1000 * 60 * 180
+        })
       } catch (e) {} finally { resolve() }
     }), new Promise(async resolve => {
       try {
