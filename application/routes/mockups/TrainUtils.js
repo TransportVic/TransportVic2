@@ -197,18 +197,14 @@ module.exports = {
     } else {
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
       if (northernGroup.includes(lineName)) {
-        if (destination === 'Flinders Street') {
-          if (isUp) {
+        if (isUp) {
+          if (destination === 'Flinders Street') {
             lineStops = [...lineStops.slice(0, -1), 'Southern Cross', 'Flinders Street']
           } else {
-            lineStops = ['Flinders Street', 'Southern Cross', ...lineStops.slice(1)]
+            lineStops = [...lineStops.slice(0, -1), 'Southern Cross']
           }
         } else {
-          if (isUp) {
-            lineStops = [...lineStops.slice(0, -1), 'Southern Cross']
-          } else {
-            lineStops = ['Southern Cross', ...lineStops.slice(1)]
-          }
+          lineStops = ['Flinders Street', 'Southern Cross', ...lineStops.slice(1)]
         }
       } else if (lineName === 'Frankston') {
         if (isUp) {
