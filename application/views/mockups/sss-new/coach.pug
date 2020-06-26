@@ -1,0 +1,25 @@
+html
+  head
+    script(src='/static/scripts/util.js')
+    script(src='/static/scripts/mockups/sss-new/coach.js' async)
+    script(src='/static/scripts/mockups/pids-utils.js') 
+    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
+    link(rel='stylesheet' href='/static/css/mockups/sss-new/coach.css')
+    link(rel='stylesheet' href='/static/css/mockups/16-9-pids-base.css')
+      
+    link(rel='preload' as='image' href='/static/images/mockups/announcements.svg')
+  body.rotated
+    div(style='display: none;').fullMessage
+      img(src='/static/images/mockups/announcements.svg')
+      p Please Listen for Announcements
+    div.content
+      div.topLineBanner
+      div.heading
+        p.title Regional Coach Departures
+        p.bays Coach Bays 59, 60, 61 &amp; 62
+      div.departures
+        for i in [59, 60, 61, 62]
+          div(data-bay=`Bay ${i}`).departureData
+            p.title Bay #{i} - No Departures
+            p.stopsAt Stops At: --
+            p.information --
