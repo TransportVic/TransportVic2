@@ -86,6 +86,8 @@ async function getVNETDepartures(direction, db) {
     const originStation = await getStationFromVNETName(originVNETName, db)
     const destinationStation = await getStationFromVNETName(destinationVNETName, db)
 
+    if (!originStation || !destinationStation) return // Apparently origin or dest is sometimes unknown
+
     let originVLinePlatform = originStation.bays.find(bay => bay.mode === 'regional train')
     let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train')
 
