@@ -145,7 +145,8 @@ module.exports = class MainServer {
       'mockups/Metro-LED-PIDS': '/mockups/metro-led-pids',
       'mockups/SouthernCross': '/mockups/sss',
 
-      'mockups/SSSCoachBay': '/mockups/sss-new/coach',
+      'mockups/sss-new/SSSNew': '/mockups/sss-new',
+      'mockups/sss-new/SSSCoachBay': '/mockups/sss-new/coach',
 
       'jmss-screens/BigScreen': '/jmss-screens/big-screen',
 

@@ -97,7 +97,12 @@ function setupClock() {
 
 $.ready(() => {
   let start = parseInt(search.query.start) || 59
-  bays = [start, start + 1, start + 2, start + 3]
+  let size = parseInt(search.query.size) || 4
+
+  bays = []
+  for (let i = start; i < start + size; i++) {
+    bays.push(i)
+  }
 
   updateBody()
   setInterval(updateBody, 1000 * 30)

@@ -54,6 +54,14 @@ div.platform.fss-escalator iframe {
   height: calc(15vw / 9 * 16);
 }
 
+div.platform.sss-new-coach, div.platform.sss-new-coach * {
+  width: 23vw;
+}
+
+div.platform.sss-new-coach iframe {
+  height: calc(23vw / 9 * 16);
+}
+
 div.platform.fss-platform, div.platform.fss-platform *, div.platform.suburban-16-9-list, div.platform.suburban-16-9-list * {
   width: 18vw;
 }

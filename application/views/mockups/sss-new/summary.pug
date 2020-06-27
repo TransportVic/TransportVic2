@@ -1,0 +1,20 @@
+html
+  head
+    link(rel='stylesheet' href='/static/css/mockups/summary.css')
+  body
+    div.container
+      div.platform.sss-new-coach
+        - let url = '/mockups/sss-new/coach?start=56&size=3'
+        div.title
+          a(href=url) /SSS/coach/56-58
+        iframe(src=url)
+          
+      - for (let i = 59; i <= 70; i += 4) {
+      -
+        let url = `/mockups/sss-new/coach?start=${i}`
+
+      div.platform.sss-new-coach
+        div.title
+          a(href=url)=`/SSS/coach/${i}-${i + 4}`
+        iframe(src=url)
+      - }

@@ -1,16 +1,20 @@
 const express = require('express')
 const router = new express.Router()
-const getCoachDepartures = require('../../../modules/regional-coach/get-departures')
-const destinationOverrides = require('../../../additional-data/coach-stops')
-const termini = require('../../../additional-data/termini-to-lines')
+const getCoachDepartures = require('../../../../modules/regional-coach/get-departures')
+const destinationOverrides = require('../../../../additional-data/coach-stops')
+const termini = require('../../../../additional-data/termini-to-lines')
 const url = require('url')
 const querystring = require('querystring')
 
 router.get('/', async (req, res) => {
   let query = querystring.parse(url.parse(req.url).query)
   let start = parseInt(query.start) || 59
+  let size = parseInt(query.size) || 4
 
-  let bays = [start, start + 1, start + 2, start + 3]
+  let bays = []
+  for (let i = start; i < start + size; i++) {
+    bays.push(i)
+  }
 
   res.render('mockups/sss-new/coach', { bays })
 })

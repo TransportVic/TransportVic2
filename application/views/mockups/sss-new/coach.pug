@@ -19,10 +19,10 @@ html
           span --:--
       div.heading
         p.title Regional Coach Departures
-        p.bays Coach Bays #{bays.slice(0, 3).join(', ')} &amp; #{bays[3]}
+        p.bays Coach Bays #{bays.slice(0, -1).join(', ')} &amp; #{bays.slice(-1)}
       div.departures
         for i in bays
           div(data-bay=`Bay ${i}`).departureData
             p.title Bay #{i} - No Departures
-            p.stopsAt Stops At: --
-            p.information --
+            p.stopsAt
+            p.information
