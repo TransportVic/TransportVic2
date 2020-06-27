@@ -25,29 +25,50 @@ div.content {
   color: white !important;
 }
 
-div.topLineBanner {
+div.top {
   width: calc(var(--width) * 0.93);
-  height: calc(var(--height) * 0.02);
-  border-radius: calc(var(--width) * 0.007);
+  height: calc(var(--height) * 0.027);
   margin-top: calc(var(--height) * 0.01);
+}
+
+div.topLineBanner {
+  width: calc(var(--width) * 0.79);
+  height: calc(var(--height) * 0.027);
+  border-radius: calc(var(--width) * 0.007);
   background-color: #9582b5;
+  display: inline-block;
+}
+
+div.clock {
+  width: calc(var(--width) * 0.135);
+  height: calc(var(--height) * 0.027);
+  border-radius: calc(var(--width) * 0.007);
+
+  background-color: white;
+  color: black;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  float: right;
+
+  font-size: calc(var(--height) * 0.024);
 }
 
 div.heading {
-  margin-top: calc(var(--height) * 0.005);
   width: calc(var(--width) * 0.93);
   display: flex;
   flex-direction: column;
 }
 
 div.heading p.title {
-  font-size: calc(var(--height) * 0.04);
+  font-size: calc(var(--height) * 0.037);
   margin-top: calc(var(--height) * 0.003);
   font-family: "NetworkSansBold";
 }
 
 div.heading p.bays {
-  font-size: calc(var(--height) * 0.034);
+  font-size: calc(var(--height) * 0.032);
   font-family: "NetworkSansRegular";
 }
 
@@ -75,8 +96,6 @@ div.departureData p.title {
 
 div.departureData p.stopsAt {
   font-size: calc(var(--height) * 0.026);
-  line-height: calc(var(--height) * 0.031);
-  margin-top: calc(var(--height) * -0.003);
   letter-spacing: calc(var(--width) * 0.0005);
   font-family: "NetworkSansRegular";
 }
