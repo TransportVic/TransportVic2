@@ -10,6 +10,7 @@ const datamartModes = require('../datamart-modes')
 const operatorOverrides = require('../../additional-data/operator-overrides')
 const ptvAPI = require('../../ptv-api')
 const loopDirections = require('../../additional-data/loop-direction')
+const gtfsUtils = require('../../gtfs-utils')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
@@ -45,9 +46,10 @@ database.connect({
   let routeData = utils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'routes.txt')).toString())
   let shapeFiles = fs.readdirSync(splicedGTFSPath).filter(e => e.startsWith('shapes'))
 
-  await async.forEachSeries(shapeFiles, async shapeFile => {
-    let shapeJSON = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, shapeFile)))
-    await loadRoutes(routes, gtfsID, routeData, shapeJSON, (routeGTFSID, routeNumber, routeName) => {
+  let allRoutes = routeData.map(r => gtfsUtils.simplifyRouteGTFSID(r[0])).filter((e, i, a) => a.indexOf(e) === i)
+
+  async function load(shapeJSON) {
+    return await loadRoutes(routes, gtfsID, routeData, shapeJSON, (routeGTFSID, routeNumber, routeName) => {
       if (operatorOverrides[routeGTFSID]) return operatorOverrides[routeGTFSID]
       if (serviceLookup[routeGTFSID]) return serviceLookup[routeGTFSID].operator
 
@@ -81,9 +83,30 @@ database.connect({
       if (routeGTFSID === '6-GVL') return null
       return routeNumber
     })
+  }
+
+  let routeShapesSeen = []
+
+  await async.forEachSeries(shapeFiles, async shapeFile => {
+    let shapeJSON = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, shapeFile)))
+    routeShapesSeen = routeShapesSeen.concat(await load(shapeJSON))
   })
 
-  await updateStats(datamartMode + '-routes', routeData.length)
-  console.log(`Completed loading in ${routeData.length} ${datamartMode} bus routes`)
+  await async.forEachSeries(allRoutes, async routeGTFSID => {
+    if (!routeShapesSeen.includes(routeGTFSID)) {
+      console.log('Found that', routeGTFSID, 'does not have a route shape programmed in, giving it a default one')
+
+      await load([{
+        shapeID: `${routeGTFSID}-mjp-1.1.H`,
+        routeGTFSID: routeGTFSID,
+        path: [[ 144, -38 ]],
+        length: 1
+      }])
+      routeShapesSeen.push(routeGTFSID)
+    }
+  })
+
+  await updateStats(datamartMode + '-routes', routeShapesSeen.length)
+  console.log(`Completed loading in ${routeShapesSeen.length} ${datamartMode} bus routes`)
   process.exit()
 })

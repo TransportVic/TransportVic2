@@ -16,6 +16,8 @@ module.exports = {
   "4-4X9": ["Sita Bus Lines"], // 459
   "4-46z": ["Kastoria Bus Lines"], // 462
   "4-462": ["Kastoria Bus Lines"],
+  "4-463": ["Kastoria Bus Lines"],
+  "4-469": ["Kastoria Bus Lines"],
   "4-47b": ["Kastoria Bus Lines"], // 476
   "4-47I": ["Tullamarine Bus Lines"], // 471
   "4-48S": ["Tullamarine Bus Lines"], // 484
@@ -30,9 +32,10 @@ module.exports = {
   "4-800": ["Ventura Bus Lines"],
   "4-80O": ["Ventura Bus Lines"],
   "4-834": ["Ventura Bus Lines"],
+  "4-84Z": ["Ventura Bus Lines"], // 842
   "4-84E": ["Ventura Bus Lines"], // 843
   "4-84F": ["Ventura Bus Lines"], // 845
-  "4-84Z": ["Ventura Bus Lines"], // 842
+  "4-85X": ["Ventura Bus Lines"], // 857
   "4-86l": ["Ventura Bus Lines"], // 861
   "4-900": ["CDC Melbourne", "Ventura Bus Lines"],
   "4-903": ["Transdev Melbourne"],

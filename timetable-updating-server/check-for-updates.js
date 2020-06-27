@@ -60,13 +60,15 @@ function spawnProcess(path, finish) {
     process.stderr.write(data.toString())
   })
   childProcess.on('close', code => {
-    console.log(`finished with code ${code}`)
+    if (finish) {
+      finish()
+    } else {
+      console.log(`finished with code ${code}`)
 
-    broadcast({
-      type: 'complete'
-    })
-
-    finish()
+      broadcast({
+        type: 'complete'
+      })
+    }
   })
 }
 
@@ -77,15 +79,23 @@ async function updateTimetables() {
       let stops = database.getCollection('stops')
       let routes = database.getCollection('routes')
       let gtfsTimetables = database.getCollection('gtfs timetables')
+      let liveTimetables = database.getCollection('live timetables')
+
       try {
         await stops.dropCollection()
         await routes.dropCollection()
         await gtfsTimetables.dropCollection()
+        await liveTimetables.dropCollection()
       } catch (e) {
         console.log(e)
       }
 
+      broadcast({
+        type: 'log-newline',
+        line: 'Dropped stops, routes and gtfs timetables'
+      })
       console.log('Dropped stops, routes and gtfs timetables')
+
       spawnProcess(__dirname + '/../load-gtfs/load-all.sh', () => {
         console.log('Done!')
         process.exit()
