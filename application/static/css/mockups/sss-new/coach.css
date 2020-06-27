@@ -52,6 +52,7 @@ div.clock {
   justify-content: center;
   float: right;
 
+  font-family: "NetworkSansBold";
   font-size: calc(var(--height) * 0.024);
 }
 

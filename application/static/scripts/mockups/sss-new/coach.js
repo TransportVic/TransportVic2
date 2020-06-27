@@ -5,15 +5,13 @@ function formatTime(time) {
   let minutes = time.getMinutes()
   let mainTime = ''
 
-  mainTime += (hours % 12) || 12
+  if (hours < 10) mainTime += '0'
+  mainTime += hours
+
   mainTime += ':'
+
   if (minutes < 10) mainTime += '0'
   mainTime += minutes
-
-  if (time.getHours() >= 12)
-    mainTime += 'pm'
-  else
-    mainTime += 'am'
 
   return mainTime
 }
@@ -78,7 +76,21 @@ function updateBody() {
   })
 }
 
+function setTime() {
+  $('.clock span').textContent = formatTime(new Date())
+}
+
+function setupClock() {
+  setTime()
+  let msToNextSecond = 1000 - (+new Date() % 1000)
+  setTimeout(() => {
+    setTime()
+    setInterval(setTime, 1000)
+  }, msToNextSecond)
+}
+
 $.ready(() => {
   updateBody()
   setInterval(updateBody, 1000 * 30)
+  setupClock()
 })
