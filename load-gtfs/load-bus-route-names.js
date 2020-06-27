@@ -34,6 +34,7 @@ database.connect({
   }).toArray()
 
   let loopServices = singleDirection.filter(route => {
+    if (!route.directions[0]) return false
     let {stops} = route.directions[0]
     return stops[0].stopName === stops.slice(-1)[0].stopName
   })
