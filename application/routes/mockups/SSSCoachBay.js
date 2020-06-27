@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
       departureTime: departure.trip.departureTime,
       stopsAt,
       isTrainReplacement: departure.isTrainReplacement,
-      connections: departure.trip.connections.map(connection => ({
+      connections: (departure.trip.connections || []).map(connection => ({
         changeAt: destinationOverrides[connection.changeAt],
         for: destinationOverrides[connection.for]
       }))
