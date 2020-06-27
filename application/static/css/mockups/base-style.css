@@ -2,7 +2,7 @@
   font-family: "NetworkSansBold";
   font-display: fallback;
   font-style: bold;
-  src: local('Network Sans 2018 Bold'), local('Network Sans K Bold'), local('Network Sans Bold'), local('Network Sans 2019 Bold'), local('Liberation Sans'), local('Helvetica Neue'), local('Arial');
+  src: local('Network Sans K'), local('NetworkSans-K-Bold'), local('Network Sans 2018 Bold'), local('Network Sans Bold'), local('Network Sans 2019 Bold'), local('Liberation Sans'), local('Helvetica Neue'), local('Arial');
 }
 
 @font-face {
@@ -10,7 +10,7 @@
   font-display: fallback;
   font-style: medium;
   font-weight: medium;
-  src: local('Network Sans 2018 Medium'), local('Network Sans K Medium'), local('Network Sans Medium'), local('Network Sans 2019 Medium'), local('Liberation Sans'), local('Helvetica Neue'), local('Arial');
+  src: local('Network Sans K'), local('NetworkSans-K-Medium'), local('Network Sans 2018 Medium'),local('Network Sans Medium'), local('Network Sans 2019 Medium'), local('Liberation Sans'), local('Helvetica Neue'), local('Arial');
 }
 
 @font-face {
@@ -18,7 +18,7 @@
   font-display: fallback;
   font-style: normal;
   font-weight: normal;
-  src: local('Network Sans 2018 Regular'), local('Network Sans K Regular'), local('Network Sans Regular'), local('Network Sans 2019 Regular'), local('Liberation Sans'), local('Helvetica Neue'), local('Arial');
+  src: local('Network Sans K'), local('NetworkSans-K-Regular'), local('Network Sans 2018 Regular'), local('Network Sans Regular'), local('Network Sans 2019 Regular'), local('Liberation Sans'), local('Helvetica Neue'), local('Arial');
 }
 
 @font-face {

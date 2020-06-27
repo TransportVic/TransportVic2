@@ -48,7 +48,6 @@ div.heading p.title {
 
 div.heading p.bays {
   font-size: calc(var(--height) * 0.034);
-  margin-top: calc(var(--height) * 0.003);
   font-family: "NetworkSansRegular";
 }
 
@@ -58,32 +57,33 @@ div.departures {
   width: var(--width);
   height: 100%;
   align-items: center;
+  margin-top: calc(var(--height) * 0.005);
 }
 
 div.departureData {
-  margin-top: calc(var(--height) * 0.01);
+  margin-bottom: calc(var(--height) * 0.01);
   border-top: calc(var(--height) * 0.003) solid white;
   height: calc(var(--height) * 0.205);
   width: calc(var(--width) * 0.93);
 }
 
 div.departureData p.title {
-  font-size: calc(var(--height) * 0.035);
+  font-size: calc(var(--height) * 0.032);
   margin-top: calc(var(--height) * 0.003);
   font-family: "NetworkSansBold";
 }
 
 div.departureData p.stopsAt {
-  font-size: calc(var(--height) * 0.027);
-  line-height: calc(var(--height) * 0.03);
+  font-size: calc(var(--height) * 0.026);
+  line-height: calc(var(--height) * 0.031);
   margin-top: calc(var(--height) * -0.003);
-  letter-spacing: calc(var(--width) * 0.001);
+  letter-spacing: calc(var(--width) * 0.0005);
   font-family: "NetworkSansRegular";
 }
 
 div.departureData p.information {
   font-size: calc(var(--height) * 0.03);
-  margin-top: calc(var(--height) * 0.001);
+  margin-top: calc(var(--height) * -0.003);
   font-family: "NetworkSansBold";
 }
 
