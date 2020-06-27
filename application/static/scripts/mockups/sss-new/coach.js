@@ -61,12 +61,18 @@ function updateBody() {
       if (departure) {
         $('p.title', departureDiv).textContent = `Bay ${bay} - ${departure.departureTime} ${departure.destination}`
         $('p.stopsAt', departureDiv).textContent = 'Stops At: ' + departure.stopsAt.join(', ')
+        $('p.information', departureDiv).innerHTML = ''
+
         if (departure.isTrainReplacement) {
-          $('p.information', departureDiv).textContent = 'Train Replacement Coach'
+          $('p.information', departureDiv).innerHTML += '<span class="important">Train Replacement Coach</span> '
           $('p.information', departureDiv).className = 'information important'
         } else {
           $('p.information', departureDiv).textContent = ''
         }
+
+        departure.connections.forEach(connection => {
+          $('p.information', departureDiv).innerHTML += `<span>Change at ${connection.changeAt} for ${connection.for}</span> `
+        })
       } else {
         $('p.title', departureDiv).textContent = `Bay ${bay} - No Departures`
         $('p.stopsAt', departureDiv).textContent = ''

@@ -1,14 +1,11 @@
-const fs = require('fs')
 const async = require('async')
-const path = require('path')
 const DatabaseConnection = require('../../../database/DatabaseConnection')
 const config = require('../../../config.json')
 const utils = require('../../../utils')
 
 const updateStats = require('../../utils/stats')
 
-let stops, timetables
-let stationCache = {}
+let timetables
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
@@ -29,6 +26,7 @@ async function findConnections(changeoverPoint) {
     let operationDay = trip.operationDays[0]
 
     let connection = await timetables.findDocument({
+      mode: 'metro train',
       direction: trip.direction,
       operationDays: operationDay,
       origin: changeoverPoint,
@@ -55,7 +53,6 @@ async function findConnections(changeoverPoint) {
 
     if (connection) {
       connectionsMade++
-      if (!trip.connections) return // vline
       if (!trip.connections.find(c => c.runID === connection.runID)) {
         trip.connections.push({
           runID: connection.runID,
@@ -83,7 +80,6 @@ async function findConnections(changeoverPoint) {
 database.connect({
   poolSize: 100
 }, async err => {
-  stops = database.getCollection('stops')
   timetables = database.getCollection('timetables')
 
   let count = 0

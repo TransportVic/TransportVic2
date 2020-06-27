@@ -33,7 +33,11 @@ router.post('/', async (req, res) => {
       destination: departure.destination.replace(/Railway Station.*/, '').trim(),
       departureTime: departure.trip.departureTime,
       stopsAt,
-      isTrainReplacement: departure.isTrainReplacement
+      isTrainReplacement: departure.isTrainReplacement,
+      connections: departure.trip.connections.map(connection => ({
+        changeAt: destinationOverrides[connection.changeAt],
+        for: destinationOverrides[connection.for]
+      }))
     }
   })
   res.json(departures)
