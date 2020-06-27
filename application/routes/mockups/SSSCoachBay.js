@@ -3,9 +3,16 @@ const router = new express.Router()
 const getCoachDepartures = require('../../../modules/regional-coach/get-departures')
 const destinationOverrides = require('../../../additional-data/coach-stops')
 const termini = require('../../../additional-data/termini-to-lines')
+const url = require('url')
+const querystring = require('querystring')
 
 router.get('/', async (req, res) => {
-  res.render('mockups/sss-new/coach')
+  let query = querystring.parse(url.parse(req.url).query)
+  let start = parseInt(query.start) || 59
+
+  let bays = [start, start + 1, start + 2, start + 3]
+
+  res.render('mockups/sss-new/coach', { bays })
 })
 
 router.post('/', async (req, res) => {

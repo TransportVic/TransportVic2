@@ -19,9 +19,9 @@ html
           span --:--
       div.heading
         p.title Regional Coach Departures
-        p.bays Coach Bays 59, 60, 61 &amp; 62
+        p.bays Coach Bays #{bays.slice(0, 3).join(', ')} &amp; #{bays[3]}
       div.departures
-        for i in [59, 60, 61, 62]
+        for i in bays
           div(data-bay=`Bay ${i}`).departureData
             p.title Bay #{i} - No Departures
             p.stopsAt Stops At: --

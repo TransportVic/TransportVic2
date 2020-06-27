@@ -1,4 +1,4 @@
-let bays = ["59", "60", "61", "62"]
+let bays = []
 
 function formatTime(time) {
   let hours = time.getHours()
@@ -96,6 +96,9 @@ function setupClock() {
 }
 
 $.ready(() => {
+  let start = parseInt(search.query.start) || 59
+  bays = [start, start + 1, start + 2, start + 3]
+
   updateBody()
   setInterval(updateBody, 1000 * 30)
   setupClock()
