@@ -329,6 +329,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
         destination = 'Southern Cross'
     }
 
+    if (routeID === 99 && stationName === 'flinders street') destination = 'City Loop'
+
     let forming = null
     if (isFormingNewTrip) {
       forming = await departureUtils.getStaticDeparture(runID, db)
