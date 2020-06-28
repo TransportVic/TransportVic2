@@ -11,6 +11,7 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 async function findConnections(changeoverPoint) {
   let shorts = await timetables.findDocuments({
+    mode: 'metro train',
     'stopTimings.stopName': changeoverPoint
   }).toArray()
 
