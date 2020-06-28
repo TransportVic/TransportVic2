@@ -74,6 +74,10 @@ async function findConnections(changeoverPoint) {
           if (trip.direction !== connection.direction) return
         }
 
+        if (trip.routeGTFSID.slice(2) === connection.routeGTFSID.slice(2)) {
+          if (trip.gtfsDirection !== connection.gtfsDirection) return
+        }
+
         if (trip.origin.includes('Southern Cross') && connection.destination.includes('Southern Cross')) return
         if (trip.destination.includes('Southern Cross') && connection.destination.includes('Southern Cross')) return
         if (trip.origin.includes('Southern Cross') && connection.origin.includes('Southern Cross')) return
