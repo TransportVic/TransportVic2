@@ -306,7 +306,7 @@ function asyncPause(milliseconds) {
   })
 }
 
-let shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 140 // px
+let shiftWidth
 let connectionsP
 
 let connectionsWidth = 0, connectionsSize = 0
@@ -349,5 +349,6 @@ $.ready(() => {
   updateBody(true)
   setInterval(updateBody, 1000 * 30)
 
+  shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 140 // px
   connectionsP = $('p.firstStoppingType')
 })
