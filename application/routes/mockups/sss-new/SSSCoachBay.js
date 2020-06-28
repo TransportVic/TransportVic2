@@ -5,6 +5,7 @@ const destinationOverrides = require('../../../../additional-data/coach-stops')
 const termini = require('../../../../additional-data/termini-to-lines')
 const url = require('url')
 const querystring = require('querystring')
+const moment = require('moment')
 
 router.get('/', async (req, res) => {
   let query = querystring.parse(url.parse(req.url).query)
@@ -19,24 +20,28 @@ router.get('/', async (req, res) => {
   res.render('mockups/sss-new/coach', { bays })
 })
 
+function getHumanName(fullStopName, stopSuburb='') {
+  let stopName = fullStopName.replace('Shopping Centre', 'SC')
+  let humanName = destinationOverrides[fullStopName] || destinationOverrides[`${fullStopName} (${stopSuburb})`] || fullStopName
+  if (humanName.includes('Railway Station')) {
+    humanName = humanName.replace(/Railway Station.*/, '').trim()
+  }
+
+  return humanName
+}
+
 router.post('/', async (req, res) => {
   let southernCross = await res.db.getCollection('stops').findDocument({
     stopName: "Southern Cross Coach Terminal/Spencer Street"
   })
 
-  let departures = await getCoachDepartures(southernCross, res.db)
+  let departures = JSON.parse(JSON.stringify(await getCoachDepartures(southernCross, res.db)))
+
   departures = departures.map(departure => {
     let stopsAt = departure.trip.stopTimings.filter(stop => {
       return stop.stopConditions.dropoff === 0
-    }).map(stop => {
-      let stopname = stop.stopName.replace('Shopping Centre', 'SC')
-      let humanName = destinationOverrides[stopname] || destinationOverrides[`${stopname} (${stop.suburb})`] || stopname
-      if (humanName.includes('Railway Station')) {
-        humanName = humanName.replace(/Railway Station.*/, '').trim()
-      }
-
-      return humanName
-    }).filter((e, i, a) => a.indexOf(e) === i).slice(1)
+    }).map(stop => getHumanName(stop.stopName, stop.suburb))
+      .filter((e, i, a) => a.indexOf(e) === i).slice(1)
 
     if (departure.isTrainReplacement) {
       let bay = '64'
@@ -76,6 +81,8 @@ router.post('/', async (req, res) => {
       departure.bay = 'Bay ' + bay
     } else if (!departure.bay) departure.bay = 'Bay 68'
 
+    let departureDay = moment.tz(departure.scheduledDepartureTime, 'Australia/Melbourne').format('YYYYMMDD')
+
     return {
       bay: departure.bay,
       destination: departure.destination.replace(/Railway Station.*/, '').trim(),
@@ -83,10 +90,10 @@ router.post('/', async (req, res) => {
       stopsAt,
       isTrainReplacement: departure.isTrainReplacement,
       connections: (departure.trip.connections || []).filter(connection => {
-        return connection.operationDays.includes(departure.trip.operationDay)
+        return connection.operationDays.includes(departureDay)
       }).map(connection => ({
-        changeAt: destinationOverrides[connection.changeAt],
-        for: destinationOverrides[connection.for]
+        changeAt: getHumanName(connection.changeAt),
+        for: getHumanName(connection.for)
       }))
     }
   })

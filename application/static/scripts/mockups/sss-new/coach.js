@@ -70,9 +70,9 @@ function updateBody() {
           $('p.information', departureDiv).textContent = ''
         }
 
-        departure.connections.forEach(connection => {
-          $('p.information', departureDiv).innerHTML += `<span>Change at ${connection.changeAt} for ${connection.for}</span> `
-        })
+        $('p.information', departureDiv).innerHTML += departure.connections.map(connection => {
+          return `<span>Change at ${connection.changeAt} for ${connection.for}</span>`
+        }).join(', ')
       } else {
         $('p.title', departureDiv).textContent = `Bay ${bay} - No Departures`
         $('p.stopsAt', departureDiv).textContent = ''
