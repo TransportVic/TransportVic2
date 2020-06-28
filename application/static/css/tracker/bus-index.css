@@ -16,7 +16,7 @@ h1, h2, h3, h4 {
 }
 
 label {
-  font-size: calc(0.9vw + 0.9vh);
+  font-size: calc(0.9vw + 1.2vh);
 }
 
 div.inputSection {

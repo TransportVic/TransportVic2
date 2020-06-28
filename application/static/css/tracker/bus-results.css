@@ -15,8 +15,14 @@ h1, h2, h3, h4 {
   margin: 0;
 }
 
+h1 {
+  font-size: calc(2vw + 1.9vh);
+}
+
 div.trip a {
-  font-size: calc(1vw + 1vh);
+  display: inline-block;
+  font-size: calc(0.9vw + 1.7vh);
+  margin-top: calc(0.1vw + 0.4vh);
 }
 
 div.trip.inactive a {
@@ -26,6 +32,6 @@ div.trip.inactive a {
 
 a.pastDeployment {
   display: inline-block;
-  font-size: calc(1vw + 1vh);
-  margin: calc(0.25vw + 0.25vh);
+  font-size: calc(0.9vw + 1.7vh);
+  margin-top: calc(0.4vw + 0.4vh);
 }
