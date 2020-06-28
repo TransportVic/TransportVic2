@@ -256,7 +256,7 @@ function updateBody(firstTime) {
           stopScrolling = true
 
         clearTimeout(connectionsScrollTimeout)
-        drawBottomRow()
+        scrollConnections()
       }
     }
 
@@ -304,7 +304,7 @@ function asyncPause(milliseconds) {
   })
 }
 
-let shiftWidth = window.innerWidth / 200 // px
+let shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 140 // px
 let connectionsP
 
 let connectionsWidth = 0, connectionsSize = 0
@@ -328,7 +328,7 @@ async function animateScrollingText() {
   connectionsP.scrollLeft = 0
 }
 
-function drawBottomRow() {
+function scrollConnections() {
   if (stopScrolling) return
 
   connectionsWidth = parseInt(getComputedStyle(connectionsP).width)
@@ -339,7 +339,7 @@ function drawBottomRow() {
   }
 
   connectionsScrollTimeout = setTimeout(async () => {
-    drawBottomRow(await animateScrollingText())
+    scrollConnections(await animateScrollingText())
   }, 2000)
 }
 
