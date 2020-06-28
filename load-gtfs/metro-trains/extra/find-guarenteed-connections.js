@@ -22,14 +22,15 @@ async function findConnections(changeoverPoint) {
     let validTimes = []
     for (let i = 2; i <= 7; i++) {
       validTimes.push((stop.arrivalTimeMinutes + i) % 1440)
+      validTimes.push(stop.arrivalTimeMinutes + i)
     }
-
-    let operationDay = trip.operationDays[0]
 
     let connection = await timetables.findDocument({
       mode: 'metro train',
       direction: trip.direction,
-      operationDays: operationDay,
+      operationDays: {
+        $in: trip.operationDays
+      },
       origin: changeoverPoint,
       stopTimings: {
         $elemMatch: {
