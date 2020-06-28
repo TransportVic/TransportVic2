@@ -1,0 +1,51 @@
+for service in services
+  -
+    let serviceDepartures = groupedDepartures[service]
+    let destinations = Object.keys(serviceDepartures).sort((a, b) => a.length - b.length)
+    let hasNumber = !!service
+  for destination in destinations.sort((a, b) => serviceDepartures[a][0].actualDepartureTime - serviceDepartures[b][0].actualDepartureTime)
+    -
+      let destinationDepartures = serviceDepartures[destination]
+      let departures = destinationDepartures.slice(0, 4)
+      let firstDeparture = destinationDepartures[0]
+      let departureDataWidth = `width: calc(100vw - (3.2vw + 3.2vh) * ${departures.length}${hasNumber ? ' - (5.25vw + 5.25vh)' : ''} - (1vw + 1vh) - 1.5vw)`
+    div(class=`departure${hasNumber ? '' : ' no-number'}`)
+      if hasNumber
+        a(class=`leftContainer platform ${classGen(firstDeparture)}`)
+          if firstDeparture.loopDirection
+            span.topText=firstDeparture.loopDirection
+          else if firstDeparture.routeDetails
+            span.topText=firstDeparture.routeDetails
+          span.bigNumber=firstDeparture.routeNumber
+          if firstDeparture.bay
+            span.bottomText=firstDeparture.bay
+      a(href=firstDeparture.destinationURL).departureInfo
+        if !hasNumber
+          span.routeName(style=departureDataWidth)=firstDeparture.trip.routeName
+        span.towards Towards
+        span.destination(style=departureDataWidth)=firstDeparture.destination
+        if firstDeparture.guidanceText
+          span.info.smaller(style=departureDataWidth)=firstDeparture.guidanceText
+        if firstDeparture.viaText && hasNumber
+          span.info.smaller(style=departureDataWidth)=firstDeparture.viaText
+      div.timings
+        for i in Array(4 - departures.length)
+          a.timing.mini(style='display: none')
+        for departure in departures
+          a(href=departure.tripURL class=`timing mini ${departure.headwayDevianceClass}`)
+            div.stats
+              if departure.vehicleDescriptor.operator === 'Yarra Trams'
+                if departure.tram.data.ac
+                  img(src='/static/images/decals/ac.svg')
+                if departure.tram.data.lf
+                  img(src='/static/images/decals/wheelchair.svg')
+            span=departure.prettyTimeToArrival
+            span=departure.scheduledDepartureTime.format('HH:mm')
+            if departure.vehicleDescriptor
+              if departure.vehicleDescriptor.supplier === 'Smartrak' || departure.isBusMinderOverride
+                if departure.busRego
+                  span.rego=`#${departure.busRego}`
+                else
+                  span.rego=`${departure.vehicleDescriptor.id}`
+              else if departure.vehicleDescriptor.operator === 'Yarra Trams'
+                span.rego=`${departure.tram.model}.${departure.tram.id}`

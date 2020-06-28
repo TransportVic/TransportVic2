@@ -40,83 +40,25 @@ append content
     }
     let cityLoopStationNames = Object.values(cityLoopStationAbbreviations).concat('City Loop Railway Station')
     
-  div#departures
-    -
-      let stopModes = station.bays.map(e => e.mode).filter((e, i, a) => a.indexOf(e) === i)
-      let iconMap = {
-        'regional train': 'vline',
-        'metro train': 'metro',
-        'regional coach': 'coach'
-      }
-    if stopModes.length > 1
-      div#modeSwitch
-        for mode in stopModes
-          -
-            let url = `/${iconMap[mode] || mode.replace(' ', '-')}/timings/`
-            if (mode === 'bus' || mode === 'tram') 
-              url += `${station.codedSuburb[0]}/`
-            url += station.codedName
-            if (mode.includes('train'))
-              url = url.slice(0, -16)
-          a(href=url class=`modeSwitchType ${mode.replace(' ', '-')} ${mode === 'metro train' ? '' : 'inactive'}`)
-            img(src=`/static/images/clear-icons/${iconMap[mode] || mode}.svg` alt='')
-            span=mode
-    for departure in departures
-      div.departure
+  -
+    let stopModes = station.bays.map(e => e.mode).filter((e, i, a) => a.indexOf(e) === i)
+    let iconMap = {
+      'regional train': 'vline',
+      'metro train': 'metro',
+      'regional coach': 'coach'
+    }
+  if stopModes.length > 1
+    div#modeSwitch
+      for mode in stopModes
         -
-          let stopName = station.stopName
-          let indexOfCurrentStation = departure.trip.stopTimings.map(stop => stop.stopName).indexOf(stopName)
-          let stopsAt = departure.trip.stopTimings.filter((_, i) => i > indexOfCurrentStation).map(stop => stop.stopName)
-          let cityLoopStationFullNames = departure.cityLoopConfig.map(stn => cityLoopStationAbbreviations[stn])
-
-          stopsAt = stopsAt.filter(station => !cityLoopStationNames.includes(station))
-          
-          if (departure.trip.direction === 'Up')
-            stopsAt = stopsAt.concat(cityLoopStationFullNames)
-          else if (cityLoopStationNames.includes(station.stopName)) {
-            indexOfCurrentStation = cityLoopStationFullNames.indexOf(stopName)
-            stopsAt = cityLoopStationFullNames.filter((stn, i) => i > indexOfCurrentStation).concat(stopsAt)
-          }
-
-          stopsAt = stopsAt.filter(Boolean).filter((e,i,a) => a.indexOf(e) === i)
-          if (departure.forming) {
-            stopsAt = stopsAt.concat(departure.forming.stopTimings.map(stop => stop.stopName))
-              .filter((e, i, a) => a.indexOf(e) === i)
-          }
-          let routeName = departure.trip.routeName
-          if (departure.forming)
-            routeName = departure.forming.routeName
-        input(type='hidden' name='stops-at' value=stopsAt.join(','))
-        input(type='hidden' name='platform' value=departure.platform || '')
-        input(type='hidden' name='run' value=departure.runID)
-        input(type='hidden' name='line' value=routeName)
-        if departure.cancelled
-          input(type='hidden' name='cancelled')
-        a(class=`leftContainer platform ${departure.codedLineName}-line`)
-          if departure.isTrainReplacement
-            span.topText Rail Bus
-            img(src='/static/images/clear-icons/bus.svg')
-          else
-            span.topText Platform
-            span.bigNumber=departure.platform || '?'
-        a.departureInfo
-          span.towards=`${routeName} Line towards`
-          span.destination=departure.destination
-          
-          if departure.cancelled
-            span.info.cancelled CANCELLED
-          else if departure.trip.message
-              span.info.cancelled.noClamp=departure.trip.message
-          else if departure.isTrainReplacement
-            span.info.cancelled Rail Replacement Bus
-          else
-            
-            -
-              let {trip} = departure
-              let isUpTrip = (trip || {}).direction === 'Up' || trip.runID % 2 === 0
-            if cityLoopStationNames.includes(station.stopName) || isUpTrip
-              span.info=departure.cityLoopConfig.join(', ')
-        div.timings
-          a(class='timing ' + departure.headwayDevianceClass href=`/metro/run/${departure.tripURL}`)
-            span=departure.prettyTimeToArrival
-            span=departure.scheduledDepartureTime.format('HH:mm')
+          let url = `/${iconMap[mode] || mode.replace(' ', '-')}/timings/`
+          if (mode === 'bus' || mode === 'tram') 
+            url += `${station.codedSuburb[0]}/`
+          url += station.codedName
+          if (mode.includes('train'))
+            url = url.slice(0, -16)
+        a(href=url class=`modeSwitchType ${mode.replace(' ', '-')} ${mode === 'metro train' ? '' : 'inactive'}`)
+          img(src=`/static/images/clear-icons/${iconMap[mode] || mode}.svg` alt='')
+          span=mode
+  div#departures
+    include ./templates/metro-trains

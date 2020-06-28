@@ -50,13 +50,4 @@ append content
           img(src=`/static/images/clear-icons/${iconMap[mode] || mode}.svg` alt='')
           span=mode
   div#departures
-    for departure in departures
-      div.departure.no-number
-        a(href=departure.destinationURL).departureInfo
-          span.routeName=departure.trip.routeName
-          span.towards Towards
-          span.destination=departure.destination
-        div.timings
-          a(href=departure.tripURL).timing.unknown
-            span=departure.prettyTimeToArrival
-            span=departure.scheduledDepartureTime.format('HH:mm')
+    include ./templates/ferry
