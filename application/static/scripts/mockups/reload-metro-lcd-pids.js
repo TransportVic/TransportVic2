@@ -151,9 +151,9 @@ function updateBody(firstTime) {
       $('.firstDestination').className = 'firstDestination'
       let width = parseInt(getComputedStyle($('.firstDestination')).width)
       let vw = window.innerWidth / 100
-      if (width > 70*vw) {
+      if (width > 75*vw) {
         $('.firstDestination').className += ' smallest'
-      } else if (width > 55*vw) {
+      } else if (width > 68*vw) {
         $('.firstDestination').className += ' smaller'
       }
 

@@ -98,22 +98,22 @@ p.firstDestination {
   font-size: 10.75vw;
   margin-left: 0.5vw;
   font-family: "NetworkSansBold";
-  letter-spacing: -0.7vw;
+  letter-spacing: -0.2vw;
   white-space: nowrap;
 }
 
 p.firstDestination.smaller {
   font-family: "NetworkSansMedium";
-  letter-spacing: -0.15vw;
+  letter-spacing: -0.3vw;
   font-size: 9.5vw;
   margin-top: 0.7vw;
 }
 
 p.firstDestination.smallest {
   font-family: "NetworkSansMedium";
-  letter-spacing: -0.1vw;
-  font-size: 8vw;
-  margin-top: 2vw;
+  letter-spacing: -0.4vw;
+  font-size: 7.5vw;
+  margin-top: 2.5vw;
 }
 
 div.firstDepartureInfo {
@@ -194,7 +194,7 @@ div.bottomRow {
   display: flex;
   align-items: center;
   height: 7vw;
-  font-size: 4vw;
+  font-size: 3.8vw;
   font-family: "NetworkSansBold";
 }
 
@@ -207,19 +207,19 @@ div.bottomRow > * {
 }
 
 div.bottomRow > span:nth-child(1) {
-  margin-left: 1vw;
-  width: 7vw;
+  margin-left: 0.5vw;
+  width: 10vw;
 }
 
 div.bottomRow > span:nth-child(2) {
   margin-left: 3vw;
-  width: 30.5vw;
+  width: 27.5vw;
   letter-spacing: -0.1vw;
 }
 
 div.bottomRow > span:nth-child(3) {
   margin-left: 1.5vw;
-  width: 23.5vw;
+  width: 20vw;
   font-family: "NetworkSansRegular";
   font-size: 3.5vw;
   letter-spacing: -0.1vw;
