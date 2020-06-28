@@ -134,7 +134,9 @@ module.exports = {
           })
 
           if (scheduled) {
-            departure.connections = scheduled.connections
+            departure.connections = scheduled.connections.filter(connection => {
+              return !!departure.trip.stopTimings.find(s => s.stopName === connection.changeAt)
+            })
           } else departure.connections = []
 
           return departure
