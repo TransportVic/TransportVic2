@@ -99,4 +99,8 @@ router.get('/:suburb/:stopName', async (req, res) => {
   res.render('timings/grouped', await loadDepartures(req, res))
 })
 
+router.post('/:suburb/:stopName', async (req, res) => {
+  res.render('timings/templates/grouped', await loadDepartures(req, res))
+})
+
 module.exports = router

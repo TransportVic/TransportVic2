@@ -48,4 +48,8 @@ router.get('/:stopName', async (req, res) => {
   res.render('timings/ferry', await loadDepartures(req, res))
 })
 
+router.post('/:stopName', async (req, res) => {
+  res.render('timings/templates/ferry', await loadDepartures(req, res))
+})
+
 module.exports = router

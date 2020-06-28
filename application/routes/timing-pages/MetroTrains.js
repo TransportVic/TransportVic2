@@ -68,4 +68,8 @@ router.get('/:stationName', async (req, res) => {
   res.render('timings/metro-trains', await loadDepartures(req, res))
 })
 
+router.post('/:stationName', async (req, res) => {
+  res.render('timings/templates/metro-trains', await loadDepartures(req, res))
+})
+
 module.exports = router

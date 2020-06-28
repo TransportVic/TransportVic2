@@ -43,8 +43,11 @@ async function loadDepartures(req, res) {
 }
 
 router.get('/:stopName', async (req, res) => {
-
   res.render('timings/regional-coach', await loadDepartures(req, res))
+})
+
+router.post('/:stopName', async (req, res) => {
+  res.render('timings/templates/regional-coach', await loadDepartures(req, res))
 })
 
 module.exports = router

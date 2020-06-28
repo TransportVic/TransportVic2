@@ -56,6 +56,12 @@ function isBookmarked(mode, suburb, stopName, callback) {
   })
 }
 
+function updateBody() {
+  $.ajax({ method: 'POST' }, (err, status, body) => {
+    $('#departures').innerHTML = body
+  })
+}
+
 $.ready(() => {
   const htmlData = $('#departures').innerHTML
 
@@ -107,4 +113,6 @@ $.ready(() => {
       })
     })
   })
+
+  setInterval(updateBody, 30 * 1000)
 })

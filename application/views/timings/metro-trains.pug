@@ -30,16 +30,6 @@ append style
   link(rel='stylesheet' href='/static/css/timings/base-style.css')
 
 append content
-  - 
-    let cityLoopStationAbbreviations = {
-      'FSS': 'Flinders Street Railway Station',
-      'SSS': 'Southern Cross Railway Station',
-      'FGS': 'Flagstaff Railway Station',
-      'MCE': 'Melbourne Central Railway Station',
-      'PAR': 'Parliament Railway Station'
-    }
-    let cityLoopStationNames = Object.values(cityLoopStationAbbreviations).concat('City Loop Railway Station')
-    
   -
     let stopModes = station.bays.map(e => e.mode).filter((e, i, a) => a.indexOf(e) === i)
     let iconMap = {

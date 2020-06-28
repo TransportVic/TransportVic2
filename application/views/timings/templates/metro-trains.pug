@@ -1,3 +1,13 @@
+- 
+  let cityLoopStationAbbreviations = {
+    'FSS': 'Flinders Street Railway Station',
+    'SSS': 'Southern Cross Railway Station',
+    'FGS': 'Flagstaff Railway Station',
+    'MCE': 'Melbourne Central Railway Station',
+    'PAR': 'Parliament Railway Station'
+  }
+  let cityLoopStationNames = Object.values(cityLoopStationAbbreviations).concat('City Loop Railway Station')
+  
 for departure in departures
   div.departure
     -

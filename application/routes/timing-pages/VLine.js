@@ -51,4 +51,8 @@ router.get('/:stationName', async (req, res) => {
   res.render('timings/vline', await loadDepartures(req, res))
 })
 
+router.post('/:stationName', async (req, res) => {
+  res.render('timings/templates/vline', await loadDepartures(req, res))
+})
+
 module.exports = router
