@@ -25,7 +25,7 @@ div.inputSection {
 }
 
 input[type="text"] {
-  width: 30vw;
+  width: calc(15vw + 15vh);
 
   height: calc(2vw + 2vh);
   border: none;
@@ -43,7 +43,7 @@ input[type="text"] {
 }
 
 input[type="submit"] {
-  width: 5vw;
+  width: calc(4vw + 4vh);
 
   height: calc(2.2vw + 2.2vh);
   border: none;

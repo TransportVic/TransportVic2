@@ -57,7 +57,7 @@ router.get('/fleet', async (req, res) => {
     smartrakID = bus.smartrakID
     fleet = `#${fleet}`
   } else {
-    smartrakID = parseInt(fleet)
+    smartrakID = parseInt(fleet) || '?'
     bus = await smartrakIDs.findDocument({ smartrakID })
     if (bus) {
       fleet = `#${bus.fleetNumber}`
