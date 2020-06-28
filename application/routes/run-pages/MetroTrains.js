@@ -28,8 +28,17 @@ async function pickBestTrip(data, db) {
   let minutesToTripEnd = tripEndTime.diff(utils.now(), 'minutes')
 
   let destinationArrivalTime = tripEndMinutes
+  let departureTime = tripStartMinutes
+
   if (data.destination === 'flinders-street') {
     destinationArrivalTime = {
+      $gte: tripEndMinutes - 1,
+      $lte: tripEndMinutes + 3
+    }
+  }
+
+  if (data.origin === 'flinders-street') {
+    departureTime = {
       $gte: tripEndMinutes - 1,
       $lte: tripEndMinutes + 3
     }
@@ -43,7 +52,7 @@ async function pickBestTrip(data, db) {
       stopTimings: {
         $elemMatch: {
           stopName: originStop.stopName,
-          departureTime: data.departureTime
+          departureTimeMinutes: departureTime
         }
       }
     }, {
@@ -57,7 +66,7 @@ async function pickBestTrip(data, db) {
   }
 
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
-  let useLive = minutesToTripEnd >= -15 && minutesToTripStart < 120
+  let useLive = minutesToTripEnd >= -25 && minutesToTripStart < 120
 
   if (liveTrip) {
     if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {

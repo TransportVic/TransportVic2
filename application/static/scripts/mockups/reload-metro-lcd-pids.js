@@ -153,7 +153,7 @@ function updateBody(firstTime) {
       let vw = window.innerWidth / 100
       if (width > 70*vw) {
         $('.firstDestination').className += ' smallest'
-      } else if (width > 50*vw) {
+      } else if (width > 55*vw) {
         $('.firstDestination').className += ' smaller'
       }
 
