@@ -157,7 +157,7 @@ div.stationRow.filler:not(:nth-child(1)) {
 div.stationRow p {
   font-size: calc(var(--height) * 0.027);
   padding-top: calc(var(--height) * 0.001);
-  padding-bottom: calc(var(--height) * 0.001);
+  padding-bottom: calc(var(--height) * 0.002);
   padding-left: calc(var(--height) * 0.007);
   padding-right: calc(var(--height) * 0.007);
 

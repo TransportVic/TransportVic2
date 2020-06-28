@@ -107,7 +107,7 @@ let currentPattern = null
 
 function addStoppingPattern(stops, className) {
   let newPatternID = createStoppingPatternID(stops)
-  if (currentPattern === newPatternID) return
+  if (currentPattern === newPatternID) return true
 
   currentPattern = newPatternID
 
@@ -191,6 +191,8 @@ function addStoppingPattern(stops, className) {
   ${column.outerHTML}
 </div>`
   })
+
+  return false
 }
 
 function adjustDepartures(departure) {
@@ -202,7 +204,10 @@ function adjustDepartures(departure) {
   return departure
 }
 
-function updateBody() {
+let stopScrolling = false
+let connectionsScrollTimeout
+
+function updateBody(firstTime) {
   $.ajax({
     method: 'POST'
   }, (err, status, body) => {
@@ -244,8 +249,17 @@ function updateBody() {
       setArrival()
     } else {
       $('.stoppingPattern').className = 'stoppingPattern ' + firstDepartureClass
-      addStoppingPattern(firstDeparture.additionalInfo.screenStops, firstDepartureClass)
+      let same = addStoppingPattern(firstDeparture.additionalInfo.screenStops, firstDepartureClass)
+
+      if (!same) {
+        if (!firstTime)
+          stopScrolling = true
+
+        clearTimeout(connectionsScrollTimeout)
+        drawBottomRow()
+      }
     }
+
 
     $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
 
@@ -284,7 +298,54 @@ function updateBody() {
   })
 }
 
+function asyncPause(milliseconds) {
+  return new Promise(resolve => {
+    pauseTimeout = setTimeout(resolve, milliseconds)
+  })
+}
+
+let shiftWidth = window.innerWidth / 200 // px
+let connectionsP
+
+let connectionsWidth = 0, connectionsSize = 0
+
+async function animateScrollingText() {
+  let iterationCount = Math.ceil((connectionsWidth) / shiftWidth)
+  let xPosition = shiftWidth
+
+  for (let i = 0; i < iterationCount; i++) {
+    if (stopScrolling) {
+      stopScrolling = false
+      return
+    }
+
+    xPosition += shiftWidth
+    connectionsP.scrollLeft = xPosition
+    await asyncPause(15)
+  }
+
+  await asyncPause(2000)
+  connectionsP.scrollLeft = 0
+}
+
+function drawBottomRow() {
+  if (stopScrolling) return
+
+  connectionsWidth = parseInt(getComputedStyle(connectionsP).width)
+  connectionsSize = connectionsP.scrollWidth + connectionsWidth * 0.05
+
+  if (connectionsSize < connectionsWidth) {
+    return
+  }
+
+  connectionsScrollTimeout = setTimeout(async () => {
+    drawBottomRow(await animateScrollingText())
+  }, 2000)
+}
+
 $.ready(() => {
-  updateBody()
+  updateBody(true)
   setInterval(updateBody, 1000 * 30)
+
+  connectionsP = $('p.firstStoppingType')
 })

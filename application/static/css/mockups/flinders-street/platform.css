@@ -98,7 +98,7 @@ div.firstDepartureInfo div.top {
 
 span.firstStoppingType {
   font-size: calc(var(--height) * 0.06);
-  margin-top: calc(var(--height) * -0.01);
+  margin-top: calc(var(--height) * -0.005);
   white-space: nowrap;
   overflow: hidden;
 }
