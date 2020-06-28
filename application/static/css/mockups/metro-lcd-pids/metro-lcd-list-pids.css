@@ -8,14 +8,13 @@ div.fullMessage {
 }
 
 div.fullMessage > img {
-  margin-top: 0.5vw;
-  height: calc(0.3 * var(--height));
+  height: calc(var(--height) * 0.3);
 }
 
 div.fullMessage > * {
-  font-size: calc(0.175 * var(--height));
-  line-height: calc(0.175 * var(--height));
-  height: calc(0.175 * var(--height));
+  font-size: calc(var(--height) * 0.175);
+  line-height: calc(var(--height) * 0.175);
+  height: calc(var(--height) * 0.175);
   margin: 1vw;
   font-family: "NetworkSansRegular";
   white-space: nowrap;
@@ -61,7 +60,7 @@ div.burnLine {
   position: absolute;
   background-color: #0074d9;
   width: 0;
-  height: calc(0.25 * var(--height));
+  height: calc(var(--height) * 0.25);
   z-index: 0;
   transition: burnLine 30s linear;
   transition-property: width;
@@ -77,7 +76,7 @@ div.burnLine.reset {
 }
 
 div.departureInfo {
-  height: calc(0.25 * var(--height));
+  height: calc(var(--height) * 0.25);
   display: flex;
   align-items: center;
   z-index: 1;
@@ -85,7 +84,7 @@ div.departureInfo {
 
 div.departureInfo span.firstDestination {
   margin-left: 0.5vw;
-  font-size: calc(0.17 * var(--height));
+  font-size: calc(var(--height) * 0.17);
   font-family: "NetworkSansBold";
   letter-spacing: -0.22vw;
 }
@@ -96,13 +95,13 @@ div.departureInfo > div {
 }
 
 div.departureInfo > div > span:nth-child(1) {
-  font-size: calc(0.035 * var(--height));
+  font-size: calc(var(--height) * 0.035);
   font-family: "NetworkSansRegular"
 }
 
 div.departureInfo > div > span:nth-child(2) {
-  font-size: calc(0.15 * var(--height));
-  line-height: calc(0.13 * var(--height));
+  font-size: calc(var(--height) * 0.15);
+  line-height: calc(var(--height) * 0.13);
   font-family: "NetworkSansBold"
 }
 
@@ -118,28 +117,28 @@ div.actualDiv {
 }
 
 div.departureInfo > div.actualDiv > div > span:nth-child(1) {
-  font-size: calc(0.15 * var(--height));
-  line-height: calc(0.13 * var(--height));
+  font-size: calc(var(--height) * 0.15);
+  line-height: calc(var(--height) * 0.13);
   font-family: "NetworkSansBold"
 }
 
 div.departureInfo > div.actualDiv > div > span:nth-child(2) {
-  font-size: calc(0.07 * var(--height));
-  line-height: calc(0.07 * var(--height));
+  font-size: calc(var(--height) * 0.07);
+  line-height: calc(var(--height) * 0.07);
   margin-left: 0.2vw;
 }
 
 div.hozWhiteLine {
-  height: calc(0.005 * var(--height));
+  height: calc(var(--height) * 0.005);
   background: #ffffff;
 }
 
 div.serviceMessage {
-  height: calc(0.7 * var(--height));
+  height: calc(var(--height) * 0.7);
 }
 
 div.stops {
-  height: calc(0.7 * var(--height));
+  height: calc(var(--height) * 0.7);
   background: #00000;
 
   display: flex;
@@ -157,14 +156,14 @@ div.stops div.stopsColumn:nth-child(1) div {
 div.stops div.stopsColumn div {
   border-left: 0.125vw solid white;
   padding-left: 1vw;
-  margin-top: calc(0.04 * var(--height));
+  margin-top: calc(var(--height) * 0.04);
   margin-left: 0.25vw;
 }
 
 div.stops div.stopsColumn div p {
-  font-size: calc(0.075 * var(--height));
-  line-height: calc(0.085 * var(--height));
-  margin-top: calc(0.01 * var(--height)) !important;
+  font-size: calc(var(--height) * 0.075);
+  line-height: calc(var(--height) * 0.085);
+  margin-top: calc(var(--height) * 0.01) !important;
   font-family: NetworkSansRegular;
   white-space: nowrap;
 }
@@ -184,21 +183,21 @@ div.stopsColumn.columns-9, div.stopsColumn.columns-8 {
 }
 
 div.stops div.stopsColumn.columns-8 div {
-  margin-top: calc(0.015 * var(--height)) !important;
+  margin-top: calc(var(--height) * 0.015) !important;
 }
 
 div.stops div.stopsColumn.columns-8 div p {
-  margin-top: calc(0.005 * var(--height)) !important;
+  margin-top: calc(var(--height) * 0.005) !important;
 }
 
 div.stops div.stopsColumn.columns-9 div {
-  margin-top: calc(0.01 * var(--height)) !important;
+  margin-top: calc(var(--height) * 0.01) !important;
 }
 
 div.stops div.stopsColumn.columns-9 div p {
-  margin-top: calc(0.001 * var(--height)) !important;
-  font-size: calc(0.07 * var(--height)) !important;
-  line-height: calc(0.079 * var(--height)) !important;
+  margin-top: calc(var(--height) * 0.001) !important;
+  font-size: calc(var(--height) * 0.07) !important;
+  line-height: calc(var(--height) * 0.079) !important;
 }
 
 
@@ -210,7 +209,7 @@ div.right {
 }
 
 div.headers {
-  height: calc(0.09 * var(--height));
+  height: calc(var(--height) * 0.09);
   background-color: #ffffff;
   display: flex;
   align-items: center;
@@ -218,8 +217,8 @@ div.headers {
 
 div.headers span {
   color: #000000;
-  font-size: calc(0.035 * var(--height));
-  line-height: calc(0.035 * var(--height));
+  font-size: calc(var(--height) * 0.035);
+  line-height: calc(var(--height) * 0.035);
 }
 
 div.headers span.actual {
@@ -230,13 +229,13 @@ div.followingDeparture {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  height: calc(0.21 * var(--height));
+  height: calc(var(--height) * 0.21);
 }
 
 div.followingDeparture > div {
   display: flex;
   align-content: center;
-  margin-top: calc(-0.02 * var(--height));
+  margin-top: calc(-var(--height) * 0.02);
 }
 
 div.right span.scheduled {
@@ -269,9 +268,9 @@ div.followingDeparture span.stoppingType {
 }
 
 div.followingDeparture span {
-  font-size: calc(0.065 * var(--height));
-  line-height: calc(0.065 * var(--height));
-  height: calc(0.065 * var(--height));
+  font-size: calc(var(--height) * 0.065);
+  line-height: calc(var(--height) * 0.065);
+  height: calc(var(--height) * 0.065);
 }
 
 div.followingDeparture:nth-child(3) {
@@ -280,8 +279,8 @@ div.followingDeparture:nth-child(3) {
 }
 
 div.time {
-  margin-top: calc(0.11 * var(--height));
-  height: calc(0.17 * var(--height));
+  margin-top: calc(var(--height) * 0.11);
+  height: calc(var(--height) * 0.17);
   background-color: #ffffff;
   display: flex;
   align-items: center;
@@ -290,7 +289,7 @@ div.time {
 
 div.timeContainer {
   width: 29.25vw;
-  height: calc(0.145 * var(--height));
+  height: calc(var(--height) * 0.145);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -301,8 +300,8 @@ div.timeContainer {
 div.time span {
   color: #000000;
   font-family: "NetworkSansBold";
-  font-size: calc(0.13 * var(--height));
-  line-height: calc(0.13 * var(--height));
+  font-size: calc(var(--height) * 0.13);
+  line-height: calc(var(--height) * 0.13);
 }
 
 div.vline {

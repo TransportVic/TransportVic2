@@ -1,14 +1,5 @@
 body {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
-}
-
-p {
-  margin: 0;
 }
 
 div.content {
@@ -23,21 +14,20 @@ div.fullMessage {
 }
 
 div.fullMessage > img {
-  margin-top: 0.5vw;
-  height: calc(0.3 * var(--height));
+  height: calc(var(--height) * 0.3);
 }
 
 div.fullMessage > * {
-  font-size: calc(0.175 * var(--height));
-  line-height: calc(0.175 * var(--height));
-  height: calc(0.175 * var(--height));
-  margin: 1vw;
+  font-size: calc(var(--height) * 0.175);
+  line-height: calc(var(--height) * 0.175);
+  height: calc(var(--height) * 0.175);
+  margin: calc(var(--width) * 0.01);
   font-family: "NetworkSansRegular";
   white-space: nowrap;
 }
 
 div.message {
-  height: calc(var(--height) - 7.25vw + 1px);
+  height: calc(var(--height) - var(--width) * 0.0725);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,14 +35,14 @@ div.message {
 }
 
 div.message p {
-  font-size: 6vw;
-  line-height: 7vw;
-  height: 7vw;
+  font-size: calc(var(--width) * 0.06);
+  line-height: calc(var(--width) * 0.07);
+  height: calc(var(--width) * 0.07);
   text-align: center;
 }
 
 div.firstDeparture  {
-  height: calc(var(--height) - 7.25vw + 1px);
+  height: calc(var(--height) - var(--width) * 0.0725);
 }
 
 @-webkit-keyframes burnLine {
@@ -69,14 +59,14 @@ div.burnLine {
   position: absolute;
   background-color: #0074d9;
   width: 0;
-  height: 13vw;
+  height: calc(var(--width) * 0.13);
   z-index: 0;
   transition: burnLine 30s linear;
   transition-property: width;
 }
 
 div.burnLine.active {
-  width: 100vw;
+  width: var(--width);
 }
 
 div.burnLine.reset {
@@ -85,7 +75,7 @@ div.burnLine.reset {
 }
 
 div.topRow {
-  height: 13vw;
+  height: calc(var(--width) * 0.13);
   display: flex;
   z-index: 1;
 }
@@ -95,76 +85,76 @@ div.topRow > * {
 }
 
 p.firstDestination {
-  font-size: 10.75vw;
-  margin-left: 0.5vw;
+  font-size: calc(var(--width) * 0.1075);
+  margin-left: calc(var(--width) * 0.005);
   font-family: "NetworkSansBold";
-  letter-spacing: -0.2vw;
+  letter-spacing: calc(var(--width) * -0.002);
   white-space: nowrap;
 }
 
 p.firstDestination.smaller {
   font-family: "NetworkSansMedium";
-  letter-spacing: -0.3vw;
-  font-size: 9.5vw;
-  margin-top: 0.7vw;
+  letter-spacing: calc(var(--width) * -0.003);
+  font-size: calc(var(--width) * 0.095);
+  margin-top: calc(var(--width) * 0.007);
 }
 
 p.firstDestination.smallest {
   font-family: "NetworkSansMedium";
-  letter-spacing: -0.4vw;
-  font-size: 7.5vw;
-  margin-top: 2.5vw;
+  letter-spacing: calc(var(--width) * -0.004);
+  font-size: calc(var(--width) * 0.075);
+  margin-top: calc(var(--width) * 0.025);
 }
 
 div.firstDepartureInfo {
   margin-left: auto;
   text-align: center;
   display: flex;
-  width: 36vw;
+  width: calc(var(--width) * 0.36);
 }
 
 div.scheduled {
-  width: 20vw;
+  width: calc(var(--width) * 0.20);
 }
 
 div.scheduled p:nth-child(1), div.actual > p:nth-child(1) {
   font-family: "NetworkSansRegular";
-  font-size: 3vw;
-  margin-top: 1vw;
-  letter-spacing: 0vw;
+  font-size: calc(var(--width) * 0.03);
+  margin-top: calc(var(--width) * 0.01);
+  letter-spacing: calc(var(--width) * 0.00);
 }
 
 div.scheduled p:nth-child(2) {
-  font-size: 7.25vw;
-  margin-left: 0.4vw;
-  margin-top: -1.3vw;
+  font-size: calc(var(--width) * 0.0725);
+  margin-left: calc(var(--width) * 0.004);
+  margin-top: calc(var(--width) * -0.013);
 }
 
 div.actual {
-  width: 16vw
+  width: calc(var(--width) * 0.16)
 }
 
 div.actual div:nth-child(2) {
-  margin-top: -1.3vw;
+  margin-top: calc(var(--width) * -0.013);
 }
 
 div.actual div:nth-child(2) > span:nth-child(1) {
-  font-size: 7.25vw;
-  margin-left: 0.4vw;
+  font-size: calc(var(--width) * 0.0725);
+  margin-left: calc(var(--width) * 0.004);
 }
 
 div.actual div:nth-child(2) > span:nth-child(2) {
-  font-size: 2.25vw;
+  font-size: calc(var(--width) * 0.0225);
 }
 
 div.middleRow {
-  height: 5vw;
+  height: calc(var(--width) * 0.05);
 }
 
 div.middleRow p {
   font-family: "NetworkSansRegular";
-  font-size: 6.25vw;
-  margin-left: 0.5vw;
+  font-size: calc(var(--width) * 0.0625);
+  margin-left: calc(var(--width) * 0.005);
   white-space: nowrap;
   width: fit-content;
   width: -moz-fit-content;
@@ -179,22 +169,22 @@ div.middleRow p {
 
 div.middleRow p.serviceMessage {
   display: none;
-  width: 100vw;
+  width: var(--width);
   text-align: center;
   height: 0;
 }
 
 div.whiteLine {
-  width: 100vw;
-  height: 0.25vw;
+  width: var(--width);
+  height: calc(var(--width) * 0.0025);
   background-color: white;
 }
 
 div.bottomRow {
   display: flex;
   align-items: center;
-  height: 7vw;
-  font-size: 3.8vw;
+  height: calc(var(--width) * 0.07);
+  font-size: calc(var(--width) * 0.038);
   font-family: "NetworkSansBold";
 }
 
@@ -203,26 +193,26 @@ div.bottomRow.vline {
 }
 
 div.bottomRow > * {
-  margin-top: -0.5vw;
+  margin-top: calc(var(--width) * -0.005);
 }
 
 div.bottomRow > span:nth-child(1) {
-  margin-left: 0.5vw;
-  width: 10vw;
+  margin-left: calc(var(--width) * 0.005);
+  width: calc(var(--width) * 0.10);
 }
 
 div.bottomRow > span:nth-child(2) {
-  margin-left: 3vw;
-  width: 27.5vw;
-  letter-spacing: -0.1vw;
+  margin-left: calc(var(--width) * 0.03);
+  width: calc(var(--width) * 0.275);
+  letter-spacing: calc(var(--width) * -0.001);
 }
 
 div.bottomRow > span:nth-child(3) {
-  margin-left: 1.5vw;
-  width: 20vw;
+  margin-left: calc(var(--width) * 0.015);
+  width: calc(var(--width) * 0.20);
   font-family: "NetworkSansRegular";
-  font-size: 3.5vw;
-  letter-spacing: -0.1vw;
+  font-size: calc(var(--width) * 0.035);
+  letter-spacing: calc(var(--width) * -0.001);
 
   white-space: nowrap;
   overflow: hidden
@@ -230,28 +220,28 @@ div.bottomRow > span:nth-child(3) {
 
 div.bottomRow > div:nth-child(4) {
   margin-left: auto;
-  margin-right: 1vw;
+  margin-right: calc(var(--width) * 0.01);
 }
 
 div.bottomRow > div:nth-child(4) span:nth-child(1) {
-  width: 15vw;
+  width: calc(var(--width) * 0.15);
 }
 
 div.bottomRow > div:nth-child(4) span:nth-child(2) {
-  font-size: 2vw;
-  width: 15vw;
+  font-size: calc(var(--width) * 0.02);
+  width: calc(var(--width) * 0.15);
 }
 
 div.timeNow {
   margin-top: 0 !important;
   color: black;
   background-color: white;
-  height: 7vw;
-  width: 17.5vw;
+  height: calc(var(--width) * 0.07);
+  width: calc(var(--width) * 0.175);
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 5vw;
+  font-size: calc(var(--width) * 0.05);
   font-family: "NetworkSansRegular";
 }

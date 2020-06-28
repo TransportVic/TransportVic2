@@ -15,14 +15,14 @@ div.message > div {
 
 div.message div.info-circle {
   transform: scale(1.5);
-  margin-bottom: calc(0.05 * var(--height));
+  margin-bottom: calc(var(--height) * 0.05);
 }
 
 div.message div.text {
   display: flex;
   flex-direction: column;
   text-align: center;
-  font-size: calc(0.15 * var(--height));
+  font-size: calc(var(--height) * 0.15);
 }
 
 div.content.messages div.message {

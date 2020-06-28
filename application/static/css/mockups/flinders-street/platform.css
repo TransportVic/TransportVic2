@@ -10,13 +10,13 @@ div.fullMessage {
 }
 
 div.fullMessage img {
-  margin-top: calc(0.005 * var(--height));
-  margin-right: calc(0.05 * var(--height));
-  height: calc(0.12 * var(--height));
+  margin-top: calc(var(--height) * 0.005);
+  margin-right: calc(var(--height) * 0.05);
+  height: calc(var(--height) * 0.12);
 }
 
 div.fullMessage p {
-  font-size: calc(0.08 * var(--height));
+  font-size: calc(var(--height) * 0.08);
 }
 
 div.content {
