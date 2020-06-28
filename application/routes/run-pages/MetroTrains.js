@@ -39,8 +39,8 @@ async function pickBestTrip(data, db) {
 
   if (data.origin === 'flinders-street') {
     departureTime = {
-      $gte: tripEndMinutes - 1,
-      $lte: tripEndMinutes + 3
+      $gte: tripStartMinutes - 1,
+      $lte: tripStartMinutes + 3
     }
   }
 
