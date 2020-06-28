@@ -4,6 +4,7 @@ const utils = require('../../../utils')
 const router = new express.Router()
 const url = require('url')
 const querystring = require('querystring')
+const moment = require('moment')
 const busDestinations = require('../../../additional-data/bus-destinations')
 
 const highlightData = require('../../../additional-data/tracker-highlights')
@@ -100,7 +101,7 @@ router.get('/fleet', async (req, res) => {
     bus,
     fleet,
     smartrakID,
-    date: utils.now()
+    date: moment(date, 'YYYYMMDD')
   })
 })
 
