@@ -39,6 +39,15 @@ async function getDeparture(station, db, mode, possibleLines, departureTime, pos
       },
       direction
     }).toArray()
+
+    timetables = timetables.map(timetable => {
+      let startTime = day.startOf('day').add(timetable.stopTimings[0].departureTimeMinutes, 'minutes')
+      timetable.sortID = +startTime
+      return timetable
+    })
+
+    seen = seen.concat(timetables.map(e => e._id))
+    allTimetables.push(timetables)
   }
 
   let timetables = allTimetables.reduce((a, e) => a.concat(e), [])

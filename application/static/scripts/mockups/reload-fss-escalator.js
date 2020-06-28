@@ -312,7 +312,7 @@ let connectionsP
 let connectionsWidth = 0, connectionsSize = 0
 
 async function animateScrollingText() {
-  let iterationCount = Math.ceil((connectionsWidth) / shiftWidth)
+  let iterationCount = Math.ceil((connectionsSize) / shiftWidth)
   let xPosition = shiftWidth
 
   for (let i = 0; i < iterationCount; i++) {
@@ -323,7 +323,7 @@ async function animateScrollingText() {
 
     xPosition += shiftWidth
     connectionsP.scrollLeft = xPosition
-    await asyncPause(15)
+    await asyncPause(20)
   }
 
   await asyncPause(2000)
@@ -349,6 +349,6 @@ $.ready(() => {
   updateBody(true)
   setInterval(updateBody, 1000 * 30)
 
-  shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 140 // px
+  shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 150 // px
   connectionsP = $('p.firstStoppingType')
 })
