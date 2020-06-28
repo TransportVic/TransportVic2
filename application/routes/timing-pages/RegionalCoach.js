@@ -4,7 +4,7 @@ const getDepartures = require('../../../modules/regional-coach/get-departures')
 const moment = require('moment')
 const utils = require('../../../utils')
 
-router.get('/:stopName', async (req, res) => {
+async function loadDepartures(req, res) {
   const stop = await res.db.getCollection('stops').findDocument({
     codedName: req.params.stopName
   })
@@ -39,7 +39,12 @@ router.get('/:stopName', async (req, res) => {
     return departure
   }).filter(Boolean)
 
-  res.render('timings/regional-coach', { departures, stop })
+  return { departures, stop }
+}
+
+router.get('/:stopName', async (req, res) => {
+
+  res.render('timings/regional-coach', await loadDepartures(req, res))
 })
 
 module.exports = router

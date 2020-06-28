@@ -4,12 +4,7 @@ const getDepartures = require('../../../modules/vline/get-departures')
 const utils = require('../../../utils')
 const moment = require('moment')
 
-let lineTypes = {
-  short: ['Geelong', 'Ballarat', 'Bendigo', 'Seymour', 'Traralgon'],
-  long: ['Warrnambool', 'Ararat', 'Maryborough', 'Swan Hill', 'Echuca', 'Albury', 'Shepparton', 'Bairnsdale']
-}
-
-router.get('/:stationName', async (req, res) => {
+async function loadDepartures(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
     codedName: req.params.stationName + '-railway-station'
   })
@@ -45,7 +40,15 @@ router.get('/:stationName', async (req, res) => {
     return departure
   })
 
-  res.render('timings/vline', { departures, station, placeholder: "Destination or platform" })
+  return {
+    departures,
+    station,
+    placeholder: "Destination or platform"
+  }
+}
+
+router.get('/:stationName', async (req, res) => {
+  res.render('timings/vline', await loadDepartures(req, res))
 })
 
 module.exports = router

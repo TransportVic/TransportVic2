@@ -5,7 +5,7 @@ const moment = require('moment')
 const utils = require('../../../utils')
 const async = require('async')
 
-router.get('/:stopName', async (req, res) => {
+async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
   let stop = await stops.findDocument({
     codedName: req.params.stopName
@@ -41,7 +41,11 @@ router.get('/:stopName', async (req, res) => {
     return departure
   })
 
-  res.render('timings/ferry', { departures, stop })
+  return { departures, stop }
+}
+
+router.get('/:stopName', async (req, res) => {
+  res.render('timings/ferry', await loadDepartures(req, res))
 })
 
 module.exports = router

@@ -6,7 +6,7 @@ const utils = require('../../../utils')
 const tramDestinations = require('../../../additional-data/tram-destinations')
 const async = require('async')
 
-router.get('/:suburb/:stopName', async (req, res) => {
+async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
   let stop = await stops.findDocument({
     codedName: req.params.stopName,
@@ -88,11 +88,15 @@ router.get('/:suburb/:stopName', async (req, res) => {
   services = services.sort((a, b) => a - b)
 
   //todo check 3a
-  res.render('timings/grouped', {
+  return {
     services, groupedDepartures, stop,
     classGen: departure => `tram-${departure.routeNumber}`,
     currentMode: 'tram'
-  })
+  }
+}
+
+router.get('/:suburb/:stopName', async (req, res) => {
+  res.render('timings/grouped', await loadDepartures(req, res))
 })
 
 module.exports = router

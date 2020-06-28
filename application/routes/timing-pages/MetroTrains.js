@@ -4,7 +4,7 @@ const getDepartures = require('../../../modules/metro-trains/get-departures')
 const moment = require('moment')
 const utils = require('../../../utils')
 
-router.get('/:stationName', async (req, res) => {
+async function loadDepartures(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
     codedName: req.params.stationName + '-railway-station'
   })
@@ -57,7 +57,15 @@ router.get('/:stationName', async (req, res) => {
     return departure
   })
 
-  res.render('timings/metro-trains', { departures, station, placeholder: 'Destination or platform' })
+  return {
+    departures,
+    station,
+    placeholder: 'Destination or platform'
+  }
+}
+
+router.get('/:stationName', async (req, res) => {
+  res.render('timings/metro-trains', await loadDepartures(req, res))
 })
 
 module.exports = router

@@ -6,7 +6,7 @@ const moment = require('moment')
 const utils = require('../../../utils')
 const async = require('async')
 
-router.get('/:suburb/:stopName', async (req, res) => {
+async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
   let stop = await stops.findDocument({
     codedName: req.params.stopName,
@@ -96,7 +96,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
 
   services = services.sort((a, b) => a - b)
 
-  res.render('timings/grouped', {
+  return {
     services, groupedDepartures, stop,
     classGen: departure => {
       let operator = departure.codedOperator
@@ -104,7 +104,11 @@ router.get('/:suburb/:stopName', async (req, res) => {
       return operator
     },
     currentMode: 'bus'
-  })
+  }
+}
+
+router.get('/:suburb/:stopName', async (req, res) => {
+  res.render('timings/grouped', await loadDepartures(req, res))
 })
 
 module.exports = router
