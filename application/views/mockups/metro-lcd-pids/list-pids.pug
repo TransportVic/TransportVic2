@@ -11,19 +11,6 @@ html
   
     meta(name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, height=device-height')
   body
-    -
-      function formatTime(time) {
-        let hours = time.getHours()
-        let minutes = time.getMinutes()
-        let mainTime = ''
-
-        mainTime += (hours % 12) || 12
-        mainTime += ':'
-        if (minutes < 10) mainTime += '0'
-        mainTime += minutes
-
-        return mainTime
-      }
     div.content
       div(style='display: none;').fullMessage
         img(src='/static/images/mockups/announcements.svg')
@@ -76,5 +63,5 @@ html
           span.stoppingType
         div.time
           div.timeContainer
-            span=formatTime(new Date())
+            span=now.format('h:mm')
           

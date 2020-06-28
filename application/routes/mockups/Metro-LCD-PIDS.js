@@ -1,5 +1,6 @@
 const express = require('express')
 const router = new express.Router()
+const utils = require('../../../utils')
 const TrainUtils = require('./TrainUtils')
 
 let stoppingTextMap = {
@@ -32,15 +33,15 @@ async function getData(req, res) {
 }
 
 router.get('/:station/:platform', async (req, res) => {
-  res.render('mockups/metro-lcd-pids/pids')
+  res.render('mockups/metro-lcd-pids/pids', { now: utils.now() })
 })
 
 router.get('/:station/:platform/list', async (req, res) => {
-  res.render('mockups/metro-lcd-pids/list-pids')
+  res.render('mockups/metro-lcd-pids/list-pids', { now: utils.now() })
 })
 
 router.get('/:station/:platform/16-9-list', async (req, res) => {
-  res.render('mockups/metro-lcd-pids/16-9-list-pids')
+  res.render('mockups/metro-lcd-pids/16-9-list-pids', { now: utils.now() })
 })
 
 router.post('/:station/:platform/:type*?', async (req, res) => {
