@@ -240,6 +240,8 @@ function updateBody(firstTime) {
     }
 
     $('.firstDepartureInfo .platform').className = 'platform ' + firstDepartureClass
+    $('.firstDepartureInfo .platform').textContent = firstDeparture.platform
+
     $('.firstDepartureInfo .firstDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
     $('.firstDepartureInfo .firstDestination').textContent = destination
     $('.firstDepartureInfo .firstStoppingType').textContent = firstStoppingType
