@@ -46,7 +46,7 @@ router.get('/fleet', async (req, res) => {
 
   let {fleet, date} = querystring.parse(url.parse(req.url).query)
   if (!fleet) return res.end()
-  if (!fleet) date = today
+  if (!date) date = today
 
   let bus = await smartrakIDs.findDocument({ fleetNumber: fleet })
   let query = { date }
