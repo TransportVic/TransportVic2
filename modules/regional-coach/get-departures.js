@@ -246,10 +246,10 @@ async function getDepartures(stop, db) {
 
         let hasNSPDeparture = (await timetables.countDocuments({
           mode: 'regional train',
-          origin, destination,
+          origin,
+          'stopTimings.stopName': destination,
           departureTime
-        })) > 0
-
+        }) > 0)
         departure.isTrainReplacement = hasNSPDeparture
       }
       return departure
