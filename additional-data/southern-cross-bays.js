@@ -1,4 +1,5 @@
 module.exports = {
+  "5-V34": "Bay 59", // Melbourne - Mildura
   "5-V20": "Bay 59", // Melbourne - Deniliquin
   "5-V52": "Bay 60", // Melbourne - Yarram
   "5-Ech": "Bay 61", // Melbourne - Moama
