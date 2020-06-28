@@ -14,9 +14,7 @@ const serviceDepots = require('../../../additional-data/service-depots')
 let crossDepotQuery = null
 
 router.get('/', (req, res) => {
-  res.render('tracker/bus/index', {
-    operators: Object.keys(operators)
-  })
+  res.render('tracker/bus/index')
 })
 
 function adjustTrip(trip) {
