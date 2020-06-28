@@ -1,0 +1,31 @@
+div#content {
+  display: block;
+  flex-direction: column;
+}
+
+div#content > * {
+  margin-left: calc(1vw + 1vh);
+}
+
+h1.title {
+  margin-top: calc(0.8vw + 0.8vh);
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+}
+
+div.trip a {
+  font-size: calc(1vw + 1vh);
+}
+
+div.trip.inactive a {
+  color: #777777;
+  text-decoration: line-through;
+}
+
+a.pastDeployment {
+  display: inline-block;
+  font-size: calc(1vw + 1vh);
+  margin: calc(0.25vw + 0.25vh);
+}

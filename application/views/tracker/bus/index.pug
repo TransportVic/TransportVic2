@@ -1,0 +1,31 @@
+extends ../../layout
+
+block head
+  title TransportVic - Tracker/Bus
+  
+block title
+  span Bus Tracker
+  
+block style
+  link(rel='stylesheet' href='/static/css/tracker/bus-index.css')
+
+block content
+  h1#title Bus Tracker
+  h2 Track Your Bus By:
+  br
+  form(method="GET" action="/bus/tracker/fleet")#byFleet
+    label(for="fleet") Enter Bus Fleet Number:
+    br
+    div.inputSection
+      input(type="text" maxlength="7" name="fleet" value="" placeholder="Fleet Number" autocomplete="off")
+      input(type="submit" value="Go")
+  br
+  form(method="GET" action="/bus/tracker/service")#byService
+    label(for="service") Enter Bus Service:
+    br
+    div.inputSection
+      input(type="text" name="service" value="" placeholder="Service Number" autocomplete="off")
+      input(type="submit" value="Go")
+  br
+  h2 Or,
+  a#highlights(href="/bus/tracker/highlights") View Today's Highlights
