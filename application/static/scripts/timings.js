@@ -77,11 +77,13 @@ function filterRuns(query) {
 
 function updateBody() {
   $.ajax({ method: 'POST' }, (err, status, body) => {
-    $('#departures').innerHTML = body
-    htmlData = body
+    if (!err && status === 200) {
+      $('#departures').innerHTML = body
+      htmlData = body
 
-    if ($('#textbar'))
-      filterRuns($('#textbar').value.toLowerCase())
+      if ($('#textbar'))
+        filterRuns($('#textbar').value.toLowerCase())
+    }
   })
 }
 
@@ -90,7 +92,7 @@ $.ready(() => {
     $('#textbar').on('input', () => {
       filterRuns($('#textbar').value.toLowerCase())
     })
-    
+
     filterRuns($('#textbar').value.toLowerCase())
   }
 
