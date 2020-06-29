@@ -334,9 +334,9 @@ function scrollConnections() {
   if (stopScrolling) return
 
   connectionsWidth = parseInt(getComputedStyle(connectionsP).width)
-  connectionsSize = connectionsP.scrollWidth + connectionsWidth * 0.05
+  connectionsSize = connectionsP.scrollWidth - connectionsP.clientWidth
 
-  if (connectionsSize < connectionsWidth) {
+  if (connectionsP.scrollWidth < connectionsWidth) {
     return
   }
 
