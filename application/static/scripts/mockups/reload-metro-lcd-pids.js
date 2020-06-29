@@ -11,7 +11,7 @@ function formatTime(time) {
   return mainTime
 }
 
-function shortenStoppingType (type) {
+function shortenStoppingType(type) {
   if (type === 'Stops All Stations') return 'Stops All'
   if (type === 'Limited Express') return 'Ltd Express'
   return type
@@ -37,7 +37,7 @@ function showStoppingType() {
   }
 }
 
-function setServiceMessageActive(state) {
+function setServiceMessageActive(state, doNotUpdate=false) {
   if (state) {
     $('.serviceMessage').style = 'display: block;'
     $('div.middleRow .stoppingType').style = 'display: none;'
@@ -46,7 +46,8 @@ function setServiceMessageActive(state) {
     $('.firstDepartureInfo').style = 'display: none;'
   } else {
     $('.serviceMessage').style = 'display: none;'
-    showStoppingType()
+    if (!doNotUpdate)
+      showStoppingType()
     $('.firstDestination').style = ''
     $('.firstDepartureInfo').style = ''
   }
@@ -141,7 +142,6 @@ function updateBody(firstTime) {
 
     if (!showingBurnLine) {
       $('.burnLine').className = 'burnLine reset'
-      setServiceMessageActive(false)
 
       showingStandClear = false
 
@@ -210,6 +210,7 @@ function updateBody(firstTime) {
     }
 
     if (firstDeparture.scheduledDepartureTime !== previousDeparture) {
+      setServiceMessageActive(false)
       if (!firstTime)
         stopScrolling = true
       clearTimeout(firstRowTimeout)
@@ -218,6 +219,8 @@ function updateBody(firstTime) {
       clearTimeout(secondRowPause)
 
       drawBottomRow()
+    } else {
+      setServiceMessageActive(false, true)
     }
 
     clearTimeout(showBurnLineTimeout)
@@ -251,7 +254,7 @@ function updateBody(firstTime) {
 
 function asyncPause(milliseconds) {
   return new Promise(resolve => {
-    pauseTimeout = setTimeout(resolve, milliseconds)
+    setTimeout(resolve, milliseconds)
   })
 }
 
