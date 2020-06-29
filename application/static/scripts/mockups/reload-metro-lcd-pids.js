@@ -144,6 +144,7 @@ function updateBody(firstTime) {
       $('.burnLine').className = 'burnLine reset'
 
       showingStandClear = false
+      setServiceMessageActive(false, true)
 
       let classes = ''
 
@@ -151,7 +152,8 @@ function updateBody(firstTime) {
       $('.firstDestination').className = 'firstDestination'
       let width = parseInt(getComputedStyle($('.firstDestination')).width)
       let vw = window.innerWidth / 100
-      if (width > 75*vw) {
+
+      if (width > 76*vw) {
         $('.firstDestination').className += ' smallest'
       } else if (width > 68*vw) {
         $('.firstDestination').className += ' smaller'
@@ -219,8 +221,6 @@ function updateBody(firstTime) {
       clearTimeout(secondRowPause)
 
       drawBottomRow()
-    } else {
-      setServiceMessageActive(false, true)
     }
 
     clearTimeout(showBurnLineTimeout)
