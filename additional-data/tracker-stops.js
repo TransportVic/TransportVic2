@@ -313,5 +313,11 @@ module.exports = [
   'melton/woodgrove-shopping-centre-high-street',
   'melton/melton-bus-interchange-palmerston-street',
   'glen-waverley/glen-waverley-primary-school-high-street-road',
-  'glen-waverley/the-glen-shopping-centre'
+  'glen-waverley/the-glen-shopping-centre',
+  'berwick/berwick-cfa-reserve-street',
+  'berwick/langmore-lane-gloucester-avenue',
+  'pakenham/village-lakeside-east-shopping-centre-lakeside-boulevard',
+  'pakenham/pakenham-rec-reserve-john-street',
+  'pakenham/pakenham-hills-primary-school-army-road',
+  'gembrook/gembrook-road-main-street'
 ]
