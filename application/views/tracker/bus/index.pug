@@ -14,14 +14,14 @@ block content
   h2 Track Your Bus By:
   br
   form(method="GET" action="/bus/tracker/fleet")#byFleet
-    label(for="fleet") Enter Bus Fleet Number:
+    label(for="fleet") Bus Fleet Number:
     br
     div.inputSection
       input(type="text" maxlength="7" name="fleet" value="" placeholder="Fleet Number" autocomplete="off")
       input(type="submit" value="Go")
   br
   form(method="GET" action="/bus/tracker/service")#byService
-    label(for="service") Enter Bus Service:
+    label(for="service") Bus Service:
     br
     div.inputSection
       input(type="text" name="service" value="" placeholder="Service Number" autocomplete="off")
