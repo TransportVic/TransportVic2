@@ -1,0 +1,67 @@
+html
+  head
+    script(src='/static/scripts/util.js')
+    script(src='/static/scripts/mockups/metro-lcd/half-platform.js' async)
+    script(src='/static/scripts/mockups/pids-utils.js') 
+    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
+    link(rel='stylesheet' href='/static/css/mockups/mini-pids-base.css')
+    link(rel='stylesheet' href='/static/css/mockups/metro-lcd/half-platform.css')
+      
+    link(rel='preload' href='/static/images/mockups/announcements.svg' as='image')
+  
+    meta(name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, height=device-height')
+  body
+    div.content
+      div(style='display: none;').fullMessage
+        img(src='/static/images/mockups/announcements.svg')
+        p Please Listen for Announcements
+      div(style='display: block;').left
+        div(style='display: flex;').message
+          p Checking departures
+          p Please wait...
+        div(style='display: none;').nextDeparture
+          div.burnLine.reset
+          div.departureInfo
+            span.firstDestination --
+            div.scheduledDiv
+              span Scheduled
+              span --
+            div.actualDiv
+              span Departing
+              div
+                span --
+                span min
+          div.hozWhiteLine
+          div.serviceMessage
+            
+          div.stops
+      div(style='display: block;').right
+        div.headers
+          span.scheduled Schedule
+          span.destination Train To
+          span.actual Departing
+        div.followingDeparture
+          div
+            span.scheduled --
+            span.destination --
+            span.actual --
+            span.min min
+          span.stoppingType 
+        div.followingDeparture
+          div
+            span.scheduled --
+            span.destination --
+            span.actual --
+            span.min min
+          span.stoppingType
+        div.followingDeparture
+          div
+            span.scheduled --
+            span.destination --
+            span.actual --
+            span.min min
+          span.stoppingType
+        div.time
+          div.timeContainer
+            span=now.format('h:mm')
+          
