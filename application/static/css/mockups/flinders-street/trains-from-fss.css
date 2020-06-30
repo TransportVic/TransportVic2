@@ -70,6 +70,86 @@ div.right {
   align-items: center;
 }
 
+div.destination {
+  height: calc(var(--height) * 0.845 / 4);
+  display: flex;
+  align-items: center;
+
+  box-sizing: border-box;
+  border-bottom: solid calc(var(--height) * 0.005) black;
+}
+
+div.details {
+  height: calc(var(--height) * 0.18);
+  font-family: "NetworkSansBold";
+}
+
+div.details span.destinationName {
+  font-size: calc(var(--height) * 0.045);
+
+  display: inline-block;
+  height: calc(var(--height) * 0.05);
+}
+
+div.details span.stoppingAt {
+  font-size: calc(var(--height) * 0.035);
+}
+
+div.destination div.lineColour {
+  width: calc(var(--width) * 0.005);
+  height: calc(var(--height) * 0.18);
+  border-radius: calc(var(--width) * 0.003);
+  margin: 0 calc(var(--width) * 0.01);
+}
+
+div.next2 {
+  margin-left: auto;
+}
+
+div.next2 div.departure {
+  display: flex;
+  align-items: center;
+}
+
+div.next2 div.departure div.platform {
+  margin-left: auto;
+  width: calc(var(--width) * 0.04);
+  height: calc(var(--height) * 0.06);
+  border-radius: calc(var(--width) * 0.005);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: calc(var(--height) * 0.043);
+}
+
+div.next2 div.departure div.minutesToDeparture {
+  margin-left: calc(var(--width) * 0.005);
+  margin-right: calc(var(--width) * 0.01);
+  width: calc(var(--width) * 0.09);
+  height: calc(var(--height) * 0.06);
+  border-radius: calc(var(--width) * 0.005);
+  background-color: #000000;
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: "NetworkSansRegular";
+
+  font-size: calc(var(--height) * 0.043);
+}
+
+div.divider {
+  width: calc(var(--width) * (0.04 + 0.005 + 0.09 + 0.01));
+  margin: calc(var(--height) * 0.005) 0;
+  margin-right: calc(var(--width) * 0.005);
+  height: calc(var(--height) * 0.003);
+  background-color: #C0C0C0;
+}
+
 div.cityLoopDiagram {
   height: calc(var(--height) * 0.7);
   display: flex;
