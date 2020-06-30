@@ -161,10 +161,10 @@ module.exports = class MainServer {
 
       'mockups/Index': '/mockups',
       'mockups/fss/FlindersStreet': '/mockups/fss',
-      'mockups/Metro-LCD-PIDS': '/mockups/metro-lcd-pids',
+      'mockups/metro-lcd/Metro-LCD-PIDS': '/mockups/metro-lcd',
       'mockups/BusInt-PIDS': '/mockups/bus-int-pids',
       'mockups/Metro-LED-PIDS': '/mockups/metro-led-pids',
-      'mockups/SouthernCross': '/mockups/sss',
+      'mockups/sss/SouthernCross': '/mockups/sss',
 
       'mockups/sss-new/SSSNew': '/mockups/sss-new',
       'mockups/sss-new/SSSCoachBay': '/mockups/sss-new/coach',

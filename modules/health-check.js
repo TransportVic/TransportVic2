@@ -1,7 +1,5 @@
-const config = require('../config.json')
+const modules = require('../modules.json')
 
-const startVlineMailServer = require('./health-check/vline')
-
-if (!config.devMode) {
-  startVlineMailServer()
+if (modules.vlineMail) {
+  require('./health-check/vline')()
 }

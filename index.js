@@ -2,7 +2,6 @@ global.startTime = +new Date()
 require('./utils')
 
 const config = require('./config.json')
-const modules = require('./modules.json')
 const HTTPServer = require('./server/HTTPServer')
 const HTTPSServer = require('./server/HTTPSServer')
 const HTTPSRedirectServer = require('./server/HTTPSRedirectServer')
@@ -34,5 +33,4 @@ process.on('uncaughtException', (err) => {
 
 console.err = console.error
 
-if (modules.vlineMail)
-  require('./modules/health-check')
+require('./modules/health-check')

@@ -1,7 +1,7 @@
 html
   head
     script(src='/static/scripts/util.js')
-    script(src='/static/scripts/mockups/reload-fss-escalator.js' async)
+    script(src='/static/scripts/mockups/fss/escalator.js' async)
     script(src='/static/scripts/mockups/pids-utils.js') 
     link(rel='stylesheet' href='/static/css/mockups/base-style.css')
     link(rel='stylesheet' href='/static/css/mockups/actual-line-colours.css')
@@ -48,42 +48,3 @@ html
               span &nbsp;
             div.minutesToDeparture
               span -- min
-
-      //- div.message
-      //-   div.textWrapper
-      //-     img(src='/static/images/mockups/no-boarding-train.svg')
-      //-     p Checking departures
-      //-     p Please wait...
-      //- div(style='display: none;').firstDepartureInfo
-      //-   div.details
-      //-     span.scheduledDepartureTime --
-      //-     br
-      //-     span.destination --
-      //-     span.stoppingType --
-      //-   div.firstDepartureTime
-      //-     div.platform
-      //-       span=platform
-      //-     div.timeToDeparture
-      //-       span --
-      //- div(style='display: block;').greyLine
-      //- div(style='display: block;').stoppingAt.no-line
-      //-   div
-      //-     div
-      //-     div
-      //- 
-      //- div.next3Departures    
-      //-   div.blackLine
-      //-   for departure in [1,2,3,4]
-      //-     div.smallDeparture
-      //-       div.left
-      //-         div(class='sideBar no-line')
-      //-         p --
-      //-       div.centre
-      //-         p --
-      //-       div.right
-      //-         div(class='platform no-line')
-      //-           p &nbsp;
-      //-         div.timeToDeparture
-      //-           p &nbsp;
-      //-     if departure !== 4
-      //-       div.greyLine
