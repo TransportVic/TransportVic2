@@ -271,6 +271,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
         let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === stopGTFSID)[0]
         if (!stopData || stopData.departureTimeMinutes !== scheduledDepartureTimeMinutes)
           trip = null
+        else if (!possibleDestinations.includes(trip.destination))
+          trip = null
       }
     }
 
