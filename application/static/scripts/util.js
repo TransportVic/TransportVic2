@@ -58,6 +58,14 @@ $.ready = function (callback) {
   }
 }
 
+$.loaded = function (callback) {
+  if (document.readyState !== 'complete') {
+    setTimeout(callback, 0)
+  } else {
+    window.addEventListener('load', callback)
+  }
+}
+
 var query = location.query
 
 window.search = {}

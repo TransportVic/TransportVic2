@@ -115,7 +115,7 @@ let currentPattern = null
 
 function addStoppingPattern(stops, className) {
   let newPatternID = createStoppingPatternID(stops)
-  if (currentPattern === newPatternID) return
+  if (currentPattern === newPatternID) return true
 
   currentPattern = newPatternID
 
@@ -211,7 +211,10 @@ function adjustDepartures(departure) {
   return departure
 }
 
-function updateBody() {
+let stopScrolling = false
+let connectionsScrollTimeout
+
+function updateBody(firstTime) {
   $.ajax({
     method: 'POST'
   }, (err, status, body) => {
@@ -237,6 +240,7 @@ function updateBody() {
     if (firstDeparture.additionalInfo.via) {
       firstStoppingType += ' ' + firstDeparture.additionalInfo.via
     }
+
     if (firstDeparture.connections) {
       firstStoppingType += firstDeparture.connections.map(connection => {
         return `, Change at ${connection.changeAt.slice(0, -16)} for ${connection.for.slice(0, -16)}`
@@ -253,7 +257,15 @@ function updateBody() {
       setArrival()
     } else {
       $('.stoppingPattern').className = 'stoppingPattern ' + firstDepartureClass
-      addStoppingPattern(firstDeparture.additionalInfo.screenStops, firstDepartureClass)
+      let same = addStoppingPattern(firstDeparture.additionalInfo.screenStops, firstDepartureClass)
+
+      if (!same) {
+        if (!firstTime)
+          stopScrolling = true
+
+        clearTimeout(connectionsScrollTimeout)
+        scrollConnections()
+      }
     }
 
     let nextDepartures = (departures.slice(1).concat([null, null])).slice(0, 2)
@@ -290,9 +302,62 @@ function updateBody() {
   })
 }
 
+function asyncPause(milliseconds) {
+  return new Promise(resolve => {
+    pauseTimeout = setTimeout(resolve, milliseconds)
+  })
+}
+
+let shiftWidth
+let connectionsSpan
+
+let connectionsWidth = 0, connectionsSize = 0
+
+async function animateScrollingText() {
+  let iterationCount = Math.ceil((connectionsSize) / shiftWidth)
+  let xPosition = shiftWidth
+
+  for (let i = 0; i < iterationCount; i++) {
+    if (stopScrolling) {
+      stopScrolling = false
+      return
+    }
+
+    xPosition += shiftWidth
+    connectionsSpan.scrollLeft = xPosition
+    await asyncPause(20)
+  }
+
+  await asyncPause(2000)
+  connectionsSpan.scrollLeft = 0
+}
+
+function scrollConnections() {
+  if (stopScrolling) return
+
+  connectionsWidth = parseInt(getComputedStyle(connectionsSpan).width)
+  connectionsSize = connectionsSpan.scrollWidth - connectionsSpan.clientWidth
+
+  if (connectionsSpan.scrollWidth < connectionsWidth) {
+    return
+  }
+
+  connectionsScrollTimeout = setTimeout(async () => {
+    scrollConnections(await animateScrollingText())
+  }, 2000)
+}
+
+$.loaded(() => {
+  setTimeout(() => {
+    shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 150 // px
+
+    connectionsSpan = $('span.firstStoppingType')
+  }, 50)
+})
+
 $.ready(() => {
   setupClock()
 
-  updateBody()
+  updateBody(true)
   setInterval(updateBody, 1000 * 30)
 })

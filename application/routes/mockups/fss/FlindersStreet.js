@@ -33,11 +33,11 @@ async function getData(req, res) {
 }
 
 router.get('/escalator/:platform/:station*?', async (req, res) => {
-  res.render('mockups/flinders-street/escalator', {platform: req.params.platform})
+  res.render('mockups/fss/escalator', {platform: req.params.platform})
 })
 
 router.get('/platform/:platform/:station*?', async (req, res) => {
-  res.render('mockups/flinders-street/platform', {platform: req.params.platform})
+  res.render('mockups/fss/platform', {platform: req.params.platform})
 })
 
 router.post('/:type/:platform/:station*?', async (req, res) => {
@@ -46,7 +46,7 @@ router.post('/:type/:platform/:station*?', async (req, res) => {
 })
 
 router.get('/trains-from-fss', async (req, res) => {
-  res.render('mockups/flinders-street/trains-from-fss', { now: utils.now() })
+  res.render('mockups/fss/trains-from-fss', { now: utils.now() })
 })
 
 router.post('/trains-from-fss', async (req, res) => {

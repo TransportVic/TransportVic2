@@ -234,12 +234,14 @@ function setSVGSize() {
   $('#svgContainer').style = `height: ${containerHeight}px`
 }
 
-$.ready(() => {
+$.loaded(() => {
   setTimeout(() => {
     setSVGSize()
     $('#cclSVG').setAttribute('display', '')
-  }, 100)
+  }, 50)
+})
 
+$.ready(() => {
   setupClock()
   updateBody()
   setInterval(updateBody, 1000 * 30)

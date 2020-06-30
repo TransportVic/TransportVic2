@@ -233,6 +233,7 @@ function updateBody(firstTime) {
     if (firstDeparture.additionalInfo.via) {
       firstStoppingType += ' ' + firstDeparture.additionalInfo.via
     }
+    
     if (firstDeparture.connections) {
       firstStoppingType += firstDeparture.connections.map(connection => {
         return `, Change at ${connection.changeAt.slice(0, -16)} for ${connection.for.slice(0, -16)}`
@@ -345,12 +346,15 @@ function scrollConnections() {
   }, 2000)
 }
 
+$.loaded(() => {
+  setTimeout(() => {
+    shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 150 // px
+
+    connectionsP = $('p.firstStoppingType')
+  }, 50)
+})
+
 $.ready(() => {
   updateBody(true)
   setInterval(updateBody, 1000 * 30)
-
-  setTimeout(() => {
-    shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 150 // px
-  }, 10)
-  connectionsP = $('p.firstStoppingType')
 })
