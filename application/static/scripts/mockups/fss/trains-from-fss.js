@@ -101,6 +101,7 @@ let diagramSections = [
   },
   {
     targets: ['Flagstaff', 'Parliament'],
+    not: ['North Melbourne'],
     key: 'FSS-CCL-PAR'
   },
   {
@@ -179,13 +180,18 @@ function setDestinationsRow(departures) {
 
 function updateDiagram(departures) {
   diagramSections.forEach(section => {
-    let {targets, key} = section
+    let {targets, not, key} = section
     let lastTarget = targets.slice(-1)[0]
 
     let nextDeparture = departures.filter(departure => {
       for (let target of targets) {
         if (!departure.additionalInfo.screenStops.find(stop => stop.stopName === target && !stop.express))
           return false
+      }
+      if (not) {
+        for (let excluded of not)
+          if (departure.additionalInfo.screenStops.find(stop => stop.stopName === excluded && !stop.express))
+            return false
       }
       return true
     }).map(departure => {
