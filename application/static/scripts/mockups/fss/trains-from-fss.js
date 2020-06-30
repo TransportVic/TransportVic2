@@ -97,6 +97,7 @@ let diagramSections = [
   },
   {
     targets: ['Richmond'],
+    not: ['Parliament'],
     key: 'FSS-RMD'
   },
   {
