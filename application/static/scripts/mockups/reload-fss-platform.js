@@ -102,7 +102,7 @@ function setArrival() {
 function setListenAnnouncements() {
   if (currentlyDisplaying !== 'announcements') {
     currentlyDisplaying = 'announcements'
-    $('.message').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>'
+    $('.fullMessage').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>'
     setFullMessageActive(true)
   }
 }

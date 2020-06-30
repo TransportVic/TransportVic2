@@ -1,7 +1,8 @@
 const express = require('express')
 const router = new express.Router()
 const async = require('async')
-const TrainUtils = require('./TrainUtils')
+const utils = require('../../../../utils')
+const TrainUtils = require('../TrainUtils')
 
 let stoppingTextMap = {
   stopsAll: 'Stops All Stations',
@@ -41,6 +42,15 @@ router.get('/platform/:platform/:station*?', async (req, res) => {
 
 router.post('/:type/:platform/:station*?', async (req, res) => {
   let departures = await getData(req, res)
+  res.json(departures)
+})
+
+router.get('/trains-from-fss', async (req, res) => {
+  res.render('mockups/flinders-street/trains-from-fss', { now: utils.now() })
+})
+
+router.post('/trains-from-fss', async (req, res) => {
+  let departures = await getData({ params: { platform: '*' } }, res)
   res.json(departures)
 })
 

@@ -139,7 +139,7 @@ module.exports = class MainServer {
       TourBusMinder: '/tbm',
 
       'mockups/Index': '/mockups',
-      'mockups/FlindersStreet': '/mockups/fss',
+      'mockups/fss/FlindersStreet': '/mockups/fss',
       'mockups/Metro-LCD-PIDS': '/mockups/metro-lcd-pids',
       'mockups/BusInt-PIDS': '/mockups/bus-int-pids',
       'mockups/Metro-LED-PIDS': '/mockups/metro-led-pids',
