@@ -112,7 +112,7 @@ let diagramSections = [
   {
     targets: ['Parliament', 'Richmond'],
     key: 'PAR-RMD'
-  },
+  }
 ]
 
 let lineColours = {
@@ -143,7 +143,7 @@ function identifyTargetStop(departure, target) {
 
   let fssStop = departure.trip.stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
   let fssMinutes = fssStop.departureTimeMinutes
-  let targetMinutes = targetStop.departureTimeMinutes
+  let targetMinutes = targetStop.arrivalTimeMinutes
 
   let minutesDifference = targetMinutes - fssMinutes
 
@@ -159,7 +159,7 @@ function setDestinationsRow(departures) {
     let {target, id} = section
 
     let validDepartures = departures.filter(departure => {
-      return !!departure.additionalInfo.screenStops.find(stop => stop.stopName === target && !stop.express)
+      return departure.type !== 'vline' && !!departure.additionalInfo.screenStops.find(stop => stop.stopName === target && !stop.express)
     }).map(departure => {
       return identifyTargetStop(departure, target)
     }).sort((a, b) => a.targetActualTime - b.targetActualTime)
@@ -185,6 +185,7 @@ function updateDiagram(departures) {
     let lastTarget = targets.slice(-1)[0]
 
     let nextDeparture = departures.filter(departure => {
+      if (departure.type === 'vline') return false
       for (let target of targets) {
         if (!departure.additionalInfo.screenStops.find(stop => stop.stopName === target && !stop.express))
           return false
