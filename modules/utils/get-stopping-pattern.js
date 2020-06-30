@@ -39,7 +39,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     departure.scheduledDepartureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
     departure.estimatedDepartureTime = moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne')
     return departure
-  }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+  })
 
   let dbStops = {}
   let checkModes = [mode]

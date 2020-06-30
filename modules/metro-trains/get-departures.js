@@ -70,7 +70,8 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip, isS
 }
 
 function mapSuspension(suspension) {
-  let stationsAffected = suspension.description.match(/between ([ \w]+) and ([ \w]+) stations/)
+  let stationsAffected = suspension.description.replace(/\u00A0/g, ' ').match(/between ([ \w]+) and ([ \w]+) stations/i)
+
   if (!stationsAffected) return
   let startStation = stationsAffected[1].trim() + ' Railway Station',
       endStation = stationsAffected[2].trim() + ' Railway Station'
