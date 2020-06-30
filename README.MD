@@ -172,12 +172,38 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   "ptvKey": "", // Your PTV dev key.
   "ptvDevID": "", // Your PTV dev id. If left blank PTV api calls will not work and will fallback to gtfs timetable. This makes data less accurate
 
-  "seekBuses": false, // Whether to run the bus seeker.
-  "trackVline": false, // Whether to track v/line trips
-  "devMode": true // Disabling the v/line email server
+  "devMode": true // Enables/Disables compression of data and other stuff
 }
 ```
 with the appropriate fields filled
+Create a modules.json with this filled
+```
+{
+  "Next4": {
+    "bus": true,
+    "tram": true,
+    "metro": true,
+    "vline": true,
+    "coach": true,
+    "ferry": true
+  },
+  "tracker": {
+    "bus": true,
+    "vline": true
+  },
+  "mockups": {
+    "pidsview": true
+  },
+  "routes": {
+    "bus": true
+  },
+  "stopPreview": true,
+  "jmssScreen": true,
+  "vlineMail": true
+}
+```
+And enable the modules you want. The example here has everything enabled. Keep in mind that GTFS loading is controlled by the Next4 entry, and that other modules such as trackers or routes do not check that the relevant module is enabled as well.
+
 * You'll have to download additional data from Spatial Datamart Victoria and save it to `/spatial-datamart`
   * These typically come as a Esri shapefile, I used `shp2json` to generate geojson
   * metro-bus-route
