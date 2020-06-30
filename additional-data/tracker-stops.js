@@ -319,5 +319,7 @@ module.exports = [
   'pakenham/village-lakeside-east-shopping-centre-lakeside-boulevard',
   'pakenham/pakenham-rec-reserve-john-street',
   'pakenham/pakenham-hills-primary-school-army-road',
-  'gembrook/gembrook-road-main-street'
+  'gembrook/gembrook-road-main-street',
+  'lilydale/gateway-reserve-the-gateway',
+  'lilydale/lilydale-post-office-maroondah-highway'
 ]
