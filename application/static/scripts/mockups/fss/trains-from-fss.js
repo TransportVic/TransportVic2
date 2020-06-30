@@ -236,7 +236,7 @@ $.ready(() => {
   setTimeout(() => {
     setSVGSize()
     $('#cclSVG').setAttribute('display', '')
-  }, 50)
+  }, 100)
 
   setupClock()
   updateBody()
