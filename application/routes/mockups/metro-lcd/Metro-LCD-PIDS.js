@@ -44,7 +44,17 @@ router.get('/:station/:platform/platform', async (req, res) => {
   res.render('mockups/metro-lcd/platform', { now: utils.now() })
 })
 
+router.get('/:station/concourse-up-down', async (req, res) => {
+  res.render('mockups/metro-lcd/concourse-up-down', { now: utils.now() })
+})
+
 router.post('/:station/:platform/:type', async (req, res) => {
+  let departures = await getData(req, res)
+  res.json(departures)
+})
+
+router.post('/:station/concourse-up-down', async (req, res) => {
+  req.params.platform = '*'
   let departures = await getData(req, res)
   res.json(departures)
 })
