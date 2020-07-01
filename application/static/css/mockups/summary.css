@@ -47,11 +47,11 @@ div.platform iframe {
 }
 
 div.platform.fss-escalator, div.platform.fss-escalator * {
-  width: 15vw;
+  width: 15vw !important;
 }
 
 div.platform.fss-escalator iframe {
-  height: calc(15vw / 9 * 16);
+  height: calc(15vw / 9 * 16) !important;
 }
 
 div.platform.sss-new-coach, div.platform.sss-new-coach * {

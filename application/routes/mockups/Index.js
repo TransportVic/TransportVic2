@@ -41,10 +41,12 @@ router.get('/get', async (req, res) => {
     return res.redirect('/mockups/fss/escalator/' + value + (station ? '/' + station : ''))
   } else if (type === 'fss-platform') {
     return res.redirect('/mockups/fss/platform/' + value + (station ? '/' + station : ''))
-  } else if (type === 'suburban-list') {
-    return res.redirect(`/mockups/metro-lcd-pids/${station}/${value}`)
-  } else if (type === 'suburban-text') {
-    return res.redirect(`/mockups/metro-lcd-pids/${station}/${value}/list`)
+  } else if (type === 'half-platform') {
+    return res.redirect(`/mockups/metro-lcd/${station}/${value}/half-platform`)
+  } else if (type === 'half-platform-bold') {
+    return res.redirect(`/mockups/metro-lcd/${station}/${value}/half-platform-bold`)
+  } else if (type === 'platform') {
+    return res.redirect(`/mockups/metro-lcd/${station}/${value}/platform`)
   } else if (type === 'summary') {
     return res.redirect(`/mockups/summary/${station}?type=${value}`)
   } else if (type === 'bus-int-pids') {
