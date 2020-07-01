@@ -21,6 +21,7 @@ div.fullMessage p {
 
 div.content {
   background-color: #f0f0f0 !important;
+  overflow: hidden;
 }
 
 div.topLineBanner {
