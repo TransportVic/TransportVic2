@@ -32,6 +32,12 @@ function setListenAnnouncements() {
   setFullMessageActive(true)
 }
 
+function shorternDestination (destination) {
+  if (destination === 'Upper Ferntree Gully') return 'Upper F.T Gully'
+  if (destination === 'Flemington Racecource') return 'Flemington Races'
+  return destination
+}
+
 function updateBody(firstTime) {
   $.ajax({
     method: 'POST'
@@ -58,16 +64,19 @@ function updateBody(firstTime) {
     screenDepartures = [...screenDepartures, null, null, null, null].slice(0, 4)
 
     let departureRows = Array.from(document.querySelectorAll('.departure'))
+    let dividerDivs = Array.from(document.querySelectorAll('.greySeparator'))
 
     screenDepartures.forEach((departure, i) => {
       let departureRow = departureRows[i]
+      let dividerDiv = dividerDivs[i]
 
       if (departure) {
+        if (dividerDiv) dividerDiv.style = 'display: block;'
         if (departure.type === 'vline') departureRow.className = 'departure vline'
         else departureRow.className = 'departure'
         departureRow.style = 'display: flex;'
         $('.departureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
-        $('.destination', departureRow).textContent = departure.destination
+        $('.destination', departureRow).textContent = shorternDestination(departure.destination)
 
         let stoppingType = shortenStoppingType(departure.stoppingType)
         if (departure.additionalInfo.via) {
@@ -93,6 +102,7 @@ function updateBody(firstTime) {
           $('.timeToDeparture', departureRow).className = 'timeToDeparture now'
         }
       } else {
+        if (dividerDiv) dividerDiv.style = 'display: none;'
         departureRow.className = 'departure'
         departureRow.style = 'display: none;'
       }
