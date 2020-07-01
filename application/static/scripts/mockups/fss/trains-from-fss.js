@@ -238,7 +238,7 @@ $.loaded(() => {
   setTimeout(() => {
     setSVGSize()
     $('#cclSVG').setAttribute('display', '')
-  }, 50)
+  }, 100)
 })
 
 $.ready(() => {

@@ -350,9 +350,8 @@ function scrollConnections() {
 $.loaded(() => {
   setTimeout(() => {
     shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 150 // px
-
     connectionsSpan = $('span.firstStoppingType')
-  }, 50)
+  }, 100)
 })
 
 $.ready(() => {
