@@ -42,6 +42,12 @@ let cliftonHillGroup = [
   'Mernda'
 ]
 
+let caulfieldGroup = [
+  'Cranbourne',
+  'Pakenham',
+  'Frankston'
+]
+
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 
@@ -255,7 +261,8 @@ module.exports = {
     let isFormingNewTrip = !!departure.forming
     let isUp = departure.trip.direction === 'Up' && !isFormingNewTrip
     let destination = isFormingNewTrip ? departure.destination : departure.trip.destination.slice(0, -16)
-    if (destination === 'Parliament' || (routeName === 'Frankston' && destination === 'Southern Cross')) destination = 'Flinders Street'
+    if (destination === 'Parliament') destination = 'Flinders Street'
+    if (destination === 'Southern Cross' && caulfieldGroup.includes(routeName)) destination = 'Flinders Street'
 
     if (routeName === 'Bendigo') {
       if (isUp && departure.trip.origin === 'Eaglehawk Railway Station') routeName = 'Swan Hill'
