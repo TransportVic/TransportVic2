@@ -276,7 +276,7 @@ function updateBody(firstTime) {
         $('.scheduledDepartureTime', departureRow).textContent = '--'
         $('.destination', departureRow).textContent = '--'
         $('.stoppingType', departureRow).textContent = '--'
-        $('.minutesToDeparture span', departureRow).textContent = ''
+        $('.minutesToDeparture span', departureRow).textContent = '-- min'
       } else {
         let departureClass = departure.codedLineName
         if (departure.type === 'vline') departureClass = 'vline'
