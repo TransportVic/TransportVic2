@@ -50,7 +50,7 @@ module.exports = {
       id: 'FSY-BDG',
       count: 1,
       allowVLine: true
-    },
+    }
   ],
   'Flagstaff': [
     {
@@ -148,6 +148,56 @@ module.exports = {
       targets: ['Sunbury'],
       id: 'FGS-SBY',
       count: 1
+    }
+  ],
+  'North Melbourne': [
+    {
+      name: 'Craigieburn',
+      targets: ['Craigieburn'],
+      id: 'NME-CGB',
+      count: 2
+    },
+    {
+      name: 'Sunbury',
+      targets: ['Sunbury'],
+      id: 'NME-SBY',
+      count: 2
+    },
+    {
+      name: 'Watergardens',
+      targets: ['Watergardens'],
+      id: 'NME-WGS',
+      count: 2
+    },
+    {
+      name: 'Upfield',
+      targets: ['Upfield'],
+      id: 'NME-UPF',
+      count: 2
+    },
+    {
+      name: 'Werribee',
+      targets: ['Werribee'],
+      id: 'NME-WBE',
+      count: 2
+    },
+    {
+      name: 'Laverton',
+      targets: ['Laverton'],
+      id: 'NME-LAV',
+      count: 2
+    },
+    {
+      name: 'Williamstown',
+      targets: ['Williamstown'],
+      id: 'NME-WIL',
+      count: 2
+    },
+    {
+      name: 'Flinders Street',
+      targets: ['Flinders Street'],
+      id: 'NME-FSS',
+      count: 2
     },
   ]
 }
