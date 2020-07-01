@@ -351,12 +351,12 @@ $.loaded(() => {
   setTimeout(() => {
     shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 150 // px
     connectionsSpan = $('span.firstStoppingType')
-  }, 100)
+
+    updateBody(true)
+    setInterval(updateBody, 1000 * 30)
+  }, 500)
 })
 
 $.ready(() => {
   setupClock()
-
-  updateBody(true)
-  setInterval(updateBody, 1000 * 30)
 })

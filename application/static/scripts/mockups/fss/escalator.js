@@ -350,10 +350,8 @@ $.loaded(() => {
   setTimeout(() => {
     shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 150 // px
     connectionsP = $('p.firstStoppingType')
-  }, 100)
-})
 
-$.ready(() => {
-  updateBody(true)
-  setInterval(updateBody, 1000 * 30)
+    updateBody(true)
+    setInterval(updateBody, 1000 * 30)
+  }, 500)
 })
