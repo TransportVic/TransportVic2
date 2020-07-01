@@ -96,9 +96,12 @@ function updateDestinations(departures) {
       }
 
       return true
-    }).map(departure => {
-      return identifyTargetStop(departure, lastTarget)
-    }).sort((a, b) => a.targetActualTime - b.targetActualTime).slice(0, count)
+    // }).map(departure => {
+    //   return identifyTargetStop(departure, lastTarget)
+    // }).sort((a, b) => a.targetActualTime - b.targetActualTime).slice(0, count)
+    }).slice(0, count)
+
+    $('.nextDepartures', departureRow).className = 'nextDepartures departure-' + count + '-' + nextDepartures.length
 
     let departureDivs = Array.from(departureRow.querySelectorAll('.departure', departureRow))
     let dividerDivs = Array.from(departureRow.querySelectorAll('.divider', departureRow))

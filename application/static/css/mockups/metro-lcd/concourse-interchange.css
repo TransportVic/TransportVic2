@@ -113,12 +113,16 @@ div.nextDepartures div.departure {
   align-items: center;
 }
 
-div.departure-1 {
+div.nextDepartures.departure-1-1 div.departure {
   height: 90%;
 }
 
-div.departure-2 {
+div.nextDepartures.departure-2 div.departure, div.nextDepartures.departure-2-2 div.departure {
   height: 38%;
+}
+
+div.nextDepartures.departure-2 div.departure, div.nextDepartures.departure-2-1 div.departure {
+  height: 53%;
 }
 
 div.nextDepartures div.departure div.platform {

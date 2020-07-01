@@ -25,11 +25,11 @@ html
                 span.destinationName #{destination.name}
                 br
                 span.stoppingAt
-              div.nextDepartures
+              div(class='nextDepartures departure-' + destination.count + '-' + destination.count)
                 for _, i in Array(destination.count)
                   if i !== 0
                     div(style='display: none;').divider
-                  div(class='departure departure-' + destination.count style='display: none;')
+                  div(style='display: none;').departure
                     div.platform --
                     div.minutesToDeparture -- min
       div.clockContainer

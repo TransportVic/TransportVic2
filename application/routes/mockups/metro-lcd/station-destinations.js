@@ -31,6 +31,19 @@ module.exports = {
       count: 2
     },
     {
+      name: 'Watergardens',
+      targets: ['Watergardens'],
+      id: 'FSY-WGS',
+      count: 2
+    },
+    {
+      name: 'Wyndham Vale',
+      targets: ['Wyndham Vale'],
+      id: 'FSY-WVL',
+      count: 1,
+      allowVLine: true
+    },
+    {
       name: 'Geelong',
       targets: ['Geelong'],
       id: 'FSY-GLG',
@@ -41,6 +54,13 @@ module.exports = {
       name: 'Ballarat',
       targets: ['Ballarat'],
       id: 'FSY-BAL',
+      count: 1,
+      allowVLine: true
+    },
+    {
+      name: 'Bacchus Marsh',
+      targets: ['Bacchus Marsh'],
+      id: 'FSY-BMH',
       count: 1,
       allowVLine: true
     },
@@ -198,6 +218,86 @@ module.exports = {
       targets: ['Flinders Street'],
       id: 'NME-FSS',
       count: 2
+    }
+  ],
+  'Richmond': [
+    {
+      name: 'Flinders Street',
+      targets: ['Flinders Street'],
+      id: 'RMD-FSS',
+      count: 1
+    },
+    {
+      name: 'City Loop',
+      targets: ['Flinders Street', 'Flagstaff'],
+      id: 'RMD-CCL-FSS',
+      count: 1
+    },
+    {
+      name: 'Cranbourne',
+      targets: ['Cranbourne'],
+      id: 'RMD-CBE',
+      count: 1
+    },
+    {
+      name: 'Pakenham',
+      targets: ['Pakenham'],
+      id: 'RMD-PKM',
+      count: 1
+    },
+    {
+      name: 'Dandenong',
+      targets: ['Dandenong'],
+      id: 'RMD-DNG',
+      count: 1
+    },
+    {
+      name: 'Frankston',
+      targets: ['Frankston'],
+      id: 'RMD-FKN',
+      count: 1
+    },
+    {
+      name: 'Caulfield',
+      targets: ['Caulfield'],
+      id: 'RMD-CFD',
+      count: 1
+    },
+    {
+      name: 'Sandringham',
+      targets: ['Sandringham'],
+      id: 'RMD-SHM',
+      count: 1
+    },
+    {
+      name: 'Lilydale',
+      targets: ['Lilydale'],
+      id: 'RMD-LIL',
+      count: 1
+    },
+    {
+      name: 'Belgrave',
+      targets: ['Belgrave'],
+      id: 'RMD-BEL',
+      count: 1
+    },
+    {
+      name: 'Alamein',
+      targets: ['Alamein'],
+      id: 'RMD-ALM',
+      count: 1
+    },
+    {
+      name: 'Camberwell',
+      targets: ['Camberwell'],
+      id: 'RMD-CAM',
+      count: 1
+    },
+    {
+      name: 'Glen Waverley',
+      targets: ['Glen Waverley'],
+      id: 'RMD-GWY',
+      count: 1
     },
   ]
 }
