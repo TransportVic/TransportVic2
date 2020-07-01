@@ -51,6 +51,10 @@ div.details {
   flex-direction: column;
 }
 
+div.departure.vline {
+  background-color: #753f98;
+}
+
 span.departureTime {
   font-size: calc(var(--height) * 0.088);
   display: inline-block;

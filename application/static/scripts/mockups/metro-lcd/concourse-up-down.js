@@ -63,6 +63,8 @@ function updateBody(firstTime) {
       let departureRow = departureRows[i]
 
       if (departure) {
+        if (departure.type === 'vline') departureRow.className = 'departure vline'
+        else departureRow.className = 'departure'
         departureRow.style = 'display: flex;'
         $('.departureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
         $('.destination', departureRow).textContent = departure.destination
@@ -91,6 +93,7 @@ function updateBody(firstTime) {
           $('.timeToDeparture', departureRow).className = 'timeToDeparture now'
         }
       } else {
+        departureRow.className = 'departure'
         departureRow.style = 'display: none;'
       }
     })
