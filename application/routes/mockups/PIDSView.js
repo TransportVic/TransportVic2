@@ -50,16 +50,16 @@ router.get('/:platform/:type', async (req, res, next) => {
     let {platform, type} = req.params
     let now = utils.now()
 
-    if (type === 'suburban-list') {
-      res.render('mockups/metro-lcd-pids/list-pids', { now })
-    } if (type === 'suburban-16-9-list') {
-      res.render('mockups/metro-lcd-pids/16-9-list-pids', { now })
-    } else if (type === 'suburban-text') {
-      res.render('mockups/metro-lcd-pids/pids', { now })
+    if (type === 'half-platform') {
+      res.render('mockups/metro-lcd/half-platform', { now })
+    } if (type === 'platform') {
+      res.render('mockups/metro-lcd/platform', { now })
+    } else if (type === 'half-platform-bold') {
+      res.render('mockups/metro-lcd/half-platform-bold', { now })
     } else if (type === 'fss-escalator') {
-      res.render('mockups/flinders-street/escalator', { platform, now })
+      res.render('mockups/fss/escalator', { platform, now })
     } else if (type === 'fss-platform') {
-      res.render('mockups/flinders-street/platform')
+      res.render('mockups/fss/platform')
     }
   }
 })
