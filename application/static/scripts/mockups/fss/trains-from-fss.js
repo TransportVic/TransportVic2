@@ -216,7 +216,7 @@ function updateBody() {
   }, (err, status, body) => {
     if (err) return setListenAnnouncements()
     setFullMessageActive(false)
-    
+
     let departures = body.departures
     setDestinationsRow(departures)
     updateDiagram(departures)
