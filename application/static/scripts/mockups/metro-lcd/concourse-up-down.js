@@ -43,6 +43,7 @@ function updateBody(firstTime) {
     method: 'POST'
   }, (err, status, body) => {
     if (err) return setListenAnnouncements()
+    setFullMessageActive(false)
 
     let departures = {
       'Up': [],

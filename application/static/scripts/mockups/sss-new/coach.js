@@ -22,11 +22,11 @@ function setListenAnnouncements() {
   if (currentlyDisplaying !== 'announcements') {
     currentlyDisplaying = 'announcements'
     $('.fullMessage').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>'
-    setFullMessagesActive(true)
+    setFullMessageActive(true)
   }
 }
 
-function setFullMessagesActive(active) {
+function setFullMessageActive(active) {
   if (active) {
     $('.fullMessage').style = 'display: flex;'
     $('.content').style = 'display: none;'
@@ -42,7 +42,7 @@ function updateBody() {
     method: 'POST'
   }, (err, status, body) => {
     if (err) return setListenAnnouncements()
-    setFullMessagesActive(false)
+    setFullMessageActive(false)
 
     let departures = {}
 

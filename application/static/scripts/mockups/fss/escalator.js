@@ -47,7 +47,7 @@ function setListenAnnouncements() {
   if (currentlyDisplaying !== 'announcements') {
     currentlyDisplaying = 'announcements'
     $('.fullMessage').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>'
-    setFullMessagesActive(true)
+    setFullMessageActive(true)
   }
 }
 
@@ -75,7 +75,7 @@ function setMessageActive(active) {
   }
 }
 
-function setFullMessagesActive(active) {
+function setFullMessageActive(active) {
   if (active) {
     $('.fullMessage').style = 'display: flex;'
     $('.content').style = 'display: none;'

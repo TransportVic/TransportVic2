@@ -131,6 +131,7 @@ function updateBody() {
     method: 'POST'
   }, (err, status, body) => {
     if (err) return setListenAnnouncements()
+    setFullMessageActive(false)
 
     updateDestinations(body.departures)
   })
