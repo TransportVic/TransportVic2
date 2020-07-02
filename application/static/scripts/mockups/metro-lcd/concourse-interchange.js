@@ -48,7 +48,7 @@ function setFullMessageActive(state) {
     $('.content').style = 'display: none;'
   } else {
     $('.fullMessage').style = 'display: none;'
-    $('.content').style = 'display: block;'
+    $('.content').style = 'display: flex;'
   }
 }
 
