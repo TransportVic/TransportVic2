@@ -264,6 +264,12 @@ module.exports = {
       count: 1
     },
     {
+      name: 'Mordialloc',
+      targets: ['Mordialloc'],
+      id: 'RMD-MOR',
+      count: 1
+    },
+    {
       name: 'Sandringham',
       targets: ['Sandringham'],
       id: 'RMD-SHM',
@@ -279,6 +285,12 @@ module.exports = {
       name: 'Belgrave',
       targets: ['Belgrave'],
       id: 'RMD-BEL',
+      count: 1
+    },
+    {
+      name: 'Ringwood',
+      targets: ['Ringwood'],
+      id: 'RMD-RWD',
       count: 1
     },
     {
