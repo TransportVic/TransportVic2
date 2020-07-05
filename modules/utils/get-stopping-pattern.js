@@ -145,6 +145,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let direction
   if (mode === 'metro train') {
     direction = ptvDirection.direction_id === 1 ? 'Up' : 'Down'
+    if (routeGTFSID === '2-CCL') direction = 'Down'
   }
 
   let routeName = routeData.route_name.trim()
