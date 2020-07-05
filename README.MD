@@ -169,8 +169,10 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   "useLetsEncrypt": false, // Whether to use let's encrypt to automatically renew certs
   "certbotFlags": "", // Any extra flags to pass to the certbot renew call. For example using dns challenge
 
-  "ptvKey": "", // Your PTV dev key.
-  "ptvDevID": "", // Your PTV dev id. If left blank PTV api calls will not work and will fallback to gtfs timetable. This makes data less accurate
+  "ptvKeys": [{
+    "key": "", // Your PTV dev key.
+    "devID": "" // Your PTV dev id. If left blank PTV api calls will not work and will fallback to gtfs timetable. This makes data less accurate
+  }],
 
   "devMode": true // Enables/Disables compression of data and other stuff
 }
