@@ -139,9 +139,19 @@ module.exports = {
             runID, operationDays: today
           })
 
+          departure.type = 'metro'
+          let tripStops = departure.trip.stopTimings.map(e => e.stopName)
+          let currentIndex = tripStops.indexOf(station.stopName)
+
           if (scheduled) {
             departure.connections = scheduled.connections.filter(connection => {
-              return !!departure.trip.stopTimings.find(s => s.stopName === connection.changeAt)
+              let changeAtStation = departure.trip.stopTimings.find(s => s.stopName === connection.changeAt)
+              if (!changeAtStation) return false
+              let {changeAt} = connection
+
+              let changeIndex = tripStops.indexOf(changeAt)
+
+              return changeIndex > currentIndex
             })
           } else departure.connections = []
 
