@@ -279,33 +279,15 @@ module.exports = {
       if (!isUp && departure.trip.destination === 'Eaglehawk Railway Station') routeName = 'Swan Hill'
     }
 
-    let lineStops = getLineStops(routeName)
-    let tripStops = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
-
-    if (departure.forming) {
-      let prevTripCityLoop = tripStops.filter(e => cityLoopStations.includes(e))
-      tripStops = [...prevTripCityLoop, ...departure.forming.stopTimings.map(stop => stop.stopName.slice(0, -16))]
-      tripStops = tripStops.filter((e, i, a) => a.indexOf(e) === i)
-
-      lineStops = getLineStops(departure.forming.routeName, departure.destination)
-    }
-
-    lineStops = lineStops.slice(0)
+    let lineStops = departure.lineStops
+    let tripStops = departure.tripStops
 
     let stationName = station.stopName.slice(0, -16)
-    if (isUp) {
-      lineStops = lineStops.reverse()
-    }
-
-    tripStops = module.exports.trimTrip(isUp, tripStops, stationName, routeName)
-
     let startingIndex = tripStops.indexOf(stationName)
-    tripStops = tripStops.slice(startingIndex)
-
-    lineStops = module.exports.getFixedLineStops(tripStops, lineStops, routeName, isUp, departure.type)
 
     startingIndex = lineStops.indexOf(stationName)
     let endingIndex = lineStops.lastIndexOf(destination)
+
     if (departure.trip.routeGTFSID === '2-CCL') endingIndex-- // bring it back from fss to parliament or southern cross
 
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
@@ -347,11 +329,9 @@ module.exports = {
     if (stopData.stopConditions) // trips matching using wtt timetables and live timetables don't have NTP
       notTakingPassengers = stopData.stopConditions.pickup === 1
 
-    let additionalInfo = {
+    departure.additionalInfo = {
       screenStops, expressCount, viaCityLoop, direction: isUp ? 'Up': 'Down', via, notTakingPassengers
     }
-
-    departure.additionalInfo = additionalInfo
     if (departure.trip.routeGTFSID === '2-CCL') departure.destination = 'City Loop'
 
     return departure
@@ -495,6 +475,10 @@ module.exports = {
       if (isUp) lineStops = lineStops.slice(0).reverse()
 
       lineStops = module.exports.getFixedLineStops(tripStops, lineStops, routeName, isUp, departure.type)
+
+      departure.lineStops = lineStops
+      departure.tripStops = tripStops
+
       let expresses = module.exports.findExpressStops(tripStops, lineStops, routeName, isUp, stationName)
       let stoppingPattern = module.exports.determineStoppingPattern(expresses, destination, lineStops, stationName, stoppingTextMap)
 
