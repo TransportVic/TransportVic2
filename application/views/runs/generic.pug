@@ -65,7 +65,15 @@ block content
       if trip.cancelled
         span.info.cancelled CANCELLED
   div.infoRow
-    span Bus stop
+    -
+      let stopType = ({
+        bus: 'Bus',
+        tram: 'Tram',
+        'regional coach': 'Coach',
+        ferry: 'Ferry'
+      })[trip.mode]
+    
+    span #{stopType} stop
   div.timing-list
     for stop in trip.stopTimings
       div.timingRow(id='stop-' + stop.stopGTFSID)
