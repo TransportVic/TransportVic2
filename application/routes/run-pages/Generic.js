@@ -73,7 +73,7 @@ async function pickBestTrip(data, db) {
 
   let checkStop = checkStops[0]
 
-  if (!checkStop) return gtfsTrip
+  if (!checkStop) checkStop = referenceTrip.stopTimings[0]
 
   let checkStopTime = moment.tz(`${data.operationDays} ${checkStop.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
   let isoDeparture = checkStopTime.toISOString()
