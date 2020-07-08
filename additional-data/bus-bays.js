@@ -429,7 +429,10 @@ module.exports = {
   51733: "Bay 3",
   51734: "Bay 4",
 
-
+  // Stud Park SC
+  21314: "Bay 1",
+  21315: "Bay 2",
+  21316: "Bay 3",
 
   // check ringwood 901 bay
   // Next up:

@@ -321,5 +321,6 @@ module.exports = [
   'pakenham/pakenham-hills-primary-school-army-road',
   'gembrook/gembrook-road-main-street',
   'lilydale/gateway-reserve-the-gateway',
-  'lilydale/lilydale-post-office-maroondah-highway'
+  'lilydale/lilydale-post-office-maroondah-highway',
+  'wantirna-south/dandenong-valley-parklands-high-street-road'
 ]
