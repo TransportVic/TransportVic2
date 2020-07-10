@@ -2,7 +2,7 @@ const departureUtils = require('../utils/get-bus-timetables')
 const async = require('async')
 const moment = require('moment')
 const TimedCache = require('timed-cache')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1 })
+const departuresCache = new TimedCache({ defaultTtl: 1000 * 30 })
 const healthCheck = require('../health-check')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
@@ -44,7 +44,7 @@ async function getDeparturesFromPTV(stop, db) {
 
   await async.forEach(gtfsIDs, async stopGTFSID => {
     //todo put route number as part of route and timetable db
-    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/1/stop/${stopGTFSID}?gtfs=true&max_results=5&expand=run&expand=route`)
+    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/1/stop/${stopGTFSID}?gtfs=true&max_results=6&look_backwards=false&include_cancelled=true&expand=run&expand=route`)
 
     let seenIDs = []
     await async.forEach(departures, async tramDeparture => {
