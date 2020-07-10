@@ -94,6 +94,75 @@ let showBurnLineTimeout = 0
 let showingStandClear = false
 let previousDeparture = null
 
+function createStoppingPatternID(stoppingPattern) {
+  return stoppingPattern.map(e => `${e.stopName}${e.isExpress}`).join(',')
+}
+
+let currentPattern = null
+
+function addStoppingPattern(stops) {
+  let newPatternID = createStoppingPatternID(stops)
+  if (currentPattern === newPatternID) return true
+
+  currentPattern = newPatternID
+  let {stopColumns, size} = splitStops(stops.slice(1), false, {
+    MAX_COLUMNS: 4,
+    CONNECTION_LOSS: 2,
+    MIN_COLUMN_SIZE: 5,
+    MAX_COLUMN_SIZE: 9
+  })
+
+  $('.stops').innerHTML = ''
+
+  let check = []
+
+  stopColumns.forEach((stopColumn, i) => {
+    let outerColumn = document.createElement('div')
+    let html = ''
+
+    let hasStop = false
+
+    stopColumn.forEach(stop => {
+      if (stop.isExpress)
+        html += '<span>&nbsp;---</span><br>'
+      else {
+        let {stopName} = stop
+        if (stopName === 'Upper Ferntree Gully') stopName = 'Upper F.T Gully'
+
+        html += `<span>${stopName}</span><br>`
+
+        hasStop = true
+      }
+    })
+
+    outerColumn.innerHTML = `<div>${html}</div>`
+    outerColumn.className = `stopsColumn columns-${size}${hasStop ? '' : ' expressColumn'}`
+
+    $('.stops').appendChild(outerColumn)
+
+    if (hasStop) {
+      check.push($('div', outerColumn))
+    }
+  })
+
+  setTimeout(() => {
+    check.forEach(container => {
+      let computed = getComputedStyle(container.parentElement)
+      let containerWidth = parseFloat(computed.width) + 0.3 * parseFloat(computed.marginRight)
+      let threshold = containerWidth * 0.9
+
+      Array.from(container.children).forEach(station => {
+        if (station.tagName === 'BR') return
+
+        let childWidth = parseFloat(getComputedStyle(station).width)
+        if (childWidth >= threshold) {
+          station.className = 'squish'
+        }
+      })
+    })
+  }, 1)
+}
+
 function updateBody() {
   $.ajax({
     method: 'POST'
@@ -131,64 +200,7 @@ function updateBody() {
         $('.actualDiv div span:nth-child(2)').textContent = 'min'
       }
 
-      let {stopColumns, size} = splitStops(firstDeparture.additionalInfo.screenStops.slice(1), false, {
-        MAX_COLUMNS: 4,
-        CONNECTION_LOSS: 2,
-        MIN_COLUMN_SIZE: 5,
-        MAX_COLUMN_SIZE: 9
-      })
-
-      $('.stops').innerHTML = ''
-
-      let check = []
-
-      stopColumns.forEach((stopColumn, i) => {
-        let outerColumn = document.createElement('div')
-        let html = ''
-
-        let hasStop = false
-
-        stopColumn.forEach(stop => {
-          if (stop.isExpress)
-            html += '<span>&nbsp;---</span><br>'
-          else {
-            let {stopName} = stop
-            if (stopName === 'Upper Ferntree Gully') stopName = 'Upper F.T Gully'
-
-            html += `<span>${stopName}</span><br>`
-
-            hasStop = true
-          }
-        })
-
-        outerColumn.innerHTML = `<div>${html}</div>`
-        outerColumn.className = `stopsColumn columns-${size}${hasStop ? '' : ' expressColumn'}`
-
-        $('.stops').appendChild(outerColumn)
-
-        if (hasStop) {
-          check.push($('div', outerColumn))
-        }
-      })
-
-      setTimeout(() => {
-        check.forEach(container => {
-          let computed = getComputedStyle(container.parentElement)
-          let containerWidth = parseFloat(computed.width) + 0.3 * parseFloat(computed.marginRight)
-          let threshold = containerWidth * 0.9
-
-          Array.from(container.children).forEach(station => {
-            if (station.tagName === 'BR') return
-
-            let childWidth = parseFloat(getComputedStyle(station).width)
-            console.log(childWidth, threshold, station.textContent)
-            if (childWidth >= threshold) {
-              station.className = 'squish'
-            }
-          })
-        })
-      }, 1)
-
+      addStoppingPattern(firstDeparture.additionalInfo.screenStops)
       setMessagesActive(false)
     }
 

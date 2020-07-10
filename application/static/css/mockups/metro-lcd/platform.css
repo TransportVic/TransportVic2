@@ -7,10 +7,6 @@ div.content {
   color: white !important;
 }
 
-div.content.announcements {
-  background-color: #000000 !important;
-}
-
 div.fullMessage {
   height: var(--height);
   flex-direction: column;
@@ -144,7 +140,6 @@ div.serviceMessage {
 
 div.stops {
   height: calc(var(--height) * 0.65);
-  background: #222222;
 
   display: flex;
 }
@@ -177,7 +172,7 @@ div.stops div.stopsColumn div span {
 }
 
 div.stops div.stopsColumn div span.squish {
-  letter-spacing: -0.07vw;
+  letter-spacing: calc(var(--width) * -0.0007);
   transform: scaleX(0.9);
   transform-origin: left;
 }
@@ -273,7 +268,7 @@ div.time {
 }
 
 div.timeContainer {
-  width: 29.25vw;
+  width: calc(var(--width) * 0.0025);
   height: calc(var(--height) * 0.145);
   display: flex;
   align-items: center;

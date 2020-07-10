@@ -7,10 +7,6 @@ div.content {
   color: white !important;
 }
 
-div.content.announcements {
-  background-color: #000000 !important;
-}
-
 div.fullMessage {
   height: var(--height);
   flex-direction: column;

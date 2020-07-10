@@ -11,19 +11,40 @@ div.fullMessage {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 }
 
-div.fullMessage > img {
+div.fullMessage div.announcements {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+div.fullMessage div.fixedMessage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+div.fullMessage img {
   height: calc(var(--height) * 0.3);
 }
 
-div.fullMessage > * {
-  font-size: calc(var(--height) * 0.175);
-  line-height: calc(var(--height) * 0.175);
-  height: calc(var(--height) * 0.175);
-  margin: calc(var(--width) * 0.01);
+div.fullMessage p {
   font-family: "NetworkSansRegular";
   white-space: nowrap;
+}
+
+div.fullMessage div.announcements p {
+  font-size: calc(var(--height) * 0.175);
+  line-height: calc(var(--height) * 0.175);
+  margin: calc(var(--width) * 0.01);
+}
+
+div.fullMessage div.fixedMessage p {
+  font-size: calc(var(--height) * 0.3);
+  line-height: calc(var(--height) * 0.33);
 }
 
 div.message {

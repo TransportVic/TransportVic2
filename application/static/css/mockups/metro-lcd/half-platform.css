@@ -15,14 +15,14 @@ div.fullMessage > * {
   font-size: calc(var(--height) * 0.175);
   line-height: calc(var(--height) * 0.175);
   height: calc(var(--height) * 0.175);
-  margin: 1vw;
+  margin: calc(var(--width) * 0.01);
   font-family: "NetworkSansRegular";
   white-space: nowrap;
 }
 
 
 div.left {
-  width: 70vw;
+  width: calc(var(--width) * 0.70);
 }
 
 div.message, div.serviceMessage {
@@ -33,13 +33,13 @@ div.message, div.serviceMessage {
 }
 
 div.message p, div.serviceMessage p {
-  font-size: 6vw;
-  line-height: 6vw;
+  font-size: calc(var(--width) * 0.06);
+  line-height: calc(var(--width) * 0.06);
 }
 
 div.message p.large, div.serviceMessage p.large {
-  font-size: 7.5vw;
-  line-height: 7.5vw;
+  font-size: calc(var(--width) * 0.075);
+  line-height: calc(var(--width) * 0.075);
 }
 
 div.nextDeparture {
@@ -67,7 +67,7 @@ div.burnLine {
 }
 
 div.burnLine.active {
-  width: 70vw;
+  width: calc(var(--width) * 0.70);
 }
 
 div.burnLine.reset {
@@ -83,10 +83,10 @@ div.departureInfo {
 }
 
 div.departureInfo span.firstDestination {
-  margin-left: 0.5vw;
+  margin-left: calc(var(--width) * 0.005);
   font-size: calc(var(--height) * 0.17);
   font-family: "NetworkSansBold";
-  letter-spacing: -0.22vw;
+  letter-spacing: calc(var(--width) * -0.0022);
 }
 
 div.departureInfo > div {
@@ -107,13 +107,13 @@ div.departureInfo > div > span:nth-child(2) {
 
 div.scheduledDiv {
   margin-left: auto;
-  min-width: 7vw;
+  min-width: calc(var(--width) * 0.07);
 }
 
 div.actualDiv {
-  margin-left: 2vw;
-  min-width: 7vw;
-  margin-right: 0.5vw;
+  margin-left: calc(var(--width) * 0.02);
+  min-width: calc(var(--width) * 0.07);
+  margin-right: calc(var(--width) * 0.005);
 }
 
 div.departureInfo > div.actualDiv > div > span:nth-child(1) {
@@ -125,7 +125,7 @@ div.departureInfo > div.actualDiv > div > span:nth-child(1) {
 div.departureInfo > div.actualDiv > div > span:nth-child(2) {
   font-size: calc(var(--height) * 0.07);
   line-height: calc(var(--height) * 0.07);
-  margin-left: 0.2vw;
+  margin-left: calc(var(--width) * 0.002);
 }
 
 div.hozWhiteLine {
@@ -139,43 +139,49 @@ div.serviceMessage {
 
 div.stops {
   height: calc(var(--height) * 0.7);
-  background: #00000;
 
   display: flex;
 }
 
 div.stops div.stopsColumn {
-  min-width: 12vw;
-  padding-right: 2vw;
+  min-width: calc(var(--width) * 0.12);
+  margin-right: auto;
 }
 
 div.stops div.stopsColumn:nth-child(1) div {
   border-left: none !important;
 }
 
-div.stops div.stopsColumn div {
-  border-left: 0.125vw solid white;
-  padding-left: 1vw;
-  margin-top: calc(var(--height) * 0.04);
-  margin-left: 0.25vw;
+div.stops div.stopsColumn.expressColumn:nth-child(1) div {
+  padding-left: 0;
+  margin-left: 0;
 }
 
-div.stops div.stopsColumn div p {
+div.stops div.stopsColumn div {
+  border-left: calc(var(--width) * 0.00125) solid white;
+  padding-left: calc(var(--width) * 0.01);
+  margin-top: calc(var(--height) * 0.02);
+  margin-left: calc(var(--width) * 0.0025);
+}
+
+div.stops div.stopsColumn div span {
   font-size: calc(var(--height) * 0.075);
   line-height: calc(var(--height) * 0.085);
   margin-top: calc(var(--height) * 0.01) !important;
-  font-family: NetworkSansRegular;
+
   white-space: nowrap;
+  display: inline-block;
 }
 
-div.stops div.stopsColumn div p.squish {
-  letter-spacing: -0.05vw;
+div.stops div.stopsColumn div span.squish {
+  letter-spacing: calc(var(--width) * -0.0005);
   transform: scaleX(0.98);
   transform-origin: left;
 }
 
-div.stopsColumn.expressRow {
+div.stopsColumn.expressColumn {
   min-width: unset !important;
+  margin-right: calc(var(--width) * 0.02) !important;
 }
 
 div.stopsColumn.columns-9, div.stopsColumn.columns-8 {
@@ -186,15 +192,15 @@ div.stops div.stopsColumn.columns-8 div {
   margin-top: calc(var(--height) * 0.015) !important;
 }
 
-div.stops div.stopsColumn.columns-8 div p {
-  margin-top: calc(var(--height) * 0.005) !important;
+div.stops div.stopsColumn.columns-8 div span {
+  margin-top: calc(var(--height) * 0.0034) !important;
 }
 
 div.stops div.stopsColumn.columns-9 div {
   margin-top: calc(var(--height) * 0.01) !important;
 }
 
-div.stops div.stopsColumn.columns-9 div p {
+div.stops div.stopsColumn.columns-9 div span {
   margin-top: calc(var(--height) * 0.001) !important;
   font-size: calc(var(--height) * 0.07) !important;
   line-height: calc(var(--height) * 0.079) !important;
@@ -204,8 +210,8 @@ div.stops div.stopsColumn.columns-9 div p {
 
 
 div.right {
-  width: 29.75vw;
-  border-left: 0.25vw solid white;
+  width: calc(var(--width) * 0.2975);
+  border-left: calc(var(--width) * 0.0025) solid white;
 }
 
 div.headers {
@@ -222,7 +228,7 @@ div.headers span {
 }
 
 div.headers span.actual {
-  margin-right: 2vw !important;
+  margin-right: calc(var(--width) * 0.02) !important;
 }
 
 div.followingDeparture {
@@ -239,8 +245,8 @@ div.followingDeparture > div {
 }
 
 div.right span.scheduled {
-  margin-left: 0.5vw;
-  width: 6.5vw;
+  margin-left: calc(var(--width) * 0.005);
+  width: calc(var(--width) * 0.065);
   font-family: "NetworkSansBold";
 }
 
@@ -250,20 +256,21 @@ div.right span.destination {
 
 div.right span.actual {
   margin-left: auto;
-  margin-right: 0.5vw;
+  margin-right: calc(var(--width) * 0.005);
   text-align: right;
-  width: 3vw;
+  width: calc(var(--width) * 0.03);
   font-family: "NetworkSansBold";
 }
 
 div.right span.min {
-  margin-right: 0.5vw;
+  margin-right: calc(var(--width) * 0.005);
   text-align: right;
   font-family: "NetworkSansRegular";
 }
 
 div.followingDeparture span.stoppingType {
-  margin-left: 0.5vw;
+  margin-top: calc(var(--height) * 0.012);
+  margin-left: calc(var(--width) * 0.005);
   font-family: "NetworkSansRegular";
 }
 
@@ -274,8 +281,8 @@ div.followingDeparture span {
 }
 
 div.followingDeparture:nth-child(3) {
-  border-top: 0.1vw solid grey;
-  border-bottom: 0.1vw solid grey;
+  border-top: calc(var(--width) * 0.001) solid grey;
+  border-bottom: calc(var(--width) * 0.001) solid grey;
 }
 
 div.time {
@@ -288,13 +295,13 @@ div.time {
 }
 
 div.timeContainer {
-  width: 29.25vw;
+  width: calc(var(--width) * 0.2925);
   height: calc(var(--height) * 0.145);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 0.1vw solid gray;
-  margin-right: 0.25vw;
+  border: calc(var(--width) * 0.001) solid gray;
+  margin-right: calc(var(--width) * 0.0025);
 }
 
 div.time span {

@@ -97,8 +97,8 @@ function setFullMessageActive(state) {
 }
 
 function setNoDepartures() {
-  $('.message').innerHTML = '<p>No trains departing from</p><p>this platform</p>'
-  setMessagesActive(true)
+  $('.fullMessage').innerHTML = '<div class="fixedMessage"><p>No trains departing from</p><p>this platform</p></div>'
+  setFullMessageActive(true)
 }
 
 function setBusesReplaceTrains() {
@@ -107,7 +107,7 @@ function setBusesReplaceTrains() {
 }
 
 function setListenAnnouncements() {
-  $('.fullMessage').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>'
+  $('.fullMessage').innerHTML = '<div class="announcements"><img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p></div>'
   setFullMessageActive(true)
 }
 
