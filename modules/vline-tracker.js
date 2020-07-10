@@ -114,7 +114,9 @@ async function getDeparturesFromVNET(db) {
   let vlineTrips = db.getCollection('vline trips')
 
   await async.forEach(vnetDepartures, async departure => {
-    let date = departure.originDepartureTime.format('YYYYMMDD')
+    let referenceTime = departure.originDepartureTime.clone()
+    if (referenceTime.get('minutes') < 180) referenceTime.add(-1, 'days')
+    let date = referenceTime.format('YYYYMMDD')
 
     let tripData = {
       date,
