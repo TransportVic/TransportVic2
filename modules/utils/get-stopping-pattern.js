@@ -164,7 +164,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     runID: vehicleDescriptor.id,
     operationDays: [tripOperationDay],
     vehicle: vehicleDescriptor.description || vehicleDescriptor.id,
-    stopTimings: stopTimings.sort((a, b) => (a.arrivalTimeMinutes || a.departureTimeMinutes) - (b.arrivalTimeMinutes || b.departureTimeMinutes)),
+    stopTimings: stopTimings,
     destination: stopTimings[stopTimings.length - 1].stopName,
     destinationArrivalTime: stopTimings[stopTimings.length - 1].arrivalTime,
     departureTime: stopTimings[0].departureTime,

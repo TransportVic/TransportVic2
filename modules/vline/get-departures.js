@@ -421,8 +421,10 @@ async function getScheduledDepartures(db, station) {
       if (stopTiming) platform = stopTiming.platform
     }
 
+    let departureDay = departure.scheduledDepartureTime.format('YYYYMMDD')
+
     let tripData = await vlineTrips.findDocument({
-      date: departureTime.format('YYYYMMDD'),
+      date: departureDay,
       departureTime,
       origin: origin.slice(0, -16),
       destination: destination.slice(0, -16)
@@ -430,7 +432,7 @@ async function getScheduledDepartures(db, station) {
 
     if (!tripData) {
       tripData = await vlineTrips.findDocument({
-        date: departureTime.format('YYYYMMDD'),
+        date: departureDay,
         departureTime,
         origin: origin.slice(0, -16)
       })
@@ -438,7 +440,7 @@ async function getScheduledDepartures(db, station) {
 
     if (!tripData) {
       tripData = await vlineTrips.findDocument({
-        date: departureTime.format('YYYYMMDD'),
+        date: departureDay,
         destination: destination.slice(0, -16),
         destinationArrivalTime
       })
