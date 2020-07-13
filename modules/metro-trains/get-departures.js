@@ -254,12 +254,45 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let direction = isUpTrip ? 'Up' : 'Down'
     if (isTrainReplacement) direction = { $in: ['Up', 'Down'] }
 
+    let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== trip.destination.slice(0, -16)
+    let isSCS = station.stopName.slice(0, -16) === 'Southern Cross'
+    let isFSS = station.stopName.slice(0, -16) === 'Flinders Street'
+
+    // let isUpTrip = ((trip || {}).direction === 'Up' || runID % 2 === 0) && !isFormingNewTrip
+    let cityLoopConfig = !isTrainReplacement ? determineLoopRunning(routeID, runID, runDestination, isFormingNewTrip, isSCS) : []
+
+    if (isUpTrip && !cityLoopStations.includes(runDestination.toLowerCase()) &&
+      !cityLoopStations.includes(stationName) && runDestination !== 'Flinders Street')
+      cityLoopConfig = []
+
+    if (cityLoopStations.includes(stationName) && !cityLoopConfig.includes('FGS')) {
+      if (caulfieldGroup.includes(routeID) && isUpTrip)
+        cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
+        // trip is towards at flinders, but ptv api already gave next trip
+        // really only seems to happen with cran/pak/frank lines
+      if (!crossCityGroup.includes(routeID) && northenGroup.includes(routeID)) {// all northern group except showgrounds & cross city
+        if (runDestination !== 'Flinders Street')
+          cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
+      }
+    }
+
+    if (isUpTrip && !cityLoopStations.includes(stationName)) {
+      if (cityLoopConfig[0] === 'FSS' || cityLoopConfig[1] === 'FSS')
+        destination = 'Flinders Street'
+      else if (['PAR', 'FGS'].includes(cityLoopConfig[0]) && !cityLoopStations.includes(stationName))
+        destination = 'City Loop'
+      else if (cityLoopConfig.slice(-1)[0] === 'SSS')
+        destination = 'Southern Cross'
+    }
+
+    let viaCityLoop = isFSS ? cityLoopConfig.includes('FGS') : undefined
+
     let trip = await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines,
-      scheduledDepartureTime, possibleDestinations, direction)
+      scheduledDepartureTime, possibleDestinations, direction, viaCityLoop)
 
     if (!trip) {
       trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
-        scheduledDepartureTime, possibleDestinations, direction)
+        scheduledDepartureTime, possibleDestinations, direction, viaCityLoop)
     } else {
       if (new Date() - trip.updateTime < 2 * 60 * 1000) usedLive = true
     }
@@ -300,36 +333,6 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
         return r.origin === trip.origin.slice(0, -16) && r.departureTime === trip.departureTime
       })
       if (replacement) isTrainReplacement = true
-    }
-
-    let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== trip.destination.slice(0, -16)
-    let isSCS = station.stopName.slice(0, -16) === 'Southern Cross'
-
-    // let isUpTrip = ((trip || {}).direction === 'Up' || runID % 2 === 0) && !isFormingNewTrip
-    let cityLoopConfig = !isTrainReplacement ? determineLoopRunning(routeID, runID, runDestination, isFormingNewTrip, isSCS) : []
-
-    if (isUpTrip && !cityLoopStations.includes(runDestination.toLowerCase()) &&
-      !cityLoopStations.includes(stationName) && runDestination !== 'Flinders Street')
-      cityLoopConfig = []
-
-    if (cityLoopStations.includes(stationName) && !cityLoopConfig.includes('FGS')) {
-      if (caulfieldGroup.includes(routeID) && isUpTrip)
-        cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
-        // trip is towards at flinders, but ptv api already gave next trip
-        // really only seems to happen with cran/pak/frank lines
-      if (!crossCityGroup.includes(routeID) && northenGroup.includes(routeID)) {// all northern group except showgrounds & cross city
-        if (runDestination !== 'Flinders Street')
-          cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
-      }
-    }
-
-    if (isUpTrip && !cityLoopStations.includes(stationName)) {
-      if (cityLoopConfig[0] === 'FSS' || cityLoopConfig[1] === 'FSS')
-        destination = 'Flinders Street'
-      else if (['PAR', 'FGS'].includes(cityLoopConfig[0]) && !cityLoopStations.includes(stationName))
-        destination = 'City Loop'
-      else if (cityLoopConfig.slice(-1)[0] === 'SSS')
-        destination = 'Southern Cross'
     }
 
     if (routeID === 99 && stationName === 'flinders street') destination = 'City Loop'
