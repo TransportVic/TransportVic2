@@ -1,9 +1,9 @@
 for service in services
   -
     let serviceDepartures = groupedDepartures[service]
-    let destinations = Object.keys(serviceDepartures).sort((a, b) => a.length - b.length)
+    let destinations = Object.keys(serviceDepartures)
     let hasNumber = !!service
-  for destination in destinations.sort((a, b) => serviceDepartures[a][0].actualDepartureTime - serviceDepartures[b][0].actualDepartureTime)
+  for destination in destinations
     -
       let destinationDepartures = serviceDepartures[destination]
       let departures = destinationDepartures.slice(0, 4)

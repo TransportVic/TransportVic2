@@ -3,8 +3,8 @@ extends ../layout
 block head
   -
     let title = `${trip.departureTime} ${origin} to ${destination}`
-    if (trip.routeNumber) {
-      title = `${trip.departureTime} ${trip.routeNumber} to ${destination}`
+    if (routeNumber) {
+      title = `${trip.departureTime} ${routeNumber} to ${destination}`
     }
   title=`TransportVic - ${title}`
   
@@ -46,15 +46,15 @@ block content
         //- placeholder icon
         span
         img(src=`/static/images/icons/optimus.svg`)
-  - let hasNumber = !!trip.routeNumber
+  - let hasNumber = !!routeNumber
   div(class=`departure${hasNumber ? '' : ' no-number'}`)
     if hasNumber
-      a(class=`leftContainer platform ${operator}`)
+      a(class=`leftContainer platform ${routeNumberClass}`)
         if loopDirection
           span.topText=loopDirection
         else if trip.routeDetails
           span.topText=trip.routeDetails
-        span.bigNumber=trip.routeNumber
+        span.bigNumber=routeNumber
     a.departureInfo
       if !hasNumber
         span.routeName=trip.routeName

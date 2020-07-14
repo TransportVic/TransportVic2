@@ -54,7 +54,14 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     routeGTFSID = '2-CCL'
   }
 
-  let gtfsDirection = route.ptvDirections[ptvDirection.direction_name]
+  let directionName = ptvDirection.direction_name
+  let gtfsDirection = route.ptvDirections[directionName]
+
+  if (mode === 'tram') {
+    let keys = Object.keys(route.ptvDirections)
+    let bestKey = keys.find(k => k.replace(/[\w ]+ to/).includes(directionName))
+    if (bestKey) gtfsDirection = route.ptvDirections[bestKey]
+  }
 
   await async.forEach(Object.values(stops), async stop => {
     let stopName = stop.stop_name.trim()

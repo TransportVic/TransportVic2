@@ -10,6 +10,8 @@ const busDestinations = require('../../../additional-data/bus-destinations')
 const coachDestinations = require('../../../additional-data/coach-destinations')
 const tramDestinations = require('../../../additional-data/tram-destinations')
 
+const determineTramRouteNumber = require('../../../modules/tram/determine-tram-route-number')
+
 const tramFleet = require('../../../tram-fleet')
 
 async function pickBestTrip(data, db) {
@@ -215,14 +217,23 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
     }
   }
 
+  let routeNumber = trip.routeNumber
+  let routeNumberClass = utils.encodeName(operator)
+
+  if (trip.mode === 'tram') {
+    routeNumber = determineTramRouteNumber(trip)
+    routeNumberClass = 'tram-' + routeNumber.replace(/[a-z]/, '')
+  }
+
   res.render('runs/generic', {
     trip,
     shorternStopName: utils.shorternStopName,
     origin,
     destination,
-    operator: utils.encodeName(operator),
+    routeNumberClass,
     loopDirection,
-    viaText
+    viaText,
+    routeNumber
   })
 })
 

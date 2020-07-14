@@ -83,14 +83,30 @@ async function loadDepartures(req, res) {
     let serviceDepartures = departures.filter(d => d.sortNumber === service)
     let serviceDestinations = []
 
-    serviceDepartures.forEach(departure => {
-      let destination = departure.destination + departure.viaText + departure.loopDirection
-      if (!serviceDestinations.includes(destination)) {
-        serviceDestinations.push(destination)
-        groupedDepartures[service][destination] =
-          serviceDepartures.filter(d => d.destination + d.viaText + d.loopDirection === destination)
-          .sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
-      }
+    let directions = [
+      serviceDepartures.filter(d => d.trip.gtfsDirection === '0'),
+      serviceDepartures.filter(d => d.trip.gtfsDirection === '1')
+    ]
+
+    directions.forEach(direction => {
+      let destinationDepartures = []
+      let destinations = []
+
+      direction.forEach(departure => {
+        let destination = departure.destination + departure.viaText + departure.loopDirection
+        if (!destinations.includes(destination)) {
+          destinations.push(destination)
+          destinationDepartures.push({
+            destination,
+            departures: direction.filter(d => d.destination + d.viaText + d.loopDirection === destination)
+          })
+        }
+      })
+
+      let sortedDepartures = destinationDepartures.sort((a, b) => a.departures[0].actualDepartureTime - b.departures[0].actualDepartureTime)
+      sortedDepartures.forEach(departureSet => {
+        groupedDepartures[service][departureSet.destination] = departureSet.departures
+      })
     })
   })
 

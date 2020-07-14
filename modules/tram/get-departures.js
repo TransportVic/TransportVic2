@@ -9,6 +9,7 @@ const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
 const tramFleet = require('../../tram-fleet')
+const determineTramRouteNumber = require('./determine-tram-route-number')
 
 let tripLoader = {}
 let tripCache = {}
@@ -59,7 +60,7 @@ async function getDeparturesFromPTV(stop, db) {
 
       if (actualDepartureTime.diff(now, 'minutes') > 90) return
 
-      let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
+      let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime) % 1440
 
       let destination = utils.adjustStopname(run.destination_name.trim())
         .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
@@ -68,7 +69,10 @@ async function getDeparturesFromPTV(stop, db) {
       let routeGTFSID = route.route_gtfs_id.replace(/-0+/, '-')
 
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'tram', day, routeGTFSID)
-      if (!trip) trip = await getStoppingPatternWithCache(db, tramDeparture, run.destination_name),console.log(trip)
+      if (!trip) trip = await getStoppingPatternWithCache(db, tramDeparture, run.destination_name)
+
+      let tripDestination = trip.stopTimings.slice(-1)[0].stopGTFSID
+      if (allGTFSIDs.includes(tripDestination)) return
 
       let vehicleDescriptor = run.vehicle_descriptor || {}
       let tram = {}
@@ -84,6 +88,9 @@ async function getDeparturesFromPTV(stop, db) {
         }
       }
 
+      let routeNumber = determineTramRouteNumber(trip)
+      let sortNumber = parseInt(routeNumber.replace(/[a-z]/, ''))
+
       mappedDepartures.push({
         trip,
         scheduledDepartureTime,
@@ -91,7 +98,8 @@ async function getDeparturesFromPTV(stop, db) {
         actualDepartureTime,
         destination: trip.destination,
         vehicleDescriptor,
-        routeNumber: route.route_number === '3-3a' ? '3' : route.route_number,
+        routeNumber,
+        sortNumber,
         tram
       })
     })
