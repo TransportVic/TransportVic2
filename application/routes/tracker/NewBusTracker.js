@@ -105,7 +105,7 @@ router.get('/fleet', async (req, res) => {
       services: await busTrips.distinct('routeNumber', {
         smartrakID, date
       }),
-      date: date
+      date
     }
   })
 
@@ -163,7 +163,7 @@ router.get('/service', async (req, res) => {
   let busesByDay = {}
   let smartrakIDCache = {}
 
-  await async.forEach(operationDays, async date => {
+  await async.forEachSeries(operationDays, async date => {
     let smartrakIDsByDate = await busTrips.distinct('smartrakID', {
       date,
       routeNumber: service
@@ -183,7 +183,10 @@ router.get('/service', async (req, res) => {
     })).sort((a, b) => a.replace(/[^\d]/g, '') - b.replace(/[^\d]/g, ''))
 
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
-    busesByDay[humanDate] = buses
+    busesByDay[humanDate] = {
+      buses,
+      date
+    }
   })
 
   res.render('tracker/bus/by-service', {
