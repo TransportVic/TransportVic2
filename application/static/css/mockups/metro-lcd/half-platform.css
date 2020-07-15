@@ -42,6 +42,14 @@ div.message p.large, div.serviceMessage p.large {
   line-height: calc(var(--width) * 0.075);
 }
 
+div.serviceMessage div.arrivalMessage {
+  width: 95%;
+}
+
+div.serviceMessage div.arrivalMessage p {
+  font-size: calc(var(--height) * 0.17);
+}
+
 div.nextDeparture {
   flex-direction: column;
 }

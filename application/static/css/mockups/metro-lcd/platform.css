@@ -43,6 +43,22 @@ div.message p.large, div.serviceMessage p.large {
   font-size: calc(var(--width) * 0.075);
 }
 
+div.serviceMessage div.arrivalMessage {
+  width: 98%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.serviceMessage div.arrivalMessage img {
+  height: calc(var(--height) * 0.35);
+  margin-right: calc(var(--width) * 0.02);
+}
+
+div.serviceMessage div.arrivalMessage p {
+  font-size: calc(var(--height) * 0.085);
+}
+
 div.nextDeparture {
   flex-direction: column;
 }

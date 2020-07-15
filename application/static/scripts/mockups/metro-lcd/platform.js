@@ -89,6 +89,12 @@ function setListenAnnouncements() {
   setFullMessageActive(true)
 }
 
+function setArrival() {
+  $('.firstDestination').textContent = 'Arrival'
+  $('.serviceMessage').innerHTML = '<div class="arrivalMessage"><img src="/static/images/mockups/no-boarding-train.svg" /><div><p>This train is not taking passengers.</p><p>Don\'t board this train.</p></div></div>'
+  setServiceMessageActive(true)
+}
+
 let burnLinesShown = []
 let showBurnLineTimeout = 0
 let showingStandClear = false
@@ -202,6 +208,8 @@ function updateBody() {
 
       addStoppingPattern(firstDeparture.additionalInfo.screenStops)
       setMessagesActive(false)
+
+      if (firstDeparture.additionalInfo.notTakingPassengers) setArrival()
     }
 
     let nextDepartures = [...departures.slice(1, 3), null, null].slice(0, 2)

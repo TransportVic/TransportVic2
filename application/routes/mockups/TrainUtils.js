@@ -89,6 +89,7 @@ module.exports = {
         trip: arrival,
         type: 'arrival',
         scheduledDepartureTime,
+        destination: 'Arrival',
         estimatedDepartureTime: null,
         actualDepartureTime,
         platform: arrivalStop.platform, // use realtime

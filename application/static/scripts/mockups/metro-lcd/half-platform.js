@@ -99,6 +99,12 @@ function setListenAnnouncements() {
   setFullMessageActive(true)
 }
 
+function setArrival() {
+  $('.firstDestination').textContent = 'Arrival'
+  $('.serviceMessage').innerHTML = '<div class="arrivalMessage"><p>This train is not taking</p><p>passengers.</p><p>Don\'t board this train.</p></div>'
+  setServiceMessageActive(true)
+}
+
 let burnLinesShown = []
 let showBurnLineTimeout = 0
 let showingStandClear = false
@@ -192,7 +198,7 @@ function updateBody() {
     showingStandClear = showingStandClear && firstDeparture.scheduledDepartureTime === previousDeparture
 
     if (!showingStandClear) {
-      if (firstDeparture.additionalInfo.notTakingPassengers) {
+      if (firstDeparture.additionalInfo.notTakingPassengers && firstDeparture.type === 'vline') {
         setNotTakingPassengers()
       } else {
         $('.burnLine').className = 'burnLine reset'
@@ -216,6 +222,8 @@ function updateBody() {
 
         addStoppingPattern(firstDeparture.additionalInfo.screenStops)
         setMessagesActive(false)
+
+        if (firstDeparture.additionalInfo.notTakingPassengers) setArrival()
       }
     }
 
@@ -233,6 +241,8 @@ function updateBody() {
 
         if (departure.type === 'vline') {
           div.className = 'followingDeparture vline'
+        } else if (departure.type === 'arrival') {
+          $('.destination', div).textContent = 'Arrival'
         } else {
           div.className = 'followingDeparture'
         }

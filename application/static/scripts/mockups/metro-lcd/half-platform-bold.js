@@ -25,6 +25,7 @@ let secondRowTimeout, secondRowPause
 let firstScheduledTime, firstStoppingPattern
 
 let departures
+let isArrival = false
 
 function showStoppingType() {
   if (firstStoppingPatternP.textContent.includes('Not Stopping At')) {
@@ -111,6 +112,24 @@ function setListenAnnouncements() {
   setFullMessageActive(true)
 }
 
+function setStandClear() {
+  $('.serviceMessage').textContent = 'Stand Clear Train Departing'
+  setServiceMessageActive(true)
+}
+
+function setArrival() {
+  isArrival = true
+
+  $('.serviceMessage').style = 'display: block;'
+  $('div.middleRow .stoppingType').style = 'display: none;'
+  $('div.middleRow .stoppingPattern').style = 'display: none;'
+
+  $('.firstDestination').textContent = 'Arrival'
+  $('.firstDestination').className = 'firstDestination'
+
+  $('.serviceMessage').innerHTML = '<div class="arrivalMessage"><img src="/static/images/mockups/no-boarding-train.svg" /><p>Not taking passengers,please don\'t board</p></div>'
+}
+
 let burnLinesShown = []
 let showBurnLineTimeout = 0
 let showingBurnLine = false
@@ -182,6 +201,9 @@ function updateBody(firstTime) {
       firstStoppingTypeP.textContent = firstStoppingType
       firstStoppingPatternP.textContent = firstDeparture.stoppingPattern
       firstStoppingPatternP.setAttribute('data-text', firstDeparture.stoppingPattern)
+
+      if (firstDeparture.additionalInfo.notTakingPassengers) setArrival()
+      else isArrival = false
     }
 
     let secondDeparture = departures[1]
@@ -212,15 +234,19 @@ function updateBody(firstTime) {
     }
 
     if (firstDeparture.scheduledDepartureTime !== previousDeparture) {
-      setServiceMessageActive(false)
-      if (!firstTime)
+      if (firstDeparture.isArrival) {
         stopScrolling = true
-      clearTimeout(firstRowTimeout)
-      clearTimeout(firstRowPause)
-      clearTimeout(secondRowTimeout)
-      clearTimeout(secondRowPause)
+      } else {
+        setServiceMessageActive(false)
+        if (!firstTime)
+          stopScrolling = true
+        clearTimeout(firstRowTimeout)
+        clearTimeout(firstRowPause)
+        clearTimeout(secondRowTimeout)
+        clearTimeout(secondRowPause)
 
-      drawBottomRow()
+        drawBottomRow()
+      }
     }
 
     clearTimeout(showBurnLineTimeout)
@@ -244,7 +270,7 @@ function updateBody(firstTime) {
         setTimeout(() => {
           showingStandClear = true
           stopScrolling = true
-          setServiceMessageActive(true)
+          setStandClear()
         }, 1000 * 15)
       }, difference - 1000 * 20)
     }
@@ -288,7 +314,7 @@ async function animateScrollingText() {
 }
 
 function drawBottomRow(shouldPause=false) {
-  if (showingStandClear) return
+  if (showingStandClear || isArrival) return
 
   if (firstStoppingPatternP.textContent.includes('Not Stopping At')) {
     firstStoppingTypeP.style = 'opacity: 0;'

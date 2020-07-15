@@ -196,6 +196,20 @@ div.middleRow p.serviceMessage {
   height: 0;
 }
 
+p.serviceMessage div.arrivalMessage {
+  display: flex;
+}
+
+p.serviceMessage div.arrivalMessage img {
+  height: calc(var(--height) * 0.25);
+  margin: 0 calc(var(--width) * 0.01);
+}
+
+p.serviceMessage div.arrivalMessage p {
+  font-size: calc(var(--height) * 0.17);
+  margin-top: calc(var(--height) * 0.015);
+}
+
 div.whiteLine {
   width: var(--width);
   height: calc(var(--width) * 0.0025);
