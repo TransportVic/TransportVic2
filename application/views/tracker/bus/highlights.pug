@@ -21,3 +21,9 @@ block content
     
   for section in highlights
     +section(section)
+    
+  if unknownBuses.length
+    h1 Unknown Buses
+    for trip in unknownBuses
+      div(class=`trip ${trip.active ? '' : 'inactive'}`)
+        a(href=trip.url) #{trip.smartrakID}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}

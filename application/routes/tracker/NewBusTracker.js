@@ -15,11 +15,17 @@ const serviceDepots = require('../../../additional-data/service-depots')
 let crossDepotQuery = null
 let trackUnknown = ['Ventura Bus Lines', 'CDC Ballarat', 'Cranbourne Transit', 'Sunbury Bus Service', 'Martyrs Bus Service', 'Dysons', 'Ryan Bros Bus Service', 'McKenzies Tourist Service']
 
+let manualRoutes = {
+  "CO": ["4-601", "4-60S", "4-612", "4-623", "4-624", "4-625", "4-626", "4-630", "4-900"],
+  "CS": ["4-406", "4-407", "4-408", "4-409", "4-410", "4-418", "4-419", "4-421", "4-423", "4-424", "4-425", "4-461"],
+  "CW": ["4-150", "4-151", "4-153", "4-160", "4-161", "4-166", "4-167", "4-170", "4-180", "4-181", "4-190", "4-191", "4-192", "4-400", "4-411", "4-412", "4-414", "4-415", "4-417", "4-439", "4-441", "4-443", "4-494", "4-495", "4-496", "4-497", "4-498", "4-606"],
+}
+
 router.get('/', (req, res) => {
   res.render('tracker/bus/index')
 })
 
-function adjustTrip(trip) {
+function adjustTrip(trip, date, today, minutesPastMidnightNow) {
   let {origin, destination} = trip
   let serviceData = busDestinations.service[trip.routeNumber] || {}
   let dA = destination, dB = destination.split('/')[0]
@@ -32,6 +38,12 @@ function adjustTrip(trip) {
     || busDestinations.generic[dA] || busDestinations.generic[dB] || dB).replace('Shopping Centre', 'SC')
   trip.origin = (serviceData[oA] || serviceData[oB]
     || busDestinations.generic[oA] || busDestinations.generic[oB] || oB).replace('Shopping Centre', 'SC')
+
+  let {departureTime, destinationArrivalTime} = trip
+  let departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime),
+      destinationArrivalTimeMinutes = utils.time24ToMinAftMidnight(destinationArrivalTime)
+
+  trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
 
   return trip
 }
@@ -79,14 +91,7 @@ router.get('/fleet', async (req, res) => {
   let tripsToday = await busTrips.findDocuments(query)
     .sort({departureTime: 1}).toArray()
 
-  tripsToday = tripsToday.map(adjustTrip).map(trip => {
-    let {departureTime, destinationArrivalTime} = trip
-    let departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime),
-        destinationArrivalTimeMinutes = utils.time24ToMinAftMidnight(destinationArrivalTime)
-
-    trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
-    return trip
-  })
+  tripsToday = tripsToday.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
   let operationDays = await busTrips.distinct('date', {
     smartrakID
@@ -142,20 +147,15 @@ router.get('/service', async (req, res) => {
     routeNumber: service
   }).sort({departureTime: 1, origin: 1}).toArray()
 
-  let tripsToday = (await async.map(rawTripsToday, async rawTrip => {
+  let tripsToday = (await async.map(rawTripsToday, async trip => {
     let {fleetNumber} = await smartrakIDs.findDocument({
-      smartrakID: rawTrip.smartrakID
+      smartrakID: trip.smartrakID
     }) || {}
 
-    let {origin, destination, departureTime, destinationArrivalTime} = rawTrip
+    trip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + trip.smartrakID
 
-    let departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime),
-        destinationArrivalTimeMinutes = utils.time24ToMinAftMidnight(destinationArrivalTime)
-
-    rawTrip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
-    rawTrip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + rawTrip.smartrakID
-    return rawTrip
-  })).map(adjustTrip)
+    return trip
+  })).map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
   let operationDays = await busTrips.distinct('date', {
     routeNumber: service
@@ -230,38 +230,40 @@ router.get('/highlights', async (req, res) => {
     let matchedTrips = await busTrips.findDocuments(query)
       .sort({departureTime: 1, origin: 1}).toArray()
 
-    let trips = (await async.map(matchedTrips, async rawTrip => {
+    let trips = (await async.map(matchedTrips, async trip => {
       let {fleetNumber} = await smartrakIDs.findDocument({
-        smartrakID: rawTrip.smartrakID
+        smartrakID: trip.smartrakID
       }) || {}
 
-      let {origin, destination, departureTime, destinationArrivalTime} = rawTrip
+      trip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + trip.smartrakID
 
-      let departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime),
-          destinationArrivalTimeMinutes = utils.time24ToMinAftMidnight(destinationArrivalTime)
-
-      rawTrip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes
-      rawTrip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + rawTrip.smartrakID
-      return rawTrip
-    })).map(adjustTrip)
+      return trip
+    })).map(trip => adjustTrip(trip, date, date, minutesPastMidnightNow))
 
     return {
       ...section,
       trips
     }
   })
-  
-  // let allBuses = await smartrakIDs.findDocuments().toArray()
-  // let busMapping = allBuses.reduce((acc, bus) => {
-  //   acc[bus.smartrakID] = bus.fleetNumber
-  //   return acc
-  // }, {})
 
-  res.render('tracker/bus/highlights', {highlights})
-  // res.render('tracker/bus/highlights', {
-    // ...highlights,
-    // busMapping
-  // })
+  let allBuses = await smartrakIDs.findDocuments().toArray()
+  let trackUnknownRoutes = await routes.distinct('routeGTFSID', {
+    operators: { $in: trackUnknown }
+  })
+
+  trackUnknownRoutes = trackUnknownRoutes.concat(manualRoutes.CO, manualRoutes.CS, manualRoutes.CW)
+
+  let unknownBuses = (await busTrips.findDocuments({
+    date,
+    routeGTFSID: { $in: trackUnknownRoutes },
+    smartrakID: { $not: { $in: allBuses.map(bus => bus.smartrakID) } }
+  }).sort({departureTime: 1, origin: 1}).toArray())
+    .map(trip => adjustTrip(trip, date, date, minutesPastMidnightNow))
+
+  res.render('tracker/bus/highlights', {
+    highlights,
+    unknownBuses
+  })
 })
 
 module.exports = router
