@@ -17,5 +17,5 @@ block content
 
   h1.title Past deployments:
   for pastDate in Object.keys(busesByDay).reverse()
-    a(href=`/bus/tracker/service?fleet=service&date=${busesByDay[pastDate].date}`).pastDeployment #{pastDate} - #{busesByDay[pastDate].buses.join(', ')}
+    a(href=`/bus/tracker/service?service=${service}&date=${busesByDay[pastDate].date}`).pastDeployment #{pastDate} - #{busesByDay[pastDate].buses.join(', ')}
     br
