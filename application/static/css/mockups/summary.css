@@ -62,11 +62,11 @@ div.platform.sss-new-coach iframe {
   height: calc(23vw / 9 * 16) !important;
 }
 
-div.platform.fss-platform, div.platform.fss-platform *, div.platform.platform, div.platform.platform * {
+div.platform.fss-platform, div.platform.fss-platform *, div.platform.full-platform, div.platform.full-platform * {
   width: 18vw;
 }
 
-div.platform.fss-platform iframe, div.platform.platform iframe {
+div.platform.fss-platform iframe, div.platform.full-platform iframe {
   height: calc(18vw * 9 / 16);
 }
 
