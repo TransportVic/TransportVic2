@@ -7,12 +7,13 @@ const querystring = require('querystring')
 const moment = require('moment')
 const busDestinations = require('../../../additional-data/bus-destinations')
 
-const highlightData = require('../../../additional-data/tracker-highlights')
+const highlightData = require('../../../additional-data/tracker-highlights-new')
 
 const knownBuses = require('../../../additional-data/bus-lists')
 const serviceDepots = require('../../../additional-data/service-depots')
 
 let crossDepotQuery = null
+let trackUnknown = ['Ventura Bus Lines', 'CDC Ballarat', 'Cranbourne Transit', 'Sunbury Bus Service', 'Martyrs Bus Service', 'Dysons', 'Ryan Bros Bus Service', 'McKenzies Tourist Service']
 
 router.get('/', (req, res) => {
   res.render('tracker/bus/index')
@@ -191,6 +192,76 @@ router.get('/service', async (req, res) => {
     service,
     date: moment(date, 'YYYYMMDD')
   })
+})
+
+router.get('/highlights', async (req, res) => {
+  let {db} = res
+  let busTrips = db.getCollection('bus trips')
+  let smartrakIDs = db.getCollection('smartrak ids')
+  let routes = db.getCollection('routes')
+  let date = utils.getYYYYMMDDNow()
+
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  async function getBuses(fleets) {
+    return await smartrakIDs.distinct('smartrakID', { fleetNumber: { $in: fleets } })
+  }
+
+  let highlights = await async.map(highlightData, async section => {
+    let trackBuses = section.track,
+        routes = section.routes,
+        type = section.type,
+        buses = section.buses || 'include'
+
+    let matchedBuses = await getBuses(trackBuses)
+    let query = {
+      date,
+      smartrakID: { $in: matchedBuses },
+      routeNumber: { $not: { $in: routes} }
+    }
+
+    if (type === 'include') {
+      query.routeNumber = { $in: routes }
+    }
+    if (buses === 'exclude') {
+      query.smartrakID = { $not: { $in: matchedBuses } }
+    }
+
+    let matchedTrips = await busTrips.findDocuments(query)
+      .sort({departureTime: 1, origin: 1}).toArray()
+
+    let trips = (await async.map(matchedTrips, async rawTrip => {
+      let {fleetNumber} = await smartrakIDs.findDocument({
+        smartrakID: rawTrip.smartrakID
+      }) || {}
+
+      let {origin, destination, departureTime, destinationArrivalTime} = rawTrip
+
+      let departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime),
+          destinationArrivalTimeMinutes = utils.time24ToMinAftMidnight(destinationArrivalTime)
+
+      rawTrip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes
+      rawTrip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + rawTrip.smartrakID
+      return rawTrip
+    })).map(adjustTrip)
+
+    return {
+      ...section,
+      trips
+    }
+  })
+  
+  // let allBuses = await smartrakIDs.findDocuments().toArray()
+  // let busMapping = allBuses.reduce((acc, bus) => {
+  //   acc[bus.smartrakID] = bus.fleetNumber
+  //   return acc
+  // }, {})
+
+  res.render('tracker/bus/highlights', {highlights})
+  // res.render('tracker/bus/highlights', {
+    // ...highlights,
+    // busMapping
+  // })
 })
 
 module.exports = router
