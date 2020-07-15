@@ -186,6 +186,7 @@ div.middleRow p {
   opacity: 1;
   -webkit-transition: opacity 250ms linear;
   transition: opacity 250ms linear;
+  margin-top: calc(var(--height) * -0.01);
 }
 
 div.middleRow p.serviceMessage {
