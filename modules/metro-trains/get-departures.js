@@ -254,7 +254,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let direction = isUpTrip ? 'Up' : 'Down'
     if (isTrainReplacement) direction = { $in: ['Up', 'Down'] }
 
-    let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== trip.destination.slice(0, -16)
+    let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== 'Flinders Street'
     let isSCS = station.stopName.slice(0, -16) === 'Southern Cross'
     let isFSS = station.stopName.slice(0, -16) === 'Flinders Street'
 
