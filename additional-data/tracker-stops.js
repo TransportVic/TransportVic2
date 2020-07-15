@@ -322,5 +322,8 @@ module.exports = [
   'gembrook/gembrook-road-main-street',
   'lilydale/gateway-reserve-the-gateway',
   'lilydale/lilydale-post-office-maroondah-highway',
-  'wantirna-south/dandenong-valley-parklands-high-street-road'
+  'wantirna-south/dandenong-valley-parklands-high-street-road',
+  'caroline-springs/caroline-springs-square-shopping-centre-main-street',
+  'ravenhall/caroline-springs-railway-station',
+  'taylors-hill/taylors-hill-village-shopping-centre'
 ]
