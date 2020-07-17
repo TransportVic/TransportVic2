@@ -114,7 +114,7 @@ async function pickBestTrip(data, db) {
     let stops = gtfsTrip.stopTimings.map(stop => stop.stopName)
     let flindersIndex = stops.indexOf('Flinders Street Railway Station')
 
-    if (flindersIndex && gtfsTrip.direction === 'Down') {
+    if (flindersIndex >= 0 && gtfsTrip.direction === 'Down') {
       let stopAfterFlinders = gtfsTrip.stopTimings[flindersIndex + 1]
       originStopID = stopAfterFlinders.stopGTFSID
       originTime = moment.tz(`${data.operationDays} ${stopAfterFlinders.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
