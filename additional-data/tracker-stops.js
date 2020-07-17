@@ -296,7 +296,6 @@ module.exports = [
   'st-andrews-beach/sandy-road-bass-meadows-boulevard',
   'coburg/reynard-street-gordon-street',
   'whittlesea/whittlesea-showgrounds-yea-road',
-  'reservoir/edwardes-street-spring-street',
   'knoxfield/anne-road-o-connor-road',
   'wantirna/old-stud-road-burwood-highway',
   'gardenvale/north-road-kooyong-road',
@@ -325,5 +324,9 @@ module.exports = [
   'wantirna-south/dandenong-valley-parklands-high-street-road',
   'caroline-springs/caroline-springs-square-shopping-centre-main-street',
   'ravenhall/caroline-springs-railway-station',
-  'taylors-hill/taylors-hill-village-shopping-centre'
+  'taylors-hill/taylors-hill-village-shopping-centre',
+  'capel-sound/chisholm-tafe-henry-wilson-drive',
+  'malvern/tooronga-railway-station',
+  'hoppers-crossing/werribee-village-shopping-centre',
+  'manor-lakes/manor-lakes-central-shopping-centre'
 ]
