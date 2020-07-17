@@ -140,7 +140,11 @@ async function getDeparturesFromVNET(db) {
 
 async function requestTimings() {
   console.log('requesting vline trips')
-  await getDeparturesFromVNET(database)
+  try {
+    await getDeparturesFromVNET(database)
+  } catch (e) {
+    console.log('Error getting vline trips, skipping this round')
+  }
 
   if (shouldRun()) {
     setTimeout(requestTimings, 30 * 60 * 1000)
