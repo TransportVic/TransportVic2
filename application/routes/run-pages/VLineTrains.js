@@ -7,6 +7,10 @@ const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern'
 async function pickBestTrip(data, db) {
   data.mode = 'regional train'
   let tripDay = moment.tz(data.operationDays, 'YYYYMMDD', 'Australia/Melbourne')
+  let tripStartTime = moment.tz(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
+  let tripEndTime = moment.tz(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
 
   let originStop = await db.getCollection('stops').findDocument({
     codedName: data.origin,
@@ -18,13 +22,35 @@ async function pickBestTrip(data, db) {
   })
   if (!originStop || !destinationStop) return null
 
+  let variance = 5
+  let destinationArrivalTime = {
+    $gte: tripEndMinutes - variance,
+    $lte: tripEndMinutes + variance
+  }
+  let departureTime = {
+    $gte: tripStartMinutes - variance,
+    $lte: tripStartMinutes + variance
+  }
+
   let query = {
-    mode: 'regional train',
-    origin: originStop.stopName,
-    departureTime: data.departureTime,
-    destination: destinationStop.stopName,
-    destinationArrivalTime: data.destinationArrivalTime,
-    operationDays: data.operationDays
+    $and: [{
+      mode: 'regional train',
+      operationDays: data.operationDays
+    }, {
+      stopTimings: {
+        $elemMatch: {
+          stopName: originStop.stopName,
+          departureTimeMinutes: departureTime
+        }
+      }
+    }, {
+      stopTimings: {
+        $elemMatch: {
+          stopName: destinationStop.stopName,
+          arrivalTimeMinutes: destinationArrivalTime
+        }
+      }
+    }]
   }
 
   let referenceTrip
