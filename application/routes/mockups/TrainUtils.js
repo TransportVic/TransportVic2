@@ -45,7 +45,8 @@ let cliftonHillGroup = [
 let caulfieldGroup = [
   'Cranbourne',
   'Pakenham',
-  'Frankston'
+  'Frankston',
+  'Sandringham'
 ]
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
