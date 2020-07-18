@@ -58,6 +58,10 @@ input[type="submit"] {
   font-family: Default-Font;
 }
 
+input {
+  margin: calc(0.2vw + 0.2vh) 0;
+}
+
 a#highlights {
   font-size: calc(1.1vw + 1.1vh);
   margin-left: calc(1.8vw + 1.8vh);
