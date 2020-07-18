@@ -216,8 +216,8 @@ module.exports = {
 
   // Newport
   18740: "Bay 2",
-  18741: "Bay 5",
   18742: "Bay 3",
+  18741: "Bay 5",
 
   // Geelong
   30309: "Bay 1",
@@ -434,39 +434,15 @@ module.exports = {
   21315: "Bay 2",
   21316: "Bay 3",
 
-  // check ringwood 901 bay
-  // Next up:
-  // The pines SC
-  // Bayswater done
-  // Upfield line stuff - coburg?
-  // Chirnside park sc, done
-  // Eastland? - done, doesnt have
-  // Laverton done
-  // Doncaster sc done
-  // Box Hill done
-  // Glen Waverley done
-  // Knox City SC done
-  // Blackburn (ew) no bays
-  // Geelong done
-  // Southland
-  // Epping done
-  // Footscray done
-  // Fountain Gate SC
-  // South Morang done
-  // Mernda done
-  // Boronia done
-  // Reservoir done
-  // Bendigo done
-  // Craigieburn done
-  // Tarneit apparently has bus bays
-  // Yarraville? don't think I saw bus numbers -
-  // Sunbury done
-  // Melton
-  // Nuna?
-  // Mitcham done
-  // Watergardens done
-  // St albans done
-  // Airport West SC? no bays
-  // Altona Gate SC?
-  // Pacific Werribee/Werribee Plaza
+  // Northland
+  47158: "Bay 1",
+  47159: "Bay 2",
+  47160: "Bay 3",
+  47161: "Bay 4",
+  47162: "Bay 5",
+  47163: "Bay 6",
+  47164: "Bay 7",
+  47165: "Bay 8",
+  47166: "Bay 9",
+  47167: "Bay 10"
 }

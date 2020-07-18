@@ -129,13 +129,7 @@ module.exports = {
       name = name.replace(' Station', ' Railway Station')
     }
 
-    name = name.replace('Schhol', 'School')
-    .replace('Chrisholm Institute', 'Chisholm Institute')
-    .replace('Villag/', 'Village/')
-    .replace('Esplande', 'Esplanade')
-    .replace('MacISAAC/', 'MacIsaac/')
-    .replace('VUSC', 'Victoria University Secondary College')
-    .replace(/Freeburgh \w*? ?Hall/, 'Freeburgh Community Hall')
+    name = name.replace(/Freeburgh \w*? ?Hall/, 'Freeburgh Community Hall')
 
     if (name === 'Dalgetty St/Holding St') {
       name = 'Dalgetty Rd/Holding St'
