@@ -397,14 +397,21 @@ module.exports = {
       let firstExpressStop = expressSection[0]
       let lastExpressStop = expressSection.slice(-1)[0]
 
-      let previousStop = lineStops[lineStops.indexOf(firstExpressStop) - 1]
-      let nextStop = lineStops[lineStops.indexOf(lastExpressStop) + 1]
+      let previousStopIndex = lineStops.indexOf(firstExpressStop) - 1
+      let nextStopIndex = lineStops.indexOf(lastExpressStop) + 1
+
+      let previousStop = lineStops[previousStopIndex]
+      let nextStop = lineStops[nextStopIndex]
 
       if (lastStop) {
+        let lastStopIndex = lineStops.indexOf(lastStop)
+
         if (i === expressParts.length - 1 && nextStop === destination) {
           texts.push(textMap.thenRunsExpressAtoB.format(previousStop, nextStop))
         } else if (lastStop === previousStop) {
           texts.push(textMap.expressAtoB.format(previousStop, nextStop))
+        } else if (lastStopIndex + 1 === previousStopIndex) {
+          texts.push(textMap.runsExpressAtoB.format(previousStop, nextStop))
         } else {
           texts.push(textMap.sasAtoB.format(lastStop, previousStop))
           texts.push(textMap.runsExpressAtoB.format(previousStop, nextStop))
