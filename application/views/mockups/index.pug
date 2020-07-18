@@ -21,13 +21,21 @@ block content
     input(type='text' name='type' placeholder='PID Type')
     input(type='submit' value='Go')
   form(action='/mockups/get' method='get')
+    label Get Concourse PID
+    br
+    input(type='text' name='station' placeholder='Station Name' required)
+    br
+    input(type='text' name='concourseType' placeholder='Concourse PID Type')
+    input(type='hidden' name='type' value='concourse')
+    input(type='submit' value='Go')
+  form(action='/mockups/get' method='get')
     label Get Bus Interchange PIDs for bus stop URL
     br
     input(type='text' name='value' placeholder='Bus Timings URL' required)
     br
     input(type='text' name='bay' placeholder='Bus Bay (Blank for all)')
     input(type='submit' value='Go')
-    input(name='type' value='bus-int-pids' type='hidden')
+    input(type='hidden' name='type' value='bus-int-pids')
   form(action='/mockups/get' method='get')
     label Get station summary page
     br
@@ -35,4 +43,4 @@ block content
     br
     input(type='text' name='value' placeholder='PID Type' required)
     input(type='submit' value='Go')
-    input(name='type' value='summary' type='hidden')
+    input(type='hidden' name='type' value='summary')

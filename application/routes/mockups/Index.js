@@ -34,7 +34,7 @@ router.get('/summary/:station', (req, res) => {
 router.get('/get', async (req, res) => {
   let stops = res.db.getCollection('stops')
   let query = querystring.parse(url.parse(req.url).query)
-  let {type, value, station} = query
+  let {type, value, station, concourseType} = query
   station = utils.encodeName(station || '')
 
   if (type === 'fss-escalator') {
@@ -49,6 +49,8 @@ router.get('/get', async (req, res) => {
     return res.redirect(`/mockups/metro-lcd/${station}/${value}/platform`)
   } else if (type === 'summary') {
     return res.redirect(`/mockups/summary/${station}?type=${value}`)
+  } else if (type === 'concourse') {
+    return res.redirect(`/mockups/metro-lcd/concourse/${station}/${concourseType}`)
   } else if (type === 'bus-int-pids') {
     let {bay} = query
     let m = value.match(/\/bus\/timings(\/.+)/)
