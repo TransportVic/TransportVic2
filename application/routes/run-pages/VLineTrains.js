@@ -4,6 +4,19 @@ const router = new express.Router()
 const utils = require('../../../utils')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
 
+function giveVariance(time) {
+  let minutes = utils.time24ToMinAftMidnight(time)
+
+  let validTimes = []
+  for (let i = minutes - 5; i <= minutes + 5; i++) {
+    validTimes.push(utils.minAftMidnightToTime24(i))
+  }
+
+  return {
+    $in: validTimes
+  }
+}
+
 async function pickBestTrip(data, db) {
   data.mode = 'regional train'
   let tripDay = moment.tz(data.operationDays, 'YYYYMMDD', 'Australia/Melbourne')
@@ -76,9 +89,13 @@ async function pickBestTrip(data, db) {
   let {runID, vehicle} = nspTrip || {}
 
   let vlineTrips = db.getCollection('vline trips')
+
+  let trackerDepartureTime = giveVariance(referenceTrip.departureTime)
+  let trackerDestinationArrivalTime = giveVariance(referenceTrip.destinationArrivalTime)
+
   let tripData = await vlineTrips.findDocument({
     date: data.operationDays,
-    departureTime: referenceTrip.departureTime,
+    departureTime: trackerDepartureTime,
     origin: referenceTrip.origin.slice(0, -16),
     destination: referenceTrip.destination.slice(0, -16)
   })
@@ -86,7 +103,7 @@ async function pickBestTrip(data, db) {
   if (!tripData) {
     tripData = await vlineTrips.findDocument({
       date: data.operationDays,
-      departureTime: referenceTrip.departureTime,
+      departureTime: trackerDepartureTime,
       origin: referenceTrip.origin.slice(0, -16)
     })
   }
@@ -95,7 +112,7 @@ async function pickBestTrip(data, db) {
     tripData = await vlineTrips.findDocument({
       date: data.operationDays,
       destination: referenceTrip.destination.slice(0, -16),
-      destinationArrivalTime: referenceTrip.destinationArrivalTime
+      destinationArrivalTime: trackerDestinationArrivalTime
     })
   }
 
