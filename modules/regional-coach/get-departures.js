@@ -244,13 +244,16 @@ async function getDepartures(stop, db) {
           destination = 'Southern Cross Railway Station'
         }
 
-        let hasNSPDeparture = (await timetables.countDocuments({
+        let nspDeparture = await timetables.findDocument({
           mode: 'regional train',
           origin,
           'stopTimings.stopName': destination,
           departureTime
-        }) > 0)
-        departure.isTrainReplacement = hasNSPDeparture
+        })
+        departure.isTrainReplacement = !!nspDeparture
+        if (nspDeparture) {
+          departure.shortRouteName = nspDeparture.routeName
+        }
       }
       return departure
     })

@@ -87,7 +87,7 @@ module.exports = [{
 }, {
   name: 'Non-509 Perms on 509',
   track: ['D895', 'D896'],
-  routes: ['509'],
+  routes: ['505', '509'],
   type: 'include',
   buses: 'exclude'
 }]

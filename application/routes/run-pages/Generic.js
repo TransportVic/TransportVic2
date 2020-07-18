@@ -7,7 +7,7 @@ const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern'
 const busStopNameModifier = require('../../../additional-data/bus-stop-name-modifier')
 
 const busDestinations = require('../../../additional-data/bus-destinations')
-const coachDestinations = require('../../../additional-data/coach-destinations')
+const coachDestinations = require('../../../additional-data/coach-stops')
 const tramDestinations = require('../../../additional-data/tram-destinations')
 
 const determineTramRouteNumber = require('../../../modules/tram/determine-tram-route-number')
@@ -121,8 +121,8 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   let destinationShortName = destination.split('/')[0]
   let originShortName = origin.split('/')[0]
 
-  if (!(utils.isStreet(destinationShortName) || (trip.mode === 'regional coach' && destinationShortName.includes('Information Centre')))) destination = destinationShortName
-  if (!(utils.isStreet(originShortName) || (trip.mode === 'regional coach' && originShortName.includes('Information Centre')))) origin = originShortName
+  if (!utils.isStreet(destinationShortName)) destination = destinationShortName
+  if (!utils.isStreet(originShortName)) origin = originShortName
 
   destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
   origin = origin.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
@@ -131,8 +131,17 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
     destination = tramDestinations[destination] || destination
     origin = tramDestinations[origin] || origin
   } else if (trip.mode === 'regional coach') {
+    destination = fullDestination.replace('Shopping Centre', 'SC')
+    origin = fullOrigin.replace('Shopping Centre', 'SC')
+
     destination = coachDestinations[destination] || destination
     origin = coachDestinations[origin] || origin
+
+    let destShortName = destination.split('/')[0]
+    if (!utils.isStreet(destShortName)) destination = destShortName
+
+    let originShortName = origin.split('/')[0]
+    if (!utils.isStreet(originShortName)) origin = originShortName
   } else {
     let serviceData = busDestinations.service[trip.routeNumber] || busDestinations.service[trip.routeGTFSID] || {}
 
