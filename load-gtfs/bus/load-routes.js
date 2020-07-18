@@ -97,7 +97,7 @@ database.connect({
       console.log('Found that', routeGTFSID, 'does not have a route shape programmed in, giving it a default one')
 
       await load([{
-        shapeID: `${routeGTFSID}-mjp-1.1.H`,
+        shapeID: "",
         routeGTFSID: routeGTFSID,
         path: [[ 144, -38 ]],
         length: 1

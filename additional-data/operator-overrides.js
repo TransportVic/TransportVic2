@@ -21,6 +21,7 @@ module.exports = {
   "4-47b": ["Kastoria Bus Lines"], // 476
   "4-47I": ["Tullamarine Bus Lines"], // 471
   "4-48S": ["Tullamarine Bus Lines"], // 484
+  "4-5X9": ["Dysons"], // 509
   "4-525": ["Dysons"],
   "4-52F": ["Dysons"], // 525
   "4-552": ["Dysons"],
