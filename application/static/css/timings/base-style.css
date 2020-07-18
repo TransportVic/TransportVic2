@@ -110,7 +110,7 @@ div.departure:nth-child(even) a.departureInfo.reservationsOnly {
 
 .leftContainer.platform img {
   margin-top: calc(0.75vw + 0.75vh);
-  height: calc(3vw + 3vh);
+  width: calc(3vw + 3vh);
   padding-bottom: calc(0.25vw + 0.25vh);
 }
 

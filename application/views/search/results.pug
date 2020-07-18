@@ -67,10 +67,12 @@ for busRoute in routes.filter(route => route.mode === 'bus')
     let url
     let {operationDate} = busRoute
     
-    if (busRoute.routeGTFSID.match(/(4|7|8)-/)) {
-      if (hasNumber) url = `/bus/route/${busRoute.routeNumber}`   
+    if (busRoute.routeGTFSID.match(/(4|7|8|11)-/)) {
+      if (hasNumber) url = `/bus/route/${busRoute.routeNumber}`
+      else url = `/bus/route/named/${busRoute.codedName}`
     } else if (busRoute.routeGTFSID.startsWith('6-')) {
       if (hasNumber) url = `/bus/route/regional/${busRoute.codedSuburb}/${busRoute.routeNumber}`
+      else url = `/bus/route/named/${busRoute.codedName}`
     }
     
     url += `/${encodeName(busRoute.directions[0].directionName)}`
@@ -81,16 +83,19 @@ for busRoute in routes.filter(route => route.mode === 'bus')
     if (operator.startsWith('dysons')) operator = 'dysons'
   
   a(href=url).route.result
-    if hasNumber
-      div(class=`leftContainer platform ${operator}`)
+    div(class=`leftContainer platform ${operator}`)
+      if hasNumber
         span.bigNumber=busRoute.routeNumber
+      else
+        img(src='/static/images/clear-icons/bus.svg')
     div.resultDetails
       -
-        let type = '', gtfsID = busRoute.routeGTFSID[0]
+        let type = '', gtfsID = busRoute.routeGTFSID.split('-')[0]
         if (gtfsID === '4') type = 'Metropolitan Bus Route'
         else if (gtfsID === '6') type = 'Regional Bus Route'
-        else if (gtfsID === '7') type = 'Telebus'
-        else if (gtfsID === '8') type = 'Night Bus'
+        else if (gtfsID === '7') type = 'Telebus Route'
+        else if (gtfsID === '8') type = 'Night Bus Route'
+        else if (gtfsID === '11') type = 'Skybus Route'
         
         let name = ''
 

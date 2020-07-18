@@ -28,7 +28,7 @@ router.get('/:routeNumber/:directionName/:operationDateType*?', async (req, res,
   let gtfsTimetables = db.getCollection('gtfs timetables')
 
   let {routeNumber, directionName, operationDateType} = req.params
-  if (routeNumber === 'regional') return next()
+  if (['regional', 'named'].includes(routeNumber)) return next()
 
   let matchingRoute = await routes.findDocument({
     mode: 'bus',

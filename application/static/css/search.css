@@ -56,12 +56,20 @@
   background-color: #028980;
 }
 
+.route .leftContainer {
+  background-color: #d7832c;
+}
+
+.route:nth-child(even) .leftContainer {
+  background-color: #c47625;
+}
+
 .leftContainer.miniIcon img {
   width: calc(2.5vw + 2.5vh) !important;
 }
 
 .leftContainer img {
-  width: calc(3.5vw + 4vh);
+  width: calc(3.5vw + 4vh) !important;
 }
 
 .leftContainer span.distance {

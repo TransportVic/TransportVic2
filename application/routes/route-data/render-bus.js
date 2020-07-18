@@ -12,10 +12,13 @@ async function render(params, res, matchingRoute) {
   })
 
   if (!direction) {
-    if (matchingRoute.routeGTFSID.match(/(4|7|8)-/))
-      return res.redirect(`/bus/route/${routeNumber}`)
-    else
-      return res.redirect(`/bus/route/regional/${suburb}/${routeNumber}`)
+    if (matchingRoute.routeNumber) {
+      if (matchingRoute.routeGTFSID.match(/(4|7|8)-/))
+        return res.redirect(`/bus/route/${routeNumber}`)
+      else
+        return res.redirect(`/bus/route/regional/${suburb}/${routeNumber}`)
+    } else
+      return res.redirect(`/bus/route/named/${utils.encodeName(matchingRoute.routeName)}`)
   }
 
   let {gtfsDirection} = direction
@@ -48,18 +51,22 @@ async function render(params, res, matchingRoute) {
   let {routeName} = matchingRoute
   let terminiName = routeName.replace(/\(.*/, '').split(' - ')
 
-  if (matchingRoute.directions.length === 1 && routeName.includes('Loop')) {
-    if (terminiName[1]) {
-      directionNames[0] = terminiName[1]
-      directionNames[1] = terminiName[0]
-      if (matchingRoute.flags) {
-        directionNames[0] += ` (${matchingRoute.flags[0]} Loop)`
+  if (matchingRoute.directions.length === 1) {
+    if (routeName.includes('Loop')) {
+      if (terminiName[1]) {
+        directionNames[0] = terminiName[1]
+        directionNames[1] = terminiName[0]
+        if (matchingRoute.flags) {
+          directionNames[0] += ` (${matchingRoute.flags[0]} Loop)`
+        } else {
+          directionNames[0] += ` (Loop)`
+        }
       } else {
-        directionNames[0] += ` (Loop)`
+        showDualTermini = false
+        directionNames[0] = matchingRoute.routeName
       }
     } else {
-      showDualTermini = false
-      directionNames[0] = matchingRoute.routeName
+      directionNames = [terminiName[1], terminiName[0]]
     }
   } else if (routeName.includes('Loop')) {
     directionNames[0] = terminiName[1]

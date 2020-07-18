@@ -1,3 +1,9 @@
+div#header span {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 * > .coloured-row:nth-child(even) {
   background-color: #2a2a2a;
 }
@@ -24,10 +30,17 @@
   justify-content: center;
   flex-direction: column;
   color: #f9f9f9;
+
+  background-color: #d7832c;
 }
 
 #routeNumber > span {
   margin: calc(-0.2vw - 0.2vh);
+}
+
+#routeIcon {
+  width: calc(3vw + 3vh);
+  margin-top: calc(0.5vw + 0.5vh);
 }
 
 #routeType, #routeDetail {
@@ -67,6 +80,10 @@
 
 #terminals > a > span {
   margin-left: calc(0.5vw + 1.2vh);
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .table-header {

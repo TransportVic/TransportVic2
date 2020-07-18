@@ -677,6 +677,21 @@
     },
     "12-MPF": {
       "Monash University": "Monash Uni Peninsula"
+    },
+    "6-R12": {
+      "Municipal Chambers": "Swan Hill",
+      "Newsagency": "Sea Lake"
+    },
+    "6-Nul": {
+      "Nullawil-Birchip Road/Calder Highway": "Nullawil",
+      "Newsagency": "Sea Lake"
+    },
+    "6-MiS": {
+      "Newsagency": "Sea Lake"
+    },
+    "6-Swo": {
+      "Uniting Church": "Woomelang",
+      "Newsagency": "Sea Lake"
     }
   },
   "generic": {
@@ -750,6 +765,8 @@
     "Melbourne Airport T4 Skybus": "Melbourne Airport (Skybus)",
     "Bailey Street - North": "Bairnsdale",
     "Old Echuca Post Office": "Echuca",
-    "Post Office North": "Lakes Entrance"
+    "Post Office North": "Lakes Entrance",
+    "Ouyen Newsagency": "Ouyen",
+    "BP Pinnaroo": "Pinnaroo"
   }
 }

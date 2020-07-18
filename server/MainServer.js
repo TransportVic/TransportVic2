@@ -193,12 +193,16 @@ module.exports = class MainServer {
         enable: modules.tracker && modules.tracker.vline
       },
 
-      'route-data/MetroBusRoute': {
-        path: '/bus/route',
-        enable: modules.routes && modules.routes.bus
-      },
       'route-data/RegionalBusRoute': {
         path: '/bus/route/regional',
+        enable: modules.routes && modules.routes.bus
+      },
+      'route-data/NamedBusRoute': {
+        path: '/bus/route/named',
+        enable: modules.routes && modules.routes.bus
+      },
+      'route-data/MetroBusRoute': {
+        path: '/bus/route',
         enable: modules.routes && modules.routes.bus
       },
 

@@ -1,7 +1,6 @@
 extends ../layout
 
 block head
-  title TransportVic - Bus #{route.routeNumber}
   
   -
     let type = ''
@@ -13,15 +12,18 @@ block head
     
     let name = `${directionNames[1]} - ${directionNames[0]}`
     if (!showDualTermini) name = directionNames[0]
-  
-  meta(property='og:title' content=`TransportVic - Bus ${route.routeNumber}`)
-  meta(property='twitter:title' content=`TransportVic - Bus ${route.routeNumber}`)
-  meta(property='og:description' content=`${type} ${route.routeNumber}: ${name}`)
-  meta(property='twitter:description' content=`${type} ${route.routeNumber}: ${name}`)
+    
+    let identifier = route.routeNumber || route.routeName.replace(/ Railway Station/g, '')
+    
+  title TransportVic - #{type} #{identifier}
+  meta(property='og:title' content=`TransportVic - ${type} ${identifier}`)
+  meta(property='twitter:title' content=`TransportVic - ${type} ${identifier}`)
+  meta(property='og:description' content=`${type} ${identifier}: ${name}`)
+  meta(property='twitter:description' content=`${type} ${identifier}: ${name}`)
   
 block title
     
-  span #{type} #{route.routeNumber}
+  span #{type} #{identifier}
 
 block style
   link(rel='stylesheet' href='/static/css/routes/base-style.css')
@@ -31,16 +33,26 @@ block style
 block content
   div#routeSummary
     -
-      let link = `/bus/route/${route.routeNumber}/${codedDirectionNames[1]}`
-      if (route.routeGTFSID.startsWith('6')) {
-        link = `/bus/route/regional/${route.codedSuburb}/${route.routeNumber}/${codedDirectionNames[1]}`
+      let link
+      if (route.routeNumber) {
+        if (route.routeGTFSID.startsWith('6')) {
+          link = `/bus/route/regional/${route.codedSuburb}/${route.routeNumber}/${codedDirectionNames[1]}`
+        } else {
+          link = `/bus/route/${route.routeNumber}/${codedDirectionNames[1]}`
+        }
+      } else {
+        link = `/bus/route/named/${route.codedName}/${codedDirectionNames[1]}`
       }
+      
       if (route.operationDate) {
         link += `/${route.operationDate.type}`
       }
     a(class=operator href=link)#routeNumber
       span#routeType=type
-      span#routeText=route.routeNumber
+      if route.routeNumber
+        span#routeText=route.routeNumber
+      else
+        img#routeIcon(src='/static/images/clear-icons/bus.svg')
       if route.operationDate
         span#routeDetail=operationDate
     div#terminals

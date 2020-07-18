@@ -3,45 +3,41 @@ const utils = require('../../../utils')
 const render = require('./render-bus')
 const router = new express.Router()
 
-router.get('/:suburb/:routeNumber', async (req, res, next) => {
+router.get('/:codedName', async (req, res, next) => {
   let {db} = res
   let routes = db.getCollection('routes')
-  let {routeNumber, suburb} = req.params
+  let {codedName} = req.params
 
   let matchingRoute = await routes.findDocument({
     mode: 'bus',
-    routeNumber,
-    routeGTFSID: /6-/,
-    codedSuburb: suburb
+    codedName,
+    routeGTFSID: /(4|6|7|8|11)-/
   })
 
   if (!matchingRoute) return res.status(404).render('errors/no-route')
 
   let bestDirection = matchingRoute.directions.sort((a, b) => a.directionName.localeCompare(b.directionName))[0]
-  let codedName = utils.encodeName(bestDirection.directionName)
+  let codedDirection = utils.encodeName(bestDirection.directionName)
 
-  res.redirect(`/bus/route/regional/${suburb}/${routeNumber}/${codedName}`)
+  res.redirect('/bus/route/named/' + codedName + '/' + codedDirection)
 })
 
-router.get('/:suburb/:routeNumber/:directionName/:operationDateType*?', async (req, res, next) => {
+router.get('/:codedName/:directionName/:operationDateType*?', async (req, res, next) => {
   let {db} = res
   let routes = db.getCollection('routes')
   let gtfsTimetables = db.getCollection('gtfs timetables')
 
-  let {routeNumber, directionName, suburb, operationDateType} = req.params
-  if (['named'].includes(routeNumber)) return next()
+  let {codedName, directionName, operationDateType} = req.params
 
   let matchingRoute = await routes.findDocument({
     mode: 'bus',
-    routeNumber,
-    routeGTFSID: /6-/,
-    codedSuburb: suburb,
+    codedName,
+    routeGTFSID: /(4|6|7|8|11)-/,
     'operationDate.type': operationDateType ? operationDateType : undefined
   })
 
   if (!matchingRoute) return res.status(404).render('errors/no-route')
   render(req.params, res, matchingRoute)
 })
-
 
 module.exports = router
