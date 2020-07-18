@@ -72,7 +72,9 @@ async function getDeparturesFromPTV(stop, db) {
       if (!trip) trip = await getStoppingPatternWithCache(db, tramDeparture, run.destination_name)
 
       let tripDestination = trip.stopTimings.slice(-1)[0].stopGTFSID
-      if (allGTFSIDs.includes(tripDestination)) return
+      let tripOrigin = trip.stopTimings[0].stopGTFSID
+
+      if (allGTFSIDs.includes(tripDestination) && !allGTFSIDs.includes(tripOrigin)) return
 
       let vehicleDescriptor = run.vehicle_descriptor || {}
       let tram = {}
@@ -90,6 +92,11 @@ async function getDeparturesFromPTV(stop, db) {
 
       let routeNumber = determineTramRouteNumber(trip)
       let sortNumber = parseInt(routeNumber.replace(/[a-z]/, ''))
+      let loopDirection = null
+
+      if (routeGTFSID === '3-35') {
+        loopDirection = trip.gtfsDirection === '0' ? 'AC/W' : 'C/W'
+      }
 
       mappedDepartures.push({
         trip,
@@ -97,6 +104,7 @@ async function getDeparturesFromPTV(stop, db) {
         estimatedDepartureTime,
         actualDepartureTime,
         destination: trip.destination,
+        loopDirection,
         vehicleDescriptor,
         routeNumber,
         sortNumber,

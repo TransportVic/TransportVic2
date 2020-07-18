@@ -27,5 +27,11 @@ module.exports = function (trip) {
     if (trip.destination === stVincent || trip.origin === stVincent) return '11b'
   }
 
+  if (routeNumber === '12') {
+    let hasLaTrobe = trip.stopTimings.find(stop => stop.stopName === 'William Street/La Trobe Street')
+    if (hasLaTrobe) return '12a'
+    routeNumber = '12'
+  }
+
   return routeNumber
 }

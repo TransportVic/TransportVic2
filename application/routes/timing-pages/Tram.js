@@ -71,6 +71,7 @@ async function loadDepartures(req, res) {
       groupedDepartures[departure.sortNumber] = {}
     }
   })
+
   services.forEach(service => {
     let serviceDepartures = departures.filter(d => d.sortNumber === service)
     let serviceDestinations = []
@@ -85,12 +86,12 @@ async function loadDepartures(req, res) {
       let destinations = []
 
       direction.forEach(departure => {
-        let destination = departure.destination
+        let destination = departure.destination + departure.loopDirection
         if (!destinations.includes(destination)) {
           destinations.push(destination)
           destinationDepartures.push({
             destination,
-            departures: direction.filter(d => d.destination === destination)
+            departures: direction.filter(d => d.destination + d.loopDirection === destination)
           })
         }
       })
