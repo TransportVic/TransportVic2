@@ -1,4 +1,4 @@
-const utils = require('../../../utils')
+const utils = require('../../../../utils')
 const routeUtils = require('./route-utils')
 
 async function render(params, res, matchingRoute) {

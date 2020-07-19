@@ -1,6 +1,6 @@
 const express = require('express')
 const utils = require('../../../utils')
-const render = require('./render-bus')
+const render = require('./utils/render-bus')
 const router = new express.Router()
 
 router.get('/:codedName', async (req, res, next) => {

@@ -1,6 +1,6 @@
 const express = require('express')
 const utils = require('../../../utils')
-const render = require('./render-tram')
+const render = require('./utils/render-tram')
 const router = new express.Router()
 
 router.get('/:routeNumber', async (req, res, next) => {

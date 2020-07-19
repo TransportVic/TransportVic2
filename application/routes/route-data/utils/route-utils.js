@@ -1,7 +1,7 @@
 const moment = require('moment')
 const async = require('async')
-const utils = require('../../../utils')
-const publicHolidays = require('../../../public-holidays')
+const utils = require('../../../../utils')
+const publicHolidays = require('../../../../public-holidays')
 
 let frequencyRanges = {
   'Early Morning': [[3, 0], [6, 00]],
