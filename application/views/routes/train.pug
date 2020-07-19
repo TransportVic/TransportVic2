@@ -2,28 +2,15 @@ extends ../layout
 
 block head
   
-  -
-    let type = ''
-    if (route.routeGTFSID.startsWith('4-')) type = 'Metropolitian Bus'
-    if (route.routeGTFSID.startsWith('6-')) type = 'Regional Bus'
-    if (route.routeGTFSID.startsWith('7-')) type = 'Telebus'
-    if (route.routeGTFSID.startsWith('8-')) type = 'Night Bus'
-    if (route.routeGTFSID.startsWith('11-')) type = 'SkyBus'
-    
-    let name = `${directionNames[1]} - ${directionNames[0]}`
-    if (!showDualTermini) name = directionNames[0]
-    
-    let identifier = route.routeNumber || route.routeName.replace(/ Railway Station/g, '')
-    
-  title TransportVic - #{type} #{identifier}
-  meta(property='og:title' content=`TransportVic - ${type} ${identifier}`)
-  meta(property='twitter:title' content=`TransportVic - ${type} ${identifier}`)
-  meta(property='og:description' content=`${type} ${identifier}: ${name}`)
-  meta(property='twitter:description' content=`${type} ${identifier}: ${name}`)
+  - let name = `${route.routeName} Line`
+  title TransportVic - #{name}
+  meta(property='og:title' content=`TransportVic - ${name}`)
+  meta(property='twitter:title' content=`TransportVic - ${name}`)
+  meta(property='og:description' content=`${name}`)
+  meta(property='twitter:description' content=`${name}`)
   
 block title
-    
-  span #{type} #{identifier}
+  span #{name}
 
 block style
   link(rel='stylesheet' href='/static/css/routes/base-style.css')
@@ -31,58 +18,31 @@ block style
       
 block content
   div#routeSummary
-    -
-      let link
-      if (route.routeNumber) {
-        if (route.routeGTFSID.startsWith('6')) {
-          link = `/bus/route/regional/${route.codedSuburb}/${route.routeNumber}/${codedDirectionNames[1]}`
-        } else {
-          link = `/bus/route/${route.routeNumber}/${codedDirectionNames[1]}`
-        }
-      } else {
-        link = `/bus/route/named/${route.codedName}/${codedDirectionNames[1]}`
-      }
-      
-      if (route.operationDate) {
-        link += `/${route.operationDate.type}`
-      }
-    a(class=operator href=link)#routeNumber
-      span#routeType=type
-      if route.routeNumber
-        span#routeText=route.routeNumber
-      else
-        img#routeIcon(src='/static/images/clear-icons/bus.svg')
-      if route.operationDate
-        span#routeDetail=operationDate
+    a(class=cssName href=`/${niceMode}/line/${route.codedName}/${codedDirectionNames[1]}`)#routeNumber
+      span#routeType=mode === 'vline' ? 'V/Line Train' : 'Metro Train'
+      span#routeText #{lineCode}
     div#terminals
-      if showDualTermini
-        a().coloured-row
-          span.destination=directionNames[1]
-        a().coloured-row
-          span.destination=directionNames[0]
-      else
-        
-        a().coloured-row.full
-          span.header Circular Loop
-          span.destination=directionNames[0]
+      a.coloured-row.full
+        span.header Towards
+        span.destination=directionNames[0]
   div#serviceTimings
     div#keyTimings
       div.table-header.table-data.spacing1
         span Days
-        span First Bus
-        span Last Bus
+        span First Train
+        span Last Train
       div.coloured-row.table-data.spacing1
         span Weekdays
-        span=firstLastBusMap.firstTrip.weekday
-        span=firstLastBusMap.lastTrip.weekday
+        span=firstLastTrainMap.firstTrip.weekday
+        span=firstLastTrainMap.lastTrip.weekday
       div.coloured-row.table-data.spacing1
         span Saturday / PH
-        span=firstLastBusMap.firstTrip.saturday
-        span=firstLastBusMap.lastTrip.saturday
+        span=firstLastTrainMap.firstTrip.saturday
+        span=firstLastTrainMap.lastTrip.saturday
       div.coloured-row.table-data.spacing1
         span Sundays
-        span=firstLastBusMap.firstTrip.sunday
-        span=firstLastBusMap.lastTrip.sunday
+        span=firstLastTrainMap.firstTrip.sunday
+        span=firstLastTrainMap.lastTrip.sunday
     div#frequency
       div.table-header.table-data.spacing3
         span Time Of Day
@@ -94,7 +54,7 @@ block content
           function frequency(data) {
             if (data.min === '-') return '-'
             else {
-              if (data.min === '1 Trip') return '1 Bus'
+              if (data.min === '1 Trip') return '1 Train'
               else if (data.min === data.max) return data.min + 'min'
               else return `${data.min}-${data.max}min`
             }
@@ -143,21 +103,12 @@ block content
   div#stops
     div.table-header.table-data.spacing2
       span.suburb Suburb
-      span.stopName Bus Stop    
+      span.stopName Train Station    
     
     for stop in direction.stops
       div.coloured-row
         div.stop.table-data.spacing2
           span.suburb=stop.suburb
           div.stopNameData.stopName
-            -
-              let stopRoad = stop.stopName.replace(/^[^\/]+\//, '')
-              let stopName = stop.stopName.replace(/\/.+$/, '')
-              if ((stopRoad == stopName) && stopName.match(/\d+[A-Z]? .+$/)) {
-                stopRoad = stopName.match(/\d+[A-Z]? (.+)$/)[1]
-              }
-            if stopRoad !== stopName
-                span=stopRoad
-            else
-                span
-            span=stopName
+            span
+            span=stop.stopName.slice(0, -16)

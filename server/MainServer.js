@@ -211,6 +211,16 @@ module.exports = class MainServer {
         enable: modules.routes && modules.routes.tram
       },
 
+      'route-data/MetroRoute': {
+        path: '/metro/line',
+        enable: modules.routes && modules.routes.metro
+      },
+
+      'route-data/VLineRoute': {
+        path: '/vline/line',
+        enable: modules.routes && modules.routes.vline
+      },
+
       StopPreview: {
         path: '/stop-preview',
         enable: modules.stopPreview

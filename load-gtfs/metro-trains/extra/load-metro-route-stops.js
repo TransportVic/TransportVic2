@@ -61,7 +61,11 @@ database.connect({
       let { stopTimings } = timetable
 
       stopTimings = stopTimings.filter(s => !cityLoopStations.includes(s.stopName))
-      stopTimings = stopTimings.map(e => ({stopName: e.stopName, stopGTFSID: e.stopGTFSID}))
+      stopTimings = stopTimings.map(e => ({
+        stopName: e.stopName,
+        stopGTFSID: e.stopGTFSID,
+        suburb: e.suburb
+      }))
 
       routeDirections[timetable.gtfsDirection].push(stopTimings)
     })
@@ -109,7 +113,8 @@ database.connect({
       cityLoopStops = cityLoopStops.map(station => {
         return {
           stopName: station[0] + ' Railway Station',
-          stopGTFSID: station[1]
+          stopGTFSID: station[1],
+          suburb: 'Melbourne City'
         }
       })
 
