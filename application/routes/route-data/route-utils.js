@@ -1,6 +1,7 @@
 const moment = require('moment')
 const async = require('async')
 const utils = require('../../../utils')
+const publicHolidays = require('../../../public-holidays')
 
 let frequencyRanges = {
   'Early Morning': [[3, 0], [6, 00]],
@@ -13,11 +14,13 @@ let frequencyRanges = {
 
 function getDistantWeekdays(allAvailableDays) {
   let weekdays = allAvailableDays.filter(day => {
+    let phName = publicHolidays.getPublicHolidayName(day)
+    if (phName) return false
     let dayOfWeek = day.day()
 
     return 0 < dayOfWeek && dayOfWeek < 5 // Exclude friday
   })
-  let sorted = weekdays.sort((a, b) => b - a)
+  let sorted = weekdays.sort((a, b) => a - b)
   let lastSeven = sorted.slice(0, 7)
   let seenDaysOfWeek = []
 
@@ -37,30 +40,34 @@ function getDistantWeekdays(allAvailableDays) {
 
 function getDistantSaturday(allAvailableDays) {
   let saturdays = allAvailableDays.filter(day => {
+    let phName = publicHolidays.getPublicHolidayName(day)
+    if (phName) return false
+
     let dayOfWeek = day.day()
 
     return dayOfWeek === 6
   })
 
-  let sorted = saturdays.sort((a, b) => b - a)
-  let lastThree = sorted.slice(0, 3)
+  let sorted = saturdays.sort((a, b) => a - b)
+  let firstThree = sorted.slice(0, 3)
 
-  // filter out public hols
-
-  return lastThree.length ? lastThree[0].format('YYYYMMDD') : null
+  return firstThree.length ? firstThree[0].format('YYYYMMDD') : null
 }
 
 function getDistantSunday(allAvailableDays) {
   let sundays = allAvailableDays.filter(day => {
+    let phName = publicHolidays.getPublicHolidayName(day)
+    if (phName) return false
+
     let dayOfWeek = day.day()
 
     return dayOfWeek === 0
   })
 
-  let sorted = sundays.sort((a, b) => b - a)
-  let lastThree = sorted.slice(0, 3)
+  let sorted = sundays.sort((a, b) => a - b)
+  let firstThree = sorted.slice(0, 3)
 
-  return lastThree.length ? lastThree[0].format('YYYYMMDD') : null
+  return firstThree.length ? firstThree[0].format('YYYYMMDD') : null
 }
 
 function parseOperationDays(operationDays) {
