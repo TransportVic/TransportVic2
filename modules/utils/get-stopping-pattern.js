@@ -163,6 +163,13 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     cancelled = run.status === 'cancelled'
   }
 
+  let vehicle = vehicleDescriptor.description || vehicleDescriptor.id
+  if (mode === 'metro train') {
+    if (['Belgrave', 'Lilydale', 'Alamein', 'Glen Waverley'].includes(routeName)) {
+      vehicle = vehicle.replace('Comeng', 'Xtrapolis')
+    }
+  }
+
   let timetable = {
     mode, routeName,
     routeGTFSID,
@@ -170,7 +177,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     routeDetails: referenceTrip ? referenceTrip.routeDetails : null,
     runID: vehicleDescriptor.id,
     operationDays: [tripOperationDay],
-    vehicle: vehicleDescriptor.description || vehicleDescriptor.id,
+    vehicle,
     stopTimings: stopTimings,
     destination: stopTimings[stopTimings.length - 1].stopName,
     destinationArrivalTime: stopTimings[stopTimings.length - 1].arrivalTime,
