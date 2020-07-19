@@ -6,6 +6,7 @@ let depots = [
   'Camberwell Tram Depot/Riversdale Road',
   'Essendon Tram Depot/Mount Alexander Road',
   'Malvern Tram Depot/Glenferrie Road',
+  'Glenferrie Road/Malvern Road',
   'High Street/Barkers Road'
 ]
 
