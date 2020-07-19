@@ -206,6 +206,11 @@ module.exports = class MainServer {
         enable: modules.routes && modules.routes.bus
       },
 
+      'route-data/TramRoute': {
+        path: '/tram/route',
+        enable: modules.routes && modules.routes.tram
+      },
+
       StopPreview: {
         path: '/stop-preview',
         enable: modules.stopPreview

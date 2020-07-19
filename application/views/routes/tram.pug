@@ -1,29 +1,14 @@
 extends ../layout
 
 block head
-  
-  -
-    let type = ''
-    if (route.routeGTFSID.startsWith('4-')) type = 'Metropolitian Bus'
-    if (route.routeGTFSID.startsWith('6-')) type = 'Regional Bus'
-    if (route.routeGTFSID.startsWith('7-')) type = 'Telebus'
-    if (route.routeGTFSID.startsWith('8-')) type = 'Night Bus'
-    if (route.routeGTFSID.startsWith('11-')) type = 'SkyBus'
-    
-    let name = `${directionNames[1]} - ${directionNames[0]}`
-    if (!showDualTermini) name = directionNames[0]
-    
-    let identifier = route.routeNumber || route.routeName.replace(/ Railway Station/g, '')
-    
-  title TransportVic - #{type} #{identifier}
-  meta(property='og:title' content=`TransportVic - ${type} ${identifier}`)
-  meta(property='twitter:title' content=`TransportVic - ${type} ${identifier}`)
-  meta(property='og:description' content=`${type} ${identifier}: ${name}`)
-  meta(property='twitter:description' content=`${type} ${identifier}: ${name}`)
+  title TransportVic - Tram Route #{route.routeNumber}
+  meta(property='og:title' content=`TransportVic - Tram Route ${route.routeNumber}`)
+  meta(property='twitter:title' content=`TransportVic - Tram Route ${route.routeNumber}`)
+  meta(property='og:description' content=`Tram Route ${route.routeNumber}: ${name}`)
+  meta(property='twitter:description' content=`Tram Route ${route.routeNumber}: ${name}`)
   
 block title
-    
-  span #{type} #{identifier}
+  span Tram Route #{route.routeNumber}
 
 block style
   link(rel='stylesheet' href='/static/css/routes/base-style.css')
@@ -32,29 +17,9 @@ block style
       
 block content
   div#routeSummary
-    -
-      let link
-      if (route.routeNumber) {
-        if (route.routeGTFSID.startsWith('6')) {
-          link = `/bus/route/regional/${route.codedSuburb}/${route.routeNumber}/${codedDirectionNames[1]}`
-        } else {
-          link = `/bus/route/${route.routeNumber}/${codedDirectionNames[1]}`
-        }
-      } else {
-        link = `/bus/route/named/${route.codedName}/${codedDirectionNames[1]}`
-      }
-      
-      if (route.operationDate) {
-        link += `/${route.operationDate.type}`
-      }
-    a(class=operator href=link)#routeNumber
-      span#routeType=type
-      if route.routeNumber
-        span#routeText=route.routeNumber
-      else
-        img#routeIcon(src='/static/images/clear-icons/bus.svg')
-      if route.operationDate
-        span#routeDetail=operationDate
+    a(class=`tram-${route.routeNumber}` href=`/tram/route/${route.routeNumber}/${codedDirectionNames[1]}`)#routeNumber
+      span#routeType Tram Route
+      span#routeText=route.routeNumber
     div#terminals
       if showDualTermini
         a().coloured-row
@@ -70,20 +35,20 @@ block content
     div#keyTimings
       div.table-header.table-data.spacing1
         span Days
-        span First Bus
-        span Last Bus
+        span First Tram
+        span Last Tram
       div.coloured-row.table-data.spacing1
         span Weekdays
-        span=firstLastBusMap.firstTrip.weekday
-        span=firstLastBusMap.lastTrip.weekday
+        span=firstLastTramMap.firstTrip.weekday
+        span=firstLastTramMap.lastTrip.weekday
       div.coloured-row.table-data.spacing1
         span Saturday / PH
-        span=firstLastBusMap.firstTrip.saturday
-        span=firstLastBusMap.lastTrip.saturday
+        span=firstLastTramMap.firstTrip.saturday
+        span=firstLastTramMap.lastTrip.saturday
       div.coloured-row.table-data.spacing1
         span Sundays
-        span=firstLastBusMap.firstTrip.sunday
-        span=firstLastBusMap.lastTrip.sunday
+        span=firstLastTramMap.firstTrip.sunday
+        span=firstLastTramMap.lastTrip.sunday
     div#frequency
       div.table-header.table-data.spacing3
         span Time Of Day
@@ -95,7 +60,7 @@ block content
           function frequency(data) {
             if (data.min === '-') return '-'
             else {
-              if (data.min === '1 Trip') return '1 Bus'
+              if (data.min === '1 Trip') return '1 Tram'
               else if (data.min === data.max) return data.min + 'min'
               else return `${data.min}-${data.max}min`
             }
@@ -144,7 +109,7 @@ block content
   div#stops
     div.table-header.table-data.spacing2
       span.suburb Suburb
-      span.stopName Bus Stop    
+      span.stopName Tram Stop    
     
     for stop in direction.stops
       div.coloured-row

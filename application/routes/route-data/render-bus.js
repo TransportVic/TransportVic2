@@ -44,7 +44,7 @@ async function render(params, res, matchingRoute) {
     gtfsDirection: gtfsDirection.toString()
   }
 
-  let firstLastBusMap = await routeUtils.generateFirstLastBusMap(gtfsTimetables, query)
+  let firstLastBusMap = await routeUtils.generateFirstLastTripMap(gtfsTimetables, query)
   let frequencyMap = await routeUtils.generateFrequencyMap(gtfsTimetables, query)
 
   let showDualTermini = true
@@ -87,7 +87,6 @@ async function render(params, res, matchingRoute) {
     let {operationDate} = matchingRoute
     operationDateText = `${operationDate.type[0].toUpperCase()}${operationDate.type.slice(1)} ${operationDate.operationDateReadable}`
   }
-
 
   res.render('routes/bus', {
     route: matchingRoute,

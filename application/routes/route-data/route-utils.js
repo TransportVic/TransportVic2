@@ -1,5 +1,6 @@
 const moment = require('moment')
 const async = require('async')
+const utils = require('../../../utils')
 
 let frequencyRanges = {
   'Early Morning': [[3, 0], [6, 00]],
@@ -14,7 +15,7 @@ function getDistantWeekdays(allAvailableDays) {
   let weekdays = allAvailableDays.filter(day => {
     let dayOfWeek = day.day()
 
-    return 0 < dayOfWeek && dayOfWeek < 6
+    return 0 < dayOfWeek && dayOfWeek < 5 // Exclude friday
   })
   let sorted = weekdays.sort((a, b) => b - a)
   let lastSeven = sorted.slice(0, 7)
@@ -93,19 +94,33 @@ async function findTripsForDates(gtfsTimetables, query, dates) {
   return trips
 }
 
-function findFirstBus(trips) {
-  return trips.length ? trips[0].departureTime : '-'
+function findFirstTrip(trips) {
+  return trips.length ? trips.map(trip => {
+    let departureTimeMinutes = utils.time24ToMinAftMidnight(trip.departureTime)
+    if (departureTimeMinutes < 180) departureTimeMinutes += 1440
+    return {
+      departureTime: trip.departureTime,
+      departureTimeMinutes
+    }
+  }).sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)[0].departureTime : '-'
 }
 
-function findLastBus(trips) {
-  return trips.length ? trips.slice(-1)[0].departureTime : '-'
+function findLastTrip(trips) {
+  return trips.length ? trips.map(trip => {
+    let departureTimeMinutes = utils.time24ToMinAftMidnight(trip.departureTime)
+    if (departureTimeMinutes < 180) departureTimeMinutes += 1440
+    return {
+      departureTime: trip.departureTime,
+      departureTimeMinutes
+    }
+  }).sort((a, b) => b.departureTimeMinutes - a.departureTimeMinutes)[0].departureTime : '-'
 }
 
 async function getOperationDays(gtfsTimetables, query) {
   return await gtfsTimetables.distinct('operationDays', query)
 }
 
-async function generateFirstLastBusMap(gtfsTimetables, query) {
+async function generateFirstLastTripMap(gtfsTimetables, query) {
   let operationDays = await getOperationDays(gtfsTimetables, query)
   let parsedOperationDays = parseOperationDays(operationDays)
 
@@ -117,24 +132,24 @@ async function generateFirstLastBusMap(gtfsTimetables, query) {
   let saturdayTrips = await findTripsForDates(gtfsTimetables, query, distantSaturday)
   let sundayTrips = await findTripsForDates(gtfsTimetables, query, distantSunday)
 
-  let weekdayFirstBus = findFirstBus(weekdayTrips)
-  let saturdayFirstBus = findFirstBus(saturdayTrips)
-  let sundayFirstBus = findFirstBus(sundayTrips)
+  let weekdayFirstTrip = findFirstTrip(weekdayTrips)
+  let saturdayFirstTrip = findFirstTrip(saturdayTrips)
+  let sundayFirstTrip = findFirstTrip(sundayTrips)
 
-  let weekdayLastBus = findLastBus(weekdayTrips)
-  let saturdayLastBus = findLastBus(saturdayTrips)
-  let sundayLastBus = findLastBus(sundayTrips)
+  let weekdayLastTrip = findLastTrip(weekdayTrips)
+  let saturdayLastTrip = findLastTrip(saturdayTrips)
+  let sundayLastTrip = findLastTrip(sundayTrips)
 
   return {
-    firstBus: {
-      weekday: weekdayFirstBus,
-      saturday: saturdayFirstBus,
-      sunday: sundayFirstBus
+    firstTrip: {
+      weekday: weekdayFirstTrip,
+      saturday: saturdayFirstTrip,
+      sunday: sundayFirstTrip
     },
-    lastBus: {
-      weekday: weekdayLastBus,
-      saturday: saturdayLastBus,
-      sunday: sundayLastBus
+    lastTrip: {
+      weekday: weekdayLastTrip,
+      saturday: saturdayLastTrip,
+      sunday: sundayLastTrip
     }
   }
 }
@@ -218,10 +233,10 @@ async function generateFrequencyMap(gtfsTimetables, query) {
 
 
   Object.keys(weekdayFrequency).forEach(name => {
-    let has1Bus = !!weekdayFrequency[name].min.find(e => e === -1)
-    let hasMultipleBus = !!weekdayFrequency[name].min.find(e => e !== -1)
+    let has1Trip = !!weekdayFrequency[name].min.find(e => e === -1)
+    let hasMultipleTrip = !!weekdayFrequency[name].min.find(e => e !== -1)
 
-    if (has1Bus && hasMultipleBus) {
+    if (has1Trip && hasMultipleTrip) {
       weekdayFrequency[name].min = weekdayFrequency[name].min.filter(e => e !== -1)
       weekdayFrequency[name].max = weekdayFrequency[name].max.filter(e => e !== -1)
     }
@@ -233,12 +248,12 @@ async function generateFrequencyMap(gtfsTimetables, query) {
   let saturdayFrequency = generateFrequencyMapOnDate(saturdayTrips, true)
   let sundayFrequency = generateFrequencyMapOnDate(sundayTrips, true)
 
-  function check1Bus(frequencyMap) {
+  function check1Trip(frequencyMap) {
     Object.keys(frequencyMap).forEach(name => {
       if (frequencyMap[name].min === -1) {
         frequencyMap[name] = {
-          min: '1 Bus',
-          max: '1 Bus'
+          min: '1 Trip',
+          max: '1 Trip'
         }
       }
     })
@@ -247,9 +262,9 @@ async function generateFrequencyMap(gtfsTimetables, query) {
   }
 
   return {
-    weekday: check1Bus(weekdayFrequency),
-    saturday: check1Bus(saturdayFrequency),
-    sunday: check1Bus(sundayFrequency)
+    weekday: check1Trip(weekdayFrequency),
+    saturday: check1Trip(saturdayFrequency),
+    sunday: check1Trip(sundayFrequency)
   }
 }
 
@@ -260,6 +275,6 @@ module.exports = {
   getOperationDays,
   parseOperationDays,
 
-  generateFirstLastBusMap,
+  generateFirstLastTripMap,
   generateFrequencyMap
 }
