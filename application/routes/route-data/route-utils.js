@@ -83,37 +83,30 @@ async function findTripsForDates(gtfsTimetables, query, dates) {
 
   if (!mostCommonOrigin) return []
 
-  let trips = await gtfsTimetables.findDocuments({
+  let trips = (await gtfsTimetables.findDocuments({
     ...query,
     origin: mostCommonOrigin._id,
     operationDays: {
       $in: dates
     }
-  }).sort({departureTime: 1}).toArray()
+  }).toArray()).map(trip => {
+    let departureTimeMinutes = utils.time24ToMinAftMidnight(trip.departureTime)
+    if (departureTimeMinutes < 180) departureTimeMinutes += 1440
+    return {
+      departureTimeMinutes,
+      trip
+    }
+  }).sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes).map(t => t.trip)
 
   return trips
 }
 
 function findFirstTrip(trips) {
-  return trips.length ? trips.map(trip => {
-    let departureTimeMinutes = utils.time24ToMinAftMidnight(trip.departureTime)
-    if (departureTimeMinutes < 180) departureTimeMinutes += 1440
-    return {
-      departureTime: trip.departureTime,
-      departureTimeMinutes
-    }
-  }).sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)[0].departureTime : '-'
+  return trips.length ? trips[0].departureTime : '-'
 }
 
 function findLastTrip(trips) {
-  return trips.length ? trips.map(trip => {
-    let departureTimeMinutes = utils.time24ToMinAftMidnight(trip.departureTime)
-    if (departureTimeMinutes < 180) departureTimeMinutes += 1440
-    return {
-      departureTime: trip.departureTime,
-      departureTimeMinutes
-    }
-  }).sort((a, b) => b.departureTimeMinutes - a.departureTimeMinutes)[0].departureTime : '-'
+  return trips.length ? trips.slice(-1)[0].departureTime : '-'
 }
 
 async function getOperationDays(gtfsTimetables, query) {

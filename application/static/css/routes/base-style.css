@@ -75,12 +75,14 @@ div#header span {
 
 #terminals > a.full > span.destination {
   font-size: calc(1.7vw + 1.7vh);
-  line-height: calc(1.7vw + 1.7vh);
+  line-height: calc(2.1vw + 2.1vh);
 }
 
 #terminals > a > span {
   margin-left: calc(0.5vw + 1.2vh);
+}
 
+#terminals > a:not(.full) > span {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;

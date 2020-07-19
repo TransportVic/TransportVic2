@@ -87,6 +87,10 @@ database.connect({}, async err => {
         directionName += ` (${routeData.flags[gtfsDirection]})`
       }
 
+      if (routeGTFSID === '3-35') {
+        directionName = `Waterfront City Docklands (${gtfsDirection == 0 ? 'Anti-' : ''}Clockwise)`
+      }
+
       let serviceData = busDestinations.service[routeData.routeNumber] || busDestinations.service[routeGTFSID] || {}
 
       directionName = serviceData[directionName]
