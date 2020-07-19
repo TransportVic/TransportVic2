@@ -1,4 +1,4 @@
-const version = '70'
+const version = '71'
 const cacheName = `transportvic-${version}`
 
 function cacheFiles(files) {
@@ -34,15 +34,20 @@ self.addEventListener('install', e => {
       '/static/css/index.css',
       '/static/css/loading.css',
       '/static/css/search.css',
+      '/static/css/smartrak.css',
       '/static/css/about.css',
       '/static/css/textbar-style.css',
       '/static/css/content-error.css',
 
       '/static/css/form.css',
 
+      '/static/css/routes/base-style.css',
+
       '/static/css/tracker/bus-results.css',
 
       '/static/fonts/Nunito.ttf',
+
+      '/static/images/interactives/trains-new.svg',
 
       '/static/images/decals/ac.svg',
       '/static/images/decals/wheelchair.svg',
