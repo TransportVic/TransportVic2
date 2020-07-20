@@ -192,7 +192,7 @@ module.exports = {
     .replace(/Sec Col(\b)/g, 'Secondary College$1')
     .replace(/Rec Res(\b)/g, 'Rec Reserve$1')
     .replace(/SC Senior Campus(\b)/g, 'Secondary College Senior Campus$1')
-    .replace(/([\w ]+) - ([\w ]+) Road/g, '$1-$2 Road')
+    .replace(/([\w ]+) ?- ?([\w ]+) Road/g, '$1-$2 Road')
     .replace(/St(\b)/, 'St.$1')
     .replace('St..', 'St. ')
     .replace('Ret Village', 'Retirement Village')
