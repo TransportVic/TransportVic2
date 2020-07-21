@@ -131,8 +131,7 @@ async function pickBestTrip(data, db) {
     let isoDeparture = originTime.toISOString()
     let {departures, runs} = await ptvAPI(`/v3/departures/route_type/0/stop/${originStopID}?gtfs=true&date_utc=${originTime.clone().add(-3, 'minutes').toISOString()}&max_results=3&expand=run&expand=stop&include_cancelled=true`)
 
-    let departure
-    let isUp = referenceTrip.direction === 'Up'
+    let isUp = referenceTrip ? referenceTrip.direction === 'Up' : null
     let possibleDepartures = departures.filter(departure => {
       let run = runs[departure.run_id]
       let destinationName = run.destination_name.trim()
