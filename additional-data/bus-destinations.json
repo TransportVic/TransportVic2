@@ -327,21 +327,21 @@
       "High Street/Miller Street": "Preston"
     },
     "555": {
-      "Broadway": "Reservoir Railway Station"
+      "Broadway": "Reservoir Station"
     },
     "556": {
       "Plenty Road/Dunne Street": "La Trobe University",
-      "Broadway": "Reservoir Railway Station"
+      "Broadway": "Reservoir Station"
     },
     "558": {
-      "Edwardes Street/Spring Street": "Reservoir Railway Station"
+      "Edwardes Street/Spring Street": "Reservoir Station"
     },
     "569": {
       "Northern Hospital": "Epping Plaza SC"
     },
     "561": {
-      "Coburg Primary School": "Coburg Railway Station",
-      "High Street/Broadway": "Reservoir Railway Station",
+      "Coburg Primary School": "Coburg Station",
+      "High Street/Broadway": "Reservoir Station",
       "Dunvegan Cresent/Vincent Street": "Macleod"
     },
     "567": {
@@ -607,7 +607,7 @@
       "Archers Field Drive/Bradford Drive": "Cranbourne East"
     },
     "901": {
-      "Mereweather Avenue/Dandenong Road": "Frankston Railway Station"
+      "Mereweather Avenue/Dandenong Road": "Frankston Station"
     },
     "902": {
       "Cheltenham Road/Springvale Road": "Keysborough",
@@ -617,7 +617,7 @@
     },
     "903": {
       "Keys Road/Warrigal Road": "Heatherton Bus Depot",
-      "Holmesglen TAFE - Chadstone": "Holmesglen Railway Station",
+      "Holmesglen TAFE - Chadstone": "Holmesglen Station",
       "Burwood Highway/Warrigal Road": "Burwood",
       "Coburg Primary School": "Coburg",
       "Savona Street/Warrigal Road": "Mentone"
@@ -735,7 +735,7 @@
     "Killara Primary School - Opp": "Killara Heights",
     "East Kew Terminus": "Kew",
     "Brighton Town Hall": "Brighton",
-    "Doveton Cresent/Lydiard Street N": "Ballarat Railway Station",
+    "Doveton Cresent/Lydiard Street N": "Ballarat Station",
     "Knox Place/Kathryn Road": "Knoxfield Shops",
     "Kathryn Road/Ferntree Gully Road": "Knoxfield Shops",
     "Brice Grove/Kathryn Road": "Knoxfield Shops",
