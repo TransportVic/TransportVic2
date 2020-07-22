@@ -14,7 +14,7 @@ block content
 
   mixin section(section)
     if section.trips.length
-      h1.title=section.name
+      h1.title #{section.name}
       for trip in section.trips
         div(class=`trip ${trip.active ? '' : 'inactive'}`)
           a(href=trip.url) #{trip.fleetNumber}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
@@ -23,13 +23,13 @@ block content
     +section(section)
     
   if unknownMetroBuses.length
-    h1 Unknown Metro Buses
+    h1.title Unknown Metro Buses
     for trip in unknownMetroBuses
       div(class=`trip ${trip.active ? '' : 'inactive'}`)
         a(href=trip.url) #{trip.smartrakID}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
     
   if unknownRegionalBuses.length
-    h1 Unknown Regional Buses
+    h1.title Unknown Regional Buses
     for trip in unknownRegionalBuses
       div(class=`trip ${trip.active ? '' : 'inactive'}`)
         a(href=trip.url) #{trip.smartrakID}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
