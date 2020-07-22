@@ -123,7 +123,7 @@ module.exports = [
   'epsom/epsom-village-shopping-centre',
   'flora-hill/la-trobe-university',
   'kingsbury/la-trobe-university-medical-centre-plenty-road',
-  'bendigo/mitchell-street-central-bay-a-mitchell-street',
+  'bendigo/mitchell-street-central-mitchell-street',
   'marshall/marshall-railway-station',
   'beaconsfield/beaconsfield-railway-station',
   'point-cook/sanctuary-lakes-shopping-centre-point-cook-road',

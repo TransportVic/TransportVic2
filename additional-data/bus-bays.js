@@ -444,5 +444,9 @@ module.exports = {
   47164: "Bay 7",
   47165: "Bay 8",
   47166: "Bay 9",
-  47167: "Bay 10"
+  47167: "Bay 10",
+
+  //Mitchell Street Bendigo
+  35756: "Bay A",
+  35822: "Bay B"
 }

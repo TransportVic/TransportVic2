@@ -13,5 +13,8 @@ module.exports = stopName => {
 
   if (stopName === '(opp) 5 Bass School Road') return '5 Bass School Road'
 
+  if (stopName === 'Mitchell Street Central - Bay A/Mitchell Street') return 'Mitchell Street Central/Mitchell Street'
+  if (stopName === 'Mitchell Street Central - Bay B/Mitchell Street') return 'Mitchell Street Central/Mitchell Street'
+
   return stopName
 }
