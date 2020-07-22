@@ -3,7 +3,7 @@
     "1": {
       "McCallum Street/Campbell Street": "Swan Hill North (Loop)",
       "Edith Street/Shirley Street": "Shirley Street",
-      "Windsor Cresent/Mintern Cresent": "Natimuk Road",
+      "Windsor Crescent/Mintern Crescent": "Natimuk Road",
       "Hutchison Street/Patten Street": "Sale South",
       "McSwains Road/Northern Highway": "Westwood Park",
       "32 Harris Road": "Elliminyt",
@@ -29,6 +29,7 @@
     "12": {
       "Tulloch Ard Road/Gelantipy Road": "Gelantipy",
       "Moorhen Drive/Westlakes Boulevard": "Lara West",
+      "Cape Barron Drive/Westlakes Boulevard": "Lara West",
       "Lapwing Drive/Eastlakes Boulevard": "Lara West"
     },
     "13": {
@@ -58,7 +59,7 @@
     },
     "25": {
       "James Drive/Whitelaw Avenue": "Delacombe",
-      "Eagleview Cresent/Braund Avenue": "Bell Post Hill"
+      "Eagleview Crescent/Braund Avenue": "Bell Post Hill"
     },
     "26": {
       "Parkview Drive/Cuthberts Road": "Alfredton"
@@ -102,10 +103,13 @@
       "Strathfieldsaye Road/Blucher Street": "Strathfieldaye"
     },
     "80": {
-      "Fairfield Village Chapel": "Warragul South"
+      "Fairview Village Chapel": "Warragul South"
     },
     "81": {
-      "Myrtle Cresent/Bowen Street": "Warragul North"
+      "Myrtle Crescent/Bowen Street": "Warragul North"
+    },
+    "82": {
+      "Service Station": "Warragul North"
     },
     "83": {
       "Dawson Drive/Copelands Road": "Warragul East"
@@ -117,7 +121,7 @@
       "Barclay Square Park": "Red Cliffs"
     },
     "191": {
-      "Anniversary Avenue/Stanmore Cresent": "Jubilee Estate"
+      "Anniversary Avenue/Stanmore Crescent": "Jubilee Estate"
     },
     "200": {
       "Barclay Square Park": "Red Cliffs"
@@ -174,7 +178,7 @@
       "Jennifer Court/Yea Road": "Eastern Hill"
     },
     "400": {
-      "Pembroke Cresent/Westminster Parkway": "Derrimut"
+      "Pembroke Crescent/Westminster Parkway": "Derrimut"
     },
     "402": {
       "Carlton Gardens": "East Melbourne"
@@ -186,7 +190,7 @@
       "Maidstone Street/Civic Parade": "Altona Meadows"
     },
     "421": {
-      "Cocoparra Cresent/Apollo Road": "Taylors Lakes"
+      "Cocoparra Crescent/Apollo Road": "Taylors Lakes"
     },
     "426": {
       "Lexington Drive/Westwood Drive": "Burnside"
@@ -249,7 +253,7 @@
       "Bundanoon Avenue/Canterbury Avenue": "Canterbury Hills"
     },
     "490": {
-      "Bluebell Cresent/Gowanbrae Drive": "Gowanbrae"
+      "Bluebell Crescent/Gowanbrae Drive": "Gowanbrae"
     },
     "494": {
       "Yellowbox Drive/Featherbrook Road": "Point Cook South"
@@ -285,7 +289,7 @@
       "Sydney Road/Moreland Road": "Moreland"
     },
     "511": {
-      "Waterfall Cresent/Mandalay Circuit": "Mandalay Circuit"
+      "Waterfall Crescent/Mandalay Circuit": "Mandalay Circuit"
     },
     "512": {
       "Nicholson Street/Rennie Street": "East Coburg"
@@ -342,7 +346,7 @@
     "561": {
       "Coburg Primary School": "Coburg Station",
       "High Street/Broadway": "Reservoir Station",
-      "Dunvegan Cresent/Vincent Street": "Macleod"
+      "Dunvegan Crescent/Vincent Street": "Macleod"
     },
     "567": {
       "High Street/Mitchell Street": "Northcote"
@@ -379,7 +383,7 @@
       "St. Kilda Street/Bent Avenue": "Elwood/Bent Avenue"
     },
     "663": {
-      "Birmingham Road/Wray Cresent": "Mount Evelyn"
+      "Birmingham Road/Wray Crescent": "Mount Evelyn"
     },
     "670": {
       "Box Hill Institute": "Lilydale Lakeside"
@@ -389,7 +393,7 @@
     },
     "679": {
       "Stradbroke Road/Mount Dandenong Road": "Montrose",
-      "Birmingham Road/Wray Cresent": "Mount Evelyn"
+      "Birmingham Road/Wray Crescent": "Mount Evelyn"
     },
     "681": {
       "Greenhaven Court/Sovereign Crest Boulevard": "Lysterfield"
@@ -470,7 +474,7 @@
       "Mountain Highway/Forest Road": "The Basin"
     },
     "757": {
-      "Ferntree Gully Road/Borg Cresent": "Scoresby"
+      "Ferntree Gully Road/Borg Crescent": "Scoresby"
     },
     "766": {
       "Burwood Highway/Warrigal Road": "Burwood"
@@ -573,7 +577,7 @@
     },
     "843": {
       "John Strover Reserve": "Endeavour Hills",
-      "Maryrose Cresent/Reema Boulevard": "Endeavour Hills (Maryrose Cres)",
+      "Maryrose Crescent/Reema Boulevard": "Endeavour Hills (Maryrose Cres)",
       "Gleneagles Secondary College": "Endeavour Hills"
     },
     "845": {
@@ -648,7 +652,7 @@
       "Doncaster Junction": "Doncaster"
     },
     "TB3": {
-      "Chevalier Cresent/Landscape Drive": "Rolling Hills"
+      "Chevalier Crescent/Landscape Drive": "Rolling Hills"
     },
     "TB4": {
       "Ervin Road/Kiloran Avenue": "Kiloran Park"
@@ -698,7 +702,7 @@
     "Monash University Bus Loop": "Monash Uni Clayton",
     "Greensborough SC Para Road": "Greensborough SC",
     "Doveton Pool In The Park": "Doveton",
-    "Maryrose Cresent/Reema Boulevard": "Mossgiel Park",
+    "Maryrose Crescent/Reema Boulevard": "Mossgiel Park",
     "Bendigo Health/Arnold Street": "Bendigo Hospital",
     "Information Centre/Godfrey Street": "Boort",
     "Eaglehawk Road/Victoria Street": "Eaglehawk",
@@ -735,7 +739,7 @@
     "Killara Primary School - Opp": "Killara Heights",
     "East Kew Terminus": "Kew",
     "Brighton Town Hall": "Brighton",
-    "Doveton Cresent/Lydiard Street N": "Ballarat Station",
+    "Doveton Crescent/Lydiard Street N": "Ballarat Station",
     "Knox Place/Kathryn Road": "Knoxfield Shops",
     "Kathryn Road/Ferntree Gully Road": "Knoxfield Shops",
     "Brice Grove/Kathryn Road": "Knoxfield Shops",
