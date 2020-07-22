@@ -19,7 +19,9 @@ router.get('/', (req, res) => {
 })
 
 function adjustTrip(trip, date, today, minutesPastMidnightNow) {
-  let {origin, destination} = trip
+  let origin = trip.origin.replace('Shopping Centre', 'SC')
+  let destination = trip.destination.replace('Shopping Centre', 'SC')
+  
   let serviceData = busDestinations.service[trip.routeNumber] || {}
   let dA = destination, dB = destination.split('/')[0]
   let oA = origin, oB = origin.split('/')[0]
@@ -28,9 +30,9 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
   trip.url = `/bus/run/${e(trip.origin)}/${trip.departureTime}/${e(trip.destination)}/${trip.destinationArrivalTime}/${trip.date}`
 
   trip.destination = (serviceData[dA] || serviceData[dB]
-    || busDestinations.generic[dA] || busDestinations.generic[dB] || dB).replace('Shopping Centre', 'SC')
+    || busDestinations.generic[dA] || busDestinations.generic[dB] || dB)
   trip.origin = (serviceData[oA] || serviceData[oB]
-    || busDestinations.generic[oA] || busDestinations.generic[oB] || oB).replace('Shopping Centre', 'SC')
+    || busDestinations.generic[oA] || busDestinations.generic[oB] || oB)
 
   let {departureTime, destinationArrivalTime} = trip
   let departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime),

@@ -26,6 +26,9 @@
     "10": {
       "Coltman Plaza": "Alfredton"
     },
+    "11": {
+      "Nasmyth Street/Rennie Street": "Lara East"
+    },
     "12": {
       "Tulloch Ard Road/Gelantipy Road": "Gelantipy",
       "Moorhen Drive/Westlakes Boulevard": "Lara West",
@@ -75,6 +78,9 @@
     "32": {
       "Hammer Court/Hoddle Drive": "Leopold"
     },
+    "45": {
+      "The Village Warralily SC": "Armstrong Creek"
+    },
     "50": {
       "Camrose Court/Strathmore Drive": "Jan Juc",
       "St. Andrews Drive/Duffields Road": "Jan Juc"
@@ -90,7 +96,7 @@
       "Ocean Grove Market Place/Kingston Downs Drive": "Ocean Grove"
     },
     "56": {
-      "Queenscliffe Marina": "Queenscliffe"
+      "Queenscliff Marina": "Queenscliff"
     },
     "60": {
       "Piper Lane/Piper Road": "Bendigo East",
