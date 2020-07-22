@@ -84,15 +84,15 @@
   justify-content: center;
   flex-direction: column;
   margin-left: calc(1vw + 1vh);
-  font-size: calc(2vh + 1.2vw);
+  font-size: calc(1.2vw + 2vh);
 }
 
 .resultDetails > span:nth-child(1) {
   color: #8f8f8f;
-  font-size: calc(1.6vh + 0.9vw);
+  font-size: calc(0.9vw + 1.6vh);
 }
 
 .resultDetails > span:nth-child(2) {
-  font-size: calc(2vh + 1.2vw);
-  margin-top: calc(-0.4vh - 0.2vw);
+  font-size: calc(1.2vw + 2vh);
+  margin-top: calc(-0.2vw - 0.4vh);
 }

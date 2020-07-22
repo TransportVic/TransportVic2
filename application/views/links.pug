@@ -1,0 +1,43 @@
+extends layout
+    
+block head
+  title TransportVic - About
+
+  meta(property='og:title' content='TransportVic - About')
+  meta(property='twitter:title' content='TransportVic - About')
+  meta(property='og:description' content='About TransportVic')
+  meta(property='twitter:description' content='About TransportVic')
+  
+block title
+  span About TransportVic
+
+block scripts
+  
+block style
+  link(rel='stylesheet' href='/static/css/links.css')
+
+block content
+  a(href='/bus/tracker').row.result
+    div.leftContainer.bus
+      img(src='/static/images/icons/gemilang.svg')
+    div.linkDetails
+      span Bus Tracker
+      
+  a(href='/vline/tracker').row.result
+    div.leftContainer.vline
+      img(src='/static/images/icons/sprinter.svg')
+    div.linkDetails
+      span V/Line Tracker
+      
+  a(href='/mockups').row.result
+    div.leftContainer.metro
+      img(src='/static/images/icons/hcmt.svg')
+    div.linkDetails
+      span Station PID Mockup
+      
+  a(href='/about').row.result
+    div.leftContainer.rainbow
+      img(src='/static/images/icons/designline.svg')
+    div.linkDetails
+      span About This Site
+       

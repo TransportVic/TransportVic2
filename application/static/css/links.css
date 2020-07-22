@@ -1,0 +1,86 @@
+.result {
+  width: 100vw;
+  display: flex;
+  background-color: #2a2a2a;
+}
+
+.result:nth-child(even) {
+  background-color: #202020;
+}
+
+.leftContainer {
+  min-width: calc(5.2vw + 5.8vh);
+  height: calc(7vw + 7vh);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  color: #f9f9f9;
+}
+
+.leftContainer:visited {
+  color: #f9f9f9;
+}
+
+.leftContainer img {
+  width: calc(3.5vw + 4vh) !important;
+}
+
+.linkDetails {
+  width: calc(95vw - 5.25vh);
+  display: flex;
+  align-items: left;
+  justify-content: center;
+  flex-direction: column;
+  margin-left: calc(1vw + 1vh);
+  font-size: calc(1.2vw + 2vh);
+}
+
+.linkDetails > span {
+  font-size: calc(2.5vw + 2.5vh);
+}
+
+.leftContainer.bus {
+  background-color: #d7832c;
+}
+
+.leftContainer.vline {
+  background-color: #6b4d9e;
+}
+
+.leftContainer.metro {
+  background-color: #3483db;
+}
+
+.leftContainer.rainbow {
+  background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+  background-size: 1800% 1800%;
+
+  -webkit-animation: rainbow 10s ease infinite;
+  -moz-animation: rainbow 10s ease infinite;
+  animation: rainbow 10s ease infinite;
+}
+
+
+@-webkit-keyframes rainbow {
+  0%{background-position:0% 82%}
+  50%{background-position:100% 19%}
+  100%{background-position:0% 82%}
+}
+@-moz-keyframes rainbow {
+  0%{background-position:0% 82%}
+  50%{background-position:100% 19%}
+  100%{background-position:0% 82%}
+}
+@-o-keyframes rainbow {
+  0%{background-position:0% 82%}
+  50%{background-position:100% 19%}
+  100%{background-position:0% 82%}
+}
+@keyframes rainbow {
+  0%{background-position:0% 82%}
+  50%{background-position:100% 19%}
+  100%{background-position:0% 82%}
+}

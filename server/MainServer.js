@@ -124,6 +124,7 @@ module.exports = class MainServer {
       },
 
       Index: '/',
+      AdditionalLinks: '/links',
       Search: '/search',
       StopsNearby: '/nearby',
 
