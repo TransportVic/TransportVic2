@@ -328,5 +328,6 @@ module.exports = [
   'capel-sound/chisholm-tafe-henry-wilson-drive',
   'malvern/tooronga-railway-station',
   'hoppers-crossing/werribee-village-shopping-centre',
-  'manor-lakes/manor-lakes-central-shopping-centre'
+  'manor-lakes/manor-lakes-central-shopping-centre',
+  'mill-park/dysons-bus-depot-121-mckimmies-road'
 ]
