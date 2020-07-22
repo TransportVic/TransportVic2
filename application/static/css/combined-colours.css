@@ -214,27 +214,11 @@
   background-color: #181d55 !important;
 }
 
-.christians-bus-company-bendigo {
+.christians-bus-company-bendigo, .christians-bus-company-ararat, .christians-bus-company-colac, .christians-bus-company {
   background-color: #0559a6 !important;
 }
 
-:nth-child(even) > .christians-bus-company-bendigo {
-  background-color: #0a4a85 !important;
-}
-
-.christians-bus-company-ararat {
-  background-color: #0559a6 !important;
-}
-
-:nth-child(even) > .christians-bus-company-ararat {
-  background-color: #0a4a85 !important;
-}
-
-.christians-bus-company-colac {
-  background-color: #0559a6 !important;
-}
-
-:nth-child(even) > .christians-bus-company-colac {
+:nth-child(even) > .christians-bus-company-bendigo, :nth-child(even) > .christians-bus-company-ararat, :nth-child(even) > .christians-bus-company-colac, :nth-child(even) > .christians-bus-company {
   background-color: #0a4a85 !important;
 }
 
