@@ -13,13 +13,6 @@ const knownBuses = require('../../../additional-data/bus-lists')
 const serviceDepots = require('../../../additional-data/service-depots')
 
 let crossDepotQuery = null
-let trackUnknown = ['Ventura Bus Lines', 'CDC Ballarat', 'Cranbourne Transit', 'Sunbury Bus Service', 'Martyrs Bus Service', 'Dysons', 'Ryan Bros Bus Service', 'McKenzies Tourist Service']
-
-let manualRoutes = {
-  "CO": ["4-601", "4-60S", "4-612", "4-623", "4-624", "4-625", "4-626", "4-630", "4-900"],
-  "CS": ["4-406", "4-407", "4-408", "4-409", "4-410", "4-418", "4-419", "4-421", "4-423", "4-424", "4-425", "4-461"],
-  "CW": ["4-150", "4-151", "4-153", "4-160", "4-161", "4-166", "4-167", "4-170", "4-180", "4-181", "4-190", "4-191", "4-192", "4-400", "4-411", "4-412", "4-414", "4-415", "4-417", "4-439", "4-441", "4-443", "4-494", "4-495", "4-496", "4-497", "4-498", "4-606"],
-}
 
 router.get('/', (req, res) => {
   res.render('tracker/bus/index')
@@ -250,22 +243,26 @@ router.get('/highlights', async (req, res) => {
   })
 
   let allBuses = await smartrakIDs.findDocuments().toArray()
-  let trackUnknownRoutes = await routes.distinct('routeGTFSID', {
-    operators: { $in: trackUnknown }
-  })
+  let allGTFSIDs = allBuses.map(bus => bus.smartrakID)
 
-  trackUnknownRoutes = trackUnknownRoutes.concat(manualRoutes.CO, manualRoutes.CS, manualRoutes.CW)
-
-  let unknownBuses = (await busTrips.findDocuments({
+  let unknownMetroBuses = (await busTrips.findDocuments({
     date,
-    routeGTFSID: { $in: trackUnknownRoutes },
-    smartrakID: { $not: { $in: allBuses.map(bus => bus.smartrakID) } }
+    routeGTFSID: /^4-/,
+    smartrakID: { $not: { $in: allGTFSIDs } }
+  }).sort({departureTime: 1, origin: 1}).toArray())
+    .map(trip => adjustTrip(trip, date, date, minutesPastMidnightNow))
+
+  let unknownRegionalBuses = (await busTrips.findDocuments({
+    date,
+    routeGTFSID: /^6-/,
+    smartrakID: { $not: { $in: allGTFSIDs } }
   }).sort({departureTime: 1, origin: 1}).toArray())
     .map(trip => adjustTrip(trip, date, date, minutesPastMidnightNow))
 
   res.render('tracker/bus/highlights', {
     highlights,
-    unknownBuses
+    unknownMetroBuses,
+    unknownRegionalBuses
   })
 })
 

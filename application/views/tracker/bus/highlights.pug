@@ -22,8 +22,14 @@ block content
   for section in highlights
     +section(section)
     
-  if unknownBuses.length
-    h1 Unknown Buses
-    for trip in unknownBuses
+  if unknownMetroBuses.length
+    h1 Unknown Metro Buses
+    for trip in unknownMetroBuses
+      div(class=`trip ${trip.active ? '' : 'inactive'}`)
+        a(href=trip.url) #{trip.smartrakID}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
+    
+  if unknownRegionalBuses.length
+    h1 Unknown Regional Buses
+    for trip in unknownRegionalBuses
       div(class=`trip ${trip.active ? '' : 'inactive'}`)
         a(href=trip.url) #{trip.smartrakID}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
