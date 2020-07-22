@@ -11,7 +11,7 @@ router.get('/:codedName', async (req, res, next) => {
   let matchingRoute = await routes.findDocument({
     mode: 'bus',
     codedName,
-    routeGTFSID: /(4|6|7|8|11)-/
+    routeGTFSID: /(4|6|7|8|11|12)-/
   })
 
   if (!matchingRoute) return res.status(404).render('errors/no-route')
@@ -32,7 +32,7 @@ router.get('/:codedName/:directionName/:operationDateType*?', async (req, res, n
   let matchingRoute = await routes.findDocument({
     mode: 'bus',
     codedName,
-    routeGTFSID: /(4|6|7|8|11)-/,
+    routeGTFSID: /(4|6|7|8|11|12)-/,
     'operationDate.type': operationDateType ? operationDateType : undefined
   })
 

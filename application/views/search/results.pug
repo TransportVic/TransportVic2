@@ -67,7 +67,7 @@ for busRoute in routes.filter(route => route.mode === 'bus')
     let url
     let {operationDate} = busRoute
     
-    if (busRoute.routeGTFSID.match(/(4|7|8|11)-/)) {
+    if (busRoute.routeGTFSID.match(/(4|7|8|11|12)-/)) {
       if (hasNumber) url = `/bus/route/${busRoute.routeNumber}`
       else url = `/bus/route/named/${busRoute.codedName}`
     } else if (busRoute.routeGTFSID.startsWith('6-')) {
@@ -96,6 +96,7 @@ for busRoute in routes.filter(route => route.mode === 'bus')
         else if (gtfsID === '7') type = 'Telebus Route'
         else if (gtfsID === '8') type = 'Night Bus Route'
         else if (gtfsID === '11') type = 'Skybus Route'
+        else if (gtfsID === '12') type = 'Monash Uni Shuttle Bus'
         
         let name = ''
 
