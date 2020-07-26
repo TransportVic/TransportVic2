@@ -118,5 +118,29 @@
     "stopNumber": null,
     "mode": "heritage train",
     "suburb": "Daylesford"
+  },
+  {
+    "originalName": "Maldon Railway Station",
+    "fullStopName": "Maldon Railway Station",
+    "stopGTFSID": 13000011,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.073942, -36.992486]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Maldon"
+  },
+  {
+    "originalName": "Castlemaine Railway Station",
+    "fullStopName": "Castlemaine Railway Station",
+    "stopGTFSID": 13000012,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.213611, -37.063065]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Castlemaine"
   }
 ]
