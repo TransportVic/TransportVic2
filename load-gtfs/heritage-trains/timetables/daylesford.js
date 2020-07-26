@@ -2,7 +2,10 @@ module.exports = {
   "days": [
     ["SUNDAY", "0", "0", "0", "0", "0", "0", "1", "20200101", "20201231"]
   ],
-  "dates": [],
+  "dates": [
+    ["SUNDAY", "20201225", "2"],
+    ["SUNDAY", "20211225", "2"]
+  ],
   "trips": [
     {
       "mode": "heritage train",

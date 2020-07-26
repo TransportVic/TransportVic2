@@ -190,5 +190,41 @@
     "stopNumber": null,
     "mode": "heritage train",
     "suburb": "Yarra Glen"
+  },
+  {
+    "originalName": "Mornington Railway Station",
+    "fullStopName": "Mornington Railway Station",
+    "stopGTFSID": 13000017,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.050313, -38.229874]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Mornington"
+  },
+  {
+    "originalName": "Tanti Railway Station",
+    "fullStopName": "Tanti Railway Station",
+    "stopGTFSID": 13000018,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.066912, -38.223724]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Mornington"
+  },
+  {
+    "originalName": "Moorooduc Railway Station",
+    "fullStopName": "Moorooduc Railway Station",
+    "stopGTFSID": 13000019,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.107168, -38.214002]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Mount Eliza"
   }
 ]
