@@ -142,5 +142,53 @@
     "stopNumber": null,
     "mode": "heritage train",
     "suburb": "Castlemaine"
+  },
+  {
+    "originalName": "Healesville Railway Station",
+    "fullStopName": "Healesville Railway Station",
+    "stopGTFSID": 13000013,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.510251, -37.654902]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Healesville"
+  },
+  {
+    "originalName": "Tunnel Hill Railway Station",
+    "fullStopName": "Tunnel Hill Railway Station",
+    "stopGTFSID": 13000014,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.463974, -37.661717]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Tarrawarra"
+  },
+  {
+    "originalName": "Tarrawarra Railway Station",
+    "fullStopName": "Tarrawarra Railway Station",
+    "stopGTFSID": 13000015,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.427191, -37.657270]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Tarrawarra"
+  },
+  {
+    "originalName": "Yarra Glen Railway Station",
+    "fullStopName": "Yarra Glen Railway Station",
+    "stopGTFSID": 13000016,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.372392, -37.661481]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Yarra Glen"
   }
 ]

@@ -6,5 +6,7 @@
   "13-BPR-mjp-1.1.H": "Drysdale-Queenscliff-Down",
   "13-BPR-mjp-1.1.R": "Queenscliff-Drysdale-Up",
   "13-VGR-mjp-1.1.H": "Castlemaine-Maldon-Down",
-  "13-VGR-mjp-1.1.R": "Maldon-Castlemaine-Up"
+  "13-VGR-mjp-1.1.R": "Maldon-Castlemaine-Up",
+  "13-YVR-mjp-1.1.H": "TunnelHill-Healesville-Down",
+  "13-YVR-mjp-1.1.R": "Healesville-TunnelHill-Up"
 }
