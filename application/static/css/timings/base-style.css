@@ -38,6 +38,10 @@
   background-color: #d7832c;
 }
 
+.modeSwitchType.heritage-train {
+  background-color: #593915;
+}
+
 .modeSwitchType img {
   height: calc(2vw + 2vh);
 }

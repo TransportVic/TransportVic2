@@ -38,6 +38,7 @@ async function main() {
   if (moduleEnabled('tram')) await spawnProcess(l('trams/load-all.sh'))
   if (moduleEnabled('ferry')) await spawnProcess(l('ferry/load-all.sh'))
   if (moduleEnabled('bus')) await spawnProcess(l('monash-shuttle/load-all.sh'))
+  if (moduleEnabled('heritage')) await spawnProcess(l('heritage-trains/load-all.sh'))
 
   await spawnProcess('node', [l('load-route-stops.js')])
   if (moduleEnabled('bus')) await spawnProcess('node', [l('load-route-stops.js')])
