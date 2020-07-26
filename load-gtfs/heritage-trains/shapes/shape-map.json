@@ -10,5 +10,7 @@
   "13-YVR-mjp-1.1.H": "TunnelHill-Healesville-Down",
   "13-YVR-mjp-1.1.R": "Healesville-TunnelHill-Up",
   "13-MPR-mjp-1.1.H": "Moorooduc-Mornington-Down",
-  "13-MPR-mjp-1.1.R": "Mornington-Moorooduc-Up"
+  "13-MPR-mjp-1.1.R": "Mornington-Moorooduc-Up",
+  "13-WHR-mjp-1.1.H": "Thomson-Walhalla-Down",
+  "13-WHR-mjp-1.1.R": "Walhalla-Thomson-Up"
 }

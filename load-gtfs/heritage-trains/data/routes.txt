@@ -5,3 +5,4 @@ route_id,agency_id,route_short_name,route_long_name,route_type,route_color,route
 "13-VGR-mjp-1","","","Victorian Goldfields Railway","","","FFFFFF"
 "13-YVR-mjp-1","","","Yarra Valley Railway","","","FFFFFF"
 "13-MPR-mjp-1","","","Mornington Railway","","","FFFFFF"
+"13-WHR-mjp-1","","","Walhalla Railway","","","FFFFFF"
