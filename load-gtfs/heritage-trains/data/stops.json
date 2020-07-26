@@ -1,0 +1,122 @@
+[
+  {
+    "originalName": "Belgrave Railway Station",
+    "fullStopName": "Belgrave Railway Station",
+    "stopGTFSID": 13000001,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.356580, -37.907601]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Belgrave"
+  },
+  {
+    "originalName": "Menzies Creek Railway Station",
+    "fullStopName": "Menzies Creek Railway Station",
+    "stopGTFSID": 13000002,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.404772, -37.920746]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Menzies Creek"
+  },
+  {
+    "originalName": "Emerald Railway Station",
+    "fullStopName": "Emerald Railway Station",
+    "stopGTFSID": 13000003,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.439586, -37.933663]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Emerald"
+  },
+  {
+    "originalName": "Lakeside Railway Station",
+    "fullStopName": "Lakeside Railway Station",
+    "stopGTFSID": 13000004,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.459684, -37.930781]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Emerald"
+  },
+  {
+    "originalName": "Cockatoo Railway Station",
+    "fullStopName": "Cockatoo Railway Station",
+    "stopGTFSID": 13000005,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.491476, -37.934499]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Caulfield"
+  },
+  {
+    "originalName": "Gembrook Railway Station",
+    "fullStopName": "Gembrook Railway Station",
+    "stopGTFSID": 13000006,
+    "location": {
+      "type": "Point",
+      "coordinates": [145.548400, -37.950191]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Gembrook"
+  },
+  {
+    "originalName": "Bullarto Railway Station",
+    "fullStopName": "Bullarto Railway Station",
+    "stopGTFSID": 13000007,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.222677, -37.394789]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Bullarto"
+  },
+  {
+    "originalName": "Passing Clouds Railway Station",
+    "fullStopName": "Passing Clouds Railway Station",
+    "stopGTFSID": 13000008,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.195292, -37.374422]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Musk"
+  },
+  {
+    "originalName": "Musk Railway Station",
+    "fullStopName": "Musk Railway Station",
+    "stopGTFSID": 13000009,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.192920, -37.372630]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Musk"
+  },
+  {
+    "originalName": "Daylesford Railway Station",
+    "fullStopName": "Daylesford Railway Station",
+    "stopGTFSID": 13000010,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.153677, -37.341978]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Daylesford"
+  }
+]
