@@ -8,7 +8,7 @@ function dateRange(name, start, end, type) {
   let allDatesInbetween = utils.allDaysBetweenDates(startDate, endDate)
 
   return allDatesInbetween.map(date => {
-    return [name, date, type]
+    return [name, date.format('YYYYMMDD'), type]
   })
 }
 
