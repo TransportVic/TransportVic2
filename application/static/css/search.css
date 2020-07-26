@@ -56,6 +56,14 @@
   background-color: #028980;
 }
 
+.heritageStation .leftContainer {
+  background-color: #593915;
+}
+
+.heritageStation:nth-child(even) .leftContainer {
+  background-color: #472e11;
+}
+
 .route .leftContainer {
   background-color: #d7832c;
 }

@@ -43,6 +43,6 @@ database.connect({
   })
 
   await updateStats('heritage-routs', routeData.length)
-  console.log('Completed loading in ' + routeData.length + ' hertiage rail routes')
+  console.log('Completed loading in ' + routeData.length + ' heritage rail routes')
   process.exit()
 })

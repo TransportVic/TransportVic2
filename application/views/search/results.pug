@@ -14,6 +14,14 @@ for vlineStation in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'r
       span='V/Line train station in ' + vlineStation.suburb[0]
       span=vlineStation.stopName
       
+for heritageStation in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'heritage train')).slice(0, 3)
+  a(href=`/heritage/timings/${heritageStation.codedName.slice(0, -16)}`).heritageStation.result
+    div.leftContainer
+      img(src='/static/images/clear-icons/vline.svg')
+    div.resultDetails
+      span='Heritage train station in ' + heritageStation.suburb[0]
+      span=heritageStation.stopName
+      
 for regionalCoachStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'regional coach')).slice(0, 3)
   a(href=`/coach/timings/${regionalCoachStop.codedName}`).regionalCoachStop.result
     div.leftContainer

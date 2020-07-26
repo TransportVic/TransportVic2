@@ -152,6 +152,10 @@ module.exports = class MainServer {
         path: '/ferry/timings',
         enable: modules.Next4 && modules.Next4.ferry
       },
+      'timing-pages/HeritageTrain': {
+        path: '/heritage/timings',
+        enable: modules.Next4 && modules.Next4.heritage
+      },
 
       'run-pages/MetroTrains': '/metro/run',
       'run-pages/VLineTrains': '/vline/run',
