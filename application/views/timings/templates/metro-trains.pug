@@ -46,7 +46,7 @@ for departure in departures
       else
         span.topText Platform
         span.bigNumber=departure.platform || '?'
-    a.departureInfo
+    a(href=departure.destinationURL).departureInfo
       span.towards=`${routeName} Line towards`
       span.destination=departure.destination
       

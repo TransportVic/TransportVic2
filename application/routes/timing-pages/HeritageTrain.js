@@ -36,7 +36,7 @@ async function loadDepartures(req, res) {
       + `${day}#stop-${departure.trip.stopTimings[0].stopGTFSID}`
 
     departure.destination = departure.trip.destination.split('/')[0]
-    departure.destinationURL = `/heritage/timings/${utils.encodeName(departure.trip.destination)}`
+    departure.destinationURL = `/heritage/timings/${utils.encodeName(departure.trip.destination).slice(0, -16)}`
 
     return departure
   })
