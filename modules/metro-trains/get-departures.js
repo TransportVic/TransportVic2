@@ -50,7 +50,7 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip, isS
         if (routeID === 99) cityLoopConfig.push('FSS')
     } else if (!stopsViaFlindersFirst && throughCityLoop) { // loop then flinders
       if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID) || routeID === 99)
-        cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
+        cityLoopConfig = ['PAR', 'MCE', 'FGS', 'SSS', 'FSS']
       if (routeID === 99) cityLoopConfig = ['FSS', ...cityLoopConfig]
     } else if (stopsViaFlindersFirst && !throughCityLoop) { // direct to flinders
       if (routeID === 6 && isSCS)
@@ -266,8 +266,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       cityLoopConfig = []
 
     if (cityLoopStations.includes(stationName) && !cityLoopConfig.includes('FGS')) {
-      if (caulfieldGroup.includes(routeID) && isUpTrip)
-        cityLoopConfig = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS']
+      if (caulfieldGroup.includes(routeID) || burnleyGroup.includes(routeID))
+        cityLoopConfig = ['PAR', 'MCE', 'FGS', 'SSS', 'FSS']
         // trip is towards at flinders, but ptv api already gave next trip
         // really only seems to happen with cran/pak/frank lines
       if (!crossCityGroup.includes(routeID) && northenGroup.includes(routeID)) {// all northern group except showgrounds & cross city
@@ -437,9 +437,10 @@ async function getDepartures(station, db, filter=true) {
   } catch (e) {
     console.log(e)
     try {
-      let scheduled = await departureUtils.getScheduledDepartures(station, db, 'metro train', 120)
+      let scheduled = await departureUtils.getScheduledMetroDepartures(station, db)
       return returnDepartures(scheduled)
     } catch (ee) {
+      console.log(ee)
       return returnDepartures(null)
     }
   }
