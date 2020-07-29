@@ -318,13 +318,13 @@ module.exports = {
       body = await request(options[0], {
         timeout: 5000,
         gzip: true,
-        ...(options || {})
+        ...(options[1] || {})
       })
     else
       body = await request({
         timeout: 5000,
         gzip: true,
-        ...options
+        ...options[0]
       })
 
     let url = typeof options[0] === 'string' ? options[0] : options[0].url

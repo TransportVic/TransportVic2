@@ -10,6 +10,10 @@ const EventEmitter = require('events')
 const busStopNameModifier = require('../../additional-data/bus-stop-name-modifier')
 const busBays = require('../../additional-data/bus-bays')
 
+const modules = require('../../modules')
+const config = require('../../config')
+const discordIntegration = modules.tracker && modules.tracker.discordIntegration
+
 let tripLoader = {}
 let tripCache = {}
 
@@ -59,7 +63,7 @@ async function updateBusTrips(db, departures) {
   await async.forEach(viableDepartures, async departure => {
     let {routeGTFSID, origin, destination, departureTime, destinationArrivalTime} = departure.trip
     let smartrakID = parseInt(departure.vehicleDescriptor.id)
-    let {routeNumber} = departure
+    let {routeNumber, busRego} = departure
 
     let data = {
       date, timestamp,
@@ -68,11 +72,23 @@ async function updateBusTrips(db, departures) {
       origin, destination, departureTime, destinationArrivalTime
     }
 
-    await busTrips.replaceDocument({
+    let results = await busTrips.replaceDocument({
       date, routeGTFSID, origin, destination, departureTime, destinationArrivalTime
     }, data, {
       upsert: true
     })
+
+    if (results.result.upserted && discordIntegration && routeNumber === '737') {
+      process.nextTick(async () => {
+        await utils.request(config.discordURL, {
+          method: 'POST',
+          json: true,
+          body: {
+            content: `Tracked: ${busRego ? '#' + busRego : '@' + smartrakID} on the ${departureTime} 737 to ${destination}`
+          }
+        })
+      })
+    }
   })
 }
 
