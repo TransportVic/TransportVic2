@@ -314,12 +314,15 @@ div.expressArrow img:nth-child(2) {
 
 div.serviceMessage {
   width: var(--width);
-  height: 100%;
+  height: calc(var(--height) * 0.643);
 
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 div.serviceMessage img {
