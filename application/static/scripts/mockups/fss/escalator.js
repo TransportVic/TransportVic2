@@ -352,6 +352,9 @@ $.loaded(() => {
     connectionsP = $('p.firstStoppingType')
 
     updateBody(true)
-    setInterval(updateBody, 1000 * 30)
+    setTimeout(() => {
+      updateBody()
+      setInterval(updateBody, 1000 * 30)
+    }, 30000 - (+new Date() % 30000))
   }, 500)
 })

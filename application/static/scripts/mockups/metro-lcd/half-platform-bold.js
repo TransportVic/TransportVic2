@@ -350,8 +350,11 @@ function drawBottomRow(shouldPause=false) {
 }
 
 $.ready(() => {
-  setInterval(updateBody, 1000 * 30)
   updateBody(true)
+  setTimeout(() => {
+    updateBody()
+    setInterval(updateBody, 1000 * 30)
+  }, 30000 - (+new Date() % 30000))
 
   setInterval(() => {
     $('div.timeNow span').textContent = formatTime(new Date())

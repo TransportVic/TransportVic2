@@ -267,6 +267,9 @@ function updateBody() {
 }
 
 $.ready(() => {
-  setInterval(updateBody, 1000 * 30)
   updateBody()
+  setTimeout(() => {
+    updateBody()
+    setInterval(updateBody, 1000 * 30)
+  }, 30000 - (+new Date() % 30000))
 })
