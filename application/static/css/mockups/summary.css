@@ -43,8 +43,7 @@ div.title a, div.title a:visited {
 }
 
 iframe {
-  width: 20vw;
-  height: calc(20vw * 9 / 32);
+  height: calc(var(--width) * 9 / 32);
   border: none;
 }
 
@@ -85,6 +84,16 @@ div.platform.sss-platform iframe {
   height: calc(30vw * 9 / 16);
 }
 
+
+
+div.vertical {
+  --width: calc(13vw + 13vh);
+}
+
+div.horizontal, div.half {
+  --width: calc(17vw + 17vh);
+}
+
 div.pid, div.pid * {
   width: var(--width);
 }
@@ -95,12 +104,4 @@ div.horizontal iframe {
 
 div.vertical iframe {
   height: calc(var(--width) / 9 * 16) !important;
-}
-
-div.vertical {
-  --width: calc(13vw + 13vh);
-}
-
-div.horizontal, div.half {
-  --width: calc(17vw + 17vh);
 }
