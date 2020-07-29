@@ -21,7 +21,7 @@ div.container {
 
 div.platform, div.pid {
   display: inline-block;
-  margin: 1vw;
+  margin: 0.8vw;
 }
 
 div.title {
@@ -98,9 +98,9 @@ div.vertical iframe {
 }
 
 div.vertical {
-  --width: calc(10vw + 12vh);
+  --width: calc(13vw + 13vh);
 }
 
 div.horizontal, div.half {
-  --width: calc(14vw + 15vh);
+  --width: calc(17vw + 17vh);
 }
