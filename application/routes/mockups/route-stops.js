@@ -222,6 +222,8 @@ let lines = {
     'Seaholme',
     'Altona',
     'Westona',
+    'Paisley',
+    'Galvin',
     'Laverton',
     'Aircraft',
     'Williams Landing',

@@ -235,6 +235,16 @@ module.exports = {
       }
     }
 
+    if (tripStops.includes('Laverton')) {
+      if (tripStops.includes('Altona')) {
+        let mainLine = ['Paisley', 'Galvin']
+        lineStops = lineStops.filter(e => !mainLine.includes(e))
+      } else {
+        let altonaLoop = ['Seaholme', 'Altona', 'Westona']
+        lineStops = lineStops.filter(e => !altonaLoop.includes(e))
+      }
+    }
+
     return lineStops.filter((e, i, a) => a.indexOf(e) === i)
   },
   trimTrip: (isUp, stopTimings, fromStation, routeName) => {
