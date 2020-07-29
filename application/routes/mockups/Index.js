@@ -3,14 +3,20 @@ const router = new express.Router()
 const utils = require('../../../utils')
 const stationCodes = require('../../../additional-data/station-codes.json')
 const rawStationPlatforms = require('../../../additional-data/station-platforms.json')
+const rawStationPIDs = require('../../../additional-data/station-pids')
 const url = require('url')
 const querystring = require('querystring')
 
 let stationPlatforms = {}
+let stationPIDs = {}
 let stationNames = {}
 
 Object.keys(rawStationPlatforms).forEach(stationName => {
   stationPlatforms[utils.encodeName(stationName)] = rawStationPlatforms[stationName]
+})
+
+Object.keys(rawStationPIDs).forEach(stationName => {
+  stationPIDs[utils.encodeName(stationName)] = rawStationPIDs[stationName]
 })
 
 Object.keys(stationCodes).forEach(stationCode => {
@@ -25,10 +31,17 @@ router.get('/', (req, res) => {
 
 router.get('/summary/:station', (req, res) => {
   let query = querystring.parse(url.parse(req.url).query)
-  let stationPlatformData = stationPlatforms[req.params.station]
-  let stationCode = stationNames[req.params.station]
+  let {station} = req.params
 
-  res.render('mockups/summary', {query, stationPlatformData, station: req.params.station, stationCode})
+  let stationPlatformData = stationPlatforms[station]
+  let stationPID = stationPIDs[station]
+  let stationCode = stationNames[station]
+
+  if (stationPID.length) {
+    res.render('mockups/summary-known', {stationPID, station, stationCode})
+  } else {
+    res.render('mockups/summary', {query, stationPlatformData, station, stationCode})
+  }
 })
 
 router.get('/get', async (req, res) => {
