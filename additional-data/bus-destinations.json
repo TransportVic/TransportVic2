@@ -311,6 +311,9 @@
       "Elizabeth Street/Kennedy Street": "Reservoir",
       "Urquhart Street/Sydney Road": "Coburg"
     },
+    "530": {
+      "Urquhart Street/Sydney Road": "Coburg"
+    },
     "537": {
       "Craigieburn Road/Vantage Boulevard": "West Craigieburn"
     },
@@ -778,6 +781,7 @@
     "Old Echuca Post Office": "Echuca",
     "Post Office North": "Lakes Entrance",
     "Ouyen Newsagency": "Ouyen",
-    "BP Pinnaroo": "Pinnaroo"
+    "BP Pinnaroo": "Pinnaroo",
+    "Campbellfield Plaza": "Campbellfield"
   }
 }
