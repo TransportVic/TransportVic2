@@ -159,7 +159,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
   let stonyPointReplacements = Object.values(disruptions).filter(disruption => {
     if (disruption.routes.find(r => r.route_gtfs_id === '2-SPT')) {
-      return disruption.description.includes('replace') && disruption.description.includes('fault')
+      return disruption.description.includes('replace')
     }
     return false
   }).map(matchService).filter(Boolean)
