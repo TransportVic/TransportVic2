@@ -338,7 +338,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     if (routeID === 99 && stationName === 'flinders street') destination = 'City Loop'
 
     let forming = null
-    if (isFormingNewTrip) {
+    if (isFormingNewTrip && !usedLive) {
       forming = await departureUtils.getStaticDeparture(runID, db)
       if (!forming || (forming.destination !== trip.destination)) {
         trip = await getStoppingPattern(db, departure.run_id, 'metro train', scheduledDepartureTime.toISOString())
