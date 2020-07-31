@@ -73,7 +73,8 @@ router.get('/get', async (req, res) => {
       res.redirect('/mockups/bus-int-pids' + m + '/' + bay)
     }
   }
-  res.end('what?')
+
+  res.redirect('/mockups')
 })
 
 module.exports = router

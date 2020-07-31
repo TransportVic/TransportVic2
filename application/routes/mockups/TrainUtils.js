@@ -124,6 +124,8 @@ module.exports = {
           departure.type = 'vline'
           departure.actualDepartureTime = departure.scheduledDepartureTime
 
+          departure.stopTimings = departure.trip.stopTimings
+
           return departure
         })
       }
@@ -141,13 +143,36 @@ module.exports = {
             runID, operationDays: today
           })
 
+          let stopTimings = departure.trip.stopTimings.slice(0)
+          let tripStops = stopTimings.map(e => e.stopName)
+
+          if (departure.forming) {
+            let startIndex = tripStops.indexOf(departure.forming.stopTimings[0].stopName)
+            if (startIndex > 0) {
+              stopTimings = stopTimings.slice(startIndex)
+            }
+            stopTimings = stopTimings.concat(departure.forming.stopTimings)
+            tripStops = stopTimings.map(e => e.stopName)
+          }
+
+          let suspensions = departure.suspensions
+          if (suspensions.length) {
+            let first = suspensions[0]
+            let start = first.startStation
+            let index = tripStops.indexOf(start)
+
+            tripStops = tripStops.slice(0, index)
+            stopTimings = stopTimings.slice(0, index)
+          }
+
+          departure.stopTimings = stopTimings
+
           departure.type = 'metro'
-          let tripStops = departure.trip.stopTimings.map(e => e.stopName)
           let currentIndex = tripStops.indexOf(station.stopName)
 
           if (scheduled) {
             departure.connections = scheduled.connections.filter(connection => {
-              let changeAtStation = departure.trip.stopTimings.find(s => s.stopName === connection.changeAt)
+              let changeAtStation = stopTimings.find(s => s.stopName === connection.changeAt)
               if (!changeAtStation) return false
               let {changeAt} = connection
 
@@ -472,16 +497,12 @@ module.exports = {
     let platformArrivals = module.exports.filterPlatforms(arrivals, platform)
 
     platformDepartures = platformDepartures.map(departure => {
-      let {trip, destination} = departure
-      let {routeGTFSID, direction, stopTimings} = trip
+      let {trip, destination, stopTimings} = departure
+      let {routeGTFSID, direction} = trip
       let isUp = direction === 'Up' && !departure.forming
       let routeName = departure.shortRouteName || trip.routeName
 
       let tripStops = stopTimings.map(stop => stop.stopName.slice(0, -16))
-      if (departure.forming) {
-        tripStops = tripStops.concat(departure.forming.stopTimings.map(stop => stop.stopName.slice(0, -16)))
-          .filter((e, i, a) => a.indexOf(e) == i)
-      }
 
       if (routeName === 'Bendigo') {
         if (isUp && departure.trip.origin === 'Eaglehawk Railway Station') routeName = 'Swan Hill'
