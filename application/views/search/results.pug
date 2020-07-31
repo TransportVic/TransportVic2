@@ -69,7 +69,7 @@ for busStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'bus'))
       span=displayName
       
       
-for busRoute in routes.filter(route => route.mode === 'bus')
+for busRoute in routes.filter(route => route.mode === 'bus' && route.directions[0])
   -
     let hasNumber = !!busRoute.routeNumber
     let url
