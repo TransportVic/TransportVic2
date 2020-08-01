@@ -13,6 +13,7 @@ const {tableToColumnOrder, expandName} = require('./timetable-utils')
 const updateStats = require('../../utils/stats')
 
 let stops, timetables
+let bendigoRFRSection = ['Woodend', 'Macedon', 'Gisborne', 'Riddells Creek', 'Clarkefield']
 
 function operatingDaysToArray (days) {
   days = days.replace(/ /g, '').replace(/&/g, ',')
@@ -75,6 +76,8 @@ async function parseTimings(names, types, trip) {
     timing = timing.replace('*', '')
 
     if (locationName === 'SEYMOUR SG Platform') locationName = 'Seymour'
+    if (locationName === 'Clarkefield (new code)') locationName = 'Clarkefield'
+    if (locationName === 'Riddels Creek') locationName = 'Riddells Creek'
 
     let stationData
     if (nonStations[locationName]) return
@@ -126,6 +129,7 @@ async function parseTimings(names, types, trip) {
         departureTime: timing.slice(0, 5),
         departureTimeMinutes: minutesAftMidnight,
         platform: null,
+        track: null,
         sortTime: minutesAftMidnight
       }
 
@@ -144,10 +148,11 @@ async function parseTimings(names, types, trip) {
       if (type === 'Dep') {
         locations[locationName].departureTime = timing.slice(0, 5)
         locations[locationName].departureTimeMinutes = minutesAftMidnight
-      }
-      if (type === 'Plat') {
+      } else if (type === 'Plat') {
         locations[locationName].platform = timing.trim()
       }
+    } else if (timing.length === 1) {
+      locations[locationName].track = timing
     }
   })
 
@@ -281,7 +286,21 @@ database.connect({
     })
   })
 
-  trips = Object.values(trips)
+  trips = Object.values(trips).map(trip => {
+    let gisborne = trip.stopTimings.find(stop => stop.stopName === 'Gisborne Railway Station')
+    let platform = gisborne.track === 'W' ? '2' : '1'
+    if (gisborne) {
+      trip.stopTimings = trip.stopTimings.map(stop => {
+        if (bendigoRFRSection.includes(stop.stopName.slice(0, -16))) {
+          stop.platform = platform
+        }
+
+        return stop
+      })
+    }
+
+    return trip
+  })
 
   await timetables.bulkWrite(trips.map(trip => ({
     insertOne: trip
