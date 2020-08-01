@@ -288,8 +288,9 @@ database.connect({
 
   trips = Object.values(trips).map(trip => {
     let gisborne = trip.stopTimings.find(stop => stop.stopName === 'Gisborne Railway Station')
-    let platform = gisborne.track === 'W' ? '2' : '1'
+
     if (gisborne) {
+      let platform = gisborne.track === 'W' ? '2' : '1'
       trip.stopTimings = trip.stopTimings.map(stop => {
         if (bendigoRFRSection.includes(stop.stopName.slice(0, -16))) {
           stop.platform = platform
