@@ -124,6 +124,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   const minutesPastMidnight = utils.getMinutesPastMidnightNow()
   let transformedDepartures = []
 
+  let now = utils.now()
+
   const metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
   let {stopGTFSID} = metroPlatform
   const stationName = station.stopName.slice(0, -16).toLowerCase()
@@ -294,14 +296,14 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
         scheduledDepartureTime, possibleDestinations, direction, viaCityLoop)
     } else {
-      if (new Date() - trip.updateTime < 30 * 60 * 1000) usedLive = true
+      usedLive = true
     }
 
     if (!trip) { // static dump
       // let isCityLoop = cityLoopStations.includes(stationName) || stationName === 'flinders street'
       trip = await departureUtils.getStaticDeparture(runID, db)
       if (trip) {
-        let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === stopGTFSID)[0]
+        let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
         if (!stopData || stopData.departureTimeMinutes !== scheduledDepartureTimeMinutes)
           trip = null
         else if (!possibleDestinations.includes(trip.destination))
@@ -337,17 +339,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
     if (routeID === 99 && stationName === 'flinders street') destination = 'City Loop'
 
-    let forming = null
-    if (isFormingNewTrip && !usedLive) {
-      forming = await departureUtils.getStaticDeparture(runID, db)
-      if (!forming || (forming.destination !== trip.destination)) {
-        trip = await getStoppingPattern(db, departure.run_id, 'metro train', scheduledDepartureTime.toISOString())
-        forming = null
-      }
-    }
-
     let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
-    let mappedSuspensions = suspensions.map(e => adjustSuspension(e, forming || trip, station.stopName))
+    let mappedSuspensions = suspensions.map(e => adjustSuspension(e, trip, station.stopName))
     if (mappedSuspensions.length) {
       let firstSuspension = mappedSuspensions.find(suspension => suspension.disruptionStatus !== 'passed')
       if (firstSuspension) {
@@ -367,7 +360,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       platform,
       isTrainReplacement,
       cancelled, cityLoopConfig,
-      destination, runID, forming, vehicleType, runDestination,
+      destination, runID, vehicleType, runDestination,
       suspensions: mappedSuspensions
     })
   })

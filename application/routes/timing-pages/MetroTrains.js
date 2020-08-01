@@ -38,16 +38,13 @@ async function loadDepartures(req, res) {
       }
     }
 
-    let trip = departure.forming || departure.trip
-
+    let {trip} = departure
     departure.codedLineName = utils.encodeName(trip.routeName)
 
-    let tripToUse = departure.forming || trip
-
-    let origin = tripToUse.trueOrigin.slice(0, -16)
-    let originDepartureTime = tripToUse.trueDepartureTime
-    let destination = tripToUse.trueDestination.slice(0, -16)
-    let destinationArrivalTime = tripToUse.trueDestinationArrivalTime
+    let origin = trip.trueOrigin.slice(0, -16)
+    let originDepartureTime = trip.trueDepartureTime
+    let destination = trip.trueDestination.slice(0, -16)
+    let destinationArrivalTime = trip.trueDestinationArrivalTime
 
     let stopGTFSID = departure.trip.stopTimings.filter(stop => stop.stopName === station.stopName)[0].stopGTFSID
 
@@ -55,7 +52,7 @@ async function loadDepartures(req, res) {
       + `${utils.encodeName(destination)}/${destinationArrivalTime}/`
       + `${utils.getYYYYMMDDNow()}/#stop-${stopGTFSID}`
 
-    departure.destinationURL = `/metro/timings/${utils.encodeName(departure.trip.trueDestination).slice(0, -16)}`
+    departure.destinationURL = `/metro/timings/${utils.encodeName(trip.trueDestination).slice(0, -16)}`
 
     return departure
   })
