@@ -383,17 +383,6 @@ async function appendMetroData(departure, timetables) {
   let routeName = departure.trip.routeName
   let isUp = departure.trip.direction === 'Up'
 
-  if (departure.forming) {
-    let formingStops = departure.forming.stopTimings.map(e => e.stopName.slice(0, -16))
-    let formingCityLoopStops = formingStops.filter(stop => cityLoopStations.includes(stop))
-
-    let cityLoopStops = stopTimings.filter(stop => {
-      return cityLoopStations.includes(stop) && !formingCityLoopStops.includes(stop)
-    })
-
-    stopTimings = cityLoopStops.concat(formingStops)
-  }
-
   let suspensions = departure.suspensions
   if (suspensions.length) {
     let first = suspensions[0]

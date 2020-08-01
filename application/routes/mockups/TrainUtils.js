@@ -146,20 +146,6 @@ module.exports = {
           let stopTimings = departure.trip.stopTimings.slice(0)
           let tripStops = stopTimings.map(e => e.stopName)
 
-          if (departure.forming) {
-            let formingCityLoopStops = departure.forming.stopTimings
-              .map(e => e.stopName.slice(0, -16)).filter(stop => cityLoopStations.includes(stop))
-
-            let cityLoopStops = stopTimings.filter(stop => {
-              let stopName = stop.stopName.slice(0, -16)
-
-              return cityLoopStations.includes(stopName) && !formingCityLoopStops.includes(stopName)
-            })
-
-            stopTimings = cityLoopStops.concat(departure.forming.stopTimings)
-            tripStops = stopTimings.map(e => e.stopName)
-          }
-
           let suspensions = departure.suspensions
           if (suspensions.length) {
             let first = suspensions[0]
@@ -306,13 +292,11 @@ module.exports = {
     departure = module.exports.addTimeToDeparture(departure)
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
-    let relevantTrip = departure.forming || departure.trip
-    let routeName = departure.shortRouteName || relevantTrip.routeName
+    let trip = departure.trip
+    let routeName = departure.shortRouteName || trip.routeName
 
-    // If there's a forming then consider it as a down trip
-    let isFormingNewTrip = !!departure.forming
-    let isUp = departure.trip.direction === 'Up' && !isFormingNewTrip
-    let destination = isFormingNewTrip ? departure.destination : departure.trip.destination.slice(0, -16)
+    let isUp = departure.trip.direction === 'Up'
+    let destination = departure.trip.destination.slice(0, -16)
     if (destination === 'Parliament') destination = 'Flinders Street'
     if (destination === 'Southern Cross' && caulfieldGroup.includes(routeName)) destination = 'Flinders Street'
 
@@ -354,7 +338,7 @@ module.exports = {
 
     let via = ''
 
-    let isUpService = relevantTrip.direction === 'Up'
+    let isUpService = trip.direction === 'Up'
 
     function fromRoute() {
       if (northernGroup.includes(routeName)) via = 'via Sthn Cross'
@@ -511,7 +495,7 @@ module.exports = {
     platformDepartures = platformDepartures.map(departure => {
       let {trip, destination, stopTimings} = departure
       let {routeGTFSID, direction} = trip
-      let isUp = direction === 'Up' && !departure.forming
+      let isUp = direction === 'Up'
       let routeName = departure.shortRouteName || trip.routeName
 
       let tripStops = stopTimings.map(stop => stop.stopName.slice(0, -16))
