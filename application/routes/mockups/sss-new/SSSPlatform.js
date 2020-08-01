@@ -2,12 +2,13 @@ const express = require('express')
 const router = new express.Router()
 const moment = require('moment')
 const async = require('async')
+const utils = require('../../../../utils')
 
 const TrainUtils = require('../TrainUtils')
 
 let stoppingTextMap = {
   stopsAll: 'Stops All Stations',
-  allExcept: 'All Except {0}',
+  allExcept: 'Not Stopping At {0}',
   expressAtoB: '{0} to {1}',
   sasAtoB: 'Stops All Stations from {0} to {1}',
   runsExpressAtoB: 'Runs Express from {0} to {1}',
@@ -19,12 +20,29 @@ let stoppingTextMap = {
 
 let stoppingTypeMap = {
   vlineService: {
-    stoppingType: 'V/Line Service',
-    stoppingPatternPostfix: ', Not Taking Suburban Passengers'
+    stoppingType: 'No Suburban Passengers'
   },
-  sas: 'Stops All Stations',
-  limExp: 'Limited Express',
-  exp: 'Express Service'
+  sas: 'Stops All',
+  limExp: 'Ltd Express',
+  exp: 'Express'
+}
+
+function adjust(departure) {
+  let {scheduledDepartureTime} = departure
+
+  if (departure.type === 'vline') {
+    let timeDifference = departure.scheduledDepartureTime.clone().add(30, 'seconds').diff(utils.now(), 'minutes')
+    departure.minutesToDeparture = timeDifference
+  } else {
+    if (departure.estimatedDepartureTime) {
+      let timeDifference = departure.estimatedDepartureTime.clone().add(30, 'seconds').diff(utils.now(), 'minutes')
+      if (timeDifference < 0) timeDifference = 0
+
+      departure.minutesToDeparture = timeDifference
+    } else departure.minutesToDeparture = null
+  }
+
+  return departure
 }
 
 async function getData(req, res) {
@@ -32,7 +50,12 @@ async function getData(req, res) {
     codedName: 'southern-cross-railway-station'
   })
 
-  return await TrainUtils.getPIDSDepartures(res.db, station, req.params.platform, stoppingTextMap, stoppingTypeMap)
+  let platforms = req.params.platform.split('-')
+
+  let left = await TrainUtils.getPIDSDepartures(res.db, station, platforms[0], stoppingTextMap, stoppingTypeMap)
+  let right = await TrainUtils.getPIDSDepartures(res.db, station, platforms[1], stoppingTextMap, stoppingTypeMap)
+
+  return { left: left.departures.map(adjust), right: right.departures.map(adjust) }
 }
 
 router.get('/:platform', async (req, res) => {

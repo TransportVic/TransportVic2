@@ -17,10 +17,10 @@ html
           img(src='/static/images/mockups/announcements.svg')
           p Please Listen
           p for Announcements
-        div(style='display: none;').message
+        div(style='display: flex;').message
           p.large Checking departures
           p.large Please wait...
-        div(style='display: flex;').firstDeparture
+        div(style='display: none;').firstDeparture
           div.top
             div.topLineBanner.pakenham
             span.firstDestination Pakenham
@@ -31,12 +31,12 @@ html
             div.departingDiv
               span Departing
               div
-                span.platform 2
+                span.departing 2
                 span.min min
             div.platformDiv
               span Platform
               span.platform 12
-          span.stoppingType Ltd Express via Flinders Street, Change at Dandenong for Cranbourne
+          span.firstStoppingType Ltd Express via Flinders Street, Change at Dandenong for Cranbourne
           div.stops
             
             

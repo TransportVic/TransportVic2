@@ -89,10 +89,17 @@ div.topLineBanner {
 
 span.firstDestination {
   font-size: calc(var(--height) * 0.1);
+  height: calc(var(--height) * 0.12);
+
+  letter-spacing: calc(var(--width) * -0.0007);
   font-family: "NetworkSansBold";
 
   margin-top: calc(var(--height) * -0.015);
   display: block;
+}
+
+span.firstDestination.smaller {
+  font-size: calc(var(--height) * 0.9);
 }
 
 div.left span.firstDestination {
@@ -133,7 +140,6 @@ div.right div.firstDepartureInfo > div {
 
 div.firstDepartureInfo > div > span:nth-child(1) {
   font-size: calc(var(--height) * 0.05);
-  margin-top: calc(var(--height) * -0.017);
 }
 
 div.firstDepartureInfo > div > span:nth-child(2) {
@@ -157,10 +163,10 @@ div.departingDiv > div {
 }
 
 div.firstDepartureInfo > div {
-  width: calc(var(--width) * 0.16);
+  width: calc(var(--width) * 0.17);
 }
 
-span.stoppingType {
+span.firstStoppingType {
   width: calc(var(--width) * 0.475);
   margin-left: auto;
   margin-right: auto;
@@ -171,11 +177,11 @@ span.stoppingType {
   overflow: hidden;
 }
 
-div.left span.stoppingType {
+div.left span.firstStoppingType {
   text-align: left;
 }
 
-div.right span.stoppingType {
+div.right span.firstStoppingType {
   text-align: right;
 }
 
@@ -229,25 +235,28 @@ div.stops div.stopsColumn div span.squish {
   transform-origin: left;
 }
 
-div.stopsColumn.columns-8 {
+div.stopsColumn.columns-11 {
   min-width: unset !important;
 }
 
-div.stopsColumn.columns-8 div {
-  margin-top: calc(var(--height) * 0.01) !important;
+div.stopsColumn.columns-11 div span {
+  font-size: calc(var(--height) * 0.042) !important;
 }
 
-div.stopsColumn.columns-8 div span {
-  font-size: calc(var(--height) * 0.06) !important;
+div.stopsColumn.columns-12 div span {
+  font-size: calc(var(--height) * 0.04) !important;
 }
 
-
-div.stopsColumn.columns-9 div {
-  margin-top: calc(var(--height) * 0.01) !important;
+div.stopsColumn.columns-14 div span {
+  font-size: calc(var(--height) * 0.034) !important;
 }
 
-div.stopsColumn.columns-9 div span {
-  font-size: calc(var(--height) * 0.056) !important;
+div.stopsColumn.columns-15 div span {
+  font-size: calc(var(--height) * 0.032) !important;
+}
+
+div.stopsColumn.columns-16 div span {
+  font-size: calc(var(--height) * 0.03) !important;
 }
 
 
