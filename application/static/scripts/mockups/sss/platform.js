@@ -179,7 +179,7 @@ function processDepartures(departures, platformNumber, isLeft) {
           message = [firstDeparture.divideInfo.first]
         } else {
           let stoppingPattern = ''
-          if (firstDeparture.stoppingPattern !== 'STOPPING ALL STATIONS') stoppingPattern = firstDeparture.stoppingPattern
+          if (firstDeparture.sssStoppingPattern !== 'STOPPING ALL STATIONS') stoppingPattern = firstDeparture.sssStoppingPattern
           if (firstDeparture.viaText)
             message = [firstDeparture.viaText, stoppingPattern]
           else
@@ -187,15 +187,15 @@ function processDepartures(departures, platformNumber, isLeft) {
         }
 
       } else {
-        if (firstDeparture.viaText.includes('AND') || firstDeparture.stoppingPattern !== 'STOPPING ALL STATIONS') {
-          message = [firstDeparture.viaText, firstDeparture.stoppingPattern]
+        if (firstDeparture.viaText.includes('AND') || firstDeparture.sssStoppingPattern !== 'STOPPING ALL STATIONS') {
+          message = [firstDeparture.viaText, firstDeparture.sssStoppingPattern]
         } else {
           if (firstDeparture.destination === 'FLINDERS STREET')
             message = [firstDeparture.viaText]
           else if (firstDeparture.destination === 'NORTH MELBOURNE')
             message = ['VIA NTH MELBOURNE TO NTH MELBOURNE', 'STOPPING ALL STATIONS']
           else
-            message = [firstDeparture.viaText + ', ' + firstDeparture.stoppingPattern]
+            message = [firstDeparture.viaText + ', ' + firstDeparture.sssStoppingPattern]
         }
       }
     }
@@ -259,7 +259,7 @@ function processDepartures(departures, platformNumber, isLeft) {
         else if (departure.destination === 'NORTH MELBOURNE')
           message = ['VIA NTH MELBOURNE TO NTH', 'MELBOURNE, STOPPING ALL', 'STATIONS']
         else
-          message = [departure.viaText,  departure.stoppingPattern]
+          message = [departure.viaText,  departure.sssStoppingPattern]
       }
 
       departureRow.style = ''

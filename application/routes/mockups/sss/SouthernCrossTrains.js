@@ -433,7 +433,7 @@ async function appendMetroData(departure, timetables) {
   departure.viaText = viaText
   departure.connections = connections || []
 
-  departure.stoppingPattern = getStoppingPattern(routeName, trimmedTimings, isUp, 'metro')
+  departure.sssStoppingPattern = getStoppingPattern(routeName, trimmedTimings, isUp, 'metro')
 
   return departure
 }
@@ -512,7 +512,7 @@ async function appendVLineData(departure, timetables) {
   departure.viaText = viaText
   departure.brokenVia = brokenVia
 
-  departure.stoppingPattern = getStoppingPattern(routeName, stopTimings, isUp, 'vline')
+  departure.sssStoppingPattern = getStoppingPattern(routeName, stopTimings, isUp, 'vline')
 
   return departure
 }
