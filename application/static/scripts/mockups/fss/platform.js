@@ -114,7 +114,7 @@ function createStoppingPatternID(stoppingPattern) {
 let currentPattern = null
 
 function addStoppingPattern(stops, className) {
-  let newPatternID = createStoppingPatternID(stops)
+  let newPatternID = createStoppingPatternID(stops) + className
   if (currentPattern === newPatternID) return true
 
   currentPattern = newPatternID
@@ -234,6 +234,8 @@ function updateBody(firstTime) {
     if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
 
     let {destination} = firstDeparture
+    if (destination === 'North Melbourne') destination = 'Nth Melbourne'
+    if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
     if (destination === 'Flemington Racecource') destination = 'Flemington Races'
 
     let firstStoppingType = firstDeparture.stoppingType
@@ -264,7 +266,10 @@ function updateBody(firstTime) {
           stopScrolling = true
 
         clearTimeout(connectionsScrollTimeout)
-        scrollConnections()
+        setTimeout(() => {
+          stopScrolling = false
+          scrollConnections()
+        }, 30)
       }
     }
 

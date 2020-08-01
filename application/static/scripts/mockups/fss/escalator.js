@@ -106,7 +106,7 @@ function createStoppingPatternID(stoppingPattern) {
 let currentPattern = null
 
 function addStoppingPattern(stops, className) {
-  let newPatternID = createStoppingPatternID(stops)
+  let newPatternID = createStoppingPatternID(stops) + className
   if (currentPattern === newPatternID) return true
 
   currentPattern = newPatternID
@@ -242,11 +242,6 @@ function updateBody(firstTime) {
 
     $('.firstDepartureInfo .platform').className = 'platform ' + firstDepartureClass
     $('.firstDepartureInfo .platform').textContent = firstDeparture.platform
-
-    if (destination === 'North Melbourne') destination = 'Nth Melbourne'
-    if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
-    if (destination === 'Flemington Racecource') destination = 'Flemington Races'
-
     $('.firstDepartureInfo .firstDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
     $('.firstDepartureInfo .firstDestination').textContent = destination
     $('.firstDepartureInfo .firstStoppingType').textContent = firstStoppingType
@@ -263,7 +258,10 @@ function updateBody(firstTime) {
           stopScrolling = true
 
         clearTimeout(connectionsScrollTimeout)
-        scrollConnections()
+        setTimeout(() => {
+          stopScrolling = false
+          scrollConnections()
+        }, 30)
       }
     }
 
