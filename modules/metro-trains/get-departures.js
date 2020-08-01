@@ -294,7 +294,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
         scheduledDepartureTime, possibleDestinations, direction, viaCityLoop)
     } else {
-      if (new Date() - trip.updateTime < 2 * 60 * 1000) usedLive = true
+      if (new Date() - trip.updateTime < 30 * 60 * 1000) usedLive = true
     }
 
     if (!trip) { // static dump
