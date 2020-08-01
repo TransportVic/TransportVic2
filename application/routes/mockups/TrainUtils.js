@@ -334,9 +334,9 @@ module.exports = {
 
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
 
-    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament')
+    let viaCityLoop = tripPassesBy.includes('Flagstaff') || tripPassesBy.includes('Parliament')
     if (!northernGroup.includes(routeName) && !viaCityLoop && departure.type !== 'vline')
-     viaCityLoop = tripStops.includes('Southern Cross')
+     viaCityLoop = tripPassesBy.includes('Southern Cross')
 
     let screenStops = tripPassesBy.map(stop => {
       return {
@@ -348,20 +348,27 @@ module.exports = {
     if (!screenStops.length) return null
     let expressCount = screenStops.filter(stop => stop.isExpress).length
 
-    let isCityStop = cityLoopStations.includes(stationName) || stationName === 'Flinders Street'
+    let isCityStop = cityLoopStations.includes(stationName)
+    let isFSS = stationName === 'Flinders Street'
+    let toCity = isUp && (tripStops.includes('Flinders Street') || tripStops.includes('Southern Cross'))
 
     let via = ''
 
     let isUpService = relevantTrip.direction === 'Up'
 
+    function fromRoute() {
+      if (northernGroup.includes(routeName)) via = 'via Sthn Cross'
+      else if (cliftonHillGroup.includes(routeName)) via = 'via Jolimont'
+      else via = 'via Richmond'
+    }
+
     if (departure.type !== 'vline') {
-      if (isCityStop || isUp) {
-        if (viaCityLoop && !isUpService) via = 'via City Loop'
-        else {
-          if (northernGroup.includes(routeName)) via = 'via Sthn Cross'
-          else if (cliftonHillGroup.includes(routeName)) via = 'via Jolimont'
-          else via = 'via Richmond'
-        }
+      if ((toCity || isFSS) && !isCityStop) {
+        if (viaCityLoop && isFSS) via = 'via City Loop'
+        else fromRoute()
+      } else if (isCityStop && destination !== 'Flinders Street') {
+        if (tripPassesBy.includes('Flinders Street')) via = 'via Flinders St'
+        else fromRoute()
       }
     }
 

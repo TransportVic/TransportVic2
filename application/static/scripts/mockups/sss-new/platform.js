@@ -265,8 +265,8 @@ $.loaded(() => {
     updateBody(true)
     setTimeout(() => {
       updateBody()
-      setInterval(updateBody, 1000 * 15)
-    }, 15000 - (+new Date() % 15000))
+      setInterval(updateBody, 1000 * 30)
+    }, 30000 - (+new Date() % 30000))
   }, 500)
 })
 
