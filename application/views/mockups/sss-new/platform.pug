@@ -1,0 +1,49 @@
+html
+  head
+    script(src='/static/scripts/util.js')
+    script(src='/static/scripts/mockups/sss-new/platform.js' async)
+    script(src='/static/scripts/mockups/pids-utils.js') 
+    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
+    link(rel='stylesheet' href='/static/css/mockups/actual-line-colours.css')
+    link(rel='stylesheet' href='/static/css/mockups/16-9-pids-base.css')
+    link(rel='stylesheet' href='/static/css/mockups/sss-new/platform.css')
+      
+    link(rel='preload' as='image' href='/static/images/mockups/announcements.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/no-boarding-train.svg')
+  body
+    div.content
+      mixin platform()
+        div(style='display: none;').fullMessage
+          img(src='/static/images/mockups/announcements.svg')
+          p Please Listen
+          p for Announcements
+        div(style='display: none;').message
+          p.large Checking departures
+          p.large Please wait...
+        div(style='display: flex;').firstDeparture
+          div.top
+            div.topLineBanner.pakenham
+            span.firstDestination Pakenham
+          div.firstDepartureInfo
+            div.scheduledDiv
+              span Scheduled
+              span.scheduled 12:34
+            div.departingDiv
+              span Departing
+              div
+                span.platform 2
+                span.min min
+            div.platformDiv
+              span Platform
+              span.platform 12
+          span.stoppingType Ltd Express via Flinders Street, Change at Dandenong for Cranbourne
+          div.stops
+            
+            
+      div.platforms
+        div.platformContainer.left
+          +platform()
+        div.platformContainer.right
+          +platform()
+      div.clock
+        span 12:34:56

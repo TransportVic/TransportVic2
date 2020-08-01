@@ -173,6 +173,7 @@ module.exports = class MainServer {
       'mockups/sss/SouthernCross': '/mockups/sss',
 
       'mockups/sss-new/SSSNew': '/mockups/sss-new',
+      'mockups/sss-new/SSSPlatform': '/mockups/sss-new/platform',
       'mockups/sss-new/SSSCoachBay': '/mockups/sss-new/coach',
 
       'jmss-screens/BigScreen': {
