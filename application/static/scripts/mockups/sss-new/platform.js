@@ -160,7 +160,7 @@ function processDepartures(departures, side, firstTime) {
       $$('.firstDepartureInfo .departingDiv .departing').textContent = 'Now'
       $$('.firstDepartureInfo .departingDiv .min').textContent = ''
     } else {
-      $$('.firstDepartureInfo .departingDiv .departing').textContent = firstDeparture.minutesToDeparture
+      $$('.firstDepartureInfo .departingDiv .departing').textContent = firstDeparture.minutesToDeparture || '-- '
       $$('.firstDepartureInfo .departingDiv .min').textContent = 'min'
     }
 
