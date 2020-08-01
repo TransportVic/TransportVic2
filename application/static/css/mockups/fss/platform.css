@@ -280,6 +280,7 @@ div.bottomRow {
 
 div.nextDepartures {
   width: calc(var(--width) * 0.77);
+  height: 100%;
   background-color: #f0f0f0;
   display: flex;
   flex-direction: column;
@@ -336,7 +337,7 @@ div.greyLine {
 
 div.clock {
   width: calc(var(--width) * 0.23);
-  height: calc(var(--height) * 0.1425);
+  height: 100%;
   background-color: #000000;
   color: #ffffff;
   display: flex;

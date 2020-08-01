@@ -147,11 +147,16 @@ module.exports = {
           let tripStops = stopTimings.map(e => e.stopName)
 
           if (departure.forming) {
-            let startIndex = tripStops.indexOf(departure.forming.stopTimings[0].stopName)
-            if (startIndex > 0) {
-              stopTimings = stopTimings.slice(startIndex)
-            }
-            stopTimings = stopTimings.concat(departure.forming.stopTimings)
+            let formingCityLoopStops = departure.forming.stopTimings
+              .map(e => e.stopName.slice(0, -16)).filter(stop => cityLoopStations.includes(stop))
+
+            let cityLoopStops = stopTimings.filter(stop => {
+              let stopName = stop.stopName.slice(0, -16)
+
+              return cityLoopStations.includes(stopName) && !formingCityLoopStops.includes(stopName)
+            })
+
+            stopTimings = cityLoopStops.concat(departure.forming.stopTimings)
             tripStops = stopTimings.map(e => e.stopName)
           }
 
