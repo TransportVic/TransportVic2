@@ -176,27 +176,29 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
       mode: 'regional train'
     })
 
-    let liveQuery = {
-      operationDays: operationDay,
-      runID: departure.runID,
-      mode: 'regional train'
-    }
-    let staticQuery = {
-      origin: departure.origin,
-      destination: departure.destination,
-      departureTime: utils.formatHHMM(departure.originDepartureTime),
-      operationDays: operationDay,
-      mode: 'regional train'
-    }
+    let trip
+    let departureTime = departure.originDepartureTime
+    let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime) % 1440
 
-    let trip = await db.getCollection('live timetables').findDocument(liveQuery)
+    for (let i = 0; i <= 1; i++) {
+      let tripDay = departureTime.clone().add(-i, 'days')
+      let query = {
+        operationDays: tripDay.format('YYYYMMDD'),
+        mode: 'regional train',
+        stopTimings: {
+          $elemMatch: {
+            stopGTFSID,
+            departureTimeMinutes: scheduledDepartureTimeMinutes + 1440 * i
+          }
+        },
+        destination: departure.destination
+      }
 
-    if (!trip) {
-    trip = await db.getCollection('live timetables').findDocument(staticQuery)
-    }
-
-    if (!trip) {
-      trip = await gtfsTimetables.findDocument(staticQuery)
+      // improve this
+      trip = await liveTimetables.findDocument(query)
+      if (trip) break
+      trip = await gtfsTimetables.findDocument(query)
+      if (trip) break
     }
 
     if (!trip && nspTrip) trip = nspTrip
@@ -377,18 +379,30 @@ async function appendMetroData(departure, timetables) {
 
   if (scheduled) connections = scheduled.connections
 
-  let stopTimings = departure.trip.stopTimings.map(e => e.stopName)
+  let stopTimings = departure.trip.stopTimings.slice(0).map(e => e.stopName.slice(0, -16))
   let routeName = departure.trip.routeName
   let isUp = departure.trip.direction === 'Up'
 
   if (departure.forming) {
-    isUp = departure.forming.direction === 'Up'
-    routeName = departure.forming.routeName
-    let sssIndex = stopTimings.indexOf('Southern Cross')
-    stopTimings = stopTimings.slice(sssIndex).concat(departure.forming.stopTimings.map(e => e.stopName))
-    stopTimings = stopTimings.filter((e, i, a) => a.indexOf(e) === i)
+    let formingStops = departure.forming.stopTimings.map(e => e.stopName.slice(0, -16))
+    let formingCityLoopStops = formingStops.filter(stop => cityLoopStations.includes(stop))
+
+    let cityLoopStops = stopTimings.filter(stop => {
+      return cityLoopStations.includes(stop) && !formingCityLoopStops.includes(stop)
+    })
+
+    stopTimings = cityLoopStops.concat(formingStops)
   }
-  stopTimings = stopTimings.map(e => e.slice(0, -16))
+
+  let suspensions = departure.suspensions
+  if (suspensions.length) {
+    let first = suspensions[0]
+    let start = first.startStation.slice(0, -16)
+    let index = stopTimings.indexOf(start)
+
+    stopTimings = stopTimings.slice(0, index)
+  }
+
   let sssIndex = stopTimings.lastIndexOf('Southern Cross')
   let trimmedTimings = stopTimings.slice(sssIndex)
 
