@@ -3,6 +3,10 @@ div.content {
   color: #ffffff !important;
 }
 
+div.serviceMessage {
+  color: #ffffff !important;
+}
+
 div.topLineBanner {
   background-color: #ffffff !important;
 }

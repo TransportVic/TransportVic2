@@ -60,6 +60,8 @@ router.get('/get', async (req, res) => {
     return res.redirect(`/mockups/metro-lcd/${station}/${value}/half-platform-bold`)
   } else if (type === 'platform') {
     return res.redirect(`/mockups/metro-lcd/${station}/${value}/platform`)
+  } else if (type === 'pre-platform-vertical') {
+    return res.redirect(`/mockups/metro-lcd/${station}/${value}/pre-platform-vertical`)
   } else if (type === 'summary') {
     return res.redirect(`/mockups/summary/${station}?type=${value}`)
   } else if (type === 'concourse') {
