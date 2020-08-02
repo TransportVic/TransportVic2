@@ -133,7 +133,11 @@ function updateBody() {
     if (err) return setListenAnnouncements()
     setFullMessageActive(false)
 
-    updateDestinations(body.departures)
+    try {
+      updateDestinations(body.departures)
+    } catch (e) {
+      setListenAnnouncements()
+    }
   })
 }
 

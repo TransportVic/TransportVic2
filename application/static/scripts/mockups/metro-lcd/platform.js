@@ -175,93 +175,97 @@ function updateBody() {
   }, (err, status, body) => {
     if (err) return setListenAnnouncements()
 
-    departures = body.departures
+    try {
+      departures = body.departures
 
-    let firstDeparture = departures[0]
-    if (!firstDeparture) {
-      if (body.hasRRB) setBusesReplaceTrains()
-      else setNoDepartures()
-      return
-    }
-
-    showingStandClear = showingStandClear && firstDeparture.scheduledDepartureTime === previousDeparture
-
-    if (!showingStandClear) {
-      $('.burnLine').className = 'burnLine reset'
-      setDepartureInfoVisible(true)
-
-      $('.firstDestination').textContent = firstDeparture.destination
-      $('.scheduledDiv span:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
-
-      if (firstDeparture.estimatedDepartureTime) {
-        if (firstDeparture.minutesToDeparture > 0) {
-          $('.actualDiv div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
-          $('.actualDiv div span:nth-child(2)').textContent = 'min'
-        } else {
-          $('.actualDiv div span:nth-child(1)').textContent = 'NOW'
-          $('.actualDiv div span:nth-child(2)').textContent = ''
-        }
-      } else {
-        $('.actualDiv div span:nth-child(1)').textContent = '--'
-        $('.actualDiv div span:nth-child(2)').textContent = 'min'
+      let firstDeparture = departures[0]
+      if (!firstDeparture) {
+        if (body.hasRRB) setBusesReplaceTrains()
+        else setNoDepartures()
+        return
       }
 
-      addStoppingPattern(firstDeparture.additionalInfo.screenStops)
-      setMessagesActive(false)
+      showingStandClear = showingStandClear && firstDeparture.scheduledDepartureTime === previousDeparture
 
-      if (firstDeparture.additionalInfo.notTakingPassengers) setArrival()
-    }
+      if (!showingStandClear) {
+        $('.burnLine').className = 'burnLine reset'
+        setDepartureInfoVisible(true)
 
-    let nextDepartures = [...departures.slice(1, 3), null, null].slice(0, 2)
-    nextDepartures.forEach((departure, i) => {
-      let div = $(`div.followingDeparture:nth-child(${i + 1})`)
-      if (departure) {
-        $('.scheduled', div).textContent = formatTime(new Date(departure.scheduledDepartureTime))
-        $('.destination', div).textContent = departure.destination
-        if (departure.estimatedDepartureTime)
-          $('.actual', div).textContent = departure.minutesToDeparture
-        else
-          $('.actual', div).textContent = '--'
-        $('.stoppingType', div).textContent = departure.stoppingType
+        $('.firstDestination').textContent = firstDeparture.destination
+        $('.scheduledDiv span:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
 
-        if (departure.type === 'vline') {
-          div.className = 'followingDeparture vline'
+        if (firstDeparture.estimatedDepartureTime) {
+          if (firstDeparture.minutesToDeparture > 0) {
+            $('.actualDiv div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
+            $('.actualDiv div span:nth-child(2)').textContent = 'min'
+          } else {
+            $('.actualDiv div span:nth-child(1)').textContent = 'NOW'
+            $('.actualDiv div span:nth-child(2)').textContent = ''
+          }
         } else {
+          $('.actualDiv div span:nth-child(1)').textContent = '--'
+          $('.actualDiv div span:nth-child(2)').textContent = 'min'
+        }
+
+        addStoppingPattern(firstDeparture.additionalInfo.screenStops)
+        setMessagesActive(false)
+
+        if (firstDeparture.additionalInfo.notTakingPassengers) setArrival()
+      }
+
+      let nextDepartures = [...departures.slice(1, 3), null, null].slice(0, 2)
+      nextDepartures.forEach((departure, i) => {
+        let div = $(`div.followingDeparture:nth-child(${i + 1})`)
+        if (departure) {
+          $('.scheduled', div).textContent = formatTime(new Date(departure.scheduledDepartureTime))
+          $('.destination', div).textContent = departure.destination
+          if (departure.estimatedDepartureTime)
+            $('.actual', div).textContent = departure.minutesToDeparture
+          else
+            $('.actual', div).textContent = '--'
+          $('.stoppingType', div).textContent = departure.stoppingType
+
+          if (departure.type === 'vline') {
+            div.className = 'followingDeparture vline'
+          } else {
+            div.className = 'followingDeparture'
+          }
+        } else {
+          $('.scheduled', div).textContent = '--'
+          $('.destination', div).textContent = '--'
+          $('.actual', div).textContent = '--'
+          $('.stoppingType', div).textContent = ''
+
           div.className = 'followingDeparture'
         }
-      } else {
-        $('.scheduled', div).textContent = '--'
-        $('.destination', div).textContent = '--'
-        $('.actual', div).textContent = '--'
-        $('.stoppingType', div).textContent = ''
+      })
 
-        div.className = 'followingDeparture'
+      clearTimeout(showBurnLineTimeout)
+      previousDeparture = firstDeparture.scheduledDepartureTime
+
+      if (!showingStandClear) {
+        let actualDepartureTime = new Date(firstDeparture.actualDepartureTime)
+        let difference = actualDepartureTime - new Date()
+
+        showBurnLineTimeout = setTimeout(() => {
+          if (burnLinesShown.includes(firstDeparture.actualDepartureTime)) return
+          burnLinesShown.push(firstDeparture.actualDepartureTime)
+          burnLinesShown = burnLinesShown.slice(-10)
+
+          $('.burnLine').className = 'burnLine active'
+
+          $('.actualDiv div span:nth-child(1)').textContent = 'NOW'
+          $('.actualDiv div span:nth-child(2)').textContent = ''
+
+          showingStandClear = true
+
+          setTimeout(() => {
+            setStandClear()
+          }, 1000 * 15)
+        }, difference - 1000 * 15)
       }
-    })
-
-    clearTimeout(showBurnLineTimeout)
-    previousDeparture = firstDeparture.scheduledDepartureTime
-
-    if (!showingStandClear) {
-      let actualDepartureTime = new Date(firstDeparture.actualDepartureTime)
-      let difference = actualDepartureTime - new Date()
-
-      showBurnLineTimeout = setTimeout(() => {
-        if (burnLinesShown.includes(firstDeparture.actualDepartureTime)) return
-        burnLinesShown.push(firstDeparture.actualDepartureTime)
-        burnLinesShown = burnLinesShown.slice(-10)
-
-        $('.burnLine').className = 'burnLine active'
-
-        $('.actualDiv div span:nth-child(1)').textContent = 'NOW'
-        $('.actualDiv div span:nth-child(2)').textContent = ''
-
-        showingStandClear = true
-
-        setTimeout(() => {
-          setStandClear()
-        }, 1000 * 15)
-      }, difference - 1000 * 15)
+    } catch (e) {
+      setListenAnnouncements()
     }
   })
 }

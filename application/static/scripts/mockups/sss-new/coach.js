@@ -44,41 +44,45 @@ function updateBody() {
     if (err) return setListenAnnouncements()
     setFullMessageActive(false)
 
-    let departures = {}
+    try {
+      let departures = {}
 
-    bays.forEach(bay => departures['Bay ' + bay] = null)
+      bays.forEach(bay => departures['Bay ' + bay] = null)
 
-    body.forEach(departure => {
-      if (departures[departure.bay] === null) {
-        departures[departure.bay] = departure
-      }
-    })
+      body.forEach(departure => {
+        if (departures[departure.bay] === null) {
+          departures[departure.bay] = departure
+        }
+      })
 
-    bays.forEach(bay => {
-      let departure = departures['Bay ' + bay]
-      let departureDiv = $(`[data-bay="Bay ${bay}"]`)
+      bays.forEach(bay => {
+        let departure = departures['Bay ' + bay]
+        let departureDiv = $(`[data-bay="Bay ${bay}"]`)
 
-      if (departure) {
-        $('p.title', departureDiv).textContent = `Bay ${bay} - ${departure.departureTime} ${departure.destination}`
-        $('p.stopsAt', departureDiv).textContent = 'Stops At: ' + departure.stopsAt.join(', ')
-        $('p.information', departureDiv).innerHTML = ''
+        if (departure) {
+          $('p.title', departureDiv).textContent = `Bay ${bay} - ${departure.departureTime} ${departure.destination}`
+          $('p.stopsAt', departureDiv).textContent = 'Stops At: ' + departure.stopsAt.join(', ')
+          $('p.information', departureDiv).innerHTML = ''
 
-        if (departure.isTrainReplacement) {
-          $('p.information', departureDiv).innerHTML += '<span class="important">Train Replacement Coach</span> '
-          $('p.information', departureDiv).className = 'information important'
+          if (departure.isTrainReplacement) {
+            $('p.information', departureDiv).innerHTML += '<span class="important">Train Replacement Coach</span> '
+            $('p.information', departureDiv).className = 'information important'
+          } else {
+            $('p.information', departureDiv).textContent = ''
+          }
+
+          $('p.information', departureDiv).innerHTML += departure.connections.map(connection => {
+            return `<span>Change at ${connection.changeAt} for ${connection.for}</span>`
+          }).join(', ')
         } else {
+          $('p.title', departureDiv).textContent = `Bay ${bay} - No Departures`
+          $('p.stopsAt', departureDiv).textContent = ''
           $('p.information', departureDiv).textContent = ''
         }
-
-        $('p.information', departureDiv).innerHTML += departure.connections.map(connection => {
-          return `<span>Change at ${connection.changeAt} for ${connection.for}</span>`
-        }).join(', ')
-      } else {
-        $('p.title', departureDiv).textContent = `Bay ${bay} - No Departures`
-        $('p.stopsAt', departureDiv).textContent = ''
-        $('p.information', departureDiv).textContent = ''
-      }
-    })
+      })
+    } catch (e) {
+      setListenAnnouncements()
+    }
   })
 }
 

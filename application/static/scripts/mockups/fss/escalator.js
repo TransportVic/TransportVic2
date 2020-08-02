@@ -213,93 +213,97 @@ function updateBody(firstTime) {
   }, (err, status, body) => {
     if (err) return setListenAnnouncements()
 
-    departures = body.departures
-    if (!departures) return setListenAnnouncements()
-    departures = departures.map(adjustDepartures)
+    try {
+      departures = body.departures
+      if (!departures) return setListenAnnouncements()
+      departures = departures.map(adjustDepartures)
 
-    let firstDeparture = departures[0]
-    if (!firstDeparture) {
-      $('.topLineBanner').className = 'topLineBanner no-line'
-      return setNoDepartures()
-    } else setMessageActive(false)
+      let firstDeparture = departures[0]
+      if (!firstDeparture) {
+        $('.topLineBanner').className = 'topLineBanner no-line'
+        return setNoDepartures()
+      } else setMessageActive(false)
 
-    let firstDepartureClass = firstDeparture.codedLineName
-    if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
+      let firstDepartureClass = firstDeparture.codedLineName
+      if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
 
-    let {destination} = firstDeparture
-    if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+      let {destination} = firstDeparture
+      if (destination === 'Flemington Racecource') destination = 'Flemington Races'
 
-    let firstStoppingType = firstDeparture.stoppingType
-    if (firstDeparture.additionalInfo.via) {
-      firstStoppingType += ' ' + firstDeparture.additionalInfo.via
-    }
-
-    if (firstDeparture.connections) {
-      firstStoppingType += firstDeparture.connections.map(connection => {
-        return `, Change at ${connection.changeAt.slice(0, -16)} for ${connection.for.slice(0, -16)}`
-      }).join('')
-    }
-
-    $('.firstDepartureInfo .platform').className = 'platform ' + firstDepartureClass
-    $('.firstDepartureInfo .platform').textContent = firstDeparture.platform
-    $('.firstDepartureInfo .firstDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
-    $('.firstDepartureInfo .firstDestination').textContent = destination
-    $('.firstDepartureInfo .firstStoppingType').textContent = firstStoppingType
-    $('.firstDepartureInfo .minutesToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
-
-    if (firstDeparture.isArrival) {
-      setArrival()
-    } else {
-      $('.stoppingPattern').className = 'stoppingPattern ' + firstDepartureClass
-      let same = addStoppingPattern(firstDeparture.additionalInfo.screenStops, firstDepartureClass)
-
-      if (!same) {
-        if (!firstTime)
-          stopScrolling = true
-
-        clearTimeout(connectionsScrollTimeout)
-        setTimeout(() => {
-          stopScrolling = false
-          scrollConnections()
-        }, 30)
+      let firstStoppingType = firstDeparture.stoppingType
+      if (firstDeparture.additionalInfo.via) {
+        firstStoppingType += ' ' + firstDeparture.additionalInfo.via
       }
-    }
 
+      if (firstDeparture.connections) {
+        firstStoppingType += firstDeparture.connections.map(connection => {
+          return `, Change at ${connection.changeAt.slice(0, -16)} for ${connection.for.slice(0, -16)}`
+        }).join('')
+      }
 
-    $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
+      $('.firstDepartureInfo .platform').className = 'platform ' + firstDepartureClass
+      $('.firstDepartureInfo .platform').textContent = firstDeparture.platform
+      $('.firstDepartureInfo .firstDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+      $('.firstDepartureInfo .firstDestination').textContent = destination
+      $('.firstDepartureInfo .firstStoppingType').textContent = firstStoppingType
+      $('.firstDepartureInfo .minutesToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
 
-    let nextDepartures = (departures.slice(1).concat([null, null, null, null])).slice(0, 4)
-    nextDepartures.forEach((departure, i) => {
-      let departureRow = $(`.nextDeparture:nth-child(${1 + i})`)
-      if (!departure) {
-        $('.lineColour', departureRow).className = 'lineColour no-line'
-        $('.scheduledDepartureTime', departureRow).textContent = '--'
-        $('.destination', departureRow).textContent = '--'
-        $('.platform', departureRow).className = 'platform no-line'
-        $('.minutesToDeparture span', departureRow).textContent = '-- min'
+      if (firstDeparture.isArrival) {
+        setArrival()
       } else {
-        let departureClass = departure.codedLineName
-        if (departure.type === 'vline') departureClass = 'vline'
+        $('.stoppingPattern').className = 'stoppingPattern ' + firstDepartureClass
+        let same = addStoppingPattern(firstDeparture.additionalInfo.screenStops, firstDepartureClass)
 
-        let {destination} = departure
+        if (!same) {
+          if (!firstTime)
+            stopScrolling = true
 
-        if (destination === 'North Melbourne') destination = 'Nth Melbourne'
-        if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
-        if (destination === 'Flemington Racecource') destination = 'Flemington Races'
-
-        let stoppingType = departure.stoppingType
-        if (departure.additionalInfo.via) {
-          stoppingType += ' ' + departure.additionalInfo.via
+          clearTimeout(connectionsScrollTimeout)
+          setTimeout(() => {
+            stopScrolling = false
+            scrollConnections()
+          }, 30)
         }
-
-        $('.lineColour', departureRow).className = 'lineColour ' + departureClass
-        $('.scheduledDepartureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
-        $('.destination', departureRow).textContent = destination
-        $('.platform span', departureRow).textContent = departure.platform
-        $('.platform', departureRow).className = 'platform ' + departureClass
-        $('.minutesToDeparture span', departureRow).textContent = departure.prettyTimeToDeparture
       }
-    })
+
+
+      $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
+
+      let nextDepartures = (departures.slice(1).concat([null, null, null, null])).slice(0, 4)
+      nextDepartures.forEach((departure, i) => {
+        let departureRow = $(`.nextDeparture:nth-child(${1 + i})`)
+        if (!departure) {
+          $('.lineColour', departureRow).className = 'lineColour no-line'
+          $('.scheduledDepartureTime', departureRow).textContent = '--'
+          $('.destination', departureRow).textContent = '--'
+          $('.platform', departureRow).className = 'platform no-line'
+          $('.minutesToDeparture span', departureRow).textContent = '-- min'
+        } else {
+          let departureClass = departure.codedLineName
+          if (departure.type === 'vline') departureClass = 'vline'
+
+          let {destination} = departure
+
+          if (destination === 'North Melbourne') destination = 'Nth Melbourne'
+          if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
+          if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+
+          let stoppingType = departure.stoppingType
+          if (departure.additionalInfo.via) {
+            stoppingType += ' ' + departure.additionalInfo.via
+          }
+
+          $('.lineColour', departureRow).className = 'lineColour ' + departureClass
+          $('.scheduledDepartureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
+          $('.destination', departureRow).textContent = destination
+          $('.platform span', departureRow).textContent = departure.platform
+          $('.platform', departureRow).className = 'platform ' + departureClass
+          $('.minutesToDeparture span', departureRow).textContent = departure.prettyTimeToDeparture
+        }
+      })
+    } catch (e) {
+      setListenAnnouncements()
+    }
   })
 }
 

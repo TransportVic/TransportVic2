@@ -45,69 +45,73 @@ function updateBody(firstTime) {
     if (err) return setListenAnnouncements()
     setFullMessageActive(false)
 
-    let departures = {
-      'Up': [],
-      'Down': []
-    }
+    try {
+      let departures = {
+        'Up': [],
+        'Down': []
+      }
 
-    let screenDepartures = []
+      let screenDepartures = []
 
-    body.departures.forEach(departure => {
-      departures[departure.trip.direction].push(departure)
-    })
+      body.departures.forEach(departure => {
+        departures[departure.trip.direction].push(departure)
+      })
 
-    if (departures.Up.length === 0 || departures.Down.length === 0) {
-      screenDepartures = [...departures.Up, ...departures.Down].slice(0, 4)
-    } else {
-      screenDepartures = [...departures.Up.slice(0, 2), ...departures.Down.slice(0, 2)]
-    }
+      if (departures.Up.length === 0 || departures.Down.length === 0) {
+        screenDepartures = [...departures.Up, ...departures.Down].slice(0, 4)
+      } else {
+        screenDepartures = [...departures.Up.slice(0, 2), ...departures.Down.slice(0, 2)]
+      }
 
-    screenDepartures = [...screenDepartures, null, null, null, null].slice(0, 4)
+      screenDepartures = [...screenDepartures, null, null, null, null].slice(0, 4)
 
-    let departureRows = Array.from(document.querySelectorAll('.departure'))
-    let dividerDivs = Array.from(document.querySelectorAll('.greySeparator'))
+      let departureRows = Array.from(document.querySelectorAll('.departure'))
+      let dividerDivs = Array.from(document.querySelectorAll('.greySeparator'))
 
-    screenDepartures.forEach((departure, i) => {
-      let departureRow = departureRows[i]
-      let dividerDiv = dividerDivs[i]
+      screenDepartures.forEach((departure, i) => {
+        let departureRow = departureRows[i]
+        let dividerDiv = dividerDivs[i]
 
-      if (departure) {
-        if (dividerDiv) dividerDiv.style = 'display: block;'
-        if (departure.type === 'vline') departureRow.className = 'departure vline'
-        else departureRow.className = 'departure'
-        departureRow.style = 'display: flex;'
-        $('.departureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
-        $('.destination', departureRow).textContent = shorternDestination(departure.destination)
+        if (departure) {
+          if (dividerDiv) dividerDiv.style = 'display: block;'
+          if (departure.type === 'vline') departureRow.className = 'departure vline'
+          else departureRow.className = 'departure'
+          departureRow.style = 'display: flex;'
+          $('.departureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
+          $('.destination', departureRow).textContent = shorternDestination(departure.destination)
 
-        let stoppingType = shortenStoppingType(departure.stoppingType)
-        if (departure.additionalInfo.via) {
-          stoppingType += ' ' + departure.additionalInfo.via
-        }
+          let stoppingType = shortenStoppingType(departure.stoppingType)
+          if (departure.additionalInfo.via) {
+            stoppingType += ' ' + departure.additionalInfo.via
+          }
 
-        $('.stoppingType', departureRow).textContent = stoppingType
-        $('.platform', departureRow).textContent = departure.platform
+          $('.stoppingType', departureRow).textContent = stoppingType
+          $('.platform', departureRow).textContent = departure.platform
 
-        if (departure.estimatedDepartureTime) {
-          if (departure.minutesToDeparture > 0) {
-            $('.timeToDepartureArea .title', departureRow).style = 'display: block;'
-            $('.timeToDeparture', departureRow).textContent = departure.minutesToDeparture
-            $('.timeToDeparture', departureRow).className = 'timeToDeparture'
+          if (departure.estimatedDepartureTime) {
+            if (departure.minutesToDeparture > 0) {
+              $('.timeToDepartureArea .title', departureRow).style = 'display: block;'
+              $('.timeToDeparture', departureRow).textContent = departure.minutesToDeparture
+              $('.timeToDeparture', departureRow).className = 'timeToDeparture'
+            } else {
+              $('.timeToDepartureArea .title', departureRow).style = 'display: none;'
+              $('.timeToDeparture', departureRow).textContent = 'NOW'
+              $('.timeToDeparture', departureRow).className = 'timeToDeparture now'
+            }
           } else {
-            $('.timeToDepartureArea .title', departureRow).style = 'display: none;'
-            $('.timeToDeparture', departureRow).textContent = 'NOW'
+            $('.timeToDepartureArea .title', departureRow).style = 'display: block;'
+            $('.timeToDeparture', departureRow).textContent = '--'
             $('.timeToDeparture', departureRow).className = 'timeToDeparture now'
           }
         } else {
-          $('.timeToDepartureArea .title', departureRow).style = 'display: block;'
-          $('.timeToDeparture', departureRow).textContent = '--'
-          $('.timeToDeparture', departureRow).className = 'timeToDeparture now'
+          if (dividerDiv) dividerDiv.style = 'display: none;'
+          departureRow.className = 'departure'
+          departureRow.style = 'display: none;'
         }
-      } else {
-        if (dividerDiv) dividerDiv.style = 'display: none;'
-        departureRow.className = 'departure'
-        departureRow.style = 'display: none;'
-      }
-    })
+      })
+    } catch (e) {
+      setListenAnnouncements()
+    }
   })
 }
 

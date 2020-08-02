@@ -142,137 +142,141 @@ function updateBody(firstTime) {
   }, (err, status, body) => {
     if (err) return setListenAnnouncements()
 
-    departures = body.departures.map(d => {
-      if (d.stoppingType === 'Stops All') d.stoppingType = 'Stops All Stations'
-      return d
-    })
+    try {
+      departures = body.departures.map(d => {
+        if (d.stoppingType === 'Stops All') d.stoppingType = 'Stops All Stations'
+        return d
+      })
 
-    let firstDeparture = departures[0]
-    let message = $('.message')
-    let main = $('.nextDepartures')
+      let firstDeparture = departures[0]
+      let message = $('.message')
+      let main = $('.nextDepartures')
 
-    if (!firstDeparture) {
-      if (body.hasRRB) setBusesReplaceTrains()
-      else setNoDepartures()
-      return
-    }
-
-    showingBurnLine = showingBurnLine && firstDeparture.scheduledDepartureTime === previousDeparture
-
-    if (!showingBurnLine) {
-      $('.burnLine').className = 'burnLine reset'
-
-      showingStandClear = false
-      setServiceMessageActive(false, true)
-
-      let classes = ''
-
-      $('.firstDestination').textContent = firstDeparture.destination
-      $('.firstDestination').className = 'firstDestination'
-      let width = parseInt(getComputedStyle($('.firstDestination')).width)
-      let vw = window.innerWidth / 100
-
-      if (width > 76*vw) {
-        $('.firstDestination').className += ' smallest'
-      } else if (width > 65*vw) {
-        $('.firstDestination').className += ' smaller'
+      if (!firstDeparture) {
+        if (body.hasRRB) setBusesReplaceTrains()
+        else setNoDepartures()
+        return
       }
 
-      $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+      showingBurnLine = showingBurnLine && firstDeparture.scheduledDepartureTime === previousDeparture
 
-      if (firstDeparture.estimatedDepartureTime) {
-        if (firstDeparture.minutesToDeparture > 0) {
-          $('div.actual div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
-          $('div.actual div span:nth-child(2)').textContent = 'min'
+      if (!showingBurnLine) {
+        $('.burnLine').className = 'burnLine reset'
+
+        showingStandClear = false
+        setServiceMessageActive(false, true)
+
+        let classes = ''
+
+        $('.firstDestination').textContent = firstDeparture.destination
+        $('.firstDestination').className = 'firstDestination'
+        let width = parseInt(getComputedStyle($('.firstDestination')).width)
+        let vw = window.innerWidth / 100
+
+        if (width > 76*vw) {
+          $('.firstDestination').className += ' smallest'
+        } else if (width > 65*vw) {
+          $('.firstDestination').className += ' smaller'
+        }
+
+        $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+
+        if (firstDeparture.estimatedDepartureTime) {
+          if (firstDeparture.minutesToDeparture > 0) {
+            $('div.actual div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
+            $('div.actual div span:nth-child(2)').textContent = 'min'
+          } else {
+            $('div.actual div span:nth-child(1)').textContent = 'Now'
+            $('div.actual div span:nth-child(2)').textContent = ''
+          }
         } else {
+          $('div.actual div span:nth-child(1)').textContent = '--'
+          $('div.actual div span:nth-child(2)').textContent = 'min'
+        }
+
+        let firstStoppingType = firstDeparture.stoppingType
+        if (firstDeparture.additionalInfo.via) {
+          firstStoppingType += ' ' + firstDeparture.additionalInfo.via
+        }
+
+        firstStoppingTypeP.textContent = firstStoppingType
+        firstStoppingPatternP.textContent = firstDeparture.stoppingPattern
+        firstStoppingPatternP.setAttribute('data-text', firstDeparture.stoppingPattern)
+
+        if (firstDeparture.additionalInfo.notTakingPassengers) setArrival()
+        else isArrival = false
+      }
+
+      let secondDeparture = departures[1]
+      let secondClassName = ''
+
+      if (secondDeparture) {
+        if (secondDeparture.type === 'vline') secondClassName = ' vline'
+
+        $('div.bottomRow').className = `bottomRow${secondClassName}`
+        $('div.bottomRow > span:nth-child(1)').textContent = formatTime(new Date(secondDeparture.scheduledDepartureTime))
+        $('div.bottomRow > span:nth-child(2)').textContent = secondDeparture.destination
+
+        let secondStoppingType = shortenStoppingType(secondDeparture.stoppingType)
+        if (secondDeparture.additionalInfo.via) {
+          secondStoppingType += ' ' + secondDeparture.additionalInfo.via
+        }
+        $('div.bottomRow > span:nth-child(3)').textContent = secondStoppingType
+
+        if (secondDeparture.estimatedDepartureTime)
+          $('div.bottomRow > div > span:nth-child(1)').textContent = secondDeparture.minutesToDeparture
+        else $('div.bottomRow > div > span:nth-child(1)').textContent = '--'
+      } else {
+        $('div.bottomRow').className = `bottomRow`
+        $('div.bottomRow > span:nth-child(1)').textContent = '--'
+        $('div.bottomRow > span:nth-child(2)').textContent = '--'
+        $('div.bottomRow > span:nth-child(3)').textContent = ''
+        $('div.bottomRow > div > span:nth-child(1)').textContent = '--'
+      }
+
+      if (firstDeparture.scheduledDepartureTime !== previousDeparture) {
+        if (firstDeparture.isArrival) {
+          stopScrolling = true
+        } else {
+          setServiceMessageActive(false)
+          if (!firstTime)
+            stopScrolling = true
+          clearTimeout(firstRowTimeout)
+          clearTimeout(firstRowPause)
+          clearTimeout(secondRowTimeout)
+          clearTimeout(secondRowPause)
+
+          drawBottomRow()
+        }
+      }
+
+      clearTimeout(showBurnLineTimeout)
+      previousDeparture = firstDeparture.scheduledDepartureTime
+
+      if (!showingBurnLine) {
+        let actualDepartureTime = new Date(firstDeparture.actualDepartureTime)
+        let difference = actualDepartureTime - new Date()
+
+        showBurnLineTimeout = setTimeout(() => {
+          if (burnLinesShown.includes(firstDeparture.actualDepartureTime)) return
+          burnLinesShown.push(firstDeparture.actualDepartureTime)
+          burnLinesShown = burnLinesShown.slice(-10)
+
+          showingBurnLine = true
+
+          $('.burnLine').className = 'burnLine active'
           $('div.actual div span:nth-child(1)').textContent = 'Now'
           $('div.actual div span:nth-child(2)').textContent = ''
-        }
-      } else {
-        $('div.actual div span:nth-child(1)').textContent = '--'
-        $('div.actual div span:nth-child(2)').textContent = 'min'
+
+          setTimeout(() => {
+            showingStandClear = true
+            stopScrolling = true
+            setStandClear()
+          }, 1000 * 15)
+        }, difference - 1000 * 20)
       }
-
-      let firstStoppingType = firstDeparture.stoppingType
-      if (firstDeparture.additionalInfo.via) {
-        firstStoppingType += ' ' + firstDeparture.additionalInfo.via
-      }
-
-      firstStoppingTypeP.textContent = firstStoppingType
-      firstStoppingPatternP.textContent = firstDeparture.stoppingPattern
-      firstStoppingPatternP.setAttribute('data-text', firstDeparture.stoppingPattern)
-
-      if (firstDeparture.additionalInfo.notTakingPassengers) setArrival()
-      else isArrival = false
-    }
-
-    let secondDeparture = departures[1]
-    let secondClassName = ''
-
-    if (secondDeparture) {
-      if (secondDeparture.type === 'vline') secondClassName = ' vline'
-
-      $('div.bottomRow').className = `bottomRow${secondClassName}`
-      $('div.bottomRow > span:nth-child(1)').textContent = formatTime(new Date(secondDeparture.scheduledDepartureTime))
-      $('div.bottomRow > span:nth-child(2)').textContent = secondDeparture.destination
-
-      let secondStoppingType = shortenStoppingType(secondDeparture.stoppingType)
-      if (secondDeparture.additionalInfo.via) {
-        secondStoppingType += ' ' + secondDeparture.additionalInfo.via
-      }
-      $('div.bottomRow > span:nth-child(3)').textContent = secondStoppingType
-
-      if (secondDeparture.estimatedDepartureTime)
-        $('div.bottomRow > div > span:nth-child(1)').textContent = secondDeparture.minutesToDeparture
-      else $('div.bottomRow > div > span:nth-child(1)').textContent = '--'
-    } else {
-      $('div.bottomRow').className = `bottomRow`
-      $('div.bottomRow > span:nth-child(1)').textContent = '--'
-      $('div.bottomRow > span:nth-child(2)').textContent = '--'
-      $('div.bottomRow > span:nth-child(3)').textContent = ''
-      $('div.bottomRow > div > span:nth-child(1)').textContent = '--'
-    }
-
-    if (firstDeparture.scheduledDepartureTime !== previousDeparture) {
-      if (firstDeparture.isArrival) {
-        stopScrolling = true
-      } else {
-        setServiceMessageActive(false)
-        if (!firstTime)
-          stopScrolling = true
-        clearTimeout(firstRowTimeout)
-        clearTimeout(firstRowPause)
-        clearTimeout(secondRowTimeout)
-        clearTimeout(secondRowPause)
-
-        drawBottomRow()
-      }
-    }
-
-    clearTimeout(showBurnLineTimeout)
-    previousDeparture = firstDeparture.scheduledDepartureTime
-
-    if (!showingBurnLine) {
-      let actualDepartureTime = new Date(firstDeparture.actualDepartureTime)
-      let difference = actualDepartureTime - new Date()
-
-      showBurnLineTimeout = setTimeout(() => {
-        if (burnLinesShown.includes(firstDeparture.actualDepartureTime)) return
-        burnLinesShown.push(firstDeparture.actualDepartureTime)
-        burnLinesShown = burnLinesShown.slice(-10)
-
-        showingBurnLine = true
-
-        $('.burnLine').className = 'burnLine active'
-        $('div.actual div span:nth-child(1)').textContent = 'Now'
-        $('div.actual div span:nth-child(2)').textContent = ''
-
-        setTimeout(() => {
-          showingStandClear = true
-          stopScrolling = true
-          setStandClear()
-        }, 1000 * 15)
-      }, difference - 1000 * 20)
+    } catch (e) {
+      setListenAnnouncements()
     }
   })
 }

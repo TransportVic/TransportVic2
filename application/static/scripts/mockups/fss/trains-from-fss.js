@@ -218,9 +218,16 @@ function updateBody() {
     if (err) return setListenAnnouncements()
     setFullMessageActive(false)
 
-    let departures = body.departures
-    setDestinationsRow(departures)
-    updateDiagram(departures)
+    try {
+      let departures = body.departures
+      setDestinationsRow(departures)
+      updateDiagram(departures)
+
+      setSVGSize()
+      $('#cclSVG').setAttribute('display', '')
+    } catch (e) {
+      setListenAnnouncements()
+    }
   })
 }
 

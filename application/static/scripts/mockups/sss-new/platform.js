@@ -128,59 +128,63 @@ function addStoppingPattern(side, stops) {
 }
 
 function processDepartures(departures, side, firstTime) {
-  let sideDiv = $('.' + side)
-  function $$(selector) { return $(selector, sideDiv) }
+  try {
+    let sideDiv = $('.' + side)
+    function $$(selector) { return $(selector, sideDiv) }
 
-  let firstDeparture = departures[0]
-  if (firstDeparture) {
-    setMessagesActive(side, false)
+    let firstDeparture = departures[0]
+    if (firstDeparture) {
+      setMessagesActive(side, false)
 
-    let firstDepartureClass = firstDeparture.codedLineName
-    if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
+      let firstDepartureClass = firstDeparture.codedLineName
+      if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
 
-    let {destination} = firstDeparture
+      let {destination} = firstDeparture
 
-    let firstStoppingType = firstDeparture.stoppingType
-    if (firstDeparture.additionalInfo.via) {
-      firstStoppingType += ' ' + firstDeparture.additionalInfo.via
-    }
+      let firstStoppingType = firstDeparture.stoppingType
+      if (firstDeparture.additionalInfo.via) {
+        firstStoppingType += ' ' + firstDeparture.additionalInfo.via
+      }
 
-    if (firstDeparture.connections) {
-      firstStoppingType += firstDeparture.connections.map(connection => {
-        return `, Change at ${connection.changeAt.slice(0, -16)} for ${connection.for.slice(0, -16)}`
-      }).join('')
-    }
+      if (firstDeparture.connections) {
+        firstStoppingType += firstDeparture.connections.map(connection => {
+          return `, Change at ${connection.changeAt.slice(0, -16)} for ${connection.for.slice(0, -16)}`
+        }).join('')
+      }
 
-    $$('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
+      $$('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
 
-    $$('.firstDepartureInfo .platform').textContent = firstDeparture.platform
-    $$('.firstDepartureInfo .scheduled').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+      $$('.firstDepartureInfo .platform').textContent = firstDeparture.platform
+      $$('.firstDepartureInfo .scheduled').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
 
-    if (firstDeparture.minutesToDeparture === 0) {
-      $$('.firstDepartureInfo .departingDiv .departing').textContent = 'Now'
-      $$('.firstDepartureInfo .departingDiv .min').textContent = ''
+      if (firstDeparture.minutesToDeparture === 0) {
+        $$('.firstDepartureInfo .departingDiv .departing').textContent = 'Now'
+        $$('.firstDepartureInfo .departingDiv .min').textContent = ''
+      } else {
+        $$('.firstDepartureInfo .departingDiv .departing').textContent = firstDeparture.minutesToDeparture || '-- '
+        $$('.firstDepartureInfo .departingDiv .min').textContent = 'min'
+      }
+
+      $$('.firstDeparture .firstDestination').textContent = shorternName(destination)
+      $$('.firstDeparture .firstStoppingType').textContent = firstStoppingType
+
+      let same = addStoppingPattern(side, firstDeparture.additionalInfo.screenStops)
+
+      if (!same) {
+        if (!firstTime)
+          stopScrolling[side] = true
+
+        clearTimeout(connectionsScrollTimeout[side])
+        setTimeout(() => {
+          stopScrolling[side] = false
+          scrollConnections(side, $$('.firstDeparture .firstStoppingType'))
+        }, 30)
+      }
     } else {
-      $$('.firstDepartureInfo .departingDiv .departing').textContent = firstDeparture.minutesToDeparture || '-- '
-      $$('.firstDepartureInfo .departingDiv .min').textContent = 'min'
+      setNoDepartures(side)
     }
-
-    $$('.firstDeparture .firstDestination').textContent = shorternName(destination)
-    $$('.firstDeparture .firstStoppingType').textContent = firstStoppingType
-
-    let same = addStoppingPattern(side, firstDeparture.additionalInfo.screenStops)
-
-    if (!same) {
-      if (!firstTime)
-        stopScrolling[side] = true
-
-      clearTimeout(connectionsScrollTimeout[side])
-      setTimeout(() => {
-        stopScrolling[side] = false
-        scrollConnections(side, $$('.firstDeparture .firstStoppingType'))
-      }, 30)
-    }
-  } else {
-    setNoDepartures(side)
+  } catch (e) {
+    setFullMessageActive(side, true)
   }
 }
 
