@@ -15,24 +15,21 @@ for departure in departures
       let indexOfCurrentStation = departure.trip.stopTimings.map(stop => stop.stopName).indexOf(stopName)
       let stopsAt = departure.trip.stopTimings.filter((_, i) => i > indexOfCurrentStation).map(stop => stop.stopName)
       let cityLoopStationFullNames = departure.cityLoopConfig.map(stn => cityLoopStationAbbreviations[stn])
-
-      stopsAt = stopsAt.filter(station => !cityLoopStationNames.includes(station))
       
-      if (departure.trip.direction === 'Up')
-        stopsAt = stopsAt.concat(cityLoopStationFullNames)
-      else if (cityLoopStationNames.includes(station.stopName)) {
-        indexOfCurrentStation = cityLoopStationFullNames.indexOf(stopName)
-        stopsAt = cityLoopStationFullNames.filter((stn, i) => i > indexOfCurrentStation).concat(stopsAt)
-      }
-
-      stopsAt = stopsAt.filter(Boolean).filter((e,i,a) => a.indexOf(e) === i)
-      if (departure.forming) {
-        stopsAt = stopsAt.concat(departure.forming.stopTimings.map(stop => stop.stopName))
-          .filter((e, i, a) => a.indexOf(e) === i)
-      }
       let routeName = departure.trip.routeName
-      if (departure.forming)
-        routeName = departure.forming.routeName
+      if (!departure.isTrainReplacement) {
+        stopsAt = stopsAt.filter(station => !cityLoopStationNames.includes(station))
+        
+        if (departure.trip.direction === 'Up')
+          stopsAt = stopsAt.concat(cityLoopStationFullNames)
+        else if (cityLoopStationNames.includes(station.stopName)) {
+          indexOfCurrentStation = cityLoopStationFullNames.indexOf(stopName)
+          stopsAt = cityLoopStationFullNames.filter((stn, i) => i > indexOfCurrentStation).concat(stopsAt)
+        }
+
+        stopsAt = stopsAt.filter(Boolean).filter((e,i,a) => a.indexOf(e) === i)
+      }
+      
     input(type='hidden' name='stops-at' value=stopsAt.join(','))
     input(type='hidden' name='platform' value=departure.platform || '')
     input(type='hidden' name='run' value=departure.runID)
