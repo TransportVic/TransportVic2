@@ -63,7 +63,6 @@ function shorternName(stopName) {
   if (stopName === 'North Melbourne') return 'Nth Melbourne'
   if (stopName === 'South Kensington') return 'Sth Kensington'
   if (stopName === 'Flemington Racecourse') return 'Flemington Races'
-  if (stopName === 'Flinders Street') return 'Flinders St'
 
   return stopName
 }
