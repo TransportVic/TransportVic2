@@ -380,5 +380,6 @@ module.exports = {
 
     return txt
   }),
-  uptime: () => process.uptime() * 1000
+  uptime: () => process.uptime() * 1000,
+  getStopName: stopName => stopName.split('/').slice(0, -1).join('/')
 }

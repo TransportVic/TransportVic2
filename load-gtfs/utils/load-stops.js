@@ -11,7 +11,7 @@ module.exports = async function(stops, data, stopsLookup) {
     let datamartStop = stopsLookup[stop.stopGTFSID]
     if (!datamartStop) datamartStop = { mykiZones: [], services: [] }
 
-    let mergeName = stop.fullStopName.split('/')[0]
+    let mergeName = utils.getStopName(stop.fullStopName)
     if (utils.isStreet(mergeName) || !mergeName.includes(' ')) {
       mergeName = stop.fullStopName
     }
