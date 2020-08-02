@@ -233,7 +233,7 @@ async function animateScrollingText(side, connectionsSpan, connectionsSize) {
   for (let i = 0; i < iterationCount; i++) {
     if (stopScrolling[side]) {
       stopScrolling[side] = false
-      return connectionsSpan
+      return
     }
 
     xPosition += shiftWidth
@@ -248,7 +248,7 @@ async function animateScrollingText(side, connectionsSpan, connectionsSize) {
 }
 
 function scrollConnections(side, connectionsSpan) {
-  if (stopScrolling[side]) return
+  if (stopScrolling[side] || !connectionsSpan) return
 
   let connectionsWidth = parseInt(getComputedStyle(connectionsSpan).width)
   let connectionsSize = connectionsSpan.scrollWidth - connectionsSpan.clientWidth
