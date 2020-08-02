@@ -208,7 +208,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     }
 
     if (!platform && !isTrainReplacement) return // run too far away
-    const runID = run.vehicle_descriptor.id
+    const runID = run.vehicle_descriptor.id || ''
     const vehicleType = run.vehicle_descriptor.description
 
     const scheduledDepartureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
@@ -251,7 +251,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     possibleDestinations = possibleDestinations.map(dest => dest + ' Railway Station')
 
     let usedLive = false
-    let isUpTrip = runID % 2 === 0
+    let isUpTrip = runID.slice(1) % 2 === 0
     if (routeName === 'Stony Point') {
       isUpTrip = destination === 'Frankston'
     }
