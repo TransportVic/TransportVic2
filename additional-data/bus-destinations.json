@@ -23,6 +23,15 @@
       "Boronia Road/Midland Highway": "Huntly",
       "Rossmore Avenue/North Road": "Yallourn North"
     },
+    "7": {
+      "Head Street/Liddiard Road": "Traralgon"
+    },
+    "8": {
+      "Cath Teychenne Centre": "Traralgon"
+    },
+    "9": {
+      "Cath Teychenne Centre": "Traralgon"
+    },
     "10": {
       "Coltman Plaza": "Alfredton",
       "Skylark Court/Blackbird Circuit": "Lara South"
@@ -45,6 +54,9 @@
     },
     "15": {
       "Ryan Street/Water Street": "Brown Hill"
+    },
+    "19": {
+      "McPhillips Road/High Street": "Bannockburn"
     },
     "20": {
       "Wilson Street/Kline Street": "Canadian"
@@ -716,6 +728,36 @@
     "6-Swo": {
       "Uniting Church": "Woomelang",
       "Newsagency": "Sea Lake"
+    },
+    "6-Bor": {
+      "Information Centre": "Boort"
+    },
+    "6-SY4": {
+      "Highlands Road/Delatite Road": "Wimble Street"
+    },
+    "6-GIV": {
+      "Inverleigh Public Hall": "Inverleigh",
+      "Moorabool Street/Malop Street": "Geelong"
+    },
+    "6-GVL": {
+      "Visitor Information Centre": "Apollo Bay"
+    },
+    "6-a26": {
+      "Supreme Court Hotel": "Maryborough"
+    },
+    "6-a27": {
+      "Supreme Court Hotel": "Maryborough"
+    },
+    "6-MtE": {
+      "Mount Egerton General Store": "Mount Egerton"
+    },
+    "6-rok": {
+      "Stockland SC": "Ballarat",
+      "Health Centre": "Rokewood"
+    },
+    "6-BSV": {
+      "Stockland SC": "Ballarat",
+      "Nunns Road/Carngham-Linton Road": "Snake Valley"
     }
   },
   "generic": {
@@ -792,6 +834,8 @@
     "Post Office North": "Lakes Entrance",
     "Ouyen Newsagency": "Ouyen",
     "BP Pinnaroo": "Pinnaroo",
-    "Campbellfield Plaza": "Campbellfield"
+    "Campbellfield Plaza": "Campbellfield",
+    "Goornong Newsagency": "Goornong",
+    "Ballarat Base Hospital": "Ballarat"
   }
 }

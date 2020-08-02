@@ -80,7 +80,7 @@ database.connect({}, async err => {
       if (lastStop.includes('School') || lastStop.includes('College')) directionName = mostCommonDestination
       else directionName = lastStop
 
-      let directionShortName = directionName.split('/')[0]
+      let directionShortName = directionName.split('/')[0].replace('Shopping Centre', 'SC')
       if (!utils.isStreet(directionShortName)) directionName = directionShortName
 
       if (routeData.flags && routeData.flags[1]) {

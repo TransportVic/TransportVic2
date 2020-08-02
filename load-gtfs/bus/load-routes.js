@@ -67,6 +67,10 @@ database.connect({
         return 'Skybus - Skybus Link'
       }
 
+      if (routeGTFSID === '6-SY4') {
+        return 'Wimble Street - Seymour'
+      }
+
       if (loopDirections[routeGTFSID]) {
         if (newRouteName.includes('Loop')) {
           if (!loopDirections[routeGTFSID][1])
