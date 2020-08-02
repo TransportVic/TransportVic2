@@ -18,6 +18,9 @@ if (modules.tracker && modules.tracker.bus)
 if (modules.tracker && modules.tracker.vline)
   require('../modules/vline-tracker')
 
+if (modules.preloadCCL)
+  require('../modules/preload-ccl')
+
 module.exports = class MainServer {
   constructor () {
     this.app = express()
