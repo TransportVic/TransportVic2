@@ -157,14 +157,6 @@ async function getDeparturesFromPTV(stop, db) {
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', day, routeGTFSID)
       if (!trip) {
         trip = await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
-
-        let hasSeenStop = false
-        trip.stopTimings = trip.stopTimings.filter(stop => {
-          if (allGTFSIDs.includes(stop.stopGTFSID)) {
-            hasSeenStop = true
-          }
-          return hasSeenStop
-        })
       }
       let vehicleDescriptor = run.vehicle_descriptor || {}
 
@@ -306,16 +298,27 @@ async function getDepartures(stop, db) {
       } else return fullStopName
     }).filter((e, i, a) => a.indexOf(e) === i).length > 1
 
+    let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
+
     departures = departures.map(departure => {
       let {trip} = departure
-      let departureBayID = trip.stopTimings[0].stopGTFSID
+
+      let hasSeenStop = false
+      let upcomingStops = trip.stopTimings.filter(tripStop => {
+        if (stopGTFSIDs.includes(tripStop.stopGTFSID)) {
+          hasSeenStop = true
+        }
+        return hasSeenStop
+      })
+
+      let departureBayID = upcomingStops[0].stopGTFSID
       let bay = busBays[departureBayID]
-      let departureRoad = (trip.stopTimings[0].stopName.split('/')[1] || '').replace(/^\d+[a-zA-z]? /)
+      let departureRoad = (upcomingStops[0].stopName.split('/').slice(-1)[0] || '').replace(/^\d+[a-zA-z]? /)
 
       departure.bay = bay
       departure.departureRoad = departureRoad
 
-      let importantStops = trip.stopTimings.map(stop => stop.stopName.split('/')[0])
+      let importantStops = upcomingStops.map(stop => utils.getStopName(stop.stopName))
         .filter((e, i, a) => a.indexOf(e) === i)
         .slice(1, -1)
         .filter(utils.isCheckpointStop)
