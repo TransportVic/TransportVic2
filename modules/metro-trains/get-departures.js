@@ -252,6 +252,9 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
     let usedLive = false
     let isUpTrip = runID % 2 === 0
+    if (routeName === 'Stony Point') {
+      isUpTrip = destination === 'Frankston'
+    }
 
     let direction = isUpTrip ? 'Up' : 'Down'
     if (isTrainReplacement) direction = { $in: ['Up', 'Down'] }
