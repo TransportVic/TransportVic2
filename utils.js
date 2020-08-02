@@ -197,6 +197,7 @@ module.exports = {
     .replace('St..', 'St. ')
     .replace('Ret Village', 'Retirement Village')
     .replace(' SC', ' Shopping Centre')
+    .replace(/Cresent/g, 'Crescent')
 
     return name.replace(/  +/g, ' ')
   },
@@ -341,9 +342,9 @@ module.exports = {
       || shortName.endsWith('Drive') || shortName.endsWith('Avenue')
       || shortName.endsWith('Grove') || shortName.endsWith('Court')
       || shortName.endsWith('Highway') || shortName.endsWith('Terrace')
-      || shortName.endsWith('Way') || shortName.endsWith('Cresent')
+      || shortName.endsWith('Way') || shortName.endsWith('Crescent')
       || shortName.endsWith('Place') || shortName.endsWith('Boulevard')
-      || shortName.endsWith('Cresent') || shortName.endsWith('Freeway'))
+      || shortName.endsWith('Crescent') || shortName.endsWith('Freeway'))
       || shortName.endsWith('Lane')
   },
   isCheckpointStop: stopName => stopName.includes('University')
