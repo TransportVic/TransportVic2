@@ -1,0 +1,47 @@
+div.content {
+  background-color: #222222 !important;
+  color: #ffffff !important;
+}
+
+div.topLineBanner {
+  background-color: #ffffff !important;
+}
+
+div.platform {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+div.firstDepartureRight div.minutesToDeparture {
+  border: solid calc(var(--height) * 0.001) #ffffff !important;
+  box-sizing: border-box;
+}
+
+div.stoppingPattern {
+  border-top: solid calc(var(--height) * 0.004) #ffffff !important;
+  border-bottom: solid calc(var(--height) * 0.004) #ffffff !important;
+
+  background-color: #222222 !important;
+}
+
+div.stopsColumn:nth-child(1) > div > div.stationRow:nth-child(2) p {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+div.stationRow {
+  color: #ffffff !important;
+}
+
+div.stationRow > img {
+  filter: invert(100) !important;
+}
+
+div.nextDepartures {
+  background-color: #222222 !important;
+  color: #ffffff !important;
+}
+
+div.lineColour {
+  background-color: #ffffff !important;
+}
