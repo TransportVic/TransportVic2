@@ -9,14 +9,17 @@
       "32 Harris Road": "Elliminyt",
       "Doonan Street/McLennan Street": "Mooroopna",
       "Barkly Street/Ingor Street": "Ararat",
-      "Albatross Road/Point Road": "Kalimna"
+      "Albatross Road/Point Road": "Kalimna",
+      "Opp 70 Derby Road": "Hedges"
     },
     "2": {
       "McCallum Street/Campbell Street": "Swan Hill South (Loop)",
-      "Bronsdon Street/Capes Road": "Lakes Entrance North"
+      "Bronsdon Street/Capes Road": "Lakes Entrance North",
+      "Griffiths Street/Bendigo-Maryborough Road": "Princes Park"
     },
     "3": {
-      "Thorpes Lane/McCullough Street": "Lakes Entrance East"
+      "Thorpes Lane/McCullough Street": "Lakes Entrance East",
+      "East Maryborough Neighbourhood Centre": "Pascoe"
     },
     "5": {
       "Windmill Street/Waratah Road": "Huntly",
@@ -758,6 +761,11 @@
     "6-BSV": {
       "Stockland SC": "Ballarat",
       "Nunns Road/Carngham-Linton Road": "Snake Valley"
+    },
+    "6-ArM": {
+      "Havelock Street/Clarendon Street": "Maryborough",
+      "Alma Street/Tuaggra Street": "Maryborough",
+      "Barkly Street/Ingor Street": "Ararat"
     }
   },
   "generic": {
