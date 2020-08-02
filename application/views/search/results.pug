@@ -149,11 +149,16 @@ for busRoute in routes.filter(route => route.mode === 'bus' && route.directions[
         else if (gtfsID === '12') type = 'Monash Uni Shuttle Bus'
         
         let name = ''
-
+        let via = ''
+        if (busRoute.routeName.includes(' via ')) {
+          let index = busRoute.routeName.indexOf(' via ')
+          via = busRoute.routeName.slice(index)
+        }
+        
         if (busRoute.directions.length === 1 || busRoute.routeName.includes('Loop')) {
           name = busRoute.routeName
         } else {
-          name = `${busRoute.directions[0].directionName} - ${busRoute.directions[1].directionName}`
+          name = `${busRoute.directions[0].directionName} - ${busRoute.directions[1].directionName}${via}`
         }
         if (operationDate) {
           name += ` (${operationDate.type[0].toUpperCase()}${operationDate.type.slice(1)} ${operationDate.operationDateReadable})`

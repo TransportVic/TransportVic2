@@ -28,15 +28,36 @@ database.connect({
 }, async err => {
   let routes = database.getCollection('routes')
 
-  let ptvRoutes = (await ptvAPI('/v3/routes?route_types=2')).routes
-  ptvRoutes = ptvRoutes.filter(route => {
+  let ptvRouteData = (await ptvAPI('/v3/routes?route_types=2')).routes.filter(route => {
     return route.route_gtfs_id.startsWith(`${gtfsID}-`)
-  }).reduce((acc, route) => {
-    let adjusted = utils.adjustRouteName(route.route_name)
+  }).map(route => {
+    route.routeGTFSID = route.route_gtfs_id.replace(/-0+/, '-')
+    route.adjustedName = utils.adjustRouteName(route.route_name)
+    route.originalName = route.route_name
 
-    acc[route.route_gtfs_id.replace(/-0+/, '-')] = adjusted
+    return route
+  })
+
+  let routesNeedingVia = []
+  let routeNames = {}
+
+  let ptvRoutes = ptvRouteData.reduce((acc, route) => {
+    let {routeGTFSID, adjustedName} = route
+
+    if (routeNames[adjustedName]) {
+      routesNeedingVia.push(routeNames[adjustedName])
+      routesNeedingVia.push(routeGTFSID)
+    } else {
+      routeNames[adjustedName] = routeGTFSID
+    }
+
+    acc[routeGTFSID] = adjustedName
     return acc
   }, {})
+
+  routesNeedingVia.forEach(routeGTFSID => {
+    ptvRoutes[routeGTFSID] = ptvRouteData.find(route => route.routeGTFSID === routeGTFSID).originalName
+  })
 
   ptvRoutes['4-676'] = 'Lilydale East Loop'
 
