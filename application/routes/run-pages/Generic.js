@@ -118,8 +118,8 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   let fullDestination = destination
   let fullOrigin = origin
 
-  let destinationShortName = destination.split('/')[0]
-  let originShortName = origin.split('/')[0]
+  let destinationShortName = utils.getStopName(destination)
+  let originShortName = utils.getStopName(origin)
 
   if (!utils.isStreet(destinationShortName)) destination = destinationShortName
   if (!utils.isStreet(originShortName)) origin = originShortName
@@ -137,10 +137,10 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
     destination = coachDestinations[destination] || destination
     origin = coachDestinations[origin] || origin
 
-    let destShortName = destination.split('/')[0]
+    let destShortName = utils.getStopName(destination)
     if (!utils.isStreet(destShortName)) destination = destShortName
 
-    let originShortName = origin.split('/')[0]
+    let originShortName = utils.getStopName(origin)
     if (!utils.isStreet(originShortName)) origin = originShortName
   } else {
     let serviceData = busDestinations.service[trip.routeNumber] || busDestinations.service[trip.routeGTFSID] || {}
@@ -161,7 +161,7 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   let importantStops = []
 
   if (trip.mode === 'bus')
-    importantStops = trip.stopTimings.map(stop => stop.stopName.split('/')[0])
+    importantStops = trip.stopTimings.map(stop => utils.getStopName(stop.stopName))
       .filter((e, i, a) => a.indexOf(e) === i)
       .slice(1, -1)
       .filter(utils.isCheckpointStop)

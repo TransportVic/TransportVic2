@@ -50,7 +50,7 @@ async function loadDepartures(req, res) {
       + `${day}#stop-${departure.trip.stopTimings[0].stopGTFSID}`
 
     let fullDestination = departure.trip.destination
-    let destinationShortName = departure.trip.destination.split('/')[0]
+    let destinationShortName = utils.getStopName(departure.trip.destination)
     let {destination} = departure.trip
     if (!utils.isStreet(destinationShortName)) destination = destinationShortName
     departure.destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')

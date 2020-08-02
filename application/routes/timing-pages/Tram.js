@@ -47,7 +47,7 @@ async function loadDepartures(req, res) {
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
       + `${utils.getYYYYMMDDNow()}/#stop-${stopGTFSID}`
 
-    let destinationShortName = departure.trip.destination.split('/')[0]
+    let destinationShortName = utils.getStopName(departure.trip.destination)
     let {destination} = departure.trip
     if (!utils.isStreet(destinationShortName)) destination = destinationShortName
     departure.destination = tramDestinations[destination] || destination

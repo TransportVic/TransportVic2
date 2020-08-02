@@ -223,8 +223,10 @@ async function getDepartures(stop, db) {
       let {destination} = departure.trip
       destination = destination.replace('Shopping Centre', 'SC')
       destination = destinationOverrides[destination] || destination
-      let shortName = destination.split('/')[0]
+
+      let shortName = utils.getStopName(destination)
       if (!utils.isStreet(shortName)) destination = shortName
+      
       departure.destination = destination
 
       let departureBayID = departure.trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID)).stopGTFSID
