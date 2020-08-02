@@ -91,7 +91,7 @@ database.connect({}, async err => {
         directionName = `Waterfront City Docklands (${gtfsDirection == 0 ? 'Anti-' : ''}Clockwise)`
       }
 
-      let serviceData = busDestinations.service[routeData.routeNumber] || busDestinations.service[routeGTFSID] || {}
+      let serviceData = busDestinations.service[routeGTFSID] || busDestinations.service[routeData.routeNumber] || {}
 
       directionName = serviceData[directionName]
         || busDestinations.generic[directionName]

@@ -10,7 +10,8 @@
       "Doonan Street/McLennan Street": "Mooroopna",
       "Barkly Street/Ingor Street": "Ararat",
       "Albatross Road/Point Road": "Kalimna",
-      "Opp 70 Derby Road": "Hedges"
+      "Opp 70 Derby Road": "Hedges",
+      "K-Mart Car Park": "Albury"
     },
     "2": {
       "McCallum Street/Campbell Street": "Swan Hill South (Loop)",
@@ -19,18 +20,25 @@
     },
     "3": {
       "Thorpes Lane/McCullough Street": "Lakes Entrance East",
-      "East Maryborough Neighbourhood Centre": "Pascoe"
+      "East Maryborough Neighbourhood Centre": "Pascoe",
+      "Goulburn Ovens Institute of TAFE (William Orr)": "TAFE"
+    },
+    "4": {
+      "Warrumbungle Drive/Kakadu Drive": "Connolly Park"
     },
     "5": {
       "Windmill Street/Waratah Road": "Huntly",
       "Boronia Road/Midland Highway": "Huntly",
-      "Rossmore Avenue/North Road": "Yallourn North"
+      "Rossmore Avenue/North Road": "Yallourn North",
+      "Roundabout": "Archer"
     },
     "7": {
-      "Head Street/Liddiard Road": "Traralgon"
+      "Head Street/Liddiard Road": "Traralgon",
+      "Harmony Village": "Market Place"
     },
     "8": {
-      "Cath Teychenne Centre": "Traralgon"
+      "Cath Teychenne Centre": "Traralgon",
+      "277 Waranga Drive": "Kialla"
     },
     "9": {
       "Cath Teychenne Centre": "Traralgon"
@@ -766,6 +774,32 @@
       "Havelock Street/Clarendon Street": "Maryborough",
       "Alma Street/Tuaggra Street": "Maryborough",
       "Barkly Street/Ingor Street": "Ararat"
+    },
+    "6-a44": {
+      "Post Office": "Myrtleford",
+      "Wodonga Secondary College": "Wodonga"
+    },
+    "6-MtB": {
+      "Falls Creek Coaches": "Mount Beauty",
+      "Snow White Depot": "Albury"
+    },
+    "6-a31": {
+      "Ford Street/Camp Street": "Beechworth"
+    },
+    "6-Wyc": {
+      "Post Office": "Wycheproof"
+    },
+    "6-906": {
+      "West End Plaza": "Albury",
+      "Kotthoff Street/McDonald Road": "Lavington",
+      "Heriot Street/Hague Street": "Lavington"
+    },
+    "6-907": {
+      "Hume Public School": "Lavington"
+    },
+    "6-908": {
+      "Thurgoona Community Centre": "Thurgoona",
+      "Feathertop Circuit": "Thurgoona"
     }
   },
   "generic": {
@@ -829,7 +863,7 @@
     "Post Office/Calder Freeway": "Wycheproof",
     "McCallum Street/Campbell Street": "Swan Hill",
     "General Store/Mallee Highway": "Tooleybuc",
-    "Bridgekeepers Cottage/Murray Street": "Tooleybuc",
+    "Bridgekeepers Cottage": "Tooleybuc",
     "Memorial Park/Grant Street": "Yarram",
     "Jennings Street/Northern Highway": "Heathcote",
     "Scots' Church": "Melbourne City",
@@ -844,6 +878,10 @@
     "BP Pinnaroo": "Pinnaroo",
     "Campbellfield Plaza": "Campbellfield",
     "Goornong Newsagency": "Goornong",
-    "Ballarat Base Hospital": "Ballarat"
+    "Ballarat Base Hospital": "Ballarat",
+    "Royal Hotel": "Corowa",
+    "Tallangatta Information Centre": "Tallangatta",
+    "Corryong Newsagency": "Corryong",
+    "Wodonga Post Office": "Wodonga"
   }
 }

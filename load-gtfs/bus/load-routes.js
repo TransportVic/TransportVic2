@@ -106,6 +106,26 @@ database.connect({
       return newRouteName
     }, (routeGTFSID, routeNumber) => {
       if (routeGTFSID === '6-GVL') return null
+      if (routeGTFSID === '6-a28') return null
+
+      if (routeGTFSID === '6-R54') return null
+
+      if (routeGTFSID === '6-gld') return null
+
+      if (routeGTFSID === '6-a48') return null
+      if (routeGTFSID === '6-a49') return null
+
+      if (routeGTFSID === '6-946') return null
+      if (routeGTFSID === '6-949') return null
+
+      if (routeGTFSID === '6-906') return '906'
+      if (routeGTFSID === '6-907') return '907'
+      if (routeGTFSID === '6-908') return '908'
+
+      if (routeGTFSID === '6-WN1') return '1'
+      if (routeGTFSID === '6-WN2') return '2'
+      if (routeGTFSID === '6-WN3') return '3'
+
       return routeNumber
     })
   }
