@@ -9,6 +9,8 @@ const departureUtils = require('../utils/get-train-timetables')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
 
+const covidCancelledTrips = require('../../additional-data/covid-cancelled')
+
 let ptvAPILocks = {}
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
@@ -342,12 +344,31 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
     if (routeID === 99 && stationName === 'flinders street') destination = 'City Loop'
 
+    let message = ''
+
+    if (cancelled) {
+      let departureStop = trip.stopTimings[0]
+      let minutesDifference = scheduledDepartureTimeMinutes - departure.departureTimeMinutes
+      let departureTime = scheduledDepartureTime.clone().subtract(minutesDifference, 'minutes')
+
+      let day = departureTime.isoWeekday()
+
+      let isWeekday = 0 < day && day < 6
+      let key = isWeekday ? 'Weekday' : 'Weekend'
+
+      let covidCancellation = covidCancelledTrips.find(trip => {
+        return trip.runID === runID && trip.days === key
+      })
+
+      if (covidCancellation) message = 'CANCELLED (COVID-19)'
+    }
+
     let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
     let mappedSuspensions = suspensions.map(e => adjustSuspension(e, trip, station.stopName))
     if (mappedSuspensions.length) {
       let firstSuspension = mappedSuspensions.find(suspension => suspension.disruptionStatus !== 'passed')
       if (firstSuspension) {
-        trip.message = `Buses replace trains from ${firstSuspension.startStation.slice(0, -16)} to ${firstSuspension.endStation.slice(0, -16)}`
+        message = `Buses replace trains from ${firstSuspension.startStation.slice(0, -16)} to ${firstSuspension.endStation.slice(0, -16)}`
 
         if (!isTrainReplacement) {
           isTrainReplacement = !!mappedSuspensions.find(suspension => suspension.disruptionStatus === 'current')
@@ -364,7 +385,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       isTrainReplacement,
       cancelled, cityLoopConfig,
       destination, runID, vehicleType, runDestination,
-      suspensions: mappedSuspensions
+      suspensions: mappedSuspensions,
+      message
     })
   })
 
