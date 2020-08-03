@@ -85,4 +85,8 @@ router.get('/colours', async (req, res) => {
   res.render('colours', {operators, tramRoutes, trainLines})
 })
 
+router.get('/covid-19', (req, res) => {
+  res.render('pages/covid-19')
+})
+
 module.exports = router
