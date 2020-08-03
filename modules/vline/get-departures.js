@@ -203,10 +203,15 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
 
     let shortRouteName = getShortRouteName(trip)
     if (vlinePlatform.fullStopName === 'Southern Cross Railway Station' && (platform === '15' || platform === '16')) {
-      if (gippsland.includes(shortRouteName)) {
-        platform += 'A'
+      if (nspTrip) {
+        let nspPlatform = nspTrip.stopTimings[0].platform.replace(/[AB]/, '')
+        if (nspPlatform === platform) platform = nspTrip.stopTimings[0].platform
       } else {
-        platform += 'B'
+        if (gippsland.includes(shortRouteName)) {
+          platform += 'A'
+        } else {
+          platform += 'B'
+        }
       }
     }
 
