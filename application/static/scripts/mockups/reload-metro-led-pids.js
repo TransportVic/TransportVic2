@@ -179,7 +179,10 @@ $.ready(() => {
   legacyDrawText(bottomRow, 'PLEASE WAIT', 1, 0, 0)
 
   checkAndUpdateTrains()
-  setInterval(checkAndUpdateTrains, 1000 * 60)
+  setTimeout(() => {
+    checkAndUpdateTrains()
+    setInterval(checkAndUpdateTrains, 1000 * 30)
+  }, 30000 - (+new Date() % 30000))
 })
 
 window.addEventListener('resize', generateLEDCssCode);

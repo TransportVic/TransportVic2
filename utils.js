@@ -129,13 +129,7 @@ module.exports = {
       name = name.replace(' Station', ' Railway Station')
     }
 
-    name = name.replace('Schhol', 'School')
-    .replace('Chrisholm Institute', 'Chisholm Institute')
-    .replace('Villag/', 'Village/')
-    .replace('Esplande', 'Esplanade')
-    .replace('MacISAAC/', 'MacIsaac/')
-    .replace('VUSC', 'Victoria University Secondary College')
-    .replace(/Freeburgh \w*? ?Hall/, 'Freeburgh Community Hall')
+    name = name.replace(/Freeburgh \w*? ?Hall/, 'Freeburgh Community Hall')
 
     if (name === 'Dalgetty St/Holding St') {
       name = 'Dalgetty Rd/Holding St'
@@ -159,15 +153,15 @@ module.exports = {
     .replace(/Ave?(\b)/g, 'Avenue$1')
     .replace(/Gr(\b)/g, 'Grove$1')
     .replace(/Ct(\b)/g, 'Court$1')
-    .replace(/Cr(\b)/g, 'Cresent$1')
+    .replace(/Cr(\b)/g, 'Crescent$1')
     .replace(/Hwy(\b)/g, 'Highway$1')
     .replace(/Fwy(\b)/g, 'Freeway$1')
     .replace(/Tce(\b)/g, 'Terrace$1')
-    .replace(/Crst(\b)/g, 'Cresent$1')
+    .replace(/Crst(\b)/g, 'Crescent$1')
     .replace(/Pl(\b)/g, 'Place$1')
     .replace(/Bl?vd(\b)/g, 'Boulevard$1')
-    .replace(/Cres(\b)/g, 'Cresent$1')
-    .replace(/Crse(\b)/g, 'Cresent$1')
+    .replace(/Cres(\b)/g, 'Crescent$1')
+    .replace(/Crse(\b)/g, 'Crescent$1')
     .replace(/Ctr(\b)/g, 'Centre$1')
     .replace(/Lt(\b)/g, 'Little$1')
     .replace(/Lwr(\b)/g, 'Lower$1')
@@ -196,12 +190,14 @@ module.exports = {
     .replace(/Vsta(\b)/g, 'Vista$1')
     .replace(/Pkwy(\b)/g, 'Parkway$1')
     .replace(/Sec Col(\b)/g, 'Secondary College$1')
+    .replace(/Rec Res(\b)/g, 'Rec Reserve$1')
     .replace(/SC Senior Campus(\b)/g, 'Secondary College Senior Campus$1')
-    .replace(/([\w ]+) - ([\w ]+) Road/g, '$1-$2 Road')
+    .replace(/([\w ]*?) ?- ?([\w ]*?) Road/g, '$1-$2 Road')
     .replace(/St(\b)/, 'St.$1')
     .replace('St..', 'St. ')
     .replace('Ret Village', 'Retirement Village')
     .replace(' SC', ' Shopping Centre')
+    .replace(/Cresent/g, 'Crescent')
 
     return name.replace(/  +/g, ' ')
   },
@@ -323,13 +319,13 @@ module.exports = {
       body = await request(options[0], {
         timeout: 5000,
         gzip: true,
-        ...(options || {})
+        ...(options[1] || {})
       })
     else
       body = await request({
         timeout: 5000,
         gzip: true,
-        ...options
+        ...options[0]
       })
 
     let url = typeof options[0] === 'string' ? options[0] : options[0].url
@@ -346,9 +342,9 @@ module.exports = {
       || shortName.endsWith('Drive') || shortName.endsWith('Avenue')
       || shortName.endsWith('Grove') || shortName.endsWith('Court')
       || shortName.endsWith('Highway') || shortName.endsWith('Terrace')
-      || shortName.endsWith('Way') || shortName.endsWith('Cresent')
+      || shortName.endsWith('Way') || shortName.endsWith('Crescent')
       || shortName.endsWith('Place') || shortName.endsWith('Boulevard')
-      || shortName.endsWith('Cresent') || shortName.endsWith('Freeway'))
+      || shortName.endsWith('Crescent') || shortName.endsWith('Freeway'))
       || shortName.endsWith('Lane')
   },
   isCheckpointStop: stopName => stopName.includes('University')
@@ -384,5 +380,12 @@ module.exports = {
 
     return txt
   }),
-  uptime: () => process.uptime() * 1000
+  uptime: () => process.uptime() * 1000,
+  getStopName: stopName => {
+    let parts = stopName.split('/')
+    if (parts.length > 1)
+      return parts.slice(0, -1).join('/')
+
+    return stopName
+  }
 }

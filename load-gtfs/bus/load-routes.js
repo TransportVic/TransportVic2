@@ -10,6 +10,7 @@ const datamartModes = require('../datamart-modes')
 const operatorOverrides = require('../../additional-data/operator-overrides')
 const ptvAPI = require('../../ptv-api')
 const loopDirections = require('../../additional-data/loop-direction')
+const gtfsUtils = require('../../gtfs-utils')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
@@ -27,15 +28,36 @@ database.connect({
 }, async err => {
   let routes = database.getCollection('routes')
 
-  let ptvRoutes = (await ptvAPI('/v3/routes?route_types=2')).routes
-  ptvRoutes = ptvRoutes.filter(route => {
+  let ptvRouteData = (await ptvAPI('/v3/routes?route_types=2')).routes.filter(route => {
     return route.route_gtfs_id.startsWith(`${gtfsID}-`)
-  }).reduce((acc, route) => {
-    let adjusted = utils.adjustRouteName(route.route_name)
+  }).map(route => {
+    route.routeGTFSID = route.route_gtfs_id.replace(/-0+/, '-')
+    route.adjustedName = utils.adjustRouteName(route.route_name)
+    route.originalName = route.route_name
 
-    acc[route.route_gtfs_id.replace(/-0+/, '-')] = adjusted
+    return route
+  })
+
+  let routesNeedingVia = []
+  let routeNames = {}
+
+  let ptvRoutes = ptvRouteData.reduce((acc, route) => {
+    let {routeGTFSID, adjustedName} = route
+
+    if (routeNames[adjustedName]) {
+      routesNeedingVia.push(routeNames[adjustedName])
+      routesNeedingVia.push(routeGTFSID)
+    } else {
+      routeNames[adjustedName] = routeGTFSID
+    }
+
+    acc[routeGTFSID] = adjustedName
     return acc
   }, {})
+
+  routesNeedingVia.forEach(routeGTFSID => {
+    ptvRoutes[routeGTFSID] = ptvRouteData.find(route => route.routeGTFSID === routeGTFSID).originalName
+  })
 
   ptvRoutes['4-676'] = 'Lilydale East Loop'
 
@@ -45,9 +67,10 @@ database.connect({
   let routeData = utils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'routes.txt')).toString())
   let shapeFiles = fs.readdirSync(splicedGTFSPath).filter(e => e.startsWith('shapes'))
 
-  await async.forEachSeries(shapeFiles, async shapeFile => {
-    let shapeJSON = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, shapeFile)))
-    await loadRoutes(routes, gtfsID, routeData, shapeJSON, (routeGTFSID, routeNumber, routeName) => {
+  let allRoutes = routeData.map(r => gtfsUtils.simplifyRouteGTFSID(r[0])).filter((e, i, a) => a.indexOf(e) === i)
+
+  async function load(shapeJSON) {
+    return await loadRoutes(routes, gtfsID, routeData, shapeJSON, (routeGTFSID, routeNumber, routeName) => {
       if (operatorOverrides[routeGTFSID]) return operatorOverrides[routeGTFSID]
       if (serviceLookup[routeGTFSID]) return serviceLookup[routeGTFSID].operator
 
@@ -65,6 +88,10 @@ database.connect({
         return 'Skybus - Skybus Link'
       }
 
+      if (routeGTFSID === '6-SY4') {
+        return 'Wimble Street - Seymour'
+      }
+
       if (loopDirections[routeGTFSID]) {
         if (newRouteName.includes('Loop')) {
           if (!loopDirections[routeGTFSID][1])
@@ -79,11 +106,52 @@ database.connect({
       return newRouteName
     }, (routeGTFSID, routeNumber) => {
       if (routeGTFSID === '6-GVL') return null
+      if (routeGTFSID === '6-a28') return null
+
+      if (routeGTFSID === '6-R54') return null
+
+      if (routeGTFSID === '6-gld') return null
+
+      if (routeGTFSID === '6-a48') return null
+      if (routeGTFSID === '6-a49') return null
+
+      if (routeGTFSID === '6-946') return null
+      if (routeGTFSID === '6-949') return null
+
+      if (routeGTFSID === '6-906') return '906'
+      if (routeGTFSID === '6-907') return '907'
+      if (routeGTFSID === '6-908') return '908'
+
+      if (routeGTFSID === '6-WN1') return '1'
+      if (routeGTFSID === '6-WN2') return '2'
+      if (routeGTFSID === '6-WN3') return '3'
+
       return routeNumber
     })
+  }
+
+  let routeShapesSeen = []
+
+  await async.forEachSeries(shapeFiles, async shapeFile => {
+    let shapeJSON = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, shapeFile)))
+    routeShapesSeen = routeShapesSeen.concat(await load(shapeJSON))
   })
 
-  await updateStats(datamartMode + '-routes', routeData.length)
-  console.log(`Completed loading in ${routeData.length} ${datamartMode} bus routes`)
+  await async.forEachSeries(allRoutes, async routeGTFSID => {
+    if (!routeShapesSeen.includes(routeGTFSID)) {
+      console.log('Found that', routeGTFSID, 'does not have a route shape programmed in, giving it a default one')
+
+      await load([{
+        shapeID: "",
+        routeGTFSID: routeGTFSID,
+        path: [[ 144, -38 ]],
+        length: 1
+      }])
+      routeShapesSeen.push(routeGTFSID)
+    }
+  })
+
+  await updateStats(datamartMode + '-routes', routeShapesSeen.length)
+  console.log(`Completed loading in ${routeShapesSeen.length} ${datamartMode} bus routes`)
   process.exit()
 })

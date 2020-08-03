@@ -38,6 +38,10 @@
   background-color: #d7832c;
 }
 
+.modeSwitchType.heritage-train {
+  background-color: #593915;
+}
+
 .modeSwitchType img {
   height: calc(2vw + 2vh);
 }
@@ -101,7 +105,7 @@ div.departure:nth-child(even) a.departureInfo.reservationsOnly {
 
 .leftContainer.platform span.bigNumber {
   font-size: calc(3.2vw + 2.5vh);
-  letter-spacing: calc(-0.1vw - 0.1vh);
+  letter-spacing: calc(-0.15vw - 0.15vh);
 }
 
 .leftContainer.platform span.bottomText {
@@ -110,7 +114,7 @@ div.departure:nth-child(even) a.departureInfo.reservationsOnly {
 
 .leftContainer.platform img {
   margin-top: calc(0.75vw + 0.75vh);
-  height: calc(3vw + 3vh);
+  width: calc(3vw + 3vh);
   padding-bottom: calc(0.25vw + 0.25vh);
 }
 
@@ -306,11 +310,11 @@ div.departure:nth-child(odd) a.timing.on-time:nth-child(even) {
 }
 
 div.departure:nth-child(odd) a.timing.late:nth-child(odd) {
-  background-color: #db3d25;
+  background-color: #f51227;
 }
 
 div.departure:nth-child(odd) a.timing.late:nth-child(even) {
-  background-color: #c63825;
+  background-color: #d41b2d;
 }
 
 div.departure:nth-child(odd) a.timing.unknown:nth-child(odd) {
@@ -348,11 +352,11 @@ div.departure:nth-child(even) a.timing.on-time:nth-child(odd) {
 }
 
 div.departure:nth-child(even) a.timing.late:nth-child(even) {
-  background-color: #db3d25;
+  background-color: #f51227;
 }
 
 div.departure:nth-child(even) a.timing.late:nth-child(odd) {
-  background-color: #c63825;
+  background-color: #d41b2d;
 }
 
 div.departure:nth-child(even) a.timing.unknown:nth-child(even) {

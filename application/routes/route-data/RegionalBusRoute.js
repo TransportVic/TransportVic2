@@ -1,6 +1,6 @@
 const express = require('express')
 const utils = require('../../../utils')
-const render = require('./render-bus')
+const render = require('./utils/render-bus')
 const router = new express.Router()
 
 router.get('/:suburb/:routeNumber', async (req, res, next) => {
@@ -29,6 +29,7 @@ router.get('/:suburb/:routeNumber/:directionName/:operationDateType*?', async (r
   let gtfsTimetables = db.getCollection('gtfs timetables')
 
   let {routeNumber, directionName, suburb, operationDateType} = req.params
+  if (['named'].includes(routeNumber)) return next()
 
   let matchingRoute = await routes.findDocument({
     mode: 'bus',

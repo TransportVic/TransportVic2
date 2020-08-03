@@ -9,6 +9,8 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
   let rawRouteNames = {}
   let routeDirectionCount = {}
 
+  let routeGTFSIDsSeen = []
+
   routeData.forEach(line => {
     let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(line[0])
     let rawRouteName = line[3]
@@ -22,6 +24,9 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
 
   await async.forEachSeries(shapeJSON, async shapeFile => {
     let {shapeID, routeGTFSID} = shapeFile
+
+    if (!routeGTFSIDsSeen.includes(routeGTFSID))
+      routeGTFSIDsSeen.push(routeGTFSID)
 
     let matchingRoute = await routes.findDocument({
       routeGTFSID
@@ -88,4 +93,6 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
       await routes.createDocument(newRoute)
     }
   })
+
+  return routeGTFSIDsSeen
 }

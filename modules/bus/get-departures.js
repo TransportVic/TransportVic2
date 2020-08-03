@@ -10,6 +10,10 @@ const EventEmitter = require('events')
 const busStopNameModifier = require('../../additional-data/bus-stop-name-modifier')
 const busBays = require('../../additional-data/bus-bays')
 
+const modules = require('../../modules')
+const config = require('../../config')
+const discordIntegration = modules.tracker && modules.tracker.discordIntegration
+
 let tripLoader = {}
 let tripCache = {}
 
@@ -59,7 +63,7 @@ async function updateBusTrips(db, departures) {
   await async.forEach(viableDepartures, async departure => {
     let {routeGTFSID, origin, destination, departureTime, destinationArrivalTime} = departure.trip
     let smartrakID = parseInt(departure.vehicleDescriptor.id)
-    let {routeNumber} = departure
+    let {routeNumber, busRego} = departure
 
     let data = {
       date, timestamp,
@@ -68,11 +72,23 @@ async function updateBusTrips(db, departures) {
       origin, destination, departureTime, destinationArrivalTime
     }
 
-    await busTrips.replaceDocument({
+    let results = await busTrips.replaceDocument({
       date, routeGTFSID, origin, destination, departureTime, destinationArrivalTime
     }, data, {
       upsert: true
     })
+
+    if (results.result.upserted && discordIntegration && routeNumber === '737') {
+      process.nextTick(async () => {
+        await utils.request(config.discordURL, {
+          method: 'POST',
+          json: true,
+          body: {
+            content: `Tracked: ${busRego ? '#' + busRego : '@' + smartrakID} on the ${departureTime} 737 to ${destination}`
+          }
+        })
+      })
+    }
   })
 }
 
@@ -102,7 +118,7 @@ async function getDeparturesFromPTV(stop, db) {
     let requestTime = now.clone()
     requestTime.add(-30, 'seconds')
 
-    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/${isNightBus ? 4 : 2}/stop/${stopGTFSID}?gtfs=true&date_utc=${requestTime.toISOString()}&max_results=6&look_backwards=false&include_cancelled=true&expand=run&expand=route`)
+    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/${isNightBus ? 4 : 2}/stop/${stopGTFSID}?gtfs=true&max_results=6&look_backwards=false&include_cancelled=true&expand=run&expand=route`)
 
     let seenIDs = []
     await async.forEach(departures, async busDeparture => {
@@ -141,14 +157,6 @@ async function getDeparturesFromPTV(stop, db) {
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', day, routeGTFSID)
       if (!trip) {
         trip = await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
-
-        let hasSeenStop = false
-        trip.stopTimings = trip.stopTimings.filter(stop => {
-          if (allGTFSIDs.includes(stop.stopGTFSID)) {
-            hasSeenStop = true
-          }
-          return hasSeenStop
-        })
       }
       let vehicleDescriptor = run.vehicle_descriptor || {}
 
@@ -290,16 +298,27 @@ async function getDepartures(stop, db) {
       } else return fullStopName
     }).filter((e, i, a) => a.indexOf(e) === i).length > 1
 
+    let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
+
     departures = departures.map(departure => {
       let {trip} = departure
-      let departureBayID = trip.stopTimings[0].stopGTFSID
+
+      let hasSeenStop = false
+      let upcomingStops = trip.stopTimings.filter(tripStop => {
+        if (stopGTFSIDs.includes(tripStop.stopGTFSID)) {
+          hasSeenStop = true
+        }
+        return hasSeenStop
+      })
+
+      let departureBayID = upcomingStops[0].stopGTFSID
       let bay = busBays[departureBayID]
-      let departureRoad = (trip.stopTimings[0].stopName.split('/')[1] || '').replace(/^\d+[a-zA-z]? /)
+      let departureRoad = (upcomingStops[0].stopName.split('/').slice(-1)[0] || '').replace(/^\d+[a-zA-z]? /)
 
       departure.bay = bay
       departure.departureRoad = departureRoad
 
-      let importantStops = trip.stopTimings.map(stop => stop.stopName.split('/')[0])
+      let importantStops = upcomingStops.map(stop => utils.getStopName(stop.stopName))
         .filter((e, i, a) => a.indexOf(e) === i)
         .slice(1, -1)
         .filter(utils.isCheckpointStop)

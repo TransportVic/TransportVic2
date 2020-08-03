@@ -10,12 +10,16 @@ const uglifyEs = require('uglify-es')
 const DatabaseConnection = require('../database/DatabaseConnection')
 
 const config = require('../config.json')
+const modules = require('../modules.json')
 
-if (config.seekBuses)
+if (modules.tracker && modules.tracker.bus)
   require('../modules/bus-seeker')
 
-if (config.trackVline)
+if (modules.tracker && modules.tracker.vline)
   require('../modules/vline-tracker')
+
+if (modules.preloadCCL)
+  require('../modules/preload-ccl')
 
 module.exports = class MainServer {
   constructor () {
@@ -117,49 +121,130 @@ module.exports = class MainServer {
 
   async configRoutes (app) {
     const routers = {
-      'mockups/PIDSView': '/',
+      'mockups/PIDSView': {
+        path: '/',
+        enable: modules.mockups && modules.mockups.pidsview
+      },
 
       Index: '/',
+      AdditionalLinks: '/links',
       Search: '/search',
       StopsNearby: '/nearby',
 
-      'timing-pages/VLine': '/vline/timings',
-      'timing-pages/MetroTrains': '/metro/timings',
-      'timing-pages/RegionalCoach': '/coach/timings',
-      'timing-pages/Bus': '/bus/timings',
-      'timing-pages/Tram': '/tram/timings',
-      'timing-pages/Ferry': '/Ferry/timings',
+      'timing-pages/VLine': {
+        path: '/vline/timings',
+        enable: modules.Next4 && modules.Next4.vline
+      },
+      'timing-pages/MetroTrains': {
+        path: '/metro/timings',
+        enable: modules.Next4 && modules.Next4.metro
+      },
+      'timing-pages/RegionalCoach': {
+        path: '/coach/timings',
+        enable: modules.Next4 && modules.Next4.coach
+      },
+      'timing-pages/Bus': {
+        path: '/bus/timings',
+        enable: modules.Next4 && modules.Next4.bus
+      },
+      'timing-pages/Tram': {
+        path: '/tram/timings',
+        enable: modules.Next4 && modules.Next4.tram
+      },
+      'timing-pages/Ferry': {
+        path: '/ferry/timings',
+        enable: modules.Next4 && modules.Next4.ferry
+      },
+      'timing-pages/HeritageTrain': {
+        path: '/heritage/timings',
+        enable: modules.Next4 && modules.Next4.heritage
+      },
 
       'run-pages/MetroTrains': '/metro/run',
       'run-pages/VLineTrains': '/vline/run',
       'run-pages/Generic': '/',
 
-      SmartrakIDs: '/smartrak',
       Statistics: '/stats',
       TourBusMinder: '/tbm',
 
       'mockups/Index': '/mockups',
-      'mockups/FlindersStreet': '/mockups/fss',
-      'mockups/Metro-LCD-PIDS': '/mockups/metro-lcd-pids',
+      'mockups/fss/FlindersStreet': '/mockups/fss',
+      'mockups/metro-lcd/Concourse-PIDS': '/mockups/metro-lcd/concourse',
+      'mockups/metro-lcd/Metro-LCD-PIDS': '/mockups/metro-lcd',
       'mockups/BusInt-PIDS': '/mockups/bus-int-pids',
       'mockups/Metro-LED-PIDS': '/mockups/metro-led-pids',
-      'mockups/SouthernCross': '/mockups/sss',
+      'mockups/sss/SouthernCross': '/mockups/sss',
 
-      'jmss-screens/BigScreen': '/jmss-screens/big-screen',
+      'mockups/sss-new/SSSNew': '/mockups/sss-new',
+      'mockups/sss-new/SSSPlatform': '/mockups/sss-new/platform',
+      'mockups/sss-new/SSSCoachBay': '/mockups/sss-new/coach',
 
-      'tracker/BusTracker': '/tracker2',
-      'tracker/VLineTracker': '/vline/tracker',
+      'jmss-screens/BigScreen': {
+        path: '/jmss-screens/big-screen',
+        enable: modules.jmssScreen
+      },
 
-      'route-data/MetroBusRoute': '/bus/route',
-      'route-data/RegionalBusRoute': '/bus/route/regional/',
+      SmartrakIDs: {
+        path: '/smartrak',
+        enable: modules.tracker && modules.tracker.bus
+      },
 
-      StopPreview: '/stop-preview'
+      'tracker/BusTracker': {
+        path: '/tracker2',
+        enable: modules.tracker && modules.tracker.bus
+      },
+      'tracker/NewBusTracker': {
+        path: '/bus/tracker',
+        enable: modules.tracker && modules.tracker.bus
+      },
+      'tracker/VLineTracker': {
+        path: '/vline/tracker',
+        enable: modules.tracker && modules.tracker.vline
+      },
+
+      'route-data/RegionalBusRoute': {
+        path: '/bus/route/regional',
+        enable: modules.routes && modules.routes.bus
+      },
+      'route-data/NamedBusRoute': {
+        path: '/bus/route/named',
+        enable: modules.routes && modules.routes.bus
+      },
+      'route-data/MetroBusRoute': {
+        path: '/bus/route',
+        enable: modules.routes && modules.routes.bus
+      },
+
+      'route-data/TramRoute': {
+        path: '/tram/route',
+        enable: modules.routes && modules.routes.tram
+      },
+
+      'route-data/MetroRoute': {
+        path: '/metro/line',
+        enable: modules.routes && modules.routes.metro
+      },
+
+      'route-data/VLineRoute': {
+        path: '/vline/line',
+        enable: modules.routes && modules.routes.vline
+      },
+
+      StopPreview: {
+        path: '/stop-preview',
+        enable: modules.stopPreview
+      }
     }
 
     Object.keys(routers).forEach(routerName => {
       try {
-        const router = require(`../application/routes/${routerName}`)
-        app.use(routers[routerName], router)
+        let routerData = routers[routerName]
+        if (routerData.path && !routerData.enable) return console.log('Module', routerName, 'disabled, skipping it. This does not check for cross dependencies on GTFS data')
+
+        let routerPath = routerData.path || routerData
+
+        let router = require(`../application/routes/${routerName}`)
+        app.use(routerPath, router)
       } catch (e) {
         console.err('Error registering', routerName, e)
       }

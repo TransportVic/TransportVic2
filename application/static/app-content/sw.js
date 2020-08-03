@@ -1,4 +1,4 @@
-const version = '58'
+const version = '78'
 const cacheName = `transportvic-${version}`
 
 function cacheFiles(files) {
@@ -34,11 +34,21 @@ self.addEventListener('install', e => {
       '/static/css/index.css',
       '/static/css/loading.css',
       '/static/css/search.css',
+      '/static/css/smartrak.css',
       '/static/css/about.css',
       '/static/css/textbar-style.css',
       '/static/css/content-error.css',
+      '/static/css/links.css',
+
+      '/static/css/form.css',
+
+      '/static/css/routes/base-style.css',
+
+      '/static/css/tracker/bus-results.css',
 
       '/static/fonts/Nunito.ttf',
+
+      '/static/images/interactives/trains-new.svg',
 
       '/static/images/decals/ac.svg',
       '/static/images/decals/wheelchair.svg',
@@ -47,6 +57,7 @@ self.addEventListener('install', e => {
       '/static/images/decals/bookmark-filled.svg',
 
       '/static/images/clear-icons/bus.svg',
+      '/static/images/clear-icons/coach.svg',
       '/static/images/clear-icons/tram.svg',
       '/static/images/clear-icons/metro.svg',
       '/static/images/clear-icons/vline.svg',
@@ -69,6 +80,7 @@ self.addEventListener('install', e => {
       '/static/images/icons/comeng.svg',
       '/static/images/icons/siemens.svg',
       '/static/images/icons/xtrapolis.svg',
+      '/static/images/icons/hcmt.svg',
 
       '/static/images/icons/n.svg',
       '/static/images/icons/sprinter.svg',
@@ -99,6 +111,7 @@ self.addEventListener('install', e => {
       '/static/scripts/util.js',
 
       '/',
+      '/links',
       '/nearby',
       '/search'
     ])

@@ -15,11 +15,13 @@ div.container {
   display: table-cell;
   text-align: center;
   vertical-align: middle;
+  width: 100vw;
+  height: 100vh;
 }
 
-div.platform {
+div.platform, div.pid {
   display: inline-block;
-  margin: 1vw;
+  margin: 0.8vw;
 }
 
 div.title {
@@ -40,25 +42,32 @@ div.title a, div.title a:visited {
   color: black;
 }
 
-div.platform iframe {
-  width: 20vw;
-  height: calc(20vw * 9 / 32);
+iframe {
+  height: calc(var(--width) * 9 / 32);
   border: none;
 }
 
 div.platform.fss-escalator, div.platform.fss-escalator * {
-  width: 15vw;
+  width: 15vw !important;
 }
 
 div.platform.fss-escalator iframe {
-  height: calc(15vw / 9 * 16);
+  height: calc(15vw / 9 * 16) !important;
 }
 
-div.platform.fss-platform, div.platform.fss-platform *, div.platform.suburban-16-9-list, div.platform.suburban-16-9-list * {
+div.platform.sss-new-coach, div.platform.sss-new-coach * {
+  width: 23vw !important;
+}
+
+div.platform.sss-new-coach iframe {
+  height: calc(23vw / 9 * 16) !important;
+}
+
+div.platform.fss-platform, div.platform.fss-platform *, div.platform.full-platform, div.platform.full-platform * {
   width: 18vw;
 }
 
-div.platform.fss-platform iframe, div.platform.suburban-16-9-list iframe {
+div.platform.fss-platform iframe, div.platform.full-platform iframe {
   height: calc(18vw * 9 / 16);
 }
 
@@ -73,4 +82,26 @@ div.platform.sss-platform, div.platform.sss-platform * {
 
 div.platform.sss-platform iframe {
   height: calc(30vw * 9 / 16);
+}
+
+
+
+div.vertical {
+  --width: calc(13vw + 13vh);
+}
+
+div.horizontal, div.half {
+  --width: calc(17vw + 17vh);
+}
+
+div.pid, div.pid * {
+  width: var(--width);
+}
+
+div.horizontal iframe {
+  height: calc(var(--width) * 9 / 16) !important;
+}
+
+div.vertical iframe {
+  height: calc(var(--width) / 9 * 16) !important;
 }

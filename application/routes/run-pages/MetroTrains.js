@@ -13,7 +13,6 @@ async function pickBestTrip(data, db) {
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
   let tripEndTime = moment.tz(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
-  let operationHour = Math.floor(tripStartMinutes / 60) % 24
 
   let originStop = await db.getCollection('stops').findDocument({
     codedName: data.origin + '-railway-station',
@@ -27,6 +26,23 @@ async function pickBestTrip(data, db) {
   let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
   let minutesToTripEnd = tripEndTime.diff(utils.now(), 'minutes')
 
+  let destinationArrivalTime = tripEndMinutes
+  let departureTime = tripStartMinutes
+
+  if (data.destination === 'flinders-street') {
+    destinationArrivalTime = {
+      $gte: tripEndMinutes - 1,
+      $lte: tripEndMinutes + 3
+    }
+  }
+
+  if (data.origin === 'flinders-street') {
+    departureTime = {
+      $gte: tripStartMinutes - 1,
+      $lte: tripStartMinutes + 3
+    }
+  }
+
   let query = {
     $and: [{
       mode: 'metro train',
@@ -35,21 +51,21 @@ async function pickBestTrip(data, db) {
       stopTimings: {
         $elemMatch: {
           stopName: originStop.stopName,
-          departureTime: data.departureTime
+          departureTimeMinutes: departureTime
         }
       }
     }, {
       stopTimings: {
         $elemMatch: {
           stopName: destinationStop.stopName,
-          arrivalTime: data.destinationArrivalTime
+          arrivalTimeMinutes: destinationArrivalTime
         }
       }
     }]
   }
 
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
-  let useLive = minutesToTripEnd >= -15 && minutesToTripStart < 120
+  let useLive = minutesToTripEnd >= -25 && minutesToTripStart < 120
 
   if (liveTrip) {
     if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
@@ -97,7 +113,7 @@ async function pickBestTrip(data, db) {
     let stops = gtfsTrip.stopTimings.map(stop => stop.stopName)
     let flindersIndex = stops.indexOf('Flinders Street Railway Station')
 
-    if (flindersIndex && gtfsTrip.direction === 'Down') {
+    if (flindersIndex >= 0 && gtfsTrip.direction === 'Down') {
       let stopAfterFlinders = gtfsTrip.stopTimings[flindersIndex + 1]
       originStopID = stopAfterFlinders.stopGTFSID
       originTime = moment.tz(`${data.operationDays} ${stopAfterFlinders.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
@@ -115,8 +131,7 @@ async function pickBestTrip(data, db) {
     let isoDeparture = originTime.toISOString()
     let {departures, runs} = await ptvAPI(`/v3/departures/route_type/0/stop/${originStopID}?gtfs=true&date_utc=${originTime.clone().add(-3, 'minutes').toISOString()}&max_results=3&expand=run&expand=stop&include_cancelled=true`)
 
-    let departure
-    let isUp = referenceTrip.direction === 'Up'
+    let isUp = referenceTrip ? referenceTrip.direction === 'Up' : null
     let possibleDepartures = departures.filter(departure => {
       let run = runs[departure.run_id]
       let destinationName = run.destination_name.trim()
@@ -156,9 +171,6 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   let trip = await pickBestTrip(req.params, res.db)
   if (!trip) return res.status(404).render('errors/no-trip')
 
-  trip.destination = trip.destination.slice(0, -16)
-  trip.origin = trip.origin.slice(0, -16)
-
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.prettyTimeToArrival = ''
 
@@ -171,8 +183,8 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     }
 
     if (stop.estimatedDepartureTime) {
-      let scheduledDepartureTime =
-        moment.tz(`${req.params.operationDays} ${stop.departureTime || stop.arrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+      let scheduledDepartureTime = moment.tz(req.params.operationDays, 'YYYYMMDD', 'Australia/Melbourne').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
+
       let headwayDeviance = scheduledDepartureTime.diff(stop.estimatedDepartureTime, 'minutes')
 
       // trains cannot be early

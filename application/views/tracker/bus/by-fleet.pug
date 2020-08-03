@@ -1,0 +1,21 @@
+extends ../../layout
+
+block head
+  title TransportVic - Tracker/Bus - By Fleet
+
+block title
+  span Bus Tracker - By Fleet
+
+block style
+  link(rel='stylesheet' href='/static/css/tracker/bus-results.css')
+
+block content
+  h1.title Tracking Bus #{fleet} (#{smartrakID}) on #{date.format('dddd, MMMM Do YYYY')}
+  for trip in tripsToday
+    div(class=`trip ${trip.active ? '' : 'inactive'}`)
+      a(href=trip.url) #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
+
+  h1.title Past deployments:
+  for pastDate in Object.keys(servicesByDay).reverse()
+    a(href=`/bus/tracker/fleet?fleet=${bus ? fleet.slice(1) : smartrakID}&date=${servicesByDay[pastDate].date}`).pastDeployment #{pastDate} - #{servicesByDay[pastDate].services.join(', ')}
+    br

@@ -4,9 +4,26 @@ const router = new express.Router()
 const utils = require('../../../utils')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
 
+function giveVariance(time) {
+  let minutes = utils.time24ToMinAftMidnight(time)
+
+  let validTimes = []
+  for (let i = minutes - 5; i <= minutes + 5; i++) {
+    validTimes.push(utils.minAftMidnightToTime24(i))
+  }
+
+  return {
+    $in: validTimes
+  }
+}
+
 async function pickBestTrip(data, db) {
   data.mode = 'regional train'
   let tripDay = moment.tz(data.operationDays, 'YYYYMMDD', 'Australia/Melbourne')
+  let tripStartTime = moment.tz(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
+  let tripEndTime = moment.tz(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
 
   let originStop = await db.getCollection('stops').findDocument({
     codedName: data.origin,
@@ -18,13 +35,35 @@ async function pickBestTrip(data, db) {
   })
   if (!originStop || !destinationStop) return null
 
+  let variance = 5
+  let destinationArrivalTime = {
+    $gte: tripEndMinutes - variance,
+    $lte: tripEndMinutes + variance
+  }
+  let departureTime = {
+    $gte: tripStartMinutes - variance,
+    $lte: tripStartMinutes + variance
+  }
+
   let query = {
-    mode: 'regional train',
-    origin: originStop.stopName,
-    departureTime: data.departureTime,
-    destination: destinationStop.stopName,
-    destinationArrivalTime: data.destinationArrivalTime,
-    operationDays: data.operationDays
+    $and: [{
+      mode: 'regional train',
+      operationDays: data.operationDays
+    }, {
+      stopTimings: {
+        $elemMatch: {
+          stopName: originStop.stopName,
+          departureTimeMinutes: departureTime
+        }
+      }
+    }, {
+      stopTimings: {
+        $elemMatch: {
+          stopName: destinationStop.stopName,
+          arrivalTimeMinutes: destinationArrivalTime
+        }
+      }
+    }]
   }
 
   let referenceTrip
@@ -50,9 +89,13 @@ async function pickBestTrip(data, db) {
   let {runID, vehicle} = nspTrip || {}
 
   let vlineTrips = db.getCollection('vline trips')
+
+  let trackerDepartureTime = giveVariance(referenceTrip.departureTime)
+  let trackerDestinationArrivalTime = giveVariance(referenceTrip.destinationArrivalTime)
+
   let tripData = await vlineTrips.findDocument({
     date: data.operationDays,
-    departureTime: referenceTrip.departureTime,
+    departureTime: trackerDepartureTime,
     origin: referenceTrip.origin.slice(0, -16),
     destination: referenceTrip.destination.slice(0, -16)
   })
@@ -60,7 +103,7 @@ async function pickBestTrip(data, db) {
   if (!tripData) {
     tripData = await vlineTrips.findDocument({
       date: data.operationDays,
-      departureTime: referenceTrip.departureTime,
+      departureTime: trackerDepartureTime,
       origin: referenceTrip.origin.slice(0, -16)
     })
   }
@@ -69,7 +112,7 @@ async function pickBestTrip(data, db) {
     tripData = await vlineTrips.findDocument({
       date: data.operationDays,
       destination: referenceTrip.destination.slice(0, -16),
-      destinationArrivalTime: referenceTrip.destinationArrivalTime
+      destinationArrivalTime: trackerDestinationArrivalTime
     })
   }
 
@@ -91,8 +134,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.prettyTimeToArrival = ''
 
-    let scheduledDepartureTime =
-      moment.tz(`${req.params.operationDays} ${stop.departureTime || stop.arrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+    let scheduledDepartureTime = moment.tz(req.params.operationDays, 'YYYYMMDD', 'Australia/Melbourne').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
 
     const timeDifference = moment.utc(moment(scheduledDepartureTime).diff(utils.now()))
 

@@ -1,0 +1,68 @@
+- 
+  let cityLoopStationAbbreviations = {
+    'FSS': 'Flinders Street Railway Station',
+    'SSS': 'Southern Cross Railway Station',
+    'FGS': 'Flagstaff Railway Station',
+    'MCE': 'Melbourne Central Railway Station',
+    'PAR': 'Parliament Railway Station'
+  }
+  let cityLoopStationNames = Object.values(cityLoopStationAbbreviations).concat('City Loop Railway Station')
+  
+for departure in departures
+  div.departure
+    -
+      let stopName = station.stopName
+      let indexOfCurrentStation = departure.trip.stopTimings.map(stop => stop.stopName).indexOf(stopName)
+      let stopsAt = departure.trip.stopTimings.filter((_, i) => i > indexOfCurrentStation).map(stop => stop.stopName)
+      let cityLoopStationFullNames = departure.cityLoopConfig.map(stn => cityLoopStationAbbreviations[stn])
+      
+      let routeName = departure.trip.routeName
+      if (!departure.isTrainReplacement) {
+        stopsAt = stopsAt.filter(station => !cityLoopStationNames.includes(station))
+        
+        if (departure.trip.direction === 'Up')
+          stopsAt = stopsAt.concat(cityLoopStationFullNames)
+        else if (cityLoopStationNames.includes(station.stopName)) {
+          indexOfCurrentStation = cityLoopStationFullNames.indexOf(stopName)
+          stopsAt = cityLoopStationFullNames.filter((stn, i) => i > indexOfCurrentStation).concat(stopsAt)
+        }
+
+        stopsAt = stopsAt.filter(Boolean).filter((e,i,a) => a.indexOf(e) === i)
+      }
+      
+    input(type='hidden' name='stops-at' value=stopsAt.join(','))
+    input(type='hidden' name='platform' value=departure.platform || '')
+    input(type='hidden' name='run' value=departure.runID)
+    input(type='hidden' name='line' value=routeName)
+    if departure.cancelled
+      input(type='hidden' name='cancelled')
+    a(class=`leftContainer platform ${departure.codedLineName}-line`)
+      if departure.isTrainReplacement
+        span.topText Rail Bus
+        img(src='/static/images/clear-icons/bus.svg')
+      else
+        span.topText Platform
+        span.bigNumber=departure.platform || '?'
+    a(href=departure.destinationURL).departureInfo
+      span.towards=`${routeName} Line towards`
+      span.destination=departure.destination
+      
+      if departure.message && !departure.suspensions.length
+        span.info.cancelled.noClamp=departure.message
+      else if departure.cancelled
+        span.info.cancelled CANCELLED
+      else if departure.message
+        span.info.cancelled.noClamp=departure.message
+      else if departure.isTrainReplacement
+        span.info.cancelled Rail Replacement Bus
+      else
+        
+        -
+          let {trip} = departure
+          let isUpTrip = (trip || {}).direction === 'Up' || trip.runID % 2 === 0
+        if cityLoopStationNames.includes(station.stopName) || isUpTrip
+          span.info=departure.cityLoopConfig.join(', ')
+    div.timings
+      a(class='timing ' + departure.headwayDevianceClass href=`/metro/run/${departure.tripURL}`)
+        span=departure.prettyTimeToArrival
+        span=departure.scheduledDepartureTime.format('HH:mm')

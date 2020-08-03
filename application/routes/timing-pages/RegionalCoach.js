@@ -4,7 +4,7 @@ const getDepartures = require('../../../modules/regional-coach/get-departures')
 const moment = require('moment')
 const utils = require('../../../utils')
 
-router.get('/:stopName', async (req, res) => {
+async function loadDepartures(req, res) {
   const stop = await res.db.getCollection('stops').findDocument({
     codedName: req.params.stopName
   })
@@ -20,6 +20,7 @@ router.get('/:stopName', async (req, res) => {
   departures = departures.map(departure => {
     const timeDifference = moment.utc(departure.scheduledDepartureTime.diff(utils.now()))
 
+    if (+timeDifference > 1000 * 60 * 180) return null
     if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
     else {
       departure.prettyTimeToArrival = ''
@@ -36,9 +37,17 @@ router.get('/:stopName', async (req, res) => {
       + `${utils.getYYYYMMDDNow()}/#stop-${departure.trip.stopTimings[0].stopGTFSID}`
 
     return departure
-  })
+  }).filter(Boolean)
 
-  res.render('timings/regional-coach', { departures, stop })
+  return { departures, stop }
+}
+
+router.get('/:stopName', async (req, res) => {
+  res.render('timings/regional-coach', await loadDepartures(req, res))
+})
+
+router.post('/:stopName', async (req, res) => {
+  res.render('timings/templates/regional-coach', await loadDepartures(req, res))
 })
 
 module.exports = router

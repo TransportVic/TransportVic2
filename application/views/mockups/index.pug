@@ -6,41 +6,41 @@ block head
 block title
   span Mockups
   
+block style
+  link(rel='stylesheet' href='/static/css/form.css')
+
 block content
-  h1 yea sorry this page is a mess i'll fix it up soon
+  h1#title Mockups
   form(action='/mockups/get' method='get')
-    label Get FSS Escalator display for platform# 
-    input(name='value' placeholder='platform' required)
-    input(name='station' placeholder='station (blank for fss)')
-    input(name='type' value='fss-escalator' type='hidden')
-    input(type='submit')
+    label Get Station PID
+    br
+    input(type='text' name='station' placeholder='Station Name' required)
+    br
+    input(type='text' name='value' placeholder='Platform (* for all)' required)
+    br
+    input(type='text' name='type' placeholder='PID Type')
+    input(type='submit' value='Go')
   form(action='/mockups/get' method='get')
-    label Get FSS Platform display for platform# 
-    input(name='value' placeholder='platform' required)
-    input(name='station' placeholder='station (blank for fss)')
-    input(name='type' value='fss-platform' type='hidden')
-    input(type='submit')
-  form(action='/mockups/get' method='get')
-    label Get Suburban List display for platform# 
-    input(name='value' placeholder='platform' required)
-    input(name='station' placeholder='station' required)
-    input(name='type' value='suburban-list' type='hidden')
-    input(type='submit')
-  form(action='/mockups/get' method='get')
-    label Get Suburban Text display for platform# 
-    input(name='value' placeholder='platform' required)
-    input(name='station' placeholder='station' required)
-    input(name='type' value='suburban-list' type='hidden')
-    input(type='submit')
+    label Get Concourse PID
+    br
+    input(type='text' name='station' placeholder='Station Name' required)
+    br
+    input(type='text' name='concourseType' placeholder='Concourse PID Type')
+    input(type='hidden' name='type' value='concourse')
+    input(type='submit' value='Go')
   form(action='/mockups/get' method='get')
     label Get Bus Interchange PIDs for bus stop URL
-    input(name='value' placeholder='url' required)
-    input(name='bay' placeholder='bay (blank for all)')
-    input(name='type' value='bus-int-pids' type='hidden')
-    input(type='submit')
+    br
+    input(type='text' name='value' placeholder='Bus Timings URL' required)
+    br
+    input(type='text' name='bay' placeholder='Bus Bay (Blank for all)')
+    input(type='submit' value='Go')
+    input(type='hidden' name='type' value='bus-int-pids')
   form(action='/mockups/get' method='get')
     label Get station summary page
-    input(name='station' placeholder='station' required)
-    input(name='value' placeholder='type (fss-escalator/platform, suburban-list/text)' required)
-    input(name='type' value='summary' type='hidden')
-    input(type='submit')
+    br
+    input(type='text' name='station' placeholder='Station Name' required)
+    br
+    input(type='text' name='value' placeholder='PID Type (Leave blank for default)' required)
+    input(type='submit' value='Go')
+    input(type='hidden' name='type' value='summary')

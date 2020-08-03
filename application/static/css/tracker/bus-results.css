@@ -1,0 +1,37 @@
+div#content {
+  display: block;
+  flex-direction: column;
+}
+
+div#content > * {
+  margin-left: calc(1vw + 1vh);
+}
+
+h1.title {
+  margin-top: calc(0.8vw + 0.8vh);
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+}
+
+h1 {
+  font-size: calc(2vw + 1.9vh);
+}
+
+div.trip a {
+  display: inline-block;
+  font-size: calc(0.9vw + 1.7vh);
+  margin-top: calc(0.1vw + 0.4vh);
+}
+
+div.trip.inactive a {
+  color: #777777;
+  text-decoration: line-through;
+}
+
+a.pastDeployment {
+  display: inline-block;
+  font-size: calc(0.9vw + 1.7vh);
+  margin-top: calc(0.4vw + 0.4vh);
+}

@@ -6,7 +6,7 @@ const utils = require('../../../utils')
 const tramDestinations = require('../../../additional-data/tram-destinations')
 const async = require('async')
 
-router.get('/:suburb/:stopName', async (req, res) => {
+async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
   let stop = await stops.findDocument({
     codedName: req.params.stopName,
@@ -47,7 +47,7 @@ router.get('/:suburb/:stopName', async (req, res) => {
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
       + `${utils.getYYYYMMDDNow()}/#stop-${stopGTFSID}`
 
-    let destinationShortName = departure.trip.destination.split('/')[0]
+    let destinationShortName = utils.getStopName(departure.trip.destination)
     let {destination} = departure.trip
     if (!utils.isStreet(destinationShortName)) destination = destinationShortName
     departure.destination = tramDestinations[destination] || destination
@@ -66,33 +66,60 @@ router.get('/:suburb/:stopName', async (req, res) => {
   let groupedDepartures = {}
 
   departures.forEach(departure => {
-    if (!services.includes(departure.routeNumber)) {
-      services.push(departure.routeNumber)
-      groupedDepartures[departure.routeNumber] = {}
+    if (!services.includes(departure.sortNumber)) {
+      services.push(departure.sortNumber)
+      groupedDepartures[departure.sortNumber] = {}
     }
   })
+
   services.forEach(service => {
-    let serviceDepartures = departures.filter(d => d.routeNumber === service)
+    let serviceDepartures = departures.filter(d => d.sortNumber === service)
     let serviceDestinations = []
 
-    serviceDepartures.forEach(departure => {
-      let {destination} = departure
-      if (!serviceDestinations.includes(destination)) {
-        serviceDestinations.push(destination)
-        groupedDepartures[service][destination] =
-          serviceDepartures.filter(d => d.destination === destination)
-      }
+    let directions = [
+      serviceDepartures.filter(d => d.trip.gtfsDirection === '0'),
+      serviceDepartures.filter(d => d.trip.gtfsDirection === '1')
+    ]
+
+    directions.forEach(direction => {
+      let destinationDepartures = []
+      let destinations = []
+
+      direction.forEach(departure => {
+        let destination = departure.destination + departure.loopDirection
+        if (!destinations.includes(destination)) {
+          destinations.push(destination)
+          destinationDepartures.push({
+            destination,
+            departures: direction.filter(d => d.destination + d.loopDirection === destination)
+          })
+        }
+      })
+
+      let sortedDepartures = destinationDepartures.sort((a, b) => a.departures[0].actualDepartureTime - b.departures[0].actualDepartureTime)
+
+      sortedDepartures.forEach(departureSet => {
+        groupedDepartures[service][departureSet.destination] = departureSet.departures
+      })
     })
   })
 
   services = services.sort((a, b) => a - b)
 
   //todo check 3a
-  res.render('timings/grouped', {
+  return {
     services, groupedDepartures, stop,
-    classGen: departure => `tram-${departure.routeNumber}`,
+    classGen: departure => `tram-${departure.sortNumber}`,
     currentMode: 'tram'
-  })
+  }
+}
+
+router.get('/:suburb/:stopName', async (req, res) => {
+  res.render('timings/grouped', await loadDepartures(req, res))
+})
+
+router.post('/:suburb/:stopName', async (req, res) => {
+  res.render('timings/templates/grouped', await loadDepartures(req, res))
 })
 
 module.exports = router

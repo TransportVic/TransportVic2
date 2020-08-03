@@ -3,6 +3,7 @@ const router = new express.Router()
 const TrainUtils = require('./TrainUtils')
 const stationCodes = require('../../../additional-data/station-codes.json')
 const stationPlatforms = require('../../../additional-data/station-platforms.json')
+const utils = require('../../../utils')
 const url = require('url')
 const querystring = require('querystring')
 
@@ -47,14 +48,18 @@ function filter(req, next) {
 router.get('/:platform/:type', async (req, res, next) => {
   if (filter(req, next)) {
     let {platform, type} = req.params
-    if (type === 'suburban-list') {
-      res.render('mockups/metro-lcd-pids/list-pids')
-    } else if (type === 'suburban-text') {
-      res.render('mockups/metro-lcd-pids/pids')
+    let now = utils.now()
+
+    if (type === 'half-platform') {
+      res.render('mockups/metro-lcd/half-platform', { now })
+    } if (type === 'platform') {
+      res.render('mockups/metro-lcd/platform', { now })
+    } else if (type === 'half-platform-bold') {
+      res.render('mockups/metro-lcd/half-platform-bold', { now })
     } else if (type === 'fss-escalator') {
-      res.render('mockups/flinders-street/escalator', { platform })
+      res.render('mockups/fss/escalator', { platform, now })
     } else if (type === 'fss-platform') {
-      res.render('mockups/flinders-street/platform')
+      res.render('mockups/fss/platform')
     }
   }
 })

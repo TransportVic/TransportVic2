@@ -4,7 +4,7 @@ const getDepartures = require('../../../modules/metro-trains/get-departures')
 const moment = require('moment')
 const utils = require('../../../utils')
 
-router.get('/:stationName', async (req, res) => {
+async function loadDepartures(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
     codedName: req.params.stationName + '-railway-station'
   })
@@ -38,50 +38,38 @@ router.get('/:stationName', async (req, res) => {
       }
     }
 
-    let trip = departure.forming || departure.trip
-
+    let {trip} = departure
     departure.codedLineName = utils.encodeName(trip.routeName)
 
-    let destination, origin, originDepartureTime, destinationArrivalTime
-
-    let tripToUse = departure.forming || trip
-    let stops = tripToUse.stopTimings.map(e => e.stopName.slice(0, -16))
-
-    if (tripToUse.direction === 'Up') {
-      origin = tripToUse.origin.slice(0, -16)
-      originDepartureTime = tripToUse.departureTime
-
-      let fssIndex = stops.indexOf('Flinders Street')
-      if (fssIndex !== -1) {
-        destination = 'Flinders Street'
-        destinationArrivalTime = tripToUse.stopTimings[fssIndex].arrivalTime
-      } else {
-        destination = tripToUse.destination.slice(0, -16)
-        destinationArrivalTime = tripToUse.destinationArrivalTime
-      }
-    } else {
-      let fssIndex = stops.indexOf('Flinders Street')
-      if (fssIndex !== -1) {
-        origin = 'Flinders Street'
-        originDepartureTime = tripToUse.stopTimings[fssIndex].departureTime
-      } else {
-        origin = tripToUse.origin.slice(0, -16)
-        originDepartureTime = tripToUse.departureTime
-      }
-
-      destination = tripToUse.destination.slice(0, -16)
-      destinationArrivalTime = tripToUse.destinationArrivalTime
-    }
+    let origin = trip.trueOrigin.slice(0, -16)
+    let originDepartureTime = trip.trueDepartureTime
+    let destination = trip.trueDestination.slice(0, -16)
+    let destinationArrivalTime = trip.trueDestinationArrivalTime
 
     let stopGTFSID = departure.trip.stopTimings.filter(stop => stop.stopName === station.stopName)[0].stopGTFSID
 
     departure.tripURL = `${utils.encodeName(origin)}/${originDepartureTime}/`
       + `${utils.encodeName(destination)}/${destinationArrivalTime}/`
       + `${utils.getYYYYMMDDNow()}/#stop-${stopGTFSID}`
+
+    departure.destinationURL = `/metro/timings/${utils.encodeName(trip.trueDestination).slice(0, -16)}`
+
     return departure
   })
 
-  res.render('timings/metro-trains', { departures, station, placeholder: 'Destination or platform' })
+  return {
+    departures,
+    station,
+    placeholder: 'Destination or platform'
+  }
+}
+
+router.get('/:stationName', async (req, res) => {
+  res.render('timings/metro-trains', await loadDepartures(req, res))
+})
+
+router.post('/:stationName', async (req, res) => {
+  res.render('timings/templates/metro-trains', await loadDepartures(req, res))
 })
 
 module.exports = router

@@ -150,7 +150,7 @@ database.connect({
   let $ = cheerio.load(body)
 
   let introduction = Array.from($('#introduction_1211535 > *'))
-  let operationDatesHeader = $('#introduction_1211535 > h3')[2]
+  let operationDatesHeader = Array.from($('#introduction_1211535 > h3')).find(e => $(e).text().includes('operating dates'))
 
   let dates = {
     semesters: [],
@@ -162,7 +162,7 @@ database.connect({
 
   let weekdayPart = ['1', '1', '1', '1', '1', '0', '0']
 
-  let operationDatesPs = introduction.slice(introduction.indexOf(operationDatesHeader) + 2)
+  let operationDatesPs = introduction.slice(introduction.indexOf(operationDatesHeader) + 1)
   let lines = []
   operationDatesPs.forEach(p => {
     p = $(p)

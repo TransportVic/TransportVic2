@@ -33,6 +33,7 @@ append content
     let stopModes = stop.bays.map(e => e.mode).filter((e, i, a) => a.indexOf(e) === i)
     let iconMap = {
       'regional train': 'vline',
+      'heritage train': 'heritage',
       'metro train': 'metro',
       'regional coach': 'coach'
     }
@@ -50,21 +51,4 @@ append content
           img(src=`/static/images/clear-icons/${iconMap[mode] || mode}.svg` alt='')
           span=mode
   div#departures
-    for departure in departures
-      div.departure.no-number
-        a.departureInfo
-          span.routeName=departure.trip.routeName
-          span.towards Towards
-          span.destination=departure.destination
-          if departure.isTrainReplacement
-            -
-              let message = 'This is a train replacement coach'
-              if (stop.stopName === 'Southern Cross Coach Terminal/Spencer Street') message += ', departing Bays 62 - 70'
-              else if (departure.bay) message += `, departing ${departure.bay}`
-            span.cancelled.noClamp=message
-          else if departure.bay
-            span.info Departing #{departure.bay}
-        div.timings
-          a(href=departure.tripURL).timing.unknown
-            span=departure.prettyTimeToArrival
-            span=departure.scheduledDepartureTime.format('HH:mm')
+    include ./templates/regional-coach

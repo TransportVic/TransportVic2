@@ -1,4 +1,5 @@
 /config.json
+/modules.json
 /notes.txt
 /urls.json
 /node_modules
@@ -14,4 +15,4 @@
 /load-gtfs/vline-trains/extra/timetables
 /load-gtfs/stats.json
 /application/static/images
-/timetable-updating-server/last-lastModified
+/timetable-updating-server/last-modified

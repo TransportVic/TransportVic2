@@ -5,6 +5,8 @@ const ptvAPI = require('../../ptv-api')
 const nameModifier = require('../../additional-data/bus-stop-name-modifier')
 const cityLoopRoute = require('./city-loop.json')
 
+const fixTripDestination = require('../metro-trains/fix-trip-destinations')
+
 let modes = {
   'metro train': 0,
   'regional train': 3,
@@ -37,7 +39,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     departure.scheduledDepartureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
     departure.estimatedDepartureTime = moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne')
     return departure
-  }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+  })
 
   let dbStops = {}
   let checkModes = [mode]
@@ -52,7 +54,14 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     routeGTFSID = '2-CCL'
   }
 
-  let gtfsDirection = route.ptvDirections[ptvDirection.direction_name]
+  let directionName = ptvDirection.direction_name
+  let gtfsDirection = route.ptvDirections[directionName]
+
+  if (mode === 'tram') {
+    let keys = Object.keys(route.ptvDirections)
+    let bestKey = keys.find(k => k.replace(/[\w ]+ to/).includes(directionName))
+    if (bestKey) gtfsDirection = route.ptvDirections[bestKey]
+  }
 
   await async.forEach(Object.values(stops), async stop => {
     let stopName = stop.stop_name.trim()
@@ -77,11 +86,17 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     dbStops[stop.stop_id] = dbStop
   })
 
+  let tripOperationDay
+
   let stopTimings = departures.map((departure, i) => {
     let {
       estimatedDepartureTime, scheduledDepartureTime,
       stop_id, platform_number
     } = departure
+
+    if (i === 0) {
+      tripOperationDay = utils.getYYYYMMDD(scheduledDepartureTime)
+    }
 
     let ptvStop = stops[stop_id]
 
@@ -135,8 +150,9 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     routeGTFSID = '5-' + routeGTFSID.slice(2)
 
   let direction
-  if (mode === 'metro train' && vehicleDescriptor.id) {
-    direction = (vehicleDescriptor.id[3] % 2) ? 'Down' : 'Up'
+  if (mode === 'metro train') {
+    direction = ptvDirection.direction_id === 1 ? 'Up' : 'Down'
+    if (routeGTFSID === '2-CCL') direction = 'Down'
   }
 
   let routeName = routeData.route_name.trim()
@@ -147,15 +163,22 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     cancelled = run.status === 'cancelled'
   }
 
+  let vehicle = vehicleDescriptor.description || vehicleDescriptor.id
+  if (mode === 'metro train') {
+    if (['Belgrave', 'Lilydale', 'Alamein', 'Glen Waverley'].includes(routeName) && vehicle) {
+      vehicle = vehicle.replace('Comeng', 'Xtrapolis')
+    }
+  }
+
   let timetable = {
     mode, routeName,
     routeGTFSID,
     routeNumber: referenceTrip ? referenceTrip.routeNumber : routeData.route_number,
     routeDetails: referenceTrip ? referenceTrip.routeDetails : null,
     runID: vehicleDescriptor.id,
-    operationDays: [utils.getYYYYMMDDNow()],
-    vehicle: vehicleDescriptor.description || vehicleDescriptor.id,
-    stopTimings: stopTimings.sort((a, b) => (a.arrivalTimeMinutes || a.departureTimeMinutes) - (b.arrivalTimeMinutes || b.departureTimeMinutes)),
+    operationDays: [tripOperationDay],
+    vehicle,
+    stopTimings: stopTimings,
     destination: stopTimings[stopTimings.length - 1].stopName,
     destinationArrivalTime: stopTimings[stopTimings.length - 1].arrivalTime,
     departureTime: stopTimings[0].departureTime,
@@ -166,6 +189,8 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     direction,
     cancelled
   }
+
+  timetable = fixTripDestination(timetable)
 
   let key = {
     mode, routeName: timetable.routeName,

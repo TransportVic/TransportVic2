@@ -1,7 +1,6 @@
 extends ../layout
 
 block head
-  title TransportVic - Bus #{route.routeNumber}
   
   -
     let type = ''
@@ -13,34 +12,46 @@ block head
     
     let name = `${directionNames[1]} - ${directionNames[0]}`
     if (!showDualTermini) name = directionNames[0]
-  
-  meta(property='og:title' content=`TransportVic - Bus ${route.routeNumber}`)
-  meta(property='twitter:title' content=`TransportVic - Bus ${route.routeNumber}`)
-  meta(property='og:description' content=`${type} ${route.routeNumber}: ${name}`)
-  meta(property='twitter:description' content=`${type} ${route.routeNumber}: ${name}`)
+    
+    let identifier = route.routeNumber || route.routeName.replace(/ Railway Station/g, '')
+    
+  title TransportVic - #{type} #{identifier}
+  meta(property='og:title' content=`TransportVic - ${type} ${identifier}`)
+  meta(property='twitter:title' content=`TransportVic - ${type} ${identifier}`)
+  meta(property='og:description' content=`${type} ${identifier}: ${name}`)
+  meta(property='twitter:description' content=`${type} ${identifier}: ${name}`)
   
 block title
     
-  span #{type} #{route.routeNumber}
+  span #{type} #{identifier}
 
 block style
   link(rel='stylesheet' href='/static/css/routes/base-style.css')
-  //- link(rel='stylesheet' href='/static/css/routes/bus.css')
   link(rel='stylesheet' href='/static/css/combined-colours.css')
       
 block content
   div#routeSummary
     -
-      let link = `/bus/route/${route.routeNumber}/${codedDirectionNames[1]}`
-      if (route.routeGTFSID.startsWith('6')) {
-        link = `/bus/route/regional/${route.codedSuburb}/${route.routeNumber}/${codedDirectionNames[1]}`
+      let link
+      if (route.routeNumber) {
+        if (route.routeGTFSID.startsWith('6')) {
+          link = `/bus/route/regional/${route.codedSuburb}/${route.routeNumber}/${codedDirectionNames[1]}`
+        } else {
+          link = `/bus/route/${route.routeNumber}/${codedDirectionNames[1]}`
+        }
+      } else {
+        link = `/bus/route/named/${route.codedName}/${codedDirectionNames[1]}`
       }
+      
       if (route.operationDate) {
         link += `/${route.operationDate.type}`
       }
     a(class=operator href=link)#routeNumber
       span#routeType=type
-      span#routeText=route.routeNumber
+      if route.routeNumber
+        span#routeText=route.routeNumber
+      else
+        img#routeIcon(src='/static/images/clear-icons/bus.svg')
       if route.operationDate
         span#routeDetail=operationDate
     div#terminals
@@ -62,16 +73,16 @@ block content
         span Last Bus
       div.coloured-row.table-data.spacing1
         span Weekdays
-        span=firstLastBusMap.firstBus.weekday
-        span=firstLastBusMap.lastBus.weekday
+        span=firstLastBusMap.firstTrip.weekday
+        span=firstLastBusMap.lastTrip.weekday
       div.coloured-row.table-data.spacing1
         span Saturday / PH
-        span=firstLastBusMap.firstBus.saturday
-        span=firstLastBusMap.lastBus.saturday
+        span=firstLastBusMap.firstTrip.saturday
+        span=firstLastBusMap.lastTrip.saturday
       div.coloured-row.table-data.spacing1
         span Sundays
-        span=firstLastBusMap.firstBus.sunday
-        span=firstLastBusMap.lastBus.sunday
+        span=firstLastBusMap.firstTrip.sunday
+        span=firstLastBusMap.lastTrip.sunday
     div#frequency
       div.table-header.table-data.spacing3
         span Time Of Day
@@ -83,7 +94,7 @@ block content
           function frequency(data) {
             if (data.min === '-') return '-'
             else {
-              if (data.min === '1 Bus') return '1 Bus'
+              if (data.min === '1 Trip') return '1 Bus'
               else if (data.min === data.max) return data.min + 'min'
               else return `${data.min}-${data.max}min`
             }

@@ -1,0 +1,97 @@
+html
+  head
+    script(src='/static/scripts/util.js')
+    script(src='/static/scripts/mockups/sss/platform.js' async)
+    script(src='/static/scripts/mockups/pids-utils.js') 
+    link(rel='stylesheet' href='/static/css/mockups/sss/platform.css')
+    link(rel='stylesheet' href='/static/css/mockups/16-9-pids-base.css')
+  body
+    div.content
+      mixin platform(regional)
+        div.topRow
+          span.firstDestination 
+        div.departureData
+          div.scheduled
+            span &nbsp;Scheduled:
+            span.firstDepartureTime 
+          div.actual
+            span Departing:
+            div
+              span.actual --
+              span Min
+          div.platform
+            span Platform:
+            span 
+        div.bottom
+          div.message
+            p 
+            p 
+          div.nextServices
+            if regional
+              div.header.regional
+                span Next Departures
+                div.right
+                  span.platform Platform:
+                  span Due In:
+              for i in [1, 2, 3, 4, 5]
+                div.serviceRow.regional
+                  span.scheduledDepartureTime
+                  span.destination
+                  div.message
+                    p
+                    p
+                    p
+                  span.platform
+                  div.dueIn
+                    span.actual
+                    span 
+              div.header.regional
+                span Next Arrivals
+                div.right
+                  span.platform Platform:
+                  span Due In:
+              for i in [1, 2, 3]
+                div.serviceRow.regional
+                  span.scheduledDepartureTime
+                  span.destination
+                  div.message
+                    p
+                    p
+                    p
+                  span.platform
+                  div.dueIn
+                    span.actual
+                    span 
+            else
+              
+              div.header.metro
+                span Next Departures
+                div.right
+                  span Due In:
+              for i in [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                div.serviceRow.metro
+                  span.scheduledDepartureTime
+                  span.destination 
+                  div.message
+                    p 
+                    p
+                  span.platform
+                  div.dueIn
+                    span.actual 
+                    span 
+      div.leftPlatform.platformContainer
+        div(style="display: none;").platformData
+          +platform(platforms[0])
+        div.fullMessage
+          p LISTEN
+          p FOR
+          p ANNOUNCEMENT
+      div.rightPlatform.platformContainer
+        div(style="display: none;").platformData
+          +platform(platforms[1])
+        div.fullMessage
+          p LISTEN
+          p FOR
+          p ANNOUNCEMENT
+    div.clock
+      span 12:34:56

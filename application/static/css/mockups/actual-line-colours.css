@@ -17,7 +17,7 @@ div.craigieburn, div.sunbury, div.upfield {
 }
 
 div.hurstbridge, div.mernda {
-  background-color: #bc2431;
+  background-color: #BC2431;
 }
 
 div.sandringham {
@@ -34,7 +34,7 @@ div.no-line {
 }
 
 div.vline {
-  background-color: #8F1A95;
+  background-color: #753F98;
 }
 
 div.city-loop {
@@ -83,7 +83,7 @@ p.no-line {
 }
 
 p.vline {
-  background-color: #8F1A95;
+  background-color: #753F98;
   color: #ffffff;
 }
 
@@ -125,7 +125,7 @@ p.city-loop {
 }
 
 .stoppingPattern.vline img {
-  filter: invert(13%) sepia(46%) saturate(6740%) hue-rotate(289deg) brightness(102%) contrast(92%);
+  filter: invert(32%) sepia(7%) saturate(4824%) hue-rotate(239deg) brightness(93%) contrast(103%);
 }
 
 
@@ -150,7 +150,7 @@ div.platform.craigieburn, div.platform.sunbury, div.platform.upfield {
 }
 
 div.platform.hurstbridge, div.platform.mernda {
-  background-color: #bc2431;
+  background-color: #BC2431;
   color: #ffffff;
 }
 
@@ -170,7 +170,7 @@ div.platform.no-line {
 }
 
 div.platform.vline {
-  background-color: #8F1A95;
+  background-color: #753F98;
   color: #ffffff;
 }
 

@@ -1,819 +1,819 @@
 .metro-trains-melbourne {
-  background-color: #0570c3;
+  background-color: #0570c3 !important;
 }
 
 :nth-child(even) > .metro-trains-melbourne {
-  background-color: #0a62a6;
+  background-color: #0a62a6 !important;
 }
 
 .yarra-trams {
-  background-color: #7bc916;
+  background-color: #7bc916 !important;
 }
 
 :nth-child(even) > .yarra-trams {
-  background-color: #72b31d;
+  background-color: #72b31d !important;
 }
 
 .cdc-melbourne, .cdc-geelong, .cdc-ballarat {
-  background-color: #fc923d;
+  background-color: #fc923d !important;
 }
 
 :nth-child(even) > .cdc-melbourne, :nth-child(even) > .cdc-geelong, :nth-child(even) > .cdc-ballarat {
-  background-color: #fb7b13;
+  background-color: #fb7b13 !important;
 }
 
 .ventura-bus-lines {
-  background-color: #14315b;
+  background-color: #14315b !important;
 }
 
 :nth-child(even) > .ventura-bus-lines {
-  background-color: #0c1d36;
+  background-color: #0c1d36 !important;
 }
 
 .transdev-melbourne {
-  background-color: #e30613;
+  background-color: #e30613 !important;
 }
 
 :nth-child(even) > .transdev-melbourne {
-  background-color: #bc0510;
+  background-color: #bc0510 !important;
 }
 
 .dysons {
-  background-color: #2eb130;
+  background-color: #2eb130 !important;
 }
 
 :nth-child(even) > .dysons {
-  background-color: #259027;
+  background-color: #259027 !important;
 }
 
 .panorama-coaches {
-  background-color: #d00071;
+  background-color: #d00071 !important;
 }
 
 :nth-child(even) > .panorama-coaches {
-  background-color: #930050;
+  background-color: #930050 !important;
 }
 
 .sita-bus-lines {
-  background-color: #ae6e00;
+  background-color: #ae6e00 !important;
 }
 
 :nth-child(even) > .sita-bus-lines {
-  background-color: #835300;
+  background-color: #835300 !important;
 }
 
 .kastoria-bus-lines {
-  background-color: #205878;
+  background-color: #205878 !important;
 }
 
 :nth-child(even) > .kastoria-bus-lines {
-  background-color: #153b50;
+  background-color: #153b50 !important;
 }
 
 .tullamarine-bus-lines {
-  background-color: #720016;
+  background-color: #720016 !important;
 }
 
 :nth-child(even) > .tullamarine-bus-lines {
-  background-color: #4b000e;
+  background-color: #4b000e !important;
 }
 
 .moonee-valley-bus-lines {
-  background-color: #f93a3a;
+  background-color: #f93a3a !important;
 }
 
 :nth-child(even) > .moonee-valley-bus-lines {
-  background-color: #a41717;
+  background-color: #a41717 !important;
 }
 
 .sunbury-bus-service {
-  background-color: #cd0504;
+  background-color: #cd0504 !important;
 }
 
 :nth-child(even) > .sunbury-bus-service {
-  background-color: #9a0909;
+  background-color: #9a0909 !important;
 }
 
 .ryan-bros-bus-service {
-  background-color: #1080a3;
+  background-color: #1080a3 !important;
 }
 
 :nth-child(even) > .ryan-bros-bus-service {
-  background-color: #0b5870;
+  background-color: #0b5870 !important;
 }
 
 .broadmeadows-bus-service {
-  background-color: #305fb3;
+  background-color: #305fb3 !important;
 }
 
 :nth-child(even) > .broadmeadows-bus-service {
-  background-color: #1f3e74;
+  background-color: #1f3e74 !important;
 }
 
 .moreland-bus-lines {
-  background-color: #50866d;
+  background-color: #50866d !important;
 }
 
 :nth-child(even) > .moreland-bus-lines {
-  background-color: #325344;
+  background-color: #325344 !important;
 }
 
 .mckenzies-tourist-service {
-  background-color: #274523;
+  background-color: #274523 !important;
 }
 
 :nth-child(even) > .mckenzies-tourist-service {
-  background-color: #192d17;
+  background-color: #192d17 !important;
 }
 
 .martyrs-bus-service {
-  background-color: #71afc7;
+  background-color: #71afc7 !important;
 }
 
 :nth-child(even) > .martyrs-bus-service {
-  background-color: #438daa;
+  background-color: #438daa !important;
 }
 
 .cranbourne-transit {
-  background-color: #cea812;
+  background-color: #cea812 !important;
 }
 
 :nth-child(even) > .cranbourne-transit {
-  background-color: #bc9a12;
+  background-color: #bc9a12 !important;
 }
 
 .skybus {
-  background-color: #e5392c;
+  background-color: #e5392c !important;
 }
 
 :nth-child(even) > .skybus {
-  background-color: #a62d24;
+  background-color: #a62d24 !important;
 }
 
 .horsham-transit, .wimmera-roadways {
-  background-color: #09633e;
+  background-color: #09633e !important;
 }
 
 :nth-child(even) > .horsham-transit, :nth-child(even) > .wimmera-roadways {
-  background-color: #03452a;
+  background-color: #03452a !important;
 }
 
 .south-coast-bus {
-  background-color: #f99d31;
+  background-color: #f99d31 !important;
 }
 
 :nth-child(even) > .south-coast-bus {
-  background-color: #d2872f;
+  background-color: #d2872f !important;
 }
 
 .turnbulls {
-  background-color: #f68b1f;
+  background-color: #f68b1f !important;
 }
 
 :nth-child(even) > .turnbulls {
-  background-color: #de7814;
+  background-color: #de7814 !important;
 }
 
 .latrobe-valley-bus-lines {
-  background-color: #b40e3a;
+  background-color: #b40e3a !important;
 }
 
 :nth-child(even) > .latrobe-valley-bus-lines {
-  background-color: #8c1131;
+  background-color: #8c1131 !important;
 }
 
 .hutchinson-bus-lines {
-  background-color: #08426a;
+  background-color: #08426a !important;
 }
 
 :nth-child(even) > .hutchinson-bus-lines {
-  background-color: #003457;
+  background-color: #003457 !important;
 }
 
 .mitchell-transit {
-  background-color: #2c4269;
+  background-color: #2c4269 !important;
 }
 
 :nth-child(even) > .mitchell-transit {
-  background-color: #192a49;
+  background-color: #192a49 !important;
 }
 
 .mcharrys-bus-lines {
-  background-color: #d50d0d;
+  background-color: #d50d0d !important;
 }
 
 :nth-child(even) > .mcharrys-bus-lines {
-  background-color: #b51010;
+  background-color: #b51010 !important;
 }
 
 .little-s-gippsland-coaches {
-  background-color: #272b69;
+  background-color: #272b69 !important;
 }
 
 :nth-child(even) > .little-s-gippsland-coaches {
-  background-color: #181d55;
+  background-color: #181d55 !important;
 }
 
-.christians-bus-company-bendigo {
-  background-color: #0559a6;
+.christians-bus-company-bendigo, .christians-bus-company-ararat, .christians-bus-company-colac, .christians-bus-company {
+  background-color: #0559a6 !important;
 }
 
-:nth-child(even) > .christians-bus-company-bendigo {
-  background-color: #0a4a85;
-}
-
-.christians-bus-company-ararat {
-  background-color: #0559a6;
-}
-
-:nth-child(even) > .christians-bus-company-ararat {
-  background-color: #0a4a85;
-}
-
-.christians-bus-company-colac {
-  background-color: #0559a6;
-}
-
-:nth-child(even) > .christians-bus-company-colac {
-  background-color: #0a4a85;
+:nth-child(even) > .christians-bus-company-bendigo, :nth-child(even) > .christians-bus-company-ararat, :nth-child(even) > .christians-bus-company-colac, :nth-child(even) > .christians-bus-company {
+  background-color: #0a4a85 !important;
 }
 
 .benalla-bus-lines {
-  background-color: #31467f;
+  background-color: #31467f !important;
 }
 
 :nth-child(even) > .benalla-bus-lines {
-  background-color: #1d2e5e;
+  background-color: #1d2e5e !important;
 }
 
 .heard-buses {
-  background-color: #1d3988;
+  background-color: #1d3988 !important;
 }
 
 :nth-child(even) > .heard-buses {
-  background-color: #162c6d;
+  background-color: #162c6d !important;
 }
 
 .westernport-roadlines {
-  background-color: #00027f;
+  background-color: #00027f !important;
 }
 
 :nth-child(even) > .westernport-roadlines {
-  background-color: #070966;
+  background-color: #070966 !important;
 }
 
 .fallons-bus-service {
-  background-color: #1f4d46;
+  background-color: #1f4d46 !important;
 }
 
 :nth-child(even) > .fallons-bus-service {
-  background-color: #10332e;
+  background-color: #10332e !important;
 }
 
 .castlemaine-bus-lines, .whitmores-bus-lines, .maryborough-transit {
-  background-color: #06345f;
+  background-color: #06345f !important;
 }
 
 :nth-child(even) > .castlemaine-bus-lines, :nth-child(even) > .whitmores-bus-lines, :nth-child(even) > .maryborough-transit {
-  background-color: #052747;
+  background-color: #052747 !important;
 }
 
 .sunraysia-bus-lines {
-  background-color: #cd9e00;
+  background-color: #cd9e00 !important;
 }
 
 :nth-child(even) > .sunraysia-bus-lines {
-  background-color: #a78307;
+  background-color: #a78307 !important;
 }
 
 .echuca-moama-transit {
-  background-color: #00a9e0;
+  background-color: #00a9e0 !important;
 }
 
 :nth-child(even) > .echuca-moama-transit {
-  background-color: #0997c6;
+  background-color: #0997c6 !important;
 }
 
 .jacobsons-bus-lines {
-  background-color: #003366;
+  background-color: #003366 !important;
 }
 
 :nth-child(even) > .jacobsons-bus-lines {
-  background-color: #032242;
+  background-color: #032242 !important;
 }
 
 .coles-coaches {
-  background-color: #0c539b;
+  background-color: #0c539b !important;
 }
 
 :nth-child(even) > .coles-coaches {
-  background-color: #0c4987;
+  background-color: #0c4987 !important;
 }
 
 .paynesville-bus-lines {
-  background-color: #c31a08;
+  background-color: #c31a08 !important;
 }
 
 :nth-child(even) > .paynesville-bus-lines {
-  background-color: #a91708;
+  background-color: #a91708 !important;
 }
 
 .sunshine-tours {
-  background-color: #faa41a;
+  background-color: #faa41a !important;
 }
 
 :nth-child(even) > .sunshine-tours {
-  background-color: #e19216;
+  background-color: #e19216 !important;
 }
 
 .little-s-coaches-daylesford {
-  background-color: #711c2b;
+  background-color: #711c2b !important;
 }
 
 :nth-child(even) > .little-s-coaches-daylesford {
-  background-color: #5e1824;
+  background-color: #5e1824 !important;
 }
 
 .harley-s-buslines {
-  background-color: #12377c;
+  background-color: #12377c !important;
 }
 
 :nth-child(even) > .harley-s-buslines {
-  background-color: #0f2c61;
+  background-color: #0f2c61 !important;
 }
 
 .bacchus-marsh-coaches {
-  background-color: #0e309f;
+  background-color: #0e309f !important;
 }
 
 :nth-child(even) > .bacchus-marsh-coaches {
-  background-color: #0d2882;
+  background-color: #0d2882 !important;
 }
 
 .gold-bus {
-  background-color: #bca436;
+  background-color: #bca436 !important;
 }
 
 :nth-child(even) > .gold-bus {
-  background-color: #aa9431;
+  background-color: #aa9431 !important;
 }
 
 .sandlant-buses {
-  background-color: #aaa07f;
+  background-color: #aaa07f !important;
 }
 
 :nth-child(even) > .sandlant-buses {
-  background-color: #948b6b;
+  background-color: #948b6b !important;
 }
 
 .swan-hill-bus-lines {
-  background-color: #2e2e8f;
+  background-color: #2e2e8f !important;
 }
 
 :nth-child(even) > .swan-hill-bus-lines {
-  background-color: #232370;
+  background-color: #232370 !important;
 }
 
 .quambatook-lalbert-community-bus-committee {
-  background-color: #67006b;
+  background-color: #67006b !important;
 }
 
 :nth-child(even) > .quambatook-lalbert-community-bus-committee {
-  background-color: #4b034e;
+  background-color: #4b034e !important;
 }
 
 .warrnambool-bus-lines, .portland-bus-lines {
-  background-color: #d51d2f;
+  background-color: #d51d2f !important;
 }
 
 :nth-child(even) > .warrnambool-bus-lines, :nth-child(even) > .portland-bus-lines {
-  background-color: #bc1726;
+  background-color: #bc1726 !important;
 }
 
 .sovereign-hill {
-  background-color: #1b2735;
+  background-color: #1b2735 !important;
 }
 
 :nth-child(even) > .sovereign-hill {
-  background-color: #141d27;
+  background-color: #141d27 !important;
 }
 
 .kingstons-tours {
-  background-color: #e80d0d;
+  background-color: #e80d0d !important;
 }
 
 :nth-child(even) > .kingstons-tours {
-  background-color: #c90f0f;
+  background-color: #c90f0f !important;
 }
 
 .shire-of-central-goldfields {
-  background-color: #067e4a;
+  background-color: #067e4a !important;
 }
 
 :nth-child(even) > .shire-of-central-goldfields {
-  background-color: #045f38;
+  background-color: #045f38 !important;
 }
 
 .henty-highway-coach {
-  background-color: #518ab7;
+  background-color: #518ab7 !important;
 }
 
 :nth-child(even) > .henty-highway-coach {
-  background-color: #4879a0;
+  background-color: #4879a0 !important;
 }
 
 .falls-creek-coach-service {
-  background-color: #2c99cc;
+  background-color: #2c99cc !important;
 }
 
 :nth-child(even) > .falls-creek-coach-service {
-  background-color: #2885af;
+  background-color: #2885af !important;
 }
 
 .organ-s-coaches {
-  background-color: #65bc9c;
+  background-color: #65bc9c !important;
 }
 
 :nth-child(even) > .organ-s-coaches {
-  background-color: #59a388;
+  background-color: #59a388 !important;
 }
 
 .trotters-coaches {
-  background-color: #28ab0e;
+  background-color: #28ab0e !important;
 }
 
 :nth-child(even) > .trotters-coaches {
-  background-color: #23910d;
+  background-color: #23910d !important;
 }
 
 .cann-s-bus-lines {
-  background-color: #047172;
+  background-color: #047172 !important;
 }
 
 :nth-child(even) > .cann-s-bus-lines {
-  background-color: #055758;
+  background-color: #055758 !important;
 }
 
 .warragul-bus-lines {
-  background-color: #4263cd;
+  background-color: #4263cd !important;
 }
 
 :nth-child(even) > .warragul-bus-lines {
-  background-color: #3856b7;
+  background-color: #3856b7 !important;
 }
 
 .martin-s-albury {
-  background-color: #af9956;
+  background-color: #af9956 !important;
 }
 
 :nth-child(even) > .martin-s-albury {
-  background-color: #a08b4b;
+  background-color: #a08b4b !important;
+}
+
+.sea-lake-district-hospital {
+  background-color: #1a73d8
+}
+
+:nth-child(even) > .sea-lake-district-hospital {
+  background-color: #1768c4 !important;
+}
+
+.zaffina-bus-lines {
+  background-color: #07b50f !important;
+}
+
+:nth-child(even) > .zaffina-bus-lines {
+  background-color: #07960e !important;
 }
 
 
 
 .glen-waverley-line {
-  background-color: #1c1e97;
+  background-color: #1c1e97 !important;
 }
 
 :nth-child(even) > .glen-waverley-line {
-  background-color: #151670;
+  background-color: #151670 !important;
 }
 
 .alamein-line {
-  background-color: #1c1e97;
+  background-color: #1c1e97 !important;
 }
 
 :nth-child(even) > .alamein-line {
-  background-color: #151670;
+  background-color: #151670 !important;
 }
 
 .belgrave-line {
-  background-color: #1c1e97;
+  background-color: #1c1e97 !important;
 }
 
 :nth-child(even) > .belgrave-line {
-  background-color: #151670;
+  background-color: #151670 !important;
 }
 
 .lilydale-line {
-  background-color: #1c1e97;
+  background-color: #1c1e97 !important;
 }
 
 :nth-child(even) > .lilydale-line {
-  background-color: #151670;
+  background-color: #151670 !important;
 }
 
 .mernda-line {
-  background-color: #ef2c20;
+  background-color: #ef2c20 !important;
 }
 
 :nth-child(even) > .mernda-line {
-  background-color: #c31e14;
+  background-color: #c31e14 !important;
 }
 
 .hurstbridge-line {
-  background-color: #ef2c20;
+  background-color: #ef2c20 !important;
 }
 
 :nth-child(even) > .hurstbridge-line {
-  background-color: #c31e14;
+  background-color: #c31e14 !important;
 }
 
 .upfield-line {
-  background-color: #a2a500;
+  background-color: #a2a500 !important;
 }
 
 :nth-child(even) > .upfield-line {
-  background-color: #7d7f00;
+  background-color: #7d7f00 !important;
 }
 
 .craigieburn-line {
-  background-color: #a2a500;
+  background-color: #a2a500 !important;
 }
 
 :nth-child(even) > .craigieburn-line {
-  background-color: #7d7f00;
+  background-color: #7d7f00 !important;
 }
 
 .sunbury-line {
-  background-color: #a2a500;
+  background-color: #a2a500 !important;
 }
 
 :nth-child(even) > .sunbury-line {
-  background-color: #7d7f00;
+  background-color: #7d7f00 !important;
 }
 
 .werribee-line {
-  background-color: #219f18;
+  background-color: #219f18 !important;
 }
 
 :nth-child(even) > .werribee-line {
-  background-color: #1b8013;
+  background-color: #1b8013 !important;
 }
 
 .williamstown-line {
-  background-color: #219f18;
+  background-color: #219f18 !important;
 }
 
 :nth-child(even) > .williamstown-line {
-  background-color: #1b8013;
+  background-color: #1b8013 !important;
 }
 
 .frankston-line {
-  background-color: #219f18;
+  background-color: #219f18 !important;
 }
 
 :nth-child(even) > .frankston-line {
-  background-color: #1b8013;
+  background-color: #1b8013 !important;
 }
 
 .stony-point-line {
-  background-color: #219f18;
+  background-color: #219f18 !important;
 }
 
 :nth-child(even) > .stony-point-line {
-  background-color: #1b8013;
+  background-color: #1b8013 !important;
 }
 
 .cranbourne-line {
-  background-color: #56b7d6;
+  background-color: #56b7d6 !important;
 }
 
 :nth-child(even) > .cranbourne-line {
-  background-color: #31a4c8;
+  background-color: #31a4c8 !important;
 }
 
 .pakenham-line {
-  background-color: #56b7d6;
+  background-color: #56b7d6 !important;
 }
 
 :nth-child(even) > .pakenham-line {
-  background-color: #31a4c8;
+  background-color: #31a4c8 !important;
 }
 
 .sandringham-line {
-  background-color: #ee67e6;
+  background-color: #ee67e6 !important;
 }
 
 :nth-child(even) > .sandringham-line {
-  background-color: #d639cc;
+  background-color: #d639cc !important;
 }
 
 .showgrounds-flemington-line {
-  background-color: #ce0058;
+  background-color: #ce0058 !important;
 }
 
 :nth-child(even) > .showgrounds-flemington-line {
-  background-color: #ba0352;
+  background-color: #ba0352 !important;
 }
 
 .city-loop-line {
-  background-color: #8f8f8f;
+  background-color: #8f8f8f !important;
 }
 
 :nth-child(even) > .city-loop-line {
-  background-color: #636363;
+  background-color: #636363 !important;
 }
 
 .vline, .v-line {
-  background-color: #6b4d9e;
+  background-color: #6b4d9e !important;
 }
 
 :nth-child(even) > .vline, :nth-child(even) > .v-line {
-  background-color: #523d77;
+  background-color: #523d77 !important;
 }
 
 
 
 .tram-1 {
-    background-color: #6e811f;
+    background-color: #6e811f !important;
 }
 
 :nth-child(even) > .tram-1 {
-    background-color: #607216;
+    background-color: #607216 !important;
 }
 
 .tram-3 {
-    background-color: #0c8aa7;
+    background-color: #0c8aa7 !important;
 }
 
 :nth-child(even) > .tram-3 {
-    background-color: #0e7991;
+    background-color: #0e7991 !important;
 }
 
 .tram-5 {
-    background-color: #ff0100;
+    background-color: #ff0100 !important;
 }
 
 :nth-child(even) > .tram-5 {
-    background-color: #b80100;
+    background-color: #b80100 !important;
 }
 
 .tram-6 {
-    background-color: #00486c;
+    background-color: #00486c !important;
 }
 
 :nth-child(even) > .tram-6 {
-    background-color: #002233;
+    background-color: #002233 !important;
 }
 
 .tram-11 {
-    background-color: #46af8b;
+    background-color: #46af8b !important;
 }
 
 :nth-child(even) > .tram-11 {
-    background-color: #227b5b;
+    background-color: #227b5b !important;
 }
 
 .tram-12 {
-    background-color: #008d9d;
+    background-color: #008d9d !important;
 }
 
 :nth-child(even) > .tram-12 {
-    background-color: #00626d;
+    background-color: #00626d !important;
 }
 
 .tram-16 {
-    background-color: #d3a306;
+    background-color: #d3a306 !important;
 }
 
 :nth-child(even) > .tram-16 {
-    background-color: #ae8600;
+    background-color: #ae8600 !important;
 }
 
 .tram-19 {
-    background-color: #953779;
+    background-color: #953779 !important;
 }
 
 :nth-child(even) > .tram-19 {
-    background-color: #5a2149;
+    background-color: #5a2149 !important;
 }
 
 .tram-30 {
-    background-color: #3e34a6;
+    background-color: #3e34a6 !important;
 }
 
 :nth-child(even) > .tram-30 {
-    background-color: #231d5c;
+    background-color: #231d5c !important;
 }
 
 .tram-35 {
-    background-color: #763113;
+    background-color: #763113 !important;
 }
 
 :nth-child(even) > .tram-35 {
-    background-color: #3a1809;
+    background-color: #3a1809 !important;
 }
 
 .tram-48 {
-    background-color: #45474d;
+    background-color: #45474d !important;
 }
 
 :nth-child(even) > .tram-48 {
-    background-color: #202124;
+    background-color: #202124 !important;
 }
 
 .tram-57 {
-    background-color: #01b2b5;
+    background-color: #01b2b5 !important;
 }
 
 :nth-child(even) > .tram-57 {
-    background-color: #008083;
+    background-color: #008083 !important;
 }
 
 .tram-58 {
-    background-color: #878e94;
+    background-color: #878e94 !important;
 }
 
 :nth-child(even) > .tram-58 {
-    background-color: #52575c;
+    background-color: #52575c !important;
 }
 
 .tram-59 {
-    background-color: #138a5a;
+    background-color: #138a5a !important;
 }
 
 :nth-child(even) > .tram-59 {
-    background-color: #0c5739;
+    background-color: #0c5739 !important;
 }
 
 .tram-64 {
-    background-color: #00ab8e;
+    background-color: #00ab8e !important;
 }
 
 :nth-child(even) > .tram-64 {
-    background-color: #019e84;
+    background-color: #019e84 !important;
 }
 
 .tram-67 {
-    background-color: #874b38;
+    background-color: #874b38 !important;
 }
 
 :nth-child(even) > .tram-67 {
-    background-color: #703c2c;
+    background-color: #703c2c !important;
 }
 
 .tram-70 {
-    background-color: #e560a5;
+    background-color: #e560a5 !important;
 }
 
 :nth-child(even) > .tram-70 {
-    background-color: #ea2a8d;
+    background-color: #ea2a8d !important;
 }
 
 .tram-72 {
-    background-color: #607c6d;
+    background-color: #607c6d !important;
 }
 
 :nth-child(even) > .tram-72 {
-    background-color: #5a7566;
+    background-color: #5a7566 !important;
 }
 
 .tram-75 {
-    background-color: #049fd3;
+    background-color: #049fd3 !important;
 }
 
 :nth-child(even) > .tram-75 {
-    background-color: #017399;
+    background-color: #017399 !important;
 }
 
 .tram-78 {
-    background-color: #8177c3;
+    background-color: #8177c3 !important;
 }
 
 :nth-child(even) > .tram-78 {
-    background-color: #51459e;
+    background-color: #51459e !important;
 }
 
 .tram-82 {
-    background-color: #79a11c;
+    background-color: #79a11c !important;
 }
 
 :nth-child(even) > .tram-82 {
-    background-color: #6d9118;
+    background-color: #6d9118 !important;
 }
 
 .tram-86 {
-    background-color: #d89c04;
+    background-color: #d89c04 !important;
 }
 
 :nth-child(even) > .tram-86 {
-    background-color: #b88400;
+    background-color: #b88400 !important;
 }
 
 .tram-96 {
-    background-color: #f20081;
+    background-color: #f20081 !important;
 }
 
 :nth-child(even) > .tram-96 {
-    background-color: #a40058;
+    background-color: #a40058 !important;
 }
 
 .tram-109 {
-    background-color: #ea6500;
+    background-color: #ea6500 !important;
 }
 
 :nth-child(even) > .tram-109 {
-    background-color: #a44700;
+    background-color: #a44700 !important;
 }

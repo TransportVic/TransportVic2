@@ -5,7 +5,7 @@ const moment = require('moment')
 const utils = require('../../../utils')
 const async = require('async')
 
-router.get('/:stopName', async (req, res) => {
+async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
   let stop = await stops.findDocument({
     codedName: req.params.stopName
@@ -35,13 +35,21 @@ router.get('/:stopName', async (req, res) => {
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
       + `${day}#stop-${departure.trip.stopTimings[0].stopGTFSID}`
 
-    departure.destination = departure.trip.destination.split('/')[0]
+    departure.destination = utils.getStopName(departure.trip.destination)
     departure.destinationURL = `/ferry/timings/${utils.encodeName(departure.trip.destination)}`
 
     return departure
   })
 
-  res.render('timings/ferry', { departures, stop })
+  return { departures, stop }
+}
+
+router.get('/:stopName', async (req, res) => {
+  res.render('timings/ferry', await loadDepartures(req, res))
+})
+
+router.post('/:stopName', async (req, res) => {
+  res.render('timings/templates/ferry', await loadDepartures(req, res))
 })
 
 module.exports = router

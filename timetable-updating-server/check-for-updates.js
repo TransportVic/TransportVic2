@@ -27,7 +27,7 @@ wss.on('connection', async (conn, req) => {
 
 let lastLastModified
 try {
-  lastLastModified = fs.readFileSync(__dirname + '/last-lastModified').toString()
+  lastLastModified = fs.readFileSync(__dirname + '/last-modified').toString()
 } catch (e) {
   console.log('No lastModified, downloading data')
 }
@@ -60,13 +60,15 @@ function spawnProcess(path, finish) {
     process.stderr.write(data.toString())
   })
   childProcess.on('close', code => {
-    console.log(`finished with code ${code}`)
+    if (finish) {
+      finish()
+    } else {
+      console.log(`finished with code ${code}`)
 
-    broadcast({
-      type: 'complete'
-    })
-
-    finish()
+      broadcast({
+        type: 'complete'
+      })
+    }
   })
 }
 
@@ -77,15 +79,23 @@ async function updateTimetables() {
       let stops = database.getCollection('stops')
       let routes = database.getCollection('routes')
       let gtfsTimetables = database.getCollection('gtfs timetables')
+      let liveTimetables = database.getCollection('live timetables')
+
       try {
         await stops.dropCollection()
         await routes.dropCollection()
         await gtfsTimetables.dropCollection()
+        await liveTimetables.dropCollection()
       } catch (e) {
         console.log(e)
       }
 
+      broadcast({
+        type: 'log-newline',
+        line: 'Dropped stops, routes and gtfs timetables'
+      })
       console.log('Dropped stops, routes and gtfs timetables')
+
       spawnProcess(__dirname + '/../load-gtfs/load-all.sh', () => {
         console.log('Done!')
         process.exit()
@@ -102,8 +112,8 @@ request.head('http://data.ptv.vic.gov.au/downloads/gtfs.zip', async (err, resp, 
     console.log('Outdated timetables: updating now...')
     console.log(new Date().toLocaleString())
     spawnProcess(__dirname + '/../update-gtfs.sh', async () => {
-      fs.writeFileSync(__dirname + '/last-lastModified', lastModified)
-      console.log('Wrote lastModified', lastModified)
+      fs.writeFileSync(__dirname + '/last-modified', lastModified)
+      console.log('Wrote last-modified', lastModified)
       await updateTimetables()
     })
   } else {

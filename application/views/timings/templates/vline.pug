@@ -1,0 +1,79 @@
+for departure in departures
+  div.departure
+    - let indexOfCurrentStation = departure.trip.stopTimings.map(stop => stop.stopName).indexOf(station.stopName)
+    input(type='hidden' name='stops-at' value=departure.trip.stopTimings.filter((_, i) => i > indexOfCurrentStation).map(stop => stop.stopName).join(','))
+    input(type='hidden' name='platform' value=departure.platform || '')
+    input(type='hidden' name='run' value=departure.runID)
+    input(type='hidden' name='line' value=departure.trip.shortRouteName)
+    a.leftContainer.platform.vline
+      if departure.isTrainReplacement
+        span.topText Coach Svc
+        //- img(src='/static/clear-icons/regional-coach.svg')
+        img(src='/static/images/clear-icons/bus.svg')
+      else
+        span.topText Platform
+        -
+          let platform = departure.platform || '?'
+          if (station.stopName !== 'Southern Cross Railway Station')
+            platform = departure.cancelled ? '-' : (departure.platform || '') + '?'
+        span.bigNumber=platform
+    -
+      let departureClass = 'departureInfo'
+      if (departure.flags && departure.flags.reservationsOnly)
+        departureClass += ' reservationsOnly'
+    a(class=departureClass href=`/vline/timings/${departure.destination.toLowerCase().replace(/ /g, '-')}`)
+      span.towards=`${departure.shortRouteName} Line towards`
+      span.destination=departure.destination
+      if departure.isTrainReplacement
+        span.info.cancelled.noClamp This service has been replaced by coaches
+      else if departure.cancelled
+        span.info.cancelled CANCELLED
+      else if departure.trip.type === 'change'
+        span.info.cancelled.noClamp=departure.trip.message
+      else
+        
+        -
+          let flags = ''
+          let checkFlags = departure.flags || {}
+          if (checkFlags.firstClassAvailable)
+            flags = 'First Class'
+          if (checkFlags.barAvailable) {
+            if (flags.length) flags += ' & '
+            flags += 'Bar'
+          }
+          if (flags.length) flags += ' Available'
+          if (checkFlags.reservationsOnly) {
+            if (flags.length) flags += ' - '
+            flags += 'Reservations Only'
+          }
+        
+          let vehicleData
+          let important = false
+          if (departure.vehicle) {
+            vehicleData = 'Vehicle: ' + departure.vehicle
+          }
+          
+          if (departure.trip.type === 'capacity reduction') {
+            important = true
+            vehicleData = `Reduced capacity of ${departure.trip.capacity} carriages`
+          }
+        span.info.full=flags
+        if vehicleData
+          if important
+            span.vehicle.cancelled=vehicleData
+          else
+            span.vehicle.full=vehicleData
+        
+    div.timings
+      -
+        let className = 'timing '
+        if (departure.trip.isUncertain)
+          className += 'uncertain'
+        else
+          className += departure.headwayDevianceClass
+      a(class=className href=departure.tripURL)
+        span=departure.prettyTimeToArrival
+        if departure.unknownScheduledDepartureTime
+          span ??
+        else
+          span=departure.scheduledDepartureTime.format('HH:mm')

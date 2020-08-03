@@ -1,0 +1,31 @@
+html
+  head
+    script(src='/static/scripts/util.js')
+    script(src='/static/scripts/mockups/metro-lcd/concourse-up-down.js' async)
+    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
+    link(rel='stylesheet' href='/static/css/mockups/16-9-pids-base.css')
+    link(rel='stylesheet' href='/static/css/mockups/metro-lcd/concourse-up-down.css')
+      
+    link(rel='preload' as='image' href='/static/images/mockups/announcements.svg')
+  body
+    div.content
+      div(style='display: none;').fullMessage
+        img(src='/static/images/mockups/announcements.svg')
+        p Please Listen
+        p for Announcements
+      div.nextDepartures
+        for i in [1, 2, 3, 4]
+          div.departure
+            div.details
+              div.top
+                span.departureTime --
+                span.destination --
+              span.stoppingType --
+            div.platformArea
+              span.title PLAT
+              span.platform --
+            div.timeToDepartureArea
+              span.title Minutes
+              span.timeToDeparture --
+          if i !== 4
+            div.greySeparator

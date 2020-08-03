@@ -1,14 +1,27 @@
 const crypto = require('crypto')
-const {ptvKey, ptvDevID} = require('./config.json')
+const {ptvKeys} = require('./config.json')
 const utils = require('./utils')
 const TimedCache = require('timed-cache')
 const requestCache = new TimedCache({ defaultTtl: 1000 * 30 })
+
+let blankKey = {ptvDevID: "", ptvKey: ""}
+
+function getPTVCreds() {
+  if (ptvKeys.length === 0) return blankKey
+
+  let key = ptvKeys[Math.floor(Math.random() * ptvKeys.length)]
+  return {
+    ptvDevID: key.devID,
+    ptvKey: key.key
+  }
+}
 
 const EventEmitter = require('events')
 
 let ptvAPILocks = {}
 
 function getURL(request) {
+  let {ptvDevID, ptvKey} = getPTVCreds()
   request += (request.includes('?') ? '&' : '?') + 'devid=' + ptvDevID
   let signature = crypto.createHmac('SHA1', ptvKey).update(request).digest('hex').toString('hex')
   return 'https://timetableapi.ptv.vic.gov.au' + request + '&signature=' + signature
@@ -27,6 +40,10 @@ async function makeRequest(url) {
       })
     }
 
+    let request
+    if (request = requestCache.get(url))
+
+      return JSON.parse(request)
     ptvAPILocks[url] = new EventEmitter()
 
     function returnData(departures) {
@@ -35,10 +52,6 @@ async function makeRequest(url) {
 
       return departures
     }
-
-    let request
-    if (request = requestCache.get(url))
-      return JSON.parse(request)
 
     let fullURL = getURL(url)
     let data = await utils.request(fullURL)

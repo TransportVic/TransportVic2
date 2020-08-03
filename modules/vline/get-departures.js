@@ -28,6 +28,8 @@ async function getStationFromVNETName(vnetStationName, db) {
   return station
 }
 
+let gippsland = ['Traralgon', 'Bairnsdale']
+
 async function getVNETDepartures(vlinePlatform, direction, db) {
   const {vnetStationName} = vlinePlatform
 
@@ -199,8 +201,22 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
     trip.vehicleType = departure.vehicleType
     trip.vehicle = departure.vehicle
 
+    let shortRouteName = getShortRouteName(trip)
+    if (vlinePlatform.fullStopName === 'Southern Cross Railway Station' && (platform === '15' || platform === '16')) {
+      if (nspTrip) {
+        let nspPlatform = nspTrip.stopTimings[0].platform.replace(/[AB]/, '')
+        if (nspPlatform === platform) platform = nspTrip.stopTimings[0].platform
+      } else {
+        if (gippsland.includes(shortRouteName)) {
+          platform += 'A'
+        } else {
+          platform += 'B'
+        }
+      }
+    }
+
     return {
-      shortRouteName: getShortRouteName(trip),
+      shortRouteName,
       originalServiceID,
       trip,
       platform,
@@ -224,6 +240,19 @@ function getShortRouteName(trip) {
   let originDest = `${origin}-${destination}`
 
   return termini[originDest] || termini[origin] || termini[destination]
+}
+
+function giveVariance(time) {
+  let minutes = utils.time24ToMinAftMidnight(time)
+
+  let validTimes = []
+  for (let i = minutes - 5; i <= minutes + 5; i++) {
+    validTimes.push(utils.minAftMidnightToTime24(i))
+  }
+
+  return {
+    $in: validTimes
+  }
 }
 
 async function processPTVDepartures(departures, runs, routes, vlinePlatform, db) {
@@ -324,9 +353,12 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
 
     let vehicle
 
+    let trackerDepartureTime = giveVariance(originDepartureTime)
+    let trackerDestinationArrivalTime = giveVariance(trip.destinationArrivalTime)
+
     let tripData = await vlineTrips.findDocument({
       date: departureTime.format('YYYYMMDD'),
-      departureTime: originDepartureTime,
+      departureTime: trackerDepartureTime,
       origin: origin.slice(0, -16),
       destination: destination.slice(0, -16)
     })
@@ -334,7 +366,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     if (!tripData) {
       tripData = await vlineTrips.findDocument({
         date: departureTime.format('YYYYMMDD'),
-        departureTime: originDepartureTime,
+        departureTime: trackerDepartureTime,
         origin: origin.slice(0, -16)
       })
     }
@@ -343,7 +375,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
       tripData = await vlineTrips.findDocument({
         date: departureTime.format('YYYYMMDD'),
         destination: destination.slice(0, -16),
-        destinationArrivalTime: trip.destinationArrivalTime
+        destinationArrivalTime: trackerDestinationArrivalTime
       })
     }
 
@@ -421,26 +453,31 @@ async function getScheduledDepartures(db, station) {
       if (stopTiming) platform = stopTiming.platform
     }
 
+    let departureDay = departure.scheduledDepartureTime.format('YYYYMMDD')
+
+    let trackerDepartureTime = giveVariance(departureTime)
+    let trackerDestinationArrivalTime = giveVariance(destinationArrivalTime)
+
     let tripData = await vlineTrips.findDocument({
-      date: departureTime.format('YYYYMMDD'),
-      departureTime,
+      date: departureDay,
+      departureTime: trackerDepartureTime,
       origin: origin.slice(0, -16),
       destination: destination.slice(0, -16)
     })
 
     if (!tripData) {
       tripData = await vlineTrips.findDocument({
-        date: departureTime.format('YYYYMMDD'),
-        departureTime,
+        date: departureDay,
+        departureTime: trackerDepartureTime,
         origin: origin.slice(0, -16)
       })
     }
 
     if (!tripData) {
       tripData = await vlineTrips.findDocument({
-        date: departureTime.format('YYYYMMDD'),
+        date: departureDay,
         destination: destination.slice(0, -16),
-        destinationArrivalTime
+        destinationArrivalTime: trackerDestinationArrivalTime
       })
     }
 
@@ -511,7 +548,9 @@ async function getDepartures(station, db) {
       } catch (e) {} finally { resolve() }
     }), new Promise(async resolve => {
       try {
-        scheduledCoachReplacements = (await getCoachDepartures(coachStop, db))
+        scheduledCoachReplacements = (await getCoachDepartures(coachStop, db)).filter(departure => {
+          return moment.utc(departure.scheduledDepartureTime.diff(utils.now())) < 1000 * 60 * 180
+        })
       } catch (e) {} finally { resolve() }
     }), new Promise(async resolve => {
       try {
@@ -551,7 +590,7 @@ async function getDepartures(station, db) {
           coach.scheduledDepartureTime = moment.tz(coach.scheduledDepartureTime, 'Australia/Melbourne')
           coach.actualDepartureTime = moment.tz(coach.actualDepartureTime, 'Australia/Melbourne')
 
-          coach.shortRouteName = getShortRouteName(coach.trip)
+          coach.shortRouteName = coach.shortRouteName || getShortRouteName(coach.trip)
 
           if (coach.trip.destination !== 'Southern Cross Coach Terminal/Spencer Street')
             coach.destination = coach.trip.destination.slice(0, -16)

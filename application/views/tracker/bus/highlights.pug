@@ -1,0 +1,35 @@
+extends ../../layout
+
+block head
+  title TransportVic - Tracker/Bus - Highlights
+
+block title
+  span Bus Tracker - Highlights
+
+block style
+  link(rel='stylesheet' href='/static/css/tracker/bus-results.css')
+
+block content
+  h1.title Bus Highlights Today
+
+  mixin section(section)
+    if section.trips.length
+      h1.title #{section.name}
+      for trip in section.trips
+        div(class=`trip ${trip.active ? '' : 'inactive'}`)
+          a(href=trip.url) #{trip.fleetNumber}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
+    
+  for section in highlights
+    +section(section)
+    
+  if unknownMetroBuses.length
+    h1.title Unknown Metro Buses
+    for trip in unknownMetroBuses
+      div(class=`trip ${trip.active ? '' : 'inactive'}`)
+        a(href=trip.url) #{trip.smartrakID}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
+    
+  if unknownRegionalBuses.length
+    h1.title Unknown Regional Buses
+    for trip in unknownRegionalBuses
+      div(class=`trip ${trip.active ? '' : 'inactive'}`)
+        a(href=trip.url) #{trip.smartrakID}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}

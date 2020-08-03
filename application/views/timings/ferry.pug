@@ -33,6 +33,7 @@ append content
     let stopModes = stop.bays.map(e => e.mode).filter((e, i, a) => a.indexOf(e) === i)
     let iconMap = {
       'regional train': 'vline',
+      'heritage train': 'heritage',
       'metro train': 'metro',
       'regional coach': 'coach'
     }
@@ -50,13 +51,4 @@ append content
           img(src=`/static/images/clear-icons/${iconMap[mode] || mode}.svg` alt='')
           span=mode
   div#departures
-    for departure in departures
-      div.departure.no-number
-        a(href=departure.destinationURL).departureInfo
-          span.routeName=departure.trip.routeName
-          span.towards Towards
-          span.destination=departure.destination
-        div.timings
-          a(href=departure.tripURL).timing.unknown
-            span=departure.prettyTimeToArrival
-            span=departure.scheduledDepartureTime.format('HH:mm')
+    include ./templates/ferry

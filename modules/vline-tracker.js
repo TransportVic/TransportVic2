@@ -86,6 +86,8 @@ async function getVNETDepartures(direction, db) {
     const originStation = await getStationFromVNETName(originVNETName, db)
     const destinationStation = await getStationFromVNETName(destinationVNETName, db)
 
+    if (!originStation || !destinationStation) return // Apparently origin or dest is sometimes unknown
+
     let originVLinePlatform = originStation.bays.find(bay => bay.mode === 'regional train')
     let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train')
 
@@ -112,7 +114,9 @@ async function getDeparturesFromVNET(db) {
   let vlineTrips = db.getCollection('vline trips')
 
   await async.forEach(vnetDepartures, async departure => {
-    let date = departure.originDepartureTime.format('YYYYMMDD')
+    let referenceTime = departure.originDepartureTime.clone()
+    if (referenceTime.get('hours') <= 3) referenceTime.add(-1, 'days')
+    let date = referenceTime.format('YYYYMMDD')
 
     let tripData = {
       date,
@@ -136,7 +140,11 @@ async function getDeparturesFromVNET(db) {
 
 async function requestTimings() {
   console.log('requesting vline trips')
-  await getDeparturesFromVNET(database)
+  try {
+    await getDeparturesFromVNET(database)
+  } catch (e) {
+    console.log('Error getting vline trips, skipping this round')
+  }
 
   if (shouldRun()) {
     setTimeout(requestTimings, 30 * 60 * 1000)

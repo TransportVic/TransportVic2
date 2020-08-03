@@ -216,8 +216,8 @@ module.exports = {
 
   // Newport
   18740: "Bay 2",
-  18741: "Bay 5",
   18742: "Bay 3",
+  18741: "Bay 5",
 
   // Geelong
   30309: "Bay 1",
@@ -375,41 +375,78 @@ module.exports = {
   19642: "Bay 10",
   19641: "Bay 11",
   19640: "Bay 13",
-  19639: "Bay 14"
+  19639: "Bay 14",
 
-  // check ringwood 901 bay
-  // Next up:
-  // The pines SC
   // Bayswater
-  // Upfield line stuff - coburg?
-  // Chirnside park sc, done
-  // Eastland?
-  // Laverton done
-  // Doncaster shoppingtown
-  // Box Hill done
-  // Glen Waverley done
-  // Knox City SC done
-  // Blackburn (ew) no bays
-  // Geelong done
-  // Southland
+  40183: "Bay 1",
+  40182: "Bay 2",
+
+  // Doncaster SC
+  19474: "Bay 1",
+  19483: "Bay 2",
+  19273: "Bay 3",
+  19485: "Bay 4",
+  19476: "Bay 5",
+  19486: "Bay 6",
+  19488: "Bay 7",
+
+  //Reservoir
+  18864: "Bay 1",
+  18865: "Bay 2",
+  19228: "Bay 3",
+  19229: "Bay 4",
+  19230: "Bay 5",
+  19231: "Bay 6",
+
   // Epping
-  // Footscray done
-  // Fountain Gate SC
+  46332: "Bay 1",
+  46333: "Bay 2",
+  46334: "Bay 3",
+  46335: "Bay 4",
+  46337: "Bay 6",
+  46338: "Bay 7",
+
   // South Morang
+  46393: "Bay 1",
+  46395: "Bay 2",
+  46396: "Bay 3",
+  46394: "Bay 5",
+  46398: "Bay 6",
+  46399: "Bay 7",
+  46397: "Bay 8",
+  51199: "Bay 9",
+  46401: "Bay 10",
+  46402: "Bay 11",
+  46403: "Bay 12",
+
+  // Hawkstowe
+  51735: "Bay 1",
+  51736: "Bay 2",
+
   // Mernda
-  // Boronia done
-  // Reservoir
-  // Bendigo done
-  // Craigieburn done
-  // Tarneit apparently has bus bays
-  // Yarraville? don't think I saw bus numbers -
-  // Sunbury done
-  // Melton
-  // Nuna?
-  // Mitcham done
-  // Watergardens done
-  // St albans done
-  // Airport West SC? no bays
-  // Altona Gate SC?
-  // Pacific Werribee/Werribee Plaza
+  51732: "Bay 1",
+  51731: "Bay 2",
+  51733: "Bay 3",
+  51734: "Bay 4",
+
+  // Stud Park SC
+  21314: "Bay 1",
+  21315: "Bay 2",
+  21316: "Bay 3",
+
+  // Northland
+  47158: "Bay 1",
+  47159: "Bay 2",
+  47160: "Bay 3",
+  47161: "Bay 4",
+  47162: "Bay 5",
+  47163: "Bay 6",
+  47164: "Bay 7",
+  47165: "Bay 8",
+  47166: "Bay 9",
+  47167: "Bay 10",
+
+  //Mitchell Street Bendigo
+  35756: "Bay A",
+  35822: "Bay B"
 }

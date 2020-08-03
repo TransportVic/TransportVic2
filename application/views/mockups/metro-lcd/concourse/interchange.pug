@@ -1,0 +1,37 @@
+html
+  head
+    script(src='/static/scripts/util.js')
+    script(src='/static/scripts/mockups/metro-lcd/concourse-interchange.js' async)
+    script(src='/static/scripts/mockups/pids-utils.js') 
+    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
+    link(rel='stylesheet' href='/static/css/mockups/16-9-pids-base.css')
+    link(rel='stylesheet' href='/static/css/mockups/metro-lcd/concourse-interchange.css')
+      
+    link(rel='preload' as='image' href='/static/images/mockups/announcements.svg')
+  body.rotated
+    div(style='display: none;').fullMessage
+      img(src='/static/images/mockups/announcements.svg')
+      p Please Listen for Announcements
+    div.content
+      div.topLineBanner
+      span.title Trains from #{stationName} to:
+      div.solidHozDivider
+      div.destinations
+        for destination in destinations
+          div(id=destination.id).destination
+            div.container
+              div.lineColour
+              div.details
+                span.destinationName #{destination.name}
+                br
+                span.stoppingAt
+              div(class='nextDepartures departure-' + destination.count + '-' + destination.count)
+                for _, i in Array(destination.count)
+                  if i !== 0
+                    div(style='display: none;').divider
+                  div(style='display: none;').departure
+                    div.platform --
+                    div.minutesToDeparture -- min
+      div.clockContainer
+        div.clock
+          span=now.format('h:mm:ss a')

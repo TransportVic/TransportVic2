@@ -1,0 +1,55 @@
+html
+  head
+    script(src='/static/scripts/util.js')
+    script(src='/static/scripts/mockups/fss/platform.js' async)
+    script(src='/static/scripts/mockups/pids-utils.js') 
+    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
+    link(rel='stylesheet' href='/static/css/mockups/actual-line-colours.css')
+    link(rel='stylesheet' href='/static/css/mockups/fss/platform.css')
+    link(rel='stylesheet' href='/static/css/mockups/16-9-pids-base.css')
+      
+    link(rel='preload' as='image' href='/static/images/mockups/announcements.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/no-boarding-train.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/station-express.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/station-filler.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/station-stops-at.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/station-stub.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/station-terminates.svg')
+    link(rel='preload' as='image' href='/static/images/mockups/express-arrow.svg')
+  body
+    div(style='display: none;').fullMessage
+      img(src='/static/images/mockups/announcements.svg')
+      p Please Listen for Announcements
+    div.content
+      div.topLineBanner.no-line
+      div.message
+        img(src='/static/images/mockups/no-boarding-train.svg')
+        p Checking departures
+        p Please wait...
+      div(style='display: none').firstDeparture
+        div.firstDepartureInfo
+          div.top
+            div
+              span.firstDepartureTime --
+              span.firstDestination --
+            div.minutesToDeparture
+              span --
+          span.firstStoppingType --
+        div.stoppingPattern.no-line
+      div.bottomRow
+        div.nextDepartures
+          mixin nextDeparture()
+            div.nextDeparture
+              div.lineColour.no-line
+              span.scheduledDepartureTime --
+              span.destination --
+              span.stoppingType --
+              div.minutesToDeparture
+                span -- min
+                  
+          +nextDeparture()
+          div.greyLine
+          +nextDeparture()
+        div.clock
+          span
+      

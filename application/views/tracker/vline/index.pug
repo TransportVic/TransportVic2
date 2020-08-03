@@ -4,25 +4,37 @@ block head
   title TransportVic - Tracker/V/Line
   
 block title
-  span V/Line history
+  span V/Line Tracker
   
-//- block style
-//-   link(rel='stylesheet' href='/static/css/tracker.css')
+block style
+  link(rel='stylesheet' href='/static/css/form.css')
+
+block scripts
+  script(src='/static/scripts/tracker/index.js')
 
 block content
-  a(href='/vline/tracker/today') see all upcoming v/line trips today
-  form(action='/vline/tracker/by-date' method='get')
-    label search all deployment by date
+  h1#title V/Line Tracker
+  h2 Track Your Train:
+  br
+  form(action='/vline/tracker/date' method='get')#byDate
+    label(for="ate") On Date:
     br
-    label -- date
-    input(name='date')
-    input(type='submit' value='check by date')
-  form(action='/vline/tracker/by-consist' method='get')
-    label search consist deployment by date
+    div.inputSection
+      input(type="text" maxlength="8" name="date" value="" placeholder="Date" autocomplete="off")
+      input(type="submit" value="Go")
+  form(action='/vline/tracker/line' method='get')#byLine
+    label(for="line") By Line:
     br
-    label -- carriage / loco number
-    input(name='consist' placeholder='eg VL42,N464,7012,BRN37') 
+    div.inputSection
+      div.selectorContainer
+      input(type="text" name="line" value="" placeholder="Line Group" autocomplete="off")
+      input(type="submit" value="Go")
+  form(action='/vline/tracker/consist' method='get')#byConsist
+    label(for="consist") By Consist:
     br
-    label -- date
-    input(name='date' placeholder='blank for today')
-    input(type='submit' value='check by date')
+    div
+      input(type="text" maxlength="8" name="consist" value="" placeholder="Carriage / Loco Number" autocomplete="off")
+      br
+      div.inputSection
+        input(type="text" maxlength="8" name="date" value="" placeholder="Date" autocomplete="off")
+        input(type="submit" value="Go")

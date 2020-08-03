@@ -1,0 +1,184 @@
+div.fullMessage {
+  width: var(--width);
+  height: var(--height);
+  background-color: #000000;
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+div.fullMessage img {
+  margin-top: calc(var(--height) * 0.005);
+  margin-right: calc(var(--height) * 0.05);
+  height: calc(var(--height) * 0.12);
+}
+
+div.fullMessage p {
+  font-size: calc(var(--height) * 0.08);
+}
+
+div.content {
+  background-color: #f0f0f0 !important;
+}
+
+div.topLineBanner {
+  width: calc(var(--width) * 0.979);
+  height: calc(var(--height) * 0.02);
+  border-radius: calc(var(--width) * 0.002);
+  margin-top: calc(var(--height) * 0.01);
+}
+
+span.title {
+  margin: calc(var(--height) * 0.01) 0;
+  height: calc(var(--height) * 0.09);
+  font-size: calc(var(--height) * 0.067);
+  display: block;
+  width: calc(var(--width) * 0.979);
+  font-family: "NetworkSansBold";
+}
+
+div.solidHozDivider {
+  background-color: black;
+  height: calc(var(--height) * 0.015);
+  width: var(--width);
+}
+
+div.splitContent {
+  height: calc(var(--height) * 0.845);
+  width: var(--width);
+  display: flex;
+}
+
+div.left, div.right {
+  display: inline-block;
+  box-sizing: border-box;
+  width: calc(var(--width) * 0.5);
+  height: calc(var(--height) * 0.845);
+}
+
+div.left {
+  border-right: solid calc(var(--width) * 0.003) black;
+}
+
+div.right {
+  border-left: solid calc(var(--width) * 0.003) black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+div.destination {
+  height: calc(var(--height) * 0.845 / 4);
+  display: flex;
+  align-items: center;
+
+  box-sizing: border-box;
+  border-bottom: solid calc(var(--height) * 0.005) black;
+}
+
+div.details {
+  height: calc(var(--height) * 0.18);
+  width: calc(var(--width) * 0.32);
+  font-family: "NetworkSansBold";
+}
+
+div.details span.destinationName {
+  font-size: calc(var(--height) * 0.045);
+
+  display: inline-block;
+  height: calc(var(--height) * 0.05);
+}
+
+div.details span.stoppingAt {
+  font-size: calc(var(--height) * 0.035);
+}
+
+div.destination div.lineColour {
+  width: calc(var(--width) * 0.005);
+  height: calc(var(--height) * 0.18);
+  border-radius: calc(var(--width) * 0.003);
+  margin: 0 calc(var(--width) * 0.01);
+}
+
+div.next2 {
+  margin-left: auto;
+}
+
+div.next2 div.departure {
+  display: flex;
+  align-items: center;
+}
+
+div.next2 div.departure div.platform {
+  margin-left: auto;
+  width: calc(var(--width) * 0.04);
+  height: calc(var(--height) * 0.06);
+  border-radius: calc(var(--width) * 0.005);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: calc(var(--height) * 0.043);
+}
+
+div.next2 div.departure div.minutesToDeparture {
+  margin-left: calc(var(--width) * 0.005);
+  margin-right: calc(var(--width) * 0.01);
+  width: calc(var(--width) * 0.09);
+  height: calc(var(--height) * 0.06);
+  border-radius: calc(var(--width) * 0.005);
+  background-color: #000000;
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: "NetworkSansRegular";
+
+  font-size: calc(var(--height) * 0.043);
+}
+
+div.divider {
+  width: calc(var(--width) * (0.04 + 0.005 + 0.09 + 0.01));
+  margin: calc(var(--height) * 0.005) 0;
+  margin-right: calc(var(--width) * 0.005);
+  height: calc(var(--height) * 0.003);
+  background-color: #C0C0C0;
+}
+
+div.cityLoopDiagram {
+  height: calc(var(--height) * 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+svg#cclSVG {
+  transform-origin: top;
+}
+
+div.clockContainer {
+  width: calc(var(--width) * 0.5 - var(--width) * 0.003);
+  height: calc(var(--height) * 0.145);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: black;
+  color: white;
+  font-size: calc(var(--height) * 0.08);
+}
+
+div.clock {
+  width: calc(var(--width) * 0.5 - var(--height) * 0.02);
+  height: calc(var(--height) * 0.145 - var(--height) * 0.02);
+  border: solid calc(var(--width) * 0.001) white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

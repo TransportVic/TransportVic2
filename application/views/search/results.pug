@@ -3,39 +3,47 @@ for metroStation in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'm
     div.leftContainer
       img(src='/static/images/clear-icons/metro.svg')
     div.resultDetails
-      span='Metro train station in ' + metroStation.suburb[0]
-      span=metroStation.stopName
+      span Metro Train Station in #{metroStation.suburb[0]}
+      span #{metroStation.stopName}
       
 for vlineStation in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'regional train')).slice(0, 3)
   a(href=`/vline/timings/${vlineStation.codedName.slice(0, -16)}`).vlineStation.result
     div.leftContainer
       img(src='/static/images/clear-icons/vline.svg')
     div.resultDetails
-      span='V/Line train station in ' + vlineStation.suburb[0]
-      span=vlineStation.stopName
+      span V/Line Train Station in #{vlineStation.suburb[0]}
+      span #{vlineStation.stopName}
+      
+for heritageStation in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'heritage train')).slice(0, 3)
+  a(href=`/heritage/timings/${heritageStation.codedName.slice(0, -16)}`).heritageStation.result
+    div.leftContainer
+      img(src='/static/images/clear-icons/vline.svg')
+    div.resultDetails
+      span Heritage Train Station in #{heritageStation.suburb[0]}
+      span #{heritageStation.stopName}
       
 for regionalCoachStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'regional coach')).slice(0, 3)
   a(href=`/coach/timings/${regionalCoachStop.codedName}`).regionalCoachStop.result
     div.leftContainer
       img(src='/static/images/clear-icons/coach.svg')
     div.resultDetails
-      span='Regional coach stop in ' + regionalCoachStop.suburb[0]
-      span=regionalCoachStop.stopName
+      span Regional Coach Stop in #{regionalCoachStop.suburb[0]}
+      span #{regionalCoachStop.stopName}
       
 for ferryTerminal in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'ferry')).slice(0, 3)
   a(href=`/ferry/timings/${ferryTerminal.codedName}`).ferryTerminal.result
     div.leftContainer
       img(src='/static/images/clear-icons/ferry.svg')
     div.resultDetails
-      span='Ferry Terminal in ' + ferryTerminal.suburb[0]
-      span=ferryTerminal.stopName
+      span Ferry Terminal in #{ferryTerminal.suburb[0]}
+      span #{ferryTerminal.stopName}
       
 for tramStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'tram')).slice(0, 5)
   a(href=`/tram/timings/${tramStop.codedSuburb[0]}/${tramStop.codedName}`).tramStop.result
     div.leftContainer
       img(src='/static/images/clear-icons/tram.svg')
     div.resultDetails
-      span='Tram stop in ' + tramStop.suburb[0]
+      span Tram Stop in #{tramStop.suburb[0]}
       -
         let displayName = tramStop.stopName
         let stopNumbers = tramStop.bays.filter(bay => bay.mode === 'tram')
@@ -43,14 +51,14 @@ for tramStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'tram'
           .filter((e, i, a) => a.indexOf(e) === i)
           .map(stopNumber => `#${stopNumber}`).join(', ')
         displayName += ` ${stopNumbers}`
-      span=displayName
+      span #{displayName}
 
 for busStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'bus')).slice(0, 10)
   a(href=`/bus/timings/${busStop.codedSuburb[0]}/${busStop.codedName}`).busStop.result
     div.leftContainer
       img(src='/static/images/clear-icons/bus.svg')
     div.resultDetails
-      span='Bus stop in ' + busStop.suburb[0]
+      span Bus Stop in #{busStop.suburb[0]}
       -
         let displayName = busStop.stopName
         let stopNumbers = busStop.bays.filter(bay => bay.mode === 'bus')
@@ -58,19 +66,63 @@ for busStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'bus'))
           .filter((e, i, a) => a.indexOf(e) === i)
           .map(stopNumber => `#${stopNumber}`).join(', ')
         displayName += ` ${stopNumbers}`
-      span=displayName
+      span #{displayName}
       
       
-for busRoute in routes.filter(route => route.mode === 'bus')
+for metroLine in routes.filter(route => route.mode === 'metro train' && route.directions[0])
+  - let url = `/metro/line/${metroLine.codedName}`
+  a(href=url).route.result
+    div(class=`leftContainer platform ${metroLine.codedName}-line`)
+      img(src='/static/images/clear-icons/metro.svg')
+    div.resultDetails
+      span Metropolitan Train Service
+      span #{metroLine.routeName} Line
+      
+for vlineLine in routes.filter(route => route.mode === 'regional train' && route.directions[0])
+  - let url = `/vline/line/${vlineLine.codedName}`
+  a(href=url).route.result
+    div(class=`leftContainer platform vline`)
+      img(src='/static/images/clear-icons/vline.svg')
+    div.resultDetails
+      span V/Line Train Service
+      span #{vlineLine.routeName} Line
+      
+//- for coachRoute in routes.filter(route => route.mode === 'regional coach' && route.directions[0])
+  - let url = `/coach/route/${coachRoute.codedName}`
+  a(href=url).route.result
+    div(class=`leftContainer platform coach`)
+      img(src='/static/images/clear-icons/coach.svg')
+    div.resultDetails
+      span Regional Coach Service
+      span #{coachRoute.routeName}
+
+for tramRoute in routes.filter(route => route.mode === 'tram' && route.directions[0])
+  - let url = `/tram/route/${tramRoute.routeNumber}`
+  a(href=url).route.result
+    div(class=`leftContainer platform tram-${tramRoute.routeNumber}`)
+        span.bigNumber=tramRoute.routeNumber
+    div.resultDetails
+      span Tram Route
+      if tramRoute.routeNumber === '35'
+        span Melbourne City Circle
+      else
+        
+        span #{tramRoute.routeName}
+
+
+
+for busRoute in routes.filter(route => route.mode === 'bus' && route.directions[0])
   -
     let hasNumber = !!busRoute.routeNumber
     let url
     let {operationDate} = busRoute
     
-    if (busRoute.routeGTFSID.match(/(4|7|8)-/)) {
-      if (hasNumber) url = `/bus/route/${busRoute.routeNumber}`   
+    if (busRoute.routeGTFSID.match(/(4|7|8|11|12)-/)) {
+      if (hasNumber) url = `/bus/route/${busRoute.routeNumber}`
+      else url = `/bus/route/named/${busRoute.codedName}`
     } else if (busRoute.routeGTFSID.startsWith('6-')) {
       if (hasNumber) url = `/bus/route/regional/${busRoute.codedSuburb}/${busRoute.routeNumber}`
+      else url = `/bus/route/named/${busRoute.codedName}`
     }
     
     url += `/${encodeName(busRoute.directions[0].directionName)}`
@@ -81,27 +133,36 @@ for busRoute in routes.filter(route => route.mode === 'bus')
     if (operator.startsWith('dysons')) operator = 'dysons'
   
   a(href=url).route.result
-    if hasNumber
-      div(class=`leftContainer platform ${operator}`)
+    div(class=`leftContainer platform ${operator}`)
+      if hasNumber
         span.bigNumber=busRoute.routeNumber
+      else
+        img(src='/static/images/clear-icons/bus.svg')
     div.resultDetails
       -
-        let type = '', gtfsID = busRoute.routeGTFSID[0]
+        let type = '', gtfsID = busRoute.routeGTFSID.split('-')[0]
         if (gtfsID === '4') type = 'Metropolitan Bus Route'
         else if (gtfsID === '6') type = 'Regional Bus Route'
-        else if (gtfsID === '7') type = 'Telebus'
-        else if (gtfsID === '8') type = 'Night Bus'
+        else if (gtfsID === '7') type = 'Telebus Route'
+        else if (gtfsID === '8') type = 'Night Bus Route'
+        else if (gtfsID === '11') type = 'Skybus Route'
+        else if (gtfsID === '12') type = 'Monash Uni Shuttle Bus'
         
         let name = ''
-
+        let via = ''
+        if (busRoute.routeName.includes(' via ')) {
+          let index = busRoute.routeName.indexOf(' via ')
+          via = busRoute.routeName.slice(index)
+        }
+        
         if (busRoute.directions.length === 1 || busRoute.routeName.includes('Loop')) {
           name = busRoute.routeName
         } else {
-          name = `${busRoute.directions[0].directionName} - ${busRoute.directions[1].directionName}`
+          name = `${busRoute.directions[0].directionName} - ${busRoute.directions[1].directionName}${via}`
         }
         if (operationDate) {
           name += ` (${operationDate.type[0].toUpperCase()}${operationDate.type.slice(1)} ${operationDate.operationDateReadable})`
         }
         name = name.replace(/(Bus )?Interchange/g, '').replace(/Bus Station/g, '').replace(/Railway Station/g, '').replace(/Shopping Centre/g, 'SC').replace(/  +/g, ' ').trim()
-      span=type
-      span=name
+      span #{type}
+      span #{name}

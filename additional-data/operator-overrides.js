@@ -16,9 +16,12 @@ module.exports = {
   "4-4X9": ["Sita Bus Lines"], // 459
   "4-46z": ["Kastoria Bus Lines"], // 462
   "4-462": ["Kastoria Bus Lines"],
+  "4-463": ["Kastoria Bus Lines"],
+  "4-469": ["Kastoria Bus Lines"],
   "4-47b": ["Kastoria Bus Lines"], // 476
   "4-47I": ["Tullamarine Bus Lines"], // 471
   "4-48S": ["Tullamarine Bus Lines"], // 484
+  "4-5X9": ["Dysons"], // 509
   "4-525": ["Dysons"],
   "4-52F": ["Dysons"], // 525
   "4-552": ["Dysons"],
@@ -30,9 +33,10 @@ module.exports = {
   "4-800": ["Ventura Bus Lines"],
   "4-80O": ["Ventura Bus Lines"],
   "4-834": ["Ventura Bus Lines"],
+  "4-84Z": ["Ventura Bus Lines"], // 842
   "4-84E": ["Ventura Bus Lines"], // 843
   "4-84F": ["Ventura Bus Lines"], // 845
-  "4-84Z": ["Ventura Bus Lines"], // 842
+  "4-85X": ["Ventura Bus Lines"], // 857
   "4-86l": ["Ventura Bus Lines"], // 861
   "4-900": ["CDC Melbourne", "Ventura Bus Lines"],
   "4-903": ["Transdev Melbourne"],
@@ -48,10 +52,10 @@ module.exports = {
   "6-ST2": ["Sandlant Buses"], // 2 Stawell - Patrick St
   "6-HT3": ["Horsham Transit"], // 3 Horsham - Wawunna Road
   "6-HT4": ["Horsham Transit"], // 4 Horsham - Williams Road South Bank
-  "6-G45": ["McHarrys"], // 45 Armstrong Creek - Waurn Ponds SC
+  "6-G45": ["McHarrys Bus Lines"], // 45 Armstrong Creek - Waurn Ponds SC
   "6-HT5": ["Horsham Transit"], // 5 Horsham - Natimuk Road
-  "6-G6X": ["McHarrys"], // 60 Geelong Railway Station - St Leonards
-  "6-G6L": ["McHarrys"], // 61 Geelong Railway Station - Drysdale
+  "6-G6X": ["McHarrys Bus Lines"], // 60 Geelong Railway Station - St Leonards
+  "6-G6L": ["McHarrys Bus Lines"], // 61 Geelong Railway Station - Drysdale
   "6-a31": ["Dysons (Wangaratta)"], // 7 Albury - Beechworth
   "6-BM8": ["Dysons (Moama)"], // Barmah 8 Barmah - Echuca
 

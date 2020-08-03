@@ -1,0 +1,23 @@
+for departure in departures
+  div.departure.no-number
+    a.departureInfo
+      -
+        let routeName = departure.trip.routeName
+        if (departure.isTrainReplacement) {
+          routeName = `V/Line ${departure.shortRouteName} Line Rail Replacement`
+        }
+      span.routeName=routeName
+      span.towards Towards
+      span.destination=departure.destination
+      if departure.isTrainReplacement
+        -
+          let message = 'This is a train replacement coach'
+          if (stop.stopName === 'Southern Cross Coach Terminal/Spencer Street') message += ', departing Bays 62 - 70'
+          else if (departure.bay) message += `, departing ${departure.bay}`
+        span.cancelled.noClamp=message
+      else if departure.bay
+        span.info Departing #{departure.bay}
+    div.timings
+      a(href=departure.tripURL).timing.unknown
+        span=departure.prettyTimeToArrival
+        span=departure.scheduledDepartureTime.format('HH:mm')

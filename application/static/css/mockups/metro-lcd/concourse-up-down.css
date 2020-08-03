@@ -1,0 +1,107 @@
+div.content > div {
+  width: var(--width);
+}
+
+div.content {
+  background-color: #222222 !important;
+  color: white !important;
+}
+
+div.fullMessage {
+  height: var(--height);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000 !important;
+}
+
+div.fullMessage > img {
+  height: calc(var(--height) * 0.2);
+}
+
+div.fullMessage > * {
+  font-size: calc(var(--height) * 0.15);
+  line-height: calc(var(--height) * 0.13);
+  height: calc(var(--height) * 0.13);
+  margin: calc(var(--width) * 0.01);
+  font-family: "NetworkSansRegular";
+  white-space: nowrap;
+}
+
+div.departure {
+  --departure-height: calc((var(--height) - var(--height) * 0.006 * 3) / 4);
+  height: var(--departure-height);
+  display: flex;
+}
+
+div.greySeparator {
+  height: calc(var(--height) * 0.006);
+  background-color: #808080;
+}
+
+div.details {
+  width: calc(var(--width) * 0.75);
+  margin-left: calc(var(--width) * 0.01);
+  height: var(--departure-height);
+  display: flex;
+  flex-direction: column;
+}
+
+div.departure.vline {
+  background-color: #753f98;
+}
+
+span.departureTime {
+  font-size: calc(var(--height) * 0.088);
+  display: inline-block;
+  width: calc(var(--width) * 0.13);
+}
+
+span.destination {
+  font-size: calc(var(--height) * 0.115);
+  margin-left: calc(var(--width) * 0.015);
+}
+
+span.stoppingType {
+  font-size: calc(var(--height) * 0.079);
+  margin-top: calc(var(--height) * -0.005);
+  font-family: "NetworkSansRegular";
+}
+
+div.platformArea, div.timeToDepartureArea {
+  width: calc(var(--width) * 0.125);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+div.platformArea {
+  background: #ffffff;
+  color: #000000;
+}
+
+div.timeToDepartureArea {
+  background-color: #0e8fd0;
+}
+
+div.platformArea span.title {
+  font-size: calc(var(--height) * 0.065);
+}
+
+div.platformArea span.platform {
+  font-size: calc(var(--height) * 0.11);
+}
+
+div.timeToDepartureArea span.title {
+  font-size: calc(var(--height) * 0.035);
+}
+
+div.timeToDepartureArea span.timeToDeparture {
+  font-size: calc(var(--height) * 0.11);
+}
+
+div.timeToDepartureArea span.timeToDeparture.now {
+  font-size: calc(var(--height) * 0.09);
+  letter-spacing: 0;
+}

@@ -2,10 +2,10 @@ const departureUtils = require('../utils/get-bus-timetables')
 const async = require('async')
 const moment = require('moment')
 const TimedCache = require('timed-cache')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 5 })
+const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
-const destinationOverrides = require('../../additional-data/coach-destinations')
+const destinationOverrides = require('../../additional-data/coach-stops')
 const EventEmitter = require('events')
 const busBays = require('../../additional-data/bus-bays')
 const southernCrossBays = require('../../additional-data/southern-cross-bays')
@@ -67,7 +67,7 @@ async function getDeparturesFromPTV(stop, db) {
       let departureTime = moment.tz(coachDeparture.scheduled_departure_utc, 'Australia/Melbourne')
       let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime) % 1440
 
-      if (departureTime.diff(now, 'minutes') > 180) return
+      if (departureTime.diff(now, 'minutes') > 60 * 12) return
 
       let coachRouteGTFSID = route.route_gtfs_id.replace('1-', '5-')
       let trainRouteGTFSID = route.route_gtfs_id
@@ -117,6 +117,9 @@ async function getDeparturesFromPTV(stop, db) {
           if (trip) {
             console.log(`Mapped train trip as coach: ${trip.departureTime} to ${trip.destination}`)
 
+            let operationDay = tripDay.format('YYYYMMDD')
+            trip.operationDays = [ operationDay ]
+
             trip.mode = 'regional coach'
             trip.routeGTFSID = trip.routeGTFSID.replace('1-', '5-')
 
@@ -133,9 +136,18 @@ async function getDeparturesFromPTV(stop, db) {
               lastStop.stopName = trip.destination
             }
 
-            delete trip._id
-            await liveTimetables.createDocument(trip)
+            let query = {
+              origin: trip.origin,
+              destination: trip.destination,
+              operationDays: operationDay,
+              departureTime: trip.departureTime,
+              destinationArrivalTime: trip.destinationArrivalTime
+            }
 
+            delete trip._id
+            await liveTimetables.replaceDocument(query, trip, {
+              $upsert: true
+            })
 
             isTrainReplacement = true
             break
@@ -208,15 +220,14 @@ async function getDepartures(stop, db) {
     let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
     departures = await async.map(departures, async departure => {
-      let destinationShortName = departure.trip.destination.split('/')[0]
       let {destination} = departure.trip
-      if (!(utils.isStreet(destinationShortName) || destinationShortName.includes('Information Centre'))) destination = destinationShortName
       destination = destination.replace('Shopping Centre', 'SC')
+      destination = destinationOverrides[destination] || destination
 
-      if (destinationOverrides[destination])
-        departure.destination = destinationOverrides[destination]
-      else
-        departure.destination = destination
+      let shortName = utils.getStopName(destination)
+      if (!utils.isStreet(shortName)) destination = shortName
+      
+      departure.destination = destination
 
       let departureBayID = departure.trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID)).stopGTFSID
       let bay
@@ -235,13 +246,16 @@ async function getDepartures(stop, db) {
           destination = 'Southern Cross Railway Station'
         }
 
-        let hasNSPDeparture = (await timetables.countDocuments({
+        let nspDeparture = await timetables.findDocument({
           mode: 'regional train',
-          origin, destination,
+          origin,
+          'stopTimings.stopName': destination,
           departureTime
-        })) > 0
-
-        departure.isTrainReplacement = hasNSPDeparture
+        })
+        departure.isTrainReplacement = !!nspDeparture
+        if (nspDeparture) {
+          departure.shortRouteName = nspDeparture.routeName
+        }
       }
       return departure
     })

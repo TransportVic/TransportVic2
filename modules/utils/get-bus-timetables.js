@@ -80,16 +80,6 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
     }
   }
 
-  if (trip) {
-    let hasSeenStop = false
-    trip.stopTimings = trip.stopTimings.filter(stop => {
-      if (stopGTFSIDs.includes(stop.stopGTFSID)) {
-        hasSeenStop = true
-      }
-      return hasSeenStop
-    })
-  }
-
   if (!trip) {
     if (mode !== 'regional coach')
       console.err('Failed to find timetable: ', JSON.stringify(query, null, 1))
@@ -122,14 +112,6 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
   return (await async.map(trips, async trip => {
     let stopData = trip.stopTimings.filter(stop => stopGTFSIDs.includes(stop.stopGTFSID))[0]
     let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
-
-    let hasSeenStop = false
-    trip.stopTimings = trip.stopTimings.filter(stop => {
-      if (stopGTFSIDs.includes(stop.stopGTFSID)) {
-        hasSeenStop = true
-      }
-      return hasSeenStop
-    })
 
     let route = await routes.findDocument({ routeGTFSID: trip.routeGTFSID })
     let opertor, routeNumber

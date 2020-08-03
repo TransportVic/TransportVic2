@@ -1,0 +1,188 @@
+div.content {
+  background-color: #222222 !important;
+  color: white !important;
+}
+
+div.fullMessage {
+  width: var(--width);
+  height: var(--height);
+  background-color: #000000;
+  color: #ffffff;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+div.fullMessage img {
+  height: calc(var(--height) * 0.12);
+}
+
+div.fullMessage p {
+  margin-top: calc(var(--height) * 0.03);
+  font-size: calc(var(--height) * 0.06);
+  text-align: center;
+}
+
+div.topLineBanner {
+  width: calc(var(--width) * 0.95);
+  height: calc(var(--height) * 0.02);
+  border-radius: calc(var(--width) * 0.01);
+  margin-top: calc(var(--height) * 0.01);
+
+  background-color: white;
+}
+
+span.title {
+  font-size: calc(var(--height) * 0.032);
+  height: calc(var(--height) * 0.038);
+  margin-left: calc(var(--width) * 0.025);
+  margin-top: calc(var(--height) * 0.004);
+  display: block;
+  width: calc(var(--width) * 0.979);
+  font-family: "NetworkSansBold";
+}
+
+div.solidHozDivider {
+  background-color: white;
+  margin-top: calc(var(--height) * 0.01);
+  height: calc(var(--height) * 0.003);
+  width: var(--width);
+}
+
+div.destinations {
+  display: flex;
+  flex-direction: column;
+  height: calc(var(--height) * 0.835);
+}
+
+div.destination {
+  width: var(--width);
+  display: flex;
+  align-items: center;
+
+  box-sizing: border-box;
+  border-bottom: solid calc(var(--height) * 0.003) #ffffff;
+  flex-grow: 1;
+}
+
+div.container {
+  width: var(--width);
+  display: flex;
+  align-items: center;
+  height: 80%;
+}
+
+div.destination div.lineColour {
+  width: calc(var(--width) * 0.017);
+  height: 100%;
+  border-radius: calc(var(--width) * 0.02);
+  margin-left: calc(var(--width) * 0.019);
+  margin-right: calc(var(--width) * 0.01);
+  background-color: #ffffff;
+}
+
+div.details {
+  width: calc(var(--width) * 0.6);
+  height: 100%;
+  font-family: "NetworkSansBold";
+}
+
+div.details span.destinationName {
+  display: inline-block;
+  font-size: calc(var(--height) * 0.025);
+  margin-top: 1.2%;
+  margin-left: calc(var(--width) * 0.01);
+}
+
+div.details span.stoppingAt {
+  font-size: calc(var(--height) * 0.035);
+}
+
+div.nextDepartures {
+  height: 100%;
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+div.nextDepartures div.departure {
+  display: flex;
+  align-items: center;
+}
+
+div.nextDepartures.departure-1-1 div.departure {
+  height: 90%;
+}
+
+div.nextDepartures.departure-2 div.departure, div.nextDepartures.departure-2-2 div.departure {
+  height: 38%;
+}
+
+div.nextDepartures.departure-2 div.departure, div.nextDepartures.departure-2-1 div.departure {
+  height: 53%;
+}
+
+div.nextDepartures div.departure div.platform {
+  margin-left: auto;
+  width: calc(var(--width) * 0.1);
+  height: 100%;
+  border-radius: calc(var(--width) * 0.005);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #ffffff;
+  color: #000000;
+
+  font-size: calc(var(--height) * 0.024);
+}
+
+div.nextDepartures div.departure div.minutesToDeparture {
+  margin: 0 calc(var(--width) * 0.017);
+  width: calc(var(--width) * 0.2);
+  height: 100%;
+  border-radius: calc(var(--width) * 0.005);
+  background-color: #000000;
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: "NetworkSansRegular";
+
+  font-size: calc(var(--height) * 0.024);
+}
+
+div.divider {
+  width: calc(var(--width) * (0.1 + 2 * 0.017 + 0.2));
+  margin: calc(var(--height) * 0.005) 0;
+  margin-right: calc(var(--width) * 0.01);
+  height: calc(var(--height) * 0.002);
+  background-color: #C0C0C0;
+}
+
+
+div.clockContainer {
+  width: var(--width);
+  height: calc(var(--height) * 0.08);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: #000000;
+  font-size: calc(var(--height) * 0.04);
+}
+
+div.clock {
+  width: calc(var(--width) - var(--height) * 0.02);
+  height: calc(var(--height) * 0.08 - var(--height) * 0.02);
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

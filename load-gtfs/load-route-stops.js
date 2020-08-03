@@ -4,7 +4,7 @@ const async = require('async')
 const mergeStops = require('./utils/merge-stops')
 const updateStats = require('./utils/stats')
 const busDestinations = require('../additional-data/bus-destinations')
-const coachDestinations = require('../additional-data/coach-destinations')
+const coachDestinations = require('../additional-data/coach-stops')
 const tramDestinations = require('../additional-data/tram-destinations')
 const utils = require('../utils')
 
@@ -80,14 +80,18 @@ database.connect({}, async err => {
       if (lastStop.includes('School') || lastStop.includes('College')) directionName = mostCommonDestination
       else directionName = lastStop
 
-      let directionShortName = directionName.split('/')[0]
+      let directionShortName = directionName.split('/')[0].replace('Shopping Centre', 'SC')
       if (!utils.isStreet(directionShortName)) directionName = directionShortName
 
       if (routeData.flags && routeData.flags[1]) {
         directionName += ` (${routeData.flags[gtfsDirection]})`
       }
 
-      let serviceData = busDestinations.service[routeData.routeNumber] || busDestinations.service[routeGTFSID] || {}
+      if (routeGTFSID === '3-35') {
+        directionName = `Waterfront City Docklands (${gtfsDirection == 0 ? 'Anti-' : ''}Clockwise)`
+      }
+
+      let serviceData = busDestinations.service[routeGTFSID] || busDestinations.service[routeData.routeNumber] || {}
 
       directionName = serviceData[directionName]
         || busDestinations.generic[directionName]

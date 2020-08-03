@@ -1,0 +1,128 @@
+extends ../layout
+
+block head
+  title TransportVic - Tram Route #{route.routeNumber}
+  meta(property='og:title' content=`TransportVic - Tram Route ${route.routeNumber}`)
+  meta(property='twitter:title' content=`TransportVic - Tram Route ${route.routeNumber}`)
+  meta(property='og:description' content=`Tram Route ${route.routeNumber}: ${name}`)
+  meta(property='twitter:description' content=`Tram Route ${route.routeNumber}: ${name}`)
+  
+block title
+  span Tram Route #{route.routeNumber}
+
+block style
+  link(rel='stylesheet' href='/static/css/routes/base-style.css')
+  link(rel='stylesheet' href='/static/css/combined-colours.css')
+      
+block content
+  div#routeSummary
+    a(class=`tram-${route.routeNumber}` href=`/tram/route/${route.routeNumber}/${codedDirectionNames[1]}`)#routeNumber
+      span#routeType Tram Route
+      span#routeText=route.routeNumber
+    div#terminals
+      if showDualTermini
+        a().coloured-row
+          span.destination=directionNames[1]
+        a().coloured-row
+          span.destination=directionNames[0]
+      else
+        
+        a().coloured-row.full
+          span.header Circular Loop
+          span.destination=directionNames[0]
+  div#serviceTimings
+    div#keyTimings
+      div.table-header.table-data.spacing1
+        span Days
+        span First Tram
+        span Last Tram
+      div.coloured-row.table-data.spacing1
+        span Weekdays
+        span=firstLastTramMap.firstTrip.weekday
+        span=firstLastTramMap.lastTrip.weekday
+      div.coloured-row.table-data.spacing1
+        span Saturday / PH
+        span=firstLastTramMap.firstTrip.saturday
+        span=firstLastTramMap.lastTrip.saturday
+      div.coloured-row.table-data.spacing1
+        span Sundays
+        span=firstLastTramMap.firstTrip.sunday
+        span=firstLastTramMap.lastTrip.sunday
+    div#frequency
+      div.table-header.table-data.spacing3
+        span Time Of Day
+        span Weekday
+        span Saturday
+        span Sunday
+      div.coloured-row.table-data.spacing3
+        -
+          function frequency(data) {
+            if (data.min === '-') return '-'
+            else {
+              if (data.min === '1 Trip') return '1 Tram'
+              else if (data.min === data.max) return data.min + 'min'
+              else return `${data.min}-${data.max}min`
+            }
+          }
+        div.freqTime
+          span.time 03:00 - 06:00
+          span.desc Early Morning
+        span=frequency(frequencyMap.weekday['Early Morning'])
+        span=frequency(frequencyMap.saturday['Early Morning'])
+        span=frequency(frequencyMap.sunday['Early Morning'])
+      div.coloured-row.table-data.spacing3
+        div.freqTime
+          span.time 06:00 - 10:00
+          span.desc Morning Peak
+        span=frequency(frequencyMap.weekday['Morning Peak'])
+        span=frequency(frequencyMap.saturday['Morning Peak'])
+        span=frequency(frequencyMap.sunday['Morning Peak'])
+      div.coloured-row.table-data.spacing3
+        div.freqTime
+          span.time 10:00 - 15:00
+          span.desc Daytime Off Peak
+        span=frequency(frequencyMap.weekday['Daytime Off Peak'])
+        span=frequency(frequencyMap.saturday['Daytime Off Peak'])
+        span=frequency(frequencyMap.sunday['Daytime Off Peak'])
+      div.coloured-row.table-data.spacing3
+        div.freqTime
+          span.time 15:00 - 19:00
+          span.desc Afternoon Peak
+        span=frequency(frequencyMap.weekday['Afternoon Peak'])
+        span=frequency(frequencyMap.saturday['Afternoon Peak'])
+        span=frequency(frequencyMap.sunday['Afternoon Peak'])
+      div.coloured-row.table-data.spacing3
+        div.freqTime
+          span.time 19:00 - 22:00
+          span.desc Early Evening
+        span=frequency(frequencyMap.weekday['Early Evening'])
+        span=frequency(frequencyMap.saturday['Early Evening'])
+        span=frequency(frequencyMap.sunday['Early Evening'])
+      div.coloured-row.table-data.spacing3
+        div.freqTime
+          span.time 22:00 - 03:00
+          span.desc Late Night
+        span=frequency(frequencyMap.weekday['Late Night'])
+        span=frequency(frequencyMap.saturday['Late Night'])
+        span=frequency(frequencyMap.sunday['Late Night'])
+  div#stops
+    div.table-header.table-data.spacing2
+      span.suburb Suburb
+      span.stopName Tram Stop    
+    
+    for stop in direction.stops
+      div.coloured-row
+        div.stop.table-data.spacing2
+          span.suburb=stop.suburb
+          div.stopNameData.stopName
+            -
+              let stopRoad = stop.stopName.replace(/^[^\/]+\//, '')
+              let stopName = stop.stopName.replace(/\/.+$/, '')
+              if ((stopRoad == stopName) && stopName.match(/\d+[A-Z]? .+$/)) {
+                stopRoad = stopName.match(/\d+[A-Z]? (.+)$/)[1]
+              }
+            if stopRoad !== stopName
+                span=stopRoad
+            else
+                span
+            span=stopName

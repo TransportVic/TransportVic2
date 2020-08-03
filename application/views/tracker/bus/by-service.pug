@@ -1,0 +1,21 @@
+extends ../../layout
+
+block head
+  title TransportVic - Tracker/Bus - By Service
+
+block title
+  span Bus Tracker - By Service
+
+block style
+  link(rel='stylesheet' href='/static/css/tracker/bus-results.css')
+
+block content
+  h1.title Tracking Bus Service #{service} on #{date.format('dddd, MMMM Do YYYY')}
+  for trip in tripsToday
+    div(class=`trip ${trip.active ? '' : 'inactive'}`)
+      a(href=trip.url) #{trip.fleetNumber}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]}
+
+  h1.title Past deployments:
+  for pastDate in Object.keys(busesByDay).reverse()
+    a(href=`/bus/tracker/service?service=${service}&date=${busesByDay[pastDate].date}`).pastDeployment #{pastDate} - #{busesByDay[pastDate].buses.join(', ')}
+    br

@@ -1,0 +1,8 @@
+route_id,agency_id,route_short_name,route_long_name,route_type,route_color,route_text_color
+"13-PBR-mjp-1","","","Puffing Billy Railway","","","FFFFFF"
+"13-BPR-mjp-1","","","Bellarine Railway","","","FFFFFF"
+"13-DCR-mjp-1","","","Daylesford Country Railway","","","FFFFFF"
+"13-VGR-mjp-1","","","Victorian Goldfields Railway","","","FFFFFF"
+"13-YVR-mjp-1","","","Yarra Valley Railway","","","FFFFFF"
+"13-MPR-mjp-1","","","Mornington Railway","","","FFFFFF"
+"13-WHR-mjp-1","","","Walhalla Railway","","","FFFFFF"

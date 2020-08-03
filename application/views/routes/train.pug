@@ -1,0 +1,114 @@
+extends ../layout
+
+block head
+  
+  - let name = `${route.routeName} Line`
+  title TransportVic - #{name}
+  meta(property='og:title' content=`TransportVic - ${name}`)
+  meta(property='twitter:title' content=`TransportVic - ${name}`)
+  meta(property='og:description' content=`${name}`)
+  meta(property='twitter:description' content=`${name}`)
+  
+block title
+  span #{name}
+
+block style
+  link(rel='stylesheet' href='/static/css/routes/base-style.css')
+  link(rel='stylesheet' href='/static/css/combined-colours.css')
+      
+block content
+  div#routeSummary
+    a(class=cssName href=`/${niceMode}/line/${route.codedName}/${codedDirectionNames[1]}`)#routeNumber
+      span#routeType=mode === 'vline' ? 'V/Line Train' : 'Metro Train'
+      span#routeText #{lineCode}
+    div#terminals
+      a.coloured-row.full
+        span.header Towards
+        span.destination=directionNames[0]
+  div#serviceTimings
+    div#keyTimings
+      div.table-header.table-data.spacing1
+        span Days
+        span First Train
+        span Last Train
+      div.coloured-row.table-data.spacing1
+        span Weekdays
+        span=firstLastTrainMap.firstTrip.weekday
+        span=firstLastTrainMap.lastTrip.weekday
+      div.coloured-row.table-data.spacing1
+        span Saturday / PH
+        span=firstLastTrainMap.firstTrip.saturday
+        span=firstLastTrainMap.lastTrip.saturday
+      div.coloured-row.table-data.spacing1
+        span Sundays
+        span=firstLastTrainMap.firstTrip.sunday
+        span=firstLastTrainMap.lastTrip.sunday
+    div#frequency
+      div.table-header.table-data.spacing3
+        span Time Of Day
+        span Weekday
+        span Saturday
+        span Sunday
+      div.coloured-row.table-data.spacing3
+        -
+          function frequency(data) {
+            if (data.min === '-') return '-'
+            else {
+              if (data.min === '1 Trip') return '1 Train'
+              else if (data.min === data.max) return data.min + 'min'
+              else return `${data.min}-${data.max}min`
+            }
+          }
+        div.freqTime
+          span.time 03:00 - 06:00
+          span.desc Early Morning
+        span=frequency(frequencyMap.weekday['Early Morning'])
+        span=frequency(frequencyMap.saturday['Early Morning'])
+        span=frequency(frequencyMap.sunday['Early Morning'])
+      div.coloured-row.table-data.spacing3
+        div.freqTime
+          span.time 06:00 - 10:00
+          span.desc Morning Peak
+        span=frequency(frequencyMap.weekday['Morning Peak'])
+        span=frequency(frequencyMap.saturday['Morning Peak'])
+        span=frequency(frequencyMap.sunday['Morning Peak'])
+      div.coloured-row.table-data.spacing3
+        div.freqTime
+          span.time 10:00 - 15:00
+          span.desc Daytime Off Peak
+        span=frequency(frequencyMap.weekday['Daytime Off Peak'])
+        span=frequency(frequencyMap.saturday['Daytime Off Peak'])
+        span=frequency(frequencyMap.sunday['Daytime Off Peak'])
+      div.coloured-row.table-data.spacing3
+        div.freqTime
+          span.time 15:00 - 19:00
+          span.desc Afternoon Peak
+        span=frequency(frequencyMap.weekday['Afternoon Peak'])
+        span=frequency(frequencyMap.saturday['Afternoon Peak'])
+        span=frequency(frequencyMap.sunday['Afternoon Peak'])
+      div.coloured-row.table-data.spacing3
+        div.freqTime
+          span.time 19:00 - 22:00
+          span.desc Early Evening
+        span=frequency(frequencyMap.weekday['Early Evening'])
+        span=frequency(frequencyMap.saturday['Early Evening'])
+        span=frequency(frequencyMap.sunday['Early Evening'])
+      div.coloured-row.table-data.spacing3
+        div.freqTime
+          span.time 22:00 - 03:00
+          span.desc Late Night
+        span=frequency(frequencyMap.weekday['Late Night'])
+        span=frequency(frequencyMap.saturday['Late Night'])
+        span=frequency(frequencyMap.sunday['Late Night'])
+  div#stops
+    div.table-header.table-data.spacing2
+      span.suburb Suburb
+      span.stopName Train Station    
+    
+    for stop in direction.stops
+      div.coloured-row
+        div.stop.table-data.spacing2
+          span.suburb=stop.suburb
+          div.stopNameData.stopName
+            span
+            span=stop.stopName.slice(0, -16)

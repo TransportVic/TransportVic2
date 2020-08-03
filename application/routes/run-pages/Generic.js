@@ -7,8 +7,10 @@ const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern'
 const busStopNameModifier = require('../../../additional-data/bus-stop-name-modifier')
 
 const busDestinations = require('../../../additional-data/bus-destinations')
-const coachDestinations = require('../../../additional-data/coach-destinations')
+const coachDestinations = require('../../../additional-data/coach-stops')
 const tramDestinations = require('../../../additional-data/tram-destinations')
+
+const determineTramRouteNumber = require('../../../modules/tram/determine-tram-route-number')
 
 const tramFleet = require('../../../tram-fleet')
 
@@ -73,7 +75,7 @@ async function pickBestTrip(data, db) {
 
   let checkStop = checkStops[0]
 
-  if (!checkStop) return gtfsTrip
+  if (!checkStop) checkStop = referenceTrip.stopTimings[0]
 
   let checkStopTime = moment.tz(`${data.operationDays} ${checkStop.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
   let isoDeparture = checkStopTime.toISOString()
@@ -112,23 +114,44 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   let tripRoute = await routes.findDocument({ routeGTFSID: trip.routeGTFSID }, { routePath: 0 })
   let operator = tripRoute.operators[0]
 
-  let {destination} = trip
+  let {destination, origin} = trip
   let fullDestination = destination
-  let destinationShortName = destination.split('/')[0]
+  let fullOrigin = origin
+
+  let destinationShortName = utils.getStopName(destination)
+  let originShortName = utils.getStopName(origin)
+
   if (!utils.isStreet(destinationShortName)) destination = destinationShortName
+  if (!utils.isStreet(originShortName)) origin = originShortName
 
   destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
+  origin = origin.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
 
   if (trip.mode === 'tram') {
     destination = tramDestinations[destination] || destination
+    origin = tramDestinations[origin] || origin
   } else if (trip.mode === 'regional coach') {
+    destination = fullDestination.replace('Shopping Centre', 'SC')
+    origin = fullOrigin.replace('Shopping Centre', 'SC')
+
     destination = coachDestinations[destination] || destination
+    origin = coachDestinations[origin] || origin
+
+    let destShortName = utils.getStopName(destination)
+    if (!utils.isStreet(destShortName)) destination = destShortName
+
+    let originShortName = utils.getStopName(origin)
+    if (!utils.isStreet(originShortName)) origin = originShortName
   } else {
     let serviceData = busDestinations.service[trip.routeNumber] || busDestinations.service[trip.routeGTFSID] || {}
 
     destination = serviceData[destination]
       || busDestinations.generic[destination]
       || busDestinations.generic[fullDestination] || destination
+
+    origin = serviceData[origin]
+      || busDestinations.generic[origin]
+      || busDestinations.generic[fullOrigin] || origin
   }
 
   let loopDirection
@@ -138,7 +161,7 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   let importantStops = []
 
   if (trip.mode === 'bus')
-    importantStops = trip.stopTimings.map(stop => stop.stopName.split('/')[0])
+    importantStops = trip.stopTimings.map(stop => utils.getStopName(stop.stopName))
       .filter((e, i, a) => a.indexOf(e) === i)
       .slice(1, -1)
       .filter(utils.isCheckpointStop)
@@ -158,8 +181,8 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
     }
 
     if (stop.estimatedDepartureTime) {
-      let scheduledDepartureTime =
-        moment.tz(`${req.params.operationDays} ${stop.departureTime || stop.arrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+      let scheduledDepartureTime = moment.tz(req.params.operationDays, 'YYYYMMDD', 'Australia/Melbourne').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
+
       let headwayDeviance = scheduledDepartureTime.diff(stop.estimatedDepartureTime, 'minutes')
 
       if (headwayDeviance > 2) {
@@ -203,13 +226,23 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
     }
   }
 
+  let routeNumber = trip.routeNumber
+  let routeNumberClass = utils.encodeName(operator)
+
+  if (trip.mode === 'tram') {
+    routeNumber = determineTramRouteNumber(trip)
+    routeNumberClass = 'tram-' + routeNumber.replace(/[a-z]/, '')
+  }
+
   res.render('runs/generic', {
     trip,
     shorternStopName: utils.shorternStopName,
+    origin,
     destination,
-    operator: utils.encodeName(operator),
+    routeNumberClass,
     loopDirection,
-    viaText
+    viaText,
+    routeNumber
   })
 })
 
