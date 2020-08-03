@@ -44,11 +44,15 @@ router.get('/summary/:station', (req, res) => {
   }
 })
 
+let validConcourseTypes = ['up-down', 'interchange']
+
 router.get('/get', async (req, res) => {
   let stops = res.db.getCollection('stops')
   let query = querystring.parse(url.parse(req.url).query)
   let {type, value, station, concourseType} = query
   station = utils.encodeName(station || '')
+
+  let errorMessage = `${type} is not a valid PID type`
 
   if (type === 'fss-escalator') {
     return res.redirect('/mockups/fss/escalator/' + value + (station ? '/' + station : ''))
@@ -65,18 +69,26 @@ router.get('/get', async (req, res) => {
   } else if (type === 'summary') {
     return res.redirect(`/mockups/summary/${station}?type=${value}`)
   } else if (type === 'concourse') {
-    return res.redirect(`/mockups/metro-lcd/concourse/${station}/${concourseType}`)
+    if (validConcourseTypes.includes(concourseType)) {
+      return res.redirect(`/mockups/metro-lcd/concourse/${station}/${concourseType}`)
+    } else {
+      errorMessage = `${concourseType} is not a valid PID type`
+    }
   } else if (type === 'bus-int-pids') {
     let {bay} = query
     let m = value.match(/\/bus\/timings(\/.+)/)
     if (m) {
       m = m[1]
       bay = bay || '*'
-      res.redirect('/mockups/bus-int-pids' + m + '/' + bay)
+      return res.redirect('/mockups/bus-int-pids' + m + '/' + bay)
+    } else {
+      errorMessage = `${value} is an invalid bus stop`
     }
   }
 
-  res.redirect('/mockups')
+  res.render('errors/400', {
+    errorMessage
+  })
 })
 
 module.exports = router
