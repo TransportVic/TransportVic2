@@ -20,5 +20,5 @@ database.connect(async () => {
   stops.push(await dbStops.findDocument({ stopName: 'Southern Cross Railway Station' }))
 
   await requestTimings()
-  setInterval(requestTimings, 60 * 60 * 1000)
+  setInterval(requestTimings, 30 * 60 * 1000)
 })
