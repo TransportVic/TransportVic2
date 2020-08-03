@@ -28,6 +28,8 @@ async function getStationFromVNETName(vnetStationName, db) {
   return station
 }
 
+let gippsland = ['Traralgon', 'Bairnsdale']
+
 async function getVNETDepartures(vlinePlatform, direction, db) {
   const {vnetStationName} = vlinePlatform
 
@@ -199,8 +201,17 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
     trip.vehicleType = departure.vehicleType
     trip.vehicle = departure.vehicle
 
+    let shortRouteName = getShortRouteName(trip)
+    if (vlinePlatform.fullStopName === 'Southern Cross Railway Station' && (platform === '15' || platform === '16')) {
+      if (gippsland.includes(shortRouteName)) {
+        platform += 'A'
+      } else {
+        platform += 'B'
+      }
+    }
+
     return {
-      shortRouteName: getShortRouteName(trip),
+      shortRouteName,
       originalServiceID,
       trip,
       platform,

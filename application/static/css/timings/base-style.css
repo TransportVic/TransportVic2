@@ -105,7 +105,7 @@ div.departure:nth-child(even) a.departureInfo.reservationsOnly {
 
 .leftContainer.platform span.bigNumber {
   font-size: calc(3.2vw + 2.5vh);
-  letter-spacing: calc(-0.1vw - 0.1vh);
+  letter-spacing: calc(-0.15vw - 0.15vh);
 }
 
 .leftContainer.platform span.bottomText {
