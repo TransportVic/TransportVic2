@@ -38,7 +38,15 @@ div.stationRow {
 }
 
 div.stationRow > img {
-  filter: invert(100) !important;
+  filter: invert(1) !important;
+}
+
+div.expressArrow img:nth-child(1) {
+  filter: invert(1) !important;
+}
+
+div.expressArrow img:nth-child(2) {
+  filter: invert(0.1333) !important;
 }
 
 div.nextDepartures {
