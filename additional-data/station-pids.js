@@ -1,5 +1,5 @@
 let plat = (p, t) =>  ({ platform: p, type: t })
-let conc = (t) =>  ({ concourse: true, type: t })
+let conc = (t, q) =>  ({ concourse: true, type: t, query: q })
 let platr = (c, e, t) => Array(c).fill(0).map((_, p) => plat(p + 1, t)).filter(p => !e.includes(p.platform))
 
 module.exports = {
@@ -52,7 +52,7 @@ module.exports = {
   "South Kensington": [],
   "Flemington Bridge": [],
   "Macaulay": [],
-  "North Melbourne": [...platr(6, [], 'platform'), ...platr(6, [], 'fss-escalator'), conc('interchange')], // Eventually style as pre platform vertical
+  "North Melbourne": [...platr(6, [], 'platform'), ...platr(6, [], 'pre-platform-vertical'), conc('interchange')],
   "Flagstaff": [...platr(4, [], 'platform'), conc('interchange')],
   "Southern Cross": [],
   "Footscray": [...platr(6, [3, 4], 'half-platform'), conc('up-down')],
@@ -80,7 +80,7 @@ module.exports = {
   "Mont Albert": [...platr(3, [], 'half-platform-bold')],
   "Surrey Hills": [...platr(3, [], 'half-platform-bold')],
   "Chatham": [...platr(2, [], 'half-platform-bold')],
-  "Canterbury": [...platr(2, [], 'half-platform'), plat(3, 'fss-escalator')], // Migrate to Pre Platform Vertical
+  "Canterbury": [...platr(2, [], 'half-platform'), plat(3, 'pre-platform-vertical')],
   "Auburn": [],
   "Moreland": [],
   "Northcote": [],
@@ -106,7 +106,7 @@ module.exports = {
   "Jolimont": [...platr(2, [], 'half-platform-bold')],
   "Richmond": [...platr(10, [], 'platform'), conc('interchange')],
   "Melbourne Central": [...platr(4, [], 'platform')],
-  "South Yarra": [...platr(6, [], 'half-platform-bold')],
+  "South Yarra": [...platr(6, [], 'half-platform-bold'), conc('up-down', 'd=up'), conc('up-down', 'd=down')],
   "Prahran": [],
   "Burnley": [...platr(3, [], 'half-platform-bold')],
   "East Richmond": [],
@@ -197,7 +197,7 @@ module.exports = {
   "Cardinia Road": [...platr(2, [], 'half-platform-bold')],
   "Pakenham": [],
   "Officer": [],
-  "Frankston": [... platr(3, [], 'platform')],
+  "Frankston": [... platr(3, [], 'platform'), conc('up-down')],
   "Leawarra": [],
   "Baxter": [],
   "Somerville": [],

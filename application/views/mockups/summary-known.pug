@@ -2,7 +2,7 @@ html
   head
     link(rel='stylesheet' href='/static/css/mockups/summary.css')
   body
-    - let verticalPIDs = ['concourse-interchange', 'fss-escalator']
+    - let verticalPIDs = ['concourse-interchange', 'fss-escalator', 'pre-platform-vertical']
       
     div.container
       for pid in stationPID
@@ -10,6 +10,7 @@ html
           -
             let fullPIDType = `concourse-${pid.type}`
             let url = `/mockups/metro-lcd/concourse/${station}/${pid.type}`
+            if (pid.query) url += '?' + pid.query
           div(class=`pid ${verticalPIDs.includes(fullPIDType) ? 'vertical' : 'horizontal'}`)
             div.title
               a(href=url)=`/${stationCode}/concourse/${pid.type}`
@@ -26,6 +27,7 @@ html
             if (pid.type === 'half-platform-bold') url = `/mockups/metro-lcd/${station}/${pid.platform}/half-platform-bold`
             if (pid.type === 'half-platform') url = `/mockups/metro-lcd/${station}/${pid.platform}/half-platform`
             if (pid.type === 'platform') url = `/mockups/metro-lcd/${station}/${pid.platform}/platform`
+            if (pid.type === 'pre-platform-vertical') url = `/mockups/metro-lcd/${station}/${pid.platform}/pre-platform-vertical`
             if (pid.type === 'fss-escalator') url = `/mockups/fss/escalator/${pid.platform}/${station}/`
             if (pid.type === 'fss-platform') url = `/mockups/fss/platform/${pid.platform}/${station}/`
 

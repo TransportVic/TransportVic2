@@ -1,3 +1,5 @@
+let forcedDirection = null
+
 function formatTime(time) {
   let hours = time.getHours()
   let minutes = time.getMinutes()
@@ -57,8 +59,15 @@ function updateBody(firstTime) {
         departures[departure.trip.direction].push(departure)
       })
 
-      if (departures.Up.length === 0 || departures.Down.length === 0) {
+      if (forcedDirection) {
+        let directionName = forcedDirection[0].toUpperCase() + forcedDirection.slice(1)
+        screenDepartures = departures[directionName]
+      } else if (departures.Up.length === 0 || departures.Down.length === 0) {
         screenDepartures = [...departures.Up, ...departures.Down].slice(0, 4)
+      } else if (departures.Up.length === 1) {
+        screenDepartures = [...departures.Up, ...departures.Down.slice(0, 3)]
+      } else if (departures.Down.length === 1) {
+        screenDepartures = [...departures.Up.slice(0, 3), ...departures.Down]
       } else {
         screenDepartures = [...departures.Up.slice(0, 2), ...departures.Down.slice(0, 2)]
       }
@@ -117,6 +126,10 @@ function updateBody(firstTime) {
 
 
 $.ready(() => {
+  if (search.query.d) {
+    forcedDirection = search.query.d
+  }
+
   updateBody(true)
   setTimeout(() => {
     updateBody()
