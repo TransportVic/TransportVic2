@@ -89,4 +89,37 @@ router.get('/covid-19', (req, res) => {
   res.render('pages/covid-19')
 })
 
+let allSprinters = []
+for (let i = 7001; i <= 7022; i++) {
+  if (i !== 7019) allSprinters.push(i.toString())
+}
+
+router.get('/sty', async (req, res) => {
+  let vlineTrips = res.db.getCollection('vline trips')
+  let now = utils.now()
+  let prevFriday = utils.now()
+  prevFriday.day(prevFriday.day() >= 5 ? 5 : -2)
+
+  let days = utils.allDaysBetweenDates(prevFriday, now).map(d => d.format('YYYYMMDD'))
+
+  let sprinters = (await vlineTrips.distinct('consist', {
+    consist: /70\d\d/,
+    date: {
+      $in: days
+    }
+  })).sort((a, b) => a - b)
+
+  let missing = allSprinters.filter(s => !sprinters.includes(s))
+
+  if (missing.length === 2) {
+    res.render('test-sty', {
+      sprinters: missing
+    })
+  } else {
+    res.render('test-sty', {
+      missing
+    })
+  }
+})
+
 module.exports = router

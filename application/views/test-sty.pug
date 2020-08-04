@@ -1,0 +1,27 @@
+extends layout
+    
+block head
+  title TransportVic - Sprinter Test
+  
+  meta(property='og:title' content='TransportVic - Sprinter Test')
+  meta(property='twitter:title' content='TransportVic - Sprinter Test')
+  meta(property='og:description' content='Sprinter Testing')
+  meta(property='twitter:description' content='Sprinter Testing')
+  meta(name='description' content='Sprinter Testing')
+
+block title
+  span TransportVic - Sprinter Test
+
+block scripts
+  
+block style
+  link(rel='stylesheet' href='/static/css/about.css')
+
+block content
+  h1 Sprinter Test
+  if sprinters
+    h2 Located: #{sprinters.join(', ')}
+  else
+    
+    h2 Could not determine sprinters
+    h2 Missing from the network are: #{missing.join(', ')}
