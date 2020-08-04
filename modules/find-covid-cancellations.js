@@ -62,7 +62,7 @@ async function run() {
     await sleep(1000)
   })
 
-  await async.forEachSeries(cancelledTrips.slice(10), async trip => {
+  await async.forEachSeries(cancelledTrips, async trip => {
     let ptvRunID
     if (trip.runID.match(/[RX]/)) ptvRunID = 988000 + parseInt(trip.runID.slice(1))
     else ptvRunID = 948000 + parseInt(trip.runID)
