@@ -346,11 +346,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let message = ''
 
     if (cancelled) {
-      let departureStop = trip.stopTimings[0]
-      let minutesDifference = scheduledDepartureTimeMinutes - departure.departureTimeMinutes
-      let departureTime = scheduledDepartureTime.clone().subtract(minutesDifference, 'minutes')
-
-      let day = departureTime.format('YYYYMMDD')
+      let day = utils.getYYYYMMDDNow()
 
       let covidCancellation = await covid19Cancelled.findDocument({
         day,
