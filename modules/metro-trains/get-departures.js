@@ -9,8 +9,6 @@ const departureUtils = require('../utils/get-train-timetables')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
 
-const covidCancelledTrips = require('../../additional-data/covid-cancelled')
-
 let ptvAPILocks = {}
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
@@ -122,6 +120,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   const gtfsTimetables = db.getCollection('gtfs timetables')
   const timetables = db.getCollection('timetables')
   const liveTimetables = db.getCollection('live timetables')
+  const covid19Cancelled = db.getCollection('covid19 cancellations')
 
   const minutesPastMidnight = utils.getMinutesPastMidnightNow()
   let transformedDepartures = []
@@ -351,13 +350,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       let minutesDifference = scheduledDepartureTimeMinutes - departure.departureTimeMinutes
       let departureTime = scheduledDepartureTime.clone().subtract(minutesDifference, 'minutes')
 
-      let day = departureTime.isoWeekday()
+      let day = departureTime.format('YYYYMMDD')
 
-      let isWeekday = 0 < day && day < 6
-      let key = isWeekday ? 'Weekday' : 'Weekend'
-
-      let covidCancellation = covidCancelledTrips.find(trip => {
-        return trip.runID === runID && trip.days === key
+      let covidCancellation = await covid19Cancelled.findDocument({
+        day,
+        runID
       })
 
       if (covidCancellation) message = 'CANCELLED (COVID-19)'
