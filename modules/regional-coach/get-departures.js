@@ -226,7 +226,7 @@ async function getDepartures(stop, db) {
 
       let shortName = utils.getStopName(destination)
       if (!utils.isStreet(shortName)) destination = shortName
-      
+
       departure.destination = destination
 
       let departureBayID = departure.trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID)).stopGTFSID
@@ -260,8 +260,37 @@ async function getDepartures(stop, db) {
       return departure
     })
 
-    departuresCache.put(cacheKey, Object.values(departures))
-    return returnDepartures(Object.values(departures))
+    let trainReplacements = []
+    departures.forEach(departure => {
+      if (departure.isTrainReplacement) {
+        trainReplacements.push({
+          routeGTFSID: departure.trip.routeGTFSID,
+          departureTime: departure.trip.stopTimings[0].departureTime,
+          direction: departure.trip.gtfsDirection,
+          shortRouteName: departure.shortRouteName
+        })
+      }
+    })
+
+    departures = departures.map(departure => {
+      if (!departure.isTrainReplacement) {
+        let combinedTR = trainReplacements.find(t => {
+          return t.routeGTFSID === departure.trip.routeGTFSID
+            && t.departureTime === departure.trip.stopTimings[0].departureTime
+            && t.direction === departure.trip.gtfsDirection
+        })
+
+        if (combinedTR) {
+          departure.isTrainReplacement = true
+          departure.shortRouteName = combinedTR.shortRouteName
+        }
+      }
+
+      return departure
+    })
+
+    departuresCache.put(cacheKey, departures)
+    return returnDepartures(departures)
   } catch (e) {
     return returnDepartures(null)
   }
