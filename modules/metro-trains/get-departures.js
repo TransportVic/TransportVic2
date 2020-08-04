@@ -9,6 +9,8 @@ const departureUtils = require('../utils/get-train-timetables')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
 
+const getStonyPoint = require('../get-stony-point')
+
 let ptvAPILocks = {}
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
@@ -215,6 +217,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     const scheduledDepartureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
     const scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
 
+    let consist = []
+
     let estimatedDepartureTime = departure.estimated_departure_utc ? moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne') : null
 
     let possibleDestinations = [runDestination]
@@ -369,6 +373,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       }
     }
 
+    if (routeName === 'Stony Point') {
+      let potentialConsist = await getStonyPoint(db)
+      if (potentialConsist.length === 2) consist = potentialConsist
+    }
+
     transformedDepartures.push({
       trip,
       scheduledDepartureTime,
@@ -379,7 +388,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       cancelled, cityLoopConfig,
       destination, runID, vehicleType, runDestination,
       suspensions: mappedSuspensions,
-      message
+      message,
+      consist
     })
   })
 

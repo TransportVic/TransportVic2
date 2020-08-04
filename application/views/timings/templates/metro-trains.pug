@@ -44,17 +44,19 @@ for departure in departures
         span.topText Platform
         span.bigNumber=departure.platform || '?'
     a(href=departure.destinationURL).departureInfo
-      span.towards=`${routeName} Line towards`
-      span.destination=departure.destination
+      span.towards #{routeName} Line towards
+      span.destination #{departure.destination}
       
       if departure.message && !departure.suspensions.length
-        span.info.cancelled.noClamp=departure.message
+        span.info.cancelled.noClamp #{departure.message}
       else if departure.cancelled
         span.info.cancelled CANCELLED
       else if departure.message
-        span.info.cancelled.noClamp=departure.message
+        span.info.cancelled.noClamp #{departure.message}
       else if departure.isTrainReplacement
         span.info.cancelled Rail Replacement Bus
+      else if departure.consist
+        span.info Detected Consist: #{departure.consist.join(', ')}
       else
         
         -
