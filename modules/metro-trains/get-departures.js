@@ -220,7 +220,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let possibleDestinations = [runDestination]
 
     let destination = runDestination
-    if (routeName === 'Frankston' && (destination === 'Southern Cross' || destination === 'Parliament'))
+    if (caulfieldGroup.includes(routeID) && destination === 'Southern Cross' || destination === 'Parliament')
       possibleDestinations.push('Flinders Street')
 
     let possibleLines = [routeName]
