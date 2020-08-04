@@ -42,7 +42,7 @@ for departure in departures
         img(src='/static/images/clear-icons/bus.svg')
       else
         span.topText Platform
-        span.bigNumber=departure.platform || '?'
+        span.bigNumber #{departure.platform || '?'}
     a(href=departure.destinationURL).departureInfo
       span.towards #{routeName} Line towards
       span.destination #{departure.destination}
@@ -55,7 +55,7 @@ for departure in departures
         span.info.cancelled.noClamp #{departure.message}
       else if departure.isTrainReplacement
         span.info.cancelled Rail Replacement Bus
-      else if departure.consist
+      else if departure.consist.length
         span.info Detected Consist: #{departure.consist.join(', ')}
       else
         
@@ -63,8 +63,8 @@ for departure in departures
           let {trip} = departure
           let isUpTrip = (trip || {}).direction === 'Up' || trip.runID % 2 === 0
         if cityLoopStationNames.includes(station.stopName) || isUpTrip
-          span.info=departure.cityLoopConfig.join(', ')
+          span.info #{departure.cityLoopConfig.join(', ')}
     div.timings
       a(class='timing ' + departure.headwayDevianceClass href=`/metro/run/${departure.tripURL}`)
-        span=departure.prettyTimeToArrival
-        span=departure.scheduledDepartureTime.format('HH:mm')
+        span #{departure.prettyTimeToArrival}
+        span #{departure.scheduledDepartureTime.format('HH:mm')}
