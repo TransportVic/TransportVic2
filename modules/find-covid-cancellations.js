@@ -4,7 +4,11 @@ const utils = require('../utils')
 const async = require('async')
 const ptvAPI = require('../ptv-api')
 const moment = require('moment')
+
+const getStoppingPattern = require('./utils/get-stopping-pattern')
+
 require('moment-timezone')
+let covid19Cancelled, stops
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let checkStops = [
@@ -12,12 +16,16 @@ let checkStops = [
   'Ringwood East',
   'Ferntree Gully',
   'Lilydale',
-  'Alamein',
+  'Burwood',
   'Mount Waverley',
   'Heyington',
   'Camberwell',
   'Cranbourne',
   'Clifton Hill',
+  'Mernda',
+  'Hurstbridge',
+  'Greensborough',
+  'Eltham',
   'South Yarra',
   'North Melbourne',
   'North Williamstown',
@@ -26,13 +34,14 @@ let checkStops = [
   'Dandenong'
 ]
 
+async function sleep(time) {
+  return await new Promise(resolve => setTimeout(resolve, time))
+}
+
 async function run() {
-  let departureMoment = moment.tz('Australia/Melbourne').startOf('day').add(19, 'hours')
+  let departureMoment = utils.now().startOf('day').add(19, 'hours')
   let departureTime = departureMoment.toISOString()
   let day = departureMoment.format('YYYYMMDD')
-
-  let stops = database.getCollection('stops')
-  let covid19Cancelled = database.getCollection('covid19 cancellations')
 
   let cancelledTrips = []
   let runIDs = []
@@ -49,18 +58,42 @@ async function run() {
       runIDs.push(trip)
       cancelledTrips.push({ day, runID: trip })
     })
+
+    await sleep(1000)
   })
 
-  await async.forEach(cancelledTrips, async trip => {
-    await covid19Cancelled.replaceDocument(trip, trip, {
+  await async.forEachSeries(cancelledTrips.slice(10), async trip => {
+    let ptvRunID
+    if (trip.runID.match(/[RX]/)) ptvRunID = 988000 + parseInt(trip.runID.slice(1))
+    else ptvRunID = 948000 + parseInt(trip.runID)
+
+    let tripData = await getStoppingPattern(database, ptvRunID, 'metro train', departureTime)
+
+    await covid19Cancelled.replaceDocument(trip, {
+      ...trip,
+      origin: tripData.trueOrigin,
+      destination: tripData.trueDestination,
+      departureTime: tripData.trueDepartureTime
+    }, {
       upsert: true
     })
+
+    await sleep(1500)
   })
+
 }
 
 database.connect({}, async () => {
-  let runTime = moment.tz('Australia/Melbourne').startOf('day').add(5, 'hours')
-  let now = moment.tz('Australia/Melbourne')
+  stops = database.getCollection('stops')
+  covid19Cancelled = database.getCollection('covid19 cancellations')
+
+  await covid19Cancelled.createIndex({
+    day: 1,
+    runID: 1
+  }, {name: 'COVID-19 Cancellations index'})
+
+  let runTime = utils.now().startOf('day').add(5, 'hours')
+  let now = utils.now()
 
   let diff = runTime - now
   if (diff < 0) diff += 1440 * 60 * 1000
