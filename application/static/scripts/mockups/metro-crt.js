@@ -40,6 +40,10 @@ function updateBody() {
 
       let destination = firstDeparture.destination.toUpperCase()
       if (firstDeparture.trip.routeGTFSID === '2-CCL') destination = 'CITY CIRCLE'
+      if (destination === 'FLINDERS STREET') destination = 'FLINDERS ST'
+      if (destination === 'UPPER FERNTREE GULLY') destination = 'UPPER FT GULLY'
+      if (destination === 'NORTH MELBOURNE') destination = 'NTH MELBOURNE'
+      if (destination === 'FLEMINGTON RACECOURSE') destination = 'FLEMINGTON RACES'
 
       $('.destination span').textContent = destination
       $('.departureInfo .scheduledDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
