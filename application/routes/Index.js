@@ -94,7 +94,7 @@ router.get('/covid-19/curfew', async (req, res) => {
   let covid19Cancellations = res.db.getCollection('covid19 cancellations')
   let today = utils.getYYYYMMDDNow()
 
-  let tripsToday = await covid19Cancellations.findDocuments({ day: today }).toArray()
+  let tripsToday = await covid19Cancellations.findDocuments({ day: today }).sort({ departureTime: 1 }).toArray()
   res.json(tripsToday)
 })
 
