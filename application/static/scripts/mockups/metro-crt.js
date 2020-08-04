@@ -57,7 +57,7 @@ function updateBody() {
         $('.min').textContent = 'MIN'
       }
 
-      let stops = firstDeparture.additionalInfo.screenStops
+      let stops = firstDeparture.additionalInfo.screenStops.slice(1)
 
       function getHTML(stops) {
         return stops.map(stop => `<span>${stop.isExpress ? '- - -' : shorternName(stop.stopName).toUpperCase()}</span>`).join('')
