@@ -4,6 +4,7 @@ function shorternName(name) {
   if (name === 'Melbourne Central') return 'Melb Central'
   if (name === 'Southern Cross') return 'Spencer Street'
   if (name === 'Upper Ferntree Gully') return 'Upper FT Gully'
+  if (name === 'Nar Nar Goon') return 'Nar-Nar-Goon'
 
   return name
 }
@@ -39,11 +40,12 @@ function updateBody() {
       if (!firstDeparture) return setListenAnnouncements()
 
       let destination = firstDeparture.destination.toUpperCase()
-      if (firstDeparture.trip.routeGTFSID === '2-CCL') destination = 'CITY CIRCLE'
+      if (firstDeparture.routeName === 'City Circle') destination = 'CITY CIRCLE'
       if (destination === 'FLINDERS STREET') destination = 'FLINDERS ST'
       if (destination === 'UPPER FERNTREE GULLY') destination = 'UPPER FT GULLY'
       if (destination === 'NORTH MELBOURNE') destination = 'NTH MELBOURNE'
       if (destination === 'FLEMINGTON RACECOURSE') destination = 'FLEMINGTON RACES'
+      if (destination === 'SOUTH GEELONG') destination = 'STH GEELONG'
 
       $('.destination span').textContent = destination
       $('.departureInfo .scheduledDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
@@ -62,6 +64,14 @@ function updateBody() {
       }
 
       let stops = firstDeparture.additionalInfo.screenStops.slice(1)
+
+      if (['Traralgon', 'Bairnsdale'].includes(firstDeparture.shortRouteName)) {
+        let nngIndex = stops.map(stop => stop.stopName).indexOf('Nar Nar Goon')
+
+        if (nngIndex > 0) {
+          stops = stops.slice(nngIndex)
+        }
+      }
 
       function getHTML(stops) {
         return stops.map(stop => `<span>${stop.isExpress ? '- - -' : shorternName(stop.stopName).toUpperCase()}</span>`).join('')

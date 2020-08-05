@@ -30,6 +30,7 @@ html
             if (pid.type === 'pre-platform-vertical') url = `/mockups/metro-lcd/${station}/${pid.platform}/pre-platform-vertical`
             if (pid.type === 'fss-escalator') url = `/mockups/fss/escalator/${pid.platform}/${station}/`
             if (pid.type === 'fss-platform') url = `/mockups/fss/platform/${pid.platform}/${station}/`
+            if (pid.type === 'sss-platform') url = `/mockups/sss/platform/${pid.platform * 2 - 1}-${pid.platform * 2}/`
 
             let isHalf = pid.type.startsWith('half-')
           div(class=`pid ${isHalf ? 'half' : verticalPIDs.includes(pid.type) ? 'vertical' : 'horizontal'}`)

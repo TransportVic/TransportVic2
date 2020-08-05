@@ -54,7 +54,7 @@ module.exports = {
   "Macaulay": [],
   "North Melbourne": [...platr(6, [], 'platform'), ...platr(6, [], 'pre-platform-vertical'), conc('interchange')],
   "Flagstaff": [...platr(4, [], 'platform'), conc('interchange')],
-  "Southern Cross": [],
+  "Southern Cross": [...platr(8, [], 'sss-platform')],
   "Footscray": [...platr(6, [3, 4], 'half-platform'), conc('up-down')],
   "Tottenham": [...platr(2, [], 'half-platform-bold')],
   "Middle Footscray": [],
