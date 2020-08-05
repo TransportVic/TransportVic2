@@ -315,18 +315,31 @@ module.exports = {
     let start = +new Date()
 
     let body
-    if (typeof options[0] === 'string')
-      body = await request(options[0], {
-        timeout: 5000,
-        gzip: true,
-        ...(options[1] || {})
-      })
-    else
-      body = await request({
-        timeout: 5000,
-        gzip: true,
-        ...options[0]
-      })
+    let error
+
+    for (let i = 0; i < 3; i++) {
+      try {
+        if (typeof options[0] === 'string') {
+          body = await request(options[0], {
+            timeout: 2500,
+            gzip: true,
+            ...(options[1] || {})
+          })
+        } else {
+          body = await request({
+            timeout: 2500,
+            gzip: true,
+            ...options[0]
+          })
+        }
+
+        break
+      } catch (e) {
+        error = e
+      }
+    }
+
+    if (!body && error) throw e
 
     let url = typeof options[0] === 'string' ? options[0] : options[0].url
 
