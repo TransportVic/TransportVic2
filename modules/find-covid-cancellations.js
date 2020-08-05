@@ -92,7 +92,7 @@ database.connect({}, async () => {
     runID: 1
   }, {name: 'COVID-19 Cancellations index'})
 
-  let runTime = utils.now().startOf('day').add(5, 'hours')
+  let runTime = utils.now().startOf('day').add(12, 'hours')
   let now = utils.now()
 
   let diff = runTime - now
