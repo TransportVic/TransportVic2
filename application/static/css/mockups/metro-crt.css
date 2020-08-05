@@ -87,6 +87,7 @@ div.rightCRT {
 div.nextDeparture {
   margin-top: auto;
   margin-bottom: calc(var(--height) * 0.02);
+  margin-left: 0;
 }
 
 div.nextDeparture span {
@@ -95,8 +96,23 @@ div.nextDeparture span {
   line-height: calc(var(--height) * 0.05);
 }
 
+div.divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.divider pre {
+  letter-spacing: 0;
+  font-size: calc(var(--height) * 0.05);
+  line-height: calc(var(--height) * 0.05);
+  margin: 0;
+  white-space: pre;
+}
+
 div.nextDeparture span:nth-child(2) {
   width: calc(var(--width) * 0.15);
+  margin-left: calc(var(--width) * 0.02);
 }
 
 div.nextDeparture span:nth-child(3) {
