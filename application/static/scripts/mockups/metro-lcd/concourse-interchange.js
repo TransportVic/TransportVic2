@@ -58,12 +58,12 @@ function setListenAnnouncements() {
 }
 
 function identifyTargetStop(departure, target) {
-  let targetStop = departure.trip.stopTimings.find(stop => stop.stopName.slice(0, -16) === target)
+  let targetStop = departure.stopTimings.find(stop => stop.stopName.slice(0, -16) === target)
 
   let actualDepartureTime = new Date(departure.actualDepartureTime)
   let scheduledDepartureTime = new Date(departure.scheduledDepartureTime)
 
-  let fssStop = departure.trip.stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
+  let fssStop = departure.stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
   let fssMinutes = fssStop.departureTimeMinutes
   let targetMinutes = targetStop.arrivalTimeMinutes
 

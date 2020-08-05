@@ -115,68 +115,75 @@ module.exports = {
 
     let vlineDepartures = [], metroDepartures = []
 
-    try {
-      let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train')
-      if (vlinePlatform) {
-        vlineDepartures = (await getVLineDepartures(station, db)).map(departure => {
-          if (departure.platform)
-            departure.platform = departure.platform
-          departure.type = 'vline'
-          departure.actualDepartureTime = departure.scheduledDepartureTime
+    await Promise.all([
+      new Promise(async resolve => {
+        try {
+          let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train')
+          if (vlinePlatform) {
+            vlineDepartures = (await getVLineDepartures(station, db)).map(departure => {
+              if (departure.platform)
+                departure.platform = departure.platform
+              departure.type = 'vline'
+              departure.actualDepartureTime = departure.scheduledDepartureTime
 
-          departure.stopTimings = departure.trip.stopTimings
+              departure.stopTimings = departure.trip.stopTimings
 
-          return departure
-        })
-      }
-    } catch (e) {}
-
-    try {
-      let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
-      if (metroPlatform) {
-        metroDepartures = (await getMetroDepartures(station, db))
-        metroDepartures = await async.map(metroDepartures, async departure => {
-          let {runID} = departure
-          let today = utils.getPTDayName(utils.now())
-
-          let scheduled = await timetables.findDocument({
-            runID, operationDays: today
-          })
-
-          let stopTimings = departure.trip.stopTimings.slice(0)
-          let tripStops = stopTimings.map(e => e.stopName)
-
-          let suspensions = departure.suspensions
-          if (suspensions.length) {
-            let first = suspensions[0]
-            let start = first.startStation
-            let index = tripStops.indexOf(start)
-
-            tripStops = tripStops.slice(0, index)
-            stopTimings = stopTimings.slice(0, index)
-          }
-
-          departure.stopTimings = stopTimings
-
-          departure.type = 'metro'
-          let currentIndex = tripStops.indexOf(station.stopName)
-
-          if (scheduled) {
-            departure.connections = scheduled.connections.filter(connection => {
-              let changeAtStation = stopTimings.find(s => s.stopName === connection.changeAt)
-              if (!changeAtStation) return false
-              let {changeAt} = connection
-
-              let changeIndex = tripStops.indexOf(changeAt)
-
-              return changeIndex > currentIndex
+              return departure
             })
-          } else departure.connections = []
+          }
+        } catch (e) {}
+        resolve()
+      }),
+      new Promise(async resolve => {
+        try {
+          let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
+          if (metroPlatform) {
+            metroDepartures = (await getMetroDepartures(station, db))
+            metroDepartures = await async.map(metroDepartures, async departure => {
+              let {runID} = departure
+              let today = utils.getPTDayName(utils.now())
 
-          return departure
-        })
-      }
-    } catch (e) {}
+              let scheduled = await timetables.findDocument({
+                runID, operationDays: today
+              })
+
+              let stopTimings = departure.trip.stopTimings.slice(0)
+              let tripStops = stopTimings.map(e => e.stopName)
+
+              let suspensions = departure.suspensions
+              if (suspensions.length) {
+                let first = suspensions[0]
+                let start = first.startStation
+                let index = tripStops.indexOf(start)
+
+                tripStops = tripStops.slice(0, index)
+                stopTimings = stopTimings.slice(0, index)
+              }
+
+              departure.stopTimings = stopTimings
+
+              departure.type = 'metro'
+              let currentIndex = tripStops.indexOf(station.stopName)
+
+              if (scheduled) {
+                departure.connections = scheduled.connections.filter(connection => {
+                  let changeAtStation = stopTimings.find(s => s.stopName === connection.changeAt)
+                  if (!changeAtStation) return false
+                  let {changeAt} = connection
+
+                  let changeIndex = tripStops.indexOf(changeAt)
+
+                  return changeIndex > currentIndex
+                })
+              } else departure.connections = []
+
+              return departure
+            })
+          }
+        } catch (e) {}
+        resolve()
+      })
+    ])
 
     let departures = [...metroDepartures, ...vlineDepartures].filter(departure => {
       let diff = departure.actualDepartureTime
@@ -351,8 +358,10 @@ module.exports = {
         if (viaCityLoop && isFSS) via = 'via City Loop'
         else fromRoute()
       } else if (isCityStop && destination !== 'Flinders Street') {
-        if (tripPassesBy.includes('Flinders Street')) via = 'via Flinders St'
-        else fromRoute()
+        if (viaCityLoop) via = 'via City Loop'
+        else if (tripPassesBy.includes('Flinders Street')) {
+          via = 'via Flinders St'
+        } else fromRoute()
       }
     }
 
@@ -481,6 +490,28 @@ module.exports = {
       }
     })
   },
+  trimDepartureData: departures => {
+    return departures.map(departure => {
+      return {
+        destination: departure.destination,
+        scheduledDepartureTime: departure.scheduledDepartureTime,
+        estimatedDepartureTime: departure.estimatedDepartureTime,
+        actualDepartureTime: departure.actualDepartureTime,
+        platform: departure.platform,
+        stopTimings: departure.stopTimings,
+        type: departure.type,
+        connections: departure.connections,
+        stoppingPattern: departure.stoppingPattern,
+        stoppingType: departure.stoppingType,
+        minutesToDeparture: departure.minutesToDeparture,
+        prettyTimeToDeparture: departure.prettyTimeToDeparture,
+        routeName: departure.trip.routeName,
+        codedLineName: departure.codedLineName,
+        additionalInfo: departure.additionalInfo,
+        direction: departure.trip.direction
+      }
+    }).slice(0, 8)
+  },
   getPIDSDepartures: async (db, station, platform, stoppingTextMap, stoppingTypeMap) => {
     let stationName = station.stopName.slice(0, -16)
 
@@ -538,6 +569,6 @@ module.exports = {
 
     let hasDepartures = allDepartures.length > 0
 
-    return { departures: platformDepartures, hasDepartures, hasRRB }
+    return { departures: module.exports.trimDepartureData(platformDepartures), hasDepartures, hasRRB }
   }
 }

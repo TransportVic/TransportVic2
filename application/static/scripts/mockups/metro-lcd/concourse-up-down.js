@@ -56,7 +56,7 @@ function updateBody(firstTime) {
       let screenDepartures = []
 
       body.departures.forEach(departure => {
-        departures[departure.trip.direction].push(departure)
+        departures[departure.direction].push(departure)
       })
 
       if (forcedDirection) {
