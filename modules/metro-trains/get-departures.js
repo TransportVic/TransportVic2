@@ -187,8 +187,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
   let replacementBusDepartures = []
 
-  await async.forEachSeries(departures, async departure => {
-    const run = runs[departure.run_id]
+  async function processDeparture(departure) {
+    let run = runs[departure.run_id]
     let routeID = departure.route_id
     let routeName = routes[routeID].route_name
     if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
@@ -210,7 +210,6 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       run.vehicle_descriptor = {} // ok maybe we should have kept the STY timetable but ah well
     }
 
-    if (!platform && !isTrainReplacement) return // run too far away
     const runID = run.vehicle_descriptor.id || ''
     const vehicleType = run.vehicle_descriptor.description
 
@@ -391,7 +390,13 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       message,
       consist
     })
-  })
+  }
+
+  let replacementBuses = departures.filter(departure => departure.flags.includes('RRB-RUN'))
+  let trains = departures.filter(departure => !departure.flags.includes('RRB-RUN') && departure.platform_number)
+
+  await async.forEach(trains, processDeparture)
+  await async.forEachSeries(replacementBuses, processDeparture)
 
   return transformedDepartures
 }

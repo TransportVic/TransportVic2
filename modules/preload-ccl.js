@@ -18,7 +18,9 @@ database.connect(async () => {
 
   stops.push(await dbStops.findDocument({ stopName: 'Flagstaff Railway Station' }))
   stops.push(await dbStops.findDocument({ stopName: 'Southern Cross Railway Station' }))
+  stops.push(await dbStops.findDocument({ stopName: 'Flinders Street Railway Station' }))
+  stops.push(await dbStops.findDocument({ stopName: 'Parliament Railway Station' }))
 
-  await requestTimings()
   setInterval(requestTimings, 30 * 60 * 1000)
+  await requestTimings()
 })
