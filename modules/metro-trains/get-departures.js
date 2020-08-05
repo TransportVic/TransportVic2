@@ -210,6 +210,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       run.vehicle_descriptor = {} // ok maybe we should have kept the STY timetable but ah well
     }
 
+    if (!platform && !isTrainReplacement) return
+
     const runID = run.vehicle_descriptor.id || ''
     const vehicleType = run.vehicle_descriptor.description
 
@@ -393,7 +395,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   }
 
   let replacementBuses = departures.filter(departure => departure.flags.includes('RRB-RUN'))
-  let trains = departures.filter(departure => !departure.flags.includes('RRB-RUN') && departure.platform_number)
+  let trains = departures.filter(departure => !departure.flags.includes('RRB-RUN'))
 
   await async.forEach(trains, processDeparture)
   await async.forEachSeries(replacementBuses, processDeparture)
