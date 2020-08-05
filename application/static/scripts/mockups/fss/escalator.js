@@ -273,6 +273,7 @@ function updateBody(firstTime) {
       nextDepartures.forEach((departure, i) => {
         let departureRow = $(`.nextDeparture:nth-child(${1 + i})`)
         if (!departure) {
+          departureRow.className = 'nextDeparture'
           $('.lineColour', departureRow).className = 'lineColour no-line'
           $('.scheduledDepartureTime', departureRow).textContent = '--'
           $('.destination', departureRow).textContent = '--'
@@ -280,7 +281,12 @@ function updateBody(firstTime) {
           $('.minutesToDeparture span', departureRow).textContent = '-- min'
         } else {
           let departureClass = departure.codedLineName
-          if (departure.type === 'vline') departureClass = 'vline'
+          if (departure.type === 'vline') {
+            departureClass = 'vline'
+            departureRow.className = 'nextDeparture vline'
+          } else {
+            departureRow.className = 'nextDeparture'
+          }
 
           let {destination} = departure
 

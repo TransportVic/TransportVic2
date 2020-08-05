@@ -351,6 +351,10 @@ div.nextDeparture {
   border-bottom: solid calc(var(--height) * 0.001) #505050;
 }
 
+div.nextDeparture.vline {
+  background-color: #f0f0f0;
+}
+
 div.nextDeparture div.lineColour {
   width: calc(var(--width) * 0.015);
   height: calc(var(--height) * 0.035);
