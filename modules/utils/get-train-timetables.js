@@ -153,7 +153,8 @@ async function getScheduledDepartures(station, db, mode, timeout) {
       cityLoopConfig: [],
       destination: trip.destination.slice(0, -16),
       runID: '',
-      cancelled: trip.type === 'cancelled'
+      cancelled: trip.type === 'cancelled',
+      suspensions: []
     }
   }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }
