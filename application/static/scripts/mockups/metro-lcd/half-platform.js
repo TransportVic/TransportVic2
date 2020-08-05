@@ -24,7 +24,7 @@ function setMessagesActive(active) {
   $('.fullMessage').style = 'display: none;'
   $('.serviceMessage').style = 'display: none;'
   $('.left').style = 'display: block;'
-  $('.right').style = 'display: block;'
+  $('.right').style = 'display: flex;'
   $('.content').className = 'content'
 }
 
@@ -41,7 +41,7 @@ function setFullMessageActive(active) {
     $('.nextDeparture').style = 'display: flex;'
     $('.stops').style = 'display: flex';
     $('.left').style = 'display: block;'
-    $('.right').style = 'display: block;'
+    $('.right').style = 'display: flex;'
   }
   $('.message').style = 'display: none;'
   $('.serviceMessage').style = 'display: none;'
@@ -52,12 +52,12 @@ function setServiceMessageActive(active) {
     $('.serviceMessage').style = 'display: flex;'
     $('.stops').style = 'display: none';
     $('.left').style = 'display: block;'
-    $('.right').style = 'display: block;'
+    $('.right').style = 'display: flex;'
   } else {
     $('.serviceMessage').style = 'display: none;'
     $('.stops').style = 'display: flex';
     $('.left').style = 'display: block;'
-    $('.right').style = 'display: block;'
+    $('.right').style = 'display: flex;'
   }
   $('.message').style = 'display: none;'
   $('.fullMessage').style = 'display: none;'

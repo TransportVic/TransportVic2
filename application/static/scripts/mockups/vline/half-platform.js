@@ -1,12 +1,21 @@
-function formatTime(time) {
+function formatTime(time, includeSeconds=false) {
   let hours = time.getHours()
   let minutes = time.getMinutes()
+  let seconds = time.getSeconds()
   let mainTime = ''
 
   mainTime += (hours % 12) || 12
   mainTime += ':'
+
   if (minutes < 10) mainTime += '0'
   mainTime += minutes
+
+  if (includeSeconds) {
+    mainTime += ':'
+
+    if (seconds < 10) mainTime += '0'
+    mainTime += seconds
+  }
 
   return mainTime
 }
@@ -193,8 +202,22 @@ $.ready(() => {
     updateBody()
     setInterval(updateBody, 1000 * 30)
   }, 30000 - (+new Date() % 30000))
+})
 
-  setInterval(() => {
-    $('div.timeContainer span').textContent = formatTime(new Date())
-  }, 1000)
+
+function setupClock() {
+  setTime()
+  let msToNextSecond = 1000 - (+new Date() % 1000)
+  setTimeout(() => {
+    setTime()
+    setInterval(setTime, 1000)
+  }, msToNextSecond)
+}
+
+function setTime() {
+  $('.timeContainer span').textContent = formatTime(new Date(), true)
+}
+
+$.ready(() => {
+  setupClock()
 })

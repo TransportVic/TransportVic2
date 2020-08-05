@@ -214,7 +214,6 @@ div.followingDeparture {
 div.followingDeparture > div {
   display: flex;
   align-content: center;
-  margin-top: calc(var(--height) * 0.02);
 }
 
 div.right span.scheduled {
