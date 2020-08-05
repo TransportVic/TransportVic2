@@ -553,7 +553,7 @@ module.exports = {
 
       let expressCount = expresses.reduce((a, e) => a + e.length, 0)
 
-      if (departure.type === 'vline') {
+      if (departure.type === 'vline' && stoppingTypeMap.vlineService) {
         departure.stoppingType = stoppingTypeMap.vlineService.stoppingType
         if (stoppingTypeMap.vlineService.stoppingPatternPostfix) {
           departure.stoppingPattern += stoppingTypeMap.vlineService.stoppingPatternPostfix

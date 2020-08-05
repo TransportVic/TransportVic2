@@ -1,0 +1,200 @@
+function formatTime(time) {
+  let hours = time.getHours()
+  let minutes = time.getMinutes()
+  let mainTime = ''
+
+  mainTime += (hours % 12) || 12
+  mainTime += ':'
+  if (minutes < 10) mainTime += '0'
+  mainTime += minutes
+
+  return mainTime
+}
+
+function setMessagesActive(active) {
+  if (active) {
+    $('.message').style = 'display: flex;'
+    $('.nextDeparture').style = 'display: none;'
+    $('.stops').style = 'display: none';
+  } else {
+    $('.message').style = 'display: none;'
+    $('.nextDeparture').style = 'display: flex;'
+    $('.stops').style = 'display: flex';
+  }
+  $('.fullMessage').style = 'display: none;'
+  $('.serviceMessage').style = 'display: none;'
+  $('.left').style = 'display: block;'
+  $('.right').style = 'display: flex;'
+  $('.content').className = 'content'
+}
+
+function setFullMessageActive(active) {
+  if (active) {
+    $('.content').className = 'content announcements'
+    $('.fullMessage').style = 'display: flex;'
+    $('.stops').style = 'display: none';
+    $('.left').style = 'display: none;'
+    $('.right').style = 'display: none;'
+  } else {
+    $('.content').className = 'content'
+    $('.fullMessage').style = 'display: none;'
+    $('.nextDeparture').style = 'display: flex;'
+    $('.stops').style = 'display: flex';
+    $('.left').style = 'display: block;'
+    $('.right').style = 'display: flex;'
+  }
+  $('.message').style = 'display: none;'
+  $('.serviceMessage').style = 'display: none;'
+}
+
+function setDepartureInfoVisible(visible) {
+  if (visible) {
+    $('.departureInfo').style = ''
+  } else {
+    $('.departureInfo').style = 'opacity: 0;'
+  }
+}
+
+function setNoDepartures() {
+  $('.message').innerHTML = '<p class="large">No trains departing</p><p class="large"> from this platform</p>'
+  setMessagesActive(true)
+}
+
+function setListenAnnouncements() {
+  $('.fullMessage').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>'
+  setFullMessageActive(true)
+}
+
+function createStoppingPatternID(stoppingPattern) {
+  return stoppingPattern.map(e => `${e.stopName}${e.isExpress}`).join(',')
+}
+
+let currentPattern = null
+
+function addStoppingPattern(stops) {
+  let newPatternID = createStoppingPatternID(stops)
+  if (currentPattern === newPatternID) return true
+
+  currentPattern = newPatternID
+
+  let stopColumns = []
+
+  let start = 0
+  let size = 5
+  for (let i = 0; true; i++) {
+    let end = start + size
+
+    let part = stops.slice(start, end)
+    if (part.length === 0) break
+    stopColumns.push(part)
+    start = end
+  }
+
+  $('.stops').innerHTML = ''
+
+  let check = []
+
+  stopColumns.forEach((stopColumn, i) => {
+    let outerColumn = document.createElement('div')
+    let html = ''
+
+    let hasStop = false
+
+    stopColumn.forEach(stop => {
+      if (stop.isExpress)
+        html += '<span>&nbsp;---</span><br>'
+      else {
+        let {stopName} = stop
+        if (stopName === 'Upper Ferntree Gully') stopName = 'Upper F.T Gully'
+
+        html += `<span>${stopName}</span><br>`
+
+        hasStop = true
+      }
+    })
+
+    outerColumn.innerHTML = `<div>${html}</div>`
+    outerColumn.className = `stopsColumn columns-${size}${hasStop ? '' : ' expressColumn'}`
+
+    $('.stops').appendChild(outerColumn)
+
+    if (hasStop) {
+      check.push($('div', outerColumn))
+    }
+  })
+
+  setTimeout(() => {
+    check.forEach(container => {
+      let computed = getComputedStyle(container.parentElement)
+      let containerWidth = parseFloat(computed.width) + 0.3 * parseFloat(computed.marginRight)
+      let threshold = containerWidth * 0.9
+
+      Array.from(container.children).forEach(station => {
+        if (station.tagName === 'BR') return
+
+        let childWidth = parseFloat(getComputedStyle(station).width)
+        if (childWidth >= threshold) {
+          station.className = 'squish'
+        }
+      })
+    })
+  }, 1)
+}
+
+
+function updateBody() {
+  $.ajax({
+    method: 'POST'
+  }, (err, status, body) => {
+    if (err) return setListenAnnouncements()
+
+    try {
+      departures = body.departures
+
+      let firstDeparture = departures[0]
+      if (!firstDeparture) {
+        return setNoDepartures()
+      }
+
+      setDepartureInfoVisible(true)
+
+      $('.firstDestination').textContent = firstDeparture.destination
+      $('.scheduledDiv span:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+
+      $('.actualDiv span:nth-child(2)').textContent = firstDeparture.prettyTimeToDeparture
+
+      addStoppingPattern(firstDeparture.additionalInfo.screenStops.slice(1))
+
+      let nextDepartures = [...departures.slice(1, 3), null, null].slice(0, 2)
+      nextDepartures.forEach((departure, i) => {
+        let div = $(`div.followingDeparture:nth-child(${i + 2})`)
+        if (departure) {
+          $('.scheduled', div).textContent = formatTime(new Date(departure.scheduledDepartureTime))
+          $('.destination', div).textContent = departure.destination
+          $('.actual', div).textContent = departure.prettyTimeToDeparture
+          $('.stoppingType', div).textContent = departure.stoppingType
+        } else {
+          $('.scheduled', div).textContent = '--'
+          $('.destination', div).textContent = '--'
+          $('.actual', div).textContent = '--'
+          $('.stoppingType', div).textContent = ''
+        }
+      })
+    } catch (e) {
+      console.log(e)
+      setListenAnnouncements()
+    }
+  })
+}
+
+$.ready(() => {
+  updateBody()
+  setTimeout(() => {
+    updateBody()
+    setInterval(updateBody, 1000 * 30)
+  }, 30000 - (+new Date() % 30000))
+
+  setInterval(() => {
+    $('div.timeContainer span').textContent = formatTime(new Date())
+  }, 1000)
+})
