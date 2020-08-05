@@ -86,6 +86,8 @@ function addStoppingPattern(stops) {
 
   currentPattern = newPatternID
 
+  stops = stops.filter(stop => vlineStops.includes(stop.stopName))
+
   let stopColumns = []
 
   let start = 0
@@ -107,47 +109,21 @@ function addStoppingPattern(stops) {
     let outerColumn = document.createElement('div')
     let html = ''
 
-    let hasStop = false
-
     stopColumn.forEach(stop => {
       if (stop.isExpress)
         html += '<span>&nbsp;---</span><br>'
       else {
-        let {stopName} = stop
-        if (stopName === 'Upper Ferntree Gully') stopName = 'Upper F.T Gully'
-
-        html += `<span>${stopName}</span><br>`
-
-        hasStop = true
+        html += `<span>${stop.stopName}</span><br>`
       }
     })
 
     outerColumn.innerHTML = `<div>${html}</div>`
-    outerColumn.className = `stopsColumn columns-${size}${hasStop ? '' : ' expressColumn'}`
+    outerColumn.className = `stopsColumn`
 
     $('.stops').appendChild(outerColumn)
 
-    if (hasStop) {
-      check.push($('div', outerColumn))
-    }
+    check.push($('div', outerColumn))
   })
-
-  setTimeout(() => {
-    check.forEach(container => {
-      let computed = getComputedStyle(container.parentElement)
-      let containerWidth = parseFloat(computed.width) + 0.3 * parseFloat(computed.marginRight)
-      let threshold = containerWidth * 0.9
-
-      Array.from(container.children).forEach(station => {
-        if (station.tagName === 'BR') return
-
-        let childWidth = parseFloat(getComputedStyle(station).width)
-        if (childWidth >= threshold) {
-          station.className = 'squish'
-        }
-      })
-    })
-  }, 1)
 }
 
 
@@ -221,3 +197,9 @@ function setTime() {
 $.ready(() => {
   setupClock()
 })
+
+
+
+let vlineStops = ["Wallan","Melton","Rockbank","Deer Park","Sunbury","Ardeer","Craigieburn","Southern Cross","Albury","Ararat","Avenel","Bacchus Marsh","Bairnsdale","Ballan","Ballarat","Beaufort","Benalla","Bendigo","Birregurra","Broadford","Bunyip","Camperdown","Castlemaine","Chiltern","Clarkefield","Colac","Corio","Dingee","Donnybrook","Drouin","Eaglehawk","Echuca","Elmore","Euroa","Garfield","Geelong","Gisborne","Heathcote Junction","Kangaroo Flat","Kerang","Kilmore East","Kyneton","Lara","Little River","Longwarry","Macedon","Malmsbury","Marshall","Moe","Mooroopna","Morwell","Murchison East","Nagambie","Nar Nar Goon","North Geelong","North Shore","Pyramid","Riddells Creek","Rochester","Rosedale","Sale","Seymour","Shepparton","South Geelong","Springhurst","Stratford","Swan Hill","Tallarook","Terang","Trafalgar","Traralgon","Tynong","Violet Town","Wandong","Wangaratta","Warragul","Warrnambool","Winchelsea","Wodonga","Woodend","Yarragon","Flinders Street","North Melbourne","Footscray","Sunshine","Watergardens","Richmond","Caulfield","Clayton","Dandenong","Berwick","Pakenham","Essendon","Broadmeadows","Sherwood Park","Wendouree","Creswick","Clunes","Maryborough","Talbot","Waurn Ponds","Epsom","Wyndham Vale","Tarneit","Cobblebank","Caroline Springs"]
+
+vlineStops = vlineStops.concat(['St. Albans', 'Keilor Plains', 'Diggers Rest']) // Old St. Albans Line
