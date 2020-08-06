@@ -704,7 +704,8 @@ function getLineStops(lineName, destination) {
   if (lineName === 'Sandringham') return lines.Sandringham
   if (lineName === 'Upfield') return lines.Upfield
   if (['Frankston', 'Stony Point'].includes(lineName)) return lines['Stony Point']
-  if (['Sunbury', 'Bendigo', 'Echuca'].includes(lineName)) return lines.Echuca
+  if (lineName === 'Sunbury') return lines.Sunbury
+  if (['Bendigo', 'Echuca'].includes(lineName)) return lines.Echuca
   if (lineName === 'Swan Hill') return lines['Swan Hill']
   if (lineName === 'Glen Waverley') return lines['Glen Waverley']
   if (lineName === 'Mernda') return lines.Mernda

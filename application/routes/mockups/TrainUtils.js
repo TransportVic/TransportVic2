@@ -336,7 +336,10 @@ module.exports = {
       }
     })
 
-    if (!screenStops.length) return null
+    if (!screenStops.length) {
+      console.log('Failed to find screen stops', tripStops, lineStops)
+      return null
+    }
     let expressCount = screenStops.filter(stop => stop.isExpress).length
 
     let isCityStop = cityLoopStations.includes(stationName)
