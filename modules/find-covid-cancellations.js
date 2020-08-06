@@ -4,10 +4,10 @@ const utils = require('../utils')
 const async = require('async')
 const ptvAPI = require('../ptv-api')
 const moment = require('moment')
+require('moment-timezone')
 
 const getStoppingPattern = require('./utils/get-stopping-pattern')
 
-require('moment-timezone')
 let covid19Cancelled, stops
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
@@ -92,7 +92,7 @@ database.connect({}, async () => {
     runID: 1
   }, {name: 'COVID-19 Cancellations index'})
 
-  let runTime = utils.now().startOf('day').add(7, 'hours')
+  let runTime = utils.now().startOf('day').add(11, 'hours')
   let now = utils.now()
 
   let diff = runTime - now
