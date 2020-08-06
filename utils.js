@@ -339,7 +339,7 @@ module.exports = {
       }
     }
 
-    if (!body && error) throw e
+    if (!body && error) throw error
 
     let url = typeof options[0] === 'string' ? options[0] : options[0].url
 
