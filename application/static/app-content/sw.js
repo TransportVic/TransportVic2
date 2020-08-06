@@ -1,8 +1,10 @@
-const version = '79a'
+const version = '80'
 const cacheName = `transportvic-${version}`
 
 function cacheFiles(files) {
   return caches.open(cacheName).then(cache => {
+    console.log('Caching files')
+
     return cache.addAll(files).then(() => self.skipWaiting())
     .catch(e => {
       console.error(e)
@@ -46,7 +48,15 @@ self.addEventListener('install', e => {
 
       '/static/css/tracker/bus-results.css',
 
+
+      '/static/css/mockups/16-9-pids-base.css',
+      '/static/css/mockups/actual-line-colours.css',
+      '/static/css/mockups/base-style.css',
+
       '/static/fonts/Nunito.ttf',
+      '/static/fonts/NetworkSans-2018-Bold.ttf',
+      '/static/fonts/NetworkSans-2018-Medium.ttf',
+      '/static/fonts/NetworkSans-2018-Regular.ttf',
 
       '/static/images/interactives/trains-new.svg',
 
@@ -109,6 +119,8 @@ self.addEventListener('install', e => {
       '/static/scripts/sw-load.js',
       '/static/scripts/timings.js',
       '/static/scripts/util.js',
+
+      '/static/scripts/mockups/pids-utils.js',
 
       '/',
       '/links',
