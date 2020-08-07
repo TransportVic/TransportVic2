@@ -39,7 +39,7 @@ async function sleep(time) {
 }
 
 async function run() {
-  let departureMoment = utils.now().startOf('day').add(19, 'hours')
+  let departureMoment = utils.now().startOf('day').add(18, 'hours')
   let departureTime = departureMoment.toISOString()
   let day = departureMoment.format('YYYYMMDD')
 
@@ -92,7 +92,7 @@ database.connect({}, async () => {
     runID: 1
   }, {name: 'COVID-19 Cancellations index'})
 
-  let runTime = utils.now().startOf('day').add(11, 'hours')
+  let runTime = utils.now().startOf('day').add(14, 'hours')
   let now = utils.now()
 
   let diff = runTime - now
@@ -102,4 +102,5 @@ database.connect({}, async () => {
     run()
     setInterval(run, 1440 * 60 * 1000)
   }, diff)
+  run()
 })

@@ -513,7 +513,7 @@ module.exports = {
         additionalInfo: departure.additionalInfo,
         direction: departure.trip.direction
       }
-    }).slice(0, 8)
+    }).slice(0, 10)
   },
   getPIDSDepartures: async (db, station, platform, stoppingTextMap, stoppingTypeMap) => {
     let stationName = station.stopName.slice(0, -16)
