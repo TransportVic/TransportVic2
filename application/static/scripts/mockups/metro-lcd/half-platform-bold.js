@@ -146,7 +146,7 @@ function updateBody(firstTime) {
       departures = body.departures.map(d => {
         if (d.stoppingType === 'Stops All') d.stoppingType = 'Stops All Stations'
         return d
-      }).filter(d=>d.destination ==='Arrival')
+      })
 
       let firstDeparture = departures[0]
       let message = $('.message')
