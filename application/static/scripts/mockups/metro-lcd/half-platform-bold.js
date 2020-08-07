@@ -146,7 +146,7 @@ function updateBody(firstTime) {
       departures = body.departures.map(d => {
         if (d.stoppingType === 'Stops All') d.stoppingType = 'Stops All Stations'
         return d
-      })
+      }).filter(d=>d.destination ==='Arrival')
 
       let firstDeparture = departures[0]
       let message = $('.message')
@@ -166,45 +166,47 @@ function updateBody(firstTime) {
         showingStandClear = false
         setServiceMessageActive(false, true)
 
-        let classes = ''
-
-        $('.firstDestination').textContent = firstDeparture.destination
-        $('.firstDestination').className = 'firstDestination'
-        let width = parseInt(getComputedStyle($('.firstDestination')).width)
-        let vw = window.innerWidth / 100
-
-        if (width > 76*vw) {
-          $('.firstDestination').className += ' smallest'
-        } else if (width > 65*vw) {
-          $('.firstDestination').className += ' smaller'
-        }
-
-        $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
-
-        if (firstDeparture.estimatedDepartureTime) {
-          if (firstDeparture.minutesToDeparture > 0) {
-            $('div.actual div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
-            $('div.actual div span:nth-child(2)').textContent = 'min'
-          } else {
-            $('div.actual div span:nth-child(1)').textContent = 'Now'
-            $('div.actual div span:nth-child(2)').textContent = ''
-          }
-        } else {
-          $('div.actual div span:nth-child(1)').textContent = '--'
-          $('div.actual div span:nth-child(2)').textContent = 'min'
-        }
-
-        let firstStoppingType = firstDeparture.stoppingType
-        if (firstDeparture.additionalInfo.via) {
-          firstStoppingType += ' ' + firstDeparture.additionalInfo.via
-        }
-
-        firstStoppingTypeP.textContent = firstStoppingType
-        firstStoppingPatternP.textContent = firstDeparture.stoppingPattern
-        firstStoppingPatternP.setAttribute('data-text', firstDeparture.stoppingPattern)
-
         if (firstDeparture.additionalInfo.notTakingPassengers) setArrival()
-        else isArrival = false
+        else {
+          isArrival = false
+
+          let classes = ''
+
+          $('.firstDestination').textContent = firstDeparture.destination
+          $('.firstDestination').className = 'firstDestination'
+          let width = parseInt(getComputedStyle($('.firstDestination')).width)
+          let vw = window.innerWidth / 100
+
+          if (width > 76*vw) {
+            $('.firstDestination').className += ' smallest'
+          } else if (width > 65*vw) {
+            $('.firstDestination').className += ' smaller'
+          }
+
+          $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+
+          if (firstDeparture.estimatedDepartureTime) {
+            if (firstDeparture.minutesToDeparture > 0) {
+              $('div.actual div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
+              $('div.actual div span:nth-child(2)').textContent = 'min'
+            } else {
+              $('div.actual div span:nth-child(1)').textContent = 'Now'
+              $('div.actual div span:nth-child(2)').textContent = ''
+            }
+          } else {
+            $('div.actual div span:nth-child(1)').textContent = '--'
+            $('div.actual div span:nth-child(2)').textContent = 'min'
+          }
+
+          let firstStoppingType = firstDeparture.stoppingType
+          if (firstDeparture.additionalInfo.via) {
+            firstStoppingType += ' ' + firstDeparture.additionalInfo.via
+          }
+
+          firstStoppingTypeP.textContent = firstStoppingType
+          firstStoppingPatternP.textContent = firstDeparture.stoppingPattern
+          firstStoppingPatternP.setAttribute('data-text', firstDeparture.stoppingPattern)
+        }
       }
 
       let secondDeparture = departures[1]
@@ -242,7 +244,7 @@ function updateBody(firstTime) {
       }
 
       if (firstDeparture.scheduledDepartureTime !== previousDeparture) {
-        if (firstDeparture.isArrival) {
+        if (isArrival) {
           stopScrolling = true
         } else {
           setServiceMessageActive(false)

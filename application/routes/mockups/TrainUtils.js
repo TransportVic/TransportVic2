@@ -85,6 +85,7 @@ module.exports = {
       // to get realtime: check if arriving less that 20min, then request runID + 948000
 
       let actualDepartureTime = scheduledDepartureTime // use realtime
+      let upService = !(arrival.runID[3] % 2)
 
       return module.exports.addTimeToDeparture({
         trip: arrival,
@@ -103,7 +104,7 @@ module.exports = {
           screenStops: [],
           expressCount: [],
           viaCityLoop: false,
-          direction: 'Down',
+          direction: upService ? 'Up' : 'Down',
           via: '',
           notTakingPassengers: true
         }

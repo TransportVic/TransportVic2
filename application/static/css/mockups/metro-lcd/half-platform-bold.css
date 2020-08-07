@@ -198,6 +198,7 @@ div.middleRow p.serviceMessage {
 
 p.serviceMessage div.arrivalMessage {
   display: flex;
+  margin-top: calc(var(--height) * 0.015);
 }
 
 p.serviceMessage div.arrivalMessage img {
