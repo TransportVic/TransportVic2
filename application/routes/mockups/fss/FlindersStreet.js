@@ -29,7 +29,8 @@ async function getData(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
     codedName: (req.params.station || 'flinders-street') + '-railway-station'
   })
-  return await TrainUtils.getPIDSDepartures(res.db, station, req.params.platform, stoppingTextMap, stoppingTypeMap)
+
+  return await TrainUtils.getPIDSDepartures(res.db, station, req.params.platform, stoppingTextMap, stoppingTypeMap, req.params.maxDepartures || 6)
 }
 
 router.get('/escalator/:platform/:station*?', async (req, res) => {
@@ -50,7 +51,7 @@ router.get('/trains-from-fss', async (req, res) => {
 })
 
 router.post('/trains-from-fss', async (req, res) => {
-  let departures = await getData({ params: { platform: '*' } }, res)
+  let departures = await getData({ params: { platform: '*', maxDepartures: 20 } }, res)
   res.json(departures)
 })
 

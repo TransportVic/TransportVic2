@@ -493,7 +493,7 @@ module.exports = {
       }
     })
   },
-  trimDepartureData: departures => {
+  trimDepartureData: (departures, maxDepartures) => {
     return departures.map(departure => {
       return {
         destination: departure.destination,
@@ -513,9 +513,9 @@ module.exports = {
         additionalInfo: departure.additionalInfo,
         direction: departure.trip.direction
       }
-    }).slice(0, 10)
+    }).slice(0, maxDepartures)
   },
-  getPIDSDepartures: async (db, station, platform, stoppingTextMap, stoppingTypeMap) => {
+  getPIDSDepartures: async (db, station, platform, stoppingTextMap, stoppingTypeMap, maxDepartures=6) => {
     let stationName = station.stopName.slice(0, -16)
 
     let allDepartures = await module.exports.getCombinedDepartures(station, db)
@@ -572,6 +572,6 @@ module.exports = {
 
     let hasDepartures = allDepartures.length > 0
 
-    return { departures: module.exports.trimDepartureData(platformDepartures), hasDepartures, hasRRB }
+    return { departures: module.exports.trimDepartureData(platformDepartures, maxDepartures), hasDepartures, hasRRB }
   }
 }
