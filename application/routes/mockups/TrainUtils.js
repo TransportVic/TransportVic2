@@ -154,10 +154,12 @@ module.exports = {
               if (suspensions.length) {
                 let first = suspensions[0]
                 let start = first.startStation
-                let index = tripStops.indexOf(start)
+                let index = tripStops.indexOf(start) + 1
 
-                tripStops = tripStops.slice(0, index)
-                stopTimings = stopTimings.slice(0, index)
+                if (index > 0) {
+                  tripStops = tripStops.slice(0, index)
+                  stopTimings = stopTimings.slice(0, index)
+                }
               }
 
               departure.stopTimings = stopTimings
