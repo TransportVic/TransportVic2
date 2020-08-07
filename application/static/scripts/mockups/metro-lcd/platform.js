@@ -217,8 +217,14 @@ function updateBody() {
       nextDepartures.forEach((departure, i) => {
         let div = $(`div.followingDeparture:nth-child(${i + 1})`)
         if (departure) {
+          let {destination} = departure
+
+          if (destination === 'North Melbourne') destination = 'Nth Melbourne'
+          if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
+          if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+
           $('.scheduled', div).textContent = formatTime(new Date(departure.scheduledDepartureTime))
-          $('.destination', div).textContent = departure.destination
+          $('.destination', div).textContent = destination
           if (departure.estimatedDepartureTime)
             $('.actual', div).textContent = departure.minutesToDeparture
           else

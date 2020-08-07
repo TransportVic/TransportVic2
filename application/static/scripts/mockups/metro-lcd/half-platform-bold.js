@@ -215,7 +215,14 @@ function updateBody(firstTime) {
 
         $('div.bottomRow').className = `bottomRow${secondClassName}`
         $('div.bottomRow > span:nth-child(1)').textContent = formatTime(new Date(secondDeparture.scheduledDepartureTime))
-        $('div.bottomRow > span:nth-child(2)').textContent = secondDeparture.destination
+
+        let {destination} = secondDeparture
+
+        if (destination === 'North Melbourne') destination = 'Nth Melbourne'
+        if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
+        if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+
+        $('div.bottomRow > span:nth-child(2)').textContent = destination
 
         let secondStoppingType = shortenStoppingType(secondDeparture.stoppingType)
         if (secondDeparture.additionalInfo.via) {
