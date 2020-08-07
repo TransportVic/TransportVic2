@@ -57,8 +57,14 @@ function shortenDestination(destination) {
   if (destination === 'Flinders Street') {
     return 'FLINDERS ST'
   }
-  if (destination === 'SOUTHERN CROSS') {
+  if (destination === 'Southern Cross') {
     return 'STHN CROSS'
+  }
+  if (destination === 'North Melbourne') {
+    return 'NTH MELBOURNE'
+  }
+  if (destination === 'Upper Ferntree Gully') {
+    return 'UPPER FT GULLY'
   }
   return destination.toUpperCase()
 }
