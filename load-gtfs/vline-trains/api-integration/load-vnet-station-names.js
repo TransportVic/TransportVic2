@@ -45,8 +45,11 @@ database.connect({
 
   await async.forEach(stations, async stop => {
     let stopData = await stops.findDocument({ stopName: stop.name })
+    if (!stopData) return console.log(`Load VNet Names: Skipping ${stop.name}`)
 
     let vlinePlatform = stopData.bays.find(bay => bay.mode === 'regional train')
+    if (!vlinePlatform) return console.log(`Load VNet Names: Skipping ${stop.name}`)
+
     vlinePlatform.vnetStationName = stop.vnetStationName
 
     await stops.updateDocument({ stopName: stop.name }, {
