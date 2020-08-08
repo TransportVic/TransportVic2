@@ -1,4 +1,4 @@
-const getLineStops = require('./route-stops')
+const getLineStops = require('../../../additional-data/route-stops')
 const getMetroDepartures = require('../../../modules/metro-trains/get-departures')
 const getVLineDepartures = require('../../../modules/vline/get-departures')
 const utils = require('../../../utils')

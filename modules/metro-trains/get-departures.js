@@ -9,6 +9,7 @@ const departureUtils = require('../utils/get-train-timetables')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
 
+const getRouteStops = require('../../additional-data/route-stops')
 const getStonyPoint = require('../get-stony-point')
 
 let ptvAPILocks = {}
@@ -71,16 +72,27 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip, isS
   return cityLoopConfig
 }
 
-function mapSuspension(suspension) {
+function mapSuspension(suspension, routeName) {
   let stationsAffected = suspension.description.replace(/\u00A0/g, ' ').match(/between ([ \w]+) and ([ \w]+) stations/i)
 
   if (!stationsAffected) return
-  let startStation = stationsAffected[1].trim() + ' Railway Station',
-      endStation = stationsAffected[2].trim() + ' Railway Station'
+  let startStation = stationsAffected[1].trim()
+  let endStation = stationsAffected[2].trim()
+
+  // Station A should always be on the UP end
+  let routeStops = getRouteStops(routeName)
+  let startIndex = routeStops.indexOf(startStation)
+  let endIndex = routeStops.indexOf(endStation)
+
+  if (endIndex < startIndex) {
+    let c = startStation
+    startStation = endStation
+    endStation = c
+  }
 
   return {
-    stationA: startStation,
-    stationB: endStation
+    stationA: startStation + ' Railway Station',
+    stationB: endStation + ' Railway Station',
   }
 }
 
@@ -138,7 +150,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   let suspensionIDs = Object.values(disruptions).filter(disruption => {
     return disruption.disruption_type.toLowerCase().includes('suspend')
   }).map(suspension => {
-    suspensionMap[suspension.disruption_id] = mapSuspension(suspension)
+    suspensionMap[suspension.disruption_id] = mapSuspension(suspension, suspension.routes[0].route_name)
     return suspension.disruption_id
   })
 
