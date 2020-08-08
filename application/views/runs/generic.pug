@@ -81,9 +81,9 @@ block content
           -
             let stopParts = stop.stopName.split('/')
             let stopRoad, stopName
-            if (stopParts.length === 2) {
-              stopName = stopParts[0]
-              stopRoad = stopParts[1]
+            if (stopParts.length >= 2) {
+              stopName = stopParts.slice(0, -1).join('/')
+              stopRoad = stopParts.slice(-1)[0]
             } else {
               if (stopParts = stop.stopName.match(/^(\d+) (.+)$/)) {
                 stopRoad = stopParts[2]
