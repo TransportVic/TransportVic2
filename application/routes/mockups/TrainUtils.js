@@ -362,7 +362,7 @@ module.exports = {
     if (departure.type !== 'vline') {
       if ((toCity || isFSS) && !isCityStop) {
         if (viaCityLoop && isFSS) via = 'via City Loop'
-        else fromRoute()
+        else if (!(northernGroup.includes(routeName) && toCity)) fromRoute()
       } else if (isCityStop && destination !== 'Flinders Street') {
         if (viaCityLoop) via = 'via City Loop'
         else if (tripPassesBy.includes('Flinders Street')) {
@@ -565,7 +565,7 @@ module.exports = {
           departure.stoppingPattern += stoppingTypeMap.vlineService.stoppingPatternPostfix
         }
       } else if (expressCount === 0) departure.stoppingType = stoppingTypeMap.sas
-      else if (expressCount < 5) departure.stoppingType = stoppingTypeMap.limExp
+      else if (expressCount < 4) departure.stoppingType = stoppingTypeMap.limExp
       else departure.stoppingType = stoppingTypeMap.exp
 
       departure = module.exports.appendScreenDataToDeparture(departure, station)
