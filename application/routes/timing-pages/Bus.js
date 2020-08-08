@@ -18,7 +18,7 @@ async function loadDepartures(req, res) {
   }
 
   let departures = await getDepartures(stop, res.db)
-  if (!departures) throw new Error('Failed to get bus timings?')
+  let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
   departures = await async.map(departures, async departure => {
     const timeDifference = moment.utc(departure.actualDepartureTime.diff(utils.now()))
@@ -43,11 +43,16 @@ async function loadDepartures(req, res) {
     }
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
-    let day = utils.getYYYYMMDD(departure.scheduledDepartureTime)
+    let stop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
+    let {stopGTFSID} = stop
+    let minutesDiff = stop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
+
+    let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
+    let operationDate = tripStart.format('YYYYMMDD')
 
     departure.tripURL = `/bus/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + `${day}#stop-${departure.trip.stopTimings[0].stopGTFSID}`
+      + `${operationDate}#stop-${stopGTFSID}`
 
     let fullDestination = departure.trip.destination
     let destinationShortName = utils.getStopName(departure.trip.destination)

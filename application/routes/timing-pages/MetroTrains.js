@@ -46,11 +46,16 @@ async function loadDepartures(req, res) {
     let destination = trip.trueDestination.slice(0, -16)
     let destinationArrivalTime = trip.trueDestinationArrivalTime
 
-    let stopGTFSID = departure.trip.stopTimings.filter(stop => stop.stopName === station.stopName)[0].stopGTFSID
+    let stop = departure.trip.stopTimings.find(stop => stop.stopName === station.stopName)
+    let {stopGTFSID} = stop
+    let minutesDiff = stop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
+
+    let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
+    let operationDate = tripStart.format('YYYYMMDD')
 
     departure.tripURL = `${utils.encodeName(origin)}/${originDepartureTime}/`
       + `${utils.encodeName(destination)}/${destinationArrivalTime}/`
-      + `${utils.getYYYYMMDDNow()}/#stop-${stopGTFSID}`
+      + `${operationDate}/#stop-${stopGTFSID}`
 
     departure.destinationURL = `/metro/timings/${utils.encodeName(trip.trueDestination).slice(0, -16)}`
 

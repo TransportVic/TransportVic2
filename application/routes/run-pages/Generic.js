@@ -64,6 +64,8 @@ async function pickBestTrip(data, db) {
 
   // So PTV API only returns estimated timings for bus if stop_id is set and the bus hasn't reached yet...
   let referenceTrip = liveTrip || gtfsTrip
+  if (!referenceTrip) return null
+
   let now = utils.now()
 
   let checkStops = referenceTrip.stopTimings.map(stopTiming => {

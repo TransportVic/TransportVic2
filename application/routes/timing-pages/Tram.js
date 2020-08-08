@@ -18,6 +18,7 @@ async function loadDepartures(req, res) {
   }
 
   let departures = await getDepartures(stop, res.db)
+  let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
   departures = await async.map(departures, async departure => {
     const timeDifference = moment.utc(departure.actualDepartureTime.diff(utils.now()))
@@ -41,11 +42,18 @@ async function loadDepartures(req, res) {
       }
     }
 
-    let stopGTFSID = departure.trip.stopTimings.filter(tripStop => tripStop.stopName.includes(stop.stopName))[0].stopGTFSID
+    let stop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
+    let {stopGTFSID} = stop
+    let minutesDiff = stop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
+
+    let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
+    if (departure.trip.stopTimings[0].departureTimeMinutes > 1440) tripStart.add(-1, 'day') // edge case where trip starts after midnight and recorded as 25:00 on
+
+    let operationDate = tripStart.format('YYYYMMDD')
 
     departure.tripURL = `/tram/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + `${utils.getYYYYMMDDNow()}/#stop-${stopGTFSID}`
+      + `${operationDate}/#stop-${stopGTFSID}`
 
     let destinationShortName = utils.getStopName(departure.trip.destination)
     let {destination} = departure.trip

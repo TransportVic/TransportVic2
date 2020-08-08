@@ -16,6 +16,7 @@ async function loadDepartures(req, res) {
   }
 
   let departures = await getDepartures(stop, res.db)
+  let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
   departures = departures.map(departure => {
     const timeDifference = moment.utc(departure.actualDepartureTime.diff(utils.now()))
@@ -29,11 +30,16 @@ async function loadDepartures(req, res) {
     departure.headwayDevianceClass = 'unknown'
     departure.codedLineName = 'ferry'
 
-    let day = utils.getYYYYMMDD(departure.scheduledDepartureTime)
+    let stop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
+    let {stopGTFSID} = stop
+    let minutesDiff = stop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
+
+    let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
+    let operationDate = tripStart.format('YYYYMMDD')
 
     departure.tripURL = `/ferry/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + `${day}#stop-${departure.trip.stopTimings[0].stopGTFSID}`
+      + `${operationDate}#stop-${stopGTFSID}`
 
     departure.destination = utils.getStopName(departure.trip.destination)
     departure.destinationURL = `/ferry/timings/${utils.encodeName(departure.trip.destination)}`
