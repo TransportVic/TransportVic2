@@ -30,7 +30,7 @@ async function getData(req, res) {
     codedName: req.params.station + '-railway-station'
   })
 
-  return await TrainUtils.getPIDSDepartures(res.db, station, '*', stoppingTextMap, stoppingTypeMap)
+  return await TrainUtils.getPIDSDepartures(res.db, station, '*', stoppingTextMap, stoppingTypeMap, 10)
 }
 
 router.get('/:station/up-down', async (req, res) => {

@@ -32,11 +32,48 @@ div.departure {
   --departure-height: calc((var(--height) - var(--height) * 0.006 * 3) / 4);
   height: var(--departure-height);
   display: flex;
+  position: relative;
+  background-color: #222222;
 }
+
+div.nextDepartures {
+  height: var(--height);
+  overflow: hidden;
+}
+
+div.nextDepartures > :nth-child(1) {
+  z-index: 7;
+}
+
+div.nextDepartures > :nth-child(2) {
+  z-index: 6;
+}
+
+div.nextDepartures > :nth-child(3) {
+  z-index: 5;
+}
+
+div.nextDepartures > :nth-child(4) {
+  z-index: 4;
+}
+
+div.nextDepartures > :nth-child(5) {
+  z-index: 3;
+}
+
+div.nextDepartures > :nth-child(6) {
+  z-index: 2;
+}
+
+div.nextDepartures > :nth-child(7) {
+  z-index: 1;
+}
+
 
 div.greySeparator {
   height: calc(var(--height) * 0.006);
   background-color: #808080;
+  position: relative;
 }
 
 div.details {

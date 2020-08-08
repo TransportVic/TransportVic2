@@ -40,6 +40,40 @@ function shorternDestination (destination) {
   return destination
 }
 
+function asyncPause(milliseconds) {
+  return new Promise(resolve => {
+    setTimeout(resolve, milliseconds)
+  })
+}
+
+async function removeService(position) {
+  let departureRows = Array.from(document.querySelectorAll('.departure'))
+  let dividerDivs = Array.from(document.querySelectorAll('.greySeparator'))
+
+  let departureRow = departureRows[position]
+  let divider = dividerDivs[position]
+
+  let rowHeight = parseInt(getComputedStyle(departureRow).height.slice(0, -2))
+  let shiftWidth = rowHeight / 40
+
+  for (let i = 1; i <= 40; i++) {
+    departureRow.style = `margin-top: -${i * shiftWidth}px`
+    await asyncPause(1)
+  }
+
+  departureRow.parentElement.removeChild(departureRow)
+  if (divider) { // last element may not have
+    divider.parentElement.removeChild(divider)
+  }
+}
+
+let services = [null, null, null, null]
+
+function getServiceID(departure) {
+  if (!departure) return null
+  return departure.scheduledDepartureTime + departure.codedLineName + departure.destination
+}
+
 function updateBody(firstTime) {
   $.ajax({
     method: 'POST'
@@ -59,6 +93,9 @@ function updateBody(firstTime) {
         departures[departure.direction].push(departure)
       })
 
+      // Only check shifts at certain points (otherwise it will run a shift for every service after the initial shift)
+      let starts = [0]
+
       if (forcedDirection) {
         let directionName = forcedDirection[0].toUpperCase() + forcedDirection.slice(1)
         screenDepartures = departures[directionName]
@@ -66,20 +103,45 @@ function updateBody(firstTime) {
         screenDepartures = [...departures.Up, ...departures.Down].slice(0, 4)
       } else if (departures.Up.length === 1) {
         screenDepartures = [...departures.Up, ...departures.Down.slice(0, 3)]
+        starts = [0, 1]
       } else if (departures.Down.length === 1) {
         screenDepartures = [...departures.Up.slice(0, 3), ...departures.Down]
+        starts = [0, 3]
       } else {
         screenDepartures = [...departures.Up.slice(0, 2), ...departures.Down.slice(0, 2)]
+        starts = [0, 2]
       }
 
       screenDepartures = [...screenDepartures, null, null, null, null].slice(0, 4)
 
-      let departureRows = Array.from(document.querySelectorAll('.departure'))
-      let dividerDivs = Array.from(document.querySelectorAll('.greySeparator'))
+      let offset = 0
+      let toRemove = []
 
       screenDepartures.forEach((departure, i) => {
-        let departureRow = departureRows[i]
-        let dividerDiv = dividerDivs[i]
+        let serviceID = getServiceID(departure)
+        let previousID = services[i]
+
+        if (starts.includes(i) && serviceID !== previousID && previousID !== null) {
+          offset++
+          $('.nextDepartures').innerHTML += `<div class="greySeparator" style="display: block;"></div>
+<div class="departure">
+  <div class="details">
+      <div class="top"><span class="departureTime">--</span><span class="destination">--</span></div><span class="stoppingType">--</span></div>
+  <div class="platformArea"><span class="title">PLAT</span><span class="platform">--</span></div>
+  <div class="timeToDepartureArea"><span class="title">Minutes</span><span class="timeToDeparture">--</span></div>
+</div>`
+          toRemove.push(i)
+        }
+
+        services[i] = serviceID
+
+        let index = i + offset
+
+        let departureRows = Array.from(document.querySelectorAll('.departure'))
+        let dividerDivs = Array.from(document.querySelectorAll('.greySeparator'))
+
+        let departureRow = departureRows[index]
+        let dividerDiv = dividerDivs[index]
 
         if (departure) {
           if (dividerDiv) dividerDiv.style = 'display: block;'
@@ -118,6 +180,11 @@ function updateBody(firstTime) {
           departureRow.style = 'display: none;'
         }
       })
+
+      toRemove.forEach(i => {
+        removeService(i)
+      })
+
     } catch (e) {
       setListenAnnouncements()
     }
