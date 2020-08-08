@@ -48,7 +48,7 @@ div.fullMessage div.fixedMessage p {
 }
 
 div.message {
-  height: calc(var(--height) - var(--width) * 0.0725);
+  height: calc(var(--height) * (1 - 0.01 - 0.25));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,14 +56,14 @@ div.message {
 }
 
 div.message p {
-  font-size: calc(var(--width) * 0.06);
-  line-height: calc(var(--width) * 0.07);
-  height: calc(var(--width) * 0.07);
+  font-size: calc(var(--height) * 0.21);
+  line-height: calc(var(--height) * 0.2);
+  height: calc(var(--height) * 0.21);
   text-align: center;
 }
 
 div.firstDeparture  {
-  height: calc(var(--height) - var(--width) * 0.0725);
+  height: calc(var(--height) * (1 - 0.01 - 0.25));
 }
 
 @-webkit-keyframes burnLine {
@@ -80,7 +80,7 @@ div.burnLine {
   position: absolute;
   background-color: #0074d9;
   width: 0;
-  height: calc(var(--width) * 0.13);
+  height: calc(var(--height) * 0.46);
   z-index: 0;
   transition: burnLine 30s linear;
   transition-property: width;
@@ -96,7 +96,7 @@ div.burnLine.reset {
 }
 
 div.topRow {
-  height: calc(var(--width) * 0.13);
+  height: calc(var(--height) * 0.46);
   display: flex;
   z-index: 1;
 }
@@ -106,7 +106,7 @@ div.topRow > * {
 }
 
 p.firstDestination {
-  font-size: calc(var(--width) * 0.1075);
+  font-size: calc(var(--height) * 0.382);
   margin-left: calc(var(--width) * 0.005);
   font-family: "NetworkSansBold";
   letter-spacing: calc(var(--width) * -0.002);
@@ -116,15 +116,15 @@ p.firstDestination {
 p.firstDestination.smaller {
   font-family: "NetworkSansMedium";
   letter-spacing: calc(var(--width) * -0.003);
-  font-size: calc(var(--width) * 0.095);
-  margin-top: calc(var(--width) * 0.007);
+  font-size: calc(var(--height) * 0.33);
+  margin-top: calc(var(--height) * 0.03);
 }
 
 p.firstDestination.smallest {
   font-family: "NetworkSansMedium";
   letter-spacing: calc(var(--width) * -0.004);
-  font-size: calc(var(--width) * 0.075);
-  margin-top: calc(var(--width) * 0.025);
+  font-size: calc(var(--height) * 0.265);
+  margin-top: calc(var(--height) * 0.08);
 }
 
 div.firstDepartureInfo {
@@ -140,15 +140,15 @@ div.scheduled {
 
 div.scheduled p:nth-child(1), div.actual > p:nth-child(1) {
   font-family: "NetworkSansRegular";
-  font-size: calc(var(--width) * 0.03);
-  margin-top: calc(var(--width) * 0.01);
-  letter-spacing: calc(var(--width) * 0.00);
+  font-size: calc(var(--height) * 0.107);
+  margin-top: calc(var(--height) * 0.035);
+  letter-spacing: 0;
 }
 
 div.scheduled p:nth-child(2) {
-  font-size: calc(var(--width) * 0.0725);
+  font-size: calc(var(--height) * 0.258);
   margin-left: calc(var(--width) * 0.004);
-  margin-top: calc(var(--width) * -0.013);
+  margin-top: calc(var(--height) * -0.045);
 }
 
 div.actual {
@@ -156,25 +156,21 @@ div.actual {
 }
 
 div.actual div:nth-child(2) {
-  margin-top: calc(var(--width) * -0.013);
+  margin-top: calc(var(--height) * -0.045);
 }
 
 div.actual div:nth-child(2) > span:nth-child(1) {
-  font-size: calc(var(--width) * 0.0725);
+  font-size: calc(var(--height) * 0.258);
   margin-left: calc(var(--width) * 0.004);
 }
 
 div.actual div:nth-child(2) > span:nth-child(2) {
-  font-size: calc(var(--width) * 0.0225);
-}
-
-div.middleRow {
-  height: calc(var(--width) * 0.05);
+  font-size: calc(var(--height) * 0.1);
 }
 
 div.middleRow p {
   font-family: "NetworkSansRegular";
-  font-size: calc(var(--width) * 0.0625);
+  font-size: calc(var(--height) * 0.222);
   margin-left: calc(var(--width) * 0.005);
   white-space: nowrap;
   width: fit-content;
@@ -213,14 +209,14 @@ p.serviceMessage div.arrivalMessage p {
 
 div.whiteLine {
   width: var(--width);
-  height: calc(var(--width) * 0.0025);
+  height: calc(var(--height) * 0.01);
   background-color: white;
 }
 
 div.bottomRow {
   display: flex;
   align-items: center;
-  height: calc(var(--width) * 0.07);
+  height: calc(var(--height) * 0.25);
   font-size: calc(var(--width) * 0.038);
   font-family: "NetworkSansBold";
 }
@@ -230,7 +226,7 @@ div.bottomRow.vline {
 }
 
 div.bottomRow > * {
-  margin-top: calc(var(--width) * -0.005);
+  margin-top: calc(var(--height) * -0.007);
 }
 
 div.bottomRow > span:nth-child(1) {
@@ -246,9 +242,8 @@ div.bottomRow > span:nth-child(2) {
 
 div.bottomRow > span:nth-child(3) {
   margin-left: calc(var(--width) * 0.015);
-  width: calc(var(--width) * 0.20);
+  width: calc(var(--width) * 0.22);
   font-family: "NetworkSansRegular";
-  font-size: calc(var(--width) * 0.035);
   letter-spacing: calc(var(--width) * -0.001);
 
   white-space: nowrap;
@@ -265,20 +260,20 @@ div.bottomRow > div:nth-child(4) span:nth-child(1) {
 }
 
 div.bottomRow > div:nth-child(4) span:nth-child(2) {
-  font-size: calc(var(--width) * 0.02);
+  font-size: calc(var(--height) * 0.08);
   width: calc(var(--width) * 0.15);
 }
 
-div.timeNow {
+div.clock {
   margin-top: 0 !important;
   color: black;
   background-color: white;
-  height: calc(var(--width) * 0.07);
+  height: calc(var(--height) * 0.25);
   width: calc(var(--width) * 0.175);
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(var(--width) * 0.05);
+  font-size: calc(var(--height) * 0.17);
   font-family: "NetworkSansRegular";
 }

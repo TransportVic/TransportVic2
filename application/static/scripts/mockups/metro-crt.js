@@ -5,6 +5,7 @@ function shorternName(name) {
   if (name === 'Southern Cross') return 'Spencer Street'
   if (name === 'Upper Ferntree Gully') return 'Upper FT Gully'
   if (name === 'Nar Nar Goon') return 'Nar-Nar-Goon'
+  if (name === 'Flemington Racecourse') return 'Flemington Races'
 
   return name
 }

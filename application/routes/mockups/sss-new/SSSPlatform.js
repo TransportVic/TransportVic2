@@ -59,7 +59,7 @@ async function getData(req, res) {
 }
 
 router.get('/:platform', async (req, res) => {
-  res.render('mockups/sss-new/platform.pug')
+  res.render('mockups/sss-new/platform.pug', { now: utils.now() })
 })
 
 router.post('/:platform', async (req, res) => {

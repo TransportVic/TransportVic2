@@ -221,7 +221,7 @@ function updateBody() {
 
           if (destination === 'North Melbourne') destination = 'Nth Melbourne'
           if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
-          if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+          if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
           $('.scheduled', div).textContent = formatTime(new Date(departure.scheduledDepartureTime))
           $('.destination', div).textContent = destination

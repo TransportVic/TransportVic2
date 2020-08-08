@@ -236,7 +236,7 @@ function updateBody() {
 
           if (destination === 'North Melbourne') destination = 'Nth Melbourne'
           if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
-          if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+          if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
           $('.scheduled', div).textContent = formatTime(new Date(departure.scheduledDepartureTime))
           $('.destination', div).textContent = destination
@@ -299,8 +299,21 @@ $.ready(() => {
     updateBody()
     setInterval(updateBody, 1000 * 30)
   }, 30000 - (+new Date() % 30000))
+})
 
-  setInterval(() => {
-    $('div.timeContainer span').textContent = formatTime(new Date())
-  }, 1000)
+function setTime() {
+  $('.clock span').textContent = formatTime(new Date())
+}
+
+function setupClock() {
+  setTime()
+  let msToNextSecond = 1000 - (+new Date() % 1000)
+  setTimeout(() => {
+    setTime()
+    setInterval(setTime, 1000)
+  }, msToNextSecond)
+}
+
+$.ready(() => {
+  setupClock()
 })

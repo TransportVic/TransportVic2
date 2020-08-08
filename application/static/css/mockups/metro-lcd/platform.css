@@ -36,11 +36,11 @@ div.message, div.serviceMessage {
 }
 
 div.message p, div.serviceMessage p {
-  font-size: calc(var(--width) * 0.065);
+  font-size: calc(var(--height) * 0.12);
 }
 
 div.message p.large, div.serviceMessage p.large {
-  font-size: calc(var(--width) * 0.075);
+  font-size: calc(var(--height) * 0.14);
 }
 
 div.serviceMessage div.arrivalMessage {

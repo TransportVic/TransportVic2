@@ -39,13 +39,13 @@ div.message {
 }
 
 div.message p {
-  font-size: calc(var(--width) * 0.06);
-  line-height: calc(var(--width) * 0.06);
+  font-size: calc(var(--height) * 0.2);
+  line-height: calc(var(--height) * 0.2);
 }
 
 div.message p.large {
-  font-size: calc(var(--width) * 0.075);
-  line-height: calc(var(--width) * 0.075);
+  font-size: calc(var(--height) * 0.25);
+  line-height: calc(var(--height) * 0.25);
 }
 
 div.nextDeparture {

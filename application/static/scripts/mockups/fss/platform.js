@@ -237,7 +237,7 @@ function updateBody(firstTime) {
       let {destination} = firstDeparture
       if (destination === 'North Melbourne') destination = 'Nth Melbourne'
       if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
-      if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+      if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
       let firstStoppingType = firstDeparture.stoppingType
       if (firstDeparture.additionalInfo.via) {
@@ -291,7 +291,7 @@ function updateBody(firstTime) {
 
           if (destination === 'North Melbourne') destination = 'Nth Melbourne'
           if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
-          if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+          if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
           let stoppingType = departure.stoppingType
           if (departure.additionalInfo.via) {

@@ -27,7 +27,7 @@ router.get('/platform/:platforms/', async (req, res) => {
   let {platforms} = req.params
   platforms = platforms.split('-').map(p => sssPlatforms[p])
 
-  res.render('mockups/sss/platform', {platforms})
+  res.render('mockups/sss/platform', { platforms, now: utils.now() })
 })
 
 router.get('/summary/', (req, res) => {

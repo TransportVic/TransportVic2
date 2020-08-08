@@ -11,7 +11,7 @@ div.fullMessage {
 
 div.fullMessage img {
   margin-top: calc(var(--height) * 0.005);
-  margin-right: calc(var(--height) * 0.05);
+  margin-right: calc(var(--width) * 0.01);
   height: calc(var(--height) * 0.12);
 }
 

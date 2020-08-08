@@ -36,7 +36,7 @@ function setListenAnnouncements() {
 
 function shorternDestination (destination) {
   if (destination === 'Upper Ferntree Gully') return 'Upper F.T Gully'
-  if (destination === 'Flemington Racecource') return 'Flemington Races'
+  if (destination === 'Flemington Racecourse') return 'Flemington Races'
   return destination
 }
 

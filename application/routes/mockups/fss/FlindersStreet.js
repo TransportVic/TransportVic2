@@ -34,11 +34,11 @@ async function getData(req, res) {
 }
 
 router.get('/escalator/:platform/:station*?', async (req, res) => {
-  res.render('mockups/fss/escalator', {platform: req.params.platform})
+  res.render('mockups/fss/escalator', { platform: req.params.platform, now: utils.now() })
 })
 
 router.get('/platform/:platform/:station*?', async (req, res) => {
-  res.render('mockups/fss/platform', {platform: req.params.platform})
+  res.render('mockups/fss/platform', { platform: req.params.platform, now: utils.now() })
 })
 
 router.post('/:type/:platform/:station*?', async (req, res) => {

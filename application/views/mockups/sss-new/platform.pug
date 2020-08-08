@@ -38,7 +38,7 @@ html
             div.platformDiv
               span Platform
               span.platform 12
-          span.firstStoppingType Ltd Express via Flinders Street, Change at Dandenong for Cranbourne
+          span.firstStoppingType --
           div.stops
             
             
@@ -48,4 +48,4 @@ html
         div.platformContainer.right
           +platform()
       div.clock
-        span 12:34:56
+        span=now.format('h:mm:ss a')

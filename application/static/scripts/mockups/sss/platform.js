@@ -93,7 +93,7 @@ function processArrivals(arrivals, platformNumber, isLeft) {
     }
   }).map(arrival => {
     let {destination} = arrival
-    if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+    if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
     if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
 
     arrival.destination = destination.toUpperCase()
@@ -144,7 +144,7 @@ function processDepartures(departures, platformNumber, isLeft) {
     }
   }).map(departure => {
     let {destination} = departure
-    if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+    if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
     if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
     if (destination === 'South Kensington') destination = 'Sth Kensington'
 

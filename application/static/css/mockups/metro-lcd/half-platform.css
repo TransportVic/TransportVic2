@@ -33,13 +33,13 @@ div.message, div.serviceMessage {
 }
 
 div.message p, div.serviceMessage p {
-  font-size: calc(var(--width) * 0.06);
-  line-height: calc(var(--width) * 0.06);
+  font-size: calc(var(--height) * 0.2);
+  line-height: calc(var(--height) * 0.2);
 }
 
 div.message p.large, div.serviceMessage p.large {
-  font-size: calc(var(--width) * 0.075);
-  line-height: calc(var(--width) * 0.075);
+  font-size: calc(var(--height) * 0.25);
+  line-height: calc(var(--height) * 0.25);
 }
 
 div.serviceMessage div.arrivalMessage {
@@ -294,7 +294,7 @@ div.followingDeparture:nth-child(3) {
   border-bottom: calc(var(--width) * 0.001) solid grey;
 }
 
-div.time {
+div.clock {
   margin-top: auto;
   height: calc(var(--height) * 0.17);
   background-color: #ffffff;
@@ -303,7 +303,7 @@ div.time {
   justify-content: center;
 }
 
-div.timeContainer {
+div.clockContainer {
   width: calc(var(--width) * 0.2925);
   height: calc(var(--height) * 0.145);
   display: flex;
@@ -313,7 +313,7 @@ div.timeContainer {
   margin-right: calc(var(--width) * 0.0025);
 }
 
-div.time span {
+div.clock span {
   color: #000000;
   font-family: "NetworkSansBold";
   font-size: calc(var(--height) * 0.13);
