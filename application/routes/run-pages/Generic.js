@@ -11,6 +11,7 @@ const coachDestinations = require('../../../additional-data/coach-stops')
 const tramDestinations = require('../../../additional-data/tram-destinations')
 
 const determineTramRouteNumber = require('../../../modules/tram/determine-tram-route-number')
+const determineBusRouteNumber = require('../../../modules/bus/determine-bus-route-number')
 
 const tramFleet = require('../../../tram-fleet')
 
@@ -234,6 +235,10 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   if (trip.mode === 'tram') {
     routeNumber = determineTramRouteNumber(trip)
     routeNumberClass = 'tram-' + routeNumber.replace(/[a-z]/, '')
+  }
+
+  if (trip.mode === 'bus') {
+    routeNumber = determineBusRouteNumber(trip)
   }
 
   res.render('runs/generic', {

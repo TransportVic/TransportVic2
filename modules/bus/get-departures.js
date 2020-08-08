@@ -9,6 +9,7 @@ const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
 const busStopNameModifier = require('../../additional-data/bus-stop-name-modifier')
 const busBays = require('../../additional-data/bus-bays')
+const determineBusRouteNumber = require('./determine-bus-route-number')
 
 const modules = require('../../modules')
 const config = require('../../config')
@@ -302,6 +303,10 @@ async function getDepartures(stop, db) {
 
     departures = departures.map(departure => {
       let {trip} = departure
+
+      if (departure.routeNumber) {
+        departure.routeNumber = determineBusRouteNumber(departure.trip)
+      }
 
       let hasSeenStop = false
       let upcomingStops = trip.stopTimings.filter(tripStop => {
