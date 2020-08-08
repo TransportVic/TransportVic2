@@ -74,7 +74,9 @@ function getServiceID(departure) {
   return departure.scheduledDepartureTime + departure.codedLineName + departure.destination
 }
 
-function updateBody(firstTime) {
+let previousStarts = [0]
+
+function updateBody(firstTime, n) {
   $.ajax({
     method: 'POST'
   }, (err, status, body) => {
@@ -112,17 +114,23 @@ function updateBody(firstTime) {
         starts = [0, 2]
       }
 
+      if (previousStarts.join() !== starts.join() && !firstTime) {
+        starts = starts.concat(previousStarts)
+      }
+
+      previousStarts = starts
+
       screenDepartures = [...screenDepartures, null, null, null, null].slice(0, 4)
 
       let offset = 0
-      let toRemove = []
+      let toRemove = -1
 
       screenDepartures.forEach((departure, i) => {
         let serviceID = getServiceID(departure)
         let previousID = services[i]
 
-        if (starts.includes(i) && serviceID !== previousID && previousID !== null) {
-          offset++
+        if (starts.includes(i) && serviceID !== previousID && previousID !== null && toRemove === -1) {
+          offset = 1
           $('.nextDepartures').innerHTML += `<div class="greySeparator" style="display: block;"></div>
 <div class="departure">
   <div class="details">
@@ -130,7 +138,7 @@ function updateBody(firstTime) {
   <div class="platformArea"><span class="title">PLAT</span><span class="platform">--</span></div>
   <div class="timeToDepartureArea"><span class="title">Minutes</span><span class="timeToDeparture">--</span></div>
 </div>`
-          toRemove.push(i)
+          toRemove = i
         }
 
         services[i] = serviceID
@@ -181,10 +189,7 @@ function updateBody(firstTime) {
         }
       })
 
-      toRemove.forEach(i => {
-        removeService(i)
-      })
-
+      if (toRemove !== -1) removeService(toRemove)
     } catch (e) {
       setListenAnnouncements()
     }
