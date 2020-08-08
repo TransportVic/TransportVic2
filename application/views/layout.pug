@@ -4,12 +4,15 @@ html(lang='en-GB')
     - let themeColour = '#171717'
     meta(charset='UTF-8')
       
-    link(rel='preload' href='/static/fonts/Nunito.ttf' as='font' crossorigin='anonymous')
-    link(rel='preload' href='/static/css/base-style.css' as='style')
-      
+    link(rel='preload' as='font' href='/static/fonts/Nunito.ttf' crossorigin='anonymous')
+    link(rel='preload' as='style' href='/static/css/base-style.css')
+
     link(rel='stylesheet' href='/static/css/base-style.css')
     script(src='/static/scripts/util.js')
     
+    block head
+    block style
+
     meta(property='og:locale' content='en-GB')
     meta(property='og:site_name' content='TransportVic')
     meta(property='og:type' content='website')
@@ -33,7 +36,6 @@ html(lang='en-GB')
     link(rel='apple-touch-icon' type='image/png' href='/static/images/favicon/favicon512.png')
       
     link(rel='manifest' href='/static/app-content/manifest.json')
-    block head
     meta(name='theme-color' content=themeColour)
   body
     div#header
@@ -43,8 +45,6 @@ html(lang='en-GB')
         a#home-button(href='/') Home
     div#content
       block content
-        
-    block style
     
     block scripts
     script(src='/static/scripts/sw-load.js')

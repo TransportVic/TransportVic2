@@ -27,6 +27,10 @@ block header-right
 block scripts
   script(src='/static/scripts/timings.js' async)
   
+block head
+  link(rel='preload' as='style' href='/static/css/combined-colours.css')
+  link(rel='preload' as='style' href='/static/css/timings/base-style.css')
+  
 append style
   link(rel='stylesheet' href='/static/css/combined-colours.css')
   link(rel='stylesheet' href='/static/css/timings/base-style.css')

@@ -43,7 +43,7 @@
 }
 
 .modeSwitchType img {
-  height: calc(2vw + 2vh);
+  height: calc(2vw + 1.7vh);
 }
 
 @media (max-width: 600px) {

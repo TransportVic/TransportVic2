@@ -20,6 +20,9 @@ block title
 block scripts
   script(src='/static/scripts/search.js')
   
+block head
+  link(rel='preload' as='style' href='/static/css/search.css')
+  
 append style
   link(rel='stylesheet' href='/static/css/search.css')
   link(rel='stylesheet' href='/static/css/loading.css')

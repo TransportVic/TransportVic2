@@ -6,11 +6,11 @@ block head
 block title
   span V/Line Tracker
   
+block head
+  link(rel='preload' as='style' href='/static/css/form.css')
+    
 block style
   link(rel='stylesheet' href='/static/css/form.css')
-
-block scripts
-  script(src='/static/scripts/tracker/index.js')
 
 block content
   h1#title V/Line Tracker
