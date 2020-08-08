@@ -92,7 +92,8 @@ let destinationSections = [
 
 let diagramSections = [
   {
-    targets: ['Southern Cross', 'North Melbourne'],
+    targets: ['North Melbourne'],
+    not: ['Flagstaff', 'Parliament'],
     key: 'FSS-SSS-NME'
   },
   {
@@ -160,7 +161,7 @@ function setDestinationsRow(departures) {
     let {target, id} = section
 
     let validDepartures = departures.filter(departure => {
-      return departure.type !== 'vline' && !!departure.additionalInfo.screenStops.find(stop => stop.stopName === target && !stop.express)
+      return departure.type !== 'vline' && !!departure.additionalInfo.screenStops.find(stop => stop.stopName === target && !stop.isExpress)
     }).map(departure => {
       return identifyTargetStop(departure, target)
     }).sort((a, b) => a.targetActualTime - b.targetActualTime)
@@ -188,12 +189,12 @@ function updateDiagram(departures) {
     let nextDeparture = departures.filter(departure => {
       if (departure.type === 'vline') return false
       for (let target of targets) {
-        if (!departure.additionalInfo.screenStops.find(stop => stop.stopName === target && !stop.express))
+        if (!departure.additionalInfo.screenStops.find(stop => stop.stopName === target && !stop.isExpress))
           return false
       }
       if (not) {
         for (let excluded of not)
-          if (departure.additionalInfo.screenStops.find(stop => stop.stopName === excluded && !stop.express))
+          if (departure.additionalInfo.screenStops.find(stop => stop.stopName === excluded && !stop.isExpress))
             return false
       }
       return true
