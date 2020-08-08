@@ -2,14 +2,14 @@
   font-family: Default-Font;
   font-weight: normal;
   font-display: fallback;
-  src: local('Nunito Regular'), local('Nunito'), url(/static/fonts/Nunito.ttf);
+  src: url(/static/fonts/Nunito.ttf);
 }
 
 @font-face {
   font-family: Default-Font;
   font-weight: bold;
   font-display: fallback;
-  src: local('Nunito Regular'), local('Nunito'), url(/static/fonts/Nunito.ttf);
+  src: url(/static/fonts/Nunito.ttf);
 }
 
 html, body {

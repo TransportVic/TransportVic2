@@ -16,7 +16,10 @@ for service in services
             span.topText #{firstDeparture.loopDirection}
           else if firstDeparture.routeDetails
             span.topText #{firstDeparture.routeDetails}
-          span.bigNumber #{firstDeparture.routeNumber}
+          -
+            let className = 'bigNumber'
+            if (firstDeparture.routeNumber.length > 3) className += ' smaller'
+          span(class=className) #{firstDeparture.routeNumber}
           if firstDeparture.bay
             span.bottomText #{firstDeparture.bay}
       a(href=firstDeparture.destinationURL).departureInfo
