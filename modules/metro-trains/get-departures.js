@@ -230,6 +230,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     const scheduledDepartureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
     const scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
 
+    if (scheduledDepartureTime.diff(now, 'minutes') > 150) return
+
     let consist = []
 
     let estimatedDepartureTime = departure.estimated_departure_utc ? moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne') : null
