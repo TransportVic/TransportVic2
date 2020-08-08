@@ -54,7 +54,10 @@ block content
           span.topText=loopDirection
         else if trip.routeDetails
           span.topText=trip.routeDetails
-        span.bigNumber=routeNumber
+        -
+          let className = 'bigNumber'
+          if (routeNumber.length > 3) className += ' smaller'
+        span(class=className)=routeNumber
     a.departureInfo
       if !hasNumber
         span.routeName=trip.routeName
