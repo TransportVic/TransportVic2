@@ -90,14 +90,6 @@ router.get('/covid-19', (req, res) => {
   res.render('pages/covid-19')
 })
 
-router.get('/covid-19/curfew', async (req, res) => {
-  let covid19Cancellations = res.db.getCollection('covid19 cancellations')
-  let today = utils.getYYYYMMDDNow()
-
-  let tripsToday = await covid19Cancellations.findDocuments({ day: today }).sort({ departureTime: 1 }).toArray()
-  res.json(tripsToday)
-})
-
 router.get('/sty', async (req, res) => {
   let missing = await getStonyPoint(res.db)
 

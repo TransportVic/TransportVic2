@@ -134,7 +134,6 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   const gtfsTimetables = db.getCollection('gtfs timetables')
   const timetables = db.getCollection('timetables')
   const liveTimetables = db.getCollection('live timetables')
-  const covid19Cancelled = db.getCollection('covid19 cancellations')
 
   const minutesPastMidnight = utils.getMinutesPastMidnightNow()
   let transformedDepartures = []
@@ -363,17 +362,6 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     if (routeID === 99 && stationName === 'flinders street') destination = 'City Loop'
 
     let message = ''
-
-    if (cancelled) {
-      let day = utils.getYYYYMMDDNow()
-
-      let covidCancellation = await covid19Cancelled.findDocument({
-        day,
-        runID
-      })
-
-      if (covidCancellation) message = 'CANCELLED (COVID-19)'
-    }
 
     let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
     let mappedSuspensions = suspensions.map(e => adjustSuspension(e, trip, station.stopName))

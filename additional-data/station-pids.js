@@ -40,7 +40,7 @@ module.exports = {
   "Pascoe Vale": [],
   "Strathmore": [],
   "Glenbervie": [],
-  "Essendon": [...platr(2, [], 'half-platform-bold')],
+  "Essendon": [...platr(3, [], 'half-platform-bold')],
   "Brunswick": [],
   "Jewell": [],
   "Royal Park": [],

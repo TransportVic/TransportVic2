@@ -21,9 +21,6 @@ if (modules.tracker && modules.tracker.vline)
 if (modules.preloadCCL)
   require('../modules/preload-ccl')
 
-if (modules.findCovidCancellations)
-  require('../modules/find-covid-cancellations')
-
 module.exports = class MainServer {
   constructor () {
     this.app = express()
