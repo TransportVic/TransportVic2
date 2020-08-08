@@ -7,7 +7,8 @@ let depots = [
   'Essendon Tram Depot/Mount Alexander Road',
   'Malvern Tram Depot/Glenferrie Road',
   'Glenferrie Road/Malvern Road',
-  'High Street/Barkers Road'
+  'High Street/Barkers Road',
+  'Glenferrie Road/High Street' // 6d Malvern Town Hall
 ]
 
 module.exports = function (trip) {
@@ -32,6 +33,10 @@ module.exports = function (trip) {
     let hasLaTrobe = trip.stopTimings.find(stop => stop.stopName === 'William Street/La Trobe Street')
     if (hasLaTrobe) return '12a'
     routeNumber = '12'
+  }
+
+  if (routeNumber === '16') {
+    if (trip.destination === 'Federation Square/Swanston Street') return '16a'
   }
 
   return routeNumber

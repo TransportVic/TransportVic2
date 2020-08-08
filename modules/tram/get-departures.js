@@ -87,6 +87,8 @@ async function getDeparturesFromPTV(stop, db) {
           vehicleDescriptor = {}
           estimatedDepartureTime = null
           actualDepartureTime = scheduledDepartureTime
+
+          if (scheduledDepartureTime.diff(now, 'minutes') > 90) return
         }
       }
 
