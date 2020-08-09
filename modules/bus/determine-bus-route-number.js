@@ -10,7 +10,7 @@ module.exports = function (trip) {
   M - C (Elizabeth Bridge Reserve/Durham Road)
   */
   if (routeNumber === '688') {
-    let hasRidge = trip.stopTimings.find(stop => stop.stopName === 'Observatory Rd/Ridge Road')
+    let hasRidge = trip.stopTimings.find(stop => stop.stopName === 'Mount Dandenong Arboretum/Ridge Road')
     if (trip.stopTimings.find(stop => stop.stopName === 'Elizabeth Bridge Reserve/Durham Road')) return '688C'
     if (hasRidge) {
       let hasObservatory = trip.stopTimings.find(stop => stop.stopName === 'Mount Dandenong Observatory/Observatory Road')
