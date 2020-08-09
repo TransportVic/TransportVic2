@@ -38,6 +38,18 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
 
     let routeName = name ? name(gtfsRouteData[2], rawRouteName, routeGTFSID) : rawRouteName
 
+    let coordsSeen = []
+    let filteredShape = []
+    shapeFile.path.forEach((coord) => {
+      let pair = coord.join(',')
+      if (!coordsSeen.includes(pair)) {
+        coordsSeen.push(pair)
+        filteredShape.push(coord)
+      }
+    })
+
+    shapeFile.path = filteredShape // Since we are removing duplicates this does not affect distance
+
     if (matchingRoute) {
       let getFingerprint = shape => `${shape.length}-${shape.path[0].join(',')}-${shape.path.slice(-1)[0].join(',')}`
 
