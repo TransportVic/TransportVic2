@@ -9,6 +9,7 @@ $DIRNAME/bus/load-all.sh
 $DIRNAME/trams/load-all.sh
 $DIRNAME/ferry/load-all.sh
 $DIRNAME/monash-shuttle/load-all.sh
+$DIRNAME/heritage-trains/load-all.sh
 
 node $DIRNAME/load-route-stops.js
 node $DIRNAME/load-bus-route-names.js
