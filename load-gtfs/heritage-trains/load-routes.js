@@ -42,7 +42,7 @@ database.connect({
     return ['Heritage']
   })
 
-  await updateStats('heritage-routs', routeData.length)
+  await updateStats('heritage-routes', routeData.length)
   console.log('Completed loading in ' + routeData.length + ' heritage rail routes')
   process.exit()
 })

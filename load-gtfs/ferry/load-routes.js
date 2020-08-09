@@ -2,6 +2,8 @@
 Route guide;
 9-STY-A.H: sty - french island - sty
 9-STY.B.H: sty - french island - phillip island - french island - sty
+9-STY.C.H: sty - phillip island - sty
+9-STY.D.H: sty - french island - phillip island - sty
 9-PMW.H: port melb - spotswood
 9-PMW.R: spotswood - port melb
 9-PPO.H: Docklands - Portarlington
@@ -17,11 +19,23 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
 const loadRoutes = require('../utils/load-routes')
 const utils = require('../../utils')
+const turf = require('@turf/turf')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
 
-let shapes = require('./data/shapes.json')
+let shapeMap = require('./shapes/shape-map.json')
+
+let shapes = Object.keys(shapeMap).map(shapeID => {
+  let fileName = shapeMap[shapeID] + '.json'
+  let data = JSON.parse(fs.readFileSync(path.join(__dirname, 'shapes', fileName)))
+  return {
+    shapeID,
+    routeGTFSID: shapeID.slice(0, 5),
+    path: data.coordinates,
+    length: turf.length(data, { units: 'kilometers' }) * 1000
+  }
+})
 
 let gtfsID = '9'
 
