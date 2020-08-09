@@ -235,6 +235,11 @@ module.exports = class MainServer {
       StopPreview: {
         path: '/stop-preview',
         enable: modules.stopPreview
+      },
+
+      RoutePreview: {
+        path: '/route-preview',
+        enable: modules.routePreview
       }
     }
 
