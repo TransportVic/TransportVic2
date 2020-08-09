@@ -1,4 +1,4 @@
-const version = '82'
+const version = '82a'
 const cacheName = `transportvic-${version}`
 
 function cacheFiles(files) {
