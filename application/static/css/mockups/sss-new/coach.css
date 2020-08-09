@@ -63,7 +63,7 @@ div.heading {
 }
 
 div.heading p.title {
-  font-size: calc(var(--height) * 0.037);
+  font-size: calc(var(--height) * 0.033);
   margin-top: calc(var(--height) * 0.003);
   font-family: "NetworkSansBold";
 }
@@ -90,21 +90,21 @@ div.departureData {
 }
 
 div.departureData p.title {
-  font-size: calc(var(--height) * 0.032);
+  font-size: calc(var(--height) * 0.03);
   margin-top: calc(var(--height) * 0.003);
   font-family: "NetworkSansBold";
 }
 
 div.departureData p.stopsAt {
-  font-size: calc(var(--height) * 0.025);
+  font-size: calc(var(--height) * 0.022);
   letter-spacing: calc(var(--width) * 0.0005);
-  line-height: calc(var(--height) * .028);
+  line-height: calc(var(--height) * .025);
   font-family: "NetworkSansRegular";
 }
 
 div.departureData p.information {
   font-size: calc(var(--height) * 0.03);
-  margin-top: calc(var(--height) * 0.003);
+  line-height: calc(var(--height) * .034);
   font-family: "NetworkSansBold";
   overflow: hidden;
 }
