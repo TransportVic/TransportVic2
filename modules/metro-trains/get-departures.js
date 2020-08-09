@@ -196,7 +196,13 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     }
   })
 
-  let replacementBusDepartures = []
+  let replacementBuses = departures.filter(departure => departure.flags.includes('RRB-RUN'))
+  let trains = departures.filter(departure => !departure.flags.includes('RRB-RUN'))
+
+  let replacementBusDepartures = replacementBuses.map(bus => {
+    let scheduledDepartureTime = moment.tz(bus.scheduled_departure_utc, 'Australia/Melbourne')
+    return utils.getPTMinutesPastMidnight(scheduledDepartureTime)
+  })
 
   async function processDeparture(departure) {
     let run = runs[departure.run_id]
@@ -340,8 +346,6 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
       trip = await getStoppingPattern(db, departure.run_id, 'metro train', scheduledDepartureTime.toISOString())
       usedLive = true
-    } else {
-      replacementBusDepartures.push(scheduledDepartureTimeMinutes)
     }
 
     if (!usedLive) {
@@ -395,9 +399,6 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       consist
     })
   }
-
-  let replacementBuses = departures.filter(departure => departure.flags.includes('RRB-RUN'))
-  let trains = departures.filter(departure => !departure.flags.includes('RRB-RUN'))
 
   await async.forEach(trains, processDeparture)
   await async.forEachSeries(replacementBuses, processDeparture)
