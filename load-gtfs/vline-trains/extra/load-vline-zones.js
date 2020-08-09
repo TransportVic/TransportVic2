@@ -13,10 +13,10 @@ async function updateStop(stopName, zone) {
   let dbStop = await stops.findDocument({
     stopName: stopName + ' Railway Station'
   })
-  if (!dbStop) return console.log(`Load V/Line Zones: Skipping ${dbStop.name}`)
+  if (!dbStop) return console.log(`Load V/Line Zones: Skipping ${stopName}`)
 
   let vlinePlatform = dbStop.bays.find(b => b.mode === 'regional train')
-  if (!vlinePlatform) return console.log(`Load V/Line Zones: Skipping ${dbStop.name}`)
+  if (!vlinePlatform) return console.log(`Load V/Line Zones: Skipping ${stopName}`)
 
   vlinePlatform.mykiZones = zone
 
