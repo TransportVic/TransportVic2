@@ -16,7 +16,7 @@ async function loadDepartures(req, res) {
   }
 
   let departures = await getDepartures(station, res.db)
-  let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
+  let stopGTFSIDs = station.bays.map(bay => bay.stopGTFSID)
 
   departures = departures.map(departure => {
     const timeDifference = moment.utc(departure.actualDepartureTime.diff(utils.now()))
@@ -30,9 +30,9 @@ async function loadDepartures(req, res) {
     departure.headwayDevianceClass = 'unknown'
     departure.codedLineName = 'heritage-train'
 
-    let stop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
-    let {stopGTFSID} = stop
-    let minutesDiff = stop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
+    let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
+    let {stopGTFSID} = currentStop
+    let minutesDiff = currentStop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
 
     let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
     let operationDate = tripStart.format('YYYYMMDD')

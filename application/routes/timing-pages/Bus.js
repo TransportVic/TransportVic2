@@ -43,9 +43,9 @@ async function loadDepartures(req, res) {
     }
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
-    let stop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
-    let {stopGTFSID} = stop
-    let minutesDiff = stop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
+    let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
+    let {stopGTFSID} = currentStop
+    let minutesDiff = currentStop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
 
     let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
     let operationDate = tripStart.format('YYYYMMDD')

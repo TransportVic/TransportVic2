@@ -31,9 +31,9 @@ async function loadDepartures(req, res) {
     if (stationName === 'Southern Cross Railway Station' && departure.isTrainReplacement)
       stationName = 'Southern Cross Coach Terminal/Spencer Street'
 
-    let stop = departure.trip.stopTimings.find(stop => stop.stopName === station.stopName)
-    let {stopGTFSID} = stop
-    let minutesDiff = stop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
+    let currentStation = departure.trip.stopTimings.find(tripStop => tripStop.stopName === station.stopName)
+    let {stopGTFSID} = currentStation
+    let minutesDiff = currentStation.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
 
     let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
     if (departure.trip.stopTimings[0].departureTimeMinutes > 1440) tripStart.add(-1, 'day') // edge case where trip starts after midnight and recorded as 25:00 on
