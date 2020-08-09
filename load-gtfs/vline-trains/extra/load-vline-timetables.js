@@ -86,7 +86,9 @@ async function parseTimings(names, types, trip) {
       stationData = await stops.findDocument({
         bays: {
           $elemMatch: {
-            mode: 'regional train',
+            mode: {
+              $in: ['regional train', 'regional coach']
+            },
             fullStopName: new RegExp(locationName + ' Railway Station', 'i')
           }
         }
@@ -101,6 +103,7 @@ async function parseTimings(names, types, trip) {
     }
 
     let stationPlatform = stationData.bays.find(bay => bay.mode === 'regional train')
+    if (!stationPlatform) stationPlatform = stationData.bays.find(bay => bay.mode === 'regional coach') // Fallback to coach because the whole albury line is missing now
 
     if (timing.includes('DV')) {
       tripDivides = true

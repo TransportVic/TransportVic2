@@ -45,8 +45,7 @@ router.post('/', async (req, res) => {
 
     if (departure.isTrainReplacement) {
       let bay = '64'
-
-      let line = termini[departure.trip.stopTimings.slice(-1)[0].stopName.slice(0, -16)]
+      let line = departure.shortRouteName
 
       switch (line) {
         case 'Geelong':
