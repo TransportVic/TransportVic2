@@ -1,0 +1,8 @@
+{
+  "12-MCC-mjp-1.1.H": "MonashBayF-MonashBldgH",
+  "12-MCC-mjp-1.1.R": "MonashBldgH-MonashBayF",
+  "12-MCP-mjp-1.1.H": "MonashBayG-MonashPen",
+  "12-MCP-mjp-1.1.R": "MonashPen-MonashBayG",
+  "12-MPF-mjp-1.1.H": "Frankston-MonashPen",
+  "12-MPF-mjp-1.1.R": "MonashPen-Frankston"
+}
