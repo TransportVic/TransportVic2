@@ -98,12 +98,12 @@ async function loadDepartures(req, res) {
       let destinations = []
 
       direction.forEach(departure => {
-        let destination = departure.destination + departure.viaText + departure.loopDirection
+        let destination = departure.destination + departure.viaText + departure.loopDirection + departure.routeNumber
         if (!destinations.includes(destination)) {
           destinations.push(destination)
           destinationDepartures.push({
             destination,
-            departures: direction.filter(d => d.destination + d.viaText + d.loopDirection === destination)
+            departures: direction.filter(d => d.destination + d.viaText + d.loopDirection + d.routeNumber === destination)
           })
         }
       })
