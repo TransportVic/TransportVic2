@@ -314,6 +314,7 @@ async function animateScrollingText() {
   for (let i = 0; i < iterationCount; i++) {
     if (stopScrolling) {
       stopScrolling = false
+      isScrolling = false
       return
     }
 
