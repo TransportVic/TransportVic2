@@ -154,8 +154,7 @@ async function getDeparturesFromPTV(stop, db) {
 
       let routeGTFSID = route.route_gtfs_id
       if (routeGTFSID === '4-965') routeGTFSID = '8-965'
-      if (routeGTFSID === '4-745') return // These ones don't track - discard it
-      if (routeGTFSID.match(/4-45[abcd]/)) routeGTFSID = '4-745' // This fake 745 tracks - correct it to 4-745
+      if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
 
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', day, routeGTFSID)
       if (!trip) {
