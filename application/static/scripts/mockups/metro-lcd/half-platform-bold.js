@@ -18,9 +18,9 @@ function shortenStoppingType(type) {
 }
 
 let stopScrolling = false
+let isScrolling = false
 
-let firstRowTimeout, firstRowPause
-let secondRowTimeout, secondRowPause
+let firstRowPause
 
 let firstScheduledTime, firstStoppingPattern
 
@@ -248,13 +248,10 @@ function updateBody(firstTime) {
           stopScrolling = true
         } else {
           setServiceMessageActive(false)
-          if (!firstTime)
+          if (!firstTime && isScrolling)
             stopScrolling = true
-          clearTimeout(firstRowTimeout)
-          clearTimeout(firstRowPause)
-          clearTimeout(secondRowTimeout)
-          clearTimeout(secondRowPause)
 
+          clearTimeout(firstRowPause)
           drawBottomRow()
         }
       }
@@ -313,6 +310,7 @@ async function animateScrollingText() {
 
   await asyncPause(2000)
 
+  isScrolling = true
   for (let i = 0; i < iterationCount; i++) {
     if (stopScrolling) {
       stopScrolling = false
@@ -323,6 +321,7 @@ async function animateScrollingText() {
     firstStoppingPatternP.style.marginLeft = xPosition + 'px'
     await asyncPause(10)
   }
+  isScrolling = false
   await asyncPause(200)
 }
 
