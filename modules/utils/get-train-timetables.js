@@ -154,7 +154,8 @@ async function getScheduledDepartures(station, db, mode, timeout) {
       destination: trip.destination.slice(0, -16),
       runID: '',
       cancelled: trip.type === 'cancelled',
-      suspensions: []
+      suspensions: [],
+      consist: []
     }
   }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }
