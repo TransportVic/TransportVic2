@@ -248,11 +248,12 @@ function updateBody(firstTime) {
           stopScrolling = true
         } else {
           setServiceMessageActive(false)
-          if (!firstTime && isScrolling)
+          if (!firstTime && isScrolling) {
             stopScrolling = true
+          }
 
           clearTimeout(firstRowPause)
-          drawBottomRow()
+          setTimeout(drawBottomRow, 100)
         }
       }
 
@@ -276,7 +277,10 @@ function updateBody(firstTime) {
 
           setTimeout(() => {
             showingStandClear = true
-            stopScrolling = true
+            if (isScrolling) {
+              stopScrolling = true
+            }
+
             setStandClear()
           }, 1000 * 15)
         }, difference - 1000 * 20)
