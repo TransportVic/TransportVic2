@@ -331,5 +331,6 @@ module.exports = [
   'hoppers-crossing/werribee-village-shopping-centre',
   'manor-lakes/manor-lakes-central-shopping-centre',
   'mill-park/dysons-bus-depot-121-mckimmies-road',
-  'frankston/fernery-lane-nepean-highway'
+  'frankston/fernery-lane-nepean-highway',
+  'bayswater/bayswater-railway-station'
 ]

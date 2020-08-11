@@ -10,9 +10,14 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Ventura Specials',
-  track: ['V187', 'V287', 'V322', 'V343', 'V784', 'V785', 'V786', 'V787', 'V789', 'V792', 'V1175', 'V1176', 'V1182', 'V1184', 'V1194', 'V1195', 'V1380', 'V1445'],
+  track: ['V187', 'V287', 'V322', 'V784', 'V785', 'V786', 'V787', 'V789', 'V792', 'V795', 'V796', 'V1175', 'V1176', 'V1182', 'V1184', 'V1194', 'V1195', 'V1380', 'V1445'],
   routes: [],
   type: 'exclude'
+}, {
+  name: 'Ventura CB80',
+  track: ['V993'],
+  routes: ['697', '699', '735', '736', '757', '765', '768'],
+  type: 'include'
 }, {
   name: 'Venture B10BLE',
   track: ['V10', 'V30', 'V31', 'V34', 'V35', 'V43', 'V44', 'V78', 'V114', 'V116', 'V137', 'V138', 'V139', 'V304'],
@@ -21,13 +26,18 @@ module.exports = [{
 }, {
   name: 'Transdev Minibuses',
   track: ['T119', 'T120', 'T129', 'T130', 'T131', 'T132', 'T133', 'T183'],
-  routes: ['280', '282'],
+  routes: ['280', '282', '370'],
   type: 'exclude'
 }, {
   name: 'Cranbourne O405NH',
   track: ['CR32', 'CR33', 'CR34', 'CR35', 'CR36'],
   routes: ['795', '891', '894', '895'],
   type: 'include'
+}, {
+  name: 'Cranbourne Specials',
+  track: ['CR37'],
+  routes: [],
+  type: 'exclude'
 }, {
   name: 'Route Livery Buses',
   track: ['S16' ,'S19', 'S43', 'S54', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
@@ -66,12 +76,17 @@ module.exports = [{
   type: 'include'
 }, {
   name: 'CDC Tullamarine Specials',
-  track: ['CT6', 'CT7', 'CT8', 'CT13'],
+  track: ['CT3', 'CT7', 'CT8', 'CT13', 'CT18'],
+  routes: [],
+  type: 'exclude'
+}, {
+  name: 'CDC Wyndham Specials',
+  track: ['CW20', 'CW22', 'CW23', 'CW189', 'CW190'],
   routes: [],
   type: 'exclude'
 }, {
   name: 'Sunbury Specials',
-  track: ['SB43', 'SB48'],
+  track: ['SB16'],
   routes: [],
   type: 'exclude'
 }, {
