@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
 function adjustTrip(trip, date, today, minutesPastMidnightNow) {
   let origin = trip.origin.replace('Shopping Centre', 'SC')
   let destination = trip.destination.replace('Shopping Centre', 'SC')
-  
+
   let serviceData = busDestinations.service[trip.routeNumber] || {}
   let dA = destination, dB = destination.split('/')[0]
   let oA = origin, oB = origin.split('/')[0]
@@ -188,6 +188,55 @@ router.get('/service', async (req, res) => {
     tripsToday,
     busesByDay,
     service,
+    date: moment(date, 'YYYYMMDD')
+  })
+})
+
+router.get('/operator-list', async (req, res) => {
+  let {db} = res
+  let busTrips = db.getCollection('bus trips')
+  let smartrakIDs = db.getCollection('smartrak ids')
+
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let today = utils.getYYYYMMDDNow()
+
+  let {operator, date} = querystring.parse(url.parse(req.url).query)
+
+  if (!date) date = today
+  if (!operator) {
+    return res.render('tracker/bus/by-operator', {
+      buses: {},
+      operator: '',
+      date: moment(date, 'YYYYMMDD')
+    })
+  }
+
+  let allBuses = (await smartrakIDs.findDocuments({
+    operator
+  }).sort({ fleetNumber: 1 }).toArray())
+  .sort((a, b) => a.fleetNumber.replace(/[^\d]/g, '') - b.fleetNumber.replace(/[^\d]/g, ''))
+
+  let allGTFSIDs = allBuses.map(bus => bus.smartrakID)
+
+  let rawTripsToday = await busTrips.findDocuments({
+    date,
+    smartrakID: { $in: allGTFSIDs }
+  }).sort({ routeNumber: 1 }).toArray()
+
+  let buses = {}
+  rawTripsToday.forEach(trip => {
+    let {fleetNumber} = allBuses.find(bus => bus.smartrakID === trip.smartrakID)
+    if (!buses[fleetNumber]) buses[fleetNumber] = []
+    if (!buses[fleetNumber].includes(trip.routeNumber)) {
+      buses[fleetNumber].push(trip.routeNumber)
+    }
+  })
+
+  return res.render('tracker/bus/by-operator', {
+    buses,
+    allBuses,
+    operator,
     date: moment(date, 'YYYYMMDD')
   })
 })

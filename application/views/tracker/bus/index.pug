@@ -28,5 +28,14 @@ block content
       input(type="text" name="service" value="" placeholder="Service Number" autocomplete="off")
       input(type="submit" value="Go")
   br
+  form(method="GET" action="/bus/tracker/operator-list")#byOperator
+    label(for="service") Operator Fleet Listing:
+    br
+    input(type="text" name="operator" value="" placeholder="Operator Prefix" autocomplete="off")
+    br
+    div.inputSection
+      input(type="text" name="date" value="" placeholder="Date (Blank for today)" autocomplete="off")
+      input(type="submit" value="Go")
+  br
   h2 Or,
   a#highlights(href="/bus/tracker/highlights") View Today's Highlights

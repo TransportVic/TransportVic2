@@ -1,0 +1,23 @@
+extends ../../layout
+
+block head
+  title TransportVic - Tracker/Bus - By Operator
+  link(rel='preload' as='style' href='/static/css/tracker/bus-results.css')
+
+block title
+  span Bus Tracker - By Operator
+  
+block style
+  link(rel='stylesheet' href='/static/css/tracker/bus-results.css')
+
+block content
+  h1.title Tracking Bus Operator #{operator} on #{date.format('dddd, MMMM Do YYYY')}
+  h2 Fleet Number, Service
+  for bus in allBuses
+    div.trip
+      -
+        let {fleetNumber} = bus
+        let text
+        if (buses[fleetNumber]) text = buses[fleetNumber].join(', ')
+        else text = '--'
+      a(href=`/bus/tracker/fleet?fleet=${fleetNumber}`) #{fleetNumber}: #{text}
