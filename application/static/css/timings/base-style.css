@@ -316,11 +316,11 @@ div.departure:nth-child(odd) a.timing.on-time:nth-child(even) {
 }
 
 div.departure:nth-child(odd) a.timing.late:nth-child(odd) {
-  background-color: #f51227;
+  background-color: #fc3a3a;
 }
 
 div.departure:nth-child(odd) a.timing.late:nth-child(even) {
-  background-color: #d41b2d;
+  background-color: #db0f0f;
 }
 
 div.departure:nth-child(odd) a.timing.unknown:nth-child(odd) {
