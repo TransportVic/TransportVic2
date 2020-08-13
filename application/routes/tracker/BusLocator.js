@@ -132,6 +132,8 @@ router.post('/', async (req, res) => {
 
   let currentTrip = activeTrips[0]
   let nextActiveTripDescriptor = activeTrips[1] || currentTrip // Prefer next one
+  if (!currentTrip) return res.json({ error: 'bus not found on network' })
+
   let tripID = `${date}${nextActiveTripDescriptor.routeGTFSID}${nextActiveTripDescriptor.origin}${ nextActiveTripDescriptor.destination}${nextActiveTripDescriptor.departureTime}${nextActiveTripDescriptor.destinationArrivalTime}`
 
   let cachedLocation
@@ -155,18 +157,20 @@ router.post('/', async (req, res) => {
     let runData = data.departures[0].run
     let vehiclePosition = runData.vehicle_position
 
-    let location = {
-      lat: vehiclePosition.latitude,
-      lng: vehiclePosition.longitude,
-      bearing: vehiclePosition.bearing,
-      departureTime: currentTrip.departureTime,
-      routeNumber: currentTrip.routeNumber,
-      destination: getPlaceName(currentTrip.routeNumber, currentTrip.destination),
-      fleetNumber: fleet
-    }
+    if (vehiclePosition) {
+      let location = {
+        lat: vehiclePosition.latitude,
+        lng: vehiclePosition.longitude,
+        bearing: vehiclePosition.bearing,
+        departureTime: currentTrip.departureTime,
+        routeNumber: currentTrip.routeNumber,
+        destination: getPlaceName(currentTrip.routeNumber, currentTrip.destination),
+        fleetNumber: fleet
+      }
 
-    locationCache.put(tripID, location)
-    return res.json(location)
+      locationCache.put(tripID, location)
+      return res.json(location)
+    }
   }
 
   return res.json({ error: 'could not locate trip' })
