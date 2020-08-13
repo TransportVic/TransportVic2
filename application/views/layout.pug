@@ -10,6 +10,10 @@ html(lang='en-GB')
     link(rel='stylesheet' href='/static/css/base-style.css')
     script(src='/static/scripts/util.js')
     
+    -
+      let description = 'A transport app for Victoria'
+      let title = 'TransportVic'
+      
     block head
     block style
 
@@ -21,7 +25,13 @@ html(lang='en-GB')
     meta(property='twitter:card' content='summary')
     meta(property='twitter:url' content='https://vic.transportsg.me')
     meta(property='twitter:image' content='https://vic.transportsg.me/static/images/favicon/favicon512.png')
-
+      
+    meta(property='og:title' content=title)
+    meta(property='twitter:title' content=title)
+    meta(property='og:description' content=description)
+    meta(property='twitter:description' content=description)
+    meta(name='description' content=description)
+      
     meta(name='keywords' content='tram,vline,train,next 5,public transport,bus,metro,transport,victora')
     meta(name='author' content='Unikitty Pte. Ltd.')
     meta(name='application-name' content='TransportVic')

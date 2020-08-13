@@ -1,7 +1,10 @@
 extends ../../layout
 
 block head
-  title TransportVic - Tracker/Bus
+  -
+    title = 'TransportVic - Tracker/Bus'
+    description = 'TransportVic Bus Tracker'
+  title #{title}
   link(rel='preload' as='style' href='/static/css/form.css')
   
 block title

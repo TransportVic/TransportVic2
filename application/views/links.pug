@@ -2,16 +2,18 @@ extends layout
 
 block head
   title TransportVic - All Links
+  -
+    title = 'TransportVic - All Links'
+    description = 'All links within TransportVic'
 
-  meta(property='og:title' content='TransportVic - All Links')
-  meta(property='twitter:title' content='TransportVic - All Links')
-  meta(property='og:description' content='All Links within TransportVic')
-  meta(property='twitter:description' content='All Links within TransportVic')
+  link(rel='preload' as='image' href='/static/images/icons/gemilang.svg')
+  link(rel='preload' as='image' href='/static/images/icons/sprinter.svg')
+  link(rel='preload' as='image' href='/static/images/icons/hcmt.svg')
+  link(rel='preload' as='image' href='/static/images/icons/designline.svg')
+  link(rel='preload' as='style' href='/static/css/links.css')
 
 block title
   span TransportVic - All Links
-
-block scripts
   
 block style
   link(rel='stylesheet' href='/static/css/links.css')
@@ -19,25 +21,25 @@ block style
 block content
   a(href='/bus/tracker').row.result
     div.leftContainer.bus
-      img(src='/static/images/icons/gemilang.svg')
+      img(src='/static/images/icons/gemilang.svg' alt='Bus Tracker')
     div.linkDetails
       span Bus Tracker
       
   a(href='/vline/tracker').row.result
     div.leftContainer.vline
-      img(src='/static/images/icons/sprinter.svg')
+      img(src='/static/images/icons/sprinter.svg' alt='V/Line Tracker')
     div.linkDetails
       span V/Line Tracker
       
   a(href='/mockups').row.result
     div.leftContainer.metro
-      img(src='/static/images/icons/hcmt.svg')
+      img(src='/static/images/icons/hcmt.svg' alt='Station PID Mockup')
     div.linkDetails
       span Station PID Mockup
       
   a(href='/about').row.result
     div.leftContainer.rainbow
-      img(src='/static/images/icons/designline.svg')
+      img(src='/static/images/icons/designline.svg' alt='About This Site')
     div.linkDetails
       span About This Site
        

@@ -1,17 +1,16 @@
 extends ../layout
     
 block head
-  - let title = `${trip.departureTime} ${trip.origin.slice(0, -16)} to ${trip.destination.slice(0, -16)}`
-  title=`TransportVic - ${title}`
-  
-  meta(property='og:title' content=`TransportVic - ${title}`)
-  meta(property='twitter:title' content=`TransportVic - ${title}`)
-  meta(property='og:description' content=`Viewing the ${title}`)
-  meta(property='twitter:description' content=`Viewing the ${title}`)
-  - themeColour = '#6b4d9e'
+  -
+    let tripName = `${trip.departureTime} ${trip.origin.slice(0, -16)} to ${trip.destination.slice(0, -16)}`
+    title = `TransportVic - ${title}`
+    description = `Viewing the ${title}`
+    themeColour = '#6b4d9e'
+
+  title #{title}
 
 block title
-  span=title
+  span #{tripName}
   
 block style
   link(rel='stylesheet' href='/static/css/runs/base-style.css')

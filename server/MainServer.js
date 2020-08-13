@@ -67,15 +67,20 @@ module.exports = class MainServer {
       next()
     })
 
-    app.use(compression())
+    app.use(compression({
+      level: 9
+    }))
 
-    if (!config.devMode)
+    if (!config.devMode) {
       app.use(minify({
         uglifyJsModule: uglifyEs,
         errorHandler: console.log
       }))
+    }
 
-    app.use('/static', express.static(path.join(__dirname, '../application/static')))
+    app.use('/static', express.static(path.join(__dirname, '../application/static'), {
+      maxAge: 31557600
+    }))
 
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(bodyParser.json())

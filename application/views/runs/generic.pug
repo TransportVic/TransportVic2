@@ -2,17 +2,12 @@ extends ../layout
     
 block head
   -
-    let title = `${trip.departureTime} ${origin} to ${destination}`
+    let tripName = `${trip.departureTime} ${origin} to ${destination}`
     if (routeNumber) {
-      title = `${trip.departureTime} ${routeNumber} to ${destination}`
+      tripName = `${trip.departureTime} ${routeNumber} to ${destination}`
     }
-  title=`TransportVic - ${title}`
-  
-  meta(property='og:title' content=`TransportVic - ${title}`)
-  meta(property='twitter:title' content=`TransportVic - ${title}`)
-  meta(property='og:description' content=`Viewing the ${title}`)
-  meta(property='twitter:description' content=`Viewing the ${title}`)
-  -
+    title = `TransportVic - ${tripName}`
+
     switch (trip.mode) {
       case 'bus':
         themeColour = '#d7832c'
@@ -27,10 +22,10 @@ block head
         themeColour = '#03998f'
         break
     }
-    
-    
+
+  title #{title}
 block title
-  span=title
+  span #{tripName}
   
 block style
   link(rel='stylesheet' href='/static/css/timings/base-style.css')

@@ -1,7 +1,10 @@
 extends ../../layout
 
 block head
-  title TransportVic - Tracker/Bus - By Operator
+  -
+    title = 'TransportVic - Tracker/Bus - By Operator'
+    description = `Tracking all buses run by #{operator}`
+  title #{title}
   link(rel='preload' as='style' href='/static/css/tracker/bus-results.css')
 
 block title

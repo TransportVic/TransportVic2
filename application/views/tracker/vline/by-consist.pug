@@ -1,7 +1,10 @@
 extends ../../layout
 
 block head
-  title TransportVic - Tracker/V/Line - By Consist
+  -
+    title = 'TransportVic - Tracker/V/Line - By Consist'
+    description = 'Tracking all V/Line trips by consist'
+  title #{title}
   link(rel='preload' as='style' href='/static/css/tracker/bus-results.css')
   
 block title
