@@ -15,28 +15,42 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 L.control.scale().addTo(map)
 
 let currentMarker
+let hasShownError = false
 
 function updateBody(firstTime) {
   $.ajax({
     method: 'POST'
   }, (err, status, data) => {
-    let location = [data.lat, data.lng]
+    if (data.error) {
+      if (currentMarker) {
+        currentMarker.remove()
+        currentMarker = null
+      }
 
-    let icon = L.divIcon({className: 'bus'})
-    if (!currentMarker)
-      currentMarker = L.marker(location, {icon: icon}).addTo(map)
-    else
-      currentMarker.setLatLng(location)
+      if (!hasShownError) {
+        alert(data.error)
+        hasShownError = true
+      }
+    } else {
+      let location = [data.lat, data.lng]
 
-    if (firstTime)
-      map.setView(location, 18)
-    else
-      map.setView(location)
+      let icon = L.divIcon({className: 'bus'})
+      if (!currentMarker)
+        currentMarker = L.marker(location, {icon: icon}).addTo(map)
+      else
+        currentMarker.setLatLng(location)
 
-    currentMarker.bindPopup(`Bus ${data.fleetNumber}<br>
+      if (firstTime)
+        map.setView(location, 18)
+      else
+        map.setView(location)
+
+      currentMarker.bindPopup(`Bus ${data.fleetNumber}<br>
 Currently running:<br>
 ${data.departureTime} ${data.routeNumber} to ${data.destination}
 `)
+      hasShownError = false
+    }
   })
 }
 
