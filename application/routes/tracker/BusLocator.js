@@ -83,6 +83,8 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
+  await getPTVKey()
+
   let {db} = res
   let busTrips = db.getCollection('bus trips')
   let smartrakIDs = db.getCollection('smartrak ids')
