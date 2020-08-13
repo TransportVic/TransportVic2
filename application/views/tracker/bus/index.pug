@@ -32,12 +32,19 @@ block content
       input(type="submit" value="Go")
   br
   form(method="GET" action="/bus/tracker/operator-list")#byOperator
-    label(for="service") Operator Fleet Listing:
+    label(for="operator") Operator Fleet Listing:
     br
     input(type="text" name="operator" value="" placeholder="Operator Prefix" autocomplete="off")
     br
     div.inputSection
       input(type="text" name="date" value="" placeholder="Date (Blank for today)" autocomplete="off")
+      input(type="submit" value="Go")
+  br
+  form(method="GET" action="/bus/tracker/locator")#locator
+    label(for="fleet") Bus Locator:
+    br
+    div.inputSection
+      input(type="text" maxlength="7" name="fleet" value="" placeholder="Fleet Number" autocomplete="off")
       input(type="submit" value="Go")
   br
   h2 Or,

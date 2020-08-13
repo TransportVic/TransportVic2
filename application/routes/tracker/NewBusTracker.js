@@ -34,9 +34,8 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
   trip.origin = (serviceData[oA] || serviceData[oB]
     || busDestinations.generic[oA] || busDestinations.generic[oB] || oB)
 
-  let {departureTime, destinationArrivalTime} = trip
-  let departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime),
-      destinationArrivalTimeMinutes = utils.time24ToMinAftMidnight(destinationArrivalTime)
+  let {destinationArrivalTime} = trip
+  let destinationArrivalTimeMinutes = utils.time24ToMinAftMidnight(destinationArrivalTime)
 
   trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
 
@@ -362,5 +361,6 @@ router.get('/bot', async (req, res) => {
   }
 })
 
+router.use('/locator', require('./BusLocator'))
 
 module.exports = router

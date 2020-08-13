@@ -1,0 +1,25 @@
+extends ../../layout
+    
+block head
+  title TransportVic - Bus Locator
+  link(rel='stylesheet' href='https://unpkg.com/leaflet@1.6.0/dist/leaflet.css')
+  script(src='https://unpkg.com/leaflet@1.6.0/dist/leaflet.js')
+  style.
+    .bus {
+      --size: calc(3vw + 3vh);
+      width: var(--size);
+      height: var(--size);
+      background-color: white;
+      border: calc(0.3vw + 0.3vh) solid;
+      border-radius: var(--size);
+      border-color: #d7832c;
+    }
+    
+block title
+  span Bus Locator
+
+block scripts
+  script(src='/static/scripts/tracker/locator.js')
+  
+block content
+  div#map(style='height: calc(100vh - (4vw + 4vh))')

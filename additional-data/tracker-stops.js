@@ -326,7 +326,7 @@ module.exports = [
   'caroline-springs/caroline-springs-square-shopping-centre-main-street',
   'ravenhall/caroline-springs-railway-station',
   'taylors-hill/taylors-hill-village-shopping-centre',
-  'capel-sound/chisholm-tafe-henry-wilson-drive',
+  'capel-sound/chisholm-tafe-rosebud-henry-wilson-drive',
   'malvern/tooronga-railway-station',
   'hoppers-crossing/werribee-village-shopping-centre',
   'manor-lakes/manor-lakes-central-shopping-centre',
