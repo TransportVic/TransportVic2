@@ -87,12 +87,12 @@ async function getVNETServices(vlinePlatform, isDepartures, db) {
     }
 
     if (!isNaN(new Date($$('ActualArrivalTime').text()))) {
-      estimatedDepartureTime = moment.tz($$('ActualArrivalTime').text(), 'Australia/Melbourne')
+      estimatedDepartureTime = utils.parseTime($$('ActualArrivalTime').text())
     } // yes arrival cos vnet
 
     let platform = $$('Platform').text()
-    let originDepartureTime = moment.tz($$('ScheduledDepartureTime').text(), 'Australia/Melbourne')
-    let destinationArrivalTime = moment.tz($$('ScheduledDestinationArrivalTime').text(), 'Australia/Melbourne')
+    let originDepartureTime = utils.parseTime($$('ScheduledDepartureTime').text())
+    let destinationArrivalTime = utils.parseTime($$('ScheduledDestinationArrivalTime').text())
     let runID = $$('ServiceIdentifier').text()
     let originVNETName = $$('Origin').text()
     let destinationVNETName = $$('Destination').text()

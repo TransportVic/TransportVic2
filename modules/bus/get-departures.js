@@ -130,8 +130,8 @@ async function getDeparturesFromPTV(stop, db) {
 
       if (route.route_number.toLowerCase().includes('combined')) return
 
-      let scheduledDepartureTime = moment.tz(busDeparture.scheduled_departure_utc, 'Australia/Melbourne')
-      let estimatedDepartureTime = busDeparture.estimated_departure_utc ? moment.tz(busDeparture.estimated_departure_utc, 'Australia/Melbourne') : null
+      let scheduledDepartureTime = utils.parseTime(busDeparture.scheduled_departure_utc)
+      let estimatedDepartureTime = busDeparture.estimated_departure_utc ? utils.parseTime(busDeparture.estimated_departure_utc) : null
       let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
 
       // if early at checkpoint set to on time
@@ -146,7 +146,7 @@ async function getDeparturesFromPTV(stop, db) {
 
       let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
 
-      let destination = busStopNameModifier(utils.adjustStopname(run.destination_name.trim()))
+      let destination = busStopNameModifier(utils.adjustStopName(run.destination_name.trim()))
 
       let day = utils.getYYYYMMDD(scheduledDepartureTime)
       if (isNightBus && (scheduledDepartureTimeMinutes % 1440) < 180)

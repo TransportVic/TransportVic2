@@ -8,10 +8,10 @@ const stonyPointFormations = require('../../../modules/metro-trains/stony-point-
 
 async function pickBestTrip(data, db) {
   data.mode = 'metro train'
-  let tripDay = moment.tz(data.operationDays, 'YYYYMMDD', 'Australia/Melbourne')
-  let tripStartTime = moment.tz(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
+  let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
-  let tripEndTime = moment.tz(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let tripEndTime = utils.parseTime(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm')
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
 
   let originStop = await db.getCollection('stops').findDocument({
@@ -116,7 +116,7 @@ async function pickBestTrip(data, db) {
     if (flindersIndex >= 0 && gtfsTrip.direction === 'Down') {
       let stopAfterFlinders = gtfsTrip.stopTimings[flindersIndex + 1]
       originStopID = stopAfterFlinders.stopGTFSID
-      originTime = moment.tz(`${data.operationDays} ${stopAfterFlinders.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+      originTime = utils.parseTime(`${data.operationDays} ${stopAfterFlinders.departureTime}`, 'YYYYMMDD HH:mm')
     }
 
     gtfsTrip.stopTimings.forEach((stop, i) => {
@@ -183,7 +183,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     }
 
     if (stop.estimatedDepartureTime) {
-      let scheduledDepartureTime = moment.tz(req.params.operationDays, 'YYYYMMDD', 'Australia/Melbourne').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
+      let scheduledDepartureTime = utils.parseTime(req.params.operationDays, 'YYYYMMDD').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
 
       let headwayDeviance = scheduledDepartureTime.diff(stop.estimatedDepartureTime, 'minutes')
 

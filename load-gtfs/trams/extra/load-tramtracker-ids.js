@@ -34,7 +34,7 @@ database.connect({}, async () => {
       stops.forEach(stop => {
         let tramTrackerID = $('.stopid', stop).text()
         let stopNumber = $('.stopno', stop).text().toUpperCase()
-        let tramTrackerName = utils.expandStopName(utils.adjustStopname($('.location', stop).text().split(/ ?[&\-,] ?/)[0].trim()))
+        let tramTrackerName = utils.expandStopName(utils.adjustStopName($('.location', stop).text().split(/ ?[&\-,] ?/)[0].trim()))
         let url = $('a', stop).attr('href')
 
         if (!url) return

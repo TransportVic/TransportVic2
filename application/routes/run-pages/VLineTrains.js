@@ -19,10 +19,10 @@ function giveVariance(time) {
 
 async function pickBestTrip(data, db) {
   data.mode = 'regional train'
-  let tripDay = moment.tz(data.operationDays, 'YYYYMMDD', 'Australia/Melbourne')
-  let tripStartTime = moment.tz(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
+  let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
-  let tripEndTime = moment.tz(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let tripEndTime = utils.parseTime(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm')
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
 
   let originStop = await db.getCollection('stops').findDocument({
@@ -134,7 +134,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.prettyTimeToArrival = ''
 
-    let scheduledDepartureTime = moment.tz(req.params.operationDays, 'YYYYMMDD', 'Australia/Melbourne').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
+    let scheduledDepartureTime = utils.parseTime(req.params.operationDays, 'YYYYMMDD').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
 
     const timeDifference = moment.utc(moment(scheduledDepartureTime).diff(utils.now()))
 

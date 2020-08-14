@@ -72,7 +72,7 @@ function getDistantSunday(allAvailableDays) {
 
 function parseOperationDays(operationDays) {
   return operationDays.map(day => {
-    return moment.tz(day, 'YYYYMMDD', 'Australia/Melbourne')
+    return utils.parseTime(day, 'YYYYMMDD')
   })
 }
 

@@ -14,48 +14,6 @@ let cache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
 
 let lock = null
 
-// async function getBusDepartures() {
-//   if (cache.get('bus loop')) return cache.get('bus loop')
-//   const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/2/stop/33430?&max_results=3&expand=run&expand=route`)
-//
-//   let mappedDepartures = []
-//   departures.forEach(departure => {
-//     let scheduledDepartureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
-//     let estimatedDepartureTime = departure.estimated_departure_utc ? moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne') : null
-//     let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
-//
-//     let runID = departure.run_id
-//     let routeID = departure.route_id
-//
-//     let run = runs[runID]
-//     let route = routes[routeID]
-//
-//     let destination = run.destination_name.split('/')[0]
-//     destination = destination.replace('Gardens', 'Gdns').replace('Shopping Centre', 'SC')
-//       .replace('Railway', '').replace('Station', 'Stn').replace('Middle', 'Mid')
-//     if (destination === 'Knox City SC Interchange')
-//       destination = 'Knox City SC'
-//     let routeNumber = route.route_number
-//     if (routeNumber.includes('combined')) return
-//     let direction = run.direction_id
-//
-//     mappedDepartures.push({
-//       estimatedDepartureTime,
-//       actualDepartureTime,
-//       routeNumber,
-//       destination,
-//       direction
-//     })
-//   })
-//
-//   mappedDepartures = mappedDepartures.sort((a, b) => {
-//     return a.routeNumber - b.routeNumber || a.destination.length - b.destination.length
-//   })
-//
-//   cache.put('bus loop', mappedDepartures)
-//   return mappedDepartures
-// }
-
 function filterDepartures(departures) {
   return departures.map(departure => {
     departure.secondsToDeparture = departure.actualDepartureTime.diff(utils.now(), 'seconds')

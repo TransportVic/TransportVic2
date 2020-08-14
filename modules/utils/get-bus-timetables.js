@@ -52,7 +52,7 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
           departureTimeMinutes: scheduledDepartureTimeMinutes % 1440 + 1440 * i
         }
       },
-      destination: utils.adjustRawStopName(utils.adjustStopname(destination))
+      destination: utils.adjustRawStopName(utils.adjustStopName(destination))
     }
 
     if (excludedTripIDs) {

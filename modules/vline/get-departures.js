@@ -47,12 +47,12 @@ async function getVNETDepartures(vlinePlatform, direction, db) {
     }
 
     if (!isNaN(new Date($$('ActualArrivalTime').text()))) {
-      estimatedDepartureTime = moment.tz($$('ActualArrivalTime').text(), 'Australia/Melbourne')
+      estimatedDepartureTime = utils.parseTime($$('ActualArrivalTime').text())
     } // yes arrival cos vnet
 
     let platform = $$('Platform').text()
-    let originDepartureTime = moment.tz($$('ScheduledDepartureTime').text(), 'Australia/Melbourne')
-    let destinationArrivalTime = moment.tz($$('ScheduledDestinationArrivalTime').text(), 'Australia/Melbourne')
+    let originDepartureTime = utils.parseTime($$('ScheduledDepartureTime').text())
+    let destinationArrivalTime = utils.parseTime($$('ScheduledDestinationArrivalTime').text())
     let runID = $$('ServiceIdentifier').text()
     let originVNETName = $$('Origin').text()
     let destinationVNETName = $$('Destination').text()
@@ -277,13 +277,13 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     let run = runs[trainDeparture.run_id]
     let route = routes[trainDeparture.route_id]
 
-    let departureTime = moment.tz(trainDeparture.scheduled_departure_utc, 'Australia/Melbourne')
+    let departureTime = utils.parseTime(trainDeparture.scheduled_departure_utc)
     let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime) % 1440
 
     if (departureTime.diff(now, 'minutes') > 180) return
 
     let routeGTFSID = route.route_gtfs_id
-    let destination = utils.adjustStopname(run.destination_name)
+    let destination = utils.adjustStopName(run.destination_name)
 
     let possibleRouteGTFSIDs = [routeGTFSID]
     if (sunburyGroup.includes(routeGTFSID)) possibleRouteGTFSIDs = sunburyGroup
@@ -567,7 +567,7 @@ async function getDepartures(station, db) {
       departures = ptvDepartures.departures, runs = ptvDepartures.runs, routes = ptvDepartures.routes
       departures.forEach(departure => {
         let run = runs[departure.run_id]
-        let departureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
+        let departureTime = utils.parseTime(departure.scheduled_departure_utc)
         let destination = run.destination_name
         let {flags} = departure
 
@@ -587,8 +587,8 @@ async function getDepartures(station, db) {
       scheduledCoachReplacements = JSON.parse(JSON.stringify(scheduledCoachReplacements))
         .filter(coach => coach.isTrainReplacement)
         .map(coach => {
-          coach.scheduledDepartureTime = moment.tz(coach.scheduledDepartureTime, 'Australia/Melbourne')
-          coach.actualDepartureTime = moment.tz(coach.actualDepartureTime, 'Australia/Melbourne')
+          coach.scheduledDepartureTime = utils.parseTime(coach.scheduledDepartureTime)
+          coach.actualDepartureTime = utils.parseTime(coach.actualDepartureTime)
 
           coach.shortRouteName = coach.shortRouteName || getShortRouteName(coach.trip)
 

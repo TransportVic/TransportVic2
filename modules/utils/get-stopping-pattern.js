@@ -35,9 +35,9 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   if (mode === 'nbus') mode = 'bus'
 
   departures = departures.map(departure => {
-    departure.actualDepartureTime = moment.tz(departure.estimated_departure_utc || departure.scheduled_departure_utc, 'Australia/Melbourne')
-    departure.scheduledDepartureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
-    departure.estimatedDepartureTime = moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne')
+    departure.actualDepartureTime = utils.parseTime(departure.estimated_departure_utc || departure.scheduled_departure_utc)
+    departure.scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
+    departure.estimatedDepartureTime = utils.parseTime(departure.estimated_departure_utc)
     return departure
   })
 
@@ -71,7 +71,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
 
       stopName += ' Railway Station'
     }
-    stopName = utils.adjustRawStopName(nameModifier(utils.adjustStopname(stopName)))
+    stopName = utils.adjustRawStopName(nameModifier(utils.adjustStopName(stopName)))
       .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
 
     let dbStop = await stopsCollection.findDocument({
@@ -102,7 +102,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
 
     let stopBay = dbStops[stop_id].bays
       .filter(bay => {
-        let stopName = utils.adjustRawStopName(nameModifier(utils.adjustStopname(ptvStop.stop_name.trim())))
+        let stopName = utils.adjustRawStopName(nameModifier(utils.adjustStopName(ptvStop.stop_name.trim())))
           .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
 
         let matchingService = bay.services.find(s => s.routeGTFSID === routeGTFSID && s.gtfsDirection === gtfsDirection)

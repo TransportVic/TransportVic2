@@ -75,10 +75,10 @@ async function getStops(db, originVNETName, destinationVNETName, originDeparture
     let arrivalTime = $('ArrivalTime', departure).text()
     let departureTime = $('DepartureTime', departure).text()
     if (arrivalTime === '0001-01-01T00:00:00') arrivalTime = null
-    else arrivalTime = moment.tz(arrivalTime, 'Australia/Melbourne')
+    else arrivalTime = utils.parseTime(arrivalTime)
 
     if (departureTime === '0001-01-01T00:00:00') departureTime = null
-    else departureTime = moment.tz(departureTime, 'Australia/Melbourne')
+    else departureTime = utils.parseTime(departureTime)
 
     let locationID = $('LocationID', departure).text()
     let stopData = dbStops[locationID]

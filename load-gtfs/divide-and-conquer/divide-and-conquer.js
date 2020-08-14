@@ -40,7 +40,7 @@ async function read5000Stops() {
     let adjustedStopName = adjustedOriginalStopName.slice(0, suburbIndex - 1)
     let suburb = adjustedOriginalStopName.slice(suburbIndex + 1, -1)
 
-    let fullStopName = utils.expandStopName(utils.adjustStopname(adjustedStopName))
+    let fullStopName = utils.expandStopName(utils.adjustStopName(adjustedStopName))
     let stopNumber = null
     let stopNumberParts
 

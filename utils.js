@@ -105,7 +105,7 @@ module.exports = {
 
     return name.replace(/  +/g, ' ')
   },
-  adjustStopname: name => {
+  adjustStopName: name => {
     if (name.includes('Jolimont-MCG')) {
       name = name.replace('Jolimont-MCG', 'Jolimont')
     }
@@ -217,9 +217,6 @@ module.exports = {
 
     return name
   },
-  extractStopName: name => {
-    return name.replace(/\/[^\/]*?$/, '')
-  },
   parseGTFSData: data =>
     data.split('\r\n').slice(1).filter(Boolean).map(e => e.match(/"([^"]*)"/g).map(f => f.slice(1, -1))),
   simplifyRouteGTFSID: id => id.replace(/(-[A-Za-z])?-mjp-1$/, ''),
@@ -311,6 +308,12 @@ module.exports = {
   },
   getYYYYMMDDNow: () => module.exports.getYYYYMMDD(module.exports.now()),
   now: () => moment.tz('Australia/Melbourne'),
+  parseTime: (time, format) => {
+    if (format)
+      return moment.tz(time, format, 'Australia/Melbourne')
+    else
+      return moment.tz(time, 'Australia/Melbourne')
+  },
   request: async (...options) => {
     let start = +new Date()
 

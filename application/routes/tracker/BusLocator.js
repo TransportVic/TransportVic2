@@ -53,15 +53,15 @@ async function getPTVRunID(now, date, trip) {
 
   if (!checkStop) checkStop = trip.stopTimings[0]
 
-  let checkStopTime = moment.tz(`${date} ${checkStop.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
-  let tripStartTime = moment.tz(`${date} ${trip.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let checkStopTime = utils.parseTime(`${date} ${checkStop.departureTime}`, 'YYYYMMDD HH:mm')
+  let tripStartTime = utils.parseTime(`${date} ${trip.departureTime}`, 'YYYYMMDD HH:mm')
   let isoDeparture = checkStopTime.toISOString()
 
   let {departures, runs} = await ptvAPI(`/v3/departures/route_type/2/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-3, 'minutes').startOf('minute').toISOString()}&max_results=5&expand=run&expand=stop`)
 
   let departure = departures.filter(departure => {
     let run = runs[departure.run_id]
-    let destinationName = busStopNameModifier(utils.adjustStopname(run.destination_name.trim()))
+    let destinationName = busStopNameModifier(utils.adjustStopName(run.destination_name.trim()))
       .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
     let scheduledDepartureTime = moment(departure.scheduled_departure_utc).toISOString()
 

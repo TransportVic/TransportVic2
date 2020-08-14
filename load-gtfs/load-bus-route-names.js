@@ -109,7 +109,7 @@ database.connect({
       if (type === 'Discontinued from') type = 'until'
       else type = type.toLowerCase()
 
-      let dateMoment = moment.tz(date, 'DD-MM-YYYY', 'Australia/Melbourne')
+      let dateMoment = utils.parseTime(date, 'DD-MM-YYYY')
       // if (dateMoment >= now) {
         operationDateCount++
         await routes.updateDocument({ routeGTFSID }, {

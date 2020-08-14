@@ -16,10 +16,10 @@ const determineBusRouteNumber = require('../../../modules/bus/determine-bus-rout
 const tramFleet = require('../../../tram-fleet')
 
 async function pickBestTrip(data, db) {
-  let tripDay = moment.tz(data.operationDays, 'YYYYMMDD', 'Australia/Melbourne')
-  let tripStartTime = moment.tz(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
+  let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
-  let tripEndTime = moment.tz(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let tripEndTime = utils.parseTime(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm')
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
 
   let trueMode = data.mode
@@ -80,7 +80,7 @@ async function pickBestTrip(data, db) {
 
   if (!checkStop) checkStop = referenceTrip.stopTimings[0]
 
-  let checkStopTime = moment.tz(`${data.operationDays} ${checkStop.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let checkStopTime = utils.parseTime(`${data.operationDays} ${checkStop.departureTime}`, 'YYYYMMDD HH:mm')
   let isoDeparture = checkStopTime.toISOString()
   let mode = trueMode === 'bus' ? 2 : 1
   try {
@@ -88,7 +88,7 @@ async function pickBestTrip(data, db) {
 
     let departure = departures.filter(departure => {
       let run = runs[departure.run_id]
-      let destinationName = busStopNameModifier(utils.adjustStopname(run.destination_name.trim()))
+      let destinationName = busStopNameModifier(utils.adjustStopName(run.destination_name.trim()))
         .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
       let scheduledDepartureTime = moment(departure.scheduled_departure_utc).toISOString()
 
@@ -184,7 +184,7 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
     }
 
     if (stop.estimatedDepartureTime) {
-      let scheduledDepartureTime = moment.tz(req.params.operationDays, 'YYYYMMDD', 'Australia/Melbourne').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
+      let scheduledDepartureTime = utils.parseTime(req.params.operationDays, 'YYYYMMDD').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
 
       let headwayDeviance = scheduledDepartureTime.diff(stop.estimatedDepartureTime, 'minutes')
 

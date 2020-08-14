@@ -54,15 +54,15 @@ async function getDeparturesFromPTV(stop, db) {
       let run = runs[tramDeparture.run_id]
       let route = routes[tramDeparture.route_id]
 
-      let scheduledDepartureTime = moment.tz(tramDeparture.scheduled_departure_utc, 'Australia/Melbourne')
-      let estimatedDepartureTime = tramDeparture.estimated_departure_utc ? moment.tz(tramDeparture.estimated_departure_utc, 'Australia/Melbourne') : null
+      let scheduledDepartureTime = utils.parseTime(tramDeparture.scheduled_departure_utc)
+      let estimatedDepartureTime = tramDeparture.estimated_departure_utc ? utils.parseTime(tramDeparture.estimated_departure_utc) : null
       let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
 
       if (actualDepartureTime.diff(now, 'minutes') > 90) return
 
       let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime) % 1440
 
-      let destination = utils.adjustStopname(run.destination_name.trim())
+      let destination = utils.adjustStopName(run.destination_name.trim())
         .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
 
       let day = utils.getYYYYMMDD(scheduledDepartureTime)

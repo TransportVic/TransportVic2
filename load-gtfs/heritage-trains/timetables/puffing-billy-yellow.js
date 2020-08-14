@@ -2,8 +2,8 @@ const utils = require('../../../utils')
 const moment = require('moment')
 
 function dateRange(name, start, end, type) {
-  let startDate = moment.tz(start, 'YYYYMMDD', 'Australia/Melbourne')
-  let endDate = moment.tz(end, 'YYYYMMDD', 'Australia/Melbourne')
+  let startDate = utils.parseTime(start, 'YYYYMMDD')
+  let endDate = utils.parseTime(end, 'YYYYMMDD')
 
   let allDatesInbetween = utils.allDaysBetweenDates(startDate, endDate)
 

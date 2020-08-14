@@ -200,7 +200,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   let trains = departures.filter(departure => !departure.flags.includes('RRB-RUN'))
 
   let replacementBusDepartures = replacementBuses.map(bus => {
-    let scheduledDepartureTime = moment.tz(bus.scheduled_departure_utc, 'Australia/Melbourne')
+    let scheduledDepartureTime = utils.parseTime(bus.scheduled_departure_utc)
     return utils.getPTMinutesPastMidnight(scheduledDepartureTime)
   })
 
@@ -210,7 +210,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let routeName = routes[routeID].route_name
     if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
     let platform = departure.platform_number
-    let runDestination = utils.adjustStopname(run.destination_name)
+    let runDestination = utils.adjustStopName(run.destination_name)
     let cancelled = run.status === 'cancelled'
     let isTrainReplacement = false
 
@@ -232,14 +232,14 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     const runID = run.vehicle_descriptor.id || ''
     const vehicleType = run.vehicle_descriptor.description
 
-    const scheduledDepartureTime = moment.tz(departure.scheduled_departure_utc, 'Australia/Melbourne')
+    const scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
     const scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
 
     if (scheduledDepartureTime.diff(now, 'minutes') > 150) return
 
     let consist = []
 
-    let estimatedDepartureTime = departure.estimated_departure_utc ? moment.tz(departure.estimated_departure_utc, 'Australia/Melbourne') : null
+    let estimatedDepartureTime = departure.estimated_departure_utc ? utils.parseTime(departure.estimated_departure_utc) : null
 
     let possibleDestinations = [runDestination]
 

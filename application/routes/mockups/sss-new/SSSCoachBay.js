@@ -3,6 +3,7 @@ const router = new express.Router()
 const getCoachDepartures = require('../../../../modules/regional-coach/get-departures')
 const destinationOverrides = require('../../../../additional-data/coach-stops')
 const termini = require('../../../../additional-data/termini-to-lines')
+const utils = require('../../../../utils')
 const url = require('url')
 const querystring = require('querystring')
 const moment = require('moment')
@@ -80,7 +81,7 @@ router.post('/', async (req, res) => {
       departure.bay = 'Bay ' + bay
     } else if (!departure.bay) departure.bay = 'Bay 68'
 
-    let departureDay = moment.tz(departure.scheduledDepartureTime, 'Australia/Melbourne').format('YYYYMMDD')
+    let departureDay = utils.parseTime(departure.scheduledDepartureTime).format('YYYYMMDD')
 
     return {
       bay: departure.bay,

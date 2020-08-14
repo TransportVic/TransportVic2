@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 async function prioritySearch(db, query) {
   let possibleStopNames = [
     query,
-    utils.adjustStopname(utils.titleCase(query, true).replace('Sc', 'Shopping Centre'))
+    utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre'))
   ]
 
   let search = possibleStopNames.map(name => ({mergeName: new RegExp(name, 'i')}))
@@ -47,7 +47,7 @@ async function findStops(db, query) {
   let excludedIDs = prioritySearchResults.map(stop => stop._id)
 
   let queryRegex = new RegExp(query, 'i')
-  let searchRegex = new RegExp(utils.adjustStopname(utils.titleCase(query, true).replace('Sc', 'Shopping Centre')), 'i')
+  let searchRegex = new RegExp(utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre')), 'i')
 
   let phoneticQuery = metaphone.process(query)
 

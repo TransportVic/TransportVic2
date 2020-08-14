@@ -27,7 +27,7 @@ function editName(name) {
 
 events.forEach(event => {
   let start = event.start.toISOString()
-  let day = moment.tz(start, 'Australia/Melbourne')
+  let day = utils.parseTime(start)
   let name = editName(event.summary)
 
   eventCache[day.format('YYYYMMDD')] = name
