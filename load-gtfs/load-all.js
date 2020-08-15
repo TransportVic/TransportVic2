@@ -41,7 +41,7 @@ async function main() {
   if (moduleEnabled('heritage')) await spawnProcess(l('heritage-trains/load-all.sh'))
 
   await spawnProcess('node', [l('load-route-stops.js')])
-  if (moduleEnabled('bus')) await spawnProcess('node', [l('load-route-stops.js')])
+  if (moduleEnabled('bus')) await spawnProcess('node', [l('load-bus-route-names.js')])
   await spawnProcess('node', [l('load-stop-services.js')])
 
   await spawnProcess('node', [l('load-route-suburbs.js')])
