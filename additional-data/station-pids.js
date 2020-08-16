@@ -238,7 +238,7 @@ module.exports = {
   "Moorabbin": [...platr(2, [], 'half-platform-bold')],
   "Highett": [],
   "Southland": [...platr(2, [], 'half-platform-bold')],
-  "Cheltenham": [],
+  "Cheltenham": [...platr(3, [], 'platform'), conc('up-down')],
   "Brighton Beach": [],
   "Gardenvale": [],
   "North Brighton": [],
