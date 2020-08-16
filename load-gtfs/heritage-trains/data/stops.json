@@ -250,5 +250,89 @@
     "stopNumber": null,
     "mode": "heritage train",
     "suburb": "Rawson"
+  },
+  {
+    "originalName": "Queenscliff Railway Station",
+    "fullStopName": "Queenscliff Railway Station",
+    "stopGTFSID": 13000022,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.661620, -38.264285]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Queenscliff"
+  },
+  {
+    "originalName": "Swan Bay Railway Station",
+    "fullStopName": "Swan Bay Railway Station",
+    "stopGTFSID": 13000023,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.638148, -38.270587]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Queenscliff"
+  },
+  {
+    "originalName": "Lakers Siding Railway Station",
+    "fullStopName": "Lakers Siding Railway Station",
+    "stopGTFSID": 13000024,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.614461, -38.261283]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Point Lonsdale"
+  },
+  {
+    "originalName": "Suma Park Railway Station",
+    "fullStopName": "Suma Park Railway Station",
+    "stopGTFSID": 13000025,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.599719, -38.253012]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Marcus Hill"
+  },
+  {
+    "originalName": "Marcus Railway Station",
+    "fullStopName": "Marcus Railway Station",
+    "stopGTFSID": 13000026,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.581134, -38.230734]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Marcus Hill"
+  },
+  {
+    "originalName": "Mannerim Railway Station",
+    "fullStopName": "Mannerim Railway Station",
+    "stopGTFSID": 13000027,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.580639, -38.219699]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Mannerim"
+  },
+  {
+    "originalName": "Drysdale Railway Station",
+    "fullStopName": "Drysdale Railway Station",
+    "stopGTFSID": 13000028,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.557332, -38.180024]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Drysdale"
   }
 ]
