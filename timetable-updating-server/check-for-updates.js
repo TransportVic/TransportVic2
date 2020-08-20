@@ -5,6 +5,8 @@ const DatabaseConnection = require('../database/DatabaseConnection')
 const ws = require('ws')
 
 const config = require('../config.json')
+const urls = require('../urls.json')
+const discordUpdate = require('./discord-integration')
 
 global.gtfsUpdaterLog = []
 
@@ -39,6 +41,7 @@ function spawnProcess(path, finish) {
     let lines = data.split('\n').map(e => e.trim()).filter(Boolean)
     lines.forEach(line => {
       if (line.match(/\d+ms http/)) {
+        if (line.includes('discord')) return
         line = line.replace(/\&devid.+/, '')
       }
 
@@ -95,6 +98,7 @@ async function updateTimetables() {
         line: 'Dropped stops, routes and gtfs timetables'
       })
       console.log('Dropped stops, routes and gtfs timetables')
+      await discordUpdate('[Updater]: Dropped stops, routes and gtfs timetables, loading data now.')
 
       spawnProcess(__dirname + '/../load-gtfs/load-all.sh', () => {
         console.log('Done!')
@@ -106,20 +110,24 @@ async function updateTimetables() {
 
 console.log('Checking for updates...')
 
-request.head('http://data.ptv.vic.gov.au/downloads/gtfs.zip', async (err, resp, body) => {
+request.head(urls.gtfsFeed, async (err, resp, body) => {
   let lastModified = resp.headers['last-modified']
   if (lastModified !== lastLastModified) {
     console.log('Outdated timetables: updating now...')
     console.log(new Date().toLocaleString())
+    await discordUpdate('[Updater]: Updating timetables to revision ' + lastModified)
+
     spawnProcess(__dirname + '/../update-gtfs.sh', async () => {
       fs.writeFileSync(__dirname + '/last-modified', lastModified)
       console.log('Wrote last-modified', lastModified)
+      await discordUpdate('[Updater]: Finished downloading new timetables')
+
       await updateTimetables()
+      await discordUpdate(`[Updater]: GTFS Timetables finished loading, took ${Math.round(utils.uptime() / 1000 / 60)}min`)
     })
   } else {
     console.log('Timetables all good')
+    await discordUpdate('[Updater]: Timetables up to date, not updating')
     process.exit(0)
-    // console.log('Timetables all good, deleting old routes')
-    // require('../load-gtfs/trim-old-routes')
   }
 })
