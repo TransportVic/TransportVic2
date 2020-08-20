@@ -1,20 +1,3 @@
 DIRNAME=$(dirname "$0")
 
-node $DIRNAME/create-indexes.js
-
-$DIRNAME/metro-trains/load-all.sh
-$DIRNAME/vline-trains/load-all.sh
-$DIRNAME/regional-coach/load-all.sh
-$DIRNAME/bus/load-all.sh
-$DIRNAME/trams/load-all.sh
-$DIRNAME/ferry/load-all.sh
-$DIRNAME/monash-shuttle/load-all.sh
-$DIRNAME/heritage-trains/load-all.sh
-
-node $DIRNAME/load-route-stops.js
-node $DIRNAME/load-bus-route-names.js
-node $DIRNAME/load-stop-services.js
-
-# node $DIRNAME/trim-old-routes.js
-
-node $DIRNAME/load-route-suburbs.js
+node $DIRNAME/load-all.js
