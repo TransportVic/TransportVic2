@@ -5,17 +5,24 @@ const updateStats = require('./utils/stats')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
+async function getCollection(name) {
+  try {
+    return await database.createCollection(name)
+  } catch (e) {
+    return database.getCollection(name)
+  }
+}
+
 database.connect({
   poolSize: 100
 }, async err => {
-  let stops = database.getCollection('stops')
-  let routes = database.getCollection('routes')
-  let timetables = database.getCollection('timetables')
-  let gtfsTimetables = database.getCollection('gtfs timetables')
+  let stops = await getCollection('stops')
+  let routes = await getCollection('routes')
+  let timetables = await getCollection('timetables')
+  let gtfsTimetables = await getCollection('gtfs timetables')
+
   let liveTimetables = database.getCollection('live timetables')
-
   let vlineTrips = database.getCollection('vline trips')
-
   let smartrakIDs = database.getCollection('smartrak ids')
   let busTrips = database.getCollection('bus trips')
   let tbmTrips = database.getCollection('tbm trips')
@@ -35,46 +42,27 @@ database.connect({
   }, {name: 'mode+gtfs id index'})
 
   await stops.createIndex({
-    'bays.stopGTFSID': 1,
-    'bays.mode': 1
-  }, {name: 'gtfs id+mode index'})
-
-  await stops.createIndex({
-    'bays.fullStopName': 1
-  }, {name: 'full name index'})
-
-  await stops.createIndex({
-    'suburb': 1,
-    'stopName': 1,
+    'bays.fullStopName': 1,
+    'stopName': 1
   }, {name: 'search index'})
 
   await stops.createIndex({
-    'codedSuburb': 1
-  }, {name: 'coded suburb index'})
+    'suburb': 1
+  }, {name: 'suburb index'})
 
   await stops.createIndex({
+    'codedSuburb': 1,
     'codedName': 1
-  }, {name: 'coded name index'})
-
-  await stops.createIndex({
-    'stopName': 1
-  }, {name: 'stopName index'})
-
-  await stops.createIndex({
-    'mergeName': 1
-  }, {name: 'mergeName index'})
+  }, {name: 'coded suburb index'})
 
   await stops.createIndex({
     'namePhonetic': 1
   }, {name: 'phonetic name index'})
 
   await stops.createIndex({
+    'tramTrackerNames': 1,
     'tramTrackerIDs': 1
-  }, {name: 'tramtracker id index', sparse: true})
-
-  await stops.createIndex({
-    'tramTrackerNames': 1
-  }, {name: 'tramtracker name index', sparse: true})
+  }, {name: 'tramtracker id+name index', sparse: true})
 
   await stops.createIndex({
     'bays.stopNumber': 1
@@ -127,7 +115,7 @@ database.connect({
   await gtfsTimetables.createIndex({
     operationDays: 1,
     routeGTFSID: 1,
-  }, {name: 'operationDays + routeGTFSID + start stop times index'})
+  }, {name: 'operationDays + routeGTFSID index'})
 
   await gtfsTimetables.createIndex({
     routeGTFSID: 1,
@@ -141,15 +129,6 @@ database.connect({
     'stopTimings.stopGTFSID': 1,
     'stopTimings.departureTimeMinutes': 1
   }, {name: 'stop timings gtfs index'})
-
-  await gtfsTimetables.createIndex({
-    gtfsMode: 1
-  }, {name: 'gtfs mode index'})
-
-  await gtfsTimetables.createIndex({
-    routeGTFSID: 1,
-    gtfsDirection: 1
-  }, {name: 'route direction index'})
 
   console.log('Created GTFS timetables indexes')
 
@@ -167,6 +146,7 @@ database.connect({
   }, {name: 'runID index', unique: true})
 
   await timetables.createIndex({
+    origin: 1,
     direction: 1,
     'stopTimings.stopName': 1,
     'stopTimings.departureTimeMinutes': 1
@@ -186,21 +166,8 @@ database.connect({
   }, {unique: true, name: 'live timetable index'})
 
   await liveTimetables.createIndex({
-    destination: 1
-  }, {name: 'destination index'})
-
-  await liveTimetables.createIndex({
-    mode: 1,
-    routeGTFSID: 1
-  }, {name: 'mode/routeGTFSID index'})
-
-  await liveTimetables.createIndex({
     operationDays: 1
   }, {name: 'operationDays index'})
-
-  await liveTimetables.createIndex({
-    stopTimings: 1,
-  }, {name: 'timings index'})
 
   await liveTimetables.createIndex({
     mode: 1,
@@ -208,7 +175,6 @@ database.connect({
     'stopTimings.stopGTFSID': 1,
     'stopTimings.departureTimeMinutes': 1
   }, {name: 'stop timings gtfs index'})
-
 
 
   await vlineTrips.createIndex({
@@ -259,11 +225,6 @@ database.connect({
     date: 1
   }, {name: 'smartrak id index'})
   await busTrips.createIndex({
-    date: 1,
-    routeNumber: 1,
-    smartrakID: 1,
-  }, {name: 'service index'})
-  await busTrips.createIndex({
     routeNumber: 1,
     date: 1,
     smartrakID: 1
@@ -280,6 +241,6 @@ database.connect({
 
   console.log('Created tourbusminder index')
 
-  updateStats('create-indexes', 44)
+  updateStats('create-indexes', 35)
   process.exit()
 })

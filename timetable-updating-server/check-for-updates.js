@@ -83,12 +83,14 @@ async function updateTimetables() {
       let routes = database.getCollection('routes')
       let gtfsTimetables = database.getCollection('gtfs timetables')
       let liveTimetables = database.getCollection('live timetables')
+      let timetables = database.getCollection('timetables')
 
       try {
         await stops.dropCollection()
         await routes.dropCollection()
         await gtfsTimetables.dropCollection()
         await liveTimetables.dropCollection()
+        await timetables.dropCollection()
       } catch (e) {
         console.log(e)
       }
