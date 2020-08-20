@@ -42,7 +42,7 @@ async function getDeparture(station, db, mode, possibleLines, departureTime, pos
       direction
     }).toArray()
 
-    if (mode === 'metro train' && viaCityLoop !== undefined && timetables.length > 1) {
+    if (mode === 'metro train' && viaCityLoop !== undefined) {
       if (viaCityLoop) {
         timetables = timetables.filter(t => t.stopTimings.find(s => s.stopName === 'Flagstaff Railway Station'))
       } else {
