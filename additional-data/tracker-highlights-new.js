@@ -40,12 +40,12 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Route Livery Buses',
-  track: ['S16' ,'S19', 'S43', 'S54', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
+  track: ['S16' ,'S19', 'S41', 'S43', 'S54', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
   routes: ['201', '301', '401', '601'],
   type: 'exclude'
 }, {
   name: 'Non-Perm Route Livery Buses',
-  track: ['S16' ,'S19', 'S43', 'S54', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
+  track: ['S16' ,'S19', 'S41', 'S43', 'S54', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
   routes: ['201', '301', '401', '601'],
   type: 'include',
   buses: 'exclude'
