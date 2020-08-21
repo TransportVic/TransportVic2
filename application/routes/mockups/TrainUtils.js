@@ -261,7 +261,7 @@ module.exports = {
       }
     }
 
-    if (tripStops.includes('Laverton')) {
+    if (lineName === 'Werribee') {
       if (tripStops.includes('Altona')) {
         let mainLine = ['Paisley', 'Galvin']
         lineStops = lineStops.filter(e => !mainLine.includes(e))
