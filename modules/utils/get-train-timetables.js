@@ -7,6 +7,11 @@ function getPlatform(station, mode) {
   return station.bays.filter(bay => bay.mode === mode)[0]
 }
 
+function trimFromFSS(stops) {
+  let fssIndex = stops.map(stop => stop.stopName).indexOf('Flinders Street Railway Station')
+  return stops.slice(fssIndex)
+}
+
 async function getDeparture(station, db, mode, possibleLines, departureTime, possibleDestinations, direction, live, viaCityLoop) {
   const platform = getPlatform(station, mode)
 
@@ -44,9 +49,9 @@ async function getDeparture(station, db, mode, possibleLines, departureTime, pos
 
     if (mode === 'metro train' && viaCityLoop !== undefined) {
       if (viaCityLoop) {
-        timetables = timetables.filter(t => t.stopTimings.find(s => s.stopName === 'Flagstaff Railway Station'))
+        timetables = timetables.filter(t => trimFromFSS(t.stopTimings).find(s => s.stopName === 'Flagstaff Railway Station'))
       } else {
-        timetables = timetables.filter(t => !t.stopTimings.find(s => s.stopName === 'Flagstaff Railway Station'))
+        timetables = timetables.filter(t => !trimFromFSS(t.stopTimings).find(s => s.stopName === 'Flagstaff Railway Station'))
       }
     }
 
