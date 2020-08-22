@@ -60,9 +60,12 @@ database.connect({
   }, {name: 'phonetic name index'})
 
   await stops.createIndex({
-    'tramTrackerNames': 1,
+    'tramTrackerNames': 1
+  }, {name: 'tramtracker name index', sparse: true})
+
+  await stops.createIndex({
     'tramTrackerIDs': 1
-  }, {name: 'tramtracker id+name index', sparse: true})
+  }, {name: 'tramtracker id index', sparse: true})
 
   await stops.createIndex({
     'bays.stopNumber': 1
