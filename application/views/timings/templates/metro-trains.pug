@@ -63,7 +63,11 @@ for departure in departures
           let {trip} = departure
           let isUpTrip = (trip || {}).direction === 'Up' || trip.runID % 2 === 0
         if cityLoopStationNames.includes(station.stopName) || isUpTrip
-          span.info #{departure.cityLoopConfig.join(', ')}
+          - let cityLoopConfig = departure.cityLoopConfig.join(', ')
+          if departure.willSkipLoop
+            span.info.cancelled #{cityLoopConfig}
+          else
+            span.info #{cityLoopConfig}
     div.timings
       a(class='timing ' + departure.headwayDevianceClass href=`/metro/run/${departure.tripURL}`)
         span #{departure.prettyTimeToArrival}

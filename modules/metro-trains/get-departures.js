@@ -18,7 +18,7 @@ let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne 
 
 let burnleyGroup = [1, 2, 7, 9] // alamein, belgrave, glen waverley, lilydale
 let caulfieldGroup = [4, 6, 11, 12] // cranbourne, frankston, pakenham, sandringham
-let northenGroup = [3, 14, 15, 16, 17, 1482] // craigieburn, sunbury, upfield, werribee, williamstown, flemington racecourse
+let northernGroup = [3, 14, 15, 16, 17, 1482] // craigieburn, sunbury, upfield, werribee, williamstown, flemington racecourse
 let cliftonHillGroup = [5, 8] // mernda, hurstbridge
 let crossCityGroup = [6, 16, 17, 1482]
 
@@ -35,7 +35,7 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip, isS
   cityLoopConfig = []
   // doublecheck showgrounds trains: R466 should be nme sss off but it show as sss fgs loop fss
   // assume up trains
-  if (northenGroup.includes(routeID)) {
+  if (northernGroup.includes(routeID)) {
     if (destination === 'Southern Cross')
       cityLoopConfig = ['NME', 'SSS']
     else if (stopsViaFlindersFirst && !throughCityLoop)
@@ -196,6 +196,22 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     }
   })
 
+  let cityLoopSkipping = Object.values(disruptions).filter(disruption => {
+    let description = disruption.description.toLowerCase()
+    return description.includes('direct to') && description.includes('not via the city loop') && !description.includes('maintain')
+  })
+
+  let servicesSkippingLoop = []
+  let linesSkippingLoop = []
+
+  cityLoopSkipping.forEach(disruption => {
+    let service = matchService(disruption)
+    if (service) servicesSkippingLoop.push(service)
+    else {
+      linesSkippingLoop = disruption.routes.map(r => r.route_gtfs_id)
+    }
+  })
+
   let replacementBuses = departures.filter(departure => departure.flags.includes('RRB-RUN'))
   let trains = departures.filter(departure => !departure.flags.includes('RRB-RUN'))
 
@@ -257,7 +273,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
         possibleLines = ['Frankston', 'Werribee', 'Williamstown']
       else if (cliftonHillGroup.includes(routeID))
         possibleLines = ['Mernda', 'Hurstbridge']
-      if (northenGroup.includes(routeID))
+      if (northernGroup.includes(routeID))
         possibleLines = [...possibleLines, 'Sunbury', 'Craigieburn', 'Upfield', 'Showgrounds/Flemington', 'Werribee', 'Williamstown']
       if (routeID == 6)
         possibleLines = [...possibleLines, 'Cranbourne', 'Pakenham']
@@ -300,7 +316,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
         cityLoopConfig = ['PAR', 'MCE', 'FGS', 'SSS', 'FSS']
         // trip is towards at flinders, but ptv api already gave next trip
         // really only seems to happen with cran/pak/frank lines
-      if (!crossCityGroup.includes(routeID) && northenGroup.includes(routeID)) {// all northern group except showgrounds & cross city
+      if (!crossCityGroup.includes(routeID) && northernGroup.includes(routeID)) {// all northern group except showgrounds & cross city
         if (runDestination !== 'Flinders Street')
           cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
       }
@@ -363,6 +379,23 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       if (replacement) isTrainReplacement = true
     }
 
+    let skippingLoop = servicesSkippingLoop.find(r => {
+      return r.origin === trip.origin.slice(0, -16) && r.departureTime === trip.departureTime
+    })
+
+    let willSkipLoop = skippingLoop || linesSkippingLoop.includes(routes[routeID].route_gtfs_id)
+    if (willSkipLoop) {
+      if (northernGroup.includes(routeID)) cityLoopConfig = ['NME', 'SSS', 'FSS']
+      else if (cliftonHillGroup.includes(routeID)) cityLoopConfig = ['JLI', 'FSS']
+      else cityLoopConfig = ['RMD', 'FSS']
+
+      if (trip.direction === 'Up') {
+        destination = 'Flinders Street'
+      } else {
+        cityLoopConfig.reverse()
+      }
+    }
+
     if (routeID === 99 && stationName === 'flinders street') destination = 'City Loop'
 
     let message = ''
@@ -396,7 +429,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       destination, runID, vehicleType, runDestination,
       suspensions: mappedSuspensions,
       message,
-      consist
+      consist,
+      willSkipLoop
     })
   }
 
