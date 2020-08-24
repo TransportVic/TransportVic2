@@ -352,10 +352,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
         mode: 'regional train'
       })
 
-      if (liveTimetable) {
-        trip = liveTimetable
-        destination = liveTimetable.destination
-      }
+      if (liveTimetable) return
     }
 
     let platform
