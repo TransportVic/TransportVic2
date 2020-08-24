@@ -243,7 +243,7 @@ module.exports = {
   "Gardenvale": [],
   "North Brighton": [],
   "Middle Brighton": [],
-  "Hampton": [],
+  "Hampton": [...platr(2, [], 'half-platform-bold')],
   "Sandringham": [],
   "Glen Waverley": [...platr(2, [], 'half-platform-bold')],
   "Syndal": [...platr(2, [], 'half-platform-bold')],
