@@ -291,13 +291,16 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
 
     let trip
 
+    let matchedTripDay
     for (let i = 0; i <= 1; i++) {
       let tripDay = now.clone().add(-i, 'days')
+      matchedTripDay = tripDay.format('YYYYMMDD')
+
       let query = {
         routeGTFSID: {
           $in: possibleRouteGTFSIDs
         },
-        operationDays: tripDay.format('YYYYMMDD'),
+        operationDays: matchedTripDay,
         mode: 'regional train',
         stopTimings: {
           $elemMatch: {
@@ -336,6 +339,19 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
       mode: 'regional train',
       departureTime: originDepartureTime
     })
+
+    if (nspTrip) {
+      let liveTimetable = await liveTimetables.findDocument({
+        operationDays: matchedTripDay,
+        runID: nspTrip.runID,
+        mode: 'regional train'
+      })
+
+      if (liveTimetable) {
+        trip = liveTimetable
+        destination = liveTimetable.destination
+      }
+    }
 
     let platform
     if (nspTrip) {
@@ -425,17 +441,19 @@ function findFlagMap(flags) {
 async function getScheduledDepartures(db, station) {
   let vlineTrips = db.getCollection('vline trips')
   let timetables = db.getCollection('timetables')
+  let liveTimetables = db.getCollection('live timetables')
   let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train')
 
   let {stopGTFSID} = vlinePlatform
 
   let scheduled = await departureUtils.getScheduledDepartures(station, db, 'regional train', 180)
 
-  return await async.map(scheduled, async departure => {
+  return (await async.map(scheduled, async departure => {
     let shortRouteName = getShortRouteName(departure.trip)
 
     let dayOfWeek = utils.getDayName(departure.scheduledDepartureTime)
     let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departure.scheduledDepartureTime) % 1440
+    let departureDay = departure.scheduledDepartureTime.format('YYYYMMDD')
 
     let {direction, origin, destination, departureTime, destinationArrivalTime} = departure.trip
     let realRouteGTFSID = departure.trip.routeGTFSID
@@ -447,13 +465,21 @@ async function getScheduledDepartures(db, station) {
       departureTime
     })
 
+    if (nspTrip) {
+      let liveTimetable = await liveTimetables.findDocument({
+        operationDays: departureDay,
+        runID: nspTrip.runID,
+        mode: 'regional train'
+      })
+
+      if (liveTimetable) return null // since get scheduled picks out live we can discard the scheduled one
+    }
+
     let platform
     if (nspTrip) {
       let stopTiming = nspTrip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
       if (stopTiming) platform = stopTiming.platform
     }
-
-    let departureDay = departure.scheduledDepartureTime.format('YYYYMMDD')
 
     let trackerDepartureTime = giveVariance(departureTime)
     let trackerDestinationArrivalTime = giveVariance(destinationArrivalTime)
@@ -500,7 +526,7 @@ async function getScheduledDepartures(db, station) {
     departure.platform = platform
 
     return departure
-  })
+  })).filter(Boolean)
 }
 
 async function getDepartures(station, db) {
@@ -581,6 +607,7 @@ async function getDepartures(station, db) {
       cancelledTrains = scheduledTrains.filter(departure => departure.cancelled)
       scheduledTrains = scheduledTrains.filter(departure => !departure.isTrainReplacement)
     } catch (e) {
+      console.log(e)
     }
 
     try {

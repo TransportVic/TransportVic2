@@ -112,11 +112,14 @@ async function getVNETDepartures(direction, db) {
 async function getDeparturesFromVNET(db) {
   let vnetDepartures = [...await getVNETDepartures('D', db), ...await getVNETDepartures('U', db)]
   let vlineTrips = db.getCollection('vline trips')
+  let timetables = db.getCollection('timetables')
+  let liveTimetables = db.getCollection('live timetables')
 
   await async.forEach(vnetDepartures, async departure => {
     let referenceTime = departure.originDepartureTime.clone()
     if (referenceTime.get('hours') <= 3) referenceTime.add(-1, 'days')
     let date = referenceTime.format('YYYYMMDD')
+    let dayOfWeek = utils.getDayName(referenceTime)
 
     let tripData = {
       date,
@@ -135,6 +138,37 @@ async function getDeparturesFromVNET(db) {
     await vlineTrips.replaceDocument(query, tripData, {
       upsert: true
     })
+
+    let nspTrip = await timetables.findDocument({
+      operationDays: dayOfWeek,
+      runID: departure.runID,
+      mode: 'regional train'
+    })
+
+    if (nspTrip && nspTrip.destination !== departure.destination) {
+      let stoppingAt = nspTrip.stopTimings.map(e => e.stopName)
+      let destinationIndex = stoppingAt.indexOf(departure.destination)
+      nspTrip.stopTimings = nspTrip.stopTimings.slice(0, destinationIndex + 1)
+      let lastStop = nspTrip.stopTimings[destinationIndex]
+
+      nspTrip.destination = lastStop.stopName
+      nspTrip.destinationArrivalTime = lastStop.arrivalTime
+      lastStop.departureTime = null
+      lastStop.departureTimeMinutes = null
+
+      nspTrip.runID = departure.runID
+      nspTrip.originalServiceID = nspTrip.originalServiceID || departure.originDepartureTime.format('HH:mm') + nspTrip.destination
+      nspTrip.operationDays = date
+
+      delete nspTrip._id
+      await liveTimetables.replaceDocument({
+        operationDays: date,
+        runID: departure.runID,
+        mode: 'regional train'
+      }, nspTrip, {
+        upsert: true
+      })
+    }
   })
 }
 
@@ -143,6 +177,7 @@ async function requestTimings() {
   try {
     await getDeparturesFromVNET(database)
   } catch (e) {
+    console.log(e)
     console.log('Error getting vline trips, skipping this round')
   }
 
