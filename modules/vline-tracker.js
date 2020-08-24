@@ -148,6 +148,8 @@ async function getDeparturesFromVNET(db) {
     if (nspTrip && nspTrip.destination !== departure.destination) {
       let stoppingAt = nspTrip.stopTimings.map(e => e.stopName)
       let destinationIndex = stoppingAt.indexOf(departure.destination)
+      let skipping = nspTrip.stopTimings.slice(destinationIndex + 1).map(e => e.stopName)
+
       nspTrip.stopTimings = nspTrip.stopTimings.slice(0, destinationIndex + 1)
       let lastStop = nspTrip.stopTimings[destinationIndex]
 
@@ -156,6 +158,7 @@ async function getDeparturesFromVNET(db) {
       lastStop.departureTime = null
       lastStop.departureTimeMinutes = null
 
+      nspTrip.skipping = skipping
       nspTrip.runID = departure.runID
       nspTrip.originalServiceID = nspTrip.originalServiceID || departure.originDepartureTime.format('HH:mm') + nspTrip.destination
       nspTrip.operationDays = date

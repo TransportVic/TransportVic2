@@ -176,6 +176,8 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
     if (trip.destination !== departure.destination) {
       let stoppingAt = trip.stopTimings.map(e => e.stopName)
       let destinationIndex = stoppingAt.indexOf(departure.destination)
+      let skipping = trip.stopTimings.slice(destinationIndex + 1).map(e => e.stopName)
+
       trip.stopTimings = trip.stopTimings.slice(0, destinationIndex + 1)
       let lastStop = trip.stopTimings[destinationIndex]
 
@@ -184,6 +186,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
       lastStop.departureTime = null
       lastStop.departureTimeMinutes = null
 
+      trip.skipping = skipping
       trip.runID = departure.runID
       trip.originalServiceID = originalServiceID
       trip.operationDays = operationDay
@@ -546,6 +549,9 @@ async function getDepartures(station, db) {
   ptvAPILocks[cacheKey] = new EventEmitter()
 
   function returnDepartures(departures) {
+    departures = departures.filter(departure => {
+      return !(departure.skipping && departure.skipping.inclides(station.stopName)) && departure.trip.destination !== station.stopName
+    })
     ptvAPILocks[cacheKey].emit('done', departures)
     delete ptvAPILocks[cacheKey]
 
@@ -607,7 +613,6 @@ async function getDepartures(station, db) {
       cancelledTrains = scheduledTrains.filter(departure => departure.cancelled)
       scheduledTrains = scheduledTrains.filter(departure => !departure.isTrainReplacement)
     } catch (e) {
-      console.log(e)
     }
 
     try {
