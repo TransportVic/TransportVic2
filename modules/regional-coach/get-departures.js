@@ -51,7 +51,7 @@ async function getDeparturesFromPTV(stop, db) {
   let runIDsSeen = []
 
   await async.forEach(gtfsIDs, async stopGTFSID => {
-    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/3/stop/${stopGTFSID}?gtfs=true&max_results=7&expand=run&expand=route`)
+    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/3/stop/${stopGTFSID}?gtfs=true&max_results=15&expand=run&expand=route`)
     let coachDepartures = departures.filter(departure => departure.flags.includes('VCH'))
 
     let tripIDsSeen = []

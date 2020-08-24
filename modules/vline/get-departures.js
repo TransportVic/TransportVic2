@@ -275,6 +275,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
 
   let sunburyGroup = ['1-V12', '1-V45', '1-Ech'] // bendigo, swanhill, echuca
   let seymourGroup = ['1-V40', '1-Sht'] // seymour, shepparton
+  let ballaratGroup = ['1-V04', '1-V05', '1-my1']
 
   await async.forEach(trainDepartures, async trainDeparture => {
     let run = runs[trainDeparture.run_id]
@@ -291,6 +292,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     let possibleRouteGTFSIDs = [routeGTFSID]
     if (sunburyGroup.includes(routeGTFSID)) possibleRouteGTFSIDs = sunburyGroup
     if (seymourGroup.includes(routeGTFSID)) possibleRouteGTFSIDs = seymourGroup
+    if (ballaratGroup.includes(routeGTFSID)) possibleRouteGTFSIDs = ballaratGroup
 
     let trip
 
@@ -576,7 +578,7 @@ async function getDepartures(station, db) {
     await Promise.all([new Promise(async resolve => {
       try {
         if (vlinePlatform.stopGTFSID > 100000) return
-        ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vlinePlatform.stopGTFSID}?gtfs=true&max_results=7&expand=run&expand=route`)
+        ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vlinePlatform.stopGTFSID}?gtfs=true&max_results=15&expand=run&expand=route`)
       } catch (e) {} finally { resolve() }
     }), new Promise(async resolve => {
       try {
