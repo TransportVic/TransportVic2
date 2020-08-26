@@ -28,6 +28,7 @@ module.exports = {
 
   'Maryborough': 'Maryborough',
   'Maryborough-Ballarat': 'Maryborough',
+  'Ballarat-Maryborough': 'Maryborough',
 
   'Seymour': 'Seymour',
 
