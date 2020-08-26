@@ -35,7 +35,7 @@ async function pickBestTrip(data, db) {
   })
   if (!originStop || !destinationStop) return null
 
-  let variance = 5
+  let variance = 8
   let destinationArrivalTime = {
     $gte: tripEndMinutes - variance,
     $lte: tripEndMinutes + variance
@@ -79,11 +79,16 @@ async function pickBestTrip(data, db) {
   let nspTrip = await db.getCollection('timetables').findDocument({
     mode: 'regional train',
     origin: referenceTrip.origin,
-    destination: referenceTrip.destination,
     direction: referenceTrip.direction,
     routeGTFSID: referenceTrip.routeGTFSID,
     operationDays: utils.getDayName(tripDay),
-    departureTime: referenceTrip.departureTime,
+    'stopTimings': {
+      $elemMatch: {
+        stopName: referenceTrip.origin,
+        departureTimeMinutes: departureTime
+      }
+
+    }
   })
 
   let {runID, vehicle} = nspTrip || {}

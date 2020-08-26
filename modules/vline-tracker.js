@@ -114,6 +114,7 @@ async function getDeparturesFromVNET(db) {
   let vlineTrips = db.getCollection('vline trips')
   let timetables = db.getCollection('timetables')
   let liveTimetables = db.getCollection('live timetables')
+  let gtfsTimetables = db.getCollection('gtfs timetables')
 
   await async.forEach(vnetDepartures, async departure => {
     let referenceTime = departure.originDepartureTime.clone()
@@ -145,30 +146,58 @@ async function getDeparturesFromVNET(db) {
       mode: 'regional train'
     })
 
-    if (nspTrip && nspTrip.destination !== departure.destination) {
-      let stoppingAt = nspTrip.stopTimings.map(e => e.stopName)
+    let trip
+    let departureTime = departure.originDepartureTime
+    let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime) % 1440
+
+    for (let i = 0; i <= 1; i++) {
+      let tripDay = departureTime.clone().add(-i, 'days')
+      let query = {
+        operationDays: tripDay.format('YYYYMMDD'),
+        mode: 'regional train',
+        stopTimings: {
+          $elemMatch: {
+            stopName: departure.origin,
+            departureTimeMinutes: scheduledDepartureTimeMinutes + 1440 * i
+          }
+        },
+        destination: departure.destination
+      }
+
+      trip = await gtfsTimetables.findDocument(query)
+      if (trip) break
+    }
+
+    if (!trip && nspTrip) trip = nspTrip
+
+    if (trip && trip.destination !== departure.destination) {
+      let stoppingAt = trip.stopTimings.map(e => e.stopName)
       let destinationIndex = stoppingAt.indexOf(departure.destination)
-      let skipping = nspTrip.stopTimings.slice(destinationIndex + 1).map(e => e.stopName)
+      let skipping = trip.stopTimings.slice(destinationIndex + 1).map(e => e.stopName)
 
-      nspTrip.stopTimings = nspTrip.stopTimings.slice(0, destinationIndex + 1)
-      let lastStop = nspTrip.stopTimings[destinationIndex]
+      trip.stopTimings = trip.stopTimings.slice(0, destinationIndex + 1)
+      let lastStop = trip.stopTimings[destinationIndex]
 
-      nspTrip.destination = lastStop.stopName
-      nspTrip.destinationArrivalTime = lastStop.arrivalTime
+      trip.destination = lastStop.stopName
+      trip.destinationArrivalTime = lastStop.arrivalTime
       lastStop.departureTime = null
       lastStop.departureTimeMinutes = null
 
-      nspTrip.skipping = skipping
-      nspTrip.runID = departure.runID
-      nspTrip.originalServiceID = nspTrip.originalServiceID || departure.originDepartureTime.format('HH:mm') + nspTrip.destination
-      nspTrip.operationDays = date
+      trip.skipping = skipping
+      trip.runID = departure.runID
+      trip.originalServiceID = trip.originalServiceID || departure.originDepartureTime.format('HH:mm') + trip.destination
+      trip.operationDays = date
 
-      delete nspTrip._id
+      if (nspTrip) {
+        trip.vehicle = nspTrip.vehicle
+      }
+
+      delete trip._id
       await liveTimetables.replaceDocument({
         operationDays: date,
         runID: departure.runID,
         mode: 'regional train'
-      }, nspTrip, {
+      }, trip, {
         upsert: true
       })
     }
