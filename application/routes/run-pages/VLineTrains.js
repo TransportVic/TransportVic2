@@ -68,12 +68,23 @@ async function pickBestTrip(data, db) {
 
   let referenceTrip
 
-  let liveTrip = await db.getCollection('live timetables').findDocument(query)
-  if (liveTrip) {
-    referenceTrip = liveTrip
+  let liveTrip = await db.getCollection('live timetables').findDocuments(query).toArray()
+  function d(x) { return Math.abs(x.stopTimings[0].departureTimeMinutes - tripStartMinutes) }
+  if (liveTrip.length) {
+    if (liveTrip.length > 1) {
+      referenceTrip = liveTrip.sort((a, b) => d(a) - d(b))[0]
+    } else {
+      referenceTrip = liveTrip[0]
+    }
   } else {
-    referenceTrip = await db.getCollection('gtfs timetables').findDocument(query)
-    if (!referenceTrip) return null
+    referenceTrip = await db.getCollection('gtfs timetables').findDocuments(query).toArray()
+    if (referenceTrip.length) {
+      if (referenceTrip.length > 1) {
+        referenceTrip = referenceTrip.sort((a, b) => d(a) - d(b))[0]
+      } else {
+        referenceTrip = referenceTrip[0]
+      }
+    } else return null
   }
 
   let nspTrip = await db.getCollection('timetables').findDocument({
@@ -87,7 +98,6 @@ async function pickBestTrip(data, db) {
         stopName: referenceTrip.origin,
         departureTimeMinutes: departureTime
       }
-
     }
   })
 
