@@ -137,7 +137,8 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
     destination = fullDestination.replace('Shopping Centre', 'SC')
     origin = fullOrigin.replace('Shopping Centre', 'SC')
 
-    destination = coachDestinations[destination] || destination
+    let destinationSuburb = trip.stopTimings.slice(-1)[0].suburb
+    destination = coachDestinations[destination + ` (${destinationSuburb})`] || coachDestinations[destination] || destination
     origin = coachDestinations[origin] || origin
 
     let destShortName = utils.getStopName(destination)
