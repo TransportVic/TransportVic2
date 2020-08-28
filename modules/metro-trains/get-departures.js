@@ -208,7 +208,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let service = matchService(disruption)
     if (service) servicesSkippingLoop.push(service)
     else {
-      linesSkippingLoop = disruption.routes.map(r => r.route_gtfs_id)
+      linesSkippingLoop = linesSkippingLoop.concat(disruption.routes.map(r => r.route_gtfs_id))
     }
   })
 
@@ -380,7 +380,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     }
 
     let skippingLoop = servicesSkippingLoop.find(r => {
-      return r.origin === trip.origin.slice(0, -16) && r.departureTime === trip.departureTime
+      return r.origin === trip.origin.slice(0, -16) && r.departureTime === trip.departureTime && r.destination === trip.destination.slice(0, -16)
     })
 
     let willSkipLoop = skippingLoop || linesSkippingLoop.includes(routes[routeID].route_gtfs_id)

@@ -103,7 +103,9 @@ async function updateTimetables() {
       await discordUpdate('[Updater]: Dropped stops, routes and gtfs timetables, loading data now.')
 
       spawnProcess(__dirname + '/../load-gtfs/load-all.sh', () => {
+        await discordUpdate(`[Updater]: GTFS Timetables finished loading, took ${Math.round(utils.uptime() / 1000 / 60)}min`)
         console.log('Done!')
+
         process.exit()
       })
     })
@@ -125,7 +127,6 @@ request.head(urls.gtfsFeed, async (err, resp, body) => {
       await discordUpdate('[Updater]: Finished downloading new timetables')
 
       await updateTimetables()
-      await discordUpdate(`[Updater]: GTFS Timetables finished loading, took ${Math.round(utils.uptime() / 1000 / 60)}min`)
     })
   } else {
     console.log('Timetables all good')
