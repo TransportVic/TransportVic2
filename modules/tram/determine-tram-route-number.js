@@ -6,9 +6,15 @@ let depots = [
   'Camberwell Tram Depot/Riversdale Road',
   'Essendon Tram Depot/Mount Alexander Road',
   'Malvern Tram Depot/Glenferrie Road',
-  'Glenferrie Road/Malvern Road',
-  'High Street/Barkers Road',
-  'Glenferrie Road/High Street' // 6d Malvern Town Hall
+  'Moreland Road/Nicholson Road', // 1d Holmes & Moreland Roads (Note: Is junction)
+  'Hawthorn Road/Balaclava Road', // 3d Balaclava Junction
+  'Glenferrie Road/High Street', // 6d Malvern Town Hall
+  'Moreland Road/Sydney Road', // 19d Moreland & Sydney Roads
+  'Royal Park', // 58d Abbotsford Street Interchange
+  'Glenhuntly Road/Hawthorn Road', // 64d Glenhuntly & Hawthorn Roads
+  'Glenferrie Road/Malvern Road', // 72d Malvern Tram Depot
+  'Casino/MCEC', //96d Southbank Depot & Casino
+  'High Street/Barkers Road' // 109d Kew Tram Depot
 ]
 
 module.exports = function (trip) {
