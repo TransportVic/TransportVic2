@@ -6,7 +6,7 @@ let depots = [
   'Camberwell Tram Depot/Riversdale Road',
   'Essendon Tram Depot/Mount Alexander Road',
   'Malvern Tram Depot/Glenferrie Road',
-  'Moreland Road/Nicholson Road', // 1d Holmes & Moreland Roads (Note: Is junction)
+  'Moreland Road/Nicholson Street', // 1d Holmes & Moreland Roads (Note: Is junction)
   'Hawthorn Road/Balaclava Road', // 3d Balaclava Junction
   'Glenferrie Road/High Street', // 6d Malvern Town Hall
   'Moreland Road/Sydney Road', // 19d Moreland & Sydney Roads
