@@ -17,7 +17,7 @@ if (config.useHTTPS) {
   const redirectServer = new HTTPSRedirectServer()
   httpServer = HTTPServer.createServer(redirectServer)
 
-  httpsServer = HTTPSServer.createServer(mainServer, config.sslCertPath)
+  httpsServer = HTTPSServer.createServer(mainServer, config.sslCerts)
 } else {
   httpServer = HTTPServer.createServer(mainServer)
 }

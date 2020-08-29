@@ -5,37 +5,50 @@ const fs = require('fs')
 const path = require('path')
 const config = require('../config.json')
 
-let secureContext = null
+let secureContexts = {}
+let wildcards = []
 
 module.exports = {
 
-  createSecureContext: certPath => {
-    const sslCertPath = path.join(certPath, 'fullchain.pem')
-    const sslKeyPath = path.join(certPath, 'privkey.pem')
-    const caPath = path.join(certPath, 'chain.pem')
+  createSecureContext: certInfo => {
+    let certPath = certInfo.path
+    let certHost = certInfo.host
 
-    const context = tls.createSecureContext({
+    let sslCertPath = path.join(certPath, 'fullchain.pem')
+    let sslKeyPath = path.join(certPath, 'privkey.pem')
+    let caPath = path.join(certPath, 'chain.pem')
+
+    let context = tls.createSecureContext({
       cert: fs.readFileSync(sslCertPath),
       key: fs.readFileSync(sslKeyPath),
       ca: fs.readFileSync(caPath),
       minVersion: 'TLSv1.2'
     })
 
-    secureContext = context
+    if (certHost.startsWith('*.')) {
+      wildcards.push(certHost.slice(2))
+    }
+
+    secureContexts[certHost] = context
   },
 
-  getSecureContext: () => {
-    return secureContext
+  getSecureContext: hostname => {
+    let up = hostname.slice(hostname.indexOf('.') + 1)
+    if (wildcards.includes(up)) return secureContexts[up]
+
+    return secureContexts[hostname]
   },
 
   createSNICallback: () => {
-    return (servername, callback) => {
-      callback(null, module.exports.getSecureContext())
+    return (hostname, callback) => {
+      callback(null, module.exports.getSecureContext(hostname))
     }
   },
 
-  createServer: (app, certPath) => {
-    module.exports.createSecureContext(certPath)
+  createServer: (app, sslCerts) => {
+    sslCerts.forEach(cert => {
+      module.exports.createSecureContext(cert)
+    })
 
     return https.createServer({
       SNICallback: module.exports.createSNICallback()
