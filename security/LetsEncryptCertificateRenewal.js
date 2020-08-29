@@ -12,7 +12,7 @@ function renew() {
     if (stderr) console.error(stderr)
 
     config.sslCerts.forEach(cert => {
-      module.exports.createSecureContext(cert)
+      HTTPSServer.createSecureContext(cert)
     })
   })
 }
