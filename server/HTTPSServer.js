@@ -27,9 +27,10 @@ module.exports = {
     if (certHost.startsWith('*.')) {
       let up = certHost.slice(2)
       if (!wildcards.includes(up)) wildcards.push(up)
+      secureContexts[up] = context
+    } else {
+      secureContexts[certHost] = context
     }
-
-    secureContexts[certHost] = context
   },
 
   getSecureContext: hostname => {
