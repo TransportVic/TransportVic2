@@ -116,7 +116,7 @@ module.exports = {
   "Toorak": [...platr(4, [], 'half-platform-bold')],
   "Hawksburn": [...platr(4, [], 'half-platform-bold')],
   "Lalor": [],
-  "Hurstbridge": [],
+  "Hurstbridge": [plat(1, 'half-platform-bold')],
   "Wattle Glen": [],
   "Diamond Creek": [],
   "Eltham": [],
