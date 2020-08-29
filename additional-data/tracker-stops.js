@@ -333,5 +333,5 @@ module.exports = [
   'mill-park/dysons-bus-depot-121-mckimmies-road',
   'frankston/fernery-lane-nepean-highway',
   'bayswater/bayswater-railway-station',
-  'hoppers-crossing/werribee-village-shopping-centre'
+  'burwood/uganda-street-elgar-road'
 ]
