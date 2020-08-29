@@ -10,7 +10,10 @@ function renew() {
     stderr = stderr.toString().trim()
     if (stdout) console.log(stdout)
     if (stderr) console.error(stderr)
-    HTTPSServer.createSecureContext(config.sslCertPath)
+
+    config.sslCerts.forEach(cert => {
+      module.exports.createSecureContext(cert)
+    })
   })
 }
 

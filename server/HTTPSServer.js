@@ -9,7 +9,6 @@ let secureContexts = {}
 let wildcards = []
 
 module.exports = {
-
   createSecureContext: certInfo => {
     let certPath = certInfo.path
     let certHost = certInfo.host
@@ -26,7 +25,8 @@ module.exports = {
     })
 
     if (certHost.startsWith('*.')) {
-      wildcards.push(certHost.slice(2))
+      let up = certHost.slice(2)
+      if (!wildcards.includes(up)) wildcards.push(up)
     }
 
     secureContexts[certHost] = context
