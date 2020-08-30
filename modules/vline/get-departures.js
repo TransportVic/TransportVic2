@@ -61,12 +61,17 @@ async function getVNETDepartures(vlinePlatform, direction, db) {
     let barAvailable = $$('IsBuffetAvailable').text() === 'true'
 
     let vehicle = $$('Consist').text().replace(/ /g, '-')
-    const vehicleConsist = $$('ConsistVehicles').text().replace(/ /g, '-')
+    let vehicleConsist = $$('ConsistVehicles').text().replace(/ /g, '-')
     let fullVehicle = vehicle
     let vehicleType
 
     if (vehicle.match(/N\d{3}/)) {
       let carriages = vehicleConsist.slice(5).split('-')
+      if (carriages.includes('ACN13')) {
+        carriages.splice(carriages.indexOf('ACN13'), 1)
+        vehicleConsist = vehicleConsist.slice(0, 5) + carriages.join('-')
+      }
+
       fullVehicle = vehicleConsist
 
       vehicleType = 'N +'

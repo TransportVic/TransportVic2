@@ -59,6 +59,11 @@ async function getVNETDepartures(direction, db) {
 
     if (vehicle.match(/N\d{3}/)) {
       let carriages = vehicleConsist.slice(5).split('-')
+      if (carriages.includes('ACN13')) {
+        carriages.splice(carriages.indexOf('ACN13'), 1)
+        vehicleConsist = vehicleConsist.slice(0, 5) + carriages.join('-')
+      }
+
       fullVehicle = vehicleConsist
 
       vehicleType = 'N +'
@@ -217,7 +222,7 @@ async function requestTimings() {
     setTimeout(requestTimings, 30 * 60 * 1000)
   } else {
     let minutesPastMidnight = utils.getMinutesPastMidnightNow()
-    let timeToStart = (1710 - minutesPastMidnight) % 1440
+    let timeToStart = (1440 + 3 * 60 + 30 - minutesPastMidnight) % 1440
 
     setTimeout(requestTimings, timeToStart * 60 * 1000)
   }
