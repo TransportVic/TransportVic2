@@ -199,6 +199,10 @@ database.connect({
     consist: 1
   }, {name: 'undated consist index'})
 
+  await vlineTrips.createIndex({
+    set: 1
+  }, {name: 'set index', sparse: 1})
+
   console.log('Created live timetables index')
 
 
