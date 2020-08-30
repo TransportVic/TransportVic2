@@ -56,6 +56,7 @@ async function getVNETDepartures(direction, db) {
 
     let fullVehicle = vehicle
     let vehicleType
+    let set
 
     if (vehicle.match(/N\d{3}/)) {
       let carriages = vehicleConsist.slice(5).split('-')
@@ -71,6 +72,8 @@ async function getVNETDepartures(direction, db) {
 
       if (carriages.includes('N')) vehicleType += 'N'
       else vehicleType += 'H'
+
+      set = vehicle.split('-').find(x => !x.startsWith('N') && !x.startsWith('P'))
     } else if (vehicle.includes('VL')) {
       let cars = vehicle.split('-')
       fullVehicle = vehicle.replace(/\dVL/g, 'VL')
@@ -107,7 +110,8 @@ async function getVNETDepartures(direction, db) {
       vehicle: fullVehicle.split('-'),
       barAvailable,
       accessibleTrain,
-      vehicleType
+      vehicleType,
+      set
     })
   })
 
@@ -134,8 +138,10 @@ async function getDeparturesFromVNET(db) {
       destination: departure.destination.slice(0, -16),
       departureTime: departure.originDepartureTime.format('HH:mm'),
       destinationArrivalTime: departure.destinationArrivalTime.format('HH:mm'),
-      consist: departure.vehicle
+      consist: departure.vehicle,
     }
+
+    if (departure.set) tripData.set = departure.set
 
     let query = {
       date, runID: departure.runID
