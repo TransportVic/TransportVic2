@@ -13,7 +13,7 @@ let refreshRate = 30
 function shouldRun() {
   let minutes = utils.getMinutesPastMidnightNow()
 
-  return 270 <= minutes && minutes <= 1260 // 0430 - 2100
+  return 210 <= minutes && minutes <= 1260 // 0330 - 2100
 }
 
 async function getStationFromVNETName(vnetStationName, db) {
