@@ -44,6 +44,31 @@ router.get('/summary/:station', (req, res) => {
   }
 })
 
+router.get('/station-preview/:station', (req, res) => {
+  let {station} = req.params
+
+  let stationPlatformData = stationPlatforms[station]
+  let stationPID = stationPIDs[station]
+  let stationCode = stationNames[station]
+
+  if (stationPID.length) {
+    let pid = stationPID.filter(p => p.platform).sort((a, b) => a.platform - b.platform)[0]
+    let pidURL
+
+    if (pid.type === 'half-platform-bold') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/half-platform-bold`
+    if (pid.type === 'half-platform') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/half-platform`
+    if (pid.type === 'platform') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/platform`
+    if (pid.type === 'pre-platform-vertical') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/pre-platform-vertical`
+    if (pid.type === 'fss-escalator') pidURL = `/mockups/fss/escalator/${pid.platform}/${station}/`
+    if (pid.type === 'fss-platform') pidURL = `/mockups/fss/platform/${pid.platform}/${station}/`
+    if (pid.type === 'sss-platform') pidURL = `/mockups/sss/platform/${pid.platform * 2 - 1}-${pid.platform * 2}/`
+
+    res.redirect(pidURL)
+  } else {
+    res.redirect(`/mockups/metro-lcd/${station}/1/half-platform`)
+  }
+})
+
 let validConcourseTypes = ['up-down', 'interchange']
 
 router.get('/get', async (req, res) => {
