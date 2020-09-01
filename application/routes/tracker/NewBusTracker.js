@@ -54,7 +54,8 @@ router.get('/fleet', async (req, res) => {
   let today = utils.getYYYYMMDDNow()
 
   let {fleet, date} = querystring.parse(url.parse(req.url).query)
-  date = utils.getYYYYMMDD(utils.parseDate(date)) || today
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
 
   if (!fleet) {
     return res.render('tracker/bus/by-fleet', {
@@ -127,7 +128,8 @@ router.get('/service', async (req, res) => {
   let today = utils.getYYYYMMDDNow()
 
   let {service, date} = querystring.parse(url.parse(req.url).query)
-  date = utils.getYYYYMMDD(utils.parseDate(date)) || today
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
 
   if (!service) {
     return res.render('tracker/bus/by-service', {
@@ -203,7 +205,8 @@ router.get('/operator-list', async (req, res) => {
   let today = utils.getYYYYMMDDNow()
 
   let {operator, date} = querystring.parse(url.parse(req.url).query)
-  date = utils.getYYYYMMDD(utils.parseDate(date)) || today
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
 
   if (!operator) {
     return res.render('tracker/bus/by-operator', {

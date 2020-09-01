@@ -39,7 +39,8 @@ router.get('/date', async (req, res) => {
 
   let today = utils.getYYYYMMDDNow()
   let {date} = querystring.parse(url.parse(req.url).query)
-  date = utils.getYYYYMMDD(utils.parseDate(date)) || today
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -59,7 +60,8 @@ router.get('/line', async (req, res) => {
 
   let today = utils.getYYYYMMDDNow()
   let {date, line} = querystring.parse(url.parse(req.url).query)
-  date = utils.getYYYYMMDD(utils.parseDate(date)) || today
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
 
   let lineGroup = lines[line] || []
 
@@ -91,7 +93,8 @@ router.get('/consist', async (req, res) => {
   let vlineTrips = db.getCollection('vline trips')
   let today = utils.getYYYYMMDDNow()
   let {consist, date} = querystring.parse(url.parse(req.url).query)
-  date = utils.getYYYYMMDD(utils.parseDate(date)) || today
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 

@@ -81,7 +81,7 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
 function change(db, text) {
   if (text.includes('delay')) return
 
-  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?)(?:service|train)? will (?:now )?(\w+) (?:early )?(?:at|from) ([\w ]*?)(?: at.*?)?(?: today.*?)?(?: due.*?)?(?: and.*?)?\./)
+  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?)(?:service|train)? will (?:now )?(\w+) (?:early )?(?:at|from|in) ([\w ]*?)(?: at.*?)?(?: today.*?)?(?: due.*?)?(?: and.*?)?\./)
 
   if (service) {
     let departureTime = service[1].replace('.', ':')
