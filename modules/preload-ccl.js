@@ -8,7 +8,10 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let stops = []
 
 async function requestTimings() {
-  await async.forEachOf(stops, async stop => {
+  await async.forEachSeries(stops, async stop => {
+    await new Promise(resolve => {
+      setTimeout(resolve, 2000)
+    })
     await getDepartures(stop, database)
   })
 }
