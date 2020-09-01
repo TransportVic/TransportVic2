@@ -212,8 +212,10 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
     trip.vehicleType = departure.vehicleType
     trip.vehicle = departure.vehicle
 
+    let currentStation = vlinePlatform.fullStopName.slice(0, -16)
+
     let shortRouteName = getShortRouteName(trip)
-    if (vlinePlatform.fullStopName === 'Southern Cross Railway Station' && (platform === '15' || platform === '16')) {
+    if (currentStation === 'Southern Cross' && (platform === '15' || platform === '16')) {
       if (nspTrip) {
         let nspPlatform = nspTrip.stopTimings[0].platform.replace(/[AB]/, '')
         if (nspPlatform === platform) platform = nspTrip.stopTimings[0].platform
@@ -226,7 +228,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
       }
     }
 
-    return {
+    return checkDivide({
       shortRouteName,
       originalServiceID,
       trip,
@@ -239,7 +241,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
         barAvailable: departure.barAvailable,
         accessibleTrain: departure.accessibleTrain
       }
-    }
+    }, currentStation, nspTrip, departure.vehicle)
   })
 
   return departures
@@ -368,6 +370,36 @@ function findFlagMap(flags) {
   return map
 }
 
+let tripDivideTypes = {
+  'Bacchus Marsh': 'FRONT',
+  'Bendigo': 'FRONT',
+  'Ballarat': 'REAR', // Maryborough, Ararat
+  'Traralgon': 'REAR', // Sale
+  'Geelong': 'REAR' // from WPD, front 3 DV to Depot.
+}
+
+function checkDivide(departure, currentStation, nspTrip, consist) {
+  let vehicle = consist
+  if (nspTrip && nspTrip.flags.tripDivides && vehicle[0].startsWith('VL')) {
+    let type = tripDivideTypes[nspTrip.flags.tripDividePoint]
+    let tripStops = nspTrip.stopTimings.map(stop => stop.stopName.slice(0, -16))
+    let remainingStops = tripStops.slice(tripStops.indexOf(nspTrip.flags.tripDividePoint))
+    let remaining
+    if (type === 'FRONT') remaining = vehicle[1]
+    else remaining = vehicle[0]
+
+    if (remainingStops.includes(currentStation)) { // Already past divide point, remove detached vehicle
+      vehicle = [remaining]
+    } else { // Not yet past, show divide message
+      departure.divideMessage = `(Take ${remaining} for ${remainingStops.slice(1).join(', ')} (Experimental, check with staff))`
+    }
+  }
+
+  departure.vehicle = vehicle.join('-')
+
+  return departure
+}
+
 async function appendTripData(db, departure, vlinePlatform) {
   let vlineTrips = db.getCollection('vline trips')
   let timetables = db.getCollection('timetables')
@@ -434,17 +466,19 @@ async function appendTripData(db, departure, vlinePlatform) {
     })
   }
 
+  let currentStation = vlinePlatform.fullStopName.slice(0, -16)
+
   if (tripData) {
     let first = tripData.consist[0]
     if (first.startsWith('N')) {
       departure.vehicle = tripData.consist.join(' ')
     } else {
-      departure.vehicle = tripData.consist.join('-')
+      departure = checkDivide(departure, currentStation, nspTrip, tripData.consist)
     }
   }
 
   if (!platform)
-    platform = guessPlatform(vlinePlatform.fullStopName.slice(0, -16), scheduledDepartureTimeMinutes,
+    platform = guessPlatform(currentStation, scheduledDepartureTimeMinutes,
       shortRouteName, departure.trip.direction)
 
   if (!platform) platform = '??'

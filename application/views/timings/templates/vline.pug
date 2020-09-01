@@ -52,6 +52,7 @@ for departure in departures
           if (departure.vehicle) {
             vehicleData = 'Vehicle: ' + departure.vehicle
           }
+          if (departure.divideMessage) vehicleData += ` ${departure.divideMessage}`
           
           if (departure.trip.type === 'capacity reduction') {
             important = true
