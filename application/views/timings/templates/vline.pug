@@ -63,7 +63,7 @@ for departure in departures
           if important
             span.vehicle.cancelled #{vehicleData}
           else
-            span.vehicle.full #{vehicleData}
+            span.vehicle.full.noClamp #{vehicleData}
         
     div.timings
       a(class='timing unknown' href=departure.tripURL)

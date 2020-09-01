@@ -353,7 +353,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     mappedDepartures.push(await appendTripData(db, departure, vlinePlatform))
   })
 
-  return mappedDepartures
+  return mappedDepartures.filter(Boolean)
 }
 
 function findFlagMap(flags) {
