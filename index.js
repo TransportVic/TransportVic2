@@ -9,6 +9,8 @@ const MainServer = require('./server/MainServer')
 
 const WebsocketServer = require('./server/WebsocketServer')
 
+require('./modules/vline-mail')
+
 let httpServer = null
 let httpsServer = null
 const mainServer = new MainServer()
@@ -32,5 +34,3 @@ process.on('uncaughtException', (err) => {
 })
 
 console.err = console.error
-
-require('./modules/health-check')

@@ -13,10 +13,10 @@ const config = require('../config.json')
 const modules = require('../modules.json')
 
 if (modules.tracker && modules.tracker.bus)
-  require('../modules/bus-seeker')
+  require('../modules/trackers/bus')
 
 if (modules.tracker && modules.tracker.vline)
-  require('../modules/vline-tracker')
+  require('../modules/trackers/vline')
 
 if (modules.preloadCCL)
   require('../modules/preload-ccl')

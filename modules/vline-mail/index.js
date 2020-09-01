@@ -1,9 +1,9 @@
 const nodeMailin = require('node-mailin')
 const cheerio = require('cheerio')
 
-const handleChange = require('./vline/handle-change')
-const handleCancellation = require('./vline/handle-cancellation')
-const handleReduction = require('./vline/handle-reduction')
+const handleChange = require('./modules/handle-change')
+const handleCancellation = require('./modules/handle-cancellation')
+const handleReduction = require('./modules/handle-reduction')
 
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')

@@ -1,10 +1,10 @@
 const async = require('async')
-const urls = require('../urls.json')
-const config = require('../config')
-const utils = require('../utils')
+const urls = require('../../urls.json')
+const config = require('../../config')
+const utils = require('../../utils')
 const moment = require('moment')
 const cheerio = require('cheerio')
-const DatabaseConnection = require('../database/DatabaseConnection')
+const DatabaseConnection = require('../../database/DatabaseConnection')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops

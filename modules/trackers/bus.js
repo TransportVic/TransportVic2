@@ -1,10 +1,10 @@
-const config = require('../config.json')
-const DatabaseConnection = require('../database/DatabaseConnection')
-const utils = require('../utils')
+const config = require('../../config.json')
+const DatabaseConnection = require('../../database/DatabaseConnection')
+const utils = require('../../utils')
 const shuffle = require('lodash.shuffle')
-const stops = require('../additional-data/tracker-stops')
+const stops = require('../../additional-data/tracker-stops')
 const async = require('async')
-const getDepartures = require('../modules/bus/get-departures')
+const getDepartures = require('../../modules/bus/get-departures')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
