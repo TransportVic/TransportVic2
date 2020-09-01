@@ -42,6 +42,14 @@ database.connect({
   }, {name: 'mode+gtfs id index'})
 
   await stops.createIndex({
+    'bays.stopGTFSID': 1
+  }, {name: 'just stop gtfs id index'})
+
+  await stops.createIndex({
+    'mergeName': 1
+  }, {name: 'merge name index'})
+
+  await stops.createIndex({
     'bays.fullStopName': 1,
     'stopName': 1
   }, {name: 'search index'})
