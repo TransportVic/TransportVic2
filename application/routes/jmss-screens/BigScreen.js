@@ -25,18 +25,8 @@ function filterDepartures(departures) {
   })
 }
 
-router.get('/', async (req, res) => {
-  if (lock) {
-    return await new Promise(resolve => {
-      lock.on('done', data => {
-        res.render('jmss-screens/big-screen', data)
-      })
-    })
-  }
-
-  lock = new EventEmitter()
-
-  let stops = res.db.getCollection('stops')
+async function getAllBusDepartures(db) {
+  let stops = db.getCollection('stops')
 
   let busLoop = await stops.findDocument({
     stopName: 'Monash University Bus Loop'
@@ -48,9 +38,25 @@ router.get('/', async (req, res) => {
     stopName: 'Monash University/Research Way'
   })
 
-  let busLoopDepartures = await getBusDepartures(busLoop, res.db)
-  let wellingtonDepartures = (await getBusDepartures(wellington, res.db)).filter(d => d.routeNumber === '800')
-  let monash742Departures = await getBusDepartures(monash742, res.db)
+  let busLoopDepartures = [], wellingtonDepartures = [], monash742Departures = []
+
+  await Promise.all([
+    new Promise(async resolve => {
+      try { busLoopDepartures = await getBusDepartures(busLoop, db) }
+      catch (e) {}
+      resolve()
+    }),
+    new Promise(async resolve => {
+      try { wellingtonDepartures = (await getBusDepartures(wellington, db)).filter(d => d.routeNumber === '800') }
+      catch (e) {}
+      resolve()
+    }),
+    new Promise(async resolve => {
+      try { monash742Departures = await getBusDepartures(monash742, db) }
+      catch (e) {}
+      resolve()
+    })
+  ])
 
   let allDepartures = filterDepartures([...busLoopDepartures, ...wellingtonDepartures, ...monash742Departures])
 
@@ -78,33 +84,76 @@ router.get('/', async (req, res) => {
     return acc
   }, {})
 
-  busDepartures = Object.values(busDepartures).filter(d => d.length)
+  return Object.values(busDepartures).filter(d => d.length)
+}
 
-  const huntingdale = (await stops.findDocument({
+async function getAllMetroDepartures(db) {
+  let stops = db.getCollection('stops')
+
+  let huntingdale = (await stops.findDocument({
     stopName: 'Huntingdale Railway Station'
   }))
-  const clayton = (await stops.findDocument({
-    stopName: 'Clayton Railway Station'
-  }))
 
-  let huntingdaleDepartures = filterDepartures(await getMetroDepartures(huntingdale, res.db))
+  let huntingdaleDepartures = filterDepartures(await getMetroDepartures(huntingdale, db))
 
   let metroGroups = huntingdaleDepartures.map(departure => departure.trip.direction)
     .filter((e, i, a) => a.indexOf(e) === i)
-  let metroDepartures = metroGroups.reduce((acc, group) => {
+
+  return metroGroups.reduce((acc, group) => {
     acc[group] = huntingdaleDepartures.filter(departure => departure.trip.direction === group).slice(0, 2)
     return acc
   }, {})
+}
 
-  let vlineDepartures = await getVLineDepartures(clayton, res.db)
+async function getNextVLineDepartures(db) {
+  let stops = db.getCollection('stops')
+
+  let clayton = (await stops.findDocument({
+    stopName: 'Clayton Railway Station'
+  }))
+
+  let vlineDepartures = await getVLineDepartures(clayton, db)
   vlineDepartures = vlineDepartures.map(d => {
     d.actualDepartureTime = d.scheduledDepartureTime
     return d
   })
   vlineDepartures = filterDepartures(vlineDepartures)
-  let nextVLineDeparture = vlineDepartures.filter(departure => {
+
+  return vlineDepartures.filter(departure => {
     return departure.trip.direction === 'Down' || departure.trip.runID % 2 === 1
   })[0]
+}
+
+router.get('/', async (req, res) => {
+  if (lock) {
+    return await new Promise(resolve => {
+      lock.on('done', data => {
+        res.render('jmss-screens/big-screen', data)
+      })
+    })
+  }
+
+  lock = new EventEmitter()
+
+  let busDepartures = [], metroDepartures = [], nextVLineDeparture = null
+
+  await Promise.all([
+    new Promise(async resolve => {
+      try { busDepartures = await getAllBusDepartures(res.db) }
+      catch (e) {}
+      resolve()
+    }),
+    new Promise(async resolve => {
+      try { metroDepartures = await getAllMetroDepartures(res.db) }
+      catch (e) {}
+      resolve()
+    }),
+    new Promise(async resolve => {
+      try { nextVLineDeparture = await getNextVLineDepartures(res.db) }
+      catch (e) {}
+      resolve()
+    })
+  ])
 
   let currentTime = utils.now().format('h:mmA').toLowerCase()
 
