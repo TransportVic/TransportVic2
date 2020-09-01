@@ -161,7 +161,7 @@ a.departureInfo span.info~span.info {
 
 a.departureInfo span.noClamp {
   -webkit-line-clamp: unset !important;
-  width: calc(100vw - (5vw + 5vh) - (5.2vw + 5.8vh) - (1vw + 1vh) - 1.5vw);
+  width: calc(100vw - (5vw + 5vh) - (5.2vw + 5.8vh) - (1vw + 1vh) - 1.5vw) !important;
 }
 
 a.departureInfo span.info.smaller {
