@@ -150,7 +150,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
     for (let i = 0; i <= 1; i++) {
       let tripDay = departureTime.clone().add(-i, 'days')
       let query = {
-        operationDays: tripDay.format('YYYYMMDD'),
+        operationDays: utils.getYYYYMMDD(tripDay),
         mode: 'regional train',
         stopTimings: {
           $elemMatch: {
@@ -307,7 +307,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     let matchedTripDay
     for (let i = 0; i <= 1; i++) {
       let tripDay = now.clone().add(-i, 'days')
-      matchedTripDay = tripDay.format('YYYYMMDD')
+      matchedTripDay = utils.getYYYYMMDD(tripDay)
 
       let query = {
         routeGTFSID: {
@@ -383,7 +383,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
     let trackerDestinationArrivalTime = giveVariance(trip.destinationArrivalTime)
 
     let tripData = await vlineTrips.findDocument({
-      date: departureTime.format('YYYYMMDD'),
+      date: utils.getYYYYMMDD(departureTime),
       departureTime: trackerDepartureTime,
       origin: origin.slice(0, -16),
       destination: destination.slice(0, -16)
@@ -391,7 +391,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
 
     if (!tripData) {
       tripData = await vlineTrips.findDocument({
-        date: departureTime.format('YYYYMMDD'),
+        date: utils.getYYYYMMDD(departureTime),
         departureTime: trackerDepartureTime,
         origin: origin.slice(0, -16)
       })
@@ -399,7 +399,7 @@ async function processPTVDepartures(departures, runs, routes, vlinePlatform, db)
 
     if (!tripData) {
       tripData = await vlineTrips.findDocument({
-        date: departureTime.format('YYYYMMDD'),
+        date: utils.getYYYYMMDD(departureTime),
         destination: destination.slice(0, -16),
         destinationArrivalTime: trackerDestinationArrivalTime
       })

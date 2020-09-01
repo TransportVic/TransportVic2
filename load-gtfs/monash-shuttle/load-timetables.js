@@ -184,8 +184,8 @@ database.connect({
     let startMoment = moment(startDate, 'DD MMMM YYYY')
     let endMoment = moment(endDate, 'DD MMMM YYYY')
     if (endMoment < startMoment) endMoment.add('1', 'year') // thinking about if term ends in jan
-    let start = startMoment.format('YYYYMMDD')
-    let end = endMoment.format('YYYYMMDD')
+    let start = utils.getYYYYMMDD(startMoment)
+    let end = utils.getYYYYMMDD(endMoment)
 
     let name
     if (isHoliday) {

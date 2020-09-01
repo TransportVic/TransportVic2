@@ -11,7 +11,7 @@ module.exports = async db => {
   let prevFriday = utils.now()
   prevFriday.day(prevFriday.day() >= 5 ? 5 : -2)
 
-  let days = utils.allDaysBetweenDates(prevFriday, now).map(d => d.format('YYYYMMDD'))
+  let days = utils.allDaysBetweenDates(prevFriday, now).map(d => utils.getYYYYMMDD(d))
 
   let sprinters = (await vlineTrips.distinct('consist', {
     consist: /70\d\d/,

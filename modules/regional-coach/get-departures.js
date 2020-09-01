@@ -98,7 +98,7 @@ async function getDeparturesFromPTV(stop, db) {
 
           trip = await gtfsTimetables.findDocument({
             routeGTFSID: trainRouteGTFSID,
-            operationDays: tripDay.format('YYYYMMDD'),
+            operationDays: utils.getYYYYMMDD(tripDay),
             mode: 'regional train',
             stopTimings: {
               $elemMatch: {
@@ -117,7 +117,7 @@ async function getDeparturesFromPTV(stop, db) {
           if (trip) {
             console.log(`Mapped train trip as coach: ${trip.departureTime} to ${trip.destination}`)
 
-            let operationDay = tripDay.format('YYYYMMDD')
+            let operationDay = utils.getYYYYMMDD(tripDay)
             trip.operationDays = [ operationDay ]
 
             trip.mode = 'regional coach'

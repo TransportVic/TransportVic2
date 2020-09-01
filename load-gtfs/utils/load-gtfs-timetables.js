@@ -40,7 +40,7 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
     let operationDays
     if (calendarCache[trip.calendarID]) operationDays = calendarCache[trip.calendarID]
     else {
-      operationDays = gtfsUtils.calendarToDates(calendarDays, calendarDates, trip.calendarID).map(date => date.format('YYYYMMDD'))
+      operationDays = gtfsUtils.calendarToDates(calendarDays, calendarDates, trip.calendarID).map(date => utils.getYYYYMMDD(date))
       calendarCache[trip.calendarID] = operationDays
     }
 

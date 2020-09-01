@@ -51,7 +51,7 @@ async function loadDepartures(req, res) {
     let minutesDiff = currentStation.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
 
     let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
-    let operationDate = tripStart.format('YYYYMMDD')
+    let operationDate = utils.getYYYYMMDD(tripStart)
 
     if (departure.trip.stopTimings[0].departureTimeMinutes > 1440) {
       operationDate = tripStart.add(-1, 'day').format('YYYYMMDD')

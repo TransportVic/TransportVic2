@@ -49,7 +49,7 @@ async function loadDepartures(req, res) {
     let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
     if (departure.trip.stopTimings[0].departureTimeMinutes > 1440) tripStart.add(-1, 'day') // edge case where trip starts after midnight and recorded as 25:00 on
 
-    let operationDate = tripStart.format('YYYYMMDD')
+    let operationDate = utils.getYYYYMMDD(tripStart)
 
     departure.tripURL = `/tram/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`

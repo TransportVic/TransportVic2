@@ -63,7 +63,7 @@ router.get('/fleet', async (req, res) => {
       bus: null,
       fleet: '?',
       smartrakID: '?',
-      date: moment(date, 'YYYYMMDD')
+      date: utils.parseTime(date, 'YYYYMMDD')
     })
   }
 
@@ -111,7 +111,7 @@ router.get('/fleet', async (req, res) => {
     bus,
     fleet,
     smartrakID,
-    date: moment(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD')
   })
 })
 
@@ -134,7 +134,7 @@ router.get('/service', async (req, res) => {
       tripsToday: [],
       busesByDay: {},
       service: '',
-      date: moment(date, 'YYYYMMDD')
+      date: utils.parseTime(date, 'YYYYMMDD')
     })
   }
 
@@ -189,7 +189,7 @@ router.get('/service', async (req, res) => {
     tripsToday,
     busesByDay,
     service,
-    date: moment(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD')
   })
 })
 
@@ -209,7 +209,7 @@ router.get('/operator-list', async (req, res) => {
     return res.render('tracker/bus/by-operator', {
       buses: {},
       operator: '',
-      date: moment(date, 'YYYYMMDD')
+      date: utils.parseTime(date, 'YYYYMMDD')
     })
   }
 
@@ -238,7 +238,7 @@ router.get('/operator-list', async (req, res) => {
     buses,
     allBuses,
     operator,
-    date: moment(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD')
   })
 })
 

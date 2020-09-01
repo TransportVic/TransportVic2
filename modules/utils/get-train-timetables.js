@@ -36,7 +36,7 @@ async function getDeparture(station, db, mode, possibleLines, departureTime, pos
       destination: {
         $in: possibleDestinations
       },
-      operationDays: day.format('YYYYMMDD'),
+      operationDays: utils.getYYYYMMDD(day),
       mode,
       stopTimings: {
         $elemMatch: {
@@ -106,7 +106,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
     let departureTimeMinutes = (minutesPastMidnight % 1440) + 1440 * i
 
     let query = {
-      operationDays: day.format('YYYYMMDD'),
+      operationDays: utils.getYYYYMMDD(day),
       mode,
       stopTimings: {
         $elemMatch: {

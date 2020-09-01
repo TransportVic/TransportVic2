@@ -38,7 +38,7 @@ async function loadDepartures(req, res) {
     let minutesDiff = currentStop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
 
     let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
-    let operationDate = tripStart.format('YYYYMMDD')
+    let operationDate = utils.getYYYYMMDD(tripStart)
 
     departure.tripURL = `/coach/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`

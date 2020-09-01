@@ -6,6 +6,7 @@ const rawStationPlatforms = require('../../../additional-data/station-platforms.
 const rawStationPIDs = require('../../../additional-data/station-pids')
 const url = require('url')
 const querystring = require('querystring')
+const PIDUtils = require('./PIDUtils')
 
 let stationPlatforms = {}
 let stationPIDs = {}
@@ -38,9 +39,9 @@ router.get('/summary/:station', (req, res) => {
   let stationCode = stationNames[station]
 
   if (stationPID.length) {
-    res.render('mockups/summary-known', {stationPID, station, stationCode})
+    res.render('mockups/summary-known', {stationPID, station, stationCode, getURL: PIDUtils.getURL})
   } else {
-    res.render('mockups/summary', {query, stationPlatformData, station, stationCode})
+    res.render('mockups/summary', {query, stationPlatformData, station, stationCode, getURL: PIDUtils.getURL})
   }
 })
 
@@ -53,17 +54,7 @@ router.get('/station-preview/:station', (req, res) => {
 
   if (stationPID.length) {
     let pid = stationPID.filter(p => p.platform).sort((a, b) => a.platform - b.platform)[0]
-    let pidURL
-
-    if (pid.type === 'half-platform-bold') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/half-platform-bold`
-    if (pid.type === 'half-platform') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/half-platform`
-    if (pid.type === 'platform') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/platform`
-    if (pid.type === 'pre-platform-vertical') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/pre-platform-vertical`
-    if (pid.type === 'fss-escalator') pidURL = `/mockups/fss/escalator/${pid.platform}/${station}/`
-    if (pid.type === 'fss-platform') pidURL = `/mockups/fss/platform/${pid.platform}/${station}/`
-    if (pid.type === 'sss-platform') pidURL = `/mockups/sss/platform/${pid.platform * 2 - 1}-${pid.platform * 2}/`
-
-    res.redirect(pidURL)
+    res.redirect(PIDUtils.getURL(station, pid))
   } else {
     res.redirect(`/mockups/metro-lcd/${station}/1/half-platform`)
   }

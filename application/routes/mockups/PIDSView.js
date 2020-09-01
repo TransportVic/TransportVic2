@@ -5,6 +5,7 @@ const rawStationPIDs = require('../../../additional-data/station-pids')
 const utils = require('../../../utils')
 const url = require('url')
 const querystring = require('querystring')
+const PIDUtils = require('./PIDUtils')
 
 function filter(req, next) {
   let host = req.headers.host || ''
@@ -26,7 +27,7 @@ router.get('/summary', async (req, res, next) => {
     let codedStationName = utils.encodeName(stationName)
     let stationPID = stationPIDs[codedStationName]
 
-    res.render('mockups/summary-known', {stationPID, station: codedStationName, stationCode})
+    res.render('mockups/summary-known', {stationPID, station: codedStationName, stationCode, getURL: PIDUtils.getURL})
   }
 })
 

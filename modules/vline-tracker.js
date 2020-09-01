@@ -131,7 +131,7 @@ async function getDeparturesFromVNET(db) {
   await async.forEach(vnetDepartures, async departure => {
     let referenceTime = departure.originDepartureTime.clone()
     if (referenceTime.get('hours') <= 3) referenceTime.add(-1, 'days')
-    let date = referenceTime.format('YYYYMMDD')
+    let date = utils.getYYYYMMDD(referenceTime)
     let dayOfWeek = utils.getDayName(referenceTime)
 
     let tripData = {
@@ -167,7 +167,7 @@ async function getDeparturesFromVNET(db) {
     for (let i = 0; i <= 1; i++) {
       let tripDay = departureTime.clone().add(-i, 'days')
       let query = {
-        operationDays: tripDay.format('YYYYMMDD'),
+        operationDays: utils.getYYYYMMDD(tripDay),
         mode: 'regional train',
         stopTimings: {
           $elemMatch: {

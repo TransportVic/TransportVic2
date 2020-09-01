@@ -42,7 +42,7 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
   for (let i = 0; i <= 1; i++) {
     let tripDay = today.clone().add(-i, 'days')
     query = {
-      operationDays: day || tripDay.format('YYYYMMDD'),
+      operationDays: day || utils.getYYYYMMDD(tripDay),
       mode,
       stopTimings: {
         $elemMatch: {

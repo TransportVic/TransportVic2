@@ -3,7 +3,7 @@ const cancellation = require('./handle-cancellation')
 const async = require('async')
 
 async function setServiceAsChanged(db, departureTime, origin, destination, type, changePoint) {
-  let today = utils.now().format('YYYYMMDD')
+  let today = utils.getYYYYMMDDNow()
 
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')

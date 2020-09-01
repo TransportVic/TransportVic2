@@ -183,7 +183,7 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
     for (let i = 0; i <= 1; i++) {
       let tripDay = departureTime.clone().add(-i, 'days')
       let query = {
-        operationDays: tripDay.format('YYYYMMDD'),
+        operationDays: utils.getYYYYMMDD(tripDay),
         mode: 'regional train',
         stopTimings: {
           $elemMatch: {
