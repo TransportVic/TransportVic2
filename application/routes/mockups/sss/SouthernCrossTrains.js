@@ -483,6 +483,8 @@ async function appendVLineData(departure, timetables) {
     'Bacchus Marsh': 'FRONT',
     'Bendigo': 'FRONT',
     'Ballarat': 'REAR', // maryborough, ararat
+    'Traralgon': 'REAR', // Sale
+    'Geelong': 'REAR' // from WPD, front 3 DV to Depot. Doesn't show here but just recording it anyway
   }
 
   if (departure.tripFlags.tripDivides) {

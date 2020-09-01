@@ -152,7 +152,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
       scheduledDepartureTime: departureTime,
       estimatedDepartureTime: null,
       actualDepartureTime: departureTime,
-      platform: '?',
+      platform: '??',
       scheduledDepartureTimeMinutes: stopData.departureTimeMinutes,
       cancelled: false,
       cityLoopConfig: [],
