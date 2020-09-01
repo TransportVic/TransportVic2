@@ -380,7 +380,7 @@ let tripDivideTypes = {
 
 function checkDivide(departure, currentStation, nspTrip, consist) {
   let vehicle = consist
-  if (nspTrip && nspTrip.flags.tripDivides && vehicle[0].startsWith('VL')) {
+  if (nspTrip && nspTrip.flags.tripDivides && (vehicle[1] || '').startsWith('VL')) { // Ensure that there is actually something to split
     let type = tripDivideTypes[nspTrip.flags.tripDividePoint]
     let tripStops = nspTrip.stopTimings.map(stop => stop.stopName.slice(0, -16))
     let remainingStops = tripStops.slice(tripStops.indexOf(nspTrip.flags.tripDividePoint))
@@ -391,7 +391,11 @@ function checkDivide(departure, currentStation, nspTrip, consist) {
     if (remainingStops.includes(currentStation)) { // Already past divide point, remove detached vehicle
       vehicle = [remaining]
     } else { // Not yet past, show divide message
-      departure.divideMessage = `(Take ${remaining} for ${remainingStops.slice(1).join(', ')} (Experimental, check with staff))`
+      let stopsRange = remainingStops.slice(1).join(', ')
+      if (remainingStops.length > 5) {
+        stopsRange = `${remainingStops[1]} - ${remainingStops.slice(-1)[0]}`
+      }
+      departure.divideMessage = `(Take ${remaining} for ${stopsRange} (Experimental, check with staff))`
     }
   }
 
