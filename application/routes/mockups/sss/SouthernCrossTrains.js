@@ -215,22 +215,24 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
       trip.stopTimings = trip.stopTimings.slice(0, destinationIndex + 1)
       let lastStop = trip.stopTimings[destinationIndex]
 
-      trip.destination = lastStop.stopName
-      trip.destinationArrivalTime = lastStop.arrivalTime
-      lastStop.departureTime = null
-      lastStop.departureTimeMinutes = null
+      if (lastStop) { // trip extensions and all...
+        trip.destination = lastStop.stopName
+        trip.destinationArrivalTime = lastStop.arrivalTime
+        lastStop.departureTime = null
+        lastStop.departureTimeMinutes = null
 
-      trip.runID = departure.runID
-      trip.operationDays = operationDay
+        trip.runID = departure.runID
+        trip.operationDays = operationDay
 
-      delete trip._id
-      await liveTimetables.replaceDocument({
-        operationDays: operationDay,
-        runID: departure.runID,
-        mode: 'regional train'
-      }, trip, {
-        upsert: true
-      })
+        delete trip._id
+        await liveTimetables.replaceDocument({
+          operationDays: operationDay,
+          runID: departure.runID,
+          mode: 'regional train'
+        }, trip, {
+          upsert: true
+        })
+      }
     }
 
     trip.vehicleType = departure.vehicleType
