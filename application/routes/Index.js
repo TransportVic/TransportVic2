@@ -35,7 +35,7 @@ router.get('/stop-data', async (req, res) => {
   let stops = res.db.getCollection('stops')
   let stop
 
-  if (['metro train', 'regional train'].includes(mode)) {
+  if (['metro train', 'regional train', 'heritage train'].includes(mode)) {
     stop = await stops.findDocument({
       codedName: name + '-railway-station',
     })

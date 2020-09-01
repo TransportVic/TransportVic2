@@ -27,7 +27,7 @@ for regionalCoachStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode =
     div.leftContainer
       img(src='/static/images/clear-icons/coach.svg')
     div.resultDetails
-      span Regional Coach Stop in #{regionalCoachStop.suburb[0]}
+      span V/Line Coach Stop in #{regionalCoachStop.suburb[0]}
       span #{regionalCoachStop.stopName}
       
 for ferryTerminal in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'ferry')).slice(0, 3)

@@ -106,6 +106,7 @@ $.ready(() => {
   if (mode === 'metro') mode = 'metro train'
   if (mode === 'vline') mode = 'regional train'
   if (mode === 'coach') mode = 'regional coach'
+  if (mode === 'heritage') mode = 'heritage train'
 
   isBookmarked(mode, suburb, stopName, bookmarkStatus => {
     if (bookmarkStatus)

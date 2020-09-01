@@ -13,7 +13,8 @@ let cssNames = {
   'regional coach': 'regionalCoachStop',
   'regional train': 'vlineStation',
   'metro train': 'metroStation',
-  ferry: 'ferryTerminal'
+  ferry: 'ferryTerminal',
+  'heritage train': 'heritageStation'
 }
 
 let iconNames = {
@@ -22,7 +23,8 @@ let iconNames = {
   'regional coach': 'bus',
   'regional train': 'vline',
   'metro train': 'metro',
-  ferry: 'ferry'
+  ferry: 'ferry',
+  'heritage train': 'vline'
 }
 
 let linkNames = {
@@ -31,16 +33,18 @@ let linkNames = {
   'regional coach': 'coach',
   'regional train': 'vline',
   'metro train': 'metro',
-  ferry: 'ferry'
+  ferry: 'ferry',
+  'heritage train': 'heritage'
 }
 
 let stopTypes = {
-  bus: 'Bus stop',
-  tram: 'Tram stop',
-  'regional coach': 'Regional coach stop',
-  'regional train': 'V/Line train station',
-  'metro train': 'Metro train station',
-  ferry: 'Ferry Terminal'
+  bus: 'Bus Stop',
+  tram: 'Tram Stop',
+  'regional coach': 'Regional Coach Stop',
+  'regional train': 'V/Line Train Station',
+  'metro train': 'Metro Train Station',
+  ferry: 'Ferry Terminal',
+  'heritage train': 'Heritage Train Station'
 }
 
 $.ready(() => {
@@ -58,7 +62,7 @@ $.ready(() => {
       if (['bus', 'tram'].includes(mode)) {
         link += `/${stopData.codedSuburb}`
       }
-      if (['metro train', 'regional train'].includes(mode))
+      if (['metro train', 'regional train', 'heritage train'].includes(mode))
         link += `/${stopData.codedName.slice(0, -16)}`
       else
         link += `/${stopData.codedName}`
