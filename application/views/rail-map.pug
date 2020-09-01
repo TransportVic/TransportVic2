@@ -1,0 +1,46 @@
+doctype html
+html(lang='en-GB')
+  head
+    meta(charset='UTF-8')
+    link(rel='preload' as='style' href='/static/css/rail-map.css')
+    link(rel='preload' as='image' href='/static/images-raw/interactives/trains-new.svg')
+
+    link(rel='stylesheet' href='/static/css/rail-map.css')
+    
+    -
+      let description = 'Viewing the interactive rail map'
+      let title = 'TransportVic - Interactive Rail Map'
+
+    meta(property='og:locale' content='en-GB')
+    meta(property='og:site_name' content='TransportVic')
+    meta(property='og:type' content='website')
+    meta(property='og:image' content='https://vic.transportsg.me/static/images/favicon/favicon192.png')
+    meta(property='og:url' content='https://vic.transportsg.me')
+    meta(property='twitter:card' content='summary')
+    meta(property='twitter:url' content='https://vic.transportsg.me')
+    meta(property='twitter:image' content='https://vic.transportsg.me/static/images/favicon/favicon192.png')
+      
+    meta(property='og:title' content=title)
+    meta(property='twitter:title' content=title)
+    meta(property='og:description' content=description)
+    meta(property='twitter:description' content=description)
+    meta(name='description' content=description)
+      
+    meta(name='keywords' content='tram,vline,train,next 5,public transport,bus,metro,transport,victora,ferry,train times,bus times,coach,coach times,ptv')
+    meta(name='author' content='Unikitty Pte. Ltd.')
+    meta(name='application-name' content='TransportVic')
+    meta(name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, height=device-height')
+    meta(name='google' content='notranslate')
+    meta(name='apple-mobile-web-app-capable' content='yes')
+    meta(name='mobile-web-app-capable' content='yes')
+    meta(name='apple-mobile-web-app-status-bar-style' content='black-translucent')
+      
+    link(rel='icon' type='image/png' href='/static/images/favicon/favicon192.png')
+    link(rel='shortcut icon' type='image/png' href='/static/images/favicon/favicon192.png')
+    link(rel='apple-touch-icon' type='image/png' href='/static/images/favicon/favicon192.png')
+      
+    link(rel='manifest' href='/static/app-content/manifest.json')
+    meta(name='theme-color' content='#171717')
+  body
+    | !{mapSVG}
+    script(src='/static/scripts/sw-load.js')

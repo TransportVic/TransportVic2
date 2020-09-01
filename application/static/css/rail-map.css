@@ -1,0 +1,13 @@
+html, body {
+  margin: 0;
+  padding: 0;
+
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+svg {
+  min-width: 200vw;
+  min-height: 200vh;
+}

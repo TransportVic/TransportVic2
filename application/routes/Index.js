@@ -1,10 +1,13 @@
 const express = require('express')
 const utils = require('../../utils')
 const {exec} = require('child_process')
+const fs = require('fs')
+const path = require('path')
 const router = new express.Router()
 const getStonyPoint = require('../../modules/get-stony-point')
 
 let buildNumber, buildComment
+let mapSVG
 
 exec('git describe --always', {
     cwd: process.cwd()
@@ -18,6 +21,10 @@ exec('git describe --always', {
   })
 })
 
+fs.readFile(path.join(__dirname, '../static/images/interactives/trains-new.svg'), (err, data) => {
+  mapSVG = data.toString()
+})
+
 router.get('/', (req, res) => {
   res.render('index')
 })
@@ -28,6 +35,10 @@ router.get('/bookmarks', (req, res) => {
 
 router.get('/about', (req, res) => {
   res.render('about', {buildNumber, buildComment})
+})
+
+router.get('/railmap', (req, res) => {
+  res.render('rail-map', { mapSVG })
 })
 
 router.get('/stop-data', async (req, res) => {
