@@ -21,7 +21,7 @@ block content
     label(for="ate") On Date:
     br
     div.inputSection
-      input(type="text" maxlength="8" name="date" value="" placeholder="Date" autocomplete="off")
+      input(type="text" maxlength="10" name="date" value="" placeholder="DD/MM/YYYY (Blank for today)" autocomplete="off")
       input(type="submit" value="Go")
   form(action='/vline/tracker/line' method='get')#byLine
     label(for="line") By Line:
@@ -37,5 +37,5 @@ block content
       input(type="text" maxlength="8" name="consist" value="" placeholder="Carriage / Loco Number" autocomplete="off")
       br
       div.inputSection
-        input(type="text" maxlength="8" name="date" value="" placeholder="Date" autocomplete="off")
+        input(type="text" maxlength="10" name="date" value="" placeholder="DD/MM/YYYY (Blank for today)" autocomplete="off")
         input(type="submit" value="Go")

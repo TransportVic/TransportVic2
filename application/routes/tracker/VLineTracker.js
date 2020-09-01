@@ -39,7 +39,7 @@ router.get('/date', async (req, res) => {
 
   let today = utils.getYYYYMMDDNow()
   let {date} = querystring.parse(url.parse(req.url).query)
-  if (!date) date = today
+  date = utils.getYYYYMMDD(utils.parseDate(date)) || today
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -49,7 +49,7 @@ router.get('/date', async (req, res) => {
 
   res.render('tracker/vline/by-date', {
     trips,
-    date: moment(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD')
   })
 })
 
@@ -59,7 +59,7 @@ router.get('/line', async (req, res) => {
 
   let today = utils.getYYYYMMDDNow()
   let {date, line} = querystring.parse(url.parse(req.url).query)
-  if (!date) date = today
+  date = utils.getYYYYMMDD(utils.parseDate(date)) || today
 
   let lineGroup = lines[line] || []
 
@@ -82,7 +82,7 @@ router.get('/line', async (req, res) => {
   res.render('tracker/vline/by-line', {
     trips,
     line,
-    date: moment(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD')
   })
 })
 
@@ -91,8 +91,7 @@ router.get('/consist', async (req, res) => {
   let vlineTrips = db.getCollection('vline trips')
   let today = utils.getYYYYMMDDNow()
   let {consist, date} = querystring.parse(url.parse(req.url).query)
-
-  if (!date) date = today
+  date = utils.getYYYYMMDD(utils.parseDate(date)) || today
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -103,7 +102,7 @@ router.get('/consist', async (req, res) => {
   res.render('tracker/vline/by-consist', {
     trips,
     consist,
-    date: moment(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD')
   })
 })
 

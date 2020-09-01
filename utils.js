@@ -301,10 +301,11 @@ module.exports = {
     return `${module.exports.pad(hours, 2)}:${module.exports.pad(minutes, 2)}`
   },
   getYYYYMMDD: time => {
-    let cloned = time.clone()
-    if (cloned.get('hours') < 3) // 3am PT day :((((
-      cloned.add(-1, 'days')
-    return cloned.format('YYYYMMDD')
+    // let cloned = time.clone()
+    // if (cloned.get('hours') < 3) // 3am PT day :((((
+    //   cloned.add(-1, 'days')
+    // return cloned.format('YYYYMMDD')
+    return time.format('YYYYMMDD')
   },
   getYYYYMMDDNow: () => module.exports.getYYYYMMDD(module.exports.now()),
   now: () => moment.tz('Australia/Melbourne'),
@@ -403,5 +404,9 @@ module.exports = {
       return parts.slice(0, -1).join('/')
 
     return stopName
+  },
+  parseDate: date => {
+    if (date.match(/\d{1,2}\/\d{1,2}\/\d{1,2}/)) return module.exports.parseTime(date, 'DD/MM/YYYY')
+    else return module.exports.parseTime(date, 'YYYYMMDD')
   }
 }
