@@ -21,10 +21,17 @@ if (modules.tracker && modules.tracker.vline)
 if (modules.preloadCCL)
   require('../modules/preload-ccl')
 
+let serverStarted = false
+
 module.exports = class MainServer {
   constructor () {
     this.app = express()
+    this.app.use((req, res, next) => {
+      if (serverStarted) return next()
+      else res.type('text').end('Server starting, please wait...')
+    })
     this.initDatabaseConnection(this.app, () => {
+      serverStarted = true
       this.configMiddleware(this.app)
       this.configRoutes(this.app)
     })

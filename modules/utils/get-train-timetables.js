@@ -157,11 +157,10 @@ async function getScheduledDepartures(station, db, mode, timeout) {
       actualDepartureTime: departureTime,
       platform: '??',
       scheduledDepartureTimeMinutes: stopData.departureTimeMinutes,
-      cancelled: false,
       cityLoopConfig: [],
       destination: trip.destination.slice(0, -16),
       runID: '',
-      cancelled: trip.type === 'cancelled',
+      cancelled: trip.type === 'cancellation' || trip.cancelled,
       suspensions: [],
       consist: []
     }
