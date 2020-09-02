@@ -533,7 +533,7 @@ async function getDepartures(station, db) {
     let flagMap = {}
     let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train')
     let departures = [], runs, routes
-    let scheduledTrains = [], coachReplacements = [], cancelledTrains = []
+    let coachReplacements = []
 
     let coachStop = station
     if (station.stopName === 'Southern Cross Railway Station') {
@@ -565,6 +565,7 @@ async function getDepartures(station, db) {
 
     let scheduled = await getScheduledDepartures(db, station)
     let xptDepartures = scheduled.filter(d => d.trip.routeGTFSID === '13-XPT')
+    cancelledTrains = scheduled.filter(departure => departure.cancelled)
 
     try {
       departures = ptvDepartures.departures, runs = ptvDepartures.runs, routes = ptvDepartures.routes
@@ -577,17 +578,11 @@ async function getDepartures(station, db) {
         let serviceID = departureTime.format('HH:mm') + destination
         flagMap[serviceID] = findFlagMap(departure.flags)
       })
-
-      scheduledTrains = await processPTVDepartures(departures, runs, routes, vlinePlatform, db)
-
-      coachReplacements = scheduledTrains.filter(departure => departure.isTrainReplacement)
-      cancelledTrains = scheduledTrains.filter(departure => departure.cancelled)
-      scheduledTrains = scheduledTrains.filter(departure => !departure.isTrainReplacement)
     } catch (e) {
     }
 
     try {
-      scheduledCoachReplacements = JSON.parse(JSON.stringify(scheduledCoachReplacements))
+      coachReplacements = JSON.parse(JSON.stringify(scheduledCoachReplacements))
         .filter(coach => coach.isTrainReplacement)
         .map(coach => {
           coach.scheduledDepartureTime = utils.parseTime(coach.scheduledDepartureTime)
@@ -601,7 +596,6 @@ async function getDepartures(station, db) {
           } else coach.destination = 'Southern Cross'
           return coach
         })
-      coachReplacements = [...coachReplacements, ...scheduledCoachReplacements]
     } catch (e) {
     }
 
@@ -632,26 +626,10 @@ async function getDepartures(station, db) {
       }
     }
 
-    if (scheduledTrains.length) {
-      let allDepartures = scheduledTrains.concat(xptDepartures).concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
-      departuresCache.put(cacheKey, allDepartures)
+    let allDepartures = scheduled.concat(xptDepartures).concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+    departuresCache.put(cacheKey, allDepartures)
 
-      return returnDepartures(allDepartures)
-    } else {
-      let coachServiceIDs = coachReplacements.map(coach => {
-        return coach.scheduledDepartureTime.format('HH:mm') + coach.destination
-      })
-
-      scheduled = scheduled.filter(train => {
-        let serviceID = train.scheduledDepartureTime.format('HH:mm') + train.destination
-        return !coachServiceIDs.includes(serviceID)
-      })
-
-      let allDepartures = scheduled.concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
-      departuresCache.put(cacheKey, allDepartures)
-
-      return returnDepartures(allDepartures)
-    }
+    return returnDepartures(allDepartures)
   } catch (e) {
     console.log(e)
     return returnDepartures(null)
