@@ -1,9 +1,9 @@
 require('../utils')
 
 const config = require('../config.json')
-const HTTPServer = require('./HTTPServer')
-const HTTPSServer = require('./HTTPSServer')
-const HTTPSRedirectServer = require('./HTTPSRedirectServer')
+const HTTPServer = require('../server/HTTPServer')
+const HTTPSServer = require('../server/HTTPSServer')
+const HTTPSRedirectServer = require('../server/HTTPSRedirectServer')
 const MainServer = require('./MainServer')
 
 const {exec} = require('child_process')
@@ -17,7 +17,7 @@ if (config.useHTTPS) {
   const redirectServer = new HTTPSRedirectServer()
   httpServer = HTTPServer.createServer(redirectServer)
 
-  httpsServer = HTTPSServer.createServer(mainServer, config.sslCertPath)
+  httpsServer = HTTPSServer.createServer(mainServer, config.sslCerts)
 } else {
   httpServer = HTTPServer.createServer(mainServer)
 }
