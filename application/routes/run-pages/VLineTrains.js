@@ -87,22 +87,6 @@ async function pickBestTrip(data, db) {
     } else return null
   }
 
-  let nspTrip = await db.getCollection('timetables').findDocument({
-    mode: 'regional train',
-    origin: referenceTrip.origin,
-    direction: referenceTrip.direction,
-    routeGTFSID: referenceTrip.routeGTFSID,
-    operationDays: utils.getDayName(tripDay),
-    'stopTimings': {
-      $elemMatch: {
-        stopName: referenceTrip.origin,
-        departureTimeMinutes: departureTime
-      }
-    }
-  })
-
-  let {runID, vehicle} = nspTrip || {}
-
   let vlineTrips = db.getCollection('vline trips')
 
   let trackerDepartureTime = giveVariance(referenceTrip.departureTime)
@@ -115,7 +99,7 @@ async function pickBestTrip(data, db) {
     destination: referenceTrip.destination.slice(0, -16)
   })
 
-  if (!tripData) {
+  if (!tripData && referenceTrip.direction === 'Up') {
     tripData = await vlineTrips.findDocument({
       date: data.operationDays,
       departureTime: trackerDepartureTime,
@@ -130,6 +114,32 @@ async function pickBestTrip(data, db) {
       destinationArrivalTime: trackerDestinationArrivalTime
     })
   }
+
+  let nspTrip
+  if (tripData) {
+      nspTrip = await db.getCollection('timetables').findDocument({
+      mode: 'regional train',
+      routeGTFSID: referenceTrip.routeGTFSID,
+      runID: tripData.runID,
+      operationDays: utils.getDayName(tripDay),
+    })
+  } else {
+    nspTrip = await db.getCollection('timetables').findDocument({
+      mode: 'regional train',
+      origin: referenceTrip.origin,
+      direction: referenceTrip.direction,
+      routeGTFSID: referenceTrip.routeGTFSID,
+      operationDays: utils.getDayName(tripDay),
+      'stopTimings': {
+        $elemMatch: {
+          stopName: referenceTrip.origin,
+          departureTimeMinutes: departureTime
+        }
+      }
+    })
+  }
+
+  let {runID, vehicle} = nspTrip || {}
 
   referenceTrip.runID = runID
   referenceTrip.vehicle = vehicle

@@ -184,18 +184,35 @@ async function getDeparturesFromVNET(db) {
 
     if (!trip && nspTrip) trip = nspTrip
 
-    if (trip && trip.destination !== departure.destination) {
+    if (trip && trip.destination !== departure.destination || trip.origin !== departure.origin) {
       let stoppingAt = trip.stopTimings.map(e => e.stopName)
       let destinationIndex = stoppingAt.indexOf(departure.destination)
-      let skipping = trip.stopTimings.slice(destinationIndex + 1).map(e => e.stopName)
 
-      trip.stopTimings = trip.stopTimings.slice(0, destinationIndex + 1)
-      let lastStop = trip.stopTimings[destinationIndex]
+      let skipping = []
+      if (trip.destination !== departure.destination) {
+        skipping = trip.stopTimings.slice(destinationIndex + 1).map(e => e.stopName)
 
-      trip.destination = lastStop.stopName
-      trip.destinationArrivalTime = lastStop.arrivalTime
-      lastStop.departureTime = null
-      lastStop.departureTimeMinutes = null
+        trip.stopTimings = trip.stopTimings.slice(0, destinationIndex + 1)
+        let lastStop = trip.stopTimings[destinationIndex]
+
+        trip.destination = lastStop.stopName
+        trip.destinationArrivalTime = lastStop.arrivalTime
+        lastStop.departureTime = null
+        lastStop.departureTimeMinutes = null
+      }
+
+      let originIndex = stoppingAt.indexOf(departure.origin)
+      if (trip.origin !== departure.origin) {
+        skipping = skipping.concat(trip.stopTimings.slice(0, originIndex).map(e => e.stopName))
+
+        trip.stopTimings = trip.stopTimings.slice(originIndex)
+        let firstStop = trip.stopTimings[0]
+
+        trip.origin = firstStop.stopName
+        trip.departureTime = firstStop.departureTime
+        firstStop.arrivalTime = null
+        firstStop.arrivalTimeMinutes = null
+      }
 
       trip.skipping = skipping
       trip.runID = departure.runID
