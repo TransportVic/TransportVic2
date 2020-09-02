@@ -7,7 +7,7 @@ html, body {
   -webkit-user-select: none;
 }
 
-svg {
-  min-width: 100vw;
-  min-height: 100vh;
+html {
+  transform: scale(0.4);
+  transform-origin: top left;
 }
