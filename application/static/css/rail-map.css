@@ -8,6 +8,6 @@ html, body {
 }
 
 svg {
-  min-width: 200vw;
-  min-height: 200vh;
+  min-width: 100vw;
+  min-height: 100vh;
 }
