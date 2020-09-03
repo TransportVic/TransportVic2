@@ -241,7 +241,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
         barAvailable: departure.barAvailable,
         accessibleTrain: departure.accessibleTrain
       }
-    }, currentStation, nspTrip, departure.vehicle)
+    }, currentStation, nspTrip, departure.vehicle.split('-'))
   })
 
   return departures
@@ -339,6 +339,9 @@ async function appendTripData(db, departure, vlinePlatform) {
   })
 
   let platform = departure.platform
+  if (platform.endsWith('N')) {
+    platform = platform.slice(0, 1) = 'A'
+  }
   if (platform === '??') platform = null
 
   if (nspTrip && !platform) {
@@ -462,7 +465,7 @@ async function getDepartures(station, db) {
         if (station.stopName === 'Southern Cross Railway Station') {
           vnetDepartures = await getDeparturesFromVNET(vlinePlatform, db)
         }
-      } catch (e) {} finally { resolve() }
+      } catch (e) { console.log(e) } finally { resolve() }
     })])
 
     let scheduled = await getScheduledDepartures(db, station)
