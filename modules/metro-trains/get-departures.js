@@ -184,7 +184,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   Object.values(disruptions).filter(disruption => {
     return disruption.description.includes('originate') || disruption.description.includes('terminate')
   }).map(matchService).filter(Boolean).map(disruption => {
-    let parts = disruption.originalText.match(/now (\w+) (?:from|at) (.*)./)
+    let parts = disruption.originalText.match(/will (?:now )?(\w+) (?:from|at) (.*)./)
     if (parts) {
       let type = parts[1]
       let point = parts[2]
