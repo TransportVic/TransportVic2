@@ -2,7 +2,7 @@ const utils = require('../utils')
 
 let allSprinters = []
 for (let i = 7001; i <= 7022; i++) {
-  if (i !== 7019) allSprinters.push(i.toString())
+  if (i !== 7019 && 1 !== 7015) allSprinters.push(i.toString())
 }
 
 module.exports = async db => {
