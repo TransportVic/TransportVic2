@@ -3,6 +3,7 @@ const fs = require('fs')
 const {spawn} = require('child_process')
 const DatabaseConnection = require('../database/DatabaseConnection')
 const ws = require('ws')
+const utils = require('../utils')
 
 const config = require('../config.json')
 const urls = require('../urls.json')
@@ -125,7 +126,7 @@ request.head(urls.gtfsFeed, async (err, resp, body) => {
       fs.writeFileSync(__dirname + '/last-modified', lastModified)
       console.log('Wrote last-modified', lastModified)
       await discordUpdate('[Updater]: Finished downloading new timetables')
-
+  
       await updateTimetables()
     })
   } else {
