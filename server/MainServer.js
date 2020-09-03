@@ -279,6 +279,10 @@ module.exports = class MainServer {
       res.sendFile(path.join(__dirname, '../application/static/app-content/robots.txt'))
     })
 
+    app.get('/health-check', (req, res) => {
+      res.type('text').end('Ok')
+    })
+
     app.use('/500', (req, res) => { throw new Error('500') })
 
     app.use((req, res, next) => {
