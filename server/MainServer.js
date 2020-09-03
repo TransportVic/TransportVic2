@@ -188,6 +188,7 @@ module.exports = class MainServer {
       'mockups/Metro-CRT-PIDS': '/mockups/metro-crt',
       'mockups/VLine-PIDS': '/mockups/vline',
       'mockups/sss/SouthernCross': '/mockups/sss',
+      'mockups/train/TrainPID': '/mockups/train',
 
       'mockups/sss-new/SSSNew': '/mockups/sss-new',
       'mockups/sss-new/SSSPlatform': '/mockups/sss-new/platform',
