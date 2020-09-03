@@ -197,7 +197,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
   let cityLoopSkipping = Object.values(disruptions).filter(disruption => {
     let description = disruption.description.toLowerCase()
-    return description.includes('direct to') && description.includes('not via the city loop') && !description.includes('maint')
+    return description.includes('direct to') && description.includes('not via the city loop') && !description.includes('maint') && !disruption.disruption_status === 'Planned'
   })
 
   let servicesSkippingLoop = []
