@@ -402,7 +402,7 @@ async function getScheduledDepartures(db, station) {
   let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train')
 
   let scheduled = await departureUtils.getScheduledDepartures(station, db, 'regional train', 180)
-  console.log(scheduled)
+
   return (await async.map(scheduled, async departure => {
     return await appendTripData(db, departure, vlinePlatform)
   })).filter(Boolean)

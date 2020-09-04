@@ -4,6 +4,8 @@ const getVLineDepartures = require('../../../modules/vline/get-departures')
 const utils = require('../../../utils')
 const async = require('async')
 const emptyShunts = require('../../../additional-data/empty-shunts.json')
+const TimedCache = require('timed-cache')
+const EventEmitter = require('events')
 
 let defaultStoppingMap = {
   stopsAll: 'Stops All Stations',
@@ -51,6 +53,8 @@ let caulfieldGroup = [
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
+let departuresLock = {}
+let departuresCache = new TimedCache({ defaultTtl: 1000 * 30 })
 
 module.exports = {
   getEmptyShunts: async (station, db) => {
@@ -520,6 +524,21 @@ module.exports = {
   },
   getPIDSDepartures: async (db, station, platform, stoppingTextMap, stoppingTypeMap, maxDepartures=6) => {
     let stationName = station.stopName.slice(0, -16)
+    let cacheKey = `${stationName}${platform}${maxDepartures}`
+
+    if (departuresLock[cacheKey]) {
+      return await new Promise(resolve => {
+        departuresLock[cacheKey].on('done', data => {
+          resolve(data)
+        })
+      })
+    }
+
+    if (departuresCache.get(cacheKey)) {
+      return departuresCache.get(cacheKey)
+    }
+
+    departuresLock[cacheKey] = new EventEmitter()
 
     let allDepartures = await module.exports.getCombinedDepartures(station, db)
     let hasRRB = !!allDepartures.find(d => d.isTrainReplacement)
@@ -575,6 +594,11 @@ module.exports = {
 
     let hasDepartures = allDepartures.length > 0
 
-    return { departures: module.exports.trimDepartureData(platformDepartures, maxDepartures), hasDepartures, hasRRB }
+    let output = { departures: module.exports.trimDepartureData(platformDepartures, maxDepartures), hasDepartures, hasRRB }
+
+    departuresLock[cacheKey].emit('done', output)
+    delete departuresLock[cacheKey]
+
+    return output
   }
 }
