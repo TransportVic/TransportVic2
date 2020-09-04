@@ -4,6 +4,7 @@ const cheerio = require('cheerio')
 const handleChange = require('./modules/handle-change')
 const handleCancellation = require('./modules/handle-cancellation')
 const handleReduction = require('./modules/handle-reduction')
+const handleReinstatement = require('./modules/handle-reinstatement')
 
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
@@ -22,7 +23,7 @@ async function inboundMessage(data) {
   let {subject, html} = data
   let $ = cheerio.load(html)
   let textContent = $('center').text()
-  textContent = textContent.replace(/SCS/g, 'Southern Cross')
+  textContent = textContent.replace(/SCS/g, 'Southern Cross').replace(/Flinders St\.? /g, 'Flinders Street')
 
   handleMessage(subject, textContent)
 }
@@ -31,10 +32,12 @@ async function handleMessage(subject, text) {
   text = text.replace(/\n/g, ' ').replace(/\u00A0/g, ' ').replace(/More information at.+/, '').replace(/  +/g, ' ').trim()
   stream.write(`Got mail: Subject: ${subject}. Text: ${text.replace(/\n/g, ' ')}\n`)
 
-  if (subject.includes('Service cancellation') || text.includes('will not run') || text.includes('has been cancelled')) {
+  if (subject.includes('Service cancellation') || text.includes('will not run') || text.includes('no longer run') || text.includes('has been cancelled')) {
     await handleCancellation(database, text)
   } else if (subject.includes('Service reduction') || text.includes('reduced capacity')) {
     await handleReduction(database, text)
+  } else if (text.includes('been reinstated')) {
+    await handleReinstatement(database, text)
   } else {
     await handleChange(database, text)
   }
