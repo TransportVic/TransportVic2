@@ -13,10 +13,10 @@ require('./modules/vline-mail')
 
 let httpServer = null
 let httpsServer = null
-const mainServer = new MainServer()
+let mainServer = new MainServer()
 
 if (config.useHTTPS) {
-  const redirectServer = new HTTPSRedirectServer()
+  let redirectServer = new HTTPSRedirectServer()
   httpServer = HTTPServer.createServer(redirectServer)
 
   httpsServer = HTTPSServer.createServer(mainServer, config.sslCerts)

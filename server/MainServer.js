@@ -49,27 +49,36 @@ module.exports = class MainServer {
     })
   }
 
+  getAverageResponseTime() {
+    let counts = this.past50ResponseTimes.length
+    let sum = this.past50ResponseTimes.reduce((a, b) => a + b, 0)
+    let average = sum / counts
+
+    return average
+  }
+
   configMiddleware (app) {
-    const stream = fs.createWriteStream('/tmp/log.txt', { flags: 'a' })
-    let excludedURLs = []
+    let stream = fs.createWriteStream('/tmp/log.txt', { flags: 'a' })
+
+    this.past50ResponseTimes = []
 
     app.use((req, res, next) => {
-      const reqURL = req.url + ''
-      const start = +new Date()
+      let reqURL = req.url + ''
+      let start = +new Date()
 
-      const endResponse = res.end
-      res.end = function (x, y, z) {
+      let endResponse = res.end
+      res.end = (x, y, z) => {
         endResponse.bind(res, x, y, z)()
-        const end = +new Date()
+        let end = +new Date()
+        let diff = end - start
 
-        const diff = end - start
-
-        if (diff > 5 && !reqURL.startsWith('/static/') && !excludedURLs.includes(reqURL)) {
+        if (diff > 20 && !reqURL.startsWith('/static/')) {
           stream.write(`${req.method} ${reqURL} ${res.loggingData} ${diff}\n`, () => {})
+
+          this.past50ResponseTimes = [...this.past50ResponseTimes.slice(-49), diff]
+          this.monitorResponseTime()
         }
       }
-
-      res.locals.hostname = config.websiteDNSName
 
       next()
     })
@@ -119,7 +128,7 @@ module.exports = class MainServer {
       if (req.url.startsWith('/.well-known')) {
         try {
           let reqURL = new url.URL('https://transportsg.me' + req.url)
-          const filePath = path.join(config.webrootPath, reqURL.pathname)
+          let filePath = path.join(config.webrootPath, reqURL.pathname)
 
           fs.createReadStream(filePath).pipe(res)
 
@@ -132,7 +141,7 @@ module.exports = class MainServer {
   }
 
   async configRoutes (app) {
-    const routers = {
+    let routers = {
       'mockups/PIDSView': {
         path: '/',
         enable: modules.mockups && modules.mockups.pidsview
@@ -280,8 +289,8 @@ module.exports = class MainServer {
       res.sendFile(path.join(__dirname, '../application/static/app-content/robots.txt'))
     })
 
-    app.get('/health-check', (req, res) => {
-      res.type('text').end('Ok')
+    app.get('/response-stats', (req, res) => {
+      res.json({ status: 'ok', meanResponseTime: this.getAverageResponseTime() })
     })
 
     app.use('/500', (req, res) => { throw new Error('500') })
