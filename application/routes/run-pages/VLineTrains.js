@@ -3,6 +3,7 @@ const moment = require('moment')
 const router = new express.Router()
 const utils = require('../../../utils')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
+const guessPlatform = require('../../../modules/vline/guess-scheduled-platforms')
 
 function giveVariance(time) {
   let minutes = utils.time24ToMinAftMidnight(time)
@@ -148,6 +149,20 @@ async function pickBestTrip(data, db) {
     referenceTrip.runID = tripData.runID
     referenceTrip.consist = tripData.consist
   }
+
+  referenceTrip.stopTimings = referenceTrip.stopTimings.map(stop => {
+    let nspStop = nspTrip && nspTrip.stopTimings.find(nspStop => nspStop.stopGTFSID === stop.stopGTFSID && nspStop.platform)
+
+    if (nspStop) {
+      stop.platform = nspStop.platform + '?'
+    } else {
+      stop.platform = guessPlatform(stop.stopName.slice(0, -16), stop.departureTimeMinutes,
+        referenceTrip.routeName, referenceTrip.direction)
+      if (stop.platform) stop.platform += '?'
+    }
+
+    return stop
+  })
 
   return referenceTrip
 }

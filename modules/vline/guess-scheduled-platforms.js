@@ -167,8 +167,7 @@ module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday)
     'Gisborne',
     'Macedon',
     'Woodend',
-    'Kyneton',
-    'Castlemaine'
+    'Kyneton'
   ]
   if (rfrReverses.includes(stationName)) {
     if (departureTimeMinutes < 9 * 60) { // RFR platform reverse, check time??
