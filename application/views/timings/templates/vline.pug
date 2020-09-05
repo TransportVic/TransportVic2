@@ -6,7 +6,7 @@ for departure in departures
     input(type='hidden' name='run' value=departure.runID)
     input(type='hidden' name='line' value=departure.trip.shortRouteName)
     a.leftContainer.platform.vline
-      if departure.isTrainReplacement
+      if departure.isRailReplacementBus
         span.topText Coach Svc
         //- img(src='/static/clear-icons/regional-coach.svg')
         img(src='/static/images/clear-icons/bus.svg')
@@ -24,7 +24,7 @@ for departure in departures
     a(class=departureClass href=`/vline/timings/${departure.destination.toLowerCase().replace(/ /g, '-')}`)
       span.towards=`${departure.shortRouteName} Line towards`
       span.destination #{departure.destination}
-      if departure.isTrainReplacement
+      if departure.isRailReplacementBus
         span.info.cancelled.noClamp This service has been replaced by coaches
       else if departure.cancelled
         span.info.cancelled CANCELLED

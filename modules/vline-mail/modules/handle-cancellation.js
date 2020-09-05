@@ -25,7 +25,7 @@ async function setServicesAsCancelled(db, services) {
       delete trip._id
       if (isCoach) {
         trip.type = 'replacement coach'
-        trip.isTrainReplacement = true
+        trip.isRailReplacementBus = true
         trip.tripID = trip.tripID + '-RRB'
       } else {
         trip.type = 'cancellation'

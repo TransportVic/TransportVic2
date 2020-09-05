@@ -75,13 +75,13 @@ async function getDeparturesFromPTV(stop, db) {
       let destination = utils.adjustStopName(run.destination_name)
 
       // null: unknown, true: yes, false: no
-      let isTrainReplacement = null
+      let isRailReplacementBus = null
 
-      if (!vlineTrainRoutes.includes(trainRouteGTFSID)) isTrainReplacement = false
+      if (!vlineTrainRoutes.includes(trainRouteGTFSID)) isRailReplacementBus = false
 
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'regional coach', null, coachRouteGTFSID, tripIDsSeen)
 
-      if (!trip && (isTrainReplacement !== false)) {
+      if (!trip && (isRailReplacementBus !== false)) {
         let stopGTFSIDs = {
           $in: allGTFSIDs
         }
@@ -149,7 +149,7 @@ async function getDeparturesFromPTV(stop, db) {
               $upsert: true
             })
 
-            isTrainReplacement = true
+            isRailReplacementBus = true
             break
           }
         }
@@ -167,7 +167,7 @@ async function getDeparturesFromPTV(stop, db) {
         estimatedDepartureTime: null,
         actualDepartureTime: scheduledDepartureTimeMinutes,
         destination,
-        isTrainReplacement: isTrainReplacement
+        isRailReplacementBus: isRailReplacementBus
       })
     })
   })
@@ -211,7 +211,7 @@ async function getDepartures(stop, db) {
     } catch (e) {
       departures = await getScheduledDepartures(stop, db, false)
       departures = departures.map(departure => {
-        departure.isTrainReplacement = null
+        departure.isRailReplacementBus = null
         return departure
       })
     }
@@ -238,7 +238,7 @@ async function getDepartures(stop, db) {
         departure.bay = busBays[departureBayID]
       }
 
-      if (departure.isTrainReplacement === null) {
+      if (departure.isRailReplacementBus === null) {
         let {origin, destination, departureTime} = departure.trip
         if (origin === 'Southern Cross Coach Terminal/Spencer Street') {
           origin = 'Southern Cross Railway Station'
@@ -253,7 +253,7 @@ async function getDepartures(stop, db) {
           'stopTimings.stopName': destination,
           departureTime
         })
-        departure.isTrainReplacement = !!nspDeparture
+        departure.isRailReplacementBus = !!nspDeparture
         if (nspDeparture) {
           departure.shortRouteName = nspDeparture.routeName
         }
@@ -263,7 +263,7 @@ async function getDepartures(stop, db) {
 
     let trainReplacements = []
     departures.forEach(departure => {
-      if (departure.isTrainReplacement) {
+      if (departure.isRailReplacementBus) {
         trainReplacements.push({
           routeGTFSID: departure.trip.routeGTFSID,
           departureTime: departure.trip.stopTimings[0].departureTime,
@@ -274,7 +274,7 @@ async function getDepartures(stop, db) {
     })
 
     departures = departures.map(departure => {
-      if (!departure.isTrainReplacement) {
+      if (!departure.isRailReplacementBus) {
         let combinedTR = trainReplacements.find(t => {
           return t.routeGTFSID === departure.trip.routeGTFSID
             && t.departureTime === departure.trip.stopTimings[0].departureTime
@@ -282,7 +282,7 @@ async function getDepartures(stop, db) {
         })
 
         if (combinedTR) {
-          departure.isTrainReplacement = true
+          departure.isRailReplacementBus = true
           departure.shortRouteName = combinedTR.shortRouteName
         }
       }

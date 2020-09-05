@@ -72,7 +72,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - LED PIDS display found at suburban stations like Pakenham, Lilydale and Croydon
 
 - GeoJSON visualiser, cos why not
-- Checks disruptions whenever requesting for metro train departures - looks for suspended regions and adds a message / marks `isTrainReplacement` (need to rename to `isBusReplacement`)
+- Checks disruptions whenever requesting for metro train departures - looks for suspended regions and adds a message / marks `isRailReplacementBus` (need to rename to `isBusReplacement`)
 - Stop merging in place
   - Roads do not get merged, see commit [0c3cf46](https://github.com/TransportVic/TransportVic2/commit/0c3cf45222eb2d94bc1e26cc6a95b862218a441f)
   - Looks for stops with the same primary stop name: Primary Stop Name/Road Name (Suburb)

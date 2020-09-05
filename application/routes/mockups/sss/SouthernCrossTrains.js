@@ -585,7 +585,7 @@ module.exports = async (platforms, db) => {
 
   let mtmDepartures = (await async.map(await getMetroDepartures(sss, db, false), async d => {
     return await appendMetroData(d, timetables)
-  })).filter(e => !e.isTrainReplacement && !e.cancelled)
+  })).filter(e => !e.isRailReplacementBus && !e.cancelled)
 
   let formingIDsSeen = []
   let allArrivals = (await async.map(arrivals.concat(scheduledArrivals).sort((a, b) => a.destinationArrivalTime - b.destinationArrivalTime), async d => {

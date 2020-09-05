@@ -562,8 +562,8 @@ module.exports = {
     departuresLock[cacheKey] = new EventEmitter()
 
     let allDepartures = await module.exports.getCombinedDepartures(station, db)
-    let hasRRB = !!allDepartures.find(d => d.isTrainReplacement)
-    allDepartures = allDepartures.filter(d => !d.isTrainReplacement)
+    let hasRRB = !!allDepartures.find(d => d.isRailReplacementBus)
+    allDepartures = allDepartures.filter(d => !d.isRailReplacementBus)
     let platformDepartures = module.exports.filterPlatforms(allDepartures, platform)
 
     let arrivals = await module.exports.getEmptyShunts(station, db)

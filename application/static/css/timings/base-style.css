@@ -164,6 +164,10 @@ a.departureInfo span.noClamp {
   width: calc(100vw - (5vw + 5vh) - (5.2vw + 5.8vh) - (1vw + 1vh) - 1.5vw) !important;
 }
 
+div.departure.no-number a.departureInfo span.noClamp {
+  width: calc(100vw - (5.2vw + 5.8vh) - (1vw + 1vh) - 1.5vw) !important;
+}
+
 a.departureInfo span.info.smaller {
   line-height: calc(1.2vw + 1.2vh) !important;
 }
@@ -191,9 +195,9 @@ a.departureInfo span.full {
 
 a.departureInfo span.cancelled {
   font-size: calc(1.1vw + 1.1vh);
+  line-height: calc(1.1vw + 1.1vh);
   color: #e03549;
 }
-
 
 div.departure.no-number a.departureInfo span.routeName {
   font-size: calc(1vw + 1vh);

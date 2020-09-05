@@ -245,22 +245,22 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let platform = departure.platform_number
     let runDestination = utils.adjustStopName(run.destination_name)
     let cancelled = run.status === 'cancelled'
-    let isTrainReplacement = false
+    let isRailReplacementBus = false
 
     let suspensions = departure.disruption_ids.map(id => suspensionMap[id]).filter(Boolean)
 
     if (platform == null) { // show replacement bus
-      isTrainReplacement = departure.flags.includes('RRB-RUN')
+      isRailReplacementBus = departure.flags.includes('RRB-RUN')
       run.vehicle_descriptor = {}
     }
 
-    if (routeID === 13 && !isTrainReplacement) { // stony point platforms
+    if (routeID === 13 && !isRailReplacementBus) { // stony point platforms
       if (station.stopName === 'Frankston Railway Station') platform = '3'
       else platform = '1'
       run.vehicle_descriptor = {} // ok maybe we should have kept the STY timetable but ah well
     }
 
-    if (!platform && !isTrainReplacement) return
+    if (!platform && !isRailReplacementBus) return
 
     const runID = run.vehicle_descriptor.id || ''
     const vehicleType = run.vehicle_descriptor.description
@@ -282,7 +282,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
     let possibleLines = [routeName]
 
-    if (cityLoopStations.includes(stationName) || isTrainReplacement) {
+    if (cityLoopStations.includes(stationName) || isRailReplacementBus) {
       if (burnleyGroup.includes(routeID))
         possibleLines = ['Alamein', 'Belgrave', 'Glen Waverley', 'Lilydale']
       else if (caulfieldGroup.includes(routeID))
@@ -316,14 +316,14 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     }
 
     let direction = isUpTrip ? 'Up' : 'Down'
-    if (isTrainReplacement) direction = { $in: ['Up', 'Down'] }
+    if (isRailReplacementBus) direction = { $in: ['Up', 'Down'] }
 
     let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== 'Flinders Street'
     let isSCS = stationName === 'Southern Cross'
     let isFSS = stationName === 'Flinders Street'
 
     // let isUpTrip = ((trip || {}).direction === 'Up' || runID % 2 === 0) && !isFormingNewTrip
-    let cityLoopConfig = !isTrainReplacement ? determineLoopRunning(routeID, runID, runDestination, isFormingNewTrip, isSCS) : []
+    let cityLoopConfig = !isRailReplacementBus ? determineLoopRunning(routeID, runID, runDestination, isFormingNewTrip, isSCS) : []
 
     if (isUpTrip && !cityLoopStations.includes(runDestination) &&
       !cityLoopStations.includes(stationName) && runDestination !== 'Flinders Street')
@@ -375,7 +375,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
     if (!trip) { // still no match - getStoppingPattern
       if (replacementBusDepartures.includes(scheduledDepartureTimeMinutes)) {
-        if (isTrainReplacement && suspensions.length === 0) return // ok this is risky but bus replacements actually seem to do it the same way as vline
+        if (isRailReplacementBus && suspensions.length === 0) return // ok this is risky but bus replacements actually seem to do it the same way as vline
       }
 
       trip = await getStoppingPattern(db, departure.run_id, 'metro train', scheduledDepartureTime.toISOString())
@@ -394,7 +394,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       let replacement = stonyPointReplacements.find(r => {
         return r.origin === trip.origin.slice(0, -16) && r.departureTime === trip.departureTime
       })
-      if (replacement) isTrainReplacement = true
+      if (replacement) isRailReplacementBus = true
     }
 
     let skippingLoop = servicesSkippingLoop.find(r => {
@@ -431,8 +431,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       if (firstSuspension) {
         message = `Buses replace trains from ${firstSuspension.startStation.slice(0, -16)} to ${firstSuspension.endStation.slice(0, -16)}`
 
-        if (!isTrainReplacement) {
-          isTrainReplacement = !!mappedSuspensions.find(suspension => suspension.disruptionStatus === 'current')
+        if (!isRailReplacementBus) {
+          isRailReplacementBus = !!mappedSuspensions.find(suspension => suspension.disruptionStatus === 'current')
         }
       }
     }
@@ -448,7 +448,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       estimatedDepartureTime,
       actualDepartureTime,
       platform,
-      isTrainReplacement,
+      isRailReplacementBus,
       cancelled, cityLoopConfig,
       destination, runID, vehicleType, runDestination,
       suspensions: mappedSuspensions,

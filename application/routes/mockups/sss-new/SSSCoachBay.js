@@ -44,7 +44,7 @@ router.post('/', async (req, res) => {
     }).map(stop => getHumanName(stop.stopName, stop.suburb))
       .filter((e, i, a) => a.indexOf(e) === i).slice(1)
 
-    if (departure.isTrainReplacement) {
+    if (departure.isRailReplacementBus) {
       let bay = '64'
       let line = departure.shortRouteName
 
@@ -88,7 +88,7 @@ router.post('/', async (req, res) => {
       destination: departure.destination.replace(/Railway Station.*/, '').trim(),
       departureTime: departure.trip.departureTime,
       stopsAt,
-      isTrainReplacement: departure.isTrainReplacement,
+      isRailReplacementBus: departure.isRailReplacementBus,
       connections: (departure.trip.connections || []).filter(connection => {
         return connection.operationDays.includes(departureDay)
       }).map(connection => ({

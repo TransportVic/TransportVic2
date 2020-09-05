@@ -17,7 +17,7 @@ for departure in departures
       let cityLoopStationFullNames = departure.cityLoopConfig.map(stn => cityLoopStationAbbreviations[stn])
       
       let routeName = departure.trip.routeName
-      if (!departure.isTrainReplacement) {
+      if (!departure.isRailReplacementBus) {
         stopsAt = stopsAt.filter(station => !cityLoopStationNames.includes(station))
         
         if (departure.trip.direction === 'Up')
@@ -40,7 +40,7 @@ for departure in departures
       let cssClass = `${departure.codedLineName}-line`
       if (routeName === 'City Circle') cssClass = 'city-circle'
     a(class=`leftContainer platform ${cssClass}`)
-      if departure.isTrainReplacement
+      if departure.isRailReplacementBus
         span.topText Rail Bus
         img(src='/static/images/clear-icons/bus.svg')
       else
@@ -59,7 +59,7 @@ for departure in departures
         span.info.cancelled CANCELLED
       else if departure.message
         span.info.cancelled.noClamp #{departure.message}
-      else if departure.isTrainReplacement
+      else if departure.isRailReplacementBus
         span.info.cancelled Rail Replacement Bus
       else if departure.consist.length
         span.info Detected Consist: #{departure.consist.join(', ')}

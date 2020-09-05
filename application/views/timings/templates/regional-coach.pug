@@ -3,13 +3,13 @@ for departure in departures
     a.departureInfo
       -
         let routeName = departure.trip.routeName
-        if (departure.isTrainReplacement) {
+        if (departure.isRailReplacementBus) {
           routeName = `V/Line ${departure.shortRouteName} Line Rail Replacement`
         }
       span.routeName #{routeName}
       span.towards Towards
       span.destination=departure.destination
-      if departure.isTrainReplacement
+      if departure.isRailReplacementBus
         -
           let message = 'This is a train replacement coach'
           if (stop.stopName === 'Southern Cross Coach Terminal/Spencer Street') message += ', departing Bays 62 - 70'

@@ -488,7 +488,7 @@ async function getDepartures(station, db) {
 
     try {
       coachReplacements = JSON.parse(JSON.stringify(scheduledCoachReplacements))
-        .filter(coach => coach.isTrainReplacement)
+        .filter(coach => coach.isRailReplacementBus)
         .map(coach => {
           coach.scheduledDepartureTime = utils.parseTime(coach.scheduledDepartureTime)
           coach.actualDepartureTime = utils.parseTime(coach.actualDepartureTime)

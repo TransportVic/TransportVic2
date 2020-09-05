@@ -93,9 +93,7 @@ module.exports = class MainServer {
       }))
     }
 
-    app.use('/static', express.static(path.join(__dirname, '../application/static'), {
-      maxAge: 31557600
-    }))
+    app.use('/static', express.static(path.join(__dirname, '../application/static')))
 
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(bodyParser.json())

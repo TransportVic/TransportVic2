@@ -64,7 +64,7 @@ function updateBody() {
           $('p.stopsAt', departureDiv).textContent = 'Stops At: ' + departure.stopsAt.join(', ')
           $('p.information', departureDiv).innerHTML = ''
 
-          if (departure.isTrainReplacement) {
+          if (departure.isRailReplacementBus) {
             $('p.information', departureDiv).innerHTML += '<span class="important">Train Replacement Coach</span> '
             $('p.information', departureDiv).className = 'information important'
           } else {
