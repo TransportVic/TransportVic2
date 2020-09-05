@@ -13,7 +13,7 @@ const getStonyPoint = require('../get-stony-point')
 
 let ptvAPILocks = {}
 
-let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central']
+let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 let burnleyGroup = [1, 2, 7, 9] // alamein, belgrave, glen waverley, lilydale
 let caulfieldGroup = [4, 6, 11, 12] // cranbourne, frankston, pakenham, sandringham
@@ -130,18 +130,18 @@ function adjustSuspension(suspension, trip, currentStation) {
 }
 
 async function getDeparturesFromPTV(station, db, departuresCount, platform) {
-  const gtfsTimetables = db.getCollection('gtfs timetables')
-  const timetables = db.getCollection('timetables')
-  const liveTimetables = db.getCollection('live timetables')
+  let gtfsTimetables = db.getCollection('gtfs timetables')
+  let timetables = db.getCollection('timetables')
+  let liveTimetables = db.getCollection('live timetables')
 
-  const minutesPastMidnight = utils.getMinutesPastMidnightNow()
+  let minutesPastMidnight = utils.getMinutesPastMidnightNow()
   let transformedDepartures = []
 
   let now = utils.now()
 
-  const metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
+  let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
   let {stopGTFSID} = metroPlatform
-  const stationName = station.stopName.slice(0, -16).toLowerCase()
+  let stationName = station.stopName.slice(0, -16)
   let {departures, runs, routes, disruptions} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=run&expand=route&expand=disruption`)
 
   let suspensionMap = {}
@@ -318,8 +318,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     if (isTrainReplacement) direction = { $in: ['Up', 'Down'] }
 
     let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== 'Flinders Street'
-    let isSCS = station.stopName.slice(0, -16) === 'Southern Cross'
-    let isFSS = station.stopName.slice(0, -16) === 'Flinders Street'
+    let isSCS = stationName === 'Southern Cross'
+    let isFSS = stationName === 'Flinders Street'
 
     // let isUpTrip = ((trip || {}).direction === 'Up' || runID % 2 === 0) && !isFormingNewTrip
     let cityLoopConfig = !isTrainReplacement ? determineLoopRunning(routeID, runID, runDestination, isFormingNewTrip, isSCS) : []
@@ -402,6 +402,12 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
     let willSkipLoop = skippingLoop || linesSkippingLoop.includes(routes[routeID].route_gtfs_id)
     if (willSkipLoop) {
+      if (cityLoopStations.includes(stationName)) {
+        if (northernGroup.includes(routeID)) {
+          if (!isSCS) return
+        } else return
+      }
+
       if (northernGroup.includes(routeID)) cityLoopConfig = ['NME', 'SSS', 'FSS']
       else if (cliftonHillGroup.includes(routeID)) cityLoopConfig = ['JLI', 'FSS']
       else cityLoopConfig = ['RMD', 'FSS']
@@ -413,7 +419,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       }
     }
 
-    if (routeID === 99 && stationName === 'flinders street') destination = 'City Loop'
+    if (routeID === 99 && stationName === 'Flinders Street') destination = 'City Loop'
 
     let message = ''
 
