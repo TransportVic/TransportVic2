@@ -3,8 +3,8 @@ extends ../layout
 block head
   -
     let tripName = `${trip.departureTime} ${trip.origin.slice(0, -16)} to ${trip.destination.slice(0, -16)}`
-    title = `TransportVic - ${title}`
-    description = `Viewing the ${title}`
+    title = `TransportVic - ${tripName}`
+    description = `Viewing the ${tripName}`
     themeColour = '#6b4d9e'
 
   title #{title}
