@@ -3,6 +3,7 @@ extends ../layout
 block head
   -
     let tripName = `${trip.trueDepartureTime} ${trip.trueOrigin.slice(0, -16)} to ${trip.trueDestination.slice(0, -16)}`
+    if (trip.routeGTFSID === '2-CCL') tripName = `${trip.trueDepartureTime} City Circle`
     title = `TransportVic - ${title}`
     description = `Viewing the ${title}`
     themeColour = '#0570c3'
