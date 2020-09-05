@@ -1,10 +1,14 @@
-for departure in departures
-  div.departure.no-number
-    a(href=departure.destinationURL).departureInfo
-      span.routeName #{departure.trip.routeName}
-      span.towards Towards
-      span.destination #{departure.destination}
-    div.timings
-      a(href=departure.tripURL).timing.unknown
-        span #{departure.prettyTimeToArrival}
-        span #{departure.scheduledDepartureTime.format('HH:mm')}
+if departures.length
+  for departure in departures
+    div.departure.no-number
+      a(href=departure.destinationURL).departureInfo
+        span.routeName #{departure.trip.routeName}
+        span.towards Towards
+        span.destination #{departure.destination}
+      div.timings
+        a(href=departure.tripURL).timing.unknown
+          span #{departure.prettyTimeToArrival}
+          span #{departure.scheduledDepartureTime.format('HH:mm')}
+else
+  div.errorPage
+    h2 No Upcoming Departures...

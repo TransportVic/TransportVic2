@@ -39,7 +39,7 @@
 }
 
 .modeSwitchType.heritage-train {
-  background-color: #593915;
+  background-color: #5e401f;
 }
 
 .modeSwitchType img {
@@ -60,6 +60,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+div#textbar-container ~ div#modeSwitch ~ div#departures > div.errorPage {
+  height: calc(96vh - 4vw - (4vw + 4vh) - (5vw + 5vh));
+}
+
+div#modeSwitch:nth-child(1) ~ div#departures > div.errorPage {
+  height: calc(96vh - 4vw - (4vw + 4vh));
+}
+
+div#textbar-container ~ div#departures > div.errorPage {
+  height: calc(96vh - 4vw - (5vw + 5vh));
 }
 
 div.departure {
