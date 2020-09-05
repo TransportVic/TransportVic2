@@ -75,7 +75,22 @@ function filterRuns(query) {
   })
 }
 
+let isFocused = true
+let lostFocusTime
+
+function checkFocus() {
+  isFocused = document.hasFocus()
+  if (!isFocused) {
+    lostFocusTime = new Date()
+  }
+}
+
 function updateBody() {
+  if (!isFocused) {
+    let timeDiff = new Date() - lostFocusTime
+    if (timeDiff > 5 * 60 * 1000) return
+  }
+
   $.ajax({ method: 'POST' }, (err, status, body) => {
     if (!err && status === 200) {
       $('#departures').innerHTML = body
@@ -86,6 +101,10 @@ function updateBody() {
     }
   })
 }
+
+document.on("visibilitychange", checkFocus)
+window.on("focus", checkFocus)
+window.on("blur", checkFocus)
 
 $.ready(() => {
   if ($('#textbar')) {
@@ -125,4 +144,5 @@ $.ready(() => {
   })
 
   setInterval(updateBody, 30 * 1000)
+  checkFocus()
 })

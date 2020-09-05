@@ -11,6 +11,7 @@ HTMLElement.prototype.toggleClass = function(className) {
 }
 
 Window.prototype.on = Window.prototype.addEventListener
+Document.prototype.on = Document.prototype.addEventListener
 
 Object.defineProperty(XMLHttpRequest.prototype, 'responseJSON', {
   get: function () {

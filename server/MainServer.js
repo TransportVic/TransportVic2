@@ -76,7 +76,6 @@ module.exports = class MainServer {
           stream.write(`${req.method} ${reqURL} ${res.loggingData} ${diff}\n`, () => {})
 
           this.past50ResponseTimes = [...this.past50ResponseTimes.slice(-49), diff]
-          this.monitorResponseTime()
         }
       }
 
