@@ -172,7 +172,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let timetable = {
     mode, routeName,
     routeGTFSID,
-    routeNumber: referenceTrip ? referenceTrip.routeNumber : routeData.route_number,
+    routeNumber: referenceTrip ? referenceTrip.routeNumber : route.routeNumber,
     routeDetails: referenceTrip ? referenceTrip.routeDetails : null,
     runID: vehicleDescriptor.id,
     operationDays: [tripOperationDay],
