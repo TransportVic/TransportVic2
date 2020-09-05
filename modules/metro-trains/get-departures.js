@@ -25,7 +25,7 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip, isS
   if (routeID === 13) return [] // stony point
 
   let upService = !(runID[3] % 2)
-  let throughCityLoop = runID[1] > 5 || cityLoopStations.includes(destination.toLowerCase()) && destination !== 'Southern Cross'
+  let throughCityLoop = runID[1] > 5 || cityLoopStations.includes(destination) && destination !== 'Southern Cross'
   if (routeID === 6 && destination == 'Southern Cross' && isFormingNewTrip) {
     throughCityLoop = false
   }
@@ -325,7 +325,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     // let isUpTrip = ((trip || {}).direction === 'Up' || runID % 2 === 0) && !isFormingNewTrip
     let cityLoopConfig = !isTrainReplacement ? determineLoopRunning(routeID, runID, runDestination, isFormingNewTrip, isSCS) : []
 
-    if (isUpTrip && !cityLoopStations.includes(runDestination.toLowerCase()) &&
+    if (isUpTrip && !cityLoopStations.includes(runDestination) &&
       !cityLoopStations.includes(stationName) && runDestination !== 'Flinders Street')
       cityLoopConfig = []
 

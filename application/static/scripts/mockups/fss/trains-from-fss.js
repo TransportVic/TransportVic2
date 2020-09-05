@@ -133,7 +133,7 @@ let lineColours = {
   'Upfield': 'FFBE00',
   'Werribee': '028430',
   'Williamstown': '028430',
-  'City Loop': '000000',
+  'City Circle': '000000',
   'Showgrounds/Flemington': 'CE0058'
 }
 
