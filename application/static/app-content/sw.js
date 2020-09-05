@@ -91,6 +91,7 @@ self.addEventListener('install', e => {
       '/static/images/icons/siemens.svg',
       '/static/images/icons/xtrapolis.svg',
       '/static/images/icons/hcmt.svg',
+      '/static/images/icons/hitachi.svg',
 
       '/static/images/icons/n.svg',
       '/static/images/icons/sprinter.svg',
