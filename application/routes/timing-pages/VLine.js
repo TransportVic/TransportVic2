@@ -54,7 +54,8 @@ async function loadDepartures(req, res) {
 }
 
 router.get('/:stationName', async (req, res) => {
-  res.render('timings/vline', await loadDepartures(req, res))
+  let response = await loadDepartures(req, res)
+  if (response) res.render('timings/vline', response)
 })
 
 router.post('/:stationName', async (req, res) => {

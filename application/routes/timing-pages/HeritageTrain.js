@@ -51,7 +51,8 @@ async function loadDepartures(req, res) {
 }
 
 router.get('/:stopName', async (req, res) => {
-  res.render('timings/heritage', await loadDepartures(req, res))
+  let response = await loadDepartures(req, res)
+  if (response) res.render('timings/heritage', response)
 })
 
 router.post('/:stopName', async (req, res) => {

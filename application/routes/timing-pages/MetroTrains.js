@@ -76,7 +76,8 @@ async function loadDepartures(req, res) {
 }
 
 router.get('/:stationName', async (req, res) => {
-  res.render('timings/metro-trains', await loadDepartures(req, res))
+  let response = await loadDepartures(req, res)
+  if (response) res.render('timings/metro-trains', response)
 })
 
 router.post('/:stationName', async (req, res) => {

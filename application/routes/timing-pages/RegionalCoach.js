@@ -51,7 +51,8 @@ async function loadDepartures(req, res) {
 }
 
 router.get('/:stopName', async (req, res) => {
-  res.render('timings/regional-coach', await loadDepartures(req, res))
+  let response = await loadDepartures(req, res)
+  if (response) res.render('timings/regional-coach', response)
 })
 
 router.post('/:stopName', async (req, res) => {

@@ -114,7 +114,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
         .filter(bay => checkModes.includes(bay.mode))[0]
     }
 
-    let departureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
+    let departureTimeMinutes = utils.getMinutesPastMidnight(scheduledDepartureTime)
 
     let stopTiming = {
       stopName: stopBay.fullStopName,

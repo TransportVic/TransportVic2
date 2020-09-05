@@ -123,7 +123,8 @@ async function loadDepartures(req, res) {
 }
 
 router.get('/:suburb/:stopName', async (req, res) => {
-  res.render('timings/grouped', await loadDepartures(req, res))
+  let response = await loadDepartures(req, res)
+  if (response) res.render('timings/grouped', response)
 })
 
 router.post('/:suburb/:stopName', async (req, res) => {
