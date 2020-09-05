@@ -175,7 +175,7 @@ module.exports = [
   'coburg-north/batman-railway-station',
   'coburg-north/merlynston-railway-station',
   'epping/epping-railway-station',
-  'epping/epping-plaza-shopping-centre',
+  'epping/epping-plaza-shopping-centre-cooper-street',
   'mernda/mernda-village-shopping-centre',
   'preston/preston-railway-station',
   'sunshine-north/albion-railway-station',

@@ -6,4 +6,6 @@ node $DIRNAME/load-routes.js
 node $DIRNAME/load-gtfs-timetables.js
 node $DIRNAME/extra/load-connections.js
 
+node $DIRNAME/../vline-trains/extra/load-vline-timetables.js
+
 rm -r $DIRNAME/../spliced-gtfs-stuff/5
