@@ -197,7 +197,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
   let cityLoopSkipping = Object.values(disruptions).filter(disruption => {
     let description = disruption.description.toLowerCase()
-    return description.includes('direct to') && description.includes('not via the city loop') && !description.includes('maint') && !disruption.disruption_status === 'Planned'
+    return description.includes('direct to') && description.includes('not via the city loop') && !description.includes('maint') && disruption.disruption_type !== 'Planned Works'
   })
 
   let servicesSkippingLoop = []
@@ -210,6 +210,24 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       linesSkippingLoop = linesSkippingLoop.concat(disruption.routes.map(r => r.route_gtfs_id))
     }
   })
+
+  // PTV likes to leave stuff out
+
+  if (linesSkippingLoop.includes('2-HBG') || linesSkippingLoop.includes('2-MER')) {
+    linesSkippingLoop = linesSkippingLoop.concat(['2-HBG', '2-MER'])
+  }
+
+  if (linesSkippingLoop.includes('2-BEL') || linesSkippingLoop.includes('2-LIL') || linesSkippingLoop.includes('2-GLW') || linesSkippingLoop.includes('2-ALM')) {
+    linesSkippingLoop = linesSkippingLoop.concat(['2-BEL', '2-LIL', '2-GLW', '2-ALM'])
+  }
+
+  if (linesSkippingLoop.includes('2-CRB') || linesSkippingLoop.includes('2-PKM') || linesSkippingLoop.includes('2-FKN') || linesSkippingLoop.includes('2-SDM')) {
+    linesSkippingLoop = linesSkippingLoop.concat(['2-CRB', '2-PKM', '2-FKN', '2-SDM'])
+  }
+
+  if (linesSkippingLoop.includes('2-WBE') || linesSkippingLoop.includes('2-WMN') || linesSkippingLoop.includes('2-UFD') || linesSkippingLoop.includes('2-B31') || linesSkippingLoop.includes('2-SYM')) {
+    linesSkippingLoop = linesSkippingLoop.concat(['2-WBE', '2-WMN', '2-UFD', '2-B31', '2-SYM'])
+  }
 
   let replacementBuses = departures.filter(departure => departure.flags.includes('RRB-RUN'))
   let trains = departures.filter(departure => !departure.flags.includes('RRB-RUN'))
