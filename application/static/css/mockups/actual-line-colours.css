@@ -37,7 +37,7 @@ div.vline {
   background-color: #753F98;
 }
 
-div.city-loop {
+div.city-circle {
   background-color: #000000;
 }
 
@@ -87,7 +87,7 @@ p.vline {
   color: #ffffff;
 }
 
-p.city-loop {
+p.city-circle {
   background-color: #000000;
   color: #ffffff;
 }
@@ -174,7 +174,7 @@ div.platform.vline {
   color: #ffffff;
 }
 
-div.platform.city-loop {
+div.platform.city-circle {
   background-color: #000000;
   color: #ffffff;
 }

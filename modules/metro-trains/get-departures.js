@@ -281,6 +281,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       possibleDestinations.push('Flinders Street')
 
     let possibleLines = [routeName]
+
     if (cityLoopStations.includes(stationName) || isTrainReplacement) {
       if (burnleyGroup.includes(routeID))
         possibleLines = ['Alamein', 'Belgrave', 'Glen Waverley', 'Lilydale']
@@ -295,15 +296,15 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       if (routeID == 6)
         possibleLines = [...possibleLines, 'Cranbourne', 'Pakenham']
 
-      if (routeID == 99)
-        possibleLines = ['City Circle']
-
       possibleDestinations.push('Flinders Street')
     } else {
       if ((routeName === 'Pakenham' || routeName === 'Cranbourne') && destination === 'Parliament') {
         possibleDestinations.push('Flinders Street')
       }
     }
+
+    if (routeID == 99)
+      possibleLines = ['City Circle']
 
     // gtfs timetables
     possibleDestinations = possibleDestinations.map(dest => dest + ' Railway Station')

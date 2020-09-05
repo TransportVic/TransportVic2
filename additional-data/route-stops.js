@@ -653,7 +653,7 @@ let lines = {
     'Syndal',
     'Glen Waverley'
   ],
-  'City Loop': [
+  'City Circle': [
     'Parliament',
     'Melbourne Central',
     'Flagstaff',
@@ -710,7 +710,7 @@ function getLineStops(lineName, destination) {
   if (lineName === 'Glen Waverley') return lines['Glen Waverley']
   if (lineName === 'Mernda') return lines.Mernda
   if (lineName === 'Hurstbridge') return lines.Hurstbridge
-  if (lineName === 'City Loop') return lines['City Loop']
+  if (lineName === 'City Circle') return lines['City Circle']
   if (lineName === 'Melbourne - Sydney') return lines.Sydney
 }
 

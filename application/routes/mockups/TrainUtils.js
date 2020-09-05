@@ -54,7 +54,7 @@ let caulfieldGroup = [
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 let departuresLock = {}
-let departuresCache = new TimedCache({ defaultTtl: 1000 * 30 })
+let departuresCache = new TimedCache({ defaultTtl: 1000 * 5 })
 
 module.exports = {
   getEmptyShunts: async (station, db) => {
@@ -228,7 +228,7 @@ module.exports = {
       } else {
         lineStops = [...cityLoopStops, ...lineStops]
       }
-      if (lineName === 'City Loop') {
+      if (lineName === 'City Circle') {
         return lineStops
       }
     } else if (type === 'vline') {
@@ -278,7 +278,7 @@ module.exports = {
     return lineStops.filter((e, i, a) => a.indexOf(e) === i)
   },
   trimTrip: (isUp, stopTimings, fromStation, routeName, willSkipLoop) => {
-    if (routeName === 'City Loop') return stopTimings
+    if (routeName === 'City Circle') return stopTimings
     if (isUp) {
       let hasSeenFSS = false
       let destStop = 'Flinders Street'
