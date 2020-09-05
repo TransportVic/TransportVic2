@@ -321,20 +321,29 @@ module.exports = {
     let body
     let error
 
+    let baseOptions = {
+      timeout: 1500,
+      gzip: true
+    }
+    let fullOptions
+    if (typeof options[0] === 'string') {
+      fullOptions = {
+        ...baseOptions,
+        ...(options[1] || {})
+      }
+    } else {
+      fullOptions = {
+        ...baseOptions,
+        ...options[0]
+      }
+    }
+
     for (let i = 0; i < 3; i++) {
       try {
         if (typeof options[0] === 'string') {
-          body = await request(options[0], {
-            timeout: 2500,
-            gzip: true,
-            ...(options[1] || {})
-          })
+          body = await request(options[0], fullOptions)
         } else {
-          body = await request({
-            timeout: 2500,
-            gzip: true,
-            ...options[0]
-          })
+          body = await request(fullOptions)
         }
 
         break
