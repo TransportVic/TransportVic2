@@ -3,7 +3,7 @@ const moment = require('moment')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const nameModifier = require('../../additional-data/bus-stop-name-modifier')
-const cityLoopRoute = require('./city-loop.json')
+const cityCircleRoute = require('./city-circle.json')
 
 const fixTripDestination = require('../metro-trains/fix-trip-destinations')
 
@@ -50,7 +50,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let route = await routesCollection.findDocument({ routeGTFSID })
 
   if (routeData.route_id === 99) {
-    route = cityLoopRoute
+    route = cityCircleRoute
     routeGTFSID = '2-CCL'
   }
 
@@ -155,8 +155,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     if (routeGTFSID === '2-CCL') direction = 'Down'
   }
 
-  let routeName = routeData.route_name.trim()
-  if (routeGTFSID === '2-ain') routeName = 'Showgrounds/Flemington'
+  let routeName = route.routeName
 
   let cancelled
   if (mode === 'metro train') {

@@ -296,7 +296,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
         possibleLines = [...possibleLines, 'Cranbourne', 'Pakenham']
 
       if (routeID == 99)
-        possibleLines = ['City Loop']
+        possibleLines = ['City Circle']
 
       possibleDestinations.push('Flinders Street')
     } else {

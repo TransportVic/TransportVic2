@@ -36,7 +36,10 @@ for departure in departures
     input(type='hidden' name='line' value=routeName)
     if departure.cancelled
       input(type='hidden' name='cancelled')
-    a(class=`leftContainer platform ${departure.codedLineName}-line`)
+    -
+      let cssClass = `${departure.codedLineName}-line`
+      if (routeName === 'City Circle') cssClass = 'city-circle'
+    a(class=`leftContainer platform ${cssClass}`)
       if departure.isTrainReplacement
         span.topText Rail Bus
         img(src='/static/images/clear-icons/bus.svg')
@@ -44,7 +47,10 @@ for departure in departures
         span.topText Platform
         span.bigNumber #{departure.platform || '?'}
     a(href=departure.destinationURL).departureInfo
-      span.towards #{routeName} Line towards
+      -
+        let prettyLineName = `${routeName} Line`
+        if (routeName === 'City Circle') prettyLineName = routeName
+      span.towards #{prettyLineName} towards
       span.destination #{departure.destination}
       
       if departure.message && !departure.suspensions.length

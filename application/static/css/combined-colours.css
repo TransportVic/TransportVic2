@@ -608,11 +608,11 @@
   background-color: #ba0352 !important;
 }
 
-.city-loop-line {
+.city-circle {
   background-color: #8f8f8f !important;
 }
 
-:nth-child(even) > .city-loop-line {
+:nth-child(even) > .city-circle {
   background-color: #636363 !important;
 }
 

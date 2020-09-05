@@ -1,6 +1,6 @@
 {
-  "routeName" : "City Loop Line",
-  "codedName" : "city-loop-line",
+  "routeName" : "City Circle",
+  "codedName" : "city-circle",
   "routeNumber" : null,
   "routeGTFSID" : "2-CCL",
   "operators" : [
@@ -8,7 +8,7 @@
   ],
   "directions" : [
     {
-      "directionName" : "City Loop (Anti-Clockwise)",
+      "directionName" : "City Circle (Anti-Clockwise)",
       "gtfsDirection" : 0,
       "trainDirection" : "Down",
       "stops" : [
@@ -39,7 +39,7 @@
       ]
     },
     {
-      "directionName" : "City Loop (Clockwise)",
+      "directionName" : "City Circle (Clockwise)",
       "gtfsDirection" : 1,
       "trainDirection" : "Up",
       "stops" : [
