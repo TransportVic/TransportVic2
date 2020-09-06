@@ -24,14 +24,14 @@ if stopModes.length > 1
     for mode in stopModes
       -
         let url = `/${iconMap[mode] || mode.replace(' ', '-')}/timings/`
-        if (mode === 'bus' || mode === 'tram') 
+        if (mode === 'bus' || mode === 'tram' || mode === 'regional coach') 
           url += `${stopToUse.codedSuburb[0]}/`
         url += stopToUse.codedName
         if (mode.includes('train'))
           url = url.slice(0, -16)
           
         if (mode === 'regional coach' && stopToUse.stopName === 'Southern Cross Railway Station') {
-          url = '/coach/timings/southern-cross-coach-terminal-spencer-street'
+          url = '/coach/timings/melbourne-city/southern-cross-coach-terminal-spencer-street'
         } else if (mode === 'regional train' && stopToUse.stopName === 'Southern Cross Coach Terminal/Spencer Street') {
           url = '/vline/timings/southern-cross'
         }

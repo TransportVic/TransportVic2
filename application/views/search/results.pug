@@ -23,7 +23,7 @@ for heritageStation in stops.filter(stop => !!stop.bays.find(bay => bay.mode ===
       span #{heritageStation.stopName}
       
 for regionalCoachStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'regional coach')).slice(0, 3)
-  a(href=`/coach/timings/${regionalCoachStop.codedName}`).regionalCoachStop.result
+  a(href=`/coach/timings/${regionalCoachStop.codedSuburb[0]}/${regionalCoachStop.codedName}`).regionalCoachStop.result
     div.leftContainer
       img(src='/static/images/clear-icons/coach.svg')
     div.resultDetails

@@ -5,8 +5,10 @@ const moment = require('moment')
 const utils = require('../../../utils')
 
 async function loadDepartures(req, res) {
-  const stop = await res.db.getCollection('stops').findDocument({
-    codedName: req.params.stopName
+  let stops = res.db.getCollection('stops')
+  let stop = await stops.findDocument({
+    codedName: req.params.stopName,
+    codedSuburb: req.params.suburb
   })
 
   let coachBay = stop.bays.filter(bay => bay.mode === 'regional coach')
@@ -50,12 +52,12 @@ async function loadDepartures(req, res) {
   return { departures, stop }
 }
 
-router.get('/:stopName', async (req, res) => {
+router.get('/:suburb/:stopName', async (req, res) => {
   let response = await loadDepartures(req, res)
   if (response) res.render('timings/regional-coach', response)
 })
 
-router.post('/:stopName', async (req, res) => {
+router.post('/:suburb/:stopName', async (req, res) => {
   res.render('timings/templates/regional-coach', await loadDepartures(req, res))
 })
 

@@ -59,7 +59,7 @@ $.ready(() => {
       bookmarked++
 
       let link = `/${linkNames[mode]}/timings`
-      if (['bus', 'tram'].includes(mode)) {
+      if (['bus', 'tram', 'regional coach'].includes(mode)) {
         link += `/${stopData.codedSuburb}`
       }
       if (['metro train', 'regional train', 'heritage train'].includes(mode))

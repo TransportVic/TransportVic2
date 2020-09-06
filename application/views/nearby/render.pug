@@ -23,7 +23,7 @@ for stop in stops
     if (stop.mode.endsWith('train'))
       codedName = codedName.slice(0, -16)
     let url = `/${stopIcons[stop.mode]}/timings/`
-    if (stop.mode === 'bus' || stop.mode === 'tram')
+    if (stop.mode === 'bus' || stop.mode === 'tram' || stop.mode === 'regional coach')
       url += `${stop.codedSuburb}/`
     url += `${codedName}`
   a(href=url class=`result ${stopCSSClasses[stop.mode]}`)
