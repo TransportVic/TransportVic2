@@ -32,6 +32,8 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let ptvDirection = Object.values(directions)[0]
   let routeData = Object.values(routes)[0]
 
+  let trueMode = mode
+
   if (mode === 'nbus') mode = 'bus'
 
   departures = departures.map(departure => {
@@ -63,7 +65,10 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     if (bestKey) gtfsDirection = route.ptvDirections[bestKey]
   }
 
-  await async.forEach(Object.values(stops), async stop => {
+
+  let previousDepartureTime = -1
+
+  await async.forEachSeries(Object.values(stops), async stop => {
     let stopName = stop.stop_name.trim()
     if (mode === 'metro train') {
       if (stopName === 'Jolimont-MCG')
@@ -116,6 +121,20 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
 
     let departureTimeMinutes = utils.getMinutesPastMidnight(scheduledDepartureTime)
 
+    if (previousDepartureTime == -1) { // if first stop is already beyond midnight then keep it
+      if (trueMode === 'nbus' && departureTimeMinutes < 600) {
+        arrivalTimeMinutes %= 1440
+        departureTimeMinutes %= 1440
+      }
+    } else {
+      departureTimeMinutes %= 1400
+    }
+
+    if (departureTimeMinutes < previousDepartureTime)
+      departureTimeMinutes += 1440
+
+    previousDepartureTime = departureTimeMinutes
+
     let stopTiming = {
       stopName: stopBay.fullStopName,
       stopNumber: stopBay.stopNumber,
@@ -124,7 +143,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
       arrivalTime: scheduledDepartureTime.format("HH:mm"),
       arrivalTimeMinutes: departureTimeMinutes,
       departureTime: scheduledDepartureTime.format("HH:mm"),
-      departureTimeMinutes: departureTimeMinutes,
+      departureTimeMinutes,
       estimatedDepartureTime: estimatedDepartureTime ? estimatedDepartureTime.toISOString() : null,
       platform: platform_number,
       stopConditions: {
