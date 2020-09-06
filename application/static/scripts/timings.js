@@ -79,10 +79,17 @@ let isFocused = true
 let lostFocusTime
 
 function checkFocus() {
-  isFocused = document.hasFocus()
-  if (!isFocused) {
+  let isNowFocused = document.hasFocus()
+  if (!isNowFocused) {
     lostFocusTime = new Date()
+  } else {
+    let timeDiff = new Date() - lostFocusTime
+    if (timeDiff > 5 * 60 * 1000 && !isFocused) {
+      updateBody() // If user wasn't focused - update the timings as soon as they come back
+    }
   }
+
+  isFocused = isNowFocused
 }
 
 function updateBody() {
