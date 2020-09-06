@@ -42,9 +42,11 @@ async function getData(req, res) {
     })
 
     if (downTrips.length === 0)
-      trainDepartures = upTrips
+      trainDepartures = upTrips.slice(0, 2)
+    else if (upTrips.length === 0)
+      trainDepartures = downTrips.slice(0, 2)
     else
-      trainDepartures = [upTrips[0], downTrips[1]]
+      trainDepartures = [upTrips[0], downTrips[0]]
   }
 
   let directionCount = {}
