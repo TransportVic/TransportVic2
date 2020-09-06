@@ -16,9 +16,9 @@ async function getData(req, res) {
     codedSuburb: req.params.suburb
   })
 
-  if (!stop || !stop.bays.filter(bay => bay.mode === 'bus')) {
+  if (!stop || !stop.bays.find(bay => bay.mode === 'bus')) {
     // TODO: create error page
-    return res.end('Could not lookup timings for ' + req.params.stopName + '. Are you sure buses stop there?')
+    return { trainDepartures: null, busDepartures: null, error: true }
   }
 
   let trainDepartures
