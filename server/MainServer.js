@@ -6,6 +6,7 @@ const path = require('path')
 const minify = require('express-minify')
 const fs = require('fs')
 const uglifyEs = require('uglify-es')
+const rateLimit = require('express-rate-limit')
 
 const DatabaseConnection = require('../database/DatabaseConnection')
 
@@ -135,6 +136,11 @@ module.exports = class MainServer {
       }
       next()
     })
+
+    app.use('/mockups', rateLimit({
+      windowMs: 5 * 60 * 1000,
+      max: 320
+    }))
   }
 
   async configRoutes (app) {
