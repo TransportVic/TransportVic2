@@ -82,7 +82,7 @@ module.exports = [{
   type: 'include'
 }, {
   name: 'CDC Tullamarine Specials',
-  track: ['CT3', 'CT7', 'CT8', 'CT13', 'CT18'],
+  track: ['CT3', 'CT4', 'CT7', 'CT8', 'CT13', 'CT18'],
   routes: [],
   type: 'exclude'
 }, {
@@ -96,8 +96,13 @@ module.exports = [{
   routes: [],
   type: 'exclude'
 }, {
+  name: 'Kastoria Specials',
+  track: ['K13', 'K14', 'K23', 'K24', 'K25', 'K26', 'K28', 'K5001', 'K5007', 'K5026'],
+  routes: [],
+  type: 'exclude'
+}, {
   name: 'Dysons Specials',
-  track: ['D184', 'D185', 'D186', 'D321', 'D430', 'D431', 'D754', 'D758', 'D762', 'D763', 'D764'],
+  track: ['D184', 'D185', 'D186', 'D430', 'D431', 'D754', 'D757', 'D758', 'D762', 'D763', 'D764'],
   routes: [],
   type: 'exclude'
 }, {
