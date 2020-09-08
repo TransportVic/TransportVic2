@@ -142,7 +142,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
   let {stopGTFSID} = metroPlatform
   let stationName = station.stopName.slice(0, -16)
-  let {departures, runs, routes, disruptions} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=run&expand=route&expand=disruption`)
+  let {departures, runs, routes, disruptions} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=run&expand=route&expand=disruption&expand=VehicleDescriptor`)
 
   let suspensionMap = {}
   let suspensionIDs = Object.values(disruptions).filter(disruption => {

@@ -21,7 +21,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let liveTimetables = db.getCollection('live timetables')
   let routesCollection = db.getCollection('routes')
 
-  let url = `/v3/pattern/run/${ptvRunID}/route_type/${modes[mode]}?expand=stop&expand=run&expand=route&expand=direction`
+  let url = `/v3/pattern/run/${ptvRunID}/route_type/${modes[mode]}?expand=stop&expand=run&expand=route&expand=direction&expand=VehicleDescriptor`
   if (time)
     url += `&date_utc=${time}`
   if (stopID)
