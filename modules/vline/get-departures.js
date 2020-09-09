@@ -90,6 +90,11 @@ async function getVNETDepartures(vlinePlatform, direction, db) {
     } else if (vehicle.match(/70\d\d/)) {
       let cars = vehicle.split('-')
       vehicleType = cars.length + 'x SP'
+    } else {
+      if (vehicle.includes('N') || vehicle.includes('H')) {
+        fullVehicle = null
+        vehicleType = null
+      }
     }
 
     if ($$('Consist').attr('i:nil'))
