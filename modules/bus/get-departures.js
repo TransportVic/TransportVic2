@@ -211,19 +211,8 @@ async function getDeparturesFromPTV(stop, db) {
     })
   })
 
-  let sortedDepartures = mappedDepartures.sort((a, b) => {
-    return a.actualDepartureTime - b.actualDepartureTime
-  }).sort((a, b) => {
-    let gtfsDirection = null
-    if (a.trip && b.trip && a.trip.gtfsDirection && b.trip.gtfsDirection)
-      gtfsDirection = a.trip.gtfsDirection - b.trip.gtfsDirection
-    return gtfsDirection ||
-      a.destination.length - b.destination.length ||
-      a.actualDepartureTime - b.actualDepartureTime
-  })
-
   let tripIDs = []
-  let filteredDepartures = sortedDepartures.filter(d => {
+  let filteredDepartures = mappedDepartures.filter(d => {
     let {tripID} = d.trip
     if (!tripID)
       tripID = d.trip.origin + d.trip.departureTime + d.trip.destination + d.trip.destinationArrivalTime
@@ -234,6 +223,7 @@ async function getDeparturesFromPTV(stop, db) {
   })
 
   await updateBusTrips(db, filteredDepartures)
+
   return filteredDepartures
 }
 
@@ -275,15 +265,27 @@ async function getDepartures(stop, db) {
 
     let departures
     try {
-      departures = await getDeparturesFromPTV(stop, db)
+      let ptvDepartures = await getDeparturesFromPTV(stop, db)
 
       function i (trip) { return `${trip.routeGTFSID}${trip.origin}${trip.departureTime}` }
-      let tripIDsSeen = departures.map(d => i(d.trip))
+      let tripIDsSeen = ptvDepartures.map(d => i(d.trip))
 
       let now = utils.now()
       let extraScheduledTrips = scheduledDepartures.filter(d => !tripIDsSeen.includes(i(d.trip)) && d.actualDepartureTime.diff(now, 'seconds') > -75)
 
-      departures = departures.concat(extraScheduledTrips)
+      departures = ptvDepartures.concat(extraScheduledTrips)
+
+
+      let sortedDepartures = departures.sort((a, b) => {
+        return a.actualDepartureTime - b.actualDepartureTime
+      }).sort((a, b) => {
+        let gtfsDirection = null
+        if (a.trip && b.trip && a.trip.gtfsDirection && b.trip.gtfsDirection)
+          gtfsDirection = a.trip.gtfsDirection - b.trip.gtfsDirection
+        return gtfsDirection ||
+          a.destination.length - b.destination.length ||
+          a.actualDepartureTime - b.actualDepartureTime
+      })
     } catch (e) {
       console.log('Failed to get bus timetables', e)
       departures = scheduledDepartures
