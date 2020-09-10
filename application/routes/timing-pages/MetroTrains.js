@@ -48,16 +48,21 @@ async function loadDepartures(req, res) {
 
     let currentStation = departure.trip.stopTimings.find(tripStop => tripStop.stopName === station.stopName)
     let {stopGTFSID} = currentStation
-    let minutesDiff = currentStation.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
+    let firstStop = departure.trip.stopTimings[0]
+
+    let fss = departure.trip.stopTimings.find(tripStop => tripStop.stopName === 'Flinders Street Railway Station')
+    if (departure.trip.direction === 'Down' && fss) firstStop = fss
+    let minutesDiff = currentStation.departureTimeMinutes - firstStop.departureTimeMinutes
 
     let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
     let operationDate = utils.getYYYYMMDD(tripStart)
 
-    if (departure.trip.stopTimings[0].departureTimeMinutes > 1440) {
-      operationDate = tripStart.add(-1, 'day').format('YYYYMMDD')
-      // Note: do not attempt to fix wrong day thing as timetables are screwed up on PTV's end.
-      // Example: TDN1069 on Saturday morning when loaded returns some 17.10 down MDD
-    }
+    // if (departure.trip.stopTimings[0].departureTimeMinutes > 1440) {
+    //   console.log(departure.trip)
+    //   operationDate = tripStart.add(-1, 'day').format('YYYYMMDD')
+    //   // Note: do not attempt to fix wrong day thing as timetables are screwed up on PTV's end.
+    //   // Example: TDN1069 on Saturday morning when loaded returns some 17.10 down MDD
+    // }
 
     departure.tripURL = `${utils.encodeName(origin)}/${originDepartureTime}/`
       + `${utils.encodeName(destination)}/${destinationArrivalTime}/`

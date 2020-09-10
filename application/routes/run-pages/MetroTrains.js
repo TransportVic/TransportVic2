@@ -12,6 +12,7 @@ async function pickBestTrip(data, db) {
   let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
   let tripEndTime = utils.parseTime(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm')
+  if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
 
   let originStop = await db.getCollection('stops').findDocument({
@@ -114,9 +115,10 @@ async function pickBestTrip(data, db) {
     let flindersIndex = stops.indexOf('Flinders Street Railway Station')
 
     if (flindersIndex >= 0 && gtfsTrip.direction === 'Down') {
+      let flinders = gtfsTrip.stopTimings[flindersIndex]
       let stopAfterFlinders = gtfsTrip.stopTimings[flindersIndex + 1]
       originStopID = stopAfterFlinders.stopGTFSID
-      originTime = utils.parseTime(`${data.operationDays} ${stopAfterFlinders.departureTime}`, 'YYYYMMDD HH:mm')
+      originTime.add(stopAfterFlinders.departureTimeMinutes - flinders.departureTimeMinutes, 'minutes')
     }
 
     gtfsTrip.stopTimings.forEach((stop, i) => {
