@@ -9,6 +9,9 @@ block title
 block style
   link(rel='stylesheet' href='/static/css/form.css')
 
+block scripts
+  script(src='/static/scripts/dropdown.js')
+
 block content
   h1#title Mockups
   form(action='/mockups/get' method='get')
@@ -17,30 +20,42 @@ block content
     input(type='text' name='station' placeholder='Station Name' required)
     br
     input(type='text' name='value' placeholder='Platform (* for all)' required)
-    br
-    input(type='text' name='type' placeholder='PID Type')
-    input(type='submit' value='Go')
+    div
+      div.customDropdown
+        select(name="type" autocomplete="off")
+          option platform
+          option half-platform
+          option half-platform-bold
+          option fss-platform
+          option fss-escalator
+          option pre-platform-bold
+        span platform
+      input(type='submit' value='Go')
   form(action='/mockups/get' method='get')
     label Get Concourse PID
     br
     input(type='text' name='station' placeholder='Station Name' required)
-    br
-    input(type='text' name='concourseType' placeholder='Concourse PID Type')
+    div.submissionRow
+      div.customDropdown
+        select(name="concourseType" autocomplete="off")
+          option interchange
+          option up-down
+        span interchange
+      input(type='submit' value='Go')
     input(type='hidden' name='type' value='concourse')
-    input(type='submit' value='Go')
   form(action='/mockups/get' method='get')
     label Get Bus Interchange PIDs for bus stop URL
     br
     input(type='text' name='value' placeholder='Bus Timings URL' required)
-    br
-    input(type='text' name='bay' placeholder='Bus Bay (Blank for all)')
-    input(type='submit' value='Go')
+    div.submissionRow
+      input(type='text' name='bay' placeholder='Bus Bay (Blank for all)')
+      input(type='submit' value='Go')
     input(type='hidden' name='type' value='bus-int-pids')
   form(action='/mockups/get' method='get')
     label Get station summary page
     br
     input(type='text' name='station' placeholder='Station Name' required)
-    br
-    input(type='text' name='value' placeholder='PID Type (Leave blank for default)')
-    input(type='submit' value='Go')
+    div.submissionRow
+      input(type='text' name='value' placeholder='PID Type (Leave blank for default)')
+      input(type='submit' value='Go')
     input(type='hidden' name='type' value='summary')
