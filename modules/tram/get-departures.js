@@ -24,7 +24,7 @@ async function getStoppingPatternWithCache(db, tramDeparture, destination) {
     tripLoader[id] = new EventEmitter()
     tripLoader[id].setMaxListeners(1000)
 
-    let trip = await getStoppingPattern(db, tramDeparture.run_id, 'tram', tramDeparture.scheduled_departure_utc)
+    let trip = await getStoppingPattern(db, tramDeparture.run_ref, 'tram', tramDeparture.scheduled_departure_utc)
 
     tripCache[id] = trip
     tripLoader[id].emit('loaded', trip)
@@ -48,9 +48,9 @@ async function getDeparturesFromPTV(stop, db) {
 
     let seenIDs = []
     await async.forEach(departures, async tramDeparture => {
-      if (seenIDs.includes(tramDeparture.run_id)) return
-      seenIDs.push(tramDeparture.run_id)
-      let run = runs[tramDeparture.run_id]
+      if (seenIDs.includes(tramDeparture.run_ref)) return
+      seenIDs.push(tramDeparture.run_ref)
+      let run = runs[tramDeparture.run_ref]
       let route = routes[tramDeparture.route_id]
 
       let scheduledDepartureTime = utils.parseTime(tramDeparture.scheduled_departure_utc)

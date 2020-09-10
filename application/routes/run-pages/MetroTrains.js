@@ -135,7 +135,7 @@ async function pickBestTrip(data, db) {
 
     let isUp = referenceTrip ? referenceTrip.direction === 'Up' : null
     let possibleDepartures = departures.filter(departure => {
-      let run = runs[departure.run_id]
+      let run = runs[departure.run_ref]
       let destinationName = run.destination_name.trim()
       let scheduledDepartureTime = moment(departure.scheduled_departure_utc).toISOString()
 
@@ -152,14 +152,14 @@ async function pickBestTrip(data, db) {
 
     if (possibleDepartures.length > 1) {
       departure = possibleDepartures.filter(departure => {
-        return runs[departure.run_id].express_stop_count === expressCount
+        return runs[departure.run_ref].express_stop_count === expressCount
       })[0]
     } else departure = possibleDepartures[0]
 
     // interrim workaround cos when services start from a later stop they're really cancelled
     // in the stops before, but PTV thinks otherwise...
     if (!departure) return referenceTrip
-    let ptvRunID = departure.run_id
+    let ptvRunID = departure.run_ref
     let departureTime = departure.scheduled_departure_utc
 
     let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime)

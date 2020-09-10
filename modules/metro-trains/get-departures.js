@@ -241,7 +241,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   })
 
   async function processDeparture(departure) {
-    let run = runs[departure.run_id]
+    let run = runs[departure.run_ref]
     let routeID = departure.route_id
     let routeName = routes[routeID].route_name
     if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
@@ -381,7 +381,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
         if (isRailReplacementBus && suspensions.length === 0) return // ok this is risky but bus replacements actually seem to do it the same way as vline
       }
 
-      trip = await getStoppingPattern(db, departure.run_id, 'metro train', scheduledDepartureTime.toISOString())
+      trip = await getStoppingPattern(db, departure.run_ref, 'metro train', scheduledDepartureTime.toISOString())
       usedLive = true
     }
 
@@ -390,7 +390,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       let destination = trip.trueDestination.slice(0, -16)
 
       let serviceID = `${origin}-${destination}-${trip.trueDepartureTime}`
-      if (shortMap[serviceID]) trip = await getStoppingPattern(db, departure.run_id, 'metro train', scheduledDepartureTime.toISOString())
+      if (shortMap[serviceID]) trip = await getStoppingPattern(db, departure.run_ref, 'metro train', scheduledDepartureTime.toISOString())
     }
 
     if (stonyPointReplacements.length) {

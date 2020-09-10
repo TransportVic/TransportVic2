@@ -480,7 +480,7 @@ async function getDepartures(station, db) {
     try {
       departures = ptvDepartures.departures, runs = ptvDepartures.runs, routes = ptvDepartures.routes
       departures.forEach(departure => {
-        let run = runs[departure.run_id]
+        let run = runs[departure.run_ref]
         let departureTime = utils.parseTime(departure.scheduled_departure_utc)
         let destination = run.destination_name
         let {flags} = departure

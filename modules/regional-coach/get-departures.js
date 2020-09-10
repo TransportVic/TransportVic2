@@ -57,7 +57,7 @@ async function getDeparturesFromPTV(stop, db) {
     let tripIDsSeen = []
 
     await async.forEachSeries(coachDepartures, async coachDeparture => {
-      let runID = coachDeparture.run_id
+      let runID = coachDeparture.run_ref
       if (runIDsSeen.includes(runID)) return
       runIDsSeen.push(runID)
 

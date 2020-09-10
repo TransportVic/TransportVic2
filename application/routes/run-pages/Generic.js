@@ -87,7 +87,7 @@ async function pickBestTrip(data, db) {
     let {departures, runs} = await ptvAPI(`/v3/departures/route_type/${mode}/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-3, 'minutes').startOf('minute').toISOString()}&max_results=5&expand=run&expand=stop`)
 
     let departure = departures.filter(departure => {
-      let run = runs[departure.run_id]
+      let run = runs[departure.run_ref]
       let destinationName = busStopNameModifier(utils.adjustStopName(run.destination_name.trim()))
         .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
       let scheduledDepartureTime = moment(departure.scheduled_departure_utc).toISOString()
@@ -97,7 +97,7 @@ async function pickBestTrip(data, db) {
     })[0]
 
     if (!departure) return gtfsTrip
-    let ptvRunID = departure.run_id
+    let ptvRunID = departure.run_ref
     let departureTime = departure.scheduled_departure_utc
 
     let trip = await getStoppingPattern(db, ptvRunID, trueMode, departureTime, departure.stop_id, gtfsTrip)

@@ -29,7 +29,7 @@ async function getStoppingPatternWithCache(db, busDeparture, destination, isNigh
     tripLoader[id] = new EventEmitter()
     tripLoader[id].setMaxListeners(1000)
 
-    let trip = await getStoppingPattern(db, busDeparture.run_id, isNightBus ? 'nbus' : 'bus', busDeparture.scheduled_departure_utc)
+    let trip = await getStoppingPattern(db, busDeparture.run_ref, isNightBus ? 'nbus' : 'bus', busDeparture.scheduled_departure_utc)
 
     tripCache[id] = trip
     tripLoader[id].emit('loaded', trip)
@@ -123,9 +123,9 @@ async function getDeparturesFromPTV(stop, db) {
 
     let seenIDs = []
     await async.forEach(departures, async busDeparture => {
-      if (seenIDs.includes(busDeparture.run_id)) return
-      seenIDs.push(busDeparture.run_id)
-      let run = runs[busDeparture.run_id]
+      if (seenIDs.includes(busDeparture.run_ref)) return
+      seenIDs.push(busDeparture.run_ref)
+      let run = runs[busDeparture.run_ref]
       let route = routes[busDeparture.route_id]
 
       if (route.route_number.toLowerCase().includes('combined')) return
