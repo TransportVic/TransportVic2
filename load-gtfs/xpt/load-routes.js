@@ -1,7 +1,7 @@
 /*
 Route guide;
-13-XPT.H Sydney - Melbourne
-13-XPT.R Melbourne - Sydney
+14-XPT.H Sydney - Melbourne
+14-XPT.R Melbourne - Sydney
 */
 
 const fs = require('fs')
@@ -17,7 +17,7 @@ const updateStats = require('../utils/stats')
 
 let shapes = require('./data/shapes.json')
 
-let gtfsID = '13'
+let gtfsID = '14'
 
 database.connect({
   poolSize: 100

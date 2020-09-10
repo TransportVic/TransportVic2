@@ -2,7 +2,7 @@
   {
     "originalName": "Sydney Central Railway Station (Sydney, NSW)",
     "fullStopName": "Sydney Central Railway Station",
-    "stopGTFSID": 13000001,
+    "stopGTFSID": 14000001,
     "location": {
       "type": "Point",
       "coordinates": [151.2065819, -33.8826209]
@@ -14,7 +14,7 @@
   {
     "originalName": "Campbelltown Railway Station (Campbelltown, NSW)",
     "fullStopName": "Campbelltown Railway Station",
-    "stopGTFSID": 13000002,
+    "stopGTFSID": 14000002,
     "location": {
       "type": "Point",
       "coordinates": [150.8140653, -34.0640915]
@@ -26,7 +26,7 @@
   {
     "originalName": "Moss Vale Railway Station (Moss Vale, NSW)",
     "fullStopName": "Moss Vale Railway Station",
-    "stopGTFSID": 13000003,
+    "stopGTFSID": 14000003,
     "location": {
       "type": "Point",
       "coordinates": [150.3718458, -34.5479282]
@@ -38,7 +38,7 @@
   {
     "originalName": "Goulburn Railway Station (Goulburn, NSW)",
     "fullStopName": "Goulburn Railway Station",
-    "stopGTFSID": 13000004,
+    "stopGTFSID": 14000004,
     "location": {
       "type": "Point",
       "coordinates": [149.7193261, -34.7581809]
@@ -50,7 +50,7 @@
   {
     "originalName": "Gunning Railway Station (Gunning, NSW)",
     "fullStopName": "Gunning Railway Station",
-    "stopGTFSID": 13000005,
+    "stopGTFSID": 14000005,
     "location": {
       "type": "Point",
       "coordinates": [149.2613521, -34.7797646]
@@ -62,7 +62,7 @@
   {
     "originalName": "Yass Junction Railway Station (Yass, NSW)",
     "fullStopName": "Yass Junction Railway Station",
-    "stopGTFSID": 13000006,
+    "stopGTFSID": 14000006,
     "location": {
       "type": "Point",
       "coordinates": [148.9152721,-34.8089686]
@@ -74,7 +74,7 @@
   {
     "originalName": "Harden Railway Station (Harden, NSW)",
     "fullStopName": "Harden Railway Station",
-    "stopGTFSID": 13000007,
+    "stopGTFSID": 14000007,
     "location": {
       "type": "Point",
       "coordinates": [148.371484, -34.5535743]
@@ -86,7 +86,7 @@
   {
     "originalName": "Cootamundra Railway Station (Cootamundra, NSW)",
     "fullStopName": "Cootamundra Railway Station",
-    "stopGTFSID": 13000008,
+    "stopGTFSID": 14000008,
     "location": {
       "type": "Point",
       "coordinates": [148.0305762, -34.6409692]
@@ -98,7 +98,7 @@
   {
     "originalName": "Junee Railway Station (Junee, NSW)",
     "fullStopName": "Junee Railway Station",
-    "stopGTFSID": 1300009,
+    "stopGTFSID": 1400009,
     "location": {
       "type": "Point",
       "coordinates": [147.5839818,-34.8701641]
@@ -110,7 +110,7 @@
   {
     "originalName": "Wagga Wagga Railway Station (Turvey Park, NSW)",
     "fullStopName": "Wagga Wagga Railway Station",
-    "stopGTFSID": 13000010,
+    "stopGTFSID": 14000010,
     "location": {
       "type": "Point",
       "coordinates": [147.3685119, -35.1203284]
@@ -122,7 +122,7 @@
   {
     "originalName": "The Rock Railway Station (The Rock, NSW)",
     "fullStopName": "The Rock Railway Station",
-    "stopGTFSID": 13000011,
+    "stopGTFSID": 14000011,
     "location": {
       "type": "Point",
       "coordinates": [147.1185439, -35.2717797]
@@ -134,7 +134,7 @@
   {
     "originalName": "Henty Railway Station (Henty, NSW)",
     "fullStopName": "Henty Railway Station",
-    "stopGTFSID": 13000012,
+    "stopGTFSID": 14000012,
     "location": {
       "type": "Point",
       "coordinates": [147.035376, -35.5176411]
@@ -146,7 +146,7 @@
   {
     "originalName": "Culcairn Railway Station (Culcairn, NSW)",
     "fullStopName": "Culcairn Railway Station",
-    "stopGTFSID": 13000013,
+    "stopGTFSID": 14000013,
     "location": {
       "type": "Point",
       "coordinates": [147.0382401, -35.666037]

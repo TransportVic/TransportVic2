@@ -474,7 +474,7 @@ async function getDepartures(station, db) {
     })])
 
     let scheduled = await getScheduledDepartures(db, station)
-    let xptDepartures = scheduled.filter(d => d.trip.routeGTFSID === '13-XPT')
+    let xptDepartures = scheduled.filter(d => d.trip.routeGTFSID === '14-XPT')
     cancelledTrains = scheduled.filter(departure => departure.cancelled)
 
     try {
