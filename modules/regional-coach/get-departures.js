@@ -172,8 +172,7 @@ async function getDeparturesFromPTV(stop, db) {
     })
   })
 
-  return mappedDepartures.sort((a, b) => a.destination.length - b.destination.length)
-    .sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+  return mappedDepartures
 }
 
 async function getScheduledDepartures(stop, db, useLive) {
@@ -206,15 +205,22 @@ async function getDepartures(stop, db) {
 
   try {
     let departures
+    let scheduledDepartueres = (await getScheduledDepartures(stop, db, false)).map(departure => {
+      departure.isRailReplacementBus = null
+      return departure
+    })
+
     try {
       departures = await getDeparturesFromPTV(stop, db)
+      let ptvDepartures = departures.map(d => d.trip.tripID)
+      let extras = scheduledDepartueres.filter(d => !ptvDepartures.includes(d.trip.tripID))
+      departures = departures.concat(extras)
     } catch (e) {
-      departures = await getScheduledDepartures(stop, db, false)
-      departures = departures.map(departure => {
-        departure.isRailReplacementBus = null
-        return departure
-      })
+      departures = scheduledDepartueres
     }
+
+    departures = departures.sort((a, b) => a.destination.length - b.destination.length)
+      .sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
 
     let timetables = db.getCollection('timetables')
     let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
