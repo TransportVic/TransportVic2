@@ -120,8 +120,9 @@ router.get('/highlights', async (req, res) => {
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
-  let allTrips = (await vlineTrips.findDocuments({ date, 'consist.0': { $exists: true } })
+  let allTrips = (await vlineTrips.findDocuments({ date })
     .sort({departureTime: 1, destination: 1}).toArray())
+    .filter(trip => trip.consist[0] !== '')
     .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
   let doubleHeaders = allTrips.filter(trip => {
