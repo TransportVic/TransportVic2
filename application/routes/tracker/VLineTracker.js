@@ -137,7 +137,8 @@ router.get('/highlights', async (req, res) => {
       else {
         tripVehicleType = 'N +'
         let carriage = trip.consist.find(c => !c.startsWith('N') && !c.startsWith('P'))
-        tripVehicleType += carriage.includes('N') ? 'N' : 'H'
+        if (carriage) tripVehicleType += carriage.includes('N') ? 'N' : 'H'
+        else return true
       }
 
       let nspTripType = nspTimetable.vehicle
