@@ -60,7 +60,7 @@ async function getVNETDepartures(direction, db) {
 
     if (vehicle.match(/N\d{3}/)) {
       let carriages = vehicleConsist.slice(5).split('-')
-      let excludes = ['ACN13', 'FLH32']
+      let excludes = ['ACN13', 'FLH32', 'B219', 'BRN']
       excludes.forEach(exclude => {
         if (carriages.includes(exclude)) {
           carriages.splice(carriages.indexOf(exclude), 1)

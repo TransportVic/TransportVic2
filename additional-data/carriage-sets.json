@@ -1,5 +1,6 @@
 {
   "SN1": ["BN19", "BDN50", "BRN53", "ACN3", "BCZ260"],
+  "SN1_": ["Confirmed"],
   "VN3": ["BTN264", "BN8", "BRN47", "ACN9"],
   "VN3_": ["Confirmed"],
   "FN4": ["BZN267", "BN11", "BRN44", "ACN12"],
@@ -22,11 +23,15 @@
   "VN14": ["BN14", "BRN41", "ACN42"],
   "VN14_": ["Confirmed"],
   "SN15": ["BN5", "BDN21", "BRN43", "ACN45"],
+  "SN15_": ["Confirmed"],
   "SN16": ["BN22", "BDN6", "BRN46", "ACN48"],
+  "SN16_": ["Confirmed"],
   "VN17": ["BZN256", "BN4", "BRN49", "ACN51"],
   "VN17_": ["Confirmed"],
   "VN18": ["BTN253", "BZN275", "BN1", "BRN52", "ACN54"],
+  "VN18_": ["Confirmed"],
   "VN19": ["BCZ257", "BZN271", "BN55", "BRN56", "ACN57"],
+  "VN19_": ["Confirmed"],
 
   "SSH22": ["BTH162", "BH149", "BIH184", "BH142", "BIH182", "BCH122"],
   "SSH22_": ["Confirmed"],
