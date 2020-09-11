@@ -19,16 +19,13 @@ let burnleyGroup = [1, 2, 7, 9] // alamein, belgrave, glen waverley, lilydale
 let caulfieldGroup = [4, 6, 11, 12] // cranbourne, frankston, pakenham, sandringham
 let northernGroup = [3, 14, 15, 16, 17, 1482] // craigieburn, sunbury, upfield, werribee, williamstown, flemington racecourse
 let cliftonHillGroup = [5, 8] // mernda, hurstbridge
-let crossCityGroup = [6, 16, 17, 1482]
+let crossCityGroup = [6, 16, 17, 1482] // frankston, werribee, williamstown, flemington racecourse
 
-function determineLoopRunning(routeID, runID, destination, isFormingNewTrip, isSCS) {
+function determineLoopRunning(routeID, runID, destination, isFormingNewTrip) {
   if (routeID === 13) return [] // stony point
 
   let upService = !(runID[3] % 2)
   let throughCityLoop = runID[1] > 5 || cityLoopStations.includes(destination) && destination !== 'Southern Cross'
-  if (routeID === 6 && destination == 'Southern Cross' && isFormingNewTrip) {
-    throughCityLoop = false
-  }
   let stopsViaFlindersFirst = runID[1] <= 5
 
   cityLoopConfig = []
@@ -45,9 +42,7 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip, isS
       cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
   } else {
     if (stopsViaFlindersFirst && throughCityLoop) { // flinders then loop
-      if (routeID === 6) // frankston
-        cityLoopConfig = ['RMD', 'FSS', 'SSS']
-      else if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID) || routeID === 99)
+      if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID) || routeID === 99)
         cityLoopConfig = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR']
         if (routeID === 99) cityLoopConfig.push('FSS')
     } else if (!stopsViaFlindersFirst && throughCityLoop) { // loop then flinders
@@ -55,7 +50,7 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip, isS
         cityLoopConfig = ['PAR', 'MCE', 'FGS', 'SSS', 'FSS']
       if (routeID === 99) cityLoopConfig = ['FSS', ...cityLoopConfig]
     } else if (stopsViaFlindersFirst && !throughCityLoop) { // direct to flinders
-      if (routeID === 6 && isSCS)
+      if (caulfieldGroup.includes(routeID) && destination === 'Southern Cross')
         cityLoopConfig = ['RMD', 'FSS', 'SSS']
       else if (burnleyGroup.concat(caulfieldGroup).includes(routeID))
         cityLoopConfig = ['RMD', 'FSS']
@@ -325,8 +320,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let isSCS = stationName === 'Southern Cross'
     let isFSS = stationName === 'Flinders Street'
 
-    // let isUpTrip = ((trip || {}).direction === 'Up' || runID % 2 === 0) && !isFormingNewTrip
-    let cityLoopConfig = !isRailReplacementBus ? determineLoopRunning(routeID, runID, runDestination, isFormingNewTrip, isSCS) : []
+    let cityLoopConfig = !isRailReplacementBus ? determineLoopRunning(routeID, runID, runDestination, isFormingNewTrip) : []
 
     if (isUpTrip && !cityLoopStations.includes(runDestination) &&
       !cityLoopStations.includes(stationName) && runDestination !== 'Flinders Street')
