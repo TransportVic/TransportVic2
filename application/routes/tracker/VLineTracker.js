@@ -5,6 +5,7 @@ const router = new express.Router()
 const url = require('url')
 const querystring = require('querystring')
 const moment = require('moment')
+const vlineFleet = require('../../../additional-data/vline-fleet')
 
 let lines = {
   Geelong: ['Geelong', 'Marshall', 'South Geelong', 'Waurn Ponds', 'Wyndham Vale', 'Warrnambool'],
@@ -155,9 +156,14 @@ router.get('/highlights', async (req, res) => {
     }
   })
 
+  let unknownVehicle = allTrips.filter(trip => {
+    return trip.consist.some(c => !vlineFleet.includes(c))
+  })
+
   res.render('tracker/vline/highlights', {
     doubleHeaders,
     consistTypeChanged,
+    unknownVehicle,
     date: utils.parseTime(date, 'YYYYMMDD')
   })
 })
