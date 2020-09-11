@@ -32,7 +32,7 @@ async function handleMessage(subject, text) {
   text = text.replace(/\n/g, ' ').replace(/\u00A0/g, ' ').replace(/More information at.+/, '').replace(/  +/g, ' ').trim()
   stream.write(`Got mail: Subject: ${subject}. Text: ${text.replace(/\n/g, ' ')}\n`)
 
-  if (subject.includes('Service cancellation') || text.includes('will not run') || text.includes('no longer run') || text.includes('has been cancelled')) {
+  if (subject.includes('Service cancellation') || text.includes('will not run') || (text.includes('no longer run') && !text.includes('no longer run to')) || text.includes('has been cancelled')) {
     await handleCancellation(database, text)
   } else if (subject.includes('Service reduction') || text.includes('reduced capacity')) {
     await handleReduction(database, text)

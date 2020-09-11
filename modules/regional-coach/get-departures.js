@@ -155,6 +155,10 @@ async function getDeparturesFromPTV(stop, db) {
         }
       }
 
+      if (trip.origin === 'Southern Cross Coach Terminal/Spencer Street' && trip.destination === 'Sunshine Railway Station') {
+        isRailReplacementBus = true
+      }
+
       // Its half trips that never show up properly
       if (!trip) return
       // if (!trip) return console.err(`Failed to map trip: ${departureTime.format('HH:mm')} to ${destination}`)
@@ -167,7 +171,7 @@ async function getDeparturesFromPTV(stop, db) {
         estimatedDepartureTime: null,
         actualDepartureTime: scheduledDepartureTimeMinutes,
         destination,
-        isRailReplacementBus: isRailReplacementBus
+        isRailReplacementBus
       })
     })
   })
