@@ -39,10 +39,10 @@ module.exports = class MainServer {
   }
 
   initDatabaseConnection (app, callback) {
-    const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-    database.connect(async err => {
+    this.database = new DatabaseConnection(config.databaseURL, config.databaseName)
+    this.database.connect(async err => {
       app.use((req, res, next) => {
-        res.db = database
+        res.db = this.database
         next()
       })
 
@@ -277,6 +277,7 @@ module.exports = class MainServer {
 
         let router = require(`../application/routes/${routerName}`)
         app.use(routerPath, router)
+        if (router.initDB) router.initDB(this.database)
       } catch (e) {
         console.err('Error registering', routerName, e)
       }

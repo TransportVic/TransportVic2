@@ -14,6 +14,43 @@ const serviceDepots = require('../../../additional-data/service-depots')
 
 let crossDepotQuery = null
 
+async function generateCrossDepotQuery(smartrakIDs) {
+  if (crossDepotQuery) return
+
+  crossDepotQuery = { $or: [] }
+  await async.forEach(Object.keys(knownBuses), async fleet => {
+    let bus = await smartrakIDs.findDocument({ fleetNumber: fleet })
+    let busDepot = knownBuses[fleet]
+    let depotRoutes = serviceDepots[busDepot]
+
+    if (bus && depotRoutes) {
+      crossDepotQuery.$or.push({
+        smartrakID: bus.smartrakID,
+        routeNumber: { $not: { $in: depotRoutes } }
+      })
+    }
+  })
+}
+
+async function findCrossDepotTrips(busTrips, smartrakIDs, date) {
+  await generateCrossDepotQuery(smartrakIDs)
+
+  let crossDepotQueryOnDate = {
+    $or: crossDepotQuery.$or.map(e => {
+      return {
+        ...e,
+        date
+      }
+    })
+  }
+
+  let crossDepotTrips = await busTrips.findDocuments(crossDepotQueryOnDate)
+    .sort({departureTime: 1}).toArray()
+
+  return crossDepotTrips
+}
+
+
 router.get('/', (req, res) => {
   res.render('tracker/bus/index')
 })
@@ -321,6 +358,37 @@ router.get('/highlights', async (req, res) => {
   })
 })
 
+router.get('/cross-depot', async (req, res) => {
+  let {db} = res
+  let busTrips = db.getCollection('bus trips')
+  let smartrakIDs = db.getCollection('smartrak ids')
+
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let today = utils.getYYYYMMDDNow()
+
+  let {date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  let crossDepotTrips = await findCrossDepotTrips(busTrips, smartrakIDs, date)
+
+  let tripsToday = (await async.map(crossDepotTrips, async trip => {
+    let {fleetNumber} = await smartrakIDs.findDocument({
+      smartrakID: trip.smartrakID
+    }) || {}
+
+    trip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + trip.smartrakID
+
+    return trip
+  })).map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
+
+  res.render('tracker/bus/cross-depot', {
+    tripsToday,
+    date: utils.parseTime(date, 'YYYYMMDD')
+  })
+})
+
 router.get('/bot', async (req, res) => {
   let {db} = res
   let busTrips = db.getCollection('bus trips')
@@ -369,3 +437,7 @@ router.get('/bot', async (req, res) => {
 router.use('/locator', require('./BusLocator'))
 
 module.exports = router
+module.exports.initDB = async db => {
+  let smartrakIDs = db.getCollection('smartrak ids')
+  await generateCrossDepotQuery(smartrakIDs)
+}
