@@ -1,0 +1,27 @@
+extends ../../layout
+
+block head
+  -
+    title = 'TransportVic - Tracker/V/Line - Highlights'
+    description = 'V/Line Tracker Highlights'
+  title #{title}
+  link(rel='preload' as='style' href='/static/css/tracker/bus-results.css')
+  
+block title
+  span V/Line Tracker - Highlights
+
+block style
+  link(rel='stylesheet' href='/static/css/tracker/bus-results.css')
+
+block content
+  h1.title V/Line Highlights Today
+  
+  mixin section(trips, title)
+    if trips.length > 0
+      h1.title #{title}
+      for trip in trips
+        div(class=`trip ${trip.active ? '' : 'inactive'}`)
+          a(href=trip.url) ##{trip.runID}: #{trip.departureTime} #{trip.origin} - #{trip.destination}: #{trip.consist.join('-')}
+          
+  +section(doubleHeaders, 'Double Headers')
+  +section(consistTypeChanged, 'Consist Type Changed')
