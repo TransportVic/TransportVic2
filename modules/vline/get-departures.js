@@ -1,140 +1,27 @@
 const TimedCache = require('timed-cache')
 const async = require('async')
-const urls = require('../../urls.json')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1 })
 const moment = require('moment')
-const cheerio = require('cheerio')
 const departureUtils = require('../utils/get-train-timetables')
-const getStoppingPattern = require('../utils/get-vline-stopping-pattern')
 const guessPlatform = require('./guess-scheduled-platforms')
 const termini = require('../../additional-data/termini-to-lines')
 const getCoachDepartures = require('../regional-coach/get-departures')
+const getVNETDepartures = require('./get-vnet-departures')
+const handleTripShorted = require('./handle-trip-shorted')
 const EventEmitter = require('events')
 
 let ptvAPILocks = {}
 
-async function getStationFromVNETName(vnetStationName, db) {
-  const station = await db.getCollection('stops').findDocument({
-    bays: {
-      $elemMatch: {
-        mode: 'regional train',
-        vnetStationName
-      }
-    }
-  })
-
-  return station
-}
-
 let gippsland = ['Traralgon', 'Bairnsdale']
-
-async function getVNETDepartures(vlinePlatform, direction, db) {
-  const {vnetStationName} = vlinePlatform
-
-  const body = (await utils.request(urls.vlinePlatformDepartures.format(vnetStationName, direction))).replace(/a:/g, '')
-  const $ = cheerio.load(body)
-  const allServices = Array.from($('PlatformService'))
-
-  let mappedDepartures = []
-
-  await async.forEach(allServices, async service => {
-    let estimatedDepartureTime
-
-    function $$(q) {
-      return $(q, service)
-    }
-
-    if (!isNaN(new Date($$('ActualArrivalTime').text()))) {
-      estimatedDepartureTime = utils.parseTime($$('ActualArrivalTime').text())
-    } // yes arrival cos vnet
-
-    let platform = $$('Platform').text()
-    let originDepartureTime = utils.parseTime($$('ScheduledDepartureTime').text())
-    let destinationArrivalTime = utils.parseTime($$('ScheduledDestinationArrivalTime').text())
-    let runID = $$('ServiceIdentifier').text()
-    let originVNETName = $$('Origin').text()
-    let destinationVNETName = $$('Destination').text()
-
-    let accessibleTrain = $$('IsAccessibleAvailable').text() === 'true'
-    let barAvailable = $$('IsBuffetAvailable').text() === 'true'
-
-    let vehicle = $$('Consist').text().replace(/ /g, '-')
-    let vehicleConsist = $$('ConsistVehicles').text().replace(/ /g, '-')
-    let fullVehicle = vehicle
-    let vehicleType
-
-    if (vehicle.match(/N\d{3}/)) {
-      let carriages = vehicleConsist.slice(5).split('-')
-      let excludes = ['ACN13', 'FLH32']
-      excludes.forEach(exclude => {
-        if (carriages.includes(exclude)) {
-          carriages.splice(carriages.indexOf(exclude), 1)
-        }
-      })
-      vehicleConsist = vehicleConsist.slice(0, 5) + carriages.join('-')
-
-      fullVehicle = vehicleConsist
-
-      vehicleType = 'N +'
-      vehicleType += carriages.length
-
-      if (carriages.includes('N')) vehicleType += 'N'
-      else vehicleType += 'H'
-    } else if (vehicle.includes('VL')) {
-      let cars = vehicle.split('-')
-      fullVehicle = vehicle.replace(/\dVL/g, 'VL')
-
-      vehicleType = cars.length + 'x 3VL'
-    } else if (vehicle.match(/70\d\d/)) {
-      let cars = vehicle.split('-')
-      vehicleType = cars.length + 'x SP'
-    } else {
-      if (vehicle.includes('N') || vehicle.includes('H')) {
-        fullVehicle = null
-        vehicleType = null
-      }
-    }
-
-    if ($$('Consist').attr('i:nil'))
-      fullVehicle = ''
-
-    let direction = $$('Direction').text()
-    if (direction === 'D') direction = 'Down'
-    else direction = 'Up'
-
-    const originStation = await getStationFromVNETName(originVNETName, db)
-    const destinationStation = await getStationFromVNETName(destinationVNETName, db)
-
-    let originVLinePlatform = originStation.bays.find(bay => bay.mode === 'regional train')
-    let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train')
-
-    mappedDepartures.push({
-      runID,
-      originVNETName: originVLinePlatform.vnetStationName,
-      destinationVNETName: destinationVLinePlatform.vnetStationName,
-      origin: originVLinePlatform.fullStopName,
-      destination: destinationVLinePlatform.fullStopName,
-      originDepartureTime, destinationArrivalTime,
-      platform, estimatedDepartureTime,
-      direction,
-      vehicle: fullVehicle,
-      barAvailable,
-      accessibleTrain,
-      vehicleType
-    })
-  })
-
-  return mappedDepartures
-}
 
 async function getDeparturesFromVNET(vlinePlatform, db) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let timetables = db.getCollection('timetables')
   let liveTimetables = db.getCollection('live timetables')
 
-  let vnetDepartures = await getVNETDepartures(vlinePlatform, 'D', db)
+  let vnetDepartures = await getVNETDepartures(vlinePlatform.vnetStationName, 'D', db)
   let journeyCache = {}
   let stopGTFSID = vlinePlatform.stopGTFSID
 
@@ -186,36 +73,10 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
     let platform = departure.platform
     let originalServiceID = trip.originalServiceID || departure.originDepartureTime.format('HH:mm') + trip.destination
 
-    if (trip.destination !== departure.destination) {
-      let stoppingAt = trip.stopTimings.map(e => e.stopName)
-      let destinationIndex = stoppingAt.indexOf(departure.destination)
-      let skipping = trip.stopTimings.slice(destinationIndex + 1).map(e => e.stopName)
-
-      trip.stopTimings = trip.stopTimings.slice(0, destinationIndex + 1)
-      let lastStop = trip.stopTimings[destinationIndex]
-
-      trip.destination = lastStop.stopName
-      trip.destinationArrivalTime = lastStop.arrivalTime
-      lastStop.departureTime = null
-      lastStop.departureTimeMinutes = null
-
-      trip.skipping = skipping
-      trip.runID = departure.runID
-      trip.originalServiceID = originalServiceID
-      trip.operationDays = operationDay
-
-      delete trip._id
-      await liveTimetables.replaceDocument({
-        operationDays: operationDay,
-        runID: departure.runID,
-        mode: 'regional train'
-      }, trip, {
-        upsert: true
-      })
-    }
+    await handleTripShorted(trip, departure, nspTrip, liveTimetables)
 
     trip.vehicleType = departure.vehicleType
-    trip.vehicle = departure.vehicle
+    trip.vehicle = departure.vehicle.join('-')
 
     let currentStation = vlinePlatform.fullStopName.slice(0, -16)
 
@@ -246,7 +107,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
         barAvailable: departure.barAvailable,
         accessibleTrain: departure.accessibleTrain
       }
-    }, currentStation, nspTrip, departure.vehicle.split('-'))
+    }, currentStation, nspTrip, departure.vehicle)
   })
 
   return departures
