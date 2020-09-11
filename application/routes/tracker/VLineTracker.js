@@ -119,6 +119,8 @@ router.get('/highlights', async (req, res) => {
   if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
   else date = today
 
+  let dayOfWeek = utils.getDayName(utils.parseDate(date))
+
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
   let allTrips = (await vlineTrips.findDocuments({ date })
@@ -131,19 +133,25 @@ router.get('/highlights', async (req, res) => {
   })
 
   let consistTypeChanged = await async.filter(allTrips, async trip => {
-    let nspTimetable = await nspTimetables.findDocument({ runID: trip.runID })
+    let nspTimetable = await nspTimetables.findDocument({
+      runID: trip.runID,
+      operationDays: dayOfWeek
+    })
+
     if (nspTimetable) {
       let tripVehicleType
       if (trip.consist[0].startsWith('VL')) tripVehicleType = 'VL'
       else if (trip.consist[0].startsWith('70')) tripVehicleType = 'SP'
       else {
         tripVehicleType = 'N +'
-        let carriage = trip.consist.find(c => !c.startsWith('N') && !c.startsWith('P'))
+        let carriage = trip.consist.find(c => !c.startsWith('N') && !c.startsWith('P') && (c.includes('N') || c.includes('H')))
         if (carriage) tripVehicleType += carriage.includes('N') ? 'N' : 'H'
         else return true
       }
 
       let nspTripType = nspTimetable.vehicle
+      if (nspTripType.endsWith('+PCJ')) nspTripType = nspTripType.slice(0, -4)
+
       let vlMatch = (nspTripType.includes('VL') || nspTripType.includes('VR')) && tripVehicleType == 'VL'
       let spMatch = nspTripType.includes('SP') && tripVehicleType == 'SP'
 

@@ -22,7 +22,7 @@
     "minimist": "^1.2.5",
     "moment": "^2.27.0",
     "moment-timezone": "^0.5.31",
-    "mongodb": "^3.6.1",
+    "mongodb": "^3.6.2",
     "natural": "^2.1.5",
     "node-ical": "^0.11.4",
     "node-mailin": "^2.4.0",
