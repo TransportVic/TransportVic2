@@ -325,7 +325,7 @@ async function appendTripData(db, departure, vlinePlatform) {
   let vlineTrips = db.getCollection('vline trips')
   let timetables = db.getCollection('timetables')
   let liveTimetables = db.getCollection('live timetables')
-  let shortRouteName = getShortRouteName(departure.trip)
+  let shortRouteName = departure.trip.routeName
 
   let {stopGTFSID} = vlinePlatform
 
@@ -369,14 +369,6 @@ async function appendTripData(db, departure, vlinePlatform) {
       date: departureDay,
       departureTime: trackerDepartureTime,
       origin: origin.slice(0, -16)
-    })
-  }
-
-  if (!tripData) {
-    tripData = await vlineTrips.findDocument({
-      date: departureDay,
-      destination: destination.slice(0, -16),
-      destinationArrivalTime: trackerDestinationArrivalTime
     })
   }
 
