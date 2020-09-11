@@ -125,7 +125,7 @@ router.get('/highlights', async (req, res) => {
     .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
   let doubleHeaders = allTrips.filter(trip => {
-    return trip.consist[0].startsWith('N') && trip.consist[1].startsWith('N')
+    return trip.consist[1] && trip.consist[0].startsWith('N') && trip.consist[1].startsWith('N')
   })
 
   let consistTypeChanged = await async.filter(allTrips, async trip => {
