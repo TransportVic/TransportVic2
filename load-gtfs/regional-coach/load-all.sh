@@ -5,6 +5,7 @@ node $DIRNAME/load-stops.js
 node $DIRNAME/load-routes.js
 node $DIRNAME/load-gtfs-timetables.js
 node $DIRNAME/extra/load-connections.js
+node $DIRNAME/extra/find-sss-sun-connections.js
 
 node $DIRNAME/../vline-trains/extra/load-vline-timetables.js
 

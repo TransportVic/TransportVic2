@@ -32,7 +32,7 @@ async function findConnections(changeoverPoint) {
     let stop = trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))
 
     if (!stop.arrivalTimeMinutes) return
-    validTimes = {
+    let validTimes = {
       $gte: stop.arrivalTimeMinutes + 1,
       $lte: stop.arrivalTimeMinutes + 30
     }

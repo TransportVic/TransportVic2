@@ -155,10 +155,6 @@ async function getDeparturesFromPTV(stop, db) {
         }
       }
 
-      if (trip.origin === 'Southern Cross Coach Terminal/Spencer Street' && trip.destination === 'Sunshine Railway Station') {
-        isRailReplacementBus = true
-      }
-
       // Its half trips that never show up properly
       if (!trip) return
       // if (!trip) return console.err(`Failed to map trip: ${departureTime.format('HH:mm')} to ${destination}`)
@@ -220,6 +216,7 @@ async function getDepartures(stop, db) {
       let extras = scheduledDepartueres.filter(d => !ptvDepartures.includes(d.trip.tripID))
       departures = departures.concat(extras)
     } catch (e) {
+      console.log(e)
       departures = scheduledDepartueres
     }
 
@@ -250,22 +247,30 @@ async function getDepartures(stop, db) {
 
       if (departure.isRailReplacementBus === null) {
         let {origin, destination, departureTime} = departure.trip
-        if (origin === 'Southern Cross Coach Terminal/Spencer Street') {
-          origin = 'Southern Cross Railway Station'
-        }
-        if (destination === 'Southern Cross Coach Terminal/Spencer Street') {
-          destination = 'Southern Cross Railway Station'
-        }
+        let sssSUNDown = origin === 'Southern Cross Coach Terminal/Spencer Street' && destination === 'Sunshine Railway Station'
+        let sunSSSUp = origin === 'Sunshine Railway Station' && destination === 'Southern Cross Coach Terminal/Spencer Street'
 
-        let nspDeparture = await timetables.findDocument({
-          mode: 'regional train',
-          origin,
-          'stopTimings.stopName': destination,
-          departureTime
-        })
-        departure.isRailReplacementBus = !!nspDeparture
-        if (nspDeparture) {
-          departure.shortRouteName = nspDeparture.routeName
+        if (sssSUNDown || sunSSSUp) {
+          departure.isRailReplacementBus = true
+          departure.shortRouteName = departure.trip.trainConnection
+        } else {
+          if (origin === 'Southern Cross Coach Terminal/Spencer Street') {
+            origin = 'Southern Cross Railway Station'
+          }
+          if (destination === 'Southern Cross Coach Terminal/Spencer Street') {
+            destination = 'Southern Cross Railway Station'
+          }
+
+          let nspDeparture = await timetables.findDocument({
+            mode: 'regional train',
+            origin,
+            'stopTimings.stopName': destination,
+            departureTime
+          })
+          departure.isRailReplacementBus = !!nspDeparture
+          if (nspDeparture) {
+            departure.shortRouteName = nspDeparture.routeName
+          }
         }
       }
       return departure
