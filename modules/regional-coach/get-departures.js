@@ -245,32 +245,30 @@ async function getDepartures(stop, db) {
         departure.bay = busBays[departureBayID]
       }
 
+      if (departure.trip.trainConnection) {
+        departure.isRailReplacementBus = true
+        departure.shortRouteName = departure.trip.trainConnection
+      }
+
       if (departure.isRailReplacementBus === null) {
         let {origin, destination, departureTime} = departure.trip
-        let sssSUNDown = origin === 'Southern Cross Coach Terminal/Spencer Street' && destination === 'Sunshine Railway Station'
-        let sunSSSUp = origin === 'Sunshine Railway Station' && destination === 'Southern Cross Coach Terminal/Spencer Street'
 
-        if (sssSUNDown || sunSSSUp) {
-          departure.isRailReplacementBus = true
-          departure.shortRouteName = departure.trip.trainConnection
-        } else {
-          if (origin === 'Southern Cross Coach Terminal/Spencer Street') {
-            origin = 'Southern Cross Railway Station'
-          }
-          if (destination === 'Southern Cross Coach Terminal/Spencer Street') {
-            destination = 'Southern Cross Railway Station'
-          }
+        if (origin === 'Southern Cross Coach Terminal/Spencer Street') {
+          origin = 'Southern Cross Railway Station'
+        }
+        if (destination === 'Southern Cross Coach Terminal/Spencer Street') {
+          destination = 'Southern Cross Railway Station'
+        }
 
-          let nspDeparture = await timetables.findDocument({
-            mode: 'regional train',
-            origin,
-            'stopTimings.stopName': destination,
-            departureTime
-          })
-          departure.isRailReplacementBus = !!nspDeparture
-          if (nspDeparture) {
-            departure.shortRouteName = nspDeparture.routeName
-          }
+        let nspDeparture = await timetables.findDocument({
+          mode: 'regional train',
+          origin,
+          'stopTimings.stopName': destination,
+          departureTime
+        })
+        departure.isRailReplacementBus = !!nspDeparture
+        if (nspDeparture) {
+          departure.shortRouteName = nspDeparture.routeName
         }
       }
       return departure

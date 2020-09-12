@@ -142,6 +142,8 @@ database.connect({
 
   count += await findDownConnections('Southern Cross Coach Terminal/Spencer Street', 'Sunshine Railway Station')
   count += await findUpConnections('Sunshine Railway Station', 'Southern Cross Coach Terminal/Spencer Street')
+  count += await findDownConnections('Southern Cross Coach Terminal/Spencer Street', 'Gisborne Railway Station')
+  count += await findUpConnections('Gisborne Railway Station', 'Southern Cross Coach Terminal/Spencer Street')
 
   updateStats('vline-coach-replacement-connections', count)
   console.log('Completed loading in ' + count + ' vline connections')
