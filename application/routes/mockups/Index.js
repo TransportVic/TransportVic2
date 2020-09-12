@@ -86,6 +86,8 @@ router.get('/get', async (req, res) => {
     return res.redirect(`/mockups/vline/${station}/${value}`)
   } else if (type === 'crt') {
     return res.redirect(`/mockups/metro-crt/${station}/${value}`)
+  } else if (type === '2-line-led') {
+    return res.redirect(`/mockups/metro-led-pids/${station}/${value}`)
   } else if (type === 'summary') {
     return res.redirect(`/mockups/summary/${station}?type=${value}`)
   } else if (type === 'concourse') {

@@ -132,11 +132,23 @@ module.exports = {
               departure.actualDepartureTime = departure.scheduledDepartureTime
 
               departure.stopTimings = departure.trip.stopTimings
+              let tripStops = departure.stopTimings.map(e => e.stopName)
+              let currentIndex = tripStops.indexOf(station.stopName)
 
+              departure.connections = (departure.trip.connections || []).filter(connection => {
+                if (!tripStops.some(s => s === connection.changeAt)) return false
+                let {changeAt} = connection
+
+                let changeIndex = tripStops.indexOf(changeAt)
+
+                return changeIndex > currentIndex
+              })
               return departure
             })
           }
-        } catch (e) {}
+        } catch (e) {
+          console.log(e)
+        }
         resolve()
       }),
       new Promise(async resolve => {
@@ -174,8 +186,7 @@ module.exports = {
 
               if (scheduled) {
                 departure.connections = scheduled.connections.filter(connection => {
-                  let changeAtStation = stopTimings.find(s => s.stopName === connection.changeAt)
-                  if (!changeAtStation) return false
+                  if (!tripStops.some(s => s === connection.changeAt)) return false
                   let {changeAt} = connection
 
                   let changeIndex = tripStops.indexOf(changeAt)

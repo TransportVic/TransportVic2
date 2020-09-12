@@ -3,12 +3,9 @@ html
     link(rel='stylesheet' href='/static/css/mockups/summary.css')
   body
     div.container
-      - for (let i = 1; i <= 16; i += 2) {
-      -
-        let url = `/mockups/sss/platform/${i}-${i+1}/`
-
-      div.platform.sss-platform
-        div.title
-          a(href=url)=`/SSS/platform/${i}-${i+1}`
-        iframe(src=url)
-      - }
+      for i in [1, 3, 5, 7, 9, 11, 13, 15]
+        - let url = `/mockups/sss/platform/${i}-${i+1}`
+        div.pid.horizontal
+          div.title
+            a(href=url)=`/SSS/platform/${i}-${i + 1}`
+          iframe(src=url)
