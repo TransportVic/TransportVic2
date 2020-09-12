@@ -25,19 +25,19 @@ html
         div(style='display: none;').firstDeparture
           div.top
             div.topLineBanner.pakenham
-            span.firstDestination Pakenham
+            span.firstDestination 
           div.firstDepartureInfo
             div.scheduledDiv
               span Scheduled
-              span.scheduled 12:34
+              span.scheduled 
             div.departingDiv
               span Departing
               div
-                span.departing 2
+                span.departing 
                 span.min min
             div.platformDiv
               span Platform
-              span.platform 12
+              span.platform 
           span.firstStoppingType --
           div.stops
             
@@ -48,4 +48,4 @@ html
         div.platformContainer.right
           +platform()
       div.clock
-        span=now.format('h:mm:ss a')
+        span #{now.format('h:mm:ss')}

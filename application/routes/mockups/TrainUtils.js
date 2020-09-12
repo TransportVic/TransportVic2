@@ -1,6 +1,7 @@
 const getLineStops = require('../../../additional-data/route-stops')
 const getMetroDepartures = require('../../../modules/metro-trains/get-departures')
 const getVLineDepartures = require('../../../modules/vline/get-departures')
+const destinationOverrides = require('../../../additional-data/coach-stops')
 const utils = require('../../../utils')
 const async = require('async')
 const emptyShunts = require('../../../additional-data/empty-shunts.json')
@@ -57,6 +58,15 @@ let departuresLock = {}
 let departuresCache = new TimedCache({ defaultTtl: 1000 * 5 })
 
 module.exports = {
+  getHumanName: (fullStopName, stopSuburb='') => {
+    let stopName = fullStopName.replace('Shopping Centre', 'SC')
+    let humanName = destinationOverrides[fullStopName] || destinationOverrides[`${fullStopName} (${stopSuburb})`] || fullStopName
+    if (humanName.includes('Railway Station')) {
+      humanName = humanName.replace(/Railway Station.*/, '').trim()
+    }
+
+    return humanName
+  },
   getEmptyShunts: async (station, db) => {
     let timetables = db.getCollection('timetables')
     let today = utils.getPTDayName(utils.now())
@@ -142,7 +152,11 @@ module.exports = {
                 let changeIndex = tripStops.indexOf(changeAt)
 
                 return changeIndex > currentIndex
-              })
+              }).map(connection => ({
+                changeAt: connection.changeAt,
+                for: module.exports.getHumanName(connection.for)
+              }))
+
               return departure
             })
           }
@@ -288,7 +302,7 @@ module.exports = {
 
     return lineStops.filter((e, i, a) => a.indexOf(e) === i)
   },
-  trimTrip: (isUp, stopTimings, fromStation, routeName, willSkipLoop) => {
+  trimTrip: (isUp, stopTimings, fromStation, routeName, willSkipLoop, destination) => {
     if (routeName === 'City Circle') return stopTimings
     if (isUp) {
       let hasSeenFSS = false
@@ -599,7 +613,7 @@ module.exports = {
       if (isUp) lineStops = lineStops.slice(0).reverse()
 
       lineStops = module.exports.getFixedLineStops(tripStops, lineStops, routeName, isUp, departure.type, departure.willSkipLoop)
-      tripStops = module.exports.trimTrip(isUp, tripStops, stationName, routeName, departure.willSkipLoop)
+      tripStops = module.exports.trimTrip(isUp, tripStops, stationName, routeName, departure.willSkipLoop, destination)
 
       departure.lineStops = lineStops
       departure.tripStops = tripStops

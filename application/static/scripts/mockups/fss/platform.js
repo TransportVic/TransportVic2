@@ -246,7 +246,7 @@ function updateBody(firstTime) {
 
       if (firstDeparture.connections) {
         firstStoppingType += firstDeparture.connections.map(connection => {
-          return `, Change at ${connection.changeAt.slice(0, -16)} for ${connection.for.slice(0, -16)}`
+          return `, Change at ${connection.changeAt.replace(' Railway Station', '')} for ${connection.for.replace(' Railway Station', '')}`
         }).join('')
       }
 
