@@ -11,9 +11,7 @@ async function loadDepartures(req, res) {
     codedSuburb: req.params.suburb
   })
 
-  let coachBay = stop.bays.filter(bay => bay.mode === 'regional coach')
-
-  if (!stop || !coachBay.length) {
+  if (!stop || !stop.bays.find(bay => bay.mode === 'regional coach')) {
     return res.status(404).render('errors/no-stop')
   }
 

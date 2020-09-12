@@ -40,7 +40,7 @@ if departures.length
       -
         let cssClass = `${departure.codedLineName}-line`
         if (routeName === 'City Circle') cssClass = 'city-circle'
-      a(class=`leftContainer platform ${cssClass}`)
+      a(class=`leftContainer ${cssClass}`)
         if departure.isRailReplacementBus
           span.topText Rail Bus
           img(src='/static/images/clear-icons/bus.svg')
@@ -55,15 +55,15 @@ if departures.length
         span.destination #{departure.destination}
         
         if departure.message && !departure.suspensions.length
-          span.info.cancelled.noClamp #{departure.message}
+          span.broadDepartureInfo.important #{departure.message}
         else if departure.cancelled
-          span.info.cancelled CANCELLED
+          span.broadDepartureInfo.important CANCELLED
         else if departure.message
-          span.info.cancelled.noClamp #{departure.message}
+          span.broadDepartureInfo.important #{departure.message}
         else if departure.isRailReplacementBus
-          span.info.cancelled Rail Replacement Bus
+          span.broadDepartureInfo.important Rail Replacement Bus
         else if departure.consist.length
-          span.info Detected Consist: #{departure.consist.join(', ')}
+          span.broadDepartureInfo Detected Consist: #{departure.consist.join(', ')}
         else
           
           -
@@ -72,9 +72,9 @@ if departures.length
           if cityLoopStationNames.includes(station.stopName) || isUpTrip
             - let cityLoopConfig = departure.cityLoopConfig.join(', ')
             if departure.willSkipLoop
-              span.info.cancelled #{cityLoopConfig}
+              span.broadDepartureInfo.important #{cityLoopConfig}
             else
-              span.info #{cityLoopConfig}
+              span.broadDepartureInfo #{cityLoopConfig}
       div.timings
         a(class='timing ' + departure.headwayDevianceClass href=`/metro/run/${departure.tripURL}`)
           span #{departure.prettyTimeToArrival}

@@ -13,7 +13,7 @@ async function loadDepartures(req, res) {
     codedSuburb: req.params.suburb
   })
 
-  if (!stop || !stop.bays.filter(bay => bay.mode === 'tram')) {
+  if (!stop || !stop.bays.find(bay => bay.mode === 'tram')) {
     return res.status(404).render('errors/no-stop')
   }
 
@@ -118,7 +118,8 @@ async function loadDepartures(req, res) {
   return {
     services, groupedDepartures, stop,
     classGen: departure => `tram-${departure.sortNumber}`,
-    currentMode: 'tram'
+    currentMode: 'tram',
+    maxDepartures: 3
   }
 }
 

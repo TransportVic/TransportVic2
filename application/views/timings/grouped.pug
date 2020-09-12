@@ -3,7 +3,7 @@ extends ../layout
 block head
   -
     title = `TransportVic - ${stop.stopName}`
-    description = `Viewing the Next 4 ${currentMode} departures from ${stop.stopName}`
+    description = `Viewing the Next ${maxDepartures} ${currentMode} departures from ${stop.stopName}`
     
     switch (currentMode) {
       case 'bus':
@@ -24,7 +24,6 @@ block head
     
   link(rel='preload' as='style' href='/static/css/combined-colours.css')
   link(rel='preload' as='style' href='/static/css/timings/base-style.css')
-  
 
 block title
   span=stop.stopName

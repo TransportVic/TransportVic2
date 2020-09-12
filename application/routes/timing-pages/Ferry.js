@@ -11,7 +11,7 @@ async function loadDepartures(req, res) {
     codedName: req.params.stopName
   })
 
-  if (!stop || !stop.bays.filter(bay => bay.mode === 'ferry')) {
+  if (!stop || !stop.bays.find(bay => bay.mode === 'ferry')) {
     return res.status(404).render('errors/no-stop')
   }
 

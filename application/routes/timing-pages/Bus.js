@@ -13,7 +13,7 @@ async function loadDepartures(req, res) {
     codedSuburb: req.params.suburb
   })
 
-  if (!stop || !stop.bays.filter(bay => bay.mode === 'bus')) {
+  if (!stop || !stop.bays.find(bay => bay.mode === 'bus')) {
     return res.status(404).render('errors/no-stop')
   }
 
@@ -124,7 +124,8 @@ async function loadDepartures(req, res) {
       if (operator.startsWith('dysons')) return 'dysons'
       return operator
     },
-    currentMode: 'bus'
+    currentMode: 'bus',
+    maxDepartures: 4
   }
 }
 

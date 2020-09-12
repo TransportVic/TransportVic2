@@ -14,6 +14,16 @@
   }
   
   let iconMap = {
+    'bus': 'bus',
+    'metro train': 'metro',
+    'regional train': 'vline',
+    'heritage train': 'heritage',
+    'regional coach': 'coach',
+    'tram': 'tram',
+    'ferry': 'ferry'
+  }
+  
+  let urlMap = {
     'regional train': 'vline',
     'heritage train': 'heritage',
     'metro train': 'metro',
@@ -23,7 +33,7 @@ if stopModes.length > 1
   div#modeSwitch
     for mode in stopModes
       -
-        let url = `/${iconMap[mode] || mode.replace(' ', '-')}/timings/`
+        let url = `/${urlMap[mode] || mode.replace(' ', '-')}/timings/`
         if (mode === 'bus' || mode === 'tram' || mode === 'regional coach') 
           url += `${stopToUse.codedSuburb[0]}/`
         url += stopToUse.codedName

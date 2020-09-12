@@ -72,7 +72,7 @@ for busStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'bus'))
 for metroLine in routes.filter(route => route.mode === 'metro train' && route.directions[0])
   - let url = `/metro/line/${metroLine.codedName}`
   a(href=url).route.result
-    div(class=`leftContainer platform ${metroLine.codedName}-line`)
+    div(class=`leftContainer ${metroLine.codedName}-line`)
       img(src='/static/images/clear-icons/metro.svg')
     div.resultDetails
       span Metropolitan Train Service
@@ -81,7 +81,7 @@ for metroLine in routes.filter(route => route.mode === 'metro train' && route.di
 for vlineLine in routes.filter(route => route.mode === 'regional train' && route.directions[0])
   - let url = `/vline/line/${vlineLine.codedName}`
   a(href=url).route.result
-    div(class=`leftContainer platform vline`)
+    div(class=`leftContainer vline`)
       img(src='/static/images/clear-icons/vline.svg')
     div.resultDetails
       span V/Line Train Service
@@ -90,7 +90,7 @@ for vlineLine in routes.filter(route => route.mode === 'regional train' && route
 //- for coachRoute in routes.filter(route => route.mode === 'regional coach' && route.directions[0])
   - let url = `/coach/route/${coachRoute.codedName}`
   a(href=url).route.result
-    div(class=`leftContainer platform coach`)
+    div(class=`leftContainer coach`)
       img(src='/static/images/clear-icons/coach.svg')
     div.resultDetails
       span Regional Coach Service
@@ -99,7 +99,7 @@ for vlineLine in routes.filter(route => route.mode === 'regional train' && route
 for tramRoute in routes.filter(route => route.mode === 'tram' && route.directions[0])
   - let url = `/tram/route/${tramRoute.routeNumber}`
   a(href=url).route.result
-    div(class=`leftContainer platform tram-${tramRoute.routeNumber}`)
+    div(class=`leftContainer tram-${tramRoute.routeNumber}`)
         span.bigNumber=tramRoute.routeNumber
     div.resultDetails
       span Tram Route
@@ -133,7 +133,7 @@ for busRoute in routes.filter(route => route.mode === 'bus' && route.directions[
     if (operator.startsWith('dysons')) operator = 'dysons'
   
   a(href=url).route.result
-    div(class=`leftContainer platform ${operator}`)
+    div(class=`leftContainer ${operator}`)
       if hasNumber
         span.bigNumber=busRoute.routeNumber
       else

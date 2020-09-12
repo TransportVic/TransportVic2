@@ -44,7 +44,7 @@ block content
   - let hasNumber = !!routeNumber
   div(class=`departure${hasNumber ? '' : ' no-number'}`)
     if hasNumber
-      a(class=`leftContainer platform ${routeNumberClass}`)
+      a(class=`leftContainer ${routeNumberClass}`)
         if loopDirection
           span.topText=loopDirection
         else if trip.routeDetails

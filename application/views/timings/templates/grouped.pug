@@ -7,12 +7,11 @@ if services.length
     for destination in destinations
       -
         let destinationDepartures = serviceDepartures[destination]
-        let departures = destinationDepartures.slice(0, 4)
+        let departures = destinationDepartures.slice(0, maxDepartures)
         let firstDeparture = destinationDepartures[0]
-        let departureDataWidth = `width: calc(100vw - (3.2vw + 3.2vh) * ${departures.length}${hasNumber ? ' - (5.25vw + 5.25vh)' : ''} - (1vw + 1vh) - 1.5vw)`
-      div(class=`departure${hasNumber ? '' : ' no-number'}`)
+      div(class=`departure groupedTimings${hasNumber ? '' : ' no-number'}`)
         if hasNumber
-          a(class=`leftContainer platform ${classGen(firstDeparture)}`)
+          a(class=`leftContainer ${classGen(firstDeparture)}`)
             if firstDeparture.loopDirection
               span.topText #{firstDeparture.loopDirection}
             else if firstDeparture.routeDetails
@@ -23,21 +22,19 @@ if services.length
             span(class=className) #{firstDeparture.routeNumber}
             if firstDeparture.bay
               span.bottomText #{firstDeparture.bay}
-        a(href=firstDeparture.destinationURL).departureInfo
+        a(href=firstDeparture.destinationURL class=`departureInfo departure${departures.length}`)
           if !hasNumber
-            span.routeName(style=departureDataWidth) #{firstDeparture.trip.routeName}
+            span.routeName #{firstDeparture.trip.routeName}
           span.towards Towards
-          span.destination(style=departureDataWidth) #{firstDeparture.destination}
+          span.destination #{firstDeparture.destination}
           if firstDeparture.guidanceText
-            span.info.smaller(style=departureDataWidth) #{firstDeparture.guidanceText}
+            span.broadDepartureInfo.clampLine #{firstDeparture.guidanceText}
           if firstDeparture.viaText && hasNumber
-            span.info.smaller(style=departureDataWidth) #{firstDeparture.viaText}
+            span.broadDepartureInfo.clampLine #{firstDeparture.viaText}
         div.timings
-          for i in Array(4 - departures.length)
-            a.timing.mini(style='display: none')
           for departure in departures
-            a(href=departure.tripURL class=`timing mini ${departure.headwayDevianceClass}`)
-              div.stats
+            a(href=departure.tripURL class=`timing ${departure.headwayDevianceClass}`)
+              div.vehicleData
                 if departure.vehicleDescriptor.operator === 'Yarra Trams'
                   if departure.tram.data.ac
                     img(src='/static/images/decals/ac.svg')
@@ -46,7 +43,7 @@ if services.length
               span #{departure.prettyTimeToArrival}
               span #{departure.scheduledDepartureTime.format('HH:mm')}
               if departure.vehicleDescriptor
-                if departure.vehicleDescriptor.supplier === 'Smartrak' || departure.isBusMinderOverride
+                if departure.vehicleDescriptor.supplier === 'Smartrak'
                   if departure.busRego
                     span.rego ##{departure.busRego}
                   else
