@@ -20,6 +20,7 @@ async function pickBestTrip(data, db) {
   let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
   let tripEndTime = utils.parseTime(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm')
+  if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
 
   let trueMode = data.mode
@@ -41,13 +42,16 @@ async function pickBestTrip(data, db) {
   let originName = originStop.bays.filter(bay => utils.encodeName(bay.fullStopName) === data.origin)[0].fullStopName
   let destinationName = destinationStop.bays.filter(bay => utils.encodeName(bay.fullStopName) === data.destination)[0].fullStopName
 
+  let operationDays = data.operationDays
+  if (tripStartMinutes > 1440) operationDays = utils.getYYYYMMDD(tripDay.clone().add(-1, 'day'))
+
   let query = {
     mode: trueMode,
     origin: originName,
     departureTime: data.departureTime,
     destination: destinationName,
     destinationArrivalTime: data.destinationArrivalTime,
-    operationDays: data.operationDays
+    operationDays
   }
 
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)

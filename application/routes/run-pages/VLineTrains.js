@@ -19,11 +19,11 @@ function giveVariance(time) {
 }
 
 async function pickBestTrip(data, db) {
-  data.mode = 'regional train'
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
   let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
   let tripEndTime = utils.parseTime(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm')
+  if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
 
   let originStop = await db.getCollection('stops').findDocument({
@@ -46,10 +46,13 @@ async function pickBestTrip(data, db) {
     $lte: tripStartMinutes + variance
   }
 
+  let operationDays = data.operationDays
+  if (tripStartMinutes > 1440) operationDays = utils.getYYYYMMDD(tripDay.clone().add(-1, 'day'))
+
   let query = {
     $and: [{
       mode: 'regional train',
-      operationDays: data.operationDays
+      operationDays
     }, {
       stopTimings: {
         $elemMatch: {
