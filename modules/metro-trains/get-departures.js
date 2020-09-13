@@ -507,7 +507,7 @@ async function getDepartures(station, db, filter=true) {
     let mergedDepartures = {}
 
     departures.forEach(departure => {
-      let serviceID = departure.scheduledDepartureTime.format('HH:mm') + departure.trip.destination + departure.trip.destinationArrivalTime
+      let serviceID = departure.scheduledDepartureTime.format('HH:mm') + departure.trip.destination + departure.trip.trueDestinationArrivalTime
 
       if (serviceIDs.includes(serviceID))
         mergedDepartures[serviceID].busCount++
