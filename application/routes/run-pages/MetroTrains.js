@@ -7,7 +7,6 @@ const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern'
 const stonyPointFormations = require('../../../modules/metro-trains/stony-point-formations')
 
 async function pickBestTrip(data, db) {
-  data.mode = 'metro train'
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
   let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
@@ -44,10 +43,13 @@ async function pickBestTrip(data, db) {
     }
   }
 
+  let operationDays = data.operationDays
+  if (tripStartMinutes > 1440) operationDays = utils.getYYYYMMDD(tripDay.clone().add(-1, 'day'))
+
   let query = {
     $and: [{
       mode: 'metro train',
-      operationDays: data.operationDays
+      operationDays
     }, {
       stopTimings: {
         $elemMatch: {
