@@ -130,9 +130,11 @@ async function getScheduledDepartures(station, db, mode, timeout) {
     liveDepartures = liveDepartures.concat(liveTimetablesFound)
   }
 
-  function getID(departure) {
-    let stop = departure.stopTimings.find(s => s.stopGTFSID === platform.stopGTFSID)
-    return stop.departureTimeMinutes + departure.direction + departure.routeGTFSID
+  function getID(trip) {
+    let stop = trip.stopTimings.find(s => s.stopGTFSID === platform.stopGTFSID)
+    let id = stop.tripTimeMinutes + trip.direction + trip.routeGTFSID
+    if (trip.mode === 'metro train') id += trip.trueDestination + trip.trueOrigin
+    return id
   }
 
   let serviceIndex = []
