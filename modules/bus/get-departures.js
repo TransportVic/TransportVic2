@@ -275,7 +275,6 @@ async function getDepartures(stop, db) {
 
       departures = ptvDepartures.concat(extraScheduledTrips)
 
-
       let sortedDepartures = departures.sort((a, b) => {
         return a.actualDepartureTime - b.actualDepartureTime
       }).sort((a, b) => {

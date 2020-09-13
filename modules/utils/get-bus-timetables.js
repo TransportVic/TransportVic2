@@ -109,7 +109,17 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
     }
   }).toArray()
 
-  return (await async.map(trips, async trip => {
+  function i (trip) { return `${trip.routeGTFSID}${trip.origin}${trip.departureTime}` }
+
+  let tripsSeen = []
+  let filteredTrips = trips.filter(trip => {
+    let id = i(trip)
+    if (tripsSeen.includes(id)) return false
+    tripsSeen.push(id)
+    return true
+  })
+
+  return (await async.map(filteredTrips, async trip => {
     let stopData = trip.stopTimings.filter(stop => stopGTFSIDs.includes(stop.stopGTFSID))[0]
     let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
 
