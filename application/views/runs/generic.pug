@@ -59,9 +59,9 @@ block content
       span.towards Towards
       span.destination=destination
       if viaText && hasNumber
-        span.info.smaller=viaText
+        span.broadDepartureInfo.clampLine=viaText
       if trip.cancelled
-        span.info.cancelled CANCELLED
+        span.broadDepartureInfo.important CANCELLED
   div.infoRow
     -
       let stopType = ({
