@@ -112,7 +112,10 @@ async function readRouteShapes() {
       currentShape = []
       if (routesSeen.length === batchSize) return shapes
     } else {
-      currentLength = parseFloat(line[4])
+      let newLength = parseFloat(line[4])
+      if (currentLength === newLength) continue
+      currentLength = newLength
+
       if (!routesSeen.includes(currentRouteGTFSID)) routesSeen.push(currentRouteGTFSID)
       currentShape.push([
         parseFloat(line[2]),
