@@ -1,4 +1,4 @@
-module.exports = async function (trip, departure, nspTrip, liveTimetables) {
+module.exports = async function (trip, departure, nspTrip, liveTimetables, date) {
   if (trip && trip.destination !== departure.destination || trip.origin !== departure.origin) {
     let stoppingAt = trip.stopTimings.map(e => e.stopName)
     let destinationIndex = stoppingAt.indexOf(departure.destination)

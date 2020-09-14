@@ -79,7 +79,7 @@ async function getDeparturesFromVNET(db) {
 
     if (!trip && nspTrip) trip = nspTrip
 
-    await handleTripShorted(trip, departure, nspTrip, liveTimetables)
+    await handleTripShorted(trip, departure, nspTrip, liveTimetables, date)
   })
 }
 

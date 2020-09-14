@@ -27,7 +27,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
 
   let departures = await async.map(vnetDepartures, async departure => {
     let dayOfWeek = utils.getDayName(departure.originDepartureTime)
-    let operationDay = departure.originDepartureTime.format('YYYYMMDD')
+    let operationDay = utils.getYYYYMMDD(departure.originDepartureTime)
 
     let nspTrip = await timetables.findDocument({
       operationDays: dayOfWeek,
@@ -73,7 +73,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
     let platform = departure.platform
     let originalServiceID = trip.originalServiceID || departure.originDepartureTime.format('HH:mm') + trip.destination
 
-    await handleTripShorted(trip, departure, nspTrip, liveTimetables)
+    await handleTripShorted(trip, departure, nspTrip, liveTimetables, operationDay)
 
     trip.vehicleType = departure.vehicleType
     trip.vehicle = departure.vehicle.join('-')
