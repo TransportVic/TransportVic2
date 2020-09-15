@@ -22,11 +22,13 @@ module.exports = {
   "4-47I": ["Tullamarine Bus Lines"], // 471
   "4-48S": ["Tullamarine Bus Lines"], // 484
   "4-5X9": ["Dysons"], // 509
+  "4-51I": ["Dysons"],
   "4-525": ["Dysons"],
   "4-52F": ["Dysons"], // 525
   "4-552": ["Dysons"],
   "4-556": ["Dysons"],
   "4-570": ["Dysons"],
+  "4-58x": ["Panorama Coaches"],
   "4-603": ["Transdev Melbourne"],
   "4-604": ["Transdev Melbourne"],
   "4-704": ["Ventura Bus Lines"],

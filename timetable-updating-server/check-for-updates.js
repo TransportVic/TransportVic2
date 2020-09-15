@@ -4,6 +4,7 @@ const {spawn} = require('child_process')
 const DatabaseConnection = require('../database/DatabaseConnection')
 const ws = require('ws')
 const utils = require('../utils')
+const async = require('async')
 
 const config = require('../config.json')
 const urls = require('../urls.json')
@@ -80,21 +81,13 @@ async function updateTimetables() {
   let database = new DatabaseConnection(config.databaseURL, config.databaseName)
   return new Promise(resolve => {
     database.connect(async err => {
-      let stops = database.getCollection('stops')
-      let routes = database.getCollection('routes')
-      let gtfsTimetables = database.getCollection('gtfs timetables')
-      let liveTimetables = database.getCollection('live timetables')
-      let timetables = database.getCollection('timetables')
+      let collections = ['stops', 'routes', 'gtfs timetables', 'live timetables', 'timetables']
 
-      try {
-        await stops.dropCollection()
-        await routes.dropCollection()
-        await gtfsTimetables.dropCollection()
-        await liveTimetables.dropCollection()
-        await timetables.dropCollection()
-      } catch (e) {
-        console.log(e)
-      }
+      await async.forEach(collections, async collection => {
+        try {
+          await database.getCollection(collection).dropCollection()
+        } catch (e) {}
+      })
 
       broadcast({
         type: 'log-newline',
@@ -126,7 +119,7 @@ request.head(urls.gtfsFeed, async (err, resp, body) => {
       fs.writeFileSync(__dirname + '/last-modified', lastModified)
       console.log('Wrote last-modified', lastModified)
       await discordUpdate('[Updater]: Finished downloading new timetables')
-  
+
       await updateTimetables()
     })
   } else {
