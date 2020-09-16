@@ -15,8 +15,10 @@ let defaultStoppingMap = {
   sasAtoB: 'Stops All Stations from {0} to {1}',
   runsExpressAtoB: 'Runs Express from {0} to {1}',
   runsExpressTo: 'Runs Express to {0}',
+  thenRunsExpressTo: 'then Runs Express to {0}',
   thenRunsExpressAtoB: 'then Runs Express from {0} to {1}',
   sasTo: 'Stops All Stations to {0}',
+  stopsAt: 'Stops At {0}',
   thenSASTo: 'then Stops All Stations to {0}'
 }
 
@@ -516,8 +518,16 @@ module.exports = {
         if (currentStation === previousStop) {
           texts.push(textMap.runsExpressTo.format(nextStop))
         } else {
-          texts.push(textMap.sasTo.format(previousStop))
-          texts.push(textMap.runsExpressAtoB.format(previousStop, nextStop))
+          if (nextStopIndex - lineStops.indexOf(currentStation)) {
+            texts.push(textMap.stopsAt.format(previousStop))
+          } else {
+            texts.push(textMap.sasTo.format(previousStop))
+          }
+          if (nextStop === destination) {
+            texts.push(textMap.thenRunsExpressTo.format(nextStop))
+          } else {
+            texts.push(textMap.runsExpressAtoB.format(previousStop, nextStop))
+          }
         }
       }
 

@@ -210,7 +210,6 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   })
 
   // PTV likes to leave stuff out
-
   if (linesSkippingLoop.includes('2-HBG') || linesSkippingLoop.includes('2-MER')) {
     linesSkippingLoop = linesSkippingLoop.concat(['2-HBG', '2-MER'])
   }
