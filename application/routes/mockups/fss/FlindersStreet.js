@@ -1,46 +1,23 @@
 const express = require('express')
 const router = new express.Router()
-const async = require('async')
 const utils = require('../../../../utils')
 const TrainUtils = require('../TrainUtils')
 
-let stoppingTextMap = {
-  stopsAll: 'Stops All Stations',
-  allExcept: 'Not Stopping At {0}',
-  expressAtoB: '{0} to {1}',
-  sasAtoB: 'Stops All Stations from {0} to {1}',
-  runsExpressAtoB: 'Runs Express from {0} to {1}',
-  runsExpressTo: 'Runs Express to {0}',
-  thenRunsExpressTo: 'then Runs Express to {0}',
-  thenRunsExpressAtoB: 'then Runs Express from {0} to {1}',
-  sasTo: 'Stops All Stations to {0}',
-  stopsAt: 'Stops At {0}',
-  thenSASTo: 'then Stops All Stations to {0}'
-}
-
-let stoppingTypeMap = {
-  vlineService: {
-    stoppingType: 'No Suburban Passengers'
-  },
-  sas: 'Stops All',
-  limExp: 'Ltd Express',
-  exp: 'Express'
-}
+let validPIDTypes = ['escalator', 'platform']
 
 async function getData(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
     codedName: (req.params.station || 'flinders-street') + '-railway-station'
   })
 
-  return await TrainUtils.getPIDSDepartures(res.db, station, req.params.platform, stoppingTextMap, stoppingTypeMap, req.params.maxDepartures || 6)
+  return await TrainUtils.getPIDSDepartures(res.db, station, req.params.platform, null, null, req.params.maxDepartures || 5)
 }
 
-router.get('/escalator/:platform/:station*?', async (req, res) => {
-  res.render('mockups/fss/escalator', { platform: req.params.platform, now: utils.now() })
-})
+router.get('/:type/:platform/:station*?', async (req, res, next) => {
+  let pidType = req.params.type
+  if (!validPIDTypes.includes(pidType)) return next()
 
-router.get('/platform/:platform/:station*?', async (req, res) => {
-  res.render('mockups/fss/platform', { platform: req.params.platform, now: utils.now() })
+  res.render('mockups/fss/' + pidType, { platform: req.params.platform, now: utils.now() })
 })
 
 router.post('/:type/:platform/:station*?', async (req, res) => {

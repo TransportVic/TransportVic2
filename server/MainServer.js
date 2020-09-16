@@ -131,15 +131,16 @@ module.exports = class MainServer {
           fs.createReadStream(filePath).pipe(res)
 
           return
-        } catch (e) {console.log(e)
+        } catch (e) {
+          console.log(e)
         }
       }
       next()
     })
 
     app.use('/mockups', rateLimit({
-      windowMs: 5 * 60 * 1000,
-      max: 320
+      windowMs: 1 * 60 * 1000,
+      max: 18
     }))
   }
 

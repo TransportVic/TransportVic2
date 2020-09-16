@@ -8,7 +8,7 @@ const emptyShunts = require('../../../additional-data/empty-shunts.json')
 const TimedCache = require('timed-cache')
 const EventEmitter = require('events')
 
-let defaultStoppingMap = {
+let defaultStoppingText = {
   stopsAll: 'Stops All Stations',
   allExcept: 'All Except {0}',
   expressAtoB: '{0} to {1}',
@@ -20,6 +20,15 @@ let defaultStoppingMap = {
   sasTo: 'Stops All Stations to {0}',
   stopsAt: 'Stops At {0}',
   thenSASTo: 'then Stops All Stations to {0}'
+}
+
+let defaultStoppingType = {
+  vlineService: {
+    stoppingType: 'No Suburban Passengers'
+  },
+  sas: 'Stops All',
+  limExp: 'Limited Express',
+  exp: 'Express'
 }
 
 let northernGroup = [
@@ -483,9 +492,9 @@ module.exports = {
 
     return expressParts
   },
-  determineStoppingPattern: (expressParts, destination, lineStops, currentStation, textMap=defaultStoppingMap) => {
-    if (expressParts.length === 0) return textMap.stopsAll
-    if (expressParts.length === 1 && expressParts[0].length === 1) return textMap.allExcept.format(expressParts[0][0])
+  determineStoppingPattern: (expressParts, destination, lineStops, currentStation, stoppingText) => {
+    if (expressParts.length === 0) return stoppingText.stopsAll
+    if (expressParts.length === 1 && expressParts[0].length === 1) return stoppingText.allExcept.format(expressParts[0][0])
 
     let texts = []
 
@@ -505,28 +514,28 @@ module.exports = {
         let lastStopIndex = lineStops.indexOf(lastStop)
 
         if (i === expressParts.length - 1 && nextStop === destination) {
-          texts.push(textMap.thenRunsExpressAtoB.format(previousStop, nextStop))
+          texts.push(stoppingText.thenRunsExpressAtoB.format(previousStop, nextStop))
         } else if (lastStop === previousStop) {
-          texts.push(textMap.expressAtoB.format(previousStop, nextStop))
+          texts.push(stoppingText.expressAtoB.format(previousStop, nextStop))
         } else if (lastStopIndex + 1 === previousStopIndex) {
-          texts.push(textMap.runsExpressAtoB.format(previousStop, nextStop))
+          texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
         } else {
-          texts.push(textMap.sasAtoB.format(lastStop, previousStop))
-          texts.push(textMap.runsExpressAtoB.format(previousStop, nextStop))
+          texts.push(stoppingText.sasAtoB.format(lastStop, previousStop))
+          texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
         }
       } else {
         if (currentStation === previousStop) {
-          texts.push(textMap.runsExpressTo.format(nextStop))
+          texts.push(stoppingText.runsExpressTo.format(nextStop))
         } else {
           if (nextStopIndex - lineStops.indexOf(currentStation)) {
-            texts.push(textMap.stopsAt.format(previousStop))
+            texts.push(stoppingText.stopsAt.format(previousStop))
           } else {
-            texts.push(textMap.sasTo.format(previousStop))
+            texts.push(stoppingText.sasTo.format(previousStop))
           }
           if (nextStop === destination) {
-            texts.push(textMap.thenRunsExpressTo.format(nextStop))
+            texts.push(stoppingText.thenRunsExpressTo.format(nextStop))
           } else {
-            texts.push(textMap.runsExpressAtoB.format(previousStop, nextStop))
+            texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
           }
         }
       }
@@ -535,7 +544,7 @@ module.exports = {
     })
 
     if (lineStops[lineStops.indexOf(lastStop)] !== destination) {
-      texts.push(textMap.thenSASTo.format(destination))
+      texts.push(stoppingText.thenSASTo.format(destination))
     }
 
     return texts.join(', ').replace(/ Railway Station/g, '')
@@ -578,7 +587,10 @@ module.exports = {
       }
     }).slice(0, maxDepartures)
   },
-  getPIDSDepartures: async (db, station, platform, stoppingTextMap, stoppingTypeMap, maxDepartures=6) => {
+  getPIDSDepartures: async (db, station, platform, stoppingText, stoppingType, maxDepartures=6) => {
+    stoppingText = stoppingText || defaultStoppingText
+    stoppingType = stoppingType || defaultStoppingType
+
     let stationName = station.stopName.slice(0, -16)
     let cacheKey = `${stationName}${platform}${maxDepartures}`
 
@@ -629,20 +641,20 @@ module.exports = {
       departure.tripStops = tripStops
 
       let expresses = module.exports.findExpressStops(tripStops, lineStops, routeName, isUp, stationName)
-      let stoppingPattern = module.exports.determineStoppingPattern(expresses, destination, lineStops, stationName, stoppingTextMap)
+      let stoppingPattern = module.exports.determineStoppingPattern(expresses, destination, lineStops, stationName, stoppingText)
 
       departure.stoppingPattern = stoppingPattern
 
       let expressCount = expresses.reduce((a, e) => a + e.length, 0)
 
-      if (departure.type === 'vline' && stoppingTypeMap.vlineService) {
-        departure.stoppingType = stoppingTypeMap.vlineService.stoppingType
-        if (stoppingTypeMap.vlineService.stoppingPatternPostfix) {
-          departure.stoppingPattern += stoppingTypeMap.vlineService.stoppingPatternPostfix
+      if (departure.type === 'vline' && stoppingType.vlineService) {
+        departure.stoppingType = stoppingType.vlineService.stoppingType
+        if (stoppingType.vlineService.stoppingPatternPostfix) {
+          departure.stoppingPattern += stoppingType.vlineService.stoppingPatternPostfix
         }
-      } else if (expressCount === 0) departure.stoppingType = stoppingTypeMap.sas
-      else if (expressCount < 4) departure.stoppingType = stoppingTypeMap.limExp
-      else departure.stoppingType = stoppingTypeMap.exp
+      } else if (expressCount === 0) departure.stoppingType = stoppingType.sas
+      else if (expressCount < 4) departure.stoppingType = stoppingType.limExp
+      else departure.stoppingType = stoppingType.exp
 
       departure = module.exports.appendScreenDataToDeparture(departure, station)
 
