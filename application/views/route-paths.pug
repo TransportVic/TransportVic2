@@ -1,0 +1,15 @@
+extends layout
+    
+block head
+  title TransportVic - Route Paths
+  link(rel='stylesheet' href='https://unpkg.com/leaflet@1.6.0/dist/leaflet.css')
+  script(src='https://unpkg.com/leaflet@1.6.0/dist/leaflet.js')
+    
+block title
+  span Route Paths
+
+block scripts
+  script(src='/static/scripts/route-paths.js')
+  
+block content
+  div#map(style='height: calc(100vh - (4vw + 4vh))')

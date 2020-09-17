@@ -266,7 +266,9 @@ module.exports = class MainServer {
       RoutePreview: {
         path: '/route-preview',
         enable: modules.routePreview
-      }
+      },
+
+      RoutePaths: '/route-paths'
     }
 
     Object.keys(routers).forEach(routerName => {
