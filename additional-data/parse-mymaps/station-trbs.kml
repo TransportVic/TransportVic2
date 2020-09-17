@@ -1,0 +1,1171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Station TRBS</name>
+    <description/>
+    <Style id="icon-1899-0288D1-normal">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1899-0288D1-highlight">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1899-0288D1">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1899-0288D1-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1899-0288D1-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Folder>
+      <name>Untitled layer</name>
+      <Placemark>
+        <name>FSS</name>
+        <description><![CDATA[towards: City Loop<br>along: Flinders Street<br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City Loop</value>
+          </Data>
+          <Data name="along">
+            <value>Flinders Street</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9657737,-37.8180461,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>PAR
+</name>
+        <description><![CDATA[towards: Parliament<br><br>along: Nicholson Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Parliament
+</value>
+          </Data>
+          <Data name="along">
+            <value>Nicholson Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9729884,-37.8102828,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>PAR
+</name>
+        <description><![CDATA[towards: Suburbs<br>along: Spring Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Suburbs</value>
+          </Data>
+          <Data name="along">
+            <value>Spring Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9737611,-37.812526,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CFD</name>
+        <description><![CDATA[towards: Cranbourne, Pakenham, Frankston & Darling<br><br>along: Normanby Road<br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Cranbourne, Pakenham, Frankston & Darling
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Normanby Road</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0417437,-37.8772795,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CFD</name>
+        <description><![CDATA[towards: City<br>along: Normanby Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Normanby Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0417156,-37.877307,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CFD</name>
+        <description><![CDATA[towards: Traralgon & Bairnsdale<br><br>along: Sir John Monash Drive<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Traralgon & Bairnsdale
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Sir John Monash Drive
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0421234,-37.8768127,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>OAK</name>
+        <description><![CDATA[towards: City<br>along: Johnson Street<br><br>bay: E]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Johnson Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value>E</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0874375,-37.9005391,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>OAK</name>
+        <description><![CDATA[towards: Cranbourne & Pakenham<br><br>along: Haughton Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Cranbourne & Pakenham
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Haughton Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0882207,-37.9006047,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HUN</name>
+        <description><![CDATA[towards: City<br>along: Huntingdale Road<br><br>bay: F]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Huntingdale Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value>F</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1033858,-37.9110168,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HUN</name>
+        <description><![CDATA[towards: Cranbourne & Pakenham<br><br>along: Haughton Road<br><br>bay: C]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Cranbourne & Pakenham
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Haughton Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value>C</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1029848,-37.910838,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CLA</name>
+        <description><![CDATA[towards: City<br>along: Carinish Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Carinish Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1205641,-37.9243792,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CLA</name>
+        <description><![CDATA[towards: Cranbourne & Pakenham<br><br>along: Carinish Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Cranbourne & Pakenham
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Carinish Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1214439,-37.9248489,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>WTL</name>
+        <description><![CDATA[towards: City<br>along: Rayhur Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Rayhur Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1379247,-37.9375197,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>WTL</name>
+        <description><![CDATA[towards: Cranbourne & Pakenham<br><br>along: Rayhur Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Cranbourne & Pakenham
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Rayhur Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1385322,-37.9379851,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SPG</name>
+        <description><![CDATA[towards: City<br>along: Lightwood Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Lightwood Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.153433,-37.9499503,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SPG</name>
+        <description><![CDATA[towards: Cranbourne & Pakenham<br><br>along: Lightwood Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Cranbourne & Pakenham
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Lightwood Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1534263,-37.9497219,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HUG</name>
+        <description><![CDATA[towards: City<br>along: Poath Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Poath Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0767749,-37.8940442,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HUG</name>
+        <description><![CDATA[towards: Cranbourne & Pakenham<br><br>along: Poath Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Cranbourne & Pakenham
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Poath Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0767504,-37.8949906,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MRB</name>
+        <description><![CDATA[towards: City<br>along: Neerim Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Neerim Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0669408,-37.8896636,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MRB</name>
+        <description><![CDATA[towards: Cranbourne & Pakenham<br><br>along: Neerim Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Cranbourne & Pakenham
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Neerim Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0669824,-37.8895323,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CNE</name>
+        <description><![CDATA[towards: City<br>along: Koornang Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Koornang Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0576561,-37.8858498,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CNE</name>
+        <description><![CDATA[towards: Cranbourne & Pakenham<br><br>along: Koornang Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Cranbourne & Pakenham
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Koornang Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0578211,-37.8860107,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CFD</name>
+        <description><![CDATA[towards: City (Dropoff Only)<br><br>along: Sir John Monash Drive<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City (Dropoff Only)
+</value>
+          </Data>
+          <Data name="along">
+            <value>Sir John Monash Drive
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0427719,-37.877253,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CFD</name>
+        <description><![CDATA[towards: Cranbourne, Pakenham & Frankston (LTD EXP)<br><br>along: Normanby Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Cranbourne, Pakenham & Frankston (LTD EXP)
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Normanby Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0411787,-37.8769122,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SNP</name>
+        <description><![CDATA[towards: City<br>along: Lightwood Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Lightwood Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1630082,-37.9571595,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SNP</name>
+        <description><![CDATA[towards: Cranbourne & Pakenham<br><br>along: Lightwood Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Cranbourne & Pakenham
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Lightwood Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1630229,-37.9569935,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>NPK</name>
+        <description><![CDATA[towards: City<br>along: Mons Parade<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Mons Parade
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1761902,-37.9663427,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>NPK</name>
+        <description><![CDATA[towards: Cranbourne & Pakenham<br><br>along: Mons Parade<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Cranbourne & Pakenham
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Mons Parade
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1754921,-37.9656829,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>YMN</name>
+        <description><![CDATA[towards: City<br>along: Railway Parade<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Railway Parade
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1915176,-37.9777231,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>YMN</name>
+        <description><![CDATA[towards: Cranbourne & Pakenham<br><br>along: Railway Parade<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Cranbourne & Pakenham
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Railway Parade
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1928976,-37.9785212,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>DNG</name>
+        <description><![CDATA[towards: Traralgon & Gippsland<br><br>along: Foster Street<br><br>bay: 10 & 11<br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Traralgon & Gippsland
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Foster Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value><![CDATA[10 & 11
+]]></value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2091884,-37.9896496,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>DNG</name>
+        <description><![CDATA[towards: Cranbourne & Pakenham<br><br>along: Foster Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Cranbourne & Pakenham
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Foster Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2096913,-37.9894319,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>DNG</name>
+        <description><![CDATA[towards: City<br>along: Foster Street<br><br>bay: ?]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Foster Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value>?</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2093145,-37.9896899,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HLM</name>
+        <description><![CDATA[towards: Pakenham<br>along: Hallam South Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Pakenham</value>
+          </Data>
+          <Data name="along">
+            <value>Hallam South Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2711065,-38.0174199,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HLM</name>
+        <description><![CDATA[towards: City<br>along: Hallam South Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Hallam South Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2706881,-38.0180739,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>NWA</name>
+        <description><![CDATA[towards: City<br>along: Webb Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Webb Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.3032548,-38.0269388,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>NWA</name>
+        <description><![CDATA[towards: Pakenham<br>along: Webb Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Pakenham</value>
+          </Data>
+          <Data name="along">
+            <value>Webb Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.3031381,-38.0267592,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BEW</name>
+        <description><![CDATA[towards: Pakenham<br>along: Reserve Street<br><br>bay: 1]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Pakenham</value>
+          </Data>
+          <Data name="along">
+            <value>Reserve Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.3445934,-38.0387707,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BEW</name>
+        <description><![CDATA[towards: City<br>along: Reserve Street<br><br>bay: 2]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Reserve Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value>2</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.3447597,-38.0389281,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BFD
+</name>
+        <description><![CDATA[towards: City<br>along: Beaconsfield Avenue<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Beaconsfield Avenue
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.3665132,-38.0506983,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BFD
+</name>
+        <description><![CDATA[towards: Pakenham<br>along: Beaconsfield Avenue<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Pakenham</value>
+          </Data>
+          <Data name="along">
+            <value>Beaconsfield Avenue
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.3667841,-38.050599,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>OFC</name>
+        <description><![CDATA[towards: City<br>along: Siding Avenue<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Siding Avenue
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.4137203,-38.0666689,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>OFC</name>
+        <description><![CDATA[towards: Pakenham<br>along: Siding Avenue<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Pakenham</value>
+          </Data>
+          <Data name="along">
+            <value>Siding Avenue
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.4138799,-38.0666879,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CDA</name>
+        <description><![CDATA[towards: City & Pakenham<br><br>along: Village Way<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[City & Pakenham
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Village Way
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.4382205,-38.0721528,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>PKM</name>
+        <description><![CDATA[towards: City<br>along: Railway Avenue<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Railway Avenue
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.4850546,-38.0800667,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SSS</name>
+        <description><![CDATA[towards: City Loop<br><br>along: Spencer Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City Loop
+</value>
+          </Data>
+          <Data name="along">
+            <value>Spencer Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9531202,-37.8172703,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>FGS</name>
+        <description><![CDATA[towards: City Loop<br><br>along: La Trobe Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City Loop
+</value>
+          </Data>
+          <Data name="along">
+            <value>La Trobe Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9560633,-37.8117238,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>FGS</name>
+        <description><![CDATA[towards: Sunshine<br>along: King Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Sunshine</value>
+          </Data>
+          <Data name="along">
+            <value>King Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9534602,-37.8111093,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MCE</name>
+        <description><![CDATA[towards: City Loop<br><br>along: La Trobe Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City Loop
+</value>
+          </Data>
+          <Data name="along">
+            <value>La Trobe Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9620137,-37.8099968,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>GWY</name>
+        <description><![CDATA[towards: City<br>along: Coleman Parade<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Coleman Parade
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1634938,-37.880035,0
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+  </Document>
+</kml>

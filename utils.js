@@ -322,7 +322,7 @@ module.exports = {
     let error
 
     let baseOptions = {
-      timeout: 1500,
+      timeout: 1000,
       gzip: true
     }
     let fullOptions

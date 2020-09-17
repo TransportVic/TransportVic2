@@ -30,12 +30,12 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Cranbourne O405NH',
-  track: ['CR32', 'CR33', 'CR34', 'CR35', 'CR36'],
+  track: ['CR32', 'CR33', 'CR34', 'CR35'],
   routes: ['795', '891', '894', '895'],
   type: 'include'
 }, {
   name: 'Cranbourne Specials',
-  track: ['CR37'],
+  track: ['CR36', 'CR37'],
   routes: [],
   type: 'exclude'
 }, {

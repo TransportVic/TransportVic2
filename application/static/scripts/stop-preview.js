@@ -84,6 +84,17 @@ Towards: ${bay.towards}`
         })
       }
 
+      if (stopData.platformGeometry) {
+        stopData.platformGeometry.forEach(platform => {
+          let {platformNumber, geometry} = platform
+
+          L.geoJSON({
+            type: 'Feature',
+            geometry
+          }).addTo(map).bindPopup('Platform ' + platformNumber)
+        })
+      }
+
       let {bbox} = stopData
       map.fitBounds([bbox.geometry.coordinates[0][0].reverse(), bbox.geometry.coordinates[0][2].reverse()])
     })
