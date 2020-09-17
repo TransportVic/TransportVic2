@@ -1,3 +1,12 @@
+#mapLink {
+  height: calc(2.1vw + 2.1vh);
+  margin-right: calc(0.4vw + 1.2vh);
+}
+
+#mapIcon {
+  height: calc(2.1vw + 2.1vh);
+}
+
 #bookmark {
   width: calc(1.5vw + 1.5vh);
   margin-right: calc(0.4vw + 1.2vh);
