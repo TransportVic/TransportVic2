@@ -34,7 +34,7 @@ function getDistantWeekdays(allAvailableDays) {
   })
 
   return uniqueDays.map(day => {
-    returnutils.getYYYYMMDD(day)
+    return utils.getYYYYMMDD(day)
   })
 }
 
