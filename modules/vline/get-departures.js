@@ -253,6 +253,9 @@ async function appendTripData(db, departure, vlinePlatform) {
   departure.shortRouteName = shortRouteName
   departure.platform = platform
 
+  departure.originalServiceID = departure.trip.originalServiceID || departure.scheduledDepartureTime.format('HH:mm') + departure.trip.destination
+  departure.flags = {}
+
   return departure
 }
 
@@ -362,25 +365,21 @@ async function getDepartures(station, db) {
     } catch (e) {
     }
 
+    function addFlags(departure) {
+      let serviceID = departure.originalServiceID
+      let flags = flagMap[serviceID]
+      if (!flags) return departure
+
+      if (flags.reservationsOnly) departure.flags.reservationsOnly = true
+      if (flags.firstClassAvailable) departure.flags.firstClassAvailable = true
+      if (flags.barAvailable && !departure.flags.barAvailable) departure.flags.barAvailable = null
+
+      return departure
+    }
+
     if (vnetDepartures.length) {
       try {
-        vnetDepartures = vnetDepartures.map(departure => {
-          let serviceID = departure.originalServiceID
-          let flags = flagMap[serviceID]
-          if (!flags) {
-            return departure
-          }
-
-          if (flags.reservationsOnly) departure.flags.reservationsOnly = true
-          if (flags.firstClassAvailable) departure.flags.firstClassAvailable = true
-          if (flags.barAvailable && !departure.flags.barAvailable) departure.flags.barAvailable = null
-
-          departure.shortRouteName = getShortRouteName(departure.trip)
-
-          return departure
-        })
-
-        let allDepartures = vnetDepartures.concat(xptDepartures).concat(coachReplacements).concat(cancelledTrains).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+        let allDepartures = vnetDepartures.map(addFlags).concat(xptDepartures).concat(coachReplacements).concat(cancelledTrains).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
         departuresCache.put(cacheKey, allDepartures)
 
         return returnDepartures(allDepartures)
@@ -389,7 +388,7 @@ async function getDepartures(station, db) {
       }
     }
 
-    let allDepartures = scheduled.concat(xptDepartures).concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+    let allDepartures = scheduled.map(addFlags).concat(xptDepartures).concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
     departuresCache.put(cacheKey, allDepartures)
 
     return returnDepartures(allDepartures)
