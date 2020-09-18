@@ -2,7 +2,9 @@ const utils = require('../../../utils')
 const async = require('async')
 
 async function setServiceAsReinstated(db, service) {
-  let today = utils.getYYYYMMDDNow()
+  let now = utils.now()
+  if (now.get('hours') <= 2) now.add(-1, 'day')
+  let today = utils.getYYYYMMDD(now)
 
   let liveTimetables = db.getCollection('live timetables')
 

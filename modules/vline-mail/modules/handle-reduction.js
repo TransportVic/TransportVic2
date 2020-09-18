@@ -2,7 +2,9 @@ const utils = require('../../../utils')
 const async = require('async')
 
 async function setServiceAsReducedCapacity(db, departureTime, origin, destination, capacity) {
-  let today = utils.getYYYYMMDDNow()
+  let now = utils.now()
+  if (now.get('hours') <= 2) now.add(-1, 'day')
+  let today = utils.getYYYYMMDD(now)
 
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
