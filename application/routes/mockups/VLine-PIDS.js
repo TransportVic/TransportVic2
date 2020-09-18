@@ -2,6 +2,7 @@ const express = require('express')
 const router = new express.Router()
 const utils = require('../../../utils')
 const TrainUtils = require('./TrainUtils')
+const PIDUtils = require('./PIDUtils')
 
 let stoppingTypeMap = {
   sas: 'Stops All',
@@ -12,9 +13,7 @@ let stoppingTypeMap = {
 let rrlStations = [ 'footscray', 'sunshine' ]
 
 async function getData(req, res) {
-  let station = await res.db.getCollection('stops').findDocument({
-    codedName: req.params.station + '-railway-station'
-  })
+  let station = await PIDUtils.getStation(res.db, req.params.station)
 
   if (station.bays.find(bay => bay.mode === 'regional train')) {
     let metro = station.bays.find(bay => bay.mode === 'metro train')

@@ -3,8 +3,8 @@ const router = new express.Router()
 const moment = require('moment')
 const async = require('async')
 const utils = require('../../../utils')
-
 const TrainUtils = require('./TrainUtils')
+const PIDUtils = require('./PIDUtils')
 
 let stoppingTextMap = {
   stopsAll: 'Stops All Stations',
@@ -31,9 +31,7 @@ let stoppingTypeMap = {
 }
 
 async function getData(req, res) {
-  let station = await res.db.getCollection('stops').findDocument({
-    codedName: req.params.station + '-railway-station'
-  })
+  let station = await PIDUtils.getStation(res.db, req.params.station)
 
   return await TrainUtils.getPIDSDepartures(res.db, station, req.params.platform, stoppingTextMap, stoppingTypeMap)
 }

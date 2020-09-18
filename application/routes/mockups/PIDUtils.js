@@ -15,3 +15,17 @@ module.exports.getURL = (station, pid) => {
 
   return pidURL
 }
+
+let stationsCache = {}
+
+module.exports.getStation = async (db, stationName) => {
+  let station
+  if (!(station = stationsCache[stationName])) {
+    station = await db.getCollection('stops').findDocument({
+      codedName: (stationName || 'flinders-street') + '-railway-station'
+    })
+    stationsCache[stationName] = station
+  }
+  
+  return station
+}

@@ -66,7 +66,7 @@ let caulfieldGroup = [
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 let departuresLock = {}
-let departuresCache = new TimedCache({ defaultTtl: 1000 * 5 })
+let departuresCache = new TimedCache({ defaultTtl: 1000 * 15 })
 
 module.exports = {
   getHumanName: (fullStopName, stopSuburb='') => {
@@ -667,6 +667,8 @@ module.exports = {
 
     departuresLock[cacheKey].emit('done', output)
     delete departuresLock[cacheKey]
+
+    departuresCache.put(cacheKey, output)
 
     return output
   }

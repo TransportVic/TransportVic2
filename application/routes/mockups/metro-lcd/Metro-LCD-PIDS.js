@@ -2,13 +2,12 @@ const express = require('express')
 const router = new express.Router()
 const utils = require('../../../../utils')
 const TrainUtils = require('../TrainUtils')
+const PIDUtils = require('../PIDUtils')
 
 let validPIDTypes = ['half-platform-bold', 'half-platform', 'platform', 'pre-platform-vertical']
 
 async function getData(req, res) {
-  let station = await res.db.getCollection('stops').findDocument({
-    codedName: req.params.station + '-railway-station'
-  })
+  let station = await PIDUtils.getStation(res.db, req.params.station)
 
   return await TrainUtils.getPIDSDepartures(res.db, station, req.params.platform, null, null, 5)
 }
