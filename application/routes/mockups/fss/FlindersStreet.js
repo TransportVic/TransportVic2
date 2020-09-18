@@ -20,9 +20,7 @@ router.get('/:type/:platform/:station*?', async (req, res, next) => {
 })
 
 router.post('/:type/:platform/:station*?', async (req, res) => {
-  let start = new Date()
   let departures = await getData(req, res)
-  console.log(new Date() - start)
   res.json(departures)
 })
 

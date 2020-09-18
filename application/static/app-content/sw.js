@@ -1,4 +1,4 @@
-const version = '97'
+const version = '98'
 const cacheName = `transportvic-${version}`
 
 function cacheFiles(files) {
@@ -50,8 +50,24 @@ self.addEventListener('install', e => {
 
 
       '/static/css/mockups/16-9-pids-base.css',
+      '/static/css/mockups/32-9-pids-base.css',
       '/static/css/mockups/actual-line-colours.css',
       '/static/css/mockups/base-style.css',
+      '/static/css/mockups/summary.css',
+
+      '/static/css/mockups/fss/platform.css',
+      '/static/css/mockups/fss/escalator.css',
+      '/static/css/mockups/fss/trains-from-fss.css',
+
+      '/static/css/mockups/metro-lcd/concourse-interchange.css',
+      '/static/css/mockups/metro-lcd/concourse-up-down.css',
+      '/static/css/mockups/metro-lcd/half-platform-bold.css',
+      '/static/css/mockups/metro-lcd/half-platform.css',
+      '/static/css/mockups/metro-lcd/platform.css',
+      '/static/css/mockups/metro-lcd/pre-platform-vertical.css',
+
+      '/static/css/mockups/sss-new/coach.css',
+      '/static/css/mockups/sss-new/platform.css',
 
       '/static/fonts/Nunito.ttf',
       '/static/fonts/NetworkSans-2018-Bold.ttf',

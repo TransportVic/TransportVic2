@@ -59,8 +59,10 @@ async function makeRequest(url) {
 
     return returnData(JSON.parse(data))
   } catch (e) {
-    ptvAPILocks[url].emit('err', e)
-    delete ptvAPILocks[url]
+    if (ptvAPILocks[url]) {
+      ptvAPILocks[url].emit('err', e)
+      delete ptvAPILocks[url]
+    }
 
     throw e
   }

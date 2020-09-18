@@ -153,7 +153,8 @@ database.connect({
 
   await timetables.createIndex({
     runID: 1,
-    operationDays: 1
+    operationDays: 1,
+    destination: 1
   }, {name: 'runID index', unique: true})
 
   await timetables.createIndex({

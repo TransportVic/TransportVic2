@@ -66,7 +66,12 @@ let caulfieldGroup = [
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 let departuresLock = {}
+let arrivalsLock = {}
+let combinedDeparturesLock = {}
+
 let departuresCache = new TimedCache({ defaultTtl: 1000 * 15 })
+let arrivalsCache = new TimedCache({ defaultTtl: 1000 * 15 })
+let combinedDeparturesCache = new TimedCache({ defaultTtl: 1000 * 15 })
 
 module.exports = {
   getHumanName: (fullStopName, stopSuburb='') => {
@@ -79,6 +84,20 @@ module.exports = {
     return humanName
   },
   getEmptyShunts: async (station, db) => {
+    if (arrivalsLock[station]) {
+      return await new Promise(resolve => {
+        arrivalsLock[station].on('done', data => {
+          resolve(data)
+        })
+      })
+    }
+
+    if (arrivalsCache.get(station)) {
+      return arrivalsCache.get(station)
+    }
+
+    arrivalsLock[station] = new EventEmitter()
+
     let timetables = db.getCollection('timetables')
     let today = utils.getPTDayName(utils.now())
     let minutesPastMidnight = utils.getPTMinutesPastMidnight(utils.now())
@@ -103,7 +122,7 @@ module.exports = {
       }
     }).sort({ destinationArrivalTime: 1 }).limit(20).toArray()
 
-    return await async.map(arrivals, async arrival => {
+    let mappedArrivals = await async.map(arrivals, async arrival => {
       let arrivalStop = arrival.stopTimings.slice(-1)[0]
       let scheduledDepartureTime = utils.minutesAftMidnightToMoment(arrivalStop.arrivalTimeMinutes, utils.now())
 
@@ -135,8 +154,29 @@ module.exports = {
         }
       })
     })
+
+    arrivalsLock[station].emit('done', mappedArrivals)
+    delete arrivalsLock[station]
+
+    arrivalsCache.put(station, mappedArrivals)
+
+    return mappedArrivals
   },
   getCombinedDepartures: async (station, db) => {
+    if (combinedDeparturesLock[station]) {
+      return await new Promise(resolve => {
+        combinedDeparturesLock[station].on('done', data => {
+          resolve(data)
+        })
+      })
+    }
+
+    if (combinedDeparturesCache.get(station)) {
+      return combinedDeparturesCache.get(station)
+    }
+
+    combinedDeparturesLock[station] = new EventEmitter()
+
     let timetables = db.getCollection('timetables')
 
     let vlineDepartures = [], metroDepartures = []
@@ -234,9 +274,14 @@ module.exports = {
       let secondsDifference = diff.diff(utils.now(), 'seconds')
 
       return !departure.cancelled && minutesDifference < 120 && secondsDifference > -60
-    })
+    }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 
-    return departures.sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+    combinedDeparturesLock[station].emit('done', departures)
+    delete combinedDeparturesLock[station]
+
+    combinedDeparturesCache.put(station, departures)
+
+    return departures
   },
   addTimeToDeparture: departure => {
     let timeDifference = departure.actualDepartureTime.clone().add(30, 'seconds').diff(utils.now(), 'minutes')
@@ -359,22 +404,16 @@ module.exports = {
 
     return stopTimings
   },
-  appendScreenDataToDeparture: (departure, station) => {
+  appendScreenDataToDeparture: (departure, station, routeName) => {
     departure = module.exports.addTimeToDeparture(departure)
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
     let trip = departure.trip
-    let routeName = departure.shortRouteName || trip.routeName
 
     let isUp = departure.trip.direction === 'Up'
     let destination = departure.trip.destination.slice(0, -16)
     if (destination === 'Parliament') destination = 'Flinders Street'
     if (destination === 'Southern Cross' && caulfieldGroup.includes(routeName)) destination = 'Flinders Street'
-
-    if (routeName === 'Bendigo') {
-      if (isUp && departure.trip.origin === 'Eaglehawk Railway Station') routeName = 'Swan Hill'
-      if (!isUp && departure.trip.destination === 'Eaglehawk Railway Station') routeName = 'Swan Hill'
-    }
 
     let lineStops = departure.lineStops
     let tripStops = departure.tripStops
@@ -656,7 +695,7 @@ module.exports = {
       else if (expressCount < 4) departure.stoppingType = stoppingType.limExp
       else departure.stoppingType = stoppingType.exp
 
-      departure = module.exports.appendScreenDataToDeparture(departure, station)
+      departure = module.exports.appendScreenDataToDeparture(departure, station, routeName)
 
       return departure
     }).concat(platformArrivals).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
