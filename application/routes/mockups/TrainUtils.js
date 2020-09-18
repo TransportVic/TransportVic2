@@ -5,7 +5,7 @@ const destinationOverrides = require('../../../additional-data/coach-stops')
 const utils = require('../../../utils')
 const async = require('async')
 const emptyShunts = require('../../../additional-data/empty-shunts.json')
-const TimedCache = require('timed-cache')
+const TimedCache = require('../../../TimedCache')
 const EventEmitter = require('events')
 
 let defaultStoppingText = {
