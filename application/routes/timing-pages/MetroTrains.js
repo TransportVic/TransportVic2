@@ -57,13 +57,6 @@ async function loadDepartures(req, res) {
     let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
     let operationDate = utils.getYYYYMMDD(tripStart)
 
-    // if (departure.trip.stopTimings[0].departureTimeMinutes > 1440) {
-    //   console.log(departure.trip)
-    //   operationDate = tripStart.add(-1, 'day').format('YYYYMMDD')
-    //   // Note: do not attempt to fix wrong day thing as timetables are screwed up on PTV's end.
-    //   // Example: TDN1069 on Saturday morning when loaded returns some 17.10 down MDD
-    // }
-
     departure.tripURL = `${utils.encodeName(origin)}/${originDepartureTime}/`
       + `${utils.encodeName(destination)}/${destinationArrivalTime}/`
       + `${operationDate}/#stop-${stopGTFSID}`

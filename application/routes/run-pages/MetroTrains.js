@@ -69,7 +69,7 @@ async function pickBestTrip(data, db) {
 
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
-  
+
   let useLive = minutesToTripEnd >= -25 && minutesToTripStart < 120
 
   if (liveTrip) {
