@@ -199,14 +199,11 @@ async function getScheduledMetroDepartures(station, db) {
       departure.destination = departure.trip.trueDestination.slice(0, -16)
 
       if (departure.destination === 'Flinders Street') {
+        if (willGoByCityLoop) cityLoopConfig.shift()
         let viaCityLoop = cityLoopConfig[0] === 'FGS' || cityLoopConfig[0] === 'PAR'
 
         if (viaCityLoop) {
           departure.destination = 'City Loop'
-        }
-
-        if (willGoByCityLoop) {
-          cityLoopConfig.shift()
         }
 
         departure.cityLoopConfig = cityLoopConfig
