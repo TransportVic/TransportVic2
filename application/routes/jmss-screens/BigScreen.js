@@ -1,7 +1,7 @@
 const express = require('express')
 const router = new express.Router()
 const ptvAPI = require('../../../ptv-api')
-const TimedCache = require('timed-cache')
+const TimedCache = require('../../../TimedCache')
 const moment = require('moment')
 const utils = require('../../../utils')
 const getMetroDepartures = require('../../../modules/metro-trains/get-departures')

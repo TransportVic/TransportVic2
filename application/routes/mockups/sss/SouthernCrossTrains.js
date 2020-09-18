@@ -1,4 +1,4 @@
-const TimedCache = require('timed-cache')
+const TimedCache = require('../../../../TimedCache')
 const async = require('async')
 const urls = require('../../../../urls.json')
 const utils = require('../../../../utils')
@@ -10,6 +10,7 @@ const getVLineStops = require('./SSS-Lines')
 const getMetroStops = require('../../../../additional-data/route-stops')
 const TrainUtils = require('../TrainUtils')
 const emptyCars = require('../empty-cars')
+
 const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1.5 })
 
 const EventEmitter = require('events')

@@ -1,4 +1,4 @@
-const TimedCache = require('timed-cache')
+const TimedCache = require('../../TimedCache')
 const async = require('async')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')

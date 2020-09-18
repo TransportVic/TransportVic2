@@ -9,7 +9,7 @@ const busDestinations = require('../../../additional-data/bus-destinations')
 const busStopNameModifier = require('../../../additional-data/bus-stop-name-modifier')
 const ptvAPI = require('../../../ptv-api')
 const cheerio = require('cheerio')
-const TimedCache = require('timed-cache')
+const TimedCache = require('../../../TimedCache')
 
 const locationCache = new TimedCache({ defaultTtl: 1000 * 30 })
 

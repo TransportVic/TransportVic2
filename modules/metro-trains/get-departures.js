@@ -1,8 +1,7 @@
-const TimedCache = require('timed-cache')
+const TimedCache = require('../../TimedCache')
 const async = require('async')
 const ptvAPI = require('../../ptv-api')
 const utils = require('../../utils')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 30 })
 const moment = require('moment')
 const departureUtils = require('../utils/get-train-timetables')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
@@ -10,6 +9,8 @@ const EventEmitter = require('events')
 
 const getRouteStops = require('../../additional-data/route-stops')
 const getStonyPoint = require('../get-stony-point')
+
+const departuresCache = new TimedCache({ defaultTtl: 1000 * 30 })
 
 let ptvAPILocks = {}
 
