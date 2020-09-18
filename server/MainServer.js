@@ -138,10 +138,10 @@ module.exports = class MainServer {
       next()
     })
 
-    // app.use('/mockups', rateLimit({
-    //   windowMs: 1 * 60 * 1000,
-    //   max: 18
-    // }))
+    app.use('/mockups', rateLimit({
+      windowMs: 1 * 60 * 1000,
+      max: 140
+    }))
   }
 
   async configRoutes (app) {
