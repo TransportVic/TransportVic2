@@ -83,10 +83,9 @@ async function updateBusTrips(db, departures) {
       process.nextTick(async () => {
         await utils.request(config.discordURL, {
           method: 'POST',
-          json: true,
-          body: {
+          body: JSON.stringify({
             content: `Tracked: ${busRego ? '#' + busRego : '@' + smartrakID} on the ${departureTime} 737 to ${destination}`
-          }
+          })
         })
       })
     }

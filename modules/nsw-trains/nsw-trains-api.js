@@ -8,9 +8,7 @@ let {tfnswAPIKey} = config
 let urlBase = 'https://api.transport.nsw.gov.au'
 
 async function makeRequest(url, options={}) {
-  let data = await utils.request({
-    url: urlBase + url,
-    method: 'GET',
+  let data = await utils.request(urlBase + url, {
     headers: {
       Authorization: 'apikey ' + tfnswAPIKey
     },

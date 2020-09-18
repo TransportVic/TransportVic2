@@ -1,4 +1,3 @@
-const request = require('request-promise')
 const async = require('async')
 const cheerio = require('cheerio')
 
@@ -14,10 +13,7 @@ database.connect({
 }, async err => {
   let stops = database.getCollection('stops')
 
-  let body = await request({
-    method: 'GET',
-    uri: 'https://maps.busminder.com.au/route/live/79290903-fd57-48ac-be22-990857625ecc',
-    gzip: true,
+  let body = await utils.request('https://maps.busminder.com.au/route/live/79290903-fd57-48ac-be22-990857625ecc', {
     headers: {
       'Origin': 'https://maps.busminder.com.au',
       'User-Agent': 'Mozilla/5.0 (Macintosh, Intel Mac OS X 10_14_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.2 Safari/605.1.15',

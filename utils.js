@@ -1,7 +1,7 @@
 const moment = require('moment')
 require('moment-timezone')
 moment.tz.setDefault('Australia/Melbourne')
-const request = require('request-promise')
+const fetch = require('node-fetch')
 
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 
@@ -315,36 +315,21 @@ module.exports = {
     else
       return moment.tz(time, 'Australia/Melbourne')
   },
-  request: async (...options) => {
+  request: async (url, options) => {
     let start = +new Date()
 
     let body
     let error
 
-    let baseOptions = {
-      timeout: 1000,
-      gzip: true
-    }
-    let fullOptions
-    if (typeof options[0] === 'string') {
-      fullOptions = {
-        ...baseOptions,
-        ...(options[1] || {})
-      }
-    } else {
-      fullOptions = {
-        ...baseOptions,
-        ...options[0]
-      }
+    let fullOptions = {
+      timeout: 1500,
+      compress: true,
+      ...(options || {})
     }
 
     for (let i = 0; i < 3; i++) {
       try {
-        if (typeof options[0] === 'string') {
-          body = await request(options[0], fullOptions)
-        } else {
-          body = await request(fullOptions)
-        }
+        body = await fetch(url, fullOptions)
 
         break
       } catch (e) {
@@ -354,13 +339,11 @@ module.exports = {
 
     if (!body && error) throw error
 
-    let url = typeof options[0] === 'string' ? options[0] : options[0].url
-
     let end = +new Date()
     let diff = end - start
     console.log(`${diff}ms ${url}`)
 
-    return body
+    return body.text()
   },
   isStreet: shortName => {
     return (shortName.endsWith('Street') || shortName.endsWith('Road')

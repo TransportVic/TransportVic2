@@ -1,4 +1,4 @@
-const request = require('request')
+const fetch = require('node-fetch')
 const fs = require('fs')
 const {spawn} = require('child_process')
 const DatabaseConnection = require('../database/DatabaseConnection')
@@ -108,8 +108,11 @@ async function updateTimetables() {
 
 console.log('Checking for updates...')
 
-request.head(urls.gtfsFeed, async (err, resp, body) => {
-  let lastModified = resp.headers['last-modified']
+fetch(urls.gtfsFeed, {
+  method: 'HEAD'
+}).then(async (res) => {
+  let lastModified = res.headers.get('last-modified')
+
   if (lastModified !== lastLastModified) {
     console.log('Outdated timetables: updating now...')
     console.log(new Date().toLocaleString())

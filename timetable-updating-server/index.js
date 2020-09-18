@@ -6,9 +6,6 @@ const HTTPSServer = require('../server/HTTPSServer')
 const HTTPSRedirectServer = require('../server/HTTPSRedirectServer')
 const MainServer = require('./MainServer')
 
-const {exec} = require('child_process')
-const request = require('request')
-
 let httpServer = null
 let httpsServer = null
 const mainServer = new MainServer()

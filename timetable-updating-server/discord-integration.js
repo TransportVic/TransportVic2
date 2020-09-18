@@ -6,10 +6,9 @@ module.exports = async text => {
   if (modules.updaterDiscordIntegration) {
     await utils.request(config.discordUpdaterURL, {
       method: 'POST',
-      json: true,
-      body: {
+      body: JSON.stringify({
         content: text
-      }
+      })
     })
   }
 }
