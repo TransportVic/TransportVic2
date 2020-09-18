@@ -1162,7 +1162,1317 @@
         </ExtendedData>
         <Point>
           <coordinates>
-            145.1634938,-37.880035,0
+            145.1631907,-37.8799704,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CBE</name>
+        <description><![CDATA[towards: City<br>along: Station Street<br><br>bay: 1]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Station Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2811765,-38.1002409,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MPK</name>
+        <description><![CDATA[towards: City<br>along: Endeavour Drive<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Endeavour Drive
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2643129,-38.0794022,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MPK</name>
+        <description><![CDATA[towards: Cranbourne<br>along: Endeavour Drive<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Cranbourne</value>
+          </Data>
+          <Data name="along">
+            <value>Endeavour Drive
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.264278,-38.0795595,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LBK</name>
+        <description><![CDATA[towards: City & Cranbourne<br><br>along: Patterson Drive<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[City & Cranbourne
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Patterson Drive
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2505796,-38.0584209,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>FKN</name>
+        <description><![CDATA[towards: City & Stony Point<br><br>along: Fletcher Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[City & Stony Point
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Fletcher Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1266078,-38.1432195,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LWA</name>
+        <description><![CDATA[towards: Frankston & Stony Point<br><br>along: Bloom Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Frankston & Stony Point
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Bloom Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1393007,-38.1521033,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BXR</name>
+        <description><![CDATA[towards: Stony Point<br><br>along: Baxter-Tooradin Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Stony Point
+</value>
+          </Data>
+          <Data name="along">
+            <value>Baxter-Tooradin Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1576316,-38.1952278,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BXR</name>
+        <description><![CDATA[towards: Frankston<br><br>along: Baxter-Tooradin Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston
+</value>
+          </Data>
+          <Data name="along">
+            <value>Baxter-Tooradin Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1576249,-38.1954122,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SVE</name>
+        <description><![CDATA[towards: Frankston<br>along: Frankston-Flinders Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Frankston-Flinders Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1761126,-38.2245442,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SVE</name>
+        <description><![CDATA[towards: Stony Point<br><br>along: Frankston-Flinders Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Stony Point
+</value>
+          </Data>
+          <Data name="along">
+            <value>Frankston-Flinders Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1773625,-38.2254492,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TAB</name>
+        <description><![CDATA[towards: Stony Point<br><br>along: Frankston-Flinders Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Stony Point
+</value>
+          </Data>
+          <Data name="along">
+            <value>Frankston-Flinders Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.189891,-38.2610333,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TAB</name>
+        <description><![CDATA[towards: Frankston<br><br>along: Frankston-Flinders Road<br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston
+</value>
+          </Data>
+          <Data name="along">
+            <value>Frankston-Flinders Road</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1895933,-38.2616062,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HST</name>
+        <description><![CDATA[towards: Stony Point<br><br>along: High Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Stony Point
+</value>
+          </Data>
+          <Data name="along">
+            <value>High Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1869611,-38.3077949,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HST</name>
+        <description><![CDATA[towards: Frankton<br><br>along: High Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankton
+</value>
+          </Data>
+          <Data name="along">
+            <value>High Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.18689,-38.3076455,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BIT</name>
+        <description><![CDATA[towards: Stony Point<br><br>along: Frankston-Flinders Road<br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Stony Point
+</value>
+          </Data>
+          <Data name="along">
+            <value>Frankston-Flinders Road</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1761932,-38.3389057,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BIT</name>
+        <description><![CDATA[towards: Frankston<br><br>along: Frankston-Flinders Road<br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston
+</value>
+          </Data>
+          <Data name="along">
+            <value>Frankston-Flinders Road</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1767051,-38.3378492,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MRO</name>
+        <description><![CDATA[towards: Stony Point<br><br>along: Disney Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Stony Point
+</value>
+          </Data>
+          <Data name="along">
+            <value>Disney Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1902869,-38.3534389,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MRO</name>
+        <description><![CDATA[towards: Frankston<br>along: Disney Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Disney Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1901716,-38.353584,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CPT</name>
+        <description><![CDATA[towards: Frankston<br><br>along: Stony Point Road<br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston
+</value>
+          </Data>
+          <Data name="along">
+            <value>Stony Point Road</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2055585,-38.3659714,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CPT</name>
+        <description><![CDATA[towards: Stony Point<br><br>along: Stony Point Road<br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Stony Point
+</value>
+          </Data>
+          <Data name="along">
+            <value>Stony Point Road</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2041476,-38.3650786,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>STY</name>
+        <description><![CDATA[towards: Frankston<br>along: Stony Point Road<br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Stony Point Road</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2222956,-38.3737575,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>KAN</name>
+        <description><![CDATA[towards: Frankston<br>along: Wells Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Wells Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.135274,-38.1215433,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>KAN</name>
+        <description><![CDATA[towards: City<br>along: Wells Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Wells Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1351251,-38.121153,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SEA</name>
+        <description><![CDATA[towards: City<br>along: Railway Parade<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Railway Parade
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.128353,-38.1039002,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SEA</name>
+        <description><![CDATA[towards: Frankston<br>along: Railway Parade<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Railway Parade
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1286333,-38.1041693,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CAR</name>
+        <description><![CDATA[towards: City<br>along: McLeod Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>McLeod Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1242709,-38.0760805,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CAR</name>
+        <description><![CDATA[towards: Frankston<br>along: Station Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Station Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1233955,-38.076902,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BON</name>
+        <description><![CDATA[towards: City<br>along: Station Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Station Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1199361,-38.0632588,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BON</name>
+        <description><![CDATA[towards: Frankston<br>along: Nepean Highway<br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Nepean Highway</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1196371,-38.0631679,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CSA</name>
+        <description><![CDATA[towards: Frankston<br>along: Station Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Station Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1165138,-38.052273,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CSA</name>
+        <description><![CDATA[towards: City<br>along: Station Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Station Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.116196,-38.0519742,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>EDI</name>
+        <description><![CDATA[towards: Frankston<br>along: Station Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Station Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1088764,-38.0381595,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>EDI</name>
+        <description><![CDATA[towards: City<br>along: Station Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Station Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1085706,-38.0379538,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ASP</name>
+        <description><![CDATA[towards: Frankston<br><br>along: Station Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston
+</value>
+          </Data>
+          <Data name="along">
+            <value>Station Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1019028,-38.0263006,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ASP</name>
+        <description><![CDATA[towards: City<br>along: Station Street<br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Station Street</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1020261,-38.0268161,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MOR</name>
+        <description><![CDATA[towards: City<br>along: Albert Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Albert Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0876005,-38.0058776,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MOR</name>
+        <description><![CDATA[towards: Frankston<br>along: Albert Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Albert Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0879211,-38.0059632,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>PKD</name>
+        <description><![CDATA[towards: City<br>along: Como Parade E<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Como Parade E
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0767215,-37.9932077,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>PKD</name>
+        <description><![CDATA[towards: Frankston<br>along: Parkers Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Parkers Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0773961,-37.9932785,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MEN</name>
+        <description><![CDATA[towards: Frankston<br>along: Como Parade W<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Como Parade W
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0648806,-37.9819585,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MEN</name>
+        <description><![CDATA[towards: City<br>along: Como Parade W<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Como Parade W
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0643294,-37.9815484,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CTM</name>
+        <description><![CDATA[towards: Frankston<br>along: Charman Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Charman Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0552829,-37.9680339,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CTM</name>
+        <description><![CDATA[towards: City<br>along: Charman Road<br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Charman Road</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0551045,-37.9679789,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SOU</name>
+        <description><![CDATA[towards: City<br>along: Bay Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Bay Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0486467,-37.9571299,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SOU</name>
+        <description><![CDATA[towards: Frankston<br>along: Bay Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Bay Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.048766,-37.9569596,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HIG</name>
+        <description><![CDATA[towards: Frankston<br>along: Highett Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Highett Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0417501,-37.9486412,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HIG</name>
+        <description><![CDATA[towards: City<br><br>along: Highett Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City
+</value>
+          </Data>
+          <Data name="along">
+            <value>Highett Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0409589,-37.9487057,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MRN
+</name>
+        <description><![CDATA[towards: City & Frankston<br>along: Nepean Highway<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[City & Frankston]]></value>
+          </Data>
+          <Data name="along">
+            <value>Nepean Highway
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0362216,-37.9346118,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MRN</name>
+        <description><![CDATA[towards: City & Frankston (LTD EXP)<br><br>along: Station Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[City & Frankston (LTD EXP)
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Station Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0371429,-37.933773,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>PAT</name>
+        <description><![CDATA[towards: Frankston<br>along: Jasper Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Jasper Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0406768,-37.9245366,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>PAT</name>
+        <description><![CDATA[towards: City<br><br>along: Jasper Road<br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City
+</value>
+          </Data>
+          <Data name="along">
+            <value>Jasper Road</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0405534,-37.9243229,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BEN</name>
+        <description><![CDATA[towards: Frankston<br><br>along: Centre Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston
+</value>
+          </Data>
+          <Data name="along">
+            <value>Centre Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0373276,-37.9181959,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BEN</name>
+        <description><![CDATA[towards: City<br>along: Centre Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Centre Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0370754,-37.9183017,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MCK</name>
+        <description><![CDATA[towards: Frankston<br>along: McKinnon Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>McKinnon Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0383682,-37.9111369,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MCK</name>
+        <description><![CDATA[towards: City<br>along: McKinnon Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>McKinnon Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0385305,-37.9110099,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>OMD</name>
+        <description><![CDATA[towards: Frankston<br>along: North Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>North Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0394966,-37.9037234,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>OMD</name>
+        <description><![CDATA[towards: City<br>along: North Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>North Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0398882,-37.9040588,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>GHY
+</name>
+        <description><![CDATA[towards: Frankston<br>along: Manchester Grove<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Frankston</value>
+          </Data>
+          <Data name="along">
+            <value>Manchester Grove
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0407596,-37.8890003,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>GHY</name>
+        <description><![CDATA[towards: City<br>along: Manchester Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Manchester Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0406148,-37.888921,0
           </coordinates>
         </Point>
       </Placemark>

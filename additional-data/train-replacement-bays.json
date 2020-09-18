@@ -1,0 +1,1535 @@
+{
+ "Flinders Street": [
+  {
+   "towards": "City Loop",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.9657737,
+     -37.8180461
+    ]
+   },
+   "along": "Flinders Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019854
+  }
+ ],
+ "Parliament": [
+  {
+   "towards": "Parliament",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.9729884,
+     -37.8102828
+    ]
+   },
+   "along": "Nicholson Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019843
+  },
+  {
+   "towards": "Suburbs",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.9737611,
+     -37.812526
+    ]
+   },
+   "along": "Spring Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019843
+  }
+ ],
+ "Caulfield": [
+  {
+   "towards": "Cranbourne, Pakenham, Frankston & Darling",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0417437,
+     -37.8772795
+    ]
+   },
+   "along": "Normanby Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019943
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0417156,
+     -37.877307
+    ]
+   },
+   "along": "Normanby Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019943
+  },
+  {
+   "towards": "Traralgon & Bairnsdale",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0421234,
+     -37.8768127
+    ]
+   },
+   "along": "Sir John Monash Drive",
+   "bayDesignation": null,
+   "stopGTFSID": 530019943
+  },
+  {
+   "towards": "City (Dropoff Only)",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0427719,
+     -37.877253
+    ]
+   },
+   "along": "Sir John Monash Drive",
+   "bayDesignation": null,
+   "stopGTFSID": 540019943
+  },
+  {
+   "towards": "Cranbourne, Pakenham & Frankston (LTD EXP)",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0411787,
+     -37.8769122
+    ]
+   },
+   "along": "Normanby Road",
+   "bayDesignation": null,
+   "stopGTFSID": 550019943
+  }
+ ],
+ "Oakleigh": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0874375,
+     -37.9005391
+    ]
+   },
+   "along": "Johnson Street",
+   "bayDesignation": "Bay E",
+   "stopGTFSID": 510019917
+  },
+  {
+   "towards": "Cranbourne & Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0882207,
+     -37.9006047
+    ]
+   },
+   "along": "Haughton Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019917
+  }
+ ],
+ "Huntingdale": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1033858,
+     -37.9110168
+    ]
+   },
+   "along": "Huntingdale Road",
+   "bayDesignation": "Bay F",
+   "stopGTFSID": 510019916
+  },
+  {
+   "towards": "Cranbourne & Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1029848,
+     -37.910838
+    ]
+   },
+   "along": "Haughton Road",
+   "bayDesignation": "Bay C",
+   "stopGTFSID": 520019916
+  }
+ ],
+ "Clayton": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1205641,
+     -37.9243792
+    ]
+   },
+   "along": "Carinish Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019915
+  },
+  {
+   "towards": "Cranbourne & Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1214439,
+     -37.9248489
+    ]
+   },
+   "along": "Carinish Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019915
+  }
+ ],
+ "Westall": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1379247,
+     -37.9375197
+    ]
+   },
+   "along": "Rayhur Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019914
+  },
+  {
+   "towards": "Cranbourne & Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1385322,
+     -37.9379851
+    ]
+   },
+   "along": "Rayhur Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019914
+  }
+ ],
+ "Springvale": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.153433,
+     -37.9499503
+    ]
+   },
+   "along": "Lightwood Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019913
+  },
+  {
+   "towards": "Cranbourne & Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1534263,
+     -37.9497219
+    ]
+   },
+   "along": "Lightwood Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019913
+  }
+ ],
+ "Hughesdale": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0767749,
+     -37.8940442
+    ]
+   },
+   "along": "Poath Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019918
+  },
+  {
+   "towards": "Cranbourne & Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0767504,
+     -37.8949906
+    ]
+   },
+   "along": "Poath Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019918
+  }
+ ],
+ "Murrumbeena": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0669408,
+     -37.8896636
+    ]
+   },
+   "along": "Neerim Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019919
+  },
+  {
+   "towards": "Cranbourne & Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0669824,
+     -37.8895323
+    ]
+   },
+   "along": "Neerim Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019919
+  }
+ ],
+ "Carnegie": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0576561,
+     -37.8858498
+    ]
+   },
+   "along": "Koornang Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019920
+  },
+  {
+   "towards": "Cranbourne & Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0578211,
+     -37.8860107
+    ]
+   },
+   "along": "Koornang Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019920
+  }
+ ],
+ "Sandown Park": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1630082,
+     -37.9571595
+    ]
+   },
+   "along": "Lightwood Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019891
+  },
+  {
+   "towards": "Cranbourne & Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1630229,
+     -37.9569935
+    ]
+   },
+   "along": "Lightwood Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019891
+  }
+ ],
+ "Noble Park": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1761902,
+     -37.9663427
+    ]
+   },
+   "along": "Mons Parade",
+   "bayDesignation": null,
+   "stopGTFSID": 510019890
+  },
+  {
+   "towards": "Cranbourne & Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1754921,
+     -37.9656829
+    ]
+   },
+   "along": "Mons Parade",
+   "bayDesignation": null,
+   "stopGTFSID": 520019890
+  }
+ ],
+ "Yarraman": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1915176,
+     -37.9777231
+    ]
+   },
+   "along": "Railway Parade",
+   "bayDesignation": null,
+   "stopGTFSID": 510019889
+  },
+  {
+   "towards": "Cranbourne & Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1928976,
+     -37.9785212
+    ]
+   },
+   "along": "Railway Parade",
+   "bayDesignation": null,
+   "stopGTFSID": 520019889
+  }
+ ],
+ "Dandenong": [
+  {
+   "towards": "Traralgon & Gippsland",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2091884,
+     -37.9896496
+    ]
+   },
+   "along": "Foster Street",
+   "bayDesignation": "Bay 10 & 11",
+   "stopGTFSID": 510019888
+  },
+  {
+   "towards": "Cranbourne & Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2096913,
+     -37.9894319
+    ]
+   },
+   "along": "Foster Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019888
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2093145,
+     -37.9896899
+    ]
+   },
+   "along": "Foster Street",
+   "bayDesignation": "Bay ?",
+   "stopGTFSID": 530019888
+  }
+ ],
+ "Hallam": [
+  {
+   "towards": "Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2711065,
+     -38.0174199
+    ]
+   },
+   "along": "Hallam South Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019885
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2706881,
+     -38.0180739
+    ]
+   },
+   "along": "Hallam South Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019885
+  }
+ ],
+ "Narre Warren": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.3032548,
+     -38.0269388
+    ]
+   },
+   "along": "Webb Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019884
+  },
+  {
+   "towards": "Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.3031381,
+     -38.0267592
+    ]
+   },
+   "along": "Webb Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019884
+  }
+ ],
+ "Berwick": [
+  {
+   "towards": "Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.3445934,
+     -38.0387707
+    ]
+   },
+   "along": "Reserve Street",
+   "bayDesignation": "Bay 1",
+   "stopGTFSID": 510019883
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.3447597,
+     -38.0389281
+    ]
+   },
+   "along": "Reserve Street",
+   "bayDesignation": "Bay 2",
+   "stopGTFSID": 520019883
+  }
+ ],
+ "Beaconsfield": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.3665132,
+     -38.0506983
+    ]
+   },
+   "along": "Beaconsfield Avenue",
+   "bayDesignation": null,
+   "stopGTFSID": 510019882
+  },
+  {
+   "towards": "Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.3667841,
+     -38.050599
+    ]
+   },
+   "along": "Beaconsfield Avenue",
+   "bayDesignation": null,
+   "stopGTFSID": 520019882
+  }
+ ],
+ "Officer": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.4137203,
+     -38.0666689
+    ]
+   },
+   "along": "Siding Avenue",
+   "bayDesignation": null,
+   "stopGTFSID": 510019881
+  },
+  {
+   "towards": "Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.4138799,
+     -38.0666879
+    ]
+   },
+   "along": "Siding Avenue",
+   "bayDesignation": null,
+   "stopGTFSID": 520019881
+  }
+ ],
+ "Cardinia Road": [
+  {
+   "towards": "City & Pakenham",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.4382205,
+     -38.0721528
+    ]
+   },
+   "along": "Village Way",
+   "bayDesignation": null,
+   "stopGTFSID": 510045794
+  }
+ ],
+ "Pakenham": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.4850546,
+     -38.0800667
+    ]
+   },
+   "along": "Railway Avenue",
+   "bayDesignation": null,
+   "stopGTFSID": 510019880
+  }
+ ],
+ "Southern Cross": [
+  {
+   "towards": "City Loop",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.9531202,
+     -37.8172703
+    ]
+   },
+   "along": "Spencer Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510022180
+  }
+ ],
+ "Flagstaff": [
+  {
+   "towards": "City Loop",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.9560633,
+     -37.8117238
+    ]
+   },
+   "along": "La Trobe Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019841
+  },
+  {
+   "towards": "Sunshine",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.9534602,
+     -37.8111093
+    ]
+   },
+   "along": "King Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019841
+  }
+ ],
+ "Melbourne Central": [
+  {
+   "towards": "City Loop",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.9620137,
+     -37.8099968
+    ]
+   },
+   "along": "La Trobe Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019842
+  }
+ ],
+ "Glen Waverley": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1631907,
+     -37.8799704
+    ]
+   },
+   "along": "Coleman Parade",
+   "bayDesignation": null,
+   "stopGTFSID": 510019873
+  }
+ ],
+ "Cranbourne": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2811765,
+     -38.1002409
+    ]
+   },
+   "along": "Station Street",
+   "bayDesignation": "Bay 1",
+   "stopGTFSID": 510019886
+  }
+ ],
+ "Merinda Park": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2643129,
+     -38.0794022
+    ]
+   },
+   "along": "Endeavour Drive",
+   "bayDesignation": null,
+   "stopGTFSID": 510019887
+  },
+  {
+   "towards": "Cranbourne",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.264278,
+     -38.0795595
+    ]
+   },
+   "along": "Endeavour Drive",
+   "bayDesignation": null,
+   "stopGTFSID": 520019887
+  }
+ ],
+ "Lynbrook": [
+  {
+   "towards": "City & Cranbourne",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2505796,
+     -38.0584209
+    ]
+   },
+   "along": "Patterson Drive",
+   "bayDesignation": null,
+   "stopGTFSID": 510045793
+  }
+ ],
+ "Frankston": [
+  {
+   "towards": "City & Stony Point",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1266078,
+     -38.1432195
+    ]
+   },
+   "along": "Fletcher Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019855
+  }
+ ],
+ "Leawarra": [
+  {
+   "towards": "Frankston & Stony Point",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1393007,
+     -38.1521033
+    ]
+   },
+   "along": "Bloom Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019836
+  }
+ ],
+ "Baxter": [
+  {
+   "towards": "Stony Point",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1576316,
+     -38.1952278
+    ]
+   },
+   "along": "Baxter-Tooradin Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019834
+  },
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1576249,
+     -38.1954122
+    ]
+   },
+   "along": "Baxter-Tooradin Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019834
+  }
+ ],
+ "Somerville": [
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1761126,
+     -38.2245442
+    ]
+   },
+   "along": "Frankston-Flinders Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019833
+  },
+  {
+   "towards": "Stony Point",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1773625,
+     -38.2254492
+    ]
+   },
+   "along": "Frankston-Flinders Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019833
+  }
+ ],
+ "Tyabb": [
+  {
+   "towards": "Stony Point",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.189891,
+     -38.2610333
+    ]
+   },
+   "along": "Frankston-Flinders Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019832
+  },
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1895933,
+     -38.2616062
+    ]
+   },
+   "along": "Frankston-Flinders Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019832
+  }
+ ],
+ "Hastings": [
+  {
+   "towards": "Stony Point",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1869611,
+     -38.3077949
+    ]
+   },
+   "along": "High Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019831
+  },
+  {
+   "towards": "Frankton",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.18689,
+     -38.3076455
+    ]
+   },
+   "along": "High Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019831
+  }
+ ],
+ "Bittern": [
+  {
+   "towards": "Stony Point",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1761932,
+     -38.3389057
+    ]
+   },
+   "along": "Frankston-Flinders Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019830
+  },
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1767051,
+     -38.3378492
+    ]
+   },
+   "along": "Frankston-Flinders Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019830
+  }
+ ],
+ "Morradoo": [
+  {
+   "towards": "Stony Point",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1902869,
+     -38.3534389
+    ]
+   },
+   "along": "Disney Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019829
+  },
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1901716,
+     -38.353584
+    ]
+   },
+   "along": "Disney Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019829
+  }
+ ],
+ "Crib Point": [
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2055585,
+     -38.3659714
+    ]
+   },
+   "along": "Stony Point Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019828
+  },
+  {
+   "towards": "Stony Point",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2041476,
+     -38.3650786
+    ]
+   },
+   "along": "Stony Point Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019828
+  }
+ ],
+ "Stony Point": [
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2222956,
+     -38.3737575
+    ]
+   },
+   "along": "Stony Point Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019827
+  }
+ ],
+ "Kananook": [
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.135274,
+     -38.1215433
+    ]
+   },
+   "along": "Wells Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019856
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1351251,
+     -38.121153
+    ]
+   },
+   "along": "Wells Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019856
+  }
+ ],
+ "Seaford": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.128353,
+     -38.1039002
+    ]
+   },
+   "along": "Railway Parade",
+   "bayDesignation": null,
+   "stopGTFSID": 510019857
+  },
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1286333,
+     -38.1041693
+    ]
+   },
+   "along": "Railway Parade",
+   "bayDesignation": null,
+   "stopGTFSID": 520019857
+  }
+ ],
+ "Carrum": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1242709,
+     -38.0760805
+    ]
+   },
+   "along": "McLeod Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019858
+  },
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1233955,
+     -38.076902
+    ]
+   },
+   "along": "Station Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019858
+  }
+ ],
+ "Bonbeach": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1199361,
+     -38.0632588
+    ]
+   },
+   "along": "Station Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019859
+  },
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1196371,
+     -38.0631679
+    ]
+   },
+   "along": "Nepean Highway",
+   "bayDesignation": null,
+   "stopGTFSID": 520019859
+  }
+ ],
+ "Chelsea": [
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1165138,
+     -38.052273
+    ]
+   },
+   "along": "Station Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019860
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.116196,
+     -38.0519742
+    ]
+   },
+   "along": "Station Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019860
+  }
+ ],
+ "Edithvale": [
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1088764,
+     -38.0381595
+    ]
+   },
+   "along": "Station Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019861
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1085706,
+     -38.0379538
+    ]
+   },
+   "along": "Station Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019861
+  }
+ ],
+ "Aspendale": [
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1019028,
+     -38.0263006
+    ]
+   },
+   "along": "Station Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019862
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1020261,
+     -38.0268161
+    ]
+   },
+   "along": "Station Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019862
+  }
+ ],
+ "Mordialloc": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0876005,
+     -38.0058776
+    ]
+   },
+   "along": "Albert Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019863
+  },
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0879211,
+     -38.0059632
+    ]
+   },
+   "along": "Albert Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019863
+  }
+ ],
+ "Parkdale": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0767215,
+     -37.9932077
+    ]
+   },
+   "along": "Como Parade E",
+   "bayDesignation": null,
+   "stopGTFSID": 510019864
+  },
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0773961,
+     -37.9932785
+    ]
+   },
+   "along": "Parkers Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019864
+  }
+ ],
+ "Mentone": [
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0648806,
+     -37.9819585
+    ]
+   },
+   "along": "Como Parade W",
+   "bayDesignation": null,
+   "stopGTFSID": 510019865
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0643294,
+     -37.9815484
+    ]
+   },
+   "along": "Como Parade W",
+   "bayDesignation": null,
+   "stopGTFSID": 520019865
+  }
+ ],
+ "Cheltenham": [
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0552829,
+     -37.9680339
+    ]
+   },
+   "along": "Charman Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019866
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0551045,
+     -37.9679789
+    ]
+   },
+   "along": "Charman Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019866
+  }
+ ],
+ "Southland": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0486467,
+     -37.9571299
+    ]
+   },
+   "along": "Bay Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510052095
+  },
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.048766,
+     -37.9569596
+    ]
+   },
+   "along": "Bay Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520052095
+  }
+ ],
+ "Highett": [
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0417501,
+     -37.9486412
+    ]
+   },
+   "along": "Highett Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019872
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0409589,
+     -37.9487057
+    ]
+   },
+   "along": "Highett Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019872
+  }
+ ],
+ "Moorabbin": [
+  {
+   "towards": "City & Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0362216,
+     -37.9346118
+    ]
+   },
+   "along": "Nepean Highway",
+   "bayDesignation": null,
+   "stopGTFSID": 510019937
+  },
+  {
+   "towards": "City & Frankston (LTD EXP)",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0371429,
+     -37.933773
+    ]
+   },
+   "along": "Station Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019937
+  }
+ ],
+ "Patterson": [
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0406768,
+     -37.9245366
+    ]
+   },
+   "along": "Jasper Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019938
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0405534,
+     -37.9243229
+    ]
+   },
+   "along": "Jasper Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019938
+  }
+ ],
+ "Bentleigh": [
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0373276,
+     -37.9181959
+    ]
+   },
+   "along": "Centre Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019939
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0370754,
+     -37.9183017
+    ]
+   },
+   "along": "Centre Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019939
+  }
+ ],
+ "McKinnon": [
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0383682,
+     -37.9111369
+    ]
+   },
+   "along": "McKinnon Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019940
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0385305,
+     -37.9110099
+    ]
+   },
+   "along": "McKinnon Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019940
+  }
+ ],
+ "Ormond": [
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0394966,
+     -37.9037234
+    ]
+   },
+   "along": "North Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019941
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0398882,
+     -37.9040588
+    ]
+   },
+   "along": "North Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019941
+  }
+ ],
+ "Glenhuntly": [
+  {
+   "towards": "Frankston",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0407596,
+     -37.8890003
+    ]
+   },
+   "along": "Manchester Grove",
+   "bayDesignation": null,
+   "stopGTFSID": 510019942
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0406148,
+     -37.888921
+    ]
+   },
+   "along": "Manchester Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019942
+  }
+ ]
+}
