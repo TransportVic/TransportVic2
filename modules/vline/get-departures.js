@@ -192,7 +192,10 @@ async function appendTripData(db, departure, vlinePlatform) {
 
   let dayOfWeek = utils.getDayName(departure.scheduledDepartureTime)
   let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departure.scheduledDepartureTime) % 1440
-  let departureDay = departure.scheduledDepartureTime.format('YYYYMMDD')
+
+  let departureMoment = departure.scheduledDepartureTime.clone()
+  if (scheduledDepartureTimeMinutes < 180) departureMoment.add(-1, 'day')
+  let departureDay = utils.getYYYYMMDD(departureMoment)
 
   let {direction, origin, destination, departureTime, destinationArrivalTime} = departure.trip
   let realRouteGTFSID = departure.trip.routeGTFSID

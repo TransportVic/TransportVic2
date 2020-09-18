@@ -21,14 +21,21 @@ router.get('/', (req, res) => {
 
 function adjustTrip(trip, date, today, minutesPastMidnightNow) {
   let e = utils.encodeName
-  trip.url = `/vline/run/${e(trip.origin)}-railway-station/${trip.departureTime}/${e(trip.destination)}-railway-station/${trip.destinationArrivalTime}/${trip.date}`
-
   let {departureTime, destinationArrivalTime} = trip
   let departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime),
       destinationArrivalTimeMinutes = utils.time24ToMinAftMidnight(destinationArrivalTime)
 
+  let tripDate = trip.date
+
+  if (departureTimeMinutes < 180) {
+    departureTimeMinutes += 1440
+    tripDate = utils.getYYYYMMDD(utils.parseDate(tripDate).add(1, 'day'))
+  }
   if (destinationArrivalTimeMinutes < departureTimeMinutes) destinationArrivalTimeMinutes += 1440
 
+  trip.url = `/vline/run/${e(trip.origin)}-railway-station/${trip.departureTime}/${e(trip.destination)}-railway-station/${trip.destinationArrivalTime}/${tripDate}`
+
+  trip.departureTimeMinutes = departureTimeMinutes
   trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
 
   return trip
@@ -46,8 +53,9 @@ router.get('/date', async (req, res) => {
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
   let trips = (await vlineTrips.findDocuments({ date })
-    .sort({departureTime: 1, destination: 1}).toArray())
+    .sort({destination: 1}).toArray())
     .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
+    .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
 
   res.render('tracker/vline/by-date', {
     trips,
@@ -79,8 +87,9 @@ router.get('/line', async (req, res) => {
         $in: lineGroup
       }
     }]
-  }).sort({departureTime: 1, destination: 1}).toArray())
+  }).sort({destination: 1}).toArray())
   .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
+  .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
 
   res.render('tracker/vline/by-line', {
     trips,
@@ -100,8 +109,9 @@ router.get('/consist', async (req, res) => {
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
   let trips = (await vlineTrips.findDocuments({ consist, date })
-    .sort({departureTime: 1, destination: 1}).toArray())
+    .sort({destination: 1}).toArray())
     .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
+    .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
 
   res.render('tracker/vline/by-consist', {
     trips,
@@ -124,9 +134,10 @@ router.get('/highlights', async (req, res) => {
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
   let allTrips = (await vlineTrips.findDocuments({ date })
-    .sort({departureTime: 1, destination: 1}).toArray())
+    .sort({destination: 1}).toArray())
     .filter(trip => trip.consist[0] !== '')
     .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
+    .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
 
   let doubleHeaders = allTrips.filter(trip => {
     return trip.consist[1] && trip.consist[0].startsWith('N') && trip.consist[1].startsWith('N')

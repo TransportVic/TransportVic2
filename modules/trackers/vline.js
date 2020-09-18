@@ -25,7 +25,7 @@ async function getDeparturesFromVNET(db) {
 
   await async.forEach(vnetDepartures, async departure => {
     let referenceTime = departure.originDepartureTime.clone()
-    if (referenceTime.get('hours') <= 3) referenceTime.add(-1, 'days')
+    if (referenceTime.get('hours') <= 2) referenceTime.add(-1, 'days')
     let date = utils.getYYYYMMDD(referenceTime)
     let dayOfWeek = utils.getDayName(referenceTime)
 
