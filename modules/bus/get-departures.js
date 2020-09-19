@@ -2,7 +2,6 @@ const departureUtils = require('../utils/get-bus-timetables')
 const async = require('async')
 const moment = require('moment')
 const TimedCache = require('../../TimedCache')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 30 })
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
@@ -14,6 +13,8 @@ const determineBusRouteNumber = require('./determine-bus-route-number')
 const modules = require('../../modules')
 const config = require('../../config')
 const discordIntegration = modules.tracker && modules.tracker.discordIntegration
+
+const departuresCache = new TimedCache(1000 * 30)
 
 let tripLoader = {}
 let tripCache = {}

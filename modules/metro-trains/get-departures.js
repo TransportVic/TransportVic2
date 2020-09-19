@@ -10,7 +10,7 @@ const EventEmitter = require('events')
 const getRouteStops = require('../../additional-data/route-stops')
 const getStonyPoint = require('../get-stony-point')
 
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 30 })
+const departuresCache = new TimedCache(1000 * 30)
 
 let ptvAPILocks = {}
 

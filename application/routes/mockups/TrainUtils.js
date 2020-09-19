@@ -69,9 +69,9 @@ let departuresLock = {}
 let arrivalsLock = {}
 let combinedDeparturesLock = {}
 
-let departuresCache = new TimedCache({ defaultTtl: 1000 * 15 })
-let arrivalsCache = new TimedCache({ defaultTtl: 1000 * 15 })
-let combinedDeparturesCache = new TimedCache({ defaultTtl: 1000 * 15 })
+let departuresCache = new TimedCache(1000 * 15)
+let arrivalsCache = new TimedCache(1000 * 15)
+let combinedDeparturesCache = new TimedCache(1000 * 15)
 
 module.exports = {
   getHumanName: (fullStopName, stopSuburb='') => {

@@ -3,7 +3,7 @@ const {ptvKeys} = require('./config.json')
 const utils = require('./utils')
 const TimedCache = require('./TimedCache')
 
-const requestCache = new TimedCache({ defaultTtl: 1000 * 30 })
+const requestCache = new TimedCache(1000 * 30)
 
 let blankKey = {ptvDevID: "", ptvKey: ""}
 

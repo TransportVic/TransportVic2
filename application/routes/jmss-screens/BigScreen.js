@@ -10,7 +10,7 @@ const getBusDepartures = require('../../../modules/bus/get-departures')
 const busDestinations = require('../../../additional-data/bus-destinations')
 let EventEmitter = require('events')
 
-let cache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
+let cache = new TimedCache(1000 * 60 * 1)
 
 let lock = null
 

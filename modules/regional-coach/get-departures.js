@@ -2,13 +2,14 @@ const departureUtils = require('../utils/get-bus-timetables')
 const async = require('async')
 const moment = require('moment')
 const TimedCache = require('../../TimedCache')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const destinationOverrides = require('../../additional-data/coach-stops')
 const EventEmitter = require('events')
 const busBays = require('../../additional-data/bus-bays')
 const southernCrossBays = require('../../additional-data/southern-cross-bays')
+
+const departuresCache = new TimedCache(1000 * 60 * 1)
 
 let ptvAPILocks = {}
 

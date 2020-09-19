@@ -11,7 +11,7 @@ const ptvAPI = require('../../../ptv-api')
 const cheerio = require('cheerio')
 const TimedCache = require('../../../TimedCache')
 
-const locationCache = new TimedCache({ defaultTtl: 1000 * 30 })
+const locationCache = new TimedCache(1000 * 30)
 
 let ptvKey
 let cacheTime

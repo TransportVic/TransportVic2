@@ -11,7 +11,7 @@ const getMetroStops = require('../../../../additional-data/route-stops')
 const TrainUtils = require('../TrainUtils')
 const emptyCars = require('../empty-cars')
 
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1.5 })
+const departuresCache = new TimedCache(1000 * 60 * 1.5)
 
 const EventEmitter = require('events')
 

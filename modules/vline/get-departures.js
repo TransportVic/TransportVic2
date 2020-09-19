@@ -2,7 +2,6 @@ const TimedCache = require('../../TimedCache')
 const async = require('async')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1 })
 const moment = require('moment')
 const departureUtils = require('../utils/get-train-timetables')
 const guessPlatform = require('./guess-scheduled-platforms')
@@ -11,6 +10,8 @@ const getCoachDepartures = require('../regional-coach/get-departures')
 const getVNETDepartures = require('./get-vnet-departures')
 const handleTripShorted = require('./handle-trip-shorted')
 const EventEmitter = require('events')
+
+const departuresCache = new TimedCache(1000 * 60 * 1)
 
 let ptvAPILocks = {}
 
