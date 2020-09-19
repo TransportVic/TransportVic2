@@ -11,6 +11,8 @@ async function getData(req, res) {
 }
 
 router.get('/:station/:platform', async (req, res) => {
+  getData(req, res)
+
   res.render('mockups/metro-crt', { now: utils.now() })
 })
 

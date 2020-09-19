@@ -15,8 +15,13 @@ async function getData(req, res) {
 router.get('/:station/:platform/:type', async (req, res, next) => {
   let pidType = req.params.type
   if (!validPIDTypes.includes(pidType)) return next()
+  getData(req, res)
 
-  res.render('mockups/metro-lcd/' + pidType, { now: utils.now() })
+  if (pidType === 'pre-platform-vertical') {
+    res.render('mockups/fss/escalator', { platform: req.params.platform, dark: true })
+  } else {
+    res.render('mockups/metro-lcd/' + pidType, { now: utils.now() })
+  }
 })
 
 router.post('/:station/:platform/:type', async (req, res) => {

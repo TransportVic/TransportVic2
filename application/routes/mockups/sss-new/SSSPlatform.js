@@ -38,6 +38,8 @@ async function getData(req, res) {
 }
 
 router.get('/:platform', async (req, res) => {
+  getData(req, res)
+
   res.render('mockups/sss-new/platform.pug', { now: utils.now() })
 })
 

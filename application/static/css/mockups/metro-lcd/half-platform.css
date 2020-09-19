@@ -215,11 +215,13 @@ div.stops div.stopsColumn.columns-9 div span {
 }
 
 
-
+div.vertLine {
+  width: calc(var(--width) * 0.0025);
+  background-color: #ffffff;
+}
 
 div.right {
   width: calc(var(--width) * 0.2975);
-  border-left: calc(var(--width) * 0.0025) solid white;
   flex-direction: column;
 }
 
@@ -310,7 +312,6 @@ div.clockContainer {
   align-items: center;
   justify-content: center;
   border: calc(var(--width) * 0.001) solid gray;
-  margin-right: calc(var(--width) * 0.0025);
 }
 
 div.clock span {

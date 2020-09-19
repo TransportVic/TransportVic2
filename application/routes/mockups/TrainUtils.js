@@ -69,6 +69,13 @@ let departuresLock = {}
 let arrivalsLock = {}
 let combinedDeparturesLock = {}
 
+class IEventEmitter extends EventEmitter {
+  constructor() {
+    super()
+    this.setMaxListeners(Infinity)
+  }
+}
+
 let departuresCache = new TimedCache(1000 * 15)
 let arrivalsCache = new TimedCache(1000 * 15)
 let combinedDeparturesCache = new TimedCache(1000 * 15)
@@ -84,9 +91,10 @@ module.exports = {
     return humanName
   },
   getEmptyShunts: async (station, db) => {
-    if (arrivalsLock[station]) {
+    let stationName = station.stopName
+    if (arrivalsLock[stationName]) {
       return await new Promise(resolve => {
-        arrivalsLock[station].on('done', data => {
+        arrivalsLock[stationName].on('done', data => {
           resolve(data)
         })
       })
@@ -96,7 +104,7 @@ module.exports = {
       return arrivalsCache.get(station)
     }
 
-    arrivalsLock[station] = new EventEmitter()
+    arrivalsLock[stationName] = new IEventEmitter()
 
     let timetables = db.getCollection('timetables')
     let today = utils.getPTDayName(utils.now())
@@ -155,17 +163,18 @@ module.exports = {
       })
     })
 
-    arrivalsLock[station].emit('done', mappedArrivals)
-    delete arrivalsLock[station]
+    arrivalsLock[stationName].emit('done', mappedArrivals)
+    delete arrivalsLock[stationName]
 
-    arrivalsCache.put(station, mappedArrivals)
+    arrivalsCache.put(stationName, mappedArrivals)
 
     return mappedArrivals
   },
   getCombinedDepartures: async (station, db) => {
-    if (combinedDeparturesLock[station]) {
+    let stationName = station.stopName
+    if (combinedDeparturesLock[stationName]) {
       return await new Promise(resolve => {
-        combinedDeparturesLock[station].on('done', data => {
+        combinedDeparturesLock[stationName].on('done', data => {
           resolve(data)
         })
       })
@@ -175,7 +184,7 @@ module.exports = {
       return combinedDeparturesCache.get(station)
     }
 
-    combinedDeparturesLock[station] = new EventEmitter()
+    combinedDeparturesLock[stationName] = new IEventEmitter()
 
     let timetables = db.getCollection('timetables')
 
@@ -276,10 +285,10 @@ module.exports = {
       return !departure.cancelled && minutesDifference < 120 && secondsDifference > -60
     }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 
-    combinedDeparturesLock[station].emit('done', departures)
-    delete combinedDeparturesLock[station]
+    combinedDeparturesLock[stationName].emit('done', departures)
+    delete combinedDeparturesLock[stationName]
 
-    combinedDeparturesCache.put(station, departures)
+    combinedDeparturesCache.put(stationName, departures)
 
     return departures
   },
@@ -604,15 +613,14 @@ module.exports = {
       }
     })
   },
-  trimDepartureData: (departures, maxDepartures) => {
+  trimDepartureData: (departures, maxDepartures, addStopTimings) => {
     return departures.map(departure => {
-      return {
+      let data = {
         destination: departure.destination,
         scheduledDepartureTime: departure.scheduledDepartureTime,
         estimatedDepartureTime: departure.estimatedDepartureTime,
         actualDepartureTime: departure.actualDepartureTime,
         platform: departure.platform,
-        stopTimings: departure.stopTimings,
         type: departure.type,
         connections: departure.connections,
         stoppingPattern: departure.stoppingPattern,
@@ -624,9 +632,16 @@ module.exports = {
         additionalInfo: departure.additionalInfo,
         direction: departure.trip.direction
       }
+
+      if (addStopTimings) data.stopTimings = departure.stopTimings.map(stop => ({
+        stopName: stop.stopName,
+        arrivalTimeMinutes: stop.arrivalTimeMinutes,
+        departureTimeMinutes: stop.departureTimeMinutes
+      }))
+      return data
     }).slice(0, maxDepartures)
   },
-  getPIDSDepartures: async (db, station, platform, stoppingText, stoppingType, maxDepartures=6) => {
+  getPIDSDepartures: async (db, station, platform, stoppingText, stoppingType, maxDepartures=6, addStopTimings=false) => {
     stoppingText = stoppingText || defaultStoppingText
     stoppingType = stoppingType || defaultStoppingType
 
@@ -645,7 +660,7 @@ module.exports = {
       return departuresCache.get(cacheKey)
     }
 
-    departuresLock[cacheKey] = new EventEmitter()
+    departuresLock[cacheKey] = new IEventEmitter()
 
     let allDepartures = await module.exports.getCombinedDepartures(station, db)
     let hasRRB = !!allDepartures.find(d => d.isRailReplacementBus)
@@ -702,7 +717,7 @@ module.exports = {
 
     let hasDepartures = allDepartures.length > 0
 
-    let output = { departures: module.exports.trimDepartureData(platformDepartures, maxDepartures), hasDepartures, hasRRB }
+    let output = { departures: module.exports.trimDepartureData(platformDepartures, maxDepartures, addStopTimings), hasDepartures, hasRRB }
 
     departuresLock[cacheKey].emit('done', output)
     delete departuresLock[cacheKey]

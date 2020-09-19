@@ -8,20 +8,21 @@ const stationDestinations = require('./station-destinations')
 async function getData(req, res) {
   let station = await PIDUtils.getStation(res.db, req.params.station)
 
-  return await TrainUtils.getPIDSDepartures(res.db, station, '*', null, null, 15)
+  return await TrainUtils.getPIDSDepartures(res.db, station, '*', null, null, 15, true)
 }
 
 router.get('/:station/up-down', async (req, res) => {
+  getData(req, res)
+
   res.render('mockups/metro-lcd/concourse/up-down', { now: utils.now() })
 })
 
 router.get('/:station/interchange', async (req, res) => {
-  let station = await res.db.getCollection('stops').findDocument({
-    codedName: req.params.station + '-railway-station'
-  })
+  let station = await PIDUtils.getStation(res.db, req.params.station)
 
   let stationName = station ? station.stopName.slice(0, -16) : '??'
   let destinations = stationDestinations[stationName] || []
+  getData(req, res)
 
   res.render('mockups/metro-lcd/concourse/interchange', {
     now: utils.now(),
