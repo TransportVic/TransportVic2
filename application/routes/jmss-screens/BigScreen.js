@@ -161,6 +161,7 @@ router.get('/', async (req, res) => {
   lock.emit('done', data)
   lock = null
 
+  res.loggingData = req.headers['user-agent']
   res.render('jmss-screens/big-screen', data)
 })
 

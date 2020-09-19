@@ -74,7 +74,7 @@ module.exports = class MainServer {
         let diff = end - start
 
         if (diff > 20 && !reqURL.startsWith('/static/')) {
-          stream.write(`${req.method} ${reqURL} ${res.loggingData} ${diff}\n`, () => {})
+          stream.write(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff}\n`, () => {})
 
           this.past50ResponseTimes = [...this.past50ResponseTimes.slice(-49), diff]
         }
