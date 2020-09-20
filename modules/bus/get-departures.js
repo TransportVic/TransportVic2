@@ -60,12 +60,12 @@ async function updateBusTrips(db, departures) {
   let date = utils.getYYYYMMDDNow()
   let timestamp = +new Date()
 
-  let viableDepartures = departures.filter(d => d.vehicleDescriptor.id)
+  let viableDepartures = departures.filter(d => d.vehicle)
 
   await async.forEach(viableDepartures, async departure => {
     let {routeGTFSID, origin, destination, departureTime, destinationArrivalTime} = departure.trip
-    let smartrakID = parseInt(departure.vehicleDescriptor.id)
-    let {routeNumber, busRego} = departure
+    let smartrakID = parseInt(departure.vehicle.smartrakID)
+    let {routeNumber, vehicle} = departure
 
     let data = {
       date, timestamp,
@@ -160,12 +160,15 @@ async function getDeparturesFromPTV(stop, db) {
       if (!trip) {
         trip = await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
       }
-      let vehicleDescriptor = run.vehicle_descriptor || {}
+
+      let hasVehicleData = run.vehicle_descriptor
+      let vehicleDescriptor = hasVehicleData ? run.vehicle_descriptor : {}
 
       let busRego
+      let smartrakID = vehicleDescriptor.id
       if (vehicleDescriptor.supplier === 'Smartrak') {
         busRego = (await smartrakIDs.findDocument({
-          smartrakID: parseInt(vehicleDescriptor.id)
+          smartrakID: parseInt(smartrakID)
         }) || {}).fleetNumber
       }
 
@@ -198,10 +201,13 @@ async function getDeparturesFromPTV(stop, db) {
         estimatedDepartureTime,
         actualDepartureTime,
         destination: trip.destination,
-        vehicleDescriptor,
+        vehicle: smartrakID ? {
+          name: busRego || smartrakID,
+          smartrakID,
+          attributes: null
+        } : null,
         routeNumber,
         sortNumber,
-        busRego,
         isNightBus,
         operator,
         codedOperator: utils.encodeName(operator.replace(/ \(.+/, '')),
