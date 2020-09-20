@@ -65,6 +65,8 @@ async function updateBusTrips(db, departures) {
   await async.forEach(viableDepartures, async departure => {
     let {routeGTFSID, origin, destination, departureTime, destinationArrivalTime} = departure.trip
     let smartrakID = parseInt(departure.vehicle.smartrakID)
+    let busRego = departure.vehicle.name
+
     let {routeNumber, vehicle} = departure
 
     let data = {
