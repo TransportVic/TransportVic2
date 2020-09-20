@@ -2,8 +2,10 @@ const DatabaseConnection = require('../../../database/DatabaseConnection')
 const config = require('../../../config.json')
 const utils = require('../../../utils')
 const ptvStops = require('./tram-stops.json')
+const directions = require('./tram-directions')
 const async = require('async')
 const cheerio = require('cheerio')
+const ptvOverrides = require('./ptv-overrides')
 
 const updateStats = require('../../utils/stats')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
@@ -17,17 +19,23 @@ function sleep() {
 database.connect({}, async () => {
   let stops = database.getCollection('stops')
   let routes = database.getCollection('routes')
+  let gtfsTimetables = database.getCollection('gtfs timetables')
 
   let tramServices = (await routes.distinct('routeNumber', { mode: 'tram' })).map(e => e.match(/(\d+)/)[1]).concat('3a')
   let count = 0
 
-  let stopIDs = {}
+  let tramTrackerIDs = {}
+  let stopDirections = {}
   let stopNames = {}
   let stopNumbers = {}
 
   await async.forEachSeries(tramServices, async service => {
+    if (service === '35') return
+
     await async.forEachSeries([0, 1], async direction => {
-      let data = await utils.request(`https://yarratrams.com.au/umbraco/surface/data/routestopsdata/?id=${service}&dir=${direction}`)
+      let data = await utils.request(`https://yarratrams.com.au/umbraco/surface/data/routestopsdata/?id=${service}&dir=${direction}`, {
+        timeout: 3000
+      })
       let $ = cheerio.load(data)
 
       let stops = Array.from($('table.route-view tbody > tr:not(.suburb):not(.suburb-section-first):not(.suburb-section):not([style])'))
@@ -40,27 +48,34 @@ database.connect({}, async () => {
         if (!url) return
 
         let stopID = url.match(/stopId=(\d+)/)[1]
-
         if (!tramTrackerID) return
+        if (ptvOverrides[tramTrackerID]) stopID = ptvOverrides[tramTrackerID]
+        if (!stopID) return
 
-        if (!stopIDs[stopID]) {
-          stopIDs[stopID] = []
+        if (!stopNames[stopID]) {
           stopNames[stopID] = []
           stopNumbers[stopID] = []
         }
 
-        if (!stopIDs[stopID].includes(tramTrackerID)) stopIDs[stopID].push(tramTrackerID)
+        tramTrackerIDs[tramTrackerID] = stopID
         if (!stopNames[stopID].includes(tramTrackerName)) stopNames[stopID].push(tramTrackerName)
         if (!stopNumbers[stopID].includes(stopNumber)) stopNumbers[stopID].push(stopNumber)
+
+        if (!stopDirections[tramTrackerID]) stopDirections[tramTrackerID] = []
+        stopDirections[tramTrackerID].push({
+          service,
+          gtfsDirection: directions[`${service}.${direction}`]
+        })
       })
 
       await sleep()
     })
   })
 
-  await async.forEach(Object.keys(stopIDs), async stopID => {
+  await async.forEachSeries(Object.keys(tramTrackerIDs), async tramTrackerID => {
     count++
 
+    let stopID = tramTrackerIDs[tramTrackerID]
     let ptvStop = ptvStops.find(stop => stop.stopID === stopID)
     let dbStop
 
@@ -85,17 +100,49 @@ database.connect({}, async () => {
     }
 
     if (dbStop) {
-      await stops.updateDocument({ _id: dbStop._id }, {
-        $set: {
-          tramTrackerIDs: stopIDs[stopID].map(e => parseInt(e)),
-          tramTrackerNames: stopNames[stopID]
+      let stopGTFSIDs = dbStop.bays.filter(b => b.mode === 'tram').map(b => b.stopGTFSID)
+
+      let matches = stopGTFSIDs.map(id => [id, 0])
+
+      await async.forEach(stopDirections[tramTrackerID], async stopService => {
+        let timetable = await gtfsTimetables.findDocument({
+          mode: 'tram',
+          routeGTFSID: '3-' + stopService.service,
+          gtfsDirection: stopService.gtfsDirection,
+          'stopTimings.stopGTFSID': {
+            $in: stopGTFSIDs
+          }
+        })
+
+        if (timetable) {
+          let stopTiming = timetable.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))
+          matches.find(m => m[0] === stopTiming.stopGTFSID)[1]++
         }
       })
 
-      return
+      let bestMatch = matches.sort((a, b) => b[1] - a[1])[0]
+      if (bestMatch[1] > 0) {
+        let stopGTFSID = bestMatch[0]
+        dbStop.bays = dbStop.bays.map(bay => {
+          if (bay.mode === 'tram' && bay.stopGTFSID === stopGTFSID) {
+            bay.tramTrackerID = tramTrackerID
+          }
+
+          return bay
+        })
+
+        await stops.updateDocument({ _id: dbStop._id }, {
+          $set: {
+            bays: dbStop.bays,
+            tramTrackerNames: stopNames[stopID]
+          }
+        })
+
+        return
+      } else console.log(matches)
     }
 
-    console.log('Failed to map stop', stopID, stopIDs[stopID], stopNames[stopID], dbStop)
+    console.log('Failed to map stop', stopID, tramTrackerID, stopNames[stopID], dbStop)
   })
 
   await updateStats('tramtracker-ids', count)

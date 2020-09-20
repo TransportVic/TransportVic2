@@ -31,7 +31,7 @@ async function prioritySearch(db, query) {
 
   let numericalMatchStops = (await db.getCollection('stops').findDocuments({
     $or: [{
-      tramTrackerIDs: nquery
+      'bays.tramTrackerID': query
     }, {
       'bays.stopNumber': query.replace('#', '')
     }]
