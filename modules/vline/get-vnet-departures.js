@@ -105,7 +105,7 @@ async function getVNETDepartures(stationName, direction, db, time) {
       platform,
       originDepartureTime, destinationArrivalTime,
       direction,
-      vehicle: fullVehicle.split('-'),
+      vehicle: fullVehicle.split('-').filter((e, i, a) => a.indexOf(e) === i), // Simple deduper
       barAvailable,
       accessibleTrain,
       vehicleType,
