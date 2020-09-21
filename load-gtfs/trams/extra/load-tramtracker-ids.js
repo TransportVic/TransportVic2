@@ -59,7 +59,7 @@ database.connect({}, async () => {
 
         tramTrackerIDs[tramTrackerID] = stopID
         if (!stopNames[stopID].includes(tramTrackerName)) stopNames[stopID].push(tramTrackerName)
-        if (!stopNumbers[stopID].includes(stopNumber)) stopNumbers[stopID].push(stopNumber)
+        if (!stopNumbers[stopID].includes(stopNumber)) stopNumbers[stopID].push(stopNumber.toUpperCase())
 
         if (!stopDirections[tramTrackerID]) stopDirections[tramTrackerID] = []
         stopDirections[tramTrackerID].push({
@@ -82,9 +82,7 @@ database.connect({}, async () => {
     if (ptvStop) {
       dbStop = await stops.findDocument({
         'bays.fullStopName': utils.adjustStopName(ptvStop.stopName),
-        'bays.stopNumber': {
-          $in: stopNumbers[stopID]
-        }
+        'bays.stopNumber': ptvStop.stopNumber
       })
     }
 
@@ -142,7 +140,7 @@ database.connect({}, async () => {
       } else console.log(matches)
     }
 
-    console.log('Failed to map stop', stopID, tramTrackerID, stopNames[stopID], dbStop)
+    console.log('Failed to map stop', stopID, tramTrackerID, stopNames[stopID], dbStop, ptvStop)
   })
 
   await updateStats('tramtracker-ids', count)
