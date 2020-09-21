@@ -6,7 +6,6 @@ const utils = require('../../utils')
 const EventEmitter = require('events')
 const tramFleet = require('../../tram-fleet')
 const urls = require('../../urls')
-const tramDirections = require('./tram-direction-map')
 
 const departuresCache = new TimedCache(1000 * 60)
 
