@@ -44,10 +44,11 @@ async function loadDepartures(req, res) {
 
     let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
     let {stopGTFSID} = currentStop
-    let minutesDiff = currentStop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
+    let firstStop = departure.trip.stopTimings[0]
+
+    let minutesDiff = currentStop.departureTimeMinutes - firstStop.departureTimeMinutes
 
     let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
-    if (departure.trip.stopTimings[0].departureTimeMinutes > 1440) tripStart.add(-1, 'day') // edge case where trip starts after midnight and recorded as 25:00 on
 
     let operationDate = utils.getYYYYMMDD(tripStart)
 
