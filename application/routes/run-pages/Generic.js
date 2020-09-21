@@ -25,6 +25,7 @@ async function pickBestTrip(data, db) {
 
   let trueMode = data.mode
   if (trueMode === 'coach') trueMode = 'regional coach'
+  if (trueMode === 'heritage') trueMode = 'heritage train'
 
   let originStop = await db.getCollection('stops').findDocument({
     codedNames: data.origin,
@@ -57,7 +58,8 @@ async function pickBestTrip(data, db) {
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
 
-  let useLive = minutesToTripEnd > -60 && minutesToTripStart < 60 && data.mode !== 'coach'
+  let noLive = ['regional coach', 'ferry', 'heritage train']
+  let useLive = minutesToTripEnd > -60 && minutesToTripStart < 60 && !noLive.includes(trueMode)
 
   if (liveTrip) {
     if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
@@ -111,7 +113,7 @@ async function pickBestTrip(data, db) {
 }
 
 router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res, next) => {
-  if (!['coach', 'bus', 'tram'].includes(req.params.mode)) return next()
+  if (!['coach', 'bus', 'tram', 'ferry', 'heritage'].includes(req.params.mode)) return next()
 
   let tripData = await pickBestTrip(req.params, res.db)
   if (!tripData) return res.status(404).render('errors/no-trip')
@@ -151,7 +153,7 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
 
     let originShortName = utils.getStopName(origin)
     if (!utils.isStreet(originShortName)) origin = originShortName
-  } else {
+  } else if (trip.mode == 'bus') {
     let serviceData = busDestinations.service[trip.routeNumber] || busDestinations.service[trip.routeGTFSID] || {}
 
     destination = serviceData[destination]

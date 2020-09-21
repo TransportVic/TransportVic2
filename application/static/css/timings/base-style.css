@@ -28,27 +28,31 @@
 }
 
 .modeSwitchType.metro-train {
-  background-color: #0570c3;
+  background-color: #3483db;
 }
 
 .modeSwitchType.tram {
-  background-color: #20b734;
-}
-
-.modeSwitchType.regional-coach {
-  background-color: #9582b5;
+  background-color: #1a942a;
 }
 
 .modeSwitchType.regional-train {
   background-color: #6b4d9e;
 }
 
+.modeSwitchType.regional-coach {
+  background-color: #9582b5;
+}
+
 .modeSwitchType.bus {
   background-color: #d7832c;
 }
 
+.modeSwitchType.ferry {
+  background-color: #03998f;
+}
+
 .modeSwitchType.heritage-train {
-  background-color: #5e401f;
+  background-color: #7a562e;
 }
 
 .modeSwitchType img {
