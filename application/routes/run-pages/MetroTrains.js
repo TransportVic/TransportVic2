@@ -70,11 +70,11 @@ async function pickBestTrip(data, db) {
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
 
-  let useLive = minutesToTripEnd >= -25 && minutesToTripStart < 120
+  let useLive = minutesToTripEnd >= -120 && minutesToTripStart < 240
 
   if (liveTrip) {
     if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
-      return liveTrip
+      return { trip: liveTrip, tripStartTime, isLive: true }
     }
   }
 
@@ -83,11 +83,9 @@ async function pickBestTrip(data, db) {
   let isStonyPoint = data.origin === 'stony-point' || data.destination === 'stony-point'
 
   if (gtfsTrip && isStonyPoint) {
-    if (isStonyPoint) {
-      query.$and[0] = { mode: 'metro train', operationDays: utils.getPTDayName(tripStartTime) }
-      let staticTrip = await db.getCollection('timetables').findDocument(query)
-      if (!staticTrip) return gtfsTrip
-
+    query.$and[0] = { mode: 'metro train', operationDays: utils.getPTDayName(tripStartTime) }
+    let staticTrip = await db.getCollection('timetables').findDocument(query)
+    if (staticTrip) {
       gtfsTrip.stopTimings = gtfsTrip.stopTimings.map(stop => {
         if (stop.stopName === 'Frankston Railway Station')
           stop.platform = '3'
@@ -104,10 +102,10 @@ async function pickBestTrip(data, db) {
       gtfsTrip.vehicle = gtfsTrip.vehicle || '2 Car Sprinter'
     }
 
-    return gtfsTrip
+    return { trip: gtfsTrip, tripStartTime, isLive: false }
   }
 
-  if (!useLive) return gtfsTrip || liveTrip
+  if (!useLive) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null
 
   let originStopID = originStop.bays.filter(bay => bay.mode === 'metro train')[0].stopGTFSID
   let originTime = tripStartTime
@@ -161,21 +159,24 @@ async function pickBestTrip(data, db) {
 
     // interrim workaround cos when services start from a later stop they're really cancelled
     // in the stops before, but PTV thinks otherwise...
-    if (!departure) return referenceTrip
+    if (!departure) return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
     let ptvRunID = departure.run_ref
     let departureTime = departure.scheduled_departure_utc
 
     let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime)
-    return trip
+    return { trip, tripStartTime, isLive: true }
   } catch (e) {
-    return gtfsTrip
+    return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
   }
 }
 
 router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
-  let trip = await pickBestTrip(req.params, res.db)
-  if (!trip) return res.status(404).render('errors/no-trip')
+  let tripData = await pickBestTrip(req.params, res.db)
+  if (!tripData) return res.status(404).render('errors/no-trip')
 
+  let { trip, tripStartTime, isLive } = tripData
+
+  let firstDepartureTime = trip.stopTimings[0].departureTimeMinutes
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.prettyTimeToArrival = ''
 
@@ -187,23 +188,28 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
       stop.headwayDevianceClass = 'unknown'
     }
 
-    if (stop.estimatedDepartureTime) {
-      let scheduledDepartureTime = utils.parseTime(req.params.operationDays, 'YYYYMMDD').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
+    if (!isLive || (isLive && stop.estimatedDepartureTime)) {
+      let scheduledDepartureTime = tripStartTime.clone().add((stop.departureTimeMinutes || stop.arrivalTimeMinutes) - firstDepartureTime, 'minutes')
+      if (stop.estimatedDepartureTime) {
+        let headwayDeviance = scheduledDepartureTime.diff(stop.estimatedDepartureTime, 'minutes')
 
-      let headwayDeviance = scheduledDepartureTime.diff(stop.estimatedDepartureTime, 'minutes')
-
-      // trains cannot be early
-      let lateThreshold = 5
-      if (headwayDeviance <= -lateThreshold) { // <= 5min counts as late
-        stop.headwayDevianceClass = 'late'
-      } else {
-        stop.headwayDevianceClass = 'on-time'
+        // trains cannot be early
+        if (headwayDeviance <= -5) { // <= 5min counts as late
+          stop.headwayDevianceClass = 'late'
+        } else {
+          stop.headwayDevianceClass = 'on-time'
+        }
       }
 
-      const timeDifference = moment.utc(moment(stop.estimatedDepartureTime).diff(utils.now()))
+      if (isLive && !stop.estimatedDepartureTime) return stop
+
+      // TODO: Refactor
+      let actualDepartureTime = stop.estimatedDepartureTime || scheduledDepartureTime
+      let timeDifference = moment.utc(moment(actualDepartureTime).diff(utils.now()))
 
       if (+timeDifference < -30000) return stop
       if (+timeDifference <= 60000) stop.prettyTimeToArrival = 'Now'
+      else if (+timeDifference > 1440 * 60 * 1000) stop.prettyTimeToArrival = utils.getHumanDateShort(scheduledDepartureTime)
       else {
         stop.prettyTimeToArrival = ''
         if (timeDifference.get('hours')) stop.prettyTimeToArrival += timeDifference.get('hours') + ' h '

@@ -167,22 +167,28 @@ async function pickBestTrip(data, db) {
     return stop
   })
 
-  return referenceTrip
+  return {
+    trip: referenceTrip,
+    tripStartTime
+  }
 }
 
 router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
-  let trip = await pickBestTrip(req.params, res.db)
-  if (!trip) return res.status(404).render('errors/no-trip')
+  let tripData = await pickBestTrip(req.params, res.db)
+  if (!tripData) return res.status(404).render('errors/no-trip')
 
+  let { trip, tripStartTime } = tripData
+
+  let firstDepartureTime = trip.stopTimings[0].departureTimeMinutes
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.prettyTimeToArrival = ''
 
-    let scheduledDepartureTime = utils.parseTime(req.params.operationDays, 'YYYYMMDD').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
-
-    const timeDifference = moment.utc(moment(scheduledDepartureTime).diff(utils.now()))
+    let scheduledDepartureTime = tripStartTime.clone().add((stop.departureTimeMinutes || stop.arrivalTimeMinutes) - firstDepartureTime, 'minutes')
+    let timeDifference = moment.utc(moment(scheduledDepartureTime).diff(utils.now()))
 
     if (+timeDifference < -30000) return stop
     if (+timeDifference <= 60000) stop.prettyTimeToArrival = 'Now'
+    else if (+timeDifference > 1440 * 60 * 1000) stop.prettyTimeToArrival = utils.getHumanDateShort(scheduledDepartureTime)
     else {
       stop.prettyTimeToArrival = ''
       if (timeDifference.get('hours')) stop.prettyTimeToArrival += timeDifference.get('hours') + ' h '
