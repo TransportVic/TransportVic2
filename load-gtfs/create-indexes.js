@@ -72,7 +72,7 @@ database.connect({
   }, {name: 'tramtracker name index', sparse: true})
 
   await stops.createIndex({
-    'tramTrackerIDs': 1
+    'bays.tramTrackerIDs': 1
   }, {name: 'tramtracker id index', sparse: true})
 
   await stops.createIndex({

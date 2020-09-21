@@ -70,7 +70,7 @@ async function getDeparturesFromPTV(stop, db) {
     let {responseObject} = JSON.parse(await utils.request(urls.yarraStopNext3.format(tramTrackerID)))
 
     await async.forEach(responseObject, async tramDeparture => {
-      let {Deviation, AVMTime, Down, HeadBoardRouteNo, RunNo, Schedule, TramDistance, VehicleNo, Destination} = tramDeparture
+      let {Prediction, AVMTime, Down, HeadBoardRouteNo, RunNo, Schedule, TramDistance, VehicleNo, Destination} = tramDeparture
       let scheduledTimeMS = parseInt(Schedule.slice(0, -1).match(/(\d)+\+/)[0])
       let avmTimeMS = parseInt(AVMTime.slice(0, -1).match(/(\d)+\+/)[0])
 
