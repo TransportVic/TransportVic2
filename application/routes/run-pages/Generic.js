@@ -89,8 +89,7 @@ async function pickBestTrip(data, db) {
 
     let departure = departures.filter(departure => {
       let run = runs[departure.run_ref]
-      let destinationName = busStopNameModifier(utils.adjustStopName(run.destination_name.trim()))
-        .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
+      let destinationName = busStopNameModifier(utils.adjustStopName(run.destination_name.trim().replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')))
       let scheduledDepartureTime = moment(departure.scheduled_departure_utc).toISOString()
 
       return scheduledDepartureTime === isoDeparture &&
