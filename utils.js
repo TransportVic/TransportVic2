@@ -321,7 +321,7 @@ module.exports = {
     else
       return moment.tz(time, 'Australia/Melbourne')
   },
-  request: async (url, options) => {
+  request: async (url, options={}) => {
     let start = +new Date()
 
     let body
@@ -330,7 +330,7 @@ module.exports = {
     let fullOptions = {
       timeout: 2000,
       compress: true,
-      ...(options || {})
+      ...options
     }
 
     for (let i = 0; i < 3; i++) {
@@ -349,6 +349,7 @@ module.exports = {
     let diff = end - start
     console.log(`${diff}ms ${url}`)
 
+    if (options.raw) return body
     return body.text()
   },
   isStreet: shortName => {
