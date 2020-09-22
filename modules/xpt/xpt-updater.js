@@ -17,17 +17,8 @@ async function fetchAndUpdate() {
   await async.forEach(relevantSYDTrips, async trip => {
     let rawTripID = trip.trip.trip_id
 
-    let gtfsTrip
-    if (rawTripID.includes('.X.')) { // From SYD trains
-      let updateTimestamp = utils.parseTime(trip.timestamp * 1000)
-      gtfsTrip = await gtfsTimetables.findDocument({
-        operationDays: utils.getYYYYMMDD(updateTimestamp),
-        runID: rawTripID.slice(0, 4)
-      })
-    } else {
-      let tripID = `${rawTripID.slice(-4)}.${rawTripID.slice(0, 4)}.${rawTripID.slice(5, -5)}.14-XPT`
-      gtfsTrip = await gtfsTimetables.findDocument({ tripID })
-    }
+    let tripID = `${rawTripID}.14-XPT`
+    let gtfsTrip = await gtfsTimetables.findDocument({ tripID })
 
     let stopTimings = {}
 
@@ -58,15 +49,6 @@ async function fetchAndUpdate() {
       let delayFactor = stopTimings[stop.stopName]
       if (delayFactor) {
         stop.stopGTFSID = delayFactor.stopGTFSID
-      } else {
-        let previousStop = gtfsTrip.stopTimings[i - 1]
-        let nextStop = gtfsTrip.stopTimings[i + 1]
-
-        if (previousStop && stopTimings[previousStop.stopName]) delayFactor = stopTimings[previousStop.stopName]
-        else if (nextStop && stopTimings[nextStop.stopName]) delayFactor = stopTimings[nextStop.stopName]
-      }
-
-      if (delayFactor) {
         let minutesDiff = (stop.departureTimeMinutes || stop.arrivalTimeMinutes) - startMinutes
         let scheduledDepartureTime = tripStartTime.clone().add(minutesDiff, 'minutes')
         stop.estimatedDepartureTime = scheduledDepartureTime.add(delayFactor.departureDelay).toISOString()

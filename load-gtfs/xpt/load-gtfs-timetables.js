@@ -27,13 +27,18 @@ database.connect({
 
   let gtfsPath = path.join(__dirname, '../../gtfs', `${gtfsID}`)
   let calendarDays = utils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar.txt')).toString())
-  let calendarDates = utils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar_dates.txt')).toString())
+  let calendarDates = []
+  try {
+    calendarDates = utils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar_dates.txt')).toString())
+  } catch (e) {}
 
-  let chars = ['A', 'B', 'C', 'D']
   let tripsLineReader = new BufferedLineReader(path.join(gtfsPath, 'trips.txt'))
   let tripTimingsLineReader = new BufferedLineReader(path.join(gtfsPath, 'stop_times.txt'))
+  let routesLineReader = new BufferedLineReader(path.join(gtfsPath, 'stop_times.txt'))
   await tripsLineReader.open()
   await tripTimingsLineReader.open()
+  await routesLineReader.open()
+  let chars = ['A', 'B']
 
   let tripsConsidered = []
   let rawTripIDsConsidered = []
@@ -42,17 +47,14 @@ database.connect({
   while (tripsLineReader.available()) {
     let line = await tripsLineReader.nextLine()
     let lineData = gtfsUtils.splitLine(line)
-    let routeID = lineData[0]
+    let rawTripID = lineData[2]
 
-    if (routeID.startsWith('4T.T.ST')) {
+    if (rawTripID.startsWith('ST')) {
       let rawShapeID = lineData[7]
-      let variant = rawShapeID.split('.').slice(-2).join('.')
-      let rawTripID = lineData[2]
-
       let routeGTFSID = '14-XPT'
-      let shapeID = `14-XPT-${chars[routeID[8] - 1]}-mjp-1.${variant}`
+      let shapeID = `14-XPT-${chars[rawShapeID[5] - 1]}-mjp-1.1.${rawShapeID[6].toUpperCase()}`
       let calendarID = lineData[1]
-      let tripID = `${rawTripID.slice(-4)}.${calendarID}.14-XPT`
+      let tripID = `${rawTripID}.14-XPT`
       let gtfsDirection = lineData[5]
       let headsign = lineData[3]
 
@@ -66,13 +68,18 @@ database.connect({
         calendarID,
         gtfsDirection,
         shapeID,
-        headsign,
-        runID: rawTripID.slice(0, 4)
+        headsign
       })
     }
   }
 
   console.log('Filtered trips, found', tripsConsidered.length)
+
+  let permittedStopGTFSIDs = await stops.distinct('bays.stopGTFSID', {
+    'bays.stopGTFSID': {
+      $gt: 140000000
+    }
+  })
 
   let tripTimes = []
   let currentTripID = null
@@ -95,17 +102,20 @@ database.connect({
         })
         currentTrip = []
       } else {
-        currentTrip.push({
-          stopGTFSID: parseInt(lineData[3].replace('P', '0')) + 140000000,
-          arrivalTime: lineData[1],
-          departureTime: lineData[2],
-          stopConditions: {
-            pickup: parseInt(lineData[5]),
-            dropoff: parseInt(lineData[6])
-          },
-          stopDistance: parseFloat(lineData[9]),
-          stopSequence: parseFloat(lineData[4])
-        })
+        let stopGTFSID = parseInt(lineData[3].replace('P', '0')) + 140000000
+        if (permittedStopGTFSIDs.includes(stopGTFSID)) {
+          currentTrip.push({
+            stopGTFSID,
+            arrivalTime: lineData[1],
+            departureTime: lineData[2],
+            stopConditions: {
+              pickup: parseInt(lineData[5]),
+              dropoff: parseInt(lineData[6])
+            },
+            stopDistance: parseFloat(lineData[9]),
+            stopSequence: parseFloat(lineData[4])
+          })
+        }
       }
 
       currentTripID = tripID
