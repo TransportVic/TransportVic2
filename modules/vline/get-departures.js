@@ -101,6 +101,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
       trip,
       platform,
       scheduledDepartureTime: departure.originDepartureTime,
+      actualDepartureTime: departure.originDepartureTime,
       runID: departure.runID,
       vehicle: departure.vehicle,
       destination: trip.destination.slice(0, -16),
