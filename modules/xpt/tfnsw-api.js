@@ -21,10 +21,10 @@ async function makeRequest(url, options={}) {
 
 async function makePBRequest(url) {
   let rawData = await makeRequest(url, {
-
+    raw: true
   })
 
-  return GTFSR.FeedMessage.decode(rawData)
+  return GTFSR.FeedMessage.decode(await rawData.buffer())
 }
 
 module.exports = {
