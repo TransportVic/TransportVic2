@@ -678,7 +678,7 @@ let lines = {
     'Junee',
     'Cootamundra',
     'Harden',
-    'Yass',
+    'Yass Junction',
     'Gunning',
     'Goulburn',
     'Moss Vale',
