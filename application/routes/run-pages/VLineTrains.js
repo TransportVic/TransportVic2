@@ -97,72 +97,74 @@ async function pickBestTrip(data, db) {
     } else return null
   }
 
-  let vlineTrips = db.getCollection('vline trips')
-
-  let trackerDepartureTime = giveVariance(referenceTrip.departureTime)
-  let trackerDestinationArrivalTime = giveVariance(referenceTrip.destinationArrivalTime)
-
-  let tripData = await vlineTrips.findDocument({
-    date: operationDays,
-    departureTime: trackerDepartureTime,
-    origin: referenceTrip.origin.slice(0, -16),
-    destination: referenceTrip.destination.slice(0, -16)
-  })
-
-  if (!tripData && referenceTrip.direction === 'Up') {
-    tripData = await vlineTrips.findDocument({
-      date: operationDays,
-      departureTime: trackerDepartureTime,
-      origin: referenceTrip.origin.slice(0, -16)
-    })
-  }
-
-  if (!tripData) {
-    tripData = await vlineTrips.findDocument({
-      date: operationDays,
-      destination: referenceTrip.destination.slice(0, -16),
-      destinationArrivalTime: trackerDestinationArrivalTime
-    })
-  }
-
-  let nspTrip
-  if (tripData) {
-      nspTrip = await db.getCollection('timetables').findDocument({
-      mode: 'regional train',
-      routeGTFSID: referenceTrip.routeGTFSID,
-      runID: tripData.runID,
-      operationDays: utils.getDayName(tripDay),
-    })
-  } else {
-    nspTrip = await db.getCollection('timetables').findDocument({
-      mode: 'regional train',
-      origin: referenceTrip.origin,
-      direction: referenceTrip.direction,
-      routeGTFSID: referenceTrip.routeGTFSID,
-      operationDays: utils.getDayName(tripDay),
-      'stopTimings': {
-        $elemMatch: {
-          stopName: referenceTrip.origin,
-          departureTimeMinutes: departureTime
-        }
-      }
-    })
-  }
-
-  let {runID, vehicle} = nspTrip || {}
-
-  referenceTrip.runID = runID
-  referenceTrip.vehicle = vehicle
-
-  if (tripData) {
-    referenceTrip.runID = tripData.runID
-    referenceTrip.consist = tripData.consist
-  }
-
   let isXPT = referenceTrip.routeGTFSID === '14-XPT'
   let isLive = false
 
   if (isXPT && referenceTrip.updateTime) isLive = true
+
+  let nspTrip
+  if (!isXPT) {
+    let vlineTrips = db.getCollection('vline trips')
+
+    let trackerDepartureTime = giveVariance(referenceTrip.departureTime)
+    let trackerDestinationArrivalTime = giveVariance(referenceTrip.destinationArrivalTime)
+
+    let tripData = await vlineTrips.findDocument({
+      date: operationDays,
+      departureTime: trackerDepartureTime,
+      origin: referenceTrip.origin.slice(0, -16),
+      destination: referenceTrip.destination.slice(0, -16)
+    })
+
+    if (!tripData && referenceTrip.direction === 'Up') {
+      tripData = await vlineTrips.findDocument({
+        date: operationDays,
+        departureTime: trackerDepartureTime,
+        origin: referenceTrip.origin.slice(0, -16)
+      })
+    }
+
+    if (!tripData) {
+      tripData = await vlineTrips.findDocument({
+        date: operationDays,
+        destination: referenceTrip.destination.slice(0, -16),
+        destinationArrivalTime: trackerDestinationArrivalTime
+      })
+    }
+
+    if (tripData) {
+        nspTrip = await db.getCollection('timetables').findDocument({
+        mode: 'regional train',
+        routeGTFSID: referenceTrip.routeGTFSID,
+        runID: tripData.runID,
+        operationDays: utils.getDayName(tripDay),
+      })
+    } else {
+      nspTrip = await db.getCollection('timetables').findDocument({
+        mode: 'regional train',
+        origin: referenceTrip.origin,
+        direction: referenceTrip.direction,
+        routeGTFSID: referenceTrip.routeGTFSID,
+        operationDays: utils.getDayName(tripDay),
+        'stopTimings': {
+          $elemMatch: {
+            stopName: referenceTrip.origin,
+            departureTimeMinutes: departureTime
+          }
+        }
+      })
+    }
+
+    let {runID, vehicle} = nspTrip || {}
+
+    referenceTrip.runID = runID
+    referenceTrip.vehicle = vehicle
+
+    if (tripData) {
+      referenceTrip.runID = tripData.runID
+      referenceTrip.consist = tripData.consist
+    }
+  }
 
   referenceTrip.stopTimings = await async.map(referenceTrip.stopTimings, async stop => {
     if (isXPT) {
