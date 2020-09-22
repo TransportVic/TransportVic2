@@ -160,6 +160,9 @@ async function pickBestTrip(data, db) {
   }
 
   let isXPT = referenceTrip.routeGTFSID === '14-XPT'
+  let isLive = false
+
+  if (isXPT && referenceTrip.updateTime) isLive = true
 
   referenceTrip.stopTimings = await async.map(referenceTrip.stopTimings, async stop => {
     if (isXPT) {
@@ -190,7 +193,8 @@ async function pickBestTrip(data, db) {
 
   return {
     trip: referenceTrip,
-    tripStartTime
+    tripStartTime,
+    isLive
   }
 }
 
@@ -198,22 +202,48 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   let tripData = await pickBestTrip(req.params, res.db)
   if (!tripData) return res.status(404).render('errors/no-trip')
 
-  let { trip, tripStartTime } = tripData
+  let { trip, tripStartTime, isLive } = tripData
 
   let firstDepartureTime = trip.stopTimings[0].departureTimeMinutes
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.prettyTimeToArrival = ''
 
-    let scheduledDepartureTime = tripStartTime.clone().add((stop.departureTimeMinutes || stop.arrivalTimeMinutes) - firstDepartureTime, 'minutes')
-    let timeDifference = moment.utc(moment(scheduledDepartureTime).diff(utils.now()))
+    if (trip.cancelled || stop.cancelled) {
+      stop.headwayDevianceClass = 'cancelled'
 
-    if (+timeDifference < -30000) return stop
-    if (+timeDifference <= 60000) stop.prettyTimeToArrival = 'Now'
-    else if (+timeDifference > 1440 * 60 * 1000) stop.prettyTimeToArrival = utils.getHumanDateShort(scheduledDepartureTime)
-    else {
-      stop.prettyTimeToArrival = ''
-      if (timeDifference.get('hours')) stop.prettyTimeToArrival += timeDifference.get('hours') + ' h '
-      if (timeDifference.get('minutes')) stop.prettyTimeToArrival += timeDifference.get('minutes') + ' min'
+      return stop
+    } else {
+      stop.headwayDevianceClass = 'unknown'
+    }
+
+    if (!isLive || (isLive && stop.estimatedDepartureTime)) {
+      let scheduledDepartureTime = tripStartTime.clone().add((stop.departureTimeMinutes || stop.arrivalTimeMinutes) - firstDepartureTime, 'minutes')
+      if (stop.estimatedDepartureTime) {
+        let headwayDeviance = scheduledDepartureTime.diff(stop.estimatedDepartureTime, 'minutes')
+
+        if (headwayDeviance > 0) {
+          stop.headwayDevianceClass = 'early'
+        } else if (headwayDeviance <= -5) { // <= 5min counts as late
+          stop.headwayDevianceClass = 'late'
+        } else {
+          stop.headwayDevianceClass = 'on-time'
+        }
+      }
+
+      if (isLive && !stop.estimatedDepartureTime) return stop
+
+      // TODO: Refactor
+      let actualDepartureTime = stop.estimatedDepartureTime || scheduledDepartureTime
+      let timeDifference = moment.utc(moment(actualDepartureTime).diff(utils.now()))
+
+      if (+timeDifference < -30000) return stop
+      if (+timeDifference <= 60000) stop.prettyTimeToArrival = 'Now'
+      else if (+timeDifference > 1440 * 60 * 1000) stop.prettyTimeToArrival = utils.getHumanDateShort(scheduledDepartureTime)
+      else {
+        stop.prettyTimeToArrival = ''
+        if (timeDifference.get('hours')) stop.prettyTimeToArrival += timeDifference.get('hours') + ' h '
+        if (timeDifference.get('minutes')) stop.prettyTimeToArrival += timeDifference.get('minutes') + ' min'
+      }
     }
     return stop
   })
