@@ -9,7 +9,7 @@ async function loadDepartures(req, res) {
     codedName: req.params.stationName + '-railway-station'
   })
 
-  if (!station || !station.bays.find(bay => bay.mode === 'regional train')) {
+  if (!station || !station.bays.find(bay => bay.mode === 'regional train')) { // Not filtering xpt as we just want to check it exists
     return res.status(404).render('errors/no-stop')
   }
 

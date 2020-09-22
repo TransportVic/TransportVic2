@@ -63,7 +63,8 @@ database.connect({
       let fakeSuburb = stopName.replace(' Station', '')
       fakeSuburb = suburbs[fakeSuburb] || fakeSuburb + (vicStops.includes(fakeSuburb) ? '' : ', NSW')
 
-      if (mergeName === 'Melbourne (Southern Cross) Station') mergeName = 'Southern Cross Railway Station'
+      if (mergeName === 'Melbourne (Southern Cross) Railway Station') mergeName = 'Southern Cross Railway Station'
+      if (mergeName === 'Central Railway Station') mergeName = 'Sydney Central Railway Station'
 
       stopsData.push({
         originalName,

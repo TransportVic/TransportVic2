@@ -15,7 +15,7 @@ let rrlStations = [ 'footscray', 'sunshine' ]
 async function getData(req, res) {
   let station = await PIDUtils.getStation(res.db, req.params.station)
 
-  if (station.bays.find(bay => bay.mode === 'regional train')) {
+  if (station.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)) {
     let metro = station.bays.find(bay => bay.mode === 'metro train')
     if (metro && !rrlStations.includes(req.params.station)) return { departures: [] }
   } else return { departures: [] }

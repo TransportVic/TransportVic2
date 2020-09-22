@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
 
   departures = departures.map(departure => {
     let stopsAt = departure.trip.stopTimings.filter(stop => {
-      return stop.stopConditions.dropoff === 0
+      return stop.stopConditions.dropoff !== 1
     }).map(stop => getHumanName(stop.stopName, stop.suburb))
       .filter((e, i, a) => a.indexOf(e) === i).slice(1)
 
