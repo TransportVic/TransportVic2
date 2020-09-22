@@ -146,7 +146,7 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
     let originShortName = utils.getStopName(origin)
     if (!utils.isStreet(originShortName)) origin = originShortName
   } else if (trip.mode == 'bus') {
-    let serviceData = busDestinations.service[trip.routeNumber] || busDestinations.service[trip.routeGTFSID] || {}
+    let serviceData = busDestinations.service[trip.routeGTFSID] || busDestinations.service[trip.routeNumber] || {}
 
     destination = serviceData[destination]
       || busDestinations.generic[destination]

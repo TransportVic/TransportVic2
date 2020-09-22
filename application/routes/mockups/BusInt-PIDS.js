@@ -79,7 +79,7 @@ async function getData(req, res) {
       if (!utils.isStreet(destinationShortName)) destination = destinationShortName
       departure.destination = destination.replace('Shopping Centre', 'SC')
 
-      let serviceData = busDestinations.service[departure.routeNumber] || busDestinations.service[departure.trip.routeGTFSID] || {}
+      let serviceData = busDestinations.service[departure.trip.routeGTFSID] || busDestinations.service[departure.routeNumber] || {}
       departure.destination = serviceData[departure.destination]
         || busDestinations.generic[departure.destination] || departure.destination
 

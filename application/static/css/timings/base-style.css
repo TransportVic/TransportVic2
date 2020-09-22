@@ -281,6 +281,10 @@ a.timing {
   color: #101010;
 }
 
+div.departure.groupedTimings a.timing.hidden {
+  display: none;
+}
+
 div.departure.groupedTimings a.timing {
   width: calc(3.2vw + 3.2vh);
   font-size: calc(1vw + 1vh);
