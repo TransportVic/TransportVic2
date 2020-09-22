@@ -8,12 +8,8 @@ const busStopNameModifier = require('../../../additional-data/bus-stop-name-modi
 
 const busDestinations = require('../../../additional-data/bus-destinations')
 const coachDestinations = require('../../../additional-data/coach-stops')
-const tramDestinations = require('../../../additional-data/tram-destinations')
 
-const determineTramRouteNumber = require('../../../modules/tram/determine-tram-route-number')
 const determineBusRouteNumber = require('../../../modules/bus/determine-bus-route-number')
-
-const tramFleet = require('../../../tram-fleet')
 
 async function pickBestTrip(data, db) {
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
@@ -112,7 +108,7 @@ async function pickBestTrip(data, db) {
 }
 
 router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res, next) => {
-  if (!['coach', 'bus', 'tram'].includes(req.params.mode)) return next()
+  if (!['coach', 'bus'].includes(req.params.mode)) return next()
 
   let trip = await pickBestTrip(req.params, res.db)
   if (!trip) return res.status(404).render('errors/no-trip')
@@ -134,10 +130,7 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
   origin = origin.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
 
-  if (trip.mode === 'tram') {
-    destination = tramDestinations[destination] || destination
-    origin = tramDestinations[origin] || origin
-  } else if (trip.mode === 'regional coach') {
+  if (trip.mode === 'regional coach') {
     destination = fullDestination.replace('Shopping Centre', 'SC')
     origin = fullOrigin.replace('Shopping Centre', 'SC')
 
@@ -215,32 +208,20 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   })
 
   if (trip.vehicle) {
-    if (req.params.mode === 'tram') {
-      let tramModel = tramFleet.getModel(trip.vehicle)
-      trip.vehicleData = {
-        name: `Tram ${tramModel}.${trip.vehicle}`
-      }
-    } else if (req.params.mode === 'bus') {
-      let smartrakIDs = res.db.getCollection('smartrak ids')
+    let smartrakIDs = res.db.getCollection('smartrak ids')
 
-      let busRego = (await smartrakIDs.findDocument({
-        smartrakID: parseInt(trip.vehicle)
-      }) || {}).fleetNumber
-      if (busRego) {
-        trip.vehicleData = {
-          name: 'Bus #' + busRego
-        }
+    let busRego = (await smartrakIDs.findDocument({
+      smartrakID: parseInt(trip.vehicle)
+    }) || {}).fleetNumber
+    if (busRego) {
+      trip.vehicleData = {
+        name: 'Bus #' + busRego
       }
     }
   }
 
   let routeNumber = trip.routeNumber
   let routeNumberClass = utils.encodeName(operator)
-
-  if (trip.mode === 'tram') {
-    routeNumber = determineTramRouteNumber(trip)
-    routeNumberClass = 'tram-' + routeNumber.replace(/[a-z]/, '')
-  }
 
   if (trip.mode === 'bus') {
     routeNumber = determineBusRouteNumber(trip)

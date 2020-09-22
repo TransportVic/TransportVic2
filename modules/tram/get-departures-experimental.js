@@ -57,6 +57,7 @@ async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, route
 
 async function getDeparturesFromYT(stop, db) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
+  let tramTrips = db.getCollection('tram trips')
   let tramStops = stop.bays.filter(b => b.mode === 'tram' && b.tramTrackerID)
   let tramTrackerIDs = tramStops.map(b => b.tramTrackerID)
 
@@ -70,8 +71,8 @@ async function getDeparturesFromYT(stop, db) {
 
     await async.forEach(responseObject, async tramDeparture => {
       let {Prediction, AVMTime, HeadBoardRouteNo, RunNo, Schedule, TramDistance, VehicleNo, Destination} = tramDeparture
-      let scheduledTimeMS = parseInt(Schedule.slice(0, -1).match(/(\d)+\+/)[0])
-      let avmTimeMS = parseInt(AVMTime.slice(0, -1).match(/(\d)+\+/)[0])
+      let scheduledTimeMS = parseInt(Schedule.slice(0, -1).match(/(\d+)\+/)[1])
+      let avmTimeMS = parseInt(AVMTime.slice(0, -1).match(/(\d+)\+/)[1])
 
       let scheduledDepartureTime = utils.parseTime(scheduledTimeMS)
       let estimatedDepartureTime = utils.parseTime(avmTimeMS + Prediction * 1000)
@@ -109,6 +110,32 @@ async function getDeparturesFromYT(stop, db) {
       let loopDirection
       if (routeGTFSID === '3-35') {
         loopDirection = gtfsDirection === '0' ? 'AC/W' : 'C/W'
+      }
+
+      if (tram) {
+        let firstStop = trip.stopTimings[0]
+        let currentStop = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+        let minutesDiff = currentStop.departureTimeMinutes - firstStop.departureTimeMinutes
+        let originDepartureTime = scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
+
+        let date = utils.getYYYYMMDD(originDepartureTime)
+
+        let query = {
+          date,
+          origin: trip.origin,
+          destination: trip.destination,
+          departureTime: trip.departureTime,
+          destinationArrivalTime: trip.destinationArrivalTime
+        }
+
+        let tripData = {
+          ...query,
+          tram: VehicleNo
+        }
+
+        await tramTrips.replaceDocument(query, tripData, {
+          upsert: true
+        })
       }
 
       mappedDepartures.push({
