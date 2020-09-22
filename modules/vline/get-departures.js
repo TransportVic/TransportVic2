@@ -183,79 +183,89 @@ function checkDivide(departure, currentStation, nspTrip, consist) {
   return departure
 }
 
-async function appendTripData(db, departure, vlinePlatform) {
+async function appendTripData(db, departure, vlinePlatforms) {
   let vlineTrips = db.getCollection('vline trips')
   let timetables = db.getCollection('timetables')
   let liveTimetables = db.getCollection('live timetables')
   let shortRouteName = departure.trip.routeName
 
-  let {stopGTFSID} = vlinePlatform
+  if (departure.trip.routeGTFSID === '14-XPT') {
+    let stopGTFSIDs = vlinePlatforms.map(bay => bay.stopGTFSID)
+    let stopTiming = departure.trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))
 
-  let dayOfWeek = utils.getDayName(departure.scheduledDepartureTime)
-  let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departure.scheduledDepartureTime) % 1440
+    let nswPlatform = vlinePlatforms.find(bay => bay.stopGTFSID === stopTiming.stopGTFSID)
+    let platformNumber = nswPlatform.originalName.match(/Platform (\d+)/)[1]
+    departure.platform = platformNumber
+  } else {
+    let vlinePlatform = vlinePlatforms.find(bay => bay.stopGTFSID < 140000000)
+    let { stopGTFSID } = vlinePlatform
 
-  let departureMoment = departure.scheduledDepartureTime.clone()
-  if (scheduledDepartureTimeMinutes < 180) departureMoment.add(-1, 'day')
-  let departureDay = utils.getYYYYMMDD(departureMoment)
+    let dayOfWeek = utils.getDayName(departure.scheduledDepartureTime)
+    let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departure.scheduledDepartureTime) % 1440
 
-  let {direction, origin, destination, departureTime, destinationArrivalTime} = departure.trip
-  let realRouteGTFSID = departure.trip.routeGTFSID
+    let departureMoment = departure.scheduledDepartureTime.clone()
+    if (scheduledDepartureTimeMinutes < 180) departureMoment.add(-1, 'day')
+    let departureDay = utils.getYYYYMMDD(departureMoment)
 
-  let nspTrip = await timetables.findDocument({
-    origin, destination, direction, routeGTFSID: realRouteGTFSID,
-    operationDays: dayOfWeek,
-    mode: 'regional train',
-    departureTime
-  })
+    let {direction, origin, destination, departureTime, destinationArrivalTime} = departure.trip
+    let realRouteGTFSID = departure.trip.routeGTFSID
 
-  let platform = departure.platform
-  if (platform.endsWith('N')) {
-    platform = platform.slice(0, 1) = 'A'
-  }
-  if (platform === '??') platform = null
+    let nspTrip = await timetables.findDocument({
+      origin, destination, direction, routeGTFSID: realRouteGTFSID,
+      operationDays: dayOfWeek,
+      mode: 'regional train',
+      departureTime
+    })
 
-  if (nspTrip && !platform) {
-    let stopTiming = nspTrip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
-    if (stopTiming) platform = stopTiming.platform
-  }
+    let platform = departure.platform
+    if (platform.endsWith('N')) {
+      platform = platform.slice(0, 1) = 'A'
+    }
+    if (platform === '??') platform = null
 
-  let trackerDepartureTime = giveVariance(departureTime)
-  let trackerDestinationArrivalTime = giveVariance(destinationArrivalTime)
+    if (nspTrip && !platform) {
+      let stopTiming = nspTrip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+      if (stopTiming) platform = stopTiming.platform
+    }
 
-  let tripData = await vlineTrips.findDocument({
-    date: departureDay,
-    departureTime: trackerDepartureTime,
-    origin: origin.slice(0, -16),
-    destination: destination.slice(0, -16)
-  })
+    let trackerDepartureTime = giveVariance(departureTime)
+    let trackerDestinationArrivalTime = giveVariance(destinationArrivalTime)
 
-  if (!tripData) {
-    tripData = await vlineTrips.findDocument({
+    let tripData = await vlineTrips.findDocument({
       date: departureDay,
       departureTime: trackerDepartureTime,
-      origin: origin.slice(0, -16)
+      origin: origin.slice(0, -16),
+      destination: destination.slice(0, -16)
     })
-  }
 
-  let currentStation = vlinePlatform.fullStopName.slice(0, -16)
-
-  if (tripData) {
-    let first = tripData.consist[0]
-    if (first.startsWith('N')) {
-      departure.vehicle = tripData.consist.join(' ')
-    } else {
-      departure = checkDivide(departure, currentStation, nspTrip, tripData.consist)
+    if (!tripData) {
+      tripData = await vlineTrips.findDocument({
+        date: departureDay,
+        departureTime: trackerDepartureTime,
+        origin: origin.slice(0, -16)
+      })
     }
+
+    let currentStation = vlinePlatform.fullStopName.slice(0, -16)
+
+    if (tripData) {
+      let first = tripData.consist[0]
+      if (first.startsWith('N')) {
+        departure.vehicle = tripData.consist.join(' ')
+      } else {
+        departure = checkDivide(departure, currentStation, nspTrip, tripData.consist)
+      }
+    }
+
+    if (!platform)
+      platform = guessPlatform(currentStation, scheduledDepartureTimeMinutes,
+        shortRouteName, departure.trip.direction)
+
+    if (!platform) platform = '??'
+
+    departure.shortRouteName = shortRouteName
+    departure.platform = platform
   }
-
-  if (!platform)
-    platform = guessPlatform(currentStation, scheduledDepartureTimeMinutes,
-      shortRouteName, departure.trip.direction)
-
-  if (!platform) platform = '??'
-
-  departure.shortRouteName = shortRouteName
-  departure.platform = platform
 
   departure.originalServiceID = departure.trip.originalServiceID || departure.scheduledDepartureTime.format('HH:mm') + departure.trip.destination
   departure.flags = {}
@@ -264,12 +274,12 @@ async function appendTripData(db, departure, vlinePlatform) {
 }
 
 async function getScheduledDepartures(db, station) {
-  let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train')
+  let vlinePlatforms = station.bays.filter(bay => bay.mode === 'regional train')
 
   let scheduled = await departureUtils.getScheduledDepartures(station, db, 'regional train', 180)
 
   return (await async.map(scheduled, async departure => {
-    return await appendTripData(db, departure, vlinePlatform)
+    return await appendTripData(db, departure, vlinePlatforms)
   })).filter(Boolean)
 }
 
@@ -301,7 +311,7 @@ async function getDepartures(station, db) {
 
   try {
     let flagMap = {}
-    let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train')
+    let vlinePlatforms = station.bays.filter(bay => bay.mode === 'regional train')
     let departures = [], runs, routes
     let coachReplacements = []
 
@@ -316,8 +326,10 @@ async function getDepartures(station, db) {
     let vnetDepartures = []
     await Promise.all([new Promise(async resolve => {
       try {
-        if (vlinePlatform.stopGTFSID > 100000) return
-        ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vlinePlatform.stopGTFSID}?gtfs=true&max_results=15&expand=run&expand=route`)
+        let vicVlinePlatform = vlinePlatforms.find(bay => bay.stopGTFSID < 140000000)
+        if (!vicVlinePlatform) return resolve()
+
+        ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vicVlinePlatform.stopGTFSID}?gtfs=true&max_results=15&expand=run&expand=route`)
       } catch (e) {} finally { resolve() }
     }), new Promise(async resolve => {
       try {
@@ -328,13 +340,13 @@ async function getDepartures(station, db) {
     }), new Promise(async resolve => {
       try {
         if (station.stopName === 'Southern Cross Railway Station') {
-          vnetDepartures = await getDeparturesFromVNET(vlinePlatform, db)
+          let vicVlinePlatform = vlinePlatforms.find(bay => bay.stopGTFSID < 140000000)
+          vnetDepartures = await getDeparturesFromVNET(vicVlinePlatform, db)
         }
       } catch (e) { console.log(e) } finally { resolve() }
     })])
 
     let scheduled = await getScheduledDepartures(db, station)
-    let xptDepartures = scheduled.filter(d => d.trip.routeGTFSID === '14-XPT')
     cancelledTrains = scheduled.filter(departure => departure.cancelled)
 
     try {
@@ -383,6 +395,7 @@ async function getDepartures(station, db) {
 
     if (vnetDepartures.length) {
       try {
+        let xptDepartures = scheduled.filter(departure => departure.trip.routeGTFSID === '14-XPT')
         let allDepartures = vnetDepartures.map(addFlags).concat(xptDepartures).concat(coachReplacements).concat(cancelledTrains).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
         departuresCache.put(cacheKey, allDepartures)
 
@@ -392,7 +405,7 @@ async function getDepartures(station, db) {
       }
     }
 
-    let allDepartures = scheduled.map(addFlags).concat(xptDepartures).concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+    let allDepartures = scheduled.map(addFlags).concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
     departuresCache.put(cacheKey, allDepartures)
 
     return returnDepartures(allDepartures)

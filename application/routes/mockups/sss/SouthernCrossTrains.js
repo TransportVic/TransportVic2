@@ -135,8 +135,8 @@ async function getVNETServices(vlinePlatform, isDepartures, db) {
     const originStation = await getStationFromVNETName(originVNETName, db)
     const destinationStation = await getStationFromVNETName(destinationVNETName, db)
 
-    let originVLinePlatform = originStation.bays.find(bay => bay.mode === 'regional train')
-    let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train')
+    let originVLinePlatform = originStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
+    let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
 
     mappedDepartures.push({
       runID,
@@ -570,7 +570,7 @@ module.exports = async (platforms, db) => {
     codedName: 'southern-cross-railway-station'
   })
 
-  let vlinePlatform = sss.bays.find(bay => bay.mode === 'regional train')
+  let vlinePlatform = sss.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
   let metroPlatform = sss.bays.find(bay => bay.mode === 'metro train')
 
   let timetables = db.getCollection('timetables')

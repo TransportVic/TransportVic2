@@ -15,7 +15,7 @@ async function updateStop(stopName, zone) {
   })
   if (!dbStop) return console.log(`Load V/Line Zones: Skipping ${stopName}`)
 
-  let vlinePlatform = dbStop.bays.find(b => b.mode === 'regional train')
+  let vlinePlatform = dbStop.bays.find(b => b.mode === 'regional train' && bay.stopGTFSID < 140000000)
   if (!vlinePlatform) return console.log(`Load V/Line Zones: Skipping ${stopName}`)
 
   vlinePlatform.mykiZones = zone

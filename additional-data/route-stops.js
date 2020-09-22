@@ -678,12 +678,11 @@ let lines = {
     'Junee',
     'Cootamundra',
     'Harden',
-    'Yass Junction',
+    'Yass',
     'Gunning',
     'Goulburn',
     'Moss Vale',
     'Campbelltown',
-    'Glenfield', // I believe so
     'Sydney Central'
   ]
 }
@@ -711,7 +710,7 @@ function getLineStops(lineName, destination) {
   if (lineName === 'Mernda') return lines.Mernda
   if (lineName === 'Hurstbridge') return lines.Hurstbridge
   if (lineName === 'City Circle') return lines['City Circle']
-  if (lineName === 'Melbourne - Sydney') return lines.Sydney
+  if (lineName === 'Sydney - Melbourne') return lines.Sydney
 }
 
 module.exports = getLineStops

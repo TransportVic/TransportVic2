@@ -19,6 +19,9 @@ if (modules.tracker && modules.tracker.bus)
 if (modules.tracker && modules.tracker.vline)
   require('../modules/trackers/vline')
 
+if (modules.tracker && modules.tracker.xpt)
+  require('../modules/xpt/xpt-updater')
+
 if (modules.preloadCCL)
   require('../modules/preload-ccl')
 

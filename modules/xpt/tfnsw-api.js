@@ -1,7 +1,8 @@
 const utils = require('../../utils')
 const protobuf = require('protocol-buffers')
 const fs = require('fs')
-const GTFSR = protobuf(fs.readFileSync('gtfsr.proto'))
+const path = require('path')
+const GTFSR = protobuf(fs.readFileSync(path.join(__dirname, 'gtfsr.proto')))
 const config = require('../../config')
 
 let {tfnswAPIKey} = config
@@ -20,10 +21,10 @@ async function makeRequest(url, options={}) {
 
 async function makePBRequest(url) {
   let rawData = await makeRequest(url, {
-    encoding: null
+    raw: true
   })
 
-  return GTFSR.FeedMessage.decode(rawData)
+  return GTFSR.FeedMessage.decode(await rawData.buffer())
 }
 
 module.exports = {

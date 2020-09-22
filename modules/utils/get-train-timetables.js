@@ -4,7 +4,7 @@ const utils = require('../../utils')
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 function getPlatform(station, mode) {
-  return station.bays.filter(bay => bay.mode === mode)[0]
+  return station.bays.find(bay => bay.mode === mode)
 }
 
 function trimFromFSS(stops) {
@@ -88,11 +88,11 @@ async function getStaticDeparture(runID, db) {
 }
 
 async function getScheduledDepartures(station, db, mode, timeout) {
-  const gtfsTimetables = db.getCollection('gtfs timetables')
-  const liveTimetables = db.getCollection('live timetables')
-  const minutesPastMidnight = utils.getMinutesPastMidnightNow()
+  let gtfsTimetables = db.getCollection('gtfs timetables')
+  let liveTimetables = db.getCollection('live timetables')
+  let minutesPastMidnight = utils.getMinutesPastMidnightNow()
 
-  const platform = getPlatform(station, mode)
+  let stopGTFSIDs = station.bays.filter(bay => bay.mode === mode).map(bay => bay.stopGTFSID)
 
   let gtfsDepartures = []
   let liveDepartures = []
@@ -110,7 +110,9 @@ async function getScheduledDepartures(station, db, mode, timeout) {
       mode,
       stopTimings: {
         $elemMatch: {
-          stopGTFSID: platform.stopGTFSID,
+          stopGTFSID: {
+            $in: stopGTFSIDs
+          },
           departureTimeMinutes: {
             $gte: departureTimeMinutes - 5,
             $lte: departureTimeMinutes + timeout
@@ -131,7 +133,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
   }
 
   function getID(trip) {
-    let stop = trip.stopTimings.find(s => s.stopGTFSID === platform.stopGTFSID)
+    let stop = trip.stopTimings.find(s => stopGTFSIDs.includes(s.stopGTFSID))
     let id = stop.departureTimeMinutes + trip.direction + trip.routeGTFSID
     if (trip.mode === 'metro train') id += trip.trueDestination + trip.trueOrigin
     return id
@@ -149,14 +151,17 @@ async function getScheduledDepartures(station, db, mode, timeout) {
   })
 
   return departures.map(trip => {
-    let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === platform.stopGTFSID)[0]
+    let stopData = trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))
     let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, days[trip.tripID])
+
+    let estimatedDepartureTime = stopData.estimatedDepartureTime || null
+    if (estimatedDepartureTime) estimatedDepartureTime = utils.parseTime(estimatedDepartureTime)
 
     return {
       trip,
       scheduledDepartureTime: departureTime,
-      estimatedDepartureTime: null,
-      actualDepartureTime: departureTime,
+      estimatedDepartureTime,
+      actualDepartureTime: estimatedDepartureTime || departureTime,
       platform: '??',
       scheduledDepartureTimeMinutes: stopData.departureTimeMinutes,
       cityLoopConfig: [],

@@ -193,7 +193,7 @@ module.exports = {
     await Promise.all([
       new Promise(async resolve => {
         try {
-          let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train')
+          let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train') // Not filtering XPT here as we just want to check if it exists
           if (vlinePlatform) {
             vlineDepartures = (await getVLineDepartures(station, db)).map(departure => {
               if (departure.platform)

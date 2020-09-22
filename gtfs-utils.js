@@ -5,7 +5,7 @@ const utils = require('./utils')
 module.exports = {
   splitLine: line => line.match(/"([^"]*)"/g).map(f => f.slice(1, -1)),
   calendarToDates(calendar, calendarDates, service) {
-    let calendarLine = calendar.filter(line => line[0] == service)[0]
+    let calendarLine = calendar.find(line => line[0] == service)
     calendarDates = calendarDates.filter(line => line[0] == service).reduce((a, line) => {
       a[line[1]] = line[2]
       return a

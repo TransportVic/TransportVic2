@@ -102,7 +102,7 @@ async function parseTimings(names, types, trip) {
       }
     }
 
-    let stationPlatform = stationData.bays.find(bay => bay.mode === 'regional train')
+    let stationPlatform = stationData.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000) // We don't want to assign to the NSW stop
     if (!stationPlatform) stationPlatform = stationData.bays.find(bay => bay.mode === 'regional coach') // Fallback to coach because the whole albury line is missing now
 
     if (timing.includes('DV')) {

@@ -125,6 +125,18 @@ database.connect({
   }, {name: 'shapeID index'})
 
   await gtfsTimetables.createIndex({
+    gtfsMode: 1
+  }, {name: 'gtfs mode index'})
+
+  await gtfsTimetables.createIndex({
+    tripID: 1
+  }, {name: 'tripID index', unique: true})
+
+  await gtfsTimetables.createIndex({
+    runID: 1
+  }, {name: 'runID index', sparse: true})
+
+  await gtfsTimetables.createIndex({
     operationDays: 1,
     routeGTFSID: 1,
   }, {name: 'operationDays + routeGTFSID index'})

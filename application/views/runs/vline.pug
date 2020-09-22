@@ -53,6 +53,6 @@ block content
             span.info.cancelled CANCELLED
           else if stop.platform
             span.platform=`Platform ${stop.platform}`
-        div(class=`timing${stop.cancelled || trip.cancelled ? ' cancelled' : ' unknown'}`)
+        div(class=`timing ${stop.headwayDevianceClass}`)
           span=stop.prettyTimeToArrival
           span=stop.departureTime || stop.arrivalTime
