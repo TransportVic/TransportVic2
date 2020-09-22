@@ -115,15 +115,22 @@ async function loadDepartures(req, res) {
     })
   })
 
-  services = services.sort((a, b) => a - b)
+  let hasNoNumber = services.includes('')
+  let alphaRoutes = services.filter(service => service.match(/^[A-Za-z]/))
+  let numberRoutes = services.filter(service => service.match(/^\d/))
+
+  let sortedServices = []
+  if (hasNoNumber) sortedServices.push('')
+  sortedServices = sortedServices.concat(alphaRoutes.sort((a, b) => {
+    return a.localeCompare(b)
+  })).concat(numberRoutes.sort((a, b) => {
+    return a - b
+  }))
 
   return {
-    services, groupedDepartures, stop,
-    classGen: departure => {
-      let operator = departure.codedOperator
-      if (operator.startsWith('dysons')) return 'dysons'
-      return operator
-    },
+    services: sortedServices,
+    groupedDepartures, stop,
+    classGen: departure => departure.codedOperator,
     currentMode: 'bus',
     maxDepartures: 4
   }
