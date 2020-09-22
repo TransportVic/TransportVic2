@@ -133,6 +133,10 @@ database.connect({
   }, {name: 'tripID index', unique: true})
 
   await gtfsTimetables.createIndex({
+    runID: 1
+  }, {name: 'runID index', sparse: true})
+
+  await gtfsTimetables.createIndex({
     operationDays: 1,
     routeGTFSID: 1,
   }, {name: 'operationDays + routeGTFSID index'})

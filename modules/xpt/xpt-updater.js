@@ -9,16 +9,26 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let gtfsTimetables, liveTimetables, stops
 
 async function fetchAndUpdate() {
-  let data = await tfnswAPI.makePBRequest('/v1/gtfs/realtime/nswtrains')
-  let tripDescriptors = data.entity
+  let dataSYDTrains = await tfnswAPI.makePBRequest('/v1/gtfs/realtime/sydneytrains')
+  let sydTripDescriptors = dataSYDTrains.entity
 
-  let relevantTrips = tripDescriptors.map(trip => trip.trip_update).filter(trip => trip.trip.route_id.startsWith('4T.T.ST'))
+  let relevantSYDTrips = sydTripDescriptors.map(trip => trip.trip_update).filter(trip => trip.trip.trip_id.match(/ST\d\d/) && trip.stop_time_update.length)
 
-  await async.forEach(relevantTrips, async trip => {
+  await async.forEach(relevantSYDTrips, async trip => {
     let rawTripID = trip.trip.trip_id
-    let tripID = `${rawTripID.slice(-4)}.${rawTripID.slice(0, 4)}.${rawTripID.slice(5, -5)}.14-XPT`
 
-    let gtfsTrip = await gtfsTimetables.findDocument({ tripID })
+    let gtfsTrip
+    if (rawTripID.includes('.X.')) { // From SYD trains
+      let updateTimestamp = utils.parseTime(trip.timestamp * 1000)
+      gtfsTrip = await gtfsTimetables.findDocument({
+        operationDays: utils.getYYYYMMDD(updateTimestamp),
+        runID: rawTripID.slice(0, 4)
+      })
+    } else {
+      let tripID = `${rawTripID.slice(-4)}.${rawTripID.slice(0, 4)}.${rawTripID.slice(5, -5)}.14-XPT`
+      gtfsTrip = await gtfsTimetables.findDocument({ tripID })
+    }
+
     let stopTimings = {}
 
     let startMinutes = gtfsTrip.stopTimings[0].departureTimeMinutes

@@ -66,7 +66,8 @@ database.connect({
         calendarID,
         gtfsDirection,
         shapeID,
-        headsign
+        headsign,
+        runID: rawTripID.slice(0, 4)
       })
     }
   }

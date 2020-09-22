@@ -133,6 +133,8 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
       gtfsMode: parseInt(gtfsID)
     }
 
+    if (trip.runID) tripData.runID = trip.runID
+
     await gtfsTimetables.createDocument(tripData)
   })
 
