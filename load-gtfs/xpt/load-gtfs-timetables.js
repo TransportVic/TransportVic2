@@ -50,9 +50,9 @@ database.connect({
       let rawTripID = lineData[2]
 
       let routeGTFSID = '14-XPT'
-      let shapeID = `14-XPT-${chars[routeID[8] - 1]}-mpj-1.${variant}`
+      let shapeID = `14-XPT-${chars[routeID[8] - 1]}-mjp-1.${variant}`
       let calendarID = lineData[1]
-      let tripID = `${rawTripID.slice(-4)}.${calendarID}.${shapeID}`
+      let tripID = `${rawTripID.slice(-4)}.${calendarID}.14-XPT`
       let gtfsDirection = lineData[5]
       let headsign = lineData[3]
 

@@ -129,6 +129,10 @@ database.connect({
   }, {name: 'gtfs mode index'})
 
   await gtfsTimetables.createIndex({
+    tripID: 1
+  }, {name: 'tripID index', unique: true})
+
+  await gtfsTimetables.createIndex({
     operationDays: 1,
     routeGTFSID: 1,
   }, {name: 'operationDays + routeGTFSID index'})
