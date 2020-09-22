@@ -59,7 +59,9 @@ async function pickBestTrip(data, db) {
 
   if (liveTrip) {
     if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
-      return { trip: liveTrip, tripStartTime, isLive: true }
+      let isLive = liveTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
+
+      return { trip: liveTrip, tripStartTime, isLive }
     }
   }
 
@@ -101,7 +103,9 @@ async function pickBestTrip(data, db) {
     let departureTime = departure.scheduled_departure_utc
 
     let trip = await getStoppingPattern(db, ptvRunID, trueMode, departureTime, departure.stop_id, gtfsTrip)
-    return { trip, tripStartTime, isLive: true }
+    let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
+
+    return { trip, tripStartTime, isLive }
   } catch (e) {
     return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
   }
