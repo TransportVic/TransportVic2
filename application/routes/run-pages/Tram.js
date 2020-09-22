@@ -63,12 +63,12 @@ async function pickBestTrip(data, db) {
     origin: gtfsTrip.origin,
     destination: gtfsTrip.destination
   })
-  if (!tripData) return gtfsTrip
+  if (!tripData) return { trip: gtfsTrip, tripStartTime, isLive: false }
 
   let useLive = minutesToTripEnd > -20 && minutesToTripStart < 45
   if (liveTrip) {
     if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
-      return liveTrip
+      return { trip: liveTrip, tripStartTime, isLive: true }
     }
   }
 
@@ -76,7 +76,7 @@ async function pickBestTrip(data, db) {
   let {tram} = tripData
   gtfsTrip.vehicle = tram
 
-  if (!useLive) return referenceTrip
+  if (!useLive) return { trip: gtfsTrip, tripStartTime, isLive: false }
 
   try {
     let rawTramTimings = JSON.parse(await utils.request(urls.yarraByFleet.format(tram)))
@@ -105,7 +105,7 @@ async function pickBestTrip(data, db) {
         break
       }
       let estimatedTimeMS = parseInt(predictedStop.PredictedArrivalDateTime.slice(0, -1).match(/(\d+)\+/)[1])
-      associatedTripStop.estimatedDepartureTime = utils.parseTime(estimatedTimeMS)
+      associatedTripStop.estimatedDepartureTime = utils.parseTime(estimatedTimeMS).toISOString()
     }
 
     if (failed) {
@@ -120,6 +120,8 @@ async function pickBestTrip(data, db) {
           stop.estimatedDepartureTime = scheduledDepartureTime.add(tripDifference * 1 - (i / stopCount)).toISOString()
           return stop
         })
+
+        failed = false
       }
     } else {
       gtfsTrip.routeNumber = tramInfo.HeadBoardRouteNo
@@ -134,6 +136,7 @@ async function pickBestTrip(data, db) {
       origin: gtfsTrip.origin
     }
 
+    gtfsTrip.operationDays = operationDays
     gtfsTrip.type = 'timings'
     gtfsTrip.updateTime = new Date()
     delete gtfsTrip._id
@@ -142,15 +145,17 @@ async function pickBestTrip(data, db) {
       upsert: true
     })
 
-    return gtfsTrip
+    return  { trip: gtfsTrip, tripStartTime, isLive: !failed }
   } catch (e) {
-    return gtfsTrip
+    return  { trip: gtfsTrip, tripStartTime, isLive: false }
   }
 }
 
 router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res, next) => {
-  let trip = await pickBestTrip(req.params, res.db)
-  if (!trip) return res.status(404).render('errors/no-trip')
+  let tripData = await pickBestTrip(req.params, res.db)
+  if (!tripData) return res.status(404).render('errors/no-trip')
+
+  let { trip, tripStartTime, isLive } = tripData
 
   let routes = res.db.getCollection('routes')
   let tripRoute = await routes.findDocument({ routeGTFSID: trip.routeGTFSID }, { routePath: 0 })
@@ -177,27 +182,31 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     loopDirection = trip.gtfsDirection === '0' ? 'AC/W' : 'C/W'
   }
 
+  let firstDepartureTime = trip.stopTimings[0].departureTimeMinutes
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.prettyTimeToArrival = ''
     stop.headwayDevianceClass = 'unknown'
 
-    if (stop.estimatedDepartureTime) {
-      let scheduledDepartureTime = utils.parseTime(req.params.operationDays, 'YYYYMMDD').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
+    if (!isLive || (isLive && stop.estimatedDepartureTime)) {
+      let scheduledDepartureTime = tripStartTime.clone().add((stop.departureTimeMinutes || stop.arrivalTimeMinutes) - firstDepartureTime, 'minutes')
+      if (stop.estimatedDepartureTime) {
+        let headwayDeviance = scheduledDepartureTime.diff(stop.estimatedDepartureTime, 'minutes')
 
-      let headwayDeviance = scheduledDepartureTime.diff(stop.estimatedDepartureTime, 'minutes')
-
-      if (headwayDeviance > 2) {
-        stop.headwayDevianceClass = 'early'
-      } else if (headwayDeviance <= -5) {
-        stop.headwayDevianceClass = 'late'
-      } else {
-        stop.headwayDevianceClass = 'on-time'
+        if (headwayDeviance > 2) {
+          stop.headwayDevianceClass = 'early'
+        } else if (headwayDeviance <= -5) {
+          stop.headwayDevianceClass = 'late'
+        } else {
+          stop.headwayDevianceClass = 'on-time'
+        }
       }
 
-      const timeDifference = moment.utc(moment(stop.estimatedDepartureTime).diff(utils.now()))
+      let actualDepartureTime = stop.estimatedDepartureTime || scheduledDepartureTime
+      let timeDifference = moment.utc(moment(actualDepartureTime).diff(utils.now()))
 
       if (+timeDifference < -30000) return stop
       if (+timeDifference <= 60000) stop.prettyTimeToArrival = 'Now'
+      else if (+timeDifference > 1440 * 60 * 1000) stop.prettyTimeToArrival = utils.getHumanDateShort(scheduledDepartureTime)
       else {
         stop.prettyTimeToArrival = ''
         if (timeDifference.get('hours')) stop.prettyTimeToArrival += timeDifference.get('hours') + ' h '
