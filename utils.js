@@ -328,7 +328,7 @@ module.exports = {
     let error
 
     let fullOptions = {
-      timeout: 1500,
+      timeout: 2000,
       compress: true,
       ...(options || {})
     }
