@@ -9,6 +9,7 @@ let depots = [
   'Moreland Road/Nicholson Street', // 1d Holmes & Moreland Roads (Note: Is junction)
   'Hawthorn Road/Balaclava Road', // 3d Balaclava Junction
   'Glenferrie Road/High Street', // 6d Malvern Town Hall
+  'Mercer Road/High Street', // 6d Malvern Town Hall
   'Moreland Road/Sydney Road', // 19d Moreland & Sydney Roads
   'Royal Park', // 58d Abbotsford Street Interchange
   'Glenhuntly Road/Hawthorn Road', // 64d Glenhuntly & Hawthorn Roads

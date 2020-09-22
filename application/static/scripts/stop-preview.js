@@ -59,8 +59,11 @@ $.ready(() => {
         let name = bay.fullStopName
         if (bayData[bay.stopGTFSID]) name += ` (${bayData[bay.stopGTFSID]})`
         if (bay.screenServices) {
-          name += '<br>'
-          name += `Services: ${bay.screenServices.map(e => e.routeNumber).filter((e, i, a) => a.indexOf(e) === i).filter(Boolean).join(', ')}`
+          name += `<br>Services: ${bay.screenServices.map(e => e.routeNumber).filter((e, i, a) => a.indexOf(e) === i).filter(Boolean).join(', ')}`
+        }
+        name += `<br>Stop ID: ${bay.stopGTFSID}`
+        if (bay.tramTrackerID) {
+          name += `<br>TramTracker ID: ${bay.tramTrackerID}`
         }
 
         marker.bindPopup(name)

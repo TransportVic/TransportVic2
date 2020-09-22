@@ -35,21 +35,15 @@ if services.length
           for departure in departures
             a(href=departure.tripURL class=`timing ${departure.headwayDevianceClass}`)
               div.vehicleData
-                if departure.vehicleDescriptor.operator === 'Yarra Trams'
-                  if departure.tram.data.ac
+                if departure.vehicle && departure.vehicle.attributes
+                  if departure.vehicle.attributes.ac
                     img(src='/static/images/decals/ac.svg')
-                  if departure.tram.data.lf
+                  if departure.vehicle.attributes.lf
                     img(src='/static/images/decals/wheelchair.svg')
               span #{departure.prettyTimeToArrival}
               span #{departure.scheduledDepartureTime.format('HH:mm')}
-              if departure.vehicleDescriptor
-                if departure.vehicleDescriptor.supplier === 'Smartrak'
-                  if departure.busRego
-                    span.rego ##{departure.busRego}
-                  else
-                    span.rego #{departure.vehicleDescriptor.id}
-                else if departure.vehicleDescriptor.operator === 'Yarra Trams'
-                  span.rego #{departure.tram.model}.#{departure.tram.id}
+              if departure.vehicle
+                span.rego #{departure.vehicle.name}
 else
   div.errorPage
     h2 No Upcoming Departures...

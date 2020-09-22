@@ -23,6 +23,7 @@ database.connect({
 
   let liveTimetables = database.getCollection('live timetables')
   let vlineTrips = database.getCollection('vline trips')
+  let tramTrips = database.getCollection('tram trips')
   let smartrakIDs = database.getCollection('smartrak ids')
   let busTrips = database.getCollection('bus trips')
   let tbmTrips = database.getCollection('tbm trips')
@@ -72,7 +73,7 @@ database.connect({
   }, {name: 'tramtracker name index', sparse: true})
 
   await stops.createIndex({
-    'tramTrackerIDs': 1
+    'bays.tramTrackerIDs': 1
   }, {name: 'tramtracker id index', sparse: true})
 
   await stops.createIndex({
@@ -188,6 +189,7 @@ database.connect({
     'stopTimings.departureTimeMinutes': 1
   }, {name: 'stop timings gtfs index'})
 
+  console.log('Created live timetables index')
 
   await vlineTrips.createIndex({
     date: 1,
@@ -197,7 +199,7 @@ database.connect({
     departureTime: 1,
     destinationArrivalTime: 1,
     consist: 1
-  }, {name: 'vline trips index', unique: 1})
+  }, {name: 'vline trips index', unique: true})
 
   await vlineTrips.createIndex({
     date: 1,
@@ -212,8 +214,27 @@ database.connect({
     set: 1
   }, {name: 'set index', sparse: 1})
 
-  console.log('Created live timetables index')
+  console.log('Created vline trips index')
 
+  await tramTrips.createIndex({
+    date: 1,
+    origin: 1,
+    destination: 1,
+    departureTime: 1,
+    destinationArrivalTime: 1,
+    tram: 1
+  }, {name: 'tram trips index', unique: true})
+
+  await tramTrips.createIndex({
+    date: 1,
+    tram: 1
+  }, {name: 'tram index'})
+
+  await tramTrips.createIndex({
+    tram: 1
+  }, {name: 'undated tram index'})
+
+  console.log('Created tram trips index')
 
   await smartrakIDs.createIndex({
     smartrakID: 1

@@ -1,6 +1,7 @@
 const express = require('express')
 const router = new express.Router()
 const getDepartures = require('../../../modules/tram/get-departures')
+const getDeparturesExperimental = require('../../../modules/tram/get-departures-experimental')
 const moment = require('moment')
 const utils = require('../../../utils')
 const tramDestinations = require('../../../additional-data/tram-destinations')
@@ -17,7 +18,9 @@ async function loadDepartures(req, res) {
     return res.status(404).render('errors/no-stop')
   }
 
-  let departures = await getDepartures(stop, res.db)
+  // let departures = await getDepartures(stop, res.db)
+  let departures = await getDeparturesExperimental(stop, res.db)
+
   let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
   departures = await async.map(departures, async departure => {
@@ -60,6 +63,7 @@ async function loadDepartures(req, res) {
     let {destination} = departure.trip
     if (!utils.isStreet(destinationShortName)) destination = destinationShortName
     departure.destination = tramDestinations[destination] || destination
+    if (departure.hasBussingMessage) departure.destination += ' (Bus Around Works)'
 
     let destinationStopTiming = departure.trip.stopTimings.slice(-1)[0]
     let destinationStop = await stops.findDocument({
