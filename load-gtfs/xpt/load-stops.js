@@ -34,8 +34,11 @@ let permittedStops = [
 
 let suburbs = {
   Central: "Sydney, NSW",
-  "Wagga Wagga": "Turvey Park, NSW"
+  "Wagga Wagga": "Turvey Park, NSW",
+  "Southern Cross": "Melbourne City"
 }
+
+let vicStops = ['Southern Cross', 'Broadmeadows', 'Seymour', 'Benalla', 'Wangaratta']
 
 database.connect({
   poolSize: 100
@@ -50,16 +53,15 @@ database.connect({
     let line = await stopsLineReader.nextLine()
     line = gtfsUtils.splitLine(line)
 
-    let rawStopName = line[1]
-    if (!rawStopName.includes(' Station')) rawStopName += ' Station'
+    let rawStopName = line[1].replace('Platform Station', 'Station')
     let stopName = rawStopName.replace(/ Plat.+/, '').trim()
 
     if (permittedStops.includes(stopName) && rawStopName.includes('Platform')) {
-      let originalName = line[1].replace('Station', 'Railway Station')
+      let originalName = rawStopName.replace('Station', 'Railway Station')
       let mergeName = stopName.replace('Station', 'Railway Station')
       let stopGTFSID = parseInt(line[0].replace('P', '0')) + 140000000
       let fakeSuburb = stopName.replace(' Station', '')
-      fakeSuburb = suburbs[fakeSuburb] || fakeSuburb + ', NSW'
+      fakeSuburb = suburbs[fakeSuburb] || fakeSuburb + (vicStops.includes(fakeSuburb) ? '' : ', NSW')
 
       if (mergeName === 'Melbourne (Southern Cross) Station') mergeName = 'Southern Cross Railway Station'
 

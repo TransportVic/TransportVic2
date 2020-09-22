@@ -1,11 +1,3 @@
-/*
-Route guide;
-14-XPT.H Sydney - Melbourne
-14-XPT.R Melbourne - Sydney
-
-Filter as 4T.T.ST trains (ST21-24)
-*/
-
 const fs = require('fs')
 const path = require('path')
 const async = require('async')
@@ -82,7 +74,7 @@ database.connect({
   })
 
   await loadRoutes(routes, gtfsID, routeData, shapes, (routeGTFSID) => {
-    return ['Sydney Trains']
+    return ['NSW TrainLink']
   })
 
   await updateStats('xpt-routes', routeData.length)
