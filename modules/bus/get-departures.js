@@ -187,7 +187,7 @@ async function getDeparturesFromPTV(stop, db) {
       if (!operator) operator = ''
 
       let {routeNumber} = trip
-      let sortNumber = routeNumber
+      let sortNumber = routeNumber || ''
 
       if (route.route_gtfs_id.startsWith('7-')) {
         sortNumber = routeNumber.slice(2)

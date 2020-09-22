@@ -153,7 +153,8 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
       routeNumber = ''
     }
 
-    let sortNumber = routeNumber
+    let sortNumber = routeNumber || ''
+
     if (trip.routeGTFSID.startsWith('7-')) {
       routeNumber = trip.routeGTFSID.slice(2)
       sortNumber = routeNumber.slice(2)

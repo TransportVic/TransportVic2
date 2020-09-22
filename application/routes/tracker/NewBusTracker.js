@@ -59,7 +59,7 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
   let origin = trip.origin.replace('Shopping Centre', 'SC')
   let destination = trip.destination.replace('Shopping Centre', 'SC')
 
-  let serviceData = busDestinations.service[trip.routeNumber] || {}
+  let serviceData = busDestinations.service[trip.routeGTFSID] || busDestinations.service[trip.routeNumber] || {}
   let dA = destination, dB = destination.split('/')[0]
   let oA = origin, oB = origin.split('/')[0]
 

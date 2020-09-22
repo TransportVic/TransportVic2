@@ -11,8 +11,11 @@ async function pickBestTrip(data, db) {
   let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
   let tripEndTime = utils.parseTime(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm')
-  if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
+  if (tripEndTime < tripStartTime) { // Because we don't have date stamps on start and end this is required
+    tripEndTime.add(1, 'day')
+    tripEndMinutes += 1440
+  }
 
   let originStop = await db.getCollection('stops').findDocument({
     codedName: data.origin + '-railway-station',
@@ -74,7 +77,9 @@ async function pickBestTrip(data, db) {
 
   if (liveTrip) {
     if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
-      return { trip: liveTrip, tripStartTime, isLive: true }
+      let isLive = liveTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
+
+      return { trip: liveTrip, tripStartTime, isLive }
     }
   }
 
@@ -164,7 +169,9 @@ async function pickBestTrip(data, db) {
     let departureTime = departure.scheduled_departure_utc
 
     let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime)
-    return { trip, tripStartTime, isLive: true }
+    let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
+
+    return { trip, tripStartTime, isLive }
   } catch (e) {
     return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
   }

@@ -10,8 +10,6 @@ const updateStats = require('../utils/stats')
 
 let stopsData = require('./data/stops.json')
 
-let gtfsID = 12
-
 database.connect({
   poolSize: 100
 }, async err => {

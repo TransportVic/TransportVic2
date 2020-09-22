@@ -32,6 +32,8 @@ if services.length
           if firstDeparture.viaText && hasNumber
             span.broadDepartureInfo.clampLine #{firstDeparture.viaText}
         div.timings
+          for departure in Array(maxDepartures - departures.length)
+            a.timing.hidden
           for departure in departures
             a(href=departure.tripURL class=`timing ${departure.headwayDevianceClass}`)
               div.vehicleData

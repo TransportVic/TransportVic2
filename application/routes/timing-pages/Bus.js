@@ -60,7 +60,7 @@ async function loadDepartures(req, res) {
     if (!utils.isStreet(destinationShortName)) destination = destinationShortName
     departure.destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
 
-    let serviceData = busDestinations.service[departure.routeNumber] || busDestinations.service[departure.trip.routeGTFSID] || {}
+    let serviceData = busDestinations.service[departure.trip.routeGTFSID] || busDestinations.service[departure.routeNumber] || {}
     departure.destination = serviceData[departure.destination]
       || busDestinations.generic[departure.destination]
       || busDestinations.generic[fullDestination] || departure.destination
@@ -115,15 +115,22 @@ async function loadDepartures(req, res) {
     })
   })
 
-  services = services.sort((a, b) => a - b)
+  let hasNoNumber = services.includes('')
+  let alphaRoutes = services.filter(service => service.match(/^[A-Za-z]/))
+  let numberRoutes = services.filter(service => service.match(/^\d/))
+
+  let sortedServices = []
+  if (hasNoNumber) sortedServices.push('')
+  sortedServices = sortedServices.concat(alphaRoutes.sort((a, b) => {
+    return a.localeCompare(b)
+  })).concat(numberRoutes.sort((a, b) => {
+    return a - b
+  }))
 
   return {
-    services, groupedDepartures, stop,
-    classGen: departure => {
-      let operator = departure.codedOperator
-      if (operator.startsWith('dysons')) return 'dysons'
-      return operator
-    },
+    services: sortedServices,
+    groupedDepartures, stop,
+    classGen: departure => departure.codedOperator,
     currentMode: 'bus',
     maxDepartures: 4
   }

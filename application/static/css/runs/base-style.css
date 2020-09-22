@@ -75,7 +75,7 @@ a.departureInfo {
 
   justify-content: center;
 
-  width: 100%;
+  width: calc(100vw - (6vw + 6.3vh));
 }
 
 div.timingRow a.departureInfo span {

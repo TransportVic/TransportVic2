@@ -31,10 +31,10 @@ async function getPTVKey() {
   return key
 }
 
-function getPlaceName(routeNumber, placeName) {
+function getPlaceName(routeNumber, routeGTFSID, placeName) {
   let trimmedPlaceName = placeName.replace('Shopping Centre', 'SC')
 
-  let serviceData = busDestinations.service[routeNumber] || {}
+  let serviceData = busDestinations.service[routeGTFSID] || busDestinations.service[routeNumber] || {}
   let a = trimmedPlaceName, b = trimmedPlaceName.split('/')[0]
 
   return (serviceData[a] || serviceData[b]
@@ -164,7 +164,7 @@ router.post('/', async (req, res) => {
         bearing: vehiclePosition.bearing,
         departureTime: currentTrip.departureTime,
         routeNumber: currentTrip.routeNumber,
-        destination: getPlaceName(currentTrip.routeNumber, currentTrip.destination),
+        destination: getPlaceName(currentTrip.routeNumber, currentTrip.routeGTFSID, currentTrip.destination),
         fleetNumber: fleet
       }
 

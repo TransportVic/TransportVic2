@@ -215,7 +215,7 @@ div.departure.no-number a.departureInfo span {
 }
 
 div.departure.no-number:not(.groupedDepartures) a.departureInfo span {
-  width: calc(100vw - (5.2vw + 5.8vh) - (1vw + 1vh) - 1.5vw);
+  width: calc(100vw - (6vw + 6.3vh) - (1.2vw + 1.8vh) - (1vw + 1vh) - 1.5vw);
 }
 
 div.departure:not(.no-number) a.departureInfo span {
@@ -223,7 +223,7 @@ div.departure:not(.no-number) a.departureInfo span {
 }
 
 div.departure:not(.groupedTimings) a.departureInfo span {
-  width: calc(100vw - (5.2vw + 5.8vh) - (5vw + 5vh) - (1vw + 1vh) - 1.5vw);
+  width: calc(100vw - (6vw + 6.3vh) - (1.2vw + 1.8vh) - (5vw + 5vh) - (1vw + 1vh) - 1.5vw);
 }
 
 div.departure.no-number a.departureInfo span.routeName {
@@ -269,7 +269,7 @@ div.timings {
 
 a.timing {
   height: calc(7vw + 7vh);
-  width: calc(5vw + 5vh);
+  width: calc(6vw + 6.3vh);
 
   display: flex;
   flex-direction: column;
@@ -279,6 +279,10 @@ a.timing {
 
   font-size: calc(1.05vw + 1.05vh);
   color: #101010;
+}
+
+div.departure.groupedTimings a.timing.hidden {
+  display: none;
 }
 
 div.departure.groupedTimings a.timing {
@@ -321,7 +325,7 @@ a.timing span.rego {
 }
 
 a.timing span {
-  width: calc(5vw + 5vh);
+  width: calc(6vw + 6vh);
   text-align: center;
 }
 

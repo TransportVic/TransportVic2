@@ -61,7 +61,7 @@ async function getAllBusDepartures(db) {
   let allDepartures = filterDepartures([...busLoopDepartures, ...wellingtonDepartures, ...monash742Departures])
 
   allDepartures = allDepartures.map(departure => {
-    let serviceData = busDestinations.service[departure.routeNumber] || busDestinations.service[departure.trip.routeGTFSID] || {}
+    let serviceData = busDestinations.service[departure.trip.routeGTFSID] || busDestinations.service[departure.routeNumber] || {}
 
     let fullDestination = departure.trip.destination
     let destinationShortName = departure.trip.destination.split('/')[0]
