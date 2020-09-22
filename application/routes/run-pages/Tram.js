@@ -53,8 +53,19 @@ async function pickBestTrip(data, db) {
   let gtfsTrip = await gtfsTimetables.findDocument(query)
   let liveTrip = await liveTimetables.findDocument(query)
 
-  let useLive = minutesToTripEnd > -20 && minutesToTripStart < 30
+  if (!gtfsTrip) return null
+  gtfsTrip.routeNumber = determineTramRouteNumber(gtfsTrip)
 
+  let tramTrips = db.getCollection('tram trips')
+  let tripData = await tramTrips.findDocument({
+    date: operationDays,
+    departureTime: gtfsTrip.departureTime,
+    origin: gtfsTrip.origin,
+    destination: gtfsTrip.destination
+  })
+  if (!tripData) return gtfsTrip
+
+  let useLive = minutesToTripEnd > -20 && minutesToTripStart < 45
   if (liveTrip) {
     if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
       return liveTrip
@@ -62,21 +73,11 @@ async function pickBestTrip(data, db) {
   }
 
   let referenceTrip = liveTrip || gtfsTrip
+  let {tram} = tripData
+  gtfsTrip.vehicle = tram
 
   if (!useLive) return referenceTrip
 
-  let tramTrips = db.getCollection('tram trips')
-
-  let tripData = await tramTrips.findDocument({
-    date: operationDays,
-    departureTime: gtfsTrip.departureTime,
-    origin: gtfsTrip.origin,
-    destination: gtfsTrip.destination
-  })
-
-  if (!tripData) return referenceTrip
-
-  let {tram} = tripData
   try {
     let rawTramTimings = JSON.parse(await utils.request(urls.yarraByFleet.format(tram)))
     let tramInfo = rawTramTimings.responseObject
@@ -120,13 +121,9 @@ async function pickBestTrip(data, db) {
           return stop
         })
       }
-
-      gtfsTrip.routeNumber = determineTramRouteNumber(gtfsTrip)
     } else {
       gtfsTrip.routeNumber = tramInfo.HeadBoardRouteNo
     }
-
-    gtfsTrip.vehicle = tram
 
     let key = {
       mode: 'tram',
