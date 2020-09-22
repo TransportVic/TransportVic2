@@ -16,15 +16,20 @@ if departures.length
           span.topText Platform
           -
             let platform = departure.platform
-            if (station.stopName !== 'Southern Cross Railway Station') platform = (departure.platform || '') + '?'
-            if (departure.cancelled) platform = '-'
+            if (!(departure.trip.routeGTFSID === '14-XPT' && departure.trip.updateTime)) {
+              if (station.stopName !== 'Southern Cross Railway Station' && platform !== '??') platform += '?'
+              if (departure.cancelled) platform = '-'
+            }
           span.bigNumber #{platform}
       -
         let departureClass = 'departureInfo'
         if (departure.flags && departure.flags.reservationsOnly)
           departureClass += ' reservationsOnly'
       a(class=departureClass href=`/vline/timings/${departure.destination.toLowerCase().replace(/ /g, '-')}`)
-        span.towards=`${departure.shortRouteName} Line towards`
+        -
+          let lineName = `${departure.shortRouteName} Line towards`
+          if (departure.trip.routeGTFSID === '14-XPT') lineName = 'Melbourne-Sydney XPT towards'
+        span.towards #{lineName}
         span.destination #{departure.destination}
         if departure.isRailReplacementBus
           span.broadDepartureInfo.important This service has been replaced by coaches

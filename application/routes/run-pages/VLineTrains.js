@@ -1,5 +1,6 @@
 const express = require('express')
 const moment = require('moment')
+const async = require('async')
 const router = new express.Router()
 const utils = require('../../../utils')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
@@ -26,11 +27,13 @@ async function pickBestTrip(data, db) {
   if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
 
-  let originStop = await db.getCollection('stops').findDocument({
+  let stops = db.getCollection('stops')
+
+  let originStop = await stops.findDocument({
     codedName: data.origin,
     'bays.mode': 'regional train'
   })
-  let destinationStop = await db.getCollection('stops').findDocument({
+  let destinationStop = await stops.findDocument({
     codedName: data.destination,
     'bays.mode': 'regional train'
   })
@@ -153,15 +156,30 @@ async function pickBestTrip(data, db) {
     referenceTrip.consist = tripData.consist
   }
 
-  referenceTrip.stopTimings = referenceTrip.stopTimings.map(stop => {
-    let nspStop = nspTrip && nspTrip.stopTimings.find(nspStop => nspStop.stopGTFSID === stop.stopGTFSID && nspStop.platform)
+  let isXPT = referenceTrip.routeGTFSID === '14-XPT'
 
-    if (nspStop) {
-      stop.platform = nspStop.platform + '?'
+  referenceTrip.stopTimings = await async.map(referenceTrip.stopTimings, async stop => {
+    if (isXPT) {
+      let stopData = await stops.findDocument({
+        stopName: stop.stopName
+      })
+
+      let nswPlatform = stopData.bays.find(bay => bay.stopGTFSID === stop.stopGTFSID)
+
+      let platformNumber = nswPlatform.originalName.match(/Platform (\d+)/)[1]
+      stop.platform = platformNumber
+
+      if (!referenceTrip.updateTime) stop.platform += '?'
     } else {
-      stop.platform = guessPlatform(stop.stopName.slice(0, -16), stop.departureTimeMinutes,
-        referenceTrip.routeName, referenceTrip.direction)
-      if (stop.platform) stop.platform += '?'
+      let nspStop = nspTrip && nspTrip.stopTimings.find(nspStop => nspStop.stopGTFSID === stop.stopGTFSID && nspStop.platform)
+
+      if (nspStop) {
+        stop.platform = nspStop.platform + '?'
+      } else {
+        stop.platform = guessPlatform(stop.stopName.slice(0, -16), stop.departureTimeMinutes,
+          referenceTrip.routeName, referenceTrip.direction)
+        if (stop.platform) stop.platform += '?'
+      }
     }
 
     return stop
