@@ -60,12 +60,14 @@ database.connect({
       let originalName = rawStopName.replace('Station', 'Railway Station')
       let mergeName = stopName.replace('Station', 'Railway Station')
       let stopGTFSID = parseInt(line[0].replace('P', '0')) + 140000000
-      let fakeSuburb = stopName.replace(' Station', '')
-      fakeSuburb = suburbs[fakeSuburb] || fakeSuburb + (vicStops.includes(fakeSuburb) ? '' : ', NSW')
 
       if (mergeName === 'Melbourne (Southern Cross) Railway Station') mergeName = 'Southern Cross Railway Station'
       if (mergeName === 'Central Railway Station') mergeName = 'Sydney Central Railway Station'
 
+      let fakeSuburb = mergeName.replace(' Railway Station', '')
+      fakeSuburb = suburbs[fakeSuburb] || fakeSuburb + (vicStops.includes(fakeSuburb) ? '' : ', NSW')
+
+      console.log(fakeSuburb)
       stopsData.push({
         originalName,
         fullStopName: mergeName,
