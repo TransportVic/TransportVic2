@@ -79,7 +79,7 @@ database.connect({
     path: currentShape,
     length: currentShape.length
   })
-  console.log(shapes)
+
   await loadRoutes(routes, gtfsID, routeData, shapes, (routeGTFSID) => {
     return ['NSW TrainLink']
   })
