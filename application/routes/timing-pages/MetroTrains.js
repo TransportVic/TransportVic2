@@ -16,7 +16,7 @@ async function loadDepartures(req, res) {
   let departures = await getDepartures(station, res.db)
 
   departures = departures.map(departure => {
-    const timeDifference = moment.utc(departure.actualDepartureTime.diff(utils.now()))
+    let timeDifference = moment.utc(departure.actualDepartureTime.diff(utils.now()))
 
     if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
     else {

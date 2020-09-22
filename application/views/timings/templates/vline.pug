@@ -73,7 +73,7 @@ if departures.length
               span.broadDepartureInfo #{vehicleData}
           
       div.timings
-        a(class='timing unknown' href=departure.tripURL)
+        a(class=`timing ${departure.headwayDevianceClass}` href=departure.tripURL)
           span #{departure.prettyTimeToArrival}
           span #{departure.scheduledDepartureTime.format('HH:mm')}
 else

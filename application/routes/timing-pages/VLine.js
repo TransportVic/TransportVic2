@@ -16,7 +16,7 @@ async function loadDepartures(req, res) {
   let departures = await getDepartures(station, res.db)
 
   departures = departures.map(departure => {
-    const timeDifference = moment.utc(departure.scheduledDepartureTime.diff(utils.now()))
+    let timeDifference = moment.utc(departure.actualDepartureTime.diff(utils.now()))
 
     if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
     else {
@@ -26,6 +26,17 @@ async function loadDepartures(req, res) {
     }
 
     departure.headwayDevianceClass = 'unknown'
+    if (departure.estimatedDepartureTime) {
+      departure.headwayDeviance = departure.scheduledDepartureTime.diff(departure.estimatedDepartureTime, 'minutes')
+
+      // trains cannot be early
+      let lateThreshold = 5
+      if (departure.headwayDeviance <= -lateThreshold) { // <= 5min counts as late
+        departure.headwayDevianceClass = 'late'
+      } else {
+        departure.headwayDevianceClass = 'on-time'
+      }
+    }
 
     let stationName = station.stopName
     if (stationName === 'Southern Cross Railway Station' && departure.isRailReplacementBus)
