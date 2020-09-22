@@ -67,7 +67,6 @@ database.connect({
       let fakeSuburb = mergeName.replace(' Railway Station', '')
       fakeSuburb = suburbs[fakeSuburb] || fakeSuburb + (vicStops.includes(fakeSuburb) ? '' : ', NSW')
 
-      console.log(fakeSuburb)
       stopsData.push({
         originalName,
         fullStopName: mergeName,
