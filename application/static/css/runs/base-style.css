@@ -108,7 +108,7 @@ div.timingRow a.departureInfo span.stopName {
 
 div.timing {
   height: calc(5vw + 5vh);
-  width: calc(5vw + 5vh);
+  width: calc(6vw + 6.3vh);
 
   display: flex;
   flex-direction: column;
@@ -121,7 +121,7 @@ div.timing {
 }
 
 div.timing span {
-  width: calc(5vw + 5vh);
+  width: calc(6vw + 6vh);
   text-align: center;
 }
 

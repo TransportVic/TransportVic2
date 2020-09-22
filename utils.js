@@ -308,6 +308,12 @@ module.exports = {
     return time.format('YYYYMMDD')
   },
   getYYYYMMDDNow: () => module.exports.getYYYYMMDD(module.exports.now()),
+  getHumanDateShort: time => {
+    return time.format('DD/MM')
+  },
+  getHumanDate: time => {
+    return time.format('DD/MM/YYYY')
+  },
   now: () => moment.tz('Australia/Melbourne'),
   parseTime: (time, format) => {
     if (format)
@@ -322,7 +328,7 @@ module.exports = {
     let error
 
     let fullOptions = {
-      timeout: 1500,
+      timeout: 2000,
       compress: true,
       ...(options || {})
     }

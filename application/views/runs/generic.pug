@@ -14,10 +14,13 @@ block head
         themeColour = '#d7832c'
         break
       case 'tram':
-        themeColour = '#20b734'
+        themeColour = '#1a942a'
         break
       case 'regional coach':
         themeColour = '#9582b5'
+        break
+      case 'heritage train':
+        themeColour = '#7a562e'
         break
       case 'ferry':
         themeColour = '#03998f'
@@ -65,13 +68,14 @@ block content
   div.infoRow
     -
       let stopType = ({
-        bus: 'Bus',
-        tram: 'Tram',
-        'regional coach': 'Coach',
-        ferry: 'Ferry'
+        bus: 'Bus Stop',
+        tram: 'Tram Stop',
+        'regional coach': 'Coach Stop',
+        'heritage train': 'Train Station',
+        ferry: 'Ferry Stop'
       })[trip.mode]
     
-    span #{stopType} stop
+    span #{stopType}
   div.timing-list
     for stop in trip.stopTimings
       div.timingRow(id='stop-' + stop.stopGTFSID)
