@@ -149,6 +149,12 @@ database.connect({
     destination: 1,
   }, {name: 'stop timings gtfs index'})
 
+  await gtfsTimetables.createIndex({
+    mode: 1,
+    'stopTimings.stopGTFSID': 1,
+    'stopTimings.departureTimeMinutes': 1
+  }, {name: 'stop services index'})
+
   console.log('Created GTFS timetables indexes')
 
   await timetables.createIndex({
