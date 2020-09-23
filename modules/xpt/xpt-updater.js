@@ -90,6 +90,12 @@ async function fetchAndUpdate() {
     gtfsTrip.type = 'timings'
     gtfsTrip.updateTime = new Date()
     gtfsTrip.operationDays = utils.getYYYYMMDD(tripStartTime)
+
+    let vehicle
+    if (vehicle = rawTripID.match(/\.X\.(\d)\./)) {
+      gtfsTrip.vehicle = `${vehicle[1]}x XPT`
+    }
+
     delete gtfsTrip._id
 
     let key = {

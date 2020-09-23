@@ -18,7 +18,7 @@ let permittedStops = [
  "Moss Vale Station",
  "Yass Junction Station",
  "Seymour Station",
- "Southern Cross Station",
+ "Melbourne (Southern Cross) Station",
  "The Rock Station",
  "Henty Station",
  "Culcairn Station",
@@ -53,7 +53,8 @@ database.connect({
     let line = await stopsLineReader.nextLine()
     line = gtfsUtils.splitLine(line)
 
-    let rawStopName = line[2].replace('Platform Station', 'Station')
+    let rawStopName = line[1].replace('Platform Station', 'Station')
+    if (rawStopName === 'Yass Station') rawStopName = 'Yass Junction Station'
     let stopName = rawStopName.replace(/ Plat.+/, '').trim()
 
     if (permittedStops.includes(stopName) && rawStopName.includes('Platform')) {
@@ -61,6 +62,7 @@ database.connect({
       let mergeName = stopName.replace('Station', 'Railway Station')
       let stopGTFSID = parseInt(line[0].replace('P', '0')) + 140000000
 
+      if (mergeName === 'Melbourne (Southern Cross) Railway Station') mergeName = 'Southern Cross Railway Station'
       if (mergeName === 'Central Railway Station') mergeName = 'Sydney Central Railway Station'
 
       let fakeSuburb = mergeName.replace(' Railway Station', '')
@@ -72,7 +74,7 @@ database.connect({
         stopGTFSID,
         location: {
           type: 'Point',
-          coordinates: [parseFloat(line[5]), parseFloat(line[4])]
+          coordinates: [parseFloat(line[3]), parseFloat(line[2])]
         },
         stopNumber: null,
         mode: 'regional train',

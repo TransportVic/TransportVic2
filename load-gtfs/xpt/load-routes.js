@@ -20,10 +20,8 @@ database.connect({
   let routeData = utils.parseGTFSData(fs.readFileSync(path.join(__dirname, 'data/routes.txt')).toString())
 
   let shapesLineReader = new BufferedLineReader(path.join(__dirname, '../../gtfs/14/shapes.txt'))
-  let routesLineReader = new BufferedLineReader(path.join(__dirname, '../../gtfs/14/routes.txt'))
   await shapesLineReader.open()
-  await routesLineReader.open()
-  let chars = ['A', 'B']
+  let chars = ['A', 'B', 'C', 'D']
 
   let shapes = []
   let routesSeen = []
@@ -31,37 +29,31 @@ database.connect({
   let currentShapeID = null
   let currentRouteGTFSID = null
   let currentShape = []
-
-  let routeIDsConsidered = []
-  while (routesLineReader.available()) {
-    let line = await routesLineReader.nextLine()
-    line = gtfsUtils.splitLine(line)
-
-    let routeName = line[3]
-    if (routeName.includes('Melbourne')) {
-      routeIDsConsidered.push(line[0])
-    }
-  }
+  let currentLength = null
 
   while (shapesLineReader.available()) {
     let line = await shapesLineReader.nextLine()
     line = gtfsUtils.splitLine(line)
 
     let shapeID = line[0]
-    if (routeIDsConsidered.includes(shapeID)) {
+    if (shapeID.startsWith('4T.T.ST')) {
       let routeGTFSID = '14-XPT'
-      let newShapeID = `14-XPT-${chars[shapeID[5] - 1]}-mjp-1.1.${shapeID[6].toUpperCase()}`
+      let newShapeID = `14-XPT-${chars[shapeID[8] - 1]}-mjp-1.1.${shapeID[12].toUpperCase()}`
 
       if (currentShapeID && currentShapeID !== newShapeID) {
         shapesLineReader.unreadLine()
         shapes.push({
-          shapeID: currentShapeID,
-          routeGTFSID: routeGTFSID,
+          newShapeID: currentShapeID,
+          routeGTFSID: currentRouteGTFSID,
           path: currentShape,
-          length: currentShape.length
+          length: currentLength
         })
         currentShape = []
       } else {
+        let newLength = parseFloat(line[4])
+        if (currentLength === newLength) continue
+        currentLength = newLength
+
         if (!routesSeen.includes(currentRouteGTFSID)) routesSeen.push(currentRouteGTFSID)
         currentShape.push([
           parseFloat(line[2]),
@@ -77,7 +69,7 @@ database.connect({
     shapeID: currentShapeID,
     routeGTFSID: currentRouteGTFSID,
     path: currentShape,
-    length: currentShape.length
+    length: currentLength
   })
 
   await loadRoutes(routes, gtfsID, routeData, shapes, (routeGTFSID) => {

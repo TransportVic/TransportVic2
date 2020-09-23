@@ -2,7 +2,7 @@ const tfnswAPI = require('../../modules/xpt/tfnsw-api.js')
 const fs = require('fs')
 const path = require('path')
 
-tfnswAPI.makeRequest('/v1/gtfs/schedule/sydneytrains', {
+tfnswAPI.makeRequest('/v1/gtfs/schedule/nswtrains', {
   raw: true
 }).then(res => {
   let folder = path.join(__dirname, '../../gtfs/14')
