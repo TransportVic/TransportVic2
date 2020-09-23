@@ -134,6 +134,7 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
     }
 
     if (trip.runID) tripData.runID = trip.runID
+    if (trip.vehicle) tripData.vehicle = trip.vehicle
 
     await gtfsTimetables.createDocument(tripData)
   })

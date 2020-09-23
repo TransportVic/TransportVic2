@@ -61,6 +61,8 @@ database.connect({
       rawTripIDsConsidered.push(rawTripID)
       mappedTripIDsConsidered.push(tripID)
 
+      let vehicle = `${tripID.match(/.X.(\d)./)[1]}x XPT`
+
       tripsConsidered.push({
         mode: 'regional train',
         tripID,
@@ -69,7 +71,8 @@ database.connect({
         gtfsDirection,
         shapeID,
         headsign,
-        runID: rawTripID.slice(0, 4)
+        runID: rawTripID.slice(0, 4),
+        vehicle
       })
     }
   }

@@ -38,12 +38,25 @@ block style
 
 block content
   if trip.vehicleData
+    -
+      let vehicleIcons = {
+        'A1': 'a-b',
+        'A2': 'a-b',
+        'B2': 'a-b',
+        'Z3': 'z3',
+        'C': 'c1',
+        'D1': 'd',
+        'D2': 'd'
+      }
     div.infoRow
       span=trip.vehicleData.name
       div.vehicle
-        //- placeholder icon
         span
-        img(src=`/static/images/icons/optimus.svg`)
+        -
+          let icon
+          if (trip.mode === 'tram') icon = vehicleIcons[trip.vehicleData.model] || 'optimus'
+          else if (trip.mode === 'bus') icon = 'optimus'
+        img(src=`/static/images/icons/${icon}.svg`)
   - let hasNumber = !!routeNumber
   div(class=`departure${hasNumber ? '' : ' no-number'}`)
     if hasNumber

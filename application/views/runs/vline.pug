@@ -11,7 +11,7 @@ block head
 
 block title
   span #{tripName}
-  
+
 block style
   link(rel='stylesheet' href='/static/css/runs/base-style.css')
 
@@ -23,14 +23,15 @@ block content
         let {vehicle, consist} = trip
         let parts
         if (vehicle) {
-          if (vehicle.startsWith('N'))
+          if (vehicle.startsWith('N')) {
             parts = [null, 'N']
-          else if (vehicle.includes('VL')) {
+          } else if (vehicle.includes('VL')) {
             let count = (vehicle.match(/^(\d)x/) || [0, 1])[1]
             parts = [count, 'vlocity']
           } else {
             parts = vehicle.match(/(\d)x ([A-Za-z]+)/).slice(1, 3)
             if (parts[1] === 'SP') parts[1] = 'sprinter'
+            else if (parts[1] === 'XPT') parts[1] = 'xpt'
           }
         }
       if vehicle
