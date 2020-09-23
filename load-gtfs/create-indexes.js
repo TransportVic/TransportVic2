@@ -195,6 +195,10 @@ database.connect({
   }, {name: 'operationDays index'})
 
   await liveTimetables.createIndex({
+    runID: 1
+  }, {name: 'runID index', sparse: true})
+
+  await liveTimetables.createIndex({
     mode: 1,
     routeGTFSID: 1,
     'stopTimings.stopGTFSID': 1,
@@ -224,7 +228,7 @@ database.connect({
 
   await vlineTrips.createIndex({
     set: 1
-  }, {name: 'set index', sparse: 1})
+  }, {name: 'set index', sparse: true})
 
   console.log('Created vline trips index')
 

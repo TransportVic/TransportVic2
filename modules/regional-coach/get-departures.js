@@ -251,6 +251,8 @@ async function getDepartures(stop, db) {
         departure.shortRouteName = departure.trip.trainConnection
       }
 
+      if (departure.trip.origin === 'Southern Cross Coach Terminal/Spencer Street' && departure.trip.destination === 'Water Tower Park/High Street') departure.isRailReplacementBus = true
+
       if (departure.isRailReplacementBus === null) {
         let {origin, destination, departureTime} = departure.trip
 
