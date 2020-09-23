@@ -10,9 +10,12 @@ let gtfsTimetables, liveTimetables, stops
 
 async function fetchAndUpdate() {
   let dataSYDTrains = await tfnswAPI.makePBRequest('/v1/gtfs/realtime/sydneytrains')
+  let dataNSWTrains = await tfnswAPI.makePBRequest('/v1/gtfs/realtime/nswtrains')
   let sydTripDescriptors = dataSYDTrains.entity
+  let nswTripDescriptors = dataNSWTrains.entity
 
   let relevantSYDTrips = sydTripDescriptors.map(trip => trip.trip_update).filter(trip => trip.trip.trip_id.match(/ST\d\d/) && trip.stop_time_update.length)
+  let relevantNSWTrips = nswTripDescriptors.map(trip => trip.trip_update).filter(trip => trip.trip.trip_id.match(/ST\d\d/) && trip.stop_time_update.length)
 
   await async.forEach(relevantSYDTrips, async trip => {
     let rawTripID = trip.trip.trip_id
@@ -30,20 +33,30 @@ async function fetchAndUpdate() {
       tripStartTime.add(-1, 'day')
     }
 
-    await async.forEach(trip.stop_time_update, async stop => {
-      let stopGTFSID = parseInt(stop.stop_id.replace('P', '0')) + 140000000
-      let stopData = await stops.findDocument({
-        'bays.stopGTFSID': stopGTFSID
+    let runID = rawTripID.slice(0, 4)
+
+    let sydTrainsTimeUpdates = trip.stop_time_update
+    let nswTrainsTimeUpdates = relevantNSWTrips.find(trip => trip.trip.trip_id.startsWith(runID))
+
+    async function parseStopTimeUpdates(stopTimeUpdates) {
+      await async.forEach(stopTimeUpdates, async stop => {
+        let stopGTFSID = parseInt(stop.stop_id.replace('P', '0')) + 140000000
+        let stopData = await stops.findDocument({
+          'bays.stopGTFSID': stopGTFSID
+        })
+
+        let platform = stopData.bays.find(bay => bay.stopGTFSID === stopGTFSID)
+        stopTimings[stopData.stopName] = {
+          departureDelay: (stop.departure || stop.arrival).delay * 1000,
+          stopGTFSID
+        }
+
+        return stop
       })
+    }
 
-      let platform = stopData.bays.find(bay => bay.stopGTFSID === stopGTFSID)
-      stopTimings[stopData.stopName] = {
-        departureDelay: (stop.departure || stop.arrival).delay * 1000,
-        stopGTFSID
-      }
-
-      return stop
-    })
+    await parseStopTimeUpdates(sydTrainsTimeUpdates)
+    if (nswTrainsTimeUpdates) await parseStopTimeUpdates(nswTrainsTimeUpdates.stop_time_update)
 
     gtfsTrip.stopTimings = gtfsTrip.stopTimings.map((stop, i) => {
       let delayFactor = stopTimings[stop.stopName]
