@@ -122,8 +122,10 @@ async function pickBestTrip(data, db) {
     if (flindersIndex >= 0 && gtfsTrip.direction === 'Down') {
       let flinders = gtfsTrip.stopTimings[flindersIndex]
       let stopAfterFlinders = gtfsTrip.stopTimings[flindersIndex + 1]
-      originStopID = stopAfterFlinders.stopGTFSID
-      originTime.add(stopAfterFlinders.departureTimeMinutes - flinders.departureTimeMinutes, 'minutes')
+      if (stopAfterFlinders.stopName !== destinationStop.stopName) {
+        originStopID = stopAfterFlinders.stopGTFSID
+        originTime.add(stopAfterFlinders.departureTimeMinutes - flinders.departureTimeMinutes, 'minutes')
+      }
     }
 
     gtfsTrip.stopTimings.forEach((stop, i) => {
@@ -142,7 +144,7 @@ async function pickBestTrip(data, db) {
     let possibleDepartures = departures.filter(departure => {
       let run = runs[departure.run_ref]
       let destinationName = run.destination_name.trim()
-      let scheduledDepartureTime = moment(departure.scheduled_departure_utc).toISOString()
+      let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc).toISOString()
 
       let timeMatch = scheduledDepartureTime === isoDeparture
       if (timeMatch) {
@@ -211,7 +213,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
 
       // TODO: Refactor
       let actualDepartureTime = stop.estimatedDepartureTime || scheduledDepartureTime
-      let timeDifference = moment.utc(moment(actualDepartureTime).diff(utils.now()))
+      let timeDifference = moment.utc(utils.parseTime(actualDepartureTime).diff(utils.now()))
 
       if (+timeDifference < -30000) return stop
       if (+timeDifference <= 60000) stop.prettyTimeToArrival = 'Now'

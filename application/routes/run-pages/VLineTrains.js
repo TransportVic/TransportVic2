@@ -28,6 +28,7 @@ async function pickBestTrip(data, db) {
   if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
   if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
 
+
   let stops = db.getCollection('stops')
 
   let originStop = await stops.findDocument({
@@ -234,7 +235,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
 
       // TODO: Refactor
       let actualDepartureTime = stop.estimatedDepartureTime || scheduledDepartureTime
-      let timeDifference = moment.utc(moment(actualDepartureTime).diff(utils.now()))
+      let timeDifference = moment.utc(utils.parseTime(actualDepartureTime).diff(utils.now()))
 
       if (+timeDifference < -30000) return stop
       if (+timeDifference <= 60000) stop.prettyTimeToArrival = 'Now'

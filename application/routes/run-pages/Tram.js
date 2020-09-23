@@ -204,7 +204,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
       }
 
       let actualDepartureTime = stop.estimatedDepartureTime || scheduledDepartureTime
-      let timeDifference = moment.utc(moment(actualDepartureTime).diff(utils.now()))
+      let timeDifference = moment.utc(utils.parseTime(actualDepartureTime).diff(utils.now()))
 
       if (+timeDifference < -30000) return stop
       if (+timeDifference <= 60000) stop.prettyTimeToArrival = 'Now'
@@ -221,7 +221,8 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   if (trip.vehicle) {
     let tramModel = tramFleet.getModel(trip.vehicle)
     trip.vehicleData = {
-      name: `Tram ${tramModel}.${trip.vehicle}`
+      name: `Tram ${tramModel}.${trip.vehicle}`,
+      model: tramModel
     }
   }
 
