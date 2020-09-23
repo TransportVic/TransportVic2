@@ -199,7 +199,7 @@ module.exports = {
               if (departure.platform)
                 departure.platform = departure.platform
               departure.type = 'vline'
-              departure.actualDepartureTime = departure.scheduledDepartureTime
+              departure.actualDepartureTime = departure.estimatedDepartureTime || departure.scheduledDepartureTime
 
               departure.stopTimings = departure.trip.stopTimings
               let tripStops = departure.stopTimings.map(e => e.stopName)
