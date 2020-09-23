@@ -17,11 +17,30 @@ async function fetchAndUpdate() {
   let relevantSYDTrips = sydTripDescriptors.map(trip => trip.trip_update).filter(trip => trip.trip.trip_id.match(/ST\d\d/) && trip.stop_time_update.length)
   let relevantNSWTrips = nswTripDescriptors.map(trip => trip.trip_update).filter(trip => trip.trip.trip_id.match(/ST\d\d/) && trip.stop_time_update.length)
 
-  await async.forEach(relevantSYDTrips, async trip => {
-    let rawTripID = trip.trip.trip_id
+  let sydTrainIDs = relevantSYDTrips.map(trip => trip.trip.trip_id.slice(0, 4))
+  let missingNSWTrips = relevantNSWTrips.filter(trip => !sydTrainIDs.includes(trip.trip.trip_id.slice(0, 4)))
 
-    let tripID = `${rawTripID}.14-XPT`
-    let gtfsTrip = await gtfsTimetables.findDocument({ tripID })
+  await async.forEach(relevantSYDTrips.concat(missingNSWTrips), async trip => {
+    let rawTripID = trip.trip.trip_id
+    let runID = rawTripID.slice(0, 4)
+
+    let gtfsTrip
+
+    let yesterday = utils.now().add(-1, 'day').startOf('day')
+    let yesterdayQuery = { runID, operationDays: utils.getYYYYMMDD(yesterday) }
+    let yesterdayTrip = await liveTimetables.findDocument(yesterdayQuery) || await gtfsTimetables.findDocument(yesterdayQuery)
+
+    if (yesterdayTrip) {
+      let yesterdayEndTime = yesterday.clone().add(yesterdayTrip.stopTimings.slice(-1)[0].arrivalTimeMinutes, 'minutes')
+      if (utils.now() < yesterdayEndTime) {
+        gtfsTrip = yesterdayTrip
+      }
+    }
+
+    if (!gtfsTrip) {
+      let todayQuery = { runID, operationDays: utils.getYYYYMMDDNow() }
+      gtfsTrip = await liveTimetables.findDocument(todayQuery) || await gtfsTimetables.findDocument(todayQuery)
+    }
 
     let stopTimings = {}
 
@@ -32,8 +51,6 @@ async function fetchAndUpdate() {
     if (gtfsTrip.stopTimings.some(stop => stop.departureTimeMinutes > 1440) && minutesPastMidnight < startMinutes) { // Trip would be continuing on from previous day - so roll back a day
       tripStartTime.add(-1, 'day')
     }
-
-    let runID = rawTripID.slice(0, 4)
 
     let sydTrainsTimeUpdates = trip.stop_time_update
     let nswTrainsTimeUpdates = relevantNSWTrips.find(trip => trip.trip.trip_id.startsWith(runID))
@@ -95,6 +112,6 @@ database.connect(async () => {
   liveTimetables = database.getCollection('live timetables')
   stops = database.getCollection('stops')
 
-  setInterval(fetchAndUpdate, 1000 * 60 * 2)
+  setInterval(fetchAndUpdate, 1000 * 30)
   await fetchAndUpdate()
 })
