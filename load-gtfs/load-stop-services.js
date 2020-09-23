@@ -32,7 +32,7 @@ database.connect({}, async err => {
             stopTimings: {
               $elemMatch: {
                 stopGTFSID: bay.stopGTFSID,
-                departureTime: {
+                departureTimeMinutes: {
                   $ne: null
                 }
               }

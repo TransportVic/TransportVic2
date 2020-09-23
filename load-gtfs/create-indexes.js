@@ -134,7 +134,7 @@ database.connect({
 
   await gtfsTimetables.createIndex({
     runID: 1
-  }, {name: 'runID index', unique: true, sparse: true})
+  }, {name: 'runID index', sparse: true})
 
   await gtfsTimetables.createIndex({
     operationDays: 1,
@@ -142,16 +142,11 @@ database.connect({
   }, {name: 'operationDays + routeGTFSID index'})
 
   await gtfsTimetables.createIndex({
-    routeGTFSID: 1,
+    'stopTimings.stopGTFSID': 1,
+    'stopTimings.departureTimeMinutes': 1,
     mode: 1,
+    routeGTFSID: 1,
     destination: 1,
-    'stopTimings.stopGTFSID': 1,
-    'stopTimings.departureTimeMinutes': 1
-  }, {name: 'mode+routeGTFSID index'})
-
-  await gtfsTimetables.createIndex({
-    'stopTimings.stopGTFSID': 1,
-    'stopTimings.departureTimeMinutes': 1
   }, {name: 'stop timings gtfs index'})
 
   console.log('Created GTFS timetables indexes')
