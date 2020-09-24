@@ -47,6 +47,7 @@ function updateBody() {
       if (destination === 'NORTH MELBOURNE') destination = 'NTH MELBOURNE'
       if (destination === 'FLEMINGTON RACECOURSE') destination = 'FLEMINGTON RACES'
       if (destination === 'SOUTH GEELONG') destination = 'STH GEELONG'
+      if (destination === 'SYDNEY CENTRAL') destination = 'SYDNEY XPT'
 
       $('.destination span').textContent = destination
       $('.departureInfo .scheduledDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))

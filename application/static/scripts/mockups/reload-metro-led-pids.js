@@ -66,6 +66,9 @@ function shortenDestination(destination) {
   if (destination === 'Upper Ferntree Gully') {
     return 'UPPER FT GULLY'
   }
+  if (destination === 'Sydney Central') {
+    return 'SYDNEY XPT'
+  }
   return destination.toUpperCase()
 }
 
