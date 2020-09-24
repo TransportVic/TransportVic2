@@ -26,6 +26,7 @@ async function fetchAndUpdate() {
 
     let gtfsTrip
 
+    let tripStartTime
     let yesterday = utils.now().add(-1, 'day').startOf('day')
     let yesterdayQuery = { runID, operationDays: utils.getYYYYMMDD(yesterday) }
     let yesterdayTrip = await liveTimetables.findDocument(yesterdayQuery) || await gtfsTimetables.findDocument(yesterdayQuery)
@@ -34,23 +35,24 @@ async function fetchAndUpdate() {
       let yesterdayEndTime = yesterday.clone().add(yesterdayTrip.stopTimings.slice(-1)[0].arrivalTimeMinutes, 'minutes')
       if (utils.now() < yesterdayEndTime) {
         gtfsTrip = yesterdayTrip
+
+        let startMinutes = gtfsTrip.stopTimings[0].departureTimeMinutes
+        tripStartTime = yesterday.clone().add(startMinutes, 'minutes')
       }
     }
 
     if (!gtfsTrip) {
       let todayQuery = { runID, operationDays: utils.getYYYYMMDDNow() }
       gtfsTrip = await liveTimetables.findDocument(todayQuery) || await gtfsTimetables.findDocument(todayQuery)
+
+      let startMinutes = gtfsTrip.stopTimings[0].departureTimeMinutes
+      tripStartTime = utils.now().startOf('day').add(startMinutes, 'minutes')
     }
 
-    let stopTimings = {}
+    let timingUpdates = {}
+    let platformUpdates = {}
 
     let startMinutes = gtfsTrip.stopTimings[0].departureTimeMinutes
-    let tripStartTime = utils.minutesAftMidnightToMoment(startMinutes, utils.now())
-    let minutesPastMidnight = utils.getMinutesPastMidnightNow()
-
-    if (gtfsTrip.stopTimings.some(stop => stop.departureTimeMinutes > 1440) && minutesPastMidnight < startMinutes) { // Trip would be continuing on from previous day - so roll back a day
-      tripStartTime.add(-1, 'day')
-    }
 
     let sydTrainsTimeUpdates = trip.stop_time_update
     let nswTrainsTimeUpdates = relevantNSWTrips.find(trip => trip.trip.trip_id.startsWith(runID))
@@ -62,26 +64,33 @@ async function fetchAndUpdate() {
           'bays.stopGTFSID': stopGTFSID
         })
 
-        let platform = stopData.bays.find(bay => bay.stopGTFSID === stopGTFSID)
-        stopTimings[stopData.stopName] = {
-          departureDelay: (stop.departure || stop.arrival).delay * 1000,
-          stopGTFSID
-        }
-
-        return stop
+        timingUpdates[stopData.stopName] = (stop.departure || stop.arrival).delay * 1000
+        platformUpdates[stopData.stopName] = stopGTFSID
       })
     }
 
     await parseStopTimeUpdates(sydTrainsTimeUpdates)
     if (nswTrainsTimeUpdates) await parseStopTimeUpdates(nswTrainsTimeUpdates.stop_time_update)
 
-    gtfsTrip.stopTimings = gtfsTrip.stopTimings.map((stop, i) => {
-      let delayFactor = stopTimings[stop.stopName]
-      if (delayFactor) {
-        stop.stopGTFSID = delayFactor.stopGTFSID
+    gtfsTrip.stopTimings.forEach((stop, i) => {
+      let nextStop = gtfsTrip.stopTimings[i + 1]
+      if (nextStop && !timingUpdates[nextStop.stopName]) {
+        timingUpdates[nextStop.stopName] = timingUpdates[stop.stopName]
+      }
+    })
+
+    gtfsTrip.stopTimings = gtfsTrip.stopTimings.map(stop => {
+      let delayFactor = timingUpdates[stop.stopName]
+      let newPlatform = platformUpdates[stop.stopName]
+
+      if (newPlatform) {
+        stop.stopGTFSID = newPlatform
+      }
+
+      if (typeof delayFactor !== 'undefined') {
         let minutesDiff = (stop.departureTimeMinutes || stop.arrivalTimeMinutes) - startMinutes
         let scheduledDepartureTime = tripStartTime.clone().add(minutesDiff, 'minutes')
-        stop.estimatedDepartureTime = scheduledDepartureTime.add(delayFactor.departureDelay).toISOString()
+        stop.estimatedDepartureTime = scheduledDepartureTime.add(delayFactor).toISOString()
       }
 
       return stop
