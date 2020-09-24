@@ -91,6 +91,7 @@ async function fetchAndUpdate() {
         let minutesDiff = (stop.departureTimeMinutes || stop.arrivalTimeMinutes) - startMinutes
         let scheduledDepartureTime = tripStartTime.clone().add(minutesDiff, 'minutes')
         stop.estimatedDepartureTime = scheduledDepartureTime.add(delayFactor).toISOString()
+        stop.actualDepartureTimeMS = +scheduledDepartureTime
       }
 
       return stop

@@ -206,6 +206,13 @@ database.connect({
     'stopTimings.departureTimeMinutes': 1
   }, {name: 'stop timings gtfs index'})
 
+  await liveTimetables.createIndex({
+    'stopTimings.stopGTFSID': 1,
+    'stopTimings.actualDepartureTimeMS': 1,
+    mode: 1
+  }, {name: 'live stop timings index'})
+
+
   console.log('Created live timetables index')
 
   await vlineTrips.createIndex({

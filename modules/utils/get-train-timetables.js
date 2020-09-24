@@ -150,7 +150,33 @@ async function getScheduledDepartures(station, db, mode, timeout) {
     }
   })
 
-  return departures.map(trip => {
+  let timeMS = +utils.now()
+
+  let lateDepartures = await liveTimetables.findDocuments({
+    _id: {
+      $not: {
+        $in: liveDepartures.map(departure => departure._id)
+      }
+    },
+    mode,
+    stopTimings: {
+      $elemMatch: {
+        stopGTFSID: {
+          $in: stopGTFSIDs
+        },
+        actualDepartureTimeMS: {
+          $gte: timeMS - 1000 * 60,
+          $lte: timeMS + timeout * 60 * 1000
+        }
+      }
+    }
+  }).toArray()
+
+  lateDepartures.forEach(departure => {
+    days[departure.tripID] = utils.parseDate(departure.operationDays)
+  })
+
+  return departures.concat(lateDepartures).map(trip => {
     let stopData = trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))
     let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, days[trip.tripID])
 
