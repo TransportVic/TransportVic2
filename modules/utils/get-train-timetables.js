@@ -151,6 +151,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
   })
 
   let timeMS = +utils.now()
+  let forwardTimeoutMS = timeout * 60 * 1000
 
   let lateDepartures = await liveTimetables.findDocuments({
     _id: {
@@ -166,7 +167,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
         },
         actualDepartureTimeMS: {
           $gte: timeMS - 1000 * 60,
-          $lte: timeMS + timeout * 60 * 1000
+          $lte: timeMS + forwardTimeoutMS
         }
       }
     }
@@ -181,7 +182,10 @@ async function getScheduledDepartures(station, db, mode, timeout) {
     let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, days[trip.tripID])
 
     let estimatedDepartureTime = stopData.estimatedDepartureTime || null
-    if (estimatedDepartureTime) estimatedDepartureTime = utils.parseTime(estimatedDepartureTime)
+    if (estimatedDepartureTime) {
+      estimatedDepartureTime = utils.parseTime(estimatedDepartureTime)
+      if (estimatedDepartureTime - timeMS > forwardTimeoutMS) return null
+    }
 
     return {
       trip,
@@ -197,7 +201,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
       suspensions: [],
       consist: []
     }
-  }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+  }).filter(Boolean).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }
 
 let filterStops = [...cityLoopStations, 'Flinders Street', 'Richmond', 'North Melbourne', 'Jolimont']
