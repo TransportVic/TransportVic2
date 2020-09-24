@@ -33,7 +33,7 @@ async function prioritySearch(db, query) {
     $or: [{
       'bays.tramTrackerID': query
     }, {
-      'bays.stopNumber': query.replace('#', '')
+      'bays.stopNumber': new RegExp(query.replace('#', ''), 'i')
     }]
   }).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
 

@@ -45,7 +45,7 @@ async function read5000Stops() {
     let stopNumberParts
 
     if (stopNumberParts = fullStopName.match(/^(D?[\d]+[A-Za-z]?)-(.+)/)) {
-      stopNumber = stopNumberParts[1]
+      stopNumber = stopNumberParts[1].toUpperCase()
       fullStopName = fullStopName.replace(/^(D?[\d]+[A-Za-z]?)-/, '')
     }
 
