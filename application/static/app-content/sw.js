@@ -1,4 +1,4 @@
-const version = '99b'
+const version = '100'
 const cacheName = `transportvic-${version}`
 
 function cacheFiles(files) {
@@ -113,6 +113,7 @@ self.addEventListener('install', e => {
       '/static/images/icons/n.svg',
       '/static/images/icons/sprinter.svg',
       '/static/images/icons/vlocity.svg',
+      '/static/images/icons/xpt.svg',
 
       '/static/images/icons/cr228l.svg',
       '/static/images/icons/designline.svg',
@@ -120,8 +121,10 @@ self.addEventListener('install', e => {
       '/static/images/icons/optare.svg',
       '/static/images/icons/optimus.svg',
 
-      '/static/images/icons/z3.svg',
       '/static/images/icons/a-b.svg',
+      '/static/images/icons/c1.svg',
+      '/static/images/icons/d.svg',
+      '/static/images/icons/z3.svg',
 
       '/static/images/mockups/announcements.svg',
       '/static/images/mockups/no-boarding-train.svg',
