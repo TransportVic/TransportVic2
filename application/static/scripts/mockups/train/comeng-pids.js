@@ -88,8 +88,8 @@ let bootupText = [
   {
     text: [
       { text: '10145001', font: 'EDI-7' },
-      { text: 'G ', font: 'EDI-5' },
-      { text: '220C', font: 'EDI-7' }
+      { text: 'G', font: 'EDI-5' },
+      { text: ' 220C', font: 'EDI-7' }
     ]
   },
   { text: { text: 'CLOCK CHIP', font: 'EDI-7' }, duration: 500 },
@@ -126,7 +126,7 @@ $.ready(async () => {
   await asyncPause(500)
 
   drawObject(resolveTextPosition(
-    TextObject.fromJSON({ text: 'Welcome to Metro', font: 'EDI-7' }, null, 1),
+    TextObject.fromJSON({ text: 'Welcome to M>Train', font: 'EDI-7' }, null, 1),
     'centre-x,centre-y',
     edi
   ), edi)
