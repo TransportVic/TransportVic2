@@ -9,10 +9,7 @@ const EventEmitter = require('events')
 const busStopNameModifier = require('../../additional-data/bus-stop-name-modifier')
 const busBays = require('../../additional-data/bus-bays')
 const determineBusRouteNumber = require('./determine-bus-route-number')
-
-const modules = require('../../modules')
 const config = require('../../config')
-const discordIntegration = modules.tracker && modules.tracker.discordIntegration
 
 const departuresCache = new TimedCache(1000 * 30)
 
@@ -76,22 +73,11 @@ async function updateBusTrips(db, departures) {
       origin, destination, departureTime, destinationArrivalTime
     }
 
-    let results = await busTrips.replaceDocument({
+    await busTrips.replaceDocument({
       date, routeGTFSID, origin, destination, departureTime, destinationArrivalTime
     }, data, {
       upsert: true
     })
-
-    if (results.result.upserted && discordIntegration && routeNumber === '737') {
-      process.nextTick(async () => {
-        await utils.request(config.discordURL, {
-          method: 'POST',
-          body: JSON.stringify({
-            content: `Tracked: ${busRego ? '#' + busRego : '@' + smartrakID} on the ${departureTime} 737 to ${destination}`
-          })
-        })
-      })
-    }
   })
 }
 
@@ -159,7 +145,7 @@ async function getDeparturesFromPTV(stop, db) {
       if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
 
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', day, routeGTFSID)
-      if (!trip) {
+      if (!trip) { return
         trip = await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
       }
 
