@@ -38,12 +38,12 @@ database.connect({
     let shapeID = line[0]
     if (shapeID.startsWith('4T.T.ST')) {
       let routeGTFSID = '14-XPT'
-      let newShapeID = `14-XPT-${chars[shapeID[8] - 1]}-mjp-1.1.${shapeID[12].toUpperCase()}`
+      let newShapeID = `14-XPT-${chars[shapeID[8] - 1]}-mjp-1.1.${shapeID.slice(-1).toUpperCase()}`
 
       if (currentShapeID && currentShapeID !== newShapeID) {
         shapesLineReader.unreadLine()
         shapes.push({
-          newShapeID: currentShapeID,
+          shapeID: currentShapeID,
           routeGTFSID: currentRouteGTFSID,
           path: currentShape,
           length: currentLength
