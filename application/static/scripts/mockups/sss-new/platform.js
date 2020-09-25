@@ -34,6 +34,8 @@ function setMessagesActive(side, active) {
     $$('.stops').style = 'display: flex;'
   }
 
+  currentPattern[side] = null
+
   $$('.fullMessage').style = 'display: none;'
 }
 
@@ -50,6 +52,9 @@ function setFullMessageActive(side, active) {
     $$('.firstDeparture').style = 'display: flex;'
     $$('.stops').style = 'display: flex'
   }
+
+  currentPattern[side] = null
+
   $$('.message').style = 'display: none;'
 }
 
