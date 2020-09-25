@@ -34,7 +34,7 @@ database.connect({}, async () => {
 
     await async.forEachSeries([0, 1], async direction => {
       let data = await utils.request(`https://yarratrams.com.au/umbraco/surface/data/routestopsdata/?id=${service}&dir=${direction}`, {
-        timeout: 3000
+        timeout: 10000
       })
       let $ = cheerio.load(data)
 
