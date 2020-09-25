@@ -54,7 +54,7 @@ database.connect({
     line = gtfsUtils.splitLine(line)
 
     let rawStopName = line[1].replace('Platform Station', 'Station')
-    if (rawStopName === 'Yass Station') rawStopName = 'Yass Junction Station'
+    if (rawStopName.includes('Yass Station')) rawStopName = rawStopName.replace('Yass', 'Yass Junction')
     let stopName = rawStopName.replace(/ Plat.+/, '').trim()
 
     if (permittedStops.includes(stopName) && rawStopName.includes('Platform')) {
