@@ -53,7 +53,7 @@ async function setServicesAsCancelled(db, services) {
 }
 
 async function cancellation(db, text) {
-  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) (?:service|train|will|has)/)
+  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?)(?: to | *- *)([\w ]*?) (?:service|train|will|has)/)
   let matches = []
 
   if (service) {

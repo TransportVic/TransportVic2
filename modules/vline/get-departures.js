@@ -397,10 +397,15 @@ async function getDepartures(station, db) {
     if (vnetDepartures.length) {
       try {
         let xptDepartures = scheduled.filter(departure => departure.trip.routeGTFSID === '14-XPT')
-        let allDepartures = vnetDepartures.map(addFlags).concat(xptDepartures).concat(coachReplacements).concat(cancelledTrains).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
-        departuresCache.put(cacheKey, allDepartures)
+        let allDepartures = vnetDepartures.map(addFlags).concat(xptDepartures).concat(coachReplacements)
 
-        return returnDepartures(allDepartures)
+        let cancelledIDs = cancelledTrains.map(train => train.originalServiceID)
+        let nonCancelled = allDepartures.filter(train => !cancelledIDs.includes(train.originalServiceID))
+
+        let sorted = nonCancelled.concat(cancelledTrains).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+        departuresCache.put(cacheKey, sorted)
+
+        return returnDepartures(sorted)
       } catch (e) {
         console.log(e)
       }
