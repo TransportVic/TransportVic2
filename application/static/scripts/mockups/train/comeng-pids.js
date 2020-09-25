@@ -15,8 +15,10 @@ let pauseTimeout = 0
 let bottomRowText = []
 let stopScrolling = false
 
+let daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+
 function generateLEDCssCode() {
-    let cssData =
+  let cssData =
 `
   .led {
     width: ${Math.ceil(window.innerWidth * ledSize)}px;
@@ -32,12 +34,12 @@ function generateLEDCssCode() {
   }
 `
 
-    $('#led-style').textContent = cssData
+  $('#led-style').textContent = cssData
 }
 
 function legacyDrawText(matrix, text, spacing, x, y) {
-    matrix.clearRectangle(0, 0, 120, 7)
-    matrix.drawText(new TextObject(text, font, new Position(x, y), spacing));
+  matrix.clearRectangle(0, 0, width, height)
+  matrix.drawText(new TextObject(text, font, new Position(x, y), spacing));
 }
 
 function formatTime(time) {
@@ -50,8 +52,13 @@ function formatTime(time) {
   if (minutes < 10) mainTime += '0'
   mainTime += minutes
 
+  if (hours > 12) mainTime += ' PM'
+  else mainTime += ' AM'
+
   return mainTime
 }
+
+
 
 function asyncPause(milliseconds) {
   return new Promise(resolve => {
@@ -77,14 +84,52 @@ async function animateScrollingText(matrix, text, spacing, xPosition=0) {
   }
 }
 
-$.ready(() => {
+let bootupText = [
+  {
+    text: [
+      { text: '10145001', font: 'EDI-7' },
+      { text: 'G ', font: 'EDI-5' },
+      { text: '220C', font: 'EDI-7' }
+    ]
+  },
+  { text: { text: 'CLOCK CHIP', font: 'EDI-7' }, duration: 500 },
+  { text: { text: '32K RAM', font: 'EDI-7' }, duration: 500 },
+  { text: { text: `${daysOfWeek[new Date().getDay()]} ${formatTime(new Date())}`, font: 'EDI-7' }, duration: 500 },
+  {
+    text: [
+      { text: 'SERIAL ADDRESS =  ', font: 'EDI-5' },
+      { text: '00 ', font: 'EDI-7' }
+    ],
+    align: 'left',
+    duration: 1250
+  }
+]
+
+$.ready(async () => {
   generateLEDCssCode()
 
   font = Font.fromNameString('EDI-7')
 
   edi = new LEDMatrix(width, height, $('#edi'))
 
-  legacyDrawText(edi, 'Arriving Oakleigh', 1, 10, 0)
+  for (let text of bootupText) {
+    drawObject(resolveTextPosition(
+      TextObject.fromJSON(text.text, null, 1),
+      text.align || 'centre-x,centre-y',
+      edi
+    ), edi)
+
+    await asyncPause(text.duration || 1000)
+    edi.clearRectangle(0, 0, width, height)
+  }
+
+  await asyncPause(500)
+
+  drawObject(resolveTextPosition(
+    TextObject.fromJSON({ text: 'Welcome to Metro', font: 'EDI-7' }, null, 1),
+    'centre-x,centre-y',
+    edi
+  ), edi)
 })
 
 window.addEventListener('resize', generateLEDCssCode);

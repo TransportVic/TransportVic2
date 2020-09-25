@@ -169,6 +169,7 @@ database.connect({
   count += await findConnections('Traralgon Railway Station')
   count += await findConnections('Sale Railway Station')
   count += await findConnections('Bairnsdale Railway Station')
+  count += await findConnections('Visitor Information Centre/Great Ocean Road') // Apollo Bay
 
   updateStats('vline-connections', count)
   console.log('Completed loading in ' + count + ' vline connections')
