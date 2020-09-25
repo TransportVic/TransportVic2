@@ -29,7 +29,7 @@ database.connect({
   let routes = database.getCollection('routes')
 
   let ptvRouteData = (await ptvAPI('/v3/routes?route_types=2')).routes.filter(route => {
-    return route.route_gtfs_id.startsWith(`${gtfsID}-`)
+    return route.route_gtfs_id && route.route_gtfs_id.startsWith(`${gtfsID}-`)
   }).map(route => {
     route.routeGTFSID = route.route_gtfs_id.replace(/-0+/, '-')
     route.adjustedName = utils.adjustRouteName(route.route_name)
