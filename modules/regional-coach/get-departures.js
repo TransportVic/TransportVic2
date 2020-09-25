@@ -206,7 +206,7 @@ async function getDepartures(stop, db) {
 
   try {
     let departures
-    let scheduledDepartueres = (await getScheduledDepartures(stop, db, false)).map(departure => {
+    let scheduledDepartures = (await getScheduledDepartures(stop, db, false)).map(departure => {
       departure.isRailReplacementBus = null
       return departure
     })
@@ -214,11 +214,11 @@ async function getDepartures(stop, db) {
     try {
       departures = await getDeparturesFromPTV(stop, db)
       let ptvDepartures = departures.map(d => d.trip.tripID)
-      let extras = scheduledDepartueres.filter(d => !ptvDepartures.includes(d.trip.tripID))
+      let extras = scheduledDepartures.filter(d => !ptvDepartures.includes(d.trip.tripID))
       departures = departures.concat(extras)
     } catch (e) {
       console.log(e)
-      departures = scheduledDepartueres
+      departures = scheduledDepartures
     }
 
     departures = departures.sort((a, b) => a.destination.length - b.destination.length)
@@ -249,11 +249,6 @@ async function getDepartures(stop, db) {
       if (departure.trip.trainConnection) {
         departure.isRailReplacementBus = true
         departure.shortRouteName = departure.trip.trainConnection
-      }
-
-      if (departure.trip.origin === 'Southern Cross Coach Terminal/Spencer Street' && departure.trip.destination === 'Water Tower Park/High Street') {
-        departure.isRailReplacementBus = true
-        departure.shortRouteName = 'Albury'
       }
 
       if (departure.isRailReplacementBus === null) {
