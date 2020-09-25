@@ -2,6 +2,7 @@ const async = require('async')
 const DatabaseConnection = require('../../../database/DatabaseConnection')
 const config = require('../../../config.json')
 const utils = require('../../../utils')
+const destinationOverrides = require('../../../additional-data/coach-stops')
 
 const updateStats = require('../../utils/stats')
 
@@ -10,6 +11,16 @@ let stops, gtfsTimetables
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let mode = {
   $in: ['regional train', 'regional coach']
+}
+
+function getHumanName(fullStopName) {
+  let stopName = fullStopName.replace('Shopping Centre', 'SC')
+  let humanName = destinationOverrides[fullStopName] || fullStopName
+  if (humanName.includes('Railway Station')) {
+    humanName = humanName.replace(/Railway Station.*/, '').trim()
+  }
+
+  return humanName
 }
 
 async function findConnections(changeoverPoint) {
@@ -99,11 +110,23 @@ async function findConnections(changeoverPoint) {
           })
         }
 
+        let tripStopNames = trip.stopTimings.map(stop => stop.stopName)
+
         await gtfsTimetables.updateDocument({
           _id: trip._id
         }, {
           $set: {
-            connections: trip.connections
+            connections: trip.connections.sort((a, b) => {
+              let previousIndex = tripStopNames.indexOf(a.changeAt)
+              let currentIndex = tripStopNames.indexOf(b.changeAt)
+
+              if (previousIndex === currentIndex) {
+                let previousFor = getHumanName(a.for)
+                let currentFor = getHumanName(b.for)
+
+                return previousFor.localeCompare(currentFor)
+              } else return previousIndex - currentIndex
+            })
           }
         })
       })
