@@ -177,12 +177,4 @@ router.post('/', async (req, res) => {
   return res.json({ error: 'could not locate trip' })
 })
 
-router.post('/shape/:routeGTFSID', async (req, res) => {
-  let routeData = await res.db.getCollection('routes').findDocument({
-    routeGTFSID: req.params.routeGTFSID
-  })
-
-  res.json(routeData.routePath.map(path => path.path))
-})
-
 module.exports = router

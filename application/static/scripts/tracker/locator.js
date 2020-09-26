@@ -22,21 +22,12 @@ let currentLayer = null
 function loadRoutePath(routeGTFSID) {
   if (routeGTFSID !== currentRouteGTFSID) {
     $.ajax({
-      url: `/bus/tracker/locator/shape/${routeGTFSID}`,
+      url: `/route-preview/${routeGTFSID}`,
       method: 'POST'
     }, (err, status, data) => {
       if (currentLayer) map.removeLayer(currentLayer)
-      
-      currentLayer = L.geoJSON({
-        type: 'FeatureCollection',
-        features: data.map(points => ({
-          type: 'Feature',
-          geometry: {
-            type: 'LineString',
-            coordinates: points
-          }
-        }))
-      }, {
+
+      currentLayer = L.geoJSON(data.allRoutePaths, {
         style: {
           color: '#D7832C'
         }
