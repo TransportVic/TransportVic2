@@ -72,7 +72,7 @@ database.connect({
     'bays.vnetStationName': 1
   }, {name: 'vnet station name index', sparse: true})
 
-  console.log('Created stops indices')
+  console.log('Created stops indexes')
 
   await routes.createIndex({
     routeName: 1
@@ -86,7 +86,7 @@ database.connect({
     routeGTFSID: 1
   }, {name: 'route gtfs id index', unique: true})
 
-  console.log('Created route indices')
+  console.log('Created route indexes')
 
   await gtfsTimetables.createIndex({
     routeGTFSID: 1,
@@ -184,7 +184,6 @@ database.connect({
     mode: 1
   }, {name: 'live stop timings index'})
 
-
   console.log('Created live timetables index')
 
   await vlineTrips.createIndex({
@@ -234,9 +233,11 @@ database.connect({
   await smartrakIDs.createIndex({
     smartrakID: 1
   }, {name: 'smartrak id index', unique: true})
+
   await smartrakIDs.createIndex({
     fleetNumber: 1
   }, {name: 'fleet number index', unique: true})
+
   await smartrakIDs.createIndex({
     operator: 1
   }, {name: 'operator index'})
@@ -249,13 +250,14 @@ database.connect({
     origin: 1,
     destination: 1,
     departureTime: 1,
-    destinationArrivalTime: 1,
     smartrakID: 1
   }, {name: 'trip index', unique: true})
+
   await busTrips.createIndex({
     smartrakID: 1,
     date: 1
   }, {name: 'smartrak id index'})
+
   await busTrips.createIndex({
     routeNumber: 1,
     date: 1,
@@ -273,6 +275,6 @@ database.connect({
 
   console.log('Created tourbusminder index')
 
-  updateStats('create-indexes', 47)
+  updateStats('create-indexes', 42)
   process.exit()
 })

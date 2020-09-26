@@ -56,11 +56,11 @@ async function findStops(db, query) {
         $in: excludedIDs
       }
     },
-    $and: [{
-      $text: {
-        $search: query + ' ' + search
-      }
-    }, {
+    // $and: [{
+    //   $text: {
+    //     $search: query + ' ' + search
+    //   }
+    // }, {
       $or: [{
         suburb: queryRegex
       }, {
@@ -68,7 +68,7 @@ async function findStops(db, query) {
       }, {
         stopName: searchRegex
       }]
-    }]
+    // }]
   }).limit(15 - prioritySearchResults.length).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
 
   let lowPriorityResults = await db.getCollection('stops').findDocuments({
@@ -77,11 +77,11 @@ async function findStops(db, query) {
         $in: excludedIDs.concat(remainingResults.map(stop => stop._id))
       }
     },
-    $and: [{
-      $text: {
-        $search: query + ' ' + search
-      }
-    }, {
+    // $and: [{
+    //   $text: {
+    //     $search: query + ' ' + search
+    //   }
+    // }, {
       $or: [{
         'bays.fullStopName': queryRegex
       }, {
@@ -95,7 +95,7 @@ async function findStops(db, query) {
       }, {
         namePhonetic: new RegExp(phoneticQuery)
       }]
-    }]
+    // }]
   }).limit(15 - prioritySearchResults.length - remainingResults.length).toArray()
 
   return prioritySearchResults.concat(remainingResults).concat(lowPriorityResults)
