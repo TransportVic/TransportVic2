@@ -32,6 +32,7 @@ let stopCSSClasses = {
   'bus': 'busStop',
   'metro train': 'metroStation',
   'regional train': 'vlineStation',
+  'heritage train': 'heritageStation',
   'regional coach': 'regionalCoachStop',
   'tram': 'tramStop',
   'ferry': 'ferryTerminal'

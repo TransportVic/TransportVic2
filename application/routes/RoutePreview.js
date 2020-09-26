@@ -5,6 +5,8 @@ const turf = require('@turf/turf')
 
 router.post('/:routeGTFSID', async (req, res) => {
   let routes = res.db.getCollection('routes')
+  let stops = res.db.getCollection('stops')
+
   let route = await routes.findDocument({
     routeGTFSID: req.params.routeGTFSID
   })
@@ -25,12 +27,32 @@ router.post('/:routeGTFSID', async (req, res) => {
     }))
   }
 
+  let stopGTFSIDs = []
+  route.directions.forEach(direction => {
+    direction.stops.forEach(stop => {
+      if (!stopGTFSIDs.includes(stop.stopGTFSID)) {
+        stopGTFSIDs.push(stop.stopGTFSID)
+      }
+    })
+  })
+
+  let allStops = await stops.findDocuments({
+    'bays.stopGTFSID': {
+      $in: stopGTFSIDs
+    }
+  }).toArray()
+
+  let relevantBays = allStops.map(stop => stop.bays).reduce((a, e) => a.concat(e), []).filter(bay => {
+    return stopGTFSIDs.includes(bay.stopGTFSID) && bay.mode === route.mode
+  })
+
   let bbox = turf.bboxPolygon(turf.bbox(allRoutePaths))
 
   res.json({
     allRoutePaths,
     bbox,
-    routeType: route.mode
+    routeType: route.mode,
+    stops: relevantBays
   })
 })
 

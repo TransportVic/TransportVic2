@@ -4,47 +4,9 @@ block head
   title TransportVic - Stop Preview
   link(rel='stylesheet' href='https://unpkg.com/leaflet@1.6.0/dist/leaflet.css')
   script(src='https://unpkg.com/leaflet@1.6.0/dist/leaflet.js')
-  style.
-    .stopIcon {
-      --size: calc(3vw + 3vh);
-      width: var(--size);
-      height: var(--size);
-      background-color: white;
-      border: calc(0.3vw + 0.3vh) solid;
-      border-radius: var(--size);
-    }
-    
-    .busStop {
-      border-color: #d7832c;
-    }
-
-    .metroStation {
-      border-color: #3483db;
-    }
-
-    .tramStop {
-      border-color: #1a942a;
-    }
-
-    .vlineStation {
-      border-color: #6b4d9e;
-    }
-
-    .regionalCoachStop {
-      border-color: #9582b5;
-    }
-
-    .ferryTerminal {
-      border-color: #03998f;
-    }
-    
-    .heritageStation {
-      border-color: #593915;
-    }
-    
-    .busReplacementBay {
-      border-color: #5c95d6;
-    }
+  
+block style
+  link(rel='stylesheet' href='/static/css/map-colours.css')
     
 block title
   span Stop Preview

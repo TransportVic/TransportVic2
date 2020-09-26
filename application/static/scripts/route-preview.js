@@ -14,28 +14,64 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 
 L.control.scale().addTo(map)
 
+let stopCSSClasses = {
+  'bus': 'busStop',
+  'metro train': 'metroStation',
+  'regional train': 'vlineStation',
+  'heritage train': 'heritageStation',
+  'regional coach': 'regionalCoachStop',
+  'tram': 'tramStop',
+  'ferry': 'ferryTerminal'
+}
+
 let colours = {
   'bus': '#D7832C',
   'metro train': '#3483DB',
   'tram': '#1A942A',
   'regional train': '#6B4D9E',
+  'heritage train': '#593915',
   'regional coach': '#9582B5',
   'ferry': '#03998F',
-  'heritage train': '#593915'
 }
 
 $.ready(() => {
   $.ajax({
-    method: 'POST'
+    url: '/stop-preview/bays',
+    method: 'GET'
   }, (err, status, data) => {
-    let { allRoutePaths, bbox, routeType } = data
+    bayData = data
 
-    L.geoJSON(allRoutePaths, {
-      style: {
-        color: colours[routeType]
-      }
-    }).addTo(map)
+    $.ajax({
+      method: 'POST'
+    }, (err, status, data) => {
+      let { allRoutePaths, bbox, routeType, stops } = data
 
-    map.fitBounds([bbox.geometry.coordinates[0][0].reverse(), bbox.geometry.coordinates[0][2].reverse()])
+      L.geoJSON(allRoutePaths, {
+        style: {
+          color: colours[routeType]
+        }
+      }).addTo(map)
+
+      stops.forEach(bay => {
+        let coordinates = bay.location.coordinates
+        let location = [coordinates[1], coordinates[0]]
+
+        let icon = L.divIcon({className: `stopIcon ${stopCSSClasses[bay.mode]}`})
+
+        let marker = L.marker(location, {icon: icon}).addTo(map)
+
+        let name = bay.fullStopName
+        if (bayData[bay.stopGTFSID]) name += ` (${bayData[bay.stopGTFSID]})`
+
+        name += `<br>Stop ID: ${bay.stopGTFSID}`
+        if (bay.tramTrackerID) {
+          name += `<br>TramTracker ID: ${bay.tramTrackerID}`
+        }
+
+        marker.bindPopup(name)
+      })
+
+      map.fitBounds([bbox.geometry.coordinates[0][0].reverse(), bbox.geometry.coordinates[0][2].reverse()])
+    })
   })
 })
