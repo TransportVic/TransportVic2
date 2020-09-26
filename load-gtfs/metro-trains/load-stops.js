@@ -23,11 +23,47 @@ database.connect({
 
   let stopCount = 0
 
+  let hasSeenRCE = false, hasSeenSGS = false
+
   await async.forEachSeries(stopsFiles, async stopFile => {
     let data = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, stopFile)))
+    if (!hasSeenRCE) hasSeenRCE = data.some(stop => stop.fullStopName === 'Flemington Racecourse Railway Station')
+    if (!hasSeenSGS) hasSeenSGS = data.some(stop => stop.fullStopName === 'Showgrounds Railway Station')
     await loadStops(stops, data, stopsLookup)
     stopCount += data.length
   })
+
+  if (!hasSeenRCE) {
+    await loadStops(stops, [{
+      originalName: 'Flemington Racecourse Railway Station (Flemington)',
+      fullStopName: 'Flemington Racecourse Railway Station',
+      stopGTFSID: 20027,
+      location: {
+        type: 'Point',
+        coordinates: [ 144.907588697812, -37.787201923265 ]
+      },
+      stopNumber: null,
+      mode: 'metro train',
+      suburb: 'Flemington'
+    }], stopsLookup)
+    stopCount++
+  }
+
+  if (!hasSeenSGS) {
+    await loadStops(stops, [{
+      originalName: 'Showgrounds Railway Station (Flemington)',
+      fullStopName: 'Showgrounds Railway Station',
+      stopGTFSID: 20028,
+      location: {
+        type: 'Point',
+        coordinates: [ 144.914256890322, -37.7834721968038 ]
+      },
+      stopNumber: null,
+      mode: 'metro train',
+      suburb: 'Flemington'
+    }], stopsLookup)
+    stopCount++
+  }
 
   await updateStats('mtm-stations', stopCount)
   console.log('Completed loading in ' + stopCount + ' MTM railway stations')
