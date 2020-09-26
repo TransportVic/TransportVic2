@@ -16,14 +16,7 @@ async function loadDepartures(req, res) {
   let departures = await getDepartures(station, res.db)
 
   departures = departures.map(departure => {
-    let timeDifference = moment.utc(departure.actualDepartureTime.diff(utils.now()))
-
-    if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
-    else {
-      departure.prettyTimeToArrival = ''
-      if (timeDifference.get('hours')) departure.prettyTimeToArrival += timeDifference.get('hours') + ' h '
-      if (timeDifference.get('minutes')) departure.prettyTimeToArrival += timeDifference.get('minutes') + ' min'
-    }
+    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
 
     departure.headwayDevianceClass = 'unknown'
     if (departure.estimatedDepartureTime) {

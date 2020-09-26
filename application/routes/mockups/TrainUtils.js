@@ -297,9 +297,8 @@ module.exports = {
     departure.minutesToDeparture = timeDifference
 
     if (+timeDifference <= 0) departure.prettyTimeToDeparture = 'NOW'
-    else {
-      departure.prettyTimeToDeparture = timeDifference + ' min'
-    }
+    else departure.prettyTimeToDeparture = timeDifference + ' min'
+
     return departure
   },
   getFixedLineStops: (tripStops, lineStops, lineName, isUp, type, willSkipLoop) => {

@@ -42,7 +42,7 @@ if services.length
                     img(src='/static/images/decals/ac.svg')
                   if departure.vehicle.attributes.lf
                     img(src='/static/images/decals/wheelchair.svg')
-              span #{departure.prettyTimeToArrival}
+              span #{departure.pretyTimeToDeparture}
               span #{departure.scheduledDepartureTime.format('HH:mm')}
               if departure.vehicle
                 span.rego #{departure.vehicle.name}

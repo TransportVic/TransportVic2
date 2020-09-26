@@ -166,7 +166,7 @@ async function getDeparturesFromPTV(stop, db) {
         trip,
         scheduledDepartureTime: departureTime,
         estimatedDepartureTime: null,
-        actualDepartureTime: scheduledDepartureTimeMinutes,
+        actualDepartureTime: departureTime,
         destination,
         isRailReplacementBus
       })

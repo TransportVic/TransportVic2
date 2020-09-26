@@ -7,7 +7,7 @@ if departures.length
         span.destination #{departure.destination}
       div.timings
         a(href=departure.tripURL).timing.unknown
-          span #{departure.prettyTimeToArrival}
+          span #{departure.pretyTimeToDeparture}
           span #{departure.scheduledDepartureTime.format('HH:mm')}
 else
   div.errorPage

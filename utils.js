@@ -390,5 +390,26 @@ module.exports = {
   parseDate: date => {
     if (date.match(/^\d{1,2}\/\d{1,2}\/\d{1,4}$/)) return module.exports.parseTime(date, 'DD/MM/YYYY')
     else return module.exports.parseTime(date, 'YYYYMMDD')
+  },
+  prettyTime: (time, showHours, blankOld) => {
+    let timeDifference = moment.utc(time.diff(module.exports.now()))
+
+    if (blankOld && +timeDifference <= -30000) return ''
+    if (+timeDifference <= 60000) return 'Now'
+    if (+timeDifference > 1440 * 60 * 1000) return utils.getHumanDateShort(scheduledDepartureTime)
+
+    let hours = timeDifference.get('hours')
+    let minutes = timeDifference.get('minutes')
+    let prettyTime = ''
+
+    if (showHours) {
+      if (hours) prettyTime += hours + ' h '
+      if (minutes) prettyTime += minutes + ' min'
+    } else {
+      let minutesToDeparture = hours * 60 + minutes
+      prettyTime = minutesToDeparture + ' m'
+    }
+
+    return prettyTime.trim()
   }
 }

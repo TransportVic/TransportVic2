@@ -8,12 +8,12 @@ const handleTripShorted = require('../vline/handle-trip-shorted')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
-let refreshRate = 30
+let refreshRate = 20
 
 function shouldRun() {
   let minutes = utils.getMinutesPastMidnightNow()
 
-  return 210 <= minutes && minutes <= 1260 // 0330 - 2100
+  return 210 <= minutes && minutes <= 1380 // 0330 - 2300
 }
 
 async function getDeparturesFromVNET(db) {

@@ -19,15 +19,8 @@ async function loadDepartures(req, res) {
   let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
   departures = departures.map(departure => {
-    const timeDifference = moment.utc(departure.scheduledDepartureTime.diff(utils.now()))
-
-    if (+timeDifference > 1000 * 60 * 180) return null
-    if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
-    else {
-      departure.prettyTimeToArrival = ''
-      if (timeDifference.get('hours')) departure.prettyTimeToArrival += timeDifference.get('hours') + ' h '
-      if (timeDifference.get('minutes')) departure.prettyTimeToArrival += timeDifference.get('minutes') + ' min'
-    }
+    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
+    if (departure.scheduledDepartureTime - utils.now() > 1000 * 60 * 180) return
 
     departure.headwayDevianceClass = 'unknown'
 

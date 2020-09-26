@@ -77,7 +77,7 @@ if departures.length
               span.broadDepartureInfo #{cityLoopConfig}
       div.timings
         a(class='timing ' + departure.headwayDevianceClass href=`/metro/run/${departure.tripURL}`)
-          span #{departure.prettyTimeToArrival}
+          span #{departure.pretyTimeToDeparture}
           span #{departure.scheduledDepartureTime.format('HH:mm')}
 else
   div.errorPage

@@ -74,7 +74,7 @@ if departures.length
           
       div.timings
         a(class=`timing ${departure.headwayDevianceClass}` href=departure.tripURL)
-          span #{departure.prettyTimeToArrival}
+          span #{departure.pretyTimeToDeparture}
           span #{departure.scheduledDepartureTime.format('HH:mm')}
 else
   div.errorPage

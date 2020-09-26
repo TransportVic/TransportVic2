@@ -186,7 +186,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
 
   let firstDepartureTime = trip.stopTimings[0].departureTimeMinutes
   trip.stopTimings = trip.stopTimings.map(stop => {
-    stop.prettyTimeToArrival = ''
+    stop.pretyTimeToDeparture = ''
 
     if (trip.cancelled) {
       stop.headwayDevianceClass = 'cancelled'
@@ -198,8 +198,11 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
 
     if (!isLive || (isLive && stop.estimatedDepartureTime)) {
       let scheduledDepartureTime = tripStartTime.clone().add((stop.departureTimeMinutes || stop.arrivalTimeMinutes) - firstDepartureTime, 'minutes')
+      let estimatedDepartureTime
+
       if (stop.estimatedDepartureTime) {
-        let headwayDeviance = scheduledDepartureTime.diff(stop.estimatedDepartureTime, 'minutes')
+        estimatedDepartureTime = utils.parseTime(stop.estimatedDepartureTime)
+        let headwayDeviance = scheduledDepartureTime.diff(estimatedDepartureTime, 'minutes')
 
         // trains cannot be early
         if (headwayDeviance <= -5) { // <= 5min counts as late
@@ -210,19 +213,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
       }
 
       if (isLive && !stop.estimatedDepartureTime) return stop
-
-      // TODO: Refactor
-      let actualDepartureTime = stop.estimatedDepartureTime || scheduledDepartureTime
-      let timeDifference = moment.utc(utils.parseTime(actualDepartureTime).diff(utils.now()))
-
-      if (+timeDifference < -30000) return stop
-      if (+timeDifference <= 60000) stop.prettyTimeToArrival = 'Now'
-      else if (+timeDifference > 1440 * 60 * 1000) stop.prettyTimeToArrival = utils.getHumanDateShort(scheduledDepartureTime)
-      else {
-        stop.prettyTimeToArrival = ''
-        if (timeDifference.get('hours')) stop.prettyTimeToArrival += timeDifference.get('hours') + ' h '
-        if (timeDifference.get('minutes')) stop.prettyTimeToArrival += timeDifference.get('minutes') + ' min'
-      }
+      stop.pretyTimeToDeparture = utils.prettyTime(estimatedDepartureTime || scheduledDepartureTime, true, true)
     }
     return stop
   })
