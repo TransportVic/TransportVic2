@@ -21,12 +21,12 @@ database.connect({
   let timetables = await getCollection('timetables')
   let gtfsTimetables = await getCollection('gtfs timetables')
 
-  let liveTimetables = database.getCollection('live timetables')
-  let vlineTrips = database.getCollection('vline trips')
-  let tramTrips = database.getCollection('tram trips')
-  let smartrakIDs = database.getCollection('smartrak ids')
-  let busTrips = database.getCollection('bus trips')
-  let tbmTrips = database.getCollection('tbm trips')
+  let liveTimetables = await getCollection('live timetables')
+  let vlineTrips = await getCollection('vline trips')
+  let tramTrips = await getCollection('tram trips')
+  let smartrakIDs = await getCollection('smartrak ids')
+  let busTrips = await getCollection('bus trips')
+  let tbmTrips = await getCollection('tbm trips')
 
   await stops.createIndex({
     stopName: 1,
@@ -250,6 +250,7 @@ database.connect({
     origin: 1,
     destination: 1,
     departureTime: 1,
+    destinationArrivalTime: 1,
     smartrakID: 1
   }, {name: 'trip index', unique: true})
 
