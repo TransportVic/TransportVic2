@@ -30,7 +30,8 @@ database.connect({}, async err => {
     let routeData = await routes.findDocument({ routeGTFSID })
     let routeVariants = routeData.routePath
       .map(variant => variant.fullGTFSIDs.slice(0, 1))
-      .reduce((acc, r) => acc.concat({ shapeID: r }), [])
+      .reduce((acc, r) => acc.concat(r), [])
+      .map(shapeID => ({ shapeID }))
 
     // Because sydney uses 1 route shape for all variants this trick doesn't work
     // Only one route, XPT doesn't have too many trips so additional overhead is acceptable
@@ -41,7 +42,7 @@ database.connect({}, async err => {
 
     await async.forEach(routeVariants, async variant => {
       let timetable = await gtfsTimetables.findDocument(variant)
-      if (!timetable) return console.log('No timetable match for shapeID ' + variant)
+      if (!timetable) return console.log('No timetable match for shapeID', variant)
 
       if (!routeDirections[timetable.gtfsDirection]) routeDirections[timetable.gtfsDirection] = []
 
