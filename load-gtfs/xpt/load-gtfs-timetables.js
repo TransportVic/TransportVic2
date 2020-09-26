@@ -47,7 +47,7 @@ database.connect({
     if (rawTripID.startsWith('ST')) {
       let rawShapeID = lineData[7]
       let routeGTFSID = '14-XPT'
-      let shapeID = `14-XPT-${chars[rawShapeID[8] - 1]}-mjp-1.1.${rawShapeID[12].toUpperCase()}`
+      let shapeID = `14-XPT-${chars[rawShapeID[8] - 1]}-mjp-1.1.${rawShapeID.slice(-1).toUpperCase()}`
       let calendarID = lineData[1]
       let tripID = `${rawTripID.slice(-4)}.${calendarID}.14-XPT`
       let gtfsDirection = lineData[5]
