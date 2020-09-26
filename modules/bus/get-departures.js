@@ -145,7 +145,7 @@ async function getDeparturesFromPTV(stop, db) {
       if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
 
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', day, routeGTFSID)
-      if (!trip) { return
+      if (!trip) {
         trip = await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
       }
 

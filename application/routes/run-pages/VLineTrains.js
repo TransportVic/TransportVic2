@@ -7,11 +7,11 @@ const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern'
 const guessPlatform = require('../../../modules/vline/guess-scheduled-platforms')
 
 function giveVariance(time) {
-  let minutes = utils.time24ToMinAftMidnight(time)
+  let minutes = utils.getMinutesPastMidnightFromTime24(time)
 
   let validTimes = []
   for (let i = minutes - 5; i <= minutes + 5; i++) {
-    validTimes.push(utils.minAftMidnightToTime24(i))
+    validTimes.push(utils.getTime24FromMinutesPastMidnight(i))
   }
 
   return {

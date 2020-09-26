@@ -6,6 +6,7 @@ const config = require('../../config.json')
 const loadGTFSTimetables = require('../utils/load-gtfs-timetables')
 const utils = require('../../utils')
 const datamartModes = require('../datamart-modes')
+const gtfsUtils = require('../../gtfs-utils')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
@@ -27,8 +28,8 @@ database.connect({
   let splicedGTFSPath = path.join(__dirname, '../spliced-gtfs-stuff', `${gtfsID}`)
   let gtfsPath = path.join(__dirname, '../../gtfs', `${gtfsID}`)
 
-  let calendarDays = utils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar.txt')).toString())
-  let calendarDates = utils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar_dates.txt')).toString())
+  let calendarDays = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar.txt')).toString())
+  let calendarDates = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar_dates.txt')).toString())
 
   let tripFiles = fs.readdirSync(splicedGTFSPath).filter(e => e.startsWith('trips'))
   let tripTimeFiles = fs.readdirSync(splicedGTFSPath).filter(e => e.startsWith('trip-times'))

@@ -304,7 +304,7 @@ async function getScheduledArrivals(knownArrivals, db) {
   return arrivals.map(a => {
     let platform = a.stopTimings.slice(-1)[0].platform
     let {arrivalTimeMinutes} = a.stopTimings.slice(-1)[0]
-    let arrivalTime = utils.minutesAftMidnightToMoment(arrivalTimeMinutes, utils.now())
+    let arrivalTime = utils.getMomentFromMinutesPastMidnight(arrivalTimeMinutes, utils.now())
 
     return {
       type: 'vline',
@@ -541,9 +541,9 @@ async function appendArrivalData(arrival, timetables) {
     if (forming) { // only consider empty car movements
       arrival.showDeparture = 'OFF'
       let departureTime = forming.tripTimings[0].departureTime
-      let minutesPastMidnight = utils.time24ToMinAftMidnight(departureTime)
+      let minutesPastMidnight = utils.getMinutesPastMidnightFromTime24(departureTime)
       arrival.formingID = forming.runID
-      arrival.formingDepartureTime = utils.minutesAftMidnightToMoment(minutesPastMidnight, utils.now())
+      arrival.formingDepartureTime = utils.getMomentFromMinutesPastMidnight(minutesPastMidnight, utils.now())
     }
   }
   return arrival

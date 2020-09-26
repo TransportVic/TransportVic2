@@ -45,6 +45,7 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
 const loadGTFSTimetables = require('../utils/load-gtfs-timetables')
 const utils = require('../../utils')
+const gtfsUtils = require('../../gtfs-utils')
 
 const cheerio = require('cheerio')
 
@@ -367,8 +368,8 @@ database.connect({
     .replace(/\${START}/g, utils.getYYYYMMDDNow())
     .replace(/\${END}/g, utils.getYYYYMMDD(utils.now().add(3, 'months')))
 
-  let calendarDays = utils.parseGTFSData(parsedCalendarDays)
-  // let calendarDates = utils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar_dates.txt')).toString())
+  let calendarDays = gtfsUtils.parseGTFSData(parsedCalendarDays)
+  // let calendarDates = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar_dates.txt')).toString())
   let calendarDates = []
 
   let body = await utils.request('https://www.ptv.vic.gov.au/more/travelling-on-the-network/ferries/')

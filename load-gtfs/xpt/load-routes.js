@@ -17,7 +17,7 @@ database.connect({
   poolSize: 100
 }, async err => {
   let routes = database.getCollection('routes')
-  let routeData = utils.parseGTFSData(fs.readFileSync(path.join(__dirname, 'data/routes.txt')).toString())
+  let routeData = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(__dirname, 'data/routes.txt')).toString())
 
   let shapesLineReader = new BufferedLineReader(path.join(__dirname, '../../gtfs/14/shapes.txt'))
   await shapesLineReader.open()

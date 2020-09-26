@@ -5,6 +5,7 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
 const loadRoutes = require('../utils/load-routes')
 const utils = require('../../utils')
+const gtfsUtils = require('../../gtfs-utils')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
@@ -19,7 +20,7 @@ database.connect({
   let splicedGTFSPath = path.join(__dirname, '../spliced-gtfs-stuff', `${gtfsID}`)
   let gtfsPath = path.join(__dirname, '../../gtfs', `${gtfsID}`)
 
-  let routeData = utils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'routes.txt')).toString())
+  let routeData = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'routes.txt')).toString())
   let shapeFiles = fs.readdirSync(splicedGTFSPath).filter(e => e.startsWith('shapes'))
 
   await async.forEachSeries(shapeFiles, async shapeFile => {

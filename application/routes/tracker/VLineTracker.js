@@ -22,8 +22,8 @@ router.get('/', (req, res) => {
 function adjustTrip(trip, date, today, minutesPastMidnightNow) {
   let e = utils.encodeName
   let {departureTime, destinationArrivalTime} = trip
-  let departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime),
-      destinationArrivalTimeMinutes = utils.time24ToMinAftMidnight(destinationArrivalTime)
+  let departureTimeMinutes = utils.getMinutesPastMidnightFromTime24(departureTime),
+      destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromTime24(destinationArrivalTime)
 
   let tripDate = trip.date
 

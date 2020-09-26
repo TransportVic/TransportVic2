@@ -68,8 +68,8 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
 
       let arrivalTimeMinutes, departureTimeMinutes
 
-      arrivalTimeMinutes = utils.time24ToMinAftMidnight(arrivalTime)
-      departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime)
+      arrivalTimeMinutes = utils.getMinutesPastMidnightFromTime24(arrivalTime)
+      departureTimeMinutes = utils.getMinutesPastMidnightFromTime24(departureTime)
 
       if (previousDepartureTime == -1) { // if first stop is already beyond midnight then keep it
         if (isNightBus && arrivalTimeMinutes < 600) {
@@ -86,8 +86,8 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
 
       previousDepartureTime = departureTimeMinutes
 
-      departureTime = utils.minAftMidnightToTime24(departureTimeMinutes)
-      arrivalTime = utils.minAftMidnightToTime24(arrivalTimeMinutes)
+      departureTime = utils.getTime24FromMinutesPastMidnight(departureTimeMinutes)
+      arrivalTime = utils.getTime24FromMinutesPastMidnight(arrivalTimeMinutes)
 
       return {
         stopName: stopData.fullStopName,

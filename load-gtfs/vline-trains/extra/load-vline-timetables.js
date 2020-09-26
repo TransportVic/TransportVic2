@@ -111,7 +111,7 @@ async function parseTimings(names, types, trip) {
       tripDividePoint = stationPlatform.fullStopName.slice(0, -16)
     }
 
-    let minutesAftMidnight = utils.time24ToMinAftMidnight(timing) + offset
+    let minutesAftMidnight = utils.getMinutesPastMidnightFromTime24(timing) + offset
     if (!isNaN(minutesAftMidnight)) {
       if (previousTime > minutesAftMidnight) {
         offset += 1440
@@ -139,8 +139,8 @@ async function parseTimings(names, types, trip) {
 
     if (timing.includes('/')) {
       let [arrivalTime, departureTime] = timing.split('/')
-      let arrivalTimeMinutes = utils.time24ToMinAftMidnight(arrivalTime) + offset
-      let departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime) + offset
+      let arrivalTimeMinutes = utils.getMinutesPastMidnightFromTime24(arrivalTime) + offset
+      let departureTimeMinutes = utils.getMinutesPastMidnightFromTime24(departureTime) + offset
 
       locations[locationName].arrivalTime = arrivalTime
       locations[locationName].arrivalTimeMinutes = arrivalTimeMinutes

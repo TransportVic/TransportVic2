@@ -129,7 +129,7 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
 
   return (await async.map(filteredTrips, async trip => {
     let stopData = trip.stopTimings.filter(stop => stopGTFSIDs.includes(stop.stopGTFSID))[0]
-    let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, utils.now())
+    let departureTime = utils.getMomentFromMinutesPastMidnight(stopData.departureTimeMinutes, utils.now())
 
     let route = await routes.findDocument({ routeGTFSID: trip.routeGTFSID })
     let opertor, routeNumber

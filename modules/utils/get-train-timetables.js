@@ -179,7 +179,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
 
   return departures.concat(lateDepartures).map(trip => {
     let stopData = trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))
-    let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, days[trip.tripID])
+    let departureTime = utils.getMomentFromMinutesPastMidnight(stopData.departureTimeMinutes, days[trip.tripID])
 
     let estimatedDepartureTime = stopData.estimatedDepartureTime || null
     if (estimatedDepartureTime) {

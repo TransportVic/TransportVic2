@@ -26,8 +26,8 @@ database.connect({
   let totalCount = 0
 
   let gtfsPath = path.join(__dirname, '../../gtfs', `${gtfsID}`)
-  let calendarDays = utils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar.txt')).toString())
-  let calendarDates = utils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar_dates.txt')).toString())
+  let calendarDays = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar.txt')).toString())
+  let calendarDates = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar_dates.txt')).toString())
 
   let tripsLineReader = new BufferedLineReader(path.join(gtfsPath, 'trips.txt'))
   let tripTimingsLineReader = new BufferedLineReader(path.join(gtfsPath, 'stop_times.txt'))

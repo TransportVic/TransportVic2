@@ -97,7 +97,7 @@ async function findTripsForDates(gtfsTimetables, query, dates) {
       $in: dates
     }
   }).toArray()).map(trip => {
-    let departureTimeMinutes = utils.time24ToMinAftMidnight(trip.departureTime)
+    let departureTimeMinutes = utils.getMinutesPastMidnightFromTime24(trip.departureTime)
     if (departureTimeMinutes < 180) departureTimeMinutes += 1440
     return {
       departureTimeMinutes,

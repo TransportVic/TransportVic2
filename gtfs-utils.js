@@ -4,7 +4,7 @@ const utils = require('./utils')
 
 module.exports = {
   splitLine: line => line.match(/"([^"]*)"/g).map(f => f.slice(1, -1)),
-  calendarToDates(calendar, calendarDates, service) {
+  calendarToDates: (calendar, calendarDates, service) => {
     let calendarLine = calendar.find(line => line[0] == service)
     calendarDates = calendarDates.filter(line => line[0] == service).reduce((a, line) => {
       a[line[1]] = line[2]
@@ -28,5 +28,7 @@ module.exports = {
 
     return allDatesInbetween.sort((a, b) => +a - +b)
   },
-  simplifyRouteGTFSID: id => id.replace(/^(\d\d?-\w{1,3}).+$/, '$1')
+  simplifyRouteGTFSID: id => id.replace(/^(\d\d?-\w{1,3}).+$/, '$1'),
+  parseGTFSData: data =>
+    data.split('\n').slice(1).filter(Boolean).map(e => e.trim().match(/"([^"]*)"/g).map(f => f.slice(1, -1))),
 }

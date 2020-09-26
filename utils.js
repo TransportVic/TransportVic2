@@ -217,9 +217,6 @@ module.exports = {
 
     return name
   },
-  parseGTFSData: data =>
-    data.split('\n').slice(1).filter(Boolean).map(e => e.trim().match(/"([^"]*)"/g).map(f => f.slice(1, -1))),
-  simplifyRouteGTFSID: id => id.replace(/(-[A-Za-z])?-mjp-1$/, ''),
   pad: (data, length, filler='0') => Array(length).fill(filler).concat([...data.toString()]).slice(-length).join(''),
   allDaysBetweenDates: (startDate, endDate) => {
     startDate = startDate.clone().startOf('day').add(-1, 'days')
@@ -233,15 +230,15 @@ module.exports = {
 
     return dates
   },
-  minutesAftMidnightToMoment: (minutes, day) => {
+  getMomentFromMinutesPastMidnight: (minutes, day) => {
     return day.clone().startOf('day').set('hours', Math.floor(minutes / 60)).set('minutes', minutes % 60)
   },
-  time24ToMinAftMidnight: time => {
+  getMinutesPastMidnightFromTime24: time => {
     if (!time) return null
     const parts = time.slice(0, 5).split(':')
     return parts[0] * 60 + parts[1] * 1
   },
-  minAftMidnightToTime24: (time, padHour=true) => {
+  getTime24FromMinutesPastMidnight: (time, padHour=true) => {
     let hours = Math.floor(time / 60)
     let minutes = time % 60
     let mainTime = ''
@@ -283,22 +280,8 @@ module.exports = {
   isWeekday: dayOfWeek => {
     return ['Mon', 'Tues', 'Wed', 'Thur', 'Fri'].includes(dayOfWeek)
   },
-  formatPTHHMM: time => {
-    let hours = time.get('hours'),
-      minutes = time.get('minutes')
-    if (hours < 3) hours += 24
-    return `${module.exports.pad(hours, 2)}:${module.exports.pad(minutes, 2)}`
-  },
   formatHHMM: time => {
     return time.format('HH:mm')
-  },
-  correctHHMMToPT: time => {
-    const parts = time.slice(0, 5).split(':')
-    let hours = parts[0] * 1,
-      minutes = parts[1]
-    if (hours < 3) hours += 24
-
-    return `${module.exports.pad(hours, 2)}:${module.exports.pad(minutes, 2)}`
   },
   getYYYYMMDD: time => {
     // let cloned = time.clone()

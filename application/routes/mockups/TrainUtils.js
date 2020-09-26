@@ -132,7 +132,7 @@ module.exports = {
 
     let mappedArrivals = await async.map(arrivals, async arrival => {
       let arrivalStop = arrival.stopTimings.slice(-1)[0]
-      let scheduledDepartureTime = utils.minutesAftMidnightToMoment(arrivalStop.arrivalTimeMinutes, utils.now())
+      let scheduledDepartureTime = utils.getMomentFromMinutesPastMidnight(arrivalStop.arrivalTimeMinutes, utils.now())
 
       // to get realtime: check if arriving less that 20min, then request runID + 948000
 

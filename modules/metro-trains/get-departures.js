@@ -157,11 +157,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
           origin = service[2],
           destination = service[3]
 
-      let minutesPastMidnight = utils.time24ToMinAftMidnight(departureTime.slice(0, -2))
+      let minutesPastMidnight = utils.getMinutesPastMidnightFromTime24(departureTime.slice(0, -2))
       if (departureTime.includes('pm')) minutesPastMidnight += 720
 
       return {
-        departureTime: utils.minAftMidnightToTime24(minutesPastMidnight),
+        departureTime: utils.getTime24FromMinutesPastMidnight(minutesPastMidnight),
         origin, destination,
         originalText: text
       }

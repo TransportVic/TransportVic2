@@ -64,7 +64,7 @@ database.connect({
   let splicedGTFSPath = path.join(__dirname, '../spliced-gtfs-stuff', `${gtfsID}`)
   let gtfsPath = path.join(__dirname, '../../gtfs', `${gtfsID}`)
 
-  let routeData = utils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'routes.txt')).toString())
+  let routeData = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'routes.txt')).toString())
   let shapeFiles = fs.readdirSync(splicedGTFSPath).filter(e => e.startsWith('shapes'))
 
   let allRoutes = routeData.map(r => gtfsUtils.simplifyRouteGTFSID(r[0])).filter((e, i, a) => a.indexOf(e) === i)
