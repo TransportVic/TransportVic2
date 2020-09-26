@@ -23,7 +23,7 @@ database.connect({}, async err => {
       $ne: 'metro train'
     }
   })
-  allRoutes=['14-XPT']
+
   let stopsByService = []
 
   await async.forEach(allRoutes, async routeGTFSID => {
