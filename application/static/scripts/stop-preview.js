@@ -12,20 +12,6 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
   accessToken
 }).addTo(map)
 
-// L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg', {
-//     attribution: ATTRIBUTION,
-//     maxZoom: 17,
-//     minZoom: 2,
-//     id: 'watercolor'
-// }).addTo(map)
-//
-// L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}.png', {
-//     attribution: ATTRIBUTION,
-//     maxZoom: 17,
-//     minZoom: 2,
-//     id: 'toner labels'
-// }).addTo(map)
-
 L.control.scale().addTo(map)
 
 let stopCSSClasses = {
@@ -59,6 +45,8 @@ $.ready(() => {
 
         let name = bay.fullStopName
         if (bayData[bay.stopGTFSID]) name += ` (${bayData[bay.stopGTFSID]})`
+        if (bay.stopNumber) name += ` #${bay.stopNumber}`
+
         if (bay.screenServices) {
           name += `<br>Services: ${bay.screenServices.map(e => e.routeNumber).filter((e, i, a) => a.indexOf(e) === i).filter(Boolean).join(', ')}`
         }

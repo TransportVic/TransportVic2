@@ -1,12 +1,3 @@
-.stopIcon {
-  --size: calc(3vw + 3vh);
-  width: var(--size);
-  height: var(--size);
-  background-color: white;
-  border: calc(0.3vw + 0.3vh) solid;
-  border-radius: var(--size);
-}
-
 .busStop {
   border-color: #d7832c;
 }

@@ -4,10 +4,19 @@ block head
   title TransportVic - Route Preview
   link(rel='stylesheet' href='https://unpkg.com/leaflet@1.6.0/dist/leaflet.css')
   script(src='https://unpkg.com/leaflet@1.6.0/dist/leaflet.js')
-  
-block style
-  link(rel='stylesheet' href='/static/css/map-colours.css')
+  style.
+    .stopIcon {
+      --size: calc(3vw + 3vh);
+      width: var(--size);
+      height: var(--size);
+      background-color: white;
+      border: calc(0.3vw + 0.3vh) solid;
+      border-radius: var(--size);
+    }
     
+block style
+  link(rel='stylesheet' href='/static/css/constant-colours.css')
+
 block title
   span Route Preview
 

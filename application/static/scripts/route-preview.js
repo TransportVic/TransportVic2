@@ -62,6 +62,7 @@ $.ready(() => {
 
         let name = bay.fullStopName
         if (bayData[bay.stopGTFSID]) name += ` (${bayData[bay.stopGTFSID]})`
+        if (bay.stopNumber) name += ` #${bay.stopNumber}`
 
         name += `<br>Stop ID: ${bay.stopGTFSID}`
         if (bay.tramTrackerID) {
