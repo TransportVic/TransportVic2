@@ -35,6 +35,7 @@ database.connect({
 
   await stops.createIndex({
     'location': '2dsphere',
+    mergeName: 1
   }, {name: 'stops location index'})
 
   await stops.createIndex({
@@ -47,17 +48,8 @@ database.connect({
   }, {name: 'just stop gtfs id index'})
 
   await stops.createIndex({
-    'mergeName': 1
-  }, {name: 'merge name index'})
-
-  await stops.createIndex({
-    'bays.fullStopName': 1,
-    'stopName': 1
-  }, {name: 'search index'})
-
-  await stops.createIndex({
-    'suburb': 1
-  }, {name: 'suburb index'})
+    "$**": "text"
+  }, {name: 'text index'})
 
   await stops.createIndex({
     'codedSuburb': 1,
@@ -69,11 +61,7 @@ database.connect({
   }, {name: 'phonetic name index'})
 
   await stops.createIndex({
-    'tramTrackerNames': 1
-  }, {name: 'tramtracker name index'})
-
-  await stops.createIndex({
-    'bays.tramTrackerIDs': 1
+    'bays.tramTrackerID': 1
   }, {name: 'tramtracker id index'})
 
   await stops.createIndex({
@@ -197,13 +185,6 @@ database.connect({
   await liveTimetables.createIndex({
     runID: 1
   }, {name: 'runID index', sparse: true})
-
-  await liveTimetables.createIndex({
-    mode: 1,
-    routeGTFSID: 1,
-    'stopTimings.stopGTFSID': 1,
-    'stopTimings.departureTimeMinutes': 1
-  }, {name: 'stop timings gtfs index'})
 
   await liveTimetables.createIndex({
     'stopTimings.stopGTFSID': 1,

@@ -33,7 +33,7 @@ async function prioritySearch(db, query) {
     $or: [{
       'bays.tramTrackerID': query
     }, {
-      'bays.stopNumber': new RegExp(query.replace('#', ''), 'i')
+      'bays.stopNumber': query.replace('#', '').toUpperCase()
     }]
   }).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
 
@@ -41,13 +41,12 @@ async function prioritySearch(db, query) {
 }
 
 async function findStops(db, query) {
-  let search
-
   let prioritySearchResults = await prioritySearch(db, query)
   let excludedIDs = prioritySearchResults.map(stop => stop._id)
 
+  let search = utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre'))
   let queryRegex = new RegExp(query, 'i')
-  let searchRegex = new RegExp(utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre')), 'i')
+  let searchRegex = new RegExp(search, 'i')
 
   let phoneticQuery = metaphone.process(query)
 
@@ -57,12 +56,18 @@ async function findStops(db, query) {
         $in: excludedIDs
       }
     },
-    $or: [{
-      suburb: queryRegex
+    $and: [{
+      $text: {
+        $search: query + ' ' + search
+      }
     }, {
-      stopName: queryRegex
-    }, {
-      stopName: searchRegex
+      $or: [{
+        suburb: queryRegex
+      }, {
+        stopName: queryRegex
+      }, {
+        stopName: searchRegex
+      }]
     }]
   }).limit(15 - prioritySearchResults.length).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
 
@@ -72,18 +77,24 @@ async function findStops(db, query) {
         $in: excludedIDs.concat(remainingResults.map(stop => stop._id))
       }
     },
-    $or: [{
-      'bays.fullStopName': queryRegex
+    $and: [{
+      $text: {
+        $search: query + ' ' + search
+      }
     }, {
-      'bays.originalStopName': queryRegex
-    }, {
-      'bays.fullStopName': searchRegex
-    }, {
-      'tramTrackerNames': searchRegex
-    }, {
-      'tramTrackerNames': queryRegex
-    }, {
-      namePhonetic: new RegExp(phoneticQuery)
+      $or: [{
+        'bays.fullStopName': queryRegex
+      }, {
+        'bays.originalStopName': queryRegex
+      }, {
+        'bays.fullStopName': searchRegex
+      }, {
+        'tramTrackerNames': searchRegex
+      }, {
+        'tramTrackerNames': queryRegex
+      }, {
+        namePhonetic: new RegExp(phoneticQuery)
+      }]
     }]
   }).limit(15 - prioritySearchResults.length - remainingResults.length).toArray()
 
