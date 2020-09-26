@@ -30,10 +30,11 @@ module.exports = class MongoDatabaseConnection {
       ...options,
       storageEngine: {
         wiredTiger: {
-          configString: 'block_compressor=zlib'
+          configString: 'block_compressor=zstd'
         }
       }
     })
+
     return this.getCollection(collectionName)
   }
 
