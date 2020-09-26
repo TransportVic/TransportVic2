@@ -91,6 +91,11 @@ module.exports = [{
   routes: [],
   type: 'exclude'
 }, {
+  name: 'CDC Ballarat Specials',
+  track: ['CB174', 'CB175', 'CB176'],
+  routes: [],
+  type: 'exclude'
+}, {
   name: 'Sunbury Specials',
   track: ['SB16'],
   routes: [],

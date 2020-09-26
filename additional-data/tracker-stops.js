@@ -335,5 +335,6 @@ module.exports = [
   'bayswater/bayswater-railway-station',
   'burwood/uganda-street-elgar-road',
   'croydon/arndale-shopping-centre-mount-dandenong-road',
-  'croydon/ruskin-avenue-mount-dandenong-road'
+  'croydon/ruskin-avenue-mount-dandenong-road',
+  'ballarat-central/old-post-office'
 ]

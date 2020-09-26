@@ -11,6 +11,7 @@ const highlightData = require('../../../additional-data/tracker-highlights-new')
 
 const knownBuses = require('../../../additional-data/bus-lists')
 const serviceDepots = require('../../../additional-data/service-depots')
+const operatorCodes = require('../../../additional-data/bus-operator-codes')
 
 let crossDepotQuery = null
 
@@ -287,7 +288,11 @@ router.get('/highlights', async (req, res) => {
   let busTrips = db.getCollection('bus trips')
   let smartrakIDs = db.getCollection('smartrak ids')
   let routes = db.getCollection('routes')
-  let date = utils.getYYYYMMDDNow()
+  let today = utils.getYYYYMMDDNow()
+
+  let {operator, date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -383,8 +388,16 @@ router.get('/cross-depot', async (req, res) => {
     return trip
   })).map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
+  let operators = {}
+  tripsToday.forEach(trip => {
+    let operator = trip.fleetNumber[1]
+    if (!operators[operator]) operators[operator] = []
+    operators[operator].push(trip)
+  })
+
   res.render('tracker/bus/cross-depot', {
-    tripsToday,
+    operators,
+    operatorCodes,
     date: utils.parseTime(date, 'YYYYMMDD')
   })
 })
