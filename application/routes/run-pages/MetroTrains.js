@@ -203,7 +203,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
       let estimatedDepartureTime = stop.estimatedDepartureTime
 
       stop.headwayDevianceClass = utils.findHeadwayDeviance(scheduledDepartureTime, estimatedDepartureTime, {
-        early: 1,
+        early: 1.5,
         late: 5
       })
 

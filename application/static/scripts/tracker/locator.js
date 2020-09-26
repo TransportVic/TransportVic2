@@ -16,6 +16,36 @@ L.control.scale().addTo(map)
 
 let currentMarker
 let hasShownError = false
+let currentRouteGTFSID = null
+let currentLayer = null
+
+function loadRoutePath(routeGTFSID) {
+  if (routeGTFSID !== currentRouteGTFSID) {
+    $.ajax({
+      url: `/bus/tracker/locator/shape/${routeGTFSID}`,
+      method: 'POST'
+    }, (err, status, data) => {
+      if (currentLayer) map.removeLayer(currentLayer)
+      
+      currentLayer = L.geoJSON({
+        type: 'FeatureCollection',
+        features: data.map(points => ({
+          type: 'Feature',
+          geometry: {
+            type: 'LineString',
+            coordinates: points
+          }
+        }))
+      }, {
+        style: {
+          color: '#D7832C'
+        }
+      }).addTo(map)
+    })
+
+    currentRouteGTFSID = routeGTFSID
+  }
+}
 
 function updateBody(firstTime) {
   $.ajax({
@@ -50,6 +80,7 @@ Currently running:<br>
 ${data.departureTime} ${data.routeNumber} to ${data.destination}
 `)
       hasShownError = false
+      loadRoutePath(data.routeGTFSID)
     }
   })
 }
