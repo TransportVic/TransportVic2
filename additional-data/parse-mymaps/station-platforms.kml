@@ -28456,6 +28456,1196 @@ PLATFORMNO: 2</value>
           </outerBoundaryIs>
         </Polygon>
       </Placemark>
+      <Placemark>
+        <name>Polygon 829</name>
+        <description><![CDATA[description: <br>STATION: Culcairn<br>PLATFORMNO: 1]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Culcairn</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                147.0381201,-35.666576,0
+                147.0381697,-35.6665847,0
+                147.038328,-35.6656869,0
+                147.0382837,-35.6656793,0
+                147.0381201,-35.666576,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 830</name>
+        <description><![CDATA[description: <br>STATION: Henty<br>PLATFORMNO: 1]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Henty</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                147.0352705,-35.5172387,0
+                147.0353697,-35.5183303,0
+                147.0354368,-35.5183281,0
+                147.0353349,-35.5172343,0
+                147.0352705,-35.5172387,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 831</name>
+        <description><![CDATA[description: <br>STATION: The Rock<br><br>PLATFORMNO: 1]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>The Rock
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                147.1181409,-35.2717951,0
+                147.118149,-35.2718367,0
+                147.1196108,-35.2715126,0
+                147.1195947,-35.2714688,0
+                147.1181409,-35.2717951,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 832</name>
+        <description><![CDATA[description: <br>STATION: Wagga Wagga<br><br>PLATFORMNO: 1]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Wagga Wagga
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                147.3671253,-35.1201349,0
+                147.3691135,-35.1204053,0
+                147.3691243,-35.1203372,0
+                147.3671374,-35.1200723,0
+                147.3671253,-35.1201349,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 833</name>
+        <description><![CDATA[description: <br>STATION: Junee<br>PLATFORMNO: 1]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Junee</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                147.5834423,-34.8721795,0
+                147.5835147,-34.8721949,0
+                147.5840967,-34.8694926,0
+                147.5840297,-34.8694794,0
+                147.5834423,-34.8721795,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 834</name>
+        <description><![CDATA[description: <br>STATION: Cootamundra<br>PLATFORMNO: 1]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Cootamundra</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                148.030218,-34.6417368,0
+                148.031315,-34.640618,0
+                148.0312721,-34.6405915,0
+                148.0301778,-34.6417103,0
+                148.030218,-34.6417368,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 835</name>
+        <description><![CDATA[description: <br>STATION: Harden<br>PLATFORMNO: 1]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Harden</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                148.3705726,-34.5530639,0
+                148.3710125,-34.5533268,0
+                148.372544,-34.5541463,0
+                148.3725762,-34.5540933,0
+                148.370594,-34.5530175,0
+                148.3705726,-34.5530639,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 836</name>
+        <description><![CDATA[description: <br>STATION: Harden<br>PLATFORMNO: 2]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Harden</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>2</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                148.372544,-34.5541463,0
+                148.3710125,-34.5533268,0
+                148.370991,-34.5533665,0
+                148.3710044,-34.5534173,0
+                148.3710929,-34.5534858,0
+                148.3713719,-34.5536802,0
+                148.3717367,-34.5538923,0
+                148.3720746,-34.5540425,0
+                148.3725118,-34.5542015,0
+                148.372544,-34.5541463,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 837</name>
+        <description><![CDATA[description: <br>STATION: Yass Junction<br><br>PLATFORMNO: 1]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Yass Junction
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                148.9158384,-34.8088392,0
+                148.915833,-34.8087984,0
+                148.9142612,-34.8089283,0
+                148.9142679,-34.8089658,0
+                148.9158384,-34.8088392,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 838</name>
+        <description><![CDATA[description: <br>STATION: Yass Junction<br><br>PLATFORMNO: 2]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Yass Junction
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>2</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                148.9158478,-34.8089008,0
+                148.9142398,-34.8090319,0
+                148.9142451,-34.8090726,0
+                148.9158531,-34.8089438,0
+                148.9158478,-34.8089008,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 839</name>
+        <description><![CDATA[description: <br>STATION: Gunning<br>PLATFORMNO: 2]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Gunning</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>2</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                149.2609418,-34.7800023,0
+                149.2609619,-34.7800221,0
+                149.26178,-34.7794934,0
+                149.2617599,-34.7794702,0
+                149.2609418,-34.7800023,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 840</name>
+        <description><![CDATA[description: <br>STATION: Gunning<br>PLATFORMNO: 1]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Gunning</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                149.2610867,-34.7797831,0
+                149.2611121,-34.7798106,0
+                149.2619396,-34.7792753,0
+                149.2619141,-34.7792499,0
+                149.2610867,-34.7797831,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 841</name>
+        <description><![CDATA[description: <br>STATION: Goulburn<br>PLATFORMNO: 3]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Goulburn</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>3</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                149.7187409,-34.7591717,0
+                149.7187731,-34.7591959,0
+                149.7190252,-34.7589403,0
+                149.7192371,-34.7587288,0
+                149.7194329,-34.7585128,0
+                149.719618,-34.758277,0
+                149.7197682,-34.7580589,0
+                149.719905,-34.7578517,0
+                149.7198701,-34.7578319,0
+                149.7187409,-34.7591717,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 842</name>
+        <description><![CDATA[description: <br>STATION: Goulburn<br>PLATFORMNO: 2]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Goulburn</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>2</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                149.7187034,-34.7591431,0
+                149.7187409,-34.7591717,0
+                149.7198701,-34.7578319,0
+                149.7198272,-34.7578099,0
+                149.7187034,-34.7591431,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 843</name>
+        <description><![CDATA[description: <br>STATION: Goulburn<br>PLATFORMNO: 1]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Goulburn</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                149.718631,-34.7591276,0
+                149.7197655,-34.7577812,0
+                149.7197092,-34.7577526,0
+                149.7185773,-34.7590968,0
+                149.718631,-34.7591276,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 845</name>
+        <description><![CDATA[description: <br>STATION: Moss Vale<br><br>PLATFORMNO: 1]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Moss Vale
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                150.3709884,-34.5490501,0
+                150.3710179,-34.5490622,0
+                150.371148,-34.5488126,0
+                150.3712378,-34.5488402,0
+                150.3716549,-34.5480703,0
+                150.3715651,-34.5480372,0
+                150.3719124,-34.5473247,0
+                150.3718749,-34.5473125,0
+                150.3709884,-34.5490501,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 846</name>
+        <description><![CDATA[description: <br>STATION: Moss Vale<br><br>PLATFORMNO: 2<br>]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Moss Vale
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>2
+</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                150.37138,-34.5488758,0
+                150.3714524,-34.5487974,0
+                150.3715423,-34.5486814,0
+                150.3716268,-34.5485654,0
+                150.3717341,-34.5484108,0
+                150.3718655,-34.5482042,0
+                150.372064,-34.5478508,0
+                150.3721498,-34.5476762,0
+                150.3722356,-34.5474873,0
+                150.3722839,-34.5473658,0
+                150.3723469,-34.5471747,0
+                150.3724033,-34.5469859,0
+                150.3723617,-34.5469792,0
+                150.3723121,-34.5471471,0
+                150.3721927,-34.5474807,0
+                150.3718333,-34.5481346,0
+                150.3716549,-34.5480703,0
+                150.3712378,-34.5488402,0
+                150.3713022,-34.5488394,0
+                150.37138,-34.5488758,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 847</name>
+        <description><![CDATA[description: <br>STATION: Campbelltown<br>PLATFORMNO: 1]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Campbelltown</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                150.8132549,-34.0645346,0
+                150.8145384,-34.0634758,0
+                150.814478,-34.0634192,0
+                150.8143492,-34.0635036,0
+                150.8142486,-34.0635736,0
+                150.8141534,-34.0636425,0
+                150.8140569,-34.0637158,0
+                150.8139616,-34.0637991,0
+                150.8138463,-34.0639013,0
+                150.8137296,-34.0640113,0
+                150.8135084,-34.0642391,0
+                150.8132334,-34.0645157,0
+                150.8132549,-34.0645346,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 848</name>
+        <description><![CDATA[description: <br>STATION: Campbelltown<br>PLATFORMNO: 2]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Campbelltown</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>2</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                150.8132777,-34.0645533,0
+                150.8148776,-34.0632712,0
+                150.814832,-34.0632334,0
+                150.8145384,-34.0634758,0
+                150.8132549,-34.0645346,0
+                150.8132777,-34.0645533,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 849</name>
+        <description><![CDATA[description: <br>STATION: Campbelltown<br>PLATFORMNO: 3]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Campbelltown</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>3</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                150.8132324,-34.0646825,0
+                150.8132525,-34.0647047,0
+                150.8139572,-34.0641425,0
+                150.8146271,-34.0636092,0
+                150.8145963,-34.0635793,0
+                150.8132324,-34.0646825,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 850</name>
+        <description><![CDATA[description: <br>STATION: Campbelltown<br>PLATFORMNO: 4]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Campbelltown</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>4</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                150.8139794,-34.064165,0
+                150.8139572,-34.0641425,0
+                150.8132525,-34.0647047,0
+                150.8131076,-34.0648094,0
+                150.8131291,-34.0648338,0
+                150.8132659,-34.0647372,0
+                150.8139794,-34.064165,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 851</name>
+        <description><![CDATA[description: <br>STATION: Sydney Central<br><br>PLATFORMNO: 1]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Sydney Central
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                151.2038306,-33.8853931,0
+                151.2045196,-33.8843819,0
+                151.2046001,-33.8842594,0
+                151.2046618,-33.8841715,0
+                151.2050212,-33.8837083,0
+                151.2053994,-33.8832274,0
+                151.2059274,-33.8825557,0
+                151.2058537,-33.8825195,0
+                151.2055197,-33.8829582,0
+                151.204939,-33.8837147,0
+                151.2046105,-33.8841345,0
+                151.2043033,-33.8845893,0
+                151.2038031,-33.8853814,0
+                151.2038306,-33.8853931,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 852</name>
+        <description><![CDATA[description: <br>STATION: Sydney Central<br><br>PLATFORMNO: 2]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Sydney Central
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>2</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                151.2041601,-33.885079,0
+                151.20431,-33.8848828,0
+                151.2044763,-33.8846568,0
+                151.2046587,-33.8844263,0
+                151.2049591,-33.8840422,0
+                151.2053976,-33.8834788,0
+                151.2060682,-33.8826249,0
+                151.2060172,-33.8826004,0
+                151.2055559,-33.8831983,0
+                151.2051348,-33.883736,0
+                151.2048022,-33.8841691,0
+                151.2045487,-33.8844831,0
+                151.2043958,-33.884689,0
+                151.2042788,-33.8848669,0
+                151.2041434,-33.8850706,0
+                151.2041601,-33.885079,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 853</name>
+        <description><![CDATA[description: <br>STATION: Sydney Central<br><br>PLATFORMNO: 3]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Sydney Central
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>3</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                151.2041738,-33.8850877,0
+                151.2044595,-33.8847604,0
+                151.2049148,-33.8841776,0
+                151.2054512,-33.8834985,0
+                151.2061184,-33.882654,0
+                151.2060682,-33.8826249,0
+                151.2053976,-33.8834788,0
+                151.2049591,-33.8840422,0
+                151.2046587,-33.8844263,0
+                151.2044763,-33.8846568,0
+                151.20431,-33.8848828,0
+                151.2041601,-33.885079,0
+                151.2041738,-33.8850877,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 854</name>
+        <description><![CDATA[description: <br>STATION: Sydney Central<br><br>PLATFORMNO: 4]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Sydney Central
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>4</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                151.2061973,-33.8827023,0
+                151.2049849,-33.8842732,0
+                151.2050265,-33.8843,0
+                151.2062442,-33.8827212,0
+                151.2061973,-33.8827023,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 855</name>
+        <description><![CDATA[description: <br>STATION: Sydney Central<br><br>PLATFORMNO: 5]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Sydney Central
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>5</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                151.2062952,-33.882751,0
+                151.2062442,-33.8827212,0
+                151.2050265,-33.8843,0
+                151.2050641,-33.8843253,0
+                151.2062952,-33.882751,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 856</name>
+        <description><![CDATA[description: <br>STATION: Sydney Central<br><br>PLATFORMNO: 6<br>]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Sydney Central
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>6
+</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                151.2063824,-33.8827974,0
+                151.2051553,-33.8843906,0
+                151.2051982,-33.8844151,0
+                151.206432,-33.8828196,0
+                151.2063824,-33.8827974,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 857</name>
+        <description><![CDATA[description: <br>STATION: Sydney Central<br><br>PLATFORMNO: 7]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Sydney Central
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>7</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                151.2064789,-33.8828508,0
+                151.206432,-33.8828196,0
+                151.2051982,-33.8844151,0
+                151.2052357,-33.8844373,0
+                151.2064789,-33.8828508,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 858</name>
+        <description><![CDATA[description: <br>STATION: Sydney Central<br><br>PLATFORMNO: 8]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Sydney Central
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>8</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                151.2065634,-33.882897,0
+                151.2052103,-33.8846427,0
+                151.2052518,-33.8846639,0
+                151.2064558,-33.8831275,0
+                151.2066157,-33.8829204,0
+                151.2065634,-33.882897,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 859</name>
+        <description><![CDATA[description: <br>STATION: Sydney Central<br><br>PLATFORMNO: 9]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Sydney Central
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>9</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                151.2065,-33.8831508,0
+                151.2064558,-33.8831275,0
+                151.2052518,-33.8846639,0
+                151.2052904,-33.8846873,0
+                151.2065,-33.8831508,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 860</name>
+        <description><![CDATA[description: <br>STATION: Sydney Central<br><br>PLATFORMNO: 10]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Sydney Central
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>10</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                151.2066181,-33.8832672,0
+                151.2065537,-33.8832349,0
+                151.2053816,-33.8847491,0
+                151.2054339,-33.884778,0
+                151.2066181,-33.8832672,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 861</name>
+        <description><![CDATA[description: <br>STATION: Sydney Central<br><br>PLATFORMNO: 11]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Sydney Central
+</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>11</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                151.2054795,-33.8847989,0
+                151.206669,-33.8832936,0
+                151.2066181,-33.8832672,0
+                151.2054339,-33.884778,0
+                151.2054795,-33.8847989,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 862</name>
+        <description><![CDATA[description: <br>STATION: Sydney Central<br>PLATFORMNO: 12]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Sydney Central</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>12</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                151.2056377,-33.8847514,0
+                151.205914,-33.884462,0
+                151.2067803,-33.883352,0
+                151.2067253,-33.8833241,0
+                151.205623,-33.8847403,0
+                151.2056377,-33.8847514,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 863</name>
+        <description><![CDATA[description: <br>STATION: Sydney Central<br>PLATFORMNO: 13<br>]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Sydney Central</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>13
+</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                151.2056498,-33.8847572,0
+                151.2058791,-33.8845624,0
+                151.2060481,-33.8843865,0
+                151.2068393,-33.8833822,0
+                151.2067803,-33.883352,0
+                151.205914,-33.884462,0
+                151.2056377,-33.8847514,0
+                151.2056498,-33.8847572,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 864</name>
+        <description><![CDATA[description: <br>STATION: Sydney Central<br>PLATFORMNO: 14]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Sydney Central</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>14</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                151.2055613,-33.8849332,0
+                151.205694,-33.8848419,0
+                151.2058872,-33.884696,0
+                151.2060937,-33.8845146,0
+                151.2062211,-33.8843821,0
+                151.2069574,-33.883438,0
+                151.2069091,-33.8834146,0
+                151.2062828,-33.8842084,0
+                151.2060374,-33.8845046,0
+                151.2057933,-33.8847328,0
+                151.2055505,-33.8849165,0
+                151.2055613,-33.8849332,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Polygon 865</name>
+        <description><![CDATA[description: <br>STATION: Sydney Central<br>PLATFORMNO: 15]]></description>
+        <styleUrl>#poly-000000-1200-77</styleUrl>
+        <ExtendedData>
+          <Data name="description">
+            <value/>
+          </Data>
+          <Data name="STATION">
+            <value>Sydney Central</value>
+          </Data>
+          <Data name="PLATFORMNO">
+            <value>15</value>
+          </Data>
+        </ExtendedData>
+        <Polygon>
+          <outerBoundaryIs>
+            <LinearRing>
+              <tessellate>1</tessellate>
+              <coordinates>
+                151.205568,-33.8849488,0
+                151.2057463,-33.8848374,0
+                151.2059153,-33.8847228,0
+                151.2060856,-33.8845869,0
+                151.2062573,-33.8844277,0
+                151.2070164,-33.8834703,0
+                151.2069574,-33.883438,0
+                151.2062211,-33.8843821,0
+                151.2060937,-33.8845146,0
+                151.2058872,-33.884696,0
+                151.205694,-33.8848419,0
+                151.2055613,-33.8849332,0
+                151.205568,-33.8849488,0
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
     </Folder>
   </Document>
 </kml>
