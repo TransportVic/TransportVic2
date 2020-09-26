@@ -17,19 +17,10 @@ async function loadDepartures(req, res) {
 
   departures = departures.map(departure => {
     departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
-
-    departure.headwayDevianceClass = 'unknown'
-    if (departure.estimatedDepartureTime) {
-      departure.headwayDeviance = departure.scheduledDepartureTime.diff(departure.estimatedDepartureTime, 'minutes')
-
-      // trains cannot be early
-      let lateThreshold = 5
-      if (departure.headwayDeviance <= -lateThreshold) { // <= 5min counts as late
-        departure.headwayDevianceClass = 'late'
-      } else {
-        departure.headwayDevianceClass = 'on-time'
-      }
-    }
+    departure.headwayDevianceClass = utils.findHeadwayDeviance(departure.scheduledDepartureTime, departure.estimatedDepartureTime, {
+      early: 0,
+      late: 5
+    })
 
     let stationName = station.stopName
     if (stationName === 'Southern Cross Railway Station' && departure.isRailReplacementBus)

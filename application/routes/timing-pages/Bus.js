@@ -22,19 +22,11 @@ async function loadDepartures(req, res) {
 
   departures = await async.map(departures, async departure => {
     departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, false, false)
+    departure.headwayDevianceClass = utils.findHeadwayDeviance(departure.scheduledDepartureTime, departure.estimatedDepartureTime, {
+      early: 2,
+      late: 5
+    })
 
-    departure.headwayDevianceClass = 'unknown'
-    if (departure.estimatedDepartureTime) {
-      departure.headwayDeviance = departure.scheduledDepartureTime.diff(departure.estimatedDepartureTime, 'minutes')
-
-      if (departure.headwayDeviance > 2) {
-        departure.headwayDevianceClass = 'early'
-      } else if (departure.headwayDeviance <= -5) {
-        departure.headwayDevianceClass = 'late'
-      } else {
-        departure.headwayDevianceClass = 'on-time'
-      }
-    }
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
     let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))

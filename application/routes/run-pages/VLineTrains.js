@@ -219,20 +219,12 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
 
     if (!isLive || (isLive && stop.estimatedDepartureTime)) {
       let scheduledDepartureTime = tripStartTime.clone().add((stop.departureTimeMinutes || stop.arrivalTimeMinutes) - firstDepartureTime, 'minutes')
-      let estimatedDepartureTime
+      let estimatedDepartureTime = stop.estimatedDepartureTime
 
-      if (stop.estimatedDepartureTime) {
-        estimatedDepartureTime = utils.parseTime(stop.estimatedDepartureTime)
-        let headwayDeviance = scheduledDepartureTime.diff(estimatedDepartureTime, 'minutes')
-
-        if (headwayDeviance > 0) {
-          stop.headwayDevianceClass = 'early'
-        } else if (headwayDeviance <= -5) { // <= 5min counts as late
-          stop.headwayDevianceClass = 'late'
-        } else {
-          stop.headwayDevianceClass = 'on-time'
-        }
-      }
+      stop.headwayDevianceClass = utils.findHeadwayDeviance(scheduledDepartureTime, estimatedDepartureTime, {
+        early: 2,
+        late: 5
+      })
 
       if (isLive && !stop.estimatedDepartureTime) return stop
       stop.pretyTimeToDeparture = utils.prettyTime(estimatedDepartureTime || scheduledDepartureTime, true, true)

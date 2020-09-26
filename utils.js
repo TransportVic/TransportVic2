@@ -392,6 +392,7 @@ module.exports = {
     else return module.exports.parseTime(date, 'YYYYMMDD')
   },
   prettyTime: (time, showHours, blankOld) => {
+    time = module.exports.parseTime(time)
     let timeDifference = moment.utc(time.diff(module.exports.now()))
 
     if (blankOld && +timeDifference <= -30000) return ''
@@ -411,5 +412,17 @@ module.exports = {
     }
 
     return prettyTime.trim()
+  },
+  findHeadwayDeviance: (scheduledDepartureTime, estimatedDepartureTime, thresholds) => {
+    if (!estimatedDepartureTime) return 'unknown'
+    let headwayDeviance = scheduledDepartureTime.diff(estimatedDepartureTime, 'seconds') / 60
+
+    if (headwayDeviance > thresholds.early) {
+      return 'early'
+    } else if (headwayDeviance <= -thresholds.late) {
+      return 'late'
+    } else {
+      return 'on-time'
+    }
   }
 }

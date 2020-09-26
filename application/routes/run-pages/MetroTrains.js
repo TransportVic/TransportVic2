@@ -184,7 +184,9 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
 
   let { trip, tripStartTime, isLive } = tripData
 
-  let firstDepartureTime = trip.stopTimings[0].departureTimeMinutes
+  let trueOrigin = trip.stopTimings.find(stop => stop.stopName === trip.trueOrigin)
+  let firstDepartureTime = trueOrigin.departureTimeMinutes
+
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.pretyTimeToDeparture = ''
 
@@ -198,21 +200,14 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
 
     if (!isLive || (isLive && stop.estimatedDepartureTime)) {
       let scheduledDepartureTime = tripStartTime.clone().add((stop.departureTimeMinutes || stop.arrivalTimeMinutes) - firstDepartureTime, 'minutes')
-      let estimatedDepartureTime
+      let estimatedDepartureTime = stop.estimatedDepartureTime
 
-      if (stop.estimatedDepartureTime) {
-        estimatedDepartureTime = utils.parseTime(stop.estimatedDepartureTime)
-        let headwayDeviance = scheduledDepartureTime.diff(estimatedDepartureTime, 'minutes')
+      stop.headwayDevianceClass = utils.findHeadwayDeviance(scheduledDepartureTime, estimatedDepartureTime, {
+        early: 1,
+        late: 5
+      })
 
-        // trains cannot be early
-        if (headwayDeviance <= -5) { // <= 5min counts as late
-          stop.headwayDevianceClass = 'late'
-        } else {
-          stop.headwayDevianceClass = 'on-time'
-        }
-      }
-
-      if (isLive && !stop.estimatedDepartureTime) return stop
+      if (isLive && !estimatedDepartureTime) return stop
       stop.pretyTimeToDeparture = utils.prettyTime(estimatedDepartureTime || scheduledDepartureTime, true, true)
     }
     return stop
