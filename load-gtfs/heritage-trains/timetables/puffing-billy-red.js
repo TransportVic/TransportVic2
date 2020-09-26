@@ -2,13 +2,13 @@ const utils = require('../../../utils')
 const moment = require('moment')
 
 function dateRange(name, start, end, type) {
-  let startDate = utils.parseTime(start, 'YYYYMMDD')
-  let endDate = utils.parseTime(end, 'YYYYMMDD')
+  let startDate = utils.parseDate(start)
+  let endDate = utils.parseDate(end)
 
   let allDatesInbetween = utils.allDaysBetweenDates(startDate, endDate)
 
   return allDatesInbetween.map(date => {
-    return [name, date, type]
+    return [name, utils.getYYYYMMDD(date), type]
   })
 }
 

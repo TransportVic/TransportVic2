@@ -48,7 +48,7 @@ database.connect({
   }, {name: 'just stop gtfs id index'})
 
   await stops.createIndex({
-    "$**": "text"
+    '$**': 'text'
   }, {name: 'text index'})
 
   await stops.createIndex({
@@ -89,18 +89,14 @@ database.connect({
   console.log('Created route indices')
 
   await gtfsTimetables.createIndex({
-    mode: 1,
-    routeName: 1,
     routeGTFSID: 1,
     operationDays: 1,
     destination: 1,
     origin: 1,
     departureTime: 1,
-    destination: 1,
     destinationArrivalTime: 1,
-    tripID: 1,
-    shapeID: 1
-  }, {unique: true, name: 'gtfs timetable index'})
+    tripID: 1 // Ideally tripID wouldn't be included but there's duplicate trips in the dataset so...
+  }, {name: 'gtfs timetable index', unique: true})
 
   await gtfsTimetables.createIndex({
     shapeID: 1
@@ -111,16 +107,12 @@ database.connect({
   }, {name: 'gtfs mode index'})
 
   await gtfsTimetables.createIndex({
-    tripID: 1
-  }, {name: 'tripID index', unique: true})
-
-  await gtfsTimetables.createIndex({
     runID: 1
   }, {name: 'runID index', sparse: true})
 
   await gtfsTimetables.createIndex({
     operationDays: 1,
-    routeGTFSID: 1,
+    routeGTFSID: 1
   }, {name: 'operationDays + routeGTFSID index'})
 
   await gtfsTimetables.createIndex({
@@ -128,7 +120,7 @@ database.connect({
     'stopTimings.departureTimeMinutes': 1,
     mode: 1,
     routeGTFSID: 1,
-    destination: 1,
+    destination: 1
   }, {name: 'stop timings gtfs index'})
 
   await gtfsTimetables.createIndex({
