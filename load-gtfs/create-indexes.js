@@ -70,11 +70,11 @@ database.connect({
 
   await stops.createIndex({
     'tramTrackerNames': 1
-  }, {name: 'tramtracker name index', sparse: true})
+  }, {name: 'tramtracker name index'})
 
   await stops.createIndex({
     'bays.tramTrackerIDs': 1
-  }, {name: 'tramtracker id index', sparse: true})
+  }, {name: 'tramtracker id index'})
 
   await stops.createIndex({
     'bays.stopNumber': 1
@@ -83,12 +83,6 @@ database.connect({
   await stops.createIndex({
     'bays.vnetStationName': 1
   }, {name: 'vnet station name index', sparse: true})
-
-  await stops.createIndex({
-    'bays.flags.tramtrackerName': 1,
-    'bays.flags.services': 1
-  }, {name: 'tramtracker name + services index', sparse: true})
-
 
   console.log('Created stops indices')
 
@@ -194,7 +188,7 @@ database.connect({
     destination: 1,
     departureTime: 1,
     destinationArrivalTime: 1
-  }, {unique: true, name: 'live timetable index'})
+  }, {name: 'live timetable index', unique: true})
 
   await liveTimetables.createIndex({
     operationDays: 1
@@ -306,6 +300,6 @@ database.connect({
 
   console.log('Created tourbusminder index')
 
-  updateStats('create-indexes', 35)
+  updateStats('create-indexes', 47)
   process.exit()
 })
