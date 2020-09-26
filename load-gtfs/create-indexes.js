@@ -250,8 +250,7 @@ database.connect({
     origin: 1,
     destination: 1,
     departureTime: 1,
-    destinationArrivalTime: 1,
-    tram: 1
+    destinationArrivalTime: 1
   }, {name: 'tram trips index', unique: true})
 
   await tramTrips.createIndex({
