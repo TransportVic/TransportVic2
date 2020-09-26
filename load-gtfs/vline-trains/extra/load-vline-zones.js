@@ -39,8 +39,8 @@ database.connect({
       if (zone === '') { // non-myki zone
         await updateStop(properties.STATION, 'Paper Ticketed')
       } else {
-        let zones = zone.split(', ').map(e=>parseInt(e)).sort((a, b) => a - b)
-        if (zones.includes(1)) zones.pop()
+        let zones = zone.split(', ').map(e => parseInt(e)).sort((a, b) => a - b)
+        if (zones.includes(1) && zones.length > 1) zones.shift()
 
         await updateStop(properties.STATION, zones)
       }

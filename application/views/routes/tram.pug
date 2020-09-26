@@ -6,7 +6,11 @@ block head
   meta(property='twitter:title' content=`TransportVic - Tram Route ${route.routeNumber}`)
   meta(property='og:description' content=`Tram Route ${route.routeNumber}: ${name}`)
   meta(property='twitter:description' content=`Tram Route ${route.routeNumber}: ${name}`)
-  
+
+block header-right
+  a#mapLink(href=`/route-preview/${route.routeGTFSID}`)
+    img#mapIcon(src='/static/images/decals/map.svg' alt='map icon')
+
 block title
   span Tram Route #{route.routeNumber}
 

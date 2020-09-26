@@ -68,6 +68,15 @@ $.ready(() => {
         if (bay.tramTrackerID) {
           name += `<br>TramTracker ID: ${bay.tramTrackerID}`
         }
+        if (bay.mykiZones.length) {
+          if (bay.mykiZones === 'Paper Ticketed') {
+            name += '<br>Paper Ticket'
+          } else if (bay.mykiZones.includes(0)) {
+            name += `<br>Myki: Free Tram Zone`
+          } else {
+            name += `<br>Myki: Zone${bay.mykiZones.length > 1 ? 's' : ''} ${bay.mykiZones.join(', ')}`
+          }
+        }
 
         marker.bindPopup(name)
       })

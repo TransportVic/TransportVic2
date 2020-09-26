@@ -8,7 +8,11 @@ block head
   meta(property='twitter:title' content=`TransportVic - ${name}`)
   meta(property='og:description' content=`${name}`)
   meta(property='twitter:description' content=`${name}`)
-  
+
+block header-right
+  a#mapLink(href=`/route-preview/${route.routeGTFSID}`)
+    img#mapIcon(src='/static/images/decals/map.svg' alt='map icon')
+
 block title
   span #{name}
 
@@ -19,7 +23,7 @@ block style
 block content
   div#routeSummary
     a(class=cssName href=`/${niceMode}/line/${route.codedName}/${codedDirectionNames[1]}`)#routeNumber
-      span#routeType=mode === 'vline' ? 'V/Line Train' : 'Metro Train'
+      span#routeType=route.routeGTFSID === '14-XPT' ? 'NSW TrainLink' : route.mode === 'regional train' ? 'V/Line Train' : 'Metro Train'
       span#routeText #{lineCode}
     div#terminals
       a.coloured-row.full

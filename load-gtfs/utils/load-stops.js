@@ -49,7 +49,14 @@ module.exports = async function(stops, data, stopsLookup) {
         matchingBay.originalName = stop.originalName
         matchingBay.fullStopName = stop.fullStopName
         matchingBay.location = stop.location
-        matchingBay.mykiZones = datamartStop.mykiZones
+
+        datamartStop.mykiZones.forEach(zone => {
+          if (matchingBay.mykiZones.includes(zone)) {
+            matchingBay.mykiZones.push(zone)
+          }
+        })
+
+        matchingBay.mykiZones = matchingBay.mykiZones.sort((a, b) => a - b)
 
         if (stop.mode === 'bus') {
           matchingBay.flags = {

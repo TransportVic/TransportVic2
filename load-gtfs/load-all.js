@@ -47,6 +47,12 @@ async function main() {
     await discordUpdate('[Updater]: Finished loading V/Line data')
   } else await discordUpdate('[Updater]: Skipping V/Line')
 
+  if (moduleEnabled('xpt')) {
+    await discordUpdate('[Updater]: Loading XPT data')
+    await spawnProcess(l('xpt/load-all.sh'))
+    await discordUpdate('[Updater]: Finished loading XPT data')
+  } else await discordUpdate('[Updater]: Skipping XPT')
+
   if (moduleEnabled('coach')) {
     await discordUpdate('[Updater]: Loading Coach data')
     await spawnProcess(l('regional-coach/load-all.sh'))

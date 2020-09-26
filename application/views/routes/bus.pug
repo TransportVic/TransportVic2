@@ -20,9 +20,12 @@ block head
   meta(property='twitter:title' content=`TransportVic - ${type} ${identifier}`)
   meta(property='og:description' content=`${type} ${identifier}: ${name}`)
   meta(property='twitter:description' content=`${type} ${identifier}: ${name}`)
-  
+
+block header-right
+  a#mapLink(href=`/route-preview/${route.routeGTFSID}`)
+    img#mapIcon(src='/static/images/decals/map.svg' alt='map icon')
+
 block title
-    
   span #{type} #{identifier}
 
 block style

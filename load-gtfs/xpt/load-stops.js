@@ -33,7 +33,7 @@ let permittedStops = [
 ]
 
 let suburbs = {
-  Central: "Sydney, NSW",
+  "Sydney Central": "Sydney, NSW",
   "Wagga Wagga": "Turvey Park, NSW",
   "Southern Cross": "Melbourne City"
 }

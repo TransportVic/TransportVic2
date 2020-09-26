@@ -28,10 +28,7 @@ database.connect({}, async err => {
 
   await async.forEach(allRoutes, async routeGTFSID => {
     let routeData = await routes.findDocument({ routeGTFSID })
-    let routeVariants = routeData.routePath
-      .map(variant => variant.fullGTFSIDs.slice(0, 1))
-      .reduce((acc, r) => acc.concat(r), [])
-      .map(shapeID => ({ shapeID }))
+    let routeVariants = routeData.routePath.map(variant => ({ shapeID: variant.fullGTFSIDs[0] }))
 
     // Because sydney uses 1 route shape for all variants this trick doesn't work
     // Only one route, XPT doesn't have too many trips so additional overhead is acceptable
