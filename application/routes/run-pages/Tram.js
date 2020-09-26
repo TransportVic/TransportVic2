@@ -85,33 +85,39 @@ async function pickBestTrip(data, db) {
     let tramInfo = rawTramTimings.responseObject
     let coreRoute = tramInfo.HeadBoardRouteNo.replace(/[a-z]/, '')
 
+    let isLayover = tramInfo.AtLayover
+
     let destinationArrivalTime = parseInt(tramInfo.NextPredictedStopsDetails.slice(-1)[0].PredictedArrivalDateTime.slice(0, -1).match(/(\d+)\+/)[1])
     let failed = false
 
-    for (let predictedStop of tramInfo.NextPredictedStopsDetails) {
-      let tramTrackerID = predictedStop.StopNo.toString()
-      let stopData = await stops.findDocument({
-        'bays.tramTrackerID': tramTrackerID
-      })
+    if (!isLayover) {
+      for (let predictedStop of tramInfo.NextPredictedStopsDetails) {
+        let tramTrackerID = predictedStop.StopNo.toString()
+        let stopData = await stops.findDocument({
+          'bays.tramTrackerID': tramTrackerID
+        })
 
-      let associatedTripStop
-      if (stopData) {
-        let bay = stopData.bays.find(bay => bay.tramTrackerID === tramTrackerID)
-        associatedTripStop = gtfsTrip.stopTimings.find(stop => stop.stopGTFSID === bay.stopGTFSID)
-      } else if (!stopData && tramTrackerID > 5000) {
-        associatedTripStop = gtfsTrip.stopTimings.slice(-1)[0]
-      }
+        let associatedTripStop
+        if (stopData) {
+          let bay = stopData.bays.find(bay => bay.tramTrackerID === tramTrackerID)
+          associatedTripStop = gtfsTrip.stopTimings.find(stop => stop.stopGTFSID === bay.stopGTFSID)
+        } else if (!stopData && tramTrackerID > 5000) {
+          associatedTripStop = gtfsTrip.stopTimings.slice(-1)[0]
+        }
 
-      if (!associatedTripStop) {
-        failed = true
-        break
+        if (!associatedTripStop) {
+          failed = true
+          break
+        }
+        let estimatedTimeMS = parseInt(predictedStop.PredictedArrivalDateTime.slice(0, -1).match(/(\d+)\+/)[1])
+        associatedTripStop.estimatedDepartureTime = utils.parseTime(estimatedTimeMS).toISOString()
       }
-      let estimatedTimeMS = parseInt(predictedStop.PredictedArrivalDateTime.slice(0, -1).match(/(\d+)\+/)[1])
-      associatedTripStop.estimatedDepartureTime = utils.parseTime(estimatedTimeMS).toISOString()
     }
 
-    if (failed) {
+    if (failed || isLayover) {
       let tripDifference = tripStartTime.diff(destinationArrivalTime, 'minutes')
+      if (isLayover) tripDifference = 0
+
       if (tripDifference <= 15) {
         let stopCount = gtfsTrip.stopTimings.length
         let tripStartMinutes = gtfsTrip.stopTimings[0].departureTimeMinutes
