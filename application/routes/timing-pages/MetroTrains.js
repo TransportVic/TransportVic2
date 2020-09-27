@@ -18,7 +18,7 @@ async function loadDepartures(req, res) {
   departures = departures.map(departure => {
     departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
     departure.headwayDevianceClass = utils.findHeadwayDeviance(departure.scheduledDepartureTime, departure.estimatedDepartureTime, {
-      early: 2,
+      early: 0,
       late: 5
     })
 
