@@ -138,12 +138,12 @@ let lineColours = {
 }
 
 function identifyTargetStop(departure, target) {
-  let targetStop = departure.stopTimings.find(stop => stop.stopName.slice(0, -16) === target)
+  let targetStop = departure.stopTimings.find(stop => stop.stopName === target)
 
   let actualDepartureTime = new Date(departure.actualDepartureTime)
   let scheduledDepartureTime = new Date(departure.scheduledDepartureTime)
 
-  let fssStop = departure.stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
+  let fssStop = departure.stopTimings.find(stop => stop.stopName === 'Flinders Street')
   let fssMinutes = fssStop.departureTimeMinutes
   let targetMinutes = targetStop.arrivalTimeMinutes
 
@@ -161,7 +161,7 @@ function setDestinationsRow(departures) {
     let {target, id} = section
 
     let validDepartures = departures.filter(departure => {
-      return departure.type !== 'vline' && !!departure.additionalInfo.screenStops.find(stop => stop.stopName === target && !stop.isExpress)
+      return departure.type !== 'vline' && departure.stopTimings.some(stop => stop.stopName === target)
     }).map(departure => {
       return identifyTargetStop(departure, target)
     }).sort((a, b) => a.targetActualTime - b.targetActualTime)
@@ -189,12 +189,12 @@ function updateDiagram(departures) {
     let nextDeparture = departures.filter(departure => {
       if (departure.type === 'vline') return false
       for (let target of targets) {
-        if (!departure.additionalInfo.screenStops.find(stop => stop.stopName === target && !stop.isExpress))
+        if (!departure.stopTimings.find(stop => stop.stopName === target))
           return false
       }
       if (not) {
         for (let excluded of not)
-          if (departure.additionalInfo.screenStops.find(stop => stop.stopName === excluded && !stop.isExpress))
+          if (departure.stopTimings.find(stop => stop.stopName === excluded))
             return false
       }
       return true
@@ -227,6 +227,7 @@ function updateBody() {
       setSVGSize()
       $('#cclSVG').setAttribute('display', '')
     } catch (e) {
+      console.log(e)
       setListenAnnouncements()
     }
   })

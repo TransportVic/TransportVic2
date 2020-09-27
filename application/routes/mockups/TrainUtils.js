@@ -154,7 +154,7 @@ module.exports = {
         codedLineName: utils.encodeName(arrival.routeName),
         additionalInfo: {
           screenStops: [],
-          expressCount: [],
+          expressCount: 0,
           viaCityLoop: false,
           direction: upService ? 'Up' : 'Down',
           via: '',
@@ -612,8 +612,8 @@ module.exports = {
       }
     })
   },
-  trimDepartureData: (departures, maxDepartures, addStopTimings) => {
-    return departures.map(departure => {
+  trimDepartureData: (departures, maxDepartures, addStopTimings, fromStop) => {
+    return departures.map((departure, i) => {
       let data = {
         destination: departure.destination,
         scheduledDepartureTime: departure.scheduledDepartureTime,
@@ -632,8 +632,19 @@ module.exports = {
         direction: departure.trip.direction
       }
 
-      if (addStopTimings) data.stopTimings = departure.stopTimings.map(stop => ({
-        stopName: stop.stopName,
+      if (i > 1) data.additionalInfo.screenStops = []
+
+      let hasSeenStop = false
+
+      if (addStopTimings) data.stopTimings = departure.stopTimings.filter(stop => {
+        if (hasSeenStop) return true
+        if (stop.stopName === fromStop) {
+          hasSeenStop = true
+          return true
+        }
+        return false
+      }).map(stop => ({
+        stopName: stop.stopName.slice(0, -16),
         arrivalTimeMinutes: stop.arrivalTimeMinutes,
         departureTimeMinutes: stop.departureTimeMinutes
       }))
@@ -716,7 +727,7 @@ module.exports = {
 
     let hasDepartures = allDepartures.length > 0
 
-    let output = { departures: module.exports.trimDepartureData(platformDepartures, maxDepartures, addStopTimings), hasDepartures, hasRRB }
+    let output = { departures: module.exports.trimDepartureData(platformDepartures, maxDepartures, addStopTimings, station.stopName), hasDepartures, hasRRB }
 
     departuresLock[cacheKey].emit('done', output)
     delete departuresLock[cacheKey]
