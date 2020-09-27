@@ -57,10 +57,16 @@ database.connect({}, async err => {
 
   let count = 0
 
+  let shapeCache = {}
+
   await async.forEachSeries(allRoutes, async routeGTFSID => {
     let routeData = await routes.findDocument({ routeGTFSID })
-    let brokenShapes = routeData.routePath.filter(path => {
+    let brokenShapes = await async.filter(routeData.routePath, async path => {
       if (path.fixed) return false
+      let timetable = await gtfsTimetables.findDocument({ shapeID: path.fullGTFSIDs[0] })
+      shapeCache[path.fullGTFSIDs[0]] = timetable
+
+      if ([timetable.origin, timetable.destination].includes('Southern Cross Coach Terminal/Spencer Street')) return true
 
       let forceFail = false
 
@@ -94,15 +100,16 @@ database.connect({}, async err => {
         return false
       }).length > 2 || forceFail
     })
-    if (brokenShapes.length) console.log(routeData.routeName, routeGTFSID)
+
     await async.forEachSeries(brokenShapes, async shape => {
-      let timetable = await gtfsTimetables.findDocument({ shapeID: shape.fullGTFSIDs[0] })
+      let timetable = shapeCache[shape.fullGTFSIDs[0]]
       if (!timetable) return
       if (timetable.stopTimings.length > 25) return console.log('Don\'t know how to deal with long route!', timetable.shapeID)
 
       count++
 
       let stopCoordinates = (await async.map(timetable.stopTimings, async stop => {
+        if (stop.stopName === 'Southern Cross Coach Terminal/Spencer Street') return '144.952117,-37.815994'
         let stopData = await stops.findDocument({ 'bays.stopGTFSID': stop.stopGTFSID })
         let bay = stopData.bays.find(bay => bay.stopGTFSID === stop.stopGTFSID && bay.mode === 'regional coach')
         return bay.location.coordinates.join(',')

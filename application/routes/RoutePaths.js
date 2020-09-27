@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
 router.post('/', async (req, res) => {
   let start = new Date()
   let routes = res.db.getCollection('routes')
-  let modes = ['bus', 'metro train', 'regional train', 'heritage train', 'tram', 'regional coach', 'ferry']
+  let modes = ['bus', 'regional train', 'heritage train', 'tram', 'regional coach', 'ferry', 'metro train']
 
   let modeRoutePaths = {}
 
