@@ -123,8 +123,8 @@ router.post('/', async (req, res) => {
 
   let activeTrips = tripsToday.filter(trip => {
     let {departureTime, destinationArrivalTime} = trip
-    let departureTimeMinutes = utils.getMinutesPastMidnightFromTime24(departureTime)
-    let destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromTime24(destinationArrivalTime)
+    let departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime)
+    let destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(destinationArrivalTime)
     if (destinationArrivalTimeMinutes < departureTimeMinutes) destinationArrivalTimeMinutes += 1440
 
     return minutesPastMidnightNow <= destinationArrivalTimeMinutes

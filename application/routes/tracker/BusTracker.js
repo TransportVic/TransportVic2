@@ -214,8 +214,8 @@ router.get('/service', async (req, res) => {
 
   let activeTripsNow = rawTripsToday.filter(trip => {
     let {departureTime, destinationArrivalTime} = trip
-    let departureTimeMinutes = utils.getMinutesPastMidnightFromTime24(departureTime),
-        destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromTime24(destinationArrivalTime)
+    let departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime),
+        destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(destinationArrivalTime)
 
     return minutesPastMidnightNow <= destinationArrivalTimeMinutes
   })
@@ -306,7 +306,7 @@ router.get('/unknown', async (req, res) => {
   }).sort({departureTime: 1, origin: 1}).toArray()
 
   let activeTripsNow = rawTripsToday.filter(trip => {
-    let destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromTime24(trip.destinationArrivalTime)
+    let destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(trip.destinationArrivalTime)
 
     return minutesPastMidnightNow <= destinationArrivalTimeMinutes
   })

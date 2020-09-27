@@ -541,7 +541,7 @@ async function appendArrivalData(arrival, timetables) {
     if (forming) { // only consider empty car movements
       arrival.showDeparture = 'OFF'
       let departureTime = forming.tripTimings[0].departureTime
-      let minutesPastMidnight = utils.getMinutesPastMidnightFromTime24(departureTime)
+      let minutesPastMidnight = utils.getMinutesPastMidnightFromHHMM(departureTime)
       arrival.formingID = forming.runID
       arrival.formingDepartureTime = utils.getMomentFromMinutesPastMidnight(minutesPastMidnight, utils.now())
     }

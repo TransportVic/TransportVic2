@@ -73,8 +73,8 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
     || busDestinations.generic[oA] || busDestinations.generic[oB] || oB)
 
   let {departureTime, destinationArrivalTime} = trip
-  let departureTimeMinutes = utils.getMinutesPastMidnightFromTime24(departureTime)
-  let destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromTime24(destinationArrivalTime)
+  let departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime)
+  let destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(destinationArrivalTime)
   if (destinationArrivalTimeMinutes < departureTimeMinutes) destinationArrivalTimeMinutes += 1440
 
   trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today

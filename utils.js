@@ -233,12 +233,12 @@ module.exports = {
   getMomentFromMinutesPastMidnight: (minutes, day) => {
     return day.clone().startOf('day').set('hours', Math.floor(minutes / 60)).set('minutes', minutes % 60)
   },
-  getMinutesPastMidnightFromTime24: time => {
+  getMinutesPastMidnightFromHHMM: time => {
     if (!time) return null
     const parts = time.slice(0, 5).split(':')
     return parts[0] * 60 + parts[1] * 1
   },
-  getTime24FromMinutesPastMidnight: (time, padHour=true) => {
+  getHHMMFromMinutesPastMidnight: (time, padHour=true) => {
     let hours = Math.floor(time / 60)
     let minutes = time % 60
     let mainTime = ''
