@@ -150,7 +150,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
   function matchService(disruption) {
     let text = disruption.description
-    let service = text.match(/the (\d+:\d+[ap]m) ([ \w]*?) to ([ \w]*?) (?:train|service)/i)
+    let service = text.match(/the (\d+:\d+[ap]m) ([ \w]*?) to ([ \w]*?) (?:train|service )?will/i)
 
     if (service) {
       let departureTime = service[1],
@@ -158,7 +158,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
           destination = service[3]
 
       let minutesPastMidnight = utils.getMinutesPastMidnightFromHHMM(departureTime.slice(0, -2))
-      if (departureTime.includes('pm')) minutesPastMidnight += 720
+      if (departureTime.includes('pm') && !departureTime.startsWith('12:')) minutesPastMidnight += 720
 
       return {
         departureTime: utils.getHHMMFromMinutesPastMidnight(minutesPastMidnight),
@@ -197,6 +197,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
     return (description.includes('direct to') && description.includes('not via the city loop'))
      || (description.includes('city loop services') && description.includes('direct between flinders st'))
+     || (description.match(/direct from [\w ]* to flinders st/) && description.includes('not via the city loop'))
   })
 
   let servicesSkippingLoop = []
@@ -204,8 +205,9 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
   cityLoopSkipping.forEach(disruption => {
     let service = matchService(disruption)
-    if (service) servicesSkippingLoop.push(service)
-    else {
+    if (service) {
+      servicesSkippingLoop.push(service)
+    } else {
       linesSkippingLoop = linesSkippingLoop.concat(disruption.routes.map(r => r.route_gtfs_id))
     }
   })
