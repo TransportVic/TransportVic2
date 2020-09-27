@@ -60,14 +60,15 @@ database.connect({}, async err => {
   await async.forEachSeries(allRoutes, async routeGTFSID => {
     let routeData = await routes.findDocument({ routeGTFSID })
     let brokenShapes = routeData.routePath.filter(path => {
+      if (path.fixed) return false
+
       let forceFail = false
 
       let forceFailLength = 30
       let failLength = 20
 
       if (smallerErrorRoutes.includes(routeGTFSID)) {
-        forceLength = 3
-        forceFailLength = 3
+        forceFailLength = 4
       } else if (knownBadRoutes.includes(routeGTFSID) || path.length < 40 * 1000) {
         forceFailLength = 10
         failLength = 6
@@ -93,7 +94,7 @@ database.connect({}, async err => {
         return false
       }).length > 2 || forceFail
     })
-
+    if (brokenShapes.length) console.log(routeData.routeName, routeGTFSID)
     await async.forEachSeries(brokenShapes, async shape => {
       let timetable = await gtfsTimetables.findDocument({ shapeID: shape.fullGTFSIDs[0] })
       if (!timetable) return
@@ -117,6 +118,7 @@ database.connect({}, async err => {
       let badPath = routeData.routePath.find(path => path.fullGTFSIDs.includes(timetable.shapeID))
 
       badPath.path = routePath.coordinates
+      badPath.fixed = true
 
       await asyncPause(750)
     })
