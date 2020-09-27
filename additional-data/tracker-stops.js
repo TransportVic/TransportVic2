@@ -336,5 +336,15 @@ module.exports = [
   'burwood/uganda-street-elgar-road',
   'croydon/arndale-shopping-centre-mount-dandenong-road',
   'croydon/ruskin-avenue-mount-dandenong-road',
-  'ballarat-central/old-post-office'
+  'ballarat-central/old-post-office',
+  'morwell/morwell-bus-interchange-commercial-road',
+  'traralgon/traralgon-plaza-shopping-centre-franklin-street',
+  'traralgon/st-michaels-primary-school',
+  'mount-helen/federation-university-chancellor-drive',
+  'corio/corio-shopping-centre',
+  'waurn-ponds/deakin-university-alfred-deakin-drive',
+  'lara/the-centreway-waverley-road',
+  'lara/archimedes-avenue-rennie-street',
+  'north-shore/north-shore-railway-station',
+  'ballarat-central/davies-street-scott-parade'
 ]

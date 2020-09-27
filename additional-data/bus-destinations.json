@@ -77,10 +77,12 @@
       "Webbs Hill Road/Warrenheip Street": "Buninyong"
     },
     "22": {
-      "Bridge Street/Albert Street": "Sebastopol"
+      "Bridge Street/Albert Street": "Sebastopol",
+      "CFA/Albert Street": "Sebastopol"
     },
     "23": {
-      "Cobden Street/Barkly Street": "Mount Pleasant"
+      "Cobden Street/Barkly Street": "Mount Pleasant",
+      "The Esplanade": "North Shore"
     },
     "24": {
       "Edwards Street/Victoria Street": "Sebastopol"
