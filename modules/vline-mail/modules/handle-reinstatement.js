@@ -1,5 +1,10 @@
 const utils = require('../../../utils')
 const async = require('async')
+const postDiscordUpdate = require('../../discord-integration')
+
+async function discordUpdate(text) {
+  await postDiscordUpdate('vlineInform', text)
+}
 
 async function setServiceAsReinstated(db, service) {
   let now = utils.now()
@@ -24,9 +29,12 @@ async function setServiceAsReinstated(db, service) {
 
   if (trip) {
     console.log(`Marking ${departureTime} ${origin} - ${destination} train as reinstated.`)
+    await discordUpdate(`The ${departureTime} ${origin} - ${destination} service as been reinstated today.`)
+
     await liveTimetables.deleteDocument({ _id: trip._id })
   } else {
     console.log(`Could not mark ${departureTime} ${origin} - ${destination} as reinstated`, query)
+    await discordUpdate(`Was told the ${departureTime} ${origin} - ${destination} service would be reinstated today, but could not match.`)
   }
 }
 

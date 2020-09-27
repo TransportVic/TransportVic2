@@ -8,7 +8,12 @@ const async = require('async')
 
 const config = require('../config.json')
 const urls = require('../urls.json')
-const discordUpdate = require('./discord-integration')
+const postDiscordUpdate = require('../modules/discord-integration')
+
+async function discordUpdate(text) {
+  await postDiscordUpdate('timetables', text)
+}
+
 
 global.gtfsUpdaterLog = []
 

@@ -14,8 +14,6 @@ const stream = fs.createWriteStream('/tmp/mail.txt', { flags: 'a' })
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
-database.connect(async err => {})
-
 async function inboundMessage(data) {
   let sender = data.from.text
   if (!sender.includes('@inform.vline.com.au')) return
@@ -44,21 +42,23 @@ async function handleMessage(subject, text) {
 }
 
 module.exports = () => {
-  nodeMailin.start({
-    port: 25,
-    logLevel: 'error',
-    smtpOptions: {
-      SMTPBanner: 'TransportVic V/Line Inform Email Server'
-    }
-  })
+  database.connect(async err => {
+    nodeMailin.start({
+      port: 25,
+      logLevel: 'error',
+      smtpOptions: {
+        SMTPBanner: 'TransportVic V/Line Inform Email Server'
+      }
+    })
 
-  console.log('V/Line Email server started')
+    console.log('V/Line Email server started')
 
-  nodeMailin.on('message', (connection, data, content) => {
-    inboundMessage(data)
-  })
+    nodeMailin.on('message', (connection, data, content) => {
+      inboundMessage(data)
+    })
 
-  nodeMailin.on('error', err => {
-    console.err(err)
+    nodeMailin.on('error', err => {
+      console.err(err)
+    })
   })
 }

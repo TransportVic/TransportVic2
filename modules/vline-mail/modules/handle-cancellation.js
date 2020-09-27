@@ -1,5 +1,10 @@
 const utils = require('../../../utils')
 const async = require('async')
+const postDiscordUpdate = require('../../discord-integration')
+
+async function discordUpdate(text) {
+  await postDiscordUpdate('vlineInform', text)
+}
 
 async function setServicesAsCancelled(db, services) {
   let now = utils.now()
@@ -40,6 +45,7 @@ async function setServicesAsCancelled(db, services) {
       }
 
       console.log(`Marking ${departureTime} ${origin} - ${destination} train as cancelled.${isCoach ? ' Replacement coaches provided' : ''}`)
+      await discordUpdate(`The ${departureTime} ${origin} - ${destination} service has been cancelled.`)
 
       trip.operationDays = [today]
 
@@ -48,6 +54,7 @@ async function setServicesAsCancelled(db, services) {
       })
     } else {
       console.log('Failed to find trip', query)
+      await discordUpdate(`Was told the ${departureTime} ${origin} - ${destination} service has been cancelled, but could not match.`)
     }
   })
 }

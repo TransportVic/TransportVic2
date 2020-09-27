@@ -1,5 +1,10 @@
 const utils = require('../../../utils')
 const async = require('async')
+const postDiscordUpdate = require('../../discord-integration')
+
+async function discordUpdate(text) {
+  await postDiscordUpdate('vlineInform', text)
+}
 
 async function setServiceAsReducedCapacity(db, departureTime, origin, destination, capacity) {
   let now = utils.now()
@@ -32,6 +37,7 @@ async function setServiceAsReducedCapacity(db, departureTime, origin, destinatio
     }
 
     console.log(`Marking ${departureTime} ${origin} - ${destination} train as reduced capacity - ${capacity} carriages.`)
+    await discordUpdate(`The ${departureTime} ${origin} - ${destination} service will run with a reduced capacity of ${capacity} carriages today`)
 
     trip.operationDays = [today]
 
@@ -40,6 +46,7 @@ async function setServiceAsReducedCapacity(db, departureTime, origin, destinatio
     })
   } else {
     console.log('Failed to find trip', query)
+    await discordUpdate(`Was told the ${departureTime} ${origin} - ${destination} service has a capacity reduction, but could not match.`)
   }
 }
 

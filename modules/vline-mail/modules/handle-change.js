@@ -1,6 +1,11 @@
 const utils = require('../../../utils')
 const cancellation = require('./handle-cancellation')
 const async = require('async')
+const postDiscordUpdate = require('../../discord-integration')
+
+async function discordUpdate(text) {
+  await postDiscordUpdate('vlineInform', text)
+}
 
 async function setServiceAsChanged(db, departureTime, origin, destination, type, changePoint) {
   let now = utils.now()
@@ -69,6 +74,7 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
     }
 
     console.log(`Marking ${departureTime} ${origin} - ${destination} train as changed. Now ${type}s at ${changePoint}`)
+    await discordUpdate(`The ${departureTime} ${origin} - ${destination} service will ${type} ${type === 'originate' ? 'from' : 'at'} ${changePoint} today`)
 
     trip.operationDays = [today]
 
@@ -77,6 +83,7 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
     })
   } else {
     console.log('Failed to find trip', query)
+    await discordUpdate(`Was told the ${departureTime} ${origin} - ${destination} service would ${type} ${type === 'originate' ? 'from' : 'at'} ${changePoint} today, but could not match.`)
   }
 }
 

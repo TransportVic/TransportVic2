@@ -3,7 +3,11 @@ const path = require('path')
 
 const modules = require('../modules')
 const utils = require('../utils')
-const discordUpdate = require('../timetable-updating-server/discord-integration')
+const postDiscordUpdate = require('../modules/discord-integration')
+
+async function discordUpdate(text) {
+  await postDiscordUpdate('timetables', text)
+}
 
 function l(p) {
   return path.join(__dirname, p)
