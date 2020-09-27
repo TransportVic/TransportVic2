@@ -2,7 +2,7 @@ extends ../layout
 
 block head
   
-  - let name = `${route.routeName} Line`
+  - let name = route.routeGTFSID === '2-CCL' ? 'City Circle' : `${route.routeName} Line`
   title TransportVic - #{name}
   meta(property='og:title' content=`TransportVic - ${name}`)
   meta(property='twitter:title' content=`TransportVic - ${name}`)

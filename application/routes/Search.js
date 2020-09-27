@@ -47,6 +47,7 @@ async function findStops(db, query) {
   let search = utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre'))
   let queryRegex = new RegExp(query, 'i')
   let searchRegex = new RegExp(search, 'i')
+  let stationRegex = new RegExp(query.replace(/sta?t?i?o?n?/i, 'railway station'), 'i')
 
   let phoneticQuery = metaphone.process(query)
 
@@ -67,6 +68,8 @@ async function findStops(db, query) {
         stopName: queryRegex
       }, {
         stopName: searchRegex
+      }, {
+        stopName: stationRegex
       }]
     // }]
   }).limit(15 - prioritySearchResults.length).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
@@ -102,6 +105,7 @@ async function findStops(db, query) {
 }
 
 async function findRoutes(db, query) {
+  query = query.replace(/li?n?e?/, '').trim()
   let queryRegex = new RegExp(query, 'i')
 
   let routes = (await db.getCollection('routes').findDocuments({

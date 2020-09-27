@@ -54,6 +54,10 @@ async function render(params, res, matchingRoute) {
 
   let lineCode = stationCodeLookup[matchingRoute.routeName]
   if (matchingRoute.routeGTFSID === '14-XPT') lineCode = 'SYD'
+  if (matchingRoute.routeGTFSID === '2-CCL') {
+    cssName = 'city-circle'
+    lineCode = 'CCL'
+  }
 
   res.render('routes/train', {
     route: matchingRoute,

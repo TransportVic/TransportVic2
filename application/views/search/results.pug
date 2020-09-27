@@ -68,15 +68,18 @@ for busStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'bus'))
         displayName += ` ${stopNumbers}`
       span #{displayName}
       
-      
+
 for metroLine in routes.filter(route => route.mode === 'metro train' && route.directions[0])
-  - let url = `/metro/line/${metroLine.codedName}`
+  -
+    let url = `/metro/line/${metroLine.codedName}`
+    let cssName = metroLine.routeGTFSID === '2-CCL' ? 'city-circle' : `${metroLine.codedName}-line`
+    let routeName = metroLine.routeGTFSID === '2-CCL' ? 'City Circle' : `${metroLine.routeName} Line`
   a(href=url).route.result
-    div(class=`leftContainer ${metroLine.codedName}-line`)
+    div(class=`leftContainer ${cssName}`)
       img(src='/static/images/clear-icons/metro.svg')
     div.resultDetails
       span Metropolitan Train Service
-      span #{metroLine.routeName} Line
+      span #{routeName}
       
 for vlineLine in routes.filter(route => route.mode === 'regional train' && route.directions[0])
   - let url = `/vline/line/${vlineLine.codedName}`
