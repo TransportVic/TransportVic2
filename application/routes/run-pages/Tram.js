@@ -83,7 +83,6 @@ async function pickBestTrip(data, db) {
   try {
     let rawTramTimings = JSON.parse(await utils.request(urls.yarraByFleet.format(tram)))
     let tramInfo = rawTramTimings.responseObject
-    let coreRoute = tramInfo.HeadBoardRouteNo.replace(/[a-z]/, '')
 
     let isLayover = tramInfo.AtLayover
 
@@ -132,7 +131,7 @@ async function pickBestTrip(data, db) {
         failed = false
       }
     } else {
-      gtfsTrip.routeNumber = tramInfo.HeadBoardRouteNo
+      gtfsTrip.routeNumber = tripData.routeNumber
     }
 
     let key = {
