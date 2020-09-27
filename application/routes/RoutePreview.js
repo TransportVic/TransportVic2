@@ -14,8 +14,7 @@ router.post('/:routeGTFSID', async (req, res) => {
   if (!route) return res.json(null)
 
   let routePaths = route.routePath
-  if (route.routeGTFSID.startsWith('5-'))
-    routePaths = routePaths.filter(path => path.path.length > 50)
+
   let allRoutePaths = {
     type: "FeatureCollection",
     features: routePaths.map(path => ({

@@ -34,7 +34,8 @@ $.ready(() => {
     modes.forEach(mode => {
       L.geoJSON(modeRoutePaths[mode], {
         style: {
-          color: colours[mode]
+          color: colours[mode],
+          weight: 1
         }
       }).addTo(map)
     })
