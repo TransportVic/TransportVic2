@@ -26,6 +26,26 @@ function asyncPause(milliseconds) {
   })
 }
 
+let knownBadRoutes = [
+  "5-Ech",
+  "5-my1",
+  "5-Sht",
+  "5-V04",
+  "5-V05",
+  "5-V08",
+  "5-V12",
+  "5-V23",
+  "5-V40",
+  "5-V45",
+  "5-V48",
+  "5-V51"
+]
+
+let smallerErrorRoutes = [
+  "5-V12",
+  "5-V24"
+]
+
 database.connect({}, async err => {
   let gtfsTimetables = database.getCollection('gtfs timetables')
   let routes = database.getCollection('routes')
@@ -42,6 +62,20 @@ database.connect({}, async err => {
     let brokenShapes = routeData.routePath.filter(path => {
       let forceFail = false
 
+      let forceFailLength = 30
+      let failLength = 20
+
+      if (smallerErrorRoutes.includes(routeGTFSID)) {
+        forceLength = 3
+        forceFailLength = 3
+      } else if (knownBadRoutes.includes(routeGTFSID) || path.length < 40 * 1000) {
+        forceFailLength = 10
+        failLength = 6
+      } else if (path.length < 100 * 1000) {
+        forceFailLength = 20
+        failLength = 10
+      }
+
       return path.path.filter((point, i) => {
         let size = 3
         if (i < size) return false
@@ -52,8 +86,9 @@ database.connect({}, async err => {
           let pointB = path.path[j - 1]
           distanceSum += turf.distance(turf.point(pointA), turf.point(pointB))
         }
-        if (distanceSum >= 30) forceFail = true
-        if (distanceSum >= 20) return true
+
+        if (distanceSum >= forceFailLength) return forceFail = true
+        if (distanceSum >= failLength) return true
 
         return false
       }).length > 2 || forceFail
@@ -79,7 +114,10 @@ database.connect({}, async err => {
       if (!routePathData.routes[0]) return console.log('Failed to generate route path for', timetable)
       let routePath = routePathData.routes[0].geometry
 
-      routeData.routePath.find(path => path.fullGTFSIDs.includes(timetable.shapeID)).path = routePath.coordinates
+      let badPath = routeData.routePath.find(path => path.fullGTFSIDs.includes(timetable.shapeID))
+
+      badPath.path = routePath.coordinates
+
       await asyncPause(750)
     })
 
