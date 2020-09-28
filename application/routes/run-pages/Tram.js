@@ -57,7 +57,6 @@ async function pickBestTrip(data, db) {
 
   let referenceTrip = liveTrip || gtfsTrip
 
-  referenceTrip.routeNumber = determineTramRouteNumber(referenceTrip)
 
   let tramTrips = db.getCollection('tram trips')
   let tripData = await tramTrips.findDocument({
@@ -66,7 +65,12 @@ async function pickBestTrip(data, db) {
     origin: referenceTrip.origin,
     destination: referenceTrip.destination
   })
-  if (!tripData) return { trip: referenceTrip, tripStartTime, isLive: false }
+  if (!tripData) {
+    referenceTrip.routeNumber = determineTramRouteNumber(referenceTrip)
+    return { trip: referenceTrip, tripStartTime, isLive: false }
+  } else {
+    referenceTrip.routeNumber = tripData.routeNumber
+  }
 
   let useLive = minutesToTripEnd > -20 && minutesToTripStart < 45
   if (liveTrip) {
@@ -130,8 +134,6 @@ async function pickBestTrip(data, db) {
 
         failed = false
       }
-    } else {
-      referenceTrip.routeNumber = tripData.routeNumber
     }
 
     let key = {
