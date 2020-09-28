@@ -3,7 +3,6 @@ const cheerio = require('cheerio')
 
 const handleChange = require('./modules/handle-change')
 const handleCancellation = require('./modules/handle-cancellation')
-const handleReduction = require('./modules/handle-reduction')
 const handleReinstatement = require('./modules/handle-reinstatement')
 
 const DatabaseConnection = require('../../database/DatabaseConnection')
@@ -33,7 +32,7 @@ async function handleMessage(subject, text) {
   if (subject.includes('Service cancellation') || text.includes('will not run') || (text.includes('no longer run') && !text.includes('no longer run to') && !text.includes('no longer run between')) || text.includes('has been cancelled')) {
     await handleCancellation(database, text)
   } else if (subject.includes('Service reduction') || text.includes('reduced capacity')) {
-    await handleReduction(database, text)
+    return // Tracker makes this kinda useless now
   } else if (text.includes('been reinstated')) {
     await handleReinstatement(database, text)
   } else {
