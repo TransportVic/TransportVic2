@@ -132,7 +132,8 @@ async function getDeparturesFromYT(stop, db) {
         let tripData = {
           ...query,
           tram: VehicleNo,
-          routeNumber: HeadBoardRouteNo
+          routeNumber: HeadBoardRouteNo,
+          shift: RunNo
         }
 
         await tramTrips.replaceDocument(query, tripData, {

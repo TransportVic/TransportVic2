@@ -16,7 +16,7 @@
  ],
  "Parliament": [
   {
-   "towards": "Parliament",
+   "towards": "City (Dropoff Only)",
    "location": {
     "type": "Point",
     "coordinates": [
@@ -115,8 +115,8 @@
    "location": {
     "type": "Point",
     "coordinates": [
-     145.0874375,
-     -37.9005391
+     145.0874348,
+     -37.9005846
     ]
    },
    "along": "Johnson Street",
@@ -128,8 +128,8 @@
    "location": {
     "type": "Point",
     "coordinates": [
-     145.0882207,
-     -37.9006047
+     145.0881389,
+     -37.9005454
     ]
    },
    "along": "Haughton Road",
@@ -156,8 +156,8 @@
    "location": {
     "type": "Point",
     "coordinates": [
-     145.1029848,
-     -37.910838
+     145.1029687,
+     -37.9108242
     ]
    },
    "along": "Haughton Road",
@@ -1530,6 +1530,654 @@
    "along": "Manchester Road",
    "bayDesignation": null,
    "stopGTFSID": 520019942
+  }
+ ],
+ "North Melbourne": [
+  {
+   "towards": "Werribee, Williamstown, Sunbury, Craigieburn, Upfield",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.94207,
+     -37.8068102
+    ]
+   },
+   "along": "Railway Place",
+   "bayDesignation": null,
+   "stopGTFSID": 510019973
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.9426265,
+     -37.807037
+    ]
+   },
+   "along": "Adderley Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019973
+  }
+ ],
+ "South Kensington": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.9204305,
+     -37.7981701
+    ]
+   },
+   "along": "Kensington Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510020026
+  },
+  {
+   "towards": "Werribee & Williamstown",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.9206183,
+     -37.7982973
+    ]
+   },
+   "along": "Kensington Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520020026
+  }
+ ],
+ "Footscray": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.9004364,
+     -37.801696
+    ]
+   },
+   "along": "Irving Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510020025
+  },
+  {
+   "towards": "Geelong, Ballarat, Bendigo, Werribee, Williamstown & Sunbury",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.9002661,
+     -37.8019281
+    ]
+   },
+   "along": "Irving Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520020025
+  }
+ ],
+ "Seddon": [
+  {
+   "towards": "Werribee & Williamstown",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.8950614,
+     -37.8091728
+    ]
+   },
+   "along": "Pentland Parade",
+   "bayDesignation": null,
+   "stopGTFSID": 510019997
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.8949555,
+     -37.8090509
+    ]
+   },
+   "along": "Pentland Parade",
+   "bayDesignation": null,
+   "stopGTFSID": 520019997
+  }
+ ],
+ "Yarraville": [
+  {
+   "towards": "Werribee & Williamstown",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.889455,
+     -37.8161673
+    ]
+   },
+   "along": "Birmingham Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019996
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.889266,
+     -37.8162235
+    ]
+   },
+   "along": "Birmingham Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019996
+  }
+ ],
+ "Spotswood": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.8867997,
+     -37.8297803
+    ]
+   },
+   "along": "Hudsons road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019995
+  },
+  {
+   "towards": "Werribee & Williamstown",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.8866441,
+     -37.8298873
+    ]
+   },
+   "along": "Hudsons Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019995
+  }
+ ],
+ "Newport": [
+  {
+   "towards": "Werribee & Williamstown",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.8825835,
+     -37.8426977
+    ]
+   },
+   "along": "Market Street",
+   "bayDesignation": "Bay 3",
+   "stopGTFSID": 510019994
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.8825339,
+     -37.8425071
+    ]
+   },
+   "along": "Mason Street",
+   "bayDesignation": "Bay 2",
+   "stopGTFSID": 520019994
+  }
+ ],
+ "Seaholme": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.8386046,
+     -37.8675625
+    ]
+   },
+   "along": "Millers Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019927
+  },
+  {
+   "towards": "Werribee",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.8387588,
+     -37.8676874
+    ]
+   },
+   "along": "Millers Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019927
+  }
+ ],
+ "Altona": [
+  {
+   "towards": "Werribee",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.8301211,
+     -37.8673006
+    ]
+   },
+   "along": "Railway Street South",
+   "bayDesignation": null,
+   "stopGTFSID": 510019926
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.8307462,
+     -37.8669406
+    ]
+   },
+   "along": "Pier Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019926
+  }
+ ],
+ "Westona": [
+  {
+   "towards": "Werribee",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.8125888,
+     -37.8643503
+    ]
+   },
+   "along": "Maidstone Street",
+   "bayDesignation": null,
+   "stopGTFSID": 510019925
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.8124641,
+     -37.8644837
+    ]
+   },
+   "along": "Maidstone Street",
+   "bayDesignation": null,
+   "stopGTFSID": 520019925
+  }
+ ],
+ "Laverton": [
+  {
+   "towards": "Werribee",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.7718955,
+     -37.86442
+    ]
+   },
+   "along": "Railway Avenue",
+   "bayDesignation": null,
+   "stopGTFSID": 510019923
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.7717345,
+     -37.8643332
+    ]
+   },
+   "along": "Railway Avenue",
+   "bayDesignation": null,
+   "stopGTFSID": 520019923
+  }
+ ],
+ "Aircraft": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.7610621,
+     -37.8669387
+    ]
+   },
+   "along": "Triholm Avenue",
+   "bayDesignation": null,
+   "stopGTFSID": 510019924
+  },
+  {
+   "towards": "Werribee",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.7607966,
+     -37.8671864
+    ]
+   },
+   "along": "Triholm Avenue",
+   "bayDesignation": null,
+   "stopGTFSID": 520019924
+  }
+ ],
+ "Williams Landing": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.74711,
+     -37.869781
+    ]
+   },
+   "along": "Altair Street",
+   "bayDesignation": "Bay 1",
+   "stopGTFSID": 510046468
+  },
+  {
+   "towards": "Werribee",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.7474158,
+     -37.869709
+    ]
+   },
+   "along": "Altair Street",
+   "bayDesignation": "Bay 2",
+   "stopGTFSID": 520046468
+  }
+ ],
+ "Hoppers Crossing": [
+  {
+   "towards": "Werribee",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.7006851,
+     -37.8825589
+    ]
+   },
+   "along": "Old Geelong Road",
+   "bayDesignation": "Bay 1",
+   "stopGTFSID": 510019922
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.7006851,
+     -37.8831887
+    ]
+   },
+   "along": "Old Geelong Road",
+   "bayDesignation": "Bay 4",
+   "stopGTFSID": 520019922
+  }
+ ],
+ "Werribee": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     144.6605491,
+     -37.8989352
+    ]
+   },
+   "along": "Manly Street",
+   "bayDesignation": "Bay 4",
+   "stopGTFSID": 510019921
+  }
+ ],
+ "Ringwood": [
+  {
+   "towards": "Belgrave & Lilydale",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2296153,
+     -37.8151752
+    ]
+   },
+   "along": "Maroondah Highway",
+   "bayDesignation": "Bay 9",
+   "stopGTFSID": 510019902
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2286403,
+     -37.8157421
+    ]
+   },
+   "along": "Railway Place",
+   "bayDesignation": "Bay 7",
+   "stopGTFSID": 520019902
+  }
+ ],
+ "Ringwood East": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2504162,
+     -37.8122038
+    ]
+   },
+   "along": "Railway Avenue",
+   "bayDesignation": null,
+   "stopGTFSID": 510019879
+  },
+  {
+   "towards": "Lilydale",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2500823,
+     -37.8121487
+    ]
+   },
+   "along": "Railway Avenue",
+   "bayDesignation": null,
+   "stopGTFSID": 520019879
+  }
+ ],
+ "Croydon": [
+  {
+   "towards": "Lilydale (?)",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2802194,
+     -37.7956881
+    ]
+   },
+   "along": "Pierson Drive",
+   "bayDesignation": "Bay 3",
+   "stopGTFSID": 510019878
+  },
+  {
+   "towards": "City (?)",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.2800987,
+     -37.7957422
+    ]
+   },
+   "along": "Pierson Drive",
+   "bayDesignation": "Bay 5",
+   "stopGTFSID": 520019878
+  }
+ ],
+ "Mooroolbark": [
+  {
+   "towards": "Lilydale (?)",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.3131359,
+     -37.7848332
+    ]
+   },
+   "along": "Brice Avenue",
+   "bayDesignation": null,
+   "stopGTFSID": 510019877
+  },
+  {
+   "towards": "City (?)",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.3129428,
+     -37.7848491
+    ]
+   },
+   "along": "Brice Avenue",
+   "bayDesignation": null,
+   "stopGTFSID": 520019877
+  }
+ ],
+ "Lilydale": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.3472943,
+     -37.7562272
+    ]
+   },
+   "along": "Maroondah Highway",
+   "bayDesignation": "Bay 6",
+   "stopGTFSID": 510019876
+  }
+ ],
+ "Mernda": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1011107,
+     -37.602478
+    ]
+   },
+   "along": "Bridge Inn Road",
+   "bayDesignation": "Bay 1",
+   "stopGTFSID": 510052161
+  }
+ ],
+ "Hawkstowe": [
+  {
+   "towards": "Mernda",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0960269,
+     -37.6224037
+    ]
+   },
+   "along": "Plenty Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510052160
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0969308,
+     -37.623417
+    ]
+   },
+   "along": "Plenty Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520052160
+  }
+ ],
+ "Middle Gorge": [
+  {
+   "towards": "City & Mernda",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0927524,
+     -37.6439104
+    ]
+   },
+   "along": "Old Plenty Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510052159
+  }
+ ],
+ "South Morang": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0674462,
+     -37.6492181
+    ]
+   },
+   "along": "Civic Drive",
+   "bayDesignation": "Bay 2",
+   "stopGTFSID": 510045795
+  },
+  {
+   "towards": "Mernda",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0676407,
+     -37.6495536
+    ]
+   },
+   "along": "Civic Drive",
+   "bayDesignation": "Bay 9",
+   "stopGTFSID": 520045795
+  }
+ ],
+ "Epping": [
+  {
+   "towards": "Mernda",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0314833,
+     -37.6522846
+    ]
+   },
+   "along": "Cooper Street",
+   "bayDesignation": "Bay 2",
+   "stopGTFSID": 510020005
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0307752,
+     -37.6523069
+    ]
+   },
+   "along": "Cooper Street",
+   "bayDesignation": "Bay 3",
+   "stopGTFSID": 520020005
   }
  ]
 }

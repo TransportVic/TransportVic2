@@ -65,11 +65,11 @@
       <Placemark>
         <name>PAR
 </name>
-        <description><![CDATA[towards: Parliament<br><br>along: Nicholson Street<br><br>bay: ]]></description>
+        <description><![CDATA[towards: City (Dropoff Only)<br><br>along: Nicholson Street<br><br>bay: ]]></description>
         <styleUrl>#icon-1899-0288D1</styleUrl>
         <ExtendedData>
           <Data name="towards">
-            <value>Parliament
+            <value>City (Dropoff Only)
 </value>
           </Data>
           <Data name="along">
@@ -194,7 +194,7 @@
         </ExtendedData>
         <Point>
           <coordinates>
-            145.0874375,-37.9005391,0
+            145.0874348,-37.9005846,0
           </coordinates>
         </Point>
       </Placemark>
@@ -217,7 +217,7 @@
         </ExtendedData>
         <Point>
           <coordinates>
-            145.0882207,-37.9006047,0
+            145.0881389,-37.9005454,0
           </coordinates>
         </Point>
       </Placemark>
@@ -262,7 +262,7 @@
         </ExtendedData>
         <Point>
           <coordinates>
-            145.1029848,-37.910838,0
+            145.1029687,-37.9108242,0
           </coordinates>
         </Point>
       </Placemark>
@@ -2473,6 +2473,1034 @@
         <Point>
           <coordinates>
             145.0406148,-37.888921,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>NME</name>
+        <description><![CDATA[towards: Werribee, Williamstown, Sunbury, Craigieburn, Upfield<br><br>along: Railway Place<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Werribee, Williamstown, Sunbury, Craigieburn, Upfield
+</value>
+          </Data>
+          <Data name="along">
+            <value>Railway Place
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.94207,-37.8068102,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>NME</name>
+        <description><![CDATA[towards: City<br>along: Adderley Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Adderley Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9426265,-37.807037,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SKN</name>
+        <description><![CDATA[towards: City<br>along: Kensington Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Kensington Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9204305,-37.7981701,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SKN</name>
+        <description><![CDATA[towards: Werribee & Williamstown<br><br>along: Kensington Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Werribee & Williamstown
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Kensington Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9206183,-37.7982973,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>FSY</name>
+        <description><![CDATA[towards: City<br>along: Irving Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Irving Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9004364,-37.801696,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>FSY</name>
+        <description><![CDATA[towards: Geelong, Ballarat, Bendigo, Werribee, Williamstown & Sunbury<br><br>along: Irving Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Geelong, Ballarat, Bendigo, Werribee, Williamstown & Sunbury
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Irving Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9002661,-37.8019281,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SEN</name>
+        <description><![CDATA[towards: Werribee & Williamstown<br><br>along: Pentland Parade<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Werribee & Williamstown
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Pentland Parade
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.8950614,-37.8091728,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SEN</name>
+        <description><![CDATA[towards: City<br>along: Pentland Parade<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Pentland Parade
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.8949555,-37.8090509,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>YVE</name>
+        <description><![CDATA[towards: Werribee & Williamstown<br><br>along: Birmingham Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Werribee & Williamstown
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Birmingham Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.889455,-37.8161673,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>YVE</name>
+        <description><![CDATA[towards: City<br>along: Birmingham Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Birmingham Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.889266,-37.8162235,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SPT</name>
+        <description><![CDATA[towards: City<br>along: Hudsons road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Hudsons road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.8867997,-37.8297803,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SPT</name>
+        <description><![CDATA[towards: Werribee & Williamstown<br><br>along: Hudsons Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Werribee & Williamstown
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Hudsons Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.8866441,-37.8298873,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>NPT</name>
+        <description><![CDATA[towards: Werribee & Williamstown<br><br>along: Market Street<br><br>bay: 3]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Werribee & Williamstown
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Market Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value>3</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.8825835,-37.8426977,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>NPT
+</name>
+        <description><![CDATA[towards: City<br>along: Mason Street<br><br>bay: 2]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Mason Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value>2</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.8825339,-37.8425071,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SHE</name>
+        <description><![CDATA[towards: City<br>along: Millers Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Millers Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.8386046,-37.8675625,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SHE</name>
+        <description><![CDATA[towards: Werribee<br>along: Millers Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Werribee</value>
+          </Data>
+          <Data name="along">
+            <value>Millers Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.8387588,-37.8676874,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ALT</name>
+        <description><![CDATA[towards: Werribee<br>along: Railway Street South<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Werribee</value>
+          </Data>
+          <Data name="along">
+            <value>Railway Street South
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.8301211,-37.8673006,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ALT</name>
+        <description><![CDATA[towards: City<br>along: Pier Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Pier Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.8307462,-37.8669406,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>WTO</name>
+        <description><![CDATA[towards: Werribee<br>along: Maidstone Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Werribee</value>
+          </Data>
+          <Data name="along">
+            <value>Maidstone Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.8125888,-37.8643503,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>WTO</name>
+        <description><![CDATA[towards: City<br>along: Maidstone Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Maidstone Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.8124641,-37.8644837,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LAV</name>
+        <description><![CDATA[towards: Werribee<br>along: Railway Avenue<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Werribee</value>
+          </Data>
+          <Data name="along">
+            <value>Railway Avenue
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.7718955,-37.86442,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LAV</name>
+        <description><![CDATA[towards: City<br>along: Railway Avenue<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Railway Avenue
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.7717345,-37.8643332,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ACF</name>
+        <description><![CDATA[towards: City<br>along: Triholm Avenue<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Triholm Avenue
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.7610621,-37.8669387,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ACF</name>
+        <description><![CDATA[towards: Werribee<br>along: Triholm Avenue<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Werribee</value>
+          </Data>
+          <Data name="along">
+            <value>Triholm Avenue
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.7607966,-37.8671864,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>WLD</name>
+        <description><![CDATA[towards: City<br>along: Altair Street<br><br>bay: 1]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Altair Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.74711,-37.869781,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>WLD</name>
+        <description><![CDATA[towards: Werribee<br>along: Altair Street<br><br>bay: 2]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Werribee</value>
+          </Data>
+          <Data name="along">
+            <value>Altair Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value>2</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.7474158,-37.869709,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HCG</name>
+        <description><![CDATA[towards: Werribee<br>along: Old Geelong Road<br><br>bay: 1]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Werribee</value>
+          </Data>
+          <Data name="along">
+            <value>Old Geelong Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.7006851,-37.8825589,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HCG</name>
+        <description><![CDATA[towards: City<br>along: Old Geelong Road<br><br>bay: 4]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Old Geelong Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value>4</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.7006851,-37.8831887,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>WER</name>
+        <description><![CDATA[towards: City<br>along: Manly Street<br><br>bay: 4]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Manly Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value>4</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.6605491,-37.8989352,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>RWD
+</name>
+        <description><![CDATA[towards: Belgrave & Lilydale<br><br>along: Maroondah Highway<br><br>bay: 9]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[Belgrave & Lilydale
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Maroondah Highway
+</value>
+          </Data>
+          <Data name="bay">
+            <value>9</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2296153,-37.8151752,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>RWD</name>
+        <description><![CDATA[towards: City<br>along: Railway Place<br><br>bay: 7]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Railway Place
+</value>
+          </Data>
+          <Data name="bay">
+            <value>7</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2286403,-37.8157421,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>RWE</name>
+        <description><![CDATA[towards: City<br>along: Railway Avenue<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Railway Avenue
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2504162,-37.8122038,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>RWE</name>
+        <description><![CDATA[towards: Lilydale<br>along: Railway Avenue<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Lilydale</value>
+          </Data>
+          <Data name="along">
+            <value>Railway Avenue
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2500823,-37.8121487,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CDN</name>
+        <description><![CDATA[towards: Lilydale (?)<br><br>along: Pierson Drive<br><br>bay: 3]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Lilydale (?)
+</value>
+          </Data>
+          <Data name="along">
+            <value>Pierson Drive
+</value>
+          </Data>
+          <Data name="bay">
+            <value>3</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2802194,-37.7956881,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CDN</name>
+        <description><![CDATA[towards: City (?)<br><br>along: Pierson Drive<br><br>bay: 5]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City (?)
+</value>
+          </Data>
+          <Data name="along">
+            <value>Pierson Drive
+</value>
+          </Data>
+          <Data name="bay">
+            <value>5</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.2800987,-37.7957422,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MLK</name>
+        <description><![CDATA[towards: Lilydale (?)<br><br>along: Brice Avenue<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Lilydale (?)
+</value>
+          </Data>
+          <Data name="along">
+            <value>Brice Avenue
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.3131359,-37.7848332,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MLK</name>
+        <description><![CDATA[towards: City (?)<br><br>along: Brice Avenue<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City (?)
+</value>
+          </Data>
+          <Data name="along">
+            <value>Brice Avenue
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.3129428,-37.7848491,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LIL</name>
+        <description><![CDATA[towards: City<br>along: Maroondah Highway<br><br>bay: 6<br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Maroondah Highway
+</value>
+          </Data>
+          <Data name="bay">
+            <value>6
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.3472943,-37.7562272,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MDD</name>
+        <description><![CDATA[towards: City<br>along: Bridge Inn Road<br><br>bay: 1]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Bridge Inn Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1011107,-37.602478,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HWS</name>
+        <description><![CDATA[towards: Mernda<br>along: Plenty Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Mernda</value>
+          </Data>
+          <Data name="along">
+            <value>Plenty Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0960269,-37.6224037,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HWS</name>
+        <description><![CDATA[towards: City<br>along: Plenty Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Plenty Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0969308,-37.623417,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MMR</name>
+        <description><![CDATA[towards: City & Mernda<br><br>along: Old Plenty Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[City & Mernda
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Old Plenty Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0927524,-37.6439104,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SMG</name>
+        <description><![CDATA[towards: City<br>along: Civic Drive<br><br>bay: 2]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Civic Drive
+</value>
+          </Data>
+          <Data name="bay">
+            <value>2</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0674462,-37.6492181,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SMG</name>
+        <description><![CDATA[towards: Mernda<br>along: Civic Drive<br><br>bay: 9]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Mernda</value>
+          </Data>
+          <Data name="along">
+            <value>Civic Drive
+</value>
+          </Data>
+          <Data name="bay">
+            <value>9</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0676407,-37.6495536,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>EPP</name>
+        <description><![CDATA[towards: Mernda<br>along: Cooper Street<br><br>bay: 2]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Mernda</value>
+          </Data>
+          <Data name="along">
+            <value>Cooper Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value>2</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0314833,-37.6522846,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>EPP</name>
+        <description><![CDATA[towards: City<br>along: Cooper Street<br><br>bay: 3]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Cooper Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value>3</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0307752,-37.6523069,0
           </coordinates>
         </Point>
       </Placemark>
