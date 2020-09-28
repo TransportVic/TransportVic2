@@ -19,5 +19,8 @@ module.exports = stopName => {
   if (stopName === 'Clarendon Street/Whiteman Street') return 'Clarendon Street Junction/Whiteman Street'
   if (stopName === 'Port Junction/79 Whiteman Street') return 'Clarendon Street Junction/79 Whiteman Street'
 
+  if (stopName === 'Newport Interchange/Mason Street') return 'Newport Railway Station/Mason Street'
+  if (stopName === 'Box Hill Bus Station/Station Street') return 'Box Hill Railway Station/Station Street'
+
   return stopName
 }
