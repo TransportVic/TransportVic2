@@ -74,7 +74,7 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
     }
 
     console.log(`Marking ${departureTime} ${origin} - ${destination} train as changed. Now ${type}s at ${changePoint}`)
-    await discordUpdate(`The ${departureTime} ${origin} - ${destination} service will ${type} ${type === 'originate' ? 'from' : 'at'} ${changePoint} today`)
+    await discordUpdate(`The ${departureTime} ${origin} - ${destination} service will ${type} ${type === 'originate' ? 'from' : 'at'} ${changePoint} today.`)
 
     trip.operationDays = [today]
 

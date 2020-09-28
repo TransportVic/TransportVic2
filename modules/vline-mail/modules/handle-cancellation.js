@@ -45,7 +45,7 @@ async function setServicesAsCancelled(db, services) {
       }
 
       console.log(`Marking ${departureTime} ${origin} - ${destination} train as cancelled.${isCoach ? ' Replacement coaches provided' : ''}`)
-      await discordUpdate(`The ${departureTime} ${origin} - ${destination} service has been cancelled.`)
+      await discordUpdate(`The ${departureTime} ${origin} - ${destination} service has been cancelled today.`)
 
       trip.operationDays = [today]
 
