@@ -33,8 +33,9 @@ if departures.length
         span.destination #{departure.destination}
         if departure.isRailReplacementBus
           span.broadDepartureInfo.important This service has been replaced by coaches
-        else if departure.cancelled && departure.trip.type === 'change'
-          span.broadDepartureInfo.important CANCELLED: Now #{departure.trip.changeType}s #{departure.trip.changeType === 'originate' ? 'from' : 'at'} #{departure.trip.changePoint}
+        else if departure.trip.type === 'change'
+          if departure.cancelled || departure.trip.changeType === 'terminate'
+            span.broadDepartureInfo.important CANCELLED: Now #{departure.trip.changeType}s #{departure.trip.changeType === 'originate' ? 'from' : 'at'} #{departure.trip.changePoint}
         else if departure.cancelled
           span.broadDepartureInfo.important CANCELLED
         else

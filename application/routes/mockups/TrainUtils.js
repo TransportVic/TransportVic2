@@ -419,7 +419,8 @@ module.exports = {
     let trip = departure.trip
 
     let isUp = departure.trip.direction === 'Up'
-    let destination = departure.trip.destination.slice(0, -16)
+    let destinationStop = departure.stopTimings.slice(-1)[0]
+    let destination = destinationStop.stopName.slice(0, -16)
     if (destination === 'Parliament') destination = 'Flinders Street'
     if (destination === 'Southern Cross' && caulfieldGroup.includes(routeName)) destination = 'Flinders Street'
 

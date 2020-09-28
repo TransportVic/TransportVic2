@@ -73,7 +73,8 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
     console.log(`Marking ${departureTime} ${origin} - ${destination} train as changed. Now ${type}s at ${changePoint}`)
     await discordUpdate(`The ${departureTime} ${origin} - ${destination} service will ${type} ${type === 'originate' ? 'from' : 'at'} ${changePoint} today.`)
 
-    trip.operationDays = [today]
+    trip.operationDays = today
+    trip.originalServiceID = trip.departureTime + trip.destination
 
     await liveTimetables.replaceDocument(key, trip, {
       upsert: true

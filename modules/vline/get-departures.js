@@ -65,10 +65,6 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
 
     if (!trip) {
       console.log(departure, departure.originDepartureTime.format('HH:mm'))
-      // let originVNETName = departure.originVNETName
-      // let destinationVNETName = departure.destinationVNETName
-      // trip = await getStoppingPattern(db, originVNETName, destinationVNETName,
-      //   departure.originDepartureTime, departure.runID, journeyCache)
     }
 
     let platform = departure.platform
@@ -270,8 +266,18 @@ async function appendTripData(db, departure, vlinePlatforms) {
     let stopTiming = departure.trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
 
     if (stopTiming.cancelled) departure.cancelled = true
-    if (departure.trip.changeType === 'terminate' && currentStation === departure.trip.changePoint) {
-      departure.cancelled = true
+    if (departure.trip.changeType === 'terminate') {
+      departure.cancelled = currentStation === departure.trip.changePoint
+      departure.destination = departure.trip.changePoint
+      let hasSeen = false
+      departure.trip.stopTimings = departure.trip.stopTimings.filter(stop => {
+        if (hasSeen) return false
+        if (stop.stopName.slice(0, -16) === departure.destination) {
+          hasSeen = true
+          return true
+        }
+        return true
+      })
     }
   }
 
