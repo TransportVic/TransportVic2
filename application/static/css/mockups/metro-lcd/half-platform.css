@@ -192,6 +192,10 @@ div.stopsColumn.expressColumn {
   margin-right: calc(var(--width) * 0.02) !important;
 }
 
+div.stopsColumn.expressColumn:last-child {
+  margin-right: 50% !important;
+}
+
 div.stopsColumn.columns-9, div.stopsColumn.columns-8 {
   min-width: unset !important;
 }
