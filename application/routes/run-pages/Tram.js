@@ -55,17 +55,18 @@ async function pickBestTrip(data, db) {
   let gtfsTrip = await gtfsTimetables.findDocument(query)
   let liveTrip = await liveTimetables.findDocument(query)
 
-  if (!gtfsTrip) return null
-  gtfsTrip.routeNumber = determineTramRouteNumber(gtfsTrip)
+  let referenceTrip = liveTrip || gtfsTrip
+
+  referenceTrip.routeNumber = determineTramRouteNumber(referenceTrip)
 
   let tramTrips = db.getCollection('tram trips')
   let tripData = await tramTrips.findDocument({
     date: operationDays,
-    departureTime: gtfsTrip.departureTime,
-    origin: gtfsTrip.origin,
-    destination: gtfsTrip.destination
+    departureTime: referenceTrip.departureTime,
+    origin: referenceTrip.origin,
+    destination: referenceTrip.destination
   })
-  if (!tripData) return { trip: gtfsTrip, tripStartTime, isLive: false }
+  if (!tripData) return { trip: referenceTrip, tripStartTime, isLive: false }
 
   let useLive = minutesToTripEnd > -20 && minutesToTripStart < 45
   if (liveTrip) {
@@ -74,11 +75,10 @@ async function pickBestTrip(data, db) {
     }
   }
 
-  let referenceTrip = liveTrip || gtfsTrip
   let {tram} = tripData
-  gtfsTrip.vehicle = tram
+  referenceTrip.vehicle = tram
 
-  if (!useLive) return { trip: gtfsTrip, tripStartTime, isLive: false }
+  if (!useLive) return { trip: referenceTrip, tripStartTime, isLive: false }
 
   try {
     let rawTramTimings = JSON.parse(await utils.request(urls.yarraByFleet.format(tram)))
@@ -99,9 +99,9 @@ async function pickBestTrip(data, db) {
         let associatedTripStop
         if (stopData) {
           let bay = stopData.bays.find(bay => bay.tramTrackerID === tramTrackerID)
-          associatedTripStop = gtfsTrip.stopTimings.find(stop => stop.stopGTFSID === bay.stopGTFSID)
+          associatedTripStop = referenceTrip.stopTimings.find(stop => stop.stopGTFSID === bay.stopGTFSID)
         } else if (!stopData && tramTrackerID > 5000) {
-          associatedTripStop = gtfsTrip.stopTimings.slice(-1)[0]
+          associatedTripStop = referenceTrip.stopTimings.slice(-1)[0]
         }
 
         if (!associatedTripStop) {
@@ -118,10 +118,10 @@ async function pickBestTrip(data, db) {
       if (isLayover) tripDifference = 0
 
       if (tripDifference <= 15) {
-        let stopCount = gtfsTrip.stopTimings.length
-        let tripStartMinutes = gtfsTrip.stopTimings[0].departureTimeMinutes
+        let stopCount = referenceTrip.stopTimings.length
+        let tripStartMinutes = referenceTrip.stopTimings[0].departureTimeMinutes
 
-        gtfsTrip.stopTimings = gtfsTrip.stopTimings.map((stop, i) => {
+        referenceTrip.stopTimings = referenceTrip.stopTimings.map((stop, i) => {
           let minutesDiff = (stop.departureTimeMinutes || stop.arrivalTimeMinutes) - tripStartMinutes
           let scheduledDepartureTime = tripStartTime.clone().add(minutesDiff, 'minutes')
           stop.estimatedDepartureTime = scheduledDepartureTime.add(tripDifference * 1 - (i / stopCount)).toISOString()
@@ -131,30 +131,30 @@ async function pickBestTrip(data, db) {
         failed = false
       }
     } else {
-      gtfsTrip.routeNumber = tripData.routeNumber
+      referenceTrip.routeNumber = tripData.routeNumber
     }
 
     let key = {
       mode: 'tram',
-      routeGTFSID: gtfsTrip.routeGTFSID,
+      routeGTFSID: referenceTrip.routeGTFSID,
       operationDays,
-      departureTime: gtfsTrip.departureTime,
-      destinationArrivalTime: gtfsTrip.destinationArrivalTime,
-      origin: gtfsTrip.origin
+      departureTime: referenceTrip.departureTime,
+      destinationArrivalTime: referenceTrip.destinationArrivalTime,
+      origin: referenceTrip.origin
     }
 
-    gtfsTrip.operationDays = operationDays
-    gtfsTrip.type = 'timings'
-    gtfsTrip.updateTime = new Date()
-    delete gtfsTrip._id
+    referenceTrip.operationDays = operationDays
+    referenceTrip.type = 'timings'
+    referenceTrip.updateTime = new Date()
+    delete referenceTrip._id
 
-    await liveTimetables.replaceDocument(key, gtfsTrip, {
+    await liveTimetables.replaceDocument(key, referenceTrip, {
       upsert: true
     })
 
-    return  { trip: gtfsTrip, tripStartTime, isLive: !failed }
+    return  { trip: referenceTrip, tripStartTime, isLive: !failed }
   } catch (e) {
-    return  { trip: gtfsTrip, tripStartTime, isLive: false }
+    return  { trip: referenceTrip, tripStartTime, isLive: false }
   }
 }
 

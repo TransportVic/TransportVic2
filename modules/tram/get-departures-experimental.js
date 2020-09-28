@@ -7,6 +7,7 @@ const EventEmitter = require('events')
 const tramFleet = require('../../tram-fleet')
 const urls = require('../../urls')
 const determineTramRouteNumber = require('./determine-tram-route-number')
+const trimTrip = require('./trim-trip')
 
 const departuresCache = new TimedCache(1000 * 60)
 
@@ -104,7 +105,7 @@ async function getDeparturesFromYT(stop, db) {
         if (scheduledDepartureTime.diff(now, 'minutes') > 90) return
       }
 
-
+      trip = await trimTrip(db, Destination, coreRoute, trip, day)
       let hasBussingMessage = Destination.includes('bus around')
 
       let loopDirection
