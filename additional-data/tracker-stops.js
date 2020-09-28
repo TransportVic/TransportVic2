@@ -346,5 +346,6 @@ module.exports = [
   'lara/the-centreway-waverley-road',
   'lara/archimedes-avenue-rennie-street',
   'north-shore/north-shore-railway-station',
-  'ballarat-central/davies-street-scott-parade'
+  'ballarat-central/davies-street-scott-parade',
+  'broadmeadows/martell-street-joseph-street'
 ]
