@@ -51,7 +51,7 @@ module.exports = async function(stops, data, stopsLookup) {
         matchingBay.location = stop.location
 
         datamartStop.mykiZones.forEach(zone => {
-          if (matchingBay.mykiZones.includes(zone)) {
+          if (!matchingBay.mykiZones.includes(zone)) {
             matchingBay.mykiZones.push(zone)
           }
         })

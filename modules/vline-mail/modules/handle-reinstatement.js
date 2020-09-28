@@ -1,6 +1,7 @@
 const utils = require('../../../utils')
 const async = require('async')
 const postDiscordUpdate = require('../../discord-integration')
+const bestStop = require('./find-best-stop')
 
 async function discordUpdate(text) {
   await postDiscordUpdate('vlineInform', text)
@@ -43,8 +44,8 @@ async function reinstatement(db, text) {
 
   if (service) {
     let departureTime = service[1].replace('.', ':')
-    let origin = service[2] + ' Railway Station'
-    let destination = service[3] + ' Railway Station'
+    let origin = bestStop(service[2]) + ' Railway Station'
+    let destination = bestStop(service[3]) + ' Railway Station'
 
     await setServiceAsReinstated(db, {departureTime, origin, destination})
   }

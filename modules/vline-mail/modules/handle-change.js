@@ -2,6 +2,7 @@ const utils = require('../../../utils')
 const cancellation = require('./handle-cancellation')
 const async = require('async')
 const postDiscordUpdate = require('../../discord-integration')
+const bestStop = require('./find-best-stop')
 
 async function discordUpdate(text) {
   await postDiscordUpdate('vlineInform', text)
@@ -94,10 +95,10 @@ function change(db, text) {
 
   if (service) {
     let departureTime = service[1].replace('.', ':')
-    let origin = service[2].trim() + ' Railway Station'
-    let destination = service[3].trim() + ' Railway Station'
+    let origin = bestStop(service[2].trim()) + ' Railway Station'
+    let destination = bestStop(service[3].trim()) + ' Railway Station'
     let type = service[4]
-    let changePoint = service[5]
+    let changePoint = bestStop(service[5])
 
     setServiceAsChanged(db, departureTime, origin, destination, type, changePoint)
   } else {

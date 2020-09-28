@@ -1,6 +1,7 @@
 const utils = require('../../../utils')
 const async = require('async')
 const postDiscordUpdate = require('../../discord-integration')
+const bestStop = require('./find-best-stop')
 
 async function discordUpdate(text) {
   await postDiscordUpdate('vlineInform', text)
@@ -65,8 +66,8 @@ async function cancellation(db, text) {
 
   if (service) {
     let departureTime = service[1].replace('.', ':')
-    let origin = service[2] + ' Railway Station'
-    let destination = service[3] + ' Railway Station'
+    let origin = bestStop(service[2]) + ' Railway Station'
+    let destination = bestStop(service[3]) + ' Railway Station'
     let isCoach = text.includes('coaches') && text.includes('replace')
     matches.push({departureTime, origin, destination, isCoach})
   } else {
@@ -77,8 +78,8 @@ async function cancellation(db, text) {
       services.forEach(service => {
         let parts = service.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) /)
         let departureTime = parts[1].replace('.', ':')
-        let origin = parts[2].trim() + ' Railway Station'
-        let destination = parts[3].trim() + ' Railway Station'
+        let origin = bestStop(parts[2].trim()) + ' Railway Station'
+        let destination = bestStop(parts[3].trim()) + ' Railway Station'
         let isCoach = text.includes('coaches') && text.includes('replace')
         matches.push({departureTime, origin, destination, isCoach})
       })
