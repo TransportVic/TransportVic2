@@ -266,6 +266,13 @@ async function appendTripData(db, departure, vlinePlatforms) {
 
     departure.shortRouteName = shortRouteName
     departure.platform = platform
+
+    let stopTiming = departure.trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+
+    if (stopTiming.cancelled) departure.cancelled = true
+    if (departure.trip.changeType === 'terminate' && currentStation === departure.trip.changePoint) {
+      departure.cancelled = true
+    }
   }
 
   departure.originalServiceID = departure.trip.originalServiceID || departure.scheduledDepartureTime.format('HH:mm') + departure.trip.destination

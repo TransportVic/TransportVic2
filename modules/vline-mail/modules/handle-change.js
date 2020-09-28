@@ -33,14 +33,10 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
     trip.type = 'change'
     trip.tripID = trip.tripID + '-CHANGE'
 
-    let terminateTypes = ['terminate']
+    let terminateTypes = ['terminate', 'end']
     let originateTypes = ['originate', 'begin']
-    if (originateTypes.includes(type)) {
-      type = 'originate'
-      trip.message = `CHANGED: WILL ORIGINATE FROM ${changePoint.toUpperCase()}`
-    } else if (type === 'terminate') {
-      trip.message = `CHANGED: WILL TERMINIATE AT ${changePoint.toUpperCase()}`
-    }
+    if (originateTypes.includes(type)) type = 'originate'
+    if (terminateTypes.includes(type)) type = 'terminate'
 
     trip.changeType = type
     trip.changePoint = changePoint
