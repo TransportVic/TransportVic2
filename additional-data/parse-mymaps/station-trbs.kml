@@ -3504,6 +3504,1161 @@
           </coordinates>
         </Point>
       </Placemark>
+      <Placemark>
+        <name>CHL</name>
+        <description><![CDATA[towards: City & Mernda<br><br>along: Hoddle Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[City & Mernda
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>Hoddle Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9951979,-37.7886521,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>RUS</name>
+        <description><![CDATA[towards: Mernda<br>along: Rushall Crescent<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Mernda</value>
+          </Data>
+          <Data name="along">
+            <value>Rushall Crescent
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9909872,-37.7834852,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>RUS</name>
+        <description><![CDATA[towards: City<br>along: Rushall Crescent<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Rushall Crescent
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9910328,-37.7829426,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MER</name>
+        <description><![CDATA[towards: City & Mernda<br><br>along: South Park Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value><![CDATA[City & Mernda
+]]></value>
+          </Data>
+          <Data name="along">
+            <value>South Park Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9924753,-37.777502,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>NCE
+</name>
+        <description><![CDATA[towards: City<br>along: Arthurton Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Arthurton Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9962563,-37.7690475,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>NCE</name>
+        <description><![CDATA[towards: Mernda<br>along: Arthurton Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Mernda</value>
+          </Data>
+          <Data name="along">
+            <value>Arthurton Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9946993,-37.7687655,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CXT</name>
+        <description><![CDATA[towards: City<br>along: High Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>High Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9995317,-37.7655339,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>CXT</name>
+        <description><![CDATA[towards: Mernda<br>along: High Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Mernda</value>
+          </Data>
+          <Data name="along">
+            <value>High Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9992796,-37.7657045,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TBY</name>
+        <description><![CDATA[towards: City<br>along: High Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>High Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0010649,-37.7565835,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TBY</name>
+        <description><![CDATA[towards: Mernda<br><br>along: High Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Mernda
+</value>
+          </Data>
+          <Data name="along">
+            <value>High Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0008302,-37.7567224,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BEL</name>
+        <description><![CDATA[towards: City<br>along: High Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>High Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0028574,-37.7455601,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BEL
+</name>
+        <description><![CDATA[towards: Mernda<br>along: High Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Mernda</value>
+          </Data>
+          <Data name="along">
+            <value>High Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0025972,-37.7460521,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>PRE</name>
+        <description><![CDATA[towards: Mernda<br>along: Murray Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Mernda</value>
+          </Data>
+          <Data name="along">
+            <value>Murray Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0014437,-37.7377846,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>PRE</name>
+        <description><![CDATA[towards: City<br>along: Murray Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Murray Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0014249,-37.7376213,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>REG</name>
+        <description><![CDATA[towards: City<br>along: Spring Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Spring Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0009602,-37.7282708,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>REG</name>
+        <description><![CDATA[towards: Mernda<br>along: Spring Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Mernda</value>
+          </Data>
+          <Data name="along">
+            <value>Spring Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0007711,-37.7284373,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>RUT</name>
+        <description><![CDATA[towards: City<br>along: High Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>High Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0092198,-37.7078151,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>RUT</name>
+        <description><![CDATA[towards: Mernda<br>along: High Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Mernda</value>
+          </Data>
+          <Data name="along">
+            <value>High Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0091527,-37.7070766,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>KPK</name>
+        <description><![CDATA[towards: City<br>along: High Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>High Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0117683,-37.6936109,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>KPK</name>
+        <description><![CDATA[towards: High Street<br><br>along: Mernda<br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>High Street
+</value>
+          </Data>
+          <Data name="along">
+            <value>Mernda</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0110374,-37.6958553,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TSN</name>
+        <description><![CDATA[towards: City<br>along: High Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>High Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0138748,-37.680813,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>TSN</name>
+        <description><![CDATA[towards: Mernda<br>along: High Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Mernda</value>
+          </Data>
+          <Data name="along">
+            <value>High Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0138292,-37.6797887,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LAL</name>
+        <description><![CDATA[towards: City<br>along: Station Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Station Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0177537,-37.666073,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>LAL</name>
+        <description><![CDATA[towards: Mernda<br>along: Station Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Mernda</value>
+          </Data>
+          <Data name="along">
+            <value>Station Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0176357,-37.6660199,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>NME</name>
+        <description><![CDATA[towards: Upfield<br>along: Drysburgh Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Upfield</value>
+          </Data>
+          <Data name="along">
+            <value>Drysburgh Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9429167,-37.8070105,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MAC</name>
+        <description><![CDATA[towards: City<br>along: Macaulay Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Macaulay Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9365123,-37.7950733,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MAC</name>
+        <description><![CDATA[towards: Upfield<br>along: Macaulay Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Upfield</value>
+          </Data>
+          <Data name="along">
+            <value>Macaulay Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9363098,-37.7952079,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>FBD</name>
+        <description><![CDATA[towards: Upfield<br>along: Racecourse Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Upfield</value>
+          </Data>
+          <Data name="along">
+            <value>Racecourse Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9407476,-37.7891264,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>FBD</name>
+        <description><![CDATA[towards: City<br>along: Racecourse Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Racecourse Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9393944,-37.7892239,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>RPK
+</name>
+        <description><![CDATA[towards: City<br>along: Poplar Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Poplar Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9508771,-37.7806308,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>FBD</name>
+        <description><![CDATA[towards: Upfield<br>along: Poplar Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Upfield</value>
+          </Data>
+          <Data name="along">
+            <value>Poplar Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9506652,-37.7806001,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>JWL</name>
+        <description><![CDATA[towards: Upfield<br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Upfield</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9607394,-37.7748451,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>JWL</name>
+        <description><![CDATA[towards: City<br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.960966,-37.7746098,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BWK</name>
+        <description><![CDATA[towards: City<br><br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City
+</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9622372,-37.7669806,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BWK</name>
+        <description><![CDATA[towards: Upfield<br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Upfield</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9620226,-37.7671418,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ASY</name>
+        <description><![CDATA[towards: Upfield<br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Upfield</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9630779,-37.7609974,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ASY</name>
+        <description><![CDATA[towards: City<br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9633099,-37.7607376,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MLD</name>
+        <description><![CDATA[towards: Upfield<br><br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Upfield
+</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9641911,-37.7545869,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MLD</name>
+        <description><![CDATA[towards: City<br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9643574,-37.7547602,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>COB</name>
+        <description><![CDATA[towards: Upfield<br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Upfield</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9661493,-37.7432592,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>COB</name>
+        <description><![CDATA[towards: City<br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9664014,-37.7431097,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>COB</name>
+        <description><![CDATA[towards: City (Temp)<br><br>along: Bell Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City (Temp)
+</value>
+          </Data>
+          <Data name="along">
+            <value>Bell Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9673744,-37.7412673,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>COB</name>
+        <description><![CDATA[towards: Upfield (Temp)<br><br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Upfield (Temp)
+</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9664906,-37.7410743,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BAT</name>
+        <description><![CDATA[towards: Upfield<br>along: Gaffney Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Upfield</value>
+          </Data>
+          <Data name="along">
+            <value>Gaffney Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9634225,-37.7337222,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BAT</name>
+        <description><![CDATA[towards: City<br>along: Gaffney Street<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Gaffney Street
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9623884,-37.7337604,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MYN</name>
+        <description><![CDATA[towards: Upfield<br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Upfield</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9632823,-37.7218454,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MYN
+</name>
+        <description><![CDATA[towards: City<br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9635001,-37.7220015,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>FAK</name>
+        <description><![CDATA[towards: Upfield<br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Upfield</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9618114,-37.7140377,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>FAK</name>
+        <description><![CDATA[towards: City<br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9623827,-37.7146562,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>GOW</name>
+        <description><![CDATA[towards: Upfield<br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Upfield</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9594869,-37.6996298,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>GOW</name>
+        <description><![CDATA[towards: City<br>along: Sydney Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Sydney Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9601199,-37.7005106,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>UFD</name>
+        <description><![CDATA[towards: City<br>along: Barry Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Barry Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            144.9465456,-37.6661672,0
+          </coordinates>
+        </Point>
+      </Placemark>
     </Folder>
   </Document>
 </kml>
