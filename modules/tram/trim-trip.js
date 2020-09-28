@@ -2,7 +2,7 @@ module.exports = async function(db, destination, coreRoute, trip, operationDay) 
   let cutoffStop
 
   if (coreRoute === '96' && destination == 'Clarendon St Junction') {
-    cutoffStop = 'Port Junction/79 Whiteman Street'
+    cutoffStop = 'Clarendon Street Junction'
   }
 
   if (cutoffStop && trip.destination !== cutoffStop) {
@@ -10,13 +10,13 @@ module.exports = async function(db, destination, coreRoute, trip, operationDay) 
 
     trip.stopTimings = trip.stopTimings.filter(stop => {
       if (hasSeen) return false
-      if (stop.stopName === cutoffStop) {
+      if (stop.stopName.includes(cutoffStop)) {
         return hasSeen = true
       }
       return true
     })
 
-    trip.destination = cutoffStop
+    trip.destination = trip.stopTimings.slice(-1)[0].stopName
     trip.destinationArrivalTime = trip.stopTimings.slice(-1)[0].arrivalTime
     delete trip._id
 

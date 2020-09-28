@@ -2,7 +2,7 @@ const async = require('async')
 const moment = require('moment')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
-const nameModifier = require('../../additional-data/bus-stop-name-modifier')
+const nameModifier = require('../../additional-data/stop-name-modifier')
 
 const fixTripDestination = require('../metro-trains/fix-trip-destinations')
 

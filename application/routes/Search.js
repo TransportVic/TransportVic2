@@ -88,7 +88,7 @@ async function findStops(db, query) {
       $or: [{
         'bays.fullStopName': queryRegex
       }, {
-        'bays.originalStopName': queryRegex
+        'bays.originalName': queryRegex
       }, {
         'bays.fullStopName': searchRegex
       }, {

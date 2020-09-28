@@ -6,7 +6,7 @@ const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
-const busStopNameModifier = require('../../additional-data/bus-stop-name-modifier')
+const stopNameModifier = require('../../additional-data/stop-name-modifier')
 const busBays = require('../../additional-data/bus-bays')
 const determineBusRouteNumber = require('./determine-bus-route-number')
 const config = require('../../config')
@@ -134,7 +134,7 @@ async function getDeparturesFromPTV(stop, db) {
 
       let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
 
-      let destination = busStopNameModifier(utils.adjustStopName(run.destination_name.trim()))
+      let destination = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
 
       let day = utils.getYYYYMMDD(scheduledDepartureTime)
       if (isNightBus && (scheduledDepartureTimeMinutes % 1440) < 180)

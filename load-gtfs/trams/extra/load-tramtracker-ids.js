@@ -81,7 +81,7 @@ database.connect({}, async () => {
 
     if (ptvStop) {
       dbStop = await stops.findDocument({
-        'bays.fullStopName': utils.adjustStopName(ptvStop.stopName),
+        'bays.originalName': new RegExp('^' + ptvStop.stopName),
         'bays.stopNumber': ptvStop.stopNumber
       })
     }
@@ -89,7 +89,7 @@ database.connect({}, async () => {
     if (!dbStop) {
       dbStop = await stops.findDocument({
         $or: stopNames[stopID].map(stopName => ({
-          'bays.fullStopName': new RegExp(utils.adjustStopName(stopName), 'i'),
+          'bays.originalName': new RegExp(utils.adjustStopName(stopName), 'i'),
           'bays.stopNumber': {
             $in: stopNumbers[stopID]
           }

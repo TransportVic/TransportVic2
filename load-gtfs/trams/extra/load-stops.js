@@ -8,6 +8,8 @@ require('fs').writeFileSync(__dirname + '/tram-stops.json', JSON.stringify(requi
     stopName = stopName.replace(m[0], '')
   }
 
+  stopName = stopNumber + '-' + stopName
+
   return {
     stopName, stopNumber, stopID: x.id
   }

@@ -1,6 +1,6 @@
 const async = require('async')
 const utils = require('../../utils')
-const nameModifier = require('../../additional-data/bus-stop-name-modifier')
+const nameModifier = require('../../additional-data/stop-name-modifier')
 const natural = require('natural')
 const metaphone = natural.Metaphone
 

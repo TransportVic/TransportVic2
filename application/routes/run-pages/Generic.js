@@ -4,7 +4,7 @@ const router = new express.Router()
 const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
-const busStopNameModifier = require('../../../additional-data/bus-stop-name-modifier')
+const stopNameModifier = require('../../../additional-data/stop-name-modifier')
 
 const busDestinations = require('../../../additional-data/bus-destinations')
 const coachDestinations = require('../../../additional-data/coach-stops')
@@ -93,7 +93,7 @@ async function pickBestTrip(data, db) {
 
     let departure = departures.filter(departure => {
       let run = runs[departure.run_ref]
-      let destinationName = busStopNameModifier(utils.adjustStopName(run.destination_name.trim().replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')))
+      let destinationName = stopNameModifier(utils.adjustStopName(run.destination_name.trim().replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')))
       let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc).toISOString()
 
       return scheduledDepartureTime === isoDeparture &&
