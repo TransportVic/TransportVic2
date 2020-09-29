@@ -5,10 +5,10 @@ const TrainUtils = require('../TrainUtils')
 const PIDUtils = require('../PIDUtils')
 const stationDestinations = require('./station-destinations')
 
-async function getData(req, res) {
+async function getData(req, res, maxDepartures) {
   let station = await PIDUtils.getStation(res.db, req.params.station)
 
-  return await TrainUtils.getPIDSDepartures(res.db, station, '*', null, null, 17, true)
+  return await TrainUtils.getPIDSDepartures(res.db, station, '*', null, null, maxDepartures, true)
 }
 
 router.get('/:station/up-down', async (req, res) => {
@@ -44,9 +44,26 @@ router.get('/:station/interchange/destinations', async (req, res) => {
 })
 
 
+router.post('/:station/up-down', async (req, res) => {
+  let departures = await getData(req, res, 8)
+  res.json(departures)
+})
 
-router.post('/:station/:type', async (req, res) => {
-  let departures = await getData(req, res)
+
+router.post('/:station/interchange', async (req, res) => {
+  let departures = await getData(req, res, Infinity)
+  let groupedDepartures = {}
+
+  departures.departures.forEach(departure => {
+    let key = departure.routeName + departure.direction
+    if (!groupedDepartures[key]) groupedDepartures[key] = []
+    groupedDepartures[key].push(departure)
+  })
+
+  departures.departures = Object.values(groupedDepartures).reduce((acc, group) => {
+    return acc.concat(group.slice(0, 3))
+  }, [])
+
   res.json(departures)
 })
 

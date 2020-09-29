@@ -55,7 +55,7 @@ module.exports = {
   "North Melbourne": [...platr(6, [], 'platform'), ...platr(6, [], 'pre-platform-vertical'), conc('interchange')],
   "Flagstaff": [...platr(4, [], 'platform'), conc('interchange')],
   "Southern Cross": [...platr(8, [], 'sss-platform')],
-  "Footscray": [...platr(6, [3, 4], 'half-platform'), conc('up-down')],
+  "Footscray": [...platr(2, [], 'half-platform'), plat(3, 'vline-half-platform'), plat(4, 'vline-half-platform'), plat(5, 'half-platform'), plat(6, 'half-platform'), conc('up-down'), conc('interchange')],
   "Tottenham": [...platr(2, [], 'half-platform-bold')],
   "Middle Footscray": [],
   "West Footscray": [plat(1, 'platform'), plat(2, 'half-platform-bold'), conc('up-down')],
@@ -64,7 +64,7 @@ module.exports = {
   "St. Albans": [...platr(2, [], 'half-platform'), conc('up-down')],
   "Ginifer": [...platr(2, [], 'half-platform'), conc('up-down')],
   "Albion": [...platr(2, [], 'half-platform-bold')],
-  "Sunshine": [...platr(6, [3, 4], 'half-platform'), conc('up-down')], // 3, 4 vline style
+  "Sunshine": [...platr(2, [], 'half-platform'), plat(3, 'vline-half-platform'), plat(4, 'vline-half-platform'), conc('up-down')], // 3, 4 vline style
   "Shepparton": [],
   "Murchison East": [],
   "Wodonga": [],
@@ -102,7 +102,7 @@ module.exports = {
   "North Richmond": [],
   "West Richmond": [],
   "Flinders Street": [...platr(14, [11], 'fss-platform'), ...platr(14, [11], 'fss-escalator'), plat(null, 'trains-from-fss')],
-  "Parliament": [...platr(4, [], 'platform')],
+  "Parliament": [...platr(4, [], 'platform'), conc('interchange')],
   "Jolimont": [...platr(2, [], 'half-platform-bold')],
   "Richmond": [...platr(10, [], 'platform'), conc('interchange')],
   "Melbourne Central": [...platr(4, [], 'platform')],

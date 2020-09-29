@@ -9,6 +9,7 @@ module.exports.getURL = (station, pid) => {
   if (pid.type === 'half-platform') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/half-platform`
   if (pid.type === 'platform') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/platform`
   if (pid.type === 'pre-platform-vertical') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/pre-platform-vertical`
+  if (pid.type === 'vline-half-platform') pidURL = `/mockups/vline/${station}/${pid.platform}`
   if (pid.type === 'fss-escalator') pidURL = `/mockups/fss/escalator/${pid.platform}/${station}/`
   if (pid.type === 'fss-platform') pidURL = `/mockups/fss/platform/${pid.platform}/${station}/`
   if (pid.type === 'sss-platform') pidURL = `/mockups/sss/platform/${pid.platform * 2 - 1}-${pid.platform * 2}/`
@@ -26,6 +27,6 @@ module.exports.getStation = async (db, stationName) => {
     })
     stationsCache[stationName] = station
   }
-  
+
   return station
 }

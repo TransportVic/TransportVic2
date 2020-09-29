@@ -3,7 +3,7 @@ html
     link(rel='stylesheet' href='/static/css/mockups/summary.css')
   body
     - let verticalPIDs = ['concourse-interchange', 'fss-escalator', 'pre-platform-vertical']
-      
+
     div.container
       for pid in stationPID
         if pid.concourse
@@ -20,7 +20,7 @@ html
             let title = `/${stationCode}/platform/${pid.platform}`
             if (pid.type === 'trains-from-fss') title = '/FSS/trains-from-fss'
             let url = getURL(station, pid)
-            let isHalf = pid.type.startsWith('half-')
+            let isHalf = pid.type.includes('half-')
           div(class=`pid ${isHalf ? 'half' : verticalPIDs.includes(pid.type) ? 'vertical' : 'horizontal'}`)
             div.title
               a(href=url)=title

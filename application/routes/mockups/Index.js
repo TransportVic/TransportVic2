@@ -7,6 +7,11 @@ const rawStationPIDs = require('../../../additional-data/station-pids')
 const url = require('url')
 const querystring = require('querystring')
 const PIDUtils = require('./PIDUtils')
+const TrainUtils = require('./TrainUtils')
+
+async function preloadData(db, station, platform) {
+  TrainUtils.getPIDSDepartures(db, await PIDUtils.getStation(db, station), platform, null, null)
+}
 
 let stationPlatforms = {}
 let stationPIDs = {}
@@ -37,6 +42,8 @@ router.get('/summary/:station', (req, res) => {
   let stationPlatformData = stationPlatforms[station]
   let stationPID = stationPIDs[station]
   let stationCode = stationNames[station]
+
+  preloadData(res.db, station, '*')
 
   if (stationPID.length) {
     res.render('mockups/summary-known', {stationPID, station, stationCode, getURL: PIDUtils.getURL})
