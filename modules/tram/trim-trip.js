@@ -18,6 +18,7 @@ module.exports = async function(db, destination, coreRoute, trip, operationDay) 
 
     trip.destination = trip.stopTimings.slice(-1)[0].stopName
     trip.destinationArrivalTime = trip.stopTimings.slice(-1)[0].arrivalTime
+    trip.operationDays = operationDay
     delete trip._id
 
     let key = {
@@ -25,7 +26,7 @@ module.exports = async function(db, destination, coreRoute, trip, operationDay) 
       operationDays: operationDay,
       origin: trip.origin,
       departureTime: trip.departureTime,
-      destination: cutoffStop,
+      destination: trip.destination,
       destinationArrivalTime: trip.destinationArrivalTime
     }
 
