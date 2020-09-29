@@ -77,27 +77,7 @@ router.get('/get', async (req, res) => {
 
   let errorMessage = `${type} is not a valid PID type`
 
-  if (type === 'fss-escalator') {
-    return res.redirect('/mockups/fss/escalator/' + value + (station ? '/' + station : ''))
-  } else if (type === 'fss-platform') {
-    return res.redirect('/mockups/fss/platform/' + value + (station ? '/' + station : ''))
-  } else if (type === 'half-platform') {
-    return res.redirect(`/mockups/metro-lcd/${station}/${value}/half-platform`)
-  } else if (type === 'half-platform-bold') {
-    return res.redirect(`/mockups/metro-lcd/${station}/${value}/half-platform-bold`)
-  } else if (type === 'platform') {
-    return res.redirect(`/mockups/metro-lcd/${station}/${value}/platform`)
-  } else if (type === 'pre-platform-vertical') {
-    return res.redirect(`/mockups/metro-lcd/${station}/${value}/pre-platform-vertical`)
-  } else if (type === 'vline-half-platform') {
-    return res.redirect(`/mockups/vline/${station}/${value}`)
-  } else if (type === 'crt') {
-    return res.redirect(`/mockups/metro-crt/${station}/${value}`)
-  } else if (type === '2-line-led') {
-    return res.redirect(`/mockups/metro-led-pids/${station}/${value}`)
-  } else if (type === 'summary') {
-    return res.redirect(`/mockups/summary/${station}?type=${value}`)
-  } else if (type === 'concourse') {
+  if (type === 'concourse') {
     if (validConcourseTypes.includes(concourseType)) {
       return res.redirect(`/mockups/metro-lcd/concourse/${station}/${concourseType}`)
     } else {
@@ -113,6 +93,15 @@ router.get('/get', async (req, res) => {
     } else {
       errorMessage = `${value} is an invalid bus stop`
     }
+  } else if (type === 'summary') {
+    return res.redirect(`/mockups/summary/${station}?type=${value}`)
+  } else {
+    let url = PIDUtils.getURL(station, {
+      type,
+      platform: value
+    })
+
+    if (url) return res.redirect(url)
   }
 
   res.render('errors/400', {
