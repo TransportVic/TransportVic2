@@ -8,7 +8,7 @@ const stationDestinations = require('./station-destinations')
 async function getData(req, res) {
   let station = await PIDUtils.getStation(res.db, req.params.station)
 
-  return await TrainUtils.getPIDSDepartures(res.db, station, '*', null, null, 15, true)
+  return await TrainUtils.getPIDSDepartures(res.db, station, '*', null, null, 17, true)
 }
 
 router.get('/:station/up-down', async (req, res) => {

@@ -728,7 +728,12 @@ module.exports = {
 
     let hasDepartures = allDepartures.length > 0
 
-    let output = { departures: module.exports.trimDepartureData(platformDepartures, maxDepartures, addStopTimings, station.stopName), hasDepartures, hasRRB }
+    let output = {
+      stationName,
+      departures: module.exports.trimDepartureData(platformDepartures, maxDepartures, addStopTimings, station.stopName),
+      hasDepartures,
+      hasRRB
+    }
 
     departuresLock[cacheKey].emit('done', output)
     delete departuresLock[cacheKey]
