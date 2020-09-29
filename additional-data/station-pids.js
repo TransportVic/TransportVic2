@@ -215,7 +215,7 @@ module.exports = {
   "Yarragon": [],
   "Stratford": [],
   "Sale": [],
-  "Traralgon": [...plat(1, 'vline-half-platform')],
+  "Traralgon": [plat(1, 'vline-half-platform')],
   "Rosedale": [],
   "Spotswood": [],
   "Newport": [...platr(2, [], 'half-platform')],

@@ -124,7 +124,9 @@ module.exports = {
       || name.match(/CFA (Fire )?Station/) || name.match(/[\d]+\w? Station/)
     )
 
-    if (name.includes(' Station') && (expandStation || name.match(/Station\/Station/))) {
+    let isBusStation = name.includes('Bus Station')
+
+    if (name.includes(' Station') && !isBusStation && (expandStation || name.match(/Station\/Station/))) {
       name = name.replace(' Station', ' Railway Station')
     }
 

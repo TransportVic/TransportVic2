@@ -20,7 +20,7 @@ module.exports = [
   'wantirna/knox-city-shopping-centre',
   'belgrave/belgrave-railway-station',
   'lilydale/lilydale-railway-station',
-  'box-hill/box-hill-bus-station-station-street',
+  'box-hill/box-hill-railway-station',
   'blackburn/blackburn-railway-station',
   'mitcham/mitcham-railway-station',
   'newport/newport-interchange-mason-street',
