@@ -87,11 +87,11 @@ div.platform.sss-platform iframe {
 
 
 div.vertical {
-  --width: calc(13vw + 13vh);
+  --width: calc(14vw + 14vh);
 }
 
 div.horizontal, div.half {
-  --width: calc(18vw + 18vh);
+  --width: calc(25vw + 25vh);
 }
 
 div.pid, div.pid * {
