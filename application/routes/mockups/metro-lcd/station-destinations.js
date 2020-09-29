@@ -27,7 +27,7 @@ module.exports = {
     {
       name: 'Sunbury',
       targets: ['Sunbury'],
-      id: 'FSY-SBY',
+      id: 'FSY-SUY',
       count: 2
     },
     {
@@ -166,7 +166,7 @@ module.exports = {
     {
       name: 'Sunbury',
       targets: ['Sunbury'],
-      id: 'FGS-SBY',
+      id: 'FGS-SUY',
       count: 1
     }
   ],
@@ -180,7 +180,7 @@ module.exports = {
     {
       name: 'Sunbury',
       targets: ['Sunbury'],
-      id: 'NME-SBY',
+      id: 'NME-SUY',
       count: 2
     },
     {
@@ -406,7 +406,7 @@ module.exports = {
     {
       name: 'Sunbury',
       targets: ['Sunbury'],
-      id: 'PAR-SBY',
+      id: 'PAR-SUY',
       count: 1
     }
   ]

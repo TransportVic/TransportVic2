@@ -23,7 +23,7 @@ module.exports = [
   'box-hill/box-hill-railway-station',
   'blackburn/blackburn-railway-station',
   'mitcham/mitcham-railway-station',
-  'newport/newport-interchange-mason-street',
+  'newport/newport-railway-station',
   'rosebud/rosebud-village-shopping-centre-point-nepean-road',
   'chirnside-park/chirnside-park-shopping-centre-maroondah-highway',
   'cranbourne/cranbourne-railway-station',
