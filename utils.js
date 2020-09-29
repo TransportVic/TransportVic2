@@ -2,6 +2,7 @@ const moment = require('moment')
 require('moment-timezone')
 moment.tz.setDefault('Australia/Melbourne')
 const fetch = require('node-fetch')
+const stopNameModifier = require('./additional-data/stop-name-modifier')
 
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 
@@ -123,20 +124,10 @@ module.exports = {
       || name.match(/CFA (Fire )?Station/) || name.match(/[\d]+\w? Station/)
     )
 
-    let isBusStation = name.includes('Bus Station')
-
-    if (name.includes(' Station') && !isBusStation && (expandStation || name.match(/Station\/Station/))) {
+    if (name.includes(' Station') && (expandStation || name.match(/Station\/Station/))) {
       name = name.replace(' Station', ' Railway Station')
     }
 
-    name = name.replace(/Freeburgh \w*? ?Hall/, 'Freeburgh Community Hall')
-
-    if (name === 'Dalgetty St/Holding St') {
-      name = 'Dalgetty Rd/Holding St'
-    }
-    if (name === 'Heathcliff Lane/Royal Tce') {
-      name = 'Heathcliffe Lane/Royal Tce'
-    }
     name = module.exports.expandStopName(name)
 
     return name
@@ -212,6 +203,7 @@ module.exports = {
       .replace('North', 'Nth')
       .replace('Gardens', 'Gdns')
       .replace(/\/.+/, '')
+
     if (name === 'Monash Uni Bus Loop')
       name = 'Monash Uni'
 
@@ -225,7 +217,7 @@ module.exports = {
     let dates = []
 
     while(startDate.add(1, 'days').diff(endDate) <= 0) {
-        dates.push(startDate.clone())
+      dates.push(startDate.clone())
     }
 
     return dates
@@ -424,5 +416,8 @@ module.exports = {
     } else {
       return 'on-time'
     }
+  },
+  getProperStopName: ptvStopName => {
+    return module.exports.adjustRawStopName(stopNameModifier(module.exports.adjustStopName(ptvStopName.trim().replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, ''))))
   }
 }

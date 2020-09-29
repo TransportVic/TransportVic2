@@ -181,8 +181,8 @@ database.connect({
     if (!parts) return
     let startDate = parts[1] + ' ' + year
     let endDate = parts[2] + ' ' + year
-    let startMoment = moment(startDate, 'DD MMMM YYYY')
-    let endMoment = moment(endDate, 'DD MMMM YYYY')
+    let startMoment = utils.parseTime(startDate, 'DD MMMM YYYY')
+    let endMoment = utils.parseTime(endDate, 'DD MMMM YYYY')
     if (endMoment < startMoment) endMoment.add('1', 'year') // thinking about if term ends in jan
     let start = utils.getYYYYMMDD(startMoment)
     let end = utils.getYYYYMMDD(endMoment)

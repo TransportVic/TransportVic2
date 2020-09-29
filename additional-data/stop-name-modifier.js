@@ -22,5 +22,12 @@ module.exports = stopName => {
   if (stopName === 'Newport Interchange/Mason Street') return 'Newport Railway Station/Mason Street'
   if (stopName === 'Box Hill Bus Station/Station Street') return 'Box Hill Railway Station/Station Street'
 
+  if (stopName.includes('Freeburgh') && stopName.includes('Hall')) {
+    return stopName.replace(/Freeburgh \w*? ?Hall/, 'Freeburgh Community Hall')
+  }
+
+  if (stopName === 'Dalgetty Street/Holding Street') return 'Dalgetty Road/Holding Street'
+  if (stopName === 'Heathcliff Lane/Royal Terrace') return 'Heathcliffe Lane/Royal Tce'
+
   return stopName
 }

@@ -74,6 +74,7 @@ div.submissionRow {
 }
 
 div.customDropdown {
+  position: relative;
   margin: 0;
   display: inline-block;
 }

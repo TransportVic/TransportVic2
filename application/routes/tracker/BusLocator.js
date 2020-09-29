@@ -61,8 +61,7 @@ async function getPTVRunID(now, date, trip) {
 
   let departure = departures.filter(departure => {
     let run = runs[departure.run_ref]
-    let destinationName = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
-      .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
+    let destinationName = utils.getProperStopName(run.destination_name)
     let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc).toISOString()
 
     return scheduledDepartureTime === isoDeparture &&

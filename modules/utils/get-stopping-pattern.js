@@ -72,7 +72,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
       stopName += ' Railway Station'
     }
 
-    stopName = utils.adjustRawStopName(nameModifier(utils.adjustStopName(stopName.replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, ''))))
+    stopName = utils.getProperStopName(stopName)
 
     let dbStop = await stopsCollection.findDocument({
       $or: [{
@@ -102,9 +102,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
 
     let stopBay = dbStops[stop_id].bays
       .filter(bay => {
-        let stopName = utils.adjustRawStopName(nameModifier(utils.adjustStopName(ptvStop.stop_name.trim())))
-          .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
-
+        let stopName = utils.getProperStopName(ptvStop.stop_name)
         let matchingService = bay.services.find(s => s.routeGTFSID === routeGTFSID && s.gtfsDirection === gtfsDirection)
 
         return checkModes.includes(bay.mode) && bay.fullStopName === stopName && matchingService

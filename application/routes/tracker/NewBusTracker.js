@@ -68,9 +68,9 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
   trip.url = `/bus/run/${e(trip.origin)}/${trip.departureTime}/${e(trip.destination)}/${trip.destinationArrivalTime}/${trip.date}`
 
   trip.destination = (serviceData[dA] || serviceData[dB]
-    || busDestinations.generic[dA] || busDestinations.generic[dB] || dB)
+    || busDestinations.generic[dA] || busDestinations.generic[dB] || dB).replace('Railway Station', 'Station')
   trip.origin = (serviceData[oA] || serviceData[oB]
-    || busDestinations.generic[oA] || busDestinations.generic[oB] || oB)
+    || busDestinations.generic[oA] || busDestinations.generic[oB] || oB).replace('Railway Station', 'Station')
 
   let {departureTime, destinationArrivalTime} = trip
   let departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime)

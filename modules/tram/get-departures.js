@@ -62,8 +62,7 @@ async function getDeparturesFromPTV(stop, db) {
 
       let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime) % 1440
 
-      let destination = utils.adjustStopName(run.destination_name.trim())
-        .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
+      let destination = utils.getProperStopName(run.destination_name)
 
       let day = utils.getYYYYMMDD(scheduledDepartureTime)
       let routeGTFSID = route.route_gtfs_id.replace(/-0+/, '-')
