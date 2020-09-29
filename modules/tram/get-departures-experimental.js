@@ -133,7 +133,7 @@ async function getDeparturesFromYT(stop, db) {
           ...query,
           tram: VehicleNo,
           routeNumber: HeadBoardRouteNo,
-          shift: RunNo
+          shift: RunNo.trim()
         }
 
         await tramTrips.replaceDocument(query, tripData, {

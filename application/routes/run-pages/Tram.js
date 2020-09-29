@@ -65,9 +65,10 @@ async function pickBestTrip(data, db) {
     origin: referenceTrip.origin,
     destination: referenceTrip.destination
   })
+
   if (!tripData) {
     referenceTrip.routeNumber = determineTramRouteNumber(referenceTrip)
-    return { trip: referenceTrip, tripStartTime, isLive: false }
+    return { trip: referenceTrip, tripStartTime, isLive: false, shift: null }
   } else {
     referenceTrip.routeNumber = tripData.routeNumber
   }
@@ -75,14 +76,14 @@ async function pickBestTrip(data, db) {
   let useLive = minutesToTripEnd > -20 && minutesToTripStart < 45
   if (liveTrip) {
     if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
-      return { trip: liveTrip, tripStartTime, isLive: true }
+      return { trip: liveTrip, tripStartTime, isLive: true, shift: tripData.shift }
     }
   }
 
   let {tram} = tripData
   referenceTrip.vehicle = tram
 
-  if (!useLive) return { trip: referenceTrip, tripStartTime, isLive: false }
+  if (!useLive) return { trip: referenceTrip, tripStartTime, isLive: false, shift: tripData.shift }
 
   try {
     let rawTramTimings = JSON.parse(await utils.request(urls.yarraByFleet.format(tram)))
@@ -154,9 +155,9 @@ async function pickBestTrip(data, db) {
       upsert: true
     })
 
-    return  { trip: referenceTrip, tripStartTime, isLive: !failed }
+    return  { trip: referenceTrip, tripStartTime, isLive: !failed, shift: tripData.shift }
   } catch (e) {
-    return  { trip: referenceTrip, tripStartTime, isLive: false }
+    return  { trip: referenceTrip, tripStartTime, isLive: false, shift: tripData.shift }
   }
 }
 
@@ -164,7 +165,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   let tripData = await pickBestTrip(req.params, res.db)
   if (!tripData) return res.status(404).render('errors/no-trip')
 
-  let { trip, tripStartTime, isLive } = tripData
+  let { trip, tripStartTime, isLive, shift } = tripData
 
   let routes = res.db.getCollection('routes')
   let tripRoute = await routes.findDocument({ routeGTFSID: trip.routeGTFSID }, { routePath: 0 })
@@ -213,7 +214,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   if (trip.vehicle) {
     let tramModel = tramFleet.getModel(trip.vehicle)
     trip.vehicleData = {
-      name: `Tram ${tramModel}.${trip.vehicle}`,
+      name: `Tram ${tramModel}.${trip.vehicle} (${shift})`,
       model: tramModel
     }
   }
