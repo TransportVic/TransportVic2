@@ -46,6 +46,10 @@ const operators = {
   "Warragul Bus Lines": "W"
 }
 
+router.use((req, res) => {
+  res.render('tracker/outdated')
+})
+
 router.get('/', (req, res) => {
   res.render('tracker/index', {
     operators: Object.keys(operators)

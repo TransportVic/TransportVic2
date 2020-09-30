@@ -221,7 +221,7 @@ module.exports = class MainServer {
         enable: modules.tracker && modules.tracker.bus
       },
 
-      'tracker/BusTracker': {
+      'tracker/BusTracker': { // TODO: Deprecate
         path: '/tracker2',
         enable: modules.tracker && modules.tracker.bus
       },
