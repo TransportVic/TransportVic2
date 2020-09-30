@@ -5,6 +5,7 @@ const TrainUtils = require('../TrainUtils')
 const PIDUtils = require('../PIDUtils')
 
 let validPIDTypes = ['escalator', 'platform']
+let cityLoopConfigStops = ['Flinders Street', 'Parliament', 'Melbourne Central', 'Flagstaff', 'Southern Cross', 'North Melbourne', 'Jolimont', 'Richmond']
 
 async function getData(req, res, addStopTimings=false) {
   let station = await PIDUtils.getStation(res.db, req.params.station)
@@ -30,7 +31,22 @@ router.get('/trains-from-fss', async (req, res) => {
 })
 
 router.post('/trains-from-fss', async (req, res) => {
-  let departures = await getData({ params: { platform: '*', maxDepartures: 20 } }, res, true)
+  let departures = await getData({ params: { platform: '*', maxDepartures: Infinity } }, res, true)
+  let groupedDepartures = {}
+
+  departures.departures.forEach(departure => {
+    let cityLoopConfig = departure.stopTimings.map(stop => stop.stopName).filter(stop => cityLoopConfigStops.includes(stop))
+    if (cityLoopConfig.slice(-1)[0] === 'Flinders Street') cityLoopConfig.pop() // Account for CCL
+
+    let key = cityLoopConfig.join(',')
+    if (!groupedDepartures[key]) groupedDepartures[key] = []
+    groupedDepartures[key].push(departure)
+  })
+
+  departures.departures = Object.values(groupedDepartures).reduce((acc, group) => {
+    return acc.concat(group.slice(0, 3))
+  }, [])
+
   res.json(departures)
 })
 

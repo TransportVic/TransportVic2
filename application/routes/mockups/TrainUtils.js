@@ -637,6 +637,7 @@ module.exports = {
 
       let hasSeenStop = false
 
+      if (!departure.stopTimings) departure.stopTimings = []
       if (addStopTimings) data.stopTimings = departure.stopTimings.filter(stop => {
         if (hasSeenStop) return true
         if (stop.stopName === fromStop) {
