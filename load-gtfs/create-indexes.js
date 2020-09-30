@@ -192,8 +192,7 @@ database.connect({
     origin: 1,
     destination: 1,
     departureTime: 1,
-    destinationArrivalTime: 1,
-    consist: 1
+    destinationArrivalTime: 1
   }, {name: 'vline trips index', unique: true})
 
   await vlineTrips.createIndex({
