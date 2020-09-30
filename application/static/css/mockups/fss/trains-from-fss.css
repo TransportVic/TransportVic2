@@ -54,16 +54,17 @@ div.splitContent {
 div.left, div.right {
   display: inline-block;
   box-sizing: border-box;
-  width: calc(var(--width) * 0.5);
+  width: calc(var(--width) * (0.5 - 0.003));
   height: calc(var(--height) * 0.845);
 }
 
-div.left {
-  border-right: solid calc(var(--width) * 0.003) black;
+div.vertBorder {
+  height: calc(var(--height) * 0.845);
+  width: calc(var(--width) * 0.006);
+  background-color: #000000;
 }
 
 div.right {
-  border-left: solid calc(var(--width) * 0.003) black;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -71,12 +72,15 @@ div.right {
 }
 
 div.destination {
-  height: calc(var(--height) * 0.845 / 4);
+  height: calc(var(--height) * (0.845 / 4 - 0.005));
   display: flex;
   align-items: center;
+}
 
-  box-sizing: border-box;
-  border-bottom: solid calc(var(--height) * 0.005) black;
+div.hozBorder {
+  width: calc(var(--width) * (0.5 - 0.003));
+  height: calc(var(--height) * 0.005);
+  background-color: #000000;
 }
 
 div.details {
