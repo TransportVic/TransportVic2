@@ -28,11 +28,20 @@ $.ready(() => {
   $.ajax({
     method: 'POST'
   }, (err, status, data) => {
-    let { modeRoutePaths } = data
+    let { modePaths } = data
 
     let modes = ['bus', 'metro train', 'regional train', 'heritage train', 'tram', 'regional coach', 'ferry']
     modes.forEach(mode => {
-      L.geoJSON(modeRoutePaths[mode], {
+      L.geoJSON({
+        type: 'FeatureCollection',
+        features: modePaths[mode].map(encoded => ({
+          type: 'Feature',
+          geometry: GeoJSONPolyline.decode({
+            type: 'LineString',
+            coordinates: encoded
+          })
+        }))
+      }, {
         style: {
           color: colours[mode],
           weight: 1
