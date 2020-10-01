@@ -15,6 +15,12 @@ const operatorCodes = require('../../../additional-data/bus-operator-codes')
 
 let crossDepotQuery = null
 
+let manualRoutes = {
+  "CO": ["4-601", "4-60S", "4-612", "4-623", "4-624", "4-625", "4-626", "4-630", "4-900"],
+  "CS": ["4-406", "4-407", "4-408", "4-409", "4-410", "4-418", "4-419", "4-421", "4-423", "4-424", "4-425", "4-461"],
+  "CW": ["4-150", "4-151", "4-153", "4-160", "4-161", "4-166", "4-167", "4-170", "4-180", "4-181", "4-190", "4-191", "4-192", "4-400", "4-411", "4-412", "4-414", "4-415", "4-417", "4-439", "4-441", "4-443", "4-494", "4-495", "4-496", "4-497", "4-498", "4-606"],
+}
+
 async function generateCrossDepotQuery(smartrakIDs) {
   if (crossDepotQuery) return
 
@@ -445,6 +451,91 @@ router.get('/bot', async (req, res) => {
   } else {
     res.json([])
   }
+})
+
+router.get('/operator-unknown', async (req, res) => {
+  let {db} = res
+  let busTrips = db.getCollection('bus trips')
+  let smartrakIDs = db.getCollection('smartrak ids')
+  let routes = db.getCollection('routes')
+
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let today = utils.getYYYYMMDDNow()
+
+  let {operator, date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  if (!operator) {
+    return res.render('tracker/bus/by-operator-unknown', {
+      buses: {},
+      operator: '',
+      date: utils.parseTime(date, 'YYYYMMDD')
+    })
+  }
+
+  let operatorName = operatorCodes[operator]
+  let allBuses = await smartrakIDs.distinct('smartrakID')
+
+  let operatorServices = manualRoutes[operator] || await routes.distinct('routeGTFSID', {
+    operators: operatorName
+  })
+
+  let tripsToday = (await busTrips.findDocuments({
+    date,
+    routeGTFSID: {
+      $in: operatorServices
+    },
+    smartrakID: {
+      $not: {
+        $in: allBuses
+      }
+    }
+  }).sort({departureTime: 1, origin: 1}).toArray())
+    .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
+
+  let operationDays = await busTrips.distinct('date', {
+    routeGTFSID: {
+      $in: operatorServices
+    },
+    smartrakID: {
+      $not: {
+        $in: allBuses
+      }
+    }
+  })
+
+  let busesByDay = {}
+  let smartrakIDCache = {}
+
+  await async.forEachSeries(operationDays, async date => {
+    let buses = (await busTrips.distinct('smartrakID', {
+      date,
+      routeGTFSID: {
+        $in: operatorServices
+      },
+      smartrakID: {
+        $not: {
+          $in: allBuses
+        }
+      }
+    })).sort((a, b) => a - b).map(smartrakID => `@${smartrakID}`)
+
+    let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+    busesByDay[humanDate] = {
+      buses,
+      date
+    }
+  })
+
+  return res.render('tracker/bus/by-operator-unknown', {
+    tripsToday,
+    busesByDay,
+    operator: operatorName,
+    operatorCode: operator,
+    date: utils.parseTime(date, 'YYYYMMDD')
+  })
 })
 
 router.use('/locator', require('./BusLocator'))
