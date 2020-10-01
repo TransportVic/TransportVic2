@@ -236,6 +236,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let scheduledDepartureTime = utils.parseTime(bus.scheduled_departure_utc)
     return utils.getPTMinutesPastMidnight(scheduledDepartureTime)
   })
+  let replacementBusIDs = []
 
   async function processDeparture(departure) {
     let run = runs[departure.run_ref]
@@ -262,11 +263,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
     if (!platform && !isRailReplacementBus) return
 
-    const runID = run.vehicle_descriptor.id || ''
-    const vehicleType = run.vehicle_descriptor.description
+    let runID = run.vehicle_descriptor.id || ''
+    let vehicleType = run.vehicle_descriptor.description
 
-    const scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
-    const scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
+    let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
+    let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
 
     if (scheduledDepartureTime.diff(now, 'minutes') > 150) return
 
@@ -351,11 +352,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let viaCityLoop = isFSS ? cityLoopConfig.includes('FGS') : undefined
 
     let trip = await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines,
-      scheduledDepartureTime, possibleDestinations, direction, viaCityLoop)
+      scheduledDepartureTime, possibleDestinations, direction, viaCityLoop, replacementBusIDs)
 
     if (!trip) {
       trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
-        scheduledDepartureTime, possibleDestinations, direction, viaCityLoop)
+        scheduledDepartureTime, possibleDestinations, direction, viaCityLoop, replacementBusIDs)
     } else {
       usedLive = true
     }
@@ -379,6 +380,10 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
       trip = await getStoppingPattern(db, departure.run_ref, 'metro train', scheduledDepartureTime.toISOString())
       usedLive = true
+    }
+
+    if (isRailReplacementBus) {
+      replacementBusIDs.push(trip._id)
     }
 
     if (!usedLive) {
