@@ -101,6 +101,7 @@ let knownStops = [
 ]
 
 module.exports = stop => {
+  let bareStop = stop.replace(/station/i, '').trim()
   if (knownStops.includes(stop)) return stop
   return closest(stop, knownStops)
 }

@@ -7,7 +7,7 @@ async function discordUpdate(text) {
   await postDiscordUpdate('vlineInform', text)
 }
 
-async function setServicesAsCancelled(db, services) {
+async function setServiceAsCancelled(db, departureTime, origin, destination, isCoach) {
   let now = utils.now()
   if (now.get('hours') <= 2) now.add(-1, 'day')
   let today = utils.getYYYYMMDD(now)
@@ -15,78 +15,53 @@ async function setServicesAsCancelled(db, services) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
 
-  await async.forEach(services, async service => {
-    let {departureTime, origin, destination, isCoach} = service
+  if (departureTime.split(':')[0].length == 1) {
+    departureTime = `0${departureTime}`
+  }
 
-    if (departureTime.split(':')[0].length == 1) {
-      departureTime = `0${departureTime}`
-    }
+  let query = {
+    departureTime, origin, destination,
+    mode: 'regional train',
+    operationDays: today
+  }
 
-    let query = {
-      departureTime, origin, destination,
-      mode: 'regional train',
-      operationDays: today
-    }
-
-    let trip = await gtfsTimetables.findDocument(query)
-    if (trip) {
-      delete trip._id
-      if (isCoach) {
-        trip.type = 'replacement coach'
-        trip.isRailReplacementBus = true
-        trip.tripID = trip.tripID + '-RRB'
-      } else {
-        trip.type = 'cancellation'
-        trip.cancelled = true
-        trip.tripID = trip.tripID.replace('1-', '5-') + '-cancelled'
-      }
-
-      let key = {
-        tripID: trip.tripID
-      }
-
-      console.log(`Marking ${departureTime} ${origin} - ${destination} train as cancelled.${isCoach ? ' Replacement coaches provided' : ''}`)
-      await discordUpdate(`The ${departureTime} ${origin} - ${destination} service has been cancelled today.`)
-
-      trip.operationDays = today
-
-      await liveTimetables.replaceDocument(key, trip, {
-        upsert: true
-      })
+  let trip = await gtfsTimetables.findDocument(query)
+  if (trip) {
+    delete trip._id
+    if (isCoach) {
+      trip.type = 'replacement coach'
+      trip.isRailReplacementBus = true
+      trip.tripID = trip.tripID + '-RRB'
     } else {
-      console.log('Failed to find trip', query)
-      await discordUpdate(`Was told the ${departureTime} ${origin} - ${destination} service has been cancelled, but could not match.`)
+      trip.type = 'cancellation'
+      trip.cancelled = true
+      trip.tripID = trip.tripID.replace('1-', '5-') + '-cancelled'
     }
-  })
+
+    console.log(`Marking ${departureTime} ${origin} - ${destination} train as cancelled.${isCoach ? ' Replacement coaches provided' : ''}`)
+    await discordUpdate(`The ${departureTime} ${origin} - ${destination} service has been cancelled today.`)
+
+    trip.operationDays = today
+
+    await liveTimetables.replaceDocument(query, trip, {
+      upsert: true
+    })
+  } else {
+    console.log('Failed to find trip', query)
+    await discordUpdate(`Was told the ${departureTime} ${origin} - ${destination} service has been cancelled, but could not match.`)
+  }
 }
 
 async function cancellation(db, text) {
   let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?)(?: to | *- *)([\w ]*?) (?:service|train|will|has)/)
-  let matches = []
 
   if (service) {
     let departureTime = service[1].replace('.', ':')
     let origin = bestStop(service[2]) + ' Railway Station'
     let destination = bestStop(service[3]) + ' Railway Station'
     let isCoach = text.includes('coaches') && text.includes('replace')
-    matches.push({departureTime, origin, destination, isCoach})
-  } else {
-    if (text.match(/services (?:will not run|has been cancelled)/)) {
-      let services = text.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) /g)
-      if (services.length === 0) return console.log('Could not find match', text)
-
-      services.forEach(service => {
-        let parts = service.match(/(\d{1,2}:\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) /)
-        let departureTime = parts[1].replace('.', ':')
-        let origin = bestStop(parts[2].trim()) + ' Railway Station'
-        let destination = bestStop(parts[3].trim()) + ' Railway Station'
-        let isCoach = text.includes('coaches') && text.includes('replace')
-        matches.push({departureTime, origin, destination, isCoach})
-      })
-    }
+    await setServiceAsCancelled(db, departureTime, origin, destination, isCoach)
   }
-
-  await setServicesAsCancelled(db, matches)
 }
 
 module.exports = cancellation

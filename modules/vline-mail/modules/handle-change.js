@@ -66,17 +66,13 @@ async function setServiceAsChanged(db, departureTime, origin, destination, type,
       })
     }
 
-    let key = {
-      tripID: trip.tripID
-    }
-
     console.log(`Marking ${departureTime} ${origin} - ${destination} train as changed. Now ${type}s at ${changePoint}`)
     await discordUpdate(`The ${departureTime} ${origin} - ${destination} service will ${type} ${type === 'originate' ? 'from' : 'at'} ${changePoint} today.`)
 
     trip.operationDays = today
     trip.originalServiceID = trip.departureTime + trip.destination
 
-    await liveTimetables.replaceDocument(key, trip, {
+    await liveTimetables.replaceDocument(query, trip, {
       upsert: true
     })
   } else {
@@ -92,8 +88,8 @@ function change(db, text) {
 
   if (service) {
     let departureTime = service[1].replace('.', ':')
-    let origin = bestStop(service[2].trim()) + ' Railway Station'
-    let destination = bestStop(service[3].trim()) + ' Railway Station'
+    let origin = bestStop(service[2]) + ' Railway Station'
+    let destination = bestStop(service[3]) + ' Railway Station'
     let type = service[4]
     let changePoint = bestStop(service[5])
 

@@ -26,6 +26,7 @@ async function setServiceAsReinstated(db, service) {
     operationDays: today,
     type: 'cancellation'
   }
+
   let trip = await liveTimetables.findDocument(query)
 
   if (trip) {
