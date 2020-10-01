@@ -412,17 +412,13 @@ module.exports = {
 
     return stopTimings
   },
-  appendScreenDataToDeparture: (departure, station, routeName) => {
+  appendScreenDataToDeparture: (departure, destination, station, routeName) => {
     departure = module.exports.addTimeToDeparture(departure)
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
     let trip = departure.trip
 
-    let isUp = departure.trip.direction === 'Up'
-    let destinationStop = departure.stopTimings.slice(-1)[0]
-    let destination = destinationStop.stopName.slice(0, -16)
-    if (destination === 'Parliament') destination = 'Flinders Street'
-    if (destination === 'Southern Cross' && caulfieldGroup.includes(routeName)) destination = 'Flinders Street'
+    let isUp = trip.direction === 'Up'
 
     let lineStops = departure.lineStops
     let tripStops = departure.tripStops
@@ -433,7 +429,7 @@ module.exports = {
     startingIndex = lineStops.indexOf(stationName)
     let endingIndex = lineStops.lastIndexOf(destination)
 
-    if (departure.trip.routeGTFSID === '2-CCL') endingIndex-- // bring it back from fss to parliament or southern cross
+    if (trip.routeGTFSID === '2-CCL') endingIndex-- // bring it back from fss to parliament or southern cross
 
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
 
@@ -482,7 +478,7 @@ module.exports = {
       }
     }
 
-    let stopData = departure.trip.stopTimings.find(stop => stop.stopName === station.stopName)
+    let stopData = trip.stopTimings.find(stop => stop.stopName === station.stopName)
 
     let notTakingPassengers = false
     if (stopData.stopConditions) // trips matching using wtt timetables and live timetables don't have NTP
@@ -491,7 +487,7 @@ module.exports = {
     departure.additionalInfo = {
       screenStops, expressCount, viaCityLoop, direction: isUp ? 'Up': 'Down', via, notTakingPassengers
     }
-    if (departure.trip.routeGTFSID === '2-CCL') departure.destination = 'City Loop'
+    if (trip.routeGTFSID === '2-CCL') departure.destination = 'City Loop'
 
     return departure
   },
@@ -688,7 +684,7 @@ module.exports = {
       let isUp = direction === 'Up'
       let routeName = departure.shortRouteName || trip.routeName
 
-      let tripStops = stopTimings.map(stop => stop.stopName.slice(0, -16))
+      let tripStops = stopTimings.filter(stop => !stop.cancelled).map(stop => stop.stopName.slice(0, -16))
 
       if (routeName === 'Bendigo') {
         if (isUp && departure.trip.origin === 'Eaglehawk Railway Station') routeName = 'Swan Hill'
@@ -697,6 +693,7 @@ module.exports = {
 
       let lineStops = getLineStops(routeName)
       if (destination === 'City Loop') destination = 'Flinders Street'
+      else destination = tripStops.slice(-1)[0]
 
       if (isUp) lineStops = lineStops.slice(0).reverse()
 
@@ -722,7 +719,7 @@ module.exports = {
       else if (expressCount < 4) departure.stoppingType = stoppingType.limExp
       else departure.stoppingType = stoppingType.exp
 
-      departure = module.exports.appendScreenDataToDeparture(departure, station, routeName)
+      departure = module.exports.appendScreenDataToDeparture(departure, destination, station, routeName)
 
       return departure
     }).concat(platformArrivals).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
