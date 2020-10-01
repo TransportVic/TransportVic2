@@ -39,8 +39,13 @@ if departures.length
           else if departure.trip.changeType === 'terminate'
             span.broadDepartureInfo.important CHANGED: Now terminates at #{departure.trip.changePoint}
         else if departure.trip.type === 'pattern-altered'
-          - let stopSkipped = departure.trip.stopTimings.find(stop => stop.cancelled)
-          span.broadDepartureInfo.important #{stopSkipped.stopName === station.stopName ? 'CANCELLED' : 'CHANGED'}: Will not stop at #{stopSkipped.stopName.slice(0, -16)}
+          -
+            let stopSkipped = departure.trip.stopTimings.find(stop => stop.cancelled)
+            let currentStop = departure.trip.stopTimings.find(stop => stop.stopName === station.stopName)
+            let skippedIndex = departure.trip.stopTimings.indexOf(stopSkipped)
+            let currentIndex = departure.trip.stopTimings.indexOf(currentStop)
+          if skippedIndex >= currentIndex
+            span.broadDepartureInfo.important #{skippedIndex === currentIndex ? 'CANCELLED' : 'CHANGED'}: Will not stop at #{stopSkipped.stopName.slice(0, -16)}
         else if departure.cancelled
           span.broadDepartureInfo.important CANCELLED
         else
