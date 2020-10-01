@@ -34,7 +34,7 @@ module.exports = {
 
   getSecureContext: hostname => {
     let up = hostname.slice(hostname.indexOf('.') + 1)
-    if (wildcards.includes(up)) return secureContexts[up]
+    if (wildcards.includes(up) || wildcards.includes(hostname)) return secureContexts[up]
 
     return secureContexts[hostname]
   },
