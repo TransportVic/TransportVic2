@@ -262,7 +262,13 @@ database.connect({
     routeNumber: 1,
     date: 1,
     smartrakID: 1
-  }, {name: 'service operating days + smartrak id query index'})
+  }, {name: 'route operating days + smartrak id query index'})
+
+  await busTrips.createIndex({
+    date: 1,
+    routeGTFSID: 1,
+    smartrakID: 1
+  }, {name: 'route gtfs id operating days + smartrak id query index'})
 
   console.log('Created bus trips index')
 
