@@ -2,45 +2,45 @@ const config = require('../../config.json')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const utils = require('../../utils')
 const shuffle = require('lodash.shuffle')
-const stops = require('../../additional-data/bus-tracker/stops')
+const stops = require('../../additional-data/tram-tracker/stops')
 const async = require('async')
-const getDepartures = require('../../modules/bus/get-departures')
+const getDepartures = require('../../modules/tram/get-departures-experimental')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
-let refreshRate = 10
+let refreshRate = 6
 
 function isDay() {
   let minutes = utils.getMinutesPastMidnightNow()
 
-  return 270 <= minutes && minutes <= 1260 // 0500 - 2100
+  return 270 <= minutes && minutes <= 1200 // 0500 - 2000
 }
 
 function isNight() {
   let minutes = utils.getMinutesPastMidnightNow()
 
-  return 1261 <= minutes && minutes <= 1439 || minutes <= 60 // 2101 - 0100
+  return 1201 <= minutes && minutes <= 1439 || minutes <= 120 // 2101 - 0200
 }
 
 /*
   Requests from:
-  0500 - 2100: 160 req
-  2100 - 0100: 24 req
+  0500 - 2000: 150 req
+  2000 - 0200: 36 req
 */
 function updateRefreshRate() {
-  if (isDay()) refreshRate = 7
+  if (isDay()) refreshRate = 6
   else if (isNight()) refreshRate = 10
   else {
     let minutes = utils.getMinutesPastMidnightNow()
     if (minutes < 300) minutes += 1440
 
     refreshRate = 1740 - minutes + 1
-    console.log('Bus Tracker going to sleep for ' + refreshRate + ' minutes')
+    console.log('Tram Tracker going to sleep for ' + refreshRate + ' minutes')
   }
 }
 
 function pickRandomStops() {
-  let size = 26
+  let size = 20
   if (isNight()) size = Math.floor(size / 2)
   return shuffle(stops).slice(0, size)
 }
@@ -55,7 +55,7 @@ async function requestTimings() {
 
     setTimeout(async () => {
       await getDepartures(dbStop, database)
-    }, i * 15000)
+    }, i * 20000)
   })
 
   updateRefreshRate()

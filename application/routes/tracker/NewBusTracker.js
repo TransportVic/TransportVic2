@@ -7,11 +7,11 @@ const querystring = require('querystring')
 const moment = require('moment')
 const busDestinations = require('../../../additional-data/bus-destinations')
 
-const highlightData = require('../../../additional-data/tracker-highlights-new')
+const highlightData = require('../../../additional-data/bus-tracker/highlights')
 
-const knownBuses = require('../../../additional-data/bus-lists')
-const serviceDepots = require('../../../additional-data/service-depots')
-const operatorCodes = require('../../../additional-data/bus-operator-codes')
+const knownBuses = require('../../../additional-data/bus-tracker/fleetlist')
+const serviceDepots = require('../../../additional-data/bus-tracker/depots')
+const operatorCodes = require('../../../additional-data/bus-tracker/operators')
 
 let crossDepotQuery = null
 

@@ -181,7 +181,7 @@ module.exports = {
   "Kananook": [...platr(2, [], 'half-platform-bold')],
   "Mentone": [...platr(2, [], 'platform')],
   "Parkdale": [...platr(2, [], 'half-platform-bold')],
-  "Mordialloc": [],
+  "Mordialloc": [...platr(2, [], 'half-platform-bold')],
   "Aspendale": [],
   "Edithvale": [],
   "Chelsea": [],

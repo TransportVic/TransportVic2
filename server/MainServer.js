@@ -16,6 +16,9 @@ const modules = require('../modules.json')
 if (modules.tracker && modules.tracker.bus)
   require('../modules/trackers/bus')
 
+if (modules.tracker && modules.tracker.tram)
+  require('../modules/trackers/tram')
+
 if (modules.tracker && modules.tracker.vline)
   require('../modules/trackers/vline')
 
