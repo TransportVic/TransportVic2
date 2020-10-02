@@ -43,10 +43,8 @@ block content
   form(method="GET" action="/bus/tracker/operator-unknown")#operatorUnknowns
     label(for="operator") Operator Unknown Listing:
     br
-    input(type="text" name="operator" value="" placeholder="Operator Prefix" autocomplete="off")
-    br
     div.inputSection
-      input(type="text" name="date" value="" placeholder="DD/MM/YYYY (Blank for today)" autocomplete="off")
+      input(type="text" name="operator" value="" placeholder="Operator Prefix" autocomplete="off")
       input(type="submit" value="Go")
   br
   form(method="GET" action="/bus/tracker/locator")#locator
