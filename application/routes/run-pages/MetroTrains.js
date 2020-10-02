@@ -75,7 +75,7 @@ async function pickBestTrip(data, db) {
   let useLive = minutesToTripEnd >= -120 && minutesToTripStart < 240
 
   if (liveTrip) {
-    if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
+    if (liveTrip.isRailReplacementBus || liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
       let isLive = liveTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
 
       return { trip: liveTrip, tripStartTime, isLive }

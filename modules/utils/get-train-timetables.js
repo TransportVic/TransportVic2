@@ -199,7 +199,8 @@ async function getScheduledDepartures(station, db, mode, timeout) {
       runID: '',
       cancelled: trip.type === 'cancellation' || trip.cancelled,
       suspensions: [],
-      consist: []
+      consist: [],
+      isRailReplacementBus: trip.isRailReplacementBus || false
     }
   }).filter(Boolean).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }

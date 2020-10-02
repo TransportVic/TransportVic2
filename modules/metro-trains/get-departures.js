@@ -547,6 +547,46 @@ function filterDepartures(departures, filter) {
   })
 }
 
+async function markRailBuses(departures, station, db) {
+  let liveTimetables = db.getCollection('live timetables')
+  let stopGTFSID = station.bays.find(bay => bay.mode === 'metro train').stopGTFSID
+
+  await async.forEach(departures.filter(departure => departure.isRailReplacementBus), async departure => {
+    let { trip } = departure
+    let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+    let minutesDiff = stopData.departureTimeMinutes - trip.stopTimings[0].departureTimeMinutes
+    let originDepartureTime = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
+
+    let departureDay = utils.getYYYYMMDD(originDepartureTime)
+    let windBackTime = trip.stopTimings[0].departureTimeMinutes > 1440
+    let stopTimings = windBackTime ? trip.stopTimings.map(stop => {
+      return {
+        ...stop,
+        departureTimeMinutes: stop.departureTimeMinutes - 1440
+      }
+    }) : trip.stopTimings
+
+    let newTrip = {
+      ...trip,
+      stopTimings,
+      isRailReplacementBus: true,
+      operationDays: departureDay
+    }
+
+    let query = {
+      departureTime: newTrip.departureTime,
+      origin: newTrip.origin,
+      destination: newTrip.destination,
+      mode: 'metro train',
+      operationDays: departureDay
+    }
+
+    await liveTimetables.replaceDocument(query, newTrip, {
+      upsert: true
+    })
+  })
+}
+
 async function getDepartures(station, db, filter=true) {
   let cacheKey = station.stopName + 'M'
 
@@ -574,23 +614,10 @@ async function getDepartures(station, db, filter=true) {
   try {
     let departures = await getDeparturesFromPTV(station, db)
 
-    let serviceIDs = []
-    let mergedDepartures = {}
+    await markRailBuses(departures, station, db)
 
-    departures.forEach(departure => {
-      let serviceID = departure.scheduledDepartureTime.format('HH:mm') + departure.trip.trueOrigin + departure.trip.trueDestination + departure.trip.trueDestinationArrivalTime
-
-      if (serviceIDs.includes(serviceID))
-        mergedDepartures[serviceID].busCount++
-      else {
-        departure.busCount = 1
-        mergedDepartures[serviceID] = departure
-        serviceIDs.push(serviceID)
-      }
-    })
-
-    departuresCache.put(cacheKey, Object.values(mergedDepartures))
-    return returnDepartures(filterDepartures(Object.values(mergedDepartures), filter))
+    departuresCache.put(cacheKey, Object.values(departures))
+    return returnDepartures(filterDepartures(Object.values(departures), filter))
   } catch (e) {
     console.log(e)
     try {
