@@ -49,7 +49,7 @@ function spawnProcess(path, finish) {
     lines.forEach(line => {
       if (line.match(/\d+ms http/)) {
         if (line.includes('discord')) return
-        line = line.replace(/\&devid.+/, '')
+        line = line.replace(/\&devid.+/, '').replace(/&access_token.+/, '')
       }
 
       broadcast({
