@@ -67,7 +67,7 @@ module.exports = [{
   buses: 'exclude'
 }, {
   name: 'CDC Oakleigh Specials',
-  track: ['CO12'],
+  track: ['CO7', 'CO8', 'CO11', 'CO12', 'CO13', 'CO14', 'CO100', 'CO103', 'CO104', 'CO105', 'CO107', 'CO18'],
   routes: [],
   type: 'exclude'
 }, {
@@ -91,8 +91,23 @@ module.exports = [{
   routes: [],
   type: 'exclude'
 }, {
+  name: 'CDC Sunshine Specials',
+  track: ['CS53', 'CS54', 'CS57', 'CS58', 'CS62'],
+  routes: [],
+  type: 'exclude'
+}, {
   name: 'CDC Ballarat Specials',
   track: ['CB174', 'CB175', 'CB176'],
+  routes: [],
+  type: 'exclude'
+}, {
+  name: 'CDC Geelong Specials',
+  track: [],
+  routes: [],
+  type: 'exclude'
+}, {
+  name: 'Transdev Specials',
+  track: ['T574', 'T585'],
   routes: [],
   type: 'exclude'
 }, {
