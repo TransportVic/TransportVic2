@@ -125,6 +125,65 @@ function adjustSuspension(suspension, trip, currentStation) {
   }
 }
 
+async function getMissingRRB(station, db, individualRailBusDepartures) {
+  let gtfsTimetables = db.getCollection('gtfs timetables')
+  let today = utils.now().startOf('day')
+  let stopGTFSID = station.bays.find(bay => bay.mode === 'metro train').stopGTFSID
+
+  let extraBuses = []
+
+  await async.forEach(individualRailBusDepartures, async departureData => {
+    let { departureTimeMinutes, id, direction } = departureData
+    let searchDays = departureTimeMinutes < 300 ? 1 : 0
+
+    for (let i = 0; i <= searchDays; i++) {
+      let day = today.clone().add(-i, 'days')
+
+      let minutesPastMidnight = (departureTimeMinutes % 1440) + 1440 * i
+
+      let extraBus = await gtfsTimetables.findDocument({
+        _id: {
+          $not: {
+            $eq: id
+          }
+        },
+        operationDays: utils.getYYYYMMDD(day),
+        mode: 'metro train',
+        stopTimings: {
+          $elemMatch: {
+            stopGTFSID,
+            departureTimeMinutes: minutesPastMidnight
+          }
+        },
+        direction
+      })
+
+      if (extraBus) {
+        let stopData = extraBus.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+        let scheduledDepartureTime = utils.getMomentFromMinutesPastMidnight(stopData.departureTimeMinutes, day)
+
+        extraBuses.push({
+          trip: extraBus,
+          scheduledDepartureTime,
+          estimatedDepartureTime: null,
+          actualDepartureTime: scheduledDepartureTime,
+          platform: '-',
+          scheduledDepartureTimeMinutes: stopData.departureTimeMinutes,
+          cityLoopConfig: [],
+          destination: extraBus.destination.slice(0, -16),
+          runID: '',
+          cancelled: false,
+          suspensions: [],
+          consist: [],
+          isRailReplacementBus: true
+        })
+      }
+    }
+  })
+
+  return extraBuses
+}
+
 async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let timetables = db.getCollection('timetables')
@@ -236,7 +295,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let scheduledDepartureTime = utils.parseTime(bus.scheduled_departure_utc)
     return utils.getPTMinutesPastMidnight(scheduledDepartureTime)
   })
-  let replacementBusIDs = []
+
+  let individualRailBusDepartures = []
 
   async function processDeparture(departure) {
     let run = runs[departure.run_ref]
@@ -352,11 +412,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let viaCityLoop = isFSS ? cityLoopConfig.includes('FGS') : undefined
 
     let trip = await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines,
-      scheduledDepartureTime, possibleDestinations, direction, viaCityLoop, replacementBusIDs)
+      scheduledDepartureTime, possibleDestinations, direction, viaCityLoop)
 
     if (!trip) {
       trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
-        scheduledDepartureTime, possibleDestinations, direction, viaCityLoop, replacementBusIDs)
+        scheduledDepartureTime, possibleDestinations, direction, viaCityLoop)
     } else {
       usedLive = true
     }
@@ -383,7 +443,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     }
 
     if (isRailReplacementBus) {
-      replacementBusIDs.push(trip._id)
+      individualRailBusDepartures.push({
+        departureTimeMinutes: scheduledDepartureTimeMinutes,
+        id: trip._id,
+        direction: trip.direction
+      })
     }
 
     if (!usedLive) {
@@ -465,7 +529,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   await async.forEach(trains, processDeparture)
   await async.forEachSeries(replacementBuses, processDeparture)
 
-  return transformedDepartures
+  return transformedDepartures.concat(await getMissingRRB(station, db, individualRailBusDepartures))
 }
 
 function filterDepartures(departures, filter) {
