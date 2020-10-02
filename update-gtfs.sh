@@ -1,5 +1,6 @@
 DIRNAME=$(dirname "$0")
 
+rm -r $DIRNAME/load-gtfs/divide-conquer
 cd $DIRNAME/gtfs
 rm -r *
 curl http://data.ptv.vic.gov.au/downloads/gtfs.zip --output gtfs.zip

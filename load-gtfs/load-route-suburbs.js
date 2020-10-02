@@ -49,8 +49,7 @@ database.connect({}, async err => {
     if (i % 30 === 0 && i !== 0) console.log(`Route-Suburbs: Completed ${i} routes`)
   })
 
-  await updateStats('regional-bus-lgas', regionalBusRoutes.length)
-
-  console.log('Completed loading in ' + regionalBusRoutes.length + ' route Suburbs')
+  await updateStats('regional-bus-suburbs', regionalBusRoutes.length)
+  console.log('Completed loading in ' + regionalBusRoutes.length + ' route suburbs')
   process.exit()
 })
