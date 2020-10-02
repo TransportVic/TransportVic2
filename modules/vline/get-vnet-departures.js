@@ -96,6 +96,12 @@ async function getVNETDepartures(stationName, direction, db, time) {
     let originVLinePlatform = originStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
     let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
 
+    let consist = fullVehicle.split('-').filter((e, i, a) => a.indexOf(e) === i) // Simple deduper
+    let dayOfWeek = utils.getDayName(originDepartureTime)
+    let isWeekday = utils.isWeekday(dayOfWeek)
+
+    if (runID === '8147' && isWeekday) consist.reverse()
+
     mappedDepartures.push({
       runID,
       originVNETName: originVLinePlatform.vnetStationName,
@@ -105,7 +111,7 @@ async function getVNETDepartures(stationName, direction, db, time) {
       platform,
       originDepartureTime, destinationArrivalTime,
       direction,
-      vehicle: fullVehicle.split('-').filter((e, i, a) => a.indexOf(e) === i), // Simple deduper
+      vehicle: consist,
       barAvailable,
       accessibleTrain,
       vehicleType,
