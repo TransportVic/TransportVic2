@@ -33,7 +33,7 @@ self.addEventListener('install', e => {
 
       '/static/css/routes/base-style.css',
 
-      '/static/css/tracker/bus-results.css',
+      '/static/css/tracker/results.css',
 
       '/static/css/about.css',
       '/static/css/base-style.css',

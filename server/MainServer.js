@@ -232,6 +232,10 @@ module.exports = class MainServer {
         path: '/bus/tracker',
         enable: modules.tracker && modules.tracker.bus
       },
+      'tracker/TramTracker': {
+        path: '/tram/tracker',
+        enable: modules.tracker && modules.tracker.tram
+      },
       'tracker/VLineTracker': {
         path: '/vline/tracker',
         enable: modules.tracker && modules.tracker.vline

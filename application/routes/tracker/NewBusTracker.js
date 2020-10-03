@@ -1,11 +1,11 @@
 const async = require('async')
 const express = require('express')
 const utils = require('../../../utils')
-const router = new express.Router()
 const url = require('url')
 const querystring = require('querystring')
 const moment = require('moment')
 const busDestinations = require('../../../additional-data/bus-destinations')
+const router = new express.Router()
 
 const highlightData = require('../../../additional-data/bus-tracker/highlights')
 

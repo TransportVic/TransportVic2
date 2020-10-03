@@ -46,6 +46,10 @@
   background-color: #d7832c;
 }
 
+.leftContainer.tram {
+  background-color: #1a942a;
+}
+
 .leftContainer.vline {
   background-color: #6b4d9e;
 }

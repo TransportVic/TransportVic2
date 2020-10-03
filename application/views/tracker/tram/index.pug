@@ -1,0 +1,40 @@
+extends ../../layout
+
+block head
+  -
+    title = 'TransportVic - Tracker/Tram'
+    description = 'TransportVic Tram Tracker'
+  title #{title}
+  link(rel='preload' as='style' href='/static/css/form.css')
+  
+block title
+  span Tram Tracker
+    
+block style
+  link(rel='stylesheet' href='/static/css/form.css')
+
+block content
+  h1#title Tram Tracker
+  h2 Track Your Tram By:
+  br
+  form(method="GET" action="/tram/tracker/fleet")#byFleet
+    label(for="fleet") Fleet Number:
+    br
+    div.inputSection
+      input(type="text" maxlength="4" name="fleet" value="" placeholder="Fleet Number" autocomplete="off")
+      input(type="submit" value="Go")
+  br
+  form(method="GET" action="/tram/tracker/service")#byService
+    label(for="service") Service:
+    br
+    div.inputSection
+      input(type="text" name="service" value="" placeholder="Service Number" autocomplete="off")
+      input(type="submit" value="Go")
+        
+//-
+  h2 Alternatively,
+  a#highlights(href="/tram/tracker/highlights") View Today's Highlights
+  h2.regularText Or
+  a#crossDepot(href="/tram/tracker/cross-depot") Cross Depot Deployments
+  br
+  br
