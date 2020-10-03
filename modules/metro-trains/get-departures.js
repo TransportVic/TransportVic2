@@ -583,6 +583,8 @@ async function markRailBuses(departures, station, db) {
       operationDays: departureDay
     }
 
+    delete newTrip._id
+
     await liveTimetables.replaceDocument(query, newTrip, {
       upsert: true
     })
