@@ -1,0 +1,62 @@
+[
+  {
+    "originalName": "Quarantine Station (Portsea)",
+    "fullStopName": "Quarantine Station/Danson Drive",
+    "stopGTFSID": 15000001,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.693232, -38.313942]
+    },
+    "stopNumber": null,
+    "mode": "bus",
+    "suburb": "Portsea"
+  },
+  {
+    "originalName": "Gunner's Cottage (Portsea)",
+    "fullStopName": "Gunner's Cottage/Defence Drive",
+    "stopGTFSID": 15000002,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.679690, -38.309567]
+    },
+    "stopNumber": null,
+    "mode": "bus",
+    "suburb": "Portsea"
+  },
+  {
+    "originalName": "Cheviot Hill (Portsea)",
+    "fullStopName": "Cheviot Hill/Defence Road",
+    "stopGTFSID": 15000003,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.667915, -38.309541]
+    },
+    "stopNumber": null,
+    "mode": "bus",
+    "suburb": "Portsea"
+  },
+  {
+    "originalName": "Fort Pearce (Portsea)",
+    "fullStopName": "Fort Pearce/Defence Road",
+    "stopGTFSID": 15000004,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.658897, -38.306862]
+    },
+    "stopNumber": null,
+    "mode": "bus",
+    "suburb": "Portsea"
+  },
+  {
+    "originalName": "Fort Nepean (Portsea)",
+    "fullStopName": "Fort Nepean/Defence Road",
+    "stopGTFSID": 15000005,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.652277, -38.303411]
+    },
+    "stopNumber": null,
+    "mode": "bus",
+    "suburb": "Portsea"
+  }
+]

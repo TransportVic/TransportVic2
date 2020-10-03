@@ -580,8 +580,7 @@
       "Ferry Terminal": "Sorrento"
     },
     "788": {
-      "The Bays Hospital": "Mornington",
-      "Point Nepean National Park Entrance": "Portsea"
+      "The Bays Hospital": "Mornington"
     },
     "792": {
       "Baxter-Tooradin Road/Pearcedale Road": "Pearcedale"
@@ -887,6 +886,7 @@
     "Royal Hotel": "Corowa",
     "Tallangatta Information Centre": "Tallangatta",
     "Corryong Newsagency": "Corryong",
-    "Wodonga Post Office": "Wodonga"
+    "Wodonga Post Office": "Wodonga",
+    "Point Nepean National Park Entrance": "Portsea"
   }
 }
