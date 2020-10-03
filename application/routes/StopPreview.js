@@ -4,6 +4,8 @@ const router = new express.Router()
 const bayData = require('../../additional-data/bus-bays')
 const trainReplacementBays = require('../../additional-data/train-replacement-bays')
 const platformGeometry = require('../../additional-data/station-platform-geometry')
+const stationBikes = require('../../additional-data/station-bikes')
+const stationCarparks = require('../../additional-data/station-carparks')
 const turf = require('@turf/turf')
 
 router.post('/:suburb/:stopName', async (req, res) => {
@@ -24,7 +26,9 @@ router.post('/:suburb/:stopName', async (req, res) => {
     stop.location.coordinates = stop.location.coordinates.concat(extraLocations)
   }
 
-  stop.platformGeometry = platformGeometry[trainStationName] || null
+  stop.platformGeometry = platformGeometry[trainStationName] || []
+  stop.carpark = stationCarparks[trainStationName] || []
+  stop.bikes = stationBikes[trainStationName] || []
 
   let allFeatures = {
     type: "FeatureCollection",
@@ -36,12 +40,18 @@ router.post('/:suburb/:stopName', async (req, res) => {
     ]
   }
 
-  if (stop.platformGeometry) {
-    allFeatures.features = allFeatures.features.concat(stop.platformGeometry.map(g => ({
-      type: "Feature",
-      geometry: g.geometry
-    })))
-  }
+  allFeatures.features = allFeatures.features.concat(stop.platformGeometry.map(g => ({
+    type: "Feature",
+    geometry: g.geometry
+  }))).concat(stop.carpark.map(c => ({
+    type: "Feature",
+    geometry: c.geometry
+  }))).concat(stop.bikes.map(b => ({
+    type: "Feature",
+    geometry: b.geometry
+  })))
+
+
 
   let bbox = turf.bboxPolygon(turf.bbox(allFeatures))
   stop.bbox = bbox

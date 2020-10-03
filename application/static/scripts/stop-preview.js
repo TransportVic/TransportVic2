@@ -86,16 +86,40 @@ Towards: ${bay.towards}`
         })
       }
 
-      if (stopData.platformGeometry) {
-        stopData.platformGeometry.forEach(platform => {
-          let {platformNumber, geometry} = platform
+      stopData.carpark.forEach(carparkData => {
+        let {capacity, geometry} = carparkData
 
-          L.geoJSON({
-            type: 'Feature',
-            geometry
-          }).addTo(map).bindPopup('Platform ' + platformNumber)
-        })
-      }
+        L.geoJSON({
+          type: 'Feature',
+          geometry
+        }, {
+          style: {
+            color: '#ffffff'
+          }
+        }).addTo(map).bindPopup(`Carpark<br>Capacity: ${capacity}`)
+      })
+
+      stopData.bikes.forEach(carparkData => {
+        let {capacity, type, location, geometry} = carparkData
+        let icon = L.divIcon({className: 'stopIcon bikeStorage'})
+        let marker = L.marker([geometry.coordinates[1], geometry.coordinates[0]], {icon: icon}).addTo(map)
+
+        let name = `Bicycle Storage Area
+        <br>Type: ${type}
+        <br>Location: ${location}
+        <br>Capacity: ${capacity}`
+
+        marker.bindPopup(name)
+      })
+
+      stopData.platformGeometry.forEach(platform => {
+        let {platformNumber, geometry} = platform
+
+        L.geoJSON({
+          type: 'Feature',
+          geometry
+        }).addTo(map).bindPopup('Platform ' + platformNumber)
+      })
 
       let {bbox} = stopData
       map.fitBounds([bbox.geometry.coordinates[0][0].reverse(), bbox.geometry.coordinates[0][2].reverse()])
