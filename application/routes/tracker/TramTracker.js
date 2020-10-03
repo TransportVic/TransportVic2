@@ -5,6 +5,7 @@ const url = require('url')
 const querystring = require('querystring')
 const moment = require('moment')
 const tramDestinations = require('../../../additional-data/tram-destinations')
+const tramFleet = require('../../../tram-fleet')
 const router = new express.Router()
 
 function adjustTrip(trip, date, today, minutesPastMidnightNow) {
@@ -23,6 +24,9 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
   if (destinationArrivalTimeMinutes < departureTimeMinutes) destinationArrivalTimeMinutes += 1440
 
   trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
+
+  let model = tramFleet.getModel(tram.tram)
+  trip.tram = `${model}.${trip.tram}`
 
   return trip
 }
@@ -80,10 +84,13 @@ router.get('/fleet', async (req, res) => {
     }
   })
 
+  let model = tramFleet.getModel(fleet)
+
   res.render('tracker/tram/by-fleet', {
     tripsToday,
     servicesByDay,
     fleet,
+    tram: `${model}.${fleet}`,
     date: utils.parseTime(date, 'YYYYMMDD')
   })
 })
@@ -110,13 +117,15 @@ router.get('/service', async (req, res) => {
     })
   }
 
+  let routeQuery = {
+    $in: [
+      service, service + 'a', service + 'd' // Optimise for core route
+    ]
+  }
+
   let rawTripsToday = await tramTrips.findDocuments({
     date,
-    routeNumber: {
-      $in: [
-        service, service + 'a', service + 'd' // Optimise for core route
-      ]
-    }
+    routeNumber: routeQuery
   }).sort({departureTime: 1, origin: 1}).toArray()
 
   let tripsToday = rawTripsToday.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
@@ -130,12 +139,12 @@ router.get('/service', async (req, res) => {
   await async.forEachSeries(operationDays, async date => {
     let trams = await tramTrips.distinct('tram', {
       date,
-      routeNumber: service
+      routeNumber: routeQuery
     })
 
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
     tramsByDay[humanDate] = {
-      trams,
+      trams: trams.map(tram => `${tramFleet.getModel(tram)}.${tram}`),
       date
     }
   })
