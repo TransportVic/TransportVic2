@@ -64,5 +64,10 @@ async function requestTimings() {
 
 database.connect(async () => {
   dbStops = database.getCollection('stops')
-  await requestTimings()
+  if (!isNight() && !isDay()) {
+    updateRefreshRate()
+    setTimeout(requestTimings, refreshRate * 60 * 1000)
+  } else {
+    await requestTimings()
+  }
 })

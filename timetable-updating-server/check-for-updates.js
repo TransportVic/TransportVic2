@@ -86,7 +86,7 @@ async function updateTimetables() {
   let database = new DatabaseConnection(config.databaseURL, config.databaseName)
   return new Promise(resolve => {
     database.connect(async err => {
-      let collections = ['stops', 'routes', 'gtfs timetables', 'live timetables', 'timetables']
+      let collections = ['stops', 'routes', 'gtfs timetables', 'timetables']
 
       await async.forEach(collections, async collection => {
         try {
