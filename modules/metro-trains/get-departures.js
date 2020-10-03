@@ -297,6 +297,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   })
 
   let individualRailBusDepartures = []
+  let railBusesSeen = []
 
   async function processDeparture(departure) {
     let run = runs[departure.run_ref]
@@ -412,11 +413,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let viaCityLoop = isFSS ? cityLoopConfig.includes('FGS') : undefined
 
     let trip = await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines,
-      scheduledDepartureTime, possibleDestinations, direction, viaCityLoop)
+      scheduledDepartureTime, possibleDestinations, direction, viaCityLoop, railBusesSeen)
 
     if (!trip) {
       trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
-        scheduledDepartureTime, possibleDestinations, direction, viaCityLoop)
+        scheduledDepartureTime, possibleDestinations, direction, viaCityLoop, railBusesSeen)
     } else {
       usedLive = true
     }
@@ -448,6 +449,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
         id: trip._id,
         direction: trip.direction
       })
+      railBusesSeen.push(trip._id)
     }
 
     if (!usedLive) {
