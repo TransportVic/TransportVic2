@@ -25,8 +25,7 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
 
   trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
 
-  let model = tramFleet.getModel(tram.tram)
-  trip.tram = `${model}.${trip.tram}`
+  trip.tram = `${tramFleet.getModel(trip.tram)}.${trip.tram}`
 
   return trip
 }
