@@ -82,7 +82,7 @@ async function getDeparturesFromYT(stop, db) {
   let mappedDepartures = []
   let now = utils.now()
 
-  await async.forEach(tramStops.filter(x=>x.tramTrackerID==3400), async bay => {
+  await async.forEach(tramStops, async bay => {
     let {stopGTFSID, tramTrackerID} = bay
 
     let {responseObject} = JSON.parse(await utils.request(urls.yarraStopNext3.format(tramTrackerID)))
