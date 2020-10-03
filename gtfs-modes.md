@@ -11,7 +11,6 @@
 9. (PTV Unused) Ferry
 10. (TransportVic Unused) Overland
 11. Skybus
-12. (PTV Unused) Monash University Shuttle Bus
+12. (PTV Unused) Shuttle Bus
 13. (PTV Unused) Heritage Trains
 14. (PTV Unused) XPT Train (Sydney Melbourne only)
-15. (PTV Unused) Custom Shuttle Bus

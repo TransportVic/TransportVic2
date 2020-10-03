@@ -10,7 +10,7 @@ const moment = require('moment')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
 
-let gtfsID = 15
+let gtfsID = 12
 
 database.connect({
   poolSize: 100
