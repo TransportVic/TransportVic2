@@ -96,10 +96,11 @@ async function getDeparturesFromPTV(stop, db) {
         for (let i = 0; i <= 1; i++) {
           let tripDay = departureTime.clone().add(-i, 'days')
           let departureTimeMinutes = scheduledDepartureTimeMinutes + 1440 * i
+          let operationDay = utils.getYYYYMMDD(tripDay)
 
           trip = await gtfsTimetables.findDocument({
             routeGTFSID: trainRouteGTFSID,
-            operationDays: utils.getYYYYMMDD(tripDay),
+            operationDays: operationDay,
             mode: 'regional train',
             stopTimings: {
               $elemMatch: {
@@ -118,8 +119,7 @@ async function getDeparturesFromPTV(stop, db) {
           if (trip) {
             console.log(`Mapped train trip as coach: ${trip.departureTime} to ${trip.destination}`)
 
-            let operationDay = utils.getYYYYMMDD(tripDay)
-            trip.operationDays = [ operationDay ]
+            trip.operationDays = operationDay
 
             trip.mode = 'regional coach'
             trip.routeGTFSID = trip.routeGTFSID.replace('1-', '5-')
@@ -147,7 +147,7 @@ async function getDeparturesFromPTV(stop, db) {
 
             delete trip._id
             await liveTimetables.replaceDocument(query, trip, {
-              $upsert: true
+              upsert: true
             })
 
             isRailReplacementBus = true
