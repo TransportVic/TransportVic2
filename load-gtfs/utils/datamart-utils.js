@@ -51,7 +51,7 @@ function createServiceLookup(serviceJSON) {
 
     if (!lookupTable[routeGTFSID])
       lookupTable[routeGTFSID] = {
-        operator: service.properties.OPERATOR.split(',').map(fixOperator),
+        operator: (service.properties.OPERATOR || '').split(',').map(fixOperator),
         routeNumber: service.properties.ROUTESHTNM,
         routeName: utils.adjustRouteName(service.properties.ROUTELONGN)
       }
