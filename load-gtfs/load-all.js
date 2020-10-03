@@ -87,6 +87,12 @@ async function main() {
     await discordUpdate('[Updater]: Finished loading Monash Shuttle data')
   } else await discordUpdate('[Updater]: Skipping Monash Shuttle')
 
+  if (moduleEnabled('bus')) {
+    await discordUpdate('[Updater]: Loading Shuttle Bus data')
+    await spawnProcess(l('shuttles/load-all.sh'))
+    await discordUpdate('[Updater]: Finished loading Shuttle Bus data')
+  } else await discordUpdate('[Updater]: Skipping Shuttle Bus')
+
   if (moduleEnabled('heritage')) {
     await discordUpdate('[Updater]: Loading Heritage Train data')
     await spawnProcess(l('heritage-trains/load-all.sh'))
