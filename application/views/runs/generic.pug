@@ -58,7 +58,7 @@ block content
           else if (trip.mode === 'bus') icon = 'optimus'
         img(src=`/static/images/icons/${icon}.svg`)
   - let hasNumber = !!routeNumber
-  div(class=`departure${hasNumber ? '' : ' no-number'}`)
+  div(class=`departure noTiming${hasNumber ? '' : ' noNumber'}`)
     if hasNumber
       a(class=`leftContainer ${routeNumberClass}`)
         if loopDirection

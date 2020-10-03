@@ -9,7 +9,7 @@ if services.length
         let destinationDepartures = serviceDepartures[destination]
         let departures = destinationDepartures.slice(0, maxDepartures)
         let firstDeparture = destinationDepartures[0]
-      div(class=`departure groupedTimings${hasNumber ? '' : ' no-number'}`)
+      div(class=`departure groupedTimings${hasNumber ? '' : ' noNumber'}`)
         if hasNumber
           a(class=`leftContainer ${classGen(firstDeparture)}`)
             if firstDeparture.loopDirection

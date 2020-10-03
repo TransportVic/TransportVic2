@@ -210,23 +210,31 @@ a.departureInfo.departure2 { --departureCount: 2; }
 a.departureInfo.departure3 { --departureCount: 3; }
 a.departureInfo.departure4 { --departureCount: 4; }
 
-div.departure.no-number a.departureInfo span {
+div.departure.noNumber a.departureInfo span {
   width: calc(100vw - (3.2vw + 3.2vh) * var(--departureCount) - (1vw + 1vh) - 1.5vw);
 }
 
-div.departure.no-number:not(.groupedTimings) a.departureInfo span {
+div.departure.noNumber:not(.groupedTimings) a.departureInfo span {
   width: calc(100vw - (6vw + 6.3vh) - (1.2vw + 1.8vh) - (1vw + 1vh) - 1.5vw);
 }
 
-div.departure:not(.no-number) a.departureInfo span {
+div.departure:not(.noNumber) a.departureInfo span {
   width: calc(100vw - (3.2vw + 3.2vh) * var(--departureCount) - (5.25vw + 5.25vh) - (1vw + 1vh) - 1.5vw);
+}
+
+div.departure:not(.noNumber).noTiming a.departureInfo span {
+  width: calc(100vw - (5.25vw + 5.25vh) - (1vw + 1vh) - 1.5vw);
+}
+
+div.departure.noNumber.noTiming a.departureInfo span {
+  width: calc(100vw - (1vw + 1vh) - 1.5vw);
 }
 
 div.departure:not(.groupedTimings) a.departureInfo span {
   width: calc(100vw - (6vw + 6.3vh) - (1.2vw + 1.8vh) - (5vw + 5vh) - (1vw + 1vh) - 1.5vw);
 }
 
-div.departure.no-number a.departureInfo span.routeName {
+div.departure.noNumber a.departureInfo span.routeName {
   font-size: calc(1vw + 1vh);
 
   overflow: hidden;
@@ -238,21 +246,21 @@ div.departure.no-number a.departureInfo span.routeName {
   color: #c5c5c5;
 }
 
-div.departure.no-number a.departureInfo span.towards {
+div.departure.noNumber a.departureInfo span.towards {
   font-size: calc(1vh + 0.9vw);
   margin-top: calc(-0.1vw - 0.15vh);
 
   color: #8f8f8f;
 }
 
-div.departure.no-number a.departureInfo span.destination {
+div.departure.noNumber a.departureInfo span.destination {
   font-size: calc(1.6vw + 1.6vh);
   line-height: calc(1.9vw + 1.9vh);
 
   color: #c5c5c5;
 }
 
-div.departure.no-number a.departureInfo span.broadDepartureInfo {
+div.departure.noNumber a.departureInfo span.broadDepartureInfo {
   font-size: calc(1vw + 1vh);
   line-height: calc(1.6vw + 1.6vh);
 
@@ -311,7 +319,7 @@ div.departure.groupedTimings a.timing span {
   width: calc(3.2vw + 3.2vh);
 }
 
-div.departure.no-number a.timing span.rego {
+div.departure.noNumber a.timing span.rego {
   top: calc(0.5vw + 0.5vh);
   font-size: calc(1vw + 1vh);
 }
