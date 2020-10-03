@@ -8,12 +8,14 @@ const tramFleet = require('../../tram-fleet')
 const urls = require('../../urls')
 const determineTramRouteNumber = require('./determine-tram-route-number')
 const trimTrip = require('./trim-trip')
+const { distance } = require('fastest-levenshtein')
+const tramDestinations = require('../../additional-data/tram-destinations')
 
 const departuresCache = new TimedCache(1000 * 60)
 
 let ytAPILocks = {}
 
-async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, routeGTFSID) {
+async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, routeGTFSID, destination) {
   let trip
   let today = utils.now()
   let query
@@ -38,22 +40,37 @@ async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, route
       routeGTFSID
     }
 
-    let timetable = await db.getCollection('live timetables').findDocument(query)
-    if (!timetable) {
-      timetable = await db.getCollection('gtfs timetables').findDocument(query)
+    function findScore(trip) {
+      let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+      return Math.abs(stopData.departureTimeMinutes - departureTimeMinutes)
     }
 
-    if (timetable) {
-      trip = timetable
-      break
+    let timetables = await db.getCollection('live timetables').findDocuments(query).toArray()
+    if (!timetables.length) {
+      timetables = await db.getCollection('gtfs timetables').findDocuments(query).toArray()
+    }
+
+    if (timetables.length === 1) return timetables[0]
+    else if (timetables.length === 2) {
+      let first = timetables[0], second = timetables[1]
+      let firstScore = findScore(first)
+      let secondScore = findScore(second)
+      if (firstScore === secondScore) {
+        let firstDestination = tramDestinations[first.destination] || first.destination
+        let secondDestination = tramDestinations[second.destination] || second.destination
+        firstScore = distance(destination, utils.getStopName(firstDestination))
+        secondScore = distance(destination, utils.getStopName(secondDestination))
+      }
+
+      if (firstScore < secondScore) {
+        return first
+      } else {
+        return second
+      }
     }
   }
 
-  if (!trip) {
-    return null
-  }
-
-  return trip
+  return null
 }
 
 async function getDeparturesFromYT(stop, db) {
@@ -65,7 +82,7 @@ async function getDeparturesFromYT(stop, db) {
   let mappedDepartures = []
   let now = utils.now()
 
-  await async.forEach(tramStops, async bay => {
+  await async.forEach(tramStops.filter(x=>x.tramTrackerID==3400), async bay => {
     let {stopGTFSID, tramTrackerID} = bay
 
     let {responseObject} = JSON.parse(await utils.request(urls.yarraStopNext3.format(tramTrackerID)))
@@ -88,7 +105,7 @@ async function getDeparturesFromYT(stop, db) {
 
       let routeGTFSID = `3-${coreRoute}`
 
-      let trip = await getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, routeGTFSID)
+      let trip = await getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, routeGTFSID, Destination)
       if (!trip) return
 
       let tram = null
