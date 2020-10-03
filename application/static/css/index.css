@@ -79,6 +79,6 @@
 
 .popup span {
   font-size: calc(1.1vw + 1.1vh);
-  max-width: 70%;
+  max-width: 70vw;
   display: inline-block;
 }

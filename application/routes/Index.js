@@ -115,4 +115,17 @@ router.get('/sty', async (req, res) => {
   }
 })
 
+router.get('/home-banner', (req, res) => {
+  res.json({
+    link: 'https://forms.gle/ThoBmjvQz2jWsZucA',
+    alt: 'Site Survey',
+    text: 'Site Survey: Kindly provide feedback about the site :)'
+  })
+  // res.json({
+  //   link: 'https://www.patreon.com/transportsg',
+  //   alt: 'Patreon',
+  //   text: 'Hi! If you like this site please consider supporting me on patreon by clicking here!'
+  // })
+})
+
 module.exports = router

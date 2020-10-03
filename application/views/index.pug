@@ -9,9 +9,13 @@ block head
   link(rel='preload' as='image' href='/static/images/home/nearby.svg')
   link(rel='preload' as='image' href='/static/images/home/about.svg')
   link(rel='preload' as='image' href='/static/images/home/rainbow.svg')
+  link(rel='preload' as='script' href='/static/scripts/index.js')
   
 block title
   span TransportVic
+
+block scripts
+  script(src='/static/scripts/index.js')
 
 block style
   link(rel='stylesheet' href='/static/css/index.css')
@@ -31,10 +35,6 @@ block content
       img(src='/static/images/home/about.svg' alt='Links')
       span Links
 
-  a(href='https://forms.gle/ThoBmjvQz2jWsZucA').popup
-    img(src='/static/images/home/rainbow.svg' alt='Site Survey')
-    span Site Survey: Kindly provide feedback about the site :)
-
-  //- a(href='https://www.patreon.com/transportsg').popup
-  //-   img(src='/static/images/home/rainbow.svg')
-  //-   span Hi! If you like this site please consider supporting me on patreon by clicking here!
+  a(href='' style='display: none').popup
+    img(src='/static/images/home/rainbow.svg')
+    span

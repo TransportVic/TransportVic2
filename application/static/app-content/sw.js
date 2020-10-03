@@ -1,4 +1,4 @@
-const version = '103'
+const version = '104'
 const cacheName = `transportvic-${version}`
 
 function cacheFiles(files) {
@@ -157,6 +157,7 @@ self.addEventListener('install', e => {
       '/static/scripts/timings.js',
       '/static/scripts/updating.js',
       '/static/scripts/util.js',
+      '/static/scripts/index.js',
 
       '/static/scripts/mockups/pids-utils.js',
 
