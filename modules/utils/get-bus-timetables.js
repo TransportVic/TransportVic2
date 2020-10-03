@@ -22,9 +22,18 @@ function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
   if (isOnline) {
     let stopNamesSeen = []
     bays.forEach(bay => {
-      if (!stopNamesSeen.includes(bay.originalName) && bay.stopGTFSID < 100000) { // filter out offline override stops
-        stopNamesSeen.push(bay.originalName)
-        gtfsIDs.push(bay.stopGTFSID)
+      if (bay.screenServices.length === 0) return // Save bandwidth by not requesting dropoff only stops
+      let bayGTFSModes = bay.screenServices.map(s => s.routeGTFSID.split('-')[0])
+      let shouldRequest = bayGTFSModes.includes('4') || bayGTFSModes.includes('8') // Only request metro & night bus
+      if (!shouldRequest && bayGTFSModes.includes('6')) { // Further refine - only load known operators/routes with live data
+        shouldRequest = bay.screenServices.some(s => s.routeNumber) // For now only load regional routes with number
+      }
+
+      if (shouldRequest) {
+        if (!stopNamesSeen.includes(bay.originalName) && bay.stopGTFSID < 100000) { // filter out offline override stops
+          stopNamesSeen.push(bay.originalName)
+          gtfsIDs.push(bay.stopGTFSID)
+        }
       }
     })
   } else {
