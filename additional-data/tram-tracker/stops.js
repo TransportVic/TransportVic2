@@ -77,5 +77,6 @@ module.exports = [
   'malvern/malvern-railway-station',
   'south-melbourne/montague-street-light-rail',
   'caulfield/jasmine-street-glenhuntly-road',
-  'caulfield/bambra-road-glenhuntly-road'
+  'caulfield/bambra-road-glenhuntly-road',
+  'melbourne-city/swanston-street-bourke-street'
 ]

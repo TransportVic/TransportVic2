@@ -1,6 +1,93 @@
 const async = require('async')
 const utils = require('../../utils')
 
+let liveRegionalRoutes = [
+  "6-B05",
+  "6-B10",
+  "6-B50",
+  "6-B51",
+  "6-B52",
+  "6-B53",
+  "6-B54",
+  "6-B55",
+  "6-B60",
+  "6-B61",
+  "6-B62",
+  "6-B63",
+  "6-B64",
+  "6-B65",
+  "6-B70",
+  "6-B7o",
+  "6-G01",
+  "6-G10",
+  "6-G11",
+  "6-G12",
+  "6-G19",
+  "6-G20",
+  "6-G22",
+  "6-G23",
+  "6-G24",
+  "6-G25",
+  "6-G30",
+  "6-G31",
+  "6-G32",
+  "6-G40",
+  "6-G41",
+  "6-G42",
+  "6-G43",
+  "6-G45",
+  "6-G50",
+  "6-G51",
+  "6-G55",
+  "6-G56",
+  "6-G60",
+  "6-G61",
+  "6-G6L",
+  "6-G6X",
+  "6-L01",
+  "6-L02",
+  "6-L03",
+  "6-L04",
+  "6-L05",
+  "6-L06",
+  "6-L07",
+  "6-L08",
+  "6-L11",
+  "6-L12",
+  "6-L13",
+  "6-L14",
+  "6-L15",
+  "6-L20",
+  "6-L22",
+  "6-L30",
+  "6-L40",
+  "6-L41",
+  "6-L42",
+  "6-L43",
+  "6-L44",
+  "6-L45",
+  "6-W80",
+  "6-W81",
+  "6-W82",
+  "6-W83",
+  "6-W85",
+  "6-W86",
+  "6-cvx",
+  "6-dcf",
+  "6-fgt",
+  "6-ggg",
+  "6-hnb",
+  "6-jjg",
+  "6-lkm",
+  "6-lng",
+  "6-lok",
+  "6-mnm",
+  "6-ndb",
+  "6-sdf",
+  "6-tyt",
+  "6-xyz"
+]
+
 /*
 
   if offline: needs all GTFS IDs for each bay that matches
@@ -26,7 +113,7 @@ function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
       let bayGTFSModes = bay.screenServices.map(s => s.routeGTFSID.split('-')[0])
       let shouldRequest = bayGTFSModes.includes('4') || bayGTFSModes.includes('8') // Only request metro & night bus
       if (!shouldRequest && bayGTFSModes.includes('6')) { // Further refine - only load known operators/routes with live data
-        shouldRequest = bay.screenServices.some(s => s.routeNumber) // For now only load regional routes with number
+        shouldRequest = bay.screenServices.some(service => liveRegionalRoutes.includes(service.routeGTFSID))
       }
 
       if (shouldRequest) {

@@ -33,7 +33,7 @@ module.exports = function (trip) {
   // 11ab special
   if (routeNumber === '11') {
     let stVincent = 'St. Vincents Plaza/Victoria Parade'
-    if (trip.destination === stVincent || trip.origin === stVincent) return '11b'
+    if (trip.destination === stVincent || trip.origin === stVincent) return '11a' // PTV says its 11b but TT gives 11a so...
   }
 
   if (routeNumber === '12') {
