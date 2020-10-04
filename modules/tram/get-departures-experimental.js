@@ -46,18 +46,28 @@ async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, route
     }
 
     let timetables = await db.getCollection('live timetables').findDocuments(query).toArray()
-    if (!timetables.length) {
-      timetables = await db.getCollection('gtfs timetables').findDocuments(query).toArray()
-    }
+    let gtfsTimetables = await db.getCollection('gtfs timetables').findDocuments(query).toArray()
+
+    gtfsTimetables.forEach(gtfsTimetable => {
+      if (!timetables.some(timetable => {
+        return timetable.origin === gtfsTimetable.origin
+        && timetable.destination === gtfsTimetable.destination
+        && timetable.departureTime === gtfsTimetable.departureTime
+      })) {
+        timetables.push(gtfsTimetable)
+      }
+    })
 
     if (timetables.length === 1) return timetables[0]
     else if (timetables.length === 2) {
       let first = timetables[0], second = timetables[1]
       let firstScore = findScore(first)
       let secondScore = findScore(second)
+
+      let firstDestination = tramDestinations[first.destination] || first.destination
+      let secondDestination = tramDestinations[second.destination] || second.destination
+
       if (firstScore === secondScore) {
-        let firstDestination = tramDestinations[first.destination] || first.destination
-        let secondDestination = tramDestinations[second.destination] || second.destination
         firstScore = distance(destination, utils.getStopName(firstDestination))
         secondScore = distance(destination, utils.getStopName(secondDestination))
       }
@@ -86,7 +96,7 @@ async function getDeparturesFromYT(stop, db) {
     let {stopGTFSID, tramTrackerID} = bay
 
     let {responseObject} = JSON.parse(await utils.request(urls.yarraStopNext3.format(tramTrackerID)))
-
+    
     await async.forEach(responseObject, async tramDeparture => {
       let {Prediction, AVMTime, HeadBoardRouteNo, RunNo, Schedule, TramDistance, VehicleNo, Destination} = tramDeparture
       let scheduledTimeMS = parseInt(Schedule.slice(0, -1).match(/(\d+)\+/)[1])

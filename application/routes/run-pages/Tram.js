@@ -18,7 +18,6 @@ async function pickBestTrip(data, db) {
   if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
   if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
 
-
   let stops = db.getCollection('stops')
 
   let originStop = await stops.findDocument({
@@ -57,10 +56,11 @@ async function pickBestTrip(data, db) {
 
   let referenceTrip = liveTrip || gtfsTrip
 
+  if (!referenceTrip) return null
 
   let tramTrips = db.getCollection('tram trips')
   let tripData = await tramTrips.findDocument({
-    date: operationDays,
+    date: data.operationDays,
     departureTime: referenceTrip.departureTime,
     origin: referenceTrip.origin,
     destination: referenceTrip.destination
