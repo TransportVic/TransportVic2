@@ -133,7 +133,7 @@ async function getMissingRRB(station, db, individualRailBusDepartures) {
   let extraBuses = []
 
   await async.forEach(individualRailBusDepartures, async departureData => {
-    let { departureTimeMinutes, id, direction } = departureData
+    let { departureTimeMinutes, origin, departureTime, destination, destinationArrivalTime, direction } = departureData
     let searchDays = departureTimeMinutes < 300 ? 1 : 0
 
     for (let i = 0; i <= searchDays; i++) {
@@ -142,11 +142,6 @@ async function getMissingRRB(station, db, individualRailBusDepartures) {
       let minutesPastMidnight = (departureTimeMinutes % 1440) + 1440 * i
 
       let extraBus = await gtfsTimetables.findDocument({
-        _id: {
-          $not: {
-            $eq: id
-          }
-        },
         operationDays: utils.getYYYYMMDD(day),
         mode: 'metro train',
         stopTimings: {
@@ -159,6 +154,9 @@ async function getMissingRRB(station, db, individualRailBusDepartures) {
       })
 
       if (extraBus) {
+        if (extraBus.origin === origin && extraBus.destination === destination
+          && extraBus.departureTime === departureTime
+          && extraBus.destinationArrivalTime === destinationArrivalTime) return
         let stopData = extraBus.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
         let scheduledDepartureTime = utils.getMomentFromMinutesPastMidnight(stopData.departureTimeMinutes, day)
 
@@ -413,11 +411,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let viaCityLoop = isFSS ? cityLoopConfig.includes('FGS') : undefined
 
     let trip = await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines,
-      scheduledDepartureTime, possibleDestinations, direction, viaCityLoop, railBusesSeen)
+      scheduledDepartureTime, possibleDestinations, direction, viaCityLoop)
 
     if (!trip) {
       trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
-        scheduledDepartureTime, possibleDestinations, direction, viaCityLoop, railBusesSeen)
+        scheduledDepartureTime, possibleDestinations, direction, viaCityLoop)
     } else {
       usedLive = true
     }
@@ -444,12 +442,20 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     }
 
     if (isRailReplacementBus) {
+      if (individualRailBusDepartures.some(bus => {
+        return bus.origin === trip.origin && bus.destination === trip.destination
+          && bus.departureTime === trip.departureTime
+          && bus.destinationArrivalTime === trip.destinationArrivalTime
+      })) return
+
       individualRailBusDepartures.push({
         departureTimeMinutes: scheduledDepartureTimeMinutes,
-        id: trip._id,
-        direction: trip.direction
+        direction: trip.direction,
+        origin: trip.origin,
+        departureTime: trip.departureTime,
+        destination: trip.destination,
+        destinationArrivalTime: trip.destinationArrivalTime,
       })
-      railBusesSeen.push(trip._id)
     }
 
     if (!usedLive) {
@@ -528,8 +534,10 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     })
   }
 
-  await async.forEach(trains, processDeparture)
-  await async.forEachSeries(replacementBuses, processDeparture)
+  await Promise.all([
+    async.forEach(trains, processDeparture),
+    async.forEachSeries(replacementBuses, processDeparture)
+  ])
 
   return transformedDepartures.concat(await getMissingRRB(station, db, individualRailBusDepartures))
 }
@@ -545,7 +553,7 @@ function filterDepartures(departures, filter) {
   }
 
   return departures.sort((a, b) => {
-    return a.actualDepartureTime - b.actualDepartureTime
+    return a.actualDepartureTime - b.actualDepartureTime || a.destination.localeCompare(b.destination)
   })
 }
 

@@ -15,7 +15,7 @@ let modes = {
   'tram': 1
 }
 
-module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip) {
+module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip, extraTripData) {
   let stopsCollection = db.getCollection('stops')
   let liveTimetables = db.getCollection('live timetables')
   let routesCollection = db.getCollection('routes')
@@ -198,7 +198,8 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     updateTime: new Date(),
     gtfsDirection,
     direction,
-    cancelled
+    cancelled,
+    ...extraTripData
   }
 
   timetable = fixTripDestination(timetable)

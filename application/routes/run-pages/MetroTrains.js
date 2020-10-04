@@ -15,7 +15,6 @@ async function pickBestTrip(data, db) {
   if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
   if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
 
-
   let originStop = await db.getCollection('stops').findDocument({
     codedName: data.origin + '-railway-station',
     'bays.mode': 'metro train'
@@ -169,11 +168,15 @@ async function pickBestTrip(data, db) {
     let ptvRunID = departure.run_ref
     let departureTime = departure.scheduled_departure_utc
 
-    let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime)
+    let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime, null, null, {
+      isRailReplacementBus: departure.flags.includes('RRB-RUN')
+    })
+
     let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
 
     return { trip, tripStartTime, isLive }
   } catch (e) {
+
     return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
   }
 }
@@ -212,7 +215,10 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     }
     return stop
   })
-  res.render('runs/metro', {trip})
+  res.render('runs/metro', {
+    trip,
+    codedLineName: utils.encodeName(trip.routeName)
+  })
 })
 
 module.exports = router

@@ -14,6 +14,8 @@ block title
   span #{tripName}
   
 block style
+  link(rel='stylesheet' href='/static/css/timings/base-style.css')
+  link(rel='stylesheet' href='/static/css/combined-colours.css')
   link(rel='stylesheet' href='/static/css/runs/base-style.css')
 
 block content
@@ -26,6 +28,19 @@ block content
         div.vehicle
           span=parts[0] + 'x'
           img(src=`/static/images/icons/${parts[1].toLowerCase()}.svg`)
+  if trip.isRailReplacementBus
+    div.departure.noTiming
+      -
+        let cssClass = `${codedLineName}-line`
+        if (trip.routeName === 'City Circle') cssClass = 'city-circle' // Unlikely to happen but just in case
+      a(class=`leftContainer ${cssClass}`)
+        img(src='/static/images/clear-icons/bus.svg')
+      a.departureInfo
+        span.towards #{trip.routeName} Towards
+        span.destination #{trip.trueDestination.slice(0, -16)}
+        span.broadDepartureInfo.important Rail Replacement Bus
+    div.infoRow
+      span Replacement Bus Stop
   div.timing-list
     for stop in trip.stopTimings
       div.timingRow(id='stop-' + stop.stopGTFSID)

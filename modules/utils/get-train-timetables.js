@@ -12,12 +12,12 @@ function trimFromFSS(stops) {
   return stops.slice(fssIndex)
 }
 
-async function getDeparture(station, db, mode, possibleLines, departureTime, possibleDestinations, direction, live, viaCityLoop, excludedIDs) {
+async function getDeparture(station, db, mode, possibleLines, departureTime, possibleDestinations, direction, live, viaCityLoop) {
   const platform = getPlatform(station, mode)
 
   let collection = db.getCollection(live ? 'live timetables' : 'gtfs timetables')
 
-  let seen = excludedIDs
+  let seen = []
   let allTimetables = []
 
   let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime)
@@ -70,12 +70,12 @@ async function getDeparture(station, db, mode, possibleLines, departureTime, pos
   return timetables.sort((a, b) => b.sortID - a.sortID)[0]
 }
 
-function getScheduledDeparture(station, db, mode, possibleLines, departureTime, possibleDestinations, direction, viaCityLoop, excludedIDs=[]) {
-  return getDeparture(station, db, mode, possibleLines, departureTime, possibleDestinations, direction, false, viaCityLoop, excludedIDs)
+function getScheduledDeparture(station, db, mode, possibleLines, departureTime, possibleDestinations, direction, viaCityLoop) {
+  return getDeparture(station, db, mode, possibleLines, departureTime, possibleDestinations, direction, false, viaCityLoop)
 }
 
-function getLiveDeparture(station, db, mode, possibleLines, departureTime, possibleDestinations, direction, viaCityLoop, excludedIDs=[]) {
-  return getDeparture(station, db, mode, possibleLines, departureTime, possibleDestinations, direction, true, viaCityLoop, excludedIDs)
+function getLiveDeparture(station, db, mode, possibleLines, departureTime, possibleDestinations, direction, viaCityLoop) {
+  return getDeparture(station, db, mode, possibleLines, departureTime, possibleDestinations, direction, true, viaCityLoop)
 }
 
 async function getStaticDeparture(runID, db) {

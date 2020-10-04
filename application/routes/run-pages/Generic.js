@@ -19,7 +19,6 @@ async function pickBestTrip(data, db) {
   if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
   if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
 
-
   let trueMode = data.mode
   if (trueMode === 'coach') trueMode = 'regional coach'
   if (trueMode === 'heritage') trueMode = 'heritage train'
