@@ -92,7 +92,7 @@ async function pickBestTrip(data, db) {
     let isLayover = tramInfo.AtLayover
 
     let destinationArrivalTime = parseInt(tramInfo.NextPredictedStopsDetails.slice(-1)[0].PredictedArrivalDateTime.slice(0, -1).match(/(\d+)\+/)[1])
-    let failed = false
+    let failed = tramInfo.NextPredictedStopsDetails.length === 1
 
     if (!isLayover) {
       for (let predictedStop of tramInfo.NextPredictedStopsDetails) {
