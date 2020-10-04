@@ -34,7 +34,7 @@ function getDistantWeekdays(allAvailableDays) {
   })
 
   return uniqueDays.map(day => {
-    return day.format('YYYYMMDD')
+    return utils.getYYYYMMDD(day)
   })
 }
 
@@ -72,7 +72,7 @@ function getDistantSunday(allAvailableDays) {
 
 function parseOperationDays(operationDays) {
   return operationDays.map(day => {
-    return moment.tz(day, 'YYYYMMDD', 'Australia/Melbourne')
+    return utils.parseTime(day, 'YYYYMMDD')
   })
 }
 
@@ -97,7 +97,7 @@ async function findTripsForDates(gtfsTimetables, query, dates) {
       $in: dates
     }
   }).toArray()).map(trip => {
-    let departureTimeMinutes = utils.time24ToMinAftMidnight(trip.departureTime)
+    let departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(trip.departureTime)
     if (departureTimeMinutes < 180) departureTimeMinutes += 1440
     return {
       departureTimeMinutes,

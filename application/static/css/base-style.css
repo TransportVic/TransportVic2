@@ -2,14 +2,14 @@
   font-family: Default-Font;
   font-weight: normal;
   font-display: fallback;
-  src: local('Nunito Regular'), local('Nunito'), url(/static/fonts/Nunito.ttf);
+  src: url(/static/fonts/Nunito.ttf);
 }
 
 @font-face {
   font-family: Default-Font;
   font-weight: bold;
   font-display: fallback;
-  src: local('Nunito Regular'), local('Nunito'), url(/static/fonts/Nunito.ttf);
+  src: url(/static/fonts/Nunito.ttf);
 }
 
 html, body {
@@ -26,7 +26,7 @@ html, body {
   -moz-user-select: none;
   -webkit-user-select: none;
 
-  overflow-x: hidden;
+  overflow-x: none;
 }
 
 div.errorPage {
@@ -40,6 +40,13 @@ div.errorPage {
 
 div.errorPage h2 {
   font-size: calc(3vw + 4vh);
+  padding-left: calc(0.5vw + 0.5vh);
+  padding-right: calc(0.5vw + 0.5vh);
+  margin: 0;
+}
+
+div.errorPage h3 {
+  font-size: calc(2vw + 2vh);
   padding-left: calc(0.5vw + 0.5vh);
   padding-right: calc(0.5vw + 0.5vh);
   margin: 0;
@@ -123,5 +130,5 @@ div#header-right {
 }
 
 #content {
-  overflow-y: hidden;
+  overflow: hidden;
 }

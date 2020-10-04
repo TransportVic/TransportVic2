@@ -13,41 +13,32 @@ async function loadDepartures(req, res) {
     codedSuburb: req.params.suburb
   })
 
-  if (!stop || !stop.bays.filter(bay => bay.mode === 'bus')) {
+  if (!stop || !stop.bays.find(bay => bay.mode === 'bus')) {
     return res.status(404).render('errors/no-stop')
   }
 
   let departures = await getDepartures(stop, res.db)
-  if (!departures) throw new Error('Failed to get bus timings?')
+  let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
   departures = await async.map(departures, async departure => {
-    const timeDifference = moment.utc(departure.actualDepartureTime.diff(utils.now()))
+    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, false, false)
+    departure.headwayDevianceClass = utils.findHeadwayDeviance(departure.scheduledDepartureTime, departure.estimatedDepartureTime, {
+      early: 2,
+      late: 5
+    })
 
-    if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
-    else {
-      let minutesToDeparture = timeDifference.get('hours') * 60 + timeDifference.get('minutes')
-      departure.prettyTimeToArrival = minutesToDeparture + ' m'
-    }
-
-    departure.headwayDevianceClass = 'unknown'
-    if (departure.estimatedDepartureTime) {
-      departure.headwayDeviance = departure.scheduledDepartureTime.diff(departure.estimatedDepartureTime, 'minutes')
-
-      if (departure.headwayDeviance > 2) {
-        departure.headwayDevianceClass = 'early'
-      } else if (departure.headwayDeviance <= -5) {
-        departure.headwayDevianceClass = 'late'
-      } else {
-        departure.headwayDevianceClass = 'on-time'
-      }
-    }
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
-    let day = utils.getYYYYMMDD(departure.scheduledDepartureTime)
+    let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
+    let {stopGTFSID} = currentStop
+    let minutesDiff = currentStop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
+
+    let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
+    let operationDate = utils.getYYYYMMDD(tripStart)
 
     departure.tripURL = `/bus/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + `${day}#stop-${departure.trip.stopTimings[0].stopGTFSID}`
+      + `${operationDate}#stop-${stopGTFSID}`
 
     let fullDestination = departure.trip.destination
     let destinationShortName = utils.getStopName(departure.trip.destination)
@@ -55,7 +46,7 @@ async function loadDepartures(req, res) {
     if (!utils.isStreet(destinationShortName)) destination = destinationShortName
     departure.destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
 
-    let serviceData = busDestinations.service[departure.routeNumber] || busDestinations.service[departure.trip.routeGTFSID] || {}
+    let serviceData = busDestinations.service[departure.trip.routeGTFSID] || busDestinations.service[departure.routeNumber] || {}
     departure.destination = serviceData[departure.destination]
       || busDestinations.generic[departure.destination]
       || busDestinations.generic[fullDestination] || departure.destination
@@ -93,12 +84,12 @@ async function loadDepartures(req, res) {
       let destinations = []
 
       direction.forEach(departure => {
-        let destination = departure.destination + departure.viaText + departure.loopDirection
+        let destination = departure.destination + departure.viaText + departure.loopDirection + departure.routeNumber
         if (!destinations.includes(destination)) {
           destinations.push(destination)
           destinationDepartures.push({
             destination,
-            departures: direction.filter(d => d.destination + d.viaText + d.loopDirection === destination)
+            departures: direction.filter(d => d.destination + d.viaText + d.loopDirection + d.routeNumber === destination)
           })
         }
       })
@@ -110,21 +101,30 @@ async function loadDepartures(req, res) {
     })
   })
 
-  services = services.sort((a, b) => a - b)
+  let hasNoNumber = services.includes('')
+  let alphaRoutes = services.filter(service => service.match(/^[A-Za-z]/))
+  let numberRoutes = services.filter(service => service.match(/^\d/))
+
+  let sortedServices = []
+  if (hasNoNumber) sortedServices.push('')
+  sortedServices = sortedServices.concat(alphaRoutes.sort((a, b) => {
+    return a.localeCompare(b)
+  })).concat(numberRoutes.sort((a, b) => {
+    return a - b
+  }))
 
   return {
-    services, groupedDepartures, stop,
-    classGen: departure => {
-      let operator = departure.codedOperator
-      if (operator.startsWith('dysons')) return 'dysons'
-      return operator
-    },
-    currentMode: 'bus'
+    services: sortedServices,
+    groupedDepartures, stop,
+    classGen: departure => departure.codedOperator,
+    currentMode: 'bus',
+    maxDepartures: 4
   }
 }
 
 router.get('/:suburb/:stopName', async (req, res) => {
-  res.render('timings/grouped', await loadDepartures(req, res))
+  let response = await loadDepartures(req, res)
+  if (response) res.render('timings/grouped', response)
 })
 
 router.post('/:suburb/:stopName', async (req, res) => {

@@ -8,7 +8,10 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let stops = []
 
 async function requestTimings() {
-  await async.forEachOf(stops, async stop => {
+  await async.forEachSeries(stops, async stop => {
+    await new Promise(resolve => {
+      setTimeout(resolve, 10000)
+    })
     await getDepartures(stop, database)
   })
 }
@@ -18,7 +21,9 @@ database.connect(async () => {
 
   stops.push(await dbStops.findDocument({ stopName: 'Flagstaff Railway Station' }))
   stops.push(await dbStops.findDocument({ stopName: 'Southern Cross Railway Station' }))
+  stops.push(await dbStops.findDocument({ stopName: 'Flinders Street Railway Station' }))
+  stops.push(await dbStops.findDocument({ stopName: 'Parliament Railway Station' }))
 
-  await requestTimings()
   setInterval(requestTimings, 30 * 60 * 1000)
+  await requestTimings()
 })

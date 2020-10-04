@@ -25,8 +25,16 @@ module.exports = class MongoDatabaseConnection {
     })
   }
 
-  createCollection (collectionName, options) {
-    this.database.createCollection(collectionName, options)
+  async createCollection (collectionName, options) {
+    await this.database.createCollection(collectionName, {
+      ...options,
+      storageEngine: {
+        wiredTiger: {
+          configString: 'block_compressor=zstd'
+        }
+      }
+    })
+
     return this.getCollection(collectionName)
   }
 

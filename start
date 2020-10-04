@@ -1,4 +1,4 @@
 #!/bin/bash
 cd /home/ec2-user/TransportVic
 
-/home/ec2-user/.nvm/versions/node/v14.2.0/bin/node --max-old-space-size=4096 /home/ec2-user/TransportVic/index.js >> /home/ec2-user/log 2>> /home/ec2-user/err
+/home/ec2-user/.nvm/versions/node/v14.13.0/bin/node --max-old-space-size=4096 /home/ec2-user/TransportVic/index.js >> /home/ec2-user/log 2>> /home/ec2-user/err

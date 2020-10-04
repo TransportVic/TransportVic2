@@ -24,7 +24,8 @@
       "Goulburn Ovens Institute of TAFE (William Orr)": "TAFE"
     },
     "4": {
-      "Warrumbungle Drive/Kakadu Drive": "Connolly Park"
+      "Warrumbungle Drive/Kakadu Drive": "Connolly Park",
+      "Opp Boolarra Post Office": "Boolarra"
     },
     "5": {
       "Windmill Street/Waratah Road": "Huntly",
@@ -76,10 +77,12 @@
       "Webbs Hill Road/Warrenheip Street": "Buninyong"
     },
     "22": {
-      "Bridge Street/Albert Street": "Sebastopol"
+      "Bridge Street/Albert Street": "Sebastopol",
+      "CFA/Albert Street": "Sebastopol"
     },
     "23": {
-      "Cobden Street/Barkly Street": "Mount Pleasant"
+      "Cobden Street/Barkly Street": "Mount Pleasant",
+      "The Esplanade": "North Shore"
     },
     "24": {
       "Edwards Street/Victoria Street": "Sebastopol"
@@ -124,7 +127,8 @@
     },
     "60": {
       "Piper Lane/Piper Road": "Bendigo East",
-      "Bluff Road/Leviens Road": "St. Leonards"
+      "Bluff Road/Leviens Road": "St. Leonards",
+      "Leonard Street/Seachange Way": "St. Leonards"
     },
     "64": {
       "Oak Street/High Street": "Golden Square"
@@ -514,7 +518,8 @@
     "755": {
       "Conyers Street/Forest Road": "The Basin",
       "Forest Road/Mountain Highway": "The Basin",
-      "Mountain Highway/Forest Road": "The Basin"
+      "Mountain Highway/Forest Road": "The Basin",
+      "Ferntree Gully Road/Windermere Drive": "Knoxfield"
     },
     "757": {
       "Ferntree Gully Road/Borg Crescent": "Scoresby"
@@ -575,8 +580,7 @@
       "Ferry Terminal": "Sorrento"
     },
     "788": {
-      "The Bays Hospital": "Mornington",
-      "Point Nepean National Park Entrance": "Portsea"
+      "The Bays Hospital": "Mornington"
     },
     "792": {
       "Baxter-Tooradin Road/Pearcedale Road": "Pearcedale"
@@ -882,6 +886,7 @@
     "Royal Hotel": "Corowa",
     "Tallangatta Information Centre": "Tallangatta",
     "Corryong Newsagency": "Corryong",
-    "Wodonga Post Office": "Wodonga"
+    "Wodonga Post Office": "Wodonga",
+    "Point Nepean National Park Entrance": "Portsea"
   }
 }

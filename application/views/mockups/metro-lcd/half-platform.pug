@@ -4,10 +4,12 @@ html
     script(src='/static/scripts/mockups/metro-lcd/half-platform.js' async)
     script(src='/static/scripts/mockups/pids-utils.js') 
     link(rel='stylesheet' href='/static/css/mockups/base-style.css')
-    link(rel='stylesheet' href='/static/css/mockups/mini-pids-base.css')
+    link(rel='stylesheet' href='/static/css/mockups/32-9-pids-base.css')
     link(rel='stylesheet' href='/static/css/mockups/metro-lcd/half-platform.css')
       
-    link(rel='preload' href='/static/images/mockups/announcements.svg' as='image')
+    link(rel='preload' as='style' href='/static/css/mockups/base-style.css')
+    link(rel='preload' as='style' href='/static/css/mockups/32-9-pids-base.css')
+    link(rel='preload' as='image' href='/static/images/mockups/announcements.svg')
   
     meta(name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, height=device-height')
   body
@@ -35,7 +37,8 @@ html
           div.serviceMessage
             
           div.stops
-      div(style='display: block;').right
+      div.vertLine
+      div(style='display: flex;').right
         div.headers
           span.scheduled Schedule
           span.destination Train To
@@ -61,7 +64,7 @@ html
             span.actual --
             span.min min
           span.stoppingType
-        div.time
-          div.timeContainer
+        div.clock
+          div.clockContainer
             span=now.format('h:mm')
           

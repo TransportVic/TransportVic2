@@ -15,8 +15,13 @@
   font-size: calc(1.8vw + 1.8vh);
 }
 
+#content h3 {
+  font-size: calc(1.5vw + 1.5vh);
+}
+
 #content > * {
   margin: calc(0.1vw + 0.1vh);
+  width: 80vw;
 }
 
 #content a {
@@ -26,4 +31,8 @@
 #content img {
   width: calc(20vw + 30vh);
   padding: calc(1vw + 1vh);
+}
+
+ul {
+  text-align: left;
 }

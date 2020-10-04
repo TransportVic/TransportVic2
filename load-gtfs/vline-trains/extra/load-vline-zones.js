@@ -13,8 +13,11 @@ async function updateStop(stopName, zone) {
   let dbStop = await stops.findDocument({
     stopName: stopName + ' Railway Station'
   })
+  if (!dbStop) return console.log(`Load V/Line Zones: Skipping ${stopName}`)
 
-  let vlinePlatform = dbStop.bays.find(b => b.mode === 'regional train')
+  let vlinePlatform = dbStop.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
+  if (!vlinePlatform) return console.log(`Load V/Line Zones: Skipping ${stopName}`)
+
   vlinePlatform.mykiZones = zone
 
   await stops.replaceDocument({
@@ -36,8 +39,8 @@ database.connect({
       if (zone === '') { // non-myki zone
         await updateStop(properties.STATION, 'Paper Ticketed')
       } else {
-        let zones = zone.split(', ').map(e=>parseInt(e)).sort((a, b) => a - b)
-        if (zones.includes(1)) zones.pop()
+        let zones = zone.split(', ').map(e => parseInt(e)).sort((a, b) => a - b)
+        if (zones.includes(1) && zones.length > 1) zones.shift()
 
         await updateStop(properties.STATION, zones)
       }

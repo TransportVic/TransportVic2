@@ -40,12 +40,12 @@ async function read5000Stops() {
     let adjustedStopName = adjustedOriginalStopName.slice(0, suburbIndex - 1)
     let suburb = adjustedOriginalStopName.slice(suburbIndex + 1, -1)
 
-    let fullStopName = utils.expandStopName(utils.adjustStopname(adjustedStopName))
+    let fullStopName = utils.expandStopName(utils.adjustStopName(adjustedStopName))
     let stopNumber = null
     let stopNumberParts
 
     if (stopNumberParts = fullStopName.match(/^(D?[\d]+[A-Za-z]?)-(.+)/)) {
-      stopNumber = stopNumberParts[1]
+      stopNumber = stopNumberParts[1].toUpperCase()
       fullStopName = fullStopName.replace(/^(D?[\d]+[A-Za-z]?)-/, '')
     }
 
@@ -112,7 +112,10 @@ async function readRouteShapes() {
       currentShape = []
       if (routesSeen.length === batchSize) return shapes
     } else {
-      currentLength = parseFloat(line[4])
+      let newLength = parseFloat(line[4])
+      if (currentLength === newLength) continue
+      currentLength = newLength
+
       if (!routesSeen.includes(currentRouteGTFSID)) routesSeen.push(currentRouteGTFSID)
       currentShape.push([
         parseFloat(line[2]),

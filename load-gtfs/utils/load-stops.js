@@ -1,6 +1,6 @@
 const async = require('async')
 const utils = require('../../utils')
-const nameModifier = require('../../additional-data/bus-stop-name-modifier')
+const nameModifier = require('../../additional-data/stop-name-modifier')
 const natural = require('natural')
 const metaphone = natural.Metaphone
 
@@ -49,7 +49,14 @@ module.exports = async function(stops, data, stopsLookup) {
         matchingBay.originalName = stop.originalName
         matchingBay.fullStopName = stop.fullStopName
         matchingBay.location = stop.location
-        matchingBay.mykiZones = datamartStop.mykiZones
+
+        datamartStop.mykiZones.forEach(zone => {
+          if (!matchingBay.mykiZones.includes(zone)) {
+            matchingBay.mykiZones.push(zone)
+          }
+        })
+
+        matchingBay.mykiZones = matchingBay.mykiZones.sort((a, b) => a - b)
 
         if (stop.mode === 'bus') {
           matchingBay.flags = {

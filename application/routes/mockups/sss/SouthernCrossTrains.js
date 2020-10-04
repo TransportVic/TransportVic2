@@ -1,4 +1,4 @@
-const TimedCache = require('timed-cache')
+const TimedCache = require('../../../../TimedCache')
 const async = require('async')
 const urls = require('../../../../urls.json')
 const utils = require('../../../../utils')
@@ -7,10 +7,11 @@ const cheerio = require('cheerio')
 const termini = require('../../../../additional-data/termini-to-lines')
 const getMetroDepartures = require('../../../../modules/metro-trains/get-departures')
 const getVLineStops = require('./SSS-Lines')
-const getMetroStops = require('../route-stops')
+const getMetroStops = require('../../../../additional-data/route-stops')
 const TrainUtils = require('../TrainUtils')
 const emptyCars = require('../empty-cars')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 1.5 })
+
+const departuresCache = new TimedCache(1000 * 60 * 1.5)
 
 const EventEmitter = require('events')
 
@@ -87,12 +88,12 @@ async function getVNETServices(vlinePlatform, isDepartures, db) {
     }
 
     if (!isNaN(new Date($$('ActualArrivalTime').text()))) {
-      estimatedDepartureTime = moment.tz($$('ActualArrivalTime').text(), 'Australia/Melbourne')
+      estimatedDepartureTime = utils.parseTime($$('ActualArrivalTime').text())
     } // yes arrival cos vnet
 
     let platform = $$('Platform').text()
-    let originDepartureTime = moment.tz($$('ScheduledDepartureTime').text(), 'Australia/Melbourne')
-    let destinationArrivalTime = moment.tz($$('ScheduledDestinationArrivalTime').text(), 'Australia/Melbourne')
+    let originDepartureTime = utils.parseTime($$('ScheduledDepartureTime').text())
+    let destinationArrivalTime = utils.parseTime($$('ScheduledDestinationArrivalTime').text())
     let runID = $$('ServiceIdentifier').text()
     let originVNETName = $$('Origin').text()
     let destinationVNETName = $$('Destination').text()
@@ -134,8 +135,8 @@ async function getVNETServices(vlinePlatform, isDepartures, db) {
     const originStation = await getStationFromVNETName(originVNETName, db)
     const destinationStation = await getStationFromVNETName(destinationVNETName, db)
 
-    let originVLinePlatform = originStation.bays.find(bay => bay.mode === 'regional train')
-    let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train')
+    let originVLinePlatform = originStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
+    let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
 
     mappedDepartures.push({
       runID,
@@ -183,7 +184,7 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
     for (let i = 0; i <= 1; i++) {
       let tripDay = departureTime.clone().add(-i, 'days')
       let query = {
-        operationDays: tripDay.format('YYYYMMDD'),
+        operationDays: utils.getYYYYMMDD(tripDay),
         mode: 'regional train',
         stopTimings: {
           $elemMatch: {
@@ -215,22 +216,24 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
       trip.stopTimings = trip.stopTimings.slice(0, destinationIndex + 1)
       let lastStop = trip.stopTimings[destinationIndex]
 
-      trip.destination = lastStop.stopName
-      trip.destinationArrivalTime = lastStop.arrivalTime
-      lastStop.departureTime = null
-      lastStop.departureTimeMinutes = null
+      if (lastStop) { // trip extensions and all...
+        trip.destination = lastStop.stopName
+        trip.destinationArrivalTime = lastStop.arrivalTime
+        lastStop.departureTime = null
+        lastStop.departureTimeMinutes = null
 
-      trip.runID = departure.runID
-      trip.operationDays = operationDay
+        trip.runID = departure.runID
+        trip.operationDays = operationDay
 
-      delete trip._id
-      await liveTimetables.replaceDocument({
-        operationDays: operationDay,
-        runID: departure.runID,
-        mode: 'regional train'
-      }, trip, {
-        upsert: true
-      })
+        delete trip._id
+        await liveTimetables.replaceDocument({
+          operationDays: operationDay,
+          runID: departure.runID,
+          mode: 'regional train'
+        }, trip, {
+          upsert: true
+        })
+      }
     }
 
     trip.vehicleType = departure.vehicleType
@@ -301,7 +304,7 @@ async function getScheduledArrivals(knownArrivals, db) {
   return arrivals.map(a => {
     let platform = a.stopTimings.slice(-1)[0].platform
     let {arrivalTimeMinutes} = a.stopTimings.slice(-1)[0]
-    let arrivalTime = utils.minutesAftMidnightToMoment(arrivalTimeMinutes, utils.now())
+    let arrivalTime = utils.getMomentFromMinutesPastMidnight(arrivalTimeMinutes, utils.now())
 
     return {
       type: 'vline',
@@ -483,6 +486,8 @@ async function appendVLineData(departure, timetables) {
     'Bacchus Marsh': 'FRONT',
     'Bendigo': 'FRONT',
     'Ballarat': 'REAR', // maryborough, ararat
+    'Traralgon': 'REAR', // Sale
+    'Geelong': 'REAR' // from WPD, front 3 DV to Depot. Doesn't show here but just recording it anyway
   }
 
   if (departure.tripFlags.tripDivides) {
@@ -536,9 +541,9 @@ async function appendArrivalData(arrival, timetables) {
     if (forming) { // only consider empty car movements
       arrival.showDeparture = 'OFF'
       let departureTime = forming.tripTimings[0].departureTime
-      let minutesPastMidnight = utils.time24ToMinAftMidnight(departureTime)
+      let minutesPastMidnight = utils.getMinutesPastMidnightFromHHMM(departureTime)
       arrival.formingID = forming.runID
-      arrival.formingDepartureTime = utils.minutesAftMidnightToMoment(minutesPastMidnight, utils.now())
+      arrival.formingDepartureTime = utils.getMomentFromMinutesPastMidnight(minutesPastMidnight, utils.now())
     }
   }
   return arrival
@@ -565,7 +570,7 @@ module.exports = async (platforms, db) => {
     codedName: 'southern-cross-railway-station'
   })
 
-  let vlinePlatform = sss.bays.find(bay => bay.mode === 'regional train')
+  let vlinePlatform = sss.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
   let metroPlatform = sss.bays.find(bay => bay.mode === 'metro train')
 
   let timetables = db.getCollection('timetables')
@@ -581,7 +586,7 @@ module.exports = async (platforms, db) => {
 
   let mtmDepartures = (await async.map(await getMetroDepartures(sss, db, false), async d => {
     return await appendMetroData(d, timetables)
-  })).filter(e => !e.isTrainReplacement && !e.cancelled)
+  })).filter(e => !e.isRailReplacementBus && !e.cancelled)
 
   let formingIDsSeen = []
   let allArrivals = (await async.map(arrivals.concat(scheduledArrivals).sort((a, b) => a.destinationArrivalTime - b.destinationArrivalTime), async d => {

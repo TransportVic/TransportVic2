@@ -1,14 +1,15 @@
 const departureUtils = require('../utils/get-bus-timetables')
 const async = require('async')
 const moment = require('moment')
-const TimedCache = require('timed-cache')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 60 * 2 })
+const TimedCache = require('../../TimedCache')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const destinationOverrides = require('../../additional-data/coach-stops')
 const EventEmitter = require('events')
 const busBays = require('../../additional-data/bus-bays')
 const southernCrossBays = require('../../additional-data/southern-cross-bays')
+
+const departuresCache = new TimedCache(1000 * 60 * 1)
 
 let ptvAPILocks = {}
 
@@ -51,20 +52,20 @@ async function getDeparturesFromPTV(stop, db) {
   let runIDsSeen = []
 
   await async.forEach(gtfsIDs, async stopGTFSID => {
-    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/3/stop/${stopGTFSID}?gtfs=true&max_results=7&expand=run&expand=route`)
+    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/3/stop/${stopGTFSID}?gtfs=true&max_results=15&expand=run&expand=route`)
     let coachDepartures = departures.filter(departure => departure.flags.includes('VCH'))
 
     let tripIDsSeen = []
 
     await async.forEachSeries(coachDepartures, async coachDeparture => {
-      let runID = coachDeparture.run_id
+      let runID = coachDeparture.run_ref
       if (runIDsSeen.includes(runID)) return
       runIDsSeen.push(runID)
 
       let run = runs[runID]
       let route = routes[coachDeparture.route_id]
 
-      let departureTime = moment.tz(coachDeparture.scheduled_departure_utc, 'Australia/Melbourne')
+      let departureTime = utils.parseTime(coachDeparture.scheduled_departure_utc)
       let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime) % 1440
 
       if (departureTime.diff(now, 'minutes') > 60 * 12) return
@@ -72,16 +73,16 @@ async function getDeparturesFromPTV(stop, db) {
       let coachRouteGTFSID = route.route_gtfs_id.replace('1-', '5-')
       let trainRouteGTFSID = route.route_gtfs_id
 
-      let destination = utils.adjustStopname(run.destination_name)
+      let destination = utils.adjustStopName(run.destination_name)
 
       // null: unknown, true: yes, false: no
-      let isTrainReplacement = null
+      let isRailReplacementBus = null
 
-      if (!vlineTrainRoutes.includes(trainRouteGTFSID)) isTrainReplacement = false
+      if (!vlineTrainRoutes.includes(trainRouteGTFSID)) isRailReplacementBus = false
 
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'regional coach', null, coachRouteGTFSID, tripIDsSeen)
 
-      if (!trip && (isTrainReplacement !== false)) {
+      if (!trip && (isRailReplacementBus !== false)) {
         let stopGTFSIDs = {
           $in: allGTFSIDs
         }
@@ -95,10 +96,11 @@ async function getDeparturesFromPTV(stop, db) {
         for (let i = 0; i <= 1; i++) {
           let tripDay = departureTime.clone().add(-i, 'days')
           let departureTimeMinutes = scheduledDepartureTimeMinutes + 1440 * i
+          let operationDay = utils.getYYYYMMDD(tripDay)
 
           trip = await gtfsTimetables.findDocument({
             routeGTFSID: trainRouteGTFSID,
-            operationDays: tripDay.format('YYYYMMDD'),
+            operationDays: operationDay,
             mode: 'regional train',
             stopTimings: {
               $elemMatch: {
@@ -117,8 +119,7 @@ async function getDeparturesFromPTV(stop, db) {
           if (trip) {
             console.log(`Mapped train trip as coach: ${trip.departureTime} to ${trip.destination}`)
 
-            let operationDay = tripDay.format('YYYYMMDD')
-            trip.operationDays = [ operationDay ]
+            trip.operationDays = operationDay
 
             trip.mode = 'regional coach'
             trip.routeGTFSID = trip.routeGTFSID.replace('1-', '5-')
@@ -146,10 +147,10 @@ async function getDeparturesFromPTV(stop, db) {
 
             delete trip._id
             await liveTimetables.replaceDocument(query, trip, {
-              $upsert: true
+              upsert: true
             })
 
-            isTrainReplacement = true
+            isRailReplacementBus = true
             break
           }
         }
@@ -165,15 +166,14 @@ async function getDeparturesFromPTV(stop, db) {
         trip,
         scheduledDepartureTime: departureTime,
         estimatedDepartureTime: null,
-        actualDepartureTime: scheduledDepartureTimeMinutes,
+        actualDepartureTime: departureTime,
         destination,
-        isTrainReplacement: isTrainReplacement
+        isRailReplacementBus
       })
     })
   })
 
-  return mappedDepartures.sort((a, b) => a.destination.length - b.destination.length)
-    .sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+  return mappedDepartures
 }
 
 async function getScheduledDepartures(stop, db, useLive) {
@@ -206,27 +206,36 @@ async function getDepartures(stop, db) {
 
   try {
     let departures
+    let scheduledDepartures = (await getScheduledDepartures(stop, db, false)).map(departure => {
+      departure.isRailReplacementBus = null
+      return departure
+    })
+
     try {
       departures = await getDeparturesFromPTV(stop, db)
+      let ptvDepartures = departures.map(d => d.trip.tripID)
+      let extras = scheduledDepartures.filter(d => !ptvDepartures.includes(d.trip.tripID))
+      departures = departures.concat(extras)
     } catch (e) {
-      departures = await getScheduledDepartures(stop, db, false)
-      departures = departures.map(departure => {
-        departure.isTrainReplacement = null
-        return departure
-      })
+      console.log(e)
+      departures = scheduledDepartures
     }
+
+    departures = departures.sort((a, b) => a.destination.length - b.destination.length)
+      .sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
 
     let timetables = db.getCollection('timetables')
     let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
     departures = await async.map(departures, async departure => {
       let {destination} = departure.trip
+      let destinationSuburb = departure.trip.stopTimings.slice(-1)[0].suburb
       destination = destination.replace('Shopping Centre', 'SC')
-      destination = destinationOverrides[destination] || destination
+      destination = destinationOverrides[destination + ` (${destinationSuburb})`] || destinationOverrides[destination] || destination
 
       let shortName = utils.getStopName(destination)
       if (!utils.isStreet(shortName)) destination = shortName
-      
+
       departure.destination = destination
 
       let departureBayID = departure.trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID)).stopGTFSID
@@ -237,8 +246,14 @@ async function getDepartures(stop, db) {
         departure.bay = busBays[departureBayID]
       }
 
-      if (departure.isTrainReplacement === null) {
+      if (departure.trip.trainConnection) {
+        departure.isRailReplacementBus = true
+        departure.shortRouteName = departure.trip.trainConnection
+      }
+
+      if (departure.isRailReplacementBus === null) {
         let {origin, destination, departureTime} = departure.trip
+
         if (origin === 'Southern Cross Coach Terminal/Spencer Street') {
           origin = 'Southern Cross Railway Station'
         }
@@ -252,7 +267,7 @@ async function getDepartures(stop, db) {
           'stopTimings.stopName': destination,
           departureTime
         })
-        departure.isTrainReplacement = !!nspDeparture
+        departure.isRailReplacementBus = !!nspDeparture
         if (nspDeparture) {
           departure.shortRouteName = nspDeparture.routeName
         }
@@ -260,8 +275,37 @@ async function getDepartures(stop, db) {
       return departure
     })
 
-    departuresCache.put(cacheKey, Object.values(departures))
-    return returnDepartures(Object.values(departures))
+    let trainReplacements = []
+    departures.forEach(departure => {
+      if (departure.isRailReplacementBus) {
+        trainReplacements.push({
+          routeGTFSID: departure.trip.routeGTFSID,
+          departureTime: departure.trip.stopTimings[0].departureTime,
+          direction: departure.trip.gtfsDirection,
+          shortRouteName: departure.shortRouteName
+        })
+      }
+    })
+
+    departures = departures.map(departure => {
+      if (!departure.isRailReplacementBus) {
+        let combinedTR = trainReplacements.find(t => {
+          return t.routeGTFSID === departure.trip.routeGTFSID
+            && t.departureTime === departure.trip.stopTimings[0].departureTime
+            && t.direction === departure.trip.gtfsDirection
+        })
+
+        if (combinedTR) {
+          departure.isRailReplacementBus = true
+          departure.shortRouteName = combinedTR.shortRouteName
+        }
+      }
+
+      return departure
+    })
+
+    departuresCache.put(cacheKey, departures)
+    return returnDepartures(departures)
   } catch (e) {
     return returnDepartures(null)
   }

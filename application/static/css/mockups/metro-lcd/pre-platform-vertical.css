@@ -54,6 +54,10 @@ div.nextDepartures {
   color: #ffffff !important;
 }
 
+div.nextDeparture.vline {
+  background-color: #753F98;
+}
+
 div.lineColour {
   background-color: #ffffff !important;
 }

@@ -1,11 +1,11 @@
 html
   head
     script(src='/static/scripts/util.js')
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js')
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.26/moment-timezone-with-data-10-year-range.min.js')
     link(rel='stylesheet' href='/static/css/jmss-screens/base-style.css')
     link(rel='stylesheet' href='/static/css/jmss-screens/big-screen.css')
-    link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=swap')
+    link(rel='preload' as='style' href='/static/css/jmss-screens/base-style.css')
+    link(rel='preload' as='style' href='/static/css/jmss-screens/big-screen.css')
+    link(rel='preload' as='font' href='https://fonts.googleapis.com/css?family=Roboto&display=swap')
     script.
       setTimeout(() => location.reload(), 1000 * 60)
       setInterval(() => {
@@ -162,4 +162,7 @@ html
                   span Too late - wait for the next one
                 div.unknown
                   span No realtime departure available
-                
+
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.26/moment-timezone-with-data-10-year-range.min.js')
+    link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=swap')

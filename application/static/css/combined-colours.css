@@ -15,11 +15,11 @@
 }
 
 .cdc-melbourne, .cdc-geelong, .cdc-ballarat {
-  background-color: #fc923d !important;
+  background-color: #e88535 !important;
 }
 
 :nth-child(even) > .cdc-melbourne, :nth-child(even) > .cdc-geelong, :nth-child(even) > .cdc-ballarat {
-  background-color: #fb7b13 !important;
+  background-color: #d3762a !important;
 }
 
 .ventura-bus-lines {
@@ -31,27 +31,27 @@
 }
 
 .transdev-melbourne {
-  background-color: #e30613 !important;
+  background-color: #d30614 !important;
 }
 
 :nth-child(even) > .transdev-melbourne {
-  background-color: #bc0510 !important;
+  background-color: #b50914 !important;
 }
 
 .dysons {
-  background-color: #2eb130 !important;
+  background-color: #23a326 !important;
 }
 
 :nth-child(even) > .dysons {
-  background-color: #259027 !important;
+  background-color: #1b8e1d !important;
 }
 
 .panorama-coaches {
-  background-color: #d00071 !important;
+  background-color: #ba0368 !important;
 }
 
 :nth-child(even) > .panorama-coaches {
-  background-color: #930050 !important;
+  background-color: #a8055e !important;
 }
 
 .sita-bus-lines {
@@ -87,11 +87,11 @@
 }
 
 .sunbury-bus-service {
-  background-color: #cd0504 !important;
+  background-color: #b50303 !important;
 }
 
 :nth-child(even) > .sunbury-bus-service {
-  background-color: #9a0909 !important;
+  background-color: #9b0909 !important;
 }
 
 .ryan-bros-bus-service {
@@ -99,7 +99,7 @@
 }
 
 :nth-child(even) > .ryan-bros-bus-service {
-  background-color: #0b5870 !important;
+  background-color: #0f6d89 !important;
 }
 
 .broadmeadows-bus-service {
@@ -127,11 +127,11 @@
 }
 
 .martyrs-bus-service {
-  background-color: #71afc7 !important;
+  background-color: #538aa0 !important;
 }
 
 :nth-child(even) > .martyrs-bus-service {
-  background-color: #438daa !important;
+  background-color: #44778c !important;
 }
 
 .cranbourne-transit {
@@ -577,27 +577,27 @@
 }
 
 .cranbourne-line {
-  background-color: #56b7d6 !important;
+  background-color: #45a6c6 !important;
 }
 
 :nth-child(even) > .cranbourne-line {
-  background-color: #31a4c8 !important;
+  background-color: #349abc !important;
 }
 
 .pakenham-line {
-  background-color: #56b7d6 !important;
+  background-color: #45a6c6 !important;
 }
 
 :nth-child(even) > .pakenham-line {
-  background-color: #31a4c8 !important;
+  background-color: #349abc !important;
 }
 
 .sandringham-line {
-  background-color: #ee67e6 !important;
+  background-color: #dd4fd4 !important;
 }
 
 :nth-child(even) > .sandringham-line {
-  background-color: #d639cc !important;
+  background-color: #ce39c4 !important;
 }
 
 .showgrounds-flemington-line {
@@ -608,11 +608,11 @@
   background-color: #ba0352 !important;
 }
 
-.city-loop-line {
+.city-circle {
   background-color: #8f8f8f !important;
 }
 
-:nth-child(even) > .city-loop-line {
+:nth-child(even) > .city-circle {
   background-color: #636363 !important;
 }
 

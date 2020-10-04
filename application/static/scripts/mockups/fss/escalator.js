@@ -228,7 +228,9 @@ function updateBody(firstTime) {
       if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
 
       let {destination} = firstDeparture
-      if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+      if (destination === 'North Melbourne') destination = 'Nth Melbourne'
+      if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
+      if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
       let firstStoppingType = firstDeparture.stoppingType
       if (firstDeparture.additionalInfo.via) {
@@ -273,6 +275,7 @@ function updateBody(firstTime) {
       nextDepartures.forEach((departure, i) => {
         let departureRow = $(`.nextDeparture:nth-child(${1 + i})`)
         if (!departure) {
+          departureRow.className = 'nextDeparture'
           $('.lineColour', departureRow).className = 'lineColour no-line'
           $('.scheduledDepartureTime', departureRow).textContent = '--'
           $('.destination', departureRow).textContent = '--'
@@ -280,13 +283,18 @@ function updateBody(firstTime) {
           $('.minutesToDeparture span', departureRow).textContent = '-- min'
         } else {
           let departureClass = departure.codedLineName
-          if (departure.type === 'vline') departureClass = 'vline'
+          if (departure.type === 'vline') {
+            departureClass = 'vline'
+            departureRow.className = 'nextDeparture vline'
+          } else {
+            departureRow.className = 'nextDeparture'
+          }
 
           let {destination} = departure
 
           if (destination === 'North Melbourne') destination = 'Nth Melbourne'
           if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
-          if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+          if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
           let stoppingType = departure.stoppingType
           if (departure.additionalInfo.via) {

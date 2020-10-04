@@ -6,7 +6,18 @@ const config = require('../../config.json')
 const loadStops = require('../utils/load-stops')
 const { createStopsLookup } = require('../utils/datamart-utils')
 const datamartStops = require('../../spatial-datamart/vline-train-stations.json').features
+const metroDatamartStops = require('../../spatial-datamart/metro-train-stations.json').features
 let stopsLookup = createStopsLookup(datamartStops)
+
+Object.keys(stopsLookup).forEach(stop => {
+  let stopName = stopsLookup[stop].stopName
+  let metroStop = metroDatamartStops.find(stop => stop.properties.STOP_NAME === stopName)
+
+  if (metroStop) {
+    let metroZones = (metroStop.properties.TICKETZONE || '').split(',').map(e => parseInt(e)).filter(Boolean)
+    stopsLookup[stop].mykiZones = metroZones
+  }
+})
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')

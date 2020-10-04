@@ -81,7 +81,7 @@ function setNoDepartures(left) {
 }
 
 function processArrivals(arrivals, platformNumber, isLeft) {
-  if (!sssPlatforms[platformNumber]) return
+  if (!sssPlatforms[platformNumber]) return true
   arrivals = arrivals.filter(arrival => {
     if (arrival.type === 'vline') {
       if (!arrival.platform) return null
@@ -93,7 +93,7 @@ function processArrivals(arrivals, platformNumber, isLeft) {
     }
   }).map(arrival => {
     let {destination} = arrival
-    if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+    if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
     if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
 
     arrival.destination = destination.toUpperCase()
@@ -144,7 +144,7 @@ function processDepartures(departures, platformNumber, isLeft) {
     }
   }).map(departure => {
     let {destination} = departure
-    if (destination === 'Flemington Racecource') destination = 'Flemington Races'
+    if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
     if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
     if (destination === 'South Kensington') destination = 'Sth Kensington'
 
@@ -160,7 +160,7 @@ function processDepartures(departures, platformNumber, isLeft) {
     return departure
   })
 
-  if (!departures) return true
+  if (!departures.length) return true
   setMessageActive(isLeft, false)
 
   departures = departures.sort((a, b) => new Date(a.actualDepartureTime) - new Date(b.actualDepartureTime))
@@ -315,8 +315,8 @@ function updateBody() {
     let leftNoArrivals = processArrivals(arrivals, platforms[0], true)
     let rightNoArrivals = processArrivals(arrivals, platforms[1], false)
 
-    if (leftNoDepartures && leftNoArrivals) setNoDepartures(true, true)
-    if (rightNoDepartures && rightNoArrivals) setNoDepartures(false, true)
+    if (leftNoDepartures && leftNoArrivals) setNoDepartures(true)
+    if (rightNoDepartures && rightNoArrivals) setNoDepartures(false)
   })
 }
 

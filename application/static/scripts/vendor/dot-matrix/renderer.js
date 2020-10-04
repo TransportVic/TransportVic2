@@ -403,6 +403,7 @@
         let measure = text.takeMeasure();
 
         let {x, y} = solveAlignment(alignment, measure.width, measure.height, width, height);
+
         y += measure.offset;
 
         text.position = new Position(x, y);
@@ -420,7 +421,7 @@
                 } else if (align == 'bottom') {
                     dy += totalMeasure.height - measure.height
                 }
-                textSection.position = new Position(dx, y + dy);
+                textSection.position = new Position(x + dx, y + dy);
 
                 dx += measure.width;
                 dx += textSection.spacing;

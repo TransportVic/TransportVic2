@@ -4,22 +4,35 @@ html(lang='en-GB')
     - let themeColour = '#171717'
     meta(charset='UTF-8')
       
-    link(rel='preload' href='/static/fonts/Nunito.ttf' as='font' crossorigin='anonymous')
-    link(rel='preload' href='/static/css/base-style.css' as='style')
-      
+    link(rel='preload' as='font' href='/static/fonts/Nunito.ttf' crossorigin='anonymous')
+    link(rel='preload' as='style' href='/static/css/base-style.css')
+
     link(rel='stylesheet' href='/static/css/base-style.css')
     script(src='/static/scripts/util.js')
     
+    -
+      let description = 'A transport app for Victoria'
+      let title = 'TransportVic'
+      
+    block head
+    block style
+
     meta(property='og:locale' content='en-GB')
     meta(property='og:site_name' content='TransportVic')
     meta(property='og:type' content='website')
-    meta(property='og:image' content='https://vic.transportsg.me/static/images/favicon/favicon512.png')
+    meta(property='og:image' content='https://vic.transportsg.me/static/images/favicon/favicon192.png')
     meta(property='og:url' content='https://vic.transportsg.me')
     meta(property='twitter:card' content='summary')
     meta(property='twitter:url' content='https://vic.transportsg.me')
-    meta(property='twitter:image' content='https://vic.transportsg.me/static/images/favicon/favicon512.png')
-
-    meta(name='keywords' content='tram,vline,train,next 5,public transport,bus,metro,transport,victora')
+    meta(property='twitter:image' content='https://vic.transportsg.me/static/images/favicon/favicon192.png')
+      
+    meta(property='og:title' content=title)
+    meta(property='twitter:title' content=title)
+    meta(property='og:description' content=description)
+    meta(property='twitter:description' content=description)
+    meta(name='description' content=description)
+      
+    meta(name='keywords' content='tram,vline,train,next 5,public transport,bus,metro,transport,victora,ferry,train times,bus times,coach,coach times,ptv')
     meta(name='author' content='Unikitty Pte. Ltd.')
     meta(name='application-name' content='TransportVic')
     meta(name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, height=device-height')
@@ -29,11 +42,10 @@ html(lang='en-GB')
     meta(name='apple-mobile-web-app-status-bar-style' content='black-translucent')
       
     link(rel='icon' type='image/png' href='/static/images/favicon/favicon192.png')
-    link(rel='shortcut icon' type='image/png' href='/static/images/favicon/favicon512.png')
-    link(rel='apple-touch-icon' type='image/png' href='/static/images/favicon/favicon512.png')
+    link(rel='shortcut icon' type='image/png' href='/static/images/favicon/favicon192.png')
+    link(rel='apple-touch-icon' type='image/png' href='/static/images/favicon/favicon192.png')
       
     link(rel='manifest' href='/static/app-content/manifest.json')
-    block head
     meta(name='theme-color' content=themeColour)
   body
     div#header
@@ -43,8 +55,6 @@ html(lang='en-GB')
         a#home-button(href='/') Home
     div#content
       block content
-        
-    block style
     
     block scripts
     script(src='/static/scripts/sw-load.js')

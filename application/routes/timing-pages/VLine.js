@@ -9,33 +9,33 @@ async function loadDepartures(req, res) {
     codedName: req.params.stationName + '-railway-station'
   })
 
-  if (!station || !station.bays.filter(bay => bay.mode === 'regional train')) {
+  if (!station || !station.bays.find(bay => bay.mode === 'regional train')) { // Not filtering xpt as we just want to check it exists
     return res.status(404).render('errors/no-stop')
   }
 
   let departures = await getDepartures(station, res.db)
 
   departures = departures.map(departure => {
-    const timeDifference = moment.utc(departure.scheduledDepartureTime.diff(utils.now()))
-
-    if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
-    else {
-      departure.prettyTimeToArrival = ''
-      if (timeDifference.get('hours')) departure.prettyTimeToArrival += timeDifference.get('hours') + ' h '
-      if (timeDifference.get('minutes')) departure.prettyTimeToArrival += timeDifference.get('minutes') + ' min'
-    }
-
-    departure.headwayDevianceClass = 'unknown'
+    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
+    departure.headwayDevianceClass = utils.findHeadwayDeviance(departure.scheduledDepartureTime, departure.estimatedDepartureTime, {
+      early: 0,
+      late: 5
+    })
 
     let stationName = station.stopName
-    if (stationName === 'Southern Cross Railway Station' && departure.isTrainReplacement)
+    if (stationName === 'Southern Cross Railway Station' && departure.isRailReplacementBus)
       stationName = 'Southern Cross Coach Terminal/Spencer Street'
 
-    let stopGTFSID = departure.trip.stopTimings.find(stop => stop.stopName === stationName).stopGTFSID
+    let currentStation = departure.trip.stopTimings.find(tripStop => tripStop.stopName === stationName)
+    let {stopGTFSID} = currentStation
+    let minutesDiff = currentStation.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
 
-    departure.tripURL = `/${departure.isTrainReplacement ? 'coach' : 'vline'}/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
+    let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
+    let operationDate = utils.getYYYYMMDD(tripStart)
+
+    departure.tripURL = `/${departure.isRailReplacementBus ? 'coach' : 'vline'}/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + `${utils.getYYYYMMDDNow()}/#stop-${stopGTFSID}`
+      + `${operationDate}/#stop-${stopGTFSID}`
 
     return departure
   })
@@ -48,7 +48,8 @@ async function loadDepartures(req, res) {
 }
 
 router.get('/:stationName', async (req, res) => {
-  res.render('timings/vline', await loadDepartures(req, res))
+  let response = await loadDepartures(req, res)
+  if (response) res.render('timings/vline', response)
 })
 
 router.post('/:stationName', async (req, res) => {

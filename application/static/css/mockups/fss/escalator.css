@@ -203,7 +203,7 @@ div.stopsColumn.row-14 div.stationRow img {
 }
 
 div.stopsColumn.row-15 div.stationRow p {
-  font-size: calc(var(--height) * 0.028);
+  font-size: calc(var(--height) * 0.027);
 }
 div.stopsColumn.row-15 {
   --arrow-height: calc(var(--width) * 0.049);
@@ -349,6 +349,10 @@ div.nextDeparture {
   display: flex;
   align-items: center;
   border-bottom: solid calc(var(--height) * 0.001) #505050;
+}
+
+div.nextDeparture.vline {
+  background-color: #f0f0f0;
 }
 
 div.nextDeparture div.lineColour {

@@ -16,7 +16,7 @@ append content
       - let {cssName, originalName} = operatorData
       for i in [1, 2]
         div.departure
-          a(class=`leftContainer platform ${cssName}`)
+          a(class=`leftContainer ${cssName}`)
             span.bigNumber 77
           a.departureInfo
             span.towards Operator
@@ -25,8 +25,8 @@ append content
     for tramRoute in tramRoutes
       for i in [1, 2]
         div.departure
-          a(class=`leftContainer platform tram-${tramRoute}`)
-            span.bigNumber=tramRoute
+          a(class=`leftContainer tram-${tramRoute}`)
+            span.bigNumber #{tramRoute}
           a.departureInfo
             span.towards Tram
             span.destination Destination
@@ -35,7 +35,7 @@ append content
       - let {cssName, originalName} = trainLine
       for i in [1, 2]
         div.departure
-          a(class=`leftContainer platform ${cssName}-line`)
+          a(class=`leftContainer ${cssName}-line`)
             span.topText Platform
             span.bigNumber 42
           a.departureInfo
@@ -44,10 +44,10 @@ append content
           
     for i in [1, 2]  
       div.departure
-        a(class=`leftContainer platform city-loop-line`)
+        a(class=`leftContainer city-circle`)
           span.topText Platform
           span.bigNumber 99
         a.departureInfo
           span.towards Metro Train
-          span.destination City Loop Line
+          span.destination City Circle
             

@@ -2,13 +2,13 @@ const utils = require('../../../utils')
 const moment = require('moment')
 
 function dateRange(name, start, end, type) {
-  let startDate = moment.tz(start, 'YYYYMMDD', 'Australia/Melbourne')
-  let endDate = moment.tz(end, 'YYYYMMDD', 'Australia/Melbourne')
+  let startDate = utils.parseDate(start)
+  let endDate = utils.parseDate(end)
 
   let allDatesInbetween = utils.allDaysBetweenDates(startDate, endDate)
 
   return allDatesInbetween.map(date => {
-    return [name, date, type]
+    return [name, utils.getYYYYMMDD(date), type]
   })
 }
 
@@ -20,7 +20,8 @@ module.exports = {
     ["PURPLE", "1", "1", "1", "1", "1", "0", "0", "20200414", "20200918"]
   ],
   "dates": [
-    ["PURPLE", "20200503", "2"]
+    ["PURPLE", "20200503", "2"],
+    ...generateExclusion("PURPLE", "20200701", "20200712")
   ],
   "trips": [
     {

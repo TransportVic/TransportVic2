@@ -1,20 +1,34 @@
-const getLineStops = require('./route-stops')
+const getLineStops = require('../../../additional-data/route-stops')
 const getMetroDepartures = require('../../../modules/metro-trains/get-departures')
 const getVLineDepartures = require('../../../modules/vline/get-departures')
+const destinationOverrides = require('../../../additional-data/coach-stops')
 const utils = require('../../../utils')
 const async = require('async')
 const emptyShunts = require('../../../additional-data/empty-shunts.json')
+const TimedCache = require('../../../TimedCache')
+const EventEmitter = require('events')
 
-let defaultStoppingMap = {
+let defaultStoppingText = {
   stopsAll: 'Stops All Stations',
   allExcept: 'All Except {0}',
   expressAtoB: '{0} to {1}',
   sasAtoB: 'Stops All Stations from {0} to {1}',
   runsExpressAtoB: 'Runs Express from {0} to {1}',
   runsExpressTo: 'Runs Express to {0}',
+  thenRunsExpressTo: 'then Runs Express to {0}',
   thenRunsExpressAtoB: 'then Runs Express from {0} to {1}',
   sasTo: 'Stops All Stations to {0}',
+  stopsAt: 'Stops At {0}',
   thenSASTo: 'then Stops All Stations to {0}'
+}
+
+let defaultStoppingType = {
+  vlineService: {
+    stoppingType: 'No Suburban Passengers'
+  },
+  sas: 'Stops All',
+  limExp: 'Limited Express',
+  exp: 'Express'
 }
 
 let northernGroup = [
@@ -51,9 +65,47 @@ let caulfieldGroup = [
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
+let departuresLock = {}
+let arrivalsLock = {}
+let combinedDeparturesLock = {}
+
+class IEventEmitter extends EventEmitter {
+  constructor() {
+    super()
+    this.setMaxListeners(Infinity)
+  }
+}
+
+let departuresCache = new TimedCache(1000 * 15)
+let arrivalsCache = new TimedCache(1000 * 15)
+let combinedDeparturesCache = new TimedCache(1000 * 15)
 
 module.exports = {
+  getHumanName: (fullStopName, stopSuburb='') => {
+    let stopName = fullStopName.replace('Shopping Centre', 'SC')
+    let humanName = destinationOverrides[fullStopName] || destinationOverrides[`${fullStopName} (${stopSuburb})`] || fullStopName
+    if (humanName.includes('Railway Station')) {
+      humanName = humanName.replace(/Railway Station.*/, '').trim()
+    }
+
+    return humanName
+  },
   getEmptyShunts: async (station, db) => {
+    let stationName = station.stopName
+    if (arrivalsLock[stationName]) {
+      return await new Promise(resolve => {
+        arrivalsLock[stationName].on('done', data => {
+          resolve(data)
+        })
+      })
+    }
+
+    if (arrivalsCache.get(station)) {
+      return arrivalsCache.get(station)
+    }
+
+    arrivalsLock[stationName] = new IEventEmitter()
+
     let timetables = db.getCollection('timetables')
     let today = utils.getPTDayName(utils.now())
     let minutesPastMidnight = utils.getPTMinutesPastMidnight(utils.now())
@@ -78,13 +130,14 @@ module.exports = {
       }
     }).sort({ destinationArrivalTime: 1 }).limit(20).toArray()
 
-    return await async.map(arrivals, async arrival => {
+    let mappedArrivals = await async.map(arrivals, async arrival => {
       let arrivalStop = arrival.stopTimings.slice(-1)[0]
-      let scheduledDepartureTime = utils.minutesAftMidnightToMoment(arrivalStop.arrivalTimeMinutes, utils.now())
+      let scheduledDepartureTime = utils.getMomentFromMinutesPastMidnight(arrivalStop.arrivalTimeMinutes, utils.now())
 
       // to get realtime: check if arriving less that 20min, then request runID + 948000
 
       let actualDepartureTime = scheduledDepartureTime // use realtime
+      let upService = !(arrival.runID[3] % 2)
 
       return module.exports.addTimeToDeparture({
         trip: arrival,
@@ -101,82 +154,128 @@ module.exports = {
         codedLineName: utils.encodeName(arrival.routeName),
         additionalInfo: {
           screenStops: [],
-          expressCount: [],
+          expressCount: 0,
           viaCityLoop: false,
-          direction: 'Down',
+          direction: upService ? 'Up' : 'Down',
           via: '',
           notTakingPassengers: true
         }
       })
     })
+
+    arrivalsLock[stationName].emit('done', mappedArrivals)
+    delete arrivalsLock[stationName]
+
+    arrivalsCache.put(stationName, mappedArrivals)
+
+    return mappedArrivals
   },
   getCombinedDepartures: async (station, db) => {
+    let stationName = station.stopName
+    if (combinedDeparturesLock[stationName]) {
+      return await new Promise(resolve => {
+        combinedDeparturesLock[stationName].on('done', data => {
+          resolve(data)
+        })
+      })
+    }
+
+    if (combinedDeparturesCache.get(station)) {
+      return combinedDeparturesCache.get(station)
+    }
+
+    combinedDeparturesLock[stationName] = new IEventEmitter()
+
     let timetables = db.getCollection('timetables')
 
     let vlineDepartures = [], metroDepartures = []
 
-    try {
-      let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train')
-      if (vlinePlatform) {
-        vlineDepartures = (await getVLineDepartures(station, db)).map(departure => {
-          if (departure.platform)
-            departure.platform = departure.platform
-          departure.type = 'vline'
-          departure.actualDepartureTime = departure.scheduledDepartureTime
+    await Promise.all([
+      new Promise(async resolve => {
+        try {
+          let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train') // Not filtering XPT here as we just want to check if it exists
+          if (vlinePlatform) {
+            vlineDepartures = (await getVLineDepartures(station, db)).map(departure => {
+              if (departure.platform)
+                departure.platform = departure.platform
+              departure.type = 'vline'
+              departure.actualDepartureTime = departure.estimatedDepartureTime || departure.scheduledDepartureTime
 
-          departure.stopTimings = departure.trip.stopTimings
+              departure.stopTimings = departure.trip.stopTimings
+              let tripStops = departure.stopTimings.map(e => e.stopName)
+              let currentIndex = tripStops.indexOf(station.stopName)
 
-          return departure
-        })
-      }
-    } catch (e) {}
+              departure.connections = (departure.trip.connections || []).filter(connection => {
+                if (!tripStops.some(s => s === connection.changeAt)) return false
+                let {changeAt} = connection
 
-    try {
-      let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
-      if (metroPlatform) {
-        metroDepartures = (await getMetroDepartures(station, db))
-        metroDepartures = await async.map(metroDepartures, async departure => {
-          let {runID} = departure
-          let today = utils.getPTDayName(utils.now())
+                let changeIndex = tripStops.indexOf(changeAt)
 
-          let scheduled = await timetables.findDocument({
-            runID, operationDays: today
-          })
+                return changeIndex > currentIndex
+              }).map(connection => ({
+                changeAt: connection.changeAt,
+                for: module.exports.getHumanName(connection.for)
+              }))
 
-          let stopTimings = departure.trip.stopTimings.slice(0)
-          let tripStops = stopTimings.map(e => e.stopName)
-
-          let suspensions = departure.suspensions
-          if (suspensions.length) {
-            let first = suspensions[0]
-            let start = first.startStation
-            let index = tripStops.indexOf(start)
-
-            tripStops = tripStops.slice(0, index)
-            stopTimings = stopTimings.slice(0, index)
-          }
-
-          departure.stopTimings = stopTimings
-
-          departure.type = 'metro'
-          let currentIndex = tripStops.indexOf(station.stopName)
-
-          if (scheduled) {
-            departure.connections = scheduled.connections.filter(connection => {
-              let changeAtStation = stopTimings.find(s => s.stopName === connection.changeAt)
-              if (!changeAtStation) return false
-              let {changeAt} = connection
-
-              let changeIndex = tripStops.indexOf(changeAt)
-
-              return changeIndex > currentIndex
+              return departure
             })
-          } else departure.connections = []
+          }
+        } catch (e) {
+          console.log(e)
+        }
+        resolve()
+      }),
+      new Promise(async resolve => {
+        try {
+          let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
+          if (metroPlatform) {
+            metroDepartures = (await getMetroDepartures(station, db))
+            metroDepartures = await async.map(metroDepartures, async departure => {
+              let {runID} = departure
+              let today = utils.getPTDayName(utils.now())
 
-          return departure
-        })
-      }
-    } catch (e) {}
+              let scheduled = await timetables.findDocument({
+                runID, operationDays: today
+              })
+
+              let stopTimings = departure.trip.stopTimings.slice(0)
+              let tripStops = stopTimings.map(e => e.stopName)
+
+              let suspensions = departure.suspensions
+              if (suspensions.length) {
+                let first = suspensions[0]
+                let start = first.startStation
+                let index = tripStops.indexOf(start) + 1
+
+                if (index > 0) {
+                  tripStops = tripStops.slice(0, index)
+                  stopTimings = stopTimings.slice(0, index)
+                }
+              }
+
+              departure.stopTimings = stopTimings
+
+              departure.type = 'metro'
+              let currentIndex = tripStops.indexOf(station.stopName)
+
+              if (scheduled) {
+                departure.connections = scheduled.connections.filter(connection => {
+                  if (!tripStops.some(s => s === connection.changeAt)) return false
+                  let {changeAt} = connection
+
+                  let changeIndex = tripStops.indexOf(changeAt)
+
+                  return changeIndex > currentIndex
+                })
+              } else departure.connections = []
+
+              return departure
+            })
+          }
+        } catch (e) {}
+        resolve()
+      })
+    ])
 
     let departures = [...metroDepartures, ...vlineDepartures].filter(departure => {
       let diff = departure.actualDepartureTime
@@ -184,22 +283,26 @@ module.exports = {
       let secondsDifference = diff.diff(utils.now(), 'seconds')
 
       return !departure.cancelled && minutesDifference < 120 && secondsDifference > -60
-    })
+    }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 
-    return departures.sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+    combinedDeparturesLock[stationName].emit('done', departures)
+    delete combinedDeparturesLock[stationName]
+
+    combinedDeparturesCache.put(stationName, departures)
+
+    return departures
   },
   addTimeToDeparture: departure => {
     let timeDifference = departure.actualDepartureTime.clone().add(30, 'seconds').diff(utils.now(), 'minutes')
     departure.minutesToDeparture = timeDifference
 
     if (+timeDifference <= 0) departure.prettyTimeToDeparture = 'NOW'
-    else {
-      departure.prettyTimeToDeparture = timeDifference + ' min'
-    }
+    else departure.prettyTimeToDeparture = timeDifference + ' min'
+
     return departure
   },
-  getFixedLineStops: (tripStops, lineStops, lineName, isUp, type) => {
-    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament')
+  getFixedLineStops: (tripStops, lineStops, lineName, isUp, type, willSkipLoop) => {
+    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament') || willSkipLoop
     if (!northernGroup.includes(lineName) && !viaCityLoop && type !== 'vline')
      viaCityLoop = tripStops.includes('Southern Cross')
 
@@ -214,7 +317,7 @@ module.exports = {
       } else {
         lineStops = [...cityLoopStops, ...lineStops]
       }
-      if (lineName === 'City Loop') {
+      if (lineName === 'City Circle') {
         return lineStops
       }
     } else if (type === 'vline') {
@@ -251,7 +354,7 @@ module.exports = {
       }
     }
 
-    if (tripStops.includes('Laverton')) {
+    if (lineName === 'Werribee') {
       if (tripStops.includes('Altona')) {
         let mainLine = ['Paisley', 'Galvin']
         lineStops = lineStops.filter(e => !mainLine.includes(e))
@@ -263,8 +366,8 @@ module.exports = {
 
     return lineStops.filter((e, i, a) => a.indexOf(e) === i)
   },
-  trimTrip: (isUp, stopTimings, fromStation, routeName) => {
-    if (routeName === 'City Loop') return stopTimings
+  trimTrip: (isUp, stopTimings, fromStation, routeName, willSkipLoop, destination) => {
+    if (routeName === 'City Circle') return stopTimings
     if (isUp) {
       let hasSeenFSS = false
       let destStop = 'Flinders Street'
@@ -286,24 +389,36 @@ module.exports = {
       stopTimings = stopTimings.slice(startIndex)
     }
 
+    if (willSkipLoop && stopTimings.includes('Flinders Street')) {
+      stopTimings = stopTimings.filter(e => !cityLoopStations.includes(e))
+      if (northernGroup.includes(routeName)) {
+        if (isUp) {
+          if (destination === 'Flinders Street') {
+            stopTimings = [...stopTimings.slice(0, -1), 'Southern Cross', 'Flinders Street']
+          } else {
+            stopTimings = [...stopTimings.slice(0, -1), 'Southern Cross']
+          }
+        } else {
+          stopTimings = ['Flinders Street', 'Southern Cross', ...stopTimings.slice(1)]
+        }
+      } else {
+        if (isUp) {
+          stopTimings = [...stopTimings.slice(0, -1), 'Flinders Street']
+        } else {
+          stopTimings = ['Flinders Street', ...stopTimings.slice(1)]
+        }
+      }
+    }
+
     return stopTimings
   },
-  appendScreenDataToDeparture: (departure, station) => {
+  appendScreenDataToDeparture: (departure, destination, station, routeName) => {
     departure = module.exports.addTimeToDeparture(departure)
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
     let trip = departure.trip
-    let routeName = departure.shortRouteName || trip.routeName
 
-    let isUp = departure.trip.direction === 'Up'
-    let destination = departure.trip.destination.slice(0, -16)
-    if (destination === 'Parliament') destination = 'Flinders Street'
-    if (destination === 'Southern Cross' && caulfieldGroup.includes(routeName)) destination = 'Flinders Street'
-
-    if (routeName === 'Bendigo') {
-      if (isUp && departure.trip.origin === 'Eaglehawk Railway Station') routeName = 'Swan Hill'
-      if (!isUp && departure.trip.destination === 'Eaglehawk Railway Station') routeName = 'Swan Hill'
-    }
+    let isUp = trip.direction === 'Up'
 
     let lineStops = departure.lineStops
     let tripStops = departure.tripStops
@@ -314,13 +429,15 @@ module.exports = {
     startingIndex = lineStops.indexOf(stationName)
     let endingIndex = lineStops.lastIndexOf(destination)
 
-    if (departure.trip.routeGTFSID === '2-CCL') endingIndex-- // bring it back from fss to parliament or southern cross
+    if (trip.routeGTFSID === '2-CCL') endingIndex-- // bring it back from fss to parliament or southern cross
 
     let tripPassesBy = lineStops.slice(startingIndex, endingIndex + 1)
 
     let viaCityLoop = tripPassesBy.includes('Flagstaff') || tripPassesBy.includes('Parliament')
     if (!northernGroup.includes(routeName) && !viaCityLoop && departure.type !== 'vline')
      viaCityLoop = tripPassesBy.includes('Southern Cross')
+
+   viaCityLoop = viaCityLoop && !departure.willSkipLoop
 
     let screenStops = tripPassesBy.map(stop => {
       return {
@@ -329,7 +446,10 @@ module.exports = {
       }
     })
 
-    if (!screenStops.length) return null
+    if (!screenStops.length) {
+      console.log('Failed to find screen stops', tripStops, lineStops)
+      return null
+    }
     let expressCount = screenStops.filter(stop => stop.isExpress).length
 
     let isCityStop = cityLoopStations.includes(stationName)
@@ -349,14 +469,16 @@ module.exports = {
     if (departure.type !== 'vline') {
       if ((toCity || isFSS) && !isCityStop) {
         if (viaCityLoop && isFSS) via = 'via City Loop'
-        else fromRoute()
+        else if (!(northernGroup.includes(routeName) && toCity)) fromRoute()
       } else if (isCityStop && destination !== 'Flinders Street') {
-        if (tripPassesBy.includes('Flinders Street')) via = 'via Flinders St'
-        else fromRoute()
+        if (viaCityLoop) via = 'via City Loop'
+        else if (tripPassesBy.includes('Flinders Street')) {
+          via = 'via Flinders St'
+        } else fromRoute()
       }
     }
 
-    let stopData = departure.trip.stopTimings.find(stop => stop.stopName === station.stopName)
+    let stopData = trip.stopTimings.find(stop => stop.stopName === station.stopName)
 
     let notTakingPassengers = false
     if (stopData.stopConditions) // trips matching using wtt timetables and live timetables don't have NTP
@@ -365,13 +487,11 @@ module.exports = {
     departure.additionalInfo = {
       screenStops, expressCount, viaCityLoop, direction: isUp ? 'Up': 'Down', via, notTakingPassengers
     }
-    if (departure.trip.routeGTFSID === '2-CCL') departure.destination = 'City Loop'
+    if (trip.routeGTFSID === '2-CCL') departure.destination = 'City Loop'
 
     return departure
   },
   findExpressStops: (tripStops, lineStops, routeName, isUp, stationName) => {
-    tripStops = module.exports.trimTrip(isUp, tripStops, stationName, routeName)
-
     let startIndex = tripStops.indexOf(stationName)
     let endIndex = tripStops.length
 
@@ -416,9 +536,9 @@ module.exports = {
 
     return expressParts
   },
-  determineStoppingPattern: (expressParts, destination, lineStops, currentStation, textMap=defaultStoppingMap) => {
-    if (expressParts.length === 0) return textMap.stopsAll
-    if (expressParts.length === 1 && expressParts[0].length === 1) return textMap.allExcept.format(expressParts[0][0])
+  determineStoppingPattern: (expressParts, destination, lineStops, currentStation, stoppingText) => {
+    if (expressParts.length === 0) return stoppingText.stopsAll
+    if (expressParts.length === 1 && expressParts[0].length === 1) return stoppingText.allExcept.format(expressParts[0][0])
 
     let texts = []
 
@@ -438,21 +558,29 @@ module.exports = {
         let lastStopIndex = lineStops.indexOf(lastStop)
 
         if (i === expressParts.length - 1 && nextStop === destination) {
-          texts.push(textMap.thenRunsExpressAtoB.format(previousStop, nextStop))
+          texts.push(stoppingText.thenRunsExpressAtoB.format(previousStop, nextStop))
         } else if (lastStop === previousStop) {
-          texts.push(textMap.expressAtoB.format(previousStop, nextStop))
+          texts.push(stoppingText.expressAtoB.format(previousStop, nextStop))
         } else if (lastStopIndex + 1 === previousStopIndex) {
-          texts.push(textMap.runsExpressAtoB.format(previousStop, nextStop))
+          texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
         } else {
-          texts.push(textMap.sasAtoB.format(lastStop, previousStop))
-          texts.push(textMap.runsExpressAtoB.format(previousStop, nextStop))
+          texts.push(stoppingText.sasAtoB.format(lastStop, previousStop))
+          texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
         }
       } else {
         if (currentStation === previousStop) {
-          texts.push(textMap.runsExpressTo.format(nextStop))
+          texts.push(stoppingText.runsExpressTo.format(nextStop))
         } else {
-          texts.push(textMap.sasTo.format(previousStop))
-          texts.push(textMap.runsExpressAtoB.format(previousStop, nextStop))
+          if (nextStopIndex - lineStops.indexOf(currentStation)) {
+            texts.push(stoppingText.stopsAt.format(previousStop))
+          } else {
+            texts.push(stoppingText.sasTo.format(previousStop))
+          }
+          if (nextStop === destination) {
+            texts.push(stoppingText.thenRunsExpressTo.format(nextStop))
+          } else {
+            texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
+          }
         }
       }
 
@@ -460,7 +588,7 @@ module.exports = {
     })
 
     if (lineStops[lineStops.indexOf(lastStop)] !== destination) {
-      texts.push(textMap.thenSASTo.format(destination))
+      texts.push(stoppingText.thenSASTo.format(destination))
     }
 
     return texts.join(', ').replace(/ Railway Station/g, '')
@@ -481,12 +609,70 @@ module.exports = {
       }
     })
   },
-  getPIDSDepartures: async (db, station, platform, stoppingTextMap, stoppingTypeMap) => {
+  trimDepartureData: (departures, maxDepartures, addStopTimings, fromStop) => {
+    return departures.map((departure, i) => {
+      let data = {
+        destination: departure.destination,
+        scheduledDepartureTime: departure.scheduledDepartureTime,
+        estimatedDepartureTime: departure.estimatedDepartureTime,
+        actualDepartureTime: departure.actualDepartureTime,
+        platform: departure.platform,
+        type: departure.type,
+        connections: departure.connections,
+        stoppingPattern: departure.stoppingPattern,
+        stoppingType: departure.stoppingType,
+        minutesToDeparture: departure.minutesToDeparture,
+        prettyTimeToDeparture: departure.prettyTimeToDeparture,
+        routeName: departure.trip.routeName,
+        codedLineName: departure.codedLineName,
+        additionalInfo: departure.additionalInfo,
+        direction: departure.trip.direction
+      }
+
+      if (i > 1) data.additionalInfo.screenStops = []
+
+      let hasSeenStop = false
+
+      if (!departure.stopTimings) departure.stopTimings = []
+      if (addStopTimings) data.stopTimings = departure.stopTimings.filter(stop => {
+        if (hasSeenStop) return true
+        if (stop.stopName === fromStop) {
+          hasSeenStop = true
+          return true
+        }
+        return false
+      }).map(stop => ({
+        stopName: stop.stopName.slice(0, -16),
+        arrivalTimeMinutes: stop.arrivalTimeMinutes,
+        departureTimeMinutes: stop.departureTimeMinutes
+      }))
+      return data
+    }).slice(0, maxDepartures)
+  },
+  getPIDSDepartures: async (db, station, platform, stoppingText, stoppingType, maxDepartures=6, addStopTimings=false) => {
+    stoppingText = stoppingText || defaultStoppingText
+    stoppingType = stoppingType || defaultStoppingType
+
     let stationName = station.stopName.slice(0, -16)
+    let cacheKey = `${stationName}${platform}${maxDepartures}`
+
+    if (departuresLock[cacheKey]) {
+      return await new Promise(resolve => {
+        departuresLock[cacheKey].on('done', data => {
+          resolve(data)
+        })
+      })
+    }
+
+    if (departuresCache.get(cacheKey)) {
+      return departuresCache.get(cacheKey)
+    }
+
+    departuresLock[cacheKey] = new IEventEmitter()
 
     let allDepartures = await module.exports.getCombinedDepartures(station, db)
-    let hasRRB = !!allDepartures.find(d => d.isTrainReplacement)
-    allDepartures = allDepartures.filter(d => !d.isTrainReplacement)
+    let hasRRB = !!allDepartures.find(d => d.isRailReplacementBus)
+    allDepartures = allDepartures.filter(d => !d.isRailReplacementBus)
     let platformDepartures = module.exports.filterPlatforms(allDepartures, platform)
 
     let arrivals = await module.exports.getEmptyShunts(station, db)
@@ -498,7 +684,7 @@ module.exports = {
       let isUp = direction === 'Up'
       let routeName = departure.shortRouteName || trip.routeName
 
-      let tripStops = stopTimings.map(stop => stop.stopName.slice(0, -16))
+      let tripStops = stopTimings.filter(stop => !stop.cancelled).map(stop => stop.stopName.slice(0, -16))
 
       if (routeName === 'Bendigo') {
         if (isUp && departure.trip.origin === 'Eaglehawk Railway Station') routeName = 'Swan Hill'
@@ -507,37 +693,51 @@ module.exports = {
 
       let lineStops = getLineStops(routeName)
       if (destination === 'City Loop') destination = 'Flinders Street'
+      else destination = tripStops.slice(-1)[0]
 
       if (isUp) lineStops = lineStops.slice(0).reverse()
 
-      lineStops = module.exports.getFixedLineStops(tripStops, lineStops, routeName, isUp, departure.type)
+      lineStops = module.exports.getFixedLineStops(tripStops, lineStops, routeName, isUp, departure.type, departure.willSkipLoop)
+      tripStops = module.exports.trimTrip(isUp, tripStops, stationName, routeName, departure.willSkipLoop, destination)
 
       departure.lineStops = lineStops
       departure.tripStops = tripStops
 
       let expresses = module.exports.findExpressStops(tripStops, lineStops, routeName, isUp, stationName)
-      let stoppingPattern = module.exports.determineStoppingPattern(expresses, destination, lineStops, stationName, stoppingTextMap)
+      let stoppingPattern = module.exports.determineStoppingPattern(expresses, destination, lineStops, stationName, stoppingText)
 
       departure.stoppingPattern = stoppingPattern
 
       let expressCount = expresses.reduce((a, e) => a + e.length, 0)
 
-      if (departure.type === 'vline') {
-        departure.stoppingType = stoppingTypeMap.vlineService.stoppingType
-        if (stoppingTypeMap.vlineService.stoppingPatternPostfix) {
-          departure.stoppingPattern += stoppingTypeMap.vlineService.stoppingPatternPostfix
+      if (departure.type === 'vline' && stoppingType.vlineService) {
+        departure.stoppingType = stoppingType.vlineService.stoppingType
+        if (stoppingType.vlineService.stoppingPatternPostfix) {
+          departure.stoppingPattern += stoppingType.vlineService.stoppingPatternPostfix
         }
-      } else if (expressCount === 0) departure.stoppingType = stoppingTypeMap.sas
-      else if (expressCount < 5) departure.stoppingType = stoppingTypeMap.limExp
-      else departure.stoppingType = stoppingTypeMap.exp
+      } else if (expressCount === 0) departure.stoppingType = stoppingType.sas
+      else if (expressCount < 4) departure.stoppingType = stoppingType.limExp
+      else departure.stoppingType = stoppingType.exp
 
-      departure = module.exports.appendScreenDataToDeparture(departure, station)
+      departure = module.exports.appendScreenDataToDeparture(departure, destination, station, routeName)
 
       return departure
     }).concat(platformArrivals).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 
     let hasDepartures = allDepartures.length > 0
 
-    return { departures: platformDepartures, hasDepartures, hasRRB }
+    let output = {
+      stationName,
+      departures: module.exports.trimDepartureData(platformDepartures, maxDepartures, addStopTimings, station.stopName),
+      hasDepartures,
+      hasRRB
+    }
+
+    departuresLock[cacheKey].emit('done', output)
+    delete departuresLock[cacheKey]
+
+    departuresCache.put(cacheKey, output)
+
+    return output
   }
 }

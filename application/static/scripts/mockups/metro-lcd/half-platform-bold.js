@@ -18,9 +18,9 @@ function shortenStoppingType(type) {
 }
 
 let stopScrolling = false
+let isScrolling = false
 
-let firstRowTimeout, firstRowPause
-let secondRowTimeout, secondRowPause
+let firstRowPause
 
 let firstScheduledTime, firstStoppingPattern
 
@@ -166,45 +166,47 @@ function updateBody(firstTime) {
         showingStandClear = false
         setServiceMessageActive(false, true)
 
-        let classes = ''
-
-        $('.firstDestination').textContent = firstDeparture.destination
-        $('.firstDestination').className = 'firstDestination'
-        let width = parseInt(getComputedStyle($('.firstDestination')).width)
-        let vw = window.innerWidth / 100
-
-        if (width > 76*vw) {
-          $('.firstDestination').className += ' smallest'
-        } else if (width > 65*vw) {
-          $('.firstDestination').className += ' smaller'
-        }
-
-        $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
-
-        if (firstDeparture.estimatedDepartureTime) {
-          if (firstDeparture.minutesToDeparture > 0) {
-            $('div.actual div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
-            $('div.actual div span:nth-child(2)').textContent = 'min'
-          } else {
-            $('div.actual div span:nth-child(1)').textContent = 'Now'
-            $('div.actual div span:nth-child(2)').textContent = ''
-          }
-        } else {
-          $('div.actual div span:nth-child(1)').textContent = '--'
-          $('div.actual div span:nth-child(2)').textContent = 'min'
-        }
-
-        let firstStoppingType = firstDeparture.stoppingType
-        if (firstDeparture.additionalInfo.via) {
-          firstStoppingType += ' ' + firstDeparture.additionalInfo.via
-        }
-
-        firstStoppingTypeP.textContent = firstStoppingType
-        firstStoppingPatternP.textContent = firstDeparture.stoppingPattern
-        firstStoppingPatternP.setAttribute('data-text', firstDeparture.stoppingPattern)
-
         if (firstDeparture.additionalInfo.notTakingPassengers) setArrival()
-        else isArrival = false
+        else {
+          isArrival = false
+
+          let classes = ''
+
+          $('.firstDestination').textContent = firstDeparture.destination
+          $('.firstDestination').className = 'firstDestination'
+          let width = parseInt(getComputedStyle($('.firstDestination')).width)
+          let vw = window.innerWidth / 100
+
+          if (width > 76*vw) {
+            $('.firstDestination').className += ' smallest'
+          } else if (width > 65*vw) {
+            $('.firstDestination').className += ' smaller'
+          }
+
+          $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+
+          if (firstDeparture.estimatedDepartureTime) {
+            if (firstDeparture.minutesToDeparture > 0) {
+              $('div.actual div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
+              $('div.actual div span:nth-child(2)').textContent = 'min'
+            } else {
+              $('div.actual div span:nth-child(1)').textContent = 'Now'
+              $('div.actual div span:nth-child(2)').textContent = ''
+            }
+          } else {
+            $('div.actual div span:nth-child(1)').textContent = '--'
+            $('div.actual div span:nth-child(2)').textContent = 'min'
+          }
+
+          let firstStoppingType = firstDeparture.stoppingType
+          if (firstDeparture.additionalInfo.via) {
+            firstStoppingType += ' ' + firstDeparture.additionalInfo.via
+          }
+
+          firstStoppingTypeP.textContent = firstStoppingType
+          firstStoppingPatternP.textContent = firstDeparture.stoppingPattern
+          firstStoppingPatternP.setAttribute('data-text', firstDeparture.stoppingPattern)
+        }
       }
 
       let secondDeparture = departures[1]
@@ -215,7 +217,14 @@ function updateBody(firstTime) {
 
         $('div.bottomRow').className = `bottomRow${secondClassName}`
         $('div.bottomRow > span:nth-child(1)').textContent = formatTime(new Date(secondDeparture.scheduledDepartureTime))
-        $('div.bottomRow > span:nth-child(2)').textContent = secondDeparture.destination
+
+        let {destination} = secondDeparture
+
+        if (destination === 'North Melbourne') destination = 'Nth Melbourne'
+        if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
+        if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
+
+        $('div.bottomRow > span:nth-child(2)').textContent = destination
 
         let secondStoppingType = shortenStoppingType(secondDeparture.stoppingType)
         if (secondDeparture.additionalInfo.via) {
@@ -235,18 +244,16 @@ function updateBody(firstTime) {
       }
 
       if (firstDeparture.scheduledDepartureTime !== previousDeparture) {
-        if (firstDeparture.isArrival) {
+        if (isArrival) {
           stopScrolling = true
         } else {
           setServiceMessageActive(false)
-          if (!firstTime)
+          if (!firstTime && isScrolling) {
             stopScrolling = true
-          clearTimeout(firstRowTimeout)
-          clearTimeout(firstRowPause)
-          clearTimeout(secondRowTimeout)
-          clearTimeout(secondRowPause)
+          }
 
-          drawBottomRow()
+          clearTimeout(firstRowPause)
+          setTimeout(drawBottomRow, 100)
         }
       }
 
@@ -270,7 +277,10 @@ function updateBody(firstTime) {
 
           setTimeout(() => {
             showingStandClear = true
-            stopScrolling = true
+            if (isScrolling) {
+              stopScrolling = true
+            }
+
             setStandClear()
           }, 1000 * 15)
         }, difference - 1000 * 20)
@@ -304,9 +314,11 @@ async function animateScrollingText() {
 
   await asyncPause(2000)
 
+  isScrolling = true
   for (let i = 0; i < iterationCount; i++) {
     if (stopScrolling) {
       stopScrolling = false
+      isScrolling = false
       return
     }
 
@@ -314,6 +326,7 @@ async function animateScrollingText() {
     firstStoppingPatternP.style.marginLeft = xPosition + 'px'
     await asyncPause(10)
   }
+  isScrolling = false
   await asyncPause(200)
 }
 
@@ -360,10 +373,23 @@ $.ready(() => {
     setInterval(updateBody, 1000 * 30)
   }, 30000 - (+new Date() % 30000))
 
-  setInterval(() => {
-    $('div.timeNow span').textContent = formatTime(new Date())
-  }, 1000)
-
   firstStoppingTypeP = $('div.middleRow p.stoppingType')
   firstStoppingPatternP = $('div.middleRow p.stoppingPattern')
+})
+
+function setTime() {
+  $('.clock span').textContent = formatTime(new Date())
+}
+
+function setupClock() {
+  setTime()
+  let msToNextSecond = 1000 - (+new Date() % 1000)
+  setTimeout(() => {
+    setTime()
+    setInterval(setTime, 1000)
+  }, msToNextSecond)
+}
+
+$.ready(() => {
+  setupClock()
 })

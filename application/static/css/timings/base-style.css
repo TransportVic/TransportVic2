@@ -1,3 +1,12 @@
+#mapLink {
+  height: calc(2.1vw + 2.1vh);
+  margin-right: calc(0.4vw + 1.2vh);
+}
+
+#mapIcon {
+  height: calc(2.1vw + 2.1vh);
+}
+
 #bookmark {
   width: calc(1.5vw + 1.5vh);
   margin-right: calc(0.4vw + 1.2vh);
@@ -19,31 +28,35 @@
 }
 
 .modeSwitchType.metro-train {
-  background-color: #0570c3;
+  background-color: #3483db;
 }
 
 .modeSwitchType.tram {
-  background-color: #20b734;
-}
-
-.modeSwitchType.regional-coach {
-  background-color: #9582b5;
+  background-color: #1a942a;
 }
 
 .modeSwitchType.regional-train {
   background-color: #6b4d9e;
 }
 
+.modeSwitchType.regional-coach {
+  background-color: #9582b5;
+}
+
 .modeSwitchType.bus {
   background-color: #d7832c;
 }
 
+.modeSwitchType.ferry {
+  background-color: #03998f;
+}
+
 .modeSwitchType.heritage-train {
-  background-color: #593915;
+  background-color: #7a562e;
 }
 
 .modeSwitchType img {
-  height: calc(2vw + 2vh);
+  height: calc(2vw + 1.7vh);
 }
 
 @media (max-width: 600px) {
@@ -60,6 +73,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+div#textbar-container ~ div#modeSwitch ~ div#departures > div.errorPage {
+  height: calc(96vh - 4vw - (4vw + 4vh) - (5vw + 5vh));
+}
+
+div#modeSwitch:nth-child(1) ~ div#departures > div.errorPage {
+  height: calc(96vh - 4vw - (4vw + 4vh));
+}
+
+div#textbar-container ~ div#departures > div.errorPage {
+  height: calc(96vh - 4vw - (5vw + 5vh));
 }
 
 div.departure {
@@ -99,20 +124,26 @@ div.departure:nth-child(even) a.departureInfo.reservationsOnly {
   text-align: center;
 }
 
-.leftContainer.platform span.topText {
+.leftContainer span.topText {
   font-size: calc(1vw + 1vh);
 }
 
-.leftContainer.platform span.bigNumber {
+.leftContainer span.bigNumber {
   font-size: calc(3.2vw + 2.5vh);
+  height: calc(4.5vw + 3.2vh);
+  line-height: calc(4.5vw + 3.6vh);
   letter-spacing: calc(-0.15vw - 0.15vh);
 }
 
-.leftContainer.platform span.bottomText {
+.leftContainer span.bigNumber.smaller {
+  font-size: calc(2.2vw + 2.2vh);
+}
+
+.leftContainer span.bottomText {
   font-size: calc(0.9vw + 0.9vh);
 }
 
-.leftContainer.platform img {
+.leftContainer img {
   margin-top: calc(0.75vw + 0.75vh);
   width: calc(3vw + 3vh);
   padding-bottom: calc(0.25vw + 0.25vh);
@@ -144,52 +175,66 @@ a.departureInfo span.towards {
 a.departureInfo span.destination {
   font-size: calc(1.6vw + 1.6vh);
   margin-top: calc(-0.3vw - 0.3vh);
-  line-height: calc(1.9vw + 1.9vh);
+  line-height: calc(1.8vw + 1.8vh);
 
   color: #c5c5c5;
 }
 
-a.departureInfo span.info~span.info {
+a.departureInfo span.broadDepartureInfo~span.broadDepartureInfo {
   -webkit-line-clamp: 1;
 }
 
-a.departureInfo span.info.noClamp {
-  -webkit-line-clamp: unset;
-  width: calc(100vw - (5vw + 5vh) - (5.2vw + 5.8vh) - (1vw + 1vh) - 1.5vw);
-}
-
-a.departureInfo span.info.smaller {
-  line-height: calc(1.2vw + 1.2vh) !important;
-}
-
-a.departureInfo span.info, a.departureInfo span.vehicle {
-  width: calc(100vw - (3.2vw + 3.2vh) * 4 - (5.2vw + 5.8vh) - (1vw + 1vh) - 1.5vw);
-  overflow: hidden;
-
+.clampLine {
   -webkit-line-clamp: 1;
   display: -webkit-box;
   -webkit-box-orient: vertical;
+}
+
+a.departureInfo span.broadDepartureInfo {
+  overflow: hidden;
 
   font-size: calc(0.9vw + 0.9vh);
   line-height: calc(1.2vw + 1.2vh);
 
-  /* white-space: nowrap;
-  text-overflow: ellipsis; */
-
   color: #bababa;
 }
 
-a.departureInfo span.full {
-  width: calc(100vw - (5.2vw + 5.8vh) - (5vw + 5vh) - (1vw + 1vh) - 1.5vw);
-}
-
-a.departureInfo span.cancelled {
+a.departureInfo span.important {
   font-size: calc(1.1vw + 1.1vh);
+  line-height: calc(1.2vw + 1.2vh);
   color: #e03549;
 }
 
+a.departureInfo.departure1 { --departureCount: 1; }
+a.departureInfo.departure2 { --departureCount: 2; }
+a.departureInfo.departure3 { --departureCount: 3; }
+a.departureInfo.departure4 { --departureCount: 4; }
 
-div.departure.no-number a.departureInfo span.routeName {
+div.departure.noNumber a.departureInfo span {
+  width: calc(100vw - (3.2vw + 3.2vh) * var(--departureCount) - (1vw + 1vh) - 1.5vw);
+}
+
+div.departure.noNumber:not(.groupedTimings) a.departureInfo span {
+  width: calc(100vw - (6vw + 6.3vh) - (1.2vw + 1.8vh) - (1vw + 1vh) - 1.5vw);
+}
+
+div.departure:not(.noNumber) a.departureInfo span {
+  width: calc(100vw - (3.2vw + 3.2vh) * var(--departureCount) - (5.25vw + 5.25vh) - (1vw + 1vh) - 1.5vw);
+}
+
+div.departure:not(.noNumber).noTiming a.departureInfo span {
+  width: calc(100vw - (5.25vw + 5.25vh) - (1vw + 1vh) - 1.5vw);
+}
+
+div.departure.noNumber.noTiming a.departureInfo span {
+  width: calc(100vw - (1vw + 1vh) - 1.5vw);
+}
+
+div.departure:not(.groupedTimings) a.departureInfo span {
+  width: calc(100vw - (6vw + 6.3vh) - (1.2vw + 1.8vh) - (5vw + 5vh) - (1vw + 1vh) - 1.5vw);
+}
+
+div.departure.noNumber a.departureInfo span.routeName {
   font-size: calc(1vw + 1vh);
 
   overflow: hidden;
@@ -201,21 +246,21 @@ div.departure.no-number a.departureInfo span.routeName {
   color: #c5c5c5;
 }
 
-div.departure.no-number a.departureInfo span.towards {
+div.departure.noNumber a.departureInfo span.towards {
   font-size: calc(1vh + 0.9vw);
   margin-top: calc(-0.1vw - 0.15vh);
 
   color: #8f8f8f;
 }
 
-div.departure.no-number a.departureInfo span.destination {
+div.departure.noNumber a.departureInfo span.destination {
   font-size: calc(1.6vw + 1.6vh);
   line-height: calc(1.9vw + 1.9vh);
 
   color: #c5c5c5;
 }
 
-div.departure.no-number a.departureInfo span.info {
+div.departure.noNumber a.departureInfo span.broadDepartureInfo {
   font-size: calc(1vw + 1vh);
   line-height: calc(1.6vw + 1.6vh);
 
@@ -232,7 +277,7 @@ div.timings {
 
 a.timing {
   height: calc(7vw + 7vh);
-  width: calc(5vw + 5vh);
+  width: calc(6vw + 6.3vh);
 
   display: flex;
   flex-direction: column;
@@ -244,12 +289,16 @@ a.timing {
   color: #101010;
 }
 
-a.timing.mini {
+div.departure.groupedTimings a.timing.hidden {
+  display: none;
+}
+
+div.departure.groupedTimings a.timing {
   width: calc(3.2vw + 3.2vh);
   font-size: calc(1vw + 1vh);
 }
 
-a.timing.mini > div.stats {
+div.departure.groupedTimings a.timing > div.vehicleData {
   height: calc(1vw + 1vh);
   width: calc(3.2vw + 3.2vh);
 
@@ -261,16 +310,16 @@ a.timing.mini > div.stats {
   justify-content: space-evenly;
 }
 
-a.timing.mini > div.stats > img {
+div.departure.groupedTimings a.timing > div.vehicleData > img {
   width: calc(1vw + 1vh);
   margin-bottom: calc(0.75vw + 0.75vh);
 }
 
-a.timing.mini span {
+div.departure.groupedTimings a.timing span {
   width: calc(3.2vw + 3.2vh);
 }
 
-div.departure.no-number a.timing span.rego {
+div.departure.noNumber a.timing span.rego {
   top: calc(0.5vw + 0.5vh);
   font-size: calc(1vw + 1vh);
 }
@@ -284,7 +333,7 @@ a.timing span.rego {
 }
 
 a.timing span {
-  width: calc(5vw + 5vh);
+  width: calc(6vw + 6vh);
   text-align: center;
 }
 
@@ -310,11 +359,11 @@ div.departure:nth-child(odd) a.timing.on-time:nth-child(even) {
 }
 
 div.departure:nth-child(odd) a.timing.late:nth-child(odd) {
-  background-color: #f51227;
+  background-color: #e83535;
 }
 
 div.departure:nth-child(odd) a.timing.late:nth-child(even) {
-  background-color: #d41b2d;
+  background-color: #d82929;
 }
 
 div.departure:nth-child(odd) a.timing.unknown:nth-child(odd) {
@@ -352,11 +401,11 @@ div.departure:nth-child(even) a.timing.on-time:nth-child(odd) {
 }
 
 div.departure:nth-child(even) a.timing.late:nth-child(even) {
-  background-color: #f51227;
+  background-color: #e83535;
 }
 
 div.departure:nth-child(even) a.timing.late:nth-child(odd) {
-  background-color: #d41b2d;
+  background-color: #d82929;
 }
 
 div.departure:nth-child(even) a.timing.unknown:nth-child(even) {

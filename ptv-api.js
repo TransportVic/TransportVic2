@@ -1,8 +1,9 @@
 const crypto = require('crypto')
 const {ptvKeys} = require('./config.json')
 const utils = require('./utils')
-const TimedCache = require('timed-cache')
-const requestCache = new TimedCache({ defaultTtl: 1000 * 30 })
+const TimedCache = require('./TimedCache')
+
+const requestCache = new TimedCache(1000 * 30)
 
 let blankKey = {ptvDevID: "", ptvKey: ""}
 
@@ -42,8 +43,8 @@ async function makeRequest(url) {
 
     let request
     if (request = requestCache.get(url))
-
       return JSON.parse(request)
+
     ptvAPILocks[url] = new EventEmitter()
 
     function returnData(departures) {
@@ -59,8 +60,10 @@ async function makeRequest(url) {
 
     return returnData(JSON.parse(data))
   } catch (e) {
-    ptvAPILocks[url].emit('err', e)
-    delete ptvAPILocks[url]
+    if (ptvAPILocks[url]) {
+      ptvAPILocks[url].emit('err', e)
+      delete ptvAPILocks[url]
+    }
 
     throw e
   }

@@ -1,6 +1,7 @@
 const express = require('express')
 const router = new express.Router()
 const getDepartures = require('../../../modules/tram/get-departures')
+const getDeparturesExperimental = require('../../../modules/tram/get-departures-experimental')
 const moment = require('moment')
 const utils = require('../../../utils')
 const tramDestinations = require('../../../additional-data/tram-destinations')
@@ -13,44 +14,41 @@ async function loadDepartures(req, res) {
     codedSuburb: req.params.suburb
   })
 
-  if (!stop || !stop.bays.filter(bay => bay.mode === 'tram')) {
+  if (!stop || !stop.bays.find(bay => bay.mode === 'tram')) {
     return res.status(404).render('errors/no-stop')
   }
 
-  let departures = await getDepartures(stop, res.db)
+  // let departures = await getDepartures(stop, res.db)
+  let departures = await getDeparturesExperimental(stop, res.db)
+
+  let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
   departures = await async.map(departures, async departure => {
-    const timeDifference = moment.utc(departure.actualDepartureTime.diff(utils.now()))
+    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, false, false)
+    departure.headwayDevianceClass = utils.findHeadwayDeviance(departure.scheduledDepartureTime, departure.estimatedDepartureTime, {
+      early: 2,
+      late: 5
+    })
 
-    if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
-    else {
-      let minutesToDeparture = timeDifference.get('hours') * 60 + timeDifference.get('minutes')
-      departure.prettyTimeToArrival = minutesToDeparture + ' m'
-    }
+    let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
+    let {stopGTFSID} = currentStop
+    let firstStop = departure.trip.stopTimings[0]
 
-    departure.headwayDevianceClass = 'unknown'
-    if (departure.estimatedDepartureTime) {
-      departure.headwayDeviance = departure.scheduledDepartureTime.diff(departure.estimatedDepartureTime, 'minutes')
+    let minutesDiff = currentStop.departureTimeMinutes - firstStop.departureTimeMinutes
 
-      if (departure.headwayDeviance > 2) {
-        departure.headwayDevianceClass = 'early'
-      } else if (departure.headwayDeviance <= -5) {
-        departure.headwayDevianceClass = 'late'
-      } else {
-        departure.headwayDevianceClass = 'on-time'
-      }
-    }
+    let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
 
-    let stopGTFSID = departure.trip.stopTimings.filter(tripStop => tripStop.stopName.includes(stop.stopName))[0].stopGTFSID
+    let operationDate = utils.getYYYYMMDD(tripStart)
 
     departure.tripURL = `/tram/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + `${utils.getYYYYMMDDNow()}/#stop-${stopGTFSID}`
+      + `${operationDate}/#stop-${stopGTFSID}`
 
     let destinationShortName = utils.getStopName(departure.trip.destination)
     let {destination} = departure.trip
     if (!utils.isStreet(destinationShortName)) destination = destinationShortName
     departure.destination = tramDestinations[destination] || destination
+    if (departure.hasBussingMessage) departure.destination += ' (Bus Around Works)'
 
     let destinationStopTiming = departure.trip.stopTimings.slice(-1)[0]
     let destinationStop = await stops.findDocument({
@@ -110,12 +108,14 @@ async function loadDepartures(req, res) {
   return {
     services, groupedDepartures, stop,
     classGen: departure => `tram-${departure.sortNumber}`,
-    currentMode: 'tram'
+    currentMode: 'tram',
+    maxDepartures: 3
   }
 }
 
 router.get('/:suburb/:stopName', async (req, res) => {
-  res.render('timings/grouped', await loadDepartures(req, res))
+  let response = await loadDepartures(req, res)
+  if (response) res.render('timings/grouped', response)
 })
 
 router.post('/:suburb/:stopName', async (req, res) => {

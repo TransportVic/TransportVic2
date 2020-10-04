@@ -22,76 +22,91 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
     }
   })
 
-  await async.forEachSeries(shapeJSON, async shapeFile => {
-    let {shapeID, routeGTFSID} = shapeFile
+  let routeGroups = {}
+  shapeJSON.forEach(shapeFile => {
+    let {routeGTFSID} = shapeFile
+    if (!routeGroups[routeGTFSID]) routeGroups[routeGTFSID] = []
+    routeGroups[routeGTFSID].push(shapeFile)
+  })
 
-    if (!routeGTFSIDsSeen.includes(routeGTFSID))
-      routeGTFSIDsSeen.push(routeGTFSID)
+  let routeCache = {}
 
-    let matchingRoute = await routes.findDocument({
-      routeGTFSID
-    })
+  await async.forEach(Object.values(routeGroups), async routeGroup => {
+    await async.forEachSeries(routeGroup, async shapeFile => {
+      let {shapeID, routeGTFSID} = shapeFile
 
-    let gtfsRouteData = routeData.find(line => gtfsUtils.simplifyRouteGTFSID(line[0]) === routeGTFSID)
+      if (!routeGTFSIDsSeen.includes(routeGTFSID))
+        routeGTFSIDsSeen.push(routeGTFSID)
 
-    let rawRouteName = rawRouteNames[routeGTFSID]
+      let matchingRoute = routeCache[routeGTFSID] || await routes.findDocument({
+        routeGTFSID
+      })
 
-    let routeName = name ? name(gtfsRouteData[2], rawRouteName, routeGTFSID) : rawRouteName
+      let gtfsRouteData = routeData.find(line => gtfsUtils.simplifyRouteGTFSID(line[0]) === routeGTFSID)
 
-    if (matchingRoute) {
-      let getFingerprint = shape => `${shape.length}-${shape.path[0].join(',')}-${shape.path.slice(-1)[0].join(',')}`
+      let rawRouteName = rawRouteNames[routeGTFSID]
 
-      let shapeFingerprint = getFingerprint(shapeFile)
-      let matchingPath = matchingRoute.routePath.find(path => shapeFingerprint === getFingerprint(path))
-      if (matchingPath) {
-        if (!matchingPath.fullGTFSIDs.includes(shapeID))
-          matchingPath.fullGTFSIDs.push(shapeID)
+      let routeName = name ? name(gtfsRouteData[2], rawRouteName, routeGTFSID) : rawRouteName
+
+      if (matchingRoute) {
+        let getFingerprint = shape => `${shape.length}-${shape.path[0].join(',')}-${shape.path.slice(-1)[0].join(',')}`
+
+        let shapeFingerprint = getFingerprint(shapeFile)
+        let matchingPath = matchingRoute.routePath.find(path => shapeFingerprint === getFingerprint(path))
+        if (matchingPath) {
+          if (!matchingPath.fullGTFSIDs.includes(shapeID))
+            matchingPath.fullGTFSIDs.push(shapeID)
+        } else {
+          matchingRoute.routePath.push({
+            fullGTFSIDs: [shapeID],
+            path: shapeFile.path,
+            length: shapeFile.length
+          })
+        }
+
+        if (!routeOperatorsSeen.includes(routeGTFSID)) {
+          matchingRoute.operators = operator ? operator(routeGTFSID, matchingRoute.routeNumber, matchingRoute.routeName) : []
+          routeOperatorsSeen.push(routeGTFSID)
+        }
+
+        matchingRoute.routeName = routeName
+
+        await routes.replaceDocument({
+          _id: matchingRoute._id
+        }, matchingRoute)
+
+        routeCache[routeGTFSID] = matchingRoute
       } else {
-        matchingRoute.routePath.push({
-          fullGTFSIDs: [shapeID],
-          path: shapeFile.path,
-          length: shapeFile.length
-        })
+        let gtfsRouteNumber = null
+        if (['3', '4', '6', '8'].includes(mode)) { // tram, metro bus, regional bus, telebus, night bus
+          gtfsRouteNumber = gtfsRouteData[2]
+        } else if (mode === '7') {
+          gtfsRouteNumber = routeGTFSID.slice(2)
+        }
+
+        let newRoute = {
+          routeName,
+          codedName: utils.encodeName(routeName),
+          routeNumber: routeNumber ? routeNumber(routeGTFSID, gtfsRouteNumber) : gtfsRouteNumber,
+          routeGTFSID,
+          routePath: [{
+            fullGTFSIDs: [shapeID],
+            path: shapeFile.path,
+            length: shapeFile.length
+          }],
+          operators: operator ? operator(routeGTFSID) : [],
+          directions: [],
+          mode: mode === '8' ? 'bus' : gtfsModes[mode]
+        }
+
+        if (loopDirections[routeGTFSID])
+          newRoute.flags = loopDirections[routeGTFSID]
+
+        await routes.createDocument(newRoute)
+
+        routeCache[routeGTFSID] = newRoute
       }
-
-      if (!routeOperatorsSeen.includes(routeGTFSID)) {
-        matchingRoute.operators = operator ? operator(routeGTFSID, matchingRoute.routeNumber, matchingRoute.routeName) : []
-        routeOperatorsSeen.push(routeGTFSID)
-      }
-
-      matchingRoute.routeName = routeName
-
-      await routes.replaceDocument({
-        _id: matchingRoute._id
-      }, matchingRoute)
-    } else {
-      let gtfsRouteNumber = null
-      if (['3', '4', '6', '8'].includes(mode)) { // tram, metro bus, regional bus, telebus, night bus
-        gtfsRouteNumber = gtfsRouteData[2]
-      } else if (mode === '7') {
-        gtfsRouteNumber = routeGTFSID.slice(2)
-      }
-
-      let newRoute = {
-        routeName,
-        codedName: utils.encodeName(routeName),
-        routeNumber: routeNumber ? routeNumber(routeGTFSID, gtfsRouteNumber) : gtfsRouteNumber,
-        routeGTFSID,
-        routePath: [{
-          fullGTFSIDs: [shapeID],
-          path: shapeFile.path,
-          length: shapeFile.length
-        }],
-        operators: operator ? operator(routeGTFSID) : [],
-        directions: [],
-        mode: mode === '8' ? 'bus' : gtfsModes[mode]
-      }
-
-      if (loopDirections[routeGTFSID])
-        newRoute.flags = loopDirections[routeGTFSID]
-
-      await routes.createDocument(newRoute)
-    }
+    })
   })
 
   return routeGTFSIDsSeen

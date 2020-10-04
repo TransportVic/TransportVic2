@@ -1,4 +1,5 @@
 const utils = require('../../utils')
+const gtfsUtils = require('../../gtfs-utils')
 
 function transformBusStop(inputStop) {
   let ticketZones = inputStop.properties.TICKETZONE || ''
@@ -46,11 +47,11 @@ function createServiceLookup(serviceJSON) {
   serviceJSON.forEach(service => {
     let routeIDFull = service.properties.ROUTE_ID
     let shapeID = service.properties.SHAPE_ID
-    let routeGTFSID = utils.simplifyRouteGTFSID(routeIDFull)
+    let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(routeIDFull)
 
     if (!lookupTable[routeGTFSID])
       lookupTable[routeGTFSID] = {
-        operator: service.properties.OPERATOR.split(',').map(fixOperator),
+        operator: (service.properties.OPERATOR || '').split(',').map(fixOperator),
         routeNumber: service.properties.ROUTESHTNM,
         routeName: utils.adjustRouteName(service.properties.ROUTELONGN)
       }

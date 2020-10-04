@@ -12,26 +12,13 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
   accessToken
 }).addTo(map)
 
-// L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg', {
-//     attribution: ATTRIBUTION,
-//     maxZoom: 17,
-//     minZoom: 2,
-//     id: 'watercolor'
-// }).addTo(map)
-//
-// L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}.png', {
-//     attribution: ATTRIBUTION,
-//     maxZoom: 17,
-//     minZoom: 2,
-//     id: 'toner labels'
-// }).addTo(map)
-
 L.control.scale().addTo(map)
 
 let stopCSSClasses = {
   'bus': 'busStop',
   'metro train': 'metroStation',
   'regional train': 'vlineStation',
+  'heritage train': 'heritageStation',
   'regional coach': 'regionalCoachStop',
   'tram': 'tramStop',
   'ferry': 'ferryTerminal'
@@ -58,9 +45,24 @@ $.ready(() => {
 
         let name = bay.fullStopName
         if (bayData[bay.stopGTFSID]) name += ` (${bayData[bay.stopGTFSID]})`
+        if (bay.stopNumber) name += ` #${bay.stopNumber}`
+
         if (bay.screenServices) {
-          name += '<br>'
-          name += `Services: ${bay.screenServices.map(e => e.routeNumber).filter((e, i, a) => a.indexOf(e) === i).filter(Boolean).join(', ')}`
+          name += `<br>Services: ${bay.screenServices.map(e => e.routeNumber).filter((e, i, a) => a.indexOf(e) === i).filter(Boolean).join(', ')}`
+        }
+        name += `<br>Stop ID: ${bay.stopGTFSID}`
+        if (bay.tramTrackerID) {
+          name += `<br>TramTracker ID: ${bay.tramTrackerID}`
+        }
+
+        if (bay.mykiZones.length) {
+          if (bay.mykiZones === 'Paper Ticketed') {
+            name += '<br>Paper Ticket'
+          } else if (bay.mykiZones.includes(0)) {
+            name += `<br>Myki: Free Tram Zone`
+          } else {
+            name += `<br>Myki: Zone${bay.mykiZones.length > 1 ? 's' : ''} ${bay.mykiZones.join(', ')}`
+          }
         }
 
         marker.bindPopup(name)
@@ -83,6 +85,41 @@ Towards: ${bay.towards}`
           marker.bindPopup(name)
         })
       }
+
+      stopData.carpark.forEach(carparkData => {
+        let {capacity, geometry} = carparkData
+
+        L.geoJSON({
+          type: 'Feature',
+          geometry
+        }, {
+          style: {
+            color: '#ffffff'
+          }
+        }).addTo(map).bindPopup(`Carpark<br>Capacity: ${capacity}`)
+      })
+
+      stopData.bikes.forEach(carparkData => {
+        let {capacity, type, location, geometry} = carparkData
+        let icon = L.divIcon({className: 'stopIcon bikeStorage'})
+        let marker = L.marker([geometry.coordinates[1], geometry.coordinates[0]], {icon: icon}).addTo(map)
+
+        let name = `Bicycle Storage Area
+        <br>Type: ${type}
+        <br>Location: ${location}
+        <br>Capacity: ${capacity}`
+
+        marker.bindPopup(name)
+      })
+
+      stopData.platformGeometry.forEach(platform => {
+        let {platformNumber, geometry} = platform
+
+        L.geoJSON({
+          type: 'Feature',
+          geometry
+        }).addTo(map).bindPopup('Platform ' + platformNumber)
+      })
 
       let {bbox} = stopData
       map.fitBounds([bbox.geometry.coordinates[0][0].reverse(), bbox.geometry.coordinates[0][2].reverse()])

@@ -29,7 +29,7 @@ database.connect({
   let routes = database.getCollection('routes')
 
   let ptvRouteData = (await ptvAPI('/v3/routes?route_types=2')).routes.filter(route => {
-    return route.route_gtfs_id.startsWith(`${gtfsID}-`)
+    return route.route_gtfs_id && route.route_gtfs_id.startsWith(`${gtfsID}-`)
   }).map(route => {
     route.routeGTFSID = route.route_gtfs_id.replace(/-0+/, '-')
     route.adjustedName = utils.adjustRouteName(route.route_name)
@@ -64,7 +64,7 @@ database.connect({
   let splicedGTFSPath = path.join(__dirname, '../spliced-gtfs-stuff', `${gtfsID}`)
   let gtfsPath = path.join(__dirname, '../../gtfs', `${gtfsID}`)
 
-  let routeData = utils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'routes.txt')).toString())
+  let routeData = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'routes.txt')).toString())
   let shapeFiles = fs.readdirSync(splicedGTFSPath).filter(e => e.startsWith('shapes'))
 
   let allRoutes = routeData.map(r => gtfsUtils.simplifyRouteGTFSID(r[0])).filter((e, i, a) => a.indexOf(e) === i)

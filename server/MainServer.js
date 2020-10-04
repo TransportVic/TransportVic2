@@ -6,6 +6,7 @@ const path = require('path')
 const minify = require('express-minify')
 const fs = require('fs')
 const uglifyEs = require('uglify-es')
+const rateLimit = require('express-rate-limit')
 
 const DatabaseConnection = require('../database/DatabaseConnection')
 
@@ -13,28 +14,41 @@ const config = require('../config.json')
 const modules = require('../modules.json')
 
 if (modules.tracker && modules.tracker.bus)
-  require('../modules/bus-seeker')
+  require('../modules/trackers/bus')
+
+if (modules.tracker && modules.tracker.tram)
+  require('../modules/trackers/tram')
 
 if (modules.tracker && modules.tracker.vline)
-  require('../modules/vline-tracker')
+  require('../modules/trackers/vline')
+
+if (modules.tracker && modules.tracker.xpt)
+  require('../modules/xpt/xpt-updater')
 
 if (modules.preloadCCL)
   require('../modules/preload-ccl')
 
+let serverStarted = false
+
 module.exports = class MainServer {
   constructor () {
     this.app = express()
+    this.app.use((req, res, next) => {
+      if (serverStarted) return next()
+      else res.type('text').end('Server starting, please wait...')
+    })
     this.initDatabaseConnection(this.app, () => {
+      serverStarted = true
       this.configMiddleware(this.app)
       this.configRoutes(this.app)
     })
   }
 
   initDatabaseConnection (app, callback) {
-    const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-    database.connect(async err => {
+    this.database = new DatabaseConnection(config.databaseURL, config.databaseName)
+    this.database.connect(async err => {
       app.use((req, res, next) => {
-        res.db = database
+        res.db = this.database
         next()
       })
 
@@ -42,38 +56,49 @@ module.exports = class MainServer {
     })
   }
 
+  getAverageResponseTime() {
+    let counts = this.past50ResponseTimes.length
+    let sum = this.past50ResponseTimes.reduce((a, b) => a + b, 0)
+    let average = sum / counts
+
+    return average
+  }
+
   configMiddleware (app) {
-    const stream = fs.createWriteStream('/tmp/log.txt', { flags: 'a' })
-    let excludedURLs = []
+    let stream = fs.createWriteStream('/tmp/log.txt', { flags: 'a' })
+
+    this.past50ResponseTimes = []
 
     app.use((req, res, next) => {
-      const reqURL = req.url + ''
-      const start = +new Date()
+      let reqURL = req.url + ''
+      let start = +new Date()
 
-      const endResponse = res.end
-      res.end = function (x, y, z) {
+      let endResponse = res.end
+      res.end = (x, y, z) => {
         endResponse.bind(res, x, y, z)()
-        const end = +new Date()
+        let end = +new Date()
+        let diff = end - start
 
-        const diff = end - start
+        if (diff > 20 && !reqURL.startsWith('/static/')) {
+          stream.write(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff}\n`, () => {})
 
-        if (diff > 5 && !reqURL.startsWith('/static/') && !excludedURLs.includes(reqURL)) {
-          stream.write(`${req.method} ${reqURL} ${res.loggingData} ${diff}\n`, () => {})
+          this.past50ResponseTimes = [...this.past50ResponseTimes.slice(-49), diff]
         }
       }
-
-      res.locals.hostname = config.websiteDNSName
 
       next()
     })
 
-    app.use(compression())
+    app.use(compression({
+      level: 9
+    }))
 
-    if (!config.devMode)
+    if (!config.devMode) {
       app.use(minify({
         uglifyJsModule: uglifyEs,
         errorHandler: console.log
       }))
+    }
 
     app.use('/static', express.static(path.join(__dirname, '../application/static')))
 
@@ -107,20 +132,26 @@ module.exports = class MainServer {
       if (req.url.startsWith('/.well-known')) {
         try {
           let reqURL = new url.URL('https://transportsg.me' + req.url)
-          const filePath = path.join(config.webrootPath, reqURL.pathname)
+          let filePath = path.join(config.webrootPath, reqURL.pathname)
 
           fs.createReadStream(filePath).pipe(res)
 
           return
-        } catch (e) {console.log(e)
+        } catch (e) {
+          console.log(e)
         }
       }
       next()
     })
+
+    app.use('/mockups', rateLimit({
+      windowMs: 1 * 60 * 1000,
+      max: 140
+    }))
   }
 
   async configRoutes (app) {
-    const routers = {
+    let routers = {
       'mockups/PIDSView': {
         path: '/',
         enable: modules.mockups && modules.mockups.pidsview
@@ -162,6 +193,7 @@ module.exports = class MainServer {
 
       'run-pages/MetroTrains': '/metro/run',
       'run-pages/VLineTrains': '/vline/run',
+      'run-pages/Tram': '/tram/run',
       'run-pages/Generic': '/',
 
       Statistics: '/stats',
@@ -173,7 +205,10 @@ module.exports = class MainServer {
       'mockups/metro-lcd/Metro-LCD-PIDS': '/mockups/metro-lcd',
       'mockups/BusInt-PIDS': '/mockups/bus-int-pids',
       'mockups/Metro-LED-PIDS': '/mockups/metro-led-pids',
+      'mockups/Metro-CRT-PIDS': '/mockups/metro-crt',
+      'mockups/VLine-PIDS': '/mockups/vline',
       'mockups/sss/SouthernCross': '/mockups/sss',
+      'mockups/train/TrainPID': '/mockups/train',
 
       'mockups/sss-new/SSSNew': '/mockups/sss-new',
       'mockups/sss-new/SSSPlatform': '/mockups/sss-new/platform',
@@ -189,13 +224,17 @@ module.exports = class MainServer {
         enable: modules.tracker && modules.tracker.bus
       },
 
-      'tracker/BusTracker': {
+      'tracker/BusTracker': { // TODO: Deprecate
         path: '/tracker2',
         enable: modules.tracker && modules.tracker.bus
       },
       'tracker/NewBusTracker': {
         path: '/bus/tracker',
         enable: modules.tracker && modules.tracker.bus
+      },
+      'tracker/TramTracker': {
+        path: '/tram/tracker',
+        enable: modules.tracker && modules.tracker.tram
       },
       'tracker/VLineTracker': {
         path: '/vline/tracker',
@@ -233,7 +272,14 @@ module.exports = class MainServer {
       StopPreview: {
         path: '/stop-preview',
         enable: modules.stopPreview
-      }
+      },
+
+      RoutePreview: {
+        path: '/route-preview',
+        enable: modules.routePreview
+      },
+
+      RoutePaths: '/route-paths'
     }
 
     Object.keys(routers).forEach(routerName => {
@@ -245,6 +291,7 @@ module.exports = class MainServer {
 
         let router = require(`../application/routes/${routerName}`)
         app.use(routerPath, router)
+        if (router.initDB) router.initDB(this.database)
       } catch (e) {
         console.err('Error registering', routerName, e)
       }
@@ -258,6 +305,10 @@ module.exports = class MainServer {
     app.get('/robots.txt', (req, res) => {
       res.setHeader('Cache-Control', 'no-cache')
       res.sendFile(path.join(__dirname, '../application/static/app-content/robots.txt'))
+    })
+
+    app.get('/response-stats', (req, res) => {
+      res.json({ status: 'ok', meanResponseTime: this.getAverageResponseTime() })
     })
 
     app.use('/500', (req, res) => { throw new Error('500') })

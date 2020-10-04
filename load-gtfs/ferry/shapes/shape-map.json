@@ -1,0 +1,12 @@
+{
+  "9-STY-A-mjp-1.1.H": "StonyPoint-FrenchIsland-StonyPoint-A",
+  "9-STY-B-mjp-1.1.H": "StonyPoint-FrenchIsland-PhillipIsland-FrenchIsland-StonyPoint-B",
+  "9-STY-C-mjp-1.1.H": "StonyPoint-PhillipIsland-StonyPoint-C",
+  "9-STY-D-mjp-1.1.H": "StonyPoint-FrenchIsland-PhillipIsland-StonyPoint-D",
+  "9-PMW-mjp-1.1.H": "PortMelb-Spotswood",
+  "9-PMW-mjp-1.1.R": "Spotswood-PortMelb",
+  "9-PPO-mjp-1.1.H": "Docklands-Portarlington",
+  "9-PPO-mjp-1.1.R": "Portarlington-Docklands",
+  "9-PGL-mjp-1.1.H": "Docklands-Geelong",
+  "9-PGL-mjp-1.1.R": "Geelong-Docklands"
+}

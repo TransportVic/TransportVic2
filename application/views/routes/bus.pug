@@ -8,22 +8,29 @@ block head
     if (route.routeGTFSID.startsWith('6-')) type = 'Regional Bus'
     if (route.routeGTFSID.startsWith('7-')) type = 'Telebus'
     if (route.routeGTFSID.startsWith('8-')) type = 'Night Bus'
-    if (route.routeGTFSID.startsWith('11-')) type = 'SkyBus'
     
     let name = `${directionNames[1]} - ${directionNames[0]}`
     if (!showDualTermini) name = directionNames[0]
     
     let identifier = route.routeNumber || route.routeName.replace(/ Railway Station/g, '')
     
-  title TransportVic - #{type} #{identifier}
-  meta(property='og:title' content=`TransportVic - ${type} ${identifier}`)
-  meta(property='twitter:title' content=`TransportVic - ${type} ${identifier}`)
-  meta(property='og:description' content=`${type} ${identifier}: ${name}`)
-  meta(property='twitter:description' content=`${type} ${identifier}: ${name}`)
-  
-block title
+    let routeName = `${type} ${identifier}`
+
+    if (route.routeGTFSID.startsWith('11-')) routeName = `${identifier.replace(/skybus - /i, '')} SkyBus`
+    if (route.routeGTFSID.startsWith('12-')) routeName = `${identifier} Shuttle Bus`
     
-  span #{type} #{identifier}
+  title TransportVic - #{routeName}
+  meta(property='og:title' content=`TransportVic - ${routeName}`)
+  meta(property='twitter:title' content=`TransportVic - ${routeName}`)
+  meta(property='og:description' content=`${routeName}: ${name}`)
+  meta(property='twitter:description' content=`${routeName}: ${name}`)
+
+block header-right
+  a#mapLink(href=`/route-preview/${route.routeGTFSID}`)
+    img#mapIcon(src='/static/images/decals/map.svg' alt='map icon')
+
+block title
+  span #{routeName}
 
 block style
   link(rel='stylesheet' href='/static/css/routes/base-style.css')

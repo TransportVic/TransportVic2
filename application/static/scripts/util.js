@@ -11,6 +11,7 @@ HTMLElement.prototype.toggleClass = function(className) {
 }
 
 Window.prototype.on = Window.prototype.addEventListener
+Document.prototype.on = Document.prototype.addEventListener
 
 Object.defineProperty(XMLHttpRequest.prototype, 'responseJSON', {
   get: function () {
@@ -88,7 +89,7 @@ $.inputTimeout = function (element, callback) {
 
   element.on('input', () => {
     clearTimeout(timeoutID)
-    timeoutID = setTimeout(callback, 850, element.value)
+    timeoutID = setTimeout(callback, 650, element.value)
   })
 }
 

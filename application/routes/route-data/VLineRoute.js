@@ -16,6 +16,8 @@ router.get('/:routeName', async (req, res, next) => {
   if (!matchingRoute) return res.status(404).render('errors/no-route')
 
   let bestDirection = matchingRoute.directions.find(direction => direction.directionName.includes(matchingRoute.routeName))
+  if (!bestDirection) bestDirection = matchingRoute.directions[0]
+
   let codedName = utils.encodeName(bestDirection.directionName)
 
   res.redirect('/vline/line/' + routeName + '/' + codedName)

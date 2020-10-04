@@ -1,0 +1,55 @@
+html
+  head
+    script(src='/static/scripts/util.js')
+    script(src='/static/scripts/mockups/vline/half-platform.js' async)
+    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
+    link(rel='stylesheet' href='/static/css/mockups/32-9-pids-base.css')
+    link(rel='stylesheet' href='/static/css/mockups/vline/half-platform.css')
+      
+    link(rel='preload' as='style' href='/static/css/mockups/32-9-pids-base.css')
+    link(rel='preload' as='style' href='/static/css/mockups/base-style.css')
+    meta(name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, height=device-height')
+  body
+    div.content
+      div(style='display: none;').fullMessage
+        img(src='/static/images/mockups/announcements.svg')
+        p Please Listen for Announcements
+      div(style='display: flex;').left
+        div(style='display: none;').message
+          p Checking departures
+          p Please wait...
+        div(style='display: flex;').nextDeparture
+          div.destination
+            span.firstDestination --
+          div.departureInfo
+            div.scheduledDiv
+              span Scheduled
+              span.scheduled --
+            div.actualDiv
+              span Departing
+              span.departing --
+          div.hozWhiteLine
+          div.serviceMessage
+            
+          div.stops
+      div(style='display: flex;').right
+        div.headers
+          span.scheduled Schedule
+          span.destination Train To
+          span.actual Departing
+        div.followingDeparture
+          div
+            span.scheduled --
+            span.destination --
+            span.actual --
+          span.stoppingType 
+        div.followingDeparture
+          div
+            span.scheduled --
+            span.destination --
+            span.actual --
+          span.stoppingType
+        div.time
+          div.timeContainer
+            span=now.format('h:mm:ss')
+          

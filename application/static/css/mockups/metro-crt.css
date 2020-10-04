@@ -1,0 +1,120 @@
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: "Helvetica";
+  font-weight: 800;
+}
+
+div.crt {
+  --width: 48vw;
+  --height: calc(48vw / 4 * 3);
+
+  width: var(--width);
+  height: var(--height);
+
+  border: calc(var(--width) * 0.003) solid #a0a0a0;
+}
+
+div.crt > * {
+  margin-left: calc(var(--width) * 0.02);
+}
+
+div.destination {
+  margin-top: calc(var(--height) * 0.01);
+  font-size: calc(var(--height) * 0.16);
+  line-height: calc(var(--height) * 0.16);
+  letter-spacing: calc(var(--width) * -0.005);
+}
+
+div.departureInfo > div {
+  display: inline-block;
+}
+
+div.departureInfo > div > span:nth-child(1) {
+  font-size: calc(var(--height) * 0.07);
+  line-height: calc(var(--height) * 0.07);
+  display: block;
+
+}
+
+div.departureInfo > div > span:nth-child(2) {
+  font-size: calc(var(--height) * 0.16);
+  line-height: calc(var(--height) * 0.16);
+  letter-spacing: calc(var(--width) * -0.004);
+}
+
+div.scheduled span {
+  text-align: right;
+  width: calc(var(--width) * 0.24);
+  display: block;
+}
+
+div.scheduled {
+  width: calc(var(--width) * 0.57);
+}
+
+div.actual span:nth-child(3) {
+  font-size: calc(var(--height) * 0.05);
+}
+
+div.stops {
+  margin-top: calc(var(--height) * 0.01);
+}
+
+div.stops > div {
+  display: inline-block;
+  width: calc(var(--width) * 0.47);
+  vertical-align: top;
+}
+
+div.stops span {
+  display: block;
+
+  font-size: calc(var(--height) * 0.052);
+  line-height: calc(var(--height) * 0.07);
+}
+
+div.rightCRT {
+  display: flex;
+  flex-direction: column;
+}
+
+div.nextDeparture {
+  margin-top: auto;
+  margin-bottom: calc(var(--height) * 0.02);
+  margin-left: 0;
+}
+
+div.nextDeparture span {
+  display: inline-block;
+  font-size: calc(var(--height) * 0.05);
+  line-height: calc(var(--height) * 0.05);
+}
+
+div.divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.divider pre {
+  letter-spacing: 0;
+  font-size: calc(var(--height) * 0.05);
+  line-height: calc(var(--height) * 0.05);
+  margin: 0;
+  white-space: pre;
+}
+
+div.nextDeparture span:nth-child(2) {
+  width: calc(var(--width) * 0.15);
+  margin-left: calc(var(--width) * 0.02);
+}
+
+div.nextDeparture span:nth-child(3) {
+  width: calc(var(--width) * 0.63);
+}

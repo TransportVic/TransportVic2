@@ -64,16 +64,33 @@ function updateBody() {
           $('p.stopsAt', departureDiv).textContent = 'Stops At: ' + departure.stopsAt.join(', ')
           $('p.information', departureDiv).innerHTML = ''
 
-          if (departure.isTrainReplacement) {
+          if (departure.isRailReplacementBus) {
             $('p.information', departureDiv).innerHTML += '<span class="important">Train Replacement Coach</span> '
             $('p.information', departureDiv).className = 'information important'
           } else {
             $('p.information', departureDiv).textContent = ''
           }
 
-          $('p.information', departureDiv).innerHTML += departure.connections.map(connection => {
-            return `<span>Change at ${connection.changeAt} for ${connection.for}</span>`
-          }).join(', ')
+          let connectionsTexts = []
+          let locations = {}
+
+          departure.connections.forEach(connection => {
+            if (!locations[connection.changeAt]) locations[connection.changeAt] = []
+            locations[connection.changeAt].push(connection.for)
+          })
+
+          connectionsTexts = Object.keys(locations).map(location => {
+            let connections = locations[location]
+            let last = connections.slice(-1)[0]
+
+            let text = `<span>Change at ${location} for ${connections.slice(0, -1).join(', ')}`
+            if (connections.length > 1) text += ` and ${last}`
+            else text += connections[0]
+
+            return text + '</span>'
+          })
+
+          $('p.information', departureDiv).innerHTML += connectionsTexts.join(', ')
         } else {
           $('p.title', departureDiv).textContent = `Bay ${bay} - No Departures`
           $('p.stopsAt', departureDiv).textContent = ''

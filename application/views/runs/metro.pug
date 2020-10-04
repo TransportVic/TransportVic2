@@ -1,21 +1,22 @@
 extends ../layout
     
 block head
-  - let title = `${trip.trueDepartureTime} ${trip.trueOrigin.slice(0, -16)} to ${trip.trueDestination.slice(0, -16)}`
-  title=`TransportVic - ${title}`
-  
-  meta(property='og:title' content=`TransportVic - ${title}`)
-  meta(property='twitter:title' content=`TransportVic - ${title}`)
-  meta(property='og:description' content=`Viewing the ${title}`)
-  meta(property='twitter:description' content=`Viewing the ${title}`)
-  - themeColour = '#0570c3'
+  -
+    let tripName = `${trip.trueDepartureTime} ${trip.trueOrigin.slice(0, -16)} to ${trip.trueDestination.slice(0, -16)}`
+    if (trip.routeGTFSID === '2-CCL') tripName = `${trip.trueDepartureTime} City Circle`
+    title = `TransportVic - ${tripName}`
+    description = `Viewing the ${tripName}`
+    themeColour = '#0570c3'
+
+  title #{title}
 
 block title
-  span=title
+  span #{tripName}
   
 block style
+  link(rel='stylesheet' href='/static/css/timings/base-style.css')
+  link(rel='stylesheet' href='/static/css/combined-colours.css')
   link(rel='stylesheet' href='/static/css/runs/base-style.css')
-  link(rel='stylesheet' href='/static/css/runs/trains.css')
 
 block content
   if trip.runID
@@ -27,6 +28,19 @@ block content
         div.vehicle
           span=parts[0] + 'x'
           img(src=`/static/images/icons/${parts[1].toLowerCase()}.svg`)
+  if trip.isRailReplacementBus
+    div.departure.noTiming
+      -
+        let cssClass = `${codedLineName}-line`
+        if (trip.routeName === 'City Circle') cssClass = 'city-circle' // Unlikely to happen but just in case
+      a(class=`leftContainer ${cssClass}`)
+        img(src='/static/images/clear-icons/bus.svg')
+      a.departureInfo
+        span.towards #{trip.routeName} Towards
+        span.destination #{trip.trueDestination.slice(0, -16)}
+        span.broadDepartureInfo.important Rail Replacement Bus
+    div.infoRow
+      span Replacement Bus Stop
   div.timing-list
     for stop in trip.stopTimings
       div.timingRow(id='stop-' + stop.stopGTFSID)
@@ -37,5 +51,5 @@ block content
           else if stop.platform
             span.platform=`Platform ${stop.platform}`
         div(class=`timing ${stop.headwayDevianceClass}`)
-          span=stop.prettyTimeToArrival
+          span=stop.pretyTimeToDeparture
           span=stop.departureTime || stop.arrivalTime

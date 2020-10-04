@@ -8,6 +8,8 @@ html
     link(rel='stylesheet' href='/static/css/mockups/fss/platform.css')
     link(rel='stylesheet' href='/static/css/mockups/16-9-pids-base.css')
       
+    link(rel='preload' as='style' href='/static/css/mockups/16-9-pids-base.css')
+    link(rel='preload' as='style' href='/static/css/mockups/base-style.css')
     link(rel='preload' as='image' href='/static/images/mockups/announcements.svg')
     link(rel='preload' as='image' href='/static/images/mockups/no-boarding-train.svg')
     link(rel='preload' as='image' href='/static/images/mockups/station-express.svg')
@@ -36,6 +38,7 @@ html
               span --
           span.firstStoppingType --
         div.stoppingPattern.no-line
+      div.bottomDivider
       div.bottomRow
         div.nextDepartures
           mixin nextDeparture()
@@ -51,5 +54,5 @@ html
           div.greyLine
           +nextDeparture()
         div.clock
-          span
+          span=now.format('h:mm:ss a')
       

@@ -2,19 +2,21 @@ extends layout
     
 block head
   title TransportVic
-  
-  meta(property='og:title' content='TransportVic')
-  meta(property='twitter:title' content='TransportVic')
-  meta(property='og:description' content='A transport app for Victoria')
-  meta(property='twitter:description' content='A transport app for Victoria')
-  meta(name='description' content='A transport app for Victoria')
-    
+
+  link(rel='preload' as='style' href='/static/css/index.css')
+  link(rel='preload' as='image' href='/static/images/home/smartbus.svg')
+  link(rel='preload' as='image' href='/static/images/home/search.svg')
+  link(rel='preload' as='image' href='/static/images/home/nearby.svg')
+  link(rel='preload' as='image' href='/static/images/home/about.svg')
+  link(rel='preload' as='image' href='/static/images/home/rainbow.svg')
+  link(rel='preload' as='script' href='/static/scripts/index.js')
   
 block title
   span TransportVic
 
 block scripts
-  
+  script(src='/static/scripts/index.js')
+
 block style
   link(rel='stylesheet' href='/static/css/index.css')
 
@@ -33,6 +35,6 @@ block content
       img(src='/static/images/home/about.svg' alt='Links')
       span Links
 
-  a(href='https://www.patreon.com/transportsg').popup
+  a(href='' style='display: none').popup
     img(src='/static/images/home/rainbow.svg')
-    span Hi! If you like this site please consider supporting me on patreon by clicking here!
+    span

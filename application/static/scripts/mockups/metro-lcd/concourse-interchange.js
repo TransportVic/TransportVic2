@@ -57,17 +57,17 @@ function setListenAnnouncements() {
   setFullMessageActive(true)
 }
 
-function identifyTargetStop(departure, target) {
-  let targetStop = departure.trip.stopTimings.find(stop => stop.stopName.slice(0, -16) === target)
+function identifyTargetStop(departure, target, stationName) {
+  let targetStop = departure.stopTimings.find(stop => stop.stopName === target)
 
   let actualDepartureTime = new Date(departure.actualDepartureTime)
   let scheduledDepartureTime = new Date(departure.scheduledDepartureTime)
 
-  let fssStop = departure.trip.stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
-  let fssMinutes = fssStop.departureTimeMinutes
+  let currentStop = departure.stopTimings.find(stop => stop.stopName === stationName)
+  let currentMinutes = currentStop.departureTimeMinutes
   let targetMinutes = targetStop.arrivalTimeMinutes
 
-  let minutesDifference = targetMinutes - fssMinutes
+  let minutesDifference = targetMinutes - currentMinutes
 
   let targetActualTime = new Date(+actualDepartureTime + minutesDifference * 1000 * 60)
 
@@ -76,7 +76,7 @@ function identifyTargetStop(departure, target) {
   return departure
 }
 
-function updateDestinations(departures) {
+function updateDestinations(departures, stationName) {
   destinations.forEach(destination => {
     let {targets, not, id, count, allowVLine} = destination
     let lastTarget = targets.slice(-1)[0]
@@ -86,20 +86,20 @@ function updateDestinations(departures) {
     let nextDepartures = departures.filter(departure => {
       if (departure.type === 'vline' && !allowVLine) return false
       for (let target of targets) {
-        if (!departure.additionalInfo.screenStops.find(stop => stop.stopName === target && !stop.express))
+        if (!departure.stopTimings.find(stop => stop.stopName === target))
           return false
       }
       if (not) {
         for (let excluded of not)
-          if (departure.additionalInfo.screenStops.find(stop => stop.stopName === excluded && !stop.express))
+          if (departure.stopTimings.find(stop => stop.stopName === excluded))
             return false
       }
 
       return true
-    // }).map(departure => {
-    //   return identifyTargetStop(departure, lastTarget)
-    // }).sort((a, b) => a.targetActualTime - b.targetActualTime).slice(0, count)
-    }).slice(0, count)
+    }).map(departure => {
+      return identifyTargetStop(departure, lastTarget, stationName)
+    }).sort((a, b) => a.targetActualTime - b.targetActualTime).slice(0, count)
+    // }).slice(0, count)
 
     $('.nextDepartures', departureRow).className = 'nextDepartures departure-' + count + '-' + nextDepartures.length
 
@@ -134,8 +134,9 @@ function updateBody() {
     setFullMessageActive(false)
 
     try {
-      updateDestinations(body.departures)
+      updateDestinations(body.departures, body.stationName)
     } catch (e) {
+      console.log(e)
       setListenAnnouncements()
     }
   })

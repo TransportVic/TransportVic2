@@ -86,7 +86,9 @@ async function parseTimings(names, types, trip) {
       stationData = await stops.findDocument({
         bays: {
           $elemMatch: {
-            mode: 'regional train',
+            mode: {
+              $in: ['regional train', 'regional coach']
+            },
             fullStopName: new RegExp(locationName + ' Railway Station', 'i')
           }
         }
@@ -100,14 +102,16 @@ async function parseTimings(names, types, trip) {
       }
     }
 
-    let stationPlatform = stationData.bays.find(bay => bay.mode === 'regional train')
+    let stationPlatform = stationData.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000) // We don't want to assign to the NSW stop
+    if (!stationPlatform) stationPlatform = stationData.bays.find(bay => bay.mode === 'regional train') // Loosen a bit
+    if (!stationPlatform) stationPlatform = stationData.bays.find(bay => bay.mode === 'regional coach') // Fallback to coach because the whole albury line is missing now
 
     if (timing.includes('DV')) {
       tripDivides = true
       tripDividePoint = stationPlatform.fullStopName.slice(0, -16)
     }
 
-    let minutesAftMidnight = utils.time24ToMinAftMidnight(timing) + offset
+    let minutesAftMidnight = utils.getMinutesPastMidnightFromHHMM(timing) + offset
     if (!isNaN(minutesAftMidnight)) {
       if (previousTime > minutesAftMidnight) {
         offset += 1440
@@ -135,8 +139,8 @@ async function parseTimings(names, types, trip) {
 
     if (timing.includes('/')) {
       let [arrivalTime, departureTime] = timing.split('/')
-      let arrivalTimeMinutes = utils.time24ToMinAftMidnight(arrivalTime) + offset
-      let departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime) + offset
+      let arrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(arrivalTime) + offset
+      let departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime) + offset
 
       locations[locationName].arrivalTime = arrivalTime
       locations[locationName].arrivalTimeMinutes = arrivalTimeMinutes

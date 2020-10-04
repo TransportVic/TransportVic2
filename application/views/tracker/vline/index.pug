@@ -1,33 +1,45 @@
 extends ../../layout
 
 block head
-  title TransportVic - Tracker/V/Line
+  -
+    title = 'TransportVic - Tracker/V/Line'
+    description = 'TransportVic V/Line Tracker'
+  title #{title}
+  link(rel='preload' as='style' href='/static/css/form.css')
+  link(rel='preload' as='script' href='/static/scripts/dropdown.js')
   
 block title
   span V/Line Tracker
   
 block style
   link(rel='stylesheet' href='/static/css/form.css')
-
+    
 block scripts
-  script(src='/static/scripts/tracker/index.js')
+  script(src='/static/scripts/dropdown.js')
 
 block content
   h1#title V/Line Tracker
   h2 Track Your Train:
   br
   form(action='/vline/tracker/date' method='get')#byDate
-    label(for="ate") On Date:
+    label(for="date") On Date:
     br
     div.inputSection
-      input(type="text" maxlength="8" name="date" value="" placeholder="Date" autocomplete="off")
+      input(type="text" maxlength="10" name="date" value="" placeholder="DD/MM/YYYY (Blank for today)" autocomplete="off")
       input(type="submit" value="Go")
   form(action='/vline/tracker/line' method='get')#byLine
     label(for="line") By Line:
     br
     div.inputSection
       div.selectorContainer
-      input(type="text" name="line" value="" placeholder="Line Group" autocomplete="off")
+      div.customDropdown
+        select(name="line" autocomplete="off")
+          option Ballarat
+          option Bendigo
+          option Geelong
+          option Gippsland
+          option Seymour
+        span Ballarat
       input(type="submit" value="Go")
   form(action='/vline/tracker/consist' method='get')#byConsist
     label(for="consist") By Consist:
@@ -36,5 +48,8 @@ block content
       input(type="text" maxlength="8" name="consist" value="" placeholder="Carriage / Loco Number" autocomplete="off")
       br
       div.inputSection
-        input(type="text" maxlength="8" name="date" value="" placeholder="Date" autocomplete="off")
+        input(type="text" maxlength="10" name="date" value="" placeholder="DD/MM/YYYY (Blank for today)" autocomplete="off")
         input(type="submit" value="Go")
+  br
+  h2 Alternatively,
+  a#highlights(href="/vline/tracker/highlights") View Today's Highlights

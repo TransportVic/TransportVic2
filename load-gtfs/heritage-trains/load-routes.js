@@ -13,6 +13,7 @@ const config = require('../../config.json')
 const loadRoutes = require('../utils/load-routes')
 const utils = require('../../utils')
 const turf = require('@turf/turf')
+const gtfsUtils = require('../../gtfs-utils')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
@@ -36,13 +37,13 @@ database.connect({
   poolSize: 100
 }, async err => {
   let routes = database.getCollection('routes')
-  let routeData = utils.parseGTFSData(fs.readFileSync(path.join(__dirname, 'data', 'routes.txt')).toString())
+  let routeData = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(__dirname, 'data', 'routes.txt')).toString())
 
   await loadRoutes(routes, gtfsID, routeData, shapes, (routeGTFSID) => {
     return ['Heritage']
   })
 
-  await updateStats('heritage-routs', routeData.length)
+  await updateStats('heritage-routes', routeData.length)
   console.log('Completed loading in ' + routeData.length + ' heritage rail routes')
   process.exit()
 })

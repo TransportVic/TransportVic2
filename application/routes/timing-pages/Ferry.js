@@ -11,29 +11,29 @@ async function loadDepartures(req, res) {
     codedName: req.params.stopName
   })
 
-  if (!stop || !stop.bays.filter(bay => bay.mode === 'ferry')) {
+  if (!stop || !stop.bays.find(bay => bay.mode === 'ferry')) {
     return res.status(404).render('errors/no-stop')
   }
 
   let departures = await getDepartures(stop, res.db)
+  let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
   departures = departures.map(departure => {
-    const timeDifference = moment.utc(departure.actualDepartureTime.diff(utils.now()))
-
-    if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
-    else {
-      let minutesToDeparture = timeDifference.get('hours') * 60 + timeDifference.get('minutes')
-      departure.prettyTimeToArrival = minutesToDeparture + ' m'
-    }
+    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
 
     departure.headwayDevianceClass = 'unknown'
     departure.codedLineName = 'ferry'
 
-    let day = utils.getYYYYMMDD(departure.scheduledDepartureTime)
+    let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
+    let {stopGTFSID} = currentStop
+    let minutesDiff = currentStop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
+
+    let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
+    let operationDate = utils.getYYYYMMDD(tripStart)
 
     departure.tripURL = `/ferry/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + `${day}#stop-${departure.trip.stopTimings[0].stopGTFSID}`
+      + `${operationDate}#stop-${stopGTFSID}`
 
     departure.destination = utils.getStopName(departure.trip.destination)
     departure.destinationURL = `/ferry/timings/${utils.encodeName(departure.trip.destination)}`
@@ -45,7 +45,8 @@ async function loadDepartures(req, res) {
 }
 
 router.get('/:stopName', async (req, res) => {
-  res.render('timings/ferry', await loadDepartures(req, res))
+  let response = await loadDepartures(req, res)
+  if (response) res.render('timings/ferry', response)
 })
 
 router.post('/:stopName', async (req, res) => {

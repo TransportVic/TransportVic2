@@ -52,9 +52,16 @@ async function render(params, res, matchingRoute) {
   let firstLastTrainMap = await routeUtils.generateFirstLastTripMap(gtfsTimetables, query)
   let frequencyMap = await routeUtils.generateFrequencyMap(gtfsTimetables, query)
 
+  let lineCode = stationCodeLookup[matchingRoute.routeName]
+  if (matchingRoute.routeGTFSID === '14-XPT') lineCode = 'SYD'
+  if (matchingRoute.routeGTFSID === '2-CCL') {
+    cssName = 'city-circle'
+    lineCode = 'CCL'
+  }
+
   res.render('routes/train', {
     route: matchingRoute,
-    lineCode: stationCodeLookup[matchingRoute.routeName],
+    lineCode,
     niceMode,
     direction,
     cssName,

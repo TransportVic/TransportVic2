@@ -1,7 +1,8 @@
 const moment = require('moment')
 require('moment-timezone')
 moment.tz.setDefault('Australia/Melbourne')
-const request = require('request-promise')
+const fetch = require('node-fetch')
+const stopNameModifier = require('./additional-data/stop-name-modifier')
 
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 
@@ -105,7 +106,7 @@ module.exports = {
 
     return name.replace(/  +/g, ' ')
   },
-  adjustStopname: name => {
+  adjustStopName: name => {
     if (name.includes('Jolimont-MCG')) {
       name = name.replace('Jolimont-MCG', 'Jolimont')
     }
@@ -129,14 +130,6 @@ module.exports = {
       name = name.replace(' Station', ' Railway Station')
     }
 
-    name = name.replace(/Freeburgh \w*? ?Hall/, 'Freeburgh Community Hall')
-
-    if (name === 'Dalgetty St/Holding St') {
-      name = 'Dalgetty Rd/Holding St'
-    }
-    if (name === 'Heathcliff Lane/Royal Tce') {
-      name = 'Heathcliffe Lane/Royal Tce'
-    }
     name = module.exports.expandStopName(name)
 
     return name
@@ -212,17 +205,12 @@ module.exports = {
       .replace('North', 'Nth')
       .replace('Gardens', 'Gdns')
       .replace(/\/.+/, '')
+
     if (name === 'Monash Uni Bus Loop')
       name = 'Monash Uni'
 
     return name
   },
-  extractStopName: name => {
-    return name.replace(/\/[^\/]*?$/, '')
-  },
-  parseGTFSData: data =>
-    data.split('\r\n').slice(1).filter(Boolean).map(e => e.match(/"([^"]*)"/g).map(f => f.slice(1, -1))),
-  simplifyRouteGTFSID: id => id.replace(/(-[A-Za-z])?-mjp-1$/, ''),
   pad: (data, length, filler='0') => Array(length).fill(filler).concat([...data.toString()]).slice(-length).join(''),
   allDaysBetweenDates: (startDate, endDate) => {
     startDate = startDate.clone().startOf('day').add(-1, 'days')
@@ -231,20 +219,20 @@ module.exports = {
     let dates = []
 
     while(startDate.add(1, 'days').diff(endDate) <= 0) {
-        dates.push(startDate.clone())
+      dates.push(startDate.clone())
     }
 
     return dates
   },
-  minutesAftMidnightToMoment: (minutes, day) => {
+  getMomentFromMinutesPastMidnight: (minutes, day) => {
     return day.clone().startOf('day').set('hours', Math.floor(minutes / 60)).set('minutes', minutes % 60)
   },
-  time24ToMinAftMidnight: time => {
+  getMinutesPastMidnightFromHHMM: time => {
     if (!time) return null
     const parts = time.slice(0, 5).split(':')
     return parts[0] * 60 + parts[1] * 1
   },
-  minAftMidnightToTime24: (time, padHour=true) => {
+  getHHMMFromMinutesPastMidnight: (time, padHour=true) => {
     let hours = Math.floor(time / 60)
     let minutes = time % 60
     let mainTime = ''
@@ -286,55 +274,60 @@ module.exports = {
   isWeekday: dayOfWeek => {
     return ['Mon', 'Tues', 'Wed', 'Thur', 'Fri'].includes(dayOfWeek)
   },
-  formatPTHHMM: time => {
-    let hours = time.get('hours'),
-      minutes = time.get('minutes')
-    if (hours < 3) hours += 24
-    return `${module.exports.pad(hours, 2)}:${module.exports.pad(minutes, 2)}`
-  },
   formatHHMM: time => {
     return time.format('HH:mm')
   },
-  correctHHMMToPT: time => {
-    const parts = time.slice(0, 5).split(':')
-    let hours = parts[0] * 1,
-      minutes = parts[1]
-    if (hours < 3) hours += 24
-
-    return `${module.exports.pad(hours, 2)}:${module.exports.pad(minutes, 2)}`
-  },
   getYYYYMMDD: time => {
-    let cloned = time.clone()
-    if (cloned.get('hours') < 3) // 3am PT day :((((
-      cloned.add(-1, 'days')
-    return cloned.format('YYYYMMDD')
+    // let cloned = time.clone()
+    // if (cloned.get('hours') < 3) // 3am PT day :((((
+    //   cloned.add(-1, 'days')
+    // return cloned.format('YYYYMMDD')
+    return time.format('YYYYMMDD')
   },
   getYYYYMMDDNow: () => module.exports.getYYYYMMDD(module.exports.now()),
+  getHumanDateShort: time => {
+    return time.format('DD/MM')
+  },
+  getHumanDate: time => {
+    return time.format('DD/MM/YYYY')
+  },
   now: () => moment.tz('Australia/Melbourne'),
-  request: async (...options) => {
+  parseTime: (time, format) => {
+    if (format)
+      return moment.tz(time, format, 'Australia/Melbourne')
+    else
+      return moment.tz(time, 'Australia/Melbourne')
+  },
+  request: async (url, options={}) => {
     let start = +new Date()
 
     let body
-    if (typeof options[0] === 'string')
-      body = await request(options[0], {
-        timeout: 5000,
-        gzip: true,
-        ...(options[1] || {})
-      })
-    else
-      body = await request({
-        timeout: 5000,
-        gzip: true,
-        ...options[0]
-      })
+    let error
 
-    let url = typeof options[0] === 'string' ? options[0] : options[0].url
+    let fullOptions = {
+      timeout: 2000,
+      compress: true,
+      ...options
+    }
+
+    for (let i = 0; i < 3; i++) {
+      try {
+        body = await fetch(url, fullOptions)
+
+        break
+      } catch (e) {
+        error = e
+      }
+    }
+
+    if (!body && error) throw error
 
     let end = +new Date()
     let diff = end - start
     console.log(`${diff}ms ${url}`)
 
-    return body
+    if (options.raw) return body
+    return body.text()
   },
   isStreet: shortName => {
     return (shortName.endsWith('Street') || shortName.endsWith('Road')
@@ -387,5 +380,46 @@ module.exports = {
       return parts.slice(0, -1).join('/')
 
     return stopName
+  },
+  parseDate: date => {
+    if (date.match(/^\d{1,2}\/\d{1,2}\/\d{1,4}$/)) return module.exports.parseTime(date, 'DD/MM/YYYY')
+    else return module.exports.parseTime(date, 'YYYYMMDD')
+  },
+  prettyTime: (time, showHours, blankOld) => {
+    time = module.exports.parseTime(time)
+    let timeDifference = moment.utc(time.diff(module.exports.now()))
+
+    if (blankOld && +timeDifference <= -30000) return ''
+    if (+timeDifference <= 60000) return 'Now'
+    if (+timeDifference > 1440 * 60 * 1000) return utils.getHumanDateShort(scheduledDepartureTime)
+
+    let hours = timeDifference.get('hours')
+    let minutes = timeDifference.get('minutes')
+    let prettyTime = ''
+
+    if (showHours) {
+      if (hours) prettyTime += hours + ' h '
+      if (minutes) prettyTime += minutes + ' min'
+    } else {
+      let minutesToDeparture = hours * 60 + minutes
+      prettyTime = minutesToDeparture + ' m'
+    }
+
+    return prettyTime.trim()
+  },
+  findHeadwayDeviance: (scheduledDepartureTime, estimatedDepartureTime, thresholds) => {
+    if (!estimatedDepartureTime) return 'unknown'
+    let headwayDeviance = scheduledDepartureTime.diff(estimatedDepartureTime, 'seconds') / 60
+
+    if (headwayDeviance > thresholds.early) {
+      return 'early'
+    } else if (headwayDeviance <= -thresholds.late) {
+      return 'late'
+    } else {
+      return 'on-time'
+    }
+  },
+  getProperStopName: ptvStopName => {
+    return module.exports.adjustRawStopName(stopNameModifier(module.exports.adjustStopName(ptvStopName.trim().replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, ''))))
   }
 }

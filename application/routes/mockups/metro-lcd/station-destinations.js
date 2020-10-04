@@ -27,7 +27,7 @@ module.exports = {
     {
       name: 'Sunbury',
       targets: ['Sunbury'],
-      id: 'FSY-SBY',
+      id: 'FSY-SUY',
       count: 2
     },
     {
@@ -166,7 +166,7 @@ module.exports = {
     {
       name: 'Sunbury',
       targets: ['Sunbury'],
-      id: 'FGS-SBY',
+      id: 'FGS-SUY',
       count: 1
     }
   ],
@@ -180,7 +180,7 @@ module.exports = {
     {
       name: 'Sunbury',
       targets: ['Sunbury'],
-      id: 'NME-SBY',
+      id: 'NME-SUY',
       count: 2
     },
     {
@@ -311,5 +311,103 @@ module.exports = {
       id: 'RMD-GWY',
       count: 1
     },
+  ],
+  'Parliament': [
+    {
+      name: 'Flinders Street',
+      targets: ['Flinders Street'],
+      id: 'PAR-FSS',
+      count: 1
+    },
+    {
+      name: 'Hurstbridge',
+      targets: ['Hurstbridge'],
+      id: 'PAR-HBE',
+      count: 1
+    },
+    {
+      name: 'Belgrave',
+      targets: ['Belgrave'],
+      id: 'PAR-BEL',
+      count: 1
+    },
+    {
+      name: 'Ringwood',
+      targets: ['Ringwood'],
+      id: 'PAR-RWD',
+      count: 1
+    },
+    {
+      name: 'Lilydale',
+      targets: ['Lilydale'],
+      id: 'PAR-LIL',
+      count: 1
+    },
+    {
+      name: 'Glen Waverley',
+      targets: ['Glen Waverley'],
+      id: 'PAR-GWY',
+      count: 1
+    },
+    {
+      name: 'Alamein',
+      targets: ['Alamein'],
+      id: 'PAR-ALM',
+      count: 1
+    },
+    {
+      name: 'Pakenham',
+      targets: ['Pakenham'],
+      id: 'PAR-PKM',
+      count: 1
+    },
+    {
+      name: 'Cranbourne',
+      targets: ['Cranbourne'],
+      id: 'PAR-CBE',
+      count: 1
+    },
+    {
+      name: 'Frankston',
+      targets: ['Frankston'],
+      id: 'PAR-FKN',
+      count: 1
+    },
+    {
+      name: 'Sandringham',
+      targets: ['Sandringham'],
+      id: 'PAR-SHM',
+      count: 1
+    },
+    {
+      name: 'Williamstown',
+      targets: ['Williamstown'],
+      id: 'PAR-WIL',
+      count: 1
+    },
+    {
+      name: 'Werribee',
+      targets: ['Werribee'],
+      id: 'PAR-WBE',
+      count: 1
+    },
+    {
+      name: 'Upfield',
+      targets: ['Upfield'],
+      id: 'PAR-UFD',
+      count: 1
+    },
+    {
+      name: 'Mernda',
+      targets: ['Mernda'],
+      id: 'PAR-MDD',
+      count: 1
+    },
+    {
+      name: 'Sunbury',
+      targets: ['Sunbury'],
+      id: 'PAR-SUY',
+      count: 1
+    }
   ]
 }

@@ -9,15 +9,17 @@ const MainServer = require('./server/MainServer')
 
 const WebsocketServer = require('./server/WebsocketServer')
 
+require('./modules/vline-mail')
+
 let httpServer = null
 let httpsServer = null
-const mainServer = new MainServer()
+let mainServer = new MainServer()
 
 if (config.useHTTPS) {
-  const redirectServer = new HTTPSRedirectServer()
+  let redirectServer = new HTTPSRedirectServer()
   httpServer = HTTPServer.createServer(redirectServer)
 
-  httpsServer = HTTPSServer.createServer(mainServer, config.sslCertPath)
+  httpsServer = HTTPSServer.createServer(mainServer, config.sslCerts)
 } else {
   httpServer = HTTPServer.createServer(mainServer)
 }
@@ -32,5 +34,3 @@ process.on('uncaughtException', (err) => {
 })
 
 console.err = console.error
-
-require('./modules/health-check')

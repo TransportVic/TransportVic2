@@ -34,6 +34,8 @@ function setMessagesActive(side, active) {
     $$('.stops').style = 'display: flex;'
   }
 
+  currentPattern[side] = null
+
   $$('.fullMessage').style = 'display: none;'
 }
 
@@ -50,6 +52,9 @@ function setFullMessageActive(side, active) {
     $$('.firstDeparture').style = 'display: flex;'
     $$('.stops').style = 'display: flex'
   }
+
+  currentPattern[side] = null
+
   $$('.message').style = 'display: none;'
 }
 
@@ -147,8 +152,8 @@ function processDepartures(departures, side, firstTime) {
 
       if (firstDeparture.connections) {
         firstStoppingType += firstDeparture.connections.map(connection => {
-          return `, Change at ${connection.changeAt.slice(0, -16)} for ${connection.for.slice(0, -16)}`
-        }).join('')
+          return `, Change at ${connection.changeAt} for ${connection.for}`
+        }).join('').replace(/ Railway Station/g, '')
       }
 
       $$('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass

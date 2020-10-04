@@ -4,25 +4,24 @@ const router = new express.Router()
 const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
-const busStopNameModifier = require('../../../additional-data/bus-stop-name-modifier')
 
 const busDestinations = require('../../../additional-data/bus-destinations')
 const coachDestinations = require('../../../additional-data/coach-stops')
-const tramDestinations = require('../../../additional-data/tram-destinations')
 
-const determineTramRouteNumber = require('../../../modules/tram/determine-tram-route-number')
-
-const tramFleet = require('../../../tram-fleet')
+const determineBusRouteNumber = require('../../../modules/bus/determine-bus-route-number')
 
 async function pickBestTrip(data, db) {
-  let tripDay = moment.tz(data.operationDays, 'YYYYMMDD', 'Australia/Melbourne')
-  let tripStartTime = moment.tz(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
+  let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
-  let tripEndTime = moment.tz(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let tripEndTime = utils.parseTime(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm')
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
+  if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
+  if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
 
   let trueMode = data.mode
   if (trueMode === 'coach') trueMode = 'regional coach'
+  if (trueMode === 'heritage') trueMode = 'heritage train'
 
   let originStop = await db.getCollection('stops').findDocument({
     codedNames: data.origin,
@@ -40,30 +39,37 @@ async function pickBestTrip(data, db) {
   let originName = originStop.bays.filter(bay => utils.encodeName(bay.fullStopName) === data.origin)[0].fullStopName
   let destinationName = destinationStop.bays.filter(bay => utils.encodeName(bay.fullStopName) === data.destination)[0].fullStopName
 
+  let operationDays = data.operationDays
+  if (tripStartMinutes > 1440) operationDays = utils.getYYYYMMDD(tripDay.clone().add(-1, 'day'))
+
   let query = {
     mode: trueMode,
     origin: originName,
     departureTime: data.departureTime,
     destination: destinationName,
     destinationArrivalTime: data.destinationArrivalTime,
-    operationDays: data.operationDays
+    operationDays
   }
 
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
 
-  let useLive = minutesToTripEnd > -5 && minutesToTripStart < 120 && data.mode !== 'coach'
+  let noLive = ['5', '7', '9', '11', '12', '13']
+  let useLive = minutesToTripEnd > -60 && minutesToTripStart < 60
 
   if (liveTrip) {
     if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
-      return liveTrip
+      let isLive = liveTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
+
+      return { trip: liveTrip, tripStartTime, isLive }
     }
   }
 
-  if (!useLive) return gtfsTrip
-
   // So PTV API only returns estimated timings for bus if stop_id is set and the bus hasn't reached yet...
   let referenceTrip = liveTrip || gtfsTrip
+  if (!referenceTrip) return null
+  if (!useLive || noLive.includes(referenceTrip.routeGTFSID.split('-')[0])) return { trip: referenceTrip, tripStartTime, isLive: false }
+
   let now = utils.now()
 
   let checkStops = referenceTrip.stopTimings.map(stopTiming => {
@@ -77,42 +83,45 @@ async function pickBestTrip(data, db) {
 
   if (!checkStop) checkStop = referenceTrip.stopTimings[0]
 
-  let checkStopTime = moment.tz(`${data.operationDays} ${checkStop.departureTime}`, 'YYYYMMDD HH:mm', 'Australia/Melbourne')
+  let checkStopTime = utils.parseTime(`${data.operationDays} ${checkStop.departureTime}`, 'YYYYMMDD HH:mm')
   let isoDeparture = checkStopTime.toISOString()
   let mode = trueMode === 'bus' ? 2 : 1
   try {
     let {departures, runs} = await ptvAPI(`/v3/departures/route_type/${mode}/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-3, 'minutes').startOf('minute').toISOString()}&max_results=5&expand=run&expand=stop`)
 
     let departure = departures.filter(departure => {
-      let run = runs[departure.run_id]
-      let destinationName = busStopNameModifier(utils.adjustStopname(run.destination_name.trim()))
-        .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
-      let scheduledDepartureTime = moment(departure.scheduled_departure_utc).toISOString()
+      let run = runs[departure.run_ref]
+      let destinationName = utils.getProperStopName(run.destination_name)
+      let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc).toISOString()
 
       return scheduledDepartureTime === isoDeparture &&
         destinationName === referenceTrip.destination
     })[0]
 
-    if (!departure) return gtfsTrip
-    let ptvRunID = departure.run_id
+    if (!departure) return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
+    let ptvRunID = departure.run_ref
     let departureTime = departure.scheduled_departure_utc
 
     let trip = await getStoppingPattern(db, ptvRunID, trueMode, departureTime, departure.stop_id, gtfsTrip)
-    return trip
+    let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
+
+    return { trip, tripStartTime, isLive }
   } catch (e) {
-    return gtfsTrip
+    return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
   }
 }
 
 router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res, next) => {
-  if (!['coach', 'bus', 'tram'].includes(req.params.mode)) return next()
+  if (!['coach', 'bus', 'ferry', 'heritage'].includes(req.params.mode)) return next()
 
-  let trip = await pickBestTrip(req.params, res.db)
-  if (!trip) return res.status(404).render('errors/no-trip')
+  let tripData = await pickBestTrip(req.params, res.db)
+  if (!tripData) return res.status(404).render('errors/no-trip')
+
+  let { trip, tripStartTime, isLive } = tripData
 
   let routes = res.db.getCollection('routes')
   let tripRoute = await routes.findDocument({ routeGTFSID: trip.routeGTFSID }, { routePath: 0 })
-  let operator = tripRoute.operators[0]
+  let operator = tripRoute.operators.sort((a, b) => a.length - b.length)[0].replace(/ \(.+/, '')
 
   let {destination, origin} = trip
   let fullDestination = destination
@@ -127,14 +136,12 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
   origin = origin.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
 
-  if (trip.mode === 'tram') {
-    destination = tramDestinations[destination] || destination
-    origin = tramDestinations[origin] || origin
-  } else if (trip.mode === 'regional coach') {
+  if (trip.mode === 'regional coach') {
     destination = fullDestination.replace('Shopping Centre', 'SC')
     origin = fullOrigin.replace('Shopping Centre', 'SC')
 
-    destination = coachDestinations[destination] || destination
+    let destinationSuburb = trip.stopTimings.slice(-1)[0].suburb
+    destination = coachDestinations[destination + ` (${destinationSuburb})`] || coachDestinations[destination] || destination
     origin = coachDestinations[origin] || origin
 
     let destShortName = utils.getStopName(destination)
@@ -142,8 +149,8 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
 
     let originShortName = utils.getStopName(origin)
     if (!utils.isStreet(originShortName)) origin = originShortName
-  } else {
-    let serviceData = busDestinations.service[trip.routeNumber] || busDestinations.service[trip.routeGTFSID] || {}
+  } else if (trip.mode == 'bus') {
+    let serviceData = busDestinations.service[trip.routeGTFSID] || busDestinations.service[trip.routeNumber] || {}
 
     destination = serviceData[destination]
       || busDestinations.generic[destination]
@@ -171,8 +178,9 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   if (importantStops.length)
     viaText = `Via ${importantStops.slice(0, -1).join(', ')}${(importantStops.length > 1 ? ' & ' : '') + importantStops.slice(-1)[0]}`
 
+  let firstDepartureTime = trip.stopTimings[0].departureTimeMinutes
   trip.stopTimings = trip.stopTimings.map(stop => {
-    stop.prettyTimeToArrival = ''
+    stop.pretyTimeToDeparture = ''
 
     if (trip.cancelled) {
       stop.headwayDevianceClass = 'cancelled'
@@ -180,48 +188,29 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
       stop.headwayDevianceClass = 'unknown'
     }
 
-    if (stop.estimatedDepartureTime) {
-      let scheduledDepartureTime = moment.tz(req.params.operationDays, 'YYYYMMDD', 'Australia/Melbourne').add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
+    if (!isLive || (isLive && stop.estimatedDepartureTime)) {
+      let scheduledDepartureTime = tripStartTime.clone().add((stop.departureTimeMinutes || stop.arrivalTimeMinutes) - firstDepartureTime, 'minutes')
+      let estimatedDepartureTime = stop.estimatedDepartureTime
 
-      let headwayDeviance = scheduledDepartureTime.diff(stop.estimatedDepartureTime, 'minutes')
+      stop.headwayDevianceClass = utils.findHeadwayDeviance(scheduledDepartureTime, estimatedDepartureTime, {
+        early: 2,
+        late: 5
+      })
 
-      if (headwayDeviance > 2) {
-        stop.headwayDevianceClass = 'early'
-      } else if (headwayDeviance <= -5) {
-        stop.headwayDevianceClass = 'late'
-      } else {
-        stop.headwayDevianceClass = 'on-time'
-      }
-
-      const timeDifference = moment.utc(moment(stop.estimatedDepartureTime).diff(utils.now()))
-
-      if (+timeDifference < -30000) return stop
-      if (+timeDifference <= 60000) stop.prettyTimeToArrival = 'Now'
-      else {
-        stop.prettyTimeToArrival = ''
-        if (timeDifference.get('hours')) stop.prettyTimeToArrival += timeDifference.get('hours') + ' h '
-        if (timeDifference.get('minutes')) stop.prettyTimeToArrival += timeDifference.get('minutes') + ' min'
-      }
+      stop.pretyTimeToDeparture = utils.prettyTime(estimatedDepartureTime || scheduledDepartureTime, true, true)
     }
     return stop
   })
 
   if (trip.vehicle) {
-    if (req.params.mode === 'tram') {
-      let tramModel = tramFleet.getModel(trip.vehicle)
-      trip.vehicleData = {
-        name: `Tram ${tramModel}.${trip.vehicle}`
-      }
-    } else if (req.params.mode === 'bus') {
-      let smartrakIDs = res.db.getCollection('smartrak ids')
+    let smartrakIDs = res.db.getCollection('smartrak ids')
 
-      let busRego = (await smartrakIDs.findDocument({
-        smartrakID: parseInt(trip.vehicle)
-      }) || {}).fleetNumber
-      if (busRego) {
-        trip.vehicleData = {
-          name: 'Bus #' + busRego
-        }
+    let busRego = (await smartrakIDs.findDocument({
+      smartrakID: parseInt(trip.vehicle)
+    }) || {}).fleetNumber
+    if (busRego) {
+      trip.vehicleData = {
+        name: 'Bus #' + busRego
       }
     }
   }
@@ -229,9 +218,8 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   let routeNumber = trip.routeNumber
   let routeNumberClass = utils.encodeName(operator)
 
-  if (trip.mode === 'tram') {
-    routeNumber = determineTramRouteNumber(trip)
-    routeNumberClass = 'tram-' + routeNumber.replace(/[a-z]/, '')
+  if (trip.mode === 'bus') {
+    routeNumber = determineBusRouteNumber(trip)
   }
 
   res.render('runs/generic', {

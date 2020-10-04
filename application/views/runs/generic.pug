@@ -2,78 +2,93 @@ extends ../layout
     
 block head
   -
-    let title = `${trip.departureTime} ${origin} to ${destination}`
+    let tripName = `${trip.departureTime} ${origin} to ${destination}`
     if (routeNumber) {
-      title = `${trip.departureTime} ${routeNumber} to ${destination}`
+      tripName = `${trip.departureTime} ${routeNumber} to ${destination}`
     }
-  title=`TransportVic - ${title}`
-  
-  meta(property='og:title' content=`TransportVic - ${title}`)
-  meta(property='twitter:title' content=`TransportVic - ${title}`)
-  meta(property='og:description' content=`Viewing the ${title}`)
-  meta(property='twitter:description' content=`Viewing the ${title}`)
-  -
+    title = `TransportVic - ${tripName}`
+    description = `Viewing the ${tripName}`
+
     switch (trip.mode) {
       case 'bus':
         themeColour = '#d7832c'
         break
       case 'tram':
-        themeColour = '#20b734'
+        themeColour = '#1a942a'
         break
       case 'regional coach':
         themeColour = '#9582b5'
+        break
+      case 'heritage train':
+        themeColour = '#7a562e'
         break
       case 'ferry':
         themeColour = '#03998f'
         break
     }
-    
-    
+
+  title #{title}
 block title
-  span=title
+  span #{tripName}
   
 block style
   link(rel='stylesheet' href='/static/css/timings/base-style.css')
   link(rel='stylesheet' href='/static/css/combined-colours.css')
   link(rel='stylesheet' href='/static/css/runs/base-style.css')
-  link(rel='stylesheet' href='/static/css/runs/trains.css')
 
 block content
   if trip.vehicleData
+    -
+      let vehicleIcons = {
+        'A1': 'a-b',
+        'A2': 'a-b',
+        'B2': 'a-b',
+        'Z3': 'z3',
+        'C': 'c1',
+        'D1': 'd',
+        'D2': 'd'
+      }
     div.infoRow
       span=trip.vehicleData.name
       div.vehicle
-        //- placeholder icon
         span
-        img(src=`/static/images/icons/optimus.svg`)
+        -
+          let icon
+          if (trip.mode === 'tram') icon = vehicleIcons[trip.vehicleData.model] || 'optimus'
+          else if (trip.mode === 'bus') icon = 'optimus'
+        img(src=`/static/images/icons/${icon}.svg`)
   - let hasNumber = !!routeNumber
-  div(class=`departure${hasNumber ? '' : ' no-number'}`)
+  div(class=`departure noTiming${hasNumber ? '' : ' noNumber'}`)
     if hasNumber
-      a(class=`leftContainer platform ${routeNumberClass}`)
+      a(class=`leftContainer ${routeNumberClass}`)
         if loopDirection
           span.topText=loopDirection
         else if trip.routeDetails
           span.topText=trip.routeDetails
-        span.bigNumber=routeNumber
+        -
+          let className = 'bigNumber'
+          if (routeNumber.length > 3) className += ' smaller'
+        span(class=className)=routeNumber
     a.departureInfo
       if !hasNumber
         span.routeName=trip.routeName
       span.towards Towards
       span.destination=destination
       if viaText && hasNumber
-        span.info.smaller=viaText
+        span.broadDepartureInfo.clampLine=viaText
       if trip.cancelled
-        span.info.cancelled CANCELLED
+        span.broadDepartureInfo.important CANCELLED
   div.infoRow
     -
       let stopType = ({
-        bus: 'Bus',
-        tram: 'Tram',
-        'regional coach': 'Coach',
-        ferry: 'Ferry'
+        bus: 'Bus Stop',
+        tram: 'Tram Stop',
+        'regional coach': 'Coach Stop',
+        'heritage train': 'Train Station',
+        ferry: 'Ferry Stop'
       })[trip.mode]
     
-    span #{stopType} stop
+    span #{stopType}
   div.timing-list
     for stop in trip.stopTimings
       div.timingRow(id='stop-' + stop.stopGTFSID)
@@ -81,9 +96,9 @@ block content
           -
             let stopParts = stop.stopName.split('/')
             let stopRoad, stopName
-            if (stopParts.length === 2) {
-              stopName = stopParts[0]
-              stopRoad = stopParts[1]
+            if (stopParts.length >= 2) {
+              stopName = stopParts.slice(0, -1).join('/')
+              stopRoad = stopParts.slice(-1)[0]
             } else {
               if (stopParts = stop.stopName.match(/^(\d+) (.+)$/)) {
                 stopRoad = stopParts[2]
@@ -100,5 +115,5 @@ block content
               displayName += ` #${stop.stopNumber}`
           span.stopName=displayName
         div(class=`timing ${stop.headwayDevianceClass}`)
-          span=stop.prettyTimeToArrival
+          span=stop.pretyTimeToDeparture
           span=stop.departureTime || stop.arrivalTime

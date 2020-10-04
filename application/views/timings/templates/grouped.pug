@@ -1,51 +1,51 @@
-for service in services
-  -
-    let serviceDepartures = groupedDepartures[service]
-    let destinations = Object.keys(serviceDepartures)
-    let hasNumber = !!service
-  for destination in destinations
+if services.length
+  for service in services
     -
-      let destinationDepartures = serviceDepartures[destination]
-      let departures = destinationDepartures.slice(0, 4)
-      let firstDeparture = destinationDepartures[0]
-      let departureDataWidth = `width: calc(100vw - (3.2vw + 3.2vh) * ${departures.length}${hasNumber ? ' - (5.25vw + 5.25vh)' : ''} - (1vw + 1vh) - 1.5vw)`
-    div(class=`departure${hasNumber ? '' : ' no-number'}`)
-      if hasNumber
-        a(class=`leftContainer platform ${classGen(firstDeparture)}`)
-          if firstDeparture.loopDirection
-            span.topText=firstDeparture.loopDirection
-          else if firstDeparture.routeDetails
-            span.topText=firstDeparture.routeDetails
-          span.bigNumber=firstDeparture.routeNumber
-          if firstDeparture.bay
-            span.bottomText=firstDeparture.bay
-      a(href=firstDeparture.destinationURL).departureInfo
-        if !hasNumber
-          span.routeName(style=departureDataWidth)=firstDeparture.trip.routeName
-        span.towards Towards
-        span.destination(style=departureDataWidth)=firstDeparture.destination
-        if firstDeparture.guidanceText
-          span.info.smaller(style=departureDataWidth)=firstDeparture.guidanceText
-        if firstDeparture.viaText && hasNumber
-          span.info.smaller(style=departureDataWidth)=firstDeparture.viaText
-      div.timings
-        for i in Array(4 - departures.length)
-          a.timing.mini(style='display: none')
-        for departure in departures
-          a(href=departure.tripURL class=`timing mini ${departure.headwayDevianceClass}`)
-            div.stats
-              if departure.vehicleDescriptor.operator === 'Yarra Trams'
-                if departure.tram.data.ac
-                  img(src='/static/images/decals/ac.svg')
-                if departure.tram.data.lf
-                  img(src='/static/images/decals/wheelchair.svg')
-            span=departure.prettyTimeToArrival
-            span=departure.scheduledDepartureTime.format('HH:mm')
-            if departure.vehicleDescriptor
-              if departure.vehicleDescriptor.supplier === 'Smartrak' || departure.isBusMinderOverride
-                if departure.busRego
-                  span.rego=`#${departure.busRego}`
-                else
-                  span.rego=`${departure.vehicleDescriptor.id}`
-              else if departure.vehicleDescriptor.operator === 'Yarra Trams'
-                span.rego=`${departure.tram.model}.${departure.tram.id}`
+      let serviceDepartures = groupedDepartures[service]
+      let destinations = Object.keys(serviceDepartures)
+      let hasNumber = !!service
+    for destination in destinations
+      -
+        let destinationDepartures = serviceDepartures[destination]
+        let departures = destinationDepartures.slice(0, maxDepartures)
+        let firstDeparture = destinationDepartures[0]
+      div(class=`departure groupedTimings${hasNumber ? '' : ' noNumber'}`)
+        if hasNumber
+          a(class=`leftContainer ${classGen(firstDeparture)}`)
+            if firstDeparture.loopDirection
+              span.topText #{firstDeparture.loopDirection}
+            else if firstDeparture.routeDetails
+              span.topText #{firstDeparture.routeDetails}
+            -
+              let className = 'bigNumber'
+              if (firstDeparture.routeNumber.length > 3) className += ' smaller'
+            span(class=className) #{firstDeparture.routeNumber}
+            if firstDeparture.bay
+              span.bottomText #{firstDeparture.bay}
+        a(href=firstDeparture.destinationURL class=`departureInfo departure${departures.length}`)
+          if !hasNumber
+            span.routeName #{firstDeparture.trip.routeName}
+          span.towards Towards
+          span.destination #{firstDeparture.destination}
+          if firstDeparture.guidanceText
+            span.broadDepartureInfo.clampLine #{firstDeparture.guidanceText}
+          if firstDeparture.viaText && hasNumber
+            span.broadDepartureInfo.clampLine #{firstDeparture.viaText}
+        div.timings
+          for departure in Array(maxDepartures - departures.length)
+            a.timing.hidden
+          for departure in departures
+            a(href=departure.tripURL class=`timing ${departure.headwayDevianceClass}`)
+              div.vehicleData
+                if departure.vehicle && departure.vehicle.attributes
+                  if departure.vehicle.attributes.ac
+                    img(src='/static/images/decals/ac.svg')
+                  if departure.vehicle.attributes.lf
+                    img(src='/static/images/decals/wheelchair.svg')
+              span #{departure.pretyTimeToDeparture}
+              span #{departure.scheduledDepartureTime.format('HH:mm')}
+              if departure.vehicle
+                span.rego #{departure.vehicle.name}
+else
+  div.errorPage
+    h2 No Upcoming Departures...

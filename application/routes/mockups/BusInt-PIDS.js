@@ -16,9 +16,9 @@ async function getData(req, res) {
     codedSuburb: req.params.suburb
   })
 
-  if (!stop || !stop.bays.filter(bay => bay.mode === 'bus')) {
+  if (!stop || !stop.bays.find(bay => bay.mode === 'bus')) {
     // TODO: create error page
-    return res.end('Could not lookup timings for ' + req.params.stopName + '. Are you sure buses stop there?')
+    return { trainDepartures: null, busDepartures: null, error: true }
   }
 
   let trainDepartures
@@ -27,7 +27,7 @@ async function getData(req, res) {
     let tripCount = {Up: 0, Down: 0}
 
     trainDepartures = (await getTrainDepartures(stop, res.db))
-      .filter(departure => !departure.isTrainReplacement && !departure.cancelled)
+      .filter(departure => !departure.isRailReplacementBus && !departure.cancelled)
 
     let downTrips = []
     let upTrips = []
@@ -42,9 +42,11 @@ async function getData(req, res) {
     })
 
     if (downTrips.length === 0)
-      trainDepartures = upTrips
+      trainDepartures = upTrips.slice(0, 2)
+    else if (upTrips.length === 0)
+      trainDepartures = downTrips.slice(0, 2)
     else
-      trainDepartures = [upTrips[0], downTrips[1]]
+      trainDepartures = [upTrips[0], downTrips[0]]
   }
 
   let directionCount = {}
@@ -77,7 +79,7 @@ async function getData(req, res) {
       if (!utils.isStreet(destinationShortName)) destination = destinationShortName
       departure.destination = destination.replace('Shopping Centre', 'SC')
 
-      let serviceData = busDestinations.service[departure.routeNumber] || busDestinations.service[departure.trip.routeGTFSID] || {}
+      let serviceData = busDestinations.service[departure.trip.routeGTFSID] || busDestinations.service[departure.routeNumber] || {}
       departure.destination = serviceData[departure.destination]
         || busDestinations.generic[departure.destination] || departure.destination
 

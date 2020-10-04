@@ -75,7 +75,7 @@ a.departureInfo {
 
   justify-content: center;
 
-  width: 100%;
+  width: calc(100vw - (6vw + 6.3vh));
 }
 
 div.timingRow a.departureInfo span {
@@ -83,7 +83,8 @@ div.timingRow a.departureInfo span {
 }
 
 div.timingRow a.departureInfo span.platform {
-  font-size: calc(0.8vw + 0.8vh);
+  font-size: calc(1vw + 1vh);
+  margin-top: calc(0.2vw + 0.2vh);
 }
 
 div.timingRow a.departureInfo span.stopRoad {
@@ -107,7 +108,7 @@ div.timingRow a.departureInfo span.stopName {
 
 div.timing {
   height: calc(5vw + 5vh);
-  width: calc(5vw + 5vh);
+  width: calc(6vw + 6.3vh);
 
   display: flex;
   flex-direction: column;
@@ -120,7 +121,7 @@ div.timing {
 }
 
 div.timing span {
-  width: calc(5vw + 5vh);
+  width: calc(6vw + 6vh);
   text-align: center;
 }
 

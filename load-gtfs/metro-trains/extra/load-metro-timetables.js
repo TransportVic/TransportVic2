@@ -118,7 +118,7 @@ function readFileData(filename, routeName, callback) {
 
       let stationPlatform = station.bays.find(bay => bay.mode === 'metro train')
 
-      let properTiming = utils.minAftMidnightToTime24(minutesPastMidnight)
+      let properTiming = utils.getHHMMFromMinutesPastMidnight(minutesPastMidnight)
 
       trips[tripID].stopTimings[timing] = {
         stopName: stationPlatform.fullStopName,

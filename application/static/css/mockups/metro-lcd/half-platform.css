@@ -33,13 +33,13 @@ div.message, div.serviceMessage {
 }
 
 div.message p, div.serviceMessage p {
-  font-size: calc(var(--width) * 0.06);
-  line-height: calc(var(--width) * 0.06);
+  font-size: calc(var(--height) * 0.2);
+  line-height: calc(var(--height) * 0.2);
 }
 
 div.message p.large, div.serviceMessage p.large {
-  font-size: calc(var(--width) * 0.075);
-  line-height: calc(var(--width) * 0.075);
+  font-size: calc(var(--height) * 0.25);
+  line-height: calc(var(--height) * 0.25);
 }
 
 div.serviceMessage div.arrivalMessage {
@@ -192,6 +192,10 @@ div.stopsColumn.expressColumn {
   margin-right: calc(var(--width) * 0.02) !important;
 }
 
+div.stopsColumn.expressColumn:last-child {
+  margin-right: 50% !important;
+}
+
 div.stopsColumn.columns-9, div.stopsColumn.columns-8 {
   min-width: unset !important;
 }
@@ -215,11 +219,14 @@ div.stops div.stopsColumn.columns-9 div span {
 }
 
 
-
+div.vertLine {
+  width: calc(var(--width) * 0.0025);
+  background-color: #ffffff;
+}
 
 div.right {
   width: calc(var(--width) * 0.2975);
-  border-left: calc(var(--width) * 0.0025) solid white;
+  flex-direction: column;
 }
 
 div.headers {
@@ -293,8 +300,8 @@ div.followingDeparture:nth-child(3) {
   border-bottom: calc(var(--width) * 0.001) solid grey;
 }
 
-div.time {
-  margin-top: calc(var(--height) * 0.11);
+div.clock {
+  margin-top: auto;
   height: calc(var(--height) * 0.17);
   background-color: #ffffff;
   display: flex;
@@ -302,17 +309,16 @@ div.time {
   justify-content: center;
 }
 
-div.timeContainer {
+div.clockContainer {
   width: calc(var(--width) * 0.2925);
   height: calc(var(--height) * 0.145);
   display: flex;
   align-items: center;
   justify-content: center;
   border: calc(var(--width) * 0.001) solid gray;
-  margin-right: calc(var(--width) * 0.0025);
 }
 
-div.time span {
+div.clock span {
   color: #000000;
   font-family: "NetworkSansBold";
   font-size: calc(var(--height) * 0.13);

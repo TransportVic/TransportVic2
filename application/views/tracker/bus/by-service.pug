@@ -1,13 +1,17 @@
 extends ../../layout
 
 block head
-  title TransportVic - Tracker/Bus - By Service
+  -
+    title = 'TransportVic - Tracker/Bus - By Service'
+    description = `Tracking all buses on Service #{service}`
+  title #{title}
+  link(rel='preload' as='style' href='/static/css/tracker/results.css')
 
 block title
   span Bus Tracker - By Service
-
+  
 block style
-  link(rel='stylesheet' href='/static/css/tracker/bus-results.css')
+  link(rel='stylesheet' href='/static/css/tracker/results.css')
 
 block content
   h1.title Tracking Bus Service #{service} on #{date.format('dddd, MMMM Do YYYY')}

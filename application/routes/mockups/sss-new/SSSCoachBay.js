@@ -3,6 +3,7 @@ const router = new express.Router()
 const getCoachDepartures = require('../../../../modules/regional-coach/get-departures')
 const destinationOverrides = require('../../../../additional-data/coach-stops')
 const termini = require('../../../../additional-data/termini-to-lines')
+const utils = require('../../../../utils')
 const url = require('url')
 const querystring = require('querystring')
 const moment = require('moment')
@@ -39,14 +40,13 @@ router.post('/', async (req, res) => {
 
   departures = departures.map(departure => {
     let stopsAt = departure.trip.stopTimings.filter(stop => {
-      return stop.stopConditions.dropoff === 0
+      return stop.stopConditions.dropoff !== 1
     }).map(stop => getHumanName(stop.stopName, stop.suburb))
       .filter((e, i, a) => a.indexOf(e) === i).slice(1)
 
-    if (departure.isTrainReplacement) {
+    if (departure.isRailReplacementBus) {
       let bay = '64'
-
-      let line = termini[departure.trip.stopTimings.slice(-1)[0].stopName.slice(0, -16)]
+      let line = departure.shortRouteName
 
       switch (line) {
         case 'Geelong':
@@ -81,14 +81,14 @@ router.post('/', async (req, res) => {
       departure.bay = 'Bay ' + bay
     } else if (!departure.bay) departure.bay = 'Bay 68'
 
-    let departureDay = moment.tz(departure.scheduledDepartureTime, 'Australia/Melbourne').format('YYYYMMDD')
+    let departureDay = utils.parseTime(departure.scheduledDepartureTime).format('YYYYMMDD')
 
     return {
       bay: departure.bay,
       destination: departure.destination.replace(/Railway Station.*/, '').trim(),
       departureTime: departure.trip.departureTime,
       stopsAt,
-      isTrainReplacement: departure.isTrainReplacement,
+      isRailReplacementBus: departure.isRailReplacementBus,
       connections: (departure.trip.connections || []).filter(connection => {
         return connection.operationDays.includes(departureDay)
       }).map(connection => ({

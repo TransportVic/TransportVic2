@@ -40,7 +40,7 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
     let operationDays
     if (calendarCache[trip.calendarID]) operationDays = calendarCache[trip.calendarID]
     else {
-      operationDays = gtfsUtils.calendarToDates(calendarDays, calendarDates, trip.calendarID).map(date => date.format('YYYYMMDD'))
+      operationDays = gtfsUtils.calendarToDates(calendarDays, calendarDates, trip.calendarID).map(date => utils.getYYYYMMDD(date))
       calendarCache[trip.calendarID] = operationDays
     }
 
@@ -68,20 +68,17 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
 
       let arrivalTimeMinutes, departureTimeMinutes
 
-      if (previousDepartureTime == -1) { // if first stop is already beyond midnight then keep it
-        arrivalTimeMinutes = utils.time24ToMinAftMidnight(arrivalTime)
-        departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime)
+      arrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(arrivalTime)
+      departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime)
 
+      if (previousDepartureTime == -1) { // if first stop is already beyond midnight then keep it
         if (isNightBus && arrivalTimeMinutes < 600) {
           arrivalTimeMinutes %= 1440
           departureTimeMinutes %= 1440
-
-          // arrivalTimeMinutes += 1440
-          // departureTimeMinutes += 1440
         }
       } else {
-        arrivalTimeMinutes = utils.time24ToMinAftMidnight(arrivalTime) % 1440
-        departureTimeMinutes = utils.time24ToMinAftMidnight(departureTime) % 1440
+        arrivalTimeMinutes %= 1440
+        departureTimeMinutes %= 1440
       }
 
       if (arrivalTimeMinutes < previousDepartureTime) arrivalTimeMinutes += 1440
@@ -89,8 +86,8 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
 
       previousDepartureTime = departureTimeMinutes
 
-      departureTime = utils.minAftMidnightToTime24(departureTimeMinutes)
-      arrivalTime = utils.minAftMidnightToTime24(arrivalTimeMinutes)
+      departureTime = utils.getHHMMFromMinutesPastMidnight(departureTimeMinutes)
+      arrivalTime = utils.getHHMMFromMinutesPastMidnight(arrivalTimeMinutes)
 
       return {
         stopName: stopData.fullStopName,
@@ -135,6 +132,9 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
       shapeID,
       gtfsMode: parseInt(gtfsID)
     }
+
+    if (trip.runID) tripData.runID = trip.runID
+    if (trip.vehicle) tripData.vehicle = trip.vehicle
 
     await gtfsTimetables.createDocument(tripData)
   })

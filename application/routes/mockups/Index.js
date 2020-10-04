@@ -6,6 +6,12 @@ const rawStationPlatforms = require('../../../additional-data/station-platforms.
 const rawStationPIDs = require('../../../additional-data/station-pids')
 const url = require('url')
 const querystring = require('querystring')
+const PIDUtils = require('./PIDUtils')
+const TrainUtils = require('./TrainUtils')
+
+async function preloadData(db, station, platform) {
+  TrainUtils.getPIDSDepartures(db, await PIDUtils.getStation(db, station), platform, null, null)
+}
 
 let stationPlatforms = {}
 let stationPIDs = {}
@@ -37,12 +43,31 @@ router.get('/summary/:station', (req, res) => {
   let stationPID = stationPIDs[station]
   let stationCode = stationNames[station]
 
+  preloadData(res.db, station, '*')
+
   if (stationPID.length) {
-    res.render('mockups/summary-known', {stationPID, station, stationCode})
+    res.render('mockups/summary-known', {stationPID, station, stationCode, getURL: PIDUtils.getURL})
   } else {
-    res.render('mockups/summary', {query, stationPlatformData, station, stationCode})
+    res.render('mockups/summary', {query, stationPlatformData, station, stationCode, getURL: PIDUtils.getURL})
   }
 })
+
+router.get('/station-preview/:station', (req, res) => {
+  let {station} = req.params
+
+  let stationPlatformData = stationPlatforms[station]
+  let stationPID = stationPIDs[station]
+  let stationCode = stationNames[station]
+
+  if (stationPID.length) {
+    let pid = stationPID.filter(p => p.platform).sort((a, b) => a.platform - b.platform)[0]
+    res.redirect(PIDUtils.getURL(station, pid))
+  } else {
+    res.redirect(`/mockups/metro-lcd/${station}/1/half-platform`)
+  }
+})
+
+let validConcourseTypes = ['up-down', 'interchange']
 
 router.get('/get', async (req, res) => {
   let stops = res.db.getCollection('stops')
@@ -50,33 +75,38 @@ router.get('/get', async (req, res) => {
   let {type, value, station, concourseType} = query
   station = utils.encodeName(station || '')
 
-  if (type === 'fss-escalator') {
-    return res.redirect('/mockups/fss/escalator/' + value + (station ? '/' + station : ''))
-  } else if (type === 'fss-platform') {
-    return res.redirect('/mockups/fss/platform/' + value + (station ? '/' + station : ''))
-  } else if (type === 'half-platform') {
-    return res.redirect(`/mockups/metro-lcd/${station}/${value}/half-platform`)
-  } else if (type === 'half-platform-bold') {
-    return res.redirect(`/mockups/metro-lcd/${station}/${value}/half-platform-bold`)
-  } else if (type === 'platform') {
-    return res.redirect(`/mockups/metro-lcd/${station}/${value}/platform`)
-  } else if (type === 'pre-platform-vertical') {
-    return res.redirect(`/mockups/metro-lcd/${station}/${value}/pre-platform-vertical`)
-  } else if (type === 'summary') {
-    return res.redirect(`/mockups/summary/${station}?type=${value}`)
-  } else if (type === 'concourse') {
-    return res.redirect(`/mockups/metro-lcd/concourse/${station}/${concourseType}`)
+  let errorMessage = `${type} is not a valid PID type`
+
+  if (type === 'concourse') {
+    if (validConcourseTypes.includes(concourseType)) {
+      return res.redirect(`/mockups/metro-lcd/concourse/${station}/${concourseType}`)
+    } else {
+      errorMessage = `${concourseType} is not a valid PID type`
+    }
   } else if (type === 'bus-int-pids') {
     let {bay} = query
     let m = value.match(/\/bus\/timings(\/.+)/)
     if (m) {
       m = m[1]
       bay = bay || '*'
-      res.redirect('/mockups/bus-int-pids' + m + '/' + bay)
+      return res.redirect('/mockups/bus-int-pids' + m + '/' + bay)
+    } else {
+      errorMessage = `${value} is an invalid bus stop`
     }
+  } else if (type === 'summary') {
+    return res.redirect(`/mockups/summary/${station}?type=${value}`)
+  } else {
+    let url = PIDUtils.getURL(station, {
+      type,
+      platform: value
+    })
+
+    if (url) return res.redirect(url)
   }
 
-  res.redirect('/mockups')
+  res.render('errors/400', {
+    errorMessage
+  })
 })
 
 module.exports = router

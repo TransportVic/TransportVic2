@@ -75,7 +75,29 @@ function filterRuns(query) {
   })
 }
 
+let isFocused = true
+let lostFocusTime
+
+function checkFocus() {
+  let isNowFocused = document.hasFocus()
+  if (!isNowFocused) {
+    lostFocusTime = new Date()
+  } else {
+    let timeDiff = new Date() - lostFocusTime
+    if (timeDiff > 5 * 60 * 1000 && !isFocused) {
+      updateBody() // If user wasn't focused - update the timings as soon as they come back
+    }
+  }
+
+  isFocused = isNowFocused
+}
+
 function updateBody() {
+  if (!isFocused) {
+    let timeDiff = new Date() - lostFocusTime
+    if (timeDiff > 5 * 60 * 1000) return
+  }
+
   $.ajax({ method: 'POST' }, (err, status, body) => {
     if (!err && status === 200) {
       $('#departures').innerHTML = body
@@ -86,6 +108,10 @@ function updateBody() {
     }
   })
 }
+
+document.on("visibilitychange", checkFocus)
+window.on("focus", checkFocus)
+window.on("blur", checkFocus)
 
 $.ready(() => {
   if ($('#textbar')) {
@@ -106,6 +132,7 @@ $.ready(() => {
   if (mode === 'metro') mode = 'metro train'
   if (mode === 'vline') mode = 'regional train'
   if (mode === 'coach') mode = 'regional coach'
+  if (mode === 'heritage') mode = 'heritage train'
 
   isBookmarked(mode, suburb, stopName, bookmarkStatus => {
     if (bookmarkStatus)
@@ -124,4 +151,5 @@ $.ready(() => {
   })
 
   setInterval(updateBody, 30 * 1000)
+  checkFocus()
 })

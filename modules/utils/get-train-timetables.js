@@ -4,7 +4,12 @@ const utils = require('../../utils')
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 function getPlatform(station, mode) {
-  return station.bays.filter(bay => bay.mode === mode)[0]
+  return station.bays.find(bay => bay.mode === mode)
+}
+
+function trimFromFSS(stops) {
+  let fssIndex = stops.map(stop => stop.stopName).indexOf('Flinders Street Railway Station')
+  return stops.slice(fssIndex)
 }
 
 async function getDeparture(station, db, mode, possibleLines, departureTime, possibleDestinations, direction, live, viaCityLoop) {
@@ -31,7 +36,7 @@ async function getDeparture(station, db, mode, possibleLines, departureTime, pos
       destination: {
         $in: possibleDestinations
       },
-      operationDays: day.format('YYYYMMDD'),
+      operationDays: utils.getYYYYMMDD(day),
       mode,
       stopTimings: {
         $elemMatch: {
@@ -42,11 +47,11 @@ async function getDeparture(station, db, mode, possibleLines, departureTime, pos
       direction
     }).toArray()
 
-    if (mode === 'metro train' && viaCityLoop !== undefined && timetables.length > 1) {
+    if (mode === 'metro train' && viaCityLoop !== undefined) {
       if (viaCityLoop) {
-        timetables = timetables.filter(t => t.stopTimings.find(s => s.stopName === 'Flagstaff Railway Station'))
+        timetables = timetables.filter(t => trimFromFSS(t.stopTimings).find(s => s.stopName === 'Flagstaff Railway Station'))
       } else {
-        timetables = timetables.filter(t => !t.stopTimings.find(s => s.stopName === 'Flagstaff Railway Station'))
+        timetables = timetables.filter(t => !trimFromFSS(t.stopTimings).find(s => s.stopName === 'Flagstaff Railway Station'))
       }
     }
 
@@ -83,11 +88,11 @@ async function getStaticDeparture(runID, db) {
 }
 
 async function getScheduledDepartures(station, db, mode, timeout) {
-  const gtfsTimetables = db.getCollection('gtfs timetables')
-  const liveTimetables = db.getCollection('live timetables')
-  const minutesPastMidnight = utils.getMinutesPastMidnightNow()
+  let gtfsTimetables = db.getCollection('gtfs timetables')
+  let liveTimetables = db.getCollection('live timetables')
+  let minutesPastMidnight = utils.getMinutesPastMidnightNow()
 
-  const platform = getPlatform(station, mode)
+  let stopGTFSIDs = station.bays.filter(bay => bay.mode === mode).map(bay => bay.stopGTFSID)
 
   let gtfsDepartures = []
   let liveDepartures = []
@@ -101,11 +106,13 @@ async function getScheduledDepartures(station, db, mode, timeout) {
     let departureTimeMinutes = (minutesPastMidnight % 1440) + 1440 * i
 
     let query = {
-      operationDays: day.format('YYYYMMDD'),
+      operationDays: utils.getYYYYMMDD(day),
       mode,
       stopTimings: {
         $elemMatch: {
-          stopGTFSID: platform.stopGTFSID,
+          stopGTFSID: {
+            $in: stopGTFSIDs
+          },
           departureTimeMinutes: {
             $gte: departureTimeMinutes - 5,
             $lte: departureTimeMinutes + timeout
@@ -125,7 +132,12 @@ async function getScheduledDepartures(station, db, mode, timeout) {
     liveDepartures = liveDepartures.concat(liveTimetablesFound)
   }
 
-  function getID(departure) { return departure.departureTime + departure.origin + departure.destination }
+  function getID(trip) {
+    let stop = trip.stopTimings.find(s => stopGTFSIDs.includes(s.stopGTFSID))
+    let id = stop.departureTimeMinutes + trip.direction + trip.routeGTFSID
+    if (trip.mode === 'metro train') id += trip.trueDestination + trip.trueOrigin
+    return id
+  }
 
   let serviceIndex = []
   let departures = []
@@ -138,24 +150,59 @@ async function getScheduledDepartures(station, db, mode, timeout) {
     }
   })
 
-  return departures.map(trip => {
-    let stopData = trip.stopTimings.filter(stop => stop.stopGTFSID === platform.stopGTFSID)[0]
-    let departureTime = utils.minutesAftMidnightToMoment(stopData.departureTimeMinutes, days[trip.tripID])
+  let timeMS = +utils.now()
+  let forwardTimeoutMS = timeout * 60 * 1000
+
+  let lateDepartures = await liveTimetables.findDocuments({
+    _id: {
+      $not: {
+        $in: liveDepartures.map(departure => departure._id)
+      }
+    },
+    mode,
+    stopTimings: {
+      $elemMatch: {
+        stopGTFSID: {
+          $in: stopGTFSIDs
+        },
+        actualDepartureTimeMS: {
+          $gte: timeMS - 1000 * 60,
+          $lte: timeMS + forwardTimeoutMS
+        }
+      }
+    }
+  }).toArray()
+
+  lateDepartures.forEach(departure => {
+    days[departure.tripID] = utils.parseDate(departure.operationDays)
+  })
+
+  return departures.concat(lateDepartures).map(trip => {
+    let stopData = trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))
+    let departureTime = utils.getMomentFromMinutesPastMidnight(stopData.departureTimeMinutes, days[trip.tripID])
+
+    let estimatedDepartureTime = stopData.estimatedDepartureTime || null
+    if (estimatedDepartureTime) {
+      estimatedDepartureTime = utils.parseTime(estimatedDepartureTime)
+      if (estimatedDepartureTime - timeMS > forwardTimeoutMS) return null
+    }
 
     return {
       trip,
       scheduledDepartureTime: departureTime,
-      estimatedDepartureTime: null,
-      actualDepartureTime: departureTime,
-      platform: '?',
+      estimatedDepartureTime,
+      actualDepartureTime: estimatedDepartureTime || departureTime,
+      platform: stopData.platform || '??',
       scheduledDepartureTimeMinutes: stopData.departureTimeMinutes,
-      cancelled: false,
       cityLoopConfig: [],
       destination: trip.destination.slice(0, -16),
       runID: '',
-      cancelled: trip.type === 'cancelled'
+      cancelled: trip.type === 'cancellation' || trip.cancelled,
+      suspensions: [],
+      consist: [],
+      isRailReplacementBus: trip.isRailReplacementBus || false
     }
-  }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+  }).filter(Boolean).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }
 
 let filterStops = [...cityLoopStations, 'Flinders Street', 'Richmond', 'North Melbourne', 'Jolimont']
@@ -170,12 +217,48 @@ let stopCodes = {
   'North Melbourne': 'NME'
 }
 
+let lineGroups = {
+  'Cranbourne': 'CFD',
+  'Pakenham': 'CFD',
+  'Sandringham': 'CFD',
+
+  'Glen Waverley': 'BLY',
+  'Lilydale': 'BLY',
+  'Belgrave': 'BLY',
+  'Alamein': 'BLY',
+
+  'Hurstbridge': 'CHL',
+  'Mernda': 'CHL',
+
+  'Frankston': 'CCY',
+  'Williamstown': 'CCY',
+  'Werribee': 'CCY',
+
+  'Upfield': 'NOR',
+  'Sunbury': 'NOR',
+  'Craigieburn': 'NOR',
+  'Flemington Racecourse': 'NOR',
+}
 
 async function getScheduledMetroDepartures(station, db) {
   let departures = await getScheduledDepartures(station, db, 'metro train', 120)
   let stopName = station.stopName.slice(0, -16)
   let stopCode = stopCodes[stopName]
   let isInCity = cityLoopStations.includes(stopName) || stopName === 'Flinders Street'
+
+  if (isInCity) {
+    let downTrains = departures.filter(departure => departure.trip.direction === 'Down')
+    let downTrainIDs = downTrains.map(departure => {
+      return `${departure.scheduledDepartureTime.format('HH:mm')}${lineGroups[departure.trip.routeName]}`
+    })
+    let upTrains = departures.filter(departure => departure.trip.direction === 'Up')
+    let uniqueUp = upTrains.filter(departure => {
+      let id = `${departure.scheduledDepartureTime.format('HH:mm')}${lineGroups[departure.trip.routeName]}`
+      return !downTrainIDs.includes(id)
+    })
+
+    departures = downTrains.concat(uniqueUp).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+  }
 
   return (await async.map(departures, async departure => {
     let cityLoopConfig = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
@@ -188,14 +271,11 @@ async function getScheduledMetroDepartures(station, db) {
       departure.destination = departure.trip.trueDestination.slice(0, -16)
 
       if (departure.destination === 'Flinders Street') {
+        if (willGoByCityLoop) cityLoopConfig.shift()
         let viaCityLoop = cityLoopConfig[0] === 'FGS' || cityLoopConfig[0] === 'PAR'
 
-        if (viaCityLoop) {
+        if (viaCityLoop && !isInCity) {
           departure.destination = 'City Loop'
-        }
-
-        if (willGoByCityLoop) {
-          cityLoopConfig.shift()
         }
 
         departure.cityLoopConfig = cityLoopConfig
@@ -213,6 +293,9 @@ async function getScheduledMetroDepartures(station, db) {
 
       departure.cityLoopConfig = cityLoopConfig
     }
+
+    if (departure.trip.routeGTFSID === '2-CCL')
+      departure.destination = 'City Circle'
 
     return departure
   })).filter(Boolean)

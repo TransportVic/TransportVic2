@@ -1,5 +1,7 @@
 module.exports = {
   'Albury': 'Albury',
+  'Wodonga': 'Albury',
+  'Wangaratta': 'Albury',
 
   'Ararat': 'Ararat',
 
@@ -26,6 +28,7 @@ module.exports = {
 
   'Maryborough': 'Maryborough',
   'Maryborough-Ballarat': 'Maryborough',
+  'Ballarat-Maryborough': 'Maryborough',
 
   'Seymour': 'Seymour',
 

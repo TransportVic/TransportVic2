@@ -1,21 +1,19 @@
 extends ../layout
     
 block head
-  - let title = `${trip.departureTime} ${trip.origin.slice(0, -16)} to ${trip.destination.slice(0, -16)}`
-  title=`TransportVic - ${title}`
-  
-  meta(property='og:title' content=`TransportVic - ${title}`)
-  meta(property='twitter:title' content=`TransportVic - ${title}`)
-  meta(property='og:description' content=`Viewing the ${title}`)
-  meta(property='twitter:description' content=`Viewing the ${title}`)
-  - themeColour = '#6b4d9e'
+  -
+    let tripName = `${trip.departureTime} ${trip.origin.slice(0, -16)} to ${trip.destination.slice(0, -16)}`
+    title = `TransportVic - ${tripName}`
+    description = `Viewing the ${tripName}`
+    themeColour = '#6b4d9e'
+
+  title #{title}
 
 block title
-  span=title
-  
+  span #{tripName}
+
 block style
   link(rel='stylesheet' href='/static/css/runs/base-style.css')
-  link(rel='stylesheet' href='/static/css/runs/trains.css')
 
 block content
   if trip.runID
@@ -25,14 +23,15 @@ block content
         let {vehicle, consist} = trip
         let parts
         if (vehicle) {
-          if (vehicle.startsWith('N'))
+          if (vehicle.startsWith('N')) {
             parts = [null, 'N']
-          else if (vehicle.includes('VL')) {
+          } else if (vehicle.includes('VL')) {
             let count = (vehicle.match(/^(\d)x/) || [0, 1])[1]
             parts = [count, 'vlocity']
           } else {
             parts = vehicle.match(/(\d)x ([A-Za-z]+)/).slice(1, 3)
             if (parts[1] === 'SP') parts[1] = 'sprinter'
+            else if (parts[1] === 'XPT') parts[1] = 'xpt'
           }
         }
       if vehicle
@@ -53,6 +52,8 @@ block content
           span.stopName=stop.stopName
           if stop.cancelled || trip.cancelled
             span.info.cancelled CANCELLED
-        div(class=`timing${stop.cancelled || trip.cancelled ? ' cancelled' : ' unknown'}`)
-          span=stop.prettyTimeToArrival
+          else if stop.platform
+            span.platform=`Platform ${stop.platform}`
+        div(class=`timing ${stop.headwayDevianceClass}`)
+          span=stop.pretyTimeToDeparture
           span=stop.departureTime || stop.arrivalTime

@@ -27,18 +27,18 @@ function editName(name) {
 
 events.forEach(event => {
   let start = event.start.toISOString()
-  let day = moment.tz(start, 'Australia/Melbourne')
+  let day = utils.parseTime(start)
   let name = editName(event.summary)
 
   eventCache[day.format('YYYYMMDD')] = name
 })
 
-function getPublicHolidayName(moment) {
-  return eventCache[moment.format('YYYYMMDD')]
+function getPublicHolidayName(time) {
+  return eventCache[time.format('YYYYMMDD')]
 }
 
-async function getPHDayOfWeek(moment) {
-  let day = moment.format('YYYYMMDD')
+async function getPHDayOfWeek(time) {
+  let day = utils.getYYYYMMDD(time)
   if (eventCache[day]) {
     if (dayCache[day]) {
       return dayCache[day]

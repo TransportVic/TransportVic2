@@ -37,7 +37,7 @@ function updateBody() {
   $.ajax({
     method: 'POST'
   }, (err, status, body) => {
-    if (err) return setMessagesActive(true)
+    if (err || body.error) return setMessagesActive(true)
 
     try {
       let {busDepartures, trainDepartures} = body

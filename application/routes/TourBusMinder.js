@@ -50,7 +50,7 @@ module.exports.setupWS = async function(wss) {
           position,
         } = data
 
-        let date = utils.now().format('YYYYMMDD')
+        let date = utils.getYYYYMMDDNow()
 
         let query = {
           rego, tripName, date, active: true

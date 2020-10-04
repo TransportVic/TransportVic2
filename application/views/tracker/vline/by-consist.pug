@@ -1,13 +1,17 @@
 extends ../../layout
 
 block head
-  title TransportVic - Tracker/V/Line - By Consist
+  -
+    title = 'TransportVic - Tracker/V/Line - By Consist'
+    description = 'Tracking all V/Line trips by consist'
+  title #{title}
+  link(rel='preload' as='style' href='/static/css/tracker/results.css')
   
 block title
-  span V/Line - By Consist
-  
+  span V/Line Tracker - By Consist
+
 block style
-  link(rel='stylesheet' href='/static/css/tracker/bus-results.css')
+  link(rel='stylesheet' href='/static/css/tracker/results.css')
 
 block content
   h1.title Tracking Consist Trips on #{date.format('dddd, MMMM Do YYYY')}

@@ -1,18 +1,17 @@
 const departureUtils = require('../utils/get-bus-timetables')
 const async = require('async')
 const moment = require('moment')
-const TimedCache = require('timed-cache')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 30 })
+const TimedCache = require('../../TimedCache')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
-const busStopNameModifier = require('../../additional-data/bus-stop-name-modifier')
+const stopNameModifier = require('../../additional-data/stop-name-modifier')
 const busBays = require('../../additional-data/bus-bays')
-
-const modules = require('../../modules')
+const determineBusRouteNumber = require('./determine-bus-route-number')
 const config = require('../../config')
-const discordIntegration = modules.tracker && modules.tracker.discordIntegration
+
+const departuresCache = new TimedCache(1000 * 30)
 
 let tripLoader = {}
 let tripCache = {}
@@ -28,7 +27,7 @@ async function getStoppingPatternWithCache(db, busDeparture, destination, isNigh
     tripLoader[id] = new EventEmitter()
     tripLoader[id].setMaxListeners(1000)
 
-    let trip = await getStoppingPattern(db, busDeparture.run_id, isNightBus ? 'nbus' : 'bus', busDeparture.scheduled_departure_utc)
+    let trip = await getStoppingPattern(db, busDeparture.run_ref, isNightBus ? 'nbus' : 'bus', busDeparture.scheduled_departure_utc)
 
     tripCache[id] = trip
     tripLoader[id].emit('loaded', trip)
@@ -58,12 +57,14 @@ async function updateBusTrips(db, departures) {
   let date = utils.getYYYYMMDDNow()
   let timestamp = +new Date()
 
-  let viableDepartures = departures.filter(d => d.vehicleDescriptor.id)
+  let viableDepartures = departures.filter(d => d.vehicle)
 
   await async.forEach(viableDepartures, async departure => {
     let {routeGTFSID, origin, destination, departureTime, destinationArrivalTime} = departure.trip
-    let smartrakID = parseInt(departure.vehicleDescriptor.id)
-    let {routeNumber, busRego} = departure
+    let smartrakID = parseInt(departure.vehicle.smartrakID)
+    let busRego = departure.vehicle.name
+
+    let {routeNumber, vehicle} = departure
 
     let data = {
       date, timestamp,
@@ -72,23 +73,11 @@ async function updateBusTrips(db, departures) {
       origin, destination, departureTime, destinationArrivalTime
     }
 
-    let results = await busTrips.replaceDocument({
+    await busTrips.replaceDocument({
       date, routeGTFSID, origin, destination, departureTime, destinationArrivalTime
     }, data, {
       upsert: true
     })
-
-    if (results.result.upserted && discordIntegration && routeNumber === '737') {
-      process.nextTick(async () => {
-        await utils.request(config.discordURL, {
-          method: 'POST',
-          json: true,
-          body: {
-            content: `Tracked: ${busRego ? '#' + busRego : '@' + smartrakID} on the ${departureTime} 737 to ${destination}`
-          }
-        })
-      })
-    }
   })
 }
 
@@ -118,19 +107,19 @@ async function getDeparturesFromPTV(stop, db) {
     let requestTime = now.clone()
     requestTime.add(-30, 'seconds')
 
-    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/${isNightBus ? 4 : 2}/stop/${stopGTFSID}?gtfs=true&max_results=6&look_backwards=false&include_cancelled=true&expand=run&expand=route`)
+    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/${isNightBus ? 4 : 2}/stop/${stopGTFSID}?gtfs=true&max_results=6&look_backwards=false&include_cancelled=true&expand=run&expand=route&expand=VehicleDescriptor`)
 
     let seenIDs = []
     await async.forEach(departures, async busDeparture => {
-      if (seenIDs.includes(busDeparture.run_id)) return
-      seenIDs.push(busDeparture.run_id)
-      let run = runs[busDeparture.run_id]
+      if (seenIDs.includes(busDeparture.run_ref)) return
+      seenIDs.push(busDeparture.run_ref)
+      let run = runs[busDeparture.run_ref]
       let route = routes[busDeparture.route_id]
 
       if (route.route_number.toLowerCase().includes('combined')) return
 
-      let scheduledDepartureTime = moment.tz(busDeparture.scheduled_departure_utc, 'Australia/Melbourne')
-      let estimatedDepartureTime = busDeparture.estimated_departure_utc ? moment.tz(busDeparture.estimated_departure_utc, 'Australia/Melbourne') : null
+      let scheduledDepartureTime = utils.parseTime(busDeparture.scheduled_departure_utc)
+      let estimatedDepartureTime = busDeparture.estimated_departure_utc ? utils.parseTime(busDeparture.estimated_departure_utc) : null
       let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
 
       // if early at checkpoint set to on time
@@ -145,7 +134,7 @@ async function getDeparturesFromPTV(stop, db) {
 
       let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
 
-      let destination = busStopNameModifier(utils.adjustStopname(run.destination_name.trim()))
+      let destination = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
 
       let day = utils.getYYYYMMDD(scheduledDepartureTime)
       if (isNightBus && (scheduledDepartureTimeMinutes % 1440) < 180)
@@ -153,17 +142,21 @@ async function getDeparturesFromPTV(stop, db) {
 
       let routeGTFSID = route.route_gtfs_id
       if (routeGTFSID === '4-965') routeGTFSID = '8-965'
+      if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
 
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', day, routeGTFSID)
       if (!trip) {
         trip = await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
       }
-      let vehicleDescriptor = run.vehicle_descriptor || {}
+
+      let hasVehicleData = run.vehicle_descriptor
+      let vehicleDescriptor = hasVehicleData ? run.vehicle_descriptor : {}
 
       let busRego
+      let smartrakID = vehicleDescriptor.id
       if (vehicleDescriptor.supplier === 'Smartrak') {
         busRego = (await smartrakIDs.findDocument({
-          smartrakID: parseInt(vehicleDescriptor.id)
+          smartrakID: parseInt(smartrakID)
         }) || {}).fleetNumber
       }
 
@@ -180,7 +173,7 @@ async function getDeparturesFromPTV(stop, db) {
       if (!operator) operator = ''
 
       let {routeNumber} = trip
-      let sortNumber = routeNumber
+      let sortNumber = routeNumber || ''
 
       if (route.route_gtfs_id.startsWith('7-')) {
         sortNumber = routeNumber.slice(2)
@@ -196,10 +189,13 @@ async function getDeparturesFromPTV(stop, db) {
         estimatedDepartureTime,
         actualDepartureTime,
         destination: trip.destination,
-        vehicleDescriptor,
+        vehicle: smartrakID ? {
+          name: busRego || smartrakID,
+          smartrakID,
+          attributes: null
+        } : null,
         routeNumber,
         sortNumber,
-        busRego,
         isNightBus,
         operator,
         codedOperator: utils.encodeName(operator.replace(/ \(.+/, '')),
@@ -209,19 +205,8 @@ async function getDeparturesFromPTV(stop, db) {
     })
   })
 
-  let sortedDepartures = mappedDepartures.sort((a, b) => {
-    return a.actualDepartureTime - b.actualDepartureTime
-  }).sort((a, b) => {
-    let gtfsDirection = null
-    if (a.trip && b.trip && a.trip.gtfsDirection && b.trip.gtfsDirection)
-      gtfsDirection = a.trip.gtfsDirection - b.trip.gtfsDirection
-    return gtfsDirection ||
-      a.destination.length - b.destination.length ||
-      a.actualDepartureTime - b.actualDepartureTime
-  })
-
   let tripIDs = []
-  let filteredDepartures = sortedDepartures.filter(d => {
+  let filteredDepartures = mappedDepartures.filter(d => {
     let {tripID} = d.trip
     if (!tripID)
       tripID = d.trip.origin + d.trip.departureTime + d.trip.destination + d.trip.destinationArrivalTime
@@ -232,6 +217,7 @@ async function getDeparturesFromPTV(stop, db) {
   })
 
   await updateBusTrips(db, filteredDepartures)
+
   return filteredDepartures
 }
 
@@ -273,15 +259,26 @@ async function getDepartures(stop, db) {
 
     let departures
     try {
-      departures = await getDeparturesFromPTV(stop, db)
+      let ptvDepartures = await getDeparturesFromPTV(stop, db)
 
       function i (trip) { return `${trip.routeGTFSID}${trip.origin}${trip.departureTime}` }
-      let tripIDsSeen = departures.map(d => i(d.trip))
+      let tripIDsSeen = ptvDepartures.map(d => i(d.trip))
 
       let now = utils.now()
       let extraScheduledTrips = scheduledDepartures.filter(d => !tripIDsSeen.includes(i(d.trip)) && d.actualDepartureTime.diff(now, 'seconds') > -75)
 
-      departures = departures.concat(extraScheduledTrips)
+      departures = ptvDepartures.concat(extraScheduledTrips)
+
+      let sortedDepartures = departures.sort((a, b) => {
+        return a.actualDepartureTime - b.actualDepartureTime
+      }).sort((a, b) => {
+        let gtfsDirection = null
+        if (a.trip && b.trip && a.trip.gtfsDirection && b.trip.gtfsDirection)
+          gtfsDirection = a.trip.gtfsDirection - b.trip.gtfsDirection
+        return gtfsDirection ||
+          a.destination.length - b.destination.length ||
+          a.actualDepartureTime - b.actualDepartureTime
+      })
     } catch (e) {
       console.log('Failed to get bus timetables', e)
       departures = scheduledDepartures
@@ -302,6 +299,10 @@ async function getDepartures(stop, db) {
 
     departures = departures.map(departure => {
       let {trip} = departure
+
+      if (departure.routeNumber) {
+        departure.routeNumber = determineBusRouteNumber(departure.trip)
+      }
 
       let hasSeenStop = false
       let upcomingStops = trip.stopTimings.filter(tripStop => {

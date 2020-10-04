@@ -72,7 +72,7 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - LED PIDS display found at suburban stations like Pakenham, Lilydale and Croydon
 
 - GeoJSON visualiser, cos why not
-- Checks disruptions whenever requesting for metro train departures - looks for suspended regions and adds a message / marks `isTrainReplacement` (need to rename to `isBusReplacement`)
+- Checks disruptions whenever requesting for metro train departures - looks for suspended regions and adds a message / marks `isRailReplacementBus` (need to rename to `isBusReplacement`)
 - Stop merging in place
   - Roads do not get merged, see commit [0c3cf46](https://github.com/TransportVic/TransportVic2/commit/0c3cf45222eb2d94bc1e26cc6a95b862218a441f)
   - Looks for stops with the same primary stop name: Primary Stop Name/Road Name (Suburb)
@@ -136,12 +136,9 @@ Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne
   - Thoughts:
     - Trams will use a simple lookup from the tram number to get the model
     - Buses use smartrak ids
-- Refactor all moment.tz to a utils method
-- And everything else on TransportVic homepage (which i think there's nothing else)
 - Fare calculator thingy (now a ptv api thing)
 - Interstate
   - overland apparently
-  - check how its actually programmed in, AM8 trips don't seem to be in?
 - If disruption thing isn't implemented do a status board
 - Maps (openstreetmap looks good)
 - Weather if I can find a way to do it freely

@@ -1,15 +1,15 @@
 const departureUtils = require('../utils/get-bus-timetables')
 const async = require('async')
 const moment = require('moment')
-const TimedCache = require('timed-cache')
-const departuresCache = new TimedCache({ defaultTtl: 1000 * 30 })
-const healthCheck = require('../health-check')
+const TimedCache = require('../../TimedCache')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const EventEmitter = require('events')
 const tramFleet = require('../../tram-fleet')
 const determineTramRouteNumber = require('./determine-tram-route-number')
+
+const departuresCache = new TimedCache(1000 * 30)
 
 let tripLoader = {}
 let tripCache = {}
@@ -25,7 +25,7 @@ async function getStoppingPatternWithCache(db, tramDeparture, destination) {
     tripLoader[id] = new EventEmitter()
     tripLoader[id].setMaxListeners(1000)
 
-    let trip = await getStoppingPattern(db, tramDeparture.run_id, 'tram', tramDeparture.scheduled_departure_utc)
+    let trip = await getStoppingPattern(db, tramDeparture.run_ref, 'tram', tramDeparture.scheduled_departure_utc)
 
     tripCache[id] = trip
     tripLoader[id].emit('loaded', trip)
@@ -45,25 +45,24 @@ async function getDeparturesFromPTV(stop, db) {
 
   await async.forEach(gtfsIDs, async stopGTFSID => {
     //todo put route number as part of route and timetable db
-    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/1/stop/${stopGTFSID}?gtfs=true&max_results=6&look_backwards=false&include_cancelled=true&expand=run&expand=route`)
+    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/1/stop/${stopGTFSID}?gtfs=true&max_results=6&look_backwards=false&include_cancelled=true&expand=run&expand=route&expand=VehicleDescriptor`)
 
     let seenIDs = []
     await async.forEach(departures, async tramDeparture => {
-      if (seenIDs.includes(tramDeparture.run_id)) return
-      seenIDs.push(tramDeparture.run_id)
-      let run = runs[tramDeparture.run_id]
+      if (seenIDs.includes(tramDeparture.run_ref)) return
+      seenIDs.push(tramDeparture.run_ref)
+      let run = runs[tramDeparture.run_ref]
       let route = routes[tramDeparture.route_id]
 
-      let scheduledDepartureTime = moment.tz(tramDeparture.scheduled_departure_utc, 'Australia/Melbourne')
-      let estimatedDepartureTime = tramDeparture.estimated_departure_utc ? moment.tz(tramDeparture.estimated_departure_utc, 'Australia/Melbourne') : null
+      let scheduledDepartureTime = utils.parseTime(tramDeparture.scheduled_departure_utc)
+      let estimatedDepartureTime = tramDeparture.estimated_departure_utc ? utils.parseTime(tramDeparture.estimated_departure_utc) : null
       let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
 
       if (actualDepartureTime.diff(now, 'minutes') > 90) return
 
       let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime) % 1440
 
-      let destination = utils.adjustStopname(run.destination_name.trim())
-        .replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, '')
+      let destination = utils.getProperStopName(run.destination_name)
 
       let day = utils.getYYYYMMDD(scheduledDepartureTime)
       let routeGTFSID = route.route_gtfs_id.replace(/-0+/, '-')
@@ -87,6 +86,8 @@ async function getDeparturesFromPTV(stop, db) {
           vehicleDescriptor = {}
           estimatedDepartureTime = null
           actualDepartureTime = scheduledDepartureTime
+
+          if (scheduledDepartureTime.diff(now, 'minutes') > 90) return
         }
       }
 

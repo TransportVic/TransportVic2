@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 async function prioritySearch(db, query) {
   let possibleStopNames = [
     query,
-    utils.adjustStopname(utils.titleCase(query, true).replace('Sc', 'Shopping Centre'))
+    utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre'))
   ]
 
   let search = possibleStopNames.map(name => ({mergeName: new RegExp(name, 'i')}))
@@ -31,9 +31,9 @@ async function prioritySearch(db, query) {
 
   let numericalMatchStops = (await db.getCollection('stops').findDocuments({
     $or: [{
-      tramTrackerIDs: nquery
+      'bays.tramTrackerID': query
     }, {
-      'bays.stopNumber': query.replace('#', '')
+      'bays.stopNumber': query.replace('#', '').toUpperCase()
     }]
   }).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
 
@@ -41,13 +41,13 @@ async function prioritySearch(db, query) {
 }
 
 async function findStops(db, query) {
-  let search
-
   let prioritySearchResults = await prioritySearch(db, query)
   let excludedIDs = prioritySearchResults.map(stop => stop._id)
 
+  let search = utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre'))
   let queryRegex = new RegExp(query, 'i')
-  let searchRegex = new RegExp(utils.adjustStopname(utils.titleCase(query, true).replace('Sc', 'Shopping Centre')), 'i')
+  let searchRegex = new RegExp(search, 'i')
+  let stationRegex = new RegExp(query.replace(/sta?t?i?o?n?/i, 'railway station'), 'i')
 
   let phoneticQuery = metaphone.process(query)
 
@@ -57,13 +57,21 @@ async function findStops(db, query) {
         $in: excludedIDs
       }
     },
-    $or: [{
-      suburb: queryRegex
-    }, {
-      stopName: queryRegex
-    }, {
-      stopName: searchRegex
-    }]
+    // $and: [{
+    //   $text: {
+    //     $search: query + ' ' + search
+    //   }
+    // }, {
+      $or: [{
+        suburb: queryRegex
+      }, {
+        stopName: queryRegex
+      }, {
+        stopName: searchRegex
+      }, {
+        stopName: stationRegex
+      }]
+    // }]
   }).limit(15 - prioritySearchResults.length).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
 
   let lowPriorityResults = await db.getCollection('stops').findDocuments({
@@ -72,25 +80,32 @@ async function findStops(db, query) {
         $in: excludedIDs.concat(remainingResults.map(stop => stop._id))
       }
     },
-    $or: [{
-      'bays.fullStopName': queryRegex
-    }, {
-      'bays.originalStopName': queryRegex
-    }, {
-      'bays.fullStopName': searchRegex
-    }, {
-      'tramTrackerNames': searchRegex
-    }, {
-      'tramTrackerNames': queryRegex
-    }, {
-      namePhonetic: new RegExp(phoneticQuery)
-    }]
+    // $and: [{
+    //   $text: {
+    //     $search: query + ' ' + search
+    //   }
+    // }, {
+      $or: [{
+        'bays.fullStopName': queryRegex
+      }, {
+        'bays.originalName': queryRegex
+      }, {
+        'bays.fullStopName': searchRegex
+      }, {
+        'tramTrackerNames': searchRegex
+      }, {
+        'tramTrackerNames': queryRegex
+      }, {
+        namePhonetic: new RegExp(phoneticQuery)
+      }]
+    // }]
   }).limit(15 - prioritySearchResults.length - remainingResults.length).toArray()
 
   return prioritySearchResults.concat(remainingResults).concat(lowPriorityResults)
 }
 
 async function findRoutes(db, query) {
+  query = query.replace(/li?n?e?/, '').trim()
   let queryRegex = new RegExp(query, 'i')
 
   let routes = (await db.getCollection('routes').findDocuments({

@@ -5,36 +5,37 @@ const moment = require('moment')
 const utils = require('../../../utils')
 
 async function loadDepartures(req, res) {
-  const stop = await res.db.getCollection('stops').findDocument({
-    codedName: req.params.stopName
+  let stops = res.db.getCollection('stops')
+  let stop = await stops.findDocument({
+    codedName: req.params.stopName,
+    codedSuburb: req.params.suburb
   })
 
-  let coachBay = stop.bays.filter(bay => bay.mode === 'regional coach')
-
-  if (!stop || !coachBay.length) {
+  if (!stop || !stop.bays.find(bay => bay.mode === 'regional coach')) {
     return res.status(404).render('errors/no-stop')
   }
 
   let departures = await getDepartures(stop, res.db)
+  let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
   departures = departures.map(departure => {
-    const timeDifference = moment.utc(departure.scheduledDepartureTime.diff(utils.now()))
-
-    if (+timeDifference > 1000 * 60 * 180) return null
-    if (+timeDifference <= 60000) departure.prettyTimeToArrival = 'Now'
-    else {
-      departure.prettyTimeToArrival = ''
-      if (timeDifference.get('hours')) departure.prettyTimeToArrival += timeDifference.get('hours') + ' h '
-      if (timeDifference.get('minutes')) departure.prettyTimeToArrival += timeDifference.get('minutes') + ' min'
-    }
+    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
+    if (departure.scheduledDepartureTime - utils.now() > 1000 * 60 * 180) return
 
     departure.headwayDevianceClass = 'unknown'
 
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
+    let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
+    let {stopGTFSID} = currentStop
+    let minutesDiff = currentStop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
+
+    let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
+    let operationDate = utils.getYYYYMMDD(tripStart)
+
     departure.tripURL = `/coach/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + `${utils.getYYYYMMDDNow()}/#stop-${departure.trip.stopTimings[0].stopGTFSID}`
+      + `${operationDate}/#stop-${stopGTFSID}`
 
     return departure
   }).filter(Boolean)
@@ -42,11 +43,12 @@ async function loadDepartures(req, res) {
   return { departures, stop }
 }
 
-router.get('/:stopName', async (req, res) => {
-  res.render('timings/regional-coach', await loadDepartures(req, res))
+router.get('/:suburb/:stopName', async (req, res) => {
+  let response = await loadDepartures(req, res)
+  if (response) res.render('timings/regional-coach', response)
 })
 
-router.post('/:stopName', async (req, res) => {
+router.post('/:suburb/:stopName', async (req, res) => {
   res.render('timings/templates/regional-coach', await loadDepartures(req, res))
 })
 

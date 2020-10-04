@@ -92,7 +92,8 @@ let destinationSections = [
 
 let diagramSections = [
   {
-    targets: ['Southern Cross', 'North Melbourne'],
+    targets: ['North Melbourne'],
+    not: ['Flagstaff', 'Parliament'],
     key: 'FSS-SSS-NME'
   },
   {
@@ -132,17 +133,17 @@ let lineColours = {
   'Upfield': 'FFBE00',
   'Werribee': '028430',
   'Williamstown': '028430',
-  'City Loop': '000000',
+  'City Circle': '000000',
   'Showgrounds/Flemington': 'CE0058'
 }
 
 function identifyTargetStop(departure, target) {
-  let targetStop = departure.trip.stopTimings.find(stop => stop.stopName.slice(0, -16) === target)
+  let targetStop = departure.stopTimings.find(stop => stop.stopName === target)
 
   let actualDepartureTime = new Date(departure.actualDepartureTime)
   let scheduledDepartureTime = new Date(departure.scheduledDepartureTime)
 
-  let fssStop = departure.trip.stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
+  let fssStop = departure.stopTimings.find(stop => stop.stopName === 'Flinders Street')
   let fssMinutes = fssStop.departureTimeMinutes
   let targetMinutes = targetStop.arrivalTimeMinutes
 
@@ -160,7 +161,7 @@ function setDestinationsRow(departures) {
     let {target, id} = section
 
     let validDepartures = departures.filter(departure => {
-      return departure.type !== 'vline' && !!departure.additionalInfo.screenStops.find(stop => stop.stopName === target && !stop.express)
+      return departure.type !== 'vline' && departure.stopTimings.some(stop => stop.stopName === target)
     }).map(departure => {
       return identifyTargetStop(departure, target)
     }).sort((a, b) => a.targetActualTime - b.targetActualTime)
@@ -188,12 +189,12 @@ function updateDiagram(departures) {
     let nextDeparture = departures.filter(departure => {
       if (departure.type === 'vline') return false
       for (let target of targets) {
-        if (!departure.additionalInfo.screenStops.find(stop => stop.stopName === target && !stop.express))
+        if (!departure.stopTimings.find(stop => stop.stopName === target))
           return false
       }
       if (not) {
         for (let excluded of not)
-          if (departure.additionalInfo.screenStops.find(stop => stop.stopName === excluded && !stop.express))
+          if (departure.stopTimings.find(stop => stop.stopName === excluded))
             return false
       }
       return true
@@ -203,7 +204,7 @@ function updateDiagram(departures) {
 
     if (nextDeparture) {
       setArrowActive(key, true)
-      setSectionColour(key, '#' + lineColours[nextDeparture.trip.routeName])
+      setSectionColour(key, '#' + lineColours[nextDeparture.routeName])
     } else {
       setArrowActive(key, false)
       setSectionColour(key, '#C0C0C0')
@@ -226,6 +227,7 @@ function updateBody() {
       setSVGSize()
       $('#cclSVG').setAttribute('display', '')
     } catch (e) {
+      console.log(e)
       setListenAnnouncements()
     }
   })

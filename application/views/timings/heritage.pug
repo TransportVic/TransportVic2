@@ -1,57 +1,40 @@
 extends ../layout
 
 block head
-  - let stationName = station.stopName.slice(0, -16)
-  title=`TransportVic - ${stationName}`
+  -
+    let stationName = station.stopName.slice(0, -16)
+    title = `TransportVic - ${stationName}`
+    description = `Viewing the Next 3 hours of heritage train departures from ${stationName}`
+    themeColour = '#5e401f'
+    
+  title #{title}
   
-  title=`TransportVic - ${stationName}`
-  
-  meta(property='og:title' content=`TransportVic - ${stationName}`)
-  meta(property='twitter:title' content=`TransportVic - ${stationName}`)
-  meta(property='og:description' content=`Viewing the Next 3 hours of heritage train departures from ${stationName}`)
-  meta(property='twitter:description' content=`Viewing the Next 3 hours of heritage train departures from ${stationName}`)
-  - themeColour = '#03998f'
-
   link(rel='preload' as='image' href='/static/images/clear-icons/bus.svg')
   link(rel='preload' as='image' href='/static/images/clear-icons/coach.svg')
   link(rel='preload' as='image' href='/static/images/clear-icons/tram.svg')
   link(rel='preload' as='image' href='/static/images/clear-icons/metro.svg')
   link(rel='preload' as='image' href='/static/images/clear-icons/vline.svg')
 
+  link(rel='preload' as='style' href='/static/css/combined-colours.css')
+  link(rel='preload' as='style' href='/static/css/timings/base-style.css')
+
 block title
   span=station.stopName
   
 block header-right
+  a#mapLink(href=`/stop-preview/${stop.codedSuburb[0]}/${stop.codedName}`)
+    img#mapIcon(src='/static/images/decals/map.svg' alt='map icon')
   img#bookmark(src='/static/images/decals/bookmark.svg' alt='bookmark icon')
 
 block scripts
   script(src='/static/scripts/timings.js' async)
-  
+
 append style
   link(rel='stylesheet' href='/static/css/combined-colours.css')
   link(rel='stylesheet' href='/static/css/timings/base-style.css')
 
 append content
-  -
-    let stopModes = station.bays.map(e => e.mode).filter((e, i, a) => a.indexOf(e) === i)
-    let iconMap = {
-      'regional train': 'vline',
-      'heritage train': 'heritage',
-      'metro train': 'metro',
-      'regional coach': 'coach'
-    }
-  if stopModes.length > 1
-    div#modeSwitch
-      for mode in stopModes
-        -
-          let url = `/${iconMap[mode] || mode.replace(' ', '-')}/timings/`
-          if (mode === 'bus' || mode === 'tram') 
-            url += `${station.codedSuburb[0]}/`
-          url += station.codedName
-          if (mode.includes('train'))
-            url = url.slice(0, -16)
-        a(href=url class=`modeSwitchType ${mode.replace(' ', '-')} ${mode === 'regional coach' ? '' : 'inactive'}`)
-          img(src=`/static/images/clear-icons/${iconMap[mode] || mode}.svg` alt='')
-          span=mode
+  - let currentMode = 'heritage train'
+  include mode-switch
   div#departures
     include ./templates/heritage
