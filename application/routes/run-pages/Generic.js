@@ -5,6 +5,7 @@ const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
 
+const liveBusData = require('../../../additional-data/live-bus-data')
 const busDestinations = require('../../../additional-data/bus-destinations')
 const coachDestinations = require('../../../additional-data/coach-stops')
 
@@ -68,7 +69,12 @@ async function pickBestTrip(data, db) {
   // So PTV API only returns estimated timings for bus if stop_id is set and the bus hasn't reached yet...
   let referenceTrip = liveTrip || gtfsTrip
   if (!referenceTrip) return null
-  if (!useLive || noLive.includes(referenceTrip.routeGTFSID.split('-')[0])) return { trip: referenceTrip, tripStartTime, isLive: false }
+
+  let gtfsMode = referenceTrip.routeGTFSID.split('-')[0]
+
+  if (!useLive || noLive.includes(gtfsMode)
+    || (gtfsMode === '4' && liveBusData.metroRoutesExcluded.includes(referenceTrip.routeGTFSID))
+    || (gtfsMode === '6' && !liveBusData.regionalRoutes.includes(referenceTrip.routeGTFSID))) return { trip: referenceTrip, tripStartTime, isLive: false }
 
   let now = utils.now()
 
