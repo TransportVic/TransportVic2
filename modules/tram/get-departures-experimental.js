@@ -154,7 +154,7 @@ async function getDeparturesFromYT(stop, db) {
 
       let loopDirection
       if (routeGTFSID === '3-35') {
-        loopDirection = gtfsDirection === '0' ? 'AC/W' : 'C/W'
+        loopDirection = trip.gtfsDirection === '0' ? 'AC/W' : 'C/W'
       }
 
       if (tram) {
