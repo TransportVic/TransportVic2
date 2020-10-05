@@ -14,7 +14,12 @@ block style
   link(rel='stylesheet' href='/static/css/tracker/results.css')
 
 block content
-  h1.title Tracking Consist Trips on #{date.format('dddd, MMMM Do YYYY')}
+  h1.title Tracking #{consist} Trips on #{date.format('dddd, MMMM Do YYYY')}
   for trip in trips
     div(class=`trip ${trip.active ? '' : 'inactive'}`)
       a(href=trip.url) ##{trip.runID}: #{trip.departureTime} #{trip.origin} - #{trip.destination}: #{trip.consist.join('-')}
+
+  h1.title Past deployments:
+  for pastDate in Object.keys(servicesByDay).reverse()
+    a(href=`/vline/tracker/consist?consist=${consist}&date=${servicesByDay[pastDate].date}`).pastDeployment #{pastDate} - #{servicesByDay[pastDate].services.join(', ')}
+    br
