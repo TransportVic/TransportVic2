@@ -70,14 +70,16 @@ async function parseTimings(names, types, trip) {
   let offset = 0
   let previousTime = 0
 
+  let lastLocation
+
   await async.forEachOfSeries(names.slice(5), async (locationName, i) => {
     let type = types[i + 5], timing = timings[i]
-    if (!timing || timing.includes('…')) return
-    timing = timing.replace('*', '')
 
     if (locationName === 'SEYMOUR SG Platform') locationName = 'Seymour'
     if (locationName === 'Clarkefield (new code)') locationName = 'Clarkefield'
     if (locationName === 'Riddels Creek') locationName = 'Riddells Creek'
+
+    if (['Arr', 'Dep', 'Plat'].includes(locationName)) locationName = lastLocation
 
     let stationData
     if (nonStations[locationName]) return
@@ -101,6 +103,10 @@ async function parseTimings(names, types, trip) {
         return
       }
     }
+
+    lastLocation = locationName
+    if (!timing || timing.includes('…')) return
+    timing = timing.replace('*', '')
 
     let stationPlatform = stationData.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000) // We don't want to assign to the NSW stop
     if (!stationPlatform) stationPlatform = stationData.bays.find(bay => bay.mode === 'regional train') // Loosen a bit
@@ -303,7 +309,7 @@ database.connect({
         return stop
       })
     }
-
+    console.log(trip.origin, trip.runID, trip.forming, trip.departureTime, trip.destination)
     return trip
   })
 
