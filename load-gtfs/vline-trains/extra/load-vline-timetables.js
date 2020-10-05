@@ -79,7 +79,10 @@ async function parseTimings(names, types, trip) {
     if (locationName === 'Clarkefield (new code)') locationName = 'Clarkefield'
     if (locationName === 'Riddels Creek') locationName = 'Riddells Creek'
 
-    if (['Arr', 'Dep', 'Plat'].includes(locationName)) locationName = lastLocation
+    if (['Arr', 'Dep', 'Plat'].includes(locationName)) {
+      type = locationName
+      locationName = lastLocation
+    }
 
     let stationData
     if (nonStations[locationName]) return
@@ -159,10 +162,15 @@ async function parseTimings(names, types, trip) {
         locations[locationName].departureTime = timing.slice(0, 5)
         locations[locationName].departureTimeMinutes = minutesAftMidnight
       } else if (type === 'Plat') {
-        locations[locationName].platform = timing.trim()
+        if (locations[locationName].platform) { // because plat is already filled this would be track
+          locations[locationName].track = timing.trim()
+        } else {
+          locations[locationName].platform = timing.trim()
+        }
+
       }
     } else if (timing.length === 1) {
-      locations[locationName].track = timing
+      locations[locationName].track = timing.trim()
     }
   })
 
@@ -309,7 +317,6 @@ database.connect({
         return stop
       })
     }
-    console.log(trip.origin, trip.runID, trip.forming, trip.departureTime, trip.destination)
     return trip
   })
 
