@@ -27,13 +27,14 @@ async function inboundMessage(data) {
 }
 
 async function handleMessage(subject, text) {
-  text = text.replace(/\n/g, ' ').replace(/\u00A0/g, ' ').replace(/More information at.+/, '').replace(/  +/g, ' ').trim()
+  text = text.replace(/\n/g, ' ').replace(/\u00A0/g, ' ').replace(/More information at.+/, '').replace(/-/g, ' to ').replace(/  +/g, ' ').trim()
   stream.write(`Got mail: Subject: ${subject}. Text: ${text.replace(/\n/g, ' ')}\n`)
+
+  // Tracker makes this kinda useless now
+  if (subject.includes('Service reduction') || text.includes('reduced capacity')) return
 
   if (subject.includes('Service cancellation') || text.includes('will not run') || (text.includes('no longer run') && !text.includes('no longer run to ') && !text.includes('no longer run between')) || text.includes('has been cancelled')) {
     await handleCancellation(database, text)
-  } else if (subject.includes('Service reduction') || text.includes('reduced capacity')) {
-    return // Tracker makes this kinda useless now
   } else if (text.includes('been reinstated')) {
     await handleReinstatement(database, text)
   } else if (text.includes('will not stop at') || text.includes('will run express')) {

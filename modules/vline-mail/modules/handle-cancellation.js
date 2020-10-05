@@ -53,7 +53,7 @@ async function setServiceAsCancelled(db, departureTime, origin, destination, isC
 }
 
 async function cancellation(db, text) {
-  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?)(?: to | *- *)([\w ]*?) (?:service|train|will|has)/)
+  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) to ([\w ]*?) (?:service|train|will|has)/)
 
   if (service) {
     let departureTime = service[1].replace('.', ':')
