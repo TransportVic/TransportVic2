@@ -98,7 +98,7 @@ async function getDeparturesFromYT(stop, db) {
     let {responseObject} = JSON.parse(await utils.request(urls.yarraStopNext3.format(tramTrackerID)))
 
     await async.forEach(responseObject, async tramDeparture => {
-      let {Prediction, AVMTime, HeadBoardRouteNo, RunNo, Schedule, TramDistance, VehicleNo, Destination} = tramDeparture
+      let {Prediction, AVMTime, HeadBoardRouteNo, RunNo, Schedule, TramDistance, VehicleNo, Destination, SpecialEventMessage} = tramDeparture
       let scheduledTimeMS = parseInt(Schedule.slice(0, -1).match(/(\d+)\+/)[1])
       let avmTimeMS = parseInt(AVMTime.slice(0, -1).match(/(\d+)\+/)[1])
 
@@ -132,8 +132,19 @@ async function getDeparturesFromYT(stop, db) {
         if (scheduledDepartureTime.diff(now, 'minutes') > 90) return
       }
 
-      trip = await trimTrip(db, Destination, coreRoute, trip, day)
-      let hasBussingMessage = Destination.toLowerCase().includes('bus around')
+      if (!trip.hasBeenTrimmed) {
+        if (SpecialEventMessage.includes('replace') && SpecialEventMessage.includes('trams')) {
+          let mainMessage = SpecialEventMessage.replace(/.*:/, '').trim()
+          let routeData = mainMessage.replace(/between.*/, '').trim()
+          let routes = routeData.match(/(\d+)/g)
+          if (routes.includes(coreRoute)) {
+            let stops = mainMessage.match(/Stop \w* [ \w]*/g).map(stop => utils.adjustStopName(stop.match(/Stop \w* ([ \w]*)/)[1].trim()))
+            trip = await trimTrip.trimFromMessage(db, stops, stopGTFSID, trip, day)
+          }
+        } else {
+          trip = await trimTrip.trimFromDestination(db, Destination, coreRoute, trip, day)
+        }
+      }
 
       let loopDirection
       if (routeGTFSID === '3-35') {
@@ -177,8 +188,7 @@ async function getDeparturesFromYT(stop, db) {
         loopDirection,
         vehicle: tram,
         routeNumber: HeadBoardRouteNo,
-        sortNumber: coreRoute,
-        hasBussingMessage
+        sortNumber: coreRoute
       })
     })
   })

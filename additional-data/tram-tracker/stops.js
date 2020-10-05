@@ -78,5 +78,6 @@ module.exports = [
   'south-melbourne/montague-street-light-rail',
   'caulfield/jasmine-street-glenhuntly-road',
   'caulfield/bambra-road-glenhuntly-road',
-  'melbourne-city/swanston-street-bourke-street'
+  'melbourne-city/swanston-street-bourke-street',
+  'melbourne-city/spencer-street-collins-street'
 ]

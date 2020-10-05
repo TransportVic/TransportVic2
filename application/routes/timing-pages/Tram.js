@@ -48,7 +48,6 @@ async function loadDepartures(req, res) {
     let {destination} = departure.trip
     if (!utils.isStreet(destinationShortName)) destination = destinationShortName
     departure.destination = tramDestinations[destination] || destination
-    if (departure.hasBussingMessage) departure.destination += ' (Bus Around Works)'
 
     let destinationStopTiming = departure.trip.stopTimings.slice(-1)[0]
     let destinationStop = await stops.findDocument({
