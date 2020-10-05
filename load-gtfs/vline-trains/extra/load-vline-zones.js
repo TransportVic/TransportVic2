@@ -37,7 +37,7 @@ database.connect({
       let zone = properties.STOP_ZONE.slice(5)
 
       if (zone === '') { // non-myki zone
-        await updateStop(properties.STATION, 'Paper Ticketed')
+        await updateStop(properties.STATION, ['Paper Ticketed'])
       } else {
         let zones = zone.split(', ').map(e => parseInt(e)).sort((a, b) => a - b)
         if (zones.includes(1) && zones.length > 1) zones.shift()

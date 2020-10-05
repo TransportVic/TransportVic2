@@ -30,6 +30,13 @@ block content
     div.inputSection
       input(type="text" name="service" value="" placeholder="Service Number" autocomplete="off")
       input(type="submit" value="Go")
+  br
+  form(method="GET" action="/tram/tracker/shift")#byShift
+    label(for="shift") Shift:
+    br
+    div.inputSection
+      input(type="text" name="shift" value="" placeholder="Shift Number" autocomplete="off")
+      input(type="submit" value="Go")
         
 //-
   h2 Alternatively,

@@ -113,9 +113,24 @@ router.get('/consist', async (req, res) => {
     .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
     .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
 
+  let operationDays = await vlineTrips.distinct('date', { consist })
+  let servicesByDay = {}
+
+  await async.forEachSeries(operationDays, async date => {
+    let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+
+    servicesByDay[humanDate] = {
+      services: (await vlineTrips.distinct('runID', {
+        consist, date
+      })).sort((a, b) => a - b),
+      date
+    }
+  })
+
   res.render('tracker/vline/by-consist', {
     trips,
     consist,
+    servicesByDay,
     date: utils.parseTime(date, 'YYYYMMDD')
   })
 })

@@ -53,7 +53,7 @@ async function requestTimings() {
 
     setTimeout(async () => {
       await getDepartures(dbStop, database)
-    }, i * 20000)
+    }, i * 15000)
   })
 
   updateRefreshRate()
