@@ -9,11 +9,11 @@ const tramFleet = require('../../../tram-fleet')
 const router = new express.Router()
 
 function adjustTrip(trip, date, today, minutesPastMidnightNow) {
-  let origin = trip.origin
-  let destination = trip.destination
-
   let e = utils.encodeName
   trip.url = `/tram/run/${e(trip.origin)}/${trip.departureTime}/${e(trip.destination)}/${trip.destinationArrivalTime}/${trip.date}`
+
+  let origin = utils.getDestinationName(trip.origin)
+  let destination = utils.getDestinationName(trip.destination)
 
   trip.destination = tramDestinations[destination] || destination
   trip.origin = tramDestinations[origin] || origin

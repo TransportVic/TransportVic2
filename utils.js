@@ -421,5 +421,12 @@ module.exports = {
   },
   getProperStopName: ptvStopName => {
     return module.exports.adjustRawStopName(stopNameModifier(module.exports.adjustStopName(ptvStopName.trim().replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, ''))))
+  },
+  getDestinationName: stopName => {
+    stopName = stopName.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
+
+    let shortName = module.exports.getStopName(stopName)
+    if (module.exports.isStreet(shortName)) return stopName
+    else return shortName
   }
 }
