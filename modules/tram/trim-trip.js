@@ -1,6 +1,17 @@
 const async = require('async')
+const utils = require('../../utils')
 const TimedCache = require('../../TimedCache')
 const EventEmitter = require('events')
+const tramDestinations = require('../../additional-data/tram-destinations')
+const { closest } = require('fastest-levenshtein')
+
+let tramDestinationLookup = {}
+Object.keys(tramDestinations).forEach(dest => {
+  let humanName = tramDestinations[dest]
+  if (!tramDestinationLookup[humanName]) tramDestinationLookup[humanName] = []
+  tramDestinationLookup[humanName].push(dest)
+})
+let knownDestinations = Object.keys(tramDestinationLookup)
 
 let stopsCache = {}
 let stopsLocks = {}
@@ -71,13 +82,26 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
 module.exports.trimFromMessage = async function(db, destinations, currentStopGTFSID, trip, operationDay) {
   let stops = db.getCollection('stops')
   let indexes = []
+  let destinationsFound
 
   await async.forEachOf(trip.stopTimings, async (stop, i) => {
     let stopData = await getStopData(stop.stopGTFSID, stops)
-    if (destinations.some(dest => stopData.tramTrackerNames.includes(dest))) {
+    let destination = destinations.find(dest => stopData.tramTrackerNames.includes(dest))
+    if (destination) {
       indexes.push(i)
+      destinationsFound = destination
     }
   })
+
+  if (indexes.length === 1) {
+    let missingDestination = destinations.find(dest => destinationsFound !== dest)
+    let bestDestination = closest(missingDestination, knownDestinations)
+    let stopNames = tramDestinationLookup[bestDestination]
+    trip.stopTimings.forEach((stop, i) => {
+      let stopDestinationName = utils.getDestinationName(stop.stopName)
+      if (stopNames.includes(stopDestinationName)) indexes.push(i)
+    })
+  }
 
   let sortedIndexes = indexes.sort()
 
