@@ -23,6 +23,7 @@ async function getStopData(stopGTFSID, stops) {
 async function modifyTrip(db, trip, operationDay) {
   trip.origin = trip.stopTimings[0].stopName
   trip.destination = trip.stopTimings.slice(-1)[0].stopName
+  trip.departureTime = trip.stopTimings[0].departureTime
   trip.destinationArrivalTime = trip.stopTimings.slice(-1)[0].arrivalTime
   trip.operationDays = operationDay
   trip.hasBeenTrimmed = true
