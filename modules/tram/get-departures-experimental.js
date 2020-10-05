@@ -96,7 +96,7 @@ async function getDeparturesFromYT(stop, db) {
     let {stopGTFSID, tramTrackerID} = bay
 
     let {responseObject} = JSON.parse(await utils.request(urls.yarraStopNext3.format(tramTrackerID)))
-    
+
     await async.forEach(responseObject, async tramDeparture => {
       let {Prediction, AVMTime, HeadBoardRouteNo, RunNo, Schedule, TramDistance, VehicleNo, Destination} = tramDeparture
       let scheduledTimeMS = parseInt(Schedule.slice(0, -1).match(/(\d+)\+/)[1])
@@ -133,7 +133,7 @@ async function getDeparturesFromYT(stop, db) {
       }
 
       trip = await trimTrip(db, Destination, coreRoute, trip, day)
-      let hasBussingMessage = Destination.includes('bus around')
+      let hasBussingMessage = Destination.toLowerCase().includes('bus around')
 
       let loopDirection
       if (routeGTFSID === '3-35') {

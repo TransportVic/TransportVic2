@@ -40,9 +40,7 @@ function updateRefreshRate() {
 }
 
 function pickRandomStops() {
-  let size = 20
-  if (isNight()) size = Math.floor(size / 2)
-  return shuffle(stops).slice(0, size)
+  return shuffle(stops).slice(0, 20)
 }
 
 async function requestTimings() {

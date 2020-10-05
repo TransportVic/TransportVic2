@@ -46,7 +46,7 @@ async function loadDepartures(req, res) {
     if (!utils.isStreet(destinationShortName)) destination = destinationShortName
     departure.destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
 
-    let serviceData = busDestinations.service[departure.trip.routeGTFSID] || busDestinations.service[departure.routeNumber] || {}
+    let serviceData = busDestinations.service[departure.trip.routeGTFSID] || busDestinations.service[departure.sortNumber] || {}
     departure.destination = serviceData[departure.destination]
       || busDestinations.generic[departure.destination]
       || busDestinations.generic[fullDestination] || departure.destination
