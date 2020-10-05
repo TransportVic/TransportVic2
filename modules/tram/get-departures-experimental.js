@@ -59,24 +59,16 @@ async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, route
     })
 
     if (timetables.length === 1) return timetables[0]
-    else if (timetables.length === 2) {
-      let first = timetables[0], second = timetables[1]
-      let firstScore = findScore(first)
-      let secondScore = findScore(second)
+    else if (timetables.length > 1) {
+      let groups = timetables.map(timetable => ({
+        timetable,
+        directScore: findScore(timetable),
+        distance: distance(destination, utils.getStopName(tramDestinations[utils.getDestinationName(timetable.destination)] || timetable.destination))
+      }))
 
-      let firstDestination = tramDestinations[first.destination] || first.destination
-      let secondDestination = tramDestinations[second.destination] || second.destination
-
-      if (firstScore === secondScore) {
-        firstScore = distance(destination, utils.getStopName(firstDestination))
-        secondScore = distance(destination, utils.getStopName(secondDestination))
-      }
-
-      if (firstScore < secondScore) {
-        return first
-      } else {
-        return second
-      }
+      return groups.sort((a, b) => {
+        return a.directScore - b.directScore || a.distance - b.distance
+      })[0].timetable
     }
   }
 
