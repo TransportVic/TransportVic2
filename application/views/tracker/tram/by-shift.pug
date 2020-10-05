@@ -17,9 +17,9 @@ block content
   h1.title Tracking Shift #{shift} on #{date.format('dddd, MMMM Do YYYY')}
   for trip in tripsToday
     div(class=`trip ${trip.active ? '' : 'inactive'}`)
-      a(href=trip.url) #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
+      a(href=trip.url) #{trip.tram}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
 
   h1.title Past deployments:
-  for pastDate in Object.keys(servicesByDay).reverse()
-    a(href=`/tram/tracker/shift?shift=${shift}&date=${servicesByDay[pastDate].date}`).pastDeployment #{pastDate} - #{servicesByDay[pastDate].services.join(', ')}
+  for pastDate in Object.keys(tramsByDay).reverse()
+    a(href=`/tram/tracker/shift?shift=${shift}&date=${tramsByDay[pastDate].date}`).pastDeployment #{pastDate} - #{tramsByDay[pastDate].trams.join(', ')}
     br

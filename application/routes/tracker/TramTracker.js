@@ -172,7 +172,7 @@ router.get('/shift', async (req, res) => {
   if (!shift) {
     return res.render('tracker/tram/by-shift', {
       tripsToday: [],
-      servicesByDay: {},
+      tramsByDay: {},
       shift: '?',
       date: utils.parseTime(date, 'YYYYMMDD')
     })
@@ -191,22 +191,23 @@ router.get('/shift', async (req, res) => {
   let operationDays = await tramTrips.distinct('date', {
     shift
   })
-  let servicesByDay = {}
+  let tramsByDay = {}
 
   await async.forEachSeries(operationDays, async date => {
-    let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+    let trams = await tramTrips.distinct('tram', {
+      shift, date
+    })
 
-    servicesByDay[humanDate] = {
-      services: await tramTrips.distinct('routeNumber', {
-        shift, date
-      }),
+    let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+    tramsByDay[humanDate] = {
+      trams: trams.map(tram => `${tramFleet.getModel(tram)}.${tram}`),
       date
     }
   })
 
   res.render('tracker/tram/by-shift', {
     tripsToday,
-    servicesByDay,
+    tramsByDay,
     shift,
     date: utils.parseTime(date, 'YYYYMMDD')
   })
