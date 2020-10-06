@@ -268,21 +268,14 @@ async function getDepartures(stop, db) {
       let extraScheduledTrips = scheduledDepartures.filter(d => !tripIDsSeen.includes(i(d.trip)) && d.actualDepartureTime.diff(now, 'seconds') > -75)
 
       departures = ptvDepartures.concat(extraScheduledTrips)
-
-      let sortedDepartures = departures.sort((a, b) => {
-        return a.actualDepartureTime - b.actualDepartureTime
-      }).sort((a, b) => {
-        let gtfsDirection = null
-        if (a.trip && b.trip && a.trip.gtfsDirection && b.trip.gtfsDirection)
-          gtfsDirection = a.trip.gtfsDirection - b.trip.gtfsDirection
-        return gtfsDirection ||
-          a.destination.length - b.destination.length ||
-          a.actualDepartureTime - b.actualDepartureTime
-      })
     } catch (e) {
       console.log('Failed to get bus timetables', e)
       departures = scheduledDepartures
     }
+
+    departures = departures.sort((a, b) => {
+      return a.actualDepartureTime - b.actualDepartureTime
+    })
 
     let nightBusIncluded = shouldGetNightbus(utils.now())
     let shouldShowRoad = stop.bays.filter(bay => {
