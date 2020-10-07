@@ -187,6 +187,7 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
   let routeID = route.route_id
   let stationName = station.stopName.slice(0, -16)
   if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
+  let { stopGTFSID } = station.bays.find(bay => bay.mode === 'metro train')
 
   let runDestination = utils.adjustStopName(run.destination_name)
   let isRailReplacementBus = departure.flags.includes('RRB-RUN')
