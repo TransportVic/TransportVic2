@@ -13,7 +13,7 @@ let refreshRate = 10
 function isDay() {
   let minutes = utils.getMinutesPastMidnightNow()
 
-  return 270 <= minutes && minutes <= 1260 // 0500 - 2100
+  return 300 <= minutes && minutes <= 1260 // 0500 - 2100
 }
 
 function isNight() {
