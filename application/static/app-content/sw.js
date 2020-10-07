@@ -74,8 +74,6 @@ self.addEventListener('install', e => {
       '/static/fonts/NetworkSans-2018-Medium.ttf',
       '/static/fonts/NetworkSans-2018-Regular.ttf',
 
-      '/static/images/interactives/trains-new.svg',
-
       '/static/images/decals/ac.svg',
       '/static/images/decals/wheelchair.svg',
 

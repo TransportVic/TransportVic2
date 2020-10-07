@@ -21,7 +21,7 @@ exec('git describe --always', {
   })
 })
 
-fs.readFile(path.join(__dirname, '../static/images/interactives/trains-new.svg'), (err, data) => {
+fs.readFile(path.join(__dirname, '../static/images/interactives/railmap.svg'), (err, data) => {
   mapSVG = data.toString()
 })
 
