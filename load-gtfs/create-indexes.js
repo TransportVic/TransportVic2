@@ -22,6 +22,7 @@ database.connect({
   let gtfsTimetables = await getCollection('gtfs timetables')
 
   let liveTimetables = await getCollection('live timetables')
+  let metroTrips = await getCollection('metro trips')
   let vlineTrips = await getCollection('vline trips')
   let tramTrips = await getCollection('tram trips')
   let smartrakIDs = await getCollection('smartrak ids')
@@ -185,6 +186,26 @@ database.connect({
   }, {name: 'live stop timings index'})
 
   console.log('Created live timetables index')
+
+  await metroTrips.createIndex({
+    date: 1,
+    runID: 1,
+    origin: 1,
+    destination: 1,
+    departureTime: 1,
+    destinationArrivalTime: 1
+  }, {name: 'metro trips index', unique: true})
+
+  await metroTrips.createIndex({
+    date: 1,
+    consist: 1
+  }, {name: 'consist index'})
+
+  await metroTrips.createIndex({
+    consist: 1
+  }, {name: 'undated consist index'})
+
+  console.log('Created metro trips index')
 
   await vlineTrips.createIndex({
     date: 1,

@@ -26,6 +26,9 @@ if (modules.tracker && modules.tracker.vline)
 if (modules.tracker && modules.tracker.xpt)
   require('../modules/xpt/xpt-updater')
 
+if (modules.tracker && modules.tracker.metro)
+  require('../modules/trackers/metro')
+
 if (modules.preloadCCL)
   require('../modules/preload-ccl')
 
