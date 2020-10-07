@@ -194,12 +194,7 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
 
   let runID = ''
   if (!isRailReplacementBus && ptvRunID > 948000) {
-    runID = parseInt(ptvRunID) - 948000
-    if (runID > 40000) {
-      runID = `X${runID - 40000}`
-    } else {
-      runID = runID.toString()
-    }
+    runID = utils.getRunID(ptvRunID)
   }
 
   let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)

@@ -180,12 +180,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     if (['Belgrave', 'Lilydale', 'Alamein', 'Glen Waverley'].includes(routeName) && vehicle) {
       vehicle = vehicle.replace('Comeng', 'Xtrapolis')
     }
-    runID = ptvRunID - 948000
-    if (runID > 40000) {
-      runID = `X${runID - 40000}`
-    } else {
-      runID = runID.toString()
-    }
+    runID = utils.getRunID(ptvRunID)
   }
 
 

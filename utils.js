@@ -428,5 +428,13 @@ module.exports = {
     let shortName = module.exports.getStopName(stopName)
     if (module.exports.isStreet(shortName)) return stopName
     else return shortName
+  },
+  getRunID: ptvRunID => {
+    let runID = ptvRunID - 948000
+    if (runID > 40000) {
+      return `X${module.exports.pad((runID - 40000).toString(), 3, '0')}`
+    } else {
+      return module.exports.pad(runID.toString(), 4, '0')
+    }
   }
 }
