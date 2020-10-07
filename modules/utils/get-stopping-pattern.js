@@ -120,7 +120,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
         departureTimeMinutes %= 1440
       }
     } else {
-      departureTimeMinutes %= 1400
+      departureTimeMinutes %= 1440
     }
 
     if (departureTimeMinutes < previousDepartureTime)

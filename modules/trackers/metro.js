@@ -48,7 +48,8 @@ function isNight() {
 
   if (['Sat', 'Sun'].includes(dayOfWeek)) { // Considering the true day, NN runs on sat & sun morn
     return minutes < 300
-  }
+  } // Do not bother with after midnight as the data is always timetabled
+  // However with NN it is more troublesome to define 0-3am as excluded so...
 
   return false
 }
