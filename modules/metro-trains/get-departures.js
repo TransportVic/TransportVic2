@@ -322,7 +322,15 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
     if (!platform && !isRailReplacementBus) return
 
-    let runID = run.vehicle_descriptor.id || ''
+    let runID = ''
+    if (!isRailReplacementBus && run.run_ref > 948000) {
+      runID = parseInt(run.run_ref) - 948000
+      if (runID > 40000) {
+        runID = `X${runID - 40000}`
+      } else {
+        runID = runID.toString()
+      }
+    }
     let vehicleType = run.vehicle_descriptor.description
 
     let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)

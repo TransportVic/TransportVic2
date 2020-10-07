@@ -391,7 +391,7 @@ module.exports = {
 
     if (blankOld && +timeDifference <= -30000) return ''
     if (+timeDifference <= 60000) return 'Now'
-    if (+timeDifference > 1440 * 60 * 1000) return utils.getHumanDateShort(scheduledDepartureTime)
+    if (+timeDifference > 1440 * 60 * 1000) return module.exports.getHumanDateShort(time)
 
     let hours = timeDifference.get('hours')
     let minutes = timeDifference.get('minutes')
