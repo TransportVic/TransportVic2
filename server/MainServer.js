@@ -7,6 +7,7 @@ const minify = require('express-minify')
 const fs = require('fs')
 const uglifyEs = require('uglify-es')
 const rateLimit = require('express-rate-limit')
+const utils = require('../utils')
 
 const DatabaseConnection = require('../database/DatabaseConnection')
 
@@ -29,6 +30,19 @@ if (modules.preloadCCL)
   require('../modules/preload-ccl')
 
 let serverStarted = false
+
+let bandwithFilePath = path.join(__dirname, '../bandwidth.json')
+let serverStats = {}
+fs.readFile(bandwithFilePath, (err, data) => {
+  if (data) {
+    serverStats = JSON.parse(data)
+  }
+})
+
+setInterval(() => {
+  fs.writeFile(bandwithFilePath, JSON.stringify(serverStats, null, 2), () => {
+  })
+}, 1000 * 60)
 
 module.exports = class MainServer {
   constructor () {
@@ -72,6 +86,20 @@ module.exports = class MainServer {
     app.use((req, res, next) => {
       let reqURL = req.url + ''
       let start = +new Date()
+      let date = utils.getYYYYMMDDNow()
+      if (!serverStats[date]) serverStats[date] = 0
+
+      let bytes = 200 // Roughly accounting for headers since... they don't show up?
+      let {write, end} = res.socket
+      res.socket.write = (x, y, z) => {
+        write.bind(res.socket, x, y, z)()
+        bytes += x.length
+      }
+
+      res.socket.end = (x, y, z) => {
+        end.bind(res.socket, x, y, z)()
+        if (x) bytes += x.length
+      }
 
       let endResponse = res.end
       res.end = (x, y, z) => {
@@ -80,10 +108,12 @@ module.exports = class MainServer {
         let diff = end - start
 
         if (diff > 20 && !reqURL.startsWith('/static/')) {
-          stream.write(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff}\n`, () => {})
+          stream.write(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff} ${bytes}B\n`, () => {})
 
           this.past50ResponseTimes = [...this.past50ResponseTimes.slice(-49), diff]
         }
+
+        serverStats[date] += bytes
       }
 
       next()
