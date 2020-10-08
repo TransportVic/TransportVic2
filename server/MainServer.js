@@ -273,6 +273,10 @@ module.exports = class MainServer {
         path: '/vline/tracker',
         enable: modules.tracker && modules.tracker.vline
       },
+      'tracker/MetroTracker': {
+        path: '/metro/tracker',
+        enable: modules.tracker && modules.tracker.metro
+      },
 
       'route-data/RegionalBusRoute': {
         path: '/bus/route/regional',

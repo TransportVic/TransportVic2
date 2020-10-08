@@ -1,0 +1,65 @@
+extends ../../layout
+
+block head
+  -
+    title = 'TransportVic - Tracker/Metro'
+    description = 'TransportVic Metro Tracker'
+  title #{title}
+  link(rel='preload' as='style' href='/static/css/form.css')
+  link(rel='preload' as='script' href='/static/scripts/dropdown.js')
+  
+block title
+  span Metro Tracker
+  
+block style
+  link(rel='stylesheet' href='/static/css/form.css')
+    
+block scripts
+  script(src='/static/scripts/dropdown.js')
+
+block content
+  h1#title Metro Tracker
+  h2 Track Your Train:
+  br
+  form(action='/metro/tracker/date' method='get')#byDate
+    label(for="date") On Date:
+    br
+    div.inputSection
+      input(type="text" maxlength="10" name="date" value="" placeholder="DD/MM/YYYY (Blank for today)" autocomplete="off")
+      input(type="submit" value="Go")
+  //- form(action='/metro/tracker/line' method='get')#byLine
+    label(for="line") By Line:
+    br
+    div.inputSection
+      div.selectorContainer
+      div.customDropdown
+        select(name="line" autocomplete="off")
+          option Alamein
+          option Belgrave
+          option Craigieburn
+          option Cranbourne
+          option Frankston
+          option Glen Waverley
+          option Hurstbridge
+          option Lilydale
+          option Mernda
+          option Pakenham
+          option Sandringham
+          option Sunbury
+          option Upfield
+          option Werribee
+          option Williamstown
+        span Alamein
+      input(type="submit" value="Go")
+  form(action='/metro/tracker/consist' method='get')#byConsist
+    label(for="consist") By Consist:
+    br
+    div
+      input(type="text" maxlength="8" name="consist" value="" placeholder="Carriage Number" autocomplete="off")
+      br
+      div.inputSection
+        input(type="text" maxlength="10" name="date" value="" placeholder="DD/MM/YYYY (Blank for today)" autocomplete="off")
+        input(type="submit" value="Go")
+  //- br
+  //- h2 Alternatively,
+  //- a#highlights(href="/metro/tracker/highlights") View Today's Highlights

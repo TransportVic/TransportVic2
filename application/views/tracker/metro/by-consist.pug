@@ -1,0 +1,25 @@
+extends ../../layout
+
+block head
+  -
+    title = 'TransportVic - Tracker/Metro - By Consist'
+    description = 'Tracking all Metro trips by consist'
+  title #{title}
+  link(rel='preload' as='style' href='/static/css/tracker/results.css')
+  
+block title
+  span Metro Tracker - By Consist
+
+block style
+  link(rel='stylesheet' href='/static/css/tracker/results.css')
+
+block content
+  h1.title Tracking #{consist} Trips on #{date.format('dddd, MMMM Do YYYY')}
+  for trip in trips
+    div(class=`trip ${trip.active ? '' : 'inactive'}`)
+      a(href=trip.url) ##{trip.runID}: #{trip.departureTime} #{trip.origin.slice(0, -16)} - #{trip.destination.slice(0, -16)}: #{trip.consist.join('-')}
+
+  h1.title Past deployments:
+  for pastDate in Object.keys(servicesByDay).reverse()
+    a(href=`/vline/tracker/consist?consist=${consist}&date=${servicesByDay[pastDate].date}`).pastDeployment #{pastDate} - #{servicesByDay[pastDate].services.join(', ')}
+    br

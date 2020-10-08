@@ -1,0 +1,20 @@
+extends ../../layout
+
+block head
+  -
+    title = 'TransportVic - Tracker/Metro - By Date'
+    description = 'Tracking all Metro trips on ' + date.format('dddd, MMMM Do YYYY')
+  title #{title}
+  link(rel='preload' as='style' href='/static/css/tracker/results.css')
+  
+block title
+  span Metro Tracker - By Date
+
+block style
+  link(rel='stylesheet' href='/static/css/tracker/results.css')
+
+block content
+  h1.title Tracking Metro Trips on #{date.format('dddd, MMMM Do YYYY')}
+  for trip in trips
+    div(class=`trip ${trip.active ? '' : 'inactive'}`)
+      a(href=trip.url) ##{trip.runID}: #{trip.departureTime} #{trip.origin.slice(0, -16)} - #{trip.destination.slice(0, -16)}: #{trip.consist.join('-')}
