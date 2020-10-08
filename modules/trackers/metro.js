@@ -7,7 +7,7 @@ const cheerio = require('cheerio')
 const moment = require('moment')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const { findTrip } = require('../metro-trains/get-departures')
-const metroConsists = require('../../additional-data/metro-consists')
+const metroConsists = require('../../additional-data/metro-tracker/metro-consists')
 const stops = require('../../additional-data/metro-tracker/stops')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
@@ -170,7 +170,11 @@ async function requestTimings() {
   let stop = pickRandomStop()
   console.log('requesting timings for', stop)
 
-  await getDepartures(stop)
+  try {
+    await getDepartures(stop)
+  } catch (e) {
+    console.log('Failed to get metro trips this round, skipping')
+  }
 
   updateRefreshRate()
   setTimeout(requestTimings, refreshRate * 60 * 1000)

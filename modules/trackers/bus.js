@@ -47,16 +47,21 @@ function pickRandomStops() {
 
 async function requestTimings() {
   let stops = pickRandomStops()
-  await async.forEachOf(stops, async (stop, i) => {
-    console.log('requesting timings for', stop)
-    let [codedSuburb, codedName] = stop.split('/')
-    let dbStop = await dbStops.findDocument({ codedName, codedSuburb })
-    if (!dbStop) return console.log('could not find', stop)
 
-    setTimeout(async () => {
-      await getDepartures(dbStop, database)
-    }, i * 15000)
-  })
+  try {
+    await async.forEachOf(stops, async (stop, i) => {
+      console.log('requesting timings for', stop)
+      let [codedSuburb, codedName] = stop.split('/')
+      let dbStop = await dbStops.findDocument({ codedName, codedSuburb })
+      if (!dbStop) return console.log('could not find', stop)
+
+      setTimeout(async () => {
+        await getDepartures(dbStop, database)
+      }, i * 15000)
+    })
+  } catch (e) {
+    console.log('Failed to get bus trips this round')
+  }
 
   updateRefreshRate()
   setTimeout(requestTimings, refreshRate * 60 * 1000)
