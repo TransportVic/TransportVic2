@@ -103,21 +103,61 @@ async function getDepartures(stop) {
 
     let query = {
       date: operationDate,
-      runID,
-      origin: trip.trueOrigin,
-      destination: trip.trueDestination,
-      departureTime: trip.trueDepartureTime,
-      destinationArrivalTime: trip.trueDestinationArrivalTime
+      runID
     }
 
+    let finalConsist = []
     let consist = run.vehicle_descriptor.id
+    if (consist.match(/train\d+/)) {
+      // let carriagePart =
+      return // For now we don't know what this means so skip it
+    }
+
     let carriages = consist.split('-')
-    let mCars = carriages.filter(carriage => carriage.endsWith('M'))
-    let setsFromMCars = metroConsists.filter(set => mCars.some(mCar => set.includes(mCar)))
+
+    if (carriages.length <= 2) {
+      finalConsist = metroConsists.filter(consist => carriages.some(carriage => consist.includes(carriage))).reduce((a, e) => {
+        return a.concat(e)
+      }, [])
+    } else {
+      let mCars = carriages.filter(carriage => carriage.endsWith('M'))
+      let tCars = carriages.filter(carriage => carriage.endsWith('T'))
+      let mCarNumbers = mCars.map(carriage => parseInt(carriage.slice(0, -1)))
+      let anyPair = mCarNumbers.find(carriage => {
+        // Only consider odd carriage as lower & find if it has + 1
+        return (carriage % 2 === 1) && mCarNumbers.some(other => other == carriage + 1)
+      })
+
+      let mtmMatched
+      if (anyPair) {
+        mtmMatched = metroConsists.find(consist => consist.includes(anyPair + 'M'))
+      } else {
+        let consistFromTCars = tCars.map(tCar => metroConsists.find(consist => consist.includes(tCar)))
+        mtmMatched = consistFromTCars.find(potentialConsist => {
+          return mCars.includes(potentialConsist[0]) && mCars.includes(potentialConsist[2])
+        })
+      }
+
+      if (mtmMatched) {
+        finalConsist = finalConsist.concat(mtmMatched)
+        if (carriages.length === 6) {
+          let tCarMatched = mtmMatched[1]
+          let otherCars = carriages.filter(carriage => !mtmMatched.includes(carriage))
+          let otherConsist = [otherCars[1], otherCars[0], otherCars[2]]
+          finalConsist = finalConsist.concat(otherConsist)
+        }
+      } else {
+        finalConsist = carriages
+      }
+    }
 
     let tripData = {
       ...query,
-      consist: setsFromMCars.reduce((a, b) => a.concat(b), [])
+      origin: trip.trueOrigin.slice(0, -16),
+      destination: trip.trueDestination.slice(0, -16),
+      departureTime: trip.trueDepartureTime,
+      destinationArrivalTime: trip.trueDestinationArrivalTime,
+      consist: finalConsist
     }
 
     await metroTrips.replaceDocument(query, tripData, {

@@ -20,7 +20,7 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
 
   if (destinationArrivalTimeMinutes < departureTimeMinutes) destinationArrivalTimeMinutes += 1440
 
-  trip.url = `/metro/run/${e(trip.origin).slice(0, -16)}/${trip.departureTime}/${e(trip.destination).slice(0, -16)}/${trip.destinationArrivalTime}/${tripDate}`
+  trip.url = `/metro/run/${e(trip.origin)}/${trip.departureTime}/${e(trip.destination)}/${trip.destinationArrivalTime}/${tripDate}`
 
   trip.departureTimeMinutes = departureTimeMinutes
   trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
@@ -85,6 +85,25 @@ router.get('/consist', async (req, res) => {
     servicesByDay,
     date: utils.parseTime(date, 'YYYYMMDD')
   })
+})
+
+router.get('/bot', async (req, res) => {
+  let {db} = res
+  let metroTrips = db.getCollection('metro trips')
+  let date = utils.getYYYYMMDDNow()
+
+  let {runID} = querystring.parse(url.parse(req.url).query)
+
+  if (runID) {
+    let tripsToday = await metroTrips.findDocuments({
+      date,
+      runID
+    }).sort({departureTime: 1}).toArray()
+
+    res.json(tripsToday.map(adjustTrip))
+  } else {
+    res.json([])
+  }
 })
 
 module.exports = router
