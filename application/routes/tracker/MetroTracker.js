@@ -92,6 +92,8 @@ router.get('/bot', async (req, res) => {
   let metroTrips = db.getCollection('metro trips')
   let date = utils.getYYYYMMDDNow()
 
+  res.header('Access-Control-Allow-Origin', '*')
+
   let {runID} = querystring.parse(url.parse(req.url).query)
 
   if (runID) {
