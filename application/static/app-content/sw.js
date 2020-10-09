@@ -69,7 +69,7 @@ self.addEventListener('install', e => {
       '/static/css/mockups/sss-new/coach.css',
       '/static/css/mockups/sss-new/platform.css',
 
-      '/static/fonts/Nunito.ttf',
+      '/static/fonts/Nunito.woff2',
       '/static/fonts/NetworkSans-2018-Bold.ttf',
       '/static/fonts/NetworkSans-2018-Medium.ttf',
       '/static/fonts/NetworkSans-2018-Regular.ttf',

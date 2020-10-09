@@ -1,7 +1,7 @@
 @font-face {
   font-family: Nunito;
   font-display: fallback;
-  src: local('Nunito Regular'), local('Nunito'), url(/static/fonts/Nunito.ttf);
+  src: local('Nunito Regular'), local('Nunito'), url(/static/fonts/Nunito.woff2);
 }
 
 html, body {
