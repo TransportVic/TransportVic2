@@ -115,6 +115,12 @@ async function getDepartures(stop) {
 
     let carriages = consist.split('-')
 
+    if (carriages.includes('333M') || carriages.includes('313M')) {
+      let exclude = ['333M', '313M', '314M', '334M', '1017T']
+      carriages = carriages.filter(carriage => !exclude.includes(carriage))
+      carriages = ['1017T', ...carriages, '314M', '334M']
+    }
+
     if (carriages.length <= 2) {
       finalConsist = metroConsists.filter(consist => carriages.some(carriage => consist.includes(carriage))).reduce((a, e) => {
         return a.concat(e)
@@ -173,6 +179,7 @@ async function requestTimings() {
   try {
     await getDepartures(stop)
   } catch (e) {
+    console.log(e)
     console.log('Failed to get metro trips this round, skipping')
   }
 

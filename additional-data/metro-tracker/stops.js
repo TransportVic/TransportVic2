@@ -43,5 +43,7 @@ module.exports = {
   'North Williamstown': 1146,
   'Altona': 1005,
   'Williams Landing': 1225,
-  'Melbourne Central': 1120
+  'Melbourne Central': 1120,
+  'Flinders Street': 1071,
+  'Southern Cross': 1181
 }

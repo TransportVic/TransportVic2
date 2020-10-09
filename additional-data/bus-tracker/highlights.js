@@ -82,7 +82,7 @@ module.exports = [{
   type: 'include'
 }, {
   name: 'CDC Tullamarine Specials',
-  track: ['CT3', 'CT4', 'CT7', 'CT8', 'CT12', 'CT13', 'CT17', 'CT18'],
+  track: ['CT3', 'CT4', 'CT7', 'CT8', 'CT12', 'CT13', 'CT17', 'CT18', 'CT20'],
   routes: [],
   type: 'exclude'
 }, {
