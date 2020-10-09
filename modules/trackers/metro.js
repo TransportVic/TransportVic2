@@ -115,10 +115,22 @@ async function getDepartures(stop) {
 
     let carriages = consist.split('-')
 
-    if (carriages.includes('333M') || carriages.includes('313M')) {
-      let exclude = ['333M', '313M', '314M', '334M', '1017T']
+    if (carriages.includes('313M') || carriages.includes('333M')) { // 313-333 withdrawn, replaced by 314-334
+      let exclude = ['333M', '313M', '314M', '334M', '1007T', '1017T']
       carriages = carriages.filter(carriage => !exclude.includes(carriage))
       carriages = ['1017T', ...carriages, '314M', '334M']
+    }
+
+    if (carriages.includes('330M') || carriages.includes('350M') || carriages.includes('691M') || carriages.includes('692M')) { // 691-692 withdrawn, replaced by 330-350
+      let exclude = ['330M', '350M', '691M', '692M', '1025T', '1196T']
+      carriages = carriages.filter(carriage => !exclude.includes(carriage))
+      carriages = ['1025T', ...carriages, '330M', '350M']
+    }
+
+    if (carriages.includes('527M') || carriages.includes('528M')) { // 695-696 withdrawn, replaced by 527-528
+      let exclude = ['527M', '528M', '695M', '696M', '1114T', '1198T']
+      carriages = carriages.filter(carriage => !exclude.includes(carriage))
+      carriages = ['1114T', ...carriages, '527M', '528M']
     }
 
     if (carriages.length <= 2) {
@@ -146,11 +158,11 @@ async function getDepartures(stop) {
 
       if (mtmMatched) {
         finalConsist = finalConsist.concat(mtmMatched)
-        if (carriages.length === 6) {
-          let tCarMatched = mtmMatched[1]
-          let otherCars = carriages.filter(carriage => !mtmMatched.includes(carriage))
-          let otherConsist = [otherCars[1], otherCars[0], otherCars[2]]
-          finalConsist = finalConsist.concat(otherConsist)
+
+        let otherCars = carriages.filter(carriage => !mtmMatched.includes(carriage))
+        let otherCarFull = metroConsists.find(consist => consist.includes(otherCars[0]))
+        if (otherCarFull) {
+          finalConsist = finalConsist.concat(otherCarFull)
         }
       } else {
         finalConsist = carriages
