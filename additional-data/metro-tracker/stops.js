@@ -40,6 +40,7 @@ module.exports = {
   'Ginifer': 1076,
   'Diggers Rest': 1055,
   'Yarraville': 1216,
+  'Williamstown Beach': 1212,
   'North Williamstown': 1146,
   'Altona': 1005,
   'Williams Landing': 1225,

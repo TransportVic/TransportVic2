@@ -37,19 +37,19 @@ async function getToken() {
 function isDay() {
   let minutes = utils.getMinutesPastMidnightNow()
 
-  return 300 <= minutes && minutes <= 1320 // 0500 - 2200
+  return 300 <= minutes && minutes <= 1380 // 0500 - 2300
 }
 
 function isNight() {
   let minutes = utils.getMinutesPastMidnightNow()
   let dayOfWeek = utils.getDayName(utils.now())
 
-  if (1321 <= minutes && minutes <= 1439) return true
+  if (1381 <= minutes && minutes <= 1439) return true // 2300 - 2359
 
   if (['Sat', 'Sun'].includes(dayOfWeek)) { // Considering the true day, NN runs on sat & sun morn
-    return minutes < 300
+    return minutes < 300 // 2359 - 0459
   } else { // Turns out consist data is still available, just no departure times
-    return minutes < 60
+    return minutes < 60 // 2359 - 0059
   }
 
   return false
@@ -57,7 +57,7 @@ function isNight() {
 
 function updateRefreshRate() {
   if (isDay()) refreshRate = 0.5
-  else if (isNight()) refreshRate = 3
+  else if (isNight()) refreshRate = 2
   else {
     let minutes = utils.getMinutesPastMidnightNow()
     if (minutes < 300) minutes += 1440

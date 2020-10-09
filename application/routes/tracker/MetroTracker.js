@@ -5,6 +5,26 @@ const router = new express.Router()
 const url = require('url')
 const querystring = require('querystring')
 const moment = require('moment')
+const rawLineRanges = require('../../../additional-data/metro-tracker/line-ranges')
+
+let lineRanges = {}
+
+Object.keys(rawLineRanges).forEach(line => {
+  let ranges = rawLineRanges[line]
+  lineRanges[line] = ranges.map(range => {
+    let lower = range[0]
+    let upper = range[1]
+    let prefix = range[2] || ''
+    let numbers = []
+    for (let n = lower; n <= upper; n++) {
+      if (n < 1000) {
+        n = utils.pad(n.toString(), prefix ? 3 : 4, '0')
+      }
+      numbers.push(prefix + n)
+    }
+    return numbers
+  }).reduce((a, e) => a.concat(e), [])
+})
 
 router.get('/', (req, res) => {
   res.render('tracker/metro/index')
@@ -46,6 +66,41 @@ router.get('/date', async (req, res) => {
 
   res.render('tracker/metro/by-date', {
     trips,
+    date: utils.parseTime(date, 'YYYYMMDD')
+  })
+})
+
+router.get('/line', async (req, res) => {
+  let {db} = res
+  let metroTrips = db.getCollection('metro trips')
+  let liveTimetables = db.getCollection('live timetables')
+
+  let today = utils.getYYYYMMDDNow()
+  let {date, line} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let baseLineRanges = lineRanges[line] || []
+
+  let additionalTDNs = await liveTimetables.distinct('runID', {
+    operationDays: date,
+    routeName: line
+  })
+
+  let trips = (await metroTrips.findDocuments({
+    date,
+    runID: {
+      $in: baseLineRanges.concat(additionalTDNs)
+    }
+  }).sort({destination: 1}).toArray())
+  .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
+  .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
+
+  res.render('tracker/metro/by-line', {
+    trips,
+    line,
     date: utils.parseTime(date, 'YYYYMMDD')
   })
 })

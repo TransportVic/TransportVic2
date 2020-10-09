@@ -27,7 +27,7 @@ block content
     div.inputSection
       input(type="text" maxlength="10" name="date" value="" placeholder="DD/MM/YYYY (Blank for today)" autocomplete="off")
       input(type="submit" value="Go")
-  //- form(action='/metro/tracker/line' method='get')#byLine
+  form(action='/metro/tracker/line' method='get')#byLine
     label(for="line") By Line:
     br
     div.inputSection
@@ -49,6 +49,7 @@ block content
           option Upfield
           option Werribee
           option Williamstown
+          option City Circle
         span Alamein
       input(type="submit" value="Go")
   form(action='/metro/tracker/consist' method='get')#byConsist
