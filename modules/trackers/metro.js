@@ -88,7 +88,7 @@ async function getDepartures(stop) {
     let { trip, runID } = await findTrip(database, viableDeparture, scheduledDepartureTime, run, ptvRunID, {
       route_name: route.short_label,
       route_id: route.id
-    }, stopData, [])
+    }, stopData, [], [])
 
     let currentStation = trip.stopTimings.find(tripStop => tripStop.stopName === stopData.stopName)
     let {stopGTFSID} = currentStation

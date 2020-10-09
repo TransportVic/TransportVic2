@@ -182,7 +182,7 @@ async function getMissingRRB(station, db, individualRailBusDepartures) {
   return extraBuses
 }
 
-async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, route, station, replacementBusDepartures) {
+async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, route, station, replacementBusDepartures, suspensions) {
   let routeName = route.route_name
   let routeID = route.route_id
   let stationName = station.stopName.slice(0, -16)
@@ -442,7 +442,9 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
     let estimatedDepartureTime = departure.estimated_departure_utc ? utils.parseTime(departure.estimated_departure_utc) : null
 
-    let { trip, usedLive, runID, isRailReplacementBus, destination } = await findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, route, station, replacementBusDepartures)
+    let tripData = await findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, route, station, replacementBusDepartures, suspensions)
+    if (!tripData) return
+    let { trip, usedLive, runID, isRailReplacementBus, destination } = tripData
 
     if (isRailReplacementBus) {
       if (individualRailBusDepartures.some(bus => {
