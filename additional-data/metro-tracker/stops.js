@@ -45,5 +45,6 @@ module.exports = {
   'Williams Landing': 1225,
   'Melbourne Central': 1120,
   'Flinders Street': 1071,
-  'Southern Cross': 1181
+  'Southern Cross': 1181,
+  'Parliament': 1155
 }
