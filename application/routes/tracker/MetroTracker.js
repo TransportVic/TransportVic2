@@ -149,12 +149,19 @@ router.get('/bot', async (req, res) => {
 
   res.header('Access-Control-Allow-Origin', '*')
 
-  let {runID} = querystring.parse(url.parse(req.url).query)
+  let {runID, consist} = querystring.parse(url.parse(req.url).query)
 
   if (runID) {
     let tripsToday = await metroTrips.findDocuments({
       date,
       runID
+    }).sort({departureTime: 1}).toArray()
+
+    res.json(tripsToday.map(adjustTrip))
+  } else if (consist) {
+    let tripsToday = await metroTrips.findDocuments({
+      date,
+      consist
     }).sort({departureTime: 1}).toArray()
 
     res.json(tripsToday.map(adjustTrip))
