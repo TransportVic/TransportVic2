@@ -162,5 +162,20 @@ module.exports = {
   "6-908": ["Martin's Albury"],
 
   "6-99x": ["Bacchus Marsh Coaches"],
-  "6-99y": ["Bacchus Marsh Coaches"]
+  "6-99y": ["Bacchus Marsh Coaches"],
+
+  "6-B10": ["CDC Ballarat"],
+  "6-B11": ["CDC Ballarat"],
+  "6-B12": ["CDC Ballarat"],
+  "6-B13": ["CDC Ballarat"],
+  "6-B14": ["CDC Ballarat"],
+  "6-B15": ["CDC Ballarat"],
+  "6-B20": ["CDC Ballarat"],
+  "6-B21": ["CDC Ballarat"],
+  "6-B22": ["CDC Ballarat"],
+  "6-B23": ["CDC Ballarat"],
+  "6-B24": ["CDC Ballarat"],
+  "6-B26": ["CDC Ballarat"],
+  "6-B30": ["CDC Ballarat"],
+  "6-cvx": ["CDC Ballarat"]
 }
