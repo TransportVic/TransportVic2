@@ -61,6 +61,16 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
     cutoffStop = 'Clarendon Street Junction'
   }
 
+  if ((coreRoute === '3' || coreRoute === '16') && destination == 'Luna Park') {
+    cutoffStop = 'Luna Park'
+  }
+
+
+  if (coreRoute === '64' && destination == 'Hawthorn & Dandenong Rds') {
+    cutoffStop = 'Hawthorn Road'
+  }
+
+
   if (cutoffStop && trip.destination !== cutoffStop) {
     let hasSeen = false
 
@@ -86,14 +96,18 @@ module.exports.trimFromMessage = async function(db, destinations, currentStopGTF
 
   await async.forEachOf(trip.stopTimings, async (stop, i) => {
     let stopData = await getStopData(stop.stopGTFSID, stops)
-    let destination = destinations.find(dest => stopData.tramTrackerNames.includes(dest))
-    if (destination) {
-      indexes.push(i)
-      destinationsFound = destination
+    if (stopData.tramTrackerNames) {
+      let destination = destinations.find(dest => stopData.tramTrackerNames.includes(dest))
+      if (destination) {
+        indexes.push(i)
+        destinationsFound = destination
+      }
     }
   })
 
-  if (indexes.length === 1) {
+  if (indexes.length === 0) {
+    return null
+  } else if (indexes.length === 1) {
     let missingDestination = destinations.find(dest => destinationsFound !== dest)
     let bestDestination = closest(missingDestination, knownDestinations)
     let stopNames = tramDestinationLookup[bestDestination]
@@ -102,6 +116,8 @@ module.exports.trimFromMessage = async function(db, destinations, currentStopGTF
       if (stopNames.includes(stopDestinationName)) indexes.push(i)
     })
   }
+
+  if (indexes.length === 1) return null
 
   let sortedIndexes = indexes.sort()
 
