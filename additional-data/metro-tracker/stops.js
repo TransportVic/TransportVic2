@@ -14,7 +14,8 @@ module.exports = {
   'Bonbeach': 1024,
   'Tooronga': 1195,
   'Jordanville': 1105,
-  'Hartwell': 1087,
+  'Ashburton': 1010,
+  'Riversdale': 1166,
   'Glenferrie': 1080,
   'Surrey Hills': 1189,
   'Box Hill': 1026,
@@ -47,5 +48,6 @@ module.exports = {
   'Melbourne Central': 1120,
   'Flinders Street': 1071,
   'Southern Cross': 1181,
-  'Parliament': 1155
+  'Parliament': 1155,
+  'Kooyong': 1110
 }
