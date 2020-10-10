@@ -56,27 +56,24 @@ async function modifyTrip(db, trip, operationDay) {
 
 module.exports.trimFromDestination = async function(db, destination, coreRoute, trip, operationDay) {
   let cutoffStop
+  let stops = db.getCollection('stops')
 
-  if ((coreRoute === '96' || coreRoute === '109') && destination == 'Clarendon St Junction') {
-    cutoffStop = 'Clarendon Street Junction'
-  }
-
-  if ((coreRoute === '3' || coreRoute === '16') && destination == 'Luna Park') {
-    cutoffStop = 'Luna Park'
-  }
-
-
-  if (coreRoute === '64' && destination == 'Hawthorn & Dandenong Rds') {
-    cutoffStop = 'Hawthorn Road'
-  }
-
+  await async.forEachOf(trip.stopTimings, async (stop, i) => {
+    let stopData = await getStopData(stop.stopGTFSID, stops)
+    if (stopData.tramTrackerNames) {
+      let baseDestination = destination.replace(/&.*/, '').trim()
+      if (stopData.tramTrackerNames.includes(baseDestination)) {
+        cutoffStop = stop.stopGTFSID
+      }
+    }
+  })
 
   if (cutoffStop && trip.destination !== cutoffStop) {
     let hasSeen = false
 
     trip.stopTimings = trip.stopTimings.filter(stop => {
       if (hasSeen) return false
-      if (stop.stopName.includes(cutoffStop)) {
+      if (stop.stopGTFSID === cutoffStop) {
         return hasSeen = true
       }
       return true
