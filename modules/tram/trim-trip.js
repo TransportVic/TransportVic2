@@ -22,6 +22,7 @@ async function getStopData(stopGTFSID, stops) {
     return await new Promise(resolve => stopsLocks[stopGTFSID].on('loaded', resolve))
   }
   stopsLocks[stopGTFSID] = new EventEmitter()
+  stopsLocks[stopGTFSID].setMaxListeners(30)
   let stopData = await stops.findDocument({ 'bays.stopGTFSID': stopGTFSID })
 
   stopsCache[stopGTFSID] = stopData
@@ -58,12 +59,15 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
   let cutoffStop
   let stops = db.getCollection('stops')
 
+  let baseDestination = destination.replace(/&.*/, '').trim()
+
   await async.forEachOf(trip.stopTimings, async (stop, i) => {
-    let stopData = await getStopData(stop.stopGTFSID, stops)
-    if (stopData.tramTrackerNames) {
-      let baseDestination = destination.replace(/&.*/, '').trim()
-      if (stopData.tramTrackerNames.includes(baseDestination)) {
-        cutoffStop = stop.stopGTFSID
+    if (!cutoffStop) {
+      let stopData = await getStopData(stop.stopGTFSID, stops)
+      if (stopData.tramTrackerNames) {
+        if (stopData.tramTrackerNames.some(name => name.includes(baseDestination))) {
+          cutoffStop = stop.stopGTFSID
+        }
       }
     }
   })
