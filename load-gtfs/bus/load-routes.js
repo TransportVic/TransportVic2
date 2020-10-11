@@ -125,6 +125,7 @@ database.connect({
       if (routeGTFSID === '6-WN1') return '1'
       if (routeGTFSID === '6-WN2') return '2'
       if (routeGTFSID === '6-WN3') return '3'
+      if (routeGTFSID === '6-W12') return 'A'
 
       return routeNumber
     })
