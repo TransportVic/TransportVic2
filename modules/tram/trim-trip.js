@@ -59,13 +59,16 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
   let cutoffStop
   let stops = db.getCollection('stops')
 
+  let selectionMethod = destination.includes('&')
   let baseDestination = destination.replace(/&.*/, '').trim()
 
   await async.forEachOf(trip.stopTimings, async (stop, i) => {
     if (!cutoffStop) {
       let stopData = await getStopData(stop.stopGTFSID, stops)
       if (stopData.tramTrackerNames) {
-        if (stopData.tramTrackerNames.some(name => name.includes(baseDestination))) {
+        let matched = selectionMethod ? stopData.tramTrackerNames.some(name => name.includes(baseDestination))
+          : stopData.tramTrackerNames.includes(baseDestination)
+        if (matched) {
           cutoffStop = stop.stopGTFSID
         }
       }
