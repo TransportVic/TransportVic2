@@ -123,7 +123,8 @@ module.exports = class MainServer {
     })
 
     app.use(compression({
-      level: 9
+      level: 9,
+      threshold: 512
     }))
 
     if (!config.devMode) {
@@ -133,7 +134,9 @@ module.exports = class MainServer {
       }))
     }
 
-    app.use('/static', express.static(path.join(__dirname, '../application/static')))
+    app.use('/static', express.static(path.join(__dirname, '../application/static'), {
+      maxAge: 1000 * 60 * 60 * 24
+    }))
 
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(bodyParser.json())
@@ -144,7 +147,6 @@ module.exports = class MainServer {
       let secureDomain = `http${config.useHTTPS ? 's' : ''}://${config.websiteDNSName}:* `
       secureDomain += ' https://*.mapbox.com/'
 
-      // res.setHeader('Content-Security-Policy', `default-src blob: data: ${secureDomain}; script-src 'unsafe-inline' blob: ${secureDomain}; style-src 'unsafe-inline' ${secureDomain}; img-src: 'unsafe-inline' ${secureDomain}`)
       res.setHeader('X-Xss-Protection', '1; mode=block')
       res.setHeader('X-Content-Type-Options', 'nosniff')
       res.setHeader('X-Download-Options', 'noopen')
@@ -355,10 +357,7 @@ module.exports = class MainServer {
         res.status(404).render('errors/404')
       } else {
         res.status(500).render('errors/500')
-
-        if (process.env['NODE_ENV'] !== 'prod') {
-          console.log(err)
-        }
+        console.log(err)
       }
     })
   }
