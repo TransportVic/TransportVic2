@@ -129,7 +129,9 @@ async function getDeparturesFromYT(stop, db) {
           let mainMessage = SpecialEventMessage.replace(/.*:/, '').trim()
           let routeData = mainMessage.replace(/between.*/, '').trim()
           let routes = routeData.match(/(\d+)/g)
-          if (routes.includes(coreRoute)) {
+
+          let trimmedTrip
+          if (routes && routes.includes(coreRoute)) {
             let stopsData = mainMessage.replace(/.*between /, '')
             let stopParts
             if (stopsData.includes('&')) stopParts = stopsData.split('&')
@@ -137,17 +139,20 @@ async function getDeparturesFromYT(stop, db) {
 
             let stops = stopParts.map(stop => utils.adjustStopName(stop.replace(/Stop \w*/, '').replace(/.$/, '').trim()))
 
-            let trimmedTrip = await trimTrip.trimFromMessage(db, stops, stopGTFSID, trip, day)
-            if (trimmedTrip) {
-              trip = trimmedTrip
-            } else {
-              trip = await trimTrip.trimFromDestination(db, Destination, coreRoute, trip, day)
-            }
+            trimmedTrip = await trimTrip.trimFromMessage(db, stops, stopGTFSID, trip, day)
+          }
+
+          if (trimmedTrip) {
+            trip = trimmedTrip
+          } else {
+            trip = await trimTrip.trimFromDestination(db, Destination, coreRoute, trip, day)
           }
         } else {
           trip = await trimTrip.trimFromDestination(db, Destination, coreRoute, trip, day)
         }
       }
+
+      if (trip.destination === bay.fullStopName) return
 
       let loopDirection
       if (routeGTFSID === '3-35') {
