@@ -18,7 +18,11 @@ const updateStats = require('../utils/stats')
 let gtfsID = process.argv[2]
 let datamartMode = datamartModes[gtfsID]
 
-const datamartRoutes = require(`../../spatial-datamart/${datamartMode}-route.json`).features
+let datamartRoutes = []
+try {
+  datamartRoutes = require(`../../spatial-datamart/${datamartMode}-route.json`).features
+} catch (e) { console.log('Could not load spatial datamart, skipping') }
+
 let serviceLookup = createServiceLookup(datamartRoutes)
 
 if (gtfsID === '7') datamartMode = 'telebus'
