@@ -3,6 +3,7 @@ const moment = require('moment')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const nameModifier = require('../../additional-data/stop-name-modifier')
+const metroTypes = require('../../additional-data/metro-tracker/metro-types')
 
 const fixTripDestination = require('../metro-trains/fix-trip-destinations')
 
@@ -181,6 +182,18 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
       vehicle = vehicle.replace('Comeng', 'Xtrapolis')
     }
     runID = utils.getRunID(ptvRunID)
+
+    let metroTrips = db.getCollection('metro trips')
+    let tripData = await metroTrips.findDocument({
+      date: tripOperationDay,
+      runID
+    })
+
+    if (tripData && vehicle) {
+      let ptvConsistSize = vehicle.slice(0, 1)
+      let carType = metroTypes.find(car => tripData.consist.includes(car.leadingCar))
+      vehicle = ptvConsistSize + ' Car ' + carType.type
+    }
   }
 
 

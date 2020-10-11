@@ -331,7 +331,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
   function matchService(disruption) {
     let text = disruption.description
-    let service = text.match(/the (\d+:\d+[ap]m) ([ \w]*?) to ([ \w]*?) (?:train|service )?will/i)
+    let service = text.match(/the (\d+:\d+[ap]m) ([ \w]*?) to ([ \w]*?) (?:train|service )?(?:will|has|is)/i)
 
     if (service) {
       let departureTime = service[1],
@@ -356,19 +356,17 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     return false
   }).map(matchService).filter(Boolean)
 
-  let shortMap = {}
+  let alterationMap = {}
 
-  Object.values(disruptions).filter(disruption => {
-    return disruption.description.includes('originate') || disruption.description.includes('terminate')
-  }).map(matchService).filter(Boolean).map(disruption => {
+  Object.values(disruptions).map(matchService).filter(Boolean).map(disruption => {
     let parts = disruption.originalText.match(/will (?:now )?(\w+) (?:from|at) (.*)./)
     if (parts) {
       let type = parts[1]
       let point = parts[2]
 
       let serviceID = `${disruption.origin}-${disruption.destination}-${disruption.departureTime}`
-
-      shortMap[serviceID] = { type, point }
+      alterationMap[serviceID] = true
+      alterationMap[serviceID] = { type, point }
     }
   })
 
@@ -468,7 +466,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       let destination = trip.trueDestination.slice(0, -16)
 
       let serviceID = `${origin}-${destination}-${trip.trueDepartureTime}`
-      if (shortMap[serviceID]) trip = await getStoppingPattern(db, ptvRunID, 'metro train', scheduledDepartureTime.toISOString())
+      if (alterationMap[serviceID]) trip = await getStoppingPattern(db, ptvRunID, 'metro train', scheduledDepartureTime.toISOString())
     }
 
     if (stonyPointReplacements.length) {

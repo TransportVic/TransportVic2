@@ -168,15 +168,17 @@ async function pickBestTrip(data, db) {
     let ptvRunID = departure.run_ref
     let departureTime = departure.scheduled_departure_utc
 
+    let isRailReplacementBus = departure.flags.includes('RRB-RUN')
+
     let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime, null, null, {
-      isRailReplacementBus: departure.flags.includes('RRB-RUN')
+      isRailReplacementBus
     })
 
     let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
 
     return { trip, tripStartTime, isLive }
   } catch (e) {
-
+    console.log(e)
     return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
   }
 }
