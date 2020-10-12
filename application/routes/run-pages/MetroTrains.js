@@ -6,6 +6,8 @@ const ptvAPI = require('../../../ptv-api')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
 const stonyPointFormations = require('../../../modules/metro-trains/stony-point-formations')
 
+let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central'].map(e => e + ' Railway Station')
+
 async function pickBestTrip(data, db) {
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
   let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
@@ -113,14 +115,18 @@ async function pickBestTrip(data, db) {
   let originStopID = originStop.bays.filter(bay => bay.mode === 'metro train')[0].stopGTFSID
   let originTime = tripStartTime.clone()
   let expressCount = undefined
+
   if (gtfsTrip) {
     expressCount = 0
     let stops = gtfsTrip.stopTimings.map(stop => stop.stopName)
     let flindersIndex = stops.indexOf('Flinders Street Railway Station')
 
     if (flindersIndex >= 0 && gtfsTrip.direction === 'Down') {
+      let nonCCLStop = gtfsTrip.stopTimings.slice(flindersIndex + 1).find(stop => !cityLoopStations.includes(stop.stopName))
+
       let flinders = gtfsTrip.stopTimings[flindersIndex]
       let stopAfterFlinders = gtfsTrip.stopTimings[flindersIndex + 1]
+      if (nonCCLStop) stopAfterFlinders = nonCCLStop
       if (stopAfterFlinders.stopName !== destinationStop.stopName) {
         originStopID = stopAfterFlinders.stopGTFSID
         originTime.add(stopAfterFlinders.departureTimeMinutes - flinders.departureTimeMinutes, 'minutes')
@@ -133,7 +139,7 @@ async function pickBestTrip(data, db) {
     })
   }
 
-  // get first stop after flinders, or if only 1 stop (nme  shorts) then flinders itself
+  // get first stop after flinders, or if only 1 stop (nme shorts) then flinders itself
   // should fix the dumb issue of trips sometimes showing as forming and sometimes as current with crazyburn
   try {
     let isoDeparture = originTime.toISOString()
