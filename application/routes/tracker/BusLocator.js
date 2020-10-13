@@ -32,7 +32,7 @@ async function getPTVKey() {
 }
 
 function getPlaceName(routeNumber, routeGTFSID, placeName) {
-  let modifiedName = utils.getDestinationName(trip.origin)
+  let modifiedName = utils.getDestinationName(placeName)
   let serviceData = busDestinations.service[routeGTFSID] || busDestinations.service[routeNumber] || {}
 
   return (serviceData[modifiedName]
