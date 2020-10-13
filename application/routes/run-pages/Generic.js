@@ -208,24 +208,56 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
     return stop
   })
 
-  if (trip.vehicle) {
+
+  let routeNumber = trip.routeNumber
+  let routeNumberClass = utils.encodeName(operator)
+  let trackerData
+
+  if (trip.mode === 'bus') {
+    routeNumber = determineBusRouteNumber(trip)
+
+    let busTrips = res.db.getCollection('bus trips')
+    trackerData = await busTrips.findDocument({
+      date: req.params.operationDays,
+      departureTime: trip.departureTime,
+      origin: trip.origin,
+      destination: trip.destination
+    })
+  }
+
+  if (trip.vehicle && !trackerData) {
+    let {routeGTFSID, origin, destination, departureTime, destinationArrivalTime} = trip
+    let smartrakID = parseInt(trip.vehicle)
+
+    trackerData = {
+      date: req.params.operationDays,
+      timestamp: +new Date(),
+      routeGTFSID,
+      smartrakID,
+      routeNumber,
+      origin, destination, departureTime, destinationArrivalTime
+    }
+
+    await busTrips.replaceDocument({
+      date: req.params.operationDays,
+      routeGTFSID, origin, destination, departureTime, destinationArrivalTime
+    }, trackerData, {
+      upsert: true
+    })
+  }
+
+  if (trackerData) {
     let smartrakIDs = res.db.getCollection('smartrak ids')
 
     let busRego = (await smartrakIDs.findDocument({
-      smartrakID: parseInt(trip.vehicle)
+      smartrakID: trackerData.smartrakID
     }) || {}).fleetNumber
+
     if (busRego) {
       trip.vehicleData = {
         name: 'Bus #' + busRego
       }
     }
-  }
-
-  let routeNumber = trip.routeNumber
-  let routeNumberClass = utils.encodeName(operator)
-
-  if (trip.mode === 'bus') {
-    routeNumber = determineBusRouteNumber(trip)
   }
 
   res.render('runs/generic', {

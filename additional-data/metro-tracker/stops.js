@@ -49,5 +49,6 @@ module.exports = {
   'Flinders Street': 1071,
   'Southern Cross': 1181,
   'Parliament': 1155,
-  'Kooyong': 1110
+  'Kooyong': 1110,
+  'Springvale': 1183
 }
