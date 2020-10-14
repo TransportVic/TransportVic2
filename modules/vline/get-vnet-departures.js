@@ -36,6 +36,8 @@ async function getVNETDepartures(stationName, direction, db, time) {
     let originVNETName = $$('Origin').text()
     let destinationVNETName = $$('Destination').text()
 
+    if (!originDepartureTime.isValid()) return // Some really edge case where it returns a run with no departure data - discard it
+
     let accessibleTrain = $$('IsAccessibleAvailable').text() === 'true'
     let barAvailable = $$('IsBuffetAvailable').text() === 'true'
 
@@ -88,8 +90,8 @@ async function getVNETDepartures(stationName, direction, db, time) {
     if (direction === 'D') direction = 'Down'
     else direction = 'Up'
 
-    const originStation = await getStationFromVNETName(originVNETName, db)
-    const destinationStation = await getStationFromVNETName(destinationVNETName, db)
+    let originStation = await getStationFromVNETName(originVNETName, db)
+    let destinationStation = await getStationFromVNETName(destinationVNETName, db)
 
     if (!originStation || !destinationStation) return // Apparently origin or dest is sometimes unknown
 

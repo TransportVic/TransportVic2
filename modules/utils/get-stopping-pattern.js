@@ -203,7 +203,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     routeNumber: referenceTrip ? referenceTrip.routeNumber : route.routeNumber,
     routeDetails: referenceTrip ? referenceTrip.routeDetails : null,
     runID,
-    operationDays: [tripOperationDay],
+    operationDays: tripOperationDay,
     vehicle,
     stopTimings: stopTimings,
     destination: stopTimings[stopTimings.length - 1].stopName,

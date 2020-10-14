@@ -9,6 +9,7 @@ if departures.length
       input(type='hidden' name='run' value=departure.runID)
       input(type='hidden' name='line' value=departure.shortRouteName)
       a.leftContainer.vline
+        - if (departure.runID === '8155'||departure.runID=='8367') {departure.cancelled=true; departure.flags.reservationsOnly=true}
         if departure.isRailReplacementBus
           span.topText Coach Svc
           img(src='/static/images/clear-icons/bus.svg')
