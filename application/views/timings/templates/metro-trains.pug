@@ -54,12 +54,11 @@ if departures.length
         span.towards #{prettyLineName} towards
         span.destination #{departure.destination}
         
-        if departure.message && !departure.suspensions.length
-          span.broadDepartureInfo.important #{departure.message}
+        - let currentSuspension = departure.suspensions.find(suspension => suspension.disruptionStatus !== 'passed')
+        if currentSuspension
+          span.broadDepartureInfo.important Buses replace trains from #{currentSuspension.startStation.slice(0, -16)} to #{currentSuspension.endStation.slice(0, -16)}
         else if departure.cancelled
           span.broadDepartureInfo.important CANCELLED
-        else if departure.message
-          span.broadDepartureInfo.important #{departure.message}
         else if departure.isRailReplacementBus
           span.broadDepartureInfo.important Rail Replacement Bus
         else if departure.consist.length

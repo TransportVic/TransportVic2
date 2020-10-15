@@ -322,11 +322,10 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   let {departures, runs, routes, disruptions} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=run&expand=route&expand=disruption&expand=VehicleDescriptor`)
 
   let suspensionMap = {}
-  let suspensionIDs = Object.values(disruptions).filter(disruption => {
+  Object.values(disruptions).filter(disruption => {
     return disruption.disruption_type.toLowerCase().includes('suspend')
-  }).map(suspension => {
+  }).forEach(suspension => {
     suspensionMap[suspension.disruption_id] = mapSuspension(suspension, suspension.routes[0].route_name)
-    return suspension.disruption_id
   })
 
   function matchService(disruption) {
@@ -510,15 +509,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
     let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
     let mappedSuspensions = suspensions.map(e => adjustSuspension(e, trip, station.stopName))
-    if (mappedSuspensions.length) {
-      let firstSuspension = mappedSuspensions.find(suspension => suspension.disruptionStatus !== 'passed')
-      if (firstSuspension) {
-        message = `Buses replace trains from ${firstSuspension.startStation.slice(0, -16)} to ${firstSuspension.endStation.slice(0, -16)}`
-
-        if (!isRailReplacementBus) {
-          isRailReplacementBus = !!mappedSuspensions.find(suspension => suspension.disruptionStatus === 'current')
-        }
-      }
+    if (mappedSuspensions.length && !isRailReplacementBus) {
+      isRailReplacementBus = mappedSuspensions.some(suspension => suspension.disruptionStatus === 'current')
     }
 
     if (trip.routeName === 'Stony Point') {
@@ -562,6 +554,52 @@ function filterDepartures(departures, filter) {
 
   return departures.sort((a, b) => {
     return a.actualDepartureTime - b.actualDepartureTime || a.destination.localeCompare(b.destination)
+  })
+}
+
+async function updateSuspensions(departures, db) {
+  let liveTimetables = db.getCollection('live timetables')
+
+  await async.forEach(departures.filter(departure => departure.suspensions.length), async departure => {
+    let { trip } = departure
+    let currentSuspension = departure.suspensions.find(suspension => suspension.disruptionStatus === 'current')
+    if (currentSuspension) { // Only update the region with the rail bus
+      let seenStart = false, seenEnd = false
+
+      // Indexes won't work if we originate/terminate within disruption zone
+      trip.stopTimings = trip.stopTimings.filter(stop => {
+        if (seenEnd) {
+          return false
+        } else if (seenStart) {
+          if (stop.stopName === currentSuspension.endStation) {
+            return seenEnd = true
+          } else {
+            return true
+          }
+        } else {
+          if (stop.stopName === currentSuspension.startStation) {
+            return seenStart = true
+          }
+        }
+      })
+
+      trip.stopTimings[0].arrivalTime = null
+      trip.stopTimings[0].arrivalTimeMinutes = null
+      trip.stopTimings.slice(-1)[0].departureTime = null
+      trip.stopTimings.slice(-1)[0].departureTimeMinutes = null
+
+      trip.origin = currentSuspension.startStation
+      trip.trueOrigin = currentSuspension.startStation
+
+      trip.destination = currentSuspension.endStation
+      trip.trueDestination = currentSuspension.endStation
+
+      trip.departureTime = trip.stopTimings[0].departureTime
+      trip.trueDepartureTime = trip.stopTimings[0].departureTime
+
+      trip.destinationArrivalTime = trip.stopTimings.slice(-1)[0].arrivalTime
+      trip.trueDestinationArrivalTime = trip.stopTimings.slice(-1)[0].arrivalTime
+    }
   })
 }
 
@@ -634,6 +672,7 @@ async function getDepartures(station, db, filter=true) {
   try {
     let departures = await getDeparturesFromPTV(station, db)
 
+    await updateSuspensions(departures, db)
     await markRailBuses(departures, station, db)
 
     departuresCache.put(cacheKey, Object.values(departures))

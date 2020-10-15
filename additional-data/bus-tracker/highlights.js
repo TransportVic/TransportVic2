@@ -67,7 +67,7 @@ module.exports = [{
   buses: 'exclude'
 }, {
   name: 'CDC Oakleigh Specials',
-  track: ['CO7', 'CO8', 'CO11', 'CO12', 'CO13', 'CO14', 'CO100', 'CO103', 'CO104', 'CO105', 'CO107', 'CO18'],
+  track: ['CO7', 'CO8', 'CO11', 'CO12', 'CO13', 'CO100', 'CO103', 'CO104', 'CO105', 'CO107', 'CO108', 'CO109'],
   routes: [],
   type: 'exclude'
 }, {
