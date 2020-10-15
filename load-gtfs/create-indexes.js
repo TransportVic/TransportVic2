@@ -73,6 +73,10 @@ database.connect({
     'bays.vnetStationName': 1
   }, {name: 'vnet station name index', sparse: true})
 
+  await stops.createIndex({
+    'bays.fullStopName': 1
+  }, {name: 'ptv matching index 1'})
+
   console.log('Created stops indexes')
 
   await routes.createIndex({
@@ -134,6 +138,15 @@ database.connect({
     routeGTFSID: 1,
     gtfsDirection: 1
   }, {name: 'directions index'})
+
+  await gtfsTimetables.createIndex({
+    mode: 1,
+    operationDays: 1,
+    origin: 1,
+    destination: 1,
+    departureTime: 1,
+    destinationArrivalTime: 1
+  }, {name: 'run lookup index'})
 
   console.log('Created GTFS timetables indexes')
 
