@@ -5,6 +5,7 @@ const utils = require('../../utils')
 const moment = require('moment')
 const departureUtils = require('../utils/get-train-timetables')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
+const fixTripDestination = require('./fix-trip-destinations')
 const EventEmitter = require('events')
 
 const getRouteStops = require('../../additional-data/route-stops')
@@ -557,8 +558,9 @@ function filterDepartures(departures, filter) {
   })
 }
 
-async function updateSuspensions(departures, db) {
+async function updateSuspensions(departures, station, db) {
   let liveTimetables = db.getCollection('live timetables')
+  let stationName = station.stopName.slice(0, -16)
 
   await async.forEach(departures.filter(departure => departure.suspensions.length), async departure => {
     let { trip } = departure
@@ -617,18 +619,23 @@ async function updateSuspensions(departures, db) {
     trip.originalDestination = trip.destination
 
     trip.origin = firstStop.stopName
-    trip.trueOrigin = firstStop.stopName
-
     trip.destination = lastStop.stopName
-    trip.trueDestination = lastStop.stopName
-
     trip.departureTime = firstStop.departureTime
-    trip.trueDepartureTime = firstStop.departureTime
-
     trip.destinationArrivalTime = lastStop.arrivalTime
-    trip.trueDestinationArrivalTime = lastStop.arrivalTime
 
-    departure.destination = lastStop.stopName.slice(0, -16)
+    trip = fixTripDestination(trip)
+    departure.destination = trip.trueDestination.slice(0, -16)
+
+    if (trip.direction === 'Up' && !cityLoopStations.includes(stationName)) {
+      let {cityLoopConfig} = departure
+
+      if (cityLoopConfig[0] === 'FSS' || cityLoopConfig[1] === 'FSS')
+        departure.destination = 'Flinders Street'
+      else if (['PAR', 'FGS'].includes(cityLoopConfig[0]) && !cityLoopStations.includes(stationName))
+        departure.destination = 'City Loop'
+      else if (cityLoopConfig.slice(-1)[0] === 'SSS')
+        departure.destination = 'Southern Cross'
+    }
   })
 }
 
@@ -701,7 +708,7 @@ async function getDepartures(station, db, filter=true) {
   try {
     let departures = await getDeparturesFromPTV(station, db)
 
-    await updateSuspensions(departures, db)
+    await updateSuspensions(departures, station, db)
     await markRailBuses(departures, station, db)
 
     departuresCache.put(cacheKey, Object.values(departures))
