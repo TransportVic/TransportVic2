@@ -627,6 +627,8 @@ async function updateSuspensions(departures, db) {
 
     trip.destinationArrivalTime = lastStop.arrivalTime
     trip.trueDestinationArrivalTime = lastStop.arrivalTime
+
+    departure.destination = lastStop.stopName.slice(0, -16)
   })
 }
 
