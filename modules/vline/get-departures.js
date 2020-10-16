@@ -38,7 +38,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
 
     let trip
     let departureTime = departure.originDepartureTime
-    let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime) % 1440
+    let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departureTime)
 
     for (let i = 0; i <= 1; i++) {
       let tripDay = departureTime.clone().add(-i, 'days')
@@ -198,7 +198,7 @@ async function appendTripData(db, departure, vlinePlatforms) {
     let { stopGTFSID } = vlinePlatform
 
     let dayOfWeek = utils.getDayName(departure.scheduledDepartureTime)
-    let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departure.scheduledDepartureTime) % 1440
+    let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departure.scheduledDepartureTime)
 
     let departureMoment = departure.scheduledDepartureTime.clone()
     if (scheduledDepartureTimeMinutes < 180) departureMoment.add(-1, 'day')

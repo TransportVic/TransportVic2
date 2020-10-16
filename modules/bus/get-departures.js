@@ -38,16 +38,16 @@ async function getStoppingPatternWithCache(db, busDeparture, destination, isNigh
 }
 
 function shouldGetNightbus(now) {
-  let minutesAfterMidnight = utils.getPTMinutesPastMidnight(now) % 1440
+  let minutesAfterMidnight = utils.getMinutesPastMidnight(now)
   let dayOfWeek = utils.getDayName(now)
 
-  // 11pm - 7.55am (last 969 runs 6.30am - 7.35am, give some buffer for lateness?)
+  // 11pm - 8.30am (last 969 runs 6.30am - 7.35am, give some buffer for lateness?)
   if (dayOfWeek == 'Fri')
     return minutesAfterMidnight >= 1380
   if (dayOfWeek == 'Sat')
-    return minutesAfterMidnight >= 1380 || minutesAfterMidnight <= 475
+    return minutesAfterMidnight >= 1380 || minutesAfterMidnight <= 510
   if (dayOfWeek == 'Sun')
-    return minutesAfterMidnight <= 475
+    return minutesAfterMidnight <= 510
   return false
 }
 

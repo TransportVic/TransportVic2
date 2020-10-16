@@ -66,7 +66,7 @@ async function getDeparturesFromPTV(stop, db) {
       let route = routes[coachDeparture.route_id]
 
       let departureTime = utils.parseTime(coachDeparture.scheduled_departure_utc)
-      let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime) % 1440
+      let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departureTime)
 
       if (departureTime.diff(now, 'minutes') > 60 * 12) return
 

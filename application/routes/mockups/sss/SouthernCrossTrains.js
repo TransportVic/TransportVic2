@@ -179,7 +179,7 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
 
     let trip
     let departureTime = departure.originDepartureTime
-    let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime) % 1440
+    let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departureTime)
 
     for (let i = 0; i <= 1; i++) {
       let tripDay = departureTime.clone().add(-i, 'days')

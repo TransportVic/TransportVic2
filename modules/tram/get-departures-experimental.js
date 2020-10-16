@@ -100,7 +100,7 @@ async function getDeparturesFromYT(stop, db) {
 
       if (actualDepartureTime.diff(now, 'minutes') > 90) return
 
-      let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime) % 1440
+      let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(scheduledDepartureTime)
       let day = utils.getYYYYMMDD(scheduledDepartureTime)
 
       let coreRoute = HeadBoardRouteNo.replace(/[a-z]/, '')

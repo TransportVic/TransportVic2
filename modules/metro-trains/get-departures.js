@@ -643,7 +643,7 @@ async function markRailBuses(departures, station, db) {
   let liveTimetables = db.getCollection('live timetables')
   let stopGTFSID = station.bays.find(bay => bay.mode === 'metro train').stopGTFSID
 
-  await async.forEach(departures.filter(departure => departure.suspensions.length || departure.isRailReplacementBus), async departure => {
+  await async.forEach(departures.filter(departure => departure.suspensions.length || departure.isRailReplacementBus || departure.trip.isRailReplacementBus), async departure => {
     let { trip } = departure
     let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
     let minutesDiff = stopData.departureTimeMinutes - trip.stopTimings[0].departureTimeMinutes
