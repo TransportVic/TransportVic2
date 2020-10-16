@@ -655,7 +655,8 @@ async function markRailBuses(departures, station, db) {
       return {
         ...stop,
         arrivalTimeMinutes: stop.arrivalTimeMinutes ? stop.arrivalTimeMinutes - 1440 : null,
-        departureTimeMinutes: stop.departureTimeMinutes ? stop.departureTimeMinutes - 1440 : null
+        departureTimeMinutes: stop.departureTimeMinutes ? stop.departureTimeMinutes - 1440 : null,
+        platform: departure.isRailReplacementBus ? null : stop.platform
       }
     }) : trip.stopTimings
 
@@ -664,6 +665,11 @@ async function markRailBuses(departures, station, db) {
       stopTimings,
       isRailReplacementBus: departure.isRailReplacementBus,
       operationDays: departureDay
+    }
+
+    if (departure.isRailReplacementBus) {
+      delete newTrip.vehicle
+      delete newTrip.runID
     }
 
     let query = {
