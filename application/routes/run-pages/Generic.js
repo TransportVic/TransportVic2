@@ -212,11 +212,11 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   let routeNumber = trip.routeNumber
   let routeNumberClass = utils.encodeName(operator)
   let trackerData
+  let busTrips = res.db.getCollection('bus trips')
 
   if (trip.mode === 'bus') {
     routeNumber = determineBusRouteNumber(trip)
 
-    let busTrips = res.db.getCollection('bus trips')
     trackerData = await busTrips.findDocument({
       date: req.params.operationDays,
       departureTime: trip.departureTime,

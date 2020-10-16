@@ -6,7 +6,8 @@ const shuffle = require('lodash.shuffle')
 const cheerio = require('cheerio')
 const moment = require('moment')
 const DatabaseConnection = require('../../database/DatabaseConnection')
-const { findTrip } = require('../metro-trains/get-departures')
+const getMetroDepartures = require('../metro-trains/get-departures')
+const { findTrip } = getMetroDepartures
 const metroConsists = require('../../additional-data/metro-tracker/metro-consists')
 const stops = require('../../additional-data/metro-tracker/stops')
 
@@ -76,6 +77,7 @@ function pickRandomStop() {
 async function getDepartures(stop) {
   let stopCode = stops[stop]
   let stopData = await dbStops.findDocument({ stopName: stop + ' Railway Station' })
+  await getMetroDepartures(stopData, database) // To preload disruptions and whatnot
 
   let stopURL = urls.metroTracker.format(stopCode, await getToken())
   let data = JSON.parse(await utils.request(stopURL))
