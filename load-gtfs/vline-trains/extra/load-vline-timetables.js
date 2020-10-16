@@ -53,7 +53,7 @@ async function parseTimings(names, types, trip) {
   let locations = {}
 
   let headers = trip.slice(0, 5).concat(trip.slice(-1))
-  let timings = trip.slice(5, -1)
+  let timings = trip.slice(5, -2)
 
   let runID = headers[0].replace(/†/g, '').trim()
   let upService = !(runID[3] % 2)
@@ -72,7 +72,7 @@ async function parseTimings(names, types, trip) {
 
   let lastLocation
 
-  await async.forEachOfSeries(names.slice(5), async (locationName, i) => {
+  await async.forEachOfSeries(names.slice(5, -2), async (locationName, i) => {
     let type = types[i + 5], timing = timings[i]
 
     if (locationName === 'SEYMOUR SG Platform') locationName = 'Seymour'
@@ -109,6 +109,7 @@ async function parseTimings(names, types, trip) {
 
     lastLocation = locationName
     if (!timing || timing.includes('…')) return
+    let isExpress = timing.includes('*')
     timing = timing.replace('*', '')
 
     let stationPlatform = stationData.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000) // We don't want to assign to the NSW stop
@@ -143,11 +144,12 @@ async function parseTimings(names, types, trip) {
         departureTimeMinutes: minutesAftMidnight,
         platform: null,
         track: null,
-        sortTime: minutesAftMidnight
+        sortTime: minutesAftMidnight,
+        express: isExpress
       }
 
     if (timing.includes('/')) {
-      let [arrivalTime, departureTime] = timing.split('/')
+      let [arrivalTime, departureTime] = timing.split('/').map(x => x.slice(0, 5))
       let arrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(arrivalTime) + offset
       let departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime) + offset
 
