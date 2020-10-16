@@ -146,14 +146,6 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
       }
     }
 
-    if (i == 0) {
-      stopTiming.arrivalTime = null
-      stopTiming.arrivalTimeMinutes = null
-    } else if (i == departures.length - 1) {
-      stopTiming.departureTime = null
-      stopTiming.departureTimeMinutes = null
-    }
-
     return stopTiming
   })
 
@@ -194,8 +186,17 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
       let carType = metroTypes.find(car => tripData.consist.includes(car.leadingCar))
       vehicle = ptvConsistSize + ' Car ' + carType.type
     }
+
+    if (referenceTrip && extraTripData && extraTripData.trimStops) {
+      let referenceStops = referenceTrip.stopTimings.map(stop => stop.stopGTFSID)
+      stopTimings = stopTimings.filter(stop => referenceStops.includes(stop.stopGTFSID))
+    }
   }
 
+  stopTimings[0].arrivalTime = null
+  stopTimings[0].arrivalTimeMinutes = null
+  stopTimings.slice(-1)[0].departureTime = null
+  stopTimings.slice(-1)[0].departureTimeMinutes = null
 
   let timetable = {
     mode, routeName,

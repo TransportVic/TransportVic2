@@ -148,16 +148,16 @@ async function pickBestTrip(data, db) {
   let originTime = tripStartTime.clone()
   let expressCount = undefined
 
-  if (gtfsTrip) {
+  if (referenceTrip) {
     expressCount = 0
-    let stops = gtfsTrip.stopTimings.map(stop => stop.stopName)
+    let stops = referenceTrip.stopTimings.map(stop => stop.stopName)
     let flindersIndex = stops.indexOf('Flinders Street Railway Station')
 
-    if (flindersIndex >= 0 && gtfsTrip.direction === 'Down') {
-      let nonCCLStop = gtfsTrip.stopTimings.slice(flindersIndex + 1).find(stop => !cityLoopStations.includes(stop.stopName))
+    if (flindersIndex >= 0 && referenceTrip.direction === 'Down') {
+      let nonCCLStop = referenceTrip.stopTimings.slice(flindersIndex + 1).find(stop => !cityLoopStations.includes(stop.stopName))
 
-      let flinders = gtfsTrip.stopTimings[flindersIndex]
-      let stopAfterFlinders = gtfsTrip.stopTimings[flindersIndex + 1]
+      let flinders = referenceTrip.stopTimings[flindersIndex]
+      let stopAfterFlinders = referenceTrip.stopTimings[flindersIndex + 1]
       if (nonCCLStop) stopAfterFlinders = nonCCLStop
       if (stopAfterFlinders.stopName !== destinationStop.stopName) {
         originStopID = stopAfterFlinders.stopGTFSID
@@ -165,9 +165,9 @@ async function pickBestTrip(data, db) {
       }
     }
 
-    gtfsTrip.stopTimings.forEach((stop, i) => {
+    referenceTrip.stopTimings.forEach((stop, i) => {
       if (i === 0) return
-      expressCount += stop.stopSequence - gtfsTrip.stopTimings[i - 1].stopSequence -1
+      expressCount += stop.stopSequence - referenceTrip.stopTimings[i - 1].stopSequence -1
     })
   }
 
@@ -216,8 +216,9 @@ async function pickBestTrip(data, db) {
 
     let isRailReplacementBus = departure.flags.includes('RRB-RUN')
 
-    let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime, null, null, {
-      isRailReplacementBus
+    let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime, null, referenceTrip, {
+      isRailReplacementBus,
+      trimStops: true
     })
 
     let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
