@@ -25,6 +25,7 @@ async function pickBestTrip(data, db) {
     codedName: data.destination + '-railway-station',
     'bays.mode': 'metro train'
   })
+
   if (!originStop || !destinationStop) return null
   let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
   let minutesToTripEnd = tripEndTime.diff(utils.now(), 'minutes')
@@ -156,7 +157,11 @@ async function pickBestTrip(data, db) {
         if (isUp && departure.direction_id === 1) {
           return true
         } else {
-          return utils.encodeName(destinationName) === data.destination
+          let fullDestinationName = destinationName + ' Railway Station'
+
+          return fullDestinationName === referenceTrip.destination
+            || fullDestinationName === referenceTrip.trueDestination
+            || fullDestinationName === referenceTrip.originalDestination
         }
       }
       return false
@@ -170,7 +175,7 @@ async function pickBestTrip(data, db) {
 
     // interrim workaround cos when services start from a later stop they're really cancelled
     // in the stops before, but PTV thinks otherwise...
-    if (!departure) return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
+    if (!departure) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null
     let ptvRunID = departure.run_ref
     let departureTime = departure.scheduled_departure_utc
 
@@ -185,7 +190,7 @@ async function pickBestTrip(data, db) {
     return { trip, tripStartTime, isLive }
   } catch (e) {
     console.log(e)
-    return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
+    return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null
   }
 }
 

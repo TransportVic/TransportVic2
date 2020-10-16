@@ -562,8 +562,20 @@ async function updateSuspensions(departures, db) {
 
   await async.forEach(departures.filter(departure => departure.suspensions.length), async departure => {
     let { trip } = departure
-    let currentSuspension = departure.suspensions.find(suspension => suspension.disruptionStatus === 'current')
-    if (currentSuspension) { // Only update the region with the rail bus
+    let currentSuspension = departure.suspensions[0]
+
+    if (currentSuspension.disruptionStatus === 'before') { // Cut destination
+      let seenStart = false
+      trip.stopTimings = trip.stopTimings.filter(stop => {
+        if (seenStart) {
+          return false
+        } else if (stop.stopName === currentSuspension.startStation) {
+          return seenStart = true
+        }
+
+        return true
+      })
+    } else if (currentSuspension.disruptionStatus === 'current') { // Rail bus
       let seenStart = false, seenEnd = false
 
       // Indexes won't work if we originate/terminate within disruption zone
@@ -582,24 +594,39 @@ async function updateSuspensions(departures, db) {
           }
         }
       })
+    } else if (currentSuspension.disruptionStatus === 'passed') { // Cut origin
+      let seenEnd = false
 
-      trip.stopTimings[0].arrivalTime = null
-      trip.stopTimings[0].arrivalTimeMinutes = null
-      trip.stopTimings.slice(-1)[0].departureTime = null
-      trip.stopTimings.slice(-1)[0].departureTimeMinutes = null
-
-      trip.origin = currentSuspension.startStation
-      trip.trueOrigin = currentSuspension.startStation
-
-      trip.destination = currentSuspension.endStation
-      trip.trueDestination = currentSuspension.endStation
-
-      trip.departureTime = trip.stopTimings[0].departureTime
-      trip.trueDepartureTime = trip.stopTimings[0].departureTime
-
-      trip.destinationArrivalTime = trip.stopTimings.slice(-1)[0].arrivalTime
-      trip.trueDestinationArrivalTime = trip.stopTimings.slice(-1)[0].arrivalTime
+      trip.stopTimings = trip.stopTimings.filter(stop => {
+        if (seenEnd) {
+          return true
+        } else if (stop.stopName === currentSuspension.endStation) {
+          return seenEnd = true
+        }
+      })
     }
+
+    let firstStop = trip.stopTimings[0]
+    let lastStop = trip.stopTimings.slice(-1)[0]
+
+    firstStop.arrivalTime = null
+    firstStop.arrivalTimeMinutes = null
+    lastStop.departureTime = null
+    lastStop.departureTimeMinutes = null
+
+    trip.originalDestination = trip.destination
+
+    trip.origin = firstStop.stopName
+    trip.trueOrigin = firstStop.stopName
+
+    trip.destination = lastStop.stopName
+    trip.trueDestination = lastStop.stopName
+
+    trip.departureTime = firstStop.departureTime
+    trip.trueDepartureTime = firstStop.departureTime
+
+    trip.destinationArrivalTime = lastStop.arrivalTime
+    trip.trueDestinationArrivalTime = lastStop.arrivalTime
   })
 }
 
@@ -607,7 +634,7 @@ async function markRailBuses(departures, station, db) {
   let liveTimetables = db.getCollection('live timetables')
   let stopGTFSID = station.bays.find(bay => bay.mode === 'metro train').stopGTFSID
 
-  await async.forEach(departures.filter(departure => departure.isRailReplacementBus), async departure => {
+  await async.forEach(departures.filter(departure => departure.suspensions.length || departure.isRailReplacementBus), async departure => {
     let { trip } = departure
     let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
     let minutesDiff = stopData.departureTimeMinutes - trip.stopTimings[0].departureTimeMinutes
@@ -625,7 +652,7 @@ async function markRailBuses(departures, station, db) {
     let newTrip = {
       ...trip,
       stopTimings,
-      isRailReplacementBus: true,
+      isRailReplacementBus: departure.isRailReplacementBus,
       operationDays: departureDay
     }
 
