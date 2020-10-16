@@ -656,6 +656,7 @@ async function markRailBuses(departures, station, db) {
         ...stop,
         arrivalTimeMinutes: stop.arrivalTimeMinutes ? stop.arrivalTimeMinutes - 1440 : null,
         departureTimeMinutes: stop.departureTimeMinutes ? stop.departureTimeMinutes - 1440 : null,
+        estimatedDepartureTime: null,
         platform: departure.isRailReplacementBus ? null : stop.platform
       }
     }) : trip.stopTimings
