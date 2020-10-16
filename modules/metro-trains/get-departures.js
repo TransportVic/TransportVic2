@@ -667,6 +667,7 @@ async function markRailBuses(departures, station, db) {
 
     let query = {
       departureTime: newTrip.departureTime,
+      destinationArrivalTime: newTrip.destinationArrivalTime,
       origin: newTrip.origin,
       destination: newTrip.destination,
       mode: 'metro train',
