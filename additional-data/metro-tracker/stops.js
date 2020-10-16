@@ -50,5 +50,14 @@ module.exports = {
   'Southern Cross': 1181,
   'Parliament': 1155,
   'Kooyong': 1110,
-  'Springvale': 1183
+  'Springvale': 1183,
+  'Camberwell': 1032,
+  'Caulfield': 1036,
+  'Footscray': 1072,
+  'Sunshine': 1218,
+  'Laverton': 1113,
+  'Newport': 1141,
+  'Essendon': 1064,
+  'Reservoir': 1161,
+  'Epping': 1063
 }
