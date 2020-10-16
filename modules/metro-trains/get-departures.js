@@ -308,7 +308,7 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
     usedLive = true
   }
 
-  return { trip, usedLive, runID, isRailReplacementBus, destination }
+  return { trip, usedLive, runID, isRailReplacementBus, destination, cityLoopConfig }
 }
 
 async function getDeparturesFromPTV(station, db, departuresCount, platform) {
@@ -442,7 +442,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
     let tripData = await findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, route, station, replacementBusDepartures, suspensions)
     if (!tripData) return
-    let { trip, usedLive, runID, isRailReplacementBus, destination } = tripData
+    let { trip, usedLive, runID, isRailReplacementBus, destination, cityLoopConfig } = tripData
 
     if (isRailReplacementBus) {
       if (individualRailBusDepartures.some(bus => {
