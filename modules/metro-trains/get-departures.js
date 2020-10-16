@@ -654,7 +654,8 @@ async function markRailBuses(departures, station, db) {
     let stopTimings = windBackTime ? trip.stopTimings.map(stop => {
       return {
         ...stop,
-        departureTimeMinutes: stop.departureTimeMinutes - 1440
+        arrivalTimeMinutes: stop.arrivalTimeMinutes ? stop.arrivalTimeMinutes - 1440 : null,
+        departureTimeMinutes: stop.departureTimeMinutes ? stop.departureTimeMinutes - 1440 : null
       }
     }) : trip.stopTimings
 

@@ -32,11 +32,17 @@ async function pickBestTrip(data, db) {
 
   let destinationArrivalTime = tripEndMinutes
   let departureTime = tripStartMinutes
+  let liveDestinationArrivalTime = tripEndMinutes % 1440
+  let liveDepartureTime = tripStartMinutes % 1440
 
   if (data.destination === 'flinders-street') {
     destinationArrivalTime = {
       $gte: tripEndMinutes - 1,
       $lte: tripEndMinutes + 3
+    }
+    liveDestinationArrivalTime = {
+      $gte: tripEndMinutes - 1 % 1440,
+      $lte: tripEndMinutes + 3 % 1440
     }
   }
 
@@ -45,12 +51,16 @@ async function pickBestTrip(data, db) {
       $gte: tripStartMinutes - 1,
       $lte: tripStartMinutes + 3
     }
+    liveDepartureTime = {
+      $gte: tripStartMinutes - 1 % 1440,
+      $lte: tripStartMinutes + 3 % 1440
+    }
   }
 
   let operationDays = data.operationDays
   if (tripStartMinutes > 1440) operationDays = utils.getYYYYMMDD(tripDay.clone().add(-1, 'day'))
 
-  let query = {
+  let gtfsQuery = {
     $and: [{
       mode: 'metro train',
       operationDays
@@ -71,8 +81,29 @@ async function pickBestTrip(data, db) {
     }]
   }
 
-  let liveTrip = await db.getCollection('live timetables').findDocument(query)
-  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
+  let liveQuery = {
+    $and: [{
+      mode: 'metro train',
+      operationDays: data.operationDays // because this uses true departure day
+    }, {
+      stopTimings: {
+        $elemMatch: {
+          stopName: originStop.stopName,
+          departureTimeMinutes: liveDepartureTime
+        }
+      }
+    }, {
+      stopTimings: {
+        $elemMatch: {
+          stopName: destinationStop.stopName,
+          arrivalTimeMinutes: liveDestinationArrivalTime
+        }
+      }
+    }]
+  }
+
+  let liveTrip = await db.getCollection('live timetables').findDocument(liveQuery)
+  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(gtfsQuery)
 
   let useLive = minutesToTripEnd >= -120 && minutesToTripStart < 240
 
@@ -89,8 +120,8 @@ async function pickBestTrip(data, db) {
   let isStonyPoint = data.origin === 'stony-point' || data.destination === 'stony-point'
 
   if (gtfsTrip && isStonyPoint) {
-    query.$and[0] = { mode: 'metro train', operationDays: utils.getPTDayName(tripStartTime) }
-    let staticTrip = await db.getCollection('timetables').findDocument(query)
+    gtfsQuery.$and[0] = { mode: 'metro train', operationDays: utils.getPTDayName(tripStartTime) }
+    let staticTrip = await db.getCollection('timetables').findDocument(gtfsQuery)
     if (staticTrip) {
       gtfsTrip.stopTimings = gtfsTrip.stopTimings.map(stop => {
         if (stop.stopName === 'Frankston Railway Station')
@@ -100,7 +131,7 @@ async function pickBestTrip(data, db) {
         return stop
       })
       gtfsTrip.runID = staticTrip.runID
-      if (utils.isWeekday(query.operationDays)) {
+      if (utils.isWeekday(gtfsQuery.operationDays)) {
         if (stonyPointFormations.weekday[gtfsTrip.runID]) {
           gtfsTrip.vehicle = stonyPointFormations.weekday[gtfsTrip.runID]
         }
@@ -157,11 +188,15 @@ async function pickBestTrip(data, db) {
         if (isUp && departure.direction_id === 1) {
           return true
         } else {
-          let fullDestinationName = destinationName + ' Railway Station'
+          if (referenceTrip) {
+            let fullDestinationName = destinationName + ' Railway Station'
 
-          return fullDestinationName === referenceTrip.destination
-            || fullDestinationName === referenceTrip.trueDestination
-            || fullDestinationName === referenceTrip.originalDestination
+            return fullDestinationName === referenceTrip.destination
+              || fullDestinationName === referenceTrip.trueDestination
+              || fullDestinationName === referenceTrip.originalDestination
+          } else {
+            return utils.encodeName(destinationName) === data.destination
+          }
         }
       }
       return false
