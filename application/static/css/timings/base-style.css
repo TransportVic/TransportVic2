@@ -159,7 +159,7 @@ a.departureInfo {
 }
 
 a.departureInfo.reservationsOnly {
-  background-color: #594875;
+  background-color: #4c3d64;
 }
 
 a.departureInfo span {
@@ -210,7 +210,7 @@ a.departureInfo span.important {
 }
 
 a.departureInfo.reservationsOnly span.important {
-  color: #f71630;
+  color: #ff001d;
 }
 
 a.departureInfo.departure1 { --departureCount: 1; }

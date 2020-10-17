@@ -25,7 +25,7 @@ async function setServiceAsCancelled(db, departureTime, origin, destination, isC
     operationDays: today
   }
 
-  let trip = await liveTimetables.findDocument(query) || await gtfsTimetables.findDocument(query)
+  let trip = await gtfsTimetables.findDocument(query) || await liveTimetables.findDocument(query)
   if (trip) {
     delete trip._id
     if (isCoach) {

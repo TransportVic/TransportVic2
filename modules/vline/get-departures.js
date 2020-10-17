@@ -68,7 +68,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
     }
 
     let platform = departure.platform
-    let originalServiceID = trip.originalServiceID || departure.originDepartureTime.format('HH:mm') + trip.destination
+    let originalServiceID = departure.originDepartureTime.format('HH:mm') + trip.destination
 
     await handleTripShorted(trip, departure, nspTrip, liveTimetables, operationDay)
 

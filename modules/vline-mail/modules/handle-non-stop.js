@@ -26,7 +26,7 @@ async function setServiceNonStop(db, departureTime, origin, destination, skippin
     operationDays: today
   }
 
-  let trip = await liveTimetables.findDocument(query) || await gtfsTimetables.findDocument(query)
+  let trip = await gtfsTimetables.findDocument(query) || await liveTimetables.findDocument(query)
   if (trip) {
     delete trip._id
 
@@ -41,7 +41,6 @@ async function setServiceNonStop(db, departureTime, origin, destination, skippin
     await discordUpdate(`The ${departureTime} ${origin} - ${destination} service will not stop at ${skipping} today.`)
 
     trip.operationDays = today
-    trip.originalServiceID = trip.departureTime + trip.destination
 
     await liveTimetables.replaceDocument(query, trip, {
       upsert: true

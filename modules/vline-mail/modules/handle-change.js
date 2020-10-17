@@ -29,7 +29,7 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
     operationDays: today
   }
 
-  let trip = await liveTimetables.findDocument(query) || await gtfsTimetables.findDocument(query)
+  let trip = await gtfsTimetables.findDocument(query) || await liveTimetables.findDocument(query)
   if (trip) {
     delete trip._id
 
@@ -87,7 +87,6 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
 
 
     trip.operationDays = today
-    trip.originalServiceID = trip.departureTime + trip.destination
 
     await liveTimetables.replaceDocument(query, trip, {
       upsert: true
