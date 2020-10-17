@@ -26,12 +26,11 @@ async function setServiceNonStop(db, departureTime, origin, destination, skippin
     operationDays: today
   }
 
-  let trip = await gtfsTimetables.findDocument(query)
+  let trip = await liveTimetables.findDocument(query) || await gtfsTimetables.findDocument(query)
   if (trip) {
     delete trip._id
 
     trip.type = 'pattern-altered'
-    trip.tripID = trip.tripID + '-PATTERN'
 
     trip.stopTimings = trip.stopTimings.map(stop => {
       stop.cancelled = stop.stopName.slice(0, -16) === skipping

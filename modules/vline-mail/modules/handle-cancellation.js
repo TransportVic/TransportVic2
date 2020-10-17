@@ -25,17 +25,15 @@ async function setServiceAsCancelled(db, departureTime, origin, destination, isC
     operationDays: today
   }
 
-  let trip = await gtfsTimetables.findDocument(query)
+  let trip = await liveTimetables.findDocument(query) || await gtfsTimetables.findDocument(query)
   if (trip) {
     delete trip._id
     if (isCoach) {
       trip.type = 'replacement coach'
       trip.isRailReplacementBus = true
-      trip.tripID = trip.tripID + '-RRB'
     } else {
       trip.type = 'cancellation'
       trip.cancelled = true
-      trip.tripID = trip.tripID.replace('1-', '5-') + '-cancelled'
     }
 
     console.log(`Marking ${departureTime} ${origin} - ${destination} train as cancelled.${isCoach ? ' Replacement coaches provided' : ''}`)
