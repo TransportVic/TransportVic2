@@ -269,8 +269,15 @@ async function appendTripData(db, departure, vlinePlatforms) {
     if (departure.trip.type === 'change' && departure.trip.modifications.some(m => m.type === 'terminate')) {
       let termination = departure.trip.modifications.find(m => m.type === 'terminate')
 
-      departure.cancelled = departure.cancelled || currentStation === termination.changePoint
-      departure.destination = termination.changePoint
+      let tripStops = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
+      let currentIndex = tripStops.indexOf(currentStation)
+      let terminationIndex = tripStops.indexOf(termination.changePoint)
+
+      departure.cancelled = departure.cancelled || currentIndex >= terminationIndex
+
+      if (currentIndex < terminationIndex) {
+        departure.destination = termination.changePoint
+      }
     }
   }
 
