@@ -43,9 +43,15 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
       let hasSeen = false
       if (type === 'originate') {
         trip.stopTimings = trip.stopTimings.map(stop => {
-          if (hasSeen) return stop
+          if (hasSeen) {
+            stop.cancelled = false
+            return stop
+          }
+
           if (stop.stopName.slice(0, -16) === changePoint) {
+            stop.cancelled = false
             hasSeen = true
+
             return stop
           }
           stop.cancelled = true
@@ -58,9 +64,12 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
             return stop
           }
           if (stop.stopName.slice(0, -16) === changePoint) {
+            stop.cancelled = false
             hasSeen = true
             return stop
           }
+
+          stop.cancelled = false
           return stop
         })
       }
