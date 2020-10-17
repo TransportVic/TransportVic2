@@ -142,7 +142,7 @@ async function getMissingRRB(station, db, individualRailBusDepartures) {
 
       let minutesPastMidnight = (departureTimeMinutes % 1440) + 1440 * i
 
-      let extraBus = await gtfsTimetables.findDocument({
+      let potentialBuses = await gtfsTimetables.findDocuments({
         operationDays: utils.getYYYYMMDD(day),
         mode: 'metro train',
         stopTimings: {
@@ -152,9 +152,9 @@ async function getMissingRRB(station, db, individualRailBusDepartures) {
           }
         },
         direction
-      })
+      }).sort({ destinationArrivalTime: 1 }).limit(3).toArray()
 
-      if (extraBus) {
+      potentialBuses.forEach(extraBus => {
         if (extraBus.origin === origin && extraBus.destination === destination
           && extraBus.departureTime === departureTime
           && extraBus.destinationArrivalTime === destinationArrivalTime) return
@@ -176,7 +176,7 @@ async function getMissingRRB(station, db, individualRailBusDepartures) {
           consist: [],
           isRailReplacementBus: true
         })
-      }
+      })
     }
   })
 
