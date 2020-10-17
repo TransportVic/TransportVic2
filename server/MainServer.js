@@ -173,7 +173,7 @@ module.exports = class MainServer {
 
           return
         } catch (e) {
-          console.log(e)
+          console.error(e)
         }
       }
       next()
@@ -328,7 +328,7 @@ module.exports = class MainServer {
         app.use(routerPath, router)
         if (router.initDB) router.initDB(this.database)
       } catch (e) {
-        console.err('Error registering', routerName, e)
+        console.error('Error registering', routerName, e)
       }
     })
 

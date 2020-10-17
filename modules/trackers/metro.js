@@ -193,7 +193,7 @@ async function requestTimings() {
   try {
     await getDepartures(stop)
   } catch (e) {
-    console.log(e)
+    console.error(e)
     console.log('Failed to get metro trips this round, skipping')
   }
 

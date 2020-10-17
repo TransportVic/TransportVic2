@@ -221,7 +221,7 @@ module.exports = {
             })
           }
         } catch (e) {
-          console.log(e)
+          console.error(e)
         }
         resolve()
       }),

@@ -88,7 +88,7 @@ async function requestTimings() {
   try {
     await getDeparturesFromVNET(database)
   } catch (e) {
-    console.log(e)
+    console.error(e)
     console.log('Error getting vline trips, skipping this round')
   }
 

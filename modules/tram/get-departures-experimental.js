@@ -244,7 +244,7 @@ async function getDepartures(stop, db) {
 
       return returnDepartures(departures)
     } catch (e) {
-      console.log(e)
+      console.error(e)
       departures = (await getScheduledDepartures(stop, db, false)).map(departure => {
         departure.routeNumber = determineTramRouteNumber(departure.trip)
         departure.sortNumber = departure.routeNumber.replace(/[a-z]/, '')
@@ -255,7 +255,7 @@ async function getDepartures(stop, db) {
       return returnDepartures(departures)
     }
   } catch (e) {
-    console.log(e)
+    console.error(e)
     return returnDepartures(null)
   }
 

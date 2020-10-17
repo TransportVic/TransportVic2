@@ -21,13 +21,13 @@ async function inboundMessage(data) {
   let {subject, html} = data
   let $ = cheerio.load(html)
   let textContent = $('center').text()
-  textContent = textContent.replace(/SCS/g, 'Southern Cross').replace(/Flinders St\.? /g, 'Flinders Street')
+  textContent = textContent
 
   handleMessage(subject, textContent)
 }
 
 async function handleMessage(subject, text) {
-  text = text.replace(/\n/g, ' ').replace(/\u00A0/g, ' ').replace(/More information at.+/, '').replace(/-/g, ' to ').replace(/  +/g, ' ').trim()
+  text = text.replace(/SCS/g, 'Southern Cross').replace(/Flinders St\.? /g, 'Flinders Street').replace(/\n/g, ' ').replace(/\u00A0/g, ' ').replace(/More information at.+/, '').replace(/[-–]/g, ' to ').replace(/  +/g, ' ').trim()
   stream.write(`Got mail: Subject: ${subject}. Text: ${text.replace(/\n/g, ' ')}\n`)
 
   // Tracker makes this kinda useless now
@@ -61,7 +61,7 @@ module.exports = () => {
     })
 
     nodeMailin.on('error', err => {
-      console.err(err)
+      console.error(err)
     })
   })
 }

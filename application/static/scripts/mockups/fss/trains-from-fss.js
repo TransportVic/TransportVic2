@@ -234,7 +234,7 @@ function updateBody() {
       setSVGSize()
       $('#cclSVG').setAttribute('display', '')
     } catch (e) {
-      console.log(e)
+      console.error(e)
       setListenAnnouncements()
     }
   })

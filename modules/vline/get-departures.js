@@ -344,20 +344,20 @@ async function getDepartures(station, db) {
         if (!vicVlinePlatform) return resolve()
 
         ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vicVlinePlatform.stopGTFSID}?gtfs=true&max_results=15&expand=run&expand=route`)
-      } catch (e) {} finally { resolve() }
+      } catch (e) { console.error(e) } finally { resolve() }
     }), new Promise(async resolve => {
       try {
         scheduledCoachReplacements = (await getCoachDepartures(coachStop, db)).filter(departure => {
           return moment.utc(departure.scheduledDepartureTime.diff(utils.now())) < 1000 * 60 * 180
         })
-      } catch (e) {} finally { resolve() }
+      } catch (e) { console.error(e) } finally { resolve() }
     }), new Promise(async resolve => {
       try {
         if (station.stopName === 'Southern Cross Railway Station') {
           let vicVlinePlatform = vlinePlatforms.find(bay => bay.stopGTFSID < 140000000)
           vnetDepartures = await getDeparturesFromVNET(vicVlinePlatform, db)
         }
-      } catch (e) { console.log(e) } finally { resolve() }
+      } catch (e) { console.error(e) } finally { resolve() }
     })])
 
     let scheduled = await getScheduledDepartures(db, station)
@@ -375,6 +375,7 @@ async function getDepartures(station, db) {
         flagMap[serviceID] = findFlagMap(departure.flags)
       })
     } catch (e) {
+      console.error(e)
     }
 
     try {
@@ -393,6 +394,7 @@ async function getDepartures(station, db) {
           return coach
         })
     } catch (e) {
+      console.error(e)
     }
 
     function addFlags(departure) {
@@ -420,7 +422,7 @@ async function getDepartures(station, db) {
 
         return returnDepartures(sorted)
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
     }
 
@@ -429,7 +431,7 @@ async function getDepartures(station, db) {
 
     return returnDepartures(allDepartures)
   } catch (e) {
-    console.log(e)
+    console.error(e)
     return returnDepartures(null)
   }
 }

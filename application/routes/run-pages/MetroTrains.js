@@ -225,7 +225,7 @@ async function pickBestTrip(data, db) {
 
     return { trip, tripStartTime, isLive }
   } catch (e) {
-    console.log(e)
+    console.error(e)
     return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null
   }
 }
