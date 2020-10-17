@@ -134,7 +134,7 @@ async function getMissingRRB(station, db, individualRailBusDepartures) {
   let extraBuses = []
 
   await async.forEach(individualRailBusDepartures, async departureData => {
-    let { departureTimeMinutes, origin, departureTime, destination, destinationArrivalTime, direction } = departureData
+    let { departureTimeMinutes, origin, departureTime, destination, destinationArrivalTime, direction, routeGTFSID } = departureData
     let searchDays = departureTimeMinutes < 300 ? 1 : 0
 
     for (let i = 0; i <= searchDays; i++) {
@@ -151,7 +151,8 @@ async function getMissingRRB(station, db, individualRailBusDepartures) {
             departureTimeMinutes: minutesPastMidnight
           }
         },
-        direction
+        direction,
+        routeGTFSID
       }).sort({ destinationArrivalTime: 1 }).limit(3).toArray()
 
       potentialBuses.forEach(extraBus => {
@@ -458,6 +459,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
         departureTime: trip.departureTime,
         destination: trip.destination,
         destinationArrivalTime: trip.destinationArrivalTime,
+        routeGTFSID: trip.routeGTFSID
       })
     }
 
