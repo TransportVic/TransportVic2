@@ -61,6 +61,9 @@ async function parseTimings(names, types, trip) {
   let tripDivides = false
   let tripDividePoint = null
 
+  let tripAttaches = false
+  let tripAttachPoint = null
+
   let movementType = headers[4]
   let vehicleFormation = headers[2],
     formedBy = headers[3]
@@ -119,6 +122,11 @@ async function parseTimings(names, types, trip) {
     if (timing.includes('DV')) {
       tripDivides = true
       tripDividePoint = stationPlatform.fullStopName.slice(0, -16)
+    }
+
+    if (timing.includes('AV')) {
+      tripAttaches = true
+      tripAttachPoint = stationPlatform.fullStopName.slice(0, -16)
     }
 
     let minutesAftMidnight = utils.getMinutesPastMidnightFromHHMM(timing) + offset
@@ -222,7 +230,9 @@ async function parseTimings(names, types, trip) {
     destinationArrivalTime: lastStop.arrivalTime,
     flags: {
       tripDivides,
-      tripDividePoint
+      tripDividePoint,
+      tripAttaches,
+      tripAttachPoint
     },
     direction: upService ? 'Up' : 'Down'
   }

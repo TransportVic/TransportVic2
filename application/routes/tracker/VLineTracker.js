@@ -200,7 +200,7 @@ router.get('/highlights', async (req, res) => {
     if (consistTypeChanged.includes(trip)) return false
     let nspTimetable = timetables[trip.runID]
 
-    if (nspTimetable) {
+    if (nspTimetable && !nspTimetable.flags.tripAttaches) {
       let tripVehicleType
       let nspTripType = nspTimetable.vehicle
       let consistSize = trip.consist.length
