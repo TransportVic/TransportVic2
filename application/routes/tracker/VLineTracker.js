@@ -10,9 +10,9 @@ const vlineFleet = require('../../../additional-data/vline-fleet')
 let lines = {
   Geelong: ['Geelong', 'Marshall', 'South Geelong', 'Waurn Ponds', 'Wyndham Vale', 'Warrnambool'],
   Ballarat: ['Ararat', 'Maryborough', 'Ballarat', 'Wendouree', 'Bacchus Marsh', 'Melton'],
-  Bendigo: ['Bendigo', 'Kyneton', 'Epsom', 'Eaglehawk', 'Swan Hill', 'Echuca'],
-  Gippsland: ['Traralgon', 'Sale', 'Bairnsdale'],
-  Seymour: ['Seymour', 'Shepparton', 'Albury']
+  Bendigo: ['Bendigo', 'Kyneton', 'Epsom', 'Eaglehawk', 'Swan Hill', 'Echuca', 'Sunbury'],
+  Gippsland: ['Traralgon', 'Sale', 'Bairnsdale', 'Pakenham'],
+  Seymour: ['Seymour', 'Shepparton', 'Albury', 'Craigieburn']
 }
 
 router.get('/', (req, res) => {

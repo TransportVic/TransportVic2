@@ -17,7 +17,10 @@ function shouldRun() {
 }
 
 async function getDeparturesFromVNET(db) {
-  let vnetDepartures = [...await getVNETDepartures('', 'D', db, 1440), ...await getVNETDepartures('', 'U', db, 1440)]
+  let vnetDepartures = [
+    ...await getVNETDepartures('', 'D', db, 1440), ...await getVNETDepartures('', 'U', db, 1440),
+    ...await getVNETDepartures('', 'D', db, 1440, true), ...await getVNETDepartures('', 'U', db, 1440, true)
+  ]
   let vlineTrips = db.getCollection('vline trips')
   let timetables = db.getCollection('timetables')
   let liveTimetables = db.getCollection('live timetables')
