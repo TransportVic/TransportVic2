@@ -190,6 +190,10 @@ a.departureInfo span.broadDepartureInfo~span.broadDepartureInfo {
   -webkit-box-orient: vertical;
 }
 
+.clampLine.clamp2 {
+  -webkit-line-clamp: 2;
+}
+
 a.departureInfo span.broadDepartureInfo {
   overflow: hidden;
 

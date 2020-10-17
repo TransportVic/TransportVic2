@@ -60,7 +60,7 @@ if departures.length
         else if departure.cancelled
           span.broadDepartureInfo.important CANCELLED
         else if departure.isRailReplacementBus
-          span.broadDepartureInfo.important Rail Replacement Bus
+          span.broadDepartureInfo.important.clampLine.clamp2 Rail Replacement Bus - Stops #{stopsAt.map(s => s.slice(0, -16)).join(', ')}
         else if departure.consist.length
           span.broadDepartureInfo Detected Consist: #{departure.consist.join(', ')}
         else
