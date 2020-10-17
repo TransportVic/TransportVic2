@@ -1,37 +1,28 @@
 module.exports = async function (trip, departure, nspTrip, liveTimetables, date) {
   if (trip && trip.destination !== departure.destination || trip.origin !== departure.origin) {
-    let stoppingAt = trip.stopTimings.map(e => e.stopName)
-    let destinationIndex = stoppingAt.indexOf(departure.destination)
+    let hasSeenOrigin = false, hasSeenDestination = false
 
-    let skipping = []
-    if (trip.destination !== departure.destination) {
-      skipping = trip.stopTimings.slice(destinationIndex + 1).map(e => e.stopName)
+    trip.stopTimings = trip.stopTimings.map(stop => {
+      if (stop.stopName.slice(0, -16) === departure.origin) {
+        hasSeenOrigin = true
+        stop.cancelled = false
+        return stop
+      } else if (stop.stopName.slice(0, -16) === departure.destination) {
+        hasSeenDestination = true
+        stop.cancelled = false
+        return stop
+      }
 
-      trip.stopTimings = trip.stopTimings.slice(0, destinationIndex + 1)
-      let lastStop = trip.stopTimings[destinationIndex]
+      if (hasSeenDestination || !hasSeenOrigin) {
+        stop.cancelled = true
+      } else {
+        stop.cancelled = false
+      }
 
-      trip.destination = lastStop.stopName
-      trip.destinationArrivalTime = lastStop.arrivalTime
-      lastStop.departureTime = null
-      lastStop.departureTimeMinutes = null
-    }
+      return stop
+    })
 
-    let originIndex = stoppingAt.indexOf(departure.origin)
-    if (trip.origin !== departure.origin) {
-      skipping = skipping.concat(trip.stopTimings.slice(0, originIndex).map(e => e.stopName))
-
-      trip.stopTimings = trip.stopTimings.slice(originIndex)
-      let firstStop = trip.stopTimings[0]
-
-      trip.origin = firstStop.stopName
-      trip.departureTime = firstStop.departureTime
-      firstStop.arrivalTime = null
-      firstStop.arrivalTimeMinutes = null
-    }
-
-    trip.skipping = skipping
     trip.runID = departure.runID
-    trip.originalServiceID = trip.originalServiceID || departure.originDepartureTime.format('HH:mm') + trip.destination
     trip.operationDays = date
 
     if (nspTrip) {

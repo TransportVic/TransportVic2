@@ -3,6 +3,8 @@ const cancellation = require('./handle-cancellation')
 const async = require('async')
 const postDiscordUpdate = require('../../discord-integration')
 const bestStop = require('./find-best-stop')
+const findTrip = require('./find-trip')
+const handleTripShorted = require('../../vline/handle-trip-shorted')
 
 async function discordUpdate(text) {
   await postDiscordUpdate('vlineInform', text)
@@ -11,26 +13,38 @@ async function discordUpdate(text) {
 let terminateTypes = ['terminate', 'terminating', 'end', 'ending']
 let originateTypes = ['originate', 'originating', 'begin', 'beginning']
 
+function giveVariance(time) {
+  let minutes = utils.getMinutesPastMidnightFromHHMM(time)
+
+  let validTimes = []
+  for (let i = minutes - 5; i <= minutes + 5; i++) {
+    validTimes.push(utils.getHHMMFromMinutesPastMidnight(i))
+  }
+
+  return {
+    $in: validTimes
+  }
+}
+
 async function setServiceAsChanged(db, departureTime, origin, destination, modifications) {
   let now = utils.now()
   if (now.get('hours') <= 2) now.add(-1, 'day')
   let today = utils.getYYYYMMDD(now)
+  let operationDay = utils.getDayName(now)
 
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
+  let timetables = db.getCollection('timetables')
 
   if (departureTime.split(':')[0].length == 1) {
     departureTime = `0${departureTime}`
   }
 
-  let query = {
-    departureTime, origin, destination,
-    mode: 'regional train',
-    operationDays: today
-  }
+  // No need for live as it allows for partial match a/c trip trimming in API
+  let trip = await findTrip(gtfsTimetables, today, origin, destination, departureTime)
+  let nspTrip = await findTrip(timetables, operationDay, origin, destination, departureTime)
 
-  let trip = await gtfsTimetables.findDocument(query) || await liveTimetables.findDocument(query)
-  if (trip) {
+  if (trip && nspTrip) {
     delete trip._id
 
     trip.type = 'change'
@@ -38,42 +52,10 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
     trip.cancelled = false
     trip.modifications = modifications
 
+    let newOrigin = origin, newDestination = destination
     modifications.forEach(modification => {
-      let {type, changePoint} = modification
-
-      let hasSeen = false
-      if (type === 'originate') {
-        trip.stopTimings = trip.stopTimings.map(stop => {
-          if (hasSeen) {
-            stop.cancelled = false
-            return stop
-          }
-
-          if (stop.stopName.slice(0, -16) === changePoint) {
-            stop.cancelled = false
-            hasSeen = true
-
-            return stop
-          }
-          stop.cancelled = true
-          return stop
-        })
-      } else {
-        trip.stopTimings = trip.stopTimings.map(stop => {
-          if (hasSeen) {
-            stop.cancelled = true
-            return stop
-          }
-          if (stop.stopName.slice(0, -16) === changePoint) {
-            stop.cancelled = false
-            hasSeen = true
-            return stop
-          }
-
-          stop.cancelled = false
-          return stop
-        })
-      }
+      if (modification.type === 'originate') newOrigin = modification.changePoint
+      else if (modification.type === 'terminate') newDestination = modification.changePoint
     })
 
     console.log(`Marking ${departureTime} ${origin} - ${destination} train as changed: Now ${modifications.map(m => `${m.type}s at ${m.changePoint}`).join(' & ')}`)
@@ -85,15 +67,20 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
       await discordUpdate(`The ${departureTime} ${origin} - ${destination} service has been altered: Now ${modifications.map(m => `${m.type}s at ${m.changePoint}`).join(', ')}`)
     }
 
-
-    trip.operationDays = today
-
-    await liveTimetables.replaceDocument(query, trip, {
-      upsert: true
-    })
+    handleTripShorted(trip, {
+      origin: newOrigin,
+      destination: newDestination,
+      runID: nspTrip.runID
+    }, nspTrip, liveTimetables, today)
   } else {
-    console.log('Failed to find trip', query)
-    await discordUpdate(`Was told the ${departureTime} ${origin} - ${destination} service would ${type} ${type === 'originate' ? 'from' : 'at'} ${changePoint} today, but could not match.`)
+    let identifier = {
+      departureTime, origin, destination,
+      operationDays: today
+    }
+
+    let firstMod = modifications[0]
+    console.log('Failed to find trip', identifier)
+    await discordUpdate(`Was told the ${departureTime} ${origin} - ${destination} service would ${firstMod.type} ${firstMod.type === 'originate' ? 'from' : 'at'} ${firstMod.changePoint} today, but could not match.`)
   }
 }
 
@@ -118,7 +105,7 @@ function change(db, text) {
     }]
 
     if (type === 'originate' && terminateTypes.some(t => text.includes(t))) {
-      let terminatingLocation = text.match(/(?:terminate|end) at ([\w ]+)\.?/)[1]
+      let terminatingLocation = bestStop(text.match(/(?:terminate|end) at ([\w ]+)(?:today)?\.?/)[1])
       modifications.push({
         type: 'terminate',
         changePoint: terminatingLocation

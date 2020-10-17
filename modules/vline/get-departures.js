@@ -320,9 +320,6 @@ async function getDepartures(station, db) {
   ptvAPILocks[cacheKey] = new EventEmitter()
 
   function returnDepartures(departures) {
-    departures = departures.filter(departure => {
-      return !(departure.skipping && departure.skipping.inclides(station.stopName)) && departure.trip.destination !== station.stopName
-    })
     ptvAPILocks[cacheKey].emit('done', departures)
     delete ptvAPILocks[cacheKey]
 
@@ -349,7 +346,8 @@ async function getDepartures(station, db) {
         let vicVlinePlatform = vlinePlatforms.find(bay => bay.stopGTFSID < 140000000)
         if (!vicVlinePlatform) return resolve()
 
-        ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vicVlinePlatform.stopGTFSID}?gtfs=true&max_results=15&expand=run&expand=route`)
+        let time = utils.now().add(-6, 'minutes').toISOString()
+        ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vicVlinePlatform.stopGTFSID}?gtfs=true&max_results=15&expand=run&expand=route&date_utc=${time}`)
       } catch (e) { console.error(e) } finally { resolve() }
     }), new Promise(async resolve => {
       try {
@@ -371,9 +369,13 @@ async function getDepartures(station, db) {
 
     try {
       departures = ptvDepartures.departures, runs = ptvDepartures.runs, routes = ptvDepartures.routes
+      let now = utils.now()
+
       departures.forEach(departure => {
         let run = runs[departure.run_ref]
         let departureTime = utils.parseTime(departure.scheduled_departure_utc)
+        if (departureTime.diff(now, 'minutes') > 600) return
+
         let destination = run.destination_name
         let {flags} = departure
 

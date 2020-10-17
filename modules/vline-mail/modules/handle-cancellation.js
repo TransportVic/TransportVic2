@@ -2,6 +2,7 @@ const utils = require('../../../utils')
 const async = require('async')
 const postDiscordUpdate = require('../../discord-integration')
 const bestStop = require('./find-best-stop')
+const findTrip = require('./find-trip')
 
 async function discordUpdate(text) {
   await postDiscordUpdate('vlineInform', text)
@@ -11,22 +12,20 @@ async function setServiceAsCancelled(db, departureTime, origin, destination, isC
   let now = utils.now()
   if (now.get('hours') <= 2) now.add(-1, 'day')
   let today = utils.getYYYYMMDD(now)
+  let operationDay = utils.getDayName(now)
 
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
+  let timetables = db.getCollection('timetables')
 
   if (departureTime.split(':')[0].length == 1) {
     departureTime = `0${departureTime}`
   }
 
-  let query = {
-    departureTime, origin, destination,
-    mode: 'regional train',
-    operationDays: today
-  }
+  let trip = await findTrip(gtfsTimetables, today, origin, destination, departureTime)
+  let nspTrip = await findTrip(timetables, operationDay, origin, destination, departureTime)
 
-  let trip = await gtfsTimetables.findDocument(query) || await liveTimetables.findDocument(query)
-  if (trip) {
+  if (trip && nspTrip) {
     delete trip._id
     if (isCoach) {
       trip.type = 'replacement coach'
@@ -40,12 +39,23 @@ async function setServiceAsCancelled(db, departureTime, origin, destination, isC
     await discordUpdate(`The ${departureTime} ${origin} - ${destination} service has been cancelled today.`)
 
     trip.operationDays = today
+    trip.runID = nspTrip.runID
+    trip.vehicle = nspTrip.vehicle
 
-    await liveTimetables.replaceDocument(query, trip, {
+    await liveTimetables.replaceDocument({
+      operationDays: today,
+      runID: nspTrip.runID,
+      mode: 'regional train'
+    }, trip, {
       upsert: true
     })
   } else {
-    console.log('Failed to find trip', query)
+    let identifier = {
+      departureTime, origin, destination,
+      operationDays: today
+    }
+
+    console.log('Failed to find trip', identifier)
     await discordUpdate(`Was told the ${departureTime} ${origin} - ${destination} service has been cancelled, but could not match.`)
   }
 }
