@@ -158,11 +158,16 @@ router.get('/highlights', async (req, res) => {
     return trip.consist[1] && trip.consist[0].startsWith('N') && trip.consist[1].startsWith('N')
   })
 
-  let consistTypeChanged = await async.filter(allTrips, async trip => {
-    let nspTimetable = await nspTimetables.findDocument({
+  let timetables = {}
+  await async.forEach(allTrips, async trip => {
+    timetables[trip.runID] = await nspTimetables.findDocument({
       runID: trip.runID,
       operationDays: dayOfWeek
     })
+  })
+
+  let consistTypeChanged = allTrips.filter(trip => {
+    let nspTimetable = timetables[trip.runID]
 
     if (nspTimetable) {
       let tripVehicleType
@@ -190,6 +195,24 @@ router.get('/highlights', async (req, res) => {
     }
   })
 
+  let oversizeConsist = allTrips.filter(trip => {
+    // We're only considering where consist type wasnt changed. otherwise 1xVL and 2xSP would trigger even though its equiv
+    if (consistTypeChanged.includes(trip)) return false
+    let nspTimetable = timetables[trip.runID]
+
+    if (nspTimetable) {
+      let tripVehicleType
+      let nspTripType = nspTimetable.vehicle
+      let consistSize = trip.consist.length
+      let nspConsistSize = parseInt(nspTripType[0])
+      if (nspTripType === '3VL') nspConsistSize = 1
+
+      if (!trip.consist[0].startsWith('N')) {
+        return consistSize > nspConsistSize
+      }
+    }
+  })
+
   let unknownVehicle = allTrips.filter(trip => {
     return trip.consist.some(c => !vlineFleet.includes(c))
   })
@@ -197,6 +220,7 @@ router.get('/highlights', async (req, res) => {
   res.render('tracker/vline/highlights', {
     doubleHeaders,
     consistTypeChanged,
+    oversizeConsist,
     unknownVehicle,
     date: utils.parseTime(date, 'YYYYMMDD')
   })
