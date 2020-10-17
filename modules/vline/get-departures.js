@@ -266,18 +266,11 @@ async function appendTripData(db, departure, vlinePlatforms) {
     let stopTiming = departure.trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
 
     if (stopTiming.cancelled) departure.cancelled = true
-    if (departure.trip.changeType === 'terminate') {
-      departure.cancelled = currentStation === departure.trip.changePoint
-      departure.destination = departure.trip.changePoint
-      let hasSeen = false
-      departure.trip.stopTimings = departure.trip.stopTimings.filter(stop => {
-        if (hasSeen) return false
-        if (stop.stopName.slice(0, -16) === departure.destination) {
-          hasSeen = true
-          return true
-        }
-        return true
-      })
+    if (departure.trip.type === 'change' && departure.trip.modifications.some(m => m.type === 'terminate')) {
+      let termination = departure.trip.modifications.find(m => m.type === 'terminate')
+
+      departure.cancelled = departure.cancelled || currentStation === termination.changePoint
+      departure.destination = termination.changePoint
     }
   }
 

@@ -9,7 +9,6 @@ if departures.length
       input(type='hidden' name='run' value=departure.runID)
       input(type='hidden' name='line' value=departure.shortRouteName)
       a.leftContainer.vline
-        - if (departure.runID === '8155'||departure.runID=='8367') {departure.cancelled=true; departure.flags.reservationsOnly=true}
         if departure.isRailReplacementBus
           span.topText Coach Svc
           img(src='/static/images/clear-icons/bus.svg')
@@ -36,9 +35,15 @@ if departures.length
           span.broadDepartureInfo.important This service has been replaced by coaches
         else if departure.trip.type === 'change'
           if departure.cancelled
-            span.broadDepartureInfo.important CANCELLED: Now #{departure.trip.changeType}s #{departure.trip.changeType === 'originate' ? 'from' : 'at'} #{departure.trip.changePoint}
-          else if departure.trip.changeType === 'terminate'
-            span.broadDepartureInfo.important CHANGED: Now terminates at #{departure.trip.changePoint}
+            - let firstMod = departure.trip.modifications[0]
+            
+            if departure.trip.modifications.length === 1
+              span.broadDepartureInfo.important CANCELLED: Now #{firstMod.type}s #{firstMod.type === 'originate' ? 'from' : 'at'} #{firstMod.changePoint}
+            else
+              span.broadDepartureInfo.important CANCELLED: Now #{departure.trip.modifications.map(m => `${m.type}s ${m.type === 'originate' ? 'from' : 'at'} ${m.changePoint}`).join(' & ')}
+          else if departure.trip.modifications.some(m => m.type === 'terminate')
+            - let terminationModification = departure.trip.modifications.find(m => m.type === 'terminate')
+            span.broadDepartureInfo.important CHANGED: Now terminates at #{terminationModification.changePoint}
         else if departure.trip.type === 'pattern-altered'
           -
             let stopSkipped = departure.trip.stopTimings.find(stop => stop.cancelled)
