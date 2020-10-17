@@ -35,6 +35,7 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
 
     trip.type = 'change'
 
+    trip.cancelled = false
     trip.modifications = modifications
 
     modifications.forEach(modification => {
