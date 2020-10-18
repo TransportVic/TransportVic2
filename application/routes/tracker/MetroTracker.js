@@ -145,11 +145,10 @@ router.get('/consist', async (req, res) => {
 router.get('/bot', async (req, res) => {
   let {db} = res
   let metroTrips = db.getCollection('metro trips')
-  let date = utils.getYYYYMMDDNow()
 
   res.header('Access-Control-Allow-Origin', '*')
 
-  let {runID, consist} = querystring.parse(url.parse(req.url).query)
+  let {runID, consist, date} = querystring.parse(url.parse(req.url).query)
 
   if (runID) {
     let tripsToday = await metroTrips.findDocuments({
@@ -162,7 +161,7 @@ router.get('/bot', async (req, res) => {
     let tripsToday = await metroTrips.findDocuments({
       date,
       consist
-    }).sort({departureTime: 1}).toArray()
+    }).sort({date: 1, departureTime: 1}).toArray()
 
     res.json(tripsToday.map(adjustTrip))
   } else {
