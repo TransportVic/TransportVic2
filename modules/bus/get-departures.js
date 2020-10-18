@@ -10,6 +10,7 @@ const stopNameModifier = require('../../additional-data/stop-name-modifier')
 const busBays = require('../../additional-data/bus-bays')
 const determineBusRouteNumber = require('./determine-bus-route-number')
 const config = require('../../config')
+const resolveRouteGTFSID = require('../resolve-gtfs-id')
 
 const departuresCache = new TimedCache(1000 * 30)
 
@@ -27,8 +28,13 @@ async function getStoppingPatternWithCache(db, busDeparture, destination, isNigh
     tripLoader[id] = new EventEmitter()
     tripLoader[id].setMaxListeners(1000)
 
-    let trip = await getStoppingPattern(db, busDeparture.run_ref, isNightBus ? 'nbus' : 'bus', busDeparture.scheduled_departure_utc)
+    let trip
 
+    try {
+      trip = await getStoppingPattern(db, busDeparture.run_ref, isNightBus ? 'nbus' : 'bus', busDeparture.scheduled_departure_utc)
+    } catch (e) {
+      console.log('Failed to load stopping pattern', e)
+    }
     tripCache[id] = trip
     tripLoader[id].emit('loaded', trip)
     delete tripLoader[id]
@@ -140,8 +146,7 @@ async function getDeparturesFromPTV(stop, db) {
       if (isNightBus && (scheduledDepartureTimeMinutes % 1440) < 180)
         day = utils.getYYYYMMDD(scheduledDepartureTime.clone().add(1, 'day'))
 
-      let routeGTFSID = route.route_gtfs_id
-      if (routeGTFSID === '4-965') routeGTFSID = '8-965'
+      let routeGTFSID = resolveRouteGTFSID(route.route_gtfs_id)
       if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
 
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', day, routeGTFSID)
@@ -175,7 +180,7 @@ async function getDeparturesFromPTV(stop, db) {
       let {routeNumber} = trip
       let sortNumber = routeNumber || ''
 
-      if (route.route_gtfs_id.startsWith('7-')) {
+      if (routeGTFSID.startsWith('7-')) {
         sortNumber = routeNumber.slice(2)
       }
 

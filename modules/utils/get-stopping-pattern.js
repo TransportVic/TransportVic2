@@ -4,6 +4,7 @@ const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const nameModifier = require('../../additional-data/stop-name-modifier')
 const metroTypes = require('../../additional-data/metro-tracker/metro-types')
+const resolveRouteGTFSID = require('../resolve-gtfs-id')
 
 const fixTripDestination = require('../metro-trains/fix-trip-destinations')
 
@@ -47,7 +48,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let checkModes = [mode]
   if (mode === 'regional coach') checkModes.push('regional train')
 
-  let routeGTFSID = routeData.route_gtfs_id
+  let routeGTFSID = resolveRouteGTFSID(routeData.route_gtfs_id)
   if (mode === 'tram') routeGTFSID = `3-${parseInt(routeGTFSID.slice(2))}`
   if (routeData.route_id === 99) routeGTFSID = '2-CCL'
   let route = await routesCollection.findDocument({ routeGTFSID })
