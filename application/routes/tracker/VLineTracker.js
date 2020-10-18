@@ -6,6 +6,7 @@ const url = require('url')
 const querystring = require('querystring')
 const moment = require('moment')
 const vlineFleet = require('../../../additional-data/vline-fleet')
+const vlineConsists = require('../../../additional-data/carriage-sets')
 
 let lines = {
   Geelong: ['Geelong', 'Marshall', 'South Geelong', 'Waurn Ponds', 'Wyndham Vale', 'Warrnambool'],
@@ -213,6 +214,18 @@ router.get('/highlights', async (req, res) => {
     }
   })
 
+  let setAltered = allTrips.filter(trip => {
+    if (!trip.consist[0].startsWith('N')) return false
+    let {consist, set} = trip
+    let knownSet = vlineConsists[set]
+    if (!knownSet) return true
+
+    let carriages = consist.slice(1).filter(c => !c.startsWith('P'))
+
+    if (knownSet.some(known => !carriages.includes(known))) return true
+    if (carriages.some(car => !knownSet.includes(car))) return true
+  })
+
   let unknownVehicle = allTrips.filter(trip => {
     return trip.consist.some(c => !vlineFleet.includes(c))
   })
@@ -221,6 +234,7 @@ router.get('/highlights', async (req, res) => {
     doubleHeaders,
     consistTypeChanged,
     oversizeConsist,
+    setAltered,
     unknownVehicle,
     date: utils.parseTime(date, 'YYYYMMDD')
   })
