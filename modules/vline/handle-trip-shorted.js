@@ -3,11 +3,11 @@ module.exports = async function (trip, departure, nspTrip, liveTimetables, date)
     let hasSeenOrigin = false, hasSeenDestination = false
 
     trip.stopTimings = trip.stopTimings.map(stop => {
-      if (stop.stopName.slice(0, -16) === departure.origin) {
+      if (stop.stopName === departure.origin) {
         hasSeenOrigin = true
         stop.cancelled = false
         return stop
-      } else if (stop.stopName.slice(0, -16) === departure.destination) {
+      } else if (stop.stopName === departure.destination) {
         hasSeenDestination = true
         stop.cancelled = false
         return stop

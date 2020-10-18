@@ -54,8 +54,8 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
 
     let newOrigin = origin, newDestination = destination
     modifications.forEach(modification => {
-      if (modification.type === 'originate') newOrigin = modification.changePoint
-      else if (modification.type === 'terminate') newDestination = modification.changePoint
+      if (modification.type === 'originate') newOrigin = modification.changePoint + ' Railway Station'
+      else if (modification.type === 'terminate') newDestination = modification.changePoint + ' Railway Station'
     })
 
     console.log(`Marking ${departureTime} ${origin} - ${destination} train as changed: Now ${modifications.map(m => `${m.type}s at ${m.changePoint}`).join(' & ')}`)
