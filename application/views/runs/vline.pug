@@ -25,6 +25,8 @@ block content
         if (vehicle) {
           if (vehicle.startsWith('N')) {
             parts = [null, 'N']
+          } else if (vehicle.startsWith('A')) {
+            parts = [null, 'A']
           } else if (vehicle.includes('VL')) {
             let count = (vehicle.match(/^(\d)x/) || [0, 1])[1]
             parts = [count, 'vlocity']
