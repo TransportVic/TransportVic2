@@ -15,7 +15,10 @@ const resolveRouteGTFSID = require('../resolve-gtfs-id')
 const departuresCache = new TimedCache(1000 * 30)
 
 let tripLoader = {}
-let tripCache = {}
+let tripCache = new TimedCache(1000 * 60)
+
+let routeLoader = {}
+let routeCache = new TimedCache(1000 * 60)
 
 let ptvAPILocks = {}
 
@@ -24,7 +27,7 @@ async function getStoppingPatternWithCache(db, busDeparture, destination, isNigh
 
   if (tripLoader[id]) {
     return await new Promise(resolve => tripLoader[id].on('loaded', resolve))
-  } else if (!tripCache[id]) {
+  } else if (!tripCache.get(id)) {
     tripLoader[id] = new EventEmitter()
     tripLoader[id].setMaxListeners(1000)
 
@@ -35,12 +38,29 @@ async function getStoppingPatternWithCache(db, busDeparture, destination, isNigh
     } catch (e) {
       console.log('Failed to load stopping pattern', e)
     }
-    tripCache[id] = trip
+    tripCache.put(id, trip)
     tripLoader[id].emit('loaded', trip)
     delete tripLoader[id]
 
     return trip
-  } else return tripCache[id]
+  } else return tripCache.get(id)
+}
+
+async function getRoute(db, routeGTFSID) {
+  if (routeLoader[routeGTFSID]) {
+    return await new Promise(resolve => routeLoader[routeGTFSID].on('loaded', resolve))
+  } else if (!routeCache.get(routeGTFSID)) {
+    routeLoader[routeGTFSID] = new EventEmitter()
+    routeLoader[routeGTFSID].setMaxListeners(1000)
+
+    let route = await db.getCollection('routes').findDocument({ routeGTFSID }, { routePath: 0 })
+
+    routeCache.put(routeGTFSID, route)
+    routeLoader[routeGTFSID].emit('loaded', route)
+    delete routeLoader[routeGTFSID]
+
+    return route
+  } else return routeCache.get(routeGTFSID)
 }
 
 function shouldGetNightbus(now) {
@@ -165,7 +185,7 @@ async function getDeparturesFromPTV(stop, db) {
         }) || {}).fleetNumber
       }
 
-      let busRoute = await dbRoutes.findDocument({ routeGTFSID }, { routePath: 0 })
+      let busRoute = await getRoute(db, routeGTFSID)
       let operator = busRoute.operators.sort((a, b) => a.length - b.length)[0]
 
       if (busRoute.operationDate) {
@@ -257,15 +277,11 @@ async function getDepartures(stop, db) {
   }
 
   try {
-    let scheduledDepartures = (await getScheduledDepartures(stop, db, false)).map(departure => {
-      departure.vehicleDescriptor = {}
-      return departure
-    })
+    let scheduledDepartures = await getScheduledDepartures(stop, db, false)
 
     let departures
     try {
       let ptvDepartures = await getDeparturesFromPTV(stop, db)
-
       function i (trip) { return `${trip.routeGTFSID}${trip.origin}${trip.departureTime}` }
       let tripIDsSeen = ptvDepartures.map(d => i(d.trip))
 

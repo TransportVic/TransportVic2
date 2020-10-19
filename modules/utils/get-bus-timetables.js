@@ -140,11 +140,17 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
     return true
   })
 
-  return (await async.map(filteredTrips, async trip => {
+  let routeGTFSIDs = filteredTrips.map(trip => trip.routeGTFSID).filter((e, i, a) => a.indexOf(e) === i)
+  let routeCache = {}
+  await async.forEach(routeGTFSIDs, async routeGTFSID => {
+    routeCache[routeGTFSID] = await routes.findDocument({ routeGTFSID })
+  })
+
+  return filteredTrips.map(trip => {
     let stopData = trip.stopTimings.filter(stop => stopGTFSIDs.includes(stop.stopGTFSID))[0]
     let departureTime = utils.getMomentFromMinutesPastMidnight(stopData.departureTimeMinutes, utils.now())
 
-    let route = await routes.findDocument({ routeGTFSID: trip.routeGTFSID })
+    let route = routeCache[trip.routeGTFSID]
     let opertor, routeNumber
 
     let loopDirection
@@ -186,7 +192,7 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
       codedOperator: utils.encodeName(operator),
       loopDirection
     }
-  })).filter(Boolean).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+  }).filter(Boolean).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }
 
 module.exports = {

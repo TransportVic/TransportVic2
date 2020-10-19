@@ -3,6 +3,27 @@ const utils = require('../../utils')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
+let routeGTFSIDs = {
+  'Hurstbridge': '2-HBG',
+  'Mernda': '2-MER',
+  'Belgrave': '2-BEL',
+  'Lilyale': '2-LIL',
+  'Glen Waverley': '2-GLW',
+  'Alamein': '2-ALM',
+  'Cranbourne': '2-CRB',
+  'Pakenham': '2-PKM',
+  'Frankston': '2-FKN',
+  'Sandringham': '2-SDM',
+  'Werribee': '2-WBE',
+  'Williamstown': '2-WMN',
+  'Upfield': '2-UFD',
+  'Craigieburn': '2-B31',
+  'Sunbury': '2-SYM',
+  'Showgrounds/Flemington': '2-ain',
+  'City Circle': '2-CCL',
+  'Stony Point': '2-SPT'
+}
+
 function getPlatform(station, mode) {
   return station.bays.find(bay => bay.mode === mode)
 }
@@ -20,18 +41,24 @@ async function getDeparture(station, db, mode, possibleLines, departureTime, pos
   let seen = []
   let allTimetables = []
 
-  let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime)
+  let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departureTime)
 
-  for (let i = 0; i <= 1; i++) {
+  let iterations = 0
+  // Only check past day if within 1.5hr of midnight
+  if (Math.abs(1440 - scheduledDepartureTimeMinutes) < 90) iterations = 1
+
+  for (let i = 0; i <= iterations; i++) {
     let day = departureTime.clone().add(-i, 'days')
+    let possibleRouteGTFSIDs = possibleLines.map(line => routeGTFSIDs[line])
+
     let timetables = await collection.findDocuments({
       _id: {
         $not: {
           $in: seen
         }
       },
-      routeName: {
-        $in: possibleLines
+      routeGTFSID: {
+        $in: possibleRouteGTFSIDs
       },
       destination: {
         $in: possibleDestinations
@@ -41,11 +68,11 @@ async function getDeparture(station, db, mode, possibleLines, departureTime, pos
       stopTimings: {
         $elemMatch: {
           stopGTFSID: platform.stopGTFSID,
-          departureTimeMinutes: (scheduledDepartureTimeMinutes % 1440) + 1440 * i
+          departureTimeMinutes: scheduledDepartureTimeMinutes + 1440 * i
         }
       },
       direction
-    }).toArray()
+    }).hint('stop timings gtfs index').toArray()
 
     if (mode === 'metro train' && viaCityLoop !== undefined) {
       if (viaCityLoop) {
