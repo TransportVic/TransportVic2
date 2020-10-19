@@ -194,7 +194,8 @@ async function pickBestTrip(data, db) {
   return {
     trip: referenceTrip,
     tripStartTime,
-    isLive
+    isLive,
+    originStop
   }
 }
 
@@ -202,9 +203,9 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   let tripData = await pickBestTrip(req.params, res.db)
   if (!tripData) return res.status(404).render('errors/no-trip')
 
-  let { trip, tripStartTime, isLive } = tripData
+  let { trip, tripStartTime, isLive, originStop } = tripData
 
-  let firstDepartureTime = trip.stopTimings[0].departureTimeMinutes
+  let firstDepartureTime = trip.stopTimings.find(stop => stop.stopName === originStop.stopName).departureTimeMinutes
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.pretyTimeToDeparture = ''
 
