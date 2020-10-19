@@ -45,7 +45,7 @@ async function getDeparture(station, db, mode, possibleLines, departureTime, pos
 
   let iterations = 0
   // Only check past day if within 1.5hr of midnight
-  if (Math.abs(1440 - scheduledDepartureTimeMinutes) < 90) iterations = 1
+  if (Math.abs(1440 - scheduledDepartureTimeMinutes) < 90 || scheduledDepartureTimeMinutes < 90) iterations = 1
 
   for (let i = 0; i <= iterations; i++) {
     let day = departureTime.clone().add(-i, 'days')

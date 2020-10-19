@@ -533,7 +533,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       suspensions: mappedSuspensions,
       message,
       consist,
-      willSkipLoop
+      willSkipLoop,
+      routeID
     })
   }
 
@@ -568,46 +569,26 @@ async function updateSuspensions(departures, station, db) {
     let { trip } = departure
     let currentSuspension = departure.suspensions[0]
 
+    let tripStops = trip.stopTimings.map(stop => stop.stopName)
+
     if (currentSuspension.disruptionStatus === 'before') { // Cut destination
-      let seenStart = false
-      trip.stopTimings = trip.stopTimings.filter(stop => {
-        if (seenStart) {
-          return false
-        } else if (stop.stopName === currentSuspension.startStation) {
-          return seenStart = true
-        }
+      let startIndex = tripStops.indexOf(currentSuspension.startStation)
+      if (startIndex == -1) startIndex = tripStops.length
 
-        return true
-      })
+      trip.stopTimings = trip.stopTimings.slice(0, startIndex + 1)
     } else if (currentSuspension.disruptionStatus === 'current') { // Rail bus
-      let seenStart = false, seenEnd = false
+      let startIndex = tripStops.indexOf(currentSuspension.startStation)
+      let endIndex = tripStops.indexOf(currentSuspension.endStation)
 
-      // Indexes won't work if we originate/terminate within disruption zone
-      trip.stopTimings = trip.stopTimings.filter(stop => {
-        if (seenEnd) {
-          return false
-        } else if (seenStart) {
-          if (stop.stopName === currentSuspension.endStation) {
-            return seenEnd = true
-          } else {
-            return true
-          }
-        } else {
-          if (stop.stopName === currentSuspension.startStation) {
-            return seenStart = true
-          }
-        }
-      })
+      if (startIndex == -1) startIndex = 0
+      if (endIndex == -1) endIndex = tripStops.length
+
+      trip.stopTimings = trip.stopTimings.slice(startIndex, endIndex + 1)
     } else if (currentSuspension.disruptionStatus === 'passed') { // Cut origin
-      let seenEnd = false
+      let endIndex = tripStops.indexOf(currentSuspension.endStation)
+      if (endIndex == -1) endIndex = 0
 
-      trip.stopTimings = trip.stopTimings.filter(stop => {
-        if (seenEnd) {
-          return true
-        } else if (stop.stopName === currentSuspension.endStation) {
-          return seenEnd = true
-        }
-      })
+      trip.stopTimings = trip.stopTimings.slice(endIndex)
     }
 
     let firstStop = trip.stopTimings[0]
@@ -626,10 +607,13 @@ async function updateSuspensions(departures, station, db) {
     trip.destinationArrivalTime = lastStop.arrivalTime
 
     trip = fixTripDestination(trip)
+
     departure.destination = trip.trueDestination.slice(0, -16)
 
-    if (trip.direction === 'Up' && !cityLoopStations.includes(stationName)) {
-      let {cityLoopConfig} = departure
+    if (trip.direction === 'Up' && !cityLoopStations.includes(stationName) && currentSuspension.disruptionStatus !== 'current') {
+      let cityLoopConfig = determineLoopRunning(departure.routeID, departure.runID, departure.destination, false)
+      if (departure.destination !== 'Flinders Street')
+        cityLoopConfig = []
 
       if (cityLoopConfig[0] === 'FSS' || cityLoopConfig[1] === 'FSS')
         departure.destination = 'Flinders Street'
@@ -660,9 +644,10 @@ async function markRailBuses(departures, station, db) {
         departureTimeMinutes: stop.departureTimeMinutes ? stop.departureTimeMinutes - 1440 : null
       }
     }) : trip.stopTimings).map(stop => {
+      let estimatedDepartureTime = departure.estimatedDepartureTime ? departure.estimatedDepartureTime.toISOString() : null
       return {
         ...stop,
-        estimatedDepartureTime: departure.isRailReplacementBus ? null : departure.estimatedDepartureTime,
+        estimatedDepartureTime: departure.isRailReplacementBus ? null : estimatedDepartureTime,
         platform: departure.isRailReplacementBus ? null : stop.platform
       }
     })
