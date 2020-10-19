@@ -53,7 +53,7 @@ database.connect({
     let line = await stopsLineReader.nextLine()
     line = gtfsUtils.splitLine(line)
 
-    let rawStopName = line[1].replace('Platform Station', 'Station')
+    let rawStopName = line[2].replace('Platform Station', 'Station')
     if (rawStopName.includes('Yass Station')) rawStopName = rawStopName.replace('Yass', 'Yass Junction')
     let stopName = rawStopName.replace(/ Plat.+/, '').trim()
 
@@ -74,7 +74,7 @@ database.connect({
         stopGTFSID,
         location: {
           type: 'Point',
-          coordinates: [parseFloat(line[3]), parseFloat(line[2])]
+          coordinates: [parseFloat(line[4]), parseFloat(line[3])]
         },
         stopNumber: null,
         mode: 'regional train',
