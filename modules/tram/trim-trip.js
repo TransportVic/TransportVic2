@@ -44,6 +44,7 @@ async function modifyTrip(db, trip, operationDay) {
   let key = {
     mode: 'tram',
     operationDays: operationDay,
+    routeGTFSID: trip.routeGTFSID,
     origin: trip.origin,
     departureTime: trip.departureTime,
     destination: trip.destination,
@@ -75,7 +76,9 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
     }
   })
 
-  if (cutoffStop && trip.destination !== cutoffStop) {
+  let tripDestinationStop = trip.stopTimings.slice(-1)[0].stopGTFSID
+
+  if (cutoffStop && tripDestinationStop !== cutoffStop) {
     let hasSeen = false
 
     trip.stopTimings = trip.stopTimings.filter(stop => {
