@@ -584,6 +584,7 @@ async function updateSuspensions(departures, station, db) {
       if (endIndex == -1) endIndex = tripStops.length
 
       trip.stopTimings = trip.stopTimings.slice(startIndex, endIndex + 1)
+      departure.estimatedDepartureTime = null
     } else if (currentSuspension.disruptionStatus === 'passed') { // Cut origin
       let endIndex = tripStops.indexOf(currentSuspension.endStation)
       if (endIndex == -1) endIndex = 0
