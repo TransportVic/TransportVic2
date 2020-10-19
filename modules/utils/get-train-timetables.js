@@ -51,7 +51,7 @@ async function getDeparture(station, db, mode, possibleLines, departureTime, pos
     let day = departureTime.clone().add(-i, 'days')
     let possibleRouteGTFSIDs = possibleLines.map(line => routeGTFSIDs[line])
 
-    let timetables = await collection.findDocuments({
+    let query = collection.findDocuments({
       _id: {
         $not: {
           $in: seen
@@ -72,7 +72,10 @@ async function getDeparture(station, db, mode, possibleLines, departureTime, pos
         }
       },
       direction
-    }).hint('stop timings gtfs index').toArray()
+    })
+
+    if (!live) query.hint('stop timings gtfs index')
+    let timetables = await query.toArray()
 
     if (mode === 'metro train' && viaCityLoop !== undefined) {
       if (viaCityLoop) {
