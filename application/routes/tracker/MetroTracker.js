@@ -150,23 +150,27 @@ router.get('/bot', async (req, res) => {
 
   let {runID, consist, date} = querystring.parse(url.parse(req.url).query)
 
+  let trips = []
+
   if (runID) {
-    let tripsToday = await metroTrips.findDocuments({
+    trips = await metroTrips.findDocuments({
       date,
       runID
     }).sort({departureTime: 1}).toArray()
-
-    res.json(tripsToday.map(adjustTrip))
   } else if (consist) {
-    let tripsToday = await metroTrips.findDocuments({
+    trips = await metroTrips.findDocuments({
       date,
       consist
-    }).sort({date: 1, departureTime: 1}).toArray()
-
-    res.json(tripsToday.map(adjustTrip))
-  } else {
-    res.json([])
+    }).sort({departureTime: 1}).toArray()
   }
+
+  let extraData = {}
+
+  if (consist && !trips.length) {
+    extraData.lastSeen = (await metroTrips.distinct('date', { consist })).slice(-1)[0]
+  }
+
+  res.json({ trips: trips.map(adjustTrip), extraData })
 })
 
 module.exports = router
