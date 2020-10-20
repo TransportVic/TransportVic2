@@ -2,6 +2,7 @@ const utils = require('../../utils')
 
 module.exports = async (collection, operationDay, origin, destination, departureTime) => {
   let tripStartMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime)
+  if (tripStartMinutes < 300) tripStartMinutes += 1440
 
   let variedDepartureTime = {
     $gte: tripStartMinutes - 5,

@@ -9,6 +9,7 @@ const termini = require('../../additional-data/termini-to-lines')
 const getCoachDepartures = require('../regional-coach/get-departures')
 const getVNETDepartures = require('./get-vnet-departures')
 const handleTripShorted = require('./handle-trip-shorted')
+const findTrip = require('./find-trip')
 const EventEmitter = require('events')
 
 const departuresCache = new TimedCache(1000 * 60 * 1)
@@ -36,35 +37,21 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
       mode: 'regional train'
     })
 
-    let trip
     let departureTime = departure.originDepartureTime
     let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departureTime)
 
-    for (let i = 0; i <= 1; i++) {
-      let tripDay = departureTime.clone().add(-i, 'days')
-      let query = {
-        operationDays: utils.getYYYYMMDD(tripDay),
-        mode: 'regional train',
-        stopTimings: {
-          $elemMatch: {
-            stopGTFSID,
-            departureTimeMinutes: scheduledDepartureTimeMinutes + 1440 * i
-          }
-        },
-        destination: departure.destination
-      }
+    let departureDay = utils.getYYYYMMDD(departureTime)
+    if (scheduledDepartureTimeMinutes < 300) departureDay = utils.getYYYYMMDD(departureTime.clone().add(-1, 'day'))
+    let departureHHMM = utils.formatHHMM(departureTime)
 
-      // improve this
-      trip = await liveTimetables.findDocument(query)
-      if (trip) break
-      trip = await gtfsTimetables.findDocument(query)
-      if (trip) break
-    }
-
-    if (!trip && nspTrip) trip = nspTrip
+    let trip = await liveTimetables.findDocument({
+      operationDays: departureDay,
+      runID: departure.runID,
+      mode: 'regional train'
+    }) || await findTrip(db.getCollection('gtfs timetables'), departureDay, departure.origin, departure.destination, departureHHMM) || nspTrip
 
     if (!trip) {
-      console.log(departure, departure.originDepartureTime.format('HH:mm'))
+      return console.log(departure, departure.originDepartureTime.format('HH:mm'))
     }
 
     let platform = departure.platform

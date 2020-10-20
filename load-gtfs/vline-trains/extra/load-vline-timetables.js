@@ -185,6 +185,12 @@ async function parseTimings(names, types, trip) {
   })
 
   let stopTimings = Object.values(locations).filter(stop => !isNaN(stop.arrivalTimeMinutes))
+  if (stopTimings[0].departureTimeMinutes < 300) {
+    stopTimings.forEach(stop => {
+      if (stop.departureTimeMinutes) stop.departureTimeMinutes += 1440
+      if (stop.arrivalTimeMinutes) stop.arrivalTimeMinutes += 1440
+    })
+  }
 
   let lastStop = stopTimings.slice(-1)[0]
 

@@ -13,19 +13,6 @@ async function discordUpdate(text) {
 let terminateTypes = ['terminate', 'terminating', 'end', 'ending']
 let originateTypes = ['originate', 'originating', 'begin', 'beginning']
 
-function giveVariance(time) {
-  let minutes = utils.getMinutesPastMidnightFromHHMM(time)
-
-  let validTimes = []
-  for (let i = minutes - 5; i <= minutes + 5; i++) {
-    validTimes.push(utils.getHHMMFromMinutesPastMidnight(i))
-  }
-
-  return {
-    $in: validTimes
-  }
-}
-
 async function setServiceAsChanged(db, departureTime, origin, destination, modifications) {
   let now = utils.now()
   if (now.get('hours') <= 2) now.add(-1, 'day')
@@ -50,7 +37,6 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
     trip.type = 'change'
 
     trip.cancelled = false
-    trip.modifications = modifications
 
     let newOrigin = origin, newDestination = destination
     modifications.forEach(modification => {
