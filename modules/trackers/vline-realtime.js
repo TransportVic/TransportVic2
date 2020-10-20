@@ -65,7 +65,7 @@ async function getDeparturesFromVNET(db, station) {
       let stopTiming = trip.stopTimings.find(stop => stop.stopName === station.stopName)
       let originTiming = trip.stopTimings.find(stop => stop.stopName === departure.origin)
 
-      let minutesDifference = (stopTiming.departureTimeMinutes || stopTiming.arrivalTimeMinutes) - originTiming.departureTimeMinutes
+      let minutesDifference = (stopTiming.arrivalTimeMinutes || stopTiming.departureTimeMinutes) - originTiming.departureTimeMinutes
 
       let scheduledDepartureTime = departure.originDepartureTime.clone().add(minutesDifference, 'minutes')
       let estimatedArrivalTime = departure.estimatedStopArrivalTime
@@ -148,12 +148,12 @@ async function fetchData() {
       relevantStops.forEach(stop => {
         let stopMinutes = (stop.departureTimeMinutes || stop.arrivalTimeMinutes)
         let minutesFromPrevious = stopMinutes - previousMinutes
-        let minutesPercentage = minutesFromPrevious / minutesDifference
+        let minutesPercentage = 1 - minutesFromPrevious / minutesDifference
         let delayPercentage = minutesPercentage * delayDifference
 
         let minutesFromOrigin = stopMinutes - tripDepartureTime.minutes
         let scheduledDepartureTime = tripDepartureTime.moment.clone().add(minutesFromOrigin, 'minutes')
-        let estimatedDepartureTime = scheduledDepartureTime.clone().add(-delayPercentage, 'milliseconds')
+        let estimatedDepartureTime = scheduledDepartureTime.clone().add(delayPercentage, 'milliseconds')
 
         stop.estimatedDepartureTime = estimatedDepartureTime.toISOString()
         stop.actualDepartureTimeMS = +estimatedDepartureTime
