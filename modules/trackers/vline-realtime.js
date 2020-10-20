@@ -7,7 +7,7 @@ const findTrip = require('../vline/find-trip')
 const getVNETDepartures = require('../vline/get-vnet-departures')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-let refreshRate = 20
+let refreshRate = 12
 
 let stops = [
   'North Geelong',
@@ -113,7 +113,7 @@ async function fetchData() {
       combinedTripData[runID][destinationTiming.stopName] = departure.estimatedDestArrivalTime - departure.destinationArrivalTime
     })
 
-    await utils.sleep(1000)
+    await utils.sleep(3000)
   })
 
   await async.forEach(Object.keys(combinedTripData), async runID => {
