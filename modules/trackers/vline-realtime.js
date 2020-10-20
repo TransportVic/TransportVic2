@@ -60,7 +60,7 @@ async function getDeparturesFromVNET(db, station) {
     let departureDay = utils.getYYYYMMDD(departure.originDepartureTime)
     let departureTimeHHMM = utils.formatHHMM(departure.originDepartureTime)
 
-    let departureMinutes = utils.getMinutesPastMidnight(departure.originDepartureTime)
+    let departureTimeMinutes = utils.getMinutesPastMidnight(departure.originDepartureTime)
     if (departureTimeMinutes < 300) departureDay = utils.getYYYYMMDD(departure.originDepartureTime.clone().add(-1, 'day'))
 
     let trip = (await liveTimetables.findDocument({
