@@ -20,24 +20,31 @@ let stops = [
   'Kangaroo Flat',
   'Woodend',
   'Sunbury',
-  'Caulfield',
+  'Dandenong',
+  'Pakenham',
   'Warragul',
   'Morwell',
-  'Sale',
   'Flinders Street',
   'Broadmeadows',
-  'Heathcote Junction',
+  'Wallan',
+  'Tallarook'
+]
+
+let extendedList = [
+  'Stratford',
   'Tallarook',
   'Mooroopna',
   'Rochester',
-  'Pyramid',
-  'Terang',
+  'Kerang',
+  'Sherwood Park',
+  'Winchelsea',
+  'North Melbourne'
 ]
 
 function shouldRun() {
   let minutes = utils.getMinutesPastMidnightNow()
 
-  return 210 <= minutes && minutes <= 1380 // 0330 - 2300
+  return minutes <= 150 || 330 <= minutes && minutes <= 1440 // 0000 - 0230 or 0530 - 2359
 }
 
 async function getDeparturesFromVNET(db, station) {
@@ -75,6 +82,8 @@ async function getDeparturesFromVNET(db, station) {
       let stopTiming = trip.stopTimings.find(stop => stop.stopName === station.stopName)
       let originTiming = trip.stopTimings.find(stop => stop.stopName === departure.origin)
 
+      if (!stopTiming) return null // Sherwood park is broken
+
       let minutesDifference = (stopTiming.arrivalTimeMinutes || stopTiming.departureTimeMinutes) - originTiming.departureTimeMinutes
 
       let scheduledDepartureTime = departure.originDepartureTime.clone().add(minutesDifference, 'minutes')
@@ -90,7 +99,7 @@ async function getDeparturesFromVNET(db, station) {
     }
 
     return departure
-  })).filter(departure => departure.trip)
+  })).filter(departure => departure && departure.trip)
 }
 
 
@@ -102,7 +111,14 @@ async function fetchData() {
   let tripDepartureTimes = {}
   let combinedTripData = {}
 
-  await async.forEachSeries(stops, async stop => {
+  let stopList = stops
+  let minutes = utils.getMinutesPastMidnightNow()
+
+  if (450 <= minutes && minutes <= 1410) { // 7.30am - 11.30pm
+    stopList = stopList.concat(extendedList)
+  }
+
+  await async.forEachSeries(stopList, async stop => {
     let stopData = await dbStops.findDocument({ stopName: stop + ' Railway Station' })
     let departures = await getDeparturesFromVNET(database, stopData)
     departures.forEach(departure => {
@@ -123,7 +139,7 @@ async function fetchData() {
       combinedTripData[runID][destinationTiming.stopName] = departure.estimatedDestArrivalTime - departure.destinationArrivalTime
     })
 
-    await utils.sleep(3000)
+    await utils.sleep(2500)
   })
 
   await async.forEach(Object.keys(combinedTripData), async runID => {
