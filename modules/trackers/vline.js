@@ -26,13 +26,19 @@ async function getDeparturesFromVNET(db) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
 
   await async.forEach(vnetDepartures, async departure => {
-    let referenceTime = departure.originDepartureTime.clone()
-    if (referenceTime.get('hours') <= 2) referenceTime.add(-1, 'days')
-    let date = utils.getYYYYMMDD(referenceTime)
-    let dayOfWeek = utils.getDayName(referenceTime)
+    let departureDay = utils.getYYYYMMDD(departure.originDepartureTime)
+    let departureTimeHHMM = utils.formatHHMM(departure.originDepartureTime)
+    let dayOfWeek = utils.getDayName(departure.originDepartureTime)
+
+    let departureTimeMinutes = utils.getMinutesPastMidnight(departure.originDepartureTime)
+    if (departureTimeMinutes < 300) {
+      let previousDay = departure.originDepartureTime.clone().add(-1, 'day')
+      departureDay = utils.getYYYYMMDD(previousDay)
+      dayOfWeek = utils.getDayName(previousDay)
+    }
 
     let tripData = {
-      date,
+      date: departureDay,
       runID: departure.runID,
       origin: departure.origin.slice(0, -16),
       destination: departure.destination.slice(0, -16),
@@ -43,22 +49,19 @@ async function getDeparturesFromVNET(db) {
 
     if (departure.set) tripData.set = departure.set
 
-    let query = {
-      date, runID: departure.runID
-    }
-
-    await vlineTrips.replaceDocument(query, tripData, {
+    await vlineTrips.replaceDocument({
+      date: departureDay,
+      runID: departure.runID
+    }, tripData, {
       upsert: true
     })
+
 
     let nspTrip = await timetables.findDocument({
       operationDays: dayOfWeek,
       runID: departure.runID,
       mode: 'regional train'
     })
-
-    let departureDay = utils.getYYYYMMDD(departure.originDepartureTime)
-    let departureTimeHHMM = utils.formatHHMM(departure.originDepartureTime)
 
     let trip = (await liveTimetables.findDocument({
       operationDays: departureDay,
@@ -69,7 +72,7 @@ async function getDeparturesFromVNET(db) {
     if (!trip && nspTrip) trip = nspTrip
 
     if (trip) {
-      await handleTripShorted(trip, departure, nspTrip, liveTimetables, date)
+      await handleTripShorted(trip, departure, nspTrip, liveTimetables, departureDay)
     }
   })
 }
