@@ -53,7 +53,7 @@ async function parseTimings(names, types, trip) {
   let locations = {}
 
   let headers = trip.slice(0, 5).concat(trip.slice(-1))
-  let timings = trip.slice(5, -2)
+  let timings = trip.slice(5, -1)
 
   let runID = headers[0].replace(/†/g, '').trim()
   let upService = !(runID[3] % 2)
@@ -75,7 +75,10 @@ async function parseTimings(names, types, trip) {
 
   let lastLocation
 
-  await async.forEachOfSeries(names.slice(5, -2), async (locationName, i) => {
+  let last3 = names.slice(-3)
+  let lastIndex = last3.includes('Plat') ? -2 : -1
+
+  await async.forEachOfSeries(names.slice(5, lastIndex), async (locationName, i) => {
     let type = types[i + 5], timing = timings[i]
 
     if (locationName === 'SEYMOUR SG Platform') locationName = 'Seymour'
