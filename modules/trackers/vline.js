@@ -4,6 +4,7 @@ const utils = require('../../utils')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const getVNETDepartures = require('../vline/get-vnet-departures')
 const handleTripShorted = require('../vline/handle-trip-shorted')
+const findTrip = require('../vline/find-trip')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let refreshRate = 10
@@ -56,31 +57,20 @@ async function getDeparturesFromVNET(db) {
       mode: 'regional train'
     })
 
-    let trip
-    let departureTime = departure.originDepartureTime
-    let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departureTime)
+    let departureDay = utils.getYYYYMMDD(departure.originDepartureTime)
+    let departureTimeHHMM = utils.formatHHMM(departure.originDepartureTime)
 
-    for (let i = 0; i <= 1; i++) {
-      let tripDay = departureTime.clone().add(-i, 'days')
-      let query = {
-        operationDays: utils.getYYYYMMDD(tripDay),
-        mode: 'regional train',
-        stopTimings: {
-          $elemMatch: {
-            stopName: departure.origin,
-            departureTimeMinutes: scheduledDepartureTimeMinutes + 1440 * i
-          }
-        },
-        destination: departure.destination
-      }
-
-      trip = await gtfsTimetables.findDocument(query)
-      if (trip) break
-    }
+    let trip = (await liveTimetables.findDocument({
+      operationDays: departureDay,
+      runID: departure.runID,
+      mode: 'regional train'
+    })) || await findTrip(gtfsTimetables, departureDay, departure.origin, departure.destination, departureTimeHHMM)
 
     if (!trip && nspTrip) trip = nspTrip
 
-    await handleTripShorted(trip, departure, nspTrip, liveTimetables, date)
+    if (trip) {
+      await handleTripShorted(trip, departure, nspTrip, liveTimetables, date)
+    }
   })
 }
 

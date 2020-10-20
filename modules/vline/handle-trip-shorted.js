@@ -2,6 +2,19 @@ module.exports = async function (trip, departure, nspTrip, liveTimetables, date)
   if (trip && trip.destination !== departure.destination || trip.origin !== departure.origin) {
     let hasSeenOrigin = false, hasSeenDestination = false
 
+    let modifications = []
+    if (trip.origin !== departure.origin) modifications.push({
+      type: 'originate',
+      changePoint: departure.origin.slice(0, -16)
+    })
+
+    if (trip.destination !== departure.destination) modifications.push({
+      type: 'terminate',
+      changePoint: departure.destination.slice(0, -16)
+    })
+
+    trip.modifications = modifications
+
     trip.stopTimings = trip.stopTimings.map(stop => {
       if (stop.stopName === departure.origin) {
         hasSeenOrigin = true
