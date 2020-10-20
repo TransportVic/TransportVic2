@@ -1,13 +1,11 @@
 const async = require('async')
 const config = require('../../config')
 const utils = require('../../utils')
-const moment = require('moment')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const getVNETDepartures = require('../vline/get-vnet-departures')
 const handleTripShorted = require('../vline/handle-trip-shorted')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-let dbStops
 let refreshRate = 20
 
 function shouldRun() {
@@ -106,6 +104,5 @@ async function requestTimings() {
 }
 
 database.connect(async () => {
-  dbStops = database.getCollection('stops')
   await requestTimings()
 })

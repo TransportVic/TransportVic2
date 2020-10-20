@@ -1,4 +1,4 @@
-DIRNAME=$(dirname "$0")
+DIRNAME=$(pwd)/$(dirname "$0")
 
 node $DIRNAME/download-gtfs.js
 cd $DIRNAME/../../gtfs/14

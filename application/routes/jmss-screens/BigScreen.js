@@ -61,17 +61,11 @@ async function getAllBusDepartures(db) {
   let allDepartures = filterDepartures([...busLoopDepartures, ...wellingtonDepartures, ...monash742Departures])
 
   allDepartures = allDepartures.map(departure => {
+    let destination = utils.getDestinationName(departure.trip.destination)
     let serviceData = busDestinations.service[departure.trip.routeGTFSID] || busDestinations.service[departure.routeNumber] || {}
 
-    let fullDestination = departure.trip.destination
-    let destinationShortName = departure.trip.destination.split('/')[0]
-    let {destination} = departure.trip
-    if (!utils.isStreet(destinationShortName)) destination = destinationShortName
-    departure.destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
-
-    departure.destination = (serviceData[departure.destination]
-      || busDestinations.generic[departure.destination]
-      || busDestinations.generic[fullDestination] || departure.destination)
+    departure.destination = serviceData[destination]
+      || busDestinations.generic[destination] || destination
       .replace('Gardens', 'Gdns').replace('Station', 'Stn').replace('Middle', 'Mid')
 
     return departure

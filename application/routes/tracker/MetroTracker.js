@@ -7,6 +7,18 @@ const querystring = require('querystring')
 const moment = require('moment')
 const rawLineRanges = require('../../../additional-data/metro-tracker/line-ranges')
 
+const metroTypes = require('../../../additional-data/metro-tracker/metro-types')
+const metroConsists = require('../../../additional-data/metro-tracker/metro-consists')
+
+function generateQuery(type) {
+  let matchedMCars = metroConsists.filter(consist => consist.type === type).map(consist => consist.leadingCar)
+  return metroConsists.filter(consist => matchedMCars.includes(consist[0]))
+}
+
+let comengQuery = { $in: generateQuery('Comeng') }
+let siemensQuery = { $in: generateQuery('Siemens') }
+let xtrapQuery = { $in: generateQuery('Xtrapolis') }
+
 let lineRanges = {}
 
 Object.keys(rawLineRanges).forEach(line => {

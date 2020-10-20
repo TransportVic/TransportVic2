@@ -20,6 +20,7 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
   let baseURL = useArrivalInstead ? urls.vlinePlatformArrivals : urls.vlinePlatformDepartures
   let url = baseURL.format(stationName, direction, time)
   const body = (await utils.request(url)).replace(/a:/g, '')
+
   const $ = cheerio.load(body)
   const allServices = Array.from($('PlatformService'))
 
@@ -31,8 +32,20 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
     }
 
     let platform = $$('Platform').text()
+    if (platform.length > 5) platform = null
+
     let originDepartureTime = utils.parseTime($$('ScheduledDepartureTime').text())
     let destinationArrivalTime = utils.parseTime($$('ScheduledDestinationArrivalTime').text())
+
+    let estimatedStopArrivalTime, estimatedDestArrivalTime
+    let providedActualArrivalTime = $$('ActualArrivalTime').text()
+    let providedDestArrivalTime = $$('ActualDestinationArrivalTime').text()
+
+    if (providedActualArrivalTime.length === 19) {
+      estimatedStopArrivalTime = utils.parseTime(providedActualArrivalTime)
+      estimatedDestArrivalTime = utils.parseTime(providedDestArrivalTime)
+    }
+
     let runID = $$('ServiceIdentifier').text()
     let originVNETName = $$('Origin').text()
     let destinationVNETName = $$('Destination').text()
@@ -112,7 +125,10 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
       origin: originVLinePlatform.fullStopName,
       destination: destinationVLinePlatform.fullStopName,
       platform,
-      originDepartureTime, destinationArrivalTime,
+      originDepartureTime,
+      destinationArrivalTime,
+      estimatedStopArrivalTime,
+      estimatedDestArrivalTime,
       direction,
       vehicle: consist,
       barAvailable,

@@ -196,10 +196,13 @@ async function getScheduledDepartures(station, db, mode, timeout) {
           $in: stopGTFSIDs
         },
         actualDepartureTimeMS: {
-          $gte: timeMS - 1000 * 60,
-          $lte: timeMS + forwardTimeoutMS
+          $gte: timeMS + forwardTimeoutMS,
+          $lte: timeMS - 1000 * 60,
         }
       }
+    },
+    destination: {
+      $ne: station.stopName
     }
   }).toArray()
 
@@ -214,7 +217,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
     let estimatedDepartureTime = stopData.estimatedDepartureTime || null
     if (estimatedDepartureTime) {
       estimatedDepartureTime = utils.parseTime(estimatedDepartureTime)
-      if (estimatedDepartureTime - timeMS > forwardTimeoutMS) return null
+      if (estimatedDepartureTime - timeMS < -1000 * 60) return null
     }
 
     return {

@@ -7,5 +7,7 @@ tfnswAPI.makeRequest('/v1/gtfs/schedule/nswtrains', {
 }).then(res => {
   let folder = path.join(__dirname, '../../gtfs/14')
   fs.mkdirSync(folder, { recursive: true })
-  res.body.pipe(fs.createWriteStream(path.join(folder, 'google_transit.zip')))
+  let stream = fs.createWriteStream(path.join(folder, 'google_transit.zip'))
+  res.body.pipe(stream)
+  stream.on('error', console.log)
 }).catch(console.log)

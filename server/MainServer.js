@@ -23,6 +23,9 @@ if (modules.tracker && modules.tracker.tram)
 if (modules.tracker && modules.tracker.vline)
   require('../modules/trackers/vline')
 
+if (modules.tracker && modules.tracker['vline-r'])
+  require('../modules/trackers/vline-realtime')
+
 if (modules.tracker && modules.tracker.xpt)
   require('../modules/xpt/xpt-updater')
 

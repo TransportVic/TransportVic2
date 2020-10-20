@@ -425,7 +425,7 @@ async function getDepartures(station, db) {
         let cancelledIDs = cancelledTrains.map(train => train.originalServiceID)
         let nonCancelled = allDepartures.filter(train => !cancelledIDs.includes(train.originalServiceID))
 
-        let sorted = nonCancelled.concat(cancelledTrains).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+        let sorted = nonCancelled.concat(cancelledTrains).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
         departuresCache.put(cacheKey, sorted)
 
         return returnDepartures(sorted)
@@ -434,7 +434,7 @@ async function getDepartures(station, db) {
       }
     }
 
-    let allDepartures = scheduled.map(addFlags).concat(coachReplacements).sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+    let allDepartures = scheduled.map(addFlags).concat(coachReplacements).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
     departuresCache.put(cacheKey, allDepartures)
 
     return returnDepartures(allDepartures)

@@ -274,7 +274,7 @@ module.exports = {
   isWeekday: dayOfWeek => {
     return ['Mon', 'Tues', 'Wed', 'Thur', 'Fri'].includes(dayOfWeek)
   },
-  formatHHMM: time => {
+  formatHHMM: time => { // TODO: Rename getHHMM
     return time.format('HH:mm')
   },
   getYYYYMMDD: time => {
@@ -436,5 +436,10 @@ module.exports = {
     } else {
       return module.exports.pad(runID.toString(), 4, '0')
     }
+  },
+  sleep: time => {
+    return new Promise(resolve => {
+      setTimeout(resolve, time)
+    })
   }
 }

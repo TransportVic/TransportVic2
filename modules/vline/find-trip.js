@@ -1,4 +1,4 @@
-const utils = require('../../../utils')
+const utils = require('../../utils')
 
 module.exports = async (collection, operationDay, origin, destination, departureTime) => {
   let tripStartMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime)
