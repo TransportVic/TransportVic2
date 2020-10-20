@@ -22,10 +22,29 @@ async function setServiceAsCancelled(db, departureTime, origin, destination, isC
     departureTime = `0${departureTime}`
   }
 
-  let trip = await findTrip(gtfsTimetables, today, origin, destination, departureTime)
+  let trip
   let nspTrip = await findTrip(timetables, operationDay, origin, destination, departureTime)
 
-  if (trip && nspTrip) {
+  if (nspTrip) {
+    trip = await liveTimetables.findDocument({
+      operationDays: today,
+      runID: nspTrip.runID,
+      mode: 'regional train'
+    })
+
+    if (!trip) {
+      trip = await findTrip(gtfsTimetables, today, origin, destination, departureTime)
+    }
+
+    if (trip) {
+      trip.runID = nspTrip.runID
+      trip.vehicle = nspTrip.vehicle
+    }
+  } else {
+    trip = await findTrip(liveTimetables, today, origin, destination, departureTime)
+  }
+
+  if (trip) {
     delete trip._id
     if (isCoach) {
       trip.type = 'replacement coach'
@@ -39,8 +58,6 @@ async function setServiceAsCancelled(db, departureTime, origin, destination, isC
     await discordUpdate(`The ${departureTime} ${origin} - ${destination} service has been cancelled today.`)
 
     trip.operationDays = today
-    trip.runID = nspTrip.runID
-    trip.vehicle = nspTrip.vehicle
 
     await liveTimetables.replaceDocument({
       operationDays: today,

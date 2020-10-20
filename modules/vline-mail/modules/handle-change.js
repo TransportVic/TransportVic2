@@ -27,11 +27,30 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
     departureTime = `0${departureTime}`
   }
 
-  // No need for live as it allows for partial match a/c trip trimming in API
-  let trip = await findTrip(gtfsTimetables, today, origin, destination, departureTime)
+
+  let trip
   let nspTrip = await findTrip(timetables, operationDay, origin, destination, departureTime)
 
-  if (trip && nspTrip) {
+  if (nspTrip) {
+    trip = await liveTimetables.findDocument({
+      operationDays: today,
+      runID: nspTrip.runID,
+      mode: 'regional train'
+    })
+
+    if (!trip) {
+      trip = await findTrip(gtfsTimetables, today, origin, destination, departureTime)
+    }
+
+    if (trip) {
+      trip.runID = nspTrip.runID
+      trip.vehicle = nspTrip.vehicle
+    }
+  } else {
+    trip = await findTrip(liveTimetables, today, origin, destination, departureTime)
+  }
+
+  if (trip) {
     delete trip._id
 
     trip.type = 'change'
@@ -56,7 +75,7 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
     handleTripShorted(trip, {
       origin: newOrigin,
       destination: newDestination,
-      runID: nspTrip.runID
+      runID: trip.runID
     }, nspTrip, liveTimetables, today)
   } else {
     let identifier = {

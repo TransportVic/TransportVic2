@@ -23,10 +23,29 @@ async function setServiceNonStop(db, departureTime, origin, destination, skippin
     departureTime = `0${departureTime}`
   }
 
-  let trip = await findTrip(gtfsTimetables, today, origin, destination, departureTime)
+  let trip
   let nspTrip = await findTrip(timetables, operationDay, origin, destination, departureTime)
 
-  if (trip && nspTrip) {
+  if (nspTrip) {
+    trip = await liveTimetables.findDocument({
+      operationDays: today,
+      runID: nspTrip.runID,
+      mode: 'regional train'
+    })
+
+    if (!trip) {
+      trip = await findTrip(gtfsTimetables, today, origin, destination, departureTime)
+    }
+
+    if (trip) {
+      trip.runID = nspTrip.runID
+      trip.vehicle = nspTrip.vehicle
+    }
+  } else {
+    trip = await findTrip(liveTimetables, today, origin, destination, departureTime)
+  }
+
+  if (trip) {
     delete trip._id
 
     trip.type = 'pattern-altered'
@@ -40,12 +59,10 @@ async function setServiceNonStop(db, departureTime, origin, destination, skippin
     await discordUpdate(`The ${departureTime} ${origin} - ${destination} service will not stop at ${skipping} today.`)
 
     trip.operationDays = today
-    trip.runID = nspTrip.runID
-    trip.vehicle = nspTrip.vehicle
 
     await liveTimetables.replaceDocument({
       operationDays: today,
-      runID: nspTrip.runID,
+      runID: trip.runID,
       mode: 'regional train'
     }, trip, {
       upsert: true
