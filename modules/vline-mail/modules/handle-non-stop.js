@@ -4,6 +4,7 @@ const async = require('async')
 const postDiscordUpdate = require('../../discord-integration')
 const bestStop = require('./find-best-stop')
 const findTrip = require('../../vline/find-trip')
+const {getDayOfWeek} = require('../../../public-holidays')
 
 async function discordUpdate(text) {
   await postDiscordUpdate('vlineInform', text)
@@ -13,7 +14,7 @@ async function setServiceNonStop(db, departureTime, origin, destination, skippin
   let now = utils.now()
   if (now.get('hours') <= 2) now.add(-1, 'day')
   let today = utils.getYYYYMMDD(now)
-  let operationDay = utils.getDayName(now)
+  let operationDay = await getDayOfWeek(now)
 
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')

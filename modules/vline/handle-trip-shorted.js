@@ -13,7 +13,9 @@ module.exports = async function (trip, departure, nspTrip, liveTimetables, date)
       changePoint: departure.destination.slice(0, -16)
     })
 
+    trip.type = 'change'
     trip.modifications = modifications
+    trip.cancelled = false
 
     trip.stopTimings = trip.stopTimings.map(stop => {
       if (stop.stopName === departure.origin) {
