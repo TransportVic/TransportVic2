@@ -48,6 +48,8 @@ async function pickBestTrip(data, db) {
   let referenceTrip = await findTrip(db.getCollection('live timetables'), operationDays, originStop.stopName, destinationStop.stopName, data.departureTime)
     || await findTrip(db.getCollection('gtfs timetables'), operationDays, originStop.stopName, destinationStop.stopName, data.departureTime)
 
+  if (!referenceTrip) return null
+
   let isXPT = referenceTrip.routeGTFSID === '14-XPT'
   let isLive = false
 
