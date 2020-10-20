@@ -347,5 +347,6 @@ module.exports = [
   'lara/archimedes-avenue-rennie-street',
   'north-shore/north-shore-railway-station',
   'ballarat-central/davies-street-scott-parade',
-  'broadmeadows/martell-street-joseph-street'
+  'broadmeadows/martell-street-joseph-street',
+  'corio/rodbrough-crescent-bacchus-marsh-road'
 ]
