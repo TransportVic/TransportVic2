@@ -5,6 +5,7 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const getVNETDepartures = require('../vline/get-vnet-departures')
 const handleTripShorted = require('../vline/handle-trip-shorted')
 const findTrip = require('../vline/find-trip')
+const { getDayOfWeek } = require('../../public-holidays')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let refreshRate = 10
@@ -28,13 +29,13 @@ async function getDeparturesFromVNET(db) {
   await async.forEach(vnetDepartures, async departure => {
     let departureDay = utils.getYYYYMMDD(departure.originDepartureTime)
     let departureTimeHHMM = utils.formatHHMM(departure.originDepartureTime)
-    let dayOfWeek = utils.getDayName(departure.originDepartureTime)
+    let dayOfWeek = await getDayOfWeek(departure.originDepartureTime)
 
     let departureTimeMinutes = utils.getMinutesPastMidnight(departure.originDepartureTime)
     if (departureTimeMinutes < 300) {
       let previousDay = departure.originDepartureTime.clone().add(-1, 'day')
       departureDay = utils.getYYYYMMDD(previousDay)
-      dayOfWeek = utils.getDayName(previousDay)
+      dayOfWeek = await getDayOfWeek(previousDay)
     }
 
     let tripData = {

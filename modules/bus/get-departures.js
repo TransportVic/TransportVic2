@@ -65,7 +65,7 @@ async function getRoute(db, routeGTFSID) {
 
 function shouldGetNightbus(now) {
   let minutesAfterMidnight = utils.getMinutesPastMidnight(now)
-  let dayOfWeek = utils.getDayName(now)
+  let dayOfWeek = utils.getDayOfWeek(now)
 
   // 11pm - 8.30am (last 969 runs 6.30am - 7.35am, give some buffer for lateness?)
   if (dayOfWeek == 'Fri')

@@ -7,6 +7,7 @@ const querystring = require('querystring')
 const moment = require('moment')
 const vlineFleet = require('../../../additional-data/vline-fleet')
 const vlineConsists = require('../../../additional-data/carriage-sets')
+const { getDayOfWeek } = require('../../../public-holidays')
 
 let lines = {
   Geelong: ['Geelong', 'Marshall', 'South Geelong', 'Waurn Ponds', 'Wyndham Vale', 'Warrnambool'],
@@ -145,7 +146,7 @@ router.get('/highlights', async (req, res) => {
   if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
   else date = today
 
-  let dayOfWeek = utils.getDayName(utils.parseDate(date))
+  let dayOfWeek = await getDayOfWeek(utils.parseDate(date))
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 

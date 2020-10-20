@@ -43,7 +43,7 @@ function isDay() {
 
 function isNight() {
   let minutes = utils.getMinutesPastMidnightNow()
-  let dayOfWeek = utils.getDayName(utils.now())
+  let dayOfWeek = utils.getDayOfWeek(utils.now())
 
   if (1381 <= minutes && minutes <= 1439) return true // 2300 - 2359
 

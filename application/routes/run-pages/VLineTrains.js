@@ -6,6 +6,7 @@ const utils = require('../../../utils')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
 const guessPlatform = require('../../../modules/vline/guess-scheduled-platforms')
 const findTrip = require('../../../modules/vline/find-trip')
+const { getDayOfWeek } = require('../../../public-holidays')
 
 function giveVariance(time) {
   let minutes = utils.getMinutesPastMidnightFromHHMM(time)
@@ -87,10 +88,10 @@ async function pickBestTrip(data, db) {
         mode: 'regional train',
         routeGTFSID: referenceTrip.routeGTFSID,
         runID: tripData.runID,
-        operationDays: utils.getDayName(tripDay),
+        operationDays: await getDayOfWeek(tripDay),
       })
     } else {
-      nspTrip = await findTrip(db.getCollection('timetables'), utils.getDayName(tripDay), originStop.stopName, destinationStop.stopName, data.departureTime)
+      nspTrip = await findTrip(db.getCollection('timetables'), utils.getDayOfWeek(tripDay), originStop.stopName, destinationStop.stopName, data.departureTime)
     }
 
     let {runID, vehicle} = nspTrip || {}

@@ -268,7 +268,7 @@ module.exports = {
 
     return daysOfWeek[time.clone().subtract(offset, 'minutes').day()]
   },
-  getDayName: time => {
+  getDayOfWeek: time => {
     return daysOfWeek[time.day()]
   },
   isWeekday: dayOfWeek => {

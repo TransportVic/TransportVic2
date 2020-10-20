@@ -10,6 +10,7 @@ const getVLineStops = require('./SSS-Lines')
 const getMetroStops = require('../../../../additional-data/route-stops')
 const TrainUtils = require('../TrainUtils')
 const emptyCars = require('../empty-cars')
+const { getDayOfWeek } = require('../../../../public-holidays')
 
 const departuresCache = new TimedCache(1000 * 60 * 1.5)
 
@@ -168,7 +169,7 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
   let stopGTFSID = vlinePlatform.stopGTFSID
 
   let departures = await async.map(vnetServices, async departure => {
-    let dayOfWeek = utils.getDayName(departure.originDepartureTime)
+    let dayOfWeek = await getDayOfWeek(departure.originDepartureTime)
     let operationDay = departure.originDepartureTime.format('YYYYMMDD')
 
     let nspTrip = await timetables.findDocument({
@@ -513,7 +514,7 @@ async function appendVLineData(departure, timetables) {
 
 async function appendArrivalData(arrival, timetables) {
   let {runID} = arrival
-  let dayOfWeek = utils.getDayName(arrival.destinationArrivalTime)
+  let dayOfWeek = await getDayOfWeek(arrival.destinationArrivalTime)
   let operationDay = arrival.destinationArrivalTime.format('YYYYMMDD')
 
   let nspTrip = await timetables.findDocument({

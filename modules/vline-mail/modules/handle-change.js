@@ -5,7 +5,7 @@ const postDiscordUpdate = require('../../discord-integration')
 const bestStop = require('./find-best-stop')
 const findTrip = require('../../vline/find-trip')
 const handleTripShorted = require('../../vline/handle-trip-shorted')
-const {getDayOfWeek} = require('../../../public-holidays')
+const { getDayOfWeek } = require('../../../public-holidays')
 
 async function discordUpdate(text) {
   await postDiscordUpdate('vlineInform', text)

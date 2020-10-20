@@ -11,6 +11,7 @@ const getVNETDepartures = require('./get-vnet-departures')
 const handleTripShorted = require('./handle-trip-shorted')
 const findTrip = require('./find-trip')
 const EventEmitter = require('events')
+const { getDayOfWeek } = require('../../public-holidays')
 
 const departuresCache = new TimedCache(1000 * 60 * 1)
 
@@ -28,8 +29,17 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
   let stopGTFSID = vlinePlatform.stopGTFSID
 
   let departures = await async.map(vnetDepartures, async departure => {
-    let dayOfWeek = utils.getDayName(departure.originDepartureTime)
-    let operationDay = utils.getYYYYMMDD(departure.originDepartureTime)
+    let departureTime = departure.originDepartureTime
+    let operationDay = utils.getYYYYMMDD(departureTime)
+    let departureHHMM = utils.formatHHMM(departureTime)
+    let dayOfWeek = await getDayOfWeek(departureTime)
+
+    let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departureTime)
+    if (scheduledDepartureTimeMinutes < 300) {
+      let previousDay = departureTime.clone().add(-1, 'day')
+      operationDay = utils.getYYYYMMDD(previousDay)
+      dayOfWeek = await getDayOfWeek(previousDay)
+    }
 
     let nspTrip = await timetables.findDocument({
       operationDays: dayOfWeek,
@@ -37,25 +47,18 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
       mode: 'regional train'
     })
 
-    let departureTime = departure.originDepartureTime
-    let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departureTime)
-
-    let departureDay = utils.getYYYYMMDD(departureTime)
-    if (scheduledDepartureTimeMinutes < 300) departureDay = utils.getYYYYMMDD(departureTime.clone().add(-1, 'day'))
-    let departureHHMM = utils.formatHHMM(departureTime)
-
     let trip = await liveTimetables.findDocument({
-      operationDays: departureDay,
+      operationDays: operationDay,
       runID: departure.runID,
       mode: 'regional train'
-    }) || await findTrip(db.getCollection('gtfs timetables'), departureDay, departure.origin, departure.destination, departureHHMM) || nspTrip
+    }) || await findTrip(db.getCollection('gtfs timetables'), operationDay, departure.origin, departure.destination, departureHHMM) || nspTrip
 
     if (!trip) {
-      return console.log(departure, departure.originDepartureTime.format('HH:mm'))
+      return console.log(departure, departureTime.format('HH:mm'))
     }
 
     let platform = departure.platform
-    let originalServiceID = departure.originDepartureTime.format('HH:mm') + trip.destination
+    let originalServiceID = departureTime.format('HH:mm') + trip.destination
 
     await handleTripShorted(trip, departure, nspTrip, liveTimetables, operationDay)
 
@@ -179,10 +182,10 @@ async function appendTripData(db, departure, vlinePlatforms) {
   let liveTimetables = db.getCollection('live timetables')
   let shortRouteName = departure.trip.routeName
 
-  if (departure.trip.routeGTFSID === '14-XPT') {
-    let stopGTFSIDs = vlinePlatforms.map(bay => bay.stopGTFSID)
-    let stopTiming = departure.trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))
+  let stopGTFSIDs = vlinePlatforms.map(bay => bay.stopGTFSID)
+  let stopTiming = departure.trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))
 
+  if (departure.trip.routeGTFSID === '14-XPT') {
     let nswPlatform = vlinePlatforms.find(bay => bay.stopGTFSID === stopTiming.stopGTFSID)
     let platformNumber = nswPlatform.originalName.match(/Platform (\d+)/)[1]
     departure.platform = platformNumber
@@ -190,12 +193,17 @@ async function appendTripData(db, departure, vlinePlatforms) {
     let vlinePlatform = vlinePlatforms.find(bay => bay.stopGTFSID < 140000000)
     let { stopGTFSID } = vlinePlatform
 
-    let dayOfWeek = utils.getDayName(departure.scheduledDepartureTime)
-    let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departure.scheduledDepartureTime)
+    let originStop = departure.trip.stopTimings[0]
 
-    let departureMoment = departure.scheduledDepartureTime.clone()
+    let timingDifference = stopTiming.departureTimeMinutes - originStop.departureTimeMinutes
+    let originDepartureTime = departure.scheduledDepartureTime.clone().add(-timingDifference, 'minutes')
+    let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(originDepartureTime)
+
+    let departureMoment = originDepartureTime.clone()
     if (scheduledDepartureTimeMinutes < 180) departureMoment.add(-1, 'day')
-    let departureDay = utils.getYYYYMMDD(departureMoment)
+
+    let operationDay = utils.getYYYYMMDD(departureMoment)
+    let dayOfWeek = await getDayOfWeek(departureMoment)
 
     let {direction, origin, destination, departureTime, destinationArrivalTime} = departure.trip
     let realRouteGTFSID = departure.trip.routeGTFSID
@@ -214,15 +222,15 @@ async function appendTripData(db, departure, vlinePlatforms) {
     if (platform === '??') platform = null
 
     if (nspTrip && !platform) {
-      let stopTiming = nspTrip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
-      if (stopTiming) platform = stopTiming.platform
+      let nspStopTiming = nspTrip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+      if (nspStopTiming) platform = nspStopTiming.platform
     }
 
     let trackerDepartureTime = giveVariance(departureTime)
     let trackerDestinationArrivalTime = giveVariance(destinationArrivalTime)
 
     let tripData = await vlineTrips.findDocument({
-      date: departureDay,
+      date: operationDay,
       departureTime: trackerDepartureTime,
       origin: origin.slice(0, -16),
       destination: destination.slice(0, -16)
@@ -230,7 +238,7 @@ async function appendTripData(db, departure, vlinePlatforms) {
 
     if (!tripData) {
       tripData = await vlineTrips.findDocument({
-        date: departureDay,
+        date: operationDay,
         departureTime: trackerDepartureTime,
         origin: origin.slice(0, -16)
       })
@@ -255,8 +263,6 @@ async function appendTripData(db, departure, vlinePlatforms) {
 
     departure.shortRouteName = shortRouteName
     departure.platform = platform
-
-    let stopTiming = departure.trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
 
     if (stopTiming.cancelled) departure.cancelled = true
     if (departure.trip.type === 'change' && departure.trip.modifications.some(m => m.type === 'terminate')) {

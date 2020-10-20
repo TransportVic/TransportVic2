@@ -2,6 +2,7 @@ const urls = require('../../urls.json')
 const utils = require('../../utils')
 const cheerio = require('cheerio')
 const async = require('async')
+const { getDayOfWeek } = require('../../public-holidays')
 
 async function getStationFromVNETName(vnetStationName, db) {
   const station = await db.getCollection('stops').findDocument({
@@ -113,7 +114,7 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
     let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
 
     let consist = fullVehicle.split('-').filter((e, i, a) => a.indexOf(e) === i) // Simple deduper
-    let dayOfWeek = utils.getDayName(originDepartureTime)
+    let dayOfWeek = await getDayOfWeek(originDepartureTime)
     let isWeekday = utils.isWeekday(dayOfWeek)
 
     if (runID === '8147' && isWeekday) consist.reverse()

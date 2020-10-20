@@ -76,7 +76,7 @@ async function getPHDayOfWeek(time) {
 
 async function getDayOfWeek(time) {
   let phDay = await getPHDayOfWeek(time)
-  let regularDay = utils.getDayName(time)
+  let regularDay = utils.getDayOfWeek(time)
   if (!phDay || phDay === 'Weekday') return regularDay
 
   if (phDay === 'Saturday') return 'Sat'
