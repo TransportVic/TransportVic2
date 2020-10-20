@@ -54,11 +54,17 @@ async function getDeparturesFromVNET(db, station) {
   let vnetDepartures = [ ...down, ...up ]
 
   let gtfsTimetables = db.getCollection('gtfs timetables')
+  let liveTimetables = db.getCollection('live timetables')
 
   return (await async.map(vnetDepartures, async departure => {
     let departureDay = utils.getYYYYMMDD(departure.originDepartureTime)
     let departureTimeHHMM = utils.formatHHMM(departure.originDepartureTime)
-    let trip = await findTrip(gtfsTimetables, departureDay, departure.origin, departure.destination, departureTimeHHMM)
+
+    let trip = (await liveTimetables.findDocument({
+      operationDays: departureDay,
+      runID: departure.runID,
+      mode: 'regional train'
+    })) || await findTrip(gtfsTimetables, departureDay, departure.origin, departure.destination, departureTimeHHMM)
     departure.trip = trip
 
     if (trip) {
@@ -148,12 +154,12 @@ async function fetchData() {
       relevantStops.forEach(stop => {
         let stopMinutes = (stop.departureTimeMinutes || stop.arrivalTimeMinutes)
         let minutesFromPrevious = stopMinutes - previousMinutes
-        let minutesPercentage = 1 - minutesFromPrevious / minutesDifference
+        let minutesPercentage = minutesFromPrevious / minutesDifference
         let delayPercentage = minutesPercentage * delayDifference
 
         let minutesFromOrigin = stopMinutes - tripDepartureTime.minutes
         let scheduledDepartureTime = tripDepartureTime.moment.clone().add(minutesFromOrigin, 'minutes')
-        let estimatedDepartureTime = scheduledDepartureTime.clone().add(delayPercentage, 'milliseconds')
+        let estimatedDepartureTime = scheduledDepartureTime.clone().add(previousDelay + delayPercentage, 'milliseconds')
 
         stop.estimatedDepartureTime = estimatedDepartureTime.toISOString()
         stop.actualDepartureTimeMS = +estimatedDepartureTime
