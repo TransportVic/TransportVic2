@@ -6,7 +6,7 @@ const getVNETDepartures = require('../vline/get-vnet-departures')
 const handleTripShorted = require('../vline/handle-trip-shorted')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-let refreshRate = 20
+let refreshRate = 10
 
 function shouldRun() {
   let minutes = utils.getMinutesPastMidnightNow()
@@ -94,10 +94,10 @@ async function requestTimings() {
   }
 
   if (shouldRun()) {
-    setTimeout(requestTimings, 30 * 60 * 1000)
+    setTimeout(requestTimings, refreshRate * 60 * 1000)
   } else {
     let minutesPastMidnight = utils.getMinutesPastMidnightNow()
-    let timeToStart = (1440 + 3 * 60 + 30 - minutesPastMidnight) % 1440
+    let timeToStart = (1440 + 3 * 60 + refreshRate - minutesPastMidnight) % 1440
 
     setTimeout(requestTimings, timeToStart * 60 * 1000)
   }

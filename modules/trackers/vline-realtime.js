@@ -180,10 +180,10 @@ async function requestTimings() {
   }
 
   if (shouldRun()) {
-    setTimeout(requestTimings, 30 * 60 * 1000)
+    setTimeout(requestTimings, refreshRate * 60 * 1000)
   } else {
     let minutesPastMidnight = utils.getMinutesPastMidnightNow()
-    let timeToStart = (1440 + 3 * 60 + 30 - minutesPastMidnight) % 1440
+    let timeToStart = (1440 + refreshRate * 60 * 1000 - minutesPastMidnight) % 1440
 
     setTimeout(requestTimings, timeToStart * 60 * 1000)
   }
