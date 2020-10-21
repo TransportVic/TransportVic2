@@ -181,7 +181,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
   })
 
   let timeMS = +utils.now()
-  let forwardTimeoutMS = timeout * 60 * 1000
+  let timeoutMS = timeout * 60 * 1000
 
   let lateDepartures = await liveTimetables.findDocuments({
     _id: {
@@ -196,8 +196,8 @@ async function getScheduledDepartures(station, db, mode, timeout) {
           $in: stopGTFSIDs
         },
         actualDepartureTimeMS: {
-          $gte: timeMS + forwardTimeoutMS,
-          $lte: timeMS - 1000 * 60,
+          $gte: timeMS - timeoutMS,
+          $lte: timeMS + 1000 * 60
         }
       }
     },
