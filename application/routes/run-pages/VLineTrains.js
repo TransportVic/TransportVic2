@@ -77,7 +77,7 @@ async function pickBestTrip(data, db) {
       })
     }
 
-    if (!tripData) {
+    if (!tripData && referenceTrip.direction === 'Down') {
       tripData = await vlineTrips.findDocument({
         date: operationDays,
         destination: referenceTrip.destination.slice(0, -16),
