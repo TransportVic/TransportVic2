@@ -6,15 +6,9 @@ const getVNETDepartures = require('../vline/get-vnet-departures')
 const handleTripShorted = require('../vline/handle-trip-shorted')
 const findTrip = require('../vline/find-trip')
 const { getDayOfWeek } = require('../../public-holidays')
+const schedule = require('./scheduler')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-let refreshRate = 10
-
-function shouldRun() {
-  let minutes = utils.getMinutesPastMidnightNow()
-
-  return 210 <= minutes && minutes <= 1380 // 0330 - 2300
-}
 
 async function getDeparturesFromVNET(db) {
   let vnetDepartures = [
@@ -86,17 +80,10 @@ async function requestTimings() {
     console.error(e)
     console.log('Error getting vline trips, skipping this round')
   }
-
-  if (shouldRun()) {
-    setTimeout(requestTimings, refreshRate * 60 * 1000)
-  } else {
-    let minutesPastMidnight = utils.getMinutesPastMidnightNow()
-    let timeToStart = (1440 + 3 * 60 + refreshRate - minutesPastMidnight) % 1440
-
-    setTimeout(requestTimings, timeToStart * 60 * 1000)
-  }
 }
 
 database.connect(async () => {
-  await requestTimings()
+  schedule([
+    [210, 1380, 10]
+  ], requestTimings, 'vline tracker')
 })

@@ -5,39 +5,10 @@ const shuffle = require('lodash.shuffle')
 const stops = require('../../additional-data/tram-tracker/stops')
 const async = require('async')
 const getDepartures = require('../../modules/tram/get-departures-experimental')
+const schedule = require('./scheduler')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
-let refreshRate = 6
-
-function isDay() {
-  let minutes = utils.getMinutesPastMidnightNow()
-
-  return 270 <= minutes && minutes <= 1200 // 0500 - 2000
-}
-
-function isNight() {
-  let minutes = utils.getMinutesPastMidnightNow()
-
-  return 1201 <= minutes && minutes <= 1439 || minutes <= 120 // 2101 - 0200
-}
-
-/*
-  Requests from:
-  0500 - 2000: 150 req
-  2000 - 0200: 36 req
-*/
-function updateRefreshRate() {
-  if (isDay()) refreshRate = 6
-  else if (isNight()) refreshRate = 10
-  else {
-    let minutes = utils.getMinutesPastMidnightNow()
-    if (minutes < 300) minutes += 1440
-
-    refreshRate = 1740 - minutes + 1
-    console.log('Tram Tracker going to sleep for ' + refreshRate + ' minutes')
-  }
-}
 
 function pickRandomStops() {
   return shuffle(stops).slice(0, 20)
@@ -60,17 +31,14 @@ async function requestTimings() {
   } catch (e) {
     console.log('Failed to get tram trips this round')
   }
-
-  updateRefreshRate()
-  setTimeout(requestTimings, refreshRate * 60 * 1000)
 }
 
 database.connect(async () => {
   dbStops = database.getCollection('stops')
-  if (!isNight() && !isDay()) {
-    updateRefreshRate()
-    setTimeout(requestTimings, refreshRate * 60 * 1000)
-  } else {
-    await requestTimings()
-  }
+
+  schedule([
+    [0, 60, 10],
+    [270, 1200, 6],
+    [1201, 1439, 10]
+  ], requestTimings, 'tram tracker')
 })

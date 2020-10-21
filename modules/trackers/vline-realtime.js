@@ -5,9 +5,9 @@ const moment = require('moment')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const findTrip = require('../vline/find-trip')
 const getVNETDepartures = require('../vline/get-vnet-departures')
+const schedule = require('./scheduler')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-let refreshRate = 12
 
 let stops = [
   'North Geelong',
@@ -40,12 +40,6 @@ let extendedList = [
   'Winchelsea',
   'North Melbourne'
 ]
-
-function shouldRun() {
-  let minutes = utils.getMinutesPastMidnightNow()
-
-  return minutes <= 150 || 330 <= minutes && minutes <= 1440 // 0000 - 0230 or 0530 - 2359
-}
 
 async function getDeparturesFromVNET(db, station) {
   let vnetName = station.bays.find(bay => bay.vnetStationName).vnetStationName
@@ -204,17 +198,11 @@ async function requestTimings() {
     console.error(e)
     console.log('Error getting vline realtime data, skipping this round')
   }
-
-  if (shouldRun()) {
-    setTimeout(requestTimings, refreshRate * 60 * 1000)
-  } else {
-    let minutesPastMidnight = utils.getMinutesPastMidnightNow()
-    let timeToStart = (1440 + refreshRate * 60 * 1000 - minutesPastMidnight) % 1440
-
-    setTimeout(requestTimings, timeToStart * 60 * 1000)
-  }
 }
 
 database.connect(async () => {
-  await requestTimings()
+  schedule([
+    [0, 150, 12],
+    [330, 1440, 12]
+  ], requestTimings, 'vline-r tracker')
 })

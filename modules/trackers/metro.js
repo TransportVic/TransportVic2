@@ -10,11 +10,11 @@ const getMetroDepartures = require('../metro-trains/get-departures')
 const { findTrip } = getMetroDepartures
 const metroConsists = require('../../additional-data/metro-tracker/metro-consists')
 const stops = require('../../additional-data/metro-tracker/stops')
+const schedule = require('./scheduler')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
 let metroTrips
-let refreshRate = 0.5
 
 let token
 let cacheTime
@@ -35,37 +35,17 @@ async function getToken() {
   return token
 }
 
-function isDay() {
-  let minutes = utils.getMinutesPastMidnightNow()
-
-  return 300 <= minutes && minutes <= 1380 // 0500 - 2300
-}
-
-function isNight() {
+function runNightNetwork() {
   let minutes = utils.getMinutesPastMidnightNow()
   let dayOfWeek = utils.getDayOfWeek(utils.now())
 
-  if (1381 <= minutes && minutes <= 1439) return true // 2300 - 2359
+  if (minutes >= 300 || minutes <= 60) return true
 
   if (['Sat', 'Sun'].includes(dayOfWeek)) { // Considering the true day, NN runs on sat & sun morn
     return minutes < 300 // 2359 - 0459
-  } else { // Turns out consist data is still available, just no departure times
-    return minutes < 60 // 2359 - 0059
   }
 
   return false
-}
-
-function updateRefreshRate() {
-  if (isDay()) refreshRate = 0.5
-  else if (isNight()) refreshRate = 2
-  else {
-    let minutes = utils.getMinutesPastMidnightNow()
-    if (minutes < 300) minutes += 1440
-
-    refreshRate = 1740 - minutes + 1
-    console.log('Metro Tracker going to sleep for ' + refreshRate + ' minutes')
-  }
 }
 
 let stopNames = Object.keys(stops)
@@ -75,6 +55,8 @@ function pickRandomStop() {
 }
 
 async function getDepartures(stop) {
+  if (!runNightNetwork()) return
+
   let stopCode = stops[stop]
   let stopData = await dbStops.findDocument({ stopName: stop + ' Railway Station' })
   await getMetroDepartures(stopData, database) // To preload disruptions and whatnot
@@ -196,18 +178,16 @@ async function requestTimings() {
     console.error(e)
     console.log('Failed to get metro trips this round, skipping')
   }
-
-  updateRefreshRate()
-  setTimeout(requestTimings, refreshRate * 60 * 1000)
 }
 
 database.connect(async () => {
   dbStops = database.getCollection('stops')
   metroTrips = database.getCollection('metro trips')
-  if (!isNight() && !isDay()) {
-    updateRefreshRate()
-    setTimeout(requestTimings, refreshRate * 60 * 1000)
-  } else {
-    await requestTimings()
-  }
+
+  schedule([
+    [0, 60, 2.5],
+    [61, 299, 2.5],
+    [300, 1380, 0.5],
+    [1381, 1440, 2]
+  ], requestTimings, 'bus tracker')
 })
