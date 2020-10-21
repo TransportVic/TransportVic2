@@ -51,7 +51,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
       operationDays: operationDay,
       runID: departure.runID,
       mode: 'regional train'
-    }) || await findTrip(db.getCollection('gtfs timetables'), operationDay, departure.origin, departure.destination, departureHHMM) || nspTrip
+    }) || await findTrip(db.getCollection('gtfs timetables'), operationDay, departure.origin, departure.destination, departureHHMM)
 
     if (!trip) {
       return console.log(departure, departureTime.format('HH:mm'))
@@ -167,7 +167,7 @@ function checkDivide(departure, currentStation, nspTrip, consist) {
       if (remainingStops.length > 5) {
         stopsRange = `${remainingStops[1]} - ${remainingStops.slice(-1)[0]}`
       }
-      departure.divideMessage = `(Take ${remaining} for ${stopsRange} (Experimental, check with staff))`
+      departure.divideMessage = `(Take ${remaining} for ${stopsRange})`
     }
   }
 

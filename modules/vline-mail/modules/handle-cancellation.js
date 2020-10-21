@@ -31,11 +31,7 @@ async function setServiceAsCancelled(db, departureTime, origin, destination, isC
       operationDays: today,
       runID: nspTrip.runID,
       mode: 'regional train'
-    })
-
-    if (!trip) {
-      trip = await findTrip(gtfsTimetables, today, origin, destination, departureTime)
-    }
+    }) || await findTrip(gtfsTimetables, today, origin, destination, departureTime)
 
     if (trip) {
       trip.runID = nspTrip.runID

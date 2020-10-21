@@ -13,7 +13,9 @@ module.exports = function schedule(intervals, func, name) {
     }, currentInterval[2] * 60 * 1000)
   } else {
     let nextInterval = intervals.find(i => {
-      return minutesNow < i[0] || minutesNow < i[0] + 1440
+      return minutesNow < i[0]
+    }) || intervals.find(i => {
+      return minutesNow < i[0] + 1440
     })
     let timeToNextInterval = nextInterval[0] - minutesNow
     if (timeToNextInterval < 0) timeToNextInterval += 1440

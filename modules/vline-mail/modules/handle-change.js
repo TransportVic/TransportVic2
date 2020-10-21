@@ -37,11 +37,7 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
       operationDays: today,
       runID: nspTrip.runID,
       mode: 'regional train'
-    })
-
-    if (!trip) {
-      trip = await findTrip(gtfsTimetables, today, origin, destination, departureTime)
-    }
+    }) || await findTrip(gtfsTimetables, today, origin, destination, departureTime)
 
     if (trip) {
       trip.runID = nspTrip.runID

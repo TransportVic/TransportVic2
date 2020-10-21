@@ -15,6 +15,7 @@ async function getDeparturesFromVNET(db) {
     ...await getVNETDepartures('', 'D', db, 1440), ...await getVNETDepartures('', 'U', db, 1440),
     ...await getVNETDepartures('', 'D', db, 1440, true), ...await getVNETDepartures('', 'U', db, 1440, true)
   ]
+
   let vlineTrips = db.getCollection('vline trips')
   let timetables = db.getCollection('timetables')
   let liveTimetables = db.getCollection('live timetables')
@@ -63,8 +64,6 @@ async function getDeparturesFromVNET(db) {
       runID: departure.runID,
       mode: 'regional train'
     })) || await findTrip(gtfsTimetables, departureDay, departure.origin, departure.destination, departureTimeHHMM)
-
-    if (!trip && nspTrip) trip = nspTrip
 
     if (trip) {
       await handleTripShorted(trip, departure, nspTrip, liveTimetables, departureDay)
