@@ -1,3 +1,6 @@
+sudo yum remove httpd -y
+sudo yum remove postfix -y
+
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 echo "
 . ~/.nvm/nvm.sh
