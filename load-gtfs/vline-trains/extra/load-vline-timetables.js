@@ -188,7 +188,7 @@ async function parseTimings(names, types, trip) {
   })
 
   let stopTimings = Object.values(locations).filter(stop => !isNaN(stop.arrivalTimeMinutes))
-  if (stopTimings[0].departureTimeMinutes < 300) {
+  if (stopTimings[0].departureTimeMinutes < 180) {
     stopTimings.forEach(stop => {
       if (stop.departureTimeMinutes) stop.departureTimeMinutes += 1440
       if (stop.arrivalTimeMinutes) stop.arrivalTimeMinutes += 1440

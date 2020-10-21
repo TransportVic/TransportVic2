@@ -35,7 +35,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
     let dayOfWeek = await getDayOfWeek(departureTime)
 
     let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departureTime)
-    if (scheduledDepartureTimeMinutes < 300) {
+    if (scheduledDepartureTimeMinutes < 180) {
       let previousDay = departureTime.clone().add(-1, 'day')
       operationDay = utils.getYYYYMMDD(previousDay)
       dayOfWeek = await getDayOfWeek(previousDay)

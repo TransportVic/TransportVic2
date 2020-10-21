@@ -32,7 +32,7 @@ async function getDeparturesFromVNET(db) {
     let dayOfWeek = await getDayOfWeek(departure.originDepartureTime)
 
     let departureTimeMinutes = utils.getMinutesPastMidnight(departure.originDepartureTime)
-    if (departureTimeMinutes < 300) {
+    if (departureTimeMinutes < 180) {
       let previousDay = departure.originDepartureTime.clone().add(-1, 'day')
       departureDay = utils.getYYYYMMDD(previousDay)
       dayOfWeek = await getDayOfWeek(previousDay)

@@ -32,7 +32,7 @@ function updateRefreshRate() {
   else if (isNight()) refreshRate = 10
   else {
     let minutes = utils.getMinutesPastMidnightNow()
-    if (minutes < 300) minutes += 1440
+    if (minutes < 180) minutes += 1440
 
     refreshRate = 1740 - minutes + 1
     console.log('Bus Tracker going to sleep for ' + refreshRate + ' minutes')

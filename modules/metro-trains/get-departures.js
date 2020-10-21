@@ -135,7 +135,7 @@ async function getMissingRRB(station, db, individualRailBusDepartures) {
 
   await async.forEach(individualRailBusDepartures, async departureData => {
     let { departureTimeMinutes, origin, departureTime, destination, destinationArrivalTime, direction, routeGTFSID } = departureData
-    let searchDays = departureTimeMinutes < 300 ? 1 : 0
+    let searchDays = departureTimeMinutes < 180 ? 1 : 0
 
     for (let i = 0; i <= searchDays; i++) {
       let day = today.clone().add(-i, 'days')
