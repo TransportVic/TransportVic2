@@ -96,7 +96,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
       actualDepartureTime: departure.originDepartureTime,
       runID: departure.runID,
       vehicle: departure.vehicle,
-      destination: trip.destination.slice(0, -16),
+      destination: departure.destination.slice(0, -16),
       flags: {
         barAvailable: departure.barAvailable,
         accessibleTrain: departure.accessibleTrain
@@ -280,7 +280,7 @@ async function appendTripData(db, departure, vlinePlatforms) {
     }
   }
 
-  departure.originalServiceID = departure.trip.originalServiceID || departure.scheduledDepartureTime.format('HH:mm') + departure.trip.destination
+  departure.originalServiceID = departure.scheduledDepartureTime.format('HH:mm') + departure.trip.destination
   departure.flags = {}
 
   return departure
@@ -332,7 +332,7 @@ async function getDepartures(station, db) {
       })
     }
 
-    let ptvDepartures = [], scheduledCoachReplacements = []
+    let ptvDepartures = { departures: [] }, scheduledCoachReplacements = []
     let vnetDepartures = []
     await Promise.all([new Promise(async resolve => {
       try {

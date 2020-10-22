@@ -36,9 +36,10 @@ let extendedList = [
   'Mooroopna',
   'Rochester',
   'Kerang',
-  'Sherwood Park',
+  'Terang',
   'Winchelsea',
-  'North Melbourne'
+  'North Melbourne',
+  'Watergardens'
 ]
 
 async function getDeparturesFromVNET(db, station) {
