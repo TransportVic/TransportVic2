@@ -1,0 +1,5 @@
+sudo mongodump --collection="smartrak ids" --db="TransportVic" --gzip --out="/home/ec2-user/backup"
+sudo mongodump --collection="bus trips" --db="TransportVic" --gzip --out="/home/ec2-user/backup"
+sudo mongodump --collection="tram trips" --db="TransportVic" --gzip --out="/home/ec2-user/backup"
+sudo mongodump --collection="metro trips" --db="TransportVic" --gzip --out="/home/ec2-user/backup"
+sudo mongodump --collection="vline trips" --db="TransportVic" --gzip --out="/home/ec2-user/backup"
