@@ -584,6 +584,9 @@ async function updateSuspensions(departures, station, db) {
       if (endIndex == -1) endIndex = tripStops.length
 
       trip.stopTimings = trip.stopTimings.slice(startIndex, endIndex + 1)
+
+      departure.cancelled = false
+      trip.cancelled = false
       departure.estimatedDepartureTime = null
       departure.actualDepartureTime = departure.scheduledDepartureTime
     } else if (currentSuspension.disruptionStatus === 'passed') { // Cut origin
@@ -631,9 +634,11 @@ async function markRailBuses(departures, station, db) {
   let liveTimetables = db.getCollection('live timetables')
   let stopGTFSID = station.bays.find(bay => bay.mode === 'metro train').stopGTFSID
 
-  await async.forEach(departures.filter(departure => departure.suspensions.length || departure.isRailReplacementBus || departure.trip.isRailReplacementBus), async departure => {
+  await async.forEachSeries(departures.filter(departure => departure.suspensions.length || departure.isRailReplacementBus || departure.trip.isRailReplacementBus), async departure => {
     let { trip } = departure
     let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+    if (!stopData) return
+
     let minutesDiff = stopData.departureTimeMinutes - trip.stopTimings[0].departureTimeMinutes
     let originDepartureTime = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
 
@@ -660,26 +665,37 @@ async function markRailBuses(departures, station, db) {
       isRailReplacementBus: departure.isRailReplacementBus,
       operationDays: departureDay
     }
+    delete newTrip._id
+
+    let query = {
+      trueDepartureTime: newTrip.trueDepartureTime,
+      trueDestinationArrivalTime: newTrip.trueDestinationArrivalTime,
+      trueOrigin: newTrip.trueOrigin,
+      trueDestination: newTrip.trueDestination,
+      mode: 'metro train',
+      operationDays: departureDay
+    }
+
+    let runIDQuery = {
+      mode: 'metro train',
+      operationDays: departureDay,
+      runID: departure.runID
+    }
 
     if (departure.isRailReplacementBus) {
       delete newTrip.vehicle
       delete newTrip.runID
     }
 
-    let query = {
-      departureTime: newTrip.departureTime,
-      destinationArrivalTime: newTrip.destinationArrivalTime,
-      origin: newTrip.origin,
-      destination: newTrip.destination,
-      mode: 'metro train',
-      operationDays: departureDay
+    if (await liveTimetables.countDocuments(runIDQuery)) {
+      if (await liveTimetables.countDocuments(query)) return
+
+      await liveTimetables.replaceDocument(runIDQuery, newTrip)
+    } else {
+      await liveTimetables.replaceDocument(query, newTrip, {
+        upsert: true
+      })
     }
-
-    delete newTrip._id
-
-    await liveTimetables.replaceDocument(query, newTrip, {
-      upsert: true
-    })
   })
 }
 
