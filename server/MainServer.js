@@ -125,6 +125,12 @@ module.exports = class MainServer {
       next()
     })
 
+    app.use('/.well_known/acme_challenge/:key', (req, res) => {
+      let reqURL = new url.URL('https://transportsg.me' + req.url)
+      let filePath = path.join(config.webrootPath, reqURL.pathname)
+      fs.createReadStream(filePath).pipe(res)
+    })
+
     app.use(compression({
       level: 9,
       threshold: 512
