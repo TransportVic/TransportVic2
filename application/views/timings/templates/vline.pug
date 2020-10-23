@@ -31,6 +31,16 @@ if departures.length
           if (departure.trip.routeGTFSID === '14-XPT') lineName = 'Melbourne-Sydney XPT towards'
         span.towards #{lineName}
         span.destination #{departure.destination}
+        -
+          let showPatternAltered = false
+          if (departure.trip.type === 'pattern-altered') {
+            let stopSkipped = departure.trip.stopTimings.find(stop => stop.cancelled)
+            let currentStop = departure.trip.stopTimings.find(stop => stop.stopName === station.stopName)
+            let skippedIndex = departure.trip.stopTimings.indexOf(stopSkipped)
+            let currentIndex = departure.trip.stopTimings.indexOf(currentStop)
+            showPatternAltered = skippedIndex >= currentIndex
+          }
+
         if departure.isRailReplacementBus
           span.broadDepartureInfo.important This service has been replaced by coaches
         else if departure.trip.type === 'change'
@@ -44,14 +54,8 @@ if departures.length
           else if departure.trip.modifications.some(m => m.type === 'terminate')
             - let terminationModification = departure.trip.modifications.find(m => m.type === 'terminate')
             span.broadDepartureInfo.important CHANGED: Now terminates at #{terminationModification.changePoint}
-        else if departure.trip.type === 'pattern-altered'
-          -
-            let stopSkipped = departure.trip.stopTimings.find(stop => stop.cancelled)
-            let currentStop = departure.trip.stopTimings.find(stop => stop.stopName === station.stopName)
-            let skippedIndex = departure.trip.stopTimings.indexOf(stopSkipped)
-            let currentIndex = departure.trip.stopTimings.indexOf(currentStop)
-          if skippedIndex >= currentIndex
-            span.broadDepartureInfo.important #{skippedIndex === currentIndex ? 'CANCELLED' : 'CHANGED'}: Will not stop at #{stopSkipped.stopName.slice(0, -16)}
+        else if showPatternAltered
+          span.broadDepartureInfo.important #{skippedIndex === currentIndex ? 'CANCELLED' : 'CHANGED'}: Will not stop at #{stopSkipped.stopName.slice(0, -16)}
         else if departure.cancelled
           span.broadDepartureInfo.important CANCELLED
         else
