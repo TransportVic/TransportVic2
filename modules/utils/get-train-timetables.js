@@ -1,5 +1,6 @@
 const async = require('async')
 const utils = require('../../utils')
+const { getDayOfWeek } = require('../../public-holidays')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 

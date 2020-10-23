@@ -64,8 +64,9 @@ database.connect({}, async err => {
     let brokenShapes = await async.filter(routeData.routePath, async path => {
       if (path.fixed) return false
       let timetable = await gtfsTimetables.findDocument({ shapeID: path.fullGTFSIDs[0] })
-      shapeCache[path.fullGTFSIDs[0]] = timetable
+      if (!timetable) return
 
+      shapeCache[path.fullGTFSIDs[0]] = timetable
       if ([timetable.origin, timetable.destination].includes('Southern Cross Coach Terminal/Spencer Street')) return true
 
       let forceFail = false
