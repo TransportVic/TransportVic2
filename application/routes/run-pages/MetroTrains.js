@@ -119,7 +119,7 @@ async function pickBestTrip(data, db) {
 
   let isStonyPoint = data.origin === 'stony-point' || data.destination === 'stony-point'
 
-  if (referenceTrip && isStonyPoint) {
+  if (referenceTrip && (isStonyPoint || referenceTrip.routeGTFSID === '2-SPT')) {
     return { trip: await addStonyPointData(db, referenceTrip, tripStartTime), tripStartTime, isLive: false }
   }
 

@@ -233,7 +233,7 @@ module.exports = {
             metroDepartures = (await getMetroDepartures(station, db))
             metroDepartures = await async.map(metroDepartures, async departure => {
               let {runID} = departure
-              let today = utils.getPTDayName(utils.now())
+              let today = await getDayOfWeek(utils.now()) // TODO: Change to trip start time
 
               let scheduled = await timetables.findDocument({
                 runID, operationDays: today

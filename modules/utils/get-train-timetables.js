@@ -111,7 +111,7 @@ function getLiveDeparture(station, db, mode, possibleLines, departureTime, possi
 async function getStaticDeparture(runID, db) {
   let trip = await db.getCollection('timetables').findDocument({
     runID,
-    operationDays: utils.getPTDayName(utils.now())
+    operationDays: await getDayOfWeek(utils.now())
   })
 
   return trip
