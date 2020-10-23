@@ -62,25 +62,38 @@ async function pickBestTrip(data, db) {
     let trackerDepartureTime = giveVariance(referenceTrip.departureTime)
     let trackerDestinationArrivalTime = giveVariance(referenceTrip.destinationArrivalTime)
 
+    let origin = referenceTrip.origin.slice(0, -16)
+    let destination = referenceTrip.destination.slice(0, -16)
+
+    let possibleOrigins = { $in: [origin] }
+    let possibleDestinations = { $in: [destination] }
+
+    if (referenceTrip.type === 'change' && referenceTrip.modifications.length) {
+      let originate = referenceTrip.modifications.find(m => m.type === 'originate')
+      let terminate = referenceTrip.modifications.find(m => m.type === 'terminate')
+      if (originate) possibleOrigins.$in.push(originate.changePoint)
+      if (terminate) possibleDestinations.$in.push(terminate.changePoint)
+    }
+
     let tripData = await vlineTrips.findDocument({
       date: operationDays,
       departureTime: trackerDepartureTime,
-      origin: referenceTrip.origin.slice(0, -16),
-      destination: referenceTrip.destination.slice(0, -16)
+      origin: possibleOrigins,
+      destination: possibleDestinations
     })
 
     if (!tripData && referenceTrip.direction === 'Up') {
       tripData = await vlineTrips.findDocument({
         date: operationDays,
         departureTime: trackerDepartureTime,
-        origin: referenceTrip.origin.slice(0, -16)
+        origin: possibleOrigins
       })
     }
 
     if (!tripData && referenceTrip.direction === 'Down') {
       tripData = await vlineTrips.findDocument({
         date: operationDays,
-        destination: referenceTrip.destination.slice(0, -16),
+        destination: possibleDestinations,
         destinationArrivalTime: trackerDestinationArrivalTime
       })
     }

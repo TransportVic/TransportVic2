@@ -5,8 +5,8 @@ const router = new express.Router()
 const url = require('url')
 const querystring = require('querystring')
 const moment = require('moment')
-const vlineFleet = require('../../../additional-data/vline-fleet')
-const vlineConsists = require('../../../additional-data/carriage-sets')
+const vlineFleet = require('../../../additional-data/vline-tracker/vline-fleet')
+const vlineConsists = require('../../../additional-data/vline-tracker/carriage-sets')
 const { getDayOfWeek } = require('../../../public-holidays')
 
 let lines = {

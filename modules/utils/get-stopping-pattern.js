@@ -18,6 +18,8 @@ let modes = {
   'tram': 1
 }
 
+let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
+
 module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip, extraTripData) {
   let stopsCollection = db.getCollection('stops')
   let liveTimetables = db.getCollection('live timetables')
@@ -192,8 +194,8 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     }
 
     if (referenceTrip && extraTripData && extraTripData.trimStops) {
-      let referenceStops = referenceTrip.stopTimings.map(stop => stop.stopGTFSID)
-      stopTimings = stopTimings.filter(stop => referenceStops.includes(stop.stopGTFSID))
+      let referenceStops = referenceTrip.stopTimings.map(stop => stop.stopName)
+      stopTimings = stopTimings.filter(stop => referenceStops.includes(stop.stopName) || cityLoopStations.includes(stop.stopName.slice(0, -16)))
     }
   }
 
