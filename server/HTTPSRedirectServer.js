@@ -5,7 +5,7 @@ const config = require('../config.json')
 
 module.exports = class HTTPSRedirectServer {
   app (req, res) {
-    const redirectedURL = 'https://transportsg.me' + req.url
+    const redirectedURL = 'https://' + req.headers.host + req.url
 
     res.writeHead(308, { Location: redirectedURL })
     res.end()
