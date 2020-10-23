@@ -22,12 +22,13 @@ block content
   if trip.runID
     div.infoRow
       span=`Run ${trip.runID}`
-      - let vehicle = trip.vehicle.replace(/ Car/, '')
-      if vehicle.match(/\d [A-Za-z]+/)
-        - let parts = vehicle.match(/(\d) ([A-Za-z]+)/).slice(1, 3)
-        div.vehicle
-          span=parts[0] + 'x'
-          img(src=`/static/images/icons/${parts[1].toLowerCase()}.svg`)
+      if trip.vehicle
+        - let vehicle = trip.vehicle.replace(/ Car/, '')
+        if vehicle.match(/\d [A-Za-z]+/)
+          - let parts = vehicle.match(/(\d) ([A-Za-z]+)/).slice(1, 3)
+          div.vehicle
+            span=parts[0] + 'x'
+            img(src=`/static/images/icons/${parts[1].toLowerCase()}.svg`)
   if trip.isRailReplacementBus
     div.departure.noTiming
       -

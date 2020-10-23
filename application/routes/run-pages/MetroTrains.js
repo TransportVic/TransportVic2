@@ -4,7 +4,7 @@ const router = new express.Router()
 const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
-const stonyPointFormations = require('../../../modules/metro-trains/stony-point-formations')
+const addStonyPointData = require('../../../modules/metro-trains/add-stony-point-data')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central'].map(e => e + ' Railway Station')
 
@@ -119,27 +119,8 @@ async function pickBestTrip(data, db) {
 
   let isStonyPoint = data.origin === 'stony-point' || data.destination === 'stony-point'
 
-  if (gtfsTrip && isStonyPoint) {
-    gtfsQuery.$and[0] = { mode: 'metro train', operationDays: utils.getPTDayName(tripStartTime) }
-    let staticTrip = await db.getCollection('timetables').findDocument(gtfsQuery)
-    if (staticTrip) {
-      gtfsTrip.stopTimings = gtfsTrip.stopTimings.map(stop => {
-        if (stop.stopName === 'Frankston Railway Station')
-          stop.platform = '3'
-        else
-          stop.platform = '1'
-        return stop
-      })
-      gtfsTrip.runID = staticTrip.runID
-      if (utils.isWeekday(gtfsQuery.operationDays)) {
-        if (stonyPointFormations.weekday[gtfsTrip.runID]) {
-          gtfsTrip.vehicle = stonyPointFormations.weekday[gtfsTrip.runID]
-        }
-      }
-      gtfsTrip.vehicle = gtfsTrip.vehicle || '2 Car Sprinter'
-    }
-
-    return { trip: gtfsTrip, tripStartTime, isLive: false }
+  if (referenceTrip && isStonyPoint) {
+    return { trip: await addStonyPointData(db, referenceTrip, tripStartTime), tripStartTime, isLive: false }
   }
 
   if (!useLive) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null

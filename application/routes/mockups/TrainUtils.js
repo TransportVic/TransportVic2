@@ -5,6 +5,7 @@ const destinationOverrides = require('../../../additional-data/coach-stops')
 const utils = require('../../../utils')
 const async = require('async')
 const emptyShunts = require('../../../additional-data/empty-shunts.json')
+const { getDayOfWeek } = require('../../../public-holidays')
 const TimedCache = require('../../../TimedCache')
 const EventEmitter = require('events')
 
@@ -107,7 +108,7 @@ module.exports = {
     arrivalsLock[stationName] = new IEventEmitter()
 
     let timetables = db.getCollection('timetables')
-    let today = utils.getPTDayName(utils.now())
+    let today = await getDayOfWeek(utils.now())
     let minutesPastMidnight = utils.getPTMinutesPastMidnight(utils.now())
 
     let emptyShuntsToday = emptyShunts.filter(emptyShunt => emptyShunt.operationDays === today)

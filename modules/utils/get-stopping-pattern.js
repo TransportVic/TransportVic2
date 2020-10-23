@@ -5,6 +5,7 @@ const ptvAPI = require('../../ptv-api')
 const nameModifier = require('../../additional-data/stop-name-modifier')
 const metroTypes = require('../../additional-data/metro-tracker/metro-types')
 const resolveRouteGTFSID = require('../resolve-gtfs-id')
+const addStonyPointData = require('../metro-trains/add-stony-point-data')
 
 const fixTripDestination = require('../metro-trains/fix-trip-destinations')
 
@@ -89,6 +90,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   })
 
   let tripOperationDay
+  let tripStartTime
 
   let stopTimings = departures.map((departure, i) => {
     let {
@@ -98,6 +100,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
 
     if (i === 0) {
       tripOperationDay = utils.getYYYYMMDD(scheduledDepartureTime)
+      tripStartTime = scheduledDepartureTime
     }
 
     let ptvStop = stops[stop_id]
@@ -221,6 +224,9 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   }
 
   timetable = fixTripDestination(timetable)
+  if (timetable.routeGTFSID === '2-SPT') {
+    timetable = await addStonyPointData(db, timetable, tripStartTime)
+  }
 
   let key = {
     mode, routeName: timetable.routeName,
