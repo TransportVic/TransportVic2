@@ -49,7 +49,7 @@ database.connect({
   }, {name: 'just stop gtfs id index'})
 
   await stops.createIndex({
-    '$**': 'text'
+    'textQuery': 'text'
   }, {name: 'text index'})
 
   await stops.createIndex({
@@ -58,6 +58,7 @@ database.connect({
   }, {name: 'coded suburb index'})
 
   await stops.createIndex({
+    _id: 1,
     'namePhonetic': 1
   }, {name: 'phonetic name index'})
 

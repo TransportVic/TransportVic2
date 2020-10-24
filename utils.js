@@ -441,5 +441,19 @@ module.exports = {
     return new Promise(resolve => {
       setTimeout(resolve, time)
     })
+  },
+  findSubstrings: (str, size=0) => {
+    let result = []
+    for (let i = 0; i < str.length; i++) {
+      for (let j = str.length; j - i >= size; j--) {
+        result.push(str.slice(i, j))
+      }
+    }
+
+    return result
+  },
+  tokeniseAndSubstring: text => {
+    let words = text.split(' ')
+    return words.map(w => module.exports.findSubstrings(w, 4)).reduce((a, e) => a.concat(e), [])
   }
 }
