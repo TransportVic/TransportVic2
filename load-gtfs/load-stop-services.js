@@ -19,7 +19,7 @@ database.connect({}, async err => {
 
   let bayCount = 0
 
-  await async.forEachOfLimit(stopIDs, 1000, async (id, i) => {
+  await async.forEachOfLimit(stopIDs, 100, async (id, i) => {
     let stop = await stops.findDocument({ _id: id })
 
     stop.bays = await async.map(stop.bays, async bay => {

@@ -26,7 +26,7 @@ database.connect({}, async err => {
 
   let stopsByService = []
 
-  await async.forEach(allRoutes, async routeGTFSID => {
+  await async.forEachLimit(allRoutes, 100, async routeGTFSID => {
     let routeData = await routes.findDocument({ routeGTFSID })
     let routeVariants = routeData.routePath.map(variant => ({ shapeID: variant.fullGTFSIDs[0] }))
 
