@@ -60,7 +60,7 @@ database.connect({
   }, {})
 
   routesNeedingVia.forEach(routeGTFSID => {
-    ptvRoutes[routeGTFSID] = ptvRouteData.find(route => route.routeGTFSID === routeGTFSID).originalName
+    ptvRoutes[routeGTFSID] = ptvRouteData.find(route => route.routeGTFSID === routeGTFSID).originalName.replace(/ \((From|Until) .+\)$/, '')
   })
 
   ptvRoutes['4-676'] = 'Lilydale East Loop'

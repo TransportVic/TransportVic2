@@ -70,6 +70,7 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
         }
 
         matchingRoute.routeName = routeName
+        matchingRoute.codedName = utils.encodeName(routeName)
         matchingRoute.operators = operator ? operator(routeGTFSID) : []
 
         await routes.replaceDocument({
