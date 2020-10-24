@@ -2,6 +2,8 @@ module.exports = {
   'Richmond': 1162,
   'South Yarra': 1180,
   'Burnley': 1030,
+  'Gardenvale': 1074,
+  'Brighton Beach': 1027,
   'Middle Brighton': 1126,
   'Balaclava': 1013,
   'Murrumbeena': 1138,
