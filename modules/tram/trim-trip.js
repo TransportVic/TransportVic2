@@ -63,6 +63,8 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
   let selectionMethod = destination.includes('&')
   let baseDestination = destination.replace(/&.*/, '').trim()
 
+  if (coreRoute === '70' && destination === 'Wattle Park') return trip
+
   await async.forEachOf(trip.stopTimings, async (stop, i) => {
     if (!cutoffStop) {
       let stopData = await getStopData(stop.stopGTFSID, stops)
@@ -77,8 +79,11 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
   })
 
   let tripDestinationStop = trip.stopTimings.slice(-1)[0].stopGTFSID
+  let indexes = trip.stopTimings.map(stop => stop.stopGTFSID)
 
   if (cutoffStop && tripDestinationStop !== cutoffStop) {
+    let cutoffStopIndex = indexes.indexOf(cutoffStop)
+    if (trip.stopTimings.length - cutoffStopIndex <= 2) return
     let hasSeen = false
 
     trip.stopTimings = trip.stopTimings.filter(stop => {
