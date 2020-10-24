@@ -145,9 +145,10 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
       departureTime: scheduledDepartureTime.format("HH:mm"),
       departureTimeMinutes,
       estimatedDepartureTime: estimatedDepartureTime ? estimatedDepartureTime.toISOString() : null,
+      actualDepartureTimeMS: estimatedDepartureTime ? +estimatedDepartureTime : null,
       platform: platform_number,
       stopConditions: {
-        pickup: departure.flags.includes('DOO') ? 1 : 0, // if dropoff onliy then pickup is unavailable
+        pickup: departure.flags.includes('DOO') ? 1 : 0, // if dropoff only then pickup is unavailable
         dropoff: departure.flags.includes('PUO') ? 1 : 0
       }
     }
@@ -176,7 +177,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let runID = vehicleDescriptor.id
   let vehicle = vehicleDescriptor.description || vehicleDescriptor.id
   if (mode === 'metro train') {
-    if (['Belgrave', 'Lilydale', 'Alamein', 'Glen Waverley'].includes(routeName) && vehicle) {
+    if (['Belgrave', 'Lilydale', 'Alamein', 'Glen Waverley', 'Hurstbridge', 'Mernda'].includes(routeName) && vehicle) {
       vehicle = vehicle.replace('Comeng', 'Xtrapolis')
     }
     runID = utils.getRunID(ptvRunID)

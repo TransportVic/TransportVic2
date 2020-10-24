@@ -7,6 +7,7 @@ const cheerio = require('cheerio')
 const moment = require('moment')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const getMetroDepartures = require('../metro-trains/get-departures')
+const getStoppingPattern = require('../utils/get-stopping-pattern')
 const { findTrip } = getMetroDepartures
 const metroConsists = require('../../additional-data/metro-tracker/metro-consists')
 const stops = require('../../additional-data/metro-tracker/stops')
@@ -64,7 +65,7 @@ async function getDepartures(stop) {
   let stopURL = urls.metroTracker.format(stopCode, await getToken())
   let data = JSON.parse(await utils.request(stopURL))
   let viableDepartures = data.departures.filter(departure => !!departure.run.vehicle_descriptor)
-  await async.forEach(viableDepartures, async viableDeparture => {
+  await async.forEachOf(viableDepartures, async (viableDeparture, i) => {
     let scheduledDepartureTime = utils.parseTime(viableDeparture.scheduled_departure_utc)
     let { run, route } = viableDeparture
     let ptvRunID = run.run_id
@@ -165,6 +166,12 @@ async function getDepartures(stop) {
     await metroTrips.replaceDocument(query, tripData, {
       upsert: true
     })
+
+    if (i < 5) {
+      if (trip.type === 'timings' && new Date() - trip.updateTime < 5 * 60 * 1000) return
+
+      await getStoppingPattern(database, ptvRunID, 'metro train', scheduledDepartureTime.toISOString())
+    }
   })
 }
 
