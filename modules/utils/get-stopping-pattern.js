@@ -19,14 +19,19 @@ let modes = {
 }
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
+let borderStops = ['Richmond', 'Jolimont', 'North Melbourne', 'Flinders Street']
 
 function extendMetroEstimation(trip) {
   let checkStop
 
   if (trip.direction === 'Up') {
-    let fssStop = trip.stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
-    if (fssStop) {
-      checkStop = trip.stopTimings[trip.stopTimings.indexOf(fssStop) - 1]
+    let borderStop = trip.stopTimings.find(stop => borderStops.includes(stop.stopName.slice(0, -16)))
+
+    if (borderStop) {
+      let hasSeenStop = false
+      trip.stopTimings.slice(trip.stopTimings.indexOf(borderStop)).forEach(stop => {
+        if (stop.estimatedDepartureTime) checkStop = stop
+      })
     }
   }
 
@@ -50,6 +55,20 @@ function extendMetroEstimation(trip) {
 
       return stop
     })
+  }
+
+  // Extend estimation backwards to first stop (usually city loop etc)
+  let firstStop = trip.stopTimings[0]
+  let secondStop = trip.stopTimings[1]
+  if (!firstStop.estimatedDepartureTime && secondStop.estimatedDepartureTime) {
+    let scheduledDepartureTime = utils.parseTime(firstStop.scheduledDepartureTime)
+    let estimatedDepartureTime = utils.parseTime(firstStop.estimatedDepartureTime)
+    let delay = estimatedDepartureTime - scheduledDepartureTime
+
+    let secondScheduled = utils.parseTime(secondStop.scheduledDepartureTime)
+    let secondEstimated = secondScheduled.clone().add(delay, 'milliseconds')
+    secondStop.estimatedDepartureTime = secondEstimated.toISOString()
+    secondStop.actualDepartureTimeMS = +secondEstimated
   }
 
   return trip
@@ -78,7 +97,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   departures = departures.map(departure => {
     departure.actualDepartureTime = utils.parseTime(departure.estimated_departure_utc || departure.scheduled_departure_utc)
     departure.scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
-    departure.estimatedDepartureTime = utils.parseTime(departure.estimated_departure_utc)
+    departure.estimatedDepartureTime = departure.estimated_departure_utc ? utils.parseTime(departure.estimated_departure_utc) : null
     return departure
   })
 
