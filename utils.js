@@ -307,6 +307,7 @@ module.exports = {
     let fullOptions = {
       timeout: 2000,
       compress: true,
+      highWaterMark: 1024 * 1024,
       ...options
     }
 
@@ -324,10 +325,14 @@ module.exports = {
 
     let end = +new Date()
     let diff = end - start
-    global.loggers.fetch.log(`${diff}ms ${url}`)
 
-    if (options.raw) return body
-    return body.text()
+    let size = body.headers.get('content-length')
+    let returnData = await (options.raw ? body.buffer() : body.text())
+    if (!size) size = returnData.length
+
+    global.loggers.fetch.log(`${diff}ms ${url} ${size}R`)
+
+    return returnData
   },
   isStreet: shortName => {
     return (shortName.endsWith('Street') || shortName.endsWith('Road')

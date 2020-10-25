@@ -222,7 +222,7 @@ module.exports = {
             })
           }
         } catch (e) {
-          console.error(e)
+          global.loggers.mockups.err('Failed getting departures', e)
         }
         resolve()
       }),

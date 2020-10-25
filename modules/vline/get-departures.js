@@ -54,7 +54,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
     }) || await findTrip(db.getCollection('gtfs timetables'), operationDay, departure.origin, departure.destination, departureHHMM)
 
     if (!trip) {
-      return console.log(departure, departureTime.format('HH:mm'))
+      return global.loggers.general.err('Failed to match V/Line departure', departure, departureTime.format('HH:mm'))
     }
 
     let platform = departure.platform
@@ -341,20 +341,20 @@ async function getDepartures(station, db) {
 
         let time = utils.now().add(-6, 'minutes').toISOString()
         ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vicVlinePlatform.stopGTFSID}?gtfs=true&max_results=15&expand=run&expand=route&date_utc=${time}`)
-      } catch (e) { console.error(e) } finally { resolve() }
+      } catch (e) { global.loggers.general.err('Failed to get V/Line PTV departures', e) } finally { resolve() }
     }), new Promise(async resolve => {
       try {
         scheduledCoachReplacements = (await getCoachDepartures(coachStop, db)).filter(departure => {
           return moment.utc(departure.scheduledDepartureTime.diff(utils.now())) < 1000 * 60 * 180
         })
-      } catch (e) { console.error(e) } finally { resolve() }
+      } catch (e) { global.loggers.general.err('Failed to get V/Line Coach departures', e) } finally { resolve() }
     }), new Promise(async resolve => {
       try {
         if (station.stopName === 'Southern Cross Railway Station') {
           let vicVlinePlatform = vlinePlatforms.find(bay => bay.stopGTFSID < 140000000)
           vnetDepartures = await getDeparturesFromVNET(vicVlinePlatform, db)
         }
-      } catch (e) { console.error(e) } finally { resolve() }
+      } catch (e) { global.loggers.general.err('Failed to get V/Line VNET departures', e) } finally { resolve() }
     })])
 
     let scheduled = await getScheduledDepartures(db, station)
@@ -376,7 +376,7 @@ async function getDepartures(station, db) {
         flagMap[serviceID] = findFlagMap(departure.flags)
       })
     } catch (e) {
-      console.error(e)
+      global.loggers.general.err('Failed to process scheduled V/Line PTV departures', e)
     }
 
     try {
@@ -395,7 +395,7 @@ async function getDepartures(station, db) {
           return coach
         })
     } catch (e) {
-      console.error(e)
+      global.loggers.general.err('Failed to process scheduled V/Line coach replacements', e)
     }
 
     function addFlags(departure) {
@@ -423,7 +423,7 @@ async function getDepartures(station, db) {
 
         return returnDepartures(sorted)
       } catch (e) {
-        console.error(e)
+        global.loggers.general.err('Failed to process VNET departures', e)
       }
     }
 
@@ -432,7 +432,7 @@ async function getDepartures(station, db) {
 
     return returnDepartures(allDepartures)
   } catch (e) {
-    console.error(e)
+    global.loggers.general.err('Failed to get V/Line departures', e)
     return returnDepartures(null)
   }
 }

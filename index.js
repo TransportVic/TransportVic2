@@ -26,7 +26,8 @@ global.loggers = {
   },
   mockups: new Logger(path.join(__dirname, 'logs', 'mockups'), 'MOCKUPS'),
   error: new Logger(path.join(__dirname, 'logs', 'errors'), 'ERROR'),
-  general: new Logger(path.join(__dirname, 'logs', 'general'), 'GENERAL')
+  general: new Logger(path.join(__dirname, 'logs', 'general'), 'GENERAL'),
+  certs: new Logger(path.join(__dirname, 'logs', 'certs'), 'CERTS')
 }
 
 require('./modules/vline-mail')

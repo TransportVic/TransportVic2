@@ -206,7 +206,7 @@ async function pickBestTrip(data, db) {
 
     return { trip, tripStartTime, isLive }
   } catch (e) {
-    console.error(e)
+    global.loggers.general.err('Failed to get Metro trip', e)
     return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null
   }
 }

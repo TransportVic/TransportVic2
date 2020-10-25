@@ -141,7 +141,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
       }],
       'bays.mode': { $in: checkModes }
     })
-    if (!dbStop) console.log(stopName)
+    if (!dbStop) global.loggers.general.err('Failed to match stop', stopName)
     dbStops[stop.stop_id] = dbStop
   })
 

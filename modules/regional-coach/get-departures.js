@@ -158,7 +158,6 @@ async function getDeparturesFromPTV(stop, db) {
 
       // Its half trips that never show up properly
       if (!trip) return
-      // if (!trip) return console.error(`Failed to map trip: ${departureTime.format('HH:mm')} to ${destination}`)
 
       tripIDsSeen.push(trip.tripID)
 
@@ -217,7 +216,7 @@ async function getDepartures(stop, db) {
       let extras = scheduledDepartures.filter(d => !ptvDepartures.includes(d.trip.tripID))
       departures = departures.concat(extras)
     } catch (e) {
-      console.error(e)
+      global.loggers.general.err('Failed to get coach trips', e)
       departures = scheduledDepartures
     }
 
