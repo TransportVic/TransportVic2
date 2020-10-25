@@ -5,10 +5,18 @@ const router = new express.Router()
 const url = require('url')
 const querystring = require('querystring')
 const moment = require('moment')
+const stationCodes = require('../../../additional-data/station-codes')
 const rawLineRanges = require('../../../additional-data/metro-tracker/line-ranges')
+const lineGroups = require('../../../additional-data/metro-tracker/line-groups')
 
 const metroTypes = require('../../../additional-data/metro-tracker/metro-types')
 const metroConsists = require('../../../additional-data/metro-tracker/metro-consists')
+
+let stationCodeLookup = {}
+
+Object.keys(stationCodes).forEach(stationCode => {
+  stationCodeLookup[stationCodes[stationCode]] = stationCode
+})
 
 function generateQuery(type) {
   let matchedMCars = metroConsists.filter(consist => consist.type === type).map(consist => consist.leadingCar)
@@ -20,6 +28,13 @@ let siemensQuery = { $in: generateQuery('Siemens') }
 let xtrapQuery = { $in: generateQuery('Xtrapolis') }
 
 let lineRanges = {}
+
+let lineGroupCodes = {
+  'Caulfield': 'CFD',
+  'Clifton Hill': 'CHL',
+  'Burnley': 'BLY',
+  'Northern': 'NTH'
+}
 
 Object.keys(rawLineRanges).forEach(line => {
   let ranges = rawLineRanges[line]
@@ -182,7 +197,39 @@ router.get('/bot', async (req, res) => {
     extraData.lastSeen = (await metroTrips.distinct('date', { consist })).slice(-1)[0]
   }
 
-  res.json({ trips: trips.map(adjustTrip), extraData })
+  res.json({
+    trips: trips.map(adjustTrip).map(trip => {
+      trip.originCode = stationCodeLookup[trip.origin]
+      trip.destinationCode = stationCodeLookup[trip.destination]
+
+      let runID = trip.runID
+      let type = null
+      let viaLoop = runID[1] > 5
+      let line = Object.keys(lineRanges).find(possibleLine => {
+        return lineRanges[possibleLine].includes(runID)
+      })
+
+      if (!line) return trip
+      let lineGroup = lineGroups[line]
+
+      // Down, handles CCL too
+      if (trip.destination === 'Flinders Street' || trip.origin === 'Flinders Street') {
+        if (viaLoop) {
+          if (lineGroup === 'City Circle') type = 'Via City Circle'
+          else type = `Via ${lineGroupCodes[lineGroup]} Loop`
+        } else {
+          if (trip.destination === 'Southern Cross') type = 'Direct'
+          else if (lineGroup === 'Northern') type = 'NME Via SSS Direct'
+          else type = 'Direct'
+        }
+      }
+
+      trip.type = type
+
+      return trip
+    }),
+    extraData
+  })
 })
 
 module.exports = router

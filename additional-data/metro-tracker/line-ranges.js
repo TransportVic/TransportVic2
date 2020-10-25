@@ -64,7 +64,8 @@ module.exports = {
     [300, 349, 'X']
   ],
   'Sandringham': [
-    [0, 199, 'X']
+    [0, 199, 'X'],
+    [600, 799, 'X']
   ],
   'City Circle': [
     [700, 899]

@@ -257,11 +257,11 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
     cityLoopConfig = []
 
   if (cityLoopStations.includes(stationName) && !cityLoopConfig.includes('FGS')) {
+    // we are in loop but given next trip - tdn decoding would give a direct service
+    // really only seems to happen with cfd & nor group
     if (caulfieldGroup.includes(routeID) || burnleyGroup.includes(routeID))
       cityLoopConfig = ['PAR', 'MCE', 'FGS', 'SSS', 'FSS']
-      // trip is towards at flinders, but ptv api already gave next trip
-      // really only seems to happen with cran/pak/frank lines
-    if (!crossCityGroup.includes(routeID) && northernGroup.includes(routeID)) {// all northern group except showgrounds & cross city
+    else if (!crossCityGroup.includes(routeID) && northernGroup.includes(routeID)) {// all northern group except showgrounds & cross city
       if (runDestination !== 'Flinders Street')
         cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
     }
