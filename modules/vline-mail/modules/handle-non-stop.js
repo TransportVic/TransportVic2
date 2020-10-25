@@ -52,7 +52,7 @@ async function setServiceNonStop(db, departureTime, origin, destination, skippin
       return stop
     })
 
-    console.log(`Marking ${departureTime} ${origin} - ${destination} train as not stopping at ${skipping}`)
+    global.loggers.mail.info(`Marking ${departureTime} ${origin} - ${destination} train as not stopping at ${skipping}`)
     await discordUpdate(`The ${departureTime} ${origin} - ${destination} service will not stop at ${skipping} today.`)
 
     trip.operationDays = today
@@ -70,7 +70,7 @@ async function setServiceNonStop(db, departureTime, origin, destination, skippin
       operationDays: today
     }
 
-    console.log('Failed to find trip', identifier)
+    global.loggers.mail.err('Failed to find trip', identifier)
     await discordUpdate(`Was told the ${departureTime} ${origin} - ${destination} service would not stop at ${skipping} today, but could not match.`)
   }
 }

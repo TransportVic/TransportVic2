@@ -732,12 +732,12 @@ async function getDepartures(station, db, filter=true) {
     departuresCache.put(cacheKey, Object.values(departures))
     return returnDepartures(filterDepartures(Object.values(departures), filter))
   } catch (e) {
-    console.error(e)
+    global.loggers.general.err('Error getting Metro departures', e)
     try {
       let scheduled = await departureUtils.getScheduledMetroDepartures(station, db)
       return returnDepartures(scheduled)
     } catch (ee) {
-      console.log(ee)
+      global.loggers.general.err('Error getting Scheduled Metro departures', ee)
       return returnDepartures(null)
     }
   }

@@ -244,7 +244,7 @@ async function getDepartures(stop, db) {
 
       return returnDepartures(departures)
     } catch (e) {
-      console.error(e)
+      global.loggers.general.err('Failed to get tram trips', e)
       departures = (await getScheduledDepartures(stop, db, false)).map(departure => {
         departure.routeNumber = determineTramRouteNumber(departure.trip)
         departure.sortNumber = departure.routeNumber.replace(/[a-z]/, '')
@@ -255,7 +255,7 @@ async function getDepartures(stop, db) {
       return returnDepartures(departures)
     }
   } catch (e) {
-    console.error(e)
+    global.loggers.general.err('Failed to get scheduled tram trips', e)
     return returnDepartures(null)
   }
 

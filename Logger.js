@@ -16,12 +16,19 @@ module.exports = class Logger {
   }
 
   format(text) {
-    return `[${this.name}] [${getTimestamp()}]: ${text}\n`
+    return `[${this.name}] [${getTimestamp()}]: ${text}`
   }
 
   level(level, objects) {
-    let text = objects.join(' ')
-    this.stream.write(`${level} ${this.format(text)}`)
+    let text = objects.map(object => {
+      if (object instanceof Error) {
+        return (object && object.stack) ? object.stack : object
+      } else return object
+    }).join(' ')
+    let logData = `${level} ${this.format(text)}`
+
+    this.stream.write(logData + '\n')
+    console.log(logData)
   }
 
   log(...objects) { this.level('LOG', objects) }

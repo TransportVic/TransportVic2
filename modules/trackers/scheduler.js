@@ -1,6 +1,6 @@
 const utils = require('../../utils')
 
-module.exports = function schedule(intervals, func, name) {
+module.exports = function schedule(intervals, func, name, logger) {
   let minutesNow = utils.getMinutesPastMidnightNow()
   let currentInterval = intervals.find(i => {
     return i[0] <= minutesNow && minutesNow <= i[1]
@@ -20,7 +20,7 @@ module.exports = function schedule(intervals, func, name) {
     let timeToNextInterval = nextInterval[0] - minutesNow
     if (timeToNextInterval < 0) timeToNextInterval += 1440
 
-    console.log(name, 'sleeping for', timeToNextInterval, 'minutes')
+    logger.info(name, 'sleeping for', timeToNextInterval, 'minutes')
 
     setTimeout(() => {
       func()

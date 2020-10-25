@@ -85,8 +85,6 @@ module.exports = class MainServer {
   }
 
   configMiddleware (app) {
-    let stream = fs.createWriteStream('/tmp/log.txt', { flags: 'a' })
-
     this.past50ResponseTimes = []
 
     app.use((req, res, next) => {
@@ -114,7 +112,7 @@ module.exports = class MainServer {
         let diff = end - start
 
         if (diff > 20 && !reqURL.startsWith('/static/')) {
-          stream.write(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff} ${bytes}B\n`, () => {})
+          global.loggers.http.info(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff} ${bytes}`)
 
           this.past50ResponseTimes = [...this.past50ResponseTimes.slice(-49), diff]
         }
@@ -125,10 +123,14 @@ module.exports = class MainServer {
       next()
     })
 
-    app.use('/.well_known/acme_challenge/:key', (req, res) => {
-      let reqURL = new url.URL('https://transportsg.me' + req.url)
-      let filePath = path.join(config.webrootPath, reqURL.pathname)
-      fs.createReadStream(filePath).pipe(res)
+    app.use('/.well-known/acme-challenge/:key', (req, res) => {
+      let filePath = path.join(config.webrootPath, req.params.key)
+      let stream = fs.createReadStream(filePath)
+      stream.pipe(res)
+
+      stream.on('error', err => {
+        res.status(404).end('404')
+      })
     })
 
     app.use(compression({
@@ -171,22 +173,6 @@ module.exports = class MainServer {
     if (process.env['NODE_ENV'] && process.env['NODE_ENV'] === 'prod') { app.set('view cache', true) }
     app.set('x-powered-by', false)
     app.set('strict routing', false)
-
-    app.use((req, res, next) => {
-      if (req.url.startsWith('/.well-known')) {
-        try {
-          let reqURL = new url.URL('https://transportsg.me' + req.url)
-          let filePath = path.join(config.webrootPath, reqURL.pathname)
-
-          fs.createReadStream(filePath).pipe(res)
-
-          return
-        } catch (e) {
-          console.error(e)
-        }
-      }
-      next()
-    })
 
     app.use('/mockups', rateLimit({
       windowMs: 1 * 60 * 1000,
@@ -330,7 +316,9 @@ module.exports = class MainServer {
     Object.keys(routers).forEach(routerName => {
       try {
         let routerData = routers[routerName]
-        if (routerData.path && !routerData.enable) return console.log('Module', routerName, 'disabled, skipping it. This does not check for cross dependencies on GTFS data')
+        if (routerData.path && !routerData.enable) {
+          return global.loggers.general.info('Module', routerName, 'has been disabled')
+        }
 
         let routerPath = routerData.path || routerData
 
@@ -338,7 +326,7 @@ module.exports = class MainServer {
         app.use(routerPath, router)
         if (router.initDB) router.initDB(this.database)
       } catch (e) {
-        console.error('Error registering', routerName, e)
+        global.loggers.error.err('Error registering', routerName, e)
       }
     })
 
@@ -367,7 +355,7 @@ module.exports = class MainServer {
         res.status(404).render('errors/404')
       } else {
         res.status(500).render('errors/500')
-        console.log(err)
+        global.loggers.error.err(err)
       }
     })
   }

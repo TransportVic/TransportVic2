@@ -26,7 +26,8 @@ global.loggers = {
   },
   mockups: new Logger(path.join(__dirname, 'logs', 'mockups'), 'MOCKUPS'),
   error: new Logger(path.join(__dirname, 'logs', 'errors'), 'ERROR'),
-  general: new Logger(path.join(__dirname, 'logs', 'general'), 'GENERAL')
+  general: new Logger(path.join(__dirname, 'logs', 'general'), 'GENERAL'),
+  certs: new Logger(path.join(__dirname, 'logs', 'certs'), 'CERTS')
 }
 
 require('./modules/vline-mail')
@@ -49,8 +50,10 @@ let websocketServer = WebsocketServer.createServer(httpsServer || httpServer)
 httpServer.listen(config.httpPort)
 if (httpsServer) httpsServer.listen(443)
 
+global.loggers.general.info('Server Started')
+
 process.on('uncaughtException', err => {
-  global.loggers.error.err((err && err.stack) ? err.stack : err)
+  global.loggers.error.err(err)
 })
 
 console.err = console.error

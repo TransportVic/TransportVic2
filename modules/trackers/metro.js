@@ -177,13 +177,12 @@ async function getDepartures(stop) {
 
 async function requestTimings() {
   let stop = pickRandomStop()
-  console.log('requesting timings for', stop)
+  global.loggers.trackers.metro.info('requesting timings for', stop)
 
   try {
     await getDepartures(stop)
   } catch (e) {
-    console.error(e)
-    console.log('Failed to get metro trips this round, skipping')
+    global.loggers.trackers.metro.err('Failed to get metro trips this round, skipping', e)
   }
 }
 
@@ -196,5 +195,5 @@ database.connect(async () => {
     [61, 299, 2.5],
     [300, 1380, 0.5],
     [1381, 1440, 2]
-  ], requestTimings, 'bus tracker')
+  ], requestTimings, 'metro tracker', global.loggers.trackers.metro)
 })
