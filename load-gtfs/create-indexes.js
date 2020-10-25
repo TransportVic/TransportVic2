@@ -199,6 +199,11 @@ database.connect({
     mode: 1
   }, {name: 'live stop timings index'})
 
+  await liveTimetables.createIndex({
+    mode: 1,
+    'stopTimings.actualDepartureTimeMS': 1,
+  }, {name: 'active trip index'})
+
   console.log('Created live timetables index')
 
   await metroTrips.createIndex({

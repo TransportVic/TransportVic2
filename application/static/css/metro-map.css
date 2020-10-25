@@ -1,0 +1,51 @@
+.leaflet-div-icon {
+  background: none;
+  border: none;
+}
+
+.train {
+  --size: calc(1vw + 2vh);
+  --border: calc(0.2vw + 0.2vh);
+  --arrow-size: calc((var(--size) + 2 * var(--border)) * 0.5);
+
+  margin-top: calc(-0.5 * var(--size));
+  margin-left: calc(-0.5 * var(--size));
+  width: calc(var(--size) + 2 * var(--border));
+  height: calc(var(--size) + 2 * var(--border));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trainData {
+  width: calc(var(--size));
+  height: calc(var(--size));
+  border: solid var(--border) #ffffff;
+  border-radius: 100%;
+  font-size: calc(0.2vw + 1.1vh);
+  line-height: calc(0.9vw + 2.2vh);
+  font-family: "Default-Font";
+  text-align: center;
+}
+
+.trainArrowWrapper {
+  width: calc(var(--size) + 2 * var(--border));
+  height: calc(var(--size) + 2 * var(--border));
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  z-index: -1;
+}
+
+.trainArrow {
+  border-left: calc(var(--arrow-size)) solid #ffffff;
+  border-right: none;
+  border-top: none;
+  border-bottom: calc(var(--arrow-size)) solid #ffffff;
+
+  position: relative;
+  width: 0;
+  height: 0;
+
+  transform: translateY(calc(var(--arrow-size) * -0.2)) rotate(45deg);
+}

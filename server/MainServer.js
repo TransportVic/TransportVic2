@@ -323,7 +323,8 @@ module.exports = class MainServer {
         enable: modules.routePreview
       },
 
-      RoutePaths: '/route-paths'
+      RoutePaths: '/route-paths',
+      MetroMap: '/metro-map'
     }
 
     Object.keys(routers).forEach(routerName => {

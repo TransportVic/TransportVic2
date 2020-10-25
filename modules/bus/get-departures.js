@@ -1,6 +1,5 @@
 const departureUtils = require('../utils/get-bus-timetables')
 const async = require('async')
-const moment = require('moment')
 const TimedCache = require('../../TimedCache')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
