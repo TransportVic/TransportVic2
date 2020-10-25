@@ -34,7 +34,7 @@ function extendMetroEstimation(trip) {
     checkStop = trip.stopTimings[trip.stopTimings.length - 2]
   }
 
-  if (checkStop.estimatedDepartureTime) {
+  if (checkStop && checkStop.estimatedDepartureTime) {
     let scheduledDepartureTime = utils.parseTime(checkStop.scheduledDepartureTime)
     let estimatedDepartureTime = utils.parseTime(checkStop.estimatedDepartureTime)
     let delay = estimatedDepartureTime - scheduledDepartureTime
