@@ -36,6 +36,16 @@ let lineGroupCodes = {
   'Northern': 'NTH'
 }
 
+let typeCode = {
+  'Direct': 'direct',
+  'Via BLY Loop': 'via_BLYLoop',
+  'Via NTH Loop': 'via_NTHLoop',
+  'Via CHL Loop': 'via_CHLLoop',
+  'Via CFD Loop': 'via_CFDLoop',
+  'Via City Circle': 'via_ccl',
+  'NME Via SSS Direct': 'nme_viasss'
+}
+
 Object.keys(rawLineRanges).forEach(line => {
   let ranges = rawLineRanges[line]
   lineRanges[line] = ranges.map(range => {
@@ -222,9 +232,10 @@ router.get('/bot', async (req, res) => {
           else if (lineGroup === 'Northern') type = 'NME Via SSS Direct'
           else type = 'Direct'
         }
-      }
 
-      trip.type = type
+        trip.type = type
+        trip.typeCode = typeCode[type]
+      }
 
       return trip
     }),
