@@ -31,6 +31,7 @@ global.loggers = {
 }
 
 require('./modules/vline-mail')
+require('./security/LetsEncryptCertificateRenewal')
 
 let httpServer = null
 let httpsServer = null

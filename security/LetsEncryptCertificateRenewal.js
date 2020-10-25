@@ -17,5 +17,7 @@ function renew() {
   })
 }
 
-setInterval(renew, 1000 * 60 * 60 * 12)
-renew()
+if (config.useLetsEncrypt) {
+  setInterval(renew, 1000 * 60 * 60 * 12)
+  renew()
+}
