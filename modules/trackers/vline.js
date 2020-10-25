@@ -72,17 +72,16 @@ async function getDeparturesFromVNET(db) {
 }
 
 async function requestTimings() {
-  console.log('requesting vline trips')
+  global.loggers.trackers.vline.info('requesting vline trips')
   try {
     await getDeparturesFromVNET(database)
   } catch (e) {
-    console.error(e)
-    console.log('Error getting vline trips, skipping this round')
+    global.loggers.trackers.vline.err('Error getting vline trips, skipping this round', e)
   }
 }
 
 database.connect(async () => {
   schedule([
     [210, 1380, 10]
-  ], requestTimings, 'vline tracker')
+  ], requestTimings, 'vline tracker', global.loggers.trackers.vline)
 })

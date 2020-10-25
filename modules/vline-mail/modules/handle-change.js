@@ -56,7 +56,7 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
       else if (modification.type === 'terminate') newDestination = modification.changePoint + ' Railway Station'
     })
 
-    console.log(`Marking ${departureTime} ${origin} - ${destination} train as changed: Now ${modifications.map(m => `${m.type}s at ${m.changePoint}`).join(' & ')}`)
+    global.loggers.mail.info(`Marking ${departureTime} ${origin} - ${destination} train as changed: Now ${modifications.map(m => `${m.type}s at ${m.changePoint}`).join(' & ')}`)
 
     if (modifications.length === 1) {
       let firstMod = modifications[0]
@@ -77,7 +77,7 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
     }
 
     let firstMod = modifications[0]
-    console.log('Failed to find trip', identifier)
+    global.loggers.mail.err('Failed to find trip', identifier)
     await discordUpdate(`Was told the ${departureTime} ${origin} - ${destination} service would ${firstMod.type} ${firstMod.type === 'originate' ? 'from' : 'at'} ${firstMod.changePoint} today, but could not match.`)
   }
 }
@@ -115,9 +115,10 @@ function change(db, text) {
     service = text.match(/(\d{1,2}[:.]\d{1,2})/)
     if (service && service.includes('terminate')) {
       cancellation(text, db)
-      console.log('Was told train was terminating early but not where, marking as cancelled')
+
+      global.loggers.mail.err('Was told train was terminating early but not where, marking as cancelled')
     } else {
-      console.log('Could not find match', text)
+      global.loggers.mail.err('Could not find match', text)
     }
   }
 

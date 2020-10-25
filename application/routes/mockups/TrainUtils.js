@@ -448,7 +448,7 @@ module.exports = {
     })
 
     if (!screenStops.length) {
-      console.log('Failed to find screen stops', tripStops, lineStops)
+      global.loggers.mockups.err('Failed to find screen stops', tripStops, lineStops)
       return null
     }
     let expressCount = screenStops.filter(stop => stop.isExpress).length

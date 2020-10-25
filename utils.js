@@ -324,7 +324,7 @@ module.exports = {
 
     let end = +new Date()
     let diff = end - start
-    console.log(`${diff}ms ${url}`)
+    global.loggers.fetch.log(`${diff}ms ${url}`)
 
     if (options.raw) return body
     return body.text()

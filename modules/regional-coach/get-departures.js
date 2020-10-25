@@ -117,7 +117,7 @@ async function getDeparturesFromPTV(stop, db) {
           })
 
           if (trip) {
-            console.log(`Mapped train trip as coach: ${trip.departureTime} to ${trip.destination}`)
+            global.loggers.general.info(`Mapped train trip as coach: ${trip.departureTime} to ${trip.destination}`)
 
             trip.operationDays = operationDay
 

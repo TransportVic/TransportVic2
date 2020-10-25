@@ -192,12 +192,11 @@ async function fetchData() {
 }
 
 async function requestTimings() {
-  console.log('requesting vline realtime data')
+  global.loggers.trackers.vlineR.info('requesting vline realtime data')
   try {
     await fetchData()
   } catch (e) {
-    console.error(e)
-    console.log('Error getting vline realtime data, skipping this round')
+    global.loggers.trackers.vlineR.err('Error getting vline realtime data, skipping this round', e)
   }
 }
 
@@ -205,5 +204,5 @@ database.connect(async () => {
   schedule([
     [0, 150, 13],
     [330, 1440, 12]
-  ], requestTimings, 'vline-r tracker')
+  ], requestTimings, 'vline-r tracker', global.loggers.trackers.vlineR)
 })

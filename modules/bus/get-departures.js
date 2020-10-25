@@ -35,7 +35,7 @@ async function getStoppingPatternWithCache(db, busDeparture, destination, isNigh
     try {
       trip = await getStoppingPattern(db, busDeparture.run_ref, isNightBus ? 'nbus' : 'bus', busDeparture.scheduled_departure_utc)
     } catch (e) {
-      console.log('Failed to load stopping pattern', e)
+      global.loggers.general.err('Failed to get bus stopping pattern', e)
     }
     tripCache.put(id, trip)
     tripLoader[id].emit('loaded', trip)
@@ -289,7 +289,7 @@ async function getDepartures(stop, db) {
 
       departures = ptvDepartures.concat(extraScheduledTrips)
     } catch (e) {
-      console.log('Failed to get bus timetables', e)
+      global.loggers.general.err('Failed to get bus timetables', e)
       departures = scheduledDepartures
     }
 

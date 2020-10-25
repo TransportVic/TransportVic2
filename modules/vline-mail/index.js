@@ -9,9 +9,6 @@ const handleReinstatement = require('./modules/handle-reinstatement')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
 
-const fs = require('fs')
-const stream = fs.createWriteStream('/tmp/mail.txt', { flags: 'a' })
-
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 async function inboundMessage(data) {
@@ -28,7 +25,7 @@ async function inboundMessage(data) {
 
 async function handleMessage(subject, text) {
   text = text.replace(/SCS/g, 'Southern Cross').replace(/Flinders St\.? /g, 'Flinders Street').replace(/\n/g, ' ').replace(/\u00A0/g, ' ').replace(/More information at.+/, '').replace(/[-–]/g, ' to ').replace(/  +/g, ' ').trim()
-  stream.write(`Got mail: Subject: ${subject}. Text: ${text.replace(/\n/g, ' ')}\n`)
+  global.loggers.mail.log(`Got Mail: ${text.replace(/\n/g, ' ')}\n`)
 
   // Tracker makes this kinda useless now
   if (subject.includes('Service reduction') || text.includes('reduced capacity')) return
@@ -54,14 +51,14 @@ module.exports = () => {
       }
     })
 
-    console.log('V/Line Email server started')
+    global.loggers.mail.info('V/Line Email Server started')
 
     nodeMailin.on('message', (connection, data, content) => {
       inboundMessage(data)
     })
 
     nodeMailin.on('error', err => {
-      console.error(err)
+      global.loggers.mail.err(err)
     })
   })
 }

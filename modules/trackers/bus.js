@@ -27,17 +27,17 @@ async function requestTimings() {
 
   try {
     await async.forEachOf(stops, async (stop, i) => {
-      console.log('requesting timings for', stop)
+      global.loggers.trackers.bus.info('requesting timings for', stop)
       let [codedSuburb, codedName] = stop.split('/')
       let dbStop = await dbStops.findDocument({ codedName, codedSuburb })
-      if (!dbStop) return console.log('could not find', stop)
+      if (!dbStop) return global.loggers.trackers.bus.err('could not find', stop)
 
       setTimeout(async () => {
         await getDepartures(dbStop, database)
       }, i * 15000)
     })
   } catch (e) {
-    console.log('Failed to get bus trips this round')
+    global.loggers.trackers.bus.err('Failed to get bus trips this round', e)
   }
 }
 
@@ -47,5 +47,5 @@ database.connect(async () => {
     [0, 60, 10],
     [300, 1260, 7],
     [1261, 1440, 10]
-  ], requestTimings, 'bus tracker')
+  ], requestTimings, 'bus tracker', global.loggers.trackers.bus)
 })

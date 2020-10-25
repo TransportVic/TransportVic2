@@ -51,7 +51,7 @@ async function setServiceAsCancelled(db, departureTime, origin, destination, isC
       trip.cancelled = true
     }
 
-    console.log(`Marking ${departureTime} ${origin} - ${destination} train as cancelled.${isCoach ? ' Replacement coaches provided' : ''}`)
+    global.loggers.mail.info(`Marking ${departureTime} ${origin} - ${destination} train as cancelled.${isCoach ? ' Replacement coaches provided' : ''}`)
     await discordUpdate(`The ${departureTime} ${origin} - ${destination} service has been cancelled today.`)
 
     trip.operationDays = today
@@ -69,7 +69,7 @@ async function setServiceAsCancelled(db, departureTime, origin, destination, isC
       operationDays: today
     }
 
-    console.log('Failed to find trip', identifier)
+    global.loggers.mail.err('Failed to find trip', identifier)
     await discordUpdate(`Was told the ${departureTime} ${origin} - ${destination} service has been cancelled, but could not match.`)
   }
 }

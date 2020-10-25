@@ -49,8 +49,10 @@ let websocketServer = WebsocketServer.createServer(httpsServer || httpServer)
 httpServer.listen(config.httpPort)
 if (httpsServer) httpsServer.listen(443)
 
+global.loggers.general.info('Server Started')
+
 process.on('uncaughtException', err => {
-  global.loggers.error.err((err && err.stack) ? err.stack : err)
+  global.loggers.error.err(err)
 })
 
 console.err = console.error
