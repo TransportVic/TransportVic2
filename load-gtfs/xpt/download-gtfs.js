@@ -3,7 +3,8 @@ const fs = require('fs')
 const path = require('path')
 
 tfnswAPI.makeRequest('/v1/gtfs/schedule/nswtrains', {
-  raw: true
+  raw: true,
+  timeout: 15000
 }).then(res => {
   let folder = path.join(__dirname, '../../gtfs/14')
   fs.mkdirSync(folder, { recursive: true })

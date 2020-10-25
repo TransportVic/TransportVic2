@@ -101,8 +101,10 @@ module.exports = class MainServer {
       }
 
       res.socket.end = (x, y, z) => {
-        end.bind(res.socket, x, y, z)()
-        if (x) bytes += x.length
+        if (res.socket) {
+          end.bind(res.socket, x, y, z)()
+          if (x) bytes += x.length
+        }
       }
 
       let endResponse = res.end

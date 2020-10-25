@@ -330,7 +330,9 @@ module.exports = {
     let returnData = await (options.raw ? body.buffer() : body.text())
     if (!size) size = returnData.length
 
-    global.loggers.fetch.log(`${diff}ms ${url} ${size}R`)
+    let logMessage = `${diff}ms ${url} ${size}R`
+    if (global.loggers) global.loggers.fetch.log(logMessage)
+    else console.log(logMessage)
 
     return returnData
   },
