@@ -20,6 +20,41 @@ let modes = {
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
+function extendMetroEstimation(trip) {
+  let checkStop
+
+  if (trip.direction === 'Up') {
+    let fssStop = trip.stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
+    if (fssStop) {
+      checkStop = trip.stopTimings[trip.stopTimings.indexOf(fssStop) - 1]
+    }
+  }
+
+  if (!checkStop) {
+    checkStop = trip.stopTimings[trip.stopTimings.length - 2]
+  }
+
+  if (checkStop.estimatedDepartureTime) {
+    let scheduledDepartureTime = utils.parseTime(checkStop.scheduledDepartureTime)
+    let estimatedDepartureTime = utils.parseTime(checkStop.estimatedDepartureTime)
+    let delay = estimatedDepartureTime - scheduledDepartureTime
+
+    let hasSeenStop = false
+    trip.stopTimings = trip.stopTimings.map(stop => {
+      if (hasSeenStop && !stop.estimatedDepartureTime) {
+        let stopScheduled = utils.parseTime(stop.scheduledDepartureTime)
+        let stopEstimated = stopScheduled.clone().add(delay, 'milliseconds')
+        stop.estimatedDepartureTime = stopEstimated.toISOString()
+        stop.actualDepartureTimeMS = +stopEstimated
+      } else if (stop === checkStop) hasSeenStop = true
+
+      return stop
+    })
+  }
+
+  return trip
+}
+
 module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip, extraTripData) {
   let stopsCollection = db.getCollection('stops')
   let liveTimetables = db.getCollection('live timetables')
@@ -146,6 +181,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
       departureTimeMinutes,
       estimatedDepartureTime: estimatedDepartureTime ? estimatedDepartureTime.toISOString() : null,
       actualDepartureTimeMS: estimatedDepartureTime ? +estimatedDepartureTime : null,
+      scheduledDepartureTime: scheduledDepartureTime.toISOString(),
       platform: platform_number,
       stopConditions: {
         pickup: departure.flags.includes('DOO') ? 1 : 0, // if dropoff only then pickup is unavailable
@@ -227,8 +263,13 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   }
 
   timetable = fixTripDestination(timetable)
+
   if (timetable.routeGTFSID === '2-SPT') {
     timetable = await addStonyPointData(db, timetable, tripStartTime)
+  }
+
+  if (mode === 'metro train') {
+    timetable = extendMetroEstimation(timetable)
   }
 
   let key = {
