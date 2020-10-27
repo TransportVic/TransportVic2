@@ -1,5 +1,5 @@
 DIRNAME=$(dirname "$0")
-
+#
 rm -r $DIRNAME/load-gtfs/spliced-gtfs-stuff
 mkdir $DIRNAME/gtfs
 cd $DIRNAME/gtfs

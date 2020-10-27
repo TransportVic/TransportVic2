@@ -327,6 +327,13 @@ module.exports = {
     let diff = end - start
 
     let size = body.headers.get('content-length')
+    if (options.stream) {
+      let logMessage = `${diff}ms ${url}`
+      if (global.loggers) global.loggers.fetch.log(logMessage)
+      else console.log(logMessage)
+
+      return body.body
+    }
     let returnData = await (options.raw ? body.buffer() : body.text())
     if (!size) size = returnData.length
 

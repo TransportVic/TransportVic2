@@ -8,8 +8,8 @@ function renew() {
   childProcess.exec(`certbot renew ${config.certbotFlags}`, function(err, stdout, stderr) {
     stdout = stdout.toString().trim()
     stderr = stderr.toString().trim()
-    if (stdout) stdout.split('\n').forEach(global.loggers.certs.log)
-    if (stderr) stderr.split('\n').forEach(global.loggers.certs.err)
+    if (stdout) stdout.split('\n').forEach(x => global.loggers.certs.log(x))
+    if (stderr) stderr.split('\n').forEach(x => global.loggers.certs.err(x))
 
     config.sslCerts.forEach(cert => {
       HTTPSServer.createSecureContext(cert)
