@@ -37,19 +37,6 @@ if (modules.preloadCCL)
 
 let serverStarted = false
 
-let bandwithFilePath = path.join(__dirname, '../bandwidth.json')
-let serverStats = {}
-fs.readFile(bandwithFilePath, (err, data) => {
-  if (data) {
-    serverStats = JSON.parse(data)
-  }
-})
-
-setInterval(() => {
-  fs.writeFile(bandwithFilePath, JSON.stringify(serverStats, null, 2), () => {
-  })
-}, 1000 * 60)
-
 module.exports = class MainServer {
   constructor () {
     this.app = express()
@@ -90,22 +77,6 @@ module.exports = class MainServer {
     app.use((req, res, next) => {
       let reqURL = req.url + ''
       let start = +new Date()
-      let date = utils.getYYYYMMDDNow()
-      if (!serverStats[date]) serverStats[date] = 0
-
-      let bytes = 200 // Roughly accounting for headers since... they don't show up?
-      let {write, end} = res.socket
-      res.socket.write = (x, y, z) => {
-        write.bind(res.socket, x, y, z)()
-        bytes += x.length
-      }
-
-      res.socket.end = (x, y, z) => {
-        if (res.socket) {
-          end.bind(res.socket, x, y, z)()
-          if (x) bytes += x.length
-        }
-      }
 
       let endResponse = res.end
       res.end = (x, y, z) => {
@@ -114,12 +85,10 @@ module.exports = class MainServer {
         let diff = end - start
 
         if (diff > 20 && !reqURL.startsWith('/static/')) {
-          global.loggers.http.info(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff} ${bytes}`)
+          global.loggers.http.info(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff}`)
 
           this.past50ResponseTimes = [...this.past50ResponseTimes.slice(-49), diff]
         }
-
-        serverStats[date] += bytes
       }
 
       next()
