@@ -1,3 +1,4 @@
+const https = require('https')
 const spdy = require('spdy')
 const tls = require('tls')
 const fs = require('fs')
@@ -50,7 +51,8 @@ module.exports = {
       module.exports.createSecureContext(cert)
     })
 
-    return spdy.createServer({
+    // return spdy.createServer({
+    return https.createServer({
       SNICallback: module.exports.createSNICallback()
     }, app.app)
   }
