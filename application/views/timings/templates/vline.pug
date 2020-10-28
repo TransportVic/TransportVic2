@@ -40,10 +40,12 @@ if departures.length
             let currentIndex = departure.trip.stopTimings.indexOf(currentStop)
             showPatternAltered = skippedIndex >= currentIndex
           }
+          
+          let showChange = departure.trip.type === 'change' && (departure.cancelled || departure.trip.modifications.some(m => m.type === 'terminate'))
 
         if departure.isRailReplacementBus
           span.broadDepartureInfo.important This service has been replaced by coaches
-        else if departure.trip.type === 'change'
+        else if showChange
           if departure.cancelled
             - let firstMod = departure.trip.modifications[0]
             

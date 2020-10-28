@@ -244,6 +244,13 @@ async function appendTripData(db, departure, vlinePlatforms) {
       })
     }
 
+    if (!tripData && nspTrip) {
+      tripData = await vlineTrips.findDocument({
+        date: operationDay,
+        runID: nspTrip.runID
+      })
+    }
+
     let currentStation = vlinePlatform.fullStopName.slice(0, -16)
 
     if (tripData) {

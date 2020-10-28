@@ -82,20 +82,20 @@ async function pickBestTrip(data, db) {
       destination: possibleDestinations
     })
 
-    if (!tripData && referenceTrip.direction === 'Up') {
-      tripData = await vlineTrips.findDocument({
-        date: operationDays,
-        departureTime: trackerDepartureTime,
-        origin: possibleOrigins
-      })
-    }
-
-    if (!tripData && referenceTrip.direction === 'Down') {
-      tripData = await vlineTrips.findDocument({
-        date: operationDays,
-        destination: possibleDestinations,
-        destinationArrivalTime: trackerDestinationArrivalTime
-      })
+    if (!tripData) {
+      if (referenceTrip.direction === 'Up') {
+        tripData = await vlineTrips.findDocument({
+          date: operationDays,
+          departureTime: trackerDepartureTime,
+          origin: possibleOrigins
+        })
+      } else {
+        tripData = await vlineTrips.findDocument({
+          date: operationDays,
+          destination: possibleDestinations,
+          destinationArrivalTime: trackerDestinationArrivalTime
+        })
+      }
     }
 
     if (tripData) {
@@ -107,6 +107,12 @@ async function pickBestTrip(data, db) {
       })
     } else {
       nspTrip = await findTrip(db.getCollection('timetables'), utils.getDayOfWeek(tripDay), originStop.stopName, destinationStop.stopName, data.departureTime)
+      if (nspTrip) {
+        tripData = await vlineTrips.findDocument({
+          date: operationDays,
+          runID: nspTrip.runID
+        })
+      }
     }
 
     let {runID, vehicle} = nspTrip || {}
