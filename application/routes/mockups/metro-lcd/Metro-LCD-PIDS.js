@@ -15,7 +15,7 @@ async function getData(req, res) {
 router.get('/:station/:platform/:type', async (req, res, next) => {
   let pidType = req.params.type
   if (!validPIDTypes.includes(pidType)) return next()
-  setTimeout(async () => await getData(req, res), 0)
+  getData(req, res)
 
   if (pidType === 'pre-platform-vertical') {
     res.render('mockups/fss/escalator', { platform: req.params.platform, dark: true })
