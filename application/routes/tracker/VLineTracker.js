@@ -5,14 +5,16 @@ const router = new express.Router()
 const url = require('url')
 const querystring = require('querystring')
 const moment = require('moment')
-const vlineFleet = require('../../../additional-data/vline-fleet')
+const vlineFleet = require('../../../additional-data/vline-tracker/vline-fleet')
+const vlineConsists = require('../../../additional-data/vline-tracker/carriage-sets')
+const { getDayOfWeek } = require('../../../public-holidays')
 
 let lines = {
   Geelong: ['Geelong', 'Marshall', 'South Geelong', 'Waurn Ponds', 'Wyndham Vale', 'Warrnambool'],
   Ballarat: ['Ararat', 'Maryborough', 'Ballarat', 'Wendouree', 'Bacchus Marsh', 'Melton'],
-  Bendigo: ['Bendigo', 'Kyneton', 'Epsom', 'Eaglehawk', 'Swan Hill', 'Echuca'],
-  Gippsland: ['Traralgon', 'Sale', 'Bairnsdale'],
-  Seymour: ['Seymour', 'Shepparton', 'Albury']
+  Bendigo: ['Bendigo', 'Kyneton', 'Epsom', 'Eaglehawk', 'Swan Hill', 'Echuca', 'Sunbury'],
+  Gippsland: ['Traralgon', 'Sale', 'Bairnsdale', 'Pakenham'],
+  Seymour: ['Seymour', 'Shepparton', 'Albury', 'Craigieburn']
 }
 
 router.get('/', (req, res) => {
@@ -113,9 +115,24 @@ router.get('/consist', async (req, res) => {
     .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
     .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
 
+  let operationDays = await vlineTrips.distinct('date', { consist })
+  let servicesByDay = {}
+
+  await async.forEachSeries(operationDays, async date => {
+    let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+
+    servicesByDay[humanDate] = {
+      services: (await vlineTrips.distinct('runID', {
+        consist, date
+      })).sort((a, b) => a - b),
+      date
+    }
+  })
+
   res.render('tracker/vline/by-consist', {
     trips,
     consist,
+    servicesByDay,
     date: utils.parseTime(date, 'YYYYMMDD')
   })
 })
@@ -129,7 +146,7 @@ router.get('/highlights', async (req, res) => {
   if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
   else date = today
 
-  let dayOfWeek = utils.getDayName(utils.parseDate(date))
+  let dayOfWeek = await getDayOfWeek(utils.parseDate(date))
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -143,11 +160,16 @@ router.get('/highlights', async (req, res) => {
     return trip.consist[1] && trip.consist[0].startsWith('N') && trip.consist[1].startsWith('N')
   })
 
-  let consistTypeChanged = await async.filter(allTrips, async trip => {
-    let nspTimetable = await nspTimetables.findDocument({
+  let timetables = {}
+  await async.forEach(allTrips, async trip => {
+    timetables[trip.runID] = await nspTimetables.findDocument({
       runID: trip.runID,
       operationDays: dayOfWeek
     })
+  })
+
+  let consistTypeChanged = allTrips.filter(trip => {
+    let nspTimetable = timetables[trip.runID]
 
     if (nspTimetable) {
       let tripVehicleType
@@ -175,6 +197,36 @@ router.get('/highlights', async (req, res) => {
     }
   })
 
+  let oversizeConsist = allTrips.filter(trip => {
+    // We're only considering where consist type wasnt changed. otherwise 1xVL and 2xSP would trigger even though its equiv
+    if (consistTypeChanged.includes(trip)) return false
+    let nspTimetable = timetables[trip.runID]
+
+    if (nspTimetable && !nspTimetable.flags.tripAttaches) {
+      let tripVehicleType
+      let nspTripType = nspTimetable.vehicle
+      let consistSize = trip.consist.length
+      let nspConsistSize = parseInt(nspTripType[0])
+      if (nspTripType === '3VL') nspConsistSize = 1
+
+      if (!trip.consist[0].startsWith('N')) {
+        return consistSize > nspConsistSize
+      }
+    }
+  })
+
+  let setAltered = allTrips.filter(trip => {
+    if (!trip.consist[0].startsWith('N')) return false
+    let {consist, set} = trip
+    let knownSet = vlineConsists[set]
+    if (!knownSet) return true
+
+    let carriages = consist.slice(1).filter(c => !c.startsWith('P'))
+
+    if (knownSet.some(known => !carriages.includes(known))) return true
+    if (carriages.some(car => !knownSet.includes(car))) return true
+  })
+
   let unknownVehicle = allTrips.filter(trip => {
     return trip.consist.some(c => !vlineFleet.includes(c))
   })
@@ -182,6 +234,8 @@ router.get('/highlights', async (req, res) => {
   res.render('tracker/vline/highlights', {
     doubleHeaders,
     consistTypeChanged,
+    oversizeConsist,
+    setAltered,
     unknownVehicle,
     date: utils.parseTime(date, 'YYYYMMDD')
   })

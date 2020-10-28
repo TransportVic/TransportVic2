@@ -107,6 +107,9 @@ async function main() {
 
   await spawnProcess('node', [l('load-route-suburbs.js')])
   await discordUpdate('[Updater]: Loaded route suburbs')
+
+  await spawnProcess('node', [l('load-search-query.js')])
+  await discordUpdate('[Updater]: Loaded Search Query')
 }
 
 main()

@@ -5,8 +5,14 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
 const loadStops = require('../utils/load-stops')
 const { createStopsLookup } = require('../utils/datamart-utils')
-const datamartStops = require('../../spatial-datamart/vline-train-stations.json').features
-const metroDatamartStops = require('../../spatial-datamart/metro-train-stations.json').features
+
+let datamartStops = []
+let metroDatamartStops = []
+try {
+  datamartStops = require('../../spatial-datamart/vline-train-stations.json').features
+  metroDatamartStops = require('../../spatial-datamart/metro-train-stations.json').features
+} catch (e) { console.log('Could not load spatial datamart, skipping') }
+
 let stopsLookup = createStopsLookup(datamartStops)
 
 Object.keys(stopsLookup).forEach(stop => {

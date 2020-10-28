@@ -4,12 +4,12 @@ const HTTPSServer = require('../server/HTTPSServer')
 const config = require('../config.json')
 
 function renew() {
-  console.log('renewing certs')
+  global.loggers.general.info('Renewing Certs')
   childProcess.exec(`certbot renew ${config.certbotFlags}`, function(err, stdout, stderr) {
     stdout = stdout.toString().trim()
     stderr = stderr.toString().trim()
-    if (stdout) console.log(stdout)
-    if (stderr) console.error(stderr)
+    if (stdout) stdout.split('\n').forEach(x => global.loggers.certs.log(x))
+    if (stderr) stderr.split('\n').forEach(x => global.loggers.certs.err(x))
 
     config.sslCerts.forEach(cert => {
       HTTPSServer.createSecureContext(cert)
@@ -17,5 +17,7 @@ function renew() {
   })
 }
 
-setInterval(renew, 1000 * 60 * 60 * 12)
-renew()
+if (config.useLetsEncrypt) {
+  setInterval(renew, 1000 * 60 * 60 * 12)
+  renew()
+}

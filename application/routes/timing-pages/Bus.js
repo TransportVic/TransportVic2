@@ -40,16 +40,11 @@ async function loadDepartures(req, res) {
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
       + `${operationDate}#stop-${stopGTFSID}`
 
-    let fullDestination = departure.trip.destination
-    let destinationShortName = utils.getStopName(departure.trip.destination)
-    let {destination} = departure.trip
-    if (!utils.isStreet(destinationShortName)) destination = destinationShortName
-    departure.destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
+    let destination = utils.getDestinationName(departure.trip.destination)
 
-    let serviceData = busDestinations.service[departure.trip.routeGTFSID] || busDestinations.service[departure.routeNumber] || {}
-    departure.destination = serviceData[departure.destination]
-      || busDestinations.generic[departure.destination]
-      || busDestinations.generic[fullDestination] || departure.destination
+    let serviceData = busDestinations.service[departure.trip.routeGTFSID] || busDestinations.service[departure.sortNumber] || {}
+    departure.destination = serviceData[destination]
+      || busDestinations.generic[destination] || destination
 
     let destinationStopTiming = departure.trip.stopTimings.slice(-1)[0]
     let destinationStop = await stops.findDocument({

@@ -22,6 +22,7 @@ database.connect({
   let gtfsTimetables = await getCollection('gtfs timetables')
 
   let liveTimetables = await getCollection('live timetables')
+  let metroTrips = await getCollection('metro trips')
   let vlineTrips = await getCollection('vline trips')
   let tramTrips = await getCollection('tram trips')
   let smartrakIDs = await getCollection('smartrak ids')
@@ -48,7 +49,7 @@ database.connect({
   }, {name: 'just stop gtfs id index'})
 
   await stops.createIndex({
-    '$**': 'text'
+    'textQuery': 'text'
   }, {name: 'text index'})
 
   await stops.createIndex({
@@ -57,6 +58,7 @@ database.connect({
   }, {name: 'coded suburb index'})
 
   await stops.createIndex({
+    _id: 1,
     'namePhonetic': 1
   }, {name: 'phonetic name index'})
 
@@ -71,6 +73,10 @@ database.connect({
   await stops.createIndex({
     'bays.vnetStationName': 1
   }, {name: 'vnet station name index', sparse: true})
+
+  await stops.createIndex({
+    'bays.fullStopName': 1
+  }, {name: 'ptv matching index 1'})
 
   console.log('Created stops indexes')
 
@@ -134,6 +140,15 @@ database.connect({
     gtfsDirection: 1
   }, {name: 'directions index'})
 
+  await gtfsTimetables.createIndex({
+    mode: 1,
+    operationDays: 1,
+    origin: 1,
+    destination: 1,
+    departureTime: 1,
+    destinationArrivalTime: 1
+  }, {name: 'run lookup index'})
+
   console.log('Created GTFS timetables indexes')
 
   await timetables.createIndex({
@@ -184,7 +199,32 @@ database.connect({
     mode: 1
   }, {name: 'live stop timings index'})
 
+  await liveTimetables.createIndex({
+    mode: 1,
+    'stopTimings.actualDepartureTimeMS': 1,
+  }, {name: 'active trip index'})
+
   console.log('Created live timetables index')
+
+  await metroTrips.createIndex({
+    date: 1,
+    runID: 1,
+    origin: 1,
+    destination: 1,
+    departureTime: 1,
+    destinationArrivalTime: 1
+  }, {name: 'metro trips index', unique: true})
+
+  await metroTrips.createIndex({
+    date: 1,
+    consist: 1
+  }, {name: 'consist index'})
+
+  await metroTrips.createIndex({
+    consist: 1
+  }, {name: 'undated consist index'})
+
+  console.log('Created metro trips index')
 
   await vlineTrips.createIndex({
     date: 1,

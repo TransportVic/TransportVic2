@@ -66,7 +66,7 @@ async function getDeparturesFromPTV(stop, db) {
       let route = routes[coachDeparture.route_id]
 
       let departureTime = utils.parseTime(coachDeparture.scheduled_departure_utc)
-      let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(departureTime) % 1440
+      let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departureTime)
 
       if (departureTime.diff(now, 'minutes') > 60 * 12) return
 
@@ -117,7 +117,7 @@ async function getDeparturesFromPTV(stop, db) {
           })
 
           if (trip) {
-            console.log(`Mapped train trip as coach: ${trip.departureTime} to ${trip.destination}`)
+            global.loggers.general.info(`Mapped train trip as coach: ${trip.departureTime} to ${trip.destination}`)
 
             trip.operationDays = operationDay
 
@@ -158,7 +158,6 @@ async function getDeparturesFromPTV(stop, db) {
 
       // Its half trips that never show up properly
       if (!trip) return
-      // if (!trip) return console.err(`Failed to map trip: ${departureTime.format('HH:mm')} to ${destination}`)
 
       tripIDsSeen.push(trip.tripID)
 
@@ -217,7 +216,7 @@ async function getDepartures(stop, db) {
       let extras = scheduledDepartures.filter(d => !ptvDepartures.includes(d.trip.tripID))
       departures = departures.concat(extras)
     } catch (e) {
-      console.log(e)
+      global.loggers.general.err('Failed to get coach trips', e)
       departures = scheduledDepartures
     }
 

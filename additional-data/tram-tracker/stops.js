@@ -54,7 +54,6 @@ module.exports = [
   'coburg/de-carle-street-moreland-road',
   'glen-iris/harold-holt-swim-centre-high-street',
   'armadale/armadale-railway-station',
-  'glen-huntly/glenhuntly-railway-station',
   'elsternwick/elsternwick-railway-station',
   'prahran/chapel-street-high-street',
   'brunswick/albion-street-sydney-road',
@@ -78,5 +77,16 @@ module.exports = [
   'south-melbourne/montague-street-light-rail',
   'caulfield/jasmine-street-glenhuntly-road',
   'caulfield/bambra-road-glenhuntly-road',
-  'melbourne-city/swanston-street-bourke-street'
+  'melbourne-city/swanston-street-bourke-street',
+  'melbourne-city/spencer-street-collins-street',
+  'melbourne-city/melbourne-central-railway-station',
+  'maribyrnong/highpoint-shopping-centre',
+  'moonee-ponds/maribyrnong-park',
+  'parkville/royal-melbourne-hospital',
+  'melbourne-city/flagstaff-railway-station',
+  'south-yarra/south-yarra-railway-station',
+  'essendon/essendon-north-primary-school-keilor-road',
+  'elwood/st-kilda-primary-school-brighton-road',
+  'richmond/howard-street-church-street',
+  'burwood/deakin-university'
 ]

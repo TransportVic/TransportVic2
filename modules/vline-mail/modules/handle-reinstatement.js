@@ -2,6 +2,7 @@ const utils = require('../../../utils')
 const async = require('async')
 const postDiscordUpdate = require('../../discord-integration')
 const bestStop = require('./find-best-stop')
+const findTrip = require('../../vline/find-trip')
 
 async function discordUpdate(text) {
   await postDiscordUpdate('vlineInform', text)
@@ -20,28 +21,21 @@ async function setServiceAsReinstated(db, service) {
     departureTime = `0${departureTime}`
   }
 
-  let query = {
-    departureTime, origin, destination,
-    mode: 'regional train',
-    operationDays: today,
-    type: 'cancellation'
-  }
-
-  let trip = await liveTimetables.findDocument(query)
+  let trip = await findTrip(liveTimetables, today, origin, destination, departureTime)
 
   if (trip) {
-    console.log(`Marking ${departureTime} ${origin} - ${destination} train as reinstated.`)
+    global.loggers.mail.info(`Marking ${departureTime} ${origin} - ${destination} train as reinstated.`)
     await discordUpdate(`The ${departureTime} ${origin} - ${destination} service as been reinstated today.`)
 
     await liveTimetables.deleteDocument({ _id: trip._id })
   } else {
-    console.log(`Could not mark ${departureTime} ${origin} - ${destination} as reinstated`, query)
+    global.loggers.mail.err(`Could not mark ${departureTime} ${origin} - ${destination} as reinstated`)
     await discordUpdate(`Was told the ${departureTime} ${origin} - ${destination} service would be reinstated today, but could not match.`)
   }
 }
 
 async function reinstatement(db, text) {
-  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) (?:to|-) ([\w ]*?) (?:service|train|will|has)/)
+  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) to ([\w ]*?) (?:service|train|will|has|is)/)
 
   if (service) {
     let departureTime = service[1].replace('.', ':')

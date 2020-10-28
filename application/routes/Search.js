@@ -11,25 +11,39 @@ router.get('/', (req, res) => {
 })
 
 async function prioritySearch(db, query) {
+  let stops = db.getCollection('stops')
+
   let possibleStopNames = [
     query,
     utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre'))
   ]
 
-  let search = possibleStopNames.map(name => ({mergeName: new RegExp(name, 'i')}))
+  let fullQuery = possibleStopNames.join(' ')
 
-  let priorityStopsByName = (await db.getCollection('stops').findDocuments({
-    $or: search
-  }).toArray()).filter(stop => {
-    return stop.mergeName.includes('Shopping Centre') || stop.mergeName.includes('Railway Station')
-      || stop.mergeName.includes('University')
-  }).sort((a, b) => a.stopName.length - b.stopName.length)
+  let priorityStopsByName = (await stops.findDocuments({
+    $and: [{
+      $text: {
+        $search: fullQuery
+      }
+    }, {
+      $or: possibleStopNames.map(name => ({mergeName: new RegExp(name, 'i')}))
+    }, {
+      $or: [{
+        mergeName: /Shopping Centre/
+      }, {
+        mergeName: /Railway Station/
+      }, {
+        mergeName: /University/
+      }]
+    }]
+  }).limit(6).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
+
   let nquery = query.match(/^\d+$/) ? parseInt(query) : -1
-  let gtfsMatch = await db.getCollection('stops').findDocuments({
+  let gtfsMatch = await stops.findDocuments({
     'bays.stopGTFSID': nquery
   }).toArray()
 
-  let numericalMatchStops = (await db.getCollection('stops').findDocuments({
+  let numericalMatchStops = (await stops.findDocuments({
     $or: [{
       'bays.tramTrackerID': query
     }, {
@@ -41,6 +55,8 @@ async function prioritySearch(db, query) {
 }
 
 async function findStops(db, query) {
+  let stops = db.getCollection('stops')
+
   let prioritySearchResults = await prioritySearch(db, query)
   let excludedIDs = prioritySearchResults.map(stop => stop._id)
 
@@ -51,17 +67,17 @@ async function findStops(db, query) {
 
   let phoneticQuery = metaphone.process(query)
 
-  let remainingResults = (await db.getCollection('stops').findDocuments({
+  let remainingResults = (await stops.findDocuments({
     _id: {
       $not: {
         $in: excludedIDs
       }
     },
-    // $and: [{
-    //   $text: {
-    //     $search: query + ' ' + search
-    //   }
-    // }, {
+    $and: [{
+      $text: {
+        $search: query + ' ' + search
+      }
+    }, {
       $or: [{
         suburb: queryRegex
       }, {
@@ -71,20 +87,20 @@ async function findStops(db, query) {
       }, {
         stopName: stationRegex
       }]
-    // }]
+    }]
   }).limit(15 - prioritySearchResults.length).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
 
-  let lowPriorityResults = await db.getCollection('stops').findDocuments({
+  let lowPriorityResults = await stops.findDocuments({
     _id: {
       $not: {
         $in: excludedIDs.concat(remainingResults.map(stop => stop._id))
       }
     },
-    // $and: [{
-    //   $text: {
-    //     $search: query + ' ' + search
-    //   }
-    // }, {
+    $and: [{
+      $text: {
+        $search: query + ' ' + search
+      }
+    }, {
       $or: [{
         'bays.fullStopName': queryRegex
       }, {
@@ -95,13 +111,22 @@ async function findStops(db, query) {
         'tramTrackerNames': searchRegex
       }, {
         'tramTrackerNames': queryRegex
-      }, {
-        namePhonetic: new RegExp(phoneticQuery)
       }]
-    // }]
+    }]
   }).limit(15 - prioritySearchResults.length - remainingResults.length).toArray()
 
-  return prioritySearchResults.concat(remainingResults).concat(lowPriorityResults)
+  let currentResults = prioritySearchResults.concat(remainingResults).concat(lowPriorityResults)
+
+  let phoneticMatch = await stops.findDocuments({
+    _id: {
+      $not: {
+        $in: currentResults.map(stop => stop._id)
+      }
+    },
+    namePhonetic: phoneticQuery
+  }).limit(5).toArray()
+
+  return currentResults.concat(phoneticMatch)
 }
 
 async function findRoutes(db, query) {

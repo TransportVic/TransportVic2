@@ -60,7 +60,7 @@ async function getDeparturesFromPTV(stop, db) {
 
       if (actualDepartureTime.diff(now, 'minutes') > 90) return
 
-      let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime) % 1440
+      let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(scheduledDepartureTime)
 
       let destination = utils.getProperStopName(run.destination_name)
 

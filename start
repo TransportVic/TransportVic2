@@ -1,4 +1,5 @@
 #!/bin/bash
 cd /home/ec2-user/TransportVic
 
-/home/ec2-user/.nvm/versions/node/v14.13.0/bin/node --max-old-space-size=4096 /home/ec2-user/TransportVic/index.js >> /home/ec2-user/log 2>> /home/ec2-user/err
+# Note: we do not want sudo or we cannot kill the process
+NODE_ENV=prod /home/ec2-user/.nvm/versions/node/v15.0.1/bin/node --max-old-space-size=4096 /home/ec2-user/TransportVic/index.js >> /home/ec2-user/log 2>> /home/ec2-user/err

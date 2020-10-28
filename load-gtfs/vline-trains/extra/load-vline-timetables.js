@@ -61,6 +61,9 @@ async function parseTimings(names, types, trip) {
   let tripDivides = false
   let tripDividePoint = null
 
+  let tripAttaches = false
+  let tripAttachPoint = null
+
   let movementType = headers[4]
   let vehicleFormation = headers[2],
     formedBy = headers[3]
@@ -70,14 +73,22 @@ async function parseTimings(names, types, trip) {
   let offset = 0
   let previousTime = 0
 
-  await async.forEachOfSeries(names.slice(5), async (locationName, i) => {
+  let lastLocation
+
+  let last3 = names.slice(-3)
+  let lastIndex = last3.includes('Plat') ? -2 : -1
+
+  await async.forEachOfSeries(names.slice(5, lastIndex), async (locationName, i) => {
     let type = types[i + 5], timing = timings[i]
-    if (!timing || timing.includes('…')) return
-    timing = timing.replace('*', '')
 
     if (locationName === 'SEYMOUR SG Platform') locationName = 'Seymour'
     if (locationName === 'Clarkefield (new code)') locationName = 'Clarkefield'
     if (locationName === 'Riddels Creek') locationName = 'Riddells Creek'
+
+    if (['Arr', 'Dep', 'Plat'].includes(locationName)) {
+      type = locationName
+      locationName = lastLocation
+    }
 
     let stationData
     if (nonStations[locationName]) return
@@ -102,6 +113,11 @@ async function parseTimings(names, types, trip) {
       }
     }
 
+    lastLocation = locationName
+    if (!timing || timing.includes('…')) return
+    let isExpress = timing.includes('*')
+    timing = timing.replace('*', '')
+
     let stationPlatform = stationData.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000) // We don't want to assign to the NSW stop
     if (!stationPlatform) stationPlatform = stationData.bays.find(bay => bay.mode === 'regional train') // Loosen a bit
     if (!stationPlatform) stationPlatform = stationData.bays.find(bay => bay.mode === 'regional coach') // Fallback to coach because the whole albury line is missing now
@@ -109,6 +125,11 @@ async function parseTimings(names, types, trip) {
     if (timing.includes('DV')) {
       tripDivides = true
       tripDividePoint = stationPlatform.fullStopName.slice(0, -16)
+    }
+
+    if (timing.includes('AV')) {
+      tripAttaches = true
+      tripAttachPoint = stationPlatform.fullStopName.slice(0, -16)
     }
 
     let minutesAftMidnight = utils.getMinutesPastMidnightFromHHMM(timing) + offset
@@ -134,11 +155,12 @@ async function parseTimings(names, types, trip) {
         departureTimeMinutes: minutesAftMidnight,
         platform: null,
         track: null,
-        sortTime: minutesAftMidnight
+        sortTime: minutesAftMidnight,
+        express: isExpress
       }
 
     if (timing.includes('/')) {
-      let [arrivalTime, departureTime] = timing.split('/')
+      let [arrivalTime, departureTime] = timing.split('/').map(x => x.slice(0, 5))
       let arrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(arrivalTime) + offset
       let departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime) + offset
 
@@ -153,14 +175,25 @@ async function parseTimings(names, types, trip) {
         locations[locationName].departureTime = timing.slice(0, 5)
         locations[locationName].departureTimeMinutes = minutesAftMidnight
       } else if (type === 'Plat') {
-        locations[locationName].platform = timing.trim()
+        if (locations[locationName].platform) { // because plat is already filled this would be track
+          locations[locationName].track = timing.trim()
+        } else {
+          locations[locationName].platform = timing.trim()
+        }
+
       }
     } else if (timing.length === 1) {
-      locations[locationName].track = timing
+      locations[locationName].track = timing.trim()
     }
   })
 
   let stopTimings = Object.values(locations).filter(stop => !isNaN(stop.arrivalTimeMinutes))
+  if (stopTimings[0].departureTimeMinutes < 180) {
+    stopTimings.forEach(stop => {
+      if (stop.departureTimeMinutes) stop.departureTimeMinutes += 1440
+      if (stop.arrivalTimeMinutes) stop.arrivalTimeMinutes += 1440
+    })
+  }
 
   let lastStop = stopTimings.slice(-1)[0]
 
@@ -206,7 +239,9 @@ async function parseTimings(names, types, trip) {
     destinationArrivalTime: lastStop.arrivalTime,
     flags: {
       tripDivides,
-      tripDividePoint
+      tripDividePoint,
+      tripAttaches,
+      tripAttachPoint
     },
     direction: upService ? 'Up' : 'Down'
   }
@@ -303,7 +338,6 @@ database.connect({
         return stop
       })
     }
-
     return trip
   })
 

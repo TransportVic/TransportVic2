@@ -5,6 +5,7 @@ const destinationOverrides = require('../../../additional-data/coach-stops')
 const utils = require('../../../utils')
 const async = require('async')
 const emptyShunts = require('../../../additional-data/empty-shunts.json')
+const { getDayOfWeek } = require('../../../public-holidays')
 const TimedCache = require('../../../TimedCache')
 const EventEmitter = require('events')
 
@@ -107,7 +108,7 @@ module.exports = {
     arrivalsLock[stationName] = new IEventEmitter()
 
     let timetables = db.getCollection('timetables')
-    let today = utils.getPTDayName(utils.now())
+    let today = await getDayOfWeek(utils.now())
     let minutesPastMidnight = utils.getPTMinutesPastMidnight(utils.now())
 
     let emptyShuntsToday = emptyShunts.filter(emptyShunt => emptyShunt.operationDays === today)
@@ -221,7 +222,7 @@ module.exports = {
             })
           }
         } catch (e) {
-          console.log(e)
+          global.loggers.mockups.err('Failed getting departures', e)
         }
         resolve()
       }),
@@ -232,7 +233,7 @@ module.exports = {
             metroDepartures = (await getMetroDepartures(station, db))
             metroDepartures = await async.map(metroDepartures, async departure => {
               let {runID} = departure
-              let today = utils.getPTDayName(utils.now())
+              let today = await getDayOfWeek(utils.now()) // TODO: Change to trip start time
 
               let scheduled = await timetables.findDocument({
                 runID, operationDays: today
@@ -447,7 +448,7 @@ module.exports = {
     })
 
     if (!screenStops.length) {
-      console.log('Failed to find screen stops', tripStops, lineStops)
+      global.loggers.mockups.err('Failed to find screen stops', tripStops, lineStops)
       return null
     }
     let expressCount = screenStops.filter(stop => stop.isExpress).length

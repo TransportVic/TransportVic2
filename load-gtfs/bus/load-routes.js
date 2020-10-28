@@ -18,7 +18,11 @@ const updateStats = require('../utils/stats')
 let gtfsID = process.argv[2]
 let datamartMode = datamartModes[gtfsID]
 
-const datamartRoutes = require(`../../spatial-datamart/${datamartMode}-route.json`).features
+let datamartRoutes = []
+try {
+  datamartRoutes = require(`../../spatial-datamart/${datamartMode}-route.json`).features
+} catch (e) { console.log('Could not load spatial datamart, skipping') }
+
 let serviceLookup = createServiceLookup(datamartRoutes)
 
 if (gtfsID === '7') datamartMode = 'telebus'
@@ -56,7 +60,7 @@ database.connect({
   }, {})
 
   routesNeedingVia.forEach(routeGTFSID => {
-    ptvRoutes[routeGTFSID] = ptvRouteData.find(route => route.routeGTFSID === routeGTFSID).originalName
+    ptvRoutes[routeGTFSID] = ptvRouteData.find(route => route.routeGTFSID === routeGTFSID).originalName.replace(/ \((From|Until) .+\)$/, '')
   })
 
   ptvRoutes['4-676'] = 'Lilydale East Loop'
@@ -125,6 +129,7 @@ database.connect({
       if (routeGTFSID === '6-WN1') return '1'
       if (routeGTFSID === '6-WN2') return '2'
       if (routeGTFSID === '6-WN3') return '3'
+      if (routeGTFSID === '6-W12') return 'A'
 
       return routeNumber
     })

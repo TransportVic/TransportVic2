@@ -74,14 +74,11 @@ async function getData(req, res) {
       }
       return false
     }).map(departure => {
-      let destinationShortName = departure.trip.destination.split('/')[0]
-      let {destination} = departure.trip
-      if (!utils.isStreet(destinationShortName)) destination = destinationShortName
-      departure.destination = destination.replace('Shopping Centre', 'SC')
-
+      let destination = utils.getDestinationName(departure.trip.destination)
       let serviceData = busDestinations.service[departure.trip.routeGTFSID] || busDestinations.service[departure.routeNumber] || {}
-      departure.destination = serviceData[departure.destination]
-        || busDestinations.generic[departure.destination] || departure.destination
+
+      departure.destination = (serviceData[destination]
+        || busDestinations.generic[destination] || destination)
 
       return departure
     })

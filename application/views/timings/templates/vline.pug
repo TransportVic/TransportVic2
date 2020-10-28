@@ -31,21 +31,33 @@ if departures.length
           if (departure.trip.routeGTFSID === '14-XPT') lineName = 'Melbourne-Sydney XPT towards'
         span.towards #{lineName}
         span.destination #{departure.destination}
-        if departure.isRailReplacementBus
-          span.broadDepartureInfo.important This service has been replaced by coaches
-        else if departure.trip.type === 'change'
-          if departure.cancelled
-            span.broadDepartureInfo.important CANCELLED: Now #{departure.trip.changeType}s #{departure.trip.changeType === 'originate' ? 'from' : 'at'} #{departure.trip.changePoint}
-          else if departure.trip.changeType === 'terminate'
-            span.broadDepartureInfo.important CHANGED: Now terminates at #{departure.trip.changePoint}
-        else if departure.trip.type === 'pattern-altered'
-          -
+        -
+          let showPatternAltered = false
+          if (departure.trip.type === 'pattern-altered') {
             let stopSkipped = departure.trip.stopTimings.find(stop => stop.cancelled)
             let currentStop = departure.trip.stopTimings.find(stop => stop.stopName === station.stopName)
             let skippedIndex = departure.trip.stopTimings.indexOf(stopSkipped)
             let currentIndex = departure.trip.stopTimings.indexOf(currentStop)
-          if skippedIndex >= currentIndex
-            span.broadDepartureInfo.important #{skippedIndex === currentIndex ? 'CANCELLED' : 'CHANGED'}: Will not stop at #{stopSkipped.stopName.slice(0, -16)}
+            showPatternAltered = skippedIndex >= currentIndex
+          }
+          
+          let showChange = departure.trip.type === 'change' && (departure.cancelled || departure.trip.modifications.some(m => m.type === 'terminate'))
+
+        if departure.isRailReplacementBus
+          span.broadDepartureInfo.important This service has been replaced by coaches
+        else if showChange
+          if departure.cancelled
+            - let firstMod = departure.trip.modifications[0]
+            
+            if departure.trip.modifications.length === 1
+              span.broadDepartureInfo.important CANCELLED: Now #{firstMod.type}s #{firstMod.type === 'originate' ? 'from' : 'at'} #{firstMod.changePoint}
+            else
+              span.broadDepartureInfo.important CANCELLED: Now #{departure.trip.modifications.map(m => `${m.type}s ${m.type === 'originate' ? 'from' : 'at'} ${m.changePoint}`).join(' & ')}
+          else if departure.trip.modifications.some(m => m.type === 'terminate')
+            - let terminationModification = departure.trip.modifications.find(m => m.type === 'terminate')
+            span.broadDepartureInfo.important CHANGED: Now terminates at #{terminationModification.changePoint}
+        else if showPatternAltered
+          span.broadDepartureInfo.important #{skippedIndex === currentIndex ? 'CANCELLED' : 'CHANGED'}: Will not stop at #{stopSkipped.stopName.slice(0, -16)}
         else if departure.cancelled
           span.broadDepartureInfo.important CANCELLED
         else

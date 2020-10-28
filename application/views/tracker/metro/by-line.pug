@@ -1,0 +1,20 @@
+extends ../../layout
+
+block head
+  -
+    title = 'TransportVic - Tracker/Metro - By Line'
+    description = `Tracking all Metro trips on the ${line} Line`
+  title #{title}
+  link(rel='preload' as='style' href='/static/css/tracker/results.css')
+  
+block title
+  span Metro Tracker - By Line
+
+block style
+  link(rel='stylesheet' href='/static/css/tracker/results.css')
+
+block content
+  h1.title Tracking Trips on #{line} Line on #{date.format('dddd, MMMM Do YYYY')}
+  for trip in trips
+    div(class=`trip ${trip.active ? '' : 'inactive'}`)
+      a(href=trip.url) ##{trip.runID}: #{trip.departureTime} #{trip.origin} - #{trip.destination}: #{trip.consist.join('-')}

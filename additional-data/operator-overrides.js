@@ -35,7 +35,11 @@ module.exports = {
   "4-58x": ["Panorama Coaches"],
   "4-603": ["Transdev Melbourne"],
   "4-604": ["Transdev Melbourne"],
+  "4-68E": ["Martyrs Bus Service"],
   "4-704": ["Ventura Bus Lines"],
+  "4-74Z": ["Ventura Bus Lines"],
+  "4-7S6": ["Ventura Bus Lines"],
+  "4-7S7": ["Ventura Bus Lines"],
   "4-800": ["Ventura Bus Lines"],
   "4-80O": ["Ventura Bus Lines"],
   "4-834": ["Ventura Bus Lines"],
@@ -48,20 +52,22 @@ module.exports = {
   "4-903": ["Transdev Melbourne"],
 
   "6-858": ["Dysons (Wangaratta)"], // Wangaratta - Myrtleford
+
   "6-LGs": ["Dysons (Kyneton)"], //  Lancefield - Gisborne
   "6-LcS": ["Dysons (Kyneton)"], //  Lancefield - Sunbury - Clarkefield
   "6-RsK": ["Dysons (Kyneton)"], //  Lancefield - Kyneton
+
   "6-a44": ["Dysons (Wangaratta)"], //  Albury - Wodonga - Myrtleford
+
   "6-HT1": ["Horsham Transit"], // 1 Horsham - Albert Street North
+
   "6-ST1": ["Sandlant Buses"], // 1 Stawell - Ligar St
   "6-HT2": ["Horsham Transit"], // 2 Horsham - Sunnyside
   "6-ST2": ["Sandlant Buses"], // 2 Stawell - Patrick St
   "6-HT3": ["Horsham Transit"], // 3 Horsham - Wawunna Road
   "6-HT4": ["Horsham Transit"], // 4 Horsham - Williams Road South Bank
-  "6-G45": ["McHarrys Bus Lines"], // 45 Armstrong Creek - Waurn Ponds SC
   "6-HT5": ["Horsham Transit"], // 5 Horsham - Natimuk Road
-  "6-G6X": ["McHarrys Bus Lines"], // 60 Geelong Railway Station - St Leonards
-  "6-G6L": ["McHarrys Bus Lines"], // 61 Geelong Railway Station - Drysdale
+
   "6-a31": ["Dysons (Wangaratta)"], // 7 Albury - Beechworth
   "6-BM8": ["Dysons (Moama)"], // Barmah 8 Barmah - Echuca
 
@@ -162,5 +168,29 @@ module.exports = {
   "6-908": ["Martin's Albury"],
 
   "6-99x": ["Bacchus Marsh Coaches"],
-  "6-99y": ["Bacchus Marsh Coaches"]
+  "6-99y": ["Bacchus Marsh Coaches"],
+
+  "6-B10": ["CDC Ballarat"],
+  "6-B11": ["CDC Ballarat"],
+  "6-B12": ["CDC Ballarat"],
+  "6-B13": ["CDC Ballarat"],
+  "6-B14": ["CDC Ballarat"],
+  "6-B15": ["CDC Ballarat"],
+  "6-B20": ["CDC Ballarat"],
+  "6-B21": ["CDC Ballarat"],
+  "6-B22": ["CDC Ballarat"],
+  "6-B23": ["CDC Ballarat"],
+  "6-B24": ["CDC Ballarat"],
+  "6-B26": ["CDC Ballarat"],
+  "6-B30": ["CDC Ballarat"],
+  "6-B31": ["CDC Ballarat"],
+  "6-cvx": ["CDC Ballarat"],
+
+  "6-G3O": ["McHarrys Bus Lines"], // 30
+  "6-G45": ["McHarrys Bus Lines"], // 45
+  "6-G6X": ["McHarrys Bus Lines"], // 60
+  "6-G6L": ["McHarrys Bus Lines"], // 61
+
+  "6-KX1": ["Mitchell Transit"],
+  "6-W12": ["Mitchell Transit"]
 }

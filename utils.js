@@ -268,13 +268,13 @@ module.exports = {
 
     return daysOfWeek[time.clone().subtract(offset, 'minutes').day()]
   },
-  getDayName: time => {
+  getDayOfWeek: time => {
     return daysOfWeek[time.day()]
   },
   isWeekday: dayOfWeek => {
     return ['Mon', 'Tues', 'Wed', 'Thur', 'Fri'].includes(dayOfWeek)
   },
-  formatHHMM: time => {
+  formatHHMM: time => { // TODO: Rename getHHMM
     return time.format('HH:mm')
   },
   getYYYYMMDD: time => {
@@ -307,6 +307,7 @@ module.exports = {
     let fullOptions = {
       timeout: 2000,
       compress: true,
+      highWaterMark: 1024 * 1024,
       ...options
     }
 
@@ -324,10 +325,23 @@ module.exports = {
 
     let end = +new Date()
     let diff = end - start
-    console.log(`${diff}ms ${url}`)
 
-    if (options.raw) return body
-    return body.text()
+    let size = body.headers.get('content-length')
+    if (options.stream) {
+      let logMessage = `${diff}ms ${url}`
+      if (global.loggers) global.loggers.fetch.log(logMessage)
+      else console.log(logMessage)
+
+      return body.body
+    }
+    let returnData = await (options.raw ? body.buffer() : body.text())
+    if (!size) size = returnData.length
+
+    let logMessage = `${diff}ms ${url} ${size}R`
+    if (global.loggers) global.loggers.fetch.log(logMessage)
+    else console.log(logMessage)
+
+    return returnData
   },
   isStreet: shortName => {
     return (shortName.endsWith('Street') || shortName.endsWith('Road')
@@ -391,7 +405,7 @@ module.exports = {
 
     if (blankOld && +timeDifference <= -30000) return ''
     if (+timeDifference <= 60000) return 'Now'
-    if (+timeDifference > 1440 * 60 * 1000) return utils.getHumanDateShort(scheduledDepartureTime)
+    if (+timeDifference > 1440 * 60 * 1000) return module.exports.getHumanDateShort(time)
 
     let hours = timeDifference.get('hours')
     let minutes = timeDifference.get('minutes')
@@ -421,5 +435,39 @@ module.exports = {
   },
   getProperStopName: ptvStopName => {
     return module.exports.adjustRawStopName(stopNameModifier(module.exports.adjustStopName(ptvStopName.trim().replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, ''))))
+  },
+  getDestinationName: stopName => {
+    stopName = stopName.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
+
+    let shortName = module.exports.getStopName(stopName)
+    if (module.exports.isStreet(shortName)) return stopName
+    else return shortName
+  },
+  getRunID: ptvRunID => {
+    let runID = ptvRunID - 948000
+    if (runID >= 40000) {
+      return `X${module.exports.pad((runID - 40000).toString(), 3, '0')}`
+    } else {
+      return module.exports.pad(runID.toString(), 4, '0')
+    }
+  },
+  sleep: time => {
+    return new Promise(resolve => {
+      setTimeout(resolve, time)
+    })
+  },
+  findSubstrings: (str, size=0) => {
+    let result = []
+    for (let i = 0; i < str.length; i++) {
+      for (let j = str.length; j - i >= size; j--) {
+        result.push(str.slice(i, j))
+      }
+    }
+
+    return result
+  },
+  tokeniseAndSubstring: text => {
+    let words = text.split(' ')
+    return words.map(w => module.exports.findSubstrings(w, 4)).reduce((a, e) => a.concat(e), [])
   }
 }

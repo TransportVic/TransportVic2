@@ -59,24 +59,16 @@ async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, route
     })
 
     if (timetables.length === 1) return timetables[0]
-    else if (timetables.length === 2) {
-      let first = timetables[0], second = timetables[1]
-      let firstScore = findScore(first)
-      let secondScore = findScore(second)
+    else if (timetables.length > 1) {
+      let groups = timetables.map(timetable => ({
+        timetable,
+        directScore: findScore(timetable),
+        distance: distance(destination, utils.getStopName(tramDestinations[utils.getDestinationName(timetable.destination)] || timetable.destination))
+      }))
 
-      let firstDestination = tramDestinations[first.destination] || first.destination
-      let secondDestination = tramDestinations[second.destination] || second.destination
-
-      if (firstScore === secondScore) {
-        firstScore = distance(destination, utils.getStopName(firstDestination))
-        secondScore = distance(destination, utils.getStopName(secondDestination))
-      }
-
-      if (firstScore < secondScore) {
-        return first
-      } else {
-        return second
-      }
+      return groups.sort((a, b) => {
+        return a.directScore - b.directScore || a.distance - b.distance
+      })[0].timetable
     }
   }
 
@@ -96,9 +88,9 @@ async function getDeparturesFromYT(stop, db) {
     let {stopGTFSID, tramTrackerID} = bay
 
     let {responseObject} = JSON.parse(await utils.request(urls.yarraStopNext3.format(tramTrackerID)))
-    
+
     await async.forEach(responseObject, async tramDeparture => {
-      let {Prediction, AVMTime, HeadBoardRouteNo, RunNo, Schedule, TramDistance, VehicleNo, Destination} = tramDeparture
+      let {Prediction, AVMTime, HeadBoardRouteNo, RunNo, Schedule, TramDistance, VehicleNo, Destination, SpecialEventMessage} = tramDeparture
       let scheduledTimeMS = parseInt(Schedule.slice(0, -1).match(/(\d+)\+/)[1])
       let avmTimeMS = parseInt(AVMTime.slice(0, -1).match(/(\d+)\+/)[1])
 
@@ -108,7 +100,7 @@ async function getDeparturesFromYT(stop, db) {
 
       if (actualDepartureTime.diff(now, 'minutes') > 90) return
 
-      let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime) % 1440
+      let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(scheduledDepartureTime)
       let day = utils.getYYYYMMDD(scheduledDepartureTime)
 
       let coreRoute = HeadBoardRouteNo.replace(/[a-z]/, '')
@@ -132,12 +124,39 @@ async function getDeparturesFromYT(stop, db) {
         if (scheduledDepartureTime.diff(now, 'minutes') > 90) return
       }
 
-      trip = await trimTrip(db, Destination, coreRoute, trip, day)
-      let hasBussingMessage = Destination.includes('bus around')
+      if (!trip.hasBeenTrimmed) {
+        if (SpecialEventMessage.includes('replace') && SpecialEventMessage.includes('trams')) {
+          let mainMessage = SpecialEventMessage.replace(/.*:/, '').trim()
+          let routeData = mainMessage.replace(/between.*/, '').trim()
+          let routes = routeData.match(/(\d+)/g)
+
+          let trimmedTrip
+          if (routes && routes.includes(coreRoute)) {
+            let stopsData = mainMessage.replace(/.*between /, '')
+            let stopParts
+            if (stopsData.includes('&')) stopParts = stopsData.split('&')
+            else stopParts = stopsData.split(' and ')
+
+            let stops = stopParts.map(stop => utils.adjustStopName(stop.replace(/Stop \w*/, '').replace(/.$/, '').trim()))
+
+            trimmedTrip = await trimTrip.trimFromMessage(db, stops, stopGTFSID, trip, day)
+          }
+
+          if (trimmedTrip) {
+            trip = trimmedTrip
+          } else {
+            trip = await trimTrip.trimFromDestination(db, Destination, coreRoute, trip, day)
+          }
+        } else {
+          trip = await trimTrip.trimFromDestination(db, Destination, coreRoute, trip, day)
+        }
+      }
+
+      if (trip.destination === bay.fullStopName) return
 
       let loopDirection
       if (routeGTFSID === '3-35') {
-        loopDirection = gtfsDirection === '0' ? 'AC/W' : 'C/W'
+        loopDirection = trip.gtfsDirection === '0' ? 'AC/W' : 'C/W'
       }
 
       if (tram) {
@@ -177,8 +196,7 @@ async function getDeparturesFromYT(stop, db) {
         loopDirection,
         vehicle: tram,
         routeNumber: HeadBoardRouteNo,
-        sortNumber: coreRoute,
-        hasBussingMessage
+        sortNumber: coreRoute
       })
     })
   })
@@ -226,7 +244,7 @@ async function getDepartures(stop, db) {
 
       return returnDepartures(departures)
     } catch (e) {
-      console.log(e)
+      global.loggers.general.err('Failed to get tram trips', e)
       departures = (await getScheduledDepartures(stop, db, false)).map(departure => {
         departure.routeNumber = determineTramRouteNumber(departure.trip)
         departure.sortNumber = departure.routeNumber.replace(/[a-z]/, '')
@@ -237,7 +255,7 @@ async function getDepartures(stop, db) {
       return returnDepartures(departures)
     }
   } catch (e) {
-    console.log(e)
+    global.loggers.general.err('Failed to get scheduled tram trips', e)
     return returnDepartures(null)
   }
 

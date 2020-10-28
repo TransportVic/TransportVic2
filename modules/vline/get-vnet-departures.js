@@ -2,6 +2,7 @@ const urls = require('../../urls.json')
 const utils = require('../../utils')
 const cheerio = require('cheerio')
 const async = require('async')
+const { getDayOfWeek } = require('../../public-holidays')
 
 async function getStationFromVNETName(vnetStationName, db) {
   const station = await db.getCollection('stops').findDocument({
@@ -16,9 +17,11 @@ async function getStationFromVNETName(vnetStationName, db) {
   return station
 }
 
-async function getVNETDepartures(stationName, direction, db, time) {
-  let url = urls.vlinePlatformDepartures.format(stationName, direction, time)
+async function getVNETDepartures(stationName, direction, db, time, useArrivalInstead=false) {
+  let baseURL = useArrivalInstead ? urls.vlinePlatformArrivals : urls.vlinePlatformDepartures
+  let url = baseURL.format(stationName, direction, time)
   const body = (await utils.request(url)).replace(/a:/g, '')
+
   const $ = cheerio.load(body)
   const allServices = Array.from($('PlatformService'))
 
@@ -30,11 +33,25 @@ async function getVNETDepartures(stationName, direction, db, time) {
     }
 
     let platform = $$('Platform').text()
+    if (platform.length > 5) platform = null
+
     let originDepartureTime = utils.parseTime($$('ScheduledDepartureTime').text())
     let destinationArrivalTime = utils.parseTime($$('ScheduledDestinationArrivalTime').text())
+
+    let estimatedStopArrivalTime, estimatedDestArrivalTime
+    let providedActualArrivalTime = $$('ActualArrivalTime').text()
+    let providedDestArrivalTime = $$('ActualDestinationArrivalTime').text()
+
+    if (providedActualArrivalTime.length === 19) {
+      estimatedStopArrivalTime = utils.parseTime(providedActualArrivalTime)
+      estimatedDestArrivalTime = utils.parseTime(providedDestArrivalTime)
+    }
+
     let runID = $$('ServiceIdentifier').text()
     let originVNETName = $$('Origin').text()
     let destinationVNETName = $$('Destination').text()
+
+    if (!originDepartureTime.isValid()) return // Some really edge case where it returns a run with no departure data - discard it
 
     let accessibleTrain = $$('IsAccessibleAvailable').text() === 'true'
     let barAvailable = $$('IsBuffetAvailable').text() === 'true'
@@ -88,8 +105,8 @@ async function getVNETDepartures(stationName, direction, db, time) {
     if (direction === 'D') direction = 'Down'
     else direction = 'Up'
 
-    const originStation = await getStationFromVNETName(originVNETName, db)
-    const destinationStation = await getStationFromVNETName(destinationVNETName, db)
+    let originStation = await getStationFromVNETName(originVNETName, db)
+    let destinationStation = await getStationFromVNETName(destinationVNETName, db)
 
     if (!originStation || !destinationStation) return // Apparently origin or dest is sometimes unknown
 
@@ -97,7 +114,7 @@ async function getVNETDepartures(stationName, direction, db, time) {
     let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
 
     let consist = fullVehicle.split('-').filter((e, i, a) => a.indexOf(e) === i) // Simple deduper
-    let dayOfWeek = utils.getDayName(originDepartureTime)
+    let dayOfWeek = await getDayOfWeek(originDepartureTime)
     let isWeekday = utils.isWeekday(dayOfWeek)
 
     if (runID === '8147' && isWeekday) consist.reverse()
@@ -109,7 +126,10 @@ async function getVNETDepartures(stationName, direction, db, time) {
       origin: originVLinePlatform.fullStopName,
       destination: destinationVLinePlatform.fullStopName,
       platform,
-      originDepartureTime, destinationArrivalTime,
+      originDepartureTime,
+      destinationArrivalTime,
+      estimatedStopArrivalTime,
+      estimatedDestArrivalTime,
       direction,
       vehicle: consist,
       barAvailable,

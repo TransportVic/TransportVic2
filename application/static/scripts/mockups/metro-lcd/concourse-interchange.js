@@ -136,7 +136,7 @@ function updateBody() {
     try {
       updateDestinations(body.departures, body.stationName)
     } catch (e) {
-      console.log(e)
+      console.error(e)
       setListenAnnouncements()
     }
   })

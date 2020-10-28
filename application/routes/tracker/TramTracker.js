@@ -6,14 +6,61 @@ const querystring = require('querystring')
 const moment = require('moment')
 const tramDestinations = require('../../../additional-data/tram-destinations')
 const tramFleet = require('../../../tram-fleet')
+const tramDepots = require('../../../additional-data/tram-tracker/depot-allocations')
+const serviceDepots = require('../../../additional-data/tram-tracker/service-depots')
 const router = new express.Router()
 
-function adjustTrip(trip, date, today, minutesPastMidnightNow) {
-  let origin = trip.origin
-  let destination = trip.destination
+let crossDepotQuery = {
+  $or: []
+}
 
+function addShortWorkings(services) {
+  return services.map(service => {
+    return [service, service + 'a', service + 'd']
+  }).reduce((a, e) => a.concat(e), [])
+}
+
+let fullDepotServices = {}
+Object.keys(serviceDepots).forEach(depot => {
+  let services = serviceDepots[depot]
+  fullDepotServices[depot] = addShortWorkings(services)
+})
+
+Object.keys(tramDepots).forEach(tram => {
+  let depot = tramDepots[tram]
+
+  crossDepotQuery.$or.push({
+    tram: parseInt(tram),
+    routeNumber: {
+      $not: {
+        $in: fullDepotServices[depot]
+      }
+    }
+  })
+})
+
+async function findCrossDepotTrips(tramTrips, date) {
+  let crossDepotQueryOnDate = {
+    $or: crossDepotQuery.$or.map(e => {
+      return {
+        ...e,
+        date
+      }
+    })
+  }
+
+  let crossDepotTrips = await tramTrips.findDocuments(crossDepotQueryOnDate)
+    .sort({departureTime: 1}).toArray()
+
+  return crossDepotTrips
+}
+
+function adjustTrip(trip, date, today, minutesPastMidnightNow) {
   let e = utils.encodeName
   trip.url = `/tram/run/${e(trip.origin)}/${trip.departureTime}/${e(trip.destination)}/${trip.destinationArrivalTime}/${trip.date}`
+
+  let origin = utils.getDestinationName(trip.origin)
+  let destination = utils.getDestinationName(trip.destination)
 
   trip.destination = tramDestinations[destination] || destination
   trip.origin = tramDestinations[origin] || origin
@@ -152,6 +199,85 @@ router.get('/service', async (req, res) => {
     tripsToday,
     tramsByDay,
     service,
+    date: utils.parseTime(date, 'YYYYMMDD')
+  })
+})
+
+
+router.get('/shift', async (req, res) => {
+  let {db} = res
+  let tramTrips = db.getCollection('tram trips')
+
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let today = utils.getYYYYMMDDNow()
+
+  let {shift, date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  if (!shift) {
+    return res.render('tracker/tram/by-shift', {
+      tripsToday: [],
+      tramsByDay: {},
+      shift: '?',
+      date: utils.parseTime(date, 'YYYYMMDD')
+    })
+  }
+
+  let query = {
+    date,
+    shift
+  }
+
+  let tripsToday = await tramTrips.findDocuments(query)
+    .sort({departureTime: 1}).toArray()
+
+  tripsToday = tripsToday.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
+
+  let operationDays = await tramTrips.distinct('date', {
+    shift
+  })
+  let tramsByDay = {}
+
+  await async.forEachSeries(operationDays, async date => {
+    let trams = await tramTrips.distinct('tram', {
+      shift, date
+    })
+
+    let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+    tramsByDay[humanDate] = {
+      trams: trams.map(tram => `${tramFleet.getModel(tram)}.${tram}`),
+      date
+    }
+  })
+
+  res.render('tracker/tram/by-shift', {
+    tripsToday,
+    tramsByDay,
+    shift,
+    date: utils.parseTime(date, 'YYYYMMDD')
+  })
+})
+
+router.get('/cross-depot', async (req, res) => {
+  let {db} = res
+  let tramTrips = db.getCollection('tram trips')
+
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let today = utils.getYYYYMMDDNow()
+
+  let {shift, date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  let crossDepotTrips = await findCrossDepotTrips(tramTrips, date)
+
+  let tripsToday = crossDepotTrips.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
+
+  res.render('tracker/tram/cross-depot', {
+    tripsToday,
     date: utils.parseTime(date, 'YYYYMMDD')
   })
 })

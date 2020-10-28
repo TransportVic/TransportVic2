@@ -1,42 +1,61 @@
 module.exports = async function (trip, departure, nspTrip, liveTimetables, date) {
-  if (trip && trip.destination !== departure.destination || trip.origin !== departure.origin) {
-    let stoppingAt = trip.stopTimings.map(e => e.stopName)
-    let destinationIndex = stoppingAt.indexOf(departure.destination)
+  if (!trip) return
+  if (trip.destination !== departure.destination || trip.origin !== departure.origin) {
+    let hasSeenOrigin = false, hasSeenDestination = false
 
-    let skipping = []
-    if (trip.destination !== departure.destination) {
-      skipping = trip.stopTimings.slice(destinationIndex + 1).map(e => e.stopName)
+    let modifications = []
+    if (trip.origin !== departure.origin) modifications.push({
+      type: 'originate',
+      changePoint: departure.origin.slice(0, -16)
+    })
 
-      trip.stopTimings = trip.stopTimings.slice(0, destinationIndex + 1)
-      let lastStop = trip.stopTimings[destinationIndex]
+    if (trip.destination !== departure.destination) modifications.push({
+      type: 'terminate',
+      changePoint: departure.destination.slice(0, -16)
+    })
 
-      trip.destination = lastStop.stopName
-      trip.destinationArrivalTime = lastStop.arrivalTime
-      lastStop.departureTime = null
-      lastStop.departureTimeMinutes = null
-    }
+    trip.type = 'change'
+    trip.modifications = modifications
+    trip.cancelled = false
 
-    let originIndex = stoppingAt.indexOf(departure.origin)
-    if (trip.origin !== departure.origin) {
-      skipping = skipping.concat(trip.stopTimings.slice(0, originIndex).map(e => e.stopName))
+    trip.stopTimings = trip.stopTimings.map(stop => {
+      if (stop.stopName === departure.origin) {
+        hasSeenOrigin = true
+        stop.cancelled = false
+        return stop
+      } else if (stop.stopName === departure.destination) {
+        hasSeenDestination = true
+        stop.cancelled = false
+        return stop
+      }
 
-      trip.stopTimings = trip.stopTimings.slice(originIndex)
-      let firstStop = trip.stopTimings[0]
+      if (hasSeenDestination || !hasSeenOrigin) {
+        stop.cancelled = true
+      } else {
+        stop.cancelled = false
+      }
 
-      trip.origin = firstStop.stopName
-      trip.departureTime = firstStop.departureTime
-      firstStop.arrivalTime = null
-      firstStop.arrivalTimeMinutes = null
-    }
+      return stop
+    })
 
-    trip.skipping = skipping
     trip.runID = departure.runID
-    trip.originalServiceID = trip.originalServiceID || departure.originDepartureTime.format('HH:mm') + trip.destination
     trip.operationDays = date
 
     if (nspTrip) {
       trip.vehicle = nspTrip.vehicle
     }
+
+    delete trip._id
+    await liveTimetables.replaceDocument({
+      operationDays: date,
+      runID: departure.runID,
+      mode: 'regional train'
+    }, trip, {
+      upsert: true
+    })
+  } else if (!nspTrip) {
+    trip.runID = departure.runID
+    trip.operationDays = date
 
     delete trip._id
     await liveTimetables.replaceDocument({

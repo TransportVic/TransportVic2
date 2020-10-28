@@ -5,6 +5,8 @@ const router = new express.Router()
 const utils = require('../../../utils')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
 const guessPlatform = require('../../../modules/vline/guess-scheduled-platforms')
+const findTrip = require('../../../modules/vline/find-trip')
+const { getDayOfWeek } = require('../../../public-holidays')
 
 function giveVariance(time) {
   let minutes = utils.getMinutesPastMidnightFromHHMM(time)
@@ -40,60 +42,13 @@ async function pickBestTrip(data, db) {
   })
   if (!originStop || !destinationStop) return null
 
-  let variance = 8
-  let destinationArrivalTime = {
-    $gte: tripEndMinutes - variance,
-    $lte: tripEndMinutes + variance
-  }
-  let departureTime = {
-    $gte: tripStartMinutes - variance,
-    $lte: tripStartMinutes + variance
-  }
-
   let operationDays = data.operationDays
-  if (tripStartMinutes > 1440) operationDays = utils.getYYYYMMDD(tripDay.clone().add(-1, 'day'))
+  if (tripStartMinutes > 1440) operationDays = utils.getYYYYMMDD(tripDay.add(-1, 'day'))
 
-  let query = {
-    $and: [{
-      mode: 'regional train',
-      operationDays
-    }, {
-      stopTimings: {
-        $elemMatch: {
-          stopName: originStop.stopName,
-          departureTimeMinutes: departureTime
-        }
-      }
-    }, {
-      stopTimings: {
-        $elemMatch: {
-          stopName: destinationStop.stopName,
-          arrivalTimeMinutes: destinationArrivalTime
-        }
-      }
-    }]
-  }
+  let referenceTrip = await findTrip(db.getCollection('live timetables'), operationDays, originStop.stopName, destinationStop.stopName, data.departureTime)
+    || await findTrip(db.getCollection('gtfs timetables'), operationDays, originStop.stopName, destinationStop.stopName, data.departureTime)
 
-  let referenceTrip
-
-  let liveTrip = await db.getCollection('live timetables').findDocuments(query).toArray()
-  function d(x) { return Math.abs(x.stopTimings[0].departureTimeMinutes - tripStartMinutes) }
-  if (liveTrip.length) {
-    if (liveTrip.length > 1) {
-      referenceTrip = liveTrip.sort((a, b) => d(a) - d(b))[0]
-    } else {
-      referenceTrip = liveTrip[0]
-    }
-  } else {
-    referenceTrip = await db.getCollection('gtfs timetables').findDocuments(query).toArray()
-    if (referenceTrip.length) {
-      if (referenceTrip.length > 1) {
-        referenceTrip = referenceTrip.sort((a, b) => d(a) - d(b))[0]
-      } else {
-        referenceTrip = referenceTrip[0]
-      }
-    } else return null
-  }
+  if (!referenceTrip) return null
 
   let isXPT = referenceTrip.routeGTFSID === '14-XPT'
   let isLive = false
@@ -107,50 +62,57 @@ async function pickBestTrip(data, db) {
     let trackerDepartureTime = giveVariance(referenceTrip.departureTime)
     let trackerDestinationArrivalTime = giveVariance(referenceTrip.destinationArrivalTime)
 
+    let origin = referenceTrip.origin.slice(0, -16)
+    let destination = referenceTrip.destination.slice(0, -16)
+
+    let possibleOrigins = { $in: [origin] }
+    let possibleDestinations = { $in: [destination] }
+
+    if (referenceTrip.type === 'change' && referenceTrip.modifications.length) {
+      let originate = referenceTrip.modifications.find(m => m.type === 'originate')
+      let terminate = referenceTrip.modifications.find(m => m.type === 'terminate')
+      if (originate) possibleOrigins.$in.push(originate.changePoint)
+      if (terminate) possibleDestinations.$in.push(terminate.changePoint)
+    }
+
     let tripData = await vlineTrips.findDocument({
       date: operationDays,
       departureTime: trackerDepartureTime,
-      origin: referenceTrip.origin.slice(0, -16),
-      destination: referenceTrip.destination.slice(0, -16)
+      origin: possibleOrigins,
+      destination: possibleDestinations
     })
 
-    if (!tripData && referenceTrip.direction === 'Up') {
-      tripData = await vlineTrips.findDocument({
-        date: operationDays,
-        departureTime: trackerDepartureTime,
-        origin: referenceTrip.origin.slice(0, -16)
-      })
-    }
-
     if (!tripData) {
-      tripData = await vlineTrips.findDocument({
-        date: operationDays,
-        destination: referenceTrip.destination.slice(0, -16),
-        destinationArrivalTime: trackerDestinationArrivalTime
-      })
+      if (referenceTrip.direction === 'Up') {
+        tripData = await vlineTrips.findDocument({
+          date: operationDays,
+          departureTime: trackerDepartureTime,
+          origin: possibleOrigins
+        })
+      } else {
+        tripData = await vlineTrips.findDocument({
+          date: operationDays,
+          destination: possibleDestinations,
+          destinationArrivalTime: trackerDestinationArrivalTime
+        })
+      }
     }
 
     if (tripData) {
-        nspTrip = await db.getCollection('timetables').findDocument({
+      nspTrip = await db.getCollection('timetables').findDocument({
         mode: 'regional train',
         routeGTFSID: referenceTrip.routeGTFSID,
         runID: tripData.runID,
-        operationDays: utils.getDayName(tripDay),
+        operationDays: await getDayOfWeek(tripDay),
       })
     } else {
-      nspTrip = await db.getCollection('timetables').findDocument({
-        mode: 'regional train',
-        origin: referenceTrip.origin,
-        direction: referenceTrip.direction,
-        routeGTFSID: referenceTrip.routeGTFSID,
-        operationDays: utils.getDayName(tripDay),
-        'stopTimings': {
-          $elemMatch: {
-            stopName: referenceTrip.origin,
-            departureTimeMinutes: departureTime
-          }
-        }
-      })
+      nspTrip = await findTrip(db.getCollection('timetables'), utils.getDayOfWeek(tripDay), originStop.stopName, destinationStop.stopName, data.departureTime)
+      if (nspTrip) {
+        tripData = await vlineTrips.findDocument({
+          date: operationDays,
+          runID: nspTrip.runID
+        })
+      }
     }
 
     let {runID, vehicle} = nspTrip || {}
@@ -194,7 +156,8 @@ async function pickBestTrip(data, db) {
   return {
     trip: referenceTrip,
     tripStartTime,
-    isLive
+    isLive,
+    originStop
   }
 }
 
@@ -202,9 +165,9 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   let tripData = await pickBestTrip(req.params, res.db)
   if (!tripData) return res.status(404).render('errors/no-trip')
 
-  let { trip, tripStartTime, isLive } = tripData
+  let { trip, tripStartTime, isLive, originStop } = tripData
 
-  let firstDepartureTime = trip.stopTimings[0].departureTimeMinutes
+  let firstDepartureTime = trip.stopTimings.find(stop => stop.stopName === originStop.stopName).departureTimeMinutes
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.pretyTimeToDeparture = ''
 

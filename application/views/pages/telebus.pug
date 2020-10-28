@@ -1,0 +1,59 @@
+extends ../layout
+
+block head
+  title TransportVic: Telebuses
+
+  meta(property='og:title' content='TransportVic: Telebuses')
+  meta(property='twitter:title' content='TransportVic: Telebuses')
+  meta(property='og:description' content='Information regarding Telebuses & other On-Demand Bus Services')
+  meta(property='twitter:description' content='Information regarding Telebuses & other On-Demand Bus Services')
+  
+block title
+  span TransportVic: Telebuses
+
+block style
+  link(rel='stylesheet' href='/static/css/about.css')
+
+block content
+  h1 Telebuses &amp; On-Demand Bus Services
+  img(src='/static/images/home/telebus.svg')
+  p Telebuses are demand-responsive bus services that operate within the eastern suburbs of Melbourne. 
+    | These services have a fixed start and end stop, along with several intermediate stops.
+    | Unlike regular fixed-route services, Telebuses are permitted to stop anywhere within their operating area. 
+    | Passengers will need to arrange with the dispatcher beforehand in order to schedule a non-fixed pickup. This is done by calling the Telebus dispatcher at (03) 9735 3133.
+  br
+  p It is important to note that bookings must be made before the scheduled trip departs the terminus as bookings cannot be made once the bus departs. 
+    | Additionally, there is a Telebus surcharge of $1.00 for Adults and $0.50 for Concession for bookings.
+  br
+  p All Telebuses are operated by 
+    a(href='http://www.venturabus.com.au/') Ventura Bus Lines
+    |  (Feedback at 1300 836 887)
+  br
+  h2
+    a(href='/bus/route/TB1/lilydale-railway-station') Telebus Area 1: Lilydale - Chirnside Park
+  h2
+    a(href='/bus/route/TB2/mooroolbark-railway-station') Telebus Area 2: Mooroolbark - Chirnside Park
+  h2
+    a(href='/bus/route/TB3/mooroolbark-railway-station') Telebus Area 3: Mooroolbark - Chirnside Park
+  h2
+    a(href='/bus/route/TB4/mooroolbark-railway-station') Telebus Area 4: Mooroolbark - Croydon
+  h2
+    a(href='/bus/route/TB7/ferntree-gully-railway-station') Telebus Area 7: Stud Park - Ferntree Gully
+  h2
+    a(href='/bus/route/TB8/ferntree-gully-railway-station') Telebus Area 8: Stud Park - Ferntree Gully
+  h2
+    a(href='/bus/route/TB9/stud-park-sc') Telebus Area 9: Stud Park Loop
+  br
+  h1 On-Demand Bus Services
+  p Apart from telebuses, other on-demand bus services operate within Melbourne and Victoria. These are listed below. 
+    | Similar to the telebuses, prior arrangements with the bus operator must be made to allow for pickup / dropoff at non-fixed stops
+  br
+  h2
+    a(href='/bus/route/490/gowanbrae') Route 490: Airport West - Gowanbrae
+  p Route 490 is a on-demand bus service operated by CDC Tullamarine serving the Gowanbrae Estate. 
+    | Bookings on this route should be made by calling the depot at 1800 898 590 at least 15 minutes before the bus leaves the Airport West terminus.
+    | Bookings cannot be made after the bus departs, and the bus will only enter Gowanbrae if requested.
+  br
+  p Because of the route's flexibility, it should be noted that real-time tracking is often inaccurate on the service. 
+    | However, whenever possible the bus fleet number will be shown below the departure time to help guide users.
+  

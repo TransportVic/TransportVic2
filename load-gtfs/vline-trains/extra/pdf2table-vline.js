@@ -65,8 +65,8 @@ function parse(pdfBuffer, callback) {
     // now lets find Texts with 'the same' y-values, Actually y-values in the range of y-smallestYValue and y+smallestYValue:
     var myPages = []
 
-    for (var p = 0; p < data.data.Pages.length; p++) {
-      var page = data.data.Pages[p]
+    for (var p = 0; p < data.formImage.Pages.length; p++) {
+      var page = data.formImage.Pages[p]
       var fills = page.Fills
       var verticalFills = fills.filter(fill => {
         return fill.h > fill.w

@@ -159,7 +159,7 @@ a.departureInfo {
 }
 
 a.departureInfo.reservationsOnly {
-  background-color: #594875;
+  background-color: #4c3d64;
 }
 
 a.departureInfo span {
@@ -190,6 +190,10 @@ a.departureInfo span.broadDepartureInfo~span.broadDepartureInfo {
   -webkit-box-orient: vertical;
 }
 
+.clampLine.clamp2 {
+  -webkit-line-clamp: 2;
+}
+
 a.departureInfo span.broadDepartureInfo {
   overflow: hidden;
 
@@ -203,6 +207,10 @@ a.departureInfo span.important {
   font-size: calc(1.1vw + 1.1vh);
   line-height: calc(1.2vw + 1.2vh);
   color: #e03549;
+}
+
+a.departureInfo.reservationsOnly span.important {
+  color: #ff001d;
 }
 
 a.departureInfo.departure1 { --departureCount: 1; }

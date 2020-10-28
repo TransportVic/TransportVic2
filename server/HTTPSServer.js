@@ -56,5 +56,3 @@ module.exports = {
   }
 
 }
-
-if (config.useLetsEncrypt) { require('../security/LetsEncryptCertificateRenewal') }

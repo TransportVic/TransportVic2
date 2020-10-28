@@ -30,11 +30,11 @@ events.forEach(event => {
   let day = utils.parseTime(start)
   let name = editName(event.summary)
 
-  eventCache[day.format('YYYYMMDD')] = name
+  eventCache[utils.getYYYYMMDD(day)] = name
 })
 
 function getPublicHolidayName(time) {
-  return eventCache[time.format('YYYYMMDD')]
+  return eventCache[utils.getYYYYMMDD(time)]
 }
 
 async function getPHDayOfWeek(time) {
@@ -74,7 +74,17 @@ async function getPHDayOfWeek(time) {
   }
 }
 
+async function getDayOfWeek(time) {
+  let phDay = await getPHDayOfWeek(time)
+  let regularDay = utils.getDayOfWeek(time)
+  if (!phDay || phDay === 'Weekday') return regularDay
+
+  if (phDay === 'Saturday') return 'Sat'
+  else return 'Sun'
+}
+
 module.exports = {
   getPublicHolidayName,
-  getPHDayOfWeek
+  getPHDayOfWeek,
+  getDayOfWeek
 }

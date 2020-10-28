@@ -3,6 +3,9 @@ const moment = require('moment')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const nameModifier = require('../../additional-data/stop-name-modifier')
+const metroTypes = require('../../additional-data/metro-tracker/metro-types')
+const resolveRouteGTFSID = require('../resolve-gtfs-id')
+const addStonyPointData = require('../metro-trains/add-stony-point-data')
 
 const fixTripDestination = require('../metro-trains/fix-trip-destinations')
 
@@ -13,6 +16,62 @@ let modes = {
   'bus': 2,
   'nbus': 4,
   'tram': 1
+}
+
+let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
+let borderStops = ['Richmond', 'Jolimont', 'North Melbourne', 'Flinders Street']
+
+function extendMetroEstimation(trip) {
+  let checkStop
+
+  if (trip.direction === 'Up') {
+    let borderStop = trip.stopTimings.find(stop => borderStops.includes(stop.stopName.slice(0, -16)))
+
+    if (borderStop) {
+      let hasSeenStop = false
+      trip.stopTimings.slice(trip.stopTimings.indexOf(borderStop)).forEach(stop => {
+        if (stop.estimatedDepartureTime) checkStop = stop
+      })
+    }
+  }
+
+  if (!checkStop) {
+    checkStop = trip.stopTimings[trip.stopTimings.length - 2]
+  }
+
+  if (checkStop && checkStop.estimatedDepartureTime) {
+    let scheduledDepartureTime = utils.parseTime(checkStop.scheduledDepartureTime)
+    let estimatedDepartureTime = utils.parseTime(checkStop.estimatedDepartureTime)
+    let delay = estimatedDepartureTime - scheduledDepartureTime
+
+    let hasSeenStop = false
+    trip.stopTimings = trip.stopTimings.map(stop => {
+      if (hasSeenStop && !stop.estimatedDepartureTime) {
+        let stopScheduled = utils.parseTime(stop.scheduledDepartureTime)
+        let stopEstimated = stopScheduled.clone().add(delay, 'milliseconds')
+        stop.estimatedDepartureTime = stopEstimated.toISOString()
+        stop.actualDepartureTimeMS = +stopEstimated
+      } else if (stop === checkStop) hasSeenStop = true
+
+      return stop
+    })
+  }
+
+  // Extend estimation backwards to first stop (usually city loop etc)
+  let firstStop = trip.stopTimings[0]
+  let secondStop = trip.stopTimings[1]
+  if (!firstStop.estimatedDepartureTime && secondStop.estimatedDepartureTime) {
+    let scheduledDepartureTime = utils.parseTime(firstStop.scheduledDepartureTime)
+    let estimatedDepartureTime = utils.parseTime(firstStop.estimatedDepartureTime)
+    let delay = estimatedDepartureTime - scheduledDepartureTime
+
+    let secondScheduled = utils.parseTime(secondStop.scheduledDepartureTime)
+    let secondEstimated = secondScheduled.clone().add(delay, 'milliseconds')
+    secondStop.estimatedDepartureTime = secondEstimated.toISOString()
+    secondStop.actualDepartureTimeMS = +secondEstimated
+  }
+
+  return trip
 }
 
 module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip, extraTripData) {
@@ -38,7 +97,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   departures = departures.map(departure => {
     departure.actualDepartureTime = utils.parseTime(departure.estimated_departure_utc || departure.scheduled_departure_utc)
     departure.scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
-    departure.estimatedDepartureTime = utils.parseTime(departure.estimated_departure_utc)
+    departure.estimatedDepartureTime = departure.estimated_departure_utc ? utils.parseTime(departure.estimated_departure_utc) : null
     return departure
   })
 
@@ -46,7 +105,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let checkModes = [mode]
   if (mode === 'regional coach') checkModes.push('regional train')
 
-  let routeGTFSID = routeData.route_gtfs_id
+  let routeGTFSID = resolveRouteGTFSID(routeData.route_gtfs_id)
   if (mode === 'tram') routeGTFSID = `3-${parseInt(routeGTFSID.slice(2))}`
   if (routeData.route_id === 99) routeGTFSID = '2-CCL'
   let route = await routesCollection.findDocument({ routeGTFSID })
@@ -82,11 +141,12 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
       }],
       'bays.mode': { $in: checkModes }
     })
-    if (!dbStop) console.log(stopName)
+    if (!dbStop) global.loggers.general.err('Failed to match stop', stopName)
     dbStops[stop.stop_id] = dbStop
   })
 
   let tripOperationDay
+  let tripStartTime
 
   let stopTimings = departures.map((departure, i) => {
     let {
@@ -96,6 +156,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
 
     if (i === 0) {
       tripOperationDay = utils.getYYYYMMDD(scheduledDepartureTime)
+      tripStartTime = scheduledDepartureTime
     }
 
     let ptvStop = stops[stop_id]
@@ -120,7 +181,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
         departureTimeMinutes %= 1440
       }
     } else {
-      departureTimeMinutes %= 1400
+      departureTimeMinutes %= 1440
     }
 
     if (departureTimeMinutes < previousDepartureTime)
@@ -138,19 +199,13 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
       departureTime: scheduledDepartureTime.format("HH:mm"),
       departureTimeMinutes,
       estimatedDepartureTime: estimatedDepartureTime ? estimatedDepartureTime.toISOString() : null,
+      actualDepartureTimeMS: estimatedDepartureTime ? +estimatedDepartureTime : null,
+      scheduledDepartureTime: scheduledDepartureTime.toISOString(),
       platform: platform_number,
       stopConditions: {
-        pickup: departure.flags.includes('DOO') ? 1 : 0, // if dropoff onliy then pickup is unavailable
+        pickup: departure.flags.includes('DOO') ? 1 : 0, // if dropoff only then pickup is unavailable
         dropoff: departure.flags.includes('PUO') ? 1 : 0
       }
-    }
-
-    if (i == 0) {
-      stopTiming.arrivalTime = null
-      stopTiming.arrivalTimeMinutes = null
-    } else if (i == departures.length - 1) {
-      stopTiming.departureTime = null
-      stopTiming.departureTimeMinutes = null
     }
 
     return stopTiming
@@ -174,20 +229,44 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     cancelled = run.status === 'cancelled'
   }
 
+  let runID = vehicleDescriptor.id
   let vehicle = vehicleDescriptor.description || vehicleDescriptor.id
   if (mode === 'metro train') {
-    if (['Belgrave', 'Lilydale', 'Alamein', 'Glen Waverley'].includes(routeName) && vehicle) {
+    if (['Belgrave', 'Lilydale', 'Alamein', 'Glen Waverley', 'Hurstbridge', 'Mernda'].includes(routeName) && vehicle) {
       vehicle = vehicle.replace('Comeng', 'Xtrapolis')
     }
+    runID = utils.getRunID(ptvRunID)
+
+    let metroTrips = db.getCollection('metro trips')
+    let tripData = await metroTrips.findDocument({
+      date: tripOperationDay,
+      runID
+    })
+
+    if (tripData && vehicle) {
+      let ptvConsistSize = vehicle.slice(0, 1)
+      let carType = metroTypes.find(car => tripData.consist.includes(car.leadingCar))
+      vehicle = ptvConsistSize + ' Car ' + carType.type
+    }
+
+    if (referenceTrip && extraTripData && extraTripData.trimStops) {
+      let referenceStops = referenceTrip.stopTimings.map(stop => stop.stopName)
+      stopTimings = stopTimings.filter(stop => referenceStops.includes(stop.stopName) || cityLoopStations.includes(stop.stopName.slice(0, -16)))
+    }
   }
+
+  stopTimings[0].arrivalTime = null
+  stopTimings[0].arrivalTimeMinutes = null
+  stopTimings.slice(-1)[0].departureTime = null
+  stopTimings.slice(-1)[0].departureTimeMinutes = null
 
   let timetable = {
     mode, routeName,
     routeGTFSID,
     routeNumber: referenceTrip ? referenceTrip.routeNumber : route.routeNumber,
     routeDetails: referenceTrip ? referenceTrip.routeDetails : null,
-    runID: vehicleDescriptor.id,
-    operationDays: [tripOperationDay],
+    runID,
+    operationDays: tripOperationDay,
     vehicle,
     stopTimings: stopTimings,
     destination: stopTimings[stopTimings.length - 1].stopName,
@@ -203,6 +282,14 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   }
 
   timetable = fixTripDestination(timetable)
+
+  if (timetable.routeGTFSID === '2-SPT') {
+    timetable = await addStonyPointData(db, timetable, tripStartTime)
+  }
+
+  if (mode === 'metro train') {
+    timetable = extendMetroEstimation(timetable)
+  }
 
   let key = {
     mode, routeName: timetable.routeName,

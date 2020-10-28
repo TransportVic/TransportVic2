@@ -1,7 +1,13 @@
+echo "LANG=en_US.utf-8
+LC_ALL=en_US.utf-8" | sudo tee /etc/environment
+
+sudo ln -sf /usr/share/zoneinfo/Australia/Melbourne /etc/localtime
+
+sudo yum remove httpd -y
+sudo yum remove postfix -y
+
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-echo "
-. ~/.nvm/nvm.sh
-alias sudo='sudo env PATH=$PATH:$NVM_BIN'" >> ~/.bashrc
+sudo ln /usr/bin/node $(readlink -f $(which node))
 
 source ~/.bashrc
 nvm install node

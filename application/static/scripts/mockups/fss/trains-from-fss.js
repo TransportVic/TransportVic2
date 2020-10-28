@@ -168,15 +168,22 @@ function setDestinationsRow(departures) {
 
     let next2 = validDepartures.slice(0, 2)
 
-    if (next2.length) {
-      let departureDivs = Array.from(document.querySelectorAll(`#to${id} div.next2 div.departure`))
+    let departureDivs = Array.from(document.querySelectorAll(`#to${id} div.next2 div.departure`))
 
-      next2.forEach((departure, i) => {
-        let departureDiv = departureDivs[i]
-        $('.platform', departureDiv).textContent = departure.platform
-        $('.platform', departureDiv).className = 'platform ' + departure.codedLineName
-        $('.minutesToDeparture', departureDiv).textContent = departure.prettyTimeToDeparture
-      })
+    next2.forEach((departure, i) => {
+      let departureDiv = departureDivs[i]
+      $('.platform', departureDiv).textContent = departure.platform
+      $('.platform', departureDiv).className = 'platform ' + departure.codedLineName
+      $('.minutesToDeparture', departureDiv).textContent = departure.prettyTimeToDeparture
+    })
+
+    let numberMissing = 2 - next2.length
+
+    for (let i = 0; i < numberMissing; i++) {
+      let departureDiv = departureDivs[next2.length + i]
+      $('.platform', departureDiv).textContent = '--'
+      $('.platform', departureDiv).className = 'platform no-line'
+      $('.minutesToDeparture', departureDiv).textContent = '-- min'
     }
   })
 }
@@ -227,7 +234,7 @@ function updateBody() {
       setSVGSize()
       $('#cclSVG').setAttribute('display', '')
     } catch (e) {
-      console.log(e)
+      console.error(e)
       setListenAnnouncements()
     }
   })

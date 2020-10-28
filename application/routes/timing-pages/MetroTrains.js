@@ -18,7 +18,7 @@ async function loadDepartures(req, res) {
   departures = departures.map(departure => {
     departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
     departure.headwayDevianceClass = utils.findHeadwayDeviance(departure.scheduledDepartureTime, departure.estimatedDepartureTime, {
-      early: 0,
+      early: 0.5,
       late: 5
     })
 
@@ -31,19 +31,29 @@ async function loadDepartures(req, res) {
     let destinationArrivalTime = trip.trueDestinationArrivalTime
 
     let currentStation = departure.trip.stopTimings.find(tripStop => tripStop.stopName === station.stopName)
-    let {stopGTFSID} = currentStation
+    let stopGTFSID, minutesDiff
     let firstStop = departure.trip.stopTimings[0]
+
+    let departureMinutes = utils.getMinutesPastMidnight(departure.scheduledDepartureTime)
 
     let fss = departure.trip.stopTimings.find(tripStop => tripStop.stopName === 'Flinders Street Railway Station')
     if (departure.trip.direction === 'Down' && fss) firstStop = fss
-    let minutesDiff = currentStation.departureTimeMinutes - firstStop.departureTimeMinutes
+
+    if (currentStation) {
+      stopGTFSID = currentStation.stopGTFSID
+
+      minutesDiff = currentStation.departureTimeMinutes - firstStop.departureTimeMinutes
+    } else {
+      minutesDiff = departureMinutes - firstStop.departureTimeMinutes
+      if (minutesDiff < 1440) minutesDiff += 1440
+    }
 
     let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
     let operationDate = utils.getYYYYMMDD(tripStart)
 
     departure.tripURL = `${utils.encodeName(origin)}/${originDepartureTime}/`
       + `${utils.encodeName(destination)}/${destinationArrivalTime}/`
-      + `${operationDate}/#stop-${stopGTFSID}`
+      + `${operationDate}/${stopGTFSID ? `#stop-${stopGTFSID}` : ''}`
 
     departure.destinationURL = `/metro/timings/${utils.encodeName(trip.trueDestination).slice(0, -16)}`
 

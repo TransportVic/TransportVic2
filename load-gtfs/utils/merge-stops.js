@@ -4,10 +4,23 @@ function hash(stops) {
 
 function l(m) { return m.slice(-1)[0] }
 
-module.exports = function merge(variants, matched) {
-  variants = variants.sort((a, b) => {
+module.exports = function merge(inputVariants, matched) {
+  inputVariants = inputVariants.sort((a, b) => {
     return b.length - a.length || l(a).stopName.length - l(b).stopName.length || hash(a) - hash(b)
   })
+
+  let loopVariants = inputVariants.filter(variant => {
+    return variant[0].stopName === l(variant).stopName
+  })
+
+  let distinctTerminusVariants = inputVariants.filter(variant => {
+    return !loopVariants.includes(variant)
+  })
+
+  // Process loop variants first in the hope that the non loop variants can come along later and add in the distinct terminus for the route
+  let variants = loopVariants.concat(distinctTerminusVariants)
+
+  let hasLoopVariants = loopVariants.length > 0
 
   stopsList = variants[0]
   branch = []
@@ -16,6 +29,7 @@ module.exports = function merge(variants, matched) {
 
   variants.slice(1).forEach(variant => {
     let lastMainMatch = 0
+    let isLoopVariant = variant[0].stopName === l(variant).stopName
 
     let stopIndex = -1
     for (let variantStop of variant) {
@@ -77,7 +91,11 @@ module.exports = function merge(variants, matched) {
       let firstHalf = stopsList.slice(0, lastMainMatch + 1)
       let backHalf = stopsList.slice(lastMainMatch + 1)
 
-      stopsList = firstHalf.concat(branch).concat(backHalf)
+      if (hasLoopVariants && !isLoopVariant) {
+        stopsList = stopsList.concat(branch)
+      } else {
+        stopsList = firstHalf.concat(branch).concat(backHalf)
+      }
 
       branchEnd = stopsList[0]
 

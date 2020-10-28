@@ -24,7 +24,7 @@ async function makePBRequest(url) {
     raw: true
   })
 
-  return GTFSR.FeedMessage.decode(await rawData.buffer())
+  return GTFSR.FeedMessage.decode(rawData)
 }
 
 module.exports = {

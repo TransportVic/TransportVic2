@@ -39,7 +39,7 @@ async function getData(db) {
   })
 
   let end = new Date()
-  console.log('Took', end - start, 'ms to compute all polylines')
+  global.loggers.general.info('[RoutePaths]: Took', end - start, 'ms to compute all polylines')
 
   dataCache = modeRoutePaths
   dataEmitter.emit('complete', modeRoutePaths)

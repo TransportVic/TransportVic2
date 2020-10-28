@@ -7,6 +7,7 @@ const minify = require('express-minify')
 const fs = require('fs')
 const uglifyEs = require('uglify-es')
 const rateLimit = require('express-rate-limit')
+const utils = require('../utils')
 
 const DatabaseConnection = require('../database/DatabaseConnection')
 
@@ -22,13 +23,32 @@ if (modules.tracker && modules.tracker.tram)
 if (modules.tracker && modules.tracker.vline)
   require('../modules/trackers/vline')
 
+if (modules.tracker && modules.tracker['vline-r'])
+  require('../modules/trackers/vline-realtime')
+
 if (modules.tracker && modules.tracker.xpt)
   require('../modules/xpt/xpt-updater')
+
+if (modules.tracker && modules.tracker.metro)
+  require('../modules/trackers/metro')
 
 if (modules.preloadCCL)
   require('../modules/preload-ccl')
 
 let serverStarted = false
+
+let bandwithFilePath = path.join(__dirname, '../bandwidth.json')
+let serverStats = {}
+fs.readFile(bandwithFilePath, (err, data) => {
+  if (data) {
+    serverStats = JSON.parse(data)
+  }
+})
+
+setInterval(() => {
+  fs.writeFile(bandwithFilePath, JSON.stringify(serverStats, null, 2), () => {
+  })
+}, 1000 * 60)
 
 module.exports = class MainServer {
   constructor () {
@@ -65,13 +85,27 @@ module.exports = class MainServer {
   }
 
   configMiddleware (app) {
-    let stream = fs.createWriteStream('/tmp/log.txt', { flags: 'a' })
-
     this.past50ResponseTimes = []
 
     app.use((req, res, next) => {
       let reqURL = req.url + ''
       let start = +new Date()
+      let date = utils.getYYYYMMDDNow()
+      if (!serverStats[date]) serverStats[date] = 0
+
+      let bytes = 200 // Roughly accounting for headers since... they don't show up?
+      let {write, end} = res.socket
+      res.socket.write = (x, y, z) => {
+        write.bind(res.socket, x, y, z)()
+        bytes += x.length
+      }
+
+      res.socket.end = (x, y, z) => {
+        if (res.socket) {
+          end.bind(res.socket, x, y, z)()
+          if (x) bytes += x.length
+        }
+      }
 
       let endResponse = res.end
       res.end = (x, y, z) => {
@@ -80,17 +114,30 @@ module.exports = class MainServer {
         let diff = end - start
 
         if (diff > 20 && !reqURL.startsWith('/static/')) {
-          stream.write(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff}\n`, () => {})
+          global.loggers.http.info(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff} ${bytes}`)
 
           this.past50ResponseTimes = [...this.past50ResponseTimes.slice(-49), diff]
         }
+
+        serverStats[date] += bytes
       }
 
       next()
     })
 
+    app.use('/.well-known/acme-challenge/:key', (req, res) => {
+      let filePath = path.join(config.webrootPath, req.params.key)
+      let stream = fs.createReadStream(filePath)
+      stream.pipe(res)
+
+      stream.on('error', err => {
+        res.status(404).end('404')
+      })
+    })
+
     app.use(compression({
-      level: 9
+      level: 9,
+      threshold: 512
     }))
 
     if (!config.devMode) {
@@ -100,7 +147,9 @@ module.exports = class MainServer {
       }))
     }
 
-    app.use('/static', express.static(path.join(__dirname, '../application/static')))
+    app.use('/static', express.static(path.join(__dirname, '../application/static'), {
+      maxAge: 1000 * 60 * 60 * 24
+    }))
 
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(bodyParser.json())
@@ -111,7 +160,6 @@ module.exports = class MainServer {
       let secureDomain = `http${config.useHTTPS ? 's' : ''}://${config.websiteDNSName}:* `
       secureDomain += ' https://*.mapbox.com/'
 
-      // res.setHeader('Content-Security-Policy', `default-src blob: data: ${secureDomain}; script-src 'unsafe-inline' blob: ${secureDomain}; style-src 'unsafe-inline' ${secureDomain}; img-src: 'unsafe-inline' ${secureDomain}`)
       res.setHeader('X-Xss-Protection', '1; mode=block')
       res.setHeader('X-Content-Type-Options', 'nosniff')
       res.setHeader('X-Download-Options', 'noopen')
@@ -127,22 +175,6 @@ module.exports = class MainServer {
     if (process.env['NODE_ENV'] && process.env['NODE_ENV'] === 'prod') { app.set('view cache', true) }
     app.set('x-powered-by', false)
     app.set('strict routing', false)
-
-    app.use((req, res, next) => {
-      if (req.url.startsWith('/.well-known')) {
-        try {
-          let reqURL = new url.URL('https://transportsg.me' + req.url)
-          let filePath = path.join(config.webrootPath, reqURL.pathname)
-
-          fs.createReadStream(filePath).pipe(res)
-
-          return
-        } catch (e) {
-          console.log(e)
-        }
-      }
-      next()
-    })
 
     app.use('/mockups', rateLimit({
       windowMs: 1 * 60 * 1000,
@@ -224,11 +256,7 @@ module.exports = class MainServer {
         enable: modules.tracker && modules.tracker.bus
       },
 
-      'tracker/BusTracker': { // TODO: Deprecate
-        path: '/tracker2',
-        enable: modules.tracker && modules.tracker.bus
-      },
-      'tracker/NewBusTracker': {
+      'tracker/BusTracker': {
         path: '/bus/tracker',
         enable: modules.tracker && modules.tracker.bus
       },
@@ -239,6 +267,10 @@ module.exports = class MainServer {
       'tracker/VLineTracker': {
         path: '/vline/tracker',
         enable: modules.tracker && modules.tracker.vline
+      },
+      'tracker/MetroTracker': {
+        path: '/metro/tracker',
+        enable: modules.tracker && modules.tracker.metro
       },
 
       'route-data/RegionalBusRoute': {
@@ -279,13 +311,16 @@ module.exports = class MainServer {
         enable: modules.routePreview
       },
 
-      RoutePaths: '/route-paths'
+      RoutePaths: '/route-paths',
+      MetroMap: '/metro-map'
     }
 
     Object.keys(routers).forEach(routerName => {
       try {
         let routerData = routers[routerName]
-        if (routerData.path && !routerData.enable) return console.log('Module', routerName, 'disabled, skipping it. This does not check for cross dependencies on GTFS data')
+        if (routerData.path && !routerData.enable) {
+          return global.loggers.general.info('Module', routerName, 'has been disabled')
+        }
 
         let routerPath = routerData.path || routerData
 
@@ -293,7 +328,7 @@ module.exports = class MainServer {
         app.use(routerPath, router)
         if (router.initDB) router.initDB(this.database)
       } catch (e) {
-        console.err('Error registering', routerName, e)
+        global.loggers.error.err('Error registering', routerName, e)
       }
     })
 
@@ -322,10 +357,7 @@ module.exports = class MainServer {
         res.status(404).render('errors/404')
       } else {
         res.status(500).render('errors/500')
-
-        if (process.env['NODE_ENV'] !== 'prod') {
-          console.log(err)
-        }
+        global.loggers.error.err(err)
       }
     })
   }

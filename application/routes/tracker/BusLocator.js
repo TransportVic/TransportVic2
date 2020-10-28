@@ -32,13 +32,11 @@ async function getPTVKey() {
 }
 
 function getPlaceName(routeNumber, routeGTFSID, placeName) {
-  let trimmedPlaceName = placeName.replace('Shopping Centre', 'SC')
-
+  let modifiedName = utils.getDestinationName(placeName)
   let serviceData = busDestinations.service[routeGTFSID] || busDestinations.service[routeNumber] || {}
-  let a = trimmedPlaceName, b = trimmedPlaceName.split('/')[0]
 
-  return (serviceData[a] || serviceData[b]
-    || busDestinations.generic[a] || busDestinations.generic[b] || b)
+  return (serviceData[modifiedName]
+    || busDestinations.generic[modifiedName] || modifiedName)
 }
 
 async function getPTVRunID(now, date, trip) {
