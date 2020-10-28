@@ -12,7 +12,7 @@ async function getData(req, res, maxDepartures) {
 }
 
 router.get('/:station/up-down', async (req, res) => {
-  getData(req, res)
+  setTimeout(async () => await getData(req, res), 0)
 
   res.render('mockups/metro-lcd/concourse/up-down', { now: utils.now() })
 })
@@ -22,7 +22,7 @@ router.get('/:station/interchange', async (req, res) => {
 
   let stationName = station ? station.stopName.slice(0, -16) : '??'
   let destinations = stationDestinations[stationName] || []
-  getData(req, res)
+  setTimeout(async () => await getData(req, res), 0)
 
   res.render('mockups/metro-lcd/concourse/interchange', {
     now: utils.now(),
