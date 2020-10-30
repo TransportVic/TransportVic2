@@ -28,7 +28,7 @@ function getModel(number) {
   if (number <= 258) return 'A1'
   if (number <= 300) return 'A2'
 
-  if ([856, 928, 946, 957, 959, 961, 981, 983, 1010].includes(number)) return 'W8'
+  if ([856, 888, 925, 928, 946, 957, 959, 961, 981, 983, 1010].includes(number)) return 'W8'
   if ([728, 842, 845, 845, 848].includes(number)) return 'SW5'
   if (850 <= number && number <= 969) return 'SW6'
   if (number === 980 || number === 1041) return 'PCC'
@@ -46,7 +46,8 @@ function getModel(number) {
   if ([5103, 5106, 5111, 5113, 5123].includes(number)) return 'C2'
 
   if (6001 <= number && number <= 6050) return 'E1'
-  if (6051 <= number && number <= 6090) return 'E2'
+  if (6051 <= number && number <= 6100) return 'E2'
+
   return '?'
 }
 
