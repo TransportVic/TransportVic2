@@ -7,15 +7,25 @@ const querystring = require('querystring')
 const moment = require('moment')
 const vlineFleet = require('../../../additional-data/vline-tracker/vline-fleet')
 const vlineConsists = require('../../../additional-data/vline-tracker/carriage-sets')
+const rawLineRanges = require('../../../additional-data/vline-tracker/line-ranges')
 const { getDayOfWeek } = require('../../../public-holidays')
 
-let lines = {
-  Geelong: ['Geelong', 'Marshall', 'South Geelong', 'Waurn Ponds', 'Wyndham Vale', 'Warrnambool'],
-  Ballarat: ['Ararat', 'Maryborough', 'Ballarat', 'Wendouree', 'Bacchus Marsh', 'Melton'],
-  Bendigo: ['Bendigo', 'Kyneton', 'Epsom', 'Eaglehawk', 'Swan Hill', 'Echuca', 'Sunbury'],
-  Gippsland: ['Traralgon', 'Sale', 'Bairnsdale', 'Pakenham'],
-  Seymour: ['Seymour', 'Shepparton', 'Albury', 'Craigieburn']
-}
+let lineRanges = {}
+
+Object.keys(rawLineRanges).forEach(line => {
+  let ranges = rawLineRanges[line]
+
+  lineRanges[line] = ranges.map(range => {
+    let lower = range[0]
+    let upper = range[1]
+
+    let numbers = []
+    for (let n = lower; n <= upper; n++) {
+      numbers.push(n.toString())
+    }
+    return numbers
+  }).reduce((a, e) => a.concat(e), [])
+})
 
 router.get('/', (req, res) => {
   res.render('tracker/vline/index')
@@ -74,21 +84,15 @@ router.get('/line', async (req, res) => {
   if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
   else date = today
 
-  let lineGroup = lines[line] || []
-
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let baseLineRanges = lineRanges[line] || []
 
   let trips = (await vlineTrips.findDocuments({
     date,
-    $or: [{
-      origin: {
-        $in: lineGroup
-      }
-    }, {
-      destination: {
-        $in: lineGroup
-      }
-    }]
+    runID: {
+      $in: baseLineRanges
+    }
   }).sort({destination: 1}).toArray())
   .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
   .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)

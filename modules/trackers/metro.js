@@ -191,9 +191,9 @@ database.connect(async () => {
   metroTrips = database.getCollection('metro trips')
 
   schedule([
-    [0, 60, 2.5],
-    [61, 299, 2.5],
+    [0, 60, 1.2],
+    [61, 299, 1.2],
     [300, 1380, 0.5],
-    [1381, 1440, 2]
+    [1381, 1440, 0.45]
   ], requestTimings, 'metro tracker', global.loggers.trackers.metro)
 })
