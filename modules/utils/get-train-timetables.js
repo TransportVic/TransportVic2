@@ -173,11 +173,11 @@ async function getScheduledDepartures(station, db, mode, timeout) {
   let serviceIndex = []
   let departures = []
 
-  liveDepartures.concat(gtfsDepartures).forEach(departure => {
-    let id = getID(departure)
+  liveDepartures.concat(gtfsDepartures).forEach(trip => {
+    let id = getID(trip)
     if (!serviceIndex.includes(id)) {
       serviceIndex.push(id)
-      departures.push(departure)
+      departures.push(trip)
     }
   })
 
@@ -187,7 +187,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
   let lateDepartures = await liveTimetables.findDocuments({
     _id: {
       $not: {
-        $in: liveDepartures.map(departure => departure._id)
+        $in: liveDepartures.map(trip => trip._id)
       }
     },
     mode,
@@ -218,6 +218,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
     let estimatedDepartureTime = stopData.estimatedDepartureTime || null
     if (estimatedDepartureTime) {
       estimatedDepartureTime = utils.parseTime(estimatedDepartureTime)
+      if (estimatedDepartureTime < timeMS - 1000 * 60) return null
     }
 
     return {

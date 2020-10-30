@@ -348,5 +348,7 @@ module.exports = [
   'north-shore/north-shore-railway-station',
   'ballarat-central/davies-street-scott-parade',
   'broadmeadows/martell-street-joseph-street',
-  'corio/rodbrough-crescent-bacchus-marsh-road'
+  'corio/rodbrough-crescent-bacchus-marsh-road',
+  'donnybrook/eucalyptus-parade-olivine-boulevard',
+  'donnybrook/donnybrook-railway-station'
 ]

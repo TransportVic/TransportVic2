@@ -26,7 +26,7 @@ module.exports = {
   "4-48S": ["Tullamarine Bus Lines"], // 484
   "4-509": ["Dysons"], // 509
   "4-5X9": ["Dysons"], // 509
-  "4-51I": ["Dysons"],
+  "4-51I": ["Broadmeadows Bus Service"],
   "4-525": ["Dysons"],
   "4-52F": ["Dysons"], // 525
   "4-552": ["Dysons"],

@@ -58,7 +58,7 @@ module.exports = {
   "Tottenham": [...platr(2, [], 'half-platform-bold')],
   "Middle Footscray": [],
   "West Footscray": [plat(1, 'platform'), plat(2, 'half-platform-bold'), conc('up-down')],
-  "Seddon": [...platr(2, [], 'half-platform')],
+  "Seddon": [...platr(2, [], 'half-platform-bold')],
   "Yarraville": [...platr(2, [], 'half-platform')],
   "St. Albans": [...platr(2, [], 'half-platform'), conc('up-down')],
   "Ginifer": [...platr(2, [], 'half-platform'), conc('up-down')],
