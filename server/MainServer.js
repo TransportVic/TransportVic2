@@ -154,6 +154,8 @@ module.exports = class MainServer {
       Search: '/search',
       StopsNearby: '/nearby',
 
+      PublicHolidayInfo: '/public-holiday',
+
       'timing-pages/VLine': {
         path: '/vline/timings',
         enable: modules.Next4 && modules.Next4.vline

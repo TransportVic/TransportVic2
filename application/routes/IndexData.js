@@ -3,11 +3,37 @@ const utils = require('../../utils')
 const config = require('../../config')
 const fs = require('fs')
 const path = require('path')
+const async = require('async')
 const rateLimit = require('express-rate-limit')
+const { getPHDayOfWeek, getPublicHolidayName } = require('../../public-holidays')
 const router = new express.Router()
 
 let robots = fs.readFileSync(path.join(__dirname, '../static/app-content/robots.txt'))
 let sw = fs.readFileSync(path.join(__dirname, '../static/app-content/sw.js'))
+
+let upcomingPH = []
+
+async function initPH(db) {
+  let now = utils.now()
+  let days = utils.allDaysBetweenDates(now, now.clone().add(7, 'days'))
+
+  await async.forEach(days, async day => {
+    let phName = getPublicHolidayName(day)
+
+    if (phName) {
+      let phDay = await getPHDayOfWeek(day)
+      upcomingPH.push({
+        name: phName,
+        day: day,
+        scheduleDay: phDay
+      })
+    }
+  })
+
+  upcomingPH = upcomingPH.sort((a, b) => a.day - b.day)
+}
+
+initPH()
 
 router.get('/stop-data', async (req, res) => {
   let {mode, suburb, name} = req.query
@@ -44,11 +70,30 @@ router.get('/stop-data', async (req, res) => {
 })
 
 router.get('/home-banner', (req, res) => {
-  res.json({
-    link: 'https://www.patreon.com/transportsg',
-    alt: 'Patreon',
-    text: 'Hi! If you like this site please consider supporting me on patreon by clicking here!'
-  })
+  if (upcomingPH.length) {
+    let link = `/public-holiday/${upcomingPH.map(ph => utils.getYYYYMMDD(ph.day)).join('-')}`
+    if (upcomingPH.length === 1) {
+      res.json({
+        link,
+        alt: 'Public Holiday Alert',
+        text: `${upcomingPH[0].day.format('dddd, MMMM Do YYYY')} (${upcomingPH[0].name}): PTV Runs to a ${upcomingPH[0].scheduleDay} timetable`
+      })
+    } else {
+      let names = upcomingPH.map(ph => ph.name)
+
+      res.json({
+        link,
+        alt: 'Public Holiday Alert',
+        text: `Upcoming Public Holidays: ${names.slice(0, -1).join(', ')} & ${names.slice(-1)[0]}`
+      })
+    }
+  } else {
+    res.json({
+      link: 'https://www.patreon.com/transportsg',
+      alt: 'Patreon',
+      text: 'Hi! If you like this site please consider supporting me on patreon by clicking here!'
+    })
+  }
 })
 
 router.get('/sw.js', (req, res) => {

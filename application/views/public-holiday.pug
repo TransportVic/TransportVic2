@@ -1,0 +1,35 @@
+extends layout
+    
+block head
+  -
+    if (holidays.length === 0) {
+      title = 'Invalid Public Holiday!'
+    } else if (holidays.length === 1) {
+      title = 'Public Holiday: ' + holidays[0].name
+    } else {
+      title = 'Public Holiday Details'
+    }
+
+  title TransportVic - #{title}
+
+block style
+  link(rel='stylesheet' href='/static/css/about.css')
+
+block title
+  span #{title}
+  
+block content
+  for holiday in holidays
+    - let humanDay = holiday.day.format('dddd, MMMM Do YYYY')
+    h1 #{holiday.name} (#{humanDay})
+    p #{holiday.name} falls on #{humanDay} this year. 
+    p This means that PTV will run to a #{holiday.scheduleDay} timetable, but some services might be altered or not run. 
+      | Additionally, Night Network will not run.
+    if holiday.fallsOnWeekday
+      p As it falls on a weekday, it is likely that university shuttles will continue to run, even if they do not show up in the data feed. Check with your local bus operator before travelling.
+  
+  for i in [1,2,3,4,5]
+    br
+  p This page was generated automatically. If there are any errors, please leave feedback 
+    a(href='https://forms.gle/v5tNack8Ts7oyQzS6') here
+  br
