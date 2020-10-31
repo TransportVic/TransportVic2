@@ -23,7 +23,7 @@ database.connect({}, async () => {
 
   let tramServices = (await routes.distinct('routeNumber', { mode: 'tram' })).map(e => e.match(/(\d+)/)[1]).concat('3a')
   let count = 0
-tramServices=['58']
+
   let tramTrackerIDs = {}
   let stopDirections = {}
   let stopNames = {}
