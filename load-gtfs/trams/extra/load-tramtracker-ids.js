@@ -23,7 +23,7 @@ database.connect({}, async () => {
 
   let tramServices = (await routes.distinct('routeNumber', { mode: 'tram' })).map(e => e.match(/(\d+)/)[1]).concat('3a')
   let count = 0
-
+tramServices=['58']
   let tramTrackerIDs = {}
   let stopDirections = {}
   let stopNames = {}
@@ -45,9 +45,8 @@ database.connect({}, async () => {
         let tramTrackerName = utils.expandStopName(utils.adjustStopName($('.location', stop).text().split(/ ?[&\-,] ?/)[0].trim()))
         let url = $('a', stop).attr('href')
 
-        if (!url) return
-
-        let stopID = url.match(/stopId=(\d+)/)[1]
+        let stopID
+        if (url) stopID = url.match(/stopId=(\d+)/)[1]
         if (!tramTrackerID) return
         if (ptvOverrides[tramTrackerID]) stopID = ptvOverrides[tramTrackerID]
         if (!stopID) return

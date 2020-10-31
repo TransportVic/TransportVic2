@@ -1,3 +1,5 @@
+
+
 require('fs').writeFileSync(__dirname + '/tram-stops.json', JSON.stringify(require('./stops').stops.filter(x=>x.primaryChronosMode === '1').map(x=>{
   let m = x.title.match(/^(D?\d+[a-zA-Z]?)-/)
   let stopName = x.title.split(' #')[0]
