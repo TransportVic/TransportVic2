@@ -1,5 +1,5 @@
 const utils = require('../../utils')
-const findTrip = require('./findTrip')
+const findTrip = require('./find-trip')
 
 module.exports = async function(departure, trip, gtfsTimetables, departureDay) {
   if (departure.origin === 'Maryborough Railway Station' && (departure.runID === '8118' || departure.runID === '8158')) { // Maryborough - Southern Cross, joins with the Ararat - Ballarat
