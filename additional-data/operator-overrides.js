@@ -183,6 +183,7 @@ module.exports = {
   "6-B22": ["CDC Ballarat"],
   "6-B23": ["CDC Ballarat"],
   "6-B24": ["CDC Ballarat"],
+  "6-B25": ["CDC Ballarat"],
   "6-B26": ["CDC Ballarat"],
   "6-B30": ["CDC Ballarat"],
   "6-B31": ["CDC Ballarat"],
@@ -194,6 +195,7 @@ module.exports = {
   "6-G5y": ["McHarrys Bus Lines"], // 51
   "6-G6X": ["McHarrys Bus Lines"], // 60
   "6-G6L": ["McHarrys Bus Lines"], // 61
+  "6-GV1": ["McHarrys Bus Lines"], // Geelong - Apollo Bay
 
   "6-KX1": ["Mitchell Transit"],
   "6-W12": ["Mitchell Transit"]

@@ -611,6 +611,8 @@ async function updateSuspensions(departures, station, db) {
     trip.departureTime = firstStop.departureTime
     trip.destinationArrivalTime = lastStop.arrivalTime
 
+    trip.affectedBySuspension = true
+
     trip = fixTripDestination(trip)
 
     departure.destination = trip.trueDestination.slice(0, -16)

@@ -199,7 +199,7 @@ async function pickBestTrip(data, db) {
 
     let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime, null, referenceTrip, {
       isRailReplacementBus,
-      trimStops: true
+      trimStops: referenceTrip.affectedBySuspension
     })
 
     let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)

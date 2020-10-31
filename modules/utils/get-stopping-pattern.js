@@ -251,7 +251,10 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
 
     if (referenceTrip && extraTripData && extraTripData.trimStops) {
       let referenceStops = referenceTrip.stopTimings.map(stop => stop.stopName)
-      stopTimings = stopTimings.filter(stop => referenceStops.includes(stop.stopName) || cityLoopStations.includes(stop.stopName.slice(0, -16)))
+      if (referenceStops.includes('Flinders Street')) {
+        referenceStops = referenceStops.concat(cityLoopStations)
+      }
+      stopTimings = stopTimings.filter(stop => referenceStops.includes(stop.stopName))
     }
   }
 
