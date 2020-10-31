@@ -14,23 +14,25 @@ let sw = fs.readFileSync(path.join(__dirname, '../static/app-content/sw.js'))
 let upcomingPH = []
 
 async function initDB(db) {
-  let now = utils.now()
-  let days = utils.allDaysBetweenDates(now, now.clone().add(7, 'days'))
+  setTimeout(async () => {
+    let now = utils.now()
+    let days = utils.allDaysBetweenDates(now, now.clone().add(7, 'days'))
 
-  await async.forEach(days, async day => {
-    let phName = getPublicHolidayName(day)
+    await async.forEach(days, async day => {
+      let phName = getPublicHolidayName(day)
 
-    if (phName) {
-      let phDay = await getPHDayOfWeek(day)
-      upcomingPH.push({
-        name: phName,
-        day: day,
-        scheduleDay: phDay
-      })
-    }
-  })
+      if (phName) {
+        let phDay = await getPHDayOfWeek(day)
+        upcomingPH.push({
+          name: phName,
+          day: day,
+          scheduleDay: phDay
+        })
+      }
+    })
 
-  upcomingPH = upcomingPH.sort((a, b) => a.day - b.day)
+    upcomingPH = upcomingPH.sort((a, b) => a.day - b.day)
+  }, 1000)
 }
 
 router.get('/stop-data', async (req, res) => {
