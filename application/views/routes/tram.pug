@@ -125,8 +125,10 @@ block content
               if ((stopRoad == stopName) && stopName.match(/\d+[A-Z]? .+$/)) {
                 stopRoad = stopName.match(/\d+[A-Z]? (.+)$/)[1]
               }
+              
+              if (stop.stopNumber) stopName += ` #${stop.stopNumber}`
             if stopRoad !== stopName
-                span=stopRoad
+                span #{stopRoad}
             else
                 span
-            span=stopName
+            span #{stopName}

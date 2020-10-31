@@ -9,6 +9,8 @@ const liveBusData = require('../../../additional-data/live-bus-data')
 const busDestinations = require('../../../additional-data/bus-destinations')
 const coachDestinations = require('../../../additional-data/coach-stops')
 
+const busBays = require('../../../additional-data/bus-bays')
+
 const determineBusRouteNumber = require('../../../modules/bus/determine-bus-route-number')
 
 async function pickBestTrip(data, db) {
@@ -57,7 +59,7 @@ async function pickBestTrip(data, db) {
 
   let noLive = ['5', '7', '9', '11', '12', '13']
   let useLive = minutesToTripEnd > -60 && minutesToTripStart < 60
-
+  useLive = false
   if (liveTrip) {
     if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
       let isLive = liveTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
@@ -205,6 +207,9 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
 
       stop.pretyTimeToDeparture = utils.prettyTime(estimatedDepartureTime || scheduledDepartureTime, true, true)
     }
+
+    stop.bay = busBays[stop.stopGTFSID]
+
     return stop
   })
 

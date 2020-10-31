@@ -113,6 +113,9 @@ block content
             let displayName = stopName
             if (stop.stopNumber)
               displayName += ` #${stop.stopNumber}`
+              
+            if (stop.bay)
+              displayName += ` (${stop.bay})`
           span.stopName=displayName
         div(class=`timing ${stop.headwayDevianceClass}`)
           span=stop.pretyTimeToDeparture

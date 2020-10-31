@@ -13,6 +13,7 @@ module.exports.getURL = (station, pid) => {
   if (pid.type === 'fss-escalator') pidURL = `/mockups/fss/escalator/${pid.platform}/${station}/`
   if (pid.type === 'fss-platform') pidURL = `/mockups/fss/platform/${pid.platform}/${station}/`
   if (pid.type === 'sss-platform') pidURL = `/mockups/sss/platform/${pid.platform * 2 - 1}-${pid.platform * 2}/`
+  if (pid.type === '2-line-led') pidURL = `/mockups/metro-led-pids/${station}/${pid.platform}`
 
   return pidURL
 }
