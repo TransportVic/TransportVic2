@@ -299,7 +299,7 @@ let dstLastTrips = dstBlocks.map(block => {
   return dstLast.map(trip => ({
     ...trip,
     calendarID: block[0],
-    tripID: trip.tripID.replace('%', block[0])
+    tripID: trip.tripID.replace(/%/g, block[0])
   }))
 }).reduce((a, b) => a.concat(b), [])
 
@@ -307,21 +307,21 @@ let nonDSTLastTrips = nonDSTBlocks.map(block => {
   return nonDSTLast.map(trip => ({
     ...trip,
     calendarID: block[0],
-    tripID: trip.tripID.replace('%', block[0])
+    tripID: trip.tripID.replace(/%/g, block[0])
   }))
 }).reduce((a, b) => a.concat(b), [])
 
 let dstLastTripTimes = dstBlocks.map(block => {
   return [
-    generateTripTimes('Down', 16 * 60 + 15, false, dstLast[0].tripID.replace('%', block[0])),
-    generateTripTimes('Up', 16 * 60 + 30, true, dstLast[1].tripID.replace('%', block[0]))
+    generateTripTimes('Down', 16 * 60 + 15, false, dstLast[0].tripID.replace(/%/g, block[0])),
+    generateTripTimes('Up', 16 * 60 + 30, true, dstLast[1].tripID.replace(/%/g, block[0]))
   ]
 }).reduce((a, b) => a.concat(b), [])
 
 let nonDSTLastTripTimes = nonDSTBlocks.map(block => {
   return [
-    generateTripTimes('Down', 15 * 60 + 30, false, nonDSTLast[0].tripID.replace('%', block[0])),
-    generateTripTimes('Up', 16 * 60 + 0, true, nonDSTLast[1].tripID.replace('%', block[0]))
+    generateTripTimes('Down', 15 * 60 + 30, false, nonDSTLast[0].tripID.replace(/%/g, block[0])),
+    generateTripTimes('Up', 16 * 60 + 0, true, nonDSTLast[1].tripID.replace(/%/g, block[0]))
   ]
 }).reduce((a, b) => a.concat(b), [])
 

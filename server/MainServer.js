@@ -94,16 +94,6 @@ module.exports = class MainServer {
       next()
     })
 
-    app.use('/.well-known/acme-challenge/:key', (req, res) => {
-      let filePath = path.join(config.webrootPath, req.params.key)
-      let stream = fs.createReadStream(filePath)
-      stream.pipe(res)
-
-      stream.on('error', err => {
-        res.status(404).end('404')
-      })
-    })
-
     app.use(compression({
       level: 9,
       threshold: 512
@@ -159,6 +149,7 @@ module.exports = class MainServer {
       },
 
       Index: '/',
+      IndexData: '/',
       AdditionalLinks: '/links',
       Search: '/search',
       StopsNearby: '/nearby',
@@ -299,16 +290,6 @@ module.exports = class MainServer {
       } catch (e) {
         global.loggers.error.err('Error registering', routerName, e)
       }
-    })
-
-    app.get('/sw.js', (req, res) => {
-      res.setHeader('Cache-Control', 'no-cache')
-      res.sendFile(path.join(__dirname, '../application/static/app-content/sw.js'))
-    })
-
-    app.get('/robots.txt', (req, res) => {
-      res.setHeader('Cache-Control', 'no-cache')
-      res.sendFile(path.join(__dirname, '../application/static/app-content/robots.txt'))
     })
 
     app.get('/response-stats', (req, res) => {
