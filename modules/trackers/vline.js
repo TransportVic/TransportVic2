@@ -22,6 +22,8 @@ async function getDeparturesFromVNET(db) {
   let liveTimetables = db.getCollection('live timetables')
   let gtfsTimetables = db.getCollection('gtfs timetables')
 
+  let allTrips = {}
+
   await async.forEach(vnetDepartures, async departure => {
     let departureDay = utils.getYYYYMMDD(departure.originDepartureTime)
     let departureTimeHHMM = utils.formatHHMM(departure.originDepartureTime)
@@ -60,17 +62,46 @@ async function getDeparturesFromVNET(db) {
 
     if (departure.set) tripData.set = departure.set
 
-    await vlineTrips.replaceDocument({
-      date: departureDay,
-      runID: departure.runID
-    }, tripData, {
-      upsert: true
-    })
-
     if (trip) {
       await handleTripShorted(trip, departure, nspTrip, liveTimetables, departureDay)
     }
+
+    allTrips[departure.runID] = tripData
   })
+
+  async function swap(mbyRun, artRun) {
+    if (allTrips[mbyRun] || allTrips[artRun]) {
+      let mby = allTrips[mbyRun], art = allTrips[artRun]
+      let today = utils.getYYYYMMDDNow() // This would only activate at a reasonable hour of the day
+      // In case one already departed eg 8118 usually leaves before 8116, but with TSRs we can't be sure
+      if (!mby) mby = await vlineTrips.findDocument({ date: today, runID: mbyRun })
+      if (!art) art = await vlineTrips.findDocument({ date: today, runID: artRun })
+
+      // If we can't find one (eg maybe MBY is bussed but ART runs) take the tracker data as correct?
+      if (art && mby && art.origin === 'Ararat' && mby.origin === 'Maryborough') {
+        let artConsist = art.consist
+        let mbyConsist = mby.consist
+        mby.consist = artConsist
+        art.consist = mbyConsist
+      }
+    }
+  }
+
+  await swap(8118, 8116)
+  await swap(8158, 8160)
+
+  let bulkOperations = []
+  Object.keys(allTrips).forEach(runID => {
+    bulkOperations.push({
+      replaceOne: {
+        filter: { date: allTrips[runID].date, runID },
+        replacement: allTrips[runID],
+        upsert: true
+      }
+    })
+  })
+
+  await vlineTrips.bulkWrite(bulkOperations)
 }
 
 async function requestTimings() {
