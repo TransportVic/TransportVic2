@@ -27,6 +27,7 @@ module.exports = {
   "4-509": ["Dysons"], // 509
   "4-5X9": ["Dysons"], // 509
   "4-51I": ["Broadmeadows Bus Service"],
+  "4-51B": ["Dysons"],
   "4-525": ["Dysons"],
   "4-52F": ["Dysons"], // 525
   "4-552": ["Dysons"],
@@ -188,6 +189,8 @@ module.exports = {
 
   "6-G3O": ["McHarrys Bus Lines"], // 30
   "6-G45": ["McHarrys Bus Lines"], // 45
+  "6-G5x": ["McHarrys Bus Lines"], // 50
+  "6-G5y": ["McHarrys Bus Lines"], // 51
   "6-G6X": ["McHarrys Bus Lines"], // 60
   "6-G6L": ["McHarrys Bus Lines"], // 61
 

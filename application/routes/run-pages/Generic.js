@@ -59,7 +59,7 @@ async function pickBestTrip(data, db) {
 
   let noLive = ['5', '7', '9', '11', '12', '13']
   let useLive = minutesToTripEnd > -60 && minutesToTripStart < 60
-  useLive = false
+
   if (liveTrip) {
     if (liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
       let isLive = liveTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
