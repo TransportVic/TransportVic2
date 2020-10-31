@@ -27,6 +27,7 @@ module.exports = {
   "4-509": ["Dysons"], // 509
   "4-5X9": ["Dysons"], // 509
   "4-51I": ["Broadmeadows Bus Service"],
+  "4-51x": ["Moreland Bus Lines"], // 512
   "4-51B": ["Dysons"],
   "4-525": ["Dysons"],
   "4-52F": ["Dysons"], // 525
