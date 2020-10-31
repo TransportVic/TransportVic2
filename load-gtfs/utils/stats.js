@@ -26,3 +26,8 @@ module.exports = async function setStats(field, datasize) {
   }
   await fsWrap('writeFile', filePath, JSON.stringify(data))
 }
+
+process.on('uncaughtException', err => {
+  console.error(err)
+  process.exit(1)
+})
