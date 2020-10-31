@@ -1,7 +1,7 @@
 const express = require('express')
 const router = new express.Router()
 const async = require('async')
-const safeRegex = require('safe-regex')
+const escapeRegex = require('escape-regex-string')
 const utils = require('../../utils')
 const natural = require('natural')
 const metaphone = natural.Metaphone
@@ -146,12 +146,10 @@ async function findRoutes(db, query) {
 
 router.post('/', async (req, res) => {
   let query = req.body.query.trim()
-  if (!safeRegex(query) || query === '') {
-    return res.end('')
-  }
+  query = escapeRegex(query)
 
-  const stops = await findStops(res.db, query)
-  const routes = await findRoutes(res.db, query)
+  let stops = await findStops(res.db, query)
+  let routes = await findRoutes(res.db, query)
 
   res.render('search/results', {stops, routes, encodeName: utils.encodeName})
 })
