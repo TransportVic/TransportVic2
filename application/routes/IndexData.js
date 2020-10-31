@@ -13,7 +13,7 @@ let sw = fs.readFileSync(path.join(__dirname, '../static/app-content/sw.js'))
 
 let upcomingPH = []
 
-async function initPH(db) {
+async function initDB(db) {
   let now = utils.now()
   let days = utils.allDaysBetweenDates(now, now.clone().add(7, 'days'))
 
@@ -32,8 +32,6 @@ async function initPH(db) {
 
   upcomingPH = upcomingPH.sort((a, b) => a.day - b.day)
 }
-
-initPH()
 
 router.get('/stop-data', async (req, res) => {
   let {mode, suburb, name} = req.query
@@ -124,3 +122,4 @@ router.get('/.well-known/acme-challenge/:key', (req, res) => {
 })
 
 module.exports = router
+module.exports.initDB = initDB

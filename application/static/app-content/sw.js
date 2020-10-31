@@ -6,14 +6,15 @@ function cacheFiles(files) {
     console.log('Caching files')
 
     return cache.addAll(files).then(() => self.skipWaiting())
-    .catch(e => {
-      console.error(e)
+    .catch(err => {
+      console.error(err)
+
       return ''
     })
   })
 }
 
-self.addEventListener('install', e => {
+self.addEventListener('install', event => {
   const timeStamp = Date.now()
 
   caches.keys().then(function (cachesNames) {
@@ -25,7 +26,7 @@ self.addEventListener('install', e => {
     }))
   })
 
-  e.waitUntil(
+  event.waitUntil(
     cacheFiles([
       '/static/css/runs/base-style.css',
 
@@ -157,8 +158,6 @@ self.addEventListener('install', e => {
       '/static/scripts/util.js',
       '/static/scripts/index.js',
 
-      '/static/scripts/mockups/pids-utils.js',
-
       '/',
       '/links',
       '/nearby',
@@ -173,7 +172,7 @@ self.addEventListener('activate', event => {
 })
 
 self.addEventListener('fetch', event => {
-  if (event.request.method != 'GET') return
+  if (event.request.method !== 'GET') return
 
   event.respondWith(
     caches.open(cacheName)
