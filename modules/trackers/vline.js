@@ -5,6 +5,7 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const getVNETDepartures = require('../vline/get-vnet-departures')
 const handleTripShorted = require('../vline/handle-trip-shorted')
 const findTrip = require('../vline/find-trip')
+const correctARTMBY = require('../vline/correct-art-mby')
 const { getDayOfWeek } = require('../../public-holidays')
 const schedule = require('./scheduler')
 
@@ -33,6 +34,20 @@ async function getDeparturesFromVNET(db) {
       dayOfWeek = await getDayOfWeek(previousDay)
     }
 
+    let nspTrip = await timetables.findDocument({
+      operationDays: dayOfWeek,
+      runID: departure.runID,
+      mode: 'regional train'
+    })
+
+    let trip = (await liveTimetables.findDocument({
+      operationDays: departureDay,
+      runID: departure.runID,
+      mode: 'regional train'
+    })) || await findTrip(gtfsTimetables, departureDay, departure.origin, departure.destination, departureTimeHHMM)
+
+    trip = await correctARTMBY(departure, trip, gtfsTimetables, departureDay)
+
     let tripData = {
       date: departureDay,
       runID: departure.runID,
@@ -51,19 +66,6 @@ async function getDeparturesFromVNET(db) {
     }, tripData, {
       upsert: true
     })
-
-
-    let nspTrip = await timetables.findDocument({
-      operationDays: dayOfWeek,
-      runID: departure.runID,
-      mode: 'regional train'
-    })
-
-    let trip = (await liveTimetables.findDocument({
-      operationDays: departureDay,
-      runID: departure.runID,
-      mode: 'regional train'
-    })) || await findTrip(gtfsTimetables, departureDay, departure.origin, departure.destination, departureTimeHHMM)
 
     if (trip) {
       await handleTripShorted(trip, departure, nspTrip, liveTimetables, departureDay)

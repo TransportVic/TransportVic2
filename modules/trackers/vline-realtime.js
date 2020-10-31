@@ -71,13 +71,15 @@ async function getDeparturesFromVNET(db, station) {
       mode: 'regional train'
     })) || await findTrip(gtfsTimetables, departureDay, departure.origin, departure.destination, departureTimeHHMM)
 
+    // Will we be able to correct the trip timings for ART-MBY? Probably not.
+
     departure.trip = trip
 
     if (trip) {
       let stopTiming = trip.stopTimings.find(stop => stop.stopName === station.stopName)
       let originTiming = trip.stopTimings.find(stop => stop.stopName === departure.origin)
 
-      if (!stopTiming) return null // Sherwood park is broken
+      if (!stopTiming) return null
 
       let minutesDifference = (stopTiming.arrivalTimeMinutes || stopTiming.departureTimeMinutes) - originTiming.departureTimeMinutes
 
