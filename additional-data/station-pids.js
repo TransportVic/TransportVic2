@@ -47,7 +47,7 @@ module.exports = {
   "Ascot Vale": [],
   "Flemington Racecourse": [],
   "Newmarket": [...platr(2, [], 'half-platform-bold')],
-  "Kensington": [],
+  "Kensington": [...platr(2, [], 'half-platform-bold')],
   "South Kensington": [],
   "Flemington Bridge": [],
   "Macaulay": [],

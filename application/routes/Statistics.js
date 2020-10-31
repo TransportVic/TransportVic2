@@ -2,10 +2,16 @@ const express = require('express')
 const router = new express.Router()
 const path = require('path')
 const async = require('async')
+const rateLimit = require('express-rate-limit')
 
 router.get('/', (req, res) => {
   res.render('stats/index')
 })
+
+router.get('/gtfs-stats', rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 20
+}))
 
 router.get('/gtfs-stats', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache')
