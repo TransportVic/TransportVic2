@@ -3,7 +3,7 @@ const utils = require('../../utils')
 const TimedCache = require('../../TimedCache')
 const EventEmitter = require('events')
 const tramDestinations = require('../../additional-data/tram-destinations')
-const { closest } = require('fastest-levenshtein')
+const { closest, distance } = require('fastest-levenshtein')
 
 let tramDestinationLookup = {}
 Object.keys(tramDestinations).forEach(dest => {
@@ -109,7 +109,12 @@ module.exports.trimFromMessage = async function(db, destinations, currentStopGTF
   await async.forEachOf(trip.stopTimings, async (stop, i) => {
     let stopData = await getStopData(stop.stopGTFSID, stops)
     if (stopData.tramTrackerNames) {
-      let destination = destinations.find(dest => stopData.tramTrackerNames.includes(dest))
+      let destination = destinations.find(dest => {
+        if (stopData.tramTrackerNames.includes(dest)) return true
+
+        return stopData.tramTrackerNames.find(name => distance(name, dest) <= 3)
+      })
+
       if (destination) {
         indexes.push(i)
         destinationsFound = destination

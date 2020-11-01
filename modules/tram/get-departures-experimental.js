@@ -132,12 +132,12 @@ async function getDeparturesFromYT(stop, db) {
 
           let trimmedTrip
           if (routes && routes.includes(coreRoute)) {
-            let stopsData = mainMessage.replace(/.*between /, '')
+            let stopsData = mainMessage.replace(/.*(between|from) /, '')
             let stopParts
             if (stopsData.includes('&')) stopParts = stopsData.split('&')
-            else stopParts = stopsData.split(' and ')
+            else stopParts = stopsData.includes(' and ') ? stopsData.split(' and ') : stopsData.split(' to ')
 
-            let stops = stopParts.map(stop => utils.adjustStopName(stop.replace(/Stop \w*/, '').replace(/.$/, '').trim()))
+            let stops = stopParts.map(stop => utils.adjustStopName(stop.replace(/Stop \w*/, '').replace(/\.$/, '').trim()))
 
             trimmedTrip = await trimTrip.trimFromMessage(db, stops, stopGTFSID, trip, day)
           }
