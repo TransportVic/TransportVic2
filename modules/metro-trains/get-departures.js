@@ -360,7 +360,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   let alterationMap = {}
 
   Object.values(disruptions).map(matchService).filter(Boolean).map(disruption => {
-    let parts = disruption.originalText.match(/will (?:now )?(\w+) (?:from|at) (.*)./)
+    let parts = disruption.originalText.match(/will (?:now )?(\w+) (?:from|at) (.*)(?: today.*)?./)
     if (parts) {
       let type = parts[1]
       let point = parts[2]

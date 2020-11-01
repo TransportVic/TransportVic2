@@ -44,8 +44,8 @@ async function loadDepartures(req, res) {
 
       minutesDiff = currentStation.departureTimeMinutes - firstStop.departureTimeMinutes
     } else {
-      minutesDiff = departureMinutes - firstStop.departureTimeMinutes
-      if (minutesDiff < 1440) minutesDiff += 1440
+      minutesDiff = firstStop.departureTimeMinutes - departureMinutes
+      if (minutesDiff < 0) minutesDiff += 1440
     }
 
     let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
