@@ -58,3 +58,54 @@ window.splitStops = function splitStops(stops, hasConnections, options) {
     start = end
   }
 }
+
+function formatTimeA(time, includeSeconds=false, space=false) {
+  let hours = time.getHours()
+  let minutes = time.getMinutes()
+  let seconds = time.getSeconds()
+  let mainTime = ''
+
+  mainTime += (hours % 12) || 12
+  mainTime += ':'
+
+  if (minutes < 10) mainTime += '0'
+  mainTime += minutes
+
+  if (includeSeconds) {
+    mainTime += ':'
+
+    if (seconds < 10) mainTime += '0'
+    mainTime += seconds
+  }
+
+  if (space) mainTime += ' '
+
+  if (time.getHours() >= 12)
+    mainTime += 'pm'
+  else
+    mainTime += 'am'
+
+  return mainTime
+}
+
+function formatTimeB(time, includeSeconds=false) {
+  let hours = time.getHours()
+  let minutes = time.getMinutes()
+  let seconds = time.getSeconds()
+  let mainTime = ''
+
+  mainTime += (hours % 12) || 12
+  mainTime += ':'
+
+  if (minutes < 10) mainTime += '0'
+  mainTime += minutes
+
+  if (includeSeconds) {
+    mainTime += ':'
+
+    if (seconds < 10) mainTime += '0'
+    mainTime += seconds
+  }
+
+  return mainTime
+}

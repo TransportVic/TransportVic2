@@ -1,18 +1,5 @@
 let forcedDirection = null
 
-function formatTime(time) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let mainTime = ''
-
-  mainTime += (hours % 12) || 12
-  mainTime += ':'
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  return mainTime
-}
-
 function shortenStoppingType(type) {
   if (type === 'Stops All Stations') return 'Stops All'
   if (type === 'Limited Express') return 'Ltd Express'
@@ -156,7 +143,7 @@ function updateBody(firstTime, n) {
           if (departure.type === 'vline') departureRow.className = 'departure vline'
           else departureRow.className = 'departure'
           departureRow.style = 'display: flex;'
-          $('.departureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
+          $('.departureTime', departureRow).textContent = formatTimeB(new Date(departure.scheduledDepartureTime))
           $('.destination', departureRow).textContent = shorternDestination(departure.destination)
 
           let stoppingType = shortenStoppingType(departure.stoppingType)

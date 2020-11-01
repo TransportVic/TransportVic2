@@ -1,21 +1,3 @@
-function formatTime(time) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let mainTime = ''
-
-  mainTime += (hours % 12) || 12
-  mainTime += ':'
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  if (time.getHours() >= 12)
-    mainTime += 'pm'
-  else
-    mainTime += 'am'
-
-  return mainTime
-}
-
 function createStationRow(name, stoppingType, clazz) {
   return `<div class="stationRow ${stoppingType === 'filler' ? 'filler' : ''}">`
   + `<img src="/static/images/mockups/station-${stoppingType}.svg">`
@@ -245,7 +227,7 @@ function updateBody(firstTime) {
 
       $('.firstDepartureInfo .platform').className = 'platform ' + firstDepartureClass
       $('.firstDepartureInfo .platform').textContent = firstDeparture.platform
-      $('.firstDepartureInfo .firstDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+      $('.firstDepartureInfo .firstDepartureTime').textContent = formatTimeA(new Date(firstDeparture.scheduledDepartureTime))
       $('.firstDepartureInfo .firstDestination').textContent = destination
       $('.firstDepartureInfo .firstStoppingType').textContent = firstStoppingType
       $('.firstDepartureInfo .minutesToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
@@ -302,7 +284,7 @@ function updateBody(firstTime) {
           }
 
           $('.lineColour', departureRow).className = 'lineColour ' + departureClass
-          $('.scheduledDepartureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
+          $('.scheduledDepartureTime', departureRow).textContent = formatTimeA(new Date(departure.scheduledDepartureTime))
           $('.destination', departureRow).textContent = destination
           $('.platform span', departureRow).textContent = departure.platform
           $('.platform', departureRow).className = 'platform ' + departureClass

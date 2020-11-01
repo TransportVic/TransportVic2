@@ -1,16 +1,3 @@
-function formatTime(time) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let mainTime = ''
-
-  mainTime += (hours % 12) || 12
-  mainTime += ':'
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  return mainTime
-}
-
 function setMessagesActive(active) {
   if (active) {
     $('.message').style = 'display: flex;'
@@ -192,7 +179,7 @@ function updateBody() {
         setDepartureInfoVisible(true)
 
         $('.firstDestination').textContent = firstDeparture.destination
-        $('.scheduledDiv span:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+        $('.scheduledDiv span:nth-child(2)').textContent = formatTimeB(new Date(firstDeparture.scheduledDepartureTime))
 
         if (firstDeparture.estimatedDepartureTime) {
           if (firstDeparture.minutesToDeparture > 0) {
@@ -223,7 +210,7 @@ function updateBody() {
           if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
           if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
-          $('.scheduled', div).textContent = formatTime(new Date(departure.scheduledDepartureTime))
+          $('.scheduled', div).textContent = formatTimeB(new Date(departure.scheduledDepartureTime))
           $('.destination', div).textContent = destination
           if (departure.estimatedDepartureTime)
             $('.actual', div).textContent = departure.minutesToDeparture

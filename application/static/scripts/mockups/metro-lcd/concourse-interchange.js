@@ -1,36 +1,7 @@
 let destinations
 
-function formatTime(time, includeSeconds=false, space=false) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let seconds = time.getSeconds()
-  let mainTime = ''
-
-  mainTime += (hours % 12) || 12
-  mainTime += ':'
-
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  if (includeSeconds) {
-    mainTime += ':'
-
-    if (seconds < 10) mainTime += '0'
-    mainTime += seconds
-  }
-
-  if (space) mainTime += ' '
-
-  if (time.getHours() >= 12)
-    mainTime += 'pm'
-  else
-    mainTime += 'am'
-
-  return mainTime
-}
-
 function setTime() {
-  $('.clock span').textContent = formatTime(new Date(), true, true)
+  $('.clock span').textContent = formatTimeA(new Date(), true, true)
 }
 
 function setupClock() {

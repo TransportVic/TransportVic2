@@ -1,25 +1,3 @@
-function formatTime(time, includeSeconds=false) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let seconds = time.getSeconds()
-  let mainTime = ''
-
-  mainTime += (hours % 12) || 12
-  mainTime += ':'
-
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  if (includeSeconds) {
-    mainTime += ':'
-
-    if (seconds < 10) mainTime += '0'
-    mainTime += seconds
-  }
-
-  return mainTime
-}
-
 function setMessagesActive(active) {
   if (active) {
     $('.message').style = 'display: flex;'
@@ -144,7 +122,7 @@ function updateBody() {
       setDepartureInfoVisible(true)
 
       $('.firstDestination').textContent = firstDeparture.destination
-      $('.scheduledDiv span:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+      $('.scheduledDiv span:nth-child(2)').textContent = formatTimeB(new Date(firstDeparture.scheduledDepartureTime))
 
       $('.actualDiv span:nth-child(2)').textContent = firstDeparture.prettyTimeToDeparture
 
@@ -154,7 +132,7 @@ function updateBody() {
       nextDepartures.forEach((departure, i) => {
         let div = $(`div.followingDeparture:nth-child(${i + 2})`)
         if (departure) {
-          $('.scheduled', div).textContent = formatTime(new Date(departure.scheduledDepartureTime))
+          $('.scheduled', div).textContent = formatTimeB(new Date(departure.scheduledDepartureTime))
           $('.destination', div).textContent = departure.destination
           $('.actual', div).textContent = departure.prettyTimeToDeparture
           $('.stoppingType', div).textContent = departure.stoppingType
@@ -191,7 +169,7 @@ function setupClock() {
 }
 
 function setTime() {
-  $('.timeContainer span').textContent = formatTime(new Date(), true)
+  $('.timeContainer span').textContent = formatTimeB(new Date(), true)
 }
 
 $.ready(() => {

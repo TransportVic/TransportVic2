@@ -1,16 +1,3 @@
-function formatTime(time) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let mainTime = ''
-
-  mainTime += (hours % 12) || 12
-  mainTime += ':'
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  return mainTime
-}
-
 function shortenStoppingType(type) {
   if (type === 'Stops All Stations') return 'Stops All'
   if (type === 'Limited Express') return 'Ltd Express'
@@ -181,7 +168,7 @@ function updateBody(firstTime) {
           $('.firstDestination').className += ' smaller'
         }
 
-        $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+        $('div.scheduled p:nth-child(2)').textContent = formatTimeB(new Date(firstDeparture.scheduledDepartureTime))
 
         if (firstDeparture.estimatedDepartureTime) {
           if (firstDeparture.minutesToDeparture > 0) {
@@ -215,7 +202,7 @@ function updateBody(firstTime) {
         if (secondDeparture.type === 'vline') secondClassName = ' vline'
 
         $('div.bottomRow').className = `bottomRow${secondClassName}`
-        $('div.bottomRow > span:nth-child(1)').textContent = formatTime(new Date(secondDeparture.scheduledDepartureTime))
+        $('div.bottomRow > span:nth-child(1)').textContent = formatTimeB(new Date(secondDeparture.scheduledDepartureTime))
 
         let {destination} = secondDeparture
 
@@ -377,7 +364,7 @@ $.ready(() => {
 })
 
 function setTime() {
-  $('.clock span').textContent = formatTime(new Date())
+  $('.clock span').textContent = formatTimeB(new Date())
 }
 
 function setupClock() {

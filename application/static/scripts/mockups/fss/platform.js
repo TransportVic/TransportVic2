@@ -1,32 +1,3 @@
-function formatTime(time, includeSeconds=false, space=false) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let seconds = time.getSeconds()
-  let mainTime = ''
-
-  mainTime += (hours % 12) || 12
-  mainTime += ':'
-
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  if (includeSeconds) {
-    mainTime += ':'
-
-    if (seconds < 10) mainTime += '0'
-    mainTime += seconds
-  }
-
-  if (space) mainTime += ' '
-
-  if (time.getHours() >= 12)
-    mainTime += 'pm'
-  else
-    mainTime += 'am'
-
-  return mainTime
-}
-
 function createStationRow(name, stoppingType, clazz) {
   return `<div class="stationRow ${stoppingType === 'filler' ? 'filler' : ''}">`
   + `<img src="/static/images/mockups/station-${stoppingType}.svg">`
@@ -35,7 +6,7 @@ function createStationRow(name, stoppingType, clazz) {
 }
 
 function setTime() {
-  $('.clock span').textContent = formatTime(new Date(), true, true)
+  $('.clock span').textContent = formatTimeA(new Date(), true, true)
 }
 
 function setupClock() {
@@ -251,7 +222,7 @@ function updateBody(firstTime) {
       }
 
       $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
-      $('.firstDepartureInfo .firstDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+      $('.firstDepartureInfo .firstDepartureTime').textContent = formatTimeA(new Date(firstDeparture.scheduledDepartureTime))
       $('.firstDepartureInfo .firstDestination').textContent = destination
       $('.firstDepartureInfo .firstStoppingType').textContent = firstStoppingType
       $('.firstDepartureInfo .minutesToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
@@ -299,7 +270,7 @@ function updateBody(firstTime) {
           }
 
           $('.lineColour', departureRow).className = 'lineColour ' + departureClass
-          $('.scheduledDepartureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
+          $('.scheduledDepartureTime', departureRow).textContent = formatTimeA(new Date(departure.scheduledDepartureTime))
           $('.destination', departureRow).textContent = destination
           $('.stoppingType', departureRow).textContent = stoppingType
           $('.minutesToDeparture span', departureRow).textContent = departure.prettyTimeToDeparture

@@ -1,25 +1,3 @@
-function formatTime(time, includeSeconds=false, space=false) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let seconds = time.getSeconds()
-  let mainTime = ''
-
-  mainTime += hours
-  mainTime += ':'
-
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  if (includeSeconds) {
-    mainTime += ':'
-
-    if (seconds < 10) mainTime += '0'
-    mainTime += seconds
-  }
-
-  return mainTime
-}
-
 function setMessagesActive(side, active) {
   let sideDiv = $('.' + side)
   function $$(selector) { return $(selector, sideDiv) }
@@ -159,7 +137,7 @@ function processDepartures(departures, side, firstTime) {
       $$('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
 
       $$('.firstDepartureInfo .platform').textContent = firstDeparture.platform
-      $$('.firstDepartureInfo .scheduled').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+      $$('.firstDepartureInfo .scheduled').textContent = formatTimeB(new Date(firstDeparture.scheduledDepartureTime))
 
       if (firstDeparture.minutesToDeparture === 0) {
         $$('.firstDepartureInfo .departingDiv .departing').textContent = 'Now'
@@ -208,7 +186,7 @@ function updateBody(firstTime) {
 }
 
 function setTime() {
-  $('.clock span').textContent = formatTime(new Date(), true, true)
+  $('.clock span').textContent = formatTimeB(new Date(), true)
 }
 
 function setupClock() {
