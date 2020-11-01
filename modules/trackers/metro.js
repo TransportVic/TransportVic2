@@ -3,8 +3,6 @@ const config = require('../../config')
 const utils = require('../../utils')
 const urls = require('../../urls')
 const shuffle = require('lodash.shuffle')
-const cheerio = require('cheerio')
-const moment = require('moment')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const getMetroDepartures = require('../metro-trains/get-departures')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
@@ -12,29 +10,11 @@ const { findTrip } = getMetroDepartures
 const metroConsists = require('../../additional-data/metro-tracker/metro-consists')
 const stops = require('../../additional-data/metro-tracker/stops')
 const schedule = require('./scheduler')
+const ptvAPI = require('../../ptv-api')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
 let metroTrips
-
-let token
-let cacheTime
-
-async function getToken() {
-  if (cacheTime && (new Date - cacheTime) < 1000 * 60 * 60) { // Cache key for 1hr max
-    return token
-  }
-
-  let ptvData = await utils.request(urls.metroTrackerBase, {
-    timeout: 6000
-  })
-  let $ = cheerio.load(ptvData)
-
-  token = $('#fetch-key').val()
-  cacheTime = new Date()
-
-  return token
-}
 
 function runNightNetwork() {
   let minutes = utils.getMinutesPastMidnightNow()
@@ -62,7 +42,7 @@ async function getDepartures(stop) {
   let stopData = await dbStops.findDocument({ stopName: stop + ' Railway Station' })
   await getMetroDepartures(stopData, database) // To preload disruptions and whatnot
 
-  let stopURL = urls.metroTracker.format(stopCode, await getToken())
+  let stopURL = urls.metroTracker.format(stopCode, await ptvAPI.getPTVKey(urls.metroTrackerBase))
   let data = JSON.parse(await utils.request(stopURL))
   let viableDepartures = data.departures.filter(departure => !!departure.run.vehicle_descriptor)
   await async.forEachOf(viableDepartures, async (viableDeparture, i) => {

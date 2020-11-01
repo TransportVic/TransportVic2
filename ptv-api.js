@@ -2,8 +2,10 @@ const crypto = require('crypto')
 const {ptvKeys} = require('./config.json')
 const utils = require('./utils')
 const TimedCache = require('./TimedCache')
+const cheerio = require('cheerio')
 
 const requestCache = new TimedCache(1000 * 30)
+const ptvKeyCache = new TimedCache(1000 * 60 * 60)
 
 let blankKey = {ptvDevID: "", ptvKey: ""}
 
@@ -69,4 +71,23 @@ async function makeRequest(url) {
   }
 }
 
+async function getPTVKey(baseURL='https://ptv.vic.gov.au') {
+  let ptvKey = ptvKeyCache.get(baseURL)
+  if (ptvKey) { // Cache key for 1hr max
+    return ptvKey
+  }
+
+  let ptvData = await utils.request(baseURL, {
+    timeout: 6000
+  })
+
+  let $ = cheerio.load(ptvData)
+  let key = $('#fetch-key').val()
+
+  ptvKeyCache.put(baseURL, key)
+
+  return key
+}
+
 module.exports = makeRequest
+module.exports.getPTVKey = getPTVKey

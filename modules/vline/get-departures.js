@@ -217,7 +217,7 @@ async function appendTripData(db, departure, vlinePlatforms) {
 
     let platform = departure.platform
     if (platform.endsWith('N')) {
-      platform = platform.slice(0, 1) = 'A'
+      platform = platform.slice(0, 1) + 'A'
     }
     if (platform === '??') platform = null
 

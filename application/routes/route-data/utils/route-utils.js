@@ -4,12 +4,12 @@ const utils = require('../../../../utils')
 const publicHolidays = require('../../../../public-holidays')
 
 let frequencyRanges = {
-  'Early Morning': [[3, 0], [6, 00]],
-  'Morning Peak': [[6, 00], [10, 0]],
+  'Early Morning': [[3, 0], [6, 0]],
+  'Morning Peak': [[6, 0], [10, 0]],
   'Daytime Off Peak': [[10, 0], [15, 0]],
   'Afternoon Peak': [[15, 0], [19, 0]],
-  'Early Evening': [[19, 0], [22, 00]],
-  'Late Night': [[22, 00], [27, 0]]
+  'Early Evening': [[19, 0], [22, 0]],
+  'Late Night': [[22, 0], [27, 0]]
 }
 
 function getDistantWeekdays(allAvailableDays) {
