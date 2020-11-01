@@ -360,7 +360,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   let alterationMap = {}
 
   Object.values(disruptions).map(matchService).filter(Boolean).map(disruption => {
-    let parts = disruption.originalText.match(/will (?:now )?(\w+) (?:from|at) (.*)(?: today.*)?./)
+    let parts = disruption.originalText.match(/will (?:now )?(\w+) (?:from|at) ([\w ]*?)(?: at.*?)?(?: [\d.:]*)?(?: today.*?)?(?: due.*?)?(?: and.*?)?.?/)
     if (parts) {
       let type = parts[1]
       let point = parts[2]
@@ -463,12 +463,13 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       })
     }
 
-    if (!usedLive) {
-      let origin = trip.trueOrigin.slice(0, -16)
-      let destination = trip.trueDestination.slice(0, -16)
-
-      let serviceID = `${origin}-${destination}-${trip.trueDepartureTime}`
-      if (alterationMap[serviceID]) trip = await getStoppingPattern(db, ptvRunID, 'metro train', scheduledDepartureTime.toISOString())
+    let shortOrigin = trip.trueOrigin.slice(0, -16), shortDest = trip.trueDestination.slice(0, -16)
+    let serviceID = `${shortOrigin}-${shortDest}-${trip.trueDepartureTime}`
+    let alteration = alterationMap[serviceID]
+    if (alteration) {
+      if (![shortOrigin, shortDest].includes(alteration.point)) {
+        trip = await getStoppingPattern(db, ptvRunID, 'metro train', scheduledDepartureTime.toISOString())
+      }
     }
 
     if (stonyPointReplacements.length) {
