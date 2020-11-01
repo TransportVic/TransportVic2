@@ -102,12 +102,15 @@ function change(db, text) {
       changePoint: bestStop(service[5])
     }]
 
-    if (type === 'originate' && terminateTypes.some(t => text.includes(t))) {
-      let terminatingLocation = bestStop(text.match(/(?:terminate|end) at ([\w ]+)(?:today)?\.?/)[1])
-      modifications.push({
-        type: 'terminate',
-        changePoint: terminatingLocation
-      })
+    if (type === 'originate' && terminateTypes.some(t => text.includes(` ${t} `))) {
+      let match = text.match(/(?:terminate|end) at ([\w ]+)(?:today)?\.?/)
+      if (match) {
+        let terminatingLocation = bestStop(match[1])
+        modifications.push({
+          type: 'terminate',
+          changePoint: terminatingLocation
+        })
+      }
     }
 
     setServiceAsChanged(db, departureTime, origin, destination, modifications)
