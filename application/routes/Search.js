@@ -130,7 +130,7 @@ async function findStops(db, query) {
 }
 
 async function findRoutes(db, query) {
-  query = query.replace(/li?n?e?/, '').trim()
+  query = query.replace(/ li?n?e?/, '').trim()
   let queryRegex = new RegExp(query, 'i')
 
   let routes = (await db.getCollection('routes').findDocuments({

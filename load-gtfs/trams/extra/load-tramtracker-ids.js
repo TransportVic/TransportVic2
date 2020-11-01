@@ -16,9 +16,6 @@ function sleep() {
   })
 }
 
-// Melb Showgrounds - stop was removed
-let excludedIDs = [ '1333' ]
-
 database.connect({}, async () => {
   let stops = database.getCollection('stops')
   let routes = database.getCollection('routes')
@@ -53,7 +50,6 @@ database.connect({}, async () => {
         if (!tramTrackerID) return
         if (ptvOverrides[tramTrackerID]) stopID = ptvOverrides[tramTrackerID]
         if (!stopID) return
-        if (excludedIDs.includes(tramTrackerID)) return
 
         if (!stopNames[stopID]) {
           stopNames[stopID] = []

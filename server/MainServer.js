@@ -213,27 +213,12 @@ module.exports = class MainServer {
         enable: modules.jmssScreen
       },
 
-      SmartrakIDs: {
-        path: '/smartrak',
-        enable: modules.tracker && modules.tracker.bus
-      },
+      SmartrakIDs: '/smartrak',
 
-      'tracker/BusTracker': {
-        path: '/bus/tracker',
-        enable: modules.tracker && modules.tracker.bus
-      },
-      'tracker/TramTracker': {
-        path: '/tram/tracker',
-        enable: modules.tracker && modules.tracker.tram
-      },
-      'tracker/VLineTracker': {
-        path: '/vline/tracker',
-        enable: modules.tracker && modules.tracker.vline
-      },
-      'tracker/MetroTracker': {
-        path: '/metro/tracker',
-        enable: modules.tracker && modules.tracker.metro
-      },
+      'tracker/BusTracker': '/bus/tracker',
+      'tracker/TramTracker': '/tram/tracker',
+      'tracker/VLineTracker': '/vline/tracker',
+      'tracker/MetroTracker': '/metro/tracker',
 
       'route-data/RegionalBusRoute': {
         path: '/bus/route/regional',
