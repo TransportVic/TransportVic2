@@ -81,7 +81,7 @@ database.connect({}, async () => {
     if (ptvStop) {
       dbStop = await stops.findDocument({
         'bays.originalName': new RegExp('^' + ptvStop.stopName),
-        'bays.stopNumber': ptvStop.stopNumber
+        'bays.stopNumber': ptvStop.stopNumber.toUpperCase()
       })
     }
 
