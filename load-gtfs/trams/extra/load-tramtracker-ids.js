@@ -16,6 +16,9 @@ function sleep() {
   })
 }
 
+// Melb Showgrounds - stop was removed
+let excludedIDs = [ '1333' ]
+
 database.connect({}, async () => {
   let stops = database.getCollection('stops')
   let routes = database.getCollection('routes')
@@ -50,6 +53,7 @@ database.connect({}, async () => {
         if (!tramTrackerID) return
         if (ptvOverrides[tramTrackerID]) stopID = ptvOverrides[tramTrackerID]
         if (!stopID) return
+        if (excludedIDs.includes(tramTrackerID)) return
 
         if (!stopNames[stopID]) {
           stopNames[stopID] = []
@@ -72,8 +76,6 @@ database.connect({}, async () => {
   })
 
   await async.forEachSeries(Object.keys(tramTrackerIDs), async tramTrackerID => {
-    count++
-
     let stopID = tramTrackerIDs[tramTrackerID]
     let ptvStop = ptvStops.find(stop => stop.stopID === stopID)
     let dbStop
@@ -135,10 +137,11 @@ database.connect({}, async () => {
           }
         })
 
-        return
-      } else console.log(matches)
+        return count++
+      }
     }
 
+    if (dbStop) delete dbStop.textQuery
     console.log('Failed to map stop', stopID, tramTrackerID, stopNames[stopID], dbStop, ptvStop)
   })
 

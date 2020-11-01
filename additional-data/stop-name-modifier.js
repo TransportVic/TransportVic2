@@ -27,7 +27,10 @@ module.exports = stopName => {
   }
 
   if (stopName === 'Dalgetty Street/Holding Street') return 'Dalgetty Road/Holding Street'
-  if (stopName === 'Heathcliff Lane/Royal Terrace') return 'Heathcliffe Lane/Royal Tce'
+  if (stopName === 'Heathcliff Lane/Royal Terrace') return 'Heathcliffe Lane/Royal Terrace'
+
+  if (stopName === 'CentralPier/Harbour Esplanade') return 'Central Pier/Harbour Esplanade'
+  if (stopName === 'New Quay Promenade/Docklands Drive') return 'NewQuay Promenade/Docklands Drive'
 
   return stopName
 }
