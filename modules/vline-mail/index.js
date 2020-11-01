@@ -25,7 +25,7 @@ async function inboundMessage(data) {
 
 async function handleMessage(subject, text) {
   text = text.replace(/SCS/g, 'Southern Cross').replace(/Flinders St\.? /g, 'Flinders Street').replace(/\n/g, ' ').replace(/\u00A0/g, ' ').replace(/More information at.+/, '').replace(/[-–]/g, ' to ').replace(/  +/g, ' ').trim()
-  global.loggers.mail.log(`Got Mail: ${text.replace(/\n/g, ' ')}\n`)
+  global.loggers.mail.log(`Got Mail: ${text.replace(/\n/g, ' ')}`)
 
   // Tracker makes this kinda useless now
   if (subject.includes('Service reduction') || text.includes('reduced capacity')) return

@@ -3,9 +3,8 @@ const cancellation = require('./handle-cancellation')
 const async = require('async')
 const postDiscordUpdate = require('../../discord-integration')
 const bestStop = require('./find-best-stop')
-const findTrip = require('../../vline/find-trip')
 const handleTripShorted = require('../../vline/handle-trip-shorted')
-const { getDayOfWeek } = require('../../../public-holidays')
+const matchTrip = require('./match-trip')
 
 async function discordUpdate(text) {
   await postDiscordUpdate('vlineInform', text)
@@ -15,40 +14,12 @@ let terminateTypes = ['terminate', 'terminating', 'end', 'ending']
 let originateTypes = ['originate', 'originating', 'begin', 'beginning']
 
 async function setServiceAsChanged(db, departureTime, origin, destination, modifications) {
-  let now = utils.now()
-  if (now.get('hours') <= 2) now.add(-1, 'day')
-  let today = utils.getYYYYMMDD(now)
-  let operationDay = await getDayOfWeek(now)
-
-  let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
-  let timetables = db.getCollection('timetables')
 
-  if (departureTime.split(':')[0].length == 1) {
-    departureTime = `0${departureTime}`
-  }
-
-
-  let trip
-  let nspTrip = await findTrip(timetables, operationDay, origin, destination, departureTime)
-
-  if (nspTrip) {
-    trip = await liveTimetables.findDocument({
-      operationDays: today,
-      runID: nspTrip.runID,
-      mode: 'regional train'
-    }) || await findTrip(gtfsTimetables, today, origin, destination, departureTime)
-
-    if (trip) {
-      trip.runID = nspTrip.runID
-      trip.vehicle = nspTrip.vehicle
-    }
-  } else {
-    trip = await findTrip(liveTimetables, today, origin, destination, departureTime)
-  }
+  let { trip, nspTrip } = await matchTrip(db, departureTime, origin, destination)
 
   if (trip) {
-    delete trip._id
+    let today = utils.getYYYYMMDDNow()
 
     let newOrigin = origin, newDestination = destination
     modifications.forEach(modification => {
