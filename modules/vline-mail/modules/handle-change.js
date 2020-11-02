@@ -17,10 +17,9 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
   let liveTimetables = db.getCollection('live timetables')
 
   let { trip, nspTrip } = await matchTrip(db, departureTime, origin, destination)
+  let today = utils.getYYYYMMDDNow()
 
   if (trip) {
-    let today = utils.getYYYYMMDDNow()
-
     let newOrigin = origin, newDestination = destination
     modifications.forEach(modification => {
       if (modification.type === 'originate') newOrigin = modification.changePoint + ' Railway Station'

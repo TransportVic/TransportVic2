@@ -23,7 +23,10 @@ module.exports = async (collection, operationDay, origin, destination, departure
     }, {
       stopTimings: {
         $elemMatch: {
-          stopName: destination
+          stopName: destination,
+          arrivalTimeMinutes: {
+            $gt: tripStartMinutes
+          }
         }
       }
     }]

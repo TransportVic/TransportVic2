@@ -468,6 +468,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let alteration = alterationMap[serviceID]
     if (alteration) {
       if (![shortOrigin, shortDest].includes(alteration.point)) {
+        if (trip.type === 'timings') {
+          await db.getCollection('live timetables').deleteDocument({
+            _id: trip._id
+          })
+        }
         trip = await getStoppingPattern(db, ptvRunID, 'metro train', scheduledDepartureTime.toISOString())
       }
     }
