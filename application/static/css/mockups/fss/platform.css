@@ -1,8 +1,8 @@
 div.fullMessage {
   width: var(--width);
   height: var(--height);
-  background-color: #000000;
-  color: #ffffff;
+  background-color: #f0f0f0;
+  color: #000000;
 
   display: flex;
   align-items: center;
