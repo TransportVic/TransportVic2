@@ -126,6 +126,7 @@ self.addEventListener('install', event => {
       '/static/images/icons/a-b.svg',
       '/static/images/icons/c1.svg',
       '/static/images/icons/d.svg',
+      '/static/images/icons/e.svg',
       '/static/images/icons/z3.svg',
 
       '/static/images/mockups/announcements.svg',
