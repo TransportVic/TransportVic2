@@ -71,7 +71,7 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
       let stopData = await getStopData(stop.stopGTFSID, stops)
       if (stopData.tramTrackerNames) {
         let matched = selectionMethod ? stopData.tramTrackerNames.some(name => name.includes(baseDestination))
-          : stopData.tramTrackerNames.find(name => distance(name, destination) <= 3)
+          : stopData.tramTrackerNames.find(name => distance(name, destination) <= 2)
         if (matched) {
           cutoffStop = stop.stopGTFSID
         }
