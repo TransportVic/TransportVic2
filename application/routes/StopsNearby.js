@@ -29,6 +29,7 @@ function expandStop(stop) {
 
       stops[bay.mode] = {
         stopName: stop.stopName,
+        stopNumber: bay.stopNumber,
         mode: bay.mode,
         suburb: stop.suburb[0],
         codedSuburb: stop.codedSuburb[0],
