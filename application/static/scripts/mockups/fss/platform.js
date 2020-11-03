@@ -224,7 +224,7 @@ function updateBody(firstTime) {
       $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
       $('.firstDepartureInfo .firstDepartureTime').textContent = formatTimeA(new Date(firstDeparture.scheduledDepartureTime))
       $('.firstDepartureInfo .firstDestination').textContent = destination
-      $('.firstDepartureInfo .firstStoppingType').textContent = firstStoppingType
+      $('.firstDepartureInfo .firstStoppingType').textContent = firstStoppingType.replace('Limited', 'Ltd')
       $('.firstDepartureInfo .minutesToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
 
       if (firstDeparture.isArrival) {

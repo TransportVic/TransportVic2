@@ -694,12 +694,11 @@ module.exports = {
 
       let lineStops = getLineStops(routeName)
       if (destination === 'City Loop') destination = 'Flinders Street'
-      else destination = tripStops.slice(-1)[0]
 
       if (isUp) lineStops = lineStops.slice(0).reverse()
 
-      lineStops = module.exports.getFixedLineStops(tripStops, lineStops, routeName, isUp, departure.type, departure.willSkipLoop)
       tripStops = module.exports.trimTrip(isUp, tripStops, stationName, routeName, departure.willSkipLoop, destination)
+      lineStops = module.exports.getFixedLineStops(tripStops, lineStops, routeName, isUp, departure.type, departure.willSkipLoop)
 
       departure.lineStops = lineStops
       departure.tripStops = tripStops

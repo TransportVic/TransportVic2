@@ -20,6 +20,7 @@ function setFullMessageActive(active) {
     $('.content').className = 'content announcements'
     $('.fullMessage').style = 'display: flex;'
     $('.stops').style = 'display: none';
+    $('.vertLine').style = 'display: none';
     $('.left').style = 'display: none;'
     $('.right').style = 'display: none;'
   } else {
@@ -27,6 +28,7 @@ function setFullMessageActive(active) {
     $('.fullMessage').style = 'display: none;'
     $('.nextDeparture').style = 'display: flex;'
     $('.stops').style = 'display: flex';
+    $('.vertLine').style = 'display: block';
     $('.left').style = 'display: block;'
     $('.right').style = 'display: flex;'
   }
