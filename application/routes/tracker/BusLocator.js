@@ -60,8 +60,6 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  await ptvAPI.getPTVKey()
-
   let {db} = res
   let busTrips = db.getCollection('bus trips')
   let smartrakIDs = db.getCollection('smartrak ids')
@@ -128,7 +126,7 @@ router.post('/', async (req, res) => {
 
   let {ptvRunID, ptvStopID, isoDeparture} = await getPTVRunID(now, date, nextActiveTrip)
   if (ptvRunID) {
-    let url = `https://www.ptv.vic.gov.au/lithe/patterns?run=${ptvRunID}&route_type=2&date_utc=${isoDeparture}&stop_id=${ptvStopID}&__tok=${ptvKey}`
+    let url = `https://www.ptv.vic.gov.au/lithe/patterns?run=${ptvRunID}&route_type=2&date_utc=${isoDeparture}&stop_id=${ptvStopID}&__tok=${await ptvAPI.getPTVKey()}`
     let data = JSON.parse(await utils.request(url))
 
     let runData = data.departures[0].run
