@@ -2,7 +2,6 @@ const async = require('async')
 const config = require('../../config')
 const utils = require('../../utils')
 const urls = require('../../urls')
-const shuffle = require('lodash.shuffle')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const getMetroDepartures = require('../metro-trains/get-departures')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
@@ -32,7 +31,7 @@ function runNightNetwork() {
 let stopNames = Object.keys(stops)
 
 function pickRandomStop() {
-  return shuffle(stopNames)[0]
+  return utils.shuffle(stopNames)[0]
 }
 
 async function getDepartures(stop) {

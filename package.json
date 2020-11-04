@@ -28,7 +28,7 @@
     "node-fetch": "^2.6.1",
     "node-ical": "^0.12.3",
     "node-mailin": "^2.4.0",
-    "pdf2json": "^1.2.0",
+    "pdf2json": "github:eyeballcode/pdf2json-updated",
     "protocol-buffers": "^4.2.0",
     "pug": "^3.0.0",
     "querystring": "^0.2.0",

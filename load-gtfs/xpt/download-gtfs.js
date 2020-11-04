@@ -11,9 +11,11 @@ tfnswAPI.makeRequest('/v1/gtfs/schedule/nswtrains', {
   fs.mkdirSync(folder, { recursive: true })
   let stream = fs.createWriteStream(path.join(folder, 'google_transit.zip'))
   res.pipe(stream)
-  stream.on('error', console.log)
 
-  await updateStats('download-xpt-timetables', 1)
-  console.log('Completed downloading xpt timetables')
-  process.exit()
+  stream.on('error', console.log)
+  stream.on('close', async () => {
+    await updateStats('download-xpt-timetables', 1)
+    console.log('Completed downloading xpt timetables')
+    process.exit()
+  })
 }).catch(console.log)

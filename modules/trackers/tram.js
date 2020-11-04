@@ -1,7 +1,6 @@
 const config = require('../../config.json')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const utils = require('../../utils')
-const shuffle = require('lodash.shuffle')
 const stops = require('../../additional-data/tram-tracker/stops')
 const async = require('async')
 const getDepartures = require('../../modules/tram/get-departures-experimental')
@@ -11,7 +10,7 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
 
 function pickRandomStops() {
-  return shuffle(stops).slice(0, 20)
+  return utils.shuffle(stops).slice(0, 20)
 }
 
 async function requestTimings() {

@@ -1,7 +1,6 @@
 const config = require('../../config.json')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const utils = require('../../utils')
-const shuffle = require('lodash.shuffle')
 const stops = require('../../additional-data/bus-tracker/stops')
 const async = require('async')
 const getDepartures = require('../../modules/bus/get-departures')
@@ -19,7 +18,7 @@ function isNight() {
 function pickRandomStops() {
   let size = 26
   if (isNight()) size = Math.floor(size / 2)
-  return shuffle(stops).slice(0, size)
+  return utils.shuffle(stops).slice(0, size)
 }
 
 async function requestTimings() {
