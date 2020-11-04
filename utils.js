@@ -3,8 +3,11 @@ require('moment-timezone')
 moment.tz.setDefault('Australia/Melbourne')
 const fetch = require('node-fetch')
 const stopNameModifier = require('./additional-data/stop-name-modifier')
+const TimedCache = require('./TimedCache')
+const EventEmitter = require('events')
 
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
+const locks = {}, caches = {}
 
 String.prototype.format = (function (i, safe, arg) {
   function format () {
@@ -480,5 +483,33 @@ module.exports = {
     }
 
     return a
+  },
+  getData: async (lock, key, noMatch, ttl=1000 * 60) => {
+    if (!locks[lock]) locks[lock] = {}
+    if (!caches[lock]) caches[lock] = new TimedCache(ttl)
+
+    if (locks[lock][key]) {
+      return await new Promise(resolve => locks[lock][key].on('loaded', resolve))
+    }
+    if (caches[lock].get(key)) {
+      return caches[lock].get(key)
+    }
+
+    locks[lock][key] = new EventEmitter()
+    locks[lock][key].setMaxListeners(1000)
+
+    let data
+
+    try {
+      data = await noMatch()
+    } catch (e) {
+      global.loggers.general.err('Getting data for', lock, 'for key', key, 'failed', e)
+    }
+
+    caches[lock].put(key, data)
+    locks[lock][key].emit('loaded', data)
+    delete locks[lock][key]
+
+    return data
   }
 }
