@@ -551,62 +551,42 @@ async function appendArrivalData(arrival, timetables) {
 }
 
 module.exports = async (platforms, db) => {
-  if (departuresCache.get('SSS')) {
-    let data = departuresCache.get('SSS')
-    return { departures: filterPlatforms(data.departures, platforms), arrivals: filterPlatforms(data.arrivals, platforms) }
-  }
-
-  if (apiLock) {
-    return await new Promise(resolve => {
-      apiLock.on('done', data => {
-        resolve({ departures: filterPlatforms(data.departures, platforms), arrivals: filterPlatforms(data.arrivals, platforms) })
-      })
+  let rawData = await utils.getData('sss-trains', 'sss', async () => {
+    let sss = await db.getCollection('stops').findDocument({
+      codedName: 'southern-cross-railway-station'
     })
-  }
 
-  apiLock = new EventEmitter()
-  apiLock.setMaxListeners(Infinity)
+    let vlinePlatform = sss.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
+    let metroPlatform = sss.bays.find(bay => bay.mode === 'metro train')
 
-  let sss = await db.getCollection('stops').findDocument({
-    codedName: 'southern-cross-railway-station'
-  })
+    let timetables = db.getCollection('timetables')
 
-  let vlinePlatform = sss.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
-  let metroPlatform = sss.bays.find(bay => bay.mode === 'metro train')
+    let departures = await async.map(await getServicesFromVNET(vlinePlatform, true, db), async d => {
+      return await appendVLineData(d, timetables)
+    })
 
-  let timetables = db.getCollection('timetables')
+    let arrivals = await getServicesFromVNET(vlinePlatform, false, db)
+    let knownArrivals = arrivals.map(a => a.runID)
 
-  let departures = await async.map(await getServicesFromVNET(vlinePlatform, true, db), async d => {
-    return await appendVLineData(d, timetables)
-  })
+    let scheduledArrivals = await getScheduledArrivals(knownArrivals, db)
 
-  let arrivals = await getServicesFromVNET(vlinePlatform, false, db)
-  let knownArrivals = arrivals.map(a => a.runID)
+    let mtmDepartures = (await async.map(await getMetroDepartures(sss, db, false), async d => {
+      return await appendMetroData(d, timetables)
+    })).filter(e => !e.isRailReplacementBus && !e.cancelled)
 
-  let scheduledArrivals = await getScheduledArrivals(knownArrivals, db)
+    let formingIDsSeen = []
+    let allArrivals = (await async.map(arrivals.concat(scheduledArrivals).sort((a, b) => a.destinationArrivalTime - b.destinationArrivalTime), async d => {
+      return await appendArrivalData(d, timetables)
+    })).filter(arrival => {
+      if (!arrival.formingID) return true
+      if (formingIDsSeen.includes(arrival.formingID)) return false
+      formingIDsSeen.push(arrival.formingID)
+      return true
+    })
+    let allDepartures = departures.concat(mtmDepartures).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 
-  let mtmDepartures = (await async.map(await getMetroDepartures(sss, db, false), async d => {
-    return await appendMetroData(d, timetables)
-  })).filter(e => !e.isRailReplacementBus && !e.cancelled)
+    return { departures: allDepartures, arrivals: allArrivals }
+  }, 1000 * 60 * 1.5)
 
-  let formingIDsSeen = []
-  let allArrivals = (await async.map(arrivals.concat(scheduledArrivals).sort((a, b) => a.destinationArrivalTime - b.destinationArrivalTime), async d => {
-    return await appendArrivalData(d, timetables)
-  })).filter(arrival => {
-    if (!arrival.formingID) return true
-    if (formingIDsSeen.includes(arrival.formingID)) return false
-    formingIDsSeen.push(arrival.formingID)
-    return true
-  })
-  let allDepartures = departures.concat(mtmDepartures).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
-
-  let rawData = { departures: allDepartures, arrivals: allArrivals }
-  departuresCache.put('SSS', rawData)
-
-  apiLock.emit('done', rawData)
-  apiLock = null
-
-  let data = { departures: filterPlatforms(allDepartures, platforms), arrivals: filterPlatforms(allArrivals, platforms) }
-
-  return data
+  return { departures: filterPlatforms(rawData.departures, platforms), arrivals: filterPlatforms(rawData.arrivals, platforms) }
 }

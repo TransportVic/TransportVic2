@@ -1,8 +1,6 @@
-const TimedCache = require('../../TimedCache')
 const async = require('async')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
-const moment = require('moment')
 const departureUtils = require('../utils/get-train-timetables')
 const guessPlatform = require('./guess-scheduled-platforms')
 const termini = require('../../additional-data/termini-to-lines')
@@ -10,12 +8,7 @@ const getCoachDepartures = require('../regional-coach/get-departures')
 const getVNETDepartures = require('./get-vnet-departures')
 const handleTripShorted = require('./handle-trip-shorted')
 const findTrip = require('./find-trip')
-const EventEmitter = require('events')
 const { getDayOfWeek } = require('../../public-holidays')
-
-const departuresCache = new TimedCache(1000 * 60 * 1)
-
-let ptvAPILocks = {}
 
 let gippsland = ['Traralgon', 'Bairnsdale']
 
@@ -25,7 +18,6 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
   let liveTimetables = db.getCollection('live timetables')
 
   let vnetDepartures = await getVNETDepartures(vlinePlatform.vnetStationName, 'D', db, 180)
-  let journeyCache = {}
   let stopGTFSID = vlinePlatform.stopGTFSID
 
   let departures = await async.map(vnetDepartures, async departure => {
@@ -304,143 +296,119 @@ async function getScheduledDepartures(db, station) {
 }
 
 async function getDepartures(station, db) {
-  let cacheKey = station.stopName + 'V'
-  if (departuresCache.get(cacheKey)) {
-    return departuresCache.get(cacheKey)
-  }
-
-  if (ptvAPILocks[cacheKey]) {
-    return await new Promise(resolve => {
-      ptvAPILocks[cacheKey].on('done', data => {
-        resolve(data)
-      })
-    })
-  }
-
-  ptvAPILocks[cacheKey] = new EventEmitter()
-
-  function returnDepartures(departures) {
-    ptvAPILocks[cacheKey].emit('done', departures)
-    delete ptvAPILocks[cacheKey]
-
-    return departures
-  }
-
   try {
-    let flagMap = {}
-    let vlinePlatforms = station.bays.filter(bay => bay.mode === 'regional train')
-    let departures = [], runs, routes
-    let coachReplacements = []
+    return await utils.getData('vline-departures', station.stopName, async () => {
+      let flagMap = {}
+      let vlinePlatforms = station.bays.filter(bay => bay.mode === 'regional train')
+      let departures = [], runs, routes
+      let coachReplacements = []
 
-    let coachStop = station
-    if (station.stopName === 'Southern Cross Railway Station') {
-      coachStop = await db.getCollection('stops').findDocument({
-        stopName: 'Southern Cross Coach Terminal/Spencer Street'
-      })
-    }
-
-    let ptvDepartures = { departures: [] }, scheduledCoachReplacements = []
-    let vnetDepartures = []
-    await Promise.all([new Promise(async resolve => {
-      try {
-        let vicVlinePlatform = vlinePlatforms.find(bay => bay.stopGTFSID < 140000000)
-        if (!vicVlinePlatform) return resolve()
-
-        let time = utils.now().add(-6, 'minutes').toISOString()
-        ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vicVlinePlatform.stopGTFSID}?gtfs=true&max_results=15&expand=run&expand=route&date_utc=${time}`)
-      } catch (e) { global.loggers.general.err('Failed to get V/Line PTV departures', e) } finally { resolve() }
-    }), new Promise(async resolve => {
-      try {
-        scheduledCoachReplacements = (await getCoachDepartures(coachStop, db)).filter(departure => {
-          return moment.utc(departure.scheduledDepartureTime.diff(utils.now())) < 1000 * 60 * 180
+      let coachStop = station
+      if (station.stopName === 'Southern Cross Railway Station') {
+        coachStop = await db.getCollection('stops').findDocument({
+          stopName: 'Southern Cross Coach Terminal/Spencer Street'
         })
-      } catch (e) { global.loggers.general.err('Failed to get V/Line Coach departures', e) } finally { resolve() }
-    }), new Promise(async resolve => {
-      try {
-        if (station.stopName === 'Southern Cross Railway Station') {
-          let vicVlinePlatform = vlinePlatforms.find(bay => bay.stopGTFSID < 140000000)
-          vnetDepartures = await getDeparturesFromVNET(vicVlinePlatform, db)
-        }
-      } catch (e) { global.loggers.general.err('Failed to get V/Line VNET departures', e) } finally { resolve() }
-    })])
-
-    let scheduled = await getScheduledDepartures(db, station)
-    cancelledTrains = scheduled.filter(departure => departure.cancelled)
-
-    try {
-      departures = ptvDepartures.departures, runs = ptvDepartures.runs, routes = ptvDepartures.routes
-      let now = utils.now()
-
-      departures.forEach(departure => {
-        let run = runs[departure.run_ref]
-        let departureTime = utils.parseTime(departure.scheduled_departure_utc)
-        if (departureTime.diff(now, 'minutes') > 600) return
-
-        let destination = run.destination_name
-        let {flags} = departure
-
-        let serviceID = departureTime.format('HH:mm') + destination
-        flagMap[serviceID] = findFlagMap(departure.flags)
-      })
-    } catch (e) {
-      global.loggers.general.err('Failed to process scheduled V/Line PTV departures', e)
-    }
-
-    try {
-      coachReplacements = JSON.parse(JSON.stringify(scheduledCoachReplacements))
-        .filter(coach => coach.isRailReplacementBus)
-        .map(coach => {
-          coach.scheduledDepartureTime = utils.parseTime(coach.scheduledDepartureTime)
-          coach.actualDepartureTime = utils.parseTime(coach.actualDepartureTime)
-
-          coach.shortRouteName = coach.shortRouteName || getShortRouteName(coach.trip)
-
-          if (coach.trip.destination !== 'Southern Cross Coach Terminal/Spencer Street') {
-            if (coach.trip.destination.includes('Railway Station'))
-              coach.destination = coach.trip.destination.slice(0, -16)
-          } else coach.destination = 'Southern Cross'
-          return coach
-        })
-    } catch (e) {
-      global.loggers.general.err('Failed to process scheduled V/Line coach replacements', e)
-    }
-
-    function addFlags(departure) {
-      let serviceID = departure.originalServiceID
-      let flags = flagMap[serviceID]
-      if (!flags) return departure
-
-      if (flags.reservationsOnly) departure.flags.reservationsOnly = true
-      if (flags.firstClassAvailable) departure.flags.firstClassAvailable = true
-      if (flags.barAvailable && !departure.flags.barAvailable) departure.flags.barAvailable = null
-
-      return departure
-    }
-
-    if (vnetDepartures.length) {
-      try {
-        let xptDepartures = scheduled.filter(departure => departure.trip.routeGTFSID === '14-XPT')
-        let allDepartures = vnetDepartures.map(addFlags).concat(xptDepartures).concat(coachReplacements)
-
-        let cancelledIDs = cancelledTrains.map(train => train.originalServiceID)
-        let nonCancelled = allDepartures.filter(train => !cancelledIDs.includes(train.originalServiceID))
-
-        let sorted = nonCancelled.concat(cancelledTrains).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
-        departuresCache.put(cacheKey, sorted)
-
-        return returnDepartures(sorted)
-      } catch (e) {
-        global.loggers.general.err('Failed to process VNET departures', e)
       }
-    }
 
-    let allDepartures = scheduled.map(addFlags).concat(coachReplacements).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
-    departuresCache.put(cacheKey, allDepartures)
+      let ptvDepartures = { departures: [] }, scheduledCoachReplacements = []
+      let vnetDepartures = []
+      await Promise.all([new Promise(async resolve => {
+        try {
+          let vicVlinePlatform = vlinePlatforms.find(bay => bay.stopGTFSID < 140000000)
+          if (!vicVlinePlatform) return resolve()
 
-    return returnDepartures(allDepartures)
+          let time = utils.now().add(-6, 'minutes').toISOString()
+          ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vicVlinePlatform.stopGTFSID}?gtfs=true&max_results=15&expand=run&expand=route&date_utc=${time}`)
+        } catch (e) { global.loggers.general.err('Failed to get V/Line PTV departures', e) } finally { resolve() }
+      }), new Promise(async resolve => {
+        try {
+          scheduledCoachReplacements = (await getCoachDepartures(coachStop, db)).filter(departure => {
+            return departure.scheduledDepartureTime.diff(utils.now(), 'milliseconds') < 1000 * 60 * 180
+          })
+        } catch (e) { global.loggers.general.err('Failed to get V/Line Coach departures', e) } finally { resolve() }
+      }), new Promise(async resolve => {
+        try {
+          if (station.stopName === 'Southern Cross Railway Station') {
+            let vicVlinePlatform = vlinePlatforms.find(bay => bay.stopGTFSID < 140000000)
+            vnetDepartures = await getDeparturesFromVNET(vicVlinePlatform, db)
+          }
+        } catch (e) { global.loggers.general.err('Failed to get V/Line VNET departures', e) } finally { resolve() }
+      })])
+
+      let scheduled = await getScheduledDepartures(db, station)
+      cancelledTrains = scheduled.filter(departure => departure.cancelled)
+
+      try {
+        departures = ptvDepartures.departures, runs = ptvDepartures.runs, routes = ptvDepartures.routes
+        let now = utils.now()
+
+        departures.forEach(departure => {
+          let run = runs[departure.run_ref]
+          let departureTime = utils.parseTime(departure.scheduled_departure_utc)
+          if (departureTime.diff(now, 'minutes') > 600) return
+
+          let destination = run.destination_name
+          let {flags} = departure
+
+          let serviceID = departureTime.format('HH:mm') + destination
+          flagMap[serviceID] = findFlagMap(departure.flags)
+        })
+      } catch (e) {
+        global.loggers.general.err('Failed to process scheduled V/Line PTV departures', e)
+      }
+
+      try {
+        coachReplacements = JSON.parse(JSON.stringify(scheduledCoachReplacements))
+          .filter(coach => coach.isRailReplacementBus)
+          .map(coach => {
+            coach.scheduledDepartureTime = utils.parseTime(coach.scheduledDepartureTime)
+            coach.actualDepartureTime = utils.parseTime(coach.actualDepartureTime)
+
+            coach.shortRouteName = coach.shortRouteName || getShortRouteName(coach.trip)
+
+            if (coach.trip.destination !== 'Southern Cross Coach Terminal/Spencer Street') {
+              if (coach.trip.destination.includes('Railway Station'))
+                coach.destination = coach.trip.destination.slice(0, -16)
+            } else coach.destination = 'Southern Cross'
+            return coach
+          })
+      } catch (e) {
+        global.loggers.general.err('Failed to process scheduled V/Line coach replacements', e)
+      }
+
+      function addFlags(departure) {
+        let serviceID = departure.originalServiceID
+        let flags = flagMap[serviceID]
+        if (!flags) return departure
+
+        if (flags.reservationsOnly) departure.flags.reservationsOnly = true
+        if (flags.firstClassAvailable) departure.flags.firstClassAvailable = true
+        if (flags.barAvailable && !departure.flags.barAvailable) departure.flags.barAvailable = null
+
+        return departure
+      }
+
+      if (vnetDepartures.length) {
+        try {
+          let xptDepartures = scheduled.filter(departure => departure.trip.routeGTFSID === '14-XPT')
+          let allDepartures = vnetDepartures.map(addFlags).concat(xptDepartures).concat(coachReplacements)
+
+          let cancelledIDs = cancelledTrains.map(train => train.originalServiceID)
+          let nonCancelled = allDepartures.filter(train => !cancelledIDs.includes(train.originalServiceID))
+
+          let sorted = nonCancelled.concat(cancelledTrains).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+
+          return sorted
+        } catch (e) {
+          global.loggers.general.err('Failed to process VNET departures', e)
+        }
+      }
+
+      return scheduled.map(addFlags).concat(coachReplacements).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+    })
   } catch (e) {
     global.loggers.general.err('Failed to get V/Line departures', e)
-    return returnDepartures(null)
+    return null
   }
 }
 

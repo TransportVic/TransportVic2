@@ -1,35 +1,22 @@
 const async = require('async')
 const utils = require('../../utils')
-const TimedCache = require('../../TimedCache')
-const EventEmitter = require('events')
 const tramDestinations = require('../../additional-data/tram-destinations')
 const { closest, distance } = require('fastest-levenshtein')
 
 let tramDestinationLookup = {}
+
 Object.keys(tramDestinations).forEach(dest => {
   let humanName = tramDestinations[dest]
   if (!tramDestinationLookup[humanName]) tramDestinationLookup[humanName] = []
   tramDestinationLookup[humanName].push(dest)
 })
+
 let knownDestinations = Object.keys(tramDestinationLookup)
 
-let stopsCache = {}
-let stopsLocks = {}
-
 async function getStopData(stopGTFSID, stops) {
-  if (stopsCache[stopGTFSID]) return stopsCache[stopGTFSID]
-  if (stopsLocks[stopGTFSID]) {
-    return await new Promise(resolve => stopsLocks[stopGTFSID].on('loaded', resolve))
-  }
-  stopsLocks[stopGTFSID] = new EventEmitter()
-  stopsLocks[stopGTFSID].setMaxListeners(30)
-  let stopData = await stops.findDocument({ 'bays.stopGTFSID': stopGTFSID })
-
-  stopsCache[stopGTFSID] = stopData
-  stopsLocks[stopGTFSID].emit('loaded', stopData)
-  delete stopsLocks[stopGTFSID]
-
-  return stopData
+  return await utils.getData('tram-stops', stopGTFSID, async () => {
+    return await stops.findDocument({ 'bays.stopGTFSID': stopGTFSID })
+  }, 1000 * 60 * 30)
 }
 
 async function modifyTrip(db, trip, operationDay) {

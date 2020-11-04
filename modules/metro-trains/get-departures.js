@@ -1,19 +1,12 @@
-const TimedCache = require('../../TimedCache')
 const async = require('async')
 const ptvAPI = require('../../ptv-api')
 const utils = require('../../utils')
-const moment = require('moment')
 const departureUtils = require('../utils/get-train-timetables')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const fixTripDestination = require('./fix-trip-destinations')
-const EventEmitter = require('events')
 
 const getRouteStops = require('../../additional-data/route-stops')
 const getStonyPoint = require('../get-stony-point')
-
-const departuresCache = new TimedCache(1000 * 30)
-
-let ptvAPILocks = {}
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
@@ -708,45 +701,22 @@ async function markRailBuses(departures, station, db) {
 }
 
 async function getDepartures(station, db, filter=true) {
-  let cacheKey = station.stopName + 'M'
-
-  if (ptvAPILocks[cacheKey]) {
-    return await new Promise(resolve => {
-      ptvAPILocks[cacheKey].on('done', data => {
-        resolve(data)
-      })
-    })
-  }
-
-  if (departuresCache.get(cacheKey)) {
-    return filterDepartures(departuresCache.get(cacheKey), filter)
-  }
-
-  ptvAPILocks[cacheKey] = new EventEmitter()
-
-  function returnDepartures(departures) {
-    ptvAPILocks[cacheKey].emit('done', departures)
-    delete ptvAPILocks[cacheKey]
-
-    return departures
-  }
-
   try {
-    let departures = await getDeparturesFromPTV(station, db)
+    return await utils.getData('metro-departures', station.stopName, async () => {
+      let departures = await getDeparturesFromPTV(station, db)
 
-    await updateSuspensions(departures, station, db)
-    await markRailBuses(departures, station, db)
+      await updateSuspensions(departures, station, db)
+      await markRailBuses(departures, station, db)
 
-    departuresCache.put(cacheKey, Object.values(departures))
-    return returnDepartures(filterDepartures(Object.values(departures), filter))
+      return filterDepartures(departures, filter)
+    })
   } catch (e) {
     global.loggers.general.err('Error getting Metro departures', e)
     try {
-      let scheduled = await departureUtils.getScheduledMetroDepartures(station, db)
-      return returnDepartures(scheduled)
+      return await departureUtils.getScheduledMetroDepartures(station, db)
     } catch (ee) {
       global.loggers.general.err('Error getting Scheduled Metro departures', ee)
-      return returnDepartures(null)
+      return null
     }
   }
 }

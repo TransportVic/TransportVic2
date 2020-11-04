@@ -1,19 +1,12 @@
 const departureUtils = require('../utils/get-bus-timetables')
 const async = require('async')
-const moment = require('moment')
-const TimedCache = require('../../TimedCache')
 const utils = require('../../utils')
-const EventEmitter = require('events')
 const tramFleet = require('../../tram-fleet')
 const urls = require('../../urls')
 const determineTramRouteNumber = require('./determine-tram-route-number')
 const trimTrip = require('./trim-trip')
 const { distance } = require('fastest-levenshtein')
 const tramDestinations = require('../../additional-data/tram-destinations')
-
-const departuresCache = new TimedCache(1000 * 60)
-
-let ytAPILocks = {}
 
 function findScore(trip, stopGTFSID, departureTimeMinutes) {
   let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
@@ -106,6 +99,8 @@ async function trimTripIfNeeded(db, tramDeparture, trip, stopGTFSID, day) {
       return await trimTrip.trimFromDestination(db, Destination, coreRoute, trip, day)
     }
   }
+
+  return trip
 }
 
 async function getDeparturesFromYT(stop, db) {
@@ -221,54 +216,24 @@ async function getScheduledDepartures(stop, db) {
 }
 
 async function getDepartures(stop, db) {
-  let cacheKey = stop.stopName
-
-  if (ytAPILocks[cacheKey]) {
-    return await new Promise(resolve => {
-      ytAPILocks[cacheKey].on('done', data => {
-        resolve(data)
-      })
-    })
-  }
-
-  if (departuresCache.get(cacheKey)) {
-    return departuresCache.get(cacheKey)
-  }
-
-  ytAPILocks[cacheKey] = new EventEmitter()
-
-  function returnDepartures(departures) {
-    ytAPILocks[cacheKey].emit('done', departures)
-    delete ytAPILocks[cacheKey]
-
-    return departures
-  }
-
-  let departures
-
   try {
-    try {
-      departures = await getDeparturesFromYT(stop, db)
-      departuresCache.put(cacheKey, departures)
+    return await utils.getData('tram-departures', stop.stopName, async () => {
+      try {
+        return await getDeparturesFromYT(stop, db)
+      } catch (e) {
+        global.loggers.general.err('Failed to get tram trips', e)
+        return (await getScheduledDepartures(stop, db, false)).map(departure => {
+          departure.routeNumber = determineTramRouteNumber(departure.trip)
+          departure.sortNumber = departure.routeNumber.replace(/[a-z]/, '')
 
-      return returnDepartures(departures)
-    } catch (e) {
-      global.loggers.general.err('Failed to get tram trips', e)
-      departures = (await getScheduledDepartures(stop, db, false)).map(departure => {
-        departure.routeNumber = determineTramRouteNumber(departure.trip)
-        departure.sortNumber = departure.routeNumber.replace(/[a-z]/, '')
-
-        return departure
-      })
-
-      return returnDepartures(departures)
-    }
+          return departure
+        })
+      }
+    })
   } catch (e) {
     global.loggers.general.err('Failed to get scheduled tram trips', e)
-    return returnDepartures(null)
+    return null
   }
-
-  return departures
 }
 
 module.exports = getDepartures
