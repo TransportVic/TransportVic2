@@ -8,7 +8,7 @@ let routeGTFSIDs = {
   'Hurstbridge': '2-HBG',
   'Mernda': '2-MER',
   'Belgrave': '2-BEL',
-  'Lilyale': '2-LIL',
+  'Lilydale': '2-LIL',
   'Glen Waverley': '2-GLW',
   'Alamein': '2-ALM',
   'Cranbourne': '2-CRB',

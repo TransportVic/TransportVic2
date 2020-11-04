@@ -1,8 +1,6 @@
-const TimedCache = require('../../../../TimedCache')
 const async = require('async')
 const urls = require('../../../../urls.json')
 const utils = require('../../../../utils')
-const moment = require('moment')
 const cheerio = require('cheerio')
 const termini = require('../../../../additional-data/termini-to-lines')
 const getMetroDepartures = require('../../../../modules/metro-trains/get-departures')
@@ -11,12 +9,6 @@ const getMetroStops = require('../../../../additional-data/route-stops')
 const TrainUtils = require('../TrainUtils')
 const emptyCars = require('../empty-cars')
 const { getDayOfWeek } = require('../../../../public-holidays')
-
-const departuresCache = new TimedCache(1000 * 60 * 1.5)
-
-const EventEmitter = require('events')
-
-let apiLock = null
 
 let northernGroup = [
   'Craigieburn',

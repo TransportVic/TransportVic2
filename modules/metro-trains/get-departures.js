@@ -197,7 +197,7 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
   let possibleDestinations = [runDestination]
 
   let destination = runDestination
-  if (caulfieldGroup.includes(routeID) && destination === 'Southern Cross' || destination === 'Parliament')
+  if (caulfieldGroup.includes(routeID) && (destination === 'Southern Cross') || destination === 'Parliament')
     possibleDestinations.push('Flinders Street')
 
   let possibleLines = [routeName]
@@ -215,12 +215,6 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
       possibleLines = [...possibleLines, 'Sunbury', 'Craigieburn', 'Upfield', 'Showgrounds/Flemington', 'Werribee', 'Williamstown']
     if (routeID == 6)
       possibleLines = [...possibleLines, 'Cranbourne', 'Pakenham']
-
-    possibleDestinations.push('Flinders Street')
-  } else {
-    if ((routeName === 'Pakenham' || routeName === 'Cranbourne') && destination === 'Parliament') {
-      possibleDestinations.push('Flinders Street')
-    }
   }
 
   if (routeID == 99)
