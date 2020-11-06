@@ -62,7 +62,7 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip) {
 }
 
 function mapSuspension(suspension, routeName) {
-  let stationsAffected = suspension.description.replace(/\u00A0/g, ' ').match(/between ([ \w]+) and ([ \w]+) stations/i)
+  let stationsAffected = suspension.description.replace(/\u00A0/g, ' ').match(/between ([ \w]+) and ([ \w]+) (?:stations|due)/i)
 
   if (!stationsAffected) return
   let startStation = stationsAffected[1].trim()
