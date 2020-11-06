@@ -625,19 +625,37 @@ async function updateSuspensions(departures, station, db) {
   })
 }
 
+function getDepartureDay(departure, stopGTFSID) {
+  let { trip } = departure
+  let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+  if (!stopData) return
+
+  let minutesDiff = stopData.departureTimeMinutes - trip.stopTimings[0].departureTimeMinutes
+  let originDepartureTime = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
+
+  return utils.getYYYYMMDD(originDepartureTime)
+}
+
 async function markRailBuses(departures, station, db) {
   let liveTimetables = db.getCollection('live timetables')
   let stopGTFSID = station.bays.find(bay => bay.mode === 'metro train').stopGTFSID
 
+  await async.forEachSeries(departures.filter(departure => departure.suspensions.length && departure.isRailReplacementBus), async departure => {
+    if (departure.runID) {
+      let runIDQuery = {
+        mode: 'metro train',
+        operationDays: getDepartureDay(departure, stopGTFSID),
+        runID: departure.runID
+      }
+
+      await liveTimetables.deleteDocument(runIDQuery)
+    }
+  })
+
   await async.forEachSeries(departures.filter(departure => departure.suspensions.length || departure.isRailReplacementBus || departure.trip.isRailReplacementBus), async departure => {
     let { trip } = departure
-    let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
-    if (!stopData) return
+    let departureDay = getDepartureDay(departure, stopGTFSID)
 
-    let minutesDiff = stopData.departureTimeMinutes - trip.stopTimings[0].departureTimeMinutes
-    let originDepartureTime = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
-
-    let departureDay = utils.getYYYYMMDD(originDepartureTime)
     let windBackTime = trip.stopTimings[0].departureTimeMinutes > 1440
     let stopTimings = (windBackTime ? trip.stopTimings.map(stop => {
       return {
