@@ -13,14 +13,16 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 async function inboundMessage(data) {
   let sender = data.from.text
-  if (!sender.includes('@inform.vline.com.au')) return
+  if (sender.includes('@inform.vline.com.au')) {
+    let {subject, html} = data
+    let $ = cheerio.load(html)
+    let textContent = $('center').text()
+    textContent = textContent
 
-  let {subject, html} = data
-  let $ = cheerio.load(html)
-  let textContent = $('center').text()
-  textContent = textContent
-
-  handleMessage(subject, textContent)
+    if (textContent < 300) handleMessage(subject, textContent)
+  } else {
+    global.loggers.spamMail.log(`Recieved Spam: ${text}`)
+  }
 }
 
 async function handleMessage(subject, text) {

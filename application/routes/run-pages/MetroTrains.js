@@ -184,9 +184,9 @@ async function pickBestTrip(data, db) {
     })
 
     if (possibleDepartures.length > 1) {
-      departure = possibleDepartures.filter(departure => {
+      departure = possibleDepartures.find(departure => {
         return runs[departure.run_ref].express_stop_count === expressCount
-      })[0]
+      })
     } else departure = possibleDepartures[0]
 
     // interrim workaround cos when services start from a later stop they're really cancelled
@@ -199,7 +199,7 @@ async function pickBestTrip(data, db) {
 
     let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime, null, referenceTrip, {
       isRailReplacementBus,
-      trimStops: referenceTrip.affectedBySuspension
+      trimStops: referenceTrip ? referenceTrip.affectedBySuspension : false
     })
 
     let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
@@ -213,7 +213,10 @@ async function pickBestTrip(data, db) {
 
 router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
   let tripData = await pickBestTrip(req.params, res.db)
-  if (!tripData) return res.status(404).render('errors/no-trip')
+  if (!tripData) {
+    global.loggers.general.err('Could not locate metro trip', req.url)
+    return res.status(404).render('errors/no-trip')
+  }
 
   let { trip, tripStartTime, isLive } = tripData
 

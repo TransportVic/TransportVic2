@@ -294,7 +294,7 @@ module.exports = class MainServer {
         res.status(404).render('errors/404')
       } else {
         res.status(500).render('errors/500')
-        global.loggers.error.err(err)
+        global.loggers.error.err(req.url, err)
       }
     })
   }

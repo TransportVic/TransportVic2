@@ -15,6 +15,7 @@ const path = require('path')
 global.loggers = {
   http: new Logger(path.join(__dirname, 'logs', 'http'), 'HTTP'),
   mail: new Logger(path.join(__dirname, 'logs', 'mail'), 'MAIL'),
+  spamMail: new Logger(path.join(__dirname, 'logs', 'spam-mail'), 'SPAM-MAIL'),
   fetch: new Logger(path.join(__dirname, 'logs', 'fetch'), 'FETCH'),
   trackers: {
     bus: new Logger(path.join(__dirname, 'logs', 'trackers', 'bus'), 'BUS'),

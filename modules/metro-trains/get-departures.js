@@ -338,7 +338,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   }
 
   let stonyPointReplacements = Object.values(disruptions).filter(disruption => {
-    if (disruption.routes.find(r => r.route_gtfs_id === '2-SPT')) {
+    if (disruption.routes.find(r => r && r.route_gtfs_id === '2-SPT')) {
       return disruption.description.includes('replace')
     }
     return false
@@ -484,7 +484,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     if (willSkipLoop) {
       if (cityLoopStations.includes(stationName)) {
         if (northernGroup.includes(routeID)) {
-          if (!isSCS) return
+          if (stationName !== 'Southern Cross') return
         } else return
       }
 
