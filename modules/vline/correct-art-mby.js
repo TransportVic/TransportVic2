@@ -6,7 +6,7 @@ module.exports = async function(departure, trip, gtfsTimetables, departureDay) {
   if (trip) {
     let tripDestinationArrivalHHMM = trip.destinationArrivalTime
     let minutesPastMidnight = utils.getMinutesPastMidnightFromHHMM(tripDestinationArrivalHHMM)
-    let destinationArrivalTime = utils.getMomentFromMinutesPastMidnight(minutesPastMidnight, utils.now())
+    destinationArrivalTime = utils.getMomentFromMinutesPastMidnight(minutesPastMidnight, utils.now())
     // We can take the shortcut approach of MPM, now as these trips do not run at odd hours of the day
   }
 
