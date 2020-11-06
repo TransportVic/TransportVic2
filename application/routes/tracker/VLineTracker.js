@@ -172,6 +172,8 @@ router.get('/highlights', async (req, res) => {
     })
   })
 
+  let unknownTrips = allTrips.filter(trip => !timetables[trip.runID])
+
   let consistTypeChanged = allTrips.filter(trip => {
     let nspTimetable = timetables[trip.runID]
 
@@ -241,6 +243,7 @@ router.get('/highlights', async (req, res) => {
     oversizeConsist,
     setAltered,
     unknownVehicle,
+    unknownTrips,
     date: utils.parseTime(date, 'YYYYMMDD')
   })
 })
