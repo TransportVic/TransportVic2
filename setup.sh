@@ -9,7 +9,7 @@ sudo yum remove httpd -y
 sudo yum remove postfix -y
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-sudo ln /usr/bin/node "$(readlink -f `command -v node`)"
+sudo ln /usr/bin/node "$(readlink -f '$(command -v node)')"
 
 source ~/.bashrc
 nvm install node

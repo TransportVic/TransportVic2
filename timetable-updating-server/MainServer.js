@@ -51,7 +51,7 @@ module.exports = class MainServer {
 
     app.set('views', path.join(__dirname, '../application/views'))
     app.set('view engine', 'pug')
-    if (process.env['NODE_ENV'] && process.env['NODE_ENV'] === 'prod') { app.set('view cache', true) }
+    if (process.NODE_ENV && process.NODE_ENV === 'prod') { app.set('view cache', true) }
     app.set('x-powered-by', false)
     app.set('strict routing', false)
   }

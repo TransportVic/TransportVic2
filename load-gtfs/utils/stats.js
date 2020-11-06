@@ -28,6 +28,7 @@ module.exports = async function setStats(field, datasize) {
 }
 
 process.on('uncaughtException', err => {
+  console.error(process.argv)
   console.error(err)
   process.exit(1)
 })

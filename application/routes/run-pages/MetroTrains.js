@@ -122,7 +122,7 @@ async function pickBestTrip(data, db) {
   let liveTrip
 
   if (liveTrips.length > 1) {
-    function tripClosenessBound(trip) { return tripCloseness(trip, originStop, destinationStop, tripStartMinutes, tripEndMinutes) }
+    let tripClosenessBound = trip => tripCloseness(trip, originStop, destinationStop, tripStartMinutes, tripEndMinutes)
     liveTrip = liveTrips.sort((a, b) => tripClosenessBound(a) - tripClosenessBound(b))[0]
   } else liveTrip = liveTrips[0]
 
@@ -148,7 +148,7 @@ async function pickBestTrip(data, db) {
 
   let originStopID = originStop.bays.filter(bay => bay.mode === 'metro train')[0].stopGTFSID
   let originTime = tripStartTime.clone()
-  let expressCount = undefined
+  let expressCount
 
   if (referenceTrip) {
     expressCount = 0

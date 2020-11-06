@@ -55,8 +55,8 @@ async function getDeparturesFromVNET(db) {
       runID: departure.runID,
       origin: departure.origin.slice(0, -16),
       destination: departure.destination.slice(0, -16),
-      departureTime: departure.originDepartureTime.format('HH:mm'),
-      destinationArrivalTime: departure.destinationArrivalTime.format('HH:mm'),
+      departureTime: utils.formatHHMM(departure.originDepartureTime),
+      destinationArrivalTime: utils.formatHHMM(departure.destinationArrivalTime),
       consist: departure.vehicle,
     }
 
