@@ -10,7 +10,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Ventura Specials',
-  track: ['V187', 'V287', 'V322', 'V784', 'V785', 'V786', 'V787', 'V789', 'V792', 'V795', 'V796', 'V1175', 'V1176', 'V1182', 'V1184', 'V1194', 'V1195', 'V1380', 'V1445'],
+  track: ['V187', 'V197', 'V198', 'V287', 'V322', 'V784', 'V785', 'V786', 'V787', 'V789', 'V792', 'V795', 'V796', 'V1175', 'V1176', 'V1182', 'V1184', 'V1194', 'V1195', 'V1380', 'V1445'],
   routes: [],
   type: 'exclude'
 }, {
@@ -27,6 +27,11 @@ module.exports = [{
   name: 'Transdev Minibuses',
   track: ['T119', 'T120', 'T129', 'T130', 'T131', 'T132', 'T133', 'T183'],
   routes: ['280', '282', '370'],
+  type: 'exclude'
+}, {
+  name: 'Transdev Specials',
+  track: ['T737', 'T738', 'T739'],
+  routes: [],
   type: 'exclude'
 }, {
   name: 'Cranbourne O405NH',
