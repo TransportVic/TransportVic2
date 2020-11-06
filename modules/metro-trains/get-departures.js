@@ -648,7 +648,7 @@ async function markRailBuses(departures, station, db) {
         runID: departure.runID
       }
 
-      await liveTimetables.deleteDocument(runIDQuery)
+      await liveTimetables.deleteDocuments(runIDQuery)
     }
   })
 
