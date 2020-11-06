@@ -21,7 +21,7 @@ async function inboundMessage(data) {
 
     if (textContent < 300) handleMessage(subject, textContent)
   } else {
-    global.loggers.spamMail.log(`Recieved Spam: ${text}`)
+    global.loggers.spamMail.log(`Recieved Spam From ${sender}: ${data.text.trim()}`)
   }
 }
 

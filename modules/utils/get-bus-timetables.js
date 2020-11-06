@@ -26,7 +26,7 @@ function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
       if (bay.screenServices.length === 0) return // Save bandwidth by not requesting dropoff only stops
       let bayGTFSModes = bay.screenServices.map(s => s.routeGTFSID.split('-')[0])
       let shouldRequest = bayGTFSModes.includes('8') // Only request night bus
-      
+
       if (bayGTFSModes.includes('4')) { // Only request metro if it has routes that are not know to have no tracking
         shouldRequest = bay.screenServices.some(s => !liveBusData.metroRoutesExcluded.includes(s.routeGTFSID))
       }
