@@ -139,6 +139,8 @@ module.exports = {
   },
   expandStopName: name => {
     name = name.replace(/St(\/|$)/g, 'Street$1')
+    .replace(/St S(\b)/, 'Street South$1')
+    .replace(/St N(\b)/, 'Street North$1')
     .replace(/(\w+) St(\b)/, '$1 Street$2')
     .replace(/St -/g, 'Street -')
     .replace(/Rd(\b)/g, 'Road$1')

@@ -8,6 +8,19 @@ const addStonyPointData = require('../../../modules/metro-trains/add-stony-point
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central'].map(e => e + ' Railway Station')
 
+function tripCloseness(trip, originStop, destinationStop, departureTimeMinutes, arrivalTimeMinutes) {
+  let tripOrigin = trip.stopTimings.find(stop => stop.stopName === originStop.stopName)
+  let tripDestination = trip.stopTimings.find(stop => stop.stopName === destinationStop.stopName)
+
+  let originMinutes = tripOrigin.departureTimeMinutes % 1440
+  let originDiff = Math.abs(originMinutes - departureTimeMinutes % 1440)
+
+  let destMinutes = tripDestination.arrivalTimeMinutes % 1440
+  let destDiff = Math.abs(destMinutes - arrivalTimeMinutes % 1440)
+
+  return originDiff + destDiff
+}
+
 async function pickBestTrip(data, db) {
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
   let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
@@ -102,8 +115,16 @@ async function pickBestTrip(data, db) {
     }]
   }
 
-  let liveTrip = await db.getCollection('live timetables').findDocument(liveQuery)
+  // NME, RMD shorts are always loaded live
+  let liveTrips = await db.getCollection('live timetables').findDocuments(liveQuery).toArray()
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(gtfsQuery)
+
+  let liveTrip
+
+  if (liveTrips.length > 1) {
+    function tripClosenessBound(trip) { return tripCloseness(trip, originStop, destinationStop, tripStartMinutes, tripEndMinutes) }
+    liveTrip = liveTrips.sort((a, b) => tripClosenessBound(a) - tripClosenessBound(b))[0]
+  } else liveTrip = liveTrips[0]
 
   let useLive = minutesToTripEnd >= -120 && minutesToTripStart < 240
 
