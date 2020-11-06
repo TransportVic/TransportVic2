@@ -4,6 +4,7 @@ const router = new express.Router()
 const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
+const resolveRouteGTFSID = require('../../../modules/resolve-gtfs-id')
 
 const liveBusData = require('../../../additional-data/live-bus-data')
 const busDestinations = require('../../../additional-data/bus-destinations')
@@ -95,16 +96,20 @@ async function pickBestTrip(data, db) {
   let isoDeparture = checkStopTime.toISOString()
   let mode = trueMode === 'bus' ? 2 : 1
   try {
-    let {departures, runs} = await ptvAPI(`/v3/departures/route_type/${mode}/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-3, 'minutes').startOf('minute').toISOString()}&max_results=5&expand=run&expand=stop`)
+    let {departures, routes, runs} = await ptvAPI(`/v3/departures/route_type/${mode}/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-3, 'minutes').startOf('minute').toISOString()}&max_results=5&expand=run&expand=stop&expand=route`)
 
-    let departure = departures.filter(departure => {
+    let departure = departures.find(departure => {
       let run = runs[departure.run_ref]
+      let route = routes[departure.route_id]
+      let routeGTFSID = resolveRouteGTFSID(route.route_gtfs_id)
+
       let destinationName = utils.getProperStopName(run.destination_name)
       let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc).toISOString()
 
       return scheduledDepartureTime === isoDeparture &&
-        destinationName === referenceTrip.destination
-    })[0]
+        destinationName === referenceTrip.destination &&
+        routeGTFSID === referenceTrip.routeGTFSID
+    })
 
     if (!departure) return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
     let ptvRunID = departure.run_ref
