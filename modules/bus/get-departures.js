@@ -36,23 +36,29 @@ function shouldGetNightbus(now) {
   return false
 }
 
-async function updateBusTrips(db, departures) {
+async function updateBusTrips(db, departures, currentStop) {
   let busTrips = db.getCollection('bus trips')
 
-  let date = utils.getYYYYMMDDNow()
   let timestamp = +new Date()
 
   let viableDepartures = departures.filter(d => d.vehicle)
 
   await async.forEach(viableDepartures, async departure => {
-    let {routeGTFSID, origin, destination, departureTime, destinationArrivalTime} = departure.trip
+    let { trip } = departure
+    let { routeGTFSID, origin, destination, departureTime, destinationArrivalTime } = departure.trip
     let smartrakID = parseInt(departure.vehicle.smartrakID)
     let busRego = departure.vehicle.name
+
+    let firstStop = trip.stopTimings[0]
+    let currentStop = trip.stopTimings.find(stop => currentStop.includes(stop.stopGTFSID))
+    let minutesDiff = currentStop.departureTimeMinutes - firstStop.departureTimeMinutes
+    let originDepartureTime = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
 
     let {routeNumber, vehicle} = departure
 
     let data = {
-      date, timestamp,
+      date: utils.getYYYYMMDD(originDepartureTime),
+      timestamp,
       routeGTFSID,
       smartrakID, routeNumber,
       origin, destination, departureTime, destinationArrivalTime
@@ -192,7 +198,7 @@ async function getDeparturesFromPTV(stop, db) {
     } else return false
   })
 
-  await updateBusTrips(db, filteredDepartures)
+  await updateBusTrips(db, filteredDepartures, allGTFSIDs)
 
   return filteredDepartures
 }
