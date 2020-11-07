@@ -33,7 +33,6 @@ async function requestTimings() {
     }
   })
 
-
   let bulkOperations = []
   Object.values(mergedAlerts).forEach(alert => {
     bulkOperations.push({

@@ -196,6 +196,11 @@ div.stopsColumn.expressColumn:last-child {
   margin-right: 50% !important;
 }
 
+div.stops div.stopsColumn.columns-7 div span {
+  margin-top: calc(var(--height) * 0.012) !important;
+  font-size: calc(var(--height) * 0.075) !important;
+}
+
 div.stopsColumn.columns-9, div.stopsColumn.columns-8 {
   min-width: unset !important;
 }

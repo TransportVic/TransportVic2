@@ -146,6 +146,7 @@ div.scheduled p:nth-child(1), div.actual > p:nth-child(1) {
 }
 
 div.scheduled p:nth-child(2) {
+  font-family: "NetworkSansBold";
   font-size: calc(var(--height) * 0.258);
   margin-left: calc(var(--width) * 0.004);
   margin-top: calc(var(--height) * -0.045);
@@ -160,6 +161,7 @@ div.actual div:nth-child(2) {
 }
 
 div.actual div:nth-child(2) > span:nth-child(1) {
+  font-family: "NetworkSansBold";
   font-size: calc(var(--height) * 0.258);
   margin-left: calc(var(--width) * 0.004);
 }
@@ -275,5 +277,4 @@ div.clock {
   align-items: center;
   justify-content: center;
   font-size: calc(var(--height) * 0.17);
-  font-family: "NetworkSansRegular";
 }
