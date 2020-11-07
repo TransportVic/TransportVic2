@@ -222,7 +222,7 @@ module.exports = class MainServer {
       'tracker/TramTracker': '/tram/tracker',
       'tracker/VLineTracker': '/vline/tracker',
       'tracker/MetroTracker': '/metro/tracker',
-      'tracker/metroNotify': '/metro/notify',
+      'tracker/MetroNotify': '/metro/notify',
 
       'route-data/RegionalBusRoute': {
         path: '/bus/route/regional',
