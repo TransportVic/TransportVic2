@@ -36,11 +36,19 @@ async function getDeparturesFromVNET(db) {
       dayOfWeek = await getDayOfWeek(previousDay)
     }
 
-    let nspTrip = await timetables.findDocument({
-      operationDays: dayOfWeek,
-      runID: departure.runID,
-      mode: 'regional train'
-    })
+    let nspMatchedMethod = 'unknown'
+    let nspTrip = await findTrip(timetables, dayOfWeek, departure.origin, departure.destination, departureTimeHHMM)
+
+    if (nspTrip) nspMatchedMethod = 'time'
+    else {
+      nspTrip = await timetables.findDocument({
+        operationDays: dayOfWeek,
+        runID: departure.runID,
+        mode: 'regional train'
+      })
+
+      if (nspTrip) nspMatchedMethod = 'runID'
+    }
 
     let trip = (await liveTimetables.findDocument({
       operationDays: departureDay,
@@ -64,6 +72,23 @@ async function getDeparturesFromVNET(db) {
 
     if (trip) {
       await handleTripShorted(trip, departure, nspTrip, liveTimetables, departureDay)
+    } else {
+      global.loggers.trackers.vline.err('Could not match trip', tripData)
+    }
+
+    if (trip && nspMatchedMethod === 'runID') {
+      trip.runID = departure.runID
+      trip.operationDays = departureDay
+
+      delete trip._id
+
+      await liveTimetables.replaceDocument({
+        operationDays: departureDay,
+        runID: departure.runID,
+        mode: 'regional train'
+      }, trip, {
+        upsert: true
+      })
     }
 
     allTrips[departure.runID] = tripData
