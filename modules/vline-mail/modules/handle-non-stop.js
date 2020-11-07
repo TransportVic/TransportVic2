@@ -13,10 +13,9 @@ async function setServiceNonStop(db, departureTime, origin, destination, skippin
   let liveTimetables = db.getCollection('live timetables')
 
   let { trip } = await matchTrip(db, departureTime, origin, destination)
+  let today = utils.getYYYYMMDDNow()
 
   if (trip) {
-    let today = utils.getYYYYMMDDNow()
-
     trip.type = 'pattern-altered'
 
     trip.stopTimings = trip.stopTimings.map(stop => {

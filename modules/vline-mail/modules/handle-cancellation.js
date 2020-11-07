@@ -12,10 +12,9 @@ async function setServiceAsCancelled(db, departureTime, origin, destination, isC
   let liveTimetables = db.getCollection('live timetables')
 
   let { trip } = await matchTrip(db, departureTime, origin, destination)
+  let today = utils.getYYYYMMDDNow()
 
   if (trip) {
-    let today = utils.getYYYYMMDDNow()
-
     if (isCoach) {
       trip.type = 'replacement coach'
       trip.isRailReplacementBus = true
