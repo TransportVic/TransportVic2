@@ -17,9 +17,8 @@ async function inboundMessage(data) {
     let {subject, html} = data
     let $ = cheerio.load(html)
     let textContent = $('center').text()
-    textContent = textContent
 
-    if (textContent < 300) handleMessage(subject, textContent)
+    if (textContent.length < 300) handleMessage(subject, textContent)
   } else {
     global.loggers.spamMail.log(`Recieved Spam From ${sender}: ${data.text.trim()}`)
   }
