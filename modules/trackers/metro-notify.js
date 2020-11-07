@@ -12,22 +12,30 @@ async function requestTimings() {
 
   let data = JSON.parse(await utils.request(urls.metroNotify))
 
-  let alerts = Object.values(data)
+  let mergedAlerts = {}
+
+  Object.values(data)
   .filter(routeData => routeData.line_name && routeData.alerts && routeData.alerts instanceof Array)
   .map(routeData => routeData.alerts)
   .reduce((a, e) => a.concat(e), [])
-  .map(alert => ({
-    alertID: alert.alert_id,
-    routeName: data[alert.line_id].line_name,
-    fromDate: parseInt(alert.from_date),
-    toDate: parseInt(alert.to_date),
-    type: alert.alert_type,
-    text: alert.alert_text.replace(/Plan your journey.*/, '').replace(/Visit .*? web.*/g, '').trim()
-  }))
+  .forEach(alert => {
+    if (!mergedAlerts[alert.alert_id]) {
+      mergedAlerts[alert.alert_id] = {
+        alertID: alert.alert_id,
+        routeName: [data[alert.line_id].line_name],
+        fromDate: parseInt(alert.from_date),
+        toDate: parseInt(alert.to_date),
+        type: alert.alert_type,
+        text: alert.alert_text.replace(/Plan your journey.*/, '').replace(/Visit .*? web.*/g, '').trim()
+      }
+    } else {
+      mergedAlerts[alert.alert_id].routeName.push(data[alert.line_id].line_name)
+    }
+  })
 
 
   let bulkOperations = []
-  alerts.forEach(alert => {
+  Object.values(mergedAlerts).forEach(alert => {
     bulkOperations.push({
       replaceOne: {
         filter: { alertID: alert.alertID },

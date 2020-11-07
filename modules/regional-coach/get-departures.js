@@ -5,6 +5,7 @@ const ptvAPI = require('../../ptv-api')
 const destinationOverrides = require('../../additional-data/coach-stops')
 const busBays = require('../../additional-data/bus-bays')
 const southernCrossBays = require('../../additional-data/southern-cross-bays')
+const { getDayOfWeek } = require('../../public-holidays')
 
 let vlineTrainRoutes = [
   '1-Ech',
@@ -226,6 +227,13 @@ async function getDepartures(stop, db) {
         if (departure.isRailReplacementBus === null) {
           let {origin, destination, departureTime} = departure.trip
 
+          let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
+          let minutesDiff = currentStop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
+
+          let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
+          if (utils.getMinutesPastMidnight(tripStart) < 180) tripStart.add(-1, 'day')
+          let operationDay = await getDayOfWeek(tripStart)
+
           if (origin === 'Southern Cross Coach Terminal/Spencer Street') {
             origin = 'Southern Cross Railway Station'
           }
@@ -235,10 +243,12 @@ async function getDepartures(stop, db) {
 
           let nspDeparture = await timetables.findDocument({
             mode: 'regional train',
+            operationDays: operationDay,
             origin,
             'stopTimings.stopName': destination,
             departureTime
           })
+
           departure.isRailReplacementBus = !!nspDeparture
           if (nspDeparture) {
             departure.shortRouteName = nspDeparture.routeName
