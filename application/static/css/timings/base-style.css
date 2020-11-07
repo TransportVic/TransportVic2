@@ -21,6 +21,8 @@
 
 #modeSwitch .modeSwitchType {
   color: #f9f9f9;
+  font-size: calc(0.8vw + 1vh);
+  line-height: calc(1.2vw + 1.2vh);
 }
 
 .modeSwitchType.inactive {

@@ -237,6 +237,9 @@ router.get('/bot', async (req, res) => {
         trip.typeCode = typeCode[type]
       }
 
+      let metroType = metroTypes.find(car => trip.consist.includes(car.leadingCar))
+      if (metroType) trip.vehicleType = metroType.type
+
       return trip
     }),
     extraData
