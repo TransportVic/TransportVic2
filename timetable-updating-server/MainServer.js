@@ -73,6 +73,14 @@ module.exports = class MainServer {
       res.json(global.gtfsUpdaterLog)
     })
 
+    app.get('/home-banner', (req, res) => {
+      res.json({
+        link: '#', 
+        alt: 'Maintenance',
+        text: 'Site is currently under maintenance...'
+      })
+    })
+
     app.use((req, res) => {
       res.status(503).render('errors/updating-in-progress')
     })

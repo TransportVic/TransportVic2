@@ -48,14 +48,16 @@ function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
   return gtfsIDs
 }
 
-async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, destination, mode, day, routeGTFSID, excludedTripIDs, variance=0) {
+async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, routeGTFSID, excludedTripIDs, variance=0) {
   let trip
-  let today = utils.now()
   let query
 
+  let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departureTime)
+
   for (let i = 0; i <= 1; i++) {
-    let tripDay = today.clone().add(-i, 'days')
-    let departureTimeMinutes = scheduledDepartureTimeMinutes % 1440 + 1440 * i
+    let tripDay = departureTime.clone().add(-i, 'days')
+    let departureTimeMinutes = scheduledDepartureTimeMinutes + 1440 * i
+
     if (variance) {
       departureTimeMinutes = {
         $gte: departureTimeMinutes - variance,
@@ -64,7 +66,7 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
     }
 
     query = {
-      operationDays: day || utils.getYYYYMMDD(tripDay),
+      operationDays: utils.getYYYYMMDD(tripDay),
       mode,
       stopTimings: {
         $elemMatch: {
@@ -91,10 +93,7 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
 
     // for the coaches
     let timetable = await db.getCollection('live timetables').findDocument(query)
-
-    if (!timetable) {
-      timetable = await db.getCollection('gtfs timetables').findDocument(query)
-    }
+      || await db.getCollection('gtfs timetables').findDocument(query)
 
     if (timetable) {
       trip = timetable

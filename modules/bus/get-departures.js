@@ -117,21 +117,13 @@ async function getDeparturesFromPTV(stop, db) {
 
       if (actualDepartureTime.diff(now, 'minutes') > 90) return
 
-      let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
-
       let destination = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
-
-      let day = utils.getYYYYMMDD(scheduledDepartureTime)
-      if (isNightBus && (scheduledDepartureTimeMinutes % 1440) < 180)
-        day = utils.getYYYYMMDD(scheduledDepartureTime.clone().add(1, 'day'))
 
       let routeGTFSID = resolveRouteGTFSID(route.route_gtfs_id)
       if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
 
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'bus', day, routeGTFSID)
-      if (!trip) {
-        trip = await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
-      }
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSID)
+        || await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
 
       let hasVehicleData = run.vehicle_descriptor
       let vehicleDescriptor = hasVehicleData ? run.vehicle_descriptor : {}

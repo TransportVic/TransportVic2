@@ -74,7 +74,7 @@ async function getDeparturesFromPTV(stop, db) {
 
       if (!vlineTrainRoutes.includes(trainRouteGTFSID)) isRailReplacementBus = false
 
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'regional coach', null, coachRouteGTFSID, tripIDsSeen)
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, departureTime, destination, 'regional coach', coachRouteGTFSID, tripIDsSeen)
 
       if (!trip && (isRailReplacementBus !== false)) {
         let stopGTFSIDs = {
