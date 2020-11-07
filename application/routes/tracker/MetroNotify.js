@@ -20,17 +20,13 @@ router.get('/bot', async (req, res) => {
   let trips = await metroNotify.findDocuments({
     $or: [{
       fromDate: {
-        $gte: startOfDay
-      },
-      toDate: {
+        $gte: startOfDay,
         $lte: endOfDay
-      }
-    }, {
-      fromDate: {
-        $lte: startOfDay
       },
+    }, {
       toDate: {
-        $gte: startOfDay
+        $gte: startOfDay,
+        $lte: endOfDay
       }
     }, {
       fromDate: {

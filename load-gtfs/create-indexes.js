@@ -331,6 +331,11 @@ database.connect({
     routeName: 1
   }, { name: 'date index' })
 
+  await metroNotify.createIndex({
+    toDate: 1,
+    fromDate: 1
+  }, { name: 'date index 2' })
+
   console.log('Created Metro Notify index')
 
   updateStats('create-indexes', 51)
