@@ -491,7 +491,13 @@ module.exports = {
     if (!caches[lock]) caches[lock] = new TimedCache(ttl)
 
     if (locks[lock][key]) {
-      return await new Promise(resolve => locks[lock][key].on('loaded', resolve))
+      return await new Promise((resolve, reject) => {
+        locks[lock][key].on('loaded', resolve)
+        locks[lock][key].on('fail', e => {
+          reject(e)
+          console.log(e)
+        })
+      })
     }
     if (caches[lock].get(key)) {
       return caches[lock].get(key)
@@ -506,6 +512,9 @@ module.exports = {
       data = await noMatch()
     } catch (e) {
       global.loggers.general.err('Getting data for', lock, 'for key', key, 'failed', e)
+      locks[lock][key].emit('fail', e)
+      delete locks[lock][key]
+      throw e
     }
 
     caches[lock].put(key, data)

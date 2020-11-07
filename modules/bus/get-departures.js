@@ -335,8 +335,7 @@ async function getDepartures(stop, db) {
       })
     }, 1000 * 30)
   } catch (e) {
-    global.loggers.general.err(e)
-    return null
+    throw e
   }
 }
 

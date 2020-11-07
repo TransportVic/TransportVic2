@@ -179,9 +179,15 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
       sortNumber = routeNumber.slice(2)
     }
 
+    let firstStop = trip.stopTimings[0]
+    let currentStop = trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))
+    let minutesDiff = currentStop.departureTimeMinutes - firstStop.departureTimeMinutes
+    let originDepartureTime = departureTime.clone().add(-minutesDiff, 'minutes')
+
     return {
       trip,
       scheduledDepartureTime: departureTime,
+      originDepartureTime,
       estimatedDepartureTime: null,
       actualDepartureTime: departureTime,
       scheduledDepartureTimeMinutes: stopData.departureTimeMinutes,
