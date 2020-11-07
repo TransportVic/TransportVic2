@@ -24,10 +24,28 @@ database.connect({}, async () => {
   let tramServices = (await routes.distinct('routeNumber', { mode: 'tram' })).map(e => e.match(/(\d+)/)[1]).concat('3a')
   let count = 0
 
-  let tramTrackerIDs = {}
-  let stopDirections = {}
-  let stopNames = {}
-  let stopNumbers = {}
+  let tramTrackerIDs = {
+    "3813": "2013",
+    "3913": "2013"
+  }
+  let stopDirections = {
+    "3813": [{
+      service: "35",
+      gtfsDirection: "1"
+    }],
+    "3913": [{
+      service: "35",
+      gtfsDirection: "0"
+    }]
+  }
+  let stopNames = {
+    "3813": ["Spring Street"],
+    "3913": ["Spring Street"]
+  }
+  let stopNumbers = {
+    "3813": ["0"],
+    "3913": ["0"]
+  }
 
   await async.forEachSeries(tramServices, async service => {
     if (service === '35') return
