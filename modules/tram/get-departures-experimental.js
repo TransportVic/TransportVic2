@@ -154,7 +154,7 @@ async function getDeparturesFromYT(stop, db) {
 
       trip = await trimTripIfNeeded(db, tramDeparture, trip, stopGTFSID, day)
 
-      if (trip.destination === bay.fullStopName) return
+      if (trip.destination === bay.fullStopName && routeGTFSID !== '3-35') return
 
       let loopDirection
       if (routeGTFSID === '3-35') {

@@ -88,5 +88,8 @@ module.exports = [
   'essendon/essendon-north-primary-school-keilor-road',
   'elwood/st-kilda-primary-school-brighton-road',
   'richmond/howard-street-church-street',
-  'burwood/deakin-university'
+  'burwood/deakin-university',
+  'melbourne-city/melbourne-aquarium-flinders-street',
+  'docklands/etihad-stadium-la-trobe-street',
+  'melbourne-city/exhibition-street-la-trobe-street'
 ]
