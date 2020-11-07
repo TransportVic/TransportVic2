@@ -22,7 +22,7 @@ async function requestTimings() {
     fromDate: parseInt(alert.from_date),
     toDate: parseInt(alert.to_date),
     type: alert.alert_type,
-    text: alert.alert_text.replace(/Plan your journey.*/m, '').trim()
+    text: alert.alert_text.replace(/Plan your journey.*/, '').replace(/Visit .*? web.*/g, '').trim()
   }))
 
 
