@@ -18,8 +18,8 @@ async function setServiceAsCancelled(db, departureTime, origin, destination, isC
     //   trip.type = 'replacement coach'
     //   trip.isRailReplacementBus = true
     // } else {
-    //   trip.type = 'cancellation'
-    //   trip.cancelled = true
+      trip.type = 'cancellation'
+      trip.cancelled = true
     // }
 
     global.loggers.mail.info(`Marking ${departureTime} ${origin} - ${destination} train as cancelled.${isCoach ? ' Replacement coaches provided' : ''}`)
