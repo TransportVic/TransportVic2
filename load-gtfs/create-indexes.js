@@ -28,6 +28,7 @@ database.connect({
   let smartrakIDs = await getCollection('smartrak ids')
   let busTrips = await getCollection('bus trips')
   let tbmTrips = await getCollection('tbm trips')
+  let metroNotify = await getCollection('metro notify')
 
   await stops.createIndex({
     stopName: 1,
@@ -320,6 +321,18 @@ database.connect({
 
   console.log('Created tourbusminder index')
 
-  updateStats('create-indexes', 42)
+  await metroNotify.createIndex({
+    alertID: 1
+  }, { name: 'alertid index', unique: true })
+
+  await metroNotify.createIndex({
+    fromDate: 1,
+    toDate: 1,
+    routeName: 1
+  }, { name: 'date index' })
+
+  console.log('Created Metro Notify index')
+
+  updateStats('create-indexes', 51)
   process.exit()
 })

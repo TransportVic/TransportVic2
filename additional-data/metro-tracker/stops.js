@@ -62,5 +62,6 @@ module.exports = {
   'Essendon': 1064,
   'Reservoir': 1161,
   'Epping': 1063,
-  'Clifton Hill': 1041
+  'Clifton Hill': 1041,
+  'Boronia': 1025
 }

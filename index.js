@@ -23,6 +23,7 @@ global.loggers = {
     vline: new Logger(path.join(__dirname, 'logs', 'trackers', 'vline'), 'VLINE'),
     vlineR: new Logger(path.join(__dirname, 'logs', 'trackers', 'vline-realtime'), 'VLINE-R'),
     metro: new Logger(path.join(__dirname, 'logs', 'trackers', 'metro'), 'METRO'),
+    metroNotify: new Logger(path.join(__dirname, 'logs', 'trackers', 'metro'), 'METRO-NOTIFY'),
     xpt: new Logger(path.join(__dirname, 'logs', 'trackers', 'xpt'), 'XPT'),
   },
   mockups: new Logger(path.join(__dirname, 'logs', 'mockups'), 'MOCKUPS'),
