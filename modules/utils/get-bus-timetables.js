@@ -27,8 +27,8 @@ function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
       let bayGTFSModes = bay.screenServices.map(s => s.routeGTFSID.split('-')[0])
       let shouldRequest = bayGTFSModes.includes('8') // Only request night bus
 
-      if (bayGTFSModes.includes('4')) { // Only request metro if it has routes that are not know to have no tracking
-        shouldRequest = bay.screenServices.some(s => !liveBusData.metroRoutesExcluded.includes(s.routeGTFSID))
+      if (!shouldRequest && bayGTFSModes.includes('4')) { // Only request metro if it has routes that are not know to have no tracking
+        shouldRequest = bay.screenServices.some(service => !liveBusData.metroRoutesExcluded.includes(service.routeGTFSID))
       }
       if (!shouldRequest && bayGTFSModes.includes('6')) { // Further refine - only load known operators/routes with live data
         shouldRequest = bay.screenServices.some(service => liveBusData.regionalRoutes.includes(service.routeGTFSID))

@@ -7,6 +7,7 @@ const busBays = require('../../additional-data/bus-bays')
 const determineBusRouteNumber = require('./determine-bus-route-number')
 const resolveRouteGTFSID = require('../resolve-gtfs-id')
 const departureUtils = require('../utils/get-bus-timetables')
+const liveBusData = require('../../additional-data/live-bus-data')
 
 async function getStoppingPatternWithCache(db, busDeparture, destination, isNightBus) {
   let id = busDeparture.scheduled_departure_utc + destination
@@ -36,7 +37,7 @@ function shouldGetNightbus(now) {
   return false
 }
 
-async function updateBusTrips(db, departures, currentStop) {
+async function updateBusTrips(db, departures) {
   let busTrips = db.getCollection('bus trips')
 
   let timestamp = +new Date()
@@ -44,20 +45,15 @@ async function updateBusTrips(db, departures, currentStop) {
   let viableDepartures = departures.filter(d => d.vehicle)
 
   await async.forEach(viableDepartures, async departure => {
-    let { trip } = departure
     let { routeGTFSID, origin, destination, departureTime, destinationArrivalTime } = departure.trip
     let smartrakID = parseInt(departure.vehicle.smartrakID)
     let busRego = departure.vehicle.name
 
-    let firstStop = trip.stopTimings[0]
-    let currentStop = trip.stopTimings.find(stop => currentStop.includes(stop.stopGTFSID))
-    let minutesDiff = currentStop.departureTimeMinutes - firstStop.departureTimeMinutes
-    let originDepartureTime = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
-
     let {routeNumber, vehicle} = departure
 
+    let date = utils.getYYYYMMDD(departure.originDepartureTime)
     let data = {
-      date: utils.getYYYYMMDD(originDepartureTime),
+      date,
       timestamp,
       routeGTFSID,
       smartrakID, routeNumber,
@@ -165,8 +161,14 @@ async function getDeparturesFromPTV(stop, db) {
       if (busRoute.flags)
         loopDirection = busRoute.flags[trip.gtfsDirection]
 
+      let firstStop = trip.stopTimings[0]
+      let currentStop = trip.stopTimings.find(stop => allGTFSIDs.includes(stop.stopGTFSID))
+      let minutesDiff = currentStop.departureTimeMinutes - firstStop.departureTimeMinutes
+      let originDepartureTime = scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
+
       mappedDepartures.push({
         trip,
+        originDepartureTime,
         scheduledDepartureTime,
         estimatedDepartureTime,
         actualDepartureTime,
@@ -198,7 +200,7 @@ async function getDeparturesFromPTV(stop, db) {
     } else return false
   })
 
-  await updateBusTrips(db, filteredDepartures, allGTFSIDs)
+  await updateBusTrips(db, filteredDepartures)
 
   return filteredDepartures
 }
@@ -248,8 +250,42 @@ async function getDepartures(stop, db) {
 
       let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
-      return departures.map(departure => {
+      let busTrips = db.getCollection('bus trips')
+      let smartrakIDs = db.getCollection('smartrak ids')
+
+      return await async.map(departures, async departure => {
         let {trip} = departure
+
+        if (!departure.vehicle) {
+          let trip = departure.trip
+          let { routeGTFSID } = trip
+          let shouldCheck = routeGTFSID.startsWith('8-')
+            || (routeGTFSID.startsWith('4-') && !liveBusData.metroRoutesExcluded.includes(routeGTFSID))
+            || liveBusData.regionalRoutes.includes(routeGTFSID)
+
+          if (shouldCheck) {
+            let query = {
+              date: utils.getYYYYMMDD(departure.originDepartureTime),
+              routeGTFSID,
+              origin: trip.origin,
+              destination: trip.destination,
+              departureTime: trip.departureTime,
+              destinationArrivalTime: trip.destinationArrivalTime
+            }
+
+            let vehicle = await busTrips.findDocument(query)
+
+            if (vehicle) {
+              let { smartrakID } = vehicle
+              let smartrak = await smartrakIDs.findDocument({ smartrakID })
+              departure.vehicle = {
+                name: smartrak ? smartrak.fleetNumber : smartrakID,
+                smartrakID,
+                attributes: null
+              }
+            }
+          }
+        }
 
         if (departure.routeNumber) {
           departure.routeNumber = determineBusRouteNumber(departure.trip)
