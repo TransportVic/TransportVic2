@@ -11,17 +11,16 @@ async function discordUpdate(text) {
 async function setServiceAsCancelled(db, departureTime, origin, destination, isCoach) {
   let liveTimetables = db.getCollection('live timetables')
 
-  let { trip } = await matchTrip(db, departureTime, origin, destination)
-  let today = utils.getYYYYMMDDNow()
+  let { trip, today } = await matchTrip(db, departureTime, origin, destination)
 
   if (trip) {
-    if (isCoach) {
-      trip.type = 'replacement coach'
-      trip.isRailReplacementBus = true
-    } else {
-      trip.type = 'cancellation'
-      trip.cancelled = true
-    }
+    // if (isCoach) {
+    //   trip.type = 'replacement coach'
+    //   trip.isRailReplacementBus = true
+    // } else {
+    //   trip.type = 'cancellation'
+    //   trip.cancelled = true
+    // }
 
     global.loggers.mail.info(`Marking ${departureTime} ${origin} - ${destination} train as cancelled.${isCoach ? ' Replacement coaches provided' : ''}`)
     await discordUpdate(`The ${departureTime} ${origin} - ${destination} service has been cancelled today.`)

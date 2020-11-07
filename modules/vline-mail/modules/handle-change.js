@@ -16,8 +16,7 @@ let originateTypes = ['originate', 'originating', 'begin', 'beginning']
 async function setServiceAsChanged(db, departureTime, origin, destination, modifications) {
   let liveTimetables = db.getCollection('live timetables')
 
-  let { trip, nspTrip } = await matchTrip(db, departureTime, origin, destination)
-  let today = utils.getYYYYMMDDNow()
+  let { trip, nspTrip, today } = await matchTrip(db, departureTime, origin, destination)
 
   if (trip) {
     let newOrigin = origin, newDestination = destination

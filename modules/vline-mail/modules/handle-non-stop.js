@@ -12,8 +12,7 @@ async function discordUpdate(text) {
 async function setServiceNonStop(db, departureTime, origin, destination, skipping) {
   let liveTimetables = db.getCollection('live timetables')
 
-  let { trip } = await matchTrip(db, departureTime, origin, destination)
-  let today = utils.getYYYYMMDDNow()
+  let { trip, today } = await matchTrip(db, departureTime, origin, destination)
 
   if (trip) {
     trip.type = 'pattern-altered'

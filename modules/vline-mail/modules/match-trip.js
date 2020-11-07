@@ -4,7 +4,16 @@ const { getDayOfWeek } = require('../../../public-holidays')
 
 module.exports = async function (db, departureTime, origin, destination) {
   let now = utils.now()
-  if (now.get('hours') <= 2) now.add(-1, 'day')
+  let hoursNow = now.get('hours')
+  let departureHour = parseInt(departureTime.slice(0, 2))
+  if (hoursNow <= 2) {
+    if ((hoursNow < 3 || hoursNow > 21) && departureHour === 12) {
+      departureTime = `00:${departureTime.slice(3)}`
+      departureHour = 0
+    }
+
+    if (departureHour <= 2) now.add(-1, 'day')
+  }
   let today = utils.getYYYYMMDD(now)
   let operationDay = await getDayOfWeek(now)
 
@@ -38,5 +47,5 @@ module.exports = async function (db, departureTime, origin, destination) {
     delete trip._id
   }
 
-  return { trip, nspTrip }
+  return { trip, nspTrip, today }
 }
