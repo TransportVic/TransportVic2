@@ -6,6 +6,7 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const findTrip = require('../vline/find-trip')
 const getVNETDepartures = require('../vline/get-vnet-departures')
 const schedule = require('./scheduler')
+const vlineLock = require('../vline/vline-lock-wrap')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
@@ -139,58 +140,65 @@ async function fetchData() {
     await utils.sleep(2500)
   })
 
-  await async.forEach(Object.keys(combinedTripData), async runID => {
-    let stopDelays = combinedTripData[runID]
-    let trip = trips[runID]
+  try {
+    vlineLock.createLock()
 
-    let tripStops = trip.stopTimings.map(stop => stop.stopName)
-    let orderedStops = Object.keys(stopDelays).map(stop => [stop, tripStops.indexOf(stop)])
-      .sort((a, b) => a[1] - b[1]).map(stop => stop[0])
+    await async.forEach(Object.keys(combinedTripData), async runID => {
+      let stopDelays = combinedTripData[runID]
+      let trip = trips[runID]
 
-    let tripDepartureTime = tripDepartureTimes[runID]
+      let tripStops = trip.stopTimings.map(stop => stop.stopName)
+      let orderedStops = Object.keys(stopDelays).map(stop => [stop, tripStops.indexOf(stop)])
+        .sort((a, b) => a[1] - b[1]).map(stop => stop[0])
 
-    orderedStops.forEach((stop, i) => {
-      if (i === 0) return
-      let previous = orderedStops[i - 1]
+      let tripDepartureTime = tripDepartureTimes[runID]
 
-      let currentDelay = stopDelays[stop]
-      let previousDelay = stopDelays[previous]
+      orderedStops.forEach((stop, i) => {
+        if (i === 0) return
+        let previous = orderedStops[i - 1]
 
-      let delayDifference = currentDelay - previousDelay
+        let currentDelay = stopDelays[stop]
+        let previousDelay = stopDelays[previous]
 
-      let previousIndex = tripStops.indexOf(previous)
-      let currentIndex = tripStops.indexOf(stop)
-      let relevantStops = trip.stopTimings.slice(previousIndex, currentIndex + 1)
+        let delayDifference = currentDelay - previousDelay
 
-      let previousMinutes = trip.stopTimings[previousIndex].departureTimeMinutes
-      let currentStopData = trip.stopTimings[currentIndex]
-      let currentMinutes = (currentStopData.departureTimeMinutes || currentStopData.arrivalTimeMinutes)
+        let previousIndex = tripStops.indexOf(previous)
+        let currentIndex = tripStops.indexOf(stop)
+        let relevantStops = trip.stopTimings.slice(previousIndex, currentIndex + 1)
 
-      let minutesDifference = currentMinutes - previousMinutes
+        let previousMinutes = trip.stopTimings[previousIndex].departureTimeMinutes
+        let currentStopData = trip.stopTimings[currentIndex]
+        let currentMinutes = (currentStopData.departureTimeMinutes || currentStopData.arrivalTimeMinutes)
 
-      relevantStops.forEach(stop => {
-        let stopMinutes = (stop.departureTimeMinutes || stop.arrivalTimeMinutes)
-        let minutesFromPrevious = stopMinutes - previousMinutes
-        let minutesPercentage = minutesFromPrevious / minutesDifference
-        let delayPercentage = minutesPercentage * delayDifference
+        let minutesDifference = currentMinutes - previousMinutes
 
-        let minutesFromOrigin = stopMinutes - tripDepartureTime.minutes
-        let scheduledDepartureTime = tripDepartureTime.moment.clone().add(minutesFromOrigin, 'minutes')
-        let estimatedDepartureTime = scheduledDepartureTime.clone().add(previousDelay + delayPercentage, 'milliseconds')
+        relevantStops.forEach(stop => {
+          let stopMinutes = (stop.departureTimeMinutes || stop.arrivalTimeMinutes)
+          let minutesFromPrevious = stopMinutes - previousMinutes
+          let minutesPercentage = minutesFromPrevious / minutesDifference
+          let delayPercentage = minutesPercentage * delayDifference
 
-        stop.estimatedDepartureTime = estimatedDepartureTime.toISOString()
-        stop.actualDepartureTimeMS = +estimatedDepartureTime
+          let minutesFromOrigin = stopMinutes - tripDepartureTime.minutes
+          let scheduledDepartureTime = tripDepartureTime.moment.clone().add(minutesFromOrigin, 'minutes')
+          let estimatedDepartureTime = scheduledDepartureTime.clone().add(previousDelay + delayPercentage, 'milliseconds')
+
+          stop.estimatedDepartureTime = estimatedDepartureTime.toISOString()
+          stop.actualDepartureTimeMS = +estimatedDepartureTime
+        })
+      })
+
+      await liveTimetables.replaceDocument({
+        operationDays: trip.operationDays,
+        runID: trip.runID,
+        mode: 'regional train'
+      }, trip, {
+        upsert: true
       })
     })
-
-    await liveTimetables.replaceDocument({
-      operationDays: trip.operationDays,
-      runID: trip.runID,
-      mode: 'regional train'
-    }, trip, {
-      upsert: true
-    })
-  })
+  } catch (e) {
+  } finally {
+    vlineLock.releaseLock()
+  }
 }
 
 async function requestTimings() {

@@ -1,8 +1,11 @@
 const utils = require('../../../utils')
 const findTrip = require('../../vline/find-trip')
 const { getDayOfWeek } = require('../../../public-holidays')
+const vlineLock = require('../../vline/vline-lock-wrap')
 
 module.exports = async function (db, departureTime, origin, destination) {
+  await vlineLock.awaitLock()
+
   let now = utils.now()
   let hoursNow = now.get('hours')
   let departureHour = parseInt(departureTime.slice(0, 2))
