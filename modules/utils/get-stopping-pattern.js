@@ -234,6 +234,9 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     if (['Belgrave', 'Lilydale', 'Alamein', 'Glen Waverley', 'Hurstbridge', 'Mernda'].includes(routeName) && vehicle) {
       vehicle = vehicle.replace('Comeng', 'Xtrapolis')
     }
+    if (['Cranbourne', 'Pakenham', 'Sandringham'].includes(routeName) && vehicle) {
+      vehicle = vehicle.replace('Xtrapolis', 'Comeng') // Xtrap sometimes show on CBE PKM SHM so correct to comeng
+    }
     runID = utils.getRunID(ptvRunID)
 
     let metroTrips = db.getCollection('metro trips')
