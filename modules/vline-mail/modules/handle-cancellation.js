@@ -22,8 +22,8 @@ async function setServiceAsCancelled(db, departureTime, origin, destination, isC
       trip.cancelled = true
     // }
 
-    global.loggers.mail.info(`Marking ${departureTime} ${origin} - ${destination} train as cancelled.${isCoach ? ' Replacement coaches provided' : ''}`)
-    await discordUpdate(`The ${departureTime} ${origin} - ${destination} service has been cancelled today.`)
+    global.loggers.mail.info(`Marking ${trip.departureTime} ${origin} - ${destination} train as cancelled.${isCoach ? ' Replacement coaches provided' : ''}`)
+    await discordUpdate(`The ${trip.departureTime} ${origin} - ${destination} service has been cancelled today.`)
 
     trip.operationDays = today
 

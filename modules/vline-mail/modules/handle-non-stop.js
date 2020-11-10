@@ -22,8 +22,8 @@ async function setServiceNonStop(db, departureTime, origin, destination, skippin
       return stop
     })
 
-    global.loggers.mail.info(`Marking ${departureTime} ${origin} - ${destination} train as not stopping at ${skipping}`)
-    await discordUpdate(`The ${departureTime} ${origin} - ${destination} service will not stop at ${skipping} today.`)
+    global.loggers.mail.info(`Marking ${trip.departureTime} ${origin} - ${destination} train as not stopping at ${skipping}`)
+    await discordUpdate(`The ${trip.departureTime} ${origin} - ${destination} service will not stop at ${skipping} today.`)
 
     trip.operationDays = today
 

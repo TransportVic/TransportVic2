@@ -24,8 +24,8 @@ async function setServiceAsReinstated(db, service) {
   let trip = await findTrip(liveTimetables, today, origin, destination, departureTime)
 
   if (trip) {
-    global.loggers.mail.info(`Marking ${departureTime} ${origin} - ${destination} train as reinstated.`)
-    await discordUpdate(`The ${departureTime} ${origin} - ${destination} service as been reinstated today.`)
+    global.loggers.mail.info(`Marking ${trip.departureTime} ${origin} - ${destination} train as reinstated.`)
+    await discordUpdate(`The ${trip.departureTime} ${origin} - ${destination} service as been reinstated today.`)
 
     await liveTimetables.deleteDocument({ _id: trip._id })
   } else {

@@ -25,13 +25,13 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
       else if (modification.type === 'terminate') newDestination = modification.changePoint + ' Railway Station'
     })
 
-    global.loggers.mail.info(`Marking ${departureTime} ${origin} - ${destination} train as changed: Now ${modifications.map(m => `${m.type}s at ${m.changePoint}`).join(' & ')}`)
+    global.loggers.mail.info(`Marking ${trip.departureTime} ${origin} - ${destination} train as changed: Now ${modifications.map(m => `${m.type}s at ${m.changePoint}`).join(' & ')}`)
 
     if (modifications.length === 1) {
       let firstMod = modifications[0]
-      await discordUpdate(`The ${departureTime} ${origin} - ${destination} service will ${firstMod.type} ${firstMod.type === 'originate' ? 'from' : 'at'} ${firstMod.changePoint} today.`)
+      await discordUpdate(`The ${trip.departureTime} ${origin} - ${destination} service will ${firstMod.type} ${firstMod.type === 'originate' ? 'from' : 'at'} ${firstMod.changePoint} today.`)
     } else {
-      await discordUpdate(`The ${departureTime} ${origin} - ${destination} service has been altered: Now ${modifications.map(m => `${m.type}s at ${m.changePoint}`).join(', ')}`)
+      await discordUpdate(`The ${trip.departureTime} ${origin} - ${destination} service has been altered: Now ${modifications.map(m => `${m.type}s at ${m.changePoint}`).join(', ')}`)
     }
 
     handleTripShorted(trip, {
