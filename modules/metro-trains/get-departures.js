@@ -61,8 +61,8 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip) {
   return cityLoopConfig
 }
 
-function mapSuspension(suspension, routeName) {
-  let stationsAffected = suspension.description.replace(/\u00A0/g, ' ').match(/between ([ \w]+) and ([ \w]+) (?:stations|due)/i)
+function mapSuspension(suspensionText, routeName) {
+  let stationsAffected = suspensionText.replace(/\u00A0/g, ' ').match(/between ([ \w]+) and ([ \w]+) (?:stations|due)/i)
 
   if (!stationsAffected) return
   let startStation = stationsAffected[1].trim()
@@ -300,6 +300,7 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
 }
 
 async function getDeparturesFromPTV(station, db, departuresCount, platform) {
+  let metroNotify = db.getCollection('metro notify')
   let minutesPastMidnight = utils.getMinutesPastMidnightNow()
   let transformedDepartures = []
 
@@ -310,11 +311,19 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   let stationName = station.stopName.slice(0, -16)
   let {departures, runs, routes, disruptions} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=run&expand=route&expand=disruption&expand=VehicleDescriptor`)
 
+  let suspensions = await metroNotify.findDocuments({
+    toDate: {
+      $lte: +new Date()
+    },
+    type: 'suspended'
+  }).toArray()
+
   let suspensionMap = {}
-  Object.values(disruptions).filter(disruption => {
-    return disruption.disruption_type.toLowerCase().includes('suspend')
-  }).forEach(suspension => {
-    suspensionMap[suspension.disruption_id] = mapSuspension(suspension, suspension.routes[0].route_name)
+  suspensions.forEach(suspension => {
+    suspension.routeName.forEach(route => {
+      if (!suspensionMap[route]) suspensionMap[route] = []
+      suspensionMap[route].push(mapSuspension(suspension.text, route))
+    })
   })
 
   function matchService(disruption) {
@@ -413,7 +422,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     let routeID = departure.route_id
     let route = routes[routeID]
     let platform = departure.platform_number
-    let suspensions = departure.disruption_ids.map(id => suspensionMap[id]).filter(Boolean)
+    let suspensions = suspensionMap[route.route_name] || []
     let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
     let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
     let cancelled = run.status === 'cancelled'
