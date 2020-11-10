@@ -26,7 +26,8 @@ async function requestTimings() {
         fromDate: parseInt(alert.from_date),
         toDate: parseInt(alert.to_date),
         type: alert.alert_type,
-        text: alert.alert_text.replace(/Plan your journey.*/, '').replace(/Visit .*? web.*/g, '').trim()
+        text: alert.alert_text.replace(/Plan your journey.*/, '').replace(/Visit .*? web.*/g, '').trim(),
+        active: true
       }
     } else {
       mergedAlerts[alert.alert_id].routeName.push(data[alert.line_id].line_name)
@@ -42,6 +43,23 @@ async function requestTimings() {
         upsert: true
       }
     })
+  })
+
+  let alertIDs = Object.keys(mergedAlerts)
+  await metroNotify.updateDocuments({
+    alertID: {
+      $not: {
+        $in: alertIDs
+      }
+    },
+    fromDate: {
+      $gte: +utils.now().startOf('day').add(-1, 'day') / 1000
+    },
+    active: true
+  }, {
+    $set: {
+      active: false
+    }
   })
 
   await metroNotify.bulkWrite(bulkOperations)

@@ -315,7 +315,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     toDate: {
       $lte: +new Date()
     },
-    type: 'suspended'
+    type: 'suspended',
+    active: true
   }).toArray()
 
   let suspensionMap = {}
