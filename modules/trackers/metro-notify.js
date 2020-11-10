@@ -52,9 +52,6 @@ async function requestTimings() {
         $in: alertIDs
       }
     },
-    fromDate: {
-      $gte: +utils.now().startOf('day').add(-1, 'day') / 1000
-    },
     active: true
   }, {
     $set: {

@@ -326,6 +326,11 @@ database.connect({
   }, { name: 'alertid index', unique: true })
 
   await metroNotify.createIndex({
+    active: 1,
+    alertID: 1
+  }, { name: 'active index' })
+
+  await metroNotify.createIndex({
     fromDate: 1,
     toDate: 1,
     routeName: 1
@@ -335,6 +340,12 @@ database.connect({
     toDate: 1,
     fromDate: 1
   }, { name: 'date index 2' })
+
+  await metroNotify.createIndex({
+    active: 1,
+    toDate: 1,
+    type: 1
+  }, { name: 'suspensions index' })
 
   console.log('Created Metro Notify index')
 
