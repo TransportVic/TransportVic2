@@ -112,8 +112,8 @@ async function getDeparturesFromVNET(db) {
     }
   }
 
-  await swap(8118, 8116)
-  await swap(8158, 8160)
+  await swap('8118', '8116')
+  await swap('8158', '8160')
 
   let bulkOperations = []
   Object.keys(allTrips).forEach(runID => {
