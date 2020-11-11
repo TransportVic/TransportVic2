@@ -4,7 +4,7 @@ const utils = require('../../utils')
 const departureUtils = require('../utils/get-train-timetables')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const fixTripDestination = require('./fix-trip-destinations')
-
+const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 const getRouteStops = require('../../additional-data/route-stops')
 const getStonyPoint = require('../get-stony-point')
 
@@ -309,26 +309,27 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
   let {stopGTFSID} = metroPlatform
   let stationName = station.stopName.slice(0, -16)
-  let {departures, runs, routes, disruptions} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=run&expand=route&expand=disruption&expand=VehicleDescriptor`)
+  let {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=run&expand=route&expand=VehicleDescriptor`)
 
-  let suspensions = await metroNotify.findDocuments({
+  let disruptions = await metroNotify.findDocuments({
     toDate: {
       $lte: +new Date()
     },
-    type: 'suspended',
     active: true
   }).toArray()
 
   let suspensionMap = {}
-  suspensions.forEach(suspension => {
-    suspension.routeName.forEach(route => {
-      if (!suspensionMap[route]) suspensionMap[route] = []
-      suspensionMap[route].push(mapSuspension(suspension.text, route))
-    })
+  disruptions.forEach(suspension => {
+    if (suspension.type === 'suspended') {
+      suspension.routeName.forEach(route => {
+        if (!suspensionMap[route]) suspensionMap[route] = []
+        suspensionMap[route].push(mapSuspension(suspension.text, route))
+      })
+    }
   })
 
   function matchService(disruption) {
-    let text = disruption.description
+    let text = disruption.text
     let service = text.match(/the (\d+:\d+[ap]m) ([ \w]*?) to ([ \w]*?) (?:train|service )?(?:will|has|is)/i)
 
     if (service) {
@@ -347,16 +348,16 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     }
   }
 
-  let stonyPointReplacements = Object.values(disruptions).filter(disruption => {
-    if (disruption.routes.find(r => r && r.route_gtfs_id === '2-SPT')) {
-      return disruption.description.includes('replace')
+  let stonyPointReplacements = disruptions.filter(disruption => {
+    if (disruption.routeName.includes('Stony Point')) {
+      return disruption.text.includes('replace')
     }
     return false
   }).map(matchService).filter(Boolean)
 
   let alterationMap = {}
 
-  Object.values(disruptions).map(matchService).filter(Boolean).map(disruption => {
+  disruptions.map(matchService).filter(Boolean).map(disruption => {
     let parts = disruption.originalText.match(/will (?:now )?(\w+) (?:from|at) ([\w ]*?)(?: at.*?)?(?: [\d.:]*)?(?: today.*?)?(?: due.*?)?(?: and.*?)?.?/)
     if (parts) {
       let type = parts[1]
@@ -368,9 +369,9 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     }
   })
 
-  let cityLoopSkipping = Object.values(disruptions).filter(disruption => {
-    let description = disruption.description.toLowerCase()
-    if (description.includes('maint') || description.includes('works') || disruption.disruption_type === 'Planned Works') return false
+  let cityLoopSkipping = disruptions.filter(disruption => {
+    let description = disruption.text.toLowerCase()
+    if (description.includes('maint') || description.includes('works') || disruption.type === 'works') return false
 
     return (description.includes('direct to') && description.includes('not via the city loop'))
      || (description.includes('city loop services') && description.includes('direct between flinders st'))
@@ -385,26 +386,9 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     if (service) {
       servicesSkippingLoop.push(service)
     } else {
-      linesSkippingLoop = linesSkippingLoop.concat(disruption.routes.map(r => r.route_gtfs_id))
+      linesSkippingLoop = linesSkippingLoop.concat(disruption.routeName.map(r => routeGTFSIDs[r]))
     }
   })
-
-  // PTV likes to leave stuff out
-  if (linesSkippingLoop.includes('2-HBG') || linesSkippingLoop.includes('2-MER')) {
-    linesSkippingLoop = linesSkippingLoop.concat(['2-HBG', '2-MER'])
-  }
-
-  if (linesSkippingLoop.includes('2-BEL') || linesSkippingLoop.includes('2-LIL') || linesSkippingLoop.includes('2-GLW') || linesSkippingLoop.includes('2-ALM')) {
-    linesSkippingLoop = linesSkippingLoop.concat(['2-BEL', '2-LIL', '2-GLW', '2-ALM'])
-  }
-
-  if (linesSkippingLoop.includes('2-CRB') || linesSkippingLoop.includes('2-PKM') || linesSkippingLoop.includes('2-FKN') || linesSkippingLoop.includes('2-SDM')) {
-    linesSkippingLoop = linesSkippingLoop.concat(['2-CRB', '2-PKM', '2-FKN', '2-SDM'])
-  }
-
-  if (linesSkippingLoop.includes('2-WBE') || linesSkippingLoop.includes('2-WMN') || linesSkippingLoop.includes('2-UFD') || linesSkippingLoop.includes('2-B31') || linesSkippingLoop.includes('2-SYM')) {
-    linesSkippingLoop = linesSkippingLoop.concat(['2-WBE', '2-WMN', '2-UFD', '2-B31', '2-SYM'])
-  }
 
   let replacementBuses = departures.filter(departure => departure.flags.includes('RRB-RUN'))
   let trains = departures.filter(departure => !departure.flags.includes('RRB-RUN'))

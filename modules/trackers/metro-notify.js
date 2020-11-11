@@ -14,15 +14,20 @@ async function requestTimings() {
 
   let mergedAlerts = {}
 
-  Object.values(data)
-  .filter(routeData => routeData.line_name && routeData.alerts && routeData.alerts instanceof Array)
+  Object.keys(data)
+  .filter(key => !isNaN(parseInt(key)))
+  .map(key => data[key])
+  .filter(routeData => routeData.alerts && routeData.alerts instanceof Array)
   .map(routeData => routeData.alerts)
   .reduce((a, e) => a.concat(e), [])
   .forEach(alert => {
+    let routeName = data[alert.line_id].line_name
+    if (alert.line_id == '94') routeName = 'Stony Point'
+
     if (!mergedAlerts[alert.alert_id]) {
       mergedAlerts[alert.alert_id] = {
         alertID: alert.alert_id,
-        routeName: [data[alert.line_id].line_name],
+        routeName: [routeName],
         fromDate: parseInt(alert.from_date),
         toDate: parseInt(alert.to_date),
         type: alert.alert_type,
@@ -30,7 +35,7 @@ async function requestTimings() {
         active: true
       }
     } else {
-      mergedAlerts[alert.alert_id].routeName.push(data[alert.line_id].line_name)
+      mergedAlerts[alert.alert_id].routeName.push(routeName)
     }
   })
 

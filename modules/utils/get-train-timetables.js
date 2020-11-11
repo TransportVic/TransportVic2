@@ -2,28 +2,9 @@ const async = require('async')
 const utils = require('../../utils')
 const { getDayOfWeek } = require('../../public-holidays')
 
-let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
+const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 
-let routeGTFSIDs = {
-  'Hurstbridge': '2-HBG',
-  'Mernda': '2-MER',
-  'Belgrave': '2-BEL',
-  'Lilydale': '2-LIL',
-  'Glen Waverley': '2-GLW',
-  'Alamein': '2-ALM',
-  'Cranbourne': '2-CRB',
-  'Pakenham': '2-PKM',
-  'Frankston': '2-FKN',
-  'Sandringham': '2-SDM',
-  'Werribee': '2-WBE',
-  'Williamstown': '2-WMN',
-  'Upfield': '2-UFD',
-  'Craigieburn': '2-B31',
-  'Sunbury': '2-SYM',
-  'Showgrounds/Flemington': '2-ain',
-  'City Circle': '2-CCL',
-  'Stony Point': '2-SPT'
-}
+let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 function getPlatform(station, mode) {
   return station.bays.find(bay => bay.mode === mode)
