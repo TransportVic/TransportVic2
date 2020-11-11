@@ -85,17 +85,7 @@ let singlePlatforms = [
   'Rosedale',
   'Sale',
   'Stratford',
-  'Bairnsdale',
-  'Goulburn',
-  'Gunning',
-  'Yass Junction',
-  'Harden',
-  'Cootamundra',
-  'Junee',
-  'Wagga Wagga',
-  'The Rock',
-  'Hentys',
-  'Culcairn'
+  'Bairnsdale'
 ]
 
 module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday) => {
@@ -124,7 +114,12 @@ module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday)
   }
 
   if (stationName === 'Broadmeadows') {
-    if (line === 'Albury' || line === 'Melbourne - Sydney') return 3
+    if (line === 'Albury') return 3
+  }
+
+  if (stationName === 'Essendon') {
+    if (isUp) return 2
+    else return 3
   }
 
   if (stationName === 'Albury') {
@@ -133,7 +128,7 @@ module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday)
   }
 
   if (stationName === 'Seymour') {
-    if (line === 'Albury' || line === 'Melbourne - Sydney') return 1
+    if (line === 'Albury') return 1
     if (isUp) return 2
     else return 3
   }
@@ -212,18 +207,6 @@ module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday)
   if (stationName === 'Ararat') {
     return 2
   }
-
-  if (stationName === 'Campbelltown') {
-    if (isUp) return 3
-    else return 2
-  }
-
-  if (stationName === 'Moss Vale') {
-    if (isUp) return 2
-    else return 1
-  }
-
-  if (stationName === 'Southern Cross' || line === 'Melbourne - Sydney') return 1
 
   if (singlePlatforms.includes(stationName)) return 1
 }
