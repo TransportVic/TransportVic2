@@ -59,8 +59,8 @@ database.connect({
   }, {name: 'coded suburb index'})
 
   await stops.createIndex({
-    _id: 1,
-    'namePhonetic': 1
+    'namePhonetic': 1,
+    _id: 1
   }, {name: 'phonetic name index'})
 
   await stops.createIndex({

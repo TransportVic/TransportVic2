@@ -16,7 +16,7 @@ async function prioritySearch(db, query) {
   let possibleStopNames = [
     query,
     utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre'))
-  ]
+  ].map(name => name.toLowerCase()).filter((e, i, a) => a.indexOf(e) === i)
 
   let fullQuery = possibleStopNames.join(' ')
 
@@ -60,12 +60,14 @@ async function findStops(db, query) {
   let prioritySearchResults = await prioritySearch(db, query)
   let excludedIDs = prioritySearchResults.map(stop => stop._id)
 
-  let search = utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre'))
-  let queryRegex = new RegExp(query, 'i')
-  let searchRegex = new RegExp(search, 'i')
-  let stationRegex = new RegExp(query.replace(/sta?t?i?o?n?/i, 'railway station'), 'i')
+  let search = utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre')).toLowerCase()
+  let queryString = query.toLowerCase()
 
-  let phoneticQuery = metaphone.process(query)
+  let queryRegex = new RegExp(queryString, 'i')
+  let searchRegex = new RegExp(search, 'i')
+  let stationRegex = new RegExp(queryString.replace(/sta?t?i?o?n?/i, 'railway station'), 'i')
+
+  let phoneticQuery = metaphone.process(queryString)
 
   let remainingResults = (await stops.findDocuments({
     _id: {
@@ -75,7 +77,7 @@ async function findStops(db, query) {
     },
     $and: [{
       $text: {
-        $search: query + ' ' + search
+        $search: queryString + ' ' + search
       }
     }, {
       $or: [{
@@ -98,7 +100,7 @@ async function findStops(db, query) {
     },
     $and: [{
       $text: {
-        $search: query + ' ' + search
+        $search: queryString + ' ' + search
       }
     }, {
       $or: [{
@@ -131,17 +133,19 @@ async function findStops(db, query) {
 
 async function findRoutes(db, query) {
   query = query.replace(/ li?n?e?/, '').trim()
-  let queryRegex = new RegExp(query, 'i')
+  if (query.length) {
+    let queryRegex = new RegExp(query, 'i')
 
-  let routes = (await db.getCollection('routes').findDocuments({
-    $or: [{
-      routeNumber: queryRegex
-    }, {
-      routeName: queryRegex
-    }]
-  }).limit(15).toArray()).sort((a, b) => a.routeNumber - b.routeNumber || a.routeName.localeCompare(b.routeName))
-
-  return routes
+    return (await db.getCollection('routes').findDocuments({
+      $or: [{
+        routeNumber: queryRegex
+      }, {
+        routeName: queryRegex
+      }]
+    }).limit(15).toArray()).sort((a, b) => a.routeNumber - b.routeNumber || a.routeName.localeCompare(b.routeName))
+  } else {
+    return []
+  }
 }
 
 router.post('/', async (req, res) => {

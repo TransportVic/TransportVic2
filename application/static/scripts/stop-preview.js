@@ -44,8 +44,8 @@ $.ready(() => {
         let marker = L.marker(location, {icon: icon}).addTo(map)
 
         let name = bay.fullStopName
-        if (bayData[bay.stopGTFSID]) name += ` (${bayData[bay.stopGTFSID]})`
         if (bay.stopNumber) name += ` #${bay.stopNumber}`
+        if (bayData[bay.stopGTFSID]) name += ` (${bayData[bay.stopGTFSID]})`
 
         if (bay.screenServices) {
           name += `<br>Services: ${bay.screenServices.map(e => e.routeNumber).filter((e, i, a) => a.indexOf(e) === i).filter(Boolean).join(', ')}`

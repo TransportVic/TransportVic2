@@ -64,4 +64,8 @@ module.exports = class MongoDatabaseCollection {
   dropCollection() {
     return this.collection.drop()
   }
+
+  async explain(query) {
+    return (await query.explain('executionStats')).executionStats
+  }
 }
