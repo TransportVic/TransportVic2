@@ -313,7 +313,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
   let disruptions = await metroNotify.findDocuments({
     toDate: {
-      $lte: +new Date()
+      $gte: +new Date() / 1000
     },
     active: true
   }).toArray()

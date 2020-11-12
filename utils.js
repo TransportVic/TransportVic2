@@ -309,6 +309,8 @@ module.exports = {
     let body
     let error
 
+    let maxRetries = (options ? options.maxRetries : null) || 3
+
     let fullOptions = {
       timeout: 2000,
       compress: true,
@@ -316,7 +318,7 @@ module.exports = {
       ...options
     }
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < maxRetries; i++) {
       try {
         body = await fetch(url, fullOptions)
 

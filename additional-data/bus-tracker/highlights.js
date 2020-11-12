@@ -45,18 +45,18 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Route Livery Buses',
-  track: ['S16' ,'S19', 'S27', 'S40', 'S41', 'S43', 'S54', 'S71', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
+  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
   routes: ['201', '301', '401', '601'],
   type: 'exclude'
 }, {
   name: 'Non-Perm Route Livery Buses',
-  track: ['S16' ,'S19', 'S27', 'S40', 'S41', 'S43', 'S54', 'S71', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
+  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
   routes: ['201', '301', '401', '601'],
   type: 'include',
   buses: 'exclude'
 }, {
   name: 'Old Sita',
-  track: ['S33', 'S64', 'S80', 'S81', 'S86', 'S91', 'S92', 'S93', 'S94', 'S95', 'S97', 'S99'],
+  track: ['TS33', 'TS64', 'TS80', 'TS81', 'TS86', 'TS91', 'TS92', 'TS93', 'TS94', 'TS95', 'TS97', 'TS99'],
   routes: [],
   type: 'exclude'
 }, {
@@ -117,7 +117,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Sunbury Specials',
-  track: ['SB16'],
+  track: ['S16'],
   routes: [],
   type: 'exclude'
 }, {
