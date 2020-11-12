@@ -17,4 +17,4 @@ block content
   h1.title Tracking Cross Depot tram deployments on #{date.format('dddd, MMMM Do YYYY')}
   for trip in tripsToday
     div(class=`trip ${trip.active ? '' : 'inactive'}`)
-      a(href=trip.url) #{trip.tram}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
+      a(href=trip.url) #{trip.tram}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber} (#{trip.shift})
