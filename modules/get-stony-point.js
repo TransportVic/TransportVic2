@@ -63,13 +63,19 @@ module.exports = async db => {
     let previousRotationEnd = untilDay.clone().add(-1, 'day')
 
     for (let check of potential) {
-      let pairedWith = await vlineTrips.distinct('consist', {
+      let pairedWith = await vlineTrips.findDocuments({
         consist: check,
         date: utils.getYYYYMMDD(previousRotationEnd)
-      })
+      }).sort({ departureTime: -1 }).limit(1).next()
 
-      if (pairedWith.length === 2 && pairedWith.some(train => potential.includes(train))) {
-        return pairedWith
+      if (pairedWith && pairedWith.consist.length >= 2) {
+        let alsoMissing = pairedWith.consist.filter(train => potential.includes(train) && train !== check)
+        if (alsoMissing.length === 1) {
+          let checkIndex = pairedWith.consist.indexOf(check)
+          let otherIndex = pairedWith.consist.indexOf(alsoMissing[0])
+
+          if (Math.abs(checkIndex - otherIndex) === 1) return [check, alsoMissing[0]]
+        }
       }
     }
   }
