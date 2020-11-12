@@ -99,16 +99,24 @@ async function getDeparturesFromVNET(db) {
       let mby = allTrips[mbyRun], art = allTrips[artRun]
       let today = utils.getYYYYMMDDNow() // This would only activate at a reasonable hour of the day
       // In case one already departed eg 8118 usually leaves before 8116, but with TSRs we can't be sure
-      if (!mby) mby = await vlineTrips.findDocument({ date: today, runID: mbyRun })
-      if (!art) art = await vlineTrips.findDocument({ date: today, runID: artRun })
 
-      // If we can't find one (eg maybe MBY is bussed but ART runs) take the tracker data as correct?
-      if (art && mby && art.origin === 'Ararat' && mby.origin === 'Maryborough') {
-        let artConsist = art.consist
-        let mbyConsist = mby.consist
-        mby.consist = artConsist
-        art.consist = mbyConsist
+      let trueArtConsist, trueMbyConsist
+
+      if (mby && mby.origin === 'Maryborough') trueArtConsist = mby.consist
+      if (art && art.origin === 'Ararat') trueMbyConsist = art.consist
+
+      if (!mby) {
+        art = await vlineTrips.findDocument({ date: today, runID: artRun })
+        if (art && art.origin === 'Ararat') trueArtConsist = art.consist
       }
+
+      if (!art) {
+        mby = await vlineTrips.findDocument({ date: today, runID: mbyRun })
+        if (mby && mby.origin === 'Maryborough') trueMbyConsist = mby.consist
+      }
+
+      if (allTrips[mbyRun]) allTrips[mbyRun].consist = trueMbyConsist
+      if (allTrips[artRun]) allTrips[artRun].consist = trueArtConsist
     }
   }
 

@@ -3,7 +3,7 @@ const findTrip = require('../../vline/find-trip')
 const { getDayOfWeek } = require('../../../public-holidays')
 const vlineLock = require('../../vline/vline-lock-wrap')
 
-module.exports = async function (db, departureTime, origin, destination) {
+module.exports = async function (db, departureTime, origin, destination, keepID=false) {
   await vlineLock.awaitLock()
 
   let now = utils.now()
@@ -46,7 +46,7 @@ module.exports = async function (db, departureTime, origin, destination) {
     trip = await findTrip(liveTimetables, today, origin, destination, departureTime)
   }
 
-  if (trip) {
+  if (trip && !keepID) {
     delete trip._id
   }
 
