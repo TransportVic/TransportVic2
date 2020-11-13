@@ -218,6 +218,11 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let direction
   if (mode === 'metro train') {
     direction = ptvDirection.direction_id === 0 ? 'Up' : 'Down'
+    if (routeGTFSID === '2-SPT') {
+      let origin = stopTimings[0].stopName
+      if (origin === 'Frankston Railway Station') direction = 'Down'
+      else direction = 'Up'
+    }
     if (routeGTFSID === '2-CCL') direction = 'Down'
   }
 
