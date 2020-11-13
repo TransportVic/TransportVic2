@@ -3,6 +3,7 @@ const router = new express.Router()
 const async = require('async')
 const escapeRegex = require('escape-regex-string')
 const utils = require('../../utils')
+const stationCodes = require('../../additional-data/station-codes')
 const natural = require('natural')
 const metaphone = natural.Metaphone
 
@@ -17,6 +18,10 @@ async function prioritySearch(db, query) {
     query,
     utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre'))
   ].map(name => name.toLowerCase()).filter((e, i, a) => a.indexOf(e) === i)
+
+  if (stationCodes[query.toUpperCase()]) {
+    possibleStopNames.push(stationCodes[query.toUpperCase()] + ' Railway Station')
+  }
 
   let fullQuery = possibleStopNames.join(' ')
 

@@ -53,6 +53,7 @@ $.ready(() => {
         name += `<br>Stop ID: ${bay.stopGTFSID}`
         if (bay.tramTrackerID) {
           name += `<br>TramTracker ID: ${bay.tramTrackerID}`
+          name += `<br>TramTracker Name: ${bay.tramTrackerName}`
         }
 
         if (bay.mykiZones.length) {
