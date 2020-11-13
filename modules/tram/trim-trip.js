@@ -56,9 +56,11 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
   await async.forEachOf(trip.stopTimings, async (stop, i) => {
     if (!cutoffStop) {
       let stopData = await getStopData(stop.stopGTFSID, stops)
-      if (stopData.tramTrackerNames) {
-        let matched = selectionMethod ? stopData.tramTrackerNames.some(name => name.includes(baseDestination))
-          : stopData.tramTrackerNames.find(name => distance(name, destination) <= 2)
+      let tramTrackerNames = stopData.bays.map(bay => bay.tramTrackerName).filter(Boolean)
+
+      if (tramTrackerNames) {
+        let matched = selectionMethod ? tramTrackerNames.some(name => name.includes(baseDestination))
+          : tramTrackerNames.find(name => distance(name, destination) <= 2)
         if (matched) {
           cutoffStop = stop.stopGTFSID
         }
@@ -96,11 +98,13 @@ module.exports.trimFromMessage = async function(db, destinations, currentStopGTF
 
   await async.forEachOf(trip.stopTimings, async (stop, i) => {
     let stopData = await getStopData(stop.stopGTFSID, stops)
-    if (stopData.tramTrackerNames) {
-      let destination = destinations.find(dest => {
-        if (stopData.tramTrackerNames.includes(dest)) return true
+    let tramTrackerNames = stopData.bays.map(bay => bay.tramTrackerName).filter(Boolean)
 
-        return stopData.tramTrackerNames.find(name => distance(name, dest) <= 3)
+    if (tramTrackerNames) {
+      let destination = destinations.find(dest => {
+        if (tramTrackerNames.includes(dest)) return true
+
+        return tramTrackerNames.find(name => distance(name, dest) <= 3)
       })
 
       if (destination) {

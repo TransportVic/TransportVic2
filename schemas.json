@@ -131,10 +131,10 @@
         "routeNumber": "string"
       }],
       "tramTrackerID": "number:optional",
+      "tramTrackerName": "string:optional"
     }],
     "location": "GeoJSON:MultiPoint",
-    "mergeName": "string",
-    "tramTrackerNames": ["string:optional"]
+    "mergeName": "string"
   },
   "route": {
     "mode": "string",

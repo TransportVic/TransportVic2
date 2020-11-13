@@ -110,9 +110,9 @@ async function findStops(db, query) {
       }, {
         'bays.fullStopName': searchRegex
       }, {
-        'tramTrackerNames': searchRegex
+        'bays.tramTrackerName': searchRegex
       }, {
-        'tramTrackerNames': queryRegex
+        'bays.tramTrackerName': queryRegex
       }]
     }]
   }).limit(15 - prioritySearchResults.length - remainingResults.length).toArray()
