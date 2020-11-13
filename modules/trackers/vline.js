@@ -115,8 +115,8 @@ async function getDeparturesFromVNET(db) {
         if (mby && mby.origin === 'Maryborough') trueMbyConsist = mby.consist
       }
 
-      if (allTrips[mbyRun]) allTrips[mbyRun].consist = trueMbyConsist
-      if (allTrips[artRun]) allTrips[artRun].consist = trueArtConsist
+      if (allTrips[mbyRun] && trueMbyConsist) allTrips[mbyRun].consist = trueMbyConsist
+      if (allTrips[artRun] && trueArtConsist) allTrips[artRun].consist = trueArtConsist
     }
   }
 
