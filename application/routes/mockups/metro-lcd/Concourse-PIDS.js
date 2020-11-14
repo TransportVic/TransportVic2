@@ -1,14 +1,16 @@
 const express = require('express')
 const router = new express.Router()
+const url = require('url')
+const querystring = require('querystring')
 const utils = require('../../../../utils')
 const TrainUtils = require('../TrainUtils')
 const PIDUtils = require('../PIDUtils')
 const stationDestinations = require('./station-destinations')
 
-async function getData(req, res, maxDepartures) {
+async function getData(req, res) {
   let station = await PIDUtils.getStation(res.db, req.params.station)
 
-  return await TrainUtils.getPIDSDepartures(res.db, station, '*', null, null, maxDepartures, true)
+  return await TrainUtils.getPIDSDepartures(res.db, station, '*', null, null, Infinity, true)
 }
 
 router.get('/:station/up-down', async (req, res) => {
@@ -45,13 +47,24 @@ router.get('/:station/interchange/destinations', async (req, res) => {
 
 
 router.post('/:station/up-down', async (req, res) => {
-  let departures = await getData(req, res, 8)
+  let departures = await getData(req, res)
+
+  let {d} = querystring.parse(url.parse(req.url).query)
+  if (d) {
+    return res.json({
+      ...departures,
+      departures: departures.departures.filter(departure => {
+        return departure.direction.toLowerCase() === d
+      }).slice(0, 5)
+    })
+  }
+
   res.json(departures)
 })
 
 
 router.post('/:station/interchange', async (req, res) => {
-  let departures = await getData(req, res, Infinity)
+  let departures = await getData(req, res)
   let groupedDepartures = {}
 
   departures.departures.forEach(departure => {
