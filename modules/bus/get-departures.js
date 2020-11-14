@@ -4,7 +4,6 @@ const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const stopNameModifier = require('../../additional-data/stop-name-modifier')
 const busBays = require('../../additional-data/bus-bays')
-const determineBusRouteNumber = require('./determine-bus-route-number')
 const resolveRouteGTFSID = require('../resolve-gtfs-id')
 const departureUtils = require('../utils/get-bus-timetables')
 const liveBusData = require('../../additional-data/live-bus-data')
@@ -285,10 +284,6 @@ async function getDepartures(stop, db) {
               }
             }
           }
-        }
-
-        if (departure.routeNumber) {
-          departure.routeNumber = determineBusRouteNumber(departure.trip)
         }
 
         let hasSeenStop = false

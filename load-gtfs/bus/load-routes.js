@@ -119,6 +119,8 @@ database.connect({
       if (routeGTFSID === '6-a48') return null
       if (routeGTFSID === '6-a49') return null
 
+      if (routeGTFSID === '6-BM8') return '8'
+
       if (routeGTFSID === '6-946') return null
       if (routeGTFSID === '6-949') return null
 

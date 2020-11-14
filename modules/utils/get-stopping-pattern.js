@@ -5,7 +5,7 @@ const nameModifier = require('../../additional-data/stop-name-modifier')
 const metroTypes = require('../../additional-data/metro-tracker/metro-types')
 const resolveRouteGTFSID = require('../resolve-gtfs-id')
 const addStonyPointData = require('../metro-trains/add-stony-point-data')
-
+const determineBusRouteNumber = require('../../additional-data/determine-bus-route-number')
 const fixTripDestination = require('../metro-trains/fix-trip-destinations')
 
 let modes = {
@@ -270,10 +270,12 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   stopTimings.slice(-1)[0].departureTime = null
   stopTimings.slice(-1)[0].departureTimeMinutes = null
 
+  let routeNumber = referenceTrip ? referenceTrip.routeNumber : route.routeNumber
+
   let timetable = {
     mode, routeName,
     routeGTFSID,
-    routeNumber: referenceTrip ? referenceTrip.routeNumber : route.routeNumber,
+    routeNumber,
     routeDetails: referenceTrip ? referenceTrip.routeDetails : null,
     runID,
     operationDays: tripOperationDay,
@@ -290,6 +292,8 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     cancelled,
     ...extraTripData
   }
+
+  if (mode === 'bus') timetable.routeNumber = determineBusRouteNumber(timetable)
 
   timetable = fixTripDestination(timetable)
 

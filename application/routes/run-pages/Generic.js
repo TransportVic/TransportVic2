@@ -12,8 +12,6 @@ const coachDestinations = require('../../../additional-data/coach-stops')
 
 const busBays = require('../../../additional-data/bus-bays')
 
-const determineBusRouteNumber = require('../../../modules/bus/determine-bus-route-number')
-
 async function pickBestTrip(data, db) {
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
   let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
@@ -225,8 +223,6 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   let busTrips = res.db.getCollection('bus trips')
 
   if (trip.mode === 'bus') {
-    routeNumber = determineBusRouteNumber(trip)
-
     trackerData = await busTrips.findDocument({
       date: req.params.operationDays,
       departureTime: trip.departureTime,

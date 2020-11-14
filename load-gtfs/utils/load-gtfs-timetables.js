@@ -117,8 +117,8 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
     let tripData = {
       mode: actualMode,
       routeName: routeData.routeName,
-      routeNumber: routeNumber ? routeNumber(routeGTFSID, trip.gtfsDirection, stopTimings, routeData.routeNumber) : routeData.routeNumber,
-      routeDetails: routeDetails ? routeDetails(routeGTFSID, trip.gtfsDirection) : null,
+      routeNumber: routeData.routeNumber,
+      routeDetails: null,
       tripID,
       routeGTFSID,
       operationDays,
@@ -132,6 +132,9 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
       shapeID,
       gtfsMode: parseInt(gtfsID)
     }
+
+    if (routeNumber) tripData.routeNumber = routeNumber(tripData)
+    if (routeDetails) tripData.routeDetails = routeDetails(routeGTFSID, trip.gtfsDirection)
 
     if (trip.runID) tripData.runID = trip.runID
     if (trip.vehicle) tripData.vehicle = trip.vehicle
