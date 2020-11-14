@@ -198,7 +198,9 @@ async function getDeparturesFromYT(stop, db) {
         loopDirection,
         vehicle: tram,
         routeNumber: HeadBoardRouteNo,
-        sortNumber: coreRoute
+        sortNumber: coreRoute,
+        tramTrackerID,
+        stopGTFSID
       })
     })
   })

@@ -8,6 +8,12 @@ const tramDestinations = require('../../../additional-data/tram-destinations')
 const async = require('async')
 const timingUtils = require('./timing-utils')
 
+let cityCircleOverride = [
+  20981,
+  18183,
+  18037
+]
+
 async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
   let stop = await stops.findDocument({
@@ -31,7 +37,7 @@ async function loadDepartures(req, res) {
       late: 5
     })
 
-    let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
+    let currentStop = departure.trip.stopTimings.find(tripStop => tripStop.stopGTFSID === departure.stopGTFSID)
     let {stopGTFSID} = currentStop
     let firstStop = departure.trip.stopTimings[0]
 
@@ -48,6 +54,14 @@ async function loadDepartures(req, res) {
     let destination = utils.getDestinationName(departure.trip.destination)
     departure.destination = tramDestinations[destination] || destination
 
+    if (departure.trip.routeGTFSID === '3-35') {
+      if (cityCircleOverride.includes(stopGTFSID)) {
+        departure.loopDirection = null
+      } else {
+        departure.destination = 'City Circle'
+      }
+    }
+
     let destinationStopTiming = departure.trip.stopTimings.slice(-1)[0]
     let destinationStop = await stops.findDocument({
       'bays.stopGTFSID': destinationStopTiming.stopGTFSID
@@ -60,7 +74,6 @@ async function loadDepartures(req, res) {
 
   let groupedDepartures = timingUtils.groupDepartures(departures)
 
-  //todo check 3a
   return {
     ...groupedDepartures,
     stop,
