@@ -470,11 +470,12 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       else platform = '1'
     }
 
-    let skippingLoop = servicesSkippingLoop.find(r => {
+    let skippingLoop = servicesSkippingLoop.some(r => {
       return r.origin === trip.origin.slice(0, -16) && r.departureTime === trip.departureTime && r.destination === trip.destination.slice(0, -16)
     })
 
     let willSkipLoop = skippingLoop || linesSkippingLoop.includes(routes[routeID].route_gtfs_id)
+
     if (willSkipLoop) {
       if (cityLoopStations.includes(stationName)) {
         if (northernGroup.includes(routeID)) {

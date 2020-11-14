@@ -253,19 +253,22 @@ module.exports = {
     let destination = tripStops.slice(-1)[0]
 
     if (viaCityLoop) {
+      let cityLoopStops = tripStops.filter(e => cityLoopStations.includes(e) || e === 'Flinders Street')
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
 
-      if (northernGroup.includes(lineName)) {
-        if (isUp) {
-          cityLoopStops = ['Flagstaff', 'Melbourne Central', 'Parliament', 'Flinders Street']
+      if (willSkipLoop) {
+        if (northernGroup.includes(lineName)) {
+          if (isUp) {
+            cityLoopStops = ['Flagstaff', 'Melbourne Central', 'Parliament', 'Flinders Street']
+          } else {
+            cityLoopStops = ['Flinders Street', 'Parliament', 'Melbourne Central', 'Flagstaff']
+          }
         } else {
-          cityLoopStops = ['Flinders Street', 'Parliament', 'Melbourne Central', 'Flagstaff']
-        }
-      } else {
-        if (isUp) {
-          cityLoopStops = ['Parliament', 'Melbourne Central', 'Flagstaff', 'Southern Cross', 'Flinders Street']
-        } else {
-          cityLoopStops = ['Flinders Street', 'Southern Cross', 'Flagstaff', 'Melbourne Central', 'Parliament']
+          if (isUp) {
+            cityLoopStops = ['Parliament', 'Melbourne Central', 'Flagstaff', 'Southern Cross', 'Flinders Street']
+          } else {
+            cityLoopStops = ['Flinders Street', 'Southern Cross', 'Flagstaff', 'Melbourne Central', 'Parliament']
+          }
         }
       }
 
