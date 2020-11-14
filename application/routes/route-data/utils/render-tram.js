@@ -44,6 +44,7 @@ async function render(params, res, matchingRoute) {
 
   if (matchingRoute.routeGTFSID === '3-35') {
     showDualTermini = false
+    directionNames[0] = `City Circle Tram (${gtfsDirection === '0' ? 'Anti-Clockwise' : 'Clockwise'})`
   }
 
   res.render('routes/tram', {

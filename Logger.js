@@ -36,4 +36,5 @@ module.exports = class Logger {
   log(...objects) { this.level('LOG', objects) }
   info(...objects) { this.level('INFO', objects) }
   err(...objects) { this.level('ERROR', objects) }
+  warn(...objects) { this.level('WARN', objects) }
 }

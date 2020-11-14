@@ -73,8 +73,11 @@ async function getDepartures(stop) {
     let finalConsist = []
     let consist = run.vehicle_descriptor.id
     if (consist.match(/train\d+/)) {
-      // let carriagePart =
-      return // For now we don't know what this means so skip it
+      // For now we don't know what this means so skip it
+      return global.loggers.trackers.metro.warn('Encountered strange train', {
+        consist,
+        runID
+      })
     }
 
     let carriages = consist.split('-')

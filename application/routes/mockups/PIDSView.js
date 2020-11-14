@@ -19,7 +19,7 @@ Object.keys(rawStationPIDs).forEach(stationName => {
   stationPIDs[utils.encodeName(stationName)] = rawStationPIDs[stationName]
 })
 
-router.get('/summary', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   if (filter(req, next)) {
     let stationCode = req.headers.host.split('.')[0].toUpperCase()
 
@@ -28,6 +28,16 @@ router.get('/summary', async (req, res, next) => {
     let stationPID = stationPIDs[codedStationName]
 
     res.render('mockups/summary-known', {stationPID, station: codedStationName, stationCode, getURL: PIDUtils.getURL})
+  }
+})
+
+router.use((req, res, next) => {
+  if (filter(req, next)) {
+    if (req.url.startsWith('/mockups/')) {
+      next()
+    } else {
+      next(new Error('404'))
+    }
   }
 })
 
