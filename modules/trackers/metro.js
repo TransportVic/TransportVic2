@@ -136,18 +136,25 @@ async function getDepartures(stop) {
       }
     }
 
-    let tripData = {
-      ...query,
-      origin: trip.trueOrigin.slice(0, -16),
-      destination: trip.trueDestination.slice(0, -16),
-      departureTime: trip.trueDepartureTime,
-      destinationArrivalTime: trip.trueDestinationArrivalTime,
-      consist: finalConsist
-    }
+    if (finalConsist.length) {
+      let tripData = {
+        ...query,
+        origin: trip.trueOrigin.slice(0, -16),
+        destination: trip.trueDestination.slice(0, -16),
+        departureTime: trip.trueDepartureTime,
+        destinationArrivalTime: trip.trueDestinationArrivalTime,
+        consist: finalConsist
+      }
 
-    await metroTrips.replaceDocument(query, tripData, {
-      upsert: true
-    })
+      await metroTrips.replaceDocument(query, tripData, {
+        upsert: true
+      })
+    } else {
+      return global.loggers.trackers.metro.warn('Encountered strange train', {
+        consist,
+        runID
+      })
+    }
 
     if (i < 5) {
       if (trip.type === 'timings' && new Date() - trip.updateTime < 5 * 60 * 1000) return
