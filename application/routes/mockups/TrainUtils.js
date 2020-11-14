@@ -246,15 +246,28 @@ module.exports = {
     return departure
   },
   getFixedLineStops: (tripStops, lineStops, lineName, isUp, type, willSkipLoop) => {
-    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament') || willSkipLoop
+    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament') || !!willSkipLoop
     if (!northernGroup.includes(lineName) && !viaCityLoop && type !== 'vline')
      viaCityLoop = tripStops.includes('Southern Cross')
 
     let destination = tripStops.slice(-1)[0]
 
     if (viaCityLoop) {
-      let cityLoopStops = tripStops.filter(e => cityLoopStations.includes(e) || e === 'Flinders Street')
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
+
+      if (northernGroup.includes(lineName)) {
+        if (isUp) {
+          cityLoopStops = ['Flagstaff', 'Melbourne Central', 'Parliament', 'Flinders Street']
+        } else {
+          cityLoopStops = ['Flinders Street', 'Parliament', 'Melbourne Central', 'Flagstaff']
+        }
+      } else {
+        if (isUp) {
+          cityLoopStops = ['Parliament', 'Melbourne Central', 'Flagstaff', 'Southern Cross', 'Flinders Street']
+        } else {
+          cityLoopStops = ['Flinders Street', 'Southern Cross', 'Flagstaff', 'Melbourne Central', 'Parliament']
+        }
+      }
 
       if (isUp) {
         lineStops = lineStops.concat(cityLoopStops)
