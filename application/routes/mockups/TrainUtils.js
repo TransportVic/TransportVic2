@@ -245,8 +245,8 @@ module.exports = {
 
     return departure
   },
-  getFixedLineStops: (tripStops, lineStops, lineName, isUp, type, willSkipLoop) => {
-    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament') || !!willSkipLoop
+  getFixedLineStops: (tripStops, lineStops, lineName, isUp, type, willSkipCCL) => {
+    let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament') || !!willSkipCCL
     if (!northernGroup.includes(lineName) && !viaCityLoop && type !== 'vline')
      viaCityLoop = tripStops.includes('Southern Cross')
 
@@ -256,7 +256,7 @@ module.exports = {
       let cityLoopStops = tripStops.filter(e => cityLoopStations.includes(e) || e === 'Flinders Street')
       lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
 
-      if (willSkipLoop) {
+      if (willSkipCCL) {
         if (northernGroup.includes(lineName)) {
           if (isUp) {
             cityLoopStops = ['Flagstaff', 'Melbourne Central', 'Parliament', 'Flinders Street']
@@ -326,7 +326,7 @@ module.exports = {
 
     return lineStops.filter((e, i, a) => a.indexOf(e) === i)
   },
-  trimTrip: (isUp, stopTimings, fromStation, routeName, willSkipLoop, destination) => {
+  trimTrip: (isUp, stopTimings, fromStation, routeName, willSkipCCL, destination) => {
     if (routeName === 'City Circle') return stopTimings
     if (isUp) {
       let hasSeenFSS = false
@@ -349,7 +349,7 @@ module.exports = {
       stopTimings = stopTimings.slice(startIndex)
     }
 
-    if (willSkipLoop && stopTimings.includes('Flinders Street')) {
+    if (willSkipCCL && stopTimings.includes('Flinders Street')) {
       stopTimings = stopTimings.filter(e => !cityLoopStations.includes(e))
       if (northernGroup.includes(routeName)) {
         if (isUp) {
@@ -397,7 +397,7 @@ module.exports = {
     if (!northernGroup.includes(routeName) && !viaCityLoop && departure.type !== 'vline')
      viaCityLoop = tripPassesBy.includes('Southern Cross')
 
-   viaCityLoop = viaCityLoop && !departure.willSkipLoop
+   viaCityLoop = viaCityLoop && !departure.willSkipCCL
 
     let screenStops = tripPassesBy.map(stop => {
       return {
@@ -643,8 +643,8 @@ module.exports = {
 
         if (isUp) lineStops = lineStops.slice(0).reverse()
 
-        tripStops = module.exports.trimTrip(isUp, tripStops, stationName, routeName, departure.willSkipLoop, destination)
-        lineStops = module.exports.getFixedLineStops(tripStops, lineStops, routeName, isUp, departure.type, departure.willSkipLoop)
+        tripStops = module.exports.trimTrip(isUp, tripStops, stationName, routeName, departure.willSkipCCL, destination)
+        lineStops = module.exports.getFixedLineStops(tripStops, lineStops, routeName, isUp, departure.type, departure.willSkipCCL)
 
         departure.lineStops = lineStops
         departure.tripStops = tripStops

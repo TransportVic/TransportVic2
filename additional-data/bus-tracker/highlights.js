@@ -10,7 +10,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Ventura Specials',
-  track: ['V187', 'V197', 'V198', 'V287', 'V322', 'V784', 'V785', 'V786', 'V787', 'V789', 'V792', 'V795', 'V796', 'V1175', 'V1176', 'V1182', 'V1184', 'V1194', 'V1195', 'V1380', 'V1445'],
+  track: ['V21', 'V187', 'V197', 'V198', 'V287', 'V322', 'V529', 'V784', 'V785', 'V786', 'V787', 'V789', 'V792', 'V795', 'V796', 'V1175', 'V1176', 'V1182', 'V1184', 'V1194', 'V1195', 'V1380', 'V1445'],
   routes: [],
   type: 'exclude'
 }, {
@@ -92,7 +92,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'CDC Wyndham Specials',
-  track: ['CW20', 'CW22', 'CW23', 'CW189', 'CW190'],
+  track: ['CW20', 'CW22', 'CW23', 'CW131', 'CW189', 'CW190'],
   routes: [],
   type: 'exclude'
 }, {
@@ -141,4 +141,24 @@ module.exports = [{
   routes: ['509'],
   type: 'include',
   buses: 'exclude'
+}, {
+  name: 'McHarry Specials',
+  track: ['MH51', 'MH55', 'MH127'],
+  routes: [],
+  type: 'exclude'
+}, {
+  name: 'Moonee Valley Specials',
+  track: ['MV71', 'MV72', 'MV77'],
+  routes: [],
+  type: 'exclude'
+}, {
+  name: 'Panorama Specials',
+  track: ['P8', 'P12'],
+  routes: [],
+  type: 'exclude'
+}, {
+  name: 'Ryan\'s Specials',
+  track: ['R40', 'R41', 'R42'],
+  routes: [],
+  type: 'exclude'
 }]

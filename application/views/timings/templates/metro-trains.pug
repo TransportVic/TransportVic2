@@ -68,12 +68,36 @@ if departures.length
           -
             let {trip} = departure
             let isUpTrip = (trip || {}).direction === 'Up' || trip.runID % 2 === 0
-          if cityLoopStationNames.includes(station.stopName) || isUpTrip
-            - let cityLoopConfig = departure.cityLoopConfig.join(', ')
-            if departure.willSkipLoop
-              span.broadDepartureInfo.important #{cityLoopConfig}
+            
+            let cityLoopConfig = departure.cityLoopConfig.join(', ')
+            let altLoopConfig = departure.altLoopConfig.join(', ')
+            
+            let configText = []
+            let important = false
+            
+            if (altLoopConfig.length) {
+              let shouldShow = (isUpTrip && stopsAt.includes('Newport Railway Station'))
+                || (!isUpTrip && stopsAt.includes('Laverton Railway Station'))
+                
+              if (shouldShow) {
+                if (departure.willSkipALT) important = true
+                configText.push(altLoopConfig)
+              }
+            }
+            
+            if (cityLoopStationNames.includes(station.stopName) || isUpTrip) {
+              if (departure.willSkipCCL) important = true
+              configText.push(cityLoopConfig)
+            }
+            
+            if (!isUpTrip && configText.length === 2) configText.reverse()
+          
+          if configText.length
+            if important
+              span.broadDepartureInfo.important #{configText.join(' -> ')}
             else
-              span.broadDepartureInfo #{cityLoopConfig}
+              
+              span.broadDepartureInfo #{configText.join(' -> ')}
       div.timings
         a(class='timing ' + departure.headwayDevianceClass href=`/metro/run/${departure.tripURL}`)
           span #{departure.pretyTimeToDeparture}

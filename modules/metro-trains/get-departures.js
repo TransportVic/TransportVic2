@@ -369,26 +369,48 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     }
   })
 
-  let cityLoopSkipping = disruptions.filter(disruption => {
+  let nonWorks = disruptions.filter(disruption => {
+    return disruption.type !== 'works'
+  })
+
+  let cityLoopSkipping = nonWorks.filter(disruption => {
     let description = disruption.text.toLowerCase()
-    if (description.includes('maint') || description.includes('works') || disruption.type === 'works') return false
 
     return (description.includes('direct to') && description.includes('not via the city loop'))
      || (description.includes('city loop services') && description.includes('direct between flinders st'))
-     || (description.match(/direct from [\w ]* to flinders st/) && description.includes('not via the city loop'))
+     || (description.match(/direct(?: from)? [\w ]* to flinders st/) && description.includes('not via the city loop'))
   })
 
-  let servicesSkippingLoop = []
-  let linesSkippingLoop = []
+  let altonaLoopSkipping = nonWorks.filter(disruption => {
+    let description = disruption.text.toLowerCase()
+
+    return description.includes('direct') && description.includes('not')
+    && (description.includes('altona') || description.includes('westona') || description.includes('seaholme'))
+    || description.includes('laverton to newport')
+    || description.includes('newport to laverton')
+  })
+
+  let servicesSkippingALT = []
+  let servicesSkippingCCL = []
+  let linesSkippingCCL = []
 
   cityLoopSkipping.forEach(disruption => {
     let service = matchService(disruption)
     if (service) {
-      servicesSkippingLoop.push(service)
+      servicesSkippingCCL.push(service)
     } else {
-      linesSkippingLoop = linesSkippingLoop.concat(disruption.routeName.map(r => routeGTFSIDs[r]))
+      linesSkippingCCL = linesSkippingCCL.concat(disruption.routeName.map(r => routeGTFSIDs[r]))
     }
   })
+
+  altonaLoopSkipping.forEach(disruption => {
+    let service = matchService(disruption)
+    if (service) {
+      servicesSkippingALT.push(service)
+    } // Unsure of the suspension message
+  })
+
+  console.log(servicesSkippingALT, servicesSkippingCCL)
 
   let replacementBuses = departures.filter(departure => departure.flags.includes('RRB-RUN'))
   let trains = departures.filter(departure => !departure.flags.includes('RRB-RUN'))
@@ -470,13 +492,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       else platform = '1'
     }
 
-    let skippingLoop = servicesSkippingLoop.some(r => {
+    let willSkipCCL = servicesSkippingCCL.some(r => {
       return r.origin === trip.origin.slice(0, -16) && r.departureTime === trip.departureTime && r.destination === trip.destination.slice(0, -16)
-    })
+    }) || linesSkippingCCL.includes(routes[routeID].route_gtfs_id)
 
-    let willSkipLoop = skippingLoop || linesSkippingLoop.includes(routes[routeID].route_gtfs_id)
-
-    if (willSkipLoop) {
+    if (willSkipCCL) {
       if (cityLoopStations.includes(stationName)) {
         if (northernGroup.includes(routeID)) {
           if (stationName !== 'Southern Cross') return
@@ -491,6 +511,25 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
         destination = 'Flinders Street'
       } else {
         cityLoopConfig.reverse()
+      }
+    }
+
+    let willSkipALT = servicesSkippingALT.some(r => {
+      return r.origin === trip.origin.slice(0, -16) && r.departureTime === trip.departureTime && r.destination === trip.destination.slice(0, -16)
+    })
+
+    let altLoopConfig = []
+    if (trip.routeName === 'Werribee') {
+      let stops = trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
+      let stopsNPTLAV = stops.includes('Newport') && stops.includes('Laverton')
+      if (stopsNPTLAV) {
+        if (stops.includes('Altona') && !willSkipALT) { // Via ALT Loop
+          altLoopConfig = ['WTO', 'ALT', 'SHE']
+        } else { // Via ML
+          altLoopConfig = ['LAV', 'NPT']
+        }
+
+        if (trip.direction === 'Down') altLoopConfig.reverse()
       }
     }
 
@@ -516,12 +555,15 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       actualDepartureTime,
       platform,
       isRailReplacementBus,
-      cancelled, cityLoopConfig,
+      cancelled,
+      cityLoopConfig,
+      altLoopConfig,
       destination, runID, vehicleType,
       suspensions: mappedSuspensions,
       message,
       consist,
-      willSkipLoop,
+      willSkipCCL,
+      willSkipALT,
       routeID
     })
   }
