@@ -92,7 +92,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'CDC Wyndham Specials',
-  track: ['CW20', 'CW22', 'CW23', 'CW131', 'CW189', 'CW190'],
+  track: ['CW20', 'CW22', 'CW23', 'CW76', 'CW79', 'CW80', 'CW126', 'CW127', 'CW131', 'CW189', 'CW190', 'CW195', 'CW196'],
   routes: [],
   type: 'exclude'
 }, {
