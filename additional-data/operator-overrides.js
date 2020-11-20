@@ -31,6 +31,14 @@ module.exports = {
   "4-51B": ["Dysons"],
   "4-525": ["Dysons"],
   "4-52F": ["Dysons"], // 525
+  "4-52A": ["Broadmeadows Bus Service"], // 528
+  "4-5Z9": ["Broadmeadows Bus Service"], // 529
+  "4-5E0": ["Broadmeadows Bus Service"], // 530
+  "4-5E1": ["Broadmeadows Bus Service"], // 531
+  "4-53Z": ["Broadmeadows Bus Service"], // 531
+  "4-5E3": ["Broadmeadows Bus Service"], // 533
+  "4-5E7": ["Broadmeadows Bus Service"], // 537
+  "4-5A4": ["Broadmeadows Bus Service"],
   "4-552": ["Dysons"],
   "4-556": ["Dysons"],
   "4-570": ["Dysons"],
@@ -38,18 +46,23 @@ module.exports = {
   "4-603": ["Transdev Melbourne"],
   "4-604": ["Transdev Melbourne"],
   "4-68E": ["Martyrs Bus Service"],
-  "4-704": ["Ventura Bus Lines"],
-  "4-74Z": ["Ventura Bus Lines"],
-  "4-7S6": ["Ventura Bus Lines"],
-  "4-7S7": ["Ventura Bus Lines"],
-  "4-800": ["Ventura Bus Lines"],
-  "4-80O": ["Ventura Bus Lines"],
-  "4-834": ["Ventura Bus Lines"],
+  "4-704": ["Ventura Bus Lines"], // 704
+  "4-74Z": ["Ventura Bus Lines"], // 742
+  "4-7S6": ["Ventura Bus Lines"], // 766
+  "4-7S7": ["Ventura Bus Lines"], // 767
+  "4-79Z": ["Cranbourne Transit"], // 792
+  "4-800": ["Ventura Bus Lines"], // 800
+  "4-80O": ["Ventura Bus Lines"], // 800
+  "4-834": ["Ventura Bus Lines"], // 834
   "4-84Z": ["Ventura Bus Lines"], // 842
   "4-84E": ["Ventura Bus Lines"], // 843
   "4-84F": ["Ventura Bus Lines"], // 845
   "4-85X": ["Ventura Bus Lines"], // 857
   "4-86l": ["Ventura Bus Lines"], // 861
+  "4-89Z": ["Cranbourne Transit"], // 892
+  "4-89E": ["Cranbourne Transit"], // 893
+  "4-89F": ["Cranbourne Transit"], // 894
+  "4-89S": ["Cranbourne Transit"], // 897
   "4-900": ["CDC Melbourne", "Ventura Bus Lines"],
   "4-903": ["Transdev Melbourne"],
 
@@ -198,5 +211,7 @@ module.exports = {
   "6-GV1": ["McHarrys Bus Lines"], // Geelong - Apollo Bay
 
   "6-KX1": ["Mitchell Transit"],
-  "6-W12": ["Mitchell Transit"]
+  "6-W12": ["Mitchell Transit"],
+
+  "6-col": ["Hutchinson Buslines"]
 }
