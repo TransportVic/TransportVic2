@@ -415,8 +415,6 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     } // Unsure of the suspension message
   })
 
-  console.log(servicesSkippingALT, servicesSkippingCCL)
-
   let replacementBuses = departures.filter(departure => departure.flags.includes('RRB-RUN'))
   let trains = departures.filter(departure => !departure.flags.includes('RRB-RUN'))
 
