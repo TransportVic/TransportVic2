@@ -328,6 +328,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     }
   })
 
+  if (suspensionMap.Frankston) {
+    let possibleSty = suspensionMap.Frankston.find(s => s.stationB === 'Stony Point Railway Station')
+    if (possibleSty && !suspensionMap['Stony Point']) suspensionMap['Stony Point'] = [possibleSty]
+  }
+
   function matchService(disruption) {
     let text = disruption.text
     let service = text.match(/the (\d+:\d+[ap]m) ([ \w]*?) to ([ \w]*?) (?:train|service )?(?:will|has|is)/i)
@@ -378,7 +383,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
     return (description.includes('direct to') && description.includes('not via the city loop'))
      || (description.includes('city loop services') && description.includes('direct between flinders st'))
-     || (description.match(/direct(?: from)? [\w ]* to flinders st/) && description.includes('not via the city loop'))
+     || ((description.match(/direct(?: from)? [\w ]* to flinders st/) || description.match(/direct(?: from)? flinders st/)) && description.includes('not via the city loop'))
   })
 
   let altonaLoopSkipping = nonWorks.filter(disruption => {
