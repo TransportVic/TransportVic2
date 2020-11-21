@@ -5,15 +5,15 @@ module.exports = {
   "4-281": ["Transdev Melbourne"],
   "4-301": ["Dysons"],
   "4-35Z": ["Dysons"], // 357
-  '4-400': ['CDC Melbourne', 'Sita Bus Lines'],
+  '4-400': ['CDC Melbourne', 'Transit Systems'],
   "4-406": ["CDC Melbourne"],
   "4-409": ["CDC Melbourne"],
   "4-429": ["Transdev Melbourne"],
-  "4-44t": ["Sita Bus Lines"], // 444
-  "4-444": ["Sita Bus Lines"], // 444
-  "4-454": ["Sita Bus Lines"],
-  "4-45S": ["Sita Bus Lines"], // 456
-  "4-4X9": ["Sita Bus Lines"], // 459
+  "4-44t": ["Transit Systems"], // 444
+  "4-444": ["Transit Systems"], // 444
+  "4-454": ["Transit Systems"],
+  "4-45S": ["Transit Systems"], // 456
+  "4-4X9": ["Transit Systems"], // 459
   "4-46z": ["Kastoria Bus Lines"], // 462
   "4-462": ["Kastoria Bus Lines"],
   "4-463": ["Kastoria Bus Lines"],

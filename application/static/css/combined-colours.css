@@ -62,6 +62,14 @@
   background-color: #835300 !important;
 }
 
+.transit-systems {
+  background-color: #228a47 !important;
+}
+
+:nth-child(even) > .transit-systems {
+  background-color: #1b6635 !important;
+}
+
 .kastoria-bus-lines {
   background-color: #205878 !important;
 }

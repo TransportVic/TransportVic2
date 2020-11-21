@@ -26,7 +26,7 @@ module.exports = function (trip) {
       if (hasDandenong) return '695D'
     }
 
-    if (routeNumber === '697' || routeNumber === '695F') { // It jumps around timetables
+    if (routeNumber === '697' || routeNumber === '697F') { // It jumps around timetables
       let hasDandenong = trip.stopTimings.some(stop => stop.stopName === 'Dandenong Market/Cleeland Street')
       let hasFountainGate = trip.stopTimings.some(stop => stop.stopName === 'Fountain Gate Shopping Centre/Overland Drive')
       if (hasDandenong) return '697D'

@@ -31,6 +31,8 @@ function fixOperator(operator) {
   if (operator === 'Transdev') return 'Transdev Melbourne'
   if (operator === 'McHarrys') return 'McHarrys Bus Lines'
   if (operator === 'Panorama') return 'Panorama Coaches'
+  if (operator === 'Sita Bus Lines') return 'Transit Systems'
+  if (operator === 'McKenzies') return 'McKenzies Tourist Service'
 
   if (operator.includes('Dysons ')) {
     return `Dysons (${operator.slice(7)})`
@@ -38,7 +40,6 @@ function fixOperator(operator) {
 
   operator = operator.replace('Night Bus - ', '')
 
-  if (operator === 'McKenzies') return 'McKenzies Tourist Service'
   return operator
 }
 

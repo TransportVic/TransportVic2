@@ -206,6 +206,8 @@ router.get('/highlights', async (req, res) => {
   let oversizeConsist = allTrips.filter(trip => {
     // We're only considering where consist type wasnt changed. otherwise 1xVL and 2xSP would trigger even though its equiv
     if (consistTypeChanged.includes(trip)) return false
+    if (['8118', '8116', '8160', '8158'].includes(trip.runID)) return false
+
     let nspTimetable = timetables[trip.runID]
 
     if (nspTimetable && !nspTimetable.flags.tripAttaches) {
@@ -227,7 +229,7 @@ router.get('/highlights', async (req, res) => {
     let knownSet = vlineConsists[set]
     if (!knownSet) return true
 
-    let carriages = consist.slice(1).filter(c => !c.startsWith('P'))
+    let carriages = consist.filter(c => !c.startsWith('P') && !c.startsWith('N'))
 
     if (knownSet.some(known => !carriages.includes(known))) return true
     if (carriages.some(car => !knownSet.includes(car))) return true
