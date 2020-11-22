@@ -446,7 +446,13 @@ module.exports = {
   47166: "Bay 9",
   47167: "Bay 10",
 
-  //Mitchell Street Bendigo
+  // Mitchell Street Bendigo
   35756: "Bay A",
-  35822: "Bay B"
+  35822: "Bay B",
+
+  // Bairnsdale
+  46443: "Bay 2",
+  46442: "Bay 3",
+  16309: "Bay 4",
+  37915: "Bay 5"
 }
