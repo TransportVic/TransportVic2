@@ -282,7 +282,7 @@ module.exports = [
   'vermont/andrew-street-canterbury-road',
   'pakenham/racecourse-road-henry-street',
   'warrandyte/warrandyte-community-church-yarra-street',
-  'research/post-office-main-road',
+  'north-warrandyte/valias-street-research-warrandyte-road',
   'broadmeadows/broadmeadows-shopping-centre-tanderrum-way',
   'gladstone-park/south-circular-road-gladstone-park-drive',
   'olinda/parsons-lane-monash-avenue',
@@ -350,5 +350,6 @@ module.exports = [
   'broadmeadows/martell-street-joseph-street',
   'corio/rodbrough-crescent-bacchus-marsh-road',
   'donnybrook/eucalyptus-parade-olivine-boulevard',
-  'donnybrook/donnybrook-railway-station'
+  'donnybrook/donnybrook-railway-station',
+  'northcote/westgarth-railway-station'
 ]

@@ -218,22 +218,23 @@ router.get('/bot', async (req, res) => {
         return lineRanges[possibleLine].includes(runID)
       })
 
-      if (!line) return trip
-      let lineGroup = lineGroups[line]
+      if (line) {
+        let lineGroup = lineGroups[line]
 
-      // Down, handles CCL too
-      if (trip.destination === 'Flinders Street' || trip.origin === 'Flinders Street') {
-        if (viaLoop) {
-          if (lineGroup === 'City Circle') type = 'Via City Circle'
-          else type = `Via ${lineGroupCodes[lineGroup]} Loop`
-        } else {
-          if (trip.destination === 'Southern Cross') type = 'Direct'
-          else if (lineGroup === 'Northern') type = 'NME Via SSS Direct'
-          else type = 'Direct'
+        // Down, handles CCL too
+        if (trip.destination === 'Flinders Street' || trip.origin === 'Flinders Street') {
+          if (viaLoop) {
+            if (lineGroup === 'City Circle') type = 'Via City Circle'
+            else type = `Via ${lineGroupCodes[lineGroup]} Loop`
+          } else {
+            if (trip.destination === 'Southern Cross') type = 'Direct'
+            else if (lineGroup === 'Northern') type = 'NME Via SSS Direct'
+            else type = 'Direct'
+          }
+
+          trip.type = type
+          trip.typeCode = typeCode[type]
         }
-
-        trip.type = type
-        trip.typeCode = typeCode[type]
       }
 
       let metroType = metroTypes.find(car => trip.consist.includes(car.leadingCar))
