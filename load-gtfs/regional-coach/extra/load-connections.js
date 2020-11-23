@@ -14,7 +14,7 @@ let mode = {
 }
 
 function getHumanName(fullStopName, suburb) {
-  return destinationOverrides.stops[`${fullStopName} ${suburb}`] || fullStopName.replace(/Railway Station.*/, '')
+  return destinationOverrides.stops[`${fullStopName.replace('Shopping Centre', 'SC')} ${suburb}`] || fullStopName.replace(/Railway Station.*/, '')
 }
 
 async function findConnections(changeoverPoint) {

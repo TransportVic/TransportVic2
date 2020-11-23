@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
 })
 
 function getHumanName(fullStopName, stopSuburb) {
-  return destinationOverrides.stops[`${fullStopName} ${stopSuburb}`] || fullStopName.replace(/Railway Station.*/, '')
+  return destinationOverrides.stops[`${fullStopName.replace('Shopping Centre', 'SC')} ${stopSuburb}`] || fullStopName.replace(/Railway Station.*/, '')
 }
 
 router.post('/', async (req, res) => {

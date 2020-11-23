@@ -66,7 +66,7 @@ let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne 
 
 module.exports = {
   getHumanName: (fullStopName, stopSuburb) => {
-    return destinationOverrides.stops[`${fullStopName} ${stopSuburb}`] || fullStopName.replace(/Railway Station.*/, '')
+    return destinationOverrides.stops[`${fullStopName.replace('Shopping Centre', 'SC')} ${stopSuburb}`] || fullStopName.replace(/Railway Station.*/, '')
   },
   getEmptyShunts: async (station, db) => {
     return await utils.getData('pid-arrivals', station.stopName, async () => {
