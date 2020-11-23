@@ -181,6 +181,8 @@ async function appendTripData(db, departure, vlinePlatforms) {
     let nswPlatform = vlinePlatforms.find(bay => bay.stopGTFSID === stopTiming.stopGTFSID)
     let platformNumber = nswPlatform.originalName.match(/Platform (\d+)/)[1]
     departure.platform = platformNumber
+
+    if (departure.trip.consist) departure.vehicle = departure.trip.consist.join('-')
   } else {
     let vlinePlatform = vlinePlatforms.find(bay => bay.stopGTFSID < 140000000)
     let { stopGTFSID } = vlinePlatform

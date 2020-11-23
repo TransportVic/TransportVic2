@@ -104,9 +104,23 @@ async function fetchAndUpdate() {
     gtfsTrip.updateTime = new Date()
     gtfsTrip.operationDays = utils.getYYYYMMDD(tripStartTime)
 
-    let vehicle
-    if (vehicle = rawTripID.match(/\.X\.(\d)\./)) {
-      gtfsTrip.vehicle = `${vehicle[1]}x XPT`
+    let consist = trip.vehicle
+
+    if (!consist) {
+      let nswTrip = relevantNSWTrips.find(trip => trip.trip.trip_id.startsWith(runID))
+      if (nswTrip) consist = nswTrip.vehicle
+    }
+
+    if (consist && consist.id) {
+      let rawID = (consist.id || '').toString()
+      if (rawID.match(/XP\d{4}/)) {
+        gtfsTrip.consist = [rawID]
+      }
+    }
+
+    let xptSize
+    if (xptSize = rawTripID.match(/\.X\.(\d)\./)) {
+      gtfsTrip.vehicle = `${xptSize[1]}x XPT`
     }
 
     delete gtfsTrip._id
