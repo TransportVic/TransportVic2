@@ -6,13 +6,13 @@ function setMessagesActive(side, active) {
     $$('.message').style = 'display: flex;'
     $$('.firstDeparture').style = 'display: none;'
     $$('.stops').style = 'display: none';
+
+    currentPattern[side] = null
   } else {
     $$('.message').style = 'display: none;'
     $$('.firstDeparture').style = 'display: flex;'
     $$('.stops').style = 'display: flex;'
   }
-
-  currentPattern[side] = null
 
   $$('.fullMessage').style = 'display: none;'
 }
@@ -25,13 +25,13 @@ function setFullMessageActive(side, active) {
     $$('.fullMessage').style = 'display: flex;'
     $$('.firstDeparture').style = 'display: none;'
     $$('.stops').style = 'display: none;'
+
+    currentPattern[side] = null
   } else {
     $$('.fullMessage').style = 'display: none;'
     $$('.firstDeparture').style = 'display: flex;'
     $$('.stops').style = 'display: flex'
   }
-
-  currentPattern[side] = null
 
   $$('.message').style = 'display: none;'
 }
@@ -241,7 +241,6 @@ function scrollConnections(side, connectionsSpan) {
   }
 
   connectionsScrollTimeout[side] = setTimeout(async () => {
-    console.log('timeout', side)
     scrollConnections(side, await animateScrollingText(side, connectionsSpan, connectionsSize))
   }, 2000)
 }
