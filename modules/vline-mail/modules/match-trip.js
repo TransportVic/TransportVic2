@@ -15,7 +15,7 @@ module.exports = async function (db, departureTime, origin, destination, keepID=
       departureHour = 0
     }
 
-    if (departureHour <= 2) now.add(-1, 'day')
+    if (departureHour <= 2 || departureHour >= 22) now.add(-1, 'day')
   }
   let today = utils.getYYYYMMDD(now)
   let operationDay = await getDayOfWeek(now)
