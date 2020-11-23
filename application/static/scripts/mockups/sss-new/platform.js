@@ -241,13 +241,14 @@ function scrollConnections(side, connectionsSpan) {
   }
 
   connectionsScrollTimeout[side] = setTimeout(async () => {
+    console.log('timeout', side)
     scrollConnections(side, await animateScrollingText(side, connectionsSpan, connectionsSize))
   }, 2000)
 }
 
 $.loaded(() => {
   setTimeout(() => {
-    shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 200 // px
+    shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 250 // px
 
     updateBody(true)
     setTimeout(() => {

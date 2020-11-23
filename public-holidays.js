@@ -1,6 +1,5 @@
 const ical = require('node-ical')
 const path = require('path')
-const moment = require('moment')
 const DatabaseConnection = require('./database/DatabaseConnection')
 const config = require('./config.json')
 const utils = require('./utils')

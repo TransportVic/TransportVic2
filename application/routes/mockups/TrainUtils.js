@@ -65,14 +65,8 @@ let caulfieldGroup = [
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 module.exports = {
-  getHumanName: (fullStopName, stopSuburb='') => {
-    let stopName = fullStopName.replace('Shopping Centre', 'SC')
-    let humanName = destinationOverrides[fullStopName] || destinationOverrides[`${fullStopName} (${stopSuburb})`] || fullStopName
-    if (humanName.includes('Railway Station')) {
-      humanName = humanName.replace(/Railway Station.*/, '').trim()
-    }
-
-    return humanName
+  getHumanName: (fullStopName, stopSuburb) => {
+    return destinationOverrides.stops[`${fullStopName} ${stopSuburb}`] || fullStopName.replace(/Railway Station.*/, '')
   },
   getEmptyShunts: async (station, db) => {
     return await utils.getData('pid-arrivals', station.stopName, async () => {
@@ -164,7 +158,7 @@ module.exports = {
                   return changeIndex > currentIndex
                 }).map(connection => ({
                   changeAt: connection.changeAt,
-                  for: module.exports.getHumanName(connection.for)
+                  for: module.exports.getHumanName(connection.for, connection.forSuburb)
                 }))
 
                 return departure

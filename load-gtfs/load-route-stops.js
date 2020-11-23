@@ -78,12 +78,13 @@ database.connect({}, async err => {
       if (mostCommonDestinations[0] === mostCommonOrigin && mostCommonDestinations.length > 1) mostCommonDestinations.shift()
       mostCommonDestination = mostCommonDestinations[0]
 
-      let lastStop = mergedStops.slice(-1)[0].stopName
+      let lastStop = mergedStops.slice(-1)[0]
+      let lastStopName = lastStop.stopName
 
       let directionName
 
-      if (lastStop.includes('School') || lastStop.includes('College')) directionName = mostCommonDestination
-      else directionName = lastStop
+      if (lastStopName.includes('School') || lastStopName.includes('College')) directionName = mostCommonDestination
+      else directionName = lastStopName
 
       let directionShortName = directionName.split('/')[0].replace('Shopping Centre', 'SC')
       if (!utils.isStreet(directionShortName)) directionName = directionShortName
@@ -100,7 +101,7 @@ database.connect({}, async err => {
 
       directionName = serviceData[directionName]
         || busDestinations.generic[directionName]
-        || coachDestinations[directionName] || tramDestinations[directionName] || directionName
+        || coachDestinations(lastStop) || tramDestinations[directionName] || directionName
 
       if (!stopsByService[routeGTFSID]) stopsByService[routeGTFSID] = []
       stopsByService[routeGTFSID][gtfsDirection] = {

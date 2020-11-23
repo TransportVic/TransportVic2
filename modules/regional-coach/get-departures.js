@@ -201,10 +201,10 @@ async function getDepartures(stop, db) {
       let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
       departures = await async.map(departures, async departure => {
-        let {destination} = departure.trip
-        let destinationSuburb = departure.trip.stopTimings.slice(-1)[0].suburb
-        destination = destination.replace('Shopping Centre', 'SC')
-        destination = destinationOverrides[destination + ` (${destinationSuburb})`] || destinationOverrides[destination] || destination
+        let destination = destinationOverrides(departure.trip.stopTimings.slice(-1)[0])
+        if (departure.trip.destination.includes(' Railway Station')) {
+          destination = departure.trip.destination.split('/')[0]
+        }
 
         let shortName = utils.getStopName(destination)
         if (!utils.isStreet(shortName)) destination = shortName

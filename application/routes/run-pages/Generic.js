@@ -148,12 +148,8 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   origin = origin.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
 
   if (trip.mode === 'regional coach') {
-    destination = fullDestination.replace('Shopping Centre', 'SC')
-    origin = fullOrigin.replace('Shopping Centre', 'SC')
-
-    let destinationSuburb = trip.stopTimings.slice(-1)[0].suburb
-    destination = coachDestinations[destination + ` (${destinationSuburb})`] || coachDestinations[destination] || destination
-    origin = coachDestinations[origin] || origin
+    origin = coachDestinations(trip.stopTimings[0])
+    destination = coachDestinations(trip.stopTimings.slice(-1)[0])
 
     let destShortName = utils.getStopName(destination)
     if (!utils.isStreet(destShortName)) destination = destShortName
