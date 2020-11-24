@@ -145,10 +145,13 @@ div.stops div.stopsColumn div span {
 }
 
 
+div.vertLine {
+  width: calc(var(--width) * 0.0025);
+  background-color: #ffffff;
+}
 
 div.right {
   width: calc(var(--width) * 0.3475);
-  border-left: calc(var(--width) * 0.0025) solid white;
   display: flex;
   flex-direction: column;
 }
