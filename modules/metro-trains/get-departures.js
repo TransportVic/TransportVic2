@@ -386,7 +386,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     return (description.includes('direct to') && description.includes('not via the city loop'))
      || (description.includes('city loop services') && description.includes('direct between flinders st'))
      || ((description.match(/direct(?: from)? [\w ]* to flinders st/) || description.match(/direct(?: from)? flinders st/)) && description.includes('not via the city loop'))
-     && !description.includes('resume')
+     && !description.includes('resume') && !description.includes('select trains')
   })
 
   let altonaLoopSkipping = nonWorks.filter(disruption => {
