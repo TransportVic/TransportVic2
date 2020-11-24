@@ -62,7 +62,9 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip) {
 }
 
 function mapSuspension(suspensionText, routeName) {
-  let stationsAffected = suspensionText.replace(/\u00A0/g, ' ').match(/between ([ \w]+) and ([ \w]+) (?:stations|due)/i)
+  let stationsAffected = suspensionText
+    .replace(/\u00A0/g, ' ').replace(/[–-]/, ' and ')
+    .match(/between ([ \w]+) and ([ \w]+) (?:stations|due)/i)
 
   if (!stationsAffected) return
   let startStation = stationsAffected[1].trim()
@@ -384,6 +386,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     return (description.includes('direct to') && description.includes('not via the city loop'))
      || (description.includes('city loop services') && description.includes('direct between flinders st'))
      || ((description.match(/direct(?: from)? [\w ]* to flinders st/) || description.match(/direct(?: from)? flinders st/)) && description.includes('not via the city loop'))
+     && !description.includes('resume')
   })
 
   let altonaLoopSkipping = nonWorks.filter(disruption => {

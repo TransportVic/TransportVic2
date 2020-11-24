@@ -276,8 +276,9 @@ async function getScheduledMetroDepartures(station, db) {
   }
 
   return (await async.map(departures, async departure => {
-    let cityLoopConfig = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
-    .filter(stop => filterStops.includes(stop)).map(stop => stopCodes[stop])
+    let tripStops = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
+
+    let cityLoopConfig = tripStops.filter(stop => filterStops.includes(stop)).map(stop => stopCodes[stop])
     let willGoByCityLoop = cityLoopConfig.includes('MCE')
 
     if (isInCity && departure.trip.destination === 'Parliament Railway Station') return null
@@ -308,6 +309,22 @@ async function getScheduledMetroDepartures(station, db) {
 
       departure.cityLoopConfig = cityLoopConfig
     }
+
+    let altLoopConfig = []
+    if (departure.trip.routeName === 'Werribee') {
+      let stopsNPTLAV = tripStops.includes('Newport') && tripStops.includes('Laverton')
+      if (stopsNPTLAV) {
+        if (tripStops.includes('Altona') && !willSkipALT) { // Via ALT Loop
+          altLoopConfig = ['WTO', 'ALT', 'SHE']
+        } else { // Via ML
+          altLoopConfig = ['LAV', 'NPT']
+        }
+
+        if (departure.trip.direction === 'Down') altLoopConfig.reverse()
+      }
+    }
+
+    departure.altLoopConfig = altLoopConfig
 
     if (departure.trip.routeGTFSID === '2-CCL')
       departure.destination = 'City Circle'
