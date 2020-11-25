@@ -217,7 +217,7 @@ router.get('/service', async (req, res) => {
   await async.forEachSeries(operationDays, async date => {
     let smartrakIDsByDate = await busTrips.distinct('smartrakID', {
       date,
-      routeNumber: service
+      routeNumber: routeQuery
     })
     let buses = (await async.map(smartrakIDsByDate, async smartrakID => {
       let fleetNumber = smartrakIDCache[smartrakID]
