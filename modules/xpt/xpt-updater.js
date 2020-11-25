@@ -30,6 +30,8 @@ async function fetchAndUpdate() {
 
     let gtfsTrip
 
+    let tripStartTime
+
     if (nswTrainsTrip && nswTrainsTrip.trip.start_date) {
       let knownQuery = { runID, operationDays: nswTrainsTrip.trip.start_date }
       gtfsTrip = await liveTimetables.findDocument(knownQuery) || await gtfsTimetables.findDocument(knownQuery)
@@ -40,7 +42,6 @@ async function fetchAndUpdate() {
         tripStartTime = startDate.clone().add(startMinutes, 'minutes')
       }
     } else {
-      let tripStartTime
       let yesterday = utils.now().add(-1, 'day').startOf('day')
       let yesterdayQuery = { runID, operationDays: utils.getYYYYMMDD(yesterday) }
       let yesterdayTrip = await liveTimetables.findDocument(yesterdayQuery) || await gtfsTimetables.findDocument(yesterdayQuery)
