@@ -314,7 +314,7 @@ async function getScheduledMetroDepartures(station, db) {
     if (departure.trip.routeName === 'Werribee') {
       let stopsNPTLAV = tripStops.includes('Newport') && tripStops.includes('Laverton')
       if (stopsNPTLAV) {
-        if (tripStops.includes('Altona') && !willSkipALT) { // Via ALT Loop
+        if (tripStops.includes('Altona')) { // Via ALT Loop
           altLoopConfig = ['WTO', 'ALT', 'SHE']
         } else { // Via ML
           altLoopConfig = ['LAV', 'NPT']

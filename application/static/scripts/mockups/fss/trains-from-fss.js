@@ -213,11 +213,11 @@ function updateBody() {
 
 function setSVGSize() {
   let windowSize = parseInt(getComputedStyle(document.body).getPropertyValue('width').slice(0, -2))
-  let targetSize = windowSize * 0.47
+  let targetSize = windowSize * 0.48
 
-  let scalingFactor = targetSize / 59.953
+  let scalingFactor = targetSize / 61.45
 
-  let containerHeight = targetSize * (36.838/59.953)
+  let containerHeight = targetSize * (38.34/61.45)
 
   $('#cclSVG').style = `transform: scale(${scalingFactor})`
   $('#svgContainer').style = `height: ${containerHeight}px`
