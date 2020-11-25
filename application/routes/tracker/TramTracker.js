@@ -296,7 +296,7 @@ router.get('/highlights', async (req, res) => {
   else date = today
 
   let unknownTrams = (await tramTrips.findDocuments({
-    date: today,
+    date: date,
     tram: {
       $not: {
         $in: knownTrams

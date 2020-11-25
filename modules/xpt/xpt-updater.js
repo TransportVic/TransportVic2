@@ -25,20 +25,34 @@ async function fetchAndUpdate() {
     let rawTripID = trip.trip.trip_id
     let runID = rawTripID.slice(0, 4)
 
+    let sydneyTrainsTrip = trip.stop_time_update
+    let nswTrainsTrip = relevantNSWTrips.find(trip => trip.trip.trip_id.startsWith(runID))
+
     let gtfsTrip
 
-    let tripStartTime
-    let yesterday = utils.now().add(-1, 'day').startOf('day')
-    let yesterdayQuery = { runID, operationDays: utils.getYYYYMMDD(yesterday) }
-    let yesterdayTrip = await liveTimetables.findDocument(yesterdayQuery) || await gtfsTimetables.findDocument(yesterdayQuery)
+    if (nswTrainsTrip && nswTrainsTrip.trip.start_date) {
+      let knownQuery = { runID, operationDays: nswTrainsTrip.trip.start_date }
+      gtfsTrip = await liveTimetables.findDocument(knownQuery) || await gtfsTimetables.findDocument(knownQuery)
 
-    if (yesterdayTrip) {
-      let yesterdayEndTime = yesterday.clone().add(yesterdayTrip.stopTimings.slice(-1)[0].arrivalTimeMinutes, 'minutes')
-      if (utils.now() < yesterdayEndTime) {
-        gtfsTrip = yesterdayTrip
-
+      let startDate = utils.parseDate(nswTrainsTrip.trip.start_date)
+      if (gtfsTrip) {
         let startMinutes = gtfsTrip.stopTimings[0].departureTimeMinutes
-        tripStartTime = yesterday.clone().add(startMinutes, 'minutes')
+        tripStartTime = startDate.clone().add(startMinutes, 'minutes')
+      }
+    } else {
+      let tripStartTime
+      let yesterday = utils.now().add(-1, 'day').startOf('day')
+      let yesterdayQuery = { runID, operationDays: utils.getYYYYMMDD(yesterday) }
+      let yesterdayTrip = await liveTimetables.findDocument(yesterdayQuery) || await gtfsTimetables.findDocument(yesterdayQuery)
+
+      if (yesterdayTrip) {
+        let yesterdayEndTime = yesterday.clone().add(yesterdayTrip.stopTimings.slice(-1)[0].arrivalTimeMinutes, 'minutes')
+        if (utils.now() < yesterdayEndTime + 1000 * 60 * 60 * 5) { // Give it a buffer of 5 hours late?
+          gtfsTrip = yesterdayTrip
+
+          let startMinutes = gtfsTrip.stopTimings[0].departureTimeMinutes
+          tripStartTime = yesterday.clone().add(startMinutes, 'minutes')
+        }
       }
     }
 
@@ -55,9 +69,6 @@ async function fetchAndUpdate() {
 
     let startMinutes = gtfsTrip.stopTimings[0].departureTimeMinutes
 
-    let sydTrainsTimeUpdates = trip.stop_time_update
-    let nswTrainsTimeUpdates = relevantNSWTrips.find(trip => trip.trip.trip_id.startsWith(runID))
-
     async function parseStopTimeUpdates(stopTimeUpdates) {
       await async.forEach(stopTimeUpdates, async stop => {
         let stopGTFSID = parseInt(stop.stop_id.replace('P', '0')) + 140000000
@@ -72,8 +83,8 @@ async function fetchAndUpdate() {
       })
     }
 
-    await parseStopTimeUpdates(sydTrainsTimeUpdates)
-    if (nswTrainsTimeUpdates) await parseStopTimeUpdates(nswTrainsTimeUpdates.stop_time_update)
+    await parseStopTimeUpdates(sydneyTrainsTrip)
+    if (nswTrainsTrip) await parseStopTimeUpdates(nswTrainsTrip.stop_time_update)
 
     gtfsTrip.stopTimings.forEach((stop, i) => {
       let nextStop = gtfsTrip.stopTimings[i + 1]
@@ -106,10 +117,7 @@ async function fetchAndUpdate() {
 
     let consist = trip.vehicle
 
-    if (!consist) {
-      let nswTrip = relevantNSWTrips.find(trip => trip.trip.trip_id.startsWith(runID))
-      if (nswTrip) consist = nswTrip.vehicle
-    }
+    if (!consist && nswTrainsTrip) consist = nswTrainsTrip.vehicle
 
     if (consist && consist.id) {
       let rawID = (consist.id || '').toString()
