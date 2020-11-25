@@ -28,7 +28,7 @@ async function handleMessage(subject, rawText) {
   let text = rawText.replace(/SCS/g, 'Southern Cross').replace(/Flinders St\.? /g, 'Flinders Street').replace(/\n/g, ' ').replace(/\u00A0/g, ' ').replace(/More information at.+/, '').replace(/[-–]/g, ' to ').replace(/  +/g, ' ').trim()
 
   if (text.length > 300) {
-    return global.loggers.spamMail.log(`Disregarded vline email: ${data.text.trim()}`)
+    return global.loggers.spamMail.log(`Disregarded vline email: ${text.trim()}`)
   }
 
   global.loggers.mail.log(`Got Mail: ${text.replace(/\n/g, ' ')}`)

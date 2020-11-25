@@ -18,12 +18,12 @@ async function setServiceNonStop(db, departureTime, origin, destination, skippin
     trip.type = 'pattern-altered'
 
     trip.stopTimings = trip.stopTimings.map(stop => {
-      stop.cancelled = stop.stopName.slice(0, -16) === skipping
+      stop.cancelled = skipping.includes(stop.stopName.slice(0, -16))
       return stop
     })
 
-    global.loggers.mail.info(`Marking ${trip.departureTime} ${origin} - ${destination} train as not stopping at ${skipping}`)
-    await discordUpdate(`The ${trip.departureTime} ${origin} - ${destination} service will not stop at ${skipping} today.`)
+    global.loggers.mail.info(`Marking ${trip.departureTime} ${origin} - ${destination} train as not stopping at ${skipping.join(', ')}`)
+    await discordUpdate(`The ${trip.departureTime} ${origin} - ${destination} service will not stop at ${skipping.join(', ')} today.`)
 
     trip.operationDays = today
 
@@ -41,19 +41,19 @@ async function setServiceNonStop(db, departureTime, origin, destination, skippin
     }
 
     global.loggers.mail.err('Failed to find trip', identifier)
-    await discordUpdate(`Was told the ${departureTime} ${origin} - ${destination} service would not stop at ${skipping} today, but could not match.`)
+    await discordUpdate(`Was told the ${departureTime} ${origin} - ${destination} service would not stop at ${skipping.join(', ')} today, but could not match.`)
   }
 }
 
 function nonStop(db, text) {
   text = text.replace('will run express through', 'will not stop at')
-  let service = (text + '.').match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) to ([\w ]*?)(?:service|train)? will not stop at ([\w ]*?)(?: today)?\./m)
+  let service = (text + '.').match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) to ([\w ]*?)(?:service|train)? will not stop at ([\w ,]*?)(?: today|this.*)?\./m)
 
   if (service) {
     let departureTime = service[1].replace('.', ':')
     let origin = bestStop(service[2]) + ' Railway Station'
     let destination = bestStop(service[3]) + ' Railway Station'
-    let skipping = bestStop(service[4])
+    let skipping = service[4].replace('and', ',').split(',').map(s => bestStop(s.trim()))
 
     setServiceNonStop(db, departureTime, origin, destination, skipping)
   }
