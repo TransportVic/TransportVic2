@@ -61,6 +61,7 @@ database.connect({}, async err => {
 
   await async.forEachSeries(allRoutes, async routeGTFSID => {
     let routeData = await routes.findDocument({ routeGTFSID })
+
     let brokenShapes = await async.filter(routeData.routePath, async path => {
       if (path.fixed) return false
       let timetable = await gtfsTimetables.findDocument({ shapeID: path.fullGTFSIDs[0] })
@@ -71,16 +72,16 @@ database.connect({}, async err => {
 
       let forceFail = false
 
-      let forceFailLength = 30
-      let failLength = 20
+      let forceFailLength = 25
+      let failLength = 15
 
       if (smallerErrorRoutes.includes(routeGTFSID)) {
-        forceFailLength = 4
+        forceFailLength = 3
       } else if (knownBadRoutes.includes(routeGTFSID) || path.length < 40 * 1000) {
         forceFailLength = 10
-        failLength = 6
+        failLength = 5
       } else if (path.length < 100 * 1000) {
-        forceFailLength = 20
+        forceFailLength = 15
         failLength = 10
       }
 
@@ -105,33 +106,52 @@ database.connect({}, async err => {
     await async.forEachSeries(brokenShapes, async shape => {
       let timetable = shapeCache[shape.fullGTFSIDs[0]]
       if (!timetable) return
-      if (timetable.stopTimings.length > 25) return console.log('Don\'t know how to deal with long route!', timetable.shapeID)
 
       count++
 
-      let stopCoordinates = (await async.map(timetable.stopTimings, async stop => {
-        if (stop.stopName === 'Southern Cross Coach Terminal/Spencer Street') return '144.952117,-37.815994'
-        let stopData = await stops.findDocument({ 'bays.stopGTFSID': stop.stopGTFSID })
-        let bay = stopData.bays.find(bay => bay.stopGTFSID === stop.stopGTFSID && bay.mode === 'regional coach')
-        return bay.location.coordinates.join(',')
-      })).join(';')
+      let fullPath = []
 
-      let radiuses = timetable.stopTimings.map(_ => '200').join(';')
+      for (let i = 0; i < timetable.stopTimings.length; i+= 25) {
+        let start = i === 0 ? 0 : i - 1
+        let relevantStops = timetable.stopTimings.slice(start, i + 25)
 
-      let url = baseURL.format(stopCoordinates, radiuses)
-      let routePathData = JSON.parse(await utils.request(url))
-      if (!routePathData.routes[0]) return console.log('Failed to generate route path for', timetable)
-      let routePath = routePathData.routes[0].geometry
+        let stopCoordinates = (await async.map(relevantStops, async stop => {
+          if (stop.stopName === 'Southern Cross Coach Terminal/Spencer Street') return '144.952117,-37.815994'
+          let stopData = await stops.findDocument({ 'bays.stopGTFSID': stop.stopGTFSID })
+          let bay = stopData.bays.find(bay => bay.stopGTFSID === stop.stopGTFSID && bay.mode === 'regional coach')
+          return bay.location.coordinates.join(',')
+        })).join(';')
+
+        let radiuses = relevantStops.map(_ => '200').join(';')
+
+        let url = baseURL.format(stopCoordinates, radiuses)
+        if (start !== 0) {
+          let lastTwo = fullPath.slice(-2)
+          let bearing = turf.bearing(turf.point(lastTwo[0]), turf.point(lastTwo[1]))
+          if (bearing < 0) bearing += 360
+
+          url += `&bearings=${bearing},45;`
+          url += relevantStops.slice(1).map(_ => '').join(';')
+        }
+
+        let routePathData = JSON.parse(await utils.request(url))
+        if (!routePathData.routes[0]) return console.log('Failed to generate route path for', timetable)
+        let routePath = routePathData.routes[0].geometry.coordinates
+
+        fullPath = fullPath.concat(routePath.slice(i === 0 ? 0 : 1))
+      }
 
       let badPath = routeData.routePath.find(path => path.fullGTFSIDs.includes(timetable.shapeID))
 
-      badPath.path = routePath.coordinates
+      badPath.path = fullPath
       badPath.fixed = true
 
       await asyncPause(750)
     })
 
-    if (brokenShapes.length) await routes.replaceDocument({ routeGTFSID }, routeData)
+    if (brokenShapes.length) {
+      await routes.replaceDocument({ routeGTFSID }, routeData)
+    }
   })
 
   await updateStats('coach-pathing', count)
