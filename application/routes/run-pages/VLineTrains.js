@@ -75,12 +75,20 @@ async function pickBestTrip(data, db) {
       if (terminate) possibleDestinations.$in.push(terminate.changePoint)
     }
 
-    let tripData = await vlineTrips.findDocument({
-      date: operationDays,
-      departureTime: trackerDepartureTime,
-      origin: possibleOrigins,
-      destination: possibleDestinations
-    })
+    let tripData
+    if (referenceTrip.runID) {
+      tripData = await vlineTrips.findDocument({
+        date: operationDays,
+        runID: referenceTrip.runID
+      })
+    } else {
+      tripData = await vlineTrips.findDocument({
+        date: operationDays,
+        departureTime: trackerDepartureTime,
+        origin: possibleOrigins,
+        destination: possibleDestinations
+      })
+    }
 
     if (!tripData) {
       if (referenceTrip.direction === 'Up') {
