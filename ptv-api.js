@@ -45,7 +45,7 @@ async function getPTVKey(baseURL='https://ptv.vic.gov.au') {
     let key = $('#fetch-key').val()
 
     return key
-  })
+  }, 1000 * 60 * 60)
 }
 
 module.exports = makeRequest
