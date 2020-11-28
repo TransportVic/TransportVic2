@@ -71,7 +71,7 @@ module.exports = async (collection, operationDay, origin, destination, departure
 
   let varianceAllowed = 5
   if (traralgonStops.includes(origin) || traralgonStops.includes(destination)) {
-    varianceAllowed = 25
+    varianceAllowed = 20
   }
 
   if (longDistanceCountryStops.includes(origin) || longDistanceCountryStops.includes(destination)) {

@@ -50,11 +50,15 @@ async function getDeparturesFromVNET(db) {
       if (nspTrip) nspMatchedMethod = 'runID'
     }
 
-    let trip = (await liveTimetables.findDocument({
+    let trip = await liveTimetables.findDocument({
       operationDays: departureDay,
       runID: departure.runID,
       mode: 'regional train'
-    })) || await findTrip(gtfsTimetables, departureDay, departure.origin, departure.destination, departureTimeHHMM)
+    }) || await findTrip(gtfsTimetables, departureDay, departure.origin, departure.destination, departureTimeHHMM)
+
+    if (!trip && nspTrip) {
+      trip = await findTrip(gtfsTimetables, departureDay, nspTrip.origin, nspTrip.destination, nspTrip.departureTime)
+    }
 
     trip = await correctARTMBY(departure, trip, gtfsTimetables, departureDay)
 

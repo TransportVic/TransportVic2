@@ -46,6 +46,7 @@ module.exports = async function (trip, departure, nspTrip, liveTimetables, date)
     }
 
     delete trip._id
+
     await liveTimetables.replaceDocument({
       operationDays: date,
       runID: departure.runID,
