@@ -21,16 +21,16 @@ router.get('/bot', async (req, res) => {
     $or: [{
       fromDate: {
         $gte: startOfDay,
-        $lte: endOfDay
+        $lt: endOfDay
       },
     }, {
       toDate: {
         $gte: startOfDay,
-        $lte: endOfDay
+        $lt: endOfDay
       }
     }, {
       fromDate: {
-        $lte: endOfDay
+        $lt: endOfDay
       },
       toDate: {
         $gte: endOfDay

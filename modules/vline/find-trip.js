@@ -40,11 +40,40 @@ let longDistanceCountryStops = [
   "Epsom"
 ].map(x => x + ' Railway Station')
 
+let traralgonStops = [
+  'Richmond',
+  'Caulfield',
+  'Clayton',
+  'Dandenong',
+  'Berwick',
+  'Pakenham',
+  'Nar Nar Goon',
+  'Tynong',
+  'Garfield',
+  'Bunyip',
+  'Longwarry',
+  'Drouin',
+  'Warragul',
+  'Yarragon',
+  'Trafalgar',
+  'Moe',
+  'Morwell',
+  'Traralgon',
+  'Rosedale',
+  'Sale',
+  'Stratford',
+  'Bairnsdale'
+].map(x => x + ' Railway Station')
+
 module.exports = async (collection, operationDay, origin, destination, departureTime) => {
   let tripStartMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime)
   if (tripStartMinutes < 180) tripStartMinutes += 1440
 
   let varianceAllowed = 5
+  if (traralgonStops.includes(origin) || traralgonStops.includes(destination)) {
+    varianceAllowed = 25
+  }
+
   if (longDistanceCountryStops.includes(origin) || longDistanceCountryStops.includes(destination)) {
     varianceAllowed = 25
   }
