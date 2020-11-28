@@ -46,7 +46,7 @@ module.exports = async (collection, operationDay, origin, destination, departure
 
   let varianceAllowed = 5
   if (longDistanceCountryStops.includes(origin) || longDistanceCountryStops.includes(destination)) {
-    varianceAllowed = 13
+    varianceAllowed = 25
   }
 
   let variedDepartureTime = {
