@@ -141,8 +141,13 @@ async function pickBestTrip(data, db) {
     } else {
       let nspStop = nspTrip && nspTrip.stopTimings.find(nspStop => nspStop.stopGTFSID === stop.stopGTFSID && nspStop.platform)
 
+      let isSSS = stop.stopName === 'Southern Cross Railway Station'
+
+      if (isSSS && stop.livePlatform) return stop
+
       if (nspStop) {
-        stop.platform = nspStop.platform + '?'
+        let nspPlatform = nspStop.platform.replace('C', 'A').replace('N', 'B')
+        stop.platform = nspPlatform + '?'
       } else {
         stop.platform = guessPlatform(stop.stopName.slice(0, -16), stop.departureTimeMinutes,
           referenceTrip.routeName, referenceTrip.direction)

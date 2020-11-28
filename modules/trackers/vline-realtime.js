@@ -7,6 +7,7 @@ const findTrip = require('../vline/find-trip')
 const getVNETDepartures = require('../vline/get-vnet-departures')
 const schedule = require('./scheduler')
 const vlineLock = require('../vline/vline-lock-wrap')
+const { getDayOfWeek } = require('../../public-holidays')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
@@ -140,79 +141,157 @@ async function fetchData() {
     await utils.sleep(2500)
   })
 
-  try {
-    vlineLock.createLock()
+  await async.forEach(Object.keys(combinedTripData), async runID => {
+    let stopDelays = combinedTripData[runID]
+    let trip = trips[runID]
 
-    await async.forEach(Object.keys(combinedTripData), async runID => {
-      let stopDelays = combinedTripData[runID]
-      let trip = trips[runID]
+    let tripStops = trip.stopTimings.map(stop => stop.stopName)
+    let orderedStops = Object.keys(stopDelays).map(stop => [stop, tripStops.indexOf(stop)])
+      .sort((a, b) => a[1] - b[1]).map(stop => stop[0])
 
-      let tripStops = trip.stopTimings.map(stop => stop.stopName)
-      let orderedStops = Object.keys(stopDelays).map(stop => [stop, tripStops.indexOf(stop)])
-        .sort((a, b) => a[1] - b[1]).map(stop => stop[0])
+    let tripDepartureTime = tripDepartureTimes[runID]
 
-      let tripDepartureTime = tripDepartureTimes[runID]
+    orderedStops.forEach((stop, i) => {
+      if (i === 0) return
+      let previous = orderedStops[i - 1]
 
-      orderedStops.forEach((stop, i) => {
-        if (i === 0) return
-        let previous = orderedStops[i - 1]
+      let currentDelay = stopDelays[stop]
+      let previousDelay = stopDelays[previous]
 
-        let currentDelay = stopDelays[stop]
-        let previousDelay = stopDelays[previous]
+      let delayDifference = currentDelay - previousDelay
 
-        let delayDifference = currentDelay - previousDelay
+      let previousIndex = tripStops.indexOf(previous)
+      let currentIndex = tripStops.indexOf(stop)
+      let relevantStops = trip.stopTimings.slice(previousIndex, currentIndex + 1)
 
-        let previousIndex = tripStops.indexOf(previous)
-        let currentIndex = tripStops.indexOf(stop)
-        let relevantStops = trip.stopTimings.slice(previousIndex, currentIndex + 1)
+      let previousMinutes = trip.stopTimings[previousIndex].departureTimeMinutes
+      let currentStopData = trip.stopTimings[currentIndex]
+      let currentMinutes = (currentStopData.departureTimeMinutes || currentStopData.arrivalTimeMinutes)
 
-        let previousMinutes = trip.stopTimings[previousIndex].departureTimeMinutes
-        let currentStopData = trip.stopTimings[currentIndex]
-        let currentMinutes = (currentStopData.departureTimeMinutes || currentStopData.arrivalTimeMinutes)
+      let minutesDifference = currentMinutes - previousMinutes
 
-        let minutesDifference = currentMinutes - previousMinutes
+      relevantStops.forEach(stop => {
+        let stopMinutes = (stop.departureTimeMinutes || stop.arrivalTimeMinutes)
+        let minutesFromPrevious = stopMinutes - previousMinutes
+        let minutesPercentage = minutesFromPrevious / minutesDifference
+        let delayPercentage = minutesPercentage * delayDifference
 
-        relevantStops.forEach(stop => {
-          let stopMinutes = (stop.departureTimeMinutes || stop.arrivalTimeMinutes)
-          let minutesFromPrevious = stopMinutes - previousMinutes
-          let minutesPercentage = minutesFromPrevious / minutesDifference
-          let delayPercentage = minutesPercentage * delayDifference
+        let minutesFromOrigin = stopMinutes - tripDepartureTime.minutes
+        let scheduledDepartureTime = tripDepartureTime.moment.clone().add(minutesFromOrigin, 'minutes')
+        let estimatedDepartureTime = scheduledDepartureTime.clone().add(previousDelay + delayPercentage, 'milliseconds')
 
-          let minutesFromOrigin = stopMinutes - tripDepartureTime.minutes
-          let scheduledDepartureTime = tripDepartureTime.moment.clone().add(minutesFromOrigin, 'minutes')
-          let estimatedDepartureTime = scheduledDepartureTime.clone().add(previousDelay + delayPercentage, 'milliseconds')
+        stop.estimatedDepartureTime = estimatedDepartureTime.toISOString()
+        stop.actualDepartureTimeMS = +estimatedDepartureTime
+      })
+    })
 
-          stop.estimatedDepartureTime = estimatedDepartureTime.toISOString()
-          stop.actualDepartureTimeMS = +estimatedDepartureTime
-        })
+    await liveTimetables.replaceDocument({
+      operationDays: trip.operationDays,
+      runID: trip.runID,
+      mode: 'regional train'
+    }, trip, {
+      upsert: true
+    })
+  })
+}
+
+async function fetchPlatforms(db) {
+  let vnetDepartures = [
+    ...await getVNETDepartures('Melbourne, Southern Cross', 'D', db, 1440),
+    ...await getVNETDepartures('Melbourne, Southern Cross', 'U', db, 1440, true)
+  ]
+
+  let vlineTrips = db.getCollection('vline trips')
+  let timetables = db.getCollection('timetables')
+  let liveTimetables = db.getCollection('live timetables')
+  let gtfsTimetables = db.getCollection('gtfs timetables')
+
+  await async.forEach(vnetDepartures, async departure => {
+    let departureDay = utils.getYYYYMMDD(departure.originDepartureTime)
+    let departureTimeHHMM = utils.formatHHMM(departure.originDepartureTime)
+    let dayOfWeek = await getDayOfWeek(departure.originDepartureTime)
+
+    let departureTimeMinutes = utils.getMinutesPastMidnight(departure.originDepartureTime)
+    if (departureTimeMinutes < 180) {
+      let previousDay = departure.originDepartureTime.clone().add(-1, 'day')
+      departureDay = utils.getYYYYMMDD(previousDay)
+      dayOfWeek = await getDayOfWeek(previousDay)
+    }
+
+    let nspMatchedMethod = 'unknown'
+    let nspTrip = await findTrip(timetables, dayOfWeek, departure.origin, departure.destination, departureTimeHHMM)
+
+    if (nspTrip) nspMatchedMethod = 'time'
+    else {
+      nspTrip = await timetables.findDocument({
+        operationDays: dayOfWeek,
+        runID: departure.runID,
+        mode: 'regional train'
       })
 
+      if (nspTrip) nspMatchedMethod = 'runID'
+    }
+
+    let trip = await liveTimetables.findDocument({
+      operationDays: departureDay,
+      runID: departure.runID,
+      mode: 'regional train'
+    }) || await findTrip(gtfsTimetables, departureDay, departure.origin, departure.destination, departureTimeHHMM)
+
+    if (!trip && nspTrip) {
+      trip = await findTrip(gtfsTimetables, departureDay, nspTrip.origin, nspTrip.destination, nspTrip.departureTime)
+    }
+
+    if (trip) {
+      trip.runID = departure.runID
+      trip.operationDays = departureDay
+
+      delete trip._id
+
+      let sssStop = trip.stopTimings.find(stop => stop.stopName === 'Southern Cross Railway Station')
+      if (sssStop) {
+        sssStop.platform = departure.platform
+        sssStop.livePlatform = true
+      }
+
       await liveTimetables.replaceDocument({
-        operationDays: trip.operationDays,
-        runID: trip.runID,
+        operationDays: departureDay,
+        runID: departure.runID,
         mode: 'regional train'
       }, trip, {
         upsert: true
       })
-    })
+    }
+  })
+}
+
+let cycleCount = 0
+
+async function requestTimings() {
+  cycleCount++
+
+  try {
+    vlineLock.createLock()
+
+    if (cycleCount === 1) {
+      global.loggers.trackers.vlineR.info('requesting vline realtime data')
+      await fetchData()
+    }
+
+    global.loggers.trackers.vlineR.info('requesting vline platform data')
+    await fetchPlatforms(database)
   } catch (e) {
+    global.loggers.trackers.vlineR.err('Error getting vline realtime data, skipping this round', e)
   } finally {
     vlineLock.releaseLock()
   }
-}
 
-async function requestTimings() {
-  global.loggers.trackers.vlineR.info('requesting vline realtime data')
-  try {
-    await fetchData()
-  } catch (e) {
-    global.loggers.trackers.vlineR.err('Error getting vline realtime data, skipping this round', e)
-  }
+  if (cycleCount === 6) cycleCount = 0
 }
 
 database.connect(async () => {
   schedule([
-    [0, 150, 13],
-    [330, 1440, 12]
+    [0, 150, 2],
+    [330, 1440, 2]
   ], requestTimings, 'vline-r tracker', global.loggers.trackers.vlineR)
 })
