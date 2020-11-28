@@ -231,11 +231,19 @@ async function appendTripData(db, departure, vlinePlatforms) {
     })
 
     if (!tripData) {
-      tripData = await vlineTrips.findDocument({
-        date: operationDay,
-        departureTime: trackerDepartureTime,
-        origin: origin.slice(0, -16)
-      })
+      if (direction === 'Up') {
+        tripData = await vlineTrips.findDocument({
+          date: operationDay,
+          departureTime: trackerDepartureTime,
+          origin: origin.slice(0, -16)
+        })
+      } else {
+        tripData = await vlineTrips.findDocument({
+          date: operationDay,
+          destinationArrivalTime: trackerDestinationArrivalTime,
+          destination: destination.slice(0, -16)
+        })
+      }
     }
 
     if (!tripData && nspTrip) {
@@ -258,7 +266,7 @@ async function appendTripData(db, departure, vlinePlatforms) {
 
     if (!platform)
       platform = guessPlatform(currentStation, scheduledDepartureTimeMinutes,
-        shortRouteName, departure.trip.direction)
+        shortRouteName, direction)
 
     if (!platform) platform = '??'
 
