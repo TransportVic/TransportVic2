@@ -210,14 +210,27 @@ async function parseTimings(names, types, trip) {
     }
   }
 
+  let lastStop = stopTimings.slice(-1)[0]
+
+  let shortDest = lastStop.stopName.slice(0, -16)
+  let shortOrigin = stopTimings[0].stopName.slice(0, -16)
+  let originDest = `${shortOrigin}-${shortDest}`
+  let line = termini[originDest] || termini[shortOrigin] || termini[shortDest]
+  let routeGTFSID = routeGTFSIDs[line]
+
+
   return {
+    mode: 'regional train',
     movementType,
+    routeName: line,
+    routeGTFSID,
     runID,
     operationDays: operatingDaysToArray(headers[1]),
     vehicle: vehicleFormation,
     isConditional,
     formedBy,
     forming,
+    operator: 'V/Line',
     stopTimings,
     flags: {
       tripDivides,
