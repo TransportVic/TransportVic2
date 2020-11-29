@@ -55,7 +55,8 @@ async function parseTimings(names, types, trip) {
   let headers = trip.slice(0, 5).concat(trip.slice(-1))
   let timings = trip.slice(5, -1)
 
-  let runID = headers[0].replace(/†/g, '').trim()
+  let isConditional = headers[0].includes('†')
+  let runID = headers[0].replace(/[†+]/g, '').trim()
   let upService = !(runID[3] % 2)
 
   let tripDivides = false
@@ -65,8 +66,8 @@ async function parseTimings(names, types, trip) {
   let tripAttachPoint = null
 
   let movementType = headers[4]
-  let vehicleFormation = headers[2],
-    formedBy = headers[3]
+  let vehicleFormation = headers[2]
+  let formedBy = headers[3]
 
   if (movementType !== 'PSNG_SRV') return
 
@@ -75,20 +76,19 @@ async function parseTimings(names, types, trip) {
 
   let lastLocation
 
-  let last3 = names.slice(-3)
-  let lastIndex = last3.includes('Plat') ? -2 : -1
+  let formsIndex = names.indexOf('Forms')
 
-  await async.forEachOfSeries(names.slice(5, lastIndex), async (locationName, i) => {
+  await async.forEachOf(names.slice(5, formsIndex), async (locationName, i) => {
     let type = types[i + 5], timing = timings[i]
 
-    if (locationName === 'SEYMOUR SG Platform') locationName = 'Seymour'
-    if (locationName === 'Clarkefield (new code)') locationName = 'Clarkefield'
+    if (locationName === 'Seymour Standard Gauge Platform') locationName = 'Seymour'
+    if (locationName === 'Clarkefield (New Code)') locationName = 'Clarkefield'
     if (locationName === 'Riddels Creek') locationName = 'Riddells Creek'
 
     if (['Arr', 'Dep', 'Plat'].includes(locationName)) {
       type = locationName
       locationName = lastLocation
-    }
+    } else lastLocation = locationName
 
     let stationData
     if (nonStations[locationName]) return
@@ -113,7 +113,6 @@ async function parseTimings(names, types, trip) {
       }
     }
 
-    lastLocation = locationName
     if (!timing || timing.includes('…')) return
     let isExpress = timing.includes('*')
     timing = timing.replace('*', '')
@@ -144,7 +143,7 @@ async function parseTimings(names, types, trip) {
     if (timing.includes('*')) return
 
     let exists = !!locations[locationName]
-    if (!exists)
+    if (!exists) {
       locations[locationName] = {
         stopName: stationPlatform.fullStopName,
         stopGTFSID: stationPlatform.stopGTFSID,
@@ -158,6 +157,7 @@ async function parseTimings(names, types, trip) {
         sortTime: minutesAftMidnight,
         express: isExpress
       }
+    }
 
     if (timing.includes('/')) {
       let [arrivalTime, departureTime] = timing.split('/').map(x => x.slice(0, 5))
@@ -188,25 +188,14 @@ async function parseTimings(names, types, trip) {
   })
 
   let stopTimings = Object.values(locations).filter(stop => !isNaN(stop.arrivalTimeMinutes))
+
   if (stopTimings[0].departureTimeMinutes < 180) {
     stopTimings.forEach(stop => {
       if (stop.departureTimeMinutes) stop.departureTimeMinutes += 1440
       if (stop.arrivalTimeMinutes) stop.arrivalTimeMinutes += 1440
+      stop.sortTime += 1440
     })
   }
-
-  let lastStop = stopTimings.slice(-1)[0]
-
-  let destination = lastStop.stopName.slice(0, -16)
-  let origin = stopTimings[0].stopName.slice(0, -16)
-  let originDest = `${origin}-${destination}`
-  let line = termini[originDest] || termini[origin] || termini[destination]
-  let routeGTFSID = routeGTFSIDs[line]
-
-  stopTimings[0].arrivalTime = null
-  stopTimings[0].arrivalTimeMinutes = null
-  lastStop.departureTime = null
-  lastStop.departureTimeMinutes = null
 
   let formingData = trip.slice(-2)
   let forming
@@ -222,21 +211,14 @@ async function parseTimings(names, types, trip) {
   }
 
   return {
-    mode: 'regional train',
     movementType,
-    routeName: line,
-    routeGTFSID,
     runID,
     operationDays: operatingDaysToArray(headers[1]),
     vehicle: vehicleFormation,
+    isConditional,
     formedBy,
     forming,
-    operator: 'V/Line',
     stopTimings,
-    origin: origin + ' Railway Station',
-    departureTime: stopTimings[0].departureTime,
-    destination: destination + ' Railway Station',
-    destinationArrivalTime: lastStop.arrivalTime,
     flags: {
       tripDivides,
       tripDividePoint,
@@ -254,8 +236,17 @@ function readFileData(filename, allTrips, callback) {
     let pages = await pdf2table.parse(buffer)
 
     pages = pages.map(page => {
-      let headers = page.slice(0, 5)
-      let timings = page.slice(5)
+      let form = page.find(x => {
+        let lower = x[0].toLowerCase()
+        return lower.includes('movement') || lower.includes('formed')
+      })
+
+      let sliceEnd = page.indexOf(form) + 1
+      let next = page[sliceEnd]
+      if(next[0].toLowerCase().includes('movement')) sliceEnd++
+
+      let headers = page.slice(0, sliceEnd)
+      let timings = page.slice(sliceEnd)
 
       let currentStation
       timings = timings.map(row => {
@@ -266,36 +257,46 @@ function readFileData(filename, allTrips, callback) {
         }
         return row
       })
-      return [...headers, ...timings]
+
+      if (sliceEnd === 5) return [...headers, ...timings]
+      if (sliceEnd === 4) return [...headers, '', ...timings]
     })
+
     pages = pages.map(tableToColumnOrder)
 
     let trips = (await async.mapSeries(pages, async page => {
-      return await async.mapSeries(page.slice(2).filter(trip => trip[0].trim().length), async trip => {
-        return await parseTimings(page[0].map(expandName), page[1], trip)
+      let pages = page.slice(2).filter(trip => trip[0].trim().length)
+      return await async.mapSeries(page.slice(2).filter(trip => trip[0].trim().length), async (trip, i) => {
+        let currentHead = trip.slice(0, 6)
+        let tripBody = trip.slice(5)
+        let tripToUse = trip
+        if (!tripBody.find(t => t.trim())) {
+          tripToUse = currentHead.concat(pages[i + 1].slice(5))
+        }
+
+        return await parseTimings(page[0].map(expandName), page[1], tripToUse)
       })
     })).reduce((acc, page) => acc.concat(page), [])
 
     trips.forEach(trip => {
       if (!trip) return
-
       let tripID = trip.runID + trip.operationDays.join('-')
       if (allTrips[tripID]) {
         let locationsSeen = allTrips[tripID].stopTimings.map(l => l.stopName.toLowerCase())
+
         trip.stopTimings.forEach(tripTiming => {
           let name = tripTiming.stopName.toLowerCase()
           if (!locationsSeen.includes(name)) {
             locationsSeen.push(name)
             allTrips[tripID].stopTimings.push(tripTiming)
+          } else {
+            let existing = allTrips[tripID].stopTimings.find(l => l.stopName.toLowerCase() === name)
+            existing.platform = existing.platform || tripTiming.platform
+            existing.track = existing.track || tripTiming.track
           }
         })
 
-        allTrips[tripID].stopTimings = allTrips[tripID].stopTimings
-          .sort((a, b) => a.sortTime - b.sortTime)
-          .map(a => {
-            delete a.sortTime
-            return a
-          })
+        allTrips[tripID].stopTimings = allTrips[tripID].stopTimings.sort((a, b) => a.sortTime - b.sortTime)
       } else allTrips[tripID] = trip
     })
 
@@ -338,7 +339,22 @@ database.connect({
         return stop
       })
     }
-    return trip
+
+    let stopTimings = trip.stopTimings
+    let lastStop = stopTimings.slice(-1)[0]
+
+    stopTimings[0].arrivalTime = null
+    stopTimings[0].arrivalTimeMinutes = null
+    lastStop.departureTime = null
+    lastStop.departureTimeMinutes = null
+
+    return {
+      ...trip,
+      origin: stopTimings[0].stopName,
+      departureTime: stopTimings[0].departureTime,
+      destination: lastStop.stopName,
+      destinationArrivalTime: lastStop.arrivalTime
+    }
   })
 
   await timetables.bulkWrite(trips.map(trip => ({
