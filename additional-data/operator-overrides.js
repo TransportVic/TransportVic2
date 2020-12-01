@@ -50,7 +50,13 @@ module.exports = {
   "4-74Z": ["Ventura Bus Lines"], // 742
   "4-7S6": ["Ventura Bus Lines"], // 766
   "4-7S7": ["Ventura Bus Lines"], // 767
+  "4-78N": ["Cranbourne Transit"], // 789
+  "4-79o": ["Cranbourne Transit"], // 790
+  "4-79I": ["Cranbourne Transit"], // 791
   "4-79Z": ["Cranbourne Transit"], // 792
+  "4-79S": ["Cranbourne Transit"], // 795
+  "4-79X": ["Cranbourne Transit"], // 796
+  "4-79A": ["Cranbourne Transit"], // 798
   "4-800": ["Ventura Bus Lines"], // 800
   "4-80O": ["Ventura Bus Lines"], // 800
   "4-834": ["Ventura Bus Lines"], // 834
@@ -59,10 +65,14 @@ module.exports = {
   "4-84F": ["Ventura Bus Lines"], // 845
   "4-85X": ["Ventura Bus Lines"], // 857
   "4-86l": ["Ventura Bus Lines"], // 861
+  "4-89o": ["Cranbourne Transit"], // 890
+  "4-89I": ["Cranbourne Transit"], // 891
   "4-89Z": ["Cranbourne Transit"], // 892
   "4-89E": ["Cranbourne Transit"], // 893
   "4-89F": ["Cranbourne Transit"], // 894
+  "4-89v": ["Cranbourne Transit"], // 894
   "4-89S": ["Cranbourne Transit"], // 897
+  "4-89T": ["Cranbourne Transit"], // 898
   "4-900": ["CDC Melbourne", "Ventura Bus Lines"],
   "4-903": ["Transdev Melbourne"],
 

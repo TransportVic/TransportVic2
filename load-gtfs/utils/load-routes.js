@@ -65,13 +65,12 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
         }
 
         if (!routeOperatorsSeen.includes(routeGTFSID)) {
-          matchingRoute.operators = operator ? operator(routeGTFSID, matchingRoute.routeNumber, matchingRoute.routeName) : []
           routeOperatorsSeen.push(routeGTFSID)
+          matchingRoute.operators = operator ? operator(routeGTFSID, matchingRoute.routeNumber, matchingRoute.routeName) : []
         }
 
         matchingRoute.routeName = routeName
         matchingRoute.codedName = utils.encodeName(routeName)
-        matchingRoute.operators = operator ? operator(routeGTFSID) : []
 
         await routes.replaceDocument({
           _id: matchingRoute._id
@@ -86,20 +85,24 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
           gtfsRouteNumber = routeGTFSID.slice(2)
         }
 
+        let finalRouteNumber = routeNumber ? routeNumber(routeGTFSID, gtfsRouteNumber) : gtfsRouteNumber
+
         let newRoute = {
           routeName,
           codedName: utils.encodeName(routeName),
-          routeNumber: routeNumber ? routeNumber(routeGTFSID, gtfsRouteNumber) : gtfsRouteNumber,
+          routeNumber: finalRouteNumber,
           routeGTFSID,
           routePath: [{
             fullGTFSIDs: [shapeID],
             path: shapeFile.path,
             length: shapeFile.length
           }],
-          operators: operator ? operator(routeGTFSID) : [],
+          operators: operator ? operator(routeGTFSID, finalRouteNumber, routeName) : [],
           directions: [],
           mode: mode === '8' ? 'bus' : gtfsModes[mode]
         }
+
+        routeOperatorsSeen.push(routeGTFSID)
 
         if (loopDirections[routeGTFSID])
           newRoute.flags = loopDirections[routeGTFSID]

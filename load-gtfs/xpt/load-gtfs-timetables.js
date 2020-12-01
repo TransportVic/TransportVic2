@@ -97,10 +97,10 @@ database.connect({
           arrivalTime: lineData[1],
           departureTime: lineData[2],
           stopConditions: {
-            pickup: parseInt(lineData[5]),
-            dropoff: parseInt(lineData[6])
+            pickup: parseInt(lineData[6]),
+            dropoff: parseInt(lineData[7])
           },
-          stopDistance: parseFloat(lineData[9]),
+          stopDistance: parseFloat(lineData[10]),
           stopSequence: parseFloat(lineData[4])
         })
       }
