@@ -334,5 +334,17 @@
     "stopNumber": null,
     "mode": "heritage train",
     "suburb": "Drysdale"
+  },
+  {
+    "originalName": "Muckleford Railway Station",
+    "fullStopName": "Muckleford Railway Station",
+    "stopGTFSID": 13000029,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.150104, -37.022337]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Muckleford"
   }
 ]

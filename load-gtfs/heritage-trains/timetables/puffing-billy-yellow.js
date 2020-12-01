@@ -533,8 +533,8 @@ module.exports = {
         },
         {
           "stopGTFSID": 13000001,
-          "arrivalTime": "15:08:00",
-          "departureTime": "15:08:00",
+          "arrivalTime": "17:08:00",
+          "departureTime": "17:08:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
