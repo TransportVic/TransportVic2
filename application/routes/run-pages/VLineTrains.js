@@ -45,8 +45,19 @@ async function pickBestTrip(data, db) {
   let operationDays = data.operationDays
   if (tripStartMinutes > 1440) operationDays = utils.getYYYYMMDD(tripDay.add(-1, 'day'))
 
-  let referenceTrip = await findTrip(db.getCollection('live timetables'), operationDays, originStop.stopName, destinationStop.stopName, data.departureTime)
-    || await findTrip(db.getCollection('gtfs timetables'), operationDays, originStop.stopName, destinationStop.stopName, data.departureTime)
+  let liveTrip = await findTrip(db.getCollection('live timetables'), operationDays, originStop.stopName, destinationStop.stopName, data.departureTime)
+  let gtfsTrip = await findTrip(db.getCollection('gtfs timetables'), operationDays, originStop.stopName, destinationStop.stopName, data.departureTime)
+  let referenceTrip
+
+  if (liveTrip && !gtfsTrip) referenceTrip = liveTrip
+  else if (gtfsTrip && !liveTrip) referenceTrip = gtfsTrip
+  else {
+    let liveDiff = Math.abs(liveTrip.stopTimings[0].departureTimeMinutes - tripStartMinutes)
+    let gtfsDiff = Math.abs(gtfsTrip.stopTimings[0].departureTimeMinutes - tripStartMinutes)
+    if (liveDiff < gtfsDiff) referenceTrip = liveTrip
+    else referenceTrip = gtfsTrip
+  }
+
 
   if (!referenceTrip) return null
 
