@@ -54,7 +54,7 @@ async function pickBestTrip(data, db) {
   else {
     let liveDiff = Math.abs(liveTrip.stopTimings[0].departureTimeMinutes - tripStartMinutes)
     let gtfsDiff = Math.abs(gtfsTrip.stopTimings[0].departureTimeMinutes - tripStartMinutes)
-    if (liveDiff < gtfsDiff) referenceTrip = liveTrip
+    if (liveDiff <= gtfsDiff) referenceTrip = liveTrip
     else referenceTrip = gtfsTrip
   }
 
