@@ -5,6 +5,7 @@ const fetch = require('node-fetch')
 const stopNameModifier = require('./additional-data/stop-name-modifier')
 const TimedCache = require('./TimedCache')
 const EventEmitter = require('events')
+const crypto = require('crypto')
 
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 const locks = {}, caches = {}
@@ -524,5 +525,8 @@ module.exports = {
     delete locks[lock][key]
 
     return data
+  },
+  hash: data => {
+    return crypto.createHash('md5').update(data).digest('hex')
   }
 }
