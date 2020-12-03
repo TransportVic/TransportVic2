@@ -311,7 +311,11 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
   let {stopGTFSID} = metroPlatform
   let stationName = station.stopName.slice(0, -16)
-  let {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=run&expand=route&expand=VehicleDescriptor`)
+
+  let maxResults = 15
+  if (stationName === 'Flinders Street' || cityLoopStations.includes(stationName)) maxResults = 10
+
+  let {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=${maxResults}&include_cancelled=true&expand=run&expand=route&expand=VehicleDescriptor`)
 
   let disruptions = await metroNotify.findDocuments({
     toDate: {
@@ -588,7 +592,7 @@ function filterDepartures(departures, filter) {
     departures = departures.filter(departure => {
       let secondsDiff = departure.actualDepartureTime.diff(now, 'seconds')
 
-      return -30 < secondsDiff && secondsDiff < 7200 // 2 hours
+      return -30 < secondsDiff && secondsDiff < 5400 // 1.5 hours
     })
   }
 
