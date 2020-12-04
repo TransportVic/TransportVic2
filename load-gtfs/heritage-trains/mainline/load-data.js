@@ -42,19 +42,7 @@ let shapes = [{
 }]
 
 async function fetchStops() {
-  let rawStopData = `station name,lat,long
-Wycheproof,-36.082084,143.228174
-Boort,-36.114114,143.722114
-Quambatook,-35.851106,143.51923
-Inglewood,-36.573991,143.873908
-Charlton,-36.267745,143.354387
-Sea Lake,-35.504692,142.846287
-Nullawil,-35.85237,143.175922
-Deniliquin,-35.530289,144.959218
-Piangil,-35.057055,143.309686
-Tocumwal,-35.807607,145.55754
-Strathmerton,-35.926429,145.480881`.split('\n').join('\r\n')
-  // let rawStopData = await utils.request(stopsURL)
+  let rawStopData = await utils.request(stopsURL)
   let rawStops = rawStopData.split('\r\n').slice(1).map(line => line.split(','))
 
   let allStops = rawStops.map(stop => {
