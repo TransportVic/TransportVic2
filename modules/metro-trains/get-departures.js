@@ -282,7 +282,7 @@ async function getMissingRRB(station, db, individualRailBusDepartures) {
   return extraBuses
 }
 
-async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, route, station, replacementBusDepartures, suspensions) {
+async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, route, station, replacementBusDepartures, suspensions, individualRailBusDepartures) {
   let routeName = route.route_name
   let routeID = route.route_id
   let stationName = station.stopName.slice(0, -16)
@@ -394,7 +394,11 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
 
   if (!trip) { // still no match - getStoppingPattern
     if (replacementBusDepartures.includes(scheduledDepartureTimeMinutes)) {
-      if (isRailReplacementBus && suspensions.length === 0) return // ok this is risky but bus replacements actually seem to do it the same way as vline
+      if (isRailReplacementBus && suspensions.length === 0) {
+        if (individualRailBusDepartures.some(b => b.departureTimeMinutes === scheduledDepartureTimeMinutes)) {
+          return // ok this is risky but bus replacements actually seem to do it the same way as vline
+        }
+      }
     }
 
     trip = await getStoppingPattern(db, ptvRunID, 'metro train', scheduledDepartureTime.toISOString())
@@ -525,7 +529,10 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     } // Unsure of the suspension message
   })
 
-  let replacementBuses = departures.filter(departure => departure.flags.includes('RRB-RUN'))
+  let replacementBuses = departures.filter(departure => departure.flags.includes('RRB-RUN')).sort((a, b) => {
+    return utils.parseTime(a.scheduled_departure_utc) - utils.parseTime(b.scheduled_departure_utc)
+  })
+
   let trains = departures.filter(departure => !departure.flags.includes('RRB-RUN'))
 
   let replacementBusDepartures = replacementBuses.map(bus => {
@@ -555,7 +562,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
     let estimatedDepartureTime = departure.estimated_departure_utc ? utils.parseTime(departure.estimated_departure_utc) : null
 
-    let tripData = await findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, route, station, replacementBusDepartures, suspensions)
+    let tripData = await findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, route, station, replacementBusDepartures, suspensions, individualRailBusDepartures)
     if (!tripData) return
     let { trip, usedLive, runID, isRailReplacementBus, destination, cityLoopConfig } = tripData
 
