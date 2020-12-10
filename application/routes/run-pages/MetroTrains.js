@@ -244,6 +244,18 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   let trueOrigin = trip.stopTimings.find(stop => stop.stopName === trip.trueOrigin)
   let firstDepartureTime = trueOrigin.departureTimeMinutes
 
+  let trackerData
+  if (trip.runID) {
+    let metroTrips = res.db.getCollection('metro trips')
+
+    trackerData = await metroTrips.findDocument({
+      date: utils.getYYYYMMDD(tripStartTime),
+      runID: trip.runID
+    })
+
+    if (trackerData) trip.consist = trackerData.consist
+  }
+
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.pretyTimeToDeparture = ''
 

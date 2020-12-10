@@ -44,7 +44,7 @@ block content
           else
             span
           img(src=`/static/images/icons/${parts[1].toLowerCase()}.svg`)
-    if consist
+    if consist && consist.length
       div.liveConsist
         span.header Live Tracking
         span.consist=consist.join('-')

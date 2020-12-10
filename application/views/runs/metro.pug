@@ -30,6 +30,10 @@ block content
           div.vehicle
             span=parts[0] + 'x'
             img(src=`/static/images/icons/${parts[1].toLowerCase()}.svg`)
+    if trip.consist && trip.consist.length
+      div.liveConsist
+        span.header Live Tracking
+        span.consist=trip.consist.join('-')
   if trip.isRailReplacementBus
     div.departure.noTiming
       -
