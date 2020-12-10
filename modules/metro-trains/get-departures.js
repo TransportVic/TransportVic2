@@ -685,7 +685,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       consistConfirmed,
       willSkipCCL,
       willSkipALT,
-      routeID
+      routeID,
+      ptvRunID
     })
   }
 

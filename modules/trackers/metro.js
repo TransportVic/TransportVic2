@@ -6,6 +6,7 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const getMetroDepartures = require('../metro-trains/get-departures')
 const { findTrip } = getMetroDepartures
 const stops = require('../../additional-data/metro-tracker/stops')
+const getStoppingPattern = require('../utils/get-stopping-pattern')
 const schedule = require('./scheduler')
 const ptvAPI = require('../../ptv-api')
 
@@ -37,7 +38,12 @@ async function getDepartures(stop) {
 
   let stopCode = stops[stop]
   let stopData = await dbStops.findDocument({ stopName: stop + ' Railway Station' })
-  await getMetroDepartures(stopData, database)
+  let departures = await getMetroDepartures(stopData, database)
+  let requestLive = departures.filter(d => d.estimatedDepartureTime && d.ptvRunID).slice(0, 4)
+
+  await async.forEachSeries(requestLive, async departure => {
+    await getStoppingPattern(database, departure.ptvRunID, 'metro train', departure.scheduledDepartureTime.toISOString())
+  })
 }
 
 async function requestTimings() {
