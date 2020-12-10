@@ -278,11 +278,6 @@ function updateBody(firstTime) {
           if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
           if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
-          let stoppingType = departure.stoppingType
-          if (departure.additionalInfo.via) {
-            stoppingType += ' ' + departure.additionalInfo.via
-          }
-
           $('.lineColour', departureRow).className = 'lineColour ' + departureClass
           $('.scheduledDepartureTime', departureRow).textContent = formatTimeA(new Date(departure.scheduledDepartureTime))
           $('.destination', departureRow).textContent = destination

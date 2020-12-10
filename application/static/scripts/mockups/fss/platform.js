@@ -272,7 +272,7 @@ function updateBody(firstTime) {
           $('.lineColour', departureRow).className = 'lineColour ' + departureClass
           $('.scheduledDepartureTime', departureRow).textContent = formatTimeA(new Date(departure.scheduledDepartureTime))
           $('.destination', departureRow).textContent = destination
-          $('.stoppingType', departureRow).textContent = stoppingType
+          $('.stoppingType', departureRow).textContent = stoppingType.replace('Limited', 'Ltd')
           $('.minutesToDeparture span', departureRow).textContent = departure.prettyTimeToDeparture
         }
       })

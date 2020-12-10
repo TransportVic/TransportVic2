@@ -38,7 +38,7 @@ async function handleMessage(subject, rawText) {
 
   if (subject.includes('Service cancellation') || text.includes('not run') || (text.includes('no longer run') && !text.includes('no longer run to ') && !text.includes('no longer run between') && !text.includes('no longer run from')) || text.includes('has been cancelled')) {
     await handleCancellation(database, text)
-  } else if (text.includes('been reinstated') || text.includes('running as scheduled') || text.includes('will now run as scheduled') || text.includes('operate as scheduled')) {
+  } else if (text.includes('been reinstated') || text.includes('running as scheduled') || text.includes('will now run as scheduled') || text.includes('operate as scheduled')|| text.includes('resume running')) {
     await handleReinstatement(database, text)
   } else if (text.includes('will not stop at') || text.includes('will run express')) {
     await handleNonStop(database, text)

@@ -454,5 +454,9 @@ module.exports = {
   46443: "Bay 2",
   46442: "Bay 3",
   16309: "Bay 4",
-  37915: "Bay 5"
+  37915: "Bay 5",
+
+  // Donnybrook
+  48851: "Bay A",
+  48850: "Bay B"
 }

@@ -607,7 +607,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       }
     }
 
-    if (stonyPointReplacements.length) {
+    if (routeID === 13 && stonyPointReplacements.length) { // Only match STY if it *is* sty, there is a FKN up with the same timings
       let replacement = stonyPointReplacements.find(r => {
         return r.origin === trip.origin.slice(0, -16) && r.departureTime === trip.departureTime
       })
