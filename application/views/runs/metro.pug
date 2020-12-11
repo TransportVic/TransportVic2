@@ -30,7 +30,7 @@ block content
           div.vehicle
             span=parts[0] + 'x'
             img(src=`/static/images/icons/${parts[1].toLowerCase()}.svg`)
-    if trip.consist && trip.consist.length
+    if trip.consist && trip.consist.length && false
       div.liveConsist
         span.header Live Tracking
         span.consist=trip.consist.join('-')

@@ -96,7 +96,7 @@ if departures.length
             else
               
               span.broadDepartureInfo #{configText.join(' -> ')}
-        if departure.consist.length
+        if departure.consist.length && false
           span.broadDepartureInfo Vehicle: #{departure.consist.join('-')}
       div.timings
         a(class='timing ' + departure.headwayDevianceClass href=`/metro/run/${departure.tripURL}`)
