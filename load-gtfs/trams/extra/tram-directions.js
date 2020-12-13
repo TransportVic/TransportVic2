@@ -8,8 +8,8 @@ module.exports = {
   "5.0": "1", // Melb Uni
   "5.1": "0", // Malvern
 
-  "6.0": "0", // Moreland
-  "6.1": "1", // Glen Iris
+  "6.0": "1", // Moreland
+  "6.1": "0", // Glen Iris
 
   "11.0": "1", // West Preston
   "11.1": "0", // Docklands
