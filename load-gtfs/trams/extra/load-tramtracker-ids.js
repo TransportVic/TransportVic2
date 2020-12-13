@@ -29,8 +29,6 @@ database.connect({}, async () => {
     "3913": "2013"
   }
 
-  tramServices=['6']
-
   let stopDirections = {
     "3813": [{
       service: "35",
@@ -87,7 +85,7 @@ database.connect({}, async () => {
       await sleep()
     })
   })
-  console.log(stopDirections)
+
   await async.forEachSeries(Object.keys(tramTrackerIDs), async tramTrackerID => {
     let stopID = tramTrackerIDs[tramTrackerID]
     let ptvStop = ptvStops.find(stop => stop.stopID === stopID)
