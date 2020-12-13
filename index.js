@@ -25,6 +25,7 @@ global.loggers = {
     metro: new Logger(path.join(__dirname, 'logs', 'trackers', 'metro'), 'METRO'),
     metroNotify: new Logger(path.join(__dirname, 'logs', 'trackers', 'metro'), 'METRO-NOTIFY'),
     xpt: new Logger(path.join(__dirname, 'logs', 'trackers', 'xpt'), 'XPT'),
+    ccl: new Logger(path.join(__dirname, 'logs', 'trackers', 'ccl'), 'CCL')
   },
   mockups: new Logger(path.join(__dirname, 'logs', 'mockups'), 'MOCKUPS'),
   error: new Logger(path.join(__dirname, 'logs', 'errors'), 'ERROR'),

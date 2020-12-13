@@ -46,6 +46,7 @@ module.exports = {
   "4-603": ["Transdev Melbourne"],
   "4-604": ["Transdev Melbourne"],
   "4-68E": ["Martyrs Bus Service"],
+  "4-70C": ["CDC Melbourne"],
   "4-704": ["Ventura Bus Lines"], // 704
   "4-74Z": ["Ventura Bus Lines"], // 742
   "4-7S6": ["Ventura Bus Lines"], // 766
@@ -75,6 +76,12 @@ module.exports = {
   "4-89T": ["Cranbourne Transit"], // 898
   "4-900": ["CDC Melbourne", "Ventura Bus Lines"],
   "4-903": ["Transdev Melbourne"],
+
+  "8-96w": ["Ventura Bus Lines"], // 967
+  "8-97B": ["Ventura Bus Lines"], // 978
+  "8-97P": ["Ventura Bus Lines"], // 979
+  "8-98l": ["Ventura Bus Lines"], // 981
+  "8-98Z": ["Ventura Bus Lines"], // 982
 
   "6-858": ["Dysons (Wangaratta)"], // Wangaratta - Myrtleford
 
