@@ -458,5 +458,13 @@ module.exports = {
 
   // Donnybrook
   48851: "Bay A",
-  48850: "Bay B"
+  48850: "Bay B",
+
+  // Melton
+  27577: "Bay 6",
+  21132: "Bay 5",
+  21131: "Bay 4",
+  21185: "Bay 3",
+  21184: "Bay 2",
+  21183: "Bay 1"
 }

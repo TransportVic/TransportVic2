@@ -179,7 +179,7 @@ module.exports = {
   "Carrum": [...platr(2, [], 'platform'), conc('up-down')],
   "Seaford": [...platr(2, [], 'half-platform-bold')],
   "Kananook": [...platr(2, [], 'half-platform-bold')],
-  "Mentone": [...platr(2, [], 'platform')],
+  "Mentone": [...platr(2, [], 'platform'), conc('up-down')],
   "Parkdale": [...platr(2, [], 'half-platform-bold')],
   "Mordialloc": [...platr(2, [], 'half-platform-bold')],
   "Aspendale": [],

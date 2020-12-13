@@ -52,7 +52,7 @@ if (config.useHTTPS) {
 let websocketServer = WebsocketServer.createServer(httpsServer || httpServer)
 
 httpServer.listen(config.httpPort)
-if (httpsServer) httpsServer.listen(443)
+if (httpsServer) httpsServer.listen(config.httpsPort)
 
 global.loggers.general.info('Server Started')
 
