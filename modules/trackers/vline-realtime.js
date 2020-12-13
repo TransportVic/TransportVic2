@@ -47,15 +47,7 @@ let extendedList = [
 async function getDeparturesFromVNET(db, station) {
   let vnetName = station.bays.find(bay => bay.vnetStationName).vnetStationName
 
-  let down = [], up = []
-  try {
-    down = await getVNETDepartures(vnetName, 'D', db, 1440, true)
-  } catch (e) {}
-  try {
-    up = await getVNETDepartures(vnetName, 'U', db, 1440, true)
-  } catch (e) {}
-
-  let vnetDepartures = [ ...down, ...up ]
+  let vnetDepartures = await getVNETDepartures(vnetName, 'B', db, 1440, true)
 
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
@@ -196,10 +188,7 @@ async function fetchData() {
 }
 
 async function fetchPlatforms(db) {
-  let vnetDepartures = [
-    ...await getVNETDepartures('Melbourne, Southern Cross', 'D', db, 1440),
-    ...await getVNETDepartures('Melbourne, Southern Cross', 'U', db, 1440, true)
-  ]
+  let vnetDepartures = await getVNETDepartures('Melbourne, Southern Cross', 'B', db, 1440)
 
   let vlineTrips = db.getCollection('vline trips')
   let timetables = db.getCollection('timetables')

@@ -17,7 +17,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
   let timetables = db.getCollection('timetables')
   let liveTimetables = db.getCollection('live timetables')
 
-  let vnetDepartures = await getVNETDepartures(vlinePlatform.vnetStationName, 'D', db, 180)
+  let vnetDepartures = await getVNETDepartures(vlinePlatform.vnetStationName, 'B', db, 180)
   let stopGTFSID = vlinePlatform.stopGTFSID
 
   let departures = await async.map(vnetDepartures, async departure => {
