@@ -1,6 +1,7 @@
 module.exports = {
   'Ballarat': [
     [8100, 8199],
+    [8200, 8299]
   ],
   'Bendigo': [
     [8000, 8099]
