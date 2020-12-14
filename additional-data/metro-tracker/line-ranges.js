@@ -70,5 +70,8 @@ module.exports = {
   ],
   'City Circle': [
     [700, 899]
+  ],
+  'Flemington Races': [
+    [0, 999, 'R']
   ]
 }
