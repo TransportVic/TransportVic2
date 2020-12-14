@@ -455,6 +455,8 @@ module.exports = {
     let runID = ptvRunID - 948000
     if (runID >= 40000) {
       return `X${module.exports.pad((runID - 40000).toString(), 3, '0')}`
+    } else if (runID >= 30000) {
+      return `R${module.exports.pad((runID - 30000).toString(), 3, '0')}`
     } else {
       return module.exports.pad(runID.toString(), 4, '0')
     }

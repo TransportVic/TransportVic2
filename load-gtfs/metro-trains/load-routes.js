@@ -7,6 +7,7 @@ const loadRoutes = require('../utils/load-routes')
 const utils = require('../../utils')
 const gtfsUtils = require('../../gtfs-utils')
 const cityCircle = require('../../additional-data/city-circle')
+const flemington = require('../../additional-data/flemington-racecourse')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
@@ -34,9 +35,8 @@ database.connect({
     })
   })
 
-  await routes.replaceDocument({ routeGTFSID: "2-CCL" }, cityCircle, {
-    upsert: true
-  })
+  await routes.replaceDocument({ routeGTFSID: "2-CCL" }, cityCircle, { upsert: true })
+  await routes.replaceDocument({ routeGTFSID: "2-ain" }, flemington, { upsert: true })
 
   await updateStats('mtm-routes', routeData.length + 1)
   console.log('Completed loading in ' + routeData.length + 1 + ' MTM rail routes')

@@ -1,0 +1,161 @@
+{
+  "routeName" : "Showgrounds/Flemington",
+  "codedName" : "showgrounds-flemington",
+  "routeNumber" : null,
+  "routeGTFSID" : "2-ain",
+  "operators" : [
+    "Metro Trains Melbourne"
+  ],
+  "routePath": [
+    {
+      "fullGTFSIDs": [
+        "2-ain-mjp-1.1.H"
+      ],
+      "path": [
+        [144.9668358,-37.8179855],
+        [144.9719535,-37.8165871]
+      ]
+    }
+  ],
+  "directions" : [
+    {
+      "directionName" : "Flemington Racecourse",
+      "gtfsDirection" : 0,
+      "trainDirection" : "Down",
+      "stops" : [
+        {
+          "stopName" : "Flagstaff Railway Station",
+          "stopGTFSID" : 19841,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Melbourne Central Railway Station",
+          "stopGTFSID" : 19842,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Parliament Railway Station",
+          "stopGTFSID" : 19843,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Southern Cross Railway Station",
+          "stopGTFSID" : 22180,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Flinders Street Railway Station",
+          "stopGTFSID" : 19854,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Southern Cross Railway Station",
+          "stopGTFSID" : 22180,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Parliament Railway Station",
+          "stopGTFSID" : 19843,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Melbourne Central Railway Station",
+          "stopGTFSID" : 19842,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Flagstaff Railway Station",
+          "stopGTFSID" : 19841,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "North Melbourne Railway Station",
+          "stopGTFSID" : 19973,
+          "suburb" : "West Melbourne"
+        },
+        {
+          "stopName" : "Showgrounds Railway Station",
+          "stopGTFSID" : 20028,
+          "suburb" : "Flemington"
+        },
+        {
+          "stopName" : "Flemington Racecourse Railway Station",
+          "stopGTFSID" : 20027,
+          "suburb" : "Flemington"
+        }
+      ]
+    },
+    {
+      "directionName" : "City (Flinders Street)",
+      "gtfsDirection" : 1,
+      "trainDirection" : "Up",
+      "stops" : [
+        {
+          "stopName" : "Flemington Racecourse Railway Station",
+          "stopGTFSID" : 20027,
+          "suburb" : "Flemington"
+        },
+        {
+          "stopName" : "Showgrounds Railway Station",
+          "stopGTFSID" : 20028,
+          "suburb" : "Flemington"
+        },
+        {
+          "stopName" : "North Melbourne Railway Station",
+          "stopGTFSID" : 19973,
+          "suburb" : "West Melbourne"
+        },
+        {
+          "stopName" : "Flagstaff Railway Station",
+          "stopGTFSID" : 19841,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Melbourne Central Railway Station",
+          "stopGTFSID" : 19842,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Parliament Railway Station",
+          "stopGTFSID" : 19843,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Southern Cross Railway Station",
+          "stopGTFSID" : 22180,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Flinders Street Railway Station",
+          "stopGTFSID" : 19854,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Southern Cross Railway Station",
+          "stopGTFSID" : 22180,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Parliament Railway Station",
+          "stopGTFSID" : 19843,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Melbourne Central Railway Station",
+          "stopGTFSID" : 19842,
+          "suburb" : "Melbourne City"
+        },
+        {
+          "stopName" : "Flagstaff Railway Station",
+          "stopGTFSID" : 19841,
+          "suburb" : "Melbourne City"
+        }
+      ]
+    }
+  ],
+  "mode" : "metro train",
+  "ptvDirections" : {
+    "Flemington Racecourse" : "0",
+    "City (Flinders Street)" : "1"
+  }
+}
