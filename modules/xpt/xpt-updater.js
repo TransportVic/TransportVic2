@@ -10,33 +10,26 @@ let gtfsTimetables, liveTimetables, stops
 
 async function fetchAndUpdate() {
   global.loggers.trackers.xpt.log('requesting xpt data')
-  let dataSYDTrains = await tfnswAPI.makePBRequest('/v1/gtfs/realtime/sydneytrains')
   let dataNSWTrains = await tfnswAPI.makePBRequest('/v1/gtfs/realtime/nswtrains')
-  let sydTripDescriptors = dataSYDTrains.entity
   let nswTripDescriptors = dataNSWTrains.entity
 
-  let relevantSYDTrips = sydTripDescriptors.map(trip => trip.trip_update).filter(trip => trip.trip.trip_id.match(/ST\d\d/) && trip.stop_time_update.length)
   let relevantNSWTrips = nswTripDescriptors.map(trip => trip.trip_update).filter(trip => trip.trip.trip_id.match(/ST\d\d/) && trip.stop_time_update.length)
 
-  let sydTrainIDs = relevantSYDTrips.map(trip => trip.trip.trip_id.slice(0, 4))
-  let missingNSWTrips = relevantNSWTrips.filter(trip => !sydTrainIDs.includes(trip.trip.trip_id.slice(0, 4)))
-
-  await async.forEach(relevantSYDTrips.concat(missingNSWTrips), async trip => {
+  await async.forEach(relevantNSWTrips, async trip => {
     let rawTripID = trip.trip.trip_id
     let runID = rawTripID.slice(0, 4)
 
-    let sydneyTrainsTrip = trip.stop_time_update
-    let nswTrainsTrip = relevantNSWTrips.find(trip => trip.trip.trip_id.startsWith(runID))
+    let stopTimeUpdates = trip.stop_time_update
 
     let gtfsTrip
 
     let tripStartTime
 
-    if (nswTrainsTrip && nswTrainsTrip.trip.start_date) {
-      let knownQuery = { runID, operationDays: nswTrainsTrip.trip.start_date }
+    if (trip && trip.trip.start_date) {
+      let knownQuery = { runID, operationDays: trip.trip.start_date }
       gtfsTrip = await liveTimetables.findDocument(knownQuery) || await gtfsTimetables.findDocument(knownQuery)
 
-      let startDate = utils.parseDate(nswTrainsTrip.trip.start_date)
+      let startDate = utils.parseDate(trip.trip.start_date)
       if (gtfsTrip) {
         let startMinutes = gtfsTrip.stopTimings[0].departureTimeMinutes
         tripStartTime = startDate.clone().add(startMinutes, 'minutes')
@@ -84,8 +77,7 @@ async function fetchAndUpdate() {
       })
     }
 
-    await parseStopTimeUpdates(sydneyTrainsTrip)
-    if (nswTrainsTrip) await parseStopTimeUpdates(nswTrainsTrip.stop_time_update)
+    await parseStopTimeUpdates(stopTimeUpdates)
 
     gtfsTrip.stopTimings.forEach((stop, i) => {
       let nextStop = gtfsTrip.stopTimings[i + 1]
@@ -118,18 +110,13 @@ async function fetchAndUpdate() {
 
     let consist = trip.vehicle
 
-    if (!consist && nswTrainsTrip) consist = nswTrainsTrip.vehicle
+    if (!consist && trip) consist = trip.vehicle
 
     if (consist && consist.id) {
       let rawID = (consist.id || '').toString()
       if (rawID.match(/XP\d{4}/)) {
         gtfsTrip.consist = [rawID]
       }
-    }
-
-    let xptSize
-    if (xptSize = rawTripID.match(/\.X\.(\d)\./)) {
-      gtfsTrip.vehicle = `${xptSize[1]}x XPT`
     }
 
     delete gtfsTrip._id
