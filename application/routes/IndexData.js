@@ -88,10 +88,16 @@ router.get('/home-banner', (req, res) => {
       })
     }
   } else {
+    // res.json({
+    //   link: 'https://www.patreon.com/transportsg',
+    //   alt: 'Patreon',
+    //   text: 'Hi! If you like this site please consider supporting me on patreon by clicking here!'
+    // })
+
     res.json({
-      link: 'https://www.patreon.com/transportsg',
-      alt: 'Patreon',
-      text: 'Hi! If you like this site please consider supporting me on patreon by clicking here!'
+      link: '/vline/tracker',
+      alt: 'V/Line Tracker',
+      text: 'From 16 December the V/Line tracker will no longer be updated. The page will be kept for historical records.'
     })
   }
 })
