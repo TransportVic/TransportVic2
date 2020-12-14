@@ -66,11 +66,11 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip) {
 function mapSuspension(suspensionText, routeName) {
   let stationsAffected = suspensionText
     .replace(/\u00A0/g, ' ').replace(/[–-]/, ' and ')
-    .match(/between ([ \w]+) and ([ \w]+) (?:stations|due)/i)
+    .match(/trains (?:between )?([ \w]+) and ([ \w]+) (?:stations|due)/i)
 
   if (!stationsAffected) return
-  let startStation = stationsAffected[1].trim()
-  let endStation = stationsAffected[2].trim()
+  let startStation = utils.titleCase(stationsAffected[1].trim())
+  let endStation = utils.titleCase(stationsAffected[2].trim())
 
   // Station A should always be on the UP end
   let routeStops = getRouteStops(routeName)
@@ -441,7 +441,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     if (suspension.type === 'suspended') {
       suspension.routeName.forEach(route => {
         if (!suspensionMap[route]) suspensionMap[route] = []
-        suspensionMap[route].push(mapSuspension(suspension.text, route))
+        let suspensionData = mapSuspension(suspension.text, route)
+        if (suspensionData) suspensionMap[route].push(suspensionData)
       })
     }
   })
