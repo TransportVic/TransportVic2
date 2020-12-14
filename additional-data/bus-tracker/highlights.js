@@ -127,7 +127,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Dysons Specials',
-  track: ['D184', 'D185', 'D186', 'D430', 'D431', 'D754', 'D757', 'D758', 'D762', 'D763', 'D764'],
+  track: ['D184', 'D185', 'D186', 'D430', 'D431', 'D754', 'D757', 'D758', 'D759', 'D762', 'D763', 'D764'],
   routes: [],
   type: 'exclude'
 }, {

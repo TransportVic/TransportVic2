@@ -176,6 +176,7 @@ router.get('/highlights', async (req, res) => {
 
   let consistTypeChanged = allTrips.filter(trip => {
     let nspTimetable = timetables[trip.runID]
+    if (!trip.consist[0]) return false
 
     if (nspTimetable) {
       let tripVehicleType
@@ -207,6 +208,7 @@ router.get('/highlights', async (req, res) => {
     // We're only considering where consist type wasnt changed. otherwise 1xVL and 2xSP would trigger even though its equiv
     if (consistTypeChanged.includes(trip)) return false
     if (['8118', '8116', '8160', '8158'].includes(trip.runID)) return false
+    if (!trip.consist[0]) return
 
     let nspTimetable = timetables[trip.runID]
 
@@ -224,9 +226,11 @@ router.get('/highlights', async (req, res) => {
   })
 
   let setAltered = allTrips.filter(trip => {
+    if (!trip.consist[0]) return false
     if (!trip.consist[0].startsWith('N')) return false
     let {consist, set} = trip
     let knownSet = vlineConsists[set]
+    if (!set) return false // If only a loco was assigned don't trigger it
     if (!knownSet) return true
 
     let carriages = consist.filter(c => !c.startsWith('P') && !c.startsWith('N'))
