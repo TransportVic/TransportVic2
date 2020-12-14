@@ -56,50 +56,38 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
     let accessibleTrain = $$('IsAccessibleAvailable').text() === 'true'
     let barAvailable = $$('IsBuffetAvailable').text() === 'true'
 
-    let vehicle = $$('Consist').text().replace(/ /g, '-')
-    let vehicleConsist = $$('ConsistVehicles').text().replace(/ /g, '-')
+    let rawVehicle = $$('Consist').text()
+    let shortConsist = rawVehicle.split(' ').filter((e, i, a) => a.indexOf(e) === i)
+    let allCars = $$('ConsistVehicles').text().split(' ').filter((e, i, a) => a.indexOf(e) === i)
 
-    let fullVehicle = vehicle
-    let vehicleType
-    let set
+    let consist = []
+    let vehicleType = ''
+    let set = null
 
-    if (vehicle.match(/N\d{3}/)) {
-      let carriages = vehicleConsist.slice(5).split('-')
-      let excludes = ['ACN13', 'FLH32', 'B219', 'BRN']
-      excludes.forEach(exclude => {
-        if (carriages.includes(exclude)) {
-          carriages.splice(carriages.indexOf(exclude), 1)
-        }
-      })
-      if (carriages.includes('BCZ260')) carriages[carriages.indexOf('BCZ260')] = 'PCJ491'
-      vehicleConsist = vehicleConsist.slice(0, 5) + carriages.join('-')
+    let consistType
+    if (rawVehicle.includes('VL')) consistType = 'Vlocity'
+    else if (rawVehicle.match(/70\d{2}/)) consistType = 'Sprinter'
+    else consistType = 'Loco'
 
-      fullVehicle = vehicleConsist
+    if (consistType === 'Vlocity') {
+      consist = shortConsist.map(vlo => vlo.replace(/\dVL/g, 'VL'))
+      vehicleType = shortConsist.length + 'x 3VL'
+    } else if (consistType === 'Sprinter') {
+      consist = shortConsist
+      vehicleType = shortConsist.length + 'x SP'
+    } else if (consistType === 'Loco') {
+      let loco = shortConsist.find(car => car.match(/^[APN]\d{2,3}$/))
+      let powerVan = shortConsist.find(car => car.match(/^P[CHZ]J?\d{3}$/))
+      set = shortConsist.find(car => car !== loco && car !== powerVan)
+      let setVehicles = allCars.filter(car => car !== loco && car !== powerVan)
 
-      vehicleType = 'N +'
-      vehicleType += carriages.length
-
-      if (carriages.includes('N')) vehicleType += 'N'
-      else vehicleType += 'H'
-
-      set = vehicle.split('-').find(x => !x.startsWith('N') && !x.startsWith('P'))
-    } else if (vehicle.includes('VL')) {
-      let cars = vehicle.split('-')
-      fullVehicle = vehicle.replace(/\dVL/g, 'VL')
-
-      vehicleType = cars.length + 'x 3VL'
-    } else if (vehicle.match(/70\d\d/)) {
-      let cars = vehicle.split('-')
-      vehicleType = cars.length + 'x SP'
-    } else {
-      if (vehicle.includes('N') || vehicle.includes('H')) {
-        fullVehicle = ''
-        vehicleType = ''
-      }
+      if (loco) consist.push(loco)
+      consist = consist.concat(setVehicles)
+      if (powerVan) consist.push(powerVan)
     }
 
     if ($$('Consist').attr('i:nil'))
-      fullVehicle = ''
+      consist = []
 
     let direction = $$('Direction').text()
     if (direction === 'D') direction = 'Down'
@@ -113,7 +101,6 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
     let originVLinePlatform = originStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
     let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
 
-    let consist = fullVehicle.split('-').filter((e, i, a) => a.indexOf(e) === i) // Simple deduper
     let dayOfWeek = await getDayOfWeek(originDepartureTime)
     let isWeekday = utils.isWeekday(dayOfWeek)
 
