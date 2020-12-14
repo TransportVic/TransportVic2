@@ -55,7 +55,8 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip) {
     }
   }
 
-  if (!upService || isFormingNewTrip) { // down trains away from city
+
+  if ((!upService || isFormingNewTrip) && destination !== 'Flagstaff') { // down trains away from city
     cityLoopConfig.reverse()
   }
 
@@ -366,6 +367,10 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
       destination = 'City Loop'
     else if (cityLoopConfig.slice(-1)[0] === 'SSS')
       destination = 'Southern Cross'
+  }
+
+  if (routeName === 'Showgrounds/Flemington' && destination === 'Flagstaff') {
+    destination = 'Flinders Street'
   }
 
   let viaCityLoop = isFSS ? cityLoopConfig.includes('FGS') : undefined
