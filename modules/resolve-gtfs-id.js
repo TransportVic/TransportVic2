@@ -17,7 +17,7 @@ let overrides = {
   "4-895": "4-89v",
   "4-897": "4-89S",
   "4-898": "4-89T",
-  "6-B7-": "6-B71"
+  "6-B7-": "6-B7X"
 }
 
 module.exports = routeGTFSID => {

@@ -191,8 +191,11 @@ module.exports = {
   "6-wr8": ["Warrnambool Bus Lines"],
   "6-wr9": ["Warrnambool Bus Lines"],
 
-  "6-B70": ["Whitmores Bus Lines"],
-  "6-B7o": ["Whitmores Bus Lines"],
+  "6-B70": ["Whitmores Bus Lines"], // 70
+  "6-B7o": ["Whitmores Bus Lines"], // 70
+  "6-B7X": ["Whitmores Bus Lines"], // 70
+
+  "6-B71": ["Whitmores Bus Lines"], // 71
 
   // TNSW
   "6-906": ["Martin's Albury"],
