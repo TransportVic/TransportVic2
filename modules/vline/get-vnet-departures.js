@@ -56,9 +56,12 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
     let accessibleTrain = $$('IsAccessibleAvailable').text() === 'true'
     let barAvailable = $$('IsBuffetAvailable').text() === 'true'
 
-    let rawVehicle = $$('Consist').text()
-    let shortConsist = rawVehicle.split(' ').filter((e, i, a) => a.indexOf(e) === i)
-    let allCars = $$('ConsistVehicles').text().split(' ').filter((e, i, a) => a.indexOf(e) === i)
+    let rawVehicle = ''
+    let shortConsist = [], allCars = []
+
+    // let rawVehicle = $$('Consist').text()
+    // let shortConsist = rawVehicle.split(' ').filter((e, i, a) => a.indexOf(e) === i)
+    // let allCars = $$('ConsistVehicles').text().split(' ').filter((e, i, a) => a.indexOf(e) === i)
 
     let consist = []
     let vehicleType = ''

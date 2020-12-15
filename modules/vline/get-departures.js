@@ -210,14 +210,15 @@ async function appendTripData(db, departure, vlinePlatforms) {
     })
 
     let platform = departure.platform
-    if (platform.endsWith('N')) {
-      platform = platform.slice(0, 1) + 'A'
-    }
     if (platform === '??') platform = null
 
     if (nspTrip && !platform) {
       let nspStopTiming = nspTrip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
       if (nspStopTiming) platform = nspStopTiming.platform
+    }
+
+    if (platform.endsWith('N')) {
+      platform = platform.slice(0, 1) + 'A'
     }
 
     let trackerDepartureTime = giveVariance(departureTime)
