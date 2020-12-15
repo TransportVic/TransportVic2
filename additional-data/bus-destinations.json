@@ -810,6 +810,18 @@
     "6-908": {
       "Thurgoona Community Centre": "Thurgoona",
       "Feathertop Circuit": "Thurgoona"
+    },
+    "6-WN1": {
+      "Windham Street/Queen Street": "Wallan Central"
+    },
+    "6-WN2": {
+      "Berry Saltbush Drive/Springridge Boulevard": "Springridge"
+    },
+    "6-WN3": {
+      "Buckland Hill Drive/Wallara Waters Boulevard": "Wallara Waters"
+    },
+    "6-W12": {
+      "Hadfield Park/High Street": "Springridge"
     }
   },
   "generic": {

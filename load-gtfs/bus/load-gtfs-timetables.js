@@ -47,6 +47,10 @@ database.connect({
       calendarDays, calendarDates, null, determineBusRouteNumber, routeGTFSID => {
         // Swan Hill AM and PM
         if (['6-946', '6-949'].includes(routeGTFSID)) return 'School Bus'
+
+        // Wallan Link A, B
+        if (['6-W12', '6-WN3']) return 'Link Bus'
+
         return null
       })
 

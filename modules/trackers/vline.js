@@ -138,7 +138,8 @@ async function getDeparturesFromVNET(db) {
     })
   })
 
-  await vlineTrips.bulkWrite(bulkOperations)
+  // We still kinda want to keep this to watch for trip alterations, but since tracker data is all empty there's no point running this
+  // await vlineTrips.bulkWrite(bulkOperations)
 }
 
 async function requestTimings() {

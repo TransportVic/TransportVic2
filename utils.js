@@ -26,19 +26,16 @@ String.prototype.format = (function (i, safe, arg) {
 module.exports = {
   encodeName: name => name.toLowerCase().replace(/[^\w\d ]/g, '-').replace(/  */g, '-').replace(/--+/g, '-').replace(/-$/, '').replace(/^-/, ''),
   adjustRouteName: routeName => {
-    routeName = routeName.replace(/via .+/, '')
+    return module.exports.titleCase(routeName.replace(/via .+/i, '')
       .replace(/\(?(?:anti)? ?-? ?(?:clockwise)(?: loop)?\)?$/i, '')
-      .replace(/ \(SMARTBUS.+/g, '')
-      .replace(' To ', ' - ')
-      .replace(' to ', ' - ')
+      .replace(/ \(SMARTBUS.+/gi, '')
+      .replace(/ to /i, ' - ')
       .replace(/  +/g, ' ')
       .replace(/(\w) *- *(\w)/g, '$1 - $2')
-      .replace(/Railway Station/g, 'Station')
-      .replace(/Station/g, 'Railway Station')
-      .replace(/ \((From|Until) .+\)$/, '')
+      .replace(/(?:Railway)? Station/gi, '')
+      .replace(/ \((From|Until) .+\)$/i, '')
       .trim()
-
-    return module.exports.titleCase(routeName)
+    )
   },
   adjustRawStopName: name => {
     let directionParts

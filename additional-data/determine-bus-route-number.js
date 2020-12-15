@@ -60,29 +60,16 @@ module.exports = function (trip) {
         return '211'
       }
     }
+
     if (routeGTFSID === '6-920') { // Mildura 250/300
       return ['300', '250'][trip.gtfsDirection]
     }
 
-    if (routeGTFSID === '6-946') { //Swan Hill Schools AM
+    if (routeGTFSID === '6-946') { // Swan Hill Schools AM
       return 'AM'
     }
-    if (routeGTFSID === '6-949') { //Swan Hill Schools PM
+    if (routeGTFSID === '6-949') { // Swan Hill Schools PM
       return 'PM'
-    }
-
-    if (['6-WN1', '6-WN2', '6-WN3'].includes(routeGTFSID)) {
-      // Wallan 1, 2 and 3
-      return routeGTFSID.slice(-1)
-    }
-
-    if (['6-906', '6-907', '6-908'].includes(routeGTFSID)) {
-      return routeGTFSID.slice(2)
-    }
-
-    if (['6-a84', '6-a49', '6-R54'].includes(routeGTFSID)) {
-      // Wonthaggi North, South and to Dudley
-      return null
     }
 
     if (routeGTFSID === '6-gld') {
