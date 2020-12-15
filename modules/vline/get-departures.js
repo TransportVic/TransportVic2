@@ -257,7 +257,7 @@ async function appendTripData(db, departure, vlinePlatforms) {
 
     if (tripData) {
       let first = tripData.consist[0]
-      if (first.startsWith('N')) {
+      if (first && first.startsWith('N')) {
         departure.vehicle = tripData.consist.join('-')
       } else {
         departure = checkDivide(departure, currentStation, nspTrip, tripData.consist)
