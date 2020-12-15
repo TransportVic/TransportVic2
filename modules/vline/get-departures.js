@@ -217,7 +217,7 @@ async function appendTripData(db, departure, vlinePlatforms) {
       if (nspStopTiming) platform = nspStopTiming.platform
     }
 
-    if (platform.endsWith('N')) {
+    if (platform && platform.endsWith('N')) {
       platform = platform.slice(0, 1) + 'A'
     }
 
