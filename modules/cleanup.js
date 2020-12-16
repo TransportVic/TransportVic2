@@ -9,7 +9,16 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 function trimLog(filename) {
   let dateRegex = /\] \[(.*?)\]: /
-  let end = utils.now().add(-14, 'days')
+  let cutoff = 14
+
+  if (filename.includes('trackers')) cutoff = 2
+  if (filename.includes('http')) cutoff = 3
+  if (filename.includes('certs')) cutoff = 7
+  if (filename.includes('fetch')) cutoff = 10
+  if (filename.includes('errors') || filename.includes('mockups')) cutoff = 28
+  if (filename.includes('mail')) cutoff = 21
+
+  let end = utils.now().add(-cutoff, 'days')
 
   let data = fs.readFileSync(filename).toString().split('\n')
   let recentLogs = data.filter(line => {
