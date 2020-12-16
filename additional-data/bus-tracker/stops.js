@@ -183,7 +183,7 @@ module.exports = [
   'williamstown/williamstown-railway-station',
   'williamstown/williamstown-shopping-centre-douglas-parade',
   'north-melbourne/macaulay-railway-station',
-  'parkville/melbourne-university',
+  'carlton/melbourne-university-swanston-street-stop-swanston-street',
   'parkville/royal-melbourne-hospital',
   'crib-point/crib-point-railway-station',
   'ashburton/ashburton-railway-station',

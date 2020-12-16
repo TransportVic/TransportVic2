@@ -633,7 +633,7 @@ module.exports = {
         }
 
         let lineStops = getLineStops(routeName)
-        if (!lineStops) global.loggers.error.err('No route data', routeName)
+        if (!lineStops) global.loggers.mockups.err('No route data', routeName)
         if (destination === 'City Loop') destination = 'Flinders Street'
 
         if (isUp) lineStops = lineStops.slice(0).reverse()

@@ -13,16 +13,16 @@ module.exports = {
 
     let operationDays = calendarLine.slice(1, 8)
     operationDays = operationDays.slice(6).concat(operationDays.slice(0, 6))
-    let startDate = utils.parseTime(calendarLine[8], 'YYYYMMDD')
-    let endDate = utils.parseTime(calendarLine[9], 'YYYYMMDD')
+    let startDate = utils.parseDate(calendarLine[8])
+    let endDate = utils.parseDate(calendarLine[9])
 
     let allDatesInbetween = utils.allDaysBetweenDates(startDate, endDate)
       .filter(date => operationDays[date.day()] === '1')
-      .filter(date => calendarDates[date.format('YYYYMMDD')] !== '2')
+      .filter(date => calendarDates[utils.getYYYYMMDD(date)] !== '2')
 
     Object.keys(calendarDates).forEach(date => {
       if (calendarDates[date] === 1) {
-        allDatesInbetween.push(utils.parseTime(date, 'YYYYMMDD'))
+        allDatesInbetween.push(utils.parseDate(date))
       }
     })
 

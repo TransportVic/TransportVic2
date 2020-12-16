@@ -221,13 +221,9 @@ database.connect({
   }, {name: 'metro trips index', unique: true})
 
   await metroTrips.createIndex({
-    date: 1,
-    consist: 1
+    consist: 1,
+    date: 1
   }, {name: 'consist index'})
-
-  await metroTrips.createIndex({
-    consist: 1
-  }, {name: 'undated consist index'})
 
   console.log('Created metro trips index')
 
@@ -264,13 +260,9 @@ database.connect({
   }, {name: 'tram trips index', unique: true})
 
   await tramTrips.createIndex({
+    tram: 1,
     date: 1,
-    tram: 1
   }, {name: 'tram index'})
-
-  await tramTrips.createIndex({
-    tram: 1
-  }, {name: 'undated tram index'})
 
   console.log('Created tram trips index')
 
