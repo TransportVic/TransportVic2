@@ -164,6 +164,7 @@ async function getDeparturesFromYT(stop, db) {
       if (tram) {
         let firstStop = trip.stopTimings[0]
         let currentStop = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+        if (!currentStop) global.loggers.error.err(trip, stopGTFSID)
         let minutesDiff = currentStop.departureTimeMinutes - firstStop.departureTimeMinutes
         let originDepartureTime = scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
 

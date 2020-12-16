@@ -264,6 +264,7 @@ router.get('/operator-list', async (req, res) => {
   if (!operator) {
     return res.render('tracker/bus/by-operator', {
       buses: {},
+      allBuses: [],
       operator: '',
       date: utils.parseTime(date, 'YYYYMMDD')
     })

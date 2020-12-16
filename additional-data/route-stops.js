@@ -684,6 +684,22 @@ let lines = {
     'Moss Vale',
     'Campbelltown',
     'Sydney Central'
+  ],
+  'Flemington Racecourse': [
+    'Flagstaff',
+    'Melbourne Central',
+    'Parliament',
+    'Southern Cross',
+    'Flinders Street',
+    'Southern Cross',
+    'Parliament',
+    'Melbourne Central',
+    'Flagstaff',
+    'North Melbourne',
+    'Kensington',
+    'Newmarket',
+    'Showgrounds',
+    'Flemington Racecourse'
   ]
 }
 
@@ -711,6 +727,7 @@ function getLineStops(lineName, destination) {
   if (lineName === 'Hurstbridge') return lines.Hurstbridge
   if (lineName === 'City Circle') return lines['City Circle']
   if (lineName === 'Sydney - Melbourne') return lines.Sydney
+  if (lineName === 'Showgrounds/Flemington') return lines['Flemington Racecourse']
 }
 
 module.exports = getLineStops
