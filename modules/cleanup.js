@@ -7,7 +7,7 @@ const path = require('path')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
-function trimLog(filename) {
+function trimLog(filename, isCombined) {
   let dateRegex = /\] \[(.*?)\]: /
   let cutoff = 14
 
@@ -17,6 +17,8 @@ function trimLog(filename) {
   if (filename.includes('certs')) cutoff = 7
   if (filename.includes('mail')) cutoff = 21
   if (filename.includes('errors') || filename.includes('mockups')) cutoff = 28
+
+  if (isCombined) cutoff = 3
 
   let end = utils.now().add(-cutoff, 'days')
 
@@ -84,11 +86,11 @@ database.connect(async () => {
 
   console.log('Cleaned up', live.nRemoved, 'live timetables')
 
-  console.log('Removed', trimLog(config.combinedLog), 'lines from combined log')
+  console.log('Removed', trimLog(config.combinedLog, true), 'lines from combined log')
   walk(path.join(__dirname, '../logs'), (err, results) => {
     results.forEach(filename => {
       let logName = filename.replace(/.*?\/logs\//, '')
-      console.log('Removed', trimLog(filename), 'lines from', logName)
+      console.log('Removed', trimLog(filename, false), 'lines from', logName)
     })
     process.exit()
   })
