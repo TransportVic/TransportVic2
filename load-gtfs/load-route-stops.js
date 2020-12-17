@@ -24,7 +24,7 @@ database.connect({}, async err => {
     }
   })
 
-  let stopsByService = []
+  let stopsByService = {}
 
   await async.forEachLimit(allRoutes, 100, async routeGTFSID => {
     let routeData = await routes.findDocument({ routeGTFSID })
@@ -119,7 +119,7 @@ database.connect({}, async err => {
       updateOne: {
         filter: { routeGTFSID },
         update: { $set: {
-          directions: stopsByService[routeGTFSID]
+          directions: stopsByService[routeGTFSID].filter(Boolean) // Apparently some routes dont have GTFS Dir 0
         } }
       }
     })
