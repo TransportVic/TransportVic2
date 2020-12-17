@@ -619,7 +619,7 @@ module.exports = {
       let arrivals = await module.exports.getEmptyShunts(station, db)
       let platformArrivals = module.exports.filterPlatforms(arrivals, platform)
 
-      platformDepartures = platformDepartures.map(departure => {
+      let mappedDepartures = platformDepartures.map(departure => {
         let {trip, destination, stopTimings} = departure
         let {routeGTFSID, direction} = trip
         let isUp = direction === 'Up'
@@ -663,13 +663,16 @@ module.exports = {
         departure = module.exports.appendScreenDataToDeparture(departure, destination, station, routeName)
 
         return departure
-      }).concat(platformArrivals).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+      }).concat(platformArrivals).sort((a, b) => {
+        return a.actualDepartureTime - b.actualDepartureTime
+          || a.destination.localeCompare(b.destination)
+      })
 
       let hasDepartures = allDepartures.length > 0
 
       return {
         stationName,
-        departures: module.exports.trimDepartureData(platformDepartures, maxDepartures, addStopTimings, station.stopName),
+        departures: module.exports.trimDepartureData(mappedDepartures, maxDepartures, addStopTimings, station.stopName),
         hasDepartures,
         hasRRB
       }

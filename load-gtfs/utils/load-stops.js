@@ -26,6 +26,12 @@ module.exports = async function(stops, data, stopsLookup) {
       }
     })
 
+    if (!matchingStop) {
+      matchingStop = await stops.findDocument({
+        'bays.originalName': stop.originalName
+      })
+    }
+
     let actualMode = stop.mode === 'nbus' ? 'bus' : stop.mode
     let flags = null
     if (actualMode === 'bus') {
