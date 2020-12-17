@@ -57,9 +57,20 @@ router.post('/:station/up-down', async (req, res) => {
         return departure.direction.toLowerCase() === d
       }).slice(0, 5)
     })
-  }
+  } else {
+    let up = departures.departures.filter(departure => {
+      return departure.direction === 'Up'
+    }).slice(0, 4)
 
-  res.json(departures)
+    let down = departures.departures.filter(departure => {
+      return departure.direction === 'Down'
+    }).slice(0, 4)
+
+    res.json({
+      ...departures,
+      departures: [...up, ...down]
+    })
+  }
 })
 
 

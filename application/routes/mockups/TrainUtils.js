@@ -227,7 +227,7 @@ module.exports = {
         let secondsDifference = diff.diff(utils.now(), 'seconds')
 
         return !departure.cancelled && minutesDifference < 120 && secondsDifference > -60
-      }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+      })
     }, 1000 * 15)
   },
   addTimeToDeparture: departure => {
