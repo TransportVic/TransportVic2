@@ -48,7 +48,7 @@ module.exports = {
   "70.0": "0", // Wattle Park
 
   "72.0": "0", // Melb Uni
-  "72.1": "1", // Cambwell
+  "72.1": "1", // Camberwell
 
   "75.0": "1", // Vermont Sth
   "75.1": "0", // Docklands

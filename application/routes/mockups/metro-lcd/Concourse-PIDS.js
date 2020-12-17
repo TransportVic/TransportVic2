@@ -84,11 +84,12 @@ router.post('/:station/interchange', async (req, res) => {
     groupedDepartures[key].push(departure)
   })
 
-  departures.departures = Object.values(groupedDepartures).reduce((acc, group) => {
-    return acc.concat(group.slice(0, 3))
-  }, [])
-
-  res.json(departures)
+  res.json({
+    ...departures,
+    departures: Object.values(groupedDepartures).reduce((acc, group) => {
+      return acc.concat(group.slice(0, 3))
+    }, [])
+  })
 })
 
 module.exports = router
