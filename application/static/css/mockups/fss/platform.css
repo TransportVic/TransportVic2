@@ -318,6 +318,11 @@ div.nextDeparture span.destination {
   white-space: nowrap;
 }
 
+div.nextDeparture span.destination.small {
+  width: calc(var(--width) * 0.2);
+  font-size: calc(var(--height) * 0.045);
+}
+
 div.nextDeparture span.stoppingType {
   margin-left: calc(var(--width) * 0.02);
   font-size: calc(var(--height) * 0.03);

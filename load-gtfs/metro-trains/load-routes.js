@@ -36,7 +36,9 @@ database.connect({
   })
 
   await routes.replaceDocument({ routeGTFSID: "2-CCL" }, cityCircle, { upsert: true })
-  await routes.replaceDocument({ routeGTFSID: "2-ain" }, flemington, { upsert: true })
+  if (!await routes.findDocument({ routeGTFSID: "2-ain" })) {
+    await routes.replaceDocument({ routeGTFSID: "2-ain" }, flemington, { upsert: true })
+  }
 
   await updateStats('mtm-routes', routeData.length + 2)
   console.log('Completed loading in ' + routeData.length + 2 + ' MTM rail routes')

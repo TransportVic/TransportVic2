@@ -260,9 +260,14 @@ function updateBody(firstTime) {
 
           let {destination} = departure
 
+          let destinationClass = 'destination'
+
           if (destination === 'North Melbourne') destination = 'Nth Melbourne'
           if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
-          if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
+          if (destination === 'Flemington Racecourse') {
+            destination = 'Flemington Races'
+            destinationClass += ' small'
+          }
 
           let stoppingType = departure.stoppingType
           if (departure.additionalInfo.via) {
@@ -272,6 +277,7 @@ function updateBody(firstTime) {
           $('.lineColour', departureRow).className = 'lineColour ' + departureClass
           $('.scheduledDepartureTime', departureRow).textContent = formatTimeA(new Date(departure.scheduledDepartureTime))
           $('.destination', departureRow).textContent = destination
+          $('.destination', departureRow).className = destinationClass
           $('.stoppingType', departureRow).textContent = stoppingType.replace('Limited', 'Ltd')
           $('.minutesToDeparture span', departureRow).textContent = departure.prettyTimeToDeparture
         }

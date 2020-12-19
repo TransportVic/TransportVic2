@@ -121,6 +121,7 @@ function addStoppingPattern(stops) {
       else {
         let {stopName} = stop
         if (stopName === 'Upper Ferntree Gully') stopName = 'Upper F.T Gully'
+        if (stopName === 'Flemington Racecourse') stopName = 'Flemington Races'
 
         html += `<span>${stopName}</span><br>`
 
@@ -178,7 +179,10 @@ function updateBody() {
         $('.burnLine').className = 'burnLine reset'
         setDepartureInfoVisible(true)
 
-        $('.firstDestination').textContent = firstDeparture.destination
+        let destination = firstDeparture.destination
+        if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
+
+        $('.firstDestination').textContent = destination
         $('.scheduledDiv span:nth-child(2)').textContent = formatTimeB(new Date(firstDeparture.scheduledDepartureTime))
 
         if (firstDeparture.estimatedDepartureTime) {

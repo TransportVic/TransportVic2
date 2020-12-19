@@ -46,7 +46,6 @@ function shorternName(stopName) {
   if (stopName === 'North Melbourne') return 'Nth Melbourne'
   if (stopName === 'South Kensington') return 'Sth Kensington'
   if (stopName === 'Flemington Racecourse') return 'Flemington Races'
-  if (stopName === 'Sydney Central') return 'Sydney XPT'
 
   return stopName
 }
@@ -122,8 +121,6 @@ function processDepartures(departures, side, firstTime) {
       let firstDepartureClass = firstDeparture.codedLineName
       if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
 
-      let {destination} = firstDeparture
-
       let firstStoppingType = firstDeparture.stoppingType
       if (firstDeparture.additionalInfo.via) {
         firstStoppingType += ' ' + firstDeparture.additionalInfo.via
@@ -148,7 +145,16 @@ function processDepartures(departures, side, firstTime) {
         $$('.firstDepartureInfo .departingDiv .min').textContent = 'min'
       }
 
-      $$('.firstDeparture .firstDestination').textContent = shorternName(destination)
+      let destination = shorternName(firstDeparture.destination)
+      let destinationClass = 'firstDestination'
+      if (destination === 'Sydney Central') destination = 'Sydney XPT'
+      if (destination === 'Flemington Races') {
+        destinationClass += ' small'
+      }
+
+      $$('.firstDeparture .firstDestination').textContent = destination
+      $$('.firstDeparture .firstDestination').className = destinationClass
+
       $$('.firstDeparture .firstStoppingType').textContent = firstStoppingType
 
       let same = addStoppingPattern(side, firstDeparture.additionalInfo.screenStops)
