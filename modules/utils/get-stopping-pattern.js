@@ -258,6 +258,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     if (tripData && vehicle) {
       let ptvConsistSize = vehicle.slice(0, 1)
       let carType = metroTypes.find(car => tripData.consist.includes(car.leadingCar))
+      if (tripData.consist[0].match(/9\d{3}/)) carType = { type: 'HCMT' }
       if (carType) vehicle = ptvConsistSize + ' Car ' + carType.type
     }
 
