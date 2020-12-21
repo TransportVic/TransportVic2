@@ -46,7 +46,7 @@ function generateTripTimes(direction, departureTime, tripID) {
 
 module.exports = {
   "days": [
-    ["WEEKDAY", "1", "1", "1", "1", "1", "0", "0", "20200803", "20201120"]
+    ["WEEKDAY", "1", "1", "1", "1", "1", "0", "0", "20200803", "20201204"]
   ],
   "dates": [],
   "trips": [
