@@ -64,5 +64,6 @@ module.exports = {
   'Epping': 1063,
   'Clifton Hill': 1041,
   'Boronia': 1025,
-  'Eaglemont': 1056
+  'Eaglemont': 1056,
+  'Cardinia Road': 1223
 }

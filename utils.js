@@ -449,13 +449,12 @@ module.exports = {
     else return shortName
   },
   getRunID: ptvRunID => {
-    let runID = ptvRunID - 948000
-    if (runID >= 40000) {
-      return `X${module.exports.pad((runID - 40000).toString(), 3, '0')}`
-    } else if (runID >= 30000) {
-      return `R${module.exports.pad((runID - 30000).toString(), 3, '0')}`
+    if (ptvRunID >= 988000) {
+      return `X${module.exports.pad((ptvRunID - 988000).toString(), 3, '0')}`
+    } else if (ptvRunID >= 982000) {
+      return `R${module.exports.pad((ptvRunID - 982000).toString(), 3, '0')}`
     } else {
-      return module.exports.pad(runID.toString(), 4, '0')
+      return module.exports.pad((ptvRunID - 948000).toString(), 4, '0')
     }
   },
   sleep: time => {
