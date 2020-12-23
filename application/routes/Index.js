@@ -25,6 +25,18 @@ fs.readFile(path.join(__dirname, '../static/images/interactives/railmap.svg'), (
   mapSVG = data.toString()
 })
 
+function filter(req, next) {
+  let host = req.headers.host || ''
+  if (host.includes('circulars.')) return true
+  else return void next()
+}
+
+router.use('*', (req, res, next) => {
+  if (filter(req, next)) {
+    res.render('seized')
+  }
+})
+
 router.get('/', (req, res) => {
   res.render('index')
 })
