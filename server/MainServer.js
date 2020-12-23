@@ -7,6 +7,7 @@ const minify = require('express-minify')
 const fs = require('fs')
 const uglifyEs = require('uglify-es')
 const rateLimit = require('express-rate-limit')
+const fetch = require('node-fetch')
 const utils = require('../utils')
 
 const DatabaseConnection = require('../database/DatabaseConnection')
@@ -108,6 +109,24 @@ module.exports = class MainServer {
         errorHandler: console.log
       }))
     }
+
+    function filter(req, next) {
+      let host = req.headers.host || ''
+      if (host.includes('circulars.')) return true
+      else return void next()
+    }
+
+    app.use('*', (req, res, next) => {
+      if (filter(req, next)) {
+        let url = `http://localhost:${config.circularPort}${req.baseUrl}`
+        fetch(url).then(r => {
+          res.header('Content-Type', r.headers.get('content-type'))
+          r.body.pipe(res)
+        })
+
+        // res.render('seized')
+      }
+    })
 
     app.use('/static', express.static(path.join(__dirname, '../application/static'), {
       maxAge: 1000 * 60 * 60 * 24

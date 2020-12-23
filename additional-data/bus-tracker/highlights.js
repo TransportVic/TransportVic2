@@ -107,7 +107,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'CDC Geelong Specials',
-  track: [],
+  track: ['CG99'],
   routes: [],
   type: 'exclude'
 }, {
