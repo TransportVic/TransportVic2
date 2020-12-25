@@ -53,13 +53,8 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
   return trip
 }
 
-let dates = {}
-
 function p(d) {
-  if (dates[d]) return dates[d] >= 1608037200000
-  else dates[d] = utils.parseDate(d) || Infinity
-
-  return dates[d] >= 1608037200000
+  return false
 }
 
 router.get('/date', async (req, res) => {

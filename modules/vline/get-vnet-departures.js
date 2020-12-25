@@ -60,6 +60,12 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
     let shortConsist = rawVehicle.split(' ').filter((e, i, a) => a.indexOf(e) === i)
     let allCars = $$('ConsistVehicles').text().split(' ').filter((e, i, a) => a.indexOf(e) === i)
 
+    if ($$('Consist').attr('i:nil')) {
+      rawVehicle = ''
+      shortConsist = []
+      allCars = []
+    }
+
     let consist = []
     let vehicleType = ''
     let set = null
@@ -85,9 +91,6 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
       consist = consist.concat(setVehicles)
       if (powerVan) consist.push(powerVan)
     }
-
-    if ($$('Consist').attr('i:nil'))
-      consist = []
 
     let direction = $$('Direction').text()
     if (direction === 'D') direction = 'Down'

@@ -87,13 +87,15 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
       scheduledDepartureTime: departure.originDepartureTime,
       actualDepartureTime: departure.originDepartureTime,
       runID: departure.runID,
-      vehicle: departure.vehicle,
+      vehicle: [],
+      // vehicle: departure.vehicle,
       destination: departure.destination.slice(0, -16),
       flags: {
         barAvailable: departure.barAvailable,
         accessibleTrain: departure.accessibleTrain
       }
-    }, currentStation, nspTrip, departure.vehicle)
+    }, currentStation, nspTrip, [])
+    // }, currentStation, nspTrip, departure.vehicle)
   })
 
   return departures
@@ -257,6 +259,7 @@ async function appendTripData(db, departure, vlinePlatforms) {
     let currentStation = vlinePlatform.fullStopName.slice(0, -16)
 
     if (tripData) {
+      tripData.consist = ['']
       let first = tripData.consist[0]
       if (first && first.startsWith('N')) {
         departure.vehicle = tripData.consist.join('-')
