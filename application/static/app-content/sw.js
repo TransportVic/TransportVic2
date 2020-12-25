@@ -176,6 +176,8 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return
 
+  event.request.credentials = 'same-origin'
+
   event.respondWith(
     caches.open(cacheName)
     .then(cache => cache.match(event.request, {ignoreSearch: true}))
