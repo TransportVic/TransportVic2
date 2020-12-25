@@ -41,6 +41,8 @@ if (modules.preloadCCL)
 
 let serverStarted = false
 
+let code = 'Basic ' + Buffer.from(config.vlineLogin).toString('base64')
+
 module.exports = class MainServer {
   constructor () {
     this.app = express()
@@ -156,6 +158,18 @@ module.exports = class MainServer {
     if (process.NODE_ENV && process.NODE_ENV === 'prod') { app.set('view cache', true) }
     app.set('x-powered-by', false)
     app.set('strict routing', false)
+
+    app.use(config.newVlineTracker, (req, res, next) => {
+      if (req.headers.authorization && req.headers.authorization === code) {
+        return next()
+      }
+
+      res.status(401)
+      res.header('www-authenticate', 'Basic realm="password needed"')
+      res.end('Please login')
+    })
+
+    app.use(config.newVlineTracker, require('../application/routes/tracker/VLineTracker2'))
 
     app.use('/mockups', rateLimit({
       windowMs: 1 * 60 * 1000,

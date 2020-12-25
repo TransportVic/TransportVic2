@@ -28,7 +28,7 @@ Object.keys(rawLineRanges).forEach(line => {
 })
 
 router.get('/', (req, res) => {
-  res.render('tracker/vline/index')
+  res.render('tracker/vline/index', { baseURL: '/vline/tracker' })
 })
 
 function adjustTrip(trip, date, today, minutesPastMidnightNow) {
@@ -81,7 +81,8 @@ router.get('/date', async (req, res) => {
 
   res.render('tracker/vline/by-date', {
     trips,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    baseURL: '/vline/tracker'
   })
 })
 
@@ -111,7 +112,8 @@ router.get('/line', async (req, res) => {
   res.render('tracker/vline/by-line', {
     trips,
     line,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    baseURL: '/vline/tracker'
   })
 })
 
@@ -148,7 +150,8 @@ router.get('/consist', async (req, res) => {
     trips,
     consist,
     servicesByDay,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    baseURL: '/vline/tracker'
   })
 })
 
@@ -276,7 +279,8 @@ router.get('/highlights', async (req, res) => {
     setAltered,
     unknownVehicle,
     unknownTrips,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    baseURL: '/vline/tracker'
   })
 })
 

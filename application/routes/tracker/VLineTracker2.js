@@ -9,6 +9,7 @@ const vlineFleet = require('../../../additional-data/vline-tracker/vline-fleet')
 const vlineConsists = require('../../../additional-data/vline-tracker/carriage-sets')
 const rawLineRanges = require('../../../additional-data/vline-tracker/line-ranges')
 const { getDayOfWeek } = require('../../../public-holidays')
+const config = require('../../../config')
 
 let lineRanges = {}
 
@@ -28,7 +29,7 @@ Object.keys(rawLineRanges).forEach(line => {
 })
 
 router.get('/', (req, res) => {
-  res.render('tracker/vline/index')
+  res.render('tracker/vline/index', { baseURL: config.newVlineTracker })
 })
 
 function adjustTrip(trip, date, today, minutesPastMidnightNow) {
@@ -76,7 +77,8 @@ router.get('/date', async (req, res) => {
 
   res.render('tracker/vline/by-date', {
     trips,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    baseURL: config.newVlineTracker
   })
 })
 
@@ -106,7 +108,8 @@ router.get('/line', async (req, res) => {
   res.render('tracker/vline/by-line', {
     trips,
     line,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    baseURL: config.newVlineTracker
   })
 })
 
@@ -143,7 +146,8 @@ router.get('/consist', async (req, res) => {
     trips,
     consist,
     servicesByDay,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    baseURL: config.newVlineTracker
   })
 })
 
@@ -271,7 +275,8 @@ router.get('/highlights', async (req, res) => {
     setAltered,
     unknownVehicle,
     unknownTrips,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    baseURL: config.newVlineTracker
   })
 })
 
