@@ -56,12 +56,9 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
     let accessibleTrain = $$('IsAccessibleAvailable').text() === 'true'
     let barAvailable = $$('IsBuffetAvailable').text() === 'true'
 
-    let rawVehicle = ''
-    let shortConsist = [], allCars = []
-
-    // let rawVehicle = $$('Consist').text()
-    // let shortConsist = rawVehicle.split(' ').filter((e, i, a) => a.indexOf(e) === i)
-    // let allCars = $$('ConsistVehicles').text().split(' ').filter((e, i, a) => a.indexOf(e) === i)
+    let rawVehicle = $$('Consist').text()
+    let shortConsist = rawVehicle.split(' ').filter((e, i, a) => a.indexOf(e) === i)
+    let allCars = $$('ConsistVehicles').text().split(' ').filter((e, i, a) => a.indexOf(e) === i)
 
     let consist = []
     let vehicleType = ''
@@ -79,12 +76,12 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
       consist = shortConsist
       vehicleType = shortConsist.length + 'x SP'
     } else if (consistType === 'Loco') {
-      let loco = shortConsist.find(car => car.match(/^[APN]\d{2,3}$/))
+      let locos = shortConsist.filter(car => car.match(/^[ANP]\d{2,3}$/))
       let powerVan = shortConsist.find(car => car.match(/^P[CHZ]J?\d{3}$/))
-      set = shortConsist.find(car => car !== loco && car !== powerVan)
-      let setVehicles = allCars.filter(car => car !== loco && car !== powerVan)
+      set = shortConsist.filter(car => !locos.includes(car) && car !== powerVan).join(' ')
+      let setVehicles = allCars.filter(car => !locos.includes(car) && car !== powerVan)
 
-      if (loco) consist.push(loco)
+      if (locos.length) consist = locos
       consist = consist.concat(setVehicles)
       if (powerVan) consist.push(powerVan)
     }

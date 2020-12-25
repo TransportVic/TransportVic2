@@ -25,7 +25,8 @@ let routeNames = {
   '1-V45': 'Swan Hill',
   '1-V48': 'Traralgon',
   '1-V51': 'Warrnambool',
-  '1-V40': 'Seymour'
+  '1-V40': 'Seymour',
+  '1-Vov': 'Overland'
 }
 
 database.connect({

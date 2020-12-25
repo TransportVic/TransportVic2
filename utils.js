@@ -235,7 +235,7 @@ module.exports = {
     const parts = time.slice(0, 5).split(':')
     return parts[0] * 60 + parts[1] * 1
   },
-  getHHMMFromMinutesPastMidnight: (time, padHour=true) => {
+  getHHMMFromMinutesPastMidnight: time => {
     let hours = Math.floor(time / 60)
     let minutes = time % 60
     let mainTime = ''

@@ -183,9 +183,13 @@ router.get('/highlights', async (req, res) => {
       if (trip.consist[0].startsWith('VL')) tripVehicleType = 'VL'
       else if (trip.consist[0].startsWith('70')) tripVehicleType = 'SP'
       else {
-        tripVehicleType = 'N +'
-        let carriage = trip.consist.find(c => !c.startsWith('N') && !c.startsWith('P') && (c.includes('N') || c.includes('H')))
-        if (carriage) tripVehicleType += carriage.includes('N') ? 'N' : 'H'
+        let locos = trip.consist.filter(car => car.match(/^[ANP]\d{2,3}$/))
+        let powerVan = trip.consist.find(car => car.match(/^P[CHZ]J?\d{3}$/))
+        let setVehicles = trip.consist.filter(car => !locos.includes(car) && car !== powerVan)
+
+        if (locos[0]) tripVehicleType = locos[0][0] + ' +'
+
+        if (setVehicles.length) tripVehicleType += setVehicles[0].includes('N') ? 'N' : 'H'
         else return true
       }
 
@@ -196,7 +200,7 @@ router.get('/highlights', async (req, res) => {
       let spMatch = nspTripType.includes('SP') && tripVehicleType == 'SP'
 
       if (vlMatch || spMatch) return false
-      if (nspTripType.startsWith('N') && tripVehicleType.startsWith('N')) {
+      if (nspTripType.match(/^[ANP]/) && tripVehicleType.match(/^[ANP]/)) {
         return tripVehicleType.slice(-1) !== nspTripType.slice(-1)
       }
 
@@ -227,16 +231,24 @@ router.get('/highlights', async (req, res) => {
 
   let setAltered = allTrips.filter(trip => {
     if (!trip.consist[0]) return false
-    if (!trip.consist[0].startsWith('N')) return false
+    if (!trip.consist[0].match(/^[ANP]\d{2,3}$/)) return false
+
     let {consist, set} = trip
-    let knownSet = vlineConsists[set]
     if (!set) return false // If only a loco was assigned don't trigger it
-    if (!knownSet) return true
+
+    let individualSets = set.split(' ')
+    let combinedKnownSets = []
+
+    for (let setName of individualSets) {
+      let knownSet = vlineConsists[setName]
+      if (!knownSet) return true // We don't recognise the set, mark as set altered
+      combinedKnownSets = combinedKnownSets.concat(knownSet)
+    }
 
     let carriages = consist.filter(c => !c.startsWith('P') && !c.startsWith('N'))
 
-    if (knownSet.some(known => !carriages.includes(known))) return true
-    if (carriages.some(car => !knownSet.includes(car))) return true
+    if (combinedKnownSets.some(known => !carriages.includes(known))) return true
+    if (carriages.some(car => !combinedKnownSets.includes(car))) return true
   })
 
   let unknownVehicle = allTrips.filter(trip => {

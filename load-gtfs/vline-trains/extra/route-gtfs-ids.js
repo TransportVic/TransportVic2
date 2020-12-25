@@ -11,5 +11,6 @@ module.exports = {
   'Traralgon': '1-V48',
   'Warrnambool': '1-V51',
   'Seymour': '1-V40',
-  'Shepparton': '1-Sht'
+  'Shepparton': '1-Sht',
+  'Overland': '1-Vov'
 }

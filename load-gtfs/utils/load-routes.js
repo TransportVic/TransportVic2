@@ -46,7 +46,7 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
 
       let rawRouteName = rawRouteNames[routeGTFSID]
 
-      let routeName = name ? name(gtfsRouteData[2], rawRouteName, routeGTFSID) : rawRouteName
+      let routeName = name ? name(gtfsRouteData[2], rawRouteName, routeGTFSID) || rawRouteName : rawRouteName
 
       if (matchingRoute) {
         let getFingerprint = shape => `${shape.length}-${shape.path[0].join(',')}-${shape.path.slice(-1)[0].join(',')}`
