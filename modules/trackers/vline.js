@@ -13,8 +13,8 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 async function getDeparturesFromVNET(db) {
   let vnetDepartures = [
-    ...await getVNETDepartures('', 'B', db, 1440),
-    ...await getVNETDepartures('', 'B', db, 1440, true)
+    ...await getVNETDepartures('', 'B', db, 1440, false, true),
+    ...await getVNETDepartures('', 'B', db, 1440, true, true)
   ]
 
   let vlineTrips = db.getCollection('vline trips')
@@ -153,6 +153,6 @@ async function requestTimings() {
 
 database.connect(async () => {
   schedule([
-    [210, 1380, 10]
+    [210, 1380, 12]
   ], requestTimings, 'vline tracker', global.loggers.trackers.vline)
 })
