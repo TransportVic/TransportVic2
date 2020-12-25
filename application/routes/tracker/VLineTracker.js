@@ -136,11 +136,13 @@ router.get('/consist', async (req, res) => {
   let servicesByDay = {}
 
   await async.forEachSeries(operationDays, async checkDay => {
+    if (p(checkDay)) return
+
     let humanDate = checkDay.slice(6, 8) + '/' + checkDay.slice(4, 6) + '/' + checkDay.slice(0, 4)
 
     servicesByDay[humanDate] = {
-      services: p(checkDay) ? [] : (await vlineTrips.distinct('runID', {
-        consist: consist, date: checkDay
+      services: (await vlineTrips.distinct('runID', {
+        consist, date: checkDay
       })).sort((a, b) => a - b),
       date: checkDay
     }
