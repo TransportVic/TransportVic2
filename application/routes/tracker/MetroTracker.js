@@ -290,8 +290,7 @@ router.get('/strange', (req, res) => {
         date
       })
 
-      if (trip) train.resolvedConsist = trip.consist.join('-')
-      return train
+      if (trip) trains[train].resolvedConsist = trip.consist.join('-')
     })
 
     res.json(Object.values(trains))
