@@ -30,7 +30,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Transdev Specials',
-  track: ['T703', 'T705', 'T708', 'T710', 'T712', 'T736', 'T737', 'T738', 'T739'],
+  track: ['T703', 'T705', 'T708', 'T710', 'T712', 'T736', 'T737', 'T738', 'T739', 'T745'],
   routes: [],
   type: 'exclude'
 }, {

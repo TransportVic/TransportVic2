@@ -10,7 +10,7 @@ let trainType = {
   'Siemens': 'Siemens'
 }
 
-utils.request(urls.ptDatabase).then(data => {
+utils.request(urls.ptDatabaseMetro).then(data => {
   let parsed = JSON.parse(data)
   let consists = parsed.map(train => [train.mCarA, train.tCar, train.mCarB])
   let types = parsed.map(train => ({
@@ -18,6 +18,16 @@ utils.request(urls.ptDatabase).then(data => {
     type: trainType[train.trainType]
   }))
 
-  fs.writeFile(path.join(__dirname, 'additional-data/metro-tracker/metro-consists.json'), JSON.stringify(consists), () => {})
-  fs.writeFile(path.join(__dirname, 'additional-data/metro-tracker/metro-types.json'), JSON.stringify(types), () => {})
+  utils.request(urls.ptDatabaseHCMT).then(hcmtData => {
+    let parsedHCMT = JSON.parse(hcmtData)
+    consists = consists.concat(parsedHCMT.map(train => [train.TC1, train.DMP1, train.MP1, train.DT1, train.MP2, train.DMP2, train.TC2]))
+
+    types = types.concat(parsedHCMT.map(train => ({
+      leadingCar: train.TC1,
+      type: 'HCMT'
+    })))
+
+    fs.writeFile(path.join(__dirname, 'additional-data/metro-tracker/metro-consists.json'), JSON.stringify(consists), () => {})
+    fs.writeFile(path.join(__dirname, 'additional-data/metro-tracker/metro-types.json'), JSON.stringify(types), () => {})
+  })
 })

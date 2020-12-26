@@ -126,6 +126,16 @@ function adjustSuspension(suspension, trip, currentStation) {
 function findConsist(consist, runID) {
   let finalConsist = []
   if (!consist) return null
+
+  if (consist.toLowerCase().includes('hcmt')) {
+    let parts = consist.match(/(\d+)/)
+    let number
+    if (parts) number = parts[1]
+    if (number) {
+      consist = '90' + utils.pad(number, 2, '0')
+    }
+  }
+
   if (consist.match(/train\d+/)) {
     // For now we don't know what this means so skip it
     return global.loggers.trackers.metro.warn('Encountered strange train', {
