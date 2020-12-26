@@ -249,7 +249,10 @@ router.get('/bot', async (req, res) => {
 })
 
 router.get('/strange', (req, res) => {
-  fs.readFile(path.join(__dirname, '../../../logs/trackers/metro'), (err, data) => {
+  let {db} = res
+  let metroTrips = db.getCollection('metro trips')
+
+  fs.readFile(path.join(__dirname, '../../../logs/trackers/metro'), async (err, data) => {
     let today = utils.getYYYYMMDDNow()
     let {consist, date} = querystring.parse(url.parse(req.url).query)
     if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
@@ -258,25 +261,40 @@ router.get('/strange', (req, res) => {
     let strangeTrains = data.toString().split('\n').filter(line => line.includes('strange'))
     .filter(line => utils.getYYYYMMDD(utils.parseTime(line.slice(14, 39))) === date)
 
-    let tdns = []
-    let seen = []
+    let trains = {}
 
     strangeTrains.forEach(line => {
       let train = line.slice(-29, -18)
-      let tdn = line.slice(-7, -3)
-      if (!seen.includes(tdn)) {
-        seen.push(tdn)
-        tdns.push({
+      let runID = line.slice(-7, -3)
+
+      if (!trains[train]) {
+        trains[train] = {
           train,
-          tdn,
-          time: new Date(line.slice(14, 39)).toLocaleString()
-        })
+          runIDs: [runID],
+          time: new Date(line.slice(14, 39)).toLocaleString(),
+        }
+      } else {
+        if (!trains[train].runIDs.includes(runID)) {
+          trains[train].runIDs.push(runID)
+        }
       }
     })
 
     res.header('Access-Control-Allow-Origin', '*')
 
-    res.json(tdns)
+    await async.forEach(Object.keys(trains), async train => {
+      let trip = await metroTrips.findDocument({
+        runID: {
+          $in: trains[train].runIDs
+        },
+        date
+      })
+
+      if (trip) train.resolvedConsist = trip.consist.join('-')
+      return train
+    })
+
+    res.json(Object.values(trains))
   })
 })
 
