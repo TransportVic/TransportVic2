@@ -161,4 +161,9 @@ module.exports = [{
   track: ['R40', 'R41', 'R42'],
   routes: [],
   type: 'exclude'
+}, {
+  name: 'Warragul Specials',
+  track: ['W2043'],
+  routes: [],
+  type: 'exclude'
 }]

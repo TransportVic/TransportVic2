@@ -274,6 +274,8 @@ router.get('/strange', (req, res) => {
       }
     })
 
+    res.header('Access-Control-Allow-Origin', '*')
+
     res.json(tdns)
   })
 })
