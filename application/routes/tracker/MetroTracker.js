@@ -255,16 +255,19 @@ router.get('/strange', (req, res) => {
     let strangeTrains = data.toString().split('\n').filter(line => line.includes('strange'))
     .filter(line => now - new Date(line.slice(14, 39)) < 1440 * 60 * 1000)
 
-    let tdns = {}
+    let tdns = []
+    let seen = []
+
     strangeTrains.forEach(line => {
       let train = line.slice(-29, -18)
       let tdn = line.slice(-7, -3)
-      if (!tdns[tdn]) {
-        tdns[tdn] = {
+      if (!seen.includes(tdn)) {
+        seen.push(tdn)
+        tdns.push({
           train,
           tdn,
           time: new Date(line.slice(14, 39)).toLocaleString()
-        }
+        })
       }
     })
 
