@@ -250,10 +250,13 @@ router.get('/bot', async (req, res) => {
 
 router.get('/strange', (req, res) => {
   fs.readFile(path.join(__dirname, '../../../logs/trackers/metro'), (err, data) => {
-    let now = +new Date()
+    let today = utils.getYYYYMMDDNow()
+    let {consist, date} = querystring.parse(url.parse(req.url).query)
+    if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+    else date = today
 
     let strangeTrains = data.toString().split('\n').filter(line => line.includes('strange'))
-    .filter(line => now - new Date(line.slice(14, 39)) < 1440 * 60 * 1000)
+    .filter(line => utils.getYYYYMMDD(utils.parseTime(line.slice(14, 39))) === date)
 
     let tdns = []
     let seen = []
