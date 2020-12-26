@@ -29,8 +29,8 @@ router.post('/', async (req, res) => {
 
   let minutes = utils.getMinutesPastMidnightNow()
 
-  if (minutes > 23 * 60) days.push(utils.getYYYYMMDD(utils.now().add(1, 'day')))
-  if (minutes < 120) days.push(utils.getYYYYMMDD(utils.now().add(-1, 'day')))
+  if (minutes > 23 * 60) days.$in.push(utils.getYYYYMMDD(utils.now().add(1, 'day')))
+  if (minutes < 120) days.$in.push(utils.getYYYYMMDD(utils.now().add(-1, 'day')))
 
   let activeTrips = await liveTimetables.findDocuments({
     mode: 'metro train',
