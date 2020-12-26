@@ -79,8 +79,15 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let routesCollection = db.getCollection('routes')
 
   let url = `/v3/pattern/run/${ptvRunID}/route_type/${modes[mode]}?expand=stop&expand=run&expand=route&expand=direction&expand=VehicleDescriptor`
-  if (time)
-    url += `&date_utc=${time}`
+  if (time) {
+    if (mode === 'metro train') {
+      let startTime = utils.parseTime(time)
+      if (utils.getMinutesPastMidnight(startTime) < 180) startTime.add(-3.5, 'hours')
+      url += `&date_utc=${startTime.toISOString()}`
+    } else {
+      url += `&date_utc=${time}`
+    }
+  }
   if (stopID)
     url += `&stop_id=${stopID}`
 
