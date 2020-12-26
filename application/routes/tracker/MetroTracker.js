@@ -3,6 +3,8 @@ const express = require('express')
 const utils = require('../../../utils')
 const router = new express.Router()
 const url = require('url')
+const path = require('path')
+const fs = require('fs')
 const querystring = require('querystring')
 const stationCodes = require('../../../additional-data/station-codes')
 const rawLineRanges = require('../../../additional-data/metro-tracker/line-ranges')
@@ -243,6 +245,30 @@ router.get('/bot', async (req, res) => {
       return trip
     }),
     extraData
+  })
+})
+
+router.get('/strange', (req, res) => {
+  fs.readFile(path.join(__dirname, '../../../logs/trackers/metro'), (err, data) => {
+    let now = +new Date()
+
+    let strangeTrains = data.toString().split('\n').filter(line => line.includes('strange'))
+    .filter(line => now - new Date(line.slice(14, 39)) < 1440 * 60 * 1000)
+
+    let tdns = {}
+    strangeTrains.forEach(line => {
+      let train = line.slice(-29, -18)
+      let tdn = line.slice(-7, -3)
+      if (!tdns[tdn]) {
+        tdns[tdn] = {
+          train,
+          tdn,
+          time: new Date(line.slice(14, 39)).toLocaleString()
+        }
+      }
+    })
+
+    res.json(tdns)
   })
 })
 
