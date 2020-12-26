@@ -153,6 +153,7 @@ async function requestTimings() {
 
 database.connect(async () => {
   schedule([
-    [210, 1380, 12]
+    [225, 1350, 20],
+    [1350, 1440, 40]
   ], requestTimings, 'vline tracker', global.loggers.trackers.vline)
 })
