@@ -96,9 +96,11 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let ptvDirection = Object.values(directions)[0]
   let routeData = Object.values(routes)[0]
 
+  if (departures.length === 0) return referenceTrip
+
   if (stopID && time) {
     let checkStop = departures.find(stop => stop.stop_id === stopID)
-    if (checkStop.scheduled_departure_utc !== time) return referenceTrip
+    if (checkStop && checkStop.scheduled_departure_utc !== time) return referenceTrip
   }
 
   let trueMode = mode

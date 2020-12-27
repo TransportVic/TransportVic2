@@ -241,14 +241,16 @@ module.exports = {
   },
   getFixedLineStops: (tripStops, lineStops, lineName, isUp, type, willSkipCCL) => {
     let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament') || !!willSkipCCL
-    if (!northernGroup.includes(lineName) && !viaCityLoop && type !== 'vline')
-     viaCityLoop = tripStops.includes('Southern Cross')
+    if (!northernGroup.includes(lineName) && !viaCityLoop && type !== 'vline') {
+      viaCityLoop = tripStops.includes('Southern Cross')
+    }
 
     let destination = tripStops.slice(-1)[0]
 
+    lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
+
     if (viaCityLoop) {
       let cityLoopStops = tripStops.filter(e => cityLoopStations.includes(e) || e === 'Flinders Street')
-      lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
 
       if (willSkipCCL) {
         if (northernGroup.includes(lineName)) {
@@ -275,7 +277,6 @@ module.exports = {
         return lineStops
       }
     } else if (type === 'vline') {
-      lineStops = lineStops.filter(e => !cityLoopStations.includes(e) && e !== 'Flinders Street')
       if (isUp) {
         if (gippslandLines.includes(lineName))
           lineStops = [...lineStops, 'Flinders Street', 'Southern Cross']
@@ -288,22 +289,21 @@ module.exports = {
           lineStops = ['Southern Cross', ...lineStops]
       }
     } else {
-      lineStops = lineStops.filter(e => !cityLoopStations.includes(e))
       if (northernGroup.includes(lineName)) {
         if (isUp) {
           if (destination === 'Flinders Street') {
-            lineStops = [...lineStops.slice(0, -1), 'Southern Cross', 'Flinders Street']
+            lineStops = [...lineStops, 'Southern Cross', 'Flinders Street']
           } else {
-            lineStops = [...lineStops.slice(0, -1), 'Southern Cross']
+            lineStops = [...lineStops, 'Southern Cross']
           }
         } else {
-          lineStops = ['Flinders Street', 'Southern Cross', ...lineStops.slice(1)]
+          lineStops = ['Flinders Street', 'Southern Cross', ...lineStops]
         }
       } else if (lineName === 'Frankston') {
         if (isUp) {
-          lineStops = [...lineStops.slice(0, -1), 'Flinders Street', 'Southern Cross']
+          lineStops = [...lineStops, 'Flinders Street', 'Southern Cross']
         } else {
-          lineStops = ['Southern Cross', 'Flinders Street', ...lineStops.slice(1)]
+          lineStops = ['Southern Cross', 'Flinders Street', ...lineStops]
         }
       }
     }
