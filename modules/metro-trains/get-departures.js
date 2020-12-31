@@ -22,30 +22,29 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip) {
 
   let upService = !(runID[3] % 2)
   let throughCityLoop = runID[1] > 5 || cityLoopStations.includes(destination) && destination !== 'Southern Cross'
-  let stopsViaFlindersFirst = runID[1] <= 5
+  let fssDirect = runID[1] <= 5
 
-  cityLoopConfig = []
-  // doublecheck showgrounds trains: R466 should be nme sss off but it show as sss fgs loop fss
-  // assume up trains
+  let cityLoopConfig = []
+
   if (northernGroup.includes(routeID)) {
     if (destination === 'Southern Cross')
       cityLoopConfig = ['NME', 'SSS']
-    else if (stopsViaFlindersFirst && !throughCityLoop)
+    else if (fssDirect && !throughCityLoop)
       cityLoopConfig = ['NME', 'SSS', 'FSS']
-    else if (stopsViaFlindersFirst && throughCityLoop)
+    else if (fssDirect && throughCityLoop)
       cityLoopConfig = ['SSS', 'FSS', 'PAR', 'MCE', 'FGS']
-    else if (!stopsViaFlindersFirst && throughCityLoop)
+    else if (!fssDirect && throughCityLoop)
       cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
   } else {
-    if (stopsViaFlindersFirst && throughCityLoop) { // flinders then loop
+    if (fssDirect && throughCityLoop) { // flinders then loop
       if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID) || routeID === 99)
         cityLoopConfig = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR']
         if (routeID === 99) cityLoopConfig.push('FSS')
-    } else if (!stopsViaFlindersFirst && throughCityLoop) { // loop then flinders
+    } else if (!fssDirect && throughCityLoop) { // loop then flinders
       if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID) || routeID === 99)
         cityLoopConfig = ['PAR', 'MCE', 'FGS', 'SSS', 'FSS']
       if (routeID === 99) cityLoopConfig = ['FSS', ...cityLoopConfig]
-    } else if (stopsViaFlindersFirst && !throughCityLoop) { // direct to flinders
+    } else if (fssDirect && !throughCityLoop) { // direct to flinders
       if (caulfieldGroup.includes(routeID) && destination === 'Southern Cross')
         cityLoopConfig = ['RMD', 'FSS', 'SSS']
       else if (burnleyGroup.concat(caulfieldGroup).includes(routeID))
@@ -483,7 +482,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       return {
         departureTime: utils.getHHMMFromMinutesPastMidnight(minutesPastMidnight),
         origin, destination,
-        originalText: text
+        originalText: text,
+        runID: disruption.runID
       }
     }
   }
@@ -503,9 +503,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       let type = parts[1]
       let point = parts[2]
 
-      let serviceID = `${disruption.origin}-${disruption.destination}-${disruption.departureTime}`
-      alterationMap[serviceID] = true
-      alterationMap[serviceID] = { type, point }
+      alterationMap[disruption.runID] = { type, point }
     }
   })
 
@@ -519,6 +517,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     return (description.includes('direct to') && description.includes('not via the city loop'))
      || (description.includes('city loop services') && description.includes('direct between flinders st'))
      || ((description.match(/direct(?: from)? [\w ]* to flinders st/) || description.match(/direct(?: from)? flinders st/)) && description.includes('not via the city loop'))
+     || description.includes('run direct to\/from flinders st')
      && !description.includes('resume') && !description.includes('select trains')
   })
 
@@ -616,8 +615,7 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
     }
 
     let shortOrigin = trip.trueOrigin.slice(0, -16), shortDest = trip.trueDestination.slice(0, -16)
-    let serviceID = `${shortOrigin}-${shortDest}-${trip.trueDepartureTime}`
-    let alteration = alterationMap[serviceID]
+    let alteration = alterationMap[runID]
     if (alteration) {
       if (![shortOrigin, shortDest].includes(alteration.point)) {
         if (trip.type === 'timings') {
