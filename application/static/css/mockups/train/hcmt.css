@@ -1,0 +1,245 @@
+div.content {
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  font-family: "NetworkSansRegular";
+}
+
+div.top, div.bottom {
+  width: 100vw;
+  height: 50vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+div.frontDesto {
+  width: 50vw;
+  height: 10vw;
+  background-color: #202020;
+  color: #FFD100;
+  border: solid 0.3vw #505050;
+
+  font-size: 6vw;
+  text-align: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  letter-spacing: 0.1vw;
+}
+
+div.middlePID {
+  width: 44vw;
+  height: 8vw;
+
+  color: #FFFFFF;
+  border: solid 0.3vw #505050;
+
+  font-size: 2vw;
+  text-align: center;
+
+  letter-spacing: 0.1vw;
+}
+
+div.middlePID > div {
+  width: 44vw;
+  height: 8vw;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+div.serviceDestination div.destination {
+  width: 44vw;
+  height: 4.5vw;
+  line-height: 4.5vw;
+
+  font-size: 3vw;
+}
+
+div.serviceDestination span.type {
+  width: 44vw;
+  height: 3.5vw;
+  line-height: 3.5vw;
+
+  font-size: 2.1vw;
+}
+
+div.middlePID div.announcements {
+  background: #000000;
+  flex-direction: row;
+  font-size: 3vw;
+  text-align: left;
+}
+
+div.middlePID div.announcements img {
+  height: 6vw;
+  margin-right: 2vw;
+}
+
+div.middlePID div.text {
+  background: #000000;
+  flex-direction: row;
+  font-size: 4vw;
+  text-align: center;
+}
+
+div.patternPID {
+  width: 97vw;
+  height: 10.5vw;
+
+  color: #FFFFFF;
+  border: solid 0.3vw #505050;
+
+  font-size: 2vw;
+  text-align: center;
+
+  letter-spacing: 0.1vw;
+}
+
+div.patternTop {
+  width: 97vw;
+  height: 8vw;
+}
+
+div.stationNames {
+  height: 4.2vw;
+  font-size: 0.9vw;
+  letter-spacing: normal;
+  text-align: left;
+  padding-left: 0.3vw;
+  margin-left: 0.5vw;
+}
+
+div.stationNames span {
+  position: absolute;
+  transform: rotate(-23deg);
+  transform-origin: bottom left;
+  margin-top: 2.8vw;
+}
+
+div.stationNames span.express {
+  color: #8f8f8f;
+}
+
+div.stoppingPattern {
+  display: flex;
+  margin-left: 0.5vw;
+}
+
+div.stationRow.full, div.stationRow.full > div {
+  width: var(--stationRowSize);
+}
+
+div.stationRow.half, div.stationRow.half > div {
+  width: calc(var(--stationRowSize) / 2);
+}
+
+div.stationRow > div {
+  display: flex;
+  justify-content: center;
+}
+
+div.stationRow > div, div.stationRow div.stud {
+  height: 0.4vw;
+}
+
+div.stationRow > div.left {
+  justify-content: flex-start;
+}
+
+div.stationRow > div.right {
+  justify-content: flex-end;
+}
+
+div.stationRow div.mainBody {
+  height: 0.5vw;
+}
+
+div.stationRow div.stud {
+  width: clamp(0.4vw, calc(var(--stationRowSize) / 6), 0.8vw);
+}
+
+div.filter {
+  height: 1.3vw;
+  margin-top: -1.3vw;
+  background-color: #000000;
+  position: relative;
+  z-index: 5;
+  opacity: 0.7;
+}
+
+div.currentLocation {
+  width: 0.8vw;
+  height: 0.8vw;
+  box-sizing: border-box;
+  background: #FFFFFF;
+  border: solid 0.2vw #000000;
+  border-radius: 100vw;
+  margin-top: -1vw;
+
+  left: 0.3vw;
+
+  position: relative;
+  z-index: 10;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.currentLocation div.innerBall {
+  width: 0.4vw;
+  height: 0.4vw;
+  border-radius: 100vw;
+  background-color: #000000;
+}
+
+div.patternBottom {
+  width: 96.5vw;
+  height: 2.4vw;
+
+  border-top: solid 0.1vw #FFFFFF;
+  border-right: solid 0.1vw #FFFFFF;
+  border-top-right-radius: 0.5vw;
+  display: flex;
+}
+
+div.infoBar {
+  width: 89.4vw;
+  height: 2.4vw;
+  text-align: left;
+}
+
+div.infoBar span, div.clock span {
+  line-height: 2.4vw;
+}
+
+div.infoBar span.destination {
+  margin-left: 0.75vw;
+  margin-right: 3vw;
+  display: inline-block;
+}
+
+div.infoBar span.via {
+  margin-right: 3vw;
+  display: inline-block;
+}
+
+div.clock {
+  width: 7vw;
+  height: 2.4vw;
+  border-left: solid 0.1vw #FFFFFF;
+  font-size: 1.7vw;
+}

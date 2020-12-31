@@ -54,6 +54,10 @@ router.get('/comeng/:runID', async (req, res) => {
   res.render('mockups/train-pids/comeng')
 })
 
+router.get('/hcmt/:runID', async (req, res) => {
+  res.render('mockups/train-pids/hcmt')
+})
+
 router.post('/:type/:runID', async (req, res) => {
   let minutesPastMidnight = utils.getMinutesPastMidnightNow()
   let trip
