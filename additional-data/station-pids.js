@@ -253,7 +253,7 @@ module.exports = {
   "Upper Ferntree Gully": [...platr(2, [], 'half-platform-bold')],
   "Upwey": [],
   "Springvale": [...platr(2, [], 'half-platform-bold')],
-  "Sandown Park": [],
+  "Sandown Park": [...platr(2, [], 'half-platform-bold')],
   "Noble Park": [...platr(2, [], 'half-platform')],
   "Little River": [...platr(2, [], 'vline-half-platform')],
   "Lara": [...platr(2, [], 'vline-half-platform')],

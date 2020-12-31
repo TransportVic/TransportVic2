@@ -71,7 +71,7 @@ async function requestTimings() {
       routeName: allRoutes,
       fromDate: parseInt(alert.from_date),
       toDate: parseInt(alert.to_date),
-      type: 'travel',
+      type: 'general',
       text: `${alert.title}\n${alert.body}`.replace(/  +/g, ' '),
       active: true
     }
