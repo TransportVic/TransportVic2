@@ -450,11 +450,11 @@ module.exports = {
   },
   getRunID: ptvRunID => {
     if (ptvRunID >= 988000) {
-      return `X${module.exports.pad((ptvRunID - 988000).toString(), 3, '0')}`
+      return `X${module.exports.pad(ptvRunID - 988000, 3, '0')}`
     } else if (ptvRunID >= 982000) {
-      return `R${module.exports.pad((ptvRunID - 982000).toString(), 3, '0')}`
+      return `R${module.exports.pad(ptvRunID - 982000, 3, '0')}`
     } else {
-      return module.exports.pad((ptvRunID - 948000).toString(), 4, '0')
+      return module.exports.pad(ptvRunID - 948000, 4, '0')
     }
   },
   sleep: time => {
