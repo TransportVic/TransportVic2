@@ -38,8 +38,8 @@ div.frontDesto {
 }
 
 div.middlePID {
-  width: 44vw;
-  height: 8vw;
+  width: 45vw;
+  height: 9vw;
 
   color: #FFFFFF;
   border: solid 0.3vw #505050;
@@ -51,8 +51,8 @@ div.middlePID {
 }
 
 div.middlePID > div {
-  width: 44vw;
-  height: 8vw;
+  width: 45vw;
+  height: 9vw;
 
   display: flex;
   flex-direction: column;
@@ -61,7 +61,7 @@ div.middlePID > div {
 }
 
 div.serviceDestination div.destination {
-  width: 44vw;
+  width: 43vw;
   height: 4.5vw;
   line-height: 4.5vw;
 
@@ -96,8 +96,8 @@ div.middlePID div.text {
 }
 
 div.patternPID {
-  width: 97vw;
-  height: 10.5vw;
+  width: 98vw;
+  height: 12vw;
 
   color: #FFFFFF;
   border: solid 0.3vw #505050;
@@ -109,8 +109,8 @@ div.patternPID {
 }
 
 div.patternTop {
-  width: 97vw;
-  height: 8vw;
+  width: 98vw;
+  height: 9.5vw;
 }
 
 div.stationNames {
@@ -122,15 +122,21 @@ div.stationNames {
   margin-left: 0.5vw;
 }
 
-div.stationNames span {
+div.stationNames p {
+  margin: 0;
   position: absolute;
   transform: rotate(-23deg);
   transform-origin: bottom left;
   margin-top: 2.8vw;
 }
 
-div.stationNames span.express {
+div.stationNames p.express {
   color: #8f8f8f;
+}
+
+div.stationNames p.next {
+  padding: 0 0.3vw;
+  border-radius: 0.2vw;
 }
 
 div.stoppingPattern {
@@ -168,7 +174,7 @@ div.stationRow div.mainBody {
 }
 
 div.stationRow div.stud {
-  width: clamp(0.4vw, calc(var(--stationRowSize) / 6), 0.8vw);
+  width: var(--stud-size);
 }
 
 div.filter {
@@ -181,13 +187,14 @@ div.filter {
 }
 
 div.currentLocation {
-  width: 0.8vw;
-  height: 0.8vw;
+  --scaling-factor: 1;
+  width: calc(var(--stud-size) * var(--scaling-factor) * 2);
+  height: calc(var(--stud-size) * var(--scaling-factor) * 2);
   box-sizing: border-box;
   background: #FFFFFF;
   border: solid 0.2vw #000000;
   border-radius: 100vw;
-  margin-top: -1vw;
+  margin-top: calc(-0.9vw - var(--stud-size) * var(--scaling-factor) / 2);
 
   left: 0.3vw;
 
@@ -200,35 +207,37 @@ div.currentLocation {
 }
 
 div.currentLocation div.innerBall {
-  width: 0.4vw;
-  height: 0.4vw;
+  width: calc(var(--stud-size) * var(--scaling-factor));
+  height: calc(var(--stud-size) * var(--scaling-factor));
   border-radius: 100vw;
   background-color: #000000;
 }
 
 div.patternBottom {
   width: 96.5vw;
-  height: 2.4vw;
+  height: 2.5vw;
 
-  border-top: solid 0.1vw #FFFFFF;
-  border-right: solid 0.1vw #FFFFFF;
+  box-sizing: border-box;
+
+  border-top: solid 0.2vw #FFFFFF;
+  border-right: solid 0.2vw #FFFFFF;
   border-top-right-radius: 0.5vw;
   display: flex;
 }
 
 div.infoBar {
   width: 89.4vw;
-  height: 2.4vw;
+  height: 2.3vw;
   text-align: left;
 }
 
 div.infoBar span, div.clock span {
-  line-height: 2.4vw;
+  line-height: 2.3vw;
 }
 
 div.infoBar span.destination {
   margin-left: 0.75vw;
-  margin-right: 3vw;
+  margin-right: 2.7vw;
   display: inline-block;
 }
 
@@ -239,7 +248,8 @@ div.infoBar span.via {
 
 div.clock {
   width: 7vw;
-  height: 2.4vw;
-  border-left: solid 0.1vw #FFFFFF;
+  height: 2.3vw;
+
+  border-left: solid 0.2vw #FFFFFF;
   font-size: 1.7vw;
 }

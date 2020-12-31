@@ -118,20 +118,22 @@ function setStoppingPattern(lineStops, tripStops, routeName) {
   patternHTML += createStationSVG('terminusRight')
 
   let now = +new Date()
-  let nextStop = tripStops.find(stop => stop.actualDepartureMS > now)
-  let stopCount = lineStops.length
-  let totalSize = 93
-  let individualSize = totalSize / stopCount
+  let nextStop = tripStops.find(stop => stop.actualDepartureTimeMS > now)
+  if (!nextStop) nextStop = tripStops[tripStops.length - 1]
 
+  let stopCount = lineStops.length
+  let totalSize = 94
+  let individualSize = totalSize / stopCount
+  let studSize = Math.max(Math.min(individualSize / 6, 0.8), 0.4)
   namesHTML = lineStops.map((stop, i) => {
-    return `<span class="${expressStops.includes(stop) ? 'express' : ''}" style="margin-left: ${individualSize * i}vw;">${adjustStopName(stop)}</span>`
+    return `<p class="${expressStops.includes(stop) ? 'express' : ''} ${stop === nextStop.stopName ? routeName + ' next' : ''}" style="margin-left: ${individualSize * i}vw;">${adjustStopName(stop)}</p>`
   }).join('')
 
   $('.stoppingPattern').innerHTML = patternHTML.replace(/\{0}/g, routeName)
-  $('.stoppingPattern').style = `--stationRowSize: ${individualSize}vw`
+  $('.patternTop').style = `--stationRowSize: ${individualSize}vw; --stud-size: ${studSize}vw`;
   $('.stationNames').innerHTML = namesHTML
 
-  return expressStops.length
+  return { expressCount: expressStops.length, nextStop, stationSize: individualSize, studSize }
 }
 
 function displayPIDData() {
@@ -147,7 +149,18 @@ function displayPIDData() {
   let codedRouteName = encodeName(pidData.routeName)
 
   setLine(codedRouteName)
-  let expressCount = setStoppingPattern(pidData.lineStops, pidData.tripStops, codedRouteName)
+  let { expressCount, nextStop, stationSize, studSize } = setStoppingPattern(pidData.lineStops, pidData.tripStops, codedRouteName)
+
+  let currentStopIndex = Math.max(pidData.tripStops.indexOf(nextStop) - 1, 0)
+  let previousStop = pidData.tripStops[currentStopIndex]
+  if (previousStop) {
+    let timeDifference = nextStop.actualDepartureTimeMS - previousStop.actualDepartureTimeMS
+    let currentDifference = new Date() - previousStop.actualDepartureTimeMS
+    let percentage = currentDifference / timeDifference
+    let position = (currentStopIndex + percentage) * stationSize
+    $('.currentLocation').style = `margin-left: ${position}vw`
+    $('.filter').style = `width: ${position + studSize}vw`
+  }
 
   if (expressCount === 0) setType('Stops All Stations')
   else if (expressCount <= 4) setType('Limited Express')
@@ -177,5 +190,5 @@ $.ready(async () => {
   }, 1000 * 60)
 
   displayPIDData()
-  // setInterval(() => displayPIDData(), 1000 * 500)
+  setInterval(() => displayPIDData(), 1000 * 5)
 })
