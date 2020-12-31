@@ -14,7 +14,7 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
 let metroTrips
 
-function runNightNetwork() {
+function shouldRun() {
   let minutes = utils.getMinutesPastMidnightNow()
   let dayOfWeek = utils.getDayOfWeek(utils.now())
 
@@ -27,16 +27,13 @@ function runNightNetwork() {
   return false
 }
 
-let stopNames = Object.keys(stops)
-
 function pickRandomStop() {
-  return utils.shuffle(stopNames)[0]
+  return utils.shuffle(stops)[0]
 }
 
 async function getDepartures(stop) {
-  if (!runNightNetwork()) return
+  if (!shouldRun()) return
 
-  let stopCode = stops[stop]
   let stopData = await dbStops.findDocument({ stopName: stop + ' Railway Station' })
   let departures = await getMetroDepartures(stopData, database)
   let requestLive = departures.filter(d => d.estimatedDepartureTime && d.ptvRunID).slice(0, 4)
