@@ -167,15 +167,20 @@ function displayPIDData() {
   setLine(codedRouteName)
   let { expressCount, nextStop, stationSize, studSize } = setStoppingPattern(pidData.lineStops, pidData.tripStops, codedRouteName)
 
-  let currentStopIndex = Math.max(pidData.tripStops.indexOf(nextStop) - 1, 0)
-  let previousStop = pidData.tripStops[currentStopIndex]
+  let previousStopIndex = Math.max(pidData.tripStops.indexOf(nextStop) - 1, 0)
+  let previousStop = pidData.tripStops[previousStopIndex]
+
+  let previousLineIndex = pidData.lineStops.indexOf(previousStop.stopName)
+  let nextLineIndex = pidData.lineStops.indexOf(nextStop.stopName)
+
   if (previousStop) {
     let timeDifference = nextStop.actualDepartureTimeMS - previousStop.actualDepartureTimeMS
     let currentDifference = new Date() - previousStop.actualDepartureTimeMS
-    let percentage = currentDifference / timeDifference
-    let position = (currentStopIndex + percentage) * stationSize
-    $('.currentLocation').style = `margin-left: ${position}vw`
-    $('.filter').style = `width: ${position + studSize * 2}vw`
+    let percentage = Math.min(currentDifference / timeDifference, 1)
+
+    let position = (previousLineIndex + percentage * (nextLineIndex - previousLineIndex)) * stationSize
+    $('.currentLocation').style = `margin-left: ${position - studSize}vw`
+    $('.filter').style = `width: ${position + studSize}vw`
   }
 
   if (expressCount === 0) setType('Stops All Stations')
