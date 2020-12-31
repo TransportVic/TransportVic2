@@ -7,6 +7,29 @@ const schedule = require('./scheduler')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
+let routeIDs = {
+  '82': 'Alamein',
+  '84': 'Belgrave',
+  '85': 'Craigieburn',
+  '86': 'Cranbourne',
+  '87': 'Mernda',
+  '88': 'Frankston',
+  '89': 'Glen Waverley',
+  '90': 'Hurstbridge',
+  '91': 'Lilydale',
+  '92': 'Pakenham',
+  '93': 'Sandringham',
+  '94': 'Stony Point',
+  '95': 'Sunbury',
+  '96': 'Upfield',
+  '97': 'Werribee',
+  '98': 'Williamstown',
+  '92761': 'Showgrounds/Flemington',
+  '168307': 'Showgrounds/Flemington'
+}
+
+let allRoutes = Object.values(routeIDs).slice(0, -1)
+
 async function requestTimings() {
   let metroNotify = database.getCollection('metro notify')
 
@@ -21,8 +44,7 @@ async function requestTimings() {
   .map(routeData => routeData.alerts)
   .reduce((a, e) => a.concat(e), [])
   .forEach(alert => {
-    let routeName = data[alert.line_id].line_name
-    if (alert.line_id == '94') routeName = 'Stony Point'
+    let routeName = routeIDs[alert.line_id]
 
     if (!mergedAlerts[alert.alert_id]) {
       mergedAlerts[alert.alert_id] = {
@@ -31,13 +53,29 @@ async function requestTimings() {
         fromDate: parseInt(alert.from_date),
         toDate: parseInt(alert.to_date),
         type: alert.alert_type,
-        text: alert.alert_text.replace(/Plan your journey.*/, '').replace(/Visit .*? web.*/g, '').trim(),
-        active: true
+        text: alert.alert_text.replace(/Plan your journey.*/, '').replace(/Visit .*? web.*/g, '').replace(/  +/g, ' ').trim(),
+        active: true,
+        ...(alert.trip_id ? { runID: alert.trip_id } : {})
       }
     } else {
       mergedAlerts[alert.alert_id].routeName.push(routeName)
     }
   })
+
+  if (data.general) {
+    let alert = data.general
+    let alertID = alert.from_date + alert.to_date
+
+    mergedAlerts[alertID] = {
+      alertID,
+      routeName: allRoutes,
+      fromDate: parseInt(alert.from_date),
+      toDate: parseInt(alert.to_date),
+      type: 'travel',
+      text: `${alert.title}\n${alert.body}`.replace(/  +/g, ' '),
+      active: true
+    }
+  }
 
   let bulkOperations = []
   Object.values(mergedAlerts).forEach(alert => {
