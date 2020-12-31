@@ -1,5 +1,7 @@
 let pidData = null
 let currentlyShowing = 'service'
+let frontDesto = 0
+let frontDestoFrames = 1
 
 function encodeName(name) {
   return name.toLowerCase().replace(/[^\w\d ]/g, '-').replace(/  */g, '-').replace(/--+/g, '-').replace(/-$/, '').replace(/^-/, '')
@@ -31,6 +33,17 @@ async function loadPIDData() {
       resolve(body)
     })
   })
+}
+
+function alternateFrontDesto() {
+  frontDesto = frontDestoFrames - 1 - frontDesto
+  if (frontDesto === 0) { // Show destination
+    $('.frontDesto .destination').style.display = 'block'
+    $('.frontDesto .via').style.display = 'none'
+  } else { // Show via
+    $('.frontDesto .destination').style.display = 'none'
+    $('.frontDesto .via').style.display = 'block'
+  }
 }
 
 function setMiddlePIDActive(type) {
@@ -142,8 +155,11 @@ function displayPIDData() {
   let viaLoop = tripStops.includes('Parliament')
 
   setDestination(destination)
+  frontDestoFrames = 1
+
   if (viaLoop) {
     setVia('via City Loop')
+    frontDestoFrames = 2
   } else setVia('')
 
   let codedRouteName = encodeName(pidData.routeName)
@@ -159,7 +175,7 @@ function displayPIDData() {
     let percentage = currentDifference / timeDifference
     let position = (currentStopIndex + percentage) * stationSize
     $('.currentLocation').style = `margin-left: ${position}vw`
-    $('.filter').style = `width: ${position + studSize}vw`
+    $('.filter').style = `width: ${position + studSize * 2}vw`
   }
 
   if (expressCount === 0) setType('Stops All Stations')
@@ -191,4 +207,6 @@ $.ready(async () => {
 
   displayPIDData()
   setInterval(() => displayPIDData(), 1000 * 5)
+
+  setInterval(() => alternateFrontDesto(), 1000 * 10)
 })
