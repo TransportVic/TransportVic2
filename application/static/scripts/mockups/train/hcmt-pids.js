@@ -176,7 +176,7 @@ function displayPIDData() {
   if (previousStop) {
     let timeDifference = nextStop.actualDepartureTimeMS - previousStop.actualDepartureTimeMS
     let currentDifference = new Date() - previousStop.actualDepartureTimeMS
-    let percentage = Math.min(currentDifference / timeDifference, 1)
+    let percentage = Math.max(Math.min(currentDifference / timeDifference, 1), 0)
 
     let position = (previousLineIndex + percentage * (nextLineIndex - previousLineIndex)) * stationSize
     $('.currentLocation').style = `margin-left: ${position - studSize}vw`

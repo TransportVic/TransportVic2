@@ -56,6 +56,21 @@ async function pickBestTrip(data, db) {
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
 
+  let referenceTrip = liveTrip || gtfsTrip
+  if (!referenceTrip) {
+    if (tripStartMinutes > 1440) {
+      query.operationDays = data.operationDays
+
+      gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
+      liveTrip = await db.getCollection('live timetables').findDocument(query)
+      referenceTrip = liveTrip || gtfsTrip
+
+      if (referenceTrip && !referenceTrip.routeGTFSID.startsWith('8-')) return null
+    } else {
+      return null
+    }
+  }
+
   let noLive = ['5', '7', '9', '11', '12', '13']
   let useLive = minutesToTripEnd > -60 && minutesToTripStart < 60
 
@@ -66,10 +81,6 @@ async function pickBestTrip(data, db) {
       return { trip: liveTrip, tripStartTime, isLive }
     }
   }
-
-  // So PTV API only returns estimated timings for bus if stop_id is set and the bus hasn't reached yet...
-  let referenceTrip = liveTrip || gtfsTrip
-  if (!referenceTrip) return null
 
   let gtfsMode = referenceTrip.routeGTFSID.split('-')[0]
 
