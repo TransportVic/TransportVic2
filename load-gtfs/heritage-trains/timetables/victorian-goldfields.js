@@ -1,14 +1,15 @@
 module.exports = {
   "days": [
-    ["SUN_BLUE", "0", "0", "1", "0", "0", "0", "1", "20201129", "20201231"]
+    // Blue is steam, red is diesel, timewise there is no diff
+    ["SUN_BLUE_RED", "0", "0", "1", "0", "0", "0", "1", "20210103", "20210228"]
   ],
   "dates": [],
   "trips": [
     {
       "mode": "heritage train",
       "routeGTFSID": "13-VGR",
-      "calendarID": "SUN_BLUE",
-      "tripID": "1130.SUN_BLUE.13-VGR-mjp-1.1.H",
+      "calendarID": "SUN_BLUE_RED",
+      "tripID": "1130.SUN_BLUE_RED.13-VGR-mjp-1.1.H",
       "gtfsDirection": "0",
       "shapeID": "13-VGR-mjp-1.1.H",
       "headsign": "Maldon"
@@ -16,8 +17,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-VGR",
-      "calendarID": "SUN_BLUE",
-      "tripID": "1445.SUN_BLUE.13-VGR-mjp-1.1.R",
+      "calendarID": "SUN_BLUE_RED",
+      "tripID": "1445.SUN_BLUE_RED.13-VGR-mjp-1.1.R",
       "gtfsDirection": "1",
       "shapeID": "13-VGR-mjp-1.1.R",
       "headsign": "Castlemaine"
@@ -25,7 +26,7 @@ module.exports = {
   ],
   "timings": [
     {
-      "tripID": "1130.SUN_BLUE.13-VGR-mjp-1.1.H",
+      "tripID": "1130.SUN_BLUE_RED.13-VGR-mjp-1.1.H",
       "stopTimings": [
         {
           "stopGTFSID": 13000012,
@@ -60,7 +61,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1445.SUN_BLUE.13-VGR-mjp-1.1.R",
+      "tripID": "1445.SUN_BLUE_RED.13-VGR-mjp-1.1.R",
       "stopTimings": [
         {
           "stopGTFSID": 13000011,

@@ -1,17 +1,39 @@
 module.exports = {
   "days": [
-    ["WED_SAT_SUN", "0", "0", "1", "0", "0", "1", "1", "20200101", "20201231"]
+    ["DAILY", "1", "1", "1", "1", "1", "1", "1", "20210101", "20210228"]
   ],
   "dates": [
-    ["WED_SAT_SUN", "20201225", "2"],
-    ["WED_SAT_SUN", "20211225", "2"]
+    ["DAILY", "20210118", "2"],
+    ["DAILY", "20210119", "2"],
+    ["DAILY", "20210121", "2"],
+    ["DAILY", "20210122", "2"],
+    ["DAILY", "20210125", "2"],
+    ["DAILY", "20210126", "2"],
+    ["DAILY", "20210128", "2"],
+    ["DAILY", "20210129", "2"],
+    ["DAILY", "20210201", "2"],
+    ["DAILY", "20210202", "2"],
+    ["DAILY", "20210204", "2"],
+    ["DAILY", "20210205", "2"],
+    ["DAILY", "20210208", "2"],
+    ["DAILY", "20210209", "2"],
+    ["DAILY", "20210211", "2"],
+    ["DAILY", "20210212", "2"],
+    ["DAILY", "20210215", "2"],
+    ["DAILY", "20210216", "2"],
+    ["DAILY", "20210218", "2"],
+    ["DAILY", "20210219", "2"],
+    ["DAILY", "20210222", "2"],
+    ["DAILY", "20210223", "2"],
+    ["DAILY", "20210225", "2"],
+    ["DAILY", "20210226", "2"],
   ],
   "trips": [
     {
       "mode": "heritage train",
       "routeGTFSID": "13-WHR",
-      "calendarID": "WED_SAT_SUN",
-      "tripID": "1100.WED_SAT_SUN.13-WHR-mjp-1.1.R",
+      "calendarID": "DAILY",
+      "tripID": "1100.DAILY.13-WHR-mjp-1.1.R",
       "gtfsDirection": "1",
       "shapeID": "13-WHR-mjp-1.1.R",
       "headsign": "Thomson"
@@ -19,8 +41,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-WHR",
-      "calendarID": "WED_SAT_SUN",
-      "tripID": "1140.WED_SAT_SUN.13-WHR-mjp-1.1.H",
+      "calendarID": "DAILY",
+      "tripID": "1140.DAILY.13-WHR-mjp-1.1.H",
       "gtfsDirection": "0",
       "shapeID": "13-WHR-mjp-1.1.H",
       "headsign": "Walhalla"
@@ -28,8 +50,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-WHR",
-      "calendarID": "WED_SAT_SUN",
-      "tripID": "1300.WED_SAT_SUN.13-WHR-mjp-1.1.R",
+      "calendarID": "DAILY",
+      "tripID": "1300.DAILY.13-WHR-mjp-1.1.R",
       "gtfsDirection": "1",
       "shapeID": "13-WHR-mjp-1.1.R",
       "headsign": "Thomson"
@@ -37,8 +59,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-WHR",
-      "calendarID": "WED_SAT_SUN",
-      "tripID": "1340.WED_SAT_SUN.13-WHR-mjp-1.1.H",
+      "calendarID": "DAILY",
+      "tripID": "1340.DAILY.13-WHR-mjp-1.1.H",
       "gtfsDirection": "0",
       "shapeID": "13-WHR-mjp-1.1.H",
       "headsign": "Walhalla"
@@ -46,8 +68,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-WHR",
-      "calendarID": "WED_SAT_SUN",
-      "tripID": "1500.WED_SAT_SUN.13-WHR-mjp-1.1.R",
+      "calendarID": "DAILY",
+      "tripID": "1500.DAILY.13-WHR-mjp-1.1.R",
       "gtfsDirection": "1",
       "shapeID": "13-WHR-mjp-1.1.R",
       "headsign": "Thomson"
@@ -55,8 +77,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-WHR",
-      "calendarID": "WED_SAT_SUN",
-      "tripID": "1540.WED_SAT_SUN.13-WHR-mjp-1.1.H",
+      "calendarID": "DAILY",
+      "tripID": "1540.DAILY.13-WHR-mjp-1.1.H",
       "gtfsDirection": "0",
       "shapeID": "13-WHR-mjp-1.1.H",
       "headsign": "Walhalla"
@@ -64,7 +86,7 @@ module.exports = {
   ],
   "timings": [
     {
-      "tripID": "1100.WED_SAT_SUN.13-WHR-mjp-1.1.R",
+      "tripID": "1100.DAILY.13-WHR-mjp-1.1.R",
       "stopTimings": [
         {
           "stopGTFSID": 13000021,
@@ -89,7 +111,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1140.WED_SAT_SUN.13-WHR-mjp-1.1.H",
+      "tripID": "1140.DAILY.13-WHR-mjp-1.1.H",
       "stopTimings": [
         {
           "stopGTFSID": 13000020,
@@ -114,7 +136,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1300.WED_SAT_SUN.13-WHR-mjp-1.1.R",
+      "tripID": "1300.DAILY.13-WHR-mjp-1.1.R",
       "stopTimings": [
         {
           "stopGTFSID": 13000021,
@@ -139,7 +161,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1340.WED_SAT_SUN.13-WHR-mjp-1.1.H",
+      "tripID": "1340.DAILY.13-WHR-mjp-1.1.H",
       "stopTimings": [
         {
           "stopGTFSID": 13000020,
@@ -164,7 +186,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1500.WED_SAT_SUN.13-WHR-mjp-1.1.R",
+      "tripID": "1500.DAILY.13-WHR-mjp-1.1.R",
       "stopTimings": [
         {
           "stopGTFSID": 13000021,
@@ -189,7 +211,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1540.WED_SAT_SUN.13-WHR-mjp-1.1.H",
+      "tripID": "1540.DAILY.13-WHR-mjp-1.1.H",
       "stopTimings": [
         {
           "stopGTFSID": 13000020,
