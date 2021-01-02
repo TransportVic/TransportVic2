@@ -1,6 +1,6 @@
 module.exports = {
   "days": [
-    ["SUNDAY", "0", "0", "0", "0", "0", "0", "1", "20210103", "20210228"],
+    ["SUNDAY", "0", "0", "0", "0", "0", "0", "1", "20210103", "20210228"]
   ],
   "dates": [
   ],
@@ -58,25 +58,7 @@ module.exports = {
       "gtfsDirection": "0",
       "shapeID": "13-MPR-mjp-1.1.R",
       "headsign": "Moorooduc"
-    },
-    {
-      "mode": "heritage train",
-      "routeGTFSID": "13-MPR",
-      "calendarID": "SUNDAY_EXTRA",
-      "tripID": "1500.SUNDAY_EXTRA.13-MPR-mjp-1.1.H",
-      "gtfsDirection": "1",
-      "shapeID": "13-MPR-mjp-1.1.H",
-      "headsign": "Mornington"
-    },
-    {
-      "mode": "heritage train",
-      "routeGTFSID": "13-MPR",
-      "calendarID": "SUNDAY_EXTRA",
-      "tripID": "1530.SUNDAY_EXTRA.13-MPR-mjp-1.1.R",
-      "gtfsDirection": "0",
-      "shapeID": "13-MPR-mjp-1.1.R",
-      "headsign": "Moorooduc"
-    },
+    }
   ],
   "timings": [
     {

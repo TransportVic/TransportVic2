@@ -21,7 +21,7 @@ module.exports = {
       .filter(date => calendarDates[utils.getYYYYMMDD(date)] !== '2')
 
     Object.keys(calendarDates).forEach(date => {
-      if (calendarDates[date] === 1) {
+      if (calendarDates[date] === "1") {
         allDatesInbetween.push(utils.parseDate(date))
       }
     })
