@@ -60,6 +60,7 @@ async function fetchAndUpdate() {
 
     let timingUpdates = {}
     let platformUpdates = {}
+    let stopsSkipped = []
 
     let startMinutes = gtfsTrip.stopTimings[0].departureTimeMinutes
 
@@ -74,6 +75,8 @@ async function fetchAndUpdate() {
         if (delayFactor > 1000 * 60 * 60 * 24) delayFactor = 0
         timingUpdates[stopData.stopName] = delayFactor
         platformUpdates[stopData.stopName] = stopGTFSID
+
+        if (stop.schedule_relationship === 1) stopsSkipped.push(stopData.stopName)
       })
     }
 
@@ -86,7 +89,9 @@ async function fetchAndUpdate() {
       }
     })
 
-    gtfsTrip.stopTimings = gtfsTrip.stopTimings.map(stop => {
+    gtfsTrip.stopTimings = gtfsTrip.stopTimings.filter(stop => {
+      return !stopsSkipped.includes(stop.stopName)
+    }).map(stop => {
       let delayFactor = timingUpdates[stop.stopName]
       let newPlatform = platformUpdates[stop.stopName]
 
@@ -103,6 +108,21 @@ async function fetchAndUpdate() {
 
       return stop
     })
+
+    let first = gtfsTrip.stopTimings[0]
+    let last = gtfsTrip.stopTimings.slice(-1)[0]
+
+    first.arrivalTime = null
+    first.arrivalTimeMinutes = null
+
+    last.departureTime = null
+    last.departureTimeMinutes = null
+
+    gtfsTrip.origin = first.stopName
+    gtfsTrip.departureTime = first.departureTime
+
+    gtfsTrip.destination = last.stopName
+    gtfsTrip.destinationArrivalTime = last.arrivalTime
 
     gtfsTrip.type = 'timings'
     gtfsTrip.updateTime = new Date()
