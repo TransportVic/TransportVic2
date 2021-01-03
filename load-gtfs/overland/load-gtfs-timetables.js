@@ -10,7 +10,7 @@ const gtfsUtils = require('../../gtfs-utils')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
 
-let gtfsID = 1
+let gtfsID = 10
 
 database.connect({
   poolSize: 100
@@ -36,8 +36,20 @@ database.connect({
     let trips = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, tripFile)))
     let tripTimings = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, tripTimeFiles[index])))
 
-    trips = trips.filter(trip => {
-      return trip.routeGTFSID !== '1-vPK' && trip.routeGTFSID !== '1-Vov'
+    trips = trips.map(trip => {
+      let times = tripTimings.find(times => times.tripID === trip.tripID)
+      let departureTime = times.stopTimings[0].departureTime
+      let arrivalTime = times.stopTimings.slice(-1)[0].arrivalTime
+
+      if (trip.headsign === 'Melbourne') { // AM trip
+        if (departureTime === '08:15:00') trip.runID = '1AM8'
+        if (departureTime === '07:25:00') trip.runID = '5AM8'
+      } else { // MA trip
+        if (arrivalTime === '18:30:00') trip.runID = '2MA8'
+        if (arrivalTime === '18:35:00') trip.runID = '6MA8'
+      }
+
+      return trip
     })
 
     tripCount += trips.length
@@ -49,7 +61,7 @@ database.connect({
     console.log(`GTFS Timetables: Completed iteration ${index + 1} of ${tripFiles.length}, loaded ${trips.length} trips`)
   })
 
-  await updateStats('vline-timetables', tripCount)
-  console.log('Completed loading in ' + tripCount + ' V/Line trips')
+  await updateStats('overland-timetables', tripCount)
+  console.log('Completed loading in ' + tripCount + ' Overland trips')
   process.exit()
 })

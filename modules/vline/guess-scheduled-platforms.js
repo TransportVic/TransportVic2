@@ -85,7 +85,14 @@ let singlePlatforms = [
   'Rosedale',
   'Sale',
   'Stratford',
-  'Bairnsdale'
+  'Bairnsdale',
+
+  'Stawell',
+  'Horsham',
+  'Dimboola',
+  'Nhill',
+  'Bordertown',
+  'Murray Bridge'
 ]
 
 module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday) => {
@@ -94,6 +101,7 @@ module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday)
   if (line === 'The Overland') {
     if (stationName === 'North Shore') return 3
     if (stationName === 'Ararat') return 1
+    if (stationName === 'Southern Cross') return 2
   }
 
   if (stationName === 'Flinders Street') return 6

@@ -29,6 +29,8 @@ if departures.length
         -
           let lineName = `${departure.shortRouteName} Line towards`
           if (departure.trip.routeGTFSID === '14-XPT') lineName = 'Melbourne-Sydney XPT towards'
+          if (departure.trip.routeGTFSID === '10-GSR') lineName = 'The Overland towards'
+          
         span.towards #{lineName}
         span.destination #{departure.destination}
         -

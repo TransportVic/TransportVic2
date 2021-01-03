@@ -58,16 +58,16 @@ async function pickBestTrip(data, db) {
     else referenceTrip = gtfsTrip
   }
 
-
   if (!referenceTrip) return null
 
   let isXPT = referenceTrip.routeGTFSID === '14-XPT'
+  let isGSR = referenceTrip.routeGTFSID === '10-GSR'
   let isLive = false
 
   if (isXPT && referenceTrip.updateTime) isLive = true
 
   let nspTrip
-  if (!isXPT) {
+  if (!isXPT && !isGSR) {
     let vlineTrips = db.getCollection('vline trips')
 
     let trackerDepartureTime = giveVariance(referenceTrip.departureTime)
