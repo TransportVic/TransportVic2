@@ -27,8 +27,10 @@ function determineLoopRunning(routeID, runID, destination, isFormingNewTrip) {
   let cityLoopConfig = []
 
   if (northernGroup.includes(routeID)) {
-    if (destination === 'Southern Cross')
+    if (destination === 'Southern Cross' && !throughCityLoop)
       cityLoopConfig = ['NME', 'SSS']
+    else if (destination === 'Southern Cross' && throughCityLoop)
+      cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
     else if (fssDirect && !throughCityLoop)
       cityLoopConfig = ['NME', 'SSS', 'FSS']
     else if (fssDirect && throughCityLoop)
@@ -353,7 +355,7 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
   let direction = isUpTrip ? 'Up' : 'Down'
   if (isRailReplacementBus) direction = { $in: ['Up', 'Down'] }
 
-  let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== 'Flinders Street'
+  let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== 'Flinders Street' && destination !== 'Southern Cross'
 
   let isSCS = stationName === 'Southern Cross'
   let isFSS = stationName === 'Flinders Street'
@@ -375,13 +377,18 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
     }
   }
 
-  if (isUpTrip && !cityLoopStations.includes(stationName)) {
-    if (cityLoopConfig[0] === 'FSS' || cityLoopConfig[1] === 'FSS')
-      destination = 'Flinders Street'
-    else if (['PAR', 'FGS'].includes(cityLoopConfig[0]) && !cityLoopStations.includes(stationName))
-      destination = 'City Loop'
-    else if (cityLoopConfig.slice(-1)[0] === 'SSS')
-      destination = 'Southern Cross'
+  if (isUpTrip) {
+    if (cityLoopStations.includes(stationName)) {
+      if (cityLoopConfig[0] === 'FGS' && cityLoopConfig.slice(-1)[0] === 'SSS' && destination === 'Southern Cross')
+        destination = 'Flinders Street'
+    } else {
+      if (cityLoopConfig[0] === 'FSS' || cityLoopConfig[1] === 'FSS')
+        destination = 'Flinders Street'
+      else if (['PAR', 'FGS'].includes(cityLoopConfig[0]) && !cityLoopStations.includes(stationName))
+        destination = 'City Loop'
+      else if (cityLoopConfig.slice(-1)[0] === 'SSS')
+        destination = 'Southern Cross'
+    }
   }
 
   if (routeName === 'Showgrounds/Flemington' && destination === 'Flagstaff') {
