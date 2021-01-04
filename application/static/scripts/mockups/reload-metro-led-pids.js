@@ -95,9 +95,9 @@ function checkAndUpdateTrains() {
       let timeDiff = new Date(estimatedDepartureTime) - new Date()
       let minutes = timeDiff / 1000 / 60
 
-      if (!!estimatedDepartureTime) {
+      if (estimatedDepartureTime) {
         minutes = Math.floor(minutes).toString()
-        if (timeDiff >= 0) minutes = 'NOW'
+        if (timeDiff <= 0) minutes = 'NOW'
 
         let timeToDepart = new TextObject(minutes, font, new Position(0, 0), 1)
 
