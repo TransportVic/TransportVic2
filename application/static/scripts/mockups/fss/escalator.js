@@ -210,7 +210,6 @@ function updateBody(firstTime) {
       if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
 
       let {destination} = firstDeparture
-      if (destination === 'North Melbourne') destination = 'Nth Melbourne'
       if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
       if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
@@ -274,7 +273,6 @@ function updateBody(firstTime) {
 
           let {destination} = departure
 
-          if (destination === 'North Melbourne') destination = 'Nth Melbourne'
           if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
           if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
