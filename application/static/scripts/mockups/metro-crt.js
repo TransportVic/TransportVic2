@@ -42,6 +42,7 @@ function updateBody() {
 
       let destination = firstDeparture.destination.toUpperCase()
       if (firstDeparture.routeName === 'City Circle') destination = 'CITY CIRCLE'
+      if (destination === 'SOUTHERN CROSS') destination = 'SPENCER ST'
       if (destination === 'FLINDERS STREET') destination = 'FLINDERS ST'
       if (destination === 'UPPER FERNTREE GULLY') destination = 'UPPER FT GULLY'
       if (destination === 'NORTH MELBOURNE') destination = 'NTH MELBOURNE'
@@ -110,7 +111,7 @@ function updateBody() {
       let secondDeparture
       if (secondDeparture = departures[1]) {
         $('.nextDeparture .scheduledDepartureTime').textContent = formatTime(new Date(secondDeparture.scheduledDepartureTime))
-        $('.nextDeparture .destination').textContent = secondDeparture.destination.toUpperCase()
+        $('.nextDeparture .destination').textContent = shorternName(secondDeparture.destination).toUpperCase()
 
         if (secondDeparture.estimatedDepartureTime) {
           if (secondDeparture.minutesToDeparture > 0) {

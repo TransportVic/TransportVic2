@@ -299,7 +299,7 @@ module.exports = {
         } else {
           lineStops = ['Flinders Street', 'Southern Cross', ...lineStops]
         }
-      } else if (lineName === 'Frankston') {
+      } else {
         if (isUp) {
           lineStops = [...lineStops, 'Flinders Street', 'Southern Cross']
         } else {
