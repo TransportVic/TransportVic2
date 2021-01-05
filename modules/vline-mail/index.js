@@ -11,7 +11,7 @@ const config = require('../../config.json')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
-async function inboundMessage(data) {
+async function inboundMessage(connection, data) {
   let sender = data.from.text
   if (sender.includes('@inform.vline.com.au')) {
     let {subject, html} = data
@@ -20,7 +20,7 @@ async function inboundMessage(data) {
 
     handleMessage(subject || '', textContent)
   } else {
-    global.loggers.spamMail.log(`Recieved Spam From ${sender}: ${data.text.trim()}`)
+    global.loggers.spamMail.log(`Recieved Spam To ${data.to.text} From ${sender} (${connection.remoteAddress}, ${connection.clientHostname}): ${data.text.trim()}\n`)
   }
 }
 
@@ -60,7 +60,7 @@ module.exports = () => {
     global.loggers.mail.info('V/Line Email Server started')
 
     nodeMailin.on('message', (connection, data, content) => {
-      inboundMessage(data)
+      inboundMessage(connection, data)
     })
 
     nodeMailin.on('error', err => {
