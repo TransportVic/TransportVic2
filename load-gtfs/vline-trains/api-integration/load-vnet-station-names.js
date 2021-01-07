@@ -22,10 +22,13 @@ const coachOverrides = [
 ]
 
 const stations = Array.from($('Location')).filter(location => {
-  return $('StopType', location).text() === 'Station'
+  let locationType = $('StopType', location).text()
+  let locationName = $('LocationName', location).text().trim()
+
+  return locationType === 'Station' || coachOverrides.includes(locationName)
 }).map(location => {
-  const vnetStationName = $('LocationName', location).text().trim()
-  const stationName = vnetStationName.replace(/^Melbourne[^\w]+/, '').replace(/\(.+\)/g, '')
+  let vnetStationName = $('LocationName', location).text().trim()
+  let stationName = vnetStationName.replace(/^Melbourne[^\w]+/, '').replace(/\(.+\)/g, '')
     .replace(/: .+/, '').replace(/Station.*/, '').replace(/Railway.*/, '')
     .replace(/  +/, ' ').trim() + ' Railway Station'
 

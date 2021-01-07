@@ -220,7 +220,7 @@ function findConsist(consist, runID) {
 async function saveConsists(db, transformedDepartures) {
   let metroTrips = db.getCollection('metro trips')
   await async.forEach(transformedDepartures, async departure => {
-    if (departure.consist.length && departure.consistConfirmed && departure.trip.routeGTFSID !== '2-SPT') {
+    if (departure.departureDay && departure.consist.length && departure.consistConfirmed && departure.trip.routeGTFSID !== '2-SPT') {
       let query = {
         date: departure.departureDay,
         runID: departure.runID
@@ -828,6 +828,7 @@ async function updateSuspensions(departures, station, db) {
 function getDepartureDay(departure, stopGTFSID) {
   let { trip } = departure
   let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+  if (!stopData) global.loggers.metro.warn('No departure day', departure, stopGTFSID)
   if (!stopData) return
 
   let minutesDiff = stopData.departureTimeMinutes - trip.stopTimings[0].departureTimeMinutes
