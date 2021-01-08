@@ -65,16 +65,20 @@ let traralgonStops = [
   'Bairnsdale'
 ].map(x => x + ' Railway Station')
 
+let validALBOrigins = [
+  'Seymour',
+  'Southern Cross'
+].map(x => x + ' Railway Station')
+
 module.exports = async (collection, operationDay, origin, destination, departureTime) => {
   let tripStartMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime)
   if (tripStartMinutes < 180) tripStartMinutes += 1440
 
-  if (destination === 'Albury Railway Station') {
+  if (destination === 'Albury Railway Station' && validALBOrigins.includes(origin)) {
     destination = 'Wodonga Railway Station'
   }
 
-
-  if (origin === 'Albury Railway Station') {
+  if (origin === 'Albury Railway Station' && validALBOrigins.includes(destination)) {
     origin = 'Wodonga Railway Station'
     tripStartMinutes += 20
   }
