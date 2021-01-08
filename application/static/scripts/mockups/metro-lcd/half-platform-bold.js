@@ -157,7 +157,10 @@ function updateBody(firstTime) {
 
         let classes = ''
 
-        $('.firstDestination').textContent = firstDeparture.destination
+        let destination = firstDeparture.destination
+        if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
+
+        $('.firstDestination').textContent = destination
         $('.firstDestination').className = 'firstDestination'
         let width = parseInt(getComputedStyle($('.firstDestination')).width)
         let vw = window.innerWidth / 100
@@ -210,7 +213,10 @@ function updateBody(firstTime) {
         if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
         if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
-        $('div.bottomRow > span:nth-child(2)').textContent = destination
+        let nextDestinationSpan = $('div.bottomRow > span:nth-child(2)')
+        nextDestinationSpan.textContent = destination
+
+        nextDestinationSpan.className = destination === 'Flemington Races' ? 'smaller' : ''
 
         let secondStoppingType = shortenStoppingType(secondDeparture.stoppingType)
         if (secondDeparture.additionalInfo.via) {
