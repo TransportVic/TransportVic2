@@ -69,6 +69,17 @@ module.exports = async (collection, operationDay, origin, destination, departure
   let tripStartMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime)
   if (tripStartMinutes < 180) tripStartMinutes += 1440
 
+  if (destination === 'Albury Railway Station') {
+    destination = 'Wodonga Railway Station'
+  }
+
+
+  if (origin === 'Albury Railway Station') {
+    origin = 'Wodonga Railway Station'
+    tripStartMinutes += 20
+  }
+
+
   let varianceAllowed = 5
   if (traralgonStops.includes(origin) || traralgonStops.includes(destination)) {
     varianceAllowed = 20

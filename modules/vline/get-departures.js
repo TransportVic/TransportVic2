@@ -98,7 +98,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
     // }, currentStation, nspTrip, departure.vehicle)
   })
 
-  return departures
+  return departures.filter(Boolean)
 }
 
 function getShortRouteName(trip) {
