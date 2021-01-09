@@ -137,6 +137,10 @@ function findConsist(consist, runID) {
     }
   }
 
+  if (consist.match(/9\d{3}M/)) {
+    consist = consist.slice(0, 4)
+  }
+
   if (consist.match(/train\d+/)) {
     // For now we don't know what this means so skip it
     return global.loggers.trackers.metro.warn('Encountered strange train', {
