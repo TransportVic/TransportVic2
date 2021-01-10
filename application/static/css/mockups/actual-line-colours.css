@@ -125,7 +125,7 @@ p.city-circle {
 }
 
 .stoppingPattern.vline img {
-  filter: invert(32%) sepia(7%) saturate(4824%) hue-rotate(239deg) brightness(93%) contrast(103%);
+  filter: invert(31%) sepia(33%) saturate(1200%) hue-rotate(245deg) brightness(85%) contrast(130%);
 }
 
 

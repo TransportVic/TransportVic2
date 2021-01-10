@@ -261,7 +261,7 @@ function updateBody(firstTime) {
 
           let destinationClass = 'destination'
 
-          if (destination === 'North Melbourne') destination = 'Nth Melbourne'
+          if (destination === 'North Melbourne') destinationClass += ' small'
           if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
           if (destination === 'Flemington Racecourse') {
             destination = 'Flemington Races'
