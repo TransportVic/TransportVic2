@@ -323,9 +323,11 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
 
   let possibleDestinations = [runDestination]
 
-  let destination = runDestination
-  if (caulfieldGroup.includes(routeID) && (destination === 'Southern Cross') || destination === 'Parliament')
+  if (caulfieldGroup.includes(routeID) && runDestination === 'Southern Cross' || runDestination === 'Parliament')
     possibleDestinations.push('Flinders Street')
+
+  if (routeID === 1482 && runDestination === 'Showgrounds' || runDestination === 'Flemington Racecourse')
+    possibleDestinations.push('North Melbourne')
 
   let possibleLines = [routeName]
 
@@ -353,13 +355,13 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
   let usedLive = false
   let isUpTrip = runID.slice(1) % 2 === 0
   if (routeName === 'Stony Point') {
-    isUpTrip = destination === 'Frankston'
+    isUpTrip = runDestination === 'Frankston'
   }
 
   let direction = isUpTrip ? 'Up' : 'Down'
   if (isRailReplacementBus) direction = { $in: ['Up', 'Down'] }
 
-  let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== 'Flinders Street' && destination !== 'Southern Cross'
+  let isFormingNewTrip = cityLoopStations.includes(stationName) && runDestination !== 'Flinders Street' && runDestination !== 'Southern Cross'
 
   let isSCS = stationName === 'Southern Cross'
   let isFSS = stationName === 'Flinders Street'
@@ -379,24 +381,6 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
       if (runDestination !== 'Flinders Street')
         cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
     }
-  }
-
-  if (isUpTrip) {
-    if (cityLoopStations.includes(stationName)) {
-      if (cityLoopConfig[0] === 'FGS' && cityLoopConfig.slice(-1)[0] === 'SSS' && destination === 'Southern Cross')
-        destination = 'Flinders Street'
-    } else {
-      if (cityLoopConfig[0] === 'FSS' || cityLoopConfig[1] === 'FSS')
-        destination = 'Flinders Street'
-      else if (['PAR', 'FGS'].includes(cityLoopConfig[0]) && !cityLoopStations.includes(stationName))
-        destination = 'City Loop'
-      else if (cityLoopConfig.slice(-1)[0] === 'SSS')
-        destination = 'Southern Cross'
-    }
-  }
-
-  if (routeName === 'Showgrounds/Flemington' && destination === 'Flagstaff') {
-    destination = 'Flinders Street'
   }
 
   let viaCityLoop = isFSS ? cityLoopConfig.includes('FGS') : undefined
@@ -434,6 +418,26 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
 
     trip = await getStoppingPattern(db, ptvRunID, 'metro train', scheduledDepartureTime.toISOString())
     usedLive = true
+  }
+
+  let destination = isUpTrip ? runDestination : trip.trueDestination.slice(0, -16)
+
+  if (isUpTrip) {
+    if (cityLoopStations.includes(stationName)) {
+      if (cityLoopConfig[0] === 'FGS' && cityLoopConfig.slice(-1)[0] === 'SSS' && destination === 'Southern Cross')
+        destination = 'Flinders Street'
+    } else {
+      if (cityLoopConfig[0] === 'FSS' || cityLoopConfig[1] === 'FSS')
+        destination = 'Flinders Street'
+      else if (['PAR', 'FGS'].includes(cityLoopConfig[0]) && !cityLoopStations.includes(stationName))
+        destination = 'City Loop'
+      else if (cityLoopConfig.slice(-1)[0] === 'SSS')
+        destination = 'Southern Cross'
+    }
+  }
+
+  if (routeName === 'Showgrounds/Flemington' && destination === 'Flagstaff') {
+    destination = 'Flinders Street'
   }
 
   return { trip, usedLive, runID, isRailReplacementBus, destination, cityLoopConfig }
