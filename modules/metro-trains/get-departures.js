@@ -505,7 +505,8 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
 
   let stonyPointReplacements = disruptions.filter(disruption => {
     if (disruption.routeName.includes('Stony Point')) {
-      return disruption.text.includes('replace')
+      let text = disruption.text.toLowerCase()
+      return text.includes('replace') || text.includes('coach')
     }
     return false
   }).map(matchService).filter(Boolean)
@@ -648,7 +649,6 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       })
       if (replacement) isRailReplacementBus = true
     }
-
     if (routeID === 13 && !isRailReplacementBus) { // stony point platforms
       if (station.stopName === 'Frankston Railway Station') platform = '3'
       else platform = '1'
