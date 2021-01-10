@@ -16,6 +16,7 @@ let caulfieldGroup = [4, 6, 11, 12] // cranbourne, frankston, pakenham, sandring
 let northernGroup = [3, 14, 15, 16, 17, 1482] // craigieburn, sunbury, upfield, werribee, williamstown, flemington racecourse
 let cliftonHillGroup = [5, 8] // mernda, hurstbridge
 let crossCityGroup = [6, 16, 17, 1482] // frankston, werribee, williamstown, flemington racecourse
+let newportGroup = [16, 17] // werribee, williamstown
 
 function determineLoopRunning(routeID, runID, destination, isFormingNewTrip) {
   if (routeID === 13) return [] // stony point
@@ -223,7 +224,17 @@ function findConsist(consist, runID) {
 
 async function saveConsists(db, transformedDepartures) {
   let metroTrips = db.getCollection('metro trips')
-  await async.forEach(transformedDepartures, async departure => {
+  let runIDsSeen = []
+  let deduped = transformedDepartures.filter(dep => {
+    if (!runIDsSeen.includes(dep.runID)) {
+      runIDsSeen.push(dep.runID)
+      return true
+    } else {
+      return false
+    }
+  })
+
+  await async.forEach(deduped, async departure => {
     if (departure.departureDay && departure.consist.length && departure.consistConfirmed && departure.trip.routeGTFSID !== '2-SPT') {
       let query = {
         date: departure.departureDay,
@@ -377,9 +388,15 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
     // really only seems to happen with cfd & nor group
     if (caulfieldGroup.includes(routeID) || burnleyGroup.includes(routeID))
       cityLoopConfig = ['PAR', 'MCE', 'FGS', 'SSS', 'FSS']
-    else if (!crossCityGroup.includes(routeID) && northernGroup.includes(routeID)) {// all northern group except showgrounds & cross city
+    else if (!crossCityGroup.includes(routeID) && northernGroup.includes(routeID)) { // all northern group except showgrounds & cross city
       if (runDestination !== 'Flinders Street')
         cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
+    }
+  }
+
+  if (stationName === 'Southern Cross' && newportGroup.includes(routeID)) {
+    if (!isUpTrip && cityLoopConfig[0] === 'FSS') {
+      cityLoopConfig = ['SSS', 'FSS', 'SSS', 'NME']
     }
   }
 
