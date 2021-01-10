@@ -853,10 +853,9 @@ async function updateSuspensions(departures, station, db) {
 function getDepartureDay(departure, stopGTFSID) {
   let { trip } = departure
   let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
-  if (!stopData) global.loggers.metro.warn('No departure day', departure, stopGTFSID)
-  if (!stopData) return
+  if (!stopData) return void global.loggers.general.warn('No departure day', departure, stopGTFSID)
 
-  let minutesDiff = stopData.departureTimeMinutes - trip.stopTimings[0].departureTimeMinutes
+  let minutesDiff = (stopData.departureTimeMinutes || stopData.arrivalTimeMinutes) - trip.stopTimings[0].departureTimeMinutes
   let originDepartureTime = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
 
   return utils.getYYYYMMDD(originDepartureTime)
