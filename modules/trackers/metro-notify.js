@@ -102,7 +102,9 @@ async function requestTimings() {
     }
   })
 
-  await metroNotify.bulkWrite(bulkOperations)
+  if (bulkOperations.length) {
+    await metroNotify.bulkWrite(bulkOperations)
+  }
 }
 
 database.connect(async () => {
