@@ -453,7 +453,7 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
     }
   }
 
-  if (routeName === 'Showgrounds/Flemington' && destination === 'Flagstaff') {
+  if (northernGroup.includes(routeID) && destination === 'Flagstaff') {
     destination = 'Flinders Street'
   }
 
