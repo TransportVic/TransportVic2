@@ -8,7 +8,11 @@ module.exports = {
   '4-400': ['CDC Melbourne', 'Transit Systems'],
   "4-406": ["CDC Melbourne"],
   "4-409": ["CDC Melbourne"],
+  "4-41I": ["CDC Melbourne"], // 411
+  "4-41Z": ["CDC Melbourne"], // 412
   "4-429": ["Transdev Melbourne"],
+  "4-43P": ["CDC Melbourne"], // 439
+  "4-44E": ["CDC Melbourne"], // 443
   "4-44t": ["Transit Systems"], // 444
   "4-444": ["Transit Systems"], // 444
   "4-454": ["Transit Systems"],
@@ -24,11 +28,13 @@ module.exports = {
   "4-477": ["Tullamarine Bus Lines"], // 477
   "4-484": ["Tullamarine Bus Lines"], // 484
   "4-48S": ["Tullamarine Bus Lines"], // 484
+  "4-48q": ["Sunbury Bus Service"], // 489
   "4-509": ["Dysons"], // 509
   "4-5X9": ["Dysons"], // 509
-  "4-51I": ["Broadmeadows Bus Service"],
+  "4-51I": ["Broadmeadows Bus Service"], // 511
+  "4-5ii": ["Broadmeadows Bus Service"], // 511
   "4-51x": ["Moreland Bus Lines"], // 512
-  "4-51B": ["Dysons"],
+  "4-51B": ["Dysons"], // 513
   "4-525": ["Dysons"],
   "4-52F": ["Dysons"], // 525
   "4-52A": ["Broadmeadows Bus Service"], // 528
@@ -38,15 +44,16 @@ module.exports = {
   "4-53Z": ["Broadmeadows Bus Service"], // 531
   "4-5E3": ["Broadmeadows Bus Service"], // 533
   "4-5E7": ["Broadmeadows Bus Service"], // 537
-  "4-5A4": ["Broadmeadows Bus Service"],
+  "4-5A4": ["Broadmeadows Bus Service"], // 544
   "4-552": ["Dysons"],
   "4-556": ["Dysons"],
   "4-570": ["Dysons"],
-  "4-58x": ["Panorama Coaches"],
+  "4-58x": ["Panorama Coaches"], //
   "4-603": ["Transdev Melbourne"],
   "4-604": ["Transdev Melbourne"],
-  "4-68E": ["Martyrs Bus Service"],
-  "4-70C": ["CDC Melbourne"],
+  "4-62L": ["Transdev Melbourne"], // 624
+  "4-68E": ["Martyrs Bus Service"], // 683
+  "4-70C": ["CDC Melbourne"], // 700
   "4-704": ["Ventura Bus Lines"], // 704
   "4-74Z": ["Ventura Bus Lines"], // 742
   "4-7S6": ["Ventura Bus Lines"], // 766
@@ -58,6 +65,7 @@ module.exports = {
   "4-79S": ["Cranbourne Transit"], // 795
   "4-79X": ["Cranbourne Transit"], // 796
   "4-79A": ["Cranbourne Transit"], // 798
+  "4-79g": ["Cranbourne Transit"], // 799
   "4-800": ["Ventura Bus Lines"], // 800
   "4-80O": ["Ventura Bus Lines"], // 800
   "4-834": ["Ventura Bus Lines"], // 834
