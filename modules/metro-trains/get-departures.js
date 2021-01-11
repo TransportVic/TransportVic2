@@ -547,10 +547,10 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   let cityLoopSkipping = nonWorks.filter(disruption => {
     let description = disruption.text.toLowerCase()
 
-    return (description.includes('direct to') && description.includes('not via the city loop'))
+    return ((description.includes('direct to') && description.includes('not via the city loop'))
      || (description.includes('city loop services') && description.includes('direct between flinders st'))
      || ((description.match(/direct(?: from)? [\w ]* to flinders st/) || description.match(/direct(?: from)? flinders st/)) && description.includes('not via the city loop'))
-     || description.includes('run direct to\/from flinders st')
+     || description.includes('run direct to\/from flinders st'))
      && !description.includes('resume') && !description.includes('select trains')
   })
 
