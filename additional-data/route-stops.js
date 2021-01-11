@@ -700,6 +700,18 @@ let lines = {
     'Newmarket',
     'Showgrounds',
     'Flemington Racecourse'
+  ],
+  Overland: [
+    "Southern Cross",
+    "North Shore",
+    "Ararat",
+    "Stawell",
+    "Horsham",
+    "Dimboola",
+    "Nhill",
+    "Bordertown",
+    "Murray Bridge",
+    "Adelaide"
   ]
 }
 
@@ -728,6 +740,7 @@ function getLineStops(lineName, destination) {
   if (lineName === 'City Circle') return lines['City Circle']
   if (lineName === 'Sydney - Melbourne') return lines.Sydney
   if (lineName === 'Showgrounds/Flemington') return lines['Flemington Racecourse']
+  if (lineName === 'The Overland') return lines.Overland
 }
 
 module.exports = getLineStops
