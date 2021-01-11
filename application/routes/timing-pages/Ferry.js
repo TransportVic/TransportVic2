@@ -4,6 +4,7 @@ const getDepartures = require('../../../modules/ferry/get-departures')
 const moment = require('moment')
 const utils = require('../../../utils')
 const async = require('async')
+const timingUtils = require('./timing-utils')
 
 async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
@@ -14,6 +15,8 @@ async function loadDepartures(req, res) {
   if (!stop || !stop.bays.find(bay => bay.mode === 'ferry')) {
     return res.status(404).render('errors/no-stop')
   }
+
+  let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, stop)
 
   let departures = await getDepartures(stop, res.db)
   let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
@@ -41,7 +44,7 @@ async function loadDepartures(req, res) {
     return departure
   })
 
-  return { departures, stop }
+  return { departures, stop, stopHeritageUseDates }
 }
 
 router.get('/:stopName', async (req, res) => {

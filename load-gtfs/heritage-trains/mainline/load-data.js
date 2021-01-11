@@ -17,7 +17,7 @@ const timetables = require('./timetables')
 let stopsURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSRbKz9g8MveSiSnqQwfXpTCBzq_1z2gkjS5W4y6nj5QIgmZXjTg8fmKhaMzkfZbkUWGjIe1Uj8yMFm/pub?gid=0&single=true&output=csv'
 
 function generateStopID(stopName) {
-  return 13000000 + parseInt(parseInt(utils.hash(stopName), '16').toString().slice(2, 8))
+  return 13100000 + parseInt(parseInt(utils.hash(stopName), '16').toString().slice(3, 8))
 }
 
 let points = [

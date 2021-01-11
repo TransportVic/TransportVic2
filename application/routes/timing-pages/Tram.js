@@ -25,6 +25,9 @@ async function loadDepartures(req, res) {
     return res.status(404).render('errors/no-stop')
   }
 
+  let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, stop)
+
+
   // let departures = await getDepartures(stop, res.db)
   let departures = await getDeparturesExperimental(stop, res.db)
 
@@ -79,7 +82,8 @@ async function loadDepartures(req, res) {
     stop,
     classGen: departure => `tram-${departure.sortNumber}`,
     currentMode: 'tram',
-    maxDepartures: 3
+    maxDepartures: 3,
+    stopHeritageUseDates
   }
 }
 

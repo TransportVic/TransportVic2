@@ -3,6 +3,7 @@ const router = new express.Router()
 const getDepartures = require('../../../modules/vline/get-departures')
 const utils = require('../../../utils')
 const moment = require('moment')
+const timingUtils = require('./timing-utils')
 
 async function loadDepartures(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
@@ -12,6 +13,8 @@ async function loadDepartures(req, res) {
   if (!station || !station.bays.find(bay => bay.mode === 'regional train')) { // Not filtering xpt as we just want to check it exists
     return res.status(404).render('errors/no-stop')
   }
+
+  let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, station)
 
   let departures = await getDepartures(station, res.db)
 
@@ -43,7 +46,8 @@ async function loadDepartures(req, res) {
   return {
     departures,
     station,
-    placeholder: "Destination or platform"
+    placeholder: "Destination or platform",
+    stopHeritageUseDates
   }
 }
 

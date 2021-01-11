@@ -18,6 +18,8 @@ async function loadDepartures(req, res) {
     return res.status(404).render('errors/no-stop')
   }
 
+  let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, stop)
+
   let departures = await getDepartures(stop, res.db)
   let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
@@ -64,7 +66,8 @@ async function loadDepartures(req, res) {
     stop,
     classGen: departure => departure.codedOperator,
     currentMode: 'bus',
-    maxDepartures: 4
+    maxDepartures: 4,
+    stopHeritageUseDates
   }
 }
 

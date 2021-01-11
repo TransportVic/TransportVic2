@@ -1,3 +1,7 @@
+const utils = require('../../../utils')
+
+let stopDates = {}
+
 module.exports = {
   groupDepartures: departures => {
     let services = []
@@ -67,5 +71,24 @@ module.exports = {
     }))
 
     return { services: sortedServices, groupedDepartures }
+  },
+  getStopHeritageUseDates: async (db, stop) => {
+    let bay = stop.bays.find(bay => bay.mode === 'heritage train')
+    if (bay) {
+      if (stopDates[bay.stopGTFSID]) return stopDates[bay.stopGTFSID]
+
+      let gtfsTimetables = db.getCollection('gtfs timetables')
+      let dates = await gtfsTimetables.distinct('operationDays', {
+        mode: 'heritage train',
+        'stopTimings.stopGTFSID': bay.stopGTFSID
+      })
+
+      let moments = dates.map(date => utils.parseDate(date))
+      stopDates[bay.stopGTFSID] = moments
+
+      return moments
+    } else {
+      return []
+    }
   }
 }

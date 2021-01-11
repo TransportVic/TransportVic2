@@ -3,6 +3,7 @@ const router = new express.Router()
 const getDepartures = require('../../../modules/regional-coach/get-departures')
 const moment = require('moment')
 const utils = require('../../../utils')
+const timingUtils = require('./timing-utils')
 
 async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
@@ -14,6 +15,8 @@ async function loadDepartures(req, res) {
   if (!stop || !stop.bays.find(bay => bay.mode === 'regional coach')) {
     return res.status(404).render('errors/no-stop')
   }
+
+  let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, stop)
 
   let departures = await getDepartures(stop, res.db)
   let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
@@ -40,7 +43,7 @@ async function loadDepartures(req, res) {
     return departure
   }).filter(Boolean)
 
-  return { departures, stop }
+  return { departures, stop, stopHeritageUseDates }
 }
 
 router.get('/:suburb/:stopName', async (req, res) => {
