@@ -13,7 +13,10 @@ module.exports = {
     ["707_GRAINLANDER_SEALAKE_SUN", "1", "1", "1", "1", "1", "1", "1", "20210509", "20210509"],
 
     ["707_GRAINLANDER_QUAMBATOOK_SAT", "1", "1", "1", "1", "1", "1", "1", "20210306", "20210306"],
-    ["707_GRAINLANDER_QUAMBATOOK_SUN", "1", "1", "1", "1", "1", "1", "1", "20210307", "20210307"]
+    ["707_GRAINLANDER_QUAMBATOOK_SUN", "1", "1", "1", "1", "1", "1", "1", "20210307", "20210307"],
+
+    ["SRV_OTWAY_SAT", "1", "1", "1", "1", "1", "1", "1", "20210213", "20210213"],
+    ["SRV_S313_SAT", "1", "1", "1", "1", "1", "1", "1", "20210227", "20210227"]
   ],
   "dates": [],
   "trips": [
@@ -218,6 +221,63 @@ module.exports = {
       "routeGTFSID": "13-MLH",
       "calendarID": "707_GRAINLANDER_QUAMBATOOK_SUN",
       "tripID": "0800.707_GRAINLANDER_QUAMBATOOK_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Southern Cross"
+    },
+
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_OTWAY_SAT",
+      "tripID": "0825.SRV_OTWAY_SAT.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "1",
+      "shapeID": "13-MLH-mjp-1.1.H",
+      "headsign": "Camperdown"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_OTWAY_SAT",
+      "tripID": "1250.SRV_OTWAY_SAT.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "1",
+      "shapeID": "13-MLH-mjp-1.1.H",
+      "headsign": "Warrnambool"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_OTWAY_SAT",
+      "tripID": "1440.SRV_OTWAY_SAT.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Camperdown"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_OTWAY_SAT",
+      "tripID": "1610.SRV_OTWAY_SAT.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Southern Cross"
+    },
+
+
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_S313_SAT",
+      "tripID": "1110.SRV_S313_SAT.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "1",
+      "shapeID": "13-MLH-mjp-1.1.H",
+      "headsign": "Seymour"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_S313_SAT",
+      "tripID": "1515.SRV_S313_SAT.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Southern Cross"
@@ -928,6 +988,230 @@ module.exports = {
           "stopSequence": 0
         }
       ]
-    }
+    },
+
+
+    {
+      "tripID": "0825.SRV_OTWAY_SAT.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "08:25:00",
+          "departureTime": "08:25:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Werribee",
+          "arrivalTime": "09:01:00",
+          "departureTime": "09:01:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Geelong",
+          "arrivalTime": "09:36:00",
+          "departureTime": "09:36:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Colac",
+          "arrivalTime": "11:03:00",
+          "departureTime": "11:03:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Camperdown",
+          "arrivalTime": "11:51:00",
+          "departureTime": "11:51:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1250.SRV_OTWAY_SAT.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Camperdown",
+          "arrivalTime": "12:50:00",
+          "departureTime": "12:50:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Warrnambool",
+          "arrivalTime": "13:45:00",
+          "departureTime": "13:45:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1440.SRV_OTWAY_SAT.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Warrnambool",
+          "arrivalTime": "14:40:00",
+          "departureTime": "14:40:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Camperdown",
+          "arrivalTime": "15:35:00",
+          "departureTime": "15:35:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1610.SRV_OTWAY_SAT.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Camperdown",
+          "arrivalTime": "16:10:00",
+          "departureTime": "16:10:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Colac",
+          "arrivalTime": "16:55:00",
+          "departureTime": "16:55:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Birregurra",
+          "arrivalTime": "17:17:00",
+          "departureTime": "17:17:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Geelong",
+          "arrivalTime": "18:30:00",
+          "departureTime": "18:30:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Werribee",
+          "arrivalTime": "19:10:00",
+          "departureTime": "19:10:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "19:45:00",
+          "departureTime": "19:45:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+
+
+    {
+      "tripID": "1110.SRV_S313_SAT.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "11:10:00",
+          "departureTime": "11:10:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Seymour",
+          "arrivalTime": "12:49:00",
+          "departureTime": "12:49:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1515.SRV_S313_SAT.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Seymour",
+          "arrivalTime": "15:15:00",
+          "departureTime": "15:15:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "16:50:00",
+          "departureTime": "16:50:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
   ]
 }
