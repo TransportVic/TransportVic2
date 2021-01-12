@@ -66,6 +66,7 @@ let traralgonStops = [
 ].map(x => x + ' Railway Station')
 
 let validALBOrigins = [
+  'Broadmeadows',
   'Seymour',
   'Southern Cross'
 ].map(x => x + ' Railway Station')
@@ -98,10 +99,22 @@ module.exports = async (collection, operationDay, origin, destination, departure
     $lte: tripStartMinutes + varianceAllowed
   }
 
+  let routeGTFSID = { $not: { $in: [] } }
+  let syd = 'Sydney Central Railway Station'
+  if (destination !== syd && origin !== syd) {
+    routeGTFSID.$not.$in.push('14-XPT')
+  }
+
+  let ade = 'Adelaide Railway Station'
+  if (destination !== ade && origin !== ade) {
+    routeGTFSID.$not.$in.push('10-GSR')
+  }
+
   let query = {
     $and: [{
       mode: 'regional train',
-      operationDays: operationDay
+      operationDays: operationDay,
+      routeGTFSID
     }, {
       stopTimings: {
         $elemMatch: {
