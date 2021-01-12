@@ -8,6 +8,14 @@ const addStonyPointData = require('../../../modules/metro-trains/add-stony-point
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central'].map(e => e + ' Railway Station')
 
+let burnleyGroup = [1, 2, 7, 9] // alamein, belgrave, glen waverley, lilydale
+let caulfieldGroup = [4, 6, 11, 12] // cranbourne, frankston, pakenham, sandringham
+let northernGroup = [3, 14, 15, 16, 17, 1482] // craigieburn, sunbury, upfield, werribee, williamstown, flemington racecourse
+let cliftonHillGroup = [5, 8] // mernda, hurstbridge
+let crossCityGroup = [6, 16, 17, 1482] // frankston, werribee, williamstown, flemington racecourse
+let newportGroup = [16, 17] // werribee, williamstown
+
+
 function tripCloseness(trip, originStop, destinationStop, departureTimeMinutes, arrivalTimeMinutes) {
   let tripOrigin = trip.stopTimings.find(stop => stop.stopName === originStop.stopName)
   let tripDestination = trip.stopTimings.find(stop => stop.stopName === destinationStop.stopName)
@@ -183,6 +191,21 @@ async function pickBestTrip(data, db) {
     let possibleDepartures = departures.filter(departure => {
       let run = runs[departure.run_ref]
       let destinationName = run.destination_name.trim()
+      let routeID = departure.route_id
+
+      if ((caulfieldGroup.includes(routeID) && destinationName === 'Southern Cross') || destinationName === 'Parliament') {
+        destinationName = 'Flinders Street'
+      }
+
+      if (northernGroup.includes(routeID) && destinationName === 'Flagstaff') {
+        destinationName = 'Flinders Street'
+      }
+
+      if (isUp && northernGroup.includes(routeID) && destinationName === 'Southern Cross') { // This kind of merging only happens with train runs, never bus runs
+        let secondDigit = departure.run_ref[1]
+        if (secondDigit > 5) destinationName = 'Flinders Street'
+      }
+
       let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc).toISOString()
 
       let timeMatch = scheduledDepartureTime === isoDeparture
@@ -204,21 +227,23 @@ async function pickBestTrip(data, db) {
       return false
     })
 
+    let departureToUse
+
     if (possibleDepartures.length > 1) {
-      departure = possibleDepartures.find(departure => {
-        return runs[departure.run_ref].express_stop_count === expressCount
+      departureToUse = possibleDepartures.find(possibleDeparture => {
+        return runs[possibleDeparture.run_ref].express_stop_count === expressCount
       })
-    } else departure = possibleDepartures[0]
+    } else departureToUse = possibleDepartures[0]
 
     // interrim workaround cos when services start from a later stop they're really cancelled
     // in the stops before, but PTV thinks otherwise...
-    if (!departure) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null
-    let ptvRunID = departure.run_ref
-    let departureTime = departure.scheduled_departure_utc
+    if (!departureToUse) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null
+    let ptvRunID = departureToUse.run_ref
+    let departureTime = departureToUse.scheduled_departure_utc
 
-    let isRailReplacementBus = departure.flags.includes('RRB-RUN')
+    let isRailReplacementBus = departureToUse.flags.includes('RRB-RUN')
 
-    let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime, departure.stop_id, referenceTrip, {
+    let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime, departureToUse.stop_id, referenceTrip, {
       isRailReplacementBus,
       trimStops: referenceTrip ? referenceTrip.affectedBySuspension : false
     })
