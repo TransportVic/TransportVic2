@@ -3,7 +3,7 @@ const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const nameModifier = require('../../additional-data/stop-name-modifier')
 const metroTypes = require('../../additional-data/metro-tracker/metro-types')
-const resolveRouteGTFSID = require('../resolve-gtfs-id')
+const gtfsGroups = require('../gtfs-id-groups')
 const addStonyPointData = require('../metro-trains/add-stony-point-data')
 const determineBusRouteNumber = require('../../additional-data/determine-bus-route-number')
 const fixTripDestination = require('../metro-trains/fix-trip-destinations')
@@ -118,7 +118,9 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let checkModes = [mode]
   if (mode === 'regional coach') checkModes.push('regional train')
 
-  let routeGTFSID = resolveRouteGTFSID(routeData.route_gtfs_id)
+  let routeGTFSID = routeData.route_gtfs_id
+  if (routeGTFSID === '4-965') routeGTFSID = '8-965'
+
   if (mode === 'tram') routeGTFSID = `3-${parseInt(routeGTFSID.slice(2))}`
   if (routeData.route_id === 99) routeGTFSID = '2-CCL'
   let route = await routesCollection.findDocument({ routeGTFSID })
@@ -131,7 +133,6 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     let bestKey = keys.find(k => k.replace(/[\w ]+ to/).includes(directionName))
     if (bestKey) gtfsDirection = route.ptvDirections[bestKey]
   }
-
 
   let previousDepartureTime = -1
 

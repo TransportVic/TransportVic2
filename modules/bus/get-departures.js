@@ -4,7 +4,7 @@ const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const stopNameModifier = require('../../additional-data/stop-name-modifier')
 const busBays = require('../../additional-data/bus-bays')
-const resolveRouteGTFSID = require('../resolve-gtfs-id')
+const gtfsGroups = require('../gtfs-id-groups')
 const departureUtils = require('../utils/get-bus-timetables')
 const liveBusData = require('../../additional-data/live-bus-data')
 
@@ -16,9 +16,10 @@ async function getStoppingPatternWithCache(db, busDeparture, destination, isNigh
   })
 }
 
-async function getRoute(db, routeGTFSID) {
+async function getRoute(db, routeGTFSID, query) {
   return await utils.getData('bus-routes', routeGTFSID, async () => {
-    return await db.getCollection('routes').findDocument({ routeGTFSID }, { routePath: 0 })
+    let routes = await db.getCollection('routes').findDocuments({ routeGTFSID: query }, { routePath: 0 }).toArray()
+    return routes.find(r => r.routeGTFSID === query) || routes[0]
   })
 }
 
@@ -120,10 +121,16 @@ async function getDeparturesFromPTV(stop, db) {
 
       let destination = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
 
-      let routeGTFSID = resolveRouteGTFSID(route.route_gtfs_id)
+      let routeGTFSID = route.route_gtfs_id
       if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
+      if (routeGTFSID === '4-965') routeGTFSID = '8-965'
 
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSID)
+      let routeGTFSIDQuery = routeGTFSID, matchingGroup
+      if (matchingGroup = gtfsGroups.find(g => g.includes(routeGTFSID))) {
+        routeGTFSIDQuery = { $in: matchingGroup }
+      }
+
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSIDQuery)
         || await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
 
       let hasVehicleData = run.vehicle_descriptor
@@ -137,7 +144,7 @@ async function getDeparturesFromPTV(stop, db) {
         }) || {}).fleetNumber
       }
 
-      let busRoute = await getRoute(db, routeGTFSID)
+      let busRoute = await getRoute(db, routeGTFSID, routeGTFSIDQuery)
       let operator = busRoute.operators.sort((a, b) => a.length - b.length)[0]
 
       if (busRoute.operationDate) {

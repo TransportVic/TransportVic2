@@ -48,7 +48,7 @@ module.exports = {
   "4-552": ["Dysons"],
   "4-556": ["Dysons"],
   "4-570": ["Dysons"],
-  "4-58x": ["Panorama Coaches"], //
+  "4-58x": ["Panorama Coaches"], // 582
   "4-603": ["Transdev Melbourne"],
   "4-604": ["Transdev Melbourne"],
   "4-62L": ["Transdev Melbourne"], // 624
@@ -79,7 +79,7 @@ module.exports = {
   "4-89Z": ["Cranbourne Transit"], // 892
   "4-89E": ["Cranbourne Transit"], // 893
   "4-89F": ["Cranbourne Transit"], // 894
-  "4-89v": ["Cranbourne Transit"], // 894
+  "4-89v": ["Cranbourne Transit"], // 895
   "4-89S": ["Cranbourne Transit"], // 897
   "4-89T": ["Cranbourne Transit"], // 898
   "4-900": ["CDC Melbourne", "Ventura Bus Lines"],

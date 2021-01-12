@@ -4,7 +4,7 @@ const router = new express.Router()
 const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
-const resolveRouteGTFSID = require('../../../modules/resolve-gtfs-id')
+const gtfsGroups = require('../../../modules/gtfs-id-groups')
 
 const liveBusData = require('../../../additional-data/live-bus-data')
 const busDestinations = require('../../../additional-data/bus-destinations')
@@ -110,14 +110,19 @@ async function pickBestTrip(data, db) {
     let departure = departures.find(departure => {
       let run = runs[departure.run_ref]
       let route = routes[departure.route_id]
-      let routeGTFSID = resolveRouteGTFSID(route.route_gtfs_id)
+      let routeGTFSID = route.route_gtfs_id
+
+      if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
+      if (routeGTFSID === '4-965') routeGTFSID = '8-965'
+
+      let matchingGroup = gtfsGroups.find(g => g.includes(routeGTFSID)) || [ routeGTFSID ]
 
       let destinationName = utils.getProperStopName(run.destination_name)
       let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc).toISOString()
 
       return scheduledDepartureTime === isoDeparture &&
         destinationName === referenceTrip.destination &&
-        routeGTFSID === referenceTrip.routeGTFSID
+        matchingGroup.includes(referenceTrip.routeGTFSID)
     })
 
     if (!departure) return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
