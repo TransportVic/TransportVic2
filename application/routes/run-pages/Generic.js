@@ -65,7 +65,7 @@ async function pickBestTrip(data, db) {
       liveTrip = await db.getCollection('live timetables').findDocument(query)
       referenceTrip = liveTrip || gtfsTrip
 
-      if (referenceTrip && !referenceTrip.routeGTFSID.startsWith('8-')) return null
+      if (!referenceTrip || !referenceTrip.routeGTFSID.startsWith('8-')) return null
     } else {
       return null
     }
