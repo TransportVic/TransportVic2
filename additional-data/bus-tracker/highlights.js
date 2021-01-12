@@ -143,7 +143,7 @@ module.exports = [{
   buses: 'exclude'
 }, {
   name: 'McHarry Specials',
-  track: ['MH51', 'MH55', 'MH127'],
+  track: ['MH32', 'MH43', 'MH51', 'MH55', 'MH56', 'MH65', 'MH89', 'MH127', 'MH140', 'MH144', 'MH145', 'MH147', 'MH150'],
   routes: [],
   type: 'exclude'
 }, {
