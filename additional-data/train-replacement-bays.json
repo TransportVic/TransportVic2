@@ -2907,5 +2907,145 @@
    "bayDesignation": null,
    "stopGTFSID": 510019960
   }
+ ],
+ "Syndal": [
+  {
+   "towards": "Glen Waverley",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1500169,
+     -37.8766859
+    ]
+   },
+   "along": "Coleman Parade",
+   "bayDesignation": null,
+   "stopGTFSID": 510019874
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.149868,
+     -37.8767642
+    ]
+   },
+   "along": "Coleman Parade",
+   "bayDesignation": null,
+   "stopGTFSID": 520019874
+  }
+ ],
+ "Mount Waverley": [
+  {
+   "towards": "Glen Waverley",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1287882,
+     -37.8763428
+    ]
+   },
+   "along": "Stephensons Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019875
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1291222,
+     -37.8761946
+    ]
+   },
+   "along": "Stephensons Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019875
+  }
+ ],
+ "Jordanville": [
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1127391,
+     -37.8742159
+    ]
+   },
+   "along": "Windsor Avenue",
+   "bayDesignation": null,
+   "stopGTFSID": 510019840
+  },
+  {
+   "towards": "Glen Waverley",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.1128356,
+     -37.8741238
+    ]
+   },
+   "along": "Windsor Avenue",
+   "bayDesignation": null,
+   "stopGTFSID": 520019840
+  }
+ ],
+ "Holmesglen": [
+  {
+   "towards": "Glen Waverley",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0915362,
+     -37.8749612
+    ]
+   },
+   "along": "Warrigal Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019839
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0917897,
+     -37.8752608
+    ]
+   },
+   "along": "Warrigal Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019839
+  }
+ ],
+ "East Malvern": [
+  {
+   "towards": "Glen Waverley",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0695076,
+     -37.8793987
+    ]
+   },
+   "along": "Waverley Road",
+   "bayDesignation": null,
+   "stopGTFSID": 510019838
+  },
+  {
+   "towards": "City",
+   "location": {
+    "type": "Point",
+    "coordinates": [
+     145.0700051,
+     -37.8797374
+    ]
+   },
+   "along": "Waverley Road",
+   "bayDesignation": null,
+   "stopGTFSID": 520019838
+  }
  ]
 }

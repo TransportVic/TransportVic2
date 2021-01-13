@@ -32,7 +32,9 @@ async function getData(db) {
       _id: 0
     }).toArray()).reduce((a, b) => a.concat(b.routePath), [])
 
-    modeRoutePaths[mode] = routePaths.map(path => encode({
+    modeRoutePaths[mode] = routePaths.filter(path => {
+      return !path.isRailBus
+    }).map(path => encode({
       type: "LineString",
       coordinates: path.path
     }, { precision: 5 }).coordinates)
