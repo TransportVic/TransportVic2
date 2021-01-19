@@ -35,8 +35,9 @@ if departures.length
         span.destination #{departure.destination}
         -
           let showPatternAltered = false
+          let stopSkipped
           if (departure.trip.type === 'pattern-altered') {
-            let stopSkipped = departure.trip.stopTimings.find(stop => stop.cancelled)
+            stopSkipped = departure.trip.stopTimings.find(stop => stop.cancelled)
             let currentStop = departure.trip.stopTimings.find(stop => stop.stopName === station.stopName)
             let skippedIndex = departure.trip.stopTimings.indexOf(stopSkipped)
             let currentIndex = departure.trip.stopTimings.indexOf(currentStop)

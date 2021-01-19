@@ -131,6 +131,7 @@ async function fetchData() {
       combinedTripData[runID][stopTiming.stopName] = delay
 
       let destinationTiming = departure.trip.stopTimings.find(stop => stop.stopName === departure.destination)
+      if (!destinationTiming) return global.loggers.general.warn('Destination mismatch!', departure)
       combinedTripData[runID][destinationTiming.stopName] = departure.estimatedDestArrivalTime - departure.destinationArrivalTime
     })
 
