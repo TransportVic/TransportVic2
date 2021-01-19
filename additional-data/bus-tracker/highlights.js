@@ -166,4 +166,9 @@ module.exports = [{
   track: ['W2043'],
   routes: [],
   type: 'exclude'
+}, {
+  name: 'Latrobe Specials',
+  track: ['LV64', 'LV66', 'LV67'],
+  routes: [],
+  type: 'exclude'
 }]
