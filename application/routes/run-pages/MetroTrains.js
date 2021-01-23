@@ -243,7 +243,7 @@ async function pickBestTrip(data, db) {
 
     let isRailReplacementBus = departureToUse.flags.includes('RRB-RUN')
 
-    let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime, departureToUse.stop_id, referenceTrip, {
+    let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime, null, referenceTrip, {
       isRailReplacementBus,
       trimStops: referenceTrip ? referenceTrip.affectedBySuspension : false
     })

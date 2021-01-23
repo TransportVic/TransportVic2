@@ -82,8 +82,11 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   if (time) {
     if (mode === 'metro train') {
       let startTime = utils.parseTime(time)
-      if (utils.getMinutesPastMidnight(startTime) < 180) startTime.add(-3.5, 'hours')
-      url += `&date_utc=${startTime.toISOString()}`
+      if (utils.getMinutesPastMidnight(startTime) < 180) {
+        url += `&date_utc=${startTime.add(-3.5, 'hours').toISOString()}`
+      } else {
+        url += `&date_utc=${new Date().toISOString()}`
+      }
     } else {
       url += `&date_utc=${time}`
     }
