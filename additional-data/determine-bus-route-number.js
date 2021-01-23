@@ -11,15 +11,16 @@ module.exports = function (trip) {
     K - B (Ridge Rd & Mount Dandenong Observatory)
     M - C (Elizabeth Bridge Reserve/Durham Road)
     */
-    if (routeNumber === '688') {
-      let hasRidge = trip.stopTimings.some(stop => stop.stopName === 'Mount Dandenong Arboretum/Ridge Road')
-      if (trip.stopTimings.some(stop => stop.stopName === 'Elizabeth Bridge Reserve/Durham Road')) return '688C'
-      if (hasRidge) {
-        let hasObservatory = trip.stopTimings.some(stop => stop.stopName === 'Mount Dandenong Observatory/Observatory Road')
-        if (hasObservatory) return '688B'
-        else return '688A'
-      }
-    }
+
+    // if (routeNumber === '688') {
+    //   let hasRidge = trip.stopTimings.some(stop => stop.stopName === 'Mount Dandenong Arboretum/Ridge Road')
+    //   if (trip.stopTimings.some(stop => stop.stopName === 'Elizabeth Bridge Reserve/Durham Road')) return '688C'
+    //   if (hasRidge) {
+    //     let hasObservatory = trip.stopTimings.some(stop => stop.stopName === 'Mount Dandenong Observatory/Observatory Road')
+    //     if (hasObservatory) return '688B'
+    //     else return '688A'
+    //   }
+    // }
 
     if (routeNumber === '695' || routeNumber === '695F') { // It jumps around timetables
       let hasDandenong = trip.stopTimings.some(stop => stop.stopName === 'Dandenong Market/Cleeland Street')
