@@ -66,5 +66,8 @@ module.exports = [
   'Boronia',
   'Eaglemont',
   'Cardinia Road',
-  'Hampton'
+  'Hampton',
+  'Chelsea',
+  'Kananook',
+  'Highett'
 ]
