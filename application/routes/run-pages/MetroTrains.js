@@ -51,10 +51,12 @@ async function pickBestTrip(data, db) {
   let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
   let minutesToTripEnd = tripEndTime.diff(utils.now(), 'minutes')
 
-  let destinationArrivalTime = tripEndMinutes
   let departureTime = tripStartMinutes
-  let liveDestinationArrivalTime = tripEndMinutes % 1440
+  let destinationArrivalTime = tripEndMinutes
+
   let liveDepartureTime = tripStartMinutes % 1440
+  let liveDestinationArrivalTime = tripEndMinutes % 1440
+  if (liveDestinationArrivalTime < liveDepartureTime) liveDestinationArrivalTime += 1440
 
   if (data.destination === 'flinders-street') {
     destinationArrivalTime = {
