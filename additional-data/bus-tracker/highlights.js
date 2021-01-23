@@ -5,7 +5,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Ventura Artics',
-  track: ['V100', 'V102', 'V136', 'V143', 'V190', 'V292', 'V293', 'V294', 'V730', 'V732', 'V733', 'V734', 'V735', 'V842', 'V1271', 'V1374', 'V1378', 'V1379', 'V1380', 'V1422', 'V1423'],
+  track: ['V100', 'V102', 'V136', 'V143', 'V190', 'V292', 'V293', 'V294', 'V730', 'V732', 'V733', 'V734', 'V735', 'V842', 'V1271', 'V1374', 'V1378', 'V1379', 'V1380', 'V1422', 'V1423', 'V1424', 'V1426', 'V1427'],
   routes: ['811', '812', '813', '843', '664', '670', '679', '788'],
   type: 'exclude'
 }, {
@@ -21,6 +21,11 @@ module.exports = [{
 }, {
   name: 'Venture B10BLE',
   track: ['V10', 'V30', 'V31', 'V34', 'V35', 'V43', 'V44', 'V78', 'V114', 'V116', 'V137', 'V138', 'V139', 'V304'],
+  routes: [],
+  type: 'exclude'
+}, {
+  name: 'Venture O405NH',
+  track: ['V548', 'V550', 'V569', 'V570'],
   routes: [],
   type: 'exclude'
 }, {
@@ -40,7 +45,7 @@ module.exports = [{
   type: 'include'
 }, {
   name: 'Cranbourne Specials',
-  track: ['CR36', 'CR37'],
+  track: ['CR37'],
   routes: [],
   type: 'exclude'
 }, {
