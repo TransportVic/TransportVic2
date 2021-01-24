@@ -8,7 +8,6 @@ const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 const getRouteStops = require('../../additional-data/route-stops')
 const getStonyPoint = require('../get-stony-point')
 const metroConsists = require('../../additional-data/metro-tracker/metro-consists')
-const { getDayOfWeek } = require('../../public-holidays')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
@@ -237,17 +236,16 @@ async function saveConsists(db, transformedDepartures) {
 
   await async.forEach(deduped, async departure => {
     if (departure.departureDay && departure.consist.length && departure.consistConfirmed && departure.trip.routeGTFSID !== '2-SPT') {
-      let dayOfWeek = departure.departureDay
+      let departureDay = departure.departureDay
       let departureTimeMinutes = utils.getMinutesPastMidnight(departure.originDepartureTime)
 
       if (departureTimeMinutes < 180) {
         let previousDay = departure.originDepartureTime.clone().add(-1, 'day')
         departureDay = utils.getYYYYMMDD(previousDay)
-        dayOfWeek = await getDayOfWeek(previousDay)
       }
 
       let query = {
-        date: dayOfWeek,
+        date: departureDay,
         runID: departure.runID
       }
 
