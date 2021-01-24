@@ -8,6 +8,7 @@ const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 const getRouteStops = require('../../additional-data/route-stops')
 const getStonyPoint = require('../get-stony-point')
 const metroConsists = require('../../additional-data/metro-tracker/metro-consists')
+const { getDayOfWeek } = require('../../public-holidays')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
