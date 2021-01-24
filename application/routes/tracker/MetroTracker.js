@@ -75,6 +75,11 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
       destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(destinationArrivalTime)
 
   let tripDate = trip.date
+  
+  if (departureTimeMinutes < 180) {
+    departureTimeMinutes += 1440
+    tripDate = utils.getYYYYMMDD(utils.parseDate(tripDate).add(1, 'day'))
+  }
 
   if (destinationArrivalTimeMinutes < departureTimeMinutes) destinationArrivalTimeMinutes += 1440
 

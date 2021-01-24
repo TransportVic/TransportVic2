@@ -236,8 +236,17 @@ async function saveConsists(db, transformedDepartures) {
 
   await async.forEach(deduped, async departure => {
     if (departure.departureDay && departure.consist.length && departure.consistConfirmed && departure.trip.routeGTFSID !== '2-SPT') {
+      let dayOfWeek = departure.departureDay
+      let departureTimeMinutes = utils.getMinutesPastMidnight(departure.originDepartureTime)
+
+      if (departureTimeMinutes < 180) {
+        let previousDay = departure.originDepartureTime.clone().add(-1, 'day')
+        departureDay = utils.getYYYYMMDD(previousDay)
+        dayOfWeek = await getDayOfWeek(previousDay)
+      }
+
       let query = {
-        date: departure.departureDay,
+        date: dayOfWeek,
         runID: departure.runID
       }
 
@@ -755,8 +764,10 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
   ])
 
   let allDepartures = transformedDepartures.concat(await getMissingRRB(station, db, individualRailBusDepartures)).map(departure => {
-    departure.departureDay = getDepartureDay(departure, stopGTFSID)
-    return departure
+    return {
+      ...departure,
+      ...getDepartureDay(departure, stopGTFSID)
+    }
   })
 
   await saveConsists(db, allDepartures)
@@ -858,7 +869,10 @@ function getDepartureDay(departure, stopGTFSID) {
   let minutesDiff = (stopData.departureTimeMinutes || stopData.arrivalTimeMinutes) - trip.stopTimings[0].departureTimeMinutes
   let originDepartureTime = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
 
-  return utils.getYYYYMMDD(originDepartureTime)
+  return {
+    departureDay: utils.getYYYYMMDD(originDepartureTime),
+    originDepartureTime
+  }
 }
 
 async function markRailBuses(departures, station, db) {

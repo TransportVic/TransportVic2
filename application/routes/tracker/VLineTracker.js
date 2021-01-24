@@ -43,6 +43,7 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
     departureTimeMinutes += 1440
     tripDate = utils.getYYYYMMDD(utils.parseDate(tripDate).add(1, 'day'))
   }
+
   if (destinationArrivalTimeMinutes < departureTimeMinutes) destinationArrivalTimeMinutes += 1440
 
   trip.url = `/vline/run/${e(trip.origin)}-railway-station/${trip.departureTime}/${e(trip.destination)}-railway-station/${trip.destinationArrivalTime}/${tripDate}`
