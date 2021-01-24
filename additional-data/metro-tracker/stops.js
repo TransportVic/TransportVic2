@@ -69,5 +69,6 @@ module.exports = [
   'Hampton',
   'Chelsea',
   'Kananook',
-  'Highett'
+  'Highett',
+  'Glenhuntly'
 ]
