@@ -49,6 +49,11 @@ async function read5000Stops() {
       fullStopName = fullStopName.replace(/^(D?[\d]+[A-Za-z]?)-/, '')
     }
 
+    if (fullStopName.includes(' - Stop')) {
+      stopNumber = originalName.match(/Stop (D?\d*)/)[1]
+      fullStopName = originalName.replace(' - Stop ' + stopNumber, '')
+    }
+
     let stop = {
       originalName,
       fullStopName,
