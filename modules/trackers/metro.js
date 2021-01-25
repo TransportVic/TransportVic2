@@ -18,10 +18,10 @@ function shouldRun() {
   let minutes = utils.getMinutesPastMidnightNow()
   let dayOfWeek = utils.getDayOfWeek(utils.now())
 
-  if (minutes >= 300 || minutes <= 60) return true
+  if (minutes >= 240 || minutes <= 60) return true
 
   if (['Sat', 'Sun'].includes(dayOfWeek)) { // Considering the true day, NN runs on sat & sun morn
-    return minutes < 300 // 2359 - 0459
+    return minutes < 240 // 2359 - 0359
   }
 
   return false
