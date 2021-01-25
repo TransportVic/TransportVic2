@@ -13,6 +13,7 @@ let stopsLookup = createStopsLookup(datamartStops)
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
+const utils = require('../../utils')
 
 let gtfsID = 3
 

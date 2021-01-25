@@ -4,6 +4,7 @@ const async = require('async')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
 const loadStops = require('../utils/load-stops')
+const utils = require('../../utils')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
