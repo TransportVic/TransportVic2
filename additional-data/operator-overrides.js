@@ -53,8 +53,8 @@ module.exports = {
   "4-58x": ["Panorama Coaches"], // 582
   "4-603": ["Transdev Melbourne"],
   "4-604": ["Transdev Melbourne"],
-  "4-624": ["Transdev Melbourne"], // 624
-  "4-62L": ["Transdev Melbourne"], // 624
+  "4-624": ["CDC Melbourne"], // 624
+  "4-62L": ["CDC Melbourne"], // 624
   "4-68E": ["Martyrs Bus Service"], // 683
   "4-70C": ["CDC Melbourne"], // 700
   "4-704": ["Ventura Bus Lines"], // 704
