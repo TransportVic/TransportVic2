@@ -36,7 +36,7 @@ async function getDepartures(stop) {
 
   let stopData = await dbStops.findDocument({ stopName: stop + ' Railway Station' })
   let departures = await getMetroDepartures(stopData, database)
-  let requestLive = departures.filter(d => !d.isRailReplacementBus).slice(0, 6)
+  let requestLive = departures.filter(d => !d.isRailReplacementBus).slice(0, 5)
 
   await async.forEachSeries(requestLive, async departure => {
     await getStoppingPattern(database, departure.ptvRunID, 'metro train', departure.scheduledDepartureTime.toISOString())
