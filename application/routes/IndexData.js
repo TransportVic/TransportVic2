@@ -70,12 +70,6 @@ router.get('/stop-data', async (req, res) => {
 })
 
 router.get('/home-banner', (req, res) => {
-  return res.json({
-    link: '#',
-    alt: 'PTV Data Fault',
-    text: 'Due to a PTV Data Fault: Stop suburbs & Secondary bus stop names are unavailable. Apologies'
-  })
-
   if (upcomingPH.length) {
     let link = `/public-holiday/${upcomingPH.map(ph => utils.getYYYYMMDD(ph.day)).join('-')}`
     if (upcomingPH.length === 1) {
@@ -94,11 +88,11 @@ router.get('/home-banner', (req, res) => {
       })
     }
   } else {
-    res.json({
-      link: 'https://www.patreon.com/transportsg',
-      alt: 'Patreon',
-      text: 'Hi! If you like this site please consider supporting me on patreon by clicking here!'
-    })
+     res.json({
+       link: 'https://www.patreon.com/transportsg',
+       alt: 'Patreon',
+       text: 'Hi! If you like this site please consider supporting me on patreon by clicking here!'
+     })
   }
 })
 

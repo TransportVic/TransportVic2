@@ -42,12 +42,6 @@ database.connect({
 
   await async.forEachSeries(stopsFiles, async stopFile => {
     let data = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, stopFile)))
-
-    data.forEach(stop => {
-      let baseName = stop.originalName.replace('Railway', '').replace('Station', '').trim()
-      stop.fullStopName = baseName + ' Railway Station'
-    })
-
     await loadStops(stops, data, stopsLookup)
     stopCount += data.length
   })

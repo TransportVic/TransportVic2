@@ -68,7 +68,7 @@ async function getDeparturesFromPTV(stop, db) {
       let coachRouteGTFSID = route.route_gtfs_id.replace('1-', '5-')
       let trainRouteGTFSID = route.route_gtfs_id
 
-      let destination = utils.adjustStopName(run.destination_name.split('/')[0])
+      let destination = utils.adjustStopName(run.destination_name)
 
       // null: unknown, true: yes, false: no
       let isRailReplacementBus = null

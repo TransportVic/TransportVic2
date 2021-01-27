@@ -119,7 +119,7 @@ async function getDeparturesFromPTV(stop, db) {
 
       if (actualDepartureTime.diff(now, 'minutes') > 90) return
 
-      let destination = stopNameModifier(utils.adjustStopName(run.destination_name.split('/')[0].trim()))
+      let destination = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
 
       let routeGTFSID = route.route_gtfs_id
       if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745

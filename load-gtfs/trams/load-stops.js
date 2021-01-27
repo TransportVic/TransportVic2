@@ -13,7 +13,6 @@ let stopsLookup = createStopsLookup(datamartStops)
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
-const utils = require('../../utils')
 
 let gtfsID = 3
 
@@ -29,12 +28,6 @@ database.connect({
 
   await async.forEachSeries(stopsFiles, async stopFile => {
     let data = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, stopFile)))
-
-    data.forEach(stop => {
-      stop.fullStopName = utils.expandStopName(utils.adjustStopName(stop.fullStopName))
-      stop.suburb = (utils.getDistanceFromLatLon(-37.818115, 144.963237, stop.location.coordinates[1], stop.location.coordinates[0])/1000).toFixed(0)
-    })
-
     await loadStops(stops, data, stopsLookup)
     stopCount += data.length
   })
