@@ -17,6 +17,7 @@ module.exports = {
   "4-444": ["Transit Systems"], // 444
   "4-454": ["Transit Systems"],
   "4-45S": ["Transit Systems"], // 456
+  "4-45L": ["Transit Systems"], // 456
   "4-4X9": ["Transit Systems"], // 459
   "4-46z": ["Kastoria Bus Lines"], // 462
   "4-462": ["Kastoria Bus Lines"],
@@ -29,6 +30,7 @@ module.exports = {
   "4-484": ["Tullamarine Bus Lines"], // 484
   "4-48S": ["Tullamarine Bus Lines"], // 484
   "4-48q": ["Sunbury Bus Service"], // 489
+  "4-48P": ["Sunbury Bus Service"], // 489
   "4-509": ["Dysons"], // 509
   "4-5X9": ["Dysons"], // 509
   "4-51I": ["Broadmeadows Bus Service"], // 511
