@@ -302,7 +302,8 @@ router.get('/highlights', async (req, res) => {
         $in: knownTrams
       }
     }
-  }).toArray()).map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
+  }).sort({departureTime: 1}).toArray())
+    .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
   res.render('tracker/tram/highlights', {
     date: utils.parseTime(date, 'YYYYMMDD'),
