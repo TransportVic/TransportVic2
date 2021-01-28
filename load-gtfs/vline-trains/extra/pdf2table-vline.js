@@ -83,7 +83,7 @@ function parse(pdfBuffer, callback) {
         var text = page.Texts[t]
         let textContent = decodeURIComponent(text.R[0].T)
 
-        let firstYGreater = rowStarts.find(r => r > text.y + 0.2)
+        let firstYGreater = rowStarts.find(r => r > text.y + 0.1)
         let difference = firstYGreater - text.y
         let currentRow = rowStarts.indexOf(firstYGreater) - 1
         if (difference > 0.6) currentRow--
@@ -94,8 +94,9 @@ function parse(pdfBuffer, callback) {
         if (!['EMPTY', 'LIGHT_LO', 'PSNG_SRV', 'QL', 'PN', 'SSR', 'Train Movement Type'].includes(textContent) && currentRow === 4)
           currentRow = 3
 
-        let xThreshold = 0.07
-        if (text.w > 220) xThreshold = 0.085
+        let xThreshold = 0.03
+        if (text.w < 2.85) xThreshold = -0.1
+        if (text.w > 3.9) xThreshold = 0.3
         if (currentRow === 0 && !textContent.includes('Business') && textContent.length > 4) xThreshold = 0.3
         if (currentRow === 1 && !textContent.includes('Days') && textContent.length > 4) xThreshold = 0.3
 

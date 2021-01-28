@@ -78,12 +78,11 @@ async function parseTimings(names, types, trip) {
 
   let formsIndex = names.indexOf('Forms')
 
-  await async.forEachOf(names.slice(5, formsIndex), async (locationName, i) => {
+  await async.forEachOfSeries(names.slice(5, formsIndex), async (locationName, i) => {
     let type = types[i + 5], timing = timings[i]
 
     if (locationName === 'Seymour Standard Gauge Platform') locationName = 'Seymour'
-    if (locationName === 'Clarkefield (New Code)') locationName = 'Clarkefield'
-    if (locationName === 'Riddels Creek') locationName = 'Riddells Creek'
+    if (locationName === 'Advertised departure') return
 
     if (['Arr', 'Dep', 'Plat'].includes(locationName)) {
       type = locationName
@@ -115,7 +114,9 @@ async function parseTimings(names, types, trip) {
 
     if (!timing || timing.includes('…')) return
     let isExpress = timing.includes('*')
-    timing = timing.replace('*', '')
+    if (isExpress) return
+
+    timing = timing.replace(/[du]/, '')
 
     let stationPlatform = stationData.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000) // We don't want to assign to the NSW stop
     if (!stationPlatform) stationPlatform = stationData.bays.find(bay => bay.mode === 'regional train') // Loosen a bit
@@ -131,8 +132,10 @@ async function parseTimings(names, types, trip) {
       tripAttachPoint = stationPlatform.fullStopName.slice(0, -16)
     }
 
+    let exists = !!locations[locationName]
+
     let minutesAftMidnight = utils.getMinutesPastMidnightFromHHMM(timing) + offset
-    if (!isNaN(minutesAftMidnight)) {
+    if (!isNaN(minutesAftMidnight) && !timing.includes('/')) {
       if (previousTime > minutesAftMidnight) {
         offset += 1440
         minutesAftMidnight += offset
@@ -140,9 +143,6 @@ async function parseTimings(names, types, trip) {
       previousTime = minutesAftMidnight
     }
 
-    if (timing.includes('*')) return
-
-    let exists = !!locations[locationName]
     if (!exists) {
       locations[locationName] = {
         stopName: stationPlatform.fullStopName,
@@ -217,7 +217,6 @@ async function parseTimings(names, types, trip) {
   let originDest = `${shortOrigin}-${shortDest}`
   let line = termini[originDest] || termini[shortOrigin] || termini[shortDest]
   let routeGTFSID = routeGTFSIDs[line]
-
 
   return {
     mode: 'regional train',
