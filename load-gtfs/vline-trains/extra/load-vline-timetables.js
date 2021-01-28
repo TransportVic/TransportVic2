@@ -132,10 +132,8 @@ async function parseTimings(names, types, trip) {
       tripAttachPoint = stationPlatform.fullStopName.slice(0, -16)
     }
 
-    let exists = !!locations[locationName]
-
     let minutesAftMidnight = utils.getMinutesPastMidnightFromHHMM(timing) + offset
-    if (!isNaN(minutesAftMidnight) && !timing.includes('/')) {
+    if (!isNaN(minutesAftMidnight)) {
       if (previousTime > minutesAftMidnight) {
         offset += 1440
         minutesAftMidnight += offset
@@ -143,6 +141,7 @@ async function parseTimings(names, types, trip) {
       previousTime = minutesAftMidnight
     }
 
+    let exists = !!locations[locationName]
     if (!exists) {
       locations[locationName] = {
         stopName: stationPlatform.fullStopName,
@@ -333,6 +332,7 @@ database.connect({
     await new Promise(resolve => {
       readFileData(filename, trips, newTrips => {
         trips = newTrips
+        console.log('Completed processing', filename)
         resolve()
       })
     })
