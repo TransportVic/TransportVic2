@@ -206,8 +206,13 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
 
     previousDepartureTime = departureTimeMinutes
 
+    let stopName = stopBay.fullStopName
+    if (stopName === 'Flemington Racecourse Railway Station' && platform_number === '4') {
+      platform_number = '2' // 4 Road is Platform 2
+    }
+
     let stopTiming = {
-      stopName: stopBay.fullStopName,
+      stopName,
       stopNumber: stopBay.stopNumber,
       suburb: stopBay.suburb,
       stopGTFSID: stopBay.stopGTFSID,

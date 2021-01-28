@@ -679,6 +679,10 @@ async function getDeparturesFromPTV(station, db, departuresCount, platform) {
       else platform = '1'
     }
 
+    if (station.stopName === 'Flemington Racecourse Railway Station' && platform === '4') {
+      platform = '2' // 4 Road is Platform 2
+    }
+
     let willSkipCCL = servicesSkippingCCL.some(r => {
       return r.origin === trip.origin.slice(0, -16) && r.departureTime === trip.departureTime && r.destination === trip.destination.slice(0, -16)
     }) || linesSkippingCCL.includes(routes[routeID].route_gtfs_id)
