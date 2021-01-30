@@ -15,7 +15,6 @@ let cliftonHillGroup = [5, 8] // mernda, hurstbridge
 let crossCityGroup = [6, 16, 17, 1482] // frankston, werribee, williamstown, flemington racecourse
 let newportGroup = [16, 17] // werribee, williamstown
 
-
 function tripCloseness(trip, originStop, destinationStop, departureTimeMinutes, arrivalTimeMinutes) {
   let tripOrigin = trip.stopTimings.find(stop => stop.stopName === originStop.stopName)
   let tripDestination = trip.stopTimings.find(stop => stop.stopName === destinationStop.stopName)
