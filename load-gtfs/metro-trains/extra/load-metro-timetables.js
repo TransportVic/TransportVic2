@@ -74,6 +74,7 @@ function readFileData(filename, routeName, callback) {
         platform = tripTiming.platform
 
       if (runID === '0') return
+      if (tripDay === '7') return
 
       let minutesPastMidnight = timeInSeconds / 60
       let timing = minutesPastMidnightTo24Time(minutesPastMidnight)
