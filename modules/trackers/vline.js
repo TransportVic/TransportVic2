@@ -5,7 +5,6 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const getVNETDepartures = require('../vline/get-vnet-departures')
 const handleTripShorted = require('../vline/handle-trip-shorted')
 const findTrip = require('../vline/find-trip')
-const correctARTMBY = require('../vline/correct-art-mby')
 const { getDayOfWeek } = require('../../public-holidays')
 const schedule = require('./scheduler')
 
@@ -59,8 +58,6 @@ async function getDeparturesFromVNET(db) {
     if (!trip && nspTrip) {
       trip = await findTrip(gtfsTimetables, departureDay, nspTrip.origin, nspTrip.destination, nspTrip.departureTime)
     }
-
-    trip = await correctARTMBY(departure, trip, gtfsTimetables, departureDay)
 
     let tripData = {
       date: departureDay,
