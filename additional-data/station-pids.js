@@ -261,7 +261,7 @@ module.exports = {
   "North Shore": [],
   "Aircraft": [],
   "Williams Landing": [...platr(2, [], 'half-platform'), conc('up-down')],
-  "Hoppers Crossing": [],
+  "Hoppers Crossing": [...platr(2, [], 'half-platform')],
   "Werribee": [...platr(3, [], 'half-platform-bold'), conc('up-down')],
   "Westona": [...platr(2, [], 'half-platform')],
   "Seaholme": [],
