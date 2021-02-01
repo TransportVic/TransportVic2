@@ -31,6 +31,7 @@
     "protocol-buffers": "^4.2.0",
     "pug": "^3.0.0",
     "querystring": "^0.2.0",
+    "signalr-client": "^0.0.20",
     "spdy": "^4.0.2",
     "svgo": "^1.3.2",
     "uglify-es": "^3.3.9",

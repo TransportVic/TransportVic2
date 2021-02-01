@@ -296,7 +296,8 @@ module.exports = class MainServer {
       },
 
       RoutePaths: '/route-paths',
-      MetroMap: '/metro-map'
+      MetroMap: '/metro-map',
+      ChatbotTest: '/lxra-map'
     }
 
     Object.keys(routers).forEach(routerName => {
