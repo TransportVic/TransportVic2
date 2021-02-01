@@ -5,7 +5,10 @@ const signalR = require('signalr-client')
 
 let buses = {}
 let types = {
+  58369: "Limited Express FKN",
   58370: "Limited Express FKN",
+  58372: "Stopping All Stations FKN",
+  58373: "Stopping All Stations STY",
   58374: "Stopping All Stations FKN",
   58375: "Stopping All Stations STY"
 }
