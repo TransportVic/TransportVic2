@@ -7,15 +7,14 @@ const departureUtils = require('../utils/get-train-timetables-new')
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 let burnleyGroup = ['Alamein', 'Belgrave', 'Glen Waverley', 'Lilydale']
-let caulfieldGroup = ['Cranbourne', 'Pakenham', 'Sandringham']
-let northernGroup = ['Craigieburn', 'Sunbury', 'Upfield', 'Showgrounds/Flemington']
+let caulfieldGroup = ['Frankston', 'Cranbourne', 'Pakenham', 'Sandringham']
+let dandenongGroup = ['Cranbourne', 'Pakenham']
+let northernGroup = ['Craigieburn', 'Sunbury', 'Upfield', 'Showgrounds/Flemington', 'Werribee', 'Williamstown']
 let cliftonHillGroup = ['Mernda', 'Hurstbridge']
-let crossCityGroup = ['Frankston', 'Werribee', 'Williamstown']
 
 let lineGroups = [
   burnleyGroup, caulfieldGroup,
-  northernGroup, cliftonHillGroup,
-  crossCityGroup
+  northernGroup, cliftonHillGroup
 ]
 
 function filterDepartures(departures, filter) {
@@ -58,9 +57,50 @@ async function genericMatch(train, stopGTFSID, db) {
   if (train.runDestination === 'Parliament') // RMD/JLI -> FSS -> CCL -> PAR
     possibleDestinations.push('Flinders Street')
 
-  let trip = await matchTrip(train, stopGTFSID, db, possibleLines, possibleDestinations)
+  if (train.runDestination === 'Flinders Street' && !train.viaCityLoop)
+    possibleDestinations.push('Parliament')
 
-  console.log(trip)
+  let trip = await matchTrip(train, stopGTFSID, db, possibleLines, possibleDestinations)
+  return trip
+}
+
+async function cfdGroupMatch(train, stopGTFSID, db) {
+  let possibleLines = caulfieldGroup
+
+  let possibleDestinations = [train.runDestination]
+  if (train.runDestination === 'Parliament') // RMD -> FSS -> CCL -> PAR
+    possibleDestinations.push('Flinders Street')
+
+  if (train.runDestination === 'Southern Cross' && !train.viaCityLoop) // RMD -> FSS -> SSS -> NPT (Occo Only)
+    possibleDestinations.push('Flinders Street')
+
+  if (train.runDestination === 'Flagstaff' && train.viaCityLoop) // RMD -> CCL -> FSS -> PAR -> CCL -> FGS -> NME
+    possibleDestinations.push('Flinders Street')
+
+  let trip = await matchTrip(train, stopGTFSID, db, possibleLines, possibleDestinations)
+  return trip
+}
+
+async function norGroupMatch(train, stopGTFSID, db) {
+  let possibleLines = northernGroup
+
+  let possibleDestinations = [train.runDestination]
+  if (train.runDestination === 'Southern Cross' && train.viaCityLoop) // NME -> FGS -> CCL -> FSS -> SSS -> NME (Next trip)
+    possibleDestinations.push('Flinders Street')
+
+  if (train.runDestination === 'Flagstaff' && !train.viaCityLoop) // NME -> SSS -> FSS -> CCL -> FGS -> NME (Next trip)
+    possibleDestinations.push('Flinders Street')
+
+  if (train.runDestination === 'Flinders Street') {
+    if (train.viaCityLoop) {
+      possibleDestinations.push('Southern Cross')
+    } else {// NME -> SSS -> FSS -> CCL -> FGS -> NME (Next trip)
+      possibleDestinations.push('Flagstaff')
+    }
+  }
+
+  let trip = await matchTrip(train, stopGTFSID, db, possibleLines, possibleDestinations)
+  return trip
 }
 
 async function mapTrain(train, metroPlatform, db) {
@@ -69,9 +109,16 @@ async function mapTrain(train, metroPlatform, db) {
   let isInLoop = cityLoopStations.includes(stationName)
 
   let routeName = train.routeName
-  if (burnleyGroup.includes(routeName) || cliftonHillGroup.includes(routeName) || northernGroup.includes(routeName)) {
-    let trip = await genericMatch(train, stopGTFSID, db)
+  let trip
+  if (burnleyGroup.includes(routeName) || cliftonHillGroup.includes(routeName)) {
+    trip = await genericMatch(train, stopGTFSID, db)
+  } else if (caulfieldGroup.includes(routeName)) {
+    trip = await cfdGroupMatch(train, stopGTFSID, db)
+  } else if (northernGroup.includes(routeName)) {
+    trip = await norGroupMatch(train, stopGTFSID, db)
   }
+
+  if (!trip) console.log(train)
 }
 
 async function getDeparturesFromPTV(station, db) {
@@ -79,10 +126,13 @@ async function getDeparturesFromPTV(station, db) {
 
   let url = `/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=12&include_cancelled=true&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor`
   let {departures, runs, routes, directions} = await ptvAPI(url)
+  let now = utils.now()
 
   let parsedDepartures = departures.map(departure => {
     let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
     let estimatedDepartureTime = departure.estimated_departure_utc ? utils.parseTime(departure.estimated_departure_utc) : null
+
+    if (scheduledDepartureTime.diff(now, 'minutes') > 110) return null
 
     let platform = departure.platform_number
     let ptvRunID = departure.run_ref
@@ -112,8 +162,23 @@ async function getDeparturesFromPTV(station, db) {
     if (routeName === 'City Circle') direction = 'Down'
 
     let viaCityLoop = null
+    let runID = null
     if (ptvRunID > 948000) {
-      let viaCityLoop = ptvRunID[3] >= 5
+      let loopIndicator = ptvRunID[3]
+      runID = utils.getRunID(ptvRunID)
+      if (dandenongGroup.includes(routeName)) {
+        if (3999 < runID && runID < 4105) {
+          viaCityLoop = direction === 'Up'
+        } else if (4179 < runID && runID < 4200) { // Night network, loop closed
+          viaCityLoop = false
+        } else if (runID < 4265) {
+          viaCityLoop = direction === 'Up'
+        } else if (4599 < runID && runID < 4800) {
+          viaCityLoop = direction === 'Up'
+        }
+      } else {
+        viaCityLoop = parseInt(loopIndicator) > 5
+      }
     }
 
     return {
@@ -129,7 +194,7 @@ async function getDeparturesFromPTV(station, db) {
       direction,
       viaCityLoop
     }
-  })
+  }).filter(Boolean)
 
   let replacementBuses = parsedDepartures.filter(departure => departure.isRailReplacementBus)
   let trains = parsedDepartures.filter(departure => !departure.isRailReplacementBus)

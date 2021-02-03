@@ -6,9 +6,13 @@ const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
-function trimFromFSS(stops) {
-  let fssIndex = stops.map(stop => stop.stopName).indexOf('Flinders Street Railway Station')
-  return stops.slice(fssIndex)
+function trimFromFSS(trip) {
+  let stops = trip.stopTimings.map(stop => stop.stopName)
+  let fssIndex = stops.indexOf('Flinders Street Railway Station')
+  if (fssIndex >= 0) {
+    if (trip.direction === 'Down') return stops.slice(fssIndex)
+    else return stops.slice(0, fssIndex)
+  } else return stops
 }
 
 async function getDeparture(stopGTFSID, db, mode, possibleLines, departureTime, possibleDestinations, direction, live, viaCityLoop) {
@@ -54,11 +58,14 @@ async function getDeparture(stopGTFSID, db, mode, possibleLines, departureTime, 
     let timetables = await query.toArray()
 
     if (mode === 'metro train' && viaCityLoop !== null) {
-      if (viaCityLoop) {
-        timetables = timetables.filter(t => trimFromFSS(t.stopTimings).find(s => s.stopName === 'Flagstaff Railway Station'))
-      } else {
-        timetables = timetables.filter(t => !trimFromFSS(t.stopTimings).find(s => s.stopName === 'Flagstaff Railway Station'))
-      }
+      timetables = timetables.filter(trip => {
+        let stops = trimFromFSS(trip)
+        if (stops.includes('Flinders Street')) {
+          return viaCityLoop === stops.includes('Flagstaff Railway Station')
+        } else {
+          return true
+        }
+      })
     }
 
     timetables.forEach(timetable => {
@@ -69,9 +76,8 @@ async function getDeparture(stopGTFSID, db, mode, possibleLines, departureTime, 
     allTimetables.push(timetables)
   }
 
-  let timetables = allTimetables.reduce((a, e) => a.concat(e), [])
-
-  return timetables.sort((a, b) => b.sortID - a.sortID)[0]
+  let mergedTimetables = allTimetables.reduce((a, e) => a.concat(e), [])
+  return mergedTimetables.sort((a, b) => b.sortID - a.sortID)[0]
 }
 
 function getScheduledDeparture(stopGTFSID, db, mode, possibleLines, departureTime, possibleDestinations, direction, viaCityLoop) {
