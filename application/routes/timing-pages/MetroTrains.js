@@ -7,11 +7,13 @@ const utils = require('../../../utils')
 const timingUtils = require('./timing-utils')
 
 async function loadDepartures(req, res) {
-  const station = await res.db.getCollection('stops').findDocument({
+  let station = await res.db.getCollection('stops').findDocument({
     codedName: req.params.stationName + '-railway-station'
   })
 
-  if (!station || !station.bays.find(bay => bay.mode === 'metro train')) {
+  let metroPlatform = station ? station.bays.find(bay => bay.mode === 'metro train') : null
+
+  if (!station || !metroPlatform) {
     return res.status(404).render('errors/no-stop')
   }
 
@@ -27,37 +29,17 @@ async function loadDepartures(req, res) {
     })
 
     let {trip} = departure
-    departure.codedLineName = utils.encodeName(trip.routeName)
 
     let origin = trip.trueOrigin.slice(0, -16)
     let originDepartureTime = trip.trueDepartureTime
     let destination = trip.trueDestination.slice(0, -16)
     let destinationArrivalTime = trip.trueDestinationArrivalTime
 
-    let currentStation = departure.trip.stopTimings.find(tripStop => tripStop.stopName === station.stopName)
-    let stopGTFSID, minutesDiff
-    let firstStop = departure.trip.stopTimings[0]
-
-    let departureMinutes = utils.getMinutesPastMidnight(departure.scheduledDepartureTime)
-
-    let fss = departure.trip.stopTimings.find(tripStop => tripStop.stopName === 'Flinders Street Railway Station')
-    if (departure.trip.direction === 'Down' && fss) firstStop = fss
-
-    if (currentStation) {
-      stopGTFSID = currentStation.stopGTFSID
-
-      minutesDiff = currentStation.departureTimeMinutes - firstStop.departureTimeMinutes
-    } else {
-      minutesDiff = firstStop.departureTimeMinutes - departureMinutes
-      if (minutesDiff < 0) minutesDiff += 1440
-    }
-
-    let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
-    let operationDate = utils.getYYYYMMDD(tripStart)
+    let stopGTFSID = metroPlatform.stopGTFSID
 
     departure.tripURL = `${utils.encodeName(origin)}/${originDepartureTime}/`
       + `${utils.encodeName(destination)}/${destinationArrivalTime}/`
-      + `${operationDate}/${stopGTFSID ? `#stop-${stopGTFSID}` : ''}`
+      + `${departure.departureDay}/${stopGTFSID ? `#stop-${stopGTFSID}` : ''}`
 
     departure.destinationURL = `/metro/timings/${utils.encodeName(trip.trueDestination).slice(0, -16)}`
 

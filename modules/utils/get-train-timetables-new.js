@@ -60,7 +60,7 @@ async function getDeparture(stopGTFSID, db, mode, possibleLines, departureTime, 
     if (mode === 'metro train' && viaCityLoop !== null) {
       timetables = timetables.filter(trip => {
         let stops = trimFromFSS(trip)
-        if (stops.includes('Flinders Street')) {
+        if (stops.includes('Flinders Street Railway Station')) {
           return viaCityLoop === stops.includes('Flagstaff Railway Station')
         } else {
           return true
