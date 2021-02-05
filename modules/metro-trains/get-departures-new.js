@@ -134,6 +134,8 @@ async function mapTrain(train, metroPlatform, db) {
     scheduledDepartureTime: train.scheduledDepartureTime,
     estimatedDepartureTime: train.estimatedDepartureTime,
     actualDepartureTime: train.estimatedDepartureTime || train.scheduledDepartureTime,
+    fleetNumber: train.fleetNumber,
+    runID: train.runID,
     platform: train.platform,
     cancelled: train.cancelled,
     routeName: train.routeName,
@@ -194,6 +196,42 @@ function findUpcomingStops(departure, stopGTFSID) {
   departure.tripStops = futureStops.map(stop => stop.stopName.slice(0, -16))
 }
 
+
+async function saveConsists(departures, db) {
+  let metroTrips = db.getCollection('metro trips')
+  let runIDsSeen = []
+  let deduped = departures.filter(dep => {
+    if (!runIDsSeen.includes(dep.runID)) {
+      runIDsSeen.push(dep.runID)
+      return true
+    } else {
+      return false
+    }
+  })
+
+  await async.forEach(deduped, async departure => {
+    if (!departure.fleetNumber) return
+
+    let query = {
+      date: departure.trackerDay,
+      runID: departure.runID
+    }
+
+    let tripData = {
+      ...query,
+      origin: departure.trip.trueOrigin.slice(0, -16),
+      destination: departure.trip.trueDestination.slice(0, -16),
+      departureTime: departure.trip.trueDepartureTime,
+      destinationArrivalTime: departure.trip.trueDestinationArrivalTime,
+      consist: departure.fleetNumber
+    }
+
+    await metroTrips.replaceDocument(query, tripData, {
+      upsert: true
+    })
+  })
+}
+
 async function getDeparturesFromPTV(station, db) {
   let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
 
@@ -251,6 +289,7 @@ async function getDeparturesFromPTV(station, db) {
       routeName,
       runDestination,
       ptvRunID,
+      runID,
       direction,
       viaCityLoop
     }
@@ -266,6 +305,8 @@ async function getDeparturesFromPTV(station, db) {
     appendDepartureDay(departure, metroPlatform.stopGTFSID)
     findUpcomingStops(departure, metroPlatform.stopGTFSID)
   })
+
+  await saveConsists(mappedTrains, db)
 
   return allDepartures
 }
