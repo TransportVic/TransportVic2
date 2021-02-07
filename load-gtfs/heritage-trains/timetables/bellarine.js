@@ -1,6 +1,6 @@
 module.exports = {
   "days": [
-    ["SUN", "0", "0", "0", "0", "0", "0", "1", "20210103", "20210117"]
+    ["SUN", "0", "0", "0", "0", "0", "0", "1", "20210207", "20210307"]
   ],
   "dates": [],
   "trips": [
@@ -26,7 +26,7 @@ module.exports = {
       "mode": "heritage train",
       "routeGTFSID": "13-BPR",
       "calendarID": "SUN",
-      "tripID": "1215.SUN.13-BPR-mjp-1.1.R",
+      "tripID": "1200.SUN.13-BPR-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-BPR-mjp-1.1.R",
       "headsign": "Lakers Siding"
@@ -35,7 +35,7 @@ module.exports = {
       "mode": "heritage train",
       "routeGTFSID": "13-BPR",
       "calendarID": "SUN",
-      "tripID": "1245.SUN.13-BPR-mjp-1.1.H",
+      "tripID": "1230.SUN.13-BPR-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-BPR-mjp-1.1.H",
       "headsign": "Queenscliff"
@@ -44,7 +44,7 @@ module.exports = {
       "mode": "heritage train",
       "routeGTFSID": "13-BPR",
       "calendarID": "SUN",
-      "tripID": "1400.SUN.13-BPR-mjp-1.1.R",
+      "tripID": "1415.SUN.13-BPR-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-BPR-mjp-1.1.R",
       "headsign": "Lakers Siding"
@@ -53,7 +53,7 @@ module.exports = {
       "mode": "heritage train",
       "routeGTFSID": "13-BPR",
       "calendarID": "SUN",
-      "tripID": "1430.SUN.13-BPR-mjp-1.1.H",
+      "tripID": "1445.SUN.13-BPR-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-BPR-mjp-1.1.H",
       "headsign": "Queenscliff"
@@ -131,12 +131,12 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1215.SUN.13-BPR-mjp-1.1.R",
+      "tripID": "1200.SUN.13-BPR-mjp-1.1.R",
       "stopTimings": [
         {
           "stopGTFSID": 13000022,
-          "arrivalTime": "12:15:00",
-          "departureTime": "12:15:00",
+          "arrivalTime": "12:00:00",
+          "departureTime": "12:00:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -145,14 +145,29 @@ module.exports = {
         },
         {
           "stopGTFSID": 13000023,
-          "arrivalTime": "12:22:00",
-          "departureTime": "12:22:00",
+          "arrivalTime": "12:07:00",
+          "departureTime": "12:07:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
           "stopSequence": 0
         },
+        {
+          "stopGTFSID": 13000024,
+          "arrivalTime": "12:15:00",
+          "departureTime": "12:15:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1230.SUN.13-BPR-mjp-1.1.H",
+      "stopTimings": [
         {
           "stopGTFSID": 13000024,
           "arrivalTime": "12:30:00",
@@ -162,14 +177,19 @@ module.exports = {
           },
           "stopDistance": 0,
           "stopSequence": 0
-        }
-      ]
-    },
-    {
-      "tripID": "1245.SUN.13-BPR-mjp-1.1.H",
-      "stopTimings": [
+        },
         {
-          "stopGTFSID": 13000024,
+          "stopGTFSID": 13000023,
+          "arrivalTime": "12:38:00",
+          "departureTime": "12:38:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000022,
           "arrivalTime": "12:45:00",
           "departureTime": "12:45:00",
           "stopConditions": {
@@ -177,54 +197,14 @@ module.exports = {
           },
           "stopDistance": 0,
           "stopSequence": 0
-        },
-        {
-          "stopGTFSID": 13000023,
-          "arrivalTime": "12:53:00",
-          "departureTime": "12:53:00",
-          "stopConditions": {
-            "dropoff": 0, "pickup": 0
-          },
-          "stopDistance": 0,
-          "stopSequence": 0
-        },
-        {
-          "stopGTFSID": 13000022,
-          "arrivalTime": "13:00:00",
-          "departureTime": "13:00:00",
-          "stopConditions": {
-            "dropoff": 0, "pickup": 0
-          },
-          "stopDistance": 0,
-          "stopSequence": 0
         }
       ]
     },
     {
-      "tripID": "1400.SUN.13-BPR-mjp-1.1.R",
+      "tripID": "1415.SUN.13-BPR-mjp-1.1.R",
       "stopTimings": [
         {
           "stopGTFSID": 13000022,
-          "arrivalTime": "14:00:00",
-          "departureTime": "14:00:00",
-          "stopConditions": {
-            "dropoff": 0, "pickup": 0
-          },
-          "stopDistance": 0,
-          "stopSequence": 0
-        },
-        {
-          "stopGTFSID": 13000023,
-          "arrivalTime": "14:07:00",
-          "departureTime": "14:07:00",
-          "stopConditions": {
-            "dropoff": 0, "pickup": 0
-          },
-          "stopDistance": 0,
-          "stopSequence": 0
-        },
-        {
-          "stopGTFSID": 13000024,
           "arrivalTime": "14:15:00",
           "departureTime": "14:15:00",
           "stopConditions": {
@@ -232,12 +212,17 @@ module.exports = {
           },
           "stopDistance": 0,
           "stopSequence": 0
-        }
-      ]
-    },
-    {
-      "tripID": "1430.SUN.13-BPR-mjp-1.1.H",
-      "stopTimings": [
+        },
+        {
+          "stopGTFSID": 13000023,
+          "arrivalTime": "14:22:00",
+          "departureTime": "14:22:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
         {
           "stopGTFSID": 13000024,
           "arrivalTime": "14:30:00",
@@ -247,11 +232,26 @@ module.exports = {
           },
           "stopDistance": 0,
           "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1445.SUN.13-BPR-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopGTFSID": 13000024,
+          "arrivalTime": "14:45:00",
+          "departureTime": "14:45:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
         },
         {
           "stopGTFSID": 13000023,
-          "arrivalTime": "14:38:00",
-          "departureTime": "14:38:00",
+          "arrivalTime": "14:53:00",
+          "departureTime": "14:53:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -260,8 +260,8 @@ module.exports = {
         },
         {
           "stopGTFSID": 13000022,
-          "arrivalTime": "14:45:00",
-          "departureTime": "14:45:00",
+          "arrivalTime": "15:00:00",
+          "departureTime": "15:00:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },

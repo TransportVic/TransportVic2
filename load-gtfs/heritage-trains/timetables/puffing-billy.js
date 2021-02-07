@@ -71,24 +71,6 @@ module.exports = {
       "shapeID": "13-PBR-mjp-1.1.R",
       "headsign": "Belgrave"
     },
-    {
-      "mode": "heritage train",
-      "routeGTFSID": "13-PBR",
-      "calendarID": "BEG_L",
-      "tripID": "1445.BEG_L.13-PBR-mjp-1.1.H",
-      "gtfsDirection": "0",
-      "shapeID": "13-PBR-mjp-1.1.H",
-      "headsign": "Lakeside"
-    },
-    {
-      "mode": "heritage train",
-      "routeGTFSID": "13-PBR",
-      "calendarID": "BEG_L",
-      "tripID": "1645.BEG_L.13-PBR-mjp-1.1.R",
-      "gtfsDirection": "0",
-      "shapeID": "13-PBR-mjp-1.1.R",
-      "headsign": "Belgrave"
-    },
 
     {
       "mode": "heritage train",
@@ -122,7 +104,7 @@ module.exports = {
       "mode": "heritage train",
       "routeGTFSID": "13-PBR",
       "calendarID": "BEG_G",
-      "tripID": "1425.BEG_G.13-PBR-mjp-1.1.R",
+      "tripID": "1445.BEG_G.13-PBR-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-PBR-mjp-1.1.R",
       "headsign": "Belgrave"
@@ -160,7 +142,7 @@ module.exports = {
         {
           "stopGTFSID": 13000004,
           "arrivalTime": "12:30:00",
-          "departureTime": "10:30:00",
+          "departureTime": "12:30:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -169,8 +151,8 @@ module.exports = {
         },
         {
           "stopGTFSID": 13000001,
-          "arrivalTime": "13:30:00",
-          "departureTime": "13:30:00",
+          "arrivalTime": "13:25:00",
+          "departureTime": "13:25:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -219,58 +201,8 @@ module.exports = {
         },
         {
           "stopGTFSID": 13000001,
-          "arrivalTime": "15:45:00",
-          "departureTime": "15:45:00",
-          "stopConditions": {
-            "dropoff": 0, "pickup": 0
-          },
-          "stopDistance": 0,
-          "stopSequence": 0
-        }
-      ]
-    },
-    {
-      "tripID": "1445.BEG_L.13-PBR-mjp-1.1.H",
-      "stopTimings": [
-        {
-          "stopGTFSID": 13000001,
-          "arrivalTime": "14:45:00",
-          "departureTime": "14:45:00",
-          "stopConditions": {
-            "dropoff": 0, "pickup": 0
-          },
-          "stopDistance": 0,
-          "stopSequence": 0
-        },
-        {
-          "stopGTFSID": 13000004,
-          "arrivalTime": "15:45:00",
-          "departureTime": "15:45:00",
-          "stopConditions": {
-            "dropoff": 0, "pickup": 0
-          },
-          "stopDistance": 0,
-          "stopSequence": 0
-        }
-      ]
-    },
-    {
-      "tripID": "1645.BEG_L.13-PBR-mjp-1.1.R",
-      "stopTimings": [
-        {
-          "stopGTFSID": 13000004,
-          "arrivalTime": "16:45:00",
-          "departureTime": "16:45:00",
-          "stopConditions": {
-            "dropoff": 0, "pickup": 0
-          },
-          "stopDistance": 0,
-          "stopSequence": 0
-        },
-        {
-          "stopGTFSID": 13000001,
-          "arrivalTime": "17:45:00",
-          "departureTime": "17:45:00",
+          "arrivalTime": "15:35:00",
+          "departureTime": "15:35:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -320,8 +252,8 @@ module.exports = {
         },
         {
           "stopGTFSID": 13000001,
-          "arrivalTime": "11:55:00",
-          "departureTime": "11:55:00",
+          "arrivalTime": "11:50:00",
+          "departureTime": "11:50:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -357,12 +289,12 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1425.BEG_G.13-PBR-mjp-1.1.R",
+      "tripID": "1445.BEG_G.13-PBR-mjp-1.1.R",
       "stopTimings": [
         {
           "stopGTFSID": 13000006,
-          "arrivalTime": "14:25:00",
-          "departureTime": "14:25:00",
+          "arrivalTime": "14:45:00",
+          "departureTime": "14:45:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -371,8 +303,8 @@ module.exports = {
         },
         {
           "stopGTFSID": 13000001,
-          "arrivalTime": "15:00:00",
-          "departureTime": "15:00:00",
+          "arrivalTime": "16:50:00",
+          "departureTime": "16:50:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
