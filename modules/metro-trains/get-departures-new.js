@@ -20,6 +20,54 @@ let lineGroups = [
   northernGroup, cliftonHillGroup
 ]
 
+function addCityLoopRunning(train) {
+  let { routeName, viaCityLoop, runDestination, runID } = train
+  let loopRunning = []
+
+  if (northernGroup.includes(routeName)) {
+    if (viaCityLoop) {
+      loopRunning = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
+    } else {
+      if (runDestination === 'Southern Cross') {
+        loopRunning = ['NME', 'SSS']
+      } else if (runDestination === 'Flagstaff') {
+        loopRunning = ['SSS', 'FSS', 'PAR', 'MCE', 'FGS']
+      } else {
+        loopRunning = ['NME', 'SSS', 'FSS']
+      }
+    }
+  } else if (cliftonHillGroup.includes(routeName)) {
+    if (viaCityLoop) {
+      loopRunning = ['PAR', 'MCE', 'FGS', 'SSS', 'FSS']
+    } else {
+      if (runDestination === 'Parliament') {
+        loopRunning = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR']
+      } else {
+        loopRunning = ['JLI', 'FSS']
+      }
+    }
+  } else if (burnleyGroup.includes(routeName) || caulfieldGroup.includes(routeName)) {
+    if (viaCityLoop) {
+      loopRunning = ['PAR', 'MCE', 'FGS', 'SSS', 'FSS']
+    } else {
+      if (runDestination === 'Southern Cross') {
+        loopRunning = ['RMD', 'FSS', 'SSS']
+      } else if (runDestination === 'Parliament') {
+        loopRunning = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR']
+      } else {
+        loopRunning = ['RMD', 'FSS']
+      }
+    }
+  } else if (routeName === 'City Circle') {
+    // Reversed a/c "up" train
+    if (800 <= runID <= 899) loopRunning = ['FSS', 'PAR', 'MCE', 'FGS', 'SSS', 'FSS']
+    if (700 <= runID <= 799) loopRunning = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR', 'FSS']
+  }
+
+  if (train.direction === 'Down') loopRunning.reverse()
+  train.cityLoopRunning = loopRunning
+}
+
 function filterDepartures(departures, filter) {
   if (filter) {
     let now = utils.now()
@@ -109,10 +157,13 @@ async function norGroupMatch(train, stopGTFSID, db) {
 async function verifyTrainLoopRunning(train) {
   if (dandenongGroup.includes(train.routeName)) {
     let departureDay = await getDayOfWeek(train.originDepartureTime)
-    if (departureDay === 'Sat' || departureDay === 'Sun') {
-      if (train.runID <= 4105) {
+    if (train.runID <= 4105) {
+      if (departureDay === 'Sat' || departureDay === 'Sun') {
         train.viaCityLoop = false
       }
+    } else if (train.runID < 6999 && train.runID < 7999) {
+      let loopIndicator = train.runID[1]
+      train.viaCityLoop = loopIndicator > 5
     }
   }
 }
@@ -151,6 +202,8 @@ async function mapTrain(train, metroPlatform, db) {
     codedRouteName: utils.encodeName(train.routeName),
     trip,
     destination,
+    direction: train.direction,
+    runDestination: train.runDestination,
     viaCityLoop: train.viaCityLoop,
     isRailReplacementBus: false
   }
@@ -171,7 +224,7 @@ function determineLoopRunning(runID, routeName, direction) {
       viaCityLoop = direction === 'Up'
     }
   } else {
-    viaCityLoop = parseInt(loopIndicator) > 5
+    viaCityLoop = loopIndicator > 5
   }
 
   return viaCityLoop
@@ -323,6 +376,15 @@ async function getDeparturesFromPTV(station, db) {
 
     if (train.destination === 'Flinders Street' && train.viaCityLoop) {
       train.destination = 'City Loop'
+    }
+
+    let isCityTrain = [
+      train.trip.trueOrigin,
+      train.trip.trueDestination
+    ].includes('Flinders Street Railway Station')
+
+    if (isCityTrain) {
+      addCityLoopRunning(train)
     }
   })
 

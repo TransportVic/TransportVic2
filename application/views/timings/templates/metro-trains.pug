@@ -38,8 +38,8 @@ if departures.length
             let {trip} = departure
             let isUpTrip = (trip || {}).direction === 'Up' || trip.runID % 2 === 0
             
-            let cityLoopConfig = departure.cityLoopConfig.join(', ')
-            let altLoopConfig = departure.altLoopConfig.join(', ')
+            let cityLoopConfig = departure.cityLoopRunning.join(', ')
+            let altLoopConfig = []
             
             let configText = []
             let important = false
@@ -61,12 +61,12 @@ if departures.length
             
             if (!isUpTrip && configText.length === 2) configText.reverse()
           
-          //- if configText.length
-            if important
-              span.broadDepartureInfo.important #{configText.join(' -> ')}
-            else
+          if departure.cityLoopRunning
+            //- if important
+            //-   span.broadDepartureInfo.important #{configText.join(' -> ')}
+            //- else
               
-              span.broadDepartureInfo #{configText.join(' -> ')}
+            span.broadDepartureInfo #{departure.cityLoopRunning.join(', ')}
       div.timings
         a(class='timing ' + departure.headwayDevianceClass href=`/metro/run/${departure.tripURL}`)
           span #{departure.pretyTimeToDeparture}
