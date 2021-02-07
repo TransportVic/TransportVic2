@@ -4,6 +4,7 @@ const utils = require('../../utils')
 const findConsist = require('./fleet-parser')
 const departureUtils = require('../utils/get-train-timetables-new')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
+const { getDayOfWeek } = require('../../public-holidays')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
@@ -105,6 +106,17 @@ async function norGroupMatch(train, stopGTFSID, db) {
   return trip
 }
 
+async function verifyTrainLoopRunning(train) {
+  if (dandenongGroup.includes(train.routeName)) {
+    let departureDay = await getDayOfWeek(train.originDepartureTime)
+    if (departureDay === 'Sat' || departureDay === 'Sun') {
+      if (train.runID <= 4105) {
+        train.viaCityLoop = false
+      }
+    }
+  }
+}
+
 async function mapTrain(train, metroPlatform, db) {
   let {stopGTFSID} = metroPlatform
   let stationName = metroPlatform.fullStopName.slice(0, -16)
@@ -126,9 +138,6 @@ async function mapTrain(train, metroPlatform, db) {
   }
 
   let destination = trip.trueDestination.slice(0, -16)
-  if (destination === 'Flinders Street' && train.viaCityLoop) {
-    destination = 'City Loop'
-  }
 
   return {
     scheduledDepartureTime: train.scheduledDepartureTime,
@@ -142,6 +151,7 @@ async function mapTrain(train, metroPlatform, db) {
     codedRouteName: utils.encodeName(train.routeName),
     trip,
     destination,
+    viaCityLoop: train.viaCityLoop,
     isRailReplacementBus: false
   }
 }
@@ -181,6 +191,7 @@ function appendDepartureDay(departure, stopGTFSID) {
   let minutesDiff = stopDepartureMinutes - originDepartureMinutes
   let originDepartureTime = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
 
+  departure.originDepartureTime = originDepartureTime
   departure.departureDay = utils.getYYYYMMDD(originDepartureTime)
   departure.trackerDay = departure.departureDay
   if (originDepartureMinutes >= 1440) {
@@ -307,6 +318,14 @@ async function getDeparturesFromPTV(station, db) {
   })
 
   await saveConsists(mappedTrains, db)
+  await async.forEach(mappedTrains, async train => {
+    await verifyTrainLoopRunning(train)
+
+    if (train.destination === 'Flinders Street' && train.viaCityLoop) {
+      train.destination = 'City Loop'
+    }
+  })
+
 
   return allDepartures
 }
