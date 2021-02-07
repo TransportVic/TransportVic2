@@ -273,7 +273,7 @@ function appendDepartureDay(departure, stopGTFSID) {
 
 function findUpcomingStops(departure, stopGTFSID) {
   let tripStops = departure.trip.stopTimings
-  let currentIndex = tripStops.indexOf(tripStops.find(stop => stop.stopGTFSID === stopGTFSID))
+  let currentIndex = tripStops.findIndex(stop => stop.stopGTFSID === stopGTFSID)
   let stopNames = tripStops.map(stop => stop.stopName.slice(0, -16))
   let futureStops = stopNames.slice(currentIndex + 1)
 
@@ -319,6 +319,7 @@ async function saveConsists(departures, db) {
 
 async function getDeparturesFromPTV(station, db) {
   let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
+  let stationName = metroPlatform.fullStopName.slice(0, -16)
 
   let url = `/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=12&include_cancelled=true&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor`
   let {departures, runs, routes, directions} = await ptvAPI(url)
@@ -395,8 +396,12 @@ async function getDeparturesFromPTV(station, db) {
   await async.forEach(mappedTrains, async train => {
     await verifyTrainLoopRunning(train)
 
-    if (train.destination === 'Flinders Street' && train.viaCityLoop) {
+    if (train.destination === 'Flinders Street' && train.viaCityLoop && !cityStations.includes(stationName)) {
       train.destination = 'City Loop'
+    }
+
+    if (train.routeName === 'City Circle') {
+      train.destination = 'City Circle'
     }
 
     let isCityTrain = [
