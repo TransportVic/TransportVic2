@@ -68,6 +68,23 @@ function addCityLoopRunning(train) {
   train.cityLoopRunning = loopRunning
 }
 
+function addAltonaLoopRunning(train) {
+  let stops = train.allStops
+  let stopsNPTLAV = stops.includes('Newport') && stops.includes('Laverton')
+  let loopRunning = []
+
+  if (stopsNPTLAV) {
+    if (stops.includes('Altona')) { // Via ALT Loop
+      loopRunning = ['WTO', 'ALT', 'SHE']
+    } else { // Via ML
+      loopRunning = ['LAV', 'NPT']
+    }
+
+    if (train.direction === 'Down') loopRunning.reverse()
+    train.altonaLoopRunning = loopRunning
+  }
+}
+
 function filterDepartures(departures, filter) {
   if (filter) {
     let now = utils.now()
@@ -255,9 +272,11 @@ function appendDepartureDay(departure, stopGTFSID) {
 function findUpcomingStops(departure, stopGTFSID) {
   let tripStops = departure.trip.stopTimings
   let currentIndex = tripStops.indexOf(tripStops.find(stop => stop.stopGTFSID === stopGTFSID))
-  let futureStops = tripStops.slice(currentIndex + 1)
+  let stopNames = tripStops.map(stop => stop.stopName.slice(0, -16))
+  let futureStops = stopNames.slice(currentIndex + 1)
 
-  departure.tripStops = futureStops.map(stop => stop.stopName.slice(0, -16))
+  departure.allStops = stopNames
+  departure.futureStops = futureStops
 }
 
 
@@ -383,9 +402,8 @@ async function getDeparturesFromPTV(station, db) {
       train.trip.trueDestination
     ].includes('Flinders Street Railway Station')
 
-    if (isCityTrain) {
-      addCityLoopRunning(train)
-    }
+    if (isCityTrain) addCityLoopRunning(train)
+    if (train.routeName === 'Werribee') addAltonaLoopRunning(train)
   })
 
 

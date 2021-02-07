@@ -1,8 +1,10 @@
+- let cityStations = ['Flinders Street', 'Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
+
 if departures.length
   for departure in departures
     div.departure
       - let { routeName } = departure
-      input(type='hidden' name='stops-at' value=departure.tripStops.join(','))
+      input(type='hidden' name='stops-at' value=departure.futureStops.join(','))
       input(type='hidden' name='platform' value=departure.platform || '')
       input(type='hidden' name='run' value=departure.runID)
       input(type='hidden' name='line' value=routeName)
@@ -34,39 +36,38 @@ if departures.length
           span.broadDepartureInfo.important.clampLine.clamp2 Rail Replacement Bus - Stops #{stopsAt.map(s => s.slice(0, -16)).join(', ')}
         else
           
-          // -
-            let {trip} = departure
-            let isUpTrip = (trip || {}).direction === 'Up' || trip.runID % 2 === 0
+          -
+            let isUpTrip = departure.direction === 'Up'
+            let { futureStops } = departure
             
-            let cityLoopConfig = departure.cityLoopRunning.join(', ')
-            let altLoopConfig = []
-            
+            let cityLoopConfig = departure.cityLoopRunning ? departure.cityLoopRunning.join(', ') : ''
+            let altLoopConfig = departure.altonaLoopRunning ? departure.altonaLoopRunning.join(', ') : ''
+
             let configText = []
             let important = false
             
             if (altLoopConfig.length) {
-              let shouldShow = (isUpTrip && stopsAt.includes('Newport Railway Station'))
-                || (!isUpTrip && stopsAt.includes('Laverton Railway Station'))
-                
+              let shouldShow = (isUpTrip && futureStops.includes('Newport')) || (!isUpTrip && futureStops.includes('Laverton'))
+              
               if (shouldShow) {
                 if (departure.willSkipALT) important = true
                 configText.push(altLoopConfig)
               }
             }
             
-            if (cityLoopStationNames.includes(station.stopName) || isUpTrip) {
+            if (isUpTrip || cityStations.includes(station.stopName.slice(0, -16))) {
               if (departure.willSkipCCL) important = true
               configText.push(cityLoopConfig)
             }
             
             if (!isUpTrip && configText.length === 2) configText.reverse()
-          
-          if departure.cityLoopRunning
-            //- if important
-            //-   span.broadDepartureInfo.important #{configText.join(' -> ')}
-            //- else
+
+          if configText.length
+            if important
+              span.broadDepartureInfo.important #{configText.join(' -> ')}
+            else
               
-            span.broadDepartureInfo #{departure.cityLoopRunning.join(', ')}
+              span.broadDepartureInfo #{configText.join(' -> ')}
       div.timings
         a(class='timing ' + departure.headwayDevianceClass href=`/metro/run/${departure.tripURL}`)
           span #{departure.pretyTimeToDeparture}
