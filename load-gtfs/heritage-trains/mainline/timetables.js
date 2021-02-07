@@ -16,7 +16,8 @@ module.exports = {
     ["707_GRAINLANDER_QUAMBATOOK_SUN", "1", "1", "1", "1", "1", "1", "1", "20210307", "20210307"],
 
     ["SRV_OTWAY_SAT", "1", "1", "1", "1", "1", "1", "1", "20210213", "20210213"],
-    ["SRV_S313_SAT", "1", "1", "1", "1", "1", "1", "1", "20210227", "20210227"]
+    ["SRV_S313_SAT", "1", "1", "1", "1", "1", "1", "1", "20210306", "20210306"],
+    ["SRV_SHM_SUN", "1", "1", "1", "1", "1", "1", "1", "20210314", "20210314"]
   ],
   "dates": [],
   "trips": [
@@ -268,7 +269,7 @@ module.exports = {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
       "calendarID": "SRV_S313_SAT",
-      "tripID": "1110.SRV_S313_SAT.13-MLH-mjp-1.1.H",
+      "tripID": "1056.SRV_S313_SAT.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Seymour"
@@ -277,10 +278,101 @@ module.exports = {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
       "calendarID": "SRV_S313_SAT",
-      "tripID": "1515.SRV_S313_SAT.13-MLH-mjp-1.1.R",
+      "tripID": "1520.SRV_S313_SAT.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Southern Cross"
+    },
+
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_SHM_SUN",
+      "tripID": "0932.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "1",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Sandringham"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_SHM_SUN",
+      "tripID": "1004.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Flinders Street"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_SHM_SUN",
+      "tripID": "1052.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "1",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Sandringham"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_SHM_SUN",
+      "tripID": "1124.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Flinders Street"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_SHM_SUN",
+      "tripID": "1212.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "1",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Sandringham"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_SHM_SUN",
+      "tripID": "1244.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Flinders Street"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_SHM_SUN",
+      "tripID": "1452.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "1",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Sandringham"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_SHM_SUN",
+      "tripID": "1524.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Flinders Street"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_SHM_SUN",
+      "tripID": "1612.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "1",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Sandringham"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_SHM_SUN",
+      "tripID": "1644.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Flinders Street"
     },
   ],
   "timings": [
@@ -1164,12 +1256,12 @@ module.exports = {
 
 
     {
-      "tripID": "1110.SRV_S313_SAT.13-MLH-mjp-1.1.H",
+      "tripID": "1056.SRV_S313_SAT.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Southern Cross",
-          "arrivalTime": "11:10:00",
-          "departureTime": "11:10:00",
+          "arrivalTime": "10:56:00",
+          "departureTime": "10:56:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1178,8 +1270,8 @@ module.exports = {
         },
         {
           "stopName": "Seymour",
-          "arrivalTime": "12:49:00",
-          "departureTime": "12:49:00",
+          "arrivalTime": "12:35:00",
+          "departureTime": "12:35:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1189,12 +1281,12 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1515.SRV_S313_SAT.13-MLH-mjp-1.1.R",
+      "tripID": "1520.SRV_S313_SAT.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Seymour",
-          "arrivalTime": "15:15:00",
-          "departureTime": "15:15:00",
+          "arrivalTime": "15:20:00",
+          "departureTime": "15:20:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1203,8 +1295,260 @@ module.exports = {
         },
         {
           "stopName": "Southern Cross",
-          "arrivalTime": "16:50:00",
-          "departureTime": "16:50:00",
+          "arrivalTime": "16:56:00",
+          "departureTime": "16:56:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+
+
+    {
+      "tripID": "0932.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "09:32:00",
+          "departureTime": "09:32:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Sandringham",
+          "arrivalTime": "10:00:00",
+          "departureTime": "10:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1004.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Sandringham",
+          "arrivalTime": "10:04:00",
+          "departureTime": "10:04:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "10:30:00",
+          "departureTime": "10:30:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1052.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "10:52:00",
+          "departureTime": "10:52:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Sandringham",
+          "arrivalTime": "11:20:00",
+          "departureTime": "11:20:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1124.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Sandringham",
+          "arrivalTime": "11:24:00",
+          "departureTime": "11:24:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "11:50:00",
+          "departureTime": "11:50:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1212.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "12:12:00",
+          "departureTime": "12:12:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Sandringham",
+          "arrivalTime": "12:40:00",
+          "departureTime": "12:40:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1244.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Sandringham",
+          "arrivalTime": "12:44:00",
+          "departureTime": "12:44:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "13:10:00",
+          "departureTime": "13:10:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1452.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "14:52:00",
+          "departureTime": "14:52:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Sandringham",
+          "arrivalTime": "15:20:00",
+          "departureTime": "15:20:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1524.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Sandringham",
+          "arrivalTime": "15:24:00",
+          "departureTime": "15:24:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "15:50:00",
+          "departureTime": "15:50:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1612.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "16:12:00",
+          "departureTime": "16:12:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Sandringham",
+          "arrivalTime": "16:40:00",
+          "departureTime": "16:40:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1644.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Sandringham",
+          "arrivalTime": "16:44:00",
+          "departureTime": "16:44:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "17:10:00",
+          "departureTime": "17:10:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
