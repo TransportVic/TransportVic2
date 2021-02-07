@@ -7,6 +7,7 @@ const getStoppingPattern = require('../utils/get-stopping-pattern')
 const { getDayOfWeek } = require('../../public-holidays')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
+let cityStations = [...cityLoopStations, 'Flinders Street']
 
 let burnleyGroup = ['Alamein', 'Belgrave', 'Glen Waverley', 'Lilydale']
 let caulfieldGroup = ['Frankston', 'Cranbourne', 'Pakenham', 'Sandringham']
@@ -17,7 +18,8 @@ let genericGroup = ['City Circle', 'Stony Point']
 
 let lineGroups = [
   burnleyGroup, caulfieldGroup,
-  northernGroup, cliftonHillGroup
+  northernGroup, cliftonHillGroup,
+  genericGroup
 ]
 
 function addCityLoopRunning(train) {
@@ -398,9 +400,9 @@ async function getDeparturesFromPTV(station, db) {
     }
 
     let isCityTrain = [
-      train.trip.trueOrigin,
-      train.trip.trueDestination
-    ].includes('Flinders Street Railway Station')
+      train.trip.trueOrigin.slice(0, -16),
+      train.trip.trueDestination.slice(0, -16)
+    ].some(stop => cityStations.includes(stop))
 
     if (isCityTrain) addCityLoopRunning(train)
     if (train.routeName === 'Werribee') addAltonaLoopRunning(train)

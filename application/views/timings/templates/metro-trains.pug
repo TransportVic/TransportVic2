@@ -40,26 +40,30 @@ if departures.length
             let isUpTrip = departure.direction === 'Up'
             let { futureStops } = departure
             
-            let cityLoopConfig = departure.cityLoopRunning ? departure.cityLoopRunning.join(', ') : ''
-            let altLoopConfig = departure.altonaLoopRunning ? departure.altonaLoopRunning.join(', ') : ''
+            let cityLoopRunning = departure.cityLoopRunning ? departure.cityLoopRunning.join(', ') : ''
+            let altonaLoopRunning = departure.altonaLoopRunning ? departure.altonaLoopRunning.join(', ') : ''
 
             let configText = []
             let important = false
             
-            if (altLoopConfig.length) {
+            if (altonaLoopRunning.length) {
               let shouldShow = (isUpTrip && futureStops.includes('Newport')) || (!isUpTrip && futureStops.includes('Laverton'))
               
               if (shouldShow) {
                 if (departure.willSkipALT) important = true
-                configText.push(altLoopConfig)
+                configText.push(altonaLoopRunning)
               }
             }
             
-            if (isUpTrip || cityStations.includes(station.stopName.slice(0, -16))) {
-              if (departure.willSkipCCL) important = true
-              configText.push(cityLoopConfig)
+            if (cityLoopRunning.length) {
+              let shouldShow = isUpTrip || cityStations.includes(station.stopName.slice(0, -16))
+              
+              if (shouldShow) {
+                if (departure.willSkipCCL) important = true
+                configText.push(cityLoopRunning)
+              }
             }
-            
+
             if (!isUpTrip && configText.length === 2) configText.reverse()
 
           if configText.length
