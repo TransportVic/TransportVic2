@@ -251,7 +251,17 @@ async function pickBestTrip(data, db) {
 
     let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
 
-    return { trip, tripStartTime, isLive }
+    let needsRedirect = trip.trueOrigin !== originStop.stopName
+      || trip.trueDestination !== destinationStop.stopName
+
+    let actualOriginStop = trip.stopTimings.find(stop => stop.stopName === trip.trueOrigin)
+
+    return {
+      trip,
+      tripStartTime: utils.parseTime(actualOriginStop.scheduledDepartureTime),
+      isLive,
+      needsRedirect
+    }
   } catch (e) {
     global.loggers.general.err('Failed to get Metro trip', e)
     return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null
@@ -265,7 +275,12 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     return res.status(404).render('errors/no-trip')
   }
 
-  let { trip, tripStartTime, isLive } = tripData
+  let { trip, tripStartTime, isLive, needsRedirect } = tripData
+
+  if (needsRedirect) {
+    let operationDay = utils.getYYYYMMDD(tripStartTime)
+    return res.redirect(`/metro/run/${utils.encodeName(trip.trueOrigin.slice(0, -16))}/${trip.trueDepartureTime}/${utils.encodeName(trip.trueDestination.slice(0, -16))}/${trip.trueDestinationArrivalTime}/${operationDay}`)
+  }
 
   let trueOrigin = trip.stopTimings.find(stop => stop.stopName === trip.trueOrigin)
   let firstDepartureTime = trueOrigin.departureTimeMinutes
@@ -307,6 +322,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     }
     return stop
   })
+
   res.render('runs/metro', {
     trip,
     codedLineName: utils.encodeName(trip.routeName)
