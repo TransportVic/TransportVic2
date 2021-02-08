@@ -179,6 +179,11 @@ async function verifyTrainLoopRunning(train) {
     if (train.runID <= 4105) {
       if (departureDay === 'Sat' || departureDay === 'Sun') {
         train.viaCityLoop = false
+      } else {
+        let fssIndex = train.futureStops.indexOf('Flinders Street')
+        if (train.direction === 'Up' && fssIndex !== -1) {
+          train.viaCityLoop = train.futureStops.includes('Parliament')
+        }
       }
     } else if (train.runID < 6999 && train.runID < 7999) {
       let loopIndicator = train.runID[1]
