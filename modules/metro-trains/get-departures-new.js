@@ -60,13 +60,13 @@ function addCityLoopRunning(train) {
         loopRunning = ['RMD', 'FSS']
       }
     }
-  } else if (routeName === 'City Circle') {
-    // Reversed a/c "up" train
-    if (800 <= runID <= 899) loopRunning = ['FSS', 'PAR', 'MCE', 'FGS', 'SSS', 'FSS']
-    if (700 <= runID <= 799) loopRunning = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR', 'FSS']
   }
 
-  if (train.direction === 'Down') loopRunning.reverse()
+  if (routeName === 'City Circle') {
+    if (700 <= runID && runID <= 799) loopRunning = ['FSS', 'PAR', 'MCE', 'FGS', 'SSS', 'FSS']
+    if (800 <= runID && runID <= 899) loopRunning = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR', 'FSS']
+  } else if (train.direction === 'Down') loopRunning.reverse()
+
   train.cityLoopRunning = loopRunning
 }
 
@@ -185,7 +185,7 @@ async function verifyTrainLoopRunning(train) {
           train.viaCityLoop = train.futureStops.includes('Parliament')
         }
       }
-    } else if (train.runID < 6999 && train.runID < 7999) {
+    } else if (6999 < train.runID && train.runID < 7999) {
       let loopIndicator = train.runID[1]
       train.viaCityLoop = loopIndicator > 5
     }
@@ -405,7 +405,7 @@ async function getDeparturesFromPTV(station, db) {
       train.destination = 'City Loop'
     }
 
-    if (train.routeName === 'City Circle') {
+    if (train.routeName === 'City Circle' && stationName === 'Flinders Street') {
       train.destination = 'City Circle'
     }
 
