@@ -19,12 +19,12 @@ module.exports = [{
   routes: ['697', '699', '735', '736', '757', '765', '768'],
   type: 'include'
 }, {
-  name: 'Venture B10BLE',
+  name: 'Ventura B10BLE',
   track: ['V10', 'V30', 'V31', 'V34', 'V35', 'V43', 'V44', 'V78', 'V114', 'V116', 'V137', 'V138', 'V139', 'V304'],
   routes: [],
   type: 'exclude'
 }, {
-  name: 'Venture O405NH',
+  name: 'Ventura O405NH',
   track: ['V548', 'V550', 'V569', 'V570'],
   routes: [],
   type: 'exclude'
@@ -132,7 +132,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Dysons Specials',
-  track: ['D184', 'D185', 'D186', 'D430', 'D431', 'D754', 'D757', 'D758', 'D759', 'D762', 'D763', 'D764'],
+  track: ['D184', 'D185', 'D186', 'D430', 'D431', 'D754', 'D756', 'D757', 'D758', 'D759', 'D762', 'D763', 'D764'],
   routes: [],
   type: 'exclude'
 }, {
