@@ -105,19 +105,17 @@ function filterDepartures(departures, filter) {
 async function matchTrip(train, stopGTFSID, db, possibleLines, possibleDestinations) {
   let fullPossibleDestinations = possibleDestinations.map(dest => dest + ' Railway Station')
 
-  return await departureUtils.getLiveDeparture(
-    stopGTFSID, db, 'metro train', possibleLines,
-    train.scheduledDepartureTime,
-    fullPossibleDestinations,
-    train.direction,
-    train.viaCityLoop
-  ) || await departureUtils.getScheduledDeparture(
-    stopGTFSID, db, 'metro train', possibleLines,
-    train.scheduledDepartureTime,
-    fullPossibleDestinations,
-    train.direction,
-    train.viaCityLoop
-  )
+  let data = {
+    stopGTFSID,
+    possibleLines,
+    departureTime: train.scheduledDepartureTime,
+    possibleDestinations: fullPossibleDestinations,
+    direction: train.direction,
+    viaCityLoop: train.viaCityLoop
+  }
+
+  return await departureUtils.getLiveDeparture(data, db)
+    || await departureUtils.getScheduledDeparture(data, db)
 }
 
 async function genericMatch(train, stopGTFSID, db) {

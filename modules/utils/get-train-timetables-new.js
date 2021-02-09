@@ -15,21 +15,30 @@ function trimFromFSS(trip) {
   } else return stops
 }
 
-async function getDeparture(stopGTFSID, db, mode, possibleLines, departureTime, possibleDestinations, direction, live, viaCityLoop) {
+async function getDeparture(data, db, live) {
+  let {
+    stopGTFSID,
+    possibleLines,
+    departureTime,
+    possibleDestinations,
+    direction,
+    viaCityLoop
+  } = data
+
   let collection = db.getCollection(live ? 'live timetables' : 'gtfs timetables')
 
   let seen = []
   let allTimetables = []
+  let possibleRouteGTFSIDs = possibleLines.map(line => routeGTFSIDs[line])
 
   let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departureTime)
 
   let iterations = 0
-  // Only check past day if within 1.5hr of midnight
-  if (Math.abs(1440 - scheduledDepartureTimeMinutes) < 90 || scheduledDepartureTimeMinutes < 90) iterations = 1
+  // Only check past day if 1.5hr before midnight or 3hr after midnight (for NN)
+  if (Math.abs(1440 - scheduledDepartureTimeMinutes) < 90 || scheduledDepartureTimeMinutes < 180) iterations = 1
 
   for (let i = 0; i <= iterations; i++) {
     let day = departureTime.clone().add(-i, 'days')
-    let possibleRouteGTFSIDs = possibleLines.map(line => routeGTFSIDs[line])
 
     let query = collection.findDocuments({
       _id: {
@@ -44,7 +53,7 @@ async function getDeparture(stopGTFSID, db, mode, possibleLines, departureTime, 
         $in: possibleDestinations
       },
       operationDays: utils.getYYYYMMDD(day),
-      mode,
+      mode: 'metro train',
       stopTimings: {
         $elemMatch: {
           stopGTFSID,
@@ -57,7 +66,7 @@ async function getDeparture(stopGTFSID, db, mode, possibleLines, departureTime, 
     if (!live) query.hint('stop timings gtfs index')
     let timetables = await query.toArray()
 
-    if (mode === 'metro train' && viaCityLoop !== null) {
+    if (viaCityLoop !== null) {
       let filteredTimetables = timetables.filter(trip => {
         let stops = trimFromFSS(trip)
         if (stops.includes('Flinders Street Railway Station')) {
@@ -84,12 +93,12 @@ async function getDeparture(stopGTFSID, db, mode, possibleLines, departureTime, 
   return mergedTimetables.sort((a, b) => b.sortID - a.sortID)[0]
 }
 
-function getScheduledDeparture(stopGTFSID, db, mode, possibleLines, departureTime, possibleDestinations, direction, viaCityLoop) {
-  return getDeparture(stopGTFSID, db, mode, possibleLines, departureTime, possibleDestinations, direction, false, viaCityLoop)
+function getScheduledDeparture(data, db) {
+  return getDeparture(data, db, false)
 }
 
-function getLiveDeparture(stopGTFSID, db, mode, possibleLines, departureTime, possibleDestinations, direction, viaCityLoop) {
-  return getDeparture(stopGTFSID, db, mode, possibleLines, departureTime, possibleDestinations, direction, true, viaCityLoop)
+function getLiveDeparture(data, db) {
+  return getDeparture(data, db, true)
 }
 
 async function getScheduledDepartures(station, db, mode, timeout) {
