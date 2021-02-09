@@ -176,7 +176,7 @@ async function norGroupMatch(train, stopGTFSID, db) {
 async function verifyTrainLoopRunning(train) {
   if (dandenongGroup.includes(train.routeName)) {
     let departureDay = await getDayOfWeek(train.originDepartureTime)
-    if (train.runID <= 4105) {
+    if (train.runID <= 4299) {
       if (departureDay === 'Sat' || departureDay === 'Sun') {
         train.viaCityLoop = false
       } else {
