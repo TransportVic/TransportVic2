@@ -75,7 +75,7 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
       destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(destinationArrivalTime)
 
   let tripDate = trip.date
-  
+
   if (departureTimeMinutes < 180) {
     departureTimeMinutes += 1440
     tripDate = utils.getYYYYMMDD(utils.parseDate(tripDate).add(1, 'day'))
@@ -185,6 +185,38 @@ router.get('/consist', async (req, res) => {
   })
 })
 
+router.get('/hcmt', async (req, res) => {
+  let {db} = res
+  let liveTimetables = db.getCollection('live timetables')
+  let today = utils.getYYYYMMDDNow()
+  let {date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let trips = await liveTimetables.findDocuments({
+    operationDays: date,
+    mode: 'metro train',
+    routeGTFSID: '2-PKM',
+    h: true
+  }).toArray()
+
+  let e = utils.encodeName
+  trips.forEach(trip => {
+    let destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(trip.trueDestinationArrivalTime)
+
+    trip.url = `/metro/run/${e(trip.trueOrigin.slice(0, -16))}/${trip.trueDepartureTime}/${e(trip.trueDestination.slice(0, -16))}/${trip.trueDestinationArrivalTime}/${date}`
+    trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
+  })
+
+
+  res.render('tracker/metro/hcmt', {
+    trips,
+    date: utils.parseTime(date, 'YYYYMMDD')
+  })
+})
+
 router.get('/bot', async (req, res) => {
   let {db} = res
   let metroTrips = db.getCollection('metro trips')
@@ -248,7 +280,7 @@ router.get('/bot', async (req, res) => {
       if (metroType) trip.vehicleType = metroType.type
 
       return trip
-    }),
+    }).sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes),
     extraData
   })
 })
