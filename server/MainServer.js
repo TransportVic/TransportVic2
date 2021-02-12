@@ -30,6 +30,9 @@ if (modules.tracker && modules.tracker['vline-r'])
 if (modules.tracker && modules.tracker.xpt)
   require('../modules/xpt/xpt-updater')
 
+if (modules.tracker && modules.tracker.hcmt)
+  require('../modules/trackers/hcmt')
+
 if (modules.tracker && modules.tracker.metro)
   require('../modules/trackers/metro')
 
@@ -297,7 +300,10 @@ module.exports = class MainServer {
 
       RoutePaths: '/route-paths',
       MetroMap: '/metro-map',
-      ChatbotTest: '/lxra-map'
+      ChatbotTest: {
+        path: '/lxra-map',
+        enable: modules.lxraMap
+      }
     }
 
     Object.keys(routers).forEach(routerName => {

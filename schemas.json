@@ -84,8 +84,9 @@
   "liveTimetable": {
     "mode": "string",
     "routeName": "string",
+    "routeGTFSID": "string",
     "runID": "string",
-    "operationDay": "string",
+    "operationDays": "string",
     "vehicle": "string",
     "stopTimings": [{
       "stopName": "string",

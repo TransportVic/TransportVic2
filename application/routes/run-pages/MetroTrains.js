@@ -154,6 +154,7 @@ async function pickBestTrip(data, db) {
   }
 
   if (!useLive) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null
+  if (referenceTrip && referenceTrip.h) return { trip: referenceTrip, tripStartTime, isLive: true }
 
   let originStopID = originStop.bays.filter(bay => bay.mode === 'metro train')[0].stopGTFSID
   let originTime = tripStartTime.clone()

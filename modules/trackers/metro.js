@@ -8,7 +8,6 @@ const { findTrip } = getMetroDepartures
 const stops = require('../../additional-data/metro-tracker/stops')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const schedule = require('./scheduler')
-const ptvAPI = require('../../ptv-api')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
