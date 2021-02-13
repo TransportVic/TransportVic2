@@ -164,6 +164,7 @@ async function getDepartures(stop) {
   let startOfDay = utils.now().startOf('day')
   let day = utils.getYYYYMMDD(startOfDay)
   let dayOfWeek = await getDayOfWeek(startOfDay)
+  let now = utils.now()
 
   let allTrips = Object.values(extraTrips.reduce((trips, stop) => {
     let runID = stop.trip_id
@@ -203,8 +204,11 @@ async function getDepartures(stop) {
       }
     } else {
       let ptvRunID = 948000 + parseInt(trip.runID)
-      let resp = await ptvAPI(`/v3/pattern/run/${ptvRunID}/route_type/0`)
-      if (resp.departures.length === 0) { // PTV Doesnt have it, likely to be HCMT
+      let resp = await ptvAPI(`/v3/pattern/run/${ptvRunID}/route_type/0?date_utc=${now.toISOString()}`)
+      let firstDeparture = resp.departures[0]
+      let firstDepartureDay = firstDeparture ? utils.getYYYYMMDD(utils.parseTime(firstDeparture.scheduled_departure_utc)) : null
+
+      if (!firstDeparture || firstDepartureDay !== day) { // PTV Doesnt have it, likely to be HCMT
         global.loggers.trackers.metro.log('[HCMT]: Identified HCMT Trip #' + trip.runID)
         await createTrip(trip)
       } else {
