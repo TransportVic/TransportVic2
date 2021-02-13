@@ -208,11 +208,11 @@ router.get('/hcmt', async (req, res) => {
 
     trip.url = `/metro/run/${e(trip.trueOrigin.slice(0, -16))}/${trip.trueDepartureTime}/${e(trip.trueDestination.slice(0, -16))}/${trip.trueDestinationArrivalTime}/${date}`
     trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
+    trip.departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(trip.departureTime)
   })
 
-
   res.render('tracker/metro/hcmt', {
-    trips,
+    trips: trips.sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes),
     date: utils.parseTime(date, 'YYYYMMDD')
   })
 })

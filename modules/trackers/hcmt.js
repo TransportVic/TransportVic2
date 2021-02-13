@@ -6,26 +6,15 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const schedule = require('./scheduler')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const ptvAPI = require('../../ptv-api')
-const { getDayOfWeek } = require('../../public-holidays')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
 let liveTimetables
 
-let weekend = ['Sat', 'Sun']
-let times = {
-  "RMD-FSS": {
-    "Weekday": 4,
-    "Weekend": 3,
-  },
-  "SSS-FSS": {
-    "Weekday": 4,
-    "Weekend": 4
-  },
-  "CDA-PKM": {
-    "Weekday": 6,
-    "Weekend": 6
-  }
+async function getTimetable() {
+  return await utils.getData('metro-op-timetable', '92', async () => {
+    return JSON.parse(await utils.request(urls.op))
+  }, 1000 * 60 * 60)
 }
 
 async function requestMetroData() {
@@ -33,57 +22,66 @@ async function requestMetroData() {
   return data.entries
 }
 
-function appendLastStop(trip) {
-  let type = weekend.includes(trip.dayOfWeek) ? 'Weekend' : 'Weekday'
 
+async function appendLastStop(trip) {
   let prevStop, minutesDiff, stopName, platform
 
   if (trip.direction === 'Down') { // Last stop given CDA
-    prevStop = trip.stopsAvailable.find(stop => stop.stopName === 'Cardinia Road Railway Station')
+    prevStop = trip.stopTimings.find(stop => stop.stopName === 'Cardinia Road Railway Station')
     if (prevStop) {
-      minutesDiff = times['CDA-PKM'][type]
+      minutesDiff = 6
       stopName = 'Pakenham Railway Station'
       platform = '1'
-    }
-  } else { // Last stop given either SSS (VL) or RMD (Direct)
-    prevStop = trip.stopsAvailable[trip.stopsAvailable.length - 1]
-    if (prevStop.stopName === 'Richmond Railway Station') {
-      minutesDiff = times['RMD-FSS'][type]
-    } else if (prevStop.stopName === 'Southern Cross Railway Station') {
-      minutesDiff = times['SSS-FSS'][type]
-    }
-
-    if (minutesDiff) {
-      stopName = 'Flinders Street Railway Station'
-      platform = '7'
     }
   }
 
   if (minutesDiff) {
-    trip.stopsAvailable.push({
-      stopName,
-      scheduledDepartureTime: prevStop.scheduledDepartureTime.clone().add(minutesDiff, 'minutes'),
-      estimatedDepartureTime: prevStop.estimatedDepartureTime.clone().add(minutesDiff, 'minutes'),
-      scheduledDepartureMinutes: prevStop.scheduledDepartureMinutes + minutesDiff,
-      platform
+    let stopData = await dbStops.findDocument({ stopName })
+    let metroBay = stopData.bays.find(bay => bay.mode === 'metro train')
+    let prevScheduled = utils.parseTime(prevStop.scheduledDepartureTime)
+    let prevEstimated = prevStop.estimatedDepartureTime ? utils.parseTime(prevStop.estimatedDepartureTime) : null
+
+    let newScheduled = prevScheduled.clone().add(minutesDiff, 'minutes')
+    let scheduledTime = utils.formatHHMM(newScheduled)
+    let newEstimated = prevEstimated ? prevEstimated.clone().add(minutesDiff, 'minutes').toISOString() : null
+
+    trip.stopTimings.push({
+      stopName: stopName,
+      stopNumber: null,
+      suburb: metroBay.suburb,
+      stopGTFSID: metroBay.stopGTFSID,
+      arrivalTime: scheduledTime,
+      arrivalTimeMinutes: prevStop.departureTimeMinutes + minutesDiff,
+      departureTime: scheduledTime,
+      departureTimeMinutes: prevStop.departureTimeMinutes + minutesDiff,
+      estimatedDepartureTime: newEstimated,
+      scheduledDepartureTime: newScheduled.toISOString(),
+      platform,
+      stopConditions: { pickup: "0", dropoff: "0" }
     })
   }
 }
 
-async function appendNewData(existingTrip, newData) {
+async function appendNewData(existingTrip, stopDescriptors, startOfDay) {
   existingTrip.stopTimings.forEach(stop => {
-    let updatedData = newData.stopsAvailable.find(newStop => newStop.stopName === stop.stopName)
+    let updatedData = stopDescriptors.find(newStop => stop.stopName.includes(newStop.station))
 
     if (updatedData) {
-      stop.estimatedDepartureTime = updatedData.estimatedDepartureTime.toISOString()
-      stop.platform = updatedData.platform
+      stop.estimatedDepartureTime = startOfDay.clone().add(updatedData.estimated_departure_time_seconds, 'seconds').toISOString()
+      stop.platform = updatedData.estimated_platform
     }
   })
 
   let existingLastStop = existingTrip.destination
-  let index = newData.stopsAvailable.findIndex(stop => stop.stopName === existingLastStop)
-  let newStops = await mapStops(newData.stopsAvailable.slice(index + 1))
-  existingTrip.stopTimings = existingTrip.stopTimings.concat(newStops)
+  let index = stopDescriptors.findIndex(stop => existingLastStop.includes(stop.stopName))
+  if (index !== -1) {
+    let baseTrip = stopDescriptors.slice(index + 1).map(stop => parseRawData(stop, startOfDay))
+
+    let newStops = await mapStops(baseTrip, stopDescriptors, startOfDay)
+    existingTrip.stopTimings = existingTrip.stopTimings.concat(newStops)
+  }
+
+  await appendLastStop(existingTrip)
 
   let lastStop = existingTrip.stopTimings[existingTrip.stopTimings.length - 1]
 
@@ -100,12 +98,19 @@ async function appendNewData(existingTrip, newData) {
   })
 }
 
-async function mapStops(stops) {
+async function mapStops(stops, stopDescriptors, startOfDay) {
   return await async.map(stops, async stop => {
     let stopData = await dbStops.findDocument({ stopName: stop.stopName })
     let metroBay = stopData.bays.find(bay => bay.mode === 'metro train')
 
     let scheduledTime = utils.formatHHMM(stop.scheduledDepartureTime)
+    let departureData = stopDescriptors.find(stopDescriptor => stop.stopName.startsWith(stopDescriptor.station))
+    let estimatedDepartureTime, platform = stop.platform
+
+    if (departureData) {
+      estimatedDepartureTime = startOfDay.clone().add(departureData.estimated_departure_time_seconds, 'seconds').toISOString()
+      platform = departureData.estimated_platform
+    }
 
     return {
       stopName: stop.stopName,
@@ -116,16 +121,16 @@ async function mapStops(stops) {
       arrivalTimeMinutes: stop.scheduledDepartureMinutes,
       departureTime: scheduledTime,
       departureTimeMinutes: stop.scheduledDepartureMinutes,
-      estimatedDepartureTime: stop.estimatedDepartureTime.toISOString(),
+      estimatedDepartureTime,
       scheduledDepartureTime: stop.scheduledDepartureTime.toISOString(),
-      platform: stop.platform,
+      platform,
       stopConditions: { pickup: "0", dropoff: "0" }
     }
   })
 }
 
-async function createTrip(trip) {
-  let stopTimings = await mapStops(trip.stopsAvailable)
+async function createTrip(trip, stopDescriptors, startOfDay) {
+  let stopTimings = await mapStops(trip.stopsAvailable, stopDescriptors, startOfDay)
 
   let firstStop = stopTimings[0]
   let lastStop = stopTimings[trip.stopsAvailable.length - 1]
@@ -156,14 +161,25 @@ async function createTrip(trip) {
   await liveTimetables.createDocument(timetable)
 }
 
+function parseRawData(stop, startOfDay) {
+  let scheduledDepartureTime = startOfDay.clone().add(stop.time_seconds, 'seconds')
+
+  return {
+    stopName: stop.station + ' Railway Station',
+    scheduledDepartureTime,
+    scheduledDepartureMinutes: Math.round(parseInt(stop.time_seconds) / 60),
+    platform: stop.platform
+  }
+}
+
 async function getDepartures(stop) {
+  let timetable = await getTimetable()
+  let extraTrips = timetable.filter(trip => trip.trip_id[0] === '7')
   let stopDepartures = await requestMetroData()
-  let extraTrips = stopDepartures.filter(trip => trip.trip_id[0] === '7')
 
   // Tracker only runs at reasonable times, no 3am to worry about
   let startOfDay = utils.now().startOf('day')
   let day = utils.getYYYYMMDD(startOfDay)
-  let dayOfWeek = await getDayOfWeek(startOfDay)
   let now = utils.now()
 
   let allTrips = Object.values(extraTrips.reduce((trips, stop) => {
@@ -172,35 +188,27 @@ async function getDepartures(stop) {
       runID: runID,
       stopsAvailable: [],
       direction: runID[3] % 2 === 0 ? 'Up' : 'Down',
-      operationDays: day,
-      dayOfWeek
+      operationDays: day
     }
 
-    let scheduledDepartureTime = startOfDay.clone().add(stop.time_seconds, 'seconds')
-    let estimatedDepartureTime = startOfDay.clone().add(stop.estimated_departure_time_seconds, 'seconds')
-
-    trips[runID].stopsAvailable.push({
-      stopName: stop.station + ' Railway Station',
-      scheduledDepartureTime,
-      estimatedDepartureTime,
-      scheduledDepartureMinutes: Math.round(parseInt(stop.time_seconds) / 60),
-      platform: stop.estimated_platform
-    })
+    trips[runID].stopsAvailable.push(parseRawData(stop, startOfDay))
 
     return trips
   }, {}))
 
-  await async.forEach(allTrips, async trip => {
-    appendLastStop(trip)
+  let runIDs = allTrips.map(trip => trip.runID)
 
+  await async.forEach(allTrips, async trip => {
     let existingTrip = await liveTimetables.findDocument({
       operationDays: day,
       runID: trip.runID
     })
 
+    let stopDescriptors = stopDepartures.filter(stop => stop.trip_id === trip.runID)
+
     if (existingTrip) {
       if (existingTrip.h) {
-        await appendNewData(existingTrip, trip)
+        await appendNewData(existingTrip, stopDescriptors, startOfDay)
       }
     } else {
       let ptvRunID = 948000 + parseInt(trip.runID)
@@ -210,7 +218,7 @@ async function getDepartures(stop) {
 
       if (!firstDeparture || firstDepartureDay !== day) { // PTV Doesnt have it, likely to be HCMT
         global.loggers.trackers.metro.log('[HCMT]: Identified HCMT Trip #' + trip.runID)
-        await createTrip(trip)
+        await createTrip(trip, stopDescriptors, startOfDay)
       } else {
         await getStoppingPattern(database, ptvRunID, 'metro train')
       }
