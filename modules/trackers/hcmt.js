@@ -80,17 +80,28 @@ async function appendNewData(existingTrip, newData) {
     }
   })
 
+  let existingLastStop = existingTrip.destination
+  let index = newData.stopsAvailable.findIndex(stop => stop.stopName === existingLastStop)
+  let newStops = await mapStops(newData.stopsAvailable.slice(index + 1))
+  existingTrip.stopTimings = existingTrip.stopTimings.concat(newStops)
+
+  let lastStop = existingTrip.stopTimings[existingTrip.stopTimings.length - 1]
+
   await liveTimetables.updateDocument({
     _id: existingTrip._id
   }, {
     $set: {
-      stopTimings: existingTrip.stopTimings
+      stopTimings: existingTrip.stopTimings,
+      trueDestination: lastStop.stopName,
+      destination: lastStop.stopName,
+      trueDestinationArrivalTime: lastStop.arrivalTime,
+      destinationArrivalTime: lastStop.arrivalTime,
     }
   })
 }
 
-async function createTrip(trip) {
-  let stopTimings = await async.map(trip.stopsAvailable, async stop => {
+async function mapStops(stops) {
+  return await async.map(stops, async stop => {
     let stopData = await dbStops.findDocument({ stopName: stop.stopName })
     let metroBay = stopData.bays.find(bay => bay.mode === 'metro train')
 
@@ -111,6 +122,10 @@ async function createTrip(trip) {
       stopConditions: { pickup: "0", dropoff: "0" }
     }
   })
+}
+
+async function createTrip(trip) {
+  let stopTimings = await mapStops(trip.stopsAvailable)
 
   let firstStop = stopTimings[0]
   let lastStop = stopTimings[trip.stopsAvailable.length - 1]
@@ -121,7 +136,7 @@ async function createTrip(trip) {
     routeGTFSID: '2-PKM',
     runID: trip.runID,
     operationDays: trip.operationDays,
-    vehicle: '7x HCMT',
+    vehicle: '7 Car HCMT',
     stopTimings,
     trueDestination: lastStop.stopName,
     destination: lastStop.stopName,
@@ -190,7 +205,7 @@ async function getDepartures(stop) {
       let ptvRunID = 948000 + parseInt(trip.runID)
       let resp = await ptvAPI(`/v3/pattern/run/${ptvRunID}/route_type/0`)
       if (resp.departures.length === 0) { // PTV Doesnt have it, likely to be HCMT
-        global.loggers.metro.log('[HCMT]: Identified HCMT Trip #' + trip.runID)
+        global.loggers.trackers.metro.log('[HCMT]: Identified HCMT Trip #' + trip.runID)
         await createTrip(trip)
       } else {
         await getStoppingPattern(database, ptvRunID, 'metro train')
@@ -214,7 +229,7 @@ database.connect(async () => {
   liveTimetables = database.getCollection('live timetables')
 
   schedule([
-    [360, 1199, 4],
-    [1200, 1380, 5]
+    [360, 1199, 3],
+    [1200, 1380, 4]
   ], requestTimings, 'hcmt tracker', global.loggers.trackers.metro)
 })
