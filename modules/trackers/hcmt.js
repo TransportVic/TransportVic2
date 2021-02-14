@@ -14,7 +14,7 @@ let liveTimetables
 async function getTimetable() {
   return await utils.getData('metro-op-timetable', '92', async () => {
     return JSON.parse(await utils.request(urls.op))
-  }, 1000 * 60 * 60)
+  }, 1000 * 60 * 12)
 }
 
 async function requestMetroData() {
@@ -62,7 +62,7 @@ async function appendLastStop(trip) {
   }
 }
 
-async function appendNewData(existingTrip, stopDescriptors, startOfDay) {
+async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
   existingTrip.stopTimings.forEach(stop => {
     let updatedData = stopDescriptors.find(newStop => stop.stopName.includes(newStop.station))
 
@@ -95,6 +95,7 @@ async function appendNewData(existingTrip, stopDescriptors, startOfDay) {
       destination: lastStop.stopName,
       trueDestinationArrivalTime: lastStop.arrivalTime,
       destinationArrivalTime: lastStop.arrivalTime,
+      cancelled: trip.stopsAvailable[0].cancelled
     }
   })
 }
@@ -156,6 +157,7 @@ async function createTrip(trip, stopDescriptors, startOfDay) {
     direction: trip.direction,
     shapeID: '',
     gtfsMode: 2,
+    cancelled: trip.stopsAvailable[0].cancelled,
     h: true
   }
 
@@ -169,7 +171,8 @@ function parseRawData(stop, startOfDay) {
     stopName: stop.station + ' Railway Station',
     scheduledDepartureTime,
     scheduledDepartureMinutes: Math.round(parseInt(stop.time_seconds) / 60),
-    platform: stop.platform
+    platform: stop.platform,
+    cancelled: stop.status === 'C'
   }
 }
 
@@ -209,7 +212,7 @@ async function getDepartures(stop) {
 
     if (existingTrip) {
       if (existingTrip.h) {
-        await appendNewData(existingTrip, stopDescriptors, startOfDay)
+        await appendNewData(existingTrip, trip, stopDescriptors, startOfDay)
       }
     } else {
       let ptvRunID = 948000 + parseInt(trip.runID)
