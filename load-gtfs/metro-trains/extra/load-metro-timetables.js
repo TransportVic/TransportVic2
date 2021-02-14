@@ -74,7 +74,7 @@ function readFileData(filename, routeName, callback) {
         platform = tripTiming.platform
 
       if (runID === '0') return
-      if (tripDay === '7') return
+      if (tripDay > 3) return
 
       let minutesPastMidnight = timeInSeconds / 60
       let timing = minutesPastMidnightTo24Time(minutesPastMidnight)
@@ -136,7 +136,22 @@ function readFileData(filename, routeName, callback) {
 
     trips = Object.values(trips)
 
-    await async.forEach(trips, async trip => {
+    let weekdayTrips = trips.filter(trip => trip.operationDays[0] === 'Mon')
+    let fridayTrips = trips.filter(trip => trip.operationDays[0] === 'Fri')
+
+    let dupeFriday = fridayTrips.filter(trip => {
+      let weekday = weekdayTrips.find(weekdayTrip => weekdayTrip.runID === trip.runID)
+      if (weekday) {
+        weekday.operationDays.push('Fri')
+        return true
+      } else {
+        return false
+      }
+    })
+
+    let monFriMerged = trips.filter(trip => !dupeFriday.includes(trip))
+
+    await async.forEach(monFriMerged, async trip => {
       trip.stopTimings = Object.values(trip.stopTimings)
         .sort((a, b) => a.sortTime - b.sortTime)
         .map(a => {
@@ -163,7 +178,7 @@ function readFileData(filename, routeName, callback) {
       await timetables.createDocument(trip)
     })
 
-    callback(trips.length)
+    callback(monFriMerged.length)
   })
 }
 

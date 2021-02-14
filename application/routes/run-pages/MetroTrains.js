@@ -158,7 +158,9 @@ async function pickBestTrip(data, db) {
     let needsRedirect = referenceTrip.trueOrigin !== originStop.stopName
       || referenceTrip.trueDestination !== destinationStop.stopName
 
-    return { trip: referenceTrip, tripStartTime, isLive: true, needsRedirect }
+    let isLive = referenceTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
+
+    return { trip: referenceTrip, tripStartTime, isLive, needsRedirect }
   }
 
   let originStopID = originStop.bays.filter(bay => bay.mode === 'metro train')[0].stopGTFSID
