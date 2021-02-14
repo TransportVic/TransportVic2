@@ -73,7 +73,8 @@ async function appendNewData(existingTrip, stopDescriptors, startOfDay) {
   })
 
   let existingLastStop = existingTrip.destination
-  let index = stopDescriptors.findIndex(stop => existingLastStop.includes(stop.stopName))
+  let index = stopDescriptors.findIndex(stop => existingLastStop.includes(stop.station))
+
   if (index !== -1) {
     let baseTrip = stopDescriptors.slice(index + 1).map(stop => parseRawData(stop, startOfDay))
 
@@ -204,7 +205,7 @@ async function getDepartures(stop) {
       runID: trip.runID
     })
 
-    let stopDescriptors = stopDepartures.filter(stop => stop.trip_id === trip.runID)
+    let stopDescriptors = stopDepartures.filter(stop => stop.trip_id === trip.runID).sort((a, b) => a.time_seconds - b.time_seconds)
 
     if (existingTrip) {
       if (existingTrip.h) {
