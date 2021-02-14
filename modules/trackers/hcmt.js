@@ -27,8 +27,8 @@ async function appendLastStop(trip) {
   let prevStop, minutesDiff, stopName, platform
 
   if (trip.direction === 'Down') { // Last stop given CDA
-    prevStop = trip.stopTimings.find(stop => stop.stopName === 'Cardinia Road Railway Station')
-    if (prevStop) {
+    prevStop = trip.stopTimings[trip.stopTimings.length - 1]
+    if (prevStop && prevStop.stopName === 'Cardinia Road Railway Station') {
       minutesDiff = 6
       stopName = 'Pakenham Railway Station'
       platform = '1'
