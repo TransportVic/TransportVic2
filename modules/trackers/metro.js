@@ -17,10 +17,10 @@ function shouldRun() {
   let minutes = utils.getMinutesPastMidnightNow()
   let dayOfWeek = utils.getDayOfWeek(utils.now())
 
-  if (minutes >= 300 || minutes <= 60) return true
+  if (minutes >= 240 || minutes <= 60) return true // from 4am to 1am (next day)
 
   if (['Sat', 'Sun'].includes(dayOfWeek)) { // Considering the true day, NN runs on sat & sun morn
-    return minutes < 300 // 2359 - 0459
+    return minutes < 240 // 2359 - 0459
   }
 
   return false
@@ -31,8 +31,6 @@ function pickRandomStop() {
 }
 
 async function getDepartures(stop) {
-  if (!shouldRun()) return
-
   let stopData = await dbStops.findDocument({ stopName: stop + ' Railway Station' })
   let departures = await getMetroDepartures(stopData, database)
   let requestLive = departures.filter(d => !d.isRailReplacementBus).slice(0, 5)
@@ -43,6 +41,8 @@ async function getDepartures(stop) {
 }
 
 async function requestTimings() {
+  if (!shouldRun()) return
+
   let stop = pickRandomStop()
   global.loggers.trackers.metro.info('requesting timings for', stop)
 
@@ -59,8 +59,8 @@ database.connect(async () => {
 
   schedule([
     [0, 60, 1.2],
-    [61, 299, 1.2],
-    [300, 1079, 0.5],
+    [61, 239, 1.2],
+    [240, 1079, 0.5],
     [1080, 1199, 0.3333],
     [1200, 1380, 0.5],
     [1381, 1440, 0.45]

@@ -82,10 +82,13 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   if (time) {
     if (mode === 'metro train') {
       let startTime = utils.parseTime(time)
-      if (utils.getMinutesPastMidnight(startTime) < 180) {
+      let now = utils.now()
+      if (utils.getMinutesPastMidnight(startTime) < 180) { // trip starts in the 3am overlap, we want it from the 'previous' day
         url += `&date_utc=${startTime.add(-3.5, 'hours').toISOString()}`
-      } else {
-        url += `&date_utc=${new Date().toISOString()}`
+      } else if (utils.getMinutesPastMidnight(now) < 180) { // trip starts before the 3am overlap but it is currently 1-3am. hence requesting for previous day's times
+        url += `&date_utc=${now.add(-3.5, 'hours').toISOString()}`
+      } else { // sane trip, request with time now
+        url += `&date_utc=${now.toISOString()}`
       }
     } else {
       url += `&date_utc=${time}`
