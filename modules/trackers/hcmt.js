@@ -22,43 +22,45 @@ async function requestMetroData() {
   return data.entries
 }
 
+async function createStop(prevStop, minutesDiff, stopName, platform) {
+  let stopData = await dbStops.findDocument({ stopName })
+  let metroBay = stopData.bays.find(bay => bay.mode === 'metro train')
+  let prevScheduled = utils.parseTime(prevStop.scheduledDepartureTime)
+  let prevEstimated = prevStop.estimatedDepartureTime ? utils.parseTime(prevStop.estimatedDepartureTime) : null
+
+  let newScheduled = prevScheduled.clone().add(minutesDiff, 'minutes')
+  let scheduledTime = utils.formatHHMM(newScheduled)
+  let newEstimated = prevEstimated ? prevEstimated.clone().add(minutesDiff, 'minutes').toISOString() : null
+
+  return {
+    stopName: stopName,
+    stopNumber: null,
+    suburb: metroBay.suburb,
+    stopGTFSID: metroBay.stopGTFSID,
+    arrivalTime: scheduledTime,
+    arrivalTimeMinutes: prevStop.departureTimeMinutes + minutesDiff,
+    departureTime: scheduledTime,
+    departureTimeMinutes: prevStop.departureTimeMinutes + minutesDiff,
+    estimatedDepartureTime: newEstimated,
+    scheduledDepartureTime: newScheduled.toISOString(),
+    platform,
+    stopConditions: { pickup: "0", dropoff: "0" }
+  }
+}
 
 async function appendLastStop(trip) {
-  let prevStop, minutesDiff, stopName, platform
-
-  if (trip.direction === 'Down') { // Last stop given CDA
+  if (trip.direction === 'Down') { // Last stop given OFC/CDA
     prevStop = trip.stopTimings[trip.stopTimings.length - 1]
-    if (prevStop && prevStop.stopName === 'Cardinia Road Railway Station') {
-      minutesDiff = 6
-      stopName = 'Pakenham Railway Station'
-      platform = '1'
+
+    if (prevStop && prevStop.stopName === 'Officer Railway Station') {
+      let cdaStop = await createStop(prevStop, 3, 'Cardinia Road Railway Station', '2')
+      trip.stopTimings.push(cdaStop)
+      prevStop = cdaStop
     }
-  }
 
-  if (minutesDiff) {
-    let stopData = await dbStops.findDocument({ stopName })
-    let metroBay = stopData.bays.find(bay => bay.mode === 'metro train')
-    let prevScheduled = utils.parseTime(prevStop.scheduledDepartureTime)
-    let prevEstimated = prevStop.estimatedDepartureTime ? utils.parseTime(prevStop.estimatedDepartureTime) : null
-
-    let newScheduled = prevScheduled.clone().add(minutesDiff, 'minutes')
-    let scheduledTime = utils.formatHHMM(newScheduled)
-    let newEstimated = prevEstimated ? prevEstimated.clone().add(minutesDiff, 'minutes').toISOString() : null
-
-    trip.stopTimings.push({
-      stopName: stopName,
-      stopNumber: null,
-      suburb: metroBay.suburb,
-      stopGTFSID: metroBay.stopGTFSID,
-      arrivalTime: scheduledTime,
-      arrivalTimeMinutes: prevStop.departureTimeMinutes + minutesDiff,
-      departureTime: scheduledTime,
-      departureTimeMinutes: prevStop.departureTimeMinutes + minutesDiff,
-      estimatedDepartureTime: newEstimated,
-      scheduledDepartureTime: newScheduled.toISOString(),
-      platform,
-      stopConditions: { pickup: "0", dropoff: "0" }
-    })
+    if (prevStop && prevStop.stopName === 'Cardinia Road Railway Station') {
+      trip.stopTimings.push(await createStop(prevStop, 6, 'Pakenham Railway Station', '1'))
+    }
   }
 }
 
@@ -134,8 +136,15 @@ async function mapStops(stops, stopDescriptors, startOfDay) {
 async function createTrip(trip, stopDescriptors, startOfDay) {
   let stopTimings = await mapStops(trip.stopsAvailable, stopDescriptors, startOfDay)
 
-  let firstStop = stopTimings[0]
-  let lastStop = stopTimings[trip.stopsAvailable.length - 1]
+  let baseTrip = {
+    stopTimings,
+    direction: trip.direction
+  }
+
+  await appendLastStop(baseTrip)
+
+  let firstStop = baseTrip.stopTimings[0]
+  let lastStop = baseTrip.stopTimings[baseTrip.stopTimings.length - 1]
 
   let timetable = {
     mode: 'metro train',
@@ -144,7 +153,7 @@ async function createTrip(trip, stopDescriptors, startOfDay) {
     runID: trip.runID,
     operationDays: trip.operationDays,
     vehicle: '7 Car HCMT',
-    stopTimings,
+    stopTimings: baseTrip.stopTimings,
     trueDestination: lastStop.stopName,
     destination: lastStop.stopName,
     trueDestinationArrivalTime: lastStop.arrivalTime,
