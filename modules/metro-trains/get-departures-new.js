@@ -178,9 +178,10 @@ async function verifyTrainLoopRunning(train) {
       if (departureDay === 'Sat' || departureDay === 'Sun') {
         train.viaCityLoop = false
       } else {
-        let fssIndex = train.futureStops.indexOf('Flinders Street')
+        let fssIndex = train.allStops.indexOf('Flinders Street')
         if (train.direction === 'Up' && fssIndex !== -1) {
-          train.viaCityLoop = train.futureStops.includes('Parliament')
+          let parIndex = train.allStops.indexOf('Parliament')
+          train.viaCityLoop = parIndex < fssIndex // PAR before FSS
         }
       }
     } else if (6999 < train.runID && train.runID < 7999) {
