@@ -22,7 +22,7 @@ let lineGroups = [
   genericGroup
 ]
 
-function addCityLoopRunning(train) {
+function addCityLoopRunning(train, stationName) {
   let { routeName, viaCityLoop, runDestination, runID } = train
   let loopRunning = []
 
@@ -54,7 +54,7 @@ function addCityLoopRunning(train) {
     } else {
       if (runDestination === 'Southern Cross') {
         loopRunning = ['RMD', 'FSS', 'SSS']
-      } else if (runDestination === 'Parliament') {
+      } else if (runDestination === 'Parliament' || cityLoopStations.includes(stationName)) {
         loopRunning = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR']
       } else {
         loopRunning = ['RMD', 'FSS']
@@ -118,7 +118,7 @@ async function matchTrip(train, stopGTFSID, db, possibleLines, possibleDestinati
     || await departureUtils.getScheduledDeparture(data, db)
 }
 
-async function genericMatch(train, stopGTFSID, db) {
+async function genericMatch(train, stopGTFSID, stationName, db) {
   let possibleLines = lineGroups.find(group => group.includes(train.routeName)) || train.routeName
 
   let possibleDestinations = [train.runDestination]
@@ -132,7 +132,7 @@ async function genericMatch(train, stopGTFSID, db) {
   return trip
 }
 
-async function cfdGroupMatch(train, stopGTFSID, db) {
+async function cfdGroupMatch(train, stopGTFSID, stationName, db) {
   let possibleLines = caulfieldGroup
 
   let possibleDestinations = [train.runDestination]
@@ -149,7 +149,7 @@ async function cfdGroupMatch(train, stopGTFSID, db) {
   return trip
 }
 
-async function norGroupMatch(train, stopGTFSID, db) {
+async function norGroupMatch(train, stopGTFSID, stationName, db) {
   let possibleLines = northernGroup
 
   let possibleDestinations = [train.runDestination]
@@ -162,12 +162,25 @@ async function norGroupMatch(train, stopGTFSID, db) {
   if (train.runDestination === 'Flinders Street') {
     if (train.viaCityLoop) {
       possibleDestinations.push('Southern Cross')
-    } else {// NME -> SSS -> FSS -> CCL -> FGS -> NME (Next trip)
+    } else { // NME -> SSS -> FSS -> CCL -> FGS -> NME (Next trip)
       possibleDestinations.push('Flagstaff')
     }
   }
 
-  let trip = await matchTrip(train, stopGTFSID, db, possibleLines, possibleDestinations)
+  let trip
+
+  if (stationName === 'Southern Cross' && train.runDestination !== 'Flinders Street') { // Look for SSS -> FSS -> SSS reverse stunt
+    // These reverse runs seem to always be on the same line (so SUY->SUY for eg)
+    trip = await matchTrip({
+      ...train,
+      direction: 'Up'
+    }, stopGTFSID, db, [train.routeName], ['Flinders Street'])
+  }
+
+  if (!trip) {
+    trip = await matchTrip(train, stopGTFSID, db, possibleLines, possibleDestinations)
+  }
+
   return trip
 }
 
@@ -199,11 +212,11 @@ async function mapTrain(train, metroPlatform, db) {
   let routeName = train.routeName
   let trip
   if (burnleyGroup.includes(routeName) || cliftonHillGroup.includes(routeName) || genericGroup.includes(routeName)) {
-    trip = await genericMatch(train, stopGTFSID, db)
+    trip = await genericMatch(train, stopGTFSID, stationName, db)
   } else if (caulfieldGroup.includes(routeName)) {
-    trip = await cfdGroupMatch(train, stopGTFSID, db)
+    trip = await cfdGroupMatch(train, stopGTFSID, stationName, db)
   } else if (northernGroup.includes(routeName)) {
-    trip = await norGroupMatch(train, stopGTFSID, db)
+    trip = await norGroupMatch(train, stopGTFSID, stationName, db)
   }
 
   if (!trip) {
@@ -413,7 +426,7 @@ async function getDeparturesFromPTV(station, db) {
       train.trip.trueDestination.slice(0, -16)
     ].some(stop => cityStations.includes(stop))
 
-    if (isCityTrain) addCityLoopRunning(train)
+    if (isCityTrain) addCityLoopRunning(train, stationName)
     if (train.routeName === 'Werribee') addAltonaLoopRunning(train)
   })
 
