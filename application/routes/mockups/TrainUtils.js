@@ -416,7 +416,8 @@ module.exports = {
 
     function fromRoute() {
       if (northernGroup.includes(routeName)) via = 'via Sthn Cross'
-      else if (cliftonHillGroup.includes(routeName)) via = 'via Jolimont'
+      // else if (cliftonHillGroup.includes(routeName)) via = 'via Jolimont'
+      else if (cliftonHillGroup.includes(routeName)) via = '' // Apparently there's no via JLI
       else via = 'via Richmond'
     }
 
