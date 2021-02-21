@@ -178,6 +178,11 @@ module.exports = class MainServer {
       windowMs: 1 * 60 * 1000,
       max: 140
     }))
+
+    app.use('/bus/timings', rateLimit({
+      windowMs: 1 * 60 * 1000,
+      max: 20
+    }))
   }
 
   async configRoutes (app) {
