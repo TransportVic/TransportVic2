@@ -204,6 +204,65 @@ async function verifyTrainLoopRunning(train) {
   }
 }
 
+function returnBusDeparture(bus, trip) {
+  let destination = trip.destination.slice(0, -16)
+
+  return {
+    scheduledDepartureTime: bus.scheduledDepartureTime,
+    estimatedDepartureTime: null,
+    actualDepartureTime: bus.scheduledDepartureTime,
+    fleetNumber: null,
+    runID: null,
+    platform: null,
+    cancelled: null,
+    routeName: bus.routeName,
+    codedRouteName: utils.encodeName(bus.routeName),
+    trip,
+    destination,
+    direction: bus.direction,
+    runDestination: destination,
+    viaCityLoop: null,
+    isRailReplacementBus: true
+  }
+}
+
+async function expandSkeleton(bus, allBuses, db) {
+  let {originalBus} = bus
+
+  let matchingDeparture = allBuses.find(potentialMatch => {
+    return originalBus.scheduledDepartureTime.isSame(potentialMatch.scheduledDepartureTime)
+      && originalBus.direction === potentialMatch.direction
+      && bus.possibleLines.includes(potentialMatch.routeName)
+  })
+
+  if (matchingDeparture) return
+  let trip = await getStoppingPattern(db, originalBus.ptvRunID, 'metro train', originalBus.scheduledDepartureTime.toISOString())
+
+  return returnBusDeparture(originalBus, trip)
+}
+
+async function mapBus(bus, metroPlatform, db) {
+  let {stopGTFSID} = metroPlatform
+
+  let destination = bus.runDestination
+
+  let possibleLines = lineGroups.find(group => group.includes(bus.routeName)) || bus.routeName
+  let trip = await matchTrip(bus, stopGTFSID, db, possibleLines, [destination])
+
+  if (trip) {
+    return returnBusDeparture(bus, trip)
+  } else {
+    // No trip - could be fake trips from PTV (eg buses NME-WER, SUY will show NME-FSY)
+    return {
+      skeleton: true,
+      destination,
+      possibleLines,
+      stopGTFSID,
+      originalBus: bus
+    }
+  }
+}
+
 async function mapTrain(train, metroPlatform, db) {
   let {stopGTFSID} = metroPlatform
   let stationName = metroPlatform.fullStopName.slice(0, -16)
@@ -401,9 +460,16 @@ async function getDeparturesFromPTV(station, db) {
   let replacementBuses = parsedDepartures.filter(departure => departure.isRailReplacementBus)
   let trains = parsedDepartures.filter(departure => !departure.isRailReplacementBus)
 
+  let initalMappedBuses = await async.map(replacementBuses, async bus => await mapBus(bus, metroPlatform, db))
+  let nonSkeleton = initalMappedBuses.filter(bus => !bus.skeleton)
+  let mappedBuses = (await async.map(initalMappedBuses, async bus => {
+    if (bus.skeleton) return await expandSkeleton(bus, nonSkeleton, db)
+    else return bus
+  })).filter(Boolean)
   let mappedTrains = await async.map(trains, async train => await mapTrain(train, metroPlatform, db))
 
-  let allDepartures = [...mappedTrains].sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+  let allDepartures = [...mappedTrains, ...mappedBuses]
+
   allDepartures.forEach(departure => {
     appendDepartureDay(departure, metroPlatform.stopGTFSID)
     findUpcomingStops(departure, metroPlatform.stopGTFSID)
@@ -429,7 +495,6 @@ async function getDeparturesFromPTV(station, db) {
     if (isCityTrain) addCityLoopRunning(train, stationName)
     if (train.routeName === 'Werribee') addAltonaLoopRunning(train)
   })
-
 
   return allDepartures
 }
