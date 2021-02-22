@@ -463,15 +463,11 @@ async function saveRailBuses(buses, db) {
   })
 }
 
-async function getDeparturesFromPTV(station, db) {
-  let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
-  let stationName = metroPlatform.fullStopName.slice(0, -16)
-
-  let url = `/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor`
-  let {departures, runs, routes, directions} = await ptvAPI(url)
+function parsePTVDepartures(ptvResponse) {
+  let {departures, runs, routes, directions} = ptvResponse
   let now = utils.now()
 
-  let parsedDepartures = departures.map(departure => {
+  return departures.map(departure => {
     let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
     let estimatedDepartureTime = departure.estimated_departure_utc ? utils.parseTime(departure.estimated_departure_utc) : null
 
@@ -526,11 +522,23 @@ async function getDeparturesFromPTV(station, db) {
       viaCityLoop
     }
   }).filter(Boolean)
+}
+
+async function getDeparturesFromPTV(station, db) {
+  let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
+  let stationName = metroPlatform.fullStopName.slice(0, -16)
+
+  let url = `/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor`
+  let ptvResponse = await ptvAPI(url)
+
+  let parsedDepartures = parsePTVDepartures(ptvResponse)
 
   let replacementBuses = parsedDepartures.filter(departure => departure.isRailReplacementBus)
   let trains = parsedDepartures.filter(departure => !departure.isRailReplacementBus)
 
   let initalMappedBuses = await async.map(replacementBuses, async bus => await mapBus(bus, metroPlatform, db))
+  let initialMappedTrains = await async.map(trains, async train => await mapTrain(train, metroPlatform, db))
+
   let nonSkeleton = initalMappedBuses.filter(bus => !bus.skeleton)
   let mappedBuses = (await async.map(initalMappedBuses, async bus => {
     if (bus.skeleton) return await expandSkeleton(bus, nonSkeleton, db)
@@ -538,10 +546,11 @@ async function getDeparturesFromPTV(station, db) {
   })).filter(Boolean)
 
   let extraBuses = await getMissingRailBuses(mappedBuses, metroPlatform, db)
-  let allRailBuses = [...mappedBuses, ...extraBuses]
-  let mappedTrains = await async.map(trains, async train => await mapTrain(train, metroPlatform, db))
+  let mappedTrains = initialMappedTrains.filter(departure => !departure.isRailReplacementBus)
+  let suspensionBuses = initialMappedTrains.filter(departure => departure.isRailReplacementBus)
+  let allRailBuses = [...mappedBuses, ...extraBuses, ...suspensionBuses]
 
-  let allDepartures = [...mappedTrains, ...allRailBuses]
+  let allDepartures = [...initialMappedTrains, ...allRailBuses]
 
   allDepartures.forEach(departure => {
     appendDepartureDay(departure, metroPlatform.stopGTFSID)
