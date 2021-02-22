@@ -447,14 +447,15 @@ async function saveRailBuses(buses, db) {
       trueDestinationArrivalTime: trip.trueDestinationArrivalTime,
       trueOrigin: trip.trueOrigin,
       trueDestination: trip.trueDestination,
-      mode: 'metro train',
-      operationDays: trip.departureDay
+      mode: 'metro train'
     }
 
     let newTrip = {
       ...trip,
       isRailReplacementBus: true
     }
+
+    delete newTrip._id
 
     await liveTimetables.replaceDocument(query, newTrip, {
       upsert: true
