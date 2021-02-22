@@ -265,7 +265,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     if (['Cranbourne', 'Pakenham', 'Sandringham'].includes(routeName) && vehicle) {
       vehicle = vehicle.replace('Xtrapolis', 'Comeng') // Xtrap sometimes show on CBE PKM SHM so correct to comeng
     }
-    runID = utils.getRunID(ptvRunID)
+    if (ptvRunID >= 948000) runID = utils.getRunID(ptvRunID)
 
     let metroTrips = db.getCollection('metro trips')
     let tripData = await metroTrips.findDocument({

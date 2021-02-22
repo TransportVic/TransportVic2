@@ -436,6 +436,32 @@ async function saveConsists(departures, db) {
   })
 }
 
+async function saveRailBuses(buses, db) {
+  let liveTimetables = db.getCollection('live timetables')
+
+  await async.forEach(buses, async bus => {
+    let {trip} = bus
+
+    let query = {
+      trueDepartureTime: trip.trueDepartureTime,
+      trueDestinationArrivalTime: trip.trueDestinationArrivalTime,
+      trueOrigin: trip.trueOrigin,
+      trueDestination: trip.trueDestination,
+      mode: 'metro train',
+      operationDays: trip.departureDay
+    }
+
+    let newTrip = {
+      ...trip,
+      isRailReplacementBus: true
+    }
+
+    await liveTimetables.replaceDocument(query, newTrip, {
+      upsert: true
+    })
+  })
+}
+
 async function getDeparturesFromPTV(station, db) {
   let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
   let stationName = metroPlatform.fullStopName.slice(0, -16)
@@ -511,10 +537,10 @@ async function getDeparturesFromPTV(station, db) {
   })).filter(Boolean)
 
   let extraBuses = await getMissingRailBuses(mappedBuses, metroPlatform, db)
-
+  let allRailBuses = [...mappedBuses, ...extraBuses]
   let mappedTrains = await async.map(trains, async train => await mapTrain(train, metroPlatform, db))
 
-  let allDepartures = [...mappedTrains, ...mappedBuses, ...extraBuses]
+  let allDepartures = [...mappedTrains, ...allRailBuses]
 
   allDepartures.forEach(departure => {
     appendDepartureDay(departure, metroPlatform.stopGTFSID)
@@ -522,6 +548,8 @@ async function getDeparturesFromPTV(station, db) {
   })
 
   await saveConsists(mappedTrains, db)
+  await saveRailBuses(allRailBuses, db)
+
   await async.forEach(mappedTrains, async train => {
     await verifyTrainLoopRunning(train)
 
