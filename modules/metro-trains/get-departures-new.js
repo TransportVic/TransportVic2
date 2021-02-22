@@ -88,17 +88,24 @@ function addAltonaLoopRunning(train) {
 }
 
 function filterDepartures(departures, filter) {
+  let filteredDepartures = departures
   if (filter) {
     let now = utils.now()
-    departures = departures.filter(departure => {
+
+    filteredDepartures = departures.filter(departure => {
       let secondsDiff = departure.actualDepartureTime.diff(now, 'seconds')
 
       return -30 < secondsDiff && secondsDiff < 5400 // 1.5 hours
     })
   }
 
-  return departures.sort((a, b) => {
-    return a.actualDepartureTime - b.actualDepartureTime || a.destination.localeCompare(b.destination)
+  return filteredDepartures.sort((a, b) => {
+    let aLastStop = a.trip.stopTimings[a.trip.stopTimings.length - 1]
+    let bLastStop = b.trip.stopTimings[b.trip.stopTimings.length - 1]
+
+    return a.actualDepartureTime - b.actualDepartureTime
+      || a.destination.localeCompare(b.destination)
+      || aLastStop.arrivalTimeMinutes - bLastStop.arrivalTimeMinutes
   })
 }
 
@@ -224,6 +231,42 @@ function returnBusDeparture(bus, trip) {
     viaCityLoop: null,
     isRailReplacementBus: true
   }
+}
+
+async function getMissingRailBuses(mappedBuses, metroPlatform, db) {
+  let {stopGTFSID} = metroPlatform
+  let gtfsTimetables = db.getCollection('gtfs timetables')
+
+  let extrasByTime = await async.map(mappedBuses, async bus => {
+    let departureTimeMinutes = utils.getMinutesPastMidnight(bus.scheduledDepartureTime)
+    let searchDays = departureTimeMinutes < 180 ? 1 : 0
+
+    for (let i = 0; i <= searchDays; i++) {
+      let day = bus.scheduledDepartureTime.clone().add(-i, 'days')
+
+      let potentialBuses = await gtfsTimetables.findDocuments({
+        operationDays: utils.getYYYYMMDD(day),
+        mode: 'metro train',
+        stopTimings: {
+          $elemMatch: {
+            stopGTFSID,
+            departureTimeMinutes: departureTimeMinutes + 1440 * i
+          }
+        },
+        direction: bus.direction,
+        routeGTFSID: bus.trip.routeGTFSID
+      }).limit(3).toArray()
+
+      let extras = potentialBuses.filter(extra => !utils.tripsEqual(bus.trip, extra))
+
+      return extras.map(extra => {
+        // It has all the same propeties as the original bus just a different trip
+        return returnBusDeparture(bus, extra)
+      })
+    }
+  })
+
+  return extrasByTime.reduce((a, e) => a.concat(e), [])
 }
 
 async function expandSkeleton(bus, allBuses, db) {
@@ -397,7 +440,7 @@ async function getDeparturesFromPTV(station, db) {
   let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
   let stationName = metroPlatform.fullStopName.slice(0, -16)
 
-  let url = `/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=12&include_cancelled=true&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor`
+  let url = `/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor`
   let {departures, runs, routes, directions} = await ptvAPI(url)
   let now = utils.now()
 
@@ -466,9 +509,12 @@ async function getDeparturesFromPTV(station, db) {
     if (bus.skeleton) return await expandSkeleton(bus, nonSkeleton, db)
     else return bus
   })).filter(Boolean)
+
+  let extraBuses = await getMissingRailBuses(mappedBuses, metroPlatform, db)
+
   let mappedTrains = await async.map(trains, async train => await mapTrain(train, metroPlatform, db))
 
-  let allDepartures = [...mappedTrains, ...mappedBuses]
+  let allDepartures = [...mappedTrains, ...mappedBuses, ...extraBuses]
 
   allDepartures.forEach(departure => {
     appendDepartureDay(departure, metroPlatform.stopGTFSID)
