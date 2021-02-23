@@ -15,9 +15,11 @@ module.exports = {
     ["707_GRAINLANDER_QUAMBATOOK_SAT", "1", "1", "1", "1", "1", "1", "1", "20210306", "20210306"],
     ["707_GRAINLANDER_QUAMBATOOK_SUN", "1", "1", "1", "1", "1", "1", "1", "20210307", "20210307"],
 
-    ["SRV_OTWAY_SAT", "1", "1", "1", "1", "1", "1", "1", "20210213", "20210213"],
+    ["SRV_OTWAY_SAT", "1", "1", "1", "1", "1", "1", "1", "20210313", "20210313"],
     ["SRV_S313_SAT", "1", "1", "1", "1", "1", "1", "1", "20210306", "20210306"],
-    ["SRV_SHM_SUN", "1", "1", "1", "1", "1", "1", "1", "20210314", "20210314"]
+    ["SRV_SHM_SUN", "1", "1", "1", "1", "1", "1", "1", "20210314", "20210314"],
+
+    ["SRHC_TRARALGON_SAT", "1", "1", "1", "1", "1", "1", "1", "20210410", "20210410"]
   ],
   "dates": [],
   "trips": [
@@ -231,7 +233,7 @@ module.exports = {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
       "calendarID": "SRV_OTWAY_SAT",
-      "tripID": "0825.SRV_OTWAY_SAT.13-MLH-mjp-1.1.H",
+      "tripID": "0830.SRV_OTWAY_SAT.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Camperdown"
@@ -373,6 +375,26 @@ module.exports = {
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Flinders Street"
+    },
+
+
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRHC_TRARALGON_SAT",
+      "tripID": "0810.SRHC_TRARALGON_SAT.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "1",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Traralgon"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRHC_TRARALGON_SAT",
+      "tripID": "1604.SRHC_TRARALGON_SAT.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Southern Cross"
     },
   ],
   "timings": [
@@ -1084,12 +1106,12 @@ module.exports = {
 
 
     {
-      "tripID": "0825.SRV_OTWAY_SAT.13-MLH-mjp-1.1.H",
+      "tripID": "0830.SRV_OTWAY_SAT.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Southern Cross",
-          "arrivalTime": "08:25:00",
-          "departureTime": "08:25:00",
+          "arrivalTime": "08:30:00",
+          "departureTime": "08:30:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1097,9 +1119,9 @@ module.exports = {
           "stopSequence": 0
         },
         {
-          "stopName": "Werribee",
-          "arrivalTime": "09:01:00",
-          "departureTime": "09:01:00",
+          "stopName": "Wyndham Vale",
+          "arrivalTime": "09:11:00",
+          "departureTime": "09:11:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1108,8 +1130,8 @@ module.exports = {
         },
         {
           "stopName": "Geelong",
-          "arrivalTime": "09:36:00",
-          "departureTime": "09:36:00",
+          "arrivalTime": "09:45:00",
+          "departureTime": "09:45:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1118,8 +1140,8 @@ module.exports = {
         },
         {
           "stopName": "Colac",
-          "arrivalTime": "11:03:00",
-          "departureTime": "11:03:00",
+          "arrivalTime": "11:06:00",
+          "departureTime": "11:06:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1212,19 +1234,9 @@ module.exports = {
           "stopSequence": 0
         },
         {
-          "stopName": "Birregurra",
-          "arrivalTime": "17:17:00",
-          "departureTime": "17:17:00",
-          "stopConditions": {
-            "dropoff": 0, "pickup": 0
-          },
-          "stopDistance": 0,
-          "stopSequence": 0
-        },
-        {
           "stopName": "Geelong",
-          "arrivalTime": "18:30:00",
-          "departureTime": "18:30:00",
+          "arrivalTime": "18:35:00",
+          "departureTime": "18:35:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1232,9 +1244,9 @@ module.exports = {
           "stopSequence": 0
         },
         {
-          "stopName": "Werribee",
-          "arrivalTime": "19:10:00",
-          "departureTime": "19:10:00",
+          "stopName": "Wyndham Vale",
+          "arrivalTime": "19:09:00",
+          "departureTime": "19:09:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1549,6 +1561,138 @@ module.exports = {
           "stopName": "Flinders Street",
           "arrivalTime": "17:10:00",
           "departureTime": "17:10:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+
+
+    {
+      "tripID": "0810.SRHC_TRARALGON_SAT.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "08:10:00",
+          "departureTime": "08:10:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "08:20:00",
+          "departureTime": "08:20:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Caulfield",
+          "arrivalTime": "08:32:00",
+          "departureTime": "08:32:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Dandenong",
+          "arrivalTime": "08:53:00",
+          "departureTime": "08:53:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Moe",
+          "arrivalTime": "10:21:00",
+          "departureTime": "10:21:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Traralgon",
+          "arrivalTime": "11:00:00",
+          "departureTime": "11:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1604.SRHC_TRARALGON_SAT.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Traralgon",
+          "arrivalTime": "16:04:00",
+          "departureTime": "16:04:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Moe",
+          "arrivalTime": "16:55:00",
+          "departureTime": "16:55:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Dandenong",
+          "arrivalTime": "18:00:00",
+          "departureTime": "18:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Caulfield",
+          "arrivalTime": "18:18:00",
+          "departureTime": "18:18:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "19:01:00",
+          "departureTime": "19:01:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "19:06:00",
+          "departureTime": "19:06:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
