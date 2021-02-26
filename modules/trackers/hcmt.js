@@ -6,6 +6,7 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const schedule = require('./scheduler')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const ptvAPI = require('../../ptv-api')
+const { getDayOfWeek } = require('../../public-holidays')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
@@ -20,6 +21,15 @@ async function getTimetable() {
 async function requestMetroData() {
   let data = JSON.parse(await utils.request(urls.hcmt))
   return data.entries
+}
+
+function dayCodeToArray (dayCode) {
+  if (dayCode === '2' || dayCode === '4' || dayCode === '6') return ['Sun']
+  if (dayCode === '1' || dayCode === '5') return ['Sat']
+  if (dayCode === '3') return ['Mon', 'Tues', 'Wed', 'Thur']
+  if (dayCode === '0') return ['Fri']
+
+  throw new Error('Invalid day code ' + dayCode)
 }
 
 async function createStop(prevStop, minutesDiff, stopName, platform) {
@@ -187,13 +197,19 @@ function parseRawData(stop, startOfDay) {
 
 async function getDepartures(stop) {
   let timetable = await getTimetable()
-  let extraTrips = timetable.filter(trip => trip.trip_id[0] === '7')
-  let stopDepartures = await requestMetroData()
 
   // Tracker only runs at reasonable times, no 3am to worry about
   let startOfDay = utils.now().startOf('day')
   let day = utils.getYYYYMMDD(startOfDay)
   let now = utils.now()
+  let dayOfWeek = await getDayOfWeek(now)
+
+  let tripsToday = timetable.filter(trip => {
+    return dayCodeToArray(trip.day_type).includes(dayOfWeek)
+  })
+
+  let extraTrips = tripsToday.filter(trip => trip.trip_id[0] === '7')
+  let stopDepartures = await requestMetroData()
 
   let allTrips = Object.values(extraTrips.reduce((trips, stop) => {
     let runID = stop.trip_id
