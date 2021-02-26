@@ -205,10 +205,13 @@ router.get('/hcmt', async (req, res) => {
   let e = utils.encodeName
   trips.forEach(trip => {
     let destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(trip.trueDestinationArrivalTime)
+    let departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(trip.departureTime)
+
+    if (destinationArrivalTimeMinutes < departureTimeMinutes) destinationArrivalTimeMinutes += 1440
 
     trip.url = `/metro/run/${e(trip.trueOrigin.slice(0, -16))}/${trip.trueDepartureTime}/${e(trip.trueDestination.slice(0, -16))}/${trip.trueDestinationArrivalTime}/${date}`
     trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
-    trip.departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(trip.departureTime)
+    trip.departureTimeMinutes = departureTimeMinutes
   })
 
   res.render('tracker/metro/hcmt', {
