@@ -18,9 +18,9 @@ if departures.length
         let tripStops = departure.trip.stopTimings.map(stop => stop.stopName)
         let indexOfCurrentStation = tripStops.indexOf(stopName)
         let stopsAt = departure.trip.stopTimings.filter((_, i) => i > indexOfCurrentStation).map(stop => stop.stopName)
-        if (!tripStops.includes('Southern Cross Railway Station') && departure.cityLoopConfig[1] === 'SSS') {
-          departure.cityLoopConfig = ['NME', 'FSS']
-        }
+        // if (!tripStops.includes('Southern Cross Railway Station') && departure.cityLoopConfig[1] === 'SSS') {
+        //   departure.cityLoopConfig = ['NME', 'FSS']
+        // }
         let cityLoopStationFullNames = departure.cityLoopConfig.map(stn => cityLoopStationAbbreviations[stn])
         
         let routeName = departure.trip.routeName
