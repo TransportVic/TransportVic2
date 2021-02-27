@@ -69,5 +69,12 @@ module.exports = [
   'Chelsea',
   'Kananook',
   'Highett',
+  'Southern Cross',
+  'Ringwood East',
+  'Flemington Racecourse',
+  'Showgrounds',
+  'Riversdale',
+  'Upwey',
+  'Brighton Beach',
   'Glenhuntly'
 ]
