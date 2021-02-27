@@ -305,6 +305,8 @@ router.get('/strange', (req, res) => {
 
     strangeTrains.forEach(line => {
       let train = line.slice(-29, -18)
+      let index = train.indexOf('train')
+      if (index !== -1) train = train.slice(index)
       let runID = line.slice(-7, -3)
 
       if (!trains[train]) {
