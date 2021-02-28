@@ -184,6 +184,7 @@ database.connect({
     routeName: 1,
     routeGTFSID: 1,
     operationDays: 1,
+    runID: 1,
     origin: 1,
     destination: 1,
     departureTime: 1,
