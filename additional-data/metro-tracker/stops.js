@@ -49,11 +49,9 @@ module.exports = [
   'North Williamstown',
   'Altona',
   'Williams Landing',
-  'Flinders Street',
   'Kooyong',
   'Springvale',
   'Camberwell',
-  'Caulfield',
   'Footscray',
   'Sunshine',
   'Laverton',
@@ -69,5 +67,7 @@ module.exports = [
   'Chelsea',
   'Kananook',
   'Highett',
+  'Ringwood East',
+  'Upwey',
   'Glenhuntly'
 ]
