@@ -72,7 +72,11 @@ async function getDeparturesFromVNET(db) {
     if (departure.set) tripData.set = departure.set
 
     if (trip) {
-      await handleTripShorted(trip, departure, nspTrip, liveTimetables, departureDay)
+      try {
+        await handleTripShorted(trip, departure, nspTrip, liveTimetables, departureDay)
+      } catch (e) {
+        global.loggers.trackers.vline.err('Error cutting trip back', e, trip)
+      }
     } else {
       global.loggers.trackers.vline.err('Could not match trip', tripData)
     }
@@ -83,13 +87,18 @@ async function getDeparturesFromVNET(db) {
 
       delete trip._id
 
-      await liveTimetables.replaceDocument({
-        operationDays: departureDay,
-        runID: departure.runID,
-        mode: 'regional train'
-      }, trip, {
-        upsert: true
-      })
+
+      try {
+        await liveTimetables.replaceDocument({
+          operationDays: departureDay,
+          runID: departure.runID,
+          mode: 'regional train'
+        }, trip, {
+          upsert: true
+        })
+      } catch (e) {
+        global.loggers.trackers.vline.err('Failed to update runid', e, departure.runID, trip)
+      }
     }
 
     allTrips[departure.runID] = tripData
