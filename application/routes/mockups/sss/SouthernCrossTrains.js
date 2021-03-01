@@ -203,7 +203,7 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
 
     let platform = departure.platform
 
-    if (trip.destination !== departure.destination && false) {
+    if (trip.destination !== departure.destination) {
       let stoppingAt = trip.stopTimings.map(e => e.stopName)
       let destinationIndex = stoppingAt.indexOf(departure.destination)
       trip.stopTimings = trip.stopTimings.slice(0, destinationIndex + 1)
@@ -218,14 +218,14 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
         trip.runID = departure.runID
         trip.operationDays = operationDay
 
-        delete trip._id
-        await liveTimetables.replaceDocument({
-          operationDays: operationDay,
-          runID: departure.runID,
-          mode: 'regional train'
-        }, trip, {
-          upsert: true
-        })
+        // delete trip._id
+        // await liveTimetables.replaceDocument({
+        //   operationDays: operationDay,
+        //   runID: departure.runID,
+        //   mode: 'regional train'
+        // }, trip, {
+        //   upsert: true
+        // })
       }
     }
 
