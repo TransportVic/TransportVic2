@@ -97,7 +97,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'CDC Wyndham Specials',
-  track: ['CW20', 'CW22', 'CW23', 'CW76', 'CW79', 'CW80', 'CW126', 'CW127', 'CW131', 'CW189', 'CW190', 'CW195', 'CW196'],
+  track: ['CW20', 'CW21', 'CW22', 'CW23', 'CW76', 'CW79', 'CW80', 'CW126', 'CW127', 'CW131', 'CW189', 'CW190', 'CW195', 'CW196'],
   routes: [],
   type: 'exclude'
 }, {
@@ -107,7 +107,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'CDC Ballarat Specials',
-  track: ['CB174', 'CB175', 'CB176'],
+  track: ['CB146', 'CB147', 'CB155', 'CB156', 'CB162', 'CB174', 'CB175', 'CB176'],
   routes: [],
   type: 'exclude'
 }, {
