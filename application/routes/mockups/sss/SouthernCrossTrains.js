@@ -63,9 +63,9 @@ async function getVNETServices(vlinePlatform, isDepartures, db) {
 
   let vnetURL
   if (isDepartures)
-    vnetURL = urls.vlinePlatformDepartures.slice(0, -3).format(vnetStationName, 'D') + '1440'
+    vnetURL = urls.vlinePlatformDeparturesOld.slice(0, -3).format(vnetStationName, 'D') + '1440'
   else
-    vnetURL = urls.vlinePlatformArrivals.slice(0, -3).format(vnetStationName, 'U') + '1440'
+    vnetURL = urls.vlinePlatformArrivalsOld.slice(0, -3).format(vnetStationName, 'U') + '1440'
 
   const body = (await utils.request(vnetURL)).replace(/a:/g, '')
   const $ = cheerio.load(body)
@@ -203,7 +203,7 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
 
     let platform = departure.platform
 
-    if (trip.destination !== departure.destination) {
+    if (trip.destination !== departure.destination && false) {
       let stoppingAt = trip.stopTimings.map(e => e.stopName)
       let destinationIndex = stoppingAt.indexOf(departure.destination)
       trip.stopTimings = trip.stopTimings.slice(0, destinationIndex + 1)
