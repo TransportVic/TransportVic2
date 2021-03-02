@@ -526,7 +526,7 @@ module.exports = {
         if (currentStation === previousStop) {
           texts.push(stoppingText.runsExpressTo.format(nextStop))
         } else {
-          if (nextStopIndex - lineStops.indexOf(currentStation)) {
+          if (nextStopIndex - lineStops.indexOf(currentStation) === 1) {
             texts.push(stoppingText.stopsAt.format(previousStop))
           } else {
             texts.push(stoppingText.sasTo.format(previousStop))
