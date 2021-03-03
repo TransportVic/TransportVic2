@@ -275,9 +275,12 @@ router.get('/bot', async (req, res) => {
           }
 
           trip.type = type
-          trip.typeCode = typeCode[type]
-        }
+        } else trip.type = 'Direct'
+      } else {
+        if (!viaLoop) trip.type = 'Direct'
       }
+
+      if (trip.type) trip.typeCode = typeCode[trip.type]
 
       let metroType = metroTypes.find(car => trip.consist.includes(car.leadingCar))
       if (metroType) trip.vehicleType = metroType.type
