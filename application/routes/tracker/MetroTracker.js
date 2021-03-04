@@ -6,6 +6,8 @@ const url = require('url')
 const path = require('path')
 const fs = require('fs')
 const querystring = require('querystring')
+const modules = require('../../../modules')
+
 const stationCodes = require('../../../additional-data/station-codes')
 const rawLineRanges = require('../../../additional-data/metro-tracker/line-ranges')
 const lineGroups = require('../../../additional-data/metro-tracker/line-groups')
@@ -14,6 +16,19 @@ const metroTypes = require('../../../additional-data/metro-tracker/metro-types')
 const metroConsists = require('../../../additional-data/metro-tracker/metro-consists')
 
 let stationCodeLookup = {}
+
+let loggerPath = path.join(__dirname, '../../../logs/metro-tracker.json')
+let loggerData = []
+if (modules.metroLogger) {
+  try {
+    loggerData = JSON.parse(fs.readFileSync(loggerPath))
+  } catch (e) {}
+
+  setInterval(() => {
+    fs.writeFileSync(loggerPath, JSON.stringify(loggerData))
+  }, 1000)
+}
+
 
 Object.keys(stationCodes).forEach(stationCode => {
   stationCodeLookup[stationCodes[stationCode]] = stationCode
@@ -226,7 +241,8 @@ router.get('/bot', async (req, res) => {
 
   res.header('Access-Control-Allow-Origin', '*')
 
-  let {runID, consist, date} = querystring.parse(url.parse(req.url).query)
+  let search = querystring.parse(url.parse(req.url).query)
+  let {runID, consist, date} = search
 
   let trips = []
 
@@ -246,6 +262,18 @@ router.get('/bot', async (req, res) => {
 
   if (consist && !trips.length) {
     extraData.lastSeen = (await metroTrips.distinct('date', { consist })).slice(-1)[0]
+  }
+
+  if (modules.metroLogger) {
+    loggerData.push({
+      utc: new Date().toISOString(),
+      time: new Date().toLocaleString(),
+      search,
+      result: trips[0],
+      referer: req.headers['referer'],
+      ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+      userAgent: req.headers['user-agent']
+    })
   }
 
   res.json({
@@ -275,12 +303,9 @@ router.get('/bot', async (req, res) => {
           }
 
           trip.type = type
-        } else trip.type = 'Direct'
-      } else {
-        if (!viaLoop) trip.type = 'Direct'
+          trip.typeCode = typeCode[type]
+        }
       }
-
-      if (trip.type) trip.typeCode = typeCode[trip.type]
 
       let metroType = metroTypes.find(car => trip.consist.includes(car.leadingCar))
       if (metroType) trip.vehicleType = metroType.type
@@ -308,8 +333,6 @@ router.get('/strange', (req, res) => {
 
     strangeTrains.forEach(line => {
       let train = line.slice(-29, -18)
-      let index = train.indexOf('train')
-      if (index !== -1) train = train.slice(index)
       let runID = line.slice(-7, -3)
 
       if (!trains[train]) {
@@ -340,6 +363,10 @@ router.get('/strange', (req, res) => {
 
     res.json(Object.values(trains))
   })
+})
+
+router.get('/logs', (req, res) => {
+  res.json(loggerData)
 })
 
 module.exports = router
