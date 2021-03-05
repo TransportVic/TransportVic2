@@ -366,8 +366,15 @@ router.get('/strange', (req, res) => {
 })
 
 router.get('/logs', (req, res) => {
+  let today = utils.getYYYYMMDDNow()
+  let {consist, date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
   res.header('Access-Control-Allow-Origin', '*')
-  res.json(loggerData)
+  res.json(data.loggerData.filter(entry => {
+    return utils.getYYYYMMDD(utils.parseTime(entry.utc)) === date
+  }))
 })
 
 module.exports = router
