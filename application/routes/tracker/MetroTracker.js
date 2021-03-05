@@ -372,7 +372,7 @@ router.get('/logs', (req, res) => {
   else date = today
 
   res.header('Access-Control-Allow-Origin', '*')
-  res.json(data.loggerData.filter(entry => {
+  res.json(loggerData.filter(entry => {
     return utils.getYYYYMMDD(utils.parseTime(entry.utc)) === date
   }))
 })
