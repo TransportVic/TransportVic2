@@ -366,6 +366,7 @@ router.get('/strange', (req, res) => {
 })
 
 router.get('/logs', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*')
   res.json(loggerData)
 })
 
