@@ -1,8 +1,10 @@
 module.exports = {
   "days": [
-    ["SUNDAY", "0", "0", "0", "0", "0", "0", "1", "20210207", "20211231"]
+    ["SUNDAY", "0", "0", "0", "0", "0", "0", "1", "20210207", "20211231"],
+    ["SUNDAY_7_MARCH", "0", "0", "0", "0", "0", "0", "1", "20210307", "20210307"]
   ],
   "dates": [
+    ["SUNDAY", "20210307", "2"],
     ["SUNDAY", "20211225", "2"]
   ],
   "trips": [
@@ -95,7 +97,135 @@ module.exports = {
       "gtfsDirection": "0",
       "shapeID": "13-DCR-mjp-1.1.H",
       "headsign": "Daylesford"
-    }
+    },
+
+
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-DCR",
+      "calendarID": "SUNDAY_7_MARCH",
+      "tripID": "0930.SUNDAY_7_MARCH.13-DCR-mjp-1.1.R",
+      "gtfsDirection": "1",
+      "shapeID": "13-DCR-mjp-1.1.R",
+      "headsign": "Musk"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-DCR",
+      "calendarID": "SUNDAY_7_MARCH",
+      "tripID": "0950.SUNDAY_7_MARCH.13-DCR-mjp-1.1.H",
+      "gtfsDirection": "0",
+      "shapeID": "13-DCR-mjp-1.1.H",
+      "headsign": "Daylesford"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-DCR",
+      "calendarID": "SUNDAY_7_MARCH",
+      "tripID": "1030.SUNDAY_7_MARCH.13-DCR-mjp-1.1.R",
+      "gtfsDirection": "1",
+      "shapeID": "13-DCR-mjp-1.1.R",
+      "headsign": "Bullarto"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-DCR",
+      "calendarID": "SUNDAY_7_MARCH",
+      "tripID": "1110.SUNDAY_7_MARCH.13-DCR-mjp-1.1.H",
+      "gtfsDirection": "0",
+      "shapeID": "13-DCR-mjp-1.1.H",
+      "headsign": "Daylesford"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-DCR",
+      "calendarID": "SUNDAY_7_MARCH",
+      "tripID": "1045.SUNDAY_7_MARCH.13-DCR-mjp-1.1.R",
+      "gtfsDirection": "1",
+      "shapeID": "13-DCR-mjp-1.1.R",
+      "headsign": "Musk"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-DCR",
+      "calendarID": "SUNDAY_7_MARCH",
+      "tripID": "1105.SUNDAY_7_MARCH.13-DCR-mjp-1.1.H",
+      "gtfsDirection": "0",
+      "shapeID": "13-DCR-mjp-1.1.H",
+      "headsign": "Daylesford"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-DCR",
+      "calendarID": "SUNDAY_7_MARCH",
+      "tripID": "1200.SUNDAY_7_MARCH.13-DCR-mjp-1.1.R",
+      "gtfsDirection": "1",
+      "shapeID": "13-DCR-mjp-1.1.R",
+      "headsign": "Bullarto"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-DCR",
+      "calendarID": "SUNDAY_7_MARCH",
+      "tripID": "1240.SUNDAY_7_MARCH.13-DCR-mjp-1.1.H",
+      "gtfsDirection": "0",
+      "shapeID": "13-DCR-mjp-1.1.H",
+      "headsign": "Daylesford"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-DCR",
+      "calendarID": "SUNDAY_7_MARCH",
+      "tripID": "1215.SUNDAY_7_MARCH.13-DCR-mjp-1.1.R",
+      "gtfsDirection": "1",
+      "shapeID": "13-DCR-mjp-1.1.R",
+      "headsign": "Musk"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-DCR",
+      "calendarID": "SUNDAY_7_MARCH",
+      "tripID": "1235.SUNDAY_7_MARCH.13-DCR-mjp-1.1.H",
+      "gtfsDirection": "0",
+      "shapeID": "13-DCR-mjp-1.1.H",
+      "headsign": "Daylesford"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-DCR",
+      "calendarID": "SUNDAY_7_MARCH",
+      "tripID": "1330.SUNDAY_7_MARCH.13-DCR-mjp-1.1.R",
+      "gtfsDirection": "1",
+      "shapeID": "13-DCR-mjp-1.1.R",
+      "headsign": "Bullarto"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-DCR",
+      "calendarID": "SUNDAY_7_MARCH",
+      "tripID": "1405.SUNDAY_7_MARCH.13-DCR-mjp-1.1.H",
+      "gtfsDirection": "0",
+      "shapeID": "13-DCR-mjp-1.1.H",
+      "headsign": "Daylesford"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-DCR",
+      "calendarID": "SUNDAY_7_MARCH",
+      "tripID": "1445.SUNDAY_7_MARCH.13-DCR-mjp-1.1.R",
+      "gtfsDirection": "1",
+      "shapeID": "13-DCR-mjp-1.1.R",
+      "headsign": "Passing Clouds"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-DCR",
+      "calendarID": "SUNDAY_7_MARCH",
+      "tripID": "1506.SUNDAY_7_MARCH.13-DCR-mjp-1.1.H",
+      "gtfsDirection": "0",
+      "shapeID": "13-DCR-mjp-1.1.H",
+      "headsign": "Daylesford"
+    },
   ],
   "timings": [
     {
@@ -510,6 +640,498 @@ module.exports = {
           "stopGTFSID": 13000010,
           "arrivalTime": "15:35:00",
           "departureTime": "15:35:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+
+
+    {
+      "tripID": "0930.SUNDAY_7_MARCH.13-DCR-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopGTFSID": 13000010,
+          "arrivalTime": "09:30:00",
+          "departureTime": "09:30:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000009,
+          "arrivalTime": "09:45:00",
+          "departureTime": "09:45:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "0950.SUNDAY_7_MARCH.13-DCR-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopGTFSID": 13000009,
+          "arrivalTime": "09:50:00",
+          "departureTime": "09:50:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000010,
+          "arrivalTime": "10:05:00",
+          "departureTime": "10:05:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1030.SUNDAY_7_MARCH.13-DCR-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopGTFSID": 13000010,
+          "arrivalTime": "10:30:00",
+          "departureTime": "10:30:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000009,
+          "arrivalTime": "10:42:00",
+          "departureTime": "10:45:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000008,
+          "arrivalTime": "10:48:00",
+          "departureTime": "10:48:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000007,
+          "arrivalTime": "10:55:00",
+          "departureTime": "10:55:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1110.SUNDAY_7_MARCH.13-DCR-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopGTFSID": 13000007,
+          "arrivalTime": "11:00:00",
+          "departureTime": "11:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000008,
+          "arrivalTime": "11:18:00",
+          "departureTime": "11:18:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000009,
+          "arrivalTime": "11:20:00",
+          "departureTime": "11:22:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000010,
+          "arrivalTime": "11:37:00",
+          "departureTime": "11:37:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1045.SUNDAY_7_MARCH.13-DCR-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopGTFSID": 13000010,
+          "arrivalTime": "10:45:00",
+          "departureTime": "10:45:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000009,
+          "arrivalTime": "11:00:00",
+          "departureTime": "11:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1105.SUNDAY_7_MARCH.13-DCR-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopGTFSID": 13000009,
+          "arrivalTime": "11:05:00",
+          "departureTime": "11:05:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000010,
+          "arrivalTime": "11:20:00",
+          "departureTime": "11:20:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1200.SUNDAY_7_MARCH.13-DCR-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopGTFSID": 13000010,
+          "arrivalTime": "12:00:00",
+          "departureTime": "12:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000009,
+          "arrivalTime": "12:12:00",
+          "departureTime": "12:15:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000008,
+          "arrivalTime": "12:18:00",
+          "departureTime": "12:18:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000007,
+          "arrivalTime": "12:25:00",
+          "departureTime": "12:25:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1240.SUNDAY_7_MARCH.13-DCR-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopGTFSID": 13000007,
+          "arrivalTime": "12:40:00",
+          "departureTime": "12:40:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000008,
+          "arrivalTime": "12:48:00",
+          "departureTime": "12:48:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000009,
+          "arrivalTime": "12:50:00",
+          "departureTime": "12:52:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000010,
+          "arrivalTime": "13:07:00",
+          "departureTime": "13:07:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1215.SUNDAY_7_MARCH.13-DCR-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopGTFSID": 13000010,
+          "arrivalTime": "12:15:00",
+          "departureTime": "12:15:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000009,
+          "arrivalTime": "12:30:00",
+          "departureTime": "12:30:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1235.SUNDAY_7_MARCH.13-DCR-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopGTFSID": 13000009,
+          "arrivalTime": "12:35:00",
+          "departureTime": "12:35:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000010,
+          "arrivalTime": "12:50:00",
+          "departureTime": "12:50:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1330.SUNDAY_7_MARCH.13-DCR-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopGTFSID": 13000010,
+          "arrivalTime": "13:30:00",
+          "departureTime": "13:30:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000009,
+          "arrivalTime": "13:45:00",
+          "departureTime": "13:45:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000008,
+          "arrivalTime": "13:48:00",
+          "departureTime": "13:48:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000007,
+          "arrivalTime": "13:55:00",
+          "departureTime": "13:55:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1405.SUNDAY_7_MARCH.13-DCR-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopGTFSID": 13000007,
+          "arrivalTime": "14:05:00",
+          "departureTime": "14:05:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000008,
+          "arrivalTime": "14:13:00",
+          "departureTime": "14:13:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000009,
+          "arrivalTime": "14:15:00",
+          "departureTime": "14:15:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000010,
+          "arrivalTime": "14:30:00",
+          "departureTime": "14:30:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1445.SUNDAY_7_MARCH.13-DCR-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopGTFSID": 13000010,
+          "arrivalTime": "14:45:00",
+          "departureTime": "14:45:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000009,
+          "arrivalTime": "15:00:00",
+          "departureTime": "15:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000008,
+          "arrivalTime": "15:03:00",
+          "departureTime": "15:03:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1506.SUNDAY_7_MARCH.13-DCR-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopGTFSID": 13000008,
+          "arrivalTime": "15:06:00",
+          "departureTime": "15:06:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000009,
+          "arrivalTime": "15:09:00",
+          "departureTime": "15:09:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopGTFSID": 13000010,
+          "arrivalTime": "15:22:00",
+          "departureTime": "15:22:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },

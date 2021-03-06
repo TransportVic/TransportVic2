@@ -149,7 +149,7 @@ database.connect({
 
   let gtfsTimetables = database.getCollection('gtfs timetables')
 
-  await gtfsTimetables.deleteDocuments({ gtfsMode: 13 })
+  await gtfsTimetables.deleteDocuments({ mode: 'heritage train', routeGTFSID: '13-MLH' })
   await loadGTFSTimetables({
     gtfsTimetables,
     stops: database.getCollection('stops'),
