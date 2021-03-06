@@ -18,6 +18,7 @@ module.exports = {
     ["SRV_OTWAY_SAT", "1", "1", "1", "1", "1", "1", "1", "20210313", "20210313"],
     ["SRV_S313_SAT", "1", "1", "1", "1", "1", "1", "1", "20210306", "20210306"],
     ["SRV_SHM_SUN", "1", "1", "1", "1", "1", "1", "1", "20210314", "20210314"],
+    ["SRV_Y_NOT_SUN", "1", "1", "1", "1", "1", "1", "1", "20210321", "20210321"],
 
     ["SRHC_TRARALGON_SAT", "1", "1", "1", "1", "1", "1", "1", "20210410", "20210410"]
   ],
@@ -217,7 +218,8 @@ module.exports = {
       "tripID": "0740.707_GRAINLANDER_QUAMBATOOK_SAT.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
-      "headsign": "Quambatook"
+      "headsign": "Quambatook",
+      "vehicle": ["A66", "S306", "PCP294", "BZ270", "BRS224", "NAM2336", "LAN2354", "Victoria", "BK708", "SJ284", "Kuldalai", "Wando" ,"DT318"]
     },
     {
       "mode": "heritage train",
@@ -226,7 +228,8 @@ module.exports = {
       "tripID": "0800.707_GRAINLANDER_QUAMBATOOK_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Southern Cross"
+      "headsign": "Southern Cross",
+      "vehicle": ["A66" ,"S306", "PCP294", "BZ270", "BRS224", "NAM2336", "LAN2354", "Victoria", "BK708", "SJ284", "Kuldalai", "Wando", "DT318"]
     },
 
     {
@@ -236,7 +239,8 @@ module.exports = {
       "tripID": "0830.SRV_OTWAY_SAT.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
-      "headsign": "Camperdown"
+      "headsign": "Camperdown",
+      "vehicle": ["A66", "S313"]
     },
     {
       "mode": "heritage train",
@@ -245,7 +249,8 @@ module.exports = {
       "tripID": "1250.SRV_OTWAY_SAT.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
-      "headsign": "Warrnambool"
+      "headsign": "Warrnambool",
+      "vehicle": ["A66", "S313"]
     },
     {
       "mode": "heritage train",
@@ -254,7 +259,8 @@ module.exports = {
       "tripID": "1440.SRV_OTWAY_SAT.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Camperdown"
+      "headsign": "Camperdown",
+      "vehicle": ["S313", "A66"]
     },
     {
       "mode": "heritage train",
@@ -263,7 +269,8 @@ module.exports = {
       "tripID": "1610.SRV_OTWAY_SAT.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Southern Cross"
+      "headsign": "Southern Cross",
+      "vehicle": ["S313", "A66"]
     },
 
 
@@ -274,7 +281,8 @@ module.exports = {
       "tripID": "1056.SRV_S313_SAT.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
-      "headsign": "Seymour"
+      "headsign": "Seymour",
+      "vehicle": ["S313", "1BCE", "17BE", "25BE", "46BE", "7ABE", "3BE", "600BK", "700BK", "Moorabool", "PCP292"]
     },
     {
       "mode": "heritage train",
@@ -283,7 +291,8 @@ module.exports = {
       "tripID": "1520.SRV_S313_SAT.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Southern Cross"
+      "headsign": "Southern Cross",
+      "vehicle": ["S313", "PCP292", "Moorabool", "700BK", "600BK", "3BE", "7ABE", "46BE", "25BE", "17BE", "1BCE"]
     },
 
     {
@@ -293,7 +302,8 @@ module.exports = {
       "tripID": "0932.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Sandringham"
+      "headsign": "Sandringham",
+      "vehicle": ["K190", "K153"]
     },
     {
       "mode": "heritage train",
@@ -302,7 +312,8 @@ module.exports = {
       "tripID": "1004.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Flinders Street"
+      "headsign": "Flinders Street",
+      "vehicle": ["K153", "K190"]
     },
     {
       "mode": "heritage train",
@@ -311,7 +322,8 @@ module.exports = {
       "tripID": "1052.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Sandringham"
+      "headsign": "Sandringham",
+      "vehicle": ["K190", "K153"]
     },
     {
       "mode": "heritage train",
@@ -320,7 +332,8 @@ module.exports = {
       "tripID": "1124.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Flinders Street"
+      "headsign": "Flinders Street",
+      "vehicle": ["K153", "K190"]
     },
     {
       "mode": "heritage train",
@@ -329,7 +342,8 @@ module.exports = {
       "tripID": "1212.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Sandringham"
+      "headsign": "Sandringham",
+      "vehicle": ["K190", "K153"]
     },
     {
       "mode": "heritage train",
@@ -338,7 +352,8 @@ module.exports = {
       "tripID": "1244.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Flinders Street"
+      "headsign": "Flinders Street",
+      "vehicle": ["K153", "K190"]
     },
     {
       "mode": "heritage train",
@@ -347,7 +362,8 @@ module.exports = {
       "tripID": "1452.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Sandringham"
+      "headsign": "Sandringham",
+      "vehicle": ["K190", "K153"]
     },
     {
       "mode": "heritage train",
@@ -356,7 +372,8 @@ module.exports = {
       "tripID": "1524.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Flinders Street"
+      "headsign": "Flinders Street",
+      "vehicle": ["K153", "K190"]
     },
     {
       "mode": "heritage train",
@@ -365,7 +382,8 @@ module.exports = {
       "tripID": "1612.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Sandringham"
+      "headsign": "Sandringham",
+      "vehicle": ["K190", "K153"]
     },
     {
       "mode": "heritage train",
@@ -374,7 +392,50 @@ module.exports = {
       "tripID": "1644.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Flinders Street"
+      "headsign": "Flinders Street",
+      "vehicle": ["K153", "K190"]
+    },
+
+
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_Y_NOT_SUN",
+      "tripID": "0953.SRV_Y_NOT_SUN.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "1",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Somerton Yard",
+      "vehicle": ["Y112"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_Y_NOT_SUN",
+      "tripID": "1204.SRV_Y_NOT_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Flinders Street",
+      "vehicle": ["Y112"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_Y_NOT_SUN",
+      "tripID": "1327.SRV_Y_NOT_SUN.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "1",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Westall",
+      "vehicle": ["Y112"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_Y_NOT_SUN",
+      "tripID": "1430.SRV_Y_NOT_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Flinders Street",
+      "vehicle": ["Y112"]
     },
 
 
@@ -988,13 +1049,14 @@ module.exports = {
       "stopTimings": [
         {
           "stopName": "Southern Cross",
-          "arrivalTime": "07:40:00",
-          "departureTime": "07:40:00",
+          "arrivalTime": "07:42:00",
+          "departureTime": "07:42:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "3"
         },
         {
           "stopName": "Ballarat",
@@ -1004,37 +1066,41 @@ module.exports = {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "2"
         },
         {
           "stopName": "Maryborough",
-          "arrivalTime": "13:00:00",
-          "departureTime": "13:00:00",
+          "arrivalTime": "12:55:00",
+          "departureTime": "13:05:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         },
         {
           "stopName": "Boort",
-          "arrivalTime": "16:00:00",
-          "departureTime": "17:00:00",
+          "arrivalTime": "16:05:00",
+          "departureTime": "17:05:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         },
         {
           "stopName": "Quambatook",
-          "arrivalTime": "18:05:00",
-          "departureTime": "18:05:00",
+          "arrivalTime": "18:10:00",
+          "departureTime": "18:10:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         }
       ]
     },
@@ -1049,47 +1115,52 @@ module.exports = {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         },
         {
           "stopName": "Inglewood",
-          "arrivalTime": "10:00:00",
+          "arrivalTime": "10:10:00",
           "departureTime": "12:00:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         },
         {
           "stopName": "Maryborough",
-          "arrivalTime": "13:40:00",
+          "arrivalTime": "13:25:00",
           "departureTime": "13:40:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         },
         {
           "stopName": "Ballarat",
-          "arrivalTime": "15:00:00",
+          "arrivalTime": "14:45:00",
           "departureTime": "15:00:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "2"
         },
         {
           "stopName": "North Shore",
-          "arrivalTime": "17:00:00",
-          "departureTime": "17:00:00",
+          "arrivalTime": "17:03:00",
+          "departureTime": "17:03:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         },
         {
           "stopName": "Southern Cross",
@@ -1099,7 +1170,8 @@ module.exports = {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "3"
         }
       ]
     },
@@ -1278,7 +1350,8 @@ module.exports = {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "4"
         },
         {
           "stopName": "Seymour",
@@ -1288,7 +1361,8 @@ module.exports = {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "2"
         }
       ]
     },
@@ -1303,7 +1377,8 @@ module.exports = {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "2"
         },
         {
           "stopName": "Southern Cross",
@@ -1313,7 +1388,8 @@ module.exports = {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "4"
         }
       ]
     },
@@ -1566,6 +1642,126 @@ module.exports = {
           },
           "stopDistance": 0,
           "stopSequence": 0
+        }
+      ]
+    },
+
+    {
+      "tripID": "0953.SRV_Y_NOT_SUN.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "09:53:00",
+          "departureTime": "09:53:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "3"
+        },
+        {
+          "stopName": "Somerton Yard",
+          "arrivalTime": "11:08:00",
+          "departureTime": "11:08:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        }
+      ]
+    },
+    {
+      "tripID": "1204.SRV_Y_NOT_SUN.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Somerton Yard",
+          "arrivalTime": "12:04:00",
+          "departureTime": "12:04:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        },
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "12:42:00",
+          "departureTime": "13:23:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "16"
+        },
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "13:27:00",
+          "departureTime": "13:27:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "10"
+        }
+      ]
+    },
+    {
+      "tripID": "1327.SRV_Y_NOT_SUN.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "13:27:00",
+          "departureTime": "13:27:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "10"
+        },
+        {
+          "stopName": "Westall",
+          "arrivalTime": "14:07:00",
+          "departureTime": "14:07:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "A"
+        }
+      ]
+    },
+    {
+      "tripID": "1430.SRV_Y_NOT_SUN.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Westall",
+          "arrivalTime": "14:30:00",
+          "departureTime": "14:30:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "A"
+        },
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "15:07:00",
+          "departureTime": "15:07:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "10"
         }
       ]
     },

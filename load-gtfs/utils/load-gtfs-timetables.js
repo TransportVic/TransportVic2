@@ -89,7 +89,7 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
       departureTime = utils.getHHMMFromMinutesPastMidnight(departureTimeMinutes)
       arrivalTime = utils.getHHMMFromMinutesPastMidnight(arrivalTimeMinutes)
 
-      return {
+      let tripStop = {
         stopName: stopData.fullStopName,
         stopNumber: stopData.stopNumber,
         suburb: stopData.suburb,
@@ -102,6 +102,10 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
         stopDistance,
         stopSequence
       }
+
+      if (stopData.platform) tripStop.platform = stopData.platform
+
+      return tripStop
     })
 
     let actualMode = (gtfsID === '8') ? 'bus' : gtfsModes[gtfsID]
