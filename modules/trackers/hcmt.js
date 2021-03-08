@@ -14,22 +14,13 @@ let liveTimetables
 
 async function getTimetable() {
   return await utils.getData('metro-op-timetable', '92', async () => {
-    return JSON.parse(await utils.request(urls.op))
+    return JSON.parse(await utils.request(urls.op.format('92')))
   }, 1000 * 60 * 12)
 }
 
 async function requestMetroData() {
   let data = JSON.parse(await utils.request(urls.hcmt))
   return data.entries
-}
-
-function dayCodeToArray (dayCode) {
-  if (dayCode === '2' || dayCode === '4' || dayCode === '6') return ['Sun']
-  if (dayCode === '1' || dayCode === '5') return ['Sat']
-  if (dayCode === '3') return ['Mon', 'Tues', 'Wed', 'Thur']
-  if (dayCode === '0') return ['Fri']
-
-  throw new Error('Invalid day code ' + dayCode)
 }
 
 async function createStop(prevStop, minutesDiff, stopName, platform) {
@@ -195,6 +186,37 @@ function parseRawData(stop, startOfDay) {
   }
 }
 
+async function checkTrip(trip, stopDepartures, startOfDay, day, now) {
+  let existingTrip = await liveTimetables.findDocument({
+    operationDays: day,
+    runID: trip.runID
+  })
+
+  let stopDescriptors = stopDepartures.filter(stop => stop.trip_id === trip.runID).sort((a, b) => a.time_seconds - b.time_seconds)
+
+  if (existingTrip) {
+    if (existingTrip.h) {
+      await appendNewData(existingTrip, trip, stopDescriptors, startOfDay)
+      return true
+    }
+  } else {
+    let ptvRunID = 948000 + parseInt(trip.runID)
+    let resp = await ptvAPI(`/v3/pattern/run/${ptvRunID}/route_type/0?date_utc=${now.toISOString()}`)
+    let firstDeparture = resp.departures[0]
+    let firstDepartureDay = firstDeparture ? utils.getYYYYMMDD(utils.parseTime(firstDeparture.scheduled_departure_utc)) : null
+
+    if (!firstDeparture || firstDepartureDay !== day) { // PTV Doesnt have it, likely to be HCMT
+      global.loggers.trackers.metro.log('[HCMT]: Identified HCMT Trip #' + trip.runID)
+      await createTrip(trip, stopDescriptors, startOfDay)
+      return true
+    } else {
+      await getStoppingPattern(database, ptvRunID, 'metro train')
+    }
+  }
+
+  return false
+}
+
 async function getDepartures(stop) {
   let timetable = await getTimetable()
 
@@ -203,15 +225,15 @@ async function getDepartures(stop) {
   let day = utils.getYYYYMMDD(startOfDay)
   let now = utils.now()
   let dayOfWeek = await getDayOfWeek(now)
+  let metroDay = startOfDay.format('YYYY-MM-DD')
 
   let tripsToday = timetable.filter(trip => {
-    return dayCodeToArray(trip.day_type).includes(dayOfWeek)
+    return trip.date === metroDay
   })
 
-  let extraTrips = tripsToday.filter(trip => trip.trip_id[0] === '7')
   let stopDepartures = await requestMetroData()
 
-  let allTrips = Object.values(extraTrips.reduce((trips, stop) => {
+  let allTrips = Object.values(tripsToday.reduce((trips, stop) => {
     let runID = stop.trip_id
     if (!trips[runID]) trips[runID] = {
       runID: runID,
@@ -225,32 +247,20 @@ async function getDepartures(stop) {
     return trips
   }, {}))
 
+  let extraTrips = allTrips.filter(trip => trip.runID[0] === '7')
   let runIDs = allTrips.map(trip => trip.runID)
 
-  await async.forEach(allTrips, async trip => {
-    let existingTrip = await liveTimetables.findDocument({
-      operationDays: day,
-      runID: trip.runID
-    })
+  let hcmtExtras = await async.filter(extraTrips, async trip => await checkTrip(trip, stopDepartures, startOfDay, day, now))
+  let foundRunIDs = hcmtExtras.map(trip => trip.runID)
 
-    let stopDescriptors = stopDepartures.filter(stop => stop.trip_id === trip.runID).sort((a, b) => a.time_seconds - b.time_seconds)
+  await async.forEach(hcmtExtras, async trip => {
+    let runID = trip.runID
+    let stopDescriptor = tripsToday.find(stop => stop.trip_id === runID)
 
-    if (existingTrip) {
-      if (existingTrip.h) {
-        await appendNewData(existingTrip, trip, stopDescriptors, startOfDay)
-      }
-    } else {
-      let ptvRunID = 948000 + parseInt(trip.runID)
-      let resp = await ptvAPI(`/v3/pattern/run/${ptvRunID}/route_type/0?date_utc=${now.toISOString()}`)
-      let firstDeparture = resp.departures[0]
-      let firstDepartureDay = firstDeparture ? utils.getYYYYMMDD(utils.parseTime(firstDeparture.scheduled_departure_utc)) : null
-
-      if (!firstDeparture || firstDepartureDay !== day) { // PTV Doesnt have it, likely to be HCMT
-        global.loggers.trackers.metro.log('[HCMT]: Identified HCMT Trip #' + trip.runID)
-        await createTrip(trip, stopDescriptors, startOfDay)
-      } else {
-        await getStoppingPattern(database, ptvRunID, 'metro train')
-      }
+    let formingRunID = stopDescriptor.forms_trip_id
+    if (formingRunID.length === 4 && !foundRunIDs.includes(formingRunID)) {
+      let formingTrip = allTrips.find(newTrip => newTrip.runID === formingRunID)
+      await checkTrip(formingTrip, stopDepartures, startOfDay, day, now)
     }
   })
 }
