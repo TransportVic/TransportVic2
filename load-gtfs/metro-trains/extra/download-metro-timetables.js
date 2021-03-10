@@ -2,6 +2,7 @@ const async = require('async')
 const fs = require('fs')
 const path = require('path')
 const utils = require('../../../utils')
+const urls = require('../../../urls')
 const updateStats = require('../../utils/stats')
 
 const lineIDs = {
@@ -28,7 +29,7 @@ async function main () {
 
   await async.forEach(Object.keys(lineIDs), async lineName => {
     const lineID = lineIDs[lineName]
-    const body = await utils.request('https://www.metrotrains.com.au/api?op=get_timetable_data&line_id={0}'.format(lineID), {
+    const body = await utils.request(urls.metroTrainsTimetable.format(lineID), {
       timeout: 20000
     })
 
