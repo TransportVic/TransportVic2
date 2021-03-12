@@ -17,7 +17,7 @@ module.exports = {
 
     ["SRV_OTWAY_SAT", "1", "1", "1", "1", "1", "1", "1", "20210313", "20210313"],
     ["SRV_S313_SAT", "1", "1", "1", "1", "1", "1", "1", "20210306", "20210306"],
-    ["SRV_SHM_SUN", "1", "1", "1", "1", "1", "1", "1", "20210314", "20210314"],
+    ["SRV_SHM_SUN", "1", "1", "1", "1", "1", "1", "1", "20210418", "20210418"],
     ["SRV_Y_NOT_SUN", "1", "1", "1", "1", "1", "1", "1", "20210321", "20210321"],
 
     ["SRHC_TRARALGON_SAT", "1", "1", "1", "1", "1", "1", "1", "20210410", "20210410"]
@@ -240,7 +240,7 @@ module.exports = {
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Camperdown",
-      "vehicle": ["A66", "S313"]
+      "vehicle": ["S313", "A66", "25BE", "46BE", "7ABE", "38BE", "17BE", "5AS", "Moorabool", "PCP292"]
     },
     {
       "mode": "heritage train",
@@ -250,7 +250,7 @@ module.exports = {
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Warrnambool",
-      "vehicle": ["A66", "S313"]
+      "vehicle": ["S313", "A66", "25BE", "46BE", "7ABE", "38BE", "17BE", "5AS", "Moorabool", "PCP292"]
     },
     {
       "mode": "heritage train",
@@ -260,7 +260,7 @@ module.exports = {
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Camperdown",
-      "vehicle": ["S313", "A66"]
+      "vehicle": ["S313", "A66", "PCP292", "Moorabool", "5AS", "17BE", "38BE", "7ABE", "46BE", "25BE"]
     },
     {
       "mode": "heritage train",
@@ -270,7 +270,7 @@ module.exports = {
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Southern Cross",
-      "vehicle": ["S313", "A66"]
+      "vehicle": ["S313", "A66", "PCP292", "Moorabool", "5AS", "17BE", "38BE", "7ABE", "46BE", "25BE"]
     },
 
 
@@ -1188,7 +1188,8 @@ module.exports = {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "2"
         },
         {
           "stopName": "Wyndham Vale",
@@ -1198,37 +1199,41 @@ module.exports = {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "2"
         },
         {
           "stopName": "Geelong",
-          "arrivalTime": "09:45:00",
-          "departureTime": "09:45:00",
+          "arrivalTime": "09:48:00",
+          "departureTime": "09:48:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "2"
         },
         {
           "stopName": "Colac",
-          "arrivalTime": "11:06:00",
-          "departureTime": "11:06:00",
+          "arrivalTime": "11:11:00",
+          "departureTime": "11:11:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         },
         {
           "stopName": "Camperdown",
-          "arrivalTime": "11:51:00",
-          "departureTime": "11:51:00",
+          "arrivalTime": "11:56:00",
+          "departureTime": "11:56:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         }
       ]
     },
@@ -1237,23 +1242,25 @@ module.exports = {
       "stopTimings": [
         {
           "stopName": "Camperdown",
-          "arrivalTime": "12:50:00",
-          "departureTime": "12:50:00",
+          "arrivalTime": "12:55:00",
+          "departureTime": "12:55:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         },
         {
           "stopName": "Warrnambool",
-          "arrivalTime": "13:45:00",
-          "departureTime": "13:45:00",
+          "arrivalTime": "13:50:00",
+          "departureTime": "13:50:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         }
       ]
     },
@@ -1268,7 +1275,8 @@ module.exports = {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         },
         {
           "stopName": "Camperdown",
@@ -1278,7 +1286,8 @@ module.exports = {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         }
       ]
     },
@@ -1293,27 +1302,30 @@ module.exports = {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         },
         {
           "stopName": "Colac",
-          "arrivalTime": "16:55:00",
+          "arrivalTime": "16:50:00",
           "departureTime": "16:55:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         },
         {
           "stopName": "Geelong",
-          "arrivalTime": "18:35:00",
+          "arrivalTime": "18:32:00",
           "departureTime": "18:35:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         },
         {
           "stopName": "Wyndham Vale",
@@ -1323,17 +1335,19 @@ module.exports = {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "1"
         },
         {
           "stopName": "Southern Cross",
-          "arrivalTime": "19:45:00",
-          "departureTime": "19:45:00",
+          "arrivalTime": "19:52:00",
+          "departureTime": "19:52:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "2"
         }
       ]
     },
