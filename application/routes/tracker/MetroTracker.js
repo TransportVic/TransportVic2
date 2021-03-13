@@ -325,6 +325,8 @@ router.get('/shunts', async  (req, res) => {
   if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
   else date = today
 
+  res.header('Access-Control-Allow-Origin', '*')
+
   res.json((await metroShunts.findDocuments({
     date
   }).toArray()).map(shunt => shunt.runID))
