@@ -14,7 +14,7 @@ let liveTimetables, timetables
 
 async function getTimetable() {
   return await utils.getData('metro-op-timetable', '92', async () => {
-    return JSON.parse(await utils.request(urls.op.format('92')))
+    return JSON.parse(await utils.request(urls.op.format('92'), { timeout: 6000 }))
   }, 1000 * 60 * 12)
 }
 
@@ -221,7 +221,7 @@ async function checkTrip(trip, stopDepartures, startOfDay, day, now) {
   }
 }
 
-async function getDepartures(stop) {
+async function getDepartures() {
   let timetable = await getTimetable()
 
   // Tracker only runs at reasonable times, no 3am to worry about

@@ -39,6 +39,9 @@ if (modules.tracker && modules.tracker.metro)
 if (modules.tracker && modules.tracker.metroNotify)
   require('../modules/trackers/metro-notify')
 
+if (modules.tracker && modules.tracker.metroShunts)
+  require('../modules/trackers/metro-shunts')
+
 if (modules.preloadCCL)
   require('../modules/preload-ccl')
 
