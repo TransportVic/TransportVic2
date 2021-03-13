@@ -127,7 +127,7 @@ async function requestTimetables() {
     let allLines = Object.keys(routes)
     for (let line of allLines) {
       await getDepartures(line)
-      await utils.sleep(5000)
+      await utils.sleep(12000)
     }
   } catch (e) {
     global.loggers.trackers.metro.err('Failed to load shunts data, skipping', e)

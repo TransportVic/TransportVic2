@@ -316,6 +316,20 @@ router.get('/bot', async (req, res) => {
   })
 })
 
+router.get('/shunts', async  (req, res) => {
+  let {db} = res
+  let metroShunts = db.getCollection('metro shunts')
+
+  let today = utils.getYYYYMMDDNow()
+  let {consist, date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  res.json((await metroShunts.findDocuments({
+    date
+  }).toArray()).map(shunt => shunt.runID))
+})
+
 router.get('/strange', (req, res) => {
   let {db} = res
   let metroTrips = db.getCollection('metro trips')
