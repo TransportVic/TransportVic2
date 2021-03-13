@@ -92,12 +92,14 @@ async function getDepartures(routeName) {
     if (formingTrip) {
       if (formingTrip.platform !== trip.platform) {
         trip.type = 'SHUNT_AND_REDOCK'
+        trip.toPlatform = formingTrip.platform
         return true
       } else return false
     }
 
     if (!allRunIDs.includes(forming)) {
       trip.type = 'EMPTY_CARS'
+      return true
     } else return false
   })
 
@@ -108,7 +110,9 @@ async function getDepartures(routeName) {
     stationName: shunt.station,
     arrivalTimeMinutes: Math.round(shunt.time_seconds / 60),
     type: shunt.type,
-    platform: shunt.platform
+    platform: shunt.platform,
+    ...((shunt.type === 'EMPTY_CARS' || shunt.type === 'SHUNT_OUT') ? { forming: shunt.forms_trip_id } : {}),
+    ...(shunt.type === 'SHUNT_AND_REDOCK' ? { toPlatform: shunt.toPlatform } : {})
   }))
 
   let shuntIDs = dbShunts.map(shunt => shunt.runID)
@@ -137,7 +141,7 @@ async function requestTimetables() {
     let allLines = Object.keys(routes)
     for (let line of allLines) {
       await getDepartures(line)
-      await utils.sleep(12000)
+      await utils.sleep(5000)
     }
   } catch (e) {
     global.loggers.trackers.metro.err('Failed to load shunts data, skipping', e)

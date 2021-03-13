@@ -331,7 +331,9 @@ router.get('/shunts', async  (req, res) => {
     date
   }).toArray()).map(shunt => ({
     runID: shunt.runID,
-    type: shunt.type
+    type: shunt.type,
+    forming: shunt.forming,
+    toPlatform: shunt.toPlatform
   })))
 })
 
