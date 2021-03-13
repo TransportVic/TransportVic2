@@ -79,18 +79,26 @@ async function getDepartures(routeName) {
   let shunts = lastStops.filter(trip => {
     let forming = trip.forms_trip_id
 
-    if (forming === '0') return true
+    if (forming === '0') return trip.type = 'TO_YARD' || true
     if (forming.startsWith('0')) {
       let runID = parseInt(forming)
-      return !(700 <= runID && runID <= 899) // City Circle
+      if (!(700 <= runID && runID <= 899)) { // City Circle
+        trip.type = 'SHUNT_OUT'
+        return true
+      } else return false
     }
 
     let formingTrip = firstStops.find(nextTrip => nextTrip.trip_id === forming)
     if (formingTrip) {
-      return formingTrip.platform !== trip.platform
+      if (formingTrip.platform !== trip.platform) {
+        trip.type = 'SHUNT_AND_REDOCK'
+        return true
+      } else return false
     }
 
-    return !allRunIDs.includes(forming)
+    if (!allRunIDs.includes(forming)) {
+      trip.type = 'EMPTY_CARS'
+    } else return false
   })
 
   let dbShunts = shunts.map(shunt => ({
@@ -98,7 +106,9 @@ async function getDepartures(routeName) {
     runID: shunt.trip_id,
     routeName,
     stationName: shunt.station,
-    arrivalTimeMinutes: Math.round(shunt.time_seconds / 60)
+    arrivalTimeMinutes: Math.round(shunt.time_seconds / 60),
+    type: shunt.type,
+    platform: shunt.platform
   }))
 
   let shuntIDs = dbShunts.map(shunt => shunt.runID)

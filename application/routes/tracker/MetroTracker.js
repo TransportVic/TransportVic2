@@ -329,7 +329,10 @@ router.get('/shunts', async  (req, res) => {
 
   res.json((await metroShunts.findDocuments({
     date
-  }).toArray()).map(shunt => shunt.runID))
+  }).toArray()).map(shunt => ({
+    runID: shunt.runID,
+    type: shunt.type
+  })))
 })
 
 router.get('/strange', (req, res) => {
