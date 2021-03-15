@@ -152,6 +152,7 @@ async function createTrip(trip, stopDescriptors, startOfDay) {
     routeName: 'Pakenham',
     routeGTFSID: '2-PKM',
     runID: trip.runID,
+    forming: trip.forming === '0' ? null : trip.forming,
     operationDays: trip.operationDays,
     vehicle: '7 Car HCMT',
     stopTimings: baseTrip.stopTimings,
@@ -241,6 +242,7 @@ async function getDepartures() {
     let runID = stop.trip_id
     if (!trips[runID]) trips[runID] = {
       runID: runID,
+      forming: stop.forms_trip_id,
       stopsAvailable: [],
       direction: runID[3] % 2 === 0 ? 'Up' : 'Down',
       operationDays: day
