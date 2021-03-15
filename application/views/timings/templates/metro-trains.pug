@@ -27,8 +27,8 @@ if departures.length
         span.towards #{prettyLineName} towards
         span.destination #{departure.destination}
         
-        - let currentSuspension = true ? null : departure.suspensions.find(suspension => suspension.disruptionStatus !== 'passed')
-        if currentSuspension
+        - let currentSuspension = departure.suspension
+        if currentSuspension && currentSuspension.disruptionStatus !== 'passed' && !departure.cancelled
           span.broadDepartureInfo.important Buses replace trains from #{currentSuspension.startStation.slice(0, -16)} to #{currentSuspension.endStation.slice(0, -16)}
         else if departure.cancelled
           span.broadDepartureInfo.important CANCELLED
@@ -45,7 +45,6 @@ if departures.length
               let cityLoopRunning = departure.cityLoopRunning ? departure.cityLoopRunning.join(', ') : ''
               let altonaLoopRunning = departure.altonaLoopRunning ? departure.altonaLoopRunning.join(', ') : ''
 
-              let configText = []
               let important = false
               
               if (altonaLoopRunning.length) {

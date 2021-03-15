@@ -27,7 +27,7 @@ async function makeRequest(url, maxRetries=2) {
     return await utils.getData('ptv-api', url, async () => {
       return JSON.parse(await utils.request(getURL(url), {
         maxRetries,
-        timeout: 1700
+        timeout: 1900
       }))
     })
   } catch (e) {
