@@ -232,7 +232,7 @@ async function applySuspension(train, notifyData, metroPlatform, db) {
     let isDown = train.direction === 'Down'
 
     train.suspension = suspension
-    trip.suspension = { startStation: suspension.startStation, endStation: suspension.endStation }
+    trip.suspension = suspension
 
     if (suspension.disruptionStatus === 'before') { // Cut destination
       let startIndex = tripStops.indexOf(suspension.startStation)
