@@ -188,14 +188,9 @@ module.exports = class MainServer {
 
     app.use(config.newVlineTracker, require('../application/routes/tracker/VLineTracker2'))
 
-    app.use('/mockups', rateLimit({
-      windowMs: 1 * 60 * 1000,
-      max: 140
-    }))
-
     app.use('/bus/timings', rateLimit({
       windowMs: 1 * 60 * 1000,
-      max: 20
+      max: 40
     }))
   }
 
