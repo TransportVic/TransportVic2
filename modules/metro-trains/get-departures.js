@@ -409,11 +409,29 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
   }
 
   if (routeName === 'Pakenham') {
+    let testDay = utils.getYYYYMMDD(scheduledDepartureTime)
     let test = await db.getCollection('live timetables').findDocument({
-      mode: 'metro train', routeGTFSID: '2-PKM', runID, operationDays: utils.getYYYYMMDD(scheduledDepartureTime)
+      mode: 'metro train', routeGTFSID: '2-PKM', runID, operationDays: testDay
     })
 
-    if (test && test.h) return
+    if (test && test.h) {
+      let query = {
+        date: testDay,
+        runID: runID
+      }
+
+      let tripData = {
+        ...query,
+        origin: test.trueOrigin.slice(0, -16),
+        destination: test.trueDestination.slice(0, -16),
+        departureTime: test.trueDepartureTime,
+        destinationArrivalTime: test.trueDestinationArrivalTime,
+        consist: findConsist(run.vehicle_descriptor.id, runID)
+      }
+
+      await db.getCollection('metro trips').replaceDocument(query, tripData, { upsert: true })
+      return global.loggers.general.log('Found HCMT trip', runID, '@', stationName)
+    }
   }
 
   let viaCityLoop = isFSS ? cityLoopConfig.includes('FGS') : undefined
