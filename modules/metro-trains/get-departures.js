@@ -408,6 +408,14 @@ async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, ro
     }
   }
 
+  if (routeName === 'Pakenham') {
+    let test = await db.getCollection('live timetables').findDocument({
+      mode: 'metro train', routeGTFSID: '2-PKM', runID, operationDays: utils.getYYYYMMDD(scheduledDepartureTime)
+    })
+
+    if (test && test.h) return
+  }
+
   let viaCityLoop = isFSS ? cityLoopConfig.includes('FGS') : undefined
 
   let trip = await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines,
