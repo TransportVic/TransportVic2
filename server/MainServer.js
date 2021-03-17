@@ -47,7 +47,8 @@ if (modules.preloadCCL)
 
 let serverStarted = false
 
-let code = 'Basic ' + Buffer.from(config.vlineLogin).toString('base64')
+let trackerAuth = 'Basic ' + Buffer.from(config.vlineLogin).toString('base64')
+let mockupsAuths = config.mockupsLogin.map(key => 'Basic ' + Buffer.from(key).toString('base64'))
 
 module.exports = class MainServer {
   constructor () {
@@ -166,7 +167,17 @@ module.exports = class MainServer {
     app.set('strict routing', false)
 
     app.use(config.newVlineTracker, (req, res, next) => {
-      if (req.headers.authorization && req.headers.authorization === code) {
+      if (req.headers.authorization && req.headers.authorization === trackerAuth) {
+        return next()
+      }
+
+      res.status(401)
+      res.header('www-authenticate', 'Basic realm="password needed"')
+      res.end('Please login')
+    })
+
+    app.use('/mockups', (req, res, next) => {
+      if (req.headers.authorization && mockupsAuths.includes(req.headers.authorization)) {
         return next()
       }
 
