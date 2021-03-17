@@ -89,6 +89,11 @@ function addAltonaLoopRunning(train) {
   }
 }
 
+function addStonyPointPlatform(train, stationName) {
+  if (stationName === 'Frankston') train.platform = '3'
+  else train.platform = '1'
+}
+
 function mapSuspension(suspensionText, routeName) {
   let stationsAffected = suspensionText
     .replace(/\u00A0/g, ' ').replace(/[–-]/, ' and ')
@@ -509,6 +514,18 @@ async function mapBus(bus, metroPlatform, db) {
   }
 }
 
+async function getSTYRunID(trip, db) {
+  let timetables = db.getCollection('timetables')
+  let wttTrip = await timetables.findDocument({
+    mode: 'metro train',
+    routeGTFSID: '2-SPT',
+    direction: trip.direction,
+    departureTime: trip.departureTime
+  })
+
+  if (wttTrip) return wttTrip.runID
+}
+
 async function mapTrain(train, metroPlatform, db) {
   let {stopGTFSID} = metroPlatform
   let stationName = metroPlatform.fullStopName.slice(0, -16)
@@ -529,7 +546,9 @@ async function mapTrain(train, metroPlatform, db) {
     trip = await getStoppingPattern(db, train.ptvRunID, 'metro train', train.scheduledDepartureTime.toISOString())
   }
 
-  let destination = trip.trueDestination.slice(0, -16)
+  if (train.routeName === 'Stony Point') {
+    train.runID = await getSTYRunID(trip, db)
+  }
 
   return {
     scheduledDepartureTime: train.scheduledDepartureTime,
@@ -542,7 +561,7 @@ async function mapTrain(train, metroPlatform, db) {
     routeName: train.routeName,
     codedRouteName: utils.encodeName(train.routeName),
     trip,
-    destination,
+    destination: trip.trueDestination.slice(0, -16),
     direction: train.direction,
     runDestination: train.runDestination,
     viaCityLoop: train.viaCityLoop,
@@ -812,6 +831,7 @@ async function getDeparturesFromPTV(station, db) {
 
     if (isCityTrain) addCityLoopRunning(train, stationName)
     if (train.routeName === 'Werribee') addAltonaLoopRunning(train)
+    if (train.routeName === 'Stony Point') addStonyPointPlatform(train, stationName)
   })
 
   return allDepartures
