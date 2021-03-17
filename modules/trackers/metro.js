@@ -1,7 +1,7 @@
 const async = require('async')
 const config = require('../../config')
 const utils = require('../../utils')
-const urls = require('../../urls')
+const ptvAPI = require('../../ptv-api')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const getMetroDepartures = require('../metro-trains/get-departures')
 const { findTrip } = getMetroDepartures
@@ -53,9 +53,40 @@ async function requestTimings() {
   }
 }
 
+async function trainCount(stopGTFSID) {
+  let { departures } = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=7&include_cancelled=true`)
+  let today = utils.getYYYYMMDDNow()
+
+  let trains = departures.filter(departure => {
+    if (!departure.flags.includes('RRB')) {
+      let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
+      return utils.getYYYYMMDD(scheduledDepartureTime) === today
+    }
+  })
+  return trains.count
+}
+
 database.connect(async () => {
   dbStops = database.getCollection('stops')
   metroTrips = database.getCollection('metro trips')
+
+  try {
+    if (await trainCount(20227) >= 4) {
+      stops.push('Flemington Racecourse')
+      global.loggers.trackers.metro.log('Found at least 4 RCE trains, monitoring RCE')
+    }
+  } catch (e) {
+    global.loggers.trackers.metro.err('Failed to check RCE trips, assuming none', e)
+  }
+
+  try {
+    if (await trainCount(20228) >= 4) {
+      stops.push('Showgrounds')
+      global.loggers.trackers.metro.log('Found at least 4 SGS trains, monitoring SGS')
+    }
+  } catch (e) {
+    global.loggers.trackers.metro.err('Failed to check SGS trips, assuming none', e)
+  }
 
   schedule([
     [0, 60, 1.2],
