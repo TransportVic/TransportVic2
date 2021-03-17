@@ -421,6 +421,27 @@ async function verifyTrainLoopRunning(train) {
   }
 }
 
+async function applyLoopSkipping(train, notifyData) {
+  let { routeName } = train
+
+  if (notifyData.cityLoopSkipping.includes(train.runID) || notifyData.broadCityLoopSkipping.includes(routeName)) {
+    let isCityTrain = train.trip.stopTimings.some(stop => stop.stopName === 'Flinders Street Railway Station')
+    if (isCityTrain) {
+      train.viaCityLoop = false
+      train.isSkippingLoop = true
+      if (northernGroup.includes(routeName)) { // NME - SSS - FSS
+        train.cityLoopRunning = ['NME', 'SSS', 'FSS']
+      } else if (cliftonHillGroup.includes(routeName)) { // JLI - FSS
+        train.cityLoopRunning = ['JLI', 'FSS']
+      } else { // RMD - FSS
+        train.cityLoopRunning = ['RMD', 'FSS']
+      }
+
+      if (train.direction === 'Down') train.cityLoopRunning.reverse()
+    }
+  }
+}
+
 function returnBusDeparture(bus, trip) {
   let destination = trip.destination.slice(0, -16)
 
@@ -440,7 +461,8 @@ function returnBusDeparture(bus, trip) {
     runDestination: destination,
     viaCityLoop: null,
     isRailReplacementBus: true,
-    suspension: null
+    suspension: null,
+    isSkippingLoop: null
   }
 }
 
@@ -569,7 +591,8 @@ async function mapTrain(train, metroPlatform, db) {
     runDestination: train.runDestination,
     viaCityLoop: train.viaCityLoop,
     isRailReplacementBus: false,
-    suspension: null
+    suspension: null,
+    isSkippingLoop: null
   }
 }
 
@@ -835,6 +858,8 @@ async function getDeparturesFromPTV(station, db) {
     if (isCityTrain) addCityLoopRunning(train, stationName)
     if (train.routeName === 'Werribee') addAltonaLoopRunning(train)
     if (train.routeName === 'Stony Point') addStonyPointPlatform(train, stationName)
+
+    await applyLoopSkipping(train, notifyData)
   })
 
   return allDepartures

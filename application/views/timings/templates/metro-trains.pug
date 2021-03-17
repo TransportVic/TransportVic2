@@ -38,20 +38,19 @@ if departures.length
           
           -
             let configText = []
+            let important = false
             if (!departure.isRailReplacementBus) {
               let isUpTrip = departure.direction === 'Up'
               let { futureStops } = departure
               
               let cityLoopRunning = departure.cityLoopRunning ? departure.cityLoopRunning.join(', ') : ''
               let altonaLoopRunning = departure.altonaLoopRunning ? departure.altonaLoopRunning.join(', ') : ''
-
-              let important = false
               
               if (altonaLoopRunning.length) {
                 let shouldShow = (isUpTrip && futureStops.includes('Newport')) || (!isUpTrip && futureStops.includes('Laverton'))
                 
                 if (shouldShow) {
-                  if (departure.willSkipALT) important = true
+                  if (departure.isSkippingLoop) important = true
                   configText.push(altonaLoopRunning)
                 }
               }
@@ -60,7 +59,7 @@ if departures.length
                 let shouldShow = isUpTrip || cityStations.includes(station.stopName.slice(0, -16))
                 
                 if (shouldShow) {
-                  if (departure.willSkipCCL) important = true
+                  if (departure.isSkippingLoop) important = true
                   configText.push(cityLoopRunning)
                 }
               }
