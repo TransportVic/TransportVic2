@@ -289,6 +289,9 @@ async function applySuspension(train, notifyData, metroPlatform, db) {
     trip.destinationArrivalTime = lastStop.arrivalTime
 
     fixTripDestination(trip)
+  } else if (train.routeName === 'Stony Point' && notifyData.stonyPointReplacements.includes(train.runID)) {
+    train.isRailReplacementBus = true
+    train.trip.runID = train.runID + 'B'
   }
 
   return train
