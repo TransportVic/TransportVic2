@@ -343,6 +343,14 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     destinationArrivalTime: timetable.destinationArrivalTime
   }
 
+  if (mode === 'metro train' && runID) {
+    key = {
+      mode: 'metro train',
+      operationDays: timetable.operationDays,
+      runID
+    }
+  }
+
   await liveTimetables.replaceDocument(key, timetable, {
     upsert: true
   })
