@@ -27,6 +27,8 @@ database.connect(async () => {
   stops.push(await dbStops.findDocument({ stopName: 'Flinders Street Railway Station' }))
   stops.push(await dbStops.findDocument({ stopName: 'Parliament Railway Station' }))
   stops.push(await dbStops.findDocument({ stopName: 'North Melbourne Railway Station' }))
+  stops.push(await dbStops.findDocument({ stopName: 'Jolimont Railway Station' }))
+  stops.push(await dbStops.findDocument({ stopName: 'Richmond Railway Station' }))
 
   schedule([
     [0, 60, 12], // 12am - 1am
