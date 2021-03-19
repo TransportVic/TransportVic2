@@ -214,6 +214,10 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
       platform_number = '2' // 4 Road is Platform 2
     }
 
+    if (stopName === 'Merinda Park Railway Station' && platform_number === '1') {
+      platform = '2' // Plat 1 renumbered to Plat 2 physically, we want to match this
+    }
+
     let stopTiming = {
       stopName,
       stopNumber: stopBay.stopNumber,

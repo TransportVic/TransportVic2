@@ -174,7 +174,7 @@ module.exports = {
   "Narre Warren": [],
   "Hallam": [],
   "Lynbrook": [...platr(2, [], 'half-platform-bold')],
-  "Merinda Park": [...platr(1, [], 'half-platform-bold')],
+  "Merinda Park": [plat(2, 'platform')],
   "Cranbourne": [...platr(2, [], 'half-platform-bold')],
   "Carrum": [...platr(2, [], 'platform'), conc('up-down')],
   "Seaford": [...platr(2, [], 'half-platform-bold')],

@@ -70,5 +70,6 @@ module.exports = [
   'Ringwood East',
   'Upwey',
   'Glenhuntly',
-  'Mooroolbark'
+  'Mooroolbark',
+  'Merinda Park'
 ]
