@@ -1704,7 +1704,7 @@ module.exports = {
         {
           "stopName": "Southern Cross",
           "arrivalTime": "12:42:00",
-          "departureTime": "13:23:00",
+          "departureTime": "13:24:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1714,8 +1714,8 @@ module.exports = {
         },
         {
           "stopName": "Flinders Street",
-          "arrivalTime": "13:27:00",
-          "departureTime": "13:27:00",
+          "arrivalTime": "13:29:00",
+          "departureTime": "13:29:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1730,8 +1730,8 @@ module.exports = {
       "stopTimings": [
         {
           "stopName": "Flinders Street",
-          "arrivalTime": "13:27:00",
-          "departureTime": "13:27:00",
+          "arrivalTime": "13:29:00",
+          "departureTime": "13:29:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1768,14 +1768,25 @@ module.exports = {
         },
         {
           "stopName": "Flinders Street",
-          "arrivalTime": "15:07:00",
-          "departureTime": "15:07:00",
+          "arrivalTime": "15:08:00",
+          "departureTime": "15:10:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
           "stopSequence": 0,
           "platform": "10"
+        },
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "15:14:00",
+          "departureTime": "15:14:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "14"
         }
       ]
     },
