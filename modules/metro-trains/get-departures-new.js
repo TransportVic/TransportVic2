@@ -404,19 +404,19 @@ async function norGroupMatch(train, stopGTFSID, stationName, db) {
 async function verifyTrainLoopRunning(train) {
   if (dandenongGroup.includes(train.routeName)) {
     let departureDay = await getDayOfWeek(train.originDepartureTime)
-    if (train.runID <= 4299) {
+    if (4200 <= train.runID && train.runID <= 4299) { // DNG - CBE Shuttles
       if (departureDay === 'Sat' || departureDay === 'Sun') {
         train.viaCityLoop = false
-      } else {
-        let fssIndex = train.allStops.indexOf('Flinders Street')
-        if (train.direction === 'Up' && fssIndex !== -1) {
-          let parIndex = train.allStops.indexOf('Parliament')
-          train.viaCityLoop = parIndex < fssIndex // PAR before FSS
-        }
       }
-    } else if (6999 < train.runID && train.runID < 7999) {
+    } else if (6999 < train.runID && train.runID < 7999) { // Specials, these still follow regular conventions
       let loopIndicator = train.runID[1]
       train.viaCityLoop = loopIndicator > 5
+    } else { // Look for city loop skipping a/c scheduled works
+      let fssIndex = train.allStops.indexOf('Flinders Street')
+      if (train.direction === 'Up' && fssIndex !== -1) {
+        let parIndex = train.allStops.indexOf('Parliament')
+        train.viaCityLoop = parIndex < fssIndex && parIndex !== -1 // PAR before FSS
+      }
     }
   }
 }
