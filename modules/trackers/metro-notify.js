@@ -53,7 +53,7 @@ async function requestTimings() {
         fromDate: parseInt(alert.from_date),
         toDate: parseInt(alert.to_date),
         type: alert.alert_type,
-        text: alert.alert_text.replace(/Plan your journey.*/, '').replace(/Visit .*? web.*/g, '').replace(/  +/g, ' ').trim(),
+        text: alert.alert_text.replace(/Plan your journey.*/, '').replace(/Visit .*? web.*/g, '').replace(/[–-]/g, ' to ').replace(/  +/g, ' ').trim(),
         active: true,
         ...(alert.trip_id ? { runID: alert.trip_id } : {})
       }

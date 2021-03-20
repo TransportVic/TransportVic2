@@ -127,8 +127,9 @@ function isCityLoop(disruption) {
 }
 
 function isAltonaLoop(disruption) {
-  let text = disruption.text.toLowerCase()
-  return text.includes('altona') || text.includes('seaholme') || text.includes('westona')
+  let text = disruption.text
+  return text.includes('Altona') || text.includes('Seaholme') || text.includes('Westona')
+    || (text.includes('Newport') && text.includes('Laverton'))
 }
 
 async function getNotifyData(db) {
@@ -168,7 +169,12 @@ async function getNotifyData(db) {
     return text.includes('originate') || text.includes('terminate')
   }).map(disruption => disruption.runID)
 
-  let loopSkipping = allTrainAlterations.filter(disruption => disruption.text.includes('direct'))
+  let loopSkipping = allTrainAlterations.filter(disruption => {
+    let { text } = disruption
+    return text.includes('direct')
+      || (text.includes('express') && isAltonaLoop(disruption))
+  })
+
   let cityLoopSkipping = loopSkipping.filter(isCityLoop).map(disruption => disruption.runID)
   let altonaLoopSkipping = loopSkipping.filter(isAltonaLoop).map(disruption => disruption.runID)
 
