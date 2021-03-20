@@ -182,13 +182,13 @@ async function getNotifyData(db) {
   let broadAltonaLoopSkipping = broadLoopSkipping.filter(isAltonaLoop).length !== 0
 
   return {
-    suspensions,
-    suspendedLines: Object.keys(suspensions),
-    stonyPointReplacements,
+    suspensions, // Done
+    suspendedLines: Object.keys(suspensions), // Done as part of suspensions
+    stonyPointReplacements, // Done
     trainAlterations,
-    cityLoopSkipping,
+    cityLoopSkipping, // Done
     altonaLoopSkipping,
-    broadCityLoopSkipping,
+    broadCityLoopSkipping, // Done
     broadAltonaLoopSkipping
   }
 }
@@ -426,6 +426,7 @@ async function applyLoopSkipping(train, notifyData) {
 
   if (notifyData.cityLoopSkipping.includes(train.runID) || notifyData.broadCityLoopSkipping.includes(routeName)) {
     let isCityTrain = train.trip.stopTimings.some(stop => stop.stopName === 'Flinders Street Railway Station')
+
     if (isCityTrain) {
       train.viaCityLoop = false
       train.isSkippingLoop = true
@@ -440,6 +441,17 @@ async function applyLoopSkipping(train, notifyData) {
       if (train.direction === 'Down') train.cityLoopRunning.reverse()
     }
   }
+
+  if (notifyData.altonaLoopSkipping.includes(train.runID) || notifyData.broadAltonaLoopSkipping) {
+    if (train.viaAltonaLoop) {
+      train.viaAltonaLoop = false
+      train.isSkippingLoop = true
+      train.altonaLoopRunning = ['LAV', 'NPT']
+
+      if (train.direction === 'Down') train.altonaLoopRunning.reverse()
+    }
+  }
+
 }
 
 function returnBusDeparture(bus, trip) {
@@ -460,6 +472,7 @@ function returnBusDeparture(bus, trip) {
     direction: bus.direction,
     runDestination: destination,
     viaCityLoop: null,
+    viaAltonaLoop: null,
     isRailReplacementBus: true,
     suspension: null,
     isSkippingLoop: null
@@ -575,6 +588,16 @@ async function mapTrain(train, metroPlatform, db) {
     train.runID = await getSTYRunID(trip, db)
   }
 
+  let viaAltonaLoop = null
+  if (train.routeName === 'Werribee') {
+    let isNPTTrain = trip.stopTimings.some(stop => stop.stopName === 'Newport Railway Station')
+    let isLAVTrain = trip.stopTimings.some(stop => stop.stopName === 'Laverton Railway Station')
+
+    if (isNPTTrain && isLAVTrain) {
+      viaAltonaLoop = trip.stopTimings.some(stop => stop.stopName === 'Altona Railway Station')
+    }
+  }
+
   return {
     scheduledDepartureTime: train.scheduledDepartureTime,
     estimatedDepartureTime: train.estimatedDepartureTime,
@@ -590,6 +613,7 @@ async function mapTrain(train, metroPlatform, db) {
     direction: train.direction,
     runDestination: train.runDestination,
     viaCityLoop: train.viaCityLoop,
+    viaAltonaLoop,
     isRailReplacementBus: false,
     suspension: null,
     isSkippingLoop: null
