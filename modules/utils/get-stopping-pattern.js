@@ -343,7 +343,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     destinationArrivalTime: timetable.destinationArrivalTime
   }
 
-  if (mode === 'metro train' && runID) {
+  if (mode === 'metro train' && runID && (referenceTrip ? !referenceTrip.affectedBySuspension : true)) {
     key = {
       mode: 'metro train',
       operationDays: timetable.operationDays,
