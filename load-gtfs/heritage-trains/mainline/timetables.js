@@ -405,7 +405,7 @@ module.exports = {
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Somerton Yard",
-      "vehicle": ["Y112"]
+      "vehicle": ["Y112", "1BCE", "700BK", "7ABE", "14BRS", "600BK", "VZVF1"]
     },
     {
       "mode": "heritage train",
@@ -415,7 +415,7 @@ module.exports = {
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Flinders Street",
-      "vehicle": ["Y112"]
+      "vehicle": ["Y112", "VZVF1", "600BK", "14BRS", "7ABE", "700BK", "1BCE"]
     },
     {
       "mode": "heritage train",
@@ -425,7 +425,7 @@ module.exports = {
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Westall",
-      "vehicle": ["Y112"]
+      "vehicle": ["Y112", "1BCE", "700BK", "7ABE", "14BRS", "600BK", "VZVF1"]
     },
     {
       "mode": "heritage train",
@@ -435,7 +435,7 @@ module.exports = {
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Flinders Street",
-      "vehicle": ["Y112"]
+      "vehicle": ["Y112", "VZVF1", "600BK", "14BRS", "7ABE", "700BK", "1BCE"]
     },
 
 
