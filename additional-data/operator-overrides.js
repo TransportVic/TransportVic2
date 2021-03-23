@@ -59,6 +59,7 @@ module.exports = {
   "4-68E": ["Martyrs Bus Service"], // 683
   "4-70C": ["CDC Melbourne"], // 700
   "4-704": ["Ventura Bus Lines"], // 704
+  "4-705": ["Ventura Bus Lines"], // 705
   "4-74Z": ["Ventura Bus Lines"], // 742
   "4-7S6": ["Ventura Bus Lines"], // 766
   "4-7S7": ["Ventura Bus Lines"], // 767
@@ -78,6 +79,8 @@ module.exports = {
   "4-84F": ["Ventura Bus Lines"], // 845
   "4-85X": ["Ventura Bus Lines"], // 857
   "4-86l": ["Ventura Bus Lines"], // 861
+  "4-888": ["Ventura Bus Lines"], // 888
+  "4-889": ["Ventura Bus Lines"], // 889
   "4-89o": ["Cranbourne Transit"], // 890
   "4-89I": ["Cranbourne Transit"], // 891
   "4-89Z": ["Cranbourne Transit"], // 892
