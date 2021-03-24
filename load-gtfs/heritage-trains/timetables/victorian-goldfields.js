@@ -10,12 +10,16 @@ module.exports = {
     ["SUN_BLUE_RED", "20210224", "2"],
 
     ["SUN_BLUE_RED", "20210308", "1"],
-    ["SUN_BLUE_RED", "20210331", "2"],
 
     ["SUN_BLUE_RED", "20210403", "1"],
     ["SUN_BLUE_RED", "20210405", "1"],
     ["SUN_BLUE_RED", "20210410", "1"],
     ["SUN_BLUE_RED", "20210417", "1"],
+
+    ["SUN_BLUE_RED", "20210614", "1"],
+    ["SUN_BLUE_RED", "20210626", "1"],
+
+    ["SUN_BLUE_RED", "20210703", "1"],
 
     ["SAT_ALES", "20210424", "1"],
     ["SAT_ALES", "20210529", "1"],
