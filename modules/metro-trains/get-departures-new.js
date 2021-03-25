@@ -73,12 +73,8 @@ function addCityLoopRunning(train, stationName) {
 }
 
 function addAltonaLoopRunning(train) {
-  let stops = train.allStops
-  let stopsNPTLAV = stops.includes('Newport') && stops.includes('Laverton')
-  let loopRunning = []
-
-  if (stopsNPTLAV) {
-    if (stops.includes('Altona')) { // Via ALT Loop
+  if (train.viaAltonaLoop !== null) {
+    if (train.viaAltonaLoop) { // Via ALT Loop
       loopRunning = ['WTO', 'ALT', 'SHE']
     } else { // Via ML
       loopRunning = ['LAV', 'NPT']
@@ -164,15 +160,16 @@ async function getNotifyData(db) {
     return disruption.routeName === 'Stony Point' && text.includes('replace') || text.includes('coach')
   }).map(disruption => disruption.runID)
 
-  let trainAlterations = allTrainAlterations.filter(disruption => {
-    let text = disruption.text
-    return text.includes('originate') || text.includes('terminate')
-  }).map(disruption => disruption.runID)
-
   let loopSkipping = allTrainAlterations.filter(disruption => {
     let { text } = disruption
     return text.includes('direct')
       || (text.includes('express') && isAltonaLoop(disruption))
+  })
+
+  let trainAlterations = allTrainAlterations.filter(disruption => {
+    let text = disruption.text
+    return (!text.includes('cancel') && !loopSkipping.includes(disruption))
+      || text.includes('originate') || text.includes('terminate') || text.includes('express')
   })
 
   let cityLoopSkipping = loopSkipping.filter(isCityLoop).map(disruption => disruption.runID)
@@ -191,7 +188,7 @@ async function getNotifyData(db) {
     suspensions, // Done
     suspendedLines: Object.keys(suspensions), // Done as part of suspensions
     stonyPointReplacements, // Done
-    trainAlterations,
+    trainAlterations, // Done
     cityLoopSkipping, // Done
     altonaLoopSkipping,
     broadCityLoopSkipping, // Done
@@ -570,7 +567,7 @@ async function getSTYRunID(trip, db) {
   if (wttTrip) return wttTrip.runID
 }
 
-async function mapTrain(train, metroPlatform, db) {
+async function mapTrain(train, metroPlatform, notifyData, db) {
   let {stopGTFSID} = metroPlatform
   let stationName = metroPlatform.fullStopName.slice(0, -16)
   let isInLoop = cityLoopStations.includes(stationName)
@@ -594,6 +591,13 @@ async function mapTrain(train, metroPlatform, db) {
     train.runID = await getSTYRunID(trip, db)
   }
 
+  let relevantAlerts = notifyData.trainAlterations.filter(alteration => alteration.runID === train.runID)
+  let tripAlerts = trip.notifyAlerts || []
+
+  if (relevantAlerts.some(alert => !tripAlerts.includes(alert.alertID))) {
+    trip = await getStoppingPattern(db, train.ptvRunID, 'metro train', train.scheduledDepartureTime.toISOString())
+  }
+
   let viaAltonaLoop = null
   if (train.routeName === 'Werribee') {
     let isNPTTrain = trip.stopTimings.some(stop => stop.stopName === 'Newport Railway Station')
@@ -601,6 +605,13 @@ async function mapTrain(train, metroPlatform, db) {
 
     if (isNPTTrain && isLAVTrain) {
       viaAltonaLoop = trip.stopTimings.some(stop => stop.stopName === 'Altona Railway Station')
+    }
+
+    if (isNPTTrain !== isLAVTrain) { // We only have one of NPT or LAV
+      let isWERTrain = trip.stopTimings.some(stop => stop.stopName === 'Werribee Railway Station')
+      let isFSYTrain = trip.stopTimings.some(stop => stop.stopName === 'Footscray Railway Station')
+
+      viaAltonaLoop = !(isWERTrain || isFSYTrain) // We are expressing one of NPT or LAV
     }
   }
 
@@ -844,7 +855,7 @@ async function getDeparturesFromPTV(station, db) {
   let trains = parsedDepartures.filter(departure => !departure.isRailReplacementBus)
 
   let initalMappedBuses = await async.map(replacementBuses, async bus => await mapBus(bus, metroPlatform, db))
-  let initialMappedTrains = await async.map(trains, async train => await mapTrain(train, metroPlatform, db))
+  let initialMappedTrains = await async.map(trains, async train => await mapTrain(train, metroPlatform, notifyData, db))
   let suspensionMappedTrains = await async.map(initialMappedTrains, async train => await applySuspension(train, notifyData, metroPlatform, db))
 
   let nonSkeleton = initalMappedBuses.filter(bus => !bus.skeleton)

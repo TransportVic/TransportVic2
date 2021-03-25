@@ -305,6 +305,20 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
         if (runID) runID += isDown ? 'D' : 'U'
       }
     }
+
+    if (runID) {
+      let metroNotify = db.getCollection('metro notify')
+
+      if (!extraTripData) extraTripData = {}
+
+      extraTripData.notifyAlerts = await metroNotify.distinct('alertID', {
+        toDate: {
+          $gte: +new Date() / 1000
+        },
+        active: true,
+        runID
+      })
+    }
   }
 
   stopTimings[0].arrivalTime = null
