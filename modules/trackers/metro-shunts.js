@@ -128,9 +128,12 @@ async function getDepartures(routeName) {
   })
 
   await async.forEach(dbShunts, async shunt => {
-    if (await metroShunts.countDocuments({ date: day, runID: shunt.runID }) === 0) {
-      await metroShunts.createDocument(shunt)
-    }
+    await metroShunts.replaceDocument({
+      date: day,
+      runID: shunt.runID
+    }, shunt, {
+      upsert: true
+    })
   })
 }
 
