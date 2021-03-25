@@ -249,7 +249,6 @@ div.bottomRow > span:nth-child(2).smaller {
 div.bottomRow > span:nth-child(3) {
   margin-left: calc(var(--width) * 0.015);
   width: calc(var(--width) * 0.22);
-  font-family: "NetworkSansRegular";
   letter-spacing: calc(var(--width) * -0.001);
 
   white-space: nowrap;

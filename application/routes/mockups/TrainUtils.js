@@ -626,7 +626,7 @@ module.exports = {
         let isUp = direction === 'Up'
         let routeName = departure.shortRouteName || trip.routeName
 
-        let tripStops = stopTimings.filter(stop => !stop.cancelled).map(stop => stop.stopName.slice(0, -16))
+        let tripStops = stopTimings.filter(stop => !stop.cancelled && stop.stopConditions.dropoff === 0 || stop.stopName === station.stopName).map(stop => stop.stopName.slice(0, -16))
 
         if (routeName === 'Bendigo') {
           if (isUp && departure.trip.origin === 'Eaglehawk Railway Station') routeName = 'Swan Hill'

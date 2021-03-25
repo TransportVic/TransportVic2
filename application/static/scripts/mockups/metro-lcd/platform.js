@@ -48,10 +48,11 @@ function setServiceMessageActive(active) {
 }
 
 function setDepartureInfoVisible(visible) {
+  let existing = $('.nextDeparture .departureInfo').className
   if (visible) {
-    $('.departureInfo').style = ''
+    $('.nextDeparture .departureInfo').className = 'departureInfo ' + (existing.includes('vline') ? 'vline' : '')
   } else {
-    $('.departureInfo').style = 'opacity: 0;'
+    $('.nextDeparture .departureInfo').className = 'departureInfo hidden ' + (existing.includes('vline') ? 'vline' : '')
   }
 }
 
@@ -102,7 +103,7 @@ function addStoppingPattern(stops) {
     MAX_COLUMNS: 4,
     CONNECTION_LOSS: 2,
     MIN_COLUMN_SIZE: 5,
-    MAX_COLUMN_SIZE: 9
+    MAX_COLUMN_SIZE: 10
   })
 
   $('.stops').innerHTML = ''
@@ -184,6 +185,12 @@ function updateBody() {
 
         $('.firstDestination').textContent = destination
         $('.scheduledDiv span:nth-child(2)').textContent = formatTimeB(new Date(firstDeparture.scheduledDepartureTime))
+
+        if (firstDeparture.type === 'vline') {
+          $('.nextDeparture .departureInfo').className = 'departureInfo vline'
+        } else {
+          $('.nextDeparture .departureInfo').className = 'departureInfo'
+        }
 
         if (firstDeparture.estimatedDepartureTime) {
           if (firstDeparture.minutesToDeparture > 0) {
