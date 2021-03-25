@@ -197,6 +197,12 @@ div.stops div.stopsColumn div span.squish {
   transform-origin: left;
 }
 
+div.stops div.stopsColumn div span.super-squish {
+  letter-spacing: calc(var(--width) * -0.0007);
+  transform: scaleX(0.85);
+  transform-origin: left;
+}
+
 div.stopsColumn.expressColumn {
   min-width: unset !important;
   margin-right: calc(var(--width) * 0.04) !important;
@@ -221,7 +227,7 @@ div.stopsColumn.columns-8 div {
 }
 
 div.stopsColumn.columns-8 div span {
-  font-size: calc(var(--height) * 0.06) !important;
+  font-size: calc(var(--height) * 0.056) !important;
 }
 
 

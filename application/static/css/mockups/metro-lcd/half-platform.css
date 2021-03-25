@@ -215,6 +215,7 @@ div.stops div.stopsColumn.columns-8 div {
 
 div.stops div.stopsColumn.columns-8 div span {
   margin-top: calc(var(--height) * 0.0034) !important;
+  font-size: calc(var(--height) * 0.071) !important;
 }
 
 div.stops div.stopsColumn.columns-9 div {
@@ -223,7 +224,7 @@ div.stops div.stopsColumn.columns-9 div {
 
 div.stops div.stopsColumn.columns-9 div span {
   margin-top: calc(var(--height) * 0.001) !important;
-  font-size: calc(var(--height) * 0.07) !important;
+  font-size: calc(var(--height) * 0.068) !important;
   line-height: calc(var(--height) * 0.079) !important;
 }
 

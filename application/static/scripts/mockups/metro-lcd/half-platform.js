@@ -133,8 +133,6 @@ function addStoppingPattern(stops) {
         html += '<span>&nbsp;---</span><br>'
       else {
         let {stopName} = stop
-        if (stopName === 'Upper Ferntree Gully') stopName = 'Upper F.T Gully'
-
         html += `<span>${stopName}</span><br>`
 
         hasStop = true

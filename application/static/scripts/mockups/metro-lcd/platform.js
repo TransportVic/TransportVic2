@@ -121,7 +121,6 @@ function addStoppingPattern(stops) {
         html += '<span>&nbsp;---</span><br>'
       else {
         let {stopName} = stop
-        if (stopName === 'Upper Ferntree Gully') stopName = 'Upper F.T Gully'
         if (stopName === 'Flemington Racecourse') stopName = 'Flemington Races'
 
         html += `<span>${stopName}</span><br>`
@@ -150,7 +149,9 @@ function addStoppingPattern(stops) {
         if (station.tagName === 'BR') return
 
         let childWidth = parseFloat(getComputedStyle(station).width)
-        if (childWidth >= threshold) {
+        if (childWidth >= threshold * 1.04) {
+          station.className = 'super-squish'
+        } else if (childWidth >= threshold) {
           station.className = 'squish'
         }
       })
