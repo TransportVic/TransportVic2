@@ -106,9 +106,8 @@ module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday)
 
   if (stationName === 'Flinders Street') return 6
   if (stationName === 'Richmond') {
-    if (!isUp) return 5
-    if (line === 'Bairnsdale') return 4
-    else return 6
+    if (!isUp) return 6
+    else return 5
   }
 
   if (stationName === 'Caulfield') {

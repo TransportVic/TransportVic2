@@ -222,95 +222,59 @@ module.exports = {
   ],
   'Richmond': [
     {
-      name: 'Flinders Street',
-      targets: ['Flinders Street'],
-      id: 'RMD-FSS',
-      count: 1
-    },
-    {
-      name: 'City Loop',
-      targets: ['Flinders Street', 'Flagstaff'],
-      id: 'RMD-CCL-FSS',
-      count: 1
-    },
-    {
       name: 'Cranbourne',
       targets: ['Cranbourne'],
       id: 'RMD-CBE',
-      count: 1
-    },
-    {
-      name: 'Pakenham',
-      targets: ['Pakenham'],
-      id: 'RMD-PKM',
-      count: 1
-    },
-    {
-      name: 'Dandenong',
-      targets: ['Dandenong'],
-      id: 'RMD-DNG',
-      count: 1
+      count: 2
     },
     {
       name: 'Frankston',
       targets: ['Frankston'],
       id: 'RMD-FKN',
-      count: 1
+      count: 2
     },
     {
-      name: 'Caulfield',
-      targets: ['Caulfield'],
-      id: 'RMD-CFD',
-      count: 1
-    },
-    {
-      name: 'Mordialloc',
-      targets: ['Mordialloc'],
-      id: 'RMD-MOR',
-      count: 1
+      name: 'Pakenham',
+      targets: ['Pakenham'],
+      id: 'RMD-PKM',
+      count: 2
     },
     {
       name: 'Sandringham',
       targets: ['Sandringham'],
       id: 'RMD-SHM',
-      count: 1
-    },
-    {
-      name: 'Lilydale',
-      targets: ['Lilydale'],
-      id: 'RMD-LIL',
-      count: 1
-    },
-    {
-      name: 'Belgrave',
-      targets: ['Belgrave'],
-      id: 'RMD-BEL',
-      count: 1
-    },
-    {
-      name: 'Ringwood',
-      targets: ['Ringwood'],
-      id: 'RMD-RWD',
-      count: 1
+      count: 2
     },
     {
       name: 'Alamein',
       targets: ['Alamein'],
       id: 'RMD-ALM',
-      count: 1
+      count: 2
     },
     {
-      name: 'Camberwell',
-      targets: ['Camberwell'],
-      id: 'RMD-CAM',
-      count: 1
+      name: 'Belgrave',
+      targets: ['Belgrave'],
+      id: 'RMD-BEL',
+      count: 2
+    },
+    {
+      name: 'Blackburn',
+      targets: ['Blackburn'],
+      id: 'RMD-BBN',
+      count: 2
     },
     {
       name: 'Glen Waverley',
       targets: ['Glen Waverley'],
       id: 'RMD-GWY',
-      count: 1
+      count: 2
     },
+    {
+      name: 'Lilydale',
+      targets: ['Lilydale'],
+      id: 'RMD-LIL',
+      count: 2
+    }
   ],
   'Parliament': [
     {
