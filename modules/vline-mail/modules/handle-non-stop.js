@@ -47,12 +47,12 @@ async function setServiceNonStop(db, departureTime, origin, destination, skippin
 
 function nonStop(db, text) {
   text = text.replace('will run express through', 'will not stop at')
-  let service = (text + '.').match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) ?to ?([\w ]*?)(?:service|train)? will not stop at ([\w ,]*?)(?: today|this.*)?\./m)
+  let service = (text + '.').match(/(\d{1,2}[:.]\d{1,2}) ([\w ]+) ?to ?([\w ]+)(?:service|train)? will not stop at ([\w ,]*?)(?: today|this.*)?\./m)
 
   if (service) {
     let departureTime = service[1].replace('.', ':')
-    let origin = bestStop(service[2]) + ' Railway Station'
-    let destination = bestStop(service[3]) + ' Railway Station'
+    let origin = bestStop(service[2].trim()) + ' Railway Station'
+    let destination = bestStop(service[3].trim()) + ' Railway Station'
     let skipping = service[4].replace('and', ',').split(',').map(s => bestStop(s.trim()))
 
     setServiceNonStop(db, departureTime, origin, destination, skipping)

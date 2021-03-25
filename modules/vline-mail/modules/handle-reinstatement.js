@@ -35,12 +35,12 @@ async function setServiceAsReinstated(db, departureTime, origin, destination) {
 }
 
 async function reinstatement(db, text) {
-  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]*?) to ?([\w ]*?) ?(?:service|train|will|has|is)/)
+  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]+) to ?([\w ]+) ?(?:service|train|will|has|is)/)
 
   if (service) {
     let departureTime = service[1].replace('.', ':')
-    let origin = bestStop(service[2]) + ' Railway Station'
-    let destination = bestStop(service[3]) + ' Railway Station'
+    let origin = bestStop(service[2].trim()) + ' Railway Station'
+    let destination = bestStop(service[3].trim()) + ' Railway Station'
 
     await setServiceAsReinstated(db, departureTime, origin, destination)
   }
