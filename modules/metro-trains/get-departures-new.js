@@ -93,29 +93,37 @@ function addStonyPointPlatform(train, stationName) {
 function mapSuspension(suspensionText, routeName) {
   let stationsAffected = suspensionText
     .replace(/\u00A0/g, ' ').replace(/[–-]/, ' and ')
-    .match(/trains (?:between )?([ \w]+) and ([ \w]+) (?:stations|due)/i)
+    .match(/trains (?:between )?([ \w]+) and ([ \w\/]+) (?:stations|due)/i)
 
   if (!stationsAffected) return
   let startStation = utils.titleCase(stationsAffected[1].trim())
-  let endStation = utils.titleCase(stationsAffected[2].trim())
+  let endStations = stationsAffected[2].trim()
 
   // Station A should always be on the UP end
   let routeStops = getRouteStops(routeName)
   let startIndex = routeStops.indexOf(startStation)
-  let endIndex = routeStops.indexOf(endStation)
+  if (startIndex === -1) return
 
-  if (startIndex === -1 || endIndex === -1) return
+  let allSuspensions = []
 
-  if (endIndex < startIndex) {
-    let c = startStation
-    startStation = endStation
-    endStation = c
-  }
+  endStations.split('/').forEach(rawEndStation => {
+    let endStation = utils.titleCase(rawEndStation)
+    let endIndex = routeStops.indexOf(endStation)
+    if (endIndex === -1) return
 
-  return {
-    upStation: startStation + ' Railway Station',
-    downStation: endStation + ' Railway Station',
-  }
+    if (endIndex < startIndex) {
+      let c = startStation
+      startStation = endStation
+      endStation = c
+    }
+
+    allSuspensions.push({
+      upStation: startStation + ' Railway Station',
+      downStation: endStation + ' Railway Station',
+    })
+  })
+
+  return allSuspensions
 }
 
 function isCityLoop(disruption) {
@@ -142,9 +150,11 @@ async function getNotifyData(db) {
   disruptions.forEach(suspension => {
     if (suspension.type === 'suspended') {
       suspension.routeName.forEach(route => {
-        if (!suspensions[route]) suspensions[route] = []
         let suspensionData = mapSuspension(suspension.text, route)
-        if (suspensionData) suspensions[route].push(suspensionData)
+        if (suspensionData.length) {
+          if (!suspensions[route]) suspensions[route] = []
+          suspensions[route].push(...suspensionData)
+        }
       })
     }
   })
