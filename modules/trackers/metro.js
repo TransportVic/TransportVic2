@@ -6,7 +6,7 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const getMetroDepartures = require('../metro-trains/get-departures')
 const { findTrip } = getMetroDepartures
 const stops = require('../../additional-data/metro-tracker/stops')
-const getStoppingPattern = require('../utils/get-stopping-pattern')
+const getStoppingPattern = require('../metro-trains/get-stopping-pattern')
 const schedule = require('./scheduler')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
@@ -37,7 +37,10 @@ async function getDepartures(stop) {
 
   await async.forEachSeries(requestLive, async departure => {
     if (departure.ptvRunID) { // Remember local departures do not have a run id
-      await getStoppingPattern(database, departure.ptvRunID, 'metro train', departure.scheduledDepartureTime.toISOString())
+      await getStoppingPattern({
+        ptvRunID: departure.ptvRunID,
+        time: departure.originDepartureTime.toISOString()
+      }, database)
     }
   })
 }
