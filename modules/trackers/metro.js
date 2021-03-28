@@ -36,7 +36,9 @@ async function getDepartures(stop) {
   let requestLive = departures.filter(d => !d.isRailReplacementBus).slice(0, 5)
 
   await async.forEachSeries(requestLive, async departure => {
-    await getStoppingPattern(database, departure.ptvRunID, 'metro train', departure.scheduledDepartureTime.toISOString())
+    if (departure.ptvRunID) { // Remember local departures do not have a run id
+      await getStoppingPattern(database, departure.ptvRunID, 'metro train', departure.scheduledDepartureTime.toISOString())
+    }
   })
 }
 
