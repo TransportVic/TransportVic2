@@ -3,7 +3,7 @@ const moment = require('moment')
 const router = new express.Router()
 const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
-const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
+const getStoppingPattern = require('../../../modules/metro-trains/get-stopping-pattern')
 const addStonyPointData = require('../../../modules/metro-trains/add-stony-point-data')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central'].map(e => e + ' Railway Station')
@@ -244,9 +244,11 @@ async function pickBestTrip(data, db) {
 
     let isRailReplacementBus = departureToUse.flags.includes('RRB-RUN')
 
-    let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime, null, referenceTrip, {
-      isRailReplacementBus
-    })
+    let trip = await getStoppingPattern({
+      ptvRunID,
+      time: departureTime,
+      referenceTrip
+    }, db)
 
     let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
 

@@ -4,7 +4,7 @@ const utils = require('../../utils')
 const findConsist = require('./fleet-parser')
 const departureUtils = require('../utils/get-train-timetables-new')
 const fixTripDestination = require('./fix-trip-destinations')
-const getStoppingPattern = require('../utils/get-stopping-pattern')
+const getStoppingPattern = require('./get-stopping-pattern')
 const getRouteStops = require('../../additional-data/route-stops')
 const { getDayOfWeek } = require('../../public-holidays')
 
@@ -358,7 +358,7 @@ async function genericMatch(train, stopGTFSID, stationName, db) {
   let possibleLines = lineGroups.find(group => group.includes(train.routeName)) || train.routeName
 
   let possibleDestinations = [train.runDestination]
-  if (train.runDestination === 'Parliament') // RMD/JLI -> FSS -> CCL -> PAR
+  if (train.runDestination === 'Parliament') // RMD/JLI -> FSS -> CLP -> PAR
     possibleDestinations.push('Flinders Street')
 
   if (train.runDestination === 'Flinders Street' && !train.viaCityLoop)
@@ -372,13 +372,13 @@ async function cfdGroupMatch(train, stopGTFSID, stationName, db) {
   let possibleLines = caulfieldGroup
 
   let possibleDestinations = [train.runDestination]
-  if (train.runDestination === 'Parliament') // RMD -> FSS -> CCL -> PAR
+  if (train.runDestination === 'Parliament') // RMD -> FSS -> CLP -> PAR
     possibleDestinations.push('Flinders Street')
 
   if (train.runDestination === 'Southern Cross' && !train.viaCityLoop) // RMD -> FSS -> SSS -> NPT (Occo Only)
     possibleDestinations.push('Flinders Street')
 
-  if (train.runDestination === 'Flagstaff' && train.viaCityLoop) // RMD -> CCL -> FSS -> PAR -> CCL -> FGS -> NME
+  if (train.runDestination === 'Flagstaff' && train.viaCityLoop) // RMD -> CLP -> FSS -> PAR -> CLP -> FGS -> NME
     possibleDestinations.push('Flinders Street')
 
   let trip = await matchTrip(train, stopGTFSID, db, possibleLines, possibleDestinations)
@@ -389,16 +389,16 @@ async function norGroupMatch(train, stopGTFSID, stationName, db) {
   let possibleLines = northernGroup
 
   let possibleDestinations = [train.runDestination]
-  if (train.runDestination === 'Southern Cross' && train.viaCityLoop) // NME -> FGS -> CCL -> FSS -> SSS -> NME (Next trip)
+  if (train.runDestination === 'Southern Cross' && train.viaCityLoop) // NME -> FGS -> CLP -> FSS -> SSS -> NME (Next trip)
     possibleDestinations.push('Flinders Street')
 
-  if (train.runDestination === 'Flagstaff' && !train.viaCityLoop) // NME -> SSS -> FSS -> CCL -> FGS -> NME (Next trip)
+  if (train.runDestination === 'Flagstaff' && !train.viaCityLoop) // NME -> SSS -> FSS -> CLP -> FGS -> NME (Next trip)
     possibleDestinations.push('Flinders Street')
 
   if (train.runDestination === 'Flinders Street') {
     if (train.viaCityLoop) {
       possibleDestinations.push('Southern Cross')
-    } else { // NME -> SSS -> FSS -> CCL -> FGS -> NME (Next trip)
+    } else { // NME -> SSS -> FSS -> CLP -> FGS -> NME (Next trip)
       possibleDestinations.push('Flagstaff')
     }
   }
@@ -544,7 +544,10 @@ async function expandSkeleton(bus, allBuses, db) {
   })
 
   if (matchingDeparture) return
-  let trip = await getStoppingPattern(db, originalBus.ptvRunID, 'metro train', originalBus.scheduledDepartureTime.toISOString())
+  let trip = await getStoppingPattern({
+    ptvRunID: originalBus.ptvRunID,
+    time: originalBus.scheduledDepartureTime.toISOString()
+  }, db)
 
   return returnBusDeparture(originalBus, trip)
 }
@@ -575,7 +578,7 @@ async function getSTYRunID(trip, db) {
   let timetables = db.getCollection('timetables')
   let wttTrip = await timetables.findDocument({
     mode: 'metro train',
-    routeGTFSID: '2-SPT',
+    routeGTFSID: trip.routeGTFSID,
     direction: trip.direction,
     departureTime: trip.departureTime
   })
@@ -600,7 +603,10 @@ async function mapTrain(train, metroPlatform, notifyData, db) {
 
   if (!trip) {
     // Rewrite specifically for metro
-    trip = await getStoppingPattern(db, train.ptvRunID, 'metro train', train.scheduledDepartureTime.toISOString())
+    trip = await getStoppingPattern({
+      ptvRunID: train.ptvRunID,
+      time: train.scheduledDepartureTime.toISOString()
+    }, db)
   }
 
   if (train.routeName === 'Stony Point') {
@@ -611,7 +617,10 @@ async function mapTrain(train, metroPlatform, notifyData, db) {
   let tripAlerts = trip.notifyAlerts || []
 
   if (relevantAlerts.some(alert => !tripAlerts.includes(alert.alertID))) {
-    trip = await getStoppingPattern(db, train.ptvRunID, 'metro train', train.scheduledDepartureTime.toISOString())
+    trip = await getStoppingPattern({
+      ptvRunID: train.ptvRunID,
+      time: train.scheduledDepartureTime.toISOString()
+    }, db)
   }
 
   let viaAltonaLoop = null
@@ -710,9 +719,9 @@ function findUpcomingStops(departure, stopGTFSID) {
 async function saveConsists(departures, db) {
   let metroTrips = db.getCollection('metro trips')
   let runIDsSeen = []
-  let deduped = departures.filter(dep => {
-    if (!runIDsSeen.includes(dep.runID)) {
-      runIDsSeen.push(dep.runID)
+  let deduped = departures.filter(departure => {
+    if (!runIDsSeen.includes(departure.runID) && departure.fleetNumber) {
+      runIDsSeen.push(departure.runID)
       return true
     } else {
       return false
@@ -720,8 +729,6 @@ async function saveConsists(departures, db) {
   })
 
   await async.forEach(deduped, async departure => {
-    if (!departure.fleetNumber) return
-
     let query = {
       date: departure.trackerDay,
       runID: departure.runID
@@ -818,7 +825,7 @@ async function saveRailBuses(buses, db) {
   })
 }
 
-function parsePTVDepartures(ptvResponse) {
+function parsePTVDepartures(ptvResponse, stationName) {
   let {departures, runs, routes, directions} = ptvResponse
   let now = utils.now()
 
@@ -862,6 +869,9 @@ function parsePTVDepartures(ptvResponse) {
       viaCityLoop = determineLoopRunning(runID, routeName, direction)
     }
 
+    if (stationName === 'Flemington Racecourse' && platform === '4') platform = '2' // 4 Road is Platform 2
+    if (stationName === 'Merinda Park' && platform === '1') platform = '2' // Match physical signage
+
     return {
       scheduledDepartureTime,
       estimatedDepartureTime,
@@ -887,7 +897,7 @@ async function getDeparturesFromPTV(station, db) {
   let url = `/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor`
   let ptvResponse = await ptvAPI(url)
 
-  let parsedDepartures = parsePTVDepartures(ptvResponse)
+  let parsedDepartures = parsePTVDepartures(ptvResponse, stationName)
 
   let replacementBuses = parsedDepartures.filter(departure => departure.isRailReplacementBus)
   let trains = parsedDepartures.filter(departure => !departure.isRailReplacementBus)
