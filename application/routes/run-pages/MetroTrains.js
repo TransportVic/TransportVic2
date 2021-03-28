@@ -34,8 +34,10 @@ async function pickBestTrip(data, db) {
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
   let tripEndTime = utils.parseTime(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm')
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
-  if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
+
   if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
+  if (tripStartMinutes > 1440) tripDay.add(-1, 'day')
+  if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
 
   let originStop = await db.getCollection('stops').findDocument({
     codedName: data.origin + '-railway-station',
@@ -53,18 +55,10 @@ async function pickBestTrip(data, db) {
   let departureTime = tripStartMinutes
   let destinationArrivalTime = tripEndMinutes
 
-  let liveDepartureTime = tripStartMinutes % 1440
-  let liveDestinationArrivalTime = tripEndMinutes % 1440
-  if (liveDestinationArrivalTime < liveDepartureTime) liveDestinationArrivalTime += 1440
-
   if (data.destination === 'flinders-street') {
     destinationArrivalTime = {
       $gte: tripEndMinutes - 1,
       $lte: tripEndMinutes + 3
-    }
-    liveDestinationArrivalTime = {
-      $gte: tripEndMinutes - 1 % 1440,
-      $lte: tripEndMinutes + 3 % 1440
     }
   }
 
@@ -73,14 +67,9 @@ async function pickBestTrip(data, db) {
       $gte: tripStartMinutes - 1,
       $lte: tripStartMinutes + 3
     }
-    liveDepartureTime = {
-      $gte: tripStartMinutes - 1 % 1440,
-      $lte: tripStartMinutes + 3 % 1440
-    }
   }
 
-  let operationDays = data.operationDays
-  if (tripStartMinutes > 1440) operationDays = utils.getYYYYMMDD(tripDay.clone().add(-1, 'day'))
+  let operationDays = utils.getYYYYMMDD(tripDay)
 
   let gtfsQuery = {
     $and: [{
@@ -103,29 +92,8 @@ async function pickBestTrip(data, db) {
     }]
   }
 
-  let liveQuery = {
-    $and: [{
-      mode: 'metro train',
-      operationDays: data.operationDays // because this uses true departure day
-    }, {
-      stopTimings: {
-        $elemMatch: {
-          stopName: originStop.stopName,
-          departureTimeMinutes: liveDepartureTime
-        }
-      }
-    }, {
-      stopTimings: {
-        $elemMatch: {
-          stopName: destinationStop.stopName,
-          arrivalTimeMinutes: liveDestinationArrivalTime
-        }
-      }
-    }]
-  }
-
   // NME, RMD shorts are always loaded live
-  let liveTrips = await db.getCollection('live timetables').findDocuments(liveQuery).toArray()
+  let liveTrips = await db.getCollection('live timetables').findDocuments(gtfsQuery).toArray()
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(gtfsQuery)
 
   let liveTrip

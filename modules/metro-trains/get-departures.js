@@ -701,9 +701,9 @@ function appendDepartureDay(departure, stopGTFSID) {
 
   departure.originDepartureTime = originDepartureTime
   departure.departureDay = utils.getYYYYMMDD(originDepartureTime)
-  departure.trackerDay = departure.departureDay
+  departure.trueDepartureDay = departure.departureDay
   if (originDepartureMinutes >= 1440) {
-    departure.trackerDay = utils.getYYYYMMDD(originDepartureTime.clone().add(-1, 'day'))
+    departure.departureDay = utils.getYYYYMMDD(originDepartureTime.clone().add(-1, 'day'))
   }
 }
 
@@ -732,7 +732,7 @@ async function saveConsists(departures, db) {
 
   await async.forEach(deduped, async departure => {
     let query = {
-      date: departure.trackerDay,
+      date: departure.departureDay,
       runID: departure.runID
     }
 

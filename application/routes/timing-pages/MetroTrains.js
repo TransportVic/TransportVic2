@@ -38,7 +38,7 @@ async function loadDepartures(req, res) {
 
     departure.tripURL = `${utils.encodeName(origin)}/${originDepartureTime}/`
       + `${utils.encodeName(destination)}/${destinationArrivalTime}/`
-      + `${departure.departureDay}/${stopGTFSID ? `#stop-${stopGTFSID}` : ''}`
+      + `${departure.trueDepartureDay}/${stopGTFSID ? `#stop-${stopGTFSID}` : ''}`
 
     departure.destinationURL = `/metro/timings/${utils.encodeName(trip.trueDestination).slice(0, -16)}`
 
