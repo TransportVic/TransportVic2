@@ -526,5 +526,12 @@ module.exports = {
   },
   hash: data => {
     return crypto.createHash('md5').update(data).digest('hex')
+  },
+  tripsEqual: (tripA, tripB) => {
+    return tripA.routeGTFSID === tripB.routeGTFSID
+      && tripA.origin === tripB.origin
+      && tripA.destination === tripB.destination
+      && tripA.departureTime === tripB.departureTime
+      && tripA.destinationArrivalTime === tripB.destinationArrivalTime
   }
 }

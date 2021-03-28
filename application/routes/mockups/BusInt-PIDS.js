@@ -16,14 +16,14 @@ async function getData(req, res) {
     codedSuburb: req.params.suburb
   })
 
-  if (!stop || !stop.bays.find(bay => bay.mode === 'bus')) {
+  if (!stop || !stop.bays.some(bay => bay.mode === 'bus')) {
     // TODO: create error page
     return { trainDepartures: null, busDepartures: null, error: true }
   }
 
   let trainDepartures
 
-  if (stop.bays.find(bay => bay.mode === 'metro train')) {
+  if (stop.bays.some(bay => bay.mode === 'metro train')) {
     let tripCount = {Up: 0, Down: 0}
 
     trainDepartures = (await getTrainDepartures(stop, res.db))

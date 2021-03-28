@@ -184,19 +184,6 @@ module.exports = {
 
                 let stopTimings = departure.trip.stopTimings.slice(0)
                 let tripStops = stopTimings.map(e => e.stopName)
-
-                let suspensions = departure.suspensions
-                if (suspensions.length) {
-                  let first = suspensions[0]
-                  let start = first.startStation
-                  let index = tripStops.indexOf(start) + 1
-
-                  if (index > 0) {
-                    tripStops = tripStops.slice(0, index)
-                    stopTimings = stopTimings.slice(0, index)
-                  }
-                }
-
                 departure.stopTimings = stopTimings
 
                 departure.type = 'metro'
@@ -621,12 +608,12 @@ module.exports = {
       let platformArrivals = module.exports.filterPlatforms(arrivals, platform)
 
       let mappedDepartures = platformDepartures.map(departure => {
-        let {trip, destination, stopTimings} = departure
+        let {trip, destination} = departure
         let {routeGTFSID, direction} = trip
         let isUp = direction === 'Up'
         let routeName = departure.shortRouteName || trip.routeName
 
-        let tripStops = stopTimings.filter(stop => !stop.cancelled && (stop.stopConditions ? stop.stopConditions.dropoff === 0 : true) || stop.stopName === station.stopName).map(stop => stop.stopName.slice(0, -16))
+        let tripStops = trip.stopTimings.filter(stop => !stop.cancelled && (stop.stopConditions ? stop.stopConditions.dropoff === 0 : true) || stop.stopName === station.stopName).map(stop => stop.stopName.slice(0, -16))
 
         if (routeName === 'Bendigo') {
           if (isUp && departure.trip.origin === 'Eaglehawk Railway Station') routeName = 'Swan Hill'

@@ -272,7 +272,8 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     if (['Cranbourne', 'Pakenham', 'Sandringham'].includes(routeName) && vehicle) {
       vehicle = vehicle.replace('Xtrapolis', 'Comeng') // Xtrap sometimes show on CBE PKM SHM so correct to comeng
     }
-    runID = utils.getRunID(ptvRunID)
+    if (ptvRunID >= 948000) runID = utils.getRunID(ptvRunID)
+    else runID = null
 
     let metroTrips = db.getCollection('metro trips')
     let tripData = await metroTrips.findDocument({
@@ -287,12 +288,43 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
       if (carType) vehicle = ptvConsistSize + ' Car ' + carType.type
     }
 
-    if (referenceTrip && extraTripData && extraTripData.trimStops) {
-      let referenceStops = referenceTrip.stopTimings.map(stop => stop.stopName)
-      if (referenceStops.includes('Flinders Street')) {
-        referenceStops = referenceStops.concat(cityLoopStations)
+    if (referenceTrip && referenceTrip.suspension) {
+      let isDown = referenceTrip.direction === 'Down'
+
+      let suspension = referenceTrip.suspension
+      let tripStops = stopTimings.map(stop => stop.stopName)
+
+      let startIndex = tripStops.indexOf(suspension.startStation)
+      let endIndex = tripStops.indexOf(suspension.endStation)
+
+      // No need to consider current as it would not call getStoppingPattern on it
+      if (suspension.disruptionStatus === 'before') { // Cut destination
+        let startIndex = tripStops.indexOf(suspension.startStation)
+        if (startIndex == -1) startIndex = tripStops.length
+
+        stopTimings = stopTimings.slice(0, startIndex + 1)
+        if (runID) runID += isDown ? 'U' : 'D'
+      } else if (suspension.disruptionStatus === 'passed') { // Cut origin
+        let endIndex = tripStops.indexOf(suspension.endStation)
+        if (endIndex == -1) endIndex = 0
+
+        stopTimings = stopTimings.slice(endIndex)
+        if (runID) runID += isDown ? 'D' : 'U'
       }
-      stopTimings = stopTimings.filter(stop => referenceStops.includes(stop.stopName))
+    }
+
+    if (runID) {
+      let metroNotify = db.getCollection('metro notify')
+
+      if (!extraTripData) extraTripData = {}
+
+      extraTripData.notifyAlerts = await metroNotify.distinct('alertID', {
+        toDate: {
+          $gte: +new Date() / 1000
+        },
+        active: true,
+        runID
+      })
     }
   }
 
@@ -321,6 +353,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     gtfsDirection,
     direction,
     cancelled,
+    suspensions: referenceTrip ? referenceTrip.suspension : null,
     ...extraTripData
   }
 
