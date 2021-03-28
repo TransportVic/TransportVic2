@@ -1,7 +1,6 @@
 const express = require('express')
 const router = new express.Router()
-// const getDepartures = require('../../../modules/metro-trains/get-departures')
-const getDepartures = require('../../../modules/metro-trains/get-departures-new')
+const getDepartures = require('../../../modules/metro-trains/get-departures')
 const moment = require('moment')
 const utils = require('../../../utils')
 const timingUtils = require('./timing-utils')

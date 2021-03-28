@@ -379,15 +379,6 @@ async function appendMetroData(departure, timetables) {
   let routeName = departure.trip.routeName
   let isUp = departure.trip.direction === 'Up'
 
-  let suspensions = departure.suspensions
-  if (suspensions.length) {
-    let first = suspensions[0]
-    let start = first.startStation.slice(0, -16)
-    let index = stopTimings.indexOf(start)
-
-    stopTimings = stopTimings.slice(0, index)
-  }
-
   let sssIndex = stopTimings.lastIndexOf('Southern Cross')
   let trimmedTimings = stopTimings.slice(sssIndex)
 
