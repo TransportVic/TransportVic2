@@ -154,7 +154,11 @@ async function createTrip(trip, stopDescriptors, startOfDay) {
     runID: trip.runID,
     forming: trip.forming === '0' ? null : trip.forming,
     operationDays: trip.operationDays,
-    vehicle: '7 Car HCMT',
+    vehicle: {
+      size: '7',
+      type: 'HCMT',
+      consist: [],
+    },
     stopTimings: baseTrip.stopTimings,
     trueDestination: lastStop.stopName,
     destination: lastStop.stopName,
