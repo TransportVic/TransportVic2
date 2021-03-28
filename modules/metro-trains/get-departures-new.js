@@ -224,6 +224,9 @@ function adjustSuspension(suspension, trip, currentStation) {
   let currentIndex = tripStops.indexOf(currentStation)
   let endIndex = tripStops.indexOf(endStation)
 
+  if (startIndex !== -1 && endIndex === -1) endIndex = tripStops.length - 1
+  if (startIndex === -1 && endIndex !== -1) startIndex = 0
+
   if (currentIndex < startIndex) { // we're approaching disruption
     disruptionStatus = 'before'
   } else if (currentIndex == endIndex) { // we are at end of disruption
@@ -257,7 +260,6 @@ async function applySuspension(train, notifyData, metroPlatform, db) {
       if (startIndex == -1) startIndex = tripStops.length
 
       trip.stopTimings = trip.stopTimings.slice(0, startIndex + 1)
-      train.destination = suspension.startStation.slice(0, -16)
       trip.runID = train.runID + (isDown ? 'U' : 'D')
     } else if (suspension.disruptionStatus === 'current') { // Rail bus
       let startIndex = tripStops.indexOf(suspension.startStation)
@@ -269,7 +271,6 @@ async function applySuspension(train, notifyData, metroPlatform, db) {
       trip.stopTimings = trip.stopTimings.slice(startIndex, endIndex + 1)
       trip.cancelled = false
 
-      train.destination = suspension.endStation.slice(0, -16)
       train.isRailReplacementBus = true
       train.cancelled = false
 
@@ -302,9 +303,14 @@ async function applySuspension(train, notifyData, metroPlatform, db) {
     trip.destinationArrivalTime = lastStop.arrivalTime
 
     fixTripDestination(trip)
+
+    train.destination = trip.trueDestination.slice(0, -16)
   } else if (train.routeName === 'Stony Point' && notifyData.stonyPointReplacements.includes(train.runID)) {
     train.isRailReplacementBus = true
     train.trip.runID = train.runID + 'B'
+  } else {
+    train.suspension = null
+    train.trip.suspension = null
   }
 
   return train
@@ -761,6 +767,28 @@ async function saveSuspensions(suspensionAffectedTrains, db) {
   })
 }
 
+async function removeResumedSuspensions(nonSuspendedTrains, db) {
+  let liveTimetables = db.getCollection('live timetables')
+
+  await async.forEach(nonSuspendedTrains, async train => {
+    let {trip} = train
+
+    let query = {
+      operationDays: train.departureDay,
+      mode: 'metro train',
+      runID: {
+        $in: [
+          train.runID + 'U',
+          train.runID + 'B',
+          train.runID + 'D'
+        ]
+      }
+    }
+
+    await liveTimetables.deleteDocuments(query)
+  })
+}
+
 async function saveRailBuses(buses, db) {
   let liveTimetables = db.getCollection('live timetables')
 
@@ -888,6 +916,7 @@ async function getDeparturesFromPTV(station, db) {
 
   await saveConsists(mappedTrains, db)
   await saveSuspensions(suspensionMappedTrains.filter(departure => departure.trip.suspension && !departure.isRailReplacementBus), db)
+  await removeResumedSuspensions(suspensionMappedTrains.filter(departure => !departure.trip.suspension), db)
   await saveRailBuses(allRailBuses, db)
 
   await async.forEach(mappedTrains, async train => {
