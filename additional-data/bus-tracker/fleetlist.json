@@ -1595,9 +1595,9 @@
   "D781": "Reservoir",
   "D782": "Reservoir",
   "D783": "Reservoir",
-  "D784": "Reservoir",
-  "D785": "Reservoir",
-  "D786": "Reservoir",
+  "D784": "Bundoora",
+  "D785": "Bundoora",
+  "D786": "Bundoora",
   "D787": "Reservoir",
   "D809": "Reservoir",
   "D810": "Reservoir",
@@ -1710,5 +1710,8 @@
   "D1123": "Bundoora",
   "D1124": "Bundoora",
   "D1125": "Bundoora",
-  "D1126": "Bundoora"
+  "D1126": "Bundoora",
+  "D1193": "Reservoir",
+  "D1194": "Reservoir",
+  "D1195": "Reservoir"
 }
