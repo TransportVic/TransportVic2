@@ -340,11 +340,18 @@ router.get('/shunts', async  (req, res) => {
   })))
 })
 
-router.get('/strange', (req, res) => {
+router.get('/strange', async (req, res) => {
   let {db} = res
   let metroTrips = db.getCollection('metro trips')
 
-  fs.readFile(path.join(__dirname, '../../../logs/trackers/metro'), async (err, data) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.json(await utils.getData('metro-strange', '1', async () => {
+    let data = await new Promise(resolve => {
+      fs.readFile(path.join(__dirname, '../../../logs/trackers/metro'), (err, data) => {
+        resolve(data)
+      })
+    })
+
     let today = utils.getYYYYMMDDNow()
     let {consist, date} = querystring.parse(url.parse(req.url).query)
     if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
@@ -372,8 +379,6 @@ router.get('/strange', (req, res) => {
       }
     })
 
-    res.header('Access-Control-Allow-Origin', '*')
-
     await async.forEach(Object.keys(trains), async train => {
       let trip = await metroTrips.findDocument({
         runID: {
@@ -385,8 +390,8 @@ router.get('/strange', (req, res) => {
       if (trip) trains[train].resolvedConsist = trip.consist.join('-')
     })
 
-    res.json(Object.values(trains))
-  })
+    return Object.values(trains)
+  }, 1000 * 30))
 })
 
 router.get('/logs', (req, res) => {
