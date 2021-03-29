@@ -409,8 +409,7 @@ async function norGroupMatch(train, stopGTFSID, stationName, db) {
     // Look for SSS -> FSS -> SSS reverse stunt
     // These reverse runs seem to always be on the same line (so SUY->SUY for eg)
     // Especially problematic with P13 as it is UP only, but down trips can be given from there
-    // Do not perform the checks on P14 as it will correctly show the DOWN trips
-    if (train.platform !== '14') {
+    if (train.platform === '13' && train.direction === 'Down') {
       trip = await matchTrip({
         ...train,
         direction: 'Up'
