@@ -39,6 +39,7 @@ if departures.length
           -
             let configText = []
             let important = false
+
             if (!departure.isRailReplacementBus) {
               let isUpTrip = departure.direction === 'Up'
               let { futureStops } = departure

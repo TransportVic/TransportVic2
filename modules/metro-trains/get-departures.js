@@ -409,10 +409,13 @@ async function norGroupMatch(train, stopGTFSID, stationName, db) {
     // Look for SSS -> FSS -> SSS reverse stunt
     // These reverse runs seem to always be on the same line (so SUY->SUY for eg)
     // Especially problematic with P13 as it is UP only, but down trips can be given from there
-    trip = await matchTrip({
-      ...train,
-      direction: 'Up'
-    }, stopGTFSID, db, possibleLines, ['Flinders Street'])
+    // Do not perform the checks on P14 as it will correctly show the DOWN trips
+    if (train.platform !== '14') {
+      trip = await matchTrip({
+        ...train,
+        direction: 'Up'
+      }, stopGTFSID, db, possibleLines, ['Flinders Street'])
+    }
   }
 
   if (!trip) {
@@ -961,6 +964,7 @@ async function getDeparturesFromPTV(station, db) {
 
 async function getDepartures(station, db, filter) {
   try {
+    throw new Error('a')
     if (typeof filter === 'undefined') filter = true
 
     return await utils.getData('metro-departures-new', station.stopName, async () => {

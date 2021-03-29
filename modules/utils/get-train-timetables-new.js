@@ -247,7 +247,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
       isRailReplacementBus: trip.isRailReplacementBus,
       suspension: null,
       isSkippingLoop: null,
-      departureDay: utils.getYYYYMMDD(tripDepartureDay)
+      trueDepartureDay: utils.getYYYYMMDD(tripDepartureDay)
     }
   })).filter(Boolean).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }
@@ -316,8 +316,8 @@ async function getScheduledMetroDepartures(station, db) {
     departure.allStops = stopNames
     departure.futureStops = futureStops
 
-    let cityLoopConfig = stopNames.filter(stop => filterStops.includes(stop)).map(stop => stopCodes[stop])
-    let willGoByCityLoop = cityLoopConfig.includes('MCE')
+    let cityLoopRunning = stopNames.filter(stop => filterStops.includes(stop)).map(stop => stopCodes[stop])
+    let willGoByCityLoop = cityLoopRunning.includes('MCE')
 
     if (isInCity && departure.trip.destination === 'Parliament Railway Station') return null
     if (isInCity && departure.trip.destination === 'Flagstaff Railway Station') return null
@@ -326,44 +326,45 @@ async function getScheduledMetroDepartures(station, db) {
       departure.destination = departure.trip.trueDestination.slice(0, -16)
 
       if (departure.destination === 'Flinders Street') {
-        if (willGoByCityLoop) cityLoopConfig.shift()
-        let viaCityLoop = cityLoopConfig[0] === 'FGS' || cityLoopConfig[0] === 'PAR'
+        if (willGoByCityLoop) cityLoopRunning.shift()
+        let viaCityLoop = cityLoopRunning[0] === 'FGS' || cityLoopRunning[0] === 'PAR'
 
         if (viaCityLoop && !isInCity) {
           departure.destination = 'City Loop'
         }
 
-        departure.cityLoopConfig = cityLoopConfig
+        departure.cityLoopRunning = cityLoopRunning
       }
     } else if (isInCity) {
-      let upcoming = cityLoopConfig.slice(stopCode)
+      let upcoming = cityLoopRunning.slice(stopCode)
       let viaCityLoop = upcoming.includes('FGS')
 
       if (viaCityLoop) {
-        cityLoopConfig.pop()
+        cityLoopRunning.pop()
       } else {
-        if (upcoming.includes('SSS')) cityLoopConfig = ['FSS', 'SSS', 'NME']
-        else cityLoopConfig = cityLoopConfig.slice(-2)
+        if (upcoming.includes('SSS')) cityLoopRunning = ['FSS', 'SSS', 'NME']
+        else cityLoopRunning = cityLoopRunning.slice(-2)
       }
 
-      departure.cityLoopConfig = cityLoopConfig
+      departure.cityLoopRunning = cityLoopRunning
     }
 
-    let altLoopConfig = []
+    let altonaLoopRunning = []
     if (departure.trip.routeName === 'Werribee') {
-      let stopsNPTLAV = tripStops.includes('Newport') && tripStops.includes('Laverton')
+      let stopsNPTLAV = stopNames.includes('Newport') && stopNames.includes('Laverton')
       if (stopsNPTLAV) {
-        if (tripStops.includes('Altona')) { // Via ALT Loop
-          altLoopConfig = ['WTO', 'ALT', 'SHE']
+        departure.viaAltonaLoop = stopNames.includes('Altona')
+        if (departure.viaAltonaLoop) { // Via ALT Loop
+          altonaLoopRunning = ['WTO', 'ALT', 'SHE']
         } else { // Via ML
-          altLoopConfig = ['LAV', 'NPT']
+          altonaLoopRunning = ['LAV', 'NPT']
         }
 
-        if (departure.trip.direction === 'Down') altLoopConfig.reverse()
+        if (departure.trip.direction === 'Down') altonaLoopRunning.reverse()
       }
     }
 
-    departure.altLoopConfig = altLoopConfig
+    departure.altonaLoopRunning = altonaLoopRunning
 
     if (departure.trip.routeGTFSID === '2-CCL')
       departure.destination = 'City Circle'
