@@ -767,6 +767,11 @@ async function saveSuspensions(suspensionAffectedTrains, db) {
       runID: trip.runID
     }
 
+    let deletionQuery = {
+      ...query,
+      runID: trip.runID.slice(0, 4)
+    }
+
     let newTrip = {
       ...trip,
       operationDays: train.departureDay
@@ -777,6 +782,8 @@ async function saveSuspensions(suspensionAffectedTrains, db) {
     await liveTimetables.replaceDocument(query, newTrip, {
       upsert: true
     })
+
+    await liveTimetables.deleteDocument(deletionQuery)
   })
 }
 
