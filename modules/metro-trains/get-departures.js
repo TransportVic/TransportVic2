@@ -964,7 +964,6 @@ async function getDeparturesFromPTV(station, db) {
 
 async function getDepartures(station, db, filter) {
   try {
-    throw new Error('a')
     if (typeof filter === 'undefined') filter = true
 
     return await utils.getData('metro-departures-new', station.stopName, async () => {
