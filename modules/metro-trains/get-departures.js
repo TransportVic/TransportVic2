@@ -462,6 +462,7 @@ async function applyLoopSkipping(train, notifyData) {
       }
 
       if (train.direction === 'Down') train.cityLoopRunning.reverse()
+      else train.destination = 'Flinders Street'
     }
   }
 
