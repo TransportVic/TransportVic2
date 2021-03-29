@@ -188,7 +188,7 @@ async function getNotifyData(db) {
   let broadLoopSkipping = disruptions.filter(disruption => {
     return disruption.type !== 'works' && !disruption.runID
       && disruption.text.includes('direct')
-      && disruption.text.toLowerCase().includes('all trains')
+      && disruption.text.toLowerCase().includes('all ')
   })
 
   let broadCityLoopSkipping = broadLoopSkipping.filter(isCityLoop).map(disruption => disruption.routeName).reduce((a, e) => a.concat(e), [])
