@@ -39,7 +39,8 @@ async function getDepartures(stop) {
     if (departure.ptvRunID) { // Remember local departures do not have a run id
       await getStoppingPattern({
         ptvRunID: departure.ptvRunID,
-        time: departure.originDepartureTime.toISOString()
+        time: departure.originDepartureTime.toISOString(),
+        referenceTrip: departure.trip
       }, database)
     }
   })
