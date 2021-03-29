@@ -22,6 +22,7 @@ Object.keys(rawStationPIDs).forEach(stationName => {
 router.get('/', async (req, res, next) => {
   if (filter(req, next)) {
     let stationCode = req.headers.host.split('.')[0].toUpperCase()
+    if (req.headers.host.startsWith('pidsview.')) stationCode = 'FSS'
 
     let stationName = stationCodes[stationCode]
     let codedStationName = utils.encodeName(stationName)

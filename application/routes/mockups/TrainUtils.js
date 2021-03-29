@@ -140,8 +140,6 @@ module.exports = {
             let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train') // Not filtering XPT here as we just want to check if it exists
             if (vlinePlatform) {
               vlineDepartures = (await getVLineDepartures(station, db)).map(departure => {
-                if (departure.platform)
-                  departure.platform = departure.platform
                 departure.type = 'vline'
                 departure.actualDepartureTime = departure.estimatedDepartureTime || departure.scheduledDepartureTime
 
@@ -540,7 +538,7 @@ module.exports = {
     if (!shouldFilterPlatform) return departures
 
     return departures.filter(departure => {
-      let departurePlatform = departure.platform
+      let departurePlatform = departure.platform.replace('?', '')
       if (!departurePlatform) return null
       departurePlatform = departurePlatform.toString()
       if (departure.type === 'vline') {
