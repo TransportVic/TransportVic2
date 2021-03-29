@@ -405,12 +405,14 @@ async function norGroupMatch(train, stopGTFSID, stationName, db) {
 
   let trip
 
-  if (stationName === 'Southern Cross' && train.runDestination !== 'Flinders Street') { // Look for SSS -> FSS -> SSS reverse stunt
+  if (stationName === 'Southern Cross' && train.runDestination !== 'Flinders Street') {
+    // Look for SSS -> FSS -> SSS reverse stunt
     // These reverse runs seem to always be on the same line (so SUY->SUY for eg)
+    // Especially problematic with P13 as it is UP only, but down trips can be given from there
     trip = await matchTrip({
       ...train,
       direction: 'Up'
-    }, stopGTFSID, db, [train.routeName], ['Flinders Street'])
+    }, stopGTFSID, db, possibleLines, ['Flinders Street'])
   }
 
   if (!trip) {
