@@ -275,7 +275,7 @@ async function appendTripData(db, departure, vlinePlatforms) {
     if (!platform) platform = '??'
 
     departure.shortRouteName = shortRouteName
-    departure.platform = platform
+    departure.platform = platform.toString()
 
     if (stopTiming.cancelled) departure.cancelled = true
     if (departure.trip.type === 'change' && departure.trip.modifications.some(m => m.type === 'terminate')) {
