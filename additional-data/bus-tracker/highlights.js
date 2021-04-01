@@ -158,7 +158,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Panorama Specials',
-  track: ['P8', 'P12'],
+  track: ['P3', 'P5', 'P7', 'P47'],
   routes: [],
   type: 'exclude'
 }, {
