@@ -17,14 +17,28 @@ module.exports = trip => {
     trip.trueDepartureTime = trip.departureTime
     trip.trueDestination = destination
     trip.trueDestinationArrivalTime = destinationArrivalTime
-  } else {
+  } else { // Down
     let fssIndex = stops.indexOf('Flinders Street Railway Station')
     if (fssIndex !== -1) {
       origin = 'Flinders Street Railway Station'
       originDepartureTime = trip.stopTimings[fssIndex].departureTime
     } else {
-      origin = trip.origin
-      originDepartureTime = trip.departureTime
+      if (stops.includes('Parliament Railway Station')) { // No FSS but we have PAR
+        let rmdIndex = stops.indexOf('Richmond Railway Station')
+        let jliIndex = stops.indexOf('Jolimont Railway Station')
+        let sssIndex = stops.indexOf('Southern Cross Railway Station')
+
+        let chosenIndex = [rmdIndex, jliIndex, sssIndex].find(index => index !== -1)
+        if (chosenIndex) {
+          origin = trip.stopTimings[chosenIndex].stopName
+          originDepartureTime = trip.stopTimings[chosenIndex].departureTime
+        }
+      }
+
+      if (!origin) {
+        origin = trip.origin
+        originDepartureTime = trip.departureTime
+      }
     }
 
     trip.trueOrigin = origin
