@@ -351,8 +351,17 @@ async function matchTrip(train, stopGTFSID, db, possibleLines, originalLine, pos
     viaCityLoop: train.viaCityLoop
   }
 
-  return await departureUtils.getLiveDeparture(data, db)
-    || await departureUtils.getScheduledDeparture(data, db)
+  let liveDeparture = await departureUtils.getLiveDeparture(data, db)
+  let gtfsDeparture = await departureUtils.getScheduledDeparture(data, db)
+  if (liveDeparture && gtfsDeparture) {
+    if (liveDeparture.routeName !== originalLine && gtfsDeparture.routeName == originalLine) {
+      return gtfsDeparture
+    } else {
+      return liveDeparture
+    }
+  } else {
+    return liveDeparture || gtfsDeparture
+  }
 }
 
 async function genericMatch(train, stopGTFSID, stationName, db) {
