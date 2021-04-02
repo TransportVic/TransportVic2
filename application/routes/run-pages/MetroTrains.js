@@ -25,7 +25,12 @@ function tripCloseness(trip, originStop, destinationStop, departureTimeMinutes, 
   let destMinutes = tripDestination.arrivalTimeMinutes % 1440
   let destDiff = Math.abs(destMinutes - arrivalTimeMinutes % 1440)
 
-  return originDiff + destDiff
+  let terminalsDiff = 0
+
+  if (trip.trueOrigin === originStop.stopName) terminalsDiff++
+  if (trip.trueDestination === destinationStop.stopName) terminalsDiff++
+  console.log(trip.trueDestination, destinationStop.stopName)
+  return originDiff + destDiff - terminalsDiff
 }
 
 async function pickBestTrip(data, db) {
@@ -94,14 +99,18 @@ async function pickBestTrip(data, db) {
 
   // NME, RMD shorts are always loaded live
   let liveTrips = await db.getCollection('live timetables').findDocuments(gtfsQuery).toArray()
-  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(gtfsQuery)
+  let gtfsTrips = await db.getCollection('gtfs timetables').findDocuments(gtfsQuery).toArray()
 
-  let liveTrip
+  let gtfsTrip, liveTrip
+  let tripClosenessBound = trip => tripCloseness(trip, originStop, destinationStop, tripStartMinutes, tripEndMinutes)
 
   if (liveTrips.length > 1) {
-    let tripClosenessBound = trip => tripCloseness(trip, originStop, destinationStop, tripStartMinutes, tripEndMinutes)
     liveTrip = liveTrips.sort((a, b) => tripClosenessBound(a) - tripClosenessBound(b))[0]
   } else liveTrip = liveTrips[0]
+
+  if (gtfsTrips.length > 1) {
+    gtfsTrip = gtfsTrips.sort((a, b) => tripClosenessBound(a) - tripClosenessBound(b))[0]
+  } else gtfsTrip = gtfsTrips[0]
 
   let useLive = minutesToTripEnd >= -120 && minutesToTripStart < 240
 
@@ -113,7 +122,14 @@ async function pickBestTrip(data, db) {
     }
   }
 
-  let referenceTrip = liveTrip || gtfsTrip
+  let referenceTrip
+  if (liveTrip && gtfsTrip) {
+    let liveCloseness = tripClosenessBound(liveTrip)
+    let gtfsCloseness = tripClosenessBound(gtfsTrip)
+
+    if (liveCloseness <= gtfsCloseness) referenceTrip = liveTrip
+    else referenceTrip = gtfsTrip
+  } else referenceTrip = liveTrip || gtfsTrip
 
   let isStonyPoint = data.origin === 'stony-point' || data.destination === 'stony-point'
 
