@@ -942,6 +942,18 @@ function parsePTVDepartures(ptvResponse, stationName) {
   }).filter(Boolean)
 }
 
+function dedupeRailReplacementBuses(replacementBuses) {
+  let deduped = []
+  return replacementBuses.filter(bus => {
+    let id = bus.scheduledDepartureTime.toISOString() + bus.runDestination
+    if (deduped.includes(id)) return false
+    else {
+      deduped.push(id)
+      return true
+    }
+  })
+}
+
 async function getDeparturesFromPTV(station, db) {
   let notifyData = await getNotifyData(db)
   let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
@@ -952,7 +964,9 @@ async function getDeparturesFromPTV(station, db) {
 
   let parsedDepartures = parsePTVDepartures(ptvResponse, stationName)
 
-  let replacementBuses = parsedDepartures.filter(departure => departure.isRailReplacementBus)
+  let rawReplacementBuses = parsedDepartures.filter(departure => departure.isRailReplacementBus)
+  let replacementBuses = dedupeRailReplacementBuses(rawReplacementBuses)
+
   let trains = parsedDepartures.filter(departure => !departure.isRailReplacementBus)
 
   let initalMappedBuses = await async.map(replacementBuses, async bus => await mapBus(bus, metroPlatform, db))
