@@ -196,6 +196,7 @@ async function pickBestTrip(data, db) {
             return fullDestinationName === referenceTrip.destination
               || fullDestinationName === referenceTrip.trueDestination
               || fullDestinationName === referenceTrip.originalDestination
+              || utils.encodeName(destinationName) === data.destination
           } else {
             return utils.encodeName(destinationName) === data.destination
           }
