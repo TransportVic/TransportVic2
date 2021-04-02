@@ -19,6 +19,7 @@ async function getDeparture(data, db, live) {
   let {
     stopGTFSID,
     possibleLines,
+    originalLine,
     departureTime,
     possibleDestinations,
     direction,
@@ -81,16 +82,13 @@ async function getDeparture(data, db, live) {
       }
     }
 
-    timetables.forEach(timetable => {
-      timetable.sortID = +day.startOf('day').add(timetable.stopTimings[0].departureTimeMinutes, 'minutes')
-    })
-
     seen = seen.concat(timetables.map(e => e._id))
     allTimetables.push(timetables)
   }
 
   let mergedTimetables = allTimetables.reduce((a, e) => a.concat(e), [])
-  return mergedTimetables.sort((a, b) => b.sortID - a.sortID)[0]
+  let originalLineMatch = mergedTimetables.find(timetable => timetable.routeName === originalLine)
+  return originalLineMatch || mergedTimetables[0]
 }
 
 function getScheduledDeparture(data, db) {

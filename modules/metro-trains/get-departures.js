@@ -338,12 +338,13 @@ function filterDepartures(departures, filter) {
   })
 }
 
-async function matchTrip(train, stopGTFSID, db, possibleLines, possibleDestinations) {
+async function matchTrip(train, stopGTFSID, db, possibleLines, originalLine, possibleDestinations) {
   let fullPossibleDestinations = possibleDestinations.map(dest => dest + ' Railway Station')
 
   let data = {
     stopGTFSID,
     possibleLines,
+    originalLine,
     departureTime: train.scheduledDepartureTime,
     possibleDestinations: fullPossibleDestinations,
     direction: train.direction,
@@ -364,7 +365,7 @@ async function genericMatch(train, stopGTFSID, stationName, db) {
   if (train.runDestination === 'Flinders Street' && !train.viaCityLoop)
     possibleDestinations.push('Parliament')
 
-  let trip = await matchTrip(train, stopGTFSID, db, possibleLines, possibleDestinations)
+  let trip = await matchTrip(train, stopGTFSID, db, possibleLines, train.routeName, possibleDestinations)
   return trip
 }
 
@@ -381,7 +382,7 @@ async function cfdGroupMatch(train, stopGTFSID, stationName, db) {
   if (train.runDestination === 'Flagstaff' && train.viaCityLoop) // RMD -> CLP -> FSS -> PAR -> CLP -> FGS -> NME
     possibleDestinations.push('Flinders Street')
 
-  let trip = await matchTrip(train, stopGTFSID, db, possibleLines, possibleDestinations)
+  let trip = await matchTrip(train, stopGTFSID, db, possibleLines, train.routeName, possibleDestinations)
   return trip
 }
 
@@ -413,12 +414,12 @@ async function norGroupMatch(train, stopGTFSID, stationName, db) {
       trip = await matchTrip({
         ...train,
         direction: 'Up'
-      }, stopGTFSID, db, possibleLines, ['Flinders Street'])
+      }, stopGTFSID, db, possibleLines, train.routeName, ['Flinders Street'])
     }
   }
 
   if (!trip) {
-    trip = await matchTrip(train, stopGTFSID, db, possibleLines, possibleDestinations)
+    trip = await matchTrip(train, stopGTFSID, db, possibleLines, train.routeName, possibleDestinations)
   }
 
   return trip
@@ -564,7 +565,7 @@ async function mapBus(bus, metroPlatform, db) {
   let destination = bus.runDestination
 
   let possibleLines = lineGroups.find(group => group.includes(bus.routeName)) || bus.routeName
-  let trip = await matchTrip(bus, stopGTFSID, db, possibleLines, [destination])
+  let trip = await matchTrip(bus, stopGTFSID, db, possibleLines, bus.routeName, [destination])
 
   if (trip) {
     return returnBusDeparture(bus, trip)
