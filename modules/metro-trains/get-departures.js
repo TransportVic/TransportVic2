@@ -760,9 +760,38 @@ async function saveConsists(departures, db) {
       consist: departure.fleetNumber
     }
 
-    await metroTrips.replaceDocument(query, tripData, {
-      upsert: true
-    })
+    let existingTrip
+    if (tripData.consist.length === 3) {
+      existingTrip = await metroTrips.findDocument(query)
+      if (existingTrip) {
+        if (existingTrip.consist.length === 6) { // Trip already exists with a filled consist, we only override if a different set matches
+          if (!existingTrip.consist.includes(tripData.consist[0])) {
+            existingTrip = null
+          } // Otherwise do not override a 6 car train with a 3 car
+        } else if (existingTrip.consist.length === 3 && !existingTrip.consist.includes(tripData.consist[0])) { // We might have matched half a train and now have the other half, sanity check
+          let sanityCheckTrip = await metroTrips.findDocument({
+            date: departure.departureDay,
+            consist: {
+              $and: [ // Match both the one already existing and the one given
+                tripData.consist[0],
+                existingTrip.consist[0]
+              ]
+            }
+          })
+
+          if (sanityCheckTrip) {
+            tripData.consist = sanityCheckTrip.consist
+            existingTrip = null
+          }
+        }
+      }
+    }
+
+    if (!existingTrip) {
+      await metroTrips.replaceDocument(query, tripData, {
+        upsert: true
+      })
+    }
   })
 }
 
