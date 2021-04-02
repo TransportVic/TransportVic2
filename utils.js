@@ -457,6 +457,14 @@ module.exports = {
       return module.exports.pad(ptvRunID - 948000, 4, '0')
     }
   },
+  getPTVRunID: runID => {
+    if (parseInt(runID)) {
+      return parseInt(runID) + 948000
+    } else {
+      if (runID[0] === 'X') return parseInt(runID.slice(1)) + 988000
+      if (runID[0] === 'R') return parseInt(runID.slice(1)) + 982000
+    }
+  },
   sleep: time => {
     return new Promise(resolve => {
       setTimeout(resolve, time)

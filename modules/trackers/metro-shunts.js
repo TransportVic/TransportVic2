@@ -55,6 +55,21 @@ function dedupeRunIDs(trips) {
   })
 }
 
+function parseRawData(stop, startOfDay) {
+  let scheduledDepartureTime = startOfDay.clone().add(stop.time_seconds, 'seconds')
+
+  return {
+    stopName: stop.station,
+    stopSeconds: stop.time_seconds,
+    scheduledDepartureTime,
+    scheduledDepartureMinutes: Math.round(parseInt(stop.time_seconds) / 60),
+    platform: stop.platform,
+    cancelled: stop.status === 'C',
+    runID: stop.trip_id,
+    forming: stop.forms_trip_id
+  }
+}
+
 async function getDepartures(routeName) {
   let routeID = routes[routeName]
   let timetable = await getTimetable(routeID)
@@ -70,14 +85,51 @@ async function getDepartures(routeName) {
     return trip.date === metroDay
   })
 
-  let tripsAscending = tripsToday.slice(0).sort((a, b) => parseInt(a.time_seconds) - parseInt(b.time_seconds))
-  let tripsDescending = tripsToday.slice(0).sort((a, b) => parseInt(b.time_seconds) - parseInt(a.time_seconds))
+  let allTrips = Object.values(tripsToday.reduce((trips, stop) => {
+    let runID = stop.trip_id
+    if (!trips[runID]) trips[runID] = {
+      runID: runID,
+      forming: stop.forms_trip_id,
+      stopsAvailable: [],
+      direction: runID[3] % 2 === 0 ? 'Up' : 'Down',
+      operationDays: day
+    }
 
-  let firstStops = dedupeRunIDs(tripsAscending)
-  let lastStops = dedupeRunIDs(tripsDescending)
+    trips[runID].stopsAvailable.push(parseRawData(stop, startOfDay))
+
+    return trips
+  }, {})).filter(trip => trip.stopsAvailable[0].stopSeconds < 86400)
+  // Filter as we can get trips for just past 3am for the next day and obv it won't match
+
+  await async.forEach(allTrips.filter(trip => trip.stopsAvailable.length === 1), async metroTrip => {
+    let trip = await liveTimetables.findDocument({
+      operationDays: day,
+      runID: metroTrip.runID
+    })
+
+    if (!trip) trip = await getStoppingPattern(database, utils.getPTVRunID(metroTrip.runID), 'metro train')
+    if (trip) { // Trips can sometimes not appear in PTV, especially 7xxx extras
+      metroTrip.stopsAvailable = trip.stopTimings.map(stop => {
+        let stopTime = stop.departureTimeMinutes || stop.arrivalTimeMinutes
+        return {
+          stopName: stop.stopName.slice(0, -16),
+          stopSeconds: stopTime * 60,
+          scheduledDepartureTime: startOfDay.clone().add(stopTime, 'minutes'),
+          scheduledDepartureMinutes: stopTime,
+          platform: stop.platform,
+          cancelled: trip.cancelled,
+          runID: metroTrip.runID,
+          forming: metroTrip.forming
+        }
+      })
+    }
+  })
+
+  let firstStops = allTrips.map(trip => trip.stopsAvailable[0])
+  let lastStops = allTrips.map(trip => trip.stopsAvailable[trip.stopsAvailable.length - 1])
 
   let shunts = lastStops.filter(trip => {
-    let forming = trip.forms_trip_id
+    let forming = trip.forming
 
     if (forming === '0') return trip.type = 'TO_YARD' || true
     if (forming.startsWith('0')) {
@@ -88,7 +140,7 @@ async function getDepartures(routeName) {
       } else return false
     }
 
-    let formingTrip = firstStops.find(nextTrip => nextTrip.trip_id === forming)
+    let formingTrip = firstStops.find(nextTrip => nextTrip.runID === forming)
     if (formingTrip) {
       if (formingTrip.platform !== trip.platform) {
         trip.type = 'SHUNT_AND_REDOCK'
@@ -105,13 +157,13 @@ async function getDepartures(routeName) {
 
   let dbShunts = shunts.map(shunt => ({
     date: day,
-    runID: shunt.trip_id,
+    runID: shunt.runID,
     routeName,
-    stationName: shunt.station,
-    arrivalTimeMinutes: Math.round(shunt.time_seconds / 60),
+    stationName: shunt.stopName,
+    arrivalTimeMinutes: shunt.scheduledDepartureMinutes,
     type: shunt.type,
     platform: shunt.platform,
-    ...((shunt.type === 'EMPTY_CARS' || shunt.type === 'SHUNT_OUT') ? { forming: shunt.forms_trip_id } : {}),
+    ...((shunt.type === 'EMPTY_CARS' || shunt.type === 'SHUNT_OUT') ? { forming: shunt.forming } : {}),
     ...(shunt.type === 'SHUNT_AND_REDOCK' ? { toPlatform: shunt.toPlatform } : {})
   }))
 
@@ -144,7 +196,7 @@ async function requestTimetables() {
     let allLines = Object.keys(routes)
     for (let line of allLines) {
       await getDepartures(line)
-      await utils.sleep(5000)
+      await utils.sleep(3000)
     }
   } catch (e) {
     global.loggers.trackers.metro.err('Failed to load shunts data, skipping', e)
@@ -154,6 +206,7 @@ async function requestTimetables() {
 
 database.connect(async () => {
   metroShunts = database.getCollection('metro shunts')
+  liveTimetables = database.getCollection('live timetables')
 
   schedule([
     [360, 1380, 18]
