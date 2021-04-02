@@ -184,6 +184,7 @@ function parseRawData(stop, startOfDay) {
 
   return {
     stopName: stop.station + ' Railway Station',
+    stopSeconds: stop.time_seconds,
     scheduledDepartureTime,
     scheduledDepartureMinutes: Math.round(parseInt(stop.time_seconds) / 60),
     platform: stop.platform,
@@ -255,7 +256,8 @@ async function getDepartures() {
     trips[runID].stopsAvailable.push(parseRawData(stop, startOfDay))
 
     return trips
-  }, {}))
+  }, {})).filter(trip => trip.stopsAvailable[0].stopSeconds < 86400)
+  // Filter as we can get trips for just past 3am for the next day and obv it won't match
 
   let knownRunIDs = await timetables.distinct('runID', {
     operationDays: dayOfWeek,
