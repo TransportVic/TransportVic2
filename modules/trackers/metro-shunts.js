@@ -164,7 +164,7 @@ async function getDepartures(routeName) {
     type: shunt.type,
     platform: shunt.platform,
     ...((shunt.type === 'EMPTY_CARS' || shunt.type === 'SHUNT_OUT') ? { forming: shunt.forming } : {}),
-    ...(shunt.type === 'SHUNT_AND_REDOCK' ? { toPlatform: shunt.toPlatform } : {})
+    ...(shunt.type === 'SHUNT_AND_REDOCK' ? { toPlatform: shunt.toPlatform, forming: shunt.forming } : {})
   }))
 
   let shuntIDs = dbShunts.map(shunt => shunt.runID)
@@ -202,7 +202,6 @@ async function requestTimetables() {
     global.loggers.trackers.metro.err('Failed to load shunts data, skipping', e)
   }
 }
-
 
 database.connect(async () => {
   metroShunts = database.getCollection('metro shunts')

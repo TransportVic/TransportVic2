@@ -5,7 +5,12 @@ function findConsist(consist) {
   if (!consist) return null
 
   // POTS Ghost Train
-  if (consist.match(/train\d+/)) return null
+  if (consist.match(/train\d+/)) {
+    return global.loggers.trackers.metro.warn('Encountered strange train', {
+      consist,
+      runID
+    })
+  }
 
   let carriages = consist.split('-')
 
