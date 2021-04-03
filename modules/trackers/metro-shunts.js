@@ -208,6 +208,9 @@ database.connect(async () => {
   liveTimetables = database.getCollection('live timetables')
 
   schedule([
-    [360, 1380, 18]
+    [180, 240, 15], // Run it from 3am - 4am, taking into account website updating till ~3.30am
+    [241, 359, 20],
+    [360, 1380, 18],
+    [1380, 1440, 20]
   ], requestTimetables, 'metro shunts', global.loggers.trackers.metro)
 })

@@ -285,6 +285,7 @@ database.connect(async () => {
   timetables = database.getCollection('timetables')
 
   schedule([
+    [180, 240, 15], // Run it from 3am - 4am, taking into account website updating till ~3.30am
     [360, 1199, 3],
     [1200, 1380, 4]
   ], requestTimings, 'hcmt tracker', global.loggers.trackers.metro)

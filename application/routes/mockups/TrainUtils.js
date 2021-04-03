@@ -4,7 +4,7 @@ const getVLineDepartures = require('../../../modules/vline/get-departures')
 const destinationOverrides = require('../../../additional-data/coach-stops')
 const utils = require('../../../utils')
 const async = require('async')
-const emptyShunts = require('../../../additional-data/empty-shunts.json')
+const emptyShunts = [] // Replace with metro shunts db
 const { getDayOfWeek } = require('../../../public-holidays')
 
 let defaultStoppingText = {

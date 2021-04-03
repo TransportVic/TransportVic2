@@ -45,7 +45,10 @@ let extendedList = [
   'Wangaratta',
   'Wodonga',
   'Avenel',
-  'Violet Town'
+  'Violet Town',
+  'Beaufort',
+  'Talbot',
+  'Creswick'
 ]
 
 async function getDeparturesFromVNET(db, station) {
@@ -280,7 +283,7 @@ async function requestTimings() {
     vlineLock.releaseLock()
   }
 
-  if (cycleCount === 6) cycleCount = 0
+  if (cycleCount === 5) cycleCount = 0
 }
 
 database.connect(async () => {

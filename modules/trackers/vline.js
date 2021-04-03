@@ -159,6 +159,7 @@ async function requestTimings() {
 
 database.connect(async () => {
   schedule([
+    [180, 225, 30], // Run it from 3am - 4am, taking into account website updating till ~3.30am
     [225, 1350, 20],
     [1350, 1440, 40]
   ], requestTimings, 'vline tracker', global.loggers.trackers.vline)
