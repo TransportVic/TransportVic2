@@ -18,7 +18,8 @@ function trimLog(filename, isCombined) {
   if (filename.includes('http')) cutoff = 3
   if (filename.includes('certs')) cutoff = 7
   if (filename.includes('mail')) cutoff = 21
-  if (filename.includes('errors') || filename.includes('mockups')) cutoff = 28
+  if (filename.includes('errors')) cutoff = 28
+  if (filename.includes('mockups')) cutoff = 6
 
   if (isCombined) cutoff = 3
 
@@ -91,8 +92,24 @@ database.connect(async () => {
   console.log('Removed', trimLog(config.combinedLog, true), 'lines from combined log')
   walk(path.join(__dirname, '../logs'), (err, results) => {
     results.forEach(filename => {
-      let logName = filename.replace(/.*?\/logs\//, '')
-      console.log('Removed', trimLog(filename, false), 'lines from', logName)
+      if (filename.includes('metro-tracker.json')) {
+        try {
+          let data = JSON.parse(fs.readFileSync(filename).toString())
+          let now = utils.now()
+          let filtered = data.filter(entry => {
+            let entryTime = utils.parseTime(entry.utc)
+            return now.diff(entryTime, 'days') > 31
+          })
+
+          fs.writeFileSync(filename, JSON.stringify(filtered))
+          console.log('Removed', filtered.length - data.length, 'lines from metro tracker logs')
+        } catch (e) {
+          console.log('Error cleaning up metro tracker logs, skipping')
+        }
+      } else {
+        let logName = filename.replace(/.*?\/logs\//, '')
+        console.log('Removed', trimLog(filename, false), 'lines from', logName)
+      }
     })
     process.exit()
   })
