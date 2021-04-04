@@ -705,9 +705,7 @@ function appendDepartureDay(departure, stopGTFSID) {
   let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
   if (!stopData) return global.loggers.general.warn('No departure day', departure, stopGTFSID)
 
-  let firstStop = trip.stopTimings[0]
-  let fssStop = trip.stopTimings.find(tripStop => tripStop.stopName === 'Flinders Street Railway Station')
-  if (trip.direction === 'Down' && fssStop) firstStop = fssStop
+  let firstStop = trip.stopTimings.find(tripStop => tripStop.stopName === trip.trueOrigin)
 
   let originDepartureMinutes = firstStop.departureTimeMinutes
   let stopDepartureMinutes = stopData.departureTimeMinutes || stopData.arrivalTimeMinutes
