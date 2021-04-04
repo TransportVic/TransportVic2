@@ -29,7 +29,7 @@ function tripCloseness(trip, originStop, destinationStop, departureTimeMinutes, 
 
   if (trip.trueOrigin === originStop.stopName) terminalsDiff++
   if (trip.trueDestination === destinationStop.stopName) terminalsDiff++
-  console.log(trip.trueDestination, destinationStop.stopName)
+
   return originDiff + destDiff - terminalsDiff
 }
 

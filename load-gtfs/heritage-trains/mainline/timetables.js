@@ -1,19 +1,27 @@
 module.exports = {
   "days": [
-    ["707_RIVERLANDER_TOCUMWAL_FRI", "1", "1", "1", "1", "1", "1", "1", "20210917", "20210917"],
-    ["707_RIVERLANDER_TOCUMWAL_SAT", "1", "1", "1", "1", "1", "1", "1", "20210918", "20210918"],
+    ["707_GRAINLANDER_QUK_SAT_MAR", "1", "1", "1", "1", "1", "1", "1", "20210306", "20210306"],
+    ["707_GRAINLANDER_QUK_SUN_MAR", "1", "1", "1", "1", "1", "1", "1", "20210307", "20210307"],
 
-    ["707_RIVERLANDER_ECHUA_FRI", "1", "1", "1", "1", "1", "1", "1", "20210711", "20210711"],
-    ["707_RIVERLANDER_ECHUA_SAT", "1", "1", "1", "1", "1", "1", "1", "20210712", "20210712"],
-    ["707_RIVERLANDER_ECHUA_SUN", "1", "1", "1", "1", "1", "1", "1", "20210713", "20210713"],
-    ["707_RIVERLANDER_ECHUA_MON", "1", "1", "1", "1", "1", "1", "1", "20210714", "20210714"],
+    ["707_GRAINLANDER_SEL_FRI", "1", "1", "1", "1", "1", "1", "1", "20210507", "20210507"],
+    ["707_GRAINLANDER_SEL_SAT", "1", "1", "1", "1", "1", "1", "1", "20210508", "20210508"],
+    ["707_GRAINLANDER_SEL_SUN", "1", "1", "1", "1", "1", "1", "1", "20210509", "20210509"],
 
-    ["707_GRAINLANDER_SEALAKE_FRI", "1", "1", "1", "1", "1", "1", "1", "20210507", "20210507"],
-    ["707_GRAINLANDER_SEALAKE_SAT", "1", "1", "1", "1", "1", "1", "1", "20210508", "20210508"],
-    ["707_GRAINLANDER_SEALAKE_SUN", "1", "1", "1", "1", "1", "1", "1", "20210509", "20210509"],
+    ["707_RIVERLANDER_ECH_FRI", "1", "1", "1", "1", "1", "1", "1", "20210611", "20210611"],
+    ["707_RIVERLANDER_ECH_SAT", "1", "1", "1", "1", "1", "1", "1", "20210612", "20210612"],
+    ["707_RIVERLANDER_ECH_SUN", "1", "1", "1", "1", "1", "1", "1", "20210613", "20210613"],
+    ["707_RIVERLANDER_ECH_MON", "1", "1", "1", "1", "1", "1", "1", "20210614", "20210614"],
 
-    ["707_GRAINLANDER_QUAMBATOOK_SAT", "1", "1", "1", "1", "1", "1", "1", "20210306", "20210306"],
-    ["707_GRAINLANDER_QUAMBATOOK_SUN", "1", "1", "1", "1", "1", "1", "1", "20210307", "20210307"],
+    ["707_GRAINLANDER_QUK_SAT_AUG", "1", "1", "1", "1", "1", "1", "1", "20210828", "20210828"],
+    ["707_GRAINLANDER_QUK_SUN_AUG", "1", "1", "1", "1", "1", "1", "1", "20210829", "20210829"],
+
+    ["707_RIVERLANDER_TCL_FRI", "1", "1", "1", "1", "1", "1", "1", "20210917", "20210917"],
+    ["707_RIVERLANDER_TCL_SUN", "1", "1", "1", "1", "1", "1", "1", "20210919", "20210919"],
+
+    ["707_GRAINLANDER_WYF_FRI", "1", "1", "1", "1", "1", "1", "1", "20211029", "20211029"],
+    ["707_GRAINLANDER_WYF_SAT", "1", "1", "1", "1", "1", "1", "1", "20211030", "20211030"],
+    ["707_GRAINLANDER_WYF_SUN", "1", "1", "1", "1", "1", "1", "1", "20211031", "20211031"],
+
 
     ["SRV_S313_SAT", "1", "1", "1", "1", "1", "1", "1", "20210306", "20210306"],
     ["SRV_OTWAY_SAT", "1", "1", "1", "1", "1", "1", "1", "20210313", "20210313"],
@@ -23,15 +31,15 @@ module.exports = {
     ["SRV_BAL_SAT", "1", "1", "1", "1", "1", "1", "1", "20210424", "20210424"],
     ["SRV_GLG_SUN", "1", "1", "1", "1", "1", "1", "1", "20210502", "20210502"],
 
-    ["SRHC_TRARALGON_SAT", "1", "1", "1", "1", "1", "1", "1", "20210410", "20210410"]
+    ["SRHC_TRG_SAT", "0", "0", "0", "0", "0", "0", "0", "20210410", "20210410"]
   ],
   "dates": [],
   "trips": [
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_RIVERLANDER_TOCUMWAL_FRI",
-      "tripID": "2200.707_RIVERLANDER_TOCUMWAL_FRI.13-MLH-mjp-1.1.H",
+      "calendarID": "707_RIVERLANDER_TCL_FRI",
+      "tripID": "2200.707_RIVERLANDER_TCL_FRI.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Tocumwal"
@@ -39,8 +47,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_RIVERLANDER_TOCUMWAL_SAT",
-      "tripID": "0900.707_RIVERLANDER_TOCUMWAL_SAT.13-MLH-mjp-1.1.R",
+      "calendarID": "707_RIVERLANDER_TCL_SUN",
+      "tripID": "0900.707_RIVERLANDER_TCL_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Strathmerton"
@@ -48,8 +56,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_RIVERLANDER_TOCUMWAL_SAT",
-      "tripID": "0930.707_RIVERLANDER_TOCUMWAL_SAT.13-MLH-mjp-1.1.H",
+      "calendarID": "707_RIVERLANDER_TCL_SUN",
+      "tripID": "0930.707_RIVERLANDER_TCL_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Tocumwal"
@@ -57,8 +65,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_RIVERLANDER_TOCUMWAL_SAT",
-      "tripID": "1100.707_RIVERLANDER_TOCUMWAL_SAT.13-MLH-mjp-1.1.R",
+      "calendarID": "707_RIVERLANDER_TCL_SUN",
+      "tripID": "1100.707_RIVERLANDER_TCL_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Southern Cross"
@@ -68,8 +76,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_RIVERLANDER_ECHUA_FRI",
-      "tripID": "2150.707_RIVERLANDER_ECHUA_FRI.13-MLH-mjp-1.1.H",
+      "calendarID": "707_RIVERLANDER_ECH_FRI",
+      "tripID": "2150.707_RIVERLANDER_ECH_FRI.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Echuca"
@@ -77,8 +85,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_RIVERLANDER_ECHUA_SAT",
-      "tripID": "0930.707_RIVERLANDER_ECHUA_SAT.13-MLH-mjp-1.1.H",
+      "calendarID": "707_RIVERLANDER_ECH_SAT",
+      "tripID": "0930.707_RIVERLANDER_ECH_SAT.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Deniliquin"
@@ -86,8 +94,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_RIVERLANDER_ECHUA_SAT",
-      "tripID": "1445.707_RIVERLANDER_ECHUA_SAT.13-MLH-mjp-1.1.R",
+      "calendarID": "707_RIVERLANDER_ECH_SAT",
+      "tripID": "1445.707_RIVERLANDER_ECH_SAT.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Echuca"
@@ -95,8 +103,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_RIVERLANDER_ECHUA_SAT",
-      "tripID": "2200.707_RIVERLANDER_ECHUA_SAT.13-MLH-mjp-1.1.R",
+      "calendarID": "707_RIVERLANDER_ECH_SAT",
+      "tripID": "2200.707_RIVERLANDER_ECH_SAT.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Bendigo"
@@ -104,8 +112,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_RIVERLANDER_ECHUA_SUN",
-      "tripID": "0330.707_RIVERLANDER_ECHUA_SUN.13-MLH-mjp-1.1.H",
+      "calendarID": "707_RIVERLANDER_ECH_SUN",
+      "tripID": "0330.707_RIVERLANDER_ECH_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Swan Hill"
@@ -113,8 +121,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_RIVERLANDER_ECHUA_SUN",
-      "tripID": "0850.707_RIVERLANDER_ECHUA_SUN.13-MLH-mjp-1.1.H",
+      "calendarID": "707_RIVERLANDER_ECH_SUN",
+      "tripID": "0850.707_RIVERLANDER_ECH_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Piangil"
@@ -122,8 +130,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_RIVERLANDER_ECHUA_SUN",
-      "tripID": "1020.707_RIVERLANDER_ECHUA_SUN.13-MLH-mjp-1.1.R",
+      "calendarID": "707_RIVERLANDER_ECH_SUN",
+      "tripID": "1020.707_RIVERLANDER_ECH_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Swan Hill"
@@ -131,8 +139,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_RIVERLANDER_ECHUA_MON",
-      "tripID": "0500.707_RIVERLANDER_ECHUA_MON.13-MLH-mjp-1.1.R",
+      "calendarID": "707_RIVERLANDER_ECH_MON",
+      "tripID": "0500.707_RIVERLANDER_ECH_MON.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Bendigo"
@@ -140,8 +148,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_RIVERLANDER_ECHUA_MON",
-      "tripID": "0900.707_RIVERLANDER_ECHUA_MON.13-MLH-mjp-1.1.R",
+      "calendarID": "707_RIVERLANDER_ECH_MON",
+      "tripID": "0900.707_RIVERLANDER_ECH_MON.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Southern Cross"
@@ -151,8 +159,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_GRAINLANDER_SEALAKE_FRI",
-      "tripID": "2210.707_GRAINLANDER_SEALAKE_FRI.13-MLH-mjp-1.1.H",
+      "calendarID": "707_GRAINLANDER_SEL_FRI",
+      "tripID": "2210.707_GRAINLANDER_SEL_FRI.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Wycheproof"
@@ -160,8 +168,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_GRAINLANDER_SEALAKE_SAT",
-      "tripID": "0910.707_GRAINLANDER_SEALAKE_SAT.13-MLH-mjp-1.1.H",
+      "calendarID": "707_GRAINLANDER_SEL_SAT",
+      "tripID": "0920.707_GRAINLANDER_SEL_SAT.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Sea Lake"
@@ -169,8 +177,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_GRAINLANDER_SEALAKE_SAT",
-      "tripID": "1230.707_GRAINLANDER_SEALAKE_SAT.13-MLH-mjp-1.1.R",
+      "calendarID": "707_GRAINLANDER_SEL_SAT",
+      "tripID": "1230.707_GRAINLANDER_SEL_SAT.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Wycheproof"
@@ -178,8 +186,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_GRAINLANDER_SEALAKE_SUN",
-      "tripID": "0930.707_GRAINLANDER_SEALAKE_SUN.13-MLH-mjp-1.1.H",
+      "calendarID": "707_GRAINLANDER_SEL_SUN",
+      "tripID": "0930.707_GRAINLANDER_SEL_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Nullawil"
@@ -187,8 +195,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_GRAINLANDER_SEALAKE_SUN",
-      "tripID": "1050.707_GRAINLANDER_SEALAKE_SUN.13-MLH-mjp-1.1.R",
+      "calendarID": "707_GRAINLANDER_SEL_SUN",
+      "tripID": "1050.707_GRAINLANDER_SEL_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Wycheproof"
@@ -196,17 +204,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_GRAINLANDER_SEALAKE_SUN",
-      "tripID": "1230.707_GRAINLANDER_SEALAKE_SUN.13-MLH-mjp-1.1.R",
-      "gtfsDirection": "0",
-      "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Maryborough"
-    },
-    {
-      "mode": "heritage train",
-      "routeGTFSID": "13-MLH",
-      "calendarID": "707_GRAINLANDER_SEALAKE_SUN",
-      "tripID": "1650.707_GRAINLANDER_SEALAKE_SUN.13-MLH-mjp-1.1.R",
+      "calendarID": "707_GRAINLANDER_SEL_SUN",
+      "tripID": "1230.707_GRAINLANDER_SEL_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Southern Cross"
@@ -217,8 +216,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_GRAINLANDER_QUAMBATOOK_SAT",
-      "tripID": "0740.707_GRAINLANDER_QUAMBATOOK_SAT.13-MLH-mjp-1.1.H",
+      "calendarID": "707_GRAINLANDER_QUK_SAT_MAR",
+      "tripID": "0742.707_GRAINLANDER_QUK_SAT_MAR.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Quambatook",
@@ -227,13 +226,72 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "707_GRAINLANDER_QUAMBATOOK_SUN",
-      "tripID": "0800.707_GRAINLANDER_QUAMBATOOK_SUN.13-MLH-mjp-1.1.R",
+      "calendarID": "707_GRAINLANDER_QUK_SUN_MAR",
+      "tripID": "0800.707_GRAINLANDER_QUK_SUN_MAR.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Southern Cross",
       "vehicle": ["A66" ,"S306", "PCP294", "BZ270", "BRS224", "NAM2336", "LAN2354", "Victoria", "BK708", "SJ284", "Kuldalai", "Wando", "DT318"]
     },
+
+
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "707_GRAINLANDER_QUK_SAT_AUG",
+      "tripID": "0810.707_GRAINLANDER_QUK_SAT_AUG.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "1",
+      "shapeID": "13-MLH-mjp-1.1.H",
+      "headsign": "Quambatook"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "707_GRAINLANDER_QUK_SUN_AUG",
+      "tripID": "0700.707_GRAINLANDER_QUK_SUN_AUG.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Southern Cross"
+    },
+
+
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "707_GRAINLANDER_WYF_FRI",
+      "tripID": "2210.707_GRAINLANDER_WYF_FRI.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "1",
+      "shapeID": "13-MLH-mjp-1.1.H",
+      "headsign": "Wycheproof"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "707_GRAINLANDER_WYF_SAT",
+      "tripID": "0940.707_GRAINLANDER_WYF_SAT.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "1",
+      "shapeID": "13-MLH-mjp-1.1.H",
+      "headsign": "Nullawil"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "707_GRAINLANDER_WYF_SAT",
+      "tripID": "1010.707_GRAINLANDER_WYF_SAT.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Wycheproof"
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "707_GRAINLANDER_WYF_SUN",
+      "tripID": "0800.707_GRAINLANDER_WYF_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Southern Cross"
+    },
+
 
     {
       "mode": "heritage train",
@@ -589,8 +647,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "SRHC_TRARALGON_SAT",
-      "tripID": "0810.SRHC_TRARALGON_SAT.13-MLH-mjp-1.1.H",
+      "calendarID": "SRHC_TRG_SAT",
+      "tripID": "0810.SRHC_TRG_SAT.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Traralgon"
@@ -598,8 +656,8 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "SRHC_TRARALGON_SAT",
-      "tripID": "1604.SRHC_TRARALGON_SAT.13-MLH-mjp-1.1.R",
+      "calendarID": "SRHC_TRG_SAT",
+      "tripID": "1604.SRHC_TRG_SAT.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Southern Cross"
@@ -607,7 +665,7 @@ module.exports = {
   ],
   "timings": [
     {
-      "tripID": "2200.707_RIVERLANDER_TOCUMWAL_FRI.13-MLH-mjp-1.1.H",
+      "tripID": "2200.707_RIVERLANDER_TCL_FRI.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Southern Cross",
@@ -652,7 +710,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "0900.707_RIVERLANDER_TOCUMWAL_SAT.13-MLH-mjp-1.1.R",
+      "tripID": "0900.707_RIVERLANDER_TCL_SUN.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Tocumwal",
@@ -677,7 +735,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "0930.707_RIVERLANDER_TOCUMWAL_SAT.13-MLH-mjp-1.1.H",
+      "tripID": "0930.707_RIVERLANDER_TCL_SUN.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Strathmerton",
@@ -702,7 +760,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1100.707_RIVERLANDER_TOCUMWAL_SAT.13-MLH-mjp-1.1.R",
+      "tripID": "1100.707_RIVERLANDER_TCL_SUN.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Tocumwal",
@@ -748,7 +806,7 @@ module.exports = {
     },
 
     {
-      "tripID": "2150.707_RIVERLANDER_ECHUA_FRI.13-MLH-mjp-1.1.H",
+      "tripID": "2150.707_RIVERLANDER_ECH_FRI.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Southern Cross",
@@ -773,7 +831,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "0930.707_RIVERLANDER_ECHUA_SAT.13-MLH-mjp-1.1.H",
+      "tripID": "0930.707_RIVERLANDER_ECH_SAT.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Echuca",
@@ -798,7 +856,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1445.707_RIVERLANDER_ECHUA_SAT.13-MLH-mjp-1.1.R",
+      "tripID": "1445.707_RIVERLANDER_ECH_SAT.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Deniliquin",
@@ -823,7 +881,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "2200.707_RIVERLANDER_ECHUA_SAT.13-MLH-mjp-1.1.R",
+      "tripID": "2200.707_RIVERLANDER_ECH_SAT.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Echuca",
@@ -848,7 +906,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "0330.707_RIVERLANDER_ECHUA_SUN.13-MLH-mjp-1.1.H",
+      "tripID": "0330.707_RIVERLANDER_ECH_SUN.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Bendigo",
@@ -873,7 +931,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "0850.707_RIVERLANDER_ECHUA_SUN.13-MLH-mjp-1.1.H",
+      "tripID": "0850.707_RIVERLANDER_ECH_SUN.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Swan Hill",
@@ -898,7 +956,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1020.707_RIVERLANDER_ECHUA_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1020.707_RIVERLANDER_ECH_SUN.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Piangil",
@@ -923,7 +981,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "0500.707_RIVERLANDER_ECHUA_MON.13-MLH-mjp-1.1.R",
+      "tripID": "0500.707_RIVERLANDER_ECH_MON.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Swan Hill",
@@ -948,7 +1006,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "0900.707_RIVERLANDER_ECHUA_MON.13-MLH-mjp-1.1.R",
+      "tripID": "0900.707_RIVERLANDER_ECH_MON.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Bendigo",
@@ -975,7 +1033,7 @@ module.exports = {
 
 
     {
-      "tripID": "2210.707_GRAINLANDER_SEALAKE_FRI.13-MLH-mjp-1.1.H",
+      "tripID": "2210.707_GRAINLANDER_SEL_FRI.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Southern Cross",
@@ -991,6 +1049,16 @@ module.exports = {
           "stopName": "Ballarat",
           "arrivalTime": "02:10:00",
           "departureTime": "02:10:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Maryborough",
+          "arrivalTime": "04:00:00",
+          "departureTime": "04:00:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1020,12 +1088,22 @@ module.exports = {
       ]
     },
     {
-      "tripID": "0910.707_GRAINLANDER_SEALAKE_SAT.13-MLH-mjp-1.1.H",
+      "tripID": "0920.707_GRAINLANDER_SEL_SAT.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Wycheproof",
-          "arrivalTime": "09:10:00",
-          "departureTime": "09:10:00",
+          "arrivalTime": "09:20:00",
+          "departureTime": "09:20:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Nullawil",
+          "arrivalTime": "10:00:00",
+          "departureTime": "10:00:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1045,7 +1123,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1230.707_GRAINLANDER_SEALAKE_SAT.13-MLH-mjp-1.1.R",
+      "tripID": "1230.707_GRAINLANDER_SEL_SAT.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Sea Lake",
@@ -1070,7 +1148,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "0930.707_GRAINLANDER_SEALAKE_SUN.13-MLH-mjp-1.1.H",
+      "tripID": "0930.707_GRAINLANDER_SEL_SUN.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Wycheproof",
@@ -1095,7 +1173,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1050.707_GRAINLANDER_SEALAKE_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1050.707_GRAINLANDER_SEL_SUN.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Nullawil",
@@ -1120,7 +1198,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1230.707_GRAINLANDER_SEALAKE_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1230.707_GRAINLANDER_SEL_SUN.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Wycheproof",
@@ -1133,24 +1211,19 @@ module.exports = {
           "stopSequence": 0
         },
         {
-          "stopName": "Maryborough",
-          "arrivalTime": "15:25:00",
-          "departureTime": "15:25:00",
+          "stopName": "Charlton",
+          "arrivalTime": "13:00:00",
+          "departureTime": "13:00:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
           "stopSequence": 0
-        }
-      ]
-    },
-    {
-      "tripID": "1650.707_GRAINLANDER_SEALAKE_SUN.13-MLH-mjp-1.1.R",
-      "stopTimings": [
+        },
         {
           "stopName": "Maryborough",
-          "arrivalTime": "16:50:00",
-          "departureTime": "16:50:00",
+          "arrivalTime": "15:25:00",
+          "departureTime": "16:25:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1159,8 +1232,8 @@ module.exports = {
         },
         {
           "stopName": "Ballarat",
-          "arrivalTime": "18:00:00",
-          "departureTime": "18:00:00",
+          "arrivalTime": "17:50:00",
+          "departureTime": "17:50:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1192,7 +1265,7 @@ module.exports = {
 
 
     {
-      "tripID": "0740.707_GRAINLANDER_QUAMBATOOK_SAT.13-MLH-mjp-1.1.H",
+      "tripID": "0742.707_GRAINLANDER_QUK_SAT_MAR.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Southern Cross",
@@ -1252,7 +1325,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "0800.707_GRAINLANDER_QUAMBATOOK_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "0800.707_GRAINLANDER_QUK_SUN_MAR.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Quambatook",
@@ -1322,6 +1395,312 @@ module.exports = {
         }
       ]
     },
+
+
+    {
+      "tripID": "0810.707_GRAINLANDER_QUK_SAT_AUG.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "08:10:00",
+          "departureTime": "08:10:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "3"
+        },
+        {
+          "stopName": "Ballarat",
+          "arrivalTime": "11:10:00",
+          "departureTime": "11:50:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "2"
+        },
+        {
+          "stopName": "Maryborough",
+          "arrivalTime": "12:00:00",
+          "departureTime": "12:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        },
+        {
+          "stopName": "Boort",
+          "arrivalTime": "16:30:00",
+          "departureTime": "16:30:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        },
+        {
+          "stopName": "Quambatook",
+          "arrivalTime": "15:30:00",
+          "departureTime": "15:30:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        }
+      ]
+    },
+    {
+      "tripID": "0700.707_GRAINLANDER_QUK_SUN_AUG.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Quambatook",
+          "arrivalTime": "07:00:00",
+          "departureTime": "07:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        },
+        {
+          "stopName": "Inglewood",
+          "arrivalTime": "10:00:00",
+          "departureTime": "12:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        },
+        {
+          "stopName": "Maryborough",
+          "arrivalTime": "14:00:00",
+          "departureTime": "14:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        },
+        {
+          "stopName": "Ballarat",
+          "arrivalTime": "15:00:00",
+          "departureTime": "15:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "2"
+        },
+        {
+          "stopName": "North Shore",
+          "arrivalTime": "17:00:00",
+          "departureTime": "17:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        },
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "18:20:00",
+          "departureTime": "18:20:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "3"
+        }
+      ]
+    },
+
+
+    {
+      "tripID": "2210.707_GRAINLANDER_WYF_FRI.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "22:10:00",
+          "departureTime": "22:10:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Ballarat",
+          "arrivalTime": "02:10:00",
+          "departureTime": "02:10:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Charlton",
+          "arrivalTime": "07:30:00",
+          "departureTime": "07:30:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Wycheproof",
+          "arrivalTime": "08:20:00",
+          "departureTime": "08:20:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+      ]
+    },
+    {
+      "tripID": "0940.707_GRAINLANDER_WYF_SAT.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Wycheproof",
+          "arrivalTime": "09:40:00",
+          "departureTime": "09:40:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Nullawil",
+          "arrivalTime": "10:10:00",
+          "departureTime": "10:10:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1010.707_GRAINLANDER_WYF_SAT.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Nullawil",
+          "arrivalTime": "10:10:00",
+          "departureTime": "10:10:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Wycheproof",
+          "arrivalTime": "10:50:00",
+          "departureTime": "10:50:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "0800.707_GRAINLANDER_WYF_SUN.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Wycheproof",
+          "arrivalTime": "08:00:00",
+          "departureTime": "08:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Charlton",
+          "arrivalTime": "08:45:00",
+          "departureTime": "08:45:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Maryborough",
+          "arrivalTime": "11:50:00",
+          "departureTime": "18:30:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Ballarat",
+          "arrivalTime": "19:30:00",
+          "departureTime": "20:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Bacchus Marsh",
+          "arrivalTime": "21:40:00",
+          "departureTime": "21:40:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Melton",
+          "arrivalTime": "21:50:00",
+          "departureTime": "21:50:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "22:30:00",
+          "departureTime": "22:30:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+
 
 
     {
@@ -2348,7 +2727,7 @@ module.exports = {
 
 
     {
-      "tripID": "0810.SRHC_TRARALGON_SAT.13-MLH-mjp-1.1.H",
+      "tripID": "0810.SRHC_TRG_SAT.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Southern Cross",
@@ -2413,7 +2792,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1604.SRHC_TRARALGON_SAT.13-MLH-mjp-1.1.R",
+      "tripID": "1604.SRHC_TRG_SAT.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Traralgon",

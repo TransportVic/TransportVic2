@@ -55,7 +55,7 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
     let previousDepartureTime = -1
 
     let routeData = await getRouteData(routes, routeGTFSID, routeCache)
-
+    if (!timings) console.log(tripID)
     timings.stopTimings = timings.stopTimings.sort((a, b) => a.stopSequence - b.stopSequence)
 
     let stopTimings = await async.mapSeries(timings.stopTimings, async stopTiming => {
