@@ -8,7 +8,8 @@ const getStoppingPattern = require('./get-stopping-pattern')
 const getRouteStops = require('../../additional-data/route-stops')
 const { getDayOfWeek } = require('../../public-holidays')
 
-let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
+let undergroundLoopStations = ['Parliament', 'Flagstaff', 'Melbourne Central']
+let cityLoopStations = ['Southern Cross', ...undergroundLoopStations]
 let cityStations = [...cityLoopStations, 'Flinders Street']
 
 let burnleyGroup = ['Alamein', 'Belgrave', 'Glen Waverley', 'Lilydale']
@@ -34,7 +35,7 @@ function addCityLoopRunning(train, stationName) {
     } else {
       if (runDestination === 'Southern Cross') {
         loopRunning = ['NME', 'SSS']
-      } else if (runDestination === 'Flagstaff') {
+      } else if (runDestination === 'Flagstaff' || undergroundLoopStations.includes(stationName)) {
         loopRunning = ['SSS', 'FSS', 'PAR', 'MCE', 'FGS']
       } else {
         loopRunning = ['NME', 'SSS', 'FSS']
