@@ -15,10 +15,13 @@ module.exports = {
     ["707_GRAINLANDER_QUAMBATOOK_SAT", "1", "1", "1", "1", "1", "1", "1", "20210306", "20210306"],
     ["707_GRAINLANDER_QUAMBATOOK_SUN", "1", "1", "1", "1", "1", "1", "1", "20210307", "20210307"],
 
-    ["SRV_OTWAY_SAT", "1", "1", "1", "1", "1", "1", "1", "20210313", "20210313"],
     ["SRV_S313_SAT", "1", "1", "1", "1", "1", "1", "1", "20210306", "20210306"],
-    ["SRV_SHM_SUN", "1", "1", "1", "1", "1", "1", "1", "20210418", "20210418"],
+    ["SRV_OTWAY_SAT", "1", "1", "1", "1", "1", "1", "1", "20210313", "20210313"],
     ["SRV_Y_NOT_SUN", "1", "1", "1", "1", "1", "1", "1", "20210321", "20210321"],
+    ["SRV_MOR_KSY_SUN", "1", "1", "1", "1", "1", "1", "1", "20210410", "20210410"],
+    ["SRV_SHM_SUN", "1", "1", "1", "1", "1", "1", "1", "20210418", "20210418"],
+    ["SRV_BAL_SAT", "1", "1", "1", "1", "1", "1", "1", "20210424", "20210424"],
+    ["SRV_GLG_SUN", "1", "1", "1", "1", "1", "1", "1", "20210502", "20210502"],
 
     ["SRHC_TRARALGON_SAT", "1", "1", "1", "1", "1", "1", "1", "20210410", "20210410"]
   ],
@@ -303,87 +306,87 @@ module.exports = {
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Sandringham",
-      "vehicle": ["K190", "K153"]
+      "vehicle": ["A2.986", "K153"]
     },
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
       "calendarID": "SRV_SHM_SUN",
-      "tripID": "1004.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1013.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Flinders Street",
-      "vehicle": ["K153", "K190"]
+      "vehicle": ["K153", "A2.986"]
     },
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
       "calendarID": "SRV_SHM_SUN",
-      "tripID": "1052.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "tripID": "1055.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Sandringham",
-      "vehicle": ["K190", "K153"]
+      "vehicle": ["A2.986", "K153"]
     },
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
       "calendarID": "SRV_SHM_SUN",
-      "tripID": "1124.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1133.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Flinders Street",
-      "vehicle": ["K153", "K190"]
+      "vehicle": ["K153", "A2.986"]
     },
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
       "calendarID": "SRV_SHM_SUN",
-      "tripID": "1212.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "tripID": "1215.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Sandringham",
-      "vehicle": ["K190", "K153"]
+      "vehicle": ["A2.986", "K153"]
     },
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
       "calendarID": "SRV_SHM_SUN",
-      "tripID": "1244.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1253.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Flinders Street",
-      "vehicle": ["K153", "K190"]
+      "vehicle": ["K153", "A2.986"]
     },
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
       "calendarID": "SRV_SHM_SUN",
-      "tripID": "1452.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "tripID": "1435.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Sandringham",
-      "vehicle": ["K190", "K153"]
+      "vehicle": ["A2.986", "K153"]
     },
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
       "calendarID": "SRV_SHM_SUN",
-      "tripID": "1524.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1513.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Flinders Street",
-      "vehicle": ["K153", "K190"]
+      "vehicle": ["K153", "A2.986"]
     },
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
       "calendarID": "SRV_SHM_SUN",
-      "tripID": "1612.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "tripID": "1555.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "1",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Sandringham",
-      "vehicle": ["K190", "K153"]
+      "vehicle": ["A2.986", "K153"]
     },
     {
       "mode": "heritage train",
@@ -393,7 +396,49 @@ module.exports = {
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Flinders Street",
-      "vehicle": ["K153", "K190"]
+      "vehicle": ["K153", "A2.986"]
+    },
+
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_BAL_SAT",
+      "tripID": "0822.SRV_BAL_SAT.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.H",
+      "headsign": "Ballarat",
+      "vehicle": ["R711"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_BAL_SAT",
+      "tripID": "1544.SRV_BAL_SAT.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Southern Cross",
+      "vehicle": ["R711"]
+    },
+
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_GLG_SUN",
+      "tripID": "1040.SRV_GLG_SUN.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.H",
+      "headsign": "Geelong",
+      "vehicle": ["R761"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_GLG_SUN",
+      "tripID": "1555.SRV_GLG_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Southern Cross",
+      "vehicle": ["R761"]
     },
 
 
@@ -436,6 +481,108 @@ module.exports = {
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Flinders Street",
       "vehicle": ["Y112", "VZVF1", "600BK", "14BRS", "7ABE", "700BK", "1BCE"]
+    },
+
+
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_MOR_KSY_SUN",
+      "tripID": "0921.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.H",
+      "headsign": "Moorabbin",
+      "vehicle": ["K153", "K190"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_MOR_KSY_SUN",
+      "tripID": "1035.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.H",
+      "headsign": "Kananook Sidings",
+      "vehicle": ["K153", "K190"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_MOR_KSY_SUN",
+      "tripID": "1125.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Moorabbin",
+      "vehicle": ["K190", "K153"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_MOR_KSY_SUN",
+      "tripID": "1212.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.H",
+      "headsign": "Kananook Sidings",
+      "vehicle": ["K153", "K190"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_MOR_KSY_SUN",
+      "tripID": "1255.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Moorabbin",
+      "vehicle": ["K190", "K153"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_MOR_KSY_SUN",
+      "tripID": "1342.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.H",
+      "headsign": "Carrum",
+      "vehicle": ["K153", "K190"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_MOR_KSY_SUN",
+      "tripID": "1513.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Moorabbin",
+      "vehicle": ["K190", "K153"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_MOR_KSY_SUN",
+      "tripID": "1552.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.H",
+      "headsign": "Kananook Sidings",
+      "vehicle": ["K153", "K190"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_MOR_KSY_SUN",
+      "tripID": "1635.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Moorabbin",
+      "vehicle": ["K190", "K153"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_MOR_KSY_SUN",
+      "tripID": "1718.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Newport",
+      "vehicle": ["K190", "K153"]
     },
 
 
@@ -1420,7 +1567,8 @@ module.exports = {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "10"
         },
         {
           "stopName": "Sandringham",
@@ -1435,12 +1583,12 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1004.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1013.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Sandringham",
-          "arrivalTime": "10:04:00",
-          "departureTime": "10:04:00",
+          "arrivalTime": "10:13:00",
+          "departureTime": "10:13:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1449,28 +1597,30 @@ module.exports = {
         },
         {
           "stopName": "Flinders Street",
-          "arrivalTime": "10:30:00",
-          "departureTime": "10:30:00",
+          "arrivalTime": "10:44:00",
+          "departureTime": "10:44:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "10"
         }
       ]
     },
     {
-      "tripID": "1052.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "tripID": "1055.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Flinders Street",
-          "arrivalTime": "10:52:00",
-          "departureTime": "10:52:00",
+          "arrivalTime": "10:55:00",
+          "departureTime": "10:55:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "10"
         },
         {
           "stopName": "Sandringham",
@@ -1485,12 +1635,12 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1124.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1133.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Sandringham",
-          "arrivalTime": "11:24:00",
-          "departureTime": "11:24:00",
+          "arrivalTime": "11:33:00",
+          "departureTime": "11:33:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1499,28 +1649,30 @@ module.exports = {
         },
         {
           "stopName": "Flinders Street",
-          "arrivalTime": "11:50:00",
-          "departureTime": "11:50:00",
+          "arrivalTime": "12:04:00",
+          "departureTime": "12:04:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "10"
         }
       ]
     },
     {
-      "tripID": "1212.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "tripID": "1215.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Flinders Street",
-          "arrivalTime": "12:12:00",
-          "departureTime": "12:12:00",
+          "arrivalTime": "12:15:00",
+          "departureTime": "12:15:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "10"
         },
         {
           "stopName": "Sandringham",
@@ -1535,12 +1687,12 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1244.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1253.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Sandringham",
-          "arrivalTime": "12:44:00",
-          "departureTime": "12:44:00",
+          "arrivalTime": "12:53:00",
+          "departureTime": "12:53:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1549,8 +1701,35 @@ module.exports = {
         },
         {
           "stopName": "Flinders Street",
-          "arrivalTime": "13:10:00",
-          "departureTime": "13:10:00",
+          "arrivalTime": "13:24:00",
+          "departureTime": "13:24:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "10"
+        }
+      ]
+    },
+    {
+      "tripID": "1435.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "14:35:00",
+          "departureTime": "14:35:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "10"
+        },
+        {
+          "stopName": "Sandringham",
+          "arrivalTime": "15:00:00",
+          "departureTime": "15:00:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1560,37 +1739,12 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1452.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
-      "stopTimings": [
-        {
-          "stopName": "Flinders Street",
-          "arrivalTime": "14:52:00",
-          "departureTime": "14:52:00",
-          "stopConditions": {
-            "dropoff": 0, "pickup": 0
-          },
-          "stopDistance": 0,
-          "stopSequence": 0
-        },
-        {
-          "stopName": "Sandringham",
-          "arrivalTime": "15:20:00",
-          "departureTime": "15:20:00",
-          "stopConditions": {
-            "dropoff": 0, "pickup": 0
-          },
-          "stopDistance": 0,
-          "stopSequence": 0
-        }
-      ]
-    },
-    {
-      "tripID": "1524.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1513.SRV_SHM_SUN.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Sandringham",
-          "arrivalTime": "15:24:00",
-          "departureTime": "15:24:00",
+          "arrivalTime": "15:13:00",
+          "departureTime": "15:13:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1599,28 +1753,30 @@ module.exports = {
         },
         {
           "stopName": "Flinders Street",
-          "arrivalTime": "15:50:00",
-          "departureTime": "15:50:00",
+          "arrivalTime": "15:44:00",
+          "departureTime": "15:44:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "10"
         }
       ]
     },
     {
-      "tripID": "1612.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
+      "tripID": "1555.SRV_SHM_SUN.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Flinders Street",
-          "arrivalTime": "16:12:00",
-          "departureTime": "16:12:00",
+          "arrivalTime": "15:55:00",
+          "departureTime": "15:55:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
           "stopDistance": 0,
-          "stopSequence": 0
+          "stopSequence": 0,
+          "platform": "10"
         },
         {
           "stopName": "Sandringham",
@@ -1649,8 +1805,113 @@ module.exports = {
         },
         {
           "stopName": "Flinders Street",
-          "arrivalTime": "17:10:00",
-          "departureTime": "17:10:00",
+          "arrivalTime": "17:09:00",
+          "departureTime": "17:09:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "10"
+        }
+      ]
+    },
+
+
+    {
+      "tripID": "0822.SRV_BAL_SAT.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "08:22:00",
+          "departureTime": "08:22:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Ballarat",
+          "arrivalTime": "11:08:00",
+          "departureTime": "11:08:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1544.SRV_BAL_SAT.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Ballarat",
+          "arrivalTime": "15:44:00",
+          "departureTime": "15:44:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "18:02:00",
+          "departureTime": "18:02:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+
+
+    {
+      "tripID": "1040.SRV_GLG_SUN.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "10:40:00",
+          "departureTime": "10:40:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Geelong",
+          "arrivalTime": "12:00:00",
+          "departureTime": "12:00:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        }
+      ]
+    },
+    {
+      "tripID": "1555.SRV_GLG_SUN.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Geelong",
+          "arrivalTime": "15:55:00",
+          "departureTime": "15:55:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0
+        },
+        {
+          "stopName": "Southern Cross",
+          "arrivalTime": "17:15:00",
+          "departureTime": "17:15:00",
           "stopConditions": {
             "dropoff": 0, "pickup": 0
           },
@@ -1787,6 +2048,300 @@ module.exports = {
           "stopDistance": 0,
           "stopSequence": 0,
           "platform": "14"
+        }
+      ]
+    },
+
+
+    {
+      "tripID": "0921.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Newport",
+          "arrivalTime": "09:21:00",
+          "departureTime": "09:21:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        },
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "09:45:00",
+          "departureTime": "09:45:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "10"
+        },
+        {
+          "stopName": "Moorabbin",
+          "arrivalTime": "10:15:00",
+          "departureTime": "10:15:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "2"
+        }
+      ]
+    },
+    {
+      "tripID": "1035.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Moorabbin",
+          "arrivalTime": "10:35:00",
+          "departureTime": "10:35:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        },
+        {
+          "stopName": "Kananook Sidings",
+          "arrivalTime": "11:05:00",
+          "departureTime": "11:05:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "8"
+        }
+      ]
+    },
+    {
+      "tripID": "1125.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Kananook Sidings",
+          "arrivalTime": "11:25:00",
+          "departureTime": "11:25:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "8"
+        },
+        {
+          "stopName": "Moorabbin",
+          "arrivalTime": "11:55:00",
+          "departureTime": "11:55:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        }
+      ]
+    },
+    {
+      "tripID": "1212.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Moorabbin",
+          "arrivalTime": "12:12:00",
+          "departureTime": "12:12:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        },
+        {
+          "stopName": "Kananook Sidings",
+          "arrivalTime": "12:43:00",
+          "departureTime": "12:43:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "8"
+        }
+      ]
+    },
+    {
+      "tripID": "1255.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Kananook Sidings",
+          "arrivalTime": "12:55:00",
+          "departureTime": "12:55:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "8"
+        },
+        {
+          "stopName": "Moorabbin",
+          "arrivalTime": "13:25:00",
+          "departureTime": "13:25:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        }
+      ]
+    },
+    {
+      "tripID": "1342.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Moorabbin",
+          "arrivalTime": "13:42:00",
+          "departureTime": "13:42:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        },
+        {
+          "stopName": "Carrum",
+          "arrivalTime": "14:07:00",
+          "departureTime": "14:07:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "8"
+        }
+      ]
+    },
+    {
+      "tripID": "1513.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Carrum",
+          "arrivalTime": "15:13:00",
+          "departureTime": "15:13:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "8"
+        },
+        {
+          "stopName": "Moorabbin",
+          "arrivalTime": "15:37:00",
+          "departureTime": "15:37:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        }
+      ]
+    },
+    {
+      "tripID": "1552.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "stopTimings": [
+        {
+          "stopName": "Moorabbin",
+          "arrivalTime": "15:52:00",
+          "departureTime": "15:52:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        },
+        {
+          "stopName": "Kananook Sidings",
+          "arrivalTime": "16:23:00",
+          "departureTime": "16:23:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "8"
+        }
+      ]
+    },
+    {
+      "tripID": "1635.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Kananook Sidings",
+          "arrivalTime": "16:35:00",
+          "departureTime": "16:35:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "8"
+        },
+        {
+          "stopName": "Moorabbin",
+          "arrivalTime": "17:05:00",
+          "departureTime": "17:05:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        }
+      ]
+    },
+    {
+      "tripID": "1718.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "stopTimings": [
+        {
+          "stopName": "Moorabbin",
+          "arrivalTime": "17:18:00",
+          "departureTime": "17:18:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "1"
+        },
+        {
+          "stopName": "Flinders Street",
+          "arrivalTime": "17:51:00",
+          "departureTime": "17:51:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "10"
+        },
+        {
+          "stopName": "Newport",
+          "arrivalTime": "18:13:00",
+          "departureTime": "18:13:00",
+          "stopConditions": {
+            "dropoff": 0, "pickup": 0
+          },
+          "stopDistance": 0,
+          "stopSequence": 0,
+          "platform": "2"
         }
       ]
     },
