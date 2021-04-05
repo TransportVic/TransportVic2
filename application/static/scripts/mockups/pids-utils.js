@@ -59,7 +59,7 @@ window.splitStops = function splitStops(stops, hasConnections, options) {
   }
 }
 
-function formatTimeA(time, includeSeconds=false, space=false) {
+window.formatTimeA = function(time, includeSeconds=false, space=false) {
   let hours = time.getHours()
   let minutes = time.getMinutes()
   let seconds = time.getSeconds()
@@ -88,7 +88,7 @@ function formatTimeA(time, includeSeconds=false, space=false) {
   return mainTime
 }
 
-function formatTimeB(time, includeSeconds=false) {
+window.formatTimeB = function(time, includeSeconds=false) {
   let hours = time.getHours()
   let minutes = time.getMinutes()
   let seconds = time.getSeconds()
@@ -108,4 +108,13 @@ function formatTimeB(time, includeSeconds=false) {
   }
 
   return mainTime
+}
+
+window.encode = name => name.toLowerCase().replace(/[^\w\d ]/g, '-').replace(/  */g, '-')
+
+window.minutesToDeparture = function (time, upp) {
+  let now = new Date()
+  let diff = (time - now) / 1000 / 60
+  if (diff <= 0.5) return upp ? 'NOW' : 'Now'
+  else return Math.round(diff) + ' min'
 }

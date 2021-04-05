@@ -353,7 +353,8 @@ div.clock {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: calc(var(--height) * 0.07);
+  font-size: calc(var(--height) * 0.065);
+  font-family: "NetworkSansRegular";
 }
 
 div.clock span {

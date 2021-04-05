@@ -109,19 +109,20 @@ let lineColours = {
 }
 
 function identifyTargetStop(departure, target) {
-  let targetStop = departure.stopTimings.find(stop => stop.stopName === target)
+  let targetStop = departure.times.find(stop => stop.name === target)
 
-  let actualDepartureTime = new Date(departure.actualDepartureTime)
-  let scheduledDepartureTime = new Date(departure.scheduledDepartureTime)
+  let actualDepartureTime = new Date(departure.est || departure.sch)
+  let scheduledDepartureTime = new Date(departure.sch)
 
-  let fssStop = departure.stopTimings.find(stop => stop.stopName === 'Flinders Street')
-  let fssMinutes = fssStop.departureTimeMinutes
-  let targetMinutes = targetStop.arrivalTimeMinutes
+  let fssStop = departure.times.find(stop => stop.name === 'Flinders Street')
+  let fssMinutes = fssStop.time
+  let targetMinutes = targetStop.time
 
   let minutesDifference = targetMinutes - fssMinutes
 
   let targetActualTime = new Date(+actualDepartureTime + minutesDifference * 1000 * 60)
 
+  departure.act = actualDepartureTime
   departure.targetActualTime = targetActualTime
 
   return departure
@@ -132,7 +133,7 @@ function setDestinationsRow(departures) {
     let {target, id} = section
 
     let validDepartures = departures.filter(departure => {
-      return departure.type !== 'vline' && departure.stopTimings.some(stop => stop.stopName === target)
+      return departure.type !== 'vline' && departure.times.some(stop => stop.name === target)
     }).map(departure => {
       return identifyTargetStop(departure, target)
     }).sort((a, b) => a.targetActualTime - b.targetActualTime)
@@ -143,9 +144,9 @@ function setDestinationsRow(departures) {
 
     next2.forEach((departure, i) => {
       let departureDiv = departureDivs[i]
-      $('.platform', departureDiv).textContent = departure.platform
-      $('.platform', departureDiv).className = 'platform ' + departure.codedLineName
-      $('.minutesToDeparture', departureDiv).textContent = departure.prettyTimeToDeparture
+      $('.platform', departureDiv).textContent = departure.plt
+      $('.platform', departureDiv).className = 'platform ' + encode(departure.route)
+      $('.minutesToDeparture', departureDiv).textContent = minutesToDeparture(departure.act, true)
     })
 
     let numberMissing = 2 - next2.length
@@ -167,12 +168,12 @@ function updateDiagram(departures) {
     let nextDeparture = departures.filter(departure => {
       if (departure.type === 'vline') return false
       for (let target of targets) {
-        if (!departure.stopTimings.find(stop => stop.stopName === target))
+        if (!departure.times.find(stop => stop.name === target))
           return false
       }
       if (not) {
         for (let excluded of not)
-          if (departure.stopTimings.find(stop => stop.stopName === excluded))
+          if (departure.times.find(stop => stop.name === excluded))
             return false
       }
       return true
@@ -182,7 +183,7 @@ function updateDiagram(departures) {
 
     if (nextDeparture) {
       setArrowActive(key, true)
-      setSectionColour(key, '#' + lineColours[nextDeparture.routeName])
+      setSectionColour(key, '#' + lineColours[nextDeparture.route])
     } else {
       setArrowActive(key, false)
       setSectionColour(key, '#C0C0C0')
@@ -198,7 +199,7 @@ function updateBody() {
     setFullMessageActive(false)
 
     try {
-      let departures = body.departures
+      let departures = body.dep
       setDestinationsRow(departures)
       updateDiagram(departures)
 

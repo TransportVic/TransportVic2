@@ -28,6 +28,7 @@ let defaultStoppingText = {
 
 let defaultStoppingType = {
   noSuburban: 'No Suburban Passengers',
+  notTakingPax: 'Not Taking Passengers',
   // vlinePostfix: ', Not Taking Suburban Passengers',
   stopsAll: 'Stops All',
   limitedExpress: 'Limited Express',
@@ -359,7 +360,9 @@ function getExpressCount(departure) {
 function appendStoppingType(departure, stoppingTypes) {
   let { expressCount } = departure
 
-  if (departure.type === 'vline') {
+  if (departure.destination === 'Arrival') {
+    departure.stoppingType = stoppingTypes.notTakingPax
+  } else if (departure.type === 'vline') {
     departure.stoppingType = stoppingTypes.noSuburban
 
     if (stoppingTypes.vlinePostfix) {
@@ -418,9 +421,11 @@ function trimDepartures(departures, includeStopTimings) {
       txt: departure.stoppingText,
       type: departure.stoppingType,
       route: departure.routeName,
-      stops: i === 0 ? departure.screenStops.map(stop => stop.express ? '---' : stop.stopName) : [],
+      stops: i === 0 ? departure.screenStops.map(stop => [stop.stopName, stop.express]) : [],
       via: departure.via,
+      p: departure.takingPassengers ? 1 : 0,
       d: departure.direction === 'Up' ? 'U' : 'D',
+      v: departure.type === 'vline' ? 1 : 0,
       times: []
     }
 
@@ -429,14 +434,14 @@ function trimDepartures(departures, includeStopTimings) {
 
       data.times = departure.stopTimings.filter(stop => {
         if (hasSeenStop) return true
-        if (stop.stopName === currentStop) {
+        if (stop.stopName.slice(0, -16) === currentStop) {
           hasSeenStop = true
           return true
         }
         return false
       }).map(stop => ({
         name: stop.stopName.slice(0, -16),
-        time: stop.arrivalTimeMinutes || stop.departureTimeMinutes
+        time: stop.departureTimeMinutes || stop.arrivalTimeMinutes
       }))
     }
 
@@ -465,19 +470,25 @@ async function getPIDData(station, platform, options, db) {
     })
   ])
 
-  let allDepartures = [...departures, ...arrivals].sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
-
-  let trainDepartures = allDepartures.filter(departure => !departure.isRailReplacementBus)
-  let busDepartures = allDepartures.filter(departure => departure.isRailReplacementBus)
+  let trainDepartures = departures.filter(departure => !departure.isRailReplacementBus)
+  let busDepartures = departures.filter(departure => departure.isRailReplacementBus)
   let routesWithBuses = busDepartures.map(departure => departure.routeName).filter((e, i, a) => a.indexOf(e) === i)
 
   if (!options.stoppingText) options.stoppingText = defaultStoppingText
   if (!options.stoppingType) options.stoppingType = defaultStoppingType
   if (!options.maxDepartures) options.maxDepartures = 5
 
-  let platformDepartures = filterPlatform(trainDepartures, platform).slice(0, options.maxDepartures)
+  let platformDepartures = filterPlatform(trainDepartures, platform)
+  let platformArrivals = filterPlatform(arrivals, platform)
 
-  platformDepartures.forEach(departure => {
+  let allDepartures = [...platformDepartures, ...platformArrivals].sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+  if (allDepartures[0] && allDepartures[0].destination === 'Arrival') {
+    allDepartures = [allDepartures[0], ...platformDepartures]
+  } else {
+    allDepartures = platformDepartures
+  }
+
+  allDepartures.forEach(departure => {
     departure.routeStops = getRouteStopsForDeparture(departure)
     checkAltonaRunning(departure)
 
@@ -491,9 +502,22 @@ async function getPIDData(station, platform, options, db) {
     appendStoppingType(departure, options.stoppingType)
   })
 
-  return trimDepartures(platformDepartures, options.includeStopTimings)
+  return {
+    dep: trimDepartures(allDepartures, options.includeStopTimings),
+    has: trainDepartures.length > 0,
+    bus: routesWithBuses
+  }
+}
+
+async function getStation(stationName, db) {
+  return await utils.getData('pid-station', stationName, async () => {
+    return await db.getCollection('stops').findDocument({
+      codedName: stationName + '-railway-station'
+    })
+  }, 1000 * 60 * 60)
 }
 
 module.exports = {
-  getPIDData
+  getPIDData,
+  getStation
 }
