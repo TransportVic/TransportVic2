@@ -101,7 +101,7 @@ let showingStandClear = false
 let previousDeparture = null
 
 function createStoppingPatternID(stoppingPattern) {
-  return stoppingPattern.map(e => `${e.stopName}${e.isExpress}`).join(',')
+  return stoppingPattern.map(e => `${e[0]}${e[1]}`).join(',')
 }
 
 let currentPattern = null
@@ -129,10 +129,10 @@ function addStoppingPattern(stops) {
     let hasStop = false
 
     stopColumn.forEach(stop => {
-      if (stop.isExpress)
+      let [stopName, express] = stop
+      if (express)
         html += '<span>&nbsp;---</span><br>'
       else {
-        let {stopName} = stop
         html += `<span>${stopName}</span><br>`
 
         hasStop = true
@@ -175,36 +175,37 @@ function updateBody() {
     if (err) return setListenAnnouncements()
 
     try {
-      departures = body.departures
+      departures = body.dep
 
       let firstDeparture = departures[0]
       if (!firstDeparture) {
-        if (body.hasRRB) setBusesReplaceTrains()
+        if (body.bus.length) setBusesReplaceTrains()
         else setNoDepartures()
         return
       }
 
-      showingStandClear = showingStandClear && firstDeparture.scheduledDepartureTime === previousDeparture
+      showingStandClear = showingStandClear && firstDeparture.sch === previousDeparture
 
       if (!showingStandClear) {
-        if (firstDeparture.additionalInfo.notTakingPassengers && firstDeparture.type === 'vline') {
+        if (!firstDeparture.p && firstDeparture.v) {
           setNotTakingPassengers()
         } else {
           $('.burnLine').className = 'burnLine reset'
           setDepartureInfoVisible(true)
 
-          $('.firstDestination').textContent = firstDeparture.destination
-          $('.scheduledDiv span:nth-child(2)').textContent = formatTimeB(new Date(firstDeparture.scheduledDepartureTime))
+          $('.firstDestination').textContent = firstDeparture.dest
+          $('.scheduledDiv span:nth-child(2)').textContent = formatTimeB(new Date(firstDeparture.sch))
 
-          if (firstDeparture.type === 'vline') {
+          if (firstDeparture.v) {
             $('.nextDeparture .departureInfo').className = 'departureInfo vline'
           } else {
             $('.nextDeparture .departureInfo').className = 'departureInfo'
           }
 
-          if (firstDeparture.estimatedDepartureTime) {
-            if (firstDeparture.minutesToDeparture > 0) {
-              $('.actualDiv div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
+          if (firstDeparture.est) {
+            let minutesToDeparture = rawMinutesToDeparture(new Date(firstDeparture.est))
+            if (minutesToDeparture > 0) {
+              $('.actualDiv div span:nth-child(1)').textContent = minutesToDeparture
               $('.actualDiv div span:nth-child(2)').textContent = 'min'
             } else {
               $('.actualDiv div span:nth-child(1)').textContent = 'NOW'
@@ -215,10 +216,10 @@ function updateBody() {
             $('.actualDiv div span:nth-child(2)').textContent = 'min'
           }
 
-          addStoppingPattern(firstDeparture.additionalInfo.screenStops)
+          addStoppingPattern(firstDeparture.stops)
           setMessagesActive(false)
 
-          if (firstDeparture.additionalInfo.notTakingPassengers) setArrival()
+          if (!firstDeparture.dest === 'Arrival') setArrival()
         }
       }
 
@@ -226,24 +227,22 @@ function updateBody() {
       nextDepartures.forEach((departure, i) => {
         let div = $(`div.followingDeparture:nth-child(${i + 2})`)
         if (departure) {
-          let {destination} = departure
+          let destination = departure.dest
 
           if (destination === 'North Melbourne') destination = 'Nth Melbourne'
           if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
           if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
-          $('.scheduled', div).textContent = formatTimeB(new Date(departure.scheduledDepartureTime))
+          $('.scheduled', div).textContent = formatTimeB(new Date(departure.sch))
           $('.destination', div).textContent = destination
-          if (departure.estimatedDepartureTime)
-            $('.actual', div).textContent = departure.minutesToDeparture
+          if (departure.est)
+            $('.actual', div).textContent = rawMinutesToDeparture(new Date(departure.est))
           else
             $('.actual', div).textContent = '--'
-          $('.stoppingType', div).textContent = departure.stoppingType
+          $('.stoppingType', div).textContent = departure.type
 
-          if (departure.type === 'vline') {
+          if (departure.v) {
             div.className = 'followingDeparture vline'
-          } else if (departure.type === 'arrival') {
-            $('.destination', div).textContent = 'Arrival'
           } else {
             div.className = 'followingDeparture'
           }
@@ -258,15 +257,16 @@ function updateBody() {
       })
 
       clearTimeout(showBurnLineTimeout)
-      previousDeparture = firstDeparture.scheduledDepartureTime
+      previousDeparture = firstDeparture.sch
 
       if (!showingStandClear) {
-        let actualDepartureTime = new Date(firstDeparture.actualDepartureTime)
+        let actualDepartureTimeRaw = firstDeparture.est || firstDeparture.sch
+        let actualDepartureTime = new Date(actualDepartureTimeRaw)
         let difference = actualDepartureTime - new Date()
 
         showBurnLineTimeout = setTimeout(() => {
-          if (burnLinesShown.includes(firstDeparture.actualDepartureTime)) return
-          burnLinesShown.push(firstDeparture.actualDepartureTime)
+          if (burnLinesShown.includes(actualDepartureTimeRaw)) return
+          burnLinesShown.push(actualDepartureTimeRaw)
           burnLinesShown = burnLinesShown.slice(-10)
 
           $('.burnLine').className = 'burnLine active'
@@ -282,6 +282,7 @@ function updateBody() {
         }, difference - 1000 * 15)
       }
     } catch (e) {
+      console.log(e)
       setListenAnnouncements()
     }
   })
