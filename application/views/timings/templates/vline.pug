@@ -1,10 +1,7 @@
 if departures.length
   for departure in departures
     div.departure
-      -
-        let indexOfCurrentStation = departure.trip.stopTimings.map(stop => stop.stopName).indexOf(station.stopName)
-        let stopsAt = departure.trip.stopTimings.filter((_, i) => i > indexOfCurrentStation).map(stop => stop.stopName)
-      input(type='hidden' name='stops-at' value=stopsAt.join(','))
+      input(type='hidden' name='stops-at' value=departure.futureStops.join(','))
       input(type='hidden' name='platform' value=departure.platform || '')
       input(type='hidden' name='run' value=departure.runID)
       input(type='hidden' name='line' value=departure.shortRouteName)

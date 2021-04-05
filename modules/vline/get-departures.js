@@ -309,11 +309,23 @@ async function getScheduledDepartures(db, station) {
   })).filter(Boolean)
 }
 
+function findUpcomingStops(departure, stopGTFSIDs) {
+  let tripStops = departure.trip.stopTimings.filter(stop => stop.stopConditions.dropoff === 0 || stopGTFSIDs.includes(stop.stopGTFSID))
+
+  let currentIndex = tripStops.findIndex(stop => stopGTFSIDs.includes(stop.stopGTFSID))
+  let stopNames = tripStops.map(stop => stop.stopName.slice(0, -16))
+  let futureStops = stopNames.slice(currentIndex + 1)
+
+  departure.allStops = stopNames
+  departure.futureStops = futureStops
+}
+
 async function getDepartures(station, db) {
   try {
     return await utils.getData('vline-departures', station.stopName, async () => {
       let flagMap = {}
       let vlinePlatforms = station.bays.filter(bay => bay.mode === 'regional train')
+      let stopGTFSIDs = station.bays.map(bay => bay.stopGTFSID)
       let departures = [], runs, routes
       let coachReplacements = []
 
@@ -337,7 +349,7 @@ async function getDepartures(station, db) {
       }), new Promise(async resolve => {
         try {
           scheduledCoachReplacements = (await getCoachDepartures(coachStop, db)).filter(departure => {
-            return departure.scheduledDepartureTime.diff(utils.now(), 'milliseconds') < 1000 * 60 * 180
+            return departure.scheduledDepartureTime.diff(utils.now(), 'seconds') < 60 * 180
           })
         } catch (e) { global.loggers.general.err('Failed to get V/Line Coach departures', e) } finally { resolve() }
       }), new Promise(async resolve => {
@@ -412,6 +424,7 @@ async function getDepartures(station, db) {
           let nonCancelled = allDepartures.filter(train => !cancelledIDs.includes(train.originalServiceID))
 
           let sorted = nonCancelled.concat(cancelledTrains).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+          sorted.forEach(departure => findUpcomingStops(departure, stopGTFSIDs))
 
           return sorted
         } catch (e) {
@@ -419,7 +432,10 @@ async function getDepartures(station, db) {
         }
       }
 
-      return scheduled.map(addFlags).concat(coachReplacements).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+      let data = scheduled.map(addFlags).concat(coachReplacements).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+      data.forEach(departure => findUpcomingStops(departure, stopGTFSIDs))
+
+      return data
     })
   } catch (e) {
     global.loggers.general.err('Failed to get V/Line departures', e)
