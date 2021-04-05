@@ -175,16 +175,16 @@ module.exports = class MainServer {
       res.header('www-authenticate', 'Basic realm="password needed"')
       res.end('Please login')
     })
-
-    app.use('/mockups', (req, res, next) => {
-      if (req.headers.authorization && mockupsAuths.includes(req.headers.authorization)) {
-        return next()
-      }
-
-      res.status(401)
-      res.header('www-authenticate', 'Basic realm="password needed"')
-      res.end('Please login')
-    })
+    
+    // app.use('/mockups', (req, res, next) => {
+    //   if (req.headers.authorization && mockupsAuths.includes(req.headers.authorization)) {
+    //     return next()
+    //   }
+    //
+    //   res.status(401)
+    //   res.header('www-authenticate', 'Basic realm="password needed"')
+    //   res.end('Please login')
+    // })
 
     app.use(config.newVlineTracker, require('../application/routes/tracker/VLineTracker2'))
 
