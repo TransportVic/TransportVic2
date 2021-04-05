@@ -335,6 +335,8 @@ async function getDepartures(station, db) {
         coachStop = await db.getCollection('stops').findDocument({
           stopName: 'Southern Cross Coach Terminal/Spencer Street'
         })
+
+        stopGTFSIDs.push(...coachStop.bays.map(bay => bay.stopGTFSID))
       }
 
       let ptvDepartures = { departures: [] }, scheduledCoachReplacements = []

@@ -14,6 +14,7 @@ const updateStats = require('../../utils/stats')
 
 let stops, timetables
 let bendigoRFRSection = ['Woodend', 'Macedon', 'Gisborne', 'Riddells Creek', 'Clarkefield']
+let metroStops = []
 
 function operatingDaysToArray (days) {
   days = days.replace(/ /g, '').replace(/&/g, ',')
@@ -323,6 +324,13 @@ database.connect({
   stops = database.getCollection('stops')
   timetables = database.getCollection('timetables')
 
+  metroStops = await stops.distinct('stopName', {
+    'bays.mode': 'metro train',
+    stopName: {
+      $ne: 'Southern Cross Railway Station'
+    }
+  })
+
   await timetables.deleteDocuments({ mode: 'regional train' })
 
   let trips = {}
@@ -359,6 +367,13 @@ database.connect({
     stopTimings[0].arrivalTimeMinutes = null
     lastStop.departureTime = null
     lastStop.departureTimeMinutes = null
+
+    trip.stopTimings.forEach(stop => {
+      if (metroStops.includes(stop.stopName)) {
+        if (trip.direction === 'Down') stop.stopConditions = { dropff: 1, pickup: 0 }
+        else stop.stopConditions = { dropff: 0, pickup: 1 }
+      }
+    })
 
     return {
       ...trip,

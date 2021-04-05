@@ -130,7 +130,8 @@ function readFileData(filename, routeName, callback) {
         departureTime: properTiming,
         departureTimeMinutes: minutesPastMidnight,
         platform,
-        sortTime: minutesPastMidnight
+        sortTime: minutesPastMidnight,
+        stopConditions: { pickup: 0, dropff: 0 }
       }
     })
 
