@@ -35,6 +35,8 @@ let defaultStoppingType = {
 }
 
 async function getAllDeparturesFromStation(station, db) {
+  if (!station) return []
+
   let departures = await utils.getData('pid-combined-departures', station.stopName, async () => {
     let vlineDepartures = []
     let metroDepartures = []
@@ -338,9 +340,7 @@ function trimDepartures(departures, includeStopTimings) {
       dest: departure.destination,
       sch: departure.scheduledDepartureTime,
       est: departure.estimatedDepartureTime,
-      act: departure.actualDepartureTime,
       plt: departure.platform,
-      type: departure.type,
       txt: departure.stoppingText,
       type: departure.stoppingType,
       route: departure.routeName,
@@ -361,8 +361,7 @@ function trimDepartures(departures, includeStopTimings) {
         return false
       }).map(stop => ({
         name: stop.stopName.slice(0, -16),
-        arr: stop.arrivalTimeMinutes,
-        dep: stop.departureTimeMinutes
+        time: stop.arrivalTimeMinutes || stop.departureTimeMinutes
       }))
     }
 
@@ -378,8 +377,10 @@ async function getPIDData(station, platform, options, db) {
 
   if (!options.stoppingText) options.stoppingText = defaultStoppingText
   if (!options.stoppingType) options.stoppingType = defaultStoppingType
+  if (!options.maxDepartures) options.maxDepartures = 5
 
-  let platformDepartures = filterPlatform(trainDepartures, platform)
+  let platformDepartures = filterPlatform(trainDepartures, platform).slice(0, options.maxDepartures)
+
   platformDepartures.forEach(departure => {
     departure.routeStops = getRouteStopsForDeparture(departure)
     checkAltonaRunning(departure)
