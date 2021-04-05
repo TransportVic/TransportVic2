@@ -35,13 +35,13 @@ function updateBody() {
     if (err) return setListenAnnouncements()
 
     try {
-      departures = body.departures
+      departures = body.dep
 
       let firstDeparture = departures[0]
       if (!firstDeparture) return setListenAnnouncements()
 
-      let destination = firstDeparture.destination.toUpperCase()
-      if (firstDeparture.routeName === 'City Circle') destination = 'CITY CIRCLE'
+      let destination = firstDeparture.dest.toUpperCase()
+      if (firstDeparture.route === 'City Circle') destination = 'CITY CIRCLE'
       if (destination === 'SOUTHERN CROSS') destination = 'SPENCER ST'
       if (destination === 'FLINDERS STREET') destination = 'FLINDERS ST'
       if (destination === 'UPPER FERNTREE GULLY') destination = 'UPPER FT GULLY'
@@ -51,11 +51,12 @@ function updateBody() {
       if (destination === 'SYDNEY CENTRAL') destination = 'SYDNEY XPT'
 
       $('.destination span').textContent = destination
-      $('.departureInfo .scheduledDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+      $('.departureInfo .scheduledDepartureTime').textContent = formatTime(new Date(firstDeparture.sch))
 
-      if (firstDeparture.estimatedDepartureTime) {
-        if (firstDeparture.minutesToDeparture > 0) {
-          $('.departureInfo .departingMinutes').textContent = firstDeparture.minutesToDeparture
+      if (firstDeparture.est) {
+        let minutesToDeparture = rawMinutesToDeparture(new Date(firstDeparture.est))
+        if (minutesToDeparture > 0) {
+          $('.departureInfo .departingMinutes').textContent = minutesToDeparture
           $('.min').textContent = 'MIN'
         } else {
           $('.departureInfo .departingMinutes').textContent = 'NOW'
@@ -66,10 +67,10 @@ function updateBody() {
         $('.min').textContent = 'MIN'
       }
 
-      let stops = firstDeparture.additionalInfo.screenStops.slice(1)
+      let stops = firstDeparture.stops.slice(1)
 
-      if (['Traralgon', 'Bairnsdale'].includes(firstDeparture.shortRouteName)) {
-        let nngIndex = stops.map(stop => stop.stopName).indexOf('Nar Nar Goon')
+      if (['Traralgon', 'Bairnsdale'].includes(firstDeparture.route)) {
+        let nngIndex = stops.findIndex(stop => stop[0] === 'Nar Nar Goon')
 
         if (nngIndex > 0) {
           stops = stops.slice(nngIndex)
@@ -77,7 +78,7 @@ function updateBody() {
       }
 
       function getHTML(stops) {
-        return stops.map(stop => `<span>${stop.isExpress ? '- - -' : shorternName(stop.stopName).toUpperCase()}</span>`).join('')
+        return stops.map(stop => `<span>${stop[1] ? '- - -' : shorternName(stop[0]).toUpperCase()}</span>`).join('')
       }
 
       if (stops.length > 16) {
@@ -110,12 +111,13 @@ function updateBody() {
 
       let secondDeparture
       if (secondDeparture = departures[1]) {
-        $('.nextDeparture .scheduledDepartureTime').textContent = formatTime(new Date(secondDeparture.scheduledDepartureTime))
-        $('.nextDeparture .destination').textContent = shorternName(secondDeparture.destination).toUpperCase()
+        $('.nextDeparture .scheduledDepartureTime').textContent = formatTime(new Date(secondDeparture.sch))
+        $('.nextDeparture .destination').textContent = shorternName(secondDeparture.dest).toUpperCase()
 
-        if (secondDeparture.estimatedDepartureTime) {
-          if (secondDeparture.minutesToDeparture > 0) {
-            $('.nextDeparture .departingMinutes').textContent = secondDeparture.minutesToDeparture + ' MIN'
+        if (secondDeparture.est) {
+          let minutesToDeparture = rawMinutesToDeparture(new Date(secondDeparture.est))
+          if (minutesToDeparture > 0) {
+            $('.nextDeparture .departingMinutes').textContent = minutesToDeparture + ' MIN'
           } else {
             $('.nextDeparture .departingMinutes').textContent = 'NOW'
           }

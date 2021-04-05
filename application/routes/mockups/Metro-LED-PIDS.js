@@ -3,8 +3,7 @@ const router = new express.Router()
 const moment = require('moment')
 const async = require('async')
 const utils = require('../../../utils')
-const TrainUtils = require('./TrainUtils')
-const PIDUtils = require('./PIDUtils')
+const PIDBackend = require('./PIDBackend')
 
 let stoppingTextMap = {
   stopsAll: 'Stops All Stations',
@@ -21,19 +20,21 @@ let stoppingTextMap = {
 }
 
 let stoppingTypeMap = {
-  vlineService: {
-    stoppingType: 'V/Line Service',
-    stoppingPatternPostfix: ', Not Taking Suburban Passengers'
-  },
-  sas: 'Stops All Stations',
-  limExp: 'Limited Express',
-  exp: 'Express Service'
+  noSuburban: 'V/Line Service',
+  notTakingPax: 'Not Taking Passengers',
+  vlinePostfix: ', Not Taking Suburban Passengers',
+  stopsAll: 'Stops All Stations',
+  limitedExpress: 'Limited Express',
+  express: 'Express Service'
 }
 
 async function getData(req, res) {
-  let station = await PIDUtils.getStation(res.db, req.params.station)
+  let station = await PIDBackend.getStation(req.params.station, res.db)
 
-  return await TrainUtils.getPIDSDepartures(res.db, station, req.params.platform, stoppingTextMap, stoppingTypeMap)
+  return await PIDBackend.getPIDData(station, req.params.platform, {
+    stoppingType: stoppingTypeMap,
+    stoppingText: stoppingTextMap
+  }, res.db)
 }
 
 router.get('/:station/:platform', async (req, res) => {

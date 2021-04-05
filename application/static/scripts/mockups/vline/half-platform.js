@@ -53,7 +53,7 @@ function setListenAnnouncements() {
 }
 
 function createStoppingPatternID(stoppingPattern) {
-  return stoppingPattern.map(e => `${e.stopName}${e.isExpress}`).join(',')
+  return stoppingPattern.map(e => `${e[0]}${e[1]}`).join(',')
 }
 
 let currentPattern = null
@@ -64,7 +64,7 @@ function addStoppingPattern(stops) {
 
   currentPattern = newPatternID
 
-  stops = stops.filter(stop => vlineStops.includes(stop.stopName))
+  stops = stops.filter(stop => vlineStops.includes(stop[0]))
 
   let stopColumns = []
 
@@ -88,10 +88,10 @@ function addStoppingPattern(stops) {
     let html = ''
 
     stopColumn.forEach(stop => {
-      if (stop.isExpress)
+      if (stop[1])
         html += '<span>&nbsp;---</span><br>'
       else {
-        html += `<span>${stop.stopName}</span><br>`
+        html += `<span>${stop[0]}</span><br>`
       }
     })
 
@@ -112,7 +112,7 @@ function updateBody() {
     if (err) return setListenAnnouncements()
 
     try {
-      departures = body.departures
+      departures = body.dep
 
       let firstDeparture = departures[0]
       if (!firstDeparture) {
@@ -121,21 +121,21 @@ function updateBody() {
 
       setDepartureInfoVisible(true)
 
-      $('.firstDestination').textContent = firstDeparture.destination
-      $('.scheduledDiv span:nth-child(2)').textContent = formatTimeB(new Date(firstDeparture.scheduledDepartureTime))
+      $('.firstDestination').textContent = firstDeparture.dest
+      $('.scheduledDiv span:nth-child(2)').textContent = formatTimeB(new Date(firstDeparture.sch))
 
-      $('.actualDiv span:nth-child(2)').textContent = firstDeparture.prettyTimeToDeparture
+      $('.actualDiv span:nth-child(2)').textContent = minutesToDeparture(new Date(firstDeparture.est || firstDeparture.sch))
 
-      addStoppingPattern(firstDeparture.additionalInfo.screenStops.slice(1))
+      addStoppingPattern(firstDeparture.stops.slice(1))
 
       let nextDepartures = [...departures.slice(1, 3), null, null].slice(0, 2)
       nextDepartures.forEach((departure, i) => {
         let div = $(`div.followingDeparture:nth-child(${i + 2})`)
         if (departure) {
-          $('.scheduled', div).textContent = formatTimeB(new Date(departure.scheduledDepartureTime))
-          $('.destination', div).textContent = departure.destination
-          $('.actual', div).textContent = departure.prettyTimeToDeparture
-          $('.stoppingType', div).textContent = departure.stoppingType
+          $('.scheduled', div).textContent = formatTimeB(new Date(departure.sch))
+          $('.destination', div).textContent = departure.dest
+          $('.actual', div).textContent = minutesToDeparture(new Date(departure.est || departure.sch))
+          $('.stoppingType', div).textContent = departure.type
         } else {
           $('.scheduled', div).textContent = '--'
           $('.destination', div).textContent = '--'

@@ -257,8 +257,6 @@ module.exports = class MainServer {
       'mockups/sss/SouthernCross': '/mockups/sss',
       'mockups/train/TrainPID': '/mockups/train',
 
-      'mockups/PIDNew': '/new-pid-mockup',
-
       'mockups/sss-new/SSSNew': '/mockups/sss-new',
       'mockups/sss-new/SSSPlatform': '/mockups/sss-new/platform',
       'mockups/sss-new/SSSCoachBay': '/mockups/sss-new/coach',

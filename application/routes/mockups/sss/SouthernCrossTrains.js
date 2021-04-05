@@ -7,7 +7,7 @@ const getMetroDepartures = require('../../../../modules/metro-trains/get-departu
 const getVLineStops = require('./SSS-Lines')
 const getMetroStops = require('../../../../additional-data/route-stops')
 const TrainUtils = require('../TrainUtils')
-const emptyCars = require('../empty-cars')
+const emptyCars = []
 const { getDayOfWeek } = require('../../../../public-holidays')
 
 let northernGroup = [

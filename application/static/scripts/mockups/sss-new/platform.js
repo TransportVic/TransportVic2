@@ -51,7 +51,7 @@ function shorternName(stopName) {
 }
 
 function createStoppingPatternID(side, stoppingPattern) {
-  return stoppingPattern.map(e => `${e.stopName}${e.isExpress}`).join(',')
+  return stoppingPattern.map(e => `${e[0]}${e[1]}`).join(',')
 }
 
 let currentPattern = { left: null, right: null }
@@ -79,8 +79,8 @@ function addStoppingPattern(side, stops) {
     let html = ''
 
     stopColumn.forEach(stop => {
-      let className = stop.isExpress ? ' class="express"' : ''
-      html += `<span${className}>${shorternName(stop.stopName)}</span><br>`
+      let className = stop[1] ? ' class="express"' : ''
+      html += `<span${className}>${shorternName(stop[0])}</span><br>`
     })
 
     outerColumn.innerHTML = `<div>${html}</div>`
@@ -118,12 +118,12 @@ function processDepartures(departures, side, firstTime) {
     if (firstDeparture) {
       setMessagesActive(side, false)
 
-      let firstDepartureClass = firstDeparture.codedLineName
-      if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
+      let firstDepartureClass = encode(firstDeparture.route)
+      if (firstDeparture.v) firstDepartureClass = 'vline'
 
-      let firstStoppingType = firstDeparture.stoppingType
-      if (firstDeparture.additionalInfo.via) {
-        firstStoppingType += ' ' + firstDeparture.additionalInfo.via
+      let firstStoppingType = firstDeparture.type
+      if (firstDeparture.via) {
+        firstStoppingType += ' via ' + firstDeparture.via
       }
 
       if (firstDeparture.connections) {
@@ -134,18 +134,19 @@ function processDepartures(departures, side, firstTime) {
 
       $$('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
 
-      $$('.firstDepartureInfo .platform').textContent = firstDeparture.platform
-      $$('.firstDepartureInfo .scheduled').textContent = formatTimeB(new Date(firstDeparture.scheduledDepartureTime))
+      $$('.firstDepartureInfo .platform').textContent = firstDeparture.plt
+      $$('.firstDepartureInfo .scheduled').textContent = formatTimeB(new Date(firstDeparture.sch))
 
-      if (firstDeparture.minutesToDeparture === 0) {
+      let minutesToDeparture = rawMinutesToDeparture(new Date(firstDeparture.est || firstDeparture.sch))
+      if (minutesToDeparture === 0) {
         $$('.firstDepartureInfo .departingDiv .departing').textContent = 'Now'
         $$('.firstDepartureInfo .departingDiv .min').textContent = ''
       } else {
-        $$('.firstDepartureInfo .departingDiv .departing').textContent = firstDeparture.minutesToDeparture || '-- '
+        $$('.firstDepartureInfo .departingDiv .departing').textContent = minutesToDeparture
         $$('.firstDepartureInfo .departingDiv .min').textContent = 'min'
       }
 
-      let destination = shorternName(firstDeparture.destination)
+      let destination = shorternName(firstDeparture.dest)
       let destinationClass = 'firstDestination'
       if (destination === 'Sydney Central') destination = 'Sydney XPT'
       if (destination === 'Flemington Races') {
@@ -157,7 +158,7 @@ function processDepartures(departures, side, firstTime) {
 
       $$('.firstDeparture .firstStoppingType').textContent = firstStoppingType
 
-      let same = addStoppingPattern(side, firstDeparture.additionalInfo.screenStops)
+      let same = addStoppingPattern(side, firstDeparture.stops)
 
       if (!same) {
         if (!firstTime)

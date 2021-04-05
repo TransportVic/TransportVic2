@@ -86,9 +86,11 @@ function checkAndUpdateTrains() {
       legacyDrawText(bottomRow, 'ANNOUNCEMENTS', 1, 0, 0)
       return
     }
-    let nextDeparture = data.departures[0]
+    let nextDeparture = data.dep[0]
     if (nextDeparture) {
-      let {scheduledDepartureTime, estimatedDepartureTime, destination} = nextDeparture
+      let scheduledDepartureTime = nextDeparture.sch
+      let estimatedDepartureTime = nextDeparture.est
+      let destination = nextDeparture.dest
 
       legacyDrawText(topRow, `${formatTime(new Date(scheduledDepartureTime))} ${shortenDestination(destination)}`, 1, 0, 0)
 
@@ -105,15 +107,15 @@ function checkAndUpdateTrains() {
         topRow.drawText(timeToDepart)
       }
 
-      bottomRowText = [nextDeparture.stoppingType]
-      if (nextDeparture.stoppingType !== 'Stops All Stations') {
-        bottomRowText.push(nextDeparture.stoppingPattern)
+      bottomRowText = [nextDeparture.type]
+      if (nextDeparture.type !== 'Stops All Stations') {
+        bottomRowText.push(nextDeparture.text)
       }
     } else {
-      if (data.hasRRB) {
+      if (data.bus.length) {
         legacyDrawText(topRow, 'NO TRAINS OPERATING', 1, 0, 0)
         bottomRowText = ['REPLACEMENT BUSES', 'HAVE BEEN ARRANGED']
-      } else if (data.hasDepartures) {
+      } else if (data.has) {
         legacyDrawText(topRow, 'NO TRAINS DEPART', 1, 0, 0)
         legacyDrawText(bottomRow, 'FROM THIS PLATFORM', 1, 0, 0)
         bottomRowText = []

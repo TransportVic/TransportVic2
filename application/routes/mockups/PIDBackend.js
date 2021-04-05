@@ -362,7 +362,7 @@ function appendStoppingType(departure, stoppingTypes) {
 
   if (departure.destination === 'Arrival') {
     departure.stoppingType = stoppingTypes.notTakingPax
-  } else if (departure.type === 'vline') {
+  } else if (departure.type === 'vline' && stoppingTypes.noSuburban) {
     departure.stoppingType = stoppingTypes.noSuburban
 
     if (stoppingTypes.vlinePostfix) {
