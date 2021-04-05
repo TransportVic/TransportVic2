@@ -7,7 +7,7 @@ const PIDUtils = require('./PIDUtils')
 async function getData(req, res) {
   let station = await PIDUtils.getStation(res.db, req.params.station)
 
-  return await PIDBackend.getPIDData(station, req.params.platform, res.db)
+  return await PIDBackend.getPIDData(station, req.params.platform, {}, res.db)
 }
 
 router.get('/:station/:platform', async (req, res) => {
