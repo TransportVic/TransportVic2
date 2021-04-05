@@ -133,7 +133,7 @@ function setDestinationsRow(departures) {
     let {target, id} = section
 
     let validDepartures = departures.filter(departure => {
-      return departure.type !== 'vline' && departure.times.some(stop => stop.name === target)
+      return !departure.v && departure.times.some(stop => stop.name === target)
     }).map(departure => {
       return identifyTargetStop(departure, target)
     }).sort((a, b) => a.targetActualTime - b.targetActualTime)
@@ -166,7 +166,7 @@ function updateDiagram(departures) {
     let lastTarget = targets.slice(-1)[0]
 
     let nextDeparture = departures.filter(departure => {
-      if (departure.type === 'vline') return false
+      if (departure.v) return false
       for (let target of targets) {
         if (!departure.times.find(stop => stop.name === target))
           return false

@@ -112,9 +112,16 @@ window.formatTimeB = function(time, includeSeconds=false) {
 
 window.encode = name => name.toLowerCase().replace(/[^\w\d ]/g, '-').replace(/  */g, '-')
 
-window.minutesToDeparture = function (time, upp) {
+window.rawMinutesToDeparture = function (time) {
   let now = new Date()
   let diff = (time - now) / 1000 / 60
-  if (diff <= 0.5) return upp ? 'NOW' : 'Now'
-  else return Math.round(diff) + ' min'
+  if (diff <= 0.5) return 0
+  else return Math.round(diff)
+}
+
+window.minutesToDeparture = function (time, upp) {
+  let diff = rawMinutesToDeparture(time)
+
+  if (diff === 0) return upp ? 'NOW' : 'Now'
+  else return diff + ' min'
 }

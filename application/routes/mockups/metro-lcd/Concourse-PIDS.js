@@ -3,14 +3,13 @@ const router = new express.Router()
 const url = require('url')
 const querystring = require('querystring')
 const utils = require('../../../../utils')
-const TrainUtils = require('../TrainUtils')
-const PIDUtils = require('../PIDUtils')
+const PIDBackend = require('../PIDBackend')
 const stationDestinations = require('./station-destinations')
 
-async function getData(req, res) {
-  let station = await PIDUtils.getStation(res.db, req.params.station)
+async function getData(req, res, options={}) {
+  let station = await PIDBackend.getStation(req.params.station, res.db)
 
-  return await TrainUtils.getPIDSDepartures(res.db, station, '*', null, null, Infinity, true)
+  return await PIDBackend.getPIDData(station, '*', options, res.db)
 }
 
 router.get('/:station/up-down', async (req, res) => {
@@ -20,7 +19,7 @@ router.get('/:station/up-down', async (req, res) => {
 })
 
 router.get('/:station/interchange', async (req, res) => {
-  let station = await PIDUtils.getStation(res.db, req.params.station)
+  let station = await PIDBackend.getStation(req.params.station, res.db)
 
   let stationName = station ? station.stopName.slice(0, -16) : '??'
   let destinations = stationDestinations[stationName] || []
@@ -35,9 +34,7 @@ router.get('/:station/interchange', async (req, res) => {
 
 
 router.get('/:station/interchange/destinations', async (req, res) => {
-  let station = await res.db.getCollection('stops').findDocument({
-    codedName: req.params.station + '-railway-station'
-  })
+  let station = await PIDBackend.getStation(req.params.station, res.db)
 
   let stationName = station ? station.stopName.slice(0, -16) : '??'
   let destinations = stationDestinations[stationName] || []
@@ -47,47 +44,56 @@ router.get('/:station/interchange/destinations', async (req, res) => {
 
 
 router.post('/:station/up-down', async (req, res) => {
-  let departures = await getData(req, res)
+  let departures = await getData(req, res, {
+    maxDepartures: Infinity
+  })
+
+  let rawDepartures = departures.dep.filter(departure => departure.p)
 
   let {d} = querystring.parse(url.parse(req.url).query)
   if (d) {
     return res.json({
       ...departures,
-      departures: departures.departures.filter(departure => {
-        return departure.direction.toLowerCase() === d
+      dep: rawDepartures.filter(departure => {
+        return departure.d.toLowerCase() === d
       }).slice(0, 5)
     })
   } else {
-    let up = departures.departures.filter(departure => {
-      return departure.direction === 'Up'
+    let up = rawDepartures.filter(departure => {
+      return departure.d === 'U'
     }).slice(0, 4)
 
-    let down = departures.departures.filter(departure => {
-      return departure.direction === 'Down'
+    let down = rawDepartures.filter(departure => {
+      return departure.d === 'D'
     }).slice(0, 4)
 
     res.json({
       ...departures,
-      departures: [...up, ...down]
+      dep: [...up, ...down]
     })
   }
 })
 
 
 router.post('/:station/interchange', async (req, res) => {
-  let departures = await getData(req, res)
+  let departures = await getData(req, res, {
+    maxDepartures: Infinity,
+    includeStopTimings: true
+  })
   let groupedDepartures = {}
 
-  departures.departures.forEach(departure => {
-    let key = departure.routeName + departure.direction
+  departures.dep.filter(departure => {
+    return departure.p
+  }).forEach(departure => {
+    let key = departure.route + departure.d
     if (!groupedDepartures[key]) groupedDepartures[key] = []
     groupedDepartures[key].push(departure)
   })
 
   res.json({
-    ...departures,
-    departures: Object.values(groupedDepartures).reduce((acc, group) => {
-      return acc.concat(group.slice(0, 3))
+    stn: departures.dep[0] ? departures.dep[0].stops[0][0] : '',
+    dep: Object.values(groupedDepartures).reduce((acc, group) => {
+      return acc.concat(group.slice(0, 2))
     }, [])
   })
 })
