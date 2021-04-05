@@ -64,7 +64,8 @@ async function getAllDeparturesFromStation(station, db) {
                 isRailReplacementBus: departure.isRailReplacementBus,
                 platform: departure.platform ? departure.platform.replace(/[?A-Z]/g, '') : '',
                 type: 'vline',
-                takingPassengers: departure.takingPassengers
+                takingPassengers: departure.takingPassengers,
+                stopTimings: departure.trip.stopTimings
               }
             })
           }
@@ -96,7 +97,8 @@ async function getAllDeparturesFromStation(station, db) {
                 isRailReplacementBus: departure.isRailReplacementBus,
                 platform: departure.platform ? departure.platform.replace(/[?A-Z]/g, '') : '',
                 type: 'metro',
-                takingPassengers: true
+                takingPassengers: true,
+                stopTimings: departure.trip.stopTimings
               }
             })
           }
@@ -328,14 +330,54 @@ function findVia(departure) {
   return ''
 }
 
-async function getPIDData(station, platform, textOptions, db) {
+function trimDepartures(departures, includeStopTimings) {
+  return departures.map((departure, i) => {
+    let currentStop = departure.futureStops[0]
+
+    let data = {
+      dest: departure.destination,
+      sch: departure.scheduledDepartureTime,
+      est: departure.estimatedDepartureTime,
+      act: departure.actualDepartureTime,
+      plt: departure.platform,
+      type: departure.type,
+      txt: departure.stoppingText,
+      type: departure.stoppingType,
+      route: departure.routeName,
+      stops: i === 0 ? departure.screenStops.map(stop => [stop.stopName, stop.express]) : [],
+      via: departure.via,
+      times: []
+    }
+
+    if (includeStopTimings) {
+      let hasSeenStop = false
+
+      data.times = departure.stopTimings.filter(stop => {
+        if (hasSeenStop) return true
+        if (stop.stopName === currentStop) {
+          hasSeenStop = true
+          return true
+        }
+        return false
+      }).map(stop => ({
+        name: stop.stopName.slice(0, -16),
+        arr: stop.arrivalTimeMinutes,
+        dep: stop.departureTimeMinutes
+      }))
+    }
+
+    return data
+  })
+}
+
+async function getPIDData(station, platform, options, db) {
   let allDepartures = await getAllDeparturesFromStation(station, db)
   let trainDepartures = allDepartures.filter(departure => !departure.isRailReplacementBus)
   let busDepartures = allDepartures.filter(departure => departure.isRailReplacementBus)
   let routesWithBuses = busDepartures.map(departure => departure.routeName).filter((e, i, a) => a.indexOf(e) === i)
 
-  if (!textOptions.stoppingText) textOptions.stoppingText = defaultStoppingText
-  if (!textOptions.stoppingType) textOptions.stoppingType = defaultStoppingType
+  if (!options.stoppingText) options.stoppingText = defaultStoppingText
+  if (!options.stoppingType) options.stoppingType = defaultStoppingType
 
   let platformDepartures = filterPlatform(trainDepartures, platform)
   platformDepartures.forEach(departure => {
@@ -344,15 +386,15 @@ async function getPIDData(station, platform, textOptions, db) {
 
     departure.futureRouteStops = findFutureRouteStops(departure)
     departure.expressSections = findExpressSections(departure)
-    departure.stoppingText = getStoppingText(departure, textOptions.stoppingText)
+    departure.stoppingText = getStoppingText(departure, options.stoppingText)
     departure.screenStops = getScreenStops(departure)
     departure.expressCount = getExpressCount(departure)
     departure.via = findVia(departure)
 
-    appendStoppingType(departure, textOptions.stoppingType)
+    appendStoppingType(departure, options.stoppingType)
   })
 
-  return platformDepartures
+  return trimDepartures(platformDepartures, options.includeStopTimings)
 }
 
 module.exports = {
