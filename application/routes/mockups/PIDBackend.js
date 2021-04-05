@@ -27,12 +27,11 @@ let defaultStoppingText = {
 }
 
 let defaultStoppingType = {
-  vlineService: {
-    stoppingType: 'No Suburban Passengers'
-  },
-  sas: 'Stops All',
-  limExp: 'Limited Express',
-  exp: 'Express'
+  noSuburban: 'No Suburban Passengers',
+  // vlinePostfix: ', Not Taking Suburban Passengers',
+  stopsAll: 'Stops All',
+  limitedExpress: 'Limited Express',
+  express: 'Express'
 }
 
 async function getAllDeparturesFromStation(station, db) {
@@ -48,9 +47,10 @@ async function getAllDeparturesFromStation(station, db) {
           if (vlinePlatform) {
             let rawVlineDepartures = await getVLineDepartures(station, db)
             vlineDepartures = rawVlineDepartures.map(departure => {
-              let routeName = departure.shortRouteName
+              let routeName = departure.shortRouteName || departure.trip.routeName
 
               if (routeName === 'Bendigo' && departure.allStops.includes('Eaglehawk')) routeName = 'Swan Hill'
+              let currentStop = departure.trip.stopTimings.find(stop => stop.stopName === station.stopName)
 
               return {
                 routeName,
@@ -63,7 +63,8 @@ async function getAllDeparturesFromStation(station, db) {
                 direction: departure.trip.direction,
                 isRailReplacementBus: departure.isRailReplacementBus,
                 platform: departure.platform ? departure.platform.replace(/[?A-Z]/g, '') : '',
-                type: 'vline'
+                type: 'vline',
+                takingPassengers: departure.takingPassengers
               }
             })
           }
@@ -94,7 +95,8 @@ async function getAllDeparturesFromStation(station, db) {
                 direction: departure.trip.direction,
                 isRailReplacementBus: departure.isRailReplacementBus,
                 platform: departure.platform ? departure.platform.replace(/[?A-Z]/g, '') : '',
-                type: 'metro'
+                type: 'metro',
+                takingPassengers: true
               }
             })
           }
@@ -141,6 +143,18 @@ function getRouteStopsForDeparture(departure) {
       return [...departureCityStops, ...routeStops]
     } else {
       return [...routeStops.reverse(), ...departureCityStops]
+    }
+  }
+}
+
+function checkAltonaRunning(departure) {
+  if (departure.routeName === 'Werribee') {
+    if (departure.futureStops.includes('Altona')) {
+      let mainLine = ['Paisley', 'Galvin']
+      departure.routeStops = departure.routeStops.filter(e => !mainLine.includes(e))
+    } else {
+      let altonaLoop = ['Seaholme', 'Altona', 'Westona']
+      departure.routeStops = departure.routeStops.filter(e => !altonaLoop.includes(e))
     }
   }
 }
@@ -248,6 +262,72 @@ function getStoppingText(departure, stoppingText) {
   return texts.join(', ')
 }
 
+function getScreenStops(departure) {
+  let trainPassesBy = departure.futureRouteStops
+  let trainStops = departure.futureStops
+
+  let screenStops = trainPassesBy.map(stop => ({
+    stopName: stop,
+    express: !trainStops.includes(stop)
+  }))
+
+  return screenStops
+}
+
+function getExpressCount(departure) {
+  return departure.expressSections.reduce((a, e) => a.concat(e), []).length
+}
+
+function appendStoppingType(departure, stoppingTypes) {
+  let { expressCount } = departure
+
+  if (departure.type === 'vline') {
+    departure.stoppingType = stoppingTypes.noSuburban
+
+    if (stoppingTypes.vlinePostfix) {
+      departure.stoppingPattern += stoppingTypes.vlinePostfix
+    }
+  } else if (expressCount === 0) departure.stoppingType = stoppingTypes.stopsAll
+  else if (expressCount < 4) departure.stoppingType = stoppingTypes.limitedExpress
+  else departure.stoppingType = stoppingTypes.express
+}
+
+function findVia(departure) {
+  let { futureStops } = departure
+
+  let stopsUpToDest = futureStops.slice(0, -1)
+
+  let currentStop = futureStops[0]
+  let destination = futureStops[futureStops.length - 1]
+
+  let rmdIndex = stopsUpToDest.indexOf('Richmond')
+  let sssIndex = stopsUpToDest.indexOf('Southern Cross')
+  let fgsIndex = stopsUpToDest.indexOf('Flagstaff')
+  let fssIndex = stopsUpToDest.indexOf('Flinders Street')
+
+  if (currentStop === 'Flinders Street') {
+    if (northernGroup.includes(departure.routeName)) {
+      if (sssIndex !== -1) return 'via Sthn Cross'
+      if (fgsIndex !== -1) return 'via City Loop'
+    } else {
+      if (fgsIndex !== -1) return 'via City Loop'
+      if (sssIndex !== -1) return 'via Sthn Cross'
+    }
+
+    if (rmdIndex !== -1) return 'via Richmond'
+  } else if (cityLoopStations.includes(currentStop)) {
+    if (fssIndex !== -1 && destination !== 'Flinders Street') return 'via Flinders St'
+  } else {
+    if (northernGroup.includes(departure.routeName)) {
+      if (sssIndex !== -1) return 'via Sthn Cross'
+    } else {
+      if (rmdIndex !== -1) return 'via Richmond'
+    }
+  }
+
+  return ''
+}
+
 async function getPIDData(station, platform, textOptions, db) {
   let allDepartures = await getAllDeparturesFromStation(station, db)
   let trainDepartures = allDepartures.filter(departure => !departure.isRailReplacementBus)
@@ -260,9 +340,16 @@ async function getPIDData(station, platform, textOptions, db) {
   let platformDepartures = filterPlatform(trainDepartures, platform)
   platformDepartures.forEach(departure => {
     departure.routeStops = getRouteStopsForDeparture(departure)
+    checkAltonaRunning(departure)
+
     departure.futureRouteStops = findFutureRouteStops(departure)
     departure.expressSections = findExpressSections(departure)
     departure.stoppingText = getStoppingText(departure, textOptions.stoppingText)
+    departure.screenStops = getScreenStops(departure)
+    departure.expressCount = getExpressCount(departure)
+    departure.via = findVia(departure)
+
+    appendStoppingType(departure, textOptions.stoppingType)
   })
 
   return platformDepartures

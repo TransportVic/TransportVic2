@@ -318,6 +318,7 @@ function findUpcomingStops(departure, stopGTFSIDs) {
 
   departure.allStops = stopNames
   departure.futureStops = futureStops
+  departure.takingPassengers = tripStops[currentIndex].stopConditions.pickup === 0
 }
 
 async function getDepartures(station, db) {

@@ -168,7 +168,7 @@ async function getNotifyData(db) {
   let allTrainAlterations = disruptions.filter(disruption => disruption.runID)
   let stonyPointReplacements = allTrainAlterations.filter(disruption => {
     let text = disruption.text
-    return disruption.routeName === 'Stony Point' && text.includes('replace') || text.includes('coach')
+    return disruption.routeName === 'Stony Point' && (text.includes('replace') || text.includes('coach'))
   }).map(disruption => disruption.runID)
 
   let loopSkipping = allTrainAlterations.filter(disruption => {
