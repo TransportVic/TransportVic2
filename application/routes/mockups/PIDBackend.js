@@ -112,12 +112,86 @@ async function getAllDeparturesFromStation(station, db) {
 
     return [...metroDepartures, ...vlineDepartures].filter(departure => {
       return !departure.cancelled
-    }).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+    })
   }, 1000 * 30)
 
   let now = utils.now()
   return departures.filter(departure => {
     let timeDifference = departure.actualDepartureTime.diff(now, 'seconds')
+    return -30 <= timeDifference && timeDifference <= 120 * 60
+  })
+}
+
+
+async function getStationArrivals(station, db) {
+  if (!station) return []
+
+  let arrivals = await utils.getData('pid-arrivals', station.stopName, async () => {
+    let stationName = station.stopName.slice(0, -16)
+    let metroShunts = db.getCollection('metro shunts')
+    let liveTimetables = db.getCollection('live timetables')
+
+    let now = utils.now()
+    let startOfDay = now.clone().startOf('day')
+
+    let minutesPastMidnight = utils.getMinutesPastMidnight(now)
+    if (minutesPastMidnight < 180) {
+      now.add(-3.5, 'hours')
+      minutesPastMidnight += 1440
+    }
+
+    let date = utils.getYYYYMMDD(now)
+
+    let shunts = await metroShunts.findDocuments({
+      date,
+      stationName,
+      arrivalTimeMinutes: {
+        $gte: minutesPastMidnight - 30,
+        $lte: minutesPastMidnight + 120
+      }
+    }).toArray()
+
+    return async.map(shunts, async shunt => {
+      let departureTime = startOfDay.clone().add(shunt.arrivalTimeMinutes + 5, 'minutes')
+      let liveTimetable = await liveTimetables.findDocument({
+        operationDays: date,
+        mode: 'metro train',
+        runID: shunt.runID
+      })
+
+      let estimatedDepartureTime = null
+      if (liveTimetable) {
+        let lastStop = liveTimetable.stopTimings[liveTimetable.stopTimings.length - 1]
+        if (lastStop.estimatedDepartureTime) {
+          let stopEstimated = utils.parseTime(lastStop.estimatedDepartureTime)
+          let stopScheduled = utils.parseTime(lastStop.scheduledDepartureTime)
+
+          let difference = Math.max(0, stopEstimated.diff(stopScheduled))
+          estimatedDepartureTime = departureTime.clone().add(difference, 'minutes')
+        }
+      }
+
+      return {
+        routeName: shunt.routeName,
+        destination: 'Arrival',
+        scheduledDepartureTime: departureTime,
+        estimatedDepartureTime,
+        actualDepartureTime: departureTime,
+        futureStops: [],
+        allStops: [],
+        direction: 'Down',
+        isRailReplacementBus: false,
+        platform: shunt.platform,
+        type: 'metro',
+        takingPassengers: false,
+        stopTimings: []
+      }
+    })
+  }, 1000 * 30)
+
+  let now = utils.now()
+  return arrivals.filter(arrival => {
+    let timeDifference = arrival.actualDepartureTime.diff(now, 'seconds')
     return -30 <= timeDifference && timeDifference <= 120 * 60
   })
 }
@@ -311,21 +385,21 @@ function findVia(departure) {
 
   if (currentStop === 'Flinders Street') {
     if (northernGroup.includes(departure.routeName)) {
-      if (sssIndex !== -1) return 'via Sthn Cross'
-      if (fgsIndex !== -1) return 'via City Loop'
+      if (sssIndex !== -1) return 'Sthn Cross'
+      if (fgsIndex !== -1) return 'City Loop'
     } else {
-      if (fgsIndex !== -1) return 'via City Loop'
-      if (sssIndex !== -1) return 'via Sthn Cross'
+      if (fgsIndex !== -1) return 'City Loop'
+      if (sssIndex !== -1) return 'Sthn Cross'
     }
 
-    if (rmdIndex !== -1) return 'via Richmond'
+    if (rmdIndex !== -1) return 'Richmond'
   } else if (cityLoopStations.includes(currentStop)) {
-    if (fssIndex !== -1 && destination !== 'Flinders Street') return 'via Flinders St'
+    if (fssIndex !== -1 && destination !== 'Flinders Street') return 'Flinders St'
   } else {
     if (northernGroup.includes(departure.routeName)) {
-      if (sssIndex !== -1) return 'via Sthn Cross'
+      if (sssIndex !== -1) return 'Sthn Cross'
     } else {
-      if (rmdIndex !== -1) return 'via Richmond'
+      if (rmdIndex !== -1) return 'Richmond'
     }
   }
 
@@ -346,6 +420,7 @@ function trimDepartures(departures, includeStopTimings) {
       route: departure.routeName,
       stops: i === 0 ? departure.screenStops.map(stop => stop.express ? '---' : stop.stopName) : [],
       via: departure.via,
+      d: departure.direction === 'Up' ? 'U' : 'D',
       times: []
     }
 
@@ -370,7 +445,28 @@ function trimDepartures(departures, includeStopTimings) {
 }
 
 async function getPIDData(station, platform, options, db) {
-  let allDepartures = await getAllDeparturesFromStation(station, db)
+  let departures = []
+  let arrivals = []
+
+  await Promise.all([
+    new Promise(async resolve => {
+      try {
+        departures = await getAllDeparturesFromStation(station, db)
+      } finally {
+        resolve()
+      }
+    }),
+    new Promise(async resolve => {
+      try {
+        arrivals = await getStationArrivals(station, db)
+      } finally {
+        resolve()
+      }
+    })
+  ])
+
+  let allDepartures = [...departures, ...arrivals].sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+
   let trainDepartures = allDepartures.filter(departure => !departure.isRailReplacementBus)
   let busDepartures = allDepartures.filter(departure => departure.isRailReplacementBus)
   let routesWithBuses = busDepartures.map(departure => departure.routeName).filter((e, i, a) => a.indexOf(e) === i)
