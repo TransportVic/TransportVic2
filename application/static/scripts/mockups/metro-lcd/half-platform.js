@@ -219,7 +219,7 @@ function updateBody() {
           addStoppingPattern(firstDeparture.stops)
           setMessagesActive(false)
 
-          if (!firstDeparture.dest === 'Arrival') setArrival()
+          if (firstDeparture.dest === 'Arrival') setArrival()
         }
       }
 
