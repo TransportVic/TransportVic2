@@ -1,6 +1,6 @@
 const metroConsists = require('../../additional-data/metro-tracker/metro-consists')
 
-function findConsist(consist) {
+function findConsist(consist, runID) {
   let finalConsist = []
   if (!consist) return null
 

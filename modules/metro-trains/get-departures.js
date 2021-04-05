@@ -902,13 +902,6 @@ function parsePTVDepartures(ptvResponse, stationName) {
     let vehicleDescriptor = run.vehicle_descriptor || {}
     let isRailReplacementBus = departure.flags.includes('RRB-RUN')
 
-    let fleetNumber = null
-    if (!isRailReplacementBus) {
-      if (vehicleDescriptor) {
-        fleetNumber = findConsist(vehicleDescriptor.id)
-      }
-    }
-
     let routeName = route.route_name
     if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
     if (route.route_id === 99) routeName = 'City Circle'
@@ -927,6 +920,13 @@ function parsePTVDepartures(ptvResponse, stationName) {
 
     if (stationName === 'Flemington Racecourse' && platform === '4') platform = '2' // 4 Road is Platform 2
     if (stationName === 'Merinda Park' && platform === '1') platform = '2' // Match physical signage
+
+    let fleetNumber = null
+    if (!isRailReplacementBus) {
+      if (vehicleDescriptor) {
+        fleetNumber = findConsist(vehicleDescriptor.id, runID)
+      }
+    }
 
     return {
       scheduledDepartureTime,
