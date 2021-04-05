@@ -109,7 +109,7 @@ function checkAndUpdateTrains() {
 
       bottomRowText = [nextDeparture.type]
       if (nextDeparture.type !== 'Stops All Stations') {
-        bottomRowText.push(nextDeparture.text)
+        bottomRowText.push(nextDeparture.txt)
       }
     } else {
       if (data.bus.length) {

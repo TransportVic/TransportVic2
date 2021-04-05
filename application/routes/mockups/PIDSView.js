@@ -1,11 +1,11 @@
 const express = require('express')
 const router = new express.Router()
-const stationCodes = require('../../../additional-data/station-codes.json')
+const stationCodes = require('../../../additional-data/station-codes')
 const rawStationPIDs = require('../../../additional-data/station-pids')
 const utils = require('../../../utils')
 const url = require('url')
 const querystring = require('querystring')
-const PIDUtils = require('./PIDUtils')
+const PIDBackend = require('./PIDBackend')
 
 function filter(req, next) {
   let host = req.headers.host || ''
@@ -28,7 +28,7 @@ router.get('/', async (req, res, next) => {
     let codedStationName = utils.encodeName(stationName)
     let stationPID = stationPIDs[codedStationName]
 
-    res.render('mockups/summary-known', {stationPID, station: codedStationName, stationCode, getURL: PIDUtils.getURL})
+    res.render('mockups/summary-known', {stationPID, station: codedStationName, stationCode, getURL: PIDBackend.getURL})
   }
 })
 

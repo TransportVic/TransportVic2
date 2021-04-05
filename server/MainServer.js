@@ -254,7 +254,7 @@ module.exports = class MainServer {
       'mockups/Metro-LED-PIDS': '/mockups/metro-led-pids',
       'mockups/Metro-CRT-PIDS': '/mockups/metro-crt',
       'mockups/VLine-PIDS': '/mockups/vline',
-      'mockups/sss/SouthernCross': '/mockups/sss',
+      // 'mockups/sss/SouthernCross': '/mockups/sss',
       'mockups/train/TrainPID': '/mockups/train',
 
       'mockups/sss-new/SSSNew': '/mockups/sss-new',
