@@ -344,7 +344,7 @@ function trimDepartures(departures, includeStopTimings) {
       txt: departure.stoppingText,
       type: departure.stoppingType,
       route: departure.routeName,
-      stops: i === 0 ? departure.screenStops.map(stop => [stop.stopName, stop.express]) : [],
+      stops: i === 0 ? departure.screenStops.map(stop => stop.express ? '---' : stop.stopName) : [],
       via: departure.via,
       times: []
     }

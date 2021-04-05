@@ -14,4 +14,8 @@ router.get('/:station/:platform', async (req, res) => {
   res.json(await getData(req, res))
 })
 
+router.post('/:station/:platform', async (req, res) => {
+  res.json(await getData(req, res))
+})
+
 module.exports = router
