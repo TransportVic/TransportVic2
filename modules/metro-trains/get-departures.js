@@ -619,7 +619,6 @@ async function mapTrain(train, metroPlatform, notifyData, db) {
   }
 
   if (!trip) {
-    // Rewrite specifically for metro
     trip = await getStoppingPattern({
       ptvRunID: train.ptvRunID,
       time: train.scheduledDepartureTime.toISOString()

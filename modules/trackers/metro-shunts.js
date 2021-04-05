@@ -176,7 +176,10 @@ async function getDepartures(routeName) {
         $in: shuntIDs
       }
     },
-    routeName
+    routeName,
+    notifyAlert: {
+      $exists: false
+    }
   })
 
   await async.forEach(dbShunts, async shunt => {
