@@ -130,6 +130,7 @@ module.exports = class MainServer {
         let url = `http://localhost:${config.circularPort}${req.baseUrl}`
         fetch(url).then(r => {
           res.header('Content-Type', r.headers.get('content-type'))
+          res.header('Content-Disposition', r.headers.get('content-disposition'))
           r.body.pipe(res)
         })
 
@@ -175,7 +176,7 @@ module.exports = class MainServer {
       res.header('www-authenticate', 'Basic realm="password needed"')
       res.end('Please login')
     })
-    
+
     // app.use('/mockups', (req, res, next) => {
     //   if (req.headers.authorization && mockupsAuths.includes(req.headers.authorization)) {
     //     return next()
