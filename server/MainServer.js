@@ -136,7 +136,7 @@ module.exports = class MainServer {
       }
     })
 
-    app.use('*', (req, res, next) => {
+    app.get('/', (req, res, next) => {
       if (filter('seized.', req, next)) res.render('seized')
     })
 
