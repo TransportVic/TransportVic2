@@ -119,23 +119,25 @@ module.exports = class MainServer {
       }))
     }
 
-    function filter(req, next) {
+    function filter(prefix, req, next) {
       let host = req.headers.host || ''
-      if (host.includes('circulars.')) return true
+      if (host.includes(prefix)) return true
       else return void next()
     }
 
     app.use('*', (req, res, next) => {
-      if (filter(req, next)) {
+      if (filter('circulars.', req, next)) {
         let url = `http://localhost:${config.circularPort}${req.baseUrl}`
         fetch(url).then(r => {
           res.header('Content-Type', r.headers.get('content-type'))
           res.header('Content-Disposition', r.headers.get('content-disposition'))
           r.body.pipe(res)
         })
-
-        // res.render('seized')
       }
+    })
+
+    app.use('*', (req, res, next) => {
+      if (filter('seized.', req, next)) res.render('seized')
     })
 
     app.use('/static', express.static(path.join(__dirname, '../application/static'), {
