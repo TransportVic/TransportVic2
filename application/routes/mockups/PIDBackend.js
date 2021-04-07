@@ -167,7 +167,7 @@ async function getStationArrivals(station, db) {
           let stopEstimated = utils.parseTime(lastStop.estimatedDepartureTime)
           let stopScheduled = utils.parseTime(lastStop.scheduledDepartureTime)
 
-          let difference = Math.max(0, stopEstimated.diff(stopScheduled))
+          let difference = Math.max(0, stopEstimated.diff(stopScheduled, 'minutes'))
           estimatedDepartureTime = departureTime.clone().add(difference, 'minutes')
         }
       }
@@ -177,7 +177,7 @@ async function getStationArrivals(station, db) {
         destination: 'Arrival',
         scheduledDepartureTime: departureTime,
         estimatedDepartureTime,
-        actualDepartureTime: departureTime,
+        actualDepartureTime: estimatedDepartureTime || departureTime,
         futureStops: [],
         allStops: [],
         direction: 'Down',
