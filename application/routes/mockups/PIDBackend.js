@@ -240,7 +240,7 @@ function checkAltonaRunning(departure) {
 
 function findFutureRouteStops(departure) {
   let startIndex = departure.routeStops.indexOf(departure.futureStops[0])
-  let endIndex = departure.routeStops.indexOf(departure.futureStops[departure.futureStops.length - 1])
+  let endIndex = departure.routeStops.lastIndexOf(departure.futureStops[departure.futureStops.length - 1])
   let relevantRouteStops = departure.routeStops.slice(startIndex, endIndex + 1)
 
   return relevantRouteStops
@@ -485,7 +485,7 @@ async function getPIDData(station, platform, options, db) {
   if (allDepartures[0] && allDepartures[0].destination === 'Arrival') {
     allDepartures = [allDepartures[0], ...platformDepartures]
   } else {
-    allDepartures = platformDepartures
+    allDepartures = allDepartures.filter(departure => departure.destination !== 'Arrival')
   }
 
   allDepartures.forEach(departure => {

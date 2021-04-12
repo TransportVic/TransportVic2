@@ -241,7 +241,7 @@ module.exports = async function (data, db) {
   if (ptvRunID >= 948000) runID = utils.getRunID(ptvRunID)
 
   if (vehicleDescriptor) {
-    consist = findConsist(vehicleDescriptor.id)
+    consist = findConsist(vehicleDescriptor.id, runID)
     vehicle = {
       size: vehicleDescriptor.description[0],
       type: vehicleDescriptor.description.slice(6),
