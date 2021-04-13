@@ -43,4 +43,16 @@ module.exports = [
     ptv: 14690,
     gtfs: 13652
   }, // Riversdale Rd/Auburn Rd
+  {
+    ptv: 4406,
+    gtfs: 8637
+  }, // Ringwood Railway Station/Maroondah Hwy
+  {
+    ptv: 13411,
+    gtfs: 21155
+  }, // Croydon Railway Station/Wicklow Ave
+  {
+    ptv: 22565,
+    gtfs: 8289
+  }, // Ringwood East Railway Station/Railway Ave
 ]
