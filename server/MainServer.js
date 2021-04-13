@@ -130,7 +130,8 @@ module.exports = class MainServer {
         let url = `http://localhost:${config.circularPort}${req.baseUrl}`
         fetch(url).then(r => {
           res.header('Content-Type', r.headers.get('content-type'))
-          res.header('Content-Disposition', r.headers.get('content-disposition'))
+          let disposition = r.headers.get('content-disposition')
+          if (disposition) res.header('Content-Disposition', r.headers.get('content-disposition'))
           r.body.pipe(res)
         })
       }
