@@ -43,7 +43,8 @@ router.post('/trains-from-fss', async (req, res) => {
   let now = new Date()
 
   departures.dep.filter(departure => {
-    return departure.p
+    let departureTime = departure.est || departure.sch
+    return departure.p && (departureTime - now) > 1000 * 60
   }).forEach(departure => {
     let cityLoopConfig = departure.times.filter(stop => cityLoopConfigStops.includes(stop.name))
     if (cityLoopConfig[cityLoopConfig.length - 1] === 'Flinders Street') cityLoopConfig.pop() // Account for CCL

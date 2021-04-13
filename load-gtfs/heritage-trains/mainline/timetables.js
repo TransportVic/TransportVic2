@@ -26,7 +26,7 @@ module.exports = {
     ["SRV_S313_SAT", "1", "1", "1", "1", "1", "1", "1", "20210306", "20210306"],
     ["SRV_OTWAY_SAT", "1", "1", "1", "1", "1", "1", "1", "20210313", "20210313"],
     ["SRV_Y_NOT_SUN", "1", "1", "1", "1", "1", "1", "1", "20210321", "20210321"],
-    ["SRV_MOR_KSY_SUN", "1", "1", "1", "1", "1", "1", "1", "20210410", "20210410"],
+    ["SRV_MRN_KSY_SUN", "1", "1", "1", "1", "1", "1", "1", "20210410", "20210410"],
     ["SRV_SHM_SUN", "1", "1", "1", "1", "1", "1", "1", "20210418", "20210418"],
     ["SRV_BAL_SAT", "1", "1", "1", "1", "1", "1", "1", "20210424", "20210424"],
     ["SRV_GLG_SUN", "1", "1", "1", "1", "1", "1", "1", "20210502", "20210502"],
@@ -545,102 +545,102 @@ module.exports = {
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "SRV_MOR_KSY_SUN",
-      "tripID": "0921.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "calendarID": "SRV_MRN_KSY_SUN",
+      "tripID": "0921.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Moorabbin",
-      "vehicle": ["K153", "K190"]
+      "vehicle": ["A2.986", "1BCE", "38BE", "7ABE", "17BE", "25BE", "K153"]
     },
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "SRV_MOR_KSY_SUN",
-      "tripID": "1035.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
-      "gtfsDirection": "0",
-      "shapeID": "13-MLH-mjp-1.1.H",
-      "headsign": "Kananook Sidings",
-      "vehicle": ["K153", "K190"]
-    },
-    {
-      "mode": "heritage train",
-      "routeGTFSID": "13-MLH",
-      "calendarID": "SRV_MOR_KSY_SUN",
-      "tripID": "1125.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
-      "gtfsDirection": "0",
-      "shapeID": "13-MLH-mjp-1.1.R",
-      "headsign": "Moorabbin",
-      "vehicle": ["K190", "K153"]
-    },
-    {
-      "mode": "heritage train",
-      "routeGTFSID": "13-MLH",
-      "calendarID": "SRV_MOR_KSY_SUN",
-      "tripID": "1212.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "calendarID": "SRV_MRN_KSY_SUN",
+      "tripID": "1035.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Kananook Sidings",
-      "vehicle": ["K153", "K190"]
+      "vehicle": ["A2.986", "1BCE", "38BE", "7ABE", "17BE", "25BE", "K153"]
     },
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "SRV_MOR_KSY_SUN",
-      "tripID": "1255.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "calendarID": "SRV_MRN_KSY_SUN",
+      "tripID": "1125.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Moorabbin",
-      "vehicle": ["K190", "K153"]
+      "vehicle": ["K153", "25BE", "17BE", "7ABE", "38BE", "1BCE", "A2.986"]
     },
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "SRV_MOR_KSY_SUN",
-      "tripID": "1342.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "calendarID": "SRV_MRN_KSY_SUN",
+      "tripID": "1212.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.H",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.H",
+      "headsign": "Kananook Sidings",
+      "vehicle": ["A2.986", "1BCE", "38BE", "7ABE", "17BE", "25BE", "K153"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_MRN_KSY_SUN",
+      "tripID": "1255.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.R",
+      "gtfsDirection": "0",
+      "shapeID": "13-MLH-mjp-1.1.R",
+      "headsign": "Moorabbin",
+      "vehicle": ["K153", "25BE", "17BE", "7ABE", "38BE", "1BCE", "A2.986"]
+    },
+    {
+      "mode": "heritage train",
+      "routeGTFSID": "13-MLH",
+      "calendarID": "SRV_MRN_KSY_SUN",
+      "tripID": "1342.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Carrum",
-      "vehicle": ["K153", "K190"]
+      "vehicle": ["A2.986", "1BCE", "38BE", "7ABE", "17BE", "25BE", "K153"]
     },
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "SRV_MOR_KSY_SUN",
-      "tripID": "1513.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "calendarID": "SRV_MRN_KSY_SUN",
+      "tripID": "1513.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Moorabbin",
-      "vehicle": ["K190", "K153"]
+      "vehicle": ["K153", "25BE", "17BE", "7ABE", "38BE", "1BCE", "A2.986"]
     },
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "SRV_MOR_KSY_SUN",
-      "tripID": "1552.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "calendarID": "SRV_MRN_KSY_SUN",
+      "tripID": "1552.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.H",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.H",
       "headsign": "Kananook Sidings",
-      "vehicle": ["K153", "K190"]
+      "vehicle": ["A2.986", "1BCE", "38BE", "7ABE", "17BE", "25BE", "K153"]
     },
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "SRV_MOR_KSY_SUN",
-      "tripID": "1635.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "calendarID": "SRV_MRN_KSY_SUN",
+      "tripID": "1635.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Moorabbin",
-      "vehicle": ["K190", "K153"]
+      "vehicle": ["K153", "25BE", "17BE", "7ABE", "38BE", "1BCE", "A2.986"]
     },
     {
       "mode": "heritage train",
       "routeGTFSID": "13-MLH",
-      "calendarID": "SRV_MOR_KSY_SUN",
-      "tripID": "1718.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "calendarID": "SRV_MRN_KSY_SUN",
+      "tripID": "1718.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.R",
       "gtfsDirection": "0",
       "shapeID": "13-MLH-mjp-1.1.R",
       "headsign": "Newport",
-      "vehicle": ["K190", "K153"]
+      "vehicle": ["K153", "25BE", "17BE", "7ABE", "38BE", "1BCE", "A2.986"]
     },
 
 
@@ -2433,7 +2433,7 @@ module.exports = {
 
 
     {
-      "tripID": "0921.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "tripID": "0921.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Newport",
@@ -2471,7 +2471,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1035.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "tripID": "1035.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Moorabbin",
@@ -2498,7 +2498,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1125.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1125.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Kananook Sidings",
@@ -2525,7 +2525,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1212.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "tripID": "1212.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Moorabbin",
@@ -2552,7 +2552,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1255.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1255.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Kananook Sidings",
@@ -2579,7 +2579,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1342.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "tripID": "1342.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Moorabbin",
@@ -2606,7 +2606,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1513.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1513.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Carrum",
@@ -2633,7 +2633,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1552.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.H",
+      "tripID": "1552.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.H",
       "stopTimings": [
         {
           "stopName": "Moorabbin",
@@ -2660,7 +2660,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1635.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1635.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Kananook Sidings",
@@ -2687,7 +2687,7 @@ module.exports = {
       ]
     },
     {
-      "tripID": "1718.SRV_MOR_KSY_SUN.13-MLH-mjp-1.1.R",
+      "tripID": "1718.SRV_MRN_KSY_SUN.13-MLH-mjp-1.1.R",
       "stopTimings": [
         {
           "stopName": "Moorabbin",

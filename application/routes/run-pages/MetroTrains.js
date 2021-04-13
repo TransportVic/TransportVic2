@@ -97,6 +97,10 @@ async function pickBestTrip(data, db) {
     }]
   }
 
+  if (originStop.stopName === 'Flinders Street Railway Station') {
+    gtfsQuery.$and[0].direction = 'Down'
+  }
+
   // NME, RMD shorts are always loaded live
   let liveTrips = await db.getCollection('live timetables').findDocuments(gtfsQuery).toArray()
   let gtfsTrips = await db.getCollection('gtfs timetables').findDocuments(gtfsQuery).toArray()
@@ -114,14 +118,6 @@ async function pickBestTrip(data, db) {
 
   let useLive = minutesToTripEnd >= -120 && minutesToTripStart < 240
 
-  if (liveTrip) {
-    if (liveTrip.isRailReplacementBus || liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
-      let isLive = liveTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
-
-      return { trip: liveTrip, tripStartTime, isLive }
-    }
-  }
-
   let referenceTrip
   if (liveTrip && gtfsTrip) {
     let liveCloseness = tripClosenessBound(liveTrip)
@@ -131,20 +127,30 @@ async function pickBestTrip(data, db) {
     else referenceTrip = gtfsTrip
   } else referenceTrip = liveTrip || gtfsTrip
 
+  let needsRedirect = referenceTrip ? (referenceTrip.trueOrigin !== originStop.stopName
+    || referenceTrip.trueDestination !== destinationStop.stopName
+    || referenceTrip.trueDepartureTime !== data.departureTime
+    || referenceTrip.trueDestinationArrivalTime !== data.destinationArrivalTime) : false
+
+  if (liveTrip && referenceTrip === liveTrip) {
+    if (liveTrip.isRailReplacementBus || liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
+      let isLive = liveTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
+
+      return { trip: liveTrip, tripStartTime, isLive, needsRedirect }
+    }
+  }
+
   let isStonyPoint = data.origin === 'stony-point' || data.destination === 'stony-point'
 
   if (referenceTrip && (isStonyPoint || referenceTrip.routeGTFSID === '2-SPT')) {
-    return { trip: await addStonyPointData(db, referenceTrip, tripStartTime), tripStartTime, isLive: false }
+    return { trip: await addStonyPointData(db, referenceTrip, tripStartTime), tripStartTime, isLive: false, needsRedirect }
   }
 
-  if (!useLive) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null
+  if (!useLive) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false, needsRedirect } : null
   if (referenceTrip && referenceTrip.h) {
-    let needsRedirect = referenceTrip.trueOrigin !== originStop.stopName
-      || referenceTrip.trueDestination !== destinationStop.stopName
-
     let isLive = referenceTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
 
-    return { trip: referenceTrip, tripStartTime, isLive, needsRedirect }
+    return { trip: referenceTrip, tripStartTime, isLive, needsRedirect, needsRedirect }
   }
 
   let originStopID = originStop.bays.filter(bay => bay.mode === 'metro train')[0].stopGTFSID
@@ -231,7 +237,7 @@ async function pickBestTrip(data, db) {
 
     // interrim workaround cos when services start from a later stop they're really cancelled
     // in the stops before, but PTV thinks otherwise...
-    if (!departureToUse) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null
+    if (!departureToUse) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false, needsRedirect } : null
     let ptvRunID = departureToUse.run_ref
     let departureTime = departureToUse.scheduled_departure_utc
 
@@ -247,6 +253,8 @@ async function pickBestTrip(data, db) {
 
     let needsRedirect = trip.trueOrigin !== originStop.stopName
       || trip.trueDestination !== destinationStop.stopName
+      || trip.trueDepartureTime !== data.departureTime
+      || trip.trueDestinationArrivalTime !== data.destinationArrivalTime
 
     let actualOriginStop = trip.stopTimings.find(stop => stop.stopName === trip.trueOrigin)
 
