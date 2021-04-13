@@ -60,7 +60,7 @@ async function requestTimings() {
 }
 
 async function trainCount(stopGTFSID) {
-  let { departures } = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=7&include_cancelled=true`)
+  let { departures } = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=7&include_cancelled=true`, 3, 3000)
   let today = utils.getYYYYMMDDNow()
 
   let trains = departures.filter(departure => {
@@ -69,7 +69,8 @@ async function trainCount(stopGTFSID) {
       return utils.getYYYYMMDD(scheduledDepartureTime) === today
     }
   })
-  return trains.count
+
+  return trains.length
 }
 
 database.connect(async () => {
@@ -95,8 +96,8 @@ database.connect(async () => {
   }
 
   schedule([
-    [0, 60, 1.2],
-    [61, 239, 1.2],
+    [0, 60, 1],
+    [61, 239, 0.6],
     [240, 1079, 0.5],
     [1080, 1199, 0.3333],
     [1200, 1380, 0.5],

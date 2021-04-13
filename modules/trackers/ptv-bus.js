@@ -80,7 +80,7 @@ async function requestTimings() {
             }
           }
         })
-      }, i * 15000)
+      }, i * 5000)
     })
   } catch (e) {
     global.loggers.trackers.bus.err('Failed to get bus trips this round', e)
@@ -91,7 +91,7 @@ database.connect(async () => {
   dbStops = database.getCollection('stops')
   busTrips = database.getCollection('bus trips')
   schedule([
-    [300, 1260, 5],
-    [1261, 1440, 6]
+    [300, 1260, 4],
+    [1261, 1440, 5]
   ], requestTimings, 'bus tracker', global.loggers.trackers.bus)
 })

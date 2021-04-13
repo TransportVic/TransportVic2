@@ -22,12 +22,12 @@ function getURL(request) {
   return 'https://timetableapi.ptv.vic.gov.au' + request + '&signature=' + signature
 }
 
-async function makeRequest(url, maxRetries=2) {
+async function makeRequest(url, maxRetries=2, timeout=1900) {
   try {
     return await utils.getData('ptv-api', url, async () => {
       return JSON.parse(await utils.request(getURL(url), {
         maxRetries,
-        timeout: 1900
+        timeout
       }))
     })
   } catch (e) {
