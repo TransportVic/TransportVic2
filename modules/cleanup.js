@@ -64,6 +64,7 @@ database.connect(async () => {
   console.log('Starting cleanup on', utils.now().toLocaleString())
   let metroNotify = database.getCollection('metro notify')
   let liveTimetables = database.getCollection('live timetables')
+  let metroShunts = database.getCollection('metro shunts')
 
   let notify = await metroNotify.deleteDocuments({
     toDate: {
@@ -73,21 +74,37 @@ database.connect(async () => {
 
   console.log('Cleaned up', notify.nRemoved, 'notify alerts')
 
-  let firstDocument = await liveTimetables.findDocuments({})
+  let firstTrip = await liveTimetables.findDocuments({})
     .sort({ operationDays: 1 }).limit(1).next()
 
-  let start = utils.parseDate(firstDocument.operationDays)
-  let end = utils.now().add(-14, 'days')
+  let tripsStart = utils.parseDate(firstTrip.operationDays)
+  let tripsEnd = utils.now().add(-14, 'days')
 
-  let days = utils.allDaysBetweenDates(start, end).map(date => utils.getYYYYMMDD(date))
+  let tripsDay = utils.allDaysBetweenDates(tripsStart, tripsEnd).map(date => utils.getYYYYMMDD(date))
 
-  let live = await liveTimetables.deleteDocuments({
+  let liveRemoval = await liveTimetables.deleteDocuments({
     operationDays: {
-      $in: days
+      $in: tripsDay
     }
   })
 
-  console.log('Cleaned up', live.nRemoved, 'live timetables')
+  console.log('Cleaned up', liveRemoval.nRemoved, 'live timetables')
+
+  let firstShunt = await metroShunts.findDocuments({})
+    .sort({ date: 1 }).limit(1).next()
+
+  let shuntStart = utils.parseDate(firstShunt.date)
+  let shuntEnd = utils.now().add(-27, 'days')
+
+  let shuntDays = utils.allDaysBetweenDates(shuntStart, shuntEnd).map(date => utils.getYYYYMMDD(date))
+
+  let shuntsRemoved = await metroShunts.deleteDocuments({
+    date: {
+      $in: shuntDays
+    }
+  })
+
+  console.log('Cleaned up', shuntsRemoved.nRemoved, 'metro shunts')
 
   console.log('Removed', trimLog(config.combinedLog, true), 'lines from combined log')
   walk(path.join(__dirname, '../logs'), (err, results) => {
