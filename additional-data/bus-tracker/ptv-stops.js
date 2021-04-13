@@ -18,7 +18,7 @@ module.exports = [
   {
     ptv: 16119,
     gtfs: 15310
-  }, // Vermont South SC/Hanover Rd 
+  }, // Vermont South SC/Hanover Rd
   {
     ptv: 10004,
     gtfs: 19800
@@ -35,4 +35,12 @@ module.exports = [
     ptv: 15760,
     gtfs: 14910
   }, // Glen Eira College/Booran Rd
+  {
+    ptv: 14334,
+    gtfs: 13652
+  }, // Tooronga Railway Station/Tooronga Rd
+  {
+    ptv: 14690,
+    gtfs: 13652
+  }, // Riversdale Rd/Auburn Rd
 ]

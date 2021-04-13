@@ -13,7 +13,7 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops, busTrips
 
 function pickRandomStops() {
-  let size = 4
+  let size = 7
   return utils.shuffle(stops).slice(0, size)
 }
 
