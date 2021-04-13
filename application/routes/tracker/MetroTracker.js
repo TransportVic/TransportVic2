@@ -363,7 +363,7 @@ router.get('/strange', async (req, res) => {
     let trains = {}
 
     strangeTrains.forEach(line => {
-      let train = line.slice(-29, -18)
+      let train = line.slice(-28, -18)
       let runID = line.slice(-7, -3)
 
       if (!trains[train]) {

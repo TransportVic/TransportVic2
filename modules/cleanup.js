@@ -30,7 +30,9 @@ function trimLog(filename, isCombined) {
     let date = new Date((line.match(dateRegex) || [])[1])
     return date - end >= 0
   })
-  fs.writeFileSync(filename, recentLogs.join('\n'))
+
+  fs.writeFileSync(filename, recentLogs.join('\n') + '\n')
+
   return data.length - recentLogs.length
 }
 
