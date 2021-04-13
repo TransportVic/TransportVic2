@@ -38,12 +38,23 @@ let allRoutes = Object.values(routeIDs).slice(0, -1)
 
 async function lookForShunts(allAlerts) {
   let terminatingAlerts = allAlerts.filter(alert => {
-    return alert.type !== 'works' &&
-      alert.runID && alert.text.includes('terminat') // terminate/terminating
+    return alert.type !== 'works'
+      && alert.runID && (alert.text.includes('terminat') // terminate/terminating
+      || alert.text.includes('origin'))
   })
 
   await async.forEach(terminatingAlerts, async alert => {
-    let relavantText = alert.text.slice(alert.text.indexOf('terminat') + 11).trim().split('\n')[0].replace(/due.*/, '').replace(/today.*/, '')
+    let relavantText = ''
+    let type
+    if (alert.text.includes('terminat')) {
+      relavantText = alert.text.slice(alert.text.indexOf('terminat') + 11)
+      type = 'terminate'
+    } else {
+      relavantText = alert.text.slice(alert.text.indexOf('origin') + 9)
+      type = 'originate'
+    }
+    relavantText = relavantText.trim().split('\n')[0].replace(/due.*/, '').replace(/today.*/, '')
+
     let bestStop = closest(relavantText, allStops)
     let isTrainFault = alert.text.includes('train fault')
 
@@ -53,35 +64,41 @@ async function lookForShunts(allAlerts) {
       runID: alert.runID
     })
 
-    let tripAlerts = liveTimetable.notifyAlerts || []
+    let tripAlerts = (liveTimetable ? liveTimetable.notifyAlerts : []) || []
+    let mismatch = false
+    if (liveTimetable) {
+      mismatch = (type === 'originate' ? liveTimetable.trueOrigin : liveTimetable.trueDestination).slice(0, -16) !== bestStop
+    }
 
-    if (!tripAlerts.includes(alert.alertID)) {
+    if (!tripAlerts.includes(alert.alertID) || mismatch) {
       liveTimetable = await getStoppingPattern({
         ptvRunID: utils.getPTVRunID(alert.runID),
         time: utils.now()
       }, database)
     }
 
-    if (isTrainFault || !terminatingLocations.includes(bestStop)) {
-      let lastStop = liveTimetable.stopTimings[liveTimetable.stopTimings.length - 1]
-      let shunt = {
-        date: liveTimetable.operationDays,
-        runID: alert.runID,
-        routeName: liveTimetable.routeName,
-        stationName: bestStop,
-        arrivalTimeMinutes: lastStop.arrivalTimeMinutes,
-        type: 'EMPTY_CARS',
-        platform: lastStop.platform,
-        forming: alert.runID,
-        notifyAlert: alert.alertID
-      }
+    if (type === 'terminate') {
+      if (isTrainFault || !terminatingLocations.includes(bestStop)) {
+        let lastStop = liveTimetable.stopTimings.find(stop => stop.stopName.slice(0, -16) === bestStop)
+        let shunt = {
+          date: liveTimetable.operationDays,
+          runID: alert.runID,
+          routeName: liveTimetable.routeName,
+          stationName: bestStop,
+          arrivalTimeMinutes: lastStop.arrivalTimeMinutes,
+          type: 'EMPTY_CARS',
+          platform: lastStop.platform,
+          forming: alert.runID,
+          notifyAlert: alert.alertID
+        }
 
-      await metroShunts.replaceDocument({
-        date: liveTimetable.operationDays,
-        runID: alert.runID
-      }, shunt, {
-        upsert: true
-      })
+        await metroShunts.replaceDocument({
+          date: liveTimetable.operationDays,
+          runID: alert.runID
+        }, shunt, {
+          upsert: true
+        })
+      }
     }
   })
 }

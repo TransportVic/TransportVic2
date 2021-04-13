@@ -102,7 +102,7 @@ database.connect(async () => {
           })
 
           fs.writeFileSync(filename, JSON.stringify(filtered))
-          console.log('Removed', filtered.length - data.length, 'lines from metro tracker logs')
+          console.log('Removed', data.length - filtered.length, 'lines from metro tracker logs')
         } catch (e) {
           console.log('Error cleaning up metro tracker logs, skipping')
         }

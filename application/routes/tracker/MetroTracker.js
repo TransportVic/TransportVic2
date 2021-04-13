@@ -26,7 +26,7 @@ if (modules.metroLogger) {
 
   setInterval(() => {
     fs.writeFileSync(loggerPath, JSON.stringify(loggerData))
-  }, 1000)
+  }, 1000 * 60)
 }
 
 
