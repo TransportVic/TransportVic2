@@ -44,7 +44,7 @@ async function requestTimings() {
             let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
             let routeNumber = departure.route.short_label
             let routeGTFSID = '4-' + routeNumber
-            let smartrakID = departure.run.vehicle_descriptor.id
+            let smartrakID = parseInt(departure.run.vehicle_descriptor.id)
 
             let routeGTFSIDQuery = routeGTFSID, matchingGroup
             if (matchingGroup = gtfsGroups.find(g => g.includes(routeGTFSID))) {
