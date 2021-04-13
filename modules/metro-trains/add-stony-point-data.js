@@ -1,6 +1,6 @@
 const { getDayOfWeek } = require('../../public-holidays')
 
-let singleSTYTrains = ['8500', '8502', '8508', '8510', '8515', '8517']
+let singleSTYTrains = ['8500', '8502', '8508', '8510', '8509', '8512', '8515', '8517']
 
 module.exports = async function (trip, departureTime, db) {
   let query = {

@@ -96,14 +96,14 @@ function mapSuspension(suspensionText, routeName) {
     .replace(/\u00A0/g, ' ').replace(/[–-]/, ' and ')
     .match(/trains (?:between )?([ \w]+) and ([ \w\/]+) (?:stations|due)/i)
 
-  if (!stationsAffected) return
+  if (!stationsAffected) return []
   let startStation = utils.titleCase(stationsAffected[1].trim())
   let endStations = stationsAffected[2].trim()
 
   // Station A should always be on the UP end
   let routeStops = getRouteStops(routeName)
   let startIndex = routeStops.indexOf(startStation)
-  if (startIndex === -1) return
+  if (startIndex === -1) return []
 
   let allSuspensions = []
 
@@ -146,6 +146,10 @@ async function getNotifyData(db) {
     },
     active: true
   }).toArray()
+
+  disruptions.forEach(disruption => {
+    disruption.text = disruption.text.replace(/<\/?\w+>/g, '')
+  })
 
   let suspensions = {}
   disruptions.forEach(suspension => {
