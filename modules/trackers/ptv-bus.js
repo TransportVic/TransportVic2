@@ -21,8 +21,8 @@ async function requestTimings() {
   let stops = pickRandomStops()
 
   try {
-    // let ptvKey = await ptvAPI.getPTVKey()
-    let ptvKey = '837b0f06bdfbf25267379496e12dc29b'
+    let ptvKey = await ptvAPI.getPTVKey()
+
     await async.forEachOf(stops, async (stop, i) => {
       let dbStop = await dbStops.findDocument({
         'bays.stopGTFSID': stop.gtfs
