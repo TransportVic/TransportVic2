@@ -187,7 +187,7 @@ function updateBody(firstTime, n) {
 
 $.ready(() => {
   if (search.query.d) {
-    forcedDirection = search.query.d
+    forcedDirection = search.query.d[0].toUpperCase()
   }
 
   updateBody(true)

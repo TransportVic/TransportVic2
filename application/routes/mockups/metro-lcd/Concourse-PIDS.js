@@ -49,13 +49,13 @@ router.post('/:station/up-down', async (req, res) => {
   })
 
   let rawDepartures = departures.dep.filter(departure => departure.p)
-
   let {d} = querystring.parse(url.parse(req.url).query)
+
   if (d) {
     return res.json({
       ...departures,
       dep: rawDepartures.filter(departure => {
-        return departure.d.toLowerCase() === d
+        return departure.d.toLowerCase() === d[0]
       }).slice(0, 5)
     })
   } else {
