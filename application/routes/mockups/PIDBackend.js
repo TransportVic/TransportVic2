@@ -54,6 +54,10 @@ async function getAllDeparturesFromStation(station, db) {
 
               if (routeName === 'Bendigo' && departure.allStops.includes('Eaglehawk')) routeName = 'Swan Hill'
               let currentStop = departure.trip.stopTimings.find(stop => stop.stopName === station.stopName)
+              let cancelledStops = departure.trip.stopTimings.filter(stop => stop.cancelled).map(stop => stop.stopName.slice(0, -16))
+
+              let runningFutureStops = departure.futureStops.filter(stop => !cancelledStops.includes(stop))
+              let runningAllStops = departure.allStops.filter(stop => !cancelledStops.includes(stop))
 
               return {
                 routeName,
@@ -61,8 +65,8 @@ async function getAllDeparturesFromStation(station, db) {
                 scheduledDepartureTime: departure.scheduledDepartureTime,
                 estimatedDepartureTime: departure.estimatedDepartureTime,
                 actualDepartureTime: departure.actualDepartureTime,
-                futureStops: [stationName, ...departure.futureStops],
-                allStops: departure.allStops,
+                futureStops: [stationName, ...runningFutureStops],
+                allStops: runningAllStops,
                 direction: departure.trip.direction,
                 isRailReplacementBus: departure.isRailReplacementBus,
                 platform: departure.platform ? departure.platform.replace(/[?A-Z]/g, '') : '',
