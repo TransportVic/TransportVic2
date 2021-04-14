@@ -72,7 +72,8 @@ async function getAllDeparturesFromStation(station, db) {
                 platform: departure.platform ? departure.platform.replace(/[?A-Z]/g, '') : '',
                 type: 'vline',
                 takingPassengers: departure.takingPassengers,
-                stopTimings: departure.trip.stopTimings
+                stopTimings: departure.trip.stopTimings,
+                cancelled: departure.cancelled
               }
             })
           }
@@ -105,7 +106,8 @@ async function getAllDeparturesFromStation(station, db) {
                 platform: departure.platform ? departure.platform.replace(/[?A-Z]/g, '') : '',
                 type: 'metro',
                 takingPassengers: true,
-                stopTimings: departure.trip.stopTimings
+                stopTimings: departure.trip.stopTimings,
+                cancelled: departure.cancelled
               }
             })
           }
