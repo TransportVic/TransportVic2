@@ -25,6 +25,10 @@ let lineGroups = [
   genericGroup
 ]
 
+let stationsAppendingUp = [
+  'Richmond', 'North Melbourne', 'South Yarra'
+]
+
 function addCityLoopRunning(train, stationName) {
   let { routeName, viaCityLoop, runDestination, runID } = train
   let loopRunning = []
@@ -1027,14 +1031,42 @@ async function getDeparturesFromPTV(station, db) {
   return allDepartures
 }
 
+function generateTripID(trip) {
+  return trip.trueOrigin + trip.trueDestination + trip.trueDepartureTime
+}
+
+async function getExtraTrains(departures, direction, station, db) {
+  let now = utils.now()
+  let scheduled = await departureUtils.getScheduledMetroDepartures(station, db)
+
+  let inDirection = scheduled.filter(train => train.trip.direction === direction)
+  let existingInDirection = departures.filter(train => train.trip.direction === direction)
+  let existingIDs = existingInDirection.map(train => generateTripID(train.trip))
+
+  let extras = inDirection.filter(train => {
+    let id = generateTripID(train.trip)
+    return !existingIDs.includes(id)
+  })
+
+  return extras.filter(train => {
+    return train.actualDepartureTime.diff(now, 'minutes') > 5
+  })
+}
+
 async function getDepartures(station, db, filter) {
   try {
     if (typeof filter === 'undefined') filter = true
+    let stationName = station.stopName.slice(0, -16)
 
-    return await utils.getData('metro-departures-new', station.stopName, async () => {
+    return await utils.getData('metro-departures-new', stationName, async () => {
       let departures = await getDeparturesFromPTV(station, db)
+      let extraTrains = []
 
-      return filterDepartures(departures, filter)
+      if (stationsAppendingUp.includes(stationName)) {
+        extraTrains = await getExtraTrains(departures, 'Up', station, db)
+      }
+
+      return filterDepartures([...departures, ...extraTrains], filter)
     })
   } catch (e) {
     global.loggers.general.err('Error getting Metro departures', e)
