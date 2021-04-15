@@ -182,13 +182,22 @@ async function getDepartures(routeName) {
     }
   })
 
+  let notifyTrips = await metroShunts.distinct('runID', {
+    date: day,
+    notifyAlert: {
+      $exists: true
+    }
+  })
+
   await async.forEach(dbShunts, async shunt => {
-    await metroShunts.replaceDocument({
-      date: day,
-      runID: shunt.runID
-    }, shunt, {
-      upsert: true
-    })
+    if (!notifyTrips.includes(shunt.runID)) {
+      await metroShunts.replaceDocument({
+        date: day,
+        runID: shunt.runID
+      }, shunt, {
+        upsert: true
+      })
+    }
   })
 }
 
