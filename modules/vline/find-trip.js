@@ -32,6 +32,7 @@ let longDistanceCountryStops = [
   "Wangaratta",
   "Warrnambool",
   "Winchelsea",
+  "Wodonga",
   "Sherwood Park",
   "Creswick",
   "Clunes",
@@ -65,7 +66,7 @@ let traralgonStops = [
   'Bairnsdale'
 ].map(x => x + ' Railway Station')
 
-let validALBOrigins = [
+let validALYOrigins = [
   'Broadmeadows',
   'Seymour',
   'Southern Cross'
@@ -75,15 +76,14 @@ module.exports = async (collection, operationDay, origin, destination, departure
   let tripStartMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime)
   if (tripStartMinutes < 180) tripStartMinutes += 1440
 
-  if (destination === 'Albury Railway Station' && validALBOrigins.includes(origin)) {
+  if (destination === 'Albury Railway Station' && validALYOrigins.includes(origin)) {
     destination = 'Wodonga Railway Station'
   }
 
-  if (origin === 'Albury Railway Station' && validALBOrigins.includes(destination)) {
+  if (origin === 'Albury Railway Station' && validALYOrigins.includes(destination)) {
     origin = 'Wodonga Railway Station'
     tripStartMinutes += 20
   }
-
 
   let varianceAllowed = 5
   if (traralgonStops.includes(origin) || traralgonStops.includes(destination)) {

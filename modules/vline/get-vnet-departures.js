@@ -5,16 +5,16 @@ const async = require('async')
 const { getDayOfWeek } = require('../../public-holidays')
 
 async function getStationFromVNETName(vnetStationName, db) {
-  const station = await db.getCollection('stops').findDocument({
-    bays: {
-      $elemMatch: {
-        mode: 'regional train',
-        vnetStationName
+  return await utils.getData('vnet-station', vnetStationName, async () => {
+    return await db.getCollection('stops').findDocument({
+      bays: {
+        $elemMatch: {
+          mode: 'regional train',
+          vnetStationName
+        }
       }
-    }
-  })
-
-  return station
+    })
+  }, 1000 * 60 * 60)
 }
 
 async function getVNETDepartures(stationName, direction, db, time, useArrivalInstead=false, useNew=false) {
@@ -24,7 +24,7 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
   }
 
   let url = baseURL.format(stationName, direction, time)
-  const body = (await utils.request(url)).replace(/a:/g, '')
+  const body = (await utils.request(url, { timeout: 3000 })).replace(/a:/g, '')
 
   const $ = cheerio.load(body)
   const allServices = Array.from($('PlatformService'))
