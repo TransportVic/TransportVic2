@@ -153,13 +153,16 @@ async function getStationArrivals(station, db) {
       date,
       stationName,
       arrivalTimeMinutes: {
-        $gte: minutesPastMidnight - 30,
+        $gte: minutesPastMidnight - 60,
         $lte: minutesPastMidnight + 120
       }
     }).toArray()
 
     return async.map(shunts, async shunt => {
-      let departureTime = startOfDay.clone().add(shunt.arrivalTimeMinutes + 5, 'minutes')
+      let clearTime = 5
+      if (shunt.notifyAlert) clearTime = 2
+
+      let departureTime = startOfDay.clone().add(shunt.arrivalTimeMinutes + clearTime, 'minutes')
       let liveTimetable = await liveTimetables.findDocument({
         operationDays: date,
         mode: 'metro train',

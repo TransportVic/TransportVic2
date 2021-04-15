@@ -113,13 +113,16 @@ async function getScheduledDepartures(station, db, mode, timeout) {
   let today = utils.now().startOf('day')
 
   let days = {}
+  let stationName = station.stopName.slice(0, -16)
+  let isCity = stationName === 'Flinders Street' || cityLoopStations.includes(stationName)
 
   function getID(trip) {
-    let stop = trip.stopTimings.find(s => stopGTFSIDs.includes(s.stopGTFSID))
-    let id = stop.departureTimeMinutes + trip.direction + trip.routeGTFSID
-    id += trip.trueDestination + trip.trueOrigin
-
-    return id
+    if (isCity) {
+      return trip.direction + trip.routeGTFSID + trip.trueOrigin + trip.trueDestination + trip.destinationArrivalTime
+    } else {
+      let stop = trip.stopTimings.find(s => stopGTFSIDs.includes(s.stopGTFSID))
+      return stop.departureTimeMinutes + trip.direction + trip.trueDestination
+    }
   }
 
   for (let i = 0; i <= 1; i++) {
