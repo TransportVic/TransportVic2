@@ -191,6 +191,8 @@ database.connect(async () => {
   })).map(stop => stop.slice(0, -16))
 
   schedule([
-    [0, 1440, 1]
+    [0, 179, 1],
+    [180, 240, 2],
+    [240, 1440, 1]
   ], requestTimings, 'metro notify', global.loggers.trackers.metroNotify)
 })
