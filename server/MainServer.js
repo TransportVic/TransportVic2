@@ -50,7 +50,6 @@ if (modules.preloadCCL)
 let serverStarted = false
 
 let trackerAuth = 'Basic ' + Buffer.from(config.vlineLogin).toString('base64')
-let mockupsAuths = config.mockupsLogin.map(key => 'Basic ' + Buffer.from(key).toString('base64'))
 
 module.exports = class MainServer {
   constructor () {
@@ -99,7 +98,7 @@ module.exports = class MainServer {
         let end = +new Date()
         let diff = end - start
 
-        if (diff > 20 && !reqURL.startsWith('/static/')) {
+        if (!reqURL.startsWith('/static/')) {
           global.loggers.http.info(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff}`)
 
           this.past50ResponseTimes = [...this.past50ResponseTimes.slice(-49), diff]
@@ -129,13 +128,19 @@ module.exports = class MainServer {
 
     app.use('*', (req, res, next) => {
       if (filter('circulars.', req, next)) {
-        let url = `http://localhost:${config.circularPort}${req.baseUrl}`
-        fetch(url).then(r => {
-          res.header('Content-Type', r.headers.get('content-type'))
-          let disposition = r.headers.get('content-disposition')
-          if (disposition) res.header('Content-Disposition', r.headers.get('content-disposition'))
-          r.body.pipe(res)
-        })
+        if (!req.headers.authorization || req.headers.authorization !== trackerAuth) {
+          res.status(401)
+          res.header('www-authenticate', 'Basic realm="password needed"')
+          res.end('Please login')
+        } else {
+          let url = `http://localhost:${config.circularPort}${req.baseUrl}`
+          fetch(url).then(r => {
+            res.header('Content-Type', r.headers.get('content-type'))
+            let disposition = r.headers.get('content-disposition')
+            if (disposition) res.header('Content-Disposition', r.headers.get('content-disposition'))
+            r.body.pipe(res)
+          })
+        }
       }
     })
 
@@ -182,21 +187,11 @@ module.exports = class MainServer {
       res.end('Please login')
     })
 
-    // app.use('/mockups', (req, res, next) => {
-    //   if (req.headers.authorization && mockupsAuths.includes(req.headers.authorization)) {
-    //     return next()
-    //   }
-    //
-    //   res.status(401)
-    //   res.header('www-authenticate', 'Basic realm="password needed"')
-    //   res.end('Please login')
-    // })
-
     app.use(config.newVlineTracker, require('../application/routes/tracker/VLineTracker2'))
 
     app.use('/bus/timings', rateLimit({
       windowMs: 1 * 60 * 1000,
-      max: 40
+      max: 60
     }))
   }
 

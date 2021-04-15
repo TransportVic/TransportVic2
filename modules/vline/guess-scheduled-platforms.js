@@ -205,10 +205,8 @@ module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday)
   }
 
   if (stationName === 'Wendouree') {
-    return 1
-    // if (line === 'Ballarat') return 1
-    // if (isUp) return 1
-    // else return 2
+     if (line === 'Ballarat') return 2
+     else return 2
   }
 
   if (stationName === 'Ararat') {
