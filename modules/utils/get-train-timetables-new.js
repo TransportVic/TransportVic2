@@ -6,6 +6,28 @@ const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
+let trackGroups = {
+  Lilydale: 'Ringwood',
+  Belgrave: 'Ringwood',
+  Pakenham: 'Dandenong',
+  Cranbourne: 'Dandenong',
+  Frankston: 'Frankston',
+  'Stony Point': 'Frankston',
+  Sandringham: 'Sandringham',
+  Mernda: 'Clifton Hill',
+  Hurstbridge: 'Clifton Hill',
+  Werribee: 'Newport',
+  Williamstown: 'Newport',
+  Craigieburn: 'Craigieburn',
+  Sunbury: 'Sunbury',
+  Upfield: 'Upfield',
+  Alamein: 'Alamein',
+  'Glen Waverley': 'Glen Waverley',
+  'Flemington Racecourse': 'Flemington Racecourse',
+  'City Loop': 'Clifton Hill'
+}
+
+
 function trimFromFSS(trip) {
   let stops = trip.stopTimings.map(stop => stop.stopName)
   let fssIndex = stops.indexOf('Flinders Street Railway Station')
@@ -121,7 +143,12 @@ async function getScheduledDepartures(station, db, mode, timeout) {
       return trip.direction + trip.routeGTFSID + trip.trueOrigin + trip.trueDestination + trip.destinationArrivalTime
     } else {
       let stop = trip.stopTimings.find(s => stopGTFSIDs.includes(s.stopGTFSID))
-      return stop.departureTimeMinutes + trip.direction + trip.trueDestination
+      if (trip.mode === 'metro train') {
+        let trackGroup = trackGroups[trip.routeName]
+        return stop.departureTimeMinutes + trip.direction + trip.trueDestination + trackGroup
+      } else {
+        return stop.departureTimeMinutes + trip.direction + trip.trueDestination
+      }
     }
   }
 
