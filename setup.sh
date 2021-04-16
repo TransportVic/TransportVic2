@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "LANG=en_US.utf-8
 LC_ALL=en_US.utf-8" | sudo tee /etc/environment
 
@@ -7,7 +9,7 @@ sudo yum remove httpd -y
 sudo yum remove postfix -y
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-sudo ln /usr/bin/node $(readlink -f $(which node))
+sudo ln "$(readlink -f `command -v node`)" /usr/bin/node
 
 source ~/.bashrc
 nvm install node
@@ -21,5 +23,5 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc" | sudo tee /etc/yum.re
 sudo yum install -y mongodb-org git
 
 sudo amazon-linux-extras install epel -y
-sudo yum install certbot-apache -y
-sudo yum install python2-dns-lexicon -y
+sudo yum install certbot-apache python-pip -y
+sudo pip install dns-lexicon[namecheap]

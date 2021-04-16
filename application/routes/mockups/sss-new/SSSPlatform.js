@@ -4,37 +4,17 @@ const moment = require('moment')
 const async = require('async')
 const utils = require('../../../../utils')
 
-const TrainUtils = require('../TrainUtils')
-
-function adjust(departure) {
-  let {scheduledDepartureTime} = departure
-
-  if (departure.type === 'vline') {
-    let timeDifference = departure.scheduledDepartureTime.clone().add(30, 'seconds').diff(utils.now(), 'minutes')
-    departure.minutesToDeparture = timeDifference
-  } else {
-    if (departure.estimatedDepartureTime) {
-      let timeDifference = departure.estimatedDepartureTime.clone().add(30, 'seconds').diff(utils.now(), 'minutes')
-      if (timeDifference < 0) timeDifference = 0
-
-      departure.minutesToDeparture = timeDifference
-    } else departure.minutesToDeparture = null
-  }
-
-  return departure
-}
+const PIDBackend = require('../PIDBackend')
 
 async function getData(req, res) {
-  let station = await res.db.getCollection('stops').findDocument({
-    codedName: 'southern-cross-railway-station'
-  })
+  let station = await PIDBackend.getStation('southern-cross', res.db)
 
   let platforms = req.params.platform.split('-')
 
-  let left = await TrainUtils.getPIDSDepartures(res.db, station, platforms[0], null, null)
-  let right = await TrainUtils.getPIDSDepartures(res.db, station, platforms[1], null, null)
+  let left = await PIDBackend.getPIDData(station, platforms[0], {}, res.db)
+  let right = await PIDBackend.getPIDData(station, platforms[1], {}, res.db)
 
-  return { left: left.departures.map(adjust), right: right.departures.map(adjust) }
+  return { left: left.dep, right: right.dep }
 }
 
 router.get('/:platform', async (req, res) => {

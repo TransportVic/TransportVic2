@@ -7,18 +7,28 @@ const querystring = require('querystring')
 const moment = require('moment')
 const vlineFleet = require('../../../additional-data/vline-tracker/vline-fleet')
 const vlineConsists = require('../../../additional-data/vline-tracker/carriage-sets')
+const rawLineRanges = require('../../../additional-data/vline-tracker/line-ranges')
 const { getDayOfWeek } = require('../../../public-holidays')
 
-let lines = {
-  Geelong: ['Geelong', 'Marshall', 'South Geelong', 'Waurn Ponds', 'Wyndham Vale', 'Warrnambool'],
-  Ballarat: ['Ararat', 'Maryborough', 'Ballarat', 'Wendouree', 'Bacchus Marsh', 'Melton'],
-  Bendigo: ['Bendigo', 'Kyneton', 'Epsom', 'Eaglehawk', 'Swan Hill', 'Echuca', 'Sunbury'],
-  Gippsland: ['Traralgon', 'Sale', 'Bairnsdale', 'Pakenham'],
-  Seymour: ['Seymour', 'Shepparton', 'Albury', 'Craigieburn']
-}
+let lineRanges = {}
+
+Object.keys(rawLineRanges).forEach(line => {
+  let ranges = rawLineRanges[line]
+
+  lineRanges[line] = ranges.map(range => {
+    let lower = range[0]
+    let upper = range[1]
+
+    let numbers = []
+    for (let n = lower; n <= upper; n++) {
+      numbers.push(n.toString())
+    }
+    return numbers
+  }).reduce((a, e) => a.concat(e), [])
+})
 
 router.get('/', (req, res) => {
-  res.render('tracker/vline/index')
+  res.render('tracker/vline/index', { baseURL: '/vline/tracker' })
 })
 
 function adjustTrip(trip, date, today, minutesPastMidnightNow) {
@@ -33,6 +43,7 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
     departureTimeMinutes += 1440
     tripDate = utils.getYYYYMMDD(utils.parseDate(tripDate).add(1, 'day'))
   }
+
   if (destinationArrivalTimeMinutes < departureTimeMinutes) destinationArrivalTimeMinutes += 1440
 
   trip.url = `/vline/run/${e(trip.origin)}-railway-station/${trip.departureTime}/${e(trip.destination)}-railway-station/${trip.destinationArrivalTime}/${tripDate}`
@@ -41,6 +52,15 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
   trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
 
   return trip
+}
+
+let dates = {}
+
+function p(d) {
+  if (dates[d]) return dates[d] >= 1608037200000
+  else dates[d] = utils.parseDate(d) || Infinity
+
+  return dates[d] >= 1608037200000
 }
 
 router.get('/date', async (req, res) => {
@@ -56,12 +76,14 @@ router.get('/date', async (req, res) => {
 
   let trips = (await vlineTrips.findDocuments({ date })
     .sort({destination: 1}).toArray())
+    .map(trip => { if (p(trip.date)) trip.consist = []; return trip })
     .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
     .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
 
   res.render('tracker/vline/by-date', {
     trips,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    baseURL: '/vline/tracker'
   })
 })
 
@@ -74,29 +96,25 @@ router.get('/line', async (req, res) => {
   if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
   else date = today
 
-  let lineGroup = lines[line] || []
-
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let baseLineRanges = lineRanges[line] || []
 
   let trips = (await vlineTrips.findDocuments({
     date,
-    $or: [{
-      origin: {
-        $in: lineGroup
-      }
-    }, {
-      destination: {
-        $in: lineGroup
-      }
-    }]
+    runID: {
+      $in: baseLineRanges
+    }
   }).sort({destination: 1}).toArray())
+  .map(trip => { if (p(trip.date)) trip.consist = []; return trip })
   .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
   .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
 
   res.render('tracker/vline/by-line', {
     trips,
     line,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    baseURL: '/vline/tracker'
   })
 })
 
@@ -110,7 +128,7 @@ router.get('/consist', async (req, res) => {
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
-  let trips = (await vlineTrips.findDocuments({ consist, date })
+  let trips = (await vlineTrips.findDocuments({ consist: p(date) ? null : consist, date })
     .sort({destination: 1}).toArray())
     .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
     .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
@@ -118,14 +136,16 @@ router.get('/consist', async (req, res) => {
   let operationDays = await vlineTrips.distinct('date', { consist })
   let servicesByDay = {}
 
-  await async.forEachSeries(operationDays, async date => {
-    let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+  await async.forEachSeries(operationDays, async checkDay => {
+    if (p(checkDay)) return
+
+    let humanDate = checkDay.slice(6, 8) + '/' + checkDay.slice(4, 6) + '/' + checkDay.slice(0, 4)
 
     servicesByDay[humanDate] = {
       services: (await vlineTrips.distinct('runID', {
-        consist, date
+        consist, date: checkDay
       })).sort((a, b) => a - b),
-      date
+      date: checkDay
     }
   })
 
@@ -133,7 +153,8 @@ router.get('/consist', async (req, res) => {
     trips,
     consist,
     servicesByDay,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    baseURL: '/vline/tracker'
   })
 })
 
@@ -152,12 +173,13 @@ router.get('/highlights', async (req, res) => {
 
   let allTrips = (await vlineTrips.findDocuments({ date })
     .sort({destination: 1}).toArray())
+    .map(trip => { if (p(trip.date)) trip.consist = []; return trip })
     .filter(trip => trip.consist[0] !== '')
     .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
     .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
 
   let doubleHeaders = allTrips.filter(trip => {
-    return trip.consist[1] && trip.consist[0].startsWith('N') && trip.consist[1].startsWith('N')
+    return trip.consist[1] && trip.consist[0].match(/^[ANP]\d{2,3}$/) && trip.consist[1].match(/^[ANP]\d{2,3}$/)
   })
 
   let timetables = {}
@@ -168,17 +190,24 @@ router.get('/highlights', async (req, res) => {
     })
   })
 
+  let unknownTrips = allTrips.filter(trip => !timetables[trip.runID])
+
   let consistTypeChanged = allTrips.filter(trip => {
     let nspTimetable = timetables[trip.runID]
+    if (!trip.consist[0]) return false
 
     if (nspTimetable) {
       let tripVehicleType
       if (trip.consist[0].startsWith('VL')) tripVehicleType = 'VL'
       else if (trip.consist[0].startsWith('70')) tripVehicleType = 'SP'
       else {
-        tripVehicleType = 'N +'
-        let carriage = trip.consist.find(c => !c.startsWith('N') && !c.startsWith('P') && (c.includes('N') || c.includes('H')))
-        if (carriage) tripVehicleType += carriage.includes('N') ? 'N' : 'H'
+        let locos = trip.consist.filter(car => car.match(/^[ANP]\d{2,3}$/))
+        let powerVan = trip.consist.find(car => car.match(/^P[CHZ]J?\d{3}$/))
+        let setVehicles = trip.consist.filter(car => !locos.includes(car) && car !== powerVan)
+
+        if (locos[0]) tripVehicleType = locos[0][0] + ' +'
+
+        if (setVehicles.length) tripVehicleType += setVehicles[0].includes('N') ? 'N' : 'H'
         else return true
       }
 
@@ -189,7 +218,7 @@ router.get('/highlights', async (req, res) => {
       let spMatch = nspTripType.includes('SP') && tripVehicleType == 'SP'
 
       if (vlMatch || spMatch) return false
-      if (nspTripType.startsWith('N') && tripVehicleType.startsWith('N')) {
+      if (nspTripType.match(/^[ANP]/) && tripVehicleType.match(/^[ANP]/)) {
         return tripVehicleType.slice(-1) !== nspTripType.slice(-1)
       }
 
@@ -200,6 +229,9 @@ router.get('/highlights', async (req, res) => {
   let oversizeConsist = allTrips.filter(trip => {
     // We're only considering where consist type wasnt changed. otherwise 1xVL and 2xSP would trigger even though its equiv
     if (consistTypeChanged.includes(trip)) return false
+    if (['8118', '8116', '8160', '8158'].includes(trip.runID)) return false
+    if (!trip.consist[0]) return
+
     let nspTimetable = timetables[trip.runID]
 
     if (nspTimetable && !nspTimetable.flags.tripAttaches) {
@@ -209,22 +241,34 @@ router.get('/highlights', async (req, res) => {
       let nspConsistSize = parseInt(nspTripType[0])
       if (nspTripType === '3VL') nspConsistSize = 1
 
-      if (!trip.consist[0].startsWith('N')) {
+      if (!trip.consist[0].match(/^[ANP]\d{2,3}$/)) {
         return consistSize > nspConsistSize
       }
     }
   })
 
   let setAltered = allTrips.filter(trip => {
-    if (!trip.consist[0].startsWith('N')) return false
+    if (!trip.consist[0]) return false
+    if (!trip.consist[0].match(/^[ANP]\d{2,3}$/)) return false
+
     let {consist, set} = trip
-    let knownSet = vlineConsists[set]
-    if (!knownSet) return true
+    if (!set) return false // If only a loco was assigned don't trigger it
 
-    let carriages = consist.slice(1).filter(c => !c.startsWith('P'))
+    let individualSets = set.split(' ')
+    let combinedKnownSets = []
 
-    if (knownSet.some(known => !carriages.includes(known))) return true
-    if (carriages.some(car => !knownSet.includes(car))) return true
+    for (let setName of individualSets) {
+      let knownSet = vlineConsists[setName]
+      if (!knownSet) return true // We don't recognise the set, mark as set altered
+      combinedKnownSets = combinedKnownSets.concat(knownSet)
+    }
+
+    let locos = trip.consist.filter(car => car.match(/^[ANP]\d{2,3}$/))
+    let powerVan = trip.consist.find(car => car.match(/^P[CHZ]J?\d{3}$/))
+    let setVehicles = trip.consist.filter(car => !locos.includes(car) && car !== powerVan)
+
+    if (combinedKnownSets.some(known => !setVehicles.includes(known))) return true
+    if (setVehicles.some(car => !combinedKnownSets.includes(car))) return true
   })
 
   let unknownVehicle = allTrips.filter(trip => {
@@ -237,7 +281,9 @@ router.get('/highlights', async (req, res) => {
     oversizeConsist,
     setAltered,
     unknownVehicle,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    unknownTrips,
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    baseURL: '/vline/tracker'
   })
 })
 

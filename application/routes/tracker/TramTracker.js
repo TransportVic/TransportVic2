@@ -6,6 +6,7 @@ const querystring = require('querystring')
 const moment = require('moment')
 const tramDestinations = require('../../../additional-data/tram-destinations')
 const tramFleet = require('../../../tram-fleet')
+const knownTrams = require('../../../additional-data/tram-tracker/tram-fleet')
 const tramDepots = require('../../../additional-data/tram-tracker/depot-allocations')
 const serviceDepots = require('../../../additional-data/tram-tracker/service-depots')
 const router = new express.Router()
@@ -279,6 +280,34 @@ router.get('/cross-depot', async (req, res) => {
   res.render('tracker/tram/cross-depot', {
     tripsToday,
     date: utils.parseTime(date, 'YYYYMMDD')
+  })
+})
+
+router.get('/highlights', async (req, res) => {
+  let {db} = res
+  let tramTrips = db.getCollection('tram trips')
+
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let today = utils.getYYYYMMDDNow()
+
+  let {shift, date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  let unknownTrams = (await tramTrips.findDocuments({
+    date: date,
+    tram: {
+      $not: {
+        $in: knownTrams
+      }
+    }
+  }).sort({departureTime: 1}).toArray())
+    .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
+
+  res.render('tracker/tram/highlights', {
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    unknownTrams
   })
 })
 

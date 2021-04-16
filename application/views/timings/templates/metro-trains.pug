@@ -1,44 +1,17 @@
-- 
-  let cityLoopStationAbbreviations = {
-    'FSS': 'Flinders Street Railway Station',
-    'SSS': 'Southern Cross Railway Station',
-    'FGS': 'Flagstaff Railway Station',
-    'MCE': 'Melbourne Central Railway Station',
-    'PAR': 'Parliament Railway Station'
-  }
-  let cityLoopStationNames = Object.values(cityLoopStationAbbreviations).concat('City Loop Railway Station')
-  
+- let cityStations = ['Flinders Street', 'Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
+
 if departures.length
   for departure in departures
     div.departure
-      -
-        let stopName = station.stopName
-        let indexOfCurrentStation = departure.trip.stopTimings.map(stop => stop.stopName).indexOf(stopName)
-        let stopsAt = departure.trip.stopTimings.filter((_, i) => i > indexOfCurrentStation).map(stop => stop.stopName)
-        let cityLoopStationFullNames = departure.cityLoopConfig.map(stn => cityLoopStationAbbreviations[stn])
-        
-        let routeName = departure.trip.routeName
-        if (!departure.isRailReplacementBus) {
-          stopsAt = stopsAt.filter(station => !cityLoopStationNames.includes(station))
-          
-          if (departure.trip.direction === 'Up')
-            stopsAt = stopsAt.concat(cityLoopStationFullNames)
-          else if (cityLoopStationNames.includes(station.stopName)) {
-            indexOfCurrentStation = cityLoopStationFullNames.indexOf(stopName)
-            stopsAt = cityLoopStationFullNames.filter((stn, i) => i > indexOfCurrentStation).concat(stopsAt)
-          }
-
-          stopsAt = stopsAt.filter(Boolean).filter((e,i,a) => a.indexOf(e) === i)
-        }
-        
-      input(type='hidden' name='stops-at' value=stopsAt.join(','))
+      - let { routeName } = departure
+      input(type='hidden' name='stops-at' value=departure.futureStops.join(','))
       input(type='hidden' name='platform' value=departure.platform || '')
       input(type='hidden' name='run' value=departure.runID)
       input(type='hidden' name='line' value=routeName)
       if departure.cancelled
         input(type='hidden' name='cancelled')
       -
-        let cssClass = `${departure.codedLineName}-line`
+        let cssClass = `${departure.codedRouteName}-line`
         if (routeName === 'City Circle') cssClass = 'city-circle'
       a(class=`leftContainer ${cssClass}`)
         if departure.isRailReplacementBus
@@ -54,26 +27,53 @@ if departures.length
         span.towards #{prettyLineName} towards
         span.destination #{departure.destination}
         
-        - let currentSuspension = departure.suspensions.find(suspension => suspension.disruptionStatus !== 'passed')
-        if currentSuspension
+        - let currentSuspension = departure.suspension
+        if currentSuspension && currentSuspension.disruptionStatus !== 'passed' && !departure.cancelled
           span.broadDepartureInfo.important Buses replace trains from #{currentSuspension.startStation.slice(0, -16)} to #{currentSuspension.endStation.slice(0, -16)}
         else if departure.cancelled
           span.broadDepartureInfo.important CANCELLED
         else if departure.isRailReplacementBus
-          span.broadDepartureInfo.important.clampLine.clamp2 Rail Replacement Bus - Stops #{stopsAt.map(s => s.slice(0, -16)).join(', ')}
-        else if departure.consist.length
-          span.broadDepartureInfo Detected Consist: #{departure.consist.join(', ')}
+          span.broadDepartureInfo.important.clampLine.clamp2 Rail Replacement Bus - Stops #{departure.futureStops.join(', ')}
         else
           
           -
-            let {trip} = departure
-            let isUpTrip = (trip || {}).direction === 'Up' || trip.runID % 2 === 0
-          if cityLoopStationNames.includes(station.stopName) || isUpTrip
-            - let cityLoopConfig = departure.cityLoopConfig.join(', ')
-            if departure.willSkipLoop
-              span.broadDepartureInfo.important #{cityLoopConfig}
+            let configText = []
+            let important = false
+
+            if (!departure.isRailReplacementBus) {
+              let isUpTrip = departure.direction === 'Up'
+              let { futureStops } = departure
+              
+              let cityLoopRunning = departure.cityLoopRunning ? departure.cityLoopRunning.join(', ') : ''
+              let altonaLoopRunning = departure.altonaLoopRunning ? departure.altonaLoopRunning.join(', ') : ''
+              
+              if (altonaLoopRunning.length) {
+                let shouldShow = (isUpTrip && futureStops.includes('Newport')) || (!isUpTrip && futureStops.includes('Laverton'))
+                
+                if (shouldShow) {
+                  if (departure.isSkippingLoop) important = true
+                  configText.push(altonaLoopRunning)
+                }
+              }
+              
+              if (cityLoopRunning.length) {
+                let shouldShow = isUpTrip || cityStations.includes(station.stopName.slice(0, -16))
+                
+                if (shouldShow) {
+                  if (departure.isSkippingLoop) important = true
+                  configText.push(cityLoopRunning)
+                }
+              }
+
+              if (!isUpTrip && configText.length === 2) configText.reverse()
+            }
+
+          if configText.length
+            if important
+              span.broadDepartureInfo.important #{configText.join(' -> ')}
             else
-              span.broadDepartureInfo #{cityLoopConfig}
+              
+              span.broadDepartureInfo #{configText.join(' -> ')}
       div.timings
         a(class='timing ' + departure.headwayDevianceClass href=`/metro/run/${departure.tripURL}`)
           span #{departure.pretyTimeToDeparture}

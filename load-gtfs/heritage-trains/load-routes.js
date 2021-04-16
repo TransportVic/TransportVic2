@@ -39,7 +39,7 @@ database.connect({
   let routes = database.getCollection('routes')
   let routeData = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(__dirname, 'data', 'routes.txt')).toString())
 
-  await loadRoutes(routes, gtfsID, routeData, shapes, (routeGTFSID) => {
+  await loadRoutes(routes, gtfsID, routeData, shapes, () => {
     return ['Heritage']
   })
 

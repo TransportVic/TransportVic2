@@ -3,6 +3,7 @@ const router = new express.Router()
 const getDepartures = require('../../../modules/vline/get-departures')
 const utils = require('../../../utils')
 const moment = require('moment')
+const timingUtils = require('./timing-utils')
 
 async function loadDepartures(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
@@ -13,12 +14,14 @@ async function loadDepartures(req, res) {
     return res.status(404).render('errors/no-stop')
   }
 
+  let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, station)
+
   let departures = await getDepartures(station, res.db)
 
   departures = departures.map(departure => {
     departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
     departure.headwayDevianceClass = utils.findHeadwayDeviance(departure.scheduledDepartureTime, departure.estimatedDepartureTime, {
-      early: 0,
+      early: 1,
       late: 5
     })
 
@@ -43,7 +46,8 @@ async function loadDepartures(req, res) {
   return {
     departures,
     station,
-    placeholder: "Destination or platform"
+    placeholder: "Destination or platform",
+    stopHeritageUseDates
   }
 }
 

@@ -1,8 +1,8 @@
 html
   head
     script(src='/static/scripts/util.js')
+    script(src='/static/scripts/mockups/pids-utils.js')
     script(src='/static/scripts/mockups/metro-lcd/half-platform.js' async)
-    script(src='/static/scripts/mockups/pids-utils.js') 
     link(rel='stylesheet' href='/static/css/mockups/base-style.css')
     link(rel='stylesheet' href='/static/css/mockups/32-9-pids-base.css')
     link(rel='stylesheet' href='/static/css/mockups/metro-lcd/half-platform.css')
@@ -22,17 +22,17 @@ html
           p Checking departures
           p Please wait...
         div(style='display: none;').nextDeparture
-          div.burnLine.reset
           div.departureInfo
-            span.firstDestination --
-            div.scheduledDiv
+            span.text.firstDestination --
+            div.text.scheduledDiv
               span Scheduled
               span --
-            div.actualDiv
+            div.text.actualDiv
               span Departing
               div
                 span --
                 span min
+            div.burnLine.reset
           div.hozWhiteLine
           div.serviceMessage
             

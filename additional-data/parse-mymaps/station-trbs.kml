@@ -4659,6 +4659,231 @@
           </coordinates>
         </Point>
       </Placemark>
+      <Placemark>
+        <name>SYN</name>
+        <description><![CDATA[towards: Glen Waverley<br><br>along: Coleman Parade<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Glen Waverley
+</value>
+          </Data>
+          <Data name="along">
+            <value>Coleman Parade
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1500169,-37.8766859,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>SYN</name>
+        <description><![CDATA[towards: City<br><br>along: Coleman Parade<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City
+</value>
+          </Data>
+          <Data name="along">
+            <value>Coleman Parade
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.149868,-37.8767642,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MWY</name>
+        <description><![CDATA[towards: Glen Waverley<br><br>along: Stephensons Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Glen Waverley
+</value>
+          </Data>
+          <Data name="along">
+            <value>Stephensons Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1287882,-37.8763428,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>MWY</name>
+        <description><![CDATA[towards: City<br>along: Stephensons Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Stephensons Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1291222,-37.8761946,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>JOR</name>
+        <description><![CDATA[towards: City<br>along: Windsor Avenue<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Windsor Avenue
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1127391,-37.8742159,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>JOR</name>
+        <description><![CDATA[towards: Glen Waverley<br><br>along: Windsor Avenue<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Glen Waverley
+</value>
+          </Data>
+          <Data name="along">
+            <value>Windsor Avenue
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.1128356,-37.8741238,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HOL</name>
+        <description><![CDATA[towards: Glen Waverley<br><br>along: Warrigal Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Glen Waverley
+</value>
+          </Data>
+          <Data name="along">
+            <value>Warrigal Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0915362,-37.8749612,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>HOL</name>
+        <description><![CDATA[towards: City<br>along: Warrigal Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Warrigal Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0917897,-37.8752608,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>EMV</name>
+        <description><![CDATA[towards: Glen Waverley<br>along: Waverley Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>Glen Waverley</value>
+          </Data>
+          <Data name="along">
+            <value>Waverley Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0695076,-37.8793987,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>EMV</name>
+        <description><![CDATA[towards: City<br>along: Waverley Road<br><br>bay: ]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="towards">
+            <value>City</value>
+          </Data>
+          <Data name="along">
+            <value>Waverley Road
+</value>
+          </Data>
+          <Data name="bay">
+            <value/>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            145.0700051,-37.8797374,0
+          </coordinates>
+        </Point>
+      </Placemark>
     </Folder>
   </Document>
 </kml>

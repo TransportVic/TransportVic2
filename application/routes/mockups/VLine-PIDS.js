@@ -1,26 +1,28 @@
 const express = require('express')
 const router = new express.Router()
 const utils = require('../../../utils')
-const TrainUtils = require('./TrainUtils')
-const PIDUtils = require('./PIDUtils')
+const PIDBackend = require('./PIDBackend')
 
 let stoppingTypeMap = {
-  sas: 'Stops All',
-  limExp: 'Limited Express',
-  exp: 'Express'
+  notTakingPax: 'Not Taking Passengers',
+  stopsAll: 'Stops All',
+  limitedExpress: 'Limited Express',
+  express: 'Express'
 }
 
 let rrlStations = [ 'footscray', 'sunshine' ]
 
 async function getData(req, res) {
-  let station = await PIDUtils.getStation(res.db, req.params.station)
+  let station = await PIDBackend.getStation(req.params.station, res.db)
 
-  if (station.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)) {
+  if (station.bays.find(bay => bay.mode === 'regional train')) {
     let metro = station.bays.find(bay => bay.mode === 'metro train')
-    if (metro && !rrlStations.includes(req.params.station)) return { departures: [] }
-  } else return { departures: [] }
+    if (metro && !rrlStations.includes(req.params.station)) return { dep: [] }
+  } else return { dep: [] }
 
-  return await TrainUtils.getPIDSDepartures(res.db, station, req.params.platform, null, stoppingTypeMap)
+  return await PIDBackend.getPIDData(station, req.params.platform, {
+    stoppingType: stoppingTypeMap
+  }, res.db)
 }
 
 router.get('/:station/:platform', async (req, res) => {

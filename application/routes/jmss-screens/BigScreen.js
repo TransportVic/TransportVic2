@@ -1,18 +1,11 @@
 const express = require('express')
 const router = new express.Router()
 const ptvAPI = require('../../../ptv-api')
-const TimedCache = require('../../../TimedCache')
-const moment = require('moment')
 const utils = require('../../../utils')
 const getMetroDepartures = require('../../../modules/metro-trains/get-departures')
 const getVLineDepartures = require('../../../modules/vline/get-departures')
 const getBusDepartures = require('../../../modules/bus/get-departures')
 const busDestinations = require('../../../additional-data/bus-destinations')
-let EventEmitter = require('events')
-
-let cache = new TimedCache(1000 * 60 * 1)
-
-let lock = null
 
 function filterDepartures(departures) {
   return departures.map(departure => {
@@ -119,44 +112,31 @@ async function getNextVLineDepartures(db) {
 }
 
 router.get('/', async (req, res) => {
-  if (lock) {
-    return await new Promise(resolve => {
-      lock.on('done', data => {
-        res.render('jmss-screens/big-screen', data)
-      })
-    })
-  }
-
-  lock = new EventEmitter()
-
-  let busDepartures = [], metroDepartures = [], nextVLineDeparture = null
-
-  await Promise.all([
-    new Promise(async resolve => {
-      try { busDepartures = await getAllBusDepartures(res.db) }
-      catch (e) {}
-      resolve()
-    }),
-    new Promise(async resolve => {
-      try { metroDepartures = await getAllMetroDepartures(res.db) }
-      catch (e) {}
-      resolve()
-    }),
-    new Promise(async resolve => {
-      try { nextVLineDeparture = await getNextVLineDepartures(res.db) }
-      catch (e) {}
-      resolve()
-    })
-  ])
-
-  let currentTime = utils.now().format('h:mmA').toLowerCase()
-
-  let data = { busDepartures, metroDepartures, nextVLineDeparture, currentTime }
-  lock.emit('done', data)
-  lock = null
-
   res.loggingData = req.headers['user-agent']
-  res.render('jmss-screens/big-screen', data)
+  res.render('jmss-screens/big-screen', await utils.getData('jmss-screen', 'big-screen', async () => {
+    let busDepartures = [], metroDepartures = [], nextVLineDeparture = null
+
+    await Promise.all([
+      new Promise(async resolve => {
+        try { busDepartures = await getAllBusDepartures(res.db) }
+        catch (e) {}
+        resolve()
+      }),
+      new Promise(async resolve => {
+        try { metroDepartures = await getAllMetroDepartures(res.db) }
+        catch (e) {}
+        resolve()
+      }),
+      new Promise(async resolve => {
+        try { nextVLineDeparture = await getNextVLineDepartures(res.db) }
+        catch (e) {}
+        resolve()
+      })
+    ])
+
+    let currentTime = utils.now().format('h:mmA').toLowerCase()
+    return { busDepartures, metroDepartures, nextVLineDeparture, currentTime }
+  }))
 })
 
 module.exports = router

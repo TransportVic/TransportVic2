@@ -24,10 +24,30 @@ database.connect({}, async () => {
   let tramServices = (await routes.distinct('routeNumber', { mode: 'tram' })).map(e => e.match(/(\d+)/)[1]).concat('3a')
   let count = 0
 
-  let tramTrackerIDs = {}
-  let stopDirections = {}
-  let stopNames = {}
-  let stopNumbers = {}
+  let tramTrackerIDs = {
+    "3813": "2013",
+    "3913": "2013"
+  }
+
+  let stopDirections = {
+    "3813": [{
+      service: "35",
+      gtfsDirection: "1"
+    }],
+    "3913": [{
+      service: "35",
+      gtfsDirection: "0"
+    }]
+  }
+
+  let stopNames = {
+    "3813": "Spring Street",
+    "3913": "Spring Street"
+  }
+  let stopNumbers = {
+    "3813": "0",
+    "3913": "0"
+  }
 
   await async.forEachSeries(tramServices, async service => {
     if (service === '35') return
@@ -42,24 +62,18 @@ database.connect({}, async () => {
       stops.forEach(stop => {
         let tramTrackerID = $('.stopid', stop).text()
         let stopNumber = $('.stopno', stop).text().toUpperCase()
-        let tramTrackerName = utils.expandStopName(utils.adjustStopName($('.location', stop).text().split(/ ?[&\-,] ?/)[0].trim()))
+        let tramTrackerName = utils.expandStopName(utils.adjustStopName($('.location', stop).text().trim()))
         let url = $('a', stop).attr('href')
 
-        if (!url) return
-
-        let stopID = url.match(/stopId=(\d+)/)[1]
+        let stopID
+        if (url) stopID = url.match(/stopId=(\d+)/)[1]
         if (!tramTrackerID) return
         if (ptvOverrides[tramTrackerID]) stopID = ptvOverrides[tramTrackerID]
         if (!stopID) return
 
-        if (!stopNames[stopID]) {
-          stopNames[stopID] = []
-          stopNumbers[stopID] = []
-        }
-
         tramTrackerIDs[tramTrackerID] = stopID
-        if (!stopNames[stopID].includes(tramTrackerName)) stopNames[stopID].push(tramTrackerName)
-        if (!stopNumbers[stopID].includes(stopNumber)) stopNumbers[stopID].push(stopNumber.toUpperCase())
+        stopNames[tramTrackerID] = tramTrackerName
+        stopNumbers[tramTrackerID] = stopNumber
 
         if (!stopDirections[tramTrackerID]) stopDirections[tramTrackerID] = []
         stopDirections[tramTrackerID].push({
@@ -73,8 +87,6 @@ database.connect({}, async () => {
   })
 
   await async.forEachSeries(Object.keys(tramTrackerIDs), async tramTrackerID => {
-    count++
-
     let stopID = tramTrackerIDs[tramTrackerID]
     let ptvStop = ptvStops.find(stop => stop.stopID === stopID)
     let dbStop
@@ -82,18 +94,14 @@ database.connect({}, async () => {
     if (ptvStop) {
       dbStop = await stops.findDocument({
         'bays.originalName': new RegExp('^' + ptvStop.stopName),
-        'bays.stopNumber': ptvStop.stopNumber
+        'bays.stopNumber': ptvStop.stopNumber.toUpperCase()
       })
     }
 
     if (!dbStop) {
       dbStop = await stops.findDocument({
-        $or: stopNames[stopID].map(stopName => ({
-          'bays.originalName': new RegExp(utils.adjustStopName(stopName), 'i'),
-          'bays.stopNumber': {
-            $in: stopNumbers[stopID]
-          }
-        }))
+        'bays.originalName': new RegExp(utils.adjustStopName(stopNames[tramTrackerID].split(/ ?[&\-,] ?/)[0].trim()), 'i'),
+        'bays.stopNumber': stopNumbers[tramTrackerID]
       })
     }
 
@@ -124,6 +132,7 @@ database.connect({}, async () => {
         dbStop.bays = dbStop.bays.map(bay => {
           if (bay.mode === 'tram' && bay.stopGTFSID === stopGTFSID) {
             bay.tramTrackerID = tramTrackerID
+            bay.tramTrackerName = stopNames[tramTrackerID]
           }
 
           return bay
@@ -131,16 +140,16 @@ database.connect({}, async () => {
 
         await stops.updateDocument({ _id: dbStop._id }, {
           $set: {
-            bays: dbStop.bays,
-            tramTrackerNames: stopNames[stopID]
+            bays: dbStop.bays
           }
         })
 
-        return
-      } else console.log(matches)
+        return count++
+      }
     }
 
-    console.log('Failed to map stop', stopID, tramTrackerID, stopNames[stopID], dbStop, ptvStop)
+    if (dbStop) delete dbStop.textQuery
+    console.log('Failed to map stop', stopID, tramTrackerID, stopNames[tramTrackerID], dbStop, ptvStop)
   })
 
   await updateStats('tramtracker-ids', count)

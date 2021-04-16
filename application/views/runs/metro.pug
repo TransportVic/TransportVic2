@@ -14,6 +14,7 @@ block title
   span #{tripName}
   
 block style
+  link(rel='stylesheet' href='/static/css/site-colours.css')
   link(rel='stylesheet' href='/static/css/timings/base-style.css')
   link(rel='stylesheet' href='/static/css/combined-colours.css')
   link(rel='stylesheet' href='/static/css/runs/base-style.css')
@@ -23,12 +24,15 @@ block content
     div.infoRow
       span=`Run ${trip.runID}`
       if trip.vehicle
-        - let vehicle = trip.vehicle.replace(/ Car/, '')
-        if vehicle.match(/\d [A-Za-z]+/)
-          - let parts = vehicle.match(/(\d) ([A-Za-z]+)/).slice(1, 3)
+        - let { size, type } = trip.vehicle
           div.vehicle
-            span=parts[0] + 'x'
-            img(src=`/static/images/icons/${parts[1].toLowerCase()}.svg`)
+            span #{size}x 
+            img(src=`/static/images/icons/${type.toLowerCase()}.svg`)
+    if trip.vehicle && trip.vehicle.consist.length && false
+      div.liveConsist
+        span.header Live Tracking
+        span.consist #{trip.vehicle.consist.join('-')}
+
   if trip.isRailReplacementBus
     div.departure.noTiming
       -

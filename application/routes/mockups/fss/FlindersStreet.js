@@ -1,16 +1,15 @@
 const express = require('express')
 const router = new express.Router()
 const utils = require('../../../../utils')
-const TrainUtils = require('../TrainUtils')
-const PIDUtils = require('../PIDUtils')
+const PIDBackend = require('../PIDBackend')
 
 let validPIDTypes = ['escalator', 'platform']
 let cityLoopConfigStops = ['Flinders Street', 'Parliament', 'Melbourne Central', 'Flagstaff', 'Southern Cross', 'North Melbourne', 'Jolimont', 'Richmond']
 
-async function getData(req, res, addStopTimings=false) {
-  let station = await PIDUtils.getStation(res.db, req.params.station)
+async function getData(req, res, options={}) {
+  let station = await PIDBackend.getStation(req.params.station || 'flinders-street', res.db)
 
-  return await TrainUtils.getPIDSDepartures(res.db, station, req.params.platform, null, null, req.params.maxDepartures || 5, addStopTimings)
+  return await PIDBackend.getPIDData(station, req.params.platform, options, res.db)
 }
 
 router.get('/:type/:platform/:station*?', async (req, res, next) => {
@@ -18,12 +17,14 @@ router.get('/:type/:platform/:station*?', async (req, res, next) => {
   if (!validPIDTypes.includes(pidType)) return next()
   getData(req, res)
 
-  res.render('mockups/fss/' + pidType, { platform: req.params.platform, now: utils.now() })
+  res.render('mockups/fss/' + pidType, {
+    platform: req.params.platform,
+    now: utils.now()
+  })
 })
 
 router.post('/:type/:platform/:station*?', async (req, res) => {
-  let departures = await getData(req, res)
-  res.json(departures)
+  res.json(await getData(req, res))
 })
 
 router.get('/trains-from-fss', async (req, res) => {
@@ -31,20 +32,34 @@ router.get('/trains-from-fss', async (req, res) => {
 })
 
 router.post('/trains-from-fss', async (req, res) => {
-  let departures = await getData({ params: { platform: '*', maxDepartures: Infinity } }, res, true)
-  let groupedDepartures = {}
-
-  departures.departures.forEach(departure => {
-    let cityLoopConfig = departure.stopTimings.map(stop => stop.stopName).filter(stop => cityLoopConfigStops.includes(stop))
-    if (cityLoopConfig.slice(-1)[0] === 'Flinders Street') cityLoopConfig.pop() // Account for CCL
-
-    let key = cityLoopConfig.join(',')
-    if (!groupedDepartures[key]) groupedDepartures[key] = []
-    groupedDepartures[key].push(departure)
+  let departures = await getData({ params: {
+    platform: '*'
+  } }, res, {
+    maxDepartures: Infinity,
+    includeStopTimings: true
   })
 
-  departures.departures = Object.values(groupedDepartures).reduce((acc, group) => {
-    return acc.concat(group.slice(0, 3))
+  let groupedDepartures = {}
+  let now = new Date()
+
+  departures.dep.filter(departure => {
+    let departureTime = departure.est || departure.sch
+    return departure.p && (departureTime - now) > 1000 * 60
+  }).forEach(departure => {
+    let cityLoopConfig = departure.times.filter(stop => cityLoopConfigStops.includes(stop.name))
+    if (cityLoopConfig[cityLoopConfig.length - 1] === 'Flinders Street') cityLoopConfig.pop() // Account for CCL
+
+    let key = cityLoopConfig.join(',')
+
+    if (!groupedDepartures[key]) groupedDepartures[key] = []
+    groupedDepartures[key].push(departure)
+
+    departure.stops = []
+    departure.times = departure.times.slice(0, 6)
+  })
+
+  departures.dep = Object.values(groupedDepartures).reduce((acc, group) => {
+    return acc.concat(group.slice(0, 2))
   }, [])
 
   res.json(departures)

@@ -1,17 +1,11 @@
 const departureUtils = require('../utils/get-bus-timetables')
 const async = require('async')
-const moment = require('moment')
-const TimedCache = require('../../TimedCache')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const destinationOverrides = require('../../additional-data/coach-stops')
-const EventEmitter = require('events')
 const busBays = require('../../additional-data/bus-bays')
 const southernCrossBays = require('../../additional-data/southern-cross-bays')
-
-const departuresCache = new TimedCache(1000 * 60 * 1)
-
-let ptvAPILocks = {}
+const { getDayOfWeek } = require('../../public-holidays')
 
 let vlineTrainRoutes = [
   '1-Ech',
@@ -52,7 +46,8 @@ async function getDeparturesFromPTV(stop, db) {
   let runIDsSeen = []
 
   await async.forEach(gtfsIDs, async stopGTFSID => {
-    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/3/stop/${stopGTFSID}?gtfs=true&max_results=15&expand=run&expand=route`)
+    let time = now.clone().add(-6, 'minutes').startOf('minute').toISOString()
+    const {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/3/stop/${stopGTFSID}?gtfs=true&max_results=15&expand=run&expand=route&date_utc=${time}`)
     let coachDepartures = departures.filter(departure => departure.flags.includes('VCH'))
 
     let tripIDsSeen = []
@@ -80,7 +75,7 @@ async function getDeparturesFromPTV(stop, db) {
 
       if (!vlineTrainRoutes.includes(trainRouteGTFSID)) isRailReplacementBus = false
 
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'regional coach', null, coachRouteGTFSID, tripIDsSeen)
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, departureTime, destination, 'regional coach', coachRouteGTFSID, tripIDsSeen)
 
       if (!trip && (isRailReplacementBus !== false)) {
         let stopGTFSIDs = {
@@ -182,131 +177,119 @@ async function getScheduledDepartures(stop, db, useLive) {
 }
 
 async function getDepartures(stop, db) {
-  let cacheKey = stop.stopName + 'C'
-  if (departuresCache.get(cacheKey))
-    return departuresCache.get(cacheKey)
+  try {
+    return await utils.getData('coach-departures', stop.stopName, async () => {
+      let departures
+      let scheduledDepartures = (await getScheduledDepartures(stop, db, false)).map(departure => {
+        departure.isRailReplacementBus = null
+        return departure
+      })
 
-  if (ptvAPILocks[cacheKey]) {
-    return await new Promise(resolve => {
-      ptvAPILocks[cacheKey].on('done', data => {
-        resolve(data)
+      try {
+        departures = await getDeparturesFromPTV(stop, db)
+        let ptvDepartures = departures.map(d => d.trip.tripID)
+        let extras = scheduledDepartures.filter(d => !ptvDepartures.includes(d.trip.tripID))
+        departures = departures.concat(extras)
+      } catch (e) {
+        global.loggers.general.err('Failed to get coach trips', e)
+        departures = scheduledDepartures
+      }
+
+      departures = departures.sort((a, b) => a.destination.length - b.destination.length)
+        .sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+
+      let timetables = db.getCollection('timetables')
+      let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
+
+      departures = await async.map(departures, async departure => {
+        let destination = destinationOverrides(departure.trip.stopTimings.slice(-1)[0])
+        if (departure.trip.destination.includes(' Railway Station')) {
+          destination = departure.trip.destination.split('/')[0]
+        }
+
+        let shortName = utils.getStopName(destination)
+        if (!utils.isStreet(shortName)) destination = shortName
+
+        departure.destination = destination
+
+        let departureBayID = departure.trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID)).stopGTFSID
+        let bay
+        if (departureBayID === 20836) { // southern cross
+          departure.bay = southernCrossBays[departure.trip.routeGTFSID]
+        } else {
+          departure.bay = busBays[departureBayID]
+        }
+
+        if (departure.trip.trainConnection) {
+          departure.isRailReplacementBus = true
+          departure.shortRouteName = departure.trip.trainConnection
+        }
+
+        if (departure.isRailReplacementBus === null) {
+          let {origin, destination, departureTime} = departure.trip
+
+          let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
+          let minutesDiff = currentStop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
+
+          let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
+          if (utils.getMinutesPastMidnight(tripStart) < 180) tripStart.add(-1, 'day')
+          let operationDay = await getDayOfWeek(tripStart)
+
+          if (origin === 'Southern Cross Coach Terminal/Spencer Street') {
+            origin = 'Southern Cross Railway Station'
+          }
+          if (destination === 'Southern Cross Coach Terminal/Spencer Street') {
+            destination = 'Southern Cross Railway Station'
+          }
+
+          let nspDeparture = await timetables.findDocument({
+            mode: 'regional train',
+            operationDays: operationDay,
+            origin,
+            'stopTimings.stopName': destination,
+            departureTime
+          })
+
+          departure.isRailReplacementBus = !!nspDeparture
+          if (nspDeparture) {
+            departure.shortRouteName = nspDeparture.routeName
+          }
+        }
+        return departure
+      })
+
+      let trainReplacements = []
+      departures.forEach(departure => {
+        if (departure.isRailReplacementBus) {
+          trainReplacements.push({
+            routeGTFSID: departure.trip.routeGTFSID,
+            departureTime: departure.trip.stopTimings[0].departureTime,
+            direction: departure.trip.gtfsDirection,
+            shortRouteName: departure.shortRouteName
+          })
+        }
+      })
+
+      return departures.map(departure => {
+        if (!departure.isRailReplacementBus) {
+          let combinedTR = trainReplacements.find(t => {
+            return t.routeGTFSID === departure.trip.routeGTFSID
+              && t.departureTime === departure.trip.stopTimings[0].departureTime
+              && t.direction === departure.trip.gtfsDirection
+          })
+
+          if (combinedTR) {
+            departure.isRailReplacementBus = true
+            departure.shortRouteName = combinedTR.shortRouteName
+          }
+        }
+
+        return departure
       })
     })
-  }
-
-  ptvAPILocks[cacheKey] = new EventEmitter()
-
-  function returnDepartures(departures) {
-    ptvAPILocks[cacheKey].emit('done', departures)
-    delete ptvAPILocks[cacheKey]
-
-    return departures
-  }
-
-  try {
-    let departures
-    let scheduledDepartures = (await getScheduledDepartures(stop, db, false)).map(departure => {
-      departure.isRailReplacementBus = null
-      return departure
-    })
-
-    try {
-      departures = await getDeparturesFromPTV(stop, db)
-      let ptvDepartures = departures.map(d => d.trip.tripID)
-      let extras = scheduledDepartures.filter(d => !ptvDepartures.includes(d.trip.tripID))
-      departures = departures.concat(extras)
-    } catch (e) {
-      global.loggers.general.err('Failed to get coach trips', e)
-      departures = scheduledDepartures
-    }
-
-    departures = departures.sort((a, b) => a.destination.length - b.destination.length)
-      .sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
-
-    let timetables = db.getCollection('timetables')
-    let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
-
-    departures = await async.map(departures, async departure => {
-      let {destination} = departure.trip
-      let destinationSuburb = departure.trip.stopTimings.slice(-1)[0].suburb
-      destination = destination.replace('Shopping Centre', 'SC')
-      destination = destinationOverrides[destination + ` (${destinationSuburb})`] || destinationOverrides[destination] || destination
-
-      let shortName = utils.getStopName(destination)
-      if (!utils.isStreet(shortName)) destination = shortName
-
-      departure.destination = destination
-
-      let departureBayID = departure.trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID)).stopGTFSID
-      let bay
-      if (departureBayID === 20836) { // southern cross
-        departure.bay = southernCrossBays[departure.trip.routeGTFSID]
-      } else {
-        departure.bay = busBays[departureBayID]
-      }
-
-      if (departure.trip.trainConnection) {
-        departure.isRailReplacementBus = true
-        departure.shortRouteName = departure.trip.trainConnection
-      }
-
-      if (departure.isRailReplacementBus === null) {
-        let {origin, destination, departureTime} = departure.trip
-
-        if (origin === 'Southern Cross Coach Terminal/Spencer Street') {
-          origin = 'Southern Cross Railway Station'
-        }
-        if (destination === 'Southern Cross Coach Terminal/Spencer Street') {
-          destination = 'Southern Cross Railway Station'
-        }
-
-        let nspDeparture = await timetables.findDocument({
-          mode: 'regional train',
-          origin,
-          'stopTimings.stopName': destination,
-          departureTime
-        })
-        departure.isRailReplacementBus = !!nspDeparture
-        if (nspDeparture) {
-          departure.shortRouteName = nspDeparture.routeName
-        }
-      }
-      return departure
-    })
-
-    let trainReplacements = []
-    departures.forEach(departure => {
-      if (departure.isRailReplacementBus) {
-        trainReplacements.push({
-          routeGTFSID: departure.trip.routeGTFSID,
-          departureTime: departure.trip.stopTimings[0].departureTime,
-          direction: departure.trip.gtfsDirection,
-          shortRouteName: departure.shortRouteName
-        })
-      }
-    })
-
-    departures = departures.map(departure => {
-      if (!departure.isRailReplacementBus) {
-        let combinedTR = trainReplacements.find(t => {
-          return t.routeGTFSID === departure.trip.routeGTFSID
-            && t.departureTime === departure.trip.stopTimings[0].departureTime
-            && t.direction === departure.trip.gtfsDirection
-        })
-
-        if (combinedTR) {
-          departure.isRailReplacementBus = true
-          departure.shortRouteName = combinedTR.shortRouteName
-        }
-      }
-
-      return departure
-    })
-
-    departuresCache.put(cacheKey, departures)
-    return returnDepartures(departures)
   } catch (e) {
-    return returnDepartures(null)
+    global.loggers.general.err(e)
+    return null
   }
 }
 

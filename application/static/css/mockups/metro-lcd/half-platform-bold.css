@@ -43,7 +43,7 @@ div.fullMessage div.announcements p {
 }
 
 div.fullMessage div.fixedMessage p {
-  font-size: calc(var(--height) * 0.3);
+  font-size: calc(var(--height) * 0.27);
   line-height: calc(var(--height) * 0.33);
 }
 
@@ -146,6 +146,7 @@ div.scheduled p:nth-child(1), div.actual > p:nth-child(1) {
 }
 
 div.scheduled p:nth-child(2) {
+  font-family: "NetworkSansBold";
   font-size: calc(var(--height) * 0.258);
   margin-left: calc(var(--width) * 0.004);
   margin-top: calc(var(--height) * -0.045);
@@ -160,6 +161,7 @@ div.actual div:nth-child(2) {
 }
 
 div.actual div:nth-child(2) > span:nth-child(1) {
+  font-family: "NetworkSansBold";
   font-size: calc(var(--height) * 0.258);
   margin-left: calc(var(--width) * 0.004);
 }
@@ -240,10 +242,13 @@ div.bottomRow > span:nth-child(2) {
   letter-spacing: calc(var(--width) * -0.001);
 }
 
+div.bottomRow > span:nth-child(2).smaller {
+  font-size: calc(var(--width) * 0.034);
+}
+
 div.bottomRow > span:nth-child(3) {
   margin-left: calc(var(--width) * 0.015);
   width: calc(var(--width) * 0.22);
-  font-family: "NetworkSansRegular";
   letter-spacing: calc(var(--width) * -0.001);
 
   white-space: nowrap;
@@ -275,5 +280,4 @@ div.clock {
   align-items: center;
   justify-content: center;
   font-size: calc(var(--height) * 0.17);
-  font-family: "NetworkSansRegular";
 }

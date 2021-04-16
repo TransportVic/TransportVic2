@@ -4,6 +4,7 @@ const getDepartures = require('../../../modules/heritage-train/get-departures')
 const moment = require('moment')
 const utils = require('../../../utils')
 const async = require('async')
+const timingUtils = require('./timing-utils')
 
 async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
@@ -11,8 +12,19 @@ async function loadDepartures(req, res) {
     codedName: req.params.stopName + '-railway-station'
   })
 
-  if (!station || !station.bays.find(bay => bay.mode === 'heritage train')) {
+  let heritageStop = station.bays.find(bay => bay.mode === 'heritage train')
+
+  if (!station || !heritageStop) {
     return res.status(404).render('errors/no-stop')
+  }
+
+  let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, station)
+  let now = +new Date()
+  let msDay = 1440 * 60 * 1000
+  let heritageStopActive = null
+
+  if (heritageStop.stopGTFSID > 13100000) {
+    heritageStopActive = stopHeritageUseDates.some(date => Math.abs(now - date) <= msDay)
   }
 
   let departures = await getDepartures(station, res.db)
@@ -41,7 +53,7 @@ async function loadDepartures(req, res) {
     return departure
   })
 
-  return { departures, station }
+  return { departures, station, stopHeritageUseDates, heritageStopActive }
 }
 
 router.get('/:stopName', async (req, res) => {

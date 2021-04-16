@@ -1,21 +1,3 @@
-function formatTime(time) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let mainTime = ''
-
-  mainTime += (hours % 12) || 12
-  mainTime += ':'
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  if (time.getHours() >= 12)
-    mainTime += 'pm'
-  else
-    mainTime += 'am'
-
-  return mainTime
-}
-
 function createStationRow(name, stoppingType, clazz) {
   return `<div class="stationRow ${stoppingType === 'filler' ? 'filler' : ''}">`
   + `<img src="/static/images/mockups/station-${stoppingType}.svg">`
@@ -86,21 +68,8 @@ function setFullMessageActive(active) {
   }
 }
 
-function blankNextDeparture(departureDIV) {
-  $('.sideBar', departureDIV).className = 'sideBar no-line'
-  $('.sideBar~p', departureDIV).textContent = '--'
-
-  $('.centre p', departureDIV).textContent = '--'
-
-  $('.right .platform', departureDIV).className = 'platform no-line'
-  $('.right .platform p', departureDIV).innerHTML = '&nbsp;'
-
-  $('.right .timeToDeparture p', departureDIV).innerHTML = '&nbsp;'
-}
-
-
 function createStoppingPatternID(stoppingPattern) {
-  return stoppingPattern.map(e => `${e.stopName}${e.isExpress}`).join(',')
+  return stoppingPattern.map(e => `${e[0]}${e[1]}`).join(',')
 }
 
 let currentPattern = null
@@ -134,12 +103,12 @@ function addStoppingPattern(stops, className) {
     let expressPart = []
 
     stopColumn.forEach((stop, y) => {
-      let {stopName} = stop
-      let type = stop.isExpress ? 'express' : 'stops-at'
+      let [stopName, express] = stop
+      let type = express ? 'express' : 'stops-at'
       if (lastRow && y === stopColumn.length - 1) type = 'terminates'
 
       let stopType = x == 0 && y == 0 ? className : ''
-      if (stop.isExpress) {
+      if (express) {
         stopType = 'express'
         expressPart.push(y)
       } else {
@@ -195,15 +164,6 @@ function addStoppingPattern(stops, className) {
   return false
 }
 
-function adjustDepartures(departure) {
-  if (departure.additionalInfo.notTakingPassengers) {
-    departure.destination = 'Arrival'
-    departure.stoppingType = 'Not Taking Passengers'
-    departure.isArrival = true
-  }
-  return departure
-}
-
 let stopScrolling = false
 let connectionsScrollTimeout
 
@@ -214,9 +174,8 @@ function updateBody(firstTime) {
     if (err) return setListenAnnouncements()
 
     try {
-      departures = body.departures
+      departures = body.dep
       if (!departures) return setListenAnnouncements()
-      departures = departures.map(adjustDepartures)
 
       let firstDeparture = departures[0]
       if (!firstDeparture) {
@@ -224,37 +183,38 @@ function updateBody(firstTime) {
         return setNoDepartures()
       } else setMessageActive(false)
 
-      let firstDepartureClass = firstDeparture.codedLineName
-      if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
+      let firstDepartureClass = encode(firstDeparture.route)
+      if (firstDeparture.v) firstDepartureClass = 'vline'
 
-      let {destination} = firstDeparture
-      if (destination === 'North Melbourne') destination = 'Nth Melbourne'
+      let destination = firstDeparture.dest
       if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
       if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
-      let firstStoppingType = firstDeparture.stoppingType
-      if (firstDeparture.additionalInfo.via) {
-        firstStoppingType += ' ' + firstDeparture.additionalInfo.via
+      let firstStoppingType = firstDeparture.type
+      if (firstDeparture.via) {
+        firstStoppingType += ' via ' + firstDeparture.via
       }
 
       if (firstDeparture.connections) {
         firstStoppingType += firstDeparture.connections.map(connection => {
-          return `, Change at ${connection.changeAt.slice(0, -16)} for ${connection.for.slice(0, -16)}`
+          return `, Change at ${connection.changeAt.replace(' Railway Station', '')} for ${connection.for.replace(' Railway Station', '')}`
         }).join('')
       }
 
-      $('.firstDepartureInfo .platform').className = 'platform ' + firstDepartureClass
-      $('.firstDepartureInfo .platform').textContent = firstDeparture.platform
-      $('.firstDepartureInfo .firstDepartureTime').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
-      $('.firstDepartureInfo .firstDestination').textContent = destination
-      $('.firstDepartureInfo .firstStoppingType').textContent = firstStoppingType
-      $('.firstDepartureInfo .minutesToDeparture span').textContent = firstDeparture.prettyTimeToDeparture
+      let actualDepartureTime = new Date(firstDeparture.est || firstDeparture.sch)
 
-      if (firstDeparture.isArrival) {
+      $('.firstDepartureInfo .platform').className = 'platform ' + firstDepartureClass
+      $('.firstDepartureInfo .platform').textContent = firstDeparture.plt
+      $('.firstDepartureInfo .firstDepartureTime').textContent = formatTimeA(new Date(firstDeparture.sch))
+      $('.firstDepartureInfo .firstDestination').textContent = destination
+      $('.firstDepartureInfo .firstStoppingType').textContent = firstStoppingType.replace('Limited', 'Ltd')
+      $('.firstDepartureInfo .minutesToDeparture span').textContent = minutesToDeparture(actualDepartureTime, true)
+
+      if (destination === 'Arrival' || !firstDeparture.p) {
         setArrival()
       } else {
         $('.stoppingPattern').className = 'stoppingPattern ' + firstDepartureClass
-        let same = addStoppingPattern(firstDeparture.additionalInfo.screenStops, firstDepartureClass)
+        let same = addStoppingPattern(firstDeparture.stops, firstDepartureClass)
 
         if (!same) {
           if (!firstTime)
@@ -267,7 +227,6 @@ function updateBody(firstTime) {
           }, 30)
         }
       }
-
 
       $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
 
@@ -282,34 +241,31 @@ function updateBody(firstTime) {
           $('.platform', departureRow).className = 'platform no-line'
           $('.minutesToDeparture span', departureRow).textContent = '-- min'
         } else {
-          let departureClass = departure.codedLineName
-          if (departure.type === 'vline') {
+          let actualDepartureTime = new Date(departure.est || departure.sch)
+
+          let departureClass = encode(departure.route)
+          if (departure.v) {
             departureClass = 'vline'
             departureRow.className = 'nextDeparture vline'
           } else {
             departureRow.className = 'nextDeparture'
           }
 
-          let {destination} = departure
+          let destination = departure.dest
 
-          if (destination === 'North Melbourne') destination = 'Nth Melbourne'
           if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
           if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
-          let stoppingType = departure.stoppingType
-          if (departure.additionalInfo.via) {
-            stoppingType += ' ' + departure.additionalInfo.via
-          }
-
           $('.lineColour', departureRow).className = 'lineColour ' + departureClass
-          $('.scheduledDepartureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
+          $('.scheduledDepartureTime', departureRow).textContent = formatTimeA(new Date(departure.sch))
           $('.destination', departureRow).textContent = destination
-          $('.platform span', departureRow).textContent = departure.platform
+          $('.platform span', departureRow).textContent = departure.plt
           $('.platform', departureRow).className = 'platform ' + departureClass
-          $('.minutesToDeparture span', departureRow).textContent = departure.prettyTimeToDeparture
+          $('.minutesToDeparture span', departureRow).textContent = minutesToDeparture(actualDepartureTime, true)
         }
       })
     } catch (e) {
+      console.log(e)
       setListenAnnouncements()
     }
   })

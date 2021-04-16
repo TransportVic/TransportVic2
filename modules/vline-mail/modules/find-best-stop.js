@@ -97,7 +97,16 @@ let knownStops = [
   "Wyndham Vale",
   "Tarneit",
   "Cobblebank",
-  "Caroline Springs"
+  "Caroline Springs",
+  "Avenel",
+  "Euroa",
+  "Violet Town",
+  "Benalla",
+  "Wangaratta",
+  "Springhurst",
+  "Chiltern",
+  "Wodonga",
+  "Albury"
 ]
 
 module.exports = stop => {

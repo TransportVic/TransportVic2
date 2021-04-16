@@ -78,7 +78,7 @@ div.burnLine {
   background-color: #0074d9;
   width: 0;
   height: calc(var(--height) * 0.17);
-  z-index: 0;
+  z-index: -1;
   transition: burnLine 30s linear;
   transition-property: width;
 }
@@ -97,6 +97,10 @@ div.departureInfo {
   display: flex;
   align-items: center;
   z-index: 1;
+}
+
+div.departureInfo.hidden .text {
+  opacity: 0;
 }
 
 div.departureInfo span.firstDestination {
@@ -136,7 +140,7 @@ div.actualDiv {
 div.departureInfo > div.actualDiv > div > span:nth-child(1) {
   font-size: calc(var(--height) * 0.1);
   line-height: calc(var(--height) * 0.09);
-  font-family: "NetworkSansBold"
+  font-family: "NetworkSansBold";
 }
 
 div.departureInfo > div.actualDiv > div > span:nth-child(2) {
@@ -193,14 +197,26 @@ div.stops div.stopsColumn div span.squish {
   transform-origin: left;
 }
 
+div.stops div.stopsColumn div span.super-squish {
+  letter-spacing: calc(var(--width) * -0.0007);
+  transform: scaleX(0.85);
+  transform-origin: left;
+}
+
 div.stopsColumn.expressColumn {
   min-width: unset !important;
-  margin-right: calc(var(--width) * 0.02) !important;
+  margin-right: calc(var(--width) * 0.04) !important;
 }
 
 div.stopsColumn.expressColumn:last-child {
   margin-right: 50% !important;
 }
+
+
+div.stopsColumn.columns-7 div span {
+  font-size: calc(var(--height) * 0.071) !important;
+}
+
 
 div.stopsColumn.columns-8 {
   min-width: unset !important;
@@ -211,7 +227,7 @@ div.stopsColumn.columns-8 div {
 }
 
 div.stopsColumn.columns-8 div span {
-  font-size: calc(var(--height) * 0.06) !important;
+  font-size: calc(var(--height) * 0.056) !important;
 }
 
 
@@ -221,6 +237,14 @@ div.stopsColumn.columns-9 div {
 
 div.stopsColumn.columns-9 div span {
   font-size: calc(var(--height) * 0.056) !important;
+}
+
+div.stopsColumn.columns-10 div {
+  margin-top: calc(var(--height) * 0.007) !important;
+}
+
+div.stopsColumn.columns-10 div span {
+  font-size: calc(var(--height) * 0.05) !important;
 }
 
 
@@ -235,24 +259,22 @@ div.followingDeparture:nth-child(1) {
 }
 
 div.followingDeparture {
-  height: calc(var(--height) * 0.084)
+  height: calc(var(--height) * 0.084);
+  font-family: "NetworkSansBold";
 }
 
 div.followingDeparture span.scheduled {
   margin-left: calc(var(--width) * 0.005);
   width: calc(var(--width) * 0.1);
-  font-family: "NetworkSansBold";
 }
 
 div.followingDeparture span.destination {
-  font-family: "NetworkSansBold";
   width: calc(var(--width) * 0.3);
 }
 
 div.followingDeparture span.stoppingType {
   margin-left: calc(var(--width) * 0.005);
   width: calc(var(--width) * 0.46);
-  font-family: "NetworkSansRegular";
 }
 
 div.followingDeparture span.actual {
@@ -264,7 +286,6 @@ div.followingDeparture span.actual {
 
 div.followingDeparture span.min {
   text-align: right;
-  font-family: "NetworkSansRegular";
 }
 
 div.followingDeparture span {

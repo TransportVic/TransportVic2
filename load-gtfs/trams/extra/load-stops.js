@@ -1,16 +1,26 @@
-require('fs').writeFileSync(__dirname + '/tram-stops.json', JSON.stringify(require('./stops').stops.filter(x=>x.primaryChronosMode === '1').map(x=>{
-  let m = x.title.match(/^(D?\d+[a-zA-Z]?)-/)
-  let stopName = x.title.split(' #')[0]
-  let stopNumber = x.title.split(' #')[1]
+const utils = require('../../../utils')
+const ptvAPI = require('../../../ptv-api')
+const fs = require('fs')
 
-  if (m) {
-    stopNumber = m[1]
-    stopName = stopName.replace(m[0], '')
-  }
+ptvAPI.getPTVKey().then(async key => {
+  let data = JSON.parse(await utils.request('https://www.ptv.vic.gov.au/lithe/stored-stops-all?__tok=' + key))
 
-  stopName = stopNumber + '-' + stopName
+  fs.writeFileSync(__dirname + '/tram-stops.json', JSON.stringify(data.stops.filter(x => x.primaryChronosMode === '1').map(x => {
+    let m = x.title.match(/^(D?\d+[a-zA-Z]?)-/)
+    let stopName = x.title.split(' #')[0]
+    let stopNumber = x.title.split(' #')[1]
 
-  return {
-    stopName, stopNumber, stopID: x.id
-  }
-})))
+    if (m) {
+      stopNumber = m[1]
+      stopName = stopName.replace(m[0], '')
+    }
+
+    stopName = stopNumber + '-' + stopName
+
+    return {
+      stopName, stopNumber, stopID: x.id
+    }
+  })))
+
+  process.exit()
+})

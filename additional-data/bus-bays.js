@@ -446,7 +446,31 @@ module.exports = {
   47166: "Bay 9",
   47167: "Bay 10",
 
-  //Mitchell Street Bendigo
+  // Mitchell Street Bendigo
   35756: "Bay A",
-  35822: "Bay B"
+  35822: "Bay B",
+
+  // Bairnsdale
+  46443: "Bay 2",
+  46442: "Bay 3",
+  16309: "Bay 4",
+  37915: "Bay 5",
+
+  // Donnybrook
+  48851: "Bay A",
+  48850: "Bay B",
+
+  // Melton
+  21183: "Bay 1",
+  21184: "Bay 2",
+  21185: "Bay 3",
+  21131: "Bay 4",
+  21132: "Bay 5",
+  27577: "Bay 6",
+
+  // Bacchus Marsh
+  48832: "Bay 1",
+  48833: "Bay 2",
+  48834: "Bay 3",
+  20912: "Bay 4",
 }

@@ -1,22 +1,14 @@
-const TimedCache = require('../../../../TimedCache')
 const async = require('async')
 const urls = require('../../../../urls.json')
 const utils = require('../../../../utils')
-const moment = require('moment')
 const cheerio = require('cheerio')
 const termini = require('../../../../additional-data/termini-to-lines')
 const getMetroDepartures = require('../../../../modules/metro-trains/get-departures')
 const getVLineStops = require('./SSS-Lines')
 const getMetroStops = require('../../../../additional-data/route-stops')
 const TrainUtils = require('../TrainUtils')
-const emptyCars = require('../empty-cars')
+const emptyCars = []
 const { getDayOfWeek } = require('../../../../public-holidays')
-
-const departuresCache = new TimedCache(1000 * 60 * 1.5)
-
-const EventEmitter = require('events')
-
-let apiLock = null
 
 let northernGroup = [
   'Craigieburn',
@@ -71,9 +63,9 @@ async function getVNETServices(vlinePlatform, isDepartures, db) {
 
   let vnetURL
   if (isDepartures)
-    vnetURL = urls.vlinePlatformDepartures.slice(0, -3).format(vnetStationName, 'D') + '1440'
+    vnetURL = urls.vlinePlatformDeparturesOld.slice(0, -3).format(vnetStationName, 'D') + '1440'
   else
-    vnetURL = urls.vlinePlatformArrivals.slice(0, -3).format(vnetStationName, 'U') + '1440'
+    vnetURL = urls.vlinePlatformArrivalsOld.slice(0, -3).format(vnetStationName, 'U') + '1440'
 
   const body = (await utils.request(vnetURL)).replace(/a:/g, '')
   const $ = cheerio.load(body)
@@ -226,14 +218,14 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
         trip.runID = departure.runID
         trip.operationDays = operationDay
 
-        delete trip._id
-        await liveTimetables.replaceDocument({
-          operationDays: operationDay,
-          runID: departure.runID,
-          mode: 'regional train'
-        }, trip, {
-          upsert: true
-        })
+        // delete trip._id
+        // await liveTimetables.replaceDocument({
+        //   operationDays: operationDay,
+        //   runID: departure.runID,
+        //   mode: 'regional train'
+        // }, trip, {
+        //   upsert: true
+        // })
       }
     }
 
@@ -386,15 +378,6 @@ async function appendMetroData(departure, timetables) {
   let stopTimings = departure.trip.stopTimings.slice(0).map(e => e.stopName.slice(0, -16))
   let routeName = departure.trip.routeName
   let isUp = departure.trip.direction === 'Up'
-
-  let suspensions = departure.suspensions
-  if (suspensions.length) {
-    let first = suspensions[0]
-    let start = first.startStation.slice(0, -16)
-    let index = stopTimings.indexOf(start)
-
-    stopTimings = stopTimings.slice(0, index)
-  }
 
   let sssIndex = stopTimings.lastIndexOf('Southern Cross')
   let trimmedTimings = stopTimings.slice(sssIndex)
@@ -551,62 +534,42 @@ async function appendArrivalData(arrival, timetables) {
 }
 
 module.exports = async (platforms, db) => {
-  if (departuresCache.get('SSS')) {
-    let data = departuresCache.get('SSS')
-    return { departures: filterPlatforms(data.departures, platforms), arrivals: filterPlatforms(data.arrivals, platforms) }
-  }
-
-  if (apiLock) {
-    return await new Promise(resolve => {
-      apiLock.on('done', data => {
-        resolve({ departures: filterPlatforms(data.departures, platforms), arrivals: filterPlatforms(data.arrivals, platforms) })
-      })
+  let rawData = await utils.getData('sss-trains', 'sss', async () => {
+    let sss = await db.getCollection('stops').findDocument({
+      codedName: 'southern-cross-railway-station'
     })
-  }
 
-  apiLock = new EventEmitter()
-  apiLock.setMaxListeners(Infinity)
+    let vlinePlatform = sss.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
+    let metroPlatform = sss.bays.find(bay => bay.mode === 'metro train')
 
-  let sss = await db.getCollection('stops').findDocument({
-    codedName: 'southern-cross-railway-station'
-  })
+    let timetables = db.getCollection('timetables')
 
-  let vlinePlatform = sss.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
-  let metroPlatform = sss.bays.find(bay => bay.mode === 'metro train')
+    let departures = await async.map(await getServicesFromVNET(vlinePlatform, true, db), async d => {
+      return await appendVLineData(d, timetables)
+    })
 
-  let timetables = db.getCollection('timetables')
+    let arrivals = await getServicesFromVNET(vlinePlatform, false, db)
+    let knownArrivals = arrivals.map(a => a.runID)
 
-  let departures = await async.map(await getServicesFromVNET(vlinePlatform, true, db), async d => {
-    return await appendVLineData(d, timetables)
-  })
+    let scheduledArrivals = await getScheduledArrivals(knownArrivals, db)
 
-  let arrivals = await getServicesFromVNET(vlinePlatform, false, db)
-  let knownArrivals = arrivals.map(a => a.runID)
+    let mtmDepartures = (await async.map(await getMetroDepartures(sss, db, false), async d => {
+      return await appendMetroData(d, timetables)
+    })).filter(e => !e.isRailReplacementBus && !e.cancelled)
 
-  let scheduledArrivals = await getScheduledArrivals(knownArrivals, db)
+    let formingIDsSeen = []
+    let allArrivals = (await async.map(arrivals.concat(scheduledArrivals).sort((a, b) => a.destinationArrivalTime - b.destinationArrivalTime), async d => {
+      return await appendArrivalData(d, timetables)
+    })).filter(arrival => {
+      if (!arrival.formingID) return true
+      if (formingIDsSeen.includes(arrival.formingID)) return false
+      formingIDsSeen.push(arrival.formingID)
+      return true
+    })
+    let allDepartures = departures.concat(mtmDepartures).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 
-  let mtmDepartures = (await async.map(await getMetroDepartures(sss, db, false), async d => {
-    return await appendMetroData(d, timetables)
-  })).filter(e => !e.isRailReplacementBus && !e.cancelled)
+    return { departures: allDepartures, arrivals: allArrivals }
+  }, 1000 * 60 * 1.5)
 
-  let formingIDsSeen = []
-  let allArrivals = (await async.map(arrivals.concat(scheduledArrivals).sort((a, b) => a.destinationArrivalTime - b.destinationArrivalTime), async d => {
-    return await appendArrivalData(d, timetables)
-  })).filter(arrival => {
-    if (!arrival.formingID) return true
-    if (formingIDsSeen.includes(arrival.formingID)) return false
-    formingIDsSeen.push(arrival.formingID)
-    return true
-  })
-  let allDepartures = departures.concat(mtmDepartures).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
-
-  let rawData = { departures: allDepartures, arrivals: allArrivals }
-  departuresCache.put('SSS', rawData)
-
-  apiLock.emit('done', rawData)
-  apiLock = null
-
-  let data = { departures: filterPlatforms(allDepartures, platforms), arrivals: filterPlatforms(allArrivals, platforms) }
-
-  return data
+  return { departures: filterPlatforms(rawData.departures, platforms), arrivals: filterPlatforms(rawData.arrivals, platforms) }
 }

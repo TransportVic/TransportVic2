@@ -28,6 +28,8 @@ database.connect({
   let smartrakIDs = await getCollection('smartrak ids')
   let busTrips = await getCollection('bus trips')
   let tbmTrips = await getCollection('tbm trips')
+  let metroNotify = await getCollection('metro notify')
+  let metroShunts = await getCollection('metro shunts')
 
   await stops.createIndex({
     stopName: 1,
@@ -58,8 +60,12 @@ database.connect({
   }, {name: 'coded suburb index'})
 
   await stops.createIndex({
-    _id: 1,
-    'namePhonetic': 1
+    'codedName': 1
+  }, {name: 'coded name index'})
+
+  await stops.createIndex({
+    'namePhonetic': 1,
+    _id: 1
   }, {name: 'phonetic name index'})
 
   await stops.createIndex({
@@ -126,7 +132,8 @@ database.connect({
     'stopTimings.departureTimeMinutes': 1,
     mode: 1,
     routeGTFSID: 1,
-    destination: 1
+    destination: 1,
+    direction: 1
   }, {name: 'stop timings gtfs index'})
 
   await gtfsTimetables.createIndex({
@@ -179,6 +186,7 @@ database.connect({
     routeName: 1,
     routeGTFSID: 1,
     operationDays: 1,
+    runID: 1,
     origin: 1,
     destination: 1,
     departureTime: 1,
@@ -216,13 +224,9 @@ database.connect({
   }, {name: 'metro trips index', unique: true})
 
   await metroTrips.createIndex({
-    date: 1,
-    consist: 1
+    consist: 1,
+    date: 1
   }, {name: 'consist index'})
-
-  await metroTrips.createIndex({
-    consist: 1
-  }, {name: 'undated consist index'})
 
   console.log('Created metro trips index')
 
@@ -259,13 +263,9 @@ database.connect({
   }, {name: 'tram trips index', unique: true})
 
   await tramTrips.createIndex({
+    tram: 1,
     date: 1,
-    tram: 1
   }, {name: 'tram index'})
-
-  await tramTrips.createIndex({
-    tram: 1
-  }, {name: 'undated tram index'})
 
   console.log('Created tram trips index')
 
@@ -289,8 +289,7 @@ database.connect({
     origin: 1,
     destination: 1,
     departureTime: 1,
-    destinationArrivalTime: 1,
-    smartrakID: 1
+    destinationArrivalTime: 1
   }, {name: 'trip index', unique: true})
 
   await busTrips.createIndex({
@@ -321,6 +320,47 @@ database.connect({
 
   console.log('Created tourbusminder index')
 
-  updateStats('create-indexes', 42)
+  await metroNotify.createIndex({
+    alertID: 1
+  }, { name: 'alertid index', unique: true })
+
+  await metroNotify.createIndex({
+    active: 1,
+    alertID: 1
+  }, { name: 'active index' })
+
+  await metroNotify.createIndex({
+    fromDate: 1,
+    toDate: 1,
+    routeName: 1
+  }, { name: 'date index' })
+
+  await metroNotify.createIndex({
+    toDate: 1,
+    fromDate: 1
+  }, { name: 'date index 2' })
+
+  await metroNotify.createIndex({
+    active: 1,
+    toDate: 1,
+    type: 1
+  }, { name: 'suspensions index' })
+
+  console.log('Created Metro Notify index')
+
+  await metroShunts.createIndex({
+    date: 1,
+    runID: 1,
+    routeName: 1
+  }, { name: 'metro shunts index', unique: 1 })
+
+  await metroShunts.createIndex({
+    date: 1,
+    station: 1
+  }, { name: 'metro shunts by station' })
+
+  console.log('Created Metro Shunts index')
+
+  updateStats('create-indexes', 54)
   process.exit()
 })

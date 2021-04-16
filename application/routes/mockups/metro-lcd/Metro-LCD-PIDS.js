@@ -1,15 +1,14 @@
 const express = require('express')
 const router = new express.Router()
 const utils = require('../../../../utils')
-const TrainUtils = require('../TrainUtils')
-const PIDUtils = require('../PIDUtils')
+const PIDBackend = require('../PIDBackend')
 
 let validPIDTypes = ['half-platform-bold', 'half-platform', 'platform', 'pre-platform-vertical']
 
 async function getData(req, res) {
-  let station = await PIDUtils.getStation(res.db, req.params.station)
+  let station = await PIDBackend.getStation(req.params.station, res.db)
 
-  return await TrainUtils.getPIDSDepartures(res.db, station, req.params.platform, null, null, 5)
+  return await PIDBackend.getPIDData(station, req.params.platform, {}, res.db)
 }
 
 router.get('/:station/:platform/:type', async (req, res, next) => {

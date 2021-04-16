@@ -103,13 +103,11 @@ function updateBody() {
       $('#departures').innerHTML = body
       htmlData = body
 
-      if ($('#textbar'))
-        filterRuns($('#textbar').value.toLowerCase())
+      if ($('#textbar')) filterRuns($('#textbar').value.toLowerCase())
     }
   })
 }
 
-document.on("visibilitychange", checkFocus)
 window.on("focus", checkFocus)
 window.on("blur", checkFocus)
 

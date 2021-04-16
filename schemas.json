@@ -84,8 +84,9 @@
   "liveTimetable": {
     "mode": "string",
     "routeName": "string",
+    "routeGTFSID": "string",
     "runID": "string",
-    "operationDay": "string",
+    "operationDays": "string",
     "vehicle": "string",
     "stopTimings": [{
       "stopName": "string",
@@ -131,10 +132,10 @@
         "routeNumber": "string"
       }],
       "tramTrackerID": "number:optional",
+      "tramTrackerName": "string:optional"
     }],
     "location": "GeoJSON:MultiPoint",
-    "mergeName": "string",
-    "tramTrackerNames": ["string:optional"]
+    "mergeName": "string"
   },
   "route": {
     "mode": "string",

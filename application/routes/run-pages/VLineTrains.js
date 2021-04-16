@@ -45,18 +45,29 @@ async function pickBestTrip(data, db) {
   let operationDays = data.operationDays
   if (tripStartMinutes > 1440) operationDays = utils.getYYYYMMDD(tripDay.add(-1, 'day'))
 
-  let referenceTrip = await findTrip(db.getCollection('live timetables'), operationDays, originStop.stopName, destinationStop.stopName, data.departureTime)
-    || await findTrip(db.getCollection('gtfs timetables'), operationDays, originStop.stopName, destinationStop.stopName, data.departureTime)
+  let liveTrip = await findTrip(db.getCollection('live timetables'), operationDays, originStop.stopName, destinationStop.stopName, data.departureTime)
+  let gtfsTrip = await findTrip(db.getCollection('gtfs timetables'), operationDays, originStop.stopName, destinationStop.stopName, data.departureTime)
+  let referenceTrip
+
+  if (liveTrip && !gtfsTrip) referenceTrip = liveTrip
+  else if (gtfsTrip && !liveTrip) referenceTrip = gtfsTrip
+  else if (liveTrip && gtfsTrip) {
+    let liveDiff = Math.abs(liveTrip.stopTimings[0].departureTimeMinutes - tripStartMinutes)
+    let gtfsDiff = Math.abs(gtfsTrip.stopTimings[0].departureTimeMinutes - tripStartMinutes)
+    if (liveDiff <= gtfsDiff) referenceTrip = liveTrip
+    else referenceTrip = gtfsTrip
+  }
 
   if (!referenceTrip) return null
 
   let isXPT = referenceTrip.routeGTFSID === '14-XPT'
+  let isGSR = referenceTrip.routeGTFSID === '10-GSR'
   let isLive = false
 
   if (isXPT && referenceTrip.updateTime) isLive = true
 
   let nspTrip
-  if (!isXPT) {
+  if (!isXPT && !isGSR) {
     let vlineTrips = db.getCollection('vline trips')
 
     let trackerDepartureTime = giveVariance(referenceTrip.departureTime)
@@ -75,12 +86,20 @@ async function pickBestTrip(data, db) {
       if (terminate) possibleDestinations.$in.push(terminate.changePoint)
     }
 
-    let tripData = await vlineTrips.findDocument({
-      date: operationDays,
-      departureTime: trackerDepartureTime,
-      origin: possibleOrigins,
-      destination: possibleDestinations
-    })
+    let tripData
+    if (referenceTrip.runID) {
+      tripData = await vlineTrips.findDocument({
+        date: operationDays,
+        runID: referenceTrip.runID
+      })
+    } else {
+      tripData = await vlineTrips.findDocument({
+        date: operationDays,
+        departureTime: trackerDepartureTime,
+        origin: possibleOrigins,
+        destination: possibleDestinations
+      })
+    }
 
     if (!tripData) {
       if (referenceTrip.direction === 'Up') {
@@ -122,7 +141,7 @@ async function pickBestTrip(data, db) {
 
     if (tripData) {
       referenceTrip.runID = tripData.runID
-      referenceTrip.consist = tripData.consist
+      // referenceTrip.consist = tripData.consist
     }
   }
 
@@ -141,8 +160,13 @@ async function pickBestTrip(data, db) {
     } else {
       let nspStop = nspTrip && nspTrip.stopTimings.find(nspStop => nspStop.stopGTFSID === stop.stopGTFSID && nspStop.platform)
 
+      let isSSS = stop.stopName === 'Southern Cross Railway Station'
+
+      if (isSSS && stop.livePlatform) return stop
+
       if (nspStop) {
-        stop.platform = nspStop.platform + '?'
+        let nspPlatform = nspStop.platform.replace('C', 'A').replace('N', 'B')
+        stop.platform = nspPlatform + '?'
       } else {
         stop.platform = guessPlatform(stop.stopName.slice(0, -16), stop.departureTimeMinutes,
           referenceTrip.routeName, referenceTrip.direction)
@@ -184,7 +208,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
       let estimatedDepartureTime = stop.estimatedDepartureTime
 
       stop.headwayDevianceClass = utils.findHeadwayDeviance(scheduledDepartureTime, estimatedDepartureTime, {
-        early: 2,
+        early: 1,
         late: 5
       })
 

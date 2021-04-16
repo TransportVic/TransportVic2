@@ -129,83 +129,83 @@ div.timing span {
 
 
 div.timingRow:nth-child(odd) div.timing.early:nth-child(odd) {
-  background-color: #6fd6e7;
+  background-color: var(--light-blue-odd);
 }
 
 div.timingRow:nth-child(odd) div.timing.early:nth-child(even) {
-  background-color: #64c0cf;
+  background-color: var(--light-blue-even);
 }
 
 div.timingRow:nth-child(odd) div.timing.on-time:nth-child(odd) {
-  background-color: #60bd29;
+  background-color: var(--green-odd);
 }
 
 div.timingRow:nth-child(odd) div.timing.on-time:nth-child(even) {
-  background-color: #58ad25;
+  background-color: var(--green-even);
 }
 
 div.timingRow:nth-child(odd) div.timing.late:nth-child(odd) {
-  background-color: #c93e29;
+  background-color: var(--red-odd);
 }
 
 div.timingRow:nth-child(odd) div.timing.late:nth-child(even) {
-  background-color: #bd3825;
+  background-color: var(--red-even);
 }
 
 div.timingRow:nth-child(odd) div.timing.unknown:nth-child(odd) {
-  background-color: #9c9c9c;
+  background-color: var(--grey-odd);
 }
 
 div.timingRow:nth-child(odd) div.timing.unknown:nth-child(even) {
-  background-color: #a8a8a8;
+  background-color: var(--grey-even);
 }
 
 div.timingRow:nth-child(odd) div.timing.cancelled:nth-child(odd) {
-  background-color: #e87529;
+  background-color: var(--orange-odd);
 }
 
 div.timingRow:nth-child(odd) div.timing.cancelled:nth-child(even) {
-  background-color: #bf682d;
+  background-color: var(--orange-even);
 }
 
 
 
 div.timingRow:nth-child(even) div.timing.early:nth-child(even) {
-  background-color: #6fd6e7;
+  background-color: var(--light-blue-odd);
 }
 
 div.timingRow:nth-child(even) div.timing.early:nth-child(odd) {
-  background-color: #64c0cf;
+  background-color: var(--light-blue-even);
 }
 
 div.timingRow:nth-child(even) div.timing.on-time:nth-child(even) {
-  background-color: #60bd29;
+  background-color: var(--green-odd);
 }
 
 div.timingRow:nth-child(even) div.timing.on-time:nth-child(odd) {
-  background-color: #58ad25;
+  background-color: var(--green-even);
 }
 
 div.timingRow:nth-child(even) div.timing.late:nth-child(even) {
-  background-color: #c93e29;
+  background-color: var(--red-odd);
 }
 
 div.timingRow:nth-child(even) div.timing.late:nth-child(odd) {
-  background-color: #bd3825;
+  background-color: var(--red-even);
 }
 
 div.timingRow:nth-child(even) div.timing.unknown:nth-child(even) {
-  background-color: #9c9c9c;
+  background-color: var(--grey-odd);
 }
 
 div.timingRow:nth-child(even) div.timing.unknown:nth-child(odd) {
-  background-color: #a8a8a8;
+  background-color: var(--grey-even);
 }
 
 div.timingRow:nth-child(even) div.timing.cancelled:nth-child(even) {
-  background-color: #e87529;
+  background-color: var(--orange-odd);
 }
 
 div.timingRow:nth-child(even) div.timing.cancelled:nth-child(odd) {
-  background-color: #bf682d;
+  background-color: var(--orange-even);
 }

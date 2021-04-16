@@ -40,7 +40,7 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
     let operationDays
     if (calendarCache[trip.calendarID]) operationDays = calendarCache[trip.calendarID]
     else {
-      operationDays = gtfsUtils.calendarToDates(calendarDays, calendarDates, trip.calendarID).map(date => utils.getYYYYMMDD(date))
+      operationDays = gtfsUtils.calendarToDates(calendarDays, calendarDates, trip.calendarID).map(date => utils.getYYYYMMDD(date)).filter((e, i, a) => a.indexOf(e) === i)
       calendarCache[trip.calendarID] = operationDays
     }
 
@@ -55,7 +55,7 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
     let previousDepartureTime = -1
 
     let routeData = await getRouteData(routes, routeGTFSID, routeCache)
-
+    if (!timings) console.log(tripID)
     timings.stopTimings = timings.stopTimings.sort((a, b) => a.stopSequence - b.stopSequence)
 
     let stopTimings = await async.mapSeries(timings.stopTimings, async stopTiming => {
@@ -89,7 +89,7 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
       departureTime = utils.getHHMMFromMinutesPastMidnight(departureTimeMinutes)
       arrivalTime = utils.getHHMMFromMinutesPastMidnight(arrivalTimeMinutes)
 
-      return {
+      let tripStop = {
         stopName: stopData.fullStopName,
         stopNumber: stopData.stopNumber,
         suburb: stopData.suburb,
@@ -102,6 +102,10 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
         stopDistance,
         stopSequence
       }
+
+      if (stopData.platform) tripStop.platform = stopData.platform
+
+      return tripStop
     })
 
     let actualMode = (gtfsID === '8') ? 'bus' : gtfsModes[gtfsID]
@@ -117,8 +121,8 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
     let tripData = {
       mode: actualMode,
       routeName: routeData.routeName,
-      routeNumber: routeNumber ? routeNumber(routeGTFSID, trip.gtfsDirection, stopTimings, routeData.routeNumber) : routeData.routeNumber,
-      routeDetails: routeDetails ? routeDetails(routeGTFSID, trip.gtfsDirection) : null,
+      routeNumber: routeData.routeNumber,
+      routeDetails: null,
       tripID,
       routeGTFSID,
       operationDays,
@@ -132,6 +136,9 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
       shapeID,
       gtfsMode: parseInt(gtfsID)
     }
+
+    if (routeNumber) tripData.routeNumber = routeNumber(tripData)
+    if (routeDetails) tripData.routeDetails = routeDetails(routeGTFSID, trip.gtfsDirection)
 
     if (trip.runID) tripData.runID = trip.runID
     if (trip.vehicle) tripData.vehicle = trip.vehicle

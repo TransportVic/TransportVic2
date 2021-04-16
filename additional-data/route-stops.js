@@ -1,14 +1,5 @@
 let lines = {
   Gippsland: [
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
     'Richmond',
     'South Yarra',
     'Hawksburn',
@@ -53,15 +44,6 @@ let lines = {
     'Bairnsdale'
   ],
   Upfield: [
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
     'North Melbourne',
     'Macaulay',
     'Flemington Bridge',
@@ -78,15 +60,6 @@ let lines = {
     'Upfield'
   ],
   Cranbourne: [
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
     'Richmond',
     'South Yarra',
     'Hawksburn',
@@ -111,15 +84,6 @@ let lines = {
     'Cranbourne',
   ],
   'Stony Point': [
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
     'Richmond',
     'South Yarra',
     'Hawksburn',
@@ -158,15 +122,6 @@ let lines = {
     'Stony Point'
   ],
   Sandringham: [
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
     'Richmond',
     'South Yarra',
     'Prahran',
@@ -182,15 +137,6 @@ let lines = {
     'Sandringham'
   ],
   Williamstown: [
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
     'North Melbourne',
     'South Kensington',
     'Footscray',
@@ -203,15 +149,6 @@ let lines = {
     'Williamstown'
   ],
   Werribee: [
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
     'North Melbourne',
     'South Kensington',
     'Footscray',
@@ -231,15 +168,6 @@ let lines = {
     'Werribee'
   ],
   Shepparton: [
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
     'North Melbourne',
     'Kensington',
     'Newmarket',
@@ -294,15 +222,6 @@ let lines = {
     'Maryborough',
   ],
   Belgrave: [
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
     'Richmond',
     'East Richmond',
     'Burnley',
@@ -332,15 +251,6 @@ let lines = {
     'Belgrave'
   ],
   Lilydale: [
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
     'Richmond',
     'East Richmond',
     'Burnley',
@@ -366,15 +276,6 @@ let lines = {
     'Lilydale'
   ],
   Sunbury: [
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
     'North Melbourne',
     'South Kensington',
     'Footscray',
@@ -391,15 +292,6 @@ let lines = {
     'Sunbury',
   ],
   Echuca: [
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
     'Footscray',
     'Sunshine',
     'Albion',
@@ -429,15 +321,6 @@ let lines = {
   ],
 
   'Swan Hill': [
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
     'Footscray',
     'Sunshine',
     'Albion',
@@ -466,15 +349,6 @@ let lines = {
     'Swan Hill'
   ],
   Warrnambool: [
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
     'Footscray',
     'Sunshine',
     'Ardeer',
@@ -499,15 +373,6 @@ let lines = {
     'Warrnambool'
   ],
   Alamein: [
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
     'Richmond',
     'East Richmond',
     'Burnley',
@@ -559,15 +424,6 @@ let lines = {
     'Albury'
   ],
   Mernda: [
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
     'Jolimont',
     'West Richmond',
     'North Richmond',
@@ -594,15 +450,6 @@ let lines = {
     'Mernda'
   ],
   Hurstbridge: [
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
     'Jolimont',
     'West Richmond',
     'North Richmond',
@@ -628,15 +475,6 @@ let lines = {
     'Hurstbridge'
   ],
   'Glen Waverley': [
-    'Parliament',
-    'Melbourne Central',
-    'Flagstaff',
-    'Southern Cross',
-    'Flinders Street',
-    'Southern Cross',
-    'Flagstaff',
-    'Melbourne Central',
-    'Parliament',
     'Richmond',
     'East Richmond',
     'Burnley',
@@ -667,9 +505,22 @@ let lines = {
   'Sydney': [
     'Southern Cross',
     'Broadmeadows',
+    'Donnybrook',
+    'Wallan',
+    'Heathcote Junction',
+    'Wandong',
+    'Kilmore East',
+    'Broadford',
+    'Tallarook',
     'Seymour',
+    'Avenel',
+    'Euroa',
+    'Violet Town',
     'Benalla',
     'Wangaratta',
+    'Springhurst',
+    'Chiltern',
+    'Wodonga',
     'Albury',
     'Culcairn',
     'Henty',
@@ -684,6 +535,25 @@ let lines = {
     'Moss Vale',
     'Campbelltown',
     'Sydney Central'
+  ],
+  'Flemington Racecourse': [
+    'North Melbourne',
+    'Kensington',
+    'Newmarket',
+    'Showgrounds',
+    'Flemington Racecourse'
+  ],
+  Overland: [
+    "Southern Cross",
+    "North Shore",
+    "Ararat",
+    "Stawell",
+    "Horsham",
+    "Dimboola",
+    "Nhill",
+    "Bordertown",
+    "Murray Bridge",
+    "Adelaide"
   ]
 }
 
@@ -711,6 +581,8 @@ function getLineStops(lineName, destination) {
   if (lineName === 'Hurstbridge') return lines.Hurstbridge
   if (lineName === 'City Circle') return lines['City Circle']
   if (lineName === 'Sydney - Melbourne') return lines.Sydney
+  if (lineName === 'Showgrounds/Flemington') return lines['Flemington Racecourse']
+  if (lineName === 'The Overland') return lines.Overland
 }
 
 module.exports = getLineStops

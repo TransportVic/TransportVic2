@@ -1,0 +1,44 @@
+html
+  head
+    script(src='/static/scripts/util.js')
+    
+    script(src='/static/scripts/mockups/train/hcmt-pids.js' async) 
+    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
+    link(rel='stylesheet' href='/static/css/mockups/actual-line-colours.css')
+    link(rel='stylesheet' href='/static/css/mockups/train/hcmt.css')
+      
+    link(rel='preload' as='style' href='/static/css/mockups/base-style.css')
+  body
+    div.content
+      div.top
+        div.frontDesto
+          span.destination Not In Service
+          span(style='display: none;').via
+        div.middlePID
+          div(style='display: none;').serviceDestination
+            span.type -
+            div.destination.no-line
+              span Not In Service
+          div(style='display: none').announcements
+            img(src='/static/images/mockups/announcements.svg')
+            span Announcement In
+              br
+              | Progress
+          div.text
+            span Welcome to Metro
+      div.bottom
+        div.patternPID
+          div.patternTop
+            div.stationNames
+            div.stoppingPattern
+            div(style='width: 0vw;').filter
+            div(style="margin-left: 0vw;").currentLocation
+              div.innerBall
+            div.nextStation
+          div.patternBottom
+            div.infoBar
+              span.destination Not In Service
+              span.via
+              span.type
+            div.clock
+              span 12:34

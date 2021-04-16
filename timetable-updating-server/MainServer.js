@@ -7,6 +7,9 @@ const minify = require('express-minify')
 const fs = require('fs')
 const uglifyEs = require('uglify-es')
 
+let robots = fs.readFileSync(path.join(__dirname, '../application/static/app-content/robots.txt'))
+let sw = fs.readFileSync(path.join(__dirname, '../application/static/app-content/sw.js'))
+
 const config = require('../config.json')
 
 module.exports = class MainServer {
@@ -17,12 +20,17 @@ module.exports = class MainServer {
   }
 
   configMiddleware (app) {
-    app.use(compression())
-
-    app.use(minify({
-      uglifyJsModule: uglifyEs,
-      errorHandler: console.log
+    app.use(compression({
+      level: 9,
+      threshold: 512
     }))
+
+    if (!config.devMode) {
+      app.use(minify({
+        uglifyJsModule: uglifyEs,
+        errorHandler: console.log
+      }))
+    }
 
     app.use('/static', express.static(path.join(__dirname, '../application/static')))
 
@@ -43,7 +51,7 @@ module.exports = class MainServer {
 
     app.set('views', path.join(__dirname, '../application/views'))
     app.set('view engine', 'pug')
-    if (process.env['NODE_ENV'] && process.env['NODE_ENV'] === 'prod') { app.set('view cache', true) }
+    if (process.NODE_ENV && process.NODE_ENV === 'prod') { app.set('view cache', true) }
     app.set('x-powered-by', false)
     app.set('strict routing', false)
   }
@@ -51,16 +59,26 @@ module.exports = class MainServer {
   async configRoutes (app) {
     app.get('/sw.js', (req, res) => {
       res.setHeader('Cache-Control', 'no-cache')
-      res.sendFile(path.join(__dirname, '../application/static/app-content/sw.js'))
+      res.setHeader('Content-Type', 'application/javascript')
+      res.end(sw)
     })
 
     app.get('/robots.txt', (req, res) => {
       res.setHeader('Cache-Control', 'no-cache')
-      res.sendFile(path.join(__dirname, '../application/static/app-content/robots.txt'))
+      res.setHeader('Content-Type', 'text/plain')
+      res.end(robots)
     })
 
     app.get('/log', (req, res) => {
       res.json(global.gtfsUpdaterLog)
+    })
+
+    app.get('/home-banner', (req, res) => {
+      res.json({
+        link: '#', 
+        alt: 'Maintenance',
+        text: 'Site is currently under maintenance...'
+      })
     })
 
     app.use((req, res) => {

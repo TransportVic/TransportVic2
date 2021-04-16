@@ -2,19 +2,18 @@ extends ../layout
 
 block head
   
-  - let name = route.routeGTFSID === '2-CCL' ? 'City Circle' : `${route.routeName} Line`
-  title TransportVic - #{name}
-  meta(property='og:title' content=`TransportVic - ${name}`)
-  meta(property='twitter:title' content=`TransportVic - ${name}`)
-  meta(property='og:description' content=`${name}`)
-  meta(property='twitter:description' content=`${name}`)
+  -
+    title = route.routeGTFSID === '2-CCL' ? 'City Circle' : `${route.routeName} Line`
+    description = `Line data for the ${route.routeName} Line`
+    
+  title TransportVic - #{title}
 
 block header-right
   a#mapLink(href=`/route-preview/${route.routeGTFSID}`)
     img#mapIcon(src='/static/images/decals/map.svg' alt='map icon')
 
 block title
-  span #{name}
+  span #{title}
 
 block style
   link(rel='stylesheet' href='/static/css/routes/base-style.css')

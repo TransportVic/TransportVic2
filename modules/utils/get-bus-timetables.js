@@ -26,14 +26,15 @@ function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
       if (bay.screenServices.length === 0) return // Save bandwidth by not requesting dropoff only stops
       let bayGTFSModes = bay.screenServices.map(s => s.routeGTFSID.split('-')[0])
       let shouldRequest = bayGTFSModes.includes('8') // Only request night bus
-      if (bayGTFSModes.includes('4')) { // Only request metro if it has routes that are not know to have no tracking
-        shouldRequest = bay.screenServices.some(s => !liveBusData.metroRoutesExcluded.includes(s.routeGTFSID))
+
+      if (!shouldRequest && bayGTFSModes.includes('4')) { // Only request metro if it has routes that are not know to have no tracking
+        shouldRequest = bay.screenServices.some(service => !liveBusData.metroRoutesExcluded.includes(service.routeGTFSID))
       }
       if (!shouldRequest && bayGTFSModes.includes('6')) { // Further refine - only load known operators/routes with live data
         shouldRequest = bay.screenServices.some(service => liveBusData.regionalRoutes.includes(service.routeGTFSID))
       }
 
-      if (shouldRequest) {
+      if (shouldRequest || mode !== 'bus') {
         if (!stopNamesSeen.includes(bay.originalName) && bay.stopGTFSID < 100000) { // filter out offline override stops
           stopNamesSeen.push(bay.originalName)
           gtfsIDs.push(bay.stopGTFSID)
@@ -47,14 +48,16 @@ function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
   return gtfsIDs
 }
 
-async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, destination, mode, day, routeGTFSID, excludedTripIDs, variance=0) {
+async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, routeGTFSID, excludedTripIDs, variance=0) {
   let trip
-  let today = utils.now()
   let query
 
+  let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departureTime)
+
   for (let i = 0; i <= 1; i++) {
-    let tripDay = today.clone().add(-i, 'days')
-    let departureTimeMinutes = scheduledDepartureTimeMinutes % 1440 + 1440 * i
+    let tripDay = departureTime.clone().add(-i, 'days')
+    let departureTimeMinutes = scheduledDepartureTimeMinutes + 1440 * i
+
     if (variance) {
       departureTimeMinutes = {
         $gte: departureTimeMinutes - variance,
@@ -63,7 +66,7 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
     }
 
     query = {
-      operationDays: day || utils.getYYYYMMDD(tripDay),
+      operationDays: utils.getYYYYMMDD(tripDay),
       mode,
       stopTimings: {
         $elemMatch: {
@@ -90,10 +93,7 @@ async function getDeparture(db, stopGTFSIDs, scheduledDepartureTimeMinutes, dest
 
     // for the coaches
     let timetable = await db.getCollection('live timetables').findDocument(query)
-
-    if (!timetable) {
-      timetable = await db.getCollection('gtfs timetables').findDocument(query)
-    }
+      || await db.getCollection('gtfs timetables').findDocument(query)
 
     if (timetable) {
       trip = timetable
@@ -179,9 +179,15 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
       sortNumber = routeNumber.slice(2)
     }
 
+    let firstStop = trip.stopTimings[0]
+    let currentStop = trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))
+    let minutesDiff = currentStop.departureTimeMinutes - firstStop.departureTimeMinutes
+    let originDepartureTime = departureTime.clone().add(-minutesDiff, 'minutes')
+
     return {
       trip,
       scheduledDepartureTime: departureTime,
+      originDepartureTime,
       estimatedDepartureTime: null,
       actualDepartureTime: departureTime,
       scheduledDepartureTimeMinutes: stopData.departureTimeMinutes,
@@ -189,7 +195,7 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
       routeNumber,
       sortNumber,
       operator,
-      codedOperator: utils.encodeName(operator),
+      codedOperator: utils.encodeName(operator.replace(/ \(.+/, '')),
       loopDirection
     }
   }).filter(Boolean).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)

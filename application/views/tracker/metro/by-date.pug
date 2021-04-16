@@ -3,7 +3,7 @@ extends ../../layout
 block head
   -
     title = 'TransportVic - Tracker/Metro - By Date'
-    description = 'Tracking all Metro trips on ' + date.format('dddd, MMMM Do YYYY')
+    description = `Tracking all Metro trips on ${date.format('dddd, MMMM Do YYYY')}`
   title #{title}
   link(rel='preload' as='style' href='/static/css/tracker/results.css')
   

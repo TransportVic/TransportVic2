@@ -21,14 +21,8 @@ router.get('/', async (req, res) => {
   res.render('mockups/sss-new/coach', { bays })
 })
 
-function getHumanName(fullStopName, stopSuburb='') {
-  let stopName = fullStopName.replace('Shopping Centre', 'SC')
-  let humanName = destinationOverrides[fullStopName] || destinationOverrides[`${fullStopName} (${stopSuburb})`] || fullStopName
-  if (humanName.includes('Railway Station')) {
-    humanName = humanName.replace(/Railway Station.*/, '').trim()
-  }
-
-  return humanName
+function getHumanName(fullStopName, stopSuburb) {
+  return destinationOverrides.stops[`${fullStopName.replace('Shopping Centre', 'SC')} ${stopSuburb}`] || fullStopName.replace(/Railway Station.*/, '')
 }
 
 router.post('/', async (req, res) => {
@@ -92,8 +86,8 @@ router.post('/', async (req, res) => {
       connections: (departure.trip.connections || []).filter(connection => {
         return connection.operationDays.includes(departureDay)
       }).map(connection => ({
-        changeAt: getHumanName(connection.changeAt),
-        for: getHumanName(connection.for)
+        changeAt: getHumanName(connection.changeAt, connection.changeAtSuburb),
+        for: getHumanName(connection.for, connection.forSuburb)
       }))
     }
   })

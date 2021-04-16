@@ -33,5 +33,5 @@ for stop in stops
       img(src=`/static/images/clear-icons/${stopIcons[stop.mode]}.svg`)
       span.distance=stop.smallestDistance + ' metres'
     div.resultDetails
-      span=stop.type + ' in ' + stop.suburb
-      span=stop.stopName
+      span #{stop.type} in #{stop.suburb}
+      span #{stop.stopName}#{stop.stopNumber ? ` #${stop.stopNumber}` : ''}

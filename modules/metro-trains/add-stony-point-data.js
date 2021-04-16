@@ -1,7 +1,8 @@
 const { getDayOfWeek } = require('../../public-holidays')
-const stonyPointFormations = require('./stony-point-formations')
 
-module.exports = async function (db, trip, departureTime) {
+let singleSTYTrains = ['8500', '8502', '8508', '8510', '8509', '8512', '8515', '8517']
+
+module.exports = async function (trip, departureTime, db) {
   let query = {
     mode: 'metro train',
     operationDays: await getDayOfWeek(departureTime),
@@ -19,14 +20,13 @@ module.exports = async function (db, trip, departureTime) {
         stop.platform = '1'
       return stop
     })
-    trip.runID = staticTrip.runID
-    if (!['Sat', 'Sun'].includes(query.operationDays)) {
-      if (stonyPointFormations.weekday[trip.runID]) {
-        trip.vehicle = stonyPointFormations.weekday[trip.runID]
-      }
-    }
 
-    trip.vehicle = trip.vehicle || '2 Car Sprinter'
+    trip.runID = staticTrip.runID
+    trip.vehicle = { size: '2', type: 'Sprinter' }
+
+    if (!['Sat', 'Sun'].includes(query.operationDays) && singleSTYTrains.includes(trip.runID)) {
+      trip.vehicle.size = '1'
+    }
   }
 
   return trip

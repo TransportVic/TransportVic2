@@ -23,15 +23,25 @@ Object.keys(stationCodes).forEach(stationCode => {
 router.post('/', async (req, res) => {
   let liveTimetables = res.db.getCollection('live timetables')
   let msNow = +new Date()
+  let days = {
+    $in: [ utils.getYYYYMMDDNow() ]
+  }
 
-  let now = utils.now()
+  let minutes = utils.getMinutesPastMidnightNow()
+
+  if (minutes > 23 * 60) days.$in.push(utils.getYYYYMMDD(utils.now().add(1, 'day')))
+  if (minutes < 120) days.$in.push(utils.getYYYYMMDD(utils.now().add(-1, 'day')))
 
   let activeTrips = await liveTimetables.findDocuments({
     mode: 'metro train',
-    'stopTimings.actualDepartureTimeMS': {
-      $gte: msNow - 1000 * 60 * 3,
-      $lte: msNow + 1000 * 60 * 4
-    }
+    $and: [{
+      operationDays: days
+    }, {
+      'stopTimings.actualDepartureTimeMS': {
+        $gte: msNow - 1000 * 60 * 3,
+        $lte: msNow + 1000 * 60 * 4
+      }
+    }]
   }).toArray()
 
   let vehicles = []
@@ -44,8 +54,8 @@ router.post('/', async (req, res) => {
     if (!nextStop) nextStop = lastStop
     if (nextStop !== lastStop && nextStop !== firstStop) nextStop = trip.stopTimings[trip.stopTimings.indexOf(nextStop) - 1]
 
-    if (nextStop === firstStop && nextStop.actualDepartureTimeMS - now > 1000 * 30) return
-    if (nextStop === lastStop && nextStop.actualDepartureTimeMS - now < -1000 * 30) return
+    if (nextStop === firstStop && nextStop.actualDepartureTimeMS - msNow > 1000 * 30) return
+    if (nextStop === lastStop && nextStop.actualDepartureTimeMS - msNow < -1000 * 30) return
 
     let platformCentre = platformCentrepoints[nextStop.stopName.slice(0, -16) + nextStop.platform]
 

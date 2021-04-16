@@ -1,35 +1,22 @@
 const async = require('async')
 const utils = require('../../utils')
-const TimedCache = require('../../TimedCache')
-const EventEmitter = require('events')
 const tramDestinations = require('../../additional-data/tram-destinations')
-const { closest } = require('fastest-levenshtein')
+const { closest, distance } = require('fastest-levenshtein')
 
 let tramDestinationLookup = {}
+
 Object.keys(tramDestinations).forEach(dest => {
   let humanName = tramDestinations[dest]
   if (!tramDestinationLookup[humanName]) tramDestinationLookup[humanName] = []
   tramDestinationLookup[humanName].push(dest)
 })
+
 let knownDestinations = Object.keys(tramDestinationLookup)
 
-let stopsCache = {}
-let stopsLocks = {}
-
 async function getStopData(stopGTFSID, stops) {
-  if (stopsCache[stopGTFSID]) return stopsCache[stopGTFSID]
-  if (stopsLocks[stopGTFSID]) {
-    return await new Promise(resolve => stopsLocks[stopGTFSID].on('loaded', resolve))
-  }
-  stopsLocks[stopGTFSID] = new EventEmitter()
-  stopsLocks[stopGTFSID].setMaxListeners(30)
-  let stopData = await stops.findDocument({ 'bays.stopGTFSID': stopGTFSID })
-
-  stopsCache[stopGTFSID] = stopData
-  stopsLocks[stopGTFSID].emit('loaded', stopData)
-  delete stopsLocks[stopGTFSID]
-
-  return stopData
+  return await utils.getData('tram-stops', stopGTFSID, async () => {
+    return await stops.findDocument({ 'bays.stopGTFSID': stopGTFSID })
+  }, 1000 * 60 * 30)
 }
 
 async function modifyTrip(db, trip, operationDay) {
@@ -60,6 +47,7 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
   let cutoffStop
   let stops = db.getCollection('stops')
 
+  if (destination === 'Abbotsford St Intg') destination = 'Royal Childrens Hospital'
   let selectionMethod = destination.includes('&')
   let baseDestination = destination.replace(/&.*/, '').trim()
 
@@ -68,9 +56,11 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
   await async.forEachOf(trip.stopTimings, async (stop, i) => {
     if (!cutoffStop) {
       let stopData = await getStopData(stop.stopGTFSID, stops)
-      if (stopData.tramTrackerNames) {
-        let matched = selectionMethod ? stopData.tramTrackerNames.some(name => name.includes(baseDestination))
-          : stopData.tramTrackerNames.includes(baseDestination)
+      let tramTrackerNames = stopData.bays.map(bay => bay.tramTrackerName).filter(Boolean)
+
+      if (tramTrackerNames) {
+        let matched = selectionMethod ? tramTrackerNames.some(name => name.includes(baseDestination))
+          : tramTrackerNames.find(name => distance(name, destination) <= 2)
         if (matched) {
           cutoffStop = stop.stopGTFSID
         }
@@ -108,8 +98,15 @@ module.exports.trimFromMessage = async function(db, destinations, currentStopGTF
 
   await async.forEachOf(trip.stopTimings, async (stop, i) => {
     let stopData = await getStopData(stop.stopGTFSID, stops)
-    if (stopData.tramTrackerNames) {
-      let destination = destinations.find(dest => stopData.tramTrackerNames.includes(dest))
+    let tramTrackerNames = stopData.bays.map(bay => bay.tramTrackerName).filter(Boolean)
+
+    if (tramTrackerNames) {
+      let destination = destinations.find(dest => {
+        if (tramTrackerNames.includes(dest)) return true
+
+        return tramTrackerNames.find(name => distance(name, dest) <= 3)
+      })
+
       if (destination) {
         indexes.push(i)
         destinationsFound = destination

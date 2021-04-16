@@ -7,6 +7,7 @@ const loadGTFSTimetables = require('../utils/load-gtfs-timetables')
 const utils = require('../../utils')
 const datamartModes = require('../datamart-modes')
 const gtfsUtils = require('../../gtfs-utils')
+const determineBusRouteNumber = require('../../additional-data/determine-bus-route-number')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
@@ -43,56 +44,13 @@ database.connect({
     tripCount += trips.length
 
     await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, trips, tripTimings,
-      calendarDays, calendarDates, null, (routeGTFSID, gtfsDirection, stopTimings, routeNumber) => {
-        if (routeGTFSID === '6-921') { // Mildura 100/200
-          return ['200', '100'][gtfsDirection]
-        }
-        if (routeGTFSID === '6-20b') { // Mildura 211/311/312
-          if (gtfsDirection === '0') { // Milura - Merbein
-            let stops = stopTimings.map(e => e.stopName)
-            if (stops.includes('Mildura Central SC/Fifteenth St')) {
-              return '311' // 311 via Mildura Central SC
-            } else {
-              return '312' // 312 direct to Mildura Station
-            }
-          } else { // Merbein - Mildura
-            return '211'
-          }
-        }
-        if (routeGTFSID === '6-920') { // Mildura 250/300
-          return ['300', '250'][gtfsDirection]
-        }
-        if (routeGTFSID === '6-946') { //Swan Hill Schools AM
-          return 'AM'
-        }
-        if (routeGTFSID === '6-949') { //Swan Hill Schools PM
-          return 'PM'
-        }
-        if (routeGTFSID === '6-a28') { // Swan Hill - Tooleybuc
-          return null
-        }
-        if (['6-WN1', '6-WN2', '6-WN3'].includes(routeGTFSID)) {
-          // Wallan 1, 2 and 3
-          return routeGTFSID.slice(-1)
-        }
-        if (routeGTFSID === '6-BM8') { // Barmah 8
-          return 8
-        }
-        if (['6-906', '6-907', '6-908'].includes(routeGTFSID)) {
-          return routeGTFSID.slice(2)
-        }
-        if (['6-a84', '6-a49', '6-R54'].includes(routeGTFSID)) {
-          // Wonthaggi North, South and to Dudley
-          return null
-        }
-        if (routeGTFSID === '6-gld') {
-          return 'GOLD'
-        }
-
-        return routeNumber
-      }, routeGTFSID => {
+      calendarDays, calendarDates, null, determineBusRouteNumber, routeGTFSID => {
         // Swan Hill AM and PM
         if (['6-946', '6-949'].includes(routeGTFSID)) return 'School Bus'
+
+        // Wallan Link A, B
+        if (['6-W12', '6-WN3'].includes(routeGTFSID)) return 'Link Bus'
+
         return null
       })
 

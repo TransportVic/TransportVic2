@@ -53,6 +53,8 @@ database.connect({
       let gtfsDirection = lineData[5]
       let headsign = lineData[3]
 
+      let carCount = rawTripID[17]
+
       rawTripIDsConsidered.push(rawTripID)
       mappedTripIDsConsidered.push(tripID)
 
@@ -64,7 +66,8 @@ database.connect({
         gtfsDirection,
         shapeID,
         headsign,
-        runID: rawTripID.slice(0, 4)
+        runID: rawTripID.slice(0, 4),
+        vehicle: `${carCount}x XPT`
       })
     }
   }
@@ -97,10 +100,10 @@ database.connect({
           arrivalTime: lineData[1],
           departureTime: lineData[2],
           stopConditions: {
-            pickup: parseInt(lineData[5]),
-            dropoff: parseInt(lineData[6])
+            pickup: parseInt(lineData[6]),
+            dropoff: parseInt(lineData[7])
           },
-          stopDistance: parseFloat(lineData[9]),
+          stopDistance: parseFloat(lineData[10]),
           stopSequence: parseFloat(lineData[4])
         })
       }

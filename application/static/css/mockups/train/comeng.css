@@ -9,33 +9,33 @@ div.content {
 }
 
 .pids {
-    display: grid;
-    background-color: #202020;
+  display: grid;
+  background-color: #202020;
 
-    padding-left: 1.5vw;
-    padding-right: 1.5vw;
-    padding-top: 1.5vw;
-    padding-bottom: 1.5vw;
+  padding-left: 1.5vw;
+  padding-right: 1.5vw;
+  padding-top: 1.5vw;
+  padding-bottom: 1.5vw;
 }
 
 .led-cell {
-    display: flex;
-    background-color: #202020;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  background-color: #202020;
+  justify-content: center;
+  align-items: center;
 }
 
 .led {
-    border: 0;
-    padding: 0;
-    margin: 0;
-    display: block;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: block;
 }
 
 .led-off {
-    background-color: #303030;
+  background-color: #303030;
 }
 
 .led-on {
-    background-color: orange;
+  background-color: orange;
 }

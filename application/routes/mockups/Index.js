@@ -6,11 +6,10 @@ const rawStationPlatforms = require('../../../additional-data/station-platforms.
 const rawStationPIDs = require('../../../additional-data/station-pids')
 const url = require('url')
 const querystring = require('querystring')
-const PIDUtils = require('./PIDUtils')
-const TrainUtils = require('./TrainUtils')
+const PIDBackend = require('./PIDBackend')
 
 async function preloadData(db, station, platform) {
-  TrainUtils.getPIDSDepartures(db, await PIDUtils.getStation(db, station), platform, null, null)
+  PIDBackend.getPIDData(await PIDBackend.getStation(station, db), platform, {}, db)
 }
 
 let stationPlatforms = {}
@@ -46,9 +45,9 @@ router.get('/summary/:station', (req, res) => {
   preloadData(res.db, station, '*')
 
   if (stationPID.length) {
-    res.render('mockups/summary-known', {stationPID, station, stationCode, getURL: PIDUtils.getURL})
+    res.render('mockups/summary-known', {stationPID, station, stationCode, getURL: PIDBackend.getURL})
   } else {
-    res.render('mockups/summary', {query, stationPlatformData, station, stationCode, getURL: PIDUtils.getURL})
+    res.render('mockups/summary', {query, stationPlatformData, station, stationCode, getURL: PIDBackend.getURL})
   }
 })
 
@@ -61,7 +60,7 @@ router.get('/station-preview/:station', (req, res) => {
 
   if (stationPID.length) {
     let pid = stationPID.filter(p => p.platform).sort((a, b) => a.platform - b.platform)[0]
-    res.redirect(PIDUtils.getURL(station, pid))
+    res.redirect(PIDBackend.getURL(station, pid))
   } else {
     res.redirect(`/mockups/metro-lcd/${station}/1/half-platform`)
   }
@@ -96,7 +95,7 @@ router.get('/get', async (req, res) => {
   } else if (type === 'summary') {
     return res.redirect(`/mockups/summary/${station}?type=${value}`)
   } else {
-    let url = PIDUtils.getURL(station, {
+    let url = PIDBackend.getURL(station, {
       type,
       platform: value
     })

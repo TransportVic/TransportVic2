@@ -2,4 +2,4 @@
 cd /home/ec2-user/TransportVic
 
 # Note: we do not want sudo or we cannot kill the process
-NODE_ENV=prod /home/ec2-user/.nvm/versions/node/v15.0.1/bin/node --max-old-space-size=4096 /home/ec2-user/TransportVic/index.js >> /home/ec2-user/log 2>> /home/ec2-user/err
+NODE_ENV=prod node --max-old-space-size=4096 /home/ec2-user/TransportVic/index.js >> /home/ec2-user/log 2>> /home/ec2-user/err

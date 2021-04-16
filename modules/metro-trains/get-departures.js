@@ -1,94 +1,217 @@
-const TimedCache = require('../../TimedCache')
 const async = require('async')
 const ptvAPI = require('../../ptv-api')
 const utils = require('../../utils')
-const moment = require('moment')
-const departureUtils = require('../utils/get-train-timetables')
-const getStoppingPattern = require('../utils/get-stopping-pattern')
+const findConsist = require('./fleet-parser')
+const departureUtils = require('../utils/get-train-timetables-new')
 const fixTripDestination = require('./fix-trip-destinations')
-const EventEmitter = require('events')
-
+const getStoppingPattern = require('./get-stopping-pattern')
 const getRouteStops = require('../../additional-data/route-stops')
-const getStonyPoint = require('../get-stony-point')
+const { getDayOfWeek } = require('../../public-holidays')
 
-const departuresCache = new TimedCache(1000 * 30)
+let undergroundLoopStations = ['Parliament', 'Flagstaff', 'Melbourne Central']
+let cityLoopStations = ['Southern Cross', ...undergroundLoopStations]
+let cityStations = [...cityLoopStations, 'Flinders Street']
 
-let ptvAPILocks = {}
+let burnleyGroup = ['Alamein', 'Belgrave', 'Glen Waverley', 'Lilydale']
+let caulfieldGroup = ['Frankston', 'Cranbourne', 'Pakenham', 'Sandringham']
+let dandenongGroup = ['Cranbourne', 'Pakenham']
+let northernGroup = ['Craigieburn', 'Sunbury', 'Upfield', 'Showgrounds/Flemington', 'Werribee', 'Williamstown']
+let cliftonHillGroup = ['Mernda', 'Hurstbridge']
+let genericGroup = ['City Circle', 'Stony Point']
 
-let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
+let lineGroups = [
+  burnleyGroup, caulfieldGroup,
+  northernGroup, cliftonHillGroup,
+  genericGroup
+]
 
-let burnleyGroup = [1, 2, 7, 9] // alamein, belgrave, glen waverley, lilydale
-let caulfieldGroup = [4, 6, 11, 12] // cranbourne, frankston, pakenham, sandringham
-let northernGroup = [3, 14, 15, 16, 17, 1482] // craigieburn, sunbury, upfield, werribee, williamstown, flemington racecourse
-let cliftonHillGroup = [5, 8] // mernda, hurstbridge
-let crossCityGroup = [6, 16, 17, 1482] // frankston, werribee, williamstown, flemington racecourse
+let stationsAppendingUp = [
+  'Richmond', 'North Melbourne', 'South Yarra'
+]
 
-function determineLoopRunning(routeID, runID, destination, isFormingNewTrip) {
-  if (routeID === 13) return [] // stony point
+function addCityLoopRunning(train, stationName) {
+  let { routeName, viaCityLoop, runDestination, runID } = train
+  let loopRunning = []
 
-  let upService = !(runID[3] % 2)
-  let throughCityLoop = runID[1] > 5 || cityLoopStations.includes(destination) && destination !== 'Southern Cross'
-  let stopsViaFlindersFirst = runID[1] <= 5
-
-  cityLoopConfig = []
-  // doublecheck showgrounds trains: R466 should be nme sss off but it show as sss fgs loop fss
-  // assume up trains
-  if (northernGroup.includes(routeID)) {
-    if (destination === 'Southern Cross')
-      cityLoopConfig = ['NME', 'SSS']
-    else if (stopsViaFlindersFirst && !throughCityLoop)
-      cityLoopConfig = ['NME', 'SSS', 'FSS']
-    else if (stopsViaFlindersFirst && throughCityLoop)
-      cityLoopConfig = ['SSS', 'FSS', 'PAR', 'MCE', 'FGS']
-    else if (!stopsViaFlindersFirst && throughCityLoop)
-      cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
-  } else {
-    if (stopsViaFlindersFirst && throughCityLoop) { // flinders then loop
-      if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID) || routeID === 99)
-        cityLoopConfig = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR']
-        if (routeID === 99) cityLoopConfig.push('FSS')
-    } else if (!stopsViaFlindersFirst && throughCityLoop) { // loop then flinders
-      if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID) || routeID === 99)
-        cityLoopConfig = ['PAR', 'MCE', 'FGS', 'SSS', 'FSS']
-      if (routeID === 99) cityLoopConfig = ['FSS', ...cityLoopConfig]
-    } else if (stopsViaFlindersFirst && !throughCityLoop) { // direct to flinders
-      if (caulfieldGroup.includes(routeID) && destination === 'Southern Cross')
-        cityLoopConfig = ['RMD', 'FSS', 'SSS']
-      else if (burnleyGroup.concat(caulfieldGroup).includes(routeID))
-        cityLoopConfig = ['RMD', 'FSS']
-      else if (cliftonHillGroup.includes(routeID))
-        cityLoopConfig = ['JLI', 'FSS']
+  if (northernGroup.includes(routeName)) {
+    if (viaCityLoop) {
+      loopRunning = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
+    } else {
+      if (runDestination === 'Southern Cross') {
+        loopRunning = ['NME', 'SSS']
+      } else if (runDestination === 'Flagstaff' || undergroundLoopStations.includes(stationName)) {
+        loopRunning = ['SSS', 'FSS', 'PAR', 'MCE', 'FGS']
+      } else {
+        loopRunning = ['NME', 'SSS', 'FSS']
+      }
+    }
+  } else if (cliftonHillGroup.includes(routeName)) {
+    if (viaCityLoop) {
+      loopRunning = ['PAR', 'MCE', 'FGS', 'SSS', 'FSS']
+    } else {
+      if (runDestination === 'Parliament') {
+        loopRunning = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR']
+      } else {
+        loopRunning = ['JLI', 'FSS']
+      }
+    }
+  } else if (burnleyGroup.includes(routeName) || caulfieldGroup.includes(routeName)) {
+    if (viaCityLoop) {
+      loopRunning = ['PAR', 'MCE', 'FGS', 'SSS', 'FSS']
+    } else {
+      if (runDestination === 'Southern Cross') {
+        loopRunning = ['RMD', 'FSS', 'SSS']
+      } else if (runDestination === 'Parliament' || cityLoopStations.includes(stationName)) {
+        loopRunning = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR']
+      } else {
+        loopRunning = ['RMD', 'FSS']
+      }
     }
   }
 
-  if (!upService || isFormingNewTrip) { // down trains away from city
-    cityLoopConfig.reverse()
-  }
+  if (routeName === 'City Circle') {
+    if (700 <= runID && runID <= 799) loopRunning = ['FSS', 'PAR', 'MCE', 'FGS', 'SSS', 'FSS']
+    if (800 <= runID && runID <= 899) loopRunning = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR', 'FSS']
+  } else if (train.direction === 'Down') loopRunning.reverse()
 
-  return cityLoopConfig
+  train.cityLoopRunning = loopRunning
 }
 
-function mapSuspension(suspension, routeName) {
-  let stationsAffected = suspension.description.replace(/\u00A0/g, ' ').match(/between ([ \w]+) and ([ \w]+) stations/i)
+function addAltonaLoopRunning(train) {
+  if (train.viaAltonaLoop !== null) {
+    if (train.viaAltonaLoop) { // Via ALT Loop
+      loopRunning = ['WTO', 'ALT', 'SHE']
+    } else { // Via ML
+      loopRunning = ['LAV', 'NPT']
+    }
 
-  if (!stationsAffected) return
-  let startStation = stationsAffected[1].trim()
-  let endStation = stationsAffected[2].trim()
+    if (train.direction === 'Down') loopRunning.reverse()
+    train.altonaLoopRunning = loopRunning
+  }
+}
+
+function addStonyPointPlatform(train, stationName) {
+  if (stationName === 'Frankston') train.platform = '3'
+  else train.platform = '1'
+}
+
+function mapSuspension(suspensionText, routeName) {
+  let stationsAffected = suspensionText
+    .replace(/\u00A0/g, ' ').replace(/[–-]/, ' and ')
+    .match(/trains (?:between )?([ \w]+) and ([ \w\/]+) (?:stations|due)/i)
+
+  if (!stationsAffected) return []
+  let startStation = utils.titleCase(stationsAffected[1].trim())
+  let endStations = stationsAffected[2].trim()
 
   // Station A should always be on the UP end
   let routeStops = getRouteStops(routeName)
   let startIndex = routeStops.indexOf(startStation)
-  let endIndex = routeStops.indexOf(endStation)
+  if (startIndex === -1) return []
 
-  if (endIndex < startIndex) {
-    let c = startStation
-    startStation = endStation
-    endStation = c
+  let allSuspensions = []
+
+  endStations.split('/').forEach(rawEndStation => {
+    let endStation = utils.titleCase(rawEndStation)
+    let endIndex = routeStops.indexOf(endStation)
+    if (endIndex === -1) return
+
+    if (endIndex < startIndex) {
+      let c = startStation
+      startStation = endStation
+      endStation = c
+    }
+
+    allSuspensions.push({
+      upStation: startStation + ' Railway Station',
+      downStation: endStation + ' Railway Station',
+    })
+  })
+
+  return allSuspensions
+}
+
+function isCityLoop(disruption) {
+  return disruption.text.toLowerCase().includes('city loop')
+}
+
+function isAltonaLoop(disruption) {
+  let text = disruption.text
+  return text.includes('Altona') || text.includes('Seaholme') || text.includes('Westona')
+    || (text.includes('Newport') && text.includes('Laverton'))
+}
+
+async function getNotifyData(db) {
+  let metroNotify = db.getCollection('metro notify')
+
+  let disruptions = await metroNotify.findDocuments({
+    toDate: {
+      $gte: +new Date() / 1000
+    },
+    active: true
+  }).toArray()
+
+  disruptions.forEach(disruption => {
+    disruption.text = disruption.text.replace(/<\/?\w+>/g, '')
+  })
+
+  let suspensions = {}
+  disruptions.forEach(suspension => {
+    if (suspension.type === 'suspended') {
+      suspension.routeName.forEach(route => {
+        let suspensionData = mapSuspension(suspension.text, route)
+        if (suspensionData.length) {
+          if (!suspensions[route]) suspensions[route] = []
+          suspensions[route].push(...suspensionData)
+        }
+      })
+    }
+  })
+
+  if (suspensions.Frankston) {
+    let possibleSty = suspensions.Frankston.find(s => s.stationB === 'Stony Point Railway Station')
+    if (possibleSty && !suspensions['Stony Point']) suspensions['Stony Point'] = [possibleSty]
   }
 
+  let allTrainAlterations = disruptions.filter(disruption => disruption.runID)
+  let stonyPointReplacements = allTrainAlterations.filter(disruption => {
+    let text = disruption.text
+    return disruption.routeName === 'Stony Point' && (text.includes('replace') || text.includes('coach'))
+  }).map(disruption => disruption.runID)
+
+  let loopSkipping = allTrainAlterations.filter(disruption => {
+    let { text } = disruption
+    return text.includes('direct')
+      || (text.includes('express') && isAltonaLoop(disruption))
+  })
+
+  let trainAlterations = allTrainAlterations.filter(disruption => {
+    let text = disruption.text
+    return (!text.includes('cancel') && !loopSkipping.includes(disruption))
+      || text.includes('originate') || text.includes('terminate') || text.includes('express')
+  })
+
+  let cityLoopSkipping = loopSkipping.filter(isCityLoop).map(disruption => disruption.runID)
+  let altonaLoopSkipping = loopSkipping.filter(isAltonaLoop).map(disruption => disruption.runID)
+
+  let broadLoopSkipping = disruptions.filter(disruption => {
+    return disruption.type !== 'works' && !disruption.runID
+      && disruption.text.includes('direct')
+      && disruption.text.toLowerCase().includes('all ')
+  })
+
+  let broadCityLoopSkipping = broadLoopSkipping.filter(isCityLoop).map(disruption => disruption.routeName).reduce((a, e) => a.concat(e), [])
+  let broadAltonaLoopSkipping = broadLoopSkipping.filter(isAltonaLoop).length !== 0
+
   return {
-    stationA: startStation + ' Railway Station',
-    stationB: endStation + ' Railway Station',
+    suspensions,
+    suspendedLines: Object.keys(suspensions),
+    stonyPointReplacements,
+    trainAlterations,
+    cityLoopSkipping,
+    altonaLoopSkipping,
+    broadCityLoopSkipping,
+    broadAltonaLoopSkipping
   }
 }
 
@@ -96,11 +219,11 @@ function adjustSuspension(suspension, trip, currentStation) {
   let startStation, endStation
 
   if (trip.direction === 'Up') {
-    startStation = suspension.stationB
-    endStation = suspension.stationA
+    startStation = suspension.downStation
+    endStation = suspension.upStation
   } else {
-    startStation = suspension.stationA
-    endStation = suspension.stationB
+    startStation = suspension.upStation
+    endStation = suspension.downStation
   }
 
   let disruptionStatus = ''
@@ -109,6 +232,9 @@ function adjustSuspension(suspension, trip, currentStation) {
   let startIndex = tripStops.indexOf(startStation)
   let currentIndex = tripStops.indexOf(currentStation)
   let endIndex = tripStops.indexOf(endStation)
+
+  if (startIndex !== -1 && endIndex === -1) endIndex = tripStops.length - 1
+  if (startIndex === -1 && endIndex !== -1) startIndex = 0
 
   if (currentIndex < startIndex) { // we're approaching disruption
     disruptionStatus = 'before'
@@ -126,474 +252,48 @@ function adjustSuspension(suspension, trip, currentStation) {
   }
 }
 
-async function getMissingRRB(station, db, individualRailBusDepartures) {
-  let gtfsTimetables = db.getCollection('gtfs timetables')
-  let today = utils.now().startOf('day')
-  let stopGTFSID = station.bays.find(bay => bay.mode === 'metro train').stopGTFSID
-
-  let extraBuses = []
-
-  await async.forEach(individualRailBusDepartures, async departureData => {
-    let { departureTimeMinutes, origin, departureTime, destination, destinationArrivalTime, direction, routeGTFSID } = departureData
-    let searchDays = departureTimeMinutes < 180 ? 1 : 0
-
-    for (let i = 0; i <= searchDays; i++) {
-      let day = today.clone().add(-i, 'days')
-
-      let minutesPastMidnight = (departureTimeMinutes % 1440) + 1440 * i
-
-      let potentialBuses = await gtfsTimetables.findDocuments({
-        operationDays: utils.getYYYYMMDD(day),
-        mode: 'metro train',
-        stopTimings: {
-          $elemMatch: {
-            stopGTFSID,
-            departureTimeMinutes: minutesPastMidnight
-          }
-        },
-        direction,
-        routeGTFSID
-      }).sort({ destinationArrivalTime: 1 }).limit(3).toArray()
-
-      potentialBuses.forEach(extraBus => {
-        if (extraBus.origin === origin && extraBus.destination === destination
-          && extraBus.departureTime === departureTime
-          && extraBus.destinationArrivalTime === destinationArrivalTime) return
-        let stopData = extraBus.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
-        let scheduledDepartureTime = utils.getMomentFromMinutesPastMidnight(stopData.departureTimeMinutes, day)
-
-        extraBuses.push({
-          trip: extraBus,
-          scheduledDepartureTime,
-          estimatedDepartureTime: null,
-          actualDepartureTime: scheduledDepartureTime,
-          platform: '-',
-          scheduledDepartureTimeMinutes: stopData.departureTimeMinutes,
-          cityLoopConfig: [],
-          destination: extraBus.destination.slice(0, -16),
-          runID: '',
-          cancelled: false,
-          suspensions: [],
-          consist: [],
-          isRailReplacementBus: true
-        })
-      })
-    }
-  })
-
-  return extraBuses
-}
-
-async function findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, route, station, replacementBusDepartures, suspensions) {
-  let routeName = route.route_name
-  let routeID = route.route_id
-  let stationName = station.stopName.slice(0, -16)
-  if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
-  let { stopGTFSID } = station.bays.find(bay => bay.mode === 'metro train')
-
-  let runDestination = utils.adjustStopName(run.destination_name)
-  let isRailReplacementBus = departure.flags.includes('RRB-RUN')
-
-  let runID = ''
-  if (!isRailReplacementBus && ptvRunID > 948000) {
-    runID = utils.getRunID(ptvRunID)
-  }
-
-  let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
-
-  let possibleDestinations = [runDestination]
-
-  let destination = runDestination
-  if (caulfieldGroup.includes(routeID) && destination === 'Southern Cross' || destination === 'Parliament')
-    possibleDestinations.push('Flinders Street')
-
-  let possibleLines = [routeName]
-
-  if (cityLoopStations.includes(stationName) || isRailReplacementBus) {
-    if (burnleyGroup.includes(routeID))
-      possibleLines = ['Alamein', 'Belgrave', 'Glen Waverley', 'Lilydale']
-    else if (caulfieldGroup.includes(routeID))
-      possibleLines = ['Cranbourne', 'Pakenham', 'Frankston', 'Sandringham']
-    else if (crossCityGroup.includes(routeID))
-      possibleLines = ['Frankston', 'Werribee', 'Williamstown']
-    else if (cliftonHillGroup.includes(routeID))
-      possibleLines = ['Mernda', 'Hurstbridge']
-    if (northernGroup.includes(routeID))
-      possibleLines = [...possibleLines, 'Sunbury', 'Craigieburn', 'Upfield', 'Showgrounds/Flemington', 'Werribee', 'Williamstown']
-    if (routeID == 6)
-      possibleLines = [...possibleLines, 'Cranbourne', 'Pakenham']
-
-    possibleDestinations.push('Flinders Street')
-  } else {
-    if ((routeName === 'Pakenham' || routeName === 'Cranbourne') && destination === 'Parliament') {
-      possibleDestinations.push('Flinders Street')
-    }
-  }
-
-  if (routeID == 99)
-    possibleLines = ['City Circle']
-
-  // gtfs timetables
-  possibleDestinations = possibleDestinations.map(dest => dest + ' Railway Station')
-
-  let usedLive = false
-  let isUpTrip = runID.slice(1) % 2 === 0
-  if (routeName === 'Stony Point') {
-    isUpTrip = destination === 'Frankston'
-  }
-
-  let direction = isUpTrip ? 'Up' : 'Down'
-  if (isRailReplacementBus) direction = { $in: ['Up', 'Down'] }
-
-  let isFormingNewTrip = cityLoopStations.includes(stationName) && destination !== 'Flinders Street'
-
-  let isSCS = stationName === 'Southern Cross'
-  let isFSS = stationName === 'Flinders Street'
-
-  let cityLoopConfig = !isRailReplacementBus ? determineLoopRunning(routeID, runID, runDestination, isFormingNewTrip) : []
-
-  if (isUpTrip && !cityLoopStations.includes(runDestination) &&
-    !cityLoopStations.includes(stationName) && runDestination !== 'Flinders Street')
-    cityLoopConfig = []
-
-  if (cityLoopStations.includes(stationName) && !cityLoopConfig.includes('FGS')) {
-    // we are in loop but given next trip - tdn decoding would give a direct service
-    // really only seems to happen with cfd & nor group
-    if (caulfieldGroup.includes(routeID) || burnleyGroup.includes(routeID))
-      cityLoopConfig = ['PAR', 'MCE', 'FGS', 'SSS', 'FSS']
-    else if (!crossCityGroup.includes(routeID) && northernGroup.includes(routeID)) {// all northern group except showgrounds & cross city
-      if (runDestination !== 'Flinders Street')
-        cityLoopConfig = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS']
-    }
-  }
-
-  if (isUpTrip && !cityLoopStations.includes(stationName)) {
-    if (cityLoopConfig[0] === 'FSS' || cityLoopConfig[1] === 'FSS')
-      destination = 'Flinders Street'
-    else if (['PAR', 'FGS'].includes(cityLoopConfig[0]) && !cityLoopStations.includes(stationName))
-      destination = 'City Loop'
-    else if (cityLoopConfig.slice(-1)[0] === 'SSS')
-      destination = 'Southern Cross'
-  }
-
-  let viaCityLoop = isFSS ? cityLoopConfig.includes('FGS') : undefined
-
-  let trip = await departureUtils.getLiveDeparture(station, db, 'metro train', possibleLines,
-    scheduledDepartureTime, possibleDestinations, direction, viaCityLoop)
-
-  if (!trip) {
-    trip = await departureUtils.getScheduledDeparture(station, db, 'metro train', possibleLines,
-      scheduledDepartureTime, possibleDestinations, direction, viaCityLoop)
-  } else {
-    usedLive = true
-  }
-
-  if (!trip) { // static dump
-    // let isCityLoop = cityLoopStations.includes(stationName) || stationName === 'flinders street'
-    trip = await departureUtils.getStaticDeparture(runID, db)
-    if (trip) {
-      let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
-      if (!stopData || stopData.departureTimeMinutes !== scheduledDepartureTimeMinutes)
-        trip = null
-      else if (!possibleDestinations.includes(trip.destination))
-        trip = null
-    }
-  }
-
-  if (!trip) { // still no match - getStoppingPattern
-    if (replacementBusDepartures.includes(scheduledDepartureTimeMinutes)) {
-      if (isRailReplacementBus && suspensions.length === 0) return // ok this is risky but bus replacements actually seem to do it the same way as vline
-    }
-
-    trip = await getStoppingPattern(db, ptvRunID, 'metro train', scheduledDepartureTime.toISOString())
-    usedLive = true
-  }
-
-  return { trip, usedLive, runID, isRailReplacementBus, destination, cityLoopConfig }
-}
-
-async function getDeparturesFromPTV(station, db, departuresCount, platform) {
-  let minutesPastMidnight = utils.getMinutesPastMidnightNow()
-  let transformedDepartures = []
-
-  let now = utils.now()
-
-  let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
-  let {stopGTFSID} = metroPlatform
-  let stationName = station.stopName.slice(0, -16)
-  let {departures, runs, routes, disruptions} = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=run&expand=route&expand=disruption&expand=VehicleDescriptor`)
-
-  let suspensionMap = {}
-  Object.values(disruptions).filter(disruption => {
-    return disruption.disruption_type.toLowerCase().includes('suspend')
-  }).forEach(suspension => {
-    suspensionMap[suspension.disruption_id] = mapSuspension(suspension, suspension.routes[0].route_name)
-  })
-
-  function matchService(disruption) {
-    let text = disruption.description
-    let service = text.match(/the (\d+:\d+[ap]m) ([ \w]*?) to ([ \w]*?) (?:train|service )?(?:will|has|is)/i)
-
-    if (service) {
-      let departureTime = service[1],
-          origin = service[2],
-          destination = service[3]
-
-      let minutesPastMidnight = utils.getMinutesPastMidnightFromHHMM(departureTime.slice(0, -2))
-      if (departureTime.includes('pm') && !departureTime.startsWith('12:')) minutesPastMidnight += 720
-
-      return {
-        departureTime: utils.getHHMMFromMinutesPastMidnight(minutesPastMidnight),
-        origin, destination,
-        originalText: text
-      }
-    }
-  }
-
-  let stonyPointReplacements = Object.values(disruptions).filter(disruption => {
-    if (disruption.routes.find(r => r.route_gtfs_id === '2-SPT')) {
-      return disruption.description.includes('replace')
-    }
-    return false
-  }).map(matchService).filter(Boolean)
-
-  let alterationMap = {}
-
-  Object.values(disruptions).map(matchService).filter(Boolean).map(disruption => {
-    let parts = disruption.originalText.match(/will (?:now )?(\w+) (?:from|at) (.*)./)
-    if (parts) {
-      let type = parts[1]
-      let point = parts[2]
-
-      let serviceID = `${disruption.origin}-${disruption.destination}-${disruption.departureTime}`
-      alterationMap[serviceID] = true
-      alterationMap[serviceID] = { type, point }
-    }
-  })
-
-  let cityLoopSkipping = Object.values(disruptions).filter(disruption => {
-    let description = disruption.description.toLowerCase()
-    if (description.includes('maint') || description.includes('works') || disruption.disruption_type === 'Planned Works') return false
-
-    return (description.includes('direct to') && description.includes('not via the city loop'))
-     || (description.includes('city loop services') && description.includes('direct between flinders st'))
-     || (description.match(/direct from [\w ]* to flinders st/) && description.includes('not via the city loop'))
-  })
-
-  let servicesSkippingLoop = []
-  let linesSkippingLoop = []
-
-  cityLoopSkipping.forEach(disruption => {
-    let service = matchService(disruption)
-    if (service) {
-      servicesSkippingLoop.push(service)
-    } else {
-      linesSkippingLoop = linesSkippingLoop.concat(disruption.routes.map(r => r.route_gtfs_id))
-    }
-  })
-
-  // PTV likes to leave stuff out
-  if (linesSkippingLoop.includes('2-HBG') || linesSkippingLoop.includes('2-MER')) {
-    linesSkippingLoop = linesSkippingLoop.concat(['2-HBG', '2-MER'])
-  }
-
-  if (linesSkippingLoop.includes('2-BEL') || linesSkippingLoop.includes('2-LIL') || linesSkippingLoop.includes('2-GLW') || linesSkippingLoop.includes('2-ALM')) {
-    linesSkippingLoop = linesSkippingLoop.concat(['2-BEL', '2-LIL', '2-GLW', '2-ALM'])
-  }
-
-  if (linesSkippingLoop.includes('2-CRB') || linesSkippingLoop.includes('2-PKM') || linesSkippingLoop.includes('2-FKN') || linesSkippingLoop.includes('2-SDM')) {
-    linesSkippingLoop = linesSkippingLoop.concat(['2-CRB', '2-PKM', '2-FKN', '2-SDM'])
-  }
-
-  if (linesSkippingLoop.includes('2-WBE') || linesSkippingLoop.includes('2-WMN') || linesSkippingLoop.includes('2-UFD') || linesSkippingLoop.includes('2-B31') || linesSkippingLoop.includes('2-SYM')) {
-    linesSkippingLoop = linesSkippingLoop.concat(['2-WBE', '2-WMN', '2-UFD', '2-B31', '2-SYM'])
-  }
-
-  let replacementBuses = departures.filter(departure => departure.flags.includes('RRB-RUN'))
-  let trains = departures.filter(departure => !departure.flags.includes('RRB-RUN'))
-
-  let replacementBusDepartures = replacementBuses.map(bus => {
-    let scheduledDepartureTime = utils.parseTime(bus.scheduled_departure_utc)
-    return utils.getPTMinutesPastMidnight(scheduledDepartureTime)
-  })
-
-  let individualRailBusDepartures = []
-  let railBusesSeen = []
-
-  async function processRawDeparture(departure) {
-    let ptvRunID = departure.run_ref
-    let run = runs[ptvRunID]
-    let routeID = departure.route_id
-    let route = routes[routeID]
-    let platform = departure.platform_number
-    let suspensions = departure.disruption_ids.map(id => suspensionMap[id]).filter(Boolean)
-    let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
-    let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
-    let cancelled = run.status === 'cancelled'
-
-    if (scheduledDepartureTime.diff(now, 'minutes') > 150) return
-
-    let vehicleDescriptor = run.vehicle_descriptor || {}
-
-    let vehicleType = vehicleDescriptor.description
-
-    let consist = []
-
-    let estimatedDepartureTime = departure.estimated_departure_utc ? utils.parseTime(departure.estimated_departure_utc) : null
-
-    let tripData = await findTrip(db, departure, scheduledDepartureTime, run, ptvRunID, route, station, replacementBusDepartures, suspensions)
-    if (!tripData) return
-    let { trip, usedLive, runID, isRailReplacementBus, destination, cityLoopConfig } = tripData
-
-    if (isRailReplacementBus) {
-      if (individualRailBusDepartures.some(bus => {
-        return bus.origin === trip.origin && bus.destination === trip.destination
-          && bus.departureTime === trip.departureTime
-          && bus.destinationArrivalTime === trip.destinationArrivalTime
-      })) return
-
-      individualRailBusDepartures.push({
-        departureTimeMinutes: scheduledDepartureTimeMinutes,
-        direction: trip.direction,
-        origin: trip.origin,
-        departureTime: trip.departureTime,
-        destination: trip.destination,
-        destinationArrivalTime: trip.destinationArrivalTime,
-        routeGTFSID: trip.routeGTFSID
-      })
-    }
-
-    if (!usedLive) {
-      let origin = trip.trueOrigin.slice(0, -16)
-      let destination = trip.trueDestination.slice(0, -16)
-
-      let serviceID = `${origin}-${destination}-${trip.trueDepartureTime}`
-      if (alterationMap[serviceID]) trip = await getStoppingPattern(db, ptvRunID, 'metro train', scheduledDepartureTime.toISOString())
-    }
-
-    if (stonyPointReplacements.length) {
-      let replacement = stonyPointReplacements.find(r => {
-        return r.origin === trip.origin.slice(0, -16) && r.departureTime === trip.departureTime
-      })
-      if (replacement) isRailReplacementBus = true
-    }
-
-    if (routeID === 13 && !isRailReplacementBus) { // stony point platforms
-      if (station.stopName === 'Frankston Railway Station') platform = '3'
-      else platform = '1'
-    }
-
-    let skippingLoop = servicesSkippingLoop.find(r => {
-      return r.origin === trip.origin.slice(0, -16) && r.departureTime === trip.departureTime && r.destination === trip.destination.slice(0, -16)
-    })
-
-    let willSkipLoop = skippingLoop || linesSkippingLoop.includes(routes[routeID].route_gtfs_id)
-    if (willSkipLoop) {
-      if (cityLoopStations.includes(stationName)) {
-        if (northernGroup.includes(routeID)) {
-          if (!isSCS) return
-        } else return
-      }
-
-      if (northernGroup.includes(routeID)) cityLoopConfig = ['NME', 'SSS', 'FSS']
-      else if (cliftonHillGroup.includes(routeID)) cityLoopConfig = ['JLI', 'FSS']
-      else cityLoopConfig = ['RMD', 'FSS']
-
-      if (trip.direction === 'Up') {
-        destination = 'Flinders Street'
-      } else {
-        cityLoopConfig.reverse()
-      }
-    }
-
-    if (routeID === 99 && stationName === 'Flinders Street') destination = 'City Loop'
-
-    let message = ''
-
-    let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
-    let mappedSuspensions = suspensions.map(e => adjustSuspension(e, trip, station.stopName))
-    if (mappedSuspensions.length && !isRailReplacementBus) {
-      isRailReplacementBus = mappedSuspensions.some(suspension => suspension.disruptionStatus === 'current')
-    }
-
-    if (trip.routeName === 'Stony Point') {
-      let potentialConsist = await getStonyPoint(db)
-      if (potentialConsist.length === 2) consist = potentialConsist
-    }
-
-    transformedDepartures.push({
-      trip,
-      scheduledDepartureTime,
-      estimatedDepartureTime,
-      actualDepartureTime,
-      platform,
-      isRailReplacementBus,
-      cancelled, cityLoopConfig,
-      destination, runID, vehicleType,
-      suspensions: mappedSuspensions,
-      message,
-      consist,
-      willSkipLoop,
-      routeID
-    })
-  }
-
-  await Promise.all([
-    async.forEach(trains, processRawDeparture),
-    async.forEachSeries(replacementBuses, processRawDeparture)
-  ])
-
-  return transformedDepartures.concat(await getMissingRRB(station, db, individualRailBusDepartures))
-}
-
-function filterDepartures(departures, filter) {
-  if (filter) {
-    let now = utils.now()
-    departures = departures.filter(departure => {
-      let secondsDiff = departure.actualDepartureTime.diff(now, 'seconds')
-
-      return -30 < secondsDiff && secondsDiff < 7200 // 2 hours
-    })
-  }
-
-  return departures.sort((a, b) => {
-    return a.actualDepartureTime - b.actualDepartureTime || a.destination.localeCompare(b.destination)
-  })
-}
-
-async function updateSuspensions(departures, station, db) {
-  let liveTimetables = db.getCollection('live timetables')
-  let stationName = station.stopName.slice(0, -16)
-
-  await async.forEach(departures.filter(departure => departure.suspensions.length), async departure => {
-    let { trip } = departure
-    let currentSuspension = departure.suspensions[0]
-
+async function applySuspension(train, notifyData, metroPlatform, db) {
+  if (notifyData.suspendedLines.includes(train.routeName)) {
+    let rawSuspension = notifyData.suspensions[train.routeName][0]
+    let suspension = adjustSuspension(rawSuspension, train.trip, metroPlatform.fullStopName)
+
+    let trip = train.trip
     let tripStops = trip.stopTimings.map(stop => stop.stopName)
+    let isDown = train.direction === 'Down'
 
-    if (currentSuspension.disruptionStatus === 'before') { // Cut destination
-      let startIndex = tripStops.indexOf(currentSuspension.startStation)
+    train.suspension = suspension
+    trip.suspension = suspension
+
+    if (suspension.disruptionStatus === 'before') { // Cut destination
+      let startIndex = tripStops.indexOf(suspension.startStation)
       if (startIndex == -1) startIndex = tripStops.length
 
       trip.stopTimings = trip.stopTimings.slice(0, startIndex + 1)
-    } else if (currentSuspension.disruptionStatus === 'current') { // Rail bus
-      let startIndex = tripStops.indexOf(currentSuspension.startStation)
-      let endIndex = tripStops.indexOf(currentSuspension.endStation)
+      trip.runID = train.runID + (isDown ? 'U' : 'D')
+    } else if (suspension.disruptionStatus === 'current') { // Rail bus
+      let startIndex = tripStops.indexOf(suspension.startStation)
+      let endIndex = tripStops.indexOf(suspension.endStation)
 
       if (startIndex == -1) startIndex = 0
       if (endIndex == -1) endIndex = tripStops.length
 
       trip.stopTimings = trip.stopTimings.slice(startIndex, endIndex + 1)
-
-      departure.cancelled = false
       trip.cancelled = false
-      departure.estimatedDepartureTime = null
-      departure.actualDepartureTime = departure.scheduledDepartureTime
-    } else if (currentSuspension.disruptionStatus === 'passed') { // Cut origin
-      let endIndex = tripStops.indexOf(currentSuspension.endStation)
+
+      train.isRailReplacementBus = true
+      train.cancelled = false
+
+      train.estimatedDepartureTime = null
+      train.actualDepartureTime = train.scheduledDepartureTime
+
+      trip.runID = train.runID + 'B'
+    } else if (suspension.disruptionStatus === 'passed') { // Cut origin
+      let endIndex = tripStops.indexOf(suspension.endStation)
       if (endIndex == -1) endIndex = 0
 
       trip.stopTimings = trip.stopTimings.slice(endIndex)
+
+      trip.runID = train.runID + (isDown ? 'D' : 'U')
     }
 
     let firstStop = trip.stopTimings[0]
@@ -611,137 +311,772 @@ async function updateSuspensions(departures, station, db) {
     trip.departureTime = firstStop.departureTime
     trip.destinationArrivalTime = lastStop.arrivalTime
 
-    trip = fixTripDestination(trip)
+    fixTripDestination(trip)
 
-    departure.destination = trip.trueDestination.slice(0, -16)
+    train.destination = trip.trueDestination.slice(0, -16)
+  } else if (train.routeName === 'Stony Point' && notifyData.stonyPointReplacements.includes(train.runID)) {
+    train.isRailReplacementBus = true
+    train.trip.runID = train.runID + 'B'
+  } else {
+    train.suspension = null
+    train.trip.suspension = null
+  }
 
-    if (trip.direction === 'Up' && !cityLoopStations.includes(stationName) && currentSuspension.disruptionStatus !== 'current') {
-      let cityLoopConfig = determineLoopRunning(departure.routeID, departure.runID, departure.destination, false)
-      if (departure.destination !== 'Flinders Street')
-        cityLoopConfig = []
+  return train
+}
 
-      if (cityLoopConfig[0] === 'FSS' || cityLoopConfig[1] === 'FSS')
-        departure.destination = 'Flinders Street'
-      else if (['PAR', 'FGS'].includes(cityLoopConfig[0]) && !cityLoopStations.includes(stationName))
-        departure.destination = 'City Loop'
-      else if (cityLoopConfig.slice(-1)[0] === 'SSS')
-        departure.destination = 'Southern Cross'
-    }
+function filterDepartures(departures, filter) {
+  let filteredDepartures = departures
+  if (filter) {
+    let now = utils.now()
+
+    filteredDepartures = departures.filter(departure => {
+      let secondsDiff = departure.actualDepartureTime.diff(now, 'seconds')
+
+      return -30 < secondsDiff && secondsDiff < 5400 // 1.5 hours
+    })
+  }
+
+  return filteredDepartures.sort((a, b) => {
+    let aLastStop = a.trip.stopTimings[a.trip.stopTimings.length - 1]
+    let bLastStop = b.trip.stopTimings[b.trip.stopTimings.length - 1]
+
+    return a.actualDepartureTime - b.actualDepartureTime
+      || a.destination.localeCompare(b.destination)
+      || aLastStop.arrivalTimeMinutes - bLastStop.arrivalTimeMinutes
   })
 }
 
-async function markRailBuses(departures, station, db) {
-  let liveTimetables = db.getCollection('live timetables')
-  let stopGTFSID = station.bays.find(bay => bay.mode === 'metro train').stopGTFSID
+async function matchTrip(train, stopGTFSID, db, possibleLines, originalLine, possibleDestinations) {
+  let fullPossibleDestinations = possibleDestinations.map(dest => dest + ' Railway Station')
 
-  await async.forEachSeries(departures.filter(departure => departure.suspensions.length || departure.isRailReplacementBus || departure.trip.isRailReplacementBus), async departure => {
-    let { trip } = departure
-    let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
-    if (!stopData) return
+  let data = {
+    stopGTFSID,
+    possibleLines,
+    originalLine,
+    departureTime: train.scheduledDepartureTime,
+    possibleDestinations: fullPossibleDestinations,
+    direction: train.direction,
+    viaCityLoop: train.viaCityLoop
+  }
 
-    let minutesDiff = stopData.departureTimeMinutes - trip.stopTimings[0].departureTimeMinutes
-    let originDepartureTime = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
-
-    let departureDay = utils.getYYYYMMDD(originDepartureTime)
-    let windBackTime = trip.stopTimings[0].departureTimeMinutes > 1440
-    let stopTimings = (windBackTime ? trip.stopTimings.map(stop => {
-      return {
-        ...stop,
-        arrivalTimeMinutes: stop.arrivalTimeMinutes ? stop.arrivalTimeMinutes - 1440 : null,
-        departureTimeMinutes: stop.departureTimeMinutes ? stop.departureTimeMinutes - 1440 : null
-      }
-    }) : trip.stopTimings).map(stop => {
-      let estimatedDepartureTime = departure.estimatedDepartureTime ? departure.estimatedDepartureTime.toISOString() : null
-      return {
-        ...stop,
-        estimatedDepartureTime: departure.isRailReplacementBus ? null : estimatedDepartureTime,
-        platform: departure.isRailReplacementBus ? null : stop.platform
-      }
-    })
-
-    let newTrip = {
-      ...trip,
-      stopTimings,
-      isRailReplacementBus: departure.isRailReplacementBus,
-      operationDays: departureDay
+  let liveDeparture = await departureUtils.getLiveDeparture(data, db)
+  let gtfsDeparture = await departureUtils.getScheduledDeparture(data, db)
+  if (liveDeparture && gtfsDeparture) {
+    if (liveDeparture.routeName !== originalLine && gtfsDeparture.routeName == originalLine) {
+      return gtfsDeparture
+    } else {
+      return liveDeparture
     }
-    delete newTrip._id
+  } else {
+    return liveDeparture || gtfsDeparture
+  }
+}
 
+async function genericMatch(train, stopGTFSID, stationName, db) {
+  let possibleLines = lineGroups.find(group => group.includes(train.routeName)) || train.routeName
+
+  let possibleDestinations = [train.runDestination]
+  if (train.runDestination === 'Parliament') // RMD/JLI -> FSS -> CLP -> PAR
+    possibleDestinations.push('Flinders Street')
+
+  if (train.runDestination === 'Flinders Street' && !train.viaCityLoop)
+    possibleDestinations.push('Parliament')
+
+  let trip = await matchTrip(train, stopGTFSID, db, possibleLines, train.routeName, possibleDestinations)
+  return trip
+}
+
+async function cfdGroupMatch(train, stopGTFSID, stationName, db) {
+  let possibleLines = caulfieldGroup
+
+  let possibleDestinations = [train.runDestination]
+  if (train.runDestination === 'Parliament') // RMD -> FSS -> CLP -> PAR
+    possibleDestinations.push('Flinders Street')
+
+  if (train.runDestination === 'Southern Cross' && !train.viaCityLoop) // RMD -> FSS -> SSS -> NPT (Occo Only)
+    possibleDestinations.push('Flinders Street')
+
+  if (train.runDestination === 'Flagstaff' && train.viaCityLoop) // RMD -> CLP -> FSS -> PAR -> CLP -> FGS -> NME
+    possibleDestinations.push('Flinders Street')
+
+  let trip = await matchTrip(train, stopGTFSID, db, possibleLines, train.routeName, possibleDestinations)
+  return trip
+}
+
+async function norGroupMatch(train, stopGTFSID, stationName, db) {
+  let possibleLines = northernGroup
+
+  let possibleDestinations = [train.runDestination]
+  if (train.runDestination === 'Southern Cross' && train.viaCityLoop) // NME -> FGS -> CLP -> FSS -> SSS -> NME (Next trip)
+    possibleDestinations.push('Flinders Street')
+
+  if (train.runDestination === 'Flagstaff' && !train.viaCityLoop) // NME -> SSS -> FSS -> CLP -> FGS -> NME (Next trip)
+    possibleDestinations.push('Flinders Street')
+
+  if (train.runDestination === 'Flinders Street') {
+    if (train.viaCityLoop) {
+      possibleDestinations.push('Southern Cross')
+    } else { // NME -> SSS -> FSS -> CLP -> FGS -> NME (Next trip)
+      possibleDestinations.push('Flagstaff')
+    }
+  }
+
+  let trip
+
+  if (stationName === 'Southern Cross' && train.runDestination !== 'Flinders Street') {
+    // Look for SSS -> FSS -> SSS reverse stunt
+    // These reverse runs seem to always be on the same line (so SUY->SUY for eg)
+    // Especially problematic with P13 as it is UP only, but down trips can be given from there
+    if (train.platform === '13' && train.direction === 'Down') {
+      trip = await matchTrip({
+        ...train,
+        direction: 'Up'
+      }, stopGTFSID, db, possibleLines, train.routeName, ['Flinders Street'])
+    }
+  }
+
+  if (!trip) {
+    trip = await matchTrip(train, stopGTFSID, db, possibleLines, train.routeName, possibleDestinations)
+  }
+
+  return trip
+}
+
+async function verifyTrainLoopRunning(train) {
+  if (dandenongGroup.includes(train.routeName)) {
+    let departureDay = await getDayOfWeek(train.originDepartureTime)
+    if (4200 <= train.runID && train.runID <= 4299) { // DNG - CBE Shuttles
+      if (departureDay === 'Sat' || departureDay === 'Sun') {
+        train.viaCityLoop = false
+      }
+    } else if (6999 < train.runID && train.runID < 7999) { // Specials, these still follow regular conventions
+      let loopIndicator = train.runID[1]
+      train.viaCityLoop = loopIndicator > 5
+    } else { // Look for city loop skipping a/c scheduled works
+      let fssIndex = train.allStops.indexOf('Flinders Street')
+      if (train.direction === 'Up' && fssIndex !== -1) {
+        let parIndex = train.allStops.indexOf('Parliament')
+        train.viaCityLoop = parIndex < fssIndex && parIndex !== -1 // PAR before FSS
+      }
+    }
+  }
+}
+
+async function applyLoopSkipping(train, notifyData) {
+  let { routeName } = train
+
+  if (notifyData.cityLoopSkipping.includes(train.runID) || notifyData.broadCityLoopSkipping.includes(routeName)) {
+    let isCityTrain = train.trip.stopTimings.some(stop => stop.stopName === 'Flinders Street Railway Station')
+
+    if (isCityTrain) {
+      train.viaCityLoop = false
+      train.isSkippingLoop = true
+      if (northernGroup.includes(routeName)) { // NME - SSS - FSS
+        train.cityLoopRunning = ['NME', 'SSS', 'FSS']
+      } else if (cliftonHillGroup.includes(routeName)) { // JLI - FSS
+        train.cityLoopRunning = ['JLI', 'FSS']
+      } else { // RMD - FSS
+        train.cityLoopRunning = ['RMD', 'FSS']
+      }
+
+      if (train.direction === 'Down') train.cityLoopRunning.reverse()
+      else train.destination = 'Flinders Street'
+    }
+  }
+
+  if (notifyData.altonaLoopSkipping.includes(train.runID) || notifyData.broadAltonaLoopSkipping) {
+    if (train.viaAltonaLoop) {
+      train.viaAltonaLoop = false
+      train.isSkippingLoop = true
+      train.altonaLoopRunning = ['LAV', 'NPT']
+
+      if (train.direction === 'Down') train.altonaLoopRunning.reverse()
+    }
+  }
+
+}
+
+function returnBusDeparture(bus, trip) {
+  let destination = trip.destination.slice(0, -16)
+
+  return {
+    scheduledDepartureTime: bus.scheduledDepartureTime,
+    estimatedDepartureTime: null,
+    actualDepartureTime: bus.scheduledDepartureTime,
+    fleetNumber: null,
+    runID: null,
+    ptvRunID: bus.ptvRunID,
+    platform: null,
+    cancelled: null,
+    routeName: bus.routeName,
+    codedRouteName: utils.encodeName(bus.routeName),
+    trip,
+    destination,
+    direction: bus.direction,
+    runDestination: destination,
+    viaCityLoop: null,
+    viaAltonaLoop: null,
+    isRailReplacementBus: true,
+    suspension: null,
+    isSkippingLoop: null
+  }
+}
+
+async function getMissingRailBuses(mappedBuses, metroPlatform, db) {
+  let {stopGTFSID} = metroPlatform
+  let gtfsTimetables = db.getCollection('gtfs timetables')
+
+  let extrasByTime = await async.map(mappedBuses, async bus => {
+    let departureTimeMinutes = utils.getMinutesPastMidnight(bus.scheduledDepartureTime)
+    let searchDays = departureTimeMinutes < 180 ? 1 : 0
+
+    for (let i = 0; i <= searchDays; i++) {
+      let day = bus.scheduledDepartureTime.clone().add(-i, 'days')
+
+      let potentialBuses = await gtfsTimetables.findDocuments({
+        operationDays: utils.getYYYYMMDD(day),
+        mode: 'metro train',
+        stopTimings: {
+          $elemMatch: {
+            stopGTFSID,
+            departureTimeMinutes: departureTimeMinutes + 1440 * i
+          }
+        },
+        direction: bus.direction,
+        routeGTFSID: bus.trip.routeGTFSID
+      }).limit(3).toArray()
+
+      let extras = potentialBuses.filter(extra => !utils.tripsEqual(bus.trip, extra))
+
+      return extras.map(extra => {
+        // It has all the same propeties as the original bus just a different trip
+        return returnBusDeparture(bus, extra)
+      })
+    }
+  })
+
+  return extrasByTime.reduce((a, e) => a.concat(e), [])
+}
+
+async function expandSkeleton(bus, allBuses, db) {
+  let {originalBus} = bus
+
+  let matchingDeparture = allBuses.find(potentialMatch => {
+    return originalBus.scheduledDepartureTime.isSame(potentialMatch.scheduledDepartureTime)
+      && originalBus.direction === potentialMatch.direction
+      && bus.possibleLines.includes(potentialMatch.routeName)
+  })
+
+  if (matchingDeparture) return
+  let trip = await getStoppingPattern({
+    ptvRunID: originalBus.ptvRunID,
+    time: originalBus.scheduledDepartureTime.toISOString()
+  }, db)
+
+  return returnBusDeparture(originalBus, trip)
+}
+
+async function mapBus(bus, metroPlatform, db) {
+  let {stopGTFSID} = metroPlatform
+
+  let destination = bus.runDestination
+
+  let possibleLines = lineGroups.find(group => group.includes(bus.routeName)) || bus.routeName
+  let trip = await matchTrip(bus, stopGTFSID, db, possibleLines, bus.routeName, [destination])
+
+  if (trip) {
+    return returnBusDeparture(bus, trip)
+  } else {
+    // No trip - could be fake trips from PTV (eg buses NME-WER, SUY will show NME-FSY)
+    return {
+      skeleton: true,
+      destination,
+      possibleLines,
+      stopGTFSID,
+      originalBus: bus
+    }
+  }
+}
+
+async function getSTYRunID(trip, db) {
+  let timetables = db.getCollection('timetables')
+  let wttTrip = await timetables.findDocument({
+    mode: 'metro train',
+    routeGTFSID: trip.routeGTFSID,
+    direction: trip.direction,
+    departureTime: trip.departureTime
+  })
+
+  if (wttTrip) return wttTrip.runID
+}
+
+async function mapTrain(train, metroPlatform, notifyData, db) {
+  let {stopGTFSID} = metroPlatform
+  let stationName = metroPlatform.fullStopName.slice(0, -16)
+  let isInLoop = cityLoopStations.includes(stationName)
+
+  let routeName = train.routeName
+  let trip
+  if (burnleyGroup.includes(routeName) || cliftonHillGroup.includes(routeName) || genericGroup.includes(routeName)) {
+    trip = await genericMatch(train, stopGTFSID, stationName, db)
+  } else if (caulfieldGroup.includes(routeName)) {
+    trip = await cfdGroupMatch(train, stopGTFSID, stationName, db)
+  } else if (northernGroup.includes(routeName)) {
+    trip = await norGroupMatch(train, stopGTFSID, stationName, db)
+  }
+
+  if (!trip) {
+    trip = await getStoppingPattern({
+      ptvRunID: train.ptvRunID,
+      time: train.scheduledDepartureTime.toISOString()
+    }, db)
+  }
+
+  if (train.routeName === 'Stony Point') {
+    train.runID = await getSTYRunID(trip, db)
+  }
+
+  let relevantAlerts = notifyData.trainAlterations.filter(alteration => alteration.runID === train.runID)
+  let tripAlerts = trip.notifyAlerts || []
+
+  if (relevantAlerts.some(alert => !tripAlerts.includes(alert.alertID))) {
+    trip = await getStoppingPattern({
+      ptvRunID: train.ptvRunID,
+      time: train.scheduledDepartureTime.toISOString()
+    }, db)
+  }
+
+  let viaAltonaLoop = null
+  if (train.routeName === 'Werribee') {
+    let isNPTTrain = trip.stopTimings.some(stop => stop.stopName === 'Newport Railway Station')
+    let isLAVTrain = trip.stopTimings.some(stop => stop.stopName === 'Laverton Railway Station')
+
+    if (isNPTTrain && isLAVTrain) {
+      viaAltonaLoop = trip.stopTimings.some(stop => stop.stopName === 'Altona Railway Station')
+    }
+
+    if (isNPTTrain !== isLAVTrain) { // We only have one of NPT or LAV
+      let isWERTrain = trip.stopTimings.some(stop => stop.stopName === 'Werribee Railway Station')
+      let isFSYTrain = trip.stopTimings.some(stop => stop.stopName === 'Footscray Railway Station')
+
+      viaAltonaLoop = !(isWERTrain || isFSYTrain) // We are expressing one of NPT or LAV
+    }
+  }
+
+  return {
+    scheduledDepartureTime: train.scheduledDepartureTime,
+    estimatedDepartureTime: train.estimatedDepartureTime,
+    actualDepartureTime: train.estimatedDepartureTime || train.scheduledDepartureTime,
+    fleetNumber: train.fleetNumber,
+    runID: train.runID,
+    ptvRunID: train.ptvRunID,
+    platform: train.platform,
+    cancelled: train.cancelled,
+    routeName: train.routeName,
+    codedRouteName: utils.encodeName(train.routeName),
+    trip,
+    destination: trip.trueDestination.slice(0, -16),
+    direction: train.direction,
+    runDestination: train.runDestination,
+    viaCityLoop: train.viaCityLoop,
+    viaAltonaLoop,
+    isRailReplacementBus: false,
+    suspension: null,
+    isSkippingLoop: null
+  }
+}
+
+function determineLoopRunning(runID, routeName, direction) {
+  let viaCityLoop
+  let loopIndicator = runID[1]
+
+  if (dandenongGroup.includes(routeName)) {
+    if (3999 < runID && runID < 4105) {
+      viaCityLoop = direction === 'Up'
+    } else if (4179 < runID && runID < 4200) { // Night network, loop closed
+      viaCityLoop = false
+    } else if (runID < 4265) {
+      viaCityLoop = direction === 'Up'
+    } else if (4599 < runID && runID < 4800) {
+      viaCityLoop = direction === 'Up'
+    }
+  } else {
+    viaCityLoop = loopIndicator > 5
+  }
+
+  return viaCityLoop
+}
+
+function appendDepartureDay(departure, stopGTFSID) {
+  let { trip } = departure
+  let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+  if (!stopData) return global.loggers.general.warn('No departure day', departure, stopGTFSID)
+
+  let firstStop = trip.stopTimings.find(tripStop => tripStop.stopName === trip.trueOrigin)
+
+  let originDepartureMinutes = firstStop.departureTimeMinutes
+  let stopDepartureMinutes = stopData.departureTimeMinutes || stopData.arrivalTimeMinutes
+  let minutesDiff = stopDepartureMinutes - originDepartureMinutes
+  let originDepartureTime = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
+
+  departure.originDepartureTime = originDepartureTime
+  departure.departureDay = utils.getYYYYMMDD(originDepartureTime)
+  departure.trueDepartureDay = departure.departureDay
+  if (originDepartureMinutes >= 1440) {
+    departure.departureDay = utils.getYYYYMMDD(originDepartureTime.clone().add(-1, 'day'))
+  }
+}
+
+function findUpcomingStops(departure, stopGTFSID) {
+  let tripStops = departure.trip.stopTimings
+  let stopNames = tripStops.map(stop => stop.stopName.slice(0, -16))
+
+  let currentIndex = tripStops.findIndex(stop => stop.stopGTFSID === stopGTFSID)
+  let destinationIndex = stopNames.lastIndexOf(departure.trip.trueDestination.slice(0, -16))
+
+  let futureStops = stopNames.slice(currentIndex + 1, destinationIndex + 1)
+
+  departure.allStops = stopNames.slice(0, destinationIndex + 1)
+  departure.futureStops = futureStops
+}
+
+
+async function saveConsists(departures, db) {
+  let metroTrips = db.getCollection('metro trips')
+  let runIDsSeen = []
+  let deduped = departures.filter(departure => {
+    if (!runIDsSeen.includes(departure.runID) && departure.fleetNumber) {
+      runIDsSeen.push(departure.runID)
+      return true
+    } else {
+      return false
+    }
+  })
+
+  await async.forEach(deduped, async departure => {
     let query = {
-      trueDepartureTime: newTrip.trueDepartureTime,
-      trueDestinationArrivalTime: newTrip.trueDestinationArrivalTime,
-      trueOrigin: newTrip.trueOrigin,
-      trueDestination: newTrip.trueDestination,
-      mode: 'metro train',
-      operationDays: departureDay
-    }
-
-    let runIDQuery = {
-      mode: 'metro train',
-      operationDays: departureDay,
+      date: departure.departureDay,
       runID: departure.runID
     }
 
-    if (departure.isRailReplacementBus) {
-      delete newTrip.vehicle
-      delete newTrip.runID
+    let tripData = {
+      ...query,
+      origin: departure.trip.trueOrigin.slice(0, -16),
+      destination: departure.trip.trueDestination.slice(0, -16),
+      departureTime: departure.trip.trueDepartureTime,
+      destinationArrivalTime: departure.trip.trueDestinationArrivalTime,
+      consist: departure.fleetNumber
     }
 
-    if (await liveTimetables.countDocuments(runIDQuery)) {
-      if (await liveTimetables.countDocuments(query)) return
+    let existingTrip
+    if (tripData.consist.length === 3) {
+      existingTrip = await metroTrips.findDocument(query)
+      if (existingTrip) {
+        if (existingTrip.consist.length === 6) { // Trip already exists with a filled consist, we only override if a different set matches
+          if (!existingTrip.consist.includes(tripData.consist[0])) {
+            existingTrip = null
+          } // Otherwise do not override a 6 car train with a 3 car
+        } else if (existingTrip.consist.length === 3 && !existingTrip.consist.includes(tripData.consist[0])) { // We might have matched half a train and now have the other half, sanity check
+          let sanityCheckTrip = await metroTrips.findDocument({
+            date: departure.departureDay,
+            consist: {
+              $and: [ // Match both the one already existing and the one given
+                tripData.consist[0],
+                existingTrip.consist[0]
+              ]
+            }
+          })
 
-      await liveTimetables.replaceDocument(runIDQuery, newTrip)
-    } else {
-      await liveTimetables.replaceDocument(query, newTrip, {
+          if (sanityCheckTrip) {
+            tripData.consist = sanityCheckTrip.consist
+            existingTrip = null
+          }
+        }
+      }
+    }
+
+    if (!existingTrip) {
+      await metroTrips.replaceDocument(query, tripData, {
         upsert: true
       })
     }
   })
 }
 
-async function getDepartures(station, db, filter=true) {
-  let cacheKey = station.stopName + 'M'
+async function saveSuspensions(suspensionAffectedTrains, db) {
+  let liveTimetables = db.getCollection('live timetables')
 
-  if (ptvAPILocks[cacheKey]) {
-    return await new Promise(resolve => {
-      ptvAPILocks[cacheKey].on('done', data => {
-        resolve(data)
-      })
+  await async.forEach(suspensionAffectedTrains, async train => {
+    let {trip} = train
+
+    let query = {
+      operationDays: train.departureDay,
+      mode: 'metro train',
+      runID: trip.runID
+    }
+
+    let deletionQuery = {
+      ...query,
+      runID: trip.runID.slice(0, 4)
+    }
+
+    let newTrip = {
+      ...trip,
+      operationDays: train.departureDay
+    }
+
+    delete newTrip._id
+
+    await liveTimetables.replaceDocument(query, newTrip, {
+      upsert: true
     })
-  }
 
-  if (departuresCache.get(cacheKey)) {
-    return filterDepartures(departuresCache.get(cacheKey), filter)
-  }
+    await liveTimetables.deleteDocument(deletionQuery)
+  })
+}
 
-  ptvAPILocks[cacheKey] = new EventEmitter()
+async function removeResumedSuspensions(nonSuspendedTrains, db) {
+  let liveTimetables = db.getCollection('live timetables')
 
-  function returnDepartures(departures) {
-    ptvAPILocks[cacheKey].emit('done', departures)
-    delete ptvAPILocks[cacheKey]
+  await async.forEach(nonSuspendedTrains, async train => {
+    let {trip} = train
 
-    return departures
-  }
+    let query = {
+      operationDays: train.departureDay,
+      mode: 'metro train',
+      runID: {
+        $in: [
+          train.runID + 'U',
+          train.runID + 'B',
+          train.runID + 'D'
+        ]
+      }
+    }
 
+    await liveTimetables.deleteDocuments(query)
+  })
+}
+
+async function saveRailBuses(buses, db) {
+  let liveTimetables = db.getCollection('live timetables')
+
+  await async.forEach(buses, async bus => {
+    let {trip} = bus
+
+    let query = {
+      operationDays: bus.departureDay,
+      trueDepartureTime: trip.trueDepartureTime,
+      trueDestinationArrivalTime: trip.trueDestinationArrivalTime,
+      trueOrigin: trip.trueOrigin,
+      trueDestination: trip.trueDestination,
+      mode: 'metro train'
+    }
+
+    let newTrip = {
+      ...trip,
+      operationDays: bus.departureDay,
+      isRailReplacementBus: true
+    }
+
+    delete newTrip._id
+
+    await liveTimetables.replaceDocument(query, newTrip, {
+      upsert: true
+    })
+  })
+}
+
+function parsePTVDepartures(ptvResponse, stationName) {
+  let {departures, runs, routes, directions} = ptvResponse
+  let now = utils.now()
+
+  return departures.map(departure => {
+    let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
+    let estimatedDepartureTime = departure.estimated_departure_utc ? utils.parseTime(departure.estimated_departure_utc) : null
+
+    if (scheduledDepartureTime.diff(now, 'minutes') > 110) return null
+
+    let platform = departure.platform_number
+    let ptvRunID = departure.run_ref
+
+    let run = runs[ptvRunID]
+    let route = routes[departure.route_id]
+    let directionData = directions[departure.direction_id]
+
+    let cancelled = run.status === 'cancelled'
+    let vehicleDescriptor = run.vehicle_descriptor || {}
+    let isRailReplacementBus = departure.flags.includes('RRB-RUN')
+
+    let routeName = route.route_name
+    if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
+    if (route.route_id === 99) routeName = 'City Circle'
+    let runDestination = run.destination_name.trim()
+
+    let direction = directionData.direction_name.includes('City') ? 'Up' : 'Down'
+    if (routeName === 'Stony Point') direction = runDestination === 'Frankston' ? 'Up' : 'Down'
+    if (routeName === 'City Circle') direction = 'Down'
+
+    let viaCityLoop = null
+    let runID = null
+    if (ptvRunID > 948000) {
+      runID = utils.getRunID(ptvRunID)
+      viaCityLoop = determineLoopRunning(runID, routeName, direction)
+    }
+
+    if (stationName === 'Flemington Racecourse' && platform === '4') platform = '2' // 4 Road is Platform 2
+    if (stationName === 'Merinda Park' && platform === '1') platform = '2' // Match physical signage
+
+    let fleetNumber = null
+    if (!isRailReplacementBus) {
+      if (vehicleDescriptor) {
+        fleetNumber = findConsist(vehicleDescriptor.id, runID)
+      }
+    }
+
+    return {
+      scheduledDepartureTime,
+      estimatedDepartureTime,
+      platform,
+      cancelled,
+      fleetNumber,
+      isRailReplacementBus,
+      routeName,
+      runDestination,
+      ptvRunID,
+      runID,
+      direction,
+      viaCityLoop
+    }
+  }).filter(Boolean)
+}
+
+function dedupeRailReplacementBuses(replacementBuses) {
+  let deduped = []
+  return replacementBuses.filter(bus => {
+    let id = bus.scheduledDepartureTime.toISOString() + bus.runDestination
+    if (deduped.includes(id)) return false
+    else {
+      deduped.push(id)
+      return true
+    }
+  })
+}
+
+async function getDeparturesFromPTV(station, db) {
+  let notifyData = await getNotifyData(db)
+  let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
+  let stationName = metroPlatform.fullStopName.slice(0, -16)
+
+  let url = `/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor`
+  let ptvResponse = await ptvAPI(url)
+
+  let parsedDepartures = parsePTVDepartures(ptvResponse, stationName)
+
+  let rawReplacementBuses = parsedDepartures.filter(departure => departure.isRailReplacementBus)
+  let replacementBuses = dedupeRailReplacementBuses(rawReplacementBuses)
+
+  let trains = parsedDepartures.filter(departure => !departure.isRailReplacementBus)
+
+  let initalMappedBuses = await async.map(replacementBuses, async bus => await mapBus(bus, metroPlatform, db))
+  let initialMappedTrains = await async.map(trains, async train => await mapTrain(train, metroPlatform, notifyData, db))
+  let suspensionMappedTrains = await async.map(initialMappedTrains, async train => await applySuspension(train, notifyData, metroPlatform, db))
+
+  let nonSkeleton = initalMappedBuses.filter(bus => !bus.skeleton)
+  let mappedBuses = (await async.map(initalMappedBuses, async bus => {
+    if (bus.skeleton) return await expandSkeleton(bus, nonSkeleton, db)
+    else return bus
+  })).filter(Boolean)
+
+  let extraBuses = await getMissingRailBuses(mappedBuses, metroPlatform, db)
+  let mappedTrains = suspensionMappedTrains.filter(departure => !departure.isRailReplacementBus)
+  let suspensionBuses = suspensionMappedTrains.filter(departure => departure.isRailReplacementBus)
+  let allRailBuses = [...mappedBuses, ...extraBuses, ...suspensionBuses]
+
+  let allDepartures = [...mappedTrains, ...allRailBuses]
+
+  allDepartures.forEach(departure => {
+    appendDepartureDay(departure, metroPlatform.stopGTFSID)
+    findUpcomingStops(departure, metroPlatform.stopGTFSID)
+  })
+
+  await saveConsists(mappedTrains, db)
+  await saveSuspensions(suspensionMappedTrains.filter(departure => departure.trip.suspension && !departure.isRailReplacementBus), db)
+  await removeResumedSuspensions(suspensionMappedTrains.filter(departure => !departure.trip.suspension), db)
+  await saveRailBuses(allRailBuses, db)
+
+  await async.forEach(mappedTrains, async train => {
+    await verifyTrainLoopRunning(train)
+
+    if (train.destination === 'Flinders Street' && train.viaCityLoop && !cityStations.includes(stationName)) {
+      train.destination = 'City Loop'
+    }
+
+    if (train.routeName === 'City Circle' && stationName === 'Flinders Street') {
+      train.destination = 'City Circle'
+    }
+
+    let isCityTrain = [
+      train.trip.trueOrigin.slice(0, -16),
+      train.trip.trueDestination.slice(0, -16)
+    ].some(stop => cityStations.includes(stop))
+
+    if (isCityTrain) addCityLoopRunning(train, stationName)
+    if (train.routeName === 'Werribee') addAltonaLoopRunning(train)
+    if (train.routeName === 'Stony Point') addStonyPointPlatform(train, stationName)
+
+    await applyLoopSkipping(train, notifyData)
+  })
+
+  return allDepartures
+}
+
+function generateTripID(trip) {
+  return trip.trueOrigin + trip.trueDestination + trip.trueDepartureTime
+}
+
+async function getExtraTrains(departures, direction, station, db) {
+  let now = utils.now()
+  let scheduled = await departureUtils.getScheduledMetroDepartures(station, db)
+
+  let inDirection = scheduled.filter(train => train.trip.direction === direction)
+  let existingInDirection = departures.filter(train => train.trip.direction === direction)
+  let existingIDs = existingInDirection.map(train => generateTripID(train.trip))
+
+  let extras = inDirection.filter(train => {
+    let id = generateTripID(train.trip)
+    return !existingIDs.includes(id)
+  })
+
+  return extras.filter(train => {
+    return train.actualDepartureTime.diff(now, 'minutes') > 5
+  })
+}
+
+async function getDepartures(station, db, filter) {
   try {
-    let departures = await getDeparturesFromPTV(station, db)
+    if (typeof filter === 'undefined') filter = true
+    let stationName = station.stopName.slice(0, -16)
 
-    await updateSuspensions(departures, station, db)
-    await markRailBuses(departures, station, db)
+    return await utils.getData('metro-departures-new', stationName, async () => {
+      let departures = await getDeparturesFromPTV(station, db)
+      let extraTrains = []
 
-    departuresCache.put(cacheKey, Object.values(departures))
-    return returnDepartures(filterDepartures(Object.values(departures), filter))
+      if (stationsAppendingUp.includes(stationName)) {
+        extraTrains = await getExtraTrains(departures, 'Up', station, db)
+      }
+
+      return filterDepartures([...departures, ...extraTrains], filter)
+    })
   } catch (e) {
     global.loggers.general.err('Error getting Metro departures', e)
     try {
-      let scheduled = await departureUtils.getScheduledMetroDepartures(station, db)
-      return returnDepartures(scheduled)
+      return await departureUtils.getScheduledMetroDepartures(station, db)
     } catch (ee) {
       global.loggers.general.err('Error getting Scheduled Metro departures', ee)
-      return returnDepartures(null)
+      return null
     }
   }
 }
 
 module.exports = getDepartures
-module.exports.findTrip = findTrip

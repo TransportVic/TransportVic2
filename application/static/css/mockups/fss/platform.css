@@ -1,8 +1,8 @@
 div.fullMessage {
   width: var(--width);
   height: var(--height);
-  background-color: #000000;
-  color: #ffffff;
+  background-color: #f0f0f0;
+  color: #000000;
 
   display: flex;
   align-items: center;
@@ -318,6 +318,11 @@ div.nextDeparture span.destination {
   white-space: nowrap;
 }
 
+div.nextDeparture span.destination.small {
+  width: calc(var(--width) * 0.2);
+  font-size: calc(var(--height) * 0.045);
+}
+
 div.nextDeparture span.stoppingType {
   margin-left: calc(var(--width) * 0.02);
   font-size: calc(var(--height) * 0.03);
@@ -348,7 +353,8 @@ div.clock {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: calc(var(--height) * 0.07);
+  font-size: calc(var(--height) * 0.065);
+  font-family: "NetworkSansRegular";
 }
 
 div.clock span {

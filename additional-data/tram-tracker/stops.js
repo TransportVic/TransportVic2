@@ -39,7 +39,7 @@ module.exports = [
   'camberwell/trafalgar-road-camberwell-road',
   'hawthorn-east/hastings-road-riversdale-road',
   'east-melbourne/jolimont-railway-station',
-  'melbourne-city/mcg-gates-4-7-melbourne-arena',
+  'melbourne-city/mcg-gates-4-7-john-cain-arena',
   'kew/kew-shopping-centre-high-street',
   'kew/st-george-s-hospital-cotham-road',
   'balwyn-north/north-balwyn-shopping-centre-doncaster-road',
@@ -88,5 +88,9 @@ module.exports = [
   'essendon/essendon-north-primary-school-keilor-road',
   'elwood/st-kilda-primary-school-brighton-road',
   'richmond/howard-street-church-street',
-  'burwood/deakin-university'
+  'burwood/deakin-university',
+  'melbourne-city/melbourne-aquarium-flinders-street',
+  'docklands/etihad-stadium-la-trobe-street',
+  'melbourne-city/exhibition-street-la-trobe-street',
+  'carlton/melbourne-university-swanston-street-stop-swanston-street'
 ]

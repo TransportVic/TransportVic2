@@ -1,3 +1,4 @@
+const https = require('https')
 const spdy = require('spdy')
 const tls = require('tls')
 const fs = require('fs')
@@ -34,7 +35,7 @@ module.exports = {
 
   getSecureContext: hostname => {
     let up = hostname.slice(hostname.indexOf('.') + 1)
-    if (wildcards.includes(up) || wildcards.includes(hostname)) return secureContexts[up] || secureContexts[hostname]
+    if (wildcards.includes(up)) return secureContexts[up]
 
     return secureContexts[hostname]
   },
@@ -50,7 +51,8 @@ module.exports = {
       module.exports.createSecureContext(cert)
     })
 
-    return spdy.createServer({
+    // return spdy.createServer({
+    return https.createServer({
       SNICallback: module.exports.createSNICallback()
     }, app.app)
   }

@@ -26,17 +26,18 @@ module.exports = async function(stops, data, stopsLookup) {
       }
     })
 
+    if (!matchingStop) {
+      matchingStop = await stops.findDocument({
+        'bays.originalName': stop.originalName
+      })
+    }
+
     let actualMode = stop.mode === 'nbus' ? 'bus' : stop.mode
     let flags = null
     if (actualMode === 'bus') {
       flags = {
         isNightBus: stop.mode === 'nbus',
         hasRegularBus: stop.mode === 'bus'
-      }
-    } else if (actualMode === 'tram') {
-      flags = {
-        tramtrackerName: stop.fullStopName.split('/')[0],
-        services: datamartStop.services
       }
     }
 

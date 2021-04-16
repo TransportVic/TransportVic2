@@ -13,14 +13,8 @@ let mode = {
   $in: ['regional train', 'regional coach']
 }
 
-function getHumanName(fullStopName) {
-  let stopName = fullStopName.replace('Shopping Centre', 'SC')
-  let humanName = destinationOverrides[fullStopName] || fullStopName
-  if (humanName.includes('Railway Station')) {
-    humanName = humanName.replace(/Railway Station.*/, '').trim()
-  }
-
-  return humanName
+function getHumanName(fullStopName, suburb) {
+  return destinationOverrides.stops[`${fullStopName.replace('Shopping Centre', 'SC')} ${suburb}`] || fullStopName.replace(/Railway Station.*/, '')
 }
 
 async function findConnections(changeoverPoint) {
@@ -78,8 +72,8 @@ async function findConnections(changeoverPoint) {
       }).toArray()
 
       await async.forEach(connections, async connection => {
-        let lastStop = connection.stopTimings.slice(-1)[0].stopGTFSID
-        if (stopGTFSIDs.includes(lastStop)) return
+        let lastStop = connection.stopTimings.slice(-1)[0]
+        if (stopGTFSIDs.includes(lastStop.stopGTFSID)) return
 
         if (trip.mode === 'regional train' && connection.mode === 'regional train') {
           if (trip.direction !== connection.direction) return
@@ -105,7 +99,9 @@ async function findConnections(changeoverPoint) {
           trip.connections.push({
             operationDays: [operationDay],
             changeAt: changeoverPoint,
+            changeAtSuburb: changeoverStop.bays.find(bay => bay.mode === 'regional coach').suburb,
             for: connection.destination,
+            forSuburb: lastStop.suburb,
             tripID: connection.tripID
           })
         }
@@ -121,8 +117,8 @@ async function findConnections(changeoverPoint) {
               let currentIndex = tripStopNames.indexOf(b.changeAt)
 
               if (previousIndex === currentIndex) {
-                let previousFor = getHumanName(a.for)
-                let currentFor = getHumanName(b.for)
+                let previousFor = getHumanName(a.for, a.forSuburb)
+                let currentFor = getHumanName(b.for, b.forSuburb)
 
                 return previousFor.localeCompare(currentFor)
               } else return previousIndex - currentIndex
@@ -157,7 +153,7 @@ database.connect({
   count += await findConnections('Swan Hill Railway Station')
   count += await findConnections('Bendigo Railway Station')
   count += await findConnections('Rochester Railway Station')
-  count += await findConnections('Jennings Street/Northern Highway') // Heathcote
+  // count += await findConnections('Jennings Street/Northern Highway') // Heathcote
   count += await findConnections('Shepparton Railway Station')
   count += await findConnections('Wangaratta Railway Station')
   count += await findConnections('Woodend Railway Station')
@@ -169,7 +165,7 @@ database.connect({
   count += await findConnections('Traralgon Railway Station')
   count += await findConnections('Sale Railway Station')
   count += await findConnections('Bairnsdale Railway Station')
-  count += await findConnections('Visitor Information Centre/Great Ocean Road') // Apollo Bay
+  // count += await findConnections('Visitor Information Centre/Great Ocean Road') // Apollo Bay
 
   updateStats('vline-connections', count)
   console.log('Completed loading in ' + count + ' vline connections')

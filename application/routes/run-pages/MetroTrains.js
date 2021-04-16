@@ -3,10 +3,35 @@ const moment = require('moment')
 const router = new express.Router()
 const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
-const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
+const getStoppingPattern = require('../../../modules/metro-trains/get-stopping-pattern')
 const addStonyPointData = require('../../../modules/metro-trains/add-stony-point-data')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central'].map(e => e + ' Railway Station')
+
+let burnleyGroup = [1, 2, 7, 9] // alamein, belgrave, glen waverley, lilydale
+let caulfieldGroup = [4, 6, 11, 12] // cranbourne, frankston, pakenham, sandringham
+let northernGroup = [3, 14, 15, 16, 17, 1482] // craigieburn, sunbury, upfield, werribee, williamstown, flemington racecourse
+let cliftonHillGroup = [5, 8] // mernda, hurstbridge
+let crossCityGroup = [6, 16, 17, 1482] // frankston, werribee, williamstown, flemington racecourse
+let newportGroup = [16, 17] // werribee, williamstown
+
+function tripCloseness(trip, originStop, destinationStop, departureTimeMinutes, arrivalTimeMinutes) {
+  let tripOrigin = trip.stopTimings.find(stop => stop.stopName === originStop.stopName)
+  let tripDestination = trip.stopTimings.find(stop => stop.stopName === destinationStop.stopName)
+
+  let originMinutes = tripOrigin.departureTimeMinutes % 1440
+  let originDiff = Math.abs(originMinutes - departureTimeMinutes % 1440)
+
+  let destMinutes = tripDestination.arrivalTimeMinutes % 1440
+  let destDiff = Math.abs(destMinutes - arrivalTimeMinutes % 1440)
+
+  let terminalsDiff = 0
+
+  if (trip.trueOrigin === originStop.stopName) terminalsDiff++
+  if (trip.trueDestination === destinationStop.stopName) terminalsDiff++
+
+  return originDiff + destDiff - terminalsDiff
+}
 
 async function pickBestTrip(data, db) {
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
@@ -14,8 +39,10 @@ async function pickBestTrip(data, db) {
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
   let tripEndTime = utils.parseTime(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm')
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
-  if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
+
   if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
+  if (tripStartMinutes > 1440) tripDay.add(-1, 'day')
+  if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
 
   let originStop = await db.getCollection('stops').findDocument({
     codedName: data.origin + '-railway-station',
@@ -30,19 +57,13 @@ async function pickBestTrip(data, db) {
   let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
   let minutesToTripEnd = tripEndTime.diff(utils.now(), 'minutes')
 
-  let destinationArrivalTime = tripEndMinutes
   let departureTime = tripStartMinutes
-  let liveDestinationArrivalTime = tripEndMinutes % 1440
-  let liveDepartureTime = tripStartMinutes % 1440
+  let destinationArrivalTime = tripEndMinutes
 
   if (data.destination === 'flinders-street') {
     destinationArrivalTime = {
       $gte: tripEndMinutes - 1,
       $lte: tripEndMinutes + 3
-    }
-    liveDestinationArrivalTime = {
-      $gte: tripEndMinutes - 1 % 1440,
-      $lte: tripEndMinutes + 3 % 1440
     }
   }
 
@@ -51,14 +72,9 @@ async function pickBestTrip(data, db) {
       $gte: tripStartMinutes - 1,
       $lte: tripStartMinutes + 3
     }
-    liveDepartureTime = {
-      $gte: tripStartMinutes - 1 % 1440,
-      $lte: tripStartMinutes + 3 % 1440
-    }
   }
 
-  let operationDays = data.operationDays
-  if (tripStartMinutes > 1440) operationDays = utils.getYYYYMMDD(tripDay.clone().add(-1, 'day'))
+  let operationDays = utils.getYYYYMMDD(tripDay)
 
   let gtfsQuery = {
     $and: [{
@@ -81,53 +97,65 @@ async function pickBestTrip(data, db) {
     }]
   }
 
-  let liveQuery = {
-    $and: [{
-      mode: 'metro train',
-      operationDays: data.operationDays // because this uses true departure day
-    }, {
-      stopTimings: {
-        $elemMatch: {
-          stopName: originStop.stopName,
-          departureTimeMinutes: liveDepartureTime
-        }
-      }
-    }, {
-      stopTimings: {
-        $elemMatch: {
-          stopName: destinationStop.stopName,
-          arrivalTimeMinutes: liveDestinationArrivalTime
-        }
-      }
-    }]
+  if (originStop.stopName === 'Flinders Street Railway Station') {
+    gtfsQuery.$and[0].direction = 'Down'
   }
 
-  let liveTrip = await db.getCollection('live timetables').findDocument(liveQuery)
-  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(gtfsQuery)
+  // NME, RMD shorts are always loaded live
+  let liveTrips = await db.getCollection('live timetables').findDocuments(gtfsQuery).toArray()
+  let gtfsTrips = await db.getCollection('gtfs timetables').findDocuments(gtfsQuery).toArray()
+
+  let gtfsTrip, liveTrip
+  let tripClosenessBound = trip => tripCloseness(trip, originStop, destinationStop, tripStartMinutes, tripEndMinutes)
+
+  if (liveTrips.length > 1) {
+    liveTrip = liveTrips.sort((a, b) => tripClosenessBound(a) - tripClosenessBound(b))[0]
+  } else liveTrip = liveTrips[0]
+
+  if (gtfsTrips.length > 1) {
+    gtfsTrip = gtfsTrips.sort((a, b) => tripClosenessBound(a) - tripClosenessBound(b))[0]
+  } else gtfsTrip = gtfsTrips[0]
 
   let useLive = minutesToTripEnd >= -120 && minutesToTripStart < 240
 
-  if (liveTrip) {
+  let referenceTrip
+  if (liveTrip && gtfsTrip) {
+    let liveCloseness = tripClosenessBound(liveTrip)
+    let gtfsCloseness = tripClosenessBound(gtfsTrip)
+
+    if (liveCloseness <= gtfsCloseness) referenceTrip = liveTrip
+    else referenceTrip = gtfsTrip
+  } else referenceTrip = liveTrip || gtfsTrip
+
+  let needsRedirect = referenceTrip ? (referenceTrip.trueOrigin !== originStop.stopName
+    || referenceTrip.trueDestination !== destinationStop.stopName
+    || referenceTrip.trueDepartureTime !== data.departureTime
+    || referenceTrip.trueDestinationArrivalTime !== data.destinationArrivalTime) : false
+
+  if (liveTrip && referenceTrip === liveTrip) {
     if (liveTrip.isRailReplacementBus || liveTrip.type === 'timings' && new Date() - liveTrip.updateTime < 2 * 60 * 1000) {
       let isLive = liveTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
 
-      return { trip: liveTrip, tripStartTime, isLive }
+      return { trip: liveTrip, tripStartTime, isLive, needsRedirect }
     }
   }
-
-  let referenceTrip = liveTrip || gtfsTrip
 
   let isStonyPoint = data.origin === 'stony-point' || data.destination === 'stony-point'
 
   if (referenceTrip && (isStonyPoint || referenceTrip.routeGTFSID === '2-SPT')) {
-    return { trip: await addStonyPointData(db, referenceTrip, tripStartTime), tripStartTime, isLive: false }
+    return { trip: await addStonyPointData(db, referenceTrip, tripStartTime), tripStartTime, isLive: false, needsRedirect }
   }
 
-  if (!useLive) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null
+  if (!useLive) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false, needsRedirect } : null
+  if (referenceTrip && referenceTrip.h) {
+    let isLive = referenceTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
+
+    return { trip: referenceTrip, tripStartTime, isLive, needsRedirect, needsRedirect }
+  }
 
   let originStopID = originStop.bays.filter(bay => bay.mode === 'metro train')[0].stopGTFSID
   let originTime = tripStartTime.clone()
-  let expressCount = undefined
+  let expressCount
 
   if (referenceTrip) {
     expressCount = 0
@@ -162,6 +190,21 @@ async function pickBestTrip(data, db) {
     let possibleDepartures = departures.filter(departure => {
       let run = runs[departure.run_ref]
       let destinationName = run.destination_name.trim()
+      let routeID = departure.route_id
+
+      if ((caulfieldGroup.includes(routeID) && destinationName === 'Southern Cross') || destinationName === 'Parliament') {
+        destinationName = 'Flinders Street'
+      }
+
+      if (northernGroup.includes(routeID) && destinationName === 'Flagstaff') {
+        destinationName = 'Flinders Street'
+      }
+
+      if (isUp && northernGroup.includes(routeID) && destinationName === 'Southern Cross') { // This kind of merging only happens with train runs, never bus runs
+        let secondDigit = departure.run_ref[1]
+        if (secondDigit > 5) destinationName = 'Flinders Street'
+      }
+
       let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc).toISOString()
 
       let timeMatch = scheduledDepartureTime === isoDeparture
@@ -175,6 +218,7 @@ async function pickBestTrip(data, db) {
             return fullDestinationName === referenceTrip.destination
               || fullDestinationName === referenceTrip.trueDestination
               || fullDestinationName === referenceTrip.originalDestination
+              || utils.encodeName(destinationName) === data.destination
           } else {
             return utils.encodeName(destinationName) === data.destination
           }
@@ -183,28 +227,43 @@ async function pickBestTrip(data, db) {
       return false
     })
 
+    let departureToUse
+
     if (possibleDepartures.length > 1) {
-      departure = possibleDepartures.filter(departure => {
-        return runs[departure.run_ref].express_stop_count === expressCount
-      })[0]
-    } else departure = possibleDepartures[0]
+      departureToUse = possibleDepartures.find(possibleDeparture => {
+        return runs[possibleDeparture.run_ref].express_stop_count === expressCount
+      })
+    } else departureToUse = possibleDepartures[0]
 
     // interrim workaround cos when services start from a later stop they're really cancelled
     // in the stops before, but PTV thinks otherwise...
-    if (!departure) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null
-    let ptvRunID = departure.run_ref
-    let departureTime = departure.scheduled_departure_utc
+    if (!departureToUse) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false, needsRedirect } : null
+    let ptvRunID = departureToUse.run_ref
+    let departureTime = departureToUse.scheduled_departure_utc
 
-    let isRailReplacementBus = departure.flags.includes('RRB-RUN')
+    let isRailReplacementBus = departureToUse.flags.includes('RRB-RUN')
 
-    let trip = await getStoppingPattern(db, ptvRunID, 'metro train', departureTime, null, referenceTrip, {
-      isRailReplacementBus,
-      trimStops: true
-    })
+    let trip = await getStoppingPattern({
+      ptvRunID,
+      time: departureTime,
+      referenceTrip
+    }, db)
 
     let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
 
-    return { trip, tripStartTime, isLive }
+    let needsRedirect = trip.trueOrigin !== originStop.stopName
+      || trip.trueDestination !== destinationStop.stopName
+      || trip.trueDepartureTime !== data.departureTime
+      || trip.trueDestinationArrivalTime !== data.destinationArrivalTime
+
+    let actualOriginStop = trip.stopTimings.find(stop => stop.stopName === trip.trueOrigin)
+
+    return {
+      trip,
+      tripStartTime: utils.parseTime(actualOriginStop.scheduledDepartureTime),
+      isLive,
+      needsRedirect
+    }
   } catch (e) {
     global.loggers.general.err('Failed to get Metro trip', e)
     return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null
@@ -213,12 +272,32 @@ async function pickBestTrip(data, db) {
 
 router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
   let tripData = await pickBestTrip(req.params, res.db)
-  if (!tripData) return res.status(404).render('errors/no-trip')
+  if (!tripData) {
+    global.loggers.general.err('Could not locate metro trip', req.url)
+    return res.status(404).render('errors/no-trip')
+  }
 
-  let { trip, tripStartTime, isLive } = tripData
+  let { trip, tripStartTime, isLive, needsRedirect } = tripData
+
+  if (needsRedirect) {
+    let operationDay = utils.getYYYYMMDD(tripStartTime)
+    return res.redirect(`/metro/run/${utils.encodeName(trip.trueOrigin.slice(0, -16))}/${trip.trueDepartureTime}/${utils.encodeName(trip.trueDestination.slice(0, -16))}/${trip.trueDestinationArrivalTime}/${operationDay}`)
+  }
 
   let trueOrigin = trip.stopTimings.find(stop => stop.stopName === trip.trueOrigin)
   let firstDepartureTime = trueOrigin.departureTimeMinutes
+
+  let trackerData
+  if (trip.runID) {
+    let metroTrips = res.db.getCollection('metro trips')
+
+    trackerData = await metroTrips.findDocument({
+      date: utils.getYYYYMMDD(tripStartTime),
+      runID: trip.runID
+    })
+
+    if (trackerData) trip.consist = trackerData.consist
+  }
 
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.pretyTimeToDeparture = ''
@@ -245,6 +324,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     }
     return stop
   })
+
   res.render('runs/metro', {
     trip,
     codedLineName: utils.encodeName(trip.routeName)

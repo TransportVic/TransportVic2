@@ -10,35 +10,43 @@ let gtfsTimetables, liveTimetables, stops
 
 async function fetchAndUpdate() {
   global.loggers.trackers.xpt.log('requesting xpt data')
-  let dataSYDTrains = await tfnswAPI.makePBRequest('/v1/gtfs/realtime/sydneytrains')
   let dataNSWTrains = await tfnswAPI.makePBRequest('/v1/gtfs/realtime/nswtrains')
-  let sydTripDescriptors = dataSYDTrains.entity
   let nswTripDescriptors = dataNSWTrains.entity
 
-  let relevantSYDTrips = sydTripDescriptors.map(trip => trip.trip_update).filter(trip => trip.trip.trip_id.match(/ST\d\d/) && trip.stop_time_update.length)
   let relevantNSWTrips = nswTripDescriptors.map(trip => trip.trip_update).filter(trip => trip.trip.trip_id.match(/ST\d\d/) && trip.stop_time_update.length)
 
-  let sydTrainIDs = relevantSYDTrips.map(trip => trip.trip.trip_id.slice(0, 4))
-  let missingNSWTrips = relevantNSWTrips.filter(trip => !sydTrainIDs.includes(trip.trip.trip_id.slice(0, 4)))
-
-  await async.forEach(relevantSYDTrips.concat(missingNSWTrips), async trip => {
+  await async.forEach(relevantNSWTrips, async trip => {
     let rawTripID = trip.trip.trip_id
     let runID = rawTripID.slice(0, 4)
+
+    let stopTimeUpdates = trip.stop_time_update
 
     let gtfsTrip
 
     let tripStartTime
-    let yesterday = utils.now().add(-1, 'day').startOf('day')
-    let yesterdayQuery = { runID, operationDays: utils.getYYYYMMDD(yesterday) }
-    let yesterdayTrip = await liveTimetables.findDocument(yesterdayQuery) || await gtfsTimetables.findDocument(yesterdayQuery)
 
-    if (yesterdayTrip) {
-      let yesterdayEndTime = yesterday.clone().add(yesterdayTrip.stopTimings.slice(-1)[0].arrivalTimeMinutes, 'minutes')
-      if (utils.now() < yesterdayEndTime) {
-        gtfsTrip = yesterdayTrip
+    if (trip && trip.trip.start_date) {
+      let knownQuery = { runID, operationDays: trip.trip.start_date }
+      gtfsTrip = await liveTimetables.findDocument(knownQuery) || await gtfsTimetables.findDocument(knownQuery)
 
+      let startDate = utils.parseDate(trip.trip.start_date)
+      if (gtfsTrip) {
         let startMinutes = gtfsTrip.stopTimings[0].departureTimeMinutes
-        tripStartTime = yesterday.clone().add(startMinutes, 'minutes')
+        tripStartTime = startDate.clone().add(startMinutes, 'minutes')
+      }
+    } else {
+      let yesterday = utils.now().add(-1, 'day').startOf('day')
+      let yesterdayQuery = { runID, operationDays: utils.getYYYYMMDD(yesterday) }
+      let yesterdayTrip = await liveTimetables.findDocument(yesterdayQuery) || await gtfsTimetables.findDocument(yesterdayQuery)
+
+      if (yesterdayTrip) {
+        let yesterdayEndTime = yesterday.clone().add(yesterdayTrip.stopTimings.slice(-1)[0].arrivalTimeMinutes, 'minutes')
+        if (utils.now() < yesterdayEndTime + 1000 * 60 * 60 * 5) { // Give it a buffer of 5 hours late?
+          gtfsTrip = yesterdayTrip
+
+          let startMinutes = gtfsTrip.stopTimings[0].departureTimeMinutes
+          tripStartTime = yesterday.clone().add(startMinutes, 'minutes')
+        }
       }
     }
 
@@ -52,11 +60,9 @@ async function fetchAndUpdate() {
 
     let timingUpdates = {}
     let platformUpdates = {}
+    let stopsSkipped = []
 
     let startMinutes = gtfsTrip.stopTimings[0].departureTimeMinutes
-
-    let sydTrainsTimeUpdates = trip.stop_time_update
-    let nswTrainsTimeUpdates = relevantNSWTrips.find(trip => trip.trip.trip_id.startsWith(runID))
 
     async function parseStopTimeUpdates(stopTimeUpdates) {
       await async.forEach(stopTimeUpdates, async stop => {
@@ -69,11 +75,12 @@ async function fetchAndUpdate() {
         if (delayFactor > 1000 * 60 * 60 * 24) delayFactor = 0
         timingUpdates[stopData.stopName] = delayFactor
         platformUpdates[stopData.stopName] = stopGTFSID
+
+        if (stop.schedule_relationship === 1) stopsSkipped.push(stopData.stopName)
       })
     }
 
-    await parseStopTimeUpdates(sydTrainsTimeUpdates)
-    if (nswTrainsTimeUpdates) await parseStopTimeUpdates(nswTrainsTimeUpdates.stop_time_update)
+    await parseStopTimeUpdates(stopTimeUpdates)
 
     gtfsTrip.stopTimings.forEach((stop, i) => {
       let nextStop = gtfsTrip.stopTimings[i + 1]
@@ -82,7 +89,9 @@ async function fetchAndUpdate() {
       }
     })
 
-    gtfsTrip.stopTimings = gtfsTrip.stopTimings.map(stop => {
+    gtfsTrip.stopTimings = gtfsTrip.stopTimings.filter(stop => {
+      return !stopsSkipped.includes(stop.stopName)
+    }).map(stop => {
       let delayFactor = timingUpdates[stop.stopName]
       let newPlatform = platformUpdates[stop.stopName]
 
@@ -100,13 +109,34 @@ async function fetchAndUpdate() {
       return stop
     })
 
+    let first = gtfsTrip.stopTimings[0]
+    let last = gtfsTrip.stopTimings.slice(-1)[0]
+
+    first.arrivalTime = null
+    first.arrivalTimeMinutes = null
+
+    last.departureTime = null
+    last.departureTimeMinutes = null
+
+    gtfsTrip.origin = first.stopName
+    gtfsTrip.departureTime = first.departureTime
+
+    gtfsTrip.destination = last.stopName
+    gtfsTrip.destinationArrivalTime = last.arrivalTime
+
     gtfsTrip.type = 'timings'
     gtfsTrip.updateTime = new Date()
     gtfsTrip.operationDays = utils.getYYYYMMDD(tripStartTime)
 
-    let vehicle
-    if (vehicle = rawTripID.match(/\.X\.(\d)\./)) {
-      gtfsTrip.vehicle = `${vehicle[1]}x XPT`
+    let consist = trip.vehicle
+
+    if (!consist && trip) consist = trip.vehicle
+
+    if (consist && consist.id) {
+      let rawID = (consist.id || '').toString()
+      if (rawID.match(/XP\d{4}/)) {
+        gtfsTrip.consist = [rawID]
+      }
     }
 
     delete gtfsTrip._id

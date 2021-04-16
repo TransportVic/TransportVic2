@@ -1,12 +1,11 @@
 const async = require('async')
-const moment = require('moment')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const nameModifier = require('../../additional-data/stop-name-modifier')
 const metroTypes = require('../../additional-data/metro-tracker/metro-types')
-const resolveRouteGTFSID = require('../resolve-gtfs-id')
+const gtfsGroups = require('../gtfs-id-groups')
 const addStonyPointData = require('../metro-trains/add-stony-point-data')
-
+const determineBusRouteNumber = require('../../additional-data/determine-bus-route-number')
 const fixTripDestination = require('../metro-trains/fix-trip-destinations')
 
 let modes = {
@@ -80,8 +79,21 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let routesCollection = db.getCollection('routes')
 
   let url = `/v3/pattern/run/${ptvRunID}/route_type/${modes[mode]}?expand=stop&expand=run&expand=route&expand=direction&expand=VehicleDescriptor`
-  if (time)
-    url += `&date_utc=${time}`
+  if (time) {
+    if (mode === 'metro train') {
+      let startTime = utils.parseTime(time)
+      let now = utils.now()
+      if (utils.getMinutesPastMidnight(startTime) < 180) { // trip starts in the 3am overlap, we want it from the 'previous' day
+        url += `&date_utc=${startTime.add(-3.5, 'hours').toISOString()}`
+      } else if (utils.getMinutesPastMidnight(now) < 180) { // trip starts before the 3am overlap but it is currently 1-3am. hence requesting for previous day's times
+        url += `&date_utc=${now.add(-3.5, 'hours').toISOString()}`
+      } else { // sane trip, request with time now
+        url += `&date_utc=${now.toISOString()}`
+      }
+    } else {
+      url += `&date_utc=${time}`
+    }
+  }
   if (stopID)
     url += `&stop_id=${stopID}`
 
@@ -89,6 +101,13 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let run = Object.values(runs)[0]
   let ptvDirection = Object.values(directions)[0]
   let routeData = Object.values(routes)[0]
+
+  if (departures.length === 0) return referenceTrip
+
+  if (stopID && time) {
+    let checkStop = departures.find(stop => stop.stop_id === stopID)
+    if (checkStop && checkStop.scheduled_departure_utc !== time) return referenceTrip
+  }
 
   let trueMode = mode
 
@@ -105,7 +124,9 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let checkModes = [mode]
   if (mode === 'regional coach') checkModes.push('regional train')
 
-  let routeGTFSID = resolveRouteGTFSID(routeData.route_gtfs_id)
+  let routeGTFSID = routeData.route_gtfs_id
+  if (routeGTFSID === '4-965') routeGTFSID = '8-965'
+
   if (mode === 'tram') routeGTFSID = `3-${parseInt(routeGTFSID.slice(2))}`
   if (routeData.route_id === 99) routeGTFSID = '2-CCL'
   let route = await routesCollection.findDocument({ routeGTFSID })
@@ -118,7 +139,6 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     let bestKey = keys.find(k => k.replace(/[\w ]+ to/).includes(directionName))
     if (bestKey) gtfsDirection = route.ptvDirections[bestKey]
   }
-
 
   let previousDepartureTime = -1
 
@@ -189,8 +209,17 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
 
     previousDepartureTime = departureTimeMinutes
 
+    let stopName = stopBay.fullStopName
+    if (stopName === 'Flemington Racecourse Railway Station' && platform_number === '4') {
+      platform_number = '2' // 4 Road is Platform 2
+    }
+
+    if (stopName === 'Merinda Park Railway Station' && platform_number === '1') {
+      platform = '2' // Plat 1 renumbered to Plat 2 physically, we want to match this
+    }
+
     let stopTiming = {
-      stopName: stopBay.fullStopName,
+      stopName,
       stopNumber: stopBay.stopNumber,
       suburb: stopBay.suburb,
       stopGTFSID: stopBay.stopGTFSID,
@@ -218,7 +247,12 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
 
   let direction
   if (mode === 'metro train') {
-    direction = ptvDirection.direction_id === 1 ? 'Up' : 'Down'
+    direction = ptvDirection.direction_name.includes('City') ? 'Up' : 'Down'
+    if (routeGTFSID === '2-SPT') {
+      let origin = stopTimings[0].stopName
+      if (origin === 'Frankston Railway Station') direction = 'Down'
+      else direction = 'Up'
+    }
     if (routeGTFSID === '2-CCL') direction = 'Down'
   }
 
@@ -235,7 +269,11 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     if (['Belgrave', 'Lilydale', 'Alamein', 'Glen Waverley', 'Hurstbridge', 'Mernda'].includes(routeName) && vehicle) {
       vehicle = vehicle.replace('Comeng', 'Xtrapolis')
     }
-    runID = utils.getRunID(ptvRunID)
+    if (['Cranbourne', 'Pakenham', 'Sandringham'].includes(routeName) && vehicle) {
+      vehicle = vehicle.replace('Xtrapolis', 'Comeng') // Xtrap sometimes show on CBE PKM SHM so correct to comeng
+    }
+    if (ptvRunID >= 948000) runID = utils.getRunID(ptvRunID)
+    else runID = null
 
     let metroTrips = db.getCollection('metro trips')
     let tripData = await metroTrips.findDocument({
@@ -246,12 +284,47 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     if (tripData && vehicle) {
       let ptvConsistSize = vehicle.slice(0, 1)
       let carType = metroTypes.find(car => tripData.consist.includes(car.leadingCar))
-      vehicle = ptvConsistSize + ' Car ' + carType.type
+      if (tripData.consist[0].match(/9\d{3}/)) carType = { type: 'HCMT' }
+      if (carType) vehicle = ptvConsistSize + ' Car ' + carType.type
     }
 
-    if (referenceTrip && extraTripData && extraTripData.trimStops) {
-      let referenceStops = referenceTrip.stopTimings.map(stop => stop.stopName)
-      stopTimings = stopTimings.filter(stop => referenceStops.includes(stop.stopName) || cityLoopStations.includes(stop.stopName.slice(0, -16)))
+    if (referenceTrip && referenceTrip.suspension) {
+      let isDown = referenceTrip.direction === 'Down'
+
+      let suspension = referenceTrip.suspension
+      let tripStops = stopTimings.map(stop => stop.stopName)
+
+      let startIndex = tripStops.indexOf(suspension.startStation)
+      let endIndex = tripStops.indexOf(suspension.endStation)
+
+      // No need to consider current as it would not call getStoppingPattern on it
+      if (suspension.disruptionStatus === 'before') { // Cut destination
+        let startIndex = tripStops.indexOf(suspension.startStation)
+        if (startIndex == -1) startIndex = tripStops.length
+
+        stopTimings = stopTimings.slice(0, startIndex + 1)
+        if (runID) runID += isDown ? 'U' : 'D'
+      } else if (suspension.disruptionStatus === 'passed') { // Cut origin
+        let endIndex = tripStops.indexOf(suspension.endStation)
+        if (endIndex == -1) endIndex = 0
+
+        stopTimings = stopTimings.slice(endIndex)
+        if (runID) runID += isDown ? 'D' : 'U'
+      }
+    }
+
+    if (runID) {
+      let metroNotify = db.getCollection('metro notify')
+
+      if (!extraTripData) extraTripData = {}
+
+      extraTripData.notifyAlerts = await metroNotify.distinct('alertID', {
+        toDate: {
+          $gte: +new Date() / 1000
+        },
+        active: true,
+        runID
+      })
     }
   }
 
@@ -260,10 +333,12 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   stopTimings.slice(-1)[0].departureTime = null
   stopTimings.slice(-1)[0].departureTimeMinutes = null
 
+  let routeNumber = referenceTrip ? referenceTrip.routeNumber : route.routeNumber
+
   let timetable = {
     mode, routeName,
     routeGTFSID,
-    routeNumber: referenceTrip ? referenceTrip.routeNumber : route.routeNumber,
+    routeNumber,
     routeDetails: referenceTrip ? referenceTrip.routeDetails : null,
     runID,
     operationDays: tripOperationDay,
@@ -278,8 +353,11 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     gtfsDirection,
     direction,
     cancelled,
+    suspensions: referenceTrip ? referenceTrip.suspension : null,
     ...extraTripData
   }
+
+  if (mode === 'bus') timetable.routeNumber = determineBusRouteNumber(timetable)
 
   timetable = fixTripDestination(timetable)
 
@@ -296,6 +374,14 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
     operationDays: timetable.operationDays,
     departureTime: timetable.departureTime,
     destinationArrivalTime: timetable.destinationArrivalTime
+  }
+
+  if (mode === 'metro train' && runID && (referenceTrip ? !referenceTrip.affectedBySuspension : true)) {
+    key = {
+      mode: 'metro train',
+      operationDays: timetable.operationDays,
+      runID
+    }
   }
 
   await liveTimetables.replaceDocument(key, timetable, {

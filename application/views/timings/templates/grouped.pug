@@ -14,8 +14,8 @@ if services.length
           a(class=`leftContainer ${classGen(firstDeparture)}`)
             if firstDeparture.loopDirection
               span.topText #{firstDeparture.loopDirection}
-            else if firstDeparture.routeDetails
-              span.topText #{firstDeparture.routeDetails}
+            else if firstDeparture.trip.routeDetails
+              span.topText #{firstDeparture.trip.routeDetails}
             -
               let className = 'bigNumber'
               if (firstDeparture.routeNumber.length > 3) className += ' smaller'

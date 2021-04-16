@@ -32,6 +32,7 @@ block title
   span #{tripName}
   
 block style
+  link(rel='stylesheet' href='/static/css/site-colours.css')
   link(rel='stylesheet' href='/static/css/timings/base-style.css')
   link(rel='stylesheet' href='/static/css/combined-colours.css')
   link(rel='stylesheet' href='/static/css/runs/base-style.css')
@@ -46,7 +47,9 @@ block content
         'Z3': 'z3',
         'C': 'c1',
         'D1': 'd',
-        'D2': 'd'
+        'D2': 'd',
+        'E1': 'e',
+        'E2': 'e'
       }
     div.infoRow
       span=trip.vehicleData.name
@@ -113,6 +116,9 @@ block content
             let displayName = stopName
             if (stop.stopNumber)
               displayName += ` #${stop.stopNumber}`
+              
+            if (stop.bay)
+              displayName += ` (${stop.bay})`
           span.stopName=displayName
         div(class=`timing ${stop.headwayDevianceClass}`)
           span=stop.pretyTimeToDeparture

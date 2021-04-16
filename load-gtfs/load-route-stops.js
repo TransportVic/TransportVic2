@@ -24,11 +24,11 @@ database.connect({}, async err => {
     }
   })
 
-  let stopsByService = []
+  let stopsByService = {}
 
   await async.forEachLimit(allRoutes, 100, async routeGTFSID => {
     let routeData = await routes.findDocument({ routeGTFSID })
-    let routeVariants = routeData.routePath.map(variant => ({ shapeID: variant.fullGTFSIDs[0] }))
+    let routeVariants = routeData.routePath.map(variant => ({ shapeID: variant.fullGTFSIDs[0], routeGTFSID }))
 
     // Because sydney uses 1 route shape for all variants this trick doesn't work
     // Only one route, XPT doesn't have too many trips so additional overhead is acceptable
@@ -78,12 +78,13 @@ database.connect({}, async err => {
       if (mostCommonDestinations[0] === mostCommonOrigin && mostCommonDestinations.length > 1) mostCommonDestinations.shift()
       mostCommonDestination = mostCommonDestinations[0]
 
-      let lastStop = mergedStops.slice(-1)[0].stopName
+      let lastStop = mergedStops.slice(-1)[0]
+      let lastStopName = lastStop.stopName
 
       let directionName
 
-      if (lastStop.includes('School') || lastStop.includes('College')) directionName = mostCommonDestination
-      else directionName = lastStop
+      if (lastStopName.includes('School') || lastStopName.includes('College')) directionName = mostCommonDestination
+      else directionName = lastStopName
 
       let directionShortName = directionName.split('/')[0].replace('Shopping Centre', 'SC')
       if (!utils.isStreet(directionShortName)) directionName = directionShortName
@@ -100,7 +101,7 @@ database.connect({}, async err => {
 
       directionName = serviceData[directionName]
         || busDestinations.generic[directionName]
-        || coachDestinations[directionName] || tramDestinations[directionName] || directionName
+        || coachDestinations(lastStop) || tramDestinations[directionName] || directionName
 
       if (!stopsByService[routeGTFSID]) stopsByService[routeGTFSID] = []
       stopsByService[routeGTFSID][gtfsDirection] = {
@@ -118,7 +119,7 @@ database.connect({}, async err => {
       updateOne: {
         filter: { routeGTFSID },
         update: { $set: {
-          directions: stopsByService[routeGTFSID]
+          directions: stopsByService[routeGTFSID].filter(Boolean) // Apparently some routes dont have GTFS Dir 0
         } }
       }
     })

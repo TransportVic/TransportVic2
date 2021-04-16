@@ -75,7 +75,7 @@ function parse(pdfBuffer, callback) {
         return fill.h < fill.w
       })
 
-      let colStarts = verticalFills.map(fill => fill.x)
+      let colStarts = verticalFills.map(fill => fill.x).filter((e, i, a) => a.indexOf(e) === i).sort((a, b) => a - b)
       let rowStarts = horizontalFills.map(fill => fill.y).filter((e, i, a) => a.indexOf(e) === i).sort((a, b) => a - b)
       var rows = [] // store Texts and their x positions in rows
 
@@ -83,15 +83,30 @@ function parse(pdfBuffer, callback) {
         var text = page.Texts[t]
         let textContent = decodeURIComponent(text.R[0].T)
 
-        let firstYGreater = rowStarts.find(r => r > text.y + 0.2)
+        let firstYGreater = rowStarts.find(r => r > text.y + 0.1)
+        let difference = firstYGreater - text.y
         let currentRow = rowStarts.indexOf(firstYGreater) - 1
+        if (difference > 0.6) currentRow--
+
         if (currentRow < 0) continue
           // y value of Text falls within the y-value range, add text to row:
 
-        if (!['EMPTY', 'LIGHT_LO', 'PSNG_SRV'].includes(textContent) && currentRow === 4)
+        if (!['EMPTY', 'LIGHT_LO', 'PSNG_SRV', 'QL', 'PN', 'SSR', 'Train Movement Type'].includes(textContent) && currentRow === 4)
           currentRow = 3
 
-        let firstXGreater = colStarts.find(c => c > text.x + 0.1)
+        let xThreshold = 0.03
+        if (text.w < 2.85) {
+          xThreshold = 0.1
+        } else if (text.w < 3) {
+          xThreshold = 0.2
+        } else if (text.w > 3.9) {
+          xThreshold = 0.3
+        }
+
+        if (currentRow === 0 && !textContent.includes('Business') && textContent.length > 4) xThreshold = 0.3
+        if (currentRow === 1 && !textContent.includes('Days') && textContent.length > 4) xThreshold = 0.3
+
+        let firstXGreater = colStarts.find(c => c > text.x + xThreshold)
         let currentCol = colStarts.indexOf(firstXGreater) - 1
         if (currentCol === -1) currentCol = 0
 

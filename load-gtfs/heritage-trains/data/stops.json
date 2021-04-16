@@ -228,21 +228,9 @@
     "suburb": "Mount Eliza"
   },
   {
-    "originalName": "Walhalla Railway Station",
-    "fullStopName": "Walhalla Railway Station",
-    "stopGTFSID": 13000020,
-    "location": {
-      "type": "Point",
-      "coordinates": [146.449384, -37.950558]
-    },
-    "stopNumber": null,
-    "mode": "heritage train",
-    "suburb": "Walhalla"
-  },
-  {
     "originalName": "Thomson Railway Station",
     "fullStopName": "Thomson Railway Station",
-    "stopGTFSID": 13000021,
+    "stopGTFSID": 13000020,
     "location": {
       "type": "Point",
       "coordinates": [146.419389, -37.960000]
@@ -250,6 +238,18 @@
     "stopNumber": null,
     "mode": "heritage train",
     "suburb": "Rawson"
+  },
+  {
+    "originalName": "Walhalla Railway Station",
+    "fullStopName": "Walhalla Railway Station",
+    "stopGTFSID": 13000021,
+    "location": {
+      "type": "Point",
+      "coordinates": [146.449384, -37.950558]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Walhalla"
   },
   {
     "originalName": "Queenscliff Railway Station",
@@ -334,5 +334,17 @@
     "stopNumber": null,
     "mode": "heritage train",
     "suburb": "Drysdale"
+  },
+  {
+    "originalName": "Muckleford Railway Station",
+    "fullStopName": "Muckleford Railway Station",
+    "stopGTFSID": 13000029,
+    "location": {
+      "type": "Point",
+      "coordinates": [144.150104, -37.022337]
+    },
+    "stopNumber": null,
+    "mode": "heritage train",
+    "suburb": "Muckleford"
   }
 ]

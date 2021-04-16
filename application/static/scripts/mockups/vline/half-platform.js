@@ -1,25 +1,3 @@
-function formatTime(time, includeSeconds=false) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let seconds = time.getSeconds()
-  let mainTime = ''
-
-  mainTime += (hours % 12) || 12
-  mainTime += ':'
-
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  if (includeSeconds) {
-    mainTime += ':'
-
-    if (seconds < 10) mainTime += '0'
-    mainTime += seconds
-  }
-
-  return mainTime
-}
-
 function setMessagesActive(active) {
   if (active) {
     $('.message').style = 'display: flex;'
@@ -75,7 +53,7 @@ function setListenAnnouncements() {
 }
 
 function createStoppingPatternID(stoppingPattern) {
-  return stoppingPattern.map(e => `${e.stopName}${e.isExpress}`).join(',')
+  return stoppingPattern.map(e => `${e[0]}${e[1]}`).join(',')
 }
 
 let currentPattern = null
@@ -86,7 +64,7 @@ function addStoppingPattern(stops) {
 
   currentPattern = newPatternID
 
-  stops = stops.filter(stop => vlineStops.includes(stop.stopName))
+  stops = stops.filter(stop => vlineStops.includes(stop[0]))
 
   let stopColumns = []
 
@@ -110,10 +88,10 @@ function addStoppingPattern(stops) {
     let html = ''
 
     stopColumn.forEach(stop => {
-      if (stop.isExpress)
+      if (stop[1])
         html += '<span>&nbsp;---</span><br>'
       else {
-        html += `<span>${stop.stopName}</span><br>`
+        html += `<span>${stop[0]}</span><br>`
       }
     })
 
@@ -134,7 +112,7 @@ function updateBody() {
     if (err) return setListenAnnouncements()
 
     try {
-      departures = body.departures
+      departures = body.dep
 
       let firstDeparture = departures[0]
       if (!firstDeparture) {
@@ -143,21 +121,21 @@ function updateBody() {
 
       setDepartureInfoVisible(true)
 
-      $('.firstDestination').textContent = firstDeparture.destination
-      $('.scheduledDiv span:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+      $('.firstDestination').textContent = firstDeparture.dest
+      $('.scheduledDiv span:nth-child(2)').textContent = formatTimeB(new Date(firstDeparture.sch))
 
-      $('.actualDiv span:nth-child(2)').textContent = firstDeparture.prettyTimeToDeparture
+      $('.actualDiv span:nth-child(2)').textContent = minutesToDeparture(new Date(firstDeparture.est || firstDeparture.sch))
 
-      addStoppingPattern(firstDeparture.additionalInfo.screenStops.slice(1))
+      addStoppingPattern(firstDeparture.stops.slice(1))
 
       let nextDepartures = [...departures.slice(1, 3), null, null].slice(0, 2)
       nextDepartures.forEach((departure, i) => {
         let div = $(`div.followingDeparture:nth-child(${i + 2})`)
         if (departure) {
-          $('.scheduled', div).textContent = formatTime(new Date(departure.scheduledDepartureTime))
-          $('.destination', div).textContent = departure.destination
-          $('.actual', div).textContent = departure.prettyTimeToDeparture
-          $('.stoppingType', div).textContent = departure.stoppingType
+          $('.scheduled', div).textContent = formatTimeB(new Date(departure.sch))
+          $('.destination', div).textContent = departure.dest
+          $('.actual', div).textContent = minutesToDeparture(new Date(departure.est || departure.sch))
+          $('.stoppingType', div).textContent = departure.type
         } else {
           $('.scheduled', div).textContent = '--'
           $('.destination', div).textContent = '--'
@@ -191,7 +169,7 @@ function setupClock() {
 }
 
 function setTime() {
-  $('.timeContainer span').textContent = formatTime(new Date(), true)
+  $('.timeContainer span').textContent = formatTimeB(new Date(), true)
 }
 
 $.ready(() => {
@@ -200,6 +178,6 @@ $.ready(() => {
 
 
 
-let vlineStops = ["Wallan","Melton","Rockbank","Deer Park","Sunbury","Ardeer","Craigieburn","Southern Cross","Albury","Ararat","Avenel","Bacchus Marsh","Bairnsdale","Ballan","Ballarat","Beaufort","Benalla","Bendigo","Birregurra","Broadford","Bunyip","Camperdown","Castlemaine","Chiltern","Clarkefield","Colac","Corio","Dingee","Donnybrook","Drouin","Eaglehawk","Echuca","Elmore","Euroa","Garfield","Geelong","Gisborne","Heathcote Junction","Kangaroo Flat","Kerang","Kilmore East","Kyneton","Lara","Little River","Longwarry","Macedon","Malmsbury","Marshall","Moe","Mooroopna","Morwell","Murchison East","Nagambie","Nar Nar Goon","North Geelong","North Shore","Pyramid","Riddells Creek","Rochester","Rosedale","Sale","Seymour","Shepparton","South Geelong","Springhurst","Stratford","Swan Hill","Tallarook","Terang","Trafalgar","Traralgon","Tynong","Violet Town","Wandong","Wangaratta","Warragul","Warrnambool","Winchelsea","Wodonga","Woodend","Yarragon","Flinders Street","North Melbourne","Footscray","Sunshine","Watergardens","Richmond","Caulfield","Clayton","Dandenong","Berwick","Pakenham","Essendon","Broadmeadows","Sherwood Park","Wendouree","Creswick","Clunes","Maryborough","Talbot","Waurn Ponds","Epsom","Wyndham Vale","Tarneit","Cobblebank","Caroline Springs"]
+let vlineStops = ["Wallan","Melton","Rockbank","Deer Park","Sunbury","Ardeer","Craigieburn","Southern Cross","Albury","Ararat","Avenel","Bacchus Marsh","Bairnsdale","Ballan","Ballarat","Beaufort","Benalla","Bendigo","Birregurra","Broadford","Bunyip","Camperdown","Castlemaine","Chiltern","Clarkefield","Colac","Corio","Dingee","Donnybrook","Drouin","Eaglehawk","Echuca","Elmore","Euroa","Garfield","Geelong","Gisborne","Heathcote Junction","Kangaroo Flat","Kerang","Kilmore East","Kyneton","Lara","Little River","Longwarry","Macedon","Malmsbury","Marshall","Moe","Mooroopna","Morwell","Murchison East","Nagambie","Nar Nar Goon","North Geelong","North Shore","Pyramid","Riddells Creek","Rochester","Rosedale","Sale","Seymour","Shepparton","South Geelong","Springhurst","Stratford","Swan Hill","Tallarook","Terang","Trafalgar","Traralgon","Tynong","Violet Town","Wandong","Wangaratta","Warragul","Warrnambool","Winchelsea","Wodonga","Woodend","Yarragon","Flinders Street","North Melbourne","Footscray","Sunshine","Watergardens","Richmond","Caulfield","Clayton","Dandenong","Berwick","Pakenham","Essendon","Broadmeadows","Sherwood Park","Wendouree","Creswick","Clunes","Maryborough","Talbot","Waurn Ponds","Epsom","Wyndham Vale","Tarneit","Cobblebank","Caroline Springs","Culcairn","Henty","The Rock","Wagga Wagga","Junee","Cootamundra","Harden","Yass Junction","Gunning","Goulburn","Moss Vale","Campbelltown","Sydney Central"]
 
 vlineStops = vlineStops.concat(['St. Albans', 'Keilor Plains', 'Diggers Rest']) // Old St. Albans Line

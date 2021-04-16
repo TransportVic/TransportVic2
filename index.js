@@ -1,3 +1,5 @@
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 global.startTime = +new Date()
 require('./utils')
 
@@ -15,6 +17,7 @@ const path = require('path')
 global.loggers = {
   http: new Logger(path.join(__dirname, 'logs', 'http'), 'HTTP'),
   mail: new Logger(path.join(__dirname, 'logs', 'mail'), 'MAIL'),
+  spamMail: new Logger(path.join(__dirname, 'logs', 'spam-mail'), 'SPAM-MAIL'),
   fetch: new Logger(path.join(__dirname, 'logs', 'fetch'), 'FETCH'),
   trackers: {
     bus: new Logger(path.join(__dirname, 'logs', 'trackers', 'bus'), 'BUS'),
@@ -22,7 +25,9 @@ global.loggers = {
     vline: new Logger(path.join(__dirname, 'logs', 'trackers', 'vline'), 'VLINE'),
     vlineR: new Logger(path.join(__dirname, 'logs', 'trackers', 'vline-realtime'), 'VLINE-R'),
     metro: new Logger(path.join(__dirname, 'logs', 'trackers', 'metro'), 'METRO'),
+    metroNotify: new Logger(path.join(__dirname, 'logs', 'trackers', 'metro'), 'METRO-NOTIFY'),
     xpt: new Logger(path.join(__dirname, 'logs', 'trackers', 'xpt'), 'XPT'),
+    ccl: new Logger(path.join(__dirname, 'logs', 'trackers', 'ccl'), 'CCL')
   },
   mockups: new Logger(path.join(__dirname, 'logs', 'mockups'), 'MOCKUPS'),
   error: new Logger(path.join(__dirname, 'logs', 'errors'), 'ERROR'),
@@ -49,7 +54,7 @@ if (config.useHTTPS) {
 let websocketServer = WebsocketServer.createServer(httpsServer || httpServer)
 
 httpServer.listen(config.httpPort)
-if (httpsServer) httpsServer.listen(443)
+if (httpsServer) httpsServer.listen(config.httpsPort)
 
 global.loggers.general.info('Server Started')
 

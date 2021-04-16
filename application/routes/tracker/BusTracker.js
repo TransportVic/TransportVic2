@@ -182,9 +182,20 @@ router.get('/service', async (req, res) => {
     })
   }
 
+  let routeQuery = {
+    $in: [
+      service,
+      service + 'A',
+      service + 'B',
+      service + 'C',
+      service + 'D',
+      service + 'F'
+    ]
+  }
+
   let rawTripsToday = await busTrips.findDocuments({
     date,
-    routeNumber: service
+    routeNumber: routeQuery
   }).sort({departureTime: 1, origin: 1}).toArray()
 
   let tripsToday = (await async.map(rawTripsToday, async trip => {
@@ -198,7 +209,7 @@ router.get('/service', async (req, res) => {
   })).map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
   let operationDays = await busTrips.distinct('date', {
-    routeNumber: service
+    routeNumber: routeQuery
   })
   let busesByDay = {}
   let smartrakIDCache = {}
@@ -206,7 +217,7 @@ router.get('/service', async (req, res) => {
   await async.forEachSeries(operationDays, async date => {
     let smartrakIDsByDate = await busTrips.distinct('smartrakID', {
       date,
-      routeNumber: service
+      routeNumber: routeQuery
     })
     let buses = (await async.map(smartrakIDsByDate, async smartrakID => {
       let fleetNumber = smartrakIDCache[smartrakID]
@@ -253,6 +264,7 @@ router.get('/operator-list', async (req, res) => {
   if (!operator) {
     return res.render('tracker/bus/by-operator', {
       buses: {},
+      allBuses: [],
       operator: '',
       date: utils.parseTime(date, 'YYYYMMDD')
     })

@@ -4,12 +4,13 @@ const router = new express.Router()
 const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
 const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
+const gtfsGroups = require('../../../modules/gtfs-id-groups')
 
 const liveBusData = require('../../../additional-data/live-bus-data')
 const busDestinations = require('../../../additional-data/bus-destinations')
 const coachDestinations = require('../../../additional-data/coach-stops')
 
-const determineBusRouteNumber = require('../../../modules/bus/determine-bus-route-number')
+const busBays = require('../../../additional-data/bus-bays')
 
 async function pickBestTrip(data, db) {
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
@@ -55,6 +56,21 @@ async function pickBestTrip(data, db) {
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
 
+  let referenceTrip = liveTrip || gtfsTrip
+  if (!referenceTrip) {
+    if (tripStartMinutes > 1440) {
+      query.operationDays = data.operationDays
+
+      gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
+      liveTrip = await db.getCollection('live timetables').findDocument(query)
+      referenceTrip = liveTrip || gtfsTrip
+
+      if (!referenceTrip || !referenceTrip.routeGTFSID.startsWith('8-')) return null
+    } else {
+      return null
+    }
+  }
+
   let noLive = ['5', '7', '9', '11', '12', '13']
   let useLive = minutesToTripEnd > -60 && minutesToTripStart < 60
 
@@ -65,10 +81,6 @@ async function pickBestTrip(data, db) {
       return { trip: liveTrip, tripStartTime, isLive }
     }
   }
-
-  // So PTV API only returns estimated timings for bus if stop_id is set and the bus hasn't reached yet...
-  let referenceTrip = liveTrip || gtfsTrip
-  if (!referenceTrip) return null
 
   let gtfsMode = referenceTrip.routeGTFSID.split('-')[0]
 
@@ -93,16 +105,25 @@ async function pickBestTrip(data, db) {
   let isoDeparture = checkStopTime.toISOString()
   let mode = trueMode === 'bus' ? 2 : 1
   try {
-    let {departures, runs} = await ptvAPI(`/v3/departures/route_type/${mode}/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-3, 'minutes').startOf('minute').toISOString()}&max_results=5&expand=run&expand=stop`)
+    let {departures, routes, runs} = await ptvAPI(`/v3/departures/route_type/${mode}/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-3, 'minutes').startOf('minute').toISOString()}&max_results=5&expand=run&expand=stop&expand=route`)
 
-    let departure = departures.filter(departure => {
+    let departure = departures.find(departure => {
       let run = runs[departure.run_ref]
+      let route = routes[departure.route_id]
+      let routeGTFSID = route.route_gtfs_id
+
+      if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
+      if (routeGTFSID === '4-965') routeGTFSID = '8-965'
+
+      let matchingGroup = gtfsGroups.find(g => g.includes(routeGTFSID)) || [ routeGTFSID ]
+
       let destinationName = utils.getProperStopName(run.destination_name)
       let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc).toISOString()
 
       return scheduledDepartureTime === isoDeparture &&
-        destinationName === referenceTrip.destination
-    })[0]
+        destinationName === referenceTrip.destination &&
+        matchingGroup.includes(referenceTrip.routeGTFSID)
+    })
 
     if (!departure) return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
     let ptvRunID = departure.run_ref
@@ -127,7 +148,8 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
 
   let routes = res.db.getCollection('routes')
   let tripRoute = await routes.findDocument({ routeGTFSID: trip.routeGTFSID }, { routePath: 0 })
-  let operator = tripRoute.operators.sort((a, b) => a.length - b.length)[0].replace(/ \(.+/, '')
+  if (!tripRoute) tripRoute = { operators: [] }
+  let operator = (tripRoute.operators.sort((a, b) => a.length - b.length)[0] || '').replace(/ \(.+/, '')
 
   let {destination, origin} = trip
   let fullDestination = destination
@@ -143,12 +165,8 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   origin = origin.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
 
   if (trip.mode === 'regional coach') {
-    destination = fullDestination.replace('Shopping Centre', 'SC')
-    origin = fullOrigin.replace('Shopping Centre', 'SC')
-
-    let destinationSuburb = trip.stopTimings.slice(-1)[0].suburb
-    destination = coachDestinations[destination + ` (${destinationSuburb})`] || coachDestinations[destination] || destination
-    origin = coachDestinations[origin] || origin
+    origin = coachDestinations(trip.stopTimings[0])
+    destination = coachDestinations(trip.stopTimings.slice(-1)[0])
 
     let destShortName = utils.getStopName(destination)
     if (!utils.isStreet(destShortName)) destination = destShortName
@@ -205,6 +223,9 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
 
       stop.pretyTimeToDeparture = utils.prettyTime(estimatedDepartureTime || scheduledDepartureTime, true, true)
     }
+
+    stop.bay = busBays[stop.stopGTFSID]
+
     return stop
   })
 
@@ -215,8 +236,6 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   let busTrips = res.db.getCollection('bus trips')
 
   if (trip.mode === 'bus') {
-    routeNumber = determineBusRouteNumber(trip)
-
     trackerData = await busTrips.findDocument({
       date: req.params.operationDays,
       departureTime: trip.departureTime,

@@ -42,5 +42,7 @@ module.exports = {
   'Warrnambool': 'Warrnambool',
 
   'Southern Cross-Sydney Central': 'Melbourne - Sydney',
-  'Sydney Central-Southern Cross': 'Melbourne - Sydney'
+  'Sydney Central-Southern Cross': 'Melbourne - Sydney',
+
+  'Nhill': 'Overland'
 }

@@ -1,36 +1,7 @@
 let destinations
 
-function formatTime(time, includeSeconds=false, space=false) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let seconds = time.getSeconds()
-  let mainTime = ''
-
-  mainTime += (hours % 12) || 12
-  mainTime += ':'
-
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  if (includeSeconds) {
-    mainTime += ':'
-
-    if (seconds < 10) mainTime += '0'
-    mainTime += seconds
-  }
-
-  if (space) mainTime += ' '
-
-  if (time.getHours() >= 12)
-    mainTime += 'pm'
-  else
-    mainTime += 'am'
-
-  return mainTime
-}
-
 function setTime() {
-  $('.clock span').textContent = formatTime(new Date(), true, true)
+  $('.clock span').textContent = formatTimeA(new Date(), true, true)
 }
 
 function setupClock() {
@@ -58,19 +29,20 @@ function setListenAnnouncements() {
 }
 
 function identifyTargetStop(departure, target, stationName) {
-  let targetStop = departure.stopTimings.find(stop => stop.stopName === target)
+  let targetStop = departure.times.find(stop => stop.name === target)
 
-  let actualDepartureTime = new Date(departure.actualDepartureTime)
-  let scheduledDepartureTime = new Date(departure.scheduledDepartureTime)
+  let actualDepartureTime = new Date(departure.est || departure.sch)
+  let scheduledDepartureTime = new Date(departure.sch)
 
-  let currentStop = departure.stopTimings.find(stop => stop.stopName === stationName)
-  let currentMinutes = currentStop.departureTimeMinutes
-  let targetMinutes = targetStop.arrivalTimeMinutes
+  let currentStop = departure.times.find(stop => stop.name === stationName)
+  let currentMinutes = currentStop.time
+  let targetMinutes = targetStop.time
 
   let minutesDifference = targetMinutes - currentMinutes
 
   let targetActualTime = new Date(+actualDepartureTime + minutesDifference * 1000 * 60)
 
+  departure.act = actualDepartureTime
   departure.targetActualTime = targetActualTime
 
   return departure
@@ -84,14 +56,14 @@ function updateDestinations(departures, stationName) {
     let departureRow = $('#' + id)
 
     let nextDepartures = departures.filter(departure => {
-      if (departure.type === 'vline' && !allowVLine) return false
+      if (departure.v && !allowVLine) return false
       for (let target of targets) {
-        if (!departure.stopTimings.find(stop => stop.stopName === target))
+        if (!departure.times.find(stop => stop.name === target))
           return false
       }
       if (not) {
         for (let excluded of not)
-          if (departure.stopTimings.find(stop => stop.stopName === excluded))
+          if (departure.times.find(stop => stop.name === excluded))
             return false
       }
 
@@ -112,8 +84,8 @@ function updateDestinations(departures, stationName) {
       let dividerDiv = dividerDivs[i - 1]
 
       if (departure) {
-        $('.platform', departureDiv).textContent = departure.platform
-        $('.minutesToDeparture', departureDiv).textContent = departure.prettyTimeToDeparture
+        $('.platform', departureDiv).textContent = departure.plt
+        $('.minutesToDeparture', departureDiv).textContent = minutesToDeparture(departure.act, true)
 
         departureDiv.style = 'display: flex;'
         if (dividerDiv) dividerDiv.style = 'display: block;'
@@ -134,7 +106,7 @@ function updateBody() {
     setFullMessageActive(false)
 
     try {
-      updateDestinations(body.departures, body.stationName)
+      updateDestinations(body.dep, body.stn)
     } catch (e) {
       console.error(e)
       setListenAnnouncements()

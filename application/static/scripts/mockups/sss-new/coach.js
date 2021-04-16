@@ -1,21 +1,5 @@
 let bays = []
 
-function formatTime(time) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let mainTime = ''
-
-  if (hours < 10) mainTime += '0'
-  mainTime += hours
-
-  mainTime += ':'
-
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  return mainTime
-}
-
 let currentlyDisplaying = ''
 
 function setListenAnnouncements() {
@@ -104,7 +88,7 @@ function updateBody() {
 }
 
 function setTime() {
-  $('.clock span').textContent = formatTime(new Date())
+  $('.clock span').textContent = formatTimeB(new Date())
 }
 
 function setupClock() {

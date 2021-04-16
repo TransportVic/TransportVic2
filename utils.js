@@ -3,8 +3,12 @@ require('moment-timezone')
 moment.tz.setDefault('Australia/Melbourne')
 const fetch = require('node-fetch')
 const stopNameModifier = require('./additional-data/stop-name-modifier')
+const TimedCache = require('./TimedCache')
+const EventEmitter = require('events')
+const crypto = require('crypto')
 
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
+const locks = {}, caches = {}
 
 String.prototype.format = (function (i, safe, arg) {
   function format () {
@@ -22,19 +26,16 @@ String.prototype.format = (function (i, safe, arg) {
 module.exports = {
   encodeName: name => name.toLowerCase().replace(/[^\w\d ]/g, '-').replace(/  */g, '-').replace(/--+/g, '-').replace(/-$/, '').replace(/^-/, ''),
   adjustRouteName: routeName => {
-    routeName = routeName.replace(/via .+/, '')
+    return module.exports.titleCase(routeName.replace(/via .+/i, '')
       .replace(/\(?(?:anti)? ?-? ?(?:clockwise)(?: loop)?\)?$/i, '')
-      .replace(/ \(SMARTBUS.+/g, '')
-      .replace(' To ', ' - ')
-      .replace(' to ', ' - ')
+      .replace(/ \(SMARTBUS.+/gi, '')
+      .replace(/ to /i, ' - ')
       .replace(/  +/g, ' ')
       .replace(/(\w) *- *(\w)/g, '$1 - $2')
-      .replace(/Railway Station/g, 'Station')
-      .replace(/Station/g, 'Railway Station')
-      .replace(/ \((From|Until) .+\)$/, '')
+      .replace(/(?:Railway)? Station/gi, '')
+      .replace(/ \((From|Until) .+\)$/i, '')
       .trim()
-
-    return module.exports.titleCase(routeName)
+    )
   },
   adjustRawStopName: name => {
     let directionParts
@@ -136,6 +137,8 @@ module.exports = {
   },
   expandStopName: name => {
     name = name.replace(/St(\/|$)/g, 'Street$1')
+    .replace(/St S(\b)/, 'Street South$1')
+    .replace(/St N(\b)/, 'Street North$1')
     .replace(/(\w+) St(\b)/, '$1 Street$2')
     .replace(/St -/g, 'Street -')
     .replace(/Rd(\b)/g, 'Road$1')
@@ -232,7 +235,7 @@ module.exports = {
     const parts = time.slice(0, 5).split(':')
     return parts[0] * 60 + parts[1] * 1
   },
-  getHHMMFromMinutesPastMidnight: (time, padHour=true) => {
+  getHHMMFromMinutesPastMidnight: time => {
     let hours = Math.floor(time / 60)
     let minutes = time % 60
     let mainTime = ''
@@ -304,6 +307,8 @@ module.exports = {
     let body
     let error
 
+    let maxRetries = (options ? options.maxRetries : null) || 3
+
     let fullOptions = {
       timeout: 2000,
       compress: true,
@@ -311,7 +316,7 @@ module.exports = {
       ...options
     }
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < maxRetries; i++) {
       try {
         body = await fetch(url, fullOptions)
 
@@ -444,11 +449,20 @@ module.exports = {
     else return shortName
   },
   getRunID: ptvRunID => {
-    let runID = ptvRunID - 948000
-    if (runID >= 40000) {
-      return `X${module.exports.pad((runID - 40000).toString(), 3, '0')}`
+    if (ptvRunID >= 988000) {
+      return `X${module.exports.pad(ptvRunID - 988000, 3, '0')}`
+    } else if (ptvRunID >= 982000) {
+      return `R${module.exports.pad(ptvRunID - 982000, 3, '0')}`
     } else {
-      return module.exports.pad(runID.toString(), 4, '0')
+      return module.exports.pad(ptvRunID - 948000, 4, '0')
+    }
+  },
+  getPTVRunID: runID => {
+    if (parseInt(runID)) {
+      return parseInt(runID) + 948000
+    } else {
+      if (runID[0] === 'X') return parseInt(runID.slice(1)) + 988000
+      if (runID[0] === 'R') return parseInt(runID.slice(1)) + 982000
     }
   },
   sleep: time => {
@@ -469,5 +483,63 @@ module.exports = {
   tokeniseAndSubstring: text => {
     let words = text.split(' ')
     return words.map(w => module.exports.findSubstrings(w, 4)).reduce((a, e) => a.concat(e), [])
+  },
+  shuffle: a => {
+    let j, x, i
+    for (i = a.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1))
+      x = a[i]
+      a[i] = a[j]
+      a[j] = x
+    }
+
+    return a
+  },
+  getData: async (lock, key, noMatch, ttl=1000 * 60) => {
+    if (!locks[lock]) locks[lock] = {}
+    if (!caches[lock]) caches[lock] = new TimedCache(ttl)
+
+    if (locks[lock][key]) {
+      return await new Promise((resolve, reject) => {
+        locks[lock][key].on('loaded', resolve)
+        locks[lock][key].on('fail', e => {
+          reject(e)
+          console.log(e)
+        })
+      })
+    }
+    if (caches[lock].get(key)) {
+      return caches[lock].get(key)
+    }
+
+    locks[lock][key] = new EventEmitter()
+    locks[lock][key].setMaxListeners(1000)
+
+    let data
+
+    try {
+      data = await noMatch()
+    } catch (e) {
+      global.loggers.general.err('Getting data for', lock, 'for key', key, 'failed', e)
+      locks[lock][key].emit('fail', e)
+      delete locks[lock][key]
+      throw e
+    }
+
+    caches[lock].put(key, data)
+    locks[lock][key].emit('loaded', data)
+    delete locks[lock][key]
+
+    return data
+  },
+  hash: data => {
+    return crypto.createHash('md5').update(data).digest('hex')
+  },
+  tripsEqual: (tripA, tripB) => {
+    return tripA.routeGTFSID === tripB.routeGTFSID
+      && tripA.origin === tripB.origin
+      && tripA.destination === tripB.destination
+      && tripA.departureTime === tripB.departureTime
+      && tripA.destinationArrivalTime === tripB.destinationArrivalTime
   }
 }

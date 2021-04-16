@@ -17,17 +17,18 @@ database.connect({}, async err => {
 
   let bayCount = 0
 
-  await async.forEachOfLimit(stopIDs, 100, async (id, i) => {
+  await async.forEachOfLimit(stopIDs, 3000, async (id, i) => {
     let stop = await stops.findDocument({ _id: id })
 
     let bayNames = stop.bays.map(bay => bay.fullStopName)
     let originalNames = stop.bays.map(bay => bay.originalName)
+    let tramTrackerNames = stop.bays.map(bay => bay.tramTrackerName).filter(Boolean)
 
     let textQuery = [
       ...bayNames.map(name => utils.tokeniseAndSubstring(name)),
       ...originalNames.map(name => utils.tokeniseAndSubstring(name)),
       ...stop.suburb.map(name => utils.tokeniseAndSubstring(name)),
-      ...(stop.tramTrackerNames || []).map(name => utils.tokeniseAndSubstring(name))
+      ...tramTrackerNames.map(name => utils.tokeniseAndSubstring(name)),
     ].reduce((a, e) => a.concat(e), []).filter((e, i, a) => a.indexOf(e) === i)
 
     await stops.updateDocument({ _id: id }, {

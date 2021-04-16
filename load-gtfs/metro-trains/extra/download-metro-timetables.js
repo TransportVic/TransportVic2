@@ -2,6 +2,7 @@ const async = require('async')
 const fs = require('fs')
 const path = require('path')
 const utils = require('../../../utils')
+const urls = require('../../../urls')
 const updateStats = require('../../utils/stats')
 
 const lineIDs = {
@@ -28,8 +29,8 @@ async function main () {
 
   await async.forEach(Object.keys(lineIDs), async lineName => {
     const lineID = lineIDs[lineName]
-    const body = await utils.request('https://040977037015-static-assets-staging.s3-ap-southeast-2.amazonaws.com/current_timetable_{0}.json'.format(lineID), {
-      timeout: 5000
+    const body = await utils.request(urls.metroTrainsTimetable.format(lineID), {
+      timeout: 20000
     })
 
     let filePath = path.join(__dirname, 'timetables', lineName + '.json')

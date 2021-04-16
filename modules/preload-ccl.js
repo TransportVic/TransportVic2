@@ -3,6 +3,7 @@ const DatabaseConnection = require('../database/DatabaseConnection')
 const utils = require('../utils')
 const async = require('async')
 const getDepartures = require('../modules/metro-trains/get-departures')
+const schedule = require('./trackers/scheduler')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let stops = []
@@ -10,8 +11,10 @@ let stops = []
 async function requestTimings() {
   await async.forEachSeries(stops, async stop => {
     await new Promise(resolve => {
-      setTimeout(resolve, 10000)
+      setTimeout(resolve, 1500)
     })
+
+    global.loggers.trackers.ccl.info('requesting timings for', stop.stopName.slice(0, -16))
     await getDepartures(stop, database)
   })
 }
@@ -23,7 +26,14 @@ database.connect(async () => {
   stops.push(await dbStops.findDocument({ stopName: 'Southern Cross Railway Station' }))
   stops.push(await dbStops.findDocument({ stopName: 'Flinders Street Railway Station' }))
   stops.push(await dbStops.findDocument({ stopName: 'Parliament Railway Station' }))
+  stops.push(await dbStops.findDocument({ stopName: 'North Melbourne Railway Station' }))
+  stops.push(await dbStops.findDocument({ stopName: 'Jolimont Railway Station' }))
+  stops.push(await dbStops.findDocument({ stopName: 'Richmond Railway Station' }))
 
-  setInterval(requestTimings, 30 * 60 * 1000)
-  await requestTimings()
+  schedule([
+    [0, 60, 12], // 12am - 1am
+    [240, 1200, 6], // 4am - 8pm
+    [1201, 1320, 8], // 8pm - 10pm
+    [1201, 1440, 10] // 10pm - 12am
+  ], requestTimings, 'city loop preloader', global.loggers.trackers.ccl)
 })

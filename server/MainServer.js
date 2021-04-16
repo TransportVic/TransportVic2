@@ -7,6 +7,7 @@ const minify = require('express-minify')
 const fs = require('fs')
 const uglifyEs = require('uglify-es')
 const rateLimit = require('express-rate-limit')
+const fetch = require('node-fetch')
 const utils = require('../utils')
 
 const DatabaseConnection = require('../database/DatabaseConnection')
@@ -14,8 +15,10 @@ const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config.json')
 const modules = require('../modules.json')
 
-if (modules.tracker && modules.tracker.bus)
+if (modules.tracker && modules.tracker.bus) {
+  require('../modules/trackers/ptv-bus')
   require('../modules/trackers/bus')
+}
 
 if (modules.tracker && modules.tracker.tram)
   require('../modules/trackers/tram')
@@ -29,26 +32,24 @@ if (modules.tracker && modules.tracker['vline-r'])
 if (modules.tracker && modules.tracker.xpt)
   require('../modules/xpt/xpt-updater')
 
+if (modules.tracker && modules.tracker.hcmt)
+  require('../modules/trackers/hcmt')
+
 if (modules.tracker && modules.tracker.metro)
   require('../modules/trackers/metro')
+
+if (modules.tracker && modules.tracker.metroNotify)
+  require('../modules/trackers/metro-notify')
+
+if (modules.tracker && modules.tracker.metroShunts)
+  require('../modules/trackers/metro-shunts')
 
 if (modules.preloadCCL)
   require('../modules/preload-ccl')
 
 let serverStarted = false
 
-let bandwithFilePath = path.join(__dirname, '../bandwidth.json')
-let serverStats = {}
-fs.readFile(bandwithFilePath, (err, data) => {
-  if (data) {
-    serverStats = JSON.parse(data)
-  }
-})
-
-setInterval(() => {
-  fs.writeFile(bandwithFilePath, JSON.stringify(serverStats, null, 2), () => {
-  })
-}, 1000 * 60)
+let trackerAuth = 'Basic ' + Buffer.from(config.vlineLogin).toString('base64')
 
 module.exports = class MainServer {
   constructor () {
@@ -90,22 +91,6 @@ module.exports = class MainServer {
     app.use((req, res, next) => {
       let reqURL = req.url + ''
       let start = +new Date()
-      let date = utils.getYYYYMMDDNow()
-      if (!serverStats[date]) serverStats[date] = 0
-
-      let bytes = 200 // Roughly accounting for headers since... they don't show up?
-      let {write, end} = res.socket
-      res.socket.write = (x, y, z) => {
-        write.bind(res.socket, x, y, z)()
-        bytes += x.length
-      }
-
-      res.socket.end = (x, y, z) => {
-        if (res.socket) {
-          end.bind(res.socket, x, y, z)()
-          if (x) bytes += x.length
-        }
-      }
 
       let endResponse = res.end
       res.end = (x, y, z) => {
@@ -113,26 +98,14 @@ module.exports = class MainServer {
         let end = +new Date()
         let diff = end - start
 
-        if (diff > 20 && !reqURL.startsWith('/static/')) {
-          global.loggers.http.info(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff} ${bytes}`)
+        if (!reqURL.startsWith('/static/')) {
+          global.loggers.http.info(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff}`)
 
           this.past50ResponseTimes = [...this.past50ResponseTimes.slice(-49), diff]
         }
-
-        serverStats[date] += bytes
       }
 
       next()
-    })
-
-    app.use('/.well-known/acme-challenge/:key', (req, res) => {
-      let filePath = path.join(config.webrootPath, req.params.key)
-      let stream = fs.createReadStream(filePath)
-      stream.pipe(res)
-
-      stream.on('error', err => {
-        res.status(404).end('404')
-      })
     })
 
     app.use(compression({
@@ -146,6 +119,34 @@ module.exports = class MainServer {
         errorHandler: console.log
       }))
     }
+
+    function filter(prefix, req, next) {
+      let host = req.headers.host || ''
+      if (host.includes(prefix)) return true
+      else return void next()
+    }
+
+    app.use('*', (req, res, next) => {
+      if (filter('circulars.', req, next)) {
+        if (!req.headers.authorization || req.headers.authorization !== trackerAuth) {
+          res.status(401)
+          res.header('www-authenticate', 'Basic realm="password needed"')
+          res.end('Please login')
+        } else {
+          let url = `http://localhost:${config.circularPort}${req.baseUrl}`
+          fetch(url).then(r => {
+            res.header('Content-Type', r.headers.get('content-type'))
+            let disposition = r.headers.get('content-disposition')
+            if (disposition) res.header('Content-Disposition', r.headers.get('content-disposition'))
+            r.body.pipe(res)
+          })
+        }
+      }
+    })
+
+    app.get('/', (req, res, next) => {
+      if (filter('seized.', req, next)) res.render('seized')
+    })
 
     app.use('/static', express.static(path.join(__dirname, '../application/static'), {
       maxAge: 1000 * 60 * 60 * 24
@@ -172,13 +173,25 @@ module.exports = class MainServer {
 
     app.set('views', path.join(__dirname, '../application/views'))
     app.set('view engine', 'pug')
-    if (process.env['NODE_ENV'] && process.env['NODE_ENV'] === 'prod') { app.set('view cache', true) }
+    if (process.NODE_ENV && process.NODE_ENV === 'prod') { app.set('view cache', true) }
     app.set('x-powered-by', false)
     app.set('strict routing', false)
 
-    app.use('/mockups', rateLimit({
+    app.use(config.newVlineTracker, (req, res, next) => {
+      if (req.headers.authorization && req.headers.authorization === trackerAuth) {
+        return next()
+      }
+
+      res.status(401)
+      res.header('www-authenticate', 'Basic realm="password needed"')
+      res.end('Please login')
+    })
+
+    app.use(config.newVlineTracker, require('../application/routes/tracker/VLineTracker2'))
+
+    app.use('/bus/timings', rateLimit({
       windowMs: 1 * 60 * 1000,
-      max: 140
+      max: 60
     }))
   }
 
@@ -190,9 +203,12 @@ module.exports = class MainServer {
       },
 
       Index: '/',
+      IndexData: '/',
       AdditionalLinks: '/links',
       Search: '/search',
       StopsNearby: '/nearby',
+
+      PublicHolidayInfo: '/public-holiday',
 
       'timing-pages/VLine': {
         path: '/vline/timings',
@@ -239,7 +255,7 @@ module.exports = class MainServer {
       'mockups/Metro-LED-PIDS': '/mockups/metro-led-pids',
       'mockups/Metro-CRT-PIDS': '/mockups/metro-crt',
       'mockups/VLine-PIDS': '/mockups/vline',
-      'mockups/sss/SouthernCross': '/mockups/sss',
+      // 'mockups/sss/SouthernCross': '/mockups/sss',
       'mockups/train/TrainPID': '/mockups/train',
 
       'mockups/sss-new/SSSNew': '/mockups/sss-new',
@@ -251,27 +267,13 @@ module.exports = class MainServer {
         enable: modules.jmssScreen
       },
 
-      SmartrakIDs: {
-        path: '/smartrak',
-        enable: modules.tracker && modules.tracker.bus
-      },
+      SmartrakIDs: '/smartrak',
 
-      'tracker/BusTracker': {
-        path: '/bus/tracker',
-        enable: modules.tracker && modules.tracker.bus
-      },
-      'tracker/TramTracker': {
-        path: '/tram/tracker',
-        enable: modules.tracker && modules.tracker.tram
-      },
-      'tracker/VLineTracker': {
-        path: '/vline/tracker',
-        enable: modules.tracker && modules.tracker.vline
-      },
-      'tracker/MetroTracker': {
-        path: '/metro/tracker',
-        enable: modules.tracker && modules.tracker.metro
-      },
+      'tracker/BusTracker': '/bus/tracker',
+      'tracker/TramTracker': '/tram/tracker',
+      'tracker/VLineTracker': '/vline/tracker',
+      'tracker/MetroTracker': '/metro/tracker',
+      'tracker/MetroNotify': '/metro/notify',
 
       'route-data/RegionalBusRoute': {
         path: '/bus/route/regional',
@@ -312,7 +314,11 @@ module.exports = class MainServer {
       },
 
       RoutePaths: '/route-paths',
-      MetroMap: '/metro-map'
+      MetroMap: '/metro-map',
+      ChatbotTest: {
+        path: '/lxra-map',
+        enable: modules.lxraMap
+      }
     }
 
     Object.keys(routers).forEach(routerName => {
@@ -332,16 +338,6 @@ module.exports = class MainServer {
       }
     })
 
-    app.get('/sw.js', (req, res) => {
-      res.setHeader('Cache-Control', 'no-cache')
-      res.sendFile(path.join(__dirname, '../application/static/app-content/sw.js'))
-    })
-
-    app.get('/robots.txt', (req, res) => {
-      res.setHeader('Cache-Control', 'no-cache')
-      res.sendFile(path.join(__dirname, '../application/static/app-content/robots.txt'))
-    })
-
     app.get('/response-stats', (req, res) => {
       res.json({ status: 'ok', meanResponseTime: this.getAverageResponseTime() })
     })
@@ -357,7 +353,7 @@ module.exports = class MainServer {
         res.status(404).render('errors/404')
       } else {
         res.status(500).render('errors/500')
-        global.loggers.error.err(err)
+        global.loggers.error.err(req.url, err)
       }
     })
   }

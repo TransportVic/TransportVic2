@@ -4,32 +4,12 @@ const utils = require('../../../utils')
 const router = new express.Router()
 const url = require('url')
 const querystring = require('querystring')
-const moment = require('moment')
 const busDestinations = require('../../../additional-data/bus-destinations')
 const stopNameModifier = require('../../../additional-data/stop-name-modifier')
 const ptvAPI = require('../../../ptv-api')
-const cheerio = require('cheerio')
 const TimedCache = require('../../../TimedCache')
 
 const locationCache = new TimedCache(1000 * 30)
-
-let ptvKey
-let cacheTime
-
-async function getPTVKey() {
-  if (cacheTime && (new Date - cacheTime) < 1000 * 60 * 60) { // Cache key for 1hr max
-    return ptvKey
-  }
-
-  let ptvData = await utils.request('https://ptv.vic.gov.au')
-  let $ = cheerio.load(ptvData)
-  let key = $('#fetch-key').val()
-
-  ptvKey = key
-  cacheTime = new Date()
-
-  return key
-}
 
 function getPlaceName(routeNumber, routeGTFSID, placeName) {
   let modifiedName = utils.getDestinationName(placeName)
@@ -76,12 +56,10 @@ async function getPTVRunID(now, date, trip) {
 
 router.get('/', async (req, res) => {
   res.render('tracker/bus/locator')
-  await getPTVKey() // For preloading purposes
+  await ptvAPI.getPTVKey() // For preloading purposes
 })
 
 router.post('/', async (req, res) => {
-  await getPTVKey()
-
   let {db} = res
   let busTrips = db.getCollection('bus trips')
   let smartrakIDs = db.getCollection('smartrak ids')
@@ -148,7 +126,7 @@ router.post('/', async (req, res) => {
 
   let {ptvRunID, ptvStopID, isoDeparture} = await getPTVRunID(now, date, nextActiveTrip)
   if (ptvRunID) {
-    let url = `https://www.ptv.vic.gov.au/lithe/patterns?run=${ptvRunID}&route_type=2&date_utc=${isoDeparture}&stop_id=${ptvStopID}&__tok=${ptvKey}`
+    let url = `https://www.ptv.vic.gov.au/lithe/patterns?run=${ptvRunID}&route_type=2&date_utc=${isoDeparture}&stop_id=${ptvStopID}&__tok=${await ptvAPI.getPTVKey()}`
     let data = JSON.parse(await utils.request(url))
 
     let runData = data.departures[0].run

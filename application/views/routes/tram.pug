@@ -1,11 +1,14 @@
 extends ../layout
 
 block head
+  -
+    title = `Tram Route ${route.routeNumber}`
+    let name = `${directionNames[0]} - ${directionNames[1]}`
+    if (route.routeGTFSID === '3-35') name = 'City Circle Tram'
+    
+    description = `Tram Route ${route.routeNumber}: ${name}`
+    
   title TransportVic - Tram Route #{route.routeNumber}
-  meta(property='og:title' content=`TransportVic - Tram Route ${route.routeNumber}`)
-  meta(property='twitter:title' content=`TransportVic - Tram Route ${route.routeNumber}`)
-  meta(property='og:description' content=`Tram Route ${route.routeNumber}: ${name}`)
-  meta(property='twitter:description' content=`Tram Route ${route.routeNumber}: ${name}`)
 
 block header-right
   a#mapLink(href=`/route-preview/${route.routeGTFSID}`)
@@ -125,8 +128,10 @@ block content
               if ((stopRoad == stopName) && stopName.match(/\d+[A-Z]? .+$/)) {
                 stopRoad = stopName.match(/\d+[A-Z]? (.+)$/)[1]
               }
+              
+              if (stop.stopNumber) stopName += ` #${stop.stopNumber}`
             if stopRoad !== stopName
-                span=stopRoad
+                span #{stopRoad}
             else
                 span
-            span=stopName
+            span #{stopName}

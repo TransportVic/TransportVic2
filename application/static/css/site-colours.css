@@ -1,0 +1,19 @@
+:root {
+  --light-blue-odd: #6fd6e7;
+  --light-blue-even: #64c0cf;
+
+  --green-odd: #60bd29;
+  --green-even: #58ad25;
+
+  --yellow-odd: #d0ae16;
+  --yellow-even: #be9f14;
+
+  --orange-odd: #e87529;
+  --orange-even: #bf682d;
+
+  --red-odd: #e83535;
+  --red-even: #d82929;
+
+  --grey-odd: #9c9c9c;
+  --grey-even: #a8a8a8;
+}

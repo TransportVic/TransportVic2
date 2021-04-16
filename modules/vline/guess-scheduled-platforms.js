@@ -86,16 +86,13 @@ let singlePlatforms = [
   'Sale',
   'Stratford',
   'Bairnsdale',
-  'Goulburn',
-  'Gunning',
-  'Yass Junction',
-  'Harden',
-  'Cootamundra',
-  'Junee',
-  'Wagga Wagga',
-  'The Rock',
-  'Hentys',
-  'Culcairn'
+
+  'Stawell',
+  'Horsham',
+  'Dimboola',
+  'Nhill',
+  'Bordertown',
+  'Murray Bridge'
 ]
 
 module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday) => {
@@ -104,13 +101,13 @@ module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday)
   if (line === 'The Overland') {
     if (stationName === 'North Shore') return 3
     if (stationName === 'Ararat') return 1
+    if (stationName === 'Southern Cross') return 2
   }
 
   if (stationName === 'Flinders Street') return 6
   if (stationName === 'Richmond') {
-    if (!isUp) return 5
-    if (line === 'Bairnsdale') return 4
-    else return 6
+    if (!isUp) return 6
+    else return 5
   }
 
   if (stationName === 'Caulfield') {
@@ -124,7 +121,12 @@ module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday)
   }
 
   if (stationName === 'Broadmeadows') {
-    if (line === 'Albury' || line === 'Melbourne - Sydney') return 3
+    if (line === 'Albury') return 3
+  }
+
+  if (stationName === 'Essendon') {
+    if (isUp) return 2
+    else return 3
   }
 
   if (stationName === 'Albury') {
@@ -133,7 +135,7 @@ module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday)
   }
 
   if (stationName === 'Seymour') {
-    if (line === 'Albury' || line === 'Melbourne - Sydney') return 1
+    if (line === 'Albury') return 1
     if (isUp) return 2
     else return 3
   }
@@ -203,27 +205,13 @@ module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday)
   }
 
   if (stationName === 'Wendouree') {
-    return 1
-    // if (line === 'Ballarat') return 1
-    // if (isUp) return 1
-    // else return 2
+     if (line === 'Ballarat') return 2
+     else return 2
   }
 
   if (stationName === 'Ararat') {
     return 2
   }
-
-  if (stationName === 'Campbelltown') {
-    if (isUp) return 3
-    else return 2
-  }
-
-  if (stationName === 'Moss Vale') {
-    if (isUp) return 2
-    else return 1
-  }
-
-  if (stationName === 'Southern Cross' || line === 'Melbourne - Sydney') return 1
 
   if (singlePlatforms.includes(stationName)) return 1
 }

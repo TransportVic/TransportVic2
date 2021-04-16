@@ -9,7 +9,7 @@ module.exports = function schedule(intervals, func, name, logger) {
   if (currentInterval) {
     func()
     setTimeout(() => {
-      module.exports(intervals, func)
+      module.exports(intervals, func, name, logger)
     }, currentInterval[2] * 60 * 1000)
   } else {
     let nextInterval = intervals.find(i => {
@@ -25,7 +25,7 @@ module.exports = function schedule(intervals, func, name, logger) {
     setTimeout(() => {
       func()
       setTimeout(() => {
-        module.exports(intervals, func)
+        module.exports(intervals, func, name, logger)
       }, nextInterval[2] * 60 * 1000)
     }, timeToNextInterval * 60 * 1000)
   }

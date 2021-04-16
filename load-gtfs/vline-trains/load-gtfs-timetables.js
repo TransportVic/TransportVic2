@@ -37,7 +37,7 @@ database.connect({
     let tripTimings = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, tripTimeFiles[index])))
 
     trips = trips.filter(trip => {
-      return trip.routeGTFSID !== '1-vPK'
+      return trip.routeGTFSID !== '1-vPK' && trip.routeGTFSID !== '1-Vov'
     })
 
     tripCount += trips.length

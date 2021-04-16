@@ -1,25 +1,3 @@
-function formatTime(time, includeSeconds=false, space=false) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let seconds = time.getSeconds()
-  let mainTime = ''
-
-  mainTime += hours
-  mainTime += ':'
-
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  if (includeSeconds) {
-    mainTime += ':'
-
-    if (seconds < 10) mainTime += '0'
-    mainTime += seconds
-  }
-
-  return mainTime
-}
-
 function setMessagesActive(side, active) {
   let sideDiv = $('.' + side)
   function $$(selector) { return $(selector, sideDiv) }
@@ -28,13 +6,13 @@ function setMessagesActive(side, active) {
     $$('.message').style = 'display: flex;'
     $$('.firstDeparture').style = 'display: none;'
     $$('.stops').style = 'display: none';
+
+    currentPattern[side] = null
   } else {
     $$('.message').style = 'display: none;'
     $$('.firstDeparture').style = 'display: flex;'
     $$('.stops').style = 'display: flex;'
   }
-
-  currentPattern[side] = null
 
   $$('.fullMessage').style = 'display: none;'
 }
@@ -47,13 +25,13 @@ function setFullMessageActive(side, active) {
     $$('.fullMessage').style = 'display: flex;'
     $$('.firstDeparture').style = 'display: none;'
     $$('.stops').style = 'display: none;'
+
+    currentPattern[side] = null
   } else {
     $$('.fullMessage').style = 'display: none;'
     $$('.firstDeparture').style = 'display: flex;'
     $$('.stops').style = 'display: flex'
   }
-
-  currentPattern[side] = null
 
   $$('.message').style = 'display: none;'
 }
@@ -73,7 +51,7 @@ function shorternName(stopName) {
 }
 
 function createStoppingPatternID(side, stoppingPattern) {
-  return stoppingPattern.map(e => `${e.stopName}${e.isExpress}`).join(',')
+  return stoppingPattern.map(e => `${e[0]}${e[1]}`).join(',')
 }
 
 let currentPattern = { left: null, right: null }
@@ -101,8 +79,8 @@ function addStoppingPattern(side, stops) {
     let html = ''
 
     stopColumn.forEach(stop => {
-      let className = stop.isExpress ? ' class="express"' : ''
-      html += `<span${className}>${shorternName(stop.stopName)}</span><br>`
+      let className = stop[1] ? ' class="express"' : ''
+      html += `<span${className}>${shorternName(stop[0])}</span><br>`
     })
 
     outerColumn.innerHTML = `<div>${html}</div>`
@@ -140,14 +118,12 @@ function processDepartures(departures, side, firstTime) {
     if (firstDeparture) {
       setMessagesActive(side, false)
 
-      let firstDepartureClass = firstDeparture.codedLineName
-      if (firstDeparture.type === 'vline') firstDepartureClass = 'vline'
+      let firstDepartureClass = encode(firstDeparture.route)
+      if (firstDeparture.v) firstDepartureClass = 'vline'
 
-      let {destination} = firstDeparture
-
-      let firstStoppingType = firstDeparture.stoppingType
-      if (firstDeparture.additionalInfo.via) {
-        firstStoppingType += ' ' + firstDeparture.additionalInfo.via
+      let firstStoppingType = firstDeparture.type
+      if (firstDeparture.via) {
+        firstStoppingType += ' via ' + firstDeparture.via
       }
 
       if (firstDeparture.connections) {
@@ -158,21 +134,31 @@ function processDepartures(departures, side, firstTime) {
 
       $$('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
 
-      $$('.firstDepartureInfo .platform').textContent = firstDeparture.platform
-      $$('.firstDepartureInfo .scheduled').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
+      $$('.firstDepartureInfo .platform').textContent = firstDeparture.plt
+      $$('.firstDepartureInfo .scheduled').textContent = formatTimeB(new Date(firstDeparture.sch))
 
-      if (firstDeparture.minutesToDeparture === 0) {
+      let minutesToDeparture = rawMinutesToDeparture(new Date(firstDeparture.est || firstDeparture.sch))
+      if (minutesToDeparture === 0) {
         $$('.firstDepartureInfo .departingDiv .departing').textContent = 'Now'
         $$('.firstDepartureInfo .departingDiv .min').textContent = ''
       } else {
-        $$('.firstDepartureInfo .departingDiv .departing').textContent = firstDeparture.minutesToDeparture || '-- '
+        $$('.firstDepartureInfo .departingDiv .departing').textContent = minutesToDeparture
         $$('.firstDepartureInfo .departingDiv .min').textContent = 'min'
       }
 
-      $$('.firstDeparture .firstDestination').textContent = shorternName(destination)
+      let destination = shorternName(firstDeparture.dest)
+      let destinationClass = 'firstDestination'
+      if (destination === 'Sydney Central') destination = 'Sydney XPT'
+      if (destination === 'Flemington Races') {
+        destinationClass += ' small'
+      }
+
+      $$('.firstDeparture .firstDestination').textContent = destination
+      $$('.firstDeparture .firstDestination').className = destinationClass
+
       $$('.firstDeparture .firstStoppingType').textContent = firstStoppingType
 
-      let same = addStoppingPattern(side, firstDeparture.additionalInfo.screenStops)
+      let same = addStoppingPattern(side, firstDeparture.stops)
 
       if (!same) {
         if (!firstTime)
@@ -208,7 +194,7 @@ function updateBody(firstTime) {
 }
 
 function setTime() {
-  $('.clock span').textContent = formatTime(new Date(), true, true)
+  $('.clock span').textContent = formatTimeB(new Date(), true)
 }
 
 function setupClock() {
@@ -268,7 +254,7 @@ function scrollConnections(side, connectionsSpan) {
 
 $.loaded(() => {
   setTimeout(() => {
-    shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 200 // px
+    shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 250 // px
 
     updateBody(true)
     setTimeout(() => {

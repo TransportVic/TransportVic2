@@ -42,7 +42,7 @@ database.connect({
   await async.forEachSeries(shapeFiles, async shapeFile => {
     let shapeJSON = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, shapeFile)))
     shapeJSON = shapeJSON.filter(shape => {
-      return shape.routeGTFSID !== '1-vPK'
+      return shape.routeGTFSID !== '1-vPK' && shape.routeGTFSID !== '1-Vov'
     })
     await loadRoutes(routes, gtfsID, routeData, shapeJSON, () => {
       return ['V/Line']

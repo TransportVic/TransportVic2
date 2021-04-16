@@ -13,11 +13,22 @@
     }
   }
   
+  if (stopModes.includes('heritage train') && currentMode !== 'heritage train') {
+    let bay = stopToUse.bays.find(bay => bay.mode === 'heritage train')
+    if (bay.stopGTFSID > 13100000) {
+      let now = +new Date()
+      let msDay = 1440 * 60 * 1000
+      let close = stopHeritageUseDates.find(date => Math.abs(now - date) <= msDay)
+      
+      if (!close) stopModes = stopModes.filter(mode => mode !== 'heritage train')
+    }
+  }
+  
   let iconMap = {
     'bus': 'bus',
     'metro train': 'metro',
     'regional train': 'vline',
-    'heritage train': 'heritage',
+    'heritage train': 'vline',
     'regional coach': 'coach',
     'tram': 'tram',
     'ferry': 'ferry'
@@ -29,6 +40,7 @@
     'metro train': 'metro',
     'regional coach': 'coach'
   }
+
 if stopModes.length > 1
   div#modeSwitch
     for mode in stopModes

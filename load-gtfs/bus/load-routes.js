@@ -44,13 +44,18 @@ database.connect({
 
   let routesNeedingVia = []
   let routeNames = {}
+  let routesWithoutNumbers = ptvRouteData.filter(route => {
+    return !route.route_number
+  }).map(route => route.routeGTFSID)
 
   let ptvRoutes = ptvRouteData.reduce((acc, route) => {
     let {routeGTFSID, adjustedName} = route
 
     if (routeNames[adjustedName]) {
-      routesNeedingVia.push(routeNames[adjustedName])
-      routesNeedingVia.push(routeGTFSID)
+      if (routesWithoutNumbers.includes(routeGTFSID) && routesWithoutNumbers.includes(routeNames[adjustedName])) {
+        routesNeedingVia.push(routeNames[adjustedName])
+        routesNeedingVia.push(routeGTFSID)
+      }
     } else {
       routeNames[adjustedName] = routeGTFSID
     }
@@ -119,6 +124,8 @@ database.connect({
       if (routeGTFSID === '6-a48') return null
       if (routeGTFSID === '6-a49') return null
 
+      if (routeGTFSID === '6-BM8') return '8'
+
       if (routeGTFSID === '6-946') return null
       if (routeGTFSID === '6-949') return null
 
@@ -128,7 +135,7 @@ database.connect({
 
       if (routeGTFSID === '6-WN1') return '1'
       if (routeGTFSID === '6-WN2') return '2'
-      if (routeGTFSID === '6-WN3') return '3'
+      if (routeGTFSID === '6-WN3') return 'B'
       if (routeGTFSID === '6-W12') return 'A'
 
       return routeNumber

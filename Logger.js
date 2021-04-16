@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const utils = require('./utils')
+let { format } = require('util')
 
 function getTimestamp() {
   return utils.now().format()
@@ -19,12 +20,8 @@ module.exports = class Logger {
     return `[${this.name}] [${getTimestamp()}]: ${text}`
   }
 
-  level(level, objects) {
-    let text = objects.map(object => {
-      if (object instanceof Error) {
-        return (object && object.stack) ? object.stack : object
-      } else return object
-    }).join(' ')
+  level(level, ...objects) {
+    let text = format.apply(null, ...objects)
     let logData = `${level} ${this.format(text)}`
 
     this.stream.write(logData + '\n')
@@ -34,4 +31,5 @@ module.exports = class Logger {
   log(...objects) { this.level('LOG', objects) }
   info(...objects) { this.level('INFO', objects) }
   err(...objects) { this.level('ERROR', objects) }
+  warn(...objects) { this.level('WARN', objects) }
 }

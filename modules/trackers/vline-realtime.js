@@ -6,6 +6,8 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const findTrip = require('../vline/find-trip')
 const getVNETDepartures = require('../vline/get-vnet-departures')
 const schedule = require('./scheduler')
+const vlineLock = require('../vline/vline-lock-wrap')
+const { getDayOfWeek } = require('../../public-holidays')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
@@ -39,21 +41,20 @@ let extendedList = [
   'Terang',
   'Winchelsea',
   'North Melbourne',
-  'Watergardens'
+  'Watergardens',
+  'Wangaratta',
+  'Wodonga',
+  'Avenel',
+  'Violet Town',
+  'Beaufort',
+  'Talbot',
+  'Creswick'
 ]
 
 async function getDeparturesFromVNET(db, station) {
   let vnetName = station.bays.find(bay => bay.vnetStationName).vnetStationName
 
-  let down = [], up = []
-  try {
-    down = await getVNETDepartures(vnetName, 'D', db, 1440, true)
-  } catch (e) {}
-  try {
-    up = await getVNETDepartures(vnetName, 'U', db, 1440, true)
-  } catch (e) {}
-
-  let vnetDepartures = [ ...down, ...up ]
+  let vnetDepartures = await getVNETDepartures(vnetName, 'B', db, 1440, true)
 
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
@@ -71,13 +72,15 @@ async function getDeparturesFromVNET(db, station) {
       mode: 'regional train'
     })) || await findTrip(gtfsTimetables, departureDay, departure.origin, departure.destination, departureTimeHHMM)
 
+    // Will we be able to correct the trip timings for ART-MBY? Probably not.
+
     departure.trip = trip
 
     if (trip) {
       let stopTiming = trip.stopTimings.find(stop => stop.stopName === station.stopName)
       let originTiming = trip.stopTimings.find(stop => stop.stopName === departure.origin)
 
-      if (!stopTiming) return null // Sherwood park is broken
+      if (!stopTiming) return null
 
       let minutesDifference = (stopTiming.arrivalTimeMinutes || stopTiming.departureTimeMinutes) - originTiming.departureTimeMinutes
 
@@ -131,6 +134,7 @@ async function fetchData() {
       combinedTripData[runID][stopTiming.stopName] = delay
 
       let destinationTiming = departure.trip.stopTimings.find(stop => stop.stopName === departure.destination)
+      if (!destinationTiming) return global.loggers.general.warn('Destination mismatch!', departure)
       combinedTripData[runID][destinationTiming.stopName] = departure.estimatedDestArrivalTime - departure.destinationArrivalTime
     })
 
@@ -191,18 +195,100 @@ async function fetchData() {
   })
 }
 
+async function fetchPlatforms(db) {
+  let vnetDepartures = await getVNETDepartures('Melbourne, Southern Cross', 'B', db, 1440)
+
+  let vlineTrips = db.getCollection('vline trips')
+  let timetables = db.getCollection('timetables')
+  let liveTimetables = db.getCollection('live timetables')
+  let gtfsTimetables = db.getCollection('gtfs timetables')
+
+  await async.forEach(vnetDepartures, async departure => {
+    let departureDay = utils.getYYYYMMDD(departure.originDepartureTime)
+    let departureTimeHHMM = utils.formatHHMM(departure.originDepartureTime)
+    let dayOfWeek = await getDayOfWeek(departure.originDepartureTime)
+
+    let departureTimeMinutes = utils.getMinutesPastMidnight(departure.originDepartureTime)
+    if (departureTimeMinutes < 180) {
+      let previousDay = departure.originDepartureTime.clone().add(-1, 'day')
+      departureDay = utils.getYYYYMMDD(previousDay)
+      dayOfWeek = await getDayOfWeek(previousDay)
+    }
+
+    let nspMatchedMethod = 'unknown'
+    let nspTrip = await findTrip(timetables, dayOfWeek, departure.origin, departure.destination, departureTimeHHMM)
+
+    if (nspTrip) nspMatchedMethod = 'time'
+    else {
+      nspTrip = await timetables.findDocument({
+        operationDays: dayOfWeek,
+        runID: departure.runID,
+        mode: 'regional train'
+      })
+
+      if (nspTrip) nspMatchedMethod = 'runID'
+    }
+
+    let trip = await liveTimetables.findDocument({
+      operationDays: departureDay,
+      runID: departure.runID,
+      mode: 'regional train'
+    }) || await findTrip(gtfsTimetables, departureDay, departure.origin, departure.destination, departureTimeHHMM)
+
+    if (!trip && nspTrip) {
+      trip = await findTrip(gtfsTimetables, departureDay, nspTrip.origin, nspTrip.destination, nspTrip.departureTime)
+    }
+
+    if (trip) {
+      trip.runID = departure.runID
+      trip.operationDays = departureDay
+
+      delete trip._id
+
+      let sssStop = trip.stopTimings.find(stop => stop.stopName === 'Southern Cross Railway Station')
+      if (sssStop) {
+        sssStop.platform = departure.platform
+        sssStop.livePlatform = true
+      }
+
+      await liveTimetables.replaceDocument({
+        operationDays: departureDay,
+        runID: departure.runID,
+        mode: 'regional train'
+      }, trip, {
+        upsert: true
+      })
+    }
+  })
+}
+
+let cycleCount = 0
+
 async function requestTimings() {
-  global.loggers.trackers.vlineR.info('requesting vline realtime data')
+  cycleCount++
+
   try {
-    await fetchData()
+    vlineLock.createLock()
+
+    if (cycleCount === 1) {
+      global.loggers.trackers.vlineR.info('requesting vline realtime data')
+      await fetchData()
+    }
+
+    global.loggers.trackers.vlineR.info('requesting vline platform data')
+    await fetchPlatforms(database)
   } catch (e) {
     global.loggers.trackers.vlineR.err('Error getting vline realtime data, skipping this round', e)
+  } finally {
+    vlineLock.releaseLock()
   }
+
+  if (cycleCount === 5) cycleCount = 0
 }
 
 database.connect(async () => {
   schedule([
-    [0, 150, 13],
-    [330, 1440, 12]
+    [0, 120, 3],
+    [330, 1440, 2]
   ], requestTimings, 'vline-r tracker', global.loggers.trackers.vlineR)
 })

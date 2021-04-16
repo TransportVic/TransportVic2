@@ -1,16 +1,3 @@
-function formatTime(time) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let mainTime = ''
-
-  mainTime += (hours % 12) || 12
-  mainTime += ':'
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  return mainTime
-}
-
 function shortenStoppingType(type) {
   if (type === 'Stops All Stations') return 'Stops All'
   if (type === 'Limited Express') return 'Ltd Express'
@@ -98,7 +85,7 @@ function setFullMessageActive(state) {
 }
 
 function setNoDepartures() {
-  $('.fullMessage').innerHTML = '<div class="fixedMessage"><p>No trains departing from</p><p>this platform</p></div>'
+  $('.fullMessage').innerHTML = '<div class="fixedMessage"><p>No trains departing from this</p><p>platform</p></div>'
   setFullMessageActive(true)
 }
 
@@ -143,8 +130,8 @@ function updateBody(firstTime) {
     if (err) return setListenAnnouncements()
 
     try {
-      departures = body.departures.map(d => {
-        if (d.stoppingType === 'Stops All') d.stoppingType = 'Stops All Stations'
+      departures = body.dep.map(d => {
+        if (d.type === 'Stops All') d.type = 'Stops All Stations'
         return d
       })
 
@@ -153,12 +140,12 @@ function updateBody(firstTime) {
       let main = $('.nextDepartures')
 
       if (!firstDeparture) {
-        if (body.hasRRB) setBusesReplaceTrains()
+        if (body.bus.length) setBusesReplaceTrains()
         else setNoDepartures()
         return
       }
 
-      showingBurnLine = showingBurnLine && firstDeparture.scheduledDepartureTime === previousDeparture
+      showingBurnLine = showingBurnLine && firstDeparture.sch === previousDeparture
 
       if (!showingBurnLine) {
         $('.burnLine').className = 'burnLine reset'
@@ -166,74 +153,80 @@ function updateBody(firstTime) {
         showingStandClear = false
         setServiceMessageActive(false, true)
 
-        if (firstDeparture.additionalInfo.notTakingPassengers) setArrival()
-        else {
-          isArrival = false
+        isArrival = false
 
-          let classes = ''
+        let classes = ''
 
-          $('.firstDestination').textContent = firstDeparture.destination
-          $('.firstDestination').className = 'firstDestination'
-          let width = parseInt(getComputedStyle($('.firstDestination')).width)
-          let vw = window.innerWidth / 100
+        let destination = firstDeparture.dest
+        if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
-          if (width > 76*vw) {
-            $('.firstDestination').className += ' smallest'
-          } else if (width > 65*vw) {
-            $('.firstDestination').className += ' smaller'
-          }
+        $('.firstDestination').textContent = destination
+        $('.firstDestination').className = 'firstDestination'
+        let width = parseInt(getComputedStyle($('.firstDestination')).width)
+        let vw = window.innerWidth / 100
 
-          $('div.scheduled p:nth-child(2)').textContent = formatTime(new Date(firstDeparture.scheduledDepartureTime))
-
-          if (firstDeparture.estimatedDepartureTime) {
-            if (firstDeparture.minutesToDeparture > 0) {
-              $('div.actual div span:nth-child(1)').textContent = firstDeparture.minutesToDeparture
-              $('div.actual div span:nth-child(2)').textContent = 'min'
-            } else {
-              $('div.actual div span:nth-child(1)').textContent = 'Now'
-              $('div.actual div span:nth-child(2)').textContent = ''
-            }
-          } else {
-            $('div.actual div span:nth-child(1)').textContent = '--'
-            $('div.actual div span:nth-child(2)').textContent = 'min'
-          }
-
-          let firstStoppingType = firstDeparture.stoppingType
-          if (firstDeparture.additionalInfo.via) {
-            firstStoppingType += ' ' + firstDeparture.additionalInfo.via
-          }
-
-          firstStoppingTypeP.textContent = firstStoppingType
-          firstStoppingPatternP.textContent = firstDeparture.stoppingPattern
-          firstStoppingPatternP.setAttribute('data-text', firstDeparture.stoppingPattern)
+        if (width > 76*vw) {
+          $('.firstDestination').className += ' smallest'
+        } else if (width > 65*vw) {
+          $('.firstDestination').className += ' smaller'
         }
+
+        $('div.scheduled p:nth-child(2)').textContent = formatTimeB(new Date(firstDeparture.sch))
+
+        if (firstDeparture.est) {
+          let minutesToDeparture = rawMinutesToDeparture(new Date(firstDeparture.est))
+          if (minutesToDeparture > 0) {
+            $('div.actual div span:nth-child(1)').textContent = minutesToDeparture
+            $('div.actual div span:nth-child(2)').textContent = 'min'
+          } else {
+            $('div.actual div span:nth-child(1)').textContent = 'Now'
+            $('div.actual div span:nth-child(2)').textContent = ''
+          }
+        } else {
+          $('div.actual div span:nth-child(1)').textContent = '--'
+          $('div.actual div span:nth-child(2)').textContent = 'min'
+        }
+
+        let firstStoppingType = firstDeparture.type
+        if (firstDeparture.via) {
+          firstStoppingType += ' via ' + firstDeparture.via
+        }
+
+        firstStoppingTypeP.textContent = firstStoppingType
+        firstStoppingPatternP.textContent = firstDeparture.txt
+        firstStoppingPatternP.setAttribute('data-text', firstDeparture.txt)
+
+        if (!firstDeparture.p) setArrival()
       }
 
       let secondDeparture = departures[1]
       let secondClassName = ''
 
       if (secondDeparture) {
-        if (secondDeparture.type === 'vline') secondClassName = ' vline'
+        if (secondDeparture.v) secondClassName = ' vline'
 
         $('div.bottomRow').className = `bottomRow${secondClassName}`
-        $('div.bottomRow > span:nth-child(1)').textContent = formatTime(new Date(secondDeparture.scheduledDepartureTime))
+        $('div.bottomRow > span:nth-child(1)').textContent = formatTimeB(new Date(secondDeparture.sch))
 
-        let {destination} = secondDeparture
+        let destination = secondDeparture.dest
 
         if (destination === 'North Melbourne') destination = 'Nth Melbourne'
         if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
         if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
-        $('div.bottomRow > span:nth-child(2)').textContent = destination
+        let nextDestinationSpan = $('div.bottomRow > span:nth-child(2)')
+        nextDestinationSpan.textContent = destination
 
-        let secondStoppingType = shortenStoppingType(secondDeparture.stoppingType)
-        if (secondDeparture.additionalInfo.via) {
-          secondStoppingType += ' ' + secondDeparture.additionalInfo.via
+        nextDestinationSpan.className = destination === 'Flemington Races' ? 'smaller' : ''
+
+        let secondStoppingType = shortenStoppingType(secondDeparture.type)
+        if (secondDeparture.via) {
+          secondStoppingType += ' via ' + secondDeparture.via
         }
         $('div.bottomRow > span:nth-child(3)').textContent = secondStoppingType
 
-        if (secondDeparture.estimatedDepartureTime)
-          $('div.bottomRow > div > span:nth-child(1)').textContent = secondDeparture.minutesToDeparture
+        if (secondDeparture.est)
+          $('div.bottomRow > div > span:nth-child(1)').textContent = rawMinutesToDeparture(new Date(secondDeparture.est))
         else $('div.bottomRow > div > span:nth-child(1)').textContent = '--'
       } else {
         $('div.bottomRow').className = `bottomRow`
@@ -243,7 +236,7 @@ function updateBody(firstTime) {
         $('div.bottomRow > div > span:nth-child(1)').textContent = '--'
       }
 
-      if (firstDeparture.scheduledDepartureTime !== previousDeparture) {
+      if (firstDeparture.sch !== previousDeparture) {
         if (isArrival) {
           stopScrolling = true
         } else {
@@ -258,15 +251,16 @@ function updateBody(firstTime) {
       }
 
       clearTimeout(showBurnLineTimeout)
-      previousDeparture = firstDeparture.scheduledDepartureTime
+      previousDeparture = firstDeparture.sch
 
       if (!showingBurnLine) {
-        let actualDepartureTime = new Date(firstDeparture.actualDepartureTime)
+        let actualDepartureTimeRaw = firstDeparture.est || firstDeparture.sch
+        let actualDepartureTime = new Date(actualDepartureTimeRaw)
         let difference = actualDepartureTime - new Date()
 
         showBurnLineTimeout = setTimeout(() => {
-          if (burnLinesShown.includes(firstDeparture.actualDepartureTime)) return
-          burnLinesShown.push(firstDeparture.actualDepartureTime)
+          if (burnLinesShown.includes(actualDepartureTimeRaw)) return
+          burnLinesShown.push(actualDepartureTimeRaw)
           burnLinesShown = burnLinesShown.slice(-10)
 
           showingBurnLine = true
@@ -286,6 +280,7 @@ function updateBody(firstTime) {
         }, difference - 1000 * 20)
       }
     } catch (e) {
+      console.log(e)
       setListenAnnouncements()
     }
   })
@@ -378,7 +373,7 @@ $.ready(() => {
 })
 
 function setTime() {
-  $('.clock span').textContent = formatTime(new Date())
+  $('.clock span').textContent = formatTimeB(new Date())
 }
 
 function setupClock() {

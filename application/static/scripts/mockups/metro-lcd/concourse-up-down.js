@@ -1,18 +1,5 @@
 let forcedDirection = null
 
-function formatTime(time) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let mainTime = ''
-
-  mainTime += (hours % 12) || 12
-  mainTime += ':'
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  return mainTime
-}
-
 function shortenStoppingType(type) {
   if (type === 'Stops All Stations') return 'Stops All'
   if (type === 'Limited Express') return 'Ltd Express'
@@ -71,7 +58,7 @@ let services = [null, null, null, null]
 
 function getServiceID(departure) {
   if (!departure) return null
-  return departure.scheduledDepartureTime + departure.codedLineName + departure.destination
+  return departure.sch + departure.route + departure.dest
 }
 
 let previousStarts = [0]
@@ -85,14 +72,14 @@ function updateBody(firstTime, n) {
 
     try {
       let departures = {
-        'Up': [],
-        'Down': []
+        'U': [],
+        'D': []
       }
 
       let screenDepartures = []
 
-      body.departures.forEach(departure => {
-        departures[departure.direction].push(departure)
+      body.dep.forEach(departure => {
+        departures[departure.d].push(departure)
       })
 
       // Only check shifts at certain points (otherwise it will run a shift for every service after the initial shift)
@@ -101,16 +88,16 @@ function updateBody(firstTime, n) {
       if (forcedDirection) {
         let directionName = forcedDirection[0].toUpperCase() + forcedDirection.slice(1)
         screenDepartures = departures[directionName]
-      } else if (departures.Up.length === 0 || departures.Down.length === 0) {
-        screenDepartures = [...departures.Up, ...departures.Down].slice(0, 4)
-      } else if (departures.Up.length === 1) {
-        screenDepartures = [...departures.Up, ...departures.Down.slice(0, 3)]
+      } else if (departures.U.length === 0 || departures.D.length === 0) {
+        screenDepartures = [...departures.U, ...departures.D].slice(0, 4)
+      } else if (departures.U.length === 1) {
+        screenDepartures = [...departures.U, ...departures.D.slice(0, 3)]
         starts = [0, 1]
-      } else if (departures.Down.length === 1) {
-        screenDepartures = [...departures.Up.slice(0, 3), ...departures.Down]
+      } else if (departures.D.length === 1) {
+        screenDepartures = [...departures.U.slice(0, 3), ...departures.D]
         starts = [0, 3]
       } else {
-        screenDepartures = [...departures.Up.slice(0, 2), ...departures.Down.slice(0, 2)]
+        screenDepartures = [...departures.U.slice(0, 2), ...departures.D.slice(0, 2)]
         starts = [0, 2]
       }
 
@@ -153,24 +140,25 @@ function updateBody(firstTime, n) {
 
         if (departure) {
           if (dividerDiv) dividerDiv.style = 'display: block;'
-          if (departure.type === 'vline') departureRow.className = 'departure vline'
+          if (departure.v) departureRow.className = 'departure vline'
           else departureRow.className = 'departure'
           departureRow.style = 'display: flex;'
-          $('.departureTime', departureRow).textContent = formatTime(new Date(departure.scheduledDepartureTime))
-          $('.destination', departureRow).textContent = shorternDestination(departure.destination)
+          $('.departureTime', departureRow).textContent = formatTimeB(new Date(departure.sch))
+          $('.destination', departureRow).textContent = shorternDestination(departure.dest)
 
-          let stoppingType = shortenStoppingType(departure.stoppingType)
-          if (departure.additionalInfo.via) {
-            stoppingType += ' ' + departure.additionalInfo.via
+          let stoppingType = shortenStoppingType(departure.type)
+          if (departure.via) {
+            stoppingType += ' via ' + departure.via
           }
 
           $('.stoppingType', departureRow).textContent = stoppingType
-          $('.platform', departureRow).textContent = departure.platform
+          $('.platform', departureRow).textContent = departure.plt
 
-          if (departure.estimatedDepartureTime) {
-            if (departure.minutesToDeparture > 0) {
+          if (departure.est) {
+            let minutesToDeparture = rawMinutesToDeparture(new Date(departure.est))
+            if (minutesToDeparture > 0) {
               $('.timeToDepartureArea .title', departureRow).style = 'display: block;'
-              $('.timeToDeparture', departureRow).textContent = departure.minutesToDeparture
+              $('.timeToDeparture', departureRow).textContent = minutesToDeparture
               $('.timeToDeparture', departureRow).className = 'timeToDeparture'
             } else {
               $('.timeToDepartureArea .title', departureRow).style = 'display: none;'
@@ -199,7 +187,7 @@ function updateBody(firstTime, n) {
 
 $.ready(() => {
   if (search.query.d) {
-    forcedDirection = search.query.d
+    forcedDirection = search.query.d[0].toUpperCase()
   }
 
   updateBody(true)

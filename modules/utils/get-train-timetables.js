@@ -2,28 +2,9 @@ const async = require('async')
 const utils = require('../../utils')
 const { getDayOfWeek } = require('../../public-holidays')
 
-let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
+const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 
-let routeGTFSIDs = {
-  'Hurstbridge': '2-HBG',
-  'Mernda': '2-MER',
-  'Belgrave': '2-BEL',
-  'Lilyale': '2-LIL',
-  'Glen Waverley': '2-GLW',
-  'Alamein': '2-ALM',
-  'Cranbourne': '2-CRB',
-  'Pakenham': '2-PKM',
-  'Frankston': '2-FKN',
-  'Sandringham': '2-SDM',
-  'Werribee': '2-WBE',
-  'Williamstown': '2-WMN',
-  'Upfield': '2-UFD',
-  'Craigieburn': '2-B31',
-  'Sunbury': '2-SYM',
-  'Showgrounds/Flemington': '2-ain',
-  'City Circle': '2-CCL',
-  'Stony Point': '2-SPT'
-}
+let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 function getPlatform(station, mode) {
   return station.bays.find(bay => bay.mode === mode)
@@ -173,11 +154,11 @@ async function getScheduledDepartures(station, db, mode, timeout) {
   let serviceIndex = []
   let departures = []
 
-  liveDepartures.concat(gtfsDepartures).forEach(departure => {
-    let id = getID(departure)
+  liveDepartures.concat(gtfsDepartures).forEach(trip => {
+    let id = getID(trip)
     if (!serviceIndex.includes(id)) {
       serviceIndex.push(id)
-      departures.push(departure)
+      departures.push(trip)
     }
   })
 
@@ -187,7 +168,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
   let lateDepartures = await liveTimetables.findDocuments({
     _id: {
       $not: {
-        $in: liveDepartures.map(departure => departure._id)
+        $in: liveDepartures.map(trip => trip._id)
       }
     },
     mode,
@@ -218,6 +199,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
     let estimatedDepartureTime = stopData.estimatedDepartureTime || null
     if (estimatedDepartureTime) {
       estimatedDepartureTime = utils.parseTime(estimatedDepartureTime)
+      if (estimatedDepartureTime < timeMS - 1000 * 60) return null
     }
 
     return {
@@ -275,6 +257,7 @@ let lineGroups = {
 
 async function getScheduledMetroDepartures(station, db) {
   let departures = await getScheduledDepartures(station, db, 'metro train', 120)
+  departures = departures.filter(d => !d.h)
   let stopName = station.stopName.slice(0, -16)
   let stopCode = stopCodes[stopName]
   let isInCity = cityLoopStations.includes(stopName) || stopName === 'Flinders Street'
@@ -294,8 +277,9 @@ async function getScheduledMetroDepartures(station, db) {
   }
 
   return (await async.map(departures, async departure => {
-    let cityLoopConfig = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
-    .filter(stop => filterStops.includes(stop)).map(stop => stopCodes[stop])
+    let tripStops = departure.trip.stopTimings.map(stop => stop.stopName.slice(0, -16))
+
+    let cityLoopConfig = tripStops.filter(stop => filterStops.includes(stop)).map(stop => stopCodes[stop])
     let willGoByCityLoop = cityLoopConfig.includes('MCE')
 
     if (isInCity && departure.trip.destination === 'Parliament Railway Station') return null
@@ -326,6 +310,22 @@ async function getScheduledMetroDepartures(station, db) {
 
       departure.cityLoopConfig = cityLoopConfig
     }
+
+    let altLoopConfig = []
+    if (departure.trip.routeName === 'Werribee') {
+      let stopsNPTLAV = tripStops.includes('Newport') && tripStops.includes('Laverton')
+      if (stopsNPTLAV) {
+        if (tripStops.includes('Altona')) { // Via ALT Loop
+          altLoopConfig = ['WTO', 'ALT', 'SHE']
+        } else { // Via ML
+          altLoopConfig = ['LAV', 'NPT']
+        }
+
+        if (departure.trip.direction === 'Down') altLoopConfig.reverse()
+      }
+    }
+
+    departure.altLoopConfig = altLoopConfig
 
     if (departure.trip.routeGTFSID === '2-CCL')
       departure.destination = 'City Circle'

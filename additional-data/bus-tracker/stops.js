@@ -183,7 +183,7 @@ module.exports = [
   'williamstown/williamstown-railway-station',
   'williamstown/williamstown-shopping-centre-douglas-parade',
   'north-melbourne/macaulay-railway-station',
-  'parkville/melbourne-university',
+  'carlton/melbourne-university-swanston-street-stop-swanston-street',
   'parkville/royal-melbourne-hospital',
   'crib-point/crib-point-railway-station',
   'ashburton/ashburton-railway-station',
@@ -282,7 +282,7 @@ module.exports = [
   'vermont/andrew-street-canterbury-road',
   'pakenham/racecourse-road-henry-street',
   'warrandyte/warrandyte-community-church-yarra-street',
-  'research/post-office-main-road',
+  'north-warrandyte/valias-street-research-warrandyte-road',
   'broadmeadows/broadmeadows-shopping-centre-tanderrum-way',
   'gladstone-park/south-circular-road-gladstone-park-drive',
   'olinda/parsons-lane-monash-avenue',
@@ -348,5 +348,8 @@ module.exports = [
   'north-shore/north-shore-railway-station',
   'ballarat-central/davies-street-scott-parade',
   'broadmeadows/martell-street-joseph-street',
-  'corio/rodbrough-crescent-bacchus-marsh-road'
+  'corio/rodbrough-crescent-bacchus-marsh-road',
+  'donnybrook/eucalyptus-parade-olivine-boulevard',
+  'donnybrook/donnybrook-railway-station',
+  'northcote/westgarth-railway-station'
 ]

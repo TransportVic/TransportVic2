@@ -51,6 +51,12 @@ async function main() {
     await discordUpdate('[Updater]: Finished loading V/Line data')
   } else await discordUpdate('[Updater]: Skipping V/Line')
 
+  if (moduleEnabled('vline')) {
+    await discordUpdate('[Updater]: Loading Overland data')
+    await spawnProcess(l('overland/load-all.sh'))
+    await discordUpdate('[Updater]: Finished loading Overland data')
+  } else await discordUpdate('[Updater]: Skipping Overland')
+
   if (moduleEnabled('xpt')) {
     await discordUpdate('[Updater]: Loading XPT data')
     await spawnProcess(l('xpt/load-all.sh'))

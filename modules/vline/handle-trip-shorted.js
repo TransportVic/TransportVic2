@@ -1,6 +1,9 @@
 module.exports = async function (trip, departure, nspTrip, liveTimetables, date) {
   if (!trip) return
   if (trip.destination !== departure.destination || trip.origin !== departure.origin) {
+    let stopTimings = trip.stopTimings.map(stop => stop.stopName)
+    if (!stopTimings.includes(departure.destination) || !stopTimings.includes(departure.origin)) return
+
     let hasSeenOrigin = false, hasSeenDestination = false
 
     let modifications = []
@@ -19,12 +22,14 @@ module.exports = async function (trip, departure, nspTrip, liveTimetables, date)
     trip.cancelled = false
 
     trip.stopTimings = trip.stopTimings.map(stop => {
-      if (stop.stopName === departure.origin) {
-        hasSeenOrigin = true
+      if (stop.stopName === departure.destination) {
+        hasSeenDestination = true
         stop.cancelled = false
         return stop
-      } else if (stop.stopName === departure.destination) {
-        hasSeenDestination = true
+      }
+
+      if (stop.stopName === departure.origin) {
+        hasSeenOrigin = true
         stop.cancelled = false
         return stop
       }
@@ -46,6 +51,7 @@ module.exports = async function (trip, departure, nspTrip, liveTimetables, date)
     }
 
     delete trip._id
+
     await liveTimetables.replaceDocument({
       operationDays: date,
       runID: departure.runID,

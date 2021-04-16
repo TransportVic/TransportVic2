@@ -1,0 +1,135 @@
+#! /usr/bin/env node
+
+const config = require('../config.json')
+const DatabaseConnection = require('../database/DatabaseConnection')
+const utils = require('../utils')
+const async = require('async')
+const fs = require('fs')
+const path = require('path')
+
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+
+function trimLog(filename, isCombined) {
+  let dateRegex = /\] \[(.*?)\]: /
+  let cutoff = 14
+
+  if (filename.includes('fetch')) cutoff = 1
+  if (filename.includes('trackers')) cutoff = 1
+  if (filename.includes('http')) cutoff = 3
+  if (filename.includes('certs')) cutoff = 7
+  if (filename.includes('mail')) cutoff = 21
+  if (filename.includes('errors')) cutoff = 28
+  if (filename.includes('mockups')) cutoff = 6
+
+  if (isCombined) cutoff = 3
+
+  let end = utils.now().add(-cutoff, 'days')
+
+  let data = fs.readFileSync(filename).toString().split('\n')
+  let recentLogs = data.filter(line => {
+    let date = new Date((line.match(dateRegex) || [])[1])
+    return date - end >= 0
+  })
+
+  fs.writeFileSync(filename, recentLogs.join('\n') + '\n')
+
+  return data.length - recentLogs.length
+}
+
+function walk(dir, done) {
+  let results = []
+  fs.readdir(dir, function(err, list) {
+    if (err) return done(err)
+    let i = 0
+    function next() {
+      let file = list[i++]
+      if (!file) return done(null, results)
+      file = path.resolve(dir, file)
+      fs.stat(file, function(err, stat) {
+        if (stat && stat.isDirectory()) {
+          walk(file, function(err, res) {
+            results = results.concat(res)
+            next()
+          })
+        } else {
+          results.push(file)
+          next()
+        }
+      })
+    }
+    next()
+  })
+}
+
+
+database.connect(async () => {
+  console.log('Starting cleanup on', utils.now().toLocaleString())
+  let metroNotify = database.getCollection('metro notify')
+  let liveTimetables = database.getCollection('live timetables')
+  let metroShunts = database.getCollection('metro shunts')
+
+  let notify = await metroNotify.deleteDocuments({
+    toDate: {
+      $lte: utils.now().add(-14, 'days') / 1000
+    }
+  })
+
+  console.log('Cleaned up', notify.nRemoved, 'notify alerts')
+
+  let firstTrip = await liveTimetables.findDocuments({})
+    .sort({ operationDays: 1 }).limit(1).next()
+
+  let tripsStart = utils.parseDate(firstTrip.operationDays)
+  let tripsEnd = utils.now().add(-14, 'days')
+
+  let tripsDay = utils.allDaysBetweenDates(tripsStart, tripsEnd).map(date => utils.getYYYYMMDD(date))
+
+  let liveRemoval = await liveTimetables.deleteDocuments({
+    operationDays: {
+      $in: tripsDay
+    }
+  })
+
+  console.log('Cleaned up', liveRemoval.nRemoved, 'live timetables')
+
+  let firstShunt = await metroShunts.findDocuments({})
+    .sort({ date: 1 }).limit(1).next()
+
+  let shuntStart = utils.parseDate(firstShunt.date)
+  let shuntEnd = utils.now().add(-27, 'days')
+
+  let shuntDays = utils.allDaysBetweenDates(shuntStart, shuntEnd).map(date => utils.getYYYYMMDD(date))
+
+  let shuntsRemoved = await metroShunts.deleteDocuments({
+    date: {
+      $in: shuntDays
+    }
+  })
+
+  console.log('Cleaned up', shuntsRemoved.nRemoved, 'metro shunts')
+
+  console.log('Removed', trimLog(config.combinedLog, true), 'lines from combined log')
+  walk(path.join(__dirname, '../logs'), (err, results) => {
+    results.forEach(filename => {
+      if (filename.includes('metro-tracker.json')) {
+        try {
+          let data = JSON.parse(fs.readFileSync(filename).toString())
+          let now = utils.now()
+          let filtered = data.filter(entry => {
+            let entryTime = utils.parseTime(entry.utc)
+            return now.diff(entryTime, 'days') > 31
+          })
+
+          fs.writeFileSync(filename, JSON.stringify(filtered))
+          console.log('Removed', data.length - filtered.length, 'lines from metro tracker logs')
+        } catch (e) {
+          console.log('Error cleaning up metro tracker logs, skipping')
+        }
+      } else {
+        let logName = filename.replace(/.*?\/logs\//, '')
+        console.log('Removed', trimLog(filename, false), 'lines from', logName)
+      }
+    })
+    process.exit()
+  })
+})
