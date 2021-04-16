@@ -20,5 +20,33 @@
       "type": "image/png"
     }
   ],
+  "screenshots": [
+    {
+      "src": "/static/images/screenshots/bookmarks.png",
+      "sizes": "720x1600",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/images/screenshots/bus_run.png",
+      "sizes": "720x1600",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/images/screenshots/bus_timings.png",
+      "sizes": "720x1600",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/images/screenshots/tram_run.png",
+      "sizes": "720x1600",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/images/screenshots/tram_timings.png",
+      "sizes": "720x1600",
+      "type": "image/png"
+    }
+  ],
+
   "related_applications": []
 }
