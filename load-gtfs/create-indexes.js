@@ -30,6 +30,7 @@ database.connect({
   let tbmTrips = await getCollection('tbm trips')
   let metroNotify = await getCollection('metro notify')
   let metroShunts = await getCollection('metro shunts')
+  let metroLocations = await getCollection('metro locations')
 
   await stops.createIndex({
     stopName: 1,
@@ -361,6 +362,13 @@ database.connect({
 
   console.log('Created Metro Shunts index')
 
-  updateStats('create-indexes', 54)
+  await metroLocations.createIndex({
+    consist: 1,
+    timestamp: 1
+  }, { name: 'metro locations index', unique: 1 })
+
+  console.log('Created Metro Shunts index')
+
+  updateStats('create-indexes', 56)
   process.exit()
 })

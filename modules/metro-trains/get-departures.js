@@ -519,7 +519,8 @@ function returnBusDeparture(bus, trip) {
     viaAltonaLoop: null,
     isRailReplacementBus: true,
     suspension: null,
-    isSkippingLoop: null
+    isSkippingLoop: null,
+    location: null
   }
 }
 
@@ -683,7 +684,8 @@ async function mapTrain(train, metroPlatform, notifyData, db) {
     viaAltonaLoop,
     isRailReplacementBus: false,
     suspension: null,
-    isSkippingLoop: null
+    isSkippingLoop: null,
+    location: train.location
   }
 }
 
@@ -797,10 +799,54 @@ async function saveConsists(departures, db) {
     }
 
     if (!existingTrip) {
+      departure.fleetNumber = tripData.consist
       await metroTrips.replaceDocument(query, tripData, {
         upsert: true
       })
     }
+  })
+}
+
+async function saveLocations(departures, db) {
+  let metroLocations = db.getCollection('metro locations')
+  let runIDsSeen = []
+  let deduped = departures.filter(departure => {
+    if (!runIDsSeen.includes(departure.runID) && departure.fleetNumber && departure.location) {
+      runIDsSeen.push(departure.runID)
+      return true
+    } else {
+      return false
+    }
+  })
+
+  await async.forEach(deduped, async departure => {
+    let parts = []
+    if (departure.fleetNumber.length === 6) {
+      parts = [departure.fleetNumber.slice(0, 3), departure.fleetNumber.slice(3, 6)]
+    } else {
+      parts = [departure.fleetNumber]
+    }
+
+    await async.forEach(parts, async train => {
+      let locationData = {
+        consist: train,
+        timestamp: +new Date(),
+        location: {
+          type: "Point",
+          coordinates: [
+            departure.location.longitude,
+            departure.location.latitude
+          ]
+        },
+        bearing: departure.location.bearing
+      }
+
+      await metroLocations.replaceDocument({
+        consist: train[0]
+      }, locationData, {
+        upsert: 1
+      })
+    })
   })
 }
 
@@ -917,6 +963,12 @@ function parsePTVDepartures(ptvResponse, stationName) {
     if (routeName === 'Stony Point') direction = runDestination === 'Frankston' ? 'Up' : 'Down'
     if (routeName === 'City Circle') direction = 'Down'
 
+    let location = run.vehicle_position ? {
+      latitude: run.vehicle_position.latitude,
+      longitude: run.vehicle_position.longitude,
+      bearing: run.vehicle_position.bearing
+    } : null
+
     let viaCityLoop = null
     let runID = null
     if (ptvRunID > 948000) {
@@ -946,7 +998,8 @@ function parsePTVDepartures(ptvResponse, stationName) {
       ptvRunID,
       runID,
       direction,
-      viaCityLoop
+      viaCityLoop,
+      location
     }
   }).filter(Boolean)
 }
@@ -968,7 +1021,7 @@ async function getDeparturesFromPTV(station, db) {
   let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
   let stationName = metroPlatform.fullStopName.slice(0, -16)
 
-  let url = `/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor`
+  let url = `/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor&expand=VehiclePosition`
   let ptvResponse = await ptvAPI(url)
 
   let parsedDepartures = parsePTVDepartures(ptvResponse, stationName)
@@ -1001,6 +1054,7 @@ async function getDeparturesFromPTV(station, db) {
   })
 
   await saveConsists(mappedTrains, db)
+  await saveLocations(mappedTrains, db)
   await saveSuspensions(suspensionMappedTrains.filter(departure => departure.trip.suspension && !departure.isRailReplacementBus), db)
   await removeResumedSuspensions(suspensionMappedTrains.filter(departure => !departure.trip.suspension), db)
   await saveRailBuses(allRailBuses, db)

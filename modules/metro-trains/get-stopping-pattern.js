@@ -116,10 +116,41 @@ async function saveConsist(stopTimings, direction, departureDay, runID, consist,
   }
 
   if (!existingTrip) {
+    return tripData.consist
     await metroTrips.replaceDocument(query, tripData, {
       upsert: true
     })
   }
+}
+
+async function saveLocation(consist, location, metroLocations) {
+  let parts = []
+  if (consist.length === 6) {
+    parts = [consist.slice(0, 3), consist.slice(3, 6)]
+  } else {
+    parts = [consist]
+  }
+
+  await async.forEach(parts, async train => {
+    let locationData = {
+      consist: train,
+      timestamp: +new Date(),
+      location: {
+        type: "Point",
+        coordinates: [
+          location.longitude,
+          location.latitude
+        ]
+      },
+      bearing: location.bearing
+    }
+
+    await metroLocations.replaceDocument({
+      consist: train[0]
+    }, locationData, {
+      upsert: 1
+    })
+  })
 }
 
 module.exports = async function (data, db) {
@@ -130,6 +161,7 @@ module.exports = async function (data, db) {
   let routesCollection = db.getCollection('routes')
   let metroTrips = db.getCollection('metro trips')
   let metroNotify = db.getCollection('metro notify')
+  let metroLocations = db.getCollection('metro locations')
 
   let url = `/v3/pattern/run/${ptvRunID}/route_type/0?expand=stop&expand=Run&expand=Route&expand=Direction&expand=VehicleDescriptor&expand=VehiclePosition`
   if (time) {
@@ -148,6 +180,8 @@ module.exports = async function (data, db) {
   let run = Object.values(runs)[0]
   let ptvDirection = Object.values(directions)[0]
   let routeData = Object.values(routes)[0]
+
+  let location = run.vehicle_position
 
   if (departures.length === 0) return referenceTrip
 
@@ -256,7 +290,8 @@ module.exports = async function (data, db) {
     let actualSize = Math.max(ptvSize, consistSize)
     vehicle = { size: actualSize, type: vehicleType.type, consist }
 
-    await saveConsist(stopTimings, direction, departureDay, runID, consist, metroTrips)
+    consist = await saveConsist(stopTimings, direction, departureDay, runID, consist, metroTrips)
+    if (location) await saveLocation(consist, location, metroLocations)
   }
 
   if (referenceTrip && referenceTrip.suspension) {
