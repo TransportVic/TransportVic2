@@ -36,6 +36,10 @@ database.connect({
     let trips = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, tripFile)))
     let tripTimings = JSON.parse(fs.readFileSync(path.join(splicedGTFSPath, tripTimeFiles[index])))
 
+    trips = trips.filter(trip => {
+      return trip.routeGTFSID !== '5-Vpk' && trip.routeGTFSID !== '5-Vov'
+    })
+
     tripCount += trips.length
 
     await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, trips, tripTimings, calendarDays, calendarDates, null)
