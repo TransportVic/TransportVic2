@@ -100,7 +100,10 @@ async function getDeparturesFromPTV(stop, db) {
             stopTimings: {
               $elemMatch: {
                 stopGTFSID: stopGTFSIDs,
-                departureTimeMinutes
+                departureTimeMinutes: {
+                  $gte: departureTimeMinutes - 3,
+                  $lte: departureTimeMinutes + 3
+                }
               }
             },
             destination: checkDest,
