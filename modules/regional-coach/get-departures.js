@@ -249,7 +249,7 @@ async function getDepartures(stop, db) {
             stopTimings: {
               $elemMatch: {
                 stopName: origin,
-                departureTime: {
+                departureTimeMinutes: {
                   $gte: originDepartureMinutes - 3,
                   $lte: originDepartureMinutes + 3
                 }
