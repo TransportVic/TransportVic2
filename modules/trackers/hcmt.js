@@ -70,8 +70,23 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
     let updatedData = stopDescriptors.find(newStop => stop.stopName.includes(newStop.station))
 
     if (updatedData) {
-      stop.estimatedDepartureTime = startOfDay.clone().add(updatedData.estimated_departure_time_seconds, 'seconds').toISOString()
+      stop.estimatedDepartureTime = startOfDay.clone().add(updatedData.estimated_departure_time_seconds, 'seconds')
       stop.platform = updatedData.estimated_platform
+    }
+  })
+
+  existingTrip.stopTimings.forEach((stop, i) => {
+    if (i !== 0 && stop.estimatedDepartureTime) {
+      let previousStop = existingTrip.stopTimings[i - 1]
+      if (stop.estimatedDepartureTime < previousStop.estimatedDepartureTime) {
+        stop.estimatedDepartureTime.add(1, 'day')
+      }
+    }
+  })
+
+  existingTrip.stopTimings.forEach(stop => {
+    if (stop.estimatedDepartureTime) {
+      stop.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
     }
   })
 
@@ -113,7 +128,7 @@ async function mapStops(stops, stopDescriptors, startOfDay) {
     let estimatedDepartureTime, platform = stop.platform
 
     if (departureData) {
-      estimatedDepartureTime = startOfDay.clone().add(departureData.estimated_departure_time_seconds, 'seconds').toISOString()
+      estimatedDepartureTime = startOfDay.clone().add(departureData.estimated_departure_time_seconds, 'seconds')
       platform = departureData.estimated_platform
     }
 
@@ -136,9 +151,15 @@ async function mapStops(stops, stopDescriptors, startOfDay) {
   allStops.forEach((stop, i) => {
     if (i !== 0 && stop.estimatedDepartureTime) {
       let previousStop = allStops[i - 1]
-      if (stop.estimatedDepartureTime < prevStop.estimatedDepartureTime) {
+      if (stop.estimatedDepartureTime < previousStop.estimatedDepartureTime) {
         stop.estimatedDepartureTime.add(1, 'day')
       }
+    }
+  })
+
+  allStops.forEach(stop => {
+    if (stop.estimatedDepartureTime) {
+      stop.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
     }
   })
 
