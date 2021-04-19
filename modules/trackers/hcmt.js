@@ -104,7 +104,7 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
 }
 
 async function mapStops(stops, stopDescriptors, startOfDay) {
-  return await async.map(stops, async stop => {
+  let allStops = await async.map(stops, async stop => {
     let stopData = await dbStops.findDocument({ stopName: stop.stopName })
     let metroBay = stopData.bays.find(bay => bay.mode === 'metro train')
 
@@ -132,6 +132,17 @@ async function mapStops(stops, stopDescriptors, startOfDay) {
       stopConditions: { pickup: "0", dropoff: "0" }
     }
   })
+
+  allStops.forEach((stop, i) => {
+    if (i !== 0 && stop.estimatedDepartureTime) {
+      let previousStop = allStops[i - 1]
+      if (stop.estimatedDepartureTime < prevStop.estimatedDepartureTime) {
+        stop.estimatedDepartureTime.add(1, 'day')
+      }
+    }
+  })
+
+  return allStops
 }
 
 async function createTrip(trip, stopDescriptors, startOfDay) {
@@ -289,6 +300,6 @@ database.connect(async () => {
     [240, 360, 6],
     [360, 1199, 3],
     [1200, 1380, 4],
-    [1380, 1430, 6]
+    [1380, 1439, 6]
   ], requestTimings, 'hcmt tracker', global.loggers.trackers.metro)
 })
