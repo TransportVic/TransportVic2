@@ -782,12 +782,11 @@ async function saveConsists(departures, db) {
         } else if (existingTrip.consist.length === 3 && !existingTrip.consist.includes(tripData.consist[0])) { // We might have matched half a train and now have the other half, sanity check
           let sanityCheckTrip = await metroTrips.findDocument({
             date: departure.departureDay,
-            consist: {
-              $and: [ // Match both the one already existing and the one given
-                tripData.consist[0],
-                existingTrip.consist[0]
-              ]
-            }
+            $and: [{ // Match both the one already existing and the one given
+              consist: tripData.consist[0]
+            }, {
+              consist: existingTrip.consist[0]
+            }]
           })
 
           if (sanityCheckTrip) {
