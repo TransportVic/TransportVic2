@@ -85,7 +85,7 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
   })
 
   existingTrip.stopTimings.forEach(stop => {
-    if (stop.estimatedDepartureTime) {
+    if (stop.estimatedDepartureTime && stop.estimatedDepartureTime.toISOString) { // If it is an existing value it is already a string
       stop.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
     }
   })
