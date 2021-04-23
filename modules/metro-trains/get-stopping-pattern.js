@@ -291,7 +291,7 @@ module.exports = async function (data, db) {
     vehicle = { size: actualSize, type: vehicleType.type, consist }
 
     consist = await saveConsist(stopTimings, direction, departureDay, runID, consist, metroTrips)
-    if (location) await saveLocation(consist, location, metroLocations)
+    if (location && consist) await saveLocation(consist, location, metroLocations)
   }
 
   if (referenceTrip && referenceTrip.suspension) {
