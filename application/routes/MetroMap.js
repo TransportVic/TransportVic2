@@ -78,7 +78,7 @@ router.post('/', async (req, res) => {
       destinationCode: stationCodeLookup[trip.trueDestination.slice(0, -16)],
       destination: trip.trueDestination,
       runID: trip.runID,
-      vehicle: trip.vehicle,
+      vehicle: trip.vehicle ? `${trip.vehicle.size} Car ${trip.vehicle.type}` : 'Unknown',
       nextStop,
       location: platformCentre,
       line: utils.encodeName(trip.routeName),

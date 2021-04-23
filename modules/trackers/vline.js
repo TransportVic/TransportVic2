@@ -12,8 +12,8 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 async function getDeparturesFromVNET(db) {
   let vnetDepartures = [
-    ...await getVNETDepartures('', 'B', db, 1440, false, true),
-    ...await getVNETDepartures('', 'B', db, 1440, true, true)
+    ...await getVNETDepartures('', 'B', db, 1440, false, true, true),
+    ...await getVNETDepartures('', 'B', db, 1440, true, true, true)
   ]
 
   let vlineTrips = db.getCollection('vline trips')

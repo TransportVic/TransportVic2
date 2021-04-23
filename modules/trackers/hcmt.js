@@ -14,12 +14,12 @@ let liveTimetables, timetables
 
 async function getTimetable() {
   return await utils.getData('metro-op-timetable', '92', async () => {
-    return JSON.parse(await utils.request(urls.op.format('92'), { timeout: 6000 }))
+    return JSON.parse(await utils.request(urls.op.format('92'), { timeout: 10000 }))
   }, 1000 * 60 * 12)
 }
 
 async function requestMetroData() {
-  let data = JSON.parse(await utils.request(urls.hcmt))
+  let data = JSON.parse(await utils.request(urls.hcmt, { timeout: 10000 }))
   return data.entries
 }
 
@@ -31,7 +31,8 @@ async function createStop(prevStop, minutesDiff, stopName, platform) {
 
   let newScheduled = prevScheduled.clone().add(minutesDiff, 'minutes')
   let scheduledTime = utils.formatHHMM(newScheduled)
-  let newEstimated = prevEstimated ? prevEstimated.clone().add(minutesDiff, 'minutes').toISOString() : null
+  let newEstimated = prevEstimated ? prevEstimated.clone().add(minutesDiff, 'minutes') : null
+  let estimatedISO = newEstimated ? newEstimated.toISOString() : null
 
   return {
     stopName: stopName,
@@ -42,7 +43,8 @@ async function createStop(prevStop, minutesDiff, stopName, platform) {
     arrivalTimeMinutes: prevStop.departureTimeMinutes + minutesDiff,
     departureTime: scheduledTime,
     departureTimeMinutes: prevStop.departureTimeMinutes + minutesDiff,
-    estimatedDepartureTime: newEstimated,
+    estimatedDepartureTime: estimatedISO,
+    actualDepartureTimeMS: +newEstimated,
     scheduledDepartureTime: newScheduled.toISOString(),
     platform,
     stopConditions: { pickup: "0", dropoff: "0" }
@@ -86,6 +88,7 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
 
   existingTrip.stopTimings.forEach(stop => {
     if (stop.estimatedDepartureTime && stop.estimatedDepartureTime.toISOString) { // If it is an existing value it is already a string
+      stop.actualDepartureTimeMS = +stop.estimatedDepartureTime
       stop.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
     }
   })
@@ -159,6 +162,7 @@ async function mapStops(stops, stopDescriptors, startOfDay) {
 
   allStops.forEach(stop => {
     if (stop.estimatedDepartureTime) {
+      stop.actualDepartureTimeMS = +stop.estimatedDepartureTime
       stop.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
     }
   })
