@@ -48,7 +48,8 @@ function extendMetroEstimation(trip) {
   // Extend estimation backwards to first stop (usually city loop etc)
   let firstStop = trip.stopTimings[0]
   let secondStop = trip.stopTimings[1]
-  if (!firstStop.estimatedDepartureTime && secondStop.estimatedDepartureTime) {
+
+  if (!firstStop.estimatedDepartureTime && secondStop && secondStop.estimatedDepartureTime) {
     let scheduledDepartureTime = utils.parseTime(firstStop.scheduledDepartureTime)
     let estimatedDepartureTime = utils.parseTime(firstStop.estimatedDepartureTime)
     let delay = estimatedDepartureTime - scheduledDepartureTime
