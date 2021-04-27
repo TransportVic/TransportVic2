@@ -107,7 +107,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'CDC Ballarat Specials',
-  track: ['CB146', 'CB147', 'CB152', 'CB153', 'CB155', 'CB156', 'CB162', 'CB174', 'CB175', 'CB176'],
+  track: ['CB146', 'CB147', 'CB152', 'CB153', 'CB155', 'CB156', 'CB162', 'CB171', 'CB174', 'CB175', 'CB176'],
   routes: [],
   type: 'exclude'
 }, {

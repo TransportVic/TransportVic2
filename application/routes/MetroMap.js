@@ -41,7 +41,10 @@ router.post('/', async (req, res) => {
         $gte: msNow - 1000 * 60 * 3,
         $lte: msNow + 1000 * 60 * 4
       }
-    }]
+    }],
+    cancelled: {
+      $ne: true
+    }
   }).toArray()
 
   let vehicles = []
