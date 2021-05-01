@@ -99,22 +99,10 @@ module.exports = async (collection, operationDay, origin, destination, departure
     $lte: tripStartMinutes + varianceAllowed
   }
 
-  let routeGTFSID = { $not: { $in: [] } }
-  let syd = 'Sydney Central Railway Station'
-  if (destination !== syd && origin !== syd) {
-    routeGTFSID.$not.$in.push('14-XPT')
-  }
-
-  let ade = 'Adelaide Railway Station'
-  if (destination !== ade && origin !== ade) {
-    routeGTFSID.$not.$in.push('10-GSR')
-  }
-
   let query = {
     $and: [{
       mode: 'regional train',
-      operationDays: operationDay,
-      routeGTFSID
+      operationDays: operationDay
     }, {
       stopTimings: {
         $elemMatch: {
@@ -139,7 +127,13 @@ module.exports = async (collection, operationDay, origin, destination, departure
 
   if (matchedTrips.length) {
     if (matchedTrips.length > 1) {
-      return matchedTrips.sort((a, b) => d(a) - d(b))[0]
+      let sorted = matchedTrips.sort((a, b) => d(a) - d(b))[0]
+
+      let specialTrain = sorted.find(trip => trip.routeGTFSID === '14-XPT' || trip.routeGTFSID === '10-GSR')
+      let regularTrains = sorted.find(trip => !(trip.routeGTFSID === '14-XPT' || trip.routeGTFSID === '10-GSR'))
+
+      if (specialTrain && regularTrains.length) return regularTrains[0]
+      else return specialTrain || regularTrains[0]
     } else {
       return matchedTrips[0]
     }

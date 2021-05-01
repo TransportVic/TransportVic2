@@ -135,7 +135,7 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
       origin: stopTimings[0].stopName,
       departureTime: stopTimings[0].departureTime,
       gtfsDirection: trip.gtfsDirection,
-      direction: direction ? direction(trip.headsign, routeGTFSID) : null,
+      direction: direction ? direction(trip.headsign, routeGTFSID, tripID) : null,
       shapeID,
       gtfsMode: parseInt(gtfsID)
     }
