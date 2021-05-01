@@ -76,8 +76,13 @@ module.exports = [{
   type: 'include',
   buses: 'exclude'
 }, {
+  name: '703 Perms off 703',
+  track: ['V868', 'V869', 'V877', 'V878', 'V879', 'V880', 'V881', 'V882', 'V883', 'V884', 'V1237', 'V1238', 'V1239', 'V1240', 'V1241', 'V1242'],
+  routes: ['703'],
+  type: 'exclude'
+}, {
   name: 'CDC Oakleigh Specials',
-  track: ['CO7', 'CO8', 'CO11', 'CO12', 'CO13', 'CO100', 'CO103', 'CO104', 'CO105', 'CO107', 'CO108', 'CO109'],
+  track: ['CO7', 'CO8', 'CO11', 'CO12', 'CO13', 'CO34', 'CO100', 'CO103', 'CO104', 'CO105', 'CO107', 'CO108', 'CO109'],
   routes: [],
   type: 'exclude'
 }, {

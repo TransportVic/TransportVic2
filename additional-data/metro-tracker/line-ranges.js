@@ -47,13 +47,17 @@ module.exports = {
   ],
   'Pakenham': [
     [4000, 4199],
-    [4600, 4699],
+    [4600, 4689],
+    [4690, 4699], // Flinders St-Westall
+    [4700, 4719], // Flinders St-Dandenong
     [7500, 7539],
     [7950, 7969]
   ],
   'Cranbourne': [
     [4200, 4299],
-    [4700, 4799],
+    [4690, 4699], // Flinders St-Westall
+    [4700, 4719], // Flinders St-Dandenong
+    [4720, 4799],
     [7540, 7575]
   ],
   'Frankston': [
