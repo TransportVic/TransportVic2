@@ -38,6 +38,9 @@ if (modules.tracker && modules.tracker.hcmt)
 if (modules.tracker && modules.tracker.metro)
   require('../modules/trackers/metro')
 
+if (modules.tracker && modules.tracker.metroLocations)
+  require('../modules/trackers/metro-locations')
+
 if (modules.tracker && modules.tracker.metroNotify)
   require('../modules/trackers/metro-notify')
 
