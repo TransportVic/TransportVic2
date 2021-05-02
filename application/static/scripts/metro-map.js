@@ -80,5 +80,5 @@ function updateBody() {
 
 $.ready(() => {
   updateBody()
-  setInterval(updateBody, 1000 * 15)
+  setInterval(updateBody, 1000 * 10)
 })

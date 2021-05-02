@@ -56,16 +56,16 @@ router.post('/', async (req, res) => {
   await async.forEach(activeTrips, async trip => {
     let nextStop = trip.stopTimings.find(stop => stop.actualDepartureTimeMS > msNow + 1000 * 60)
 
-    let tripData = await metroLocations.findDocument({
+    let tripData = await metroTrips.findDocument({
       date: trip.operationDays,
       runID: trip.runID
     })
 
-    if (tripData) {
-      let location = await metroLocations.findDocument({
-        consist: tripDay.consist[0]
-      })
+    let trainLocation = tripData ? await metroLocations.findDocument({
+      consist: tripData.consist[0]
+    }) : null
 
+    if (tripData && trainLocation && (msNow - trainLocation) < 1000 * 60 * 2) {
       let vehicleType = metroTypes.find(car => tripData.consist[0] === car.leadingCar)
 
       vehicles.push({
@@ -73,6 +73,43 @@ router.post('/', async (req, res) => {
         destination: trip.trueDestination.slice(0, -16),
         runID: trip.runID,
         vehicle: `${tripData.consist.length} Car ${vehicleType.type}`,
+        nextStop,
+        location: trainLocation.location,
+        line: utils.encodeName(trip.routeName),
+        bearing: trainLocation.bearing
+      })
+    } else {
+      let lastStop = trip.stopTimings.slice(-1)[0]
+      let firstStop = trip.stopTimings[0]
+
+      if (!nextStop) nextStop = lastStop
+      if (nextStop !== lastStop && nextStop !== firstStop) nextStop = trip.stopTimings[trip.stopTimings.indexOf(nextStop) - 1]
+
+      if (nextStop === firstStop && nextStop.actualDepartureTimeMS - msNow > 1000 * 30) return
+      if (nextStop === lastStop && nextStop.actualDepartureTimeMS - msNow < -1000 * 30) return
+
+      let platformCentre = platformCentrepoints[nextStop.stopName.slice(0, -16) + nextStop.platform]
+
+      let bearing = 0
+
+      let followingStop = trip.stopTimings[trip.stopTimings.indexOf(nextStop) + 1]
+      if (followingStop) {
+        let followingPlatformCentre = platformCentrepoints[followingStop.stopName.slice(0, -16) + followingStop.platform]
+        if (followingPlatformCentre && platformCentre)
+          bearing = turf.rhumbBearing(platformCentre, followingPlatformCentre)
+      } else {
+        let previousStop = trip.stopTimings[trip.stopTimings.indexOf(nextStop) - 1]
+
+        let previousPlatformCentre = platformCentrepoints[previousStop.stopName.slice(0, -16) + previousStop.platform]
+        if (previousPlatformCentre && platformCentre)
+          bearing = turf.rhumbBearing(previousPlatformCentre, platformCentre)
+      }
+
+      vehicles.push({
+        destinationCode: stationCodeLookup[trip.trueDestination.slice(0, -16)],
+        destination: trip.trueDestination,
+        runID: trip.runID,
+        vehicle: trip.vehicle ? `${trip.vehicle.size} Car ${trip.vehicle.type}` : 'Unknown',
         nextStop,
         location: platformCentre,
         line: utils.encodeName(trip.routeName),
