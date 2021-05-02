@@ -65,7 +65,7 @@ router.post('/', async (req, res) => {
       consist: tripData.consist[0]
     }) : null
 
-    if (tripData && trainLocation && (msNow - trainLocation) < 1000 * 60 * 2) {
+    if (tripData && trainLocation && (msNow - trainLocation.timestamp) < 1000 * 60 * 2) {
       let vehicleType = metroTypes.find(car => tripData.consist[0] === car.leadingCar)
 
       vehicles.push({
