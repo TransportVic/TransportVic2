@@ -1030,12 +1030,12 @@ function dedupeRailReplacementBuses(replacementBuses) {
   })
 }
 
-async function getDeparturesFromPTV(station, db) {
+async function getDeparturesFromPTV(station, backwards, db) {
   let notifyData = await getNotifyData(db)
   let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
   let stationName = metroPlatform.fullStopName.slice(0, -16)
 
-  let url = `/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor&expand=VehiclePosition`
+  let url = `/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&look_backwards=${backwards ? 'true' : 'false'}&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor&expand=VehiclePosition`
   let ptvResponse = await ptvAPI(url)
 
   let parsedDepartures = parsePTVDepartures(ptvResponse, stationName)
@@ -1121,13 +1121,13 @@ async function getExtraTrains(departures, direction, station, db) {
   })
 }
 
-async function getDepartures(station, db, filter) {
+async function getDepartures(station, db, filter, backwards) {
   try {
     if (typeof filter === 'undefined') filter = true
     let stationName = station.stopName.slice(0, -16)
 
-    return await utils.getData('metro-departures-new', stationName, async () => {
-      let departures = await getDeparturesFromPTV(station, db)
+    return await utils.getData('metro-departures-new', stationName + backwards, async () => {
+      let departures = await getDeparturesFromPTV(station, backwards, db)
       let extraTrains = []
 
       if (stationsAppendingUp.includes(stationName)) {

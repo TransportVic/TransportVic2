@@ -16,6 +16,7 @@ async function requestTimings() {
 
     global.loggers.trackers.ccl.info('requesting timings for', stop.stopName.slice(0, -16))
     await getDepartures(stop, database)
+    await getDepartures(stop, database, false, true)
   })
 }
 
@@ -31,9 +32,9 @@ database.connect(async () => {
   stops.push(await dbStops.findDocument({ stopName: 'Richmond Railway Station' }))
 
   schedule([
-    [0, 60, 12], // 12am - 1am
-    [240, 1200, 6], // 4am - 8pm
-    [1201, 1320, 8], // 8pm - 10pm
-    [1201, 1440, 10] // 10pm - 12am
+    [0, 60, 10], // 12am - 1am
+    [240, 1200, 4], // 4am - 8pm
+    [1201, 1320, 6], // 8pm - 10pm
+    [1201, 1440, 7] // 10pm - 12am
   ], requestTimings, 'city loop preloader', global.loggers.trackers.ccl)
 })

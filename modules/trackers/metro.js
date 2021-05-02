@@ -44,6 +44,8 @@ async function getDepartures(stop) {
       }, database)
     }
   })
+
+  await getMetroDepartures(stopData, database, false, true)
 }
 
 async function requestTimings() {
