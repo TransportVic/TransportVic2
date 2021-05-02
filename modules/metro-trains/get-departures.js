@@ -783,7 +783,11 @@ async function saveConsists(departures, db) {
         if (existingTrip.consist.length === 6) { // Trip already exists with a filled consist, we only override if a different set matches
           if (!existingTrip.consist.includes(tripData.consist[0])) {
             existingTrip = null
-          } // Otherwise do not override a 6 car train with a 3 car
+          } else {
+            // Otherwise do not override a 6 car train with a 3 car
+            // However update the departure fleet for location purposes
+            departure.fleetNumber = tripData.consist
+          }
         } else if (existingTrip.consist.length === 3 && !existingTrip.consist.includes(tripData.consist[0])) { // We might have matched half a train and now have the other half, sanity check
           let sanityCheckTrip = await metroTrips.findDocument({
             date: departure.departureDay,
@@ -813,7 +817,6 @@ async function saveConsists(departures, db) {
 
 async function saveLocations(departures, db) {
   let metroLocations = db.getCollection('metro locations')
-
   let consists = {}
 
   departures.forEach(departure => {
