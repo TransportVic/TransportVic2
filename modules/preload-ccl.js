@@ -32,9 +32,9 @@ database.connect(async () => {
   stops.push(await dbStops.findDocument({ stopName: 'Richmond Railway Station' }))
 
   schedule([
-    [0, 60, 10], // 12am - 1am
-    [240, 1200, 4], // 4am - 8pm
-    [1201, 1320, 6], // 8pm - 10pm
-    [1201, 1440, 7] // 10pm - 12am
+    [0, 60, 3], // 12am - 1am
+    [240, 1200, 1.5], // 4am - 8pm
+    [1201, 1320, 2], // 8pm - 10pm
+    [1201, 1440, 2.5] // 10pm - 12am
   ], requestTimings, 'city loop preloader', global.loggers.trackers.ccl)
 })

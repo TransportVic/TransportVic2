@@ -32,7 +32,7 @@ async function findLocations() {
     } else return false
   })
 
-  let selected = utils.shuffle(deduped).slice(0, 6)
+  let selected = utils.shuffle(deduped).slice(0, 8)
 
   await async.forEach(selected, async train => {
     let trips = await metroTrips.findDocuments({
