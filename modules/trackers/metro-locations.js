@@ -48,7 +48,7 @@ async function findLocations() {
 
     let timetable = await liveTimetables.findDocument({
       operationDays: nextTrip.date,
-      runID: train.runID
+      runID: nextTrip.runID
     })
 
     if (!timetable) {
