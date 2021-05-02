@@ -18,7 +18,7 @@ async function findLocations() {
 
   let old = await metroLocations.findDocuments({
     timestamp: {
-      $lte: now - 1000 * 60 * 2,
+      $lte: now - 1000 * 60 * 0,
       $gte: now - 1000 * 60 * 15
     }
   }).sort({ timestamp: 1 }).limit(30).toArray()
@@ -44,7 +44,21 @@ async function findLocations() {
       date: yesterday
     }).toArray()
 
-    let nextTrip = trips[trips.length - 1]
+    let sorted = trips.map(trip => {
+      let {departureTime, destinationArrivalTime, date} = trip
+
+      let departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime)
+      let destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(destinationArrivalTime)
+
+      if (departureTimeMinutes < 180) departureTimeMinutes += 1440
+      if (destinationArrivalTimeMinutes < departureTimeMinutes) destinationArrivalTimeMinutes += 1440
+
+      trip.tripEndTime = +utils.parseDate(date).add(destinationArrivalTimeMinutes, 'minutes')
+
+      return trip
+    }).sort((a, b) => a.tripEndTime - b.tripEndTime)
+
+    let nextTrip = trips.find(trip => trip.tripEndTime > now)
 
     let timetable = await liveTimetables.findDocument({
       operationDays: nextTrip.date,
