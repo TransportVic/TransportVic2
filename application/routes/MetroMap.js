@@ -56,6 +56,11 @@ router.post('/', async (req, res) => {
   await async.forEach(activeTrips, async trip => {
     let nextStop = trip.stopTimings.find(stop => stop.actualDepartureTimeMS > msNow + 1000 * 60)
 
+    let lastStop = trip.stopTimings.slice(-1)[0]
+    let firstStop = trip.stopTimings[0]
+
+    if (!nextStop) nextStop = lastStop
+
     let tripData = await metroTrips.findDocument({
       date: trip.operationDays,
       runID: trip.runID
@@ -79,10 +84,6 @@ router.post('/', async (req, res) => {
         bearing: trainLocation.bearing
       })
     } else {
-      let lastStop = trip.stopTimings.slice(-1)[0]
-      let firstStop = trip.stopTimings[0]
-
-      if (!nextStop) nextStop = lastStop
       if (nextStop !== lastStop && nextStop !== firstStop) nextStop = trip.stopTimings[trip.stopTimings.indexOf(nextStop) - 1]
 
       if (nextStop === firstStop && nextStop.actualDepartureTimeMS - msNow > 1000 * 30) return
