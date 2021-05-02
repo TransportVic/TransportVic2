@@ -18,7 +18,7 @@ async function findLocations() {
 
   let old = await metroLocations.findDocuments({
     timestamp: {
-      $lte: now - 1000 * 60 * 5,
+      $lte: now - 1000 * 60 * 2,
       $gte: now - 1000 * 60 * 15
     }
   }).sort({ timestamp: 1 }).limit(30).toArray()
@@ -32,7 +32,7 @@ async function findLocations() {
     } else return false
   })
 
-  let selected = utils.shuffle(deduped).slice(0, 5)
+  let selected = utils.shuffle(deduped).slice(0, 6)
 
   await async.forEach(selected, async train => {
     let trips = await metroTrips.findDocuments({
@@ -75,6 +75,8 @@ async function findLocations() {
       let stopToUse = followingStop || nextStop || stopTimings[stopTimings.length - 1]
 
       if (stopToUse) {
+        global.loggers.trackers.metro.info('Updating data for', train.consist, 'at', stopToUse.stopName.slice(0, -16))
+
         let stopData = await dbStops.findDocument({ stopName: stopToUse.stopName })
         let departures = await getMetroDepartures(stopData, database)
       }
