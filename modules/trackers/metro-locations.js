@@ -41,7 +41,8 @@ async function findLocations() {
     }).toArray()
 
     if (!trips.length) trips = await metroTrips.findDocuments({
-      date: yesterday
+      date: yesterday,
+      consist: train.consist[0]
     }).toArray()
 
     let sorted = trips.map(trip => {
@@ -58,7 +59,7 @@ async function findLocations() {
       return trip
     }).sort((a, b) => a.tripEndTime - b.tripEndTime)
 
-    let nextTrip = trips.find(trip => trip.tripEndTime > now)
+    let nextTrip = trips.find(trip => trip.tripEndTime > now) || trips[trips.length - 1]
 
     let timetable = await liveTimetables.findDocument({
       operationDays: nextTrip.date,
