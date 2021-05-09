@@ -182,6 +182,8 @@ router.get('/consist', async (req, res) => {
   let servicesByDay = {}
 
   await async.forEachSeries(operationDays, async date => {
+    if (!date) return
+
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
 
     servicesByDay[humanDate] = {

@@ -73,6 +73,8 @@ async function saveConsist(stopTimings, direction, departureDay, runID, consist,
     destinationArrivalTime: stopTimings[stopTimings.length - 1].departureTime
   }
 
+  if (!departureDay) return global.loggers.error.err('No date on trip', partialTrip)
+
   fixTripDestination(partialTrip)
 
   let query = {

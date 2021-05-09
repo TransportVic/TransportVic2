@@ -718,7 +718,15 @@ function determineLoopRunning(runID, routeName, direction) {
 function appendDepartureDay(departure, stopGTFSID) {
   let { trip } = departure
   let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
-  if (!stopData) return global.loggers.general.warn('No departure day', departure, stopGTFSID)
+  if (!stopData) {
+    global.loggers.general.warn('No departure day', stopGTFSID, departure)
+    if (departure.trip.runID) { // Live trip
+      departure.departureDay = departure.trip.operationDays
+      departure.trueDepartureDay = departure.departureDay
+    }
+
+    return
+  }
 
   let firstStop = trip.stopTimings.find(tripStop => tripStop.stopName === trip.trueOrigin)
 
@@ -762,6 +770,8 @@ async function saveConsists(departures, db) {
   })
 
   await async.forEach(deduped, async departure => {
+    if (!departure.departureDay) return global.loggers.error.err('No date on trip', departure)
+
     let query = {
       date: departure.departureDay,
       runID: departure.runID
