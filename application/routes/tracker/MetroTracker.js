@@ -17,19 +17,6 @@ const metroConsists = require('../../../additional-data/metro-tracker/metro-cons
 
 let stationCodeLookup = {}
 
-let loggerPath = path.join(__dirname, '../../../logs/metro-tracker.json')
-let loggerData = []
-if (modules.metroLogger) {
-  try {
-    loggerData = JSON.parse(fs.readFileSync(loggerPath))
-  } catch (e) {}
-
-  setInterval(() => {
-    fs.writeFileSync(loggerPath, JSON.stringify(loggerData))
-  }, 1000 * 60)
-}
-
-
 Object.keys(stationCodes).forEach(stationCode => {
   stationCodeLookup[stationCodes[stationCode]] = stationCode
 })
@@ -267,9 +254,9 @@ router.get('/bot', async (req, res) => {
   }
 
   if (modules.metroLogger) {
-    loggerData.push({
-      utc: new Date().toISOString(),
-      time: new Date().toLocaleString(),
+    let metroLogger = db.getCollection('metro logs')
+    await metroLogger.createDocument({
+      utc: +new Date(),
       search,
       result: trips[0],
       referer: req.headers['referer'],
@@ -396,16 +383,23 @@ router.get('/strange', async (req, res) => {
   }, 1000 * 30))
 })
 
-router.get('/logs', (req, res) => {
-  let today = utils.getYYYYMMDDNow()
+router.get('/logs', async (req, res) => {
+  let metroLogger = res.db.getCollection('metro logs')
+  let today = utils.now()
   let {consist, date} = querystring.parse(url.parse(req.url).query)
-  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  if (date) date = utils.parseDate(date)
   else date = today
 
+  let startOfDay = date.clone().startOf('day')
+  let endOfDay = date.clone().endOf('day')
+
   res.header('Access-Control-Allow-Origin', '*')
-  res.json(loggerData.filter(entry => {
-    return utils.getYYYYMMDD(utils.parseTime(entry.utc)) === date
-  }))
+  res.json(await metroLogger.findDocuments({
+    utc: {
+      $gte: +startOfDay,
+      $lte: +endOfDay
+    }
+  }).toArray())
 })
 
 module.exports = router

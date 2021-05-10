@@ -32,6 +32,8 @@ database.connect({
   let metroShunts = await getCollection('metro shunts')
   let metroLocations = await getCollection('metro locations')
 
+  let metroLogger = await getCollection('metro logs')
+
   await stops.createIndex({
     stopName: 1,
     'bays.stopGTFSID': 1
@@ -369,6 +371,15 @@ database.connect({
 
   console.log('Created Metro Shunts index')
 
-  updateStats('create-indexes', 56)
+  await metroLogger.createIndex({
+    utc: 1,
+    referer: 1,
+    ip: 1,
+    userAgent: 1
+  }, { name: 'metro logger index', unique: 1 })
+
+  console.log('Created Metro Logger index')
+
+  updateStats('create-indexes', 57)
   process.exit()
 })
