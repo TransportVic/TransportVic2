@@ -43,7 +43,7 @@ async function handleMessage(subject, rawText) {
     await handleCancellation(database, text)
   } else if (text.includes('been reinstated') || text.includes('running as scheduled') || text.includes('will now run as scheduled') || text.includes('operate as scheduled')|| text.includes('resume running')) {
     await handleReinstatement(database, text)
-  } else if (text.includes('will not stop at') || text.includes('will run express')) {
+  } else if (text.includes('will not stop at') || text.includes('will run express') || text.includes('will not be stopping')) {
     await handleNonStop(database, text)
   } else {
     await handleChange(database, text)
