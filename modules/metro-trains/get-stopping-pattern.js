@@ -70,7 +70,7 @@ async function saveConsist(stopTimings, direction, departureDay, runID, consist,
     origin: stopTimings[0].stopName,
     departureTime: stopTimings[0].departureTime,
     destination: stopTimings[stopTimings.length - 1].stopName,
-    destinationArrivalTime: stopTimings[stopTimings.length - 1].departureTime
+    destinationArrivalTime: stopTimings[stopTimings.length - 1].arrivalTime
   }
 
   if (!departureDay) return global.loggers.error.err('No date on trip', partialTrip)
