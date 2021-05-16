@@ -371,7 +371,7 @@ module.exports = async function (data, db) {
   timetable.operationDays = departureDay
 
   if (timetable.routeName === 'Stony Point') {
-    timetable = await addStonyPointData(timetable, tripStartTime, db)
+    timetable = await addStonyPointData(timetable, originDepartureDay, db)
   }
 
   if (consist) {
