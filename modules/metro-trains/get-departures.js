@@ -176,7 +176,7 @@ async function getNotifyData(db) {
   let allTrainAlterations = disruptions.filter(disruption => disruption.runID)
   let stonyPointReplacements = allTrainAlterations.filter(disruption => {
     let text = disruption.text
-    return disruption.routeName === 'Stony Point' && (text.includes('replace') || text.includes('coach') || text.includes('bus'))
+    return disruption.routeName[0] === 'Stony Point' && (text.includes('replace') || text.includes('coach') || text.includes('bus'))
   }).map(disruption => disruption.runID)
 
   let loopSkipping = allTrainAlterations.filter(disruption => {
@@ -187,8 +187,8 @@ async function getNotifyData(db) {
 
   let trainAlterations = allTrainAlterations.filter(disruption => {
     let text = disruption.text
-    return (!text.includes('cancel') && !loopSkipping.includes(disruption))
-      || text.includes('originate') || text.includes('terminate') || text.includes('express')
+    return (!text.includes('cancel') && !loopSkipping.includes(disruption) && !stonyPointReplacements.includes(disruption.runID))
+      || text.includes('originate') || text.includes('terminate') || text.includes('express') || text.includes('not stop')
   })
 
   let cityLoopSkipping = loopSkipping.filter(isCityLoop).map(disruption => disruption.runID)
