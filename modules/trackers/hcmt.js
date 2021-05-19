@@ -64,6 +64,12 @@ async function appendLastStop(trip) {
     if (prevStop && prevStop.stopName === 'Cardinia Road Railway Station') {
       trip.stopTimings.push(await createStop(prevStop, 6, 'Pakenham Railway Station', '1'))
     }
+
+    // DNG trips only
+    if (prevStop && prevStop.stopName === 'Yarraman Railway Station') {
+      let dngStop = await createStop(prevStop, 4, 'Dandenong Railway Station', '2')
+      trip.stopTimings.push(dngStop)
+    }
   }
 }
 
