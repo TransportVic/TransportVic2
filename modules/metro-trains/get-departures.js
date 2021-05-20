@@ -969,7 +969,7 @@ function parsePTVDepartures(ptvResponse, stationName) {
     let estimatedDepartureTime = departure.estimated_departure_utc ? utils.parseTime(departure.estimated_departure_utc) : null
 
     if (scheduledDepartureTime.diff(now, 'minutes') > 110) return null
-    if (scheduledDepartureTime.diff(now, 'minutes') < 120) return null
+    if (scheduledDepartureTime.diff(now, 'minutes') < -120) return null
     // When looking backwards skip those that are more than 2hr ago to avoid getting junk from previous days on low freq lines
 
     let platform = departure.platform_number
