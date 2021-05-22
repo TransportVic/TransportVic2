@@ -1,5 +1,9 @@
 module.exports = {
   "4-PMC": ["Ventura Bus Lines"],
+  "4-152": ["CDC Melbourne"],
+  "4-182": ["CDC Melbourne"],
+  "4-2X7": ["Transdev Melbourne"],
+  "4-207": ["Transdev Melbourne"],
   "4-216": ["Transdev Melbourne"],
   "4-220": ["Transdev Melbourne"],
   "4-281": ["Transdev Melbourne"],
@@ -139,7 +143,10 @@ module.exports = {
 
   "6-b25": ["Horsham Transit"],
 
+  "8-95E": ["Dysons"],
   "8-965": ["McKenzies Tourist Service"],
+  "8-97g": ["Ventura Bus Lines"],
+  "8-981": ["Ventura Bus Lines"],
 
   "6-959": ["Dysons (Wangaratta)"],
   "6-960": ["Dysons (Wangaratta)"],
@@ -220,27 +227,26 @@ module.exports = {
   "6-99x": ["Bacchus Marsh Coaches"],
   "6-99y": ["Bacchus Marsh Coaches"],
 
-  "6-B10": ["CDC Ballarat"],
-  "6-B11": ["CDC Ballarat"],
-  "6-B12": ["CDC Ballarat"],
-  "6-B13": ["CDC Ballarat"],
-  "6-B14": ["CDC Ballarat"],
-  "6-B15": ["CDC Ballarat"],
-  "6-B20": ["CDC Ballarat"],
-  "6-B21": ["CDC Ballarat"],
-  "6-B22": ["CDC Ballarat"],
-  "6-B23": ["CDC Ballarat"],
-  "6-B24": ["CDC Ballarat"],
-  "6-B25": ["CDC Ballarat"],
-  "6-B26": ["CDC Ballarat"],
-  "6-B30": ["CDC Ballarat"],
-  "6-B31": ["CDC Ballarat"],
-  "6-cvx": ["CDC Ballarat"],
+  "6-B1E": ["CDC Ballarat"],
+  "6-B1H": ["CDC Ballarat"],
+  "6-B1S": ["CDC Ballarat"],
+  "6-B1i": ["CDC Ballarat"],
+  "6-B1o": ["CDC Ballarat"],
+  "6-B1z": ["CDC Ballarat"],
+  "6-B2E": ["CDC Ballarat"],
+  "6-B2H": ["CDC Ballarat"],
+  "6-B2S": ["CDC Ballarat"],
+  "6-B2Z": ["CDC Ballarat"],
+  "6-B2b": ["CDC Ballarat"],
+  "6-B2i": ["CDC Ballarat"],
+  "6-B2o": ["CDC Ballarat"],
+  "6-B3o": ["CDC Ballarat"],
 
   "6-G3O": ["McHarrys Bus Lines"], // 30
   "6-G45": ["McHarrys Bus Lines"], // 45
   "6-G5x": ["McHarrys Bus Lines"], // 50
   "6-G5y": ["McHarrys Bus Lines"], // 51
+  "6-G5p": ["McHarrys Bus Lines"], // 55
   "6-G6X": ["McHarrys Bus Lines"], // 60
   "6-G6L": ["McHarrys Bus Lines"], // 61
   "6-GV1": ["McHarrys Bus Lines"], // Geelong - Apollo Bay
@@ -248,5 +254,24 @@ module.exports = {
   "6-KX1": ["Mitchell Transit"],
   "6-W12": ["Mitchell Transit"],
 
-  "6-col": ["Hutchinson Buslines"]
+  "6-col": ["Hutchinson Buslines"],
+
+
+  "6-Bx4": ["Bacchus Marsh Coaches"], // 434
+  "6-dpc": ["Skybus"], // DPK - CSP shuttle
+  "6-MUR": ["Wimmera Roadways"],
+
+  "6-Mx1": ["Maryborough Transit"], // Maryborough 1
+  "6-Mx2": ["Maryborough Transit"], // Maryborough 2
+
+  "6-s05": ["Little's Gippsland Coaches"], // Sale 5
+  "6-s06": ["Little's Gippsland Coaches"], // Sale 6
+
+  "6-WGP": ["Warragul Bus Lines"],
+
+  "6-x89": ["Castlemaine Bus Lines"], // 1
+  "6-x36": ["Castlemaine Bus Lines"], // 3
+  "6-xM4": ["Castlemaine Bus Lines"], // 4
+
+  "6-x04": ["Latrobe Valley Bus Lines"] // 4
 }
