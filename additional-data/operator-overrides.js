@@ -96,10 +96,14 @@ module.exports = {
   "4-900": ["CDC Melbourne", "Ventura Bus Lines"],
   "4-903": ["Transdev Melbourne"],
 
+  "8-95E": ["Dysons"], // 958
+  "8-965": ["McKenzies Tourist Service"], // 965
   "8-96w": ["Ventura Bus Lines"], // 967
   "8-97B": ["Ventura Bus Lines"], // 978
   "8-97P": ["Ventura Bus Lines"], // 979
+  "8-97g": ["Ventura Bus Lines"], // 979
   "8-98l": ["Ventura Bus Lines"], // 981
+  "8-98i": ["Ventura Bus Lines"],
   "8-98Z": ["Ventura Bus Lines"], // 982
 
   "6-858": ["Dysons (Wangaratta)"], // Wangaratta - Myrtleford
@@ -142,11 +146,6 @@ module.exports = {
   "6-CMO": ["Hutchinson Bus Lines"],
 
   "6-b25": ["Horsham Transit"],
-
-  "8-95E": ["Dysons"],
-  "8-965": ["McKenzies Tourist Service"],
-  "8-97g": ["Ventura Bus Lines"],
-  "8-981": ["Ventura Bus Lines"],
 
   "6-959": ["Dysons (Wangaratta)"],
   "6-960": ["Dysons (Wangaratta)"],
@@ -240,6 +239,7 @@ module.exports = {
   "6-B2b": ["CDC Ballarat"],
   "6-B2i": ["CDC Ballarat"],
   "6-B2o": ["CDC Ballarat"],
+  "6-B3i": ["CDC Ballarat"],
   "6-B3o": ["CDC Ballarat"],
 
   "6-G3O": ["McHarrys Bus Lines"], // 30
