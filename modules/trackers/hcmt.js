@@ -247,25 +247,8 @@ async function checkTrip(trip, stopDepartures, startOfDay, day, now) {
       await appendNewData(existingTrip, trip, stopDescriptors, startOfDay)
     }
   } else {
-    let ptvRunID = 948000 + parseInt(trip.runID)
-    let resp = await ptvAPI(`/v3/pattern/run/${ptvRunID}/route_type/0?date_utc=${now.toISOString()}`)
-    let firstDeparture = resp.departures[0]
-    let firstDepartureDay = null
-
-    if (firstDeparture) {
-      let firstDepartureTime = utils.parseTime(firstDeparture.scheduled_departure_utc)
-      let minutes = utils.getMinutesPastMidnight(firstDepartureTime)
-      if (minutes < 180) firstDepartureTime.add('-1', 'day')
-
-      firstDepartureDay = utils.getYYYYMMDD(firstDepartureTime)
-    }
-
-    if (!firstDeparture || firstDepartureDay !== day) { // PTV Doesnt have it, likely to be HCMT
-      global.loggers.trackers.metro.log('[HCMT]: Identified HCMT Trip #' + trip.runID)
-      await createTrip(trip, stopDescriptors, startOfDay)
-    } else {
-      await getStoppingPattern(database, ptvRunID, 'metro train')
-    }
+    global.loggers.trackers.metro.log('[HCMT]: Identified HCMT Trip #' + trip.runID)
+    await createTrip(trip, stopDescriptors, startOfDay)
   }
 }
 
@@ -301,12 +284,12 @@ async function getDepartures() {
   }, {})).filter(trip => trip.stopsAvailable[0].stopSeconds < 86400)
   // Filter as we can get trips for just past 3am for the next day and obv it won't match
 
-  let knownRunIDs = await timetables.distinct('runID', {
-    operationDays: dayOfWeek,
-    mode: 'metro train'
-  })
+  let allPTVRunIDs = (await ptvAPI(`/v3/runs/route/11`)).runs.filter(run => {
+    return run.run_id >= 948000
+  }).map(run => utils.getRunID(run.run_id))
 
-  await async.forEach(allTrips.filter(trip => !knownRunIDs.includes(trip.runID)), async trip => {
+  // // PTV Doesnt have it, likely to be HCMT
+  await async.forEach(allTrips.filter(trip => !allPTVRunIDs.includes(trip.runID)), async trip => {
     await checkTrip(trip, stopDepartures, startOfDay, day, now)
   })
 }
