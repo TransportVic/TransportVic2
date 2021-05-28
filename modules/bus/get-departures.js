@@ -191,21 +191,30 @@ async function getDeparturesFromPTV(stop, db) {
         operator,
         codedOperator: utils.encodeName(operator.replace(/ \(.+/, '')),
         loopDirection,
-        routeDetails: trip.routeDetails
+        routeDetails: trip.routeDetails,
+        isLiveTrip: busDeparture.run_ref.includes('-')
       })
     })
   })
 
+  let liveTrips = mappedDepartures.filter(departure => departure.isLiveTrip)
+  let scheduledTrips = mappedDepartures.filter(departure => !departure.isLiveTrip)
+
   let tripIDs = []
-  let filteredDepartures = mappedDepartures.filter(d => {
-    let {tripID} = d.trip
-    if (!tripID)
-      tripID = d.trip.origin + d.trip.departureTime + d.trip.destination + d.trip.destinationArrivalTime
+  let filteredLiveDepartures = liveTrips.filter(d => {
+    let tripID = d.trip.origin + d.trip.departureTime + d.trip.destination + d.trip.destinationArrivalTime
+
     if (!tripIDs.includes(tripID)) {
       tripIDs.push(tripID)
       return true
     } else return false
   })
+
+  let filteredDepartures = filteredLiveDepartures.concat(scheduledTrips.filter(d => {
+    let tripID = d.trip.origin + d.trip.departureTime + d.trip.destination + d.trip.destinationArrivalTime
+
+    return !tripIDs.includes(tripID)
+  }))
 
   await updateBusTrips(db, filteredDepartures)
 
