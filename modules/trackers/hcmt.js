@@ -13,9 +13,15 @@ let dbStops
 let liveTimetables, timetables
 
 async function getTimetable() {
-  return await utils.getData('metro-op-timetable', '92', async () => {
+  let pakenham = await utils.getData('metro-op-timetable', '92', async () => {
     return JSON.parse(await utils.request(urls.op.format('92'), { timeout: 10000 }))
   }, 1000 * 60 * 12)
+
+  let cranbourne = await utils.getData('metro-op-timetable', '86', async () => {
+    return JSON.parse(await utils.request(urls.op.format('86'), { timeout: 10000 }))
+  }, 1000 * 60 * 12)
+
+  return pakenham.concat(cranbourne)
 }
 
 async function requestMetroData() {
@@ -284,9 +290,14 @@ async function getDepartures() {
   }, {})).filter(trip => trip.stopsAvailable[0].stopSeconds < 86400)
   // Filter as we can get trips for just past 3am for the next day and obv it won't match
 
-  let allPTVRunIDs = (await ptvAPI(`/v3/runs/route/11`)).runs.filter(run => {
+  let pakenhamRunIDs = (await ptvAPI(`/v3/runs/route/11`)).runs.filter(run => {
     return run.run_id >= 948000
   }).map(run => utils.getRunID(run.run_id))
+  let cranbourneRunIDs = (await ptvAPI(`/v3/runs/route/4`)).runs.filter(run => {
+    return run.run_id >= 948000
+  }).map(run => utils.getRunID(run.run_id))
+
+  let allPTVRunIDs = pakenhamRunIDs.concat(cranbourneRunIDs)
 
   // // PTV Doesnt have it, likely to be HCMT
   await async.forEach(allTrips.filter(trip => !allPTVRunIDs.includes(trip.runID)), async trip => {

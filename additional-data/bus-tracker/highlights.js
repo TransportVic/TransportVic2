@@ -50,12 +50,12 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Route Livery Buses',
-  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
+  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'CO107', 'CO108', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
   routes: ['201', '301', '401', '601'],
   type: 'exclude'
 }, {
   name: 'Non-Perm Route Livery Buses',
-  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
+  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'CO107', 'CO108', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
   routes: ['201', '301', '401', '601'],
   type: 'include',
   buses: 'exclude'
@@ -66,23 +66,23 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: '900 Perms off 900',
-  track: ['CO116', 'CO117', 'CO118', 'CO119', 'CO120', 'CO121', 'CO146', 'CO147', 'V1323', 'V8227', 'V8228', 'V8229', 'V8230', 'V8231', 'V8235', 'V8239', 'V8909'],
+  track: ['CO116', 'CO117', 'CO118', 'CO119', 'CO120', 'CO121', 'CO146', 'CO147', 'V1309', 'V1323', 'V8227', 'V8228', 'V8229', 'V8230', 'V8231', 'V8235', 'V8239', 'V8909'],
   routes: ['900'],
   type: 'exclude'
 }, {
   name: 'Non-900 Perms on 900',
-  track: ['CO116', 'CO117', 'CO118', 'CO119', 'CO120', 'CO121', 'CO146', 'CO147', 'V1323', 'V8227', 'V8228', 'V8229', 'V8230', 'V8231', 'V8235', 'V8239', 'V8909'],
+  track: ['CO116', 'CO117', 'CO118', 'CO119', 'CO120', 'CO121', 'CO146', 'CO147', 'V1309', 'V1323', 'V8227', 'V8228', 'V8229', 'V8230', 'V8231', 'V8235', 'V8239', 'V8909'],
   routes: ['900'],
   type: 'include',
   buses: 'exclude'
 }, {
   name: '703 Perms off 703',
-  track: ['V868', 'V869', 'V877', 'V878', 'V879', 'V880', 'V881', 'V882', 'V883', 'V884', 'V1237', 'V1238', 'V1239', 'V1240', 'V1241', 'V1242', 'V1309'],
+  track: ['V868', 'V869', 'V877', 'V878', 'V879', 'V880', 'V881', 'V882', 'V883', 'V884', 'V1237', 'V1238', 'V1239', 'V1240', 'V1241', 'V1242'],
   routes: ['703'],
   type: 'exclude'
 }, {
   name: 'CDC Oakleigh Specials',
-  track: ['CO7', 'CO8', 'CO11', 'CO12', 'CO13', 'CO34', 'CO100', 'CO103', 'CO104', 'CO105', 'CO107', 'CO108', 'CO109'],
+  track: ['CO7', 'CO8', 'CO11', 'CO12', 'CO13', 'CO34', 'CO100', 'CO103', 'CO104', 'CO105', 'CO109'],
   routes: [],
   type: 'exclude'
 }, {
