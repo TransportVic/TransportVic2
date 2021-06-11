@@ -50,6 +50,8 @@ if (modules.tracker && modules.tracker.metroShunts)
 if (modules.preloadCCL)
   require('../modules/preload-ccl')
 
+require('../modules/trackers/discord-notify')
+
 let serverStarted = false
 
 let trackerAuth = 'Basic ' + Buffer.from(config.vlineLogin).toString('base64')
