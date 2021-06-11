@@ -79,7 +79,7 @@ async function saveConsist(stopTimings, direction, departureDay, runID, consist,
 
   let query = {
     date: departureDay,
-    runID
+    runID: runID.slice(0, 4)
   }
 
   let tripData = {
