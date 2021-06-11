@@ -300,7 +300,21 @@ async function getDepartures() {
   let allPTVRunIDs = pakenhamRunIDs.concat(cranbourneRunIDs)
 
   // // PTV Doesnt have it, likely to be HCMT
-  await async.forEach(allTrips.filter(trip => !allPTVRunIDs.includes(trip.runID)), async trip => {
+  let missingTrips = allTrips.filter(trip => !allPTVRunIDs.includes(trip.runID))
+
+  let formingRunIDs = missingTrips.map(trip => trip.forming)
+  let missingFormings = allTrips.filter(trip => formingRunIDs.includes(trip.runID) && !missingTrips.includes(trip))
+
+  let missingFormedBy = missingTrips.map(trip => {
+    let { runID } = trip
+    let tripForming = allTrips.find(formedBy => formedBy.forming === runID)
+    if (!missingTrips.includes(tripForming)) return tripForming
+    else return null
+  }).filter(Boolean)
+
+  let allMissingTrips = missingTrips.concat(missingFormings).concat(missingFormedBy)
+
+  await async.forEach(allMissingTrips, async trip => {
     await checkTrip(trip, stopDepartures, startOfDay, day, now)
   })
 }
