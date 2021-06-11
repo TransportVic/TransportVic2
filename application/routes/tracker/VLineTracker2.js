@@ -151,25 +151,9 @@ router.get('/consist', async (req, res) => {
   })
 })
 
-router.get('/highlights', async (req, res) => {
-  let {db} = res
-  let vlineTrips = db.getCollection('vline trips')
+async function filterHighlights(date, allTrips, db) {
   let nspTimetables = db.getCollection('timetables')
-  let today = utils.getYYYYMMDDNow()
-  let {consist, date} = querystring.parse(url.parse(req.url).query)
-  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
-  else date = today
-
-  let dayOfWeek = await getDayOfWeek(utils.parseDate(date))
-
-  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
-
-  let allTrips = (await vlineTrips.findDocuments({ date })
-    .sort({destination: 1}).toArray())
-    .map(trip => { if (p(trip.date)) trip.consist = []; return trip })
-    .filter(trip => trip.consist[0] !== '')
-    .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
-    .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
+  let dayOfWeek = await getDayOfWeek(date)
 
   let doubleHeaders = allTrips.filter(trip => {
     return trip.consist[1] && trip.consist[0].match(/^[ANP]\d{2,3}$/) && trip.consist[1].match(/^[ANP]\d{2,3}$/)
@@ -187,7 +171,6 @@ router.get('/highlights', async (req, res) => {
 
   let consistTypeChanged = allTrips.filter(trip => {
     let nspTimetable = timetables[trip.runID]
-    if (!trip.consist[0]) return false
 
     if (nspTimetable) {
       let tripVehicleType
@@ -223,7 +206,6 @@ router.get('/highlights', async (req, res) => {
     // We're only considering where consist type wasnt changed. otherwise 1xVL and 2xSP would trigger even though its equiv
     if (consistTypeChanged.includes(trip)) return false
     if (['8118', '8116', '8160', '8158'].includes(trip.runID)) return false
-    if (!trip.consist[0]) return
 
     let nspTimetable = timetables[trip.runID]
 
@@ -241,7 +223,6 @@ router.get('/highlights', async (req, res) => {
   })
 
   let setAltered = allTrips.filter(trip => {
-    if (!trip.consist[0]) return false
     if (!trip.consist[0].match(/^[ANP]\d{2,3}$/)) return false
 
     let {consist, set} = trip
@@ -268,16 +249,44 @@ router.get('/highlights', async (req, res) => {
     return trip.consist.some(c => !vlineFleet.includes(c))
   })
 
-  res.render('tracker/vline/highlights', {
+  return {
     doubleHeaders,
     consistTypeChanged,
     oversizeConsist,
     setAltered,
     unknownVehicle,
-    unknownTrips,
+    unknownTrips
+  }
+}
+
+router.get('/highlights', async (req, res) => {
+  let {db} = res
+  let vlineTrips = db.getCollection('vline trips')
+  let today = utils.getYYYYMMDDNow()
+  let {consist, date} = querystring.parse(url.parse(req.url).query)
+
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  let dateMoment = utils.parseDate(date)
+
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let allTrips = (await vlineTrips.findDocuments({ date })
+    .sort({destination: 1}).toArray())
+    .map(trip => { if (p(trip.date)) trip.consist = []; return trip })
+    .filter(trip => !!trip.consist[0])
+    .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
+    .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
+
+  let highlightData = await filterHighlights(dateMoment, allTrips, db)
+
+  res.render('tracker/vline/highlights', {
+    ...highlightData,
     date: utils.parseTime(date, 'YYYYMMDD'),
     baseURL: config.newVlineTracker
   })
 })
 
 module.exports = router
+module.exports.filterHighlights = filterHighlights
