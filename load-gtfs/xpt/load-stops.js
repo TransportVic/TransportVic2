@@ -29,7 +29,8 @@ let permittedStops = [
  "Campbelltown Station",
  "Central Station",
  "Cootamundra Station",
- "Wagga Wagga Station"
+ "Wagga Wagga Station",
+ "Strathfield Station"
 ]
 
 let suburbs = {
