@@ -163,8 +163,6 @@ module.exports = class MainServer {
 
     app.use((req, res, next) => {
       res.setHeader('Strict-Transport-Security', 'max-age=31536000')
-      let secureDomain = `http${config.useHTTPS ? 's' : ''}://${config.websiteDNSName}:* `
-      secureDomain += ' https://*.mapbox.com/'
 
       res.setHeader('X-Xss-Protection', '1; mode=block')
       res.setHeader('X-Content-Type-Options', 'nosniff')
