@@ -53,7 +53,7 @@ database.connect({
       let gtfsDirection = lineData[5]
       let headsign = lineData[3]
 
-      let carCount = rawTripID[17]
+      let carCount = rawTripID[rawTripID.indexOf('X.') + 2]
 
       rawTripIDsConsidered.push(rawTripID)
       mappedTripIDsConsidered.push(tripID)
