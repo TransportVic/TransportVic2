@@ -72,6 +72,10 @@ let validALYOrigins = [
   'Southern Cross'
 ].map(x => x + ' Railway Station')
 
+let sssBAL = [ 'Southern Cross Railway Station', 'Ballarat Railway Station' ]
+let artMYB = [ 'Southern Cross Railway Station', 'Ballarat Railway Station' ]
+let sssFSS = [ 'Southern Cross Railway Station', 'Flinders Street Railway Station' ]
+
 module.exports = async (collection, operationDay, origin, destination, departureTime) => {
   let tripStartMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime)
   if (tripStartMinutes < 180) tripStartMinutes += 1440
@@ -87,11 +91,30 @@ module.exports = async (collection, operationDay, origin, destination, departure
 
   let varianceAllowed = 5
   if (traralgonStops.includes(origin) || traralgonStops.includes(destination)) {
-    varianceAllowed = 20
+    varianceAllowed = 25
+    if (origin === 'Pakenham Railway Station' || destination === 'Pakenahm Railway Station') {
+      varianceAllowed = 40
+    }
+    if (origin === 'Southern Cross Railway Station') origin = { $in: sssFSS }
+    if (destination === 'Southern Cross Railway Station') destination = { $in: sssFSS }
   }
 
+  // Maryborough/Ararat - Southern Cross
+  if (origin === 'Ararat' || origin === 'Maryborough') {
+    destination = { $in: sssBAL }
+  }
+
+  // Southern Cross - Maryborough/Ararat
+  // If one cancelled eg SSS-MYB search for the ART as well and cancel that too
+  if (destination === 'Ararat' || destination === 'Maryborough') {
+    destination = { $in: artMYB }
+  }
+
+  if (destination === 'Bacchus Marsh') destination = 'Melton' // Deals with SSS-MEL, MEL-BMH trips (but as of now MEL-BMH left uncancelled)
+  if (origin === 'Bacchus Marsh') origin = 'Melton' // Similar to down
+
   if (longDistanceCountryStops.includes(origin) || longDistanceCountryStops.includes(destination)) {
-    varianceAllowed = 25
+    varianceAllowed = 30
   }
 
   let variedDepartureTime = {
