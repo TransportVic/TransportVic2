@@ -1,9 +1,9 @@
-div#content {
+#content {
   display: block;
   flex-direction: column;
 }
 
-div#content > * {
+#content > * {
   margin-left: calc(1vw + 1vh);
 }
 

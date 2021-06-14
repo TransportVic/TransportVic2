@@ -1,4 +1,4 @@
-doctype html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
+doctype html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"
 html(lang='en-GB')
   head
     - let themeColour = '#171717'
@@ -48,12 +48,12 @@ html(lang='en-GB')
     link(rel='manifest' href='/static/app-content/manifest.json')
     meta(name='theme-color' content=themeColour)
   body
-    div#header
+    nav#header
       block title
       div#header-right
         block header-right
         a#home-button(href='/') Home
-    div#content
+    main#content
       block content
     
     block scripts

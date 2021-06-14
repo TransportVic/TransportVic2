@@ -7,7 +7,7 @@
   height: calc(2.1vw + 2.1vh);
 }
 
-div#header span {
+#header span {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
