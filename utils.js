@@ -16,7 +16,7 @@ let interval = setInterval(() => {
     forceLongRequest = false
     clearInterval(interval)
 
-    global.logger.general.info('Stopping long request timeout')
+    global.loggers.general.info('Stopping long request timeout')
   }
 }, 1000)
 
