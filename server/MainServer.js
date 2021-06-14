@@ -9,6 +9,7 @@ const uglifyEs = require('uglify-es')
 const rateLimit = require('express-rate-limit')
 const fetch = require('node-fetch')
 const utils = require('../utils')
+const ptvAPI = require('../ptv-api')
 
 const DatabaseConnection = require('../database/DatabaseConnection')
 
@@ -342,7 +343,11 @@ module.exports = class MainServer {
     })
 
     app.get('/response-stats', (req, res) => {
-      res.json({ status: 'ok', meanResponseTime: this.getAverageResponseTime() })
+      res.json({
+        status: 'ok',
+        meanResponseTime: this.getAverageResponseTime(),
+        ptvMeanResponseTime: ptvAPI.getAverageResponseTime()
+      })
     })
 
     app.use('/500', (req, res) => { throw new Error('500') })
