@@ -16,9 +16,9 @@ let interval = setInterval(() => {
     forceLongRequest = false
     clearInterval(interval)
 
-    global.loggers.general.info('Stopping long request timeout')
+    console.log('Stopping long request timeout')
   }
-}, 1000)
+}, 3000)
 
 String.prototype.format = (function (i, safe, arg) {
   function format () {
