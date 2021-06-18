@@ -274,7 +274,7 @@ async function getDepartures() {
 
   let stopDepartures = await requestMetroData()
 
-  let allTrips = Object.values(tripsToday.reduce((trips, stop) => {
+  let rawTrips = Object.values(tripsToday.reduce((trips, stop) => {
     let runID = stop.trip_id
     if (!trips[runID]) trips[runID] = {
       runID: runID,
@@ -287,7 +287,11 @@ async function getDepartures() {
     trips[runID].stopsAvailable.push(parseRawData(stop, startOfDay))
 
     return trips
-  }, {})).filter(trip => trip.stopsAvailable[0].stopSeconds < 86400)
+  }, {}))
+
+  let allTrips
+  if (dayOfWeek === 'Fri' || dayOfWeek === 'Sat') allTrips = rawTrips
+  else allTrips = rawTrips.filter(trip => trip.stopsAvailable[0].stopSeconds < 86400)
   // Filter as we can get trips for just past 3am for the next day and obv it won't match
 
   let pakenhamRunIDs = (await ptvAPI(`/v3/runs/route/11`)).runs.filter(run => {
