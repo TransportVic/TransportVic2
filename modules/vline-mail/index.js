@@ -36,6 +36,8 @@ async function handleMessage(subject, rawText) {
 
   global.loggers.mail.log(`Got Mail: ${text.replace(/\n/g, ' ')}`)
 
+  text = text.replace(/due .*/, '')
+
   // Tracker makes this kinda useless now
   if (subject.includes('Service reduction') || text.includes('reduced capacity')) return
 

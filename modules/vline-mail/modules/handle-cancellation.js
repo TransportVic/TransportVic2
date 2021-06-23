@@ -53,7 +53,7 @@ async function cancellation(db, text) {
     let origin = bestStop(service[2].trim()) + ' Railway Station'
     let destination = bestStop(service[3].trim()) + ' Railway Station'
     let isCoach = text.includes('coaches') && text.includes('replace')
-    console.log(service[1], service[2], service[3])
+
     await setServiceAsCancelled(db, departureTime, origin, destination, isCoach)
   }
 }
