@@ -153,7 +153,7 @@ module.exports = [
   'hoppers-crossing/werribee-plaza-derrimut-road',
   'northcote/northcote-railway-station',
   'gembrook/puffing-billy-railway-station-main-street',
-  'melbourne-airport/melbourne-airport-arrival-drive',
+  'melbourne-airport/melbourne-airport-grants-road',
   'macleod/macleod-railway-station',
   'ballarat-central/little-bridge-street-interchange-little-bridge-street',
   'ballarat-central/curtis-street-interchange-curtis-street',
@@ -228,7 +228,7 @@ module.exports = [
   'mill-park/rmit-bundoora-campus-west-mckimmies-road',
   'mill-park/mill-park-stables-shopping-centre',
   'ringwood/burnt-bridge-shopping-centre-maroondah-highway',
-  'camberwell/camberwell-shopping-centre',
+  'camberwell/camberwell-civic-centre-camberwell-road',
   'bayswater-north/canterbury-gardens-shopping-centre-canterbury-road',
   'canterbury/canterbury-railway-station',
   'glen-iris/glen-iris-railway-station',
@@ -351,5 +351,6 @@ module.exports = [
   'corio/rodbrough-crescent-bacchus-marsh-road',
   'donnybrook/eucalyptus-parade-olivine-boulevard',
   'donnybrook/donnybrook-railway-station',
-  'northcote/westgarth-railway-station'
+  'northcote/westgarth-railway-station',
+  'st-kilda/luna-park-the-esplanade'
 ]

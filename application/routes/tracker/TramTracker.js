@@ -119,9 +119,11 @@ router.get('/fleet', async (req, res) => {
     tram: tramNumber
   })
   let servicesByDay = {}
+  let allDays = []
 
-  await async.forEachSeries(operationDays, async date => {
+  await async.forEach(operationDays, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+    allDays.push(humanDate)
 
     servicesByDay[humanDate] = {
       services: await tramTrips.distinct('routeNumber', {
@@ -135,6 +137,7 @@ router.get('/fleet', async (req, res) => {
 
   res.render('tracker/tram/by-fleet', {
     tripsToday,
+    allDays,
     servicesByDay,
     fleet,
     tram: `${model}.${fleet}`,
@@ -183,13 +186,17 @@ router.get('/service', async (req, res) => {
 
   let tramsByDay = {}
 
-  await async.forEachSeries(operationDays, async date => {
+  let allDays = []
+
+  await async.forEach(operationDays, async date => {
+    let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+    allDays.push(humanDate)
+
     let trams = await tramTrips.distinct('tram', {
       date,
       routeNumber: routeQuery
     })
 
-    let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
     tramsByDay[humanDate] = {
       trams: trams.map(tram => `${tramFleet.getModel(tram)}.${tram}`),
       date
@@ -198,6 +205,7 @@ router.get('/service', async (req, res) => {
 
   res.render('tracker/tram/by-service', {
     tripsToday,
+    allDays,
     tramsByDay,
     service,
     date: utils.parseTime(date, 'YYYYMMDD')
@@ -240,13 +248,16 @@ router.get('/shift', async (req, res) => {
     shift
   })
   let tramsByDay = {}
+  let allDays = []
 
-  await async.forEachSeries(operationDays, async date => {
+  await async.forEach(operationDays, async date => {
+    let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+    allDays.push(humanDate)
+
     let trams = await tramTrips.distinct('tram', {
       shift, date
     })
 
-    let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
     tramsByDay[humanDate] = {
       trams: trams.map(tram => `${tramFleet.getModel(tram)}.${tram}`),
       date
@@ -255,6 +266,7 @@ router.get('/shift', async (req, res) => {
 
   res.render('tracker/tram/by-shift', {
     tripsToday,
+    allDays,
     tramsByDay,
     shift,
     date: utils.parseTime(date, 'YYYYMMDD')

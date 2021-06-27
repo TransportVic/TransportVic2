@@ -270,6 +270,18 @@ database.connect({
     date: 1,
   }, {name: 'tram index'})
 
+  await tramTrips.createIndex({
+    routeNumber: 1,
+    date: 1,
+    tram: 1
+  }, {name: 'route operating days'})
+
+  await tramTrips.createIndex({
+    shift: 1,
+    date: 1,
+    tram: 1
+  }, {name: 'shift index'})
+
   console.log('Created tram trips index')
 
   await smartrakIDs.createIndex({
@@ -380,6 +392,6 @@ database.connect({
 
   console.log('Created Metro Logger index')
 
-  updateStats('create-indexes', 57)
+  updateStats('create-indexes', 59)
   process.exit()
 })
