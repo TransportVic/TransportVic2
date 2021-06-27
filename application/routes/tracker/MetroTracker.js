@@ -168,10 +168,13 @@ router.get('/consist', async (req, res) => {
   let operationDays = await metroTrips.distinct('date', { consist })
   let servicesByDay = {}
 
-  await async.forEachSeries(operationDays, async date => {
+  let allDays = []
+
+  await async.forEach(operationDays, async date => {
     if (!date) return
 
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+    allDays.push(humanDate)
 
     servicesByDay[humanDate] = {
       services: (await metroTrips.distinct('runID', {
@@ -184,6 +187,7 @@ router.get('/consist', async (req, res) => {
   res.render('tracker/metro/by-consist', {
     trips,
     consist,
+    allDays,
     servicesByDay,
     date: utils.parseTime(date, 'YYYYMMDD')
   })

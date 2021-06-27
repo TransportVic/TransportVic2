@@ -20,6 +20,6 @@ block content
       a(href=trip.url) ##{trip.runID}: #{trip.departureTime} #{trip.origin} - #{trip.destination}: #{trip.consist.join('-')}
 
   h1.title Past deployments:
-  for pastDate in Object.keys(servicesByDay).reverse()
+  for pastDate in allDays.reverse()
     a(href=`${baseURL}/consist?consist=${consist}&date=${servicesByDay[pastDate].date}`).pastDeployment #{pastDate} - #{servicesByDay[pastDate].services.join(', ')}
     br

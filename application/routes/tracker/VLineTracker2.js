@@ -131,8 +131,11 @@ router.get('/consist', async (req, res) => {
   let operationDays = await vlineTrips.distinct('date', { consist })
   let servicesByDay = {}
 
-  await async.forEachSeries(operationDays, async date => {
+  let allDays = []
+
+  await async.forEach(operationDays, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+    allDays.push(humanDate)
 
     servicesByDay[humanDate] = {
       services: (await vlineTrips.distinct('runID', {
@@ -145,6 +148,7 @@ router.get('/consist', async (req, res) => {
   res.render('tracker/vline/by-consist', {
     trips,
     consist,
+    allDays,
     servicesByDay,
     date: utils.parseTime(date, 'YYYYMMDD'),
     baseURL: config.newVlineTracker

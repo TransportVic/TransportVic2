@@ -526,7 +526,7 @@ router.get('/operator-unknown', async (req, res) => {
 
   let allDays = []
 
-  await async.forEachSeries(operationDays, async date => {
+  await async.forEach(operationDays, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
     allDays.push(humanDate)
 
