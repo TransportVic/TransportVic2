@@ -128,8 +128,8 @@ database.connect(async () => {
 
   walk(path.join(__dirname, '../logs'), (err, results) => {
     results.forEach(filename => {
+      let logName = filename.replace(/.*?\/logs\//, '')
       try {
-        let logName = filename.replace(/.*?\/logs\//, '')
         console.log('Removed', trimLog(filename, false), 'lines from', logName)
       } catch (e) {
         console.log('Failed to clean up logfile', logName)
