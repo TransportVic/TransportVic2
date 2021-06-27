@@ -20,6 +20,6 @@ block content
       a(href=trip.url) ##{trip.runID}: #{trip.departureTime} #{trip.origin} - #{trip.destination}: #{trip.consist.join('-')}
 
   h1.title Past deployments:
-  for day in servicesByDay.reverse()
+  for day in servicesByDay
     a(href=`/metro/tracker/consist?consist=${consist}&date=${day.date}`).pastDeployment #{day.humanDate} - #{day.services.join(', ')}
     br

@@ -20,6 +20,6 @@ block content
       a(href=trip.url) #{trip.tram}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} (#{trip.shift})
 
   h1.title Past deployments:
-  for day in tramsByDay.reverse()
+  for day in tramsByDay
     a(href=`/tram/tracker/service?service=${service}&date=${day.date}`).pastDeployment #{day.humanDate} - #{day.trams.join(', ')}
     br
