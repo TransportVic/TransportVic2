@@ -223,9 +223,16 @@ router.get('/hcmt', async (req, res) => {
     let destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(trip.trueDestinationArrivalTime)
     let departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(trip.departureTime)
 
+    let tripDate = date
+
+    if (departureTimeMinutes < 180) {
+      departureTimeMinutes += 1440
+      tripDate = utils.getYYYYMMDD(utils.parseDate(tripDate).add(1, 'day'))
+    }
+
     if (destinationArrivalTimeMinutes < departureTimeMinutes) destinationArrivalTimeMinutes += 1440
 
-    trip.url = `/metro/run/${e(trip.trueOrigin.slice(0, -16))}/${trip.trueDepartureTime}/${e(trip.trueDestination.slice(0, -16))}/${trip.trueDestinationArrivalTime}/${date}`
+    trip.url = `/metro/run/${e(trip.trueOrigin.slice(0, -16))}/${trip.trueDepartureTime}/${e(trip.trueDestination.slice(0, -16))}/${trip.trueDestinationArrivalTime}/${tripDate}`
     trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
     trip.departureTimeMinutes = departureTimeMinutes
   })
