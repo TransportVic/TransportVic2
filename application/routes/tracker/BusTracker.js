@@ -351,7 +351,7 @@ router.get('/highlights', async (req, res) => {
       .sort({departureTime: 1, origin: 1}).toArray()
 
     let trips = (await async.map(matchedTrips, async trip => {
-      let {fleetNumber} = await getBusFromSmartrak(smartrakIDs, smartrakID) || {}
+      let {fleetNumber} = await getBusFromSmartrak(smartrakIDs, trip.smartrakID) || {}
 
       trip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + trip.smartrakID
 
@@ -404,7 +404,7 @@ router.get('/cross-depot', async (req, res) => {
   let crossDepotTrips = await findCrossDepotTrips(busTrips, smartrakIDs, date)
 
   let tripsToday = (await async.map(crossDepotTrips, async trip => {
-    let {fleetNumber} = await getBusFromSmartrak(smartrakIDs, smartrakID) || {}
+    let {fleetNumber} = await getBusFromSmartrak(smartrakIDs, trip.smartrakID) || {}
 
     trip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + trip.smartrakID
 
