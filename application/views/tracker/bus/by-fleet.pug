@@ -20,6 +20,6 @@ block content
       a(href=trip.url) #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
 
   h1.title Past deployments:
-  for pastDate in allDays.reverse()
-    a(href=`/bus/tracker/fleet?fleet=${bus ? fleet.slice(1) : smartrakID}&date=${servicesByDay[pastDate].date}`).pastDeployment #{pastDate} - #{servicesByDay[pastDate].services.join(', ')}
+  for day in servicesByDay.reverse()
+    a(href=`/bus/tracker/fleet?fleet=${bus ? fleet.slice(1) : smartrakID}&date=${day.date}`).pastDeployment #{day.humanDate} - #{day.services.join(', ')}
     br

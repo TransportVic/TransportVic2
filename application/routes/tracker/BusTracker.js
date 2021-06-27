@@ -137,28 +137,36 @@ router.get('/fleet', async (req, res) => {
 
   tripsToday = tripsToday.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
-  let operationDays = await busTrips.distinct('date', {
-    smartrakID
-  })
-  let servicesByDay = {}
+  let rawServicesByDay = await busTrips.aggregate([{
+    $match: {
+      smartrakID,
+    }
+  }, {
+    $group: {
+      _id: '$date',
+      services: {
+        $addToSet: '$routeNumber'
+      }
+    }
+  }, {
+    $sort: {
+      _id: -1
+    }
+  },]).toArray()
 
-  let allDays = []
-
-  await async.forEach(operationDays, async date => {
+  let servicesByDay = rawServicesByDay.map(data => {
+    let date = data._id
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
-    allDays.push(humanDate)
 
-    servicesByDay[humanDate] = {
-      services: await busTrips.distinct('routeNumber', {
-        smartrakID, date
-      }),
-      date
+    return {
+      date,
+      humanDate,
+      services: data.services
     }
   })
 
   res.render('tracker/bus/by-fleet', {
     tripsToday,
-    allDays,
     servicesByDay,
     bus,
     fleet,
@@ -213,46 +221,51 @@ router.get('/service', async (req, res) => {
     return trip
   })).map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
-  let operationDays = await busTrips.distinct('date', {
+  let rawBusesByDay = await busTrips.aggregate([{
+    $match: {
+      routeNumber: routeQuery,
+    }
+  }, {
+    $group: {
+      _id: '$date',
+      smartraks: {
+        $addToSet: '$smartrakID'
+      }
+    }
+  }, {
+    $sort: {
+      _id: -1
+    }
+  },]).toArray()
+
+  let allSmartraks = await busTrips.distinct('smartrakID', {
     routeNumber: routeQuery
   })
 
-  let busesByDay = {}
-  let smartrakIDCache = {}
+  let smartrakIDCache = await smartrakIDs.findDocuments({
+    smartrakID: {
+      $in: allSmartraks
+    }
+  }).toArray()
 
-  let allDays = []
-
-  await async.forEach(operationDays, async date => {
+  let busesByDay = rawBusesByDay.map(data => {
+    let date = data._id
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
-    allDays.push(humanDate)
 
-    let smartrakIDsByDate = await busTrips.distinct('smartrakID', {
+    let buses = data.smartraks.map(smartrak => {
+      let lookup = smartrakIDCache.find(bus => bus.smartrakID === smartrak)
+      return lookup ? '#' + lookup.fleetNumber : '@' + smartrak
+    }).sort((a, b) => a.replace(/[^\d]/g, '') - b.replace(/[^\d]/g, ''))
+
+    return {
       date,
-      routeNumber: routeQuery
-    })
-
-    let buses = (await async.map(smartrakIDsByDate, async smartrakID => {
-      let fleetNumber = smartrakIDCache[smartrakID]
-      if (!fleetNumber) {
-        let lookup = await getBusFromSmartrak(smartrakIDs, smartrakID)
-
-        if (lookup) {
-          fleetNumber = lookup.fleetNumber
-          smartrakIDCache[smartrakID] = fleetNumber
-        }
-      }
-      return fleetNumber ? '#' + fleetNumber : '@' + smartrakID
-    })).sort((a, b) => a.replace(/[^\d]/g, '') - b.replace(/[^\d]/g, ''))
-
-    busesByDay[humanDate] = {
-      buses,
-      date
+      humanDate,
+      buses
     }
   })
 
   res.render('tracker/bus/by-service', {
     tripsToday,
-    allDays,
     busesByDay,
     service,
     date: utils.parseTime(date, 'YYYYMMDD')

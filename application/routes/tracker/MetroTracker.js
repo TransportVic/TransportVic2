@@ -165,29 +165,37 @@ router.get('/consist', async (req, res) => {
     .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
     .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
 
-  let operationDays = await metroTrips.distinct('date', { consist })
-  let servicesByDay = {}
+  let rawServicesByDay = await metroTrips.aggregate([{
+    $match: {
+      consist,
+    }
+  }, {
+    $group: {
+      _id: '$date',
+      services: {
+        $addToSet: '$runID'
+      }
+    }
+  }, {
+    $sort: {
+      _id: -1
+    }
+  },]).toArray()
 
-  let allDays = []
-
-  await async.forEach(operationDays, async date => {
-    if (!date) return
-
+  let servicesByDay = rawServicesByDay.map(data => {
+    let date = data._id
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
-    allDays.push(humanDate)
 
-    servicesByDay[humanDate] = {
-      services: (await metroTrips.distinct('runID', {
-        consist, date
-      })).sort((a, b) => a - b),
-      date
+    return {
+      date,
+      humanDate,
+      services: data.services
     }
   })
 
   res.render('tracker/metro/by-consist', {
     trips,
     consist,
-    allDays,
     servicesByDay,
     date: utils.parseTime(date, 'YYYYMMDD')
   })
