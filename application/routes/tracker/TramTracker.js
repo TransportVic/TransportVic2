@@ -130,7 +130,7 @@ router.get('/fleet', async (req, res) => {
     $sort: {
       _id: -1
     }
-  },]).toArray()
+  }]).toArray()
 
   let servicesByDay = rawServicesByDay.map(data => {
     let date = data._id
@@ -139,7 +139,7 @@ router.get('/fleet', async (req, res) => {
     return {
       date,
       humanDate,
-      services: data.services
+      services: data.services.sort((a, b) => parseInt(a) - parseInt(b) || a.localeCompare(b))
     }
   })
 
@@ -204,7 +204,7 @@ router.get('/service', async (req, res) => {
     $sort: {
       _id: -1
     }
-  },]).toArray()
+  }]).toArray()
 
   let tramsByDay = rawTramsByDay.map(data => {
     let date = data._id
@@ -213,7 +213,10 @@ router.get('/service', async (req, res) => {
     return {
       date,
       humanDate,
-      trams: data.trams
+      trams: data.trams.sort((a, b) => a - b).map(tram => {
+        let model = tramFleet.getModel(tram)
+        return model + '.' + tram
+      })
     }
   })
 
@@ -272,7 +275,7 @@ router.get('/shift', async (req, res) => {
     $sort: {
       _id: -1
     }
-  },]).toArray()
+  }]).toArray()
 
   let tramsByDay = rawTramsByDay.map(data => {
     let date = data._id
@@ -281,7 +284,10 @@ router.get('/shift', async (req, res) => {
     return {
       date,
       humanDate,
-      trams: data.trams
+      trams: data.trams.sort((a, b) => a - b).map(tram => {
+        let model = tramFleet.getModel(tram)
+        return model + '.' + tram
+      })
     }
   })
 

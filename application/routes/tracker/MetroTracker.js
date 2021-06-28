@@ -180,7 +180,7 @@ router.get('/consist', async (req, res) => {
     $sort: {
       _id: -1
     }
-  },]).toArray()
+  }]).toArray()
 
   let servicesByDay = rawServicesByDay.map(data => {
     let date = data._id
@@ -189,7 +189,7 @@ router.get('/consist', async (req, res) => {
     return {
       date,
       humanDate,
-      services: data.services
+      services: data.services.sort((a, b) => a.localeCompare(b))
     }
   })
 
@@ -287,7 +287,6 @@ router.post('/hcmt/tdns', async (req, res) => {
       }
     })
   })
-
 
   res.header('Access-Control-Allow-Origin', '*')
   res.json({
