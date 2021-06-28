@@ -288,6 +288,8 @@ router.post('/hcmt/tdns', async (req, res) => {
     })
   })
 
+
+  res.header('Access-Control-Allow-Origin', '*')
   res.json({
     shifts: shiftTrips
   })
