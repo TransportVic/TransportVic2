@@ -243,6 +243,56 @@ router.get('/hcmt', async (req, res) => {
   })
 })
 
+router.post('/hcmt/tdns', async (req, res) => {
+  let {db} = res
+  let liveTimetables = db.getCollection('live timetables')
+  let today = utils.getYYYYMMDDNow()
+  let {date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let hcmtTrains = await liveTimetables.findDocuments({
+    operationDays: date,
+    mode: 'metro train',
+    routeGTFSID: '2-PKM',
+    h: true
+  }).sort({ departureTime: 1 }).toArray()
+
+  let shifts = {}
+  let runIDShifts = {}
+
+  hcmtTrains.forEach(trip => {
+    if (!runIDShifts[trip.runID]) {
+      shifts[trip.runID] = []
+      runIDShifts[trip.runID] = trip.runID
+    }
+
+    let shiftNumber = runIDShifts[trip.runID]
+    shifts[shiftNumber].push(trip.runID)
+
+    if (trip.forming !== '0') runIDShifts[trip.forming] = shiftNumber
+  })
+
+  let shiftTrips = Object.values(shifts).map(shiftTrips => {
+    return shiftTrips.map((runID, i) => {
+      let trip = hcmtTrains.find(tripData => tripData.runID === runID)
+      return {
+        runID: trip.runID,
+        departureTime: trip.trueDepartureTime,
+        origin: trip.trueOrigin.slice(0, -16),
+        destinationArrivalTime: trip.trueDestinationArrivalTime,
+        destination: trip.trueDestination.slice(0, -16)
+      }
+    })
+  })
+
+  res.json({
+    shifts: shiftTrips
+  })
+})
+
 router.get('/bot', async (req, res) => {
   let {db} = res
   let metroTrips = db.getCollection('metro trips')

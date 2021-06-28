@@ -353,5 +353,7 @@ module.exports = [
   'donnybrook/eucalyptus-parade-olivine-boulevard',
   'donnybrook/donnybrook-railway-station',
   'northcote/westgarth-railway-station',
-  'st-kilda/luna-park-the-esplanade'
+  'st-kilda/luna-park-the-esplanade',
+  'tarneit/riverdale-village-shopping-centre-davis-road',
+  'williams-landing/williams-landing-boulevard-palmers-road'
 ]
