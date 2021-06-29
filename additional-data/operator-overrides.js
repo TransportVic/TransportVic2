@@ -52,6 +52,7 @@ module.exports = {
   "4-5E3": ["Broadmeadows Bus Service"], // 533
   "4-5E7": ["Broadmeadows Bus Service"], // 537
   "4-5A4": ["Broadmeadows Bus Service"], // 544
+  "4-5A6": ["Dysons"], // 546
   "4-552": ["Dysons"],
   "4-556": ["Dysons"],
   "4-570": ["Dysons"],

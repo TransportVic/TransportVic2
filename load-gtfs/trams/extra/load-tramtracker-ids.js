@@ -53,36 +53,40 @@ database.connect({}, async () => {
     if (service === '35') return
 
     await async.forEachSeries([0, 1], async direction => {
-      let data = await utils.request(`https://yarratrams.com.au/umbraco/surface/data/routestopsdata/?id=${service}&dir=${direction}`, {
-        timeout: 10000
-      })
-      let $ = cheerio.load(data)
-
-      let stops = Array.from($('table.route-view tbody > tr:not(.suburb):not(.suburb-section-first):not(.suburb-section):not([style])'))
-      stops.forEach(stop => {
-        let tramTrackerID = $('.stopid', stop).text()
-        let stopNumber = $('.stopno', stop).text().toUpperCase()
-        let tramTrackerName = utils.expandStopName(utils.adjustStopName($('.location', stop).text().trim()))
-        let url = $('a', stop).attr('href')
-
-        let stopID
-        if (url) stopID = url.match(/stopId=(\d+)/)[1]
-        if (!tramTrackerID) return
-        if (ptvOverrides[tramTrackerID]) stopID = ptvOverrides[tramTrackerID]
-        if (!stopID) return
-
-        tramTrackerIDs[tramTrackerID] = stopID
-        stopNames[tramTrackerID] = tramTrackerName
-        stopNumbers[tramTrackerID] = stopNumber
-
-        if (!stopDirections[tramTrackerID]) stopDirections[tramTrackerID] = []
-        stopDirections[tramTrackerID].push({
-          service,
-          gtfsDirection: directions[`${service}.${direction}`]
+      try {
+        let data = await utils.request(`https://yarratrams.com.au/umbraco/surface/data/routestopsdata/?id=${service}&dir=${direction}`, {
+          timeout: 10000
         })
-      })
+        let $ = cheerio.load(data)
 
-      await sleep()
+        let stops = Array.from($('table.route-view tbody > tr:not(.suburb):not(.suburb-section-first):not(.suburb-section):not([style])'))
+        stops.forEach(stop => {
+          let tramTrackerID = $('.stopid', stop).text()
+          let stopNumber = $('.stopno', stop).text().toUpperCase()
+          let tramTrackerName = utils.expandStopName(utils.adjustStopName($('.location', stop).text().trim()))
+          let url = $('a', stop).attr('href')
+
+          let stopID
+          if (url) stopID = url.match(/stopId=(\d+)/)[1]
+          if (!tramTrackerID) return
+          if (ptvOverrides[tramTrackerID]) stopID = ptvOverrides[tramTrackerID]
+          if (!stopID) return
+
+          tramTrackerIDs[tramTrackerID] = stopID
+          stopNames[tramTrackerID] = tramTrackerName
+          stopNumbers[tramTrackerID] = stopNumber
+
+          if (!stopDirections[tramTrackerID]) stopDirections[tramTrackerID] = []
+          stopDirections[tramTrackerID].push({
+            service,
+            gtfsDirection: directions[`${service}.${direction}`]
+          })
+        })
+
+        await sleep()
+      } catch (e) {
+        console.log('Failed to load stops for Route', service, 'D', direction)
+      }
     })
   })
 
@@ -149,7 +153,7 @@ database.connect({}, async () => {
     }
 
     if (dbStop) delete dbStop.textQuery
-    console.log('Failed to map stop', stopID, tramTrackerID, stopNames[tramTrackerID], dbStop, ptvStop)
+    console.log('Failed to map stop ID', stopID, '- TT', tramTrackerID, stopNames[tramTrackerID], dbStop, ptvStop)
   })
 
   await updateStats('tramtracker-ids', count)
