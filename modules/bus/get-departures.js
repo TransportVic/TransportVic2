@@ -201,15 +201,17 @@ async function getDeparturesFromPTV(stop, db) {
   let liveTrips = mappedDepartures.filter(departure => departure.isLiveTrip)
   let scheduledTrips = mappedDepartures.filter(departure => !departure.isLiveTrip)
 
-  let tripIDs = []
-  let filteredLiveDepartures = liveTrips.filter(d => {
-    let tripID = d.trip.origin + d.trip.departureTime + d.trip.destination + d.trip.destinationArrivalTime
+  let filteredLiveDepartures = liveTrips
 
-    if (!tripIDs.includes(tripID)) {
-      tripIDs.push(tripID)
-      return true
-    } else return false
-  })
+  // let tripIDs = []
+  // let filteredLiveDepartures = liveTrips.filter(d => {
+  //   let tripID = d.trip.origin + d.trip.departureTime + d.trip.destination + d.trip.destinationArrivalTime
+  //
+  //   if (!tripIDs.includes(tripID)) {
+  //     tripIDs.push(tripID)
+  //     return true
+  //   } else return false
+  // })
 
   let filteredDepartures = filteredLiveDepartures.concat(scheduledTrips.filter(d => {
     let tripID = d.trip.origin + d.trip.departureTime + d.trip.destination + d.trip.destinationArrivalTime
