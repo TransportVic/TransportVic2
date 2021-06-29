@@ -244,6 +244,7 @@ async function getDepartures(stop, db) {
 
         let now = utils.now()
         let extraScheduledTrips = scheduledDepartures.filter(d => !tripIDsSeen.includes(i(d.trip)) && d.actualDepartureTime.diff(now, 'seconds') > -75)
+        extraScheduledTrips = extraScheduledTrips.filter(d => d.trip.routeGTFSID !== '4-601')
 
         departures = ptvDepartures.concat(extraScheduledTrips)
 
