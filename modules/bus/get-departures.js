@@ -237,6 +237,7 @@ async function getDepartures(stop, db) {
       let departures
       try {
         let ptvDepartures = await getDeparturesFromPTV(stop, db)
+        /*
         function i (trip) { return `${trip.routeGTFSID}${trip.origin}${trip.departureTime}` }
         let tripIDsSeen = ptvDepartures.map(d => i(d.trip))
 
@@ -244,6 +245,8 @@ async function getDepartures(stop, db) {
         let extraScheduledTrips = scheduledDepartures.filter(d => !tripIDsSeen.includes(i(d.trip)) && d.actualDepartureTime.diff(now, 'seconds') > -75)
 
         departures = ptvDepartures.concat(extraScheduledTrips)
+        */
+        departures = ptvDepartures
       } catch (e) {
         global.loggers.general.err('Failed to get bus timetables', e)
         departures = scheduledDepartures
