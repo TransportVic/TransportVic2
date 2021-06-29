@@ -48,10 +48,13 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
   let stops = db.getCollection('stops')
 
   if (destination === 'Abbotsford St Intg') destination = 'Royal Childrens Hospital'
-  let selectionMethod = destination.includes('&')
-  let baseDestination = destination.replace(/&.*/, '').trim()
+  let coreDestination = utils.expandStopName(utils.adjustStopName(destination.replace(/ - .*/, '').trim()))
+  if (coreDestination === 'St. Kilda Road') coreDestination = 'Flinders Street Railway Station'
 
-  if (coreRoute === '70' && destination === 'Wattle Park') return trip
+  let selectionMethod = coreDestination.includes('&')
+  let baseDestination = coreDestination.replace(/&.*/, '').trim()
+
+  if (coreRoute === '70' && coreDestination === 'Wattle Park') return trip
 
   await async.forEachOf(trip.stopTimings, async (stop, i) => {
     if (!cutoffStop) {
@@ -60,7 +63,8 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
 
       if (tramTrackerNames) {
         let matched = selectionMethod ? tramTrackerNames.some(name => name.includes(baseDestination))
-          : tramTrackerNames.find(name => distance(name, destination) <= 2)
+          : tramTrackerNames.find(name => distance(name, coreDestination) <= 2)
+
         if (matched) {
           cutoffStop = stop.stopGTFSID
         }
