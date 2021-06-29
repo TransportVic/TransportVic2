@@ -192,7 +192,8 @@ async function getDeparturesFromPTV(stop, db) {
         codedOperator: utils.encodeName(operator.replace(/ \(.+/, '')),
         loopDirection,
         routeDetails: trip.routeDetails,
-        isLiveTrip: busDeparture.run_ref.includes('-')
+        isLiveTrip: busDeparture.run_ref.includes('-'),
+        runID: busDeparture.run_ref
       })
     })
   })
@@ -246,7 +247,14 @@ async function getDepartures(stop, db) {
 
         departures = ptvDepartures.concat(extraScheduledTrips)
         */
-        departures = ptvDepartures
+
+        if (stop.stopName === 'Monash University Bus Loop') {
+          departures = ptvDepartures.filter(departure => { // Filter off scheduled departures, but only do it once
+            if (departure.trip.routeGTFSID === '4-601') {
+              return parseInt(departure.runID.slice(departure.runID.lastIndexOf('-') + 1)) < 200
+            } else return true
+          })
+        } else departures = ptvDepartures
       } catch (e) {
         global.loggers.general.err('Failed to get bus timetables', e)
         departures = scheduledDepartures
