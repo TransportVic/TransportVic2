@@ -239,7 +239,6 @@ module.exports = [
   'footscray/geelong-road-barkly-street',
   'footscray/footscray-hospital-gordon-street',
   'footscray/leeds-street-paisley-street',
-  'altona-meadows/central-square-shopping-centre',
   'maidstone/churchill-avenue-ballarat-road',
   'diamond-creek/diamond-creek-railway-station',
   'wattle-glen/wattle-glen-railway-station',
@@ -355,5 +354,9 @@ module.exports = [
   'northcote/westgarth-railway-station',
   'st-kilda/luna-park-the-esplanade',
   'tarneit/riverdale-village-shopping-centre-davis-road',
-  'williams-landing/williams-landing-boulevard-palmers-road'
+  'williams-landing/williams-landing-boulevard-palmers-road',
+  'box-hill/watts-street-whitehorse-road',
+  'mitcham/harrison-street-mitcham-road',
+  'altona/noordenne-avenue-millers-road',
+  'craigieburn/highlands-shopping-centre'
 ]
