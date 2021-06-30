@@ -42,7 +42,9 @@ async function makeRequest(url, maxRetries=2, timeout=1900) {
       return data
     })
   } catch (e) {
-    console.log(e, e.message)
+    if (e.message && e.message.toLowerCase().includes('network timeout')) {
+      past50ResponseTimes = [...past50ResponseTimes.slice(-49), timeout * maxRetries]
+    }
     throw e
   }
 }

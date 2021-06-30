@@ -32,13 +32,13 @@ let routes = {
 
 async function getTimetable(id) {
   return await utils.getData('metro-op-timetable', id, async () => {
-    return JSON.parse(await utils.request(urls.op.format(id), { timeout: 15000 }))
+    return JSON.parse(await utils.request(urls.op.format(id), { timeout: 17000 }))
   }, 1000 * 60 * 12)
 }
 
 async function getAllRunIDs() {
   return await utils.getData('metro-tdn', 'all', async () => {
-    return JSON.parse(await utils.request(urls.runIDs), { timeout: 15000 })
+    return JSON.parse(await utils.request(urls.runIDs), { timeout: 17000 })
   }, 1000 * 60 * 15)
 }
 

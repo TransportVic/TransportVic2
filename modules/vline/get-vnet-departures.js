@@ -24,7 +24,7 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
   }
 
   let url = baseURL.format(stationName, direction, time)
-  const body = (await utils.request(url, { timeout: long ? 10000 : 3000 })).replace(/a:/g, '')
+  const body = (await utils.request(url, { timeout: long ? 15000 : 3000 })).replace(/a:/g, '')
 
   const $ = cheerio.load(body)
   const allServices = Array.from($('PlatformService'))

@@ -14,11 +14,11 @@ let liveTimetables, timetables
 
 async function getTimetable() {
   let pakenham = await utils.getData('metro-op-timetable', '92', async () => {
-    return JSON.parse(await utils.request(urls.op.format('92'), { timeout: 15000 }))
+    return JSON.parse(await utils.request(urls.op.format('92'), { timeout: 17000 }))
   }, 1000 * 60 * 12)
 
   let cranbourne = await utils.getData('metro-op-timetable', '86', async () => {
-    return JSON.parse(await utils.request(urls.op.format('86'), { timeout: 15000 }))
+    return JSON.parse(await utils.request(urls.op.format('86'), { timeout: 17000 }))
   }, 1000 * 60 * 12)
 
   return pakenham.concat(cranbourne)
