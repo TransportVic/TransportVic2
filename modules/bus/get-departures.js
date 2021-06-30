@@ -235,12 +235,21 @@ async function getDepartures(stop, db) {
 
   try {
     return await utils.getData('bus-departures', cacheKey, async () => {
-      let scheduledDepartures = await getScheduledDepartures(stop, db, false)
+      let scheduledDepartures = []
+      let ptvDepartures = []
+      let departures = []
 
-      let departures
+      await Promise.all([new Promise(async resolve => {
+        try {
+          scheduledDepartures = await getScheduledDepartures(stop, db, false)
+        } catch (e) { global.loggers.general.err('Failed to get schedule departures', e) } finally { resolve() }
+      }), new Promise(async resolve => {
+        try {
+          ptvDepartures = await getDeparturesFromPTV(stop, db)
+        } catch (e) { global.loggers.general.err('Failed to get PTV departures', e) } finally { resolve() }
+      })])
+
       try {
-        let ptvDepartures = await getDeparturesFromPTV(stop, db)
-
         function i (trip) { return `${trip.routeGTFSID}${trip.origin}${trip.departureTime}` }
         let tripIDsSeen = ptvDepartures.map(d => i(d.trip))
 
