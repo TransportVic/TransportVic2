@@ -203,7 +203,7 @@ async function getDeparturesFromPTV(stop, db) {
 
   let filteredLiveDepartures = liveTrips
 
-  // let tripIDs = []
+  let tripIDs = []
   // let filteredLiveDepartures = liveTrips.filter(d => {
   //   let tripID = d.trip.origin + d.trip.departureTime + d.trip.destination + d.trip.destinationArrivalTime
   //
