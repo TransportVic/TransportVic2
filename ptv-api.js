@@ -42,6 +42,7 @@ async function makeRequest(url, maxRetries=2, timeout=1900) {
       return data
     })
   } catch (e) {
+    console.log(e, e.message)
     throw e
   }
 }
