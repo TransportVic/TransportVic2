@@ -473,4 +473,9 @@ module.exports = {
   48833: "Bay 2",
   48834: "Bay 3",
   20912: "Bay 4",
+
+  // Caroline Springs
+  51389: "Bay A",
+  27854: "Bay B",
+  27538: "Bay C"
 }
