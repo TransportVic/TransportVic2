@@ -294,6 +294,41 @@ router.post('/hcmt/tdns', async (req, res) => {
   })
 })
 
+router.post('/hcmt/tdn/:runID', async (req, res) => {
+  let {db} = res
+  let liveTimetables = db.getCollection('live timetables')
+  let today = utils.getYYYYMMDDNow()
+  let {date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  let { runID } = req.params
+
+  let trip = await liveTimetables.findDocument({
+    operationDays: date,
+    mode: 'metro train',
+    routeGTFSID: '2-PKM',
+    runID,
+    h: true
+  })
+
+  res.header('Access-Control-Allow-Origin', '*')
+
+  if (trip) {
+    res.json({
+      cancelled: trip.cancelled || false,
+      stops: trip.stopTimings.map(stop => {
+        return {
+          stopName: stop.stopName.slice(0, -16),
+          scheduled: stop.scheduledDepartureTime,
+          estimated: stop.estimatedDepartureTime,
+          platform: stop.platform
+        }
+      })
+    })
+  } else res.json(null)
+})
+
 router.get('/bot', async (req, res) => {
   let {db} = res
   let metroTrips = db.getCollection('metro trips')
