@@ -268,6 +268,16 @@ async function getDepartures(stop, db) {
             } else return true
           })
         }
+
+        if (stop.stopName === 'Huntingdale Railway Station') {
+          departures = departures.filter(departure => { // Filter off scheduled departures, but only do it once
+            if (departure.trip.routeGTFSID === '4-601') {
+              if (!departure.runID) return false
+
+              return parseInt(departure.runID.slice(departure.runID.lastIndexOf('-') + 1)) < 100
+            } else return true
+          })
+        }
       } catch (e) {
         global.loggers.general.err('Failed to get bus timetables', e)
         departures = scheduledDepartures
