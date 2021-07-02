@@ -117,6 +117,15 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
 
   await appendLastStop(existingTrip)
 
+  if (trip.stopsAvailable.some(stop => stop.isAdditional)) {
+    let removedStops = trip.stopsAvailable.filter(stop => !stop.isAdditional).map(stop => stop.stopName)
+    existingTrip.stopTimings.forEach(stop => {
+      if (removedStops.includes(stop.stopName)) {
+        stop.cancelled = true
+      }
+    })
+  }
+
   let lastStop = existingTrip.stopTimings[existingTrip.stopTimings.length - 1]
 
   await liveTimetables.updateDocument({
@@ -236,7 +245,8 @@ function parseRawData(stop, startOfDay) {
     scheduledDepartureTime,
     scheduledDepartureMinutes: Math.round(parseInt(stop.time_seconds) / 60),
     platform: stop.platform,
-    cancelled: stop.status === 'C'
+    cancelled: stop.status === 'C',
+    isAdditional: stop.status === 'A'
   }
 }
 

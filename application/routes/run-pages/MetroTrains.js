@@ -302,7 +302,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.pretyTimeToDeparture = ''
 
-    if (trip.cancelled) {
+    if (trip.cancelled || stop.cancelled) {
       stop.headwayDevianceClass = 'cancelled'
 
       return stop
