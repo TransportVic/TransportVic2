@@ -235,52 +235,13 @@ async function getDepartures(stop, db) {
 
   try {
     return await utils.getData('bus-departures', cacheKey, async () => {
-      let scheduledDepartures = []
-      let ptvDepartures = []
       let departures = []
 
-      await Promise.all([new Promise(async resolve => {
-        try {
-          scheduledDepartures = await getScheduledDepartures(stop, db, false)
-        } catch (e) { global.loggers.general.err('Failed to get schedule departures', e) } finally { resolve() }
-      }), new Promise(async resolve => {
-        try {
-          ptvDepartures = await getDeparturesFromPTV(stop, db)
-        } catch (e) { global.loggers.general.err('Failed to get PTV departures', e) } finally { resolve() }
-      })])
-
       try {
-        function i (trip) { return `${trip.routeGTFSID}${trip.origin}${trip.departureTime}` }
-        let tripIDsSeen = ptvDepartures.map(d => i(d.trip))
-
-        let now = utils.now()
-        let extraScheduledTrips = scheduledDepartures.filter(d => !tripIDsSeen.includes(i(d.trip)) && d.actualDepartureTime.diff(now, 'seconds') > -75)
-        extraScheduledTrips = extraScheduledTrips.filter(d => d.trip.routeGTFSID !== '4-601')
-
-        departures = ptvDepartures.concat(extraScheduledTrips)
-
-        if (stop.stopName === 'Monash University Bus Loop') {
-          departures = departures.filter(departure => { // Filter off scheduled departures, but only do it once
-            if (departure.trip.routeGTFSID === '4-601') {
-              if (!departure.runID) return false
-
-              return parseInt(departure.runID.slice(departure.runID.lastIndexOf('-') + 1)) < 200
-            } else return true
-          })
-        }
-
-        if (stop.stopName === 'Huntingdale Railway Station') {
-          departures = departures.filter(departure => { // Filter off scheduled departures, but only do it once
-            if (departure.trip.routeGTFSID === '4-601') {
-              if (!departure.runID) return false
-
-              return parseInt(departure.runID.slice(departure.runID.lastIndexOf('-') + 1)) < 100
-            } else return true
-          })
-        }
+        departures = await getDeparturesFromPTV(stop, db)
       } catch (e) {
         global.loggers.general.err('Failed to get bus timetables', e)
-        departures = scheduledDepartures
+        departures = await getScheduledDepartures(stop, db, false)
       }
 
       departures = departures.sort((a, b) => {
