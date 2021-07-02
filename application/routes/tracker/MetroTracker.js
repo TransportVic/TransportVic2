@@ -315,8 +315,18 @@ router.post('/hcmt/tdn/:runID', async (req, res) => {
   res.header('Access-Control-Allow-Origin', '*')
 
   if (trip) {
+    let formedBy = await liveTimetables.findDocument({
+      operationDays: date,
+      mode: 'metro train',
+      routeGTFSID: '2-PKM',
+      forming: runID,
+      h: true,
+    })
+
     res.json({
       cancelled: trip.cancelled || false,
+      formedBy: formedBy ? formedBy.runID : null,
+      forming: trip.forming,
       stops: trip.stopTimings.map(stop => {
         return {
           stopName: stop.stopName.slice(0, -16),
