@@ -283,7 +283,8 @@ router.post('/hcmt/tdns', async (req, res) => {
         departureTime: trip.trueDepartureTime,
         origin: trip.trueOrigin.slice(0, -16),
         destinationArrivalTime: trip.trueDestinationArrivalTime,
-        destination: trip.trueDestination.slice(0, -16)
+        destination: trip.trueDestination.slice(0, -16),
+        cancelled: trip.cancelled
       }
     })
   })
