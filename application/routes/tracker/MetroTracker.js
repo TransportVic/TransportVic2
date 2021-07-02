@@ -258,7 +258,7 @@ router.post('/hcmt/tdns', async (req, res) => {
     mode: 'metro train',
     routeGTFSID: '2-PKM',
     h: true
-  }).sort({ departureTime: 1 }).toArray()
+  }).sort({ 'stopTimings.0.departureTimeMinutes': 1 }).toArray()
 
   let shifts = {}
   let runIDShifts = {}

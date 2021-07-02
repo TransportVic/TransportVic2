@@ -14,7 +14,7 @@ async function findHCMT(today, date) {
     mode: 'metro train',
     routeGTFSID: '2-PKM',
     h: true
-  }).sort({ departureTime: 1 }).toArray()
+  }).sort({ 'stopTimings.0.departureTimeMinutes': 1 }).toArray()
 
   let shifts = {}
   let runIDShifts = {}
@@ -112,7 +112,7 @@ async function updateData() {
   let date = utils.now().format('dddd, MMMM Do YYYY')
 
   try { await findHCMT(today, date) } catch (e) { await discordIntegration('hcmtNotify', 'Failed to send HCMT Trips on ' + date) }
-  try { await findVLine(today, date) } catch (e) { await discordIntegration('vlineNotify', 'Failed to send V/Line Trips on ' + date) }
+  // try { await findVLine(today, date) } catch (e) { await discordIntegration('vlineNotify', 'Failed to send V/Line Trips on ' + date) }
 }
 
 database.connect(async () => {
