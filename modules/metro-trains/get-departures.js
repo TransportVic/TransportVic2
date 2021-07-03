@@ -969,7 +969,7 @@ async function saveRailBuses(buses, db) {
 function parsePTVDepartures(ptvResponse, stationName) {
   let {departures, runs, routes, directions} = ptvResponse
   let now = utils.now()
-  departures=departures.filter(d=>d.route_id!==1482)
+
   return departures.map(departure => {
     let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
     let estimatedDepartureTime = departure.estimated_departure_utc ? utils.parseTime(departure.estimated_departure_utc) : null
