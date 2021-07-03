@@ -176,7 +176,7 @@ async function getNotifyData(db) {
   let allTrainAlterations = disruptions.filter(disruption => disruption.runID)
   let stonyPointReplacements = allTrainAlterations.filter(disruption => {
     let text = disruption.text
-    return disruption.routeName === 'Stony Point' && (text.includes('replace') || text.includes('coach'))
+    return disruption.routeName[0] === 'Stony Point' && (text.includes('replace') || text.includes('coach') || text.includes('bus'))
   }).map(disruption => disruption.runID)
 
   let loopSkipping = allTrainAlterations.filter(disruption => {
@@ -187,8 +187,8 @@ async function getNotifyData(db) {
 
   let trainAlterations = allTrainAlterations.filter(disruption => {
     let text = disruption.text
-    return (!text.includes('cancel') && !loopSkipping.includes(disruption))
-      || text.includes('originate') || text.includes('terminate') || text.includes('express')
+    return (!text.includes('cancel') && !loopSkipping.includes(disruption) && !stonyPointReplacements.includes(disruption.runID))
+      || text.includes('originate') || text.includes('terminate') || text.includes('express') || text.includes('not stop')
   })
 
   let cityLoopSkipping = loopSkipping.filter(isCityLoop).map(disruption => disruption.runID)
@@ -235,6 +235,9 @@ function adjustSuspension(suspension, trip, currentStation) {
 
   if (startIndex !== -1 && endIndex === -1) endIndex = tripStops.length - 1
   if (startIndex === -1 && endIndex !== -1) startIndex = 0
+  if (startIndex === -1 && endIndex === -1) {
+    return null
+  }
 
   if (currentIndex < startIndex) { // we're approaching disruption
     disruptionStatus = 'before'
@@ -257,63 +260,65 @@ async function applySuspension(train, notifyData, metroPlatform, db) {
     let rawSuspension = notifyData.suspensions[train.routeName][0]
     let suspension = adjustSuspension(rawSuspension, train.trip, metroPlatform.fullStopName)
 
-    let trip = train.trip
-    let tripStops = trip.stopTimings.map(stop => stop.stopName)
-    let isDown = train.direction === 'Down'
+    if (suspension) {
+      let trip = train.trip
+      let tripStops = trip.stopTimings.map(stop => stop.stopName)
+      let isDown = train.direction === 'Down'
 
-    train.suspension = suspension
-    trip.suspension = suspension
+      train.suspension = suspension
+      trip.suspension = suspension
 
-    if (suspension.disruptionStatus === 'before') { // Cut destination
-      let startIndex = tripStops.indexOf(suspension.startStation)
-      if (startIndex == -1) startIndex = tripStops.length
+      if (suspension.disruptionStatus === 'before') { // Cut destination
+        let startIndex = tripStops.indexOf(suspension.startStation)
+        if (startIndex == -1) startIndex = tripStops.length
 
-      trip.stopTimings = trip.stopTimings.slice(0, startIndex + 1)
-      trip.runID = train.runID + (isDown ? 'U' : 'D')
-    } else if (suspension.disruptionStatus === 'current') { // Rail bus
-      let startIndex = tripStops.indexOf(suspension.startStation)
-      let endIndex = tripStops.indexOf(suspension.endStation)
+        trip.stopTimings = trip.stopTimings.slice(0, startIndex + 1)
+        trip.runID = train.runID + (isDown ? 'U' : 'D')
+      } else if (suspension.disruptionStatus === 'current') { // Rail bus
+        let startIndex = tripStops.indexOf(suspension.startStation)
+        let endIndex = tripStops.indexOf(suspension.endStation)
 
-      if (startIndex == -1) startIndex = 0
-      if (endIndex == -1) endIndex = tripStops.length
+        if (startIndex == -1) startIndex = 0
+        if (endIndex == -1) endIndex = tripStops.length
 
-      trip.stopTimings = trip.stopTimings.slice(startIndex, endIndex + 1)
-      trip.cancelled = false
+        trip.stopTimings = trip.stopTimings.slice(startIndex, endIndex + 1)
+        trip.cancelled = false
 
-      train.isRailReplacementBus = true
-      train.cancelled = false
+        train.isRailReplacementBus = true
+        train.cancelled = false
 
-      train.estimatedDepartureTime = null
-      train.actualDepartureTime = train.scheduledDepartureTime
+        train.estimatedDepartureTime = null
+        train.actualDepartureTime = train.scheduledDepartureTime
 
-      trip.runID = train.runID + 'B'
-    } else if (suspension.disruptionStatus === 'passed') { // Cut origin
-      let endIndex = tripStops.indexOf(suspension.endStation)
-      if (endIndex == -1) endIndex = 0
+        trip.runID = train.runID + 'B'
+      } else if (suspension.disruptionStatus === 'passed') { // Cut origin
+        let endIndex = tripStops.indexOf(suspension.endStation)
+        if (endIndex == -1) endIndex = 0
 
-      trip.stopTimings = trip.stopTimings.slice(endIndex)
+        trip.stopTimings = trip.stopTimings.slice(endIndex)
 
-      trip.runID = train.runID + (isDown ? 'D' : 'U')
+        trip.runID = train.runID + (isDown ? 'D' : 'U')
+      }
+
+      let firstStop = trip.stopTimings[0]
+      let lastStop = trip.stopTimings.slice(-1)[0]
+
+      firstStop.arrivalTime = null
+      firstStop.arrivalTimeMinutes = null
+      lastStop.departureTime = null
+      lastStop.departureTimeMinutes = null
+
+      trip.originalDestination = trip.destination
+
+      trip.origin = firstStop.stopName
+      trip.destination = lastStop.stopName
+      trip.departureTime = firstStop.departureTime
+      trip.destinationArrivalTime = lastStop.arrivalTime
+
+      fixTripDestination(trip)
+
+      train.destination = trip.trueDestination.slice(0, -16)
     }
-
-    let firstStop = trip.stopTimings[0]
-    let lastStop = trip.stopTimings.slice(-1)[0]
-
-    firstStop.arrivalTime = null
-    firstStop.arrivalTimeMinutes = null
-    lastStop.departureTime = null
-    lastStop.departureTimeMinutes = null
-
-    trip.originalDestination = trip.destination
-
-    trip.origin = firstStop.stopName
-    trip.destination = lastStop.stopName
-    trip.departureTime = firstStop.departureTime
-    trip.destinationArrivalTime = lastStop.arrivalTime
-
-    fixTripDestination(trip)
-
-    train.destination = trip.trueDestination.slice(0, -16)
   } else if (train.routeName === 'Stony Point' && notifyData.stonyPointReplacements.includes(train.runID)) {
     train.isRailReplacementBus = true
     train.trip.runID = train.runID + 'B'
@@ -519,7 +524,8 @@ function returnBusDeparture(bus, trip) {
     viaAltonaLoop: null,
     isRailReplacementBus: true,
     suspension: null,
-    isSkippingLoop: null
+    isSkippingLoop: null,
+    location: null
   }
 }
 
@@ -683,7 +689,8 @@ async function mapTrain(train, metroPlatform, notifyData, db) {
     viaAltonaLoop,
     isRailReplacementBus: false,
     suspension: null,
-    isSkippingLoop: null
+    isSkippingLoop: null,
+    location: train.location
   }
 }
 
@@ -711,7 +718,15 @@ function determineLoopRunning(runID, routeName, direction) {
 function appendDepartureDay(departure, stopGTFSID) {
   let { trip } = departure
   let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
-  if (!stopData) return global.loggers.general.warn('No departure day', departure, stopGTFSID)
+  if (!stopData) {
+    global.loggers.general.warn('No departure day', stopGTFSID, departure)
+    if (departure.trip.runID) { // Live trip
+      departure.departureDay = departure.trip.operationDays
+      departure.trueDepartureDay = departure.departureDay
+    }
+
+    return
+  }
 
   let firstStop = trip.stopTimings.find(tripStop => tripStop.stopName === trip.trueOrigin)
 
@@ -755,6 +770,8 @@ async function saveConsists(departures, db) {
   })
 
   await async.forEach(deduped, async departure => {
+    if (!departure.departureDay) return global.loggers.error.err('No date on trip', departure)
+
     let query = {
       date: departure.departureDay,
       runID: departure.runID
@@ -776,16 +793,20 @@ async function saveConsists(departures, db) {
         if (existingTrip.consist.length === 6) { // Trip already exists with a filled consist, we only override if a different set matches
           if (!existingTrip.consist.includes(tripData.consist[0])) {
             existingTrip = null
-          } // Otherwise do not override a 6 car train with a 3 car
+          } else {
+            // Otherwise do not override a 6 car train with a 3 car
+            // However update the departure fleet for location purposes
+
+            departure.fleetNumber = existingTrip.consist
+          }
         } else if (existingTrip.consist.length === 3 && !existingTrip.consist.includes(tripData.consist[0])) { // We might have matched half a train and now have the other half, sanity check
           let sanityCheckTrip = await metroTrips.findDocument({
             date: departure.departureDay,
-            consist: {
-              $and: [ // Match both the one already existing and the one given
-                tripData.consist[0],
-                existingTrip.consist[0]
-              ]
-            }
+            $and: [{ // Match both the one already existing and the one given
+              consist: tripData.consist[0]
+            }, {
+              consist: existingTrip.consist[0]
+            }]
           })
 
           if (sanityCheckTrip) {
@@ -797,10 +818,62 @@ async function saveConsists(departures, db) {
     }
 
     if (!existingTrip) {
+      departure.fleetNumber = tripData.consist
       await metroTrips.replaceDocument(query, tripData, {
         upsert: true
       })
     }
+  })
+}
+
+async function saveLocations(departures, db) {
+  let metroLocations = db.getCollection('metro locations')
+  let consists = {}
+
+  departures.forEach(departure => {
+    if (departure.fleetNumber) {
+      let fleet = departure.fleetNumber.join('-')
+      if (!consists[fleet]) {
+        consists[fleet] = departure
+      } else {
+        let existingExpiry = consists[fleet].location.expiry
+        let currentExpiry = departure.location.expiry
+
+        if (currentExpiry > existingExpiry) consists[fleet] = departure
+      }
+    }
+  })
+
+  let deduped = Object.values(consists).reduce((a, e) => a.concat(e), [])
+
+  await async.forEach(deduped, async departure => {
+    let parts = []
+    if (departure.fleetNumber.length === 6) {
+      parts = [departure.fleetNumber.slice(0, 3), departure.fleetNumber.slice(3, 6)]
+    } else {
+      parts = [departure.fleetNumber]
+    }
+
+    await async.forEach(parts, async train => {
+      let locationData = {
+        consist: train,
+        timestamp: +new Date(),
+        location: {
+          type: "Point",
+          coordinates: [
+            departure.location.longitude,
+            departure.location.latitude
+          ]
+        },
+        bearing: departure.location.bearing
+      }
+
+      await metroLocations.replaceDocument({
+        consist: train[0]
+      }, locationData, {
+        upsert: 1
+      })
+    })
   })
 }
 
@@ -896,6 +969,8 @@ function parsePTVDepartures(ptvResponse, stationName) {
     let estimatedDepartureTime = departure.estimated_departure_utc ? utils.parseTime(departure.estimated_departure_utc) : null
 
     if (scheduledDepartureTime.diff(now, 'minutes') > 110) return null
+    if (scheduledDepartureTime.diff(now, 'minutes') < -120) return null
+    // When looking backwards skip those that are more than 2hr ago to avoid getting junk from previous days on low freq lines
 
     let platform = departure.platform_number
     let ptvRunID = departure.run_ref
@@ -916,6 +991,13 @@ function parsePTVDepartures(ptvResponse, stationName) {
     let direction = directionData.direction_name.includes('City') ? 'Up' : 'Down'
     if (routeName === 'Stony Point') direction = runDestination === 'Frankston' ? 'Up' : 'Down'
     if (routeName === 'City Circle') direction = 'Down'
+
+    let location = run.vehicle_position ? {
+      latitude: run.vehicle_position.latitude,
+      longitude: run.vehicle_position.longitude,
+      bearing: run.vehicle_position.bearing,
+      expiry: +new Date(run.vehicle_position.expiry_time)
+    } : null
 
     let viaCityLoop = null
     let runID = null
@@ -946,7 +1028,8 @@ function parsePTVDepartures(ptvResponse, stationName) {
       ptvRunID,
       runID,
       direction,
-      viaCityLoop
+      viaCityLoop,
+      location
     }
   }).filter(Boolean)
 }
@@ -963,12 +1046,12 @@ function dedupeRailReplacementBuses(replacementBuses) {
   })
 }
 
-async function getDeparturesFromPTV(station, db) {
+async function getDeparturesFromPTV(station, backwards, db) {
   let notifyData = await getNotifyData(db)
   let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
   let stationName = metroPlatform.fullStopName.slice(0, -16)
 
-  let url = `/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor`
+  let url = `/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&look_backwards=${backwards ? 'true' : 'false'}&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor&expand=VehiclePosition`
   let ptvResponse = await ptvAPI(url)
 
   let parsedDepartures = parsePTVDepartures(ptvResponse, stationName)
@@ -1001,6 +1084,7 @@ async function getDeparturesFromPTV(station, db) {
   })
 
   await saveConsists(mappedTrains, db)
+  await saveLocations(mappedTrains, db)
   await saveSuspensions(suspensionMappedTrains.filter(departure => departure.trip.suspension && !departure.isRailReplacementBus), db)
   await removeResumedSuspensions(suspensionMappedTrains.filter(departure => !departure.trip.suspension), db)
   await saveRailBuses(allRailBuses, db)
@@ -1053,13 +1137,13 @@ async function getExtraTrains(departures, direction, station, db) {
   })
 }
 
-async function getDepartures(station, db, filter) {
+async function getDepartures(station, db, filter, backwards) {
   try {
     if (typeof filter === 'undefined') filter = true
     let stationName = station.stopName.slice(0, -16)
 
-    return await utils.getData('metro-departures-new', stationName, async () => {
-      let departures = await getDeparturesFromPTV(station, db)
+    return await utils.getData('metro-departures-new', stationName + backwards, async () => {
+      let departures = await getDeparturesFromPTV(station, backwards, db)
       let extraTrains = []
 
       if (stationsAppendingUp.includes(stationName)) {

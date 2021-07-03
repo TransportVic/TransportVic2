@@ -54,7 +54,7 @@ let extendedList = [
 async function getDeparturesFromVNET(db, station) {
   let vnetName = station.bays.find(bay => bay.vnetStationName).vnetStationName
 
-  let vnetDepartures = await getVNETDepartures(vnetName, 'B', db, 1440, true)
+  let vnetDepartures = await getVNETDepartures(vnetName, 'B', db, 1440, true, false, true)
 
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')

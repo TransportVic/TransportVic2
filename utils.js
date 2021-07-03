@@ -10,6 +10,17 @@ const crypto = require('crypto')
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 const locks = {}, caches = {}
 
+let forceLongRequest = true
+let interval = setInterval(() => {
+  if (module.exports.uptime() >= 60000) {
+    forceLongRequest = false
+    clearInterval(interval)
+
+    if (global.loggers) global.loggers.fetch.log('Stopping long request timeout')
+    else console.log('Stopping long request timeout')
+  }
+}, 3000)
+
 String.prototype.format = (function (i, safe, arg) {
   function format () {
     var str = this; var len = arguments.length + 1
@@ -315,6 +326,8 @@ module.exports = {
       highWaterMark: 1024 * 1024,
       ...options
     }
+
+    if (forceLongRequest) fullOptions.timeout = Math.max(fullOptions.timeout, 6000)
 
     for (let i = 0; i < maxRetries; i++) {
       try {

@@ -100,7 +100,7 @@ async function getDeparturesFromPTV(stop, db) {
             stopTimings: {
               $elemMatch: {
                 stopGTFSID: stopGTFSIDs,
-                departureTimeMinutes
+                departureTimeMinutes: departureTimeMinutes
               }
             },
             destination: checkDest,
@@ -195,8 +195,8 @@ async function getDepartures(stop, db) {
         departures = scheduledDepartures
       }
 
-      departures = departures.sort((a, b) => a.destination.length - b.destination.length)
-        .sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+      departures = departures
+        .sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime || a.destination.length - b.destination.length)
 
       let timetables = db.getCollection('timetables')
       let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
@@ -226,10 +226,11 @@ async function getDepartures(stop, db) {
         }
 
         if (departure.isRailReplacementBus === null) {
-          let {origin, destination, departureTime} = departure.trip
+          let {origin, destination} = departure.trip
 
           let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
-          let minutesDiff = currentStop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
+          let originDepartureMinutes = departure.trip.stopTimings[0].departureTimeMinutes
+          let minutesDiff = currentStop.departureTimeMinutes - originDepartureMinutes
 
           let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
           if (utils.getMinutesPastMidnight(tripStart) < 180) tripStart.add(-1, 'day')
@@ -245,9 +246,16 @@ async function getDepartures(stop, db) {
           let nspDeparture = await timetables.findDocument({
             mode: 'regional train',
             operationDays: operationDay,
-            origin,
+            stopTimings: {
+              $elemMatch: {
+                stopName: origin,
+                departureTimeMinutes: {
+                  $gte: originDepartureMinutes - 3,
+                  $lte: originDepartureMinutes + 3
+                }
+              }
+            },
             'stopTimings.stopName': destination,
-            departureTime
           })
 
           departure.isRailReplacementBus = !!nspDeparture

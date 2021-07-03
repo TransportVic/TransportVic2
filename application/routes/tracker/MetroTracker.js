@@ -17,19 +17,6 @@ const metroConsists = require('../../../additional-data/metro-tracker/metro-cons
 
 let stationCodeLookup = {}
 
-let loggerPath = path.join(__dirname, '../../../logs/metro-tracker.json')
-let loggerData = []
-if (modules.metroLogger) {
-  try {
-    loggerData = JSON.parse(fs.readFileSync(loggerPath))
-  } catch (e) {}
-
-  setInterval(() => {
-    fs.writeFileSync(loggerPath, JSON.stringify(loggerData))
-  }, 1000 * 60)
-}
-
-
 Object.keys(stationCodes).forEach(stationCode => {
   stationCodeLookup[stationCodes[stationCode]] = stationCode
 })
@@ -178,17 +165,31 @@ router.get('/consist', async (req, res) => {
     .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
     .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
 
-  let operationDays = await metroTrips.distinct('date', { consist })
-  let servicesByDay = {}
+  let rawServicesByDay = await metroTrips.aggregate([{
+    $match: {
+      consist,
+    }
+  }, {
+    $group: {
+      _id: '$date',
+      services: {
+        $addToSet: '$runID'
+      }
+    }
+  }, {
+    $sort: {
+      _id: -1
+    }
+  }]).toArray()
 
-  await async.forEachSeries(operationDays, async date => {
+  let servicesByDay = rawServicesByDay.map(data => {
+    let date = data._id
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
 
-    servicesByDay[humanDate] = {
-      services: (await metroTrips.distinct('runID', {
-        consist, date
-      })).sort((a, b) => a - b),
-      date
+    return {
+      date,
+      humanDate,
+      services: data.services.sort((a, b) => a.localeCompare(b))
     }
   })
 
@@ -222,9 +223,16 @@ router.get('/hcmt', async (req, res) => {
     let destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(trip.trueDestinationArrivalTime)
     let departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(trip.departureTime)
 
+    let tripDate = date
+
+    if (departureTimeMinutes < 180) {
+      departureTimeMinutes += 1440
+      tripDate = utils.getYYYYMMDD(utils.parseDate(tripDate).add(1, 'day'))
+    }
+
     if (destinationArrivalTimeMinutes < departureTimeMinutes) destinationArrivalTimeMinutes += 1440
 
-    trip.url = `/metro/run/${e(trip.trueOrigin.slice(0, -16))}/${trip.trueDepartureTime}/${e(trip.trueDestination.slice(0, -16))}/${trip.trueDestinationArrivalTime}/${date}`
+    trip.url = `/metro/run/${e(trip.trueOrigin.slice(0, -16))}/${trip.trueDepartureTime}/${e(trip.trueDestination.slice(0, -16))}/${trip.trueDestinationArrivalTime}/${tripDate}`
     trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
     trip.departureTimeMinutes = departureTimeMinutes
   })
@@ -233,6 +241,103 @@ router.get('/hcmt', async (req, res) => {
     trips: trips.sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes),
     date: utils.parseTime(date, 'YYYYMMDD')
   })
+})
+
+router.post('/hcmt/tdns', async (req, res) => {
+  let {db} = res
+  let liveTimetables = db.getCollection('live timetables')
+  let today = utils.getYYYYMMDDNow()
+  let {date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let hcmtTrains = await liveTimetables.findDocuments({
+    operationDays: date,
+    mode: 'metro train',
+    routeGTFSID: '2-PKM',
+    h: true
+  }).sort({ 'stopTimings.0.departureTimeMinutes': 1 }).toArray()
+
+  let shifts = {}
+  let runIDShifts = {}
+
+  hcmtTrains.forEach(trip => {
+    if (!runIDShifts[trip.runID]) {
+      shifts[trip.runID] = []
+      runIDShifts[trip.runID] = trip.runID
+    }
+
+    let shiftNumber = runIDShifts[trip.runID]
+    shifts[shiftNumber].push(trip.runID)
+
+    if (trip.forming !== '0') runIDShifts[trip.forming] = shiftNumber
+  })
+
+  let shiftTrips = Object.values(shifts).map(shiftTrips => {
+    return shiftTrips.map((runID, i) => {
+      let trip = hcmtTrains.find(tripData => tripData.runID === runID)
+      return {
+        runID: trip.runID,
+        departureTime: trip.trueDepartureTime,
+        origin: trip.trueOrigin.slice(0, -16),
+        destinationArrivalTime: trip.trueDestinationArrivalTime,
+        destination: trip.trueDestination.slice(0, -16),
+        cancelled: trip.cancelled
+      }
+    })
+  })
+
+  res.header('Access-Control-Allow-Origin', '*')
+  res.json({
+    shifts: shiftTrips
+  })
+})
+
+router.post('/hcmt/tdn/:runID', async (req, res) => {
+  let {db} = res
+  let liveTimetables = db.getCollection('live timetables')
+  let today = utils.getYYYYMMDDNow()
+  let {date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  let { runID } = req.params
+
+  let trip = await liveTimetables.findDocument({
+    operationDays: date,
+    mode: 'metro train',
+    routeGTFSID: '2-PKM',
+    runID,
+    h: true
+  })
+
+  res.header('Access-Control-Allow-Origin', '*')
+
+  if (trip) {
+    let formedBy = await liveTimetables.findDocument({
+      operationDays: date,
+      mode: 'metro train',
+      routeGTFSID: '2-PKM',
+      forming: runID,
+      h: true,
+    })
+
+    res.json({
+      cancelled: trip.cancelled || false,
+      formedBy: formedBy ? formedBy.runID : null,
+      forming: trip.forming,
+      stops: trip.stopTimings.map(stop => {
+        return {
+          stopName: stop.stopName.slice(0, -16),
+          scheduled: stop.scheduledDepartureTime,
+          estimated: stop.estimatedDepartureTime,
+          platform: stop.platform
+        }
+      })
+    })
+  } else res.json(null)
 })
 
 router.get('/bot', async (req, res) => {
@@ -265,9 +370,9 @@ router.get('/bot', async (req, res) => {
   }
 
   if (modules.metroLogger) {
-    loggerData.push({
-      utc: new Date().toISOString(),
-      time: new Date().toLocaleString(),
+    let metroLogger = db.getCollection('metro logs')
+    await metroLogger.createDocument({
+      utc: +new Date(),
       search,
       result: trips[0],
       referer: req.headers['referer'],
@@ -363,7 +468,7 @@ router.get('/strange', async (req, res) => {
     let trains = {}
 
     strangeTrains.forEach(line => {
-      let train = line.slice(-28, -18)
+      let train = line.slice(-29, -18)
       let runID = line.slice(-7, -3)
 
       if (!trains[train]) {
@@ -394,16 +499,23 @@ router.get('/strange', async (req, res) => {
   }, 1000 * 30))
 })
 
-router.get('/logs', (req, res) => {
-  let today = utils.getYYYYMMDDNow()
+router.get('/logs', async (req, res) => {
+  let metroLogger = res.db.getCollection('metro logs')
+  let today = utils.now()
   let {consist, date} = querystring.parse(url.parse(req.url).query)
-  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  if (date) date = utils.parseDate(date)
   else date = today
 
+  let startOfDay = date.clone().startOf('day')
+  let endOfDay = date.clone().endOf('day')
+
   res.header('Access-Control-Allow-Origin', '*')
-  res.json(loggerData.filter(entry => {
-    return utils.getYYYYMMDD(utils.parseTime(entry.utc)) === date
-  }))
+  res.json(await metroLogger.findDocuments({
+    utc: {
+      $gte: +startOfDay,
+      $lte: +endOfDay
+    }
+  }).toArray())
 })
 
 module.exports = router

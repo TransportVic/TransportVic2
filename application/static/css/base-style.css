@@ -105,7 +105,7 @@ a, a:visited {
   color: #c5c5c5;
 }
 
-div#header {
+#header {
   background-color: #171717;
   height: calc(4vw + 4vh);
   width: 100vw;
@@ -115,7 +115,7 @@ div#header {
   font-size: calc(1.5vw + 1.5vh);
 }
 
-div#header > span {
+#header > span {
   font-size: calc((100vw + 100vh) * 0.013);
   margin: calc(1vw + 1vh);
 }

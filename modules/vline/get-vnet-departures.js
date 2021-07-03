@@ -17,14 +17,14 @@ async function getStationFromVNETName(vnetStationName, db) {
   }, 1000 * 60 * 60)
 }
 
-async function getVNETDepartures(stationName, direction, db, time, useArrivalInstead=false, useNew=false) {
+async function getVNETDepartures(stationName, direction, db, time, useArrivalInstead=false, useNew=false, long=false) {
   let baseURL = useArrivalInstead ? urls.vlinePlatformArrivalsOld : urls.vlinePlatformDeparturesOld
   if (useNew) {
     baseURL = useArrivalInstead ? urls.vlinePlatformArrivals : urls.vlinePlatformDepartures
   }
 
   let url = baseURL.format(stationName, direction, time)
-  const body = (await utils.request(url, { timeout: 3000 })).replace(/a:/g, '')
+  const body = (await utils.request(url, { timeout: long ? 15000 : 3000 })).replace(/a:/g, '')
 
   const $ = cheerio.load(body)
   const allServices = Array.from($('PlatformService'))

@@ -16,6 +16,7 @@ async function requestTimings() {
 
     global.loggers.trackers.ccl.info('requesting timings for', stop.stopName.slice(0, -16))
     await getDepartures(stop, database)
+    await getDepartures(stop, database, false, true)
   })
 }
 
@@ -29,11 +30,12 @@ database.connect(async () => {
   stops.push(await dbStops.findDocument({ stopName: 'North Melbourne Railway Station' }))
   stops.push(await dbStops.findDocument({ stopName: 'Jolimont Railway Station' }))
   stops.push(await dbStops.findDocument({ stopName: 'Richmond Railway Station' }))
+  stops.push(await dbStops.findDocument({ stopName: 'North Williamstown Railway Station' }))
 
   schedule([
-    [0, 60, 12], // 12am - 1am
-    [240, 1200, 6], // 4am - 8pm
-    [1201, 1320, 8], // 8pm - 10pm
-    [1201, 1440, 10] // 10pm - 12am
+    [0, 60, 3], // 12am - 1am
+    [240, 1200, 1.5], // 4am - 8pm
+    [1201, 1320, 2], // 8pm - 10pm
+    [1201, 1440, 2.5] // 10pm - 12am
   ], requestTimings, 'city loop preloader', global.loggers.trackers.ccl)
 })

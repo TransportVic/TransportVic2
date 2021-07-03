@@ -22,10 +22,10 @@ module.exports = async function (trip, departureTime, db) {
     })
 
     trip.runID = staticTrip.runID
-    trip.vehicle = { size: '2', type: 'Sprinter' }
+    trip.vehicle = { size: 2, type: 'Sprinter', consist: [] }
 
     if (!['Sat', 'Sun'].includes(query.operationDays) && singleSTYTrains.includes(trip.runID)) {
-      trip.vehicle.size = '1'
+      trip.vehicle.size = 1
     }
   }
 

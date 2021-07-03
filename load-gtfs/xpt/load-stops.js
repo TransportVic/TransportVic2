@@ -11,25 +11,26 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
 
 let permittedStops = [
- "Gunning Station",
- "Harden Station",
- "Broadmeadows Station",
- "Albury Station",
- "Moss Vale Station",
- "Yass Junction Station",
- "Seymour Station",
- "Melbourne (Southern Cross) Station",
- "The Rock Station",
- "Henty Station",
- "Culcairn Station",
- "Wangaratta Station",
- "Benalla Station",
- "Junee Station",
- "Goulburn Station",
- "Campbelltown Station",
- "Central Station",
- "Cootamundra Station",
- "Wagga Wagga Station"
+  "Gunning Station",
+  "Harden Station",
+  "Broadmeadows Station",
+  "Albury Station",
+  "Moss Vale Station",
+  "Yass Junction Station",
+  "Seymour Station",
+  "Melbourne (Southern Cross) Station",
+  "The Rock Station",
+  "Henty Station",
+  "Culcairn Station",
+  "Wangaratta Station",
+  "Benalla Station",
+  "Junee Station",
+  "Goulburn Station",
+  "Campbelltown Station",
+  "Central Station",
+  "Cootamundra Station",
+  "Wagga Wagga Station",
+  "Strathfield Station"
 ]
 
 let suburbs = {

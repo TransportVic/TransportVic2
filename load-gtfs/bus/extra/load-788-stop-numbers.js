@@ -21,9 +21,16 @@ database.connect({
       'Host': 'maps.busminder.com.au'
     }
   })
+
   const $ = cheerio.load(body)
-  let data = $('body > script:nth-child(10)').html()
-  data = data.trim().slice(26).replace(/\n/g, '').replace(/;var .+$/, '').slice(0, -2)
+  let scripts = Array.from($('body > script')).map(script => {
+    return $(script).html()
+  })
+
+  let data = scripts.sort((a, b) => b.length - a.length)[0]
+
+  data = data.trim().slice(26).replace(/\n/g, '').slice(0, -2)
+
   let parsedData = JSON.parse(data)
 
   let stopMapping = {}

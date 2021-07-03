@@ -21,7 +21,7 @@ function trimLog(filename, isCombined) {
   if (filename.includes('errors')) cutoff = 28
   if (filename.includes('mockups')) cutoff = 6
 
-  if (isCombined) cutoff = 3
+  if (isCombined) cutoff = 2
 
   let end = utils.now().add(-cutoff, 'days')
 
@@ -68,66 +68,71 @@ database.connect(async () => {
   let liveTimetables = database.getCollection('live timetables')
   let metroShunts = database.getCollection('metro shunts')
 
-  let notify = await metroNotify.deleteDocuments({
-    toDate: {
-      $lte: utils.now().add(-14, 'days') / 1000
-    }
-  })
+  try {
+    let notify = await metroNotify.deleteDocuments({
+      toDate: {
+        $lte: utils.now().add(-14, 'days') / 1000
+      }
+    })
 
-  console.log('Cleaned up', notify.nRemoved, 'notify alerts')
+    console.log('Cleaned up', notify.nRemoved, 'notify alerts')
+  } catch (e) {
+    console.log('Failed to clean up notify data')
+  }
 
-  let firstTrip = await liveTimetables.findDocuments({})
-    .sort({ operationDays: 1 }).limit(1).next()
+  try {
+    let firstTrip = await liveTimetables.findDocuments({})
+      .sort({ operationDays: 1 }).limit(1).next()
 
-  let tripsStart = utils.parseDate(firstTrip.operationDays)
-  let tripsEnd = utils.now().add(-14, 'days')
+    let tripsStart = utils.parseDate(firstTrip.operationDays)
+    let tripsEnd = utils.now().add(-14, 'days')
 
-  let tripsDay = utils.allDaysBetweenDates(tripsStart, tripsEnd).map(date => utils.getYYYYMMDD(date))
+    let tripsDay = utils.allDaysBetweenDates(tripsStart, tripsEnd).map(date => utils.getYYYYMMDD(date))
 
-  let liveRemoval = await liveTimetables.deleteDocuments({
-    operationDays: {
-      $in: tripsDay
-    }
-  })
+    let liveRemoval = await liveTimetables.deleteDocuments({
+      operationDays: {
+        $in: tripsDay
+      }
+    })
 
-  console.log('Cleaned up', liveRemoval.nRemoved, 'live timetables')
+    console.log('Cleaned up', liveRemoval.nRemoved, 'live timetables')
+  } catch (e) {
+    console.log('Failed to clean up live trips')
+  }
 
-  let firstShunt = await metroShunts.findDocuments({})
-    .sort({ date: 1 }).limit(1).next()
+  try {
+    let firstShunt = await metroShunts.findDocuments({})
+      .sort({ date: 1 }).limit(1).next()
 
-  let shuntStart = utils.parseDate(firstShunt.date)
-  let shuntEnd = utils.now().add(-27, 'days')
+    let shuntStart = utils.parseDate(firstShunt.date)
+    let shuntEnd = utils.now().add(-27, 'days')
 
-  let shuntDays = utils.allDaysBetweenDates(shuntStart, shuntEnd).map(date => utils.getYYYYMMDD(date))
+    let shuntDays = utils.allDaysBetweenDates(shuntStart, shuntEnd).map(date => utils.getYYYYMMDD(date))
 
-  let shuntsRemoved = await metroShunts.deleteDocuments({
-    date: {
-      $in: shuntDays
-    }
-  })
+    let shuntsRemoved = await metroShunts.deleteDocuments({
+      date: {
+        $in: shuntDays
+      }
+    })
 
-  console.log('Cleaned up', shuntsRemoved.nRemoved, 'metro shunts')
+    console.log('Cleaned up', shuntsRemoved.nRemoved, 'metro shunts')
+  } catch (e) {
+    console.log('Failed to clean up metro shunts')
+  }
 
-  console.log('Removed', trimLog(config.combinedLog, true), 'lines from combined log')
+  try {
+    console.log('Removed', trimLog(config.combinedLog, true), 'lines from combined log')
+  } catch (e) {
+    console.log('Failed to clean up combined log')
+  }
+
   walk(path.join(__dirname, '../logs'), (err, results) => {
     results.forEach(filename => {
-      if (filename.includes('metro-tracker.json')) {
-        try {
-          let data = JSON.parse(fs.readFileSync(filename).toString())
-          let now = utils.now()
-          let filtered = data.filter(entry => {
-            let entryTime = utils.parseTime(entry.utc)
-            return now.diff(entryTime, 'days') > 31
-          })
-
-          fs.writeFileSync(filename, JSON.stringify(filtered))
-          console.log('Removed', data.length - filtered.length, 'lines from metro tracker logs')
-        } catch (e) {
-          console.log('Error cleaning up metro tracker logs, skipping')
-        }
-      } else {
-        let logName = filename.replace(/.*?\/logs\//, '')
+      let logName = filename.replace(/.*?\/logs\//, '')
+      try {
         console.log('Removed', trimLog(filename, false), 'lines from', logName)
+      } catch (e) {
+        console.log('Failed to clean up logfile', logName)
       }
     })
     process.exit()

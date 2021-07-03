@@ -30,7 +30,8 @@ utils.request(urls.ptDatabaseMetro).then(data => {
       type: 'HCMT'
     })))
 
-    fs.writeFile(path.join(__dirname, 'additional-data/metro-tracker/metro-consists.json'), JSON.stringify(consists), () => {})
-    fs.writeFile(path.join(__dirname, 'additional-data/metro-tracker/metro-types.json'), JSON.stringify(types), () => {})
+    fs.writeFileSync(path.join(__dirname, 'additional-data/metro-tracker/metro-consists.json'), JSON.stringify(consists))
+    fs.writeFileSync(path.join(__dirname, 'additional-data/metro-tracker/metro-types.json'), JSON.stringify(types))
+    process.exit()
   })
 })

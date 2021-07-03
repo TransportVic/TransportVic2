@@ -53,7 +53,7 @@ database.connect({
       let gtfsDirection = lineData[5]
       let headsign = lineData[3]
 
-      let carCount = rawTripID[17]
+      let carCount = rawTripID[rawTripID.indexOf('X.') + 2]
 
       rawTripIDsConsidered.push(rawTripID)
       mappedTripIDsConsidered.push(tripID)
@@ -119,8 +119,11 @@ database.connect({
 
   console.log('Filtered trip times')
 
-  await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, tripsConsidered, tripTimes, calendarDays, calendarDates, (headsign, routeGTFSID) => {
-    return headsign === 'Central' ? 'Down' : 'Up'
+  let sydneyBound = tripsConsidered.find(trip => trip.headsign === 'Central')
+  let downCode = sydneyBound.tripID[sydneyBound.tripID.length - 1]
+
+  await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, tripsConsidered, tripTimes, calendarDays, calendarDates, (headsign, routeGTFSID, tripID) => {
+    return tripID[tripID.length - 1] === downCode ? 'Down' : 'Up'
   })
 
   await updateStats('xpt-timetables', tripsConsidered.length)

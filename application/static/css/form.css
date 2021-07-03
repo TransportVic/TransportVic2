@@ -1,9 +1,9 @@
-div#content {
+#content {
   display: block;
   flex-direction: column;
 }
 
-div#content > * {
+#content > * {
   margin-left: calc(1vw + 1vh);
 }
 
@@ -62,7 +62,7 @@ input {
   margin: calc(0.2vw + 0.2vh) 0;
 }
 
-div#content > a {
+#content > a {
   font-size: calc(1.1vw + 1.1vh);
   margin-left: calc(1.8vw + 1.8vh);
   text-decoration: underline;

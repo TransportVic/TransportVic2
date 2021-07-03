@@ -473,4 +473,16 @@ module.exports = {
   48833: "Bay 2",
   48834: "Bay 3",
   20912: "Bay 4",
+
+  // Caroline Springs
+  51389: "Bay A",
+  27854: "Bay B",
+  27538: "Bay C",
+
+  // Fountain Gate
+  46426: "Bay 1",
+  21028: "Bay 2",
+  21026: "Bay 3",
+  21027: "Bay 4",
+  38064: "Bay 5"
 }

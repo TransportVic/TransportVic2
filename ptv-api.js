@@ -5,6 +5,8 @@ const cheerio = require('cheerio')
 
 let blankKey = {ptvDevID: "", ptvKey: ""}
 
+let past50ResponseTimes = []
+
 function getPTVCreds() {
   if (ptvKeys.length === 0) return blankKey
 
@@ -25,12 +27,24 @@ function getURL(request) {
 async function makeRequest(url, maxRetries=2, timeout=1900) {
   try {
     return await utils.getData('ptv-api', url, async () => {
-      return JSON.parse(await utils.request(getURL(url), {
+      let start = +new Date()
+
+      let data = JSON.parse(await utils.request(getURL(url), {
         maxRetries,
         timeout
       }))
+
+      let end = +new Date()
+      let diff = end - start
+
+      past50ResponseTimes = [...past50ResponseTimes.slice(-49), diff]
+
+      return data
     })
   } catch (e) {
+    if (e.message && e.message.toLowerCase().includes('network timeout')) {
+      past50ResponseTimes = [...past50ResponseTimes.slice(-49), timeout * maxRetries]
+    }
     throw e
   }
 }
@@ -48,5 +62,15 @@ async function getPTVKey(baseURL='https://ptv.vic.gov.au') {
   }, 1000 * 60 * 60)
 }
 
+
+function getAverageResponseTime() {
+  let counts = past50ResponseTimes.length
+  let sum = past50ResponseTimes.reduce((a, b) => a + b, 0)
+  let average = sum / counts
+
+  return average
+}
+
 module.exports = makeRequest
 module.exports.getPTVKey = getPTVKey
+module.exports.getAverageResponseTime = getAverageResponseTime

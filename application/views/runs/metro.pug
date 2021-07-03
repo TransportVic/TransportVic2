@@ -51,7 +51,7 @@ block content
       div.timingRow(id='stop-' + stop.stopGTFSID)
         a.departureInfo
           span.stopName=stop.stopName
-          if trip.cancelled
+          if trip.cancelled || stop.cancelled
             span.info.cancelled CANCELLED
           else if stop.platform
             span.platform=`Platform ${stop.platform}`

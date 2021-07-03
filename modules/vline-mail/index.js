@@ -36,14 +36,16 @@ async function handleMessage(subject, rawText) {
 
   global.loggers.mail.log(`Got Mail: ${text.replace(/\n/g, ' ')}`)
 
+  text = text.replace(/due .*/, '').replace(/(service|train) /, '')
+
   // Tracker makes this kinda useless now
   if (subject.includes('Service reduction') || text.includes('reduced capacity')) return
 
-  if (subject.includes('Service cancellation') || text.includes('not run') || (text.includes('no longer run') && !text.includes('no longer run to ') && !text.includes('no longer run between') && !text.includes('no longer run from')) || text.includes('has been cancelled')) {
+  if ((subject.includes('Service cancellation') || text.includes('not run') || (text.includes('no longer run') && !text.includes('no longer run to ') && !text.includes('no longer run between') && !text.includes('no longer run from')) || text.includes('has been cancelled')) && !(text.includes('terminate') || text.includes('end') || text.includes('early'))) {
     await handleCancellation(database, text)
   } else if (text.includes('been reinstated') || text.includes('running as scheduled') || text.includes('will now run as scheduled') || text.includes('operate as scheduled')|| text.includes('resume running')) {
     await handleReinstatement(database, text)
-  } else if (text.includes('will not stop at') || text.includes('will run express')) {
+  } else if (text.includes('will not stop at') || text.includes('will run express') || text.includes('will not be stopping')) {
     await handleNonStop(database, text)
   } else {
     await handleChange(database, text)

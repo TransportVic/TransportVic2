@@ -48,7 +48,8 @@ function extendMetroEstimation(trip) {
   // Extend estimation backwards to first stop (usually city loop etc)
   let firstStop = trip.stopTimings[0]
   let secondStop = trip.stopTimings[1]
-  if (!firstStop.estimatedDepartureTime && secondStop.estimatedDepartureTime) {
+
+  if (!firstStop.estimatedDepartureTime && secondStop && secondStop.estimatedDepartureTime) {
     let scheduledDepartureTime = utils.parseTime(firstStop.scheduledDepartureTime)
     let estimatedDepartureTime = utils.parseTime(firstStop.estimatedDepartureTime)
     let delay = estimatedDepartureTime - scheduledDepartureTime
@@ -69,14 +70,16 @@ async function saveConsist(stopTimings, direction, departureDay, runID, consist,
     origin: stopTimings[0].stopName,
     departureTime: stopTimings[0].departureTime,
     destination: stopTimings[stopTimings.length - 1].stopName,
-    destinationArrivalTime: stopTimings[stopTimings.length - 1].departureTime
+    destinationArrivalTime: stopTimings[stopTimings.length - 1].arrivalTime
   }
+
+  if (!departureDay) return global.loggers.error.err('No date on trip', partialTrip)
 
   fixTripDestination(partialTrip)
 
   let query = {
     date: departureDay,
-    runID
+    runID: runID.slice(0, 4)
   }
 
   let tripData = {
@@ -95,7 +98,12 @@ async function saveConsist(stopTimings, direction, departureDay, runID, consist,
       if (existingTrip.consist.length === 6) { // Trip already exists with a filled consist, we only override if a different set matches
         if (!existingTrip.consist.includes(tripData.consist[0])) {
           existingTrip = null
-        } // Otherwise do not override a 6 car train with a 3 car
+        } else {
+          // Otherwise do not override a 6 car train with a 3 car
+          // However update the departure fleet for location purposes
+
+          return existingTrip.consist
+        }
       } else if (existingTrip.consist.length === 3 && !existingTrip.consist.includes(tripData.consist[0])) { // We might have matched half a train and now have the other half, sanity check
         let sanityCheckTrip = await metroTrips.findDocument({
           date: departure.departureDay,
@@ -119,7 +127,39 @@ async function saveConsist(stopTimings, direction, departureDay, runID, consist,
     await metroTrips.replaceDocument(query, tripData, {
       upsert: true
     })
+
+    return tripData.consist
   }
+}
+
+async function saveLocation(consist, location, metroLocations) {
+  let parts = []
+  if (consist.length === 6) {
+    parts = [consist.slice(0, 3), consist.slice(3, 6)]
+  } else {
+    parts = [consist]
+  }
+
+  await async.forEach(parts, async train => {
+    let locationData = {
+      consist: train,
+      timestamp: +new Date(),
+      location: {
+        type: "Point",
+        coordinates: [
+          location.longitude,
+          location.latitude
+        ]
+      },
+      bearing: location.bearing
+    }
+
+    await metroLocations.replaceDocument({
+      consist: train[0]
+    }, locationData, {
+      upsert: 1
+    })
+  })
 }
 
 module.exports = async function (data, db) {
@@ -130,6 +170,7 @@ module.exports = async function (data, db) {
   let routesCollection = db.getCollection('routes')
   let metroTrips = db.getCollection('metro trips')
   let metroNotify = db.getCollection('metro notify')
+  let metroLocations = db.getCollection('metro locations')
 
   let url = `/v3/pattern/run/${ptvRunID}/route_type/0?expand=stop&expand=Run&expand=Route&expand=Direction&expand=VehicleDescriptor&expand=VehiclePosition`
   if (time) {
@@ -148,6 +189,8 @@ module.exports = async function (data, db) {
   let run = Object.values(runs)[0]
   let ptvDirection = Object.values(directions)[0]
   let routeData = Object.values(routes)[0]
+
+  let location = run.vehicle_position
 
   if (departures.length === 0) return referenceTrip
 
@@ -187,17 +230,6 @@ module.exports = async function (data, db) {
     let stopName = stopBay.fullStopName
 
     let departureTimeMinutes = utils.getMinutesPastMidnight(scheduledDepartureTime)
-
-    // if first stop is 12-3am push it to previous day
-    if (previousDepartureTime === -1) {
-      departureTime = scheduledDepartureTime
-      if (departureTimeMinutes < 180) {
-        departureTimeMinutes += 1440
-        departureDay = utils.getYYYYMMDD(scheduledDepartureTime.clone().add(-3.5, 'hours'))
-      } else {
-        departureDay = utils.getYYYYMMDD(scheduledDepartureTime)
-      }
-    }
 
     if (departureTimeMinutes < previousDepartureTime) departureTimeMinutes += 1440
     previousDepartureTime = departureTimeMinutes
@@ -247,16 +279,6 @@ module.exports = async function (data, db) {
       type: vehicleDescriptor.description.slice(6),
       consist: []
     }
-  }
-
-  if (consist) {
-    let vehicleType = metroTypes.find(car => consist[0] === car.leadingCar)
-    let ptvSize = vehicleDescriptor.description[0]
-    let consistSize = consist.length
-    let actualSize = Math.max(ptvSize, consistSize)
-    vehicle = { size: actualSize, type: vehicleType.type, consist }
-
-    await saveConsist(stopTimings, direction, departureDay, runID, consist, metroTrips)
   }
 
   if (referenceTrip && referenceTrip.suspension) {
@@ -315,7 +337,7 @@ module.exports = async function (data, db) {
     routeDetails: null,
     runID,
     operationDays: departureDay,
-    vehicle,
+    vehicle: null,
     stopTimings: stopTimings,
     origin: firstStop.stopName,
     departureTime: firstStop.departureTime,
@@ -333,9 +355,37 @@ module.exports = async function (data, db) {
 
   timetable = fixTripDestination(timetable)
 
-  if (timetable.routeName === 'Stony Point') {
-    timetable = await addStonyPointData(timetable, tripStartTime, db)
+  let originStop = timetable.stopTimings.find(stop => stop.stopName === timetable.trueOrigin)
+  let originDepartureDay = utils.parseTime(originStop.scheduledDepartureTime)
+
+  // if first stop is 12-3am push it to previous day
+  if (originStop.departureTimeMinutes < 180) {
+    timetable.stopTimings.forEach(stop => {
+      if (stop.arrivalTimeMinutes) stop.arrivalTimeMinutes += 1440
+      if (stop.departureTimeMinutes) stop.departureTimeMinutes += 1440
+    })
+    originDepartureDay.add(-3 ,'hours')
   }
+
+  departureDay = utils.getYYYYMMDD(originDepartureDay)
+  timetable.operationDays = departureDay
+
+  if (timetable.routeName === 'Stony Point') {
+    timetable = await addStonyPointData(timetable, originDepartureDay, db)
+  }
+
+  if (consist) {
+    let vehicleType = metroTypes.find(car => consist[0] === car.leadingCar)
+    let ptvSize = vehicleDescriptor.description[0]
+    let consistSize = consist.length
+    let actualSize = Math.max(ptvSize, consistSize)
+    vehicle = { size: actualSize, type: vehicleType.type, consist }
+
+    consist = await saveConsist(stopTimings, direction, departureDay, runID, consist, metroTrips)
+    if (location && consist) await saveLocation(consist, location, metroLocations)
+  }
+
+  timetable.vehicle = vehicle
 
   timetable = extendMetroEstimation(timetable)
 

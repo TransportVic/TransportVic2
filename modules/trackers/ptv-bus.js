@@ -91,7 +91,6 @@ database.connect(async () => {
   dbStops = database.getCollection('stops')
   busTrips = database.getCollection('bus trips')
   schedule([
-    [300, 1260, 4],
-    [1261, 1440, 5]
+    [360, 1320, 4],
   ], requestTimings, 'bus tracker', global.loggers.trackers.bus)
 })

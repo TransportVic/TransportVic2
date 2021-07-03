@@ -9,6 +9,7 @@ const uglifyEs = require('uglify-es')
 const rateLimit = require('express-rate-limit')
 const fetch = require('node-fetch')
 const utils = require('../utils')
+const ptvAPI = require('../ptv-api')
 
 const DatabaseConnection = require('../database/DatabaseConnection')
 
@@ -38,6 +39,9 @@ if (modules.tracker && modules.tracker.hcmt)
 if (modules.tracker && modules.tracker.metro)
   require('../modules/trackers/metro')
 
+if (modules.tracker && modules.tracker.metroLocations)
+  require('../modules/trackers/metro-locations')
+
 if (modules.tracker && modules.tracker.metroNotify)
   require('../modules/trackers/metro-notify')
 
@@ -46,6 +50,8 @@ if (modules.tracker && modules.tracker.metroShunts)
 
 if (modules.preloadCCL)
   require('../modules/preload-ccl')
+
+require('../modules/trackers/discord-notify')
 
 let serverStarted = false
 
@@ -158,8 +164,6 @@ module.exports = class MainServer {
 
     app.use((req, res, next) => {
       res.setHeader('Strict-Transport-Security', 'max-age=31536000')
-      let secureDomain = `http${config.useHTTPS ? 's' : ''}://${config.websiteDNSName}:* `
-      secureDomain += ' https://*.mapbox.com/'
 
       res.setHeader('X-Xss-Protection', '1; mode=block')
       res.setHeader('X-Content-Type-Options', 'nosniff')
@@ -339,7 +343,11 @@ module.exports = class MainServer {
     })
 
     app.get('/response-stats', (req, res) => {
-      res.json({ status: 'ok', meanResponseTime: this.getAverageResponseTime() })
+      res.json({
+        status: 'ok',
+        meanResponseTime: this.getAverageResponseTime(),
+        ptvMeanResponseTime: ptvAPI.getAverageResponseTime()
+      })
     })
 
     app.use('/500', (req, res) => { throw new Error('500') })

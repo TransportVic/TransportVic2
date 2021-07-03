@@ -30,6 +30,9 @@ database.connect({
   let tbmTrips = await getCollection('tbm trips')
   let metroNotify = await getCollection('metro notify')
   let metroShunts = await getCollection('metro shunts')
+  let metroLocations = await getCollection('metro locations')
+
+  let metroLogger = await getCollection('metro logs')
 
   await stops.createIndex({
     stopName: 1,
@@ -267,6 +270,18 @@ database.connect({
     date: 1,
   }, {name: 'tram index'})
 
+  await tramTrips.createIndex({
+    routeNumber: 1,
+    date: 1,
+    tram: 1
+  }, {name: 'route operating days'})
+
+  await tramTrips.createIndex({
+    shift: 1,
+    date: 1,
+    tram: 1
+  }, {name: 'shift index'})
+
   console.log('Created tram trips index')
 
   await smartrakIDs.createIndex({
@@ -361,6 +376,22 @@ database.connect({
 
   console.log('Created Metro Shunts index')
 
-  updateStats('create-indexes', 54)
+  await metroLocations.createIndex({
+    consist: 1,
+    timestamp: 1
+  }, { name: 'metro locations index', unique: 1 })
+
+  console.log('Created Metro Shunts index')
+
+  await metroLogger.createIndex({
+    utc: 1,
+    referer: 1,
+    ip: 1,
+    userAgent: 1
+  }, { name: 'metro logger index', unique: 1 })
+
+  console.log('Created Metro Logger index')
+
+  updateStats('create-indexes', 59)
   process.exit()
 })

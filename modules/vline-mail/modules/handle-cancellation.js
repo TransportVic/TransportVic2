@@ -46,14 +46,14 @@ async function setServiceAsCancelled(db, departureTime, origin, destination, isC
 }
 
 async function cancellation(db, text) {
-  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]+) to ([\w ]+) (?:service|train|will|has|is)/)
+  let service = text.match(/(\d{1,2}[:.]\d{1,2}) ([\w ]+) to ([\w ]+) (?:will|has|is)/)
 
   if (service) {
     let departureTime = service[1].replace('.', ':')
     let origin = bestStop(service[2].trim()) + ' Railway Station'
     let destination = bestStop(service[3].trim()) + ' Railway Station'
     let isCoach = text.includes('coaches') && text.includes('replace')
-    console.log(service[1], service[2], service[3])
+
     await setServiceAsCancelled(db, departureTime, origin, destination, isCoach)
   }
 }

@@ -26,8 +26,8 @@ let baseIconHTML = `
 
 function generateName(train) {
   return `Run ${train.runID}
-  <br>Dest: ${train.destination.slice(0, -16)}
-  <br>Seen: ${train.nextStop.stopName.slice(0, -16)} Plat. ${train.nextStop.platform}
+  <br>Dest: ${train.destination}
+  <br>Next: ${train.nextStop.stopName.slice(0, -16)} Plat. ${train.nextStop.platform}
   <br>Type: ${train.vehicle}`
 }
 
@@ -80,5 +80,5 @@ function updateBody() {
 
 $.ready(() => {
   updateBody()
-  setInterval(updateBody, 1000 * 15)
+  setInterval(updateBody, 1000 * 10)
 })

@@ -10,7 +10,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Ventura Specials',
-  track: ['V21', 'V200', 'V287', 'V322', 'V784', 'V785', 'V786', 'V787', 'V789', 'V792', 'V795', 'V796', 'V1097', 'V1098', 'V1175', 'V1176', 'V1182', 'V1184', 'V1194', 'V1195', 'V1380', 'V1445'],
+  track: ['V21', 'V136', 'V143', 'V200', 'V287', 'V322', 'V343', 'V730', 'V734', 'V784', 'V785', 'V786', 'V787', 'V789', 'V792', 'V795', 'V796', 'V1097', 'V1098', 'V1175', 'V1176', 'V1182', 'V1184', 'V1194', 'V1195', 'V1380', 'V1445'],
   routes: [],
   type: 'exclude'
 }, {
@@ -35,7 +35,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Transdev Specials',
-  track: ['T703', 'T705', 'T708', 'T710', 'T712', 'T736', 'T737', 'T738', 'T739', 'T745'],
+  track: ['T703', 'T705', 'T708', 'T710', 'T712', 'T736', 'T737', 'T738', 'T739'],
   routes: [],
   type: 'exclude'
 }, {
@@ -50,12 +50,12 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Route Livery Buses',
-  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
+  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'CO107', 'CO108', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
   routes: ['201', '301', '401', '601'],
   type: 'exclude'
 }, {
   name: 'Non-Perm Route Livery Buses',
-  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
+  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'CO107', 'CO108', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
   routes: ['201', '301', '401', '601'],
   type: 'include',
   buses: 'exclude'
@@ -76,8 +76,13 @@ module.exports = [{
   type: 'include',
   buses: 'exclude'
 }, {
+  name: '703 Perms off 703',
+  track: ['V868', 'V869', 'V877', 'V878', 'V879', 'V880', 'V881', 'V882', 'V883', 'V884', 'V1237', 'V1238', 'V1239', 'V1240', 'V1241', 'V1242'],
+  routes: ['703'],
+  type: 'exclude'
+}, {
   name: 'CDC Oakleigh Specials',
-  track: ['CO7', 'CO8', 'CO11', 'CO12', 'CO13', 'CO100', 'CO103', 'CO104', 'CO105', 'CO107', 'CO108', 'CO109'],
+  track: ['CO7', 'CO8', 'CO11', 'CO12', 'CO13', 'CO34', 'CO100', 'CO103', 'CO104', 'CO105', 'CO109'],
   routes: [],
   type: 'exclude'
 }, {
@@ -107,7 +112,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'CDC Ballarat Specials',
-  track: ['CB146', 'CB147', 'CB152', 'CB153', 'CB155', 'CB156', 'CB162', 'CB174', 'CB175', 'CB176'],
+  track: ['CB146', 'CB147', 'CB152', 'CB153', 'CB155', 'CB156', 'CB162', 'CB171', 'CB174', 'CB175', 'CB176'],
   routes: [],
   type: 'exclude'
 }, {
@@ -132,7 +137,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Dysons Specials',
-  track: ['D184', 'D185', 'D186', 'D430', 'D431', 'D754', 'D756', 'D757', 'D758', 'D759', 'D762', 'D763', 'D764'],
+  track: ['D184', 'D185', 'D186', 'D189', 'D259', 'D260', 'D426', 'D427', 'D428', 'D429', 'D430', 'D431', 'D433', 'D434', 'D435', 'D754', 'D755', 'D756', 'D757', 'D758', 'D759', 'D760', 'D761', 'D762', 'D763', 'D764', 'D768'],
   routes: [],
   type: 'exclude'
 }, {
@@ -173,7 +178,12 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Latrobe Specials',
-  track: ['LV64', 'LV66', 'LV67'],
+  track: ['LV10', 'LV64', 'LV66', 'LV67'],
+  routes: [],
+  type: 'exclude'
+}, {
+  name: 'Whitemore Specials',
+  track: ['WM6695'],
   routes: [],
   type: 'exclude'
 }]

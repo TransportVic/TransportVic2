@@ -55,7 +55,10 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
     let previousDepartureTime = -1
 
     let routeData = await getRouteData(routes, routeGTFSID, routeCache)
-    if (!timings) console.log(tripID)
+
+    if (!timings) console.log('Failed to match up timings', tripID)
+    if (!routeData) console.log('Failed to load route', routeGTFSID)
+
     timings.stopTimings = timings.stopTimings.sort((a, b) => a.stopSequence - b.stopSequence)
 
     let stopTimings = await async.mapSeries(timings.stopTimings, async stopTiming => {
@@ -132,7 +135,7 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
       origin: stopTimings[0].stopName,
       departureTime: stopTimings[0].departureTime,
       gtfsDirection: trip.gtfsDirection,
-      direction: direction ? direction(trip.headsign, routeGTFSID) : null,
+      direction: direction ? direction(trip.headsign, routeGTFSID, tripID) : null,
       shapeID,
       gtfsMode: parseInt(gtfsID)
     }

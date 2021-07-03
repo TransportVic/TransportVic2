@@ -10,6 +10,9 @@ let undergroundLoopStations = ['Parliament', 'Flagstaff', 'Melbourne Central']
 let cityLoopStations = ['Southern Cross', ...undergroundLoopStations]
 let cityStations = [...cityLoopStations, 'Flinders Street']
 
+let mainLine = ['Paisley', 'Galvin']
+let altonaLoop = ['Seaholme', 'Altona', 'Westona']
+
 let northernGroup = ['Craigieburn', 'Sunbury', 'Upfield', 'Showgrounds/Flemington', 'Werribee', 'Williamstown']
 
 let defaultStoppingText = {
@@ -237,11 +240,9 @@ function getRouteStopsForDeparture(departure) {
 
 function checkAltonaRunning(departure) {
   if (departure.routeName === 'Werribee') {
-    if (departure.futureStops.includes('Altona')) {
-      let mainLine = ['Paisley', 'Galvin']
+    if (departure.allStops.includes('Altona')) {
       departure.routeStops = departure.routeStops.filter(e => !mainLine.includes(e))
     } else {
-      let altonaLoop = ['Seaholme', 'Altona', 'Westona']
       departure.routeStops = departure.routeStops.filter(e => !altonaLoop.includes(e))
     }
   }
