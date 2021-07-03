@@ -1175,6 +1175,7 @@ async function getDepartures(station, db, filter, backwards) {
 
       if (rceStations.includes(stationName)) {
         raceTrains = await getMissingRaceTrains(departures, scheduled)
+        raceTrains = raceTrains.filter(train => !extraTrains.includes(train))
       }
 
       return filterDepartures([...departures, ...extraTrains, ...raceTrains], filter)
