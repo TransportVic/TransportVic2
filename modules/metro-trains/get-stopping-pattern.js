@@ -342,29 +342,31 @@ module.exports = async function (data, db) {
       }
     })
 
-    let sssStop = stopTimings[0]
-    let missingStops = scheduledTrip.stopTimings.filter(stop => stop.stopName !== 'Southern Cross Railway Station').map(stop => {
-      let minDiff = (stop.departureTimeMinutes || stop.arrivalTimeMinutes) - sssStop.departureTimeMinutes
+    if (scheduledTrip) {
+      let sssStop = stopTimings[0]
+      let missingStops = scheduledTrip.stopTimings.filter(stop => stop.stopName !== 'Southern Cross Railway Station').map(stop => {
+        let minDiff = (stop.departureTimeMinutes || stop.arrivalTimeMinutes) - sssStop.departureTimeMinutes
 
-      let scheduledTime = sssTime.clone().add(minDiff, 'minutes')
-      let platform = '1'
-      if (stop.stopName === 'North Melbourne Railway Station' && direction === 'Down') {
-        platform = '2'
-      }
+        let scheduledTime = sssTime.clone().add(minDiff, 'minutes')
+        let platform = '1'
+        if (stop.stopName === 'North Melbourne Railway Station' && direction === 'Down') {
+          platform = '2'
+        }
 
-      return {
-        ...stop,
-        estimatedDepartureTime: null,
-        actualDepartureTimeMS: +scheduledTime,
-        scheduledDepartureTime: scheduledTime.toISOString(),
-        platform,
-        stopConditions: { pickup: 0, dropoff: 0 }
-      }
-    })
+        return {
+          ...stop,
+          estimatedDepartureTime: null,
+          actualDepartureTimeMS: +scheduledTime,
+          scheduledDepartureTime: scheduledTime.toISOString(),
+          platform,
+          stopConditions: { pickup: 0, dropoff: 0 }
+        }
+      })
 
-    let allStops = stopTimings.concat(missingStops).sort((a, b) => a.actualDepartureTimeMS - b.actualDepartureTimeMS)
-    stopTimings = allStops
-    cancelled = true
+      let allStops = stopTimings.concat(missingStops).sort((a, b) => a.actualDepartureTimeMS - b.actualDepartureTimeMS)
+      stopTimings = allStops
+      cancelled = true
+    }
   }
 
   let firstStop = stopTimings[0]
