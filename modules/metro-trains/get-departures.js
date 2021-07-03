@@ -29,6 +29,12 @@ let stationsAppendingUp = [
   'Richmond', 'North Melbourne', 'South Yarra'
 ]
 
+let rceStations = [
+  'Flemington Racecourse',
+  'Showgrounds',
+  'North Melbourne'
+]
+
 function addCityLoopRunning(train, stationName) {
   let { routeName, viaCityLoop, runDestination, runID } = train
   let loopRunning = []
@@ -1119,9 +1125,8 @@ function generateTripID(trip) {
   return trip.trueOrigin + trip.trueDestination + trip.trueDepartureTime
 }
 
-async function getExtraTrains(departures, direction, station, db) {
+async function getExtraTrains(departures, direction, scheduled) {
   let now = utils.now()
-  let scheduled = await departureUtils.getScheduledMetroDepartures(station, db)
 
   let inDirection = scheduled.filter(train => train.trip.direction === direction)
   let existingInDirection = departures.filter(train => train.trip.direction === direction)
@@ -1137,6 +1142,22 @@ async function getExtraTrains(departures, direction, station, db) {
   })
 }
 
+async function getMissingRaceTrains(departures, scheduled) {
+  let now = utils.now()
+
+  let raceTrains = scheduled.filter(train => train.trip.routeGTFSID === '2-ain')
+  let existingIDs = departures.filter(train => train.trip.routeGTFSID === '2-ain').map(train => generateTripID(train.trip))
+
+  let extras = raceTrains.filter(train => {
+    let id = generateTripID(train.trip)
+    return !existingIDs.includes(id)
+  })
+
+  extras.forEach(train => train.cancelled = true)
+
+  return extras
+}
+
 async function getDepartures(station, db, filter, backwards) {
   try {
     if (typeof filter === 'undefined') filter = true
@@ -1144,13 +1165,19 @@ async function getDepartures(station, db, filter, backwards) {
 
     return await utils.getData('metro-departures-new', stationName + backwards, async () => {
       let departures = await getDeparturesFromPTV(station, backwards, db)
-      let extraTrains = []
+      let extraTrains = [], raceTrains = []
+
+      let scheduled = await departureUtils.getScheduledMetroDepartures(station, db)
 
       if (stationsAppendingUp.includes(stationName)) {
-        extraTrains = await getExtraTrains(departures, 'Up', station, db)
+        extraTrains = await getExtraTrains(departures, 'Up', scheduled)
       }
 
-      return filterDepartures([...departures, ...extraTrains], filter)
+      if (rceStations.includes(stationName)) {
+        raceTrains = await getMissingRaceTrains(departures, scheduled)
+      }
+
+      return filterDepartures([...departures, ...extraTrains, ...raceTrains], filter)
     })
   } catch (e) {
     global.loggers.general.err('Error getting Metro departures', e)
