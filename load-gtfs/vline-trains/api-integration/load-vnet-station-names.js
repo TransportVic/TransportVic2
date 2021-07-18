@@ -18,7 +18,8 @@ const coachOverrides = [
   'Nhill: Station',
   'Dimboola Station',
   'Stawell Station',
-  'Horsham Station'
+  'Horsham Station',
+  'Werribee Station'
 ]
 
 const stations = Array.from($('Location')).filter(location => {

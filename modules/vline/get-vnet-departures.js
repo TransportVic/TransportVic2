@@ -55,6 +55,9 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
     let originVNETName = $$('Origin').text()
     let destinationVNETName = $$('Destination').text()
 
+    if ($$('Origin').attr('i:nil')) originVNETName = null
+    if ($$('Destination').attr('i:nil')) destinationVNETName = null
+
     if (!originDepartureTime.isValid()) return // Some really edge case where it returns a run with no departure data - discard it
 
     let accessibleTrain = $$('IsAccessibleAvailable').text() === 'true'
@@ -100,11 +103,16 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
     if (direction === 'D') direction = 'Down'
     else direction = 'Up'
 
+    if (!originVNETName && (runID[1] === '7' || runID[1] === '8')) originVNETName = 'Werribee Station'
+    if (!destinationVNETName && (runID[1] === '7' || runID[1] === '8')) destinationVNETName = 'Werribee Station'
+
+    if (!originVNETName || !destinationVNETName) return // Apparently origin or dest is sometimes unknown
+
     let originStation = await getStationFromVNETName(originVNETName, db)
     let destinationStation = await getStationFromVNETName(destinationVNETName, db)
 
-    if (!originStation || !destinationStation) return // Apparently origin or dest is sometimes unknown
-
+    if (!originStation || !destinationStation) return // Just in case we don't know the station
+  
     let originVLinePlatform = originStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
     let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
 
