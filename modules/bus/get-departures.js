@@ -219,8 +219,9 @@ async function getDeparturesFromPTV(stop, db) {
 
   potentialDuplicateLiveTrips.forEach(tripID => {
     let trips = liveTrips.filter(trip => trip.tripID === tripID)
-    let hasLive = trips.filter(trip => trip.vehicle)
+    let hasLive = trips.filter(trip => trip.vehicle || trip.estimatedDepartureTime)
 
+    // if (hasLive.length === 0) hasLive = trips[0]
     filteredLiveDepartures = filteredLiveDepartures.filter(trip => trip.tripID !== tripID).concat(hasLive)
   })
 
