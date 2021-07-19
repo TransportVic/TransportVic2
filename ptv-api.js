@@ -34,6 +34,8 @@ async function makeRequest(url, maxRetries=2, timeout=1900) {
         timeout
       }))
 
+      if (data.Message === 'An error has occurred.') throw new Error('PTV API Fault')
+
       let end = +new Date()
       let diff = end - start
 
