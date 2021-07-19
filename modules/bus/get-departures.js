@@ -221,7 +221,7 @@ async function getDeparturesFromPTV(stop, db) {
     let trips = liveTrips.filter(trip => trip.tripID === tripID)
     let hasLive = trips.filter(trip => trip.vehicle || trip.estimatedDepartureTime)
 
-    // if (hasLive.length === 0) hasLive = trips[0]
+    if (hasLive.length === 0) hasLive = trips[0]
     filteredLiveDepartures = filteredLiveDepartures.filter(trip => trip.tripID !== tripID).concat(hasLive)
   })
 
