@@ -218,16 +218,10 @@ async function getDeparturesFromPTV(stop, db) {
   })
 
   potentialDuplicateLiveTrips.forEach(tripID => {
-    let oldIndex = filteredLiveDepartures.findIndex(trip => trip.tripID === tripID)
-
     let trips = liveTrips.filter(trip => trip.tripID === tripID)
     let hasLive = trips.filter(trip => trip.vehicle)
 
-    filteredLiveDepartures = [
-      ...filteredLiveDepartures.slice(0, oldIndex),
-      ...hasLive,
-      ...filteredLiveDepartures.slice(oldIndex + 1)
-    ]
+    filteredLiveDepartures = filteredLiveDepartures.filter(trip => trip.tripID !== tripID).concat(hasLive)
   })
 
   let filteredDepartures = filteredLiveDepartures.concat(scheduledTrips.filter(d => {
