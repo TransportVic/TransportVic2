@@ -148,7 +148,7 @@ let lines = {
     'Williamstown Beach',
     'Williamstown'
   ],
-  Werribee: [
+  Werribee: [ // We can use this for GLG trains routed via WER
     'North Melbourne',
     'South Kensington',
     'Footscray',
@@ -165,7 +165,23 @@ let lines = {
     'Aircraft',
     'Williams Landing',
     'Hoppers Crossing',
-    'Werribee'
+    'Werribee',
+    'Little River',
+    'Lara',
+    'Corio',
+    'North Shore',
+    'North Geelong',
+    'Geelong',
+    'South Geelong',
+    'Marshall',
+    'Waurn Ponds',
+    'Winchelsea',
+    'Birregurra',
+    'Colac',
+    'Camperdown',
+    'Terang',
+    'Sherwood Park',
+    'Warrnambool'
   ],
   Shepparton: [
     'North Melbourne',

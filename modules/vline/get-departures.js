@@ -306,7 +306,11 @@ async function getScheduledDepartures(db, station) {
 
   return (await async.map(scheduled, async departure => {
     return await appendTripData(db, departure, vlinePlatforms)
-  })).filter(Boolean)
+  })).filter(Boolean).filter(departure => {
+    let origin = departure.trip.origin.slice(0, -16)
+    let destination = departure.trip.destination.slice(0, -16)
+    return !((origin === 'Werribee' && destination === 'Southern Cross') || (origin === 'Southern Cross' && destination === 'Werribee'))
+  })
 }
 
 function findUpcomingStops(departure, stopGTFSIDs) {
