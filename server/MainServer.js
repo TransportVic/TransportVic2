@@ -349,7 +349,8 @@ module.exports = class MainServer {
       res.json({
         status: 'ok',
         meanResponseTime: this.getAverageResponseTime(),
-        ptvMeanResponseTime: ptvAPI.getAverageResponseTime()
+        ptvMeanResponseTime: ptvAPI.getAverageResponseTime(),
+        ptvFaultRate: ptvAPI.getFaultRate()
       })
     })
 

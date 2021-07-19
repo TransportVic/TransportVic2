@@ -5,7 +5,14 @@ const cheerio = require('cheerio')
 
 let blankKey = {ptvDevID: "", ptvKey: ""}
 
-let past50ResponseTimes = []
+let pastResponseTimes = []
+let ptvResponses = []
+
+setInterval(() => {
+  let now = +new Date()
+  let hour = 1000 * 60 * 60
+  ptvResponses = ptvResponses.filter(resp => now - resp.time <= hour)
+}, 1000 * 60)
 
 function getPTVCreds() {
   if (ptvKeys.length === 0) return blankKey
@@ -34,18 +41,31 @@ async function makeRequest(url, maxRetries=2, timeout=1900) {
         timeout
       }))
 
-      if (data.Message === 'An error has occurred.') throw new Error('PTV API Fault')
-
       let end = +new Date()
       let diff = end - start
 
-      past50ResponseTimes = [...past50ResponseTimes.slice(-49), diff]
+      pastResponseTimes = [...pastResponseTimes.slice(-99), diff]
+
+      if (data.Message === 'An error has occurred.') {
+        ptvResponses.push({
+          time: end,
+          fault: true
+        })
+        throw new Error('PTV API Fault')
+      } else {
+        ptvResponses.push({
+          time: end,
+          fault: false
+        })
+      }
 
       return data
     })
   } catch (e) {
     if (e.message && e.message.toLowerCase().includes('network timeout')) {
-      past50ResponseTimes = [...past50ResponseTimes.slice(-49), timeout * maxRetries]
+      pastResponseTimes = [...pastResponseTimes.slice(-99), timeout * maxRetries]
+    } else {
+
     }
     throw e
   }
@@ -66,13 +86,19 @@ async function getPTVKey(baseURL='https://ptv.vic.gov.au') {
 
 
 function getAverageResponseTime() {
-  let counts = past50ResponseTimes.length
-  let sum = past50ResponseTimes.reduce((a, b) => a + b, 0)
+  let counts = pastResponseTimes.length
+  let sum = pastResponseTimes.reduce((a, b) => a + b, 0)
   let average = sum / counts
 
   return average
 }
 
+function getFaultRate() {
+  let faulty = ptvResponses.filter(r => r.fault).length
+  return faulty / ptvResponses.length * 100
+}
+
 module.exports = makeRequest
 module.exports.getPTVKey = getPTVKey
 module.exports.getAverageResponseTime = getAverageResponseTime
+module.exports.getFaultRate = getFaultRate
