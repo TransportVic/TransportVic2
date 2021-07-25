@@ -98,10 +98,9 @@ database.connect(async () => {
   }
 
   schedule([
-    [0, 60, 1],
-    [61, 239, 0.4],
+    [0, 60, 0.4],
+    [61, 239, 0.3],
     [240, 1199, 0.25],
-    [1200, 1380, 0.5],
-    [1381, 1440, 0.4]
+    [1200, 1440, 0.4],
   ], requestTimings, 'metro tracker', global.loggers.trackers.metro)
 })

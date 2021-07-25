@@ -16,7 +16,7 @@ let stops, timetables
 let bendigoRFRSection = ['Woodend', 'Macedon', 'Gisborne', 'Riddells Creek', 'Clarkefield']
 let metroStops = []
 
-function operatingDaysToArray (days) {
+function operatingDaysToArray(days) {
   days = days.replace(/ /g, '').replace(/&/g, ',')
   let daysOfWeek = ['Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun']
   let dayMapping = {
@@ -384,7 +384,16 @@ database.connect({
     }
   })
 
-  await timetables.bulkWrite(trips.map(trip => ({
+  let sat = trips.filter(trip => trip.operationDays[0] === 'Sat' && trip.operationDays.length === 1)
+  let satSun = trips.filter(trip => trip.operationDays.includes('Sat') && trip.operationDays.includes('Sun') && trip.operationDays.length === 2)
+  let toRemove = []
+  toRemove = sat.filter(satTrip => {
+    return satSun.find(sunTrip => sunTrip.runID === satTrip.runID)
+  })
+
+  let dedupedTrips = trips.filter(trip => !toRemove.includes(trip))
+
+  await timetables.bulkWrite(dedupedTrips.map(trip => ({
     insertOne: trip
   })))
 
