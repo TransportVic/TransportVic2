@@ -339,7 +339,14 @@ module.exports = {
       }
     }
 
-    if (!body && error) throw error
+    if (!body && error) {
+      if (error.message && error.message.toLowerCase().includes('network timeout')) {
+        let logMessage = `${fullOptions.timeout * maxRetries}ms ${url}`
+        if (global.loggers) global.loggers.fetch.log(logMessage)
+        else console.log(logMessage)
+      }
+      throw error
+    }
 
     let end = +new Date()
     let diff = end - start
