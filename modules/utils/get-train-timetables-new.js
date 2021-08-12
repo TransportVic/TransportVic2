@@ -121,18 +121,18 @@ function getLiveDeparture(data, db) {
   return getDeparture(data, db, true)
 }
 
-async function getScheduledDepartures(station, db, mode, timeout) {
+async function getScheduledDepartures(station, db, mode, time, timeout) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
   let staticTimetables = db.getCollection('timetables')
 
-  let minutesPastMidnight = utils.getMinutesPastMidnightNow()
+  let minutesPastMidnight = utils.getMinutesPastMidnight(time)
 
   let stopGTFSIDs = station.bays.filter(bay => bay.mode === mode).map(bay => bay.stopGTFSID)
 
   let gtfsDepartures = []
   let liveDepartures = []
-  let today = utils.now().startOf('day')
+  let startOfDay = time.clone().startOf('day')
 
   let days = {}
   let stationName = station.stopName.slice(0, -16)
@@ -153,7 +153,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
   }
 
   for (let i = 0; i <= 1; i++) {
-    let day = today.clone().add(-i, 'days')
+    let day = startOfDay.clone().add(-i, 'days')
 
     let departureTimeMinutes = (minutesPastMidnight % 1440) + 1440 * i
 
@@ -195,7 +195,7 @@ async function getScheduledDepartures(station, db, mode, timeout) {
     }
   })
 
-  let timeMS = +utils.now()
+  let timeMS = +time
   let timeoutMS = timeout * 60 * 1000
 
   let lateDepartures = await liveTimetables.findDocuments({
@@ -316,7 +316,7 @@ let lineGroups = {
 }
 
 async function getScheduledMetroDepartures(station, db) {
-  let departures = await getScheduledDepartures(station, db, 'metro train', 120)
+  let departures = await getScheduledDepartures(station, db, 'metro train', utils.now(), 120)
   let stopName = station.stopName.slice(0, -16)
   let stopCode = stopCodes[stopName]
   let isInCity = cityLoopStations.includes(stopName) || stopName === 'Flinders Street'
