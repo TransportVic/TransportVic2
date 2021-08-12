@@ -70,7 +70,7 @@ async function lookForShunts(allAlerts) {
       mismatch = (type === 'originate' ? liveTimetable.trueOrigin : liveTimetable.trueDestination).slice(0, -16) !== bestStop
     }
 
-    if (!tripAlerts.includes(alert.alertID) || mismatch) {
+    if ((!tripAlerts.includes(alert.alertID) || mismatch) && !liveTimetable.h) {
       liveTimetable = await getStoppingPattern({
         ptvRunID: utils.getPTVRunID(alert.runID),
         time: utils.now()

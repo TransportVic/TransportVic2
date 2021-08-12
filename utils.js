@@ -12,7 +12,7 @@ const locks = {}, caches = {}
 
 let forceLongRequest = true
 let interval = setInterval(() => {
-  if (module.exports.uptime() >= 20000) {
+  if (module.exports.uptime() >= 40000) {
     forceLongRequest = false
     clearInterval(interval)
 
