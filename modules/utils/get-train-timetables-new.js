@@ -260,7 +260,7 @@ async function getScheduledDepartures(station, db, mode, time, timeout) {
       estimatedDepartureTime,
       actualDepartureTime: estimatedDepartureTime || departureTime,
       fleetNumber: null,
-      runID: null,
+      runID: trip.runID || null,
       ptvRunID: null,
       platform,
       cancelled: trip.cancelled,
