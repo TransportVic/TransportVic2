@@ -1159,9 +1159,9 @@ async function getMissingRaceTrains(departures, scheduled) {
 }
 
 async function getDepartures(station, db, filter, backwards) {
+  let stationName = station.stopName.slice(0, -16)
   try {
     if (typeof filter === 'undefined') filter = true
-    let stationName = station.stopName.slice(0, -16)
 
     return await utils.getData('metro-departures-new', stationName + backwards, async () => {
       let departures = await getDeparturesFromPTV(station, backwards, db)
@@ -1183,7 +1183,9 @@ async function getDepartures(station, db, filter, backwards) {
   } catch (e) {
     global.loggers.general.err('Error getting Metro departures', e)
     try {
-      return await departureUtils.getScheduledMetroDepartures(station, db)
+      return await utils.getData('metro-departures-new', stationName + backwards, async () => {
+        return await departureUtils.getScheduledMetroDepartures(station, db)
+      }, 1000 * 10)
     } catch (ee) {
       global.loggers.general.err('Error getting Scheduled Metro departures', ee)
       return null

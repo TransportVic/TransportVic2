@@ -41,4 +41,12 @@ module.exports = class MongoDatabaseConnection {
   getCollection(collectionName) {
     return new DatabaseCollection(this.database.collection(collectionName))
   }
+
+  async adminCommand(command) {
+    return await this.database.executeDbAdminCommand(command)
+  }
+
+  async runCommand(command) {
+    return await this.database.command(command)
+  }
 }

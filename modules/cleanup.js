@@ -85,7 +85,7 @@ database.connect(async () => {
       .sort({ operationDays: 1 }).limit(1).next()
 
     let tripsStart = utils.parseDate(firstTrip.operationDays)
-    let tripsEnd = utils.now().add(-14, 'days')
+    let tripsEnd = utils.now().add(-31, 'days')
 
     let tripsDay = utils.allDaysBetweenDates(tripsStart, tripsEnd).map(date => utils.getYYYYMMDD(date))
 

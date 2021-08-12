@@ -20,7 +20,8 @@ async function inboundMessage(connection, data) {
 
     handleMessage(subject || '', textContent)
   } else {
-    global.loggers.spamMail.log(`Recieved Spam To ${data.to.text} From ${sender} (${connection.remoteAddress}, ${connection.clientHostname}): ${data.text.trim()}\n`)
+    global.loggers.spamMail.log(`Recieved Spam To ${data.to.text} From ${sender} (IP ${connection.remoteAddress}, HOST ${connection.clientHostname}): ${data.text.trim()}\n`)
+    global.loggers.spamMail.log('To Data: ', data.to)
   }
 }
 

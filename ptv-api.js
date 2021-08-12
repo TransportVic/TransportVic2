@@ -63,11 +63,11 @@ async function makeRequest(url, maxRetries=2, timeout=1900) {
     })
   } catch (e) {
     if (e.message && e.message.toLowerCase().includes('network timeout')) {
-      pastResponseTimes = [...pastResponseTimes.slice(-99), timeout * maxRetries]
+      pastResponseTimes = [...pastResponseTimes.slice(-99), e.timeoutDuration]
+      return null
     } else {
-
+      throw e
     }
-    throw e
   }
 }
 

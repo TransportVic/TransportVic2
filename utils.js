@@ -12,7 +12,7 @@ const locks = {}, caches = {}
 
 let forceLongRequest = true
 let interval = setInterval(() => {
-  if (module.exports.uptime() >= 60000) {
+  if (module.exports.uptime() >= 20000) {
     forceLongRequest = false
     clearInterval(interval)
 
@@ -341,9 +341,12 @@ module.exports = {
 
     if (!body && error) {
       if (error.message && error.message.toLowerCase().includes('network timeout')) {
-        let logMessage = `${fullOptions.timeout * maxRetries}ms ${url}`
+        let totalTime = fullOptions.timeout * maxRetries
+        let logMessage = `${totalTime}ms ${url}`
         if (global.loggers) global.loggers.fetch.log(logMessage)
         else console.log(logMessage)
+
+        error.timeoutDuration = totalTime
       }
       throw error
     }
@@ -524,7 +527,6 @@ module.exports = {
         locks[lock][key].on('loaded', resolve)
         locks[lock][key].on('fail', e => {
           reject(e)
-          console.log(e)
         })
       })
     }
@@ -549,6 +551,8 @@ module.exports = {
     caches[lock].put(key, data)
     locks[lock][key].emit('loaded', data)
     delete locks[lock][key]
+
+    if (ttl !== caches[lock].getTTL()) caches[lock].setTTL(ttl)
 
     return data
   },
