@@ -26,8 +26,14 @@ function trimLog(filename, isCombined) {
   let end = utils.now().add(-cutoff, 'days')
 
   let data = fs.readFileSync(filename).toString().split('\n')
+  let lastDate
+
   let recentLogs = data.filter(line => {
     let date = new Date((line.match(dateRegex) || [])[1])
+
+    if (date) lastDate = date
+    else date = lastDate
+
     return date - end >= 0
   })
 
