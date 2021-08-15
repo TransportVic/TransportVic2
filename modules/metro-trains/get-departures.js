@@ -1167,7 +1167,7 @@ async function getDepartures(station, db, filter, backwards) {
       let departures = await getDeparturesFromPTV(station, backwards, db)
       let extraTrains = [], raceTrains = []
 
-      let scheduled = await departureUtils.getScheduledMetroDepartures(station, db)
+      let scheduled = await departureUtils.getScheduledMetroDepartures(station, db, utils.now())
 
       if (stationsAppendingUp.includes(stationName)) {
         extraTrains = await getExtraTrains(departures, 'Up', scheduled)
@@ -1184,7 +1184,7 @@ async function getDepartures(station, db, filter, backwards) {
     global.loggers.general.err('Error getting Metro departures', e)
     try {
       return await utils.getData('metro-departures-new', stationName + backwards, async () => {
-        return await departureUtils.getScheduledMetroDepartures(station, db)
+        return await departureUtils.getScheduledMetroDepartures(station, db, utils.now())
       }, 1000 * 10)
     } catch (ee) {
       global.loggers.general.err('Error getting Scheduled Metro departures', ee)

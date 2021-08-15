@@ -512,7 +512,7 @@ router.get('/departures', async (req, res) => {
 
   if (station && !isNaN(parseInt(utc))) {
     let time = utils.parseTime(parseInt(utc))
-    let departures = await departureUtils.getScheduledDepartures(stationData, res.db, 'metro train', time, 30)
+    let departures = await departureUtils.getScheduledMetroDepartures(stationData, res.db, time)
     res.json(departures.filter(departure => !departure.isRailReplacementBus).map(departure => {
       return {
         sch: departure.scheduledDepartureTime,

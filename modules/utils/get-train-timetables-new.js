@@ -315,8 +315,8 @@ let lineGroups = {
   'Flemington Racecourse': 'NOR',
 }
 
-async function getScheduledMetroDepartures(station, db) {
-  let departures = await getScheduledDepartures(station, db, 'metro train', utils.now(), 120)
+async function getScheduledMetroDepartures(station, db, time) {
+  let departures = await getScheduledDepartures(station, db, 'metro train', time, 120)
   let stopName = station.stopName.slice(0, -16)
   let stopCode = stopCodes[stopName]
   let isInCity = cityLoopStations.includes(stopName) || stopName === 'Flinders Street'
@@ -349,6 +349,7 @@ async function getScheduledMetroDepartures(station, db) {
 
     if (isInCity && departure.trip.destination === 'Parliament Railway Station') return null
     if (isInCity && departure.trip.destination === 'Flagstaff Railway Station') return null
+    if (isInCity && departure.trip.destination === 'Southern Cross Railway Station') return null
 
     if (departure.trip.direction === 'Up') {
       departure.destination = departure.trip.trueDestination.slice(0, -16)
