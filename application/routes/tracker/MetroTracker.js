@@ -508,7 +508,9 @@ router.get('/departures', async (req, res) => {
     'bays.mode': 'metro train'
   })
 
-  if (station) {
+  res.header('Access-Control-Allow-Origin', '*')
+
+  if (station && !isNaN(parseInt(utc))) {
     let time = utils.parseTime(parseInt(utc))
     let departures = await departureUtils.getScheduledDepartures(stationData, res.db, 'metro train', time, 30)
     res.json(departures.filter(departure => !departure.isRailReplacementBus).map(departure => {
@@ -521,6 +523,8 @@ router.get('/departures', async (req, res) => {
         runID: departure.runID
       }
     }))
+  } else {
+    res.json({})
   }
 })
 
