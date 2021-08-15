@@ -520,7 +520,8 @@ router.get('/departures', async (req, res) => {
         act: departure.actualDepartureTime,
         platform: departure.platform,
         destination: departure.destination,
-        runID: departure.runID
+        runID: departure.runID,
+        cancelled: departure.cancelled || false
       }
     }))
   } else {
