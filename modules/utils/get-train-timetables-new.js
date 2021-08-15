@@ -170,6 +170,9 @@ async function getScheduledDepartures(station, db, mode, time, timeout) {
             $lte: departureTimeMinutes + timeout
           }
         }
+      },
+      trueDestination: {
+        $ne: station.stopName
       }
     }
 
@@ -216,7 +219,7 @@ async function getScheduledDepartures(station, db, mode, time, timeout) {
         }
       }
     },
-    destination: {
+    trueDestination: {
       $ne: station.stopName
     }
   }).toArray()
@@ -245,8 +248,21 @@ async function getScheduledDepartures(station, db, mode, time, timeout) {
         operationDays: day,
         routeGTFSID: trip.routeGTFSID,
         origin: trip.trueOrigin,
-        destination: trip.trueDestination,
-        departureTime: trip.trueDepartureTime,
+        $and: [{
+          stopTimings: {
+            $elemMatch: {
+              stopName: trip.trueDestination,
+              arrivalTime: trip.trueDestinationArrivalTime
+            }
+          }
+        }, {
+          stopTimings: {
+            $elemMatch: {
+              stopName: trip.trueOrigin,
+              departureTime: trip.trueDepartureTime
+            }
+          }
+        }],
         'stopTimings.stopName': station.stopName
       })
 
