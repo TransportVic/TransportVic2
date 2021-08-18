@@ -1,6 +1,6 @@
 const TimedCache = require('../../../../TimedCache')
 const utils = require('../../../../utils')
-const getStoppingPattern = require('../../../../modules/utils/get-stopping-pattern')
+const getStoppingPattern = require('../../../../modules/metro-trains/get-stopping-pattern')
 const getLineStops = require('../../../../additional-data/route-stops')
 const express = require('express')
 const router = new express.Router()

@@ -101,39 +101,46 @@ async function pickBestTrip(data, db) {
 
   if (!checkStop) checkStop = referenceTrip.stopTimings[0]
 
-  let checkStopTime = utils.parseTime(`${data.operationDays} ${checkStop.departureTime}`, 'YYYYMMDD HH:mm')
+  let checkStopTime = tripDay.clone().add(checkStop.departureTimeMinutes, 'minutes')
   let isoDeparture = checkStopTime.toISOString()
   let mode = trueMode === 'bus' ? 2 : 1
+
   try {
-    let {departures, routes, runs} = await ptvAPI(`/v3/departures/route_type/${mode}/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${tripStartTime.clone().add(-3, 'minutes').startOf('minute').toISOString()}&max_results=5&expand=run&expand=stop&expand=route`)
+    let ptvRunID = referenceTrip.runID
+    if (!ptvRunID) {
+      let {departures, routes, runs} = await ptvAPI(`/v3/departures/route_type/${mode}/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${checkStopTime.clone().add(-3, 'minutes').startOf('minute').toISOString()}&max_results=5&expand=run&expand=stop&expand=route`)
 
-    let departure = departures.find(departure => {
-      let run = runs[departure.run_ref]
-      let route = routes[departure.route_id]
-      let routeGTFSID = route.route_gtfs_id
+      let departure = departures.find(departure => {
+        let run = runs[departure.run_ref]
+        let route = routes[departure.route_id]
+        let routeGTFSID = route.route_gtfs_id
 
-      if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
-      if (routeGTFSID === '4-965') routeGTFSID = '8-965'
+        if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
+        if (routeGTFSID === '4-965') routeGTFSID = '8-965'
 
-      let matchingGroup = gtfsGroups.find(g => g.includes(routeGTFSID)) || [ routeGTFSID ]
+        let matchingGroup = gtfsGroups.find(g => g.includes(routeGTFSID)) || [ routeGTFSID ]
 
-      let destinationName = utils.getProperStopName(run.destination_name)
-      let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc).toISOString()
+        let destinationName = utils.getProperStopName(run.destination_name)
+        let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc).startOf('minute').toISOString()
 
-      return scheduledDepartureTime === isoDeparture &&
-        destinationName === referenceTrip.destination &&
-        matchingGroup.includes(referenceTrip.routeGTFSID)
+        return scheduledDepartureTime === isoDeparture &&
+          destinationName === referenceTrip.destination &&
+          matchingGroup.includes(referenceTrip.routeGTFSID)
+      })
+
+      if (!departure) return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
+      ptvRunID = departure.run_ref
+    }
+
+    let trip = await getStoppingPattern(db, ptvRunID, trueMode, null, null, gtfsTrip, {
+      runID: ptvRunID
     })
 
-    if (!departure) return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
-    let ptvRunID = departure.run_ref
-    let departureTime = departure.scheduled_departure_utc
-
-    let trip = await getStoppingPattern(db, ptvRunID, trueMode, departureTime, departure.stop_id, gtfsTrip)
     let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
 
     return { trip, tripStartTime, isLive }
   } catch (e) {
+    global.loggers.general.err('Failed to get Bus trip', e)
     return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
   }
 }
