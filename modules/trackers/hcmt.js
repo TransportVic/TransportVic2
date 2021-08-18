@@ -89,9 +89,9 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
   })
 
   existingTrip.stopTimings.forEach((stop, i) => {
-    if (i !== 0 && stop.estimatedDepartureTime) {
-      let previousStop = existingTrip.stopTimings[i - 1]
-      if (stop.estimatedDepartureTime < previousStop.estimatedDepartureTime) {
+    let previousStop = existingTrip.stopTimings[i - 1]
+    if (i !== 0 && stop.estimatedDepartureTime && previousStop.estimatedDepartureTime) {
+      if (stop.actualDepartureTimeMS < previousStop.actualDepartureTimeMS) {
         stop.estimatedDepartureTime.add(1, 'day')
       }
     }
@@ -165,6 +165,7 @@ async function mapStops(stops, stopDescriptors, startOfDay) {
       departureTime: scheduledTime,
       departureTimeMinutes: stop.scheduledDepartureMinutes,
       estimatedDepartureTime,
+      actualDepartureTimeMS: estimatedDepartureTime ? +estimatedDepartureTime : +stop.scheduledDepartureTime,
       scheduledDepartureTime: stop.scheduledDepartureTime.toISOString(),
       platform,
       stopConditions: { pickup: "0", dropoff: "0" }
@@ -182,7 +183,6 @@ async function mapStops(stops, stopDescriptors, startOfDay) {
 
   allStops.forEach(stop => {
     if (stop.estimatedDepartureTime) {
-      stop.actualDepartureTimeMS = +stop.estimatedDepartureTime
       stop.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
     }
   })
