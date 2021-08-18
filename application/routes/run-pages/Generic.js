@@ -133,7 +133,7 @@ async function pickBestTrip(data, db) {
     }
 
     let trip = await getStoppingPattern(db, ptvRunID, trueMode, null, null, gtfsTrip, {
-      runID: ptvRunID
+      runID: ptvRunID.includes('-') ? ptvRunID : null
     })
 
     let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
