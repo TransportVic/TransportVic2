@@ -190,10 +190,10 @@ database.connect(async err => {
 
     if (line.startsWith('Route')) {
       currentService = line.slice(6, 9)
-      return
-    } else if (line.startsWith('will not run')) {
-      return base
-    } else if (line.startsWith('operate to')) {
+      if (line.includes('will not run')) {
+        return base
+      } else return
+    } else if (line.includes('operate to')) {
       return null
     } else {
       let rawOrigin = line.slice(9, line.indexOf('-') - 1).replace('departing', '').trim()
