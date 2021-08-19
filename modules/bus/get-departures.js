@@ -273,28 +273,29 @@ async function getDepartures(stop, db) {
 
       let busTrips = db.getCollection('bus trips')
       let smartrakIDs = db.getCollection('smartrak ids')
+      let covid19Cancellations = db.getCollection('covid19 cancellations')
 
       return await async.map(departures, async departure => {
         let {trip} = departure
 
+        let { routeGTFSID } = trip
+        let tripQuery = {
+          date: utils.getYYYYMMDD(departure.originDepartureTime),
+          routeGTFSID,
+          origin: trip.origin,
+          destination: trip.destination,
+          departureTime: trip.departureTime,
+          destinationArrivalTime: trip.destinationArrivalTime
+        }
+
         if (!departure.vehicle) {
           let trip = departure.trip
-          let { routeGTFSID } = trip
           let shouldCheck = routeGTFSID.startsWith('8-')
             || (routeGTFSID.startsWith('4-') && !liveBusData.metroRoutesExcluded.includes(routeGTFSID))
             || liveBusData.regionalRoutes.includes(routeGTFSID)
 
           if (shouldCheck) {
-            let query = {
-              date: utils.getYYYYMMDD(departure.originDepartureTime),
-              routeGTFSID,
-              origin: trip.origin,
-              destination: trip.destination,
-              departureTime: trip.departureTime,
-              destinationArrivalTime: trip.destinationArrivalTime
-            }
-
-            let vehicle = await busTrips.findDocument(query)
+            let vehicle = await busTrips.findDocument(tripQuery)
 
             if (vehicle) {
               let { smartrakID } = vehicle
@@ -307,6 +308,9 @@ async function getDepartures(stop, db) {
             }
           }
         }
+
+        let covidCancellation = await covid19Cancellations.findDocument(tripQuery)
+        if (covidCancellation) departure.cancelled = true
 
         let hasSeenStop = false
         let upcomingStops = trip.stopTimings.filter(tripStop => {

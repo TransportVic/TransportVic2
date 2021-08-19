@@ -34,6 +34,8 @@ database.connect({
 
   let metroLogger = await getCollection('metro logs')
 
+  let covid19Cancelled = await getCollection('covid19 cancellations')
+
   await stops.createIndex({
     stopName: 1,
     'bays.stopGTFSID': 1
@@ -391,6 +393,18 @@ database.connect({
   }, { name: 'metro logger index', unique: 1 })
 
   console.log('Created Metro Logger index')
+
+  await covid19Cancelled.createIndex({
+    mode: 1,
+    date: 1,
+    routeGTFSID: 1,
+    origin: 1,
+    destination: 1,
+    departureTime: 1,
+    destinationArrivalTime: 1
+  }, { name: 'covid 19 cancellations index', unique: 1 })
+
+  console.log('Created Covid 19 Cancellations index')
 
   updateStats('create-indexes', 59)
   process.exit()

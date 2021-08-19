@@ -1,5 +1,5 @@
 extends ../layout
-    
+
 block head
   -
     let tripName = `${trip.departureTime} ${origin} to ${destination}`
@@ -30,7 +30,7 @@ block head
   title #{title}
 block title
   span #{tripName}
-  
+
 block style
   link(rel='stylesheet' href='/static/css/site-colours.css')
   link(rel='stylesheet' href='/static/css/timings/base-style.css')
@@ -90,7 +90,7 @@ block content
         'heritage train': 'Train Station',
         ferry: 'Ferry Stop'
       })[trip.mode]
-    
+
     span #{stopType}
   div.timing-list
     for stop in trip.stopTimings
@@ -116,7 +116,7 @@ block content
             let displayName = stopName
             if (stop.stopNumber)
               displayName += ` #${stop.stopNumber}`
-              
+
             if (stop.bay)
               displayName += ` (${stop.bay})`
           span.stopName=displayName
