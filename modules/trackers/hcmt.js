@@ -304,11 +304,11 @@ async function getDepartures() {
   // Filter as we can get trips for just past 3am for the next day and obv it won't match
 
   let pakenhamRunIDs = (await ptvAPI(`/v3/runs/route/11`)).runs.filter(run => {
-    return run.run_id >= 948000
-  }).map(run => utils.getRunID(run.run_id))
+    return parseInt(run.run_ref) >= 948000
+  }).map(run => utils.getRunID(run.run_ref))
   let cranbourneRunIDs = (await ptvAPI(`/v3/runs/route/4`)).runs.filter(run => {
-    return run.run_id >= 948000
-  }).map(run => utils.getRunID(run.run_id))
+    return parseInt(run.run_ref) >= 948000
+  }).map(run => utils.getRunID(run.run_ref))
 
   let allPTVRunIDs = pakenhamRunIDs.concat(cranbourneRunIDs)
 

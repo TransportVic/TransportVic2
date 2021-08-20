@@ -13,8 +13,8 @@ let liveTimetables
 
 async function requestTimings() {
   let racecourseRunIDs = (await ptvAPI(`/v3/runs/route/1482`)).runs.filter(run => {
-    return run.run_id >= 948000
-  }).map(run => ({ ptvRunID: run.run_id, runID: utils.getRunID(run.run_id)}))
+    return parseInt(run.run_ref) >= 948000
+  }).map(run => ({ ptvRunID: run.run_ref, runID: utils.getRunID(run.run_ref)}))
 
   let extraTrains = racecourseRunIDs.filter(train => train.runID[0] === 'R' && train.runID[1] !== '4' && train.runID[1] !== '8')
 
