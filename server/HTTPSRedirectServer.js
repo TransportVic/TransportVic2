@@ -5,7 +5,7 @@ const config = require('../config.json')
 
 module.exports = class HTTPSRedirectServer {
   app (req, res, next) {
-    if (req.url.startsWith('.well-known')) return next()
+    if (req.url.startsWith('/.well-known')) return next()
 
     const redirectedURL = 'https://' + req.headers.host + req.url
 
