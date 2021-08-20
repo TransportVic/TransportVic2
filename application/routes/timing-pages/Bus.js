@@ -30,8 +30,6 @@ async function loadDepartures(req, res) {
       late: 5
     })
 
-    if (departure.cancelled) departure.headwayDevianceClass = 'cancelled'
-
     departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
     let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
