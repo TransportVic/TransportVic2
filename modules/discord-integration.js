@@ -10,7 +10,7 @@ module.exports = async (type, text) => {
     if (text.length > 2000) {
       chunks = []
 
-      let lines = text.split('\n').filter(Boolean)
+      let lines = text.split('\n')
       let currentChunk = []
       let currentLength = 0
       for (let i = 0; i < lines.length; i ++) {
