@@ -300,7 +300,7 @@ async function getDepartures() {
 
   let allTrips
   if (dayOfWeek === 'Fri' || dayOfWeek === 'Sat') allTrips = rawTrips
-  else allTrips = rawTrips.filter(trip => trip.stopsAvailable[0].stopSeconds < 86400)
+  else allTrips = rawTrips.filter(trip => trip.stopsAvailable[0].stopSeconds < 97200) // No reasonable weekday trip goes past 3am
   // Filter as we can get trips for just past 3am for the next day and obv it won't match
 
   let pakenhamRunIDs = (await ptvAPI(`/v3/runs/route/11`)).runs.filter(run => {
