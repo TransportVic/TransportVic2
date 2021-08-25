@@ -1138,7 +1138,7 @@ async function getExtraTrains(departures, direction, scheduled) {
   })
 
   return extras.filter(train => {
-    return train.actualDepartureTime.diff(now, 'minutes') > 5
+    return train.actualDepartureTime.diff(now, 'minutes') > 5 && !train.trip.h
   })
 }
 

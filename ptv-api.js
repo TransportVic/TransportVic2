@@ -44,7 +44,7 @@ async function makeRequest(url, maxRetries=2, timeout=1900) {
       let end = +new Date()
       let diff = end - start
 
-      pastResponseTimes = [...pastResponseTimes.slice(-99), diff]
+      pastResponseTimes = [...pastResponseTimes.slice(-39), diff]
 
       if (data.Message === 'An error has occurred.') {
         ptvResponses.push({
