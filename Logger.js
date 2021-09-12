@@ -22,7 +22,7 @@ module.exports = class Logger {
 
   level(level, ...objects) {
     let text = format.apply(null, ...objects)
-    let logData = `${level} ${this.format(text)}`
+    let logData = text.split('\n').map(line => `${level} ${this.format(line)}`).join('\n')
 
     this.stream.write(logData + '\n')
     console.log(logData)

@@ -3,14 +3,6 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 global.startTime = +new Date()
 require('./utils')
 
-const config = require('./config.json')
-const HTTPServer = require('./server/HTTPServer')
-const HTTPSServer = require('./server/HTTPSServer')
-const HTTPSRedirectServer = require('./server/HTTPSRedirectServer')
-const MainServer = require('./server/MainServer')
-
-const WebsocketServer = require('./server/WebsocketServer')
-
 const Logger = require('./Logger')
 const path = require('path')
 
@@ -34,6 +26,15 @@ global.loggers = {
   general: new Logger(path.join(__dirname, 'logs', 'general'), 'GENERAL'),
   certs: new Logger(path.join(__dirname, 'logs', 'certs'), 'CERTS')
 }
+
+const config = require('./config.json')
+const HTTPServer = require('./server/HTTPServer')
+const HTTPSServer = require('./server/HTTPSServer')
+const HTTPSRedirectServer = require('./server/HTTPSRedirectServer')
+const MainServer = require('./server/MainServer')
+
+const WebsocketServer = require('./server/WebsocketServer')
+
 
 require('./modules/vline-mail')
 require('./security/LetsEncryptCertificateRenewal')
