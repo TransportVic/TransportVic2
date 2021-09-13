@@ -88,14 +88,15 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
     }
   })
 
-  existingTrip.stopTimings.forEach((stop, i) => {
-    let previousStop = existingTrip.stopTimings[i - 1]
-    if (i !== 0 && stop.estimatedDepartureTime && previousStop.estimatedDepartureTime) {
-      if (stop.actualDepartureTimeMS < previousStop.actualDepartureTimeMS) {
-        stop.estimatedDepartureTime.add(1, 'day')
-      }
-    }
-  })
+  // What was this for again?
+  // existingTrip.stopTimings.forEach((stop, i) => {
+  //   let previousStop = existingTrip.stopTimings[i - 1]
+  //   if (i !== 0 && stop.estimatedDepartureTime && previousStop.estimatedDepartureTime) {
+  //     if (stop.actualDepartureTimeMS < previousStop.actualDepartureTimeMS) {
+  //       stop.estimatedDepartureTime.add(1, 'day')
+  //     }
+  //   }
+  // })
 
   existingTrip.stopTimings.forEach(stop => {
     if (stop.estimatedDepartureTime && stop.estimatedDepartureTime.toISOString) { // If it is an existing value it is already a string
