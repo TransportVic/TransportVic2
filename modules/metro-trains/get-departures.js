@@ -696,7 +696,9 @@ async function mapTrain(train, metroPlatform, notifyData, db) {
     isRailReplacementBus: false,
     suspension: null,
     isSkippingLoop: null,
-    location: train.location
+    location: train.location,
+    notifyAlerts: relevantAlerts,
+    tripAlerts
   }
 }
 
@@ -724,22 +726,31 @@ function determineLoopRunning(runID, routeName, direction) {
 function appendDepartureDay(departure, stopGTFSID) {
   let { trip } = departure
   let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+  let firstStop = trip.stopTimings.find(tripStop => tripStop.stopName === trip.trueOrigin)
+  let originDepartureMinutes = firstStop.departureTimeMinutes
+
+  let originDepartureTime
   if (!stopData) {
     global.loggers.general.warn('No departure day', stopGTFSID, departure)
-    if (departure.trip.runID) { // Live trip
-      departure.departureDay = departure.trip.operationDays
-      departure.trueDepartureDay = departure.departureDay
+    let departureTimeMinutes = utils.getMinutesPastMidnight(departure.scheduledDepartureTime)
+    if (departureTimeMinutes >= 180) { // 3am - midnight
+      if (departureTimeMinutes > originDepartureMinutes) { // As expected, means no 3am stuff
+        originDepartureTime = departure.scheduledDepartureTime.clone().startOf('day').add(originDepartureMinutes, 'minutes')
+      } else { // Our stop is past 3am but the day is PREVIOUS DAY
+        originDepartureTime = departure.scheduledDepartureTime.clone().startOf('day').add(originDepartureMinutes - 1440, 'minutes')
+      }
+    } else { // midnight - 3am
+      if (originDepartureMinutes < 180) { // Departure is also midnight - 3am
+        originDepartureTime = departure.scheduledDepartureTime.clone().startOf('day').add(originDepartureMinutes, 'minutes')
+      } else { // Departure is 3am - midnight PREVIOUS DAY
+        originDepartureTime = departure.scheduledDepartureTime.clone().startOf('day').add(originDepartureMinutes - 1440, 'minutes')
+      }
     }
-
-    return
+  } else {
+    let stopDepartureMinutes = stopData.departureTimeMinutes || stopData.arrivalTimeMinutes
+    let minutesDiff = stopDepartureMinutes - originDepartureMinutes
+    originDepartureTime = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
   }
-
-  let firstStop = trip.stopTimings.find(tripStop => tripStop.stopName === trip.trueOrigin)
-
-  let originDepartureMinutes = firstStop.departureTimeMinutes
-  let stopDepartureMinutes = stopData.departureTimeMinutes || stopData.arrivalTimeMinutes
-  let minutesDiff = stopDepartureMinutes - originDepartureMinutes
-  let originDepartureTime = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
 
   departure.originDepartureTime = originDepartureTime
   departure.departureDay = utils.getYYYYMMDD(originDepartureTime)
@@ -760,6 +771,14 @@ function findUpcomingStops(departure, stopGTFSID) {
 
   departure.allStops = stopNames.slice(0, destinationIndex + 1)
   departure.futureStops = futureStops
+
+  if (currentIndex === -1) {
+    global.loggers.general.warn('Dropped Shorted metro run', departure.runID, {
+      stopGTFSID,
+      departureTime: departure.scheduledDepartureTime
+    })
+    departure.shortenedAndRemove = true
+  }
 }
 
 
@@ -1088,6 +1107,8 @@ async function getDeparturesFromPTV(station, backwards, db) {
     appendDepartureDay(departure, metroPlatform.stopGTFSID)
     findUpcomingStops(departure, metroPlatform.stopGTFSID)
   })
+
+  allDepartures = allDepartures.filter(departure => !departure.shortenedAndRemove)
 
   await saveConsists(mappedTrains, db)
   await saveLocations(mappedTrains, db)
