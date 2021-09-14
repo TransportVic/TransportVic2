@@ -161,7 +161,7 @@ async function requestData() {
         routeName: disruption.lines.map(routeID => routeIDs[routeID]),
         fromDate: parseInt(disruption.from_date),
         toDate: parseInt(disruption.to_date),
-        type: 'suspended',
+        type: disruption.alert_type,
         text: disruption.notice.replace(/  +/g, ' '),
         active: true
       }
