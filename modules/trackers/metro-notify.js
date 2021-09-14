@@ -157,12 +157,12 @@ async function requestData() {
   if (data.disruptions) {
     data.disruptions.forEach(disruption => {
       mergedAlerts[disruption.id] = {
-        alertID: disruption.id,
+        alertID: disruption.id.toString(),
         routeName: disruption.lines.map(routeID => routeIDs[routeID]),
         fromDate: parseInt(disruption.from_date),
         toDate: parseInt(disruption.to_date),
         type: 'suspended',
-        text: disruption.notice.replace(/<\/?[a-zA-Z]>/, ' ').replace(/  +/g, ' '),
+        text: disruption.notice.replace(/  +/g, ' '),
         active: true
       }
     })
