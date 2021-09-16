@@ -145,7 +145,8 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
           consist: [],
         },
         h: true
-      })
+      }),
+      forming: trip.forming === '0' ? null : trip.forming
     }
   })
 }
