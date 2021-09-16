@@ -138,7 +138,14 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
       trueDestinationArrivalTime: lastStop.arrivalTime,
       destinationArrivalTime: lastStop.arrivalTime,
       cancelled: trip.stopsAvailable[0].cancelled,
-      h: true
+      ...(existingTrip.h ? {} : {
+        vehicle: {
+          size: '7',
+          type: 'HCMT',
+          consist: [],
+        },
+        h: true
+      })
     }
   })
 }
