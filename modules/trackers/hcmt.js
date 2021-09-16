@@ -137,7 +137,8 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
       destination: lastStop.stopName,
       trueDestinationArrivalTime: lastStop.arrivalTime,
       destinationArrivalTime: lastStop.arrivalTime,
-      cancelled: trip.stopsAvailable[0].cancelled
+      cancelled: trip.stopsAvailable[0].cancelled,
+      h: true
     }
   })
 }
@@ -259,9 +260,7 @@ async function checkTrip(trip, stopDepartures, startOfDay, day, now) {
   let stopDescriptors = stopDepartures.filter(stop => stop.trip_id === trip.runID).sort((a, b) => a.time_seconds - b.time_seconds)
 
   if (existingTrip) {
-    if (existingTrip.h) {
-      await appendNewData(existingTrip, trip, stopDescriptors, startOfDay)
-    }
+    await appendNewData(existingTrip, trip, stopDescriptors, startOfDay)
   } else {
     global.loggers.trackers.metro.log('[HCMT]: Identified HCMT Trip #' + trip.runID)
     await createTrip(trip, stopDescriptors, startOfDay)
