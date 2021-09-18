@@ -45,7 +45,7 @@ module.exports = [{
   type: 'include'
 }, {
   name: 'Cranbourne Specials',
-  track: ['CR3', 'CR9', 'CR37'],
+  track: ['CR3', 'CR9', 'CR11', 'CR13', 'CR37'],
   routes: [],
   type: 'exclude'
 }, {
@@ -137,7 +137,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Dysons Specials',
-  track: ['D184', 'D185', 'D186', 'D189', 'D259', 'D260', 'D426', 'D427', 'D428', 'D429', 'D430', 'D431', 'D433', 'D434', 'D435', 'D754', 'D755', 'D756', 'D757', 'D758', 'D759', 'D760', 'D761', 'D762', 'D763', 'D764', 'D768'],
+  track: ['D184', 'D185', 'D186', 'D189', 'D259', 'D260', 'D281', 'D282', 'D426', 'D427', 'D428', 'D429', 'D430', 'D431', 'D433', 'D434', 'D435', 'D754', 'D755', 'D756', 'D757', 'D758', 'D759', 'D760', 'D761', 'D762', 'D763', 'D764', 'D768'],
   routes: [],
   type: 'exclude'
 }, {
