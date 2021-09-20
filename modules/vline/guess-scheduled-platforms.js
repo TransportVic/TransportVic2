@@ -213,5 +213,7 @@ module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday)
     return 2
   }
 
+  if (stationName === 'Werribee') return 2 // Per Metro platforms being altered it appears to be 2
+
   if (singlePlatforms.includes(stationName)) return 1
 }

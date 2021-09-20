@@ -39,6 +39,9 @@ if (modules.tracker && modules.tracker.hcmt)
 if (modules.tracker && modules.tracker.metro)
   require('../modules/trackers/metro')
 
+if (modules.tracker && modules.tracker.metroRaceTrains)
+  require('../modules/trackers/metro-race-trains')
+
 if (modules.tracker && modules.tracker.metroLocations)
   require('../modules/trackers/metro-locations')
 
@@ -346,7 +349,8 @@ module.exports = class MainServer {
       res.json({
         status: 'ok',
         meanResponseTime: this.getAverageResponseTime(),
-        ptvMeanResponseTime: ptvAPI.getAverageResponseTime()
+        ptvMeanResponseTime: ptvAPI.getAverageResponseTime(),
+        ptvFaultRate: ptvAPI.getFaultRate()
       })
     })
 

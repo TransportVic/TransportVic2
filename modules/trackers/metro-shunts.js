@@ -4,7 +4,7 @@ const utils = require('../../utils')
 const urls = require('../../urls')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const schedule = require('./scheduler')
-const getStoppingPattern = require('../utils/get-stopping-pattern')
+const getStoppingPattern = require('../metro-trains/get-stopping-pattern')
 const ptvAPI = require('../../ptv-api')
 const { getDayOfWeek } = require('../../public-holidays')
 

@@ -26,8 +26,14 @@ function trimLog(filename, isCombined) {
   let end = utils.now().add(-cutoff, 'days')
 
   let data = fs.readFileSync(filename).toString().split('\n')
+  let lastDate
+
   let recentLogs = data.filter(line => {
     let date = new Date((line.match(dateRegex) || [])[1])
+
+    if (date) lastDate = date
+    else date = lastDate
+
     return date - end >= 0
   })
 
@@ -85,7 +91,7 @@ database.connect(async () => {
       .sort({ operationDays: 1 }).limit(1).next()
 
     let tripsStart = utils.parseDate(firstTrip.operationDays)
-    let tripsEnd = utils.now().add(-14, 'days')
+    let tripsEnd = utils.now().add(-31, 'days')
 
     let tripsDay = utils.allDaysBetweenDates(tripsStart, tripsEnd).map(date => utils.getYYYYMMDD(date))
 

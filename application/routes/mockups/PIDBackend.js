@@ -211,6 +211,11 @@ async function getStationArrivals(station, db) {
 
 function getRouteStopsForDeparture(departure) {
   let routeStops = getRouteStops(departure.routeName).slice(0)
+  if (departure.routeName === 'Geelong' && (
+    departure.allStops.includes('Werribee') || departure.allStops.includes('Newport')
+  )) {
+    routeStops = getRouteStops('Werribee').slice(0)
+  }
 
   if (departure.type === 'vline' && routeStops.includes('Southern Cross')) {
     if (departure.direction === 'Down') return routeStops

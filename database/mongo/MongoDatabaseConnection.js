@@ -4,12 +4,12 @@ const { MongoClient } = MongoDB
 const DatabaseCollection = require('./MongoDatabaseCollection')
 
 module.exports = class MongoDatabaseConnection {
-  constructor (databaseURL, databaseName) {
+  constructor(databaseURL, databaseName) {
     this.databaseURL = databaseURL
     this.databaseName = databaseName
   }
 
-  connect (options, callback) {
+  connect(options, callback) {
     if (callback == null) {
       callback = options
     }
@@ -25,12 +25,12 @@ module.exports = class MongoDatabaseConnection {
     })
   }
 
-  async createCollection (collectionName, options) {
+  async createCollection(collectionName, options) {
     await this.database.createCollection(collectionName, {
       ...options,
       storageEngine: {
         wiredTiger: {
-          configString: 'block_compressor=zstd'
+          configString: 'block_compressor=zstd,prefix_compression=true'
         }
       }
     })
@@ -38,7 +38,15 @@ module.exports = class MongoDatabaseConnection {
     return this.getCollection(collectionName)
   }
 
-  getCollection (collectionName) {
+  getCollection(collectionName) {
     return new DatabaseCollection(this.database.collection(collectionName))
+  }
+
+  async adminCommand(command) {
+    return await this.database.executeDbAdminCommand(command)
+  }
+
+  async runCommand(command) {
+    return await this.database.command(command)
   }
 }

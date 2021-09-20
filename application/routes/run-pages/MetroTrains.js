@@ -237,7 +237,14 @@ async function pickBestTrip(data, db) {
 
     // interrim workaround cos when services start from a later stop they're really cancelled
     // in the stops before, but PTV thinks otherwise...
-    if (!departureToUse) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false, needsRedirect } : null
+    if (!departureToUse) {
+      let needsRedirect = referenceTrip ? (referenceTrip.trueOrigin !== originStop.stopName
+        || referenceTrip.trueDestination !== destinationStop.stopName
+        || referenceTrip.trueDepartureTime !== data.departureTime
+        || referenceTrip.trueDestinationArrivalTime !== data.destinationArrivalTime) : false
+
+      return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false, needsRedirect } : null
+    }
     let ptvRunID = departureToUse.run_ref
     let departureTime = departureToUse.scheduled_departure_utc
 

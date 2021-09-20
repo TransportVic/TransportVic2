@@ -27,4 +27,12 @@ module.exports = class TimedCache {
     }
   }
 
+  getTTL() {
+    return this.ttl
+  }
+
+  setTTL(ttl) {
+    this.ttl = ttl
+  }
+
 }

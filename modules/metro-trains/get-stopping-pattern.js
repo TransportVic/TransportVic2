@@ -319,13 +319,65 @@ module.exports = async function (data, db) {
     })
   }
 
+  if (runID && routeGTFSID === '2-ain' && stopTimings.length === 1) {
+    let gtfsTimetables = db.getCollection('gtfs timetables')
+    let sssTime = utils.parseTime(stopTimings[0].scheduledDepartureTime)
+    let departureDay = utils.getYYYYMMDD(sssTime)
+    let sssTimeHHMM = utils.formatHHMM(sssTime)
+
+    let scheduledTrip = await gtfsTimetables.findDocument({
+      operationDays: departureDay,
+      mode: 'metro train',
+      routeGTFSID: '2-ain',
+      direction,
+      stopTimings: {
+        $elemMatch: {
+          stopName: 'Southern Cross Railway Station',
+          ...(direction === 'Down' ? {
+            departureTime: sssTimeHHMM
+          } : {
+            arrivalTime: sssTimeHHMM
+          })
+        }
+      }
+    })
+
+    if (scheduledTrip) {
+      let sssStop = stopTimings[0]
+      let missingStops = scheduledTrip.stopTimings.filter(stop => stop.stopName !== 'Southern Cross Railway Station').map(stop => {
+        let minDiff = (stop.departureTimeMinutes || stop.arrivalTimeMinutes) - sssStop.departureTimeMinutes
+
+        let scheduledTime = sssTime.clone().add(minDiff, 'minutes')
+        let platform = '1'
+        if (stop.stopName === 'North Melbourne Railway Station' && direction === 'Down') {
+          platform = '2'
+        }
+
+        return {
+          ...stop,
+          estimatedDepartureTime: null,
+          actualDepartureTimeMS: +scheduledTime,
+          scheduledDepartureTime: scheduledTime.toISOString(),
+          platform,
+          stopConditions: { pickup: 0, dropoff: 0 }
+        }
+      })
+
+      let allStops = stopTimings.concat(missingStops).sort((a, b) => a.actualDepartureTimeMS - b.actualDepartureTimeMS)
+      stopTimings = allStops
+      cancelled = true
+    }
+  }
+
   let firstStop = stopTimings[0]
   let lastStop = stopTimings[stopTimings.length - 1]
 
-  firstStop.arrivalTime = null
-  firstStop.arrivalTimeMinutes = null
-  lastStop.departureTime = null
-  lastStop.departureTimeMinutes = null
+  if (firstStop !== lastStop) {
+    firstStop.arrivalTime = null
+    firstStop.arrivalTimeMinutes = null
+    lastStop.departureTime = null
+    lastStop.departureTimeMinutes = null
+  }
 
   let routeNumber = referenceTrip ? referenceTrip.routeNumber : route.routeNumber
 

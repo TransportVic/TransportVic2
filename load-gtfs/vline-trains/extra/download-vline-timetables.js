@@ -43,6 +43,7 @@ async function main() {
 
   updateStats('download-vline-timetables', links.length)
   console.log('Completed downloading ' + links.length + ' PDF timetables from V/Line')
+  process.exit(0)
 }
 
 main()

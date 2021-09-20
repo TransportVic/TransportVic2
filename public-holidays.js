@@ -25,11 +25,15 @@ function editName(name) {
 }
 
 events.forEach(event => {
-  let start = event.start.toISOString()
-  let day = utils.parseTime(start)
-  let name = editName(event.summary)
+  try {
+    let start = event.start.toISOString()
+    let day = utils.parseTime(start)
+    let name = editName(event.summary)
 
-  eventCache[utils.getYYYYMMDD(day)] = name
+    eventCache[utils.getYYYYMMDD(day)] = name
+  } catch (e) {
+    global.loggers.error.err('Failed to load holiday data', event)
+  }
 })
 
 function getPublicHolidayName(time) {

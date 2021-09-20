@@ -62,7 +62,7 @@ async function requestTimings() {
 }
 
 async function trainCount(stopGTFSID) {
-  let { departures } = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&max_results=7&include_cancelled=true`, 3, 3000)
+  let { departures } = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&include_cancelled=true`, 3, 3000)
   let today = utils.getYYYYMMDDNow()
 
   let trains = departures.filter(departure => {
@@ -80,7 +80,7 @@ database.connect(async () => {
   metroTrips = database.getCollection('metro trips')
 
   try {
-    if (await trainCount(20227) >= 4) {
+    if (await trainCount(20027) >= 4) {
       stops.push('Flemington Racecourse')
       global.loggers.trackers.metro.log('Found at least 4 RCE trains, monitoring RCE')
     }
@@ -89,7 +89,7 @@ database.connect(async () => {
   }
 
   try {
-    if (await trainCount(20228) >= 4) {
+    if (await trainCount(20028) >= 4) {
       stops.push('Showgrounds')
       global.loggers.trackers.metro.log('Found at least 4 SGS trains, monitoring SGS')
     }
@@ -98,10 +98,9 @@ database.connect(async () => {
   }
 
   schedule([
-    [0, 60, 1],
-    [61, 239, 0.4],
+    [0, 60, 0.4],
+    [61, 239, 0.3],
     [240, 1199, 0.25],
-    [1200, 1380, 0.5],
-    [1381, 1440, 0.4]
+    [1200, 1440, 0.4],
   ], requestTimings, 'metro tracker', global.loggers.trackers.metro)
 })

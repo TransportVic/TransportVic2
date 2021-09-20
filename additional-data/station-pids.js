@@ -207,7 +207,7 @@ module.exports = {
   "Morradoo": [],
   "Crib Point": [],
   "Drouin": [],
-  "Longwarry": [],
+  "Longwarry": [...platr(1, [], 'vline-half-platform')],
   "Bunyip": [],
   "Trafalgar": [],
   "Moe": [],

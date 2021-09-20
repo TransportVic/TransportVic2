@@ -497,6 +497,8 @@ router.get('/operator-unknown', async (req, res) => {
 
   if (!operator) {
     return res.render('tracker/bus/by-operator-unknown', {
+      tripsToday: [],
+      busesByDay: {},
       buses: {},
       operator: '',
       date: utils.parseTime(date, 'YYYYMMDD')

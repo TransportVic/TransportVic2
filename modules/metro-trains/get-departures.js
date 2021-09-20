@@ -29,6 +29,12 @@ let stationsAppendingUp = [
   'Richmond', 'North Melbourne', 'South Yarra'
 ]
 
+let rceStations = [
+  'Flemington Racecourse',
+  'Showgrounds',
+  'North Melbourne'
+]
+
 function addCityLoopRunning(train, stationName) {
   let { routeName, viaCityLoop, runDestination, runID } = train
   let loopRunning = []
@@ -690,7 +696,9 @@ async function mapTrain(train, metroPlatform, notifyData, db) {
     isRailReplacementBus: false,
     suspension: null,
     isSkippingLoop: null,
-    location: train.location
+    location: train.location,
+    notifyAlerts: relevantAlerts,
+    tripAlerts
   }
 }
 
@@ -718,22 +726,31 @@ function determineLoopRunning(runID, routeName, direction) {
 function appendDepartureDay(departure, stopGTFSID) {
   let { trip } = departure
   let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+  let firstStop = trip.stopTimings.find(tripStop => tripStop.stopName === trip.trueOrigin)
+  let originDepartureMinutes = firstStop.departureTimeMinutes
+
+  let originDepartureTime
   if (!stopData) {
     global.loggers.general.warn('No departure day', stopGTFSID, departure)
-    if (departure.trip.runID) { // Live trip
-      departure.departureDay = departure.trip.operationDays
-      departure.trueDepartureDay = departure.departureDay
+    let departureTimeMinutes = utils.getMinutesPastMidnight(departure.scheduledDepartureTime)
+    if (departureTimeMinutes >= 180) { // 3am - midnight
+      if (departureTimeMinutes > originDepartureMinutes) { // As expected, means no 3am stuff
+        originDepartureTime = departure.scheduledDepartureTime.clone().startOf('day').add(originDepartureMinutes, 'minutes')
+      } else { // Our stop is past 3am but the day is PREVIOUS DAY
+        originDepartureTime = departure.scheduledDepartureTime.clone().startOf('day').add(originDepartureMinutes - 1440, 'minutes')
+      }
+    } else { // midnight - 3am
+      if (originDepartureMinutes < 180) { // Departure is also midnight - 3am
+        originDepartureTime = departure.scheduledDepartureTime.clone().startOf('day').add(originDepartureMinutes, 'minutes')
+      } else { // Departure is 3am - midnight PREVIOUS DAY
+        originDepartureTime = departure.scheduledDepartureTime.clone().startOf('day').add(originDepartureMinutes - 1440, 'minutes')
+      }
     }
-
-    return
+  } else {
+    let stopDepartureMinutes = stopData.departureTimeMinutes || stopData.arrivalTimeMinutes
+    let minutesDiff = stopDepartureMinutes - originDepartureMinutes
+    originDepartureTime = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
   }
-
-  let firstStop = trip.stopTimings.find(tripStop => tripStop.stopName === trip.trueOrigin)
-
-  let originDepartureMinutes = firstStop.departureTimeMinutes
-  let stopDepartureMinutes = stopData.departureTimeMinutes || stopData.arrivalTimeMinutes
-  let minutesDiff = stopDepartureMinutes - originDepartureMinutes
-  let originDepartureTime = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
 
   departure.originDepartureTime = originDepartureTime
   departure.departureDay = utils.getYYYYMMDD(originDepartureTime)
@@ -754,6 +771,14 @@ function findUpcomingStops(departure, stopGTFSID) {
 
   departure.allStops = stopNames.slice(0, destinationIndex + 1)
   departure.futureStops = futureStops
+
+  if (currentIndex === -1) {
+    global.loggers.general.warn('Dropped Shorted metro run', departure.runID, {
+      stopGTFSID,
+      departureTime: departure.scheduledDepartureTime
+    })
+    departure.shortenedAndRemove = true
+  }
 }
 
 
@@ -1083,6 +1108,8 @@ async function getDeparturesFromPTV(station, backwards, db) {
     findUpcomingStops(departure, metroPlatform.stopGTFSID)
   })
 
+  allDepartures = allDepartures.filter(departure => !departure.shortenedAndRemove)
+
   await saveConsists(mappedTrains, db)
   await saveLocations(mappedTrains, db)
   await saveSuspensions(suspensionMappedTrains.filter(departure => departure.trip.suspension && !departure.isRailReplacementBus), db)
@@ -1119,9 +1146,8 @@ function generateTripID(trip) {
   return trip.trueOrigin + trip.trueDestination + trip.trueDepartureTime
 }
 
-async function getExtraTrains(departures, direction, station, db) {
+async function getExtraTrains(departures, direction, scheduled) {
   let now = utils.now()
-  let scheduled = await departureUtils.getScheduledMetroDepartures(station, db)
 
   let inDirection = scheduled.filter(train => train.trip.direction === direction)
   let existingInDirection = departures.filter(train => train.trip.direction === direction)
@@ -1133,29 +1159,54 @@ async function getExtraTrains(departures, direction, station, db) {
   })
 
   return extras.filter(train => {
-    return train.actualDepartureTime.diff(now, 'minutes') > 5
+    return train.actualDepartureTime.diff(now, 'minutes') > 5 && !train.trip.h
   })
 }
 
+async function getMissingRaceTrains(departures, scheduled) {
+  let now = utils.now()
+
+  let raceTrains = scheduled.filter(train => train.trip.routeGTFSID === '2-ain')
+  let existingIDs = departures.filter(train => train.trip.routeGTFSID === '2-ain').map(train => generateTripID(train.trip))
+
+  let extras = raceTrains.filter(train => {
+    let id = generateTripID(train.trip)
+    return !existingIDs.includes(id)
+  })
+
+  extras.forEach(train => train.cancelled = true)
+
+  return extras
+}
+
 async function getDepartures(station, db, filter, backwards) {
+  let stationName = station.stopName.slice(0, -16)
   try {
     if (typeof filter === 'undefined') filter = true
-    let stationName = station.stopName.slice(0, -16)
 
     return await utils.getData('metro-departures-new', stationName + backwards, async () => {
       let departures = await getDeparturesFromPTV(station, backwards, db)
-      let extraTrains = []
+      let extraTrains = [], raceTrains = []
+
+      let scheduled = await departureUtils.getScheduledMetroDepartures(station, db, utils.now())
 
       if (stationsAppendingUp.includes(stationName)) {
-        extraTrains = await getExtraTrains(departures, 'Up', station, db)
+        extraTrains = await getExtraTrains(departures, 'Up', scheduled)
       }
 
-      return filterDepartures([...departures, ...extraTrains], filter)
+      if (rceStations.includes(stationName)) {
+        raceTrains = await getMissingRaceTrains(departures, scheduled)
+        raceTrains = raceTrains.filter(train => !extraTrains.includes(train))
+      }
+
+      return filterDepartures([...departures, ...extraTrains, ...raceTrains], filter)
     })
   } catch (e) {
     global.loggers.general.err('Error getting Metro departures', e)
     try {
-      return await departureUtils.getScheduledMetroDepartures(station, db)
+      return await utils.getData('metro-departures-new', stationName + backwards, async () => {
+        return await departureUtils.getScheduledMetroDepartures(station, db, utils.now())
+      }, 1000 * 10)
     } catch (ee) {
       global.loggers.general.err('Error getting Scheduled Metro departures', ee)
       return null

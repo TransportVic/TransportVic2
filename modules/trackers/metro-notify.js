@@ -70,7 +70,7 @@ async function lookForShunts(allAlerts) {
       mismatch = (type === 'originate' ? liveTimetable.trueOrigin : liveTimetable.trueDestination).slice(0, -16) !== bestStop
     }
 
-    if (!tripAlerts.includes(alert.alertID) || mismatch) {
+    if ((!tripAlerts.includes(alert.alertID) || mismatch) && (liveTimetable ? !liveTimetable.h : true)) {
       liveTimetable = await getStoppingPattern({
         ptvRunID: utils.getPTVRunID(alert.runID),
         time: utils.now()
@@ -103,7 +103,7 @@ async function lookForShunts(allAlerts) {
   })
 }
 
-async function requestTimings() {
+async function requestData() {
   let metroNotify = database.getCollection('metro notify')
 
   let data = JSON.parse(await utils.request(urls.metroNotify))
@@ -150,6 +150,24 @@ async function requestTimings() {
     }
   }
 
+  /*
+    /MTMHealthboardDisruptionStage={NEW_INCIDENT:0,REPLACEMENT_BUSES_COMMENCED:1,ESTABLISHED_END_OF_SUSPENSION:2,SERVICE_RESUMED:3}
+    Looks to be only used for suspensions
+  */
+  if (data.disruptions) {
+    data.disruptions.forEach(disruption => {
+      mergedAlerts[disruption.id] = {
+        alertID: disruption.id.toString(),
+        routeName: disruption.lines.map(routeID => routeIDs[routeID]),
+        fromDate: parseInt(disruption.from_date),
+        toDate: parseInt(disruption.to_date),
+        type: disruption.alert_type,
+        text: disruption.notice.replace(/  +/g, ' '),
+        active: true
+      }
+    })
+  }
+
   let bulkOperations = []
   let activeAlerts = Object.values(mergedAlerts)
   activeAlerts.forEach(alert => {
@@ -194,5 +212,5 @@ database.connect(async () => {
     [0, 179, 1],
     [180, 240, 2],
     [240, 1440, 1]
-  ], requestTimings, 'metro notify', global.loggers.trackers.metroNotify)
+  ], requestData, 'metro notify', global.loggers.trackers.metroNotify)
 })

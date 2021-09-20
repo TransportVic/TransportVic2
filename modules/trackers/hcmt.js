@@ -4,7 +4,6 @@ const utils = require('../../utils')
 const urls = require('../../urls')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const schedule = require('./scheduler')
-const getStoppingPattern = require('../utils/get-stopping-pattern')
 const ptvAPI = require('../../ptv-api')
 const { getDayOfWeek } = require('../../public-holidays')
 
@@ -89,14 +88,15 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
     }
   })
 
-  existingTrip.stopTimings.forEach((stop, i) => {
-    if (i !== 0 && stop.estimatedDepartureTime) {
-      let previousStop = existingTrip.stopTimings[i - 1]
-      if (stop.estimatedDepartureTime < previousStop.estimatedDepartureTime) {
-        stop.estimatedDepartureTime.add(1, 'day')
-      }
-    }
-  })
+  // What was this for again?
+  // existingTrip.stopTimings.forEach((stop, i) => {
+  //   let previousStop = existingTrip.stopTimings[i - 1]
+  //   if (i !== 0 && stop.estimatedDepartureTime && previousStop.estimatedDepartureTime) {
+  //     if (stop.actualDepartureTimeMS < previousStop.actualDepartureTimeMS) {
+  //       stop.estimatedDepartureTime.add(1, 'day')
+  //     }
+  //   }
+  // })
 
   existingTrip.stopTimings.forEach(stop => {
     if (stop.estimatedDepartureTime && stop.estimatedDepartureTime.toISOString) { // If it is an existing value it is already a string
@@ -137,7 +137,16 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
       destination: lastStop.stopName,
       trueDestinationArrivalTime: lastStop.arrivalTime,
       destinationArrivalTime: lastStop.arrivalTime,
-      cancelled: trip.stopsAvailable[0].cancelled
+      cancelled: trip.stopsAvailable[0].cancelled,
+      ...(existingTrip.h ? {} : {
+        vehicle: {
+          size: '7',
+          type: 'HCMT',
+          consist: [],
+        },
+        h: true
+      }),
+      forming: trip.forming === '0' ? null : trip.forming
     }
   })
 }
@@ -166,6 +175,7 @@ async function mapStops(stops, stopDescriptors, startOfDay) {
       departureTime: scheduledTime,
       departureTimeMinutes: stop.scheduledDepartureMinutes,
       estimatedDepartureTime,
+      actualDepartureTimeMS: estimatedDepartureTime ? +estimatedDepartureTime : +stop.scheduledDepartureTime,
       scheduledDepartureTime: stop.scheduledDepartureTime.toISOString(),
       platform,
       stopConditions: { pickup: "0", dropoff: "0" }
@@ -183,7 +193,6 @@ async function mapStops(stops, stopDescriptors, startOfDay) {
 
   allStops.forEach(stop => {
     if (stop.estimatedDepartureTime) {
-      stop.actualDepartureTimeMS = +stop.estimatedDepartureTime
       stop.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
     }
   })
@@ -259,9 +268,7 @@ async function checkTrip(trip, stopDepartures, startOfDay, day, now) {
   let stopDescriptors = stopDepartures.filter(stop => stop.trip_id === trip.runID).sort((a, b) => a.time_seconds - b.time_seconds)
 
   if (existingTrip) {
-    if (existingTrip.h) {
-      await appendNewData(existingTrip, trip, stopDescriptors, startOfDay)
-    }
+    await appendNewData(existingTrip, trip, stopDescriptors, startOfDay)
   } else {
     global.loggers.trackers.metro.log('[HCMT]: Identified HCMT Trip #' + trip.runID)
     await createTrip(trip, stopDescriptors, startOfDay)
@@ -301,15 +308,15 @@ async function getDepartures() {
 
   let allTrips
   if (dayOfWeek === 'Fri' || dayOfWeek === 'Sat') allTrips = rawTrips
-  else allTrips = rawTrips.filter(trip => trip.stopsAvailable[0].stopSeconds < 86400)
+  else allTrips = rawTrips.filter(trip => trip.stopsAvailable[0].stopSeconds < 97200) // No reasonable weekday trip goes past 3am
   // Filter as we can get trips for just past 3am for the next day and obv it won't match
 
   let pakenhamRunIDs = (await ptvAPI(`/v3/runs/route/11`)).runs.filter(run => {
-    return run.run_id >= 948000
-  }).map(run => utils.getRunID(run.run_id))
+    return parseInt(run.run_ref) >= 948000
+  }).map(run => utils.getRunID(run.run_ref))
   let cranbourneRunIDs = (await ptvAPI(`/v3/runs/route/4`)).runs.filter(run => {
-    return run.run_id >= 948000
-  }).map(run => utils.getRunID(run.run_id))
+    return parseInt(run.run_ref) >= 948000
+  }).map(run => utils.getRunID(run.run_ref))
 
   let allPTVRunIDs = pakenhamRunIDs.concat(cranbourneRunIDs)
 

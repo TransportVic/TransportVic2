@@ -193,7 +193,8 @@ async function getDeparturesFromPTV(stop, db) {
         loopDirection,
         routeDetails: trip.routeDetails,
         isLiveTrip: busDeparture.run_ref.includes('-'),
-        runID: busDeparture.run_ref
+        runID: busDeparture.run_ref,
+        tripID: trip.origin + trip.departureTime + trip.destination + trip.destinationArrivalTime
       })
     })
   })
@@ -201,22 +202,31 @@ async function getDeparturesFromPTV(stop, db) {
   let liveTrips = mappedDepartures.filter(departure => departure.isLiveTrip)
   let scheduledTrips = mappedDepartures.filter(departure => !departure.isLiveTrip)
 
+  let potentialDuplicateLiveTrips = []
+
   let tripIDs = []
   let filteredLiveDepartures = liveTrips.filter(d => {
-    if (d.trip.routeGTFSID == '4-601') return true
-
-    let tripID = d.trip.origin + d.trip.departureTime + d.trip.destination + d.trip.destinationArrivalTime
+    let tripID = d.tripID
 
     if (!tripIDs.includes(tripID)) {
       tripIDs.push(tripID)
       return true
-    } else return false
+    } else {
+      potentialDuplicateLiveTrips.push(tripID)
+      return false
+    }
+  })
+
+  potentialDuplicateLiveTrips.forEach(tripID => {
+    let trips = liveTrips.filter(trip => trip.tripID === tripID)
+    let hasLive = trips.filter(trip => trip.vehicle || trip.estimatedDepartureTime)
+
+    if (hasLive.length === 0) hasLive = trips[0]
+    filteredLiveDepartures = filteredLiveDepartures.filter(trip => trip.tripID !== tripID).concat(hasLive)
   })
 
   let filteredDepartures = filteredLiveDepartures.concat(scheduledTrips.filter(d => {
-    let tripID = d.trip.origin + d.trip.departureTime + d.trip.destination + d.trip.destinationArrivalTime
-
-    return !tripIDs.includes(tripID)
+    return !tripIDs.includes(d.tripID)
   }))
 
   await updateBusTrips(db, filteredDepartures)

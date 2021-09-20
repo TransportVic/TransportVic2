@@ -10,6 +10,7 @@ const router = new express.Router()
 
 let robots = fs.readFileSync(path.join(__dirname, '../static/app-content/robots.txt'))
 let sw = fs.readFileSync(path.join(__dirname, '../static/app-content/sw.js'))
+let sitemap = fs.readFileSync(path.join(__dirname, '../static/app-content/sitemap.xml'))
 
 let upcomingPH = []
 
@@ -121,6 +122,12 @@ router.get('/.well-known/acme-challenge/:key', (req, res) => {
   stream.on('error', err => {
     res.status(404).end('404')
   })
+})
+
+router.get('/sitemap.xml', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache')
+  res.setHeader('Content-Type', 'application/xml')
+  res.end(sitemap)
 })
 
 module.exports = router

@@ -41,8 +41,8 @@ module.exports = {
     [3770, 3799], // Ringwood short
     [3800, 3899], // Lilydale
     [3900, 3949], // Blackburn
-    [7200, 7210], // Flinders St-Ringwood
-    [7240, 7250],  // Flinders St-Lilydale
+    [7200, 7209], // Flinders St-Ringwood
+    [7210, 7250],  // Flinders St-Lilydale
     [7800, 7829]
   ],
   'Pakenham': [

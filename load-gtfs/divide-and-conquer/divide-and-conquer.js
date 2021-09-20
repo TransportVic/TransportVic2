@@ -270,7 +270,7 @@ async function splitTrips() {
     fs.writeFileSync(path.join(splicedPath, `trips.${n}.json`), JSON.stringify(trips))
   }
 
-  fs.rmdirSync(folderPath, {
+  fs.rmSync(folderPath, {
     recursive: true
   })
   tripsLineReader = null

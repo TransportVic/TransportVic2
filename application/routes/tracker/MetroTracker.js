@@ -8,6 +8,8 @@ const fs = require('fs')
 const querystring = require('querystring')
 const modules = require('../../../modules')
 
+const departureUtils = require('../../../modules/utils/get-train-timetables-new')
+
 const stationCodes = require('../../../additional-data/station-codes')
 const rawLineRanges = require('../../../additional-data/metro-tracker/line-ranges')
 const lineGroups = require('../../../additional-data/metro-tracker/line-groups')
@@ -497,6 +499,34 @@ router.get('/strange', async (req, res) => {
 
     return Object.values(trains)
   }, 1000 * 30))
+})
+
+router.get('/departures', async (req, res) => {
+  let {station, utc} = querystring.parse(url.parse(req.url).query)
+  let stationData = await res.db.getCollection('stops').findDocument({
+    stopName: station + ' Railway Station',
+    'bays.mode': 'metro train'
+  })
+
+  res.header('Access-Control-Allow-Origin', '*')
+
+  if (station && !isNaN(parseInt(utc))) {
+    let time = utils.parseTime(parseInt(utc))
+    let departures = await departureUtils.getScheduledMetroDepartures(stationData, res.db, time)
+    res.json(departures.filter(departure => !departure.isRailReplacementBus).map(departure => {
+      return {
+        sch: departure.scheduledDepartureTime,
+        est: departure.estimatedDepartureTime,
+        act: departure.actualDepartureTime,
+        platform: departure.platform,
+        destination: departure.destination,
+        runID: departure.runID,
+        cancelled: departure.cancelled || false
+      }
+    }))
+  } else {
+    res.json({})
+  }
 })
 
 router.get('/logs', async (req, res) => {
