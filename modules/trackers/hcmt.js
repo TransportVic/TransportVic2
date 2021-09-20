@@ -11,6 +11,9 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
 let liveTimetables, timetables
 
+let secondsTo3AM = 3 * 60 * 60
+let secondsInDay = 1440 * 60
+
 async function getTimetable() {
   let pakenham = await utils.getData('metro-op-timetable', '92', async () => {
     return JSON.parse(await utils.request(urls.op.format('92'), { timeout: 17000 }))
@@ -25,7 +28,12 @@ async function getTimetable() {
 
 async function requestMetroData() {
   let data = JSON.parse(await utils.request(urls.hcmt, { timeout: 15000 }))
-  return data.entries
+  return data.entries.map(stop => {
+    if (stop.estimated_arrival_time_seconds < 10800) stop.estimated_arrival_time_seconds += secondsInDay
+    if (stop.estimated_departure_time_seconds < 10800) stop.estimated_departure_time_seconds += secondsInDay
+
+    return stop
+  })
 }
 
 async function createStop(prevStop, minutesDiff, stopName, platform) {
@@ -88,15 +96,13 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
     }
   })
 
-  // What was this for again?
-  // existingTrip.stopTimings.forEach((stop, i) => {
-  //   let previousStop = existingTrip.stopTimings[i - 1]
-  //   if (i !== 0 && stop.estimatedDepartureTime && previousStop.estimatedDepartureTime) {
-  //     if (stop.actualDepartureTimeMS < previousStop.actualDepartureTimeMS) {
-  //       stop.estimatedDepartureTime.add(1, 'day')
-  //     }
-  //   }
-  // })
+  existingTrip.stopTimings.forEach(stop => {
+    if (stop.estimatedDepartureTime) {
+      if (stop.actualDepartureTimeMS < stop.scheduledDepartureTime) {
+        stop.estimatedDepartureTime = stop.scheduledDepartureTime.clone() // Disallow being early
+      }
+    }
+  })
 
   existingTrip.stopTimings.forEach(stop => {
     if (stop.estimatedDepartureTime && stop.estimatedDepartureTime.toISOString) { // If it is an existing value it is already a string
@@ -182,11 +188,10 @@ async function mapStops(stops, stopDescriptors, startOfDay) {
     }
   })
 
-  allStops.forEach((stop, i) => {
-    if (i !== 0 && stop.estimatedDepartureTime) {
-      let previousStop = allStops[i - 1]
-      if (stop.estimatedDepartureTime < previousStop.estimatedDepartureTime) {
-        stop.estimatedDepartureTime.add(1, 'day')
+  allStops.forEach(stop => {
+    if (stop.estimatedDepartureTime) {
+      if (stop.actualDepartureTimeMS < stop.scheduledDepartureTime) {
+        stop.estimatedDepartureTime = stop.scheduledDepartureTime.clone() // Disallow being early
       }
     }
   })

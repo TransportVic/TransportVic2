@@ -359,5 +359,6 @@ module.exports = [
   'mitcham/harrison-street-mitcham-road',
   'altona/noordenne-avenue-millers-road',
   'craigieburn/highlands-shopping-centre',
-  'seaholme/seaholme-railway-station'
+  'seaholme/seaholme-railway-station',
+  'morwell/churchill-road-vincent-road'
 ]

@@ -16,7 +16,7 @@ function isNight() {
 }
 
 function pickRandomStops() {
-  let size = 26
+  let size = 28
   if (isNight()) size = Math.floor(size / 2)
   return utils.shuffle(stops).slice(0, size)
 }
