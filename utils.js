@@ -332,7 +332,6 @@ module.exports = {
     for (let i = 0; i < maxRetries; i++) {
       try {
         body = await fetch(url, fullOptions)
-
         break
       } catch (e) {
         error = e
@@ -349,6 +348,13 @@ module.exports = {
         error.timeoutDuration = totalTime
       }
       throw error
+    }
+
+    if (body && body.status.toString()[0] !== '2') {
+      let err = new Error('Bad Request Status')
+      err.status = body.status
+      err.response = await (options.raw ? body.buffer() : body.text())
+      throw err
     }
 
     let end = +new Date()

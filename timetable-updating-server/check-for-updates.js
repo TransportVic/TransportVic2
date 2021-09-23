@@ -9,6 +9,7 @@ const async = require('async')
 const config = require('../config.json')
 const urls = require('../urls.json')
 const postDiscordUpdate = require('../modules/discord-integration')
+const downloadGTFS = require('../update-gtfs')
 
 async function discordUpdate(text) {
   await postDiscordUpdate('timetables', text)
@@ -123,12 +124,17 @@ fetch(urls.gtfsFeed, {
     console.log(new Date().toLocaleString())
     await discordUpdate('[Updater]: Updating timetables to revision ' + lastModified)
 
-    spawnProcess(__dirname + '/../update-gtfs.sh', async () => {
-      fs.writeFileSync(__dirname + '/last-modified', lastModified)
-      console.log('Wrote last-modified', lastModified)
-      await discordUpdate('[Updater]: Finished downloading new timetables')
+    downloadGTFS(async status => {
+      if (status === 0) {
+        fs.writeFileSync(__dirname + '/last-modified', lastModified)
+        console.log('Wrote last-modified', lastModified)
+        await discordUpdate('[Updater]: Finished downloading new timetables')
 
-      await updateTimetables()
+        await updateTimetables()
+      } else {
+        await discordUpdate('[Updater]: Unable to download new timetables, skipping update')
+        process.exit(1)
+      }
     })
   } else {
     console.log('Timetables all good')
