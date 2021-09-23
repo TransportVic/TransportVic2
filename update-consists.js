@@ -22,7 +22,7 @@ utils.request(urls.ptDatabaseMetro).then(data => {
     let parsedHCMT = JSON.parse(hcmtData)
     consists = consists.concat(parsedHCMT.map(train => {
       let rawTrain = [train.TC1, train.DMP1, train.MP1, train.DT1, train.DMP2, train.DT2, train.MP3, train.DMP3, train.TC2]
-      return rawTrain.filter(x => x !== '-')
+      return rawTrain.filter(x => x !== '-' && x)
     }))
 
     types = types.concat(parsedHCMT.map(train => ({
