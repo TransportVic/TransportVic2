@@ -42,7 +42,9 @@ async function pickBestTrip(data, db) {
   let destinationName = destinationStop.bays.filter(bay => utils.encodeName(bay.fullStopName) === data.destination)[0].fullStopName
 
   let operationDays = data.operationDays
-  if (tripStartMinutes > 1440) operationDays = utils.getYYYYMMDD(tripDay.clone().add(-1, 'day'))
+
+  // Looks like "generic" transport modes use real travel day in GTFS, no 3am rubbish
+  // if (tripStartMinutes > 1440) operationDays = utils.getYYYYMMDD(tripDay.clone().add(-1, 'day'))
 
   let query = {
     mode: trueMode,
