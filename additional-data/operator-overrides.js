@@ -98,6 +98,22 @@ module.exports = {
   "4-900": ["CDC Melbourne", "Ventura Bus Lines"],
   "4-903": ["Transdev Melbourne"],
 
+  "4-941": ["Transit Systems"],
+  "4-943": ["Transit Systems"],
+  "4-947": ["Transit Systems"],
+  "4-949": ["Transit Systems"],
+
+  "4-951": ["Ventura Bus Lines"],
+  "4-953": ["Ventura Bus Lines"],
+  "4-959": ["Ventura Bus Lines"],
+
+  "4-965": ["Ventura Bus Lines"],
+  "4-967": ["Ventura Bus Lines"],
+  "4-978": ["Ventura Bus Lines"],
+  "4-979": ["Ventura Bus Lines"],
+  "4-981": ["Ventura Bus Lines"],
+  "4-982": ["Ventura Bus Lines"],
+
   "8-95E": ["Dysons"], // 958
   "8-965": ["McKenzies Tourist Service"], // 965
   "8-96w": ["Ventura Bus Lines"], // 967
