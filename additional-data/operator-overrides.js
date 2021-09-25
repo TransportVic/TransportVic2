@@ -62,13 +62,21 @@ module.exports = {
   "4-604": ["Transdev Melbourne"],
   "4-624": ["CDC Melbourne"], // 624
   "4-62L": ["CDC Melbourne"], // 624
+  "4-67o": ["Ventura Bus Lines"], // 670
+  "4-67B": ["Ventura Bus Lines"], // 673
+  "4-67V": ["Ventura Bus Lines"], // 677
+  "4-67N": ["Ventura Bus Lines"], // 679
+  "4-68o": ["Ventura Bus Lines"], // 680
   "4-68E": ["Martyrs Bus Service"], // 683
+  "4-68B": ["Martyrs Bus Service"], // 683
+  "4-68F": ["McKenzies Tourist Service"], // 684
   "4-70C": ["CDC Melbourne"], // 700
   "4-704": ["Ventura Bus Lines"], // 704
   "4-705": ["Ventura Bus Lines"], // 705
   "4-74Z": ["Ventura Bus Lines"], // 742
   "4-7S6": ["Ventura Bus Lines"], // 766
   "4-7S7": ["Ventura Bus Lines"], // 767
+  "4-7B7": ["Ventura Bus Lines"], // 787
   "4-78N": ["Cranbourne Transit"], // 789
   "4-79o": ["Cranbourne Transit"], // 790
   "4-79I": ["Cranbourne Transit"], // 791
