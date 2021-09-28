@@ -838,6 +838,8 @@ async function saveConsists(departures, db) {
             tripData.consist = sanityCheckTrip.consist
             existingTrip = null
           }
+        } else { // Some other length? (HCMT or random crap, override it)
+          existingTrip = null
         }
       }
     }
