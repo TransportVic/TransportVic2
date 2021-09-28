@@ -154,7 +154,7 @@ module.exports = {
   "Elsternwick": [...platr(2, [], 'half-platform')],
   "Camberwell": [...platr(3, [], 'half-platform-bold')],
   "East Camberwell": [...platr(3, [], 'half-platform-bold')],
-  "Riversdale": [],
+  "Riversdale": [...platr(2, [], 'half-platform-bold')],
   "Willison": [],
   "Burwood": [],
   "Hartwell": [],

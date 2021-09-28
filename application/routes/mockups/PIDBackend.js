@@ -381,7 +381,7 @@ function appendStoppingType(departure, stoppingTypes) {
     departure.stoppingType = stoppingTypes.noSuburban
 
     if (stoppingTypes.vlinePostfix) {
-      departure.stoppingPattern += stoppingTypes.vlinePostfix
+      departure.stoppingText += stoppingTypes.vlinePostfix
     }
   } else if (expressCount === 0) departure.stoppingType = stoppingTypes.stopsAll
   else if (expressCount < 4) departure.stoppingType = stoppingTypes.limitedExpress
