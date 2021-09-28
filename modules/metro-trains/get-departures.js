@@ -1,6 +1,7 @@
 const async = require('async')
 const ptvAPI = require('../../ptv-api')
 const utils = require('../../utils')
+const config = require('../../config')
 const findConsist = require('./fleet-parser')
 const departureUtils = require('../utils/get-train-timetables-new')
 const fixTripDestination = require('./fix-trip-destinations')
@@ -1191,6 +1192,11 @@ async function getDepartures(station, db, filter, backwards) {
       let extraTrains = [], raceTrains = []
 
       let scheduled = await departureUtils.getScheduledMetroDepartures(station, db, utils.now())
+      if (config.allowHCMT) {
+        let existingRunIDs = departures.map(departure => departure.runID)
+        let hcmt = scheduled.filter(departure => departure.trip.h && !existingRunIDs.includes(departure.trip.runID))
+        departures.push(...hcmt)
+      }
 
       if (stationsAppendingUp.includes(stationName)) {
         extraTrains = await getExtraTrains(departures, 'Up', scheduled)
