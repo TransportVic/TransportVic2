@@ -1214,7 +1214,8 @@ async function getDepartures(station, db, filter, backwards) {
     try {
       return await utils.getData('metro-departures-new', stationName + backwards, async () => {
         let scheduled = await departureUtils.getScheduledMetroDepartures(station, db, utils.now())
-        return scheduled.filter(departure => !departure.trip.h)
+        if (config.allowHCMT) return scheduled
+        else return scheduled.filter(departure => !departure.trip.h)
       }, 1000 * 10)
     } catch (ee) {
       global.loggers.general.err('Error getting Scheduled Metro departures', ee)
