@@ -1213,7 +1213,8 @@ async function getDepartures(station, db, filter, backwards) {
     global.loggers.general.err('Error getting Metro departures', e)
     try {
       return await utils.getData('metro-departures-new', stationName + backwards, async () => {
-        return await departureUtils.getScheduledMetroDepartures(station, db, utils.now())
+        let scheduled = await departureUtils.getScheduledMetroDepartures(station, db, utils.now())
+        return scheduled.filter(departure => !departure.trip.h)
       }, 1000 * 10)
     } catch (ee) {
       global.loggers.general.err('Error getting Scheduled Metro departures', ee)

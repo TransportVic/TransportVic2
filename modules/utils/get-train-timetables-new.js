@@ -332,7 +332,7 @@ let lineGroups = {
 }
 
 async function getScheduledMetroDepartures(station, db, time) {
-  let departures = await getScheduledDepartures(station, db, 'metro train', time, 120)
+  let departures = await getScheduledDepartures(station, db, 'metro train', time, 90)
   let stopName = station.stopName.slice(0, -16)
   let stopCode = stopCodes[stopName]
   let isInCity = cityLoopStations.includes(stopName) || stopName === 'Flinders Street'
