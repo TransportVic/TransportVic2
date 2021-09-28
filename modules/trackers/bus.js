@@ -33,7 +33,7 @@ async function requestTimings() {
 
       setTimeout(async () => {
         await getDepartures(dbStop, database)
-      }, i * 15000)
+      }, i * 10000)
     })
   } catch (e) {
     global.loggers.trackers.bus.err('Failed to get bus trips this round', e)
@@ -43,8 +43,8 @@ async function requestTimings() {
 database.connect(async () => {
   dbStops = database.getCollection('stops')
   schedule([
-    [0, 60, 10],
-    [300, 1260, 7],
-    [1261, 1440, 10]
+    [0, 60, 7],
+    [300, 1260, 5.5],
+    [1261, 1440, 6]
   ], requestTimings, 'bus tracker', global.loggers.trackers.bus)
 })

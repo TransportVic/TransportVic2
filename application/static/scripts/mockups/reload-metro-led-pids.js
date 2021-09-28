@@ -108,7 +108,7 @@ function checkAndUpdateTrains() {
       }
 
       bottomRowText = [nextDeparture.type]
-      if (nextDeparture.type !== 'Stops All Stations') {
+      if (nextDeparture.type !== 'Stops All Stations' && nextDeparture.type !== 'Not Taking Passengers') {
         bottomRowText.push(nextDeparture.txt)
       }
     } else {

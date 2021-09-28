@@ -33,7 +33,7 @@ function pickRandomStop() {
 async function getDepartures(stop) {
   let stopData = await dbStops.findDocument({ stopName: stop + ' Railway Station' })
   let departures = await getMetroDepartures(stopData, database)
-  let requestLive = departures.filter(d => !d.isRailReplacementBus).slice(0, 5)
+  let requestLive = departures.filter(d => !d.isRailReplacementBus).slice(0, 6)
 
   await async.forEachSeries(requestLive, async departure => {
     if (departure.ptvRunID) { // Remember local departures do not have a run id
