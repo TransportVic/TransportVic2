@@ -130,7 +130,7 @@ async function getDeparturesFromPTV(stop, db) {
         routeGTFSIDQuery = { $in: matchingGroup }
       }
 
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSIDQuery)
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSIDQuery, [], 1)
         || await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
 
       let hasVehicleData = run.vehicle_descriptor
