@@ -100,7 +100,7 @@ database.connect({
 
   let ptvRoutes = (await ptvAPI('/v3/routes?route_types=2')).routes
   await async.forEach(ptvRoutes, async route => {
-    let routeGTFSID = route.route_gtfs_id, routeName = route.route_name
+    let routeGTFSID = route.route_gtfs_id, routeName = route.route_name.replace(/until /i, '')
     let now = utils.now().startOf('day')
 
     if (routeName.includes('(From') || routeName.includes('(Until') || routeName.includes('(Discontinued')) {
