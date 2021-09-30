@@ -184,7 +184,7 @@ async function pickBestTrip(data, db) {
   // should fix the dumb issue of trips sometimes showing as forming and sometimes as current with crazyburn
   try {
     let isoDeparture = originTime.toISOString()
-    let {departures, runs} = await ptvAPI(`/v3/departures/route_type/0/stop/${originStopID}?gtfs=true&date_utc=${originTime.clone().add(-3, 'minutes').toISOString()}&max_results=3&expand=run&expand=stop&include_cancelled=true`)
+    let {departures, runs} = await ptvAPI(`/v3/departures/route_type/0/stop/${originStopID}?gtfs=true&date_utc=${originTime.clone().add(-1, 'minutes').toISOString()}&max_results=6&expand=run&expand=stop&include_cancelled=true`)
 
     let isUp = referenceTrip ? referenceTrip.direction === 'Up' : null
     let possibleDepartures = departures.filter(departure => {
