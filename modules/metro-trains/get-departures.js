@@ -105,10 +105,10 @@ function addStonyPointPlatform(train, stationName) {
 function mapSuspension(suspensionText, routeName) {
   let stationsAffected = suspensionText
     .replace(/\u00A0/g, ' ').replace(/[–-]/, ' and ')
-    .match(/trains (?:between )?([ \w]+) and ([ \w\/]+) (?:stations|due)/i)
+    .match(/(?:trains|between) ([ \w]+) and ([ \w\/]+) (?:stations|due)/i)
 
   if (!stationsAffected) return []
-  let startStation = utils.titleCase(stationsAffected[1].trim())
+  let startStation = utils.titleCase(stationsAffected[1].replace('between', '').trim())
   let endStations = stationsAffected[2].trim()
 
   // Station A should always be on the UP end
