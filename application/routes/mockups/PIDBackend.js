@@ -45,6 +45,7 @@ async function getAllDeparturesFromStation(station, db) {
     let vlineDepartures = []
     let metroDepartures = []
     let stationName = station.stopName.slice(0, -16)
+    let timetables = db.getCollection('timetables')
 
     await Promise.all([
       new Promise(async resolve => {
@@ -76,7 +77,8 @@ async function getAllDeparturesFromStation(station, db) {
                 type: 'vline',
                 takingPassengers: departure.takingPassengers,
                 stopTimings: departure.trip.stopTimings,
-                cancelled: departure.cancelled
+                cancelled: departure.cancelled,
+                connections: []
               }
             })
           }
@@ -89,12 +91,25 @@ async function getAllDeparturesFromStation(station, db) {
           let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
           if (metroPlatform) {
             let rawMetroDepartures = await getMetroDepartures(station, db)
-            metroDepartures = rawMetroDepartures.map(departure => {
+            metroDepartures = await async.map(rawMetroDepartures, async departure => {
               let destination = departure.destination
               if (departure.routeName === 'City Circle') {
                 if (stationName === 'Flinders Street') destination = 'City Loop'
                 else destination = 'Flinders Street'
               }
+
+              let { runID } = departure
+              let today = await getDayOfWeek(departure.originDepartureTime)
+              let scheduledTrip = await timetables.findDocument({
+                runID, operationDays: today
+              })
+              let connections = []
+
+              if (scheduledTrip) {
+                connections = scheduledTrip.connections.filter(connection => {
+                  return departure.futureStops.slice(1).includes(connection.changeAt.slice(0, -16))
+                })
+              } else connections = []
 
               return {
                 routeName: departure.routeName,
@@ -110,7 +125,8 @@ async function getAllDeparturesFromStation(station, db) {
                 type: 'metro',
                 takingPassengers: true,
                 stopTimings: departure.trip.stopTimings,
-                cancelled: departure.cancelled
+                cancelled: departure.cancelled,
+                connections
               }
             })
           }
@@ -441,7 +457,8 @@ function trimDepartures(departures, includeStopTimings) {
       p: departure.takingPassengers ? 1 : 0,
       d: departure.direction === 'Up' ? 'U' : 'D',
       v: departure.type === 'vline' ? 1 : 0,
-      times: []
+      times: [],
+      c: departure.connections.map(connection => ({ f: connection.for.slice(0, -16), a: connection.changeAt.slice(0, -16) }))
     }
 
     if (includeStopTimings) {

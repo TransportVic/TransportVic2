@@ -11,6 +11,7 @@ module.exports = {
   "4-301": ["Dysons"],
   "4-35Z": ["Dysons"], // 357
   "4-38X": ["Dysons"], // 386
+  "4-390": ["Dysons"], // 390
   '4-400': ['CDC Melbourne', 'Transit Systems'],
   "4-406": ["CDC Melbourne"],
   "4-409": ["CDC Melbourne"],
