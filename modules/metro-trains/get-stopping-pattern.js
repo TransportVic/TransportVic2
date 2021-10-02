@@ -413,8 +413,8 @@ module.exports = async function (data, db) {
   // if first stop is 12-3am push it to previous day
   if (originStop.departureTimeMinutes < 180) {
     timetable.stopTimings.forEach(stop => {
-      if (stop.arrivalTimeMinutes) stop.arrivalTimeMinutes += 1440
-      if (stop.departureTimeMinutes) stop.departureTimeMinutes += 1440
+      if (stop.arrivalTimeMinutes !== null) stop.arrivalTimeMinutes += 1440
+      if (stop.departureTimeMinutes !== null) stop.departureTimeMinutes += 1440
     })
     originDepartureDay.add(-3 ,'hours')
   }

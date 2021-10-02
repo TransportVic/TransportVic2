@@ -41,7 +41,7 @@ async function pickBestTrip(data, db) {
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
 
   if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
-  if (tripStartMinutes > 1440) tripDay.add(-1, 'day')
+  if (tripStartMinutes >= 1440) tripDay.add(-1, 'day')
   if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
 
   let originStop = await db.getCollection('stops').findDocument({
