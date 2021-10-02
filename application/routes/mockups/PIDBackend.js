@@ -213,7 +213,8 @@ async function getStationArrivals(station, db) {
         platform: shunt.platform,
         type: 'metro',
         takingPassengers: false,
-        stopTimings: []
+        stopTimings: [],
+        connections: []
       }
     })
   }, 1000 * 30)
