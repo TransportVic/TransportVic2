@@ -91,7 +91,8 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
     let updatedData = stopDescriptors.find(newStop => stop.stopName.includes(newStop.station))
 
     if (updatedData) {
-      stop.estimatedDepartureTime = startOfDay.clone().add(updatedData.estimated_departure_time_seconds, 'seconds')
+      let minutes = updatedData.estimated_departure_time_seconds / 60
+      stop.estimatedDepartureTime = utils.getMomentFromMinutesPastMidnight(minutes, startOfDay)
       stop.platform = updatedData.estimated_platform
     }
   })
@@ -167,7 +168,8 @@ async function mapStops(stops, stopDescriptors, startOfDay) {
     let estimatedDepartureTime, platform = stop.platform
 
     if (departureData) {
-      estimatedDepartureTime = startOfDay.clone().add(departureData.estimated_departure_time_seconds, 'seconds')
+      let minutes = departureData.estimated_departure_time_seconds / 60
+      estimatedDepartureTime = utils.getMomentFromMinutesPastMidnight(minutes, startOfDay)
       platform = departureData.estimated_platform
     }
 
@@ -251,7 +253,8 @@ async function createTrip(trip, stopDescriptors, startOfDay) {
 }
 
 function parseRawData(stop, startOfDay) {
-  let scheduledDepartureTime = startOfDay.clone().add(stop.time_seconds, 'seconds')
+  let minutes = stop.time_seconds / 60
+  let scheduledDepartureTime = utils.getMomentFromMinutesPastMidnight(minutes, startOfDay)
 
   return {
     stopName: stop.station + ' Railway Station',
