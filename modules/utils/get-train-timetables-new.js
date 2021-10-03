@@ -271,6 +271,11 @@ async function getScheduledDepartures(station, db, mode, time, timeout) {
       }
     }
 
+    let firstStop = trip.stopTimings[0]
+    let currentStop = trip.stopTimings.find(stop => stop.stopName === station.stopName)
+    let minutesDifference = (currentStop.arrivalTimeMinutes || currentStop.departureTimeMinutes) - firstStop.departureTimeMinutes
+    let originDepartureTime = departureTime.clone().add(-minutesDifference, 'minutes')
+
     return {
       scheduledDepartureTime: departureTime,
       estimatedDepartureTime,
@@ -291,6 +296,7 @@ async function getScheduledDepartures(station, db, mode, time, timeout) {
       isRailReplacementBus: trip.isRailReplacementBus,
       suspension: null,
       isSkippingLoop: null,
+      originDepartureTime,
       trueDepartureDay: utils.getYYYYMMDD(tripDepartureDay)
     }
   })).filter(Boolean).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
