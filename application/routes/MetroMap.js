@@ -108,13 +108,14 @@ router.post('/', async (req, res) => {
 
       vehicles.push({
         destinationCode: stationCodeLookup[trip.trueDestination.slice(0, -16)],
-        destination: trip.trueDestination,
+        destination: trip.trueDestination.slice(0, -16),
         runID: trip.runID,
         vehicle: trip.vehicle ? `${trip.vehicle.size} Car ${trip.vehicle.type}` : 'Unknown',
         nextStop,
         location: platformCentre,
         line: utils.encodeName(trip.routeName),
-        bearing
+        bearing,
+        poorLocation: true
       })
     }
   })

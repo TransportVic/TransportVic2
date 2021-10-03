@@ -321,7 +321,7 @@ module.exports = class MainServer {
       },
 
       RoutePaths: '/route-paths',
-      MetroMap: '/metro-map',
+      MetroMap: '/metro/map',
       ChatbotTest: {
         path: '/lxra-map',
         enable: modules.lxraMap
