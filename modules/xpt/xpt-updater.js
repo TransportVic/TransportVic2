@@ -26,7 +26,7 @@ async function fetchAndUpdate() {
     let tripStartTime
 
     if (trip && trip.trip.start_date) {
-      let knownQuery = { runID, operationDays: trip.trip.start_date }
+      let knownQuery = { runID, operationDays: trip.trip.start_date, mode: 'regional train' }
       gtfsTrip = await liveTimetables.findDocument(knownQuery) || await gtfsTimetables.findDocument(knownQuery)
 
       let startDate = utils.parseDate(trip.trip.start_date)
@@ -36,7 +36,7 @@ async function fetchAndUpdate() {
       }
     } else {
       let yesterday = utils.now().add(-1, 'day').startOf('day')
-      let yesterdayQuery = { runID, operationDays: utils.getYYYYMMDD(yesterday) }
+      let yesterdayQuery = { runID, operationDays: utils.getYYYYMMDD(yesterday), mode: 'regional train' }
       let yesterdayTrip = await liveTimetables.findDocument(yesterdayQuery) || await gtfsTimetables.findDocument(yesterdayQuery)
 
       if (yesterdayTrip) {
@@ -51,7 +51,7 @@ async function fetchAndUpdate() {
     }
 
     if (!gtfsTrip) {
-      let todayQuery = { runID, operationDays: utils.getYYYYMMDDNow() }
+      let todayQuery = { runID, operationDays: utils.getYYYYMMDDNow(), mode: 'regional train' }
       gtfsTrip = await liveTimetables.findDocument(todayQuery) || await gtfsTimetables.findDocument(todayQuery)
 
       let startMinutes = gtfsTrip.stopTimings[0].departureTimeMinutes

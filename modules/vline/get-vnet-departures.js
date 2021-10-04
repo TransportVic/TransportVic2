@@ -112,7 +112,7 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
     let destinationStation = await getStationFromVNETName(destinationVNETName, db)
 
     if (!originStation || !destinationStation) return // Just in case we don't know the station
-  
+
     let originVLinePlatform = originStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
     let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
 

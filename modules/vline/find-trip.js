@@ -1,4 +1,5 @@
 const utils = require('../../utils')
+const termini = require('../../additional-data/termini-to-lines')
 
 let longDistanceCountryStops = [
   "Albury",
@@ -122,10 +123,24 @@ module.exports = async (collection, operationDay, origin, destination, departure
     $lte: tripStartMinutes + varianceAllowed
   }
 
+  let originRoute = (!origin.$in) ? termini[origin.slice(0, -16)] : null
+  let destinationRoute = (!destination.$in) ? termini[destination.slice(0, -16)] : null
+
+  let routeNames = [ originRoute, destinationRoute ].filter(Boolean)
+
+  let strictQuery = {
+    mode: 'regional train',
+    operationDays: operationDay,
+    origin,
+    destination,
+    'stopTimings.0.departureTimeMinutes': variedDepartureTime
+  }
+
   let query = {
     $and: [{
       mode: 'regional train',
-      operationDays: operationDay
+      operationDays: operationDay,
+      routeName: { $in: routeNames }
     }, {
       stopTimings: {
         $elemMatch: {
@@ -145,7 +160,16 @@ module.exports = async (collection, operationDay, origin, destination, departure
     }]
   }
 
-  let matchedTrips = await collection.findDocuments(query).toArray()
+  let matchedTrips = []
+  let strictTrips = await collection.findDocuments(strictQuery).toArray()
+
+  if (strictTrips.length) matchedTrips = strictTrips
+  else {
+    let dbQuery = collection.findDocuments(query)
+    if (collection.getCollectionName() === 'timetables') dbQuery.hint('vline matching index')
+    matchedTrips = await dbQuery.toArray()
+  }
+
   function d(x) { return Math.abs(x.stopTimings[0].departureTimeMinutes - tripStartMinutes) }
 
   if (matchedTrips.length) {

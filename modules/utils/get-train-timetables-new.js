@@ -244,25 +244,14 @@ async function getScheduledDepartures(station, db, mode, time, timeout) {
 
     if (!stopData.platform) {
       let day = await getDayOfWeek(tripDepartureDay)
+
       let staticTrip = await staticTimetables.findDocument({
+        mode: 'metro train',
         operationDays: day,
         routeGTFSID: trip.routeGTFSID,
         origin: trip.trueOrigin,
-        $and: [{
-          stopTimings: {
-            $elemMatch: {
-              stopName: trip.trueDestination,
-              arrivalTime: trip.trueDestinationArrivalTime
-            }
-          }
-        }, {
-          stopTimings: {
-            $elemMatch: {
-              stopName: trip.trueOrigin,
-              departureTime: trip.trueDepartureTime
-            }
-          }
-        }],
+        destination: trip.trueDestination,
+        departureTime: trip.trueDepartureTime,
         'stopTimings.stopName': station.stopName
       })
 

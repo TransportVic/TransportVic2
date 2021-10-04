@@ -275,6 +275,7 @@ function parseRawData(stop, startOfDay) {
 
 async function checkTrip(trip, stopDepartures, startOfDay, day, now) {
   let existingTrip = await liveTimetables.findDocument({
+    mode: 'metro train',
     operationDays: day,
     runID: trip.runID
   })

@@ -103,6 +103,7 @@ async function getDepartures(routeName) {
 
   await async.forEach(allTrips.filter(trip => trip.stopsAvailable.length === 1), async metroTrip => {
     let trip = await liveTimetables.findDocument({
+      mode: 'metro train',
       operationDays: day,
       runID: metroTrip.runID
     })
