@@ -220,10 +220,16 @@ async function createTrip(trip, stopDescriptors, startOfDay) {
   let firstStop = baseTrip.stopTimings[0]
   let lastStop = baseTrip.stopTimings[baseTrip.stopTimings.length - 1]
 
+  let routeGTFSID = '2-PKM', routeName = 'Pakenham'
+  if ([firstStop.stopName, lastStop.stopName].includes('Cranbourne Railway Station')) {
+    routeGTFSID = '2-CRB' // why
+    routeName = 'Cranbourne'
+  }
+
   let timetable = {
     mode: 'metro train',
-    routeName: 'Pakenham',
-    routeGTFSID: '2-PKM',
+    routeName,
+    routeGTFSID,
     runID: trip.runID,
     forming: trip.forming === '0' ? null : trip.forming,
     operationDays: trip.operationDays,

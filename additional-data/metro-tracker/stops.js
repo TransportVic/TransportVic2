@@ -77,5 +77,6 @@ module.exports = [
   'Newmarket',
   'Kensington',
   'Cheltenham',
-  'Parkdale'
+  'Parkdale',
+  'Heidelberg'
 ]
