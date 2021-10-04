@@ -377,20 +377,19 @@ router.get('/highlights', async (req, res) => {
     }
   })
 
-  let allBuses = await smartrakIDs.findDocuments().toArray()
-  let allGTFSIDs = allBuses.map(bus => bus.smartrakID)
+  let allBuses = await smartrakIDs.distinct('smartrakID')
 
   let unknownMetroBuses = (await busTrips.findDocuments({
     date,
     routeGTFSID: /^4-/,
-    smartrakID: { $not: { $in: allGTFSIDs } }
+    smartrakID: { $not: { $in: allBuses } }
   }).sort({departureTime: 1, origin: 1}).toArray())
     .map(trip => adjustTrip(trip, date, date, minutesPastMidnightNow))
 
   let unknownRegionalBuses = (await busTrips.findDocuments({
     date,
     routeGTFSID: /^6-/,
-    smartrakID: { $not: { $in: allGTFSIDs } }
+    smartrakID: { $not: { $in: allBuses } }
   }).sort({departureTime: 1, origin: 1}).toArray())
     .map(trip => adjustTrip(trip, date, date, minutesPastMidnightNow))
 
