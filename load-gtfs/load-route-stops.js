@@ -86,9 +86,6 @@ database.connect({}, async err => {
       if (lastStopName.includes('School') || lastStopName.includes('College')) directionName = mostCommonDestination
       else directionName = lastStopName
 
-      let directionShortName = directionName.split('/')[0].replace('Shopping Centre', 'SC')
-      if (!utils.isStreet(directionShortName)) directionName = directionShortName
-
       if (routeData.flags && routeData.flags[1]) {
         directionName += ` (${routeData.flags[gtfsDirection]})`
       }
@@ -102,6 +99,9 @@ database.connect({}, async err => {
       directionName = serviceData[directionName]
         || busDestinations.generic[directionName]
         || coachDestinations(lastStop) || tramDestinations[directionName] || directionName
+
+      let directionShortName = utils.getStopName(directionName).replace('Shopping Centre', 'SC')
+      if (!utils.isStreet(directionShortName)) directionName = directionShortName
 
       if (!stopsByService[routeGTFSID]) stopsByService[routeGTFSID] = []
       stopsByService[routeGTFSID][gtfsDirection] = {

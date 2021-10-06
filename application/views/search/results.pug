@@ -166,6 +166,6 @@ for busRoute in routes.filter(route => route.mode === 'bus' && route.directions[
         if (operationDate) {
           name += ` (${operationDate.type[0].toUpperCase()}${operationDate.type.slice(1)} ${operationDate.operationDateReadable})`
         }
-        name = name.replace(/(Bus )?Interchange/g, '').replace(/Bus Station/g, '').replace(/Railway Station/g, '').replace(/Shopping Centre/g, 'SC').replace(/  +/g, ' ').trim()
+        name = name.replace(/(Bus )?Interchange/g, '%BS').replace(/Bus Station/g, '%BS').replace(/Railway Station/g, 'Stn').replace(/Shopping Centre/g, 'SC').replace(/  +/g, ' ').replace('%BS', 'Bus Interchange').trim()
       span #{type}
       span #{name}
