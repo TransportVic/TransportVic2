@@ -9,8 +9,6 @@ sudo yum remove httpd -y
 sudo yum remove postfix -y
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-sudo ln "$(readlink -f `command -v node`)" /usr/bin/node
-
 source ~/.bashrc
 nvm install node
 
@@ -27,5 +25,6 @@ sudo yum install certbot-apache python-pip -y
 sudo pip install dns-lexicon[namecheap]
 
 sudo chmod a+rw -R /var/log/mongodb
-sudo setcap 'cap_net_bind_service=+ep' `which node`
+sudo ln "$(readlink -f `command -v node`)" /usr/bin/node
+sudo setcap 'cap_net_bind_service=+ep' `/usr/bin/node`
 sudo chmod a+r -R /etc/letsencrypt
