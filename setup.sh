@@ -25,3 +25,7 @@ sudo yum install -y mongodb-org git
 sudo amazon-linux-extras install epel -y
 sudo yum install certbot-apache python-pip -y
 sudo pip install dns-lexicon[namecheap]
+
+sudo chmod a+rw -R /var/log/mongodb
+sudo setcap 'cap_net_bind_service=+ep' `which node`
+sudo chmod a+r -R /etc/letsencrypt
