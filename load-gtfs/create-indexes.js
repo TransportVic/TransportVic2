@@ -67,6 +67,10 @@ database.connect({
   }, {name: 'coded name index'})
 
   await stops.createIndex({
+    'codedNames': 1
+  }, {name: 'coded names index'})
+
+  await stops.createIndex({
     'namePhonetic': 1,
     _id: 1
   }, {name: 'phonetic name index'})
@@ -312,6 +316,7 @@ database.connect({
   await tramTrips.createIndex({
     tram: 1,
     date: 1,
+    routeNumber: 1
   }, {name: 'tram index'})
 
   await tramTrips.createIndex({

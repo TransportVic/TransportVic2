@@ -25,15 +25,18 @@ async function pickBestTrip(data, db) {
   if (trueMode === 'coach') trueMode = 'regional coach'
   if (trueMode === 'heritage') trueMode = 'heritage train'
 
-  let originStop = await db.getCollection('stops').findDocument({
+  let dbStops = db.getCollection('stops')
+
+  let originStop = await dbStops.findDocument({
     codedNames: data.origin,
     'bays.mode': trueMode
   })
 
-  let destinationStop = await db.getCollection('stops').findDocument({
+  let destinationStop = await dbStops.findDocument({
     codedNames: data.destination,
     'bays.mode': trueMode
   })
+
   if (!originStop || !destinationStop) return null
   let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
   let minutesToTripEnd = tripEndTime.diff(utils.now(), 'minutes')
