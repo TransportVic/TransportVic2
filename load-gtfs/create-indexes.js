@@ -358,7 +358,8 @@ database.connect({
 
   await busTrips.createIndex({
     smartrakID: 1,
-    date: 1
+    date: 1,
+    routeNumber: 1
   }, {name: 'smartrak id index'})
 
   await busTrips.createIndex({

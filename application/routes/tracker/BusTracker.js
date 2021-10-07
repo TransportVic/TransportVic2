@@ -137,31 +137,17 @@ router.get('/fleet', async (req, res) => {
 
   tripsToday = tripsToday.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
-  let rawServicesByDay = await busTrips.aggregate([{
-    $match: {
-      smartrakID,
-    }
-  }, {
-    $group: {
-      _id: '$date',
-      services: {
-        $addToSet: '$routeNumber'
-      }
-    }
-  }, {
-    $sort: {
-      _id: -1
-    }
-  }]).toArray()
+  let allDates = (await busTrips.distinct('date', { smartrakID })).reverse()
 
-  let servicesByDay = rawServicesByDay.map(data => {
-    let date = data._id
+  let servicesByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+
+    let services = await busTrips.distinct('routeNumber', { smartrakID, date })
 
     return {
       date,
       humanDate,
-      services: data.services.sort((a, b) => parseInt(a) - parseInt(b) || a.localeCompare(b))
+      services: services.sort((a, b) => parseInt(a) - parseInt(b) || a.localeCompare(b))
     }
   })
 
@@ -221,23 +207,6 @@ router.get('/service', async (req, res) => {
     return trip
   })).map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
-  let rawBusesByDay = await busTrips.aggregate([{
-    $match: {
-      routeNumber: routeQuery,
-    }
-  }, {
-    $group: {
-      _id: '$date',
-      smartraks: {
-        $addToSet: '$smartrakID'
-      }
-    }
-  }, {
-    $sort: {
-      _id: -1
-    }
-  }]).toArray()
-
   let allSmartraks = await busTrips.distinct('smartrakID', {
     routeNumber: routeQuery
   })
@@ -248,19 +217,20 @@ router.get('/service', async (req, res) => {
     }
   }).toArray()
 
-  let busesByDay = rawBusesByDay.map(data => {
-    let date = data._id
+  let allDates = (await busTrips.distinct('date', { routeNumber: routeQuery })).reverse()
+
+  let busesByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
 
-    let buses = data.smartraks.map(smartrak => {
-      let lookup = smartrakIDCache.find(bus => bus.smartrakID === smartrak)
-      return lookup ? '#' + lookup.fleetNumber : '@' + smartrak
-    }).sort((a, b) => a.replace(/[^\d]/g, '') - b.replace(/[^\d]/g, ''))
+    let buses = await busTrips.distinct('smartrakID', { routeNumber: routeQuery, date })
 
     return {
       date,
       humanDate,
-      buses
+      buses: buses.map(smartrak => {
+        let lookup = smartrakIDCache.find(bus => bus.smartrakID === smartrak)
+        return lookup ? '#' + lookup.fleetNumber : '@' + smartrak
+      }).sort((a, b) => a.replace(/[^\d]/g, '') - b.replace(/[^\d]/g, ''))
     }
   })
 
@@ -524,6 +494,7 @@ router.get('/operator-unknown', async (req, res) => {
   }).sort({departureTime: 1, origin: 1}).toArray())
     .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
+  // With such a complex query it is probably more efficient to cache the result from the aggregation pipeline
   let rawBusesByDay = await busTrips.aggregate([{
     $match: {
       routeGTFSID: {
