@@ -216,7 +216,9 @@ router.get('/hcmt', async (req, res) => {
   let trips = await liveTimetables.findDocuments({
     operationDays: date,
     mode: 'metro train',
-    routeGTFSID: '2-PKM',
+    routeGTFSID: {
+      $in: ['2-PKM', '2-CRB']
+    },
     h: true
   }).toArray()
 
@@ -258,7 +260,9 @@ router.post('/hcmt/tdns', async (req, res) => {
   let hcmtTrains = await liveTimetables.findDocuments({
     operationDays: date,
     mode: 'metro train',
-    routeGTFSID: '2-PKM',
+    routeGTFSID: {
+      $in: ['2-PKM', '2-CRB']
+    },
     h: true
   }).sort({ 'stopTimings.0.departureTimeMinutes': 1 }).toArray()
 
@@ -310,7 +314,9 @@ router.post('/hcmt/tdn/:runID', async (req, res) => {
   let trip = await liveTimetables.findDocument({
     operationDays: date,
     mode: 'metro train',
-    routeGTFSID: '2-PKM',
+    routeGTFSID: {
+      $in: ['2-PKM', '2-CRB']
+    },
     runID,
     h: true
   })
@@ -321,7 +327,9 @@ router.post('/hcmt/tdn/:runID', async (req, res) => {
     let formedBy = await liveTimetables.findDocument({
       operationDays: date,
       mode: 'metro train',
-      routeGTFSID: '2-PKM',
+      routeGTFSID: {
+        $in: ['2-PKM', '2-CRB']
+      },
       forming: runID,
       h: true,
     })
