@@ -26,5 +26,5 @@ sudo pip install dns-lexicon[namecheap]
 
 sudo chmod a+rw -R /var/log/mongodb
 sudo ln "$(readlink -f `command -v node`)" /usr/bin/node
-sudo setcap 'cap_net_bind_service=+ep' `/usr/bin/node`
+sudo setcap 'cap_net_bind_service=+ep' /usr/bin/node
 sudo chmod a+r -R /etc/letsencrypt
