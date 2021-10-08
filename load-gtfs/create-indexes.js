@@ -91,6 +91,10 @@ database.connect({
     'bays.fullStopName': 1
   }, {name: 'ptv matching index 1'})
 
+  await stops.createIndex({
+    'bays.originalName': 1
+  }, {name: 'original name index'})
+
   console.log('Created stops indexes')
 
   await routes.createIndex({
@@ -105,6 +109,11 @@ database.connect({
     routeGTFSID: 1
   }, {name: 'route gtfs id index', unique: true})
 
+  await routes.createIndex({
+    operators: 1,
+    routeGTFSID: 1
+  }, {name: 'operator index'})
+
   console.log('Created route indexes')
 
   await gtfsTimetables.createIndex({
@@ -116,6 +125,10 @@ database.connect({
     destinationArrivalTime: 1,
     tripID: 1 // Ideally tripID wouldn't be included but there's duplicate trips in the dataset so...
   }, {name: 'gtfs timetable index', unique: true})
+
+  await gtfsTimetables.createIndex({
+    tripID: 1
+  }, {name: 'tripID index'})
 
   await gtfsTimetables.createIndex({
     shapeID: 1
@@ -222,6 +235,10 @@ database.connect({
     departureTime: 1,
     destinationArrivalTime: 1
   }, {name: 'live timetable index', unique: true})
+
+  await liveTimetables.createIndex({
+    tripID: 1
+  }, {name: 'tripID index'})
 
   await liveTimetables.createIndex({
     operationDays: 1
