@@ -10,7 +10,9 @@ module.exports = {
   "4-281": ["Transdev Melbourne"],
   "4-301": ["Dysons"],
   "4-35Z": ["Dysons"], // 357
+  "4-3X5": ["Dysons"], // 385
   "4-38X": ["Dysons"], // 386
+  "4-3X8": ["Dysons"], // 386
   "4-390": ["Dysons"], // 390
   '4-400': ['CDC Melbourne', 'Transit Systems'],
   "4-406": ["CDC Melbourne"],
@@ -74,6 +76,7 @@ module.exports = {
   "4-70C": ["CDC Melbourne"], // 700
   "4-704": ["Ventura Bus Lines"], // 704
   "4-705": ["Ventura Bus Lines"], // 705
+  "4-7X6": ["Ventura Bus Lines"], // 705
   "4-74Z": ["Ventura Bus Lines"], // 742
   "4-7S6": ["Ventura Bus Lines"], // 766
   "4-7S7": ["Ventura Bus Lines"], // 767
@@ -93,6 +96,7 @@ module.exports = {
   "4-84E": ["Ventura Bus Lines"], // 843
   "4-84F": ["Ventura Bus Lines"], // 845
   "4-85X": ["Ventura Bus Lines"], // 857
+  "4-8X7": ["Ventura Bus Lines"], // 857
   "4-86l": ["Ventura Bus Lines"], // 861
   "4-888": ["Ventura Bus Lines"], // 888
   "4-889": ["Ventura Bus Lines"], // 889
@@ -105,6 +109,7 @@ module.exports = {
   "4-89S": ["Cranbourne Transit"], // 897
   "4-89T": ["Cranbourne Transit"], // 898
   "4-900": ["CDC Melbourne", "Ventura Bus Lines"],
+  "4-9X2": ["Transdev Melbourne"],
   "4-903": ["Transdev Melbourne"],
 
   "4-941": ["Transit Systems"],
