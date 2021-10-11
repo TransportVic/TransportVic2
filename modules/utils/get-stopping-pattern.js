@@ -54,7 +54,13 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   if (routeGTFSID === '4-965') routeGTFSID = '8-965'
 
   if (mode === 'tram') routeGTFSID = `3-${parseInt(routeGTFSID.slice(2))}`
-  let route = await routesCollection.findDocument({ routeGTFSID })
+
+  let routeGTFSIDQuery = routeGTFSID, matchingGroup
+  if (matchingGroup = gtfsGroups.find(g => g.includes(routeGTFSID))) {
+    routeGTFSIDQuery = { $in: matchingGroup }
+  }
+
+  let route = await routesCollection.findDocument({ routeGTFSID: routeGTFSIDQuery })
 
   let directionName = ptvDirection.direction_name
   let gtfsDirection = route.ptvDirections[directionName]
