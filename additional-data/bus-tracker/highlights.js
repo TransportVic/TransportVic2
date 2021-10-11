@@ -16,7 +16,7 @@ module.exports = [{
 }, {
   name: 'Ventura CB80',
   track: ['V993'],
-  routes: ['697', '699', '735', '736', '757', '765', '768'],
+  routes: ['735', '736', '765'],
   type: 'include'
 }, {
   name: 'Ventura B10BLE',
