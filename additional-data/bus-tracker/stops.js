@@ -360,5 +360,9 @@ module.exports = [
   'altona/noordenne-avenue-millers-road',
   'craigieburn/highlands-shopping-centre',
   'seaholme/seaholme-railway-station',
-  'morwell/churchill-road-vincent-road'
+  'morwell/churchill-road-vincent-road',
+  'belmont/belmont-shopping-village-high-street',
+  'belmont/lloyd-street-corio-street',
+  'belmont/francis-street-barwon-heads-road',
+  'belmont/mount-pleasant-road-high-street'
 ]
