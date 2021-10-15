@@ -107,18 +107,22 @@ async function saveConsist(stopTimings, direction, departureDay, runID, consist,
       } else if (existingTrip.consist.length === 3 && !existingTrip.consist.includes(tripData.consist[0])) { // We might have matched half a train and now have the other half, sanity check
         let sanityCheckTrip = await metroTrips.findDocument({
           date: departure.departureDay,
-          consist: {
-            $and: [ // Match both the one already existing and the one given
-              tripData.consist[0],
-              existingTrip.consist[0]
-            ]
-          }
+          $and: [{ // Match both the one already existing and the one given on the same day to check if they're coupled up and can be merged
+            consist: tripData.consist[0]
+          }, {
+            consist: existingTrip.consist[0]
+          }]
         })
 
         if (sanityCheckTrip) {
           tripData.consist = sanityCheckTrip.consist
-          existingTrip = null
         }
+
+        // if they can be merged update
+        // if cannot be merged assume that another set is taking over and update
+        existingTrip = null
+      } else { // Some other length? (HCMT or random crap, override it)
+        existingTrip = null
       }
     }
   }
