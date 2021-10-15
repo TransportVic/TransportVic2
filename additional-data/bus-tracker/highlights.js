@@ -88,7 +88,7 @@ module.exports = [{
 }, {
   name: 'CDC Oakleigh Hybrids',
   track: ['CO152', 'CO157', 'CO158', 'CO159', 'CO160', 'CO161', 'CO162', 'CO163'],
-  routes: ['605', '630'],
+  routes: ['601', '605', '630'],
   type: 'exclude'
 }, {
   name: 'CDC Oakleigh Ex-Drivers',
