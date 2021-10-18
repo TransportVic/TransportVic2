@@ -100,16 +100,26 @@ database.connect({
 
   let ptvRoutes = (await ptvAPI('/v3/routes?route_types=2')).routes
   await async.forEach(ptvRoutes, async route => {
-    let routeGTFSID = route.route_gtfs_id, routeName = route.route_name.replace(/until /i, '')
+    let routeGTFSID = route.route_gtfs_id, routeName = route.route_name.replace(/effective /i, '').toLowerCase()
     let now = utils.now().startOf('day')
 
-    if (routeName.includes('(From') || routeName.includes('(Until') || routeName.includes('(Discontinued')) {
-      let parts = routeName.match(/\((Until|From|Discontinued from) (\d{1,2}-\d{1,2}-\d{1,4})\)/)
-      let type = parts[1], date = parts[2]
-      if (type === 'Discontinued from') type = 'until'
-      else type = type.toLowerCase()
+    if (routeName.includes('(from') || routeName.includes('(until') || routeName.includes('(discontinued')) {
+      let parts = routeName.match(/\((until|from|discontinued) (\d{1,2}-\d{1,2}-\d{1,4})\)/)
+      if (!parts) {
+        parts = routeName.match(/\((until|from|discontinued) (\d{1,2} \w* \d{1,4})\)/)
+      }
 
-      let dateMoment = utils.parseTime(date, 'DD-MM-YYYY')
+      let type = parts[1], date = parts[2]
+      if (type.includes('discontinued')) type = 'until'
+      else type = type
+
+      let formats = ['DD-MM-YYYY', 'DD MMMM YYYY']
+      let dateMoment
+      for (let format of formats) {
+        dateMoment = utils.parseTime(date, format)
+        if (dateMoment.isValid()) break
+      }
+
       // if (dateMoment >= now) {
         operationDateCount++
         await routes.updateDocument({ routeGTFSID }, {

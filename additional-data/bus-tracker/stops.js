@@ -364,5 +364,7 @@ module.exports = [
   'belmont/belmont-shopping-village-high-street',
   'belmont/lloyd-street-corio-street',
   'belmont/francis-street-barwon-heads-road',
-  'belmont/mount-pleasant-road-high-street'
+  'belmont/mount-pleasant-road-high-street',
+  'carlton/lygon-street-elgin-street',
+  'fitzroy/brunswick-street-johnston-street'
 ]
