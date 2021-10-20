@@ -366,5 +366,6 @@ module.exports = [
   'belmont/francis-street-barwon-heads-road',
   'belmont/mount-pleasant-road-high-street',
   'carlton/lygon-street-elgin-street',
-  'fitzroy/brunswick-street-johnston-street'
+  'fitzroy/brunswick-street-johnston-street',
+  'heidelberg-west/olympic-village-shopping-centre-southern-road'
 ]

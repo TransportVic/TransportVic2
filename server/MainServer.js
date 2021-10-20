@@ -135,24 +135,6 @@ module.exports = class MainServer {
       else return void next()
     }
 
-    app.use('*', (req, res, next) => {
-      if (filter('circulars.', req, next)) {
-        if (!req.headers.authorization || req.headers.authorization !== trackerAuth) {
-          res.status(401)
-          res.header('www-authenticate', 'Basic realm="password needed"')
-          res.end('Please login')
-        } else {
-          let url = `http://localhost:${config.circularPort}${req.baseUrl}`
-          fetch(url).then(r => {
-            res.header('Content-Type', r.headers.get('content-type'))
-            let disposition = r.headers.get('content-disposition')
-            if (disposition) res.header('Content-Disposition', r.headers.get('content-disposition'))
-            r.body.pipe(res)
-          })
-        }
-      }
-    })
-
     app.get('/', (req, res, next) => {
       if (filter('seized.', req, next)) res.render('seized')
     })
