@@ -170,6 +170,13 @@ module.exports = async (collection, operationDay, origin, destination, departure
     matchedTrips = await dbQuery.toArray()
   }
 
+  if (!matchedTrips.length) { // If no match try without route name - disruption/works could have made it shorter and not match
+    delete query.$and[0].routeName
+    let dbQuery = collection.findDocuments(query)
+    if (collection.getCollectionName() === 'timetables') dbQuery.hint('vline matching index')
+    matchedTrips = await dbQuery.toArray()
+  }
+
   function d(x) { return Math.abs(x.stopTimings[0].departureTimeMinutes - tripStartMinutes) }
 
   if (matchedTrips.length) {
