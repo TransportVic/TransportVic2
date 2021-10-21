@@ -120,6 +120,6 @@ database.connect(async () => {
   vlineTrips = database.getCollection('vline trips')
 
   schedule([
-    [240, 241, 15]
+    [300, 301, 15]
   ], updateData, 'discord notify', global.loggers.general)
 })
