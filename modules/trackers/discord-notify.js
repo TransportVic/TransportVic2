@@ -12,7 +12,9 @@ async function findHCMT(today, date) {
   let hcmtTrains = await liveTimetables.findDocuments({
     operationDays: today,
     mode: 'metro train',
-    routeGTFSID: '2-PKM',
+    routeGTFSID: {
+      $in: ['2-PKM', '2-CRB']
+    },
     h: true
   }).sort({ 'stopTimings.0.departureTimeMinutes': 1 }).toArray()
 
@@ -120,6 +122,6 @@ database.connect(async () => {
   vlineTrips = database.getCollection('vline trips')
 
   schedule([
-    [300, 301, 15]
+    [240, 241, 15]
   ], updateData, 'discord notify', global.loggers.general)
 })
