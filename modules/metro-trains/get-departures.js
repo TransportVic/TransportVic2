@@ -194,7 +194,7 @@ async function getNotifyData(db) {
 
   let trainAlterations = allTrainAlterations.filter(disruption => {
     let text = disruption.text
-    return (!text.includes('cancel') && !loopSkipping.includes(disruption) && !stonyPointReplacements.includes(disruption.runID))
+    return (!text.includes('maintenance') && !text.includes('works') && !text.includes('cancel') && !loopSkipping.includes(disruption) && !stonyPointReplacements.includes(disruption.runID))
       || text.includes('originate') || text.includes('terminate') || text.includes('express') || text.includes('not stop')
   })
 
