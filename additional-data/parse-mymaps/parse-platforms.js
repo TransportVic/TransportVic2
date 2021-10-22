@@ -327,13 +327,12 @@ let knownStations = [
   "Yass Junction"
 ]
 
-
 let data = {}
 
 let platformsData = Array.from($('Placemark'))
 platformsData.forEach(platform => {
   let stationName = $('Data[name=STATION]', platform).text().trim()
-  let platformNumber = $('Data[name=PLATFORMNO]', platform).text().trim()
+  let platformNumber = $('Data[name=PLATFORM]', platform).text().trim()
 
   if (!knownStations.includes(stationName)) return console.log('Skipping', stationName)
   if (!platformNumber) return console.log('Skipping', stationName, 'without platform number')
