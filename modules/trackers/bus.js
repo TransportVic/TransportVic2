@@ -20,7 +20,7 @@ function pickRandomStops() {
   if (isNightNetwork()) {
     return utils.shuffle(nightStops).slice(0, 28)
   } else {
-    return utils.shuffle(stops).slice(0, 28)
+    return utils.shuffle(stops).slice(0, 29)
   }
 }
 
@@ -61,9 +61,9 @@ async function requestTimings() {
 database.connect(async () => {
   dbStops = database.getCollection('stops')
   schedule([
-    [0, 60, 6],
-    [60, 299, 7],
-    [300, 1260, 5.5],
+    [0, 60, 6.5],
+    [60, 299, 6],
+    [300, 1260, 5],
     [1261, 1440, 6]
   ], requestTimings, 'bus tracker', global.loggers.trackers.bus)
 })
