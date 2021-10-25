@@ -67,28 +67,35 @@ if departures.length
             let checkFlags = departure.flags || {}
             if (checkFlags.firstClassAvailable)
               flags = 'First Class'
-            if (checkFlags.barAvailable) {
+
+            if (checkFlags.cateringAvailable && !departure.trip.cateringUnavailable) {
               if (flags.length) flags += ' & '
-              flags += 'Bar'
+              flags += 'Catering'
             }
             if (flags.length) flags += ' Available'
+
+            if (departure.trip.cateringUnavailable) {
+              if (flags.length) flags += ', '
+              flags += '<span class="important inline">CATERING UNAVAILABLE</span>'
+            }
+
             if (checkFlags.reservationsOnly) {
               if (flags.length) flags += ' - '
               flags += 'Reservations Only'
             }
-          
+
             let vehicleData
             let important = false
             if (departure.vehicle) {
               vehicleData = 'Vehicle: ' + departure.vehicle
             }
             if (departure.divideMessage) vehicleData += ` ${departure.divideMessage}`
-            
+
             if (departure.trip.type === 'capacity reduction') {
               important = true
               vehicleData = `Reduced capacity of ${departure.trip.capacity} carriages`
             }
-          span.broadDepartureInfo=flags
+          span.broadDepartureInfo !{flags}
           if vehicleData
             if important
               span.broadDepartureInfo.important #{vehicleData}

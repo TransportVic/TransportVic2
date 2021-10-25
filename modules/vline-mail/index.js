@@ -5,6 +5,7 @@ const handleChange = require('./modules/handle-change')
 const handleCancellation = require('./modules/handle-cancellation')
 const handleNonStop = require('./modules/handle-non-stop')
 const handleReinstatement = require('./modules/handle-reinstatement')
+const handleNoCatering = require('./modules/handle-no-catering')
 
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
@@ -48,6 +49,8 @@ async function handleMessage(subject, rawText) {
     await handleReinstatement(database, text)
   } else if (text.includes('will not stop at') || text.includes('will run express') || text.includes('will not be stopping')) {
     await handleNonStop(database, text)
+  } else if (text.includes('without') && text.includes('buffet')) {
+    await handleNoCatering(database, text)
   } else {
     await handleChange(database, text)
   }
