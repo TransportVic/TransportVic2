@@ -56,6 +56,21 @@ function setDepartureInfoVisible(visible) {
   }
 }
 
+function setMessageText(text) {
+  let lines = text.split('[NL]')
+  let fullLength = lines.map(line => line.length).reduce((a, b) => a + b + 1, 0)
+  let htmlJoined = lines.join('<br>')
+
+  let textClass = 'larger'
+  if (lines.length > 2 || fullLength > 20) textClass = 'large'
+  if (lines.length > 2 || fullLength > 40) textClass = ''
+  if (lines.length > 4 || fullLength > 90) textClass = 'small'
+  if (lines.length > 4 || fullLength > 120) textClass = 'smaller'
+
+  $('.message').innerHTML = `<p class="${textClass}">${htmlJoined}</p>`
+  setMessagesActive(true)
+}
+
 function setStandClear() {
   $('.serviceMessage').innerHTML = '<p class="large">Stand Clear Train Departing</p>'
   setServiceMessageActive(true)
@@ -63,18 +78,15 @@ function setStandClear() {
 }
 
 function setNoDepartures() {
-  $('.message').innerHTML = '<p class="large">No trains departing</p><p class="large"> from this platform</p>'
-  setMessagesActive(true)
+  setMessageText('No trains departing from this platform')
 }
 
 function setBusesReplaceTrains() {
-  $('.message').innerHTML = '<p>NO TRAINS OPERATING</p><p>REPLACEMENT BUSES</p><p>HAVE BEEN ARRANGED</p>'
-  setMessagesActive(true)
+  setMessageText('NO TRAINS OPERATING[NL]REPLACEMENT BUSES[NL]HAVE BEEN ARRANGED')
 }
 
-function setListenAnnouncements() {
-  $('.fullMessage').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen</p><p>for Announcements</p>'
-  setFullMessageActive(true)
+function setNotTakingPassengers() {
+  setMessageText('NOT TAKING SUBURBAN PASSENGERS')
 }
 
 function setArrival() {
