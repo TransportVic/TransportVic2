@@ -89,6 +89,11 @@ function setNotTakingPassengers() {
   setMessageText('NOT TAKING SUBURBAN PASSENGERS')
 }
 
+function setListenAnnouncements() {
+  $('.fullMessage').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen</p><p>for Announcements</p>'
+  setFullMessageActive(true)
+}
+
 function setArrival() {
   $('.firstDestination').textContent = 'Arrival'
   $('.serviceMessage').innerHTML = '<div class="arrivalMessage"><img src="/static/images/mockups/no-boarding-train.svg" /><div><p>This train is not taking passengers.</p><p>Don\'t board this train.</p></div></div>'
