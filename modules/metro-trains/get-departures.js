@@ -13,6 +13,13 @@ let undergroundLoopStations = ['Parliament', 'Flagstaff', 'Melbourne Central']
 let cityLoopStations = ['Southern Cross', ...undergroundLoopStations]
 let cityStations = [...cityLoopStations, 'Flinders Street']
 
+let cityLoopGTFSIDs = [
+  19843, //Parliament
+  19842, // Melb Central
+  19841, // Flagstaff
+  22180 // Southern Cross
+]
+
 let burnleyGroup = ['Alamein', 'Belgrave', 'Glen Waverley', 'Lilydale']
 let caulfieldGroup = ['Frankston', 'Cranbourne', 'Pakenham', 'Sandringham']
 let dandenongGroup = ['Cranbourne', 'Pakenham']
@@ -735,7 +742,10 @@ function appendDepartureDay(departure, stopGTFSID) {
     global.loggers.general.warn('No departure day', stopGTFSID, departure)
     let departureTimeMinutes = utils.getMinutesPastMidnight(departure.scheduledDepartureTime)
     if (departureTimeMinutes >= 180) { // 3am - midnight
-      if (departureTimeMinutes > originDepartureMinutes) { // As expected, means no 3am stuff
+
+      // As expected, means no 3am stuff
+      // Or we are in the loop past 3am meaning the next trip is definitely past 3am
+      if (departureTimeMinutes > originDepartureMinutes || cityLoopGTFSIDs.includes(stopGTFSID)) {
         originDepartureTime = departure.scheduledDepartureTime.clone().startOf('day').add(originDepartureMinutes, 'minutes')
       } else { // Our stop is past 3am but the day is PREVIOUS DAY
         originDepartureTime = departure.scheduledDepartureTime.clone().startOf('day').add(originDepartureMinutes - 1440, 'minutes')
