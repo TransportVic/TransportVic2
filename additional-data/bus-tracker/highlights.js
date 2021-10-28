@@ -45,7 +45,7 @@ module.exports = [{
   type: 'include'
 }, {
   name: 'Cranbourne Specials',
-  track: ['CR3', 'CR9', 'CR11', 'CR13', 'CR37'],
+  track: ['CR3', 'CR9', 'CR11', 'CR12', 'CR13', 'CR37'],
   routes: [],
   type: 'exclude'
 }, {
