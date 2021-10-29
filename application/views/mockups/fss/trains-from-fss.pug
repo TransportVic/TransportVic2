@@ -11,6 +11,7 @@ html
     link(rel='preload' as='style' href='/static/css/mockups/16-9-pids-base.css')
     link(rel='preload' as='style' href='/static/css/mockups/base-style.css')
     link(rel='preload' as='image' href='/static/images/mockups/announcements.svg')
+    input(type='hidden' name='csrf' value=csrf)
   body
     div(style='display: none;').fullMessage
       img(src='/static/images/mockups/announcements.svg')

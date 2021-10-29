@@ -177,7 +177,10 @@ function addStoppingPattern(stops) {
 
 function updateBody() {
   $.ajax({
-    method: 'POST'
+    method: 'POST',
+    data: {
+      csrf: $('[name=csrf]').value
+    }
   }, (err, status, body) => {
     if (err) return setListenAnnouncements()
 

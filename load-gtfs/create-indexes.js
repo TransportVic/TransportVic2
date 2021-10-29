@@ -34,6 +34,8 @@ database.connect({
 
   let metroLogger = await getCollection('metro logs')
 
+  let csrfTokens = await getCollection('csrf tokens')
+
   await stops.createIndex({
     stopName: 1,
     'bays.stopGTFSID': 1
@@ -465,6 +467,15 @@ database.connect({
 
   console.log('Created Metro Logger index')
 
-  updateStats('create-indexes', 59)
+  await csrfTokens.createIndex({
+    created: 1,
+    ip: 1,
+    uses: 1,
+    _id: 1
+  }, { name: 'csrf index', unique: 1 })
+
+  console.log('Created CSRF Token index')
+
+  updateStats('create-indexes', 71)
   process.exit()
 })
