@@ -36,10 +36,16 @@ async function makeRequest(url, maxRetries=2, timeout=2400) {
     return await utils.getData('ptv-api', url, async () => {
       let start = +new Date()
 
-      let data = JSON.parse(await utils.request(getURL(url), {
-        maxRetries,
-        timeout
-      }))
+      let data, error
+      try {
+        data = JSON.parse(await utils.request(getURL(url), {
+          maxRetries,
+          timeout
+        }))
+      } catch (e) {
+        error = e
+        data = JSON.parse(e.response)
+      }
 
       let end = +new Date()
       let diff = end - start
@@ -59,6 +65,7 @@ async function makeRequest(url, maxRetries=2, timeout=2400) {
         })
       }
 
+      if (error) throw error
       return data
     }, 5000)
   } catch (e) {
