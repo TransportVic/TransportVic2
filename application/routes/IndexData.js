@@ -115,7 +115,8 @@ router.get('/.well-known/acme-challenge/:key', rateLimit({
 }))
 
 router.get('/.well-known/acme-challenge/:key', (req, res) => {
-  let filePath = path.join(config.webrootPath, req.params.key)
+  let filePath = path.join(config.webrootPath, '.well-known', 'acme-challenge', req.params.key)
+
   let stream = fs.createReadStream(filePath)
   stream.pipe(res)
 

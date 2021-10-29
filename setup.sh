@@ -28,3 +28,13 @@ sudo chmod a+rw -R /var/log/mongodb
 sudo ln "$(readlink -f `command -v node`)" /usr/bin/node
 sudo setcap 'cap_net_bind_service=+ep' /usr/bin/node
 sudo chmod a+r -R /etc/letsencrypt
+
+sudo groupadd certbot
+sudo usermod -a -G certbot ec2-user
+sudo usermod -a -G certbot root
+
+sudo chgrp certbot /etc/letsencrypt/live -R
+sudo chgrp certbot /etc/letsencrypt/archive -R
+
+sudo chmod g=rwx,o= /etc/letsencrypt/live
+sudo chmod g=rwx,o= /etc/letsencrypt/archive
