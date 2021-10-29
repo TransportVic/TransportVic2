@@ -95,7 +95,10 @@ function getAverageResponseTime() {
 
 function getFaultRate() {
   let faulty = ptvResponses.filter(r => r.fault).length
-  return faulty / ptvResponses.length * 100
+  return {
+    rate: faulty / ptvResponses.length * 100,
+    count: faulty
+  }
 }
 
 module.exports = makeRequest
