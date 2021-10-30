@@ -6,7 +6,7 @@ const config = require('../config.json')
 module.exports = class HTTPSRedirectServer {
   app (req, res) {
     let urlMatch
-    if (urlMatch = req.url.match(/\/.well-known\/acme-challenge\/(\w*)/)) {
+    if (urlMatch = req.url.match(/\/.well-known\/acme-challenge\/([^\/]*)/)) {
       let filePath = path.join(config.webrootPath, urlMatch[0])
 
       let stream = fs.createReadStream(filePath)
