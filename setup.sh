@@ -35,6 +35,8 @@ sudo usermod -a -G certbot root
 
 sudo chgrp certbot /etc/letsencrypt/live -R
 sudo chgrp certbot /etc/letsencrypt/archive -R
+sudo chgrp certbot /var/logs/letsencrypt -R
 
 sudo chmod g=rwx,o= /etc/letsencrypt/live
 sudo chmod g=rwx,o= /etc/letsencrypt/archive
+sudo chmod g=rwx,o= /var/logs/letsencrypt

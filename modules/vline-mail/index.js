@@ -13,17 +13,11 @@ const config = require('../../config.json')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 async function inboundMessage(connection, data) {
-  let sender = data.from.text
-  if (sender.includes('@inform.vline.com.au')) {
-    let {subject, html} = data
-    let $ = cheerio.load(html)
-    let textContent = $('center').text()
+  let {subject, html} = data
+  let $ = cheerio.load(html)
+  let textContent = $('center').text()
 
-    handleMessage(subject || '', textContent)
-  } else {
-    global.loggers.spamMail.log(`Recieved Spam To ${data.to.text} From ${sender} (IP ${connection.remoteAddress}, HOST ${connection.clientHostname}): ${data.text.trim()}\n`)
-    global.loggers.spamMail.log('To Data: ', data.to)
-  }
+  handleMessage(subject || '', textContent)
 }
 
 async function handleMessage(subject, rawText) {
@@ -67,6 +61,20 @@ module.exports = () => {
     })
 
     global.loggers.mail.info('V/Line Email Server started')
+
+    nodeMailin.on('validateSender', (session, address, callback) => {
+      if (address !== '@inform.vline.com.au') {
+        // global.loggers.spamMail.log(`Recieved Spam To ${data.to.text} From ${sender} (IP ${connection.remoteAddress}, HOST ${connection.clientHostname}): ${data.text.trim()}\n`)
+        // global.loggers.spamMail.log('To Data: ', data.to)
+        // global.loggers.spamMail.log('Content: ', content)
+
+        global.loggers.spamMail.log(`Received Spam From ${address}`)
+
+        let error = new Error('RESOLVER.ADR.RecipientNotFound; Recipient not found by SMTP address lookup')
+        error.responseCode = 550
+        callback(error)
+      } else callback()
+    })
 
     nodeMailin.on('message', (connection, data, content) => {
       inboundMessage(connection, data)
