@@ -62,16 +62,25 @@ module.exports = () => {
 
     global.loggers.mail.info('V/Line Email Server started')
 
-    nodeMailin.on('validateSender', (session, address, callback) => {
-      if (address !== '@inform.vline.com.au') {
-        // global.loggers.spamMail.log(`Recieved Spam To ${data.to.text} From ${sender} (IP ${connection.remoteAddress}, HOST ${connection.clientHostname}): ${data.text.trim()}\n`)
-        // global.loggers.spamMail.log('To Data: ', data.to)
-        // global.loggers.spamMail.log('Content: ', content)
-
-        global.loggers.spamMail.log(`Received Spam From ${address}`)
-
-        let error = new Error('RESOLVER.ADR.RecipientNotFound; Recipient not found by SMTP address lookup')
+    nodeMailin.on('validateRecipient', (session, address, callback) => {
+      if (address !== config.vlineInformEmail) {
+        let error = new Error(`550 5.1.1 <${address}>: Requested action not taken: mailbox unavailable`)
         error.responseCode = 550
+
+        global.loggers.spamMail.log(`Rejected mail addressed to ${address}`)
+
+        return callback(error)
+      }
+      callback()
+    })
+
+    nodeMailin.on('validateSender', (session, address, callback) => {
+      if (!address.includes('@inform.vline.com.au')) {
+        let error = new Error(`530 5.7.0 <${address}>: Authentication required`)
+        error.responseCode = 530
+
+        global.loggers.spamMail.log(`Rejected Non-V/Line Email from ${address}`, session)
+
         callback(error)
       } else callback()
     })
