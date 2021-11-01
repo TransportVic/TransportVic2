@@ -7,6 +7,8 @@ const handleNonStop = require('./modules/handle-non-stop')
 const handleReinstatement = require('./modules/handle-reinstatement')
 const handleNoCatering = require('./modules/handle-no-catering')
 
+const HTTPSServer = require('../../server/HTTPSServer')
+
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
 
@@ -52,19 +54,28 @@ async function handleMessage(subject, rawText) {
 
 module.exports = () => {
   database.connect(async err => {
-    nodeMailin.start({
+    let options = {
       port: 25,
       logLevel: 'error',
       smtpOptions: {
-        SMTPBanner: 'TransportVic V/Line Inform Email Server'
-      }
-    })
+        banner: 'TransportVic V/Line Inform Email Server',
+        disableReverseLookup: false
+      },
+      disableDNSValidation: false
+    }
+
+    if (config.useHTTPS) {
+      options.secure = true
+      options.SNICallback = HTTPSServer.createSNICallback()
+    }
+
+    nodeMailin.start(options)
 
     global.loggers.mail.info('V/Line Email Server started')
 
     nodeMailin.on('validateRecipient', (session, address, callback) => {
       if (address !== config.vlineInformEmail) {
-        let error = new Error(`550 5.1.1 <${address}>: Requested action not taken: mailbox unavailable`)
+        let error = new Error(`5.1.1 <${address}>: Requested action not taken: mailbox unavailable`)
         error.responseCode = 550
 
         global.loggers.spamMail.log(`Rejected mail addressed to ${address}`)
@@ -76,7 +87,7 @@ module.exports = () => {
 
     nodeMailin.on('validateSender', (session, address, callback) => {
       if (!address.includes('@inform.vline.com.au')) {
-        let error = new Error(`530 5.7.0 <${address}>: Authentication required`)
+        let error = new Error(`5.7.0 <${address}>: Authentication required`)
         error.responseCode = 530
 
         global.loggers.spamMail.log(`Rejected Non-V/Line Email from ${address}`, session)
