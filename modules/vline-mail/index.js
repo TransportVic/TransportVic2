@@ -64,11 +64,6 @@ module.exports = () => {
       disableDNSValidation: false
     }
 
-    if (config.useHTTPS) {
-      options.secure = true
-      options.SNICallback = HTTPSServer.createSNICallback()
-    }
-
     nodeMailin.start(options)
 
     global.loggers.mail.info('V/Line Email Server started')
