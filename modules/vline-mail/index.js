@@ -1,6 +1,9 @@
 const nodeMailin = require('node-mailin')
 const cheerio = require('cheerio')
 
+const os = require('os')
+const path = require('path')
+
 const handleChange = require('./modules/handle-change')
 const handleCancellation = require('./modules/handle-cancellation')
 const handleNonStop = require('./modules/handle-non-stop')
@@ -61,7 +64,11 @@ module.exports = () => {
         banner: 'TransportVic V/Line Inform Email Server',
         // disableReverseLookup: false
       },
-      // disableDNSValidation: false
+      // disableDNSValidation: false,
+
+      tmp: path.join(os.tmpdir(), '.node_mail'),
+      logFile: path.join(__dirname, '..', '..', 'logs', 'mail.log'),
+      verbose: true
     })
 
     global.loggers.mail.info('V/Line Email Server started')
