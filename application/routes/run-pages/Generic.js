@@ -27,27 +27,24 @@ async function pickBestTrip(data, db) {
 
   let dbStops = db.getCollection('stops')
 
-  let originStop = await dbStops.findDocument({
+  let possibleOriginStops = await dbStops.findDocuments({
     codedNames: data.origin,
     'bays.mode': trueMode
-  })
+  }).toArray()
 
-  let destinationStop = await dbStops.findDocument({
+  let possibleDestinationStops = await dbStops.findDocuments({
     codedNames: data.destination,
     'bays.mode': trueMode
-  })
+  }).toArray()
 
-  if (!originStop || !destinationStop) return null
+  if (!possibleOriginStops.length || !possibleDestinationStops.length) return null
   let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
   let minutesToTripEnd = tripEndTime.diff(utils.now(), 'minutes')
 
-  let originName = originStop.bays.filter(bay => utils.encodeName(bay.fullStopName) === data.origin)[0].fullStopName
-  let destinationName = destinationStop.bays.filter(bay => utils.encodeName(bay.fullStopName) === data.destination)[0].fullStopName
+  let originName = possibleOriginStops.map(stop => stop.bays.find(bay => utils.encodeName(bay.fullStopName) === data.origin)).find(bay => bay).fullStopName
+  let destinationName = possibleDestinationStops.map(stop => stop.bays.find(bay => utils.encodeName(bay.fullStopName) === data.destination)).find(bay => bay).fullStopName
 
   let operationDays = data.operationDays
-
-  // Looks like "generic" transport modes use real travel day in GTFS, no 3am rubbish
-  // if (tripStartMinutes > 1440) operationDays = utils.getYYYYMMDD(tripDay.clone().add(-1, 'day'))
 
   let query = {
     mode: trueMode,
