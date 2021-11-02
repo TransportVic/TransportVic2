@@ -54,17 +54,15 @@ async function handleMessage(subject, rawText) {
 
 module.exports = () => {
   database.connect(async err => {
-    let options = {
+    nodeMailin.start({
       port: 25,
       logLevel: 'error',
       smtpOptions: {
         banner: 'TransportVic V/Line Inform Email Server',
-        disableReverseLookup: false
+        // disableReverseLookup: false
       },
-      disableDNSValidation: false
-    }
-
-    nodeMailin.start(options)
+      // disableDNSValidation: false
+    })
 
     global.loggers.mail.info('V/Line Email Server started')
 
