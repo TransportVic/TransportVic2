@@ -3,6 +3,7 @@ const cheerio = require('cheerio')
 
 const os = require('os')
 const path = require('path')
+const util = require('util')
 
 const handleChange = require('./modules/handle-change')
 const handleCancellation = require('./modules/handle-cancellation')
@@ -57,11 +58,20 @@ async function handleMessage(subject, rawText) {
 
 module.exports = () => {
   database.connect(async err => {
+    let genLog = (logger, level) => ((json, text, ...others) => logger[level](json, util.format(text, ...others)))
+
     nodeMailin.start({
       port: 25,
       logLevel: 'error',
+      debug: true,
       smtpOptions: {
-        banner: 'TransportVic V/Line Inform Email Server'
+        banner: 'TransportVic V/Line Inform Email Server',
+        logger: {
+          info: genLog(global.loggers.mail, 'info'),
+          error: genLog(global.loggers.mail, 'err'),
+          debug: genLog(global.loggers.mail, 'debug'),
+        },
+        debug: true
       },
       // disableDNSValidation: false,
 
