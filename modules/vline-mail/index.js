@@ -32,7 +32,7 @@ async function handleMessage(subject, rawText) {
     .replace(/  +/g, ' ').trim()
 
   if (text.length > 300) {
-    return global.loggers.spamMail.log(`Disregarded vline email: ${text.trim()}`)
+    return global.loggers.mail.log(`Disregarded vline email: ${text.trim()}`)
   }
 
   global.loggers.mail.log(`Got Mail: ${text.replace(/\n/g, ' ')}`)
@@ -61,8 +61,7 @@ module.exports = () => {
       port: 25,
       logLevel: 'error',
       smtpOptions: {
-        banner: 'TransportVic V/Line Inform Email Server',
-        // disableReverseLookup: false
+        banner: 'TransportVic V/Line Inform Email Server'
       },
       // disableDNSValidation: false,
 
@@ -83,17 +82,6 @@ module.exports = () => {
         return callback(error)
       }
       callback()
-    })
-
-    nodeMailin.on('validateSender', (session, address, callback) => {
-      if (!address.includes('@inform.vline.com.au')) {
-        let error = new Error(`5.7.0 <${address}>: Authentication required`)
-        error.responseCode = 530
-
-        global.loggers.spamMail.log(`Rejected Non-V/Line Email from ${address}`, session)
-
-        callback(error)
-      } else callback()
     })
 
     nodeMailin.on('message', (connection, data, content) => {

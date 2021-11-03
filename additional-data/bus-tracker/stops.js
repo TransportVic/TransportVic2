@@ -368,5 +368,6 @@ module.exports = [
   'carlton/lygon-street-elgin-street',
   'fitzroy/brunswick-street-johnston-street',
   'heidelberg-west/olympic-village-shopping-centre-southern-road',
-  'hadfield/fawkner-memorial-park-box-forest-road'
+  'hadfield/fawkner-memorial-park-box-forest-road',
+  'heidelberg/austin-hospital-burgundy-street'
 ]
