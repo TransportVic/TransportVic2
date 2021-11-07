@@ -52,7 +52,6 @@ function parse(pdfBuffer, callback) {
   function pdfParserCallback(err, data) {
     if (err) return callback(err)
 
-
     // PDF's contain pages and each page contains Texts. These texts have an x and y value.
     // So finding Texts with equal y values seems like the solution.
     // However, some y values are off by 0.010 pixels/points so let's first find what the smallest y value could be.
@@ -65,8 +64,8 @@ function parse(pdfBuffer, callback) {
     // now lets find Texts with 'the same' y-values, Actually y-values in the range of y-smallestYValue and y+smallestYValue:
     var myPages = []
 
-    for (var p = 0; p < data.formImage.Pages.length; p++) {
-      var page = data.formImage.Pages[p]
+    for (var p = 0; p < data.Pages.length; p++) {
+      var page = data.Pages[p]
       var fills = page.Fills
       var verticalFills = fills.filter(fill => {
         return fill.h > fill.w
