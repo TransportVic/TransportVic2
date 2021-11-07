@@ -127,7 +127,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Sunbury Specials',
-  track: ['S16'],
+  track: ['S16', 'S35', 'S36'],
   routes: [],
   type: 'exclude'
 }, {

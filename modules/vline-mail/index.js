@@ -73,7 +73,6 @@ module.exports = () => {
         },
         debug: true
       },
-      // disableDNSValidation: false,
 
       tmp: path.join(os.tmpdir(), '.node_mail'),
       logFile: path.join(__dirname, '..', '..', 'logs', 'mail.log'),
