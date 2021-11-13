@@ -91,6 +91,7 @@ module.exports = {
   "4-79g": ["Cranbourne Transit"], // 799
   "4-800": ["Ventura Bus Lines"], // 800
   "4-80O": ["Ventura Bus Lines"], // 800
+  "4-816": ["Ventura Bus Lines"], // 816
   "4-834": ["Ventura Bus Lines"], // 834
   "4-84Z": ["Ventura Bus Lines"], // 842
   "4-84E": ["Ventura Bus Lines"], // 843

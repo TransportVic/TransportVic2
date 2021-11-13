@@ -593,7 +593,8 @@
       "Ferry Terminal": "Sorrento"
     },
     "788": {
-      "The Bays Hospital": "Mornington"
+      "The Bays Hospital": "Mornington",
+      "Melbourne Road/Ocean Beach Road": "Sorrento"
     },
     "792": {
       "Baxter-Tooradin Road/Pearcedale Road": "Pearcedale"
@@ -616,6 +617,9 @@
     },
     "814": {
       "Spring Valley Reserve": "Springvale South"
+    },
+    "816": {
+      "Somerfield Drive/Perry Road": "Keysborough South"
     },
     "824": {
       "Parkmore SC": "Keysborough"
