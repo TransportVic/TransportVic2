@@ -65,7 +65,9 @@ async function getDeparturesFromPTV(stop, db) {
       let destination = utils.getProperStopName(run.destination_name)
 
       let day = utils.getYYYYMMDD(scheduledDepartureTime)
-      let routeGTFSID = route.route_gtfs_id.replace(/-0+/, '-')
+      let ptvRouteNumber = route.route_number
+      if (ptvRouteNumber === '3-3a') ptvRouteNumber = '3'
+      let routeGTFSID = `3-${ptvRouteNumber}`
 
       let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTimeMinutes, destination, 'tram', day, routeGTFSID)
       if (!trip) trip = await getStoppingPatternWithCache(db, tramDeparture, run.destination_name)

@@ -5,6 +5,7 @@ const findConsist = require('./fleet-parser')
 const metroTypes = require('../../additional-data/metro-tracker/metro-types')
 const addStonyPointData = require('../metro-trains/add-stony-point-data')
 const fixTripDestination = require('../metro-trains/fix-trip-destinations')
+const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 let borderStops = ['Richmond', 'Jolimont', 'North Melbourne', 'Flinders Street']
@@ -200,7 +201,10 @@ module.exports = async function (data, db) {
 
   let dbStops = {}
 
-  let routeGTFSID = routeData.route_gtfs_id
+  let routeName = routeData.route_name
+  if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
+
+  let routeGTFSID = routeGTFSIDs[routeName]
   if (routeData.route_id === 99) routeGTFSID = '2-CCL'
   let route = await routesCollection.findDocument({ routeGTFSID })
 
@@ -264,7 +268,6 @@ module.exports = async function (data, db) {
   let vehicleDescriptor = run.vehicle_descriptor
   let directionName = ptvDirection.direction_name
   let gtfsDirection = route.ptvDirections[directionName]
-  let routeName = route.routeName
   let direction = ptvDirection.direction_name.includes('City') ? 'Up' : 'Down'
 
   if (routeName === 'Stony Point') direction = ptvDirection.direction_name.includes('Frankston') ? 'Up' : 'Down'
