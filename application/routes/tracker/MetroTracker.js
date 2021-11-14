@@ -334,6 +334,25 @@ router.post('/hcmt/tdn/:runID', async (req, res) => {
       h: true,
     })
 
+    if (modules.metroLogger) {
+      let metroLogger = db.getCollection('metro logs')
+      await metroLogger.createDocument({
+        utc: +new Date(),
+        search: { runID },
+        result: {
+          cancelled: trip.cancelled || false,
+          forming: trip.forming,
+          formedBy: formedBy ? formedBy.runID : null,
+          origin: trip.origin,
+          departures: trip.departureTime,
+          destination: trip.destination
+        },
+        referer: '/trip-hcmt.html',
+        ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+        userAgent: req.headers['user-agent']
+      })
+    }
+
     res.json({
       cancelled: trip.cancelled || false,
       formedBy: formedBy ? formedBy.runID : null,
