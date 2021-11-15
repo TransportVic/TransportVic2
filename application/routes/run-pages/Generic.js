@@ -11,6 +11,7 @@ const busDestinations = require('../../../additional-data/bus-destinations')
 const coachDestinations = require('../../../additional-data/coach-stops')
 
 const busBays = require('../../../additional-data/bus-bays')
+const routeIDs = require('../../../additional-data/route-ids')
 
 async function pickBestTrip(data, db) {
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
@@ -115,7 +116,7 @@ async function pickBestTrip(data, db) {
       let departure = departures.find(departure => {
         let run = runs[departure.run_ref]
         let route = routes[departure.route_id]
-        let routeGTFSID = route.route_gtfs_id
+        let routeGTFSID = routeIDs[route.route_id]
 
         if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
         if (routeGTFSID === '4-965') routeGTFSID = '8-965'

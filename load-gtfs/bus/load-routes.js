@@ -11,6 +11,7 @@ const operatorOverrides = require('../../additional-data/operator-overrides')
 const ptvAPI = require('../../ptv-api')
 const loopDirections = require('../../additional-data/loop-direction')
 const gtfsUtils = require('../../gtfs-utils')
+const routeIDs = require('../../additional-data/route-ids')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
@@ -32,10 +33,14 @@ database.connect({
 }, async err => {
   let routes = database.getCollection('routes')
 
-  let ptvRouteData = (await ptvAPI('/v3/routes?route_types=2')).routes.filter(route => {
-    return route.route_gtfs_id && route.route_gtfs_id.startsWith(`${gtfsID}-`)
+  let ptvRouteData = (await ptvAPI('/v3/routes?route_types=2')).routes.map(route => {
+    route.routeGTFSID = routeIDs[route.route_id]
+
+    return route
+  }).filter(route => {
+    return route.routeGTFSID && route.routeGTFSID.startsWith(`${gtfsID}-`)
   }).map(route => {
-    route.routeGTFSID = route.route_gtfs_id.replace(/-0+/, '-')
+    route.routeGTFSID = route.routeGTFSID.replace(/-0+/, '-')
     route.adjustedName = utils.adjustRouteName(route.route_name)
     route.originalName = route.route_name
 

@@ -4,6 +4,7 @@ const ptvAPI = require('../../ptv-api')
 const nameModifier = require('../../additional-data/stop-name-modifier')
 const gtfsGroups = require('../gtfs-id-groups')
 const determineBusRouteNumber = require('../../additional-data/determine-bus-route-number')
+const routeIDs = require('../../additional-data/route-ids')
 
 let modes = {
   'regional train': 3,
@@ -50,7 +51,7 @@ module.exports = async function (db, ptvRunID, mode, time, stopID, referenceTrip
   let checkModes = [mode]
   if (mode === 'regional coach') checkModes.push('regional train')
 
-  let routeGTFSID = routeData.route_gtfs_id
+  let routeGTFSID = routeIDs[routeData.route_id]
   if (routeGTFSID === '4-965') routeGTFSID = '8-965'
 
   if (mode === 'tram') routeGTFSID = `3-${parseInt(routeGTFSID.slice(2))}`

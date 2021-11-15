@@ -7,6 +7,7 @@ const ptvAPI = require('../ptv-api')
 const utils = require('../utils')
 const loopDirections = require('../additional-data/loop-direction')
 const moment = require('moment')
+const routeIDs = require('../additional-data/route-ids')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('./utils/stats')
@@ -100,7 +101,9 @@ database.connect({
 
   let ptvRoutes = (await ptvAPI('/v3/routes?route_types=2')).routes
   await async.forEach(ptvRoutes, async route => {
-    let routeGTFSID = route.route_gtfs_id, routeName = route.route_name.replace(/effective /i, '').toLowerCase()
+    let routeGTFSID = routeIDs[route.route_id], routeName = route.route_name.replace(/effective /i, '').toLowerCase()
+    if (!routeGTFSID) return
+
     let now = utils.now().startOf('day')
 
     if (routeName.includes('(from') || routeName.includes('(until') || routeName.includes('(discontinued')) {

@@ -7,6 +7,7 @@ const busBays = require('../../additional-data/bus-bays')
 const gtfsGroups = require('../gtfs-id-groups')
 const departureUtils = require('../utils/get-bus-timetables')
 const liveBusData = require('../../additional-data/live-bus-data')
+const routeIDs = require('../../additional-data/route-ids')
 
 async function getStoppingPatternWithCache(db, busDeparture, destination, isNightBus) {
   let id = busDeparture.scheduled_departure_utc + destination
@@ -121,7 +122,7 @@ async function getDeparturesFromPTV(stop, db) {
 
       let destination = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
 
-      let routeGTFSID = route.route_gtfs_id
+      let routeGTFSID = routeIDs[route.route_id]
       if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
       if (routeGTFSID === '4-965') routeGTFSID = '8-965'
 
