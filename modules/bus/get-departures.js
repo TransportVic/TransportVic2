@@ -245,14 +245,24 @@ async function getDepartures(stop, db) {
 
   try {
     return await utils.getData('bus-departures', cacheKey, async () => {
+      let scheduledDepartures = []
+      let ptvDepartures = []
       let departures = []
 
-      try {
-        departures = await getDeparturesFromPTV(stop, db)
-      } catch (e) {
-        global.loggers.general.err('Failed to get bus timetables', e)
-        departures = await getScheduledDepartures(stop, db, false)
-      }
+      await Promise.all([new Promise(async resolve => {
+        try {
+          scheduledDepartures = await getScheduledDepartures(stop, db, false)
+        } catch (e) { global.loggers.general.err('Failed to get schedule departures', e) } finally { resolve() }
+      }), new Promise(async resolve => {
+        try {
+          ptvDepartures = await getDeparturesFromPTV(stop, db)
+        } catch (e) { global.loggers.general.err('Failed to get PTV departures', e) } finally { resolve() }
+      })])
+
+      let ptvRoutes = ptvDepartures.map(departure => departure.trip.routeGTFSID)
+      let nonLiveDepartures = scheduledDepartures.filter(departure => !ptvRoutes.includes(departure.trip.routeGTFSID))
+
+      departures = [...ptvDepartures, ...nonLiveDepartures]
 
       departures = departures.sort((a, b) => {
         return a.actualDepartureTime - b.actualDepartureTime
