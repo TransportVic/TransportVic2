@@ -13,6 +13,8 @@ const loopDirections = require('../../additional-data/loop-direction')
 const gtfsUtils = require('../../gtfs-utils')
 const routeIDs = require('../../additional-data/route-ids')
 
+const metroOperators = require('../../additional-data/bus-data/metro-operators')
+
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
 
@@ -85,7 +87,11 @@ database.connect({
 
   async function load(shapeJSON) {
     return await loadRoutes(routes, gtfsID, routeData, shapeJSON, (routeGTFSID, routeNumber, routeName) => {
-      if (operatorOverrides[routeGTFSID]) return operatorOverrides[routeGTFSID]
+      if ((routeGTFSID.startsWith('4-') || routeGTFSID.startsWith('8-')) && metroOperators[routeNumber]) {
+        return metroOperators[routeNumber]
+      }
+
+      // if (operatorOverrides[routeGTFSID]) return operatorOverrides[routeGTFSID]
       if (serviceLookup[routeGTFSID]) return serviceLookup[routeGTFSID].operator
 
       let routeMatch = Object.values(serviceLookup).find(route => {

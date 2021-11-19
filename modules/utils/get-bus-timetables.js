@@ -48,7 +48,7 @@ function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
   return gtfsIDs
 }
 
-async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, routeGTFSID, excludedTripIDs, variance=0) {
+async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, routeGTFSID, excludedTripIDs, variance=0, routeNumber) {
   let trip
   let query
 
@@ -89,6 +89,8 @@ async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, r
 
     if (routeGTFSID) {
       query.routeGTFSID = routeGTFSID
+    } else if (routeNumber) {
+      query.routeNumber = routeNumber
     }
 
     // for the coaches

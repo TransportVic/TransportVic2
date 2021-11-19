@@ -122,17 +122,33 @@ async function getDeparturesFromPTV(stop, db) {
 
       let destination = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
 
-      let routeGTFSID = routeIDs[route.route_id]
-      if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
-      if (routeGTFSID === '4-965') routeGTFSID = '8-965'
+      let trip, routeGTFSID, routeGTFSIDQuery
 
-      let routeGTFSIDQuery = routeGTFSID, matchingGroup
-      if (matchingGroup = gtfsGroups.find(g => g.includes(routeGTFSID))) {
-        routeGTFSIDQuery = { $in: matchingGroup }
+      if (routeGTFSID = routeIDs[route.route_id]) {
+        if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
+        if (routeGTFSID === '4-965') routeGTFSID = '8-965'
+
+        routeGTFSIDQuery = routeGTFSID
+        let matchingGroup
+        if (matchingGroup = gtfsGroups.find(g => g.includes(routeGTFSID))) {
+          routeGTFSIDQuery = { $in: matchingGroup }
+        }
+
+        trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSIDQuery, [], 1, null)
       }
 
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSIDQuery, [], 1)
-        || await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
+      if (!trip && stop.bays.some(bay => bay.screenServices.some(svc => svc.routeGTFSID.startsWith('4-') || svc.routeGTFSID.startsWith('8-')))) {
+        let routeNumber = route.route_number
+        trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', null, [], 1, routeNumber)
+        if (trip) {
+          routeGTFSID = trip.routeGTFSID
+          routeGTFSIDQuery = routeGTFSID
+        }
+      }
+
+      if (!trip) {
+        trip = await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
+      }
 
       let hasVehicleData = run.vehicle_descriptor
       let vehicleDescriptor = hasVehicleData ? run.vehicle_descriptor : {}
