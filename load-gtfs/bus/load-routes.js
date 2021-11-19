@@ -91,7 +91,7 @@ database.connect({
         return metroOperators[routeNumber]
       }
 
-      // if (operatorOverrides[routeGTFSID]) return operatorOverrides[routeGTFSID]
+      if (operatorOverrides[routeGTFSID]) return operatorOverrides[routeGTFSID]
       if (serviceLookup[routeGTFSID]) return serviceLookup[routeGTFSID].operator
 
       let routeMatch = Object.values(serviceLookup).find(route => {
