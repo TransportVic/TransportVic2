@@ -133,12 +133,10 @@ async function getDepartures(routeName) {
     let forming = trip.forming
 
     if (forming === '0') return trip.type = 'TO_YARD' || true
-    if (forming.startsWith('0')) {
+    if (forming.match(/^0[135]\d\d/)) { // 1/5 - LIGHTLOCO 3 - NPS/NWS
       let runID = parseInt(forming)
-      if (!(700 <= runID && runID <= 899)) { // City Circle
-        trip.type = 'SHUNT_OUT'
-        return true
-      } else return false
+      trip.type = 'SHUNT_OUT'
+      return true
     }
 
     let formingTrip = firstStops.find(nextTrip => nextTrip.runID === forming)
