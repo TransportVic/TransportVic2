@@ -129,6 +129,8 @@ async function getDeparturesFromPTV(stop, db) {
       let ptvRouteNumber = route.route_number
       let busRoute
 
+      if (!ptvRouteNumber) return
+
       if (bayType === 'metro') {
         busRoute = await getRoute(db, `M-${ptvRouteNumber}`, {
           routeNumber: ptvRouteNumber,
@@ -140,7 +142,7 @@ async function getDeparturesFromPTV(stop, db) {
         let liveRoute = screenServices.find(svc => regionalGTFSIDs[svc.routeGTFSID])
         let routeData = regionalGTFSIDs[liveRoute.routeGTFSID]
 
-        let routeGTFSID = {
+        routeGTFSID = {
           $in: regionalRouteNumbers[routeData.region].filter(route => route.routeNumber === ptvRouteNumber).map(route => route.routeGTFSID)
         }
       }
