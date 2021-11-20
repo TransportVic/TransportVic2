@@ -233,7 +233,7 @@ module.exports = {
   "696": ["Ventura Bus Lines"],
   "697": ["Ventura Bus Lines"],
   "699": ["Ventura Bus Lines"],
-  "700": ["CDC Melbourne", "Ventura Bus Lines", "Transdev Melbourne"],
+  "700": ["Ventura Bus Lines"],
   "701": ["Ventura Bus Lines"],
   "703": ["Ventura Bus Lines"],
   "704": ["Ventura Bus Lines"],

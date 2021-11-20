@@ -8,37 +8,18 @@ const liveBusData = require('../../additional-data/live-bus-data')
   if online: merge by raw ptv stop name, get first
 
 */
-function getUniqueGTFSIDs(station, mode, isOnline, nightBus=false) {
+function getUniqueGTFSIDs(station, mode, isOnline) {
   let gtfsIDs = []
   let bays = station.bays.filter(bay => bay.mode === mode)
-
-  if (mode === 'bus') {
-    if (nightBus) {
-      bays = bays.filter(bay => (bay.flags && bay.flags.isNightBus))
-    } else {
-      bays = bays.filter(bay => (bay.flags && bay.flags.hasRegularBus))
-    }
-  }
 
   if (isOnline) {
     let stopNamesSeen = []
     bays.forEach(bay => {
       if (bay.screenServices.length === 0) return // Save bandwidth by not requesting dropoff only stops
-      let bayGTFSModes = bay.screenServices.map(s => s.routeGTFSID.split('-')[0])
-      let shouldRequest = bayGTFSModes.includes('8') // Only request night bus
 
-      if (!shouldRequest && bayGTFSModes.includes('4')) { // Only request metro if it has routes that are not know to have no tracking
-        shouldRequest = bay.screenServices.some(service => !liveBusData.metroRoutesExcluded.includes(service.routeGTFSID))
-      }
-      if (!shouldRequest && bayGTFSModes.includes('6')) { // Further refine - only load known operators/routes with live data
-        shouldRequest = bay.screenServices.some(service => liveBusData.regionalRoutes.includes(service.routeGTFSID))
-      }
-
-      if (shouldRequest || mode !== 'bus') {
-        if (!stopNamesSeen.includes(bay.originalName) && bay.stopGTFSID < 100000) { // filter out offline override stops
-          stopNamesSeen.push(bay.originalName)
-          gtfsIDs.push(bay.stopGTFSID)
-        }
+      if (!stopNamesSeen.includes(bay.originalName) && bay.stopGTFSID < 100000) { // filter out offline override stops
+        stopNamesSeen.push(bay.originalName)
+        gtfsIDs.push(bay.stopGTFSID)
       }
     })
   } else {
@@ -112,9 +93,9 @@ async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, r
 }
 
 async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
-  const timetables = db.getCollection((useLive ? 'live' : 'gtfs') + ' timetables')
-  const routes = db.getCollection('routes')
-  const minutesPastMidnight = utils.getMinutesPastMidnightNow()
+  let timetables = db.getCollection((useLive ? 'live' : 'gtfs') + ' timetables')
+  let routes = db.getCollection('routes')
+  let minutesPastMidnight = utils.getMinutesPastMidnightNow()
 
   let trips = await timetables.findDocuments({
     operationDays: utils.getYYYYMMDDNow(),

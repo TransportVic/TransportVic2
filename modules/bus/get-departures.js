@@ -4,38 +4,32 @@ const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('../utils/get-stopping-pattern')
 const stopNameModifier = require('../../additional-data/stop-name-modifier')
 const busBays = require('../../additional-data/bus-bays')
-const gtfsGroups = require('../gtfs-id-groups')
 const departureUtils = require('../utils/get-bus-timetables')
-const liveBusData = require('../../additional-data/live-bus-data')
-const routeIDs = require('../../additional-data/route-ids')
 
-async function getStoppingPatternWithCache(db, busDeparture, destination, isNightBus) {
+const regionalRouteNumbers = require('../../additional-data/bus-data/regional-with-track')
+
+let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => {
+  let regionRoutes = regionalRouteNumbers[region]
+
+  regionRoutes.forEach(route => {
+    acc[route.routeGTFSID] = { region, routeNumber: route.routeNumber }
+  })
+
+  return acc
+}, {})
+
+async function getStoppingPatternWithCache(db, busDeparture, destination) {
   let id = busDeparture.scheduled_departure_utc + destination
 
   return await utils.getData('bus-patterns', id, async () => {
-    return await getStoppingPattern(db, busDeparture.run_ref, isNightBus ? 'nbus' : 'bus', busDeparture.scheduled_departure_utc)
+    return await getStoppingPattern(db, busDeparture.run_ref, 'bus', busDeparture.scheduled_departure_utc)
   })
 }
 
-async function getRoute(db, routeGTFSID, query) {
-  return await utils.getData('bus-routes', routeGTFSID, async () => {
-    let routes = await db.getCollection('routes').findDocuments({ routeGTFSID: query }, { routePath: 0 }).toArray()
-    return routes.find(r => r.routeGTFSID === query) || routes[0]
+async function getRoute(db, cacheKey, query) {
+  return await utils.getData('bus-routes', cacheKey, async () => {
+    return await db.getCollection('routes').findDocument(query, { routePath: 0 })
   })
-}
-
-function shouldGetNightbus(now) {
-  let minutesAfterMidnight = utils.getMinutesPastMidnight(now)
-  let dayOfWeek = utils.getDayOfWeek(now)
-
-  // 11pm - 8.30am (last 969 runs 6.30am - 7.35am, give some buffer for lateness?)
-  if (dayOfWeek == 'Fri')
-    return minutesAfterMidnight >= 1380
-  if (dayOfWeek == 'Sat')
-    return minutesAfterMidnight >= 1380 || minutesAfterMidnight <= 510
-  if (dayOfWeek == 'Sun')
-    return minutesAfterMidnight <= 510
-  return false
 }
 
 async function updateBusTrips(db, departures) {
@@ -74,28 +68,37 @@ async function getDeparturesFromPTV(stop, db) {
   let smartrakIDs = db.getCollection('smartrak ids')
   let dbRoutes = db.getCollection('routes')
 
-  let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', true, false)
-  let nightbusGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', true, true)
+  let uniqueStops = departureUtils.getUniqueGTFSIDs(stop, 'bus', true)
+  let allGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', false)
 
-  let allGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', false, false)
-    .concat(departureUtils.getUniqueGTFSIDs(stop, 'bus', false, true))
   let mappedDepartures = []
   let now = utils.now()
 
-  let gtfsIDPairs = gtfsIDs.map(s => [s, false])
-  if (shouldGetNightbus(now))
-    gtfsIDPairs = gtfsIDPairs.concat(nightbusGTFSIDs.map(s => [s, true]))
-
   let isCheckpointStop = utils.isCheckpointStop(stop.stopName)
 
-  await async.forEach(gtfsIDPairs, async stopGTFSIDPair => {
-    let stopGTFSID = stopGTFSIDPair[0],
-        isNightBus = stopGTFSIDPair[1]
-
+  await async.forEach(uniqueStops, async stopGTFSID => {
     let requestTime = now.clone()
     requestTime.add(-30, 'seconds')
 
-    let {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/${isNightBus ? 4 : 2}/stop/${stopGTFSID}?gtfs=true&max_results=9&look_backwards=false&include_cancelled=true&expand=run&expand=route&expand=VehicleDescriptor`)
+    let bayType = ''
+    let matchedBay = stop.bays.find(bay => bay.mode === 'bus' && bay.stopGTFSID === stopGTFSID)
+
+    let bays = stop.bays.filter(bay => bay.mode === 'bus' && bay.fullStopName === matchedBay.fullStopName)
+    let screenServices = bays.map(bay => bay.screenServices).reduce((a, e) => a.concat(e), [])
+
+    if (screenServices.some(svc => svc.routeGTFSID.startsWith('4-'))) { // Metro bus stop
+      bayType = 'metro'
+    } else { // Regional/Skybus
+      if (screenServices.some(svc => regionalGTFSIDs[svc.routeGTFSID])) {
+        bayType = 'regional-live'
+      } else {
+        bayType = 'regional'
+      }
+    }
+
+    if (bayType === 'regional') return // Bay does not have any live routes - skip requesting data and use scheduled
+
+    let {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/2/stop/${stopGTFSID}?gtfs=true&max_results=9&look_backwards=false&include_cancelled=true&expand=run&expand=route&expand=VehicleDescriptor`)
 
     let seenIDs = []
     await async.forEach(departures, async busDeparture => {
@@ -123,31 +126,34 @@ async function getDeparturesFromPTV(stop, db) {
       let destination = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
 
       let trip, routeGTFSID, routeGTFSIDQuery
+      let ptvRouteNumber = route.route_number
+      let busRoute
 
-      if (routeGTFSID = routeIDs[route.route_id]) {
-        if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
-        if (routeGTFSID === '4-965') routeGTFSID = '8-965'
+      if (bayType === 'metro') {
+        busRoute = await getRoute(db, `M-${ptvRouteNumber}`, {
+          routeNumber: ptvRouteNumber,
+          routeGTFSID: /^4-/
+        })
 
-        routeGTFSIDQuery = routeGTFSID
-        let matchingGroup
-        if (matchingGroup = gtfsGroups.find(g => g.includes(routeGTFSID))) {
-          routeGTFSIDQuery = { $in: matchingGroup }
-        }
+        routeGTFSID = busRoute.routeGTFSID
+      } else if (bayType === 'regional-live') {
+        let liveRoute = screenServices.find(svc => regionalGTFSIDs[svc.routeGTFSID])
+        let routeData = regionalGTFSIDs[liveRoute.routeGTFSID]
 
-        trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSIDQuery, [], 1, null)
-      }
-
-      if (!trip && stop.bays.some(bay => bay.screenServices.some(svc => svc.routeGTFSID.startsWith('4-') || svc.routeGTFSID.startsWith('8-')))) {
-        let routeNumber = route.route_number
-        trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', null, [], 1, routeNumber)
-        if (trip) {
-          routeGTFSID = trip.routeGTFSID
-          routeGTFSIDQuery = routeGTFSID
+        let routeGTFSID = {
+          $in: regionalRouteNumbers[routeData.region].filter(route => route.routeNumber === ptvRouteNumber).map(route => route.routeGTFSID)
         }
       }
 
-      if (!trip) {
-        trip = await getStoppingPatternWithCache(db, busDeparture, destination, isNightBus)
+      trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSID, [], 1, null)
+      if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, destination)
+
+      if (!busRoute) {
+        routeGTFSID = trip.routeGTFSID
+
+        busRoute = await getRoute(db, `${trip.routeGTFSID}`, {
+          routeGTFSID
+        })
       }
 
       let hasVehicleData = run.vehicle_descriptor
@@ -161,8 +167,7 @@ async function getDeparturesFromPTV(stop, db) {
         }) || {}).fleetNumber
       }
 
-      let busRoute = await getRoute(db, routeGTFSID, routeGTFSIDQuery)
-      let operator = busRoute.operators.sort((a, b) => a.length - b.length)[0]
+      let operator = busRoute.operators.sort((a, b) => a.length - b.length)[0] || ''
 
       if (busRoute.operationDate) {
         let cutoff = utils.now().startOf('day')
@@ -171,14 +176,8 @@ async function getDeparturesFromPTV(stop, db) {
         }
       }
 
-      if (!operator) operator = ''
-
-      let {routeNumber} = trip
+      let { routeNumber } = trip
       let sortNumber = routeNumber || ''
-
-      if (routeGTFSID.startsWith('7-')) {
-        sortNumber = routeNumber.slice(2)
-      }
 
       let loopDirection
       if (busRoute.flags)
@@ -204,7 +203,6 @@ async function getDeparturesFromPTV(stop, db) {
         } : null,
         routeNumber,
         sortNumber,
-        isNightBus,
         operator,
         codedOperator: utils.encodeName(operator.replace(/ \(.+/, '')),
         loopDirection,
@@ -265,30 +263,39 @@ async function getDepartures(stop, db) {
       let scheduledDepartures = []
       let ptvDepartures = []
       let departures = []
+      let ptvFailed = false, scheduledFailed = false
 
       await Promise.all([new Promise(async resolve => {
         try {
           scheduledDepartures = await getScheduledDepartures(stop, db, false)
-        } catch (e) { global.loggers.general.err('Failed to get schedule departures', e) } finally { resolve() }
+        } catch (e) {
+          global.loggers.general.err('Failed to get schedule departures', e)
+          scheduledFailed = true
+        } finally { resolve() }
       }), new Promise(async resolve => {
         try {
           ptvDepartures = await getDeparturesFromPTV(stop, db)
-        } catch (e) { global.loggers.general.err('Failed to get PTV departures', e) } finally { resolve() }
+        } catch (e) {
+          global.loggers.general.err('Failed to get PTV departures', e)
+          ptvFailed = true
+        } finally { resolve() }
       })])
 
-      let ptvRoutes = ptvDepartures.map(departure => departure.trip.routeGTFSID)
-      let nonLiveDepartures = scheduledDepartures.filter(departure => !ptvRoutes.includes(departure.trip.routeGTFSID))
+      let nonLiveDepartures = scheduledDepartures.filter(departure => {
+        let { routeGTFSID } = departure.trip
+        return !(routeGTFSID.startsWith('4-') || regionalGTFSIDs[routeGTFSID])
+      })
 
       departures = [...ptvDepartures, ...nonLiveDepartures]
+      if (ptvFailed) departures = scheduledDepartures
+      if (ptvFailed && scheduledDepartures) throw new Error('Both PTV and Scheduled timetables unavailable')
 
       departures = departures.sort((a, b) => {
         return a.actualDepartureTime - b.actualDepartureTime
       })
 
-      let nightBusIncluded = shouldGetNightbus(utils.now())
       let shouldShowRoad = stop.bays.filter(bay => {
         return bay.mode === 'bus'
-          && (nightBusIncluded ^ !(bay.flags && bay.flags.isNightBus && !bay.flags.hasRegularBus))
       }).map(bay => {
         let {fullStopName} = bay
         if (fullStopName.includes('/')) {
@@ -307,9 +314,7 @@ async function getDepartures(stop, db) {
         if (!departure.vehicle) {
           let trip = departure.trip
           let { routeGTFSID } = trip
-          let shouldCheck = routeGTFSID.startsWith('8-')
-            || (routeGTFSID.startsWith('4-') && !liveBusData.metroRoutesExcluded.includes(routeGTFSID))
-            || liveBusData.regionalRoutes.includes(routeGTFSID)
+          let shouldCheck = routeGTFSID.startsWith('4-') || regionalGTFSIDs[routeGTFSID]
 
           if (shouldCheck) {
             let query = {
