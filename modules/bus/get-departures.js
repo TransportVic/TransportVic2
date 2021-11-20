@@ -288,7 +288,7 @@ async function getDepartures(stop, db) {
 
       departures = [...ptvDepartures, ...nonLiveDepartures]
       if (ptvFailed) departures = scheduledDepartures
-      if (ptvFailed && scheduledDepartures) throw new Error('Both PTV and Scheduled timetables unavailable')
+      if (ptvFailed && scheduledFailed) throw new Error('Both PTV and Scheduled timetables unavailable')
 
       departures = departures.sort((a, b) => {
         return a.actualDepartureTime - b.actualDepartureTime
