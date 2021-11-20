@@ -19,10 +19,7 @@ router.post('/:routeGTFSID', async (req, res) => {
     type: "FeatureCollection",
     features: routePaths.map(path => ({
       type: "Feature",
-      geometry: {
-        type: "LineString",
-        coordinates: path.path
-      }
+      geometry: path.path
     }))
   }
 
