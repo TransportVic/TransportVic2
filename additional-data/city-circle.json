@@ -1,173 +1,171 @@
 {
-  "routeName" : "City Circle",
-  "codedName" : "city-circle",
-  "routeNumber" : null,
-  "routeGTFSID" : "2-CCL",
-  "operators" : [
+  "routeName": "City Circle",
+  "codedName": "city-circle",
+  "routeNumber": null,
+  "routeGTFSID": "2-CCL",
+  "operators": [
     "Metro Trains Melbourne"
   ],
-  "routePath": [
-    {
-      "fullGTFSIDs": [
-        "2-CCL-mjp-1.1.H"
-      ],
-      "path": [
-        [144.9668358,-37.8179855],
-        [144.9719535,-37.8165871],
-        [144.9733053,-37.8162184],
-        [144.9736057,-37.816104],
-        [144.973772,-37.815998],
-        [144.9739544,-37.8158497],
-        [144.9741153,-37.8157014],
-        [144.9742387,-37.8155658],
-        [144.9743031,-37.8154471],
-        [144.9743621,-37.8153073],
-        [144.9744157,-37.8151716],
-        [144.9744479,-37.8150064],
-        [144.9744479,-37.8148411],
-        [144.9744426,-37.8146843],
-        [144.9744157,-37.8144851],
-        [144.974346,-37.8142902],
-        [144.9725865,-37.810548],
-        [144.9718033,-37.8087976],
-        [144.9716853,-37.8085773],
-        [144.9715243,-37.8084374],
-        [144.9713258,-37.8083314],
-        [144.9710952,-37.8082679],
-        [144.970784,-37.8082],
-        [144.9704514,-37.8081492],
-        [144.9700867,-37.8081153],
-        [144.9696897,-37.8080899],
-        [144.9694107,-37.8080814],
-        [144.9690942,-37.8080899],
-        [144.9687616,-37.8081492],
-        [144.9683969,-37.8082382],
-        [144.9639283,-37.8095436],
-        [144.9524163,-37.8128662],
-        [144.9518047,-37.81304],
-        [144.9514453,-37.8131925],
-        [144.9511878,-37.8133875],
-        [144.9509518,-37.8135994],
-        [144.9507694,-37.8137816],
-        [144.9506138,-37.8139766],
-        [144.9504743,-37.8142012],
-        [144.9503617,-37.8144131],
-        [144.9503081,-37.8146334],
-        [144.9502544,-37.814858],
-        [144.9502222,-37.8151166],
-        [144.9502222,-37.8153581],
-        [144.9502759,-37.815659],
-        [144.9503563,-37.8159048],
-        [144.950469,-37.8161082],
-        [144.951499,-37.8174431],
-        [144.9523948,-37.8186466],
-        [144.952545,-37.8188415],
-        [144.9530171,-37.8195916],
-        [144.9534784,-37.8202357],
-        [144.9539237,-37.8207019],
-        [144.9543099,-37.82099],
-        [144.9547605,-37.8212019],
-        [144.9551253,-37.8213332],
-        [144.9555598,-37.8213629],
-        [144.9560212,-37.8213502],
-        [144.9564771,-37.8213036],
-        [144.9568795,-37.8212019],
-        [144.9572013,-37.8210959],
-        [144.9577324,-37.8207823],
-        [144.9581937,-37.8205027],
-        [144.9586122,-37.8202738],
-        [144.9591647,-37.8200874],
-        [144.9596636,-37.8199348],
-        [144.9605916,-37.8196975],
-        [144.9615465,-37.8194984],
-        [144.9622332,-37.8193416],
-        [144.9628018,-37.8191827],
-        [144.9634938,-37.8189856],
-        [144.9641912,-37.8187653],
-        [144.9651031,-37.8184729],
-        [144.9668358,-37.8179855]
+  "routePath": [{
+    "fullGTFSIDs": [
+      "2-CCL-mjp-1.1.H"
+    ],
+    "path": {
+      "type": "LineString",
+      "coordinates": [
+        [144.9668358, -37.8179855],
+        [144.9719535, -37.8165871],
+        [144.9733053, -37.8162184],
+        [144.9736057, -37.816104],
+        [144.973772, -37.815998],
+        [144.9739544, -37.8158497],
+        [144.9741153, -37.8157014],
+        [144.9742387, -37.8155658],
+        [144.9743031, -37.8154471],
+        [144.9743621, -37.8153073],
+        [144.9744157, -37.8151716],
+        [144.9744479, -37.8150064],
+        [144.9744479, -37.8148411],
+        [144.9744426, -37.8146843],
+        [144.9744157, -37.8144851],
+        [144.974346, -37.8142902],
+        [144.9725865, -37.810548],
+        [144.9718033, -37.8087976],
+        [144.9716853, -37.8085773],
+        [144.9715243, -37.8084374],
+        [144.9713258, -37.8083314],
+        [144.9710952, -37.8082679],
+        [144.970784, -37.8082],
+        [144.9704514, -37.8081492],
+        [144.9700867, -37.8081153],
+        [144.9696897, -37.8080899],
+        [144.9694107, -37.8080814],
+        [144.9690942, -37.8080899],
+        [144.9687616, -37.8081492],
+        [144.9683969, -37.8082382],
+        [144.9639283, -37.8095436],
+        [144.9524163, -37.8128662],
+        [144.9518047, -37.81304],
+        [144.9514453, -37.8131925],
+        [144.9511878, -37.8133875],
+        [144.9509518, -37.8135994],
+        [144.9507694, -37.8137816],
+        [144.9506138, -37.8139766],
+        [144.9504743, -37.8142012],
+        [144.9503617, -37.8144131],
+        [144.9503081, -37.8146334],
+        [144.9502544, -37.814858],
+        [144.9502222, -37.8151166],
+        [144.9502222, -37.8153581],
+        [144.9502759, -37.815659],
+        [144.9503563, -37.8159048],
+        [144.950469, -37.8161082],
+        [144.951499, -37.8174431],
+        [144.9523948, -37.8186466],
+        [144.952545, -37.8188415],
+        [144.9530171, -37.8195916],
+        [144.9534784, -37.8202357],
+        [144.9539237, -37.8207019],
+        [144.9543099, -37.82099],
+        [144.9547605, -37.8212019],
+        [144.9551253, -37.8213332],
+        [144.9555598, -37.8213629],
+        [144.9560212, -37.8213502],
+        [144.9564771, -37.8213036],
+        [144.9568795, -37.8212019],
+        [144.9572013, -37.8210959],
+        [144.9577324, -37.8207823],
+        [144.9581937, -37.8205027],
+        [144.9586122, -37.8202738],
+        [144.9591647, -37.8200874],
+        [144.9596636, -37.8199348],
+        [144.9605916, -37.8196975],
+        [144.9615465, -37.8194984],
+        [144.9622332, -37.8193416],
+        [144.9628018, -37.8191827],
+        [144.9634938, -37.8189856],
+        [144.9641912, -37.8187653],
+        [144.9651031, -37.8184729],
+        [144.9668358, -37.8179855]
       ]
     }
-  ],
-  "directions" : [
-    {
-      "directionName" : "City Circle (Anti-Clockwise)",
-      "gtfsDirection" : 0,
-      "trainDirection" : "Down",
-      "stops" : [
-        {
-          "stopName" : "Flinders Street Railway Station",
-          "stopGTFSID" : 19854,
-          "suburb" : "Melbourne City"
+  }],
+  "directions": [{
+      "directionName": "City Circle (Anti-Clockwise)",
+      "gtfsDirection": 0,
+      "trainDirection": "Down",
+      "stops": [{
+          "stopName": "Flinders Street Railway Station",
+          "stopGTFSID": 19854,
+          "suburb": "Melbourne City"
         },
         {
-          "stopName" : "Parliament Railway Station",
-          "stopGTFSID" : 19843,
-          "suburb" : "Melbourne City"
+          "stopName": "Parliament Railway Station",
+          "stopGTFSID": 19843,
+          "suburb": "Melbourne City"
         },
         {
-          "stopName" : "Melbourne Central Railway Station",
-          "stopGTFSID" : 19842,
-          "suburb" : "Melbourne City"
+          "stopName": "Melbourne Central Railway Station",
+          "stopGTFSID": 19842,
+          "suburb": "Melbourne City"
         },
         {
-          "stopName" : "Flagstaff Railway Station",
-          "stopGTFSID" : 19841,
-          "suburb" : "Melbourne City"
+          "stopName": "Flagstaff Railway Station",
+          "stopGTFSID": 19841,
+          "suburb": "Melbourne City"
         },
         {
-          "stopName" : "Southern Cross Railway Station",
-          "stopGTFSID" : 22180,
-          "suburb" : "Melbourne City"
+          "stopName": "Southern Cross Railway Station",
+          "stopGTFSID": 22180,
+          "suburb": "Melbourne City"
         },
         {
-          "stopName" : "Flinders Street Railway Station",
-          "stopGTFSID" : 19854,
-          "suburb" : "Melbourne City"
+          "stopName": "Flinders Street Railway Station",
+          "stopGTFSID": 19854,
+          "suburb": "Melbourne City"
         }
       ]
     },
     {
-      "directionName" : "City Circle (Clockwise)",
-      "gtfsDirection" : 1,
-      "trainDirection" : "Up",
-      "stops" : [
-        {
-          "stopName" : "Flinders Street Railway Station",
-          "stopGTFSID" : 19854,
-          "suburb" : "Melbourne City"
+      "directionName": "City Circle (Clockwise)",
+      "gtfsDirection": 1,
+      "trainDirection": "Up",
+      "stops": [{
+          "stopName": "Flinders Street Railway Station",
+          "stopGTFSID": 19854,
+          "suburb": "Melbourne City"
         },
         {
-          "stopName" : "Southern Cross Railway Station",
-          "stopGTFSID" : 22180,
-          "suburb" : "Melbourne City"
+          "stopName": "Southern Cross Railway Station",
+          "stopGTFSID": 22180,
+          "suburb": "Melbourne City"
         },
         {
-          "stopName" : "Flagstaff Railway Station",
-          "stopGTFSID" : 19841,
-          "suburb" : "Melbourne City"
+          "stopName": "Flagstaff Railway Station",
+          "stopGTFSID": 19841,
+          "suburb": "Melbourne City"
         },
         {
-          "stopName" : "Melbourne Central Railway Station",
-          "stopGTFSID" : 19842,
-          "suburb" : "Melbourne City"
+          "stopName": "Melbourne Central Railway Station",
+          "stopGTFSID": 19842,
+          "suburb": "Melbourne City"
         },
         {
-          "stopName" : "Parliament Railway Station",
-          "stopGTFSID" : 19843,
-          "suburb" : "Melbourne City"
+          "stopName": "Parliament Railway Station",
+          "stopGTFSID": 19843,
+          "suburb": "Melbourne City"
         },
         {
-          "stopName" : "Flinders Street Railway Station",
-          "stopGTFSID" : 19854,
-          "suburb" : "Melbourne City"
+          "stopName": "Flinders Street Railway Station",
+          "stopGTFSID": 19854,
+          "suburb": "Melbourne City"
         }
       ]
     }
   ],
-  "mode" : "metro train",
-  "ptvDirections" : {
-    "City Loop (Anti-Clockwise)" : "0",
-    "City (Flinders Street)" : "1"
+  "mode": "metro train",
+  "ptvDirections": {
+    "City Loop (Anti-Clockwise)": "0",
+    "City (Flinders Street)": "1"
   }
 }

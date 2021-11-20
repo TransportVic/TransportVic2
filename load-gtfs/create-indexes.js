@@ -116,6 +116,10 @@ database.connect({
     routeGTFSID: 1
   }, {name: 'operator index'})
 
+  await routes.createIndex({
+    'routePath.path': '2dsphere'
+  }, {name: 'path geospatial index'})
+
   console.log('Created route indexes')
 
   await gtfsTimetables.createIndex({

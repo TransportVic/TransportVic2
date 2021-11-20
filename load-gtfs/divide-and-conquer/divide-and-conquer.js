@@ -111,7 +111,10 @@ async function readRouteShapes() {
       shapes.push({
         shapeID: currentShapeID,
         routeGTFSID: currentRouteGTFSID,
-        path: currentShape,
+        path: {
+          type: 'LineString',
+          coordinates: currentShape
+        },
         length: currentLength
       })
       currentShape = []
@@ -134,7 +137,10 @@ async function readRouteShapes() {
   shapes.push({
     shapeID: currentShapeID,
     routeGTFSID: currentRouteGTFSID,
-    path: currentShape,
+    path: {
+      type: 'LineString',
+      coordinates: currentShape
+    },
     length: currentLength
   })
 

@@ -149,7 +149,7 @@ database.connect({
       if (routeGTFSID === '6-WN3') return 'B'
       if (routeGTFSID === '6-W12') return 'A'
 
-      return routeNumber
+      return (routeNumber && routeNumber.length ? routeNumber : null)
     })
   }
 
@@ -167,7 +167,10 @@ database.connect({
       await load([{
         shapeID: "",
         routeGTFSID: routeGTFSID,
-        path: [[ 144, -38 ]],
+        path: {
+          type: 'LineString',
+          coordinates: [[ 144, -38 ], [ 144, -38.01 ]]
+        },
         length: 1
       }])
       routeShapesSeen.push(routeGTFSID)

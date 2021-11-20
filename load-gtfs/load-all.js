@@ -80,7 +80,7 @@ async function main() {
     await spawnProcess(l('trams/load-all.sh'))
     await discordUpdate('[Updater]: Finished loading Tram data')
   } else await discordUpdate('[Updater]: Skipping Tram')
-
+/*
   if (moduleEnabled('ferry')) {
     await discordUpdate('[Updater]: Loading Ferry data')
     await spawnProcess(l('ferry/load-all.sh'))
@@ -98,7 +98,7 @@ async function main() {
     await spawnProcess(l('heritage-trains/load-all.sh'))
     await discordUpdate('[Updater]: Finished loading Heritage Train data')
   } else await discordUpdate('[Updater]: Skipping Heritage Train')
-
+*/
 
   await spawnProcess('node', [l('load-route-stops.js')])
   await discordUpdate('[Updater]: Loaded route stops')
