@@ -127,10 +127,9 @@
       </Placemark>
     </Folder>
     <Folder>
-      <name>Latrobe Valley</name>
+      <name>Latrobe</name>
       <Placemark>
-        <name>Latrobe Valley
-</name>
+        <name>Latrobe</name>
         <styleUrl>#poly-000000-1200-77-nodesc</styleUrl>
         <Polygon>
           <outerBoundaryIs>

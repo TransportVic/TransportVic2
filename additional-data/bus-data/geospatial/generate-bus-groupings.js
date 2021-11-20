@@ -8,8 +8,9 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 database.connect(async () => {
   let routes = database.getCollection('routes')
-  await async.forEachSeries(network, async region => {
-    let routeNumbers = await routes.distinct('routeNumber', {
+
+  let routeData = await async.reduce(network, {}, async (acc, region) => {
+    let matchingRoutes = await routes.findDocuments({
       'routePath.path': {
         $geoWithin: {
           $geometry: region.geometry
@@ -18,10 +19,16 @@ database.connect(async () => {
       routeNumber: {
         $ne: null
       }
-    })
+    }).toArray()
 
-    console.log(region.properties.name, routeNumbers.sort((a,b) => a - b))
+    acc[region.properties.name.trim()] = matchingRoutes.map(route => {
+      return { routeGTFSID: route.routeGTFSID, routeNumber: route.routeNumber }
+    }).sort((a, b) => parseInt(a.routeNumber) - parseInt(b.routeNumber))
+
+    return acc
   })
+
+  fs.writeFileSync(__dirname + '/../regional-with-track.json', JSON.stringify(routeData, null, 1))
 
   process.exit()
 })

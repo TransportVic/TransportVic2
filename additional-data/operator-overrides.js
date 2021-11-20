@@ -12,6 +12,7 @@ module.exports = {
   "8-98Z": ["Ventura Bus Lines"], // 982
 
   "6-858": ["Dysons (Wangaratta)"], // Wangaratta - Myrtleford
+  "6-DWB": ["Dysons (Wangaratta)"], // Wangaratta - Bright
 
   "6-LGs": ["Dysons (Kyneton)"], //  Lancefield - Gisborne
   "6-LcS": ["Dysons (Kyneton)"], //  Lancefield - Sunbury - Clarkefield

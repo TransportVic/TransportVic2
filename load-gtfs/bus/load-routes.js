@@ -14,6 +14,18 @@ const gtfsUtils = require('../../gtfs-utils')
 const routeIDs = require('../../additional-data/route-ids')
 
 const metroOperators = require('../../additional-data/bus-data/metro-operators')
+const regionalOperators = require('../../additional-data/bus-data/regional-operators')
+const regionalRouteNumbers = require('../../additional-data/bus-data/regional-with-track')
+
+let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => {
+  let regionRoutes = regionalRouteNumbers[region]
+
+  regionRoutes.forEach(route => {
+    acc[route.routeGTFSID] = { region, routeNumber: route.routeNumber }
+  })
+
+  return acc
+}, {})
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
@@ -89,6 +101,11 @@ database.connect({
     return await loadRoutes(routes, gtfsID, routeData, shapeJSON, (routeGTFSID, routeNumber, routeName) => {
       if ((routeGTFSID.startsWith('4-') || routeGTFSID.startsWith('8-')) && metroOperators[routeNumber]) {
         return metroOperators[routeNumber]
+      }
+
+      if (regionalGTFSIDs[routeGTFSID]) {
+        let routeData = regionalGTFSIDs[routeGTFSID]
+        return regionalOperators[routeData.region][routeData.routeNumber]
       }
 
       if (operatorOverrides[routeGTFSID]) return operatorOverrides[routeGTFSID]
