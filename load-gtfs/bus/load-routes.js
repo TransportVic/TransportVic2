@@ -11,8 +11,9 @@ const operatorOverrides = require('../../additional-data/operator-overrides')
 const ptvAPI = require('../../ptv-api')
 const loopDirections = require('../../additional-data/loop-direction')
 const gtfsUtils = require('../../gtfs-utils')
-const routeIDs = require('../../additional-data/route-ids')
 
+const routeNames = require('../../additional-data/bus-data/route-name-overrides')
+const routeNumbers = require('../../additional-data/bus-data/route-number-overrides')
 const metroOperators = require('../../additional-data/bus-data/metro-operators')
 const regionalOperators = require('../../additional-data/bus-data/regional-operators')
 const regionalRouteNumbers = require('../../additional-data/bus-data/regional-with-track')
@@ -40,54 +41,10 @@ try {
 
 let serviceLookup = createServiceLookup(datamartRoutes)
 
-if (gtfsID === '7') datamartMode = 'telebus'
-
 database.connect({
   poolSize: 100
 }, async err => {
   let routes = database.getCollection('routes')
-
-  let ptvRouteData = (await ptvAPI('/v3/routes?route_types=2')).routes.map(route => {
-    route.routeGTFSID = routeIDs[route.route_id]
-
-    return route
-  }).filter(route => {
-    return route.routeGTFSID && route.routeGTFSID.startsWith(`${gtfsID}-`)
-  }).map(route => {
-    route.routeGTFSID = route.routeGTFSID.replace(/-0+/, '-')
-    route.adjustedName = utils.adjustRouteName(route.route_name)
-    route.originalName = route.route_name
-
-    return route
-  })
-
-  let routesNeedingVia = []
-  let routeNames = {}
-  let routesWithoutNumbers = ptvRouteData.filter(route => {
-    return !route.route_number
-  }).map(route => route.routeGTFSID)
-
-  let ptvRoutes = ptvRouteData.reduce((acc, route) => {
-    let {routeGTFSID, adjustedName} = route
-
-    if (routeNames[adjustedName]) {
-      if (routesWithoutNumbers.includes(routeGTFSID) && routesWithoutNumbers.includes(routeNames[adjustedName])) {
-        routesNeedingVia.push(routeNames[adjustedName])
-        routesNeedingVia.push(routeGTFSID)
-      }
-    } else {
-      routeNames[adjustedName] = routeGTFSID
-    }
-
-    acc[routeGTFSID] = adjustedName
-    return acc
-  }, {})
-
-  routesNeedingVia.forEach(routeGTFSID => {
-    ptvRoutes[routeGTFSID] = ptvRouteData.find(route => route.routeGTFSID === routeGTFSID).originalName.replace(/ \((Valid )?(From|Until) .+\)$/i, '')
-  })
-
-  ptvRoutes['4-676'] = 'Lilydale East Loop'
 
   let splicedGTFSPath = path.join(__dirname, '../spliced-gtfs-stuff', `${gtfsID}`)
   let gtfsPath = path.join(__dirname, '../../gtfs', `${gtfsID}`)
@@ -120,14 +77,8 @@ database.connect({
 
       return ['Unknown Operator']
     }, (routeNumber, routeName, routeGTFSID) => {
-      let newRouteName = ptvRoutes[routeGTFSID] || routeName
-      if (routeGTFSID === '11-SKl') {
-        return 'Skybus - Skybus Link'
-      }
-
-      if (routeGTFSID === '6-SY4') {
-        return 'Wimble Street - Seymour'
-      }
+      let newRouteName = utils.adjustRouteName(routeName)
+      if (routeNames[routeGTFSID]) return routeNames[routeGTFSID]
 
       if (loopDirections[routeGTFSID]) {
         if (newRouteName.includes('Loop')) {
@@ -142,29 +93,7 @@ database.connect({
       }
       return newRouteName
     }, (routeGTFSID, routeNumber) => {
-      if (routeGTFSID === '6-GVL') return null
-      if (routeGTFSID === '6-a28') return null
-
-      if (routeGTFSID === '6-R54') return null
-
-      if (routeGTFSID === '6-gld') return null
-
-      if (routeGTFSID === '6-a48') return null
-      if (routeGTFSID === '6-a49') return null
-
-      if (routeGTFSID === '6-BM8') return '8'
-
-      if (routeGTFSID === '6-946') return null
-      if (routeGTFSID === '6-949') return null
-
-      if (routeGTFSID === '6-906') return '906'
-      if (routeGTFSID === '6-907') return '907'
-      if (routeGTFSID === '6-908') return '908'
-
-      if (routeGTFSID === '6-WN1') return '1'
-      if (routeGTFSID === '6-WN2') return '2'
-      if (routeGTFSID === '6-WN3') return 'B'
-      if (routeGTFSID === '6-W12') return 'A'
+      if (routeNumbers[routeGTFSID]) return routeNumbers[routeGTFSID]
 
       return (routeNumber && routeNumber.length ? routeNumber : null)
     })

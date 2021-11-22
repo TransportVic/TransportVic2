@@ -294,6 +294,7 @@ async function main() {
   console.log(`Completed splitting trips for GTFS ID ${gtfsID}: ${gtfsMode}`)
 
   updateStats('divide-' + datamartMode, gtfsID)
+  process.exit()
 }
 
 main()

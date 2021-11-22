@@ -839,6 +839,10 @@
     },
     "6-W12": {
       "Hadfield Park/High Street": "Springridge"
+    },
+    "6-984": {
+      "Royal Hotel/River Street": "Corowa",
+      "K-Mart Car Park/Smollett Street": "Albury"
     }
   },
   "generic": {
@@ -890,7 +894,7 @@
     "Eighth Street/Deakin Avenue": "Mildura",
     "Lime Avenue/Eighth Street": "Mildura",
     "Merbein Post Office": "Merbein",
-    "QEII Square": "Albury",
+    "QEII Square/Dean Street": "Albury",
     "Dean Street/David Street": "Albury",
     "Water Tower Park": "Wodonga",
     "Wodonga Library": "Wodonga",

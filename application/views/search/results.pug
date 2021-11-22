@@ -158,8 +158,10 @@ for busRoute in routes.filter(route => route.mode === 'bus' && route.directions[
           via = busRoute.routeName.slice(index)
         }
         
-        if (busRoute.directions.length === 1 || busRoute.routeName.includes('Loop')) {
-          name = busRoute.routeName
+        let { routeName } = busRoute
+        
+        if (busRoute.directions.length === 1 || routeName.includes('Loop') || routeName.includes('Town Service') || routeName.includes('Flexiride')) {
+          name = routeName
         } else {
           name = `${busRoute.directions[0].directionName} - ${busRoute.directions[1].directionName}${via}`
         }
