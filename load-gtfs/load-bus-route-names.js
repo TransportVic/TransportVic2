@@ -7,7 +7,6 @@ const ptvAPI = require('../ptv-api')
 const utils = require('../utils')
 const loopDirections = require('../additional-data/loop-direction')
 const moment = require('moment')
-const routeIDs = require('../additional-data/route-ids')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('./utils/stats')
@@ -29,17 +28,6 @@ database.connect({
   let updated = 0
   let operationDateCount = 0
 
-  let singleDirection = await routes.findDocuments({
-    mode: 'bus',
-    'directions.1': { $exists: false },
-  }).toArray()
-
-  let loopServices = singleDirection.filter(route => {
-    if (!route.directions[0]) return false
-    let {stops} = route.directions[0]
-    return stops[0].stopName === stops.slice(-1)[0].stopName
-  })
-
   async function update(routeGTFSID, routeName) {
     updated++
     return await routes.updateDocument({ routeGTFSID }, {
@@ -47,66 +35,14 @@ database.connect({
     })
   }
 
-  await async.forEach(loopServices, async loopService => {
-    let {routeName} = loopService
-
-    routeName = routeName.replace(' Circle', '')
-    if (routeName.includes('Town')) {
-      let newRouteName = routeName.replace(/Town \w+/, 'Town Service')
-      return await update(loopService.routeGTFSID, newRouteName)
-    }
-    if (routeName.replace(/\(.+$/, '').includes('Loop')) return
-
-    if (loopService.routeGTFSID === '11-SKl') { // hotel shuttle
-      return
-    }
-    if (routeName.includes('Flexiride')) return
-
-    let currentNameParts = routeName.replace(" - Demand Responsive", '').replace(/ Railway Station/g, '').replace(/\(.+\)/, '').split(' - ')
-
-    let loopDirection = loopService.flags ? loopService.flags[0] : ''
-    let postfix
-    if (loopDirection) {
-      postfix = `(${loopDirection} Loop)`
-    } else {
-      postfix = `(Loop Service)`
-    }
-
-    if (currentNameParts.length === 1) {
-      let name = currentNameParts[0].trim()
-      let origin = name.trim()
-      for (let direction of ['North', 'South', 'East', 'West']) {
-        origin = origin.replace(direction, '').trim()
-      }
-      if (origin !== name) {
-        return await update(loopService.routeGTFSID, `${origin} - ${name} ${postfix}`)
-      } else {
-        return await update(loopService.routeGTFSID, `${origin} ${postfix}`)
-      }
-    }
-
-    if (currentNameParts.length === 2) {
-      let first = currentNameParts[0].trim()
-      let last = currentNameParts.slice(-1)[0].trim()
-      if (first === last) {
-        return await update(loopService.routeGTFSID, first + ` ${postfix}`)
-      } else {
-        if (['North', 'South', 'East', 'West'].includes(last)) last = `${first} ${last}`
-        return await update(loopService.routeGTFSID, `${first} - ${last} ${postfix}`)
-      }
-    }
-
-    return await update(loopService.routeGTFSID, `${currentNameParts[0]} - ${currentNameParts[1]} ${postfix}`)
-  })
-
   let ptvRoutes = (await ptvAPI('/v3/routes?route_types=2')).routes
   await async.forEach(ptvRoutes, async route => {
-    let routeGTFSID = routeIDs[route.route_id], routeName = route.route_name.replace(/effective /i, '').toLowerCase()
-    if (!routeGTFSID) return
-
-    let now = utils.now().startOf('day')
+    if (!route.route_number) return
+    let routeName = route.route_name.replace(/effective /i, '').toLowerCase()
 
     if (routeName.includes('(from') || routeName.includes('(until') || routeName.includes('(discontinued')) {
+      let now = utils.now().startOf('day')
+
       let parts = routeName.match(/\((until|from|discontinued) (\d{1,2}-\d{1,2}-\d{1,4})\)/)
       if (!parts) {
         parts = routeName.match(/\((until|from|discontinued) (\d{1,2} \w* \d{1,4})\)/)
@@ -122,6 +58,36 @@ database.connect({
         dateMoment = utils.parseTime(date, format)
         if (dateMoment.isValid()) break
       }
+
+      let possibleRouteGTFSIDs = await routes.distinct('routeGTFSID', {
+        mode: 'bus',
+        routeNumber: route.route_number
+      })
+
+      let endpointDates = [utils.getYYYYMMDD(dateMoment)]
+      let dayOfWeek = utils.getDayOfWeek(dateMoment)
+      if (dayOfWeek === 'Sat' || dayOfWeek === 'Sun') {
+        if (type === 'until') { // If until date is a sunday match the saturday and friday (or thursday)
+          endpointDates.push(utils.getYYYYMMDD(dateMoment.clone().add(-1, 'day')))
+          endpointDates.push(utils.getYYYYMMDD(dateMoment.clone().add(-2, 'day')))
+        } else { // If from date is a saturday match the sunday and monday (unlikely to have Sunday only though)
+          endpointDates.push(utils.getYYYYMMDD(dateMoment.clone().add(1, 'day')))
+          endpointDates.push(utils.getYYYYMMDD(dateMoment.clone().add(2, 'day')))
+        }
+      }
+
+      let routeGTFSID = (await async.find(possibleRouteGTFSIDs, async possibleRouteGTFSID => {
+        let operationDays = await gtfsTimetables.distinct('operationDays', {
+          mode: 'bus',
+          routeGTFSID: possibleRouteGTFSID
+        })
+
+        if (type === 'from' && endpointDates.includes(operationDays[0])) return true
+        if (type === 'until' && endpointDates.includes(operationDays[operationDays.length - 1])) return true
+        return false
+      }))
+
+      if (!routeGTFSID) console.log('Could not match route', route)
 
       // if (dateMoment >= now) {
         operationDateCount++
