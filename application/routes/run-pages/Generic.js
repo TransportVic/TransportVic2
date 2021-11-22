@@ -1,9 +1,11 @@
+// TODO: Move bus to its own page handler
+
 const express = require('express')
 const moment = require('moment')
 const router = new express.Router()
 const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
-const getStoppingPattern = require('../../../modules/utils/get-stopping-pattern')
+const getStoppingPattern = require('../../../modules/bus/get-stopping-pattern')
 const gtfsGroups = require('../../../modules/gtfs-id-groups')
 
 const liveBusData = require('../../../additional-data/live-bus-data')
@@ -135,9 +137,11 @@ async function pickBestTrip(data, db) {
       ptvRunID = departure.run_ref
     }
 
-    let trip = await getStoppingPattern(db, ptvRunID, trueMode, null, null, gtfsTrip, {
-      runID: ptvRunID.includes('-') ? ptvRunID : null
-    })
+    // Only bus would fetch it
+    let trip = await getStoppingPattern({
+      ptvRunID,
+      referenceTrip: gtfsTrip
+    }, db)
 
     let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
 

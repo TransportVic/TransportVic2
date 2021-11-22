@@ -1,7 +1,7 @@
 const async = require('async')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
-const getStoppingPattern = require('../utils/get-stopping-pattern')
+const getStoppingPattern = require('./get-stopping-pattern')
 const stopNameModifier = require('../../additional-data/stop-name-modifier')
 const busBays = require('../../additional-data/bus-bays')
 const departureUtils = require('../utils/get-bus-timetables')
@@ -22,13 +22,16 @@ async function getStoppingPatternWithCache(db, busDeparture, destination) {
   let id = busDeparture.scheduled_departure_utc + destination
 
   return await utils.getData('bus-patterns', id, async () => {
-    return await getStoppingPattern(db, busDeparture.run_ref, 'bus', busDeparture.scheduled_departure_utc)
+    return await getStoppingPattern({
+      ptvRunID: busDeparture.run_ref,
+      time: busDeparture.scheduled_departure_utc
+    }, db)
   })
 }
 
-async function getRoute(db, cacheKey, query) {
+async function getRoutes(db, cacheKey, query) {
   return await utils.getData('bus-routes', cacheKey, async () => {
-    return await db.getCollection('routes').findDocument(query, { routePath: 0 })
+    return await db.getCollection('routes').findDocuments(query, { routePath: 0 }).toArray()
   })
 }
 
@@ -86,7 +89,10 @@ async function getDeparturesFromPTV(stop, db) {
     let bays = stop.bays.filter(bay => bay.mode === 'bus' && bay.fullStopName === matchedBay.fullStopName)
     let screenServices = bays.map(bay => bay.screenServices).reduce((a, e) => a.concat(e), [])
 
-    if (screenServices.some(svc => svc.routeGTFSID.startsWith('4-'))) { // Metro bus stop
+    // Metro bus stop
+    // Metro needs priority as we can have mixed metro/regional stop and it would be unwise to accidentally treat as regional and discard metro routes
+    // Eg. see Sunbury - has Lancefield bus
+    if (screenServices.some(svc => svc.routeGTFSID.startsWith('4-'))) {
       bayType = 'metro'
     } else { // Regional/Skybus
       if (screenServices.some(svc => regionalGTFSIDs[svc.routeGTFSID])) {
@@ -127,17 +133,18 @@ async function getDeparturesFromPTV(stop, db) {
 
       let trip, routeGTFSID, routeGTFSIDQuery
       let ptvRouteNumber = route.route_number
-      let busRoute
 
       if (!ptvRouteNumber) return
 
       if (bayType === 'metro') {
-        busRoute = await getRoute(db, `M-${ptvRouteNumber}`, {
+        let potentialBusRoutes = await getRoutes(db, `M-${ptvRouteNumber}`, {
           routeNumber: ptvRouteNumber,
           routeGTFSID: /^4-/
         })
 
-        routeGTFSID = busRoute.routeGTFSID
+        routeGTFSID = {
+          $in: potentialBusRoutes.map(route => route.routeGTFSID)
+        }
       } else if (bayType === 'regional-live') {
         let liveRoute = screenServices.find(svc => regionalGTFSIDs[svc.routeGTFSID])
         let routeData = regionalGTFSIDs[liveRoute.routeGTFSID]
@@ -150,13 +157,9 @@ async function getDeparturesFromPTV(stop, db) {
       trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSID, [], 1, null)
       if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, destination)
 
-      if (!busRoute) {
-        routeGTFSID = trip.routeGTFSID
-
-        busRoute = await getRoute(db, `${trip.routeGTFSID}`, {
-          routeGTFSID
-        })
-      }
+      let busRoute = (await getRoutes(db, `${trip.routeGTFSID}`, {
+        routeGTFSID: trip.routeGTFSID
+      }))[0] // Always use the routeGTFSID from the trip as we could have multiple matches and not know which is correct
 
       let hasVehicleData = run.vehicle_descriptor
       let vehicleDescriptor = hasVehicleData ? run.vehicle_descriptor : {}

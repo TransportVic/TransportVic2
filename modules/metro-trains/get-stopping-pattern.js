@@ -224,7 +224,6 @@ module.exports = async function (data, db) {
     dbStops[stop.stop_id] = dbStop
   })
 
-  let departureDay, departureTime
   let previousDepartureTime = -1
 
   let stopTimings = departures.map(departure => {
@@ -379,6 +378,7 @@ module.exports = async function (data, db) {
   let firstStop = stopTimings[0]
   let lastStop = stopTimings[stopTimings.length - 1]
 
+  // Cancelled trains sometimes only show 1 stop and so the trip has no arr/dep time
   if (firstStop !== lastStop) {
     firstStop.arrivalTime = null
     firstStop.arrivalTimeMinutes = null
@@ -386,16 +386,14 @@ module.exports = async function (data, db) {
     lastStop.departureTimeMinutes = null
   }
 
-  let routeNumber = referenceTrip ? referenceTrip.routeNumber : route.routeNumber
-
-  let timetable = {
+  let timetable = fixTripDestination({
     mode: 'metro train',
     routeName,
     routeGTFSID,
     routeNumber: null,
     routeDetails: null,
     runID,
-    operationDays: departureDay,
+    operationDays: null,
     vehicle: null,
     stopTimings: stopTimings,
     origin: firstStop.stopName,
@@ -410,9 +408,7 @@ module.exports = async function (data, db) {
     suspensions: referenceTrip ? referenceTrip.suspension : null,
     isRailReplacementBus: departures[0].flags.includes('RRB-RUN'),
     notifyAlerts
-  }
-
-  timetable = fixTripDestination(timetable)
+  })
 
   let originStop = timetable.stopTimings.find(stop => stop.stopName === timetable.trueOrigin)
   let originDepartureDay = utils.parseTime(originStop.scheduledDepartureTime)
@@ -423,10 +419,10 @@ module.exports = async function (data, db) {
       if (stop.arrivalTimeMinutes !== null) stop.arrivalTimeMinutes += 1440
       if (stop.departureTimeMinutes !== null) stop.departureTimeMinutes += 1440
     })
-    originDepartureDay.add(-3 ,'hours')
+    originDepartureDay.add(-3, 'hours')
   }
 
-  departureDay = utils.getYYYYMMDD(originDepartureDay)
+  let departureDay = utils.getYYYYMMDD(originDepartureDay)
   timetable.operationDays = departureDay
 
   if (timetable.routeName === 'Stony Point') {
