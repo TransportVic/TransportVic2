@@ -139,13 +139,24 @@ module.exports = {
   46700: "Bay 4",
   46701: "Bay 5",
 
-  // Lilydale
+  // Lilydale - OLD
   21293: "Bay 1",
   21292: "Bay 2",
   21291: "Bay 3",
   21290: "Bay 4",
   21289: "Bay 5",
   40196: "Bay 6",
+
+  // Lilydale - NEW
+  28191: "Bay A",
+  28192: "Bay B",
+  28193: "Bay C",
+  28194: "Bay D",
+  28195: "Bay E",
+  28196: "Bay F",
+  28197: "Bay G",
+  28198: "Bay H",
+  28199: "Bay I",
 
   // Croydon
   40202: "Bay 1",
