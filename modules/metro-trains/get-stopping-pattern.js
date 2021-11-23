@@ -313,7 +313,9 @@ module.exports = async function (data, db) {
   }
 
   if (runID) {
-    let tripStartSeconds = +departureTime / 1000
+    let scheduledDepartureTime = utils.parseTime(stopTimings[0].scheduledDepartureTime)
+
+    let tripStartSeconds = +scheduledDepartureTime / 1000
     notifyAlerts = await metroNotify.distinct('alertID', {
       fromDate: {
         $gte: tripStartSeconds - 60 * 60
