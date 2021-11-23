@@ -92,10 +92,17 @@ async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, r
   return trip
 }
 
-async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive) {
+async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive, time) {
   let timetables = db.getCollection((useLive ? 'live' : 'gtfs') + ' timetables')
   let routes = db.getCollection('routes')
-  let minutesPastMidnight = utils.getMinutesPastMidnightNow()
+
+  if (!time) time = utils.now()
+  let minutesPastMidnight = utils.getMinutesPastMidnight(time)
+  let operationDay = utils.getYYYYMMDD(time)
+  if (minutesPastMidnight < 180) { // Before 3am
+    minutesPastMidnight += 1440
+    operationDay = utils.getYYYYMMDD(time.clone().add(-1, 'day'))
+  }
 
   let trips = await timetables.findDocuments({
     operationDays: utils.getYYYYMMDDNow(),

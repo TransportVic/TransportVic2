@@ -66,7 +66,7 @@ async function updateBusTrips(db, departures) {
   })
 }
 
-async function getDeparturesFromPTV(stop, db) {
+async function getDeparturesFromPTV(stop, db, time) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let smartrakIDs = db.getCollection('smartrak ids')
   let dbRoutes = db.getCollection('routes')
@@ -75,14 +75,10 @@ async function getDeparturesFromPTV(stop, db) {
   let allGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', false)
 
   let mappedDepartures = []
-  let now = utils.now()
 
   let isCheckpointStop = utils.isCheckpointStop(stop.stopName)
 
   await async.forEach(uniqueStops, async stopGTFSID => {
-    let requestTime = now.clone()
-    requestTime.add(-30, 'seconds')
-
     let bayType = ''
     let matchedBay = stop.bays.find(bay => bay.mode === 'bus' && bay.stopGTFSID === stopGTFSID)
 
@@ -104,7 +100,7 @@ async function getDeparturesFromPTV(stop, db) {
 
     if (bayType === 'regional') return // Bay does not have any live routes - skip requesting data and use scheduled
 
-    let {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/2/stop/${stopGTFSID}?gtfs=true&max_results=9&look_backwards=false&include_cancelled=true&expand=run&expand=route&expand=VehicleDescriptor`)
+    let {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/2/stop/${stopGTFSID}?gtfs=true&max_results=9&look_backwards=false&include_cancelled=true&expand=run&expand=route&expand=VehicleDescriptor&date_utc=${time.toISOString()}`)
 
     let seenIDs = []
     await async.forEach(departures, async busDeparture => {
@@ -127,7 +123,7 @@ async function getDeparturesFromPTV(stop, db) {
         }
       }
 
-      if (actualDepartureTime.diff(now, 'minutes') > 90) return
+      if (actualDepartureTime.diff(time, 'minutes') > 90) return
 
       let destination = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
 
@@ -175,7 +171,7 @@ async function getDeparturesFromPTV(stop, db) {
       let operator = busRoute.operators.sort((a, b) => a.length - b.length)[0] || ''
 
       if (busRoute.operationDate) {
-        let cutoff = utils.now().startOf('day')
+        let cutoff = time.clone().startOf('day')
         if (busRoute.operationDate.type === 'until' && busRoute.operationDate.operationDate < cutoff) {
           return
         }
@@ -254,17 +250,18 @@ async function getDeparturesFromPTV(stop, db) {
   return filteredDepartures
 }
 
-async function getScheduledDepartures(stop, db) {
-  let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus')
+async function getScheduledDepartures(stop, db, time) {
+  let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', false)
 
-  return await departureUtils.getScheduledDepartures(gtfsIDs, db, 'bus', 90, false)
+  return await departureUtils.getScheduledDepartures(gtfsIDs, db, 'bus', 90, false, time)
 }
 
-async function getDepartures(stop, db) {
+async function getDepartures(stop, db, time) {
   let cacheKey = stop.codedSuburb[0] + stop.stopName
+  time = time || utils.now()
 
   try {
-    return await utils.getData('bus-departures', cacheKey, async () => {
+    return await utils.getData('bus-departures-' + time.toISOString(), cacheKey, async () => {
       let scheduledDepartures = []
       let ptvDepartures = []
       let departures = []
@@ -272,14 +269,14 @@ async function getDepartures(stop, db) {
 
       await Promise.all([new Promise(async resolve => {
         try {
-          scheduledDepartures = await getScheduledDepartures(stop, db, false)
+          scheduledDepartures = await getScheduledDepartures(stop, db, time)
         } catch (e) {
           global.loggers.general.err('Failed to get schedule departures', e)
           scheduledFailed = true
         } finally { resolve() }
       }), new Promise(async resolve => {
         try {
-          ptvDepartures = await getDeparturesFromPTV(stop, db)
+          ptvDepartures = await getDeparturesFromPTV(stop, db, time)
         } catch (e) {
           global.loggers.general.err('Failed to get PTV departures', e)
           ptvFailed = true
