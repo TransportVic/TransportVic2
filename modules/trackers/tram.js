@@ -3,7 +3,7 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const utils = require('../../utils')
 const stops = require('../../additional-data/tram-tracker/stops')
 const async = require('async')
-const getDepartures = require('../../modules/tram/get-departures-experimental')
+const getDepartures = require('../../modules/tram/get-departures')
 const schedule = require('./scheduler')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
