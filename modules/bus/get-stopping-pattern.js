@@ -141,13 +141,15 @@ module.exports = async function (data, db) {
     let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
 
     let ptvStop = stops[departure.stop_id]
+    if (!ptvStop) return null // Stop likely deactivated or does not exist but returned by operational timetable - skip it
+
     let stopName = utils.getProperStopName(ptvStop.stop_name)
 
     let stopBay = dbStops[departure.stop_id].bays.find(bay => {
       let matchingService = bay.services.some(s => s.routeGTFSID === routeGTFSID && s.gtfsDirection === gtfsDirection)
 
       return bay.mode === 'bus' && bay.fullStopName === stopName && matchingService
-    }) || dbStops[departure.stop_id].bays.find(bay => checkModes.includes(bay.mode))
+    }) || dbStops[departure.stop_id].bays.find(bay => bay.mode === 'bus')
 
     let departureTimeMinutes = utils.getMinutesPastMidnight(scheduledDepartureTime)
 
@@ -174,7 +176,7 @@ module.exports = async function (data, db) {
     }
 
     return stopTiming
-  })
+  }).filter(Boolean)
 
   let vehicleDescriptor = run.vehicle_descriptor
 

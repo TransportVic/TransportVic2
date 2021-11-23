@@ -1,19 +1,43 @@
-// TODO: Move bus to its own page handler
-
 const express = require('express')
 const moment = require('moment')
 const router = new express.Router()
 const utils = require('../../../utils')
-const ptvAPI = require('../../../ptv-api')
 const getStoppingPattern = require('../../../modules/bus/get-stopping-pattern')
-const gtfsGroups = require('../../../modules/gtfs-id-groups')
 
-const liveBusData = require('../../../additional-data/live-bus-data')
 const busDestinations = require('../../../additional-data/bus-destinations')
-const coachDestinations = require('../../../additional-data/coach-stops')
 
 const busBays = require('../../../additional-data/bus-bays')
-const routeIDs = require('../../../additional-data/route-ids')
+
+const getDepartures = require('../../../modules/bus/get-departures')
+const regionalRouteNumbers = require('../../../additional-data/bus-data/regional-with-track')
+
+let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => {
+  let regionRoutes = regionalRouteNumbers[region]
+
+  regionRoutes.forEach(route => {
+    acc[route.routeGTFSID] = { region, routeNumber: route.routeNumber }
+  })
+
+  return acc
+}, {})
+
+function determineStopType(stop) {
+  let busBays = stop.bays.filter(bay => bay.mode === 'bus')
+  let screenServices = busBays.map(bay => bay.screenServices).reduce((a, e) => a.concat(e), [])
+  let stopType = ''
+
+  if (screenServices.some(svc => svc.routeGTFSID.startsWith('4-'))) {
+    stopType = 'metro'
+  } else { // Regional/Skybus
+    if (screenServices.some(svc => regionalGTFSIDs[svc.routeGTFSID])) {
+      stopType = 'regional-live'
+    } else {
+      stopType = 'regional'
+    }
+  }
+
+  return { stopType, screenServices }
+}
 
 async function pickBestTrip(data, db) {
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
@@ -21,39 +45,39 @@ async function pickBestTrip(data, db) {
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
   let tripEndTime = utils.parseTime(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm')
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
-  if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
-  if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
 
-  let trueMode = data.mode
-  if (trueMode === 'coach') trueMode = 'regional coach'
-  if (trueMode === 'heritage') trueMode = 'heritage train'
+  if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
+  if (tripStartMinutes >= 1440) tripDay.add(-1, 'day')
+  if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
 
   let dbStops = db.getCollection('stops')
 
   let possibleOriginStops = await dbStops.findDocuments({
     codedNames: data.origin,
-    'bays.mode': trueMode
+    'bays.mode': 'bus'
   }).toArray()
 
   let possibleDestinationStops = await dbStops.findDocuments({
     codedNames: data.destination,
-    'bays.mode': trueMode
+    'bays.mode': 'bus'
   }).toArray()
 
   if (!possibleOriginStops.length || !possibleDestinationStops.length) return null
   let minutesToTripStart = tripStartTime.diff(utils.now(), 'minutes')
   let minutesToTripEnd = tripEndTime.diff(utils.now(), 'minutes')
 
-  let originName = possibleOriginStops.map(stop => stop.bays.find(bay => utils.encodeName(bay.fullStopName) === data.origin)).find(bay => bay).fullStopName
-  let destinationName = possibleDestinationStops.map(stop => stop.bays.find(bay => utils.encodeName(bay.fullStopName) === data.destination)).find(bay => bay).fullStopName
+  let originBay = possibleOriginStops.map(stop => stop.bays.find(bay => utils.encodeName(bay.fullStopName) === data.origin)).find(bay => bay)
+  let destinationBay = possibleDestinationStops.map(stop => stop.bays.find(bay => utils.encodeName(bay.fullStopName) === data.destination)).find(bay => bay)
 
-  let operationDays = data.operationDays
+  let originStop = possibleOriginStops.find(stop => stop.bays.includes(originBay))
+
+  let operationDays = utils.getYYYYMMDD(tripDay)
 
   let query = {
-    mode: trueMode,
-    origin: originName,
+    mode: 'bus',
+    origin: originBay.fullStopName,
     departureTime: data.departureTime,
-    destination: destinationName,
+    destination: destinationBay.fullStopName,
     destinationArrivalTime: data.destinationArrivalTime,
     operationDays
   }
@@ -62,21 +86,7 @@ async function pickBestTrip(data, db) {
   let liveTrip = await db.getCollection('live timetables').findDocument(query)
 
   let referenceTrip = liveTrip || gtfsTrip
-  if (!referenceTrip) {
-    if (tripStartMinutes > 1440) {
-      query.operationDays = data.operationDays
 
-      gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
-      liveTrip = await db.getCollection('live timetables').findDocument(query)
-      referenceTrip = liveTrip || gtfsTrip
-
-      if (!referenceTrip || !referenceTrip.routeGTFSID.startsWith('8-')) return null
-    } else {
-      return null
-    }
-  }
-
-  let noLive = ['5', '7', '9', '11', '12', '13']
   let useLive = minutesToTripEnd > -60 && minutesToTripStart < 60
 
   if (liveTrip) {
@@ -87,57 +97,62 @@ async function pickBestTrip(data, db) {
     }
   }
 
-  let gtfsMode = referenceTrip.routeGTFSID.split('-')[0]
+  let isLiveRoute = null
+  if (referenceTrip) {
+    isLiveRoute = referenceTrip.routeGTFSID.startsWith('4-') || !!regionalGTFSIDs[referenceTrip.routeGTFSID]
+  }
 
-  if (!useLive || noLive.includes(gtfsMode)
-    || (gtfsMode === '4' && liveBusData.metroRoutesExcluded.includes(referenceTrip.routeGTFSID))
-    || (gtfsMode === '6' && !liveBusData.regionalRoutes.includes(referenceTrip.routeGTFSID))) return { trip: referenceTrip, tripStartTime, isLive: false }
+  // Necessary to make distinction between false and null
+  // null - unknown, false - confirmed to be false
+  if (!useLive || (isLiveRoute === false)) return { trip: referenceTrip, tripStartTime, isLive: false }
+
+  if (!isLiveRoute) { // Reference trip does not exist
+    let originStopType = determineStopType(originStop)
+    if (originStopType === 'regional') return null // Trip does not exist, would not suddenly appear on PTV's end so assume it does not exist
+    // Otherwise could be trip added on the day that we do not have, although this is very unlikely
+  }
 
   let now = utils.now()
 
-  let checkStops = referenceTrip.stopTimings.map(stopTiming => {
-    stopTiming.actualDepartureTime = now.clone().startOf('day').add(stopTiming.departureTimeMinutes, 'minutes')
-    return stopTiming
-  }).filter(stopTiming => {
-    return stopTiming.actualDepartureTime.diff(now, 'minutes') > 0
-  }).slice(0, -1)
-
-  let checkStop = checkStops[0]
-
-  if (!checkStop) checkStop = referenceTrip.stopTimings[0]
-
-  let checkStopTime = tripDay.clone().add(checkStop.departureTimeMinutes, 'minutes')
-  let isoDeparture = checkStopTime.toISOString()
-  let mode = trueMode === 'bus' ? 2 : 1
-
   try {
-    let ptvRunID = referenceTrip.runID
-    if (!ptvRunID) {
-      let {departures, routes, runs} = await ptvAPI(`/v3/departures/route_type/${mode}/stop/${checkStop.stopGTFSID}?gtfs=true&date_utc=${checkStopTime.clone().add(-3, 'minutes').startOf('minute').toISOString()}&max_results=5&expand=run&expand=stop&expand=route`)
+    let ptvRunID
 
-      let departure = departures.find(departure => {
-        let run = runs[departure.run_ref]
-        let route = routes[departure.route_id]
-        let routeGTFSID = routeIDs[route.route_id]
+    if (!referenceTrip || !referenceTrip.runID) {
+      // Avoid requesting the full stop but also avoid wrongly caching only a single bay
+      let trueOriginBay
 
-        if (routeGTFSID.match(/4-45[abcd]/)) return // The fake 745
-        if (routeGTFSID === '4-965') routeGTFSID = '8-965'
+      if (referenceTrip) { // Needs to ensure other services still match
+        let originGTFSID = referenceTrip.stopTimings[0].stopGTFSID
+        let originBay = originStop.bays.find(bay => bay.stopGTFSID === originGTFSID)
+        trueOriginBay = originStop.bays.filter(bay => bay.originalName === originBay.originalName)
+      } else { // No way to actually know which bay it departs from - hence we need to request all
+        trueOriginBay = originStop.bays
+      }
 
-        let matchingGroup = gtfsGroups.find(g => g.includes(routeGTFSID)) || [ routeGTFSID ]
+      let mockedStop = {
+        codedSuburb: originStop.codedSuburb,
+        stopName: `TRIP.${originStop.stopName}.${originBay.stopGTFSID}`,
+        bays: trueOriginBay
+      }
 
-        let destinationName = utils.getProperStopName(run.destination_name)
-        let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc).startOf('minute').toISOString()
+      let originDepartures = await getDepartures(mockedStop, db, tripStartTime.clone().add(-5, 'minutes'))
 
-        return scheduledDepartureTime === isoDeparture &&
-          destinationName === referenceTrip.destination &&
-          matchingGroup.includes(referenceTrip.routeGTFSID)
+      let matchingDeparture = originDepartures.find(departure => {
+        let trip = departure.trip
+
+        if (trip.departureTime !== data.departureTime) return false
+        if (trip.destinationArrivalTime !== data.destinationArrivalTime) return false
+        if (trip.origin !== originBay.fullStopName) return false
+        if (trip.destination !== destinationBay.fullStopName) return false
+
+        return true
       })
 
-      if (!departure) return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
-      ptvRunID = departure.run_ref
-    }
+      if (matchingDeparture) ptvRunID = matchingDeparture.runID
+    } else if (referenceTrip && referenceTrip.runID) ptvRunID = referenceTrip.runID
 
-    // Only bus would fetch it
+    if (!ptvRunID) return null // Available options to get ptvRunID unsuccessful - trip does not exist
+
     let trip = await getStoppingPattern({
       ptvRunID,
       referenceTrip: gtfsTrip
@@ -148,13 +163,13 @@ async function pickBestTrip(data, db) {
     return { trip, tripStartTime, isLive }
   } catch (e) {
     global.loggers.general.err('Failed to get Bus trip', e)
-    return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false } : null
+
+    let isLive = referenceTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
+    return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive } : null
   }
 }
 
-router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res, next) => {
-  if (!['coach', 'ferry', 'heritage'].includes(req.params.mode)) return next()
-
+router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res, next) => {
   let tripData = await pickBestTrip(req.params, res.db)
   if (!tripData) return res.status(404).render('errors/no-trip')
 
@@ -178,35 +193,21 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   destination = destination.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
   origin = origin.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
 
-  if (trip.mode === 'regional coach') {
-    origin = coachDestinations(trip.stopTimings[0])
-    destination = coachDestinations(trip.stopTimings.slice(-1)[0])
+  let serviceData = busDestinations.service[trip.routeGTFSID] || busDestinations.service[trip.routeNumber] || {}
 
-    let destShortName = utils.getStopName(destination)
-    if (!utils.isStreet(destShortName)) destination = destShortName
+  destination = serviceData[destination]
+    || busDestinations.generic[destination]
+    || busDestinations.generic[fullDestination] || destination
 
-    let originShortName = utils.getStopName(origin)
-    if (!utils.isStreet(originShortName)) origin = originShortName
-  } else if (trip.mode == 'bus') {
-    let serviceData = busDestinations.service[trip.routeGTFSID] || busDestinations.service[trip.routeNumber] || {}
-
-    destination = serviceData[destination]
-      || busDestinations.generic[destination]
-      || busDestinations.generic[fullDestination] || destination
-
-    origin = serviceData[origin]
-      || busDestinations.generic[origin]
-      || busDestinations.generic[fullOrigin] || origin
-  }
+  origin = serviceData[origin]
+    || busDestinations.generic[origin]
+    || busDestinations.generic[fullOrigin] || origin
 
   let loopDirection
   if (tripRoute.flags)
     loopDirection = tripRoute.flags[trip.gtfsDirection]
 
-  let importantStops = []
-
-  if (trip.mode === 'bus')
-    importantStops = trip.stopTimings.map(stop => utils.getStopName(stop.stopName))
+  let importantStops = trip.stopTimings.map(stop => utils.getStopName(stop.stopName))
       .filter((e, i, a) => a.indexOf(e) === i)
       .slice(1, -1)
       .filter(utils.isCheckpointStop)
@@ -219,12 +220,7 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   let firstDepartureTime = trip.stopTimings[0].departureTimeMinutes
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.pretyTimeToDeparture = ''
-
-    if (trip.cancelled) {
-      stop.headwayDevianceClass = 'cancelled'
-    } else {
-      stop.headwayDevianceClass = 'unknown'
-    }
+    stop.headwayDevianceClass = 'unknown'
 
     if (!isLive || (isLive && stop.estimatedDepartureTime)) {
       let scheduledDepartureTime = tripStartTime.clone().add((stop.departureTimeMinutes || stop.arrivalTimeMinutes) - firstDepartureTime, 'minutes')
@@ -249,14 +245,12 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
   let trackerData
   let busTrips = res.db.getCollection('bus trips')
 
-  if (trip.mode === 'bus') {
-    trackerData = await busTrips.findDocument({
-      date: req.params.operationDays,
-      departureTime: trip.departureTime,
-      origin: trip.origin,
-      destination: trip.destination
-    })
-  }
+  trackerData = await busTrips.findDocument({
+    date: req.params.operationDays,
+    departureTime: trip.departureTime,
+    origin: trip.origin,
+    destination: trip.destination
+  })
 
   if (trip.vehicle && !trackerData) {
     let {routeGTFSID, origin, destination, departureTime, destinationArrivalTime} = trip

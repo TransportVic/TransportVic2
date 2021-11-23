@@ -231,6 +231,7 @@ module.exports = class MainServer {
       'run-pages/MetroTrains': '/metro/run',
       'run-pages/VLineTrains': '/vline/run',
       'run-pages/Tram': '/tram/run',
+      'run-pages/Bus': '/bus/run',
       'run-pages/Generic': '/',
 
       Statistics: '/stats',
