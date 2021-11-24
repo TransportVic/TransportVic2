@@ -38,6 +38,18 @@ let routes = {
   'Williamstown': '98'
 }
 
+let stySinglePlatform = [
+  'Leawarra',
+  'Baxter',
+  'Somerville',
+  'Tyabb',
+  'Hastings',
+  'Bittern',
+  'Morradoo',
+  'Crib Point',
+  'Stony Point'
+]
+
 async function getTimetable(id) {
   return await utils.getData('metro-op-timetable', id, async () => {
     return JSON.parse(await utils.request(urls.op.format(id), { timeout: 17000 }))
@@ -224,6 +236,9 @@ async function createTrip(trip, stopDescriptors, startOfDay, routeName) {
 function parseRawData(stop, startOfDay) {
   let minutes = stop.time_seconds / 60
   let scheduledDepartureTime = utils.getMomentFromMinutesPastMidnight(minutes, startOfDay)
+
+  // These services sometimes show as platform 0
+  if (stySinglePlatform.includes(stop.station)) stop.platform = '1'
 
   return {
     stopName: stop.station + ' Railway Station',
