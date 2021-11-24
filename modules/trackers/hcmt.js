@@ -69,12 +69,16 @@ async function getDepartures() {
   await liveTimetables.updateDocuments({
     operationDays: day,
     mode: 'metro train',
-    runID: {
-      $not: {
-        $in: missingTrips
+    h: true,
+    $or: [{
+      runID: {
+        $not: {
+          $in: missingTrips
+        }
       }
-    },
-    h: true
+    }, {
+      isRailReplacementBus: true
+    }]
   }, {
     $set: {
       vehicle: null,
