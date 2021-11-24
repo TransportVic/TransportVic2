@@ -39,6 +39,9 @@ if (modules.tracker && modules.tracker.hcmt)
 if (modules.tracker && modules.tracker.metro)
   require('../modules/trackers/metro')
 
+if (modules.tracker && modules.tracker.metroTrips)
+  require('../modules/trackers/metro-trips')
+
 if (modules.tracker && modules.tracker.metroRaceTrains)
   require('../modules/trackers/metro-race-trains')
 
