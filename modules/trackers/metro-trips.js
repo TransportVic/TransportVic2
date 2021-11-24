@@ -58,9 +58,6 @@ async function getTimetable(id) {
 
 async function getStation(name) {
   return await utils.getData('metro-station-platform', name, async () => {
-    if (name === 'Wattleglen Railway Station') name = 'Wattle Glen Railway Station'
-    if (name === 'St Albans Railway Station') name = 'St. Albans Railway Station'
-
     let stopData = await dbStops.findDocument({ stopName: name })
     if (!stopData) console.log(name)
     let metroBay = stopData.bays.find(bay => bay.mode === 'metro train')
@@ -239,6 +236,8 @@ function parseRawData(stop, startOfDay) {
 
   // These services sometimes show as platform 0
   if (stySinglePlatform.includes(stop.station)) stop.platform = '1'
+  if (stop.station === 'Wattleglen') stop.station = 'Wattle Glen'
+  if (stop.station === 'St Albans') stop.station = 'St. Albans'
 
   return {
     stopName: stop.station + ' Railway Station',
