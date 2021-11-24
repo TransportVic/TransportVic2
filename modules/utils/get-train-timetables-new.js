@@ -376,13 +376,15 @@ async function getScheduledMetroDepartures(station, db, time) {
         departure.cityLoopRunning = cityLoopRunning
       }
     } else if (isInCity) {
-      let upcoming = cityLoopRunning.slice(stopCode)
+      let currentIndex = cityLoopRunning.indexOf(stopCode)
+      let upcoming = cityLoopRunning.slice(currentIndex)
       let viaCityLoop = upcoming.includes('FGS')
 
       if (viaCityLoop) {
         cityLoopRunning.pop()
       } else {
-        if (upcoming.includes('SSS')) cityLoopRunning = ['FSS', 'SSS', 'NME']
+        let sssIndex = upcoming.indexOf('SSS')
+        if (sssIndex !== -1 && sssIndex > currentIndex) cityLoopRunning = ['FSS', 'SSS', 'NME']
         else cityLoopRunning = cityLoopRunning.slice(-2)
       }
 
