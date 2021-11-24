@@ -108,7 +108,12 @@ async function getDepartures(routeName) {
       runID: metroTrip.runID
     })
 
-    if (!trip) trip = await getStoppingPattern(database, utils.getPTVRunID(metroTrip.runID), 'metro train')
+    if (!trip) {
+      trip = await getStoppingPattern({
+        ptvRunID: utils.getPTVRunID(metroTrip.runID)
+      }, database)
+    }
+
     if (trip) { // Trips can sometimes not appear in PTV, especially 7xxx extras
       metroTrip.stopsAvailable = trip.stopTimings.map(stop => {
         let stopTime = stop.departureTimeMinutes || stop.arrivalTimeMinutes
