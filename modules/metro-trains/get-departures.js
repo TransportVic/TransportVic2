@@ -457,6 +457,10 @@ async function norGroupMatch(train, stopGTFSID, stationName, db) {
 
   if (!trip) {
     trip = await matchTrip(train, stopGTFSID, db, possibleLines, train.routeName, possibleDestinations)
+
+    // RCE trains match weirdly especially in the city - be strict with requirements
+    if (train.runID && train.runID[0] === 'R' && trip && trip.routeName !== 'Showgrounds/Flemington') trip = null
+    if (train.runID=='R404') console.log(trip)
   }
 
   return trip
