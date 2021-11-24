@@ -6,24 +6,6 @@ const destinationOverrides = require('../../additional-data/coach-stops')
 const busBays = require('../../additional-data/bus-bays')
 const southernCrossBays = require('../../additional-data/southern-cross-bays')
 const { getDayOfWeek } = require('../../public-holidays')
-const routeIDs = require('../../additional-data/route-ids')
-
-let vlineTrainRoutes = [
-  '1-Ech',
-  '1-my1',
-  '1-Sht',
-  '1-V01',
-  '1-V04',
-  '1-V05',
-  '1-V08',
-  '1-V12',
-  '1-V23',
-  '1-V40',
-  '1-V45',
-  '1-V48',
-  '1-V51',
-  '1-Vov'
-]
 
 function getAllStopGTFSIDs(stop) {
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional coach', false)
@@ -66,17 +48,12 @@ async function getDeparturesFromPTV(stop, db) {
 
       if (departureTime.diff(now, 'minutes') > 60 * 12) return
 
-      let coachRouteGTFSID = routeIDs[route.route_id].replace('1-', '5-')
-      let trainRouteGTFSID = routeIDs[route.route_id]
-
       let destination = utils.adjustStopName(run.destination_name)
 
       // null: unknown, true: yes, false: no
       let isRailReplacementBus = null
 
-      if (!vlineTrainRoutes.includes(trainRouteGTFSID)) isRailReplacementBus = false
-
-      let trip = await departureUtils.getDeparture(db, allGTFSIDs, departureTime, destination, 'regional coach', coachRouteGTFSID, tripIDsSeen)
+      let trip = await departureUtils.getDeparture(db, allGTFSIDs, departureTime, destination, 'regional coach', null, tripIDsSeen)
 
       if (!trip && (isRailReplacementBus !== false)) {
         let stopGTFSIDs = {
@@ -95,7 +72,6 @@ async function getDeparturesFromPTV(stop, db) {
           let operationDay = utils.getYYYYMMDD(tripDay)
 
           trip = await gtfsTimetables.findDocument({
-            routeGTFSID: trainRouteGTFSID,
             operationDays: operationDay,
             mode: 'regional train',
             stopTimings: {
