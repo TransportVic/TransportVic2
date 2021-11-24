@@ -252,9 +252,11 @@ async function pickBestTrip(data, db) {
 
     let trip = await getStoppingPattern({
       ptvRunID,
-      time: departureTime,
-      referenceTrip
+      time: departureTime
     }, db)
+
+    // In case the trip disappears off PTV we still have our local copy
+    if (!trip) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false, needsRedirect } : null
 
     let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
 

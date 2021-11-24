@@ -45,9 +45,6 @@ if (modules.tracker && modules.tracker.metroTrips)
 if (modules.tracker && modules.tracker.metroRaceTrains)
   require('../modules/trackers/metro-race-trains')
 
-if (modules.tracker && modules.tracker.metroLocations)
-  require('../modules/trackers/metro-locations')
-
 if (modules.tracker && modules.tracker.metroNotify)
   require('../modules/trackers/metro-notify')
 

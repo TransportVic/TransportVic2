@@ -168,7 +168,7 @@ async function saveLocation(consist, location, metroLocations) {
 }
 
 module.exports = async function (data, db) {
-  let { ptvRunID, time, referenceTrip } = data
+  let { ptvRunID, time } = data
 
   let stopsCollection = db.getCollection('stops')
   let liveTimetables = db.getCollection('live timetables')
@@ -197,7 +197,7 @@ module.exports = async function (data, db) {
 
   let location = run.vehicle_position
 
-  if (departures.length === 0) return referenceTrip
+  if (departures.length === 0) return null
 
   let dbStops = {}
 
@@ -278,6 +278,37 @@ module.exports = async function (data, db) {
   let notifyAlerts = []
   if (ptvRunID >= 948000) runID = utils.getRunID(ptvRunID)
 
+  let trueOrigin
+  if (direction === 'Up') trueOrigin = stopTimings[0].stopName
+  else { // Down
+    let fss = stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
+    return fss ? fss.stopName : stopTimings[0].stopName
+  }
+
+  let originStop = stopTimings.find(stop => stop.stopName === trueOrigin)
+  let scheduledDepartureTime = utils.parseTime(originStop.scheduledDepartureTime)
+  let originDepartureDay = scheduledDepartureTime.clone()
+
+  // if first stop is 12-3am push it to previous day
+  if (originStop.departureTimeMinutes < 180) {
+    timetable.stopTimings.forEach(stop => {
+      if (stop.arrivalTimeMinutes !== null) stop.arrivalTimeMinutes += 1440
+      if (stop.departureTimeMinutes !== null) stop.departureTimeMinutes += 1440
+    })
+    originDepartureDay.add(-3, 'hours')
+  }
+
+  let departureDay = utils.getYYYYMMDD(originDepartureDay)
+
+
+  let tripKey = {
+    mode: 'metro train',
+    operationDays: departureDay,
+    runID
+  }
+
+  let referenceTrip = await liveTimetables.findDocument(tripKey)
+
   if (vehicleDescriptor) {
     consist = findConsist(vehicleDescriptor.id, runID)
     vehicle = {
@@ -313,8 +344,6 @@ module.exports = async function (data, db) {
   }
 
   if (runID) {
-    let scheduledDepartureTime = utils.parseTime(stopTimings[0].scheduledDepartureTime)
-
     let tripStartSeconds = +scheduledDepartureTime / 1000
     notifyAlerts = await metroNotify.distinct('alertID', {
       fromDate: {
@@ -395,6 +424,10 @@ module.exports = async function (data, db) {
     routeNumber: null,
     routeDetails: null,
     runID,
+    ...(referenceTrip ? {
+      forming: referenceTrip.forming,
+      formedBy: referenceTrip.formedBy
+    } : {}),
     operationDays: null,
     vehicle: null,
     stopTimings: stopTimings,
@@ -412,19 +445,6 @@ module.exports = async function (data, db) {
     notifyAlerts
   })
 
-  let originStop = timetable.stopTimings.find(stop => stop.stopName === timetable.trueOrigin)
-  let originDepartureDay = utils.parseTime(originStop.scheduledDepartureTime)
-
-  // if first stop is 12-3am push it to previous day
-  if (originStop.departureTimeMinutes < 180) {
-    timetable.stopTimings.forEach(stop => {
-      if (stop.arrivalTimeMinutes !== null) stop.arrivalTimeMinutes += 1440
-      if (stop.departureTimeMinutes !== null) stop.departureTimeMinutes += 1440
-    })
-    originDepartureDay.add(-3, 'hours')
-  }
-
-  let departureDay = utils.getYYYYMMDD(originDepartureDay)
   timetable.operationDays = departureDay
 
   if (timetable.routeName === 'Stony Point') {
@@ -446,13 +466,7 @@ module.exports = async function (data, db) {
 
   timetable = extendMetroEstimation(timetable)
 
-  let key = {
-    mode: 'metro train',
-    operationDays: timetable.operationDays,
-    runID
-  }
-
-  await liveTimetables.replaceDocument(key, timetable, {
+  await liveTimetables.replaceDocument(tripKey, timetable, {
     upsert: true
   })
 
