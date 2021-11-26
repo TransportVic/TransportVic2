@@ -74,7 +74,7 @@ module.exports = {
   "Lilydale": [],
   "South Morang": [...platr(2, [], 'half-platform-bold')],
   "Epping": [...platr(2, [], 'half-platform-bold')],
-  "Darebin": [],
+  "Darebin": [], // Nothing
   "Box Hill": [...platr(4, [1], 'platform'), conc('up-down')],
   "Mont Albert": [...platr(3, [], 'half-platform-bold')],
   "Surrey Hills": [...platr(3, [], 'half-platform-bold')],
@@ -87,11 +87,11 @@ module.exports = {
   "Anstey": [],
   "Bell": [],
   "Thornbury": [],
-  "Alphington": [...platr(2, [], 'half-platform-bold')],
+  "Alphington": [...platr(2, [], 'half-platform-bold')], // Both platforms
   "Croxton": [],
-  "Fairfield": [...platr(2, [], 'half-platform-bold')],
-  "Dennis": [...platr(2, [], 'half-platform')],
-  "Westgarth": [...platr(2, [], 'half-platform')],
+  "Fairfield": [...platr(2, [], 'half-platform-bold')], // Both platforms
+  "Dennis": [...platr(2, [], 'half-platform')], // Plat 1 only
+  "Westgarth": [...platr(2, [], 'half-platform')], // Plat 1 only
   "Rushall": [],
   "Clifton Hill": [...platr(2, [], 'half-platform-bold')],
   "Victoria Park": [...platr(2, [], 'half-platform-bold')],
@@ -140,10 +140,10 @@ module.exports = {
   "Greensborough": [...platr(2, [], 'half-platform-bold')],
   "Montmorency": [],
   "Watsonia": [...platr(2, [], 'half-platform-bold')],
-  "Macleod": [...platr(3, [], 'half-platform-bold')],
+  "Macleod": [...platr(3, [], 'half-platform-bold')], // Platform 1 only - 2 is LED and 3 has nothing
   "Heidelberg": [...platr(2, [], 'half-platform-bold')],
   "Ivanhoe": [...platr(2, [], 'half-platform-bold')],
-  "Eaglemont": [],
+  "Eaglemont": [], // Nothing
   "Windsor": [...platr(2, [], 'half-platform')],
   "Balaclava": [...platr(2, [], 'half-platform')],
   "Armadale": [...platr(4, [], 'half-platform'), conc('up-down')],
