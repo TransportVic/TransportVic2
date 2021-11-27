@@ -6,6 +6,7 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const schedule = require('./scheduler')
 const ptvAPI = require('../../ptv-api')
 const { getDayOfWeek } = require('../../public-holidays')
+const { singleSTYTrains } = require('../metro-trains/add-stony-point-data')
 
 const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 
@@ -203,6 +204,17 @@ async function createTrip(trip, stopDescriptors, startOfDay, routeName) {
   if (routeName === 'Mernda') tripDirectionIndicator = 'Up'
   let gtfsDirection = trip.direction === tripDirectionIndicator ? '0' : '1'
 
+  let vehicle = null
+  if (routeName === 'Stony Point') {
+    let dayOfWeek = await getDayOfWeek(startOfDay)
+
+    vehicle = { size: 2, type: 'Sprinter', consist: [] }
+
+    if (!['Sat', 'Sun'].includes(dayOfWeek) && singleSTYTrains.includes(trip.runID)) {
+      vehicle.size = 1
+    }
+  }
+
   let timetable = {
     mode: 'metro train',
     routeName,
@@ -210,6 +222,7 @@ async function createTrip(trip, stopDescriptors, startOfDay, routeName) {
     runID: trip.runID,
     formedBy: null,
     forming: trip.forming === '0' ? null : trip.forming,
+    vehicle,
     operationDays: trip.operationDays,
     stopTimings: baseTrip.stopTimings,
     trueDestination: lastStop.stopName,
