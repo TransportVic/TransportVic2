@@ -330,16 +330,22 @@ async function loadTrips() {
     let { runID, forming } = trip
     if (forming) {
       forming[runID] = forming
-      formedBy[forming] = runID
+      if (!formedBy[forming]) formedBy[forming] = []
+      formedBy[forming].push(runID)
     }
   })
 
   allTrips.forEach(trip => {
-    if (formedBy[trip.runID]) trip.formedBy = formedBy[trip.runID]
+    let formedByTrip
+    if (formedBy[trip.runID]) {
+      let possibleFormedByTrips = allTrips.filter(possibleTrip => formedBy[trip.runID].includes(possibleTrip.runID))
+      if (possibleFormedByTrips.length === 1) formedByTrip = possibleFormedByTrips[0]
+      else formedByTrip = possibleFormedByTrips.find(trip => !trip.cancelled) || possibleFormedByTrips[0]
+
+      trip.formedBy = formedByTrip.runID
+    }
 
     if (trip.direction === 'Down' && trip.trueOrigin === 'Flinders Street Railway Station' && trip.formedBy) { // Prepend loop stops from previous trip
-      let formedByTrip = allTrips.find(possibleTrip => possibleTrip.runID === trip.formedBy)
-
       let tripFSSStop = trip.stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
       let fssIndex = trip.stopTimings.indexOf(tripFSSStop)
 
