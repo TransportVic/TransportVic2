@@ -1108,7 +1108,12 @@ async function getDeparturesFromPTV(station, backwards, db) {
 
   let initalMappedBuses = await async.map(replacementBuses, async bus => await mapBus(bus, metroPlatform, db))
   let initialMappedTrains = await async.map(trains, async train => await mapTrain(train, metroPlatform, notifyData, db))
-  let suspensionMappedTrains = await async.map(initialMappedTrains, async train => await applySuspension(train, notifyData, metroPlatform, db))
+  let suspensionMappedTrains
+  if (config.applyMetroSuspensions) {
+    suspensionMappedTrains = await async.map(initialMappedTrains, async train => await applySuspension(train, notifyData, metroPlatform, db))
+  } else {
+    suspensionMappedTrains = initialMappedTrains
+  }
 
   let nonSkeleton = initalMappedBuses.filter(bus => !bus.skeleton)
   let mappedBuses = (await async.map(initalMappedBuses, async bus => {
