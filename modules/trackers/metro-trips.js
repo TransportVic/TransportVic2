@@ -308,7 +308,7 @@ async function getDepartures(routeName) {
     trips[runID].stopsAvailable.push(parseRawData(stop, startOfDay))
 
     return trips
-  }, {})).filter(trip => trip.stopsAvailable[0].stopSeconds < 86400)
+  }, {}))
 
   let routeTrips = await async.map(allTrips, async trip => {
     return await checkTrip(trip, stopDepartures, startOfDay, day, now, routeName)
