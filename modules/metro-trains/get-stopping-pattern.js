@@ -1,5 +1,6 @@
 const async = require('async')
 const utils = require('../../utils')
+const config = require('../../config')
 const ptvAPI = require('../../ptv-api')
 const findConsist = require('./fleet-parser')
 const metroTypes = require('../../additional-data/metro-tracker/metro-types')
@@ -317,7 +318,7 @@ module.exports = async function (data, db) {
     }
   }
 
-  if (referenceTrip && referenceTrip.suspension) {
+  if (referenceTrip && referenceTrip.suspension && config.applyMetroSuspensions) {
     let isDown = direction === 'Down'
 
     let suspension = referenceTrip.suspension
