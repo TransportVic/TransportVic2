@@ -14,7 +14,7 @@ let cityLoopStations = ['Southern Cross', ...undergroundLoopStations]
 let cityStations = [...cityLoopStations, 'Flinders Street']
 
 let cityLoopGTFSIDs = [
-  19843, //Parliament
+  19843, // Parliament
   19842, // Melb Central
   19841, // Flagstaff
   22180 // Southern Cross

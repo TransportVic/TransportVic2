@@ -101,10 +101,10 @@ database.connect(async () => {
   liveTimetables = database.getCollection('live timetables')
 
   schedule([
-    [180, 240, 6], // Run it from 3am - 4am, taking into account website updating till ~3.30am
-    [240, 360, 6],
-    [360, 1199, 3],
-    [1200, 1380, 4],
-    [1380, 1439, 6]
+    [180, 240, 7], // Run it from 3am - 4am, taking into account website updating till ~3.30am
+    [240, 360, 7],
+    [360, 1199, 5],
+    [1200, 1380, 6],
+    [1380, 1439, 7]
   ], requestTimings, 'hcmt tracker', global.loggers.trackers.metro)
 })

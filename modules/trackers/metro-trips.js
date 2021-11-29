@@ -7,6 +7,7 @@ const schedule = require('./scheduler')
 const ptvAPI = require('../../ptv-api')
 const { getDayOfWeek } = require('../../public-holidays')
 const { singleSTYTrains } = require('../metro-trains/add-stony-point-data')
+const fixTripDestination = require('../metro-trains/fix-trip-destinations')
 
 const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 
@@ -124,17 +125,18 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
     })
   }
 
+  let firstStop = existingTrip.stopTimings[0]
   let lastStop = existingTrip.stopTimings[existingTrip.stopTimings.length - 1]
 
-  let updatedTimetable = {
+  let updatedTimetable = fixTripDestination({
     ...existingTrip,
-    trueDestination: lastStop.stopName,
+    origin: firstStop.stopName,
     destination: lastStop.stopName,
-    trueDestinationArrivalTime: lastStop.arrivalTime,
+    departureTime: firstStop.departureTime,
     destinationArrivalTime: lastStop.arrivalTime,
     cancelled: trip.stopsAvailable[0].cancelled,
     forming: trip.forming === '0' ? null : trip.forming
-  }
+  })
 
   return updatedTimetable
 }
