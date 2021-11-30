@@ -153,36 +153,60 @@ async function pickBestTrip(data, db) {
     return { trip: referenceTrip, tripStartTime, isLive, needsRedirect, needsRedirect }
   }
 
-  let originStopID = originStop.bays.filter(bay => bay.mode === 'metro train')[0].stopGTFSID
-  let originTime = tripStartTime.clone()
-  let expressCount
+  try {
+    if (referenceTrip && referenceTrip.runID) {
+      let trip = await getStoppingPattern({
+        ptvRunID: utils.getPTVRunID(referenceTrip.runID)
+      }, db)
 
-  if (referenceTrip) {
-    expressCount = 0
-    let stops = referenceTrip.stopTimings.map(stop => stop.stopName)
-    let flindersIndex = stops.indexOf('Flinders Street Railway Station')
+      if (!trip) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false, needsRedirect } : null
 
-    if (flindersIndex >= 0 && referenceTrip.direction === 'Down') {
-      let nonCCLStop = referenceTrip.stopTimings.slice(flindersIndex + 1).find(stop => !cityLoopStations.includes(stop.stopName))
+      let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
 
-      let flinders = referenceTrip.stopTimings[flindersIndex]
-      let stopAfterFlinders = referenceTrip.stopTimings[flindersIndex + 1]
-      if (nonCCLStop) stopAfterFlinders = nonCCLStop
-      if (stopAfterFlinders.stopName !== destinationStop.stopName) {
-        originStopID = stopAfterFlinders.stopGTFSID
-        originTime.add(stopAfterFlinders.departureTimeMinutes - flinders.departureTimeMinutes, 'minutes')
+      let needsRedirect = trip.trueOrigin !== originStop.stopName
+        || trip.trueDestination !== destinationStop.stopName
+        || trip.trueDepartureTime !== data.departureTime
+        || trip.trueDestinationArrivalTime !== data.destinationArrivalTime
+
+      let actualOriginStop = trip.stopTimings.find(stop => stop.stopName === trip.trueOrigin)
+
+      return {
+        trip,
+        tripStartTime: utils.parseTime(actualOriginStop.scheduledDepartureTime),
+        isLive,
+        needsRedirect
       }
     }
 
-    referenceTrip.stopTimings.forEach((stop, i) => {
-      if (i === 0) return
-      expressCount += stop.stopSequence - referenceTrip.stopTimings[i - 1].stopSequence -1
-    })
-  }
+    let originStopID = originStop.bays.filter(bay => bay.mode === 'metro train')[0].stopGTFSID
+    let originTime = tripStartTime.clone()
+    let expressCount
 
-  // get first stop after flinders, or if only 1 stop (nme shorts) then flinders itself
-  // should fix the dumb issue of trips sometimes showing as forming and sometimes as current with crazyburn
-  try {
+    if (referenceTrip) {
+      expressCount = 0
+      let stops = referenceTrip.stopTimings.map(stop => stop.stopName)
+      let flindersIndex = stops.indexOf('Flinders Street Railway Station')
+
+      if (flindersIndex >= 0 && referenceTrip.direction === 'Down') {
+        let nonCCLStop = referenceTrip.stopTimings.slice(flindersIndex + 1).find(stop => !cityLoopStations.includes(stop.stopName))
+
+        let flinders = referenceTrip.stopTimings[flindersIndex]
+        let stopAfterFlinders = referenceTrip.stopTimings[flindersIndex + 1]
+        if (nonCCLStop) stopAfterFlinders = nonCCLStop
+        if (stopAfterFlinders.stopName !== destinationStop.stopName) {
+          originStopID = stopAfterFlinders.stopGTFSID
+          originTime.add(stopAfterFlinders.departureTimeMinutes - flinders.departureTimeMinutes, 'minutes')
+        }
+      }
+
+      referenceTrip.stopTimings.forEach((stop, i) => {
+        if (i === 0) return
+        expressCount += stop.stopSequence - referenceTrip.stopTimings[i - 1].stopSequence -1
+      })
+    }
+
+    // get first stop after flinders, or if only 1 stop (nme shorts) then flinders itself
+    // should fix the dumb issue of trips sometimes showing as forming and sometimes as current with crazyburn
     let isoDeparture = originTime.toISOString()
     let {departures, runs} = await ptvAPI(`/v3/departures/route_type/0/stop/${originStopID}?gtfs=true&date_utc=${originTime.clone().add(-1, 'minutes').toISOString()}&max_results=6&expand=run&expand=stop&include_cancelled=true`)
 

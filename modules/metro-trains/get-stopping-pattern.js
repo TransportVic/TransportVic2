@@ -417,35 +417,75 @@ module.exports = async function (data, db) {
     lastStop.departureTimeMinutes = null
   }
 
-  let timetable = fixTripDestination({
-    mode: 'metro train',
-    routeName,
-    routeGTFSID,
-    routeNumber: null,
-    routeDetails: null,
-    runID,
-    ...(referenceTrip ? {
-      forming: referenceTrip.forming,
-      formedBy: referenceTrip.formedBy
-    } : {}),
-    operationDays: null,
-    vehicle: null,
-    stopTimings: stopTimings,
-    origin: firstStop.stopName,
-    departureTime: firstStop.departureTime,
-    destination: lastStop.stopName,
-    destinationArrivalTime: lastStop.arrivalTime,
-    type: 'timings',
-    updateTime: new Date(),
-    gtfsDirection,
-    direction,
-    cancelled,
-    suspensions: referenceTrip ? referenceTrip.suspension : null,
-    isRailReplacementBus: departures[0].flags.includes('RRB-RUN'),
-    notifyAlerts
-  })
+  let timetable
+  if (referenceTrip) {
+    let newStops = stopTimings.map(stop => stop.stopName)
+    let existingStops = referenceTrip.stopTimings.map(stop => stop.stopName)
 
-  timetable.operationDays = departureDay
+    let extraStops = newStops.filter(stop => !existingStops.includes(stop))
+    let cancelledStops = existingStops.filter(stop => !newStops.includes(stop))
+
+    let mergedTimings = referenceTrip.stopTimings.concat(extraStops).sort((a, b) => (a.departureTimeMinutes || a.arrivalTimeMinutes) - (b.departureTimeMinutes || b.arrivalTimeMinutes))
+    referenceTrip.stopTimings.forEach(stop => {
+      if (extraStops.includes(stop.stopName)) {
+        stop.additional = true
+      }
+      stop.cancelled = cancelledStops.includes(stop.stopName)
+
+      let updatedStop = stopTimings.find(newStop => stop.stopName === newStop.stopName)
+      if (updatedStop) {
+        if (updatedStop.estimatedDepartureTime && updatedStop.estimatedDepartureTime !== stop.estimatedDepartureTime) { // Only update if changed and exists
+          stop.estimatedDepartureTime = updatedStop.estimatedDepartureTime
+          stop.actualDepartureTimeMS = updatedStop.actualDepartureTimeMS
+        }
+
+        stop.platform = updatedStop.platform
+      }
+    })
+
+    let firstStop = referenceTrip.stopTimings[0]
+    let lastStop = referenceTrip.stopTimings[referenceTrip.stopTimings.length - 1]
+
+    timetable = fixTripDestination({
+      ...referenceTrip,
+      origin: firstStop.stopName,
+      destination: lastStop.stopName,
+      departureTime: firstStop.departureTime,
+      destinationArrivalTime: lastStop.arrivalTime,
+      cancelled,
+      type: 'timings',
+      updateTime: new Date(),
+      notifyAlerts
+    })
+  } else {
+    timetable = fixTripDestination({
+      mode: 'metro train',
+      routeName,
+      routeGTFSID,
+      routeNumber: null,
+      routeDetails: null,
+      runID,
+      ...(referenceTrip ? {
+        forming: referenceTrip.forming,
+        formedBy: referenceTrip.formedBy
+      } : {}),
+      operationDays: departureDay,
+      vehicle: null,
+      stopTimings: stopTimings,
+      origin: firstStop.stopName,
+      departureTime: firstStop.departureTime,
+      destination: lastStop.stopName,
+      destinationArrivalTime: lastStop.arrivalTime,
+      type: 'timings',
+      updateTime: new Date(),
+      gtfsDirection,
+      direction,
+      cancelled,
+      suspensions: referenceTrip ? referenceTrip.suspension : null,
+      isRailReplacementBus: departures[0].flags.includes('RRB-RUN'),
+      notifyAlerts
+    })
+  }
 
   if (timetable.routeName === 'Stony Point') {
     timetable = await addStonyPointData(timetable, originDepartureDay, db)

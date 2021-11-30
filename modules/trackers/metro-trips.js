@@ -122,16 +122,14 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
   if (trip.stopsAvailable.some(stop => stop.isAdditional)) {
     let removedStops = trip.stopsAvailable.filter(stop => !stop.isAdditional).map(stop => stop.stopName)
     existingTrip.stopTimings.forEach(stop => {
-      if (removedStops.includes(stop.stopName)) {
-        stop.cancelled = true
-      } else {
-        stop.cancelled = false
-      }
+      if (removedStops.includes(stop.stopName)) stop.cancelled = true
     })
   }
 
   let firstStop = existingTrip.stopTimings[0]
   let lastStop = existingTrip.stopTimings[existingTrip.stopTimings.length - 1]
+
+  let allStopsCancelled = trip.stopsAvailable.every(stop => stop.cancelled)
 
   let updatedTimetable = fixTripDestination({
     ...existingTrip,
@@ -139,7 +137,7 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
     destination: lastStop.stopName,
     departureTime: firstStop.departureTime,
     destinationArrivalTime: lastStop.arrivalTime,
-    cancelled: trip.stopsAvailable[0].cancelled,
+    cancelled: allStopsCancelled,
     forming: trip.forming === '0' ? null : trip.forming
   })
 
