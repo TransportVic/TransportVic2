@@ -1205,7 +1205,7 @@ async function getDepartures(station, db, filter, backwards, departureTime) {
     if (typeof filter === 'undefined') filter = true
     if (typeof departureTime === 'undefined') departureTime = utils.now()
 
-    return await utils.getData('metro-departures-new', stationName + backwards, async () => {
+    return await utils.getData('metro-departures-new', stationName + backwards + departureTime.toISOString(), async () => {
       let departures = await getDeparturesFromPTV(station, backwards, departureTime, db)
       let extraTrains = [], raceTrains = []
 
@@ -1230,7 +1230,7 @@ async function getDepartures(station, db, filter, backwards, departureTime) {
   } catch (e) {
     global.loggers.general.err('Error getting Metro departures', e)
     try {
-      return await utils.getData('metro-departures-new', stationName + backwards, async () => {
+      return await utils.getData('metro-departures-new', stationName + backwards + departureTime.toISOString(), async () => {
         let scheduled = await departureUtils.getScheduledMetroDepartures(station, db, departureTime, backwards)
         if (config.allowHCMT) return scheduled
         else return scheduled.filter(departure => !departure.trip.h)
