@@ -240,12 +240,15 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
 
   return (await async.map(departures.concat(lateDepartures), async trip => {
     let stopData = trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))
-    let departureTime = utils.getMomentFromMinutesPastMidnight(stopData.departureTimeMinutes, days[getID(trip)])
+    let scheduledDepartureTime = utils.getMomentFromMinutesPastMidnight(stopData.departureTimeMinutes, days[getID(trip)])
 
     let estimatedDepartureTime = stopData.estimatedDepartureTime || null
     if (estimatedDepartureTime) {
       estimatedDepartureTime = utils.parseTime(estimatedDepartureTime)
-      if (estimatedDepartureTime.diff(departureTime, 'minutes') < -1) return null
+      let timeDifference = estimatedDepartureTime.diff(time, 'minutes')
+
+      if (backwards && timeDifference > 1) return null
+      if (!backwards && timeDifference < -1) return null
     }
 
     let destination = trip.trueDestination.slice(0, -16)
@@ -267,18 +270,19 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
 
       if (staticTrip) {
         platform = staticTrip.stopTimings.find(stop => stop.stopName === station.stopName).platform + '?'
+        trip.runID = staticTrip.runID
       }
     }
 
     let firstStop = trip.stopTimings[0]
     let currentStop = trip.stopTimings.find(stop => stop.stopName === station.stopName)
     let minutesDifference = (currentStop.arrivalTimeMinutes || currentStop.departureTimeMinutes) - firstStop.departureTimeMinutes
-    let originDepartureTime = departureTime.clone().add(-minutesDifference, 'minutes')
+    let originDepartureTime = scheduledDepartureTime.clone().add(-minutesDifference, 'minutes')
 
     return {
-      scheduledDepartureTime: departureTime,
+      scheduledDepartureTime,
       estimatedDepartureTime,
-      actualDepartureTime: estimatedDepartureTime || departureTime,
+      actualDepartureTime: estimatedDepartureTime || scheduledDepartureTime,
       fleetNumber: null,
       runID: trip.runID || null,
       ptvRunID: null,
