@@ -106,21 +106,24 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
     }
   })
 
-  let existingLastStop = existingTrip.destination
-  let index = stopDescriptors.findIndex(stop => existingLastStop.includes(stop.station))
+  let extraStops = trip.stopsAvailable.filter(stop => {
+    return !existingTrip.stopTimings.some(existingStop => existingStop.stopName === stop.stopName)
+  })
 
-  if (index !== -1) {
-    let baseTrip = stopDescriptors.slice(index + 1).map(stop => parseRawData(stop, startOfDay))
-
-    let newStops = await mapStops(baseTrip, stopDescriptors, startOfDay)
-    existingTrip.stopTimings = existingTrip.stopTimings.concat(newStops)
+  if (extraStops.length) {
+    let mappedData = await mapStops(extraStops, stopDescriptors, startOfDay)
+    existingTrip.stopTimings = [...existingTrip.stopTimings, ...mappedData].sort((a, b) => (a.departureTimeMinutes || a.arrivalTimeMinutes) - (b.departureTimeMinutes || b.arrivalTimeMinutes))
   }
+
+  existingTrip.stopTimings = existingTrip.stopTimings.sort((a, b) => (a.departureTimeMinutes || a.arrivalTimeMinutes) - (b.departureTimeMinutes || b.arrivalTimeMinutes))
 
   if (trip.stopsAvailable.some(stop => stop.isAdditional)) {
     let removedStops = trip.stopsAvailable.filter(stop => !stop.isAdditional).map(stop => stop.stopName)
     existingTrip.stopTimings.forEach(stop => {
       if (removedStops.includes(stop.stopName)) {
         stop.cancelled = true
+      } else {
+        stop.cancelled = false
       }
     })
   }
@@ -261,7 +264,7 @@ function parseRawData(stop, startOfDay) {
     scheduledDepartureMinutes: Math.round(parseInt(stop.time_seconds) / 60),
     platform: stop.platform,
     cancelled: stop.status === 'C',
-    isAdditional: stop.status === 'A'
+    isAdditional: stop.status === 'A' || stop.status === 'U'
   }
 }
 
