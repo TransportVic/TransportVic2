@@ -439,6 +439,13 @@ module.exports = async function (data, db) {
           stop.actualDepartureTimeMS = updatedStop.actualDepartureTimeMS
         }
 
+        if (stop.departureTime !== updatedStop.departureTime) {
+          stop.arrivalTime = updatedStop.arrivalTime
+          stop.arrivalTimeMinutes = updatedStop.arrivalTimeMinutes
+          stop.departureTime = updatedStop.departureTime
+          stop.departureTimeMinutes = updatedStop.departureTimeMinutes
+        }
+
         stop.platform = updatedStop.platform
       }
     })

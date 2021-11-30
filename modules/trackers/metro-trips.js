@@ -355,7 +355,9 @@ async function loadTrips() {
       let fssIndex = trip.stopTimings.indexOf(tripFSSStop)
 
       if (formedByTrip && formedByTrip.trueDestination === 'Flinders Street Railway Station') {
-        let formedByLoopStops = formedByTrip.stopTimings.filter(stop => cityLoopStations.includes(stop.stopName.slice(0, -16)))
+        let formedByFSSIndex = formedByTrip.stopTimings.findIndex(stop => stop.stopName === 'Flinders Street Railway Station')
+
+        let formedByLoopStops = formedByTrip.stopTimings.filter((stop, i) => i < formedByFSSIndex && cityLoopStations.includes(stop.stopName.slice(0, -16)))
         let fssStop = formedByTrip.stopTimings[formedByTrip.stopTimings.length - 1]
 
         if (fssStop.arrivalTimeMinutes < 180) return // Don't want to accidentally create a messed up trip with the wrong departure day etc
