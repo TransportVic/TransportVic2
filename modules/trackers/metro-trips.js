@@ -112,10 +112,12 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
 
   if (extraStops.length) {
     let mappedData = await mapStops(extraStops, stopDescriptors, startOfDay)
+    mappedData.forEach(stop => {
+      stop.additional = true
+    })
+
     existingTrip.stopTimings = [...existingTrip.stopTimings, ...mappedData].sort((a, b) => (a.departureTimeMinutes || a.arrivalTimeMinutes) - (b.departureTimeMinutes || b.arrivalTimeMinutes))
   }
-
-  existingTrip.stopTimings = existingTrip.stopTimings.sort((a, b) => (a.departureTimeMinutes || a.arrivalTimeMinutes) - (b.departureTimeMinutes || b.arrivalTimeMinutes))
 
   if (trip.stopsAvailable.some(stop => stop.isAdditional)) {
     let removedStops = trip.stopsAvailable.filter(stop => !stop.isAdditional).map(stop => stop.stopName)
