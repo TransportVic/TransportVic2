@@ -245,7 +245,7 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
     let estimatedDepartureTime = stopData.estimatedDepartureTime || null
     if (estimatedDepartureTime) {
       estimatedDepartureTime = utils.parseTime(estimatedDepartureTime)
-      if (estimatedDepartureTime < timeMS - 1000 * 60) return null
+      if (estimatedDepartureTime.diff(departureTime, 'minutes') < -1) return null
     }
 
     let destination = trip.trueDestination.slice(0, -16)
