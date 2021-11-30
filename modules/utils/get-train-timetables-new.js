@@ -121,7 +121,7 @@ function getLiveDeparture(data, db) {
   return getDeparture(data, db, true)
 }
 
-async function getScheduledDepartures(station, db, mode, time, timeout) {
+async function getScheduledDepartures(station, db, mode, time, timeout, backwards=false) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
   let staticTimetables = db.getCollection('timetables')
@@ -157,6 +157,14 @@ async function getScheduledDepartures(station, db, mode, time, timeout) {
 
     let departureTimeMinutes = (minutesPastMidnight % 1440) + 1440 * i
 
+    let departureTime = backwards ? {
+      $gte: departureTimeMinutes - timeout,
+      $lte: departureTimeMinutes
+    } : {
+      $gte: departureTimeMinutes - 5,
+      $lte: departureTimeMinutes + timeout
+    }
+
     let query = {
       operationDays: utils.getYYYYMMDD(day),
       mode,
@@ -165,10 +173,7 @@ async function getScheduledDepartures(station, db, mode, time, timeout) {
           stopGTFSID: {
             $in: stopGTFSIDs
           },
-          departureTimeMinutes: {
-            $gte: departureTimeMinutes - 5,
-            $lte: departureTimeMinutes + timeout
-          }
+          departureTimeMinutes: departureTime
         }
       },
       trueDestination: {
@@ -201,6 +206,14 @@ async function getScheduledDepartures(station, db, mode, time, timeout) {
   let timeMS = +time
   let timeoutMS = timeout * 60 * 1000
 
+  let actualDepartureTimeMS = backwards ? {
+    $gte: timeMS - timeoutMS,
+    $lte: timeoutMS
+  } : {
+    $gte: timeMS - 1000 * 60,
+    $lte: timeMS + timeoutMS
+  }
+
   let lateDepartures = await liveTimetables.findDocuments({
     _id: {
       $not: {
@@ -213,10 +226,7 @@ async function getScheduledDepartures(station, db, mode, time, timeout) {
         stopGTFSID: {
           $in: stopGTFSIDs
         },
-        actualDepartureTimeMS: {
-          $gte: timeMS - 1000 * 60,
-          $lte: timeMS + timeoutMS
-        }
+        actualDepartureTimeMS
       }
     },
     trueDestination: {
@@ -326,8 +336,8 @@ let lineGroups = {
   'Flemington Racecourse': 'NOR',
 }
 
-async function getScheduledMetroDepartures(station, db, time) {
-  let departures = await getScheduledDepartures(station, db, 'metro train', time, 90)
+async function getScheduledMetroDepartures(station, db, time, backwards=false) {
+  let departures = await getScheduledDepartures(station, db, 'metro train', time, 90, backwards)
   let stopName = station.stopName.slice(0, -16)
   let stopCode = stopCodes[stopName]
   let isInCity = cityLoopStations.includes(stopName) || stopName === 'Flinders Street'
