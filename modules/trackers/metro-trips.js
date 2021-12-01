@@ -113,7 +113,15 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
   if (trip.stopsAvailable.some(stop => stop.isAdditional)) {
     let removedStops = trip.stopsAvailable.filter(stop => !stop.isAdditional).map(stop => stop.stopName)
     existingTrip.stopTimings.forEach(stop => {
-      if (removedStops.includes(stop.stopName)) stop.cancelled = true
+      // Do not 'uncancel' stops here as this API is not updated as frequently and does not capture all alterations
+      // PTV is typically more accurate so we rely on that for uncancelling stops
+      if (removedStops.includes(stop.stopName)) {
+        if (cityLoopStations.includes(stop.stopName)) {
+          // For city loop this can change as the loop running resumes but API has not yet updated
+          // Hence look if live times are available - if so the train would resume running by the loop and hence we can uncancel it
+          stop.cancelled = !stopDescriptors.some(stopDescriptor => stopDescriptor.station === stop.stopName.slice(0, -16))
+        } else stop.cancelled = true // Outside the loop stray times can affect this so be stricter with the running
+      }
     })
   }
 

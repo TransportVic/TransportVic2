@@ -430,6 +430,7 @@ module.exports = async function (data, db) {
       if (extraStops.includes(stop.stopName)) {
         stop.additional = true
       }
+
       stop.cancelled = cancelledStops.includes(stop.stopName)
 
       let updatedStop = stopTimings.find(newStop => stop.stopName === newStop.stopName)
