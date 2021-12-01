@@ -318,13 +318,11 @@ async function loadTrips() {
     return await getDepartures(line)
   })).reduce((a, e) => a.concat(e), [])
 
-  let forming = {}
   let formedBy = {}
 
   allTrips.forEach(trip => {
     let { runID, forming } = trip
     if (forming) {
-      forming[runID] = forming
       if (!formedBy[forming]) formedBy[forming] = []
       formedBy[forming].push(runID)
     }
@@ -338,6 +336,8 @@ async function loadTrips() {
       else formedByTrip = possibleFormedByTrips.find(trip => !trip.cancelled) || possibleFormedByTrips[0]
 
       trip.formedBy = formedByTrip.runID
+    } else {
+      trip.formedBy = null
     }
 
     if (trip.direction === 'Down' && trip.trueOrigin === 'Flinders Street Railway Station' && trip.formedBy) { // Prepend loop stops from previous trip
