@@ -61,48 +61,39 @@ async function getTimetable(id) {
 async function getStation(name) {
   return await utils.getData('metro-station-platform', name, async () => {
     let stopData = await dbStops.findDocument({ stopName: name })
-    if (!stopData) console.log(name)
     let metroBay = stopData.bays.find(bay => bay.mode === 'metro train')
 
     return metroBay
   }, 1000 * 60 * 60)
 }
 
-async function requestDepartureData() {
+async function requestDepartureData(now, startOfDay) {
   return await utils.getData('metro-live-departures', 'departures', async () => {
     let data = JSON.parse(await utils.request(urls.hcmt, { timeout: 15000 }))
+
     return data.entries.map(stop => {
       if (stop.estimated_arrival_time_seconds < 10800) stop.estimated_arrival_time_seconds += secondsInDay
       if (stop.estimated_departure_time_seconds < 10800) stop.estimated_departure_time_seconds += secondsInDay
 
+      stop.estimatedDepartureTime = startOfDay.clone().add(stop.estimated_departure_time_seconds, 'seconds')
+
+      // Some of these stops appear to track with the previous day's (?) times
+      // Could create a sudden jump and show incorrect data, happens around midnight
+      if (stop.estimated_departure_time_seconds > secondsInDay && stop.estimatedDepartureTime.diff(now, 'minutes') > 55) return null
+
       return stop
-    })
+    }).filter(Boolean)
   }, 1000 * 60 * 1)
 }
 
 async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
   existingTrip.stopTimings.forEach(stop => {
-    let updatedData = stopDescriptors.find(newStop => stop.stopName.includes(newStop.station))
+    let updatedData = stopDescriptors.find(stopDescriptor => stopDescriptor.station === stop.stopName.slice(0, -16))
 
     if (updatedData) {
-      let minutes = updatedData.estimated_departure_time_seconds / 60
-      stop.estimatedDepartureTime = utils.getMomentFromMinutesPastMidnight(minutes, startOfDay)
+      stop.estimatedDepartureTime = updatedData.estimatedDepartureTime.toISOString()
+      stop.actualDepartureTimeMS = +updatedData.estimatedDepartureTime
       stop.platform = updatedData.estimated_platform
-    }
-  })
-
-  existingTrip.stopTimings.forEach(stop => {
-    if (stop.estimatedDepartureTime) {
-      if (stop.actualDepartureTimeMS < stop.scheduledDepartureTime) {
-        stop.estimatedDepartureTime = stop.scheduledDepartureTime.clone() // Disallow being early
-      }
-    }
-  })
-
-  existingTrip.stopTimings.forEach(stop => {
-    if (stop.estimatedDepartureTime && stop.estimatedDepartureTime.toISOString) { // If it is an existing value it is already a string
-      stop.actualDepartureTimeMS = +stop.estimatedDepartureTime
-      stop.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
     }
   })
 
@@ -149,12 +140,11 @@ async function mapStops(stops, stopDescriptors, startOfDay) {
     let metroBay = await getStation(stop.stopName)
 
     let scheduledTime = utils.formatHHMM(stop.scheduledDepartureTime)
-    let departureData = stopDescriptors.find(stopDescriptor => stop.stopName.startsWith(stopDescriptor.station))
+    let departureData = stopDescriptors.find(stopDescriptor => stopDescriptor.station === stop.stopName.slice(0, -16))
     let estimatedDepartureTime, platform = stop.platform
 
     if (departureData) {
-      let minutes = departureData.estimated_departure_time_seconds / 60
-      estimatedDepartureTime = utils.getMomentFromMinutesPastMidnight(minutes, startOfDay)
+      estimatedDepartureTime = departureData.estimatedDepartureTime
       platform = departureData.estimated_platform
     }
 
@@ -294,7 +284,7 @@ async function getDepartures(routeName) {
   let dayOfWeek = await getDayOfWeek(now)
   let metroDay = startOfDay.format('YYYY-MM-DD')
 
-  let stopDepartures = await requestDepartureData()
+  let stopDepartures = await requestDepartureData(now, startOfDay)
 
   let tripsToday = timetable.filter(trip => {
     return trip.date === metroDay
