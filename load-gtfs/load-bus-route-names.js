@@ -77,13 +77,14 @@ database.connect({
       }
 
       let routeGTFSID = (await async.find(possibleRouteGTFSIDs, async possibleRouteGTFSID => {
-        let operationDays = await gtfsTimetables.distinct('operationDays', {
+        let operationDays = (await gtfsTimetables.distinct('operationDays', {
           mode: 'bus',
           routeGTFSID: possibleRouteGTFSID
-        })
+        })).map(d => parseInt(d)).sort((a, b) => a - b).map(d => d.toString())
 
         if (type === 'from' && endpointDates.includes(operationDays[0])) return true
         if (type === 'until' && endpointDates.includes(operationDays[operationDays.length - 1])) return true
+
         return false
       }))
 
