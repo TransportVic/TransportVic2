@@ -327,6 +327,7 @@ async function loadTrips() {
   })).reduce((a, e) => a.concat(e), [])
 
   let formedBy = {}
+  let cancelledTrains = []
 
   allTrips.forEach(trip => {
     let { runID, forming } = trip
@@ -334,6 +335,8 @@ async function loadTrips() {
       if (!formedBy[forming]) formedBy[forming] = []
       formedBy[forming].push(runID)
     }
+
+    if (trip.cancelled) cancelledTrains.push(trip.runID)
   })
 
   allTrips.forEach(trip => {
@@ -382,6 +385,8 @@ async function loadTrips() {
     } else {
       // Don't really need to bother with this as it is not as important
     }
+
+    if (!trip.cancelled && trip.formedBy && trip.forming && cancelledTrains.includes(trip.formedBy) && cancelledTrains.includes(trip.forming)) trip.cancelled = true
   })
 
   let bulkOperations = []
