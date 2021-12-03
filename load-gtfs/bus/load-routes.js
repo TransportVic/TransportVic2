@@ -8,7 +8,6 @@ const { createServiceLookup } = require('../utils/datamart-utils')
 const utils = require('../../utils')
 const datamartModes = require('../datamart-modes')
 const operatorOverrides = require('../../additional-data/operator-overrides')
-const ptvAPI = require('../../ptv-api')
 const loopDirections = require('../../additional-data/loop-direction')
 const gtfsUtils = require('../../gtfs-utils')
 

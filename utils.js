@@ -549,7 +549,8 @@ module.exports = {
     try {
       data = await noMatch()
     } catch (e) {
-      global.loggers.general.err('Getting data for', lock, 'for key', key, 'failed', e)
+      if (global.loggers) global.loggers.general.err('Getting data for', lock, 'for key', key, 'failed', e)
+      else console.error('Getting data for', lock, 'for key', key, 'failed', e)
       locks[lock][key].emit('fail', e)
       delete locks[lock][key]
       throw e

@@ -35,7 +35,7 @@ database.connect({
     })
   }
 
-  let ptvRoutes = (await ptvAPI('/v3/routes?route_types=2')).routes
+  let ptvRoutes = (await ptvAPI('/v3/routes?route_types=2', 6, 12000)).routes
   await async.forEach(ptvRoutes, async route => {
     if (!route.route_number) return
     let routeName = route.route_name.replace(/effective /i, '').toLowerCase()

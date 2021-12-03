@@ -78,10 +78,10 @@ async function makeRequest(url, maxRetries=2, timeout=2400) {
   }
 }
 
-async function getPTVKey(baseURL='https://ptv.vic.gov.au') {
+async function getPTVKey(baseURL='https://ptv.vic.gov.au', timeout=6000) {
   return await utils.getData('ptv-key', baseURL, async () => {
     let ptvData = await utils.request(baseURL, {
-      timeout: 6000
+      timeout
     })
 
     let $ = cheerio.load(ptvData)
