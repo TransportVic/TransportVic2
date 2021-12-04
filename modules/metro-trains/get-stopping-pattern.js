@@ -301,7 +301,7 @@ module.exports = async function (data, db) {
 
   let departureDay = utils.getYYYYMMDD(originDepartureDay)
 
-  let tripKey = runID ? {
+  let tripKey = {
     mode: 'metro train',
     operationDays: departureDay,
     runID
