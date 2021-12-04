@@ -301,7 +301,7 @@ module.exports = async function (data, db) {
 
   let departureDay = utils.getYYYYMMDD(originDepartureDay)
 
-  let tripKey = {
+  let tripKey = runID ? {
     mode: 'metro train',
     operationDays: departureDay,
     runID
@@ -513,6 +513,17 @@ module.exports = async function (data, db) {
   timetable.vehicle = vehicle
 
   timetable = extendMetroEstimation(timetable)
+
+  if (!runID) {
+    tripKey = {
+      mode: 'metro train',
+      operationDays: departureDay,
+      origin: timetable.origin,
+      destination: timetable.destination,
+      departureTime: timetable.departureTime,
+      destinationArrivalTime: timetable.destinationArrivalTime
+    }
+  }
 
   delete timetable._id
   await liveTimetables.replaceDocument(tripKey, timetable, {
