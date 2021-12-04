@@ -514,6 +514,7 @@ module.exports = async function (data, db) {
 
   timetable = extendMetroEstimation(timetable)
 
+  delete timetable._id
   await liveTimetables.replaceDocument(tripKey, timetable, {
     upsert: true
   })
