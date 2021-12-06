@@ -95,6 +95,14 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
       stop.actualDepartureTimeMS = +updatedData.estimatedDepartureTime
       stop.platform = updatedData.estimated_platform
     }
+
+    if (stop.stopName === 'Flinders Street Railway Station' && existingTrip.direction === 'Up') {
+      let fssStop = trip.stopsAvailable.find(scheduledStop => scheduledStop.stopName === stop.stopName)
+      if (fssStop) {
+        stop.arrivalTimeMinutes = fssStop.scheduledDepartureMinutes
+        stop.arrivalTime = utils.getHHMMFromMinutesPastMidnight(stop.arrivalTimeMinutes)
+      }
+    }
   })
 
   let extraStops = trip.stopsAvailable.filter(stop => {
