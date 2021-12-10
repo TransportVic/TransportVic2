@@ -157,7 +157,7 @@ async function getDeparturesFromPTV(stop, db, time) {
         routeGTFSID: trip.routeGTFSID
       }))[0] // Always use the routeGTFSID from the trip as we could have multiple matches and not know which is correct
 
-      let hasVehicleData = run.vehicle_descriptor
+      let hasVehicleData = run.vehicle_descriptor && run.vehicle_descriptor.id
       let vehicleDescriptor = hasVehicleData ? run.vehicle_descriptor : {}
 
       let busRego
