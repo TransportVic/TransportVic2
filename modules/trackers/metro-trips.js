@@ -344,9 +344,13 @@ function sortStops(trip) {
         stop
       }
     }).sort((a, b) => a.index - b.index).map(stop => stop.stop)
-    trip.stopTimings = [
+
+    trip.stopTimings = trip.direction === 'Down' ? [
       ...tripCityStops,
       ...sortedStops
+    ] : [ // Up
+      ...sortedStops,
+      ...tripCityStops
     ]
   }
 
