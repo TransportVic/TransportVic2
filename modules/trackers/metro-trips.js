@@ -9,6 +9,7 @@ const { getDayOfWeek } = require('../../public-holidays')
 const { singleSTYTrains } = require('../metro-trains/add-stony-point-data')
 const fixTripDestination = require('../metro-trains/fix-trip-destinations')
 
+const routeStops = require('../../additional-data/metro-data/metro-routes')
 const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
@@ -20,6 +21,7 @@ let secondsInDay = 1440 * 60
 
 let undergroundLoopStations = ['Parliament', 'Flagstaff', 'Melbourne Central']
 let cityLoopStations = ['Southern Cross', ...undergroundLoopStations]
+let cityStations = [...cityLoopStations, 'Flinders Street']
 
 let routes = {
   'Alamein': '82',
@@ -328,11 +330,34 @@ async function getDepartures(routeName) {
   return routeTrips
 }
 
+function sortStops(trip) {
+  if (routeStops[trip.routeName]) {
+    let tripRouteStops = routeStops[trip.routeName].slice(0)
+    if (trip.direction === 'Down') tripRouteStops.reverse()
+    let tripCityStops = trip.stopTimings.filter(stop => {
+      return cityStations.includes(stop.stopName.slice(0, -16))
+    })
+    let nonCityStops = trip.stopTimings.filter(stop => !tripCityStops.includes(stop))
+    let sortedStops = nonCityStops.map(stop => {
+      return {
+        index: tripRouteStops.indexOf(stop.stopName.slice(0, -16)),
+        stop
+      }
+    }).sort((a, b) => a.index - b.index).map(stop => stop.stop)
+    trip.stopTimings = [
+      ...tripCityStops,
+      ...sortedStops
+    ]
+  }
+
+  return trip
+}
+
 async function loadTrips() {
   let allLines = Object.keys(routes)
   let allTrips = (await async.mapLimit(allLines, 5, async line => {
     return await getDepartures(line)
-  })).reduce((a, e) => a.concat(e), [])
+  })).reduce((a, e) => a.concat(e), []).map(sortStops)
 
   let formedBy = {}
   let cancelledTrains = []
