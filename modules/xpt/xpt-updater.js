@@ -66,7 +66,7 @@ async function fetchAndUpdate() {
 
     async function parseStopTimeUpdates(stopTimeUpdates) {
       await async.forEach(stopTimeUpdates, async stop => {
-        let stopGTFSID = parseInt(stop.stop_id.replace('P', '0')) + 140000000
+        let stopGTFSID = 'XPT' + stop.stop_id
         let stopData = await stops.findDocument({
           'bays.stopGTFSID': stopGTFSID
         })
