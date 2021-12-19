@@ -49,9 +49,13 @@ function downloadGTFS(done) {
             else fs.rmdirSync(file.path)
           } catch (err) {}
         }
+        console.log('Deleted existing files')
 
         let gtfsFilePath = path.join(__dirname, 'gtfs', 'gtfs.zip')
         fs.writeFile(gtfsFilePath, data, () => {
+          console.log('Wrote GTFS Zip')
+          data = null
+
           let zip = new AdmZip(gtfsFilePath)
           zip.extractAllTo(path.join(__dirname, 'gtfs'), true)
           for (let i = 1; i <= 11; i++) {
@@ -60,6 +64,7 @@ function downloadGTFS(done) {
                 let unzipPath = path.join(__dirname, 'gtfs', i.toString())
                 let zip = new AdmZip(path.join(unzipPath, 'google_transit.zip'))
                 zip.extractAllTo(unzipPath, true)
+                console.log('Unzipped GTFS Pack', i)
               } catch (err) {
                 console.log('Failed to unzip ' + i)
               }
