@@ -88,7 +88,7 @@ database.connect({
         return false
       }))
 
-      if (!routeGTFSID) console.log('Could not match route', route)
+      if (!routeGTFSID && dateMoment >= now) console.log('Could not match route', route)
 
       // if (dateMoment >= now) {
         operationDateCount++
