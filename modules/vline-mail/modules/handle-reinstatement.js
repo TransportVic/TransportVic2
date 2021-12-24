@@ -15,7 +15,7 @@ async function setServiceAsReinstated(db, departureTime, origin, destination) {
 
   if (trip) {
     global.loggers.mail.info(`Marking ${trip.departureTime} ${origin} - ${destination} train as reinstated.`)
-    await discordUpdate(`The ${trip.departureTime} ${origin} - ${destination} service as been reinstated today.`)
+    await discordUpdate(`The ${trip.departureTime} ${origin} - ${destination} service has been reinstated today.`)
 
     delete trip.cancelled
     delete trip.type
