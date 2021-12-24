@@ -20,6 +20,7 @@ let interval = setInterval(() => {
     else console.log('Stopping long request timeout')
   }
 }, 3000)
+interval.unref()
 
 String.prototype.format = (function (i, safe, arg) {
   function format () {
