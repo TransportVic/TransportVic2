@@ -11,11 +11,11 @@ module.exports = {
   "6.0": "1", // Moreland
   "6.1": "0", // Glen Iris
 
-  "11.0": "1", // West Preston
-  "11.1": "0", // Docklands
+  "11.0": "0", // West Preston
+  "11.1": "1", // Docklands
 
-  "12.0": "0", // Vic Gardens
-  "12.1": "1", // St Kilda
+  "12.0": "1", // Vic Gardens
+  "12.1": "0", // St Kilda
 
   "16.0": "0", // Melb Uni
   "16.1": "1", // Kew
@@ -47,8 +47,8 @@ module.exports = {
   "70.1": "1", // Docklands
   "70.0": "0", // Wattle Park
 
-  "72.0": "0", // Melb Uni
-  "72.1": "1", // Camberwell
+  "72.0": "1", // Melb Uni
+  "72.1": "0", // Camberwell
 
   "75.0": "1", // Vermont Sth
   "75.1": "0", // Docklands
@@ -56,8 +56,8 @@ module.exports = {
   "78.0": "0", // North Richmond
   "78.1": "1", // Balaclava
 
-  "82.0": "1", // Footscray
-  "82.1": "0", // Moonee Ponds
+  "82.0": "0", // Footscray
+  "82.1": "1", // Moonee Ponds
 
   "86.0": "0", // Bundoora
   "86.1": "1", // Docklands
@@ -65,6 +65,6 @@ module.exports = {
   "96.0": "0", // East Brunswick
   "96.1": "1", // St Kilda Beach
 
-  "109.0": "1", // Box Hill
-  "109.1": "0", // Port Melb
+  "109.0": "0", // Box Hill
+  "109.1": "1", // Port Melb
 }

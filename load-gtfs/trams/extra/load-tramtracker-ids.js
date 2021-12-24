@@ -77,9 +77,12 @@ database.connect({}, async () => {
           stopNumbers[tramTrackerID] = stopNumber
 
           if (!stopDirections[tramTrackerID]) stopDirections[tramTrackerID] = []
+          let serviceToUse = service
+          if (service === '3a') serviceToUse = '3'
+
           stopDirections[tramTrackerID].push({
-            service,
-            gtfsDirection: directions[`${service}.${direction}`]
+            service: serviceToUse,
+            gtfsDirection: directions[`${serviceToUse}.${direction}`]
           })
         })
 
