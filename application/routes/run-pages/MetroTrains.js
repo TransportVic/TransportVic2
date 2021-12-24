@@ -156,7 +156,9 @@ async function pickBestTrip(data, db) {
   try {
     if (referenceTrip && referenceTrip.runID) {
       let trip = await getStoppingPattern({
-        ptvRunID: utils.getPTVRunID(referenceTrip.runID)
+        routeName: referenceTrip.routeName,
+        ptvRunID: utils.getPTVRunID(referenceTrip.runID),
+        time: tripStartTime.toISOString()
       }, db)
 
       if (!trip) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false, needsRedirect } : null
@@ -208,7 +210,7 @@ async function pickBestTrip(data, db) {
     // get first stop after flinders, or if only 1 stop (nme shorts) then flinders itself
     // should fix the dumb issue of trips sometimes showing as forming and sometimes as current with crazyburn
     let isoDeparture = originTime.toISOString()
-    let {departures, runs} = await ptvAPI(`/v3/departures/route_type/0/stop/${originStopID}?gtfs=true&date_utc=${originTime.clone().add(-1, 'minutes').toISOString()}&max_results=6&expand=run&expand=stop&include_cancelled=true`)
+    let {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/0/stop/${originStopID}?gtfs=true&date_utc=${originTime.clone().add(-1, 'minutes').toISOString()}&max_results=6&expand=run&expand=route&expand=stop&include_cancelled=true`)
 
     let isUp = referenceTrip ? referenceTrip.direction === 'Up' : null
     let possibleDepartures = departures.filter(departure => {
@@ -275,8 +277,9 @@ async function pickBestTrip(data, db) {
     let isRailReplacementBus = departureToUse.flags.includes('RRB-RUN')
 
     let trip = await getStoppingPattern({
+      routeName: routes[departureToUse.route_id].route_name, // No need to bother with RCE, that probably wouldn't track anyway
       ptvRunID,
-      time: departureTime
+      time: tripStartTime.toISOString(),
     }, db)
 
     // In case the trip disappears off PTV we still have our local copy

@@ -38,9 +38,9 @@ async function getDepartures(stop) {
   await async.forEachSeries(requestLive, async departure => {
     if (departure.ptvRunID) { // Remember local departures do not have a run id
       await getStoppingPattern({
+        routeName: departure.trip.routeName,
         ptvRunID: departure.ptvRunID,
-        time: departure.originDepartureTime.toISOString(),
-        referenceTrip: departure.trip
+        time: departure.originDepartureTime.toISOString()
       }, database)
     }
   })

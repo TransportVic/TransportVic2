@@ -653,6 +653,7 @@ async function mapTrain(train, metroPlatform, notifyData, db) {
 
   if (!trip) {
     trip = await getStoppingPattern({
+      routeName,
       ptvRunID: train.ptvRunID,
       time: train.scheduledDepartureTime.toISOString()
     }, db)
@@ -667,6 +668,7 @@ async function mapTrain(train, metroPlatform, notifyData, db) {
 
   if (relevantAlerts.some(alert => !tripAlerts.includes(alert.alertID))) {
     trip = await getStoppingPattern({
+      routeName,
       ptvRunID: train.ptvRunID,
       time: train.scheduledDepartureTime.toISOString()
     }, db)

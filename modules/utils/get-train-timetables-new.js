@@ -57,8 +57,8 @@ async function getDeparture(data, db, live) {
   let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(departureTime)
 
   let iterations = 0
-  // Only check past day if 1.5hr before midnight or 3hr after midnight (for NN)
-  if (Math.abs(1440 - scheduledDepartureTimeMinutes) < 90 || scheduledDepartureTimeMinutes < 180) iterations = 1
+  // Only check past day if 1.5hr before midnight or 5hr after midnight (for NN to capture next day trip)
+  if (Math.abs(1440 - scheduledDepartureTimeMinutes) < 90 || scheduledDepartureTimeMinutes < 300) iterations = 1
 
   for (let i = 0; i <= iterations; i++) {
     let day = departureTime.clone().add(-i, 'days')
@@ -279,6 +279,9 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
     let minutesDifference = (currentStop.arrivalTimeMinutes || currentStop.departureTimeMinutes) - firstStop.departureTimeMinutes
     let originDepartureTime = scheduledDepartureTime.clone().add(-minutesDifference, 'minutes')
 
+    let tripDeparturePTDay = tripDepartureDay.clone()
+    if (firstStop.departureTimeMinutes < 180) tripDeparturePTDay.add(-1, 'day')
+
     return {
       scheduledDepartureTime,
       estimatedDepartureTime,
@@ -300,7 +303,7 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
       suspension: null,
       isSkippingLoop: null,
       originDepartureTime,
-      trueDepartureDay: utils.getYYYYMMDD(tripDepartureDay)
+      trueDepartureDay: utils.getYYYYMMDD(tripDeparturePTDay)
     }
   })).filter(Boolean).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }

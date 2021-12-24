@@ -10,6 +10,11 @@ const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 let borderStops = ['Richmond', 'Jolimont', 'North Melbourne', 'Flinders Street']
+let liveTrackingRoutes = [
+  'Mernda', 'hurstbridge',
+  'Alamein', 'Lilydale', 'Belgrave', 'Glen Waverley',
+  'Craigieburn', 'Sunbury'
+]
 
 function extendMetroEstimation(trip) {
   let checkStop
@@ -170,6 +175,7 @@ async function saveLocation(consist, location, metroLocations) {
 
 module.exports = async function (data, db) {
   let { ptvRunID, time } = data
+  let givenRouteName = data.routeName
 
   let stopsCollection = db.getCollection('stops')
   let liveTimetables = db.getCollection('live timetables')
@@ -179,13 +185,27 @@ module.exports = async function (data, db) {
   let metroLocations = db.getCollection('metro locations')
 
   let url = `/v3/pattern/run/${ptvRunID}/route_type/0?expand=stop&expand=Run&expand=Route&expand=Direction&expand=VehicleDescriptor&expand=VehiclePosition`
+
   if (time) {
     let startTime = utils.parseTime(time)
+    let actualDepartureDay = utils.getYYYYMMDD(startTime)
     let now = utils.now()
-    if (utils.getMinutesPastMidnight(startTime) < 180) { // trip starts in the 3am overlap, we want it from the 'previous' day
-      url += `&date_utc=${startTime.add(-3.5, 'hours').toISOString()}`
-    } else if (utils.getMinutesPastMidnight(now) < 180) { // trip starts before the 3am overlap but it is currently 1-3am. hence requesting for previous day's times
-      url += `&date_utc=${now.add(-3.5, 'hours').toISOString()}`
+    let dayToday = utils.getYYYYMMDDNow()
+    let tripStartMinutes = utils.getMinutesPastMidnight(startTime)
+    let minutesPastMidnightNow = utils.getMinutesPastMidnight(now)
+
+    if (tripStartMinutes < 180) { // trip starts in the 3am overlap, we want it from the 'previous' day
+      if (givenRouteName && liveTrackingRoutes.includes(givenRouteName)) {
+        url += `&date_utc=${time}`
+      } else {
+        url += `&date_utc=${startTime.add(-3.5, 'hours').toISOString()}`
+      }
+    } else if (minutesPastMidnightNow < 180) { // trip starts before the 3am overlap but it is currently 1-3am. hence requesting for previous day's times
+      if (actualDepartureDay === dayToday) { // Its past 3am (next transport day)
+        url += `&date_utc=${time}`
+      } else { // Its yesterday
+        url += `&date_utc=${now.add(-3.5, 'hours').toISOString()}`
+      }
     } else { // sane trip, request with time now
       url += `&date_utc=${now.toISOString()}`
     }
