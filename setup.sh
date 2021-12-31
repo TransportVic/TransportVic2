@@ -27,16 +27,19 @@ sudo pip install dns-lexicon[namecheap]
 sudo chmod a+rw -R /var/log/mongodb
 sudo ln "$(readlink -f `command -v node`)" /usr/bin/node
 sudo setcap 'cap_net_bind_service=+ep' /usr/bin/node
-sudo chmod a+r -R /etc/letsencrypt
 
 sudo groupadd certbot
 sudo usermod -a -G certbot ec2-user
 sudo usermod -a -G certbot root
 
-sudo chgrp certbot /etc/letsencrypt/live -R
-sudo chgrp certbot /etc/letsencrypt/archive -R
-sudo chgrp certbot /var/logs/letsencrypt -R
+sudo chgrp certbot /etc/letsencrypt -R
+sudo chgrp certbot /var/log/letsencrypt -R
+sudo chgrp certbot /var/lib/letsencrypt -R
 
-sudo chmod g=rwx,o= /etc/letsencrypt/live
-sudo chmod g=rwx,o= /etc/letsencrypt/archive
-sudo chmod g=rwx,o= /var/logs/letsencrypt
+sudo chmod g=rwx,o= -R /etc/letsencrypt
+sudo chmod g=rwx,o= -R /var/log/letsencrypt
+sudo chmod g=rwx,o= -R /var/lib/letsencrypt
+
+sudo chmod a+r -R /etc/letsencrypt
+sudo chmod a+r -R /var/log/letsencrypt
+sudo chmod a+r -R /var/lib/letsencrypt

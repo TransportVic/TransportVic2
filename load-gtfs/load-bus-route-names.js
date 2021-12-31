@@ -68,11 +68,15 @@ database.connect({
       let dayOfWeek = utils.getDayOfWeek(dateMoment)
       if (dayOfWeek === 'Sat' || dayOfWeek === 'Sun') {
         if (type === 'until') { // If until date is a sunday match the saturday and friday (or thursday)
+          endpointDates.push(utils.getYYYYMMDD(dateMoment.clone().add(1, 'day'))) // Add one day grace period for slight errors
+
           endpointDates.push(utils.getYYYYMMDD(dateMoment.clone().add(-1, 'day')))
           endpointDates.push(utils.getYYYYMMDD(dateMoment.clone().add(-2, 'day')))
         } else { // If from date is a saturday match the sunday and monday (unlikely to have Sunday only though)
           endpointDates.push(utils.getYYYYMMDD(dateMoment.clone().add(1, 'day')))
           endpointDates.push(utils.getYYYYMMDD(dateMoment.clone().add(2, 'day')))
+
+          endpointDates.push(utils.getYYYYMMDD(dateMoment.clone().add(-1, 'day'))) // Also a grace period
         }
       }
 
