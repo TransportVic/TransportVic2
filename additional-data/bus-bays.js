@@ -495,5 +495,12 @@ module.exports = {
   21028: "Bay 2",
   21026: "Bay 3",
   21027: "Bay 4",
-  38064: "Bay 5"
+  38064: "Bay 5",
+
+  // Morwell Bus Interchange
+  32029: "Bay 1",
+  32028: "Bay 2",
+  32027: "Bay 3",
+  32025: "Bay 4",
+  32026: "Bay 5"
 }
