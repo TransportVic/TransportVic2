@@ -72,6 +72,7 @@ async function lookForShunts(allAlerts) {
 
     if ((!tripAlerts.includes(alert.alertID) || mismatch) && (liveTimetable ? !liveTimetable.h : true)) {
       liveTimetable = await getStoppingPattern({
+        routeName: liveTimetable.routeName,
         ptvRunID: utils.getPTVRunID(alert.runID),
         time: utils.now()
       }, database)

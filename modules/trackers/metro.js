@@ -38,9 +38,9 @@ async function getDepartures(stop) {
   await async.forEachSeries(requestLive, async departure => {
     if (departure.ptvRunID) { // Remember local departures do not have a run id
       await getStoppingPattern({
+        routeName: departure.trip.routeName,
         ptvRunID: departure.ptvRunID,
-        time: departure.originDepartureTime.toISOString(),
-        referenceTrip: departure.trip
+        time: departure.originDepartureTime.toISOString()
       }, database)
     }
   })
@@ -98,9 +98,9 @@ database.connect(async () => {
   }
 
   schedule([
-    [0, 60, 0.4],
+    [0, 60, 0.35],
     [61, 239, 0.3],
     [240, 1199, 0.25],
-    [1200, 1440, 0.4],
+    [1200, 1440, 0.3],
   ], requestTimings, 'metro tracker', global.loggers.trackers.metro)
 })
