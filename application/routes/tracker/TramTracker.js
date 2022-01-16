@@ -307,4 +307,42 @@ router.get('/highlights', async (req, res) => {
   })
 })
 
+router.get('/full-list', async (req, res) => {
+  let {db} = res
+  let tramTrips = db.getCollection('tram trips')
+
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let today = utils.getYYYYMMDDNow()
+
+  let {date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  let allTrams = knownTrams.map(tram => ({
+    tram: tram,
+    fleetNumber: `${tramFleet.getModel(tram)}.${tram}`
+  }))
+
+  let rawTripsToday = await tramTrips.findDocuments({
+    date
+  }).sort({ routeNumber: 1 }).toArray()
+
+  let trams = {}
+  rawTripsToday.forEach(trip => {
+    let fleetNumber = `${tramFleet.getModel(trip.tram)}.${trip.tram}`
+
+    if (!trams[fleetNumber]) trams[fleetNumber] = []
+    if (!trams[fleetNumber].includes(trip.routeNumber)) {
+      trams[fleetNumber].push(trip.routeNumber)
+    }
+  })
+
+  return res.render('tracker/tram/full-list', {
+    trams,
+    allTrams,
+    date: utils.parseTime(date, 'YYYYMMDD')
+  })
+})
+
 module.exports = router
