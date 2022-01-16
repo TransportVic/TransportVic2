@@ -260,7 +260,8 @@ router.get('/operator-list', async (req, res) => {
       buses: {},
       allBuses: [],
       operator: '',
-      date: utils.parseTime(date, 'YYYYMMDD')
+      date: utils.parseTime(date, 'YYYYMMDD'),
+      rawDate: date
     })
   }
 
@@ -289,7 +290,8 @@ router.get('/operator-list', async (req, res) => {
     buses,
     allBuses,
     operator,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    rawDate: date
   })
 })
 

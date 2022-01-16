@@ -341,7 +341,8 @@ router.get('/full-list', async (req, res) => {
   return res.render('tracker/tram/full-list', {
     trams,
     allTrams,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    rawDate: date
   })
 })
 
