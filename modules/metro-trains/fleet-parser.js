@@ -1,5 +1,7 @@
 const metroConsists = require('../../additional-data/metro-tracker/metro-consists')
 
+let tait = ['381M', '208T', '341T', '230D', '317M']
+
 function findConsist(consist, runID) {
   let finalConsist = []
   if (!consist) return null
@@ -14,7 +16,9 @@ function findConsist(consist, runID) {
 
   let carriages = consist.split('-')
 
-  if (carriages[0].match(/9\d{3}M/)) {
+  if (consist.includes('D')) { // Tait
+    carriages = tait.slice(0)
+  } else if (carriages[0].match(/9\d{3}M/)) { // HCMT
     let leadingNumber = carriages[0].slice(0, 4)
     let hcmtSet = metroConsists.find(set => set.includes(leadingNumber))
 
