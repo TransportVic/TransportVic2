@@ -38,7 +38,7 @@ function walk(dir, done) {
 function downloadGTFS(done) {
   utils.request(urls.gtfsFeed, {
     raw: true,
-    timeout: 60 * 1000
+    timeout: 60 * 1000 * 5
   }).then(data => {
     walk(path.join(__dirname, 'gtfs'), (err, files) => {
       walk(path.join(__dirname, 'load-gtfs', 'spliced-gtfs-stuff'), (err, spliced) => {
@@ -76,6 +76,7 @@ function downloadGTFS(done) {
     })
   }).catch(err => {
     console.error('Failed to download GTFS, exiting')
+    console.error(err)
     done(1)
   })
 }

@@ -12,11 +12,21 @@ let trainType = {
 
 utils.request(urls.ptDatabaseMetro).then(data => {
   let parsed = JSON.parse(data)
-  let consists = parsed.map(train => [train.mCarA, train.tCar, train.mCarB])
-  let types = parsed.map(train => ({
-    leadingCar: train.mCarA,
-    type: trainType[train.trainType]
+
+  let validTrains = parsed
+    .filter(train => trainType[train.trainType])
+    .map(train => ({
+      type: train.trainType,
+      consist: [train.mCarA, train.tCar, train.mCarB]
+    }))
+    .filter(train => !train.consist.includes('-'))
+
+  let types = validTrains.map(train => ({
+    leadingCar: train.consist[0],
+    type: trainType[train.type]
   }))
+
+  let consists = validTrains.map(train => train.consist)
 
   utils.request(urls.ptDatabaseHCMT).then(hcmtData => {
     let parsedHCMT = JSON.parse(hcmtData)
