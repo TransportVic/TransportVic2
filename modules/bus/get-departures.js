@@ -258,10 +258,11 @@ async function getScheduledDepartures(stop, db, time) {
 
 async function getDepartures(stop, db, time) {
   let cacheKey = stop.codedSuburb[0] + stop.stopName
-  time = time || utils.now()
 
   try {
-    return await utils.getData('bus-departures-' + time.toISOString(), cacheKey, async () => {
+    return await utils.getData('bus-departures-' + (time ? time.toISOString() : 'current'), cacheKey, async () => {
+      time = time || utils.now()
+
       let scheduledDepartures = []
       let ptvDepartures = []
       let departures = []
