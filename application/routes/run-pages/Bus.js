@@ -135,7 +135,7 @@ async function pickBestTrip(data, db) {
         bays: trueOriginBay
       }
 
-      let originDepartures = await getDepartures(mockedStop, db, tripStartTime.clone().add(-5, 'minutes'))
+      let originDepartures = await getDepartures(mockedStop, db, tripStartTime.clone().add(-5, 'minutes'), true)
 
       let matchingDeparture = originDepartures.find(departure => {
         let trip = departure.trip

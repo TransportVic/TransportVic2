@@ -29,7 +29,7 @@ function getUniqueGTFSIDs(station, mode, isOnline) {
   return gtfsIDs
 }
 
-async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, routeGTFSID, excludedTripIDs, variance=0, routeNumber) {
+async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, routeGTFSID, excludedTripIDs, variance=0, routeNumber, silent) {
   let trip
   let query
 
@@ -85,7 +85,7 @@ async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, r
   }
 
   if (!trip) {
-    if (mode !== 'regional coach')
+    if (mode !== 'regional coach' && !silent)
       global.loggers.general.err('Failed to find timetable:', JSON.stringify(query, null, 1))
     return null
   }

@@ -66,7 +66,7 @@ async function updateBusTrips(db, departures) {
   })
 }
 
-async function getDeparturesFromPTV(stop, db, time) {
+async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let smartrakIDs = db.getCollection('smartrak ids')
   let dbRoutes = db.getCollection('routes')
@@ -150,7 +150,8 @@ async function getDeparturesFromPTV(stop, db, time) {
         }
       }
 
-      trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSID, [], 1, null)
+      trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSID, [], 1, null, true)
+      if (!trip && discardUnmatched) return
       if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, destination)
 
       let busRoute = (await getRoutes(db, `${trip.routeGTFSID}`, {
@@ -256,7 +257,7 @@ async function getScheduledDepartures(stop, db, time) {
   return await departureUtils.getScheduledDepartures(gtfsIDs, db, 'bus', 90, false, time)
 }
 
-async function getDepartures(stop, db, time) {
+async function getDepartures(stop, db, time, discardUnmatched) {
   let cacheKey = stop.codedSuburb[0] + stop.stopName
 
   try {
@@ -277,7 +278,7 @@ async function getDepartures(stop, db, time) {
         } finally { resolve() }
       }), new Promise(async resolve => {
         try {
-          ptvDepartures = await getDeparturesFromPTV(stop, db, time)
+          ptvDepartures = await getDeparturesFromPTV(stop, db, time, discardUnmatched)
         } catch (e) {
           global.loggers.general.err('Failed to get PTV departures', e)
           ptvFailed = true
