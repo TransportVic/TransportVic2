@@ -56,7 +56,7 @@ $.ready(() => {
     "CT": "CDC Tullamarine",
     "CG": "CDC Geelong",
     "CB": "CDC Ballarat",
-    "T": "Transdev Melbourne",
+    "T": "Kinetic",
     "S": "Sita Bus Lines",
     "D": "Dysons",
     "CR": "Cranbourne Transit",

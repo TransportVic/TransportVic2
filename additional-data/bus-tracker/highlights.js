@@ -29,12 +29,12 @@ module.exports = [{
   routes: [],
   type: 'exclude'
 }, {
-  name: 'Transdev Minibuses',
+  name: 'Kinetic Minibuses',
   track: ['T119', 'T120', 'T129', 'T130', 'T131', 'T132', 'T133', 'T183'],
   routes: ['280', '282', '370'],
   type: 'exclude'
 }, {
-  name: 'Transdev Specials',
+  name: 'Kinetic Specials',
   track: ['T703', 'T705', 'T708', 'T710', 'T712', 'T736', 'T737', 'T738', 'T739'],
   routes: [],
   type: 'exclude'
@@ -121,7 +121,7 @@ module.exports = [{
   routes: [],
   type: 'exclude'
 }, {
-  name: 'Transdev Specials',
+  name: 'Kinetic Specials',
   track: ['T574', 'T585'],
   routes: [],
   type: 'exclude'
