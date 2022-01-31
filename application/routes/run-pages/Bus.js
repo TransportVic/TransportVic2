@@ -148,9 +148,16 @@ async function pickBestTrip(data, db) {
         return true
       })
 
-      if (matchingDeparture) ptvRunID = matchingDeparture.runID
+      if (matchingDeparture) {
+        if (matchingDeparture.runID) ptvRunID = matchingDeparture.runID
+        else ptvRunID = -1
+      }
     } else if (referenceTrip && referenceTrip.runID) ptvRunID = referenceTrip.runID
 
+    if (ptvRunID === -1 && referenceTrip) {
+      let isLive = referenceTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
+      return { trip: referenceTrip, tripStartTime, isLive } // Request must have failed, but we have a reference trip
+    }
     if (!ptvRunID) return null // Available options to get ptvRunID unsuccessful - trip does not exist
 
     let trip = await getStoppingPattern({

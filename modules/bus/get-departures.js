@@ -186,7 +186,7 @@ async function getDeparturesFromPTV(stop, db, time) {
 
       let firstStop = trip.stopTimings[0]
       let currentStop = trip.stopTimings.find(stop => allGTFSIDs.includes(stop.stopGTFSID))
-      if (!currentStop) global.loggers.error.err(trip, allGTFSIDs)
+      if (!currentStop) global.loggers.error.err('Could not find current stop', trip, allGTFSIDs)
       let minutesDiff = currentStop.departureTimeMinutes - firstStop.departureTimeMinutes
       let originDepartureTime = scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
 
