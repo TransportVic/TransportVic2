@@ -15,10 +15,11 @@ let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => 
   return acc
 }, {})
 
-async function getStop(rawStopName, stopsCollection) {
+async function getStop(stopData, stopsCollection) {
+  let rawStopName = stopData.stop_name
   let stopName = utils.getProperStopName(rawStopName.trim())
 
-  return await stopsCollection.findDocument({
+  let matchedStop = await stopsCollection.findDocument({
     $or: [{
       'bays.fullStopName': stopName
     }, {
@@ -26,6 +27,26 @@ async function getStop(rawStopName, stopsCollection) {
     }],
     'bays.mode': 'bus'
   })
+  if (matchedStop) return matchedStop
+
+  let closeStop = await stopsCollection.findDocuments({
+    location: {
+      $nearSphere: {
+        $geometry: {
+          type: 'Point',
+          coordinates: [stopData.stop_longitude, stopData.stop_latitude]
+        },
+        $maxDistance: 20
+      }
+    }
+  }).limit(2).toArray()
+
+  if (closeStop.length === 1) {
+    global.loggers.general.err('PTV Name Mismatch', stopData)
+    return closeStop[0]
+  } else {
+    return null
+  }
 }
 
 function determineStopType(stop) {
@@ -73,7 +94,7 @@ module.exports = async function (data, db) {
 
   let dbStops = {}
 
-  let firstStopData = await getStop(stops[departures[0].stop_id].stop_name, stopsCollection)
+  let firstStopData = await getStop(stops[departures[0].stop_id], stopsCollection)
   let { stopType, screenServices } = determineStopType(firstStopData)
 
   if (stopType === 'regional') return referenceTrip
@@ -127,9 +148,9 @@ module.exports = async function (data, db) {
   let gtfsDirection = route.ptvDirections[directionName]
 
   await async.forEach(Object.values(stops), async stop => {
-    let dbStop = await getStop(stop.stop_name, stopsCollection)
+    let dbStop = await getStop(stop, stopsCollection)
 
-    if (!dbStop) global.loggers.general.err('Failed to match stop', stopName)
+    if (!dbStop) global.loggers.general.err('Failed to match stop', stop)
     dbStops[stop.stop_id] = dbStop
   })
 
