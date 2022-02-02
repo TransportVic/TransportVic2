@@ -40,6 +40,14 @@ try {
 
 let serviceLookup = createServiceLookup(datamartRoutes)
 
+function parseRouteGTFSID(rawRouteGTFSID) {
+  if (rawRouteGTFSID.includes('-aus-')) {
+    let routeNumber = rawRouteGTFSID.match(/\d+-(\d+)/)[1]
+    return `${gtfsID}-${routeNumber}`
+  }
+  return gtfsUtils.simplifyRouteGTFSID(rawRouteGTFSID)
+}
+
 database.connect({
   poolSize: 100
 }, async err => {
@@ -51,7 +59,7 @@ database.connect({
   let routeData = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'routes.txt')).toString())
   let shapeFiles = fs.readdirSync(splicedGTFSPath).filter(e => e.startsWith('shapes'))
 
-  let allRoutes = routeData.map(r => gtfsUtils.simplifyRouteGTFSID(r[0])).filter((e, i, a) => a.indexOf(e) === i)
+  let allRoutes = routeData.map(r => parseRouteGTFSID(r[0])).filter((e, i, a) => a.indexOf(e) === i)
 
   async function load(shapeJSON) {
     return await loadRoutes(routes, gtfsID, routeData, shapeJSON, (routeGTFSID, routeNumber, routeName) => {

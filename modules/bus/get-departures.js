@@ -133,8 +133,9 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
       if (!ptvRouteNumber) return
 
       if (bayType === 'metro') {
-        let potentialBusRoutes = await getRoutes(db, `M-${ptvRouteNumber}`, {
-          routeNumber: ptvRouteNumber,
+        let trimmedRouteNumber = ptvRouteNumber.slice(0, 3)
+        let potentialBusRoutes = await getRoutes(db, `M-${trimmedRouteNumber}`, {
+          routeNumber: trimmedRouteNumber,
           routeGTFSID: /^4-/
         })
 
