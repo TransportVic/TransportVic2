@@ -96,7 +96,7 @@ database.connect({
         currentTrip = []
       } else {
         currentTrip.push({
-          stopGTFSID: parseInt(lineData[3].replace('P', '0')) + 140000000,
+          stopGTFSID: 'XPT' + lineData[3],
           arrivalTime: lineData[1],
           departureTime: lineData[2],
           stopConditions: {

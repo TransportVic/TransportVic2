@@ -114,6 +114,8 @@ block content
           span.stopRoad=stopRoad
           -
             let displayName = stopName
+            let genericNames = ['General Store', 'Post Office', 'Police Station']
+            if (genericNames.includes(displayName)) displayName = `${stop.suburb} ${displayName}`
             if (stop.stopNumber)
               displayName += ` #${stop.stopNumber}`
               

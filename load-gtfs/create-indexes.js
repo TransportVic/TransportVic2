@@ -34,6 +34,8 @@ database.connect({
 
   let metroLogger = await getCollection('metro logs')
 
+  let csrfTokens = await getCollection('csrf tokens')
+
   await stops.createIndex({
     stopName: 1,
     'bays.stopGTFSID': 1
@@ -67,6 +69,10 @@ database.connect({
   }, {name: 'coded name index'})
 
   await stops.createIndex({
+    'codedNames': 1
+  }, {name: 'coded names index'})
+
+  await stops.createIndex({
     'namePhonetic': 1,
     _id: 1
   }, {name: 'phonetic name index'})
@@ -87,6 +93,10 @@ database.connect({
     'bays.fullStopName': 1
   }, {name: 'ptv matching index 1'})
 
+  await stops.createIndex({
+    'bays.originalName': 1
+  }, {name: 'original name index'})
+
   console.log('Created stops indexes')
 
   await routes.createIndex({
@@ -101,6 +111,15 @@ database.connect({
     routeGTFSID: 1
   }, {name: 'route gtfs id index', unique: true})
 
+  await routes.createIndex({
+    operators: 1,
+    routeGTFSID: 1
+  }, {name: 'operator index'})
+
+  await routes.createIndex({
+    'routePath.path': '2dsphere'
+  }, {name: 'path geospatial index'})
+
   console.log('Created route indexes')
 
   await gtfsTimetables.createIndex({
@@ -112,6 +131,10 @@ database.connect({
     destinationArrivalTime: 1,
     tripID: 1 // Ideally tripID wouldn't be included but there's duplicate trips in the dataset so...
   }, {name: 'gtfs timetable index', unique: true})
+
+  await gtfsTimetables.createIndex({
+    tripID: 1
+  }, {name: 'tripID index'})
 
   await gtfsTimetables.createIndex({
     shapeID: 1
@@ -159,6 +182,12 @@ database.connect({
     destinationArrivalTime: 1
   }, {name: 'run lookup index'})
 
+  await gtfsTimetables.createIndex({
+    mode: 1,
+    operationDays: 1,
+    routeName: 1
+  }, {name: 'vline trip matching'})
+
   console.log('Created GTFS timetables indexes')
 
   await timetables.createIndex({
@@ -182,6 +211,23 @@ database.connect({
     'stopTimings.departureTimeMinutes': 1
   }, {name: 'connections index'})
 
+  await timetables.createIndex({
+    mode: 1,
+    operationDays: 1,
+    routeGTFSID: 1,
+    origin: 1,
+    destination: 1,
+    departureTime: 1,
+    direction: 1
+  }, {name: 'trip matching index'})
+
+  await timetables.createIndex({
+    mode: 1,
+    'stopTimings.stopName': 1,
+    'stopTimings.departureTimeMinutes': 1,
+    'stopTimings.arrivalTimeMinutes': 1
+  }, {name: 'vline matching index'})
+
   console.log('Created static timetable indexes')
 
   await liveTimetables.createIndex({
@@ -197,17 +243,42 @@ database.connect({
   }, {name: 'live timetable index', unique: true})
 
   await liveTimetables.createIndex({
+    tripID: 1
+  }, {name: 'tripID index'})
+
+  await liveTimetables.createIndex({
     operationDays: 1
   }, {name: 'operationDays index'})
 
   await liveTimetables.createIndex({
-    runID: 1
+    operationDays: 1,
+    trueDepartureTime: 1,
+    trueOrigin: 1,
+    trueDestinationArrivalTime: 1,
+    trueDestination: 1
+  }, {name: 'metro index', sparse: true})
+
+  await liveTimetables.createIndex({
+    runID: 1,
+    mode: 1,
+    operationDays: 1
   }, {name: 'runID index', sparse: true})
+
+  await liveTimetables.createIndex({
+    operationDays: 1,
+    'stopTimings.stopGTFSID': 1,
+    'stopTimings.departureTimeMinutes': 1,
+    mode: 1,
+    routeGTFSID: 1,
+    destination: 1,
+    direction: 1
+  }, {name: 'stop timings live index'})
 
   await liveTimetables.createIndex({
     'stopTimings.stopGTFSID': 1,
     'stopTimings.actualDepartureTimeMS': 1,
-    mode: 1
+    mode: 1,
+    trueDestination: 1
   }, {name: 'live stop timings index'})
 
   await liveTimetables.createIndex({
@@ -268,6 +339,7 @@ database.connect({
   await tramTrips.createIndex({
     tram: 1,
     date: 1,
+    routeNumber: 1
   }, {name: 'tram index'})
 
   await tramTrips.createIndex({
@@ -309,7 +381,8 @@ database.connect({
 
   await busTrips.createIndex({
     smartrakID: 1,
-    date: 1
+    date: 1,
+    routeNumber: 1
   }, {name: 'smartrak id index'})
 
   await busTrips.createIndex({
@@ -374,6 +447,12 @@ database.connect({
     station: 1
   }, { name: 'metro shunts by station' })
 
+  await metroShunts.createIndex({
+    date: 1,
+    routeName: 1,
+    runID: 1
+  }, { name: 'metro shunts by route' })
+
   console.log('Created Metro Shunts index')
 
   await metroLocations.createIndex({
@@ -392,6 +471,15 @@ database.connect({
 
   console.log('Created Metro Logger index')
 
-  updateStats('create-indexes', 59)
+  await csrfTokens.createIndex({
+    created: 1,
+    ip: 1,
+    uses: 1,
+    _id: 1
+  }, { name: 'csrf index', unique: 1 })
+
+  console.log('Created CSRF Token index')
+
+  updateStats('create-indexes', 71)
   process.exit()
 })

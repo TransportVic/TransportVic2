@@ -12,6 +12,9 @@ module.exports = {
   '4-388': { // mernda anticlockwise
     '0': 'Anti-Clockwise'
   },
+  '4-3X8': { // mernda anticlockwise
+    '0': 'Anti-Clockwise'
+  },
   '4-389': { // mernda clockwise ??
     '0': 'Clockwise'
   },

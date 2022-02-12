@@ -41,7 +41,7 @@ async function pickBestTrip(data, db) {
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
 
   if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
-  if (tripStartMinutes > 1440) tripDay.add(-1, 'day')
+  if (tripStartMinutes >= 1440) tripDay.add(-1, 'day')
   if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
 
   let originStop = await db.getCollection('stops').findDocument({
@@ -62,14 +62,14 @@ async function pickBestTrip(data, db) {
 
   if (data.destination === 'flinders-street') {
     destinationArrivalTime = {
-      $gte: tripEndMinutes - 1,
+      $gte: tripEndMinutes - 3,
       $lte: tripEndMinutes + 3
     }
   }
 
   if (data.origin === 'flinders-street') {
     departureTime = {
-      $gte: tripStartMinutes - 1,
+      $gte: tripStartMinutes - 3,
       $lte: tripStartMinutes + 3
     }
   }
@@ -153,38 +153,64 @@ async function pickBestTrip(data, db) {
     return { trip: referenceTrip, tripStartTime, isLive, needsRedirect, needsRedirect }
   }
 
-  let originStopID = originStop.bays.filter(bay => bay.mode === 'metro train')[0].stopGTFSID
-  let originTime = tripStartTime.clone()
-  let expressCount
+  try {
+    if (referenceTrip && referenceTrip.runID) {
+      let trip = await getStoppingPattern({
+        routeName: referenceTrip.routeName,
+        ptvRunID: utils.getPTVRunID(referenceTrip.runID),
+        time: tripStartTime.toISOString()
+      }, db)
 
-  if (referenceTrip) {
-    expressCount = 0
-    let stops = referenceTrip.stopTimings.map(stop => stop.stopName)
-    let flindersIndex = stops.indexOf('Flinders Street Railway Station')
+      if (!trip) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false, needsRedirect } : null
 
-    if (flindersIndex >= 0 && referenceTrip.direction === 'Down') {
-      let nonCCLStop = referenceTrip.stopTimings.slice(flindersIndex + 1).find(stop => !cityLoopStations.includes(stop.stopName))
+      let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
 
-      let flinders = referenceTrip.stopTimings[flindersIndex]
-      let stopAfterFlinders = referenceTrip.stopTimings[flindersIndex + 1]
-      if (nonCCLStop) stopAfterFlinders = nonCCLStop
-      if (stopAfterFlinders.stopName !== destinationStop.stopName) {
-        originStopID = stopAfterFlinders.stopGTFSID
-        originTime.add(stopAfterFlinders.departureTimeMinutes - flinders.departureTimeMinutes, 'minutes')
+      let needsRedirect = trip.trueOrigin !== originStop.stopName
+        || trip.trueDestination !== destinationStop.stopName
+        || trip.trueDepartureTime !== data.departureTime
+        || trip.trueDestinationArrivalTime !== data.destinationArrivalTime
+
+      let actualOriginStop = trip.stopTimings.find(stop => stop.stopName === trip.trueOrigin)
+
+      return {
+        trip,
+        tripStartTime: utils.parseTime(actualOriginStop.scheduledDepartureTime),
+        isLive,
+        needsRedirect
       }
     }
 
-    referenceTrip.stopTimings.forEach((stop, i) => {
-      if (i === 0) return
-      expressCount += stop.stopSequence - referenceTrip.stopTimings[i - 1].stopSequence -1
-    })
-  }
+    let originStopID = originStop.bays.filter(bay => bay.mode === 'metro train')[0].stopGTFSID
+    let originTime = tripStartTime.clone()
+    let expressCount
 
-  // get first stop after flinders, or if only 1 stop (nme shorts) then flinders itself
-  // should fix the dumb issue of trips sometimes showing as forming and sometimes as current with crazyburn
-  try {
+    if (referenceTrip) {
+      expressCount = 0
+      let stops = referenceTrip.stopTimings.map(stop => stop.stopName)
+      let flindersIndex = stops.indexOf('Flinders Street Railway Station')
+
+      if (flindersIndex >= 0 && referenceTrip.direction === 'Down') {
+        let nonCCLStop = referenceTrip.stopTimings.slice(flindersIndex + 1).find(stop => !cityLoopStations.includes(stop.stopName))
+
+        let flinders = referenceTrip.stopTimings[flindersIndex]
+        let stopAfterFlinders = referenceTrip.stopTimings[flindersIndex + 1]
+        if (nonCCLStop) stopAfterFlinders = nonCCLStop
+        if (stopAfterFlinders.stopName !== destinationStop.stopName) {
+          originStopID = stopAfterFlinders.stopGTFSID
+          originTime.add(stopAfterFlinders.departureTimeMinutes - flinders.departureTimeMinutes, 'minutes')
+        }
+      }
+
+      referenceTrip.stopTimings.forEach((stop, i) => {
+        if (i === 0) return
+        expressCount += stop.stopSequence - referenceTrip.stopTimings[i - 1].stopSequence -1
+      })
+    }
+
+    // get first stop after flinders, or if only 1 stop (nme shorts) then flinders itself
+    // should fix the dumb issue of trips sometimes showing as forming and sometimes as current with crazyburn
     let isoDeparture = originTime.toISOString()
-    let {departures, runs} = await ptvAPI(`/v3/departures/route_type/0/stop/${originStopID}?gtfs=true&date_utc=${originTime.clone().add(-3, 'minutes').toISOString()}&max_results=3&expand=run&expand=stop&include_cancelled=true`)
+    let {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/0/stop/${originStopID}?gtfs=true&date_utc=${originTime.clone().add(-1, 'minutes').toISOString()}&max_results=6&expand=run&expand=route&expand=stop&include_cancelled=true`)
 
     let isUp = referenceTrip ? referenceTrip.direction === 'Up' : null
     let possibleDepartures = departures.filter(departure => {
@@ -251,10 +277,13 @@ async function pickBestTrip(data, db) {
     let isRailReplacementBus = departureToUse.flags.includes('RRB-RUN')
 
     let trip = await getStoppingPattern({
+      routeName: routes[departureToUse.route_id].route_name, // No need to bother with RCE, that probably wouldn't track anyway
       ptvRunID,
-      time: departureTime,
-      referenceTrip
+      time: tripStartTime.toISOString(),
     }, db)
+
+    // In case the trip disappears off PTV we still have our local copy
+    if (!trip) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false, needsRedirect } : null
 
     let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
 

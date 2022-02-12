@@ -39,7 +39,7 @@ module.exports = class MongoDatabaseConnection {
   }
 
   getCollection(collectionName) {
-    return new DatabaseCollection(this.database.collection(collectionName))
+    return new DatabaseCollection(this.database.collection(collectionName), collectionName)
   }
 
   async adminCommand(command) {

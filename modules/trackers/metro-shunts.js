@@ -103,11 +103,17 @@ async function getDepartures(routeName) {
 
   await async.forEach(allTrips.filter(trip => trip.stopsAvailable.length === 1), async metroTrip => {
     let trip = await liveTimetables.findDocument({
+      mode: 'metro train',
       operationDays: day,
       runID: metroTrip.runID
     })
 
-    if (!trip) trip = await getStoppingPattern(database, utils.getPTVRunID(metroTrip.runID), 'metro train')
+    if (!trip) {
+      trip = await getStoppingPattern({
+        ptvRunID: utils.getPTVRunID(metroTrip.runID)
+      }, database)
+    }
+
     if (trip) { // Trips can sometimes not appear in PTV, especially 7xxx extras
       metroTrip.stopsAvailable = trip.stopTimings.map(stop => {
         let stopTime = stop.departureTimeMinutes || stop.arrivalTimeMinutes
@@ -132,12 +138,10 @@ async function getDepartures(routeName) {
     let forming = trip.forming
 
     if (forming === '0') return trip.type = 'TO_YARD' || true
-    if (forming.startsWith('0')) {
+    if (forming.match(/^0[135]\d\d/)) { // 1/5 - LIGHTLOCO 3 - NPS/NWS
       let runID = parseInt(forming)
-      if (!(700 <= runID && runID <= 899)) { // City Circle
-        trip.type = 'SHUNT_OUT'
-        return true
-      } else return false
+      trip.type = 'SHUNT_OUT'
+      return true
     }
 
     let formingTrip = firstStops.find(nextTrip => nextTrip.runID === forming)

@@ -43,9 +43,8 @@ async function prioritySearch(db, query) {
     }]
   }).limit(6).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
 
-  let nquery = query.match(/^\d+$/) ? parseInt(query) : -1
   let gtfsMatch = await stops.findDocuments({
-    'bays.stopGTFSID': nquery
+    'bays.stopGTFSID': query
   }).toArray()
 
   let numericalMatchStops = (await stops.findDocuments({

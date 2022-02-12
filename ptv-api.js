@@ -31,15 +31,21 @@ function getURL(request) {
   return 'https://timetableapi.ptv.vic.gov.au' + request + '&signature=' + signature
 }
 
-async function makeRequest(url, maxRetries=2, timeout=1900) {
+async function makeRequest(url, maxRetries=2, timeout=2400) {
   try {
     return await utils.getData('ptv-api', url, async () => {
       let start = +new Date()
 
-      let data = JSON.parse(await utils.request(getURL(url), {
-        maxRetries,
-        timeout
-      }))
+      let data = {}, error
+      try {
+        data = JSON.parse(await utils.request(getURL(url), {
+          maxRetries,
+          timeout
+        }))
+      } catch (e) {
+        error = e
+        if (e.response) data = JSON.parse(e.response)
+      }
 
       let end = +new Date()
       let diff = end - start
@@ -59,6 +65,7 @@ async function makeRequest(url, maxRetries=2, timeout=1900) {
         })
       }
 
+      if (error) throw error
       return data
     }, 5000)
   } catch (e) {
@@ -71,10 +78,10 @@ async function makeRequest(url, maxRetries=2, timeout=1900) {
   }
 }
 
-async function getPTVKey(baseURL='https://ptv.vic.gov.au') {
+async function getPTVKey(baseURL='https://ptv.vic.gov.au', timeout=6000) {
   return await utils.getData('ptv-key', baseURL, async () => {
     let ptvData = await utils.request(baseURL, {
-      timeout: 6000
+      timeout
     })
 
     let $ = cheerio.load(ptvData)
@@ -95,7 +102,10 @@ function getAverageResponseTime() {
 
 function getFaultRate() {
   let faulty = ptvResponses.filter(r => r.fault).length
-  return faulty / ptvResponses.length * 100
+  return {
+    rate: faulty / ptvResponses.length * 100,
+    count: faulty
+  }
 }
 
 module.exports = makeRequest

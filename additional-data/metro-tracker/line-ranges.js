@@ -83,6 +83,7 @@ module.exports = {
   'Werribee': [
     [6200, 6299],
     [6400, 6599],
+    [500, 599, 'X'],
     [7070, 7099]
   ],
   'Williamstown': [

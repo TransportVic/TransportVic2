@@ -215,6 +215,10 @@ a.departureInfo.reservationsOnly span.important {
   color: #ff001d;
 }
 
+a.departureInfo.reservationsOnly span.important.inline {
+  margin-left: 0;
+}
+
 a.departureInfo.departure1 { --departureCount: 1; }
 a.departureInfo.departure2 { --departureCount: 2; }
 a.departureInfo.departure3 { --departureCount: 3; }

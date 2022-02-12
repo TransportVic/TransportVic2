@@ -61,7 +61,7 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
     if (!originDepartureTime.isValid()) return // Some really edge case where it returns a run with no departure data - discard it
 
     let accessibleTrain = $$('IsAccessibleAvailable').text() === 'true'
-    let barAvailable = $$('IsBuffetAvailable').text() === 'true'
+    let cateringAvailable = $$('IsBuffetAvailable').text() === 'true'
 
     let rawVehicle = $$('Consist').text()
     let shortConsist = rawVehicle.split(' ').filter((e, i, a) => a.indexOf(e) === i)
@@ -112,7 +112,7 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
     let destinationStation = await getStationFromVNETName(destinationVNETName, db)
 
     if (!originStation || !destinationStation) return // Just in case we don't know the station
-  
+
     let originVLinePlatform = originStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
     let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
 
@@ -134,7 +134,7 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
       estimatedDestArrivalTime,
       direction,
       vehicle: consist,
-      barAvailable,
+      cateringAvailable,
       accessibleTrain,
       vehicleType,
       set

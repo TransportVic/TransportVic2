@@ -115,31 +115,17 @@ router.get('/fleet', async (req, res) => {
 
   tripsToday = tripsToday.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
-  let rawServicesByDay = await tramTrips.aggregate([{
-    $match: {
-      tram: tramNumber,
-    }
-  }, {
-    $group: {
-      _id: '$date',
-      services: {
-        $addToSet: '$routeNumber'
-      }
-    }
-  }, {
-    $sort: {
-      _id: -1
-    }
-  }]).toArray()
+  let allDates = (await tramTrips.distinct('date', { tram: tramNumber })).reverse()
 
-  let servicesByDay = rawServicesByDay.map(data => {
-    let date = data._id
+  let servicesByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+
+    let services = await tramTrips.distinct('routeNumber', { tram: tramNumber, date })
 
     return {
       date,
       humanDate,
-      services: data.services.sort((a, b) => parseInt(a) - parseInt(b) || a.localeCompare(b))
+      services: services.sort((a, b) => parseInt(a) - parseInt(b) || a.localeCompare(b))
     }
   })
 
@@ -189,31 +175,17 @@ router.get('/service', async (req, res) => {
 
   let tripsToday = rawTripsToday.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
-  let rawTramsByDay = await tramTrips.aggregate([{
-    $match: {
-      routeNumber: service,
-    }
-  }, {
-    $group: {
-      _id: '$date',
-      trams: {
-        $addToSet: '$tram'
-      }
-    }
-  }, {
-    $sort: {
-      _id: -1
-    }
-  }]).toArray()
+  let allDates = (await tramTrips.distinct('date', { routeNumber: service })).reverse()
 
-  let tramsByDay = rawTramsByDay.map(data => {
-    let date = data._id
+  let tramsByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+
+    let trams = await tramTrips.distinct('tram', { routeNumber: service, date })
 
     return {
       date,
       humanDate,
-      trams: data.trams.sort((a, b) => a - b).map(tram => {
+      trams: trams.sort((a, b) => a - b).map(tram => {
         let model = tramFleet.getModel(tram)
         return model + '.' + tram
       })
@@ -260,31 +232,17 @@ router.get('/shift', async (req, res) => {
 
   tripsToday = tripsToday.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
-  let rawTramsByDay = await tramTrips.aggregate([{
-    $match: {
-      shift,
-    }
-  }, {
-    $group: {
-      _id: '$date',
-      trams: {
-        $addToSet: '$tram'
-      }
-    }
-  }, {
-    $sort: {
-      _id: -1
-    }
-  }]).toArray()
+  let allDates = (await tramTrips.distinct('date', { shift })).reverse()
 
-  let tramsByDay = rawTramsByDay.map(data => {
-    let date = data._id
+  let tramsByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+
+    let trams = await tramTrips.distinct('tram', { shift, date })
 
     return {
       date,
       humanDate,
-      trams: data.trams.sort((a, b) => a - b).map(tram => {
+      trams: trams.sort((a, b) => a - b).map(tram => {
         let model = tramFleet.getModel(tram)
         return model + '.' + tram
       })
@@ -346,6 +304,45 @@ router.get('/highlights', async (req, res) => {
   res.render('tracker/tram/highlights', {
     date: utils.parseTime(date, 'YYYYMMDD'),
     unknownTrams
+  })
+})
+
+router.get('/full-list', async (req, res) => {
+  let {db} = res
+  let tramTrips = db.getCollection('tram trips')
+
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  let today = utils.getYYYYMMDDNow()
+
+  let {date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  let allTrams = knownTrams.map(tram => ({
+    tram: tram,
+    fleetNumber: `${tramFleet.getModel(tram)}.${tram}`
+  }))
+
+  let rawTripsToday = await tramTrips.findDocuments({
+    date
+  }).sort({ routeNumber: 1 }).toArray()
+
+  let trams = {}
+  rawTripsToday.forEach(trip => {
+    let fleetNumber = `${tramFleet.getModel(trip.tram)}.${trip.tram}`
+
+    if (!trams[fleetNumber]) trams[fleetNumber] = []
+    if (!trams[fleetNumber].includes(trip.routeNumber)) {
+      trams[fleetNumber].push(trip.routeNumber)
+    }
+  })
+
+  return res.render('tracker/tram/full-list', {
+    trams,
+    allTrams,
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    rawDate: date
   })
 })
 

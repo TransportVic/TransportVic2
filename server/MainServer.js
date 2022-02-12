@@ -39,11 +39,11 @@ if (modules.tracker && modules.tracker.hcmt)
 if (modules.tracker && modules.tracker.metro)
   require('../modules/trackers/metro')
 
+if (modules.tracker && modules.tracker.metroTrips)
+  require('../modules/trackers/metro-trips')
+
 if (modules.tracker && modules.tracker.metroRaceTrains)
   require('../modules/trackers/metro-race-trains')
-
-if (modules.tracker && modules.tracker.metroLocations)
-  require('../modules/trackers/metro-locations')
 
 if (modules.tracker && modules.tracker.metroNotify)
   require('../modules/trackers/metro-notify')
@@ -134,24 +134,6 @@ module.exports = class MainServer {
       if (host.includes(prefix)) return true
       else return void next()
     }
-
-    app.use('*', (req, res, next) => {
-      if (filter('circulars.', req, next)) {
-        if (!req.headers.authorization || req.headers.authorization !== trackerAuth) {
-          res.status(401)
-          res.header('www-authenticate', 'Basic realm="password needed"')
-          res.end('Please login')
-        } else {
-          let url = `http://localhost:${config.circularPort}${req.baseUrl}`
-          fetch(url).then(r => {
-            res.header('Content-Type', r.headers.get('content-type'))
-            let disposition = r.headers.get('content-disposition')
-            if (disposition) res.header('Content-Disposition', r.headers.get('content-disposition'))
-            r.body.pipe(res)
-          })
-        }
-      }
-    })
 
     app.get('/', (req, res, next) => {
       if (filter('seized.', req, next)) res.render('seized')
@@ -249,6 +231,7 @@ module.exports = class MainServer {
       'run-pages/MetroTrains': '/metro/run',
       'run-pages/VLineTrains': '/vline/run',
       'run-pages/Tram': '/tram/run',
+      'run-pages/Bus': '/bus/run',
       'run-pages/Generic': '/',
 
       Statistics: '/stats',
@@ -321,7 +304,7 @@ module.exports = class MainServer {
       },
 
       RoutePaths: '/route-paths',
-      MetroMap: '/metro-map',
+      MetroMap: '/metro/map',
       ChatbotTest: {
         path: '/lxra-map',
         enable: modules.lxraMap

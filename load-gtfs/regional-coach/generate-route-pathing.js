@@ -85,14 +85,14 @@ database.connect({}, async err => {
         failLength = 10
       }
 
-      return path.path.filter((point, i) => {
+      return path.path.coordinates.filter((point, i) => {
         let size = 3
         if (i < size) return false
         let distanceSum = 0
 
         for (let j = i; j > i - size; j--) {
-          let pointA = path.path[j]
-          let pointB = path.path[j - 1]
+          let pointA = path.path.coordinates[j]
+          let pointB = path.path.coordinates[j - 1]
           distanceSum += turf.distance(turf.point(pointA), turf.point(pointB))
         }
 
@@ -143,7 +143,7 @@ database.connect({}, async err => {
 
       let badPath = routeData.routePath.find(path => path.fullGTFSIDs.includes(timetable.shapeID))
 
-      badPath.path = fullPath
+      badPath.path.coordinates = fullPath
       badPath.fixed = true
 
       await asyncPause(750)

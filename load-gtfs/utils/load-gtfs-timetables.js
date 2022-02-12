@@ -75,6 +75,7 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
       departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime)
 
       if (previousDepartureTime == -1) { // if first stop is already beyond midnight then keep it
+        if (arrivalTimeMinutes === 0) arrivalTimeMinutes = 1440
         if (isNightBus && arrivalTimeMinutes < 600) {
           arrivalTimeMinutes %= 1440
           departureTimeMinutes %= 1440

@@ -3,6 +3,7 @@ const router = new express.Router()
 const getDepartures = require('../../../modules/regional-coach/get-departures')
 const moment = require('moment')
 const utils = require('../../../utils')
+const async = require('async')
 const timingUtils = require('./timing-utils')
 
 async function loadDepartures(req, res) {
@@ -21,13 +22,13 @@ async function loadDepartures(req, res) {
   let departures = await getDepartures(stop, res.db)
   let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
-  departures = departures.map(departure => {
+  let now = utils.now()
+
+  departures = (await async.map(departures, async departure => {
+    if (departure.scheduledDepartureTime.diff(now, 'minutes') > 180) return
+
     departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
-    if (departure.scheduledDepartureTime - utils.now() > 1000 * 60 * 180) return
-
     departure.headwayDevianceClass = 'unknown'
-
-    departure.codedLineName = utils.encodeName(departure.trip.routeName)
 
     let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
     let {stopGTFSID} = currentStop
@@ -40,8 +41,15 @@ async function loadDepartures(req, res) {
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
       + `${operationDate}/#stop-${stopGTFSID}`
 
+    let destinationStopTiming = departure.trip.stopTimings.slice(-1)[0]
+    let destinationStop = await stops.findDocument({
+      'bays.stopGTFSID': destinationStopTiming.stopGTFSID
+    })
+
+    departure.destinationURL = `/coach/timings/${destinationStop.codedSuburb[0]}/${destinationStop.codedName}`
+
     return departure
-  }).filter(Boolean)
+  })).filter(Boolean)
 
   return { departures, stop, stopHeritageUseDates }
 }

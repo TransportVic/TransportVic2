@@ -21,6 +21,8 @@ function trimLog(filename, isCombined) {
   if (filename.includes('errors')) cutoff = 28
   if (filename.includes('mockups')) cutoff = 6
 
+  if (filename.includes('general')) cutoff = 6
+
   if (isCombined) cutoff = 2
 
   let end = utils.now().add(-cutoff, 'days')

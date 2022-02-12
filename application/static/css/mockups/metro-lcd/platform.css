@@ -29,22 +29,38 @@ div.fullMessage > * {
 }
 
 div.message, div.serviceMessage {
+  width: 98% !important;
   height: calc(var(--height) * 0.825);
   align-items: center;
+  text-align: center;
   justify-content: center;
   flex-direction: column;
 }
 
 div.message p, div.serviceMessage p {
   font-size: calc(var(--height) * 0.12);
+  line-height: 1.1;
 }
 
 div.message p.large, div.serviceMessage p.large {
   font-size: calc(var(--height) * 0.14);
 }
 
+div.message p.large, div.serviceMessage p.larger {
+  font-size: calc(var(--height) * 0.17);
+}
+
+div.message p.small, div.serviceMessage p.small {
+  font-size: calc(var(--height) * 0.10);
+}
+
+div.message p.smaller, div.serviceMessage p.smaller {
+  font-size: calc(var(--height) * 0.08);
+}
+
 div.serviceMessage div.arrivalMessage {
   width: 98%;
+  font-family: "NetworkSansRegular";
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,6 +1,11 @@
 module.exports = class MongoDatabaseCollection {
-  constructor (mongoCollection) {
+  constructor (mongoCollection, collectionName) {
     this.collection = mongoCollection
+    this.name = collectionName
+  }
+
+  getCollectionName () {
+    return this.name
   }
 
   createIndex (keys, options) {

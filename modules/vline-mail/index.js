@@ -1,10 +1,17 @@
 const nodeMailin = require('node-mailin')
 const cheerio = require('cheerio')
 
+const os = require('os')
+const path = require('path')
+const util = require('util')
+
 const handleChange = require('./modules/handle-change')
 const handleCancellation = require('./modules/handle-cancellation')
 const handleNonStop = require('./modules/handle-non-stop')
 const handleReinstatement = require('./modules/handle-reinstatement')
+const handleNoCatering = require('./modules/handle-no-catering')
+
+const HTTPSServer = require('../../server/HTTPSServer')
 
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
@@ -12,17 +19,11 @@ const config = require('../../config.json')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 async function inboundMessage(connection, data) {
-  let sender = data.from.text
-  if (sender.includes('@inform.vline.com.au')) {
-    let {subject, html} = data
-    let $ = cheerio.load(html)
-    let textContent = $('center').text()
+  let {subject, html} = data
+  let $ = cheerio.load(html)
+  let textContent = $('center').text()
 
-    handleMessage(subject || '', textContent)
-  } else {
-    global.loggers.spamMail.log(`Recieved Spam To ${data.to.text} From ${sender} (IP ${connection.remoteAddress}, HOST ${connection.clientHostname}): ${data.text.trim()}\n`)
-    global.loggers.spamMail.log('To Data: ', data.to)
-  }
+  handleMessage(subject || '', textContent)
 }
 
 async function handleMessage(subject, rawText) {
@@ -32,7 +33,7 @@ async function handleMessage(subject, rawText) {
     .replace(/  +/g, ' ').trim()
 
   if (text.length > 300) {
-    return global.loggers.spamMail.log(`Disregarded vline email: ${text.trim()}`)
+    return global.loggers.mail.log(`Disregarded vline email: ${text.trim()}`)
   }
 
   global.loggers.mail.log(`Got Mail: ${text.replace(/\n/g, ' ')}`)
@@ -48,6 +49,8 @@ async function handleMessage(subject, rawText) {
     await handleReinstatement(database, text)
   } else if (text.includes('will not stop at') || text.includes('will run express') || text.includes('will not be stopping')) {
     await handleNonStop(database, text)
+  } else if (text.includes('without') && text.includes('buffet')) {
+    await handleNoCatering(database, text)
   } else {
     await handleChange(database, text)
   }
@@ -55,15 +58,40 @@ async function handleMessage(subject, rawText) {
 
 module.exports = () => {
   database.connect(async err => {
+    let genLog = (logger, level) => ((json, text, ...others) => logger[level](json, util.format(text, ...others)))
+
     nodeMailin.start({
       port: 25,
       logLevel: 'error',
+      debug: true,
       smtpOptions: {
-        SMTPBanner: 'TransportVic V/Line Inform Email Server'
-      }
+        banner: 'TransportVic V/Line Inform Email Server',
+        logger: {
+          info: genLog(global.loggers.mail, 'info'),
+          error: genLog(global.loggers.mail, 'err'),
+          debug: genLog(global.loggers.mail, 'debug'),
+        },
+        debug: true
+      },
+
+      tmp: path.join(os.tmpdir(), '.node_mail'),
+      logFile: path.join(__dirname, '..', '..', 'logs', 'mail.log'),
+      verbose: true
     })
 
     global.loggers.mail.info('V/Line Email Server started')
+
+    nodeMailin.on('validateRecipient', (session, address, callback) => {
+      if (address !== config.vlineInformEmail) {
+        let error = new Error(`5.1.1 <${address}>: Requested action not taken: mailbox unavailable`)
+        error.responseCode = 550
+
+        global.loggers.spamMail.log(`Rejected mail addressed to ${address}`)
+
+        return callback(error)
+      }
+      callback()
+    })
 
     nodeMailin.on('message', (connection, data, content) => {
       inboundMessage(connection, data)

@@ -2,6 +2,7 @@ const express = require('express')
 const router = new express.Router()
 const utils = require('../../../../utils')
 const PIDBackend = require('../PIDBackend')
+const csrf = require('../csrf')
 
 let validPIDTypes = ['escalator', 'platform']
 let cityLoopConfigStops = ['Flinders Street', 'Parliament', 'Melbourne Central', 'Flagstaff', 'Southern Cross', 'North Melbourne', 'Jolimont', 'Richmond']
@@ -12,26 +13,30 @@ async function getData(req, res, options={}) {
   return await PIDBackend.getPIDData(station, req.params.platform, options, res.db)
 }
 
-router.get('/:type/:platform/:station*?', async (req, res, next) => {
+router.get('/:type/:platform/:station*?', csrf, async (req, res, next) => {
   let pidType = req.params.type
   if (!validPIDTypes.includes(pidType)) return next()
   getData(req, res)
 
   res.render('mockups/fss/' + pidType, {
     platform: req.params.platform,
-    now: utils.now()
+    now: utils.now(),
+    csrf: await req.csrfToken()
   })
 })
 
-router.post('/:type/:platform/:station*?', async (req, res) => {
+router.post('/:type/:platform/:station*?', csrf, async (req, res) => {
   res.json(await getData(req, res))
 })
 
-router.get('/trains-from-fss', async (req, res) => {
-  res.render('mockups/fss/trains-from-fss', { now: utils.now() })
+router.get('/trains-from-fss', csrf, async (req, res) => {
+  res.render('mockups/fss/trains-from-fss', {
+    now: utils.now(),
+    csrf: await req.csrfToken()
+  })
 })
 
-router.post('/trains-from-fss', async (req, res) => {
+router.post('/trains-from-fss', csrf, async (req, res) => {
   let departures = await getData({ params: {
     platform: '*'
   } }, res, {

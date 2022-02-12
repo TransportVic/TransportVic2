@@ -1,7 +1,7 @@
 if departures.length
   for departure in departures
     div.departure.noNumber
-      a.departureInfo
+      a(href=departure.destinationURL).departureInfo
         -
           let routeName = departure.trip.routeName
           if (departure.isRailReplacementBus) {

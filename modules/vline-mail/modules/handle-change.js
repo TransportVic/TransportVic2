@@ -53,7 +53,7 @@ async function setServiceAsChanged(db, departureTime, origin, destination, modif
   }
 }
 
-function change(db, text) {
+async function change(db, text) {
   if (text.includes('delay')) return
 
   let service = (text + '.').match(/(\d{1,2}[:.]\d{1,2}) ([\w ]+) to ([\w ]+) will (?:now .*?)?(?:be )?(\w+) (?:earl\w* )?(?:at|from|in|out of) ([\w ]*?)(?: at.*?)?(?: [\d.:]*)?(?: today.*?)?(?: due.*?)?(?: and.*?)?\./m)
@@ -84,11 +84,11 @@ function change(db, text) {
       }
     }
 
-    setServiceAsChanged(db, departureTime, origin, destination, modifications)
+    await setServiceAsChanged(db, departureTime, origin, destination, modifications)
   } else {
     service = text.match(/(\d{1,2}[:.]\d{1,2})/)
     if (service && service.includes('terminate')) {
-      cancellation(text, db)
+      await cancellation(text, db)
 
       global.loggers.mail.err('Was told train was terminating early but not where, marking as cancelled')
     } else {

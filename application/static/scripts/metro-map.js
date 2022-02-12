@@ -28,7 +28,7 @@ function generateName(train) {
   return `Run ${train.runID}
   <br>Dest: ${train.destination}
   <br>Next: ${train.nextStop.stopName.slice(0, -16)} Plat. ${train.nextStop.platform}
-  <br>Type: ${train.vehicle}`
+  <br>Type: ${train.vehicle}` + (train.poorLocation ? '<br>Train has poor location data' : '')
 }
 
 function createIcon(train) {

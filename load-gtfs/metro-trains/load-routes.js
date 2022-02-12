@@ -58,20 +58,20 @@ database.connect({
   let rce
   if (rce = await routes.findDocument({ routeGTFSID: "2-ain" })) {
     let rceLength = flemington.routePath[0].length
-    let rceDown = flemington.routePath[0].path
-    let rceUp = flemington.routePath[0].path.slice(0).reverse()
+    let rceDown = flemington.routePath[0].path.coordinates
+    let rceUp = flemington.routePath[0].path.coordinates.slice(0).reverse()
 
     rce.routePath.forEach(path => {
-      let points = path.path
+      let points = path.path.coordinates
       let start = points[0], end = points[points.length - 1]
       let startPoint = turf.point(start)
       let endPoint = turf.point(end)
 
       if (pointsClose(start, rceLoc) && turf.booleanWithin(endPoint, city)) { // UP
-        path.path = rceUp
+        path.path.coordinates = rceUp
         path.length = rceLoc
       } else if (turf.booleanWithin(startPoint, city) && pointsClose(end, rceLoc)) {
-        path.path = rceDown
+        path.path.coordinates = rceDown
         path.length = rceLength
       }
     })

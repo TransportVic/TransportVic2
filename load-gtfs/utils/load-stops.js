@@ -32,17 +32,10 @@ module.exports = async function(stops, data, stopsLookup) {
       })
     }
 
-    let actualMode = stop.mode === 'nbus' ? 'bus' : stop.mode
-    let flags = null
-    if (actualMode === 'bus') {
-      flags = {
-        isNightBus: stop.mode === 'nbus',
-        hasRegularBus: stop.mode === 'bus'
-      }
-    }
+    let mode = stop.mode
 
     if (matchingStop) {
-      let matchingBay = matchingStop.bays.find(bay => bay.stopGTFSID === stop.stopGTFSID && bay.mode === actualMode)
+      let matchingBay = matchingStop.bays.find(bay => bay.stopGTFSID === stop.stopGTFSID && bay.mode === mode)
 
       if (matchingBay) {
         let index = matchingStop.bays.indexOf(matchingBay)
@@ -59,22 +52,11 @@ module.exports = async function(stops, data, stopsLookup) {
 
         matchingBay.mykiZones = matchingBay.mykiZones.sort((a, b) => a - b)
 
-        if (stop.mode === 'bus') {
-          matchingBay.flags = {
-            isNightBus: false,
-            hasRegularBus: true
-          }
-        } else if (stop.mode === 'nbus') {
-          matchingBay.flags.isNightBus = true
-        } else matchingBay.flags = flags
-
         matchingStop.bays[index] = matchingBay
       } else {
-        stop.mode = actualMode
         matchingStop.bays.push({
           ...stop,
-          mykiZones: datamartStop.mykiZones,
-          flags
+          mykiZones: datamartStop.mykiZones
         })
       }
 
@@ -103,7 +85,6 @@ module.exports = async function(stops, data, stopsLookup) {
         _id: matchingStop._id
       }, matchingStop)
     } else {
-      stop.mode = actualMode
       let stopData = {
         stopName: stop.fullStopName,
         suburb: [stop.suburb],
@@ -112,8 +93,7 @@ module.exports = async function(stops, data, stopsLookup) {
         codedNames: [utils.encodeName(stop.fullStopName)],
         bays: [{
           ...stop,
-          mykiZones: datamartStop.mykiZones,
-          flags
+          mykiZones: datamartStop.mykiZones
         }],
         location: {
           type: 'MultiPoint',

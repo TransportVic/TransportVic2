@@ -24,6 +24,53 @@ async function requestTimings() {
     }, database)
     await utils.sleep(2000)
   })
+
+  let timetables = await liveTimetables.findDocuments({
+    mode: 'metro train',
+    operationDays: utils.getYYYYMMDDNow(),
+    runID: {
+      $in: extraTrains.map(train => train.runID)
+    }
+  }).toArray()
+
+  let sorted = timetables.sort((a, b) => a.stopTimings[0].departureTimeMinutes - b.stopTimings[0].departureTimeMinutes)
+
+  let forming = {}
+  let formedBy = {}
+
+  for (let i = 0; i < sorted.length; i++) {
+    let train = sorted[i]
+    let trainDirection = train.direction
+    let destinationStop = train.stopTimings.find(stop => stop.stopName === train.trueDestination)
+
+    let possibleForming = sorted.slice(i + 1).find(possibleTrain => {
+      let originStop = possibleTrain.stopTimings.find(stop => stop.stopName === possibleTrain.trueOrigin)
+
+      return possibleTrain.direction !== trainDirection
+        && possibleTrain.trueOrigin === train.trueDestination
+        && originStop.platform === destinationStop.platform
+        && originStop.departureTimeMinutes > destinationStop.arrivalTimeMinutes
+    })
+
+    if (possibleForming) {
+      forming[train.runID] = possibleForming.runID
+      formedBy[possibleForming.runID] = train.runID
+    }
+  }
+
+  await async.forEach(sorted, async train => {
+    let update = { forming: null, formedBy: null }
+    if (forming[train.runID]) update.forming = forming[train.runID]
+    if (formedBy[train.runID]) update.formedBy = formedBy[train.runID]
+
+    if (update.forming || update.formedBy) {
+      await liveTimetables.updateDocument({
+        _id: train._id
+      }, {
+        $set: update
+      })
+    }
+  })
 }
 
 database.connect(async () => {

@@ -2,6 +2,7 @@ const config = require('../../config.json')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const utils = require('../../utils')
 const stops = require('../../additional-data/bus-tracker/stops')
+const nightStops = require('../../additional-data/bus-tracker/night-stops')
 const async = require('async')
 const getDepartures = require('../../modules/bus/get-departures')
 const schedule = require('./scheduler')
@@ -9,31 +10,48 @@ const schedule = require('./scheduler')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
 
-function isNight() {
+function isNightNetwork() {
   let minutes = utils.getMinutesPastMidnightNow()
 
-  return 1261 <= minutes && minutes <= 1439 || minutes <= 60 // 2101 - 0100
+  return minutes > 60 && minutes <= 300 // 0100 - 0500
 }
 
 function pickRandomStops() {
-  let size = 26
-  if (isNight()) size = Math.floor(size / 2)
-  return utils.shuffle(stops).slice(0, size)
+  if (isNightNetwork()) {
+    return utils.shuffle(nightStops).slice(0, 28)
+  } else {
+    return utils.shuffle(stops).slice(0, 29)
+  }
+}
+
+function shouldRun() {
+  let minutes = utils.getMinutesPastMidnightNow()
+  let dayOfWeek = utils.getDayOfWeek(utils.now())
+
+  if (minutes >= 240 || minutes <= 60) return true // from 4am to 1am (next day)
+
+  if (['Sat', 'Sun'].includes(dayOfWeek)) { // Considering the true day, NN runs on sat & sun morn
+    return minutes < 240 // 2359 - 0459
+  }
+
+  return false
 }
 
 async function requestTimings() {
+  if (!shouldRun()) return
+
   let stops = pickRandomStops()
 
   try {
     await async.forEachOf(stops, async (stop, i) => {
-      global.loggers.trackers.bus.info('requesting timings for', stop)
       let [codedSuburb, codedName] = stop.split('/')
       let dbStop = await dbStops.findDocument({ codedName, codedSuburb })
       if (!dbStop) return global.loggers.trackers.bus.err('could not find', stop)
 
       setTimeout(async () => {
+        global.loggers.trackers.bus.info('requesting timings for', stop)
         await getDepartures(dbStop, database)
-      }, i * 15000)
+      }, i * 10000)
     })
   } catch (e) {
     global.loggers.trackers.bus.err('Failed to get bus trips this round', e)
@@ -43,8 +61,9 @@ async function requestTimings() {
 database.connect(async () => {
   dbStops = database.getCollection('stops')
   schedule([
-    [0, 60, 10],
-    [300, 1260, 7],
-    [1261, 1440, 10]
+    [0, 60, 6.5],
+    [60, 299, 6],
+    [300, 1260, 5],
+    [1261, 1440, 6]
   ], requestTimings, 'bus tracker', global.loggers.trackers.bus)
 })

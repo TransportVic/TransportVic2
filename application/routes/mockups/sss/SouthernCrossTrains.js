@@ -92,7 +92,7 @@ async function getVNETServices(vlinePlatform, isDepartures, db) {
     let destinationVNETName = $$('Destination').text()
 
     let accessibleTrain = $$('IsAccessibleAvailable') === 'true'
-    let barAvailable = $$('IsBuffetAvailable') === 'true'
+    let cateringAvailable = $$('IsBuffetAvailable') === 'true'
 
     let vehicle = $$('Consist').text().replace(/ /g, '-')
     const vehicleConsist = $$('ConsistVehicles').text().replace(/ /g, '-')
@@ -141,7 +141,7 @@ async function getVNETServices(vlinePlatform, isDepartures, db) {
       platform, estimatedDepartureTime,
       direction,
       vehicle: fullVehicle,
-      barAvailable,
+      cateringAvailable,
       accessibleTrain,
       vehicleType
     })
@@ -246,7 +246,7 @@ async function getServicesFromVNET(vlinePlatform, isDepartures, db) {
       origin: trip.origin.slice(0, -16),
       destination: trip.destination.slice(0, -16),
       flags: {
-        barAvailable: departure.barAvailable,
+        cateringAvailable: departure.cateringAvailable,
         accessibleTrain: departure.accessibleTrain
       },
       tripFlags: nspTrip ? nspTrip.flags : {},

@@ -99,7 +99,7 @@ function checkAndUpdateTrains() {
 
       if (estimatedDepartureTime) {
         minutes = Math.floor(minutes).toString()
-        if (timeDiff <= 0) minutes = 'NOW'
+        if (timeDiff <= 1000 * 45) minutes = 'NOW'
 
         let timeToDepart = new TextObject(minutes, font, new Position(0, 0), 1)
 
@@ -108,7 +108,7 @@ function checkAndUpdateTrains() {
       }
 
       bottomRowText = [nextDeparture.type]
-      if (nextDeparture.type !== 'Stops All Stations') {
+      if (nextDeparture.type !== 'Stops All Stations' && nextDeparture.type !== 'Not Taking Passengers') {
         bottomRowText.push(nextDeparture.txt)
       }
     } else {

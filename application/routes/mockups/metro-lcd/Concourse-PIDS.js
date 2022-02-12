@@ -5,6 +5,7 @@ const querystring = require('querystring')
 const utils = require('../../../../utils')
 const PIDBackend = require('../PIDBackend')
 const stationDestinations = require('./station-destinations')
+const csrf = require('../csrf')
 
 async function getData(req, res, options={}) {
   let station = await PIDBackend.getStation(req.params.station, res.db)
@@ -12,13 +13,16 @@ async function getData(req, res, options={}) {
   return await PIDBackend.getPIDData(station, '*', options, res.db)
 }
 
-router.get('/:station/up-down', async (req, res) => {
+router.get('/:station/up-down', csrf, async (req, res) => {
   getData(req, res)
 
-  res.render('mockups/metro-lcd/concourse/up-down', { now: utils.now() })
+  res.render('mockups/metro-lcd/concourse/up-down', {
+    now: utils.now(),
+    csrf: await req.csrfToken()
+  })
 })
 
-router.get('/:station/interchange', async (req, res) => {
+router.get('/:station/interchange', csrf, async (req, res) => {
   let station = await PIDBackend.getStation(req.params.station, res.db)
 
   let stationName = station ? station.stopName.slice(0, -16) : '??'
@@ -28,12 +32,13 @@ router.get('/:station/interchange', async (req, res) => {
   res.render('mockups/metro-lcd/concourse/interchange', {
     now: utils.now(),
     stationName,
-    destinations
+    destinations,
+    csrf: await req.csrfToken()
   })
 })
 
 
-router.get('/:station/interchange/destinations', async (req, res) => {
+router.get('/:station/interchange/destinations', csrf, async (req, res) => {
   let station = await PIDBackend.getStation(req.params.station, res.db)
 
   let stationName = station ? station.stopName.slice(0, -16) : '??'
@@ -43,7 +48,7 @@ router.get('/:station/interchange/destinations', async (req, res) => {
 })
 
 
-router.post('/:station/up-down', async (req, res) => {
+router.post('/:station/up-down', csrf, async (req, res) => {
   let departures = await getData(req, res, {
     maxDepartures: Infinity
   })
@@ -75,7 +80,7 @@ router.post('/:station/up-down', async (req, res) => {
 })
 
 
-router.post('/:station/interchange', async (req, res) => {
+router.post('/:station/interchange', csrf, async (req, res) => {
   let departures = await getData(req, res, {
     maxDepartures: Infinity,
     includeStopTimings: true

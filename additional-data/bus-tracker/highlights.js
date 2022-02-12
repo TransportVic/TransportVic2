@@ -16,7 +16,7 @@ module.exports = [{
 }, {
   name: 'Ventura CB80',
   track: ['V993'],
-  routes: ['697', '699', '735', '736', '757', '765', '768'],
+  routes: ['735', '736', '765'],
   type: 'include'
 }, {
   name: 'Ventura B10BLE',
@@ -29,12 +29,12 @@ module.exports = [{
   routes: [],
   type: 'exclude'
 }, {
-  name: 'Transdev Minibuses',
+  name: 'Kinetic Minibuses',
   track: ['T119', 'T120', 'T129', 'T130', 'T131', 'T132', 'T133', 'T183'],
   routes: ['280', '282', '370'],
   type: 'exclude'
 }, {
-  name: 'Transdev Specials',
+  name: 'Kinetic Specials',
   track: ['T703', 'T705', 'T708', 'T710', 'T712', 'T736', 'T737', 'T738', 'T739'],
   routes: [],
   type: 'exclude'
@@ -45,17 +45,17 @@ module.exports = [{
   type: 'include'
 }, {
   name: 'Cranbourne Specials',
-  track: ['CR3', 'CR9', 'CR11', 'CR13', 'CR37'],
+  track: ['CR3', 'CR9', 'CR11', 'CR12', 'CR13', 'CR37'],
   routes: [],
   type: 'exclude'
 }, {
   name: 'Route Livery Buses',
-  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'CO107', 'CO108', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
+  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'CO107', 'CO108', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'CO175', 'CO176', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
   routes: ['201', '301', '401', '601'],
   type: 'exclude'
 }, {
   name: 'Non-Perm Route Livery Buses',
-  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'CO107', 'CO108', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
+  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'CO107', 'CO108', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'CO175', 'CO176', 'D897', 'D898', 'D899', 'D900', 'V1255', 'V1256'],
   routes: ['201', '301', '401', '601'],
   type: 'include',
   buses: 'exclude'
@@ -88,7 +88,7 @@ module.exports = [{
 }, {
   name: 'CDC Oakleigh Hybrids',
   track: ['CO152', 'CO157', 'CO158', 'CO159', 'CO160', 'CO161', 'CO162', 'CO163'],
-  routes: ['605', '630'],
+  routes: ['601', '605', '630'],
   type: 'exclude'
 }, {
   name: 'CDC Oakleigh Ex-Drivers',
@@ -121,13 +121,13 @@ module.exports = [{
   routes: [],
   type: 'exclude'
 }, {
-  name: 'Transdev Specials',
+  name: 'Kinetic Specials',
   track: ['T574', 'T585'],
   routes: [],
   type: 'exclude'
 }, {
   name: 'Sunbury Specials',
-  track: ['S16'],
+  track: ['S16', 'S35', 'S36'],
   routes: [],
   type: 'exclude'
 }, {
@@ -137,7 +137,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Dysons Specials',
-  track: ['D184', 'D185', 'D186', 'D189', 'D259', 'D260', 'D281', 'D282', 'D426', 'D427', 'D428', 'D429', 'D430', 'D431', 'D433', 'D434', 'D435', 'D754', 'D755', 'D756', 'D757', 'D758', 'D759', 'D760', 'D761', 'D762', 'D763', 'D764', 'D768'],
+  track: ['D184', 'D185', 'D186', 'D189', 'D259', 'D260', 'D281', 'D282', 'D426', 'D427', 'D428', 'D429', 'D430', 'D431', 'D432', 'D433', 'D434', 'D435', 'D754', 'D755', 'D756', 'D757', 'D758', 'D759', 'D760', 'D761', 'D762', 'D763', 'D764', 'D768'],
   routes: [],
   type: 'exclude'
 }, {
@@ -163,7 +163,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Panorama Specials',
-  track: ['P3', 'P5', 'P7', 'P47'],
+  track: ['P3', 'P5', 'P7', 'P19', 'P47'],
   routes: [],
   type: 'exclude'
 }, {

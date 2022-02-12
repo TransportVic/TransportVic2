@@ -34,10 +34,7 @@ async function getData(db) {
 
     modeRoutePaths[mode] = routePaths.filter(path => {
       return !path.isRailBus
-    }).map(path => encode({
-      type: "LineString",
-      coordinates: path.path
-    }, { precision: 5 }).coordinates)
+    }).map(path => encode(path.path, { precision: 5 }).coordinates)
   })
 
   let end = new Date()

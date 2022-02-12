@@ -19,7 +19,7 @@ async function main() {
   fs.mkdirSync(path.join(__dirname, 'timetables'), { recursive: true })
 
   let body = await utils.request('https://corporate.vline.com.au/Network-Access/Network-service-plan', {
-    timeout: 30 * 1000
+    timeout: 30000
   })
   let $ = cheerio.load(body)
   let as = Array.from($('div[id="publication-list"]:nth-child(3) a'))

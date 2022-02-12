@@ -20,6 +20,7 @@ let interval = setInterval(() => {
     else console.log('Stopping long request timeout')
   }
 }, 3000)
+interval.unref()
 
 String.prototype.format = (function (i, safe, arg) {
   function format () {
@@ -196,6 +197,7 @@ module.exports = {
     .replace(/Trk(\b)/g, 'Track$1')
     .replace(/Vsta(\b)/g, 'Vista$1')
     .replace(/Pkwy(\b)/g, 'Parkway$1')
+    .replace(/Devn(\b)/g, 'Deviation$1')
     .replace(/Sec Col(\b)/g, 'Secondary College$1')
     .replace(/Rec Res(\b)/g, 'Rec Reserve$1')
     .replace(/SC Senior Campus(\b)/g, 'Secondary College Senior Campus$1')
@@ -332,7 +334,6 @@ module.exports = {
     for (let i = 0; i < maxRetries; i++) {
       try {
         body = await fetch(url, fullOptions)
-
         break
       } catch (e) {
         error = e
@@ -349,6 +350,13 @@ module.exports = {
         error.timeoutDuration = totalTime
       }
       throw error
+    }
+
+    if (body && body.status.toString()[0] !== '2') {
+      let err = new Error('Bad Request Status')
+      err.status = body.status
+      err.response = await (options.raw ? body.buffer() : body.text())
+      throw err
     }
 
     let end = +new Date()
@@ -542,7 +550,8 @@ module.exports = {
     try {
       data = await noMatch()
     } catch (e) {
-      global.loggers.general.err('Getting data for', lock, 'for key', key, 'failed', e)
+      if (global.loggers) global.loggers.general.err('Getting data for', lock, 'for key', key, 'failed', e)
+      else console.error('Getting data for', lock, 'for key', key, 'failed', e)
       locks[lock][key].emit('fail', e)
       delete locks[lock][key]
       throw e

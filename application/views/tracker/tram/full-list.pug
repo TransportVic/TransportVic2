@@ -1,0 +1,26 @@
+extends ../../layout
+
+block head
+  -
+    title = 'TransportVic - Tracker/Tram - Full Listing'
+    description = `Tracking all trams`
+  title #{title}
+  link(rel='preload' as='style' href='/static/css/tracker/results.css')
+
+block title
+  span Tram Tracker - Full Listing
+  
+block style
+  link(rel='stylesheet' href='/static/css/tracker/results.css')
+
+block content
+  h1.title Tracking All Trams on #{date.format('dddd, MMMM Do YYYY')}
+  h2 Fleet Number, Service
+  for tram in allTrams
+    div.trip
+      -
+        let {fleetNumber} = tram
+        let text
+        if (trams[fleetNumber]) text = trams[fleetNumber].join(', ')
+        else text = '--'
+      a(href=`/tram/tracker/fleet?fleet=${tram.tram}&date=${rawDate}`) #{fleetNumber}: #{text}
