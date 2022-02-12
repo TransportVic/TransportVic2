@@ -23,4 +23,4 @@ block content
         let text
         if (buses[fleetNumber]) text = buses[fleetNumber].join(', ')
         else text = '--'
-      a(href=`/bus/tracker/fleet?fleet=${fleetNumber}`) #{fleetNumber}: #{text}
+      a(href=`/bus/tracker/fleet?fleet=${fleetNumber}&date=${rawDate}`) #{fleetNumber}: #{text}

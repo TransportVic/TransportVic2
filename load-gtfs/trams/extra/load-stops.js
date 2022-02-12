@@ -1,11 +1,14 @@
 const utils = require('../../../utils')
 const ptvAPI = require('../../../ptv-api')
 const fs = require('fs')
+const path = require('path')
 
-ptvAPI.getPTVKey().then(async key => {
-  let data = JSON.parse(await utils.request('https://www.ptv.vic.gov.au/lithe/stored-stops-all?__tok=' + key))
+ptvAPI.getPTVKey(undefined, 12000).then(async key => {
+  let data = JSON.parse(await utils.request('https://www.ptv.vic.gov.au/lithe/stored-stops-all?__tok=' + key, {
+    timeout: 12000
+  }))
 
-  fs.writeFileSync(__dirname + '/tram-stops.json', JSON.stringify(data.stops.filter(x => x.primaryChronosMode === '1').map(x => {
+  fs.writeFileSync(path.join(__dirname, 'tram-stops.json'), JSON.stringify(data.stops.filter(x => x.primaryChronosMode === '1').map(x => {
     let m = x.title.match(/^(D?\d+[a-zA-Z]?)-/)
     let stopName = x.title.split(' #')[0]
     let stopNumber = x.title.split(' #')[1]

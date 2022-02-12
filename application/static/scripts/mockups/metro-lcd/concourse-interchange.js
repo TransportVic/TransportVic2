@@ -100,7 +100,10 @@ function updateDestinations(departures, stationName) {
 
 function updateBody() {
   $.ajax({
-    method: 'POST'
+    method: 'POST',
+    data: {
+      csrf: $('[name=csrf]').value
+    }
   }, (err, status, body) => {
     if (err) return setListenAnnouncements()
     setFullMessageActive(false)

@@ -65,7 +65,10 @@ let previousStarts = [0]
 
 function updateBody(firstTime, n) {
   $.ajax({
-    method: 'POST'
+    method: 'POST',
+    data: {
+      csrf: $('[name=csrf]').value
+    }
   }, (err, status, body) => {
     if (err) return setListenAnnouncements()
     setFullMessageActive(false)

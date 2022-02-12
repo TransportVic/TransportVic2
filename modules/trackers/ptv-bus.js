@@ -40,7 +40,7 @@ async function requestTimings() {
         ))
 
         await async.forEach(data.departures, async departure => {
-          if (departure.run.vehicle_descriptor) {
+          if (departure.run.vehicle_descriptor && departure.run.vehicle_descriptor.id) {
             let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
             let routeNumber = departure.route.short_label
             let routeGTFSID = '4-' + routeNumber

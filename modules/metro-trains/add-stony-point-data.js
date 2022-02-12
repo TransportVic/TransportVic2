@@ -31,3 +31,5 @@ module.exports = async function (trip, departureTime, db) {
 
   return trip
 }
+
+module.exports.singleSTYTrains = singleSTYTrains

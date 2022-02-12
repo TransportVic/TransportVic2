@@ -1,7 +1,6 @@
 const express = require('express')
 const router = new express.Router()
 const getDepartures = require('../../../modules/tram/get-departures')
-const getDeparturesExperimental = require('../../../modules/tram/get-departures-experimental')
 const moment = require('moment')
 const utils = require('../../../utils')
 const tramDestinations = require('../../../additional-data/tram-destinations')
@@ -28,8 +27,7 @@ async function loadDepartures(req, res) {
   let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, stop)
 
 
-  // let departures = await getDepartures(stop, res.db)
-  let departures = await getDeparturesExperimental(stop, res.db)
+  let departures = await getDepartures(stop, res.db)
 
   let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 

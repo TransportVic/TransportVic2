@@ -28,7 +28,8 @@ function fixOperator(operator) {
 
   if (operator === 'CDC') return 'CDC Melbourne'
   if (operator.includes('Ventura')) return 'Ventura Bus Lines'
-  if (operator === 'Transdev') return 'Transdev Melbourne'
+  if (operator === 'Transdev') return 'Kinetic'
+  if (operator.includes('Kinetic')) return 'Kinetic'
   if (operator === 'McHarrys') return 'McHarrys Bus Lines'
   if (operator === 'Panorama') return 'Panorama Coaches'
   if (operator === 'Sita Bus Lines') return 'Transit Systems'

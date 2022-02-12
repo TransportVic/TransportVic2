@@ -54,8 +54,8 @@ database.connect({}, async () => {
 
     await async.forEachSeries([0, 1], async direction => {
       try {
-        let data = await utils.request(`https://yarratrams.com.au/umbraco/surface/data/routestopsdata/?id=${service}&dir=${direction}`, {
-          timeout: 10000
+        let data = await utils.request(`https://yarratrams.com.au/data/routestopsdata/?id=${service}&dir=${direction}`, {
+          timeout: 12000
         })
         let $ = cheerio.load(data)
 
@@ -77,9 +77,12 @@ database.connect({}, async () => {
           stopNumbers[tramTrackerID] = stopNumber
 
           if (!stopDirections[tramTrackerID]) stopDirections[tramTrackerID] = []
+          let serviceToUse = service
+          if (service === '3a') serviceToUse = '3'
+
           stopDirections[tramTrackerID].push({
-            service,
-            gtfsDirection: directions[`${service}.${direction}`]
+            service: serviceToUse,
+            gtfsDirection: directions[`${serviceToUse}.${direction}`]
           })
         })
 

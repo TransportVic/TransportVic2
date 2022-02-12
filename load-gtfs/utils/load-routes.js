@@ -4,6 +4,14 @@ const gtfsUtils = require('../../gtfs-utils')
 const gtfsModes = require('../gtfs-modes.json')
 const loopDirections = require('../../additional-data/loop-direction')
 
+function parseRouteGTFSID(rawRouteGTFSID, mode) {
+  if (rawRouteGTFSID.includes('-aus-')) {
+    let routeNumber = rawRouteGTFSID.match(/\d+-(\d+)/)[1]
+    return `${mode}-${routeNumber}`
+  }
+  return gtfsUtils.simplifyRouteGTFSID(rawRouteGTFSID)
+}
+
 module.exports = async function(routes, mode, routeData, shapeJSON, operator, name, routeNumber) {
   let routeOperatorsSeen = []
   let rawRouteNames = {}
@@ -12,7 +20,7 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
   let routeGTFSIDsSeen = []
 
   routeData.forEach(line => {
-    let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(line[0])
+    let routeGTFSID = parseRouteGTFSID(line[0], mode)
     let rawRouteName = line[3]
     if (rawRouteNames[routeGTFSID]) {
       if (rawRouteNames[routeGTFSID].length < rawRouteName.length)
@@ -42,14 +50,14 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
         routeGTFSID
       })
 
-      let gtfsRouteData = routeData.find(line => gtfsUtils.simplifyRouteGTFSID(line[0]) === routeGTFSID)
+      let gtfsRouteData = routeData.find(line => parseRouteGTFSID(line[0], mode) === routeGTFSID)
 
       let rawRouteName = rawRouteNames[routeGTFSID]
 
       let routeName = name ? name(gtfsRouteData[2], rawRouteName, routeGTFSID) || rawRouteName : rawRouteName
 
       if (matchingRoute) {
-        let getFingerprint = shape => `${shape.length}-${shape.path[0].join(',')}-${shape.path.slice(-1)[0].join(',')}`
+        let getFingerprint = shape => `${shape.length}-${shape.path.coordinates[0].join(',')}-${shape.path.coordinates.slice(-1)[0].join(',')}`
 
         let shapeFingerprint = getFingerprint(shapeFile)
         let matchingPath = matchingRoute.routePath.find(path => shapeFingerprint === getFingerprint(path))

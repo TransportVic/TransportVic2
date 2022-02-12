@@ -61,7 +61,7 @@ database.connect({
     if (permittedStops.includes(stopName) && rawStopName.includes('Platform')) {
       let originalName = rawStopName.replace('Station', 'Railway Station')
       let mergeName = stopName.replace('Station', 'Railway Station')
-      let stopGTFSID = parseInt(line[0].replace('P', '0')) + 140000000
+      let stopGTFSID = 'XPT' + line[0]
 
       if (mergeName === 'Melbourne (Southern Cross) Railway Station') mergeName = 'Southern Cross Railway Station'
       if (mergeName === 'Central Railway Station') mergeName = 'Sydney Central Railway Station'

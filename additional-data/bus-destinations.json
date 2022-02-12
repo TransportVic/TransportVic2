@@ -108,6 +108,10 @@
     "45": {
       "The Village Warralily SC": "Armstrong Creek"
     },
+    "49": {
+      "Belmont Shopping Village/High Street": "Belmont Village SC",
+      "Spring Street/Francis Street": "Kalkee"
+    },
     "50": {
       "Camrose Court/Strathmore Drive": "Jan Juc",
       "Duffields Road/Great Ocean Road": "Jan Juc",
@@ -131,7 +135,8 @@
     "60": {
       "Piper Lane/Piper Road": "Bendigo East",
       "Bluff Road/Leviens Road": "St. Leonards",
-      "Leonard Street/Seachange Way": "St. Leonards"
+      "Leonard Street/Seachange Way": "St. Leonards",
+      "Cole Street/Leviens Road": "St. Leonards"
     },
     "64": {
       "Oak Street/High Street": "Golden Square"
@@ -589,7 +594,8 @@
       "Ferry Terminal": "Sorrento"
     },
     "788": {
-      "The Bays Hospital": "Mornington"
+      "The Bays Hospital": "Mornington",
+      "Melbourne Road/Ocean Beach Road": "Sorrento"
     },
     "792": {
       "Baxter-Tooradin Road/Pearcedale Road": "Pearcedale"
@@ -612,6 +618,9 @@
     },
     "814": {
       "Spring Valley Reserve": "Springvale South"
+    },
+    "816": {
+      "Somerfield Drive/Perry Road": "Keysborough South"
     },
     "824": {
       "Parkmore SC": "Keysborough"
@@ -831,6 +840,10 @@
     },
     "6-W12": {
       "Hadfield Park/High Street": "Springridge"
+    },
+    "6-984": {
+      "Royal Hotel/River Street": "Corowa",
+      "K-Mart Car Park/Smollett Street": "Albury"
     }
   },
   "generic": {
@@ -882,7 +895,7 @@
     "Eighth Street/Deakin Avenue": "Mildura",
     "Lime Avenue/Eighth Street": "Mildura",
     "Merbein Post Office": "Merbein",
-    "QEII Square": "Albury",
+    "QEII Square/Dean Street": "Albury",
     "Dean Street/David Street": "Albury",
     "Water Tower Park": "Wodonga",
     "Wodonga Library": "Wodonga",

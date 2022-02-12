@@ -30,12 +30,12 @@
   background-color: #0c1d36 !important;
 }
 
-.transdev-melbourne {
-  background-color: #d30614 !important;
+.kinetic {
+  background-color: #1277c6 !important;
 }
 
-:nth-child(even) > .transdev-melbourne {
-  background-color: #b50914 !important;
+:nth-child(even) > .kinetic {
+  background-color: #1163a4 !important;
 }
 
 .dysons {

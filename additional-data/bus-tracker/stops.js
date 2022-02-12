@@ -359,5 +359,15 @@ module.exports = [
   'mitcham/harrison-street-mitcham-road',
   'altona/noordenne-avenue-millers-road',
   'craigieburn/highlands-shopping-centre',
-  'seaholme/seaholme-railway-station'
+  'seaholme/seaholme-railway-station',
+  'morwell/churchill-road-vincent-road',
+  'belmont/belmont-shopping-village-high-street',
+  'belmont/lloyd-street-corio-street',
+  'belmont/francis-street-barwon-heads-road',
+  'belmont/mount-pleasant-road-high-street',
+  'carlton/lygon-street-elgin-street',
+  'fitzroy/brunswick-street-johnston-street',
+  'heidelberg-west/olympic-village-shopping-centre-southern-road',
+  'hadfield/fawkner-memorial-park-box-forest-road',
+  'heidelberg/austin-hospital-burgundy-street'
 ]

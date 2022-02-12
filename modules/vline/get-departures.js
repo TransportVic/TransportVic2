@@ -91,7 +91,7 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
       // vehicle: departure.vehicle,
       destination: departure.destination.slice(0, -16),
       flags: {
-        barAvailable: departure.barAvailable,
+        cateringAvailable: departure.cateringAvailable,
         accessibleTrain: departure.accessibleTrain
       }
     }, currentStation, nspTrip, [])
@@ -131,7 +131,7 @@ function findFlagMap(flags) {
     map.firstClassAvailable = true
   }
   if (flags.includes('CAA')) {
-    map.barAvailable = true
+    map.cateringAvailable = true
   }
   return map
 }
@@ -414,9 +414,7 @@ async function getDepartures(station, db) {
         let flags = flagMap[serviceID]
         if (!flags) return departure
 
-        if (flags.reservationsOnly) departure.flags.reservationsOnly = true
-        if (flags.firstClassAvailable) departure.flags.firstClassAvailable = true
-        if (flags.barAvailable && !departure.flags.barAvailable) departure.flags.barAvailable = null
+        departure.flags = flags
 
         return departure
       }

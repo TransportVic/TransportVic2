@@ -12,7 +12,9 @@ async function findHCMT(today, date) {
   let hcmtTrains = await liveTimetables.findDocuments({
     operationDays: today,
     mode: 'metro train',
-    routeGTFSID: '2-PKM',
+    routeGTFSID: {
+      $in: ['2-PKM', '2-CRB']
+    },
     h: true
   }).sort({ 'stopTimings.0.departureTimeMinutes': 1 }).toArray()
 

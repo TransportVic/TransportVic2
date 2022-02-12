@@ -1,101 +1,5 @@
 module.exports = {
   "4-PMC": ["Ventura Bus Lines"],
-  "4-152": ["CDC Melbourne"],
-  "4-182": ["CDC Melbourne"],
-  "4-2X7": ["Transdev Melbourne"],
-  "4-207": ["Transdev Melbourne"],
-  "4-216": ["Transdev Melbourne"],
-  "4-220": ["Transdev Melbourne"],
-  "4-281": ["Transdev Melbourne"],
-  "4-301": ["Dysons"],
-  "4-35Z": ["Dysons"], // 357
-  "4-38X": ["Dysons"], // 386
-  '4-400': ['CDC Melbourne', 'Transit Systems'],
-  "4-406": ["CDC Melbourne"],
-  "4-409": ["CDC Melbourne"],
-  "4-41I": ["CDC Melbourne"], // 411
-  "4-41Z": ["CDC Melbourne"], // 412
-  "4-429": ["Transdev Melbourne"],
-  "4-43P": ["CDC Melbourne"], // 439
-  "4-44E": ["CDC Melbourne"], // 443
-  "4-44t": ["Transit Systems"], // 444
-  "4-444": ["Transit Systems"], // 444
-  "4-454": ["Transit Systems"],
-  "4-45S": ["Transit Systems"], // 456
-  "4-45L": ["Transit Systems"], // 456
-  "4-4X9": ["Transit Systems"], // 459
-  "4-46z": ["Kastoria Bus Lines"], // 462
-  "4-462": ["Kastoria Bus Lines"],
-  "4-463": ["Kastoria Bus Lines"],
-  "4-469": ["Kastoria Bus Lines"],
-  "4-47I": ["Tullamarine Bus Lines"], // 471
-  "4-47b": ["Kastoria Bus Lines"], // 476
-  "4-476": ["Kastoria Bus Lines"], // 476
-  "4-477": ["Tullamarine Bus Lines"], // 477
-  "4-484": ["Tullamarine Bus Lines"], // 484
-  "4-48S": ["Tullamarine Bus Lines"], // 484
-  "4-48q": ["Sunbury Bus Service"], // 489
-  "4-48P": ["Sunbury Bus Service"], // 489
-  "4-509": ["Dysons"], // 509
-  "4-5X9": ["Dysons"], // 509
-  "4-51I": ["Broadmeadows Bus Service"], // 511
-  "4-5ii": ["Broadmeadows Bus Service"], // 511
-  "4-51x": ["Moreland Bus Lines"], // 512
-  "4-51B": ["Dysons"], // 513
-  "4-525": ["Dysons"],
-  "4-52F": ["Dysons"], // 525
-  "4-52A": ["Broadmeadows Bus Service"], // 528
-  "4-5Z9": ["Broadmeadows Bus Service"], // 529
-  "4-5E0": ["Broadmeadows Bus Service"], // 530
-  "4-5E1": ["Broadmeadows Bus Service"], // 531
-  "4-53Z": ["Broadmeadows Bus Service"], // 531
-  "4-5E3": ["Broadmeadows Bus Service"], // 533
-  "4-5E7": ["Broadmeadows Bus Service"], // 537
-  "4-5A4": ["Broadmeadows Bus Service"], // 544
-  "4-5A6": ["Dysons"], // 546
-  "4-552": ["Dysons"],
-  "4-556": ["Dysons"],
-  "4-570": ["Dysons"],
-  "4-58x": ["Panorama Coaches"], // 582
-  "4-603": ["Transdev Melbourne"],
-  "4-604": ["Transdev Melbourne"],
-  "4-624": ["CDC Melbourne"], // 624
-  "4-62L": ["CDC Melbourne"], // 624
-  "4-68E": ["Martyrs Bus Service"], // 683
-  "4-70C": ["CDC Melbourne"], // 700
-  "4-704": ["Ventura Bus Lines"], // 704
-  "4-705": ["Ventura Bus Lines"], // 705
-  "4-74Z": ["Ventura Bus Lines"], // 742
-  "4-7S6": ["Ventura Bus Lines"], // 766
-  "4-7S7": ["Ventura Bus Lines"], // 767
-  "4-78N": ["Cranbourne Transit"], // 789
-  "4-79o": ["Cranbourne Transit"], // 790
-  "4-79I": ["Cranbourne Transit"], // 791
-  "4-79Z": ["Cranbourne Transit"], // 792
-  "4-79S": ["Cranbourne Transit"], // 795
-  "4-79X": ["Cranbourne Transit"], // 796
-  "4-79A": ["Cranbourne Transit"], // 798
-  "4-79g": ["Cranbourne Transit"], // 799
-  "4-800": ["Ventura Bus Lines"], // 800
-  "4-80O": ["Ventura Bus Lines"], // 800
-  "4-834": ["Ventura Bus Lines"], // 834
-  "4-84Z": ["Ventura Bus Lines"], // 842
-  "4-84E": ["Ventura Bus Lines"], // 843
-  "4-84F": ["Ventura Bus Lines"], // 845
-  "4-85X": ["Ventura Bus Lines"], // 857
-  "4-86l": ["Ventura Bus Lines"], // 861
-  "4-888": ["Ventura Bus Lines"], // 888
-  "4-889": ["Ventura Bus Lines"], // 889
-  "4-89o": ["Cranbourne Transit"], // 890
-  "4-89I": ["Cranbourne Transit"], // 891
-  "4-89Z": ["Cranbourne Transit"], // 892
-  "4-89E": ["Cranbourne Transit"], // 893
-  "4-89F": ["Cranbourne Transit"], // 894
-  "4-89v": ["Cranbourne Transit"], // 895
-  "4-89S": ["Cranbourne Transit"], // 897
-  "4-89T": ["Cranbourne Transit"], // 898
-  "4-900": ["CDC Melbourne", "Ventura Bus Lines"],
-  "4-903": ["Transdev Melbourne"],
 
   "8-95E": ["Dysons"], // 958
   "8-965": ["McKenzies Tourist Service"], // 965
@@ -108,6 +12,7 @@ module.exports = {
   "8-98Z": ["Ventura Bus Lines"], // 982
 
   "6-858": ["Dysons (Wangaratta)"], // Wangaratta - Myrtleford
+  "6-DWB": ["Dysons (Wangaratta)"], // Wangaratta - Bright
 
   "6-LGs": ["Dysons (Kyneton)"], //  Lancefield - Gisborne
   "6-LcS": ["Dysons (Kyneton)"], //  Lancefield - Sunbury - Clarkefield
@@ -242,6 +147,21 @@ module.exports = {
   "6-B2o": ["CDC Ballarat"],
   "6-B3i": ["CDC Ballarat"],
   "6-B3o": ["CDC Ballarat"],
+
+  "6-B11": ["CDC Ballarat"],
+  "6-B12": ["CDC Ballarat"],
+  "6-B13": ["CDC Ballarat"],
+  "6-B14": ["CDC Ballarat"],
+  "6-B15": ["CDC Ballarat"],
+  "6-B20": ["CDC Ballarat"],
+  "6-B21": ["CDC Ballarat"],
+  "6-B22": ["CDC Ballarat"],
+  "6-B23": ["CDC Ballarat"],
+  "6-B24": ["CDC Ballarat"],
+  "6-B25": ["CDC Ballarat"],
+  "6-B26": ["CDC Ballarat"],
+  "6-B30": ["CDC Ballarat"],
+  "6-B31": ["CDC Ballarat"],
 
   "6-G3O": ["McHarrys Bus Lines"], // 30
   "6-G45": ["McHarrys Bus Lines"], // 45

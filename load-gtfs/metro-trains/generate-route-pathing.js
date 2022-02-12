@@ -80,9 +80,9 @@ database.connect({}, async err => {
 
       shapeCache[path.fullGTFSIDs[0]] = timetable
 
-      let count = path.path.filter((point, i) => {
+      let count = path.path.coordinates.filter((point, i) => {
         if (i === 0) return
-        let previous = path.path[i - 1]
+        let previous = path.path.coordinates[i - 1]
 
         let prevOnStation = stationLocations.some(s => pointsClose(s, previous))
         let pointOnStation = stationLocations.some(s => pointsClose(s, point))
@@ -150,7 +150,7 @@ database.connect({}, async err => {
 
       let badPath = routeData.routePath.find(path => path.fullGTFSIDs.includes(timetable.shapeID))
 
-      badPath.path = fullPath
+      badPath.path.coordinates = fullPath
       badPath.isRailBus = true
 
       await asyncPause(750)

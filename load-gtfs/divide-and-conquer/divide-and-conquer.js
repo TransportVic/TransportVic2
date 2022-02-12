@@ -19,6 +19,14 @@ let shapesLineReader = new BufferedLineReader(path.join(basePath, 'shapes.txt'))
 let tripTimingsLineReader = new BufferedLineReader(path.join(basePath, 'stop_times.txt'))
 let tripsLineReader = new BufferedLineReader(path.join(basePath, 'trips.txt'))
 
+function parseRouteGTFSID(rawRouteGTFSID) {
+  if (rawRouteGTFSID.includes('-aus-')) {
+    let routeNumber = rawRouteGTFSID.match(/\d+-(\d+)/)[1]
+    return `${gtfsID}-${routeNumber}`
+  }
+  return gtfsUtils.simplifyRouteGTFSID(rawRouteGTFSID)
+}
+
 // STOPS
 async function read5000Stops() {
   let stops = []
@@ -28,7 +36,7 @@ async function read5000Stops() {
     let line = await stopsLineReader.nextLine()
     line = gtfsUtils.splitLine(line)
 
-    let stopGTFSID = parseInt(line[0])
+    let stopGTFSID = line[0]
     let originalName = line[1]
 
     if (stopGTFSID === 35117) {
@@ -104,14 +112,18 @@ async function readRouteShapes() {
     line = gtfsUtils.splitLine(line)
 
     let shapeID = line[0]
-    let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(shapeID.split('.').slice(-3)[0])
+    let rawRouteGTFSID = shapeID.split('.').slice(-3)[0]
+    let routeGTFSID = parseRouteGTFSID(rawRouteGTFSID)
 
     if (currentShapeID && currentShapeID !== shapeID) {
       shapesLineReader.unreadLine()
       shapes.push({
         shapeID: currentShapeID,
         routeGTFSID: currentRouteGTFSID,
-        path: currentShape,
+        path: {
+          type: 'LineString',
+          coordinates: currentShape
+        },
         length: currentLength
       })
       currentShape = []
@@ -134,7 +146,10 @@ async function readRouteShapes() {
   shapes.push({
     shapeID: currentShapeID,
     routeGTFSID: currentRouteGTFSID,
-    path: currentShape,
+    path: {
+      type: 'LineString',
+      coordinates: currentShape
+    },
     length: currentLength
   })
 
@@ -179,7 +194,7 @@ async function read5000TripTimings() {
       if (trips.length === 5000) return trips
     } else {
       currentTrip.push({
-        stopGTFSID: parseInt(line[3]),
+        stopGTFSID: line[3],
         arrivalTime: line[1],
         departureTime: line[2],
         stopConditions: {
@@ -252,7 +267,7 @@ async function splitTrips() {
       if (!lineData) return
       let line = gtfsUtils.splitLine(lineData)
       let [fullRouteGTFSID, calendarID, tripID, shapeID, headsign, gtfsDirection] = line
-      let routeGTFSID = gtfsUtils.simplifyRouteGTFSID(fullRouteGTFSID)
+      let routeGTFSID = parseRouteGTFSID(fullRouteGTFSID)
       let actualMode = gtfsMode === 'nbus' ? 'bus' : gtfsMode
 
       trips.push({
@@ -288,6 +303,7 @@ async function main() {
   console.log(`Completed splitting trips for GTFS ID ${gtfsID}: ${gtfsMode}`)
 
   updateStats('divide-' + datamartMode, gtfsID)
+  process.exit()
 }
 
 main()

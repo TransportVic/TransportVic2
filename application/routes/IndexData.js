@@ -90,10 +90,17 @@ router.get('/home-banner', (req, res) => {
     }
   } else {
      res.json({
+       link: '#',
+       alt: 'Alert',
+       text: 'PTV bus fleet data is currently unavailable due to a PTV error.'
+     })
+/*
+     res.json({
        link: 'https://www.patreon.com/transportsg',
        alt: 'Patreon',
        text: 'Hi! If you like this site please consider supporting me on patreon by clicking here!'
      })
+*/
   }
 })
 
@@ -115,7 +122,8 @@ router.get('/.well-known/acme-challenge/:key', rateLimit({
 }))
 
 router.get('/.well-known/acme-challenge/:key', (req, res) => {
-  let filePath = path.join(config.webrootPath, req.params.key)
+  let filePath = path.join(config.webrootPath, '.well-known', 'acme-challenge', req.params.key)
+
   let stream = fs.createReadStream(filePath)
   stream.pipe(res)
 

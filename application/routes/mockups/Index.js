@@ -41,7 +41,9 @@ router.get('/summary/:station', (req, res) => {
   let stationPlatformData = stationPlatforms[station]
   let stationPID = stationPIDs[station]
   let stationCode = stationNames[station]
-
+  if (!stationCode) {
+    return res.render('mockups/summary-known', {stationPID: [], station, stationCode: '', getURL: ''})
+  }
   preloadData(res.db, station, '*')
 
   if (stationPID.length) {

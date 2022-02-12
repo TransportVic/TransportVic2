@@ -1,19 +1,30 @@
-const SVGO = require('svgo')
+const svgo = require('svgo')
 const fs = require('fs')
 const path = require('path')
 
-let svgo = new SVGO({
-  plugins: [{
-    removeUnknownsAndDefaults: {
-      keepRoleAttr: true
-    }
-  }]
-})
-let svgoInteractives = new SVGO({
-  plugins: [{
-    removeUnknownsAndDefaults: false
-  }]
-})
+function regularOptimise(data, file) {
+  return svgo.optimize(data, {
+    path: file,
+    plugins: [{
+      name: 'removeUnknownsAndDefaults',
+      params: {
+        overrides: {
+          keepRoleAttr: true
+        }
+      }
+    }]
+  })
+}
+
+function interactiveOptimise(data, file) {
+  return svgo.optimize(data, {
+    path: file,
+    plugins: [{
+      name: 'removeUnknownsAndDefaults',
+      active: false
+    }]
+  })
+}
 
 function walk(dir, done) {
   let results = []
@@ -48,7 +59,7 @@ walk(path.join(__dirname, '../application/static/images-raw'), (err, results) =>
 
     if (result.endsWith('svg')) {
       fs.readFile(result, async (err, data) => {
-        let optimised = await (result.includes('/interactives/') ? svgoInteractives : svgo).optimize(data, {path: result})
+        let optimised = await (result.includes('/interactives/') ? interactiveOptimise : regularOptimise)(data, result)
         let optimisedData = optimised.data
         fs.writeFileSync(finalPath, optimisedData)
       })

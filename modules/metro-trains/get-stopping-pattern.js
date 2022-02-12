@@ -1,13 +1,20 @@
 const async = require('async')
 const utils = require('../../utils')
+const config = require('../../config')
 const ptvAPI = require('../../ptv-api')
 const findConsist = require('./fleet-parser')
 const metroTypes = require('../../additional-data/metro-tracker/metro-types')
 const addStonyPointData = require('../metro-trains/add-stony-point-data')
 const fixTripDestination = require('../metro-trains/fix-trip-destinations')
+const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 let borderStops = ['Richmond', 'Jolimont', 'North Melbourne', 'Flinders Street']
+let liveTrackingRoutes = [
+  'Mernda', 'hurstbridge',
+  'Alamein', 'Lilydale', 'Belgrave', 'Glen Waverley',
+  'Craigieburn', 'Sunbury'
+]
 
 function extendMetroEstimation(trip) {
   let checkStop
@@ -107,18 +114,22 @@ async function saveConsist(stopTimings, direction, departureDay, runID, consist,
       } else if (existingTrip.consist.length === 3 && !existingTrip.consist.includes(tripData.consist[0])) { // We might have matched half a train and now have the other half, sanity check
         let sanityCheckTrip = await metroTrips.findDocument({
           date: departure.departureDay,
-          consist: {
-            $and: [ // Match both the one already existing and the one given
-              tripData.consist[0],
-              existingTrip.consist[0]
-            ]
-          }
+          $and: [{ // Match both the one already existing and the one given on the same day to check if they're coupled up and can be merged
+            consist: tripData.consist[0]
+          }, {
+            consist: existingTrip.consist[0]
+          }]
         })
 
         if (sanityCheckTrip) {
           tripData.consist = sanityCheckTrip.consist
-          existingTrip = null
         }
+
+        // if they can be merged update
+        // if cannot be merged assume that another set is taking over and update
+        existingTrip = null
+      } else { // Some other length? (HCMT or random crap, override it)
+        existingTrip = null
       }
     }
   }
@@ -163,7 +174,8 @@ async function saveLocation(consist, location, metroLocations) {
 }
 
 module.exports = async function (data, db) {
-  let { ptvRunID, time, referenceTrip } = data
+  let { ptvRunID, time } = data
+  let givenRouteName = data.routeName
 
   let stopsCollection = db.getCollection('stops')
   let liveTimetables = db.getCollection('live timetables')
@@ -173,13 +185,27 @@ module.exports = async function (data, db) {
   let metroLocations = db.getCollection('metro locations')
 
   let url = `/v3/pattern/run/${ptvRunID}/route_type/0?expand=stop&expand=Run&expand=Route&expand=Direction&expand=VehicleDescriptor&expand=VehiclePosition`
+
   if (time) {
     let startTime = utils.parseTime(time)
+    let actualDepartureDay = utils.getYYYYMMDD(startTime)
     let now = utils.now()
-    if (utils.getMinutesPastMidnight(startTime) < 180) { // trip starts in the 3am overlap, we want it from the 'previous' day
-      url += `&date_utc=${startTime.add(-3.5, 'hours').toISOString()}`
-    } else if (utils.getMinutesPastMidnight(now) < 180) { // trip starts before the 3am overlap but it is currently 1-3am. hence requesting for previous day's times
-      url += `&date_utc=${now.add(-3.5, 'hours').toISOString()}`
+    let dayToday = utils.getYYYYMMDDNow()
+    let tripStartMinutes = utils.getMinutesPastMidnight(startTime)
+    let minutesPastMidnightNow = utils.getMinutesPastMidnight(now)
+
+    if (tripStartMinutes < 180) { // trip starts in the 3am overlap, we want it from the 'previous' day
+      if (givenRouteName && liveTrackingRoutes.includes(givenRouteName)) {
+        url += `&date_utc=${time}`
+      } else {
+        url += `&date_utc=${startTime.add(-3.5, 'hours').toISOString()}`
+      }
+    } else if (minutesPastMidnightNow < 180) { // trip starts before the 3am overlap but it is currently 1-3am. hence requesting for previous day's times
+      if (actualDepartureDay === dayToday) { // Its past 3am (next transport day)
+        url += `&date_utc=${time}`
+      } else { // Its yesterday
+        url += `&date_utc=${now.add(-3.5, 'hours').toISOString()}`
+      }
     } else { // sane trip, request with time now
       url += `&date_utc=${now.toISOString()}`
     }
@@ -192,11 +218,14 @@ module.exports = async function (data, db) {
 
   let location = run.vehicle_position
 
-  if (departures.length === 0) return referenceTrip
+  if (departures.length === 0) return null
 
   let dbStops = {}
 
-  let routeGTFSID = routeData.route_gtfs_id
+  let routeName = routeData.route_name
+  if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
+
+  let routeGTFSID = routeGTFSIDs[routeName]
   if (routeData.route_id === 99) routeGTFSID = '2-CCL'
   let route = await routesCollection.findDocument({ routeGTFSID })
 
@@ -216,7 +245,6 @@ module.exports = async function (data, db) {
     dbStops[stop.stop_id] = dbStop
   })
 
-  let departureDay, departureTime
   let previousDepartureTime = -1
 
   let stopTimings = departures.map(departure => {
@@ -260,7 +288,6 @@ module.exports = async function (data, db) {
   let vehicleDescriptor = run.vehicle_descriptor
   let directionName = ptvDirection.direction_name
   let gtfsDirection = route.ptvDirections[directionName]
-  let routeName = route.routeName
   let direction = ptvDirection.direction_name.includes('City') ? 'Up' : 'Down'
 
   if (routeName === 'Stony Point') direction = ptvDirection.direction_name.includes('Frankston') ? 'Up' : 'Down'
@@ -272,6 +299,36 @@ module.exports = async function (data, db) {
   let notifyAlerts = []
   if (ptvRunID >= 948000) runID = utils.getRunID(ptvRunID)
 
+  let trueOrigin
+  if (direction === 'Up') trueOrigin = stopTimings[0].stopName
+  else { // Down
+    let fss = stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
+    trueOrigin = fss ? fss.stopName : stopTimings[0].stopName
+  }
+
+  let originStop = stopTimings.find(stop => stop.stopName === trueOrigin)
+  let scheduledDepartureTime = utils.parseTime(originStop.scheduledDepartureTime)
+  let originDepartureDay = scheduledDepartureTime.clone()
+
+  // if first stop is 12-3am push it to previous day
+  if (originStop.departureTimeMinutes < 180) {
+    stopTimings.forEach(stop => {
+      if (stop.arrivalTimeMinutes !== null) stop.arrivalTimeMinutes += 1440
+      if (stop.departureTimeMinutes !== null) stop.departureTimeMinutes += 1440
+    })
+    originDepartureDay.add(-3, 'hours')
+  }
+
+  let departureDay = utils.getYYYYMMDD(originDepartureDay)
+
+  let tripKey = {
+    mode: 'metro train',
+    operationDays: departureDay,
+    runID
+  }
+
+  let referenceTrip = await liveTimetables.findDocument(tripKey)
+
   if (vehicleDescriptor) {
     consist = findConsist(vehicleDescriptor.id, runID)
     vehicle = {
@@ -281,7 +338,7 @@ module.exports = async function (data, db) {
     }
   }
 
-  if (referenceTrip && referenceTrip.suspension) {
+  if (referenceTrip && referenceTrip.suspension && config.applyMetroSuspensions) {
     let isDown = direction === 'Down'
 
     let suspension = referenceTrip.suspension
@@ -307,7 +364,7 @@ module.exports = async function (data, db) {
   }
 
   if (runID) {
-    let tripStartSeconds = +departureTime / 1000
+    let tripStartSeconds = +scheduledDepartureTime / 1000
     notifyAlerts = await metroNotify.distinct('alertID', {
       fromDate: {
         $gte: tripStartSeconds - 60 * 60
@@ -372,6 +429,7 @@ module.exports = async function (data, db) {
   let firstStop = stopTimings[0]
   let lastStop = stopTimings[stopTimings.length - 1]
 
+  // Cancelled trains sometimes only show 1 stop and so the trip has no arr/dep time
   if (firstStop !== lastStop) {
     firstStop.arrivalTime = null
     firstStop.arrivalTimeMinutes = null
@@ -379,48 +437,83 @@ module.exports = async function (data, db) {
     lastStop.departureTimeMinutes = null
   }
 
-  let routeNumber = referenceTrip ? referenceTrip.routeNumber : route.routeNumber
+  let timetable
+  if (referenceTrip) {
+    let newStops = stopTimings.map(stop => stop.stopName)
+    let existingStops = referenceTrip.stopTimings.map(stop => stop.stopName)
 
-  let timetable = {
-    mode: 'metro train',
-    routeName,
-    routeGTFSID,
-    routeNumber: null,
-    routeDetails: null,
-    runID,
-    operationDays: departureDay,
-    vehicle: null,
-    stopTimings: stopTimings,
-    origin: firstStop.stopName,
-    departureTime: firstStop.departureTime,
-    destination: lastStop.stopName,
-    destinationArrivalTime: lastStop.arrivalTime,
-    type: 'timings',
-    updateTime: new Date(),
-    gtfsDirection,
-    direction,
-    cancelled,
-    suspensions: referenceTrip ? referenceTrip.suspension : null,
-    isRailReplacementBus: departures[0].flags.includes('RRB-RUN'),
-    notifyAlerts
-  }
+    let extraStops = newStops.filter(stop => !existingStops.includes(stop))
+    let cancelledStops = existingStops.filter(stop => !newStops.includes(stop))
 
-  timetable = fixTripDestination(timetable)
+    let mergedTimings = referenceTrip.stopTimings.concat(extraStops).sort((a, b) => (a.departureTimeMinutes || a.arrivalTimeMinutes) - (b.departureTimeMinutes || b.arrivalTimeMinutes))
+    referenceTrip.stopTimings.forEach(stop => {
+      if (extraStops.includes(stop.stopName)) {
+        stop.additional = true
+      }
 
-  let originStop = timetable.stopTimings.find(stop => stop.stopName === timetable.trueOrigin)
-  let originDepartureDay = utils.parseTime(originStop.scheduledDepartureTime)
+      stop.cancelled = cancelledStops.includes(stop.stopName)
 
-  // if first stop is 12-3am push it to previous day
-  if (originStop.departureTimeMinutes < 180) {
-    timetable.stopTimings.forEach(stop => {
-      if (stop.arrivalTimeMinutes) stop.arrivalTimeMinutes += 1440
-      if (stop.departureTimeMinutes) stop.departureTimeMinutes += 1440
+      let updatedStop = stopTimings.find(newStop => stop.stopName === newStop.stopName)
+      if (updatedStop) {
+        if (updatedStop.estimatedDepartureTime && updatedStop.estimatedDepartureTime !== stop.estimatedDepartureTime) { // Only update if changed and exists
+          stop.estimatedDepartureTime = updatedStop.estimatedDepartureTime
+          stop.actualDepartureTimeMS = updatedStop.actualDepartureTimeMS
+        }
+
+        if (stop.departureTime !== updatedStop.departureTime) {
+          stop.arrivalTime = updatedStop.arrivalTime
+          stop.arrivalTimeMinutes = updatedStop.arrivalTimeMinutes
+          stop.departureTime = updatedStop.departureTime
+          stop.departureTimeMinutes = updatedStop.departureTimeMinutes
+        }
+
+        stop.platform = updatedStop.platform
+      }
     })
-    originDepartureDay.add(-3 ,'hours')
-  }
 
-  departureDay = utils.getYYYYMMDD(originDepartureDay)
-  timetable.operationDays = departureDay
+    let firstStop = referenceTrip.stopTimings[0]
+    let lastStop = referenceTrip.stopTimings[referenceTrip.stopTimings.length - 1]
+
+    timetable = fixTripDestination({
+      ...referenceTrip,
+      origin: firstStop.stopName,
+      destination: lastStop.stopName,
+      departureTime: firstStop.departureTime,
+      destinationArrivalTime: lastStop.arrivalTime,
+      cancelled,
+      type: 'timings',
+      updateTime: new Date(),
+      notifyAlerts
+    })
+  } else {
+    timetable = fixTripDestination({
+      mode: 'metro train',
+      routeName,
+      routeGTFSID,
+      routeNumber: null,
+      routeDetails: null,
+      runID,
+      ...(referenceTrip ? {
+        forming: referenceTrip.forming,
+        formedBy: referenceTrip.formedBy
+      } : {}),
+      operationDays: departureDay,
+      vehicle: null,
+      stopTimings: stopTimings,
+      origin: firstStop.stopName,
+      departureTime: firstStop.departureTime,
+      destination: lastStop.stopName,
+      destinationArrivalTime: lastStop.arrivalTime,
+      type: 'timings',
+      updateTime: new Date(),
+      gtfsDirection,
+      direction,
+      cancelled,
+      suspensions: referenceTrip ? referenceTrip.suspension : null,
+      isRailReplacementBus: departures[0].flags.includes('RRB-RUN'),
+      notifyAlerts
+    })
+  }
 
   if (timetable.routeName === 'Stony Point') {
     timetable = await addStonyPointData(timetable, originDepartureDay, db)
@@ -441,13 +534,19 @@ module.exports = async function (data, db) {
 
   timetable = extendMetroEstimation(timetable)
 
-  let key = {
-    mode: 'metro train',
-    operationDays: timetable.operationDays,
-    runID
+  if (!runID) {
+    tripKey = {
+      mode: 'metro train',
+      operationDays: departureDay,
+      origin: timetable.origin,
+      destination: timetable.destination,
+      departureTime: timetable.departureTime,
+      destinationArrivalTime: timetable.destinationArrivalTime
+    }
   }
 
-  await liveTimetables.replaceDocument(key, timetable, {
+  delete timetable._id
+  await liveTimetables.replaceDocument(tripKey, timetable, {
     upsert: true
   })
 

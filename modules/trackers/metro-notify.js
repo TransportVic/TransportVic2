@@ -30,8 +30,8 @@ let routeIDs = {
   '96': 'Upfield',
   '97': 'Werribee',
   '98': 'Williamstown',
-  '92761': 'Showgrounds/Flemington',
-  '168307': 'Showgrounds/Flemington'
+  '92761': 'Showgrounds',
+  '168307': 'Flemington Racecourse'
 }
 
 let allRoutes = Object.values(routeIDs).slice(0, -1)
@@ -72,6 +72,7 @@ async function lookForShunts(allAlerts) {
 
     if ((!tripAlerts.includes(alert.alertID) || mismatch) && (liveTimetable ? !liveTimetable.h : true)) {
       liveTimetable = await getStoppingPattern({
+        routeName: liveTimetable.routeName,
         ptvRunID: utils.getPTVRunID(alert.runID),
         time: utils.now()
       }, database)

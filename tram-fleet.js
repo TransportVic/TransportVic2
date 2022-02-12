@@ -20,6 +20,8 @@ let data = {
   E2: { ac: true, lf: true },
 }
 
+let cache = {}
+
 function getModel(number) {
   number = parseInt(number)
   if (number <= 100) return 'Z1'
@@ -51,7 +53,14 @@ function getModel(number) {
   return '?'
 }
 
+function getModelFromCache(number) {
+  if (cache[number]) return cache[number]
+  let model = getModel(number)
+  cache[number] = model
+  return model
+}
+
 module.exports = {
-  getModel,
+  getModel: getModelFromCache,
   data
 }

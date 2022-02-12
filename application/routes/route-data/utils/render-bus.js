@@ -51,7 +51,13 @@ async function render(params, res, matchingRoute) {
   let {routeName} = matchingRoute
   let terminiName = routeName.replace(/\(.*/, '').split(' - ')
 
-  if (matchingRoute.directions.length === 1) {
+  if (routeName.includes('Town Service')) {
+    showDualTermini = false
+    directionNames[0] = matchingRoute.routeName
+  } else if (routeName.includes('Flexiride')) {
+    showDualTermini = false
+    directionNames[0] = matchingRoute.routeName
+  } else if (matchingRoute.directions.length === 1) {
     if (routeName.includes('Loop')) {
       if (terminiName[1]) {
         directionNames[0] = terminiName[1]
@@ -77,9 +83,6 @@ async function render(params, res, matchingRoute) {
     }
 
     directionNames[1] = directionNames[1].replace(/ \(.+$/, '')
-  } else if (routeName.includes('Town Service')) {
-    showDualTermini = false
-    directionNames[0] = matchingRoute.routeName
   }
 
   let operationDateText
