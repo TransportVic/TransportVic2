@@ -263,7 +263,6 @@ module.exports = async function (data, db) {
     previousDepartureTime = departureTimeMinutes
 
     if (stopName === 'Flemington Racecourse Railway Station' && platform_number === '4') platform_number = '2' // 4 Road is Platform 2
-    if (stopName === 'Merinda Park Railway Station' && platform_number === '1') platform_number = '2' // Match physical signage
 
     return {
       stopName,

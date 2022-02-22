@@ -1053,7 +1053,6 @@ function parsePTVDepartures(ptvResponse, stationName, departureTime) {
     }
 
     if (stationName === 'Flemington Racecourse' && platform === '4') platform = '2' // 4 Road is Platform 2
-    if (stationName === 'Merinda Park' && platform === '1') platform = '2' // Match physical signage
 
     let fleetNumber = null
     if (!isRailReplacementBus) {
