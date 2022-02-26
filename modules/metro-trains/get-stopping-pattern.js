@@ -216,10 +216,9 @@ module.exports = async function (data, db) {
   let ptvDirection = Object.values(directions)[0]
   let routeData = Object.values(routes)[0]
 
-  let location = run.vehicle_position
-
   if (departures.length === 0) return null
 
+  let location = run.vehicle_position
   let dbStops = {}
 
   let routeName = routeData.route_name
