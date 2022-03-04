@@ -30,7 +30,7 @@ function getModel(number) {
   if (number <= 258) return 'A1'
   if (number <= 300) return 'A2'
 
-  if ([856, 888, 925, 928, 946, 957, 959, 961, 981, 983, 1010].includes(number)) return 'W8'
+  if ([856, 888, 925, 928, 946, 957, 959, 961, 981, 983, 1000, 1010].includes(number)) return 'W8'
   if ([728, 842, 845, 845, 848].includes(number)) return 'SW5'
   if (850 <= number && number <= 969) return 'SW6'
   if (number === 980 || number === 1041) return 'PCC'
