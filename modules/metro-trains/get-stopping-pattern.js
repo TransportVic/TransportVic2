@@ -308,6 +308,9 @@ module.exports = async function (data, db) {
   let scheduledDepartureTime = utils.parseTime(originStop.scheduledDepartureTime)
   let originDepartureDay = scheduledDepartureTime.clone()
 
+  let departureDay = utils.getYYYYMMDD(originDepartureDay)
+  let departurePTDay = departureDay
+
   // if first stop is 12-3am push it to previous day
   if (originStop.departureTimeMinutes < 180) {
     stopTimings.forEach(stop => {
@@ -315,9 +318,9 @@ module.exports = async function (data, db) {
       if (stop.departureTimeMinutes !== null) stop.departureTimeMinutes += 1440
     })
     originDepartureDay.add(-3, 'hours')
-  }
 
-  let departureDay = utils.getYYYYMMDD(originDepartureDay)
+    departurePTDay = utils.getYYYYMMDD(originDepartureDay)
+  }
 
   let tripKey = {
     mode: 'metro train',
@@ -524,7 +527,7 @@ module.exports = async function (data, db) {
     let actualSize = Math.max(ptvSize, consistSize)
     vehicle = { size: actualSize, type: vehicleType.type, consist }
 
-    consist = await saveConsist(stopTimings, direction, departureDay, runID, consist, metroTrips)
+    consist = await saveConsist(stopTimings, direction, departurePTDay, runID, consist, metroTrips)
     if (location && consist) await saveLocation(consist, location, metroLocations)
   }
 
