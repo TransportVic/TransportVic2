@@ -54,6 +54,9 @@ if (modules.tracker && modules.tracker.metroShunts)
 if (modules.preloadCCL)
   require('../modules/preload-ccl')
 
+if (modules.gtfsr && modules.gtfsr.metro)
+  require('../modules/gtfsr/metro')
+
 require('../modules/trackers/discord-notify')
 
 let serverStarted = false

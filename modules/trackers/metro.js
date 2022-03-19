@@ -4,9 +4,7 @@ const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const getMetroDepartures = require('../metro-trains/get-departures')
-const { findTrip } = getMetroDepartures
 const stops = require('../../additional-data/metro-tracker/stops')
-const getStoppingPattern = require('../metro-trains/get-stopping-pattern')
 const schedule = require('./scheduler')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
@@ -32,19 +30,7 @@ function pickRandomStop() {
 
 async function getDepartures(stop) {
   let stopData = await dbStops.findDocument({ stopName: stop + ' Railway Station' })
-  let departures = await getMetroDepartures(stopData, database)
-  let requestLive = departures.filter(d => !d.isRailReplacementBus).slice(0, 6)
-
-  await async.forEachSeries(requestLive, async departure => {
-    if (departure.ptvRunID) { // Remember local departures do not have a run id
-      await getStoppingPattern({
-        routeName: departure.trip.routeName,
-        ptvRunID: departure.ptvRunID,
-        time: departure.originDepartureTime.toISOString()
-      }, database)
-    }
-  })
-
+  await getMetroDepartures(stopData, database)
   await getMetroDepartures(stopData, database, false, true)
 }
 
@@ -98,9 +84,9 @@ database.connect(async () => {
   }
 
   schedule([
-    [0, 60, 0.35],
-    [61, 239, 0.3],
-    [240, 1199, 0.25],
-    [1200, 1440, 0.3],
+    [0, 60, 1.5],
+    [61, 239, 1],
+    [240, 1199, 0.66667],
+    [1200, 1440, 1],
   ], requestTimings, 'metro tracker', global.loggers.trackers.metro)
 })
