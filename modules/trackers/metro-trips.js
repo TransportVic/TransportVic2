@@ -22,6 +22,7 @@ let secondsInDay = 1440 * 60
 let undergroundLoopStations = ['Parliament', 'Flagstaff', 'Melbourne Central']
 let cityLoopStations = ['Southern Cross', ...undergroundLoopStations]
 let cityStations = [...cityLoopStations, 'Flinders Street']
+let borderStops = ['Richmond', 'Jolimont', 'North Melbourne', 'Flinders Street']
 
 let routes = {
   'Alamein': '82',
@@ -86,6 +87,60 @@ async function requestDepartureData(now, startOfDay) {
       return stop
     }).filter(Boolean)
   }, 1000 * 60 * 1)
+}
+
+function extendMetroEstimation(trip) {
+  let checkStop
+
+  if (trip.direction === 'Up') {
+    let borderStop = trip.stopTimings.find(stop => borderStops.includes(stop.stopName.slice(0, -16)))
+
+    if (borderStop) {
+      let hasSeenStop = false
+      trip.stopTimings.slice(trip.stopTimings.indexOf(borderStop)).forEach(stop => {
+        if (stop.estimatedDepartureTime) checkStop = stop
+      })
+    }
+  }
+
+  if (!checkStop) {
+    checkStop = trip.stopTimings[trip.stopTimings.length - 2]
+  }
+
+  if (checkStop && checkStop.estimatedDepartureTime) {
+    let scheduledDepartureTime = utils.parseTime(checkStop.scheduledDepartureTime)
+    let estimatedDepartureTime = utils.parseTime(checkStop.estimatedDepartureTime)
+    let delay = estimatedDepartureTime - scheduledDepartureTime
+
+    let hasSeenStop = false
+    trip.stopTimings = trip.stopTimings.map(stop => {
+      if (hasSeenStop && !stop.estimatedDepartureTime) {
+        let stopScheduled = utils.parseTime(stop.scheduledDepartureTime)
+        let stopEstimated = stopScheduled.clone().add(delay, 'milliseconds')
+        stop.estimatedDepartureTime = stopEstimated.toISOString()
+        stop.actualDepartureTimeMS = +stopEstimated
+      } else if (stop === checkStop) hasSeenStop = true
+
+      return stop
+    })
+  }
+
+  // Extend estimation backwards to first stop (usually city loop etc)
+  let firstStop = trip.stopTimings[0]
+  let secondStop = trip.stopTimings[1]
+
+  if (!firstStop.estimatedDepartureTime && secondStop && secondStop.estimatedDepartureTime) {
+    let scheduledDepartureTime = utils.parseTime(firstStop.scheduledDepartureTime)
+    let estimatedDepartureTime = utils.parseTime(firstStop.estimatedDepartureTime)
+    let delay = estimatedDepartureTime - scheduledDepartureTime
+
+    let secondScheduled = utils.parseTime(secondStop.scheduledDepartureTime)
+    let secondEstimated = secondScheduled.clone().add(delay, 'milliseconds')
+    secondStop.estimatedDepartureTime = secondEstimated.toISOString()
+    secondStop.actualDepartureTimeMS = +secondEstimated
+  }
+
+  return trip
 }
 
 async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
@@ -435,7 +490,7 @@ async function loadTrips() {
           operationDays: trip.operationDays,
           runID: trip.runID
         },
-        replacement: trip,
+        replacement: extendMetroEstimation(trip),
         upsert: true
       }
     })

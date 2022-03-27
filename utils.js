@@ -158,7 +158,7 @@ module.exports = {
     .replace(/Pde(\b)/g, 'Parade$1')
     .replace(/Cl(\b)/g, 'Close$1')
     .replace(/Dr(\b)/g, 'Drive$1')
-    .replace(/Ave?(\b)/g, 'Avenue$1')
+    .replace(/ Ave?(\b)/g, ' Avenue$1') // Cannot be at the start of a stop name, eg Ave Maria College
     .replace(/Gr(\b)/g, 'Grove$1')
     .replace(/Ct(\b)/g, 'Court$1')
     .replace(/Cr(\b)/g, 'Crescent$1')
