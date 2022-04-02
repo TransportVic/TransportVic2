@@ -198,13 +198,13 @@ module.exports = async function (data, db) {
       if (givenRouteName && liveTrackingRoutes.includes(givenRouteName)) {
         url += `&date_utc=${time}`
       } else {
-        url += `&date_utc=${startTime.add(-3.5, 'hours').toISOString()}`
+        url += `&date_utc=${startTime.add(-4, 'hours').toISOString()}`
       }
     } else if (minutesPastMidnightNow < 180) { // trip starts before the 3am overlap but it is currently 1-3am. hence requesting for previous day's times
       if (actualDepartureDay === dayToday) { // Its past 3am (next transport day)
         url += `&date_utc=${time}`
       } else { // Its yesterday
-        url += `&date_utc=${now.add(-3.5, 'hours').toISOString()}`
+        url += `&date_utc=${now.add(-4, 'hours').toISOString()}`
       }
     } else { // sane trip, request with time now
       url += `&date_utc=${now.toISOString()}`
@@ -317,14 +317,14 @@ module.exports = async function (data, db) {
       if (stop.arrivalTimeMinutes !== null) stop.arrivalTimeMinutes += 1440
       if (stop.departureTimeMinutes !== null) stop.departureTimeMinutes += 1440
     })
-    originDepartureDay.add(-3, 'hours')
+    originDepartureDay.add(-4, 'hours')
 
     departurePTDay = utils.getYYYYMMDD(originDepartureDay)
   }
 
   let tripKey = {
     mode: 'metro train',
-    operationDays: departureDay,
+    operationDays: departurePTDay,
     runID
   }
 
@@ -384,7 +384,7 @@ module.exports = async function (data, db) {
     let sssTimeHHMM = utils.formatHHMM(sssTime)
 
     let scheduledTrip = await gtfsTimetables.findDocument({
-      operationDays: departureDay,
+      operationDays: departurePTDay,
       mode: 'metro train',
       routeGTFSID: '2-ain',
       direction,
@@ -498,7 +498,7 @@ module.exports = async function (data, db) {
         forming: referenceTrip.forming,
         formedBy: referenceTrip.formedBy
       } : {}),
-      operationDays: departureDay,
+      operationDays: departurePTDay,
       vehicle: null,
       stopTimings: stopTimings,
       origin: firstStop.stopName,
@@ -538,7 +538,7 @@ module.exports = async function (data, db) {
   if (!runID) {
     tripKey = {
       mode: 'metro train',
-      operationDays: departureDay,
+      operationDays: departurePTDay,
       origin: timetable.origin,
       destination: timetable.destination,
       departureTime: timetable.departureTime,

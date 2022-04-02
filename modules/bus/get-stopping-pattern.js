@@ -129,7 +129,7 @@ module.exports = async function (data, db) {
   let possibleRoutes = await routesCollection.findDocuments({ routeGTFSID: routeGTFSIDQuery }).toArray()
   let originDepartureTime = utils.parseTime(departures[0].scheduled_departure_utc)
   let departureTimeMinutes = utils.getMinutesPastMidnight(originDepartureTime)
-  if (departureTimeMinutes < 180) originDepartureTime.add(-3, 'hours') // if first stop is 12-3am push it to previous day
+  if (departureTimeMinutes < 180) originDepartureTime.add(-4, 'hours') // if first stop is 12-3am push it to previous day
 
   let departureDay = utils.getYYYYMMDD(originDepartureTime)
 
