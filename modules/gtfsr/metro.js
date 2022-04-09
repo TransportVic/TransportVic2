@@ -19,6 +19,12 @@ async function fetchAndUpdate() {
   await async.forEach(vehicleData.entity, async data => {
     let runID = data.id.slice(-4)
     let tripDate = data.vehicle.trip.start_date
+    let startTime = data.vehicle.trip.start_time
+    let startHour = parseInt(startTime.slice(0, 2))
+    if (startHour >= 24) { // Wind it back a day
+      tripDate = utils.getYYYYMMDD(utils.parseDate(tripDate).add(-1, 'day'))
+    }
+
     let consist = findConsist(data.vehicle.vehicle.id, runID)
 
     let tripData = await liveTimetables.findDocument({
