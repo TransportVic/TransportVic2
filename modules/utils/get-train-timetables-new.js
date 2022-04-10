@@ -181,21 +181,21 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
       }
     }
 
-    let gtfsTimetablesFound = await gtfsTimetables.findDocuments(query).toArray()
+    // let gtfsTimetablesFound = await gtfsTimetables.findDocuments(query).toArray()
     let liveTimetablesFound = await liveTimetables.findDocuments(query).toArray()
 
-    gtfsTimetablesFound.concat(liveTimetablesFound).forEach(t => {
+    liveTimetablesFound.forEach(t => {
       days[getID(t)] = day
     })
 
-    gtfsDepartures = gtfsDepartures.concat(gtfsTimetablesFound)
+    // gtfsDepartures = gtfsDepartures.concat(gtfsTimetablesFound)
     liveDepartures = liveDepartures.concat(liveTimetablesFound)
   }
 
   let serviceIndex = []
   let departures = []
 
-  liveDepartures.concat(gtfsDepartures).forEach(trip => {
+  liveDepartures.forEach(trip => {
     let id = getID(trip)
     if (!serviceIndex.includes(id)) {
       serviceIndex.push(id)
