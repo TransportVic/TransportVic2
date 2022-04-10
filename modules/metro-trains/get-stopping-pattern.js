@@ -16,58 +16,38 @@ let liveTrackingRoutes = [
   'Craigieburn', 'Sunbury'
 ]
 
-function extendMetroEstimation(trip) {
-  let checkStop
+function extendMetroEstimation(stopTimings) {
+  let hasLiveData = false
 
-  if (trip.direction === 'Up') {
-    let borderStop = trip.stopTimings.find(stop => borderStops.includes(stop.stopName.slice(0, -16)))
+  let stopData = stopTimings.map(stop => {
+    let delay = null
+    let scheduledTime = utils.parseTime(stop.scheduledDepartureTime)
 
-    if (borderStop) {
-      let hasSeenStop = false
-      trip.stopTimings.slice(trip.stopTimings.indexOf(borderStop)).forEach(stop => {
-        if (stop.estimatedDepartureTime) checkStop = stop
-      })
+    if (stop.estimatedDepartureTime) {
+      let estimatedTime = utils.parseTime(stop.estimatedDepartureTime)
+      delay = estimatedTime.diff(scheduledTime)
+      hasLiveData = true
     }
-  }
 
-  if (!checkStop) {
-    checkStop = trip.stopTimings[trip.stopTimings.length - 2]
-  }
+    return {
+      stop,
+      delay,
+      scheduledTime
+    }
+  })
 
-  if (checkStop && checkStop.estimatedDepartureTime) {
-    let scheduledDepartureTime = utils.parseTime(checkStop.scheduledDepartureTime)
-    let estimatedDepartureTime = utils.parseTime(checkStop.estimatedDepartureTime)
-    let delay = estimatedDepartureTime - scheduledDepartureTime
+  if (hasLiveData) {
+    stopData.forEach((stop, i) => {
+      if (stop.delay === null && i > 0) {
+        let previousStop = stopData[i - 1]
+        stop.delay = previousStop.delay // Copy over delay
 
-    let hasSeenStop = false
-    trip.stopTimings = trip.stopTimings.map(stop => {
-      if (hasSeenStop && !stop.estimatedDepartureTime) {
-        let stopScheduled = utils.parseTime(stop.scheduledDepartureTime)
-        let stopEstimated = stopScheduled.clone().add(delay, 'milliseconds')
-        stop.estimatedDepartureTime = stopEstimated.toISOString()
-        stop.actualDepartureTimeMS = +stopEstimated
-      } else if (stop === checkStop) hasSeenStop = true
-
-      return stop
+        let estimatedTime = stop.scheduledTime.add(stop.delay)
+        stop.stop.estimatedDepartureTime = estimatedTime.toISOString()
+        stop.stop.actualDepartureTimeMS = +estimatedTime
+      }
     })
   }
-
-  // Extend estimation backwards to first stop (usually city loop etc)
-  let firstStop = trip.stopTimings[0]
-  let secondStop = trip.stopTimings[1]
-
-  if (!firstStop.estimatedDepartureTime && secondStop && secondStop.estimatedDepartureTime) {
-    let scheduledDepartureTime = utils.parseTime(firstStop.scheduledDepartureTime)
-    let estimatedDepartureTime = utils.parseTime(firstStop.estimatedDepartureTime)
-    let delay = estimatedDepartureTime - scheduledDepartureTime
-
-    let secondScheduled = utils.parseTime(secondStop.scheduledDepartureTime)
-    let secondEstimated = secondScheduled.clone().add(delay, 'milliseconds')
-    secondStop.estimatedDepartureTime = secondEstimated.toISOString()
-    secondStop.actualDepartureTimeMS = +secondEstimated
-  }
-
-  return trip
 }
 
 async function saveConsist(stopTimings, direction, departureDay, runID, consist, metroTrips) {
@@ -283,6 +263,8 @@ module.exports = async function (data, db) {
     }
   })
 
+  extendMetroEstimation(stopTimings)
+
   let vehicleDescriptor = run.vehicle_descriptor
   let directionName = ptvDirection.direction_name
   let gtfsDirection = route.ptvDirections[directionName]
@@ -440,8 +422,29 @@ module.exports = async function (data, db) {
 
   let timetable
   if (referenceTrip) {
-    let newStops = stopTimings.map(stop => stop.stopName)
-    let existingStops = referenceTrip.stopTimings.map(stop => stop.stopName)
+    let firstStop = referenceTrip.stopTimings[0]
+    let lastStop = referenceTrip.stopTimings[referenceTrip.stopTimings.length - 1]
+
+    timetable = fixTripDestination({
+      ...referenceTrip,
+      origin: firstStop.stopName,
+      destination: lastStop.stopName,
+      departureTime: firstStop.departureTime,
+      destinationArrivalTime: lastStop.arrivalTime,
+      cancelled,
+      type: 'timings',
+      updateTime: new Date(),
+      notifyAlerts
+    })
+
+    let newOrigin = stopTimings.findIndex(stop => stop.stopName === timetable.trueOrigin)
+    let newDestination = stopTimings.findIndex(stop => stop.stopName === timetable.trueDestination)
+
+    let existingOrigin = referenceTrip.stopTimings.findIndex(stop => stop.stopName === timetable.trueOrigin)
+    let existingDestination = referenceTrip.stopTimings.findIndex(stop => stop.stopName === timetable.trueDestination)
+
+    let newStops = stopTimings.slice(newOrigin, newDestination + 1).map(stop => stop.stopName)
+    let existingStops = referenceTrip.stopTimings.slice(existingOrigin, existingDestination + 1).map(stop => stop.stopName)
 
     let extraStops = newStops.filter(stop => !existingStops.includes(stop))
     let cancelledStops = existingStops.filter(stop => !newStops.includes(stop))
@@ -470,21 +473,6 @@ module.exports = async function (data, db) {
 
         stop.platform = updatedStop.platform
       }
-    })
-
-    let firstStop = referenceTrip.stopTimings[0]
-    let lastStop = referenceTrip.stopTimings[referenceTrip.stopTimings.length - 1]
-
-    timetable = fixTripDestination({
-      ...referenceTrip,
-      origin: firstStop.stopName,
-      destination: lastStop.stopName,
-      departureTime: firstStop.departureTime,
-      destinationArrivalTime: lastStop.arrivalTime,
-      cancelled,
-      type: 'timings',
-      updateTime: new Date(),
-      notifyAlerts
     })
   } else {
     timetable = fixTripDestination({
@@ -532,8 +520,6 @@ module.exports = async function (data, db) {
   }
 
   timetable.vehicle = vehicle
-
-  timetable = extendMetroEstimation(timetable)
 
   if (!runID) {
     tripKey = {
