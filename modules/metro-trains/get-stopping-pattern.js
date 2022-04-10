@@ -437,17 +437,23 @@ module.exports = async function (data, db) {
       notifyAlerts
     })
 
-    let newOrigin = stopTimings.findIndex(stop => stop.stopName === timetable.trueOrigin)
-    let newDestination = stopTimings.findIndex(stop => stop.stopName === timetable.trueDestination)
+    let newStops = stopTimings.map(stop => stop.stopName)
+    let existingStops = referenceTrip.stopTimings.map(stop => stop.stopName)
 
-    let existingOrigin = referenceTrip.stopTimings.findIndex(stop => stop.stopName === timetable.trueOrigin)
-    let existingDestination = referenceTrip.stopTimings.findIndex(stop => stop.stopName === timetable.trueDestination)
+    let newOrigin = newStops.includes(timetable.trueOrigin) ? newStops.indexOf(timetable.trueOrigin) : 0
+    let newDestination = newStops.includes(timetable.trueDestination) ? newStops.indexOf(timetable.trueDestination) : newStops.length - 1
+    newStops = newStops.slice(newOrigin, newDestination + 1)
 
-    let newStops = stopTimings.slice(newOrigin, newDestination + 1).map(stop => stop.stopName)
-    let existingStops = referenceTrip.stopTimings.slice(existingOrigin, existingDestination + 1).map(stop => stop.stopName)
+    let existingOrigin = existingStops.includes(timetable.trueOrigin) ? existingStops.indexOf(timetable.trueOrigin) : 0
+    let existingDestination = existingStops.includes(timetable.trueDestination) ? existingStops.indexOf(timetable.trueDestination) : existingStops.length - 1
+    existingStops = existingStops.slice(existingOrigin, existingDestination + 1)
 
     let extraStops = newStops.filter(stop => !existingStops.includes(stop))
     let cancelledStops = existingStops.filter(stop => !newStops.includes(stop))
+
+    if (cancelledStops.includes('Flinders Street Railway Station') && runID && runID[0] === '7') {
+      cancelledStops.splice(cancelledStops.indexOf('Flinders Street Railway Station'), 1)
+    }
 
     let mergedTimings = referenceTrip.stopTimings.concat(extraStops).sort((a, b) => (a.departureTimeMinutes || a.arrivalTimeMinutes) - (b.departureTimeMinutes || b.arrivalTimeMinutes))
     referenceTrip.stopTimings.forEach(stop => {
