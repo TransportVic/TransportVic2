@@ -429,6 +429,11 @@ async function norGroupMatch(train, stopGTFSID, stationName, db) {
   let possibleLines = northernGroup
 
   let possibleDestinations = [train.runDestination]
+  if (train.direction === 'Down' && train.routeName === 'Showgrounds/Flemington') {
+    possibleDestinations.push('Showgrounds')
+    possibleDestinations.push('Flemington Racecourse')
+  }
+
   if (train.runDestination === 'Southern Cross' && train.viaCityLoop) // NME -> FGS -> CLP -> FSS -> SSS -> NME (Next trip)
     possibleDestinations.push('Flinders Street')
 

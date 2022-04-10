@@ -359,11 +359,13 @@ module.exports = async function (data, db) {
     })
   }
 
-  if (runID && routeGTFSID === '2-ain' && stopTimings.length === 1) {
+  if (runID && routeGTFSID === '2-ain') {
     let gtfsTimetables = db.getCollection('gtfs timetables')
-    let sssTime = utils.parseTime(stopTimings[0].scheduledDepartureTime)
-    let departureDay = utils.getYYYYMMDD(sssTime)
-    let sssTimeHHMM = utils.formatHHMM(sssTime)
+    cancelled = stopTimings.length === 1 // RCE trips show SSS only if cancelled
+
+    let originStop = stopTimings[0].stopName
+    let originTime = utils.parseTime(stopTimings[0].scheduledDepartureTime)
+    let originTimeHHMM = stopTimings[0].departureTime
 
     let scheduledTrip = await gtfsTimetables.findDocument({
       operationDays: departurePTDay,
@@ -372,22 +374,23 @@ module.exports = async function (data, db) {
       direction,
       stopTimings: {
         $elemMatch: {
-          stopName: 'Southern Cross Railway Station',
+          stopName: originStop,
           ...(direction === 'Down' ? {
-            departureTime: sssTimeHHMM
+            departureTime: originTimeHHMM
           } : {
-            arrivalTime: sssTimeHHMM
+            arrivalTime: originTimeHHMM
           })
         }
       }
     })
 
     if (scheduledTrip) {
-      let sssStop = stopTimings[0]
-      let missingStops = scheduledTrip.stopTimings.filter(stop => stop.stopName !== 'Southern Cross Railway Station').map(stop => {
-        let minDiff = (stop.departureTimeMinutes || stop.arrivalTimeMinutes) - sssStop.departureTimeMinutes
+      let originDepartureMinutes = stopTimings[0].departureTimeMinutes
+      let existingStops = stopTimings.map(stop => stop.stopName)
+      let missingStops = scheduledTrip.stopTimings.filter(stop => !existingStops.includes(stop.stopName)).map(stop => {
+        let minDiff = (stop.departureTimeMinutes || stop.arrivalTimeMinutes) - originDepartureMinutes
 
-        let scheduledTime = sssTime.clone().add(minDiff, 'minutes')
+        let scheduledTime = originTime.clone().add(minDiff, 'minutes')
         let platform = '1'
         if (stop.stopName === 'North Melbourne Railway Station' && direction === 'Down') {
           platform = '2'
@@ -405,7 +408,6 @@ module.exports = async function (data, db) {
 
       let allStops = stopTimings.concat(missingStops).sort((a, b) => a.actualDepartureTimeMS - b.actualDepartureTimeMS)
       stopTimings = allStops
-      cancelled = true
     }
   }
 
@@ -422,41 +424,35 @@ module.exports = async function (data, db) {
 
   let timetable
   if (referenceTrip) {
-    let firstStop = referenceTrip.stopTimings[0]
-    let lastStop = referenceTrip.stopTimings[referenceTrip.stopTimings.length - 1]
-
-    timetable = fixTripDestination({
-      ...referenceTrip,
-      origin: firstStop.stopName,
-      destination: lastStop.stopName,
-      departureTime: firstStop.departureTime,
-      destinationArrivalTime: lastStop.arrivalTime,
-      cancelled,
-      type: 'timings',
-      updateTime: new Date(),
-      notifyAlerts
-    })
-
     let newStops = stopTimings.map(stop => stop.stopName)
     let existingStops = referenceTrip.stopTimings.map(stop => stop.stopName)
 
-    let newOrigin = newStops.includes(timetable.trueOrigin) ? newStops.indexOf(timetable.trueOrigin) : 0
-    let newDestination = newStops.includes(timetable.trueDestination) ? newStops.indexOf(timetable.trueDestination) : newStops.length - 1
+    let newOrigin, newDestination
+    let fssName = 'Flinders Street Railway Station'
+    if (direction === 'Down') {
+      newOrigin = newStops.includes(fssName) ? newStops.indexOf(fssName) : 0
+      newDestination = newStops.length - 1
+    } else {
+      newOrigin = 0
+      newDestination = newStops.includes(fssName) ? newStops.indexOf(fssName) : newStops.length - 1
+    }
+
     newStops = newStops.slice(newOrigin, newDestination + 1)
 
-    let existingOrigin = existingStops.includes(timetable.trueOrigin) ? existingStops.indexOf(timetable.trueOrigin) : 0
-    let existingDestination = existingStops.includes(timetable.trueDestination) ? existingStops.indexOf(timetable.trueDestination) : existingStops.length - 1
+    let existingOrigin = existingStops.includes(referenceTrip.trueOrigin) ? existingStops.indexOf(referenceTrip.trueOrigin) : 0
+    let existingDestination = existingStops.includes(referenceTrip.trueDestination) ? existingStops.indexOf(referenceTrip.trueDestination) : existingStops.length - 1
     existingStops = existingStops.slice(existingOrigin, existingDestination + 1)
 
     let extraStops = newStops.filter(stop => !existingStops.includes(stop))
     let cancelledStops = existingStops.filter(stop => !newStops.includes(stop))
+    let extraStopData = stopTimings.filter(stop => extraStops.includes(stop.stopName))
 
     if (cancelledStops.includes('Flinders Street Railway Station') && runID && runID[0] === '7') {
       cancelledStops.splice(cancelledStops.indexOf('Flinders Street Railway Station'), 1)
     }
 
-    let mergedTimings = referenceTrip.stopTimings.concat(extraStops).sort((a, b) => (a.departureTimeMinutes || a.arrivalTimeMinutes) - (b.departureTimeMinutes || b.arrivalTimeMinutes))
-    referenceTrip.stopTimings.forEach(stop => {
+    let mergedTimings = referenceTrip.stopTimings.concat(extraStopData).sort((a, b) => (a.departureTimeMinutes || a.arrivalTimeMinutes) - (b.departureTimeMinutes || b.arrivalTimeMinutes))
+    referenceTrip.stopTimings = mergedTimings.map(stop => {
       if (extraStops.includes(stop.stopName)) {
         stop.additional = true
       }
@@ -479,6 +475,23 @@ module.exports = async function (data, db) {
 
         stop.platform = updatedStop.platform
       }
+
+      return stop
+    })
+
+    let firstStop = referenceTrip.stopTimings[0]
+    let lastStop = referenceTrip.stopTimings[referenceTrip.stopTimings.length - 1]
+
+    timetable = fixTripDestination({
+      ...referenceTrip,
+      origin: firstStop.stopName,
+      destination: lastStop.stopName,
+      departureTime: firstStop.departureTime,
+      destinationArrivalTime: lastStop.arrivalTime,
+      cancelled,
+      type: 'timings',
+      updateTime: new Date(),
+      notifyAlerts
     })
   } else {
     timetable = fixTripDestination({
