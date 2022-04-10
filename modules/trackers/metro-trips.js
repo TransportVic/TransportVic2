@@ -78,7 +78,7 @@ async function requestDepartureData(now, startOfDay) {
       if (stop.estimated_arrival_time_seconds < 10800) stop.estimated_arrival_time_seconds += secondsInDay
       if (stop.estimated_departure_time_seconds < 10800) stop.estimated_departure_time_seconds += secondsInDay
 
-      stop.estimatedDepartureTime = startOfDay.clone().add(stop.estimated_departure_time_seconds, 'seconds')
+      stop.estimatedDepartureTime = utils.getMomentFromMinutesPastMidnight(stop.estimated_departure_time_seconds / 60, startOfDay)
 
       // Some of these stops appear to track with the previous day's (?) times
       // Could create a sudden jump and show incorrect data, happens around midnight
