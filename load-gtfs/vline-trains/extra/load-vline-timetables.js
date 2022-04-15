@@ -80,7 +80,8 @@ async function parseTimings(names, types, trip) {
   let formsIndex = names.indexOf('Forms')
 
   await async.forEachOfSeries(names.slice(5, formsIndex), async (locationName, i) => {
-    let type = types[i + 5], timing = timings[i]
+    let type = types[i + 5]
+    let timing = timings[i]
 
     if (locationName === 'Seymour Standard Gauge Platform') locationName = 'Seymour'
     if (locationName === 'Advertised departure') return
@@ -248,12 +249,18 @@ function readFileData(filename, allTrips, callback) {
     let pages = await pdf2table.parse(buffer)
 
     pages = pages.map(page => {
-      let form = page.find(x => {
+      let formsIndex = page.findIndex(x => {
         let lower = x[0].toLowerCase()
         return lower.includes('movement') || lower.includes('formed')
       })
 
-      let sliceEnd = page.indexOf(form) + 1
+      if (formsIndex === -1) {
+        formsIndex = page.findIndex(x => {
+          return x[0] === 'PSNG_SRV' || x[0] === 'LIGHT_LO' || x[0] === 'EMPTY'
+        })
+      }
+
+      let sliceEnd = formsIndex + 1
       let next = page[sliceEnd]
       if(next[0].toLowerCase().includes('movement')) sliceEnd++
 
@@ -276,9 +283,20 @@ function readFileData(filename, allTrips, callback) {
 
     pages = pages.map(tableToColumnOrder)
 
+    let locations
+    let types
+
     let trips = (await async.mapSeries(pages, async page => {
-      let pages = page.slice(2).filter(trip => trip[0].trim().length)
-      return await async.mapSeries(page.slice(2).filter(trip => trip[0].trim().length), async (trip, i) => {
+      let startingIndex = 0
+      if (page[0][0] === 'Business ID') {
+        startingIndex = 2
+        locations = page[0].map(expandName)
+        types = page[1]
+      }
+
+      let columns = page.slice(startingIndex).filter(trip => trip[0].trim().length)
+
+      return await async.mapSeries(columns, async (trip, i) => {
         let currentHead = trip.slice(0, 6)
         let tripBody = trip.slice(5)
         let tripToUse = trip
@@ -286,7 +304,7 @@ function readFileData(filename, allTrips, callback) {
           tripToUse = currentHead.concat(pages[i + 1].slice(5))
         }
 
-        return await parseTimings(page[0].map(expandName), page[1], tripToUse)
+        return await parseTimings(locations, types, tripToUse)
       })
     })).reduce((acc, page) => acc.concat(page), [])
 

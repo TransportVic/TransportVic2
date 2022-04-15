@@ -99,7 +99,7 @@ function parse(pdfBuffer, callback) {
         } else if (text.w < 3) {
           xThreshold = 0.2
         } else if (text.w > 3.9) {
-          xThreshold = 0.3
+          xThreshold = 0.5
         }
 
         if (currentRow === 0 && !textContent.includes('Business') && textContent.length > 4) xThreshold = 0.3
@@ -138,7 +138,15 @@ function parse(pdfBuffer, callback) {
       myPages.push(rows)
     }
 
-    callback(null, myPages.map(p => p.map(r => r.data.map(g => g.text)).filter(r => r.length)), myPages)
+    callback(null, myPages.map(p => {
+      return p.map((row, i) => {
+        if (row.data.length === 0) {
+          let previousRow = p[i - 1]
+          return Array(previousRow.size).fill('')
+        }
+        return row.data.map(g => g.text)
+      })
+    }), myPages)
   }
 
   pdfParser.parseBuffer(pdfBuffer)
