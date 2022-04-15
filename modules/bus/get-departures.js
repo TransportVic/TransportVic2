@@ -274,7 +274,7 @@ async function getDepartures(stop, db, time, discardUnmatched) {
         try {
           scheduledDepartures = await getScheduledDepartures(stop, db, time)
         } catch (e) {
-          global.loggers.general.err('Failed to get schedule departures', e)
+          global.loggers.general.err('Failed to get scheduled departures', e)
           scheduledFailed = true
         } finally { resolve() }
       }), new Promise(async resolve => {

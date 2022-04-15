@@ -5,15 +5,7 @@
    "routeNumber": "10"
   },
   {
-   "routeGTFSID": "6-B1o",
-   "routeNumber": "10"
-  },
-  {
    "routeGTFSID": "6-B11",
-   "routeNumber": "11"
-  },
-  {
-   "routeGTFSID": "6-B1i",
    "routeNumber": "11"
   },
   {
@@ -21,15 +13,7 @@
    "routeNumber": "12"
   },
   {
-   "routeGTFSID": "6-B1z",
-   "routeNumber": "12"
-  },
-  {
    "routeGTFSID": "6-B13",
-   "routeNumber": "13"
-  },
-  {
-   "routeGTFSID": "6-B1E",
    "routeNumber": "13"
   },
   {
@@ -37,15 +21,11 @@
    "routeNumber": "14"
   },
   {
-   "routeGTFSID": "6-B1H",
-   "routeNumber": "14"
-  },
-  {
    "routeGTFSID": "6-B15",
    "routeNumber": "15"
   },
   {
-   "routeGTFSID": "6-B1S",
+   "routeGTFSID": "6-B1X",
    "routeNumber": "15"
   },
   {
@@ -53,15 +33,7 @@
    "routeNumber": "20"
   },
   {
-   "routeGTFSID": "6-B2o",
-   "routeNumber": "20"
-  },
-  {
    "routeGTFSID": "6-B21",
-   "routeNumber": "21"
-  },
-  {
-   "routeGTFSID": "6-B2i",
    "routeNumber": "21"
   },
   {
@@ -69,15 +41,7 @@
    "routeNumber": "22"
   },
   {
-   "routeGTFSID": "6-B2Z",
-   "routeNumber": "22"
-  },
-  {
    "routeGTFSID": "6-B23",
-   "routeNumber": "23"
-  },
-  {
-   "routeGTFSID": "6-B2E",
    "routeNumber": "23"
   },
   {
@@ -85,15 +49,7 @@
    "routeNumber": "24"
   },
   {
-   "routeGTFSID": "6-B2H",
-   "routeNumber": "24"
-  },
-  {
    "routeGTFSID": "6-B25",
-   "routeNumber": "25"
-  },
-  {
-   "routeGTFSID": "6-B2S",
    "routeNumber": "25"
   },
   {
@@ -101,15 +57,7 @@
    "routeNumber": "26"
   },
   {
-   "routeGTFSID": "6-B2b",
-   "routeNumber": "26"
-  },
-  {
    "routeGTFSID": "6-B30",
-   "routeNumber": "30"
-  },
-  {
-   "routeGTFSID": "6-B3o",
    "routeNumber": "30"
   },
   {
