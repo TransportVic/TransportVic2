@@ -6,11 +6,31 @@ const path = require('path')
 const async = require('async')
 const rateLimit = require('express-rate-limit')
 const { getPHDayOfWeek, getPublicHolidayName } = require('../../public-holidays')
+const { exec } = require('child_process')
 const router = new express.Router()
 
 let robots = fs.readFileSync(path.join(__dirname, '../static/app-content/robots.txt'))
 let sw = fs.readFileSync(path.join(__dirname, '../static/app-content/sw.js'))
 let sitemap = fs.readFileSync(path.join(__dirname, '../static/app-content/sitemap.xml'))
+
+let buildNumber, buildComment
+let mapSVG
+
+exec('git describe --always', {
+    cwd: path.join(__dirname, '../..')
+}, (err, stdout, stderr) => {
+  buildNumber = stdout.toString().trim()
+
+  exec('git log -1 --oneline --pretty=%B', {
+    cwd: path.join(__dirname, '../..')
+  }, (err, stdout, stderr) => {
+    buildComment = stdout.toString().trim()
+  })
+})
+
+fs.readFile(path.join(__dirname, '../static/images/interactives/railmap.svg'), (err, data) => {
+  mapSVG = data.toString()
+})
 
 let upcomingPH = []
 
@@ -136,6 +156,14 @@ router.get('/sitemap.xml', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache')
   res.setHeader('Content-Type', 'application/xml')
   res.end(sitemap)
+})
+
+router.get('/railmap', (req, res) => {
+  res.render('rail-map', { mapSVG })
+})
+
+router.get('/about', (req, res) => {
+  res.render('about', {buildNumber, buildComment})
 })
 
 module.exports = router
