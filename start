@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /home/ec2-user/TransportVic
+DIRNAME=$(dirname "$0")
 
 # Note: we do not want sudo or we cannot kill the process
-NODE_ENV=prod node --max-old-space-size=4096 /home/ec2-user/TransportVic/index.js >> /home/ec2-user/log 2>> /home/ec2-user/err
+NODE_ENV=prod node --max-old-space-size=4096 $DIRNAME/index.js >> $DIRNAME/../log 2>> $DIRNAME/../err

@@ -18,9 +18,9 @@ function isNightNetwork() {
 
 function pickRandomStops() {
   if (isNightNetwork()) {
-    return utils.shuffle(nightStops).slice(0, 28)
+    return utils.shuffle(nightStops).slice(0, 5) //29
   } else {
-    return utils.shuffle(stops).slice(0, 29)
+    return utils.shuffle(stops).slice(0, 5) //28
   }
 }
 

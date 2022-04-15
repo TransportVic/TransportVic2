@@ -92,7 +92,7 @@ router.get('/home-banner', (req, res) => {
      res.json({
        link: '#',
        alt: 'Alert',
-       text: 'PTV bus fleet data is currently unavailable due to a PTV error.'
+       text: 'PTV bus fleet data is currently unavailable due to a PTV data error.'
      })
 /*
      res.json({
