@@ -18,7 +18,7 @@ global.loggers = {
 let mainServer = new MainServer()
 let httpServer = HTTPServer.createServer(mainServer)
 
-global.server = hhttpServer
+global.server = httpServer
 
 httpServer.listen(config.httpPort)
 
