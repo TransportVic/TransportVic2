@@ -2,8 +2,6 @@ require('../utils')
 
 const config = require('../config.json')
 const HTTPServer = require('../server/HTTPServer')
-const HTTPSServer = require('../server/HTTPSServer')
-const HTTPSRedirectServer = require('../server/HTTPSRedirectServer')
 const MainServer = require('./MainServer')
 
 const Logger = require('../Logger')
@@ -17,23 +15,12 @@ global.loggers = {
   certs: new Logger(path.join(__dirname, 'logs', 'certs'), 'CERTS')
 }
 
-let httpServer = null
-let httpsServer = null
-const mainServer = new MainServer()
+let mainServer = new MainServer()
+let httpServer = HTTPServer.createServer(mainServer)
 
-if (config.useHTTPS) {
-  const redirectServer = new HTTPSRedirectServer()
-  httpServer = HTTPServer.createServer(redirectServer)
-
-  httpsServer = HTTPSServer.createServer(mainServer, config.sslCerts)
-} else {
-  httpServer = HTTPServer.createServer(mainServer)
-}
-
-global.server = httpsServer || httpServer
+global.server = hhttpServer
 
 httpServer.listen(config.httpPort)
-if (httpsServer) httpsServer.listen(443)
 
 process.on('uncaughtException', err => {
   global.loggers.error.err(err)

@@ -222,7 +222,6 @@ module.exports = class MainServer {
       'run-pages/Generic': '/',
 
       Statistics: '/stats',
-      TourBusMinder: '/tbm',
 
       'mockups/Index': '/mockups',
       'mockups/fss/FlindersStreet': '/mockups/fss',

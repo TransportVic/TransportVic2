@@ -11,8 +11,6 @@ const handleNonStop = require('./modules/handle-non-stop')
 const handleReinstatement = require('./modules/handle-reinstatement')
 const handleNoCatering = require('./modules/handle-no-catering')
 
-const HTTPSServer = require('../../server/HTTPSServer')
-
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config.json')
 

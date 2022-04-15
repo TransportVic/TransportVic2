@@ -399,15 +399,6 @@ database.connect({
 
   console.log('Created bus trips index')
 
-  await tbmTrips.createIndex({
-    date: 1,
-    rego: 1,
-    tripName: 1,
-    time: 1
-  }, {name: 'tbm trips'})
-
-  console.log('Created tourbusminder index')
-
   await metroNotify.createIndex({
     alertID: 1
   }, { name: 'alertid index', unique: true })
