@@ -24,7 +24,7 @@ let trackGroups = {
   Alamein: 'Alamein',
   'Glen Waverley': 'Glen Waverley',
   'Flemington Racecourse': 'Flemington Racecourse',
-  'City Loop': 'Clifton Hill'
+  'City Circle': 'Clifton Hill'
 }
 
 
@@ -175,14 +175,15 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
           },
           departureTimeMinutes: departureTime
         }
-      },
-      trueDestination: {
-        $ne: station.stopName
       }
     }
 
     // let gtfsTimetablesFound = await gtfsTimetables.findDocuments(query).toArray()
-    let liveTimetablesFound = await liveTimetables.findDocuments(query).toArray()
+    let liveTimetablesFound = (await liveTimetables.findDocuments(query).toArray()).filter(timetable => {
+      if (timetable.trueDestination === station.stopName) {
+        return timetable.trueOrigin === station.stopName
+      } else return true
+    })
 
     liveTimetablesFound.forEach(t => {
       days[getID(t)] = day

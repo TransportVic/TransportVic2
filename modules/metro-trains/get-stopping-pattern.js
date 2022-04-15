@@ -203,9 +203,9 @@ module.exports = async function (data, db) {
 
   let routeName = routeData.route_name
   if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
+  if (routeData.route_id === 99) routeName = 'City Circle'
 
   let routeGTFSID = routeGTFSIDs[routeName]
-  if (routeData.route_id === 99) routeGTFSID = '2-CCL'
   let route = await routesCollection.findDocument({ routeGTFSID })
 
   await async.forEachSeries(Object.values(stops), async stop => {
