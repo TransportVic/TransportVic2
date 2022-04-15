@@ -36,3 +36,15 @@
 ul {
   text-align: left;
 }
+
+.emphasis {
+  text-decoration: underline;
+}
+
+div.holiday {
+  margin-bottom: calc(1vw + 1vh) !important;
+}
+
+div.holiday > * {
+  margin: calc(0.2vw + 0.2vh) 0;
+}

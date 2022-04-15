@@ -16,6 +16,7 @@ let events = Object.values(rawEvents).slice(1)
 
 let eventCache = {}
 let dayCache = {}
+let nightNetworkRunning = {}
 
 function editName(name) {
   if (name === 'Saturday before Easter Sunday') return 'Easter Saturday'
@@ -86,8 +87,26 @@ async function getDayOfWeek(time) {
   else return 'Sun'
 }
 
+async function isNightNetworkRunning(time) {
+  let day = utils.getYYYYMMDD(time)
+  if (nightNetworkRunning[day]) return nightNetworkRunning[day]
+
+  let train = await gtfsTimetables.findDocument({
+    operationDays: day,
+    mode: 'metro train',
+    'stopTimings.0.departureTimeMinutes': {
+      $gte: 1500 // 25 * 60 = 1am
+    }
+  })
+
+  nightNetworkRunning[day] = !!train // If timetable exists means NN running, else not running
+
+  return nightNetworkRunning[day]
+}
+
 module.exports = {
   getPublicHolidayName,
   getPHDayOfWeek,
-  getDayOfWeek
+  getDayOfWeek,
+  isNightNetworkRunning
 }

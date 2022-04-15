@@ -290,6 +290,9 @@ module.exports = {
   isWeekday: dayOfWeek => {
     return ['Mon', 'Tues', 'Wed', 'Thur', 'Fri'].includes(dayOfWeek)
   },
+  isNightNetworkDay: dayOfWeek => {
+    return ['Fri', 'Sat'].includes(dayOfWeek)
+  },
   formatHHMM: time => { // TODO: Rename getHHMM
     return time.format('HH:mm')
   },

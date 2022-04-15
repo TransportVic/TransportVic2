@@ -20,22 +20,25 @@ block title
   
 block content
   for holiday in holidays
-    -
-      let humanDay = holiday.day.format('dddd, MMMM Do YYYY')
-      let scheduleDay = holiday.scheduleDay || '??'
-    h1 #{holiday.name} (#{humanDay})
-    p #{holiday.name} will fall on #{humanDay}
-    if scheduleDay === '??'
-      p At this point in time it is unknown what day of the week PTV will run to. Please check again closer to the day
-    else 
-      
-      p This means that PTV will run to a #{scheduleDay} timetable, but some services might be altered or not run. 
-        | Additionally, Night Network will not run.
-    if holiday.fallsOnWeekday
-      p As it falls on a weekday, it is likely that university shuttles will continue to run, even if they do not show up in the data feed. Check with your local bus operator before travelling.
-  
-  for i in [1,2,3,4,5]
-    br
+    div.holiday
+      -
+        let humanDay = holiday.day.format('dddd, MMMM Do YYYY')
+        let scheduleDay = holiday.scheduleDay || '??'
+      h1 #{holiday.name} (#{humanDay})
+      p #{holiday.name} will fall on #{humanDay}
+      if scheduleDay === '??'
+        p At this point in time it is unknown what day of the week PTV will run to. Please check again closer to the day
+      else 
+        
+        p This means that PTV will run to a #{scheduleDay} timetable, but some services might be altered or not run. Do check timetables before travelling.
+        if holiday.nightNetworkRunning !== null
+          if holiday.nightNetworkRunning
+            p Night Network services 
+              span.emphasis will be
+              |  running on the day.
+          else
+            p Night Network services will not be running on the day.
+
   p This page was generated automatically. If there are any errors, please leave feedback 
     a(href='https://forms.gle/v5tNack8Ts7oyQzS6') here
   br
