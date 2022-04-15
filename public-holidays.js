@@ -51,14 +51,13 @@ async function getPHDayOfWeek(time) {
         operationDays: day,
         routeGTFSID: '4-782',
         mode: 'bus',
-        gtfsDirection: '0' // flinders - frankston
+        destination: 'Frankston Railway Station/Young Street'
       })
 
       let hasFlinders = await gtfsTimetables.countDocuments({
         operationDays: day,
         routeGTFSID: '4-782',
         mode: 'bus',
-        gtfsDirection: '0', // flinders - frankston
         origin: 'Wood Street/Cook Street',
       })
 
