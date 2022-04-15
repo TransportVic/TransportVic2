@@ -440,7 +440,7 @@ module.exports = async function (data, db) {
     newStops = newStops.slice(newOrigin, newDestination + 1)
 
     let existingOrigin = existingStops.includes(referenceTrip.trueOrigin) ? existingStops.indexOf(referenceTrip.trueOrigin) : 0
-    let existingDestination = existingStops.includes(referenceTrip.trueDestination) ? existingStops.indexOf(referenceTrip.trueDestination) : existingStops.length - 1
+    let existingDestination = existingStops.includes(referenceTrip.trueDestination) ? existingStops.lastIndexOf(referenceTrip.trueDestination) : existingStops.length - 1
     existingStops = existingStops.slice(existingOrigin, existingDestination + 1)
 
     let extraStops = newStops.filter(stop => !existingStops.includes(stop))
