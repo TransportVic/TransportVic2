@@ -51,7 +51,9 @@ input[type="submit"] {
   outline: none;
   font-size: calc(1.5vw + 1.5vh);
   margin-left: calc(0.2vw + 0.2vh);
+  padding: 0;
   background-color: #e0e0e0;
+  color: #000000;
   appearance: none;
   -moz-appearance: textfield;
 
