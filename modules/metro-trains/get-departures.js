@@ -1218,11 +1218,6 @@ async function getDepartures(station, db, filter, backwards, departureTime) {
       let extraTrains = [], raceTrains = []
 
       let scheduled = await departureUtils.getScheduledMetroDepartures(station, db, departureTime, backwards)
-      if (config.allowHCMT) {
-        let existingRunIDs = departures.map(departure => departure.runID)
-        let hcmt = scheduled.filter(departure => departure.trip.h && !existingRunIDs.includes(departure.trip.runID))
-        departures.push(...hcmt)
-      }
 
       if (stationsAppendingUp.includes(stationName)) {
         extraTrains = await getExtraTrains(departures, 'Up', scheduled, departureTime)
@@ -1240,8 +1235,7 @@ async function getDepartures(station, db, filter, backwards, departureTime) {
     try {
       return await utils.getData('metro-departures-new', stationName + backwards + departureTime.toISOString(), async () => {
         let scheduled = await departureUtils.getScheduledMetroDepartures(station, db, departureTime, backwards)
-        if (config.allowHCMT) return scheduled
-        else return scheduled.filter(departure => !departure.trip.h)
+        return scheduled
       }, 1000 * 10)
     } catch (ee) {
       global.loggers.general.err('Error getting Scheduled Metro departures', ee)

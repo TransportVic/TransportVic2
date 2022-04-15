@@ -21,13 +21,13 @@ block content
   h1#title V/Line Tracker
   h2 Track Your Train:
   br
-  form(action=`${baseURL}/date` method='get')#byDate
+  form(action='/vline/tracker/date' method='get')#byDate
     label(for="date") On Date:
     br
     div.inputSection
       input(type="text" maxlength="10" name="date" value="" placeholder="DD/MM/YYYY (Blank for today)" autocomplete="off")
       input(type="submit" value="Go")
-  form(action=`${baseURL}/line` method='get')#byLine
+  form(action='/vline/tracker/line' method='get')#byLine
     label(for="line") By Line:
     br
     div.inputSection
@@ -41,7 +41,7 @@ block content
           option Seymour
         span Ballarat
       input(type="submit" value="Go")
-  form(action=`${baseURL}/consist` method='get')#byConsist
+  form(action='/vline/tracker/consist' method='get')#byConsist
     label(for="consist") By Consist:
     br
     div
@@ -52,4 +52,4 @@ block content
         input(type="submit" value="Go")
   br
   h2 Alternatively,
-  a#highlights(href=`${baseURL}/highlights`) View Today's Highlights
+  a#highlights(href='/vline/tracker/highlights') View Today's Highlights

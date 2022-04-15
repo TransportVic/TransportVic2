@@ -3,7 +3,7 @@ const schedule = require('./scheduler')
 const config = require('../../config')
 const utils = require('../../utils')
 const DatabaseConnection = require('../../database/DatabaseConnection')
-const VLineTracker = require('../../application/routes/tracker/VLineTracker2')
+const VLineTracker = require('../../application/routes/tracker/VLineTracker')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let liveTimetables, vlineTrips
