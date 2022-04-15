@@ -9,6 +9,7 @@ const router = new express.Router()
 
 router.use('/:rawDays', async (req, res) => {
   let days = req.params.rawDays.split('-').slice(0, 7)
+  let gtfsTimetables = res.db.getCollection('gtfs timetables')
 
   let data = (await async.map(days, async day => {
     let dayMoment = utils.parseDate(day)
@@ -16,6 +17,12 @@ router.use('/:rawDays', async (req, res) => {
     let actualDay = utils.getDayOfWeek(dayMoment)
     let phDay = await getPHDayOfWeek(dayMoment)
     let phName = getPublicHolidayName(dayMoment)
+
+    let cityCircleRunning = !!await gtfsTimetables.findDocument({
+      operationDays: day,
+      mode: 'tram',
+      routeGTFSID: '3-35'
+    })
 
     let nightNetworkRunning = null
     if (utils.isNightNetworkDay(actualDay)) {
@@ -26,7 +33,8 @@ router.use('/:rawDays', async (req, res) => {
       name: phName,
       scheduleDay: phDay,
       day: dayMoment,
-      nightNetworkRunning
+      nightNetworkRunning,
+      cityCircleRunning
     }
   })).filter(ph => ph.name)
 
