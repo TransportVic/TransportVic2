@@ -54,7 +54,7 @@ let extendedList = [
 async function getDeparturesFromVNET(db, station) {
   let vnetName = station.bays.find(bay => bay.vnetStationName).vnetStationName
 
-  let vnetDepartures = await getVNETDepartures(vnetName, 'B', db, 1440, true, false, true)
+  let vnetDepartures = await getVNETDepartures(vnetName, 'B', db, 1440, true, true)
 
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
@@ -138,7 +138,7 @@ async function fetchData() {
       combinedTripData[runID][destinationTiming.stopName] = departure.estimatedDestArrivalTime - departure.destinationArrivalTime
     })
 
-    await utils.sleep(2500)
+    await utils.sleep(500)
   })
 
   try {

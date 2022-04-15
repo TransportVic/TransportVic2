@@ -6,56 +6,7 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const VLineTracker = require('../../application/routes/tracker/VLineTracker')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-let liveTimetables, vlineTrips
-
-async function findHCMT(today, date) {
-  let hcmtTrains = await liveTimetables.findDocuments({
-    operationDays: today,
-    mode: 'metro train',
-    routeGTFSID: {
-      $in: ['2-PKM', '2-CRB']
-    },
-    h: true
-  }).sort({ 'stopTimings.0.departureTimeMinutes': 1 }).toArray()
-
-  let shifts = {}
-  let runIDShifts = {}
-
-  hcmtTrains.forEach(trip => {
-    if (!runIDShifts[trip.runID]) {
-      shifts[trip.runID] = []
-      runIDShifts[trip.runID] = trip.runID
-    }
-
-    let shiftNumber = runIDShifts[trip.runID]
-    shifts[shiftNumber].push(trip.runID)
-
-    if (trip.forming !== '0') runIDShifts[trip.forming] = shiftNumber
-  })
-
-  let shiftTrips = Object.values(shifts).map(shiftTrips => {
-    return shiftTrips.map((runID, i) => {
-      let trip = hcmtTrains.find(tripData => tripData.runID === runID)
-      let data = `#${trip.runID}: ${trip.trueDepartureTime} ${trip.trueOrigin.slice(0, -16)} - ${trip.trueDestination.slice(0, -16)}`
-
-      if (i === shiftTrips.length - 1) {
-        return `${data}
-OFF${trip.forming ? `: ${trip.forming} ETY CARS` : ''}`
-      } else {
-        return data
-      }
-    }).join('\n')
-  })
-
-  let shiftData = `HCMT Trips on ${date}
-${shiftTrips.join('\n\n')}`
-
-  if (hcmtTrains.length) {
-    await discordIntegration('hcmtNotify', shiftData)
-  } else {
-    await discordIntegration('hcmtNotify', `No HCMT Trips detected on ${date}`)
-  }
-}
+let vlineTrips
 
 async function findVLine(today, date) {
   let allTrips = (await vlineTrips.findDocuments({ date: today })
@@ -113,12 +64,10 @@ async function updateData() {
   let today = utils.getYYYYMMDDNow()
   let date = utils.now().format('dddd, MMMM Do YYYY')
 
-  try { await findHCMT(today, date) } catch (e) { await discordIntegration('hcmtNotify', 'Failed to send HCMT Trips on ' + date) }
-  // try { await findVLine(today, date) } catch (e) { await discordIntegration('vlineNotify', 'Failed to send V/Line Trips on ' + date) }
+  try { await findVLine(today, date) } catch (e) { await discordIntegration('vlineNotify', 'Failed to send V/Line Trips on ' + date) }
 }
 
 database.connect(async () => {
-  liveTimetables = database.getCollection('live timetables')
   vlineTrips = database.getCollection('vline trips')
 
   schedule([

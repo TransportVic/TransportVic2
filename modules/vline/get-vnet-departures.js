@@ -17,11 +17,8 @@ async function getStationFromVNETName(vnetStationName, db) {
   }, 1000 * 60 * 60)
 }
 
-async function getVNETDepartures(stationName, direction, db, time, useArrivalInstead=false, useNew=false, long=false) {
-  let baseURL = useArrivalInstead ? urls.vlinePlatformArrivalsOld : urls.vlinePlatformDeparturesOld
-  if (useNew) {
-    baseURL = useArrivalInstead ? urls.vlinePlatformArrivals : urls.vlinePlatformDepartures
-  }
+async function getVNETDepartures(stationName, direction, db, time, useArrivalInstead=false, long=false) {
+  let baseURL = useArrivalInstead ? urls.vlinePlatformArrivals : urls.vlinePlatformDepartures
 
   let url = baseURL.format(stationName, direction, time)
   const body = (await utils.request(url, { timeout: long ? 15000 : 3000 })).replace(/a:/g, '')
@@ -103,8 +100,8 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
     if (direction === 'D') direction = 'Down'
     else direction = 'Up'
 
-    if (!originVNETName && (runID[1] === '7' || runID[1] === '8')) originVNETName = 'Werribee Station'
-    if (!destinationVNETName && (runID[1] === '7' || runID[1] === '8')) destinationVNETName = 'Werribee Station'
+    // if (!originVNETName && (runID[1] === '7' || runID[1] === '8')) originVNETName = 'Werribee Station'
+    // if (!destinationVNETName && (runID[1] === '7' || runID[1] === '8')) destinationVNETName = 'Werribee Station'
 
     if (!originVNETName || !destinationVNETName) return // Apparently origin or dest is sometimes unknown
 
@@ -118,8 +115,6 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
 
     let dayOfWeek = await getDayOfWeek(originDepartureTime)
     let isWeekday = utils.isWeekday(dayOfWeek)
-
-    if (runID === '8147' && isWeekday) consist.reverse()
 
     mappedDepartures.push({
       runID,
