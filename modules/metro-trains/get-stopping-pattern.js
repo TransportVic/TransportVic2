@@ -4,8 +4,8 @@ const config = require('../../config')
 const ptvAPI = require('../../ptv-api')
 const findConsist = require('./fleet-parser')
 const metroTypes = require('../../additional-data/metro-tracker/metro-types')
-const addStonyPointData = require('../metro-trains/add-stony-point-data')
-const fixTripDestination = require('../metro-trains/fix-trip-destinations')
+const addStonyPointData = require('./add-stony-point-data')
+const fixTripDestination = require('./fix-trip-destinations')
 const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
@@ -459,7 +459,7 @@ module.exports = async function (data, db) {
 
       stop.cancelled = cancelledStops.includes(stop.stopName)
 
-      let updatedStop = stopTimings.find(newStop => stop.stopName === newStop.stopName)
+      let updatedStop = stopTimings.find(newStop => stop.stopName === newStop.stopName && stop.scheduledDepartureTime === newStop.scheduledDepartureTime)
       if (updatedStop) {
         if (updatedStop.estimatedDepartureTime && updatedStop.estimatedDepartureTime !== stop.estimatedDepartureTime) { // Only update if changed and exists
           stop.estimatedDepartureTime = updatedStop.estimatedDepartureTime

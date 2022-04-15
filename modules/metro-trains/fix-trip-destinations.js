@@ -4,7 +4,7 @@ module.exports = trip => {
   let origin, destination, departureTime, destinationArrivalTime
 
   if (trip.direction === 'Up') {
-    let fssIndex = stops.indexOf('Flinders Street Railway Station')
+    let fssIndex = stops.lastIndexOf('Flinders Street Railway Station')
     if (fssIndex !== -1) {
       destination = 'Flinders Street Railway Station'
       destinationArrivalTime = trip.stopTimings[fssIndex].arrivalTime
