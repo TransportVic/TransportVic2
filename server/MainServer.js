@@ -16,10 +16,8 @@ const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config.json')
 const modules = require('../modules.json')
 
-if (modules.tracker && modules.tracker.bus) {
-  require('../modules/trackers/ptv-bus')
+if (modules.tracker && modules.tracker.bus)
   require('../modules/trackers/bus')
-}
 
 if (modules.tracker && modules.tracker.tram)
   require('../modules/trackers/tram')
