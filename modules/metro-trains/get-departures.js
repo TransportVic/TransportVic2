@@ -73,7 +73,9 @@ function addCityLoopRunning(train, stationName) {
     if (viaCityLoop) {
       loopRunning = ['PAR', 'MCE', 'FGS', 'SSS', 'FSS']
     } else {
-      if (runDestination === 'Southern Cross') {
+      if (stationName === 'Southern Cross' && routeName === 'Frankston') {
+        loopRunning = ['RMD', 'FSS', 'SSS', 'NME']
+      } else if (runDestination === 'Southern Cross') {
         loopRunning = ['RMD', 'FSS', 'SSS']
       } else if (runDestination === 'Parliament' || cityLoopStations.includes(stationName)) {
         loopRunning = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR']
