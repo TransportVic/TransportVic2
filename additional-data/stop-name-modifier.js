@@ -21,6 +21,7 @@ module.exports = stopName => {
 
   if (stopName === 'Newport Interchange/Mason Street') return 'Newport Railway Station/Mason Street'
   if (stopName === 'Box Hill Bus Station/Station Street') return 'Box Hill Railway Station/Station Street'
+  if (stopName === 'Ballarat Bus Interchange') return 'Ballarat Railway Station'
 
   if (stopName.includes('Freeburgh') && stopName.includes('Hall')) {
     return stopName.replace(/Freeburgh \w*? ?Hall/, 'Freeburgh Community Hall')

@@ -502,5 +502,10 @@ module.exports = {
   32028: "Bay 2",
   32027: "Bay 3",
   32025: "Bay 4",
-  32026: "Bay 5"
+  32026: "Bay 5",
+
+  // Ballarat Bus Interchange
+  49016: "Bay 1",
+  49017: "Bay 2",
+  49018: "Bay 3",
 }
