@@ -4,7 +4,6 @@ const config = require('../../config')
 const fs = require('fs')
 const path = require('path')
 const async = require('async')
-const rateLimit = require('express-rate-limit')
 const { getPHDayOfWeek, getPublicHolidayName } = require('../../public-holidays')
 const { exec } = require('child_process')
 const router = new express.Router()
@@ -136,22 +135,6 @@ router.get('/robots.txt', (req, res) => {
   res.end(robots)
 })
 
-router.get('/.well-known/acme-challenge/:key', rateLimit({
-  windowMs: 1 * 60 * 1000,
-  max: 20
-}))
-
-router.get('/.well-known/acme-challenge/:key', (req, res) => {
-  let filePath = path.join(config.webrootPath, '.well-known', 'acme-challenge', req.params.key)
-
-  let stream = fs.createReadStream(filePath)
-  stream.pipe(res)
-
-  stream.on('error', err => {
-    res.status(404).end('404')
-  })
-})
-
 router.get('/sitemap.xml', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache')
   res.setHeader('Content-Type', 'application/xml')
@@ -163,7 +146,7 @@ router.get('/railmap', (req, res) => {
 })
 
 router.get('/about', (req, res) => {
-  res.render('about', {buildNumber, buildComment})
+  res.render('about', { buildNumber, buildComment })
 })
 
 module.exports = router

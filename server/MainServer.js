@@ -6,8 +6,6 @@ const path = require('path')
 const minify = require('express-minify')
 const fs = require('fs')
 const uglifyEs = require('uglify-es')
-const rateLimit = require('express-rate-limit')
-const fetch = require('node-fetch')
 const utils = require('../utils')
 const ptvAPI = require('../ptv-api')
 
@@ -121,12 +119,10 @@ module.exports = class MainServer {
       threshold: 512
     }))
 
-    if (!config.devMode) {
-      app.use(minify({
-        uglifyJsModule: uglifyEs,
-        errorHandler: console.log
-      }))
-    }
+    if (process.env['NODE_ENV'] === 'prod') app.use(minify({
+      uglifyJsModule: uglifyEs,
+      errorHandler: console.log
+    }))
 
     function filter(prefix, req, next) {
       let host = req.headers.host || ''
@@ -161,14 +157,9 @@ module.exports = class MainServer {
 
     app.set('views', path.join(__dirname, '../application/views'))
     app.set('view engine', 'pug')
-    if (process.NODE_ENV && process.NODE_ENV === 'prod') { app.set('view cache', true) }
+    if (process.NODE_ENV === 'prod') app.set('view cache', true)
     app.set('x-powered-by', false)
     app.set('strict routing', false)
-
-    app.use('/bus/timings', rateLimit({
-      windowMs: 1 * 60 * 1000,
-      max: 60
-    }))
   }
 
   async configRoutes (app) {
