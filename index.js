@@ -28,15 +28,12 @@ global.loggers = {
 }
 
 const config = require('./config.json')
-const HTTPServer = require('./server/HTTPServer')
 const MainServer = require('./server/MainServer')
 
 require('./modules/vline-mail')
 
 let mainServer = new MainServer()
-let httpServer = HTTPServer.createServer(mainServer)
-
-httpServer.listen(config.httpPort)
+mainServer.app.listen(config.httpPort)
 
 global.loggers.general.info('Server Started')
 
