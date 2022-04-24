@@ -83,17 +83,7 @@ module.exports = class MainServer {
     })
   }
 
-  getAverageResponseTime() {
-    let counts = this.past50ResponseTimes.length
-    let sum = this.past50ResponseTimes.reduce((a, b) => a + b, 0)
-    let average = sum / counts
-
-    return average
-  }
-
   configMiddleware (app) {
-    this.past50ResponseTimes = []
-
     app.use((req, res, next) => {
       let reqURL = req.url + ''
       let start = +new Date()
@@ -106,8 +96,6 @@ module.exports = class MainServer {
 
         if (!reqURL.startsWith('/static/')) {
           global.loggers.http.info(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff}`)
-
-          this.past50ResponseTimes = [...this.past50ResponseTimes.slice(-49), diff]
         }
       }
 
@@ -308,7 +296,6 @@ module.exports = class MainServer {
     app.get('/response-stats', (req, res) => {
       res.json({
         status: 'ok',
-        meanResponseTime: this.getAverageResponseTime(),
         ptvMeanResponseTime: ptvAPI.getAverageResponseTime(),
         ptvFaultRate: ptvAPI.getFaultRate()
       })

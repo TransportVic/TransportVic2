@@ -25,12 +25,10 @@ module.exports = class MainServer {
       threshold: 512
     }))
 
-    if (!config.devMode) {
-      app.use(minify({
-        uglifyJsModule: uglifyEs,
-        errorHandler: console.log
-      }))
-    }
+    if (process.NODE_ENV === 'prod') app.use(minify({
+      uglifyJsModule: uglifyEs,
+      errorHandler: console.log
+    }))
 
     app.use('/static', express.static(path.join(__dirname, '../application/static')))
 
@@ -51,7 +49,7 @@ module.exports = class MainServer {
 
     app.set('views', path.join(__dirname, '../application/views'))
     app.set('view engine', 'pug')
-    if (process.NODE_ENV && process.NODE_ENV === 'prod') { app.set('view cache', true) }
+    if (process.NODE_ENV === 'prod') app.set('view cache', true)
     app.set('x-powered-by', false)
     app.set('strict routing', false)
   }
@@ -75,7 +73,7 @@ module.exports = class MainServer {
 
     app.get('/home-banner', (req, res) => {
       res.json({
-        link: '#', 
+        link: '#',
         alt: 'Maintenance',
         text: 'Site is currently under maintenance...'
       })

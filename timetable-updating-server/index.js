@@ -1,7 +1,6 @@
 require('../utils')
 
 const config = require('../config.json')
-const HTTPServer = require('../server/HTTPServer')
 const MainServer = require('./MainServer')
 
 const Logger = require('../Logger')
@@ -16,11 +15,9 @@ global.loggers = {
 }
 
 let mainServer = new MainServer()
-let httpServer = HTTPServer.createServer(mainServer)
+mainServer.app.listen(config.httpPort)
 
-global.server = httpServer
-
-httpServer.listen(config.httpPort)
+global.server = mainServer.app
 
 process.on('uncaughtException', err => {
   global.loggers.error.err(err)
