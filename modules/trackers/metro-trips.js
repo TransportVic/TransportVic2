@@ -265,6 +265,7 @@ async function createTrip(trip, stopDescriptors, startOfDay, routeName) {
 }
 
 function parseRawData(stop, startOfDay) {
+  if (stop.time_seconds < 10800) stop.time_seconds += secondsInDay
   let minutes = stop.time_seconds / 60
   let scheduledDepartureTime = utils.getMomentFromMinutesPastMidnight(minutes, startOfDay)
 

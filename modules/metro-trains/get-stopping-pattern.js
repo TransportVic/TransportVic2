@@ -448,10 +448,10 @@ module.exports = async function (data, db) {
     let extraStopData = stopTimings.filter(stop => extraStops.includes(stop.stopName))
 
     if (cancelledStops.includes('Flinders Street Railway Station')) {
-      if (runID && runID[0] === '7') { // Footy special - add back in FSS for display purposes
+      if (runID && runID[0] === '7' && cancelledStops.length === 1) { // Footy special - add back in FSS for display purposes
         cancelledStops.splice(cancelledStops.indexOf('Flinders Street Railway Station'), 1)
       } else { // FSS cancelled - remove city loop stops too
-        cancelledStops.push(cityLoopStations.map(stop => `${stop} Railway Station`))
+        cancelledStops.push(...cityLoopStations.map(stop => `${stop} Railway Station`))
       }
     }
 
