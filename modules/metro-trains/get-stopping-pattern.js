@@ -447,8 +447,12 @@ module.exports = async function (data, db) {
     let cancelledStops = existingStops.filter(stop => !newStops.includes(stop))
     let extraStopData = stopTimings.filter(stop => extraStops.includes(stop.stopName))
 
-    if (cancelledStops.includes('Flinders Street Railway Station') && runID && runID[0] === '7') {
-      cancelledStops.splice(cancelledStops.indexOf('Flinders Street Railway Station'), 1)
+    if (cancelledStops.includes('Flinders Street Railway Station')) {
+      if (runID && runID[0] === '7') { // Footy special - add back in FSS for display purposes
+        cancelledStops.splice(cancelledStops.indexOf('Flinders Street Railway Station'), 1)
+      } else { // FSS cancelled - remove city loop stops too
+        cancelledStops.push(cityLoopStations.map(stop => `${stop} Railway Station`))
+      }
     }
 
     let mergedTimings = referenceTrip.stopTimings.concat(extraStopData).sort((a, b) => (a.departureTimeMinutes || a.arrivalTimeMinutes) - (b.departureTimeMinutes || b.arrivalTimeMinutes))

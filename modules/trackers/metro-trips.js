@@ -141,6 +141,13 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
 
   let allStopsCancelled = trip.stopsAvailable.every(stop => stop.cancelled)
 
+  let isFSSCancelled = existingTrip.stopTimings.some(stop => stop.stopName === 'Flinders Street Railway Station' && stop.cancelled)
+  if (isFSSCancelled) { // FSS cancelled - remove city loop stops too
+    existingTrip.stopTimings.forEach(stop => {
+      if (cityLoopStations.includes(stop.stopName.slice(0, -16))) stop.cancelled = true
+    })
+  }
+
   let updatedTimetable = fixTripDestination({
     ...existingTrip,
     origin: firstStop.stopName,
