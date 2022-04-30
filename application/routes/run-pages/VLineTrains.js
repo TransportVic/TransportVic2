@@ -140,7 +140,7 @@ async function pickBestTrip(data, db) {
 
     if (tripData) {
       referenceTrip.runID = tripData.runID
-      // referenceTrip.consist = tripData.consist
+      referenceTrip.consist = tripData.consist
     }
   }
 

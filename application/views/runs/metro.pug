@@ -28,7 +28,7 @@ block content
           div.vehicle
             span #{size}x 
             img(src=`/static/images/icons/${type.toLowerCase()}.svg`)
-    if trip.vehicle && trip.vehicle.consist.length && false
+    if trip.vehicle && trip.vehicle.consist.length
       div.liveConsist
         span.header Live Tracking
         span.consist #{trip.vehicle.consist.join('-')}

@@ -423,7 +423,7 @@ module.exports = async function (data, db) {
   }
 
   let timetable
-  if (referenceTrip) {
+  if (referenceTrip && runID) { // Only update trains as such
     let newStops = stopTimings.map(stop => stop.stopName)
     let existingStops = referenceTrip.stopTimings.map(stop => stop.stopName)
 
