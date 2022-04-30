@@ -40,6 +40,8 @@ let stationsAppendingUp = [
 let rceStations = [
   'Flemington Racecourse',
   'Showgrounds',
+  'Newmarket',
+  'Kensington',
   'North Melbourne'
 ]
 
@@ -1201,8 +1203,6 @@ async function getMissingRaceTrains(departures, scheduled) {
     let id = generateTripID(train.trip)
     return !existingIDs.includes(id)
   })
-
-  extras.forEach(train => train.cancelled = true)
 
   return extras
 }
