@@ -72,6 +72,12 @@ async function parseTimings(names, types, trip) {
 
   if (movementType !== 'PSNG_SRV') return
 
+  let vehicleParts
+  if (vehicleParts = vehicleFormation.match(/3VR ?\+ ?(\d)?x?3VL/)) {
+    let vlocitySize = 1 + parseInt(vehicleParts[1] || 1)
+    vehicleFormation = `${vlocitySize}x 3VL`
+  }
+
   let offset = 0
   let previousTime = 0
 
@@ -198,18 +204,10 @@ async function parseTimings(names, types, trip) {
     })
   }
 
-  let formingData = trip.slice(-2)
+  let formingData = trip[trip.length - 1]
   let forming
-  if (formingData[1] === 'OFF') forming = 'OFF'
-  else if (formingData[1].startsWith('DAP')) {
-    forming = formingData[1].slice(4).split(', ').map(e => (e.replace(',', '')))
-  } else {
-    if (formingData[0].length === 4) {
-      forming = [formingData[0]]
-    } else {
-      forming = [formingData[1]]
-    }
-  }
+  if (formingData === 'OFF') forming = 'OFF'
+  else forming = formingData.match(/(Y?\d{4,5})/g)
 
   let lastStop = stopTimings.slice(-1)[0]
 
@@ -352,19 +350,25 @@ database.connect({
   await timetables.deleteDocuments({ mode: 'regional train' })
 
   let trips = {}
-  let files = fs.readdirSync(path.join(__dirname, 'timetables'))
+  let files = fs.readdirSync(path.join(__dirname, 'timetables')).filter(filename => filename.endsWith('.pdf'))
 
   await async.forEachSeries(files, async filename => {
-    await new Promise(resolve => {
-      readFileData(filename, trips, newTrips => {
-        trips = newTrips
-        console.log('Completed processing', filename)
-        resolve()
+    try {
+      await new Promise(resolve => {
+        console.log('Loading', filename);
+        readFileData(filename, trips, newTrips => {
+          trips = newTrips
+          console.log('Completed processing', filename)
+          resolve()
+        })
       })
-    })
+    } catch (e) {
+      console.log('Failed to load', filename);
+      console.error(e);
+    }
   })
 
-  trips = Object.values(trips).map(trip => {
+  trips = Object.values(trips).filter(trip => trip.vehicle !== 'OVERLAND' && trip.vehicle !== 'XPT').map(trip => {
     let gisborne = trip.stopTimings.find(stop => stop.stopName === 'Gisborne Railway Station')
 
     if (gisborne) {

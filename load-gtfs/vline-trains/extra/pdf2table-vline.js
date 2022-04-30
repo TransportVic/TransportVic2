@@ -94,6 +94,7 @@ function parse(pdfBuffer, callback) {
           currentRow = 3
 
         let xThreshold = 0.03
+
         if (text.w < 2.85) {
           xThreshold = 0.1
         } else if (text.w < 3) {
@@ -105,9 +106,9 @@ function parse(pdfBuffer, callback) {
         if (currentRow === 0 && !textContent.includes('Business') && textContent.length > 4) xThreshold = 0.3
         if (currentRow === 1 && !textContent.includes('Days') && textContent.length > 4) xThreshold = 0.3
 
-        let firstXGreater = colStarts.find(c => c > text.x + xThreshold)
-        let currentCol = colStarts.indexOf(firstXGreater) - 1
+        let currentCol = colStarts.findIndex(c => c > text.x + xThreshold) - 1
         if (currentCol === -1) currentCol = 0
+        if (textContent === 'Arr') currentCol = 1
 
         if (!rows[currentRow]) {
           // create new row:
@@ -117,11 +118,14 @@ function parse(pdfBuffer, callback) {
           }
         }
 
-        if (!rows[currentRow].data[currentCol])
+        if (!rows[currentRow].data[currentCol]) {
           rows[currentRow].data[currentCol] = {
             text: textContent,
             x: text.x
           }
+        } else {
+          rows[currentRow].data[currentCol].text += ` ${textContent}`
+        }
       }
 
       // rows = rows.filter(Boolean)

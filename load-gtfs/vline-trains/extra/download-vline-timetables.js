@@ -23,20 +23,19 @@ async function main() {
   })
   let $ = cheerio.load(body)
   let as = Array.from($('div[id="publication-list"]:nth-child(3) a'))
-  let links = as.map(a => [baseURL + $(a).attr('href'), $(a).text().trim()])
+  let links = as.map(a => [baseURL + $(a).attr('href'), $(a).text().trim()]).filter(link => {
+    return !link[1].includes('Central')
+  })
 
   await async.forEachSeries(links, async link => {
-    if (link[1].includes('Central')) return
+    let filePath = path.join(__dirname, 'timetables', link[1] + '.pdf')
+    let fileBuffer = await utils.request(link[0], {
+      timeout: 30 * 1000,
+      raw: true
+    })
 
-    let file = fs.createWriteStream(path.join(__dirname, 'timetables', link[1] + '.pdf'))
-    let start = new Date()
-    await new Promise(r => {
-        https.get(link[0], res => {
-        res.pipe(file)
-        let end = new Date()
-        console.log((end - start) + 'ms ' + link[0])
-        r()
-      })
+    await new Promise(resolve => {
+      fs.writeFile(filePath, fileBuffer, resolve)
     })
     await wait500()
   })
