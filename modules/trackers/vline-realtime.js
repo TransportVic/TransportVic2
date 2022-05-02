@@ -1,16 +1,15 @@
 const async = require('async')
 const config = require('../../config')
-const modules = require('../../modules')
 const utils = require('../../utils')
 const moment = require('moment')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const findTrip = require('../vline/find-trip')
 const getVNETDepartures = require('../vline/get-vnet-departures')
+const schedule = require('./scheduler')
 const vlineLock = require('../vline/vline-lock-wrap')
 const { getDayOfWeek } = require('../../public-holidays')
-const scheduleIntervals = require('./schedule-intervals')
 
-let database
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 let stops = [
   'North Geelong',
@@ -273,34 +272,29 @@ async function fetchPlatforms(db) {
   }
 }
 
-async function requestTimings() {
-  let MAX_CYCLES = 5
-  for (let cycleCount = 0; cycleCount < MAX_CYCLES; cycleCount++) {
-    try {
-      if (cycleCount === 0) {
-        global.loggers.trackers.vlineR.info('requesting vline realtime data')
-        await fetchData()
-      }
+let cycleCount = 0
 
-      global.loggers.trackers.vlineR.info('requesting vline platform data')
-      await fetchPlatforms(database)
-    } catch (e) {
-      global.loggers.trackers.vlineR.err('Error getting vline realtime data, skipping this round', e)
+async function requestTimings() {
+  cycleCount++
+
+  try {
+    if (cycleCount === 1) {
+      global.loggers.trackers.vlineR.info('requesting vline realtime data')
+      await fetchData()
     }
 
-    if (cycleCount !== MAX_CYCLES - 1) await utils.sleep(90 * 1000)
+    global.loggers.trackers.vlineR.info('requesting vline platform data')
+    await fetchPlatforms(database)
+  } catch (e) {
+    global.loggers.trackers.vlineR.err('Error getting vline realtime data, skipping this round', e)
   }
+
+  if (cycleCount === 5) cycleCount = 0
 }
 
-if (modules.tracker && modules.tracker['vline-r']) {
-  database = new DatabaseConnection(config.databaseURL, config.databaseName)
-  database.connect(async () => {
-    let shouldRun = scheduleIntervals([
-      [0, 120, 1],
-      [330, 1440, 1]
-    ])
-
-    if (shouldRun) await requestTimings()
-    process.exit()
-  })
-} else process.exit()
+database.connect(async () => {
+  schedule([
+    [0, 120, 3],
+    [330, 1440, 2]
+  ], requestTimings, 'vline-r tracker', global.loggers.trackers.vlineR)
+})

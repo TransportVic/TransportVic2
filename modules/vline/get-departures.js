@@ -63,14 +63,11 @@ async function getDeparturesFromVNET(vlinePlatform, db) {
     if (currentStation === 'Southern Cross' && (platform === '15' || platform === '16')) {
       let fixed = false
       if (nspTrip) {
-        let nspPlatform = nspTrip.stopTimings[0].platform
-        if (nspPlatform) {
-          let basePlatform = nspPlatform.replace(/[AB]/, '')
-          if (basePlatform === platform) {
-            platform = nspPlatform
-            fixed = true
-          }
-        } else global.loggers.general.warn('No SSS platform data for trip', departure.runID, nspTrip.destination, nspTrip.departureTime)
+        let nspPlatform = nspTrip.stopTimings[0].platform.replace(/[AB]/, '')
+        if (nspPlatform === platform) {
+          platform = nspTrip.stopTimings[0].platform
+          fixed = true
+        }
       }
 
       if (!fixed) {

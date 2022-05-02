@@ -1,14 +1,14 @@
 const async = require('async')
 const config = require('../../config')
-const modules = require('../../modules')
 const utils = require('../../utils')
 const urls = require('../../urls')
 const DatabaseConnection = require('../../database/DatabaseConnection')
+const schedule = require('./scheduler')
 const getStoppingPattern = require('../metro-trains/get-stopping-pattern')
 const ptvAPI = require('../../ptv-api')
-const scheduleIntervals = require('./schedule-intervals')
 
-let database
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+
 let liveTimetables
 
 async function requestTimings() {
@@ -73,16 +73,10 @@ async function requestTimings() {
   })
 }
 
-if (modules.tracker && modules.tracker.metroRaceTrains) {
-  database = new DatabaseConnection(config.databaseURL, config.databaseName)
-  database.connect(async () => {
-    liveTimetables = database.getCollection('live timetables')
+database.connect(async () => {
+  liveTimetables = database.getCollection('live timetables')
 
-    let shouldRun = scheduleIntervals([
-      [300, 420, 1]
-    ])
-
-    if (shouldRun) await requestTimings()
-    process.exit()
-  })
-} else process.exit()
+  schedule([
+    [300, 420, 30] // 5 - 7am
+  ], requestTimings, 'metro race trains', global.loggers.trackers.metro)
+})

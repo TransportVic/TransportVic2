@@ -1,14 +1,13 @@
-const async = require('async')
-const config = require('../../config')
-const modules = require('../../modules')
+const config = require('../../config.json')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const utils = require('../../utils')
 const stops = require('../../additional-data/bus-tracker/stops')
 const nightStops = require('../../additional-data/bus-tracker/night-stops')
+const async = require('async')
 const getDepartures = require('../../modules/bus/get-departures')
-const scheduleIntervals = require('./schedule-intervals')
+const schedule = require('./scheduler')
 
-let database
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
 
 function isNightNetwork() {
@@ -18,16 +17,11 @@ function isNightNetwork() {
 }
 
 function pickRandomStops() {
-  let stopSize = scheduleIntervals([
-    [0, 60, 23],
-    [60, 299, 25],
-    [300, 1260, 29],
-    [1261, 1440, 27]
-  ])
-
-  stopSize = 3 // Until PTV fixes the API
-
-  return utils.shuffle(isNightNetwork() ? nightStops : stops).slice(0, stopSize)
+  if (isNightNetwork()) {
+    return utils.shuffle(nightStops).slice(0, 5) //29
+  } else {
+    return utils.shuffle(stops).slice(0, 5) //28
+  }
 }
 
 function shouldRun() {
@@ -49,27 +43,27 @@ async function requestTimings() {
   let stops = pickRandomStops()
 
   try {
-    await async.forEachSeries(stops, async stop => {
+    await async.forEachOf(stops, async (stop, i) => {
       let [codedSuburb, codedName] = stop.split('/')
       let dbStop = await dbStops.findDocument({ codedName, codedSuburb })
       if (!dbStop) return global.loggers.trackers.bus.err('could not find', stop)
 
-      global.loggers.trackers.bus.info('requesting timings for', stop)
-      await getDepartures(dbStop, database)
-
-      await utils.sleep(5000)
+      setTimeout(async () => {
+        global.loggers.trackers.bus.info('requesting timings for', stop)
+        await getDepartures(dbStop, database)
+      }, i * 10000)
     })
   } catch (e) {
     global.loggers.trackers.bus.err('Failed to get bus trips this round', e)
   }
 }
 
-if (modules.tracker && modules.tracker.bus) {
-  database = new DatabaseConnection(config.databaseURL, config.databaseName)
-  database.connect(async () => {
-    dbStops = database.getCollection('stops')
-    await requestTimings()
-
-    process.exit()
-  })
-} else process.exit()
+database.connect(async () => {
+  dbStops = database.getCollection('stops')
+  schedule([
+    [0, 60, 6.5],
+    [60, 299, 6],
+    [300, 1260, 5],
+    [1261, 1440, 6]
+  ], requestTimings, 'bus tracker', global.loggers.trackers.bus)
+})

@@ -1,15 +1,15 @@
 const async = require('async')
 const config = require('../../config')
-const modules = require('../../modules')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const getMetroDepartures = require('../metro-trains/get-departures')
 const stops = require('../../additional-data/metro-tracker/stops')
+const schedule = require('./scheduler')
 
-let database
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
-let liveTimetables
+let metroTrips
 
 function shouldRun() {
   let minutes = utils.getMinutesPastMidnightNow()
@@ -31,6 +31,7 @@ function pickRandomStop() {
 async function getDepartures(stop) {
   let stopData = await dbStops.findDocument({ stopName: stop + ' Railway Station' })
   await getMetroDepartures(stopData, database)
+  await getMetroDepartures(stopData, database, false, true)
 }
 
 async function requestTimings() {
@@ -46,41 +47,46 @@ async function requestTimings() {
   }
 }
 
-async function trainCount(stopName) {
-  let count = await liveTimetables.countDocuments({
-    mode: 'metro train',
-    operationDays: utils.getYYYYMMDDNow(),
-    'stopTimings.stopName': `${stopName} Railway Station`
+async function trainCount(stopGTFSID) {
+  let { departures } = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&include_cancelled=true`, 3, 3000)
+  let today = utils.getYYYYMMDDNow()
+
+  let trains = departures.filter(departure => {
+    if (!departure.flags.includes('RRB')) {
+      let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
+      return utils.getYYYYMMDD(scheduledDepartureTime) === today
+    }
   })
 
-  return count
+  return trains.length
 }
 
-if (modules.tracker && modules.tracker.metro) {
-  database = new DatabaseConnection(config.databaseURL, config.databaseName)
-  database.connect(async () => {
-    dbStops = database.getCollection('stops')
-    liveTimetables = database.getCollection('live timetables')
+database.connect(async () => {
+  dbStops = database.getCollection('stops')
+  metroTrips = database.getCollection('metro trips')
 
-    try {
-      if (await trainCount('Flemington Racecourse') >= 4) {
-        stops.push('Flemington Racecourse')
-        global.loggers.trackers.metro.log('Found at least 4 RCE trains, monitoring RCE')
-      }
-    } catch (e) {
-      global.loggers.trackers.metro.err('Failed to check RCE trips, assuming none', e)
+  try {
+    if (await trainCount(20027) >= 4) {
+      stops.push('Flemington Racecourse')
+      global.loggers.trackers.metro.log('Found at least 4 RCE trains, monitoring RCE')
     }
+  } catch (e) {
+    global.loggers.trackers.metro.err('Failed to check RCE trips, assuming none', e)
+  }
 
-    try {
-      if (await trainCount('Showgrounds') >= 4) {
-        stops.push('Showgrounds')
-        global.loggers.trackers.metro.log('Found at least 4 SGS trains, monitoring SGS')
-      }
-    } catch (e) {
-      global.loggers.trackers.metro.err('Failed to check SGS trips, assuming none', e)
+  try {
+    if (await trainCount(20028) >= 4) {
+      stops.push('Showgrounds')
+      global.loggers.trackers.metro.log('Found at least 4 SGS trains, monitoring SGS')
     }
+  } catch (e) {
+    global.loggers.trackers.metro.err('Failed to check SGS trips, assuming none', e)
+  }
 
-    await requestTimings()
-    process.exit()
-  })
-} else process.exit()
+  schedule([
+    [0, 180, 0.66667],
+    [181, 239, 1],
+    [240, 1199, 0.66667],
+    [1200, 1440, 1],
+  ], requestTimings, 'metro tracker', global.loggers.trackers.metro)
+})

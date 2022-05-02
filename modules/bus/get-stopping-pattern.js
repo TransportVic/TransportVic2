@@ -42,7 +42,7 @@ async function getStop(stopData, stopsCollection) {
   }).limit(2).toArray()
 
   if (closeStop.length === 1) {
-    global.loggers.general.err('PTV Name Mismatch', stopData.stop_name, closeStop[0].stopName)
+    global.loggers.general.err('PTV Name Mismatch', stopData)
     return closeStop[0]
   } else {
     return null
