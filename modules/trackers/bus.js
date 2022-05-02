@@ -18,9 +18,9 @@ function isNightNetwork() {
 
 function pickRandomStops() {
   if (isNightNetwork()) {
-    return utils.shuffle(nightStops).slice(0, 5) //29
+    return utils.shuffle(nightStops).slice(0, 3) //29
   } else {
-    return utils.shuffle(stops).slice(0, 5) //28
+    return utils.shuffle(stops).slice(0, 3) //28
   }
 }
 
@@ -43,15 +43,18 @@ async function requestTimings() {
   let stops = pickRandomStops()
 
   try {
-    await async.forEachOf(stops, async (stop, i) => {
+    await async.forEachSeries(stops, async stop => {
       let [codedSuburb, codedName] = stop.split('/')
       let dbStop = await dbStops.findDocument({ codedName, codedSuburb })
       if (!dbStop) return global.loggers.trackers.bus.err('could not find', stop)
 
-      setTimeout(async () => {
+      try {
         global.loggers.trackers.bus.info('requesting timings for', stop)
         await getDepartures(dbStop, database)
-      }, i * 10000)
+        await utils.sleep(5000)
+      } catch (e) {
+        global.loggers.trackers.bus.err('Failed to get bus trips at', stop, e)
+      }
     })
   } catch (e) {
     global.loggers.trackers.bus.err('Failed to get bus trips this round', e)

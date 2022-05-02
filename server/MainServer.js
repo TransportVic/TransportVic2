@@ -29,9 +29,6 @@ if (modules.tracker && modules.tracker['vline-r'])
 if (modules.tracker && modules.tracker.xpt)
   require('../modules/xpt/xpt-updater')
 
-if (modules.tracker && modules.tracker.hcmt)
-  require('../modules/trackers/hcmt')
-
 if (modules.tracker && modules.tracker.metro)
   require('../modules/trackers/metro')
 
@@ -52,8 +49,6 @@ if (modules.preloadCCL)
 
 if (modules.gtfsr && modules.gtfsr.metro)
   require('../modules/gtfsr/metro')
-
-require('../modules/trackers/discord-notify')
 
 let serverStarted = false
 

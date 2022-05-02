@@ -11,12 +11,9 @@ let stops = []
 
 async function requestTimings() {
   await async.forEachSeries(stops, async stop => {
-    await new Promise(resolve => {
-      setTimeout(resolve, 1500)
-    })
-
     global.loggers.trackers.ccl.info('requesting timings for', stop.stopName.slice(0, -16))
     await getMetroDepartures(stop, database)
+    await utils.sleep(1500)
   })
 
   global.loggers.trackers.ccl.info('requesting timings for vline southern cross')

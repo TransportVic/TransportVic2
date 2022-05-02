@@ -579,3 +579,5 @@ module.exports = {
       && tripA.destinationArrivalTime === tripB.destinationArrivalTime
   }
 }
+
+require('./init-loggers')

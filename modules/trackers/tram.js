@@ -17,15 +17,18 @@ async function requestTimings() {
   let stops = pickRandomStops()
 
   try {
-    await async.forEachOf(stops, async (stop, i) => {
-      global.loggers.trackers.tram.info('requesting timings for', stop)
+    await async.forEachSeries(stops, async stop => {
       let [codedSuburb, codedName] = stop.split('/')
       let dbStop = await dbStops.findDocument({ codedName, codedSuburb })
       if (!dbStop) return global.loggers.trackers.tram.err('could not find', stop)
 
-      setTimeout(async () => {
+      try {
+        global.loggers.trackers.tram.info('requesting timings for', stop)
         await getDepartures(dbStop, database)
-      }, i * 15000)
+        await utils.sleep(5000)
+      } catch (e) {
+        global.loggers.trackers.bus.err('Failed to get tram trips at', stop, e)
+      }
     })
   } catch (e) {
     global.loggers.trackers.tram.err('Failed to get tram trips this round', e)

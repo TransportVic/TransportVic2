@@ -1,7 +1,6 @@
 const async = require('async')
 const config = require('../../config')
 const utils = require('../../utils')
-const ptvAPI = require('../../ptv-api')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const getMetroDepartures = require('../metro-trains/get-departures')
 const stops = require('../../additional-data/metro-tracker/stops')
@@ -9,7 +8,7 @@ const schedule = require('./scheduler')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
-let metroTrips
+let liveimetables
 
 function shouldRun() {
   let minutes = utils.getMinutesPastMidnightNow()
@@ -47,26 +46,22 @@ async function requestTimings() {
   }
 }
 
-async function trainCount(stopGTFSID) {
-  let { departures } = await ptvAPI(`/v3/departures/route_type/0/stop/${stopGTFSID}?gtfs=true&include_cancelled=true`, 3, 3000)
-  let today = utils.getYYYYMMDDNow()
-
-  let trains = departures.filter(departure => {
-    if (!departure.flags.includes('RRB')) {
-      let scheduledDepartureTime = utils.parseTime(departure.scheduled_departure_utc)
-      return utils.getYYYYMMDD(scheduledDepartureTime) === today
-    }
+async function trainCount(stopName) {
+  let count = await liveTimetables.countDocuments({
+    mode: 'metro train',
+    operationDays: utils.getYYYYMMDDNow(),
+    'stopTimings.stopName': `${stopName} Railway Station`
   })
 
-  return trains.length
+  return count
 }
 
 database.connect(async () => {
   dbStops = database.getCollection('stops')
-  metroTrips = database.getCollection('metro trips')
+  liveTimetables = database.getCollection('live timetables')
 
   try {
-    if (await trainCount(20027) >= 4) {
+    if (await trainCount('Flemington Racecourse') >= 4) {
       stops.push('Flemington Racecourse')
       global.loggers.trackers.metro.log('Found at least 4 RCE trains, monitoring RCE')
     }
@@ -75,7 +70,7 @@ database.connect(async () => {
   }
 
   try {
-    if (await trainCount(20028) >= 4) {
+    if (await trainCount('Showgrounds') >= 4) {
       stops.push('Showgrounds')
       global.loggers.trackers.metro.log('Found at least 4 SGS trains, monitoring SGS')
     }
