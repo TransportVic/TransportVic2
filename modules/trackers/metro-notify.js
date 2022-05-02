@@ -1,15 +1,14 @@
 const async = require('async')
 const config = require('../../config')
+const modules = require('../../modules')
 const utils = require('../../utils')
 const urls = require('../../urls')
 const DatabaseConnection = require('../../database/DatabaseConnection')
-const schedule = require('./scheduler')
 const { closest } = require('fastest-levenshtein')
 const terminatingLocations = require('../../additional-data/metro-terminating-locations')
 const getStoppingPattern = require('../metro-trains/get-stopping-pattern')
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
-
+let database
 let liveTimetables, metroShunts
 
 let allStops = []
@@ -202,16 +201,16 @@ async function requestData() {
   await lookForShunts(activeAlerts)
 }
 
-database.connect(async () => {
-  liveTimetables = database.getCollection('live timetables')
-  metroShunts = database.getCollection('metro shunts')
-  allStops = (await database.getCollection('stops').distinct('stopName', {
-    'bays.mode': 'metro train'
-  })).map(stop => stop.slice(0, -16))
+if (modules.tracker && modules.tracker.metroNotify) {
+  database = new DatabaseConnection(config.databaseURL, config.databaseName)
+  database.connect(async () => {
+    liveTimetables = database.getCollection('live timetables')
+    metroShunts = database.getCollection('metro shunts')
+    allStops = (await database.getCollection('stops').distinct('stopName', {
+      'bays.mode': 'metro train'
+    })).map(stop => stop.slice(0, -16))
 
-  schedule([
-    [0, 179, 1],
-    [180, 240, 2],
-    [240, 1440, 1]
-  ], requestData, 'metro notify', global.loggers.trackers.metroNotify)
-})
+    await requestData()
+    process.exit()
+  })
+} else process.exit()

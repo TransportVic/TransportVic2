@@ -1,9 +1,9 @@
 const async = require('async')
 const config = require('../../config')
+const modules = require('../../modules')
 const utils = require('../../utils')
 const urls = require('../../urls')
 const DatabaseConnection = require('../../database/DatabaseConnection')
-const schedule = require('./scheduler')
 const ptvAPI = require('../../ptv-api')
 const { getDayOfWeek } = require('../../public-holidays')
 const { singleSTYTrains } = require('../metro-trains/add-stony-point-data')
@@ -12,7 +12,7 @@ const fixTripDestination = require('../metro-trains/fix-trip-destinations')
 const routeStops = require('../../additional-data/metro-data/metro-routes')
 const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+let database
 let dbStops
 let liveTimetables
 
@@ -58,7 +58,7 @@ let stySinglePlatform = [
 async function getTimetable(id) {
   return await utils.getData('metro-op-timetable', id, async () => {
     return JSON.parse(await utils.request(urls.op.format(id), { timeout: 17000 }))
-  }, 1000 * 60 * 5)
+  }, 1000 * 60 * 10)
 }
 
 async function getStation(name) {
@@ -457,22 +457,24 @@ async function loadTrips() {
 async function requestTimings() {
   global.loggers.trackers.metro.info('Logging Metro trips')
 
-  try {
-    await loadTrips()
-  } catch (e) {
-    global.loggers.trackers.metro.err('Failed to find metro trips, skipping', e)
+  let MAX_CYCLES = 3
+  for (let cycleCount = 0; cycleCount < MAX_CYCLES; cycleCount++) {
+    try {
+      await loadTrips()
+    } catch (e) {
+      global.loggers.trackers.metro.err('Failed to find metro trips, skipping', e)
+    }
+    if (cycleCount !== MAX_CYCLES - 1) await utils.sleep(2 * 60 * 1000)
   }
 }
 
-database.connect(async () => {
-  dbStops = database.getCollection('stops')
-  liveTimetables = database.getCollection('live timetables')
+if (modules.tracker && modules.tracker.metroTrips) {
+  database = new DatabaseConnection(config.databaseURL, config.databaseName)
+  database.connect(async () => {
+    dbStops = database.getCollection('stops')
+    liveTimetables = database.getCollection('live timetables')
 
-  schedule([
-    [180, 240, 6], // Run it from 3am - 4am, taking into account website updating till ~3.30am
-    [240, 360, 4],
-    [360, 1199, 1.5],
-    [1200, 1380, 3],
-    [1380, 1439, 4]
-  ], requestTimings, 'hcmt tracker', global.loggers.trackers.metro)
-})
+    await requestTimings()
+    process.exit()
+  })
+} else process.exit()

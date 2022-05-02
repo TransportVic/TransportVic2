@@ -14,47 +14,6 @@ const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config.json')
 const modules = require('../modules.json')
 
-if (modules.tracker && modules.tracker.bus)
-  require('../modules/trackers/bus')
-
-if (modules.tracker && modules.tracker.tram)
-  require('../modules/trackers/tram')
-
-if (modules.tracker && modules.tracker.vline)
-  require('../modules/trackers/vline')
-
-if (modules.tracker && modules.tracker['vline-r'])
-  require('../modules/trackers/vline-realtime')
-
-if (modules.tracker && modules.tracker.xpt)
-  require('../modules/xpt/xpt-updater')
-
-if (modules.tracker && modules.tracker.hcmt)
-  require('../modules/trackers/hcmt')
-
-if (modules.tracker && modules.tracker.metro)
-  require('../modules/trackers/metro')
-
-if (modules.tracker && modules.tracker.metroTrips)
-  require('../modules/trackers/metro-trips')
-
-if (modules.tracker && modules.tracker.metroRaceTrains)
-  require('../modules/trackers/metro-race-trains')
-
-if (modules.tracker && modules.tracker.metroNotify)
-  require('../modules/trackers/metro-notify')
-
-if (modules.tracker && modules.tracker.metroShunts)
-  require('../modules/trackers/metro-shunts')
-
-if (modules.preloadCCL)
-  require('../modules/preload-ccl')
-
-if (modules.gtfsr && modules.gtfsr.metro)
-  require('../modules/gtfsr/metro')
-
-require('../modules/trackers/discord-notify')
-
 let serverStarted = false
 
 module.exports = class MainServer {

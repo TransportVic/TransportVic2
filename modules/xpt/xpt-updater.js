@@ -1,6 +1,7 @@
-const tfnswAPI = require('./tfnsw-api')
 const async = require('async')
+const tfnswAPI = require('./tfnsw-api')
 const config = require('../../config')
+const modules = require('../../modules')
 const utils = require('../../utils')
 const moment = require('moment')
 const DatabaseConnection = require('../../database/DatabaseConnection')
@@ -156,11 +157,13 @@ async function fetchAndUpdate() {
   })
 }
 
-database.connect(async () => {
-  gtfsTimetables = database.getCollection('gtfs timetables')
-  liveTimetables = database.getCollection('live timetables')
-  stops = database.getCollection('stops')
+if (modules.tracker && modules.tracker.xpt) {
+  database.connect(async () => {
+    gtfsTimetables = database.getCollection('gtfs timetables')
+    liveTimetables = database.getCollection('live timetables')
+    stops = database.getCollection('stops')
 
-  setInterval(fetchAndUpdate, 1000 * 30)
-  await fetchAndUpdate()
-})
+    await fetchAndUpdate()
+    process.exit()
+  })
+} else process.exit()

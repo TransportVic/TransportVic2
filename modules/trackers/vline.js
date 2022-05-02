@@ -1,14 +1,15 @@
 const async = require('async')
 const config = require('../../config')
+const modules = require('../../modules')
 const utils = require('../../utils')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const getVNETDepartures = require('../vline/get-vnet-departures')
 const handleTripShorted = require('../vline/handle-trip-shorted')
 const findTrip = require('../vline/find-trip')
 const { getDayOfWeek } = require('../../public-holidays')
-const schedule = require('./scheduler')
+const scheduleIntervals = require('./schedule-intervals')
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+let database
 
 async function getDeparturesFromVNET(db) {
   let vnetDepartures = [
@@ -104,35 +105,6 @@ async function getDeparturesFromVNET(db) {
     allTrips[departure.runID] = tripData
   })
 
-  async function swap(mbyRun, artRun) {
-    if (allTrips[mbyRun] || allTrips[artRun]) {
-      let mby = allTrips[mbyRun], art = allTrips[artRun]
-      let today = utils.getYYYYMMDDNow() // This would only activate at a reasonable hour of the day
-      // In case one already departed eg 8118 usually leaves before 8116, but with TSRs we can't be sure
-
-      let trueArtConsist, trueMbyConsist
-
-      if (mby && mby.origin === 'Maryborough') trueArtConsist = mby.consist
-      if (art && art.origin === 'Ararat') trueMbyConsist = art.consist
-
-      if (!mby) {
-        art = await vlineTrips.findDocument({ date: today, runID: artRun })
-        if (art && art.origin === 'Ararat') trueArtConsist = art.consist
-      }
-
-      if (!art) {
-        mby = await vlineTrips.findDocument({ date: today, runID: mbyRun })
-        if (mby && mby.origin === 'Maryborough') trueMbyConsist = mby.consist
-      }
-
-      if (allTrips[mbyRun] && trueMbyConsist) allTrips[mbyRun].consist = trueMbyConsist
-      if (allTrips[artRun] && trueArtConsist) allTrips[artRun].consist = trueArtConsist
-    }
-  }
-
-  await swap('8118', '8116')
-  await swap('8158', '8160')
-
   let bulkOperations = []
   Object.keys(allTrips).forEach(runID => {
     bulkOperations.push({
@@ -157,10 +129,14 @@ async function requestTimings() {
   }
 }
 
-database.connect(async () => {
-  schedule([
-    [200, 240, 15], // Run it from 3am - 4am, taking into account website updating till ~3.30am
-    [240, 1350, 20],
-    [1350, 1440, 40]
-  ], requestTimings, 'vline tracker', global.loggers.trackers.vline)
-})
+if (modules.tracker && modules.tracker.vline) {
+  database = new DatabaseConnection(config.databaseURL, config.databaseName)
+  database.connect(async () => {
+    let shouldRun = scheduleIntervals([
+      [200, 1440, 1]
+    ])
+
+    if (shouldRun) await requestTimings()
+    process.exit()
+  })
+} else process.exit()

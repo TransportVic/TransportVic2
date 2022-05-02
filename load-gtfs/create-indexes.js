@@ -251,6 +251,7 @@ database.connect({
   }, {name: 'operationDays index'})
 
   await liveTimetables.createIndex({
+    mode: 1,
     operationDays: 1,
     trueDepartureTime: 1,
     trueOrigin: 1,
