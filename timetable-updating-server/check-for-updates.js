@@ -102,12 +102,11 @@ async function updateTimetables() {
       console.log('Dropped stops, routes and gtfs timetables')
       await discordUpdate('[Updater]: Dropped stops, routes and gtfs timetables, loading data now.')
 
-      spawnProcess(__dirname + '/../load-gtfs/load-all.sh', async () => {
-        await discordUpdate(`[Updater]: GTFS Timetables finished loading, took ${Math.round(utils.uptime() / 1000 / 60)}min`)
-        console.log('Done!')
+      await require('../load-gtfs/load-all')()
+      await discordUpdate(`[Updater]: GTFS Timetables finished loading, took ${Math.round(utils.uptime() / 1000 / 60)}min`)
+      console.log('Done!')
 
-        process.exit()
-      })
+      process.exit()
     })
   })
 }

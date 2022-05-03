@@ -86,13 +86,13 @@ async function main() {
     await spawnProcess(l('ferry/load-all.sh'))
     await discordUpdate('[Updater]: Finished loading Ferry data')
   } else await discordUpdate('[Updater]: Skipping Ferry')
-/*
+
   if (moduleEnabled('bus')) {
     await discordUpdate('[Updater]: Loading Shuttle Bus data')
     await spawnProcess(l('shuttles/load-all.sh'))
     await discordUpdate('[Updater]: Finished loading Shuttle Bus data')
   } else await discordUpdate('[Updater]: Skipping Shuttle Bus')
-
+/*
   if (moduleEnabled('heritage')) {
     await discordUpdate('[Updater]: Loading Heritage Train data')
     await spawnProcess(l('heritage-trains/load-all.sh'))
@@ -118,4 +118,6 @@ async function main() {
   await discordUpdate('[Updater]: Loaded Search Query')
 }
 
-main()
+// If appears to be run as a script, run, otherwise expose as a module
+if (process.argv[1] && process.argv[1].includes('load-all')) main()
+else module.exports = main
