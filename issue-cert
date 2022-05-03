@@ -1,0 +1,1 @@
+certbot certonly --non-interactive -a manual --preferred-challenges dns --manual-auth-hook "/home/ec2-user/certbot-hook.sh auth" --manual-cleanup-hook "/home/ec2-user/certbot-hook.sh cleanup" --domains *.pidsview.transportvic.me
