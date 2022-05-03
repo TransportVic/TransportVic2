@@ -1,7 +1,8 @@
 const fs = require('fs')
 const path = require('path')
-const utils = require('./utils')
 let { inspect } = require('util')
+
+let utils
 
 function getTimestamp() {
   return utils.now().format()
@@ -9,6 +10,8 @@ function getTimestamp() {
 
 module.exports = class Logger {
   constructor(outputFile, name) {
+    if (!utils) utils = require('./utils')
+
     let folderName = path.dirname(outputFile)
     fs.mkdirSync(folderName, { recursive: true })
 
