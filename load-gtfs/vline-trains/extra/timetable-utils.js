@@ -33,6 +33,7 @@ function expandName(name) {
     .replace(/Mt\.?(\b)/g, 'Mount$1')
     .replace(/Mount\.(\b)/g, 'Mount$1')
     .replace(/Pt(\b)/g, 'Port$1')
+    .replace(/ Dep$/i, '')
 }
 
 module.exports = {

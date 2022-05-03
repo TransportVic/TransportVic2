@@ -68,7 +68,7 @@ async function parseTimings(names, types, trip) {
 
   let movementType = headers[4]
   let vehicleFormation = headers[2]
-  let formedBy = headers[3]
+  let formedBy = headers[3].match(/(Y?\d{4,5})/g)
 
   if (movementType !== 'PSNG_SRV') return
 

@@ -57,7 +57,7 @@ let stySinglePlatform = [
 
 async function getTimetable(id) {
   return await utils.getData('metro-op-timetable', id, async () => {
-    return JSON.parse(await utils.request(urls.op.format(id), { timeout: 17000 }))
+    return JSON.parse(await utils.request(urls.metroOpTimetable.format(id), { timeout: 17000 }))
   }, 1000 * 60 * 5)
 }
 
@@ -72,7 +72,7 @@ async function getStation(name) {
 
 async function requestDepartureData(now, startOfDay) {
   return await utils.getData('metro-live-departures', 'departures', async () => {
-    let data = JSON.parse(await utils.request(urls.hcmt, { timeout: 15000 }))
+    let data = JSON.parse(await utils.request(urls.metroLiveDepartures, { timeout: 15000 }))
 
     return data.entries.map(stop => {
       if (stop.estimated_arrival_time_seconds < 10800) stop.estimated_arrival_time_seconds += secondsInDay
@@ -474,5 +474,5 @@ database.connect(async () => {
     [360, 1199, 1.5],
     [1200, 1380, 3],
     [1380, 1439, 4]
-  ], requestTimings, 'hcmt tracker', global.loggers.trackers.metro)
+  ], requestTimings, 'metro trips', global.loggers.trackers.metro)
 })

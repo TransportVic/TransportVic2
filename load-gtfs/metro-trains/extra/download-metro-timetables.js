@@ -28,8 +28,8 @@ async function main () {
   fs.mkdirSync(path.join(__dirname, 'timetables'), { recursive: true })
 
   await async.forEach(Object.keys(lineIDs), async lineName => {
-    const lineID = lineIDs[lineName]
-    const body = await utils.request(urls.metroTrainsTimetable.format(lineID), {
+    let lineID = lineIDs[lineName]
+    let body = await utils.request(urls.metroWorkingTimetable.format(lineID), {
       timeout: 20000
     })
 
