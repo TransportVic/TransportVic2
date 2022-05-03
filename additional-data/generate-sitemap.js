@@ -21,6 +21,7 @@ database.connect(async () => {
     'bays.mode': 'bus',
     stopName: {
       $in: [
+        /Shops/,
         /Shopping Centre/,
         /Railway Station/,
         /Interchange/
@@ -28,15 +29,15 @@ database.connect(async () => {
     }
   }).toArray()
 
-  let metroContent = metroStations.map(station => {
+  let metroContent = metroStations.sort((a, b) => a.codedName.localeCompare(b.codedName)).map(station => {
     return `<url><loc>https://transportvic.me/metro/timings/${station.codedName.slice(0, -16)}</loc></url>`
   }).join('')
 
-  let vlineContent = vlineStations.map(station => {
+  let vlineContent = vlineStations.sort((a, b) => a.codedName.localeCompare(b.codedName)).map(station => {
     return `<url><loc>https://transportvic.me/vline/timings/${station.codedName.slice(0, -16)}</loc></url>`
   }).join('')
 
-  let busContent = bigBusStops.map(station => {
+  let busContent = bigBusStops.sort((a, b) => a.codedName.localeCompare(b.codedName)).map(station => {
     return `<url><loc>https://transportvic.me/bus/timings/${station.codedSuburb[0]}/${station.codedName}</loc></url>`
   }).join('')
 
@@ -45,6 +46,8 @@ database.connect(async () => {
     '/bookmarks',
     '/bus/tracker',
     '/tram/tracker',
+    '/metro/tracker',
+    '/vline/tracker',
     '/mockups',
     '/search',
     '/nearby',
