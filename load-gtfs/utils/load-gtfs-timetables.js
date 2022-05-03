@@ -16,6 +16,8 @@ async function getStopData(stops, stopGTFSID, cache) {
   let stopData = await stops.findDocument({
     'bays.stopGTFSID': stopGTFSID
   }, { bays: 1 })
+  if (!stopData) console.log('Could not find stop', stopGTFSID)
+
   let bayData = stopData.bays.find(bay => bay.stopGTFSID === stopGTFSID)
 
   cache[stopGTFSID] = bayData

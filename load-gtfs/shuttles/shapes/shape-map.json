@@ -4,10 +4,10 @@
   "12-PNS-B-mjp-1.1.H": "788-FortNepean",
   "12-PNS-B-mjp-1.1.R": "FortNepean-788",
 
-  "12-MCC-mjp-1.1.H": "MonashBayF-MonashBldgH",
-  "12-MCC-mjp-1.1.R": "MonashBldgH-MonashBayF",
-  "12-MCP-mjp-1.1.H": "MonashBayG-MonashPen",
-  "12-MCP-mjp-1.1.R": "MonashPen-MonashBayG",
+  "12-MCC-mjp-1.1.H": "MonashBldgH-MonashBayN",
+  "12-MCC-mjp-1.1.R": "MonashBayN-MonashBldgH",
+  "12-MCP-mjp-1.1.H": "MonashBayO-MonashPen",
+  "12-MCP-mjp-1.1.R": "MonashPen-MonashBayO",
   "12-MPF-mjp-1.1.H": "Frankston-MonashPen",
   "12-MPF-mjp-1.1.R": "MonashPen-Frankston"
 }

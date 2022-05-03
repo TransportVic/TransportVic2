@@ -99,13 +99,15 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive, t
   if (!time) time = utils.now()
   let minutesPastMidnight = utils.getMinutesPastMidnight(time)
   let operationDay = utils.getYYYYMMDD(time)
+  let operationMoment = time.clone()
+
   if (minutesPastMidnight < 180) { // Before 3am
     minutesPastMidnight += 1440
-    operationDay = utils.getYYYYMMDD(time.clone().add(-1, 'day'))
+    operationDay = utils.getYYYYMMDD(operationMoment.add(-1, 'day'))
   }
 
   let trips = await timetables.findDocuments({
-    operationDays: utils.getYYYYMMDDNow(),
+    operationDays: operationDay,
     mode,
     stopTimings: {
       $elemMatch: {
@@ -138,7 +140,7 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive, t
 
   return filteredTrips.map(trip => {
     let stopData = trip.stopTimings.filter(stop => stopGTFSIDs.includes(stop.stopGTFSID))[0]
-    let departureTime = utils.getMomentFromMinutesPastMidnight(stopData.departureTimeMinutes, utils.now())
+    let departureTime = utils.getMomentFromMinutesPastMidnight(stopData.departureTimeMinutes, operationMoment)
 
     let route = routeCache[trip.routeGTFSID]
     let opertor, routeNumber

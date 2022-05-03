@@ -1,8 +1,8 @@
 /*
 Route guide;
 
-12-MCC.H: clayton - caulfield
-12-MCC.R: caulfield - clayton
+12-MCC.H: caulfield - clayton
+12-MCC.R: clayton - caulfield
 12-MCP.H: clayton - peninsula
 12-MCP.R: peninsula - clayton
 12-MPF.H: frankston - peninsula
@@ -12,6 +12,7 @@ Route guide;
 12-PNS-A.R: Fort Nepean - Quarantine Station
 12-PNS-B.H: Front Entrance - Fort Nepean
 12-PNS-B.R: Fort Nepean - Front Entrance
+i.e: A - Quarantine Station, B - Front Entrance
 */
 
 let routeOperators = {

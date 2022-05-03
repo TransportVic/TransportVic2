@@ -59,11 +59,11 @@ let gtfsID = 9
 function loadWesternPort($) {
   let tables = Array.from($('div#e819 div.mceTmpl > table'))
   let stopsIndex = [
-    9000001, // stony point
-    9000002, // french island
-    9000003, // phillip island
-    9000002, // french island
-    9000001 // stony point
+    "9000001", // stony point
+    "9000002", // french island
+    "9000003", // phillip island
+    "9000002", // french island
+    "9000001" // stony point
   ]
 
   let allTripDays = ['WEEKDAY_MF', 'SATURDAY', 'SUNDAY']
@@ -117,8 +117,16 @@ function loadWesternPort($) {
 
     let tripTimings = []
     let mappedTrips = uniqueTrips.map(trip => {
-      let hasPhillipIsland = trip.stops.find(stop => stop.stopGTFSID === 9000003)
-      let shapeType = `9-STY-${hasPhillipIsland ? 'B' : 'A'}-mjp-1.1.H`
+      let frenchIslandCount = trip.stops.filter(stop => stop.stopGTFSID === '9000002').length
+      let hasPhillipIsland = trip.stops.some(stop => stop.stopGTFSID === '9000003')
+
+      let routeVariant
+      if (frenchIslandCount === 1 && !hasPhillipIsland) routeVariant = 'A'
+      else if (frenchIslandCount === 2 && hasPhillipIsland) routeVariant = 'B'
+      else if (frenchIslandCount === 0 && hasPhillipIsland) routeVariant = 'C'
+      else routeVariant = 'D' // Not currently used
+
+      let shapeType = `9-STY-${routeVariant}-mjp-1.1.H`
 
       let timings = []
       trip.stops.forEach((stop, i) => {
@@ -212,11 +220,11 @@ function loadWestgatePunt($) {
 
       let originGTFSID, destinationGTFSID
       if (gtfsDirection === '0') { // port melbourne - spotwood
-        originGTFSID = 9000004
-        destinationGTFSID = 9000005
+        originGTFSID = "9000004"
+        destinationGTFSID = "9000005"
       } else {
-        originGTFSID = 9000005
-        destinationGTFSID = 9000004
+        originGTFSID = "9000005"
+        destinationGTFSID = "9000004"
       }
 
       allTimings.push({
@@ -309,11 +317,11 @@ function loadPortPhillip($) {
 
       let originGTFSID, destinationGTFSID
       if (gtfsDirection === '0') { // docklands - destination
-        originGTFSID = 9000006
+        originGTFSID = "9000006"
         destinationGTFSID = outStopGTFSID
       } else {
         originGTFSID = outStopGTFSID
-        destinationGTFSID = 9000006
+        destinationGTFSID = "9000006"
       }
 
       allTimings.push({
@@ -343,11 +351,11 @@ function loadPortPhillip($) {
     })
   }
 
-  processTrips(docklandsPortarlington, 'Portarlington Ferry Terminal', 'PPO', 9000007)
-  processTrips(portarlingtonDocklands, null, 'PPO', 9000007)
+  processTrips(docklandsPortarlington, 'Portarlington Ferry Terminal', 'PPO', "9000007")
+  processTrips(portarlingtonDocklands, null, 'PPO', "9000007")
 
-  processTrips(docklandsGeelong, 'Geelong Ferry Terminal', 'PGL', 9000008)
-  processTrips(geelongDocklands, null, 'PGL', 9000008)
+  processTrips(docklandsGeelong, 'Geelong Ferry Terminal', 'PGL', "9000008")
+  processTrips(geelongDocklands, null, 'PGL', "9000008")
 
   return { trips: allTrips, timings: allTimings }
 }

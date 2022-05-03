@@ -1,62 +1,54 @@
 const utils = require('./utils')
-const ical = require('node-ical')
-const path = require('path')
 
-let rawEvents = ical.sync.parseFile(path.join(__dirname, 'additional-data/daylight-saving.ics'))
-let events = Object.values(rawEvents).slice(1)
+let dstBlocks = []
+let nonDSTBlocks = []
 
-let daylightBlocks = []
+let now = utils.now()
+let yearAgo = now.clone().add(-1, 'year')
 
-let currentBlock
-events.forEach(event => {
-  let start = event.start.toISOString()
-  let timestamp = utils.parseTime(start)
-  let day = utils.getYYYYMMDD(timestamp)
-  let name = event.summary
+let getDSTStartForYear = year => year.clone().startOf('year').set('month', 9).startOf('isoWeek').add(6, 'days')
+let getDSTEndForYear = dstStartDate => dstStartDate.clone().add(1, 'year').startOf('year').set('month', 3).startOf('isoWeek').add(6, 'days')
 
-  if (name.includes('begins')) {
-    currentBlock = {
-      start: day,
-      startTime: timestamp
-    }
-  } else {
-    currentBlock.end = day
-    currentBlock.endTime = timestamp
-    daylightBlocks.push(currentBlock)
-  }
+let dstStartLastYear = getDSTStartForYear(yearAgo)
+let dstEndLastYear = getDSTEndForYear(dstStartLastYear)
+
+dstBlocks.push({
+  isDST: true,
+  start: dstStartLastYear,
+  end: dstEndLastYear
 })
 
-let timeBlocks = []
-daylightBlocks.forEach((block, i) => {
-  if (i !== 0) {
-    let previous = daylightBlocks[i - 1]
-    let previousEnd = previous.endTime
-    let currentStart = block.startTime
+for (let i = 1; i <= 2; i++) {
+  let latestDSTBlock = dstBlocks[dstBlocks.length - 1]
+  let dstBlockEnd = latestDSTBlock.end
+  let blockYearDSTStart = getDSTStartForYear(dstBlockEnd)
+  let blockYearDSTEnd = getDSTEndForYear(blockYearDSTStart)
 
-    let nonDSTStart = previousEnd.clone().add(1, 'day')
-    let nonDSTEnd = currentStart.clone().add(-1, 'day')
-    timeBlocks.push({
-      isDST: false,
-      start: utils.getYYYYMMDD(nonDSTStart),
-      end: utils.getYYYYMMDD(nonDSTEnd),
-    })
-  }
-
-  timeBlocks.push({
+  dstBlocks.push({
     isDST: true,
-    start: block.start,
-    end: block.end
+    start: blockYearDSTStart,
+    end: blockYearDSTEnd
   })
+}
+
+for (let i = 1; i < dstBlocks.length; i++) {
+  let previousBlock = dstBlocks[i - 1]
+  let currentBlock = dstBlocks[i]
+
+  let nonDSTStart = previousBlock.end.clone().add(1, 'day')
+  let nonDSTEnd = currentBlock.start.clone().add(-1, 'day')
+
+  nonDSTBlocks.push({
+    isDST: false,
+    start: nonDSTStart,
+    end: nonDSTEnd
+  })
+}
+
+module.exports = dstBlocks.concat(nonDSTBlocks).sort((a, b) => a.start - b.start).filter(block => now < block.end).map(block => {
+  return {
+    isDST: block.isDST,
+    start: utils.getYYYYMMDD(block.start),
+    end: utils.getYYYYMMDD(block.end)
+  }
 })
-
-let lastBlock = daylightBlocks.slice(-1)[0]
-let nextNonDSTStart = lastBlock.endTime.clone().add(1, 'day')
-let nextNonDSTEnd = nextNonDSTStart.clone().add(6, 'months')
-
-timeBlocks.push({
-  isDST: false,
-  start: utils.getYYYYMMDD(nextNonDSTStart),
-  end: utils.getYYYYMMDD(nextNonDSTEnd)
-})
-
-module.exports = timeBlocks

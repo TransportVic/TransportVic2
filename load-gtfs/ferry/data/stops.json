@@ -2,7 +2,7 @@
   {
     "originalName": "Stony Point Pier/Stony Point Road (Crib Point)",
     "fullStopName": "Stony Point Ferry Terminal/Stony Point Road",
-    "stopGTFSID": 9000001,
+    "stopGTFSID": "9000001",
     "location": {
       "type": "Point",
       "coordinates": [145.2249918, -38.3727208]
@@ -14,7 +14,7 @@
   {
     "originalName": "Tankerton Pier/Tankerton Road (French Island)",
     "fullStopName": "French Island Ferry Terminal/Tankerton Road",
-    "stopGTFSID": 9000002,
+    "stopGTFSID": "9000002",
     "location": {
       "type": "Point",
       "coordinates": [145.270818, -38.3831156]
@@ -26,7 +26,7 @@
   {
     "originalName": "Cowes Pier/The Esplanade (Cowes)",
     "fullStopName": "Cowes Ferry Terminal/The Esplanade",
-    "stopGTFSID": 9000003,
+    "stopGTFSID": "9000003",
     "location": {
       "type": "Point",
       "coordinates": [145.2398895, -38.4472109]
@@ -38,7 +38,7 @@
   {
     "originalName": "Westgate Punt Ferry Terminal/Lorimer Street (Port Melbourne)",
     "fullStopName": "Port Melbourne Ferry Terminal/Lorimer Street",
-    "stopGTFSID": 9000004,
+    "stopGTFSID": "9000004",
     "location": {
       "type": "Point",
       "coordinates": [144.9006712, -37.829225]
@@ -50,7 +50,7 @@
   {
     "originalName": "Spotswood Ferry Terminal/Douglas Parade (Spotswood)",
     "fullStopName": "Spotswood Ferry Terminal/Douglas Parade",
-    "stopGTFSID": 9000005,
+    "stopGTFSID": "9000005",
     "location": {
       "type": "Point",
       "coordinates": [144.895642, -37.8319663]
@@ -62,7 +62,7 @@
   {
     "originalName": "Docklands Pier/Harbour Esplanade (Docklands)",
     "fullStopName": "Docklands Ferry Terminal/Harbour Esplanade",
-    "stopGTFSID": 9000006,
+    "stopGTFSID": "9000006",
     "location": {
       "type": "Point",
       "coordinates": [144.945319, -37.817079]
@@ -74,7 +74,7 @@
   {
     "originalName": "Portarlington Pier/Harding Street (Portarlington)",
     "fullStopName": "Portarlington Ferry Terminal/Harding Street",
-    "stopGTFSID": 9000007,
+    "stopGTFSID": "9000007",
     "location": {
       "type": "Point",
       "coordinates": [144.651809, -38.112522]
@@ -86,7 +86,7 @@
   {
     "originalName": "Geelong Pier/Western Foreshore Road (Geelong)",
     "fullStopName": "Geelong Ferry Terminal/Western Foreshore Road",
-    "stopGTFSID": 9000008,
+    "stopGTFSID": "9000008",
     "location": {
       "type": "Point",
       "coordinates": [144.361879, -38.142534]

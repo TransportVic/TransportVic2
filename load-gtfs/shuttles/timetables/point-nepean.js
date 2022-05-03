@@ -1,61 +1,83 @@
-const daylightSavings = require('../../../daylight-savings')
+const daylightSavings = require('../../../daylight-savings').slice(0, 2)
 const utils = require('../../../utils')
+
+function dateRange(name, start, end, type) {
+  let startDate = utils.parseDate(start)
+  let endDate = utils.parseDate(end)
+
+  let allDatesInbetween = utils.allDaysBetweenDates(startDate, endDate)
+
+  return allDatesInbetween.map(date => {
+    return [name, utils.getYYYYMMDD(date), type]
+  })
+}
+
+let generateExclusion = (name, start, end) => dateRange(name, start, end, '2')
+let generateInclusion = (name, start, end) => dateRange(name, start, end, '1')
+
+let ENTRANCE_STOP = '11844'
+let QUARANTINE_STATION = '12000001'
+let GUNNERS_COTTAGE = '12000002'
+let CHEVIOT_HILL = '12000003'
+let FORT_PEARCE = '12000004'
+let FORT_NEPEAN = '12000005'
+let ROUTE_GTFS_ID = '12-PNS'
 
 let baseDownTripTimes = [
   {
-    "stopGTFSID": 11844,
+    "stopGTFSID": ENTRANCE_STOP,
     "departureTimeMinutes": -5
   },
   {
-    "stopGTFSID": 12000001,
+    "stopGTFSID": QUARANTINE_STATION,
     "departureTimeMinutes": 0
   },
   {
-    "stopGTFSID": 12000002,
+    "stopGTFSID": GUNNERS_COTTAGE,
     "departureTimeMinutes": 3
   },
   {
-    "stopGTFSID": 12000003,
+    "stopGTFSID": CHEVIOT_HILL,
     "departureTimeMinutes": 5
   },
   {
-    "stopGTFSID": 12000004,
+    "stopGTFSID": FORT_PEARCE,
     "departureTimeMinutes": 6
   },
   {
-    "stopGTFSID": 12000005,
+    "stopGTFSID": FORT_NEPEAN,
     "departureTimeMinutes": 7
   }
 ]
 
 let baseUpTripTimes = [
   {
-    "stopGTFSID": 12000005,
+    "stopGTFSID": FORT_NEPEAN,
     "departureTimeMinutes": 0
   },
   {
-    "stopGTFSID": 12000004,
+    "stopGTFSID": FORT_PEARCE,
     "departureTimeMinutes": 1
   },
   {
-    "stopGTFSID": 12000003,
+    "stopGTFSID": CHEVIOT_HILL,
     "departureTimeMinutes": 2
   },
   {
-    "stopGTFSID": 12000002,
+    "stopGTFSID": GUNNERS_COTTAGE,
     "departureTimeMinutes": 4
   },
   {
-    "stopGTFSID": 12000001,
+    "stopGTFSID": QUARANTINE_STATION,
     "departureTimeMinutes": 7
   },
   {
-    "stopGTFSID": 11844,
+    "stopGTFSID": ENTRANCE_STOP,
     "departureTimeMinutes": 12
   },
 ]
 
-function generateTripTimes(direction, departureTime, hasFrontEntrance, tripID) {
+function generateTripTimes(direction, departureTime, tripID, hasFrontEntrance) {
   let baseTrip = direction === 'Up' ? baseUpTripTimes : baseDownTripTimes
   let stopTimings = baseTrip.slice(0)
   if (!hasFrontEntrance) {
@@ -82,206 +104,22 @@ function generateTripTimes(direction, departureTime, hasFrontEntrance, tripID) {
   }
 }
 
-let baseTrips = [
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1025.EVERYDAY.12-PNS-B-mjp-1.1.H",
-    "gtfsDirection": "0",
-    "shapeID": "12-PNS-B-mjp-1.1.H",
-    "headsign": "Fort Nepean"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1045.EVERYDAY.12-PNS-A-mjp-1.1.R",
-    "gtfsDirection": "1",
-    "shapeID": "12-PNS-A-mjp-1.1.R",
-    "headsign": "Quarantine Station"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1100.EVERYDAY.12-PNS-A-mjp-1.1.H",
-    "gtfsDirection": "0",
-    "shapeID": "12-PNS-A-mjp-1.1.H",
-    "headsign": "Fort Nepean"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1115.EVERYDAY.12-PNS-A-mjp-1.1.R",
-    "gtfsDirection": "1",
-    "shapeID": "12-PNS-A-mjp-1.1.R",
-    "headsign": "Quarantine Station"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1130.EVERYDAY.12-PNS-A-mjp-1.1.H",
-    "gtfsDirection": "0",
-    "shapeID": "12-PNS-A-mjp-1.1.H",
-    "headsign": "Fort Nepean"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1145.EVERYDAY.12-PNS-A-mjp-1.1.R",
-    "gtfsDirection": "1",
-    "shapeID": "12-PNS-A-mjp-1.1.R",
-    "headsign": "Quarantine Station"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1200.EVERYDAY.12-PNS-A-mjp-1.1.H",
-    "gtfsDirection": "0",
-    "shapeID": "12-PNS-A-mjp-1.1.H",
-    "headsign": "Fort Nepean"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1215.EVERYDAY.12-PNS-A-mjp-1.1.R",
-    "gtfsDirection": "1",
-    "shapeID": "12-PNS-A-mjp-1.1.R",
-    "headsign": "Quarantine Station"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1230.EVERYDAY.12-PNS-A-mjp-1.1.H",
-    "gtfsDirection": "0",
-    "shapeID": "12-PNS-A-mjp-1.1.H",
-    "headsign": "Fort Nepean"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1245.EVERYDAY.12-PNS-B-mjp-1.1.R",
-    "gtfsDirection": "1",
-    "shapeID": "12-PNS-B-mjp-1.1.R",
-    "headsign": "Front Entrance"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1330.EVERYDAY.12-PNS-B-mjp-1.1.H",
-    "gtfsDirection": "0",
-    "shapeID": "12-PNS-B-mjp-1.1.H",
-    "headsign": "Fort Nepean"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1345.EVERYDAY.12-PNS-A-mjp-1.1.R",
-    "gtfsDirection": "1",
-    "shapeID": "12-PNS-A-mjp-1.1.R",
-    "headsign": "Quarantine Station"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1400.EVERYDAY.12-PNS-A-mjp-1.1.H",
-    "gtfsDirection": "0",
-    "shapeID": "12-PNS-A-mjp-1.1.H",
-    "headsign": "Fort Nepean"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1415.EVERYDAY.12-PNS-A-mjp-1.1.R",
-    "gtfsDirection": "1",
-    "shapeID": "12-PNS-A-mjp-1.1.R",
-    "headsign": "Quarantine Station"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1430.EVERYDAY.12-PNS-A-mjp-1.1.H",
-    "gtfsDirection": "0",
-    "shapeID": "12-PNS-A-mjp-1.1.H",
-    "headsign": "Fort Nepean"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1445.EVERYDAY.12-PNS-A-mjp-1.1.R",
-    "gtfsDirection": "1",
-    "shapeID": "12-PNS-A-mjp-1.1.R",
-    "headsign": "Quarantine Station"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1500.EVERYDAY.12-PNS-A-mjp-1.1.H",
-    "gtfsDirection": "0",
-    "shapeID": "12-PNS-A-mjp-1.1.H",
-    "headsign": "Fort Nepean"
-  },
-  {
-    "mode": "bus",
-    "routeGTFSID": "12-PNS",
-    "calendarID": "EVERYDAY",
-    "tripID": "1515.EVERYDAY.12-PNS-A-mjp-1.1.R",
-    "gtfsDirection": "1",
-    "shapeID": "12-PNS-A-mjp-1.1.R",
-    "headsign": "Quarantine Station"
-  }
-]
+function addTrip(direction, departureHour, departureMinute, headsign, calendarID, hasFrontEntrance) {
+  let shapeID = `${ROUTE_GTFS_ID}-${hasFrontEntrance ? 'B' : 'A'}-mjp-1.1.${direction === 'Down' ? 'H' : 'R'}`
+  let tripID = `${utils.pad(departureHour, 2)}${utils.pad(departureMinute, 2)}.${calendarID}.${shapeID}`
 
-let dstLast = [{
-  "mode": "bus",
-  "routeGTFSID": "12-PNS",
-  "calendarID": "%",
-  "tripID": "1615.%.12-PNS-A-mjp-1.1.H",
-  "gtfsDirection": "0",
-  "shapeID": "12-PNS-A-mjp-1.1.H",
-  "headsign": "Fort Nepean"
-}, {
-  "mode": "bus",
-  "routeGTFSID": "12-PNS",
-  "calendarID": "%",
-  "tripID": "1630.%.12-PNS-B-mjp-1.1.R",
-  "gtfsDirection": "1",
-  "shapeID": "12-PNS-B-mjp-1.1.R",
-  "headsign": "Front Entrance"
-}]
+  module.exports.trips.push({
+    'mode': 'bus',
+    'routeGTFSID': ROUTE_GTFS_ID,
+    'calendarID': calendarID,
+    'tripID': tripID,
+    'gtfsDirection': direction === 'Down' ? '0' : '1',
+    'shapeID': shapeID,
+    'headsign': headsign
+  })
 
-let nonDSTLast = [{
-  "mode": "bus",
-  "routeGTFSID": "12-PNS",
-  "calendarID": "%",
-  "tripID": "1530.%.12-PNS-A-mjp-1.1.H",
-  "gtfsDirection": "0",
-  "shapeID": "12-PNS-A-mjp-1.1.H",
-  "headsign": "Fort Nepean"
-}, {
-  "mode": "bus",
-  "routeGTFSID": "12-PNS",
-  "calendarID": "%",
-  "tripID": "1600.%.12-PNS-B-mjp-1.1.R",
-  "gtfsDirection": "1",
-  "shapeID": "12-PNS-B-mjp-1.1.R",
-  "headsign": "Front Entrance"
-}]
+  module.exports.timings.push(generateTripTimes(direction, departureHour * 60 + departureMinute, tripID, hasFrontEntrance))
+}
 
 let everydayBase = ["1", "1", "1", "1", "1", "1", "1"]
 
@@ -295,68 +133,44 @@ let nonDSTBlocks = daylightSavings.filter(block => !block.isDST).map((block, i) 
 
 let everydayBlock = ['EVERYDAY', ...everydayBase, daylightSavings[0].start, daylightSavings.slice(-1)[0].end]
 
-let dstLastTrips = dstBlocks.map(block => {
-  return dstLast.map(trip => ({
-    ...trip,
-    calendarID: block[0],
-    tripID: trip.tripID.replace(/%/g, block[0])
-  }))
-}).reduce((a, b) => a.concat(b), [])
-
-let nonDSTLastTrips = nonDSTBlocks.map(block => {
-  return nonDSTLast.map(trip => ({
-    ...trip,
-    calendarID: block[0],
-    tripID: trip.tripID.replace(/%/g, block[0])
-  }))
-}).reduce((a, b) => a.concat(b), [])
-
-let dstLastTripTimes = dstBlocks.map(block => {
-  return [
-    generateTripTimes('Down', 16 * 60 + 15, false, dstLast[0].tripID.replace(/%/g, block[0])),
-    generateTripTimes('Up', 16 * 60 + 30, true, dstLast[1].tripID.replace(/%/g, block[0]))
-  ]
-}).reduce((a, b) => a.concat(b), [])
-
-let nonDSTLastTripTimes = nonDSTBlocks.map(block => {
-  return [
-    generateTripTimes('Down', 15 * 60 + 30, false, nonDSTLast[0].tripID.replace(/%/g, block[0])),
-    generateTripTimes('Up', 16 * 60 + 0, true, nonDSTLast[1].tripID.replace(/%/g, block[0]))
-  ]
-}).reduce((a, b) => a.concat(b), [])
-
 module.exports = {
-  "days": [
+  'days': [
     ...dstBlocks,
     ...nonDSTBlocks,
     everydayBlock
   ],
-  "dates": [],
-  "trips": [
-    ...baseTrips,
-    ...dstLastTrips,
-    ...nonDSTLastTrips
-  ],
-  "timings": [
-    generateTripTimes('Down', 10 * 60 + 30, true, '1025.EVERYDAY.12-PNS-B-mjp-1.1.H'),
-    generateTripTimes('Up', 10 * 60 + 45, false, '1045.EVERYDAY.12-PNS-A-mjp-1.1.R'),
-    generateTripTimes('Down', 11 * 60 + 0, false, '1100.EVERYDAY.12-PNS-A-mjp-1.1.H'),
-    generateTripTimes('Up', 11 * 60 + 15, false, '1115.EVERYDAY.12-PNS-A-mjp-1.1.R'),
-    generateTripTimes('Down', 11 * 60 + 30, false, '1130.EVERYDAY.12-PNS-A-mjp-1.1.H'),
-    generateTripTimes('Up', 11 * 60 + 45, false, '1145.EVERYDAY.12-PNS-A-mjp-1.1.R'),
-    generateTripTimes('Down', 12 * 60 + 0, false, '1200.EVERYDAY.12-PNS-A-mjp-1.1.H'),
-    generateTripTimes('Up', 12 * 60 + 15, false, '1215.EVERYDAY.12-PNS-A-mjp-1.1.R'),
-    generateTripTimes('Down', 12 * 60 + 30, false, '1230.EVERYDAY.12-PNS-A-mjp-1.1.H'),
-    generateTripTimes('Up', 12 * 60 + 45, true, '1245.EVERYDAY.12-PNS-B-mjp-1.1.R'),
-    generateTripTimes('Down', 13 * 60 + 35, true, '1330.EVERYDAY.12-PNS-B-mjp-1.1.H'),
-    generateTripTimes('Up', 13 * 60 + 45, false, '1345.EVERYDAY.12-PNS-A-mjp-1.1.R'),
-    generateTripTimes('Down', 14 * 60 + 0, false, '1400.EVERYDAY.12-PNS-A-mjp-1.1.H'),
-    generateTripTimes('Up', 14 * 60 + 15, false, '1415.EVERYDAY.12-PNS-A-mjp-1.1.R'),
-    generateTripTimes('Down', 14 * 60 + 30, false, '1430.EVERYDAY.12-PNS-A-mjp-1.1.H'),
-    generateTripTimes('Up', 14 * 60 + 45, false, '1445.EVERYDAY.12-PNS-A-mjp-1.1.R'),
-    generateTripTimes('Down', 15 * 60 + 0, false, '1500.EVERYDAY.12-PNS-A-mjp-1.1.H'),
-    generateTripTimes('Up', 15 * 60 + 15, false, '1515.EVERYDAY.12-PNS-A-mjp-1.1.R'),
-    ...dstLastTripTimes,
-    ...nonDSTLastTripTimes
-  ]
+  'dates': [],
+  'trips': [],
+  'timings': []
 }
+
+addTrip('Down', 10, 30, 'Fort Nepean', 'EVERYDAY', true)
+for (let hour = 11; hour <= 12; hour++) {
+  addTrip('Down', hour,  0, 'Fort Nepean', 'EVERYDAY', false)
+  addTrip('Down', hour, 30, 'Fort Nepean', 'EVERYDAY', false)
+}
+addTrip('Down', 13, 35, 'Fort Nepean', 'EVERYDAY', true)
+for (let hour = 14; hour <= 15; hour++) {
+  addTrip('Down', hour,  0, 'Fort Nepean', 'EVERYDAY', false)
+  addTrip('Down', hour, 30, 'Fort Nepean', 'EVERYDAY', false)
+}
+
+dstBlocks.forEach(block => {
+  addTrip('Down', 16, 15, 'Fort Nepean', block[0], false)
+})
+
+for (let hour = 10; hour <= 11; hour++) {
+  addTrip('Up', hour, 45, 'Front Entrance', 'EVERYDAY', false)
+  addTrip('Up', hour + 1, 15, 'Front Entrance', 'EVERYDAY', false)
+}
+addTrip('Up', 12, 45, 'Front Entrance', 'EVERYDAY', true)
+addTrip('Up', 14, 15, 'Front Entrance', 'EVERYDAY', false)
+addTrip('Up', 14, 45, 'Front Entrance', 'EVERYDAY', false)
+addTrip('Up', 15, 15, 'Front Entrance', 'EVERYDAY', false)
+nonDSTBlocks.forEach(block => {
+  addTrip('Up', 16,  0, 'Front Entrance', block[0], true) // Non DST - Operates to Front Entrance
+})
+dstBlocks.forEach(block => {
+  addTrip('Up', 16,  0, 'Front Entrance', block[0], false) // DST - Operates to Quarantine Station only
+  addTrip('Up', 16, 30, 'Front Entrance', block[0], true) // DST - Operates to Front Entrance
+})

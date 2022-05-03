@@ -2,7 +2,7 @@
   {
     "originalName": "Quarantine Station (Portsea)",
     "fullStopName": "Quarantine Station/Danson Drive",
-    "stopGTFSID": 12000001,
+    "stopGTFSID": "12000001",
     "location": {
       "type": "Point",
       "coordinates": [144.693232, -38.313942]
@@ -14,7 +14,7 @@
   {
     "originalName": "Gunner's Cottage (Portsea)",
     "fullStopName": "Gunner's Cottage/Defence Drive",
-    "stopGTFSID": 12000002,
+    "stopGTFSID": "12000002",
     "location": {
       "type": "Point",
       "coordinates": [144.679690, -38.309567]
@@ -26,7 +26,7 @@
   {
     "originalName": "Cheviot Hill (Portsea)",
     "fullStopName": "Cheviot Hill/Defence Road",
-    "stopGTFSID": 12000003,
+    "stopGTFSID": "12000003",
     "location": {
       "type": "Point",
       "coordinates": [144.667915, -38.309541]
@@ -38,7 +38,7 @@
   {
     "originalName": "Fort Pearce (Portsea)",
     "fullStopName": "Fort Pearce/Defence Road",
-    "stopGTFSID": 12000004,
+    "stopGTFSID": "12000004",
     "location": {
       "type": "Point",
       "coordinates": [144.658897, -38.306862]
@@ -50,7 +50,7 @@
   {
     "originalName": "Fort Nepean (Portsea)",
     "fullStopName": "Fort Nepean/Defence Road",
-    "stopGTFSID": 12000005,
+    "stopGTFSID": "12000005",
     "location": {
       "type": "Point",
       "coordinates": [144.652277, -38.303411]
@@ -62,7 +62,7 @@
   {
     "originalName": "Monash University (Clayton)",
     "fullStopName": "Monash University Bus Loop",
-    "stopGTFSID": 19806,
+    "stopGTFSID": "19806",
     "location": {
       "type": "Point",
       "coordinates": [145.131487777162, -37.9139887571069]
@@ -74,7 +74,7 @@
   {
     "originalName": "Monash University (Clayton)",
     "fullStopName": "Monash University Bus Loop",
-    "stopGTFSID": 19807,
+    "stopGTFSID": "19807",
     "location": {
       "type": "Point",
       "coordinates": [145.131526903253, -37.9137911178375]
@@ -86,7 +86,7 @@
   {
     "originalName": "Monash University (Clayton)",
     "fullStopName": "Monash University Bus Loop",
-    "stopGTFSID": 19808,
+    "stopGTFSID": "19808",
     "location": {
       "type": "Point",
       "coordinates": [145.131565801189, -37.9136024867716]
@@ -96,45 +96,9 @@
     "suburb": "Clayton"
   },
   {
-    "originalName": "Monash University (Clayton)",
-    "fullStopName": "Monash University Bus Loop",
-    "stopGTFSID": 48471,
-    "location": {
-      "type": "Point",
-      "coordinates": [145.131782955142, -37.9140114683215]
-    },
-    "stopNumber": null,
-    "mode": "bus",
-    "suburb": "Clayton"
-  },
-  {
-    "originalName": "Monash University (Clayton)",
-    "fullStopName": "Monash University Bus Loop",
-    "stopGTFSID": 48473,
-    "location": {
-      "type": "Point",
-      "coordinates": [145.131743829591, -37.914209107684]
-    },
-    "stopNumber": null,
-    "mode": "bus",
-    "suburb": "Clayton"
-  },
-  {
-    "originalName": "Monash University (Clayton)",
-    "fullStopName": "Monash University Bus Loop",
-    "stopGTFSID": 48474,
-    "location": {
-      "type": "Point",
-      "coordinates": [145.131716302317, -37.9143979193558]
-    },
-    "stopNumber": null,
-    "mode": "bus",
-    "suburb": "Clayton"
-  },
-  {
     "originalName": "Monash University (Caulfield)",
     "fullStopName": "Monash University/Dandenong Road",
-    "stopGTFSID": 12000006,
+    "stopGTFSID": "12000006",
     "location": {
       "type": "Point",
       "coordinates": [145.044287, -37.876056]
@@ -142,5 +106,17 @@
     "stopNumber": null,
     "mode": "bus",
     "suburb": "Caulfield"
+  },
+  {
+    "originalName": "Monash University (Frankston)",
+    "fullStopName": "Monash University/McMahons Rd (Frankston)",
+    "stopGTFSID": "12000007",
+    "location": {
+      "type": "Point",
+      "coordinates": [145.134813816484, -38.1518599835155]
+    },
+    "stopNumber": null,
+    "mode": "bus",
+    "suburb": "Frankston"
   }
 ]
