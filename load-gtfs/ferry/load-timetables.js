@@ -198,13 +198,13 @@ function loadWestgatePunt($) {
       }
 
       let arrivalGTFSTime = `${arrivalHour < 10 ? '0' + arrivalHour : arrivalHour}:${arrivalMinute < 10 ? '0' + arrivalMinute : arrivalMinute}:00`
-      let tripID = `${departureTimeMinutes}.EVERYDAY.${shapeType}`
+      let tripID = `${departureTimeMinutes}.WEEKDAY_MF.${shapeType}`
 
       allTrips.push({
         mode: 'ferry',
         tripID,
         routeGTFSID: '9-PMW',
-        calendarID: 'EVERYDAY',
+        calendarID: 'WEEKDAY_MF',
         gtfsDirection,
         shapeID: shapeType,
         headsign
@@ -253,18 +253,24 @@ function loadWestgatePunt($) {
 }
 
 function loadPortPhillip($) {
-  let tables = Array.from($('div#e937 > table'))
+  let tables = Array.from($('div#e937 table'))
 
   let dayType = {
+    'Monday to Wednesday': 'WEEKDAY_MTueW',
+    'Thursday and Friday': 'WEEKDAY_ThuF',
+
     'Monday and Tuesday': 'WEEKDAY_MTue',
-    'Wednesday, Thursday and Friday': 'WEEKDAY_WThuF',
+    'Wednesday to Friday': 'WEEKDAY_WThuF',
+
     'Saturday and Sunday': 'WEEKEND_SatSun',
-    'Monday to Friday': 'WEEKDAY_MF',
-    'Monday, Tuesday and Wednesday': 'WEEKDAY_MTueW',
-    'Thursday and Friday': 'WEEKDAY_ThuF'
+    'Monday to Friday': 'WEEKDAY_MF'
   }
 
-  let portarlington = tables[0], geelong = tables[1]
+  let geelongDocklands = tables[0]
+  let docklandsGeelong = tables[1]
+
+  let portarlingtonDocklands = tables[2]
+  let docklandsPortarlington = tables[3]
 
   function getGTFSTime(time) {
     let timingParts = time.match(/(\d{1,2})[.:]?(\d{1,2})?/)
@@ -277,41 +283,32 @@ function loadPortPhillip($) {
   let allTrips = [], allTimings = []
 
   function processTrips(table, outHeadsign, routeGTFSID, outStopGTFSID) {
-    let rows = Array.from($('tr[style="height: 19px;"]', table))
-    let lastCalendarType = ''
-
-    let isOut = false
-    let gtfsDirection = '1'
+    let rows = Array.from($('tr', table)).slice(2)
+    let gtfsDirection = outHeadsign ? '0' : '1'
     rows.forEach((row, i) => {
-      let header = $('th', row).text().trim()
-      if (header) {
-        lastCalendarType = dayType[header]
-        if (i === 2) {
-        // if (lastCalendarType == 'WEEKDAY_MF') {
-          isOut = true
-          gtfsDirection = '0'
-        }
-      }
-      let timings = Array.from($('td', row)).map(e => getGTFSTime($(e).text()))
-      let headsign = isOut ? outHeadsign : 'Docklands Ferry Terminal'
+      let cells = Array.from($('td', row)).map(e => $(e).text())
+      let calendarType = dayType[cells[0]]
+
+      let timings = cells.slice(1).map(e => getGTFSTime(e))
+      let headsign = outHeadsign || 'Docklands Ferry Terminal'
       let departureTimeParts = timings[0].split(':')
       let departureTimeMinutes = departureTimeParts[0] * 60 + departureTimeParts[1] * 1
 
       let shapeType = `9-${routeGTFSID}-mjp-1.1.${gtfsDirection === '0' ? 'H' : 'R'}`
-      let tripID = `${departureTimeMinutes}.${lastCalendarType}.${shapeType}`
+      let tripID = `${departureTimeMinutes}.${calendarType}.${shapeType}`
 
       allTrips.push({
         mode: 'ferry',
         tripID,
         routeGTFSID: `9-${routeGTFSID}`,
-        calendarID: lastCalendarType,
+        calendarID: calendarType,
         gtfsDirection,
         shapeID: shapeType,
         headsign
       })
 
       let originGTFSID, destinationGTFSID
-      if (gtfsDirection === '0') { // port melbourne - spotwood
+      if (gtfsDirection === '0') { // docklands - destination
         originGTFSID = 9000006
         destinationGTFSID = outStopGTFSID
       } else {
@@ -346,8 +343,11 @@ function loadPortPhillip($) {
     })
   }
 
-  processTrips(portarlington, 'Portarlington Ferry Terminal', 'PPO', 9000007)
-  processTrips(geelong, 'Geelong Ferry Terminal', 'PGL', 9000008)
+  processTrips(docklandsPortarlington, 'Portarlington Ferry Terminal', 'PPO', 9000007)
+  processTrips(portarlingtonDocklands, null, 'PPO', 9000007)
+
+  processTrips(docklandsGeelong, 'Geelong Ferry Terminal', 'PGL', 9000008)
+  processTrips(geelongDocklands, null, 'PGL', 9000008)
 
   return { trips: allTrips, timings: allTimings }
 }

@@ -43,7 +43,7 @@ let shapes = Object.keys(shapeMap).map(shapeID => {
   return {
     shapeID,
     routeGTFSID: shapeID.slice(0, 6),
-    path: data.coordinates,
+    path: data,
     length: turf.length(data, { units: 'kilometers' }) * 1000
   }
 })

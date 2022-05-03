@@ -80,13 +80,13 @@ async function main() {
     await spawnProcess(l('trams/load-all.sh'))
     await discordUpdate('[Updater]: Finished loading Tram data')
   } else await discordUpdate('[Updater]: Skipping Tram')
-/*
+
   if (moduleEnabled('ferry')) {
     await discordUpdate('[Updater]: Loading Ferry data')
     await spawnProcess(l('ferry/load-all.sh'))
     await discordUpdate('[Updater]: Finished loading Ferry data')
   } else await discordUpdate('[Updater]: Skipping Ferry')
-
+/*
   if (moduleEnabled('bus')) {
     await discordUpdate('[Updater]: Loading Shuttle Bus data')
     await spawnProcess(l('shuttles/load-all.sh'))
