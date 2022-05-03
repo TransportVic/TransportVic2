@@ -1,4 +1,4 @@
-# [TransportVic2](https://vic.transportsg.me)
+# [TransportVic2](https://transportvic.me)
 Hi! This is a complete rewrite of TransportVic, now that I've lived in Melbourne for a longer time and actually know the system through.
 
 ## TODO:

@@ -108,17 +108,25 @@ router.get('/home-banner', (req, res) => {
       })
     }
   } else {
-     res.json({
-       link: '#',
-       alt: 'Alert',
-       text: 'PTV bus fleet data is currently unavailable due to a PTV data error.'
-     })
+    if (req.headers.host !== 'transportvic.me') {
+      res.json({
+        link: 'https://transportvic.me',
+        alt: 'Notice',
+         text: 'TransportVic is now transportvic.me! Please update your bookmarks and use the new link.'
+      })
+    } else {
+      res.json({
+        link: '#',
+        alt: 'Alert',
+         text: 'PTV bus fleet data is currently unavailable due to a PTV data error.'
+      })
+    }
 /*
-     res.json({
-       link: 'https://www.patreon.com/transportsg',
-       alt: 'Patreon',
-       text: 'Hi! If you like this site please consider supporting me on patreon by clicking here!'
-     })
+    res.json({
+      link: 'https://www.patreon.com/transportsg',
+      alt: 'Patreon',
+      text: 'Hi! If you like this site please consider supporting me on patreon by clicking here!'
+    })
 */
   }
 })

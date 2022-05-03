@@ -5,4 +5,4 @@ Disallow: /metro/run/
 Disallow: /vline/run/
 Disallow: /coach/run/
 Crawl-delay: 10
-Sitemap: https://vic.transportsg.me/sitemap.xml
+Sitemap: https://transportvic.me/sitemap.xml

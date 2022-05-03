@@ -29,15 +29,15 @@ database.connect(async () => {
   }).toArray()
 
   let metroContent = metroStations.map(station => {
-    return `<url><loc>https://vic.transportsg.me/metro/timings/${station.codedName.slice(0, -16)}</loc></url>`
+    return `<url><loc>https://transportvic.me/metro/timings/${station.codedName.slice(0, -16)}</loc></url>`
   }).join('')
 
   let vlineContent = vlineStations.map(station => {
-    return `<url><loc>https://vic.transportsg.me/vline/timings/${station.codedName.slice(0, -16)}</loc></url>`
+    return `<url><loc>https://transportvic.me/vline/timings/${station.codedName.slice(0, -16)}</loc></url>`
   }).join('')
 
   let busContent = bigBusStops.map(station => {
-    return `<url><loc>https://vic.transportsg.me/bus/timings/${station.codedSuburb[0]}/${station.codedName}</loc></url>`
+    return `<url><loc>https://transportvic.me/bus/timings/${station.codedSuburb[0]}/${station.codedName}</loc></url>`
   }).join('')
 
   let otherURLs = [
@@ -53,7 +53,7 @@ database.connect(async () => {
   ]
 
   let otherData = otherURLs.map(url => {
-    return `<url><loc>https://vic.transportsg.me${url}</loc></url>`
+    return `<url><loc>https://transportvic.me${url}</loc></url>`
   }).join('')
 
   let data = `<?xml version="1.0" encoding="UTF-8"?>
