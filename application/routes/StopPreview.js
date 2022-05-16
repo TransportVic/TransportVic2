@@ -4,7 +4,7 @@ const router = new express.Router()
 const bayData = require('../../additional-data/bus-bays')
 const trainReplacementBays = require('../../additional-data/train-replacement-bays')
 const platformGeometry = require('../../additional-data/station-platform-geometry')
-const stationBikes = require('../../additional-data/station-bikes')
+const stationBikes = require('../../additional-data/metro-data/geospatial/station-bikes')
 const stationCarparks = require('../../additional-data/metro-data/geospatial/station-carparks')
 const turf = require('@turf/turf')
 
