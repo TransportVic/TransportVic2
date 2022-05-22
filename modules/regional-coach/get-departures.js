@@ -3,7 +3,7 @@ const async = require('async')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const destinationOverrides = require('../../additional-data/coach-stops')
-const busBays = require('../../additional-data/bus-bays')
+const busBays = require('../../additional-data/bus-data/bus-bays')
 const southernCrossBays = require('../../additional-data/southern-cross-bays')
 const { getDayOfWeek } = require('../../public-holidays')
 

@@ -7,7 +7,7 @@ const utils = require('../../../utils')
 
 const coachDestinations = require('../../../additional-data/coach-stops')
 
-const busBays = require('../../../additional-data/bus-bays')
+const busBays = require('../../../additional-data/bus-data/bus-bays')
 
 async function pickBestTrip(data, db) {
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')

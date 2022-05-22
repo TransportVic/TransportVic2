@@ -49,6 +49,7 @@ database.connect(async () => {
           $in: ['metro train', 'regional train']
         }
       })
+
       if (closestStation) station = closestStation.stopName.slice(0, -16)
       else return console.log('Discarded bad carpark', require('util').inspect(carpark, { depth: null }))
     }

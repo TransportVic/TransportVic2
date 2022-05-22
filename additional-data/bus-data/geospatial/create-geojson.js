@@ -1,7 +1,7 @@
 const cheerio = require('cheerio')
 const fs = require('fs')
 
-let platforms = fs.readFileSync(__dirname + '/Bus Network Regions.kml').toString()
+let platforms = fs.readFileSync(__dirname + '/kml/Bus Network Regions.kml').toString()
 let $ = cheerio.load(platforms)
 
 let regionMaps = Array.from($('Placemark'))

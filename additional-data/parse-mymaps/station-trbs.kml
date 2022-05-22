@@ -3125,34 +3125,34 @@
       <Placemark>
         <name>RWD
 </name>
-        <description><![CDATA[towards: Belgrave & Lilydale<br><br>along: Maroondah Highway<br><br>bay: 9]]></description>
+        <description><![CDATA[towards: City<br><br>along: Maroondah Highway<br><br>bay: ]]></description>
         <styleUrl>#icon-1899-0288D1</styleUrl>
         <ExtendedData>
           <Data name="towards">
-            <value><![CDATA[Belgrave & Lilydale
-]]></value>
+            <value>City
+</value>
           </Data>
           <Data name="along">
             <value>Maroondah Highway
 </value>
           </Data>
           <Data name="bay">
-            <value>9</value>
+            <value/>
           </Data>
         </ExtendedData>
         <Point>
           <coordinates>
-            145.2296153,-37.8151752,0
+            145.2293538,-37.8152472,0
           </coordinates>
         </Point>
       </Placemark>
       <Placemark>
         <name>RWD</name>
-        <description><![CDATA[towards: City<br>along: Railway Place<br><br>bay: 7]]></description>
+        <description><![CDATA[towards: Belgrave & Lilydale<br>along: Railway Place<br><br>bay: 7]]></description>
         <styleUrl>#icon-1899-0288D1</styleUrl>
         <ExtendedData>
           <Data name="towards">
-            <value>City</value>
+            <value><![CDATA[Belgrave & Lilydale]]></value>
           </Data>
           <Data name="along">
             <value>Railway Place
@@ -3260,11 +3260,11 @@
       </Placemark>
       <Placemark>
         <name>MLK</name>
-        <description><![CDATA[towards: Lilydale (?)<br><br>along: Brice Avenue<br><br>bay: ]]></description>
+        <description><![CDATA[towards: Lilydale<br><br>along: Brice Avenue<br><br>bay: ]]></description>
         <styleUrl>#icon-1899-0288D1</styleUrl>
         <ExtendedData>
           <Data name="towards">
-            <value>Lilydale (?)
+            <value>Lilydale
 </value>
           </Data>
           <Data name="along">
@@ -3277,17 +3277,17 @@
         </ExtendedData>
         <Point>
           <coordinates>
-            145.3131359,-37.7848332,0
+            145.3117116,-37.7849901,0
           </coordinates>
         </Point>
       </Placemark>
       <Placemark>
         <name>MLK</name>
-        <description><![CDATA[towards: City (?)<br><br>along: Brice Avenue<br><br>bay: ]]></description>
+        <description><![CDATA[towards: City<br><br>along: Brice Avenue<br><br>bay: ]]></description>
         <styleUrl>#icon-1899-0288D1</styleUrl>
         <ExtendedData>
           <Data name="towards">
-            <value>City (?)
+            <value>City
 </value>
           </Data>
           <Data name="along">
@@ -3300,7 +3300,7 @@
         </ExtendedData>
         <Point>
           <coordinates>
-            145.3129428,-37.7848491,0
+            145.3131453,-37.7849805,0
           </coordinates>
         </Point>
       </Placemark>

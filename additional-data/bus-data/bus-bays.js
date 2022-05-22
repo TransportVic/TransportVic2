@@ -174,11 +174,12 @@ module.exports = {
 
   // Ringwood
   21256: "Bay 1",
-  21257: "Bay 2", // No bay 3
+  21257: "Bay 2",
+  21260: "Bay 3",
   21261: "Bay 4",
   21269: "Bay 5",
-  21270: "Bay 6", // No bay 7
-  // 21257: "Bay 8",
+  21270: "Bay 6",
+  // Bay 7 is the metro bus bay - no GTFS data
   47252: "Bay 8",
   21318: "Bay 9",
   21005: "Bay 10",
@@ -529,5 +530,10 @@ module.exports = {
   20988: "Bay 6",
   20989: "Bay 7",
   20990: "Bay 8",
-  20991: "Bay 9"
+  20991: "Bay 9",
+
+  // Mooroolbark
+  21294: "Bay A",
+  42981: "Bay B",
+  42982: "Bay C"
 }

@@ -6,7 +6,7 @@ const getStoppingPattern = require('../../../modules/bus/get-stopping-pattern')
 
 const busDestinations = require('../../../additional-data/bus-destinations')
 
-const busBays = require('../../../additional-data/bus-bays')
+const busBays = require('../../../additional-data/bus-data/bus-bays')
 
 const getDepartures = require('../../../modules/bus/get-departures')
 const regionalRouteNumbers = require('../../../additional-data/bus-data/regional-with-track')

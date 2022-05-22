@@ -7,7 +7,7 @@ const stationCodes = require('../station-codes')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
-function getStopGTFSID(stopGTFSID, n) { return stopGTFSID + 500000000 + n * 10000000 }
+function getStopGTFSID(stopGTFSID, n) { return `5${n}00${stopGTFSID}` }
 
 let stopData = fs.readFileSync(__dirname + '/station-trbs.kml').toString().replace(/<!\[CDATA\[([\s\S]*?)\]\]>(?=\s*<)/gi, "$1")
 let $ = cheerio.load(stopData)

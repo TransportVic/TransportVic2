@@ -3,7 +3,7 @@ const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('./get-stopping-pattern')
 const stopNameModifier = require('../../additional-data/stop-name-modifier')
-const busBays = require('../../additional-data/bus-bays')
+const busBays = require('../../additional-data/bus-data/bus-bays')
 const departureUtils = require('../utils/get-bus-timetables')
 
 const regionalRouteNumbers = require('../../additional-data/bus-data/regional-with-track')
