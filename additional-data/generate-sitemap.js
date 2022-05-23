@@ -1,4 +1,3 @@
-const cheerio = require('cheerio')
 const fs = require('fs')
 const async = require('async')
 const config = require('../config')
