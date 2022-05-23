@@ -1,7 +1,7 @@
 const DatabaseConnection = require('../../../database/DatabaseConnection')
-const config = require('../../../config.json')
+const config = require('../../../config')
 const utils = require('../../../utils')
-const freeTramZoneGeofence = require('../../../additional-data/free-tram-zone-geofence.json')
+const freeTramZoneGeofence = require('../../../additional-data/free-tram-zone-geofence')
 const async = require('async')
 
 const updateStats = require('../../utils/stats')

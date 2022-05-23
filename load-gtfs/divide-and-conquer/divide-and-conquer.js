@@ -3,8 +3,8 @@ const path = require('path')
 const BufferedLineReader = require('./BufferedLineReader')
 const gtfsUtils = require('../../gtfs-utils')
 const utils = require('../../utils')
-const gtfsModes = require('../gtfs-modes.json')
-const datamartModes = require('../datamart-modes.json')
+const gtfsModes = require('../gtfs-modes')
+const datamartModes = require('../datamart-modes')
 const updateStats = require('../utils/stats')
 let gtfsID = process.argv[2]
 

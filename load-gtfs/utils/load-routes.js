@@ -1,7 +1,7 @@
 const async = require('async')
 const utils = require('../../utils')
 const gtfsUtils = require('../../gtfs-utils')
-const gtfsModes = require('../gtfs-modes.json')
+const gtfsModes = require('../gtfs-modes')
 const loopDirections = require('../../additional-data/loop-direction')
 
 function parseRouteGTFSID(rawRouteGTFSID, mode) {

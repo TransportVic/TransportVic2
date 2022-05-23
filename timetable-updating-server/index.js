@@ -1,6 +1,6 @@
 require('../utils')
 
-const config = require('../config.json')
+const config = require('../config')
 const MainServer = require('./MainServer')
 
 let mainServer = new MainServer()

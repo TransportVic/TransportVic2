@@ -3,7 +3,7 @@ const path = require('path')
 const async = require('async')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const BufferedLineReader = require('../divide-and-conquer/BufferedLineReader')
-const config = require('../../config.json')
+const config = require('../../config')
 const loadStops = require('../utils/load-stops')
 const gtfsUtils = require('../../gtfs-utils')
 

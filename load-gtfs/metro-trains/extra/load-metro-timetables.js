@@ -2,7 +2,7 @@ const fs = require('fs')
 const async = require('async')
 const path = require('path')
 const DatabaseConnection = require('../../../database/DatabaseConnection')
-const config = require('../../../config.json')
+const config = require('../../../config')
 const utils = require('../../../utils')
 
 const fixTripDestinations = require('../../../modules/metro-trains/fix-trip-destinations.js')

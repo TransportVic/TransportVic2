@@ -6,8 +6,8 @@ const ws = require('ws')
 const utils = require('../utils')
 const async = require('async')
 
-const config = require('../config.json')
-const urls = require('../urls.json')
+const config = require('../config')
+const urls = require('../urls')
 const postDiscordUpdate = require('../modules/discord-integration')
 const downloadGTFS = require('../update-gtfs')
 

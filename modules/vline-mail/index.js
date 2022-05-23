@@ -12,7 +12,7 @@ const handleReinstatement = require('./modules/handle-reinstatement')
 const handleNoCatering = require('./modules/handle-no-catering')
 
 const DatabaseConnection = require('../../database/DatabaseConnection')
-const config = require('../../config.json')
+const config = require('../../config')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 

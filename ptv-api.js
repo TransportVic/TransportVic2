@@ -1,5 +1,5 @@
 const crypto = require('crypto')
-const { ptvKeys } = require('./config.json')
+const { ptvKeys } = require('./config')
 const utils = require('./utils')
 const cheerio = require('cheerio')
 

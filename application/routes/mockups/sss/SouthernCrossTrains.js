@@ -1,5 +1,5 @@
 const async = require('async')
-const urls = require('../../../../urls.json')
+const urls = require('../../../../urls')
 const utils = require('../../../../utils')
 const cheerio = require('cheerio')
 const termini = require('../../../../additional-data/termini-to-lines')

@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-const config = require('../config.json')
+const config = require('../config')
 const DatabaseConnection = require('../database/DatabaseConnection')
 const utils = require('../utils')
 const async = require('async')

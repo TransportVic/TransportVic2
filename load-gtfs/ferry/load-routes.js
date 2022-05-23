@@ -16,7 +16,7 @@ const fs = require('fs')
 const path = require('path')
 const async = require('async')
 const DatabaseConnection = require('../../database/DatabaseConnection')
-const config = require('../../config.json')
+const config = require('../../config')
 const loadRoutes = require('../utils/load-routes')
 const utils = require('../../utils')
 const turf = require('@turf/turf')
@@ -25,7 +25,7 @@ const gtfsUtils = require('../../gtfs-utils')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
 
-let shapeMap = require('./shapes/shape-map.json')
+let shapeMap = require('./shapes/shape-map')
 
 let shapes = Object.keys(shapeMap).map(shapeID => {
   let fileName = shapeMap[shapeID] + '.json'

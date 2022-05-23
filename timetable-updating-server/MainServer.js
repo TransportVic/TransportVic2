@@ -10,7 +10,7 @@ const uglifyEs = require('uglify-es')
 let robots = fs.readFileSync(path.join(__dirname, '../application/static/app-content/robots.txt'))
 let sw = fs.readFileSync(path.join(__dirname, '../application/static/app-content/sw.js'))
 
-const config = require('../config.json')
+const config = require('../config')
 
 module.exports = class MainServer {
   constructor () {

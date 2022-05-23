@@ -2,12 +2,12 @@ const fs = require('fs')
 const path = require('path')
 const async = require('async')
 const DatabaseConnection = require('../../database/DatabaseConnection')
-const config = require('../../config.json')
+const config = require('../../config')
 const loadStops = require('../utils/load-stops')
 const { createStopsLookup } = require('../utils/datamart-utils')
 let datamartStops = []
 try {
-  datamartStops = require('../../spatial-datamart/metro-train-stations.json').features
+  datamartStops = require('../../spatial-datamart/metro-train-stations').features
 } catch (e) { console.log('Could not load spatial datamart, skipping') }
 let stopsLookup = createStopsLookup(datamartStops)
 

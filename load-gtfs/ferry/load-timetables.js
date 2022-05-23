@@ -42,7 +42,7 @@ const fs = require('fs')
 const path = require('path')
 const async = require('async')
 const DatabaseConnection = require('../../database/DatabaseConnection')
-const config = require('../../config.json')
+const config = require('../../config')
 const loadGTFSTimetables = require('../utils/load-gtfs-timetables')
 const utils = require('../../utils')
 const gtfsUtils = require('../../gtfs-utils')
@@ -52,7 +52,7 @@ const cheerio = require('cheerio')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
 
-const stops = require('./data/stops.json')
+const stops = require('./data/stops')
 
 let gtfsID = 9
 

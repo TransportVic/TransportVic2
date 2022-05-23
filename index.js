@@ -1,7 +1,7 @@
 global.startTime = +new Date()
 require('./utils')
 
-const config = require('./config.json')
+const config = require('./config')
 const MainServer = require('./server/MainServer')
 
 require('./modules/vline-mail')

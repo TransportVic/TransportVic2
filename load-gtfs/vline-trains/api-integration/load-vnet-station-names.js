@@ -3,7 +3,7 @@ const async = require('async')
 const path = require('path')
 const cheerio = require('cheerio')
 const DatabaseConnection = require('../../../database/DatabaseConnection')
-const config = require('../../../config.json')
+const config = require('../../../config')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let stops = null

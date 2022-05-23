@@ -11,8 +11,8 @@ const ptvAPI = require('../ptv-api')
 
 const DatabaseConnection = require('../database/DatabaseConnection')
 
-const config = require('../config.json')
-const modules = require('../modules.json')
+const config = require('../config')
+const modules = require('../modules')
 
 if (modules.tracker && modules.tracker.bus)
   require('../modules/trackers/bus')

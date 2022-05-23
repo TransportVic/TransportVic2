@@ -2,7 +2,7 @@ const async = require('async')
 const cheerio = require('cheerio')
 
 const DatabaseConnection = require('../../../database/DatabaseConnection')
-const config = require('../../../config.json')
+const config = require('../../../config')
 const utils = require('../../../utils')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)

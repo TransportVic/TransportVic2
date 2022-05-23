@@ -1,6 +1,6 @@
 const utils = require('../utils')
-const config = require('../config.json')
-const modules = require('../modules.json')
+const config = require('../config')
+const modules = require('../modules')
 const async = require('async')
 
 module.exports = async (type, text) => {

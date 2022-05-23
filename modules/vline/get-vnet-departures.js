@@ -1,4 +1,4 @@
-const urls = require('../../urls.json')
+const urls = require('../../urls')
 const utils = require('../../utils')
 const cheerio = require('cheerio')
 const async = require('async')

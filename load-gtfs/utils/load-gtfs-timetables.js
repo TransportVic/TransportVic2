@@ -1,7 +1,7 @@
 const async = require('async')
 const utils = require('../../utils')
 const gtfsUtils = require('../../gtfs-utils')
-const gtfsModes = require('../gtfs-modes.json')
+const gtfsModes = require('../gtfs-modes')
 
 async function getRouteData(routes, routeGTFSID, cache) {
   if (cache[routeGTFSID]) return cache[routeGTFSID]

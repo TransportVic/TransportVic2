@@ -1,7 +1,7 @@
 const ical = require('node-ical')
 const path = require('path')
 const DatabaseConnection = require('./database/DatabaseConnection')
-const config = require('./config.json')
+const config = require('./config')
 const utils = require('./utils')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)

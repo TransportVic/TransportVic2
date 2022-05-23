@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const async = require('async')
 const DatabaseConnection = require('../../database/DatabaseConnection')
-const config = require('../../config.json')
+const config = require('../../config')
 const loadRoutes = require('../utils/load-routes')
 const { createServiceLookup } = require('../utils/datamart-utils')
 const utils = require('../../utils')
@@ -35,7 +35,7 @@ let datamartMode = datamartModes[gtfsID]
 
 let datamartRoutes = []
 try {
-  datamartRoutes = require(`../../spatial-datamart/${datamartMode}-route.json`).features
+  datamartRoutes = require(`../../spatial-datamart/${datamartMode}-route`).features
 } catch (e) { console.log('Could not load spatial datamart, skipping') }
 
 let serviceLookup = createServiceLookup(datamartRoutes)

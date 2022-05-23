@@ -1,6 +1,5 @@
 const async = require('async')
 const utils = require('../../utils')
-const liveBusData = require('../../additional-data/live-bus-data')
 
 /*
 
