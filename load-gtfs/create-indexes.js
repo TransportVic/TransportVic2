@@ -35,6 +35,7 @@ database.connect({
   let metroLogger = await getCollection('metro logs')
 
   let csrfTokens = await getCollection('csrf tokens')
+  let busminderBuses = await getCollection('busminder buses')
 
   await stops.createIndex({
     stopName: 1,
@@ -472,6 +473,15 @@ database.connect({
 
   console.log('Created CSRF Token index')
 
-  updateStats('create-indexes', 71)
+  await busminderBuses.createIndex({
+    id: 1,
+    fleet: 1,
+    routeNumber: 1,
+    routeDestination: 1
+  }, { name: 'busminder index', unique: 1 })
+
+  console.log('Created BusMinder index')
+
+  updateStats('create-indexes', 72)
   process.exit()
 })

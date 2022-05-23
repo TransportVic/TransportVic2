@@ -17,6 +17,9 @@ const modules = require('../modules.json')
 if (modules.tracker && modules.tracker.bus)
   require('../modules/trackers/bus')
 
+if (modules.tracker && modules.tracker.busMinder)
+  require('../modules/trackers/busminder')
+
 if (modules.tracker && modules.tracker.tram)
   require('../modules/trackers/tram')
 
@@ -220,6 +223,7 @@ module.exports = class MainServer {
       SmartrakIDs: '/smartrak',
 
       'tracker/BusTracker': '/bus/tracker',
+      'tracker/BusMinderTracker': '/bus/tracker/busminder',
       'tracker/TramTracker': '/tram/tracker',
       'tracker/VLineTracker': '/vline/tracker',
       'tracker/MetroTracker': '/metro/tracker',

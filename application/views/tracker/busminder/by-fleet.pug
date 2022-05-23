@@ -1,0 +1,21 @@
+extends ../../layout
+
+block head
+  -
+    title = 'TransportVic - Tracker/BusMinder - By Fleet'
+    description = `Tracking Bus ${fleet}`
+  title #{title}
+  link(rel='preload' as='style' href='/static/css/tracker/results.css')
+
+block title
+  span BusMinder Tracker - By Fleet
+
+block style
+  link(rel='stylesheet' href='/static/css/tracker/results.css')
+
+block content
+  h1.title Tracking Bus #{fleet} on #{now.format('dddd, MMMM Do YYYY HH:mm')}
+  if bus
+    h2 #{fleet} currently on #{bus.routeNumber} to #{bus.routeDestination}
+  else
+    h2 #{fleet} currently not on network or is an unknown vehicle

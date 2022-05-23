@@ -1,0 +1,27 @@
+extends ../../layout
+
+block head
+  -
+    title = 'TransportVic - Tracker/BusMinder - Highlights'
+    description = 'Bus Tracker Highlights'
+  title #{title}
+  link(rel='preload' as='style' href='/static/css/tracker/results.css')
+
+block title
+  span BusMinder Tracker - Highlights
+
+block style
+  link(rel='stylesheet' href='/static/css/tracker/results.css')
+
+block content
+  h1.title Bus Highlights on #{now.format('dddd, MMMM Do YYYY HH:mm')}
+
+  mixin section(section)
+    if section.buses.length
+      h1.title #{section.name}
+      for bus in section.buses
+        div.trip
+          a #{bus.fleet}: #{bus.routeNumber} to #{bus.routeDestination}
+    
+  for section in highlights
+    +section(section)

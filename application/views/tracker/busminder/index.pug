@@ -1,0 +1,37 @@
+extends ../../layout
+
+block head
+  -
+    title = 'TransportVic - Tracker/BusMinder'
+    description = 'TransportVic BusMinder Tracker'
+  title #{title}
+  link(rel='preload' as='style' href='/static/css/form.css')
+  
+block title
+  span BusMinder Tracker
+    
+block style
+  link(rel='stylesheet' href='/static/css/form.css')
+
+block content
+  h1#title BusMinder Tracker
+  h2 Track Your Bus By:
+  br
+  form(method="GET" action="/bus/tracker/busminder/fleet")#byFleet
+    label(for="fleet") Bus Fleet Number:
+    br
+    div.inputSection
+      input(type="text" maxlength="7" name="fleet" value="" placeholder="Fleet Number" autocomplete="off")
+      input(type="submit" value="Go")
+  br
+  form(method="GET" action="/bus/tracker/busminder/service")#byService
+    label(for="service") Bus Service:
+    br
+    div.inputSection
+      input(type="text" name="service" value="" placeholder="Service Number" autocomplete="off")
+      input(type="submit" value="Go")
+  br
+  h2 Alternatively,
+  a#highlights(href="/bus/tracker/busminder/highlights") View Current Highlights
+  br
+  h2 Note: The BusMinder Tracker currently only works with Ventura routes.
