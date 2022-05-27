@@ -215,7 +215,7 @@ a.departureInfo.reservationsOnly span.important {
   color: #ff001d;
 }
 
-a.departureInfo.reservationsOnly span.important.inline {
+a.departureInfo span.important.inline {
   margin-left: 0;
 }
 
