@@ -55,6 +55,8 @@ if (modules.gtfsr && modules.gtfsr.metro)
 
 let serverStarted = false
 
+let trackerAuth = config.metroLogins.map(login => 'Basic ' + Buffer.from(login).toString('base64'))
+
 module.exports = class MainServer {
   constructor () {
     this.app = express()
@@ -149,6 +151,17 @@ module.exports = class MainServer {
   }
 
   async configRoutes (app) {
+    app.use('/metro/tracker', (req, res, next) => {
+      if (req.headers.authorization && trackerAuth.includes(req.headers.authorization)) {
+        return next()
+      }
+
+      res.status(401)
+      res.header('www-authenticate', 'Basic realm="password needed"')
+      res.end('Please login')
+    })
+
+
     let routers = {
       'mockups/PIDSView': {
         path: '/',

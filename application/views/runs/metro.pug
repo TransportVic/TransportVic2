@@ -20,7 +20,7 @@ block style
   link(rel='stylesheet' href='/static/css/runs/base-style.css')
 
 block content
-  if trip.runID
+  if trip.runID && false
     div.infoRow
       span=`Run ${trip.runID}`
       if trip.vehicle
