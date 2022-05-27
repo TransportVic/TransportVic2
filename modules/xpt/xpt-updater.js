@@ -71,7 +71,10 @@ async function fetchAndUpdate() {
           'bays.stopGTFSID': stopGTFSID
         })
 
-        let delayFactor = (stop.departure || stop.arrival).delay * 1000
+        let stopDelay = stop.departure || stop.arrival
+        if (!stopDelay) return
+
+        let delayFactor = stopDelay.delay * 1000
         if (delayFactor > 1000 * 60 * 60 * 24) delayFactor = 0
         timingUpdates[stopData.stopName] = delayFactor
         platformUpdates[stopData.stopName] = stopGTFSID
