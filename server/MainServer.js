@@ -153,7 +153,7 @@ module.exports = class MainServer {
   async configRoutes (app) {
     app.use('/metro/tracker', (req, res, next) => {
       if (req.headers.authorization) {
-        res.loggingData = Buffer.from(req.headers.authorization.slice(6), 'base64').toString('utf-8')
+        res.loggingData = `${Buffer.from((req.headers.authorization || '').slice(6), 'base64').toString('utf-8')} ${req.headers['user-agent']}`
         if (trackerAuth.includes(req.headers.authorization)) return next()
       }
 
