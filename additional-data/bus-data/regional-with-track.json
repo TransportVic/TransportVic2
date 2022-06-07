@@ -21,6 +21,10 @@
    "routeNumber": "14"
   },
   {
+   "routeGTFSID": "6-B15",
+   "routeNumber": "15"
+  },
+  {
    "routeGTFSID": "6-B1X",
    "routeNumber": "15"
   },
@@ -55,10 +59,6 @@
   {
    "routeGTFSID": "6-B30",
    "routeNumber": "30"
-  },
-  {
-   "routeGTFSID": "6-gld",
-   "routeNumber": "Goldrush"
   }
  ],
  "Geelong": [
@@ -225,7 +225,7 @@
    "routeNumber": "71"
   }
  ],
- "Latrobe Valley": [
+ "Latrobe": [
   {
    "routeGTFSID": "6-L01",
    "routeNumber": "1"

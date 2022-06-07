@@ -22,8 +22,8 @@ database.connect(async () => {
     }).toArray()
 
     acc[region.properties.name.trim()] = matchingRoutes.map(route => {
-      return { routeGTFSID: route.routeGTFSID, routeNumber: route.routeNumber }
-    }).sort((a, b) => parseInt(a.routeNumber) - parseInt(b.routeNumber))
+      return { routeGTFSID: route.routeGTFSID, routeNumber: route.routeNumber.replace('_x', '') }
+    }).filter(r => !isNaN(parseInt(r.routeNumber))).sort((a, b) => parseInt(a.routeNumber) - parseInt(b.routeNumber))
 
     return acc
   })

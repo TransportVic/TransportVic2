@@ -139,14 +139,6 @@ module.exports = {
   46700: "Bay 4",
   46701: "Bay 5",
 
-  // Lilydale - OLD
-  21293: "Bay 1",
-  21292: "Bay 2",
-  21291: "Bay 3",
-  21290: "Bay 4",
-  21289: "Bay 5",
-  40196: "Bay 6",
-
   // Lilydale - NEW
   28191: "Bay A",
   28192: "Bay B",
@@ -535,5 +527,10 @@ module.exports = {
   // Mooroolbark
   21294: "Bay A",
   42981: "Bay B",
-  42982: "Bay C"
+  42982: "Bay C",
+
+  // Ballan
+  48835: "Bay 1",
+  48837: "Bay 2",
+  25: "Bay 3"
 }
