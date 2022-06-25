@@ -1038,6 +1038,8 @@ function parsePTVDepartures(ptvResponse, stationName, departureTime) {
     let vehicleDescriptor = run.vehicle_descriptor || {}
     let isRailReplacementBus = departure.flags.includes('RRB-RUN')
 
+    if (!isRailReplacementBus && !platform) return null // Avoid picking up PTV duplicated trips
+
     let routeName = route.route_name
     if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
     if (route.route_id === 99) routeName = 'City Circle'
@@ -1064,10 +1066,8 @@ function parsePTVDepartures(ptvResponse, stationName, departureTime) {
     if (stationName === 'Flemington Racecourse' && platform === '4') platform = '2' // 4 Road is Platform 2
 
     let fleetNumber = null
-    if (!isRailReplacementBus) {
-      if (vehicleDescriptor) {
-        fleetNumber = findConsist(vehicleDescriptor.id, runID)
-      }
+    if (!isRailReplacementBus && vehicleDescriptor) {
+      fleetNumber = findConsist(vehicleDescriptor.id, runID)
     }
 
     return {

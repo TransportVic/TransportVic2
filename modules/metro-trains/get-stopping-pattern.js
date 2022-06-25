@@ -187,7 +187,7 @@ module.exports = async function (data, db) {
         url += `&date_utc=${now.add(-4, 'hours').toISOString()}`
       }
     } else { // sane trip, request with time now
-      url += `&date_utc=${now.toISOString()}`
+      url += `&date_utc=${startTime.toISOString()}`
     }
   }
 
@@ -543,6 +543,10 @@ module.exports = async function (data, db) {
   }
 
   timetable.vehicle = vehicle
+
+  if (!runID && !timetable.isRailReplacementBus) {
+    global.loggers.error.warn('Metro trip without runID', timetable)
+  }
 
   if (!runID) {
     tripKey = {
