@@ -32,8 +32,6 @@ database.connect({
   let metroShunts = await getCollection('metro shunts')
   let metroLocations = await getCollection('metro locations')
 
-  let metroLogger = await getCollection('metro logs')
-
   let csrfTokens = await getCollection('csrf tokens')
   let busminderBuses = await getCollection('busminder buses')
 
@@ -455,15 +453,6 @@ database.connect({
 
   console.log('Created Metro Shunts index')
 
-  await metroLogger.createIndex({
-    utc: 1,
-    referer: 1,
-    ip: 1,
-    userAgent: 1
-  }, { name: 'metro logger index', unique: 1 })
-
-  console.log('Created Metro Logger index')
-
   await csrfTokens.createIndex({
     created: 1,
     ip: 1,
@@ -482,6 +471,6 @@ database.connect({
 
   console.log('Created BusMinder index')
 
-  updateStats('create-indexes', 72)
+  updateStats('create-indexes', 71)
   process.exit()
 })

@@ -115,7 +115,13 @@ console.log('Checking for updates...')
 
 fetch(urls.gtfsFeed, {
   method: 'HEAD'
-}).then(async (res) => {
+}).then(async res => {
+  if (res.status !== 200) {
+    console.log('Unable to download timetables: Bad Request Status', res.status)
+    await discordUpdate(`[Updater]: Unable to download new timetables (HTTP ${res.status}), skipping update`)
+    process.exit(2)
+  }
+
   let lastModified = res.headers.get('last-modified')
 
   if (lastModified !== lastLastModified) {
