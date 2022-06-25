@@ -59,7 +59,7 @@ module.exports = {
     "70": ["Whitmores Bus Lines"],
     "71": ["Whitmores Bus Lines"]
   },
-  "Latrobe Valley": {
+  "Latrobe": {
     "1": ["Latrobe Valley Bus Lines"],
     "2": ["Latrobe Valley Bus Lines"],
     "3": ["Latrobe Valley Bus Lines"],

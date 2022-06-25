@@ -6,6 +6,9 @@ const stopNameModifier = require('./additional-data/stop-name-modifier')
 const TimedCache = require('./TimedCache')
 const EventEmitter = require('events')
 const crypto = require('crypto')
+const fs = require('fs')
+const path = require('path')
+const { spawn } = require('child_process')
 
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 const locks = {}, caches = {}
@@ -577,6 +580,65 @@ module.exports = {
       && tripA.destination === tripB.destination
       && tripA.departureTime === tripB.departureTime
       && tripA.destinationArrivalTime === tripB.destinationArrivalTime
+  },
+  spawnProcess: async (path, args, finish) => {
+    return await new Promise(resolve => {
+      let childProcess = spawn(path, args)
+
+      childProcess.stdout.on('data', data => {
+        process.stdout.write(data.toString())
+      })
+
+      childProcess.stderr.on('data', data => {
+        process.stderr.write(data.toString())
+      })
+
+      childProcess.on('close', code => {
+        resolve()
+      })
+    })
+  },
+  walkDir: dir => {
+    return new Promise((resolve, reject) => {
+      let results = []
+      let dirs = []
+      fs.readdir(dir, async function(err, list) {
+        if (err) return reject(err)
+        let i = 0
+        function next() {
+          let file = list[i++]
+          if (!file) {
+            results = results.concat(dirs)
+            return resolve(results)
+          }
+
+          file = path.resolve(dir, file)
+          fs.stat(file, async function(err, stat) {
+            if (stat && stat.isDirectory()) {
+              dirs.push({file: false, path: file})
+              results = results.concat(await module.exports.walkDir(file))
+              next()
+            } else {
+              results.push({file: true, path: file})
+              next()
+            }
+          })
+        }
+        next()
+      })
+    })
+  },
+  rmDir: async dir => {
+    let allFiles = await module.exports.walkDir(dir)
+
+    for (let file of allFiles) {
+      try {
+        if (file.file) await new Promise(resolve => fs.unlink(file.path, resolve))
+        else await new Promise(resolve => fs.rmdir(file.path, resolve))
+      } catch (err) {}
+    }
+
+    await new Promise(resolve => fs.rmdir(dir, resolve))
   }
 }
 

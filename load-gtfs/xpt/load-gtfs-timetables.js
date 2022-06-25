@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const async = require('async')
 const DatabaseConnection = require('../../database/DatabaseConnection')
-const BufferedLineReader = require('../divide-and-conquer/BufferedLineReader')
+const BufferedLineReader = require('../split-gtfs/BufferedLineReader')
 const config = require('../../config')
 const loadGTFSTimetables = require('../utils/load-gtfs-timetables')
 const utils = require('../../utils')
@@ -25,7 +25,7 @@ database.connect({
 
   let totalCount = 0
 
-  let gtfsPath = path.join(__dirname, '../../gtfs', `${gtfsID}`)
+  let gtfsPath = path.join(__dirname, `../../gtfs/${gtfsID}`)
   let calendarDays = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar.txt')).toString())
   let calendarDates = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar_dates.txt')).toString())
 

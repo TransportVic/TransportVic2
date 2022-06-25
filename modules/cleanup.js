@@ -75,6 +75,7 @@ database.connect(async () => {
   let metroNotify = database.getCollection('metro notify')
   let liveTimetables = database.getCollection('live timetables')
   let metroShunts = database.getCollection('metro shunts')
+  let csrfTokens = database.getCollection('csrf tokens')
 
   try {
     let notify = await metroNotify.deleteDocuments({
@@ -86,6 +87,18 @@ database.connect(async () => {
     console.log('Cleaned up', notify.nRemoved, 'notify alerts')
   } catch (e) {
     console.log('Failed to clean up notify data')
+  }
+
+  try {
+    let csrf = await csrfTokens.deleteDocuments({
+      created: {
+        $lte: +utils.now().add(-1, 'days')
+      }
+    })
+
+    console.log('Cleaned up', csrf.nRemoved, 'csrf tokens')
+  } catch (e) {
+    console.log('Failed to clean up csrf tokens')
   }
 
   try {

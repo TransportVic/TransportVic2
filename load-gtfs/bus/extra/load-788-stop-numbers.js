@@ -58,11 +58,13 @@ database.connect({
     return $(script).html()
   })
 
-  let data = scripts.sort((a, b) => b.length - a.length)[0]
+  let data = scripts.sort((a, b) => b.length - a.length)[0].trim()
+  let lines = data.split('\n').map(line => line.trim()).sort((a, b) => b.length - a.length)
 
-  data = data.trim().slice(26).replace(/\n/g, '').slice(0, -2)
+  let longestLine = lines[0]
+  let jsonData = longestLine.slice(longestLine.indexOf('{')).replace(/\n/g, '').slice(0, -2)
 
-  let parsedData = JSON.parse(data)
+  let parsedData = JSON.parse(jsonData)
 
   let stopMappings = {}
 

@@ -49,7 +49,7 @@ let shapes = Object.keys(shapeMap).map(shapeID => {
   }
 })
 
-let gtfsID = '12'
+let gtfsID = 12
 
 database.connect({
   poolSize: 100

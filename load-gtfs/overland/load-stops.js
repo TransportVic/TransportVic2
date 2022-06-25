@@ -15,7 +15,7 @@ database.connect({
 }, async err => {
   let stops = database.getCollection('stops')
 
-  let splicedGTFSPath = path.join(__dirname, '../spliced-gtfs-stuff', `${gtfsID}`)
+  let splicedGTFSPath = path.join(__dirname, `../spliced-gtfs-stuff/${gtfsID}`)
   let stopsFiles = fs.readdirSync(splicedGTFSPath).filter(e => e.startsWith('stops'))
 
   let stopCount = 0

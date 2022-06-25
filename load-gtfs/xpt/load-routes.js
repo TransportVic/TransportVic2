@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const async = require('async')
 const DatabaseConnection = require('../../database/DatabaseConnection')
-const BufferedLineReader = require('../divide-and-conquer/BufferedLineReader')
+const BufferedLineReader = require('../split-gtfs/BufferedLineReader')
 const config = require('../../config')
 const loadRoutes = require('../utils/load-routes')
 const gtfsUtils = require('../../gtfs-utils')
@@ -11,7 +11,7 @@ const utils = require('../../utils')
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
 
-let gtfsID = '14'
+let gtfsID = 14
 
 database.connect({
   poolSize: 100

@@ -26,8 +26,8 @@ database.connect({
 
   await gtfsTimetables.deleteDocuments({ gtfsMode: parseInt(gtfsID) })
 
-  let splicedGTFSPath = path.join(__dirname, '../spliced-gtfs-stuff', `${gtfsID}`)
-  let gtfsPath = path.join(__dirname, '../../gtfs', `${gtfsID}`)
+  let splicedGTFSPath = path.join(__dirname, `../spliced-gtfs-stuff/${gtfsID}`)
+  let gtfsPath = path.join(__dirname, `../../gtfs/${gtfsID}`)
 
   let calendarDays = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar.txt')).toString())
   let calendarDates = gtfsUtils.parseGTFSData(fs.readFileSync(path.join(gtfsPath, 'calendar_dates.txt')).toString())

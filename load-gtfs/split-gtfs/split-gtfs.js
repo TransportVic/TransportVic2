@@ -11,7 +11,7 @@ let gtfsID = process.argv[2]
 let gtfsMode = gtfsModes[gtfsID]
 let datamartMode = gtfsID === '7' ? 'telebus' : datamartModes[gtfsID]
 
-let basePath = path.join(__dirname, '../../gtfs', gtfsID)
+let basePath = path.join(__dirname, `../../gtfs/${gtfsID}`)
 let splicedPath = path.join(__dirname, '../spliced-gtfs-stuff', gtfsID)
 
 let stopsLineReader = new BufferedLineReader(path.join(basePath, 'stops.txt'))
