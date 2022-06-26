@@ -7,6 +7,47 @@ const busBays = require('../../additional-data/bus-data/bus-bays')
 const southernCrossBays = require('../../additional-data/southern-cross-bays')
 const { getDayOfWeek } = require('../../public-holidays')
 
+let longDistanceCountryStops = [
+  "Albury",
+  "Ararat",
+  "Avenel",
+  "Bairnsdale",
+  "Beaufort",
+  "Benalla",
+  "Birregurra",
+  "Broadford",
+  "Camperdown",
+  "Chiltern",
+  "Colac",
+  "Dingee",
+  "Echuca",
+  "Euroa",
+  "Kerang",
+  "Mooroopna",
+  "Murchison East",
+  "Nagambie",
+  "Pyramid",
+  "Rochester",
+  "Rosedale",
+  "Sale",
+  "Shepparton",
+  "Springhurst",
+  "Stratford",
+  "Swan Hill",
+  "Terang",
+  "Violet Town",
+  "Wangaratta",
+  "Warrnambool",
+  "Winchelsea",
+  "Wodonga",
+  "Sherwood Park",
+  "Creswick",
+  "Clunes",
+  "Maryborough",
+  "Talbot",
+  "Epsom"
+].map(x => x + ' Railway Station')
+
 function getAllStopGTFSIDs(stop) {
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional coach', false)
   let coachGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional train', false)
@@ -207,7 +248,7 @@ async function getDepartures(stop, db) {
         }
 
         if (departure.isRailReplacementBus === null) {
-          let {origin, destination} = departure.trip
+          let { origin, destination, routeName } = departure.trip
 
           let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
           let originDepartureMinutes = departure.trip.stopTimings[0].departureTimeMinutes
@@ -224,6 +265,9 @@ async function getDepartures(stop, db) {
             destination = 'Southern Cross Railway Station'
           }
 
+          let varianceAllowed = 3
+          if (longDistanceCountryStops.includes(origin) || longDistanceCountryStops.includes(destination)) varianceAllowed = 20
+
           let nspDeparture = await timetables.findDocument({
             mode: 'regional train',
             operationDays: operationDay,
@@ -232,7 +276,7 @@ async function getDepartures(stop, db) {
                 stopName: origin,
                 departureTimeMinutes: {
                   $gte: originDepartureMinutes - 3,
-                  $lte: originDepartureMinutes + 3
+                  $lte: originDepartureMinutes + varianceAllowed
                 }
               }
             },

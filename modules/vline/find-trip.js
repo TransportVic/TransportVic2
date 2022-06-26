@@ -93,7 +93,7 @@ module.exports = async (collection, operationDay, origin, destination, departure
   let varianceAllowed = 5
   if (traralgonStops.includes(origin) || traralgonStops.includes(destination)) {
     varianceAllowed = 25
-    if (origin === 'Pakenham Railway Station' || destination === 'Pakenahm Railway Station') {
+    if (origin === 'Pakenham Railway Station' || destination === 'Pakenham Railway Station') {
       varianceAllowed = 40
     }
     if (origin === 'Southern Cross Railway Station') origin = { $in: sssFSS }
