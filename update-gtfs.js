@@ -17,12 +17,16 @@ async function downloadGTFS(done) {
     done(1)
   }
 
-  await utils.rmDir(path.join(__dirname, 'gtfs'))
-  await utils.rmDir(path.join(__dirname, 'load-gtfs', 'spliced-gtfs-stuff'))
+  let gtfsFolder = path.join(__dirname, 'gtfs')
+
+  try { await utils.rmDir(gtfsFolder) } catch (e) {}
+  try { await utils.rmDir(path.join(__dirname, 'load-gtfs', 'spliced-gtfs-stuff')) } catch (e) {}
+
+  await new Promise(resolve => fs.mkdir(gtfsFolder, resolve))
 
   console.log('Deleted existing files')
 
-  let gtfsFilePath = path.join(__dirname, 'gtfs', 'gtfs.zip')
+  let gtfsFilePath = path.join(gtfsFolder, 'gtfs.zip')
   fs.writeFile(gtfsFilePath, data, () => {
     console.log('Wrote GTFS Zip')
     data = null
