@@ -20,8 +20,6 @@ try {
 
 let stopsLookup = createStopsLookup(datamartStops)
 
-if (gtfsID === '7') datamartMode = 'telebus'
-
 database.connect({
   poolSize: 100
 }, async err => {

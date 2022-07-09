@@ -30,7 +30,7 @@ let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')
 
-let gtfsID = process.argv[2]
+let gtfsID = parseInt(process.argv[2])
 let datamartMode = datamartModes[gtfsID]
 
 let datamartRoutes = []

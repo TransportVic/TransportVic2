@@ -87,10 +87,8 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
         routeCache[routeGTFSID] = matchingRoute
       } else {
         let gtfsRouteNumber = null
-        if (['3', '4', '6', '8'].includes(mode)) { // tram, metro bus, regional bus, telebus, night bus
+        if ([3, 4, 6].includes(mode)) { // tram, metro bus, regional bus
           gtfsRouteNumber = gtfsRouteData[2]
-        } else if (mode === '7') {
-          gtfsRouteNumber = routeGTFSID.slice(2)
         }
 
         let finalRouteNumber = routeNumber ? routeNumber(routeGTFSID, gtfsRouteNumber) : gtfsRouteNumber
