@@ -9,6 +9,7 @@ const fixTripDestination = require('./fix-trip-destinations')
 const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
+let cityStations = [...cityLoopStations, 'Flinders Street']
 let borderStops = ['Richmond', 'Jolimont', 'North Melbourne', 'Flinders Street']
 let liveTrackingRoutes = [
   'Mernda', 'hurstbridge',
@@ -455,7 +456,16 @@ module.exports = async function (data, db) {
       }
     }
 
-    let mergedTimings = referenceTrip.stopTimings.concat(extraStopData).sort((a, b) => (a.departureTimeMinutes || a.arrivalTimeMinutes) - (b.departureTimeMinutes || b.arrivalTimeMinutes))
+    let cityStops = referenceTrip.stopTimings.filter(stop => cityStations.includes(stop.stopName.slice(0, -16)))
+    let otherStops = referenceTrip.stopTimings.filter(stop => !cityStops.includes(stop))
+    let mainTripMerged = otherStops.concat(extraStopData).sort((a, b) => (a.departureTimeMinutes || a.arrivalTimeMinutes) - (b.departureTimeMinutes || b.arrivalTimeMinutes))
+
+    let mergedTimings = direction === 'Down' ? [
+      ...cityStops, ...otherStops
+    ] : [ // Up
+      ...otherStops, ...cityStops
+    ]
+
     referenceTrip.stopTimings = mergedTimings.map(stop => {
       if (extraStops.includes(stop.stopName)) {
         stop.additional = true
