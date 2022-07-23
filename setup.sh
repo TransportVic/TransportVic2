@@ -8,7 +8,7 @@ sudo ln -sf /usr/share/zoneinfo/Australia/Melbourne /etc/localtime
 sudo yum remove httpd -y
 sudo yum remove postfix -y
 
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 source ~/.bashrc
 nvm install node
 

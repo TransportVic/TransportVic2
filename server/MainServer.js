@@ -151,17 +151,16 @@ module.exports = class MainServer {
   }
 
   async configRoutes (app) {
-    app.use('/metro/tracker', (req, res, next) => {
-      if (req.headers.authorization) {
-        res.loggingData = `${Buffer.from((req.headers.authorization || '').slice(6), 'base64').toString('utf-8')} ${req.headers['user-agent']}`
-        if (trackerAuth.includes(req.headers.authorization)) return next()
-      }
-
-      res.status(401)
-      res.header('www-authenticate', 'Basic realm="password needed"')
-      res.end('Please login')
-    })
-
+    // app.use('/metro/tracker', (req, res, next) => {
+    //   if (req.headers.authorization) {
+    //     res.loggingData = `${Buffer.from((req.headers.authorization || '').slice(6), 'base64').toString('utf-8')} ${req.headers['user-agent']}`
+    //     if (trackerAuth.includes(req.headers.authorization)) return next()
+    //   }
+    //
+    //   res.status(401)
+    //   res.header('www-authenticate', 'Basic realm="password needed"')
+    //   res.end('Please login')
+    // })
 
     let routers = {
       'mockups/PIDSView': {
