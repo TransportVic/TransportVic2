@@ -4,6 +4,7 @@ const utils = require('../../utils')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const getMetroDepartures = require('../metro-trains/get-departures')
 const stops = require('../../additional-data/metro-tracker/stops')
+const getStoppingPattern = require('../metro-trains/get-stopping-pattern')
 const schedule = require('./scheduler')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
@@ -29,7 +30,17 @@ function pickRandomStop() {
 
 async function getDepartures(stop) {
   let stopData = await dbStops.findDocument({ stopName: stop + ' Railway Station' })
-  await getMetroDepartures(stopData, database)
+  let departures = await getMetroDepartures(stopData, database)
+
+  let requestLive = departures.filter(d => d.runID).slice(0, 5)
+  await async.forEachSeries(requestLive, async departure => {
+    await getStoppingPattern({
+      ptvRunID: utils.getPTVRunID(departure.runID),
+      time: departure.originDepartureTime.toISOString(),
+      referenceTrip: departure.trip
+    }, database)
+  })
+
   await getMetroDepartures(stopData, database, false, true)
 }
 
