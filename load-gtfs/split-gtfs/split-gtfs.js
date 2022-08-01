@@ -21,7 +21,7 @@ let tripsLineReader = new BufferedLineReader(path.join(basePath, 'trips.txt'))
 
 function parseRouteGTFSID(rawRouteGTFSID) {
   if (rawRouteGTFSID.includes('-aus-')) {
-    let routeNumber = rawRouteGTFSID.match(/\d+-(\d+)/)[1]
+    let routeNumber = rawRouteGTFSID.match(/^\d+-(\w+)/)[1]
     return `${gtfsID}-${routeNumber}`
   }
   return gtfsUtils.simplifyRouteGTFSID(rawRouteGTFSID)
