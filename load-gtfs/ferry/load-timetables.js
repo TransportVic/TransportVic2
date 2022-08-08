@@ -383,20 +383,35 @@ database.connect({
   let body = await utils.request('https://www.ptv.vic.gov.au/more/travelling-on-the-network/ferries/')
   let $ = cheerio.load(body)
 
-  let westernPortData = loadWesternPort($)
-  totalCount += westernPortData.trips.length
+  try {
+    let westernPortData = loadWesternPort($)
 
-  await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, westernPortData.trips, westernPortData.timings, calendarDays, calendarDates)
+    await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, westernPortData.trips, westernPortData.timings, calendarDays, calendarDates)
+    totalCount += westernPortData.trips.length
+  } catch (e) {
+    console.log('Failed to load Western Port data')
+    console.log(e)
+  }
 
-  let westgatePunt = loadWestgatePunt($)
-  totalCount += westgatePunt.trips.length
+  try {
+    let westgatePunt = loadWestgatePunt($)
 
-  await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, westgatePunt.trips, westgatePunt.timings, calendarDays, calendarDates)
+    await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, westgatePunt.trips, westgatePunt.timings, calendarDays, calendarDates)
+    totalCount += westgatePunt.trips.length
+  } catch (e) {
+    console.log('Failed to load Westgate Punt data')
+    console.log(e)
+  }
 
-  let portPhillip = loadPortPhillip($)
-  totalCount += portPhillip.trips.length
+  try {
+    let portPhillip = loadPortPhillip($)
 
-  await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, portPhillip.trips, portPhillip.timings, calendarDays, calendarDates)
+    await loadGTFSTimetables({gtfsTimetables, stops, routes}, gtfsID, portPhillip.trips, portPhillip.timings, calendarDays, calendarDates)
+    totalCount += portPhillip.trips.length
+  } catch (e) {
+    console.log('Failed to load Port Phillip Ferries data')
+    console.log(e)
+  }
 
   await updateStats('ferry-timetables', totalCount)
   console.log('Completed loading in ' + totalCount + ' ferry timetables')

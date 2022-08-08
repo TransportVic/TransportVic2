@@ -31,4 +31,11 @@ module.exports = {
   simplifyRouteGTFSID: id => id.replace(/^(\d\d?-\w{1,3}).+$/, '$1'),
   parseGTFSData: data =>
     data.split('\n').slice(1).filter(Boolean).map(e => e.trim().match(/"([^"]*)"/g).map(f => f.slice(1, -1))),
+  parseBusRouteGTFSID: rawRouteGTFSID => {
+    if (rawRouteGTFSID.includes('-aus-')) { // Only applies to bus routes (for now)
+      let routeNumber = rawRouteGTFSID.match(/^\d+-(\w+)/)[1]
+      return `4-${routeNumber}`
+    }
+    return module.exports.simplifyRouteGTFSID(rawRouteGTFSID)
+  }
 }

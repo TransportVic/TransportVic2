@@ -19,14 +19,6 @@ let shapesLineReader = new BufferedLineReader(path.join(basePath, 'shapes.txt'))
 let tripTimingsLineReader = new BufferedLineReader(path.join(basePath, 'stop_times.txt'))
 let tripsLineReader = new BufferedLineReader(path.join(basePath, 'trips.txt'))
 
-function parseRouteGTFSID(rawRouteGTFSID) {
-  if (rawRouteGTFSID.includes('-aus-')) {
-    let routeNumber = rawRouteGTFSID.match(/^\d+-(\w+)/)[1]
-    return `${gtfsID}-${routeNumber}`
-  }
-  return gtfsUtils.simplifyRouteGTFSID(rawRouteGTFSID)
-}
-
 // STOPS
 async function read5000Stops() {
   let stops = []
@@ -113,7 +105,7 @@ async function readRouteShapes() {
 
     let shapeID = line[0]
     let rawRouteGTFSID = shapeID.split('.').slice(-3)[0]
-    let routeGTFSID = parseRouteGTFSID(rawRouteGTFSID)
+    let routeGTFSID = gtfsUtils.parseBusRouteGTFSID(rawRouteGTFSID)
 
     if (currentShapeID && currentShapeID !== shapeID) {
       shapesLineReader.unreadLine()
@@ -267,7 +259,7 @@ async function splitTrips() {
       if (!lineData) return
       let line = gtfsUtils.splitLine(lineData)
       let [fullRouteGTFSID, calendarID, tripID, shapeID, headsign, gtfsDirection] = line
-      let routeGTFSID = parseRouteGTFSID(fullRouteGTFSID)
+      let routeGTFSID = gtfsUtils.parseBusRouteGTFSID(fullRouteGTFSID)
       let actualMode = gtfsMode === 'nbus' ? 'bus' : gtfsMode
 
       trips.push({

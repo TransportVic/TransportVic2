@@ -4,14 +4,6 @@ const gtfsUtils = require('../../gtfs-utils')
 const gtfsModes = require('../gtfs-modes')
 const loopDirections = require('../../additional-data/loop-direction')
 
-function parseRouteGTFSID(rawRouteGTFSID, mode) {
-  if (rawRouteGTFSID.includes('-aus-')) {
-    let routeNumber = rawRouteGTFSID.match(/^\d+-(\w+)/)[1]
-    return `${mode}-${routeNumber}`
-  }
-  return gtfsUtils.simplifyRouteGTFSID(rawRouteGTFSID)
-}
-
 module.exports = async function(routes, mode, routeData, shapeJSON, operator, name, routeNumber) {
   let routeOperatorsSeen = []
   let rawRouteNames = {}
@@ -20,7 +12,7 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
   let routeGTFSIDsSeen = []
 
   routeData.forEach(line => {
-    let routeGTFSID = parseRouteGTFSID(line[0], mode)
+    let routeGTFSID = gtfsUtils.parseBusRouteGTFSID(line[0], mode)
     let rawRouteName = line[3]
     if (rawRouteNames[routeGTFSID]) {
       if (rawRouteNames[routeGTFSID].length < rawRouteName.length)
@@ -50,7 +42,7 @@ module.exports = async function(routes, mode, routeData, shapeJSON, operator, na
         routeGTFSID
       })
 
-      let gtfsRouteData = routeData.find(line => parseRouteGTFSID(line[0], mode) === routeGTFSID)
+      let gtfsRouteData = routeData.find(line => gtfsUtils.parseBusRouteGTFSID(line[0], mode) === routeGTFSID)
 
       let rawRouteName = rawRouteNames[routeGTFSID]
 
