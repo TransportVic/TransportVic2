@@ -155,7 +155,7 @@ async function requestData() {
     /MTMHealthboardDisruptionStage={NEW_INCIDENT:0,REPLACEMENT_BUSES_COMMENCED:1,ESTABLISHED_END_OF_SUSPENSION:2,SERVICE_RESUMED:3}
     Looks to be only used for suspensions
   */
-  if (data.disruptions) {
+  if (data.disruptions && false) {
     data.disruptions.forEach(disruption => {
       mergedAlerts[disruption.id] = {
         alertID: disruption.id.toString(),

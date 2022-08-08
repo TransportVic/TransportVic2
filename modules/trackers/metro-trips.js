@@ -148,6 +148,7 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
     })
   }
 
+  let forming = trip.forming
   let updatedTimetable = fixTripDestination({
     ...existingTrip,
     origin: firstStop.stopName,
@@ -155,7 +156,7 @@ async function appendNewData(existingTrip, trip, stopDescriptors, startOfDay) {
     departureTime: firstStop.departureTime,
     destinationArrivalTime: lastStop.arrivalTime,
     cancelled: allStopsCancelled,
-    forming: trip.forming === '0' ? null : trip.forming
+    forming: forming === '0' ? null : forming
   })
 
   return updatedTimetable
@@ -327,7 +328,9 @@ async function getDepartures(routeName) {
       operationDays: day
     }
 
-    trips[runID].stopsAvailable.push(parseRawData(stop, startOfDay))
+    let parsedStopData = parseRawData(stop, startOfDay)
+    trips[runID].stopsAvailable.push(parsedStopData)
+    if (parsedStopData.isAdditional) trips[runID].forming = stop.forms_trip_id
 
     return trips
   }, {}))
