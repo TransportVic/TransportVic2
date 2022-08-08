@@ -486,19 +486,21 @@ module.exports = {
     else return shortName
   },
   getRunID: ptvRunID => {
-    let runIDStr = ptvRunID.toString()
-    if (runIDStr.length !== 6 || isNaN(parseInt(runIDStr))) return null
-    let firstChar = String.fromCharCode(parseInt(runIDStr.slice(1, 3)))
-    let remainingDigits = runIDStr.slice(3)
-    return `${firstChar}${remainingDigits}`
+    if (ptvRunID >= 988000) {
+      return `X${module.exports.pad(ptvRunID - 988000, 3, '0')}`
+    } else if (ptvRunID >= 982000) {
+      return `R${module.exports.pad(ptvRunID - 982000, 3, '0')}`
+    } else {
+      return module.exports.pad(ptvRunID - 948000, 4, '0')
+    }
   },
   getPTVRunID: runID => {
-    if (module.exports.isValidRunID(runID)) {
-      return parseInt(`9${runID.charCodeAt(0)}${runID.slice(1)}`)
-    } else return null
-  },
-  isValidRunID: runID => {
-    return !!runID.match(/^\w\d{3}$/)
+    if (parseInt(runID)) {
+      return parseInt(runID) + 948000
+    } else {
+      if (runID[0] === 'X') return parseInt(runID.slice(1)) + 988000
+      if (runID[0] === 'R') return parseInt(runID.slice(1)) + 982000
+    }
   },
   sleep: time => {
     return new Promise(resolve => {
@@ -637,6 +639,9 @@ module.exports = {
     }
 
     await new Promise(resolve => fs.rmdir(dir, resolve))
+  },
+  findLastIndex: (arr, func) => {
+    return arr.reduce((prev, curr, index) => func(curr) ? index : prev, -1);
   }
 }
 

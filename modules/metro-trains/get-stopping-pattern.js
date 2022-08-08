@@ -51,19 +51,11 @@ function extendMetroEstimation(stopTimings) {
   }
 }
 
-async function saveConsist(stopTimings, direction, departureDay, runID, consist, metroTrips) {
-  let partialTrip = {
-    stopTimings,
-    direction,
-    origin: stopTimings[0].stopName,
-    departureTime: stopTimings[0].departureTime,
-    destination: stopTimings[stopTimings.length - 1].stopName,
-    destinationArrivalTime: stopTimings[stopTimings.length - 1].arrivalTime
-  }
-
+async function saveConsist(trip, departureDay, consist, metroTrips) {
   if (!departureDay) return global.loggers.error.err('No date on trip', partialTrip)
 
-  fixTripDestination(partialTrip)
+  let runID = trip.runID.slice(0, 4)
+  let { originStop, destinationStop } = fixTripDestination.getTripTrueOriginDestination(trip)
 
   let query = {
     date: departureDay,
@@ -72,10 +64,10 @@ async function saveConsist(stopTimings, direction, departureDay, runID, consist,
 
   let tripData = {
     ...query,
-    origin: partialTrip.trueOrigin.slice(0, -16),
-    destination: partialTrip.trueDestination.slice(0, -16),
-    departureTime: partialTrip.trueDepartureTime,
-    destinationArrivalTime: partialTrip.trueDestinationArrivalTime,
+    origin: originStop.stopName.slice(0, -16),
+    destination: destinationStop.stopName.slice(0, -16),
+    departureTime: originStop.departureTime,
+    destinationArrivalTime: destinationStop.arrivalTime,
     consist
   }
 
@@ -548,7 +540,7 @@ module.exports = async function (data, db) {
     let actualSize = Math.max(ptvSize, consistSize)
     vehicle = { size: actualSize, type: vehicleType.type, consist }
 
-    consist = await saveConsist(stopTimings, direction, departurePTDay, runID, consist, metroTrips)
+    consist = await saveConsist(timetable, departurePTDay, consist, metroTrips)
     if (location && consist) await saveLocation(consist, location, metroLocations)
   }
 
