@@ -54,7 +54,8 @@ module.exports = trip => {
 
 module.exports.getTripTrueOriginDestination = trip => {
   let originStop = trip.stopTimings.find(stop => stop.stopName === (trip.trueOrigin || trip.origin))
-  let destinationStop = trip.stopTimings.find(stop => stop.stopName === (trip.trueDestination || trip.destination))
+  let lastIndex = utils.findLastIndex(trip.stopTimings, stop => stop.stopName === (trip.trueDestination || trip.destination))
+  let destinationStop = trip.stopTimings[lastIndex]
 
   if (!trip.cancelled && (originStop.cancelled || destinationStop.cancelled)) {
     if (originStop.cancelled) {
