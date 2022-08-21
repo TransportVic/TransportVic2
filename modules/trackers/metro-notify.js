@@ -129,7 +129,7 @@ async function requestData() {
         type: alert.alert_type,
         text: alert.alert_text.replace(/Plan your journey.*/, '').replace(/Visit .*? web.*/g, '').replace(/[–-]/g, ' to ').replace(/  +/g, ' ').trim(),
         active: true,
-        ...(alert.trip_id ? { runID: alert.trip_id } : {})
+        ...(alert.trip_id ? { runID: alert.trip_id.toUpperCase() } : {})
       }
     } else {
       mergedAlerts[alert.alert_id].routeName.push(routeName)
