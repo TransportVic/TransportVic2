@@ -1,12 +1,12 @@
 module.exports = {
-  "1.0": "1", // East Coburg
-  "1.1": "0", // Sth Melb
+  "1.0": "0", // East Coburg
+  "1.1": "1", // Sth Melb
 
-  "3.0": "0", // Melb Uni
-  "3.1": "1", // East Malvern
+  "3.0": "1", // Melb Uni
+  "3.1": "0", // East Malvern
 
-  "5.0": "1", // Melb Uni
-  "5.1": "0", // Malvern
+  "5.0": "0", // Melb Uni
+  "5.1": "1", // Malvern
 
   "6.0": "1", // Moreland
   "6.1": "0", // Glen Iris
@@ -14,14 +14,14 @@ module.exports = {
   "11.0": "0", // West Preston
   "11.1": "1", // Docklands
 
-  "12.0": "1", // Vic Gardens
-  "12.1": "0", // St Kilda
+  "12.0": "0", // Vic Gardens
+  "12.1": "1", // St Kilda
 
   "16.0": "0", // Melb Uni
   "16.1": "1", // Kew
 
-  "19.0": "1", // North Coburg
-  "19.1": "0", // FSS
+  "19.0": "0", // North Coburg
+  "19.1": "1", // FSS
 
   "30.0": "1", // St Vincents Plaza
   "30.1": "0", // Docklands
@@ -35,8 +35,8 @@ module.exports = {
   "58.0": "1", // West Coburg
   "58.1": "0", // Toorak
 
-  "59.0": "1", // Airport West
-  "59.1": "0", // FSS
+  "59.0": "0", // Airport West
+  "59.1": "1", // FSS
 
   "64.0": "1", // Melb Uni
   "64.1": "0", // East Brighton
@@ -44,27 +44,27 @@ module.exports = {
   "67.0": "1", // Melb Uni
   "67.1": "0", // Carnegie
 
-  "70.1": "1", // Docklands
-  "70.0": "0", // Wattle Park
+  "70.1": "0", // Docklands
+  "70.0": "1", // Wattle Park
 
   "72.0": "1", // Melb Uni
   "72.1": "0", // Camberwell
 
-  "75.0": "1", // Vermont Sth
-  "75.1": "0", // Docklands
+  "75.0": "0", // Vermont Sth
+  "75.1": "1", // Docklands
 
-  "78.0": "0", // North Richmond
-  "78.1": "1", // Balaclava
+  "78.0": "1", // North Richmond
+  "78.1": "0", // Balaclava
 
   "82.0": "0", // Footscray
   "82.1": "1", // Moonee Ponds
 
-  "86.0": "0", // Bundoora
-  "86.1": "1", // Docklands
+  "86.0": "1", // Bundoora
+  "86.1": "0", // Docklands
 
   "96.0": "0", // East Brunswick
   "96.1": "1", // St Kilda Beach
 
-  "109.0": "0", // Box Hill
-  "109.1": "1", // Port Melb
+  "109.0": "1", // Box Hill
+  "109.1": "0", // Port Melb
 }

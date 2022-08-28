@@ -156,7 +156,7 @@ database.connect({}, async () => {
     }
 
     if (dbStop) delete dbStop.textQuery
-    console.log('Failed to map stop ID', stopID, '- TT', tramTrackerID, stopNames[tramTrackerID], dbStop, ptvStop)
+    console.log('Failed to map stop ID', stopID, '- TT', tramTrackerID, stopNames[tramTrackerID], stopDirections[tramTrackerID], dbStop, ptvStop)
   })
 
   await updateStats('tramtracker-ids', count)
