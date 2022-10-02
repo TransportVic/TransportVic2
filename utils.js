@@ -365,11 +365,11 @@ module.exports = {
       throw err
     }
 
-    let end = +new Date()
-    let diff = end - start
-
     let size = body.headers.get('content-length')
     if (options.stream) {
+      let end = +new Date()
+      let diff = end - start
+
       let logMessage = `${diff}ms ${url}`
       if (global.loggers) global.loggers.fetch.log(logMessage)
       else console.log(logMessage)
@@ -378,6 +378,9 @@ module.exports = {
     }
     let returnData = await (options.raw ? body.buffer() : body.text())
     if (!size) size = returnData.length
+
+    let end = +new Date()
+    let diff = end - start
 
     let logMessage = `${diff}ms ${url} ${size}R`
     if (global.loggers) global.loggers.fetch.log(logMessage)

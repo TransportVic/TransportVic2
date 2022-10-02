@@ -60,7 +60,9 @@ module.exports.getTripTrueOriginDestination = trip => {
   if (!trip.cancelled && (originStop.cancelled || destinationStop.cancelled)) {
     if (originStop.cancelled) {
       originStop = trip.stopTimings.slice(trip.stopTimings.indexOf(originStop)).find(stop => !stop.cancelled)
-    } else if (destinationStop.cancelled) {
+    }
+
+    if (destinationStop.cancelled) {
       let relevantStops = trip.stopTimings.slice(0, trip.stopTimings.indexOf(destinationStop) + 1)
       let lastStopIndex = utils.findLastIndex(relevantStops, stop => !stop.cancelled)
       destinationStop = relevantStops[lastStopIndex]
