@@ -404,17 +404,6 @@ module.exports = async function (data, db) {
     }
   }
 
-  let firstStop = stopTimings[0]
-  let lastStop = stopTimings[stopTimings.length - 1]
-
-  // Cancelled trains sometimes only show 1 stop and so the trip has no arr/dep time
-  if (firstStop !== lastStop) {
-    firstStop.arrivalTime = null
-    firstStop.arrivalTimeMinutes = null
-    lastStop.departureTime = null
-    lastStop.departureTimeMinutes = null
-  }
-
   let timetable
   if (referenceTrip && runID) { // Only update trains as such
     let newStops = stopTimings.map(stop => stop.stopName)
