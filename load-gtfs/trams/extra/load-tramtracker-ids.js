@@ -24,34 +24,40 @@ database.connect({}, async () => {
   let tramServices = (await routes.distinct('routeNumber', { mode: 'tram' })).map(e => e.match(/(\d+)/)[1]).concat('3a')
   let count = 0
 
+  let closedStops = ['1217', '1334', '1418', '2217', '2418', '2890', '3828', '3928', '2232']
+
   let tramTrackerIDs = {
-    "3813": "2013",
-    "3913": "2013"
+    '3813': '2013',
+    '3913': '2013'
   }
 
   let stopDirections = {
-    "3813": [{
-      service: "35",
-      gtfsDirection: "1"
+    '3813': [{
+      service: '35',
+      gtfsDirection: '1'
     }],
-    "3913": [{
-      service: "35",
-      gtfsDirection: "0"
+    '3913': [{
+      service: '35',
+      gtfsDirection: '0'
     }]
   }
 
   let stopNames = {
-    "3813": "Spring Street",
-    "3913": "Spring Street"
+    '3813': 'Spring Street',
+    '3913': 'Spring Street'
   }
+
   let stopNumbers = {
-    "3813": "0",
-    "3913": "0"
+    '3813': '0',
+    '3913': '0'
+  }
+
+  let levelAccess = {
+    '3813': false,
+    '3913': false
   }
 
   await async.forEachSeries(tramServices, async service => {
-    if (service === '35') return
-
     await async.forEachSeries([0, 1], async direction => {
       try {
         let data = await utils.request(`https://yarratrams.com.au/data/routestopsdata/?id=${service}&dir=${direction}`, {
@@ -64,7 +70,10 @@ database.connect({}, async () => {
           let tramTrackerID = $('.stopid', stop).text()
           let stopNumber = $('.stopno', stop).text().toUpperCase()
           let tramTrackerName = utils.expandStopName(utils.adjustStopName($('.location', stop).text().trim()))
+          let isLevelAccess = $('.stop-platform', stop).length === 1
           let url = $('a', stop).attr('href')
+
+          if (closedStops.includes(tramTrackerID)) return
 
           let stopID
           if (url) stopID = url.match(/stopId=(\d+)/)[1]
@@ -75,6 +84,7 @@ database.connect({}, async () => {
           tramTrackerIDs[tramTrackerID] = stopID
           stopNames[tramTrackerID] = tramTrackerName
           stopNumbers[tramTrackerID] = stopNumber
+          levelAccess[tramTrackerID] = isLevelAccess
 
           if (!stopDirections[tramTrackerID]) stopDirections[tramTrackerID] = []
           let serviceToUse = service
@@ -140,6 +150,7 @@ database.connect({}, async () => {
           if (bay.mode === 'tram' && bay.stopGTFSID === stopGTFSID) {
             bay.tramTrackerID = tramTrackerID
             bay.tramTrackerName = stopNames[tramTrackerID]
+            bay.levelAccess = levelAccess[tramTrackerID]
           }
 
           return bay
