@@ -38,5 +38,8 @@ module.exports = stopName => {
   if (stopName === 'Melbourne University/Grattan Street') return 'Melbourne University Grattan Street Stop/Grattan Street'
   if (stopName === 'Melbourne University/Pelham Street') return 'Melbourne University Pelham Street Stop/Pelham Street'
 
+  if (stopName === 'Arts Precinct/Sturt Street') return 'Sturt Street/Southbank Boulevard'
+  if (stopName === 'Flemington Racecourse/Racecourse Road') return 'Ascot Vale Road/Racecourse Road'
+
   return stopName
 }
