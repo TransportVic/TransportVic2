@@ -4,6 +4,7 @@ const ptvAPI = require('../../ptv-api')
 const nameModifier = require('../../additional-data/stop-name-modifier')
 const determineBusRouteNumber = require('../../additional-data/determine-bus-route-number')
 const regionalRouteNumbers = require('../../additional-data/bus-data/regional-with-track')
+const { getStop } = require('../utils/get-bus-timetables')
 
 let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => {
   let regionRoutes = regionalRouteNumbers[region]
@@ -14,40 +15,6 @@ let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => 
 
   return acc
 }, {})
-
-async function getStop(stopData, stopsCollection) {
-  let rawStopName = stopData.stop_name
-  let stopName = utils.getProperStopName(rawStopName.trim())
-
-  let matchedStop = await stopsCollection.findDocument({
-    $or: [{
-      'bays.fullStopName': stopName
-    }, {
-      stopName,
-    }],
-    'bays.mode': 'bus'
-  })
-  if (matchedStop) return matchedStop
-
-  let closeStop = await stopsCollection.findDocuments({
-    location: {
-      $nearSphere: {
-        $geometry: {
-          type: 'Point',
-          coordinates: [stopData.stop_longitude, stopData.stop_latitude]
-        },
-        $maxDistance: 20
-      }
-    }
-  }).limit(2).toArray()
-
-  if (closeStop.length !== 0) {
-    global.loggers.general.err('PTV Name Mismatch', stopData, closeStop[0].stopName)
-    return closeStop[0]
-  } else {
-    return null
-  }
-}
 
 function determineStopType(stop) {
   let busBays = stop.bays.filter(bay => bay.mode === 'bus')

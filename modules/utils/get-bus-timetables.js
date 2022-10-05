@@ -28,6 +28,49 @@ function getUniqueGTFSIDs(station, mode, isOnline) {
   return gtfsIDs
 }
 
+async function getStop(stopData, stopsCollection) {
+  let rawStopName = stopData.stop_name
+  let stopName = utils.getProperStopName(rawStopName.trim())
+
+  let matchedStop = await stopsCollection.findDocument({
+    $or: [{
+      'bays.fullStopName': stopName
+    }, {
+      stopName,
+    }],
+    'bays.mode': 'bus',
+    location: {
+      $nearSphere: {
+        $geometry: {
+          type: 'Point',
+          coordinates: [stopData.stop_longitude, stopData.stop_latitude]
+        },
+        $maxDistance: 200
+      }
+    }
+  })
+  if (matchedStop) return matchedStop
+
+  let closeStop = await stopsCollection.findDocuments({
+    location: {
+      $nearSphere: {
+        $geometry: {
+          type: 'Point',
+          coordinates: [stopData.stop_longitude, stopData.stop_latitude]
+        },
+        $maxDistance: 20
+      }
+    }
+  }).limit(2).toArray()
+
+  if (closeStop.length !== 0) {
+    global.loggers.general.err('PTV Name Mismatch', stopData, closeStop[0].stopName)
+    return closeStop[0]
+  } else {
+    return null
+  }
+}
+
 async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, routeGTFSID, excludedTripIDs, variance=0, routeNumber, silent) {
   let trip
   let query
@@ -195,5 +238,6 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive, t
 module.exports = {
   getUniqueGTFSIDs,
   getScheduledDepartures,
-  getDeparture
+  getDeparture,
+  getStop
 }
