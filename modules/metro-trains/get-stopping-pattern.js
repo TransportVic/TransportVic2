@@ -489,6 +489,9 @@ module.exports = async function (data, db) {
       notifyAlerts
     })
   } else {
+    let firstStop = stopTimings[0]
+    let lastStop = stopTimings[stopTimings.length - 1]
+
     timetable = fixTripDestination({
       mode: 'metro train',
       routeName,
