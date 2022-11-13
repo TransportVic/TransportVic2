@@ -1,6 +1,6 @@
 module.exports = {
-  "1.0": "1", // East Coburg
-  "1.1": "0", // Sth Melb
+  "1.0": "0", // East Coburg
+  "1.1": "1", // Sth Melb
 
   "3.0": "0", // Melb Uni
   "3.1": "1", // East Malvern
@@ -17,8 +17,8 @@ module.exports = {
   "12.0": "1", // Vic Gardens
   "12.1": "0", // St Kilda
 
-  "16.0": "0", // Melb Uni
-  "16.1": "1", // Kew
+  "16.0": "1", // Melb Uni
+  "16.1": "0", // Kew
 
   "19.0": "1", // North Coburg
   "19.1": "0", // FSS
@@ -41,11 +41,11 @@ module.exports = {
   "59.0": "1", // Airport West
   "59.1": "0", // FSS
 
-  "64.0": "1", // Melb Uni
-  "64.1": "0", // East Brighton
+  "64.0": "0", // Melb Uni
+  "64.1": "1", // East Brighton
 
-  "67.0": "1", // Melb Uni
-  "67.1": "0", // Carnegie
+  "67.0": "0", // Melb Uni
+  "67.1": "1", // Carnegie
 
   "70.1": "1", // Docklands
   "70.0": "0", // Wattle Park
