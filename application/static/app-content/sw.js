@@ -1,4 +1,4 @@
-const version = '125'
+const version = '126'
 const cacheName = `transportvic-${version}`
 
 function cacheFiles(files) {
@@ -75,6 +75,7 @@ self.addEventListener('install', event => {
       '/static/fonts/NetworkSans-2018-Bold.ttf',
       '/static/fonts/NetworkSans-2018-Medium.ttf',
       '/static/fonts/NetworkSans-2018-Regular.ttf',
+      '/static/fonts/Arial-Bold.ttf',
 
       '/static/images/decals/ac.svg',
       '/static/images/decals/wheelchair.svg',

@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "Arial";
+  font-display: fallback;
+  font-style: bold;
+  src: local('Arial Bold'), url(/static/fonts/Arial-Bold.ttf);
+}
+
 * {
   font-family: Arial !important;
 }
