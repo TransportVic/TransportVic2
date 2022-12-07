@@ -1,5 +1,4 @@
-const moment = require('moment')
-require('moment-timezone')
+const moment = require('moment-timezone')
 moment.tz.setDefault('Australia/Melbourne')
 const fetch = require('node-fetch')
 const stopNameModifier = require('./additional-data/stop-name-modifier')
