@@ -304,6 +304,7 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
       suspension: null,
       isSkippingLoop: null,
       originDepartureTime,
+      departureDay: utils.getYYYYMMDD(tripDepartureDay),
       trueDepartureDay: utils.getYYYYMMDD(tripDeparturePTDay)
     }
   })).filter(Boolean).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
