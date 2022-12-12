@@ -488,21 +488,18 @@ module.exports = {
     else return shortName
   },
   getRunID: ptvRunID => {
-    if (ptvRunID >= 988000) {
-      return `X${module.exports.pad(ptvRunID - 988000, 3, '0')}`
-    } else if (ptvRunID >= 982000) {
-      return `R${module.exports.pad(ptvRunID - 982000, 3, '0')}`
-    } else {
-      return module.exports.pad(ptvRunID - 948000, 4, '0')
+    let parts
+    if (parts = ptvRunID.toString().match(/^9(\d\d)(\d\d\d)$/)) {
+      return `${String.fromCharCode(parseInt(parts[1]))}${parts[2]}`
     }
   },
   getPTVRunID: runID => {
-    if (parseInt(runID)) {
-      return parseInt(runID) + 948000
-    } else {
-      if (runID[0] === 'X') return parseInt(runID.slice(1)) + 988000
-      if (runID[0] === 'R') return parseInt(runID.slice(1)) + 982000
-    }
+      if (module.exports.isValidRunID(runID)) {
+        return `9${runID.charCodeAt(0)}${runID.slice(1)}`
+      } else return null
+  },
+  isValidRunID: runID => {
+    return !!runID.match(/^\w\d{3}$/)
   },
   sleep: time => {
     return new Promise(resolve => {
