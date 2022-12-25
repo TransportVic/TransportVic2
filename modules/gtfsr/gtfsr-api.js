@@ -21,7 +21,8 @@ async function makeRequest(url, options={}) {
 
 async function makePBRequest(url) {
   let rawData = await makeRequest(url, {
-    raw: true
+    raw: true,
+    timeout: 12000
   })
 
   return GTFSR.FeedMessage.decode(rawData)

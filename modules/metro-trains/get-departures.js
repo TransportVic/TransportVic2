@@ -1038,12 +1038,12 @@ function parsePTVDepartures(ptvResponse, stationName, departureTime) {
     let vehicleDescriptor = run.vehicle_descriptor || {}
     let isRailReplacementBus = departure.flags.includes('RRB-RUN')
 
-    if (!isRailReplacementBus && !platform) return null // Avoid picking up PTV duplicated trips
-
     let routeName = route.route_name
     if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
     if (route.route_id === 99) routeName = 'City Circle'
     let runDestination = run.destination_name.trim()
+
+    if (!isRailReplacementBus && (!platform && routeName !== 'Stony Point')) return null // Avoid picking up PTV duplicated trips
 
     let direction = directionData.direction_name.includes('City') ? 'Up' : 'Down'
     if (routeName === 'Stony Point') direction = runDestination === 'Frankston' ? 'Up' : 'Down'
