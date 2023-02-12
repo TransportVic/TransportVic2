@@ -41,5 +41,7 @@ module.exports = stopName => {
   if (stopName === 'Arts Precinct/Sturt Street') return 'Sturt Street/Southbank Boulevard'
   if (stopName === 'Flemington Racecourse/Racecourse Road') return 'Ascot Vale Road/Racecourse Road'
 
+  if (stopName.includes('Center')) return stopName.replace('Center', 'Centre')
+
   return stopName
 }
