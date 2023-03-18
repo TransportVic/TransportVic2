@@ -11,14 +11,16 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 database.connect(async () => {
   await database.adminCommand({ logRotate: 'server' })
-  fs.readdir(config.databaseLog, async (err, files) => {
-    for (let file of files) {
-      if (!file.endsWith('.log')) {
-        await new Promise(r => {
-          fs.unlink(path.join(config.databaseLog, file), r)
-        })
-      }
-    }
-    process.exit(0)
-  })
+  for (let dir of config.databaseLog) {
+    await new Promise(r => {
+      fs.readdir(dir, async (err, files) => {
+        for (let file of files) {
+          if (!file.endsWith('.log')) {
+            fs.unlink(path.join(dir, file), r)
+          }
+        }
+      })
+    })
+  }
+  process.exit(0)
 })
