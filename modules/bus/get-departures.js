@@ -355,7 +355,7 @@ async function getDepartures(stop, db, time, discardUnmatched) {
 
         let departureBayID = upcomingStops[0].stopGTFSID
         let bay = busBays[departureBayID]
-        let departureRoad = (upcomingStops[0].stopName.split('/').slice(-1)[0] || '').replace(/^\d+[a-zA-z]? /)
+        let departureRoad = (upcomingStops[0].stopName.split('/').slice(-1)[0] || '').replace(/^\d+[a-zA-Z]? /, '')
 
         departure.bay = bay
         departure.departureRoad = departureRoad
