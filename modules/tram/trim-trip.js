@@ -51,7 +51,7 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
   let searchDestination = utils.expandStopName(utils.adjustStopName(destination.replace(/ - .*/, '').trim()))
   if (searchDestination === 'St. Kilda Road') searchDestination = 'Flinders Street Railway Station'
 
-  let destinationWithoutRoad = searchDestination.replace(/&.*/, '').trim()
+  let destinationWithoutRoad = searchDestination.replace(/&.*/, '').trim() + ' &'
 
   if (coreRoute === '70' && searchDestination === 'Wattle Park') return trip
 
@@ -61,7 +61,7 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
       let tramTrackerNames = stopData.bays.map(bay => bay.tramTrackerName).filter(Boolean)
 
       if (tramTrackerNames) {
-        let matched = tramTrackerNames.some(name => distance(name, searchDestination) <= 2) || tramTrackerNames.some(name => name.includes(destinationWithoutRoad))
+        let matched = tramTrackerNames.some(name => distance(name, searchDestination) <= 2) || tramTrackerNames.some(name => name.startsWith(destinationWithoutRoad))
 
         if (matched) {
           cutoffStop = stop.stopGTFSID
