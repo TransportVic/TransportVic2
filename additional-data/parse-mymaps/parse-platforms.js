@@ -291,6 +291,7 @@ let knownStations = [
   "Traralgon",
   "Tyabb",
   "Tynong",
+  "Union",
   "Upfield",
   "Upper Ferntree Gully",
   "Upwey",

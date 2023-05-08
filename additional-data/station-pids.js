@@ -77,6 +77,7 @@ module.exports = {
   "Darebin": [], // Nothing
   "Box Hill": [...platr(4, [1], 'platform'), conc('up-down')],
   "Mont Albert": [...platr(3, [], 'half-platform-bold')],
+  "Union": [...platr(3, [], 'platform')],
   "Surrey Hills": [...platr(3, [], 'half-platform-bold')],
   "Chatham": [...platr(2, [], 'half-platform-bold')],
   "Canterbury": [...platr(2, [], 'half-platform'), plat(3, 'pre-platform-vertical')],

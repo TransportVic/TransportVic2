@@ -301,6 +301,10 @@
     "platforms": 3,
     "exclude": []
   },
+  "Union": {
+    "platforms": 3,
+    "exclude": []
+  },
   "Surrey Hills": {
     "platforms": 3,
     "exclude": []
