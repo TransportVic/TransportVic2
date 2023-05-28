@@ -115,12 +115,12 @@ async function getAllDeparturesFromStation(station, db) {
                 })
               } else connections = []
 
-              let consistType = { size: 0, type: 'Unknown' }
+              let consist = { size: 0, type: 'Unknown' }
               let { fleetNumber } = departure
               if (fleetNumber) {
                 let matchingSet = metroTypes.find(set => fleetNumber.includes(set.leadingCar))
                 if (matchingSet) {
-                  consistType = {
+                  consist = {
                     size: fleetNumber.length,
                     type: matchingSet.type
                   }
@@ -144,7 +144,7 @@ async function getAllDeparturesFromStation(station, db) {
                 cancelled: departure.cancelled,
                 connections,
                 tdn: departure.runID,
-                consistType
+                consist
               }
             })
           }
@@ -481,7 +481,7 @@ function trimDepartures(departures, includeStopTimings) {
       c: departure.connections.map(connection => ({ f: connection.for.slice(0, -16), a: connection.changeAt.slice(0, -16) })),
       dly: delayed ? 1 : 0,
       t: departure.tdn,
-      con: encodeTrainType(departure.consistType.size, departure.consistType.type)
+      con: encodeTrainType(departure.consist.size, departure.consist.type)
     }
 
     if (includeStopTimings) {
