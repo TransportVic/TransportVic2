@@ -442,9 +442,9 @@ module.exports = async function (data, db) {
     let mainTripMerged = otherStops.concat(extraStopData).sort((a, b) => (a.departureTimeMinutes || a.arrivalTimeMinutes) - (b.departureTimeMinutes || b.arrivalTimeMinutes))
 
     let mergedTimings = direction === 'Down' ? [
-      ...cityStops, ...otherStops
+      ...cityStops, ...mainTripMerged
     ] : [ // Up
-      ...otherStops, ...cityStops
+      ...mainTripMerged, ...cityStops
     ]
 
     referenceTrip.stopTimings = mergedTimings.map(stop => {
