@@ -5,6 +5,8 @@ const destinationOverrides = require('../../../additional-data/coach-stops')
 const utils = require('../../../utils')
 const async = require('async')
 const { getDayOfWeek } = require('../../../public-holidays')
+const metroTypes = require('../../../additional-data/metro-tracker/metro-types')
+const { encodeTrainType } = require('../../../additional-data/consist-encoder')
 
 let undergroundLoopStations = ['Parliament', 'Flagstaff', 'Melbourne Central']
 let cityLoopStations = ['Southern Cross', ...undergroundLoopStations]
@@ -78,7 +80,9 @@ async function getAllDeparturesFromStation(station, db) {
                 takingPassengers: departure.takingPassengers,
                 stopTimings: departure.trip.stopTimings,
                 cancelled: departure.cancelled,
-                connections: []
+                connections: [],
+                tdn: departure.runID,
+                consist: { size: 0, type: 'Unknown' }
               }
             })
           }
@@ -111,6 +115,18 @@ async function getAllDeparturesFromStation(station, db) {
                 })
               } else connections = []
 
+              let consistType = { size: 0, type: 'Unknown' }
+              let { fleetNumber } = departure
+              if (fleetNumber) {
+                let matchingSet = metroTypes.find(set => fleetNumber.includes(set.leadingCar))
+                if (matchingSet) {
+                  consistType = {
+                    size: fleetNumber.length,
+                    type: matchingSet.type
+                  }
+                }
+              }
+
               return {
                 routeName: departure.routeName,
                 destination,
@@ -126,7 +142,9 @@ async function getAllDeparturesFromStation(station, db) {
                 takingPassengers: true,
                 stopTimings: departure.trip.stopTimings,
                 cancelled: departure.cancelled,
-                connections
+                connections,
+                tdn: departure.runID,
+                consistType
               }
             })
           }
@@ -444,6 +462,7 @@ function findVia(departure) {
 function trimDepartures(departures, includeStopTimings) {
   return departures.map((departure, i) => {
     let currentStop = departure.futureStops[0]
+    let delayed = (departure.estimatedDepartureTime - departure.scheduledDepartureTime) > 60000
 
     let data = {
       dest: departure.destination,
@@ -459,7 +478,10 @@ function trimDepartures(departures, includeStopTimings) {
       d: departure.direction === 'Up' ? 'U' : 'D',
       v: departure.type === 'vline' ? 1 : 0,
       times: [],
-      c: departure.connections.map(connection => ({ f: connection.for.slice(0, -16), a: connection.changeAt.slice(0, -16) }))
+      c: departure.connections.map(connection => ({ f: connection.for.slice(0, -16), a: connection.changeAt.slice(0, -16) })),
+      dly: delayed ? 1 : 0,
+      t: departure.tdn,
+      con: encodeTrainType(departure.consistType.size, departure.consistType.type)
     }
 
     if (includeStopTimings) {
