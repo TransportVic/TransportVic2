@@ -280,7 +280,7 @@ module.exports = async function (data, db) {
   }
 
   let originStop = stopTimings.find(stop => stop.stopName === trueOrigin)
-  let scheduledDepartureTime = utils.parseTime(originStop.scheduledDepartureTime)
+  let scheduledDepartureTime = utils.parseTime(stopTimings[0].scheduledDepartureTime)
   let originDepartureDay = scheduledDepartureTime.clone()
 
   let departureDay = utils.getYYYYMMDD(originDepartureDay)
