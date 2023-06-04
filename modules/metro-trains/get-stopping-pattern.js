@@ -12,9 +12,9 @@ let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne 
 let cityStations = [...cityLoopStations, 'Flinders Street']
 let borderStops = ['Richmond', 'Jolimont', 'North Melbourne', 'Flinders Street']
 let liveTrackingRoutes = [
-  'Mernda', 'hurstbridge',
+  'Mernda', 'Hurstbridge',
   'Alamein', 'Lilydale', 'Belgrave', 'Glen Waverley',
-  'Craigieburn', 'Sunbury'
+  'Craigieburn', 'Sunbury', 'Upfield'
 ]
 
 function extendMetroEstimation(stopTimings) {
