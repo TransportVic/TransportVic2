@@ -280,14 +280,14 @@ module.exports = async function (data, db) {
   }
 
   let originStop = stopTimings.find(stop => stop.stopName === trueOrigin)
-  let scheduledDepartureTime = utils.parseTime(stopTimings[0].scheduledDepartureTime)
+  let scheduledDepartureTime = utils.parseTime(originStop.scheduledDepartureTime)
   let originDepartureDay = scheduledDepartureTime.clone()
 
   let departureDay = utils.getYYYYMMDD(originDepartureDay)
   let departurePTDay = departureDay
 
   // if first stop is 12-3am push it to previous day
-  if (originStop.departureTimeMinutes < 180) {
+  if ((originStop.departureTimeMinutes % 1440) < 180) {
     stopTimings.forEach(stop => {
       if (stop.arrivalTimeMinutes !== null) stop.arrivalTimeMinutes += 1440
       if (stop.departureTimeMinutes !== null) stop.departureTimeMinutes += 1440
