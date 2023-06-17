@@ -462,7 +462,7 @@ function findVia(departure) {
 function trimDepartures(departures, includeStopTimings) {
   return departures.map((departure, i) => {
     let currentStop = departure.futureStops[0]
-    let delayed = (departure.estimatedDepartureTime - departure.scheduledDepartureTime) > 60000
+    let delay = (departure.estimatedDepartureTime - departure.scheduledDepartureTime) / 60000
 
     let data = {
       dest: departure.destination,
@@ -479,7 +479,7 @@ function trimDepartures(departures, includeStopTimings) {
       v: departure.type === 'vline' ? 1 : 0,
       times: [],
       c: departure.connections.map(connection => ({ f: connection.for.slice(0, -16), a: connection.changeAt.slice(0, -16) })),
-      dly: delayed ? 1 : 0,
+      dly: delay,
       t: departure.tdn,
       con: encodeTrainType(departure.consist.size, departure.consist.type)
     }
