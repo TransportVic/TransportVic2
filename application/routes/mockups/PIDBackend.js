@@ -462,7 +462,7 @@ function findVia(departure) {
 function trimDepartures(departures, includeStopTimings) {
   return departures.map((departure, i) => {
     let currentStop = departure.futureStops[0]
-    let delay = (departure.estimatedDepartureTime - departure.scheduledDepartureTime) / 60000
+    let delay = departure.estimatedDepartureTime ? (departure.estimatedDepartureTime - departure.scheduledDepartureTime) / 60000 : 0
 
     let data = {
       dest: departure.destination,
