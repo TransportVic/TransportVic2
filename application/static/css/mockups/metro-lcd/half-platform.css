@@ -68,7 +68,7 @@ div.nextDeparture {
   flex-direction: column;
 }
 
-@-webkit-keyframes burnLine {
+@keyframes burnLine {
   0% {
     width: 0
     }
@@ -282,15 +282,18 @@ div.headers span.actual {
 
 div.followingDeparture {
   display: flex;
-  justify-content: center;
   flex-direction: column;
-  height: calc(var(--height) * 0.21);
+  height: calc(var(--height) * 0.24);
 }
 
-div.followingDeparture > div {
+div.followingDeparture div.departureData {
   display: flex;
   align-content: center;
-  margin-top: calc(-var(--height) * 0.02);
+  margin-top: calc(var(--height) * 0.02);
+}
+
+div.right div.headers span {
+  font-family: "NetworkSansRegular";
 }
 
 div.right span.scheduled {
@@ -305,10 +308,10 @@ div.right span.destination {
 
 div.right span.actual {
   margin-left: auto;
-  margin-right: calc(var(--width) * 0.005);
+  margin-right: calc(var(--width) * 0.002);
   text-align: right;
   width: calc(var(--width) * 0.03);
-  font-family: "NetworkSansBold";
+  font-family: "NetworkSansRegular";
 }
 
 div.right span.min {
@@ -320,7 +323,7 @@ div.right span.min {
 div.followingDeparture span.stoppingType {
   margin-top: calc(var(--height) * 0.012);
   margin-left: calc(var(--width) * 0.005);
-  font-family: "NetworkSansRegular";
+  font-family: "NetworkSansLight";
 }
 
 div.followingDeparture span {

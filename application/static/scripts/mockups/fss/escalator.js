@@ -208,7 +208,7 @@ function updateBody(firstTime) {
 
       $('.firstDepartureInfo .platform').className = 'platform ' + firstDepartureClass
       $('.firstDepartureInfo .platform').textContent = firstDeparture.plt
-      $('.firstDepartureInfo .firstDepartureTime').textContent = formatTimeA(new Date(firstDeparture.sch))
+      $('.firstDepartureInfo .firstDepartureTime').textContent = formatTime(new Date(firstDeparture.sch), { showAMPM: 1 })
       $('.firstDepartureInfo .firstDestination').textContent = destination
       $('.firstDepartureInfo .firstStoppingType').textContent = firstStoppingType.replace('Limited', 'Ltd')
       $('.firstDepartureInfo .minutesToDeparture span').textContent = minutesToDeparture(actualDepartureTime, true)
@@ -260,7 +260,7 @@ function updateBody(firstTime) {
           if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
           $('.lineColour', departureRow).className = 'lineColour ' + departureClass
-          $('.scheduledDepartureTime', departureRow).textContent = formatTimeA(new Date(departure.sch))
+          $('.scheduledDepartureTime', departureRow).textContent = formatTime(new Date(departure.sch), { showAMPM: 1 })
           $('.destination', departureRow).textContent = destination
           $('.platform span', departureRow).textContent = departure.plt
           $('.platform', departureRow).className = 'platform ' + departureClass

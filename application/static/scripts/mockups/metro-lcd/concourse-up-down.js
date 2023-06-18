@@ -146,7 +146,7 @@ function updateBody(firstTime, n) {
           if (departure.v) departureRow.className = 'departure vline'
           else departureRow.className = 'departure'
           departureRow.style = 'display: flex;'
-          $('.departureTime', departureRow).textContent = formatTimeB(new Date(departure.sch))
+          $('.departureTime', departureRow).textContent = formatTime(new Date(departure.sch))
           $('.destination', departureRow).textContent = shorternDestination(departure.dest)
 
           let stoppingType = shortenStoppingType(departure.type)

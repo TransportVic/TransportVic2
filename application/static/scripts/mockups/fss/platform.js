@@ -6,7 +6,7 @@ function createStationRow(name, stoppingType, clazz) {
 }
 
 function setTime() {
-  $('.clock span').textContent = formatTimeA(new Date(), true, true)
+  $('.clock span').textContent = formatTime(new Date(), { includeSeconds: 1, showAMPM: 1, spaceBeforeAMPM: 1 })
 }
 
 function setupClock() {
@@ -216,7 +216,7 @@ function updateBody(firstTime) {
       let actualDepartureTime = new Date(firstDeparture.est || firstDeparture.sch)
 
       $('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
-      $('.firstDepartureInfo .firstDepartureTime').textContent = formatTimeA(new Date(firstDeparture.sch))
+      $('.firstDepartureInfo .firstDepartureTime').textContent = formatTime(new Date(firstDeparture.sch), { showAMPM: 1 })
       $('.firstDepartureInfo .firstDestination').textContent = destination
       $('.firstDepartureInfo .firstStoppingType').textContent = firstStoppingType.replace('Limited', 'Ltd')
       $('.firstDepartureInfo .minutesToDeparture span').textContent = minutesToDeparture(actualDepartureTime, true)
@@ -271,7 +271,7 @@ function updateBody(firstTime) {
           }
 
           $('.lineColour', departureRow).className = 'lineColour ' + departureClass
-          $('.scheduledDepartureTime', departureRow).textContent = formatTimeA(new Date(departure.sch))
+          $('.scheduledDepartureTime', departureRow).textContent = formatTime(new Date(departure.sch), { showAMPM: 1 })
           $('.destination', departureRow).textContent = destination
           $('.destination', departureRow).className = destinationClass
           $('.stoppingType', departureRow).textContent = stoppingType.replace('Limited', 'Ltd')

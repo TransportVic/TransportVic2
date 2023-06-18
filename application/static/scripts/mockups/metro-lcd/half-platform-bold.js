@@ -174,20 +174,20 @@ function updateBody(firstTime) {
           $('.firstDestination').className += ' smaller'
         }
 
-        $('div.scheduled p:nth-child(2)').textContent = formatTimeB(new Date(firstDeparture.sch))
+        $('div.scheduled p.scheduledTime').textContent = formatTime(new Date(firstDeparture.sch))
 
         if (firstDeparture.est) {
           let minutesToDeparture = rawMinutesToDeparture(new Date(firstDeparture.est))
           if (minutesToDeparture > 0) {
-            $('div.actual div span:nth-child(1)').textContent = minutesToDeparture
-            $('div.actual div span:nth-child(2)').textContent = 'min'
+            $('div.actual div span.actualTime').textContent = minutesToDeparture
+            $('div.actual div span.actualMin').textContent = 'min'
           } else {
-            $('div.actual div span:nth-child(1)').textContent = 'Now'
-            $('div.actual div span:nth-child(2)').textContent = ''
+            $('div.actual div span.actualTime').textContent = 'Now'
+            $('div.actual div span.actualMin').textContent = ''
           }
         } else {
-          $('div.actual div span:nth-child(1)').textContent = '--'
-          $('div.actual div span:nth-child(2)').textContent = 'min'
+          $('div.actual div span.actualTime').textContent = '--'
+          $('div.actual div span.actualMin').textContent = 'min'
         }
 
         let firstStoppingType = firstDeparture.type
@@ -209,7 +209,7 @@ function updateBody(firstTime) {
         if (secondDeparture.v) secondClassName = ' vline'
 
         $('div.bottomRow').className = `bottomRow${secondClassName}`
-        $('div.bottomRow > span:nth-child(1)').textContent = formatTimeB(new Date(secondDeparture.sch))
+        $('div.bottomRow span.scheduledTime').textContent = formatTime(new Date(secondDeparture.sch))
 
         let destination = secondDeparture.dest
 
@@ -217,26 +217,26 @@ function updateBody(firstTime) {
         if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
         if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
-        let nextDestinationSpan = $('div.bottomRow > span:nth-child(2)')
+        let nextDestinationSpan = $('div.bottomRow span.destination')
         nextDestinationSpan.textContent = destination
 
-        nextDestinationSpan.className = destination === 'Flemington Races' ? 'smaller' : ''
+        nextDestinationSpan.className = destination === 'Flemington Races' ? 'destination smaller' : 'destination'
 
         let secondStoppingType = shortenStoppingType(secondDeparture.type)
         if (secondDeparture.via) {
           secondStoppingType += ' via ' + secondDeparture.via
         }
-        $('div.bottomRow > span:nth-child(3)').textContent = secondStoppingType
+        $('div.bottomRow span.stoppingType').textContent = secondStoppingType
 
         if (secondDeparture.est)
-          $('div.bottomRow > div > span:nth-child(1)').textContent = rawMinutesToDeparture(new Date(secondDeparture.est))
-        else $('div.bottomRow > div > span:nth-child(1)').textContent = '--'
+          $('div.bottomRow div.actualTimeGroup span.actualTime').textContent = rawMinutesToDeparture(new Date(secondDeparture.est))
+        else $('div.bottomRow div.actualTimeGroup span.actualTime').textContent = '--'
       } else {
         $('div.bottomRow').className = `bottomRow`
-        $('div.bottomRow > span:nth-child(1)').textContent = '--'
-        $('div.bottomRow > span:nth-child(2)').textContent = '--'
-        $('div.bottomRow > span:nth-child(3)').textContent = ''
-        $('div.bottomRow > div > span:nth-child(1)').textContent = '--'
+        $('div.bottomRow span.scheduledTime').textContent = '--'
+        $('div.bottomRow span.destination').textContent = '--'
+        $('div.bottomRow span.stoppingType').textContent = ''
+        $('div.bottomRow span.actualTime').textContent = '--'
       }
 
       if (firstDeparture.sch !== previousDeparture) {
@@ -269,8 +269,8 @@ function updateBody(firstTime) {
           showingBurnLine = true
 
           $('.burnLine').className = 'burnLine active'
-          $('div.actual div span:nth-child(1)').textContent = 'Now'
-          $('div.actual div span:nth-child(2)').textContent = ''
+          $('div.topRow div.actual span.actualTime').textContent = 'Now'
+          $('div.topRow div.actual span.actualMin').textContent = ''
 
           setTimeout(() => {
             showingStandClear = true
@@ -376,7 +376,7 @@ $.ready(() => {
 })
 
 function setTime() {
-  $('.clock span').textContent = formatTimeB(new Date())
+  $('.clock span').textContent = formatTime(new Date())
 }
 
 function setupClock() {

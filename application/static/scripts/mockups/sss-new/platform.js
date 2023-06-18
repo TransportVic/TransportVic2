@@ -135,7 +135,7 @@ function processDepartures(departures, side, firstTime) {
       $$('.topLineBanner').className = 'topLineBanner ' + firstDepartureClass
 
       $$('.firstDepartureInfo .platform').textContent = firstDeparture.plt
-      $$('.firstDepartureInfo .scheduled').textContent = formatTimeB(new Date(firstDeparture.sch))
+      $$('.firstDepartureInfo .scheduled').textContent = formatTime(new Date(firstDeparture.sch))
 
       let minutesToDeparture = rawMinutesToDeparture(new Date(firstDeparture.est || firstDeparture.sch))
       if (minutesToDeparture === 0) {
@@ -194,7 +194,7 @@ function updateBody(firstTime) {
 }
 
 function setTime() {
-  $('.clock span').textContent = formatTimeB(new Date(), true)
+  $('.clock span').textContent = formatTime(new Date(), { includeSeconds: 1 })
 }
 
 function setupClock() {

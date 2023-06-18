@@ -204,7 +204,7 @@ function updateBody() {
         if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
         $('.firstDestination').textContent = destination
-        $('.scheduledDiv span:nth-child(2)').textContent = formatTimeB(new Date(firstDeparture.sch))
+        $('.scheduledDiv span:nth-child(2)').textContent = formatTime(new Date(firstDeparture.sch))
 
         if (firstDeparture.type === 'vline') {
           $('.nextDeparture .departureInfo').className = 'departureInfo vline'
@@ -242,7 +242,7 @@ function updateBody() {
           if (destination === 'Upper Ferntree Gully') destination = 'Upper F.T Gully'
           if (destination === 'Flemington Racecourse') destination = 'Flemington Races'
 
-          $('.scheduled', div).textContent = formatTimeB(new Date(departure.sch))
+          $('.scheduled', div).textContent = formatTime(new Date(departure.sch))
           $('.destination', div).textContent = destination
           if (departure.est)
             $('.actual', div).textContent = `${rawMinutesToDeparture(new Date(departure.est))} min`

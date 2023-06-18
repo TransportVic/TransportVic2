@@ -1,5 +1,5 @@
 function setTime() {
-  $('.clock span').textContent = formatTimeA(new Date(), true, true)
+  $('.clock span').textContent = formatTime(new Date(), { includeSeconds: 1, showAMPM: 1, spaceBeforeAMPM: 1 })
 }
 
 function setupClock() {

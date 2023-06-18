@@ -453,7 +453,7 @@ function findVia(departure) {
     if (northernGroup.includes(departure.routeName)) {
       if (sssIndex !== -1) return 'Sthn Cross'
     } else {
-      if (rmdIndex !== -1) return 'Richmond'
+      if (departure.destination === 'City Loop' && rmdIndex !== -1) return 'Richmond'
       else if (jliIndex !== -1) return 'Jolimont'
     }
   }

@@ -66,7 +66,7 @@ div.firstDeparture  {
   height: calc(var(--height) * (1 - 0.01 - 0.25));
 }
 
-@-webkit-keyframes burnLine {
+@keyframes burnLine {
   0% {
     width: 0
     }
@@ -138,14 +138,14 @@ div.scheduled {
   width: calc(var(--width) * 0.20);
 }
 
-div.scheduled p:nth-child(1), div.actual > p:nth-child(1) {
+div.scheduled p.header, div.actual p.header {
   font-family: "NetworkSansRegular";
   font-size: calc(var(--height) * 0.107);
   margin-top: calc(var(--height) * 0.035);
   letter-spacing: 0;
 }
 
-div.scheduled p:nth-child(2) {
+div.scheduled p.scheduledTime {
   font-family: "NetworkSansBold";
   font-size: calc(var(--height) * 0.258);
   margin-left: calc(var(--width) * 0.004);
@@ -156,22 +156,22 @@ div.actual {
   width: calc(var(--width) * 0.16)
 }
 
-div.actual div:nth-child(2) {
+div.actual div.actualTimeGroup {
   margin-top: calc(var(--height) * -0.045);
 }
 
-div.actual div:nth-child(2) > span:nth-child(1) {
+div.actual div.actualTimeGroup > span.actualTime {
   font-family: "NetworkSansBold";
   font-size: calc(var(--height) * 0.258);
   margin-left: calc(var(--width) * 0.004);
 }
 
-div.actual div:nth-child(2) > span:nth-child(2) {
+div.actual div.actualTimeGroup > span.actualMin {
   font-size: calc(var(--height) * 0.1);
 }
 
 div.middleRow p {
-  font-family: "NetworkSansRegular";
+  font-family: "NetworkSansLight";
   font-size: calc(var(--height) * 0.222);
   margin-left: calc(var(--width) * 0.005);
   white-space: nowrap;
@@ -220,7 +220,6 @@ div.bottomRow {
   align-items: center;
   height: calc(var(--height) * 0.25);
   font-size: calc(var(--width) * 0.038);
-  font-family: "NetworkSansBold";
 }
 
 div.bottomRow.vline {
@@ -231,40 +230,41 @@ div.bottomRow > * {
   margin-top: calc(var(--height) * -0.007);
 }
 
-div.bottomRow > span:nth-child(1) {
-  margin-left: calc(var(--width) * 0.005);
-  width: calc(var(--width) * 0.10);
+div.bottomRow span.scheduledTime {
+  font-family: "NetworkSansRegular";
+  margin-left: calc(var(--width) * 0.012);
+  min-width: calc(var(--width) * 0.05);
 }
 
-div.bottomRow > span:nth-child(2) {
-  margin-left: calc(var(--width) * 0.03);
-  width: calc(var(--width) * 0.275);
+div.bottomRow span.destination {
+  font-family: "NetworkSansBold";
+  margin-left: calc(var(--width) * 0.01);
   letter-spacing: calc(var(--width) * -0.001);
 }
 
-div.bottomRow > span:nth-child(2).smaller {
+div.bottomRow span.destination.smaller {
   font-size: calc(var(--width) * 0.034);
 }
 
-div.bottomRow > span:nth-child(3) {
-  margin-left: calc(var(--width) * 0.015);
-  width: calc(var(--width) * 0.22);
+div.bottomRow span.stoppingType {
+  font-family: "NetworkSansLight";
+  margin-left: calc(var(--width) * 0.02);
   letter-spacing: calc(var(--width) * -0.001);
 
   white-space: nowrap;
   overflow: hidden
 }
 
-div.bottomRow > div:nth-child(4) {
+div.bottomRow div.actualTimeGroup {
   margin-left: auto;
   margin-right: calc(var(--width) * 0.01);
 }
 
-div.bottomRow > div:nth-child(4) span:nth-child(1) {
+div.bottomRow div.actualTimeGroup span.actualTime {
   width: calc(var(--width) * 0.15);
 }
 
-div.bottomRow > div:nth-child(4) span:nth-child(2) {
+div.bottomRow div.actualTimeGroup span.actualMin {
   font-size: calc(var(--height) * 0.08);
   width: calc(var(--width) * 0.15);
 }

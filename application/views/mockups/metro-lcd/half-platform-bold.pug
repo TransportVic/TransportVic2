@@ -29,25 +29,25 @@ html
             p.firstDestination --
             div.firstDepartureInfo
               div.scheduled
-                p Scheduled
-                p --
+                p.header Scheduled
+                p.scheduledTime --
               div.actual
-                p Departing
-                div
-                  span --
-                  span min
+                p.header Departing
+                div.actualTimeGroup
+                  span.actualTime --
+                  span.actualMin min
           div.middleRow
             p.serviceMessage Stand Clear Train Departing
             p.stoppingType --
             p(style='opacity: 0;' data-text='--').stoppingPattern --
         div.whiteLine
         div.bottomRow
-          span --
-          span --
-          span --
-          div
-            span --
-            span min
+          span.scheduledTime --
+          span.destination --
+          span.stoppingType
+          div.actualTimeGroup
+            span.actualTime --
+            span.actualMin min
             
           div.clock
            span=now.format('h:mm')

@@ -88,7 +88,7 @@ function updateBody() {
 }
 
 function setTime() {
-  $('.clock span').textContent = formatTimeB(new Date())
+  $('.clock span').textContent = formatTime(new Date())
 }
 
 function setupClock() {
