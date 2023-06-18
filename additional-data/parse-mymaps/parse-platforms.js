@@ -121,7 +121,7 @@ let knownStations = [
   "Glen Waverley",
   "Glenbervie",
   "Glenferrie",
-  "Glenhuntly",
+  "Glen Huntly",
   "Glenroy",
   "Goulburn",
   "Gowrie",

@@ -150,7 +150,7 @@ module.exports = {
   "Armadale": [...platr(4, [], 'half-platform'), conc('up-down')],
   "Malvern": [...platr(4, [], 'half-platform'), conc('up-down')],
   "Caulfield": [...platr(4, [], 'platform'), conc('up-down')],
-  "Glenhuntly": [],
+  "Glen Huntly": [],
   "Ripponlea": [...platr(2, [], 'half-platform')],
   "Elsternwick": [...platr(2, [], 'half-platform')],
   "Camberwell": [...platr(3, [], 'half-platform-bold')],

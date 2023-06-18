@@ -13855,20 +13855,20 @@ STATION: Caulfield</value>
       </Polygon>
     </Placemark>
     <Placemark>
-      <name>Glenhuntly</name>
-      <description><![CDATA[description: description: <br>PLATFORM: 3<br>STATION: Glenhuntly<br>PLATFORM: 3<br>STATION: Glenhuntly]]></description>
+      <name>Glen Huntly</name>
+      <description><![CDATA[description: description: <br>PLATFORM: 3<br>STATION: Glen Huntly<br>PLATFORM: 3<br>STATION: Glen Huntly]]></description>
       <styleUrl>#poly-FF0000-1000-0</styleUrl>
       <ExtendedData>
         <Data name="description">
           <value>description: 
 PLATFORM: 3
-STATION: Glenhuntly</value>
+STATION: Glen Huntly</value>
         </Data>
         <Data name="PLATFORM">
           <value>3</value>
         </Data>
         <Data name="STATION">
-          <value>Glenhuntly</value>
+          <value>Glen Huntly</value>
         </Data>
       </ExtendedData>
       <Polygon>
@@ -13888,20 +13888,20 @@ STATION: Glenhuntly</value>
       </Polygon>
     </Placemark>
     <Placemark>
-      <name>Glenhuntly</name>
-      <description><![CDATA[description: description: <br>PLATFORM: 2<br>STATION: Glenhuntly<br>PLATFORM: 2<br>STATION: Glenhuntly]]></description>
+      <name>Glen Huntly</name>
+      <description><![CDATA[description: description: <br>PLATFORM: 2<br>STATION: Glen Huntly<br>PLATFORM: 2<br>STATION: Glen Huntly]]></description>
       <styleUrl>#poly-FF0000-1000-0</styleUrl>
       <ExtendedData>
         <Data name="description">
           <value>description: 
 PLATFORM: 2
-STATION: Glenhuntly</value>
+STATION: Glen Huntly</value>
         </Data>
         <Data name="PLATFORM">
           <value>2</value>
         </Data>
         <Data name="STATION">
-          <value>Glenhuntly</value>
+          <value>Glen Huntly</value>
         </Data>
       </ExtendedData>
       <Polygon>
@@ -13921,20 +13921,20 @@ STATION: Glenhuntly</value>
       </Polygon>
     </Placemark>
     <Placemark>
-      <name>Glenhuntly</name>
-      <description><![CDATA[description: description: <br>PLATFORM: 1<br>STATION: Glenhuntly<br>PLATFORM: 1<br>STATION: Glenhuntly]]></description>
+      <name>Glen Huntly</name>
+      <description><![CDATA[description: description: <br>PLATFORM: 1<br>STATION: Glen Huntly<br>PLATFORM: 1<br>STATION: Glen Huntly]]></description>
       <styleUrl>#poly-FF0000-1000-0</styleUrl>
       <ExtendedData>
         <Data name="description">
           <value>description: 
 PLATFORM: 1
-STATION: Glenhuntly</value>
+STATION: Glen Huntly</value>
         </Data>
         <Data name="PLATFORM">
           <value>1</value>
         </Data>
         <Data name="STATION">
-          <value>Glenhuntly</value>
+          <value>Glen Huntly</value>
         </Data>
       </ExtendedData>
       <Polygon>

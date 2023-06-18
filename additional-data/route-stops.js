@@ -91,7 +91,7 @@ let lines = {
     'Armadale',
     'Malvern',
     'Caulfield',
-    'Glenhuntly',
+    'Glen Huntly',
     'Ormond',
     'McKinnon',
     'Bentleigh',
