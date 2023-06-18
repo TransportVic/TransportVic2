@@ -75,6 +75,7 @@ self.addEventListener('install', event => {
       '/static/fonts/NetworkSans-2018-Bold.ttf',
       '/static/fonts/NetworkSans-2018-Medium.ttf',
       '/static/fonts/NetworkSans-2018-Regular.ttf',
+      '/static/fonts/NetworkSans-2018-Light.ttf',
       '/static/fonts/Arial-Bold.ttf',
 
       '/static/images/decals/ac.svg',

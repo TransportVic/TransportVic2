@@ -20,12 +20,11 @@ div.fullMessage > img {
 }
 
 div.fullMessage > * {
-  font-size: calc(var(--height) * 0.15);
-  line-height: calc(var(--height) * 0.13);
-  height: calc(var(--height) * 0.13);
+  font-size: calc(var(--height) * 0.11);
+  line-height: 1;
+  text-align: center;
   margin: calc(var(--width) * 0.01);
   font-family: "NetworkSansRegular";
-  white-space: nowrap;
 }
 
 div.message, div.serviceMessage {
@@ -38,15 +37,15 @@ div.message, div.serviceMessage {
 }
 
 div.message p, div.serviceMessage p {
-  font-size: calc(var(--height) * 0.12);
+  font-size: calc(var(--height) * 0.135);
   line-height: 1.1;
 }
 
 div.message p.large, div.serviceMessage p.large {
-  font-size: calc(var(--height) * 0.14);
+  font-size: calc(var(--height) * 0.15);
 }
 
-div.message p.large, div.serviceMessage p.larger {
+div.message p.larger, div.serviceMessage p.larger {
   font-size: calc(var(--height) * 0.17);
 }
 
@@ -79,7 +78,7 @@ div.nextDeparture {
   flex-direction: column;
 }
 
-@-webkit-keyframes burnLine {
+@keyframes burnLine {
   0% {
     width: 0
     }
@@ -183,6 +182,7 @@ div.stops {
 div.stops div.stopsColumn {
   min-width: calc(var(--width) * 0.12);
   margin-right: auto;
+  font-family: "NetworkSansRegular";
 }
 
 div.stops div.stopsColumn:nth-child(1) div {
@@ -276,7 +276,6 @@ div.followingDeparture:nth-child(1) {
 
 div.followingDeparture {
   height: calc(var(--height) * 0.084);
-  font-family: "NetworkSansBold";
 }
 
 div.followingDeparture span.scheduled {
@@ -285,23 +284,18 @@ div.followingDeparture span.scheduled {
 }
 
 div.followingDeparture span.destination {
-  width: calc(var(--width) * 0.3);
+  font-family: "NetworkSansBold";
 }
 
 div.followingDeparture span.stoppingType {
-  margin-left: calc(var(--width) * 0.005);
-  width: calc(var(--width) * 0.46);
+  margin-left: calc(var(--width) * 0.011);
+  font-family: "NetworkSansLight";
 }
 
 div.followingDeparture span.actual {
-  margin-left: auto;
-  margin-right: calc(var(--width) * 0.01);
   text-align: right;
-  width: calc(var(--width) * 0.05);
-}
-
-div.followingDeparture span.min {
-  text-align: right;
+  float: right;
+  margin-right: calc(var(--width) * 0.02);
 }
 
 div.followingDeparture span {

@@ -245,10 +245,11 @@ function updateBody() {
           $('.scheduled', div).textContent = formatTimeB(new Date(departure.sch))
           $('.destination', div).textContent = destination
           if (departure.est)
-            $('.actual', div).textContent = rawMinutesToDeparture(new Date(departure.est))
+            $('.actual', div).textContent = `${rawMinutesToDeparture(new Date(departure.est))} min`
           else
-            $('.actual', div).textContent = '--'
-          $('.stoppingType', div).textContent = departure.type
+            $('.actual', div).textContent = '-- min'
+
+          $('.stoppingType', div).textContent = `${departure.type}${departure.v ? ` via ${departure.v}` : ''}`
 
           if (departure.v) {
             div.className = 'followingDeparture vline'
