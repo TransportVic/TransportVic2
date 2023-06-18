@@ -96,12 +96,14 @@ div.details {
 div.details span.destinationName {
   display: inline-block;
   font-size: calc(var(--height) * 0.025);
-  margin-top: 1.2%;
   margin-left: calc(var(--width) * 0.01);
 }
 
 div.details span.stoppingAt {
-  font-size: calc(var(--height) * 0.035);
+  font-family: "NetworkSansMedium";
+  position: relative;
+  left: calc(var(--width) * 0.01);
+  font-size: calc(var(--height) * 0.017);
 }
 
 div.nextDepartures {
@@ -149,8 +151,6 @@ div.nextDepartures div.departure div.minutesToDeparture {
   margin: 0 calc(var(--width) * 0.017);
   width: calc(var(--width) * 0.2);
   height: 100%;
-  border-radius: calc(var(--width) * 0.005);
-  background-color: #000000;
   color: #ffffff;
 
   display: flex;

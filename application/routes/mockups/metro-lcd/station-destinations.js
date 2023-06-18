@@ -8,8 +8,9 @@ module.exports = {
     },
     {
       name: 'City Loop',
+      caption: 'Flagstaff, Parliament and Melbourne Central',
       targets: ['Flinders Street', 'Flagstaff'],
-      id: 'FSY-CCL-FSS',
+      id: 'FSY-CLP-FSS',
       count: 2
     },
     {
@@ -88,7 +89,7 @@ module.exports = {
     {
       name: 'Belgrave',
       targets: ['Belgrave'],
-      id: 'FGS-BEL',
+      id: 'FGS-BEG',
       count: 1
     },
     {
@@ -222,58 +223,95 @@ module.exports = {
   ],
   'Richmond': [
     {
+      name: 'Flinders Street',
+      targets: ['Flinders Street'],
+      id: 'RMD-FSS',
+      count: 2
+    },
+    {
+      name: 'City Loop',
+      caption: 'Flagstaff, Parliament and Melbourne Central',
+      targets: ['Flinders Street', 'Flagstaff'],
+      id: 'RMD-CLP',
+      count: 2
+    },
+    {
+      name: 'Caulfield',
+      targets: ['Caulfield'],
+      id: 'RMD-CFD',
+      count: 1
+    },
+    {
+      name: 'Dandenong',
+      targets: ['Dandenong'],
+      id: 'RMD-DNG',
+      count: 1
+    },
+    {
       name: 'Cranbourne',
       targets: ['Cranbourne'],
       id: 'RMD-CBE',
-      count: 2
+      count: 1
     },
     {
       name: 'Frankston',
       targets: ['Frankston'],
       id: 'RMD-FKN',
-      count: 2
+      count: 1
     },
     {
       name: 'Pakenham',
       targets: ['Pakenham'],
       id: 'RMD-PKM',
-      count: 2
+      count: 1
     },
     {
       name: 'Sandringham',
       targets: ['Sandringham'],
       id: 'RMD-SHM',
-      count: 2
+      count: 1
     },
     {
       name: 'Alamein',
       targets: ['Alamein'],
       id: 'RMD-ALM',
-      count: 2
+      count: 1
+    },
+    {
+      name: 'Ringwood',
+      targets: ['Ringwood'],
+      id: 'RMD-RWD',
+      count: 1
     },
     {
       name: 'Belgrave',
       targets: ['Belgrave'],
-      id: 'RMD-BEL',
-      count: 2
+      id: 'RMD-BEG',
+      count: 1
     },
     {
       name: 'Blackburn',
       targets: ['Blackburn'],
       id: 'RMD-BBN',
-      count: 2
+      count: 1
     },
     {
       name: 'Glen Waverley',
       targets: ['Glen Waverley'],
       id: 'RMD-GWY',
-      count: 2
+      count: 1
     },
     {
       name: 'Lilydale',
       targets: ['Lilydale'],
       id: 'RMD-LIL',
-      count: 2
+      count: 1
+    },
+    {
+      name: 'Traralgon',
+      targets: ['Traralgon'],
+      id: 'RMD-TRG',
+      count: 1
     }
   ],
   'Parliament': [
@@ -292,7 +330,7 @@ module.exports = {
     {
       name: 'Belgrave',
       targets: ['Belgrave'],
-      id: 'PAR-BEL',
+      id: 'PAR-BEG',
       count: 1
     },
     {

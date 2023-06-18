@@ -27,7 +27,7 @@ html
               div.details
                 span.destinationName #{destination.name}
                 br
-                span.stoppingAt
+                span.stoppingAt #{destination.caption}
               div(class='nextDepartures departure-' + destination.count + '-' + destination.count)
                 for _, i in Array(destination.count)
                   if i !== 0
