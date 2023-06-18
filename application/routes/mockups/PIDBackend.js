@@ -432,6 +432,7 @@ function findVia(departure) {
   let destination = futureStops[futureStops.length - 1]
 
   let rmdIndex = stopsUpToDest.indexOf('Richmond')
+  let jliIndex = stopsUpToDest.indexOf('Jolimont')
   let sssIndex = stopsUpToDest.indexOf('Southern Cross')
   let fgsIndex = stopsUpToDest.indexOf('Flagstaff')
   let fssIndex = stopsUpToDest.indexOf('Flinders Street')
@@ -453,6 +454,7 @@ function findVia(departure) {
       if (sssIndex !== -1) return 'Sthn Cross'
     } else {
       if (rmdIndex !== -1) return 'Richmond'
+      else if (jliIndex !== -1) return 'Jolimont'
     }
   }
 
@@ -462,7 +464,7 @@ function findVia(departure) {
 function trimDepartures(departures, includeStopTimings) {
   return departures.map((departure, i) => {
     let currentStop = departure.futureStops[0]
-    let delay = departure.estimatedDepartureTime ? (departure.estimatedDepartureTime - departure.scheduledDepartureTime) / 60000 : 0
+    let delay = departure.estimatedDepartureTime ? Math.round((departure.estimatedDepartureTime - departure.scheduledDepartureTime) / 60000) : 0
 
     let data = {
       dest: departure.destination,
