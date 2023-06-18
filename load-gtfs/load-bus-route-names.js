@@ -43,9 +43,9 @@ database.connect({
     if (routeName.includes('(from') || routeName.includes('(until') || routeName.includes('(discontinued')) {
       let now = utils.now().startOf('day')
 
-      let parts = routeName.match(/\((until|from|discontinued) (\d{1,2}-\d{1,2}-\d{1,4})\)/)
+      let parts = routeName.match(/\((until|from|discontinued) (\d{1,2}-*\d{1,2}-*\d{1,4})\)/)
       if (!parts) {
-        parts = routeName.match(/\((until|from|discontinued) (\d{1,2} \w* \d{1,4})\)/)
+        parts = routeName.match(/\((until|from|discontinued) (\d{1,2}\w?\w? \w* \d{1,4})\)/)
       }
 
       let type = parts[1], date = parts[2]

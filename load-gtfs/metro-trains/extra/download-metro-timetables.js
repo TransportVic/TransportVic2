@@ -30,7 +30,7 @@ async function main () {
   await async.forEach(Object.keys(lineIDs), async lineName => {
     let lineID = lineIDs[lineName]
     let body = await utils.request(urls.metroWorkingTimetable.format(lineID), {
-      timeout: 20000
+      timeout: 300000
     })
 
     let filePath = path.join(__dirname, 'timetables', lineName + '.json')

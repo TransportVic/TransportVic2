@@ -444,6 +444,7 @@ function findVia(departure) {
     } else {
       if (fgsIndex !== -1) return 'City Loop'
       if (sssIndex !== -1) return 'Sthn Cross'
+      if (jliIndex !== -1) return 'Jolimont'
     }
 
     if (rmdIndex !== -1) return 'Richmond'

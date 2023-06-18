@@ -6,6 +6,9 @@ const utils = require('../../utils')
 const gtfsModes = require('../gtfs-modes')
 const datamartModes = require('../datamart-modes')
 const updateStats = require('../utils/stats')
+const suburbBoundaries = require('../../additional-data/geospatial/suburb-boundaries')
+const turf = require('@turf/turf')
+
 let gtfsID = process.argv[2]
 
 let gtfsMode = gtfsModes[gtfsID]
@@ -30,9 +33,15 @@ async function read5000Stops() {
 
     let stopGTFSID = line[0]
     let originalName = line[1]
+    let location = {
+      type: 'Point',
+      coordinates: [parseFloat(line[3]), parseFloat(line[2])]
+    }
 
-    if (stopGTFSID === 35117) {
-      originalName += ' (Ballarat Central)'
+    if (originalName[originalName.length - 1] !== ')') {
+      let suburb = suburbBoundaries.features.find(suburb => turf.booleanPointInPolygon(location, suburb))
+      let suburbName = suburb.properties.LOC_NAME
+      originalName += ` (${suburbName})`
     }
 
     let adjustedOriginalStopName = utils.adjustRawStopName(originalName)
@@ -58,10 +67,7 @@ async function read5000Stops() {
       originalName,
       fullStopName,
       stopGTFSID,
-      location: {
-        type: 'Point',
-        coordinates: [parseFloat(line[3]), parseFloat(line[2])]
-      },
+      location,
       stopNumber,
       mode: gtfsMode,
       suburb

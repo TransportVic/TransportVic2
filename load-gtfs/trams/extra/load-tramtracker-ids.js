@@ -144,6 +144,7 @@ database.connect({}, async () => {
       })
 
       let bestMatch = matches.sort((a, b) => b[1] - a[1])[0]
+      if (!bestMatch) console.log(dbStop)
       if (bestMatch[1] > 0) {
         let stopGTFSID = bestMatch[0]
         dbStop.bays = dbStop.bays.map(bay => {
