@@ -1,3 +1,7 @@
+html {
+  background-color: #222222;
+}
+
 div.content {
   background-color: #222222 !important;
   color: white !important;

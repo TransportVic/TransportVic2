@@ -2,6 +2,10 @@
   --font-scale: 1.3333;
 }
 
+html {
+  background-color: #222222;
+}
+
 body {
   width: 100vw;
   height: 100vh;
