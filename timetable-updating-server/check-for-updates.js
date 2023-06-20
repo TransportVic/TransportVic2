@@ -113,39 +113,37 @@ async function updateTimetables() {
 
 console.log('Checking for updates...')
 
-updateTimetables()
+fetch(urls.gtfsFeed, {
+  method: 'HEAD'
+}).then(async res => {
+  if (res.status !== 200) {
+    console.log('Unable to download timetables: Bad Request Status', res.status)
+    await discordUpdate(`[Updater]: Unable to download new timetables (HTTP ${res.status}), skipping update`)
+    process.exit(2)
+  }
 
-// fetch(urls.gtfsFeed, {
-//   method: 'HEAD'
-// }).then(async res => {
-//   if (res.status !== 200) {
-//     console.log('Unable to download timetables: Bad Request Status', res.status)
-//     await discordUpdate(`[Updater]: Unable to download new timetables (HTTP ${res.status}), skipping update`)
-//     process.exit(2)
-//   }
+  let lastModified = res.headers.get('last-modified')
 
-//   let lastModified = res.headers.get('last-modified')
+  if (lastModified !== lastLastModified) {
+    console.log('Outdated timetables: updating now...')
+    console.log(new Date().toLocaleString())
+    await discordUpdate('[Updater]: Updating timetables to revision ' + lastModified)
 
-//   if (lastModified !== lastLastModified) {
-//     console.log('Outdated timetables: updating now...')
-//     console.log(new Date().toLocaleString())
-//     await discordUpdate('[Updater]: Updating timetables to revision ' + lastModified)
+    downloadGTFS(async status => {
+      if (status === 0) {
+        fs.writeFileSync(__dirname + '/last-modified', lastModified)
+        console.log('Wrote last-modified', lastModified)
+        await discordUpdate('[Updater]: Finished downloading new timetables')
 
-//     downloadGTFS(async status => {
-//       if (status === 0) {
-//         fs.writeFileSync(__dirname + '/last-modified', lastModified)
-//         console.log('Wrote last-modified', lastModified)
-//         await discordUpdate('[Updater]: Finished downloading new timetables')
-
-//         await updateTimetables()
-//       } else {
-//         await discordUpdate('[Updater]: Unable to download new timetables, skipping update')
-//         process.exit(1)
-//       }
-//     })
-//   } else {
-//     console.log('Timetables all good')
-//     await discordUpdate('[Updater]: Timetables up to date, not updating')
-//     process.exit(0)
-//   }
-// })
+        await updateTimetables()
+      } else {
+        await discordUpdate('[Updater]: Unable to download new timetables, skipping update')
+        process.exit(1)
+      }
+    })
+  } else {
+    console.log('Timetables all good')
+    await discordUpdate('[Updater]: Timetables up to date, not updating')
+    process.exit(0)
+  }
+})
