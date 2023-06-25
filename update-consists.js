@@ -23,7 +23,10 @@ utils.request(urls.ptDatabaseMetro).then(data => {
 
   let types = validTrains.map(train => ({
     leadingCar: train.consist[0],
-    type: trainType[train.type]
+    type: trainType[train.type],
+    ...(train.type.endsWith('Comeng') ? {
+      variant: train.type.slice(0, 2)
+    } : {})
   }))
 
   let consists = validTrains.map(train => train.consist)
