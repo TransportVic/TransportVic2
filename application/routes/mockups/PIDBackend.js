@@ -561,7 +561,7 @@ async function getPIDData(station, platform, options, db) {
   })
 
   return {
-    dep: trimDepartures(allDepartures, options.includeStopTimings),
+    dep: options.rawDepartures ? allDepartures : trimDepartures(allDepartures, options.includeStopTimings),
     has: trainDepartures.length > 0,
     bus: routesWithBuses
   }
