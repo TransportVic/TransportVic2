@@ -527,7 +527,7 @@ async function getPIDData(station, platform, options, db) {
   ])
 
   let trainDepartures = departures.filter(departure => !departure.isRailReplacementBus).filter(departure => {
-    return !(departure.cancelled || options.includeCancelled)
+    return !departure.cancelled || options.includeCancelled
   })
 
   let busDepartures = departures.filter(departure => departure.isRailReplacementBus)
