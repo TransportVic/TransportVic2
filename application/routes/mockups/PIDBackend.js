@@ -154,9 +154,7 @@ async function getAllDeparturesFromStation(station, db) {
       })
     ])
 
-    return [...metroDepartures, ...vlineDepartures].filter(departure => {
-      return !departure.cancelled
-    })
+    return [...metroDepartures, ...vlineDepartures]
   }, 1000 * 30)
 
   let now = utils.now()
@@ -528,7 +526,10 @@ async function getPIDData(station, platform, options, db) {
     })
   ])
 
-  let trainDepartures = departures.filter(departure => !departure.isRailReplacementBus)
+  let trainDepartures = departures.filter(departure => !departure.isRailReplacementBus).filter(departure => {
+    return !(departure.cancelled || options.includeCancelled)
+  })
+
   let busDepartures = departures.filter(departure => departure.isRailReplacementBus)
   let routesWithBuses = busDepartures.map(departure => departure.routeName).filter((e, i, a) => a.indexOf(e) === i)
 
