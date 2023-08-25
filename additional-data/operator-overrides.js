@@ -31,6 +31,11 @@ module.exports = {
 
   "6-a31": ["Dysons (Wangaratta)"], // 7 Albury - Beechworth
   "6-BM8": ["Dysons (Moama)"], // Barmah 8 Barmah - Echuca
+  "6-8x6": ["Dysons (Wangaratta)"], // AW Albury - Wodonga
+
+  "6-C27": ["Christians Bus Company (Ballarat)"], // Smythesdale on Demand
+  "6-H46": ["Dysons (Wangaratta)"], // Wangaratta - Glenrowan
+  "6-V63": ["McKenzies Tourist Service"], // Eildon - Alexandra
 
   // Manual override for weird names
   "6-R13": ["Heard Buses"], // Horsham - Birchip

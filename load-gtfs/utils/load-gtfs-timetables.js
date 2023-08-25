@@ -35,7 +35,6 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
   let calendarCache = {}
 
   let remainingTripTimings = tripTimings.slice(0)
-  let isNightBus = gtfsID == 8
 
   await async.forEachSeries(trips, async trip => {
     let {tripID, routeGTFSID, shapeID} = trip
@@ -76,16 +75,8 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
       arrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(arrivalTime)
       departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime)
 
-      if (previousDepartureTime == -1) { // if first stop is already beyond midnight then keep it
-        if (arrivalTimeMinutes === 0) arrivalTimeMinutes = 1440
-        if (isNightBus && arrivalTimeMinutes < 600) {
-          arrivalTimeMinutes %= 1440
-          departureTimeMinutes %= 1440
-        }
-      } else {
-        arrivalTimeMinutes %= 1440
-        departureTimeMinutes %= 1440
-      }
+      arrivalTimeMinutes %= 1440
+      departureTimeMinutes %= 1440
 
       if (arrivalTimeMinutes < previousDepartureTime) arrivalTimeMinutes += 1440
       if (departureTimeMinutes < arrivalTimeMinutes) departureTimeMinutes += 1440
@@ -114,8 +105,6 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
       return tripStop
     })
 
-    let actualMode = (gtfsID === '8') ? 'bus' : gtfsModes[gtfsID]
-
     let lastStop = stopTimings.slice(-1)[0]
 
     stopTimings[0].arrivalTime = null
@@ -124,8 +113,17 @@ module.exports = async function(collections, gtfsID, trips, tripTimings, calenda
     lastStop.departureTime = null
     lastStop.departureTimeMinutes = null
 
+    if (stopTimings[0].departureTimeMinutes < 180) { // Need to rewind to previous day
+      stopTimings.forEach(stop => {
+        stop.arrivalTimeMinutes += 1440
+        stop.departureTimeMinutes += 1440
+      })
+
+      operationDays = gtfsUtils.calendarToDates(calendarDays, calendarDates, trip.calendarID).map(date => utils.getYYYYMMDD(date.add(-1, 'day'))).filter((e, i, a) => a.indexOf(e) === i)
+    }
+
     let tripData = {
-      mode: actualMode,
+      mode: gtfsModes[gtfsID],
       routeName: routeData.routeName,
       routeNumber: routeData.routeNumber,
       routeDetails: null,
