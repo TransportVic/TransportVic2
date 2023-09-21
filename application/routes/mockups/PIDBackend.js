@@ -67,7 +67,7 @@ async function getAllDeparturesFromStation(station, db) {
 
               return {
                 routeName,
-                origin: departure.trip.trueOrigin.slice(0, -16),
+                origin: departure.trip.origin.slice(0, -16),
                 destination: departure.destination,
                 scheduledDepartureTime: departure.scheduledDepartureTime,
                 estimatedDepartureTime: departure.estimatedDepartureTime,
