@@ -67,6 +67,7 @@ async function getAllDeparturesFromStation(station, db) {
 
               return {
                 routeName,
+                origin: departure.trip.trueOrigin.slice(0, -16),
                 destination: departure.destination,
                 scheduledDepartureTime: departure.scheduledDepartureTime,
                 estimatedDepartureTime: departure.estimatedDepartureTime,
@@ -82,7 +83,9 @@ async function getAllDeparturesFromStation(station, db) {
                 cancelled: departure.cancelled,
                 connections: [],
                 tdn: departure.runID,
-                consist: { size: 0, type: 'Unknown' }
+                consist: { size: 0, type: 'Unknown' },
+                formedBy: null,
+                forming: null
               }
             })
           }
@@ -116,6 +119,7 @@ async function getAllDeparturesFromStation(station, db) {
               } else connections = []
 
               let consist = { size: 0, type: 'Unknown', cars: [] }
+
               let { fleetNumber } = departure
               if (fleetNumber) {
                 let matchingSet = metroTypes.find(set => fleetNumber.includes(set.leadingCar))
@@ -130,6 +134,7 @@ async function getAllDeparturesFromStation(station, db) {
 
               return {
                 routeName: departure.routeName,
+                origin: departure.trip.trueOrigin.slice(0, -16),
                 destination,
                 scheduledDepartureTime: departure.scheduledDepartureTime,
                 estimatedDepartureTime: departure.estimatedDepartureTime,
@@ -145,7 +150,9 @@ async function getAllDeparturesFromStation(station, db) {
                 cancelled: departure.cancelled,
                 connections,
                 tdn: departure.runID,
-                consist
+                consist,
+                formedBy: departure.trip.formedBy,
+                forming: departure.trip.forming
               }
             })
           }
