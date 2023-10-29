@@ -1,23 +1,23 @@
 {
  "Ballarat": [
   {
-   "routeGTFSID": "6-B10",
+   "routeGTFSID": "6-10B",
    "routeNumber": "10"
   },
   {
-   "routeGTFSID": "6-B11",
+   "routeGTFSID": "6-11B",
    "routeNumber": "11"
   },
   {
-   "routeGTFSID": "6-B12",
+   "routeGTFSID": "6-12B",
    "routeNumber": "12"
   },
   {
-   "routeGTFSID": "6-B13",
+   "routeGTFSID": "6-13B",
    "routeNumber": "13"
   },
   {
-   "routeGTFSID": "6-B14",
+   "routeGTFSID": "6-14B",
    "routeNumber": "14"
   },
   {
@@ -25,35 +25,35 @@
    "routeNumber": "15"
   },
   {
-   "routeGTFSID": "6-B20",
+   "routeGTFSID": "6-20B",
    "routeNumber": "20"
   },
   {
-   "routeGTFSID": "6-B21",
+   "routeGTFSID": "6-21B",
    "routeNumber": "21"
   },
   {
-   "routeGTFSID": "6-B22",
+   "routeGTFSID": "6-22B",
    "routeNumber": "22"
   },
   {
-   "routeGTFSID": "6-B23",
+   "routeGTFSID": "6-23B",
    "routeNumber": "23"
   },
   {
-   "routeGTFSID": "6-B24",
+   "routeGTFSID": "6-24B",
    "routeNumber": "24"
   },
   {
-   "routeGTFSID": "6-B25",
+   "routeGTFSID": "6-25B",
    "routeNumber": "25"
   },
   {
-   "routeGTFSID": "6-B26",
+   "routeGTFSID": "6-26B",
    "routeNumber": "26"
   },
   {
-   "routeGTFSID": "6-B30",
+   "routeGTFSID": "6-30B",
    "routeNumber": "30"
   }
  ],
