@@ -286,7 +286,6 @@ function getRouteStopsForDeparture(departure) {
       }
       if (!departureCityStops.includes('Flinders Street')) cityStops.shift() // In case starts at SSS
     } else {
-      console.log(departureCityStops)
       if (departureCityStops.includes('Southern Cross')) { // VL
         cityStops = ['Flinders Street', 'Southern Cross', 'Flagstaff', 'Melbourne Central', 'Parliament']
       } else { // Direct
