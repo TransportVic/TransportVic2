@@ -267,7 +267,7 @@ function getRouteStopsForDeparture(departure) {
     let departureCityStops = departure.allStops.filter(stop => cityStations.includes(stop))
     if (northernGroup.includes(departure.routeName)) {
       // Express SSS during Night Network
-      if (departureCityStops[0] === 'Flinders Street' && departureCityStops.length === 1) {
+      if (departureCityStops[0] === 'Flinders Street' && departureCityStops.length === 1 && parseInt(departure.tdn[1]) < 6) {
         if (departure.direction === 'Down') {
           return ['Flinders Street', 'Southern Cross', ...routeStops]
         } else {
@@ -275,13 +275,31 @@ function getRouteStopsForDeparture(departure) {
         }
       }
     }
+    
+    let cityStops = []
+  
+    if (northernGroup.includes(departure.routeName)) {
+      if (departureCityStops.includes('Southern Cross')) { // Direct
+        cityStops = ['Flinders Street', 'Southern Cross']
+      } else { // VL
+        cityStops = ['Flinders Street', 'Parliament', 'Melbourne Central', 'Flagstaff']
+      }
+      if (!departureCityStops.includes('Flinders Street')) cityStops.shift() // In case starts at SSS
+    } else {
+      console.log(departureCityStops)
+      if (departureCityStops.includes('Southern Cross')) { // VL
+        cityStops = ['Flinders Street', 'Southern Cross', 'Flagstaff', 'Melbourne Central', 'Parliament']
+      } else { // Direct
+        cityStops = ['Flinders Street']
+      }
+    }
 
     if (departure.direction === 'Down') {
-      return [...departureCityStops, ...routeStops]
+      return [...cityStops, ...routeStops]
     } else {
-      return [...routeStops.reverse(), ...departureCityStops]
+      return [...routeStops.reverse(), ...cityStops.reverse()]
     }
-  }
+  } 
 }
 
 function checkAltonaRunning(departure) {
