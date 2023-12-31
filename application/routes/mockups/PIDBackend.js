@@ -447,13 +447,13 @@ function appendStoppingType(departure, stoppingTypes) {
 }
 
 function findVia(departure) {
-  let { futureStops } = departure
+  let { routeStops } = departure
 
-  let stopsUpToDest = futureStops.slice(0, -1)
+  let stopsUpToDest = routeStops.slice(0, -1)
 
-  let currentStop = futureStops[0]
-  let destination = futureStops[futureStops.length - 1]
-
+  let currentStop = routeStops[0]
+  let destination = routeStops[routeStops.length - 1]
+  
   let rmdIndex = stopsUpToDest.indexOf('Richmond')
   let jliIndex = stopsUpToDest.indexOf('Jolimont')
   let sssIndex = stopsUpToDest.indexOf('Southern Cross')
