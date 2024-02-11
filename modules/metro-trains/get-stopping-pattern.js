@@ -7,6 +7,7 @@ const metroTypes = require('../../additional-data/metro-tracker/metro-types')
 const addStonyPointData = require('./add-stony-point-data')
 const fixTripDestination = require('./fix-trip-destinations')
 const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
+const mergeConsist = require('./merge-consist')
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 let cityStations = [...cityLoopStations, 'Flinders Street']
@@ -51,69 +52,10 @@ function extendMetroEstimation(stopTimings) {
   }
 }
 
-async function saveConsist(trip, departureDay, consist, metroTrips) {
+async function saveAndUpdateConsist(trip, departureDay, consist, metroTrips) {
   if (!departureDay) return global.loggers.error.err('No date on trip', partialTrip)
 
-  let runID = trip.runID.slice(0, 4)
-  let { originStop, destinationStop } = fixTripDestination.getTripTrueOriginDestination(trip)
-
-  let query = {
-    date: departureDay,
-    runID: runID.slice(0, 4)
-  }
-
-  let tripData = {
-    ...query,
-    origin: originStop.stopName.slice(0, -16),
-    destination: destinationStop.stopName.slice(0, -16),
-    departureTime: originStop.departureTime,
-    destinationArrivalTime: destinationStop.arrivalTime,
-    consist
-  }
-
-  let existingTrip
-  if (tripData.consist.length === 3) {
-    existingTrip = await metroTrips.findDocument(query)
-    if (existingTrip) {
-      if (existingTrip.consist.length === 6) { // Trip already exists with a filled consist, we only override if a different set matches
-        if (!existingTrip.consist.includes(tripData.consist[0])) {
-          existingTrip = null
-        } else {
-          // Otherwise do not override a 6 car train with a 3 car
-          // However update the departure fleet for location purposes
-
-          return existingTrip.consist
-        }
-      } else if (existingTrip.consist.length === 3 && !existingTrip.consist.includes(tripData.consist[0])) { // We might have matched half a train and now have the other half, sanity check
-        let sanityCheckTrip = await metroTrips.findDocument({
-          date: departure.departureDay,
-          $and: [{ // Match both the one already existing and the one given on the same day to check if they're coupled up and can be merged
-            consist: tripData.consist[0]
-          }, {
-            consist: existingTrip.consist[0]
-          }]
-        })
-
-        if (sanityCheckTrip) {
-          tripData.consist = sanityCheckTrip.consist
-        }
-
-        // if they can be merged update
-        // if cannot be merged assume that another set is taking over and update
-        existingTrip = null
-      } else { // Some other length? (HCMT or random crap, override it)
-        existingTrip = null
-      }
-    }
-  }
-
-  if (!existingTrip) {
-    await metroTrips.replaceDocument(query, tripData, {
-      upsert: true
-    })
-
-    return tripData.consist
-  }
+  return await mergeConsist(trip, consist, metroTrips)
 }
 
 async function saveLocation(consist, location, metroLocations) {
@@ -532,7 +474,7 @@ module.exports = async function (data, db) {
     let actualSize = Math.max(ptvSize, consistSize)
     vehicle = { size: actualSize, type: vehicleType.type, consist }
 
-    consist = await saveConsist(timetable, departurePTDay, consist, metroTrips)
+    consist = await saveAndUpdateConsist(timetable, departurePTDay, consist, metroTrips)
     if (location && consist) await saveLocation(consist, location, metroLocations)
   }
 

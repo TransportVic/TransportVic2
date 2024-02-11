@@ -8,6 +8,7 @@ const fixTripDestination = require('./fix-trip-destinations')
 const getStoppingPattern = require('./get-stopping-pattern')
 const getRouteStops = require('../../additional-data/route-stops')
 const { getDayOfWeek } = require('../../public-holidays')
+const mergeConsist = require('./merge-consist')
 
 let undergroundLoopStations = ['Parliament', 'Flagstaff', 'Melbourne Central']
 let cityLoopStations = ['Southern Cross', ...undergroundLoopStations]
@@ -825,62 +826,7 @@ async function saveConsists(departures, db) {
   await async.forEach(deduped, async departure => {
     if (!departure.departureDay) return global.loggers.error.err('No date on trip', departure)
 
-    let query = {
-      date: departure.departureDay,
-      runID: departure.runID
-    }
-
-    let tripData = {
-      ...query,
-      origin: departure.trip.trueOrigin.slice(0, -16),
-      destination: departure.trip.trueDestination.slice(0, -16),
-      departureTime: departure.trip.trueDepartureTime,
-      destinationArrivalTime: departure.trip.trueDestinationArrivalTime,
-      consist: departure.fleetNumber
-    }
-
-    let existingTrip
-    if (tripData.consist.length === 3) {
-      existingTrip = await metroTrips.findDocument(query)
-      if (existingTrip) {
-        if (existingTrip.consist.length === 6) { // Trip already exists with a filled consist, we only override if a different set matches
-          if (!existingTrip.consist.includes(tripData.consist[0])) {
-            existingTrip = null
-          } else {
-            // Otherwise do not override a 6 car train with a 3 car
-            // However update the departure fleet for location purposes
-
-            departure.fleetNumber = existingTrip.consist
-          }
-        } else if (existingTrip.consist.length === 3 && !existingTrip.consist.includes(tripData.consist[0])) { // We might have matched half a train and now have the other half, sanity check
-          let sanityCheckTrip = await metroTrips.findDocument({
-            date: departure.departureDay,
-            $and: [{ // Match both the one already existing and the one given on the same day to check if they're coupled up and can be merged
-              consist: tripData.consist[0]
-            }, {
-              consist: existingTrip.consist[0]
-            }]
-          })
-
-          if (sanityCheckTrip) {
-            tripData.consist = sanityCheckTrip.consist
-          }
-
-          // if they can be merged update
-          // if cannot be merged assume that another set is taking over and update
-          existingTrip = null
-        } else { // Some other length? (HCMT or random crap, override it)
-          existingTrip = null
-        }
-      }
-    }
-
-    if (!existingTrip) {
-      departure.fleetNumber = tripData.consist
-      await metroTrips.replaceDocument(query, tripData, {
-        upsert: true
-      })
-    }
+    departure.fleetNumber = await mergeConsist(departure.trip, departure.fleetNumber, metroTrips)
   })
 }
 
