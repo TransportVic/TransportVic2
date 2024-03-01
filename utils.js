@@ -6,7 +6,11 @@ const EventEmitter = require('events')
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path')
-require('https').globalAgent.options.ca = fs.readFileSync(path.join(__dirname, 'node_modules/node_extra_ca_certs_mozilla_bundle/ca_bundle/ca_intermediate_root_bundle.pem'))
+
+const rootCas = require('ssl-root-cas').create()
+rootCas.addFile(path.resolve(__dirname, 'tt-intermediate.pem'))
+require('https').globalAgent.options.ca = rootCas
+
 const { spawn } = require('child_process')
 const util = require('util')
 const fetch = require('node-fetch')
