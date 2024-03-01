@@ -38,7 +38,7 @@ async function loadDepartures(req, res) {
       late: 5
     })
 
-    let currentStop = departure.trip.stopTimings.find(tripStop => tripStop.stopGTFSID === departure.stopGTFSID)
+    let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
     let {stopGTFSID} = currentStop
     let firstStop = departure.trip.stopTimings[0]
 

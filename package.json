@@ -26,6 +26,7 @@
     "moment-timezone": "^0.5.34",
     "mongodb": "^3.7.3",
     "natural": "^2.4.5",
+    "node_extra_ca_certs_mozilla_bundle": "^1.0.6",
     "node-fetch": "^2.6.7",
     "node-ical": "^0.14.1",
     "node-mailin": "github:eyeballcode/node-mailin",

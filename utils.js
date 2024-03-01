@@ -1,5 +1,6 @@
 const moment = require('moment-timezone')
 moment.tz.setDefault('Australia/Melbourne')
+require('https').globalAgent.options.ca = require('fs').readFileSync('node_modules/node_extra_ca_certs_mozilla_bundle/ca_bundle/ca_intermediate_root_bundle.pem');
 const fetch = require('node-fetch')
 const stopNameModifier = require('./additional-data/stop-name-modifier')
 const TimedCache = require('./TimedCache')
@@ -8,6 +9,7 @@ const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path')
 const { spawn } = require('child_process')
+const util = require('util')
 
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 const locks = {}, caches = {}
@@ -641,7 +643,8 @@ module.exports = {
   },
   findLastIndex: (arr, func) => {
     return arr.reduce((prev, curr, index) => func(curr) ? index : prev, -1);
-  }
+  },
+  inspect: e => console.log(util.inspect(e, { depth: null, colors: true, maxArrayLength: null }))
 }
 
 require('./init-loggers')
