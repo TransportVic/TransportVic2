@@ -147,6 +147,7 @@ module.exports = async function (data, db) {
     let stopName = stop.stop_name
 
     if (stopName === 'Jolimont-MCG') stopName = 'Jolimont'
+    if (stopName === 'Glenhuntly') stopName = 'Glen Huntly'
     if (stopName === 'St Albans') stopName = 'St. Albans'
     stopName += ' Railway Station'
 
