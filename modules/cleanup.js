@@ -146,14 +146,23 @@ database.connect(async () => {
     console.log('Failed to clean up metro shunts')
   }
 
+  let waitingForCombined = false
   try {
     console.log('Removed', trimLog(config.combinedLog, true), 'lines from combined log')
   } catch (e) {
     if (e.toString().includes('FILE_TOO_LARGE')) {
       console.log('Combined log too large to clean, using only last 5000 lines')
+      waitingForCombined = true
       readLastLines.read(config.combinedLog, 5000).then(lines => {
-        fs.writeFileSync(config.combinedLog, lines.join('\n') + '\n')
+        fs.writeFileSync(config.combinedLog, lines + '\n')
+        process.exit(0)
       })
+
+      setTimeout(() => {
+        console.log('Combined log way too large to handle, deleting')
+        fs.unlinkSync(config.combinedLog)
+        process.exit(0)
+      }, 60 * 1000 * 2) // After 2 min just delete the whole file
     } else {
       console.log('Failed to clean up combined log')
     }
@@ -168,6 +177,7 @@ database.connect(async () => {
         console.log('Failed to clean up logfile', logName)
       }
     })
-    process.exit()
+    
+    if (!waitingForCombined) process.exit()
   })
 })
