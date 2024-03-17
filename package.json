@@ -33,6 +33,7 @@
     "protocol-buffers": "^4.2.0",
     "pug": "^3.0.2",
     "querystring": "^0.2.1",
+    "read-last-lines": "^1.8.0",
     "signalr-client": "^0.0.20",
     "spdy": "^4.0.2",
     "ssl-root-cas": "^1.3.1",

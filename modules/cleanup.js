@@ -6,6 +6,7 @@ const utils = require('../utils')
 const async = require('async')
 const fs = require('fs')
 const path = require('path')
+const readLastLines = require('read-last-lines')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
@@ -125,26 +126,37 @@ database.connect(async () => {
     let firstShunt = await metroShunts.findDocuments({})
       .sort({ date: 1 }).limit(1).next()
 
-    let shuntStart = utils.parseDate(firstShunt.date)
-    let shuntEnd = utils.now().add(-27, 'days')
+    let shuntsRemoved = { nRemoved: 0 }
+    if (firstShunt) {
+      let shuntStart = utils.parseDate(firstShunt.date)
+      let shuntEnd = utils.now().add(-27, 'days')
 
-    let shuntDays = utils.allDaysBetweenDates(shuntStart, shuntEnd).map(date => utils.getYYYYMMDD(date))
+      let shuntDays = utils.allDaysBetweenDates(shuntStart, shuntEnd).map(date => utils.getYYYYMMDD(date))
 
-    let shuntsRemoved = await metroShunts.deleteDocuments({
-      date: {
-        $in: shuntDays
-      }
-    })
+      shuntsRemoved = await metroShunts.deleteDocuments({
+        date: {
+          $in: shuntDays
+        }
+      })
+    }
 
     console.log('Cleaned up', shuntsRemoved.nRemoved, 'metro shunts')
   } catch (e) {
+    console.log(e)
     console.log('Failed to clean up metro shunts')
   }
 
   try {
     console.log('Removed', trimLog(config.combinedLog, true), 'lines from combined log')
   } catch (e) {
-    console.log('Failed to clean up combined log')
+    if (e.toString().includes('FILE_TOO_LARGE')) {
+      console.log('Combined log too large to clean, using only last 5000 lines')
+      readLastLines.read(config.combinedLog, 5000).then(lines => {
+        fs.writeFileSync(config.combinedLog, lines.join('\n') + '\n')
+      })
+    } else {
+      console.log('Failed to clean up combined log')
+    }
   }
 
   walk(path.join(__dirname, '../logs'), (err, results) => {
