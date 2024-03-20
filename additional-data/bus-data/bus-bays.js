@@ -87,10 +87,18 @@ module.exports = {
   21215: null, // Fletcher Rd, no bay
 
   // Berwick
-  21023: "Bay 1",
-  40315: "Bay 2",
-  21024: "Bay 3",
-  21025: "Bay 4",
+  28341: "Bay A",
+  28342: "Bay B",
+  28343: "Bay C",
+  28344: "Bay D",
+  28345: "Bay E",
+  28346: "Bay F",
+  28347: "Bay G",
+  28348: "Bay H",
+  // 21023: "Bay 1",
+  // 40315: "Bay 2",
+  // 21024: "Bay 3",
+  // 21025: "Bay 4",
 
   // Sunshine
   18765: "Bay 1",
@@ -532,5 +540,16 @@ module.exports = {
   // Ballan
   48835: "Bay 1",
   48837: "Bay 2",
-  25: "Bay 3"
+  25: "Bay 3",
+
+  // Moonee Ponds
+  18776: "Bay 1",
+  18777: "Bay 2",
+  18778: "Bay 3",
+  18779: "Bay 4",
+  18780: "Bay 5",
+  18848: "Bay 6",
+  18849: "Bay 7",
+  18850: "Bay 8",
+  47703: "Bay 9"
 }

@@ -25,7 +25,7 @@ function editName(name) {
   return name
 }
 
-events.forEach(event => {
+events.filter(e => e.type === 'VEVENT').forEach(event => {
   try {
     let start = event.start.toISOString()
     let day = utils.parseTime(start)
