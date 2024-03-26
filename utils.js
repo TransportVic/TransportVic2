@@ -214,12 +214,13 @@ module.exports = {
     .replace('St..', 'St. ')
     .replace('Ret Village', 'Retirement Village')
     .replace(' SC', ' Shopping Centre')
+    .replace(' RS', ' Railway Station')
     .replace(/Cresent/g, 'Crescent')
 
     return name.replace(/  +/g, ' ')
   },
   shorternStopName: name => {
-    name = name.replace('Railway Station', 'RS')
+    name = name.replace('Railway Station', 'RS') 
       .replace('Shopping Centre', 'SC')
       .replace('University', 'Uni')
       .replace('Road', 'Rd')
