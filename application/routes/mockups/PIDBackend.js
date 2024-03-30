@@ -133,6 +133,7 @@ async function getAllDeparturesFromStation(station, db) {
               }
 
               return {
+                operationDay: departure.trip.operationDays,
                 routeName: departure.routeName,
                 origin: departure.trip.trueOrigin.slice(0, -16),
                 destination,
