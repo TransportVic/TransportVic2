@@ -345,6 +345,18 @@ let lineGroups = {
   'Flemington Racecourse': 'NOR',
 }
 
+async function getConsist(runID, departureDate, db) {
+  let metroTrips = db.getCollection('metro trips')
+
+  let consist = await metroTrips.findDocument({
+    date: departureDate,
+    runID
+  })
+
+  if (consist) return consist.consist
+  return null
+}
+
 async function getScheduledMetroDepartures(station, db, time, backwards=false) {
   let departures = await getScheduledDepartures(station, db, 'metro train', time, 90, backwards)
   let stopName = station.stopName.slice(0, -16)
@@ -429,6 +441,10 @@ async function getScheduledMetroDepartures(station, db, time, backwards=false) {
 
     if (departure.trip.routeGTFSID === '2-CCL')
       departure.destination = 'City Circle'
+
+    if (departure.runID && !departure.isRailReplacementBus) {
+      departure.fleetNumber = await getConsist(departure.runID, departure.trueDepartureDay, db)
+    }
 
     return departure
   })).filter(Boolean)

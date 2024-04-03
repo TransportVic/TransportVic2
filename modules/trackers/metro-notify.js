@@ -53,7 +53,7 @@ async function lookForShunts(allAlerts) {
       relavantText = alert.text.slice(alert.text.indexOf('origin') + 9)
       type = 'originate'
     }
-    relavantText = relavantText.trim().split('\n')[0].replace(/due.*/, '').replace(/today.*/, '')
+    relavantText = relavantText.trim().split('\n')[0].replace(/due.*/, '').replace(/today.*/, '').replace(/\..+/, '')
 
     let bestStop = closest(relavantText, allStops)
     let isTrainFault = alert.text.includes('train fault')
@@ -81,6 +81,8 @@ async function lookForShunts(allAlerts) {
     if (type === 'terminate') {
       if (isTrainFault || !terminatingLocations.includes(bestStop)) {
         let lastStop = liveTimetable.stopTimings.find(stop => stop.stopName.slice(0, -16) === bestStop)
+        if (!lastStop) return
+
         let shunt = {
           date: liveTimetable.operationDays,
           runID: alert.runID,
