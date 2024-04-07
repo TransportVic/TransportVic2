@@ -925,13 +925,13 @@
    "liveTrack": false
   },
   {
-   "routeGTFSID": "6-W12",
-   "routeNumber": "A",
+   "routeGTFSID": "6-WN3",
+   "routeNumber": "3",
    "liveTrack": false
   },
   {
-   "routeGTFSID": "6-WN3",
-   "routeNumber": "B",
+   "routeGTFSID": "6-W12",
+   "routeNumber": "A",
    "liveTrack": false
   }
  ],
@@ -961,6 +961,110 @@
   {
    "routeGTFSID": "6-KM1",
    "routeNumber": "Town",
+   "liveTrack": false
+  }
+ ],
+ "Wodonga": [
+  {
+   "routeGTFSID": "6-876",
+   "routeNumber": "150",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-877",
+   "routeNumber": "160",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-866",
+   "routeNumber": "AW",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-875",
+   "routeNumber": "B",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-873",
+   "routeNumber": "C",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-WoE",
+   "routeNumber": "E",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-867",
+   "routeNumber": "F",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-868",
+   "routeNumber": "G",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-woM",
+   "routeNumber": "M",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-872",
+   "routeNumber": "O",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-WoS",
+   "routeNumber": "S",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-869",
+   "routeNumber": "T",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-874",
+   "routeNumber": "WS",
+   "liveTrack": false
+  }
+ ],
+ "Albury": [
+  {
+   "routeGTFSID": "6-901",
+   "routeNumber": "901",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-902",
+   "routeNumber": "902",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-903",
+   "routeNumber": "903",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-906",
+   "routeNumber": "906",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-907",
+   "routeNumber": "907",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-908",
+   "routeNumber": "908",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-909",
+   "routeNumber": "909",
    "liveTrack": false
   }
  ],

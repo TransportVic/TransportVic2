@@ -11,18 +11,15 @@ database.connect(async () => {
 
   let routeData = await async.reduce(network, {}, async (acc, region) => {
     let matchingRoutes = await routes.findDocuments({
+      mode: 'bus',
       'routePath.path': {
         $geoWithin: {
           $geometry: region.geometry
         }
       },
-      $or: [{
-        routeNumber: {
-          $ne: null
-        }
-      }, {
-        routeName: / town /i
-      }],
+      // routeNumber: {
+      //   $ne: null
+      // },
       $and: [{
         routeNumber: {
           $not: {
@@ -49,6 +46,8 @@ database.connect(async () => {
     let regionName = region.properties.name.trim()
     let hasLiveTrack = regionName.startsWith('L-')
     if (hasLiveTrack) regionName = regionName.slice(2)
+
+    if (regionName === 'Warragul') matchingRoutes = matchingRoutes.filter(route => route.routeNumber)
 
     acc[regionName] = matchingRoutes.map(route => {
       let routeNumber = route.routeNumber ? route.routeNumber.replace('_x', '') : "Town"

@@ -218,8 +218,8 @@ module.exports = {
   "Wallan": {
     "1": ["Seymour Coaches"],
     "2": ["Seymour Coaches"],
-    "A": ["Seymour Coaches"],
-    "B": ["Seymour Coaches"]
+    "3": ["Seymour Coaches"],
+    "A": ["Seymour Coaches"]
   },
   "Kilmore": {
     "Town": ["Seymour Coaches"]
@@ -262,5 +262,29 @@ module.exports = {
   },
   "Maffra": {
     "Town": ["Dysons (Bairnsdale)"]
+  },
+  "Albury": {
+    "901": ["Dysons (Wodonga)"],
+    "902": ["Dysons (Wodonga)"],
+    "903": ["Dysons (Wodonga)"],
+    "906": ["Martin's Albury"],
+    "907": ["Martin's Albury"],
+    "908": ["Martin's Albury"],
+    "909": ["Martin's Albury"]
+  },
+  "Wodonga": {
+    "150": ["Dysons (Wodonga)"],
+    "160": ["Dysons (Wodonga)"],
+    "AW": ["Dysons (Wodonga)"],
+    "B": ["Dysons (Wodonga)"],
+    "C": ["Dysons (Wodonga)"],
+    "E": ["Dysons (Wodonga)"],
+    "F": ["Dysons (Wodonga)"],
+    "G": ["Dysons (Wodonga)"],
+    "M": ["Dysons (Wodonga)"],
+    "O": ["Dysons (Wodonga)"],
+    "S": ["Dysons (Wodonga)"],
+    "T": ["Dysons (Wodonga)"],
+    "WS": ["Dysons (Wodonga)"]
   }
 }
