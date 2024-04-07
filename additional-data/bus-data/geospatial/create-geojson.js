@@ -6,7 +6,7 @@ let $ = cheerio.load(platforms)
 
 let regionMaps = Array.from($('Placemark'))
 let regions = regionMaps.map(region => {
-  let regionName = $('name', region).text()
+  let regionName = $('name', region).text().trim()
 
   let coordinatesRaw = $('coordinates', region).text().trim()
   let coordinates = coordinatesRaw.split('\n').filter(Boolean).map(line => {
@@ -24,4 +24,4 @@ let regions = regionMaps.map(region => {
   }
 })
 
-fs.writeFileSync(__dirname + '/regional-bus-network.json', JSON.stringify(regions, null, 1))
+fs.writeFileSync(__dirname + '/regional-bus-network.json', JSON.stringify(regions, null))

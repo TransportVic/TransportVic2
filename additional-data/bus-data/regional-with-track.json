@@ -1,352 +1,1045 @@
 {
- "Ballarat": [
-  {
-   "routeGTFSID": "6-10B",
-   "routeNumber": "10"
-  },
-  {
-   "routeGTFSID": "6-11B",
-   "routeNumber": "11"
-  },
-  {
-   "routeGTFSID": "6-12B",
-   "routeNumber": "12"
-  },
-  {
-   "routeGTFSID": "6-13B",
-   "routeNumber": "13"
-  },
-  {
-   "routeGTFSID": "6-14B",
-   "routeNumber": "14"
-  },
-  {
-   "routeGTFSID": "6-B15",
-   "routeNumber": "15"
-  },
-  {
-   "routeGTFSID": "6-20B",
-   "routeNumber": "20"
-  },
-  {
-   "routeGTFSID": "6-21B",
-   "routeNumber": "21"
-  },
-  {
-   "routeGTFSID": "6-22B",
-   "routeNumber": "22"
-  },
-  {
-   "routeGTFSID": "6-23B",
-   "routeNumber": "23"
-  },
-  {
-   "routeGTFSID": "6-24B",
-   "routeNumber": "24"
-  },
-  {
-   "routeGTFSID": "6-25B",
-   "routeNumber": "25"
-  },
-  {
-   "routeGTFSID": "6-26B",
-   "routeNumber": "26"
-  },
-  {
-   "routeGTFSID": "6-30B",
-   "routeNumber": "30"
-  }
- ],
  "Geelong": [
   {
    "routeGTFSID": "6-G01",
-   "routeNumber": "1"
+   "routeNumber": "1",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G10",
-   "routeNumber": "10"
+   "routeNumber": "10",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G11",
-   "routeNumber": "11"
+   "routeNumber": "11",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G12",
-   "routeNumber": "12"
+   "routeNumber": "12",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G19",
-   "routeNumber": "19"
+   "routeNumber": "19",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G20",
-   "routeNumber": "20"
+   "routeNumber": "20",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G22",
-   "routeNumber": "22"
+   "routeNumber": "22",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G23",
-   "routeNumber": "23"
+   "routeNumber": "23",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G24",
-   "routeNumber": "24"
+   "routeNumber": "24",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G25",
-   "routeNumber": "25"
+   "routeNumber": "25",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G30",
-   "routeNumber": "30"
+   "routeNumber": "30",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G31",
-   "routeNumber": "31"
+   "routeNumber": "31",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G32",
-   "routeNumber": "32"
+   "routeNumber": "32",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G40",
-   "routeNumber": "40"
+   "routeNumber": "40",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G41",
-   "routeNumber": "41"
+   "routeNumber": "41",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G42",
-   "routeNumber": "42"
+   "routeNumber": "42",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G43",
-   "routeNumber": "43"
+   "routeNumber": "43",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-x45",
-   "routeNumber": "45"
+   "routeNumber": "45",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G49",
-   "routeNumber": "49"
+   "routeNumber": "49",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G50",
-   "routeNumber": "50"
+   "routeNumber": "50",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G51",
-   "routeNumber": "51"
+   "routeNumber": "51",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G5x",
-   "routeNumber": "55"
+   "routeNumber": "55",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G56",
-   "routeNumber": "56"
+   "routeNumber": "56",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G60",
-   "routeNumber": "60"
+   "routeNumber": "60",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-G61",
-   "routeNumber": "61"
+   "routeNumber": "61",
+   "liveTrack": true
+  }
+ ],
+ "Ballarat": [
+  {
+   "routeGTFSID": "6-10B",
+   "routeNumber": "10",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-11B",
+   "routeNumber": "11",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-12B",
+   "routeNumber": "12",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-13B",
+   "routeNumber": "13",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-14B",
+   "routeNumber": "14",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-B15",
+   "routeNumber": "15",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-20B",
+   "routeNumber": "20",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-21B",
+   "routeNumber": "21",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-22B",
+   "routeNumber": "22",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-23B",
+   "routeNumber": "23",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-24B",
+   "routeNumber": "24",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-25B",
+   "routeNumber": "25",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-26B",
+   "routeNumber": "26",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-30B",
+   "routeNumber": "30",
+   "liveTrack": true
   }
  ],
  "Bendigo": [
   {
    "routeGTFSID": "6-B05",
-   "routeNumber": "5"
+   "routeNumber": "5",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-B50",
-   "routeNumber": "50"
+   "routeNumber": "50",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-B51",
-   "routeNumber": "51"
+   "routeNumber": "51",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-B52",
-   "routeNumber": "52"
+   "routeNumber": "52",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-B53",
-   "routeNumber": "53"
+   "routeNumber": "53",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-B54",
-   "routeNumber": "54"
+   "routeNumber": "54",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-B55",
-   "routeNumber": "55"
+   "routeNumber": "55",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-B60",
-   "routeNumber": "60"
+   "routeNumber": "60",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-B61",
-   "routeNumber": "61"
+   "routeNumber": "61",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-B62",
-   "routeNumber": "62"
+   "routeNumber": "62",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-B63",
-   "routeNumber": "63"
+   "routeNumber": "63",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-B64",
-   "routeNumber": "64"
+   "routeNumber": "64",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-B65",
-   "routeNumber": "65"
+   "routeNumber": "65",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-B70",
-   "routeNumber": "70"
+   "routeNumber": "70",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-B71",
-   "routeNumber": "71"
+   "routeNumber": "71",
+   "liveTrack": true
   }
  ],
  "Latrobe": [
   {
    "routeGTFSID": "6-L01",
-   "routeNumber": "1"
-  },
-  {
-   "routeGTFSID": "6-L02",
-   "routeNumber": "2"
-  },
-  {
-   "routeGTFSID": "6-L03",
-   "routeNumber": "3"
-  },
-  {
-   "routeGTFSID": "6-L04",
-   "routeNumber": "4"
-  },
-  {
-   "routeGTFSID": "6-L05",
-   "routeNumber": "5"
-  },
-  {
-   "routeGTFSID": "6-L06",
-   "routeNumber": "6"
-  },
-  {
-   "routeGTFSID": "6-L07",
-   "routeNumber": "7"
-  },
-  {
-   "routeGTFSID": "6-L08",
-   "routeNumber": "8"
-  },
-  {
-   "routeGTFSID": "6-L09",
-   "routeNumber": "9"
+   "routeNumber": "1",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-L11",
-   "routeNumber": "11"
+   "routeNumber": "11",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-L12",
-   "routeNumber": "12"
+   "routeNumber": "12",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-L13",
-   "routeNumber": "13"
+   "routeNumber": "13",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-L14",
-   "routeNumber": "14"
+   "routeNumber": "14",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-L15",
-   "routeNumber": "15"
+   "routeNumber": "15",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-L02",
+   "routeNumber": "2",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-L20",
-   "routeNumber": "20"
+   "routeNumber": "20",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-L21",
-   "routeNumber": "21"
+   "routeNumber": "21",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-L22",
-   "routeNumber": "22"
+   "routeNumber": "22",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-L03",
+   "routeNumber": "3",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-L30",
-   "routeNumber": "30"
+   "routeNumber": "30",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-L04",
+   "routeNumber": "4",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-L40",
-   "routeNumber": "40"
+   "routeNumber": "40",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-L41",
-   "routeNumber": "41"
+   "routeNumber": "41",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-L42",
-   "routeNumber": "42"
+   "routeNumber": "42",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-L43",
-   "routeNumber": "43"
+   "routeNumber": "43",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-L44",
-   "routeNumber": "44"
+   "routeNumber": "44",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-L45",
-   "routeNumber": "45"
+   "routeNumber": "45",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-L05",
+   "routeNumber": "5",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-L06",
+   "routeNumber": "6",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-L07",
+   "routeNumber": "7",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-L08",
+   "routeNumber": "8",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-L09",
+   "routeNumber": "9",
+   "liveTrack": true
   }
  ],
  "Warragul": [
   {
    "routeGTFSID": "6-W80",
-   "routeNumber": "80"
+   "routeNumber": "80",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-W81",
-   "routeNumber": "81"
+   "routeNumber": "81",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-W82",
-   "routeNumber": "82"
+   "routeNumber": "82",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-W83",
-   "routeNumber": "83"
+   "routeNumber": "83",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-W85",
-   "routeNumber": "85"
+   "routeNumber": "85",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-W86",
-   "routeNumber": "86"
+   "routeNumber": "86",
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-W89",
-   "routeNumber": "89"
+   "routeNumber": "89",
+   "liveTrack": true
+  }
+ ],
+ "Horsham": [
+  {
+   "routeGTFSID": "6-HR1",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-HR2",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-HR3",
+   "routeNumber": "3",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-HR4",
+   "routeNumber": "4",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-HR5",
+   "routeNumber": "5",
+   "liveTrack": false
+  }
+ ],
+ "Stawell": [
+  {
+   "routeGTFSID": "6-S01",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-S02",
+   "routeNumber": "2",
+   "liveTrack": false
+  }
+ ],
+ "Ararat": [
+  {
+   "routeGTFSID": "6-Ar1",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Ar2",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Ar3",
+   "routeNumber": "3",
+   "liveTrack": false
+  }
+ ],
+ "Bacchus Marsh": [
+  {
+   "routeGTFSID": "6-Bx3",
+   "routeNumber": "433",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Bx4",
+   "routeNumber": "434",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Bx5",
+   "routeNumber": "435",
+   "liveTrack": false
+  }
+ ],
+ "Hamilton": [
+  {
+   "routeGTFSID": "6-992",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-HA2",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-HA3",
+   "routeNumber": "3",
+   "liveTrack": false
+  }
+ ],
+ "Maryborough": [
+  {
+   "routeGTFSID": "6-Mx1",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Mx2",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-MB3",
+   "routeNumber": "3",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-MB4",
+   "routeNumber": "4",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Mab",
+   "routeNumber": "Town",
+   "liveTrack": false
+  }
+ ],
+ "Bairnsdale": [
+  {
+   "routeGTFSID": "6-73",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-13",
+   "routeNumber": "13",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-a32",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-a33",
+   "routeNumber": "3",
+   "liveTrack": false
+  }
+ ],
+ "Lakes Entrance": [
+  {
+   "routeGTFSID": "6-La1",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-La2",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-La3",
+   "routeNumber": "3",
+   "liveTrack": false
+  }
+ ],
+ "Sale": [
+  {
+   "routeGTFSID": "6-589",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-298",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-209",
+   "routeNumber": "3",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-a19",
+   "routeNumber": "4",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-s05",
+   "routeNumber": "5",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-s06",
+   "routeNumber": "6",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-a30",
+   "routeNumber": "7",
+   "liveTrack": false
+  }
+ ],
+ "Maffra": [
+  {
+   "routeGTFSID": "6-Ma1",
+   "routeNumber": "Town",
+   "liveTrack": false
+  }
+ ],
+ "Alpine Ranges": [
+  {
+   "routeGTFSID": "6-a18",
+   "routeNumber": "12",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-14",
+   "routeNumber": "14",
+   "liveTrack": false
+  }
+ ],
+ "Castlemaine": [
+  {
+   "routeGTFSID": "6-x89",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-R37",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-R36",
+   "routeNumber": "3",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-xM4",
+   "routeNumber": "4",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-R30",
+   "routeNumber": "5",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-c06",
+   "routeNumber": "6",
+   "liveTrack": false
+  }
+ ],
+ "Echuca": [
+  {
+   "routeGTFSID": "6-a36",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-a37",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-a38",
+   "routeNumber": "3",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Ec4",
+   "routeNumber": "4",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Ec5",
+   "routeNumber": "5",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-BM8",
+   "routeNumber": "8",
+   "liveTrack": false
+  }
+ ],
+ "Kyneton": [
+  {
+   "routeGTFSID": "6-KY1",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-KY2",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-KY3",
+   "routeNumber": "3",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-KY4",
+   "routeNumber": "4",
+   "liveTrack": false
+  }
+ ],
+ "Shepparton": [
+  {
+   "routeGTFSID": "6-Sh1",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Sh2",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Sh3",
+   "routeNumber": "3",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Sh4",
+   "routeNumber": "4",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Sh5",
+   "routeNumber": "5",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Sh6",
+   "routeNumber": "6",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Sh7",
+   "routeNumber": "7",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Sh8",
+   "routeNumber": "8",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-Sh9",
+   "routeNumber": "9",
+   "liveTrack": false
+  }
+ ],
+ "Mooroopna": [
+  {
+   "routeGTFSID": "6-a40",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-904",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-a39",
+   "routeNumber": "3",
+   "liveTrack": false
+  }
+ ],
+ "Mildura": [
+  {
+   "routeGTFSID": "6-921",
+   "routeNumber": "100/200",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-40b",
+   "routeNumber": "211/311/312",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-920",
+   "routeNumber": "250/300",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-M40",
+   "routeNumber": "400",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-M41",
+   "routeNumber": "401",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-M50",
+   "routeNumber": "500",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-M51",
+   "routeNumber": "501",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-M60",
+   "routeNumber": "600",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-M61",
+   "routeNumber": "601",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-M62",
+   "routeNumber": "602",
+   "liveTrack": false
+  }
+ ],
+ "Cobram": [
+  {
+   "routeGTFSID": "6-cob",
+   "routeNumber": "Town",
+   "liveTrack": false
+  }
+ ],
+ "Swan Hill": [
+  {
+   "routeGTFSID": "6-a42",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-a43",
+   "routeNumber": "2",
+   "liveTrack": false
+  }
+ ],
+ "Rochester": [
+  {
+   "routeGTFSID": "6-R01",
+   "routeNumber": "Town",
+   "liveTrack": false
+  }
+ ],
+ "Benalla": [
+  {
+   "routeGTFSID": "6-BNI",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-BNZ",
+   "routeNumber": "2",
+   "liveTrack": false
+  }
+ ],
+ "Seymour": [
+  {
+   "routeGTFSID": "6-SY1",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-SY2",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-SY3",
+   "routeNumber": "3",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-SY4",
+   "routeNumber": "4",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-SY5",
+   "routeNumber": "5",
+   "liveTrack": false
+  }
+ ],
+ "Wallan": [
+  {
+   "routeGTFSID": "6-WN1",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-WN2",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-W12",
+   "routeNumber": "A",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-WN3",
+   "routeNumber": "B",
+   "liveTrack": false
+  }
+ ],
+ "Wangaratta": [
+  {
+   "routeGTFSID": "6-a20",
+   "routeNumber": "401",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-a21",
+   "routeNumber": "402",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-a22",
+   "routeNumber": "403",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-W04",
+   "routeNumber": "404",
+   "liveTrack": false
+  }
+ ],
+ "Kilmore": [
+  {
+   "routeGTFSID": "6-KM1",
+   "routeNumber": "Town",
+   "liveTrack": false
+  }
+ ],
+ "Colac": [
+  {
+   "routeGTFSID": "6-CL1",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-cc2",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-CL3",
+   "routeNumber": "3",
+   "liveTrack": false
+  }
+ ],
+ "Portland": [
+  {
+   "routeGTFSID": "6-PT1",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-PT2",
+   "routeNumber": "2",
+   "liveTrack": false
+  }
+ ],
+ "Warrnambool": [
+  {
+   "routeGTFSID": "6-wr1",
+   "routeNumber": "1",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-wr2",
+   "routeNumber": "2",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-wr3",
+   "routeNumber": "3",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-wr4",
+   "routeNumber": "4",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-wr5",
+   "routeNumber": "5",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-wr6",
+   "routeNumber": "6",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-wr8",
+   "routeNumber": "8",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-wr9",
+   "routeNumber": "9",
+   "liveTrack": false
+  }
+ ],
+ "Korumburra": [
+  {
+   "routeGTFSID": "6-935",
+   "routeNumber": "Town",
+   "liveTrack": false
   }
  ]
 }

@@ -1,5 +1,6 @@
 module.exports = {
   "6-GVL": null,
+  "6-Gld": null,
   "6-a28": null,
 
   "6-R54": null,
@@ -20,6 +21,5 @@ module.exports = {
 
   "6-WN1": "1",
   "6-WN2": "2",
-  "6-WN3": "B",
   "6-W12": "A"
 }

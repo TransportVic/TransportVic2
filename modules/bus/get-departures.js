@@ -91,7 +91,7 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
     if (screenServices.some(svc => svc.routeGTFSID.startsWith('4-'))) {
       bayType = 'metro'
     } else { // Regional/Skybus
-      if (screenServices.some(svc => regionalGTFSIDs[svc.routeGTFSID])) {
+      if (screenServices.some(svc => regionalGTFSIDs[svc.routeGTFSID] && regionalGTFSIDs[svc.routeGTFSID].liveTrack)) {
         bayType = 'regional-live'
       } else {
         bayType = 'regional'
@@ -288,7 +288,7 @@ async function getDepartures(stop, db, time, discardUnmatched) {
 
       let nonLiveDepartures = scheduledDepartures.filter(departure => {
         let { routeGTFSID } = departure.trip
-        return !(routeGTFSID.startsWith('4-') || regionalGTFSIDs[routeGTFSID])
+        return !(routeGTFSID.startsWith('4-') || (regionalGTFSIDs[routeGTFSID] && regionalGTFSIDs[routeGTFSID].liveTrack))
       })
 
       departures = [...ptvDepartures, ...nonLiveDepartures]

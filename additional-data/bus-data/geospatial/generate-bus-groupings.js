@@ -16,14 +16,45 @@ database.connect(async () => {
           $geometry: region.geometry
         }
       },
-      routeNumber: {
-        $ne: null
-      }
+      $or: [{
+        routeNumber: {
+          $ne: null
+        }
+      }, {
+        routeName: / town /i
+      }],
+      $and: [{
+        routeNumber: {
+          $not: {
+            $eq: "Goldrush"
+          }
+        },
+      }, {
+        routeNumber: {
+          $not: /Schools/
+        }
+      }]
     }).toArray()
 
-    acc[region.properties.name.trim()] = matchingRoutes.map(route => {
-      return { routeGTFSID: route.routeGTFSID, routeNumber: route.routeNumber.replace('_x', '') }
-    }).filter(r => !isNaN(parseInt(r.routeNumber))).sort((a, b) => parseInt(a.routeNumber) - parseInt(b.routeNumber))
+    if (!matchingRoutes.length) {
+      matchingRoutes = await routes.findDocuments({
+        'routePath.path': {
+          $geoWithin: {
+            $geometry: region.geometry
+          }
+        },
+      }).toArray() // Open it up to all routes if nothing matched (will be town buses)
+    }
+
+    let regionName = region.properties.name.trim()
+    let hasLiveTrack = regionName.startsWith('L-')
+    if (hasLiveTrack) regionName = regionName.slice(2)
+
+    acc[regionName] = matchingRoutes.map(route => {
+      let routeNumber = route.routeNumber ? route.routeNumber.replace('_x', '') : "Town"
+
+      return { routeGTFSID: route.routeGTFSID, routeNumber, liveTrack: hasLiveTrack }
+    }).sort((a, b) => a.routeNumber.localeCompare(b.routeNumber))
 
     return acc
   })

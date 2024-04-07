@@ -20,14 +20,14 @@ module.exports = {
 
   "6-a44": ["Dysons (Wangaratta)"], //  Albury - Wodonga - Myrtleford
 
-  "6-HT1": ["Horsham Transit"], // 1 Horsham - Albert Street North
+  // "6-HT1": ["Horsham Transit"], // 1 Horsham - Albert Street North
 
-  "6-ST1": ["Sandlant Buses"], // 1 Stawell - Ligar St
-  "6-HT2": ["Horsham Transit"], // 2 Horsham - Sunnyside
-  "6-ST2": ["Sandlant Buses"], // 2 Stawell - Patrick St
-  "6-HT3": ["Horsham Transit"], // 3 Horsham - Wawunna Road
-  "6-HT4": ["Horsham Transit"], // 4 Horsham - Williams Road South Bank
-  "6-HT5": ["Horsham Transit"], // 5 Horsham - Natimuk Road
+  // "6-ST1": ["Sandlant Buses"], // 1 Stawell - Ligar St
+  // "6-HT2": ["Horsham Transit"], // 2 Horsham - Sunnyside
+  // "6-ST2": ["Sandlant Buses"], // 2 Stawell - Patrick St
+  // "6-HT3": ["Horsham Transit"], // 3 Horsham - Wawunna Road
+  // "6-HT4": ["Horsham Transit"], // 4 Horsham - Williams Road South Bank
+  // "6-HT5": ["Horsham Transit"], // 5 Horsham - Natimuk Road
 
   "6-a31": ["Dysons (Wangaratta)"], // 7 Albury - Beechworth
   "6-BM8": ["Dysons (Moama)"], // Barmah 8 Barmah - Echuca

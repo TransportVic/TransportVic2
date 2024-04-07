@@ -61,7 +61,11 @@ database.connect({
 
       if (regionalGTFSIDs[routeGTFSID]) {
         let routeData = regionalGTFSIDs[routeGTFSID]
-        return regionalOperators[routeData.region][routeData.routeNumber]
+        if (regionalOperators[routeData.region] && regionalOperators[routeData.region][routeData.routeNumber]) {
+          return regionalOperators[routeData.region][routeData.routeNumber]
+        }
+
+        console.log(routeGTFSID, routeName, routeNumber, 'missing from defined town region', routeData.region)
       }
 
       if (operatorOverrides[routeGTFSID]) return operatorOverrides[routeGTFSID]
@@ -93,6 +97,9 @@ database.connect({
       return newRouteName
     }, (routeGTFSID, routeNumber) => {
       if (routeNumbers[routeGTFSID]) return routeNumbers[routeGTFSID]
+      
+      let parts
+      if (parts = routeNumber.match(/[a-z]+ (\d+)$/i)) return parts[1]
 
       return (routeNumber && routeNumber.length ? routeNumber : null)
     })

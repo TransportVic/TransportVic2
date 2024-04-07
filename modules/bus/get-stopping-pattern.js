@@ -24,7 +24,7 @@ function determineStopType(stop) {
   if (screenServices.some(svc => svc.routeGTFSID.startsWith('4-'))) {
     stopType = 'metro'
   } else { // Regional/Skybus
-    if (screenServices.some(svc => regionalGTFSIDs[svc.routeGTFSID])) {
+    if (screenServices.some(svc => regionalGTFSIDs[svc.routeGTFSID] && regionalGTFSIDs[svc.routeGTFSID].liveTrack)) {
       stopType = 'regional-live'
     } else {
       stopType = 'regional'
