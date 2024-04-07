@@ -68,8 +68,8 @@ database.connect({
         console.log(routeGTFSID, routeName, routeNumber, 'missing from defined town region', routeData.region)
       }
 
-      if (operatorOverrides[routeGTFSID]) return operatorOverrides[routeGTFSID]
-      if (serviceLookup[routeGTFSID]) return serviceLookup[routeGTFSID].operator
+      // if (operatorOverrides[routeGTFSID]) return operatorOverrides[routeGTFSID]
+      // if (serviceLookup[routeGTFSID]) return serviceLookup[routeGTFSID].operator
 
       let routeMatch = Object.values(serviceLookup).find(route => {
         return routeName === route.routeName && routeNumber === route.routeNumber

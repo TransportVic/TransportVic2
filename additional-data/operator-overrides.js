@@ -1,16 +1,4 @@
 module.exports = {
-  "4-PMC": ["Ventura Bus Lines"],
-
-  "8-95E": ["Dysons"], // 958
-  "8-965": ["McKenzies Tourist Service"], // 965
-  "8-96w": ["Ventura Bus Lines"], // 967
-  "8-97B": ["Ventura Bus Lines"], // 978
-  "8-97P": ["Ventura Bus Lines"], // 979
-  "8-97g": ["Ventura Bus Lines"], // 979
-  "8-98l": ["Ventura Bus Lines"], // 981
-  "8-98i": ["Ventura Bus Lines"],
-  "8-98Z": ["Ventura Bus Lines"], // 982
-
   "6-858": ["Dysons (Wangaratta)"], // Wangaratta - Myrtleford
   "6-DWB": ["Dysons (Wangaratta)"], // Wangaratta - Bright
 
