@@ -14,10 +14,10 @@ nvm install node
 
 echo "[mongodb-org-7.0]
 name=MongoDB Repository
-baseurl=https://repo.mongodb.org/dnf/amazon/2023/mongodb-org/7.0/x86_64/
+baseurl=https://repo.mongodb.org/yum/redhat/9/mongodb-org/7.0/x86_64/
 gpgcheck=1
 enabled=1
-gpgkey=https://www.mongodb.org/static/pgp/server-7.0.asc" | sudo tee /etc/yum.repos.d/mongodb-org-7.0.repo
+gpgkey=https://pgp.mongodb.com/server-7.0.asc" | sudo tee /etc/yum.repos.d/mongodb-org-7.0.repo
 sudo dnf install -y mongodb-mongosh-shared-openssl3 git
 sudo dnf install -y mongodb-org
 
@@ -62,3 +62,16 @@ EOF
 sudo mkfs.xfs -f /dev/sdf1
 sudo mount -t xfs /dev/sdf1 /data/mongo
 sudo chown mongod /data/mongo
+
+
+
+# If needed to configure SELinux
+sudo semanage fcontext -a -t mongod_var_lib_t '/home/mongod.*'
+sudo chcon -Rv -u system_u -t mongod_var_lib_t '/home/mongod'
+
+sudo semanage fcontext -a -t mongod_log_t '/home/mongod.*'
+sudo chcon -Rv -u system_u -t mongod_log_t '/home/mongod'
+
+sudo semanage fcontext -a -t mongod_var_run_t '/home/mongod.*'
+sudo chcon -Rv -u system_u -t mongod_var_run_t '/home/mongod'
+sudo restorecon -R -v '/home/mongod'

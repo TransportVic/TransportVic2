@@ -18,7 +18,10 @@ async function requestTimings() {
 
   global.loggers.trackers.ccl.info('requesting timings for vline southern cross')
   let dbStops = database.getCollection('stops')
-  await getVLineDepartures(await dbStops.findDocument({ stopName: 'Southern Cross Railway Station' }), database)
+  let sss = await dbStops.findDocument({ stopName: 'Southern Cross Railway Station' })
+  
+  let vlineStop = sss.bays.find(bay => bay.mode === 'regional train')
+  if (vlineStop) await getVLineDepartures(sss, database)
 }
 
 database.connect(async () => {

@@ -19,3 +19,5 @@
 /logs
 /timetable-updating-server/logs
 tt-intermediate.pem
+
+/additional-data/myki-zone-test

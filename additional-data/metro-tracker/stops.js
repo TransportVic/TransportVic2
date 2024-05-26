@@ -21,7 +21,7 @@ module.exports = [
   'Ashburton',
   'Riversdale',
   'Glenferrie',
-  'Surrey Hills',
+  'Union',
   'Box Hill',
   'Blackburn',
   'Mitcham',
