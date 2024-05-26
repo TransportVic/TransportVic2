@@ -304,7 +304,7 @@ async function getDepartures(stop, db, time, discardUnmatched) {
       }).map(bay => {
         let {fullStopName} = bay
         if (fullStopName.includes('/')) {
-          return fullStopName.replace(/\/\d+[a-zA-z]? /, '/')
+          return fullStopName.replace(/\/\d+[a-zA-Z]? /, '/')
         } else return fullStopName
       }).filter((e, i, a) => a.indexOf(e) === i).length > 1
 
