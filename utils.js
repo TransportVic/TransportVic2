@@ -213,8 +213,8 @@ module.exports = {
     .replace(/St(\b)/, 'St.$1')
     .replace('St..', 'St. ')
     .replace('Ret Village', 'Retirement Village')
-    .replace(' SC', ' Shopping Centre')
-    .replace(' RS', ' Railway Station')
+    .replace(/ SC(\b)/, ' Shopping Centre$1')
+    .replace(/ RS(\b)/, ' Railway Station$1')
     .replace(/Cresent/g, 'Crescent')
 
     return name.replace(/  +/g, ' ')
