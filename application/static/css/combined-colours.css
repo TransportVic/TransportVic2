@@ -478,6 +478,13 @@
   background-color: #07960e !important;
 }
 
+.seymour-coaches {
+  background-color: #2c4269 !important;
+}
+
+:nth-child(even) > .seymour-coaches {
+  background-color: #233960 !important;
+}
 
 
 .glen-waverley-line {
