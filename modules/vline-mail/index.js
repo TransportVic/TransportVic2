@@ -18,8 +18,9 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 async function inboundMessage(connection, data) {
   let {subject, html} = data
-  let $ = cheerio.load(html)
-  let textContent = $('center').text()
+  let $ = cheerio.load(`<vline-message>${html}</vline-message>`)
+  global.loggers.mail.log(`Received message: ${html}`)
+  let textContent = $('vline-message').text()
 
   handleMessage(subject || '', textContent)
 }
