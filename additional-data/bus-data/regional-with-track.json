@@ -86,6 +86,11 @@
    "liveTrack": true
   },
   {
+   "routeGTFSID": "6-G45",
+   "routeNumber": "45",
+   "liveTrack": true
+  },
+  {
    "routeGTFSID": "6-x45",
    "routeNumber": "45",
    "liveTrack": true
@@ -103,6 +108,26 @@
   {
    "routeGTFSID": "6-G51",
    "routeNumber": "51",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-G52",
+   "routeNumber": "52",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-G53",
+   "routeNumber": "53",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-G54",
+   "routeNumber": "54",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-G55",
+   "routeNumber": "55",
    "liveTrack": true
   },
   {
@@ -195,6 +220,26 @@
   {
    "routeGTFSID": "6-30B",
    "routeNumber": "30",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-59a",
+   "routeNumber": "BalWN1",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-59b",
+   "routeNumber": "BalWN2",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-59c",
+   "routeNumber": "BalWN3",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-59d",
+   "routeNumber": "BalWN4",
    "liveTrack": true
   }
  ],

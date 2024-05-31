@@ -10,7 +10,7 @@ module.exports = function merge(inputVariants, matched) {
   })
 
   let loopVariants = inputVariants.filter(variant => {
-    return variant[0].stopName === l(variant).stopName
+    return variant[0].stopName === l(variant).stopName && variant.length > 1
   })
 
   let distinctTerminusVariants = inputVariants.filter(variant => {
