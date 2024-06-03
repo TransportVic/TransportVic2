@@ -33,7 +33,7 @@ async function fetchAndUpdate() {
       runID
     })
 
-    if (consist && tripData) await mergeConsist(tripData, runID, consist, metroTrips)
+    if (consist && tripData) await mergeConsist(tripData, runID, tripDate, consist, metroTrips)
   })
 }
 

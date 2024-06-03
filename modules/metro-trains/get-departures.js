@@ -826,7 +826,7 @@ async function saveConsists(departures, db) {
   await async.forEach(deduped, async departure => {
     if (!departure.departureDay) return global.loggers.error.err('No date on trip', departure)
 
-    departure.fleetNumber = await mergeConsist(departure.trip, departure.runID, departure.fleetNumber, metroTrips)
+    departure.fleetNumber = await mergeConsist(departure.trip, departure.runID, departure.departureDay, departure.fleetNumber, metroTrips)
   })
 }
 

@@ -1,6 +1,6 @@
-module.exports = async function mergeConsist(trip, runID, newConsist, metroTrips) {
+module.exports = async function mergeConsist(trip, runID, departureDay, newConsist, metroTrips) {
   let query = {
-    date: trip.operationDays,
+    date: departureDay,
     runID: runID.slice(0, 4)
   }
 
@@ -33,7 +33,7 @@ module.exports = async function mergeConsist(trip, runID, newConsist, metroTrips
       }
     } else if (existingTrip.consist.length === 3 && !existingTrip.consist.includes(tripData.consist[0])) { // We might have matched half a train and now have the other half, sanity check
       let sanityCheckTrip = await metroTrips.findDocument({
-        date: trip.operationDays,
+        date: departureDay,
         $and: [{ // Match both the one already existing and the one given on the same day to check if they're coupled up and can be merged
           consist: tripData.consist[0]
         }, {

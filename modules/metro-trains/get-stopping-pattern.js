@@ -55,7 +55,7 @@ function extendMetroEstimation(stopTimings) {
 async function saveAndUpdateConsist(trip, departureDay, consist, metroTrips) {
   if (!departureDay) return global.loggers.error.err('No date on trip', partialTrip)
 
-  return await mergeConsist(trip, trip.runID, consist, metroTrips)
+  return await mergeConsist(trip, trip.runID, departureDay, consist, metroTrips)
 }
 
 async function saveLocation(consist, location, metroLocations) {
