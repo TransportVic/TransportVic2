@@ -1,7 +1,7 @@
-module.exports = async function mergeConsist(trip, newConsist, metroTrips) {
+module.exports = async function mergeConsist(trip, runID, newConsist, metroTrips) {
   let query = {
     date: trip.operationDays,
-    runID: trip.runID.slice(0, 4)
+    runID: runID.slice(0, 4)
   }
 
   let tripData = {
