@@ -420,6 +420,9 @@ async function cfdGroupMatch(train, stopGTFSID, stationName, db) {
   if (train.runDestination === 'Parliament') // RMD -> FSS -> CLP -> PAR
     possibleDestinations.push('Flinders Street')
 
+  if (train.runDestination === 'Pakenham')
+    possibleDestinations.push('East Pakenham')
+
   if (train.runDestination === 'Southern Cross' && !train.viaCityLoop) // RMD -> FSS -> SSS -> NPT (Occo Only)
     possibleDestinations.push('Flinders Street')
 
