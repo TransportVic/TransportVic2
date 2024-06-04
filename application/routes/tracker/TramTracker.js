@@ -222,6 +222,8 @@ router.get('/shift', async (req, res) => {
     })
   }
 
+  shift = shift.toUpperCase()
+
   let query = {
     date,
     shift
