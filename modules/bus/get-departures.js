@@ -127,11 +127,14 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
 
       let destination = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
 
+      
       let trip, routeGTFSID, routeGTFSIDQuery
       let ptvRouteNumber = route.route_number
-
+        
       if (!ptvRouteNumber) return
-
+      
+      if (destination.includes('Croydon Railway Station') && run.run_ref.match(/^\d+$/) && ['671', '672'].includes(ptvRouteNumber)) return
+      
       if (bayType === 'metro') {
         let trimmedRouteNumber = ptvRouteNumber.slice(0, 3)
         let potentialBusRoutes = await getRoutes(db, `M-${trimmedRouteNumber}`, {

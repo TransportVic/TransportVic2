@@ -137,6 +137,8 @@ module.exports = async function (data, db) {
       let matchingService = bay.services.some(s => s.routeGTFSID === routeGTFSID && s.gtfsDirection === gtfsDirection)
 
       return bay.mode === 'bus' && bay.fullStopName === stopName && matchingService
+    }) || dbStops[departure.stop_id].bays.find(bay => { // Relax the rules slightly to match just based on full stop name
+      return bay.mode === 'bus' && bay.fullStopName === stopName
     }) || dbStops[departure.stop_id].bays.find(bay => bay.mode === 'bus')
 
     let departureTimeMinutes = utils.getMinutesPastMidnight(scheduledDepartureTime)
