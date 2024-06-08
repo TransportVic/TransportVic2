@@ -302,6 +302,16 @@ async function getDepartures(stop, db, time, discardUnmatched) {
         return a.actualDepartureTime - b.actualDepartureTime
       })
 
+      let tripIDsSeen = {}
+      departures = departures.filter(departure => {
+        if (tripIDsSeen[departure.trip.tripID]) {
+          return departure.scheduledDepartureTime.diff(tripIDsSeen[departure.trip.tripID], 'minutes') >= 3
+        } else {
+          tripIDsSeen[departure.trip.tripID] = departure.scheduledDepartureTime
+          return true
+        }
+      })
+
       let shouldShowRoad = stop.bays.filter(bay => {
         return bay.mode === 'bus'
       }).map(bay => {
@@ -356,9 +366,15 @@ async function getDepartures(stop, db, time, discardUnmatched) {
           return hasSeenStop
         })
 
-        let departureBayID = upcomingStops[0].stopGTFSID
-        let bay = busBays[departureBayID]
-        let departureRoad = (upcomingStops[0].stopName.split('/').slice(-1)[0] || '').replace(/^\d+[a-zA-Z]? /, '')
+        let stopDepartures = upcomingStops.slice(0, -1).filter(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
+        let preferredStop = stopDepartures.sort((a, b) => {
+          let aBay = busBays[a.stopGTFSID], bBay = busBays[b.stopGTFSID]
+          if (aBay && !bBay) return -1
+          else return 1
+        })[0]
+
+        let bay = busBays[preferredStop.stopGTFSID]
+        let departureRoad = (preferredStop.stopName.split('/').slice(-1)[0] || '').replace(/^\d+[a-zA-Z]? /, '')
 
         departure.bay = bay
         departure.departureRoad = departureRoad
