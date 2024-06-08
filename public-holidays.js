@@ -41,7 +41,16 @@ function getPublicHolidayName(time) {
   return eventCache[utils.getYYYYMMDD(time)]
 }
 
+async function waitForDB() {
+  for (let i = 0; i < 4; i++) {
+    if (!gtfsTimetables) await utils.sleep(500)
+    if (gtfsTimetables) break
+  }
+}
+
 async function getPHDayOfWeek(time) {
+  await waitForDB()
+
   let day = utils.getYYYYMMDD(time)
   if (eventCache[day]) {
     if (dayCache[day]) {
@@ -87,6 +96,8 @@ async function getDayOfWeek(time) {
 }
 
 async function isNightNetworkRunning(time) {
+  await waitForDB()
+
   let day = utils.getYYYYMMDD(time)
   if (nightNetworkRunning[day]) return nightNetworkRunning[day]
 
