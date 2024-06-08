@@ -12,7 +12,7 @@ let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => 
   let regionRoutes = regionalRouteNumbers[region]
 
   regionRoutes.forEach(route => {
-    acc[route.routeGTFSID] = { region, routeNumber: route.routeNumber, hasLive: route.liveTrack }
+    acc[route.routeGTFSID] = { region, routeNumber: route.routeNumber, liveTrack: route.liveTrack }
   })
 
   return acc
@@ -91,7 +91,7 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
     if (screenServices.some(svc => svc.routeGTFSID.startsWith('4-'))) {
       bayType = 'metro'
     } else { // Regional/Skybus
-      if (screenServices.some(svc => regionalGTFSIDs[svc.routeGTFSID] && regionalGTFSIDs[svc.routeGTFSID].hasLive)) {
+      if (screenServices.some(svc => regionalGTFSIDs[svc.routeGTFSID] && regionalGTFSIDs[svc.routeGTFSID].liveTrack)) {
         bayType = 'regional-live'
       } else {
         bayType = 'regional'

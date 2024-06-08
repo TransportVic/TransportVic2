@@ -15,7 +15,7 @@ let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => 
   let regionRoutes = regionalRouteNumbers[region]
 
   regionRoutes.forEach(route => {
-    acc[route.routeGTFSID] = { region, routeNumber: route.routeNumber }
+    acc[route.routeGTFSID] = { region, routeNumber: route.routeNumber, liveTrack: route.liveTrack }
   })
 
   return acc

@@ -10,7 +10,7 @@ let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => 
   let regionRoutes = regionalRouteNumbers[region]
 
   regionRoutes.forEach(route => {
-    acc[route.routeGTFSID] = { region, routeNumber: route.routeNumber }
+    acc[route.routeGTFSID] = { region, routeNumber: route.routeNumber, liveTrack: route.liveTrack }
   })
 
   return acc
@@ -112,7 +112,7 @@ module.exports = async function (data, db) {
   let routeGTFSID = route.routeGTFSID
 
   let directionName = ptvDirection.direction_name
-  let gtfsDirection = route.ptvDirections[directionName]
+  let gtfsDirection = referenceTrip ? referenceTrip.gtfsDirection : route.ptvDirections[directionName] || 0
 
   await async.forEach(Object.values(stops), async stop => {
     let dbStop = await getStop(stop, stopsCollection)

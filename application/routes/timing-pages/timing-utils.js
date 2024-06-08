@@ -57,7 +57,7 @@ module.exports = {
         })
       })
     })
-
+    
     let hasNoNumber = services.includes('')
     let alphaRoutes = services.filter(service => service.match(/^[A-Za-z]/))
     let numberRoutes = services.filter(service => service.match(/^\d/))

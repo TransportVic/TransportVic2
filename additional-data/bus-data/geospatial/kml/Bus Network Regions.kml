@@ -823,7 +823,7 @@
         </Polygon>
       </Placemark>
       <Placemark>
-        <name>Seymour</name>
+        <name>L-Seymour</name>
         <styleUrl>#poly-000000-1200-77-nodesc</styleUrl>
         <Polygon>
           <outerBoundaryIs>

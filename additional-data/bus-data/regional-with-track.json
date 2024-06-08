@@ -935,27 +935,27 @@
   {
    "routeGTFSID": "6-SY1",
    "routeNumber": "1",
-   "liveTrack": false
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-SY2",
    "routeNumber": "2",
-   "liveTrack": false
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-SY3",
    "routeNumber": "3",
-   "liveTrack": false
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-SY4",
    "routeNumber": "4",
-   "liveTrack": false
+   "liveTrack": true
   },
   {
    "routeGTFSID": "6-SY5",
    "routeNumber": "5",
-   "liveTrack": false
+   "liveTrack": true
   }
  ],
  "Wallan": [
