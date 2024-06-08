@@ -304,10 +304,12 @@ async function getDepartures(stop, db, time, discardUnmatched) {
 
       let tripIDsSeen = {}
       departures = departures.filter(departure => {
-        if (tripIDsSeen[departure.trip.tripID]) {
-          return departure.scheduledDepartureTime.diff(tripIDsSeen[departure.trip.tripID], 'minutes') >= 3
+        let id = departure.trip.tripID || departure.trip.runID
+
+        if (tripIDsSeen[id]) {
+          return departure.scheduledDepartureTime.diff(tripIDsSeen[id], 'minutes') >= 5
         } else {
-          tripIDsSeen[departure.trip.tripID] = departure.scheduledDepartureTime
+          tripIDsSeen[id] = departure.scheduledDepartureTime
           return true
         }
       })
