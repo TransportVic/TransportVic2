@@ -53,7 +53,13 @@ database.connect({}, async err => {
 
     await async.forEachOf(routeDirections, async (direction, gtfsDirection) => {
       if (!direction) return
-      let mergedStops = mergeStops(direction, (a, b) => a.stopName == b.stopName)
+
+      let routeType = routeData.mode
+      if (routeType === 'bus' && routeGTFSID[0] === '6' && !routeData.routeNumber) {
+        routeType = 'bus-inter-town'
+      }
+
+      let mergedStops = mergeStops(direction, (a, b) => a.stopName == b.stopName, routeType)
 
       let mostCommonOrigin = (await gtfsTimetables.aggregate([{
           $match: {

@@ -48,6 +48,7 @@ database.connect(async () => {
     if (hasLiveTrack) regionName = regionName.slice(2)
 
     if (regionName === 'Warragul') matchingRoutes = matchingRoutes.filter(route => route.routeNumber)
+    if (regionName === 'Glenrowan') matchingRoutes = matchingRoutes.filter(route => route.routeNumber === 'H46')
 
     acc[regionName] = matchingRoutes.map(route => {
       let routeNumber = route.routeNumber ? route.routeNumber.replace('_x', '') : "Town"

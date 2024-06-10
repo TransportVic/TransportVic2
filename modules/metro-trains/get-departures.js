@@ -759,7 +759,7 @@ function appendDepartureDay(departure, stopGTFSID) {
 
   let originDepartureTime
   if (!stopData) {
-    global.loggers.general.warn('No departure day', stopGTFSID, departure)
+    // global.loggers.general.warn('No departure day', stopGTFSID, departure)
     let departureTimeMinutes = utils.getMinutesPastMidnight(departure.scheduledDepartureTime)
     if (departureTimeMinutes >= 180) { // 3am - midnight
 

@@ -4,7 +4,7 @@ function hash(stops) {
 
 function l(m) { return m.slice(-1)[0] }
 
-module.exports = function merge(inputVariants, matched) {
+module.exports = function merge(inputVariants, matched, routeType) {
   inputVariants = inputVariants.sort((a, b) => {
     return b.length - a.length || l(a).stopName.length - l(b).stopName.length || hash(a) - hash(b)
   })
@@ -26,7 +26,7 @@ module.exports = function merge(inputVariants, matched) {
   branch = []
 
   let origin = stopsList[0]
-
+  let hasFlag
   variants.slice(1).forEach(variant => {
     let lastMainMatch = 0
     let isLoopVariant = variant[0].stopName === l(variant).stopName
@@ -35,10 +35,10 @@ module.exports = function merge(inputVariants, matched) {
     for (let variantStop of variant) {
       stopIndex++
 
-      let matchIndex = -1
+      let matchIndex = lastMainMatch - 1
 
       let hasMatched = false
-      for (let stop of stopsList) {
+      for (let stop of stopsList.slice(lastMainMatch)) {
         matchIndex++
 
         if (hasMatched = matched(stop, variantStop)) {
@@ -54,18 +54,26 @@ module.exports = function merge(inputVariants, matched) {
             let firstHalf = stopsList.slice(0, matchIndex - offset)
             let backHalf = stopsList.slice(matchIndex - offset)
 
-            if (matched(branchEnd, origin)) {
-              stopsList = firstHalf.concat(backHalf).concat(branch)
-            } else {
-              stopsList = firstHalf.concat(branch).concat(backHalf)
-            }
+            // if (matched(branchEnd, origin)) {
+            //   stopsList = firstHalf.concat(backHalf).concat(branch)
+            // } else {
+              if (routeType === 'bus-inter-town' && branch.length === 1) {
+                if (stopIndex === branch.length) {
+                  stopsList = branch.concat(stopsList)
+                } else {
+                  stopsList = firstHalf.concat(branch).concat(backHalf)
+                }
+              } else {
+                stopsList = firstHalf.concat(branch).concat(backHalf)
+              }
+            // }
 
             origin = stopsList[0]
 
             branch = []
           } else { // otherwise we're on sync, all good
             if (matchIndex < lastMainMatch) {
-              let jumpPart = variant.slice(matchIndex, lastMainMatch)
+              let jumpPart = variant.slice(matchIndex, lastMainMatch + 1)
               let subBranch = []
               for (let jumpStop of jumpPart) {
                 if (matched(jumpStop, variantStop)) break

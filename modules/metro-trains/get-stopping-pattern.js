@@ -380,7 +380,7 @@ module.exports = async function (data, db) {
       }
     }
 
-    let cityStops = referenceTrip.stopTimings.filter(stop => cityStations.includes(stop.stopName.slice(0, -16)))
+    let cityStops = stopTimings.filter(stop => cityStations.includes(stop.stopName.slice(0, -16)))
     let otherStops = referenceTrip.stopTimings.filter(stop => !cityStops.includes(stop))
     let mainTripMerged = otherStops.concat(extraStopData).sort((a, b) => (a.departureTimeMinutes || a.arrivalTimeMinutes) - (b.departureTimeMinutes || b.arrivalTimeMinutes))
 

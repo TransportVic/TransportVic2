@@ -223,6 +223,11 @@
    "liveTrack": true
   },
   {
+   "routeGTFSID": "6-31B",
+   "routeNumber": "31",
+   "liveTrack": true
+  },
+  {
    "routeGTFSID": "6-59a",
    "routeNumber": "BalWN1",
    "liveTrack": true
@@ -479,6 +484,33 @@
    "liveTrack": true
   }
  ],
+ "Seymour": [
+  {
+   "routeGTFSID": "6-SY1",
+   "routeNumber": "1",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-SY2",
+   "routeNumber": "2",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-SY3",
+   "routeNumber": "3",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-SY4",
+   "routeNumber": "4",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-SY5",
+   "routeNumber": "5",
+   "liveTrack": true
+  }
+ ],
  "Horsham": [
   {
    "routeGTFSID": "6-HR1",
@@ -537,12 +569,22 @@
  ],
  "Bacchus Marsh": [
   {
+   "routeGTFSID": "6-BM3",
+   "routeNumber": "433",
+   "liveTrack": false
+  },
+  {
    "routeGTFSID": "6-Bx3",
    "routeNumber": "433",
    "liveTrack": false
   },
   {
    "routeGTFSID": "6-Bx4",
+   "routeNumber": "434",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-BM4",
    "routeNumber": "434",
    "liveTrack": false
   },
@@ -593,6 +635,13 @@
   {
    "routeGTFSID": "6-Mab",
    "routeNumber": "Town",
+   "liveTrack": false
+  }
+ ],
+ "Smythesdale": [
+  {
+   "routeGTFSID": "6-C27",
+   "routeNumber": "C27",
    "liveTrack": false
   }
  ],
@@ -688,6 +737,13 @@
   {
    "routeGTFSID": "6-14",
    "routeNumber": "14",
+   "liveTrack": false
+  }
+ ],
+ "Eildon": [
+  {
+   "routeGTFSID": "6-V63",
+   "routeNumber": "V63",
    "liveTrack": false
   }
  ],
@@ -919,6 +975,18 @@
    "liveTrack": false
   }
  ],
+ "Gisborne": [
+  {
+   "routeGTFSID": "6-473",
+   "routeNumber": "473",
+   "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-474",
+   "routeNumber": "474",
+   "liveTrack": false
+  }
+ ],
  "Benalla": [
   {
    "routeGTFSID": "6-BNI",
@@ -929,33 +997,6 @@
    "routeGTFSID": "6-BNZ",
    "routeNumber": "2",
    "liveTrack": false
-  }
- ],
- "Seymour": [
-  {
-   "routeGTFSID": "6-SY1",
-   "routeNumber": "1",
-   "liveTrack": true
-  },
-  {
-   "routeGTFSID": "6-SY2",
-   "routeNumber": "2",
-   "liveTrack": true
-  },
-  {
-   "routeGTFSID": "6-SY3",
-   "routeNumber": "3",
-   "liveTrack": true
-  },
-  {
-   "routeGTFSID": "6-SY4",
-   "routeNumber": "4",
-   "liveTrack": true
-  },
-  {
-   "routeGTFSID": "6-SY5",
-   "routeNumber": "5",
-   "liveTrack": true
   }
  ],
  "Wallan": [
@@ -1110,6 +1151,13 @@
   {
    "routeGTFSID": "6-909",
    "routeNumber": "909",
+   "liveTrack": false
+  }
+ ],
+ "Glenrowan": [
+  {
+   "routeGTFSID": "6-H46",
+   "routeNumber": "H46",
    "liveTrack": false
   }
  ],

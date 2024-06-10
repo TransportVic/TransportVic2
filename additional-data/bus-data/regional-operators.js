@@ -13,7 +13,8 @@ module.exports = {
     "24": ["CDC Ballarat"],
     "25": ["CDC Ballarat"],
     "26": ["CDC Ballarat"],
-    "30": ["CDC Ballarat"]
+    "30": ["CDC Ballarat"],
+    "31": ["CDC Ballarat"]
   },
   "Geelong": {
     "1": ["CDC Geelong"],
@@ -37,6 +38,9 @@ module.exports = {
     "49": ["McHarrys Bus Lines"],
     "50": ["McHarrys Bus Lines"],
     "51": ["McHarrys Bus Lines"],
+    "52": ["McHarrys Bus Lines"],
+    "53": ["McHarrys Bus Lines"],
+    "54": ["McHarrys Bus Lines"],
     "55": ["McHarrys Bus Lines"],
     "56": ["McHarrys Bus Lines"],
     "60": ["McHarrys Bus Lines"],
