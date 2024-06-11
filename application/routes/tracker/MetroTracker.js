@@ -16,6 +16,12 @@ const lineGroups = require('../../../additional-data/metro-tracker/line-groups')
 
 const metroTypes = require('../../../additional-data/metro-tracker/metro-types')
 const metroConsists = require('../../../additional-data/metro-tracker/metro-consists')
+const rateLimit = require('express-rate-limit')
+
+router.use(rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 15
+}))
 
 let stationCodeLookup = {}
 

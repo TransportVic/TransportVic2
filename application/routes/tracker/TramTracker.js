@@ -3,13 +3,18 @@ const express = require('express')
 const utils = require('../../../utils')
 const url = require('url')
 const querystring = require('querystring')
-const moment = require('moment')
 const tramDestinations = require('../../../additional-data/tram-destinations')
 const tramFleet = require('../../../tram-fleet')
 const knownTrams = require('../../../additional-data/tram-tracker/tram-fleet')
 const tramDepots = require('../../../additional-data/tram-tracker/depot-allocations')
 const serviceDepots = require('../../../additional-data/tram-tracker/service-depots')
 const router = new express.Router()
+const rateLimit = require('express-rate-limit')
+
+router.use(rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 15
+}))
 
 let crossDepotQuery = {
   $or: []
