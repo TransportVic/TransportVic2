@@ -249,7 +249,7 @@ function updateBody() {
           else
             $('.actual', div).textContent = '-- min'
 
-          $('.stoppingType', div).textContent = `${departure.type}${departure.v ? ` via ${departure.v}` : ''}`
+          $('.stoppingType', div).textContent = `${departure.type}${departure.via ? ` via ${departure.via}` : ''}`
 
           if (departure.v) {
             div.className = 'followingDeparture vline'

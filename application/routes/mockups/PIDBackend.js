@@ -455,7 +455,8 @@ function appendStoppingType(departure, stoppingTypes) {
 }
 
 function findVia(departure) {
-  let { routeStops } = departure
+  let { routeStops, type } = departure
+  if (type === 'vline') return ''
 
   let stopsUpToDest = routeStops.slice(0, -1)
 

@@ -38,6 +38,8 @@ router.get('/summary/:station', (req, res) => {
   let query = querystring.parse(url.parse(req.url).query)
   let {station} = req.params
 
+  if (station === 'southern-cross') return res.redirect('/mockups/sss-new')
+
   let stationPlatformData = stationPlatforms[station]
   let stationPID = stationPIDs[station]
   let stationCode = stationNames[station]
