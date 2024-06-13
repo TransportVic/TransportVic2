@@ -9,7 +9,7 @@ const metroTypes = require('../../../additional-data/metro-tracker/metro-types')
 const { encodeTrainType } = require('../../../additional-data/consist-encoder')
 
 let undergroundLoopStations = ['Parliament', 'Flagstaff', 'Melbourne Central']
-let cityLoopStations = ['Southern Cross', ...undergroundLoopStations]
+let cityLoopStations = [...undergroundLoopStations, 'Southern Cross']
 let cityStations = [...cityLoopStations, 'Flinders Street']
 
 let mainLine = ['Paisley', 'Galvin']
@@ -259,13 +259,14 @@ function getRouteStopsForDeparture(departure) {
     routeStops = getRouteStops('Werribee').slice(0)
   }
 
+  let allStops = departure.stopTimings.map(stop => stop.stopName.slice(0, -16))
   if (departure.type === 'vline' && routeStops.includes('Southern Cross')) {
     if (departure.direction === 'Down') return routeStops
     else return routeStops.reverse()
   } else if (departure.routeName === 'City Circle') {
-    return departure.allStops
+    return allStops
   } else {
-    let departureCityStops = departure.allStops.filter(stop => cityStations.includes(stop))
+    let departureCityStops = allStops.filter(stop => cityStations.includes(stop))
     if (northernGroup.includes(departure.routeName)) {
       // Express SSS during Night Network
       if (departureCityStops[0] === 'Flinders Street' && departureCityStops.length === 1 && parseInt(departure.tdn[1]) < 6) {
@@ -278,12 +279,12 @@ function getRouteStopsForDeparture(departure) {
     }
     
     let cityStops = []
-  
+
     if (northernGroup.includes(departure.routeName)) {
-      if (departureCityStops.includes('Southern Cross')) { // Direct
+      if (departureCityStops.includes('Parliament')) { // VL
+        cityStops = ['Southern Cross', 'Flinders Street', 'Parliament', 'Melbourne Central', 'Flagstaff']
+      } else { // Direct
         cityStops = ['Flinders Street', 'Southern Cross']
-      } else { // VL
-        cityStops = ['Flinders Street', 'Parliament', 'Melbourne Central', 'Flagstaff']
       }
       if (!departureCityStops.includes('Flinders Street')) cityStops.shift() // In case starts at SSS
     } else {
@@ -294,10 +295,16 @@ function getRouteStopsForDeparture(departure) {
       }
     }
 
+    let firstCityStop = departureCityStops[0], lastCityStop = departureCityStops[departureCityStops.length - 1]
+
+    let firstIndex = cityStops.indexOf(firstCityStop)
+    let lastIndex = cityStops.indexOf(lastCityStop)
+    if (firstIndex > lastIndex) cityStops.reverse()
+
     if (departure.direction === 'Down') {
       return [...cityStops, ...routeStops]
     } else {
-      return [...routeStops.reverse(), ...cityStops.reverse()]
+      return [...routeStops.reverse(), ...cityStops]
     }
   } 
 }

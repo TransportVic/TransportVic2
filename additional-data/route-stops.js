@@ -26,6 +26,7 @@ let lines = {
     'Officer',
     'Cardinia Road',
     'Pakenham',
+    'East Pakenham',
     'Nar Nar Goon',
     'Tynong',
     'Garfield',
