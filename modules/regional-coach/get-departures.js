@@ -231,8 +231,7 @@ async function getDepartures(stop, db) {
         departure.destination = destination
 
         let departureBayID = departure.trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID)).stopGTFSID
-        let bay
-        if (departureBayID === 20836) { // southern cross
+        if (departureBayID === '20836') { // southern cross
           departure.bay = southernCrossBays[departure.trip.routeGTFSID]
         } else {
           departure.bay = busBays[departureBayID]

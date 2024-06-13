@@ -341,7 +341,7 @@ module.exports = {
   50260: "Bay 6",
 
   // Southern Cross
-  20836: "Bay 54",
+  // 20836: "Bay 54",
 
   // Southern Cross Skybus
   23175: "Bay 51", // melb - avalon, tulla, shuttle arrivals
