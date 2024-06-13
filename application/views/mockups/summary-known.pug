@@ -20,8 +20,17 @@ html
             let title = `/${stationCode}/platform/${pid.platform}`
             if (pid.type === 'trains-from-fss') title = '/FSS/trains-from-fss'
             let url = getURL(station, pid)
-            let isHalf = pid.type.includes('half-')
-          div(class=`pid ${isHalf ? 'half' : verticalPIDs.includes(pid.type) ? 'vertical' : 'horizontal'}`)
+            let pidClass
+            if (pid.type.includes('half-')) {
+              pidClass = 'half'
+            } else if (verticalPIDs.includes(pid.type)) {
+              pidClass = 'vertical'
+            } else if (pid.type === '2-line-led') {
+              pidClass = 'two-line-led'
+            } else {
+              pidClass = 'horizontal'
+            }
+          div(class=`pid ${pidClass}`)
             div.title
               a(href=url)=title
             iframe(src=url)

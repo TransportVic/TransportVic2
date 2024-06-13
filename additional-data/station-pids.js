@@ -109,7 +109,7 @@ module.exports = {
   "South Yarra": [...platr(6, [], 'platform'), conc('up-down', 'd=up'), conc('up-down', 'd=down')],
   "Prahran": [...platr(2, [], 'half-platform')],
   "Burnley": [...platr(4, [], 'half-platform-bold')],
-  "East Richmond": [...platr(2, [], 'half-platform-bold')],
+  "East Richmond": [plat(1, 'half-platform-bold'), plat(2, '2-line-led')],
   "Heyington": [],
   "Kooyong": [...platr(2, [], 'half-platform')],
   "Tooronga": [...platr(2, [], 'half-platform-bold')],
