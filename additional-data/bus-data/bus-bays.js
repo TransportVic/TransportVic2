@@ -181,8 +181,9 @@ module.exports = {
   21270: "Bay 6",
   // Bay 7 is the metro bus bay - no GTFS data
   47252: "Bay 8",
-  21318: "Bay 9",
-  21005: "Bay 10",
+  49468: "Bay 9",
+  21318: "Bay 10",
+  21005: "Bay 11",
 
   // Belgrave
   19583: "Bay 1",

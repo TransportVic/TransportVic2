@@ -3,7 +3,6 @@ module.exports = stopName => {
 
   if (stopName === 'Chisholm TAFE/Stud Road') return 'Chisholm TAFE - Dandenong/Stud Road'
   if (stopName === 'Chisholm Institute/Cleeland Street') return 'Chisholm TAFE - Dandenong/Cleeland Street'
-  if (stopName === 'Chisholm TAFE/Henry Wilson Drive') return 'Chisholm TAFE - Rosebud/Henry Wilson Drive'
   if (stopName === 'Chisholm Institute of TAFE/Beach Street') return 'Chisholm TAFE - Frankston/Beach Street'
   if (stopName === 'Chisholm Institute Of TAFE/Beach Street') return 'Chisholm TAFE - Frankston/Beach Street'
 
@@ -28,9 +27,6 @@ module.exports = stopName => {
   }
 
   if (stopName === 'Dalgetty Street/Holding Street') return 'Dalgetty Road/Holding Street'
-  if (stopName === 'Heathcliff Lane/Royal Terrace') return 'Heathcliffe Lane/Royal Terrace'
-
-  if (stopName === 'CentralPier/Harbour Esplanade') return 'Central Pier/Harbour Esplanade'
   if (stopName === 'New Quay Promenade/Docklands Drive') return 'NewQuay Promenade/Docklands Drive'
 
   if (stopName === 'Melbourne University/Royal Parade') return 'Melbourne University Royal Parade Stop/Royal Parade'
