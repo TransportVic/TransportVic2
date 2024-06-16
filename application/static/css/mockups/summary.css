@@ -2,7 +2,7 @@
   font-family: "NetworkSansMedium";
   font-display: fallback;
   font-style: medium;
-  src: local('Network Sans 2018 Medium'), local('Network Sans K Medium'), local('Liberation Sans'), local('Helvetica'), local('Arial');
+  src: local('Network Sans 2018 Medium'), local('Network Sans K Medium'), url(/static/fonts/NetworkSans-2018-Medium.ttf), local('Liberation Sans'), local('Helvetica'), local('Arial');
 }
 
 body {
