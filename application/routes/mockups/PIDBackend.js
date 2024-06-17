@@ -260,9 +260,16 @@ function getRouteStopsForDeparture(departure) {
   }
 
   let allStops = departure.stopTimings.map(stop => stop.stopName.slice(0, -16))
-  if (departure.type === 'vline' && routeStops.includes('Southern Cross')) {
-    if (departure.direction === 'Down') return routeStops
-    else return routeStops.reverse()
+  if (departure.type === 'vline') {
+    let fullRouteStops
+    if (['Traralgon', 'Bairnsdale'].includes(departure.routeName)) {
+      fullRouteStops = ['Southern Cross', 'Flinders Street', ...routeStops]
+    } else {
+      fullRouteStops = ['Southern Cross', ...routeStops]
+    }
+
+    if (departure.direction === 'Down') return fullRouteStops
+    else return fullRouteStops.reverse()
   } else if (departure.routeName === 'City Circle') {
     return allStops
   } else {
