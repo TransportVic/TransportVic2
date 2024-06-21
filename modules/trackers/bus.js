@@ -64,9 +64,10 @@ async function requestTimings() {
 database.connect(async () => {
   dbStops = database.getCollection('stops')
   schedule([
-    [0, 60, 6.5],
-    [60, 299, 6],
-    [300, 1260, 5],
-    [1261, 1440, 6]
+    [300, 1260, 10]
+    // [0, 60, 6.5],
+    // [60, 299, 6],
+    // [300, 1260, 5],
+    // [1261, 1440, 6]
   ], requestTimings, 'bus tracker', global.loggers.trackers.bus)
 })
