@@ -21,44 +21,38 @@ database.connect({}, async () => {
   let routes = database.getCollection('routes')
   let gtfsTimetables = database.getCollection('gtfs timetables')
 
-  let tramServices = (await routes.distinct('routeNumber', { mode: 'tram' })).map(e => e.match(/(\d+)/)[1]).concat('3a')
+  let tramServices = (await routes.distinct('routeNumber', { mode: 'tram' })).map(e => e.match(/(\d+)/)[1])
   let count = 0
 
-  let closedStops = ['1217', '1334', '1418', '2217', '2418', '2890', '3828', '3928', '2232']
+  let closedStops = []
 
   let tramTrackerIDs = {
-    '3813': '2013',
-    '3913': '2013'
+    '3813': '2013'
   }
 
   let stopDirections = {
     '3813': [{
-      service: '35',
-      gtfsDirection: '1'
-    }],
-    '3913': [{
       service: '35',
       gtfsDirection: '0'
     }]
   }
 
   let stopNames = {
-    '3813': 'Spring Street',
-    '3913': 'Spring Street'
+    '3813': 'Spring Street'
   }
 
   let stopNumbers = {
-    '3813': '0',
-    '3913': '0'
+    '3813': '0'
   }
 
   let levelAccess = {
-    '3813': false,
-    '3913': false
+    '3813': false
   }
 
   await async.forEachSeries(tramServices, async service => {
-    await async.forEachSeries([0, 1], async direction => {
+    let routeDirections = [0, 1]
+    if (service === '35') routeDirections = [0]
+    await async.forEachSeries(routeDirections, async direction => {
       try {
         let data = await utils.request(`https://yarratrams.com.au/data/routestopsdata/?id=${service}&dir=${direction}`, {
           timeout: 12000
@@ -87,17 +81,16 @@ database.connect({}, async () => {
           levelAccess[tramTrackerID] = isLevelAccess
 
           if (!stopDirections[tramTrackerID]) stopDirections[tramTrackerID] = []
-          let serviceToUse = service
-          if (service === '3a') serviceToUse = '3'
 
           stopDirections[tramTrackerID].push({
-            service: serviceToUse,
-            gtfsDirection: directions[`${serviceToUse}.${direction}`]
+            service: service,
+            gtfsDirection: directions[`${service}.${direction}`]
           })
         })
 
         await sleep()
       } catch (e) {
+        console.log(e)
         console.log('Failed to load stops for Route', service, 'D', direction)
       }
     })

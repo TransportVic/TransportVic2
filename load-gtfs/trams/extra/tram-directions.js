@@ -26,8 +26,7 @@ module.exports = {
   "30.0": "0", // St Vincents Plaza
   "30.1": "1", // Docklands
 
-  "35.0": "1", // Anticlockwise
-  "35.1": "0", // Clockwise
+  "35.0": "0", // Anticlockwise
 
   "48.0": "0", // North Balwyn
   "48.1": "1", // Docklands
