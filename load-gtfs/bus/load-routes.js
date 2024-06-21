@@ -97,11 +97,11 @@ database.connect({
       return newRouteName
     }, (routeGTFSID, routeNumber) => {
       if (routeNumbers[routeGTFSID]) return routeNumbers[routeGTFSID]
-      
-      let parts
-      if (parts = routeNumber.match(/[a-z]+ (\d+)x?$/i)) return parts[1]
 
-      if (routeNumber.includes('NSW')) return routeNumber.match(/(\d+)/)[1]
+      let parts
+      if (routeNumber && (parts = routeNumber.match(/[a-z]+ (\d+)x?$/i))) return parts[1]
+
+      if (routeNumber && routeNumber.includes('NSW')) return routeNumber.match(/(\d+)/)[1]
 
       return (routeNumber && routeNumber.length ? routeNumber.replace('x', '') : null)
     })
