@@ -348,8 +348,8 @@ module.exports = async function (data, db) {
   }
 
   let formingData = run.interchange
-  let formedBy = referenceTrip?.forming || null
-  let forming = referenceTrip?.formedBy || null
+  let formedBy = referenceTrip?.formedBy || null
+  let forming = referenceTrip?.forming || null
   if (formingData.distributor) formedBy = utils.getRunID(run.interchange.distributor.run_ref)
   if (formingData.feeder) forming = utils.getRunID(run.interchange.feeder.run_ref)
 
