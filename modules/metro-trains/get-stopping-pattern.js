@@ -347,6 +347,12 @@ module.exports = async function (data, db) {
     }
   }
 
+  let formingData = run.interchange
+  let formedBy = referenceTrip?.forming || null
+  let forming = referenceTrip?.formedBy || null
+  if (formingData.distributor) formedBy = utils.getRunID(run.interchange.distributor.run_ref)
+  if (formingData.feeder) forming = utils.getRunID(run.interchange.feeder.run_ref)
+
   let timetable
   if (referenceTrip && runID) { // Only update trains as such
     let newStops = stopTimings.map(stop => stop.stopName)
@@ -431,7 +437,9 @@ module.exports = async function (data, db) {
       cancelled,
       type: 'timings',
       updateTime: new Date(),
-      notifyAlerts
+      notifyAlerts,
+      formedBy,
+      forming
     })
   } else {
     let firstStop = stopTimings[0]
@@ -444,10 +452,8 @@ module.exports = async function (data, db) {
       routeNumber: null,
       routeDetails: null,
       runID,
-      ...(referenceTrip ? {
-        forming: referenceTrip.forming,
-        formedBy: referenceTrip.formedBy
-      } : {}),
+      formedBy,
+      forming,
       operationDays: departurePTDay,
       vehicle: null,
       stopTimings: stopTimings,

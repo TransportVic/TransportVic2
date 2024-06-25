@@ -473,9 +473,10 @@ database.connect(async () => {
 
   schedule([
     [180, 240, 6], // Run it from 3am - 4am, taking into account website updating till ~3.30am
-    [240, 360, 4],
-    [360, 1199, 1.5],
-    [1200, 1380, 3],
-    [1380, 1439, 4]
+    [240, 360, 4], // Run until 6am
+    // No point loading it further as the data doesn't update anymore
+    // [360, 1199, 1.5],
+    // [1200, 1380, 3],
+    // [1380, 1439, 4]
   ], requestTimings, 'metro trips', global.loggers.trackers.metro)
 })
