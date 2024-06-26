@@ -386,7 +386,15 @@ module.exports = async function (data, db) {
       }
     }
 
-    let cityStops = stopTimings.filter(stop => cityStations.includes(stop.stopName.slice(0, -16)))
+    let cityStopsRaw = stopTimings.filter(stop => cityStations.includes(stop.stopName.slice(0, -16)))
+    let cityStops = []
+    cityStopsRaw.forEach((stop, i) => {
+      if (i === 0) return cityStops.push(stop)
+      let prev = cityStopsRaw[i - 1]
+      if (prev.stopName === stop.stopName) return
+      cityStops.push(stop)
+    })
+
     let cityStopNames = cityStops.map(stop => stop.stopName)
 
     let otherStops = referenceTrip.stopTimings.filter(stop => !cityStopNames.includes(stop.stopName))
