@@ -66,6 +66,7 @@ module.exports = async function (data, db) {
       "stop_id": i,
     }
   }
+  stops[34113] = { ...stops[34079], stop_id: 34113 }
 
   stops[34082] ={
     "stop_suburb": "Clayton",
@@ -77,6 +78,7 @@ module.exports = async function (data, db) {
   }
   stops[34104] = { ...stops[34082], stop_id: 34104 }
   stops[34091] = { ...stops[34082], stop_id: 34091 }
+  
 
   let run = Object.values(runs)[0]
   let ptvDirection = Object.values(directions)[0]

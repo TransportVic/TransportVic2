@@ -101,7 +101,7 @@ async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, r
       },
       destination: utils.adjustRawStopName(utils.adjustStopName(destination))
     }
-
+    
     if (excludedTripIDs) {
       query.tripID = {
         $not: {
