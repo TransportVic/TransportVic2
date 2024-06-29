@@ -126,6 +126,7 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
       if (actualDepartureTime.diff(time, 'minutes') > 90) return
 
       if (34079 <= run.final_stop_id && run.final_stop_id <= 34095) run.destination_name = "Ringwood Station/Maroonday Hwy"
+      if ([34082, 34104].includes(run.final_stop_id)) run.destination_name = "Monash University"
 
       let destination = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
       
