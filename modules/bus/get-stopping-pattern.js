@@ -53,6 +53,20 @@ module.exports = async function (data, db) {
   if (time) url += `&date_utc=${time}`
 
   let {departures, stops, runs, routes, directions} = await ptvAPI(url)
+  let rwd = {
+    "stop_suburb": "Ringwood",
+      "stop_name": "Ringwood Station/Maroondah Hwy",
+      "route_type": 2,
+      "stop_latitude": -37.815080163896,
+      "stop_longitude": 145.22988517169,
+  }
+  for (let i = 34079; i <= 34095; i++) {
+    if (!stops[i]) stops[i] = {
+      ...rwd,
+      "stop_id": i,
+    }
+  }
+
   let run = Object.values(runs)[0]
   let ptvDirection = Object.values(directions)[0]
   let routeData = Object.values(routes)[0]
@@ -132,7 +146,7 @@ module.exports = async function (data, db) {
     if (!ptvStop) return null // Stop likely deactivated or does not exist but returned by operational timetable - skip it
 
     let stopName = utils.getProperStopName(ptvStop.stop_name)
-
+    if (!dbStops[departure.stop_id]) console.log(departure)
     let stopBay = dbStops[departure.stop_id].bays.find(bay => {
       let matchingService = bay.services.some(s => s.routeGTFSID === routeGTFSID && s.gtfsDirection === gtfsDirection)
 
