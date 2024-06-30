@@ -74,6 +74,13 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
   let uniqueStops = departureUtils.getUniqueGTFSIDs(stop, 'bus', true)
   let allGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', false)
 
+
+  if (['Monash University Bus Loop', 'Ringwood Railway Station'].includes(stop.stopName)) {
+    uniqueStops = stop.bays.filter(b => b.mode === 'bus').map(b => b.stopGTFSID).filter(b => {
+      return !["19806", "19807","19808"].includes(b)
+    })
+  }
+
   let mappedDepartures = []
 
   let isCheckpointStop = utils.isCheckpointStop(stop.stopName)
