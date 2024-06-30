@@ -5,6 +5,7 @@ const nameModifier = require('../../additional-data/stop-name-modifier')
 const determineBusRouteNumber = require('../../additional-data/determine-bus-route-number')
 const regionalRouteNumbers = require('../../additional-data/bus-data/regional-with-track')
 const { getStop } = require('../utils/get-bus-timetables')
+const overrideStops = require('./override-stops')
 
 let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => {
   let regionRoutes = regionalRouteNumbers[region]
@@ -53,41 +54,11 @@ module.exports = async function (data, db) {
   if (time) url += `&date_utc=${time}`
 
   let {departures, stops, runs, routes, directions} = await ptvAPI(url)
-  let rwd = {
-    "stop_suburb": "Ringwood",
-      "stop_name": "Ringwood Station/Maroondah Hwy",
-      "route_type": 2,
-      "stop_latitude": -37.815080163896,
-      "stop_longitude": 145.22988517169,
-  }
-  for (let i = 34079; i <= 34095; i++) {
-    if (!stops[i]) stops[i] = {
-      ...rwd,
-      "stop_id": i,
-    }
-  }
-  stops[34113] = { ...stops[34079], stop_id: 34113 }
-
-  stops[34082] = {
-    "stop_suburb": "Clayton",
-      "stop_name": "Monash University",
-      "route_type": 2,
-      "stop_latitude": -37.9136868109722,
-      "stop_longitude": 145.131768418562,
-      "stop_id": 34082
-  }
-  stops[34104] = { ...stops[34082], stop_id: 34104 }
-  stops[34091] = { ...stops[34082], stop_id: 34091 }
-
-  stops[34093] = {
-    "stop_suburb": "Chelsea",
-      "stop_name": "Chelsea Railway Station/Station St",
-      "route_type": 2,
-      "stop_latitude": -38.0533202689789,
-      "stop_longitude": 145.116861077446,
-      "stop_id": 34093
-  }
   
+  stops = {
+    ...stops,
+    ...overrideStops
+  }
 
   let run = Object.values(runs)[0]
   let ptvDirection = Object.values(directions)[0]

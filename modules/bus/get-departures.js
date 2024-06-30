@@ -5,6 +5,7 @@ const getStoppingPattern = require('./get-stopping-pattern')
 const stopNameModifier = require('../../additional-data/stop-name-modifier')
 const busBays = require('../../additional-data/bus-data/bus-bays')
 const departureUtils = require('../utils/get-bus-timetables')
+const overrideStops = require('./override-stops')
 
 const regionalRouteNumbers = require('../../additional-data/bus-data/regional-with-track')
 
@@ -132,9 +133,9 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
 
       if (actualDepartureTime.diff(time, 'minutes') > 90) return
 
-      if ([34093].includes(run.final_stop_id)) run.destination_name = "Chelsea Railway Station/Station St"
-      if (34079 <= run.final_stop_id && run.final_stop_id <= 34095 || run.final_stop_id === 34113) run.destination_name = "Ringwood Station/Maroondah Hwy"
-      if ([34082, 34091, 34104].includes(run.final_stop_id)) run.destination_name = "Monash University"
+      if (!run.destination_name) {
+        run.destination_name = overrideStops[run.final_stop_id].stop_name
+      }
       
       let destination = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
       
