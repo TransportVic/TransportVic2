@@ -169,7 +169,6 @@
   "LTR": "Little River",
   "LWA": "Leawarra",
   "LWY": "Longwarry",
-  "MAB": "Mont Albert",
   "MAC": "Macaulay",
   "MAL": "Malvern",
   "MBN": "Middle Brighton",
@@ -256,7 +255,6 @@
   "SGL": "South Geelong",
   "SGS": "Showgrounds",
   "SHE": "Seaholme",
-  "SHL": "Surrey Hills",
   "SHM": "Sandringham",
   "SHP": "Shepparton",
   "SHT": "Springhurst",
@@ -329,5 +327,12 @@
   "YAS": "Yass Junction",
   "YGN": "Yarragon",
   "YMN": "Yarraman",
-  "YVE": "Yarraville"
+  "YVE": "Yarraville",
+  "GRO": "Goornong",
+  "HUY": "Huntly",
+  "RAY": "Raywood",
+  "HSM": "Horsham",
+  "BOT": "Bordertown",
+  "MUB": "Murray Bridge",
+  "ADE": "Adelaide"
 }
