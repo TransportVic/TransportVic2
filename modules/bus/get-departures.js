@@ -76,7 +76,14 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
   let allGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', false)
 
 
-  if (['Monash University Bus Loop', 'Ringwood Railway Station', 'Chelsea Railway Station'].includes(stop.stopName)) {
+  let affectedStops = [
+    'Monash University Bus Loop',
+    'Ringwood Railway Station',
+    'Chelsea Railway Station',
+    'Tarneit Railway Station',
+    'Hallam Railway Station'
+  ]
+  if (affectedStops.includes(stop.stopName)) {
     uniqueStops = stop.bays.filter(b => b.mode === 'bus').map(b => b.stopGTFSID).filter(b => {
       return !["19806", "19807","19808"].includes(b)
     })
@@ -136,7 +143,7 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
       if (!run.destination_name) {
         run.destination_name = overrideStops[run.final_stop_id].stop_name
       }
-      
+
       let destination = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
       
       let trip, routeGTFSID, routeGTFSIDQuery
