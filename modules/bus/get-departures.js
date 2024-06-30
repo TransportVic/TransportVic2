@@ -75,7 +75,7 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
   let allGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', false)
 
 
-  if (['Monash University Bus Loop', 'Ringwood Railway Station'].includes(stop.stopName)) {
+  if (['Monash University Bus Loop', 'Ringwood Railway Station', 'Chelsea Railway Station'].includes(stop.stopName)) {
     uniqueStops = stop.bays.filter(b => b.mode === 'bus').map(b => b.stopGTFSID).filter(b => {
       return !["19806", "19807","19808"].includes(b)
     })
@@ -132,6 +132,7 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
 
       if (actualDepartureTime.diff(time, 'minutes') > 90) return
 
+      if ([34093].includes(run.final_stop_id)) run.destination_name = "Chelsea Railway Station/Station St"
       if (34079 <= run.final_stop_id && run.final_stop_id <= 34095 || run.final_stop_id === 34113) run.destination_name = "Ringwood Station/Maroondah Hwy"
       if ([34082, 34091, 34104].includes(run.final_stop_id)) run.destination_name = "Monash University"
       

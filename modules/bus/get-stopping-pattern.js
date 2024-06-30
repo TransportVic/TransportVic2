@@ -68,7 +68,7 @@ module.exports = async function (data, db) {
   }
   stops[34113] = { ...stops[34079], stop_id: 34113 }
 
-  stops[34082] ={
+  stops[34082] = {
     "stop_suburb": "Clayton",
       "stop_name": "Monash University",
       "route_type": 2,
@@ -78,6 +78,15 @@ module.exports = async function (data, db) {
   }
   stops[34104] = { ...stops[34082], stop_id: 34104 }
   stops[34091] = { ...stops[34082], stop_id: 34091 }
+
+  stops[34093] = {
+    "stop_suburb": "Chelsea",
+      "stop_name": "Chelsea Railway Station/Station St",
+      "route_type": 2,
+      "stop_latitude": -38.0533202689789,
+      "stop_longitude": 145.116861077446,
+      "stop_id": 34093
+  }
   
 
   let run = Object.values(runs)[0]
