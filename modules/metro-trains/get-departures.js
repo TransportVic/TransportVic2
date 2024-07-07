@@ -799,7 +799,8 @@ function findUpcomingStops(departure, stopGTFSID) {
   let originIndex = stopNames.indexOf(departure.trip.trueOrigin.slice(0, -16))
   let destinationIndex = stopNames.lastIndexOf(departure.trip.trueDestination.slice(0, -16))
 
-  let futureStops = stopNames.slice(currentIndex + 1, destinationIndex + 1)
+  let futureStops = tripStops.slice(currentIndex + 1, destinationIndex + 1)
+    .filter(stop => !stop.cancelled).map((stop, i) => stop.stopName.slice(0, -16))
 
   departure.allStops = stopNames.slice(originIndex, destinationIndex + 1)
   departure.futureStops = futureStops
