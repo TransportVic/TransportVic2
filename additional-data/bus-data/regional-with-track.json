@@ -91,23 +91,8 @@
    "liveTrack": true
   },
   {
-   "routeGTFSID": "6-x45",
-   "routeNumber": "45",
-   "liveTrack": true
-  },
-  {
    "routeGTFSID": "6-G49",
    "routeNumber": "49",
-   "liveTrack": true
-  },
-  {
-   "routeGTFSID": "6-G50",
-   "routeNumber": "50",
-   "liveTrack": true
-  },
-  {
-   "routeGTFSID": "6-G51",
-   "routeNumber": "51",
    "liveTrack": true
   },
   {
@@ -127,11 +112,6 @@
   },
   {
    "routeGTFSID": "6-G55",
-   "routeNumber": "55",
-   "liveTrack": true
-  },
-  {
-   "routeGTFSID": "6-G5x",
    "routeNumber": "55",
    "liveTrack": true
   },
@@ -225,26 +205,6 @@
   {
    "routeGTFSID": "6-31B",
    "routeNumber": "31",
-   "liveTrack": true
-  },
-  {
-   "routeGTFSID": "6-59a",
-   "routeNumber": "BalWN1",
-   "liveTrack": true
-  },
-  {
-   "routeGTFSID": "6-59b",
-   "routeNumber": "BalWN2",
-   "liveTrack": true
-  },
-  {
-   "routeGTFSID": "6-59c",
-   "routeNumber": "BalWN3",
-   "liveTrack": true
-  },
-  {
-   "routeGTFSID": "6-59d",
-   "routeNumber": "BalWN4",
    "liveTrack": true
   }
  ],
@@ -579,12 +539,12 @@
    "liveTrack": false
   },
   {
-   "routeGTFSID": "6-Bx4",
+   "routeGTFSID": "6-BM4",
    "routeNumber": "434",
    "liveTrack": false
   },
   {
-   "routeGTFSID": "6-BM4",
+   "routeGTFSID": "6-Bx4",
    "routeNumber": "434",
    "liveTrack": false
   },
