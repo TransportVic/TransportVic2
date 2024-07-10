@@ -376,7 +376,7 @@ module.exports = async function (data, db) {
 
     let extraStops = newStops.filter(stop => !existingStops.includes(stop))
     let cancelledStops = existingStops.filter(stop => !newStops.includes(stop))
-    let extraStopData = stopTimings.filter(stop => extraStops.includes(stop.stopName))
+    let extraStopData = stopTimings.filter(stop => extraStops.includes(stop.stopName) && !cityStations.includes(stop.stopName.slice(0, -16)))
 
     if (cancelledStops.includes('Flinders Street Railway Station')) {
       if (runID && runID[0] === '7' && cancelledStops.length === 1) { // Footy special - add back in FSS for display purposes
