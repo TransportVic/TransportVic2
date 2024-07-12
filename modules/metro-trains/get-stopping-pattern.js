@@ -110,11 +110,11 @@ module.exports = async function (data, db) {
     let minutesPastMidnightNow = utils.getMinutesPastMidnight(now)
 
     if (tripStartMinutes < 180) { // trip starts in the 3am overlap, we want it from the 'previous' day
-      if (givenRouteName && liveTrackingRoutes.includes(givenRouteName)) {
-        url += `&date_utc=${time}`
-      } else {
+      // if (givenRouteName && liveTrackingRoutes.includes(givenRouteName)) {
+      //   url += `&date_utc=${time}`
+      // } else {
         url += `&date_utc=${startTime.add(-4, 'hours').toISOString()}`
-      }
+      // }
     } else if (minutesPastMidnightNow < 180) { // trip starts before the 3am overlap but it is currently 1-3am. hence requesting for previous day's times
       if (actualDepartureDay === dayToday) { // Its past 3am (next transport day)
         url += `&date_utc=${time}`
