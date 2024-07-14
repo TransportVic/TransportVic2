@@ -1,4 +1,4 @@
-const nodeMailin = require('node-mailin')
+const NodeMailin = require('node-mailin')
 const cheerio = require('cheerio')
 
 const os = require('os')
@@ -58,6 +58,8 @@ async function handleMessage(subject, rawText) {
 module.exports = () => {
   database.connect(async err => {
     let genLog = (logger, level) => ((json, text, ...others) => logger[level](json, util.format(text, ...others)))
+
+    let nodeMailin = new NodeMailin()
 
     nodeMailin.start({
       port: 25,
