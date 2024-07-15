@@ -1051,6 +1051,14 @@ function dedupeRailReplacementBuses(replacementBuses) {
   })
 }
 
+function updateShortedDestination(train) {
+  let nonCancelledStops = train.futureStops
+  let lastStop = nonCancelledStops[nonCancelledStops.length - 1]
+  if (lastStop !== train.trip.destination.slice(0, -16)) {
+    train.destination = lastStop
+  }
+}
+
 async function getDeparturesFromPTV(station, backwards, departureTime, db) {
   let notifyData = await getNotifyData(db)
   let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
@@ -1120,6 +1128,7 @@ async function getDeparturesFromPTV(station, backwards, departureTime, db) {
     if (isCityTrain) addCityLoopRunning(train, stationName)
     if (train.routeName === 'Werribee') addAltonaLoopRunning(train)
     if (train.routeName === 'Stony Point') addStonyPointPlatform(train, stationName)
+    updateShortedDestination(train)
 
     await applyLoopSkipping(train, notifyData)
   })
