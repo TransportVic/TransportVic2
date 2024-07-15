@@ -1052,8 +1052,9 @@ function dedupeRailReplacementBuses(replacementBuses) {
 }
 
 function updateShortedDestination(train, stationName) {
-  let nonCancelledStops = train.trip.stopTimings.filter(stop => !stop.cancelled)
-  let cancelledStops = train.trip.stopTimings.filter(stop => stop.cancelled).map(stop => stop.stopName.slice(0, -16))
+  let destIndex = train.trip.stopTimings.findIndex(stop => stop.stopName === train.trip.trueDestination) + 1
+  let nonCancelledStops = train.trip.stopTimings.slice(0, destIndex).filter(stop => !stop.cancelled)
+  let cancelledStops = train.trip.stopTimings.slice(0, destIndex).filter(stop => stop.cancelled).map(stop => stop.stopName.slice(0, -16))
   let lastStop = nonCancelledStops[nonCancelledStops.length - 1]
 
   if (lastStop.stopName !== train.trip.trueDestination && !cancelledStops.includes(stationName)) {
