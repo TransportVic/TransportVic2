@@ -11,7 +11,7 @@
   "dependencies": {
     "@mapbox/polyline": "^1.1.1",
     "@turf/turf": "^5.1.6",
-    "adm-zip": "^0.5.9",
+    "adm-zip": "^0.5.14",
     "async": "^3.2.3",
     "cheerio": "^1.0.0-rc.3",
     "compression": "^1.7.4",

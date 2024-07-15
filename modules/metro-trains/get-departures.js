@@ -1056,7 +1056,7 @@ function updateShortedDestination(train, stationName) {
   let cancelledStops = train.trip.stopTimings.filter(stop => stop.cancelled).map(stop => stop.stopName.slice(0, -16))
   let lastStop = nonCancelledStops[nonCancelledStops.length - 1]
 
-  if (lastStop !== train.trip.destination && !cancelledStops.includes(stationName)) {
+  if (lastStop.stopName !== train.trip.trueDestination && !cancelledStops.includes(stationName)) {
     train.destination = lastStop.stopName.slice(0, -16)
   }
 
