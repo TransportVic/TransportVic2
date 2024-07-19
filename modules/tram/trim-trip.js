@@ -48,10 +48,10 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
   let stops = db.getCollection('stops')
 
   if (destination === 'Abbotsford St Intg') destination = 'Royal Childrens Hospital'
-  let searchDestination = utils.expandStopName(utils.adjustStopName(destination.replace(/ - .*/, '').trim()))
+  let searchDestination = utils.expandStopName(utils.adjustStopName(destination.replace(/ - .*/, '').trim())).replace(' and ', ' & ')
   if (searchDestination === 'St. Kilda Road') searchDestination = 'Flinders Street Railway Station'
 
-  let destinationWithoutRoad = searchDestination.replace(/&.*/, '').trim() + ' &'
+  let destinationWithoutRoad = searchDestination.replace(/ *&.*/, ' &')
 
   if (coreRoute === '70' && searchDestination === 'Wattle Park') return trip
 
