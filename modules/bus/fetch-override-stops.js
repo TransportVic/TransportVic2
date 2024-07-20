@@ -50,7 +50,7 @@ let allStops = [
 
 async function main() {
   for (let stopID = 34081; stopID <= 34120; stopID++) {
-    let data = await ptvAPI(`/v3/departures/route_type/2/stop/${stopID}?max_results=1&expand=Stop`)
+    let data = await ptvAPI(`/v3/departures/route_type/2/stop/${stopID}?max_results=2&expand=Stop`)
     let stopData = data.stops[stopID]
     if (!stopData) continue
     if (stopData.stop_latitude !== 0) continue
