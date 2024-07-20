@@ -9,7 +9,7 @@ const schedule = require('./scheduler')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let dbStops
-let liveimetables
+let liveTimetables
 
 function shouldRun() {
   let minutes = utils.getMinutesPastMidnightNow()

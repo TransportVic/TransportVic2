@@ -534,23 +534,8 @@
    "liveTrack": false
   },
   {
-   "routeGTFSID": "6-Bx3",
-   "routeNumber": "433",
-   "liveTrack": false
-  },
-  {
    "routeGTFSID": "6-BM4",
    "routeNumber": "434",
-   "liveTrack": false
-  },
-  {
-   "routeGTFSID": "6-Bx4",
-   "routeNumber": "434",
-   "liveTrack": false
-  },
-  {
-   "routeGTFSID": "6-Bx5",
-   "routeNumber": "435",
    "liveTrack": false
   }
  ],

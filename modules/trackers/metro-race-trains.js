@@ -18,65 +18,74 @@ async function requestTimings() {
 
   let extraTrains = racecourseRunIDs.filter(train => train.runID[0] === 'R' && train.runID[1] !== '4' && train.runID[1] !== '8')
 
+  let operationDay = utils.getYYYYMMDDNow()
   await async.forEachSeries(extraTrains, async train => {
+    let timetableExists = (await liveTimetables.countDocuments({
+      mode: 'metro train',
+      operationDays: operationDay,
+      runID: train.runID
+    })) > 0
+
+    if (timetableExists) return
+ 
     await getStoppingPattern({
       ptvRunID: train.ptvRunID
     }, database)
-    await utils.sleep(2000)
+    await utils.sleep(1500)
   })
 
-  let timetables = await liveTimetables.findDocuments({
-    mode: 'metro train',
-    operationDays: utils.getYYYYMMDDNow(),
-    runID: {
-      $in: extraTrains.map(train => train.runID)
-    }
-  }).toArray()
+  // let timetables = await liveTimetables.findDocuments({
+  //   mode: 'metro train',
+  //   operationDays: utils.getYYYYMMDDNow(),
+  //   runID: {
+  //     $in: extraTrains.map(train => train.runID)
+  //   }
+  // }).toArray()
 
-  let sorted = timetables.sort((a, b) => a.stopTimings[0].departureTimeMinutes - b.stopTimings[0].departureTimeMinutes)
+  // let sorted = timetables.sort((a, b) => a.stopTimings[0].departureTimeMinutes - b.stopTimings[0].departureTimeMinutes)
 
-  let forming = {}
-  let formedBy = {}
+  // let forming = {}
+  // let formedBy = {}
 
-  for (let i = 0; i < sorted.length; i++) {
-    let train = sorted[i]
-    let trainDirection = train.direction
-    let destinationStop = train.stopTimings.find(stop => stop.stopName === train.trueDestination)
+  // for (let i = 0; i < sorted.length; i++) {
+  //   let train = sorted[i]
+  //   let trainDirection = train.direction
+  //   let destinationStop = train.stopTimings.find(stop => stop.stopName === train.trueDestination)
 
-    let possibleForming = sorted.slice(i + 1).find(possibleTrain => {
-      let originStop = possibleTrain.stopTimings.find(stop => stop.stopName === possibleTrain.trueOrigin)
+  //   let possibleForming = sorted.slice(i + 1).find(possibleTrain => {
+  //     let originStop = possibleTrain.stopTimings.find(stop => stop.stopName === possibleTrain.trueOrigin)
 
-      return possibleTrain.direction !== trainDirection
-        && possibleTrain.trueOrigin === train.trueDestination
-        && originStop.platform === destinationStop.platform
-        && originStop.departureTimeMinutes > destinationStop.arrivalTimeMinutes
-    })
+  //     return possibleTrain.direction !== trainDirection
+  //       && possibleTrain.trueOrigin === train.trueDestination
+  //       && originStop.platform === destinationStop.platform
+  //       && originStop.departureTimeMinutes > destinationStop.arrivalTimeMinutes
+  //   })
 
-    if (possibleForming) {
-      forming[train.runID] = possibleForming.runID
-      formedBy[possibleForming.runID] = train.runID
-    }
-  }
+  //   if (possibleForming) {
+  //     forming[train.runID] = possibleForming.runID
+  //     formedBy[possibleForming.runID] = train.runID
+  //   }
+  // }
 
-  await async.forEach(sorted, async train => {
-    let update = { forming: null, formedBy: null }
-    if (forming[train.runID]) update.forming = forming[train.runID]
-    if (formedBy[train.runID]) update.formedBy = formedBy[train.runID]
+  // await async.forEach(sorted, async train => {
+  //   let update = { forming: null, formedBy: null }
+  //   if (forming[train.runID]) update.forming = forming[train.runID]
+  //   if (formedBy[train.runID]) update.formedBy = formedBy[train.runID]
 
-    if (update.forming || update.formedBy) {
-      await liveTimetables.updateDocument({
-        _id: train._id
-      }, {
-        $set: update
-      })
-    }
-  })
+  //   if (update.forming || update.formedBy) {
+  //     await liveTimetables.updateDocument({
+  //       _id: train._id
+  //     }, {
+  //       $set: update
+  //     })
+  //   }
+  // })
 }
 
 database.connect(async () => {
   liveTimetables = database.getCollection('live timetables')
 
   schedule([
-    [300, 420, 30] // 5 - 7am
+    [300, 540, 30] // 5 - 9am
   ], requestTimings, 'metro race trains', global.loggers.trackers.metro)
 })
