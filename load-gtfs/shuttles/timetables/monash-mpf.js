@@ -15,7 +15,7 @@ let generateExclusion = (name, start, end) => dateRange(name, start, end, '2')
 let generateInclusion = (name, start, end) => dateRange(name, start, end, '1')
 
 let FRANKSTON = '21215'
-let MONASH_PENINSULA = '12000007'
+let MONASH_PENINSULA = '48017'
 let ROUTE_GTFS_ID = '12-MPF'
 
 let baseDownTripTimes = [
@@ -80,10 +80,10 @@ function addTrip(direction, departureHour, departureMinute, headsign) {
 
 module.exports = {
   'days': [
-    ['WEEKDAY', '1', '1', '1', '1', '1', '0', '0', '20220214', '20221118']
+    ['WEEKDAY', '1', '1', '1', '1', '1', '0', '0', '20240715', '20241115']
   ],
   'dates': [
-    ...generateExclusion('WEEKDAY', '20220625', '20220717')
+    // ...generateExclusion('WEEKDAY', '20220625', '20220717')
   ],
   'trips': [],
   'timings': []

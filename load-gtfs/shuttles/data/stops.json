@@ -110,7 +110,7 @@
   {
     "originalName": "Monash University (Frankston)",
     "fullStopName": "Monash University/McMahons Rd",
-    "stopGTFSID": "12000007",
+    "stopGTFSID": "48017",
     "location": {
       "type": "Point",
       "coordinates": [145.134813816484, -38.1518599835155]

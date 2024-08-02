@@ -80,39 +80,22 @@ function addTrip(direction, departureHour, departureMinute, headsign) {
 
 module.exports = {
   'days': [
-    ['WEEKDAY', '1', '1', '1', '1', '1', '0', '0', '20220214', '20221118']
+    ['WEEKDAY', '1', '1', '1', '1', '1', '0', '0', '20240715', '20241115']
   ],
   'dates': [
-    ...generateExclusion('WEEKDAY', '20220625', '20220717')
+    // ...generateExclusion('WEEKDAY', '20220625', '20220717')
   ],
   'trips': [],
   'timings': []
 }
 
-addTrip('Up', 7, 20, 'Monash University Caulfield')
-addTrip('Up', 7, 40, 'Monash University Caulfield')
-for (let hour = 8; hour <= 18; hour++) {
-  addTrip('Up', hour,  0, 'Monash University Caulfield')
-  addTrip('Up', hour, 20, 'Monash University Caulfield')
+for (let hour = 7; hour <= 21; hour++) {
+  addTrip('Up', hour, 10, 'Monash University Caulfield')
   addTrip('Up', hour, 40, 'Monash University Caulfield')
-}
-for (let hour = 19; hour <= 21; hour++) {
-  addTrip('Up', hour,  0, 'Monash University Caulfield')
-  addTrip('Up', hour, 30, 'Monash University Caulfield')
-}
-addTrip('Up', 22,  0, 'Monash University Caulfield')
-
-
-
-for (let hour = 7; hour <= 17; hour++) {
+  
   addTrip('Down', hour, 10, 'Monash University Clayton')
-  addTrip('Down', hour, 30, 'Monash University Clayton')
-  addTrip('Down', hour, 50, 'Monash University Clayton')
+  addTrip('Down', hour, 40, 'Monash University Clayton')
 }
-addTrip('Down', 18, 10, 'Monash University Clayton')
-addTrip('Down', 18, 30, 'Monash University Clayton')
-for (let hour = 19; hour <= 21; hour++) {
-  addTrip('Down', hour,  0, 'Monash University Clayton')
-  addTrip('Down', hour, 30, 'Monash University Clayton')
-}
-addTrip('Down', 22,  0, 'Monash University Clayton')
+
+addTrip('Up', 22, 10, 'Monash University Caulfield')
+addTrip('Down', 22, 10, 'Monash University Clayton')

@@ -15,7 +15,7 @@ let generateExclusion = (name, start, end) => dateRange(name, start, end, '2')
 let generateInclusion = (name, start, end) => dateRange(name, start, end, '1')
 
 let MONASH_CLAYTON = '19807'
-let MONASH_PENINSULA = '12000007'
+let MONASH_PENINSULA = '48017'
 let ROUTE_GTFS_ID = '12-MCP'
 
 let baseDownTripTimes = [
@@ -80,25 +80,16 @@ function addTrip(direction, departureHour, departureMinute, headsign) {
 
 module.exports = {
   'days': [
-    ['WEEKDAY', '1', '1', '1', '1', '1', '0', '0', '20220214', '20221118']
+    ['WEEKDAY', '1', '1', '1', '1', '1', '0', '0', '20240715', '20241115']
   ],
   'dates': [
-    ...generateExclusion('WEEKDAY', '20220625', '20220717')
+    // ...generateExclusion('WEEKDAY', '20220625', '20220717')
   ],
   'trips': [],
   'timings': []
 }
 
-addTrip('Down', 8, 10, 'Monash University Peninsula')
-for (let hour = 7; hour <= 17; hour += 2) {
+for (let hour = 7; hour <= 18; hour += 1) {
   addTrip('Down', hour, 10, 'Monash University Peninsula')
-}
-addTrip('Down', 18, 10, 'Monash University Peninsula')
-
-
-
-addTrip('Up', 7, 10, 'Monash University Clayton')
-for (let hour = 8; hour <= 18; hour += 2) {
   addTrip('Up', hour, 10, 'Monash University Clayton')
 }
-addTrip('Up', 17, 10, 'Monash University Clayton')
