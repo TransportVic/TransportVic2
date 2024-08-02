@@ -77,12 +77,12 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
 
 
   let affectedStops = [
-    'Monash University Bus Loop',
-    'Ringwood Railway Station',
-    'Chelsea Railway Station',
-    'Tarneit Railway Station',
-    'Hallam Railway Station',
-    'Melbourne University Grattan Street Stop/Grattan Street'
+    // 'Monash University Bus Loop',
+    // 'Ringwood Railway Station',
+    // 'Chelsea Railway Station',
+    // 'Tarneit Railway Station',
+    // 'Hallam Railway Station',
+    // 'Melbourne University Grattan Street Stop/Grattan Street'
   ]
   if (affectedStops.includes(stop.stopName)) {
     uniqueStops = stop.bays.filter(b => b.mode === 'bus').map(b => b.stopGTFSID).filter(b => {
