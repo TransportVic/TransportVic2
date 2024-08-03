@@ -1,5 +1,6 @@
 const async = require('async')
 const utils = require('../../utils')
+const overrideStops = require('../bus/override-stops.json')
 
 /*
 
@@ -64,7 +65,7 @@ async function getStop(stopData, stopsCollection) {
   }).limit(2).toArray()
 
   if (closeStop.length !== 0) {
-    global.loggers.general.err('PTV Name Mismatch', stopData, closeStop[0].stopName)
+    if (!overrideStops[stopData.stop_id]) global.loggers.general.err('PTV Name Mismatch', stopData, closeStop[0].stopName)
     return closeStop[0]
   } else {
     return null

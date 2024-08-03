@@ -11,6 +11,8 @@ const busBays = require('../../../additional-data/bus-data/bus-bays')
 const getDepartures = require('../../../modules/bus/get-departures')
 const regionalRouteNumbers = require('../../../additional-data/bus-data/regional-with-track')
 
+const overrideStops = require('../../../modules/bus/override-stops')
+
 let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => {
   let regionRoutes = regionalRouteNumbers[region]
 
@@ -135,7 +137,13 @@ async function pickBestTrip(data, db) {
         bays: trueOriginBay
       }
 
-      let originDepartures = await getDepartures(mockedStop, db, tripStartTime.clone().add(-5, 'minutes'), true)
+      let affectedStops = Object.values(overrideStops).map(stop => stop.stop_name)
+      let originStopToUse = mockedStop
+      if (affectedStops.some(affected => originStop.stopName.includes(affected) || affected.includes(originStop.stopName))) {
+        originStopToUse = originStop
+      }
+
+      let originDepartures = await getDepartures(originStopToUse, db, tripStartTime.clone().add(-5, 'minutes'), true)
 
       let matchingDeparture = originDepartures.find(departure => {
         let trip = departure.trip
@@ -154,11 +162,11 @@ async function pickBestTrip(data, db) {
       }
     } else if (referenceTrip && referenceTrip.runID) ptvRunID = referenceTrip.runID
 
-    if (ptvRunID === -1 && referenceTrip) {
+    if (!ptvRunID && referenceTrip) {
       let isLive = referenceTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
       return { trip: referenceTrip, tripStartTime, isLive } // Request must have failed, but we have a reference trip
     }
-    if (!ptvRunID) return null // Available options to get ptvRunID unsuccessful - trip does not exist
+    // if (!ptvRunID) return null // Available options to get ptvRunID unsuccessful - trip does not exist
 
     let trip = await getStoppingPattern({
       ptvRunID,
