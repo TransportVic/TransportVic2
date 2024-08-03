@@ -1,5 +1,6 @@
 const ptvAPI = require('../../ptv-api')
 const fs = require('fs/promises')
+const discord = require('../discord-integration')
 let stops = {}
 
 let RWD = {
@@ -55,6 +56,8 @@ let allStops = [
   RWD, MONASH, CSA, TNT, HLM, MELB, DONC
 ]
 
+let failedStops = []
+
 async function main() {
   for (let stopID = 34081; stopID <= 34120; stopID++) {
     let data = await ptvAPI(`/v3/departures/route_type/2/stop/${stopID}?max_results=2&expand=Stop`)
@@ -66,6 +69,7 @@ async function main() {
     let matchingData = allStops.find(stop => stop.stop_name.includes(stopName))
     if (!matchingData) {
       console.log(stopData)
+      if (!failedStops.includes(stopName)) failedStops.push(stopName)
       continue
     }
 
@@ -77,7 +81,13 @@ async function main() {
   }
   
   await fs.writeFile(__dirname + '/override-stops.json', JSON.stringify(stops, null, 2))
+  if (failedStops.length) await updateDiscord()
   process.exit(0)
+}
+
+async function updateDiscord() {
+  let message = `DIVA Stops Merge Failure:\n${failedStops.join('\n')}`
+  await discord('routeGTFSID', message)
 }
 
 main()
