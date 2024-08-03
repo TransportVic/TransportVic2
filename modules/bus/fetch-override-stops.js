@@ -44,8 +44,15 @@ let MELB = {
   stop_longitude: 144.9619
 }
 
+let DONC = {
+  stop_suburb: 'Doncaster',
+  stop_name: 'Doncaster Shopping Centre',
+  stop_latitude: -37.784023479792,
+  stop_longitude: 145.124988971071
+}
+
 let allStops = [
-  RWD, MONASH, CSA, TNT, HLM, MELB
+  RWD, MONASH, CSA, TNT, HLM, MELB, DONC
 ]
 
 async function main() {
