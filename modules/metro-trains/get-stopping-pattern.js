@@ -295,7 +295,7 @@ module.exports = async function (data, db) {
     })
   }
 
-  if (runID && routeGTFSID === '2-ain') {
+  if (runID && routeGTFSID === '2-RCE') {
     let gtfsTimetables = db.getCollection('gtfs timetables')
     cancelled = stopTimings.length === 1 // RCE trips show SSS only if cancelled
 
@@ -306,7 +306,7 @@ module.exports = async function (data, db) {
     let scheduledTrip = await gtfsTimetables.findDocument({
       operationDays: departurePTDay,
       mode: 'metro train',
-      routeGTFSID: '2-ain',
+      routeGTFSID: '2-RCE',
       direction,
       stopTimings: {
         $elemMatch: {
