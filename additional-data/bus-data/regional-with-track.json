@@ -531,12 +531,12 @@
   {
    "routeGTFSID": "6-BM3",
    "routeNumber": "433",
-   "liveTrack": true
+   "liveTrack": false
   },
   {
    "routeGTFSID": "6-BM4",
    "routeNumber": "434",
-   "liveTrack": true
+   "liveTrack": false
   }
  ],
  "Hamilton": [

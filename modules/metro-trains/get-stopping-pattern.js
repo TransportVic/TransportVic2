@@ -350,8 +350,8 @@ module.exports = async function (data, db) {
   let formingData = run.interchange
   let formedBy = referenceTrip?.formedBy || null
   let forming = referenceTrip?.forming || null
-  if (formingData && formingData.distributor) formedBy = utils.getRunID(formingData.distributor.run_ref)
-  if (formingData && formingData.feeder) forming = utils.getRunID(formingData.feeder.run_ref)
+  if (formingData && formingData.feeder) formedBy = utils.getRunID(formingData.feeder.run_ref)
+  if (formingData && formingData.distributor) forming = utils.getRunID(formingData.distributor.run_ref)
 
   let timetable
   if (referenceTrip && runID) { // Only update trains as such
