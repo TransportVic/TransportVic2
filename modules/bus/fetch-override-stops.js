@@ -1,11 +1,12 @@
 const ptvAPI = require('../../ptv-api')
 const fs = require('fs/promises')
 const discord = require('../discord-integration')
+const utils = require('../../utils')
 let stops = {}
 
 let RWD = {
   stop_suburb: "Ringwood",
-  stop_name: "Ringwood Station/Maroondah Hwy",
+  stop_name: "Ringwood Railway Station/Maroondah Hwy",
   stop_latitude: -37.815080163896,
   stop_longitude: 145.22988517169
 }
@@ -26,14 +27,14 @@ let CSA = {
 
 let TNT = {
   stop_suburb: "Tarneit",
-  stop_name: "Tarneit Station",
+  stop_name: "Tarneit Railway Station",
   stop_latitude: -37.8326687887396,
   stop_longitude: 144.694971480843
 }
 
 let HLM = {
   stop_suburb: 'Hallam',
-  stop_name: 'Hallam Station/Hallam South Rd',
+  stop_name: 'Hallam Railway Station/Hallam South Rd',
   stop_latitude: -38.01721,
   stop_longitude: 145.271164
 }
@@ -65,7 +66,7 @@ async function main() {
     if (!stopData) continue
     if (stopData.stop_latitude !== 0) continue
 
-    let stopName = stopData.stop_name || stopData.stop_landmark
+    let stopName = utils.expandStopName(utils.adjustStopName(stopData.stop_name || stopData.stop_landmark))
     let matchingData = allStops.find(stop => stop.stop_name.includes(stopName))
     if (!matchingData) {
       console.log(stopData)
