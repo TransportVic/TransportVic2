@@ -59,27 +59,30 @@ let allStops = [
 
 let failedStops = []
 
-async function main() {
-  for (let stopID = 34081; stopID <= 34120; stopID++) {
-    let data = await ptvAPI(`/v3/departures/route_type/2/stop/${stopID}?max_results=2&expand=Stop`)
-    let stopData = data.stops[stopID]
-    if (!stopData) continue
-    if (stopData.stop_latitude !== 0) continue
+async function check(stopID) {
+  let data = await ptvAPI(`/v3/departures/route_type/2/stop/${stopID}?max_results=2&expand=Stop`)
+  let stopData = data.stops[stopID]
+  if (!stopData) return
+  if (stopData.stop_latitude !== 0) return
 
-    let stopName = utils.expandStopName(utils.adjustStopName(stopData.stop_name || stopData.stop_landmark))
-    let matchingData = allStops.find(stop => stop.stop_name.includes(stopName))
-    if (!matchingData) {
-      console.log(stopData)
-      if (!failedStops.includes(stopName)) failedStops.push(stopName)
-      continue
-    }
-
-    stops[stopID] = {
-      ...matchingData,
-      route_type: 2,
-      stop_id: stopID
-    }
+  let stopName = utils.expandStopName(utils.adjustStopName(stopData.stop_name || stopData.stop_landmark))
+  let matchingData = allStops.find(stop => stop.stop_name.includes(stopName))
+  if (!matchingData) {
+    console.log(stopData)
+    if (!failedStops.includes(stopName)) failedStops.push(stopName)
+    return
   }
+
+  stops[stopID] = {
+    ...matchingData,
+    route_type: 2,
+    stop_id: stopID
+  }
+}
+
+async function main() {
+  for (let stopID = 33240; stopID <= 33250; stopID++) await check(stopID)
+  for (let stopID = 34081; stopID <= 34120; stopID++) await check(stopID)
   
   await fs.writeFile(__dirname + '/override-stops.json', JSON.stringify(stops, null, 2))
   if (failedStops.length) await updateDiscord()

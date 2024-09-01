@@ -1,4 +1,12 @@
 {
+  "33242": {
+    "stop_suburb": "Ringwood",
+    "stop_name": "Ringwood Railway Station/Maroondah Hwy",
+    "stop_latitude": -37.815080163896,
+    "stop_longitude": 145.22988517169,
+    "route_type": 2,
+    "stop_id": 33242
+  },
   "34081": {
     "stop_suburb": "Doncaster",
     "stop_name": "Doncaster Shopping Centre",
@@ -78,5 +86,13 @@
     "stop_longitude": 145.22988517169,
     "route_type": 2,
     "stop_id": 34116
+  },
+  "34119": {
+    "stop_suburb": "Ringwood",
+    "stop_name": "Ringwood Railway Station/Maroondah Hwy",
+    "stop_latitude": -37.815080163896,
+    "stop_longitude": 145.22988517169,
+    "route_type": 2,
+    "stop_id": 34119
   }
 }
