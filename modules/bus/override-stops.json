@@ -1,67 +1,67 @@
 {
-  "33242": {
-    "stop_suburb": "Ringwood",
-    "stop_name": "Ringwood Railway Station/Maroondah Hwy",
-    "stop_latitude": -37.815080163896,
-    "stop_longitude": 145.22988517169,
+  "34094": {
+    "stop_suburb": "Clayton",
+    "stop_name": "Monash University",
+    "stop_latitude": -37.9136868109722,
+    "stop_longitude": 145.131768418562,
     "route_type": 2,
-    "stop_id": 33242
+    "stop_id": 34094
   },
-  "34081": {
-    "stop_suburb": "Doncaster",
-    "stop_name": "Doncaster Shopping Centre",
-    "stop_latitude": -37.784023479792,
-    "stop_longitude": 145.124988971071,
+  "34095": {
+    "stop_suburb": "Clayton",
+    "stop_name": "Monash University",
+    "stop_latitude": -37.9136868109722,
+    "stop_longitude": 145.131768418562,
     "route_type": 2,
-    "stop_id": 34081
+    "stop_id": 34095
   },
-  "34088": {
-    "stop_suburb": "Ringwood",
-    "stop_name": "Ringwood Railway Station/Maroondah Hwy",
-    "stop_latitude": -37.815080163896,
-    "stop_longitude": 145.22988517169,
+  "34096": {
+    "stop_suburb": "Clayton",
+    "stop_name": "Monash University",
+    "stop_latitude": -37.9136868109722,
+    "stop_longitude": 145.131768418562,
     "route_type": 2,
-    "stop_id": 34088
-  },
-  "34089": {
-    "stop_suburb": "Ringwood",
-    "stop_name": "Ringwood Railway Station/Maroondah Hwy",
-    "stop_latitude": -37.815080163896,
-    "stop_longitude": 145.22988517169,
-    "route_type": 2,
-    "stop_id": 34089
-  },
-  "34090": {
-    "stop_suburb": "Doncaster",
-    "stop_name": "Doncaster Shopping Centre",
-    "stop_latitude": -37.784023479792,
-    "stop_longitude": 145.124988971071,
-    "route_type": 2,
-    "stop_id": 34090
-  },
-  "34091": {
-    "stop_suburb": "Doncaster",
-    "stop_name": "Doncaster Shopping Centre",
-    "stop_latitude": -37.784023479792,
-    "stop_longitude": 145.124988971071,
-    "route_type": 2,
-    "stop_id": 34091
+    "stop_id": 34096
   },
   "34101": {
-    "stop_suburb": "Ringwood",
-    "stop_name": "Ringwood Railway Station/Maroondah Hwy",
-    "stop_latitude": -37.815080163896,
-    "stop_longitude": 145.22988517169,
+    "stop_suburb": "Clayton",
+    "stop_name": "Monash University",
+    "stop_latitude": -37.9136868109722,
+    "stop_longitude": 145.131768418562,
     "route_type": 2,
     "stop_id": 34101
   },
-  "34113": {
+  "34108": {
+    "stop_suburb": "Clayton",
+    "stop_name": "Monash University",
+    "stop_latitude": -37.9136868109722,
+    "stop_longitude": 145.131768418562,
+    "route_type": 2,
+    "stop_id": 34108
+  },
+  "34109": {
+    "stop_suburb": "Clayton",
+    "stop_name": "Monash University",
+    "stop_latitude": -37.9136868109722,
+    "stop_longitude": 145.131768418562,
+    "route_type": 2,
+    "stop_id": 34109
+  },
+  "34110": {
+    "stop_suburb": "Clayton",
+    "stop_name": "Monash University",
+    "stop_latitude": -37.9136868109722,
+    "stop_longitude": 145.131768418562,
+    "route_type": 2,
+    "stop_id": 34110
+  },
+  "34112": {
     "stop_suburb": "Ringwood",
     "stop_name": "Ringwood Railway Station/Maroondah Hwy",
     "stop_latitude": -37.815080163896,
     "stop_longitude": 145.22988517169,
     "route_type": 2,
-    "stop_id": 34113
+    "stop_id": 34112
   },
   "34114": {
     "stop_suburb": "Ringwood",
@@ -87,12 +87,36 @@
     "route_type": 2,
     "stop_id": 34116
   },
-  "34119": {
+  "34126": {
     "stop_suburb": "Ringwood",
     "stop_name": "Ringwood Railway Station/Maroondah Hwy",
     "stop_latitude": -37.815080163896,
     "stop_longitude": 145.22988517169,
     "route_type": 2,
-    "stop_id": 34119
+    "stop_id": 34126
+  },
+  "34127": {
+    "stop_suburb": "Ringwood",
+    "stop_name": "Ringwood Railway Station/Maroondah Hwy",
+    "stop_latitude": -37.815080163896,
+    "stop_longitude": 145.22988517169,
+    "route_type": 2,
+    "stop_id": 34127
+  },
+  "34128": {
+    "stop_suburb": "Ringwood",
+    "stop_name": "Ringwood Railway Station/Maroondah Hwy",
+    "stop_latitude": -37.815080163896,
+    "stop_longitude": 145.22988517169,
+    "route_type": 2,
+    "stop_id": 34128
+  },
+  "34131": {
+    "stop_suburb": "Clayton",
+    "stop_name": "Monash University",
+    "stop_latitude": -37.9136868109722,
+    "stop_longitude": 145.131768418562,
+    "route_type": 2,
+    "stop_id": 34131
   }
 }
