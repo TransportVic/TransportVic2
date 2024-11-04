@@ -53,8 +53,22 @@ let DONC = {
   stop_longitude: 145.124988971071
 }
 
+let GLO_SHOW = {
+  stop_suburb: 'Thomson: 3219',
+  stop_name: 'Geelong Showgrounds/St. Albans Road',
+  stop_latitude: -38.1705248914605,
+  stop_longitude: 144.377048460666
+}
+
+let ELT = {
+  stop_suburb: 'Eltham',
+  stop_name: 'Eltham Railway Station',
+  stop_latitude: -37.7135496724667 ,
+  stop_longitude: 145.147822019567
+}
+
 let allStops = [
-  RWD, MONASH, CSA, TNT, HLM, MELB, DONC
+  RWD, MONASH, CSA, TNT, HLM, MELB, DONC, GLO_SHOW, ELT
 ]
 
 let failedStops = []
@@ -82,7 +96,7 @@ async function check(stopID) {
 
 async function main() {
   for (let stopID = 33240; stopID <= 33250; stopID++) await check(stopID)
-  for (let stopID = 34081; stopID <= 34140; stopID++) await check(stopID)
+  for (let stopID = 34081; stopID <= 34150; stopID++) await check(stopID)
   
   await fs.writeFile(__dirname + '/override-stops.json', JSON.stringify(stops, null, 2))
   if (failedStops.length) await updateDiscord()
