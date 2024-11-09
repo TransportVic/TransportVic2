@@ -596,7 +596,7 @@ function getLineStops(lineName, destination) {
   if (lineName === 'Hurstbridge') return lines.Hurstbridge
   if (lineName === 'City Circle') return lines['City Circle']
   if (lineName === 'Sydney - Melbourne') return lines.Sydney
-  if (lineName === 'Showgrounds/Flemington') return lines['Flemington Racecourse']
+  if (lineName === 'Flemington Racecourse') return lines['Flemington Racecourse']
   if (lineName === 'The Overland') return lines.Overland
 }
 
