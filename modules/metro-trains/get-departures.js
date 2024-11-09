@@ -43,7 +43,9 @@ let rceStations = [
   'Showgrounds',
   'Newmarket',
   'Kensington',
-  'North Melbourne'
+  'North Melbourne',
+  'Southern Cross',
+  'Flinders Street'
 ]
 
 function addCityLoopRunning(train, stationName) {
@@ -1164,8 +1166,8 @@ async function getExtraTrains(departures, direction, scheduled, departureTime) {
 }
 
 async function getMissingRaceTrains(departures, scheduled) {
-  let raceTrains = scheduled.filter(train => train.trip.routeGTFSID === '2-ain')
-  let existingIDs = departures.filter(train => train.trip.routeGTFSID === '2-ain').map(train => generateTripID(train.trip))
+  let raceTrains = scheduled.filter(train => train.trip.routeGTFSID === '2-RCE')
+  let existingIDs = departures.filter(train => train.trip.routeGTFSID === '2-RCE').map(train => generateTripID(train.trip))
 
   let extras = raceTrains.filter(train => {
     let id = generateTripID(train.trip)
