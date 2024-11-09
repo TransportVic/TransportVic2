@@ -1,14 +1,14 @@
 {
-  "routeName": "Showgrounds/Flemington",
-  "codedName": "showgrounds-flemington",
+  "routeName": "Flemington Racecourse",
+  "codedName": "flemington-racecourse",
   "routeNumber": null,
-  "routeGTFSID": "2-ain",
+  "routeGTFSID": "2-RCE",
   "operators": [
     "Metro Trains Melbourne"
   ],
   "routePath": [{
     "fullGTFSIDs": [
-      "2-ain-mjp-1.1.H"
+      "2-RCE-mjp-1.1.H"
     ],
     "path": {
       "type": "LineString",

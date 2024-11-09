@@ -137,7 +137,7 @@ module.exports = async function (data, db) {
   let dbStops = {}
 
   let routeName = routeData.route_name
-  if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
+  if (routeName.includes('Flemington')) routeName = 'Flemington Racecourse'
   if (routeData.route_id === 99) routeName = 'City Circle'
 
   let routeGTFSID = routeGTFSIDs[routeName]

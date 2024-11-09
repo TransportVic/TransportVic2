@@ -24,7 +24,7 @@ let cityLoopGTFSIDs = [
 let burnleyGroup = ['Alamein', 'Belgrave', 'Glen Waverley', 'Lilydale']
 let caulfieldGroup = ['Frankston', 'Cranbourne', 'Pakenham', 'Sandringham']
 let dandenongGroup = ['Cranbourne', 'Pakenham']
-let northernGroup = ['Craigieburn', 'Sunbury', 'Upfield', 'Showgrounds/Flemington', 'Werribee', 'Williamstown']
+let northernGroup = ['Craigieburn', 'Sunbury', 'Upfield', 'Showgrounds/Flemington', 'Flemington Racecourse', 'Werribee', 'Williamstown']
 let cliftonHillGroup = ['Mernda', 'Hurstbridge']
 let genericGroup = ['City Circle', 'Stony Point']
 
@@ -439,7 +439,7 @@ async function norGroupMatch(train, stopGTFSID, stationName, db) {
   let possibleLines = northernGroup
 
   let possibleDestinations = [train.runDestination]
-  if (train.direction === 'Down' && train.routeName === 'Showgrounds/Flemington') {
+  if (train.direction === 'Down' && train.routeName === 'Flemington Racecourse') {
     possibleDestinations.push('Showgrounds')
     possibleDestinations.push('Flemington Racecourse')
   }
@@ -476,7 +476,7 @@ async function norGroupMatch(train, stopGTFSID, stationName, db) {
     trip = await matchTrip(train, stopGTFSID, db, possibleLines, train.routeName, possibleDestinations)
 
     // RCE trains match weirdly especially in the city - be strict with requirements
-    if (train.runID && train.runID[0] === 'R' && trip && trip.routeName !== 'Showgrounds/Flemington') trip = null
+    if (train.runID && train.runID[0] === 'R' && trip && trip.routeName !== 'Flemington Racecourse') trip = null
   }
 
   return trip
@@ -992,7 +992,7 @@ function parsePTVDepartures(ptvResponse, stationName, departureTime) {
     let isRailReplacementBus = departure.flags.includes('RRB-RUN')
 
     let routeName = route.route_name
-    if (routeName.includes('Showgrounds')) routeName = 'Showgrounds/Flemington'
+    if (routeName.includes('Flemington')) routeName = 'Flemington Racecourse'
     if (route.route_id === 99) routeName = 'City Circle'
     let runDestination = run.destination_name.trim()
 

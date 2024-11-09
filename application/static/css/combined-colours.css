@@ -615,11 +615,11 @@
   background-color: #ce39c4 !important;
 }
 
-.showgrounds-flemington-line {
+.flemington-racecourse-line {
   background-color: #ce0058 !important;
 }
 
-:nth-child(even) > .showgrounds-flemington-line {
+:nth-child(even) > .flemington-racecourse-line {
   background-color: #ba0352 !important;
 }
 

@@ -15,7 +15,7 @@ let cityStations = [...cityLoopStations, 'Flinders Street']
 let mainLine = ['Paisley', 'Galvin']
 let altonaLoop = ['Seaholme', 'Altona', 'Westona']
 
-let northernGroup = ['Craigieburn', 'Sunbury', 'Upfield', 'Showgrounds/Flemington', 'Werribee', 'Williamstown']
+let northernGroup = ['Craigieburn', 'Sunbury', 'Upfield', 'Showgrounds/Flemington', 'Flemington Racecourse', 'Werribee', 'Williamstown']
 
 let defaultStoppingText = {
   stopsAll: 'Stops All Stations',

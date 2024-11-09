@@ -15,5 +15,6 @@ module.exports = {
   'Werribee': 'Northern',
   'Williamstown': 'Northern',
   'City Circle': 'City Circle',
+  'Flemington Racecourse': 'Northern',
   'Flemington Races': 'Northern'
 }

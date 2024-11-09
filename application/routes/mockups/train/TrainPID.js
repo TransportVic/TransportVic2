@@ -13,7 +13,8 @@ let northernGroup = [
   'Upfield',
   'Werribee',
   'Williamstown',
-  'Showgrounds/Flemington'
+  'Showgrounds/Flemington',
+  'Flemington Racecourse'
 ]
 
 let crossCityGroup = [

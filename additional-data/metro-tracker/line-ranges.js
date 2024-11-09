@@ -100,5 +100,8 @@ module.exports = {
   ],
   'Flemington Races': [
     [0, 999, 'R']
+  ],
+  'Flemington Racecourse': [
+    [0, 999, 'R']
   ]
 }
