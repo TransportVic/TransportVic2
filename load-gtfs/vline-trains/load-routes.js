@@ -13,19 +13,19 @@ const updateStats = require('../utils/stats')
 let gtfsID = 1
 
 let routeNames = {
-  '1-V08': 'Bairnsdale',
-  '1-Ech': 'Echuca',
-  '1-V01': 'Albury',
-  '1-V04': 'Ararat',
-  '1-V05': 'Ballarat',
-  '1-V12': 'Bendigo',
-  '1-V23': 'Geelong',
-  '1-my1': 'Maryborough',
-  '1-Sht': 'Shepparton',
-  '1-V45': 'Swan Hill',
-  '1-V48': 'Traralgon',
-  '1-V51': 'Warrnambool',
-  '1-V40': 'Seymour'
+  '1-BDE': 'Bairnsdale',
+  '1-ECH': 'Echuca',
+  '1-ABY': 'Albury',
+  '1-ART': 'Ararat',
+  '1-BAT': 'Ballarat',
+  '1-BGO': 'Bendigo',
+  '1-GEL': 'Geelong',
+  '1-MBY': 'Maryborough',
+  '1-SNH': 'Shepparton',
+  '1-SWL': 'Swan Hill',
+  '1-TRN': 'Traralgon',
+  '1-WBL': 'Warrnambool',
+  '1-SER': 'Seymour'
 }
 
 database.connect({

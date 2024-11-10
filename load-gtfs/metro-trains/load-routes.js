@@ -48,7 +48,7 @@ database.connect({
     await loadRoutes(routes, gtfsID, routeData, shapeJSON, () => {
       return ['Metro Trains Melbourne']
     }, (shortRouteName, _, routeGTFSID) => {
-      if (routeGTFSID === '2-ain') return 'Showgrounds/Flemington'
+      if (routeGTFSID === '2-RCE') return 'Flemington Racecourse'
       return shortRouteName
     })
   })
@@ -56,7 +56,7 @@ database.connect({
   await routes.replaceDocument({ routeGTFSID: "2-CCL" }, cityCircle, { upsert: true })
 
   let rce
-  if (rce = await routes.findDocument({ routeGTFSID: "2-ain" })) {
+  if (rce = await routes.findDocument({ routeGTFSID: "2-RCE" })) {
     let rceLength = flemington.routePath[0].length
     let rceDown = flemington.routePath[0].path.coordinates
     let rceUp = flemington.routePath[0].path.coordinates.slice(0).reverse()
@@ -76,9 +76,9 @@ database.connect({
       }
     })
 
-    await routes.replaceDocument({ routeGTFSID: "2-ain" }, rce)
+    await routes.replaceDocument({ routeGTFSID: "2-RCE" }, rce)
   } else {
-    await routes.replaceDocument({ routeGTFSID: "2-ain" }, flemington, { upsert: true })
+    await routes.replaceDocument({ routeGTFSID: "2-RCE" }, flemington, { upsert: true })
   }
 
   await updateStats('mtm-routes', routeData.length + 2)
