@@ -209,6 +209,8 @@ module.exports = {
   "631": ["Ventura Bus Lines"],
   "663": ["Ventura Bus Lines"],
   "664": ["Ventura Bus Lines"],
+  "668": ["Kinetic"],
+  "669": ["Kinetic"],
   "670": ["Ventura Bus Lines"],
   "671": ["Ventura Bus Lines"],
   "672": ["Ventura Bus Lines"],
