@@ -19,6 +19,7 @@ let permittedStops = [
   "Yass Junction Station",
   "Seymour Station",
   "Melbourne (Southern Cross) Station",
+  "Southern Cross Station",
   "The Rock Station",
   "Henty Station",
   "Culcairn Station",
@@ -56,7 +57,8 @@ database.connect({
 
     let rawStopName = line[2].replace('Platform Station', 'Station')
     if (rawStopName.includes('Yass Station')) rawStopName = rawStopName.replace('Yass', 'Yass Junction')
-    let stopName = rawStopName.replace(/ Plat.+/, '').trim()
+    let stopName = rawStopName.replace(/ Plat.+/, '').trim().replace(/,$/, '')
+    if (!stopName.includes('Station')) stopName += ' Station'
 
     if (permittedStops.includes(stopName) && rawStopName.includes('Platform')) {
       let originalName = rawStopName.replace('Station', 'Railway Station')
