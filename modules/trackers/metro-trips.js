@@ -40,7 +40,7 @@ let routes = {
   'Sunbury': '95',
   'Upfield': '96',
   'Werribee': '97',
-  'Flemington': '0',
+  'Flemington Racecourse': '0',
   'Williamstown': '98'
 }
 
