@@ -55,6 +55,12 @@ module.exports = async function (data, db) {
 
   let {departures, stops, runs, routes, directions} = await ptvAPI(url)
   
+  departures = departures.filter((stop, i) => {
+    let stopID = stop.stop_id
+
+    return i === 0 || departures[i - 1].stop_id !== stopID
+  })
+
   stops = {
     ...stops,
     ...overrideStops
