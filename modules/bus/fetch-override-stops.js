@@ -96,7 +96,7 @@ async function check(stopID) {
 
 async function main() {
   for (let stopID = 33240; stopID <= 33250; stopID++) await check(stopID)
-  for (let stopID = 34100; stopID <= 34200; stopID++) await check(stopID)
+  for (let stopID = 34100; stopID <= 34250; stopID++) await check(stopID)
   
   await fs.writeFile(__dirname + '/override-stops.json', JSON.stringify(stops, null, 2))
   if (failedStops.length) await updateDiscord()
