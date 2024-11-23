@@ -93,6 +93,7 @@ let knownStations = [
   "Eaglemont",
   "East Camberwell",
   "East Malvern",
+  "East Pakenham",
   "East Richmond",
   "Echuca",
   "Edithvale",
