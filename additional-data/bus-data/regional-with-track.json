@@ -496,6 +496,25 @@
    "liveTrack": true
   }
  ],
+ "Melton": [
+  {
+   "routeGTFSID": "6-452",
+   "routeNumber": "452",
+   "liveTrack": true
+  }
+ ],
+ "Bacchus Marsh": [
+  {
+   "routeGTFSID": "6-BM3",
+   "routeNumber": "433",
+   "liveTrack": true
+  },
+  {
+   "routeGTFSID": "6-BM4",
+   "routeNumber": "434",
+   "liveTrack": true
+  }
+ ],
  "Horsham": [
   {
    "routeGTFSID": "6-HR1",
@@ -550,18 +569,6 @@
    "routeGTFSID": "6-Ar3",
    "routeNumber": "3",
    "liveTrack": false
-  }
- ],
- "Bacchus Marsh": [
-  {
-   "routeGTFSID": "6-BM3",
-   "routeNumber": "433",
-   "liveTrack": true
-  },
-  {
-   "routeGTFSID": "6-BM4",
-   "routeNumber": "434",
-   "liveTrack": true
   }
  ],
  "Hamilton": [
