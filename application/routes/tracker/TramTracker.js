@@ -10,11 +10,11 @@ const tramDepots = require('../../../additional-data/tram-tracker/depot-allocati
 const serviceDepots = require('../../../additional-data/tram-tracker/service-depots')
 const router = new express.Router()
 const rateLimit = require('express-rate-limit')
-
+/*
 router.use(rateLimit({
   windowMs: 1 * 60 * 1000,
   max: 15
-}))
+}))*/
 
 let crossDepotQuery = {
   $or: []
