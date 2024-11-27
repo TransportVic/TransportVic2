@@ -38,6 +38,7 @@ module.exports = stopName => {
   if (stopName === 'Flemington Racecourse/Racecourse Road') return 'Ascot Vale Road/Racecourse Road'
 
   if (stopName.includes('Center')) return stopName.replace('Center', 'Centre')
+  if (stopName === 'Coles Supermarket/Aitken Street') return 'Gisborne Town Centre/Aitken Street'
 
   return stopName
 }
