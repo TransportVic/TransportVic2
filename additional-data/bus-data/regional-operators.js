@@ -121,7 +121,7 @@ module.exports = {
   },
   "Melton": {
     "452": ["Bacchus Marsh Coaches"]
-  }
+  },
   "Hamilton": {
     "1": ["Trotters Coaches"],
     "2": ["Trotters Coaches"],
