@@ -86,18 +86,29 @@ async function getData(req, res) {
   return {trainDepartures, busDepartures, stop}
 }
 
-router.get('/:suburb/:stopName/:bay', async (req, res) => {
+router.get('/half/:suburb/:stopName/:bay', async (req, res) => {
   let data = await getData(req, res)
 
   let time = utils.now()
 
-  res.render('mockups/bus-int-pids/pids', {
+  res.render('mockups/bus-int-pids/half-pids', {
     time,
     ...data
   })
 })
 
-router.post('/:suburb/:stopName/:bay', async (req, res) => {
+router.get('/full/:suburb/:stopName/:bay', async (req, res) => {
+  let data = await getData(req, res)
+
+  let time = utils.now()
+
+  res.render('mockups/bus-int-pids/full-pids', {
+    time,
+    ...data
+  })
+})
+
+router.post('/:type/:suburb/:stopName/:bay', async (req, res) => {
   let data = await getData(req, res)
 
   res.json(data)

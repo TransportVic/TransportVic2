@@ -92,7 +92,7 @@ router.get('/get', async (req, res) => {
     if (m) {
       m = m[1]
       bay = bay || '*'
-      return res.redirect('/mockups/bus-int-pids' + m + '/' + bay)
+      return res.redirect('/mockups/bus-int-pids/half' + m + '/' + bay)
     } else {
       errorMessage = `${value} is an invalid bus stop`
     }
