@@ -114,12 +114,12 @@ module.exports = class MainServer {
 
     function filter(prefix, req, next) {
       let host = req.headers.host || ''
-      if (host.includes(prefix)) return true
+      if (host.startsWith(prefix)) return true
       else return void next()
     }
 
-    app.get('/', (req, res, next) => {
-      if (filter('seized.', req, next)) res.render('seized')
+    app.use((req, res, next) => {
+      if (filter('vic.', req, next)) res.redirect(301, `https://transportvic.me${req.url}`)
     })
 
     app.use('/static', express.static(path.join(__dirname, '../application/static'), {
