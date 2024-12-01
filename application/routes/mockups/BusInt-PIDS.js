@@ -57,7 +57,7 @@ async function getData(req, res, full) {
       if (bay !== '*') {
         if (departure.bay) {
           let bayID = departure.bay.slice(4)
-          if (bayID !== bay) return false
+          if (!bay.includes(bayID)) return false
         } else return false
       }
 
@@ -71,7 +71,7 @@ async function getData(req, res, full) {
         if (!directionCount[id]) directionCount[id] = 1
         else directionCount[id]++
 
-        return directionCount[id] <= 2
+        return full || directionCount[id] <= 2
       }
       return false
     }).map(departure => {
