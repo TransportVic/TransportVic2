@@ -81,14 +81,7 @@ function updateBody() {
       })
 
       let maxBusDepartures = isFull ? (trainDepartures ? 9 : 14) : (trainDepartures ? 4 : 7)
-      let paddedBusDepartures
-
-      let bay = location.pathname.slice(-1)
-      if (trainDepartures && bay === '*') {
-        paddedBusDepartures = [...busDepartures, null, null, null, null, null, null, null].slice(0, maxBusDepartures)
-      } else {
-        paddedBusDepartures = [...sortedBusDepartures, null, null, null, null, null, null, null].slice(0, maxBusDepartures)
-      }
+      let paddedBusDepartures = sortedBusDepartures.concat(Array(maxBusDepartures).fill(null)).slice(0, maxBusDepartures)
 
       paddedBusDepartures.forEach((busDeparture, i) => {
         let departureRow = $(`.timings .row:nth-child(${i + 2})`)
