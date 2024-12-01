@@ -1,122 +1,130 @@
 {
-  "34094": {
-    "stop_suburb": "Clayton",
-    "stop_name": "Monash University",
-    "stop_latitude": -37.9136868109722,
-    "stop_longitude": 145.131768418562,
+  "34138": {
+    "stop_suburb": "Thomson: 3219",
+    "stop_name": "Geelong Showgrounds/St. Albans Road",
+    "stop_latitude": -38.1705248914605,
+    "stop_longitude": 144.377048460666,
     "route_type": 2,
-    "stop_id": 34094
+    "stop_id": 34138
   },
-  "34095": {
-    "stop_suburb": "Clayton",
-    "stop_name": "Monash University",
-    "stop_latitude": -37.9136868109722,
-    "stop_longitude": 145.131768418562,
-    "route_type": 2,
-    "stop_id": 34095
-  },
-  "34096": {
-    "stop_suburb": "Clayton",
-    "stop_name": "Monash University",
-    "stop_latitude": -37.9136868109722,
-    "stop_longitude": 145.131768418562,
-    "route_type": 2,
-    "stop_id": 34096
-  },
-  "34101": {
-    "stop_suburb": "Clayton",
-    "stop_name": "Monash University",
-    "stop_latitude": -37.9136868109722,
-    "stop_longitude": 145.131768418562,
-    "route_type": 2,
-    "stop_id": 34101
-  },
-  "34108": {
-    "stop_suburb": "Clayton",
-    "stop_name": "Monash University",
-    "stop_latitude": -37.9136868109722,
-    "stop_longitude": 145.131768418562,
-    "route_type": 2,
-    "stop_id": 34108
-  },
-  "34109": {
-    "stop_suburb": "Clayton",
-    "stop_name": "Monash University",
-    "stop_latitude": -37.9136868109722,
-    "stop_longitude": 145.131768418562,
-    "route_type": 2,
-    "stop_id": 34109
-  },
-  "34110": {
-    "stop_suburb": "Clayton",
-    "stop_name": "Monash University",
-    "stop_latitude": -37.9136868109722,
-    "stop_longitude": 145.131768418562,
-    "route_type": 2,
-    "stop_id": 34110
-  },
-  "34112": {
+  "34159": {
     "stop_suburb": "Ringwood",
     "stop_name": "Ringwood Railway Station/Maroondah Hwy",
     "stop_latitude": -37.815080163896,
     "stop_longitude": 145.22988517169,
     "route_type": 2,
-    "stop_id": 34112
+    "stop_id": 34159
   },
-  "34114": {
+  "34161": {
     "stop_suburb": "Ringwood",
     "stop_name": "Ringwood Railway Station/Maroondah Hwy",
     "stop_latitude": -37.815080163896,
     "stop_longitude": 145.22988517169,
     "route_type": 2,
-    "stop_id": 34114
+    "stop_id": 34161
   },
-  "34115": {
+  "34162": {
     "stop_suburb": "Ringwood",
     "stop_name": "Ringwood Railway Station/Maroondah Hwy",
     "stop_latitude": -37.815080163896,
     "stop_longitude": 145.22988517169,
     "route_type": 2,
-    "stop_id": 34115
+    "stop_id": 34162
   },
-  "34116": {
+  "34163": {
     "stop_suburb": "Ringwood",
     "stop_name": "Ringwood Railway Station/Maroondah Hwy",
     "stop_latitude": -37.815080163896,
     "stop_longitude": 145.22988517169,
     "route_type": 2,
-    "stop_id": 34116
+    "stop_id": 34163
   },
-  "34126": {
+  "34164": {
     "stop_suburb": "Ringwood",
     "stop_name": "Ringwood Railway Station/Maroondah Hwy",
     "stop_latitude": -37.815080163896,
     "stop_longitude": 145.22988517169,
     "route_type": 2,
-    "stop_id": 34126
+    "stop_id": 34164
   },
-  "34127": {
+  "34165": {
     "stop_suburb": "Ringwood",
     "stop_name": "Ringwood Railway Station/Maroondah Hwy",
     "stop_latitude": -37.815080163896,
     "stop_longitude": 145.22988517169,
     "route_type": 2,
-    "stop_id": 34127
+    "stop_id": 34165
   },
-  "34128": {
+  "34166": {
     "stop_suburb": "Ringwood",
     "stop_name": "Ringwood Railway Station/Maroondah Hwy",
     "stop_latitude": -37.815080163896,
     "stop_longitude": 145.22988517169,
     "route_type": 2,
-    "stop_id": 34128
+    "stop_id": 34166
   },
-  "34131": {
-    "stop_suburb": "Clayton",
-    "stop_name": "Monash University",
-    "stop_latitude": -37.9136868109722,
-    "stop_longitude": 145.131768418562,
+  "34167": {
+    "stop_suburb": "Tarneit",
+    "stop_name": "Tarneit Railway Station",
+    "stop_latitude": -37.8326687887396,
+    "stop_longitude": 144.694971480843,
     "route_type": 2,
-    "stop_id": 34131
+    "stop_id": 34167
+  },
+  "34168": {
+    "stop_suburb": "Tarneit",
+    "stop_name": "Tarneit Railway Station",
+    "stop_latitude": -37.8326687887396,
+    "stop_longitude": 144.694971480843,
+    "route_type": 2,
+    "stop_id": 34168
+  },
+  "34169": {
+    "stop_suburb": "Tarneit",
+    "stop_name": "Tarneit Railway Station",
+    "stop_latitude": -37.8326687887396,
+    "stop_longitude": 144.694971480843,
+    "route_type": 2,
+    "stop_id": 34169
+  },
+  "34170": {
+    "stop_suburb": "Tarneit",
+    "stop_name": "Tarneit Railway Station",
+    "stop_latitude": -37.8326687887396,
+    "stop_longitude": 144.694971480843,
+    "route_type": 2,
+    "stop_id": 34170
+  },
+  "34171": {
+    "stop_suburb": "Tarneit",
+    "stop_name": "Tarneit Railway Station",
+    "stop_latitude": -37.8326687887396,
+    "stop_longitude": 144.694971480843,
+    "route_type": 2,
+    "stop_id": 34171
+  },
+  "34172": {
+    "stop_suburb": "Tarneit",
+    "stop_name": "Tarneit Railway Station",
+    "stop_latitude": -37.8326687887396,
+    "stop_longitude": 144.694971480843,
+    "route_type": 2,
+    "stop_id": 34172
+  },
+  "34199": {
+    "stop_suburb": "Ringwood",
+    "stop_name": "Ringwood Railway Station/Maroondah Hwy",
+    "stop_latitude": -37.815080163896,
+    "stop_longitude": 145.22988517169,
+    "route_type": 2,
+    "stop_id": 34199
+  },
+  "34200": {
+    "stop_suburb": "Ringwood",
+    "stop_name": "Ringwood Railway Station/Maroondah Hwy",
+    "stop_latitude": -37.815080163896,
+    "stop_longitude": 145.22988517169,
+    "route_type": 2,
+    "stop_id": 34200
   }
 }
