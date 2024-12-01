@@ -92,9 +92,10 @@ router.get('/half/:suburb/:stopName/:bay', async (req, res) => {
 
   let time = utils.now()
 
-  res.render('mockups/bus-int-pids/half-pids', {
+  res.render('mockups/bus-int-pids/full-pids', {
     time,
-    ...data
+    ...data,
+    full: false
   })
 })
 
@@ -105,7 +106,8 @@ router.get('/full/:suburb/:stopName/:bay', async (req, res) => {
 
   res.render('mockups/bus-int-pids/full-pids', {
     time,
-    ...data
+    ...data,
+    full: true
   })
 })
 

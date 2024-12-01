@@ -23,8 +23,11 @@ div.content.announcements {
 }
 
 div.content {
-  --width: 100vw;
-  --height: calc(100vw * 9 / 32);
+  --width: calc(100vh / 9 * 32);
+  --height: 100vh;
+
+  /* --width: 100vw;
+  --height: calc(100vw * 9 / 32); */
 
   width: var(--width);
   height: var(--height);
@@ -34,4 +37,11 @@ div.content {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media (max-aspect-ratio: 32/9) {
+  body, div.content {
+    --width: 100vw;
+    --height: calc(100vw * 9 / 32);
+  }
 }
