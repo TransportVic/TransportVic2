@@ -7,7 +7,7 @@ const moment = require('moment')
 const async = require('async')
 const utils = require('../../../utils')
 
-async function getData(req, res) {
+async function getData(req, res, full) {
   let stops = res.db.getCollection('stops')
   let bay = req.params.bay.toUpperCase()
 
@@ -24,8 +24,6 @@ async function getData(req, res) {
   let trainDepartures
 
   if (stop.bays.some(bay => bay.mode === 'metro train')) {
-    let tripCount = {Up: 0, Down: 0}
-
     trainDepartures = (await getTrainDepartures(stop, res.db))
       .filter(departure => !departure.isRailReplacementBus && !departure.cancelled)
 
@@ -35,18 +33,21 @@ async function getData(req, res) {
     trainDepartures.forEach(departure => {
       let {direction} = departure.trip
 
-      if (tripCount[direction]++ < 2) {
-        if (direction === 'Up') upTrips.push(departure)
-        else downTrips.push(departure)
-      }
+      if (direction === 'Up') upTrips.push(departure)
+      else downTrips.push(departure)
     })
 
-    if (downTrips.length === 0)
-      trainDepartures = upTrips.slice(0, 2)
-    else if (upTrips.length === 0)
-      trainDepartures = downTrips.slice(0, 2)
-    else
-      trainDepartures = [upTrips[0], downTrips[0]]
+    let directionSize = full ? 2 : 1
+
+    let upLength = Math.min(directionSize, upTrips.length)
+    let downLength = Math.min(directionSize, downTrips.length)
+
+    if (downLength !== directionSize) upLength = Math.min(2 * directionSize - downLength, upTrips.length)
+
+    trainDepartures = [
+      ...upTrips.slice(0, upLength),
+      ...downTrips.slice(0, downLength)
+    ]
   }
 
   let directionCount = {}
@@ -87,7 +88,7 @@ async function getData(req, res) {
 }
 
 router.get('/half/:suburb/:stopName/:bay', async (req, res) => {
-  let data = await getData(req, res)
+  let data = await getData(req, res, false)
 
   let time = utils.now()
 
@@ -98,7 +99,7 @@ router.get('/half/:suburb/:stopName/:bay', async (req, res) => {
 })
 
 router.get('/full/:suburb/:stopName/:bay', async (req, res) => {
-  let data = await getData(req, res)
+  let data = await getData(req, res, true)
 
   let time = utils.now()
 
@@ -109,7 +110,7 @@ router.get('/full/:suburb/:stopName/:bay', async (req, res) => {
 })
 
 router.post('/:type/:suburb/:stopName/:bay', async (req, res) => {
-  let data = await getData(req, res)
+  let data = await getData(req, res, req.params.type === 'full')
 
   res.json(data)
 })

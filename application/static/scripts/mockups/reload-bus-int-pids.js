@@ -13,9 +13,9 @@ function formatTime(time) {
 
 function setMessagesActive(active) {
   if (active) {
-    $('.content').className = 'content messages'
+    $('.content').classList.add('messages')
   } else {
-    $('.content').className = 'content'
+    $('.content').classList.remove('messages')
   }
 }
 
@@ -32,6 +32,10 @@ function getEstimatedDepartureTime(estimatedDepartureTime) {
     return '-- min'
   }
 }
+
+let isFull = $('.content').classList.contains('full')
+let metroOffset = isFull ? 12 : 7
+let maxMetroDepartures = isFull ? 4 : 2
 
 function updateBody() {
   $.ajax({
@@ -76,7 +80,7 @@ function updateBody() {
         })
       })
 
-      let maxBusDepartures = trainDepartures ? 4 : 7
+      let maxBusDepartures = isFull ? (trainDepartures ? 9 : 14) : (trainDepartures ? 4 : 7)
       let paddedBusDepartures
 
       let bay = location.pathname.slice(-1)
@@ -110,9 +114,9 @@ function updateBody() {
       })
 
       if (trainDepartures) {
-        let paddedTrainDepartures = [...trainDepartures, null, null].slice(0, 2)
+        let paddedTrainDepartures = [...trainDepartures, null, null, null, null].slice(0, maxMetroDepartures)
         paddedTrainDepartures.forEach((trainDeparture, i) => {
-          let departureRow = $(`.timings .row:nth-child(${i + 7})`)
+          let departureRow = $(`.timings .row:nth-child(${i + metroOffset})`)
           if (trainDeparture) {
             let scheduled = formatTime(new Date(trainDeparture.scheduledDepartureTime))
             let estimated = getEstimatedDepartureTime(trainDeparture.estimatedDepartureTime)

@@ -5,14 +5,14 @@ html
     script(src='/static/scripts/mockups/pids-utils.js' async)
     link(rel='stylesheet' href='/static/css/mockups/base-style.css')
     link(rel='stylesheet' href='/static/css/mockups/bus-int-pids/bus-int-pids.css')
-    link(rel='stylesheet' href='/static/css/mockups/32-9-pids-base.css')
+    link(rel='stylesheet' href='/static/css/mockups/16-9-pids-base.css')
       
-    link(rel='preload' as='style' href='/static/css/mockups/32-9-pids-base.css')
+    link(rel='preload' as='style' href='/static/css/mockups/16-9-pids-base.css')
     link(rel='preload' as='style' href='/static/css/mockups/base-style.css')
 
     meta(name='format-detection' content='telephone=no')
   body
-    div.content
+    div.content.full
       div.message
         div
           div.info-circle
@@ -28,15 +28,14 @@ html
           span.scheduled Scheduled
           span.departing Departing
 
-        - for (let i = 0; i < (trainDepartures ? 4 : 7); i++)
+        - for (let i = 0; i < (trainDepartures ? 9 : 14); i++)
           div.row
         
         if trainDepartures
           div.row.train-header
             span Train Services
-          div.row
-          div.row
-            
+          - for (let i = 0; i < 4; i++)
+            div.row
         
       div.info
         div#hotline
