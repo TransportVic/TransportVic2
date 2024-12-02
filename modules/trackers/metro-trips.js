@@ -379,65 +379,65 @@ async function loadTrips() {
   let formedBy = {}
   let cancelledTrains = []
 
-  allTrips.forEach(trip => {
-    let { runID, forming } = trip
-    if (forming) {
-      if (!formedBy[forming]) formedBy[forming] = []
-      formedBy[forming].push(runID)
-    }
+  // allTrips.forEach(trip => {
+  //   let { runID, forming } = trip
+  //   if (forming) {
+  //     if (!formedBy[forming]) formedBy[forming] = []
+  //     formedBy[forming].push(runID)
+  //   }
 
-    if (trip.cancelled) cancelledTrains.push(trip.runID)
-  })
+  //   if (trip.cancelled) cancelledTrains.push(trip.runID)
+  // })
 
-  allTrips.forEach(trip => {
-    let formedByTrip
-    if (formedBy[trip.runID]) {
-      let possibleFormedByTrips = allTrips.filter(possibleTrip => formedBy[trip.runID].includes(possibleTrip.runID))
-      if (possibleFormedByTrips.length === 1) formedByTrip = possibleFormedByTrips[0]
-      else formedByTrip = possibleFormedByTrips.find(trip => !trip.cancelled) || possibleFormedByTrips[0]
+  // allTrips.forEach(trip => {
+    // let formedByTrip
+    // if (formedBy[trip.runID]) {
+    //   let possibleFormedByTrips = allTrips.filter(possibleTrip => formedBy[trip.runID].includes(possibleTrip.runID))
+    //   if (possibleFormedByTrips.length === 1) formedByTrip = possibleFormedByTrips[0]
+    //   else formedByTrip = possibleFormedByTrips.find(trip => !trip.cancelled) || possibleFormedByTrips[0]
 
-      trip.formedBy = formedByTrip.runID
-    } else {
-      trip.formedBy = null
-    }
+    //   trip.formedBy = formedByTrip.runID
+    // } else {
+    //   trip.formedBy = null
+    // }
 
-    if (trip.direction === 'Down' && trip.trueOrigin === 'Flinders Street Railway Station' && trip.formedBy) { // Prepend loop stops from previous trip
-      let tripFSSStop = trip.stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
-      let fssIndex = trip.stopTimings.indexOf(tripFSSStop)
+    // if (trip.direction === 'Down' && trip.trueOrigin === 'Flinders Street Railway Station' && trip.formedBy) { // Prepend loop stops from previous trip
+    //   let tripFSSStop = trip.stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
+    //   let fssIndex = trip.stopTimings.indexOf(tripFSSStop)
 
-      if (formedByTrip && formedByTrip.trueDestination === 'Flinders Street Railway Station') {
-        let formedByFSSIndex = formedByTrip.stopTimings.findIndex(stop => stop.stopName === 'Flinders Street Railway Station')
+    //   if (formedByTrip && formedByTrip.trueDestination === 'Flinders Street Railway Station') {
+    //     let formedByFSSIndex = formedByTrip.stopTimings.findIndex(stop => stop.stopName === 'Flinders Street Railway Station')
 
-        let formedByLoopStops = formedByTrip.stopTimings.filter((stop, i) => i < formedByFSSIndex && cityLoopStations.includes(stop.stopName.slice(0, -16)))
-        let fssStop = formedByTrip.stopTimings[formedByTrip.stopTimings.length - 1]
+    //     let formedByLoopStops = formedByTrip.stopTimings.filter((stop, i) => i < formedByFSSIndex && cityLoopStations.includes(stop.stopName.slice(0, -16)))
+    //     let fssStop = formedByTrip.stopTimings[formedByTrip.stopTimings.length - 1]
 
-        if (fssStop.arrivalTimeMinutes < 180) return // Don't want to accidentally create a messed up trip with the wrong departure day etc
+    //     if (fssStop.arrivalTimeMinutes < 180) return // Don't want to accidentally create a messed up trip with the wrong departure day etc
 
-        if (formedByLoopStops.length) {
-          tripFSSStop.arrivalTime = fssStop.arrivalTime
-          tripFSSStop.arrivalTimeMinutes = fssStop.arrivalTimeMinutes // Show the proper arrival time into FSS
+    //     if (formedByLoopStops.length) {
+    //       tripFSSStop.arrivalTime = fssStop.arrivalTime
+    //       tripFSSStop.arrivalTimeMinutes = fssStop.arrivalTimeMinutes // Show the proper arrival time into FSS
 
-          let nonLoopStops = trip.stopTimings.filter((stop, i) => {
-            if (cityLoopStations.includes(stop.stopName.slice(0, -16))) return i > fssIndex
-            return true
-          })
+    //       let nonLoopStops = trip.stopTimings.filter((stop, i) => {
+    //         if (cityLoopStations.includes(stop.stopName.slice(0, -16))) return i > fssIndex
+    //         return true
+    //       })
 
-          let mergedTimings = [
-            ...formedByLoopStops,
-            ...nonLoopStops
-          ]
+    //       let mergedTimings = [
+    //         ...formedByLoopStops,
+    //         ...nonLoopStops
+    //       ]
 
-          trip.stopTimings = mergedTimings
-        }
-      } else {
-        trip.stopTimings = trip.stopTimings.slice(fssIndex)
-      }
-    } else {
-      // Don't really need to bother with this as it is not as important
-    }
+    //       trip.stopTimings = mergedTimings
+    //     }
+    //   } else {
+    //     trip.stopTimings = trip.stopTimings.slice(fssIndex)
+    //   }
+    // } else {
+    //   // Don't really need to bother with this as it is not as important
+    // }
 
-    if (!trip.cancelled && trip.formedBy && trip.forming && cancelledTrains.includes(trip.formedBy) && cancelledTrains.includes(trip.forming)) trip.cancelled = true
-  })
+    // if (!trip.cancelled && trip.formedBy && trip.forming && cancelledTrains.includes(trip.formedBy) && cancelledTrains.includes(trip.forming)) trip.cancelled = true
+  // })
 
   let bulkOperations = []
   allTrips.forEach(trip => {
@@ -475,9 +475,9 @@ database.connect(async () => {
   schedule([
     [180, 240, 6], // Run it from 3am - 4am, taking into account website updating till ~3.30am
     [240, 360, 4], // Run until 6am
-    // No point loading it further as the data doesn't update anymore
-    // [360, 1199, 1.5],
-    // [1200, 1380, 3],
-    // [1380, 1439, 4]
+    // Run just for the live ETA data
+    [360, 1199, 1.5],
+    [1200, 1380, 3],
+    [1380, 1439, 4]
   ], requestTimings, 'metro trips', global.loggers.trackers.metro)
 })
