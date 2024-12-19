@@ -546,65 +546,69 @@ function trimDepartures(departures, includeStopTimings) {
 }
 
 async function getPIDData(station, platform, options, db) {
-  let departures = []
-  let arrivals = []
+  let { dep, has, bus } = await utils.getData('pid-data', station.stopName, async () => {
+    console.log('getting data', station.stopName)
+    let departures = []
+    let arrivals = []
 
-  await Promise.all([
-    new Promise(async resolve => {
-      try {
-        departures = await getAllDeparturesFromStation(station, db)
-      } finally {
-        resolve()
-      }
-    }),
-    new Promise(async resolve => {
-      try {
-        arrivals = await getStationArrivals(station, db)
-      } finally {
-        resolve()
-      }
+    await Promise.all([
+      new Promise(async resolve => {
+        try {
+          departures = await getAllDeparturesFromStation(station, db)
+        } finally {
+          resolve()
+        }
+      }),
+      new Promise(async resolve => {
+        try {
+          arrivals = await getStationArrivals(station, db)
+        } finally {
+          resolve()
+        }
+      })
+    ])
+
+    let trainDepartures = departures.filter(departure => !departure.isRailReplacementBus).filter(departure => {
+      return !departure.cancelled || options.includeCancelled
     })
-  ])
 
-  let trainDepartures = departures.filter(departure => !departure.isRailReplacementBus).filter(departure => {
-    return !departure.cancelled || options.includeCancelled
+    let busDepartures = departures.filter(departure => departure.isRailReplacementBus)
+    let routesWithBuses = busDepartures.map(departure => departure.routeName).filter((e, i, a) => a.indexOf(e) === i)
+
+    if (!options.stoppingText) options.stoppingText = defaultStoppingText
+    if (!options.stoppingType) options.stoppingType = defaultStoppingType
+    if (!options.maxDepartures) options.maxDepartures = 5
+
+    let allDepartures = [...trainDepartures, ...arrivals].sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+    if (allDepartures[0] && allDepartures[0].destination === 'Arrival') {
+      allDepartures = [allDepartures[0], ...trainDepartures]
+    } else {
+      allDepartures = allDepartures.filter(departure => departure.destination !== 'Arrival')
+    }
+
+    allDepartures.forEach(departure => {
+      departure.routeStops = getRouteStopsForDeparture(departure)
+      checkAltonaRunning(departure)
+
+      departure.futureRouteStops = findFutureRouteStops(departure)
+      departure.expressSections = findExpressSections(departure)
+      departure.stoppingText = getStoppingText(departure, options.stoppingText)
+      departure.screenStops = getScreenStops(departure)
+      departure.expressCount = getExpressCount(departure)
+      departure.via = findVia(departure)
+
+      appendStoppingType(departure, options.stoppingType)
+    })
+
+    return { dep: allDepartures, has: trainDepartures.length > 0, bus: routesWithBuses }
   })
 
-  let busDepartures = departures.filter(departure => departure.isRailReplacementBus)
-  let routesWithBuses = busDepartures.map(departure => departure.routeName).filter((e, i, a) => a.indexOf(e) === i)
-
-  if (!options.stoppingText) options.stoppingText = defaultStoppingText
-  if (!options.stoppingType) options.stoppingType = defaultStoppingType
-  if (!options.maxDepartures) options.maxDepartures = 5
-
-  let platformDepartures = filterPlatform(trainDepartures, platform)
-  let platformArrivals = filterPlatform(arrivals, platform)
-
-  let allDepartures = [...platformDepartures, ...platformArrivals].sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
-  if (allDepartures[0] && allDepartures[0].destination === 'Arrival') {
-    allDepartures = [allDepartures[0], ...platformDepartures]
-  } else {
-    allDepartures = allDepartures.filter(departure => departure.destination !== 'Arrival')
-  }
-
-  allDepartures.forEach(departure => {
-    departure.routeStops = getRouteStopsForDeparture(departure)
-    checkAltonaRunning(departure)
-
-    departure.futureRouteStops = findFutureRouteStops(departure)
-    departure.expressSections = findExpressSections(departure)
-    departure.stoppingText = getStoppingText(departure, options.stoppingText)
-    departure.screenStops = getScreenStops(departure)
-    departure.expressCount = getExpressCount(departure)
-    departure.via = findVia(departure)
-
-    appendStoppingType(departure, options.stoppingType)
-  })
+  let platformTrains = filterPlatform(dep, platform)
 
   return {
-    dep: options.rawDepartures ? allDepartures : trimDepartures(allDepartures, options.includeStopTimings),
-    has: trainDepartures.length > 0,
-    bus: routesWithBuses
+    dep: options.rawDepartures ? platformTrains : trimDepartures(platformTrains, options.includeStopTimings),
+    has,
+    bus
   }
 }
 
