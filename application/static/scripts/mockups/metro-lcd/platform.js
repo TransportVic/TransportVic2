@@ -302,7 +302,7 @@ function updateBody(err, body) {
 }
 
 $.ready(() => {
-  if (window.parent) {
+  if (window.parent !== window) {
     window.parent.postMessage({
       type: 'init',
       platform: $('[name=platform]').value,
