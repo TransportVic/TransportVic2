@@ -1,8 +1,10 @@
 html
   head
     link(rel='stylesheet' href='/static/css/mockups/summary.css')
+    script(src='/static/scripts/util.js')
   body
     - let verticalPIDs = ['concourse-interchange', 'fss-escalator', 'pre-platform-vertical']
+    input(type='hidden' name='station-name' value=station)
 
     div.container
       for pid in stationPID
@@ -34,3 +36,4 @@ html
             div.title
               a(href=url)=title
             iframe(src=url)
+    script(src='/static/scripts/mockups/summary.js')

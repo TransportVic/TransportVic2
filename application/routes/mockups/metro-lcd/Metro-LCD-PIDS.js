@@ -24,6 +24,7 @@ router.get('/:station/:platform/:type', csrf, async (req, res, next) => {
      })
   } else {
     res.render('mockups/metro-lcd/' + pidType, {
+      platform: req.params.platform,
       now: utils.now(),
       csrf: await req.csrfToken()
     })
