@@ -502,9 +502,17 @@ function findVia(departure) {
 }
 
 function trimDepartures(departures, includeStopTimings) {
+  let platformsSeen = []
+
   return departures.map((departure, i) => {
     let currentStop = departure.futureStops[0]
     let delay = departure.estimatedDepartureTime ? Math.round((departure.estimatedDepartureTime - departure.scheduledDepartureTime) / 60000) : 0
+
+    let stops = []
+    if (!platformsSeen.includes(departure.platform)) {
+      platformsSeen.push(departure.platform)
+      stops = departure.screenStops.map(stop => [stop.stopName, stop.express])
+    }
 
     let data = {
       dest: departure.destination,
@@ -514,7 +522,7 @@ function trimDepartures(departures, includeStopTimings) {
       txt: departure.stoppingText,
       type: departure.stoppingType,
       route: departure.routeName,
-      stops: i === 0 ? departure.screenStops.map(stop => [stop.stopName, stop.express]) : [],
+      stops,
       via: departure.via,
       p: departure.takingPassengers ? 1 : 0,
       d: departure.direction === 'Up' ? 'U' : 'D',
