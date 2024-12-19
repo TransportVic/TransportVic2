@@ -24,7 +24,7 @@ window.addEventListener('message', event => {
   }
 
   if (children.length === 1) { // The first child to register
-    setTimeout(fetchData, 100) // Give some time for the rest to register
+    setTimeout(fetchData, 400) // Give some time for the rest to register
     setTimeout(() => {
       fetchData()
       setInterval(fetchData, 1000 * 30)
