@@ -4,9 +4,10 @@ Disallow: /tram/run/
 Disallow: /metro/run/
 Disallow: /vline/run/
 Disallow: /coach/run/
-Disallow: /bus/tracker
-Disallow: /metro/tracker
-Disallow: /tram/tracker
-Disallow: /vline/tracker
+Disallow: /bus/tracker/
+Disallow: /metro/tracker/
+Disallow: /tram/tracker/
+Disallow: /vline/tracker/
+Disallow: /mockups/
 Crawl-delay: 10
 Sitemap: https://transportvic.me/sitemap.xml
