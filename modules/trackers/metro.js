@@ -32,7 +32,7 @@ async function getDepartures(stop) {
   let stopData = await dbStops.findDocument({ stopName: stop + ' Railway Station' })
   let departures = await getMetroDepartures(stopData, database)
 
-  let requestLive = departures.filter(d => d.runID).slice(0, 5)
+  let requestLive = departures.filter(d => d.runID).slice(0, 3)
   await async.forEachSeries(requestLive, async departure => {
     await getStoppingPattern({
       ptvRunID: utils.getPTVRunID(departure.runID),
@@ -90,9 +90,9 @@ database.connect(async () => {
   }
 
   schedule([
-    [0, 180, 0.66667],
-    [181, 239, 0.5],
-    [240, 1199, 0.33333],
-    [1200, 1440, 0.66667],
+    [0, 180, 2],
+    [181, 239, 1.5],
+    [240, 1199, 1],
+    [1200, 1440, 1.5],
   ], requestTimings, 'metro tracker', global.loggers.trackers.metro)
 })
