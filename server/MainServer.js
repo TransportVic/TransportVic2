@@ -95,7 +95,8 @@ module.exports = class MainServer {
         let diff = end - start
 
         if (!reqURL.startsWith('/static/')) {
-          global.loggers.http.info(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff}`)
+          let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+          global.loggers.http.info(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff} ${ip}`)
         }
       }
 
