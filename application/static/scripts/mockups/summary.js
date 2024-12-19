@@ -9,21 +9,18 @@ window.addEventListener('message', event => {
   if (event.origin !== location.origin) return
   if (event.data.type !== 'init') return
 
-  let { pidType, pidClass, platform } = event.data
+  let { pidType, urlPattern, platform } = event.data
 
   if (!csrf) csrf = event.data.csrf
 
   children.push({
-    pidClass,
     pidType,
     platform,
     window: event.source
   })
 
-  let pidTypeID = `${pidClass}/${pidType}`
-
-  if (!pidTypes[pidTypeID]) {
-    pidTypes[pidTypeID] = { pidClass, pidType }
+  if (!pidTypes[pidType]) {
+    pidTypes[pidType] = { urlPattern, pidType }
   }
 
   if (children.length === 1) { // The first child to register
@@ -37,10 +34,10 @@ window.addEventListener('message', event => {
 
 function fetchData() {
   for (let pidType of Object.values(pidTypes)) {
-    let pids = children.filter(child => child.pidType === pidType.pidType && child.pidClass === pidType.pidClass)
+    let pids = children.filter(child => child.pidType === pidType.pidType)
     $.ajax({
       method: 'POST',
-      url: `/mockups/${pidType.pidClass}/${stationName}/*/${pidType.pidType}`,
+      url: pidType.urlPattern.replace('{station}', stationName),
       data: {
         csrf
       }

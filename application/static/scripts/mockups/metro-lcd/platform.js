@@ -306,9 +306,9 @@ $.ready(() => {
     window.parent.postMessage({
       type: 'init',
       platform: $('[name=platform]').value,
-      pidClass: 'metro-lcd',
-      pidType: 'platform',
-      csrf: $('[name=csrf]').value
+      pidType: 'metro-lcd/platform',
+      csrf: $('[name=csrf]').value,
+      urlPattern: '/mockups/metro-lcd/{station}/*/platform'
     }, location.origin)
 
     window.addEventListener('message', event => {
