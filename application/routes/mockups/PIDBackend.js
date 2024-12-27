@@ -335,7 +335,9 @@ function findFutureRouteStops(departure) {
 }
 
 function filterPlatform(departures, platform) {
-  if (platform === '*') return departures
+  if (platform === 'U') return departures.filter(departure => departure.direction === 'Up')
+  else if (platform === 'D') return departures.filter(departure => departure.direction === 'Down')
+  else if (platform === '*') return departures
   return departures.filter(departure => departure.platform === platform)
 }
 
