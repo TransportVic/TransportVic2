@@ -1,8 +1,6 @@
 const async = require('async')
 const utils = require('../../utils')
 const nameModifier = require('../../additional-data/stop-name-modifier')
-const natural = require('natural')
-const metaphone = natural.Metaphone
 
 module.exports = async function(stops, data, stopsLookup) {
   await async.forEachSeries(data, async stop => {
@@ -79,8 +77,6 @@ module.exports = async function(stops, data, stopsLookup) {
           matchingStop.codedNames = [codedStopName, ...matchingStop.codedNames]
       }
 
-      matchingStop.namePhonetic = metaphone.process(matchingStop.stopName)
-
       await stops.replaceDocument({
         _id: matchingStop._id
       }, matchingStop)
@@ -101,8 +97,7 @@ module.exports = async function(stops, data, stopsLookup) {
         },
         mergeName,
         services: [],
-        screenService: [],
-        namePhonetic: metaphone.process(stop.fullStopName)
+        screenService: []
       }
       await stops.createDocument(stopData)
     }
