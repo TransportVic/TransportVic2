@@ -4,8 +4,6 @@ const async = require('async')
 const escapeRegex = require('escape-regex-string')
 const utils = require('../../utils')
 const stationCodes = require('../../additional-data/station-codes')
-const natural = require('natural')
-const metaphone = natural.Metaphone
 
 router.get('/', (req, res) => {
   res.render('search/index', { placeholder: 'Station, stop or route' })
@@ -39,6 +37,8 @@ async function prioritySearch(db, query) {
         mergeName: /Railway Station/
       }, {
         mergeName: /University/
+      }, {
+        mergeName: /Town Centre/
       }]
     }]
   }).limit(6).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
@@ -70,8 +70,6 @@ async function findStops(db, query) {
   let queryRegex = new RegExp(queryString, 'i')
   let searchRegex = new RegExp(search, 'i')
   let stationRegex = new RegExp(queryString.replace(/sta?t?i?o?n?/i, 'railway station'), 'i')
-
-  let phoneticQuery = metaphone.process(queryString)
 
   let remainingResults = (await stops.findDocuments({
     _id: {
@@ -123,16 +121,7 @@ async function findStops(db, query) {
 
   let currentResults = prioritySearchResults.concat(remainingResults).concat(lowPriorityResults)
 
-  let phoneticMatch = await stops.findDocuments({
-    _id: {
-      $not: {
-        $in: currentResults.map(stop => stop._id)
-      }
-    },
-    namePhonetic: phoneticQuery
-  }).limit(5).toArray()
-
-  return currentResults.concat(phoneticMatch)
+  return currentResults
 }
 
 async function findRoutes(db, query) {
