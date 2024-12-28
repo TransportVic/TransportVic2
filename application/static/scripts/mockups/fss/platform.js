@@ -341,7 +341,16 @@ $.loaded(() => {
     shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 150 // px
     connectionsSpan = $('span.firstStoppingType')
 
-    if (window.parent !== window && window.parent.location.host.includes('transportvic')) {
+    let isSameHost = false
+    try {
+      if ('ancestorOrigins' in window.location && window.location.ancestorOrigins.length) {
+        isSameHost = window.location.ancestorOrigins[0] === window.location.origin
+      } else {
+        isSameHost = window.parent.location.origin === window.location.origin
+      }
+    } catch (e) {}
+
+    if (window.parent !== window && isSameHost) {
       window.parent.postMessage({
         type: 'init',
         platform: $('[name=platform]').value,
