@@ -1,7 +1,10 @@
 html
   head
     link(rel='stylesheet' href='/static/css/mockups/summary.css')
+    script(src='/static/scripts/util.js')
   body
+    - let verticalPIDs = ['concourse-interchange', 'fss-escalator', 'pre-platform-vertical']
+    input(type='hidden' name='station-name' value=station)
     div.container
       - for (let i = 1; i <= stationPlatformData.platforms; i++) {
       -
@@ -9,12 +12,25 @@ html
         let url
         if (query.type === 'half-platform-bold') url = `/mockups/metro-lcd/${station}/${i}/half-platform-bold`
         if (query.type === 'half-platform') url = `/mockups/metro-lcd/${station}/${i}/half-platform`
-        if (query.type === 'full-platform') url = `/mockups/metro-lcd/${station}/${i}/platform`
+        if (query.type === 'platform') url = `/mockups/metro-lcd/${station}/${i}/platform`
         if (query.type === 'fss-escalator') url = `/mockups/fss/escalator/${i}/${station}/`
         if (query.type === 'fss-platform') url = `/mockups/fss/platform/${i}/${station}/`
+        if (query.type === '2-line-led') url = `/mockups/metro-led-pids/${station}/${i}`
 
-      div(class=`platform ${query.type}`)
+        let pidClass
+        if (query.type.includes('half-')) {
+          pidClass = 'half'
+        } else if (verticalPIDs.includes(query.type)) {
+          pidClass = 'vertical'
+        } else if (query.type === '2-line-led') {
+          pidClass = 'two-line-led'
+        } else {
+          pidClass = 'horizontal'
+        }
+
+      div(class=`pid ${pidClass}`)
         div.title
           a(href=url)=`/${stationCode}/platform/${i}`
         iframe(src=url)
       - }
+    script(src='/static/scripts/mockups/summary.js')

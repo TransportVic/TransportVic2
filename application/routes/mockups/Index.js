@@ -48,7 +48,7 @@ router.get('/summary/:station', (req, res) => {
   }
   preloadData(res.db, station, '*')
 
-  if (stationPID.length) {
+  if (stationPID.length && !query.type) {
     res.render('mockups/summary-known', {stationPID, station, stationCode, getURL: PIDBackend.getURL})
   } else {
     res.render('mockups/summary', {query, stationPlatformData, station, stationCode, getURL: PIDBackend.getURL})
