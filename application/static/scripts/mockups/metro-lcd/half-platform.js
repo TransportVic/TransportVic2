@@ -307,7 +307,7 @@ function updateBody(err, body) {
 }
 
 $.ready(() => {
-  if (window.parent !== window) {
+  if (window.parent !== window && window.parent.location.host.includes('transportvic')) {
     window.parent.postMessage({
       type: 'init',
       platform: $('[name=platform]').value,

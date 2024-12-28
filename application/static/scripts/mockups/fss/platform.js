@@ -341,7 +341,7 @@ $.loaded(() => {
     shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 150 // px
     connectionsSpan = $('span.firstStoppingType')
 
-    if (window.parent !== window) {
+    if (window.parent !== window && window.parent.location.host.includes('transportvic')) {
       window.parent.postMessage({
         type: 'init',
         platform: $('[name=platform]').value,
