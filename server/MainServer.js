@@ -5,7 +5,7 @@ const url = require('url')
 const path = require('path')
 const minify = require('express-minify')
 const fs = require('fs')
-const uglifyEs = require('uglify-es')
+const uglifyJS = require('uglify-js')
 const utils = require('../utils')
 const ptvAPI = require('../ptv-api')
 
@@ -109,7 +109,7 @@ module.exports = class MainServer {
     }))
 
     if (process.env['NODE_ENV'] === 'prod') app.use(minify({
-      uglifyJsModule: uglifyEs,
+      uglifyJsModule: uglifyJS,
       errorHandler: console.log
     }))
 
