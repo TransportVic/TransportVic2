@@ -21,3 +21,5 @@
 tt-intermediate.pem
 
 /additional-data/myki-zone-test
+
+/load-gtfs/routes.json

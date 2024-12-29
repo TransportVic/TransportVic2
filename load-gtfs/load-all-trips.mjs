@@ -1,0 +1,80 @@
+import { MongoDatabaseConnection } from '@transportme/database'
+import path from 'path'
+import url from 'url'
+import { TripLoader, ShapeLoader } from '@transportme/load-ptv-gtfs'
+import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
+
+import routeIDMap from './routes.json' with { type: 'json' }
+import { createTripProcessor, getVLineRuleStats } from '../transportvic-data/gtfs/process.mjs'
+
+const { GTFS_MODES } = GTFS_CONSTANTS
+
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+const gtfsPath = path.join(__dirname, '..', 'gtfs', '{0}')
+
+const calendarFile = path.join(gtfsPath, 'calendar.txt')
+const calendarDatesFile = path.join(gtfsPath, 'calendar_dates.txt')
+const tripsFile = path.join(gtfsPath, 'trips.txt')
+const stopTimesFile = path.join(gtfsPath, 'stop_times.txt')
+const shapeFile = path.join(gtfsPath, 'shapes.txt')
+
+let mongoDB = new MongoDatabaseConnection('mongodb://127.0.0.1:27017', 'test-db')
+await mongoDB.connect()
+
+let mongoRoutes = await mongoDB.getCollection('routes')
+let mongoTimetables = await mongoDB.getCollection('gtfs timetables')
+
+
+let start = new Date()
+console.log('Start', start)
+
+await mongoTimetables.deleteDocuments({})
+
+console.log('Loading timetables now\n')
+
+let tripsStart = new Date()
+
+let shapeIDMap = {}
+let tripProcessors = await createTripProcessor(mongoDB)
+
+for (let i of Object.keys(GTFS_MODES)) {
+  console.log('Loading trips for', GTFS_MODES[i])
+  let tripLoader = new TripLoader({
+    tripsFile: tripsFile.replace('{0}', i),
+    stopTimesFile: stopTimesFile.replace('{0}', i),
+    calendarFile: calendarFile.replace('{0}', i),
+    calendarDatesFile: calendarDatesFile.replace('{0}', i)
+  }, GTFS_MODES[i], mongoDB)
+
+  await tripLoader.loadTrips({
+    routeIDMap,
+    processTrip: tripProcessors[i]
+  })
+  console.log('Loaded trips for', GTFS_MODES[i])
+
+  shapeIDMap = {
+    ...shapeIDMap,
+    ...tripLoader.getShapeIDMap()
+  }
+}
+
+console.log('Trip exclusion stats', getVLineRuleStats())
+
+console.log('Loading trips done, took', (new Date() - tripsStart) / 1000, 'seconds')
+
+let shapeStart = new Date()
+console.log('Loading shapes')
+
+for (let i of Object.keys(GTFS_MODES)) {
+  console.log('Loading shapes for', GTFS_MODES[i])
+  let shapeLoader = new ShapeLoader(shapeFile.replace('{0}', i), mongoDB)
+
+  await shapeLoader.loadShapes({ shapeIDMap })
+}
+
+console.log('Loading shapes took', (new Date() - shapeStart) / 1000, 'seconds')
+console.log('\nLoading both trips and shapes took', (new Date() - start) / 1000, 'seconds overall')
+
+process.exit(0)
