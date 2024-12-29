@@ -74,7 +74,10 @@ for (let i of Object.keys(GTFS_MODES)) {
   
   let routeLoader = new RouteLoader(routesFile.replace('{0}', i), agencyFile.replace('{0}', i), mode, database)
   await routeLoader.loadRoutes({
-    processRoute
+    processRoute: route => {
+      route.routeGTFSID = route.routeGTFSID.replace(/-0+/, '-')
+      return processRoute(route)
+    }
   })
 
   routeIDMap = {

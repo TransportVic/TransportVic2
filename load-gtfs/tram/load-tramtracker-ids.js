@@ -83,7 +83,7 @@ database.connect({}, async () => {
 
           stopDirections[tramTrackerID].push({
             service: service,
-            gtfsDirection: directions[`${service}.${direction}`]
+            gtfsDirection: parseInt(directions[`${service}.${direction}`])
           })
         })
 
