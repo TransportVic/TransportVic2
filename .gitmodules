@@ -1,0 +1,3 @@
+[submodule "transportvic-data"]
+	path = transportvic-data
+	url = https://github.com/TransportVic/TransportVic-Data/
