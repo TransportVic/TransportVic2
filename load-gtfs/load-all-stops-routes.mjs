@@ -8,6 +8,7 @@ import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import uniqueStops from '../transportvic-data/excel/stops/unique-stops.json' with { type: 'json' }
 import nameOverrides from '../transportvic-data/excel/stops/name-overrides.json' with { type: 'json' }
 import { processRoute } from '../transportvic-data/gtfs/process.mjs'
+import config from '../config.json' with { type: 'json' }
 
 const { GTFS_MODES } = GTFS_CONSTANTS
 
@@ -22,7 +23,7 @@ const stopsFile = path.join(gtfsPath, 'stops.txt')
 const routesFile = path.join(gtfsPath, 'routes.txt')
 const agencyFile = path.join(gtfsPath, 'agency.txt')
 
-let mongoDB = new MongoDatabaseConnection('mongodb://127.0.0.1:27017', 'test-db')
+let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
 
 let mongoStops = await mongoDB.getCollection('stops')

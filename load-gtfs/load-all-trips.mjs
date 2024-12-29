@@ -6,6 +6,7 @@ import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 
 import routeIDMap from './routes.json' with { type: 'json' }
 import { createTripProcessor, getVLineRuleStats } from '../transportvic-data/gtfs/process.mjs'
+import config from '../config.json' with { type: 'json' }
 
 const { GTFS_MODES } = GTFS_CONSTANTS
 
@@ -20,12 +21,11 @@ const tripsFile = path.join(gtfsPath, 'trips.txt')
 const stopTimesFile = path.join(gtfsPath, 'stop_times.txt')
 const shapeFile = path.join(gtfsPath, 'shapes.txt')
 
-let mongoDB = new MongoDatabaseConnection('mongodb://127.0.0.1:27017', 'test-db')
+let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
 
 let mongoRoutes = await mongoDB.getCollection('routes')
 let mongoTimetables = await mongoDB.getCollection('gtfs timetables')
-
 
 let start = new Date()
 console.log('Start', start)
@@ -38,6 +38,15 @@ let tripsStart = new Date()
 
 let shapeIDMap = {}
 let tripProcessors = await createTripProcessor(mongoDB)
+
+tripProcessors[2] = trip => {
+  trip.trueOrigin = trip.origin
+  trip.trueDestination = trip.destination
+  trip.trueDepartureTime = trip.departureTime
+  trip.trueDestinationArrivalTime = trip.destinationArrivalTime
+
+  return trip
+}
 
 for (let i of Object.keys(GTFS_MODES)) {
   console.log('Loading trips for', GTFS_MODES[i])

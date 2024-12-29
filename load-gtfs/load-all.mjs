@@ -1,4 +1,3 @@
-import { reject } from 'async'
 import { spawn } from 'child_process'
 import path from 'path'
 import url from 'url'
@@ -22,4 +21,20 @@ function runNode(file) {
 await runNode('create-indexes.mjs')
 await runNode('load-all-stops-routes.mjs')
 await runNode('load-all-trips.mjs')
+
+await runNode('metro/download-metro-timetables.js')
+await runNode('metro/load-metro-timetables.js')
+
+await runNode('tram/load-stops.js')
+await runNode('tram/load-tramtracker-ids.js')
+
+await runNode('bus/load-788-stop-numbers.js')
+
+await runNode('vline/api-integration/load-vnet-station-names.js')
+await runNode('vline/timetables/download-vline-timetables.js')
+await runNode('vline/timetables/load-vline-timetables.js')
+
+await runNode('extra/load-route-suburbs.js')
+await runNode('extra/load-search-query.js')
+
 await runNode('load-all-post.mjs')

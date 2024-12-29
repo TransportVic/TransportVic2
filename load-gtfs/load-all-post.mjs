@@ -1,7 +1,8 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import { setStopServices, setRouteStops } from '@transportme/load-ptv-gtfs'
+import config from '../config.json' with { type: 'json' }
 
-let mongoDB = new MongoDatabaseConnection('mongodb://127.0.0.1:27017', 'test-db')
+let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
 
 let start = new Date()
