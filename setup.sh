@@ -33,8 +33,7 @@ sudo /opt/lexicon/bin/pip install dns-lexicon[namecheap]
 sudo ln -s /opt/lexicon/bin/lexicon /usr/bin/lexicon
 
 sudo chmod a+rw -R /var/log/mongodb
-sudo ln "$(readlink -f `command -v node`)" /usr/bin/node
-sudo setcap 'cap_net_bind_service=+ep' /usr/bin/node
+sudo setcap 'cap_net_bind_service=+ep' "$(readlink -f `command -v node`)"
 
 sudo groupadd certbot
 sudo usermod -a -G certbot ec2-user
