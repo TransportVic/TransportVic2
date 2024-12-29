@@ -21,7 +21,8 @@ async function main() {
   })
   let $ = cheerio.load(body)
   let as = Array.from($('div[id="publication-list"]:nth-child(3) a'))
-  let links = as.map(a => [baseURL + $(a).attr('href'), $(a).text().trim()]).filter(link => {
+
+  let links = as.map(a => [baseURL + $(a).attr('href'), $(a.childNodes[0]).text()]).filter(link => {
     return !link[1].includes('Central')
   })
 
