@@ -3,3 +3,4 @@ route_id,agency_id,route_short_name,route_long_name,route_type,route_color,route
 "12-MCC-mjp-1","","","Monash University Clayton - Caulfield","","","FFFFFF"
 "12-MCP-mjp-1","","","Monash University Clayton - Peninsula","","","FFFFFF"
 "12-MPF-mjp-1","","","Monash University Peninsula - Frankston Station","","","FFFFFF"
+"12-LGL-mjp-1","","","Latrobe University Glider","","","FFFFFF"
