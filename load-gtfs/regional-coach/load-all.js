@@ -12,8 +12,8 @@ async function main() {
   await utils.spawnProcess('node', [l('load-routes.js')])
   await utils.spawnProcess('node', [l('load-gtfs-timetables.js')])
 
-  await utils.spawnProcess('node', [l('extra/load-connections.js')])
-  await utils.spawnProcess('node', [l('extra/find-sss-sun-connections.js')])
+  // await utils.spawnProcess('node', [l('extra/load-connections.js')])
+  // await utils.spawnProcess('node', [l('extra/find-sss-sun-connections.js')])
 
   await utils.spawnProcess('node', [l('../vline-trains/extra/load-vline-timetables.js')])
 
