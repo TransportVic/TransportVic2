@@ -1183,7 +1183,9 @@ async function getDepartures(station, db, filter, backwards, departureTime) {
     if (typeof filter === 'undefined') filter = true
     if (typeof departureTime === 'undefined') departureTime = utils.now()
 
-    return await utils.getData('metro-departures-new', stationName + backwards + departureTime.toISOString(), async () => {
+    let roundedTimeMS = +departureTime - (+departureTime % 30000)
+
+    return await utils.getData('metro-departures-new', stationName + backwards + roundedTimeMS, async () => {
       let departures = await getDeparturesFromPTV(station, backwards, departureTime, db)
       let extraTrains = [], raceTrains = []
 

@@ -86,7 +86,6 @@ async function getDeparture(data, db, live) {
       direction
     })
 
-    if (!live) query.hint('stop timings gtfs index')
     let timetables = await query.limit(3).toArray()
 
     if (viaCityLoop !== null) {
