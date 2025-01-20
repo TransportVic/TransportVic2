@@ -18,6 +18,8 @@ $.ready(() => {
     data = JSON.parse(await data.data.text())
     if (data.type === 'log-newline') {
       addLine(data.line, true)
+    } else if (data.type === 'log-newline-multi') {
+      data.lines.forEach(line => addLine(line, true))
     }
 
     if (data.type === 'complete') {
