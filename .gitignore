@@ -25,3 +25,4 @@ tt-intermediate.pem
 /load-gtfs/routes.json
 /load-gtfs/vline/timetables/timetables
 /load-gtfs/metro/timetables
+/updater-log.txt

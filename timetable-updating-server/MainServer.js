@@ -5,7 +5,7 @@ const url = require('url')
 const path = require('path')
 const minify = require('express-minify')
 const fs = require('fs')
-const uglifyEs = require('uglify-es')
+const uglifyJS = require('uglify-js')
 
 let robots = fs.readFileSync(path.join(__dirname, '../application/static/app-content/robots.txt'))
 let sw = fs.readFileSync(path.join(__dirname, '../application/static/app-content/sw.js'))
@@ -26,7 +26,7 @@ module.exports = class MainServer {
     }))
 
     if (process.NODE_ENV === 'prod') app.use(minify({
-      uglifyJsModule: uglifyEs,
+      uglifyJsModule: uglifyJS,
       errorHandler: console.log
     }))
 

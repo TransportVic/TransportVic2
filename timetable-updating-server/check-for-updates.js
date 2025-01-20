@@ -10,6 +10,7 @@ const config = require('../config')
 const urls = require('../urls')
 const postDiscordUpdate = require('../modules/discord-integration')
 const downloadGTFS = require('../update-gtfs')
+const path = require('path')
 
 async function discordUpdate(text) {
   await postDiscordUpdate('timetables', text)
@@ -42,8 +43,8 @@ try {
   console.log('No lastModified, downloading data')
 }
 
-function spawnProcess(path, finish) {
-  let childProcess = spawn(path)
+function spawnProcess(cmd, args, finish) {
+  let childProcess = spawn(cmd, args)
 
   function processLines(data) {
     let lines = data.split('\n').map(e => e.trim()).filter(Boolean)
@@ -102,7 +103,8 @@ async function updateTimetables() {
       console.log('Dropped stops, routes and gtfs timetables')
       await discordUpdate('[Updater]: Dropped stops, routes and gtfs timetables, loading data now.')
 
-      await require('../load-gtfs/load-all')()
+      await new Promise(r => spawnProcess('node', [path.join(__dirname, '../load-gtfs/load-all.mjs')], r))
+
       await discordUpdate(`[Updater]: GTFS Timetables finished loading, took ${Math.round(utils.uptime() / 1000 / 60)}min`)
       console.log('Done!')
 
