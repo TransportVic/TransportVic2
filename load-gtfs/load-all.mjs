@@ -34,7 +34,7 @@ await runNode('vline/api-integration/load-vnet-station-names.js')
 await runNode('vline/timetables/download-vline-timetables.js')
 await runNode('vline/timetables/load-vline-timetables.js')
 
+await runNode('load-all-post.mjs')
+
 await runNode('extra/load-route-suburbs.js')
 await runNode('extra/load-search-query.js')
-
-await runNode('load-all-post.mjs')
