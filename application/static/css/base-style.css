@@ -85,7 +85,7 @@ div #updatingLog p {
   padding: calc(0.5vw + 0.5vh) 0;
   word-wrap: break-word;
   text-overflow: clip;
-  white-space: initial;
+  white-space: pre;
   padding-left: 1em;
   text-indent: -1em;
 

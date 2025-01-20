@@ -47,7 +47,7 @@ function spawnProcess(cmd, args, finish) {
   let childProcess = spawn(cmd, args)
 
   function processLines(data) {
-    let lines = data.split('\n').map(e => e.trim()).filter(Boolean)
+    let lines = data.split('\n').filter(Boolean)
     lines.forEach(line => {
       if (line.match(/\d+ms http/)) {
         if (line.includes('discord')) return
