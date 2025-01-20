@@ -17,7 +17,7 @@ async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
   let stop = await stops.findDocument({
     codedName: req.params.stopName,
-    codedSuburb: req.params.suburb
+    cleanSuburbs: req.params.suburb
   })
 
   if (!stop || !stop.bays.find(bay => bay.mode === 'tram')) {
@@ -68,7 +68,7 @@ async function loadDepartures(req, res) {
       'bays.stopGTFSID': destinationStopTiming.stopGTFSID
     })
 
-    departure.destinationURL = `/tram/timings/${destinationStop.codedSuburb[0]}/${destinationStop.codedName}`
+    departure.destinationURL = `/tram/timings/${destinationStop.cleanSuburbs[0]}/${destinationStop.codedName}`
 
     return departure
   })

@@ -59,7 +59,7 @@ database.connect({
   }, {name: 'text index'})
 
   await stops.createIndex({
-    'codedSuburb': 1,
+    'cleanSuburbs': 1,
     'codedName': 1
   }, {name: 'coded suburb index'})
 

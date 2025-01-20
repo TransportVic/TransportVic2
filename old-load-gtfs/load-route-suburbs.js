@@ -42,7 +42,7 @@ database.connect({}, async err => {
     }, {
       $set: {
         suburb: best[0],
-        codedSuburb: utils.encodeName(best[0])
+        cleanSuburbs: utils.encodeName(best[0])
       }
     })
 

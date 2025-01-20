@@ -37,7 +37,7 @@ database.connect(async () => {
   }).join('')
 
   let busContent = bigBusStops.sort((a, b) => a.codedName.localeCompare(b.codedName)).map(station => {
-    return `<url><loc>https://transportvic.me/bus/timings/${station.codedSuburb[0]}/${station.codedName}</loc></url>`
+    return `<url><loc>https://transportvic.me/bus/timings/${station.cleanSuburbs[0]}/${station.codedName}</loc></url>`
   }).join('')
 
   let otherURLs = [

@@ -18,8 +18,8 @@ async function requestTimings() {
 
   try {
     await async.forEachSeries(stops, async stop => {
-      let [codedSuburb, codedName] = stop.split('/')
-      let dbStop = await dbStops.findDocument({ codedName, codedSuburb })
+      let [cleanSuburbs, codedName] = stop.split('/')
+      let dbStop = await dbStops.findDocument({ codedName, cleanSuburbs })
       if (!dbStop) return global.loggers.trackers.tram.err('could not find', stop)
 
       try {

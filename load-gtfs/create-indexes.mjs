@@ -23,7 +23,7 @@ async function createStopIndex(mongoStops) {
   }, {name: 'text query index'})
 
   await mongoStops.createIndex({
-    codedSuburb: 1,
+    cleanSuburbs: 1,
     codedName: 1
   }, {name: 'coded stops name index'})
 

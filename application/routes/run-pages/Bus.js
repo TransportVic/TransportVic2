@@ -132,7 +132,7 @@ async function pickBestTrip(data, db) {
       }
 
       let mockedStop = {
-        codedSuburb: originStop.codedSuburb,
+        cleanSuburbs: originStop.cleanSuburbs,
         stopName: `TRIP.${originStop.stopName}.${originBay.stopGTFSID}`,
         bays: trueOriginBay
       }

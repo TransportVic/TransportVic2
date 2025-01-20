@@ -12,7 +12,7 @@ router.post('/:suburb/:stopName', async (req, res) => {
   let stops = res.db.getCollection('stops')
   let stop = await stops.findDocument({
     codedName: req.params.stopName,
-    codedSuburb: req.params.suburb
+    cleanSuburbs: req.params.suburb
   })
 
   if (!stop) return res.json(null)

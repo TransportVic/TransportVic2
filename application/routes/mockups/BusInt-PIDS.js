@@ -13,7 +13,7 @@ async function getData(req, res, full) {
 
   let stop = await stops.findDocument({
     codedName: req.params.stopName,
-    codedSuburb: req.params.suburb
+    cleanSuburbs: req.params.suburb
   })
 
   if (!stop || !stop.bays.some(bay => bay.mode === 'bus')) {
