@@ -370,7 +370,7 @@ function sortStops(trip) {
   return trip
 }
 
-async function loadTrips() {
+async function loadTrips(updateTripData) {
   let allLines = Object.keys(routes)
   let allTrips = (await async.mapLimit(allLines, 5, async line => {
     return await getDepartures(line)
@@ -379,27 +379,28 @@ async function loadTrips() {
   let formedBy = {}
   let cancelledTrains = []
 
-  // allTrips.forEach(trip => {
-  //   let { runID, forming } = trip
-  //   if (forming) {
-  //     if (!formedBy[forming]) formedBy[forming] = []
-  //     formedBy[forming].push(runID)
-  //   }
+  allTrips.forEach(trip => {
+    let { runID, forming } = trip
+    if (forming) {
+      if (!formedBy[forming]) formedBy[forming] = []
+      formedBy[forming].push(runID)
+    }
 
-  //   if (trip.cancelled) cancelledTrains.push(trip.runID)
-  // })
+    if (trip.cancelled) cancelledTrains.push(trip.runID)
+  })
 
-  // allTrips.forEach(trip => {
-    // let formedByTrip
-    // if (formedBy[trip.runID]) {
-    //   let possibleFormedByTrips = allTrips.filter(possibleTrip => formedBy[trip.runID].includes(possibleTrip.runID))
-    //   if (possibleFormedByTrips.length === 1) formedByTrip = possibleFormedByTrips[0]
-    //   else formedByTrip = possibleFormedByTrips.find(trip => !trip.cancelled) || possibleFormedByTrips[0]
+  if (updateTripData) allTrips.forEach(trip => {
+    let formedByTrip
+    if (formedBy[trip.runID]) {
+      let possibleFormedByTrips = allTrips.filter(possibleTrip => formedBy[trip.runID].includes(possibleTrip.runID))
+      if (possibleFormedByTrips.length === 1) formedByTrip = possibleFormedByTrips[0]
+      else formedByTrip = possibleFormedByTrips.find(trip => !trip.cancelled) || possibleFormedByTrips[0]
 
-    //   trip.formedBy = formedByTrip.runID
-    // } else {
-    //   trip.formedBy = null
-    // }
+      trip.formedBy = formedByTrip.runID
+    } else {
+      trip.formedBy = null
+    }
+  })
 
     // if (trip.direction === 'Down' && trip.trueOrigin === 'Flinders Street Railway Station' && trip.formedBy) { // Prepend loop stops from previous trip
     //   let tripFSSStop = trip.stopTimings.find(stop => stop.stopName === 'Flinders Street Railway Station')
@@ -461,8 +462,11 @@ async function loadTrips() {
 async function requestTimings() {
   global.loggers.trackers.metro.info('Logging Metro trips')
 
+  let minutesNow = utils.getMinutesPastMidnightNow()
+  let updateTripData = minutesNow < 360
+
   try {
-    await loadTrips()
+    await loadTrips(updateTripData)
   } catch (e) {
     global.loggers.trackers.metro.err('Failed to find metro trips, skipping', e)
   }
