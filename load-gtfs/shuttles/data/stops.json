@@ -118,5 +118,65 @@
     "stopNumber": null,
     "mode": "bus",
     "suburb": "Frankston"
+  },
+  {
+    "originalName": "Latrobe University - Stop 1",
+    "fullStopName": "Latrobe University ",
+    "stopGTFSID": "12000011",
+    "location": {
+      "type": "Point",
+      "coordinates": [145.0443159, -37.7171437]
+    },
+    "stopNumber": null,
+    "mode": "bus",
+    "suburb": "Bundoora"
+  },
+  {
+    "originalName": "Latrobe University - Stop 2",
+    "fullStopName": "La Trobe University Thomas Cherry Building",
+    "stopGTFSID": "12000012",
+    "location": {
+      "type": "Point",
+      "coordinates": [145.0464078, -37.7207590]
+    },
+    "stopNumber": null,
+    "mode": "bus",
+    "suburb": "Bundoora"
+  },
+  {
+    "originalName": "Latrobe University - Stop 3",
+    "fullStopName": "La Trobe University Chisholm College",
+    "stopGTFSID": "12000013",
+    "location": {
+      "type": "Point",
+      "coordinates": [145.0509644, -37.7238636]
+    },
+    "stopNumber": null,
+    "mode": "bus",
+    "suburb": "Bundoora"
+  },
+  {
+    "originalName": "Latrobe University - Stop 4",
+    "fullStopName": "La Trobe University Latrobe Apartment",
+    "stopGTFSID": "12000014",
+    "location": {
+      "type": "Point",
+      "coordinates": [145.0537094, -37.7213576]
+    },
+    "stopNumber": null,
+    "mode": "bus",
+    "suburb": "Bundoora"
+  },
+  {
+    "originalName": "Polaris Town Centre - Stop 5",
+    "fullStopName": "Polaris Town Centre",
+    "stopGTFSID": "12000015",
+    "location": {
+      "type": "Point",
+      "coordinates": [145.0482326, -37.7135725]
+    },
+    "stopNumber": null,
+    "mode": "bus",
+    "suburb": "Bundoora"
   }
 ]

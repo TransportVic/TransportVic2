@@ -7,6 +7,7 @@ Route guide;
 12-MCP.R: peninsula - clayton
 12-MPF.H: frankston - peninsula
 12-MPF.R: peninsula - frankston
+12-LGL.R: Latrobe University Glider
 
 12-PNS-A.H: Quarantine Station - Fort Nepean
 12-PNS-A.R: Fort Nepean - Quarantine Station
@@ -19,6 +20,7 @@ let routeOperators = {
   '12-MCC': 'Quinces',
   '12-MCP': 'Quinces',
   '12-MPF': 'Quinces',
+  '12-LGL': 'Dysons',
 
   '12-PNS': 'Ventura Bus Lines'
 }
