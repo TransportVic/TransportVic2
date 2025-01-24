@@ -353,15 +353,19 @@ module.exports = {
       }
     }
 
+    let diff = (+new Date()) - start
+    let logMessage = `${diff}ms ${url}`
+
     if (!body && error) {
       if (error.message && error.message.toLowerCase().includes('network timeout')) {
         let totalTime = fullOptions.timeout * maxRetries
-        let logMessage = `${totalTime}ms ${url}`
-        if (global.loggers) global.loggers.fetch.log(logMessage)
-        else console.log(logMessage)
-
+        logMessage = `${totalTime}ms ${url}`
         error.timeoutDuration = totalTime
       }
+
+      if (global.loggers) global.loggers.fetch.log(logMessage)
+      else console.log(logMessage)
+
       throw error
     }
 
@@ -369,15 +373,13 @@ module.exports = {
       let err = new Error('Bad Request Status')
       err.status = body.status
       err.response = await (options.raw ? body.buffer() : body.text())
+      if (global.loggers) global.loggers.fetch.log(logMessage)
+      else console.log(logMessage)
       throw err
     }
 
     let size = body.headers.get('content-length')
     if (options.stream) {
-      let end = +new Date()
-      let diff = end - start
-
-      let logMessage = `${diff}ms ${url}`
       if (global.loggers) global.loggers.fetch.log(logMessage)
       else console.log(logMessage)
 
@@ -386,10 +388,7 @@ module.exports = {
     let returnData = await (options.raw ? body.buffer() : body.text())
     if (!size) size = returnData.length
 
-    let end = +new Date()
-    let diff = end - start
-
-    let logMessage = `${diff}ms ${url} ${size}R`
+    logMessage = `${diff}ms ${url} ${size}R`
     if (global.loggers) global.loggers.fetch.log(logMessage)
     else console.log(logMessage)
 
