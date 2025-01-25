@@ -83,7 +83,7 @@ async function getDeparture(data, db, live) {
           departureTimeMinutes: scheduledDepartureTimeMinutes + 1440 * i
         }
       },
-      direction
+      // direction
     })
 
     let timetables = await query.limit(3).toArray()

@@ -667,7 +667,6 @@ async function mapTrain(train, metroPlatforms, notifyData, db) {
   }
 
   if (!trip) {
-    return null
     trip = await getStoppingPattern({
       routeName,
       ptvRunID: train.ptvRunID,
