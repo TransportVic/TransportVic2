@@ -1,0 +1,22 @@
+{
+  "stops": [
+    {
+      "stop_id": "20027",
+      "stop_name": "Flemington Racecourse Railway Station (Flemington)",
+      "stop_lat": "-37.787201923265",
+      "stop_lon": "144.907588697812"
+    },
+    {
+      "stop_id": "20028",
+      "stop_name": "Showgrounds Railway Station (Flemington)",
+      "stop_lat": "-37.7834721968038",
+      "stop_lon": "144.914256890322"
+    }
+  ],
+  "route": {
+    "route_id": "2-RCE",
+    "agency_id": "3",
+    "route_short_name": "Flemington Racecourse",
+    "route_long_name": "Flemington Racecourse - City"
+  }
+}
