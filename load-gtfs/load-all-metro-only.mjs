@@ -22,7 +22,7 @@ await runNode('create-indexes.mjs')
 await runNode('load-all-stops-routes.mjs', ['2'])
 await runNode('load-all-trips.mjs', ['2'])
 
-await runNode('metro/load-racecourse-data.mjs')
+await runNode('metro/load-extra-data.mjs')
 await runNode('metro/download-metro-timetables.js')
 await runNode('metro/load-metro-timetables.js')
 

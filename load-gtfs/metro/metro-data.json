@@ -13,10 +13,15 @@
       "stop_lon": "144.914256890322"
     }
   ],
-  "route": {
+  "routes": [{
     "route_id": "2-RCE",
     "agency_id": "3",
     "route_short_name": "Flemington Racecourse",
     "route_long_name": "Flemington Racecourse - City"
-  }
+  }, {
+    "route_id": "2-CCL",
+    "agency_id": "3",
+    "route_short_name": "City Circle",
+    "route_long_name": "City Circle"
+  }]
 }
