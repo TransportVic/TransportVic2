@@ -101,8 +101,9 @@ async function createTimetableIndex(mongoTimetables) {
   }, {name: 'shape id index'})
 
   await mongoTimetables.createIndex({
-    mode: 1,
-    runID: 1
+    operationDays: 1,
+    runID: 1,
+    mode: 1
   }, {name: 'runID index', sparse: true})
 
   await mongoTimetables.createIndex({
