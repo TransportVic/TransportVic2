@@ -117,7 +117,9 @@ async function updateTimetables() {
       console.log('Dropped stops, routes and gtfs timetables')
       await discordUpdate('[Updater]: Dropped stops, routes and gtfs timetables, loading data now.')
 
-      await new Promise(r => spawnProcess('node', [path.join(__dirname, '../load-gtfs/load-all.mjs')], r))
+      let fileName = 'load-all'
+      if (config.metroOnly) fileName += '-metro-only'
+      await new Promise(r => spawnProcess('node', [path.join(__dirname, `../load-gtfs/${fileName}.mjs`)], r))
 
       await discordUpdate(`[Updater]: GTFS Timetables finished loading, took ${Math.round(utils.uptime() / 1000 / 60)}min`)
       console.log('Done!')

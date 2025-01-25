@@ -12,6 +12,10 @@ import config from '../config.json' with { type: 'json' }
 
 const { GTFS_MODES } = GTFS_CONSTANTS
 
+let allModes = Object.keys(GTFS_MODES)
+let selectedModes = process.argv.slice(2)
+if (!selectedModes.length) selectedModes = allModes
+
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -48,7 +52,7 @@ let uniqueNamesCounter = uniqueStops.reduce((acc, e) => {
   return acc
 }, {})
 
-for (let i of Object.keys(GTFS_MODES)) {
+for (let i of selectedModes) {
   let mode = GTFS_MODES[i]
 
   let stopLoader = new StopsLoader(stopsFile.replace('{0}', i), suburbs, mode, database)

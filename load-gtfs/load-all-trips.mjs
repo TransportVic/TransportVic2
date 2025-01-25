@@ -10,6 +10,10 @@ import config from '../config.json' with { type: 'json' }
 
 const { GTFS_MODES } = GTFS_CONSTANTS
 
+let allModes = Object.keys(GTFS_MODES)
+let selectedModes = process.argv.slice(2)
+if (!selectedModes.length) selectedModes = allModes
+
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -48,7 +52,7 @@ tripProcessors[2] = trip => {
   return trip
 }
 
-for (let i of Object.keys(GTFS_MODES)) {
+for (let i of selectedModes) {
   console.log('Loading trips for', GTFS_MODES[i])
   let tripLoader = new TripLoader({
     tripsFile: tripsFile.replace('{0}', i),
@@ -76,7 +80,7 @@ console.log('Loading trips done, took', (new Date() - tripsStart) / 1000, 'secon
 let shapeStart = new Date()
 console.log('Loading shapes')
 
-for (let i of Object.keys(GTFS_MODES)) {
+for (let i of selectedModes) {
   console.log('Loading shapes for', GTFS_MODES[i])
   let shapeLoader = new ShapeLoader(shapeFile.replace('{0}', i), mongoDB)
 
