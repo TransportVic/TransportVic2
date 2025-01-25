@@ -276,10 +276,10 @@ function adjustSuspension(suspension, trip, currentStation) {
   }
 }
 
-async function applySuspension(train, notifyData, metroPlatform, db) {
+async function applySuspension(train, notifyData, metroPlatforms, db) {
   if (notifyData.suspendedLines.includes(train.routeName)) {
     let rawSuspension = notifyData.suspensions[train.routeName][0]
-    let suspension = adjustSuspension(rawSuspension, train.trip, metroPlatform.fullStopName)
+    let suspension = adjustSuspension(rawSuspension, train.trip, metroPlatforms[0].fullStopName)
 
     if (suspension) {
       let trip = train.trip
@@ -375,11 +375,11 @@ function filterDepartures(departures, filter, backwards, departureTime) {
   return sorted
 }
 
-async function matchTrip(train, stopGTFSID, db, possibleLines, originalLine, possibleDestinations) {
+async function matchTrip(train, stopGTFSIDs, db, possibleLines, originalLine, possibleDestinations) {
   let fullPossibleDestinations = possibleDestinations.map(dest => dest + ' Railway Station')
 
   let data = {
-    stopGTFSID,
+    stopGTFSID: { $in: stopGTFSIDs },
     possibleLines,
     originalLine,
     departureTime: train.scheduledDepartureTime,
@@ -401,7 +401,7 @@ async function matchTrip(train, stopGTFSID, db, possibleLines, originalLine, pos
   }
 }
 
-async function genericMatch(train, stopGTFSID, stationName, db) {
+async function genericMatch(train, stopGTFSIDs, stationName, db) {
   let possibleLines = lineGroups.find(group => group.includes(train.routeName)) || train.routeName
 
   let possibleDestinations = [train.runDestination]
@@ -411,11 +411,11 @@ async function genericMatch(train, stopGTFSID, stationName, db) {
   if (train.runDestination === 'Flinders Street' && !train.viaCityLoop)
     possibleDestinations.push('Parliament')
 
-  let trip = await matchTrip(train, stopGTFSID, db, possibleLines, train.routeName, possibleDestinations)
+  let trip = await matchTrip(train, stopGTFSIDs, db, possibleLines, train.routeName, possibleDestinations)
   return trip
 }
 
-async function cfdGroupMatch(train, stopGTFSID, stationName, db) {
+async function cfdGroupMatch(train, stopGTFSIDs, stationName, db) {
   let possibleLines = caulfieldGroup
 
   let possibleDestinations = [train.runDestination]
@@ -431,11 +431,11 @@ async function cfdGroupMatch(train, stopGTFSID, stationName, db) {
   if (train.runDestination === 'Flagstaff' && train.viaCityLoop) // RMD -> CLP -> FSS -> PAR -> CLP -> FGS -> NME
     possibleDestinations.push('Flinders Street')
 
-  let trip = await matchTrip(train, stopGTFSID, db, possibleLines, train.routeName, possibleDestinations)
+  let trip = await matchTrip(train, stopGTFSIDs, db, possibleLines, train.routeName, possibleDestinations)
   return trip
 }
 
-async function norGroupMatch(train, stopGTFSID, stationName, db) {
+async function norGroupMatch(train, stopGTFSIDs, stationName, db) {
   let possibleLines = northernGroup
 
   let possibleDestinations = [train.runDestination]
@@ -468,12 +468,12 @@ async function norGroupMatch(train, stopGTFSID, stationName, db) {
       trip = await matchTrip({
         ...train,
         direction: 'Up'
-      }, stopGTFSID, db, possibleLines, train.routeName, ['Flinders Street'])
+      }, stopGTFSIDs, db, possibleLines, train.routeName, ['Flinders Street'])
     }
   }
 
   if (!trip) {
-    trip = await matchTrip(train, stopGTFSID, db, possibleLines, train.routeName, possibleDestinations)
+    trip = await matchTrip(train, stopGTFSIDs, db, possibleLines, train.routeName, possibleDestinations)
 
     // RCE trains match weirdly especially in the city - be strict with requirements
     if (train.runID && train.runID[0] === 'R' && trip && trip.routeName !== 'Flemington Racecourse') trip = null
@@ -563,8 +563,8 @@ function returnBusDeparture(bus, trip) {
   }
 }
 
-async function getMissingRailBuses(mappedBuses, metroPlatform, db) {
-  let {stopGTFSID} = metroPlatform
+async function getMissingRailBuses(mappedBuses, metroPlatforms, db) {
+  let stopGTFSIDs = metroPlatforms.map(plat => plat.stopGTFSID)
   let gtfsTimetables = db.getCollection('gtfs timetables')
 
   let extrasByTime = await async.map(mappedBuses, async bus => {
@@ -579,7 +579,7 @@ async function getMissingRailBuses(mappedBuses, metroPlatform, db) {
         mode: 'metro train',
         stopTimings: {
           $elemMatch: {
-            stopGTFSID,
+            stopGTFSID: { $in : stopGTFSIDs },
             departureTimeMinutes: departureTimeMinutes + 1440 * i
           }
         },
@@ -617,13 +617,13 @@ async function expandSkeleton(bus, allBuses, db) {
   return returnBusDeparture(originalBus, trip)
 }
 
-async function mapBus(bus, metroPlatform, db) {
-  let {stopGTFSID} = metroPlatform
+async function mapBus(bus, metroPlatforms, db) {
+  let stopGTFSIDs = metroPlatforms.map(plat => plat.stopGTFSID)
 
   let destination = bus.runDestination
 
   let possibleLines = lineGroups.find(group => group.includes(bus.routeName)) || bus.routeName
-  let trip = await matchTrip(bus, stopGTFSID, db, possibleLines, bus.routeName, [destination])
+  let trip = await matchTrip(bus, stopGTFSIDs, db, possibleLines, bus.routeName, [destination])
 
   if (trip) {
     return returnBusDeparture(bus, trip)
@@ -633,7 +633,7 @@ async function mapBus(bus, metroPlatform, db) {
       skeleton: true,
       destination,
       possibleLines,
-      stopGTFSID,
+      stopGTFSID: stopGTFSIDs[0],
       originalBus: bus
     }
   }
@@ -651,22 +651,23 @@ async function getSTYRunID(trip, db) {
   if (wttTrip) return wttTrip.runID
 }
 
-async function mapTrain(train, metroPlatform, notifyData, db) {
-  let {stopGTFSID} = metroPlatform
-  let stationName = metroPlatform.fullStopName.slice(0, -16)
+async function mapTrain(train, metroPlatforms, notifyData, db) {
+  let stopGTFSIDs = metroPlatforms.map(plat => plat.stopGTFSID)
+  let stationName = metroPlatforms[0].fullStopName.slice(0, -16)
   let isInLoop = cityLoopStations.includes(stationName)
 
   let routeName = train.routeName
   let trip
   if (burnleyGroup.includes(routeName) || cliftonHillGroup.includes(routeName) || genericGroup.includes(routeName)) {
-    trip = await genericMatch(train, stopGTFSID, stationName, db)
+    trip = await genericMatch(train, stopGTFSIDs, stationName, db)
   } else if (caulfieldGroup.includes(routeName)) {
-    trip = await cfdGroupMatch(train, stopGTFSID, stationName, db)
+    trip = await cfdGroupMatch(train, stopGTFSIDs, stationName, db)
   } else if (northernGroup.includes(routeName)) {
-    trip = await norGroupMatch(train, stopGTFSID, stationName, db)
+    trip = await norGroupMatch(train, stopGTFSIDs, stationName, db)
   }
 
   if (!trip) {
+    return null
     trip = await getStoppingPattern({
       routeName,
       ptvRunID: train.ptvRunID,
@@ -753,9 +754,10 @@ function determineLoopRunning(runID, routeName, direction) {
   return viaCityLoop
 }
 
-function appendDepartureDay(departure, stopGTFSID) {
+function appendDepartureDay(departure, metroPlatforms) {
+  let stopGTFSIDs = metroPlatforms.map(plat => plat.stopGTFSID)
   let { trip } = departure
-  let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
+  let stopData = trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))
   let firstStop = trip.stopTimings.find(tripStop => tripStop.stopName === trip.trueOrigin)
   let originDepartureMinutes = firstStop.departureTimeMinutes
 
@@ -793,11 +795,12 @@ function appendDepartureDay(departure, stopGTFSID) {
   }
 }
 
-function findUpcomingStops(departure, stopGTFSID) {
+function findUpcomingStops(departure, metroPlatforms) {
+  let stopGTFSIDs = metroPlatforms.map(plat => plat.stopGTFSID)
   let tripStops = departure.trip.stopTimings
   let stopNames = tripStops.map(stop => stop.stopName.slice(0, -16))
 
-  let currentIndex = tripStops.findIndex(stop => stop.stopGTFSID === stopGTFSID)
+  let currentIndex = tripStops.findIndex(stop => stopGTFSIDs.includes(stop.stopGTFSID))
   let originIndex = stopNames.indexOf(departure.trip.trueOrigin.slice(0, -16))
   let destinationIndex = stopNames.lastIndexOf(departure.trip.trueDestination.slice(0, -16))
 
@@ -809,7 +812,7 @@ function findUpcomingStops(departure, stopGTFSID) {
 
   if (currentIndex === -1) {
     global.loggers.general.warn('Dropped Shorted metro run', departure.runID, {
-      stopGTFSID,
+      stop: metroPlatforms[0].stopName,
       departureTime: departure.scheduledDepartureTime
     })
     departure.shortenedAndRemove = true
@@ -1071,10 +1074,11 @@ function updateShortedDestination(train, stationName) {
 
 async function getDeparturesFromPTV(station, backwards, departureTime, db) {
   let notifyData = await getNotifyData(db)
-  let metroPlatform = station.bays.find(bay => bay.mode === 'metro train')
-  let stationName = metroPlatform.fullStopName.slice(0, -16)
+  let metroPlatforms = station.bays.filter(bay => bay.mode === 'metro train')
 
-  let url = `/v3/departures/route_type/0/stop/${metroPlatform.stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&look_backwards=${backwards ? 'true' : 'false'}&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor&expand=VehiclePosition&date_utc=${departureTime.toISOString()}`
+  let stationName = metroPlatforms[0].fullStopName.slice(0, -16)
+
+  let url = `/v3/departures/route_type/0/stop/${metroPlatforms[0].stopGTFSID}?gtfs=true&max_results=15&include_cancelled=true&look_backwards=${backwards ? 'true' : 'false'}&expand=Direction&expand=Run&expand=Route&expand=VehicleDescriptor&expand=VehiclePosition&date_utc=${departureTime.toISOString()}`
   let ptvResponse = await ptvAPI(url)
 
   let parsedDepartures = parsePTVDepartures(ptvResponse, stationName, departureTime)
@@ -1084,11 +1088,11 @@ async function getDeparturesFromPTV(station, backwards, departureTime, db) {
 
   let trains = parsedDepartures.filter(departure => !departure.isRailReplacementBus)
 
-  let initalMappedBuses = await async.map(replacementBuses, async bus => await mapBus(bus, metroPlatform, db))
-  let initialMappedTrains = await async.map(trains, async train => await mapTrain(train, metroPlatform, notifyData, db))
+  let initalMappedBuses = await async.map(replacementBuses, async bus => await mapBus(bus, metroPlatforms, db))
+  let initialMappedTrains = await async.map(trains, async train => await mapTrain(train, metroPlatforms, notifyData, db))
   let suspensionMappedTrains
   if (config.applyMetroSuspensions) {
-    suspensionMappedTrains = await async.map(initialMappedTrains, async train => await applySuspension(train, notifyData, metroPlatform, db))
+    suspensionMappedTrains = await async.map(initialMappedTrains, async train => await applySuspension(train, notifyData, metroPlatforms, db))
   } else {
     suspensionMappedTrains = initialMappedTrains
   }
@@ -1099,7 +1103,7 @@ async function getDeparturesFromPTV(station, backwards, departureTime, db) {
     else return bus
   })).filter(Boolean)
 
-  let extraBuses = await getMissingRailBuses(mappedBuses, metroPlatform, db)
+  let extraBuses = await getMissingRailBuses(mappedBuses, metroPlatforms, db)
   let mappedTrains = suspensionMappedTrains.filter(departure => !departure.isRailReplacementBus)
   let suspensionBuses = suspensionMappedTrains.filter(departure => departure.isRailReplacementBus)
   let allRailBuses = [...mappedBuses, ...extraBuses, ...suspensionBuses]
@@ -1107,8 +1111,8 @@ async function getDeparturesFromPTV(station, backwards, departureTime, db) {
   let allDepartures = [...mappedTrains, ...allRailBuses]
 
   allDepartures.forEach(departure => {
-    appendDepartureDay(departure, metroPlatform.stopGTFSID)
-    findUpcomingStops(departure, metroPlatform.stopGTFSID)
+    appendDepartureDay(departure, metroPlatforms)
+    findUpcomingStops(departure, metroPlatforms)
   })
 
   allDepartures = allDepartures.filter(departure => !departure.shortenedAndRemove)
