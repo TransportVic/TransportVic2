@@ -22,7 +22,7 @@ block title
   span=station.stopName
   
 block header-right
-  a#mapLink(href=`/stop-preview/${station.codedSuburb[0]}/${station.codedName}`)
+  a#mapLink(href=`/stop-preview/${station.cleanSuburbs[0]}/${station.codedName}`)
     img#mapIcon(src='/static/images/decals/map.svg' alt='map icon')
   img#bookmark(src='/static/images/decals/bookmark.svg' alt='bookmark icon')
 

@@ -203,7 +203,7 @@ module.exports = async function (data, db) {
 
   let vehicleDescriptor = run.vehicle_descriptor
   let directionName = ptvDirection.direction_name
-  let gtfsDirection = route.ptvDirections[directionName]
+  let gtfsDirection = route.directions.find(dir => dir.directionName === directionName)?.gtfsDirection
   let direction = ptvDirection.direction_name.includes('City') ? 'Up' : 'Down'
 
   if (routeName === 'Stony Point') direction = ptvDirection.direction_name.includes('Frankston') ? 'Up' : 'Down'

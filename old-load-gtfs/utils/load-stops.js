@@ -60,7 +60,7 @@ module.exports = async function(stops, data, stopsLookup) {
 
       matchingStop.suburb = matchingStop.bays.map(bay => bay.suburb)
         .filter((e, i, a) => a.indexOf(e) === i)
-      matchingStop.codedSuburb = matchingStop.suburb.map(suburb => utils.encodeName(suburb))
+      matchingStop.cleanSuburbs = matchingStop.suburb.map(suburb => utils.encodeName(suburb))
       matchingStop.codedNames = matchingStop.bays.map(bay => utils.encodeName(bay.fullStopName))
         .filter((e, i, a) => a.indexOf(e) === i)
       matchingStop.codedName = matchingStop.codedNames.sort((a, b) => a.length - b.length)[0]
@@ -84,7 +84,7 @@ module.exports = async function(stops, data, stopsLookup) {
       let stopData = {
         stopName: stop.fullStopName,
         suburb: [stop.suburb],
-        codedSuburb: [utils.encodeName(stop.suburb)],
+        cleanSuburbs: [utils.encodeName(stop.suburb)],
         codedName: utils.encodeName(stop.fullStopName),
         codedNames: [utils.encodeName(stop.fullStopName)],
         bays: [{

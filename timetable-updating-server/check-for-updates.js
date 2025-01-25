@@ -10,11 +10,18 @@ const config = require('../config')
 const urls = require('../urls')
 const postDiscordUpdate = require('../modules/discord-integration')
 const downloadGTFS = require('../update-gtfs')
+const path = require('path')
+
+let urlMask = []
+
+Object.keys(urls).forEach(urlName => {
+  let url = urls[urlName].replace(/{.+/, '')
+  urlMask.push(url)
+})
 
 async function discordUpdate(text) {
   await postDiscordUpdate('timetables', text)
 }
-
 
 global.gtfsUpdaterLog = []
 
@@ -42,22 +49,30 @@ try {
   console.log('No lastModified, downloading data')
 }
 
-function spawnProcess(path, finish) {
-  let childProcess = spawn(path)
+function spawnProcess(cmd, args, finish) {
+  let childProcess = spawn(cmd, args)
 
   function processLines(data) {
-    let lines = data.split('\n').map(e => e.trim()).filter(Boolean)
-    lines.forEach(line => {
+    let lines = data.split('\n').filter(Boolean).filter(line => {
+      return !(line.match(/\d+ms http/) && line.includes('discord'))
+    }).map(line => {
       if (line.match(/\d+ms http/)) {
-        if (line.includes('discord')) return
-        line = line.replace(/\&devid.+/, '').replace(/&access_token.+/, '')
-      }
+        let matchingURL = urlMask.find(url => data.includes(url))
+        if (matchingURL) {
+          let urlReplacement = new RegExp(matchingURL.replace(/([?&+])/g, '\\$1') + '[^ ]+')
+          return line.replace(urlReplacement, `{url hidden}`)
+        }
 
-      broadcast({
-        type: 'log-newline',
-        line
-      })
-      gtfsUpdaterLog.push(line)
+        return line.replace(/\&devid.+/, '').replace(/&access_token.+/, '')
+      }
+      return line
+    })
+
+    gtfsUpdaterLog.push(...lines)
+
+    broadcast({
+      type: 'log-newline-multi',
+      lines
     })
   }
 
@@ -102,7 +117,10 @@ async function updateTimetables() {
       console.log('Dropped stops, routes and gtfs timetables')
       await discordUpdate('[Updater]: Dropped stops, routes and gtfs timetables, loading data now.')
 
-      await require('../load-gtfs/load-all')()
+      let fileName = 'load-all'
+      if (config.metroOnly) fileName += '-metro-only'
+      await new Promise(r => spawnProcess('node', [path.join(__dirname, `../load-gtfs/${fileName}.mjs`)], r))
+
       await discordUpdate(`[Updater]: GTFS Timetables finished loading, took ${Math.round(utils.uptime() / 1000 / 60)}min`)
       console.log('Done!')
 

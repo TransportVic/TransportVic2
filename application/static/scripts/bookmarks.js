@@ -60,7 +60,7 @@ $.ready(() => {
 
       let link = `/${linkNames[mode]}/timings`
       if (['bus', 'tram', 'regional coach'].includes(mode)) {
-        link += `/${stopData.codedSuburb}`
+        link += `/${stopData.cleanSuburbs}`
       }
       if (['metro train', 'regional train', 'heritage train'].includes(mode))
         link += `/${stopData.codedName.slice(0, -16)}`

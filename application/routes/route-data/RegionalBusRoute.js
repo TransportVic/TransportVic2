@@ -12,7 +12,7 @@ router.get('/:suburb/:routeNumber', async (req, res, next) => {
     mode: 'bus',
     routeNumber,
     routeGTFSID: /6-/,
-    codedSuburb: suburb
+    cleanSuburbs: suburb
   })
 
   if (!matchingRoute) return res.status(404).render('errors/no-route')
@@ -35,7 +35,7 @@ router.get('/:suburb/:routeNumber/:directionName/:operationDateType?', async (re
     mode: 'bus',
     routeNumber,
     routeGTFSID: /6-/,
-    codedSuburb: suburb,
+    cleanSuburbs: suburb,
     'operationDate.type': operationDateType ? operationDateType : undefined
   })
 

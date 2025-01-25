@@ -71,7 +71,7 @@ router.get('/stop-data', async (req, res) => {
     })
   } else {
     stop = await stops.findDocument({
-      codedSuburb: suburb,
+      cleanSuburbs: suburb,
       codedName: name
     })
   }
@@ -80,7 +80,7 @@ router.get('/stop-data', async (req, res) => {
 
   let stopData = {
     codedName: stop.codedName,
-    codedSuburb: stop.codedSuburb[0],
+    cleanSuburbs: stop.cleanSuburbs[0],
     suburb: stop.suburb[0],
     stopName: stop.stopName,
     stopGTFSIDs: stop.bays.map(bay => bay.stopGTFSID).filter((e, i, a) => a.indexOf(e) === i)

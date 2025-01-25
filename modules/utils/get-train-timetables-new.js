@@ -83,10 +83,9 @@ async function getDeparture(data, db, live) {
           departureTimeMinutes: scheduledDepartureTimeMinutes + 1440 * i
         }
       },
-      direction
+      // direction
     })
 
-    if (!live) query.hint('stop timings gtfs index')
     let timetables = await query.limit(3).toArray()
 
     if (viaCityLoop !== null) {
@@ -139,15 +138,17 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
   let isCity = stationName === 'Flinders Street' || cityLoopStations.includes(stationName)
 
   function getID(trip) {
+    if (!trip.isRailReplacementBus && trip.runID) return trip.runID
+
     if (isCity) {
-      return trip.direction + trip.routeGTFSID + trip.trueOrigin + trip.trueDestination + trip.destinationArrivalTime
+      return trip.direction + trip.routeGTFSID + trip.origin + trip.destination + trip.destinationArrivalTime
     } else {
       let stop = trip.stopTimings.find(s => stopGTFSIDs.includes(s.stopGTFSID))
       if (trip.mode === 'metro train') {
         let trackGroup = trackGroups[trip.routeName]
-        return stop.departureTimeMinutes + trip.direction + trip.trueDestination + trackGroup
+        return stop.departureTime + trip.direction + trip.destination + trackGroup
       } else {
-        return stop.departureTimeMinutes + trip.direction + trip.trueDestination
+        return stop.departureTime + trip.direction + trip.destination
       }
     }
   }
@@ -178,25 +179,25 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
       }
     }
 
-    // let gtfsTimetablesFound = await gtfsTimetables.findDocuments(query).toArray()
+    let gtfsTimetablesFound = await gtfsTimetables.findDocuments(query).toArray()
     let liveTimetablesFound = (await liveTimetables.findDocuments(query).toArray()).filter(timetable => {
-      if (timetable.trueDestination === station.stopName) {
+      if (timetable.destination === station.stopName) {
         return timetable.trueOrigin === station.stopName
       } else return true
     })
 
-    liveTimetablesFound.forEach(t => {
+    liveTimetablesFound.concat(gtfsTimetablesFound).forEach(t => {
       days[getID(t)] = day
     })
 
-    // gtfsDepartures = gtfsDepartures.concat(gtfsTimetablesFound)
+    gtfsDepartures = gtfsDepartures.concat(gtfsTimetablesFound)
     liveDepartures = liveDepartures.concat(liveTimetablesFound)
   }
 
   let serviceIndex = []
   let departures = []
 
-  liveDepartures.forEach(trip => {
+  liveDepartures.concat(gtfsDepartures).forEach(trip => {
     let id = getID(trip)
     if (!serviceIndex.includes(id)) {
       serviceIndex.push(id)
@@ -230,7 +231,7 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
         actualDepartureTimeMS
       }
     },
-    trueDestination: {
+    destination: {
       $ne: station.stopName
     }
   }).toArray()
@@ -252,7 +253,7 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
       if (!backwards && timeDifference < -1) return null
     }
 
-    let destination = trip.trueDestination.slice(0, -16)
+    let destination = trip.destination.slice(0, -16)
     let platform = stopData.platform || '??'
     let tripDepartureDay = days[getID(trip)]
 
@@ -264,7 +265,7 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
         operationDays: day,
         routeGTFSID: trip.routeGTFSID,
         origin: trip.trueOrigin,
-        destination: trip.trueDestination,
+        destination: trip.destination,
         departureTime: trip.trueDepartureTime,
         'stopTimings.stopName': station.stopName
       })
@@ -363,20 +364,6 @@ async function getScheduledMetroDepartures(station, db, time, backwards=false) {
   let stopCode = stopCodes[stopName]
   let isInCity = cityLoopStations.includes(stopName) || stopName === 'Flinders Street'
 
-  if (isInCity) {
-    let downTrains = departures.filter(departure => departure.trip.direction === 'Down')
-    let downTrainIDs = downTrains.map(departure => {
-      return `${departure.scheduledDepartureTime.format('HH:mm')}${lineGroups[departure.trip.routeName]}`
-    })
-    let upTrains = departures.filter(departure => departure.trip.direction === 'Up')
-    let uniqueUp = upTrains.filter(departure => {
-      let id = `${departure.scheduledDepartureTime.format('HH:mm')}${lineGroups[departure.trip.routeName]}`
-      return !downTrainIDs.includes(id)
-    })
-
-    departures = downTrains.concat(uniqueUp).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
-  }
-
   return (await async.map(departures, async departure => {
     let tripStops = departure.trip.stopTimings
     let currentIndex = tripStops.findIndex(stop => stop.stopName === station.stopName)
@@ -389,12 +376,8 @@ async function getScheduledMetroDepartures(station, db, time, backwards=false) {
     let cityLoopRunning = stopNames.filter(stop => filterStops.includes(stop)).map(stop => stopCodes[stop])
     let willGoByCityLoop = cityLoopRunning.includes('MCE')
 
-    if (isInCity && departure.trip.destination === 'Parliament Railway Station') return null
-    if (isInCity && departure.trip.destination === 'Flagstaff Railway Station') return null
-    if (isInCity && departure.trip.destination === 'Southern Cross Railway Station') return null
-
     if (departure.trip.direction === 'Up') {
-      departure.destination = departure.trip.trueDestination.slice(0, -16)
+      departure.destination = departure.trip.destination.slice(0, -16)
 
       if (departure.destination === 'Flinders Street') {
         if (willGoByCityLoop) cityLoopRunning.shift()

@@ -21,3 +21,8 @@
 tt-intermediate.pem
 
 /additional-data/myki-zone-test
+
+/load-gtfs/routes.json
+/load-gtfs/vline/timetables/timetables
+/load-gtfs/metro/timetables
+/updater-log.txt

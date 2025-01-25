@@ -4,9 +4,7 @@ const config = require('../config')
 const MainServer = require('./MainServer')
 
 let mainServer = new MainServer()
-mainServer.app.listen(config.httpPort)
-
-global.server = mainServer.app
+global.server = mainServer.app.listen(config.httpPort)
 
 process.on('uncaughtException', err => {
   global.loggers.error.err(err)

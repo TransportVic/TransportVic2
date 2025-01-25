@@ -6,7 +6,6 @@ module.exports = {
   groupDepartures: departures => {
     let services = []
     let groupedDepartures = {}
-
     departures.forEach(departure => {
       if (!services.includes(departure.sortNumber)) {
         services.push(departure.sortNumber)
@@ -19,16 +18,16 @@ module.exports = {
       let serviceDestinations = []
 
       let directions = [
-        serviceDepartures.filter(d => d.trip.gtfsDirection === '0'),
-        serviceDepartures.filter(d => d.trip.gtfsDirection === '1')
+        serviceDepartures.filter(d => d.trip.gtfsDirection === 0),
+        serviceDepartures.filter(d => d.trip.gtfsDirection === 1)
       ]
 
       if (serviceDepartures[0].trip.routeGTFSID === '3-35') {
         let nonLoop = serviceDepartures.filter(d => !d.loopDirection)
         let loop = serviceDepartures.filter(d => d.loopDirection)
 
-        let d0 = loop.filter(d => d.trip.gtfsDirection === '0')
-        let d1 = loop.filter(d => d.trip.gtfsDirection === '1')
+        let d0 = loop.filter(d => d.trip.gtfsDirection === 0)
+        let d1 = loop.filter(d => d.trip.gtfsDirection === 1)
 
         directions = [
           nonLoop, d0, d1

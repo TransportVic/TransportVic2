@@ -1,9 +1,7 @@
-const DatabaseConnection = require('../database/DatabaseConnection')
-const config = require('../config')
-const utils = require('../utils')
+const DatabaseConnection = require('../../database/DatabaseConnection')
+const config = require('../../config')
+const utils = require('../../utils')
 const async = require('async')
-
-const updateStats = require('../load-gtfs/utils/stats')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
@@ -42,14 +40,13 @@ database.connect({}, async err => {
     }, {
       $set: {
         suburb: best[0],
-        codedSuburb: utils.encodeName(best[0])
+        cleanSuburbs: utils.encodeName(best[0])
       }
     })
 
     if (i % 30 === 0 && i !== 0) console.log(`Route-Suburbs: Completed ${i} routes`)
   })
 
-  await updateStats('regional-bus-suburbs', regionalBusRoutes.length)
   console.log('Completed loading in ' + regionalBusRoutes.length + ' route suburbs')
   process.exit()
 })

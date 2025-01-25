@@ -274,7 +274,7 @@ async function getScheduledDepartures(stop, db, time) {
 }
 
 async function getDepartures(stop, db, time, discardUnmatched) {
-  let cacheKey = stop.codedSuburb[0] + stop.stopName
+  let cacheKey = stop.cleanSuburbs[0] + stop.stopName
 
   try {
     return await utils.getData('bus-departures-' + (time ? time.toISOString() : 'current'), cacheKey, async () => {

@@ -23,7 +23,7 @@ for heritageStation in stops.filter(stop => !!stop.bays.find(bay => bay.mode ===
       span #{heritageStation.stopName}
       
 for regionalCoachStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'regional coach')).slice(0, 3)
-  a(href=`/coach/timings/${regionalCoachStop.codedSuburb[0]}/${regionalCoachStop.codedName}`).regionalCoachStop.result
+  a(href=`/coach/timings/${regionalCoachStop.cleanSuburbs[0]}/${regionalCoachStop.codedName}`).regionalCoachStop.result
     div.leftContainer
       img(src='/static/images/clear-icons/coach.svg')
     div.resultDetails
@@ -39,7 +39,7 @@ for ferryTerminal in stops.filter(stop => !!stop.bays.find(bay => bay.mode === '
       span #{ferryTerminal.stopName}
       
 for tramStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'tram')).slice(0, 5)
-  a(href=`/tram/timings/${tramStop.codedSuburb[0]}/${tramStop.codedName}`).tramStop.result
+  a(href=`/tram/timings/${tramStop.cleanSuburbs[0]}/${tramStop.codedName}`).tramStop.result
     div.leftContainer
       img(src='/static/images/clear-icons/tram.svg')
     div.resultDetails
@@ -54,7 +54,7 @@ for tramStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'tram'
       span #{displayName}
 
 for busStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'bus')).slice(0, 10)
-  a(href=`/bus/timings/${busStop.codedSuburb[0]}/${busStop.codedName}`).busStop.result
+  a(href=`/bus/timings/${busStop.cleanSuburbs[0]}/${busStop.codedName}`).busStop.result
     div.leftContainer
       img(src='/static/images/clear-icons/bus.svg')
     div.resultDetails
@@ -124,7 +124,7 @@ for busRoute in routes.filter(route => route.mode === 'bus' && route.directions[
       if (hasNumber) url = `/bus/route/${busRoute.routeNumber}`
       else url = `/bus/route/named/${busRoute.codedName}`
     } else if (busRoute.routeGTFSID.startsWith('6-')) {
-      if (hasNumber) url = `/bus/route/regional/${busRoute.codedSuburb}/${busRoute.routeNumber}`
+      if (hasNumber) url = `/bus/route/regional/${busRoute.cleanSuburbs}/${busRoute.routeNumber}`
       else url = `/bus/route/named/${busRoute.codedName}`
     }
     
