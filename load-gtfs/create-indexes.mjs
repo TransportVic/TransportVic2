@@ -279,10 +279,25 @@ async function createCSRFIndex(csrfTokens) {
   }, { name: 'csrf index', unique: 1 })
 }
 
+async function createLiveTimetableIndex(liveTimetables) {
+  await liveTimetables.createIndex({
+    'stopTimings.stopGTFSID': 1,
+    'stopTimings.actualDepartureTimeMS': 1,
+    mode: 1,
+    destination: 1
+  }, {name: 'live stop timings index'})
+
+  await liveTimetables.createIndex({
+    mode: 1,
+    'stopTimings.actualDepartureTimeMS': 1,
+  }, {name: 'active trip index'})
+}
+
 await createStopIndex(await mongoDB.getCollection('stops'))
 await createRouteIndex(await mongoDB.getCollection('routes'))
 await createTimetableIndex(await mongoDB.getCollection('gtfs timetables'))
 await createTimetableIndex(await mongoDB.getCollection('live timetables'))
+await createLiveTimetableIndex(await mongoDB.getCollection('live timetables'))
 await createMetroTripIndex(await mongoDB.getCollection('metro trips'))
 await createVLineTripIndex(await mongoDB.getCollection('vline trips'))
 await createTramTripIndex(await mongoDB.getCollection('tram trips'))
