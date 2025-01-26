@@ -133,6 +133,11 @@
  ],
  "Ballarat": [
   {
+   "routeGTFSID": "6-10B",
+   "routeNumber": "10",
+   "liveTrack": true
+  },
+  {
    "routeGTFSID": "6-10x",
    "routeNumber": "10",
    "liveTrack": true
@@ -282,11 +287,6 @@
   {
    "routeGTFSID": "6-B71",
    "routeNumber": "71",
-   "liveTrack": true
-  },
-  {
-   "routeGTFSID": "6-BN5",
-   "routeNumber": "WN05",
    "liveTrack": true
   }
  ],
@@ -934,16 +934,6 @@
  ],
  "Gisborne": [
   {
-   "routeGTFSID": "6-473",
-   "routeNumber": "473",
-   "liveTrack": false
-  },
-  {
-   "routeGTFSID": "6-474",
-   "routeNumber": "474",
-   "liveTrack": false
-  },
-  {
    "routeGTFSID": "6-G73",
    "routeNumber": "73",
    "liveTrack": false
@@ -984,7 +974,7 @@
   },
   {
    "routeGTFSID": "6-W12",
-   "routeNumber": "A",
+   "routeNumber": "Link A",
    "liveTrack": false
   }
  ],

@@ -3,6 +3,7 @@ const async = require('async')
 const config = require('../../../config')
 const DatabaseConnection = require('../../../database/DatabaseConnection')
 const network = require('./regional-bus-network')
+const operators = require('../../../transportvic-data/excel/bus/operators/regional-numbered-operators.json')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
@@ -50,11 +51,27 @@ database.connect(async () => {
     if (regionName === 'Warragul') matchingRoutes = matchingRoutes.filter(route => route.routeNumber)
     if (regionName === 'Glenrowan') matchingRoutes = matchingRoutes.filter(route => route.routeNumber === 'H46')
 
-    acc[regionName] = matchingRoutes.map(route => {
+    let regionOperators = operators[regionName]
+
+    let regionRoutes = matchingRoutes.map(route => {
       let routeNumber = route.routeNumber ? route.routeNumber.replace('_x', '') : "Town"
 
       return { routeGTFSID: route.routeGTFSID, routeNumber, liveTrack: hasLiveTrack }
     }).sort((a, b) => a.routeNumber.localeCompare(b.routeNumber))
+
+    acc[regionName] = regionRoutes
+
+    for (let route of regionRoutes) {
+      if (!regionOperators || !regionOperators[route.routeNumber]) {
+        console.log('Could not match regional operators', regionName, route)
+        continue
+      }
+      await routes.updateDocument({ routeGTFSID: route.routeGTFSID }, {
+        $set: {
+          operators: [ regionOperators[route.routeNumber] ]
+        }
+      })
+    }
 
     return acc
   })
