@@ -131,8 +131,11 @@ module.exports = class MainServer {
     app.use(bodyParser.json())
     app.use(bodyParser.text())
 
+    let staticBase = config.staticBase || ''
+    app.get('/static-server', (req, res) => res.end(staticBase))
+
     app.use((req, res, next) => {
-      res.locals.staticBase = config.staticBase || ''
+      res.locals.staticBase = staticBase
 
       res.setHeader('Strict-Transport-Security', 'max-age=31536000')
 

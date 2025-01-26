@@ -1,22 +1,23 @@
-const version = '131'
+const version = '132'
 const cacheName = `transportvic-${version}`
 
-function cacheFiles(files) {
-  return caches.open(cacheName).then(cache => {
-    console.log('Caching files')
+async function cacheFiles(files) {
+  let server = await (await fetch('/static-server')).text()
 
-    return cache.addAll(files).then(() => self.skipWaiting())
-    .catch(err => {
-      console.error(err)
-
-      return ''
-    })
+  let serverMappedFiles = files.map(file => {
+    if (file.startsWith('/static')) return server + file
+    return file
   })
+
+  let cache = await caches.open(cacheName)
+
+  console.log('Caching files')
+
+  return cache.addAll(serverMappedFiles).then(() => self.skipWaiting())
 }
 
 self.addEventListener('install', event => {
   const timeStamp = Date.now()
-
   caches.keys().then(function (cachesNames) {
     return Promise.all(cachesNames.map((storedCacheName) => {
       if (storedCacheName === cacheName || !storedCacheName.startsWith('transportvic')) return Promise.resolve()
