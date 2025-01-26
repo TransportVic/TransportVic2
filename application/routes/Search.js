@@ -134,6 +134,8 @@ async function findRoutes(db, query) {
         routeNumber: queryRegex
       }, {
         routeName: queryRegex
+      }, {
+        'directions.stops.suburb': queryRegex
       }]
     }).sort({
       routeNumber: 1,

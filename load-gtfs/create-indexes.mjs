@@ -77,6 +77,16 @@ async function createRouteIndex(mongoRoutes) {
   await mongoRoutes.createIndex({
     'routePath.path': '2dsphere'
   }, {name: 'path geospatial index'})
+
+  await mongoRoutes.createIndex({
+    mode: 1,
+    routeNumber: 1,
+    'routePath.path': '2dsphere'
+  }, {name: 'specific path geospatial index'})
+
+  await mongoRoutes.createIndex({
+    'directions.stops.suburb': 1
+  }, {name: 'route suburb index'})
 }
 
 async function createTimetableIndex(mongoTimetables) {

@@ -160,11 +160,11 @@ for busRoute in routes.filter(route => route.mode === 'bus' && route.directions[
         
         let { routeName } = busRoute
         
-        if (busRoute.directions.length === 1 || routeName.includes('Loop') || routeName.includes('Town Service') || routeName.includes('Flexiride')) {
+        //- if (busRoute.directions.length === 1 || routeName.includes('Loop') || routeName.includes('Town Service') || routeName.includes('Flexiride')) {
           name = routeName
-        } else {
-          name = `${busRoute.directions[0].directionName} - ${busRoute.directions[1].directionName}${via}`
-        }
+        //- } else {
+        //-   name = `${busRoute.directions[0].directionName} - ${busRoute.directions[1].directionName}${via}`
+        //- }
         if (operationDate) {
           name += ` (${operationDate.type[0].toUpperCase()}${operationDate.type.slice(1)} ${operationDate.operationDateReadable})`
         }
