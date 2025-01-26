@@ -30,7 +30,7 @@ for stop in stops
     url += `${codedName}`
   a(href=url class=`result ${stopCSSClasses[stop.mode]}`)
     div.leftContainer.miniIcon
-      img(src=`/static/images/clear-icons/${stopIcons[stop.mode]}.svg`)
+      img(src=`${staticBase}/static/images/clear-icons/${stopIcons[stop.mode]}.svg`)
       span.distance=stop.smallestDistance + ' metres'
     div.resultDetails
       span #{stop.type} in #{stop.suburb}

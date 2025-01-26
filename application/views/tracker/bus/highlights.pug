@@ -5,13 +5,13 @@ block head
     title = 'TransportVic - Tracker/Bus - Highlights'
     description = 'Bus Tracker Highlights'
   title #{title}
-  link(rel='preload' as='style' href='/static/css/tracker/results.css')
+  link(rel='preload' as='style' href=`${staticBase}/static/css/tracker/results.css`)
 
 block title
   span Bus Tracker - Highlights
   
 block style
-  link(rel='stylesheet' href='/static/css/tracker/results.css')
+  link(rel='stylesheet' href=`${staticBase}/static/css/tracker/results.css`)
 
 block content
   h1.title Bus Highlights Today

@@ -39,9 +39,9 @@ if services.length
               div.vehicleData
                 if departure.vehicle && departure.vehicle.attributes
                   if departure.vehicle.attributes.ac
-                    img(src='/static/images/decals/ac.svg')
+                    img(src=`${staticBase}/static/images/decals/ac.svg`)
                   if departure.vehicle.attributes.lf
-                    img(src='/static/images/decals/wheelchair.svg')
+                    img(src=`${staticBase}/static/images/decals/wheelchair.svg`)
               span #{departure.pretyTimeToDeparture}
               span #{departure.scheduledDepartureTime.format('HH:mm')}
               if departure.vehicle

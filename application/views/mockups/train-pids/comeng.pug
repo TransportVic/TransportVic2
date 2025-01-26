@@ -1,15 +1,15 @@
 html
   head
-    script(src='/static/scripts/util.js')
-    script(src='/static/scripts/vendor/dot-matrix/fonts.js') 
-    script(src='/static/scripts/vendor/dot-matrix/matrix.js') 
-    script(src='/static/scripts/vendor/dot-matrix/renderer.js') 
+    script(src=`${staticBase}/static/scripts/util.js`)
+    script(src=`${staticBase}/static/scripts/vendor/dot-matrix/fonts.js`) 
+    script(src=`${staticBase}/static/scripts/vendor/dot-matrix/matrix.js`) 
+    script(src=`${staticBase}/static/scripts/vendor/dot-matrix/renderer.js`) 
     
-    script(src='/static/scripts/mockups/train/comeng-pids.js' async) 
-    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
-    link(rel='stylesheet' href='/static/css/mockups/train/comeng.css')
+    script(src=`${staticBase}/static/scripts/mockups/train/comeng-pids.js` async) 
+    link(rel='stylesheet' href=`${staticBase}/static/css/mockups/base-style.css`)
+    link(rel='stylesheet' href=`${staticBase}/static/css/mockups/train/comeng.css`)
       
-    link(rel='preload' as='style' href='/static/css/mockups/base-style.css')
+    link(rel='preload' as='style' href=`${staticBase}/static/css/mockups/base-style.css`)
     style#led-style
   body
     div.content

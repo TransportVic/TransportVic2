@@ -1,19 +1,19 @@
 html
   head
-    script(src='/static/scripts/util.js')
-    script(src='/static/scripts/mockups/reload-bus-int-pids.js' async) 
-    script(src='/static/scripts/mockups/pids-utils.js' async)
-    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
-    link(rel='stylesheet' href='/static/css/mockups/bus-int-pids/bus-int-pids.css')
+    script(src=`${staticBase}/static/scripts/util.js`)
+    script(src=`${staticBase}/static/scripts/mockups/reload-bus-int-pids.js` async) 
+    script(src=`${staticBase}/static/scripts/mockups/pids-utils.js` async)
+    link(rel='stylesheet' href=`${staticBase}/static/css/mockups/base-style.css`)
+    link(rel='stylesheet' href=`${staticBase}/static/css/mockups/bus-int-pids/bus-int-pids.css`)
 
     if full
-      link(rel='stylesheet' href='/static/css/mockups/16-9-pids-base.css')
-      link(rel='preload' as='style' href='/static/css/mockups/16-9-pids-base.css')
+      link(rel='stylesheet' href=`${staticBase}/static/css/mockups/16-9-pids-base.css`)
+      link(rel='preload' as='style' href=`${staticBase}/static/css/mockups/16-9-pids-base.css`)
     else
-      link(rel='stylesheet' href='/static/css/mockups/32-9-pids-base.css')
-      link(rel='preload' as='style' href='/static/css/mockups/32-9-pids-base.css')
+      link(rel='stylesheet' href=`${staticBase}/static/css/mockups/32-9-pids-base.css`)
+      link(rel='preload' as='style' href=`${staticBase}/static/css/mockups/32-9-pids-base.css`)
 
-    link(rel='preload' as='style' href='/static/css/mockups/base-style.css')
+    link(rel='preload' as='style' href=`${staticBase}/static/css/mockups/base-style.css`)
 
     meta(name='format-detection' content='telephone=no')
   body
@@ -22,7 +22,7 @@ html
       div.message
         div
           div.info-circle
-            img(src='/static/images/mockups/information.svg').information
+            img(src=`${staticBase}/static/images/mockups/information.svg`).information
           div.text
             p For more information 
             p visit ptv.vic.gov.au
@@ -46,7 +46,7 @@ html
       div.info
         div#hotline
           div.info-circle
-            img(src='/static/images/mockups/information.svg').information
+            img(src=`${staticBase}/static/images/mockups/information.svg`).information
           div.call-hotline
             p For more information 
             p visit ptv.vic.gov.au

@@ -1,7 +1,7 @@
 for metroStation in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'metro train')).slice(0, 3)
   a(href=`/metro/timings/${metroStation.codedName.slice(0, -16)}`).metroStation.result
     div.leftContainer
-      img(src='/static/images/clear-icons/metro.svg')
+      img(src=`${staticBase}/static/images/clear-icons/metro.svg`)
     div.resultDetails
       span Metro Train Station in #{metroStation.suburb[0]}
       span #{metroStation.stopName}
@@ -9,7 +9,7 @@ for metroStation in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'm
 for vlineStation in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'regional train')).slice(0, 3)
   a(href=`/vline/timings/${vlineStation.codedName.slice(0, -16)}`).vlineStation.result
     div.leftContainer
-      img(src='/static/images/clear-icons/vline.svg')
+      img(src=`${staticBase}/static/images/clear-icons/vline.svg`)
     div.resultDetails
       span V/Line Train Station in #{vlineStation.suburb[0]}
       span #{vlineStation.stopName}
@@ -17,7 +17,7 @@ for vlineStation in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'r
 for heritageStation in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'heritage train')).slice(0, 3)
   a(href=`/heritage/timings/${heritageStation.codedName.slice(0, -16)}`).heritageStation.result
     div.leftContainer
-      img(src='/static/images/clear-icons/vline.svg')
+      img(src=`${staticBase}/static/images/clear-icons/vline.svg`)
     div.resultDetails
       span Heritage Train Station in #{heritageStation.suburb[0]}
       span #{heritageStation.stopName}
@@ -25,7 +25,7 @@ for heritageStation in stops.filter(stop => !!stop.bays.find(bay => bay.mode ===
 for regionalCoachStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'regional coach')).slice(0, 3)
   a(href=`/coach/timings/${regionalCoachStop.cleanSuburbs[0]}/${regionalCoachStop.codedName}`).regionalCoachStop.result
     div.leftContainer
-      img(src='/static/images/clear-icons/coach.svg')
+      img(src=`${staticBase}/static/images/clear-icons/coach.svg`)
     div.resultDetails
       span V/Line Coach Stop in #{regionalCoachStop.suburb[0]}
       span #{regionalCoachStop.stopName}
@@ -33,7 +33,7 @@ for regionalCoachStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode =
 for ferryTerminal in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'ferry')).slice(0, 3)
   a(href=`/ferry/timings/${ferryTerminal.codedName}`).ferryTerminal.result
     div.leftContainer
-      img(src='/static/images/clear-icons/ferry.svg')
+      img(src=`${staticBase}/static/images/clear-icons/ferry.svg`)
     div.resultDetails
       span Ferry Terminal in #{ferryTerminal.suburb[0]}
       span #{ferryTerminal.stopName}
@@ -41,7 +41,7 @@ for ferryTerminal in stops.filter(stop => !!stop.bays.find(bay => bay.mode === '
 for tramStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'tram')).slice(0, 5)
   a(href=`/tram/timings/${tramStop.cleanSuburbs[0]}/${tramStop.codedName}`).tramStop.result
     div.leftContainer
-      img(src='/static/images/clear-icons/tram.svg')
+      img(src=`${staticBase}/static/images/clear-icons/tram.svg`)
     div.resultDetails
       span Tram Stop in #{tramStop.suburb[0]}
       -
@@ -56,7 +56,7 @@ for tramStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'tram'
 for busStop in stops.filter(stop => !!stop.bays.find(bay => bay.mode === 'bus')).slice(0, 10)
   a(href=`/bus/timings/${busStop.cleanSuburbs[0]}/${busStop.codedName}`).busStop.result
     div.leftContainer
-      img(src='/static/images/clear-icons/bus.svg')
+      img(src=`${staticBase}/static/images/clear-icons/bus.svg`)
     div.resultDetails
       span Bus Stop in #{busStop.suburb[0]}
       -
@@ -76,7 +76,7 @@ for metroLine in routes.filter(route => route.mode === 'metro train' && route.di
     let routeName = metroLine.routeGTFSID === '2-CCL' ? 'City Circle' : `${metroLine.routeName} Line`
   a(href=url).route.result
     div(class=`leftContainer ${cssName}`)
-      img(src='/static/images/clear-icons/metro.svg')
+      img(src=`${staticBase}/static/images/clear-icons/metro.svg`)
     div.resultDetails
       span Metropolitan Train Service
       span #{routeName}
@@ -85,7 +85,7 @@ for vlineLine in routes.filter(route => route.mode === 'regional train' && route
   - let url = `/vline/line/${vlineLine.codedName}`
   a(href=url).route.result
     div(class=`leftContainer vline`)
-      img(src='/static/images/clear-icons/vline.svg')
+      img(src=`${staticBase}/static/images/clear-icons/vline.svg`)
     div.resultDetails
       span V/Line Train Service
       span #{vlineLine.routeName} Line
@@ -94,7 +94,7 @@ for vlineLine in routes.filter(route => route.mode === 'regional train' && route
   - let url = `/coach/route/${coachRoute.codedName}`
   a(href=url).route.result
     div(class=`leftContainer coach`)
-      img(src='/static/images/clear-icons/coach.svg')
+      img(src=`${staticBase}/static/images/clear-icons/coach.svg`)
     div.resultDetails
       span Regional Coach Service
       span #{coachRoute.routeName}
@@ -140,7 +140,7 @@ for busRoute in routes.filter(route => route.mode === 'bus' && route.directions[
       if hasNumber
         span.bigNumber=busRoute.routeNumber
       else
-        img(src='/static/images/clear-icons/bus.svg')
+        img(src=`${staticBase}/static/images/clear-icons/bus.svg`)
     div.resultDetails
       -
         let type = '', gtfsID = busRoute.routeGTFSID.split('-')[0]

@@ -1,10 +1,10 @@
 html
   head
-    script(src='/static/scripts/util.js')
-    link(rel='stylesheet' href='/static/css/jmss-screens/base-style.css')
-    link(rel='stylesheet' href='/static/css/jmss-screens/big-screen.css')
-    link(rel='preload' as='style' href='/static/css/jmss-screens/base-style.css')
-    link(rel='preload' as='style' href='/static/css/jmss-screens/big-screen.css')
+    script(src=`${staticBase}/static/scripts/util.js`)
+    link(rel='stylesheet' href=`${staticBase}/static/css/jmss-screens/base-style.css`)
+    link(rel='stylesheet' href=`${staticBase}/static/css/jmss-screens/big-screen.css`)
+    link(rel='preload' as='style' href=`${staticBase}/static/css/jmss-screens/base-style.css`)
+    link(rel='preload' as='style' href=`${staticBase}/static/css/jmss-screens/big-screen.css`)
     link(rel='preload' as='font' href='https://fonts.googleapis.com/css?family=Roboto&display=swap')
     script.
       setTimeout(() => location.reload(), 1000 * 60)

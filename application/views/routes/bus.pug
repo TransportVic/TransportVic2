@@ -26,14 +26,14 @@ block head
 
 block header-right
   a#mapLink(href=`/route-preview/${route.routeGTFSID}`)
-    img#mapIcon(src='/static/images/decals/map.svg' alt='map icon')
+    img#mapIcon(src=`${staticBase}/static/images/decals/map.svg` alt='map icon')
 
 block title
   span #{routeName}
 
 block style
-  link(rel='stylesheet' href='/static/css/routes/base-style.css')
-  link(rel='stylesheet' href='/static/css/combined-colours.css')
+  link(rel='stylesheet' href=`${staticBase}/static/css/routes/base-style.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/combined-colours.css`)
       
 block content
   div#routeSummary
@@ -57,7 +57,7 @@ block content
       if route.routeNumber
         span#routeText=route.routeNumber
       else
-        img#routeIcon(src='/static/images/clear-icons/bus.svg')
+        img#routeIcon(src=`${staticBase}/static/images/clear-icons/bus.svg`)
       if route.operationDate
         span#routeDetail=operationDate
     div#terminals

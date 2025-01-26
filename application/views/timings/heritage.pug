@@ -9,30 +9,30 @@ block head
     
   title #{title}
   
-  link(rel='preload' as='image' href='/static/images/clear-icons/bus.svg')
-  link(rel='preload' as='image' href='/static/images/clear-icons/coach.svg')
-  link(rel='preload' as='image' href='/static/images/clear-icons/tram.svg')
-  link(rel='preload' as='image' href='/static/images/clear-icons/metro.svg')
-  link(rel='preload' as='image' href='/static/images/clear-icons/vline.svg')
+  link(rel='preload' as='image' href=`${staticBase}/static/images/clear-icons/bus.svg`)
+  link(rel='preload' as='image' href=`${staticBase}/static/images/clear-icons/coach.svg`)
+  link(rel='preload' as='image' href=`${staticBase}/static/images/clear-icons/tram.svg`)
+  link(rel='preload' as='image' href=`${staticBase}/static/images/clear-icons/metro.svg`)
+  link(rel='preload' as='image' href=`${staticBase}/static/images/clear-icons/vline.svg`)
 
-  link(rel='preload' as='style' href='/static/css/combined-colours.css')
-  link(rel='preload' as='style' href='/static/css/timings/base-style.css')
+  link(rel='preload' as='style' href=`${staticBase}/static/css/combined-colours.css`)
+  link(rel='preload' as='style' href=`${staticBase}/static/css/timings/base-style.css`)
 
 block title
   span=station.stopName
   
 block header-right
   a#mapLink(href=`/stop-preview/${station.cleanSuburbs[0]}/${station.codedName}`)
-    img#mapIcon(src='/static/images/decals/map.svg' alt='map icon')
-  img#bookmark(src='/static/images/decals/bookmark.svg' alt='bookmark icon')
+    img#mapIcon(src=`${staticBase}/static/images/decals/map.svg` alt='map icon')
+  img#bookmark(src=`${staticBase}/static/images/decals/bookmark.svg` alt='bookmark icon')
 
 block scripts
-  script(src='/static/scripts/timings.js' async)
+  script(src=`${staticBase}/static/scripts/timings.js` async)
 
 append style
-  link(rel='stylesheet' href='/static/css/site-colours.css')
-  link(rel='stylesheet' href='/static/css/combined-colours.css')
-  link(rel='stylesheet' href='/static/css/timings/base-style.css')
+  link(rel='stylesheet' href=`${staticBase}/static/css/site-colours.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/combined-colours.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/timings/base-style.css`)
 
 append content
   - let currentMode = 'heritage train'

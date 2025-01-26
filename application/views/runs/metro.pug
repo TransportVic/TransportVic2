@@ -14,10 +14,10 @@ block title
   span #{tripName}
   
 block style
-  link(rel='stylesheet' href='/static/css/site-colours.css')
-  link(rel='stylesheet' href='/static/css/timings/base-style.css')
-  link(rel='stylesheet' href='/static/css/combined-colours.css')
-  link(rel='stylesheet' href='/static/css/runs/base-style.css')
+  link(rel='stylesheet' href=`${staticBase}/static/css/site-colours.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/timings/base-style.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/combined-colours.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/runs/base-style.css`)
 
 block content
   if trip.runID
@@ -39,7 +39,7 @@ block content
         let cssClass = `${codedLineName}-line`
         if (trip.routeName === 'City Circle') cssClass = 'city-circle' // Unlikely to happen but just in case
       a(class=`leftContainer ${cssClass}`)
-        img(src='/static/images/clear-icons/bus.svg')
+        img(src=`${staticBase}/static/images/clear-icons/bus.svg`)
       a.departureInfo
         span.towards #{trip.routeName} Towards
         span.destination #{trip.trueDestination.slice(0, -16)}

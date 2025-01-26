@@ -5,13 +5,13 @@ block head
     title = 'TransportVic - Tracker/Tram - By Fleet'
     description = `Tracking Tram ${tram}`
   title #{title}
-  link(rel='preload' as='style' href='/static/css/tracker/results.css')
+  link(rel='preload' as='style' href=`${staticBase}/static/css/tracker/results.css`)
 
 block title
   span Tram Tracker - By Fleet
 
 block style
-  link(rel='stylesheet' href='/static/css/tracker/results.css')
+  link(rel='stylesheet' href=`${staticBase}/static/css/tracker/results.css`)
 
 block content
   h1.title Tracking Tram #{tram} on #{date.format('dddd, MMMM Do YYYY')}
