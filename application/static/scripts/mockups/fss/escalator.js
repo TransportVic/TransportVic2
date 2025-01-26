@@ -1,6 +1,6 @@
 function createStationRow(name, stoppingType, clazz) {
   return `<div class="stationRow ${stoppingType === 'filler' ? 'filler' : ''}">`
-  + `<img src="/static/images/mockups/station-${stoppingType}.svg">`
+  + `<img src="${staticServer}/static/images/mockups/station-${stoppingType}.svg">`
   + `<p class="${clazz || ''}">${name}</p>`
   + `</div>`
 }
@@ -12,7 +12,7 @@ function setNoDepartures() {
     currentlyDisplaying = 'no-departures'
     setMessageActive(true)
     showServiceData(false)
-    $('.serviceMessage').innerHTML = '<img src="/static/images/mockups/no-boarding-train.svg" /><p>No trains are departing from this platform</p>'
+    $('.serviceMessage').innerHTML = `<img src="${staticServer}/static/images/mockups/no-boarding-train.svg" /><p>No trains are departing from this platform</p>`
   }
 }
 
@@ -21,14 +21,14 @@ function setArrival() {
     currentlyDisplaying = 'arrival'
     setMessageActive(true)
     showServiceData(true)
-    $('.serviceMessage').innerHTML = '<img src="/static/images/mockups/no-boarding-train.svg" /><p>This train is not taking passengers</p><p>Don\'t board this train</p>'
+    $('.serviceMessage').innerHTML = `<img src="${staticServer}/static/images/mockups/no-boarding-train.svg" /><p>This train is not taking passengers</p><p>Don\'t board this train</p>`
   }
 }
 
 function setListenAnnouncements() {
   if (currentlyDisplaying !== 'announcements') {
     currentlyDisplaying = 'announcements'
-    $('.fullMessage').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>'
+    $('.fullMessage').innerHTML = `<img src="${staticServer}/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>`
     setFullMessageActive(true)
   }
 }
@@ -326,7 +326,13 @@ function scrollConnections() {
   }, 2000)
 }
 
-$.loaded(() => {
+let staticServer = ''
+
+$.loaded(async () => {
+  if (typeof sessionStorage.staticServer === 'undefined') {
+    sessionStorage.staticServer = await (await fetch('/static-server')).text()
+  }
+  staticServer = sessionStorage.staticServer
   setTimeout(() => {
     shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 150 // px
     connectionsP = $('p.firstStoppingType')

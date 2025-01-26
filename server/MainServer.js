@@ -132,7 +132,10 @@ module.exports = class MainServer {
     app.use(bodyParser.text())
 
     let staticBase = config.staticBase || ''
-    app.get('/static-server', (req, res) => res.end(staticBase))
+    app.get('/static-server', (req, res) => {
+      res.setHeader('Cache-Control', 'max-age=604800')
+      res.end(staticBase)
+    })
 
     app.use((req, res, next) => {
       res.locals.staticBase = staticBase

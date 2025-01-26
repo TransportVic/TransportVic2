@@ -1,6 +1,6 @@
 function createStationRow(name, stoppingType, clazz) {
   return `<div class="stationRow ${stoppingType === 'filler' ? 'filler' : ''}">`
-  + `<img src="/static/images/mockups/station-${stoppingType}.svg">`
+  + `<img src="${staticServer}/static/images/mockups/station-${stoppingType}.svg">`
   + `<p class="${clazz || ''}">${name}</p>`
   + `</div>`
 }
@@ -55,14 +55,14 @@ function setFullMessageActive(active) {
 function setNoDepartures() {
   if (currentlyDisplaying !== 'no-departures') {
     currentlyDisplaying = 'no-departures'
-    $('.message').innerHTML = '<img src="/static/images/mockups/no-boarding-train.svg" /><p>No trains are departing from this platform</p>'
+    $('.message').innerHTML = `<img src="${staticServer}/static/images/mockups/no-boarding-train.svg" /><p>No trains are departing from this platform</p>`
     setMessageActive(true)
   }
 }
 
 function setArrival() {
   if (currentlyDisplaying !== 'arrival') {
-    $('.stoppingPattern').innerHTML = '<div class="arrivalMessage"><img src="/static/images/mockups/no-boarding-train.svg" /><div><p>This train is not taking passengers</p><p>Don\'t board this train</p></div></div>'
+    $('.stoppingPattern').innerHTML = `<div class="arrivalMessage"><img src="${staticServer}/static/images/mockups/no-boarding-train.svg" /><div><p>This train is not taking passengers</p><p>Don\'t board this train</p></div></div>`
     $('.stoppingPattern').className = 'stoppingPattern arrivalContainer'
     setMessageActive(false)
     currentlyDisplaying = 'arrival'
@@ -73,7 +73,7 @@ function setArrival() {
 function setListenAnnouncements() {
   if (currentlyDisplaying !== 'announcements') {
     currentlyDisplaying = 'announcements'
-    $('.fullMessage').innerHTML = '<img src="/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>'
+    $('.fullMessage').innerHTML = `<img src="${staticServer}/static/images/mockups/announcements.svg" /><p>Please Listen for Announcements</p>`
     setFullMessageActive(true)
   }
 }
@@ -336,7 +336,13 @@ function scrollConnections() {
   }, 2000)
 }
 
-$.loaded(() => {
+let staticServer = ''
+
+$.loaded(async () => {
+  if (typeof sessionStorage.staticServer === 'undefined') {
+    sessionStorage.staticServer = await (await fetch('/static-server')).text()
+  }
+  staticServer = sessionStorage.staticServer
   setTimeout(() => {
     shiftWidth = getComputedStyle(document.body).getPropertyValue('width').slice(0, -2) / 150 // px
     connectionsSpan = $('span.firstStoppingType')
