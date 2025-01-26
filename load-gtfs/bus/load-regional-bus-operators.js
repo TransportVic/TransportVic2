@@ -58,6 +58,7 @@ database.connect(async () => {
       }
     }
 
+    if (route.routeGTFSID === '6-WGT') route.routeNameTest = 'West Gippsland Transit'
     if (route.routeNumber === 'Dudley') route.routeNameTest = 'Wonthaggi - Dudley'
     if (route.routeNumber === 'South - Schools AM') route.routeNameTest = 'Swan Hill Schools - AM'
     if (route.routeNumber === 'South - Schools PM') route.routeNameTest = 'Swan Hill Schools - PM'
@@ -105,10 +106,13 @@ database.connect(async () => {
   })
 
   for (let route of busRoutes) {
+    let operator = operators[route.routeNameTest]
+    if (!operator) console.log('Failed to map operator', route.routeNameTest, ' -- ', route.routeName)
+
     await routes.updateDocument({ routeGTFSID: route.routeGTFSID }, {
       $set: {
         routeName: route.routeNameTest,
-        operators: [ operators[route.routeName] ],
+        operators: [ operator ],
         routeNumber: null
       }
     })
