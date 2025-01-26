@@ -32,12 +32,16 @@ module.exports = class MainServer {
 
     app.use('/static', express.static(path.join(__dirname, '../application/static')))
 
-    app.use((req, res, next) => {
-      res.setHeader('Strict-Transport-Security', 'max-age=31536000')
-      let secureDomain = `http${config.useHTTPS ? 's' : ''}://${config.websiteDNSName}:* `
-      secureDomain += ' https://*.mapbox.com/'
+    let staticBase = config.staticBase || ''
+    app.get('/static-server', (req, res) => {
+      res.setHeader('Cache-Control', 'max-age=604800')
+      res.end(staticBase)
+    })
 
-      // res.setHeader('Content-Security-Policy', `default-src blob: data: ${secureDomain}; script-src 'unsafe-inline' blob: ${secureDomain}; style-src 'unsafe-inline' ${secureDomain}; img-src: 'unsafe-inline' ${secureDomain}`)
+    app.use((req, res, next) => {
+      res.locals.staticBase = staticBase
+
+      res.setHeader('Strict-Transport-Security', 'max-age=31536000')
       res.setHeader('X-Xss-Protection', '1; mode=block')
       res.setHeader('X-Content-Type-Options', 'nosniff')
 
