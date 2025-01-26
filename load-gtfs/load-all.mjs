@@ -5,8 +5,8 @@ import url from 'url'
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-function runNode(file) {
-  let child = spawn('node', [path.join(__dirname, file)], {
+function runNode(file, args = []) {
+  let child = spawn('node', [path.join(__dirname, file), ...args], {
     cwd: __dirname
   })
 
