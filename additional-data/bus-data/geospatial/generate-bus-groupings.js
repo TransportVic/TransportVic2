@@ -2,15 +2,17 @@ const fs = require('fs')
 const async = require('async')
 const config = require('../../../config')
 const DatabaseConnection = require('../../../database/DatabaseConnection')
-const network = require('./regional-bus-network')
+const path = require('path')
 const operators = require('../../../transportvic-data/excel/bus/operators/regional-numbered-operators.json')
+
+const network = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../transportvic-data/geospatial/regional-bus-networks/bus-network-regions.geojson')))
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 database.connect(async () => {
   let routes = database.getCollection('routes')
 
-  let routeData = await async.reduce(network, {}, async (acc, region) => {
+  let routeData = await async.reduce(network.features, {}, async (acc, region) => {
     let matchingRoutes = await routes.findDocuments({
       mode: 'bus',
       'routePath.path': {

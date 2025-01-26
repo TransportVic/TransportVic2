@@ -942,6 +942,11 @@
    "routeGTFSID": "6-G74",
    "routeNumber": "74",
    "liveTrack": false
+  },
+  {
+   "routeGTFSID": "6-G77",
+   "routeNumber": "77",
+   "liveTrack": false
   }
  ],
  "Benalla": [
@@ -974,7 +979,7 @@
   },
   {
    "routeGTFSID": "6-W12",
-   "routeNumber": "Link A",
+   "routeNumber": "A",
    "liveTrack": false
   }
  ],
