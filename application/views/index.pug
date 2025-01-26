@@ -3,13 +3,13 @@ extends layout
 block head
   title TransportVic
 
-  link(rel='preload' as='style' href='/static/css/index.css')
-  link(rel='preload' as='image' href='/static/images/home/smartbus.svg')
-  link(rel='preload' as='image' href='/static/images/home/search.svg')
-  link(rel='preload' as='image' href='/static/images/home/nearby.svg')
-  link(rel='preload' as='image' href='/static/images/home/about.svg')
-  link(rel='preload' as='image' href='/static/images/home/rainbow.svg')
-  link(rel='preload' as='script' href='/static/scripts/index.js')
+  link(rel='preload' as='style' href=`${staticBase}/static/css/index.css`)
+  link(rel='preload' as='image' href=`${staticBase}/static/images/home/smartbus.svg`)
+  link(rel='preload' as='image' href=`${staticBase}/static/images/home/search.svg`)
+  link(rel='preload' as='image' href=`${staticBase}/static/images/home/nearby.svg`)
+  link(rel='preload' as='image' href=`${staticBase}/static/images/home/about.svg`)
+  link(rel='preload' as='image' href=`${staticBase}/static/images/home/rainbow.svg`)
+  link(rel='preload' as='script' href=`${staticBase}/static/scripts/index.js`)
   
 block title
   span TransportVic
@@ -18,23 +18,23 @@ block scripts
   script(src='/static/scripts/index.js')
 
 block style
-  link(rel='stylesheet' href='/static/css/index.css')
+  link(rel='stylesheet' href=`${staticBase}/static/css/index.css`)
 
 block content
   div.wrap
     a(href='/bookmarks').feature
-      img(src='/static/images/home/smartbus.svg' alt='Bookmarks')
+      img(src=`${staticBase}/static/images/home/smartbus.svg` alt='Bookmarks')
       span Bookmarks
     a(href='/search').feature
-      img(src='/static/images/home/search.svg' alt='Search')
+      img(src=`${staticBase}/static/images/home/search.svg` alt='Search')
       span Search
     a(href='/nearby').feature
-      img(src='/static/images/home/nearby.svg' alt='Nearby PT Stops')
+      img(src=`${staticBase}/static/images/home/nearby.svg` alt='Nearby PT Stops')
       span Nearby PT Stops
     a(href='/links').feature
-      img(src='/static/images/home/about.svg' alt='Links')
+      img(src=`${staticBase}/static/images/home/about.svg` alt='Links')
       span Links
 
   a(href='' style='display: none').popup
-    img(src='/static/images/home/rainbow.svg')
+    img(src=`${staticBase}/static/images/home/rainbow.svg`)
     span

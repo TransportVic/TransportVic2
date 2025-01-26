@@ -6,13 +6,13 @@ block head
     title = 'TransportVic - About'
     description = 'About TransportVic'
 
-  link(rel='preload' as='style' href='/static/css/about.css')
+  link(rel='preload' as='style' href=`${staticBase}/static/css/about.css`)
   
 block title
   span TransportVic - About
 
 block style
-  link(rel='stylesheet' href='/static/css/about.css')
+  link(rel='stylesheet' href=`${staticBase}/static/css/about.css`)
 
 block content
   h1 TransportVic - A Transport Application for Victoria
@@ -33,4 +33,4 @@ block content
   p With &lt;3 love from Unikitty
   p If you would like to please 
     a(href='https://www.patreon.com/transportsg') support me on patreon
-  img(src='/static/images/home/rainbow.svg')
+  img(src=`${staticBase}/static/images/home/rainbow.svg`)

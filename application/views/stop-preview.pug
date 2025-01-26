@@ -15,13 +15,13 @@ block head
     }
 
 block style
-  link(rel='stylesheet' href='/static/css/constant-colours.css')
+  link(rel='stylesheet' href=`${staticBase}/static/css/constant-colours.css`)
 
 block title
   span Stop Preview
 
 block scripts
-  script(src='/static/scripts/stop-preview.js')
+  script(src=`${staticBase}/static/scripts/stop-preview.js`)
   
 block content
   div#map(style='height: calc(100vh - (4vw + 4vh))')

@@ -132,6 +132,8 @@ module.exports = class MainServer {
     app.use(bodyParser.text())
 
     app.use((req, res, next) => {
+      res.locals.staticBase = config.staticBase || ''
+
       res.setHeader('Strict-Transport-Security', 'max-age=31536000')
 
       res.setHeader('X-Xss-Protection', '1; mode=block')
