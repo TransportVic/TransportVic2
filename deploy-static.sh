@@ -7,4 +7,4 @@ mkdir public
 mkdir public/static
 
 node modules/optimise-svg.js
-cp -R application/static/ public/static/
+cp -R application/static/* public/static/
