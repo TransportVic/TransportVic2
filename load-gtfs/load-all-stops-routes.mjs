@@ -7,7 +7,7 @@ import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 
 import uniqueStops from '../transportvic-data/excel/stops/unique-stops.json' with { type: 'json' }
 import nameOverrides from '../transportvic-data/excel/stops/name-overrides.json' with { type: 'json' }
-import { processRoute } from '../transportvic-data/gtfs/process.mjs'
+import { createRouteProcessor } from '../transportvic-data/gtfs/process.mjs'
 import config from '../config.json' with { type: 'json' }
 
 const { GTFS_MODES } = GTFS_CONSTANTS
@@ -52,6 +52,8 @@ let uniqueNamesCounter = uniqueStops.reduce((acc, e) => {
   return acc
 }, {})
 
+let routeProcessors = await createRouteProcessor()
+
 for (let i of selectedModes) {
   let mode = GTFS_MODES[i]
 
@@ -75,12 +77,13 @@ for (let i of selectedModes) {
   })
 
   console.log('Loaded stops for', mode)
-  
+  let routeProcessor = routeProcessors[i]
+
   let routeLoader = new RouteLoader(routesFile.replace('{0}', i), agencyFile.replace('{0}', i), mode, database)
   await routeLoader.loadRoutes({
     processRoute: route => {
       route.routeGTFSID = route.routeGTFSID.replace(/-0+/, '-')
-      return processRoute(route)
+      return routeProcessor ? routeProcessor(route) : route
     }
   })
 
