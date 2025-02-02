@@ -37,6 +37,7 @@ await runNode('vline/timetables/load-vline-timetables.js')
 
 await runNode('load-all-post.mjs')
 
+await runNode('metro/load-metro-directions.js')
 await runNode('extra/load-route-suburbs.js')
 await runNode('extra/load-search-query.js')
 

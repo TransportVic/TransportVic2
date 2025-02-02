@@ -28,4 +28,5 @@ await runNode('metro/load-metro-timetables.js')
 
 await runNode('load-all-post.mjs')
 
+await runNode('metro/load-metro-directions.js')
 await runNode('extra/load-search-query.js')
