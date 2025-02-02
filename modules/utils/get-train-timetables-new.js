@@ -197,7 +197,8 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
   let serviceIndex = []
   let departures = []
 
-  liveDepartures.concat(gtfsDepartures).forEach(trip => {
+  liveDepartures.forEach(trip => {
+  // liveDepartures.concat(gtfsDepartures).forEach(trip => {
     let id = getID(trip)
     if (!serviceIndex.includes(id)) {
       serviceIndex.push(id)
