@@ -72,7 +72,7 @@ async function getStop(stopData, stopsCollection) {
   }
 }
 
-async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, routeGTFSID, excludedTripIDs, variance=0, routeNumber, silent) {
+async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, routeGTFSID, excludedTripIDs, variance=0, routeNumber, silent, tripID) {
   let trip
   let query
 
@@ -102,7 +102,7 @@ async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, r
       },
       destination: utils.adjustRawStopName(utils.adjustStopName(destination))
     }
-    
+  
     if (excludedTripIDs) {
       query.tripID = {
         $not: {
@@ -116,6 +116,15 @@ async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, r
     } else if (routeNumber) {
       query.routeNumber = routeNumber
     }
+
+    if (tripID && !tripID.match(/^\d+$/)) query = {
+      $or: [ query, {
+        operationDays: utils.getYYYYMMDD(tripDay),
+        mode,
+        tripID
+      }]
+    }
+
 
     // for the coaches
     let timetable = await db.getCollection('live timetables').findDocument(query)

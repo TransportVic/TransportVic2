@@ -143,9 +143,7 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
       let ptvRouteNumber = route.route_number
         
       if (!ptvRouteNumber) return
-      
-      if (destination.includes('Croydon Railway Station') && run.run_ref.match(/^\d+$/) && ['671', '672'].includes(ptvRouteNumber)) return
-      
+
       if (bayType === 'metro') {
         let trimmedRouteNumber = ptvRouteNumber.slice(0, 3)
         let potentialBusRoutes = await getRoutes(db, `M-${trimmedRouteNumber}`, {
@@ -165,7 +163,7 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
         }
       }
 
-      trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSID, [], 1, null, true)
+      trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSID, [], 1, null, true, run.run_ref)
       if (!trip && discardUnmatched) return
       if (!trip && run.run_ref.match(/^\d+$/)) return
       if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, destination)
