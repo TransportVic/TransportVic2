@@ -138,7 +138,7 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
   let isCity = stationName === 'Flinders Street' || cityLoopStations.includes(stationName)
 
   function getID(trip) {
-    // if (!trip.isRailReplacementBus && trip.runID) return trip.runID
+    if (!trip.isRailReplacementBus && trip.runID) return trip.runID
 
     if (isCity) {
       return trip.direction + trip.routeGTFSID + trip.origin + trip.destination + trip.destinationArrivalTime
