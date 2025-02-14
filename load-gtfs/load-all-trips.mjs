@@ -8,6 +8,8 @@ import routeIDMap from './routes.json' with { type: 'json' }
 import { createTripProcessor, getVLineRuleStats } from '../transportvic-data/gtfs/process.mjs'
 import config from '../config.json' with { type: 'json' }
 
+import fs from 'fs/promises'
+
 const { GTFS_MODES } = GTFS_CONSTANTS
 
 let allModes = Object.keys(GTFS_MODES)
@@ -41,6 +43,7 @@ console.log('Loading timetables now\n')
 let tripsStart = new Date()
 
 let shapeIDMap = {}
+let directionIDMap = {}
 let tripProcessors = await createTripProcessor(mongoDB)
 
 tripProcessors[2] = trip => {
@@ -71,7 +74,14 @@ for (let i of selectedModes) {
     ...shapeIDMap,
     ...tripLoader.getShapeIDMap()
   }
+
+  directionIDMap = {
+    ...directionIDMap,
+    ...tripLoader.getDirectionIDMap()
+  }
 }
+
+await fs.writeFile(path.join(__dirname, 'directions.json'), JSON.stringify(directionIDMap))
 
 console.log('Trip exclusion stats', getVLineRuleStats())
 
