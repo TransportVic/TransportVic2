@@ -57,42 +57,46 @@ let routeProcessors = await createRouteProcessor()
 for (let i of selectedModes) {
   let mode = GTFS_MODES[i]
 
-  let stopLoader = new StopsLoader(stopsFile.replace('{0}', i), suburbs, mode, database)
-  await stopLoader.loadStops({
-    getMergeName: stop => {
-      if (uniqueStops.includes(stop.fullStopName)) {
-        uniqueNamesCounter[stop.fullStopName]++
-        return stop.fullStopName
+  try {
+    let stopLoader = new StopsLoader(stopsFile.replace('{0}', i), suburbs, mode, database)
+    await stopLoader.loadStops({
+      getMergeName: stop => {
+        if (uniqueStops.includes(stop.fullStopName)) {
+          uniqueNamesCounter[stop.fullStopName]++
+          return stop.fullStopName
+        }
+      },
+      processStop: stop => {
+        let updatedName = nameOverrides[stop.fullStopName]
+        if (updatedName) {
+          nameOverridesCounter[stop.fullStopName]++
+          stop.fullStopName = updatedName
+        }
+
+        return stop
       }
-    },
-    processStop: stop => {
-      let updatedName = nameOverrides[stop.fullStopName]
-      if (updatedName) {
-        nameOverridesCounter[stop.fullStopName]++
-        stop.fullStopName = updatedName
+    })
+
+    console.log('Loaded stops for', mode)
+    let routeProcessor = routeProcessors[i]
+
+    let routeLoader = new RouteLoader(routesFile.replace('{0}', i), agencyFile.replace('{0}', i), mode, database)
+    await routeLoader.loadRoutes({
+      processRoute: route => {
+        route.routeGTFSID = route.routeGTFSID.replace(/-0+/, '-')
+        return routeProcessor ? routeProcessor(route) : route
       }
+    })
 
-      return stop
+    routeIDMap = {
+      ...routeIDMap,
+      ...routeLoader.getRouteIDMap()
     }
-  })
 
-  console.log('Loaded stops for', mode)
-  let routeProcessor = routeProcessors[i]
-
-  let routeLoader = new RouteLoader(routesFile.replace('{0}', i), agencyFile.replace('{0}', i), mode, database)
-  await routeLoader.loadRoutes({
-    processRoute: route => {
-      route.routeGTFSID = route.routeGTFSID.replace(/-0+/, '-')
-      return routeProcessor ? routeProcessor(route) : route
-    }
-  })
-
-  routeIDMap = {
-    ...routeIDMap,
-    ...routeLoader.getRouteIDMap()
+    console.log('Loaded routes for', GTFS_MODES[i])
+  } catch (e) {
+    console.log('Failed to load stops and routes for', GTFS_MODES[i])
   }
-
-  console.log('Loaded routes for', GTFS_MODES[i])
 }
 console.log('Stop overrides', nameOverridesCounter)
 console.log('Unique stops', uniqueNamesCounter)
