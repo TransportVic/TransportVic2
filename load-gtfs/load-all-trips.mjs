@@ -56,28 +56,32 @@ tripProcessors[2] = trip => {
 }
 
 for (let i of selectedModes) {
-  console.log('Loading trips for', GTFS_MODES[i])
-  let tripLoader = new TripLoader({
-    tripsFile: tripsFile.replace('{0}', i),
-    stopTimesFile: stopTimesFile.replace('{0}', i),
-    calendarFile: calendarFile.replace('{0}', i),
-    calendarDatesFile: calendarDatesFile.replace('{0}', i)
-  }, GTFS_MODES[i], mongoDB)
+  try {
+    console.log('Loading trips for', GTFS_MODES[i])
+    let tripLoader = new TripLoader({
+      tripsFile: tripsFile.replace('{0}', i),
+      stopTimesFile: stopTimesFile.replace('{0}', i),
+      calendarFile: calendarFile.replace('{0}', i),
+      calendarDatesFile: calendarDatesFile.replace('{0}', i)
+    }, GTFS_MODES[i], mongoDB)
 
-  await tripLoader.loadTrips({
-    routeIDMap,
-    processTrip: tripProcessors[i]
-  })
-  console.log('Loaded trips for', GTFS_MODES[i])
+    await tripLoader.loadTrips({
+      routeIDMap,
+      processTrip: tripProcessors[i]
+    })
+    console.log('Loaded trips for', GTFS_MODES[i])
 
-  shapeIDMap = {
-    ...shapeIDMap,
-    ...tripLoader.getShapeIDMap()
-  }
+    shapeIDMap = {
+      ...shapeIDMap,
+      ...tripLoader.getShapeIDMap()
+    }
 
-  directionIDMap = {
-    ...directionIDMap,
-    ...tripLoader.getDirectionIDMap()
+    directionIDMap = {
+      ...directionIDMap,
+      ...tripLoader.getDirectionIDMap()
+    }
+  } catch (e) {
+    console.log('Failed to load trips for', GTFS_MODES[i])
   }
 }
 
