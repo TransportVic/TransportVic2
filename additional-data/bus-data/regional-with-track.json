@@ -138,11 +138,6 @@
    "liveTrack": true
   },
   {
-   "routeGTFSID": "6-10x",
-   "routeNumber": "10",
-   "liveTrack": true
-  },
-  {
    "routeGTFSID": "6-11B",
    "routeNumber": "11",
    "liveTrack": true
@@ -687,11 +682,6 @@
  ],
  "Alpine Ranges": [
   {
-   "routeGTFSID": "6-a18",
-   "routeNumber": "12",
-   "liveTrack": false
-  },
-  {
    "routeGTFSID": "6-14",
    "routeNumber": "14",
    "liveTrack": false
@@ -706,7 +696,7 @@
  ],
  "Castlemaine": [
   {
-   "routeGTFSID": "6-x89",
+   "routeGTFSID": "6-r89",
    "routeNumber": "1",
    "liveTrack": false
   },
