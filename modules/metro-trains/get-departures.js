@@ -1168,9 +1168,9 @@ async function getExtraTrains(departures, direction, scheduled, departureTime) {
   })
 }
 
-async function getMissingRaceTrains(departures, scheduled) {
-  let raceTrains = scheduled.filter(train => train.trip.routeGTFSID === '2-RCE')
-  let existingIDs = departures.filter(train => train.trip.routeGTFSID === '2-RCE').map(train => generateTripID(train.trip))
+async function getMissingTrains(departures, scheduled, route) {
+  let raceTrains = scheduled.filter(train => train.trip.routeGTFSID === route)
+  let existingIDs = departures.filter(train => train.trip.routeGTFSID === route).map(train => generateTripID(train.trip))
 
   let extras = raceTrains.filter(train => {
     let id = generateTripID(train.trip)
@@ -1190,7 +1190,7 @@ async function getDepartures(station, db, filter, backwards, departureTime) {
 
     return await utils.getData('metro-departures-new', stationName + backwards + roundedTimeMS, async () => {
       let departures = await getDeparturesFromPTV(station, backwards, departureTime, db)
-      let extraTrains = [], raceTrains = []
+      let extraTrains = [], raceTrains = [], cclTrains = []
 
       let scheduled = await departureUtils.getScheduledMetroDepartures(station, db, departureTime, backwards)
 
@@ -1199,11 +1199,13 @@ async function getDepartures(station, db, filter, backwards, departureTime) {
       }
 
       if (rceStations.includes(stationName)) {
-        raceTrains = await getMissingRaceTrains(departures, scheduled)
+        raceTrains = await getMissingTrains(departures, scheduled, '2-RCE')
         raceTrains = raceTrains.filter(train => !extraTrains.includes(train))
       }
 
-      return filterDepartures([...departures, ...extraTrains, ...raceTrains], filter, backwards, departureTime)
+      cclTrains = await getMissingTrains(departures, scheduled, '2-CCL')
+
+      return filterDepartures([...departures, ...extraTrains, ...raceTrains, ...cclTrains], filter, backwards, departureTime)
     })
   } catch (e) {
     global.loggers.general.err('Error getting Metro departures', e)
