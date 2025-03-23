@@ -1106,13 +1106,7 @@
    "liveTrack": false
   }
  ],
- "Glenrowan": [
-  {
-   "routeGTFSID": "6-H46",
-   "routeNumber": "H46",
-   "liveTrack": false
-  }
- ],
+ "Glenrowan": [],
  "Colac": [
   {
    "routeGTFSID": "6-CL1",
