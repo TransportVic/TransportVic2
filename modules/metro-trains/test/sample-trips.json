@@ -1,0 +1,499 @@
+[{
+  "_id": "67e6d172c02eb3472df693bd",
+  "mode": "metro train",
+  "routeName": "Alamein",
+  "routeGTFSID": "2-ALM",
+  "runID": "2318",
+  "formedBy": "2317",
+  "forming": "2321",
+  "vehicle": null,
+  "operationDays": "20250329",
+  "stopTimings": [
+    {
+      "stopName": "Alamein Railway Station",
+      "stopNumber": null,
+      "suburb": "Ashburton",
+      "stopGTFSID": "11197",
+      "arrivalTime": "08:08",
+      "arrivalTimeMinutes": 488,
+      "departureTime": "08:08",
+      "departureTimeMinutes": 488,
+      "estimatedDepartureTime": "2025-03-28T21:09:00.000Z",
+      "actualDepartureTimeMS": 1743196140000,
+      "scheduledDepartureTime": "2025-03-28T21:08:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Ashburton Railway Station",
+      "stopNumber": null,
+      "suburb": "Ashburton",
+      "stopGTFSID": "11198",
+      "arrivalTime": "08:09",
+      "arrivalTimeMinutes": 489,
+      "departureTime": "08:09",
+      "departureTimeMinutes": 489,
+      "estimatedDepartureTime": "2025-03-28T21:11:00.000Z",
+      "actualDepartureTimeMS": 1743196260000,
+      "scheduledDepartureTime": "2025-03-28T21:09:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Burwood Railway Station",
+      "stopNumber": null,
+      "suburb": "Glen Iris",
+      "stopGTFSID": "11199",
+      "arrivalTime": "08:11",
+      "arrivalTimeMinutes": 491,
+      "departureTime": "08:11",
+      "departureTimeMinutes": 491,
+      "estimatedDepartureTime": "2025-03-28T21:13:00.000Z",
+      "actualDepartureTimeMS": 1743196380000,
+      "scheduledDepartureTime": "2025-03-28T21:11:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Hartwell Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "11201",
+      "arrivalTime": "08:13",
+      "arrivalTimeMinutes": 493,
+      "departureTime": "08:13",
+      "departureTimeMinutes": 493,
+      "estimatedDepartureTime": "2025-03-28T21:14:00.000Z",
+      "actualDepartureTimeMS": 1743196440000,
+      "scheduledDepartureTime": "2025-03-28T21:13:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Willison Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "11203",
+      "arrivalTime": "08:15",
+      "arrivalTimeMinutes": 495,
+      "departureTime": "08:15",
+      "departureTimeMinutes": 495,
+      "estimatedDepartureTime": "2025-03-28T21:16:00.000Z",
+      "actualDepartureTimeMS": 1743196560000,
+      "scheduledDepartureTime": "2025-03-28T21:15:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Riversdale Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "11205",
+      "arrivalTime": "08:16",
+      "arrivalTimeMinutes": 496,
+      "departureTime": "08:16",
+      "departureTimeMinutes": 496,
+      "estimatedDepartureTime": "2025-03-28T21:17:00.000Z",
+      "actualDepartureTimeMS": 1743196620000,
+      "scheduledDepartureTime": "2025-03-28T21:16:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Camberwell Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "11207",
+      "arrivalTime": "08:19",
+      "arrivalTimeMinutes": 499,
+      "departureTime": "08:19",
+      "departureTimeMinutes": 499,
+      "estimatedDepartureTime": "2025-03-28T21:33:00.000Z",
+      "actualDepartureTimeMS": 1743197580000,
+      "scheduledDepartureTime": "2025-03-28T21:19:00.000Z",
+      "platform": "2",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    }
+  ],
+  "trueDestination": "Camberwell Railway Station",
+  "destination": "Camberwell Railway Station",
+  "trueDestinationArrivalTime": "08:19",
+  "destinationArrivalTime": "08:19",
+  "departureTime": "08:08",
+  "trueDepartureTime": "08:08",
+  "origin": "Alamein Railway Station",
+  "trueOrigin": "Alamein Railway Station",
+  "gtfsDirection": "1",
+  "direction": "Up",
+  "shapeID": "",
+  "gtfsMode": 2,
+  "cancelled": false,
+  "type": "timings",
+  "updateTime": "2025-03-28T20:49:15.526Z",
+  "notifyAlerts": []
+}, {
+  "mode": "metro train",
+  "routeName": "Alamein",
+  "routeGTFSID": "2-ALM",
+  "runID": "2320",
+  "formedBy": "2319",
+  "forming": "2323",
+  "vehicle": {
+    "size": 3,
+    "type": "Xtrapolis",
+    "consist": [
+      "275M",
+      "1438T",
+      "276M"
+    ]
+  },
+  "operationDays": "20250329",
+  "stopTimings": [
+    {
+      "stopName": "Alamein Railway Station",
+      "stopNumber": null,
+      "suburb": "Ashburton",
+      "stopGTFSID": "11197",
+      "arrivalTime": "08:28",
+      "arrivalTimeMinutes": 508,
+      "departureTime": "08:28",
+      "departureTimeMinutes": 508,
+      "estimatedDepartureTime": "2025-03-28T21:29:00.000Z",
+      "actualDepartureTimeMS": 1743197340000,
+      "scheduledDepartureTime": "2025-03-28T21:28:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Ashburton Railway Station",
+      "stopNumber": null,
+      "suburb": "Ashburton",
+      "stopGTFSID": "11198",
+      "arrivalTime": "08:29",
+      "arrivalTimeMinutes": 509,
+      "departureTime": "08:29",
+      "departureTimeMinutes": 509,
+      "estimatedDepartureTime": "2025-03-28T21:30:00.000Z",
+      "actualDepartureTimeMS": 1743197400000,
+      "scheduledDepartureTime": "2025-03-28T21:29:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Burwood Railway Station",
+      "stopNumber": null,
+      "suburb": "Glen Iris",
+      "stopGTFSID": "11199",
+      "arrivalTime": "08:31",
+      "arrivalTimeMinutes": 511,
+      "departureTime": "08:31",
+      "departureTimeMinutes": 511,
+      "estimatedDepartureTime": "2025-03-28T21:32:00.000Z",
+      "actualDepartureTimeMS": 1743197520000,
+      "scheduledDepartureTime": "2025-03-28T21:31:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Hartwell Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "11201",
+      "arrivalTime": "08:33",
+      "arrivalTimeMinutes": 513,
+      "departureTime": "08:33",
+      "departureTimeMinutes": 513,
+      "estimatedDepartureTime": "2025-03-28T21:34:00.000Z",
+      "actualDepartureTimeMS": 1743197640000,
+      "scheduledDepartureTime": "2025-03-28T21:33:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Willison Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "11203",
+      "arrivalTime": "08:35",
+      "arrivalTimeMinutes": 515,
+      "departureTime": "08:35",
+      "departureTimeMinutes": 515,
+      "estimatedDepartureTime": "2025-03-28T21:35:00.000Z",
+      "actualDepartureTimeMS": 1743197700000,
+      "scheduledDepartureTime": "2025-03-28T21:35:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Riversdale Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "11205",
+      "arrivalTime": "08:36",
+      "arrivalTimeMinutes": 516,
+      "departureTime": "08:36",
+      "departureTimeMinutes": 516,
+      "estimatedDepartureTime": "2025-03-28T21:37:00.000Z",
+      "actualDepartureTimeMS": 1743197820000,
+      "scheduledDepartureTime": "2025-03-28T21:36:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Camberwell Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "11207",
+      "arrivalTime": "08:39",
+      "arrivalTimeMinutes": 519,
+      "departureTime": "08:39",
+      "departureTimeMinutes": 519,
+      "estimatedDepartureTime": "2025-03-28T21:53:00.000Z",
+      "actualDepartureTimeMS": 1743198780000,
+      "scheduledDepartureTime": "2025-03-28T21:39:00.000Z",
+      "platform": "2",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    }
+  ],
+  "trueDestination": "Camberwell Railway Station",
+  "destination": "Camberwell Railway Station",
+  "trueDestinationArrivalTime": "08:39",
+  "destinationArrivalTime": "08:39",
+  "departureTime": "08:28",
+  "trueDepartureTime": "08:28",
+  "origin": "Alamein Railway Station",
+  "trueOrigin": "Alamein Railway Station",
+  "gtfsDirection": "1",
+  "direction": "Up",
+  "shapeID": "",
+  "gtfsMode": 2,
+  "cancelled": false,
+  "type": "timings",
+  "updateTime": "2025-03-28T21:25:16.393Z",
+  "notifyAlerts": []
+}, {
+  "_id": "67e6d172c02eb3472df693c1",
+  "mode": "metro train",
+  "routeName": "Alamein",
+  "routeGTFSID": "2-ALM",
+  "runID": "2322",
+  "formedBy": "2321",
+  "forming": "2325",
+  "vehicle": {
+    "size": 3,
+    "type": "Xtrapolis",
+    "consist": [
+      "921M",
+      "1661T",
+      "922M"
+    ]
+  },
+  "operationDays": "20250329",
+  "stopTimings": [
+    {
+      "stopName": "Alamein Railway Station",
+      "stopNumber": null,
+      "suburb": "Ashburton",
+      "stopGTFSID": "11197",
+      "arrivalTime": "08:48",
+      "arrivalTimeMinutes": 528,
+      "departureTime": "08:48",
+      "departureTimeMinutes": 528,
+      "estimatedDepartureTime": "2025-03-28T21:48:00.000Z",
+      "actualDepartureTimeMS": 1743198480000,
+      "scheduledDepartureTime": "2025-03-28T21:48:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Ashburton Railway Station",
+      "stopNumber": null,
+      "suburb": "Ashburton",
+      "stopGTFSID": "11198",
+      "arrivalTime": "08:49",
+      "arrivalTimeMinutes": 529,
+      "departureTime": "08:49",
+      "departureTimeMinutes": 529,
+      "estimatedDepartureTime": "2025-03-28T21:50:00.000Z",
+      "actualDepartureTimeMS": 1743198600000,
+      "scheduledDepartureTime": "2025-03-28T21:49:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Burwood Railway Station",
+      "stopNumber": null,
+      "suburb": "Glen Iris",
+      "stopGTFSID": "11199",
+      "arrivalTime": "08:51",
+      "arrivalTimeMinutes": 531,
+      "departureTime": "08:51",
+      "departureTimeMinutes": 531,
+      "estimatedDepartureTime": "2025-03-28T21:52:00.000Z",
+      "actualDepartureTimeMS": 1743198720000,
+      "scheduledDepartureTime": "2025-03-28T21:51:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Hartwell Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "11201",
+      "arrivalTime": "08:53",
+      "arrivalTimeMinutes": 533,
+      "departureTime": "08:53",
+      "departureTimeMinutes": 533,
+      "estimatedDepartureTime": "2025-03-28T21:54:00.000Z",
+      "actualDepartureTimeMS": 1743198840000,
+      "scheduledDepartureTime": "2025-03-28T21:53:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Willison Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "11203",
+      "arrivalTime": "08:55",
+      "arrivalTimeMinutes": 535,
+      "departureTime": "08:55",
+      "departureTimeMinutes": 535,
+      "estimatedDepartureTime": "2025-03-28T21:55:00.000Z",
+      "actualDepartureTimeMS": 1743198900000,
+      "scheduledDepartureTime": "2025-03-28T21:55:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Riversdale Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "11205",
+      "arrivalTime": "08:56",
+      "arrivalTimeMinutes": 536,
+      "departureTime": "08:56",
+      "departureTimeMinutes": 536,
+      "estimatedDepartureTime": "2025-03-28T21:57:00.000Z",
+      "actualDepartureTimeMS": 1743199020000,
+      "scheduledDepartureTime": "2025-03-28T21:56:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Camberwell Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "11207",
+      "arrivalTime": "08:59",
+      "arrivalTimeMinutes": 539,
+      "departureTime": "08:59",
+      "departureTimeMinutes": 539,
+      "estimatedDepartureTime": "2025-03-28T22:13:00.000Z",
+      "actualDepartureTimeMS": 1743199980000,
+      "scheduledDepartureTime": "2025-03-28T21:59:00.000Z",
+      "platform": "2",
+      "stopConditions": {
+        "pickup": "0",
+        "dropoff": "0"
+      },
+      "cancelled": false
+    }
+  ],
+  "trueDestination": "Camberwell Railway Station",
+  "destination": "Camberwell Railway Station",
+  "trueDestinationArrivalTime": "08:59",
+  "destinationArrivalTime": "08:59",
+  "departureTime": "08:48",
+  "trueDepartureTime": "08:48",
+  "origin": "Alamein Railway Station",
+  "trueOrigin": "Alamein Railway Station",
+  "gtfsDirection": "1",
+  "direction": "Up",
+  "shapeID": "",
+  "gtfsMode": 2,
+  "cancelled": false,
+  "type": "timings",
+  "updateTime": "2025-03-28T21:50:16.758Z",
+  "notifyAlerts": []
+}]
