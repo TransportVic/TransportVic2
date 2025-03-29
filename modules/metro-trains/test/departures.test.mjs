@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
-import sampleTrips from './sample-trips.json' with { type: 'json' }
-import alamein from './alamein.json' with { type: 'json' }
+import sampleTrips from './sample-data/sample-trips.json' with { type: 'json' }
+import alamein from './sample-data/alamein.json' with { type: 'json' }
 import { fetchLiveTrips } from '../get-departures.js'
 
 const db = new LokiDatabaseConnection()

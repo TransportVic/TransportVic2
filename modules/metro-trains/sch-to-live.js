@@ -1,0 +1,3 @@
+function convertToLive(trip, departureDay) {
+  
+}
