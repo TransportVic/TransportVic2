@@ -26,9 +26,17 @@ function getNonDSTMinutesPastMidnight(time) {
   return givenTime.hours() * 60 + givenTime.minutes()
 }
 
+function getMinutesInDay(date) {
+  let startOfDay = moment(date).startOf('day')
+  let nextDay = startOfDay.clone().add(1, 'day')
+
+  return nextDay.diff(startOfDay, 'minutes')
+}
+
 module.exports = {
   isDSTChange,
   getTimeOffset,
   getNonDSTMinutesPastMidnight,
-  getDSTMinutesPastMidnight
+  getDSTMinutesPastMidnight,
+  getMinutesInDay
 }

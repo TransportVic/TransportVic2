@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { getDSTMinutesPastMidnight, getNonDSTMinutesPastMidnight, getTimeOffset, isDSTChange } from '../dst.js'
+import { getDSTMinutesPastMidnight, getMinutesInDay, getNonDSTMinutesPastMidnight, getTimeOffset, isDSTChange } from '../dst.js'
 
 describe('The DST methods', () => {
   it('Should identify if a given day is the first day of a time change', () => {
@@ -38,5 +38,11 @@ describe('The general time methods', () => {
     expect(getNonDSTMinutesPastMidnight(new Date('2025-04-05T15:08:00.000Z'))).to.equal(2 * 60 + 8) // 2:08am on a repeating 2am day - first occurrence
     expect(getNonDSTMinutesPastMidnight(new Date('2025-04-05T16:08:00.000Z'))).to.equal(2 * 60 + 8) // 2:08am on a repeating 2am day - second occurrence, no difference
     expect(getNonDSTMinutesPastMidnight(new Date('2025-04-05T17:08:00.000Z'))).to.equal(3 * 60 + 8) // 3:08am on a repeating 2am day
+  })
+
+  it('Should return the number of minutes in a day', () => {
+    expect(getMinutesInDay(new Date('2025-03-29T15:16:00.000Z'))).to.equal(1440) // Regular day has 1440 minutes
+    expect(getMinutesInDay(new Date('2025-04-05T15:16:00.000Z'))).to.equal(1440 + 60) // DST repeat 2am has 1440+60 minutes
+    expect(getMinutesInDay(new Date('2024-10-05T16:16:00.000Z'))).to.equal(1440 - 60) // DST repeat 2am has 1440+60 minutes
   })
 })
