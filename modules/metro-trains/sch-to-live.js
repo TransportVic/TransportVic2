@@ -6,6 +6,11 @@ function convertToLive(trip, departureDay) {
   
   trip.operationDays = operationDay
 
+  for (let stop of trip.stopTimings) {
+    let scheduledUTC = startOfDay.clone().add(stop.departureTimeMinutes || stop.arrivalTimeMinutes, 'minutes')
+    stop.scheduledDepartureTime = scheduledUTC.toISOString()
+  }
+
   return trip
 }
 
