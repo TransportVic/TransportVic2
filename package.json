@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha modules/metro-trains/test/*.test.mjs"
+    "test": "mocha modules/**/*.test.mjs"
   },
   "author": "",
   "license": "ISC",
