@@ -9,7 +9,7 @@ db.connect()
 db.createCollection('gtfs timetables')
 let dbTrips = await db.createCollection('live timetables')
 
-dbTrips.createDocuments(sampleTrips)
+await dbTrips.createDocuments(sampleTrips)
 
 describe('The fetchLiveTrips function', () => {
   it('Should return trip data from the live timetables collection', async () => {
