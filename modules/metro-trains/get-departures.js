@@ -1,3 +1,4 @@
+const { getNonDSTMinutesPastMidnight } = require('../dst/dst')
 const { convertToLive } = require('./sch-to-live')
 
 /**
@@ -78,5 +79,6 @@ async function getDepartures(station, db, options={}) {
 
 module.exports = {
   fetchLiveTrips,
+  fetchScheduledTrips,
   getDepartures
 }
