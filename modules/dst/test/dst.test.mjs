@@ -1,7 +1,7 @@
 import { expect } from 'chai'
-import { getTimeOffset, isDSTChange } from '../dst.js'
+import { getDSTMinutesPastMidnight, getNonDSTMinutesPastMidnight, getTimeOffset, isDSTChange } from '../dst.js'
 
-describe('The DST function', () => {
+describe('The DST methods', () => {
   it('Should identify if a given day is the first day of a time change', () => {
     expect(isDSTChange(new Date('2025-03-29T08:59:53.716Z'))).to.be.false
     expect(isDSTChange(new Date('2025-04-05T08:59:53.716Z'))).to.be.false
@@ -24,5 +24,19 @@ describe('The DST function', () => {
 
     expect(getTimeOffset(new Date('2024-10-06T08:59:53.716Z'))).to.equal(-60) // 60 less minutes to account for the skipped 2am
     expect(getTimeOffset(new Date('2024-10-05T14:00:00.000Z'))).to.equal(-60) // 60 less minutes to account for the skipped 2am
+  })
+})
+
+describe('The general time methods', () => {
+  it('Should return the DST aware minutes past midnight from a timestamp', () => {
+    expect(getDSTMinutesPastMidnight(new Date('2025-04-05T15:08:00.000Z'))).to.equal(2 * 60 + 8) // 2:08am on a repeating 2am day - first occurrence
+    expect(getDSTMinutesPastMidnight(new Date('2025-04-05T16:08:00.000Z'))).to.equal(2 * 60 + 8 + 60) // 2:08am on a repeating 2am day - second occurrence
+    expect(getDSTMinutesPastMidnight(new Date('2025-04-05T17:08:00.000Z'))).to.equal(3 * 60 + 8 + 60) // 3:08am on a repeating 2am day
+  })
+
+  it('Should return the non-DST aware minutes past midnight from a timestamp', () => {
+    expect(getNonDSTMinutesPastMidnight(new Date('2025-04-05T15:08:00.000Z'))).to.equal(2 * 60 + 8) // 2:08am on a repeating 2am day - first occurrence
+    expect(getNonDSTMinutesPastMidnight(new Date('2025-04-05T16:08:00.000Z'))).to.equal(2 * 60 + 8) // 2:08am on a repeating 2am day - second occurrence, no difference
+    expect(getNonDSTMinutesPastMidnight(new Date('2025-04-05T17:08:00.000Z'))).to.equal(3 * 60 + 8) // 3:08am on a repeating 2am day
   })
 })
