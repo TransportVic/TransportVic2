@@ -2,6 +2,7 @@ import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
 import sampleLiveTrips from './sample-data/sample-live-trips.json' with { type: 'json' }
 import sampleSchTrips from './sample-data/sample-sch-trips.json' with { type: 'json' }
+import sampleSchMidnightNoDSTTrips from './sample-data/sample-sch-trips-mid-nodst.json' with { type: 'json' }
 import alamein from './sample-data/alamein.json' with { type: 'json' }
 import { fetchLiveTrips, fetchScheduledTrips } from '../get-departures.js'
 
@@ -12,6 +13,10 @@ let liveTrips = await db.createCollection('live timetables')
 
 await gtfsTrips.createDocuments(sampleSchTrips)
 await liveTrips.createDocuments(sampleLiveTrips)
+
+const midnightDBNoDST = new LokiDatabaseConnection()
+midnightDBNoDST.connect()
+await (await midnightDBNoDST.createCollection('gtfs timetables')).createDocuments(sampleSchMidnightNoDSTTrips)
 
 describe('The fetchLiveTrips function', () => {
   it('Should return trip data from the live timetables collection', async () => {
@@ -27,5 +32,14 @@ describe('The fetchScheduledTrips function', () => {
 
     expect(trips[0].stopTimings[0].scheduledDepartureTime).to.equal('2025-03-28T21:08:00.000Z') // 08:08
     expect(trips[1].stopTimings[0].scheduledDepartureTime).to.equal('2025-03-28T21:28:00.000Z') // 08:28
+  })
+
+  it('Should match trips across midnight', async () => {
+    let trips = await fetchScheduledTrips(alamein, midnightDBNoDST, new Date('2025-03-29T12:40:00.000Z'))
+    expect(trips.length).to.equal(3)
+
+    expect(trips[0].stopTimings[0].scheduledDepartureTime).to.equal('2025-03-29T12:46:00.000Z') // 23:46
+    expect(trips[1].stopTimings[0].scheduledDepartureTime).to.equal('2025-03-29T13:16:00.000Z') // 00:16 NEXT DAY
+    expect(trips[2].stopTimings[0].scheduledDepartureTime).to.equal('2025-03-29T14:14:00.000Z') // 01:14 NEXT DAY
   })
 })
