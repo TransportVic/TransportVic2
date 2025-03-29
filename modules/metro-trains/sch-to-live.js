@@ -28,6 +28,9 @@ function convertToLive(trip, departureDay) {
     }
 
     stop.scheduledDepartureTime = scheduledUTC.toISOString()
+    stop.actualDepartureTimeMS = +scheduledUTC
+    stop.estimatedDepartureTime = null
+    stop.cancelled = false
   }
 
   return trip
