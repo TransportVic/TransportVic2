@@ -21,6 +21,8 @@ describe('The DST function', () => {
   it('Should return the HH:MM and minutes offset on a given day', () => {
     expect(getTimeOffset(new Date('2025-03-29T08:59:53.716Z'))).to.equal(0)
     expect(getTimeOffset(new Date('2025-04-06T08:59:53.716Z'))).to.equal(60) // Extra 60 minutes to account for the repeated 2am
+
     expect(getTimeOffset(new Date('2024-10-06T08:59:53.716Z'))).to.equal(-60) // 60 less minutes to account for the skipped 2am
+    expect(getTimeOffset(new Date('2024-10-05T14:00:00.000Z'))).to.equal(-60) // 60 less minutes to account for the skipped 2am
   })
 })
