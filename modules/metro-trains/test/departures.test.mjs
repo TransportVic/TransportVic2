@@ -4,7 +4,7 @@ import sampleLiveTrips from './sample-data/sample-live-trips.json' with { type: 
 import sampleSchTrips from './sample-data/sample-sch-trips.json' with { type: 'json' }
 import sampleSchMidnightNoDSTTrips from './sample-data/sample-sch-trips-mid-nodst.json' with { type: 'json' }
 import alamein from './sample-data/alamein.json' with { type: 'json' }
-import { fetchLiveTrips, fetchScheduledTrips, shouldUseLiveDepartures } from '../get-departures.js'
+import { fetchLiveTrips, fetchScheduledTrips, getDepartures, shouldUseLiveDepartures } from '../get-departures.js'
 import utils from '../../../utils.js'
 
 const db = new LokiDatabaseConnection()
@@ -69,5 +69,13 @@ describe('The shouldUseLiveDepartures function', () => {
   it('Should return true for a departure before today', () => {
     expect(shouldUseLiveDepartures(utils.now().startOf('day').add(-1, 'day'))).to.be.true
     expect(shouldUseLiveDepartures(utils.now().startOf('day').add(-50, 'day'))).to.be.true
+  })
+})
+
+describe('The getDepartures function', () => {
+  it('Should return live departures for departure times in the past', async () => {
+    let departures = await getDepartures(alamein, db, { departureTime: new Date('2025-03-28T20:51:00.000Z'), timeframe: 10 })
+    expect(departures.length).to.equal(1)
+    expect(departures[0]._live).to.be.true
   })
 })
