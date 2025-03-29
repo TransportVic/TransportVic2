@@ -17,3 +17,10 @@ describe('The fetchLiveTrips function', () => {
     expect(trips.length).to.equal(3)
   })
 })
+
+describe('The fetchScheduledTrips function', () => {
+  it('Should return trip data from the gtfs timetables collection, with scheduled times to match the given departure day', async () => {
+    let trips = await fetchLiveTrips(alamein, db, new Date('2025-03-28T21:00:00.000Z'))
+    expect(trips.length).to.equal(3)
+  })
+})
