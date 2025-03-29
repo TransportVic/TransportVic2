@@ -6,7 +6,7 @@ function isDSTChange(date) {
 }
 
 function getTimeOffset(date) {
-  let givenDay = moment(date)
+  let givenDay = moment(date).startOf('day').add(5, 'hours')
   let previousDay = givenDay.clone().add(-1, 'day')
 
   let previousUTCOffset = previousDay.utcOffset()
