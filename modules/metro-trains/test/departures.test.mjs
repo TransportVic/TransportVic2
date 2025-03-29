@@ -4,7 +4,8 @@ import sampleLiveTrips from './sample-data/sample-live-trips.json' with { type: 
 import sampleSchTrips from './sample-data/sample-sch-trips.json' with { type: 'json' }
 import sampleSchMidnightNoDSTTrips from './sample-data/sample-sch-trips-mid-nodst.json' with { type: 'json' }
 import alamein from './sample-data/alamein.json' with { type: 'json' }
-import { fetchLiveTrips, fetchScheduledTrips } from '../get-departures.js'
+import { fetchLiveTrips, fetchScheduledTrips, shouldUseLiveDepartures } from '../get-departures.js'
+import utils from '../../../utils.js'
 
 const db = new LokiDatabaseConnection()
 db.connect()
@@ -49,5 +50,24 @@ describe('The fetchScheduledTrips function', () => {
 
     expect(trips[0].stopTimings[0].scheduledDepartureTime).to.equal('2025-03-29T15:16:00.000Z') // 02:16 NEXT DAY
     expect(trips[1].stopTimings[0].scheduledDepartureTime).to.equal('2025-03-29T16:18:00.000Z') // 03:16 NEXT PT DAY
+  })
+})
+
+describe('The shouldUseLiveDepartures function', () => {
+  it('Should return true for a departure today', () => {
+    expect(shouldUseLiveDepartures(utils.now())).to.be.true
+  })
+
+  it('Should return false for a departure at 8am tomorrow', () => {
+    expect(shouldUseLiveDepartures(utils.now().startOf('day').add(1, 'day').add('8', 'hours'))).to.be.false
+  })
+
+  it('Should return true for a departure at 2am tomorrow', () => {
+    expect(shouldUseLiveDepartures(utils.now().startOf('day').add(1, 'day').add('2', 'hours'))).to.be.true
+  })
+
+  it('Should return true for a departure before today', () => {
+    expect(shouldUseLiveDepartures(utils.now().startOf('day').add(-1, 'day'))).to.be.true
+    expect(shouldUseLiveDepartures(utils.now().startOf('day').add(-50, 'day'))).to.be.true
   })
 })

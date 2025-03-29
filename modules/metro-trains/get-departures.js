@@ -85,12 +85,20 @@ async function fetchScheduledTrips(station, db, departureTime, timeframe=120, ba
   return trips
 }
 
+function shouldUseLiveDepartures(departureTime) {
+  let endOfPTDayToday = utils.now().startOf('day').add(1, 'day').add(3, 'hours')
+  return departureTime < endOfPTDayToday
+}
+
 async function getDepartures(station, db, options={}) {
   let { lookBackwards, departureTime } = options
+  departureTime = departureTime ? utils.parseTime(departureTime) : utils.now()
+
 }
 
 module.exports = {
   fetchLiveTrips,
   fetchScheduledTrips,
-  getDepartures
+  getDepartures,
+  shouldUseLiveDepartures
 }
