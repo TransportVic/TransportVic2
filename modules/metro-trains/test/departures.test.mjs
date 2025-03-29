@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
-import sampleTrips from './sample-data/sample-trips.json' with { type: 'json' }
+import sampleLiveTrips from './sample-data/sample-live-trips.json' with { type: 'json' }
 import alamein from './sample-data/alamein.json' with { type: 'json' }
 import { fetchLiveTrips } from '../get-departures.js'
 
@@ -9,7 +9,7 @@ db.connect()
 db.createCollection('gtfs timetables')
 let dbTrips = await db.createCollection('live timetables')
 
-await dbTrips.createDocuments(sampleTrips)
+await dbTrips.createDocuments(sampleLiveTrips)
 
 describe('The fetchLiveTrips function', () => {
   it('Should return trip data from the live timetables collection', async () => {
