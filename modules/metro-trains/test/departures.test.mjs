@@ -7,7 +7,6 @@ import { fetchLiveTrips, fetchScheduledTrips } from '../get-departures.js'
 
 const db = new LokiDatabaseConnection()
 db.connect()
-db.createCollection('gtfs timetables')
 let gtfsTrips = await db.createCollection('gtfs timetables')
 let liveTrips = await db.createCollection('live timetables')
 

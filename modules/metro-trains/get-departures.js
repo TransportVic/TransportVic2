@@ -70,7 +70,7 @@ async function fetchScheduledTrips(station, db, departureTime, timeframe=120, ba
     },
   }).toArray()
 
-  return trips
+  return trips.map(trip => convertToLive(trip, departureTime))
 }
 
 async function getDepartures(station, db, options={}) {
