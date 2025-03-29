@@ -1,6 +1,7 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
 import utils from '../../utils.js'
+import { convertToLive } from '../metro-trains/sch-to-live.js'
 
 let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
@@ -9,10 +10,13 @@ let gtfsTimetables = mongoDB.getCollection('gtfs timetables')
 let liveTimetables = mongoDB.getCollection('live timetables')
 
 async function loadOperationalTT(operationDay) {
-  let activeTrips = await gtfsTimetables.findDocuments({
+  let opDayFormat = utils.getYYYYMMDD(operationDay)
+  let rawActiveTrips = await gtfsTimetables.findDocuments({
     mode: 'metro train',
-    operationDays: operationDay
+    operationDays: opDayFormat
   }).sort({ departureTime: 1 }).toArray()
+
+  let activeTrips = rawActiveTrips.map(trip => convertToLive(trip, operationDay))
 
   let blocks = {}
   let trips = {}
@@ -20,7 +24,7 @@ async function loadOperationalTT(operationDay) {
   for (let trip of activeTrips) {
     trips[trip.runID] = trip
 
-    trip.operationDays = today
+    trip.operationDays = opDayFormat
 
     if (trip.block) {
       if (!blocks[trip.block]) blocks[trip.block] = []
@@ -51,7 +55,6 @@ async function loadOperationalTT(operationDay) {
   await liveTimetables.bulkWrite(bulkUpdate)
 }
 
-let today = utils.getYYYYMMDD(utils.now())
-await loadOperationalTT(today)
+await loadOperationalTT(utils.now())
 
 await mongoDB.close()
