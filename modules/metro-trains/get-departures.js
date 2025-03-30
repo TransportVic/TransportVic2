@@ -96,9 +96,22 @@ async function getDepartures(station, db, options={}) {
   departureTime = departureTime ? utils.parseTime(departureTime) : utils.now()
   timeframe = timeframe || 120
   if (typeof lookBackwards === 'undefined') lookBackwards = false
-  let departures
-  if (shouldUseLiveDepartures(departureTime)) departures = await fetchLiveTrips(station, db, departureTime, timeframe, lookBackwards)
+
+  let departures, useLive = shouldUseLiveDepartures(departureTime)
+  if (useLive) departures = await fetchLiveTrips(station, db, departureTime, timeframe, lookBackwards)
   else departures = await fetchScheduledTrips(station, db, departureTime, timeframe, lookBackwards)
+
+  let departureEndTime = departureTime.clone().add(timeframe, 'minutes')
+
+  // The departure time crossed the PT day and we need to use scheduled times for the rest
+  // Will only trigger for non backwards departures anyway
+  if (useLive && !shouldUseLiveDepartures(departureEndTime)) {
+    let ptDayStart = departureEndTime.clone().startOf('day').set('hours', 3)
+    let remainingMinutes = departureEndTime.diff(ptDayStart, 'minutes')
+
+    let missingTrips = await fetchScheduledTrips(station, db, ptDayStart, remainingMinutes, false)
+    departures.push(...missingTrips)
+  }
 
   return departures
 }
