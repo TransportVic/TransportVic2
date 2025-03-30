@@ -7,7 +7,7 @@ import sampleLiveMidnightNoDSTTrips from './sample-data/sample-live-trips-mid-no
 import sampleLiveCCLTrips from './sample-data/sample-live-trips-ccl.json' with { type: 'json' }
 import flindersStreet from './sample-data/flinders-street.json' with { type: 'json' }
 import alamein from './sample-data/alamein.json' with { type: 'json' }
-import { fetchLiveTrips, fetchScheduledTrips, getCombinedDepartures, shouldUseLiveDepartures } from '../get-departures.js'
+import { fetchLiveTrips, fetchScheduledTrips, getDepartures, getCombinedDepartures, shouldUseLiveDepartures } from '../get-departures.js'
 import utils from '../../../utils.js'
 
 let clone = o => JSON.parse(JSON.stringify(o))
@@ -156,27 +156,25 @@ describe('The getCombinedDepartures function', () => {
 
 describe('The getDepartures function', () => {
   it('Should return appropriate data for each departure', async () => {
-    let departures = await getCombinedDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-03-28T20:40:00.000Z'), timeframe: 120 })
+    let departures = await getDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-03-28T20:40:00.000Z'), timeframe: 120 })
 
     expect(departures.length).to.equal(4)
 
     expect(departures[0].scheduledDepartureTime.toISOString()).to.equal('2025-03-28T20:48:00.000Z')
     expect(departures[0].estimatedDepartureTime.toISOString()).to.equal('2025-03-28T20:51:00.000Z')
     expect(departures[0].actualDepartureTime.toISOString()).to.equal('2025-03-28T20:51:00.000Z')
+    expect(departures[0].cancelled).to.be.false
 
     expect(departures[0].routeName).to.equal('Alamein')
-    expect(departures[0].destination).to.equal('Camberwell')
+    expect(departures[0].destination).to.equal('Camberwell Railway Station')
 
     expect(departures[0].departureDay).to.equal('20250329')
 
-    expect(departures[0].allStops[0]).to.equal('Alamein')
-    expect(departures[0].allStops.slice(-1)[0]).to.equal('Camberwell')
+    expect(departures[0].allStops[0]).to.equal('Alamein Railway Station')
+    expect(departures[0].allStops.slice(-1)[0]).to.equal('Camberwell Railway Station')
 
-    expect(departures[0].futureStops[0]).to.equal('Ashburton')
-    expect(departures[0].futureStops.slice(-1)[0]).to.equal('Camberwell')
-
-    expect(departures[0]._live).to.exist
-
+    expect(departures[0].futureStops[0]).to.equal('Ashburton Railway Station')
+    expect(departures[0].futureStops.slice(-1)[0]).to.equal('Camberwell Railway Station')
 
     expect(departures[3].scheduledDepartureTime.toISOString()).to.equal('2025-03-28T21:48:00.000Z')
     expect(departures[3].estimatedDepartureTime).to.be.null
