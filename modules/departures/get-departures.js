@@ -115,26 +115,37 @@ async function getDepartures(station, mode, db, options={}) {
   let departures = []
 
   for (let trip of combinedDepartures) {
-    let currentStopIndex = trip.stopTimings.findIndex(stop => stopGTFSIDs.includes(stop.stopGTFSID))
-    let currentStop = trip.stopTimings[currentStopIndex]
+    let stopIndices = trip.stopTimings
+      .map((stop, i) => ({ m: stopGTFSIDs.includes(stop.stopGTFSID), i }))
+      .filter(e => e.m)
+      .map(e => e.i)
 
-    let scheduledDepartureTime = utils.parseTime(currentStop.scheduledDepartureTime)
-    let estimatedDepartureTime = currentStop.estimatedDepartureTime ? utils.parseTime(currentStop.estimatedDepartureTime) : null
+    let prevVisitSchDep = null
+    
+    for (let currentStopIndex of stopIndices) {
+      let currentStop = trip.stopTimings[currentStopIndex]
 
-    departures.push({
-      scheduledDepartureTime,
-      estimatedDepartureTime,
-      actualDepartureTime: estimatedDepartureTime || scheduledDepartureTime,
-      currentStop,
-      cancelled: trip.cancelled || currentStop.cancelled,
-      routeName: trip.routeName,
-      codedRouteName: utils.encodeName(trip.routeName),
-      trip,
-      destination: trip.destination,
-      departureDay: trip.operationDays,
-      allStops: trip.stopTimings.map(stop => stop.stopName),
-      futureStops: trip.stopTimings.slice(currentStopIndex + 1).map(stop => stop.stopName)
-    })
+      let scheduledDepartureTime = utils.parseTime(currentStop.scheduledDepartureTime)
+      let estimatedDepartureTime = currentStop.estimatedDepartureTime ? utils.parseTime(currentStop.estimatedDepartureTime) : null
+
+      if (prevVisitSchDep !== null && scheduledDepartureTime.diff(prevVisitSchDep, 'minutes') <= 2) continue
+      prevVisitSchDep = scheduledDepartureTime
+
+      departures.push({
+        scheduledDepartureTime,
+        estimatedDepartureTime,
+        actualDepartureTime: estimatedDepartureTime || scheduledDepartureTime,
+        currentStop,
+        cancelled: trip.cancelled || currentStop.cancelled,
+        routeName: trip.routeName,
+        codedRouteName: utils.encodeName(trip.routeName),
+        trip,
+        destination: trip.destination,
+        departureDay: trip.operationDays,
+        allStops: trip.stopTimings.map(stop => stop.stopName),
+        futureStops: trip.stopTimings.slice(currentStopIndex + 1).map(stop => stop.stopName)
+      })
+    }
   }
 
   return departures.sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)

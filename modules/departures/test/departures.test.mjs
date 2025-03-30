@@ -195,6 +195,6 @@ describe('The getDepartures function', () => {
 
     expect(departures.length).to.equal(2)
     expect(departures[0].scheduledDepartureTime.toISOString()).to.equal('2025-03-30T05:18:00.000Z')
-    expect(departures[0].scheduledDepartureTime.toISOString()).to.equal('2025-03-30T06:07:00.000Z')
+    expect(departures[1].scheduledDepartureTime.toISOString()).to.equal('2025-03-30T06:07:00.000Z')
   })
 })
