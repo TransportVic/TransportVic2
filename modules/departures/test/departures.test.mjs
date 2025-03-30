@@ -8,15 +8,17 @@ import alamein from './sample-data/alamein.json' with { type: 'json' }
 import { fetchLiveTrips, fetchScheduledTrips, getDepartures, shouldUseLiveDepartures } from '../get-departures.js'
 import utils from '../../../utils.js'
 
+let clone = o => JSON.parse(JSON.stringify(o))
+
 const db = new LokiDatabaseConnection()
 db.connect()
-await (await db.createCollection('gtfs timetables')).createDocuments(sampleSchTrips)
-await (await db.createCollection('live timetables')).createDocuments(sampleLiveTrips)
+await (await db.createCollection('gtfs timetables')).createDocuments(clone(sampleSchTrips))
+await (await db.createCollection('live timetables')).createDocuments(clone(sampleLiveTrips))
 
 const midnightDBNoDST = new LokiDatabaseConnection()
 midnightDBNoDST.connect()
-await (await midnightDBNoDST.createCollection('gtfs timetables')).createDocuments(sampleSchMidnightNoDSTTrips)
-await (await midnightDBNoDST.createCollection('live timetables')).createDocuments(sampleLiveMidnightNoDSTTrips)
+await (await midnightDBNoDST.createCollection('gtfs timetables')).createDocuments(clone(sampleSchMidnightNoDSTTrips))
+await (await midnightDBNoDST.createCollection('live timetables')).createDocuments(clone(sampleLiveMidnightNoDSTTrips))
 
 describe('The fetchLiveTrips function', () => {
   it('Should return trip data from the live timetables collection', async () => {
