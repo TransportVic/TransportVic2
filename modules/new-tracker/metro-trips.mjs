@@ -9,7 +9,7 @@ export async function getUpcomingTrips(ptvAPI, lines) {
   return trips.filter(trip => trip.operationalDateMoment >= today)
 }
 
-export async function fetchTrips(ptvAPI, lines=Object.values(ptvAPI.metroSite.lines)) {
+export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSite.lines)) {
   let relevantTrips = await getUpcomingTrips(ptvAPI, lines)
   console.log(relevantTrips)
 }
@@ -18,5 +18,5 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let ptvAPI = new PTVAPI()
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
-  await fetchTrips(ptvAPI, ptvAPI.metroSite.lines.STONY_POINT)
+  await fetchTrips(ptvAPI, null, ptvAPI.metroSite.lines.STONY_POINT)
 }
