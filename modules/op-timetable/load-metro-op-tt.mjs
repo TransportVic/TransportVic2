@@ -56,5 +56,6 @@ async function loadOperationalTT(operationDay) {
 }
 
 await loadOperationalTT(utils.now())
+await loadOperationalTT(utils.now().add(1, 'day'))
 
 await mongoDB.close()
