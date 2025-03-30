@@ -86,8 +86,8 @@ async function fetchScheduledTrips(station, db, departureTime, timeframe=120, ba
 }
 
 function shouldUseLiveDepartures(departureTime) {
-  let endOfPTDayToday = utils.now().startOf('day').add(1, 'day').add(3, 'hours')
-  return departureTime < endOfPTDayToday
+  let endOfPTDayTomorrow = utils.now().startOf('day').add(2, 'days').add(3, 'hours')
+  return departureTime < endOfPTDayTomorrow
 }
 
 async function getDepartures(station, db, options={}) {
