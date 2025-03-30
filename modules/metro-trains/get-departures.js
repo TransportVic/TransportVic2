@@ -10,10 +10,10 @@ const { convertToLive } = require('./sch-to-live')
  * @param {Number} timeframe The number of minutes worth of departures to capture
  * @param {Boolean} backwards If previous departures should be fetched
  */
-async function fetchLiveTrips(station, db, departureTime, timeframe=120) {
+async function fetchLiveTrips(station, mode, db, departureTime, timeframe=120) {
   let liveTimetables = db.getCollection('live timetables')
   let stopGTFSIDs = station.bays
-    .filter(bay => bay.mode === 'metro train')
+    .filter(bay => bay.mode === mode)
     .map(bay => bay.stopGTFSID)
 
   let timeMS = +departureTime
@@ -25,7 +25,7 @@ async function fetchLiveTrips(station, db, departureTime, timeframe=120) {
   }
 
   let trips = await liveTimetables.findDocuments({
-    mode: 'metro train',
+    mode,
     stopTimings: {
       $elemMatch: {
         stopGTFSID: {
@@ -39,10 +39,10 @@ async function fetchLiveTrips(station, db, departureTime, timeframe=120) {
   return trips
 }
 
-async function fetchScheduledTrips(station, db, departureTime, timeframe=120) {
+async function fetchScheduledTrips(station, mode, db, departureTime, timeframe=120) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let stopGTFSIDs = station.bays
-    .filter(bay => bay.mode === 'metro train')
+    .filter(bay => bay.mode === mode)
     .map(bay => bay.stopGTFSID)
 
   // Get the non DST aware minutes past midnight - the times would be saved normally
@@ -61,7 +61,7 @@ async function fetchScheduledTrips(station, db, departureTime, timeframe=120) {
     }
 
     let dayTrips = await gtfsTimetables.findDocuments({
-      mode: 'metro train',
+      mode,
       operationDays: utils.getYYYYMMDD(operationDay),
       stopTimings: {
         $elemMatch: {
@@ -85,14 +85,14 @@ function shouldUseLiveDepartures(departureTime) {
   return departureTime < endOfPTDayTomorrow
 }
 
-async function getDepartures(station, db, options={}) {
+async function getDepartures(station, mode, db, options={}) {
   let { departureTime, timeframe } = options
   departureTime = departureTime ? utils.parseTime(departureTime) : utils.now()
   timeframe = timeframe || 120
 
   let departures, useLive = shouldUseLiveDepartures(departureTime)
-  if (useLive) departures = await fetchLiveTrips(station, db, departureTime, timeframe)
-  else departures = await fetchScheduledTrips(station, db, departureTime, timeframe)
+  if (useLive) departures = await fetchLiveTrips(station, mode, db, departureTime, timeframe)
+  else departures = await fetchScheduledTrips(station, mode, db, departureTime, timeframe)
 
   let departureEndTime = departureTime.clone().add(timeframe, 'minutes')
 
@@ -101,7 +101,7 @@ async function getDepartures(station, db, options={}) {
     let ptDayStart = departureEndTime.clone().startOf('day').set('hours', 3)
     let remainingMinutes = departureEndTime.diff(ptDayStart, 'minutes')
 
-    let missingTrips = await fetchScheduledTrips(station, db, ptDayStart, remainingMinutes, false)
+    let missingTrips = await fetchScheduledTrips(station, mode, db, ptDayStart, remainingMinutes, false)
     departures.push(...missingTrips)
   }
 
