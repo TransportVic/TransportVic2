@@ -11,6 +11,7 @@
   "dependencies": {
     "@transportme/database": "^1.0.10",
     "@transportme/load-ptv-gtfs": "^1.0.4",
+    "@transportme/ptv-api": "^1.0.3",
     "@turf/turf": "^5.1.6",
     "adm-zip": "^0.5.14",
     "async": "^3.2.3",
