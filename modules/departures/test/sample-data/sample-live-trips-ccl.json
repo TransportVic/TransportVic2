@@ -1,120 +1,146 @@
 [{
-	"mode" : "metro train",
-	"routeGTFSID" : "2-CCL",
-	"operationDays" : "20250326",
-	"tripID" : "02-CCL--11-T5_z3-0831",
-	"shapeID" : "2-CCL-vpt-11.1.H",
-	"block" : null,
-	"gtfsDirection" : 0,
-	"runID" : "0831",
-	"isRailReplacementBus" : false,
-	"direction" : "Down",
-	"routeName" : "City Circle",
-	"routeNumber" : null,
-	"stopTimings" : [
-		{
-			"stopName" : "Flinders Street Railway Station",
-			"stopNumber" : null,
-			"suburb" : "Melbourne",
-			"stopGTFSID" : "11212",
-			"arrivalTime" : null,
-			"arrivalTimeMinutes" : null,
-			"departureTime" : "21:52",
-			"departureTimeMinutes" : 1312,
-			"stopConditions" : {
-				"pickup" : 0,
-				"dropoff" : 1
-			},
-			"stopDistance" : "0.00",
-			"platform" : "1"
-		},
-		{
-			"stopName" : "Southern Cross Railway Station",
-			"stopNumber" : null,
-			"suburb" : "Docklands",
-			"stopGTFSID" : "22188",
-			"arrivalTime" : "21:55",
-			"arrivalTimeMinutes" : 1315,
-			"departureTime" : "21:55",
-			"departureTimeMinutes" : 1315,
-			"stopConditions" : {
-				"pickup" : 0,
-				"dropoff" : 0
-			},
-			"stopDistance" : "1363.56",
-			"platform" : "9"
-		},
-		{
-			"stopName" : "Flagstaff Railway Station",
-			"stopNumber" : null,
-			"suburb" : "Melbourne",
-			"stopGTFSID" : "10920",
-			"arrivalTime" : "21:57",
-			"arrivalTimeMinutes" : 1317,
-			"departureTime" : "21:57",
-			"departureTimeMinutes" : 1317,
-			"stopConditions" : {
-				"pickup" : 0,
-				"dropoff" : 0
-			},
-			"stopDistance" : "2443.56",
-			"platform" : "1"
-		},
-		{
-			"stopName" : "Melbourne Central Railway Station",
-			"stopNumber" : null,
-			"suburb" : "Melbourne",
-			"stopGTFSID" : "10922",
-			"arrivalTime" : "21:59",
-			"arrivalTimeMinutes" : 1319,
-			"departureTime" : "21:59",
-			"departureTimeMinutes" : 1319,
-			"stopConditions" : {
-				"pickup" : 0,
-				"dropoff" : 0
-			},
-			"stopDistance" : "3052.86",
-			"platform" : "1"
-		},
-		{
-			"stopName" : "Parliament Railway Station",
-			"stopNumber" : null,
-			"suburb" : "East Melbourne",
-			"stopGTFSID" : "10924",
-			"arrivalTime" : "22:01",
-			"arrivalTimeMinutes" : 1321,
-			"departureTime" : "22:01",
-			"departureTimeMinutes" : 1321,
-			"stopConditions" : {
-				"pickup" : 0,
-				"dropoff" : 0
-			},
-			"stopDistance" : "4168.05",
-			"platform" : "1"
-		},
-		{
-			"stopName" : "Flinders Street Railway Station",
-			"stopNumber" : null,
-			"suburb" : "Melbourne",
-			"stopGTFSID" : "11212",
-			"arrivalTime" : "22:04",
-			"arrivalTimeMinutes" : 1324,
-			"departureTime" : null,
-			"departureTimeMinutes" : null,
-			"stopConditions" : {
-				"pickup" : 1,
-				"dropoff" : 0
-			},
-			"stopDistance" : "5603.97",
-			"platform" : "1"
-		}
-	],
-	"origin" : "Flinders Street Railway Station",
-	"departureTime" : "21:52",
-	"destination" : "Flinders Street Railway Station",
-	"destinationArrivalTime" : "22:04",
-	"trueOrigin" : "Flinders Street Railway Station",
-	"trueDestination" : "Flinders Street Railway Station",
-	"trueDepartureTime" : "21:52",
-	"trueDestinationArrivalTime" : "22:04"
+  "mode" : "metro train",
+  "routeGTFSID" : "2-CCL",
+  "operationDays" : "20250405",
+  "tripID" : "02-CCL--14-T2-0701",
+  "shapeID" : "2-CCL-vpt-14.1.H",
+  "block" : "4917",
+  "gtfsDirection" : 0,
+  "runID" : "0701",
+  "isRailReplacementBus" : false,
+  "direction" : "Down",
+  "routeName" : "City Circle",
+  "routeNumber" : null,
+  "stopTimings" : [
+    {
+      "stopName" : "Flinders Street Railway Station",
+      "stopNumber" : null,
+      "suburb" : "Melbourne",
+      "stopGTFSID" : "11213",
+      "arrivalTime" : null,
+      "arrivalTimeMinutes" : null,
+      "departureTime" : "05:30",
+      "departureTimeMinutes" : 330,
+      "stopConditions" : {
+        "pickup" : 0,
+        "dropoff" : 1
+      },
+      "stopDistance" : "0.00",
+      "platform" : "2",
+      "scheduledDepartureTime" : "2025-04-04T18:30:00.000Z",
+      "actualDepartureTimeMS" : 1743791400000,
+      "estimatedDepartureTime" : null,
+      "cancelled" : false
+    },
+    {
+      "stopName" : "Southern Cross Railway Station",
+      "stopNumber" : null,
+      "suburb" : "Docklands",
+      "stopGTFSID" : "22188",
+      "arrivalTime" : "05:33",
+      "arrivalTimeMinutes" : 333,
+      "departureTime" : "05:33",
+      "departureTimeMinutes" : 333,
+      "stopConditions" : {
+        "pickup" : 0,
+        "dropoff" : 0
+      },
+      "stopDistance" : "1470.67",
+      "platform" : "9",
+      "scheduledDepartureTime" : "2025-04-04T18:33:00.000Z",
+      "actualDepartureTimeMS" : 1743791580000,
+      "estimatedDepartureTime" : null,
+      "cancelled" : false
+    },
+    {
+      "stopName" : "Flagstaff Railway Station",
+      "stopNumber" : null,
+      "suburb" : "Melbourne",
+      "stopGTFSID" : "10920",
+      "arrivalTime" : "05:35",
+      "arrivalTimeMinutes" : 335,
+      "departureTime" : "05:35",
+      "departureTimeMinutes" : 335,
+      "stopConditions" : {
+        "pickup" : 0,
+        "dropoff" : 0
+      },
+      "stopDistance" : "2550.68",
+      "platform" : "1",
+      "scheduledDepartureTime" : "2025-04-04T18:35:00.000Z",
+      "actualDepartureTimeMS" : 1743791700000,
+      "estimatedDepartureTime" : null,
+      "cancelled" : false
+    },
+    {
+      "stopName" : "Melbourne Central Railway Station",
+      "stopNumber" : null,
+      "suburb" : "Melbourne",
+      "stopGTFSID" : "10922",
+      "arrivalTime" : "05:37",
+      "arrivalTimeMinutes" : 337,
+      "departureTime" : "05:37",
+      "departureTimeMinutes" : 337,
+      "stopConditions" : {
+        "pickup" : 0,
+        "dropoff" : 0
+      },
+      "stopDistance" : "3159.97",
+      "platform" : "1",
+      "scheduledDepartureTime" : "2025-04-04T18:37:00.000Z",
+      "actualDepartureTimeMS" : 1743791820000,
+      "estimatedDepartureTime" : null,
+      "cancelled" : false
+    },
+    {
+      "stopName" : "Parliament Railway Station",
+      "stopNumber" : null,
+      "suburb" : "East Melbourne",
+      "stopGTFSID" : "10924",
+      "arrivalTime" : "05:39",
+      "arrivalTimeMinutes" : 339,
+      "departureTime" : "05:39",
+      "departureTimeMinutes" : 339,
+      "stopConditions" : {
+        "pickup" : 0,
+        "dropoff" : 0
+      },
+      "stopDistance" : "4275.17",
+      "platform" : "1",
+      "scheduledDepartureTime" : "2025-04-04T18:39:00.000Z",
+      "actualDepartureTimeMS" : 1743791940000,
+      "estimatedDepartureTime" : null,
+      "cancelled" : false
+    },
+    {
+      "stopName" : "Flinders Street Railway Station",
+      "stopNumber" : null,
+      "suburb" : "Melbourne",
+      "stopGTFSID" : "11213",
+      "arrivalTime" : "05:42",
+      "arrivalTimeMinutes" : 342,
+      "departureTime" : null,
+      "departureTimeMinutes" : null,
+      "stopConditions" : {
+        "pickup" : 1,
+        "dropoff" : 0
+      },
+      "stopDistance" : "5605.92",
+      "platform" : "2",
+      "scheduledDepartureTime" : "2025-04-04T18:42:00.000Z",
+      "actualDepartureTimeMS" : 1743792120000,
+      "estimatedDepartureTime" : null,
+      "cancelled" : false
+    }
+  ],
+  "origin" : "Flinders Street Railway Station",
+  "departureTime" : "05:30",
+  "destination" : "Flinders Street Railway Station",
+  "destinationArrivalTime" : "05:42",
+  "trueOrigin" : "Flinders Street Railway Station",
+  "trueDestination" : "Flinders Street Railway Station",
+  "trueDepartureTime" : "05:30",
+  "trueDestinationArrivalTime" : "05:42",
+  "formedBy" : "3200",
+  "forming" : "0703"
 }]

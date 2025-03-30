@@ -29,6 +29,7 @@ await (await midnightDBNoDST.createCollection('live timetables')).createDocument
 
 const cclDB = new LokiDatabaseConnection()
 cclDB.connect()
+await (await cclDB.createCollection('gtfs timetables')).createDocuments(clone(sampleLiveCCLTrips))
 await (await cclDB.createCollection('live timetables')).createDocuments(clone(sampleLiveCCLTrips))
 
 const studDB = new LokiDatabaseConnection()
@@ -193,8 +194,15 @@ describe('The getDepartures function', () => {
   it('Should duplicate a departure to show it servicing a stop more than once', async () => {
     let departures = await getDepartures(studPark, 'bus', studDB, { departureTime: new Date('2025-03-30T05:05:00.000Z'), timeframe: 120 })
 
-    expect(departures.length).to.equal(2)
+    expect(departures.length).to.equal(2, 'Stops served under 2 minutes should not be duplicated')
     expect(departures[0].scheduledDepartureTime.toISOString()).to.equal('2025-03-30T05:18:00.000Z')
     expect(departures[1].scheduledDepartureTime.toISOString()).to.equal('2025-03-30T06:07:00.000Z')
+  })
+
+  it('Should not duplicate the final stop', async () => {
+    let departures = await getDepartures(flindersStreet, 'metro train', cclDB, { departureTime: new Date('2025-04-04T18:29:00.000Z'), timeframe: 120 })
+
+    expect(departures.length).to.equal(1)
+    expect(departures[0].scheduledDepartureTime.toISOString()).to.equal('2025-04-04T18:30:00.000Z')
   })
 })

@@ -31,8 +31,7 @@ async function fetchLiveTrips(station, mode, db, departureTime, timeframe=120) {
         stopGTFSID: {
           $in: stopGTFSIDs
         },
-        actualDepartureTimeMS,
-        departureTime: { $ne: null }
+        actualDepartureTimeMS
       }
     },
   }).toArray()
@@ -116,6 +115,7 @@ async function getDepartures(station, mode, db, options={}) {
 
   for (let trip of combinedDepartures) {
     let stopIndices = trip.stopTimings
+      .slice(0, -1) // Exclude the last stop
       .map((stop, i) => ({ m: stopGTFSIDs.includes(stop.stopGTFSID), i }))
       .filter(e => e.m)
       .map(e => e.i)
