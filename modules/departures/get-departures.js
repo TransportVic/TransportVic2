@@ -31,7 +31,8 @@ async function fetchLiveTrips(station, mode, db, departureTime, timeframe=120) {
         stopGTFSID: {
           $in: stopGTFSIDs
         },
-        actualDepartureTimeMS
+        actualDepartureTimeMS,
+        departureTime: { $ne: null }
       }
     },
   }).toArray()
@@ -90,6 +91,8 @@ async function getDepartures(station, mode, db, options={}) {
   departureTime = departureTime ? utils.parseTime(departureTime) : utils.now()
   timeframe = timeframe || 120
 
+  let stopGTFSIDs = station.bays.map(stop => stop.stopGTFSID)
+
   let departures, useLive = shouldUseLiveDepartures(departureTime)
   if (useLive) departures = await fetchLiveTrips(station, mode, db, departureTime, timeframe)
   else departures = await fetchScheduledTrips(station, mode, db, departureTime, timeframe)
@@ -105,7 +108,13 @@ async function getDepartures(station, mode, db, options={}) {
     departures.push(...missingTrips)
   }
 
-  return departures
+  return departures.map(trip => {
+    return {
+      trip,
+      stop: trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))
+    }
+  }).sort((a, b) => a.stop.actualDepartureTimeMS - b.stop.actualDepartureTimeMS)
+  .map(t => t.trip)
 }
 
 module.exports = {
