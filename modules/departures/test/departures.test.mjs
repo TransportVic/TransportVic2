@@ -3,8 +3,13 @@ import { LokiDatabaseConnection } from '@transportme/database'
 import sampleLiveTrips from './sample-data/sample-live-trips.json' with { type: 'json' }
 import sampleSchTrips from './sample-data/sample-sch-trips.json' with { type: 'json' }
 import sampleSchMidnightNoDSTTrips from './sample-data/sample-sch-trips-mid-nodst.json' with { type: 'json' }
+
 import sampleLiveMidnightNoDSTTrips from './sample-data/sample-live-trips-mid-nodst.json' with { type: 'json' }
 import sampleLiveCCLTrips from './sample-data/sample-live-trips-ccl.json' with { type: 'json' }
+
+import sample682 from './sample-data/sample-682.json' with { type: 'json' }
+import studPark from './sample-data/stud-park.json' with { type: 'json' }
+
 import flindersStreet from './sample-data/flinders-street.json' with { type: 'json' }
 import alamein from './sample-data/alamein.json' with { type: 'json' }
 import { fetchLiveTrips, fetchScheduledTrips, getDepartures, getCombinedDepartures, shouldUseLiveDepartures } from '../get-departures.js'
@@ -25,6 +30,10 @@ await (await midnightDBNoDST.createCollection('live timetables')).createDocument
 const cclDB = new LokiDatabaseConnection()
 cclDB.connect()
 await (await cclDB.createCollection('live timetables')).createDocuments(clone(sampleLiveCCLTrips))
+
+const studDB = new LokiDatabaseConnection()
+studDB.connect()
+await (await studDB.createCollection('live timetables')).createDocuments(clone(sample682))
 
 describe('The fetchLiveTrips function', () => {
   it('Should return trip data from the live timetables collection', async () => {
@@ -179,5 +188,13 @@ describe('The getDepartures function', () => {
     expect(departures[3].scheduledDepartureTime.toISOString()).to.equal('2025-03-28T21:48:00.000Z')
     expect(departures[3].estimatedDepartureTime).to.be.null
     expect(departures[3].actualDepartureTime).to.equal(departures[3].scheduledDepartureTime)
+  })
+
+  it('Should duplicate a departure to show it servicing a stop more than once', async () => {
+    let departures = await getDepartures(studPark, 'bus', studDB, { departureTime: new Date('2025-03-30T05:05:00.000Z'), timeframe: 120 })
+
+    expect(departures.length).to.equal(2)
+    expect(departures[0].scheduledDepartureTime.toISOString()).to.equal('2025-03-30T05:18:00.000Z')
+    expect(departures[0].scheduledDepartureTime.toISOString()).to.equal('2025-03-30T06:07:00.000Z')
   })
 })
