@@ -86,7 +86,7 @@ function shouldUseLiveDepartures(departureTime) {
   return departureTime < endOfPTDayTomorrow
 }
 
-async function getDepartures(station, mode, db, options={}) {
+async function getCombinedDepartures(station, mode, db, options={}) {
   let { departureTime, timeframe } = options
   departureTime = departureTime ? utils.parseTime(departureTime) : utils.now()
   timeframe = timeframe || 120
@@ -120,6 +120,6 @@ async function getDepartures(station, mode, db, options={}) {
 module.exports = {
   fetchLiveTrips,
   fetchScheduledTrips,
-  getDepartures,
+  getCombinedDepartures,
   shouldUseLiveDepartures
 }

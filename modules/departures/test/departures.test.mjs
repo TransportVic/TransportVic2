@@ -5,7 +5,7 @@ import sampleSchTrips from './sample-data/sample-sch-trips.json' with { type: 'j
 import sampleSchMidnightNoDSTTrips from './sample-data/sample-sch-trips-mid-nodst.json' with { type: 'json' }
 import sampleLiveMidnightNoDSTTrips from './sample-data/sample-live-trips-mid-nodst.json' with { type: 'json' }
 import alamein from './sample-data/alamein.json' with { type: 'json' }
-import { fetchLiveTrips, fetchScheduledTrips, getDepartures, shouldUseLiveDepartures } from '../get-departures.js'
+import { fetchLiveTrips, fetchScheduledTrips, getCombinedDepartures, shouldUseLiveDepartures } from '../get-departures.js'
 import utils from '../../../utils.js'
 
 let clone = o => JSON.parse(JSON.stringify(o))
@@ -77,9 +77,9 @@ describe('The shouldUseLiveDepartures function', () => {
   })
 })
 
-describe('The getDepartures function', () => {
+describe('The getCombinedDepartures function', () => {
   it('Should return live departures for departure times in the past', async () => {
-    let departures = await getDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-03-28T20:50:00.000Z'), timeframe: 10 })
+    let departures = await getCombinedDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-03-28T20:50:00.000Z'), timeframe: 10 })
     expect(departures.length).to.equal(1)
     expect(departures[0].stopTimings[0].scheduledDepartureTime).to.equal('2025-03-28T20:48:00.000Z')
     expect(departures[0].stopTimings[0].estimatedDepartureTime).to.equal('2025-03-28T20:51:00.000Z')
@@ -92,7 +92,7 @@ describe('The getDepartures function', () => {
     utils.now = () => utils.parseTime('2025-03-25T20:45:00.000Z') // current time is 24 march
 
     // fetch for 29 march
-    let departures = await getDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 10 })
+    let departures = await getCombinedDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 10 })
     expect(departures.length).to.equal(1)
     expect(departures[0].departureTime).to.equal('07:48')
     expect(departures[0]._live).to.not.exist
@@ -105,7 +105,7 @@ describe('The getDepartures function', () => {
     utils.now = () => utils.parseTime('2025-03-28T20:00:00.000Z') // current time is 29 march 7am
 
     // fetch for 29 march 7.45am
-    let departures = await getDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 10 })
+    let departures = await getCombinedDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 10 })
     expect(departures.length).to.equal(1)
     expect(departures[0].departureTime).to.equal('07:48')
     expect(departures[0]._live).to.exist
@@ -118,7 +118,7 @@ describe('The getDepartures function', () => {
     utils.now = () => utils.parseTime('2025-03-28T20:00:00.000Z') // current time is 29 march 7am
 
     // fetch for 30 march 1.10am (same PT day)
-    let departures = await getDepartures(alamein, 'metro train', midnightDBNoDST, { departureTime: new Date('2025-03-29T14:10:00.000Z'), timeframe: 10 })
+    let departures = await getCombinedDepartures(alamein, 'metro train', midnightDBNoDST, { departureTime: new Date('2025-03-29T14:10:00.000Z'), timeframe: 10 })
     expect(departures.length).to.equal(1)
     expect(departures[0].departureTime).to.equal('25:14')
     expect(departures[0].stopTimings[0].departureTime).to.equal('01:14')
@@ -132,7 +132,7 @@ describe('The getDepartures function', () => {
     utils.now = () => utils.parseTime('2025-03-27T20:00:00.000Z') // current time is 28 march 7am
 
     // fetch for 30 march 1.10am (end of next PT day), should include departures for 30 march 3am (subsequent PT day)
-    let departures = await getDepartures(alamein, 'metro train', midnightDBNoDST, { departureTime: new Date('2025-03-29T14:10:00.000Z'), timeframe: 180 })
+    let departures = await getCombinedDepartures(alamein, 'metro train', midnightDBNoDST, { departureTime: new Date('2025-03-29T14:10:00.000Z'), timeframe: 180 })
 
     expect(departures.length).to.equal(3)
     expect(departures[0].stopTimings[0].departureTime).to.equal('01:14')
