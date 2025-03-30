@@ -108,7 +108,13 @@ async function getCombinedDepartures(station, mode, db, options={}) {
     departures.push(...missingTrips)
   }
 
-  return departures.map(trip => {
+  return departures
+}
+
+async function getDepartures(station, mode, db, options={}) {
+  let departures = await getCombinedDepartures(station, mode, db, options)
+
+  .map(trip => {
     return {
       trip,
       stop: trip.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))

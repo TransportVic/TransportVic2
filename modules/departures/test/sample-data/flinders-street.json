@@ -1,0 +1,302 @@
+{
+	"stopName" : "Flinders Street Railway Station",
+	"suburb" : [
+		"Melbourne",
+		"Melbourne City"
+	],
+	"cleanSuburbs" : [
+		"melbourne-city",
+		"melbourne"
+	],
+	"bays" : [
+		{
+			"originalName" : "Flinders Street Railway Station (Melbourne City)",
+			"fullStopName" : "Flinders Street Railway Station",
+			"stopGTFSID" : "22238",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.96696435,
+					-37.81830513
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "regional train",
+			"suburb" : "Melbourne City",
+			"vnetStationName" : "Melbourne: Flinders Street"
+		},
+		{
+			"originalName" : "Flinders Street Station",
+			"fullStopName" : "Flinders Street Railway Station",
+			"stopGTFSID" : "11212",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.96483434,
+					-37.81851165
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "metro train",
+			"suburb" : "Melbourne",
+			"platform" : "1"
+		},
+		{
+			"originalName" : "Flinders Street Station",
+			"fullStopName" : "Flinders Street Railway Station",
+			"stopGTFSID" : "11213",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.96601006,
+					-37.81830668
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "metro train",
+			"suburb" : "Melbourne",
+			"platform" : "2"
+		},
+		{
+			"originalName" : "Flinders Street Station",
+			"fullStopName" : "Flinders Street Railway Station",
+			"stopGTFSID" : "11214",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.96646672,
+					-37.81822445
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "metro train",
+			"suburb" : "Melbourne",
+			"platform" : "3"
+		},
+		{
+			"originalName" : "Flinders Street Station",
+			"fullStopName" : "Flinders Street Railway Station",
+			"stopGTFSID" : "11215",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.96655582,
+					-37.81828907
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "metro train",
+			"suburb" : "Melbourne",
+			"platform" : "4"
+		},
+		{
+			"originalName" : "Flinders Street Station",
+			"fullStopName" : "Flinders Street Railway Station",
+			"stopGTFSID" : "11216",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.96660025,
+					-37.81832588
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "metro train",
+			"suburb" : "Melbourne",
+			"platform" : "5"
+		},
+		{
+			"originalName" : "Flinders Street Station",
+			"fullStopName" : "Flinders Street Railway Station",
+			"stopGTFSID" : "11217",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.9669283,
+					-37.81837661
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "metro train",
+			"suburb" : "Melbourne",
+			"platform" : "6"
+		},
+		{
+			"originalName" : "Flinders Street Station",
+			"fullStopName" : "Flinders Street Railway Station",
+			"stopGTFSID" : "11218",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.96674342,
+					-37.81849057
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "metro train",
+			"suburb" : "Melbourne",
+			"platform" : "7"
+		},
+		{
+			"originalName" : "Flinders Street Station",
+			"fullStopName" : "Flinders Street Railway Station",
+			"stopGTFSID" : "12201",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.96826668,
+					-37.81845378
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "metro train",
+			"suburb" : "Melbourne",
+			"platform" : "13"
+		},
+		{
+			"originalName" : "Flinders Street Station",
+			"fullStopName" : "Flinders Street Railway Station",
+			"stopGTFSID" : "12202",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.96817708,
+					-37.81840717
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "metro train",
+			"suburb" : "Melbourne",
+			"platform" : "12"
+		},
+		{
+			"originalName" : "Flinders Street Station",
+			"fullStopName" : "Flinders Street Railway Station",
+			"stopGTFSID" : "12203",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.96619788,
+					-37.81891371
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "metro train",
+			"suburb" : "Melbourne",
+			"platform" : "10"
+		},
+		{
+			"originalName" : "Flinders Street Station",
+			"fullStopName" : "Flinders Street Railway Station",
+			"stopGTFSID" : "12204",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.96687671,
+					-37.81860101
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "metro train",
+			"suburb" : "Melbourne",
+			"platform" : "9"
+		},
+		{
+			"originalName" : "Flinders Street Station",
+			"fullStopName" : "Flinders Street Railway Station",
+			"stopGTFSID" : "12205",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.9668893,
+					-37.81855617
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "metro train",
+			"suburb" : "Melbourne",
+			"platform" : "8"
+		},
+		{
+			"originalName" : "Flinders Street Railway Station",
+			"fullStopName" : "Flinders Street Railway Station",
+			"stopGTFSID" : "26170",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.96591676,
+					-37.81798064
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "metro train",
+			"suburb" : "Melbourne",
+			"platform" : "RRB"
+		},
+		{
+			"originalName" : "Flinders Street Railway Station",
+			"fullStopName" : "Flinders Street Railway Station",
+			"stopGTFSID" : "Parentvic:rail:FSS",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.96696435,
+					-37.81830513
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "metro train",
+			"suburb" : "Melbourne"
+		},
+		{
+			"originalName" : "1-Flinders Street Railway Station/Elizabeth St (Melbourne City)",
+			"fullStopName" : "Flinders Street Railway Station/Elizabeth Street",
+			"stopGTFSID" : "17850",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.96476527,
+					-37.81771743
+				]
+			},
+			"stopNumber" : "1",
+			"mode" : "tram",
+			"suburb" : "Melbourne City",
+			"tramTrackerID" : "3801",
+			"tramTrackerName" : "Flinders Street Railway Station",
+			"levelAccess" : false
+		},
+		{
+			"originalName" : "1-Flinders Street Railway Station/Elizabeth St (Melbourne City)",
+			"fullStopName" : "Flinders Street Railway Station/Elizabeth Street",
+			"stopGTFSID" : "17877",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					144.9648398,
+					-37.81789895
+				]
+			},
+			"stopNumber" : "1",
+			"mode" : "tram",
+			"suburb" : "Melbourne City"
+		}
+	],
+	"mergeName" : "Flinders Street Railway Station",
+	"services" : [ ],
+	"screenServices" : [ ],
+	"cleanName" : "flinders-street-railway-station",
+	"cleanNames" : [
+		"flinders-street-railway-station",
+		"flinders-street-railway-station-elizabeth-street"
+	],
+	"codedSuburbs" : [
+		"melbourne-city",
+		"melbourne"
+	],
+	"codedName" : "flinders-street-railway-station",
+	"codedNames" : [
+		"flinders-street-railway-station",
+		"flinders-street-railway-station-elizabeth-street"
+	]
+}

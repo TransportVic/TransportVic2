@@ -4,6 +4,8 @@ import sampleLiveTrips from './sample-data/sample-live-trips.json' with { type: 
 import sampleSchTrips from './sample-data/sample-sch-trips.json' with { type: 'json' }
 import sampleSchMidnightNoDSTTrips from './sample-data/sample-sch-trips-mid-nodst.json' with { type: 'json' }
 import sampleLiveMidnightNoDSTTrips from './sample-data/sample-live-trips-mid-nodst.json' with { type: 'json' }
+import sampleLiveCCLTrips from './sample-data/sample-live-trips-ccl.json' with { type: 'json' }
+import flindersStreet from './sample-data/flinders-street.json' with { type: 'json' }
 import alamein from './sample-data/alamein.json' with { type: 'json' }
 import { fetchLiveTrips, fetchScheduledTrips, getCombinedDepartures, shouldUseLiveDepartures } from '../get-departures.js'
 import utils from '../../../utils.js'
@@ -19,6 +21,10 @@ const midnightDBNoDST = new LokiDatabaseConnection()
 midnightDBNoDST.connect()
 await (await midnightDBNoDST.createCollection('gtfs timetables')).createDocuments(clone(sampleSchMidnightNoDSTTrips))
 await (await midnightDBNoDST.createCollection('live timetables')).createDocuments(clone(sampleLiveMidnightNoDSTTrips))
+
+const cclDB = new LokiDatabaseConnection()
+cclDB.connect()
+await (await cclDB.createCollection('live timetables')).createDocuments(clone(sampleLiveCCLTrips))
 
 describe('The fetchLiveTrips function', () => {
   it('Should return trip data from the live timetables collection', async () => {
@@ -145,5 +151,35 @@ describe('The getCombinedDepartures function', () => {
     expect(departures[2]._live).to.not.exist
 
     utils.now = originalNow
+  })
+})
+
+describe('The getDepartures function', () => {
+  it('Should return appropriate data for each departure', async () => {
+    let departures = await getCombinedDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-03-28T20:40:00.000Z'), timeframe: 120 })
+
+    expect(departures.length).to.equal(4)
+
+    expect(departures[0].scheduledDepartureTime.toISOString()).to.equal('2025-03-28T20:48:00.000Z')
+    expect(departures[0].estimatedDepartureTime.toISOString()).to.equal('2025-03-28T20:51:00.000Z')
+    expect(departures[0].actualDepartureTime.toISOString()).to.equal('2025-03-28T20:51:00.000Z')
+
+    expect(departures[0].routeName).to.equal('Alamein')
+    expect(departures[0].destination).to.equal('Camberwell')
+
+    expect(departures[0].departureDay).to.equal('20250329')
+
+    expect(departures[0].allStops[0]).to.equal('Alamein')
+    expect(departures[0].allStops.slice(-1)[0]).to.equal('Camberwell')
+
+    expect(departures[0].futureStops[0]).to.equal('Ashburton')
+    expect(departures[0].futureStops.slice(-1)[0]).to.equal('Camberwell')
+
+    expect(departures[0]._live).to.exist
+
+
+    expect(departures[3].scheduledDepartureTime.toISOString()).to.equal('2025-03-28T21:48:00.000Z')
+    expect(departures[3].estimatedDepartureTime).to.be.null
+    expect(departures[3].actualDepartureTime).to.equal(departures[3].scheduledDepartureTime)
   })
 })
