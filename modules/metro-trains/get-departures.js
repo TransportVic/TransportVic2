@@ -97,7 +97,7 @@ async function getDepartures(station, db, options={}) {
   if (typeof lookBackwards === 'undefined') lookBackwards = false
 
   let departures
-  if (shouldUseLiveDepartures) departures = await fetchLiveTrips(station, db, departureTime, timeframe, lookBackwards)
+  if (shouldUseLiveDepartures(departureTime)) departures = await fetchLiveTrips(station, db, departureTime, timeframe, lookBackwards)
   else departures = await fetchScheduledTrips(station, db, departureTime, timeframe, lookBackwards)
 
   return departures

@@ -74,8 +74,24 @@ describe('The shouldUseLiveDepartures function', () => {
 
 describe('The getDepartures function', () => {
   it('Should return live departures for departure times in the past', async () => {
-    let departures = await getDepartures(alamein, db, { departureTime: new Date('2025-03-28T20:51:00.000Z'), timeframe: 10 })
+    let departures = await getDepartures(alamein, db, { departureTime: new Date('2025-03-28T20:50:00.000Z'), timeframe: 10 })
     expect(departures.length).to.equal(1)
+    expect(departures[0].stopTimings[0].scheduledDepartureTime).to.equal('2025-03-28T20:48:00.000Z')
+    expect(departures[0].stopTimings[0].estimatedDepartureTime).to.equal('2025-03-28T20:51:00.000Z')
+    expect(departures[0].departureTime).to.equal('07:48')
     expect(departures[0]._live).to.be.true
+  })
+
+  it('Should return scheduled departures for departure times in the future on a different day', async () => {
+    let originalNow = utils.now
+    utils.now = () => utils.parseTime('2025-03-25T20:45:00.000Z') // current time is 24 march
+
+    // fetch for 29 march
+    let departures = await getDepartures(alamein, db, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 10 })
+    expect(departures.length).to.equal(1)
+    expect(departures[0].departureTime).to.equal('07:48')
+    expect(departures[0]._live).to.not.exist
+
+    utils.now = originalNow
   })
 })
