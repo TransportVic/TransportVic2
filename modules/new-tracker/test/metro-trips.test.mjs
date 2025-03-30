@@ -17,7 +17,7 @@ describe('The getUpcomingTrips function', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addMetroSite(stubAPI)
 
-    let trips = await getUpcomingTrips(ptvAPI)
+    let trips = await getUpcomingTrips(ptvAPI, ptvAPI.metroSite.lines.STONY_POINT)
 
     expect(trips.some(trip => trip.operationalDate === '20250330')).to.be.true
 
@@ -35,7 +35,7 @@ describe('The getUpcomingTrips function', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addMetroSite(stubAPI)
 
-    let trips = await getUpcomingTrips(ptvAPI)
+    let trips = await getUpcomingTrips(ptvAPI, ptvAPI.metroSite.lines.STONY_POINT)
 
     expect(trips.some(trip => trip.operationalDate === '20250330')).to.be.false
 
