@@ -3,21 +3,20 @@ import { LokiDatabaseConnection } from '@transportme/database'
 import sampleLiveTrips from './sample-data/sample-live-trips.json' with { type: 'json' }
 import sampleSchTrips from './sample-data/sample-sch-trips.json' with { type: 'json' }
 import sampleSchMidnightNoDSTTrips from './sample-data/sample-sch-trips-mid-nodst.json' with { type: 'json' }
+import sampleLiveMidnightNoDSTTrips from './sample-data/sample-live-trips-mid-nodst.json' with { type: 'json' }
 import alamein from './sample-data/alamein.json' with { type: 'json' }
 import { fetchLiveTrips, fetchScheduledTrips, getDepartures, shouldUseLiveDepartures } from '../get-departures.js'
 import utils from '../../../utils.js'
 
 const db = new LokiDatabaseConnection()
 db.connect()
-let gtfsTrips = await db.createCollection('gtfs timetables')
-let liveTrips = await db.createCollection('live timetables')
-
-await gtfsTrips.createDocuments(sampleSchTrips)
-await liveTrips.createDocuments(sampleLiveTrips)
+await (await db.createCollection('gtfs timetables')).createDocuments(sampleSchTrips)
+await (await db.createCollection('live timetables')).createDocuments(sampleLiveTrips)
 
 const midnightDBNoDST = new LokiDatabaseConnection()
 midnightDBNoDST.connect()
 await (await midnightDBNoDST.createCollection('gtfs timetables')).createDocuments(sampleSchMidnightNoDSTTrips)
+await (await midnightDBNoDST.createCollection('live timetables')).createDocuments(sampleLiveMidnightNoDSTTrips)
 
 describe('The fetchLiveTrips function', () => {
   it('Should return trip data from the live timetables collection', async () => {
@@ -91,6 +90,33 @@ describe('The getDepartures function', () => {
     expect(departures.length).to.equal(1)
     expect(departures[0].departureTime).to.equal('07:48')
     expect(departures[0]._live).to.not.exist
+
+    utils.now = originalNow
+  })
+
+  it('Should return live departures for departure times in the future on the same day', async () => {
+    let originalNow = utils.now
+    utils.now = () => utils.parseTime('2025-03-28T20:00:00.000Z') // current time is 29 march 7am
+
+    // fetch for 29 march 7.45am
+    let departures = await getDepartures(alamein, db, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 10 })
+    expect(departures.length).to.equal(1)
+    expect(departures[0].departureTime).to.equal('07:48')
+    expect(departures[0]._live).to.exist
+
+    utils.now = originalNow
+  })
+
+  it('Should return live departures for departure times before 3am on the next day', async () => {
+    let originalNow = utils.now
+    utils.now = () => utils.parseTime('2025-03-28T20:00:00.000Z') // current time is 29 march 7am
+
+    // fetch for 30 march 1.10am (same PT day)
+    let departures = await getDepartures(alamein, midnightDBNoDST, { departureTime: new Date('2025-03-29T14:10:00.000Z'), timeframe: 10 })
+    expect(departures.length).to.equal(1)
+    expect(departures[0].departureTime).to.equal('25:14')
+    expect(departures[0].stopTimings[0].departureTime).to.equal('01:14')
+    expect(departures[0]._live).to.exist
 
     utils.now = originalNow
   })
