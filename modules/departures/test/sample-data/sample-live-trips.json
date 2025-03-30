@@ -521,7 +521,7 @@
       "arrivalTimeMinutes": 528,
       "departureTime": "08:48",
       "departureTimeMinutes": 528,
-      "estimatedDepartureTime": "2025-03-28T21:48:00.000Z",
+      "estimatedDepartureTime": null,
       "actualDepartureTimeMS": 1743198480000,
       "scheduledDepartureTime": "2025-03-28T21:48:00.000Z",
       "platform": "1",

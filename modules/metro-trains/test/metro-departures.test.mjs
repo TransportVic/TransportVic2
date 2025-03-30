@@ -38,5 +38,9 @@ describe('The metro departures class', () => {
 
     expect(departures[0].futureStops[0]).to.equal('Ashburton')
     expect(departures[0].futureStops.slice(-1)[0]).to.equal('Camberwell')
+
+    expect(departures[3].scheduledDepartureTime.toISOString()).to.equal('2025-03-28T21:48:00.000Z')
+    expect(departures[3].estimatedDepartureTime).to.be.null
+    expect(departures[3].actualDepartureTime).to.equal(departures[3].scheduledDepartureTime)
   })
 })

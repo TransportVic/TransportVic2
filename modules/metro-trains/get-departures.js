@@ -12,7 +12,7 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
     let hasALT = trip.stopTimings.some(stop => stop.stopName === 'Altona Railway Station')
 
     let scheduledDepartureTime = utils.parseTime(currentStop.scheduledDepartureTime)
-    let estimatedDepartureTime = utils.parseTime(currentStop.estimatedDepartureTime)
+    let estimatedDepartureTime = currentStop.estimatedDepartureTime ? utils.parseTime(currentStop.estimatedDepartureTime) : null
 
     return {
       scheduledDepartureTime,
