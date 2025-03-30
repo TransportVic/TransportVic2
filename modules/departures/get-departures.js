@@ -133,7 +133,7 @@ async function getDepartures(station, mode, db, options={}) {
       destination: trip.destination,
       departureDay: trip.operationDays,
       allStops: trip.stopTimings.map(stop => stop.stopName),
-      futureStops: trip.stopTimings.slice(currentStopIndex + 1).map(stop => stop.stopName),
+      futureStops: trip.stopTimings.slice(currentStopIndex + 1).map(stop => stop.stopName)
     })
   }
 
