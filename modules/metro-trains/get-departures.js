@@ -10,7 +10,7 @@ const { convertToLive } = require('./sch-to-live')
  * @param {Number} timeframe The number of minutes worth of departures to capture
  * @param {Boolean} backwards If previous departures should be fetched
  */
-async function fetchLiveTrips(station, db, departureTime, timeframe=120, backwards=false) {
+async function fetchLiveTrips(station, db, departureTime, timeframe=120) {
   let liveTimetables = db.getCollection('live timetables')
   let stopGTFSIDs = station.bays
     .filter(bay => bay.mode === 'metro train')
@@ -19,10 +19,7 @@ async function fetchLiveTrips(station, db, departureTime, timeframe=120, backwar
   let timeMS = +departureTime
   let timeoutMS = timeframe * 60 * 1000
 
-  let actualDepartureTimeMS = backwards ? {
-    $gte: timeMS - timeoutMS,
-    $lte: timeMS
-  } : {
+  let actualDepartureTimeMS = {
     $gte: timeMS - 1000 * 60,
     $lte: timeMS + timeoutMS
   }
@@ -42,7 +39,7 @@ async function fetchLiveTrips(station, db, departureTime, timeframe=120, backwar
   return trips
 }
 
-async function fetchScheduledTrips(station, db, departureTime, timeframe=120, backwards=false) {
+async function fetchScheduledTrips(station, db, departureTime, timeframe=120) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let stopGTFSIDs = station.bays
     .filter(bay => bay.mode === 'metro train')
@@ -58,10 +55,7 @@ async function fetchScheduledTrips(station, db, departureTime, timeframe=120, ba
     let minutesOffset = i * 1440 // Note - fix as 1440 first and have a think if it needs to be dynamic
     let operationDay = departureDay.clone().add(-i, 'days')
 
-    let departureTimeMinutes = backwards ? {
-      $gte: rawDepartureTimeMinutes - timeframe + minutesOffset,
-      $lte: rawDepartureTimeMinutes + minutesOffset
-    } : {
+    let departureTimeMinutes = {
       $gte: rawDepartureTimeMinutes - 1 + minutesOffset,
       $lte: rawDepartureTimeMinutes + timeframe + minutesOffset
     }
@@ -92,19 +86,17 @@ function shouldUseLiveDepartures(departureTime) {
 }
 
 async function getDepartures(station, db, options={}) {
-  let { lookBackwards, departureTime, timeframe } = options
+  let { departureTime, timeframe } = options
   departureTime = departureTime ? utils.parseTime(departureTime) : utils.now()
   timeframe = timeframe || 120
-  if (typeof lookBackwards === 'undefined') lookBackwards = false
 
   let departures, useLive = shouldUseLiveDepartures(departureTime)
-  if (useLive) departures = await fetchLiveTrips(station, db, departureTime, timeframe, lookBackwards)
-  else departures = await fetchScheduledTrips(station, db, departureTime, timeframe, lookBackwards)
+  if (useLive) departures = await fetchLiveTrips(station, db, departureTime, timeframe)
+  else departures = await fetchScheduledTrips(station, db, departureTime, timeframe)
 
   let departureEndTime = departureTime.clone().add(timeframe, 'minutes')
 
   // The departure time crossed the PT day and we need to use scheduled times for the rest
-  // Will only trigger for non backwards departures anyway
   if (useLive && !shouldUseLiveDepartures(departureEndTime)) {
     let ptDayStart = departureEndTime.clone().startOf('day').set('hours', 3)
     let remainingMinutes = departureEndTime.diff(ptDayStart, 'minutes')
