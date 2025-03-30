@@ -4,6 +4,7 @@
   "routeGTFSID": "2-ALM",
   "_live": true,
   "runID": "2316",
+  "isRailReplacementBus" : false,
   "formedBy": "2315",
   "forming": "2319",
   "vehicle": null,
@@ -165,6 +166,7 @@
   "routeGTFSID": "2-ALM",
   "_live": true,
   "runID": "2318",
+  "isRailReplacementBus" : false,
   "formedBy": "2317",
   "forming": "2321",
   "vehicle": null,
@@ -326,6 +328,7 @@
   "routeGTFSID": "2-ALM",
   "_live": true,
   "runID": "2320",
+  "isRailReplacementBus" : false,
   "formedBy": "2319",
   "forming": "2323",
   "vehicle": {
@@ -495,6 +498,7 @@
   "routeGTFSID": "2-ALM",
   "_live": true,
   "runID": "2322",
+  "isRailReplacementBus" : false,
   "formedBy": "2321",
   "forming": "2325",
   "vehicle": {

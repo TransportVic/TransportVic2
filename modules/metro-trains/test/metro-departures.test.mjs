@@ -28,8 +28,15 @@ describe('The metro departures class', () => {
     expect(departures[0].destination).to.equal('Camberwell')
     expect(departures[0].direction).to.equal('Up')
     expect(departures[0].viaCityLoop).to.be.false
+    expect(departures[0].isSkippingLoop).to.be.null
     expect(departures[0].viaAltonaLoop).to.be.null
     expect(departures[0].isRailReplacementBus).to.be.false
-    expect(departures[0].originDepartureDay).to.equal('20250329')
+    expect(departures[0].departureDay).to.equal('20250329')
+
+    expect(departures[0].allStops[0]).to.equal('Alamein')
+    expect(departures[0].allStops.slice(-1)[0]).to.equal('Camberwell')
+
+    expect(departures[0].futureStops[0]).to.equal('Ashburton')
+    expect(departures[0].futureStops.slice(-1)[0]).to.equal('Camberwell')
   })
 })
