@@ -1170,6 +1170,7 @@ async function getExtraTrains(departures, direction, scheduled, departureTime) {
 
 async function getMissingTrains(departures, scheduled, route) {
   let raceTrains = scheduled.filter(train => train.trip.routeGTFSID === route)
+  raceTrains = scheduled
   let existingIDs = departures.filter(train => train.trip.routeGTFSID === route).map(train => generateTripID(train.trip))
 
   let extras = raceTrains.filter(train => {
@@ -1198,10 +1199,10 @@ async function getDepartures(station, db, filter, backwards, departureTime) {
         extraTrains = await getExtraTrains(departures, 'Up', scheduled, departureTime)
       }
 
-      if (rceStations.includes(stationName)) {
-        raceTrains = await getMissingTrains(departures, scheduled, '2-RCE')
-        raceTrains = raceTrains.filter(train => !extraTrains.includes(train))
-      }
+      // if (rceStations.includes(stationName)) {
+      //   raceTrains = await getMissingTrains(departures, scheduled, '2-RCE')
+      //   raceTrains = raceTrains.filter(train => !extraTrains.includes(train))
+      // }
 
       cclTrains = await getMissingTrains(departures, scheduled, '2-CCL')
 
