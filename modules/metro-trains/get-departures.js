@@ -1171,7 +1171,8 @@ async function getExtraTrains(departures, direction, scheduled, departureTime) {
 async function getMissingTrains(departures, scheduled, route) {
   let raceTrains = scheduled.filter(train => train.trip.routeGTFSID === route)
   raceTrains = scheduled
-  let existingIDs = departures.filter(train => train.trip.routeGTFSID === route).map(train => generateTripID(train.trip))
+  // let existingIDs = departures.filter(train => train.trip.routeGTFSID === route).map(train => generateTripID(train.trip))
+  let existingIDs = departures.map(train => generateTripID(train.trip))
 
   let extras = raceTrains.filter(train => {
     let id = generateTripID(train.trip)
