@@ -95,7 +95,8 @@ for (let i of selectedModes) {
 
     console.log('Loaded routes for', GTFS_MODES[i])
   } catch (e) {
-    console.log('Failed to load stops and routes for', GTFS_MODES[i])
+    console.log('ERROR: Failed to load stops and routes for', GTFS_MODES[i])
+    console.log(e)
   }
 }
 console.log('Stop overrides', nameOverridesCounter)
@@ -117,10 +118,10 @@ function cleanStop(stop) {
 
   return stop
 }
-
+console.log(allStops)
 let allStops = (await stops.findDocuments({}).toArray()).map(cleanStop)
 await mongoStops.createDocuments(allStops)
-
+console.log(allRoutes)
 let allRoutes = (await routes.findDocuments({}).toArray()).map(cleanStop)
 await mongoRoutes.createDocuments(allRoutes)
 
