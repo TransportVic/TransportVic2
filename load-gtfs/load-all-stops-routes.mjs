@@ -118,10 +118,10 @@ function cleanStop(stop) {
 
   return stop
 }
-console.log(allStops)
+
 let allStops = (await stops.findDocuments({}).toArray()).map(cleanStop)
 await mongoStops.createDocuments(allStops)
-console.log(allRoutes)
+
 let allRoutes = (await routes.findDocuments({}).toArray()).map(cleanStop)
 await mongoRoutes.createDocuments(allRoutes)
 
