@@ -1002,6 +1002,7 @@ function parsePTVDepartures(ptvResponse, stationName, departureTime) {
 
     let direction = directionData.direction_name.includes('City') ? 'Up' : 'Down'
     if (routeName === 'Stony Point') direction = runDestination === 'Frankston' ? 'Up' : 'Down'
+    if (routeName === 'Stony Point') return // Force loading of local trip which has TDN
     if (routeName === 'City Circle') direction = 'Down'
 
     let location = run.vehicle_position ? {
