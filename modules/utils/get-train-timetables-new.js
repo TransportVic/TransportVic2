@@ -307,7 +307,8 @@ async function getScheduledDepartures(station, db, mode, time, timeout, backward
       isSkippingLoop: null,
       originDepartureTime,
       departureDay: utils.getYYYYMMDD(tripDepartureDay),
-      trueDepartureDay: utils.getYYYYMMDD(tripDeparturePTDay)
+      trueDepartureDay: utils.getYYYYMMDD(tripDeparturePTDay),
+      trueDepartureDayMoment: tripDeparturePTDay
     }
   })).filter(Boolean).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }
@@ -404,6 +405,12 @@ async function getScheduledMetroDepartures(station, db, time, backwards=false) {
       }
 
       departure.cityLoopRunning = cityLoopRunning
+
+      let depTime = departure.departureTime
+      let destStopIndex = utils.findLastIndex(departure.trip.stopTimings, stop => stop.stopName === departure.trip.trueDestination)
+      let destArrMin = departure.trip.stopTimings[destStopIndex].arrivalTimeMinutes
+      let destArr = departure.trueDepartureDayMoment.clone().add(destArrMin, 'minutes')
+      if (depTime >= destArr) return null
     }
 
     let altonaLoopRunning = []
