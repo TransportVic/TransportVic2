@@ -391,6 +391,14 @@ async function getScheduledMetroDepartures(station, db, time, backwards=false) {
 
         departure.cityLoopRunning = cityLoopRunning
       }
+
+      if (isInCity) {
+        let depTime = departure.scheduledDepartureTime
+        let destStopIndex = utils.findLastIndex(departure.trip.stopTimings, stop => stop.stopName === departure.trip.trueDestination)
+        let destArrMin = departure.trip.stopTimings[destStopIndex].arrivalTimeMinutes
+        let destArr = departure.trueDepartureDayMoment.clone().add(destArrMin, 'minutes')
+        if (depTime >= destArr) return null
+      }
     } else if (isInCity) {
       let currentIndex = cityLoopRunning.indexOf(stopCode)
       let upcoming = cityLoopRunning.slice(currentIndex)
@@ -405,12 +413,6 @@ async function getScheduledMetroDepartures(station, db, time, backwards=false) {
       }
 
       departure.cityLoopRunning = cityLoopRunning
-
-      let depTime = departure.departureTime
-      let destStopIndex = utils.findLastIndex(departure.trip.stopTimings, stop => stop.stopName === departure.trip.trueDestination)
-      let destArrMin = departure.trip.stopTimings[destStopIndex].arrivalTimeMinutes
-      let destArr = departure.trueDepartureDayMoment.clone().add(destArrMin, 'minutes')
-      if (depTime >= destArr) return null
     }
 
     let altonaLoopRunning = []
