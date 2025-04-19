@@ -9,7 +9,7 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.mode).to.equal('metro train')
     expect(timetable.routeGTFSID).to.equal('2-MDD')
     expect(timetable.routeName).to.equal('Mernda')
-    expect(timetable.operationDays).to.equal('20250410')
+    expect(timetable.operationDay).to.equal('20250410')
     expect(timetable.operationDayMoment.toISOString()).to.equal('2025-04-09T14:00:00.000Z')
     expect(timetable.block).to.equal('11393')
     expect(timetable.runID).to.equal('1000')
@@ -30,5 +30,13 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.stops[0].platform).to.equal('1')
     expect(timetable.stops[0].scheduledDepartureTime.toISOString()).to.equal('2025-04-09T18:04:00.000Z')
     expect(timetable.stops[0].actualDepartureTime.toISOString()).to.equal('2025-04-09T18:03:40.000Z')
+
+    expect(timetable.stops[1].stopName).to.equal('Hawkstowe Railway Station')
+    expect(timetable.stops[1].stopGTFSID).to.equal('26511')
+    expect(timetable.stops[1].arrivalTime).to.be.null
+    expect(timetable.stops[1].departureTime).to.equal('04:07')
+    expect(timetable.stops[1].platform).to.equal('1')
+    expect(timetable.stops[1].scheduledDepartureTime.toISOString()).to.equal('2025-04-09T18:07:00.000Z')
+    expect(timetable.stops[1].actualDepartureTime.toISOString()).to.equal('2025-04-09T18:10:00.000Z')
   })
 })
