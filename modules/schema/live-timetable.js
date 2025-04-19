@@ -49,8 +49,10 @@ module.exports = class LiveTimetable {
   #routeGTFSID
   #routeName
   #tripID
+  #shapeID
   #block
-
+  
+  #isRRB
   #runID
   #direction
 
@@ -74,6 +76,7 @@ module.exports = class LiveTimetable {
   get operationDay() { return utils.getYYYYMMDD(this.#operationDay) }
   get operationDayMoment() { return this.#operationDay.clone() }
   get tripID() { return this.#tripID }
+  get shapeID() { return this.#shapeID }
   get block() { return this.#block }
   get direction() { return this.#direction }
   get runID() { return this.#runID }
@@ -89,6 +92,8 @@ module.exports = class LiveTimetable {
   get formedBy() { return this.#formedBy }
   get forming() { return this.#forming }
 
+  get isRRB() { return this.#isRRB }
+
   static fromDatabase(timetable) {
     let timetableInstance = new LiveTimetable(
       timetable.mode,
@@ -99,6 +104,7 @@ module.exports = class LiveTimetable {
       timetable.block
     )
 
+    if (timetable.shapeID) timetableInstance.#shapeID = timetable.shapeID
     if (timetable.direction) timetableInstance.#direction = timetable.direction
     if (timetable.runID) timetableInstance.#runID = timetable.runID
 
@@ -118,6 +124,7 @@ module.exports = class LiveTimetable {
 
     if (timetable.formedBy) timetableInstance.#formedBy = timetable.formedBy
     if (timetable.forming) timetableInstance.#forming = timetable.forming
+    if (typeof timetable.isRailReplacementBus !== 'undefined') timetableInstance.#isRRB = timetable.isRailReplacementBus
 
     return timetableInstance
   }

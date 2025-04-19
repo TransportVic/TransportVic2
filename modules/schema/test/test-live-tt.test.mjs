@@ -12,8 +12,11 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.operationDay).to.equal('20250410')
     expect(timetable.operationDayMoment.toISOString()).to.equal('2025-04-09T14:00:00.000Z')
     expect(timetable.block).to.equal('11393')
+    expect(timetable.tripID).to.equal('02-MDD--23-T5-1000')
+    expect(timetable.shapeID).to.equal('2-MDD-vpt-23.1.R')
     expect(timetable.runID).to.equal('1000')
     expect(timetable.direction).to.equal('Up')
+    expect(timetable.isRRB).to.be.false
 
     expect(timetable.origin).to.equal('Mernda Railway Station')
     expect(timetable.departureTime).to.equal('04:04')
