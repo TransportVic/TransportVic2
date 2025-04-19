@@ -40,6 +40,24 @@ class TimetableStop {
   get arrivalTime() { return utils.formatHHMM(this.#schDepartureTime) }
   get departureTime() { return utils.formatHHMM(this.#schDepartureTime) }
 
+  toDatabase() {
+    return {
+      stopName: this.#stopName,
+      stopNumber: this.#stopNumber,
+      suburb: this.#suburb,
+      stopGTFSID: this.#stopGTFSID,
+      arrivalTime: this.arrivalTime,
+      arrivalTimeMinutes: this.arrivalTimeMinutes,
+      departureTime: this.departureTime,
+      departureTimeMinutes: this.departureTimeMinutes,
+      estimatedDepartureTime: this.estimatedDepartureTime.toISOString(),
+      scheduledDepartureTime: this.estimatedDepartureTime.toISOString(),
+      actualDepartureTimeMS: +this.actualDepartureTime,
+      platform: this.#platform,
+      cancelled: this.#cancelled,
+    }
+  }
+
 }
 
 module.exports = class LiveTimetable {
