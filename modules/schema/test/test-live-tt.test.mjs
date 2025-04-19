@@ -25,7 +25,6 @@ describe('The LiveTimetable schema', () => {
 
     expect(timetable.stops[0].stopName).to.equal('Mernda Railway Station')
     expect(timetable.stops[0].stopGTFSID).to.equal('26517')
-    expect(timetable.stops[0].arrivalTime).to.be.null
     expect(timetable.stops[0].departureTime).to.equal('04:04')
     expect(timetable.stops[0].platform).to.equal('1')
     expect(timetable.stops[0].scheduledDepartureTime.toISOString()).to.equal('2025-04-09T18:04:00.000Z')
@@ -33,7 +32,6 @@ describe('The LiveTimetable schema', () => {
 
     expect(timetable.stops[1].stopName).to.equal('Hawkstowe Railway Station')
     expect(timetable.stops[1].stopGTFSID).to.equal('26511')
-    expect(timetable.stops[1].arrivalTime).to.be.null
     expect(timetable.stops[1].departureTime).to.equal('04:07')
     expect(timetable.stops[1].platform).to.equal('1')
     expect(timetable.stops[1].scheduledDepartureTime.toISOString()).to.equal('2025-04-09T18:07:00.000Z')

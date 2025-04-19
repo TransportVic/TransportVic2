@@ -3,6 +3,7 @@ const utils = require('../../utils')
 class TimetableStop {
 
   #stopName
+  #suburb
   #stopNumber
   #stopGTFSID
 
@@ -13,15 +14,19 @@ class TimetableStop {
   #platform
   #cancelled
 
-  constructor(stopName, stopNumber, stopGTFSID, scheduledDepartureTime, estimatedDepartureTime) {
+  constructor(stopName, suburb, stopNumber, stopGTFSID, scheduledDepartureTime, estimatedDepartureTime, platform) {
     this.#stopName = stopName
+    this.#suburb = suburb
     this.#stopNumber = stopNumber
     this.#stopGTFSID = stopGTFSID
     this.#schDepartureTime = utils.parseTime(scheduledDepartureTime)
     this.#estDepartureTime = utils.parseTime(estimatedDepartureTime)
+
+    if (platform) this.#platform = platform
   }
 
   get stopName() { return this.#stopName }
+  get suburb() { return this.#suburb }
   get stopNumber() { return this.#stopNumber }
   get stopName() { return this.#stopName }
   get stopGTFSID() { return this.#stopGTFSID }
@@ -32,8 +37,8 @@ class TimetableStop {
   get estimatedDepartureTime() { return this.#estDepartureTime ? this.#estDepartureTime.clone() : null }
   get actualDepartureTime() { return this.estimatedDepartureTime || this.scheduledDepartureTime }
 
-  get arrivalTime() { return utils.formatHHMM(this.#estDepartureTime) }
-  get departureTime() { return utils.formatHHMM(this.#estDepartureTime) }
+  get arrivalTime() { return utils.formatHHMM(this.#schDepartureTime) }
+  get departureTime() { return utils.formatHHMM(this.#schDepartureTime) }
 
 }
 
@@ -49,7 +54,10 @@ module.exports = class LiveTimetable {
   #runID
   #direction
 
-  #stops
+  #stops = []
+
+  #formedBy
+  #forming
 
   constructor(mode, operationDays, routeName, routeGTFSID, tripID, block) {
     this.#mode = mode
@@ -70,9 +78,16 @@ module.exports = class LiveTimetable {
   get direction() { return this.#direction }
   get runID() { return this.#runID }
 
-  set direction(direction) { this.#direction = direction }
-  set runID(runID) { this.#runID = runID }
+  get stops() { return this.#stops }
 
+  get origin() { return this.#stops[0].stopName }
+  get destination() { return this.#stops[this.#stops.length - 1].stopName }
+  
+  get departureTime() { return this.#stops[0].departureTime }
+  get destinationArrivalTime() { return this.#stops[this.#stops.length - 1].arrivalTime }
+
+  get formedBy() { return this.#formedBy }
+  get forming() { return this.#forming }
 
   static fromDatabase(timetable) {
     let timetableInstance = new LiveTimetable(
@@ -84,10 +99,25 @@ module.exports = class LiveTimetable {
       timetable.block
     )
 
-    if (timetable.direction) timetableInstance.direction = timetable.direction
-    if (timetable.runID) timetableInstance.runID = timetable.runID
+    if (timetable.direction) timetableInstance.#direction = timetable.direction
+    if (timetable.runID) timetableInstance.#runID = timetable.runID
 
+    for (let stopData of timetable.stopTimings) {
+      let stop = new TimetableStop(
+        stopData.stopName,
+        stopData.suburb,
+        stopData.stopNumber,
+        stopData.stopGTFSID,
+        stopData.scheduledDepartureTime,
+        stopData.estimatedDepartureTime,
+        stopData.platform
+      )
 
+      timetableInstance.#stops.push(stop)
+    }
+
+    if (timetable.formedBy) timetableInstance.#formedBy = timetable.formedBy
+    if (timetable.forming) timetableInstance.#forming = timetable.forming
 
     return timetableInstance
   }
