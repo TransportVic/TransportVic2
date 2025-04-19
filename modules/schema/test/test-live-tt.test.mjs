@@ -33,6 +33,8 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.stops[0].platform).to.equal('1')
     expect(timetable.stops[0].scheduledDepartureTime.toISOString()).to.equal('2025-04-09T18:04:00.000Z')
     expect(timetable.stops[0].actualDepartureTime.toISOString()).to.equal('2025-04-09T18:03:40.000Z')
+    expect(timetable.stops[0].allowPickup).to.be.true
+    expect(timetable.stops[0].allowDropoff).to.be.false
 
     expect(timetable.stops[1].stopName).to.equal('Hawkstowe Railway Station')
     expect(timetable.stops[1].stopGTFSID).to.equal('26511')
@@ -74,5 +76,8 @@ describe('The LiveTimetable schema', () => {
     expect(dbObj.stopTimings[0].actualDepartureTimeMS).to.equal(+new Date('2025-04-09T18:03:40.000Z'))
     expect(dbObj.stopTimings[0].platform).to.equal('1')
     expect(dbObj.stopTimings[0].cancelled).to.be.false
+    expect(dbObj.stopTimings[0].stopConditions).to.deep.equal({
+      pickup: '0', dropoff: '1'
+    })
   })
 })

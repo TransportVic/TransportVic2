@@ -2,6 +2,8 @@ const utils = require('../../utils')
 
 class TimetableStop {
 
+  #operationDay
+
   #stopName
   #suburb
   #stopNumber
@@ -12,9 +14,13 @@ class TimetableStop {
   #estDepartureTime
 
   #platform
-  #cancelled
+  #cancelled = false
 
-  constructor(stopName, suburb, stopNumber, stopGTFSID, scheduledDepartureTime, estimatedDepartureTime, platform) {
+  #allowPickup = true
+  #allowDropoff = true
+
+  constructor(operationDayMoment, stopName, suburb, stopNumber, stopGTFSID, scheduledDepartureTime, estimatedDepartureTime, { platform, cancelled, allowPickup, allowDropoff }) {
+    this.#operationDay = operationDayMoment
     this.#stopName = stopName
     this.#suburb = suburb
     this.#stopNumber = stopNumber
@@ -23,6 +29,9 @@ class TimetableStop {
     this.#estDepartureTime = utils.parseTime(estimatedDepartureTime)
 
     if (platform) this.#platform = platform
+    if (cancelled) this.#cancelled = cancelled
+    if (typeof allowPickup !== 'undefined') this.#allowPickup = allowPickup
+    if (typeof allowDropoff !== 'undefined') this.#allowDropoff = allowDropoff
   }
 
   get stopName() { return this.#stopName }
@@ -38,7 +47,12 @@ class TimetableStop {
   get actualDepartureTime() { return this.estimatedDepartureTime || this.scheduledDepartureTime }
 
   get arrivalTime() { return utils.formatHHMM(this.#schDepartureTime) }
+  get arrivalTimeMinutes() { return this.#schDepartureTime.diff(this.#operationDay, 'minutes') }
   get departureTime() { return utils.formatHHMM(this.#schDepartureTime) }
+  get departureTimeMinutes() { return this.#schDepartureTime.diff(this.#operationDay, 'minutes') }
+
+  get allowDropoff() { return this.#allowDropoff }
+  get allowPickup() { return this.#allowPickup }
 
   toDatabase() {
     return {
@@ -51,10 +65,14 @@ class TimetableStop {
       departureTime: this.departureTime,
       departureTimeMinutes: this.departureTimeMinutes,
       estimatedDepartureTime: this.estimatedDepartureTime.toISOString(),
-      scheduledDepartureTime: this.estimatedDepartureTime.toISOString(),
+      scheduledDepartureTime: this.scheduledDepartureTime.toISOString(),
       actualDepartureTimeMS: +this.actualDepartureTime,
       platform: this.#platform,
       cancelled: this.#cancelled,
+      stopConditions: {
+        pickup: this.#allowPickup ? '0' : '1',
+        dropoff: this.allowDropoff ? '0' : '1'
+      }
     }
   }
 
@@ -131,13 +149,19 @@ module.exports = class LiveTimetable {
 
     for (let stopData of timetable.stopTimings) {
       let stop = new TimetableStop(
+        timetableInstance.operationDayMoment,
         stopData.stopName,
         stopData.suburb,
         stopData.stopNumber,
         stopData.stopGTFSID,
         stopData.scheduledDepartureTime,
         stopData.estimatedDepartureTime,
-        stopData.platform
+        {
+          platform: stopData.platform,
+          cancelled: stopData.cancelled,
+          allowPickup: stopData.stopConditions.pickup === '0',
+          allowDropoff: stopData.stopConditions.dropoff === '0'
+        }
       )
 
       timetableInstance.#stops.push(stop)
@@ -164,11 +188,11 @@ module.exports = class LiveTimetable {
       direction: this.#direction,
       routeName: this.#routeName,
       routeNumber: this.#routeNumber,
-
       origin: this.origin,
       destination: this.destination,
       departureTime: this.departureTime,
-      destinationArrivalTime: this.destinationArrivalTime
+      destinationArrivalTime: this.destinationArrivalTime,
+      stopTimings: this.#stops.map(stop => stop.toDatabase())
     }
   }
 
