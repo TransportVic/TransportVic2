@@ -48,6 +48,7 @@ module.exports = class LiveTimetable {
   #operationDay
   #routeGTFSID
   #routeName
+  #routeNumber
   #tripID
   #shapeID
   #block
@@ -61,7 +62,7 @@ module.exports = class LiveTimetable {
   #formedBy
   #forming
 
-  constructor(mode, operationDays, routeName, routeGTFSID, tripID, block) {
+  constructor(mode, operationDays, routeName, routeNumber, routeGTFSID, tripID, block) {
     this.#mode = mode
     this.#operationDay = utils.parseDate(operationDays)
     this.#routeName = routeName
@@ -73,6 +74,7 @@ module.exports = class LiveTimetable {
   get mode() { return this.#mode }
   get routeGTFSID() { return this.#routeGTFSID }
   get routeName() { return this.#routeName }
+  get routeNumber() { return this.#routeNumber }
   get operationDay() { return utils.getYYYYMMDD(this.#operationDay) }
   get operationDayMoment() { return this.#operationDay.clone() }
   get tripID() { return this.#tripID }
@@ -99,6 +101,7 @@ module.exports = class LiveTimetable {
       timetable.mode,
       timetable.operationDays,
       timetable.routeName,
+      timetable.routeNumber,
       timetable.routeGTFSID,
       timetable.tripID,
       timetable.block
@@ -127,6 +130,28 @@ module.exports = class LiveTimetable {
     if (typeof timetable.isRailReplacementBus !== 'undefined') timetableInstance.#isRRB = timetable.isRailReplacementBus
 
     return timetableInstance
+  }
+
+  toDatabase() {
+    return {
+      mode: this.#mode,
+      routeGTFSID: this.#routeGTFSID,
+      operationDays: this.operationDay,
+      tripID: this.#tripID,
+      shapeID: this.#shapeID,
+      block: this.#block,
+      gtfsDirection: undefined,
+      runID: this.#runID,
+      isRailReplacementBus: this.#isRRB,
+      direction: this.#direction,
+      routeName: this.#routeName,
+      routeNumber: this.#routeNumber,
+
+      origin: this.origin,
+      destination: this.destination,
+      departureTime: this.departureTime,
+      destinationArrivalTime: this.destinationArrivalTime
+    }
   }
 
 }

@@ -56,6 +56,11 @@ describe('The LiveTimetable schema', () => {
     expect(dbObj.direction).to.equal('Up')
     expect(dbObj.isRailReplacementBus).to.be.false
 
+    expect(dbObj.origin).to.equal('Mernda Railway Station')
+    expect(dbObj.departureTime).to.equal('04:04')
+    expect(dbObj.destination).to.equal('Flinders Street Railway Station')
+    expect(dbObj.destinationArrivalTime).to.equal('04:56')
+
     expect(dbObj.stopTimings[0].stopName).to.equal('Mernda Railway Station')
     expect(dbObj.stopTimings[0].arrivalTime).to.equal('04:04')
     expect(dbObj.stopTimings[0].arrivalTimeMinutes).to.equal(244)
