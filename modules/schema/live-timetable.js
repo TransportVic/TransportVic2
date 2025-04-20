@@ -100,7 +100,7 @@ module.exports = class LiveTimetable {
 
   constructor(mode, operationDays, routeName, routeNumber, routeGTFSID, tripID, block) {
     this.#mode = mode
-    this.#operationDay = utils.parseDate(operationDays)
+    this.#operationDay = utils.parseDate(operationDays).startOf('day')
     this.#routeName = routeName
     this.#routeNumber = routeNumber
     this.#routeGTFSID = routeGTFSID
@@ -119,6 +119,10 @@ module.exports = class LiveTimetable {
   get block() { return this.#block }
   get direction() { return this.#direction }
   get runID() { return this.#runID }
+
+  set direction(direction) { this.#direction = direction }
+  set runID(runID) { this.#runID = runID }
+  set isRRB(isRRB) { this.#isRRB = isRRB }
 
   get stops() { return this.#stops }
 
@@ -194,6 +198,32 @@ module.exports = class LiveTimetable {
       departureTime: this.departureTime,
       destinationArrivalTime: this.destinationArrivalTime,
       stopTimings: this.#stops.map(stop => stop.toDatabase())
+    }
+  }
+
+  updateStopByName(stopName, stopData) {
+    let matchingStop = this.#stops.find(stop => stop.stopName === stopName)
+    if (matchingStop) {
+      if (stopData.scheduledDepartureTime) matchingStop.scheduledDepartureTime = utils.parseTime(stopData.scheduledDepartureTime)
+      if (stopData.estimatedDepartureTime) matchingStop.estimatedDepartureTime = utils.parseTime(stopData.estimatedDepartureTime)
+      if (stopData.platform) matchingStop.platform = stopData.platform
+      if (typeof stopData.cancelled !== 'undefined') matchingStop.cancelled = stopData.cancelled
+    } else {
+      let stop = new TimetableStop(
+        this.#operationDay.clone(),
+        stopName,
+        stopData.suburb,
+        stopData.stopNumber,
+        stopData.stopGTFSID,
+        utils.parseDate(stopData.scheduledDepartureTime),
+        utils.parseDate(stopData.estimatedDepartureTime),
+        {
+          platform: stopData.platform,
+          cancelled: stopData.cancelled
+        }
+      )
+
+      this.#stops.push(stop)
     }
   }
 

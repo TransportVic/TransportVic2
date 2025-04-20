@@ -84,7 +84,7 @@ describe('The LiveTimetable schema', () => {
   it('Should allow creation of a new trip', () => {
     let timetable = new LiveTimetable(
       'metro train',
-      new Date(),
+      new Date('2025-04-09T18:04:00.000Z'),
       'Mernda',
       null,
       '2-MDD',
@@ -92,7 +92,7 @@ describe('The LiveTimetable schema', () => {
       null
     )
 
-    timetable.updateStop('Mernda Railway Station', {
+    timetable.updateStopByName('Mernda Railway Station', {
       stopGTFSID: '26517',
       stopNumber: null,
       suburb: 'Mernda',
@@ -101,7 +101,7 @@ describe('The LiveTimetable schema', () => {
       platform: 1
     })
 
-    timetable.updateStop('Flinders Street Railway Station', {
+    timetable.updateStopByName('Flinders Street Railway Station', {
       stopGTFSID: '11212',
       stopNumber: null,
       suburb: 'Melbourne',
