@@ -210,7 +210,9 @@ module.exports = class LiveTimetable {
       destination: this.destination,
       departureTime: this.departureTime,
       destinationArrivalTime: this.destinationArrivalTime,
-      stopTimings: this.#stops.map(stop => stop.toDatabase())
+      stopTimings: this.#stops.map(stop => stop.toDatabase()),
+      formedBy: this.#formedBy,
+      forming: this.#forming
     }
   }
 

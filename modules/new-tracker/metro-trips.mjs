@@ -11,7 +11,7 @@ export async function getUpcomingTrips(ptvAPI, lines) {
 }
 
 async function getStop(db, stopName) {
-  let stops = await db.getCollection('stops')
+  let stops = db.getCollection('stops')
   let stop = await stops.findDocument({
     stopName
   })
@@ -20,12 +20,20 @@ async function getStop(db, stopName) {
 }
 
 async function getRoute(db, routeName) {
-  let routes = await db.getCollection('routes')
+  let routes = db.getCollection('routes')
   let route = await routes.findDocument({
     routeName
   })
 
   return route
+}
+
+async function getTrip(liveTimetables, runID, date) {
+  return await liveTimetables.findDocument({
+    mode: 'metro train',
+    runID,
+    operationDays: date
+  })
 }
 
 async function createTrip(trip, db) {
@@ -68,19 +76,43 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
   let tripObjects = {}
 
   for (let trip of relevantTrips) {
-    let tripData = await liveTimetables.findDocument({
-      mode: 'metro train',
-      runID: trip.tdn,
-      operationDays: trip.operationalDate
-    })
+    let tripData = await getTrip(liveTimetables, trip.tdn, trip.operationalDate)
 
     if (tripData) tripObjects[trip.tdn] = LiveTimetable.fromDatabase(tripData)
     else tripObjects[trip.tdn] = await createTrip(trip, db)
   }
 
+  for (let trip of relevantTrips) {
+    let tripData = tripObjects[trip.tdn]
+
+    if (trip.runData.formedBy) {
+      let formedByTDN = trip.runData.formedBy.tdn
+
+      let formedByTripData = tripObjects[formedByTDN]
+      if (!formedByTripData) {
+        tripObjects[formedByTDN] = (formedByTripData = await getTrip(liveTimetables, formedByTDN, trip.operationalDate))
+      }
+
+      if (formedByTripData) formedByTripData.forming = trip.tdn
+      tripData.formedBy = formedByTDN
+    }
+
+    if (trip.runData.forming) {
+      let formingTDN = trip.runData.forming.tdn
+
+      let formingTripData = tripObjects[formingTDN]
+      if (!formingTripData) {
+        tripObjects[formingTDN] = (formingTripData = await getTrip(liveTimetables, formingTDN, trip.operationalDate))
+      }
+
+      if (formingTripData) formingTripData.formedBy = trip.tdn
+      tripData.forming = formingTDN
+    }
+  }
+
   let bulkUpdate = Object.values(tripObjects).map(trip => ({
     replaceOne: {
-      filter: { mode: 'metro train', operationDays: trip.operationDayMoment, runID: trip.runID },
+      filter: { mode: 'metro train', operationDays: trip.operationDay, runID: trip.runID },
       replacement: trip.toDatabase(),
       upsert: true
     }

@@ -57,6 +57,12 @@ describe('The getUpcomingTrips function', () => {
     let liveTimetables = await db.createCollection('live timetables')
     await liveTimetables.createDocuments(clone(styLiveTrips))
 
+    let stops = await db.createCollection('stops')
+    await stops.createDocuments(clone(styStops))
+
+    let routes = await db.createCollection('routes')
+    await routes.createDocument(clone(styRoute))
+
     let ptvAPI = createAPI()
 
     await fetchTrips(ptvAPI, db, ptvAPI.metroSite.lines.STONY_POINT)
