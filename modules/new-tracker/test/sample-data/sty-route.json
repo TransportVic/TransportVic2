@@ -1,0 +1,12 @@
+{
+	"mode" : "metro train",
+	"routeName" : "Stony Point",
+	"cleanName" : "stony-point",
+	"routeNumber" : null,
+	"routeGTFSID" : "2-STY",
+	"operators" : [
+		"Unknown"
+	],
+	"directions" : [ ],
+	"codedName" : "stony-point"
+}

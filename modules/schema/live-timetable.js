@@ -227,8 +227,8 @@ module.exports = class LiveTimetable {
 
 
     if (matchingStop) {
-      if (stopData.scheduledDepartureTime) matchingStop.scheduledDepartureTime = utils.parseTime(stopData.scheduledDepartureTime)
-      if (stopData.estimatedDepartureTime) matchingStop.estimatedDepartureTime = utils.parseTime(stopData.estimatedDepartureTime)
+      if (stopData.scheduledDepartureTime) matchingStop.scheduledDepartureTime = stopData.scheduledDepartureTime
+      if (stopData.estimatedDepartureTime) matchingStop.estimatedDepartureTime = stopData.estimatedDepartureTime
       if (stopData.platform) matchingStop.platform = stopData.platform.toString()
       if (typeof stopData.cancelled !== 'undefined') matchingStop.cancelled = stopData.cancelled
     } else {
@@ -238,8 +238,8 @@ module.exports = class LiveTimetable {
         stopData.suburb,
         stopData.stopNumber,
         stopData.stopGTFSID,
-        utils.parseDate(stopData.scheduledDepartureTime),
-        utils.parseDate(stopData.estimatedDepartureTime),
+        stopData.scheduledDepartureTime,
+        stopData.estimatedDepartureTime,
         {
           platform: stopData.platform,
           cancelled: stopData.cancelled
