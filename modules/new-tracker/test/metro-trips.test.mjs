@@ -47,11 +47,14 @@ describe('The getUpcomingTrips function', () => {
   })
 
   it('Should update the trip data of existing live trips', async () => {
+    let originalNow = utils.now
+    utils.now = () => utils.parseDate('20250330')
+    
     let db = new LokiDatabaseConnection()
     db.connect()
     let liveTimetables = await db.createCollection('live timetables')
     await liveTimetables.createDocuments(clone(styLiveTrips))
-    
+
     let ptvAPI = createAPI()
 
     await fetchTrips(ptvAPI, db, ptvAPI.metroSite.lines.STONY_POINT)
@@ -59,5 +62,7 @@ describe('The getUpcomingTrips function', () => {
     let td8500 = await liveTimetables.findDocument({ runID: '8500' })
     expect(td8500.formedBy).to.equal('8501')
     expect(td8500.forming).to.equal('8503')
+
+    utils.now = originalNow
   })
 })

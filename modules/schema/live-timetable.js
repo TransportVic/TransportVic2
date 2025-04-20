@@ -145,6 +145,9 @@ module.exports = class LiveTimetable {
   get formedBy() { return this.#formedBy }
   get forming() { return this.#forming }
 
+  set formedBy(formedBy) { this.#formedBy = formedBy } 
+  set forming(forming) { this.#forming = forming } 
+
   get isRRB() { return this.#isRRB }
 
   static fromDatabase(timetable) {

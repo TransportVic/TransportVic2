@@ -130,6 +130,8 @@ describe('The LiveTimetable schema', () => {
   it('Should allow updating an existing trip', () => {
     let timetable = LiveTimetable.fromDatabase(mdd1000)
 
+    timetable.forming = '1999'
+
     timetable.updateStopByName('Jolimont Railway Station', {
       estimatedDepartureTime: new Date('2025-04-09T18:56:00.000Z'),
       platform: 5
@@ -137,6 +139,7 @@ describe('The LiveTimetable schema', () => {
 
     expect(timetable.stops[timetable.stops.length - 2].estimatedDepartureTime.toISOString()).to.equal('2025-04-09T18:56:00.000Z')
     expect(timetable.stops[timetable.stops.length - 2].platform).to.equal('5')
+    expect(timetable.forming).to.equal('1999')
   })
 
   it('Should handle a stop being served multiple times', () => {
