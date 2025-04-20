@@ -3,6 +3,9 @@ import { fileURLToPath } from 'url'
 import utils from '../../utils.js'
 import LiveTimetable from '../schema/live-timetable.js'
 
+import { MongoDatabaseConnection } from '@transportme/database'
+import config from '../../config.json' with { type: 'json' }
+
 export async function getUpcomingTrips(ptvAPI, lines) {
   let trips = await ptvAPI.metroSite.getOperationalTimetable(lines)
   let today = utils.now().startOf('day')
@@ -50,6 +53,7 @@ async function createTrip(trip, db) {
   )
 
   timetable.runID = trip.tdn
+  timetable.direction = trip.tdn[3] % 2 === 0 ? 'Up' : 'Down'
   timetable.forming = trip.forming
   timetable.formedBy = trip.formedBy
 
@@ -154,8 +158,13 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await mongoDB.connect()
+
   let ptvAPI = new PTVAPI()
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
-  await fetchTrips(ptvAPI, null, ptvAPI.metroSite.lines.STONY_POINT)
+  await fetchTrips(ptvAPI, mongoDB, ptvAPI.metroSite.lines.STONY_POINT)
+
+  process.exit(0)
 }

@@ -26,7 +26,7 @@ class TimetableStop {
     this.#stopNumber = stopNumber
     this.#stopGTFSID = stopGTFSID
     this.scheduledDepartureTime = scheduledDepartureTime
-    this.estimatedDepartureTime = estimatedDepartureTime
+    if (estimatedDepartureTime) this.estimatedDepartureTime = estimatedDepartureTime
 
     if (platform) this.#platform = platform
     if (cancelled) this.#cancelled = cancelled
@@ -51,7 +51,11 @@ class TimetableStop {
   }
 
   set estimatedDepartureTime(estimatedDepartureTime) {
-    this.#estDepartureTime = utils.parseTime(estimatedDepartureTime)
+    if (estimatedDepartureTime) {
+      this.#estDepartureTime = utils.parseTime(estimatedDepartureTime)
+    } else {
+      this.#estDepartureTime = null
+    }
   }
 
   set platform(platform) { this.#platform = platform }
@@ -74,7 +78,7 @@ class TimetableStop {
       arrivalTimeMinutes: this.arrivalTimeMinutes,
       departureTime: this.departureTime,
       departureTimeMinutes: this.departureTimeMinutes,
-      estimatedDepartureTime: this.estimatedDepartureTime.toISOString(),
+      estimatedDepartureTime: this.#estDepartureTime ? this.estimatedDepartureTime.toISOString() : null,
       scheduledDepartureTime: this.scheduledDepartureTime.toISOString(),
       actualDepartureTimeMS: +this.actualDepartureTime,
       platform: this.#platform,

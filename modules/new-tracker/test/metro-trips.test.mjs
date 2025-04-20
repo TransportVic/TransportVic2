@@ -76,6 +76,8 @@ describe('The getUpcomingTrips function', () => {
     expect(td8500.formedBy).to.equal('8501')
     expect(td8500.forming).to.equal('8503')
 
+    expect(td8500.stopTimings[0].estimatedDepartureTime).to.be.null
+
     let td8503 = await liveTimetables.findDocument({ runID: '8503' })
     expect(td8503.formedBy).to.equal('8500')
     expect(td8503.forming).to.equal('8502')
@@ -114,6 +116,8 @@ describe('The getUpcomingTrips function', () => {
     expect(td8506.departureTime).to.equal('14:09')
     expect(td8506.destination).to.equal('Frankston Railway Station')
     expect(td8506.destinationArrivalTime).to.equal('14:45')
+
+    expect(td8506.stopTimings[0].estimatedDepartureTime).to.be.null
 
     utils.now = originalNow
   })
