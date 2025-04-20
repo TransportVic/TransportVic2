@@ -11,6 +11,16 @@ export async function getUpcomingTrips(ptvAPI, lines) {
 
 export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSite.lines)) {
   let relevantTrips = await getUpcomingTrips(ptvAPI, lines)
+  let liveTimetables = db.getCollection('live timetables')
+
+  for (let trip of relevantTrips) {
+    let tripData = await liveTimetables.findDocument({
+      mode: 'metro train',
+      runID: trip.tdn,
+      operationDays: trip.operationalDate
+    })
+    console.log(tripData)
+  }
   console.log(relevantTrips)
 }
 
