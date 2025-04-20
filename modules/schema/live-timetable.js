@@ -25,8 +25,8 @@ class TimetableStop {
     this.#suburb = suburb
     this.#stopNumber = stopNumber
     this.#stopGTFSID = stopGTFSID
-    this.#schDepartureTime = utils.parseTime(scheduledDepartureTime)
-    this.#estDepartureTime = utils.parseTime(estimatedDepartureTime)
+    this.scheduledDepartureTime = scheduledDepartureTime
+    this.estimatedDepartureTime = estimatedDepartureTime
 
     if (platform) this.#platform = platform
     if (cancelled) this.#cancelled = cancelled
@@ -45,6 +45,16 @@ class TimetableStop {
   get scheduledDepartureTime() { return this.#schDepartureTime.clone() }
   get estimatedDepartureTime() { return this.#estDepartureTime ? this.#estDepartureTime.clone() : null }
   get actualDepartureTime() { return this.estimatedDepartureTime || this.scheduledDepartureTime }
+
+  set scheduledDepartureTime(scheduledDepartureTime) {
+    this.#schDepartureTime = utils.parseTime(scheduledDepartureTime)
+  }
+
+  set estimatedDepartureTime(estimatedDepartureTime) {
+    this.#estDepartureTime = utils.parseTime(estimatedDepartureTime)
+  }
+
+  set platform(platform) { this.#platform = platform }
 
   get arrivalTime() { return utils.formatHHMM(this.#schDepartureTime) }
   get arrivalTimeMinutes() { return this.#schDepartureTime.diff(this.#operationDay, 'minutes') }
@@ -206,7 +216,7 @@ module.exports = class LiveTimetable {
     if (matchingStop) {
       if (stopData.scheduledDepartureTime) matchingStop.scheduledDepartureTime = utils.parseTime(stopData.scheduledDepartureTime)
       if (stopData.estimatedDepartureTime) matchingStop.estimatedDepartureTime = utils.parseTime(stopData.estimatedDepartureTime)
-      if (stopData.platform) matchingStop.platform = stopData.platform
+      if (stopData.platform) matchingStop.platform = stopData.platform.toString()
       if (typeof stopData.cancelled !== 'undefined') matchingStop.cancelled = stopData.cancelled
     } else {
       let stop = new TimetableStop(

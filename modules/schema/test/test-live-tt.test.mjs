@@ -125,4 +125,16 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.destination).to.equal('Flinders Street Railway Station')
     expect(timetable.destinationArrivalTime).to.equal('04:56')
   })
+
+  it('Should allow updating an existing trip', () => {
+    let timetable = LiveTimetable.fromDatabase(mdd1000)
+
+    timetable.updateStopByName('Jolimont Railway Station', {
+      estimatedDepartureTime: new Date('2025-04-09T18:56:00.000Z'),
+      platform: 5
+    })
+
+    expect(timetable.stops[timetable.stops.length - 2].estimatedDepartureTime.toISOString()).to.equal('2025-04-09T18:56:00.000Z')
+    expect(timetable.stops[timetable.stops.length - 2].platform).to.equal('5')
+  })
 })
