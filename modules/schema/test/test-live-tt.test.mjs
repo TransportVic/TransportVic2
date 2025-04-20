@@ -1,5 +1,6 @@
 import { expect } from 'chai'
 import mdd1000 from './sample-data/mdd-1000.json' with { type: 'json' }
+import ccl0735 from './sample-data/ccl-0735.json' with { type: 'json' }
 import LiveTimetable from '../live-timetable.js'
 
 describe('The LiveTimetable schema', () => {
@@ -136,5 +137,26 @@ describe('The LiveTimetable schema', () => {
 
     expect(timetable.stops[timetable.stops.length - 2].estimatedDepartureTime.toISOString()).to.equal('2025-04-09T18:56:00.000Z')
     expect(timetable.stops[timetable.stops.length - 2].platform).to.equal('5')
+  })
+
+  it('Should handle a stop being served multiple times', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+
+    let delays = [0, 1, 2, 3, 4, 5]
+
+    for (let delay of delays) {
+      let stopData = timetable.stops[delay]
+      let stopName = stopData.stopName
+      timetable.updateStopByName(stopName, {
+        estimatedDepartureTime: stopData.scheduledDepartureTime.add(delay, 'minutes')
+      }, stopData.scheduledDepartureTime)
+    }
+
+    // First time FSS is served
+    expect(timetable.stops[0].estimatedDepartureTime.toISOString()).to.equal('2025-04-04T23:53:00.000Z')
+    expect(timetable.stops[1].estimatedDepartureTime.toISOString()).to.equal('2025-04-04T23:57:00.000Z')
+
+    // Second time FSS is served
+    expect(timetable.stops[5].estimatedDepartureTime.toISOString()).to.equal('2025-04-05T00:10:00.000Z')
   })
 })

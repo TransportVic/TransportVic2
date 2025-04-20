@@ -211,8 +211,18 @@ module.exports = class LiveTimetable {
     }
   }
 
-  updateStopByName(stopName, stopData) {
-    let matchingStop = this.#stops.find(stop => stop.stopName === stopName)
+  updateStopByName(stopName, stopData, prefSchTime) {
+    let matchingStop = this.#stops.find(stop => {
+      if (prefSchTime) {
+        let prefISOTime = utils.parseTime(prefSchTime).toISOString()
+        let stopISOTime = stop.scheduledDepartureTime.toISOString()
+        if (prefISOTime !== stopISOTime) return false
+      }
+
+      return stop.stopName === stopName
+    })
+
+
     if (matchingStop) {
       if (stopData.scheduledDepartureTime) matchingStop.scheduledDepartureTime = utils.parseTime(stopData.scheduledDepartureTime)
       if (stopData.estimatedDepartureTime) matchingStop.estimatedDepartureTime = utils.parseTime(stopData.estimatedDepartureTime)
