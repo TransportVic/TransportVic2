@@ -447,6 +447,8 @@ module.exports = {
     return stopName
   },
   parseDate: date => {
+    if (date instanceof Date) return module.exports.parseTime(date)
+
     if (date.match(/^\d{1,2}\/\d{1,2}\/\d{1,4}$/)) return module.exports.parseTime(date, 'DD/MM/YYYY')
     else return module.exports.parseTime(date, 'YYYYMMDD')
   },

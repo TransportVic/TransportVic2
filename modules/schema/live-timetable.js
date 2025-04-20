@@ -102,6 +102,7 @@ module.exports = class LiveTimetable {
     this.#mode = mode
     this.#operationDay = utils.parseDate(operationDays)
     this.#routeName = routeName
+    this.#routeNumber = routeNumber
     this.#routeGTFSID = routeGTFSID
     this.#tripID = tripID
     this.#block = block

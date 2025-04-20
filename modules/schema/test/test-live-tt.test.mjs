@@ -80,4 +80,49 @@ describe('The LiveTimetable schema', () => {
       pickup: '0', dropoff: '1'
     })
   })
+
+  it('Should allow creation of a new trip', () => {
+    let timetable = new LiveTimetable(
+      'metro train',
+      new Date(),
+      'Mernda',
+      null,
+      '2-MDD',
+      null,
+      null
+    )
+
+    timetable.updateStop('Mernda Railway Station', {
+      stopGTFSID: '26517',
+      stopNumber: null,
+      suburb: 'Mernda',
+      scheduledDepartureTime: new Date('2025-04-09T18:04:00.000Z'),
+      estimatedDepartureTime: new Date('2025-04-09T18:03:40.000Z'),
+      platform: 1
+    })
+
+    timetable.updateStop('Flinders Street Railway Station', {
+      stopGTFSID: '11212',
+      stopNumber: null,
+      suburb: 'Melbourne',
+      scheduledDepartureTime: new Date('2025-04-09T18:56:00.000Z'),
+      estimatedDepartureTime: new Date('2025-04-09T18:56:00.000Z'),
+      platform: 1
+    })
+
+    timetable.runID = '1000'
+    timetable.direction = 'Up'
+    timetable.isRRB = false
+
+    expect(timetable.operationDay).to.equal('20250410')
+    expect(timetable.operationDayMoment.toISOString()).to.equal('2025-04-09T14:00:00.000Z')
+    expect(timetable.runID).to.equal('1000')
+    expect(timetable.direction).to.equal('Up')
+    expect(timetable.isRRB).to.be.false
+
+    expect(timetable.origin).to.equal('Mernda Railway Station')
+    expect(timetable.departureTime).to.equal('04:04')
+    expect(timetable.destination).to.equal('Flinders Street Railway Station')
+    expect(timetable.destinationArrivalTime).to.equal('04:56')
+  })
 })
