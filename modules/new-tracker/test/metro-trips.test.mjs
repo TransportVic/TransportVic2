@@ -57,6 +57,11 @@ describe('The getUpcomingTrips function', () => {
     let liveTimetables = await db.createCollection('live timetables')
     await liveTimetables.createDocuments(clone(styLiveTrips))
 
+    let td9999 = clone(styLiveTrips.find(trip => trip.runID === '8504'))
+    td9999.runID = '9999'
+    td9999.forming = '8503'
+    await liveTimetables.createDocument(td9999)
+
     let stops = await db.createCollection('stops')
     await stops.createDocuments(clone(styStops))
 
@@ -70,6 +75,17 @@ describe('The getUpcomingTrips function', () => {
     let td8500 = await liveTimetables.findDocument({ runID: '8500' })
     expect(td8500.formedBy).to.equal('8501')
     expect(td8500.forming).to.equal('8503')
+
+    let td8503 = await liveTimetables.findDocument({ runID: '8503' })
+    expect(td8503.formedBy).to.equal('8500')
+    expect(td8503.forming).to.equal('8502')
+
+    let td8505 = await liveTimetables.findDocument({ runID: '8505' })
+    expect(td8505.formedBy).to.equal('8502')
+    expect(td8505.forming).to.equal('8504')
+
+    td9999 = await liveTimetables.findDocument({ runID: '9999' })
+    expect(td9999.forming).to.be.null
 
     utils.now = originalNow
   })

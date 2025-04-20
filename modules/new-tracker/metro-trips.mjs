@@ -82,33 +82,65 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
     else tripObjects[trip.tdn] = await createTrip(trip, db)
   }
 
-  for (let trip of relevantTrips) {
-    let tripData = tripObjects[trip.tdn]
+  let forming = {}
+  let formedBy = {}
 
+  for (let trip of relevantTrips) {
     if (trip.runData.formedBy) {
       let formedByTDN = trip.runData.formedBy.tdn
 
+      formedBy[trip.tdn] = formedByTDN
+
       let formedByTripData = tripObjects[formedByTDN]
       if (!formedByTripData) {
-        tripObjects[formedByTDN] = (formedByTripData = await getTrip(liveTimetables, formedByTDN, trip.operationalDate))
+        formedByTripData = await getTrip(liveTimetables, formedByTDN, trip.operationalDate)
+        if (formedByTripData) {
+          formedByTripData = LiveTimetable.fromDatabase(formedByTripData)
+          tripObjects[formedByTDN] = formedByTripData
+        }
       }
 
-      if (formedByTripData) formedByTripData.forming = trip.tdn
-      tripData.formedBy = formedByTDN
+      if (formedByTripData) {
+        let originalForming = formedByTripData.forming
+        if (originalForming) {
+          let originalFormingData = await getTrip(liveTimetables, originalForming, trip.operationalDate)
+          if (originalFormingData) {
+            tripObjects[originalForming] = LiveTimetable.fromDatabase(originalFormingData)
+            if (!formedBy[originalForming]) formedBy[originalForming] = null
+          }
+        }
+      }
     }
 
     if (trip.runData.forming) {
       let formingTDN = trip.runData.forming.tdn
 
+      forming[trip.tdn] = formingTDN
+
       let formingTripData = tripObjects[formingTDN]
       if (!formingTripData) {
-        tripObjects[formingTDN] = (formingTripData = await getTrip(liveTimetables, formingTDN, trip.operationalDate))
+        formingTripData = await getTrip(liveTimetables, formingTDN, trip.operationalDate)
+        if (formingTripData) {
+          formingTripData = LiveTimetable.fromDatabase(formingTripData)
+          tripObjects[formingTDN] = formingTripData
+        }
       }
 
-      if (formingTripData) formingTripData.formedBy = trip.tdn
-      tripData.forming = formingTDN
+      if (formingTripData) {
+        let originalFormedBy = formingTripData.formedBy
+        if (originalFormedBy) {
+          let originalFormedByData = await getTrip(liveTimetables, originalFormedBy, trip.operationalDate)
+          if (originalFormedByData) {
+            tripObjects[originalFormedBy] = LiveTimetable.fromDatabase(originalFormedByData)
+            if (!forming[originalFormedBy]) forming[originalFormedBy] = null
+          }
+        }
+      }
     }
   }
+
+  for (let tdn of Object.keys(forming)) tripObjects[tdn].forming = forming[tdn]
+  for (let tdn of Object.keys(formedBy)) tripObjects[tdn].formedBy = formedBy[tdn]
 
   let bulkUpdate = Object.values(tripObjects).map(trip => ({
     replaceOne: {
