@@ -1,0 +1,146 @@
+{
+	"mode" : "metro train",
+	"routeGTFSID" : "2-CCL",
+	"operationDays" : "20250405",
+	"tripID" : "02-CCL--14-T2-0735",
+	"shapeID" : "2-CCL-vpt-14.1.H",
+	"block" : "4913",
+	"gtfsDirection" : 0,
+	"runID" : "0735",
+	"isRailReplacementBus" : false,
+	"direction" : "Down",
+	"routeName" : "City Circle",
+	"routeNumber" : null,
+	"stopTimings" : [
+		{
+			"stopName" : "Flinders Street Railway Station",
+			"stopNumber" : null,
+			"suburb" : "Melbourne",
+			"stopGTFSID" : "11213",
+			"arrivalTime" : null,
+			"arrivalTimeMinutes" : null,
+			"departureTime" : "10:53",
+			"departureTimeMinutes" : 653,
+			"stopConditions" : {
+				"pickup" : 0,
+				"dropoff" : 1
+			},
+			"stopDistance" : "0.00",
+			"platform" : "2",
+			"scheduledDepartureTime" : "2025-04-04T23:53:00.000Z",
+			"actualDepartureTimeMS" : 1743810780000,
+			"estimatedDepartureTime" : null,
+			"cancelled" : false
+		},
+		{
+			"stopName" : "Southern Cross Railway Station",
+			"stopNumber" : null,
+			"suburb" : "Docklands",
+			"stopGTFSID" : "22188",
+			"arrivalTime" : "10:56",
+			"arrivalTimeMinutes" : 656,
+			"departureTime" : "10:56",
+			"departureTimeMinutes" : 656,
+			"stopConditions" : {
+				"pickup" : 0,
+				"dropoff" : 0
+			},
+			"stopDistance" : "1470.67",
+			"platform" : "9",
+			"scheduledDepartureTime" : "2025-04-04T23:56:00.000Z",
+			"actualDepartureTimeMS" : 1743810960000,
+			"estimatedDepartureTime" : null,
+			"cancelled" : false
+		},
+		{
+			"stopName" : "Flagstaff Railway Station",
+			"stopNumber" : null,
+			"suburb" : "Melbourne",
+			"stopGTFSID" : "10920",
+			"arrivalTime" : "10:58",
+			"arrivalTimeMinutes" : 658,
+			"departureTime" : "10:58",
+			"departureTimeMinutes" : 658,
+			"stopConditions" : {
+				"pickup" : 0,
+				"dropoff" : 0
+			},
+			"stopDistance" : "2550.68",
+			"platform" : "1",
+			"scheduledDepartureTime" : "2025-04-04T23:58:00.000Z",
+			"actualDepartureTimeMS" : 1743811080000,
+			"estimatedDepartureTime" : null,
+			"cancelled" : false
+		},
+		{
+			"stopName" : "Melbourne Central Railway Station",
+			"stopNumber" : null,
+			"suburb" : "Melbourne",
+			"stopGTFSID" : "10922",
+			"arrivalTime" : "11:00",
+			"arrivalTimeMinutes" : 660,
+			"departureTime" : "11:00",
+			"departureTimeMinutes" : 660,
+			"stopConditions" : {
+				"pickup" : 0,
+				"dropoff" : 0
+			},
+			"stopDistance" : "3159.97",
+			"platform" : "1",
+			"scheduledDepartureTime" : "2025-04-05T00:00:00.000Z",
+			"actualDepartureTimeMS" : 1743811200000,
+			"estimatedDepartureTime" : null,
+			"cancelled" : false
+		},
+		{
+			"stopName" : "Parliament Railway Station",
+			"stopNumber" : null,
+			"suburb" : "East Melbourne",
+			"stopGTFSID" : "10924",
+			"arrivalTime" : "11:02",
+			"arrivalTimeMinutes" : 662,
+			"departureTime" : "11:02",
+			"departureTimeMinutes" : 662,
+			"stopConditions" : {
+				"pickup" : 0,
+				"dropoff" : 0
+			},
+			"stopDistance" : "4275.17",
+			"platform" : "1",
+			"scheduledDepartureTime" : "2025-04-05T00:02:00.000Z",
+			"actualDepartureTimeMS" : 1743811320000,
+			"estimatedDepartureTime" : null,
+			"cancelled" : false
+		},
+		{
+			"stopName" : "Flinders Street Railway Station",
+			"stopNumber" : null,
+			"suburb" : "Melbourne",
+			"stopGTFSID" : "11213",
+			"arrivalTime" : "11:05",
+			"arrivalTimeMinutes" : 665,
+			"departureTime" : null,
+			"departureTimeMinutes" : null,
+			"stopConditions" : {
+				"pickup" : 1,
+				"dropoff" : 0
+			},
+			"stopDistance" : "5605.92",
+			"platform" : "2",
+			"scheduledDepartureTime" : "2025-04-05T00:05:00.000Z",
+			"actualDepartureTimeMS" : 1743811500000,
+			"estimatedDepartureTime" : null,
+			"cancelled" : false
+		}
+	],
+	"origin" : "Flinders Street Railway Station",
+	"departureTime" : "10:53",
+	"destination" : "Flinders Street Railway Station",
+	"destinationArrivalTime" : "11:05",
+	"trueOrigin" : "Flinders Street Railway Station",
+	"trueDestination" : "Flinders Street Railway Station",
+	"trueDepartureTime" : "10:53",
+	"trueDestinationArrivalTime" : "11:05",
+	"formedBy" : "0733",
+	"forming" : "0737"
+}
