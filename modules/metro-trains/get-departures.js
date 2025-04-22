@@ -1197,9 +1197,9 @@ async function getDepartures(station, db, filter, backwards, departureTime) {
 
       let scheduled = await departureUtils.getScheduledMetroDepartures(station, db, departureTime, backwards)
 
-      if (stationsAppendingUp.includes(stationName)) {
-        extraTrains = await getExtraTrains(departures, 'Up', scheduled, departureTime)
-      }
+      // if (stationsAppendingUp.includes(stationName)) {
+      //   extraTrains = await getExtraTrains(departures, 'Up', scheduled, departureTime)
+      // }
 
       // if (rceStations.includes(stationName)) {
       //   raceTrains = await getMissingTrains(departures, scheduled, '2-RCE')
