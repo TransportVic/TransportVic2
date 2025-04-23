@@ -768,7 +768,7 @@ function appendDepartureDay(departure, metroPlatforms) {
 
       // As expected, means no 3am stuff
       // Or we are in the loop past 3am meaning the next trip is definitely past 3am
-      if (departureTimeMinutes > originDepartureMinutes || cityLoopGTFSIDs.includes(stopGTFSID)) {
+      if (departureTimeMinutes > originDepartureMinutes || cityLoopGTFSIDs.some(id => stopGTFSIDs.includes(id))) {
         originDepartureTime = departure.scheduledDepartureTime.clone().startOf('day').add(originDepartureMinutes, 'minutes')
       } else { // Our stop is past 3am but the day is PREVIOUS DAY
         originDepartureTime = departure.scheduledDepartureTime.clone().startOf('day').add(originDepartureMinutes - 1440, 'minutes')
@@ -1170,7 +1170,7 @@ async function getExtraTrains(departures, direction, scheduled, departureTime) {
 }
 
 async function getMissingTrains(departures, scheduled, route) {
-  let raceTrains = scheduled.filter(train => train.trip.routeGTFSID === route)
+  // let raceTrains = scheduled.filter(train => train.trip.routeGTFSID === route)
   raceTrains = scheduled
   // let existingIDs = departures.filter(train => train.trip.routeGTFSID === route).map(train => generateTripID(train.trip))
   let existingIDs = departures.map(train => generateTripID(train.trip))
@@ -1193,7 +1193,7 @@ async function getDepartures(station, db, filter, backwards, departureTime) {
 
     return await utils.getData('metro-departures-new', stationName + backwards + roundedTimeMS, async () => {
       let departures = await getDeparturesFromPTV(station, backwards, departureTime, db)
-      let extraTrains = [], raceTrains = [], cclTrains = []
+      let extraTrains = [], raceTrains = [], missingTrains = []
 
       let scheduled = await departureUtils.getScheduledMetroDepartures(station, db, departureTime, backwards)
 
@@ -1206,9 +1206,13 @@ async function getDepartures(station, db, filter, backwards, departureTime) {
       //   raceTrains = raceTrains.filter(train => !extraTrains.includes(train))
       // }
 
-      cclTrains = await getMissingTrains(departures, scheduled, '2-CCL')
+      missingTrains = await getMissingTrains(departures, scheduled, '2-CCL')
 
-      return filterDepartures([...departures, ...extraTrains, ...raceTrains, ...cclTrains], filter, backwards, departureTime)
+      if (cityLoopStations.includes(stationName)) {
+        missingTrains = missingTrains.filter(trip => trip.direction === 'Down')
+      }
+
+      return filterDepartures([...departures, ...extraTrains, ...raceTrains, ...missingTrains], filter, backwards, departureTime)
     })
   } catch (e) {
     global.loggers.general.err('Error getting Metro departures', e)
