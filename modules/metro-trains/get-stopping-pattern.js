@@ -397,12 +397,14 @@ module.exports = async function (data, db) {
 
     let hasSeenFSS = false
     let otherStops = referenceTrip.stopTimings.filter(stop => {
-      if (stop.stopName === 'Flinders Street Railway Station') hasSeenFSS = true
-
       let notCity = !cityStations.includes(stop.stopName.slice(0, -16))
       let cancelled = cancelledStops.includes(stop.stopName)
 
-      if (!hasSeenFSS && cancelled) return false
+      if (referenceTrip.direction === 'Down') {
+        if (stop.stopName === 'Flinders Street Railway Station') hasSeenFSS = true
+
+        if (!hasSeenFSS && cancelled) return false
+      }
 
       return notCity || cancelled
     })
