@@ -395,9 +395,18 @@ module.exports = async function (data, db) {
       cityStops.push(stop)
     })
 
+    let hasSeenFSS = false
     let otherStops = referenceTrip.stopTimings.filter(stop => {
-      return !cityStations.includes(stop.stopName.slice(0, -16)) || cancelledStops.includes(stop.stopName)
+      if (stop.stopName === 'Flinders Street Railway Station') hasSeenFSS = true
+
+      let notCity = !cityStations.includes(stop.stopName.slice(0, -16))
+      let cancelled = cancelledStops.includes(stop.stopName)
+
+      if (!hasSeenFSS && cancelled) return false
+
+      return notCity || cancelled
     })
+
     let mainTripMerged = otherStops.concat(extraStopData).sort((a, b) => (a.departureTimeMinutes || a.arrivalTimeMinutes) - (b.departureTimeMinutes || b.arrivalTimeMinutes))
 
     let mergedTimings = direction === 'Down' ? [
