@@ -3,7 +3,7 @@ const utils = require('../../utils')
 module.exports = trip => {
   let stops = trip.stopTimings.map(s => s.stopName)
 
-  let origin, destination, departureTime, destinationArrivalTime
+  let origin, destination, originDepartureTime, destinationArrivalTime
 
   if (trip.direction === 'Up') {
     let fssIndex = stops.lastIndexOf('Flinders Street Railway Station')
@@ -25,17 +25,17 @@ module.exports = trip => {
       origin = 'Flinders Street Railway Station'
       originDepartureTime = trip.stopTimings[fssIndex].departureTime
     } else {
-      if (stops.includes('Parliament Railway Station')) { // No FSS but we have PAR
-        let rmdIndex = stops.indexOf('Richmond Railway Station')
-        let jliIndex = stops.indexOf('Jolimont Railway Station')
-        let sssIndex = stops.indexOf('Southern Cross Railway Station')
+      // if (stops.includes('Parliament Railway Station')) { // No FSS but we have PAR
+      //   let rmdIndex = stops.indexOf('Richmond Railway Station')
+      //   let jliIndex = stops.indexOf('Jolimont Railway Station')
+      //   let sssIndex = stops.indexOf('Southern Cross Railway Station')
 
-        let chosenIndex = [rmdIndex, jliIndex, sssIndex].find(index => index !== -1)
-        if (chosenIndex) {
-          origin = trip.stopTimings[chosenIndex].stopName
-          originDepartureTime = trip.stopTimings[chosenIndex].departureTime
-        }
-      }
+      //   let chosenIndex = [rmdIndex, jliIndex, sssIndex].find(index => index !== -1)
+      //   if (chosenIndex) {
+      //     origin = trip.stopTimings[chosenIndex].stopName
+      //     originDepartureTime = trip.stopTimings[chosenIndex].departureTime
+      //   }
+      // }
 
       if (!origin) {
         origin = trip.origin
