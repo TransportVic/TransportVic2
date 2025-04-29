@@ -87,6 +87,12 @@ async function loadTrips(updateTripData) {
       })
     }
 
+    let lastIndex = trip.stopsAvailable.length - 1
+    if (trip.stopsAvailable[lastIndex].estimatedDepartureTime < trip.stopsAvailable[lastIndex - 1].estimatedDepartureTime) {
+      trip.stopsAvailable[lastIndex].estimatedDepartureTime = trip.stopsAvailable[lastIndex - 1].estimatedDepartureTime.clone().add(3, 'minutes')
+      trip.stopsAvailable[lastIndex].platform = null
+    }
+
     let dbTrip = await liveTimetables.findDocument({
       mode: 'metro train',
       operationDays: trip.operationDays,
