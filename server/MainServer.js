@@ -35,8 +35,10 @@ if (modules.tracker && modules.tracker.xpt)
 if (modules.tracker && modules.tracker.metro)
   require('../modules/trackers/metro')
 
-if (modules.tracker && modules.tracker.metroTrips)
+if (modules.tracker && modules.tracker.metroTrips) {
   require('../modules/trackers/metro-trips')
+  require('../modules/trackers/metro-ccl')
+}
 
 if (modules.tracker && modules.tracker.metroRaceTrains)
   require('../modules/trackers/metro-race-trains')
