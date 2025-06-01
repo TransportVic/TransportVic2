@@ -37,7 +37,7 @@ database.connect({}, async () => {
   }
 
   let stopNames = {
-    '3813': 'Spring Street'
+    '3813': 'Bourke St/Spring St #0'
   }
 
   let stopNumbers = {
