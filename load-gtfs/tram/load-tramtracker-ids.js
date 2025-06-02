@@ -32,7 +32,7 @@ database.connect({}, async () => {
   let stopDirections = {
     '3813': [{
       service: '35',
-      gtfsDirection: '0'
+      gtfsDirection: 0
     }]
   }
 
@@ -62,7 +62,7 @@ database.connect({}, async () => {
         stops.forEach(stop => {
           let tramTrackerID = $('.stopid', stop).text()
           let stopNumber = $('.stopno', stop).text().toUpperCase()
-          let tramTrackerName = utils.expandStopName(utils.adjustStopName($('.location', stop).text().trim()))
+          let tramTrackerName = utils.expandStopName(utils.adjustStopName($('.location', stop).text().trim().split('\n')[1].trim()))
           let isLevelAccess = $('.stop-platform', stop).length === 1
           let url = $('a', stop).attr('href')
 
