@@ -1,9 +1,16 @@
 export class MetroGTFSRTrip {
 
-  constructor() {}
+  #operationDay
+  #startTime
+
+  constructor(trip) {
+    this.#operationDay = trip.start_date
+    this.#startTime = trip.start_time
+  }
+
   getTDN() {}
-  getOperationDay() {}
-  getStartTime() {}
+  getOperationDay() { return this.#operationDay }
+  getStartTime() { return this.#startTime }
 
   static canProcess() { return false }
 
@@ -17,14 +24,10 @@ export class MetroGTFSRTrip {
 export class ScheduledMetroGTFSRTrip extends MetroGTFSRTrip {
 
   #tdn
-  #operationDay
-  #startTime
 
   constructor(trip) {
-    super()
+    super(trip)
     this.#tdn = trip.trip_id.slice(-4)
-    this.#operationDay = trip.start_date
-    this.#startTime = trip.start_time
   }
 
   static canProcess(trip) {
@@ -32,22 +35,16 @@ export class ScheduledMetroGTFSRTrip extends MetroGTFSRTrip {
   }
 
   getTDN() { return this.#tdn }
-  getOperationDay() { return this.#operationDay }
-  getStartTime() { return this.#startTime }
 
 }
 
 export class UnscheduledMetroGTFSRTrip extends MetroGTFSRTrip {
 
   #tdn
-  #operationDay
-  #startTime
 
   constructor(trip) {
-    super()
+    super(trip)
     this.#tdn = trip.trip_id.match(/_(\w\d{3})_\d{8}$/)[1]
-    this.#operationDay = trip.start_date
-    this.#startTime = trip.start_time
   }
 
   static canProcess(trip) {
@@ -55,7 +52,5 @@ export class UnscheduledMetroGTFSRTrip extends MetroGTFSRTrip {
   }
 
   getTDN() { return this.#tdn }
-  getOperationDay() { return this.#operationDay }
-  getStartTime() { return this.#startTime }
 
 }
