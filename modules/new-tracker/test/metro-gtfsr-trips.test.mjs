@@ -41,6 +41,17 @@ describe('The GTFSRTrip class', () => {
         schedule_relationship: 0
       }).getTDN()).to.equal('4418')
     })
+
+    it('Should extract the schedule relationship type', async () => {
+      expect(new ScheduledMetroGTFSRTrip({
+        trip_id: '02-FKN--52-T5-4418',
+        route_id: 'aus:vic:vic-02-FKN:',
+        direction_id: 0,
+        start_time: '14:38:00',
+        start_date: '20250603',
+        schedule_relationship: 0
+      }).getScheduleRelationship()).to.equal(MetroGTFSRTrip.SR_SCHEDULED)
+    })
   })
 
   describe('The Unscheduled trip class', () => {
@@ -59,6 +70,17 @@ describe('The GTFSRTrip class', () => {
         start_date: '20250603',
         schedule_relationship: 1
       }).getTDN()).to.equal('6112')
+    })
+
+    it('Should extract the schedule relationship type', async () => {
+      expect(new UnscheduledMetroGTFSRTrip({
+        trip_id: 'vic:02SUY:_:R:vpt._Sunbury_6112_20250603',
+        route_id: 'aus:vic:vic-02-SUY:',
+        direction_id: 0,
+        start_time: '15:37:00',
+        start_date: '20250603',
+        schedule_relationship: 1
+      }).getScheduleRelationship()).to.equal(MetroGTFSRTrip.SR_ADDED)
     })
   })
 

@@ -2,15 +2,23 @@ export class MetroGTFSRTrip {
 
   #operationDay
   #startTime
+  #scheduleRelationship
+
+  static SR_SCHEDULED = 0;
+  static SR_ADDED = 1;
+  static SR_UNSCHEDULED = 2;
+  static SR_CANCELLED = 3;
 
   constructor(trip) {
     this.#operationDay = trip.start_date
     this.#startTime = trip.start_time
+    this.#scheduleRelationship = trip.schedule_relationship
   }
 
   getTDN() {}
   getOperationDay() { return this.#operationDay }
   getStartTime() { return this.#startTime }
+  getScheduleRelationship() { return this.#scheduleRelationship }
 
   static canProcess() { return false }
 

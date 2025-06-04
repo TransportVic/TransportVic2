@@ -1,28 +1,43 @@
-const { makePBRequest } = require('./gtfsr-api')
+import { makePBRequest } from '../gtfsr/gtfsr-api.js'
 import { fileURLToPath } from 'url'
 import utils from '../../utils.js'
 import LiveTimetable from '../schema/live-timetable.js'
 
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
+import { MetroGTFSRTrip } from './GTFSRTrip.mjs'
 
-export async function getUpcomingTrips() {
-  let tripData = await makePBRequest('metrotrain-tripupdates')
+let stopIDCache = {}
+let stopCache = {}
 
-  tripData.entity.forEach(trip => {
-    
-  })
+async function getStop(db, stopID) {
+  if (stopIDCache[stopID]) return stopCache[stopIDCache[stopID]].bays.find(bay => bay.stopGTFSID == stopID)
 
-  return trips.filter(trip => trip.operationalDateMoment >= today)
-}
-
-async function getStop(db, stopName) {
   let stops = db.getCollection('stops')
   let stop = await stops.findDocument({
-    stopName
+    'bays.stopGTFSID': stopID
   })
 
-  return stop
+  stopCache[stop.stopName] = stop
+  stopIDCache[stopID] = stop.stopName
+
+  return stop.bays.find(bay => bay.stopGTFSID == stopID)
+}
+
+
+export async function getUpcomingTrips(db) {
+  let tripData = await makePBRequest('metrotrain-tripupdates')
+
+  for (let trip of tripData.entity) {
+    trip.trip_data = MetroGTFSRTrip.parse(trip.trip_update.trip)
+    for (let stop of trip.trip_update.stop_time_update) {
+      let stopData = await getStop(db, stop.stop_id)
+      stop.stopName = stopData.fullStopName
+      stop.platform = stopData.platform
+    }
+  }
+
+  return tripData.entity
 }
 
 async function getRoute(db, routeName) {
@@ -76,30 +91,27 @@ async function createTrip(trip, db) {
   return timetable
 }
 
-export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSite.lines)) {
-  let relevantTrips = await getUpcomingTrips(ptvAPI, lines)
+export async function fetchTrips(db) {
+  let relevantTrips = await getUpcomingTrips(db)
   let liveTimetables = db.getCollection('live timetables')
 
   let tripObjects = {}
+  utils.inspect(relevantTrips)
+  // for (let trip of relevantTrips) {
+  //   let tripData = await getTrip(liveTimetables, trip.tdn, trip.operationalDate)
 
-  for (let trip of relevantTrips) {
-    let tripData = await getTrip(liveTimetables, trip.tdn, trip.operationalDate)
+  //   if (tripData) tripObjects[trip.tdn] = LiveTimetable.fromDatabase(tripData)
+  //   else tripObjects[trip.tdn] = await createTrip(trip, db)
+  // }
 
-    if (tripData) tripObjects[trip.tdn] = LiveTimetable.fromDatabase(tripData)
-    else tripObjects[trip.tdn] = await createTrip(trip, db)
-  }
-
-  await liveTimetables.bulkWrite(bulkUpdate)
+  // await liveTimetables.bulkWrite(bulkUpdate)
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
-  let ptvAPI = new PTVAPI()
-  ptvAPI.addMetroSite(new MetroSiteAPIInterface())
-
-  await fetchTrips(ptvAPI, mongoDB, ptvAPI.metroSite.lines.STONY_POINT)
+  await fetchTrips(mongoDB)
 
   process.exit(0)
 }
