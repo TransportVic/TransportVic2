@@ -1,0 +1,29 @@
+{
+    "header": {
+        "gtfs_realtime_version": "2.0",
+        "incrementality": 0,
+        "timestamp": 1749165051
+    },
+    "entity": [
+        {
+            "id": "02-STY--53-T6-8505",
+            "is_deleted": false,
+            "trip_update": {
+                "trip": {
+                    "trip_id": "02-STY--53-T6-8505",
+                    "route_id": "aus:vic:vic-02-STY:",
+                    "direction_id": 0,
+                    "start_time": "08:48:00",
+                    "start_date": "20250606",
+                    "schedule_relationship": 3
+                },
+                "vehicle": null,
+                "stop_time_update": [],
+                "timestamp": 0,
+                "delay": 0
+            },
+            "vehicle": null,
+            "alert": null
+        }
+    ]
+}
