@@ -6,27 +6,10 @@ import LiveTimetable from '../schema/live-timetable.js'
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
 import { MetroGTFSRTrip } from './GTFSRTrip.mjs'
+import { getStop } from './trip-updater.mjs'
 
-let stopIDCache = {}
-let stopCache = {}
-
-async function getStop(db, stopID) {
-  if (stopIDCache[stopID]) return stopCache[stopIDCache[stopID]].bays.find(bay => bay.stopGTFSID == stopID)
-
-  let stops = db.getCollection('stops')
-  let stop = await stops.findDocument({
-    'bays.stopGTFSID': stopID
-  })
-
-  stopCache[stop.stopName] = stop
-  stopIDCache[stopID] = stop.stopName
-
-  return stop.bays.find(bay => bay.stopGTFSID == stopID)
-}
-
-
-export async function getUpcomingTrips(db) {
-  let tripData = await makePBRequest('metrotrain-tripupdates')
+export async function getUpcomingTrips(db, gtfsrAPI) {
+  let tripData = await gtfsrAPI('metrotrain-tripupdates')
 
   for (let trip of tripData.entity) {
     trip.trip_data = MetroGTFSRTrip.parse(trip.trip_update.trip)
@@ -92,7 +75,7 @@ async function createTrip(trip, db) {
 }
 
 export async function fetchTrips(db) {
-  let relevantTrips = await getUpcomingTrips(db)
+  let relevantTrips = await getUpcomingTrips(db, makePBRequest)
   let liveTimetables = db.getCollection('live timetables')
 
   let tripObjects = {}
