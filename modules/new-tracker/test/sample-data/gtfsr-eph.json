@@ -32,7 +32,7 @@
                     },
                     {
                         "stop_sequence": 2,
-                        "stop_id": "12172",
+                        "stop_id": "vic:rail:PKM",
                         "arrival": {
                             "delay": 0,
                             "time": 1749159900,

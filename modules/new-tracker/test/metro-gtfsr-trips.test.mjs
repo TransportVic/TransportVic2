@@ -26,6 +26,15 @@ describe('The GTFSR Tracker module', () => {
       estimatedDepartureTime: new Date(1749159840 * 1000),
       cancelled: false
     })
+
+    expect(tripData[0].stops[1]).to.deep.equal({
+      stopName: 'Pakenham Railway Station',
+      platform: null,
+      scheduledDepartureTime: null,
+      estimatedArrivalTime: new Date(1749159900 * 1000),
+      estimatedDepartureTime: new Date(1749159960 * 1000),
+      cancelled: false
+    })
   })
 })
 

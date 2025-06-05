@@ -27,7 +27,7 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
       let stopData = await getStop(db, stop.stop_id)
       let tripStop = {
         stopName: stopData.fullStopName,
-        platform: stopData.platform,
+        platform: stopData.platform || null,
         scheduledDepartureTime: null,
         cancelled: stop.schedule_relationship === 1
       }
