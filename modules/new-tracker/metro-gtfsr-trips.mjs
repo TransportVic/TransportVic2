@@ -29,6 +29,7 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
         stopName: stopData.fullStopName,
         platform: stopData.platform,
         scheduledDepartureTime: null,
+        cancelled: stop.schedule_relationship === 1
       }
 
       if (stop.arrival) tripStop.estimatedArrivalTime = new Date(stop.arrival.time * 1000)
@@ -36,9 +37,10 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
 
       tripData.stops.push(tripStop)
     }
+    output.push(tripData)
   }
 
-  return tripData.entity
+  return output
 }
 
 async function getRoute(db, routeName) {

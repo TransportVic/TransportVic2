@@ -23,9 +23,9 @@ describe('The GTFSR Tracker module', () => {
       stopName: 'East Pakenham Railway Station',
       platform: '1',
       scheduledDepartureTime: null,
-      estimatedDepartureTime: new Date(1749159840 * 1000)
+      estimatedDepartureTime: new Date(1749159840 * 1000),
+      cancelled: false
     })
-    console.log(tripData)
   })
 })
 
