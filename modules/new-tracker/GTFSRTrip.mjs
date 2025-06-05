@@ -3,6 +3,7 @@ export class MetroGTFSRTrip {
   #operationDay
   #startTime
   #scheduleRelationship
+  #routeID
 
   static SR_SCHEDULED = 0;
   static SR_ADDED = 1;
@@ -13,12 +14,14 @@ export class MetroGTFSRTrip {
     this.#operationDay = trip.start_date
     this.#startTime = trip.start_time
     this.#scheduleRelationship = trip.schedule_relationship
+    this.#routeID = trip.route_id.slice(-6, -1)
   }
 
   getTDN() {}
   getOperationDay() { return this.#operationDay }
   getStartTime() { return this.#startTime }
   getScheduleRelationship() { return this.#scheduleRelationship }
+  getRouteID() { return this.#routeID }
 
   static canProcess() { return false }
 

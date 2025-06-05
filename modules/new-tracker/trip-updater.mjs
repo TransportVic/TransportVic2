@@ -15,6 +15,18 @@ export async function getStop(db, stopID) {
   return stop.bays.find(bay => bay.stopGTFSID == stopID)
 }
 
+async function getStopByName(db, stopName) {
+  if (stopCache[stopName]) return stopCache[stopName]
+
+  let stops = db.getCollection('stops')
+  let stop = await stops.findDocument({
+    stopName
+  })
+
+  stopCache[stopName] = stop
+  return stop
+}
+
 async function createTrip(trip, db) {
   
 }

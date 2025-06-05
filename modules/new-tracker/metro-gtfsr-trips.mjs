@@ -11,12 +11,30 @@ import { getStop } from './trip-updater.mjs'
 export async function getUpcomingTrips(db, gtfsrAPI) {
   let tripData = await gtfsrAPI('metrotrain-tripupdates')
 
+  let output = []
+
   for (let trip of tripData.entity) {
-    trip.trip_data = MetroGTFSRTrip.parse(trip.trip_update.trip)
+    let gtfsrTripData = MetroGTFSRTrip.parse(trip.trip_update.trip)
+    let tripData = {
+      operationDays: gtfsrTripData.getOperationDay(),
+      runID: gtfsrTripData.getTDN(),
+      routeGTFSID: gtfsrTripData.getRouteID(),
+      stops: [],
+      cancelled: gtfsrTripData.getScheduleRelationship() === MetroGTFSRTrip.SR_CANCELLED
+    }
+
     for (let stop of trip.trip_update.stop_time_update) {
       let stopData = await getStop(db, stop.stop_id)
-      stop.stopName = stopData.fullStopName
-      stop.platform = stopData.platform
+      let tripStop = {
+        stopName: stopData.fullStopName,
+        platform: stopData.platform,
+        scheduledDepartureTime: null,
+      }
+
+      if (stop.arrival) tripStop.estimatedArrivalTime = new Date(stop.arrival.time * 1000)
+      if (stop.departure) tripStop.estimatedDepartureTime = new Date(stop.departure.time * 1000)
+
+      tripData.stops.push(tripStop)
     }
   }
 

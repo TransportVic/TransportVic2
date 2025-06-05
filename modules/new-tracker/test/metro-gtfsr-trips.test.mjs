@@ -1,18 +1,33 @@
 import { expect } from 'chai'
 import { MetroGTFSRTrip, ScheduledMetroGTFSRTrip, UnscheduledMetroGTFSRTrip } from '../GTFSRTrip.mjs'
+import { getUpcomingTrips } from '../metro-gtfsr-trips.mjs'
+import { LokiDatabaseConnection } from '@transportme/database'
+import pkmStops from './sample-data/pkm-stops-db.json' with { type: 'json' }
+import gtfsr_EPH from './sample-data/gtfsr-eph.json' with { type: 'json' }
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
-function createAPI() {
-  let stubAPI = new StubAPI()
-  stubAPI.setResponses([ stubSTYOpData ])
-  stubAPI.skipErrors()
+describe('The GTFSR Tracker module', () => {
+  it('Should return the GTFSR data as a list of stop names, platforms, and departure times', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    await stops.createDocuments(pkmStops)
 
-  let ptvAPI = new PTVAPI(stubAPI)
-  ptvAPI.addMetroSite(stubAPI)
+    let tripData = await getUpcomingTrips(database, () => gtfsr_EPH)
+    expect(tripData[0].operationDays).to.equal('20250606')
+    expect(tripData[0].runID).to.equal('C036')
+    expect(tripData[0].routeGTFSID).to.equal('2-PKM')
+    expect(tripData[0].cancelled).to.be.false
 
-  return ptvAPI
-}
+    expect(tripData[0].stops[0]).to.deep.equal({
+      stopName: 'East Pakenham Railway Station',
+      platform: '1',
+      scheduledDepartureTime: null,
+      estimatedDepartureTime: new Date(1749159840 * 1000)
+    })
+    console.log(tripData)
+  })
+})
 
 describe('The GTFSRTrip class', () => {
   describe('The Scheduled trip class', () => {
@@ -102,5 +117,14 @@ describe('The GTFSRTrip class', () => {
       start_date: '20250603',
       schedule_relationship: 0
     }).getTDN()).to.equal('8514')
+    
+    expect(MetroGTFSRTrip.parse({
+      trip_id: '02-STY--52-T5-8514',
+      route_id: 'aus:vic:vic-02-STY:',
+      direction_id: 0,
+      start_time: '15:29:00',
+      start_date: '20250603',
+      schedule_relationship: 0
+    }).getRouteID()).to.equal('2-STY')
   })
 })
