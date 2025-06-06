@@ -11,7 +11,7 @@ describe('The GTFSR Tracker module', () => {
   it('Should return the GTFSR data as a list of stop names, platforms, and departure times', async () => {
     let database = new LokiDatabaseConnection('test-db')
     let stops = await database.createCollection('stops')
-    await stops.createDocuments(pkmStops)
+    await stops.createDocuments(clone(pkmStops))
 
     let tripData = await getUpcomingTrips(database, () => gtfsr_EPH)
     expect(tripData[0].operationDays).to.equal('20250606')
