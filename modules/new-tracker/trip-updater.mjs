@@ -78,6 +78,12 @@ export async function updateTrip(db, trip) {
   if (!dbTrip) return await createTrip(db, trip)
   let timetable = LiveTimetable.fromDatabase(dbTrip)
 
+  timetable.cancelled = trip.cancelled
+  if (trip.cancelled) {
+    await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase())
+    return timetable
+  }
+
   let existingStops = timetable.getStopNames()
 
   let stopVisits = {}

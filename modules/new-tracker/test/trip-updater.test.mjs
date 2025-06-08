@@ -233,6 +233,45 @@ describe('The trip updater module', () => {
     expect(cdaChange.timestamp).to.exist
   })
 
+  it('Should mark trips as cancelled', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(pkmStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "pakenham"
+    })
+    await liveTimetables.createDocument(clone(pkmSchTrip))
+
+    expect(await liveTimetables.countDocuments({})).to.equal(1)
+    let gtfsrUpdate = clone(gtfsr_EPH)
+    gtfsrUpdate.entity[0].trip_update.trip.schedule_relationship = 3
+    gtfsrUpdate.entity[0].trip_update.stop_time_update = []
+
+    let gtfsrTrips = await getUpcomingTrips(database, () => gtfsrUpdate)
+    let tripData = await updateTrip(database, gtfsrTrips[0])
+    expect(await liveTimetables.countDocuments({})).to.equal(1)
+
+    expect(tripData.cancelled).to.be.true
+    expect(tripData.changes.length).to.equal(1)
+    let tripChange = tripData.changes[0]
+    expect(tripChange).to.exist
+    expect(tripChange.type).to.equal('trip-cancelled')
+    expect(tripChange.oldVal).to.be.false
+    expect(tripChange.newVal).to.be.true
+    expect(tripChange.timestamp).to.exist
+  })
+
   it('Should ensure the changelog persists in the database', async () => {
     let database = new LokiDatabaseConnection('test-db')
     let stops = await database.createCollection('stops')
@@ -281,6 +320,5 @@ describe('The trip updater module', () => {
     expect(dngChange.oldVal).to.equal('2')
     expect(dngChange.newVal).to.equal('3')
     expect(dngChange.timestamp).to.exist
-
   })
 })

@@ -124,6 +124,8 @@ module.exports = class LiveTimetable {
   logChanges = true
   changes = []
 
+  #cancelled = false
+
   constructor(mode, operationDays, routeName, routeNumber, routeGTFSID, tripID, block) {
     this.#mode = mode
     this.#operationDay = utils.parseDate(operationDays).startOf('day')
@@ -149,6 +151,17 @@ module.exports = class LiveTimetable {
   set direction(direction) { this.#direction = direction }
   set runID(runID) { this.#runID = runID }
   set isRRB(isRRB) { this.#isRRB = isRRB }
+  set cancelled(cancelled) {
+    if (cancelled !== this.#cancelled) {
+      this.changes.push({
+        type: 'trip-cancelled',
+        oldVal: this.cancelled,
+        newVal: cancelled,
+        timestamp: new Date().toISOString()
+      })
+    }
+    this.#cancelled = cancelled
+  }
 
   get stops() { return this.#stops }
 
@@ -165,6 +178,7 @@ module.exports = class LiveTimetable {
   set forming(forming) { this.#forming = forming } 
 
   get isRRB() { return this.#isRRB }
+  get cancelled() { return this.#cancelled }
 
   static fromDatabase(timetable) {
     let timetableInstance = new LiveTimetable(
@@ -180,6 +194,7 @@ module.exports = class LiveTimetable {
     if (timetable.shapeID) timetableInstance.#shapeID = timetable.shapeID
     if (timetable.direction) timetableInstance.#direction = timetable.direction
     if (timetable.runID) timetableInstance.#runID = timetable.runID
+    if (timetable.cancelled) timetableInstance.#cancelled = timetable.cancelled
 
     for (let stopData of timetable.stopTimings) {
       let stop = new TimetableStop(
@@ -239,7 +254,8 @@ module.exports = class LiveTimetable {
       stopTimings: this.#stops.map(stop => stop.toDatabase()),
       formedBy: this.#formedBy,
       forming: this.#forming,
-      changes: this.changes
+      changes: this.changes,
+      cancelled: this.#cancelled
     }
   }
 
