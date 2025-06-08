@@ -123,7 +123,7 @@ describe('The trip updater module', () => {
 
     let ephChange = tripData.changes.find(change => change.stopGTFSID === 'vic:rail:EPH')
     expect(ephChange).to.exist
-    expect(ephChange.type).to.equal('platform')
+    expect(ephChange.type).to.equal('platform-change')
     expect(ephChange.oldVal).to.equal('2')
     expect(ephChange.newVal).to.equal('1')
     expect(ephChange.timestamp).to.exist

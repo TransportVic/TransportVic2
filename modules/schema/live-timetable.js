@@ -264,7 +264,17 @@ module.exports = class LiveTimetable {
     if (matchingStop) {
       if (stopData.scheduledDepartureTime) matchingStop.scheduledDepartureTime = stopData.scheduledDepartureTime
       if (stopData.estimatedDepartureTime) matchingStop.estimatedDepartureTime = stopData.estimatedDepartureTime
-      if (stopData.platform) matchingStop.platform = stopData.platform.toString()
+      if (stopData.platform) {
+        let newPlatform = stopData.platform.toString()
+        if (matchingStop.platform !== newPlatform && this.logChanges) this.changes.push({
+          type: 'platform-change',
+          stopGTFSID: stopData.stopGTFSID,
+          oldVal: matchingStop.platform,
+          newVal: newPlatform,
+          timestamp: new Date().toISOString()
+        })
+        matchingStop.platform = newPlatform
+      }
       if (typeof stopData.cancelled !== 'undefined') matchingStop.cancelled = stopData.cancelled
     } else {
       let stop = new TimetableStop(
