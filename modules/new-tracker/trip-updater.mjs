@@ -3,6 +3,9 @@ import LiveTimetable from '../schema/live-timetable.js'
 let stopIDCache = {}
 let stopCache = {}
 
+let routeIDCache = {}
+let routeNameCache = {}
+
 async function getTrip(db, runID, date) {
   let liveTimetables = db.getCollection('live timetables')
   return await liveTimetables.findDocument({
@@ -26,7 +29,7 @@ export async function getStop(db, stopID) {
   return stop.bays.find(bay => bay.stopGTFSID == stopID)
 }
 
-async function getStopByName(db, stopName) {
+export async function getStopByName(db, stopName) {
   if (stopCache[stopName]) return stopCache[stopName]
 
   let stops = db.getCollection('stops')
@@ -38,18 +41,40 @@ async function getStopByName(db, stopName) {
   return stop
 }
 
-async function getRoute(db, routeName) {
+export async function getRoute(db, routeGTFSID) {
+  if (routeIDCache[routeGTFSID]) return routeIDCache[routeGTFSID]
+
   let routes = db.getCollection('routes')
   let route = await routes.findDocument({
+    mode: 'metro train',
+    routeGTFSID
+  })
+
+  routeNameCache[routeGTFSID] = route
+  routeIDCache[route.routeGTFSID] = route
+
+  return route
+}
+
+export async function getRouteByName(db, routeName) {
+  if (routeNameCache[routeName]) return routeNameCache[routeName]
+
+  let routes = db.getCollection('routes')
+  let route = await routes.findDocument({
+    mode: 'metro train',
     routeName
   })
+
+  routeNameCache[routeName] = route
+  routeIDCache[route.routeGTFSID] = route
 
   return route
 }
 
 export async function updateTrip(db, trip) {
-  let dbTrip = await getTrip(db, trip.tdn, trip.operationDays)
+  let dbTrip = await getTrip(db, trip.runID, trip.operationDays)
   let tripData
+
   if (!dbTrip) return await createTrip(db, trip)
 
   tripData = LiveTimetable.fromDatabase(dbTrip)
@@ -57,35 +82,58 @@ export async function updateTrip(db, trip) {
 }
 
 async function createTrip(db, trip) {
-  let routeData = await getRoute(db, trip.routeName)
+  let routeData = await getRoute(db, trip.routeGTFSID)
 
   let timetable = new LiveTimetable(
     'metro train',
-    trip.operationalDate,
-    trip.routeName,
+    trip.operationDays,
+    routeData.routeName,
     routeData.routeNumber,
     routeData.routeGTFSID,
     null,
     null
   )
 
-  timetable.runID = trip.tdn
-  timetable.direction = trip.tdn[3] % 2 === 0 ? 'Up' : 'Down'
+  timetable.isRRB = false
+  timetable.runID = trip.runID
+  timetable.direction = trip.runID[3] % 2 === 0 ? 'Up' : 'Down'
+
   timetable.forming = trip.forming
   timetable.formedBy = trip.formedBy
 
   for (let stop of trip.stops) {
-    let stopData = await getStop(db, stop.stationName + ' Railway Station')
-    let platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.platform === stop.platform)
+    let stopData = await getStopByName(db, stop.stopName)
+    let platformBay
+    if (stop.platform) {
+      platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.platform === stop.platform)
+    } else {
+      // TODO: Change to use parent stop logic
+      platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.stopGTFSID.startsWith('vic:rail'))
+    }
 
-    timetable.updateStopByName(stopData.stopName, {
+    let updatedData = {
       stopGTFSID: platformBay.stopGTFSID,
       stopNumber: null,
-      suburb: platformBay.suburb,
-      scheduledDepartureTime: stop.scheduledDeparture.toUTC().toISO(),
-      platform: stop.platform
-    })
+      suburb: platformBay.suburb
+    }
+
+    if (stop.platform) updatedData.platform = stop.platform
+
+    if (stop.scheduledDepartureTime) updatedData.scheduledDepartureTime = stop.scheduledDepartureTime.toISOString()
+    else if (stop.estimatedDepartureTime) updatedData.scheduledDepartureTime = stop.estimatedDepartureTime.toISOString()
+    else if (stop.estimatedArrivalTime) updatedData.scheduledDepartureTime = stop.estimatedArrivalTime.toISOString()
+    else throw new Error('Stop has no scheduled or estimated time')
+
+    if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
+
+    timetable.updateStopByName(stopData.stopName, updatedData)
   }
+
+  timetable.stops[0].allowDropoff = false
+  timetable.stops[trip.stops.length - 1].allowPickup = false
+
+  let liveTimetables = db.getCollection('live timetables')
+  await liveTimetables.createDocument(timetable.toDatabase())
 
   return timetable
 }

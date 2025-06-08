@@ -68,6 +68,9 @@ class TimetableStop {
   get allowDropoff() { return this.#allowDropoff }
   get allowPickup() { return this.#allowPickup }
 
+  set allowDropoff(dropoff) { this.#allowDropoff = dropoff }
+  set allowPickup(pickup) { this.#allowPickup = pickup }
+
   toDatabase() {
     return {
       stopName: this.#stopName,
@@ -230,7 +233,6 @@ module.exports = class LiveTimetable {
 
       return stop.stopName === stopName
     })
-
 
     if (matchingStop) {
       if (stopData.scheduledDepartureTime) matchingStop.scheduledDepartureTime = stopData.scheduledDepartureTime
