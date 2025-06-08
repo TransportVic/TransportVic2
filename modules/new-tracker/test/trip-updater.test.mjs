@@ -29,7 +29,7 @@ describe('The trip updater module', () => {
     })
 
     expect(await liveTimetables.countDocuments({})).to.equal(0)
-    let gtfsrTrips = await getUpcomingTrips(database, () => gtfsr_EPH)
+    let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
     let tripData = await updateTrip(database, gtfsrTrips[0])
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
@@ -64,7 +64,7 @@ describe('The trip updater module', () => {
     expect(tripData.stops[1].actualDepartureTime.toISOString()).to.equal('2025-06-05T21:46:00.000Z')
   })
 
-  it('Should update the trip if it does not exist', async () => {
+  it('Should update the trip if it exists', async () => {
     let database = new LokiDatabaseConnection('test-db')
     let stops = await database.createCollection('stops')
     let routes = await database.createCollection('routes')
@@ -82,10 +82,10 @@ describe('The trip updater module', () => {
       ],
       "codedName" : "pakenham"
     })
-    await liveTimetables.createDocument(pkmSchTrip)
+    await liveTimetables.createDocument(clone(pkmSchTrip))
 
     expect(await liveTimetables.countDocuments({})).to.equal(1)
-    let gtfsrTrips = await getUpcomingTrips(database, () => gtfsr_EPH)
+    let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
     let tripData = await updateTrip(database, gtfsrTrips[0])
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
@@ -94,17 +94,17 @@ describe('The trip updater module', () => {
     expect(tripData.routeName).to.equal('Pakenham')
     expect(tripData.operationDay).to.equal('20250606')
     expect(tripData.operationDayMoment.toISOString()).to.equal('2025-06-05T14:00:00.000Z')
-    expect(tripData.block).to.be.null
-    // expect(tripData.tripID).to.equal('02-MDD--23-T5-1000')
-    // expect(tripData.shapeID).to.equal('2-MDD-vpt-23.1.R')
+    expect(tripData.block).to.be.equal('9337')
+    expect(tripData.tripID).to.equal('02-PKM--53-T6-C036')
+    expect(tripData.shapeID).to.equal('2-PKM-vpt-53.14.R')
     expect(tripData.runID).to.equal('C036')
     expect(tripData.direction).to.equal('Up')
-    // expect(tripData.isRRB).to.be.false
+    expect(tripData.isRRB).to.be.false
 
     expect(tripData.stops[0].stopName).to.equal('East Pakenham Railway Station')
     expect(tripData.stops[0].stopGTFSID).to.equal('vic:rail:EPH')
     expect(tripData.stops[0].departureTime).to.equal('07:43')
-    expect(tripData.stops[0].departureTimeMinutes).to.equal(7*60 + 44)
+    expect(tripData.stops[0].departureTimeMinutes).to.equal(7*60 + 43)
     expect(tripData.stops[0].platform).to.equal('1')
     expect(tripData.stops[0].scheduledDepartureTime.toISOString()).to.equal('2025-06-05T21:43:00.000Z') // Fallback if no data provided
     expect(tripData.stops[0].actualDepartureTime.toISOString()).to.equal('2025-06-05T21:44:00.000Z')

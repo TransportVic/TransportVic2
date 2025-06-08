@@ -87,8 +87,8 @@ class TimetableStop {
       platform: this.#platform,
       cancelled: this.#cancelled,
       stopConditions: {
-        pickup: this.#allowPickup ? '0' : '1',
-        dropoff: this.allowDropoff ? '0' : '1'
+        pickup: this.#allowPickup ? 0 : 1,
+        dropoff: this.allowDropoff ? 0 : 1
       }
     }
   }
@@ -184,8 +184,8 @@ module.exports = class LiveTimetable {
         {
           platform: stopData.platform,
           cancelled: stopData.cancelled,
-          allowPickup: stopData.stopConditions.pickup === '0',
-          allowDropoff: stopData.stopConditions.dropoff === '0'
+          allowPickup: stopData.stopConditions.pickup === 0,
+          allowDropoff: stopData.stopConditions.dropoff === 0
         }
       )
 
@@ -197,6 +197,14 @@ module.exports = class LiveTimetable {
     if (typeof timetable.isRailReplacementBus !== 'undefined') timetableInstance.#isRRB = timetable.isRailReplacementBus
 
     return timetableInstance
+  }
+
+  getDBKey() {
+    return {
+      mode: this.#mode,
+      operationDays: this.operationDay,
+      runID: this.#runID
+    }
   }
 
   toDatabase() {
@@ -223,8 +231,8 @@ module.exports = class LiveTimetable {
     }
   }
 
-  updateStopByName(stopName, stopData, prefSchTime) {
-    let matchingStop = this.#stops.find(stop => {
+  updateStopByName(stopName, stopData, { prefSchTime, visitNum } = {}) {
+    let matchingStops = this.#stops.filter(stop => {
       if (prefSchTime) {
         let prefISOTime = utils.parseTime(prefSchTime).toISOString()
         let stopISOTime = stop.scheduledDepartureTime.toISOString()
@@ -233,6 +241,9 @@ module.exports = class LiveTimetable {
 
       return stop.stopName === stopName
     })
+
+    if (typeof visitNum !== 'undefined') visitNum = 1
+    let matchingStop = matchingStops[visitNum - 1]
 
     if (matchingStop) {
       if (stopData.scheduledDepartureTime) matchingStop.scheduledDepartureTime = stopData.scheduledDepartureTime

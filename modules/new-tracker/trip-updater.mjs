@@ -73,12 +73,39 @@ export async function getRouteByName(db, routeName) {
 
 export async function updateTrip(db, trip) {
   let dbTrip = await getTrip(db, trip.runID, trip.operationDays)
-  let tripData
+  let liveTimetables = db.getCollection('live timetables')
 
   if (!dbTrip) return await createTrip(db, trip)
+  let timetable = LiveTimetable.fromDatabase(dbTrip)
 
-  tripData = LiveTimetable.fromDatabase(dbTrip)
+  let stopVisits = {}
+  for (let stop of trip.stops) {
+    let stopData = await getStopByName(db, stop.stopName)
+    let platformBay
+    if (stop.platform) {
+      platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.platform === stop.platform)
+    } else {
+      platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.stopType == 'station')
+    }
 
+    if (!stopVisits[stop.stopName]) stopVisits[stop.stopName] = 0
+    stopVisits[stop.stopName]++
+
+    let updatedData = {}
+
+    if (stop.platform) updatedData.platform = stop.platform
+
+    // if (stop.scheduledDepartureTime) updatedData.scheduledDepartureTime = stop.scheduledDepartureTime.toISOString()
+
+    if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
+    if (stop.estimatedArrivalTime) updatedData.estimatedArrivalTime = stop.estimatedArrivalTime.toISOString()
+
+    timetable.updateStopByName(stopData.stopName, updatedData, { visitNum: stopVisits[stop.stopName] })
+  }
+
+  await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase())
+
+  return timetable
 }
 
 async function createTrip(db, trip) {
@@ -101,6 +128,7 @@ async function createTrip(db, trip) {
   timetable.forming = trip.forming
   timetable.formedBy = trip.formedBy
 
+  let stopVisits = {}
   for (let stop of trip.stops) {
     let stopData = await getStopByName(db, stop.stopName)
     let platformBay
@@ -109,6 +137,9 @@ async function createTrip(db, trip) {
     } else {
       platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.stopType == 'station')
     }
+
+    if (!stopVisits[stop.stopName]) stopVisits[stop.stopName] = 0
+    stopVisits[stop.stopName]++
 
     let updatedData = {
       stopGTFSID: platformBay.parentStopGTFSID || platformBay.stopGTFSID,
@@ -125,7 +156,7 @@ async function createTrip(db, trip) {
 
     if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
 
-    timetable.updateStopByName(stopData.stopName, updatedData)
+    timetable.updateStopByName(stopData.stopName, updatedData, { visitNum: stopVisits[stop.stopName] })
   }
 
   timetable.stops[0].allowDropoff = false
