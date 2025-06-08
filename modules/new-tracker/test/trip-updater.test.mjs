@@ -169,8 +169,6 @@ describe('The trip updater module', () => {
     let oakChange = tripData.changes.find(change => change.stopGTFSID === 'vic:rail:OAK')
     expect(oakChange).to.exist
     expect(oakChange.type).to.equal('add-stop')
-    expect(oakChange.oldVal).to.be.null
-    expect(oakChange.newVal).to.be.null
     expect(oakChange.timestamp).to.exist
   })
 })

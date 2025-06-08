@@ -120,6 +120,7 @@ module.exports = class LiveTimetable {
   #forming
 
   logChanges = true
+  changes = []
 
   constructor(mode, operationDays, routeName, routeNumber, routeGTFSID, tripID, block) {
     this.#mode = mode
@@ -281,6 +282,11 @@ module.exports = class LiveTimetable {
         }
       )
 
+      if (this.logChanges) this.changes.push({
+        type: 'add-stop',
+        stopGTFSID: stopData.stopGTFSID,
+        timestamp: new Date().toISOString()
+      })
       this.#stops.push(stop)
     }
   }
