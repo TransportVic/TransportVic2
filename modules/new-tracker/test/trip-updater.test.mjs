@@ -174,6 +174,65 @@ describe('The trip updater module', () => {
     expect(oakChange.timestamp).to.exist
   })
 
+  it('Should mark missing stops as cancelled', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(pkmStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "pakenham"
+    })
+    await liveTimetables.createDocument(clone(pkmSchTrip))
+
+    expect(await liveTimetables.countDocuments({})).to.equal(1)
+    let updateData = {
+      operationDays: '20250606',
+      runID: 'C036',
+      routeGTFSID: '2-PKM',
+      stops: [
+        {
+          stopName: 'East Pakenham Railway Station',
+          platform: '1',
+          scheduledDepartureTime: null,
+          cancelled: false,
+          estimatedDepartureTime: new Date('2025-06-05T21:44:00.000Z')
+        },
+        {
+          stopName: 'Pakenham Railway Station',
+          platform: null,
+          scheduledDepartureTime: null,
+          cancelled: false,
+          estimatedArrivalTime: new Date('2025-06-05T21:45:00.000Z'),
+          estimatedDepartureTime: new Date('2025-06-05T21:46:00.000Z'),
+        }
+      ]
+    }
+
+    let tripData = await updateTrip(database, updateData)
+    expect(await liveTimetables.countDocuments({})).to.equal(1)
+
+    for (let stop of tripData.stops.slice(2)) {
+      expect(stop.cancelled).to.be.true
+    }
+
+    let cdaChange = tripData.changes.find(change => change.stopGTFSID === 'vic:rail:CDA')
+    expect(cdaChange).to.exist
+    expect(cdaChange.type).to.equal('cancelled')
+    expect(cdaChange.oldVal).to.be.false
+    expect(cdaChange.newVal).to.be.true
+    expect(cdaChange.timestamp).to.exist
+  })
+
   it('Should ensure the changelog persists in the database', async () => {
     let database = new LokiDatabaseConnection('test-db')
     let stops = await database.createCollection('stops')
