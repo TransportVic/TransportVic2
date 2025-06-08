@@ -88,6 +88,8 @@ describe('The trip updater module', () => {
 
     expect(await liveTimetables.countDocuments({})).to.equal(1)
     let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
+    gtfsrTrips[0].stops[14].scheduledDepartureTime = gtfsrTrips[0].stops[14].estimatedDepartureTime
+
     let tripData = await updateTrip(database, gtfsrTrips[0])
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
@@ -170,5 +172,43 @@ describe('The trip updater module', () => {
     expect(oakChange).to.exist
     expect(oakChange.type).to.equal('add-stop')
     expect(oakChange.timestamp).to.exist
+  })
+
+  it('Should ensure the changelog persists in the database', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(pkmStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "pakenham"
+    })
+    await liveTimetables.createDocument(clone(pkmSchTrip))
+
+    expect(await liveTimetables.countDocuments({})).to.equal(1)
+    let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
+    gtfsrTrips[0].stops[14].scheduledDepartureTime = gtfsrTrips[0].stops[14].estimatedDepartureTime
+
+    await updateTrip(database, gtfsrTrips[0])
+    await updateTrip(database, gtfsrTrips[0]) // Run the update twice - should only have 1 set of changes
+
+    let timetable = await liveTimetables.findDocument({})
+    expect(timetable.changes.length).to.equal(2)
+
+    let ephChange = timetable.changes.find(change => change.stopGTFSID === 'vic:rail:EPH')
+    expect(ephChange).to.exist
+    expect(ephChange.type).to.equal('platform-change')
+    expect(ephChange.oldVal).to.equal('2')
+    expect(ephChange.newVal).to.equal('1')
+    expect(ephChange.timestamp).to.exist
   })
 })
