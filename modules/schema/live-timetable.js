@@ -15,11 +15,12 @@ class TimetableStop {
 
   #platform
   #cancelled = false
+  #additional = false
 
   #allowPickup = true
   #allowDropoff = true
 
-  constructor(operationDayMoment, stopName, suburb, stopNumber, stopGTFSID, scheduledDepartureTime, estimatedDepartureTime, { platform, cancelled, allowPickup, allowDropoff }) {
+  constructor(operationDayMoment, stopName, suburb, stopNumber, stopGTFSID, scheduledDepartureTime, estimatedDepartureTime, { platform, cancelled, additional, allowPickup, allowDropoff }) {
     this.#operationDay = operationDayMoment
     this.#stopName = stopName
     this.#suburb = suburb
@@ -30,6 +31,7 @@ class TimetableStop {
 
     if (platform) this.#platform = platform
     if (cancelled) this.#cancelled = cancelled
+    if (additional) this.#additional = additional
     if (typeof allowPickup !== 'undefined') this.#allowPickup = allowPickup
     if (typeof allowDropoff !== 'undefined') this.#allowDropoff = allowDropoff
   }
@@ -41,6 +43,7 @@ class TimetableStop {
   get stopGTFSID() { return this.#stopGTFSID }
   get platform() { return this.#platform }
   get cancelled() { return this.#cancelled }
+  get additional() { return this.#additional }
 
   get scheduledDepartureTime() { return this.#schDepartureTime.clone() }
   get estimatedDepartureTime() { return this.#estDepartureTime ? this.#estDepartureTime.clone() : null }
@@ -86,6 +89,7 @@ class TimetableStop {
       actualDepartureTimeMS: +this.actualDepartureTime,
       platform: this.#platform,
       cancelled: this.#cancelled,
+      additional: this.#additional,
       stopConditions: {
         pickup: this.#allowPickup ? 0 : 1,
         dropoff: this.allowDropoff ? 0 : 1
@@ -184,6 +188,7 @@ module.exports = class LiveTimetable {
         {
           platform: stopData.platform,
           cancelled: stopData.cancelled,
+          additional: stopData.additional,
           allowPickup: stopData.stopConditions.pickup === 0,
           allowDropoff: stopData.stopConditions.dropoff === 0
         }
@@ -235,6 +240,10 @@ module.exports = class LiveTimetable {
     this.#stops = this.#stops.sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
   }
 
+  getStopNames() {
+    return this.#stops.map(stop => stop.stopName)
+  }
+
   updateStopByName(stopName, stopData, { prefSchTime, visitNum } = {}) {
     let matchingStops = this.#stops.filter(stop => {
       if (prefSchTime) {
@@ -265,7 +274,8 @@ module.exports = class LiveTimetable {
         stopData.estimatedDepartureTime,
         {
           platform: stopData.platform,
-          cancelled: stopData.cancelled
+          cancelled: stopData.cancelled,
+          additional: stopData.additional
         }
       )
 

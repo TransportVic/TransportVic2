@@ -78,6 +78,8 @@ export async function updateTrip(db, trip) {
   if (!dbTrip) return await createTrip(db, trip)
   let timetable = LiveTimetable.fromDatabase(dbTrip)
 
+  let existingStops = timetable.getStopNames()
+
   let stopVisits = {}
   for (let stop of trip.stops) {
     let stopData = await getStopByName(db, stop.stopName)
@@ -97,6 +99,7 @@ export async function updateTrip(db, trip) {
       suburb: platformBay.suburb
     }
 
+    if (!existingStops.includes(stop.stopName)) updatedData.additional = true
     if (stop.platform) updatedData.platform = stop.platform
     if (stop.scheduledDepartureTime) updatedData.scheduledDepartureTime = stop.scheduledDepartureTime.toISOString()
     if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
@@ -108,7 +111,7 @@ export async function updateTrip(db, trip) {
   timetable.sortStops()
 
   await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase())
-  // console.log(timetable.toDatabase())
+
   return timetable
 }
 

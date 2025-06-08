@@ -155,5 +155,6 @@ describe('The trip updater module', () => {
     expect(tripData.stops[14].actualDepartureTime.toISOString()).to.equal('2025-06-05T22:34:00.000Z')
     expect(tripData.stops[14].allowPickup).to.be.true
     expect(tripData.stops[14].allowDropoff).to.be.true
+    expect(tripData.stops[14].additional).to.be.true
   })
 })
