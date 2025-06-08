@@ -107,12 +107,11 @@ async function createTrip(db, trip) {
     if (stop.platform) {
       platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.platform === stop.platform)
     } else {
-      // TODO: Change to use parent stop logic
-      platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.stopGTFSID.startsWith('vic:rail'))
+      platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.stopType == 'station')
     }
 
     let updatedData = {
-      stopGTFSID: platformBay.stopGTFSID,
+      stopGTFSID: platformBay.parentStopGTFSID || platformBay.stopGTFSID,
       stopNumber: null,
       suburb: platformBay.suburb
     }
