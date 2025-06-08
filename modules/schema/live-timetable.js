@@ -242,7 +242,7 @@ module.exports = class LiveTimetable {
       return stop.stopName === stopName
     })
 
-    if (typeof visitNum !== 'undefined') visitNum = 1
+    if (typeof visitNum === 'undefined') visitNum = 1
     let matchingStop = matchingStops[visitNum - 1]
 
     if (matchingStop) {

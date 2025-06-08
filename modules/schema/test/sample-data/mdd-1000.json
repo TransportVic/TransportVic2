@@ -26,8 +26,8 @@
       "scheduledDepartureTime": "2025-04-09T18:04:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "1"
+        "pickup": 0,
+        "dropoff": 1
       },
       "cancelled": false
     },
@@ -45,8 +45,8 @@
       "scheduledDepartureTime": "2025-04-09T18:07:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -64,8 +64,8 @@
       "scheduledDepartureTime": "2025-04-09T18:10:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -83,8 +83,8 @@
       "scheduledDepartureTime": "2025-04-09T18:12:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -102,8 +102,8 @@
       "scheduledDepartureTime": "2025-04-09T18:16:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -121,8 +121,8 @@
       "scheduledDepartureTime": "2025-04-09T18:19:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -140,8 +140,8 @@
       "scheduledDepartureTime": "2025-04-09T18:21:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -159,8 +159,8 @@
       "scheduledDepartureTime": "2025-04-09T18:23:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -178,8 +178,8 @@
       "scheduledDepartureTime": "2025-04-09T18:26:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -197,8 +197,8 @@
       "scheduledDepartureTime": "2025-04-09T18:27:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -216,8 +216,8 @@
       "scheduledDepartureTime": "2025-04-09T18:30:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -235,8 +235,8 @@
       "scheduledDepartureTime": "2025-04-09T18:32:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -254,8 +254,8 @@
       "scheduledDepartureTime": "2025-04-09T18:34:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -273,8 +273,8 @@
       "scheduledDepartureTime": "2025-04-09T18:35:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -292,8 +292,8 @@
       "scheduledDepartureTime": "2025-04-09T18:37:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -311,8 +311,8 @@
       "scheduledDepartureTime": "2025-04-09T18:39:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -330,8 +330,8 @@
       "scheduledDepartureTime": "2025-04-09T18:41:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -349,8 +349,8 @@
       "scheduledDepartureTime": "2025-04-09T18:42:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -368,8 +368,8 @@
       "scheduledDepartureTime": "2025-04-09T18:45:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -387,8 +387,8 @@
       "scheduledDepartureTime": "2025-04-09T18:47:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -406,8 +406,8 @@
       "scheduledDepartureTime": "2025-04-09T18:48:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -425,8 +425,8 @@
       "scheduledDepartureTime": "2025-04-09T18:50:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -444,8 +444,8 @@
       "scheduledDepartureTime": "2025-04-09T18:51:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -463,8 +463,8 @@
       "scheduledDepartureTime": "2025-04-09T18:53:00.000Z",
       "platform": "1",
       "stopConditions": {
-        "pickup": "0",
-        "dropoff": "0"
+        "pickup": 0,
+        "dropoff": 0
       },
       "cancelled": false
     },
@@ -483,7 +483,7 @@
       "platform": "1",
       "stopConditions": {
         "pickup": "1",
-        "dropoff": "0"
+        "dropoff": 0
       },
       "cancelled": false
     }

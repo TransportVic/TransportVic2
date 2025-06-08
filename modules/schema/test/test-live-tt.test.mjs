@@ -78,7 +78,7 @@ describe('The LiveTimetable schema', () => {
     expect(dbObj.stopTimings[0].platform).to.equal('1')
     expect(dbObj.stopTimings[0].cancelled).to.be.false
     expect(dbObj.stopTimings[0].stopConditions).to.deep.equal({
-      pickup: '0', dropoff: '1'
+      pickup: 0, dropoff: 1
     })
   })
 
@@ -152,7 +152,7 @@ describe('The LiveTimetable schema', () => {
       let stopName = stopData.stopName
       timetable.updateStopByName(stopName, {
         estimatedDepartureTime: stopData.scheduledDepartureTime.add(delay, 'minutes')
-      }, stopData.scheduledDepartureTime)
+      }, { prefSchTime: stopData.scheduledDepartureTime })
     }
 
     // First time FSS is served
