@@ -152,7 +152,7 @@ module.exports = class LiveTimetable {
   set runID(runID) { this.#runID = runID }
   set isRRB(isRRB) { this.#isRRB = isRRB }
   set cancelled(cancelled) {
-    if (cancelled !== this.#cancelled) {
+    if (cancelled !== this.#cancelled && this.logChanges) {
       this.changes.push({
         type: 'trip-cancelled',
         oldVal: this.cancelled,
@@ -174,8 +174,28 @@ module.exports = class LiveTimetable {
   get formedBy() { return this.#formedBy }
   get forming() { return this.#forming }
 
-  set formedBy(formedBy) { this.#formedBy = formedBy } 
-  set forming(forming) { this.#forming = forming } 
+  set formedBy(formedBy) {
+    if (formedBy !== this.#formedBy && this.logChanges) {
+      this.changes.push({
+        type: 'formedby-change',
+        oldVal: this.#formedBy,
+        newVal: formedBy,
+        timestamp: new Date().toISOString()
+      })
+    }
+    this.#formedBy = formedBy
+  }
+  set forming(forming) {
+    if (forming !== this.#forming && this.logChanges) {
+      this.changes.push({
+        type: 'forming-change',
+        oldVal: this.#forming,
+        newVal: forming,
+        timestamp: new Date().toISOString()
+      })
+    }
+    this.#forming = forming
+  }
 
   get isRRB() { return this.#isRRB }
   get cancelled() { return this.#cancelled }
