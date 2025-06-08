@@ -71,6 +71,26 @@ export async function getRouteByName(db, routeName) {
   return route
 }
 
+async function getBaseStopUpdateData(db, stop) {
+  let stopData = await getStopByName(db, stop.stopName)
+  let platformBay
+  if (stop.platform) {
+    platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.platform === stop.platform)
+  } else {
+    platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.stopType == 'station')
+  }
+
+  let updatedData = {
+    stopGTFSID: platformBay.parentStopGTFSID || platformBay.stopGTFSID,
+    stopNumber: null,
+    suburb: platformBay.suburb
+  }
+
+  return {
+    stopData, platformBay, updatedData
+  }
+}
+
 export async function updateTrip(db, trip) {
   let dbTrip = await getTrip(db, trip.runID, trip.operationDays)
   let liveTimetables = db.getCollection('live timetables')
@@ -88,22 +108,10 @@ export async function updateTrip(db, trip) {
 
   let stopVisits = {}
   for (let stop of trip.stops) {
-    let stopData = await getStopByName(db, stop.stopName)
-    let platformBay
-    if (stop.platform) {
-      platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.platform === stop.platform)
-    } else {
-      platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.stopType == 'station')
-    }
+    let { stopData, updatedData } = await getBaseStopUpdateData(db, stop)
 
     if (!stopVisits[stop.stopName]) stopVisits[stop.stopName] = 0
     stopVisits[stop.stopName]++
-
-    let updatedData = {
-      stopGTFSID: platformBay.parentStopGTFSID || platformBay.stopGTFSID,
-      stopNumber: null,
-      suburb: platformBay.suburb
-    }
 
     if (!existingStops.includes(stop.stopName)) updatedData.additional = true
     if (stop.platform) updatedData.platform = stop.platform
@@ -156,22 +164,10 @@ async function createTrip(db, trip) {
 
   let stopVisits = {}
   for (let stop of trip.stops) {
-    let stopData = await getStopByName(db, stop.stopName)
-    let platformBay
-    if (stop.platform) {
-      platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.platform === stop.platform)
-    } else {
-      platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.stopType == 'station')
-    }
+    let { stopData, updatedData } = await getBaseStopUpdateData(db, stop)
 
     if (!stopVisits[stop.stopName]) stopVisits[stop.stopName] = 0
     stopVisits[stop.stopName]++
-
-    let updatedData = {
-      stopGTFSID: platformBay.parentStopGTFSID || platformBay.stopGTFSID,
-      stopNumber: null,
-      suburb: platformBay.suburb
-    }
 
     if (stop.platform) updatedData.platform = stop.platform
 
