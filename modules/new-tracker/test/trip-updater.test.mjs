@@ -62,6 +62,8 @@ describe('The trip updater module', () => {
     // expect(tripData.stops[1].platform).to.equal('1')
     expect(tripData.stops[1].scheduledDepartureTime.toISOString()).to.equal('2025-06-05T21:46:00.000Z')
     expect(tripData.stops[1].actualDepartureTime.toISOString()).to.equal('2025-06-05T21:46:00.000Z')
+
+    expect(tripData.changes.length).to.equal(0)
   })
 
   it('Should update the trip if it exists', async () => {
@@ -118,6 +120,13 @@ describe('The trip updater module', () => {
     expect(tripData.stops[1].platform).to.equal('1')
     expect(tripData.stops[1].scheduledDepartureTime.toISOString()).to.equal('2025-06-05T21:46:00.000Z')
     expect(tripData.stops[1].actualDepartureTime.toISOString()).to.equal('2025-06-05T21:46:00.000Z')
+
+    let ephChange = tripData.changes.find(change => change.stopGTFSID === 'vic:rail:EPH')
+    expect(ephChange).to.exist
+    expect(ephChange.type).to.equal('platform')
+    expect(ephChange.oldVal).to.equal('2')
+    expect(ephChange.newVal).to.equal('1')
+    expect(ephChange.timestamp).to.exist
   })
 
   it('Should insert an additional stop', async () => {
@@ -156,5 +165,12 @@ describe('The trip updater module', () => {
     expect(tripData.stops[14].allowPickup).to.be.true
     expect(tripData.stops[14].allowDropoff).to.be.true
     expect(tripData.stops[14].additional).to.be.true
+
+    let oakChange = tripData.changes.find(change => change.stopGTFSID === 'vic:rail:OAK')
+    expect(oakChange).to.exist
+    expect(oakChange.type).to.equal('add-stop')
+    expect(oakChange.oldVal).to.be.null
+    expect(oakChange.newVal).to.be.null
+    expect(oakChange.timestamp).to.exist
   })
 })

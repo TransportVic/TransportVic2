@@ -119,6 +119,8 @@ module.exports = class LiveTimetable {
   #formedBy
   #forming
 
+  logChanges = true
+
   constructor(mode, operationDays, routeName, routeNumber, routeGTFSID, tripID, block) {
     this.#mode = mode
     this.#operationDay = utils.parseDate(operationDays).startOf('day')
