@@ -180,6 +180,5 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.changes[1].oldVal).to.equal('0733')
     expect(timetable.changes[1].newVal).to.equal('0400')
     expect(timetable.changes[1].timestamp).to.exist
-
   })
 })

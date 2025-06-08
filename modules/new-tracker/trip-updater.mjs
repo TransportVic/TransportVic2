@@ -6,7 +6,7 @@ let stopCache = {}
 let routeIDCache = {}
 let routeNameCache = {}
 
-async function getTrip(db, runID, date) {
+export async function getTrip(db, runID, date) {
   let liveTimetables = db.getCollection('live timetables')
   return await liveTimetables.findDocument({
     mode: 'metro train',
@@ -91,7 +91,7 @@ async function getBaseStopUpdateData(db, stop) {
   }
 }
 
-export async function updateTrip(db, trip) {
+export async function updateTrip(db, trip, { skipWrite } = { skipWrite: false }) {
   let dbTrip = await getTrip(db, trip.runID, trip.operationDays)
   let liveTimetables = db.getCollection('live timetables')
 
@@ -100,9 +100,12 @@ export async function updateTrip(db, trip) {
 
   timetable.cancelled = trip.cancelled
   if (trip.cancelled) {
-    await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase())
+    if (!skipWrite) await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase())
     return timetable
   }
+
+  if (trip.forming) timetable.forming = trip.forming
+  if (trip.formedBy) timetable.formedBy = trip.formedBy
 
   let existingStops = timetable.getStopNames()
 
@@ -135,7 +138,7 @@ export async function updateTrip(db, trip) {
 
   timetable.sortStops()
 
-  await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase())
+  if (!skipWrite) await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase())
 
   return timetable
 }
