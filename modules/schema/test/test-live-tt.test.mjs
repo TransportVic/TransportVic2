@@ -162,4 +162,24 @@ describe('The LiveTimetable schema', () => {
     // Second time FSS is served
     expect(timetable.stops[5].estimatedDepartureTime.toISOString()).to.equal('2025-04-05T00:10:00.000Z')
   })
+
+  it('Should track a change in forming/formed by data', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    timetable.forming = '3800'
+
+    expect(timetable.changes.length).to.equal(1)
+    expect(timetable.changes[0].type).to.equal('forming-change')
+    expect(timetable.changes[0].oldVal).to.equal('0737')
+    expect(timetable.changes[0].newVal).to.equal('3800')
+    expect(timetable.changes[0].timestamp).to.exist
+
+    timetable.formedBy = '0400'
+
+    expect(timetable.changes.length).to.equal(2)
+    expect(timetable.changes[1].type).to.equal('formedby-change')
+    expect(timetable.changes[1].oldVal).to.equal('0733')
+    expect(timetable.changes[1].newVal).to.equal('0400')
+    expect(timetable.changes[1].timestamp).to.exist
+
+  })
 })
