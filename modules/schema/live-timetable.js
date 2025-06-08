@@ -62,6 +62,8 @@ class TimetableStop {
   }
 
   set platform(platform) { this.#platform = platform }
+  set cancelled(cancelled) { this.#cancelled = cancelled }
+  set additional(additional) { this.#additional = additional }
 
   get arrivalTime() { return utils.formatHHMM(this.#schDepartureTime) }
   get arrivalTimeMinutes() { return this.#schDepartureTime.diff(this.#operationDay, 'minutes') }
@@ -270,14 +272,24 @@ module.exports = class LiveTimetable {
         let newPlatform = stopData.platform.toString()
         if (matchingStop.platform !== newPlatform && this.logChanges) this.changes.push({
           type: 'platform-change',
-          stopGTFSID: stopData.stopGTFSID,
+          stopGTFSID: matchingStop.stopGTFSID,
           oldVal: matchingStop.platform,
           newVal: newPlatform,
           timestamp: new Date().toISOString()
         })
         matchingStop.platform = newPlatform
       }
-      if (typeof stopData.cancelled !== 'undefined') matchingStop.cancelled = stopData.cancelled
+
+      if (typeof stopData.cancelled !== 'undefined') {
+        if (matchingStop.cancelled !== stopData.cancelled && this.logChanges) this.changes.push({
+          type: 'stop-cancelled',
+          stopGTFSID: matchingStop.stopGTFSID,
+          oldVal: matchingStop.cancelled,
+          newVal: stopData.cancelled,
+          timestamp: new Date().toISOString()
+        })
+        matchingStop.cancelled = stopData.cancelled
+      }
     } else {
       let stop = new TimetableStop(
         this.#operationDay.clone(),

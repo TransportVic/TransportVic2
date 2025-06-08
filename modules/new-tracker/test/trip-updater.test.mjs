@@ -227,7 +227,7 @@ describe('The trip updater module', () => {
 
     let cdaChange = tripData.changes.find(change => change.stopGTFSID === 'vic:rail:CDA')
     expect(cdaChange).to.exist
-    expect(cdaChange.type).to.equal('cancelled')
+    expect(cdaChange.type).to.equal('stop-cancelled')
     expect(cdaChange.oldVal).to.be.false
     expect(cdaChange.newVal).to.be.true
     expect(cdaChange.timestamp).to.exist

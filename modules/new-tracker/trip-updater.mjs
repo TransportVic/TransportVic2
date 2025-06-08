@@ -101,11 +101,22 @@ export async function updateTrip(db, trip) {
 
     if (!existingStops.includes(stop.stopName)) updatedData.additional = true
     if (stop.platform) updatedData.platform = stop.platform
+    if (typeof stop.cancelled !== 'undefined') updatedData.cancelled = stop.cancelled
+    else updatedData.cancelled = false
+
     if (stop.scheduledDepartureTime) updatedData.scheduledDepartureTime = stop.scheduledDepartureTime.toISOString()
     if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
     if (stop.estimatedArrivalTime) updatedData.estimatedArrivalTime = stop.estimatedArrivalTime.toISOString()
 
     timetable.updateStopByName(stopData.stopName, updatedData, { visitNum: stopVisits[stop.stopName] })
+  }
+
+  for (let stop of existingStops) {
+    if (!stopVisits[stop]) {
+      timetable.updateStopByName(stop, {
+        cancelled: true
+      })
+    }
   }
 
   timetable.sortStops()
