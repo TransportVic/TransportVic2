@@ -128,6 +128,8 @@ async function createTrip(db, trip) {
     null
   )
 
+  timetable.logChanges = false
+
   timetable.isRRB = false
   timetable.runID = trip.runID
   timetable.direction = trip.runID[3] % 2 === 0 ? 'Up' : 'Down'
