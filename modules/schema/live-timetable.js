@@ -231,6 +231,10 @@ module.exports = class LiveTimetable {
     }
   }
 
+  sortStops() {
+    this.#stops = this.#stops.sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+  }
+
   updateStopByName(stopName, stopData, { prefSchTime, visitNum } = {}) {
     let matchingStops = this.#stops.filter(stop => {
       if (prefSchTime) {

@@ -293,26 +293,6 @@
             "cancelled": false
         },
         {
-            "stopName": "Oakleigh Railway Station",
-            "stopNumber": null,
-            "suburb": "Oakleigh",
-            "stopGTFSID": "vic:rail:OAK",
-            "arrivalTime": "08:34",
-            "arrivalTimeMinutes": 514,
-            "departureTime": "08:34",
-            "departureTimeMinutes": 514,
-            "stopConditions": {
-                "pickup": 0,
-                "dropoff": 0
-            },
-            "stopDistance": "46078.65",
-            "platform": "1",
-            "scheduledDepartureTime": "2025-06-05T22:34:00.000Z",
-            "actualDepartureTimeMS": 1749162840000,
-            "estimatedDepartureTime": null,
-            "cancelled": false
-        },
-        {
             "stopName": "Hughesdale Railway Station",
             "stopNumber": null,
             "suburb": "Murrumbeena",

@@ -91,7 +91,11 @@ export async function updateTrip(db, trip) {
     if (!stopVisits[stop.stopName]) stopVisits[stop.stopName] = 0
     stopVisits[stop.stopName]++
 
-    let updatedData = {}
+    let updatedData = {
+      stopGTFSID: platformBay.parentStopGTFSID || platformBay.stopGTFSID,
+      stopNumber: null,
+      suburb: platformBay.suburb
+    }
 
     if (stop.platform) updatedData.platform = stop.platform
     if (stop.scheduledDepartureTime) updatedData.scheduledDepartureTime = stop.scheduledDepartureTime.toISOString()
@@ -101,8 +105,10 @@ export async function updateTrip(db, trip) {
     timetable.updateStopByName(stopData.stopName, updatedData, { visitNum: stopVisits[stop.stopName] })
   }
 
-  await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase())
+  timetable.sortStops()
 
+  await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase())
+  // console.log(timetable.toDatabase())
   return timetable
 }
 
