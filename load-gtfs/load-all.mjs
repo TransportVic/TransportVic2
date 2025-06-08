@@ -32,8 +32,8 @@ await runNode('tram/load-tramtracker-ids.js')
 await runNode('bus/load-788-stop-numbers.js')
 
 await runNode('vline/api-integration/load-vnet-station-names.js')
-await runNode('vline/timetables/download-vline-timetables.js')
-await runNode('vline/timetables/load-vline-timetables.js')
+// await runNode('vline/timetables/download-vline-timetables.js')
+// await runNode('vline/timetables/load-vline-timetables.js')
 
 await runNode('load-all-post.mjs')
 
