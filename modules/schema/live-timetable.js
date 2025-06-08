@@ -203,6 +203,7 @@ module.exports = class LiveTimetable {
     if (timetable.formedBy) timetableInstance.#formedBy = timetable.formedBy
     if (timetable.forming) timetableInstance.#forming = timetable.forming
     if (typeof timetable.isRailReplacementBus !== 'undefined') timetableInstance.#isRRB = timetable.isRailReplacementBus
+    if (timetable.changes) timetableInstance.changes = timetable.changes
 
     return timetableInstance
   }
@@ -235,7 +236,8 @@ module.exports = class LiveTimetable {
       destinationArrivalTime: this.destinationArrivalTime,
       stopTimings: this.#stops.map(stop => stop.toDatabase()),
       formedBy: this.#formedBy,
-      forming: this.#forming
+      forming: this.#forming,
+      changes: this.changes
     }
   }
 

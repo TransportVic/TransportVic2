@@ -210,5 +210,18 @@ describe('The trip updater module', () => {
     expect(ephChange.oldVal).to.equal('2')
     expect(ephChange.newVal).to.equal('1')
     expect(ephChange.timestamp).to.exist
+
+    gtfsrTrips[0].stops[8].platform = '3'
+    await updateTrip(database, gtfsrTrips[0])
+    timetable = await liveTimetables.findDocument({})
+    expect(timetable.changes.length).to.equal(3)
+
+    let dngChange = timetable.changes.find(change => change.stopGTFSID === 'vic:rail:DNG')
+    expect(dngChange).to.exist
+    expect(dngChange.type).to.equal('platform-change')
+    expect(dngChange.oldVal).to.equal('2')
+    expect(dngChange.newVal).to.equal('3')
+    expect(dngChange.timestamp).to.exist
+
   })
 })
