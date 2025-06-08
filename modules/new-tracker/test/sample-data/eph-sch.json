@@ -26,7 +26,7 @@
                 "dropoff": 1
             },
             "stopDistance": "0.00",
-            "platform": "1",
+            "platform": "2",
             "scheduledDepartureTime": "2025-06-05T21:43:00.000Z",
             "actualDepartureTimeMS": 1749159780000,
             "estimatedDepartureTime": null,
