@@ -4,6 +4,11 @@ import { LokiDatabaseConnection } from '@transportme/database'
 import pkmStops from './sample-data/pkm-stops-db.json' with { type: 'json' }
 import gtfsr_EPH from './sample-data/gtfsr-eph.json' with { type: 'json' }
 import pkmSchTrip from './sample-data/eph-sch.json' with { type: 'json' }
+
+import rceStops from './sample-data/rce-stops-db.json' with { type: 'json' }
+import tdR202 from './sample-data/rce-R202.json' with { type: 'json' }
+import tdR205 from './sample-data/rce-R205.json' with { type: 'json' }
+
 import { updateTrip } from '../trip-updater.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
@@ -320,5 +325,167 @@ describe('The trip updater module', () => {
     expect(dngChange.oldVal).to.equal('2')
     expect(dngChange.newVal).to.equal('3')
     expect(dngChange.timestamp).to.exist
+  })
+
+  it('Should be able to handle trips being redirected', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(rceStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Flemington Racecourse",
+      "cleanName" : "flemington-racecourse",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-RCE",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "flemington-racecourse"
+    })
+    await liveTimetables.createDocument(clone(tdR202))
+
+    expect(await liveTimetables.countDocuments({})).to.equal(1)
+
+    let tripUdate = {
+      operationDays: '20240224',
+      runID: 'R202',
+      routeGTFSID: '2-RCE',
+      stops: [{
+        stopName: 'Showgrounds Railway Station',
+        platform: '1',
+        scheduledDepartureTime: new Date('2024-02-23T22:29:00.000Z'),
+        cancelled: false
+      }, {
+        stopName: 'Flagstaff Railway Station',
+        platform: '3',
+        scheduledDepartureTime: new Date('2024-02-23T22:39:00.000Z'),
+        cancelled: false
+      }, {
+        stopName: 'Melbourne Central Railway Station',
+        platform: '3',
+        scheduledDepartureTime: new Date('2024-02-23T22:41:00.000Z'),
+        cancelled: false
+      }, {
+        stopName: 'Parliament Railway Station',
+        platform: '3',
+        scheduledDepartureTime: new Date('2024-02-23T22:43:00.000Z'),
+        cancelled: false
+      }, {
+        stopName: 'Flinders Street Railway Station',
+        platform: '5',
+        scheduledDepartureTime: new Date('2024-02-23T22:46:00.000Z'),
+        cancelled: false
+      }],
+      cancelled: false
+    }
+
+    let trip = await updateTrip(database, tripUdate)
+    expect(trip.stops[0].stopName).to.equal('Showgrounds Railway Station')
+    expect(trip.stops[0].additional).to.be.false
+    expect(trip.stops[0].cancelled).to.be.false
+
+    expect(trip.stops[1].stopName).to.equal('Southern Cross Railway Station')
+    expect(trip.stops[1].additional).to.be.false
+    expect(trip.stops[1].cancelled).to.be.true
+
+    expect(trip.stops[2].stopName).to.equal('Flagstaff Railway Station')
+    expect(trip.stops[2].additional).to.be.true
+    expect(trip.stops[2].cancelled).to.be.false
+
+    expect(trip.stops[3].stopName).to.equal('Melbourne Central Railway Station')
+    expect(trip.stops[3].additional).to.be.true
+    expect(trip.stops[3].cancelled).to.be.false
+
+    expect(trip.stops[4].stopName).to.equal('Parliament Railway Station')
+    expect(trip.stops[4].additional).to.be.true
+    expect(trip.stops[4].cancelled).to.be.false
+
+    expect(trip.stops[5].stopName).to.equal('Flinders Street Railway Station')
+    expect(trip.stops[5].additional).to.be.true
+    expect(trip.stops[5].cancelled).to.be.false
+
+    expect(trip.origin).to.equal('Showgrounds Railway Station')
+    expect(trip.departureTime).to.equal('09:29')
+
+    expect(trip.destination).to.equal('Flinders Street Railway Station')
+    expect(trip.destinationArrivalTime).to.equal('09:46')
+  })
+
+  it('Should be able to handle trips being extended', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(rceStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Flemington Racecourse",
+      "cleanName" : "flemington-racecourse",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-RCE",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "flemington-racecourse"
+    })
+    await liveTimetables.createDocument(clone(tdR205))
+
+    expect(await liveTimetables.countDocuments({})).to.equal(1)
+
+    let tripUdate = {
+      operationDays: '20240224',
+      runID: 'R205',
+      routeGTFSID: '2-RCE',
+      stops: [{
+        stopName: 'Flinders Street Railway Station',
+        platform: '5',
+        scheduledDepartureTime: new Date('2024-02-23T22:46:00.000Z'),
+        cancelled: false
+      }, {
+        stopName: 'Southern Cross Railway Station',
+        platform: '11',
+        scheduledDepartureTime: new Date('2024-02-23T22:49:00.000Z'),
+        cancelled: false
+      }, {
+        stopName: 'North Melbourne Railway Station',
+        platform: '2',
+        scheduledDepartureTime: new Date('2024-02-23T22:52:00.000Z'),
+        cancelled: false
+      }, {
+        stopName: 'Showgrounds Railway Station',
+        platform: '1',
+        scheduledDepartureTime: new Date('2024-02-23T23:01:00.000Z'),
+        cancelled: false
+      }],
+      cancelled: false
+    }
+
+    let trip = await updateTrip(database, tripUdate)
+    expect(trip.stops[0].stopName).to.equal('Flinders Street Railway Station')
+    expect(trip.stops[0].additional).to.be.true
+    expect(trip.stops[0].cancelled).to.be.false
+
+    expect(trip.stops[1].stopName).to.equal('Southern Cross Railway Station')
+    expect(trip.stops[1].additional).to.be.false
+    expect(trip.stops[1].cancelled).to.be.false
+    expect(trip.stops[1].platform).to.equal('11')
+
+    expect(trip.stops[2].stopName).to.equal('North Melbourne Railway Station')
+    expect(trip.stops[2].additional).to.be.false
+    expect(trip.stops[2].cancelled).to.be.false
+
+    expect(trip.stops[3].stopName).to.equal('Showgrounds Railway Station')
+    expect(trip.stops[3].additional).to.be.false
+    expect(trip.stops[3].cancelled).to.be.false
+
+    expect(trip.origin).to.equal('Flinders Street Railway Station')
+    expect(trip.departureTime).to.equal('09:46')
+
+    expect(trip.destination).to.equal('Showgrounds Railway Station')
+    expect(trip.destinationArrivalTime).to.equal('10:01')
   })
 })

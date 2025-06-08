@@ -1,0 +1,62 @@
+{
+    "mode": "metro train",
+    "routeName": "Flemington Racecourse",
+    "routeGTFSID": "2-RCE",
+    "routeNumber": null,
+    "routeDetails": null,
+    "runID": "R202",
+    "operationDays": "20240224",
+    "vehicle": null,
+    "stopTimings": [
+        {
+            "stopName": "Showgrounds Railway Station",
+            "stopNumber": null,
+            "suburb": "Flemington",
+            "stopGTFSID": "vic:rail:SGS",
+            "arrivalTime": "09:29",
+            "arrivalTimeMinutes": 569,
+            "departureTime": "09:29",
+            "departureTimeMinutes": 569,
+            "estimatedDepartureTime": null,
+            "actualDepartureTimeMS": 1708727340000,
+            "scheduledDepartureTime": "2024-02-23T22:29:00.000Z",
+            "platform": "1",
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 1
+            },
+            "cancelled": false
+        },
+        {
+            "stopName": "Southern Cross Railway Station",
+            "stopNumber": null,
+            "suburb": "Melbourne City",
+            "stopGTFSID": "vic:rail:SSS",
+            "arrivalTime": "09:39",
+            "arrivalTimeMinutes": 579,
+            "departureTime": "09:39",
+            "departureTimeMinutes": 579,
+            "estimatedDepartureTime": null,
+            "actualDepartureTimeMS": 1708727940000,
+            "scheduledDepartureTime": "2024-02-23T22:39:00.000Z",
+            "platform": "8",
+            "stopConditions": {
+                "pickup": 1,
+                "dropoff": 0
+            },
+            "cancelled": false
+        }
+    ],
+    "origin": "Showgrounds Railway Station",
+    "departureTime": "09:29",
+    "destination": "Southern Cross Railway Station",
+    "destinationArrivalTime": "09:39",
+    "type": "timings",
+    "gtfsDirection": null,
+    "direction": "Up",
+    "cancelled": false,
+    "suspensions": null,
+    "isRailReplacementBus": false,
+    "formedBy": "R201",
+    "forming": "R205"
+}
