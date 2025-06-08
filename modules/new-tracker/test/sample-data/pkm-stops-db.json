@@ -1421,6 +1421,147 @@
         ]
     },
     {
+        "stopName": "Darling Railway Station",
+        "suburb": [
+            "Malvern East"
+        ],
+        "cleanSuburbs": [
+            "malvern-east"
+        ],
+        "bays": [
+            {
+                "originalName": "Darling Railway Station",
+                "fullStopName": "Darling Railway Station",
+                "stopGTFSID": "vic:rail:DLG",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        145.06295083,
+                        -37.86895684
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Malvern East",
+                "services": [],
+                "screenServices": [],
+                "stopType": "station",
+                "parentStopGTFSID": null
+            },
+            {
+                "originalName": "Darling Railway Station",
+                "fullStopName": "Darling Railway Station",
+                "stopGTFSID": "26151",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        145.06038347,
+                        -37.86888753
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Malvern East",
+                "services": [
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:DLG",
+                "platform": "RRB"
+            },
+            {
+                "originalName": "Darling Station",
+                "fullStopName": "Darling Railway Station",
+                "stopGTFSID": "8272",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        145.06286016,
+                        -37.86894634
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Malvern East",
+                "services": [
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:DLG",
+                "platform": "1"
+            },
+            {
+                "originalName": "Darling Station",
+                "fullStopName": "Darling Railway Station",
+                "stopGTFSID": "8691",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        145.0629745,
+                        -37.86892119
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Malvern East",
+                "services": [
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:DLG",
+                "platform": "2"
+            }
+        ],
+        "mergeName": "Darling Railway Station",
+        "services": [],
+        "screenServices": [],
+        "cleanName": "darling-railway-station",
+        "cleanNames": [
+            "darling-railway-station"
+        ],
+        "codedSuburbs": [
+            "malvern-east"
+        ]
+    },
+    {
         "stopName": "East Pakenham Railway Station",
         "suburb": [
             "Pakenham"
@@ -1570,6 +1711,1350 @@
         ],
         "codedSuburbs": [
             "pakenham"
+        ]
+    },
+    {
+        "stopName": "Flagstaff Railway Station",
+        "suburb": [
+            "Melbourne",
+            "West Melbourne"
+        ],
+        "cleanSuburbs": [
+            "melbourne",
+            "west-melbourne"
+        ],
+        "bays": [
+            {
+                "originalName": "Flagstaff Railway Station",
+                "fullStopName": "Flagstaff Railway Station",
+                "stopGTFSID": "vic:rail:FGS",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.95566511,
+                        -37.8119815
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [],
+                "screenServices": [],
+                "stopType": "station",
+                "parentStopGTFSID": null
+            },
+            {
+                "originalName": "Flagstaff Station",
+                "fullStopName": "Flagstaff Railway Station",
+                "stopGTFSID": "10920",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.95604277,
+                        -37.81187992
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CCL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-HBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-MDD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CCL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-HBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-MDD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FGS",
+                "platform": "1"
+            },
+            {
+                "originalName": "Flagstaff Station",
+                "fullStopName": "Flagstaff Railway Station",
+                "stopGTFSID": "10921",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.95596751,
+                        -37.81172541
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "West Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FGS",
+                "platform": "2"
+            },
+            {
+                "originalName": "Flagstaff Station",
+                "fullStopName": "Flagstaff Railway Station",
+                "stopGTFSID": "12195",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.95607534,
+                        -37.81193456
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-RCE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-RCE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FGS",
+                "platform": "3"
+            },
+            {
+                "originalName": "Flagstaff Station",
+                "fullStopName": "Flagstaff Railway Station",
+                "stopGTFSID": "12196",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.95600083,
+                        -37.81175303
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "West Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FGS",
+                "platform": "4"
+            }
+        ],
+        "mergeName": "Flagstaff Railway Station",
+        "services": [],
+        "screenServices": [],
+        "cleanName": "flagstaff-railway-station",
+        "cleanNames": [
+            "flagstaff-railway-station",
+            "flagstaff-railway-station-la-trobe-street",
+            "flagstaff-railway-station-william-street"
+        ],
+        "codedSuburbs": [
+            "melbourne",
+            "west-melbourne"
+        ]
+    },
+    {
+        "stopName": "Flinders Street Railway Station",
+        "suburb": [
+            "Melbourne"
+        ],
+        "cleanSuburbs": [
+            "melbourne"
+        ],
+        "bays": [
+            {
+                "originalName": "Flinders Street Station",
+                "fullStopName": "Flinders Street Railway Station",
+                "stopGTFSID": "11212",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96483434,
+                        -37.81851165
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CCL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-HBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-HBE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-MDD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-MDD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CCL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-HBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-MDD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FSS",
+                "platform": "1"
+            },
+            {
+                "originalName": "Flinders Street Station",
+                "fullStopName": "Flinders Street Railway Station",
+                "stopGTFSID": "11213",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96601006,
+                        -37.81830668
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CCL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-HBE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-MDD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CCL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FSS",
+                "platform": "2"
+            },
+            {
+                "originalName": "Flinders Street Station",
+                "fullStopName": "Flinders Street Railway Station",
+                "stopGTFSID": "11214",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96646672,
+                        -37.81822445
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CCL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-HBE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CCL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FSS",
+                "platform": "3"
+            },
+            {
+                "originalName": "Flinders Street Station",
+                "fullStopName": "Flinders Street Railway Station",
+                "stopGTFSID": "11215",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96655582,
+                        -37.81828907
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-RCE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FSS",
+                "platform": "4"
+            },
+            {
+                "originalName": "Flinders Street Station",
+                "fullStopName": "Flinders Street Railway Station",
+                "stopGTFSID": "11216",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96660025,
+                        -37.81832588
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-RCE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FSS",
+                "platform": "5"
+            },
+            {
+                "originalName": "Flinders Street Station",
+                "fullStopName": "Flinders Street Railway Station",
+                "stopGTFSID": "11217",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.9669283,
+                        -37.81837661
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FSS",
+                "platform": "6"
+            },
+            {
+                "originalName": "Flinders Street Station",
+                "fullStopName": "Flinders Street Railway Station",
+                "stopGTFSID": "11218",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96674342,
+                        -37.81849057
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FSS",
+                "platform": "7"
+            },
+            {
+                "originalName": "Flinders Street Station",
+                "fullStopName": "Flinders Street Railway Station",
+                "stopGTFSID": "12201",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96826668,
+                        -37.81845378
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SHM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SHM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-SHM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FSS",
+                "platform": "13"
+            },
+            {
+                "originalName": "Flinders Street Station",
+                "fullStopName": "Flinders Street Railway Station",
+                "stopGTFSID": "12202",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96817708,
+                        -37.81840717
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SHM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SHM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-SHM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FSS",
+                "platform": "12"
+            },
+            {
+                "originalName": "Flinders Street Station",
+                "fullStopName": "Flinders Street Railway Station",
+                "stopGTFSID": "12203",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96619788,
+                        -37.81891371
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SHM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FSS",
+                "platform": "10"
+            },
+            {
+                "originalName": "Flinders Street Station",
+                "fullStopName": "Flinders Street Railway Station",
+                "stopGTFSID": "12204",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96687671,
+                        -37.81860101
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SHM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FSS",
+                "platform": "9"
+            },
+            {
+                "originalName": "Flinders Street Station",
+                "fullStopName": "Flinders Street Railway Station",
+                "stopGTFSID": "12205",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.9668893,
+                        -37.81855617
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SHM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SHM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FSS",
+                "platform": "8"
+            },
+            {
+                "originalName": "Flinders Street Railway Station",
+                "fullStopName": "Flinders Street Railway Station",
+                "stopGTFSID": "26170",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96591676,
+                        -37.81798064
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:FSS",
+                "platform": "RRB"
+            },
+            {
+                "originalName": "Flinders Street Railway Station",
+                "fullStopName": "Flinders Street Railway Station",
+                "stopGTFSID": "vic:rail:FSS",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96696435,
+                        -37.81830513
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [],
+                "screenServices": [],
+                "stopType": "station",
+                "parentStopGTFSID": null
+            }
+        ],
+        "mergeName": "Flinders Street Railway Station",
+        "services": [],
+        "screenServices": [],
+        "cleanName": "flinders-street-railway-station",
+        "cleanNames": [
+            "flinders-street-railway-station",
+            "flinders-street-railway-station-elizabeth-street"
+        ],
+        "codedSuburbs": [
+            "melbourne"
         ]
     },
     {
@@ -2396,6 +3881,337 @@
         "codedSuburbs": [
             "malvern",
             "caulfield-north"
+        ]
+    },
+    {
+        "stopName": "Melbourne Central Railway Station",
+        "suburb": [
+            "Melbourne"
+        ],
+        "cleanSuburbs": [
+            "melbourne"
+        ],
+        "bays": [
+            {
+                "originalName": "Melbourne Central Railway Station",
+                "fullStopName": "Melbourne Central Railway Station",
+                "stopGTFSID": "vic:rail:MCE",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96260489,
+                        -37.80993896
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [],
+                "screenServices": [],
+                "stopType": "station",
+                "parentStopGTFSID": null
+            },
+            {
+                "originalName": "Melbourne Central Station",
+                "fullStopName": "Melbourne Central Railway Station",
+                "stopGTFSID": "10922",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96254713,
+                        -37.80997401
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CCL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-HBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-MDD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CCL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-HBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-MDD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:MCE",
+                "platform": "1"
+            },
+            {
+                "originalName": "Melbourne Central Station",
+                "fullStopName": "Melbourne Central Railway Station",
+                "stopGTFSID": "10923",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96251604,
+                        -37.80986533
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:MCE",
+                "platform": "2"
+            },
+            {
+                "originalName": "Melbourne Central Station",
+                "fullStopName": "Melbourne Central Railway Station",
+                "stopGTFSID": "12197",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96257971,
+                        -37.81002865
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-RCE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-RCE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:MCE",
+                "platform": "3"
+            },
+            {
+                "originalName": "Melbourne Central Station",
+                "fullStopName": "Melbourne Central Railway Station",
+                "stopGTFSID": "12198",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.96249234,
+                        -37.80990097
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:MCE",
+                "platform": "4"
+            }
+        ],
+        "mergeName": "Melbourne Central Railway Station",
+        "services": [],
+        "screenServices": [],
+        "cleanName": "melbourne-central-railway-station",
+        "cleanNames": [
+            "melbourne-central-railway-station",
+            "melbourne-central-railway-station-elizabeth-street",
+            "melbourne-central-railway-station-la-trobe-street",
+            "melbourne-central-railway-station-swanston-street"
+        ],
+        "codedSuburbs": [
+            "melbourne"
         ]
     },
     {
@@ -3316,6 +5132,877 @@
         ]
     },
     {
+        "stopName": "Parliament Railway Station",
+        "suburb": [
+            "East Melbourne",
+            "Melbourne"
+        ],
+        "cleanSuburbs": [
+            "east-melbourne",
+            "melbourne"
+        ],
+        "bays": [
+            {
+                "originalName": "Parliament Railway Station",
+                "fullStopName": "Parliament Railway Station",
+                "stopGTFSID": "vic:rail:PAR",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.973119,
+                        -37.811337
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "East Melbourne",
+                "services": [],
+                "screenServices": [],
+                "stopType": "station",
+                "parentStopGTFSID": null
+            },
+            {
+                "originalName": "Parliament Station",
+                "fullStopName": "Parliament Railway Station",
+                "stopGTFSID": "10924",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.9729235,
+                        -37.81100921
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "East Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CCL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-HBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-MDD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CCL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-HBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-MDD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:PAR",
+                "platform": "1"
+            },
+            {
+                "originalName": "Parliament Station",
+                "fullStopName": "Parliament Railway Station",
+                "stopGTFSID": "11210",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.97309652,
+                        -37.81091306
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "East Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:PAR",
+                "platform": "2"
+            },
+            {
+                "originalName": "Parliament Station",
+                "fullStopName": "Parliament Railway Station",
+                "stopGTFSID": "12199",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.97285637,
+                        -37.81097201
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-RCE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-RCE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:PAR",
+                "platform": "3"
+            },
+            {
+                "originalName": "Parliament Station",
+                "fullStopName": "Parliament Railway Station",
+                "stopGTFSID": "12200",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.97306221,
+                        -37.81092148
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "East Melbourne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:PAR",
+                "platform": "4"
+            }
+        ],
+        "mergeName": "Parliament Railway Station",
+        "services": [],
+        "screenServices": [],
+        "cleanName": "parliament-railway-station",
+        "cleanNames": [
+            "parliament-railway-station",
+            "parliament-railway-station-macarthur-street"
+        ],
+        "codedSuburbs": [
+            "east-melbourne",
+            "melbourne"
+        ]
+    },
+    {
+        "stopName": "Richmond Railway Station",
+        "suburb": [
+            "Cremorne",
+            "Melbourne",
+            "Richmond"
+        ],
+        "cleanSuburbs": [
+            "richmond",
+            "cremorne",
+            "melbourne"
+        ],
+        "bays": [
+            {
+                "originalName": "Richmond Station",
+                "fullStopName": "Richmond Railway Station",
+                "stopGTFSID": "12253",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.9891647,
+                        -37.8240664
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Richmond",
+                "services": [
+                    {
+                        "routeGTFSID": "2-SHM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-SHM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:RMD",
+                "platform": "1"
+            },
+            {
+                "originalName": "Richmond Station",
+                "fullStopName": "Richmond Railway Station",
+                "stopGTFSID": "12254",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.98916544,
+                        -37.82403938
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Richmond",
+                "services": [
+                    {
+                        "routeGTFSID": "2-SHM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-SHM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:RMD",
+                "platform": "2"
+            },
+            {
+                "originalName": "Richmond Station",
+                "fullStopName": "Richmond Railway Station",
+                "stopGTFSID": "12255",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.98921331,
+                        -37.82395008
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Richmond",
+                "services": [
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:RMD",
+                "platform": "3"
+            },
+            {
+                "originalName": "Richmond Station",
+                "fullStopName": "Richmond Railway Station",
+                "stopGTFSID": "12256",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.98921404,
+                        -37.82392305
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Richmond",
+                "services": [
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-FKN",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:RMD",
+                "platform": "4"
+            },
+            {
+                "originalName": "Richmond Station",
+                "fullStopName": "Richmond Railway Station",
+                "stopGTFSID": "12257",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.98925055,
+                        -37.82383356
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Richmond",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:RMD",
+                "platform": "5"
+            },
+            {
+                "originalName": "Richmond Station",
+                "fullStopName": "Richmond Railway Station",
+                "stopGTFSID": "12258",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.98928535,
+                        -37.82380712
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Richmond",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:RMD",
+                "platform": "6"
+            },
+            {
+                "originalName": "Richmond Station",
+                "fullStopName": "Richmond Railway Station",
+                "stopGTFSID": "12259",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.98931051,
+                        -37.82371743
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Richmond",
+                "services": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:RMD",
+                "platform": "7"
+            },
+            {
+                "originalName": "Richmond Station",
+                "fullStopName": "Richmond Railway Station",
+                "stopGTFSID": "12260",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.9893226,
+                        -37.8236906
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Richmond",
+                "services": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:RMD",
+                "platform": "8"
+            },
+            {
+                "originalName": "Richmond Station",
+                "fullStopName": "Richmond Railway Station",
+                "stopGTFSID": "12261",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.98934775,
+                        -37.82360091
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Richmond",
+                "services": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:RMD",
+                "platform": "9"
+            },
+            {
+                "originalName": "Richmond Station",
+                "fullStopName": "Richmond Railway Station",
+                "stopGTFSID": "12262",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.98938231,
+                        -37.82358348
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Richmond",
+                "services": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:RMD",
+                "platform": "10"
+            },
+            {
+                "originalName": "Richmond Railway Station",
+                "fullStopName": "Richmond Railway Station",
+                "stopGTFSID": "26263",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.98957471,
+                        -37.82486644
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Cremorne",
+                "services": [
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:RMD",
+                "platform": "RRB"
+            },
+            {
+                "originalName": "Richmond Railway Station",
+                "fullStopName": "Richmond Railway Station",
+                "stopGTFSID": "vic:rail:RMD",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.99016426,
+                        -37.82407446
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Richmond",
+                "services": [],
+                "screenServices": [],
+                "stopType": "station",
+                "parentStopGTFSID": null
+            }
+        ],
+        "mergeName": "Richmond Railway Station",
+        "services": [],
+        "screenServices": [],
+        "cleanName": "richmond-railway-station",
+        "cleanNames": [
+            "richmond-railway-station",
+            "richmond-railway-station-swan-street"
+        ],
+        "codedSuburbs": [
+            "richmond",
+            "cremorne",
+            "melbourne"
+        ]
+    },
+    {
         "stopName": "Sandown Park Railway Station",
         "suburb": [
             "Springvale"
@@ -3732,6 +6419,602 @@
         ],
         "codedSuburbs": [
             "south-yarra"
+        ]
+    },
+    {
+        "stopName": "Southern Cross Railway Station",
+        "suburb": [
+            "Docklands",
+            "Melbourne"
+        ],
+        "cleanSuburbs": [
+            "docklands",
+            "melbourne"
+        ],
+        "bays": [
+            {
+                "originalName": "Southern Cross Station",
+                "fullStopName": "Southern Cross Railway Station",
+                "stopGTFSID": "22187",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.95179389,
+                        -37.81765471
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Docklands",
+                "services": [
+                    {
+                        "routeGTFSID": "2-RCE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-RCE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-RCE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:SSS",
+                "platform": "8"
+            },
+            {
+                "originalName": "Southern Cross Station",
+                "fullStopName": "Southern Cross Railway Station",
+                "stopGTFSID": "22188",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.95200455,
+                        -37.81825315
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Docklands",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CCL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-HBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-MDD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CCL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-HBE",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-MDD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:SSS",
+                "platform": "9"
+            },
+            {
+                "originalName": "Southern Cross Station",
+                "fullStopName": "Southern Cross Railway Station",
+                "stopGTFSID": "22189",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.95214444,
+                        -37.81853495
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Docklands",
+                "services": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-ALM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-BEG",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-GWY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-LIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:SSS",
+                "platform": "10"
+            },
+            {
+                "originalName": "Southern Cross Station",
+                "fullStopName": "Southern Cross Railway Station",
+                "stopGTFSID": "22190",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.95191735,
+                        -37.818531
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Docklands",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:SSS",
+                "platform": "11"
+            },
+            {
+                "originalName": "Southern Cross Station",
+                "fullStopName": "Southern Cross Railway Station",
+                "stopGTFSID": "22191",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.95184872,
+                        -37.81854783
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Docklands",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CBE",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-PKM",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-UFD",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:SSS",
+                "platform": "12"
+            },
+            {
+                "originalName": "Southern Cross Station",
+                "fullStopName": "Southern Cross Railway Station",
+                "stopGTFSID": "22192",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.951766,
+                        -37.81866354
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Docklands",
+                "services": [
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WIL",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:SSS",
+                "platform": "13"
+            },
+            {
+                "originalName": "Southern Cross Station",
+                "fullStopName": "Southern Cross Railway Station",
+                "stopGTFSID": "22193",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.95170848,
+                        -37.81868957
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Docklands",
+                "services": [
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-CGB",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-SUY",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    },
+                    {
+                        "routeGTFSID": "2-WIL",
+                        "gtfsDirection": 0,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:SSS",
+                "platform": "14"
+            },
+            {
+                "originalName": "Southern Cross Railway Station",
+                "fullStopName": "Southern Cross Railway Station",
+                "stopGTFSID": "26282",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.95326534,
+                        -37.81743698
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Docklands",
+                "services": [
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "screenServices": [
+                    {
+                        "routeGTFSID": "2-WER",
+                        "gtfsDirection": 1,
+                        "routeNumber": null
+                    }
+                ],
+                "stopType": "stop",
+                "parentStopGTFSID": "vic:rail:SSS",
+                "platform": "RRB"
+            },
+            {
+                "originalName": "Southern Cross Railway Station",
+                "fullStopName": "Southern Cross Railway Station",
+                "stopGTFSID": "vic:rail:SSS",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        144.95277706,
+                        -37.8186631
+                    ]
+                },
+                "stopNumber": null,
+                "mode": "metro train",
+                "suburb": "Docklands",
+                "services": [],
+                "screenServices": [],
+                "stopType": "station",
+                "parentStopGTFSID": null
+            }
+        ],
+        "mergeName": "Southern Cross Railway Station",
+        "services": [],
+        "screenServices": [],
+        "cleanName": "southern-cross-railway-station",
+        "cleanNames": [
+            "southern-cross-railway-station",
+            "southern-cross-railway-station-spencer-street",
+            "southern-cross-railway-station-collins-street"
+        ],
+        "codedSuburbs": [
+            "docklands",
+            "melbourne"
         ]
     },
     {
