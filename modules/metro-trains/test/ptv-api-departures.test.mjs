@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import ptvRWD from '../../new-tracker/test/sample-data/rwd-ptv-departures.json' with { type: 'json' }
 import rwdStop from '../../new-tracker/test/sample-data/rwd-stop-db.json' with { type: 'json' }
 import TD3826DBTrip from '../../new-tracker/test/sample-data/lil-3826.json' with { type: 'json' }
-import ptvAPITD3213 from '../../new-tracker/test/sample-data/lil-3826.json' with { type: 'json' }
+import ptvAPITD3213 from '../../new-tracker/test/sample-data/lil-3213.json' with { type: 'json' }
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
 import getTripUpdateData from '../get-ptv-departures.js'
 import { LokiDatabaseConnection } from '@transportme/database'
@@ -97,21 +97,21 @@ describe('The getTripUpdateData function', () => {
 
     let stubAPI = new StubAPI()
     let response = clone(ptvRWD)
-    response.departures = [ response.departures[0], response.departures[1] ]
+    response.departures = [ response.departures[1] ]
     stubAPI.setResponses([ response, clone(ptvAPITD3213) ])
     let ptvAPI = new PTVAPI(stubAPI)
 
     let tripData = await getTripUpdateData(database, rwdStop, ptvAPI)
 
-    expect(tripData[1].operationDays).to.equal('20250610')
-    expect(tripData[1].runID).to.equal('3213')
-    expect(tripData[1].routeGTFSID).to.equal('2-LIL')
-    expect(tripData[1].cancelled).to.be.false
+    expect(tripData[0].operationDays).to.equal('20250610')
+    expect(tripData[0].runID).to.equal('3213')
+    expect(tripData[0].routeGTFSID).to.equal('2-LIL')
+    expect(tripData[0].cancelled).to.be.false
 
-    expect(tripData[1].formedBy).to.equal('2806')
-    expect(tripData[1].forming).to.equal('3832')
+    expect(tripData[0].formedBy).to.equal('2806')
+    expect(tripData[0].forming).to.equal('3832')
 
-    expect(tripData[1].stops[0]).to.deep.equal({
+    expect(tripData[0].stops[0]).to.deep.equal({
       stopName: 'Flinders Street Railway Station',
       platform: '3',
       scheduledDepartureTime: new Date('2025-06-10T07:29:00.000+10:00'),
@@ -119,7 +119,7 @@ describe('The getTripUpdateData function', () => {
       cancelled: false
     })
 
-    expect(tripData[1].stops[tripData[1].stops.length - 2]).to.deep.equal({
+    expect(tripData[0].stops[tripData[0].stops.length - 2]).to.deep.equal({
       stopName: 'Mooroolbark Railway Station',
       platform: '2',
       scheduledDepartureTime: new Date('2025-06-10T08:22:00.000+10:00'),
@@ -127,7 +127,7 @@ describe('The getTripUpdateData function', () => {
       cancelled: false
     })
 
-    expect(tripData[1].stops[tripData[1].stops.length - 1]).to.deep.equal({
+    expect(tripData[0].stops[tripData[0].stops.length - 1]).to.deep.equal({
       stopName: 'Lilydale Railway Station',
       platform: '1',
       scheduledDepartureTime: new Date('2025-06-10T08:28:00.000+10:00'),
