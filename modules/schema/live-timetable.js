@@ -152,6 +152,7 @@ module.exports = class LiveTimetable {
   set runID(runID) { this.#runID = runID }
   set isRRB(isRRB) { this.#isRRB = isRRB }
   set cancelled(cancelled) {
+    if (typeof cancelled === 'undefined') return
     if (cancelled !== this.#cancelled && this.logChanges) {
       this.changes.push({
         type: 'trip-cancelled',

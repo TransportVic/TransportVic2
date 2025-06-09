@@ -181,4 +181,17 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.changes[1].newVal).to.equal('0400')
     expect(timetable.changes[1].timestamp).to.exist
   })
+
+  it('Should disallow invalid cancellation values', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    expect(timetable.cancelled).to.be.false
+    timetable.cancelled = undefined
+    expect(timetable.cancelled).to.be.false
+    timetable.cancelled = true
+    expect(timetable.cancelled).to.be.true
+    timetable.cancelled = undefined
+    expect(timetable.cancelled).to.be.true
+    timetable.cancelled = false
+    expect(timetable.cancelled).to.be.false
+  })
 })
