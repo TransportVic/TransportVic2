@@ -112,9 +112,9 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
     }
   }))
 
-  console.log('Metro Trips: Updated forming data of', bulkUpdate.length, 'trips')
-
   await liveTimetables.bulkWrite(bulkUpdate)
+
+  return bulkUpdate.length
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
@@ -124,7 +124,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let ptvAPI = new PTVAPI()
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
-  await fetchTrips(ptvAPI, mongoDB)
+  let tripCount = await fetchTrips(ptvAPI, mongoDB)
+  console.log('Metro Trips: Updated forming data of', tripCount, 'trips')
 
   process.exit(0)
 }
