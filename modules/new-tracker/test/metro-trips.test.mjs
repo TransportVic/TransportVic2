@@ -6,7 +6,7 @@ import styStops from './sample-data/sty-stops.json' with { type: 'json' }
 import styRoute from './sample-data/sty-route.json' with { type: 'json' }
 import stubSTYOpData from './sample-data/stony-point.json' with { type: 'json' }
 import utils from '../../../utils.js'
-import { fetchTrips, getUpcomingTrips } from '../metro-trips.mjs'
+import { fetchTrips, getUpcomingTrips } from '../metro-trips-schedule.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 

@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import ptvAPIC406 from '../../new-tracker/test/sample-data/ptv-api-C406.json' with { type: 'json' }
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
-import { getTripUpdateData } from '../get-stopping-pattern.js'
+import getTripUpdateData from '../get-stopping-pattern.js'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -17,6 +17,9 @@ describe('The getTripUpdateData function', () => {
     expect(tripData.runID).to.equal('C406')
     expect(tripData.routeGTFSID).to.equal('2-CBE')
     expect(tripData.cancelled).to.be.false
+
+    expect(tripData.formedBy).to.be.null
+    expect(tripData.forming).to.equal('C407')
 
     expect(tripData.stops[0]).to.deep.equal({
       stopName: 'Cranbourne Railway Station',
