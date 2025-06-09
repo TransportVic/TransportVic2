@@ -48,7 +48,7 @@ export async function fetchTrips(db) {
   for (let tripData of relevantTrips) {
     // TODO: Implement separate arrival/departure times
     let lastStop = tripData.stops[tripData.stops.length - 1]
-    lastStop.estimatedDepartureTime = lastStop.estimatedArrivalTime
+    if (lastStop) lastStop.estimatedDepartureTime = lastStop.estimatedArrivalTime
 
     // GTFSR data currently does not support platform changes
     tripData.stops.forEach(stop => { delete stop.platform })
