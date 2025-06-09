@@ -38,7 +38,7 @@ describe('The getTripUpdateData function', () => {
       stopName: 'Richmond Railway Station',
       platform: '5',
       scheduledDepartureTime: new Date('2025-06-09T08:02:00.000+10:00'),
-      estiatedDepartureTime: new Date('2025-06-09T08:03:00.000+10:00'),
+      estimatedDepartureTime: new Date('2025-06-09T08:03:00.000+10:00'),
       cancelled: false
     })
 
