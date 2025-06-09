@@ -8,6 +8,13 @@ import getMetroDepartures from '../metro-trains/get-departures.js'
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import getTripUpdateData from '../metro-trains/get-stopping-pattern.js'
 
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]
+  }
+}
+
 export async function getTrips(db, ptvAPI, station) {
   let departures = await getMetroDepartures(station, db)
 
@@ -24,7 +31,9 @@ export async function fetchTrips(db, ptvAPI) {
   let allStations = await db.getCollection('stops').findDocuments({
     'bays.mode': 'metro train'
   }).toArray()
-  let station = allStations[Math.floor(Math.random() * allStations.length)]
+  shuffleArray(allStations)
+  let station = allStations[0]
+  
   console.log('Loading next 5 departures from', station.stopName)
 
   let relevantTrips = await getTrips(db, ptvAPI, station)

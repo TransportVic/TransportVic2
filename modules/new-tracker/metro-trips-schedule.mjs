@@ -99,6 +99,8 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
     }
   }
 
+  for (let tdn of Object.keys(tripObjects)) tripObjects[tdn].logChanges = false
+
   for (let tdn of Object.keys(forming)) tripObjects[tdn].forming = forming[tdn]
   for (let tdn of Object.keys(formedBy)) tripObjects[tdn].formedBy = formedBy[tdn]
 
@@ -110,6 +112,8 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
     }
   }))
 
+  console.log('Metro Trips: Updated forming data of', bulkUpdate.length, 'trips')
+
   await liveTimetables.bulkWrite(bulkUpdate)
 }
 
@@ -120,7 +124,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let ptvAPI = new PTVAPI()
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
-  await fetchTrips(ptvAPI, mongoDB, ptvAPI.metroSite.lines.STONY_POINT)
+  await fetchTrips(ptvAPI, mongoDB)
 
   process.exit(0)
 }

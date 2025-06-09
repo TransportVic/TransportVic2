@@ -43,12 +43,17 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
 
 export async function fetchTrips(db) {
   let relevantTrips = await getUpcomingTrips(db, makePBRequest)
+  console.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
   for (let tripData of relevantTrips) {
     // TODO: Implement separate arrival/departure times
     let lastStop = tripData.stops[tripData.stops.length - 1]
     lastStop.estimatedDepartureTime = lastStop.estimatedArrivalTime
-    await updateTrip(db, tripData)
+
+    // GTFSR data currently does not support platform changes
+    tripData.stops.forEach(stop => { delete stop.platform })
+
+    await updateTrip(db, tripData, { skipStopCancellation: true })
   }
 }
 
