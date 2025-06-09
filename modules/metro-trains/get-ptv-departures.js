@@ -1,5 +1,7 @@
-module.exports = async function getTripUpdateData(stop, ptvAPI) {
+module.exports = async function getTripUpdateData(db, stop, ptvAPI) {
+  let liveTimetables = await db.getCollection('live timetables')
   let metroBay = stop.bays.find(bay => bay.mode === 'metro train' && bay.platform)
+
   let departures = await ptvAPI.metro.getDepartures(metroBay.stopGTFSID, {
     gtfs: true,
     maxResults: 5
@@ -7,28 +9,38 @@ module.exports = async function getTripUpdateData(stop, ptvAPI) {
 
   if (!departures) return null
 
-  console.log(departures)
+  let tripUpdates = {}
 
-  // let tripData = {
-  //   operationDays: trip.runData.operationDay,
-  //   runID: trip.runData.tdn,
-  //   routeGTFSID: trip.routeData.gtfsRouteID,
-  //   stops: trip.stops.map(stop => {
-  //     let stopData = {
-  //       stopName: stop.stationName + ' Railway Station',
-  //       platform: stop.platform,
-  //       scheduledDepartureTime: new Date(stop.scheduledDeparture.toUTC().toISO()),
-  //       cancelled: false
-  //     }
-  //     if (stop.estimatedDeparture) stopData.estimatedDepartureTime = new Date(stop.estimatedDeparture.toUTC().toISO())
+  for (let departure of departures.filter(dep => !dep.runData.isRailBus)) {
+    let timetable = await liveTimetables.findDocument({
+      mode: 'metro train',
+      runID: departure.runData.tdn,
+      stopTimings: {
+        $elemMatch: {
+          stopGTFSID: metroBay.parentStopGTFSID,
+          scheduledDepartureTime: departure.scheduledDeparture.toUTC().toISO()
+        }
+      }
+    })
+    if (timetable) {
+      let tripData = {
+        operationDays: timetable.operationDays,
+        runID: departure.runData.tdn,
+        routeGTFSID: timetable.routeGTFSID,
+        stops: [{
+          stopName: stop.stopName,
+          platform: departure.platform,
+          cancelled: false
+        }],
+        cancelled: departure.runData.cancelled
+      }
 
-  //     return stopData
-  //   }),
-  //   cancelled: trip.runData.cancelled
-  // }
-
-  // if (trip.runData.formedBy) tripData.formedBy = trip.runData.formedBy.tdn
-  // if (trip.runData.forming) tripData.forming = trip.runData.forming.tdn
-
-  // return tripData
+      if (departure.estimatedDeparture) tripData.stops[0].estimatedDepartureTime = new Date(departure.estimatedDeparture.toUTC().toISO())
+      if (departure.runData.formedBy) tripData.formedBy = departure.runData.formedBy.tdn
+      if (departure.runData.forming) tripData.forming = departure.runData.forming.tdn
+      tripUpdates[departure.runData.tdn] = tripData
+    }
+  }
+  
+  return Object.values(tripUpdates)
 }

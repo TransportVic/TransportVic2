@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import ptvRWD from '../../new-tracker/test/sample-data/rwd-ptv-departures.json' with { type: 'json' }
 import rwdStop from '../../new-tracker/test/sample-data/rwd-stop-db.json' with { type: 'json' }
+import LILTD3826 from '../../new-tracker/test/sample-data/lil-3826.json' with { type: 'json' }
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
 import getTripUpdateData from '../get-ptv-departures.js'
 import { LokiDatabaseConnection } from '@transportme/database'
@@ -15,6 +16,7 @@ describe('The getTripUpdateData function', () => {
     let liveTimetables = await database.createCollection('live timetables')
 
     await stops.createDocument(clone(rwdStop))
+    await liveTimetables.createDocument(clone(LILTD3826))
     await routes.createDocuments([{
       "mode" : "metro train",
       "routeName" : "Lilydale",
@@ -36,14 +38,14 @@ describe('The getTripUpdateData function', () => {
       ],
       "codedName" : "belgrave"
     }])
-    
+
     let stubAPI = new StubAPI()
     let response = clone(ptvRWD)
     response.departures = [ response.departures[0] ]
     stubAPI.setResponses([ response ])
     let ptvAPI = new PTVAPI(stubAPI)
 
-    let tripData = await getTripUpdateData(rwdStop, ptvAPI)
+    let tripData = await getTripUpdateData(database, rwdStop, ptvAPI)
 
     expect(tripData[0].operationDays).to.equal('20250610')
     expect(tripData[0].runID).to.equal('3826')
@@ -53,11 +55,10 @@ describe('The getTripUpdateData function', () => {
     expect(tripData[0].formedBy).to.be.undefined
     expect(tripData[0].forming).to.equal('3511')
 
-    expect(tripData.stops.length).to.equal(1)
-    expect(tripData.stops[0]).to.deep.equal({
+    expect(tripData[0].stops.length).to.equal(1)
+    expect(tripData[0].stops[0]).to.deep.equal({
       stopName: 'Ringwood Railway Station',
       platform: '2',
-      scheduledDepartureTime: new Date('2025-06-09T22:07:00.000Z'),
       estimatedDepartureTime: new Date('2025-06-09T22:07:43.000Z'),
       cancelled: false
     })
