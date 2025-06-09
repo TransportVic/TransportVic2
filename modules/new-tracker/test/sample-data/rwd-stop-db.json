@@ -1,0 +1,140 @@
+{
+    "stopName": "Ringwood Railway Station",
+    "suburb": [
+        "Ringwood"
+    ],
+    "cleanSuburbs": [
+        "ringwood"
+    ],
+    "bays": [
+        {
+            "originalName": "Ringwood Railway Station",
+            "fullStopName": "Ringwood Railway Station",
+            "stopGTFSID": "vic:rail:RWD",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    145.22896846,
+                    -37.81588648
+                ]
+            },
+            "stopNumber": null,
+            "mode": "metro train",
+            "suburb": "Ringwood",
+            "services": [
+                {
+                    "routeGTFSID": "2-BEG",
+                    "gtfsDirection": 0,
+                    "routeNumber": null
+                },
+                {
+                    "routeGTFSID": "2-BEG",
+                    "gtfsDirection": 1,
+                    "routeNumber": null
+                },
+                {
+                    "routeGTFSID": "2-LIL",
+                    "gtfsDirection": 0,
+                    "routeNumber": null
+                },
+                {
+                    "routeGTFSID": "2-LIL",
+                    "gtfsDirection": 1,
+                    "routeNumber": null
+                }
+            ],
+            "screenServices": [
+                {
+                    "routeGTFSID": "2-BEG",
+                    "gtfsDirection": 0,
+                    "routeNumber": null
+                },
+                {
+                    "routeGTFSID": "2-BEG",
+                    "gtfsDirection": 1,
+                    "routeNumber": null
+                },
+                {
+                    "routeGTFSID": "2-LIL",
+                    "gtfsDirection": 0,
+                    "routeNumber": null
+                },
+                {
+                    "routeGTFSID": "2-LIL",
+                    "gtfsDirection": 1,
+                    "routeNumber": null
+                }
+            ],
+            "stopType": "station",
+            "parentStopGTFSID": null
+        },
+        {
+            "originalName": "Ringwood Station",
+            "fullStopName": "Ringwood Railway Station",
+            "stopGTFSID": "12235",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    145.22928003,
+                    -37.81568389
+                ]
+            },
+            "stopNumber": null,
+            "mode": "metro train",
+            "suburb": "Ringwood",
+            "services": [],
+            "screenServices": [],
+            "stopType": "stop",
+            "parentStopGTFSID": "vic:rail:RWD",
+            "platform": "3"
+        },
+        {
+            "originalName": "Ringwood Station",
+            "fullStopName": "Ringwood Railway Station",
+            "stopGTFSID": "12236",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    145.22913751,
+                    -37.8159431
+                ]
+            },
+            "stopNumber": null,
+            "mode": "metro train",
+            "suburb": "Ringwood",
+            "services": [],
+            "screenServices": [],
+            "stopType": "stop",
+            "parentStopGTFSID": "vic:rail:RWD",
+            "platform": "1"
+        },
+        {
+            "originalName": "Ringwood Station",
+            "fullStopName": "Ringwood Railway Station",
+            "stopGTFSID": "12237",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    145.2290698,
+                    -37.81592405
+                ]
+            },
+            "stopNumber": null,
+            "mode": "metro train",
+            "suburb": "Ringwood",
+            "services": [],
+            "screenServices": [],
+            "stopType": "stop",
+            "parentStopGTFSID": "vic:rail:RWD",
+            "platform": "2"
+        }
+    ],
+    "mergeName": "Ringwood Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "ringwood-railway-station",
+    "cleanNames": [
+        "ringwood-railway-station",
+        "ringwood-railway-station-maroondah-highway"
+    ]
+}
