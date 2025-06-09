@@ -91,7 +91,7 @@ async function getBaseStopUpdateData(db, stop) {
   }
 }
 
-export async function updateTrip(db, trip, { skipWrite } = { skipWrite: false }) {
+export async function updateTrip(db, trip, { skipWrite, skipStopCancellation } = { skipWrite: false, skipStopCancellation: false }) {
   let dbTrip = await getTrip(db, trip.runID, trip.operationDays)
   let liveTimetables = db.getCollection('live timetables')
 
@@ -128,11 +128,13 @@ export async function updateTrip(db, trip, { skipWrite } = { skipWrite: false })
     timetable.updateStopByName(stopData.stopName, updatedData, { visitNum: stopVisits[stop.stopName] })
   }
 
-  for (let stop of existingStops) {
-    if (!stopVisits[stop]) {
-      timetable.updateStopByName(stop, {
-        cancelled: true
-      })
+  if (!skipStopCancellation) {
+    for (let stop of existingStops) {
+      if (!stopVisits[stop]) {
+        timetable.updateStopByName(stop, {
+          cancelled: true
+        })
+      }
     }
   }
 
