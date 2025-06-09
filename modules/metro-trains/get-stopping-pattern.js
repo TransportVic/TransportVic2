@@ -21,5 +21,8 @@ module.exports = async function getTripUpdateData(runID, ptvAPI) {
     cancelled: trip.runData.cancelled
   }
 
+  if (trip.runData.formedBy) tripData.formedBy = trip.runData.formedBy.tdn
+  if (trip.runData.forming) tripData.forming = trip.runData.forming.tdn
+
   return tripData
 }

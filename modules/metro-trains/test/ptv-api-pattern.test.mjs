@@ -18,7 +18,7 @@ describe('The getTripUpdateData function', () => {
     expect(tripData.routeGTFSID).to.equal('2-CBE')
     expect(tripData.cancelled).to.be.false
 
-    expect(tripData.formedBy).to.be.null
+    expect(tripData.formedBy).to.be.undefined
     expect(tripData.forming).to.equal('C407')
 
     expect(tripData.stops[0]).to.deep.equal({
