@@ -13,7 +13,12 @@ module.exports = async function getTripUpdateData(db, stop, ptvAPI) {
 
   let tripUpdates = {}
 
-  for (let departure of departures.filter(dep => !dep.runData.isRailBus)) {
+  let trains = departures.filter(dep => !dep.runData.isRailBus)
+  let updatedTrips = trains.filter(dep => dep.runData.updated)
+  let regularTrips = trains.filter(dep => !dep.runData.updated)
+
+  for (let departure of updatedTrips) tripUpdates[departure.runData.tdn] = await getStoppingPatternData(departure.runData.tdn, ptvAPI)
+  for (let departure of regularTrips) {
     let timetable = await liveTimetables.findDocument({
       mode: 'metro train',
       runID: departure.runData.tdn,
