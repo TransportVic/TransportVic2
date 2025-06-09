@@ -18,7 +18,7 @@ function shuffleArray(array) {
 export async function getTrips(db, ptvAPI, station) {
   let departures = await getMetroDepartures(station, db)
 
-  let importantDepartures = departures.slice(0, 5)
+  let importantDepartures = departures.filter(departure => !departure.isRailReplacementBus).slice(0, 5)
   let updates = []
   for (let departure of importantDepartures) {
     updates.push(await getTripUpdateData(departure.runID, ptvAPI))
