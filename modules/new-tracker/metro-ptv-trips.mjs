@@ -1,9 +1,8 @@
-import { makePBRequest } from '../gtfsr/gtfsr-api.js'
 import { fileURLToPath } from 'url'
 
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
-import { getStopByName, updateTrip } from '../metro-trains/trip-updater.mjs'
+import { updateTrip } from '../metro-trains/trip-updater.mjs'
 import getMetroDepartures from '../metro-trains/get-departures.js'
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import getTripUpdateData from '../metro-trains/get-stopping-pattern.js'
@@ -18,10 +17,17 @@ function shuffleArray(array) {
 export async function getTrips(db, ptvAPI, station) {
   let departures = await getMetroDepartures(station, db)
 
-  let importantDepartures = departures.filter(departure => !departure.isRailReplacementBus).slice(0, 5)
+  let trains = departures.filter(departure => !departure.isRailReplacementBus)
   let updates = []
-  for (let departure of importantDepartures) {
-    updates.push(await getTripUpdateData(departure.runID, ptvAPI))
+  let successfulDepartures = 0
+  for (let departure of trains) {
+    let tripUpdate = await getTripUpdateData(departure.runID, ptvAPI)
+    if (tripUpdate) {
+      updates.push(tripUpdate)
+      if (++successfulDepartures === 5) break
+    } else {
+      console.log('Failed to get trip data for TDN', departure.runID)
+    }
   }
 
   return updates

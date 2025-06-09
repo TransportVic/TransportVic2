@@ -3,6 +3,8 @@ module.exports = async function getTripUpdateData(runID, ptvAPI) {
     includeForming: true
   })
 
+  if (!trip) return null
+
   let tripData = {
     operationDays: trip.runData.operationDay,
     runID: trip.runData.tdn,
