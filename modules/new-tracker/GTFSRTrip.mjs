@@ -55,11 +55,11 @@ export class UnscheduledMetroGTFSRTrip extends MetroGTFSRTrip {
 
   constructor(trip) {
     super(trip)
-    this.#tdn = trip.trip_id.match(/_(\w\d{3})_\d{8}$/)[1]
+    this.#tdn = trip.trip_id.match(/_(\w\d{3})_\d*$/)[1]
   }
 
   static canProcess(trip) {
-    return !!trip.trip_id.match(/_\w\d{3}_\d{8}$/)
+    return !!trip.trip_id.match(/_\w\d{3}_\d*$/)
   }
 
   getTDN() { return this.#tdn }

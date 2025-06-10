@@ -1,0 +1,41 @@
+{
+    "header": {
+        "gtfs_realtime_version": "2.0",
+        "incrementality": 0,
+        "timestamp": 1749165051
+    },
+    "entity": [
+        {
+            "id": "vic:02WIL:_:R:vpt._Williamstown_7072_",
+            "is_deleted": false,
+            "trip_update": {
+                "trip": {
+                    "trip_id": "vic:02WIL:_:R:vpt._Williamstown_7072_",
+                    "route_id": "aus:vic:vic-02-WIL:",
+                    "direction_id": 0,
+                    "start_time": "09:35:00",
+                    "start_date": "20250611",
+                    "schedule_relationship": 1
+                },
+                "vehicle": null,
+                "stop_time_update": [
+                    {
+                        "stop_sequence": 1,
+                        "stop_id": "15522",
+                        "arrival": null,
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749598500,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    }
+                ],
+                "timestamp": 0,
+                "delay": 0
+            },
+            "vehicle": null,
+            "alert": null
+        }
+    ]
+}
