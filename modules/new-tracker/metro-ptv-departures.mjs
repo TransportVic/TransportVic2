@@ -15,8 +15,7 @@ function shuffleArray(array) {
 
 export async function fetchTrips(db, ptvAPI) {
   let allStations = await db.getCollection('stops').findDocuments({
-    'bays.mode': 'metro train',
-    stopName: /Flinders Street/
+    'bays.mode': 'metro train'
   }).toArray()
   shuffleArray(allStations)
   let station = allStations[0]
