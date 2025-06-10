@@ -40,7 +40,7 @@ export async function fetchTrips(db, ptvAPI) {
   shuffleArray(allStations)
   let station = allStations[0]
   
-  console.log('Loading next 5 departures from', station.stopName)
+  console.log('Loading next 5 trips from', station.stopName)
 
   let relevantTrips = await getTrips(db, ptvAPI, station)
   console.log('> Updating TDNs: ' + relevantTrips.map(trip => trip.runID).join(', '))
