@@ -39,13 +39,16 @@ export async function getDepartures(db, ptvAPI) {
       operationDays: trip.operationalDate,
       runID: trip.tdn,
       routeGTFSID: routeData.routeGTFSID,
-      stops: trip.stops.map(stop => ({
-        stopName: stop.stationName + ' Railway Station',
-        platform: stop.platform,
-        scheduledDepartureTime: new Date(stop.scheduledDeparture.toUTC().toISO()),
-        estimatedDepartureTime: new Date(stop.estimatedDeparture.toUTC().toISO()),
-        estimatedArrivalTime: new Date(stop.estimatedArrival.toUTC().toISO())
-      }))
+      stops: trip.stops.map(stop => {
+        let data = {
+          stopName: stop.stationName + ' Railway Station',
+          platform: stop.platform,
+          scheduledDepartureTime: new Date(stop.scheduledDeparture.toUTC().toISO()),
+          estimatedDepartureTime: new Date(stop.estimatedDeparture.toUTC().toISO())
+        }
+        if (stop.estimatedArrival) data.estimatedArrivalTime = new Date(stop.estimatedArrival.toUTC().toISO())
+        return data
+      })
     }
     output.push(tripData)
   }
