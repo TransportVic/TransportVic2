@@ -52,4 +52,20 @@ describe('The getTripUpdateData function', () => {
       cancelled: false
     })
   })
+
+  it('Should mark additional trips as such', async () => {
+    let stubAPI = new StubAPI()
+    let response = clone(ptvAPIC406)
+    response.runs[response.departures[0].run_ref].status = 'added'
+    stubAPI.setResponses([ response ])
+    let ptvAPI = new PTVAPI(stubAPI)
+
+    let tripData = await getTripUpdateData('C406', ptvAPI)
+
+    expect(tripData.operationDays).to.equal('20250609')
+    expect(tripData.runID).to.equal('C406')
+    expect(tripData.routeGTFSID).to.equal('2-CBE')
+    expect(tripData.cancelled).to.be.false
+    expect(tripData.additional).to.be.true
+  })
 })

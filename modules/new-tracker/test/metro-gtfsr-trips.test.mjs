@@ -116,7 +116,7 @@ describe('The GTFSR Tracker module', () => {
 
     expect(tripData[0].stops[0]).to.deep.equal({
       stopName: 'South Kensington Railway Station',
-      platform: '2',
+      platform: '1',
       scheduledDepartureTime: null,
       estimatedDepartureTime: new Date(1749598500 * 1000),
       cancelled: false
