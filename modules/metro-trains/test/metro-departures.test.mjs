@@ -50,6 +50,7 @@ describe('The metro departures class', () => {
 
     let trip = clone(sampleLiveTrips)[0]
     trip.stopTimings[0].cancelled = true // ALM
+    trip.stopTimings[2].cancelled = true // BWD
     trip.stopTimings[6].cancelled = true // CAM
 
     await (await db.createCollection('live timetables')).createDocument(trip)
@@ -65,5 +66,29 @@ describe('The metro departures class', () => {
 
     expect(departures[0].trueOrigin).to.equal('Alamein')
     expect(departures[0].trueDestination).to.equal('Camberwell')
+  })
+
+  it('Should return the departure trip\'s new origin and destination if it was extended', async () => {
+    let db = new LokiDatabaseConnection()
+    db.connect()
+
+    let trip = clone(sampleLiveTrips)[0]
+    trip.stopTimings[0].additional = true // ALM
+    trip.stopTimings[2].additional = true // BWD
+    trip.stopTimings[6].additional = true // CAM
+
+    await (await db.createCollection('live timetables')).createDocument(trip)
+
+    let departures = await getDepartures(alamein, db, null, null, new Date('2025-03-28T20:40:00.000Z'))
+
+    expect(departures[0].runID).to.equal('2316')
+    expect(departures[0].platform).to.equal('1')
+    expect(departures[0].cancelled).to.be.false
+    expect(departures[0].routeName).to.equal('Alamein')
+    expect(departures[0].origin).to.equal('Alamein')
+    expect(departures[0].destination).to.equal('Camberwell')
+
+    expect(departures[0].trueOrigin).to.equal('Ashburton')
+    expect(departures[0].trueDestination).to.equal('Riversdale')
   })
 })
