@@ -13,7 +13,7 @@ module.exports = async function getTripUpdateData(db, stop, ptvAPI) {
 
   let tripUpdates = {}
 
-  let trains = departures.filter(dep => !dep.runData.isRailBus)
+  let trains = departures.filter(dep => !dep.runData.isRailBus && dep.runData.tdn)
   let updatedTrips = trains.filter(dep => dep.runData.updated)
   let regularTrips = trains.filter(dep => !dep.runData.updated)
 
