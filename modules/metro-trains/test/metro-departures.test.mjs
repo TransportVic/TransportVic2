@@ -4,7 +4,6 @@ import sampleLiveTrips from '../../departures/test/sample-data/sample-live-trips
 import sampleSchTrips from '../../departures/test/sample-data/sample-sch-trips.json' with { type: 'json' }
 import alamein from '../../departures/test/sample-data/alamein.json' with { type: 'json' }
 import getDepartures from '../get-departures.js'
-import utils from '../../../utils.js'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -25,6 +24,7 @@ describe('The metro departures class', () => {
     expect(departures[0].platform).to.equal('1')
     expect(departures[0].cancelled).to.be.false
     expect(departures[0].routeName).to.equal('Alamein')
+    expect(departures[0].origin).to.equal('Alamein')
     expect(departures[0].destination).to.equal('Camberwell')
     expect(departures[0].direction).to.equal('Up')
     expect(departures[0].viaCityLoop).to.be.false
@@ -42,5 +42,28 @@ describe('The metro departures class', () => {
     expect(departures[3].scheduledDepartureTime.toISOString()).to.equal('2025-03-28T21:48:00.000Z')
     expect(departures[3].estimatedDepartureTime).to.be.null
     expect(departures[3].actualDepartureTime).to.equal(departures[3].scheduledDepartureTime)
+  })
+
+  it('Should return the departure trip\'s new origin and destination if it was cancelled', async () => {
+    let db = new LokiDatabaseConnection()
+    db.connect()
+
+    let trip = clone(sampleLiveTrips)[0]
+    trip.stopTimings[0].cancelled = true // ALM
+    trip.stopTimings[6].cancelled = true // CAM
+
+    await (await db.createCollection('live timetables')).createDocument(trip)
+
+    let departures = await getDepartures(alamein, db, null, null, new Date('2025-03-28T20:40:00.000Z'))
+
+    expect(departures[0].runID).to.equal('2316')
+    expect(departures[0].platform).to.equal('1')
+    expect(departures[0].cancelled).to.be.true
+    expect(departures[0].routeName).to.equal('Alamein')
+    expect(departures[0].origin).to.equal('Ashburton')
+    expect(departures[0].destination).to.equal('Riversdale')
+
+    expect(departures[0].trueOrigin).to.equal('Alamein')
+    expect(departures[0].trueDestination).to.equal('Camberwell')
   })
 })

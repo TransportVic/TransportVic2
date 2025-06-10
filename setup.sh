@@ -5,8 +5,8 @@ LC_ALL=en_US.utf-8" | sudo tee /etc/environment
 
 sudo ln -sf /usr/share/zoneinfo/Australia/Melbourne /etc/localtime
 
-sudo dnf remove httpd -y
-sudo dnf remove postfix -y
+sudo dnf install -y git python3 augeas-libs python-pip
+sudo dnf remove -y httpd postfix
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 source ~/.bashrc
@@ -36,7 +36,7 @@ sudo chmod a+rw -R /var/log/mongodb
 sudo setcap 'cap_net_bind_service=+ep' "$(readlink -f `command -v node`)"
 
 sudo groupadd certbot
-sudo usermod -a -G certbot ec2-user
+sudo usermod -a -G certbot onboard
 sudo usermod -a -G certbot root
 
 sudo mkdir /etc/letsencrypt /var/log/letsencrypt /var/lib/letsencrypt
