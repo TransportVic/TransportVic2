@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
 import notifyAlerts from './sample-data/notify-alert.json' with { type: 'json' }
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
-import { fetchNotifyAlerts } from '../metro-trips-notify.mjs'
+import { fetchNotifyAlerts } from '../metro-notify.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
