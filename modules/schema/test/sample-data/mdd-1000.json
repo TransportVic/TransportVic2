@@ -497,5 +497,6 @@
   "trueDepartureTime": "04:04",
   "trueDestinationArrivalTime": "04:56",
   "formedBy": "1999",
-  "forming": "1801"
+  "forming": "1801",
+  "additional": true
 }

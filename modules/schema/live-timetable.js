@@ -125,6 +125,7 @@ module.exports = class LiveTimetable {
   changes = []
 
   #cancelled = false
+  #additional = false
 
   constructor(mode, operationDays, routeName, routeNumber, routeGTFSID, tripID, block) {
     this.#mode = mode
@@ -163,6 +164,7 @@ module.exports = class LiveTimetable {
     }
     this.#cancelled = cancelled
   }
+  set additional(additional) { this.#additional = additional }
 
   get stops() { return this.#stops }
 
@@ -200,6 +202,7 @@ module.exports = class LiveTimetable {
 
   get isRRB() { return this.#isRRB }
   get cancelled() { return this.#cancelled }
+  get additional() { return this.#additional }
 
   static fromDatabase(timetable) {
     let timetableInstance = new LiveTimetable(
@@ -216,6 +219,7 @@ module.exports = class LiveTimetable {
     if (timetable.direction) timetableInstance.#direction = timetable.direction
     if (timetable.runID) timetableInstance.#runID = timetable.runID
     if (timetable.cancelled) timetableInstance.#cancelled = timetable.cancelled
+    if (timetable.additional) timetableInstance.#additional = timetable.additional
 
     for (let stopData of timetable.stopTimings) {
       let stop = new TimetableStop(
@@ -276,7 +280,8 @@ module.exports = class LiveTimetable {
       formedBy: this.#formedBy,
       forming: this.#forming,
       changes: this.changes,
-      cancelled: this.#cancelled
+      cancelled: this.#cancelled,
+      additional: this.#additional
     }
   }
 
