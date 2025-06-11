@@ -3,13 +3,13 @@ import { fileURLToPath } from 'url'
 
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
-import { MetroGTFSRTrip } from './GTFSRTrip.mjs'
+import { MetroGTFSRTrip, UnscheduledMetroGTFSRTrip } from './GTFSRTrip.mjs'
 import { getStop, updateTrip } from '../metro-trains/trip-updater.mjs'
 
 export async function getUpcomingTrips(db, gtfsrAPI) {
   let tripData = await gtfsrAPI('metrotrain-tripupdates')
 
-  let output = []
+  let trips = {}
 
   for (let trip of tripData.entity) {
     let gtfsrTripData = MetroGTFSRTrip.parse(trip.trip_update.trip)
@@ -35,10 +35,14 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
 
       tripData.stops.push(tripStop)
     }
-    output.push(tripData)
+
+    if (!trips[tripData.runID]) trips[tripData.runID] = tripData
+    if (trips[tripData.runID] && trips[tripData.runID] instanceof UnscheduledMetroGTFSRTrip && trips[tripData.runID].cancelled && !tripData) {
+      trips[tripData.runID] = tripData
+    }
   }
 
-  return output
+  return Object.values(trips)
 }
 
 export async function fetchTrips(db) {

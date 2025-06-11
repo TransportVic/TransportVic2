@@ -134,12 +134,12 @@ describe('The GTFSR Tracker module', () => {
     expect(tripData.length).to.equal(1)
     expect(tripData[0].operationDays).to.equal('20250611')
     expect(tripData[0].runID).to.equal('3920')
-    expect(tripData[0].routeGTFSID).to.equal('2-BEG')
+    expect(tripData[0].routeGTFSID).to.equal('2-LIL')
     expect(tripData[0].cancelled).to.be.false
 
     expect(tripData[0].stops[0]).to.deep.equal({
       stopName: 'Blackburn Railway Station',
-      platform: '1',
+      platform: '2',
       scheduledDepartureTime: null,
       estimatedDepartureTime: new Date(1749599100 * 1000),
       cancelled: true
@@ -158,6 +158,7 @@ describe('The GTFSR Tracker module', () => {
       stopName: 'Box Hill Railway Station',
       platform: '2',
       scheduledDepartureTime: null,
+      estimatedArrivalTime: new Date(1749599340 * 1000),
       estimatedDepartureTime: new Date(1749599400 * 1000),
       cancelled: false
     })
