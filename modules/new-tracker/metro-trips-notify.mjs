@@ -28,7 +28,7 @@ export async function fetchNotifyAlerts(ptvAPI, db) {
     }
   }))
 
-  await metroNotify.bulkWrite(bulkReplace)
+  if (alertData.length > 0) await metroNotify.bulkWrite(bulkReplace)
   await metroNotify.updateDocuments({
     alertID: {
       $not: {
