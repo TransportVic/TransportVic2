@@ -38,7 +38,8 @@ export async function fetchNotifyAlerts(ptvAPI, db) {
     active: true
   }, {
     $set: {
-      active: false
+      active: false,
+      toDate: +new Date() / 1000
     }
   })
 }
