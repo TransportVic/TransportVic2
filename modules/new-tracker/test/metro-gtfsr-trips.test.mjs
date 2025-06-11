@@ -3,8 +3,10 @@ import { MetroGTFSRTrip, ScheduledMetroGTFSRTrip, UnscheduledMetroGTFSRTrip } fr
 import { getUpcomingTrips } from '../metro-gtfsr-trips.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import pkmStops from './sample-data/pkm-stops-db.json' with { type: 'json' }
+import bbnStops from './sample-data/bbn-stops-db.json' with { type: 'json' }
 import gtfsr_EPH from './sample-data/gtfsr-eph.json' with { type: 'json' }
 import gtfsr_WIL from './sample-data/gtfsr-wil-noopday.json' with { type: 'json' }
+import gtfsr_BBN from './sample-data/gtfsr-bbn-lab-amex.json' with { type: 'json' }
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -119,6 +121,44 @@ describe('The GTFSR Tracker module', () => {
       platform: '1',
       scheduledDepartureTime: null,
       estimatedDepartureTime: new Date(1749598500 * 1000),
+      cancelled: false
+    })
+  })
+
+  it('When a trip is duplicated, take the original', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    await stops.createDocument(clone(bbnStops))
+
+    let tripData = await getUpcomingTrips(database, () => gtfsr_BBN)
+    expect(tripData.length).to.equal(1)
+    expect(tripData[0].operationDays).to.equal('20250611')
+    expect(tripData[0].runID).to.equal('3920')
+    expect(tripData[0].routeGTFSID).to.equal('2-BEG')
+    expect(tripData[0].cancelled).to.be.false
+
+    expect(tripData[0].stops[0]).to.deep.equal({
+      stopName: 'Blackburn Railway Station',
+      platform: '1',
+      scheduledDepartureTime: null,
+      estimatedDepartureTime: new Date(1749599100 * 1000),
+      cancelled: true
+    })
+
+    expect(tripData[0].stops[1]).to.deep.equal({
+      stopName: 'Laburnum Railway Station',
+      platform: '1',
+      scheduledDepartureTime: null,
+      estimatedArrivalTime: new Date(1749599220 * 1000),
+      estimatedDepartureTime: new Date(1749599220 * 1000),
+      cancelled: true
+    })
+
+    expect(tripData[0].stops[2]).to.deep.equal({
+      stopName: 'Box Hill Railway Station',
+      platform: '2',
+      scheduledDepartureTime: null,
+      estimatedDepartureTime: new Date(1749599400 * 1000),
       cancelled: false
     })
   })
