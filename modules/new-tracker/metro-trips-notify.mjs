@@ -29,6 +29,18 @@ export async function fetchNotifyAlerts(ptvAPI, db) {
   }))
 
   await metroNotify.bulkWrite(bulkReplace)
+  await metroNotify.updateDocuments({
+    alertID: {
+      $not: {
+        $in: Array.from(alertData.map(alert => alert.alertID))
+      }
+    },
+    active: true
+  }, {
+    $set: {
+      active: false
+    }
+  })
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
