@@ -57,7 +57,8 @@ export async function fetchTrips(db) {
     // GTFSR data currently does not support platform changes
     tripData.stops.forEach(stop => { delete stop.platform })
 
-    await updateTrip(db, tripData, { skipStopCancellation: true })
+    await updateTrip(db, tripData)
+    // await updateTrip(db, tripData, { skipStopCancellation: true })
   }
 }
 
