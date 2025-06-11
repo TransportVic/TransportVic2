@@ -5,8 +5,30 @@ import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
 
 export async function fetchNotifyAlerts(ptvAPI, db) {
+  let metroNotify = await db.getCollection('metro notify')
   let alerts = await ptvAPI.metroSite.getNotifyData()
-  console.log(alerts)
+
+  let alertData = alerts.map(alert => ({
+    alertID: alert.id,
+    rawAlertID: alert.rawID,
+    routeName: alert.lineNames,
+    fromDate: +alert.startTime / 1000,
+    toDate: +alert.endTime / 1000,
+    type: alert.type,
+    text: alert.html,
+    ...(alert.runID ? { runID: alert.runID } : {}),
+    active: true
+  }))
+
+  let bulkReplace = alertData.map(alert => ({
+    replaceOne: {
+      filter: { alertID: alert.alertID },
+      replacement: alert,
+      upsert: true
+    }
+  }))
+
+  await metroNotify.bulkWrite(bulkReplace)
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

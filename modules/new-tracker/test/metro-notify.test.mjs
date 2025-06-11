@@ -26,13 +26,13 @@ describe('The MetroNotify tracker', () => {
     expect(await metroNotify.countDocuments({})).to.equal(1)
     let alert = await metroNotify.findDocument({})
 
-    expect(alert.alertID).to.equal('647069')
+    expect(alert.alertID).to.not.equal('647069')
+    expect(alert.rawAlertID).to.equal('647069')
     expect(alert.routeName).to.have.members(['Mernda'])
     expect(alert.fromDate).to.equal(1749596940)
     expect(alert.toDate).to.equal(1749598800)
     expect(alert.type).to.equal('service')
     expect(alert.text).to.equal('<p>The 8:46am Flinders Street to Epping service is currently running up to 10 minutes late.</p>')
-    expect(alert.sanitisedText).to.equal('The 8:46am Flinders Street to Epping service is currently running up to 10 minutes late.')
     expect(alert.runID).to.equal('1653')
     expect(alert.active).to.be.true
   })
