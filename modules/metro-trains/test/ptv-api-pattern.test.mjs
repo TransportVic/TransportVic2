@@ -44,11 +44,23 @@ describe('The getTripUpdateData function', () => {
       estimatedDepartureTime: new Date('2025-06-09T08:03:00.000+10:00'),
       cancelled: false
     })
+  })
+
+  it('Should not return scheduled departure data for Flinders Street (last stop) on the Up', async () => {
+    let stubAPI = new StubAPI()
+    stubAPI.setResponses([ ptvAPIC406 ])
+    let ptvAPI = new PTVAPI(stubAPI)
+
+    let tripData = await getTripUpdateData('C406', ptvAPI)
+
+    expect(tripData.operationDays).to.equal('20250609')
+    expect(tripData.runID).to.equal('C406')
+    expect(tripData.routeGTFSID).to.equal('2-CBE')
+    expect(tripData.cancelled).to.be.false
 
     expect(tripData.stops[tripData.stops.length - 1]).to.deep.equal({
       stopName: 'Flinders Street Railway Station',
       platform: '6',
-      scheduledDepartureTime: new Date('2025-06-09T08:15:00.000+10:00'),
       cancelled: false
     })
   })
