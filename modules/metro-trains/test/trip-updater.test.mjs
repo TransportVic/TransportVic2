@@ -179,6 +179,39 @@ describe('The trip updater module', () => {
     expect(oakChange.timestamp).to.exist
   })
 
+  it('Should use the estimated time if scheduled is unavailable when inserting an additional stop', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(pkmStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "pakenham"
+    })
+    await liveTimetables.createDocument(clone(pkmSchTrip))
+
+    expect(await liveTimetables.countDocuments({})).to.equal(1)
+    let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
+
+    let tripData = await updateTrip(database, gtfsrTrips[0])
+    expect(await liveTimetables.countDocuments({})).to.equal(1)
+
+    expect(tripData.stops[14].stopGTFSID).to.equal('vic:rail:OAK')
+    expect(tripData.stops[14].departureTime).to.equal('08:34')
+    expect(tripData.stops[14].departureTimeMinutes).to.equal(8*60 + 34)
+    expect(tripData.stops[14].scheduledDepartureTime.toISOString()).to.equal('2025-06-05T22:34:00.000Z')
+    expect(tripData.stops[14].actualDepartureTime.toISOString()).to.equal('2025-06-05T22:34:00.000Z')
+  })
+
   it('Should mark missing stops as cancelled', async () => {
     let database = new LokiDatabaseConnection('test-db')
     let stops = await database.createCollection('stops')
