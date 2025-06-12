@@ -1,16 +1,135 @@
 {
   "stops": [
     {
-      "stop_id": "20027",
+      "stop_id": "vic:rail:RCE",
       "stop_name": "Flemington Racecourse Railway Station (Flemington)",
-      "stop_lat": "-37.787201923265",
-      "stop_lon": "144.907588697812"
+      "stop_lat": "-37.78721073",
+      "stop_lon": "144.90757709",
+      "parent_station": "",
+      "location_type": "1",
+      "platform_code": ""
     },
     {
-      "stop_id": "20028",
+      "stop_id": "15524",
+      "stop_name": "Flemington Racecourse Railway Station (Flemington)",
+      "stop_lat": "-37.78772649",
+      "stop_lon": "144.90718782",
+      "parent_station": "vic:rail:RCE",
+      "location_type": "",
+      "platform_code": "1"
+    },
+    {
+      "stop_id": "15525",
+      "stop_name": "Flemington Racecourse Railway Station (Flemington)",
+      "stop_lat": "-37.78772649",
+      "stop_lon": "144.90718782",
+      "parent_station": "vic:rail:RCE",
+      "location_type": "",
+      "platform_code": "2"
+    },
+    {
+      "stop_id": "vic:rail:SGS",
       "stop_name": "Showgrounds Railway Station (Flemington)",
       "stop_lat": "-37.7834721968038",
-      "stop_lon": "144.914256890322"
+      "stop_lon": "144.914256890322",
+      "parent_station": "",
+      "location_type": "1",
+      "platform_code": ""
+    },
+    {
+      "stop_id": "15526",
+      "stop_name": "Showgrounds Railway Station (Flemington)",
+      "stop_lat": "-37.7834721968038",
+      "stop_lon": "144.914256890322",
+      "parent_station": "vic:rail:SGS",
+      "location_type": "",
+      "platform_code": "1"
+    },
+
+    {
+      "stop_id": "vic:rail:ANZ",
+      "stop_name": "Anzac Railway Station",
+      "stop_lat": "-37.8331",
+      "stop_lon": "144.9722",
+      "parent_station": "",
+      "location_type": "1",
+      "platform_code": ""
+    },
+    {
+      "stop_id": "vic:rail:DMA",
+      "stop_name": "Anzac Railway Station",
+      "stop_lat": "-37.8331",
+      "stop_lon": "144.9722",
+      "parent_station": "",
+      "location_type": "1",
+      "platform_code": ""
+    },
+
+    {
+      "stop_id": "vic:rail:THL",
+      "stop_name": "Town Hall Railway Station",
+      "stop_lat": "-37.815926",
+      "stop_lon": "144.967134",
+      "parent_station": "",
+      "location_type": "1",
+      "platform_code": ""
+    },
+    {
+      "stop_id": "vic:rail:TSC",
+      "stop_name": "Town Hall Railway Station",
+      "stop_lat": "-37.815926",
+      "stop_lon": "144.967134",
+      "parent_station": "",
+      "location_type": "1",
+      "platform_code": ""
+    },
+
+    {
+      "stop_id": "vic:rail:STL",
+      "stop_name": "State Library Railway Station",
+      "stop_lat": "-37.807631",
+      "stop_lon": "144.962393",
+      "parent_station": "",
+      "location_type": "1",
+      "platform_code": ""
+    },
+    {
+      "stop_id": "vic:rail:TNC",
+      "stop_name": "State Library Railway Station",
+      "stop_lat": "-37.807631",
+      "stop_lon": "144.962393",
+      "parent_station": "",
+      "location_type": "1",
+      "platform_code": ""
+    },
+
+    {
+      "stop_id": "vic:rail:PKV",
+      "stop_name": "Parkville Railway Station",
+      "stop_lat": "-37.799887",
+      "stop_lon": "144.959171",
+      "parent_station": "",
+      "location_type": "1",
+      "platform_code": ""
+    },
+
+    {
+      "stop_id": "vic:rail:ARN",
+      "stop_name": "Arden Railway Station",
+      "stop_lat": "-37.80193",
+      "stop_lon": "144.94031",
+      "parent_station": "",
+      "location_type": "1",
+      "platform_code": ""
+    },
+    {
+      "stop_id": "vic:rail:AEN",
+      "stop_name": "Arden Railway Station",
+      "stop_lat": "-37.80193",
+      "stop_lon": "144.94031",
+      "parent_station": "",
+      "location_type": "1",
+      "platform_code": ""
     }
   ],
   "routes": [{

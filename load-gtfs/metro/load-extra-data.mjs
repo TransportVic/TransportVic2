@@ -26,7 +26,7 @@ let mongoStops = await mongoDB.getCollection('stops')
 let mongoRoutes = await mongoDB.getCollection('routes')
 
 let stopLoader = new StopsLoader('', suburbs, TRANSIT_MODES.metroTrain, mongoDB)
-let reader = new GTFSStopsReader('')
+let reader = new GTFSStopsReader('', suburbs)
 
 for (let stop of MetroData.stops) await stopLoader.loadStop(reader.processEntity(stop))
 
