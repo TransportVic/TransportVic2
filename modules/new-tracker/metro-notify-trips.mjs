@@ -7,25 +7,6 @@ import getMetroDepartures from '../metro-trains/get-departures.js'
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import getTripUpdateData from '../metro-trains/get-stopping-pattern.js'
 
-export async function getTrips(db, ptvAPI, station) {
-  let departures = await getMetroDepartures(station, db)
-
-  let trains = departures.filter(departure => !departure.isRailReplacementBus)
-  let updates = []
-  let successfulDepartures = 0
-  for (let departure of trains) {
-    let tripUpdate = await getTripUpdateData(departure.runID, ptvAPI)
-    if (tripUpdate) {
-      updates.push(tripUpdate)
-      if (++successfulDepartures === 5) break
-    } else {
-      console.log('Failed to get trip data for TDN', departure.runID)
-    }
-  }
-
-  return updates
-}
-
 export async function getUpdatedTDNs(db) {
   return (await db.getCollection('metro notify').findDocuments({
     fromDate: {
@@ -36,17 +17,12 @@ export async function getUpdatedTDNs(db) {
 }
 
 export async function fetchTrips(db, ptvAPI) {
-
-  console.log(recentAlerts)
-
-  // console.log('Loading next 5 trips from', station.stopName)
-
-  // let relevantTrips = await getTrips(db, ptvAPI, station)
-  // console.log('> Updating TDNs: ' + relevantTrips.map(trip => trip.runID).join(', '))
-
-  // for (let tripData of relevantTrips) {
-  //   await updateTrip(db, tripData)
-  // }
+  let updatedTDNs = await getUpdatedTDNs(db)
+  for (let updatedTDN of updatedTDNs) {
+    let tripData = await getTripUpdateData(updatedTDN, ptvAPI)
+    await updateTrip(db, tripData, { dataSource: 'notify-trip-from-ptv' })
+  }
+  return updatedTDNs
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
@@ -55,7 +31,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
 
-  await fetchTrips(mongoDB, ptvAPI)
+  let updatedTDNs = await fetchTrips(mongoDB, ptvAPI)
+  console.log('> Updating TDNs: ' + updatedTDNs.join(', '))
 
   process.exit(0)
 }
