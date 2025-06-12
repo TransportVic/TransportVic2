@@ -127,6 +127,8 @@ module.exports = class LiveTimetable {
   #cancelled = false
   #additional = false
 
+  #dataSource
+
   constructor(mode, operationDays, routeName, routeNumber, routeGTFSID, tripID, block) {
     this.#mode = mode
     this.#operationDay = utils.parseDate(operationDays).startOf('day')
@@ -159,7 +161,8 @@ module.exports = class LiveTimetable {
         type: 'trip-cancelled',
         oldVal: this.cancelled,
         newVal: cancelled,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        source: this.#dataSource
       })
     }
     this.#cancelled = cancelled
@@ -177,13 +180,16 @@ module.exports = class LiveTimetable {
   get formedBy() { return this.#formedBy }
   get forming() { return this.#forming }
 
+  setModificationSource(source) { this.#dataSource = source }
+
   set formedBy(formedBy) {
     if (formedBy !== this.#formedBy && this.logChanges) {
       this.changes.push({
         type: 'formedby-change',
         oldVal: this.#formedBy,
         newVal: formedBy,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        source: this.#dataSource
       })
     }
     this.#formedBy = formedBy
@@ -194,7 +200,8 @@ module.exports = class LiveTimetable {
         type: 'forming-change',
         oldVal: this.#forming,
         newVal: forming,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        source: this.#dataSource
       })
     }
     this.#forming = forming
@@ -317,7 +324,8 @@ module.exports = class LiveTimetable {
           stopGTFSID: matchingStop.stopGTFSID,
           oldVal: matchingStop.platform,
           newVal: newPlatform,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          source: this.#dataSource
         })
         matchingStop.platform = newPlatform
       }
@@ -328,7 +336,8 @@ module.exports = class LiveTimetable {
           stopGTFSID: matchingStop.stopGTFSID,
           oldVal: matchingStop.cancelled,
           newVal: stopData.cancelled,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          source: this.#dataSource
         })
         matchingStop.cancelled = stopData.cancelled
       }
@@ -351,7 +360,8 @@ module.exports = class LiveTimetable {
       if (this.logChanges) this.changes.push({
         type: 'add-stop',
         stopGTFSID: stopData.stopGTFSID,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        source: this.#dataSource
       })
       this.#stops.push(stop)
     }

@@ -93,12 +93,14 @@ async function getBaseStopUpdateData(db, stop) {
   }
 }
 
-export async function updateTrip(db, trip, { skipWrite, skipStopCancellation } = { skipWrite: false, skipStopCancellation: false }) {
+export async function updateTrip(db, trip, { skipWrite, skipStopCancellation, dataSource } = { skipWrite: false, skipStopCancellation: false, dataSource: 'unknown' }) {
   let dbTrip = await getTrip(db, trip.runID, trip.operationDays)
   let liveTimetables = db.getCollection('live timetables')
 
   if (!dbTrip) return await createTrip(db, trip)
   let timetable = LiveTimetable.fromDatabase(dbTrip)
+
+  timetable.setModificationSource(dataSource)
 
   timetable.cancelled = trip.cancelled
   if (trip.cancelled) {

@@ -39,7 +39,7 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
       tripData.stops.push(tripStop)
     }
 
-    tripObjects[trip.tdn] = await updateTrip(db, tripData, { skipWrite: true, skipStopCancellation: true })
+    tripObjects[trip.tdn] = await updateTrip(db, tripData, { skipWrite: true, skipStopCancellation: true, dataSource: 'mtm-op-timetable' })
   }
 
   let forming = {}

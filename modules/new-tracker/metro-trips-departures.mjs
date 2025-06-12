@@ -60,7 +60,7 @@ export async function fetchTrips(ptvAPI, db) {
   console.log('MTM Departures: Fetched', trips.length, 'trips')
 
   for (let tripData of trips) {
-    await updateTrip(db, tripData, { skipStopCancellation: true })
+    await updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'mtm-departures' })
   }
 }
 

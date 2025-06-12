@@ -46,7 +46,7 @@ export async function fetchTrips(db, ptvAPI) {
   console.log('> Updating TDNs: ' + relevantTrips.map(trip => trip.runID).join(', '))
 
   for (let tripData of relevantTrips) {
-    await updateTrip(db, tripData)
+    await updateTrip(db, tripData, { dataSource: 'ptv-pattern' })
   }
 }
 
