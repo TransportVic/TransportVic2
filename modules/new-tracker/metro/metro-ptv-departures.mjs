@@ -1,10 +1,10 @@
 import { fileURLToPath } from 'url'
 
 import { MongoDatabaseConnection } from '@transportme/database'
-import config from '../../config.json' with { type: 'json' }
-import { updateTrip } from '../metro-trains/trip-updater.mjs'
+import config from '../../../config.json' with { type: 'json' }
+import { updateTrip } from '../../metro-trains/trip-updater.mjs'
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
-import getTripUpdateData from '../metro-trains/get-ptv-departures.js'
+import getTripUpdateData from '../../metro-trains/get-ptv-departures.js'
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {

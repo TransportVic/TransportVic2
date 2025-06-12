@@ -3,7 +3,7 @@ import { LokiDatabaseConnection } from '@transportme/database'
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
 import stubDepartures from './sample-data/mtm-departures.json' with { type: 'json' }
 import utils from '../../../utils.js'
-import { getDepartures } from '../metro-trips-departures.mjs'
+import { getDepartures } from '../metro/metro-trips-departures.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 

@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'url'
 import { MongoDatabaseConnection } from '@transportme/database'
-import config from '../../config.json' with { type: 'json' }
+import config from '../../../config.json' with { type: 'json' }
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import { fetchTrips } from './metro-ptv-departures.mjs'
 

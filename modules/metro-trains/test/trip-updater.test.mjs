@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { getUpcomingTrips } from '../../new-tracker/metro-gtfsr-trips.mjs'
+import { getUpcomingTrips } from '../../new-tracker/metro/metro-gtfsr-trips.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import pkmStops from '../../new-tracker/test/sample-data/pkm-stops-db.json' with { type: 'json' }
 import gtfsr_EPH from '../../new-tracker/test/sample-data/gtfsr-eph.json' with { type: 'json' }

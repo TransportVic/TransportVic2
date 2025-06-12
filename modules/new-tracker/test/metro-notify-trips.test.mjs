@@ -2,8 +2,8 @@ import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
 import notifyAlerts from './sample-data/notify-alert.json' with { type: 'json' }
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
-import { fetchNotifyAlerts } from '../metro-notify.mjs'
-import { fetchTrips, getUpdatedTDNs } from '../metro-notify-trips.mjs'
+import { fetchNotifyAlerts } from '../metro/metro-notify.mjs'
+import { fetchTrips, getUpdatedTDNs } from '../metro/metro-notify-trips.mjs'
 
 describe('The MetroNotify trip tracker', () => {
   it('Should get TDNs for trips with an alert issued in the last 5 minutes', async () => {

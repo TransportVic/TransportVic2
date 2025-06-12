@@ -2,11 +2,11 @@ import { PTVAPI, MetroSiteAPIInterface } from '@transportme/ptv-api'
 import { fileURLToPath } from 'url'
 
 import { MongoDatabaseConnection } from '@transportme/database'
-import config from '../../config.json' with { type: 'json' }
+import config from '../../../config.json' with { type: 'json' }
 
-import rawLineRanges from '../../additional-data/metro-tracker/line-ranges.js'
-import utils from '../../utils.js'
-import { getRouteByName, updateTrip } from '../metro-trains/trip-updater.mjs'
+import rawLineRanges from '../../../additional-data/metro-tracker/line-ranges.js'
+import utils from '../../../utils.js'
+import { getRouteByName, updateTrip } from '../../metro-trains/trip-updater.mjs'
 
 const tdnToLine = {}
 Object.keys(rawLineRanges).forEach(line => {

@@ -1,11 +1,11 @@
 import { PTVAPI, MetroSiteAPIInterface } from '@transportme/ptv-api'
 import { fileURLToPath } from 'url'
-import utils from '../../utils.js'
-import LiveTimetable from '../schema/live-timetable.js'
+import utils from '../../../utils.js'
+import LiveTimetable from '../../schema/live-timetable.js'
 
 import { MongoDatabaseConnection } from '@transportme/database'
-import config from '../../config.json' with { type: 'json' }
-import { getRouteByName, getTrip, updateTrip } from '../metro-trains/trip-updater.mjs'
+import config from '../../../config.json' with { type: 'json' }
+import { getRouteByName, getTrip, updateTrip } from '../../metro-trains/trip-updater.mjs'
 
 export async function getUpcomingTrips(ptvAPI, lines) {
   let trips = await ptvAPI.metroSite.getOperationalTimetable(lines)
