@@ -93,7 +93,7 @@ async function getBaseStopUpdateData(db, stop) {
   }
 }
 
-export async function updateTrip(db, trip, { skipWrite, skipStopCancellation, dataSource } = { skipWrite: false, skipStopCancellation: false, dataSource: 'unknown' }) {
+export async function updateTrip(db, trip, { skipWrite = false, skipStopCancellation = false, dataSource = 'unknown' } = {}) {
   let dbTrip = await getTrip(db, trip.runID, trip.operationDays)
   let liveTimetables = db.getCollection('live timetables')
 
@@ -116,7 +116,10 @@ export async function updateTrip(db, trip, { skipWrite, skipStopCancellation, da
   let stopVisits = {}
   for (let stop of trip.stops) {
     let { stopData, updatedData } = await getBaseStopUpdateData(db, stop)
-    if (!stopData) throw new Error('Failed to update trip ' + JSON.stringify(trip))
+    if (!stopData) {
+      console.log('Failed to update stop ' + JSON.stringify(trip))
+      continue
+    }
 
     if (!stopVisits[stop.stopName]) stopVisits[stop.stopName] = 0
     stopVisits[stop.stopName]++
@@ -124,7 +127,7 @@ export async function updateTrip(db, trip, { skipWrite, skipStopCancellation, da
     if (!existingStops.includes(stop.stopName)) updatedData.additional = true
     if (stop.platform) updatedData.platform = stop.platform
     if (typeof stop.cancelled !== 'undefined') updatedData.cancelled = stop.cancelled
-    else updatedData.cancelled = false
+    else if (!skipStopCancellation) updatedData.cancelled = false
 
     if (stop.scheduledDepartureTime) updatedData.scheduledDepartureTime = stop.scheduledDepartureTime.toISOString()
     if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
