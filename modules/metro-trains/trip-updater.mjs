@@ -76,7 +76,9 @@ async function getBaseStopUpdateData(db, stop) {
   let platformBay
   if (stop.platform) {
     platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.platform === stop.platform)
-  } else {
+  }
+
+  if (!platformBay) {
     platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.stopType == 'station')
   }
 
@@ -117,7 +119,7 @@ export async function updateTrip(db, trip, { skipWrite = false, skipStopCancella
   for (let stop of trip.stops) {
     let { stopData, updatedData } = await getBaseStopUpdateData(db, stop)
     if (!stopData) {
-      console.log('Failed to update stop ' + JSON.stringify(trip))
+      console.log('Failed to update stop ' + JSON.stringify(trip), stop)
       continue
     }
 

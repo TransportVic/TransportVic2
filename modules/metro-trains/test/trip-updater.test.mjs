@@ -724,4 +724,45 @@ describe('The trip updater module', () => {
     expect(trip.destination).to.equal('Showgrounds Railway Station')
     expect(trip.destinationArrivalTime).to.equal('10:01')
   })
+
+  it('Should handle non-existent platform numbers', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(rceStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Flemington Racecourse",
+      "cleanName" : "flemington-racecourse",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-RCE",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "flemington-racecourse"
+    })
+    await liveTimetables.createDocument(clone(tdR205))
+
+    expect(await liveTimetables.countDocuments({})).to.equal(1)
+
+    let tripUdate = {
+      operationDays: '20240224',
+      runID: 'R205',
+      routeGTFSID: '2-RCE',
+      stops: [{
+        stopName: 'Showgrounds Railway Station',
+        platform: '2',
+        scheduledDepartureTime: new Date('2024-02-23T23:01:00.000Z'),
+        cancelled: false
+      }],
+      cancelled: false
+    }
+
+    let trip = await updateTrip(database, tripUdate)
+
+    expect(trip.stops[2].stopName).to.equal('Showgrounds Railway Station')
+    expect(trip.stops[2].platform).to.equal('2')
+  })
 })
