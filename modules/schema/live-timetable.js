@@ -342,6 +342,9 @@ module.exports = class LiveTimetable {
         matchingStop.cancelled = stopData.cancelled
       }
     } else {
+      if (!stopData.scheduledDepartureTime && stopData.estimatedDepartureTime) {
+        stopData.scheduledDepartureTime = stopData.estimatedDepartureTime
+      }
       let stop = new TimetableStop(
         this.#operationDay.clone(),
         stopName,
