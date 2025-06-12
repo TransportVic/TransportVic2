@@ -1,6 +1,7 @@
-module.exports = async function getTripUpdateData(runID, ptvAPI) {
+module.exports = async function getTripUpdateData(runID, ptvAPI, { date = new Date() } = {}) {
   let trip = await ptvAPI.metro.getStoppingPatternFromTDN(runID, {
-    includeForming: true
+    includeForming: true,
+    date
   })
 
   if (!trip) return null
