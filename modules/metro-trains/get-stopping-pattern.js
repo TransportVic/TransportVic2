@@ -18,8 +18,8 @@ module.exports = async function getTripUpdateData(runID, ptvAPI, { date = new Da
       }
       if (!(stop.stationName === 'Flinders Street' && trip.runData.direction.railDirection === 'Up')) {
         stopData.scheduledDepartureTime = new Date(stop.scheduledDeparture.toUTC().toISO())
+        if (stop.estimatedDeparture) stopData.estimatedDepartureTime = new Date(stop.estimatedDeparture.toUTC().toISO())
       }
-      if (stop.estimatedDeparture) stopData.estimatedDepartureTime = new Date(stop.estimatedDeparture.toUTC().toISO())
 
       return stopData
     }),
