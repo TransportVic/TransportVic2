@@ -1,12 +1,12 @@
 const getStoppingPatternData = require('./get-stopping-pattern.js')
 
-module.exports = async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = [] } = {}) {
+module.exports = async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = [], maxResults = 5 } = {}) {
   let liveTimetables = await db.getCollection('live timetables')
   let metroBay = stop.bays.find(bay => bay.mode === 'metro train' && bay.platform)
 
   let departures = await ptvAPI.metro.getDepartures(metroBay.stopGTFSID, {
     gtfs: true,
-    maxResults: 5
+    maxResults
   })
 
   if (!departures) return null
