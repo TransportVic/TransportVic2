@@ -13,21 +13,23 @@ function shuffleArray(array) {
   }
 }
 
-export async function fetchTrips(db, ptvAPI) {
-  let allStations = await db.getCollection('stops').findDocuments({
-    'bays.mode': 'metro train'
-  }).toArray()
+export async function fetchTrips(db, ptvAPI, { stationName = null, skipTDN = [] } = {}) {
+  let query = { 'bays.mode': 'metro train' }
+  if (stationName) query.stopName = stationName
+  let allStations = await db.getCollection('stops').findDocuments(query).toArray()
   shuffleArray(allStations)
   let station = allStations[0]
   
   console.log('Loading next 5 departures from', station.stopName)
 
-  let relevantTrips = await getTripUpdateData(db, station, ptvAPI)
-  console.log('> Updating TDNs: ' + relevantTrips.map(trip => trip.runID).join(', '))
+  let relevantTrips = await getTripUpdateData(db, station, ptvAPI, { skipTDN })
+  let updatedTDNs = relevantTrips.map(trip => trip.runID)
+  console.log('> Updating TDNs: ' + updatedTDNs.join(', '))
 
   for (let tripData of relevantTrips) {
     await updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'ptv-departure' })
   }
+  return updatedTDNs
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
