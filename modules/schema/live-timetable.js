@@ -174,6 +174,7 @@ module.exports = class LiveTimetable {
       if (consist.length === 3 && this.#vehicle.size === 6) {
         if (this.#vehicle.consist.includes(consist[0])) return
       } else if (consist.length === 3 && this.#vehicle.size === 3 && typeDescriptor === this.#vehicle.type) {
+        if (consist[0] === this.#vehicle.consist[0]) return
         this.#vehicle.size = 6
         this.#vehicle.consist.push(...consist)
         return

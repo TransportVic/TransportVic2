@@ -297,6 +297,29 @@ describe('The LiveTimetable schema', () => {
     })
   })
 
+  it('Should should not duplicate a 3 car when being updated twice', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    expect(timetable.vehicle).to.be.null
+
+    timetable.consist = [
+      '189M', '1395T', '190M'
+    ]
+    expect(timetable.vehicle).to.deep.equal({
+      size: 3,
+      type: 'Xtrapolis',
+      consist: ['189M', '1395T', '190M']
+    })
+
+    timetable.consist = [
+      '189M', '1395T', '190M'
+    ]
+    expect(timetable.vehicle).to.deep.equal({
+      size: 3,
+      type: 'Xtrapolis',
+      consist: ['189M', '1395T', '190M']
+    })
+  })
+
   it('Should not update null consists', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     let expectedVehicle = {
