@@ -6,6 +6,8 @@ import config from '../../../config.json' with { type: 'json' }
 import { MetroGTFSRTrip, UnscheduledMetroGTFSRTrip } from '../GTFSRTrip.mjs'
 import { getStop, updateTrip } from '../../metro-trains/trip-updater.mjs'
 
+const routeFilter = process.argv[2] || ''
+
 export async function getUpcomingTrips(db, gtfsrAPI) {
   let tripData = await gtfsrAPI('metrotrain-tripupdates')
 
@@ -13,6 +15,8 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
 
   for (let trip of tripData.entity) {
     let gtfsrTripData = MetroGTFSRTrip.parse(trip.trip_update.trip)
+    if (!gtfsrTripData.getRouteID().includes(routeFilter)) continue
+
     let tripData = {
       operationDays: gtfsrTripData.getOperationDay(),
       runID: gtfsrTripData.getTDN(),
