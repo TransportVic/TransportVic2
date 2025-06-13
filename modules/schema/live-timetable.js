@@ -1,4 +1,5 @@
 const utils = require('../../utils')
+const metroTypes = require('../../additional-data/metro-tracker/metro-types.json')
 
 class TimetableStop {
 
@@ -162,6 +163,16 @@ module.exports = class LiveTimetable {
       }
     }
     return null
+  }
+
+  set consist(consist) {
+    let type = metroTypes.find(type => consist[0] == type.leadingCar)
+    let typeDescriptor = type ? type.type : 'Unknown'
+    this.#vehicle = {
+      size: consist.length,
+      type: typeDescriptor,
+      consist
+    }
   }
 
   set direction(direction) { this.#direction = direction }

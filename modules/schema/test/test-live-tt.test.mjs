@@ -214,4 +214,18 @@ describe('The LiveTimetable schema', () => {
     timetable.cancelled = false
     expect(timetable.cancelled).to.be.false
   })
+
+  it('Should allow setting a vehicle type', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    expect(timetable.vehicle).to.be.null
+    timetable.consist = ['189M', '1395T', '190M']
+    let expectedVehicle = {
+      size: 3,
+      type: 'Xtrapolis',
+      consist: ['189M', '1395T', '190M']
+    }
+
+    expect(timetable.vehicle).to.deep.equal(expectedVehicle)
+    expect(timetable.toDatabase().vehicle).to.deep.equal(expectedVehicle)
+  })
 })
