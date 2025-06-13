@@ -27,7 +27,7 @@ describe('The GTFSR Tracker module', () => {
       platform: '1',
       scheduledDepartureTime: null,
       estimatedDepartureTime: new Date(1749159840 * 1000),
-      cancelled: false
+      // cancelled: false
     })
 
     expect(tripData[0].stops[1]).to.deep.equal({
@@ -121,7 +121,7 @@ describe('The GTFSR Tracker module', () => {
       platform: '1',
       scheduledDepartureTime: null,
       estimatedDepartureTime: new Date(1749598500 * 1000),
-      cancelled: false
+      // cancelled: false
     })
   })
 
@@ -160,7 +160,7 @@ describe('The GTFSR Tracker module', () => {
       scheduledDepartureTime: null,
       estimatedArrivalTime: new Date(1749599340 * 1000),
       estimatedDepartureTime: new Date(1749599400 * 1000),
-      cancelled: false
+      // cancelled: false
     })
   })
 })
