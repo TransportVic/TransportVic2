@@ -337,6 +337,30 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
   })
 
+  it('Should allow forcing a consist', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    let expectedVehicle = {
+      size: 3,
+      type: 'Xtrapolis',
+      consist: ['189M', '1395T', '190M']
+    }
+    let forcedVehicle = {
+      size: 7,
+      type: 'Steam Train',
+      consist: ['N456', '1M', '9001'],
+      icon: 'AClass'
+    }
+    timetable.consist = ['189M', '1395T', '190M']
+    expect(timetable.vehicle).to.deep.equal(expectedVehicle)
+
+    timetable.forcedVehicle = forcedVehicle
+    expect(timetable.vehicle).to.deep.equal(forcedVehicle)
+
+    // Setting the consist here should no longer apply
+    timetable.consist = ['189M', '1395T', '190M']
+    expect(timetable.vehicle).to.deep.equal(forcedVehicle)
+  })
+
   it('Should allow exporting to a metro trips tracker format', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     timetable.consist = ['189M', '1395T', '190M']
