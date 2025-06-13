@@ -64,6 +64,8 @@ describe('The getTripUpdateData function', () => {
       estimatedDepartureTime: new Date('2025-06-09T22:07:43.000Z'),
       cancelled: false
     })
+
+    expect(tripData.consist).to.deep.equal([['913M', '1657T', '914M'], ['949M', '1675T', '950M']])
   })
 
   it('Should fetch stopping pattern data for unmatched trips in the database', async () => {
