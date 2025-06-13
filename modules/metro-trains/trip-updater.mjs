@@ -95,11 +95,20 @@ async function getBaseStopUpdateData(db, stop) {
   }
 }
 
+export async function updateTrackerData(db, timetable) {
+
+}
+
 export async function updateTrip(db, trip, { skipWrite = false, skipStopCancellation = false, dataSource = 'unknown' } = {}) {
   let dbTrip = await getTrip(db, trip.runID, trip.operationDays)
   let liveTimetables = db.getCollection('live timetables')
 
-  if (!dbTrip) return await createTrip(db, trip)
+  if (!dbTrip) {
+    let timetable = await createTrip(db, trip)
+    updateTrackerData(db, timetable)
+    return timetable
+  }
+
   let timetable = LiveTimetable.fromDatabase(dbTrip)
 
   timetable.setModificationSource(dataSource)
@@ -161,6 +170,7 @@ export async function updateTrip(db, trip, { skipWrite = false, skipStopCancella
   timetable.sortStops()
 
   if (!skipWrite) await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase())
+  updateTrackerData(db, timetable)
 
   return timetable
 }
