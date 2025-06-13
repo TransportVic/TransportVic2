@@ -350,15 +350,16 @@ describe('The LiveTimetable schema', () => {
       consist: ['N456', '1M', '9001'],
       icon: 'AClass'
     }
+    let expectedForcedVehicle = { ...forcedVehicle, forced: true }
     timetable.consist = ['189M', '1395T', '190M']
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
 
     timetable.forcedVehicle = forcedVehicle
-    expect(timetable.vehicle).to.deep.equal(forcedVehicle)
+    expect(timetable.vehicle).to.deep.equal(expectedForcedVehicle)
 
     // Setting the consist here should no longer apply
     timetable.consist = ['189M', '1395T', '190M']
-    expect(timetable.vehicle).to.deep.equal(forcedVehicle)
+    expect(timetable.vehicle).to.deep.equal(expectedForcedVehicle)
   })
 
   it('Should allow exporting to a metro trips tracker format', () => {

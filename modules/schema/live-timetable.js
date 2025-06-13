@@ -117,6 +117,7 @@ module.exports = class LiveTimetable {
   #runID
   #direction
 
+  #vehicleForced = false
   #vehicle
 
   #stops = []
@@ -156,11 +157,14 @@ module.exports = class LiveTimetable {
 
   get vehicle() {
     if (this.#vehicle) {
-      return {
+      let returnData = {
         size: this.#vehicle.size,
         type: this.#vehicle.type,
-        consist: this.#vehicle.consist
+        consist: this.#vehicle.consist,
       }
+      if (this.#vehicle.icon) returnData.icon = this.#vehicle.icon
+      if (this.#vehicle.forced) returnData.forced = this.#vehicle.forced
+      return returnData
     }
     return null
   }
@@ -186,6 +190,16 @@ module.exports = class LiveTimetable {
       type: typeDescriptor,
       consist
     }
+  }
+
+  set forcedVehicle(vehicle) {
+    this.#vehicle = {
+      size: vehicle.size,
+      type: vehicle.type,
+      consist: vehicle.consist,
+      forced: true
+    }
+    if (vehicle.icon) this.#vehicle.icon = vehicle.icon
   }
 
   set direction(direction) { this.#direction = direction }
