@@ -31,7 +31,7 @@ export async function getActiveSuspensions(db) {
     active: true
   }).toArray())
     .map(alert => alert.routeName)
-    .reduce((acc, e) => acc.concat(e))
+    .reduce((acc, e) => acc.concat(e), [])
 }
 
 export async function getStationsOnRoute(db, routeName) {
