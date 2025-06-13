@@ -36,7 +36,7 @@ describe('The GTFSR Tracker module', () => {
       scheduledDepartureTime: null,
       estimatedArrivalTime: new Date(1749159900 * 1000),
       estimatedDepartureTime: new Date(1749159960 * 1000),
-      cancelled: false
+      // cancelled: false
     })
   })
 

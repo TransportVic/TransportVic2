@@ -50,7 +50,7 @@ export async function fetchTripsFromAffectedStops(db, ptvAPI) {
     shuffleArray(lineStops)
 
     let offset = 0
-    for (let i = 0; i < 5;) {
+    for (let i = 0; i < 3;) {
       let stop = lineStops[i + offset]
       if (stopsToUse.includes(stop)) offset++
       else {
@@ -63,6 +63,7 @@ export async function fetchTripsFromAffectedStops(db, ptvAPI) {
   let tdnsSeen = []
   for (let stop of stopsToUse) {
     tdnsSeen.push(...await fetchTrips(db, ptvAPI, { stationName: stop, skipTDN: tdnsSeen, maxResults: 5 }))
+    tdnsSeen.push(...await fetchTrips(db, ptvAPI, { stationName: stop, skipTDN: tdnsSeen, maxResults: 5, backwards: true }))
   }
 }
 
