@@ -765,4 +765,110 @@ describe('The trip updater module', () => {
     expect(trip.stops[2].stopName).to.equal('Showgrounds Railway Station')
     expect(trip.stops[2].platform).to.equal('2')
   })
+
+  it('Should ensure the changelog persists in the database', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(pkmStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "pakenham"
+    })
+    await liveTimetables.createDocument(clone(pkmSchTrip))
+
+    expect(await liveTimetables.countDocuments({})).to.equal(1)
+    let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
+    gtfsrTrips[0].stops[14].scheduledDepartureTime = gtfsrTrips[0].stops[14].estimatedDepartureTime
+
+    await updateTrip(database, gtfsrTrips[0])
+    await updateTrip(database, gtfsrTrips[0]) // Run the update twice - should only have 1 set of changes
+
+    let timetable = await liveTimetables.findDocument({})
+    expect(timetable.changes.length).to.equal(2)
+
+    let ephChange = timetable.changes.find(change => change.stopGTFSID === 'vic:rail:EPH')
+    expect(ephChange).to.exist
+    expect(ephChange.type).to.equal('platform-change')
+    expect(ephChange.oldVal).to.equal('2')
+    expect(ephChange.newVal).to.equal('1')
+    expect(ephChange.timestamp).to.exist
+
+    gtfsrTrips[0].stops[8].platform = '3'
+    await updateTrip(database, gtfsrTrips[0])
+    timetable = await liveTimetables.findDocument({})
+    expect(timetable.changes.length).to.equal(3)
+
+    let dngChange = timetable.changes.find(change => change.stopGTFSID === 'vic:rail:DNG')
+    expect(dngChange).to.exist
+    expect(dngChange.type).to.equal('platform-change')
+    expect(dngChange.oldVal).to.equal('2')
+    expect(dngChange.newVal).to.equal('3')
+    expect(dngChange.timestamp).to.exist
+  })
+
+  it('Should be able to handle trips being redirected', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(rceStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Flemington Racecourse",
+      "cleanName" : "flemington-racecourse",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-RCE",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "flemington-racecourse"
+    })
+    let dbTrip = clone(tdR202)
+    dbTrip.stopTimings[1].stopName = 'Flinders Street Railway Station'
+    dbTrip.destination = 'Flinders Street Railway Station'
+    dbTrip.stopTimings[1].stopGTFSID = 'vic:rail:FSS'
+
+    await liveTimetables.createDocument(dbTrip)
+    expect(await liveTimetables.countDocuments({})).to.equal(1)
+
+    let tripUdate = {
+      operationDays: '20240224',
+      runID: 'R202',
+      routeGTFSID: '2-RCE',
+      stops: [{
+        stopName: 'Showgrounds Railway Station',
+        platform: '1',
+        scheduledDepartureTime: new Date('2024-02-23T22:29:00.000Z'),
+        cancelled: false
+      }, {
+        stopName: 'Flinders Street Railway Station',
+        platform: '5',
+        scheduledDepartureTime: new Date('2024-02-23T22:50:00.000Z'),
+        cancelled: false
+      }],
+      cancelled: false
+    }
+
+    let trip = await updateTrip(database, tripUdate)
+
+    expect(trip.stops[1].stopName).to.equal('Flinders Street Railway Station')
+    expect(trip.stops[1].scheduledDepartureTime.toISOString()).to.equal('2024-02-23T22:46:00.000Z')
+
+    expect(trip.origin).to.equal('Showgrounds Railway Station')
+    expect(trip.departureTime).to.equal('09:29')
+
+    expect(trip.destination).to.equal('Flinders Street Railway Station')
+    expect(trip.destinationArrivalTime).to.equal('09:46')
+  })
 })
