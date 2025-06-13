@@ -18,7 +18,8 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
 
     return {
       ...departure,
-      fleetNumber: null,
+      fleetNumber: trip.vehicle ? trip.vehicle.consist : null,
+      vehicle: trip.vehicle,
       runID: trip.runID,
       platform: currentStop.platform,
       origin: origin.slice(0, -16),

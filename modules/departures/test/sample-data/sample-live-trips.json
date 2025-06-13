@@ -7,8 +7,19 @@
   "isRailReplacementBus" : false,
   "formedBy": "2315",
   "forming": "2319",
-  "vehicle": null,
   "operationDays": "20250329",
+  "vehicle": {
+    "size": 6,
+    "type": "Xtrapolis",
+    "consist": [
+      "915M",
+      "1658T",
+      "916M",
+      "943M",
+      "1672T",
+      "944M"
+    ]
+  },
   "stopTimings": [
     {
       "stopName": "Alamein Railway Station",
@@ -331,15 +342,7 @@
   "isRailReplacementBus" : false,
   "formedBy": "2319",
   "forming": "2323",
-  "vehicle": {
-    "size": 3,
-    "type": "Xtrapolis",
-    "consist": [
-      "275M",
-      "1438T",
-      "276M"
-    ]
-  },
+  "vehicle": null,
   "operationDays": "20250329",
   "stopTimings": [
     {

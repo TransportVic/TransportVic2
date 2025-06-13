@@ -38,10 +38,23 @@ describe('The metro departures class', () => {
 
     expect(departures[0].futureStops[0]).to.equal('Ashburton')
     expect(departures[0].futureStops.slice(-1)[0]).to.equal('Camberwell')
+    
+    expect(departures[0].fleetNumber).to.deep.equal(["915M", "1658T", "916M", "943M", "1672T", "944M"])
+    expect(departures[0].vehicle.type).to.equal('Xtrapolis')
+    expect(departures[0].vehicle.size).to.equal(6)
+    expect(departures[0].vehicle.consist).to.deep.equal(["915M", "1658T", "916M", "943M", "1672T", "944M"])
+    
+    expect(departures[2].fleetNumber).to.be.null
+    expect(departures[2].vehicle).to.be.null
 
     expect(departures[3].scheduledDepartureTime.toISOString()).to.equal('2025-03-28T21:48:00.000Z')
     expect(departures[3].estimatedDepartureTime).to.be.null
     expect(departures[3].actualDepartureTime).to.equal(departures[3].scheduledDepartureTime)
+
+    expect(departures[3].fleetNumber).to.deep.equal(['921M', '1661T', '922M'])
+    expect(departures[3].vehicle.type).to.equal('Xtrapolis')
+    expect(departures[3].vehicle.size).to.equal(3)
+    expect(departures[3].vehicle.consist).to.deep.equal(['921M', '1661T', '922M'])
   })
 
   it('Should return the departure trip\'s new origin and destination if it was cancelled', async () => {
