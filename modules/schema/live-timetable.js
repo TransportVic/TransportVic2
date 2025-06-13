@@ -330,6 +330,25 @@ module.exports = class LiveTimetable {
     }
   }
 
+  getTrackerDatabaseKey() {
+    return {
+      date: this.operationDay,
+      runID: this.#runID
+    }
+  }
+
+  toTrackerDatabase() {
+    return {
+      date: this.operationDay,
+      runID: this.#runID,
+      origin: this.origin.slice(0, -16),
+      destination: this.destination.slice(0, -16),
+      departureTime: this.departureTime,
+      destinationArrivalTime: this.destinationArrivalTime,
+      consist: this.#vehicle.consist
+    }
+  }
+
   sortStops() {
     this.#stops = this.#stops.sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
   }
