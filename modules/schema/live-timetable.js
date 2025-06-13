@@ -166,6 +166,7 @@ module.exports = class LiveTimetable {
   }
 
   set consist(consist) {
+    if (!consist || !consist.length) return
     let type = metroTypes.find(type => consist[0] == type.leadingCar)
     let typeDescriptor = type ? type.type : 'Unknown'
 

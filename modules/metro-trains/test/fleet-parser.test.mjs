@@ -48,5 +48,9 @@ describe('The fleet parser functions', () => {
         ['9002','9102','9202','9302','9702','9802','9902']
       ])
     })
+
+    it('Should return null for an empty consist', () => {
+      expect(parseConsistFromMotors([], fleet)).to.be.null
+    })
   })
 })

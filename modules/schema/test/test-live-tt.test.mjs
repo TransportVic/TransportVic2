@@ -279,8 +279,7 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.vehicle).to.be.null
 
     timetable.consist = [
-      '189M', '1395T', '190M',
-      
+      '189M', '1395T', '190M'
     ]
     expect(timetable.vehicle).to.deep.equal({
       size: 3,
@@ -296,5 +295,22 @@ describe('The LiveTimetable schema', () => {
       type: 'Xtrapolis',
       consist: ['189M', '1395T', '190M', '875M', '1638T', '876M']
     })
+  })
+
+  it('Should not update null consists', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    let expectedVehicle = {
+      size: 3,
+      type: 'Xtrapolis',
+      consist: ['189M', '1395T', '190M']
+    }
+    expect(timetable.vehicle).to.be.null
+
+    timetable.consist = ['189M', '1395T', '190M']
+    expect(timetable.vehicle).to.deep.equal(expectedVehicle)
+    timetable.consist = null
+    expect(timetable.vehicle).to.deep.equal(expectedVehicle)
+    timetable.consist = []
+    expect(timetable.vehicle).to.deep.equal(expectedVehicle)
   })
 })

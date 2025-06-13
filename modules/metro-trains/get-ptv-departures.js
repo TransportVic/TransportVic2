@@ -48,7 +48,7 @@ module.exports = async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = 
         }],
         cancelled: departure.runData.cancelled,
       }
-      
+
       if (departure.runData.additional) tripData.additional = departure.runData.additional
       if (departure.estimatedDeparture) tripData.stops[0].estimatedDepartureTime = new Date(departure.estimatedDeparture.toUTC().toISO())
       if (departure.runData.formedBy) tripData.formedBy = departure.runData.formedBy.tdn
