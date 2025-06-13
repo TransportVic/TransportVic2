@@ -362,6 +362,21 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.vehicle).to.deep.equal(expectedForcedVehicle)
   })
 
+  it('Should still lookup the metro fleet type if forced but not specified', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    let forcedVehicle = {
+      consist: ['875M', '1638T', '876M'],
+    }
+
+    timetable.forcedVehicle = forcedVehicle
+    expect(timetable.vehicle).to.deep.equal({
+      size: 3,
+      type: 'Xtrapolis',
+      consist: ['875M', '1638T', '876M'],
+      forced: true
+    })
+  })
+
   it('Should allow exporting to a metro trips tracker format', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     timetable.consist = ['189M', '1395T', '190M']

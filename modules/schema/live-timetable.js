@@ -193,14 +193,21 @@ module.exports = class LiveTimetable {
   }
 
   set forcedVehicle(vehicle) {
-    this.#vehicle = {
-      size: vehicle.size,
-      type: vehicle.type,
-      consist: vehicle.consist,
-      forced: true
+    if (vehicle.consist && !vehicle.type && !vehicle.size) {
+      this.consist = vehicle.consist
+      this.#vehicle.forced = true
+    } else {
+      this.#vehicle = {
+        size: vehicle.size,
+        type: vehicle.type,
+        consist: vehicle.consist,
+        forced: true
+      }
     }
+
     this.#vehicleForced = true
     if (vehicle.icon) this.#vehicle.icon = vehicle.icon
+
   }
 
   set direction(direction) { this.#direction = direction }
