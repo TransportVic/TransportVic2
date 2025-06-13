@@ -687,13 +687,7 @@
    "liveTrack": false
   }
  ],
- "Eildon": [
-  {
-   "routeGTFSID": "6-V63",
-   "routeNumber": "V63",
-   "liveTrack": false
-  }
- ],
+ "Eildon": [],
  "Castlemaine": [
   {
    "routeGTFSID": "6-r89",
