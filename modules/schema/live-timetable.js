@@ -116,6 +116,8 @@ module.exports = class LiveTimetable {
   #runID
   #direction
 
+  #vehicle
+
   #stops = []
 
   #formedBy
@@ -150,6 +152,17 @@ module.exports = class LiveTimetable {
   get block() { return this.#block }
   get direction() { return this.#direction }
   get runID() { return this.#runID }
+
+  get vehicle() {
+    if (this.#vehicle) {
+      return {
+        size: this.#vehicle.size,
+        type: this.#vehicle.type,
+        consist: this.#vehicle.consist
+      }
+    }
+    return null
+  }
 
   set direction(direction) { this.#direction = direction }
   set runID(runID) { this.#runID = runID }
@@ -227,6 +240,7 @@ module.exports = class LiveTimetable {
     if (timetable.runID) timetableInstance.#runID = timetable.runID
     if (timetable.cancelled) timetableInstance.#cancelled = timetable.cancelled
     if (timetable.additional) timetableInstance.#additional = timetable.additional
+    if (timetable.vehicle) timetableInstance.#vehicle = timetable.vehicle
 
     for (let stopData of timetable.stopTimings) {
       let stop = new TimetableStop(
@@ -276,6 +290,7 @@ module.exports = class LiveTimetable {
       gtfsDirection: undefined,
       runID: this.#runID,
       isRailReplacementBus: this.#isRRB,
+      vehicle: this.#vehicle,
       direction: this.#direction,
       routeName: this.#routeName,
       routeNumber: this.#routeNumber,
