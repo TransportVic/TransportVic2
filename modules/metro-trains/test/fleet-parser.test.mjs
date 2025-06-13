@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { getLeadingVehicles, parseConsist } from '../fleet-parser.js'
+import { getLeadingVehicles, getMotorVehicles, parseConsist, parseConsistFromMotors } from '../fleet-parser.js'
 
 let fleet = [
   ['1M','1301T','2M'],['3M','1302T','4M'],['5M','1303T','6M'],['7M','1304T','8M'],
@@ -9,15 +9,24 @@ let fleet = [
 describe('The fleet parser functions', () => {
   describe('The getLeadingVehicles function', () => {
     it('Should take a POTS consist and extact the unique motor cars a MTM-MTM type consist', () => {
-      expect(getLeadingVehicles('1303T-1304T-5M-6M-7M-8M')).to.have.members(['5M', '7M'])
+      expect(getLeadingVehicles(getMotorVehicles('1303T-1304T-5M-6M-7M-8M'))).to.have.members(['5M', '7M'])
     })
 
     it('Should take a POTS consist and extact the lower motor cars an HCMT', () => {
-      expect(getLeadingVehicles('9002M-9902M')).to.have.members(['9002'])
+      expect(getLeadingVehicles(getMotorVehicles('9002M-9902M'))).to.have.members(['9002'])
     })
 
     it('Should handle XT2 in the format 8001M-8601M', () => {
-      expect(getLeadingVehicles('8001M-8601M')).to.have.members(['8001'])
+      expect(getLeadingVehicles(getMotorVehicles('8001M-8601M'))).to.have.members(['8001'])
+    })
+  })
+
+  describe('The getMotorVehicles function', () => {
+    it('Should return just the motor numbers', () => {
+      expect(getMotorVehicles('1303T-1304T-5M-6M-7M-8M')).to.have.members(['5M', '6M', '7M', '8M'])
+    })
+    it('Should return just the number for HCMTs', () => {
+      expect(getMotorVehicles('9001M-9901M')).to.have.members(['9001', '9901'])
     })
   })
 
@@ -28,6 +37,10 @@ describe('The fleet parser functions', () => {
       ])
 
       expect(parseConsist('9002M-9902M', fleet)).to.deep.equal([
+        ['9002','9102','9202','9302','9702','9802','9902']
+      ])
+
+      expect(parseConsistFromMotors(['9002', '9902'], fleet)).to.deep.equal([
         ['9002','9102','9202','9302','9702','9802','9902']
       ])
     })

@@ -6,7 +6,8 @@ module.exports = async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = 
 
   let departures = await ptvAPI.metro.getDepartures(metroBay.stopGTFSID, {
     gtfs: true,
-    maxResults
+    maxResults,
+    expand: ['VehicleDescriptor', 'VehiclePosition']
   })
 
   if (!departures) return null

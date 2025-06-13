@@ -1,7 +1,8 @@
 module.exports = async function getTripUpdateData(runID, ptvAPI, { date = new Date() } = {}) {
   let trip = await ptvAPI.metro.getStoppingPatternFromTDN(runID, {
     includeForming: true,
-    date
+    date,
+    expand: ['VehicleDescriptor', 'VehiclePosition']
   })
 
   if (!trip) return null
@@ -16,10 +17,9 @@ module.exports = async function getTripUpdateData(runID, ptvAPI, { date = new Da
         platform: stop.platform,
         cancelled: false
       }
-      // if (!(stop.stationName === 'Flinders Street' && trip.runData.direction.railDirection === 'Up')) {
-        stopData.scheduledDepartureTime = new Date(stop.scheduledDeparture.toUTC().toISO())
-        if (stop.estimatedDeparture) stopData.estimatedDepartureTime = new Date(stop.estimatedDeparture.toUTC().toISO())
-      // }
+
+      stopData.scheduledDepartureTime = new Date(stop.scheduledDeparture.toUTC().toISO())
+      if (stop.estimatedDeparture) stopData.estimatedDepartureTime = new Date(stop.estimatedDeparture.toUTC().toISO())
 
       return stopData
     }),
