@@ -897,19 +897,19 @@ describe('The trip updater module', () => {
       routeGTFSID: '2-RCE',
       stops: [],
       cancelled: false,
-      consist: ['9001', '9901']
+      consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
     }
 
     let trip = await updateTrip(database, tripUdate)
     expect(trip.vehicle.type).to.equal('HCMT')
-    expect(await metroTrips.findDocument({})).to.deep.equal({
-      date: '20240224',
-      runID: 'R205',
-      origin: 'Southern Cross',
-      departureTime: '09:49',
-      destination: 'Showgrounds',
-      destinationArrivalTime: '10:01',
-      consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
-    })
+
+    let trackerEntry = await metroTrips.findDocument({})
+    expect(trackerEntry.date).to.equal('20240224')
+    expect(trackerEntry.runID).to.equal('R205')
+    expect(trackerEntry.origin).to.equal('Southern Cross')
+    expect(trackerEntry.departureTime).to.equal('09:49')
+    expect(trackerEntry.destination).to.equal('Showgrounds')
+    expect(trackerEntry.destinationArrivalTime).to.equal('10:01')
+    expect(trackerEntry.consist).to.deep.equal(['9001', '9101', '9201', '9301', '9701', '9801', '9901'])
   })
 })

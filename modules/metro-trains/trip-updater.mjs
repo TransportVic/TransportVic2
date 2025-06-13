@@ -96,7 +96,11 @@ async function getBaseStopUpdateData(db, stop) {
 }
 
 export async function updateTrackerData(db, timetable) {
-
+  let key = timetable.getTrackerDatabaseKey()
+  let metroTrips = db.getCollection('metro trips')
+  if (key) await metroTrips.replaceDocument(key, timetable.toTrackerDatabase(), {
+    upsert: true
+  })
 }
 
 export async function updateTrip(db, trip, { skipWrite = false, skipStopCancellation = false, dataSource = 'unknown' } = {}) {
