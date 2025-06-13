@@ -28,9 +28,10 @@ async function pickBestTrip(data, db) {
   let tripEndTime = utils.parseTime(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm')
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
 
+  if (tripStartMinutes < 180) tripStartMinutes += 1440
   if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
-  if (tripStartMinutes >= 1440) tripDay.add(-1, 'day')
-  if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
+  // if (tripStartMinutes >= 1440) tripDay.add(-1, 'day')
+  // if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
 
   let originStop = await db.getCollection('stops').findDocument({
     codedName: data.origin + '-railway-station',
