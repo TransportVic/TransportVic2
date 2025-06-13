@@ -20,6 +20,15 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.isRRB).to.be.false
     expect(timetable.additional).to.be.true
 
+    expect(timetable.vehicle).to.deep.equal({
+      size: 6,
+      type: "Xtrapolis",
+      consist: [
+        "189M", "1395T", "190M",
+        "875M", "1638T", "876M"
+      ]
+    })
+
     expect(timetable.origin).to.equal('Mernda Railway Station')
     expect(timetable.departureTime).to.equal('04:04')
     expect(timetable.destination).to.equal('Flinders Street Railway Station')
@@ -62,6 +71,15 @@ describe('The LiveTimetable schema', () => {
     expect(dbObj.direction).to.equal('Up')
     expect(dbObj.isRailReplacementBus).to.be.false
     expect(dbObj.additional).to.be.true
+
+    expect(dbObj.vehicle).to.deep.equal({
+      size: 6,
+      type: "Xtrapolis",
+      consist: [
+        "189M", "1395T", "190M",
+        "875M", "1638T", "876M"
+      ]
+    })
 
     expect(dbObj.origin).to.equal('Mernda Railway Station')
     expect(dbObj.departureTime).to.equal('04:04')

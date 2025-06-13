@@ -498,5 +498,13 @@
   "trueDestinationArrivalTime": "04:56",
   "formedBy": "1999",
   "forming": "1801",
-  "additional": true
+  "additional": true,
+  "vehicle" : {
+    "size": 6,
+    "type": "Xtrapolis",
+    "consist": [
+      "189M", "1395T", "190M",
+      "875M", "1638T", "876M"
+    ]
+  }
 }
