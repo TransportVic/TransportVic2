@@ -189,7 +189,7 @@ async function createTrip(db, trip) {
     if (stop.scheduledDepartureTime) updatedData.scheduledDepartureTime = stop.scheduledDepartureTime.toISOString()
     else if (stop.estimatedDepartureTime) updatedData.scheduledDepartureTime = stop.estimatedDepartureTime.toISOString()
     else if (stop.estimatedArrivalTime) updatedData.scheduledDepartureTime = stop.estimatedArrivalTime.toISOString()
-    else throw new Error('Stop has no scheduled or estimated time')
+    else throw new Error('Stop has no scheduled or estimated time ' + JSON.stringify(trip, null, 2))
 
     if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
 

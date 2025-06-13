@@ -191,6 +191,7 @@ describe('The getTripUpdateData function', () => {
     expect(tripData[0].stops[tripData[0].stops.length - 1]).to.deep.equal({
       stopName: 'Flinders Street Railway Station',
       platform: '2',
+      scheduledDepartureTime: new Date('2025-06-09T22:58:00.000Z'),
       cancelled: false
     })
   })
