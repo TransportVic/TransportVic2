@@ -6,9 +6,7 @@ import config from '../../../config.json' with { type: 'json' }
 import { MetroGTFSRTrip, UnscheduledMetroGTFSRTrip } from '../GTFSRTrip.mjs'
 import { getStop, updateTrip } from '../../metro-trains/trip-updater.mjs'
 
-const routeFilter = process.argv[2] || ''
-
-export async function getUpcomingTrips(db, gtfsrAPI) {
+export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
   let tripData = await gtfsrAPI('metrotrain-tripupdates')
 
   let trips = {}
@@ -49,8 +47,8 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
   return Object.values(trips)
 }
 
-export async function fetchTrips(db) {
-  let relevantTrips = await getUpcomingTrips(db, makePBRequest)
+export async function fetchTrips(db, routeFilter = '') {
+  let relevantTrips = await getUpcomingTrips(db, makePBRequest, routeFilter)
   console.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
   for (let tripData of relevantTrips) {
@@ -69,7 +67,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
-  await fetchTrips(mongoDB)
+  await fetchTrips(mongoDB, process.argv[2] || '')
 
   process.exit(0)
 }
