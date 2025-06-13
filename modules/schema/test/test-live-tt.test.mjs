@@ -313,4 +313,23 @@ describe('The LiveTimetable schema', () => {
     timetable.consist = []
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
   })
+
+  it('Should allow exporting to a metro trips tracker format', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    timetable.consist = ['189M', '1395T', '190M']
+    expect(timetable.toTrackerDatabase()).to.deep.equal({
+      date: '20250405',
+      runID: '0735',
+      origin: 'Flinders Street',
+      departureTime: '10:53',
+      destination: 'Flinders Street',
+      destinationArrivalTime: '11:05',
+      consist: ['189M', '1395T', '190M']
+    })
+
+    expect(timetable.getTrackerDatabaseKey()).to.deep.equal({
+      date: '20250405',
+      runID: '0735'
+    })
+  })
 })
