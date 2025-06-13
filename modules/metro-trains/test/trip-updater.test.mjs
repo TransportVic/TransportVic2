@@ -816,7 +816,7 @@ describe('The trip updater module', () => {
     expect(dngChange.timestamp).to.exist
   })
 
-  it('Should be able to handle trips being redirected', async () => {
+  it('Should not update the scheduled departure time for FSS on the up', async () => {
     let database = new LokiDatabaseConnection('test-db')
     let stops = await database.createCollection('stops')
     let routes = await database.createCollection('routes')
@@ -863,12 +863,12 @@ describe('The trip updater module', () => {
     let trip = await updateTrip(database, tripUdate)
 
     expect(trip.stops[1].stopName).to.equal('Flinders Street Railway Station')
-    expect(trip.stops[1].scheduledDepartureTime.toISOString()).to.equal('2024-02-23T22:46:00.000Z')
+    expect(trip.stops[1].scheduledDepartureTime.toISOString()).to.equal('2024-02-23T22:39:00.000Z')
 
     expect(trip.origin).to.equal('Showgrounds Railway Station')
     expect(trip.departureTime).to.equal('09:29')
 
     expect(trip.destination).to.equal('Flinders Street Railway Station')
-    expect(trip.destinationArrivalTime).to.equal('09:46')
+    expect(trip.destinationArrivalTime).to.equal('09:39')
   })
 })
