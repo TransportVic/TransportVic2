@@ -112,6 +112,7 @@ export async function updateTrip(db, trip, { skipWrite = false, skipStopCancella
 
   if (trip.forming) timetable.forming = trip.forming
   if (trip.formedBy) timetable.formedBy = trip.formedBy
+  if (trip.consist) timetable.consist = trip.consist.reduce((acc, e) => acc.concat(e), [])
 
   let existingStops = timetable.getStopNames()
 
@@ -185,6 +186,7 @@ async function createTrip(db, trip) {
 
   timetable.forming = trip.forming
   timetable.formedBy = trip.formedBy
+  if (trip.consist) timetable.consist = trip.consist.reduce((acc, e) => acc.concat(e), [])
 
   let stopVisits = {}
   for (let stop of trip.stops) {
