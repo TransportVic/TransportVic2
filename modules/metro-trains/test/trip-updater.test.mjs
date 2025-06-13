@@ -871,4 +871,45 @@ describe('The trip updater module', () => {
     expect(trip.destination).to.equal('Flinders Street Railway Station')
     expect(trip.destinationArrivalTime).to.equal('09:39')
   })
+
+  it('Should create or update a fleet tracker entry', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+    let metroTrips = await database.createCollection('metro trips')
+
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Flemington Racecourse",
+      "cleanName" : "flemington-racecourse",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-RCE",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "flemington-racecourse"
+    })
+    await liveTimetables.createDocument(clone(tdR205))
+    let tripUdate = {
+      operationDays: '20240224',
+      runID: 'R205',
+      routeGTFSID: '2-RCE',
+      stops: [],
+      cancelled: false,
+      consist: ['9001', '9901']
+    }
+
+    let trip = await updateTrip(database, tripUdate)
+    expect(trip.vehicle.type).to.equal('HCMT')
+    expect(await metroTrips.findDocument({})).to.deep.equal({
+      date: '20240224',
+      runID: 'R205',
+      origin: 'Southern Cross',
+      departureTime: '09:49',
+      destination: 'Showgrounds',
+      destinationArrivalTime: '10:01',
+      consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+    })
+  })
 })
