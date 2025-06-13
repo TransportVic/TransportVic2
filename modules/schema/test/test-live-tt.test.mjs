@@ -387,4 +387,32 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.toTrackerDatabase()).to.be.null
     expect(timetable.getTrackerDatabaseKey()).to.be.null
   })
+
+  it('Should return a forced flag if the vehicle was forced', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    timetable.forcedVehicle = {
+      size: 7,
+      type: 'Steam Train',
+      consist: ['N456', '1M', '9001'],
+      icon: 'AClass'
+    }
+
+    expect(timetable.toTrackerDatabase()).to.deep.equal({
+      date: '20250405',
+      runID: '0735',
+      origin: 'Flinders Street',
+      departureTime: '10:53',
+      destination: 'Flinders Street',
+      destinationArrivalTime: '11:05',
+      consist: ['N456', '1M', '9001'],
+      size: 7,
+      icon: 'AClass',
+      forced: true
+    })
+
+    expect(timetable.getTrackerDatabaseKey()).to.deep.equal({
+      date: '20250405',
+      runID: '0735'
+    })
+  })
 })

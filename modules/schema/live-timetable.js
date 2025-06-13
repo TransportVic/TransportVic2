@@ -356,7 +356,7 @@ module.exports = class LiveTimetable {
 
   toTrackerDatabase() {
     if (!this.#vehicle) return null
-    return {
+    let returnData = {
       date: this.operationDay,
       runID: this.#runID,
       origin: this.origin.slice(0, -16),
@@ -365,6 +365,13 @@ module.exports = class LiveTimetable {
       destinationArrivalTime: this.destinationArrivalTime,
       consist: this.#vehicle.consist
     }
+
+    if (this.#vehicleForced) {
+      returnData.forced = true
+      if (this.#vehicle.icon) returnData.icon = this.#vehicle.icon
+      if (this.#vehicle.size) returnData.size = this.#vehicle.size
+    }
+    return returnData
   }
 
   sortStops() {
