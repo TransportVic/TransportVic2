@@ -65,7 +65,7 @@ describe('The getTripUpdateData function', () => {
       cancelled: false
     })
 
-    expect(tripData.consist).to.deep.equal([['913M', '1657T', '914M'], ['949M', '1675T', '950M']])
+    expect(tripData[0].consist).to.deep.equal([['913M', '1657T', '914M'], ['949M', '1675T', '950M']])
   })
 
   it('Should fetch stopping pattern data for unmatched trips in the database', async () => {

@@ -1,4 +1,6 @@
 const getStoppingPatternData = require('./get-stopping-pattern.js')
+const metroConsists = require('../../additional-data/metro-tracker/metro-consists.json')
+const { parseConsistFromMotors } = require('./fleet-parser.js')
 
 module.exports = async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = [], maxResults = 5 } = {}) {
   let liveTimetables = await db.getCollection('live timetables')
@@ -51,6 +53,9 @@ module.exports = async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = 
       if (departure.estimatedDeparture) tripData.stops[0].estimatedDepartureTime = new Date(departure.estimatedDeparture.toUTC().toISO())
       if (departure.runData.formedBy) tripData.formedBy = departure.runData.formedBy.tdn
       if (departure.runData.forming) tripData.forming = departure.runData.forming.tdn
+      if (departure.runData.vehicle) {
+        tripData.consist = parseConsistFromMotors(departure.runData.vehicle.motorCars, metroConsists)
+      }
 
       tripUpdates[departure.runData.tdn] = tripData
     } else {
