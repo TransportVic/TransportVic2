@@ -168,6 +168,17 @@ module.exports = class LiveTimetable {
   set consist(consist) {
     let type = metroTypes.find(type => consist[0] == type.leadingCar)
     let typeDescriptor = type ? type.type : 'Unknown'
+
+    if (this.#vehicle) {
+      if (consist.length === 3 && this.#vehicle.size === 6) {
+        if (this.#vehicle.consist.includes(consist[0])) return
+      } else if (consist.length === 3 && this.#vehicle.size === 3 && typeDescriptor === this.#vehicle.type) {
+        this.#vehicle.size = 6
+        this.#vehicle.consist.push(...consist)
+        return
+      }
+    }
+
     this.#vehicle = {
       size: consist.length,
       type: typeDescriptor,
