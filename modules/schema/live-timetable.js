@@ -286,7 +286,10 @@ module.exports = class LiveTimetable {
     if (timetable.runID) timetableInstance.#runID = timetable.runID
     if (timetable.cancelled) timetableInstance.#cancelled = timetable.cancelled
     if (timetable.additional) timetableInstance.#additional = timetable.additional
-    if (timetable.vehicle) timetableInstance.#vehicle = timetable.vehicle
+    if (timetable.vehicle) {
+      timetableInstance.#vehicle = timetable.vehicle
+      timetableInstance.#vehicleForced = timetable.vehicle.forced || false
+    }
 
     for (let stopData of timetable.stopTimings) {
       let stop = new TimetableStop(

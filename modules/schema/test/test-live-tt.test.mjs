@@ -362,6 +362,23 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.vehicle).to.deep.equal(expectedForcedVehicle)
   })
 
+  it('Should ensure the forced vehicle flag is saved/read from the DB', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    let forcedVehicle = {
+      size: 7,
+      type: 'Steam Train',
+      consist: ['N456', '1M', '9001'],
+      icon: 'AClass'
+    }
+    timetable.forcedVehicle = forcedVehicle
+    let newTimetable = LiveTimetable.fromDatabase(timetable.toDatabase())
+    expect(newTimetable.vehicle.forced).to.be.true
+
+    newTimetable.consist = ['189M', '1395T', '190M']
+    expect(newTimetable.vehicle.consist).to.deep.equal(['N456', '1M', '9001'])
+    expect(newTimetable.vehicle.icon).to.equal('AClass')
+  })
+
   it('Should still lookup the metro fleet type if forced but not specified', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     let forcedVehicle = {
