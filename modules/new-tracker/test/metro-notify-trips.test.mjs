@@ -1,8 +1,6 @@
 import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
-import notifyAlerts from './sample-data/notify-alert.json' with { type: 'json' }
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
-import { fetchNotifyAlerts } from '../metro/metro-notify.mjs'
 import { fetchTrips, getUpdatedTDNs } from '../metro/metro-notify-trips.mjs'
 
 describe('The MetroNotify trip tracker', () => {
