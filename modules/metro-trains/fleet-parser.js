@@ -1,10 +1,11 @@
 module.exports.parseConsist = function parseConsist(consist, metroConsists) {
-
+  let leadingVehicles = module.exports.getLeadingVehicles(consist)
+  return leadingVehicles.map(vehicle => metroConsists.find(consist => consist[0] === vehicle))
 }
 
 module.exports.getLeadingVehicles =  function getLeadingVehicles(consist) {
   let carriages = consist.split('-')
-  if (carriages[0].match(/9\d{3}M/)) { // HCMT
+  if (carriages[0].match(/^\d{4}M$/)) { // New format consists
     return [ carriages[0].slice(0, 4) ]
   } else if (consist.includes('M')) {
     let mCars = carriages.filter(carriage => carriage.endsWith('M')).map(carriage => ({
