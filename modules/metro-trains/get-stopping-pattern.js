@@ -1,3 +1,6 @@
+const metroConsists = require('../../additional-data/metro-tracker/metro-consists.json')
+const { parseConsistFromMotors } = require('./fleet-parser')
+
 module.exports = async function getTripUpdateData(runID, ptvAPI, { date = new Date() } = {}) {
   let trip = await ptvAPI.metro.getStoppingPatternFromTDN(runID, {
     includeForming: true,
@@ -29,6 +32,9 @@ module.exports = async function getTripUpdateData(runID, ptvAPI, { date = new Da
   if (trip.runData.additional) tripData.additional = trip.runData.additional
   if (trip.runData.formedBy) tripData.formedBy = trip.runData.formedBy.tdn
   if (trip.runData.forming) tripData.forming = trip.runData.forming.tdn
+  if (trip.runData.vehicle) {
+    tripData.consist = parseConsistFromMotors(trip.runData.vehicle.motorCars, metroConsists)
+  }
 
   return tripData
 }

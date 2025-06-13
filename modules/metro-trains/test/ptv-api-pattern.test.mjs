@@ -51,6 +51,8 @@ describe('The getTripUpdateData function', () => {
       scheduledDepartureTime: new Date('2025-06-08T22:15:00.000Z'),
       cancelled: false
     })
+
+    expect(tripData.consist).to.deep.equal([['9024', '9124', '9224', '9324', '9724', '9824', '9924']])
   })
 
   it('Should mark additional trips as such', async () => {

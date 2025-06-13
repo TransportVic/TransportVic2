@@ -17,6 +17,7 @@ module.exports.getMotorVehicles = function getMotorVehicles(consist) {
 
 module.exports.getLeadingVehicles = function getLeadingVehicles(motorVehicles) {
   if (motorVehicles[0].match(/^\d{4}$/)) return [ motorVehicles[0] ]
+  if (motorVehicles[0].match(/^\d{4}M$/)) return [ motorVehicles[0].slice(0, -1) ]
 
   let mCars = motorVehicles.map(carriage => ({
     number: parseInt(carriage.match(/(\d+)/)[1]),

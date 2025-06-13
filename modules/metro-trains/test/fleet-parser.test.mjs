@@ -43,6 +43,10 @@ describe('The fleet parser functions', () => {
       expect(parseConsistFromMotors(['9002', '9902'], fleet)).to.deep.equal([
         ['9002','9102','9202','9302','9702','9802','9902']
       ])
+
+      expect(parseConsistFromMotors(['9002M', '9902M'], fleet)).to.deep.equal([
+        ['9002','9102','9202','9302','9702','9802','9902']
+      ])
     })
   })
 })
