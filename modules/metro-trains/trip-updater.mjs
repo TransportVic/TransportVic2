@@ -116,8 +116,13 @@ export async function updateTrip(db, trip, { skipWrite = false, skipStopCancella
   let existingStops = timetable.getStopNames()
 
   let stopVisits = {}
-  if (timetable.direction === 'Up' && trip.stops[trip.stops.length - 1].stopName === 'Flinders Street Railway Station') {
-    trip.stops[trip.stops.length - 1].scheduledDepartureTime = null
+
+  if (timetable.direction === 'Up') {
+    let updateLastStop = trip.stops[trip.stops.length - 1]
+    let isFSS = timetable.destination === 'Flinders Street Railway Station'
+    if (isFSS && updateLastStop.stopName === timetable.destination) {
+      trip.stops[trip.stops.length - 1].scheduledDepartureTime = null
+    }
   }
 
   for (let stop of trip.stops) {
