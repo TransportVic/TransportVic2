@@ -49,23 +49,25 @@ describe('The getTripUpdateData function', () => {
 
     let tripData = await getTripUpdateData(database, rwdStop, ptvAPI)
 
-    expect(tripData[0].operationDays).to.equal('20250610')
-    expect(tripData[0].runID).to.equal('3826')
-    expect(tripData[0].routeGTFSID).to.equal('2-LIL')
-    expect(tripData[0].cancelled).to.be.false
+    let { type, data } = tripData[0]
+    expect(type).to.equal('stop')
+    expect(data.operationDays).to.equal('20250610')
+    expect(data.runID).to.equal('3826')
+    expect(data.routeGTFSID).to.equal('2-LIL')
+    expect(data.cancelled).to.be.false
 
-    expect(tripData[0].formedBy).to.be.undefined
-    expect(tripData[0].forming).to.equal('3511')
+    expect(data.formedBy).to.be.undefined
+    expect(data.forming).to.equal('3511')
 
-    expect(tripData[0].stops.length).to.equal(1)
-    expect(tripData[0].stops[0]).to.deep.equal({
+    expect(data.stops.length).to.equal(1)
+    expect(data.stops[0]).to.deep.equal({
       stopName: 'Ringwood Railway Station',
       platform: '2',
       estimatedDepartureTime: new Date('2025-06-09T22:07:43.000Z'),
       cancelled: false
     })
 
-    expect(tripData[0].consist).to.deep.equal([['913M', '1657T', '914M'], ['949M', '1675T', '950M']])
+    expect(data.consist).to.deep.equal([['913M', '1657T', '914M'], ['949M', '1675T', '950M']])
   })
 
   it('Should fetch stopping pattern data for unmatched trips in the database', async () => {
@@ -105,16 +107,18 @@ describe('The getTripUpdateData function', () => {
     let ptvAPI = new PTVAPI(stubAPI)
 
     let tripData = await getTripUpdateData(database, rwdStop, ptvAPI)
+    
+    let { type, data } = tripData[0]
+    expect(type).to.equal('pattern')
+    expect(data.operationDays).to.equal('20250610')
+    expect(data.runID).to.equal('3213')
+    expect(data.routeGTFSID).to.equal('2-LIL')
+    expect(data.cancelled).to.be.false
 
-    expect(tripData[0].operationDays).to.equal('20250610')
-    expect(tripData[0].runID).to.equal('3213')
-    expect(tripData[0].routeGTFSID).to.equal('2-LIL')
-    expect(tripData[0].cancelled).to.be.false
+    expect(data.formedBy).to.equal('2806')
+    expect(data.forming).to.equal('3832')
 
-    expect(tripData[0].formedBy).to.equal('2806')
-    expect(tripData[0].forming).to.equal('3832')
-
-    expect(tripData[0].stops[0]).to.deep.equal({
+    expect(data.stops[0]).to.deep.equal({
       stopName: 'Flinders Street Railway Station',
       platform: '3',
       scheduledDepartureTime: new Date('2025-06-10T07:29:00.000+10:00'),
@@ -122,7 +126,7 @@ describe('The getTripUpdateData function', () => {
       cancelled: false
     })
 
-    expect(tripData[0].stops[tripData[0].stops.length - 2]).to.deep.equal({
+    expect(data.stops[data.stops.length - 2]).to.deep.equal({
       stopName: 'Mooroolbark Railway Station',
       platform: '2',
       scheduledDepartureTime: new Date('2025-06-10T08:22:00.000+10:00'),
@@ -130,7 +134,7 @@ describe('The getTripUpdateData function', () => {
       cancelled: false
     })
 
-    expect(tripData[0].stops[tripData[0].stops.length - 1]).to.deep.equal({
+    expect(data.stops[data.stops.length - 1]).to.deep.equal({
       stopName: 'Lilydale Railway Station',
       platform: '1',
       scheduledDepartureTime: new Date('2025-06-10T08:28:00.000+10:00'),
@@ -177,12 +181,14 @@ describe('The getTripUpdateData function', () => {
 
     let tripData = await getTripUpdateData(database, rwdStop, ptvAPI)
 
-    expect(tripData[0].operationDays).to.equal('20250610')
-    expect(tripData[0].runID).to.equal('3826')
-    expect(tripData[0].routeGTFSID).to.equal('2-LIL')
-    expect(tripData[0].cancelled).to.be.false
+    let { type, data } = tripData[0]
+    expect(type).to.equal('pattern')
+    expect(data.operationDays).to.equal('20250610')
+    expect(data.runID).to.equal('3826')
+    expect(data.routeGTFSID).to.equal('2-LIL')
+    expect(data.cancelled).to.be.false
 
-    expect(tripData[0].stops[0]).to.deep.equal({
+    expect(data.stops[0]).to.deep.equal({
       stopName: 'Lilydale Railway Station',
       platform: '1',
       scheduledDepartureTime: new Date('2025-06-10T07:50:00.000+10:00'),
@@ -190,7 +196,7 @@ describe('The getTripUpdateData function', () => {
       cancelled: false
     })
 
-    expect(tripData[0].stops[tripData[0].stops.length - 1]).to.deep.equal({
+    expect(data.stops[data.stops.length - 1]).to.deep.equal({
       stopName: 'Flinders Street Railway Station',
       platform: '2',
       scheduledDepartureTime: new Date('2025-06-09T22:58:00.000Z'),

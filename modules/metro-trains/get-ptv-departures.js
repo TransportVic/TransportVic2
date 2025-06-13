@@ -23,7 +23,10 @@ module.exports = async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = 
 
   for (let departure of updatedTrips) {
     if (skipTDN.includes(departure.runData.tdn)) continue
-    tripUpdates[departure.runData.tdn] = await getStoppingPatternData(departure.runData.tdn, ptvAPI)
+    tripUpdates[departure.runData.tdn] = {
+      type: 'pattern',
+      data: await getStoppingPatternData(departure.runData.tdn, ptvAPI)
+    }
   }
   for (let departure of regularTrips) {
     let timetable = await liveTimetables.findDocument({
@@ -58,9 +61,14 @@ module.exports = async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = 
         tripData.consist = parseConsistFromMotors(departure.runData.vehicle.motorCars, metroConsists)
       }
 
-      tripUpdates[departure.runData.tdn] = tripData
+      tripUpdates[departure.runData.tdn] = {
+        type: 'stop', data: tripData
+      }
     } else {
-      tripUpdates[departure.runData.tdn] = await getStoppingPatternData(departure.runData.tdn, ptvAPI)
+      tripUpdates[departure.runData.tdn] = {
+        type: 'pattern',
+        data: await getStoppingPatternData(departure.runData.tdn, ptvAPI)
+      }
     }
   }
 
