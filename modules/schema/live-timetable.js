@@ -331,6 +331,7 @@ module.exports = class LiveTimetable {
   }
 
   getTrackerDatabaseKey() {
+    if (!this.#vehicle) return null
     return {
       date: this.operationDay,
       runID: this.#runID
@@ -338,6 +339,7 @@ module.exports = class LiveTimetable {
   }
 
   toTrackerDatabase() {
+    if (!this.#vehicle) return null
     return {
       date: this.operationDay,
       runID: this.#runID,

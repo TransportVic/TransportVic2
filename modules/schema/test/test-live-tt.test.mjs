@@ -332,4 +332,11 @@ describe('The LiveTimetable schema', () => {
       runID: '0735'
     })
   })
+
+  it('Should not return a tracker database entry if no consist data is available', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+
+    expect(timetable.toTrackerDatabase()).to.be.null
+    expect(timetable.getTrackerDatabaseKey()).to.be.null
+  })
 })
