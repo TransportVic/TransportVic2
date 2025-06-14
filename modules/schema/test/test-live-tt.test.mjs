@@ -1,7 +1,11 @@
-import { expect } from 'chai'
+import { expect, use } from 'chai'
 import mdd1000 from './sample-data/mdd-1000.json' with { type: 'json' }
 import ccl0735 from './sample-data/ccl-0735.json' with { type: 'json' }
 import LiveTimetable from '../live-timetable.js'
+import chaiExclude from 'chai-exclude'
+use(chaiExclude)
+
+let clone = o => JSON.parse(JSON.stringify(o))
 
 describe('The LiveTimetable schema', () => {
   it('Should allow object creation from a database object', () => {
@@ -227,7 +231,7 @@ describe('The LiveTimetable schema', () => {
 
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
     expect(timetable.toDatabase().vehicle).to.deep.equal(expectedVehicle)
-    expect(timetable.changes[0]).to.deep.equal({
+    expect(timetable.changes[0]).excluding('timestamp').excluding('source').to.deep.equal({
       type: 'veh-change',
       oldVal: null,
       newVal: expectedVehicle
@@ -269,13 +273,13 @@ describe('The LiveTimetable schema', () => {
       type: 'Xtrapolis',
       consist: ['189M', '1395T', '190M', '875M', '1638T', '876M']
     })
-    expect(timetable.changes[0]).to.deep.equal({
+    expect(timetable.changes[0]).excluding('timestamp').excluding('source').to.deep.equal({
       type: 'veh-change',
       oldVal: null,
       newVal: timetable.vehicle
     })
     
-    let oldVehicle = timetable.vehicle
+    let oldVehicle = clone(timetable.vehicle)
     timetable.consist = [
       '39M', '1320T', '40M'
     ]
@@ -284,7 +288,7 @@ describe('The LiveTimetable schema', () => {
       type: 'Xtrapolis',
       consist: ['39M', '1320T', '40M']
     })
-    expect(timetable.changes[0]).to.deep.equal({
+    expect(timetable.changes[1]).excluding('timestamp').excluding('source').to.deep.equal({
       type: 'veh-change',
       oldVal: oldVehicle,
       newVal: timetable.vehicle
@@ -303,13 +307,13 @@ describe('The LiveTimetable schema', () => {
       type: 'Xtrapolis',
       consist: ['189M', '1395T', '190M']
     })
-    expect(timetable.changes[0]).to.deep.equal({
+    expect(timetable.changes[0]).excluding('timestamp').excluding('source').to.deep.equal({
       type: 'veh-change',
       oldVal: null,
       newVal: timetable.vehicle
     })
 
-    let oldVehicle = timetable.vehicle
+    let oldVehicle = clone(timetable.vehicle)
     timetable.consist = [
       '875M', '1638T', '876M'
     ]
@@ -318,7 +322,7 @@ describe('The LiveTimetable schema', () => {
       type: 'Xtrapolis',
       consist: ['189M', '1395T', '190M', '875M', '1638T', '876M']
     })
-    expect(timetable.changes[0]).to.deep.equal({
+    expect(timetable.changes[1]).excluding('timestamp').excluding('source').to.deep.equal({
       type: 'veh-change',
       oldVal: oldVehicle,
       newVal: timetable.vehicle

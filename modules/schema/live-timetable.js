@@ -179,17 +179,32 @@ module.exports = class LiveTimetable {
         if (this.#vehicle.consist.includes(consist[0])) return
       } else if (consist.length === 3 && this.#vehicle.size === 3 && typeDescriptor === this.#vehicle.type) {
         if (consist[0] === this.#vehicle.consist[0]) return
-        this.#vehicle.size = 6
-        this.#vehicle.consist.push(...consist)
+        let oldVal = { ...this.#vehicle, consist: this.#vehicle.consist.slice(0) }
+        let newVal = { ...this.#vehicle, size: 6, consist: this.#vehicle.consist.concat(consist) }
+        this.changes.push({
+          type: 'veh-change',
+          oldVal,
+          newVal,
+          timestamp: new Date().toISOString(),
+          source: this.#dataSource
+        })
+
+        this.#vehicle = newVal
         return
       }
     }
 
-    this.#vehicle = {
-      size: consist.length,
-      type: typeDescriptor,
-      consist
-    }
+    let newVal = { size: consist.length, type: typeDescriptor, consist }
+
+    this.changes.push({
+      type: 'veh-change',
+      oldVal: this.#vehicle || null,
+      newVal,
+      timestamp: new Date().toISOString(),
+      source: this.#dataSource
+    })
+
+    this.#vehicle = newVal
   }
 
   set forcedVehicle(vehicle) {
