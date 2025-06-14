@@ -5,6 +5,7 @@ import sampleSchTrips from '../../departures/test/sample-data/sample-sch-trips.j
 import alamein from '../../departures/test/sample-data/alamein.json' with { type: 'json' }
 import riversdale from '../../departures/test/sample-data/riversdale.json' with { type: 'json' }
 
+import ccyTrips from '../../departures/test/sample-data/fkn-wer-wil-through-running.json' with { type: 'json' }
 import ephTrips from '../../departures/test/sample-data/eph-clp-forming.json' with { type: 'json' }
 import pkmStops from '../../new-tracker/test/sample-data/pkm-stops-db.json' with { type: 'json' }
 import getDepartures from '../get-departures.js'
@@ -268,5 +269,31 @@ describe('The metro departures class', () => {
     expect(departures[0].formingDestination).to.not.exist
     expect(departures[0].formingRunID).to.not.exist
     expect(departures[0].futureFormingStops).to.not.exist
+  })
+
+  it('Should only return the next trip\'s data for cross city rnus', async () => {
+    let db = new LokiDatabaseConnection()
+    db.connect()
+
+    let stops = await db.createCollection('stops')
+    await stops.createDocuments(clone(pkmStops))
+    await (await db.createCollection('live timetables')).createDocuments(clone(ccyTrips))
+
+    let par = await stops.findDocument({ stopName: "South Yarra Railway Station" })
+    let departures = await getDepartures(par, db, null, null, new Date('2025-06-11T07:49:00.000Z'))
+
+    expect(departures[0].runID).to.equal('4444')
+    expect(departures[0].platform).to.equal('3')
+    expect(departures[0].destination).to.equal('Flinders Street')
+    expect(departures[0].trueDestination).to.equal('Flinders Street')
+
+    expect(departures[0].formingDestination).to.equal('Williamstown')
+    expect(departures[0].formingRunID).to.equal('6385')
+    expect(departures[0].futureFormingStops).to.equal([
+      'Richmond',
+      'Flinders Street',
+      'Southern Cross',
+      'Williamstown'
+    ])
   })
 })
