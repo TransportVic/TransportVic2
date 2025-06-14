@@ -224,10 +224,11 @@ module.exports = class LiveTimetable {
     this.#vehicleForced = true
     if (vehicle.icon) this.#vehicle.icon = vehicle.icon
 
+    let newVal = { ...this.#vehicle, consist: this.#vehicle.consist.slice(0) }
     this.changes.push({
       type: 'veh-change',
       oldVal,
-      newVal: this.#vehicle,
+      newVal,
       timestamp: new Date().toISOString(),
       source: this.#dataSource
     })
