@@ -10,15 +10,23 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
     let par = trip.stopTimings.find(stop => stop.stopName === 'Parliament Railway Station')
     let hasALT = trip.stopTimings.some(stop => stop.stopName === 'Altona Railway Station')
 
-    let origin = trip.stopTimings.find(stop => !stop.cancelled).stopName
-    let destination = trip.stopTimings.findLast(stop => !stop.cancelled).stopName
+    let origin = trip.stopTimings.find(stop => !stop.cancelled).stopName.slice(0, -16)
+    let destination = trip.stopTimings.findLast(stop => !stop.cancelled).stopName.slice(0, -16)
 
-    let trueOrigin = trip.stopTimings.find(stop => !stop.additional).stopName
-    let trueDestination = trip.stopTimings.findLast(stop => !stop.additional).stopName
+    if (destination === 'Flinders Street' && trip.direction === 'Up' && !!par && !par.cancelled) {
+      destination = 'City Loop'
+    }
+
+    let trueOrigin = trip.stopTimings.find(stop => !stop.additional).stopName.slice(0, -16)
+    let trueDestination = trip.stopTimings.findLast(stop => !stop.additional).stopName.slice(0, -16)
 
     if (currentStop.cancelled && !trip.cancelled) {
       origin = trueOrigin
       destination = trueDestination
+    }
+
+    if (trueDestination === 'Flinders Street' && trip.direction === 'Up' && !!par) {
+      trueDestination = 'City Loop'
     }
 
     return {
@@ -27,10 +35,10 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
       vehicle: trip.vehicle,
       runID: trip.runID,
       platform: currentStop.platform,
-      origin: origin.slice(0, -16),
-      destination: destination.slice(0, -16),
-      trueOrigin: trueOrigin.slice(0, -16),
-      trueDestination: trueDestination.slice(0, -16),
+      origin: origin,
+      destination: destination,
+      trueOrigin: trueOrigin,
+      trueDestination: trueDestination,
       direction: trip.direction,
       viaCityLoop: !!par,
       isSkippingLoop: par ? par.cancelled : null,

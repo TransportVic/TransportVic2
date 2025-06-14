@@ -137,13 +137,63 @@ describe('The metro departures class', () => {
   it('Should set the destination as City Loop if needed', async () => {
     let db = new LokiDatabaseConnection()
     db.connect()
-
-    await (await db.createCollection('live timetables')).createDocuments(clone(sampleLiveTrips))
+    
+    let trip = clone(sampleLiveTrips[4])
+    await (await db.createCollection('live timetables')).createDocument(trip)
 
     let departures = await getDepartures(alamein, db, null, null, new Date('2025-06-05T19:38:00.000Z'))
 
     expect(departures[0].runID).to.equal('2800')
     expect(departures[0].platform).to.equal('1')
+    expect(departures[0].destination).to.equal('City Loop')
+    expect(departures[0].trueDestination).to.equal('City Loop')
+  })
+
+  it('Should keep City Loop as the true destination if it was shorted', async () => {
+    let db = new LokiDatabaseConnection()
+    db.connect()
+
+    let trip = clone(sampleLiveTrips[4])
+    trip.stopTimings.slice(3).forEach(stop => stop.cancelled = true)
+    await (await db.createCollection('live timetables')).createDocument(trip)
+
+    let departures = await getDepartures(riversdale, db, null, null, new Date('2025-06-05T19:38:00.000Z'))
+
+    expect(departures[0].runID).to.equal('2800')
+    expect(departures[0].platform).to.equal('1')
+    expect(departures[0].destination).to.equal('Camberwell')
+    expect(departures[0].trueDestination).to.equal('City Loop')
+  })
+
+  it('Should keep City Loop as the true destination it bypasses the loop', async () => {
+    let db = new LokiDatabaseConnection()
+    db.connect()
+
+    let trip = clone(sampleLiveTrips[4])
+    trip.stopTimings.slice(4, -1).forEach(stop => stop.cancelled = true)
+    await (await db.createCollection('live timetables')).createDocument(trip)
+
+    let departures = await getDepartures(riversdale, db, null, null, new Date('2025-06-05T19:38:00.000Z'))
+
+    expect(departures[0].runID).to.equal('2800')
+    expect(departures[0].platform).to.equal('1')
+    expect(departures[0].destination).to.equal('Flinders Street')
+    expect(departures[0].trueDestination).to.equal('City Loop')
+  })
+
+  it('Should show the trip as cancelled if viewing on the last stop before cancellation', async () => {
+    let db = new LokiDatabaseConnection()
+    db.connect()
+
+    let trip = clone(sampleLiveTrips[4])
+    trip.stopTimings.slice(2).forEach(stop => stop.cancelled = true)
+    await (await db.createCollection('live timetables')).createDocument(trip)
+
+    let departures = await getDepartures(riversdale, db, null, null, new Date('2025-06-05T19:38:00.000Z'))
+
+    expect(departures[0].runID).to.equal('2800')
+    expect(departures[0].platform).to.equal('1')
+    expect(departures[0].cancelled).to.be.true
     expect(departures[0].destination).to.equal('City Loop')
     expect(departures[0].trueDestination).to.equal('City Loop')
   })
