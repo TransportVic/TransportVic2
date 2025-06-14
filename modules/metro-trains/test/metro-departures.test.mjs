@@ -152,6 +152,23 @@ describe('The metro departures class', () => {
     expect(departures[0].trueDestination).to.equal('City Loop')
   })
 
+  it('Should not set the destination to City Loop within the loop itself', async () => {
+    let db = new LokiDatabaseConnection()
+    db.connect()
+
+    let stops = await db.createCollection('stops')
+    await stops.createDocuments(clone(pkmStops))
+    await (await db.createCollection('live timetables')).createDocuments(clone(ephTrips))
+
+    let par = await stops.findDocument({ stopName: "Parliament Railway Station" })
+    let departures = await getDepartures(par, db, null, null, new Date('2025-06-10T19:17:00.000Z'))
+
+    expect(departures[0].runID).to.equal('C000')
+    expect(departures[0].platform).to.equal('2')
+    expect(departures[0].destination).to.equal('Flinders Street')
+    expect(departures[0].trueDestination).to.equal('Flinders Street')
+  })
+
   it('Should keep City Loop as the true destination if it was shorted', async () => {
     let db = new LokiDatabaseConnection()
     db.connect()
@@ -214,8 +231,6 @@ describe('The metro departures class', () => {
 
     expect(departures[0].runID).to.equal('C000')
     expect(departures[0].platform).to.equal('2')
-    expect(departures[0].destination).to.equal('City Loop')
-    expect(departures[0].trueDestination).to.equal('City Loop')
 
     expect(departures[0].formingDestination).to.equal('East Pakenham')
     expect(departures[0].formingRunID).to.equal('C005')

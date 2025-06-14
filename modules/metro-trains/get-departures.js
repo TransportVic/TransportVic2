@@ -24,13 +24,13 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
 
     trueOrigin = trip.stopTimings.find(stop => !stop.additional).stopName.slice(0, -16)
     trueDestination = trip.stopTimings.findLast(stop => !stop.additional).stopName.slice(0, -16)
-    if (trueDestination === 'Flinders Street' && trip.direction === 'Up' && !!par) trueDestination = 'City Loop'
+    if (!isWithinCityLoop && trueDestination === 'Flinders Street' && trip.direction === 'Up' && !!par) trueDestination = 'City Loop'
 
     let updatedOrigin = trip.stopTimings.find(stop => !stop.cancelled).stopName.slice(0, -16)
     let destinationStop = trip.stopTimings.findLast(stop => !stop.cancelled)
     let updatedDestination = destinationStop.stopName.slice(0, -16)
 
-    if (updatedDestination === 'Flinders Street' && trip.direction === 'Up' && !!par && !par.cancelled) updatedDestination = 'City Loop'
+    if (!isWithinCityLoop && updatedDestination === 'Flinders Street' && trip.direction === 'Up' && !!par && !par.cancelled) updatedDestination = 'City Loop'
     if (destinationStop === currentStop) departure.cancelled = (currentStop.cancelled = true) // Rest of the trip is cancelled so this stop is also cancelled
 
     // If current stop is cancelled but the trip is still running, show the original details
