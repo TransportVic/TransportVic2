@@ -12,6 +12,10 @@ describe('The fleet parser functions', () => {
       expect(getLeadingVehicles(getMotorVehicles('1303T-1304T-5M-6M-7M-8M'))).to.have.members(['5M', '7M'])
     })
 
+    it('Should handle mismatched motor car numbers', () => {
+      expect(getLeadingVehicles(getMotorVehicles('1163T-1171T-625M-626M-642M-673M'))).to.have.members(['625M', '642M'])
+    })
+
     it('Should take a POTS consist and extact the lower motor cars an HCMT', () => {
       expect(getLeadingVehicles(getMotorVehicles('9002M-9902M'))).to.have.members(['9002'])
     })
@@ -24,6 +28,7 @@ describe('The fleet parser functions', () => {
   describe('The getMotorVehicles function', () => {
     it('Should return just the motor numbers', () => {
       expect(getMotorVehicles('1303T-1304T-5M-6M-7M-8M')).to.have.members(['5M', '6M', '7M', '8M'])
+      expect(getMotorVehicles('1163T-1171T-625M-626M-642M-673M')).to.have.members(['625M', '626M', '642M', '673M'])
     })
     it('Should return just the number for HCMTs', () => {
       expect(getMotorVehicles('9001M-9901M')).to.have.members(['9001', '9901'])
