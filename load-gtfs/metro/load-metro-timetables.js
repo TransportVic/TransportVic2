@@ -181,7 +181,7 @@ function readFileData(filename, routeName, callback) {
   })
 }
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
 
 database.connect({
   poolSize: 100

@@ -43,3 +43,5 @@ await runNode('extra/load-search-query.js')
 
 await runNode('../additional-data/bus-data/geospatial/generate-bus-groupings.js')
 await runNode('bus/load-regional-bus-operators.js')
+
+await runNode('move-database.mjs')

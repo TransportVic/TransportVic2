@@ -3,7 +3,7 @@ import { setStopServices, setRouteStops } from '@transportme/load-ptv-gtfs'
 import config from '../config.json' with { type: 'json' }
 import directionIDMap from './directions.json' with { type: 'json' }
 
-let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
 await mongoDB.connect()
 
 let start = new Date()

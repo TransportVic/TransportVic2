@@ -30,3 +30,5 @@ await runNode('load-all-post.mjs')
 
 await runNode('metro/load-metro-directions.js')
 await runNode('extra/load-search-query.js')
+
+await runNode('move-database.mjs')

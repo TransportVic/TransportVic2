@@ -1,7 +1,7 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../config.json' with { type: 'json' }
 
-let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
 await mongoDB.connect()
 
 async function createStopIndex(mongoStops) {

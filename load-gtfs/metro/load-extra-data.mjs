@@ -19,7 +19,7 @@ const __dirname = path.dirname(__filename)
 
 const suburbs = JSON.parse(await fs.readFile(path.join(__dirname, '../../transportvic-data/geospatial/suburb-boundaries/data.geojson')))
 
-let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
 await mongoDB.connect()
 
 let mongoStops = await mongoDB.getCollection('stops')

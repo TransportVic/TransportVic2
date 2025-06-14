@@ -27,7 +27,7 @@ const stopsFile = path.join(gtfsPath, 'stops.txt')
 const routesFile = path.join(gtfsPath, 'routes.txt')
 const agencyFile = path.join(gtfsPath, 'agency.txt')
 
-let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
 await mongoDB.connect()
 
 let mongoStops = await mongoDB.getCollection('stops')
