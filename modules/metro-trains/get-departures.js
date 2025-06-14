@@ -16,6 +16,11 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
     let trueOrigin = trip.stopTimings.find(stop => !stop.additional).stopName
     let trueDestination = trip.stopTimings.findLast(stop => !stop.additional).stopName
 
+    if (currentStop.cancelled && !trip.cancelled) {
+      origin = trueOrigin
+      destination = trueDestination
+    }
+
     return {
       ...departure,
       fleetNumber: trip.vehicle ? trip.vehicle.consist : null,

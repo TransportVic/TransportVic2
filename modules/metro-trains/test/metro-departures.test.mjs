@@ -63,7 +63,6 @@ describe('The metro departures class', () => {
     db.connect()
 
     let trip = clone(sampleLiveTrips)[0]
-    trip.stopTimings[0].cancelled = true // ALM
     trip.stopTimings[2].cancelled = true // BWD
     trip.stopTimings[6].cancelled = true // CAM
 
@@ -73,9 +72,9 @@ describe('The metro departures class', () => {
 
     expect(departures[0].runID).to.equal('2316')
     expect(departures[0].platform).to.equal('1')
-    expect(departures[0].cancelled).to.be.true
+    expect(departures[0].cancelled).to.be.false
     expect(departures[0].routeName).to.equal('Alamein')
-    expect(departures[0].origin).to.equal('Ashburton')
+    expect(departures[0].origin).to.equal('Alamein')
     expect(departures[0].destination).to.equal('Riversdale')
 
     expect(departures[0].trueOrigin).to.equal('Alamein')
@@ -126,8 +125,7 @@ describe('The metro departures class', () => {
     expect(almDepartures[0].trueOrigin).to.equal('Alamein')
     expect(almDepartures[0].trueDestination).to.equal('Camberwell')
 
-    let rivDepartures = await getDepartures(alamein, db, null, null, new Date('2025-03-28T20:40:00.000Z'))
-
+    let rivDepartures = await getDepartures(riversdale, db, null, null, new Date('2025-03-28T20:40:00.000Z'))
     expect(rivDepartures[0].runID).to.equal('2316')
     expect(rivDepartures[0].cancelled).to.be.true
     expect(rivDepartures[0].origin).to.equal('Alamein')
