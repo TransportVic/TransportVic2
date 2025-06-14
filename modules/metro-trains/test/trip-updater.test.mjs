@@ -946,7 +946,7 @@ describe('The trip updater module', () => {
     ptvAPI.addMetroSite(stubAPI)
 
     let tripData = await getDepartures(database, ptvAPI)
-    let trip = await updateTrip(database, tripData[0])
+    let trip = await updateTrip(database, tripData[1])
 
     expect(trip.stops[0].stopGTFSID).to.equal('vic:rail:FSS')
     expect(trip.stops[0].departureTime).to.equal('11:13')
@@ -958,6 +958,6 @@ describe('The trip updater module', () => {
     expect(trip.stops[5].departureTime).to.equal('11:25')
     expect(trip.stops[5].departureTimeMinutes).to.equal(11*60 + 25)
     expect(trip.stops[5].scheduledDepartureTime.toISOString()).to.equal('2025-06-14T01:25:00.000Z')
-    expect(trip.stops[5].estimatedDepartureTime.toISOString()).to.not.exist
+    expect(trip.stops[5].estimatedDepartureTime).to.not.exist
   })
 })

@@ -204,6 +204,7 @@ async function createTrip(db, trip) {
   if (trip.consist) timetable.consist = trip.consist.reduce((acc, e) => acc.concat(e), [])
   else if (trip.forcedVehicle) timetable.forcedVehicle = trip.forcedVehicle
 
+  let isCCL = trip.routeGTFSID === '2-CCL'
   let stopVisits = {}
   for (let stop of trip.stops) {
     let { stopData, updatedData } = await getBaseStopUpdateData(db, stop)
@@ -220,7 +221,8 @@ async function createTrip(db, trip) {
 
     if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
 
-    timetable.updateStopByName(stopData.stopName, updatedData, { visitNum: stopVisits[stop.stopName] })
+    let matchingCriteria = isCCL ? { prefSchTime: stop.scheduledDepartureTime.toISOString() } : { visitNum: stopVisits[stop.stopName] }
+    timetable.updateStopByName(stopData.stopName, updatedData, matchingCriteria)
   }
 
   timetable.stops[0].allowDropoff = false
