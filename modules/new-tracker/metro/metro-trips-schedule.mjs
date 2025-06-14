@@ -18,103 +18,110 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
   let relevantTrips = await getUpcomingTrips(ptvAPI, lines)
   let liveTimetables = db.getCollection('live timetables')
 
-  let tripObjects = {}
-
+  let tripsByDay = {}
   for (let trip of relevantTrips) {
-    let routeData = await getRouteByName(db, trip.routeName)
-    let tripData = {
-      operationDays: trip.operationalDate,
-      runID: trip.tdn,
-      routeGTFSID: routeData.routeGTFSID,
-      stops: [],
-      cancelled: false
-    }
-    for (let stop of trip.stops) {
-      let tripStop = {
-        stopName: stop.stationName + ' Railway Station',
-        platform: stop.platform,
-        scheduledDepartureTime: new Date(stop.scheduledDeparture.toUTC().toISO()),
+    if (!tripsByDay[trip.operationDate]) tripsByDay[trip.operationDate] = []
+    tripsByDay[trip.operationDate].push(trip)
+  }
+
+  for (let dayTrips of Object.values(tripsByDay)) {
+    let tripObjects = {}
+    for (let trip of dayTrips) {
+      let routeData = await getRouteByName(db, trip.routeName)
+      let tripData = {
+        operationDays: trip.operationalDate,
+        runID: trip.tdn,
+        routeGTFSID: routeData.routeGTFSID,
+        stops: [],
         cancelled: false
       }
-      tripData.stops.push(tripStop)
+      for (let stop of trip.stops) {
+        let tripStop = {
+          stopName: stop.stationName + ' Railway Station',
+          platform: stop.platform,
+          scheduledDepartureTime: new Date(stop.scheduledDeparture.toUTC().toISO()),
+          cancelled: false
+        }
+        tripData.stops.push(tripStop)
+      }
+
+      tripObjects[trip.tdn] = await updateTrip(db, tripData, { skipWrite: true, skipStopCancellation: true, dataSource: 'mtm-op-timetable' })
     }
 
-    tripObjects[trip.tdn] = await updateTrip(db, tripData, { skipWrite: true, skipStopCancellation: true, dataSource: 'mtm-op-timetable' })
-  }
+    let forming = {}
+    let formedBy = {}
 
-  let forming = {}
-  let formedBy = {}
+    for (let trip of relevantTrips) {
+      if (trip.runData.formedBy) {
+        let formedByTDN = trip.runData.formedBy.tdn
 
-  for (let trip of relevantTrips) {
-    if (trip.runData.formedBy) {
-      let formedByTDN = trip.runData.formedBy.tdn
+        formedBy[trip.tdn] = formedByTDN
 
-      formedBy[trip.tdn] = formedByTDN
+        let formedByTripData = tripObjects[formedByTDN]
+        if (!formedByTripData) {
+          formedByTripData = await getTrip(db, formedByTDN, trip.operationalDate)
+          if (formedByTripData) {
+            formedByTripData = LiveTimetable.fromDatabase(formedByTripData)
+            tripObjects[formedByTDN] = formedByTripData
+          }
+        }
 
-      let formedByTripData = tripObjects[formedByTDN]
-      if (!formedByTripData) {
-        formedByTripData = await getTrip(db, formedByTDN, trip.operationalDate)
         if (formedByTripData) {
-          formedByTripData = LiveTimetable.fromDatabase(formedByTripData)
-          tripObjects[formedByTDN] = formedByTripData
-        }
-      }
-
-      if (formedByTripData) {
-        let originalForming = formedByTripData.forming
-        if (originalForming) {
-          let originalFormingData = await getTrip(db, originalForming, trip.operationalDate)
-          if (originalFormingData) {
-            tripObjects[originalForming] = LiveTimetable.fromDatabase(originalFormingData)
-            if (!formedBy[originalForming]) formedBy[originalForming] = null
+          let originalForming = formedByTripData.forming
+          if (originalForming) {
+            let originalFormingData = await getTrip(db, originalForming, trip.operationalDate)
+            if (originalFormingData) {
+              tripObjects[originalForming] = LiveTimetable.fromDatabase(originalFormingData)
+              if (!formedBy[originalForming]) formedBy[originalForming] = null
+            }
           }
         }
       }
-    }
 
-    if (trip.runData.forming) {
-      let formingTDN = trip.runData.forming.tdn
+      if (trip.runData.forming) {
+        let formingTDN = trip.runData.forming.tdn
 
-      forming[trip.tdn] = formingTDN
+        forming[trip.tdn] = formingTDN
 
-      let formingTripData = tripObjects[formingTDN]
-      if (!formingTripData) {
-        formingTripData = await getTrip(db, formingTDN, trip.operationalDate)
+        let formingTripData = tripObjects[formingTDN]
+        if (!formingTripData) {
+          formingTripData = await getTrip(db, formingTDN, trip.operationalDate)
+          if (formingTripData) {
+            formingTripData = LiveTimetable.fromDatabase(formingTripData)
+            tripObjects[formingTDN] = formingTripData
+          }
+        }
+
         if (formingTripData) {
-          formingTripData = LiveTimetable.fromDatabase(formingTripData)
-          tripObjects[formingTDN] = formingTripData
-        }
-      }
-
-      if (formingTripData) {
-        let originalFormedBy = formingTripData.formedBy
-        if (originalFormedBy) {
-          let originalFormedByData = await getTrip(db, originalFormedBy, trip.operationalDate)
-          if (originalFormedByData) {
-            tripObjects[originalFormedBy] = LiveTimetable.fromDatabase(originalFormedByData)
-            if (!forming[originalFormedBy]) forming[originalFormedBy] = null
+          let originalFormedBy = formingTripData.formedBy
+          if (originalFormedBy) {
+            let originalFormedByData = await getTrip(db, originalFormedBy, trip.operationalDate)
+            if (originalFormedByData) {
+              tripObjects[originalFormedBy] = LiveTimetable.fromDatabase(originalFormedByData)
+              if (!forming[originalFormedBy]) forming[originalFormedBy] = null
+            }
           }
         }
       }
     }
+
+    for (let tdn of Object.keys(tripObjects)) tripObjects[tdn].logChanges = false
+
+    for (let tdn of Object.keys(forming)) tripObjects[tdn].forming = forming[tdn]
+    for (let tdn of Object.keys(formedBy)) tripObjects[tdn].formedBy = formedBy[tdn]
+
+    let bulkUpdate = Object.values(tripObjects).map(trip => ({
+      replaceOne: {
+        filter: trip.getDBKey(),
+        replacement: trip.toDatabase(),
+        upsert: true
+      }
+    }))
+
+    await liveTimetables.bulkWrite(bulkUpdate)
   }
 
-  for (let tdn of Object.keys(tripObjects)) tripObjects[tdn].logChanges = false
-
-  for (let tdn of Object.keys(forming)) tripObjects[tdn].forming = forming[tdn]
-  for (let tdn of Object.keys(formedBy)) tripObjects[tdn].formedBy = formedBy[tdn]
-
-  let bulkUpdate = Object.values(tripObjects).map(trip => ({
-    replaceOne: {
-      filter: trip.getDBKey(),
-      replacement: trip.toDatabase(),
-      upsert: true
-    }
-  }))
-
-  await liveTimetables.bulkWrite(bulkUpdate)
-
-  return bulkUpdate.length
+  return relevantTrips.length
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
