@@ -44,8 +44,9 @@ export async function getDepartures(db, ptvAPI) {
           stopName: stop.stationName + ' Railway Station',
           platform: stop.platform,
           scheduledDepartureTime: new Date(stop.scheduledDeparture.toUTC().toISO()),
-          estimatedDepartureTime: new Date(stop.estimatedDeparture.toUTC().toISO())
         }
+
+        if (stop.estimatedDeparture) data.estimatedDepartureTime = new Date(stop.estimatedDeparture.toUTC().toISO())
         if (stop.estimatedArrival) data.estimatedArrivalTime = new Date(stop.estimatedArrival.toUTC().toISO())
         return data
       })

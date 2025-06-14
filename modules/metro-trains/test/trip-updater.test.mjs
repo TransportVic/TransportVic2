@@ -9,6 +9,11 @@ import rceStops from '../../new-tracker/test/sample-data/rce-stops-db.json' with
 import tdR202 from '../../new-tracker/test/sample-data/rce-R202.json' with { type: 'json' }
 import tdR205 from '../../new-tracker/test/sample-data/rce-R205.json' with { type: 'json' }
 
+import { PTVAPI, StubAPI } from '@transportme/ptv-api'
+import td0737 from '../../new-tracker/test/sample-data/ccl-0737-sch.json' with { type: 'json' }
+import cclDepartures from '../../new-tracker/test/sample-data/ccl-departures.json' with { type: 'json' }
+import { getDepartures } from '../../new-tracker/metro/metro-trips-departures.mjs'
+
 import { updateTrip } from '../trip-updater.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
@@ -911,5 +916,48 @@ describe('The trip updater module', () => {
     expect(trackerEntry.destination).to.equal('Showgrounds')
     expect(trackerEntry.destinationArrivalTime).to.equal('10:01')
     expect(trackerEntry.consist).to.deep.equal(['9001', '9101', '9201', '9301', '9701', '9801', '9901'])
+  })
+
+  it('Should use strict time matching for CCL trips', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let routes = await database.createCollection('routes')
+    let stops = await database.createCollection('stops')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(pkmStops))
+    await liveTimetables.createDocument(clone(td0737))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "City Circle",
+      "cleanName" : "city-circle",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-CCL",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "city-circle"
+    })
+
+    let stubAPI = new StubAPI()
+    stubAPI.setResponses([ cclDepartures ])
+    stubAPI.skipErrors()
+
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addMetroSite(stubAPI)
+
+    let tripData = await getDepartures(database, ptvAPI)
+    let trip = await updateTrip(database, tripData[0])
+
+    expect(trip.stops[0].stopGTFSID).to.equal('vic:rail:FSS')
+    expect(trip.stops[0].departureTime).to.equal('11:13')
+    expect(trip.stops[0].departureTimeMinutes).to.equal(11*60 + 13)
+    expect(trip.stops[0].scheduledDepartureTime.toISOString()).to.equal('2025-06-14T01:13:00.000Z')
+    expect(trip.stops[0].estimatedDepartureTime.toISOString()).to.equal('2025-06-14T01:14:00.000Z')
+
+    expect(trip.stops[5].stopGTFSID).to.equal('vic:rail:FSS')
+    expect(trip.stops[5].departureTime).to.equal('11:25')
+    expect(trip.stops[5].departureTimeMinutes).to.equal(11*60 + 25)
+    expect(trip.stops[5].scheduledDepartureTime.toISOString()).to.equal('2025-06-14T01:25:00.000Z')
+    expect(trip.stops[5].estimatedDepartureTime.toISOString()).to.not.exist
   })
 })

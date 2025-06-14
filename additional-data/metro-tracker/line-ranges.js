@@ -1,4 +1,7 @@
 module.exports = {
+  'City Circle': [
+    [700, 899]
+  ],
   'Mernda': [
     [1000, 1199],
     [1600, 1799],
