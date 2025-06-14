@@ -15,6 +15,14 @@ const CROSS_CITY_GROUP_WEST = [
   'Williamstown'
 ]
 
+const METRO_TUNNEL_GROUP_EAST = [
+  'Pakenham',
+  'Cranbourne'
+]
+const METRO_TUNNEL_GROUP_WEST = [
+  'Sunbury'
+]
+
 async function getMetroDepartures(station, db, filter, backwards, departureTime) {
   let departures = await getDepartures(station, 'metro train', db, { departureTime })
   let liveTimetables = db.getCollection('live timetables')
@@ -58,9 +66,9 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
     let formingTrip
 
     let isCrossCityTrip = CROSS_CITY_GROUP_EAST.includes(trip.routeName) || CROSS_CITY_GROUP_WEST.includes(trip.routeName)
-    let shouldShowForming = 
-      (isWithinCityLoop && trip.direction === 'Up')
-      || isCrossCityTrip
+    let isMetroTunnelTrip = METRO_TUNNEL_GROUP_EAST.includes(trip.routeName) || METRO_TUNNEL_GROUP_WEST.includes(trip.routeName)
+    let upTripInCityLoop = (isWithinCityLoop && trip.direction === 'Up')
+    let shouldShowForming = upTripInCityLoop || isCrossCityTrip || isMetroTunnelTrip
   
     if (shouldShowForming) {
       formingTrip = trip.forming ? await liveTimetables.findDocument({
@@ -72,6 +80,9 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
       if (isCrossCityTrip && formingTrip) shouldShowForming = 
         (CROSS_CITY_GROUP_EAST.includes(trip.routeName) && CROSS_CITY_GROUP_WEST.includes(formingTrip.routeName))
         || (CROSS_CITY_GROUP_WEST.includes(trip.routeName) && CROSS_CITY_GROUP_EAST.includes(formingTrip.routeName))
+      else if (isMetroTunnelTrip && formingTrip && !upTripInCityLoop) shouldShowForming =
+        (METRO_TUNNEL_GROUP_EAST.includes(trip.routeName) && METRO_TUNNEL_GROUP_WEST.includes(formingTrip.routeName))
+        || (METRO_TUNNEL_GROUP_WEST.includes(trip.routeName) && METRO_TUNNEL_GROUP_EAST.includes(formingTrip.routeName))
     
       if (formingTrip && shouldShowForming) {
         formingDestination = formingTrip.destination.slice(0, -16)
