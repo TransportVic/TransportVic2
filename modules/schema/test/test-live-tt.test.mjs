@@ -227,6 +227,11 @@ describe('The LiveTimetable schema', () => {
 
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
     expect(timetable.toDatabase().vehicle).to.deep.equal(expectedVehicle)
+    expect(timetable.changes[0]).to.deep.equal({
+      type: 'veh-change',
+      oldVal: null,
+      newVal: expectedVehicle
+    })
   })
 
   it('Should not allow downgrading from 6 cars to 3 cars if the consist is the same', () => {
@@ -248,6 +253,7 @@ describe('The LiveTimetable schema', () => {
       '189M', '1395T', '190M'
     ]
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
+    expect(timetable.changes.length).to.equal(1)
   })
 
   it('Should replace a 6 car with a 3 car consist if it is totally different', () => {
@@ -263,7 +269,13 @@ describe('The LiveTimetable schema', () => {
       type: 'Xtrapolis',
       consist: ['189M', '1395T', '190M', '875M', '1638T', '876M']
     })
-
+    expect(timetable.changes[0]).to.deep.equal({
+      type: 'veh-change',
+      oldVal: null,
+      newVal: timetable.vehicle
+    })
+    
+    let oldVehicle = timetable.vehicle
     timetable.consist = [
       '39M', '1320T', '40M'
     ]
@@ -271,6 +283,11 @@ describe('The LiveTimetable schema', () => {
       size: 3,
       type: 'Xtrapolis',
       consist: ['39M', '1320T', '40M']
+    })
+    expect(timetable.changes[0]).to.deep.equal({
+      type: 'veh-change',
+      oldVal: oldVehicle,
+      newVal: timetable.vehicle
     })
   })
 
@@ -286,7 +303,13 @@ describe('The LiveTimetable schema', () => {
       type: 'Xtrapolis',
       consist: ['189M', '1395T', '190M']
     })
+    expect(timetable.changes[0]).to.deep.equal({
+      type: 'veh-change',
+      oldVal: null,
+      newVal: timetable.vehicle
+    })
 
+    let oldVehicle = timetable.vehicle
     timetable.consist = [
       '875M', '1638T', '876M'
     ]
@@ -294,6 +317,11 @@ describe('The LiveTimetable schema', () => {
       size: 6,
       type: 'Xtrapolis',
       consist: ['189M', '1395T', '190M', '875M', '1638T', '876M']
+    })
+    expect(timetable.changes[0]).to.deep.equal({
+      type: 'veh-change',
+      oldVal: oldVehicle,
+      newVal: timetable.vehicle
     })
   })
 
@@ -335,6 +363,7 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
     timetable.consist = []
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
+    expect(timetable.changes.length).to.equal(1)
   })
 
   it('Should allow forcing a consist', () => {
