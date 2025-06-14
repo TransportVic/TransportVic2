@@ -41,6 +41,9 @@ async function loadDepartures(req, res) {
       + `${departure.departureDay}/${stopGTFSID ? `#stop-${stopGTFSID}` : ''}`
 
     departure.destinationURL = `/metro/timings/${utils.encodeName(trip.destination).slice(0, -16)}`
+    if (departure.formingDestination) {
+      departure.destinationURL = `/metro/timings/${utils.encodeName(departure.formingDestination)}`
+    }
 
     return departure
   })

@@ -3,7 +3,9 @@
 if departures.length
   for departure in departures
     div.departure
-      - let { routeName } = departure
+      -
+        let { routeName } = departure
+        if (departure.formingTrip) routeName = departure.formingTrip.routeName
       input(type='hidden' name='stops-at' value=departure.futureStops.join(','))
       input(type='hidden' name='platform' value=departure.platform || '')
       input(type='hidden' name='run' value=departure.runID)
@@ -25,7 +27,7 @@ if departures.length
           let prettyLineName = `${routeName} Line`
           if (routeName === 'City Circle') prettyLineName = routeName
         span.towards #{prettyLineName} towards
-        span.destination #{departure.destination}
+        span.destination #{departure.formingDestination || departure.destination}
         
         - let currentSuspension = departure.suspension
         if currentSuspension && currentSuspension.disruptionStatus !== 'passed' && !departure.cancelled

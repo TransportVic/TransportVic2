@@ -47,9 +47,10 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
 
     let futureStops = departure.futureStops.map(stop => stop.slice(0, -16))
     let formingDestination = null, formingRunID = null, futureFormingStops = null
+    let formingTrip
 
     if (isWithinCityLoop) {
-      let formingTrip = trip.forming ? await liveTimetables.findDocument({
+      formingTrip = trip.forming ? await liveTimetables.findDocument({
         mode: 'metro train',
         operationDays: trip.operationDays,
         runID: trip.forming
@@ -83,7 +84,7 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
       allStops: departure.allStops.map(stop => stop.slice(0, -16)),
       futureStops: futureStops,
       cityLoopRunning: [],
-      formingDestination, formingRunID, futureFormingStops
+      formingDestination, formingRunID, futureFormingStops, formingTrip
     })
   }
 
