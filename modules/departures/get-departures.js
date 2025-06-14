@@ -85,10 +85,8 @@ function shouldUseLiveDepartures(departureTime) {
   return departureTime < endOfPTDayTomorrow
 }
 
-async function getCombinedDepartures(station, mode, db, options={}) {
-  let { departureTime, timeframe } = options
+async function getCombinedDepartures(station, mode, db, { departureTime = null, timeframe = 120 }={}) {
   departureTime = departureTime ? utils.parseTime(departureTime) : utils.now()
-  timeframe = timeframe || 120
 
   let departures, useLive = shouldUseLiveDepartures(departureTime)
   if (useLive) departures = await fetchLiveTrips(station, mode, db, departureTime, timeframe)
@@ -108,9 +106,11 @@ async function getCombinedDepartures(station, mode, db, options={}) {
   return departures
 }
 
-async function getDepartures(station, mode, db, options={}) {
+async function getDepartures(station, mode, db, { departureTime = null, timeframe = 120 } = {}) {
   let stopGTFSIDs = station.bays.map(stop => stop.stopGTFSID)
-  let combinedDepartures = await getCombinedDepartures(station, mode, db, options)
+  departureTime = departureTime ? utils.parseTime(departureTime) : utils.now()
+
+  let combinedDepartures = await getCombinedDepartures(station, mode, db, { departureTime, timeframe })
   let departures = []
 
   for (let trip of combinedDepartures) {
@@ -121,7 +121,7 @@ async function getDepartures(station, mode, db, options={}) {
       .map(e => e.i)
 
     let prevVisitSchDep = null
-    
+
     for (let currentStopIndex of stopIndices) {
       let currentStop = trip.stopTimings[currentStopIndex]
 
@@ -130,11 +130,14 @@ async function getDepartures(station, mode, db, options={}) {
 
       if (prevVisitSchDep !== null && scheduledDepartureTime.diff(prevVisitSchDep, 'minutes') <= 2) continue
       prevVisitSchDep = scheduledDepartureTime
+      
+      let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
+      if (departureTime.diff(actualDepartureTime, 'minutes') > 1) continue
 
       departures.push({
         scheduledDepartureTime,
         estimatedDepartureTime,
-        actualDepartureTime: estimatedDepartureTime || scheduledDepartureTime,
+        actualDepartureTime,
         currentStop,
         cancelled: trip.cancelled || currentStop.cancelled,
         routeName: trip.routeName,

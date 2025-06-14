@@ -205,4 +205,9 @@ describe('The getDepartures function', () => {
     expect(departures.length).to.equal(1)
     expect(departures[0].scheduledDepartureTime.toISOString()).to.equal('2025-04-04T18:30:00.000Z')
   })
+
+  it('Should not duplicate the first stop if it already passed', async () => {
+    let departures = await getDepartures(flindersStreet, 'metro train', cclDB, { departureTime: new Date('2025-04-04T18:39:00.000Z'), timeframe: 120 })
+    expect(departures.length).to.equal(0)
+  })
 })
