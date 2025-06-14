@@ -5,6 +5,7 @@ import sampleSchTrips from '../../departures/test/sample-data/sample-sch-trips.j
 import alamein from '../../departures/test/sample-data/alamein.json' with { type: 'json' }
 import riversdale from '../../departures/test/sample-data/riversdale.json' with { type: 'json' }
 
+import mtpTrips from '../../departures/test/sample-data/mtp-through-running.json' with { type: 'json' }
 import ccyTrips from '../../departures/test/sample-data/fkn-wer-wil-through-running.json' with { type: 'json' }
 import ephTrips from '../../departures/test/sample-data/eph-clp-forming.json' with { type: 'json' }
 import pkmStops from '../../new-tracker/test/sample-data/pkm-stops-db.json' with { type: 'json' }
@@ -271,7 +272,7 @@ describe('The metro departures class', () => {
     expect(departures[0].futureFormingStops).to.not.exist
   })
 
-  it('Should only return the next trip\'s data for cross city rnus', async () => {
+  it('Should return the next trip\'s data for cross city runs', async () => {
     let db = new LokiDatabaseConnection()
     db.connect()
 
@@ -294,6 +295,31 @@ describe('The metro departures class', () => {
       'Flinders Street',
       'Southern Cross',
       'Williamstown'
+    ])
+  })
+
+  it('Should return the next trip\'s data for metro tunnel runs', async () => {
+    let db = new LokiDatabaseConnection()
+    db.connect()
+
+    let stops = await db.createCollection('stops')
+    await stops.createDocuments(clone(pkmStops))
+    await (await db.createCollection('live timetables')).createDocuments(clone(mtpTrips))
+
+    let cfd = await stops.findDocument({ stopName: "Caulfield Railway Station" })
+    let departures = await getDepartures(cfd, db, null, null, new Date('2025-06-06T20:04:00.000Z'))
+
+    expect(departures[0].runID).to.equal('C100')
+    expect(departures[0].platform).to.equal('3')
+    expect(departures[0].destination).to.equal('Town Hall')
+    expect(departures[0].trueDestination).to.equal('Town Hall')
+
+    expect(departures[0].formingDestination).to.equal('West Footscray')
+    expect(departures[0].formingRunID).to.equal('Z101')
+    expect(departures[0].futureFormingStops).to.deep.equal([
+      'Anzac', 'Town Hall',
+      'State Library', 'Parkville', 'Arden',
+      'Footscray', 'Middle Footscray', 'West Footscray'
     ])
   })
 })
