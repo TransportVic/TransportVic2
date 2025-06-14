@@ -208,6 +208,7 @@ module.exports = class LiveTimetable {
   }
 
   set forcedVehicle(vehicle) {
+    let oldVal = this.#vehicle ? { ...this.#vehicle, consist: this.#vehicle.consist.slice(0) } : null
     if (vehicle.consist && !vehicle.type && !vehicle.size) {
       this.consist = vehicle.consist
       this.#vehicle.forced = true
@@ -223,6 +224,13 @@ module.exports = class LiveTimetable {
     this.#vehicleForced = true
     if (vehicle.icon) this.#vehicle.icon = vehicle.icon
 
+    this.changes.push({
+      type: 'veh-change',
+      oldVal,
+      newVal: this.#vehicle,
+      timestamp: new Date().toISOString(),
+      source: this.#dataSource
+    })
   }
 
   set direction(direction) { this.#direction = direction }

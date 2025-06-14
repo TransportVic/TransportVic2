@@ -386,6 +386,11 @@ describe('The LiveTimetable schema', () => {
     let expectedForcedVehicle = { ...forcedVehicle, forced: true }
     timetable.consist = ['189M', '1395T', '190M']
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
+    expect(timetable.changes[0]).excluding('timestamp').excluding('source').to.deep.equal({
+      type: 'veh-change',
+      oldVal: null,
+      newVal: expectedVehicle
+    })
 
     timetable.forcedVehicle = forcedVehicle
     expect(timetable.vehicle).to.deep.equal(expectedForcedVehicle)
@@ -393,6 +398,12 @@ describe('The LiveTimetable schema', () => {
     // Setting the consist here should no longer apply
     timetable.consist = ['189M', '1395T', '190M']
     expect(timetable.vehicle).to.deep.equal(expectedForcedVehicle)
+
+    expect(timetable.changes[1]).excluding('timestamp').excluding('source').to.deep.equal({
+      type: 'veh-change',
+      oldVal: expectedVehicle,
+      newVal: expectedForcedVehicle
+    })
   })
 
   it('Should ensure the forced vehicle flag is saved/read from the DB', () => {
@@ -417,13 +428,20 @@ describe('The LiveTimetable schema', () => {
     let forcedVehicle = {
       consist: ['875M', '1638T', '876M'],
     }
-
-    timetable.forcedVehicle = forcedVehicle
-    expect(timetable.vehicle).to.deep.equal({
+    let expectedForcedVehicle = {
       size: 3,
       type: 'Xtrapolis',
       consist: ['875M', '1638T', '876M'],
       forced: true
+    }
+
+    timetable.forcedVehicle = forcedVehicle
+    expect(timetable.vehicle).to.deep.equal(expectedForcedVehicle)
+
+    expect(timetable.changes[0]).excluding('timestamp').excluding('source').to.deep.equal({
+      type: 'veh-change',
+      oldVal: null,
+      newVal: expectedForcedVehicle
     })
   })
 
