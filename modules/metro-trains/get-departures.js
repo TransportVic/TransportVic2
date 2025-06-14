@@ -49,7 +49,9 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
     let formingDestination = null, formingRunID = null, futureFormingStops = null
     let formingTrip
 
-    if (isWithinCityLoop) {
+    let shouldShowForming = isWithinCityLoop && trip.direction === 'Up'
+  
+    if (shouldShowForming) {
       formingTrip = trip.forming ? await liveTimetables.findDocument({
         mode: 'metro train',
         operationDays: trip.operationDays,

@@ -244,7 +244,7 @@ describe('The metro departures class', () => {
     ])
   })
 
-  it.only('Should only return the next trip\'s data if it is a down trip', async () => {
+  it('Should only return the next trip\'s data if it is a down trip', async () => {
     let db = new LokiDatabaseConnection()
     db.connect()
 
