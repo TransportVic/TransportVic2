@@ -1,9 +1,17 @@
-const utils = require('../../utils')
 const { getDepartures } = require('../departures/get-departures')
+
+const CITY_LOOP = [
+  'Parliament',
+  'Melbourne Central',
+  'Flagstaff',
+  'Southern Cross'
+]
 
 async function getMetroDepartures(station, db, filter, backwards, departureTime) {
   let departures = await getDepartures(station, 'metro train', db, { departureTime })
   let liveTimetables = db.getCollection('live timetables')
+
+  let isWithinCityLoop = CITY_LOOP.includes(station.stopName.slice(0, -16))
 
   let outputDepartures = []
   for (let departure of departures) {
@@ -38,20 +46,22 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
     else destination = trueDestination
 
     let futureStops = departure.futureStops.map(stop => stop.slice(0, -16))
-
-    let formingTrip = trip.forming ? await liveTimetables.findDocument({
-      mode: 'metro train',
-      operationDays: trip.operationDays,
-      runID: trip.forming
-    }) : null
-  
     let formingDestination = null, formingRunID = null, futureFormingStops = null
-    if (formingTrip) {
-      formingDestination = formingTrip.destination.slice(0, -16)
-      formingRunID = formingTrip.runID
-      futureFormingStops = futureStops.concat(
-        formingTrip.stopTimings.slice(1).map(stop => stop.stopName.slice(0, -16))
-      )
+
+    if (isWithinCityLoop) {
+      let formingTrip = trip.forming ? await liveTimetables.findDocument({
+        mode: 'metro train',
+        operationDays: trip.operationDays,
+        runID: trip.forming
+      }) : null
+    
+      if (formingTrip) {
+        formingDestination = formingTrip.destination.slice(0, -16)
+        formingRunID = formingTrip.runID
+        futureFormingStops = futureStops.concat(
+          formingTrip.stopTimings.slice(1).map(stop => stop.stopName.slice(0, -16))
+        )
+      }
     }
 
     outputDepartures.push({

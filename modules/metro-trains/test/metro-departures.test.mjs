@@ -228,4 +228,25 @@ describe('The metro departures class', () => {
       'East Pakenham'
     ])
   })
+
+  it('Should not return the next trip\'s data outside the City Loop', async () => {
+    let db = new LokiDatabaseConnection()
+    db.connect()
+
+    let stops = await db.createCollection('stops')
+    await stops.createDocuments(clone(pkmStops))
+    await (await db.createCollection('live timetables')).createDocuments(clone(ephTrips))
+
+    let rmd = await stops.findDocument({ stopName: "Richmond Railway Station" })
+    let departures = await getDepartures(rmd, db, null, null, new Date('2025-06-10T19:14:00.000Z'))
+
+    expect(departures[0].runID).to.equal('C000')
+    expect(departures[0].platform).to.equal('5')
+    expect(departures[0].destination).to.equal('City Loop')
+    expect(departures[0].trueDestination).to.equal('City Loop')
+
+    expect(departures[0].formingDestination).to.not.exist
+    expect(departures[0].formingRunID).to.not.exist
+    expect(departures[0].futureFormingStops).to.not.exist
+  })
 })
