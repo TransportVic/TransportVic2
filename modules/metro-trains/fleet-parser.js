@@ -22,16 +22,22 @@ module.exports.getLeadingVehicles = function getLeadingVehicles(motorVehicles) {
 
   let mCars = motorVehicles.map(carriage => ({
     number: parseInt(carriage.match(/(\d+)/)[1]),
-    carriage
+    carriage,
+    matched: false
   })).sort((a, b) => a.number - b.number)
+
   let leadingVehicles = []
   for (let i = 0; i < mCars.length - 1; i++) {
     let { number, carriage } = mCars[i]
     let nextNumber = mCars[i + 1].number
     if ((number % 2 === 1) && (nextNumber === number + 1)) {
       leadingVehicles.push(carriage)
+      mCars[i].matched = mCars[i + 1].matched = true
       i++
     }
   }
+
+  let unmatched = mCars.filter(car => !car.matched)
+  if (unmatched.length == 2) leadingVehicles.push(unmatched[0].carriage)
   return leadingVehicles
 }
