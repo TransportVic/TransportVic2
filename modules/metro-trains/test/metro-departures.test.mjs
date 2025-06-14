@@ -244,21 +244,26 @@ describe('The metro departures class', () => {
     ])
   })
 
-  it('Should not return the next trip\'s data outside the City Loop', async () => {
+  it.only('Should only return the next trip\'s data if it is a down trip', async () => {
     let db = new LokiDatabaseConnection()
     db.connect()
 
     let stops = await db.createCollection('stops')
     await stops.createDocuments(clone(pkmStops))
-    await (await db.createCollection('live timetables')).createDocuments(clone(ephTrips))
+    let trips = clone(ephTrips)
+    let loopStops = trips[0].stopTimings.splice(2, 4).reverse()
+    trips[1].stopTimings.splice(1, 0, ...loopStops)
+    trips[1].forming = trips[0].runID
 
-    let rmd = await stops.findDocument({ stopName: "Richmond Railway Station" })
-    let departures = await getDepartures(rmd, db, null, null, new Date('2025-06-10T19:14:00.000Z'))
+    await (await db.createCollection('live timetables')).createDocuments(trips)
 
-    expect(departures[0].runID).to.equal('C000')
-    expect(departures[0].platform).to.equal('5')
-    expect(departures[0].destination).to.equal('City Loop')
-    expect(departures[0].trueDestination).to.equal('City Loop')
+    let par = await stops.findDocument({ stopName: "Parliament Railway Station" })
+    let departures = await getDepartures(par, db, null, null, new Date('2025-06-10T19:14:00.000Z'))
+
+    expect(departures[0].runID).to.equal('C005')
+    expect(departures[0].platform).to.equal('2')
+    expect(departures[0].destination).to.equal('East Pakenham')
+    expect(departures[0].trueDestination).to.equal('East Pakenham')
 
     expect(departures[0].formingDestination).to.not.exist
     expect(departures[0].formingRunID).to.not.exist
