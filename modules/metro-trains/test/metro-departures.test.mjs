@@ -133,4 +133,18 @@ describe('The metro departures class', () => {
     expect(rivDepartures[0].trueOrigin).to.equal('Alamein')
     expect(rivDepartures[0].trueDestination).to.equal('Camberwell')
   })
+
+  it('Should set the destination as City Loop if needed', async () => {
+    let db = new LokiDatabaseConnection()
+    db.connect()
+
+    await (await db.createCollection('live timetables')).createDocuments(clone(sampleLiveTrips))
+
+    let departures = await getDepartures(alamein, db, null, null, new Date('2025-06-05T19:38:00.000Z'))
+
+    expect(departures[0].runID).to.equal('2800')
+    expect(departures[0].platform).to.equal('1')
+    expect(departures[0].destination).to.equal('City Loop')
+    expect(departures[0].trueDestination).to.equal('City Loop')
+  })
 })
