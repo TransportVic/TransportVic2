@@ -3,8 +3,10 @@ const { getDepartures } = require('../departures/get-departures')
 
 async function getMetroDepartures(station, db, filter, backwards, departureTime) {
   let departures = await getDepartures(station, 'metro train', db, { departureTime })
+  let liveTimetables = db.getCollection('live timetables')
 
-  return departures.map(departure => {
+  let outputDepartures = []
+  for (let departure of departures) {
     let { trip, currentStop } = departure
 
     let par = trip.stopTimings.find(stop => stop.stopName === 'Parliament Railway Station')
@@ -35,7 +37,24 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
     if (updatedDestination !== trueDestination) destination = updatedDestination
     else destination = trueDestination
 
-    return {
+    let futureStops = departure.futureStops.map(stop => stop.slice(0, -16))
+
+    let formingTrip = trip.forming ? await liveTimetables.findDocument({
+      mode: 'metro train',
+      operationDays: trip.operationDays,
+      runID: trip.forming
+    }) : null
+  
+    let formingDestination = null, formingRunID = null, futureFormingStops = null
+    if (formingTrip) {
+      formingDestination = formingTrip.destination.slice(0, -16)
+      formingRunID = formingTrip.runID
+      futureFormingStops = futureStops.concat(
+        formingTrip.stopTimings.slice(1).map(stop => stop.stopName.slice(0, -16))
+      )
+    }
+
+    outputDepartures.push({
       ...departure,
       fleetNumber: trip.vehicle ? trip.vehicle.consist : null,
       vehicle: trip.vehicle,
@@ -52,10 +71,13 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
       isRailReplacementBus: trip.isRailReplacementBus,
       departureDay: trip.operationDays,
       allStops: departure.allStops.map(stop => stop.slice(0, -16)),
-      futureStops: departure.futureStops.map(stop => stop.slice(0, -16)),
-      cityLoopRunning: []
-    }
-  })
+      futureStops: futureStops,
+      cityLoopRunning: [],
+      formingDestination, formingRunID, futureFormingStops
+    })
+  }
+
+  return outputDepartures
 }
 
 module.exports = getMetroDepartures
