@@ -1,91 +1,74 @@
 {
-  "_id": "3d39ef075cf9365e6c143f1c35352d2f",
-  "stopName": "Alamein Railway Station",
-  "suburb": [
-    "Ashburton"
-  ],
-  "cleanSuburbs": [
-    "ashburton"
-  ],
-  "bays": [
-    {
-      "originalName": "Alamein Station",
-      "fullStopName": "Alamein Railway Station",
-      "stopGTFSID": "11197",
-      "location": {
-        "type": "Point",
-        "coordinates": [
-          145.07972689,
-          -37.8682044
-        ]
-      },
-      "stopNumber": null,
-      "mode": "metro train",
-      "suburb": "Ashburton",
-      "services": [
+    "stopName": "Alamein Railway Station",
+    "suburb": [
+        "Ashburton"
+    ],
+    "cleanSuburbs": [
+        "ashburton"
+    ],
+    "bays": [
         {
-          "routeGTFSID": "2-ALM",
-          "gtfsDirection": 0,
-          "routeNumber": null
+            "originalName": "Alamein Railway Station",
+            "fullStopName": "Alamein Railway Station",
+            "stopGTFSID": "vic:rail:ALM",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    145.07965567,
+                    -37.86832039
+                ]
+            },
+            "stopNumber": null,
+            "mode": "metro train",
+            "suburb": "Ashburton",
+            "services": [
+                {
+                    "routeGTFSID": "2-ALM",
+                    "gtfsDirection": 0,
+                    "routeNumber": null
+                },
+                {
+                    "routeGTFSID": "2-ALM",
+                    "gtfsDirection": 1,
+                    "routeNumber": null
+                }
+            ],
+            "screenServices": [
+                {
+                    "routeGTFSID": "2-ALM",
+                    "gtfsDirection": 1,
+                    "routeNumber": null
+                }
+            ],
+            "stopType": "station",
+            "parentStopGTFSID": null
         },
         {
-          "routeGTFSID": "2-ALM",
-          "gtfsDirection": 1,
-          "routeNumber": null
+            "originalName": "Alamein Station",
+            "fullStopName": "Alamein Railway Station",
+            "stopGTFSID": "11197",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    145.07972689,
+                    -37.8682044
+                ]
+            },
+            "stopNumber": null,
+            "mode": "metro train",
+            "suburb": "Ashburton",
+            "services": [],
+            "screenServices": [],
+            "stopType": "stop",
+            "parentStopGTFSID": "vic:rail:ALM",
+            "platform": "1"
         }
-      ],
-      "screenServices": [
-        {
-          "routeGTFSID": "2-ALM",
-          "gtfsDirection": 1,
-          "routeNumber": null
-        }
-      ],
-      "platform": "1"
-    },
-    {
-      "originalName": "Alamein Railway Station",
-      "fullStopName": "Alamein Railway Station",
-      "stopGTFSID": "Parentvic:rail:ALM",
-      "location": {
-        "type": "Point",
-        "coordinates": [
-          145.07965567,
-          -37.86832039
-        ]
-      },
-      "stopNumber": null,
-      "mode": "metro train",
-      "suburb": "Ashburton",
-      "services": [],
-      "screenServices": []
-    }
-  ],
-  "location": {
-    "type": "MultiPoint",
-    "coordinates": [
-      [
-        145.07972689,
-        -37.8682044
-      ],
-      [
-        145.07965567,
-        -37.86832039
-      ]
+    ],
+    "mergeName": "Alamein Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "alamein-railway-station",
+    "cleanNames": [
+        "alamein-railway-station"
     ]
-  },
-  "mergeName": "Alamein Railway Station",
-  "services": [],
-  "screenServices": [],
-  "cleanName": "alamein-railway-station",
-  "cleanNames": [
-    "alamein-railway-station"
-  ],
-  "codedSuburbs": [
-    "ashburton"
-  ],
-  "codedName": "alamein-railway-station",
-  "codedNames": [
-    "alamein-railway-station"
-  ]
 }
