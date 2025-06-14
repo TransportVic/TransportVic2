@@ -139,7 +139,8 @@ export async function updateTrip(db, trip, { skipWrite = false, skipStopCancella
       trip.stops[trip.stops.length - 1].scheduledDepartureTime = null
     }
   }
-
+  
+  let isCCL = trip.routeGTFSID === '2-CCL'
   for (let stop of trip.stops) {
     let { stopData, updatedData } = await getBaseStopUpdateData(db, stop)
     if (!stopData) {
@@ -159,7 +160,8 @@ export async function updateTrip(db, trip, { skipWrite = false, skipStopCancella
     if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
     if (stop.estimatedArrivalTime) updatedData.estimatedArrivalTime = stop.estimatedArrivalTime.toISOString()
 
-    timetable.updateStopByName(stopData.stopName, updatedData, { visitNum: stopVisits[stop.stopName] })
+    let matchingCriteria = isCCL ? { prefSchTime: stop.scheduledDepartureTime.toISOString() } : { visitNum: stopVisits[stop.stopName] }
+    timetable.updateStopByName(stopData.stopName, updatedData, matchingCriteria)
   }
 
   if (!skipStopCancellation) {

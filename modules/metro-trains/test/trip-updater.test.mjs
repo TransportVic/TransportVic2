@@ -10,7 +10,7 @@ import tdR202 from '../../new-tracker/test/sample-data/rce-R202.json' with { typ
 import tdR205 from '../../new-tracker/test/sample-data/rce-R205.json' with { type: 'json' }
 
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
-import td0737 from '../../new-tracker/test/sample-data/ccl-0737-sch.json' with { type: 'json' }
+import td0735_0737 from '../../new-tracker/test/sample-data/ccl-0735-0737-sch.json' with { type: 'json' }
 import cclDepartures from '../../new-tracker/test/sample-data/ccl-departures.json' with { type: 'json' }
 import { getDepartures } from '../../new-tracker/metro/metro-trips-departures.mjs'
 
@@ -925,7 +925,7 @@ describe('The trip updater module', () => {
     let liveTimetables = await database.createCollection('live timetables')
 
     await stops.createDocuments(clone(pkmStops))
-    await liveTimetables.createDocument(clone(td0737))
+    await liveTimetables.createDocuments(clone(td0735_0737))
     await routes.createDocument({
       "mode" : "metro train",
       "routeName" : "City Circle",
@@ -946,18 +946,32 @@ describe('The trip updater module', () => {
     ptvAPI.addMetroSite(stubAPI)
 
     let tripData = await getDepartures(database, ptvAPI)
-    let trip = await updateTrip(database, tripData[1])
+    let td0735 = await updateTrip(database, tripData[0])
 
-    expect(trip.stops[0].stopGTFSID).to.equal('vic:rail:FSS')
-    expect(trip.stops[0].departureTime).to.equal('11:13')
-    expect(trip.stops[0].departureTimeMinutes).to.equal(11*60 + 13)
-    expect(trip.stops[0].scheduledDepartureTime.toISOString()).to.equal('2025-06-14T01:13:00.000Z')
-    expect(trip.stops[0].estimatedDepartureTime.toISOString()).to.equal('2025-06-14T01:14:00.000Z')
+    expect(td0735.stops[0].stopGTFSID).to.equal('vic:rail:FSS')
+    expect(td0735.stops[0].departureTime).to.equal('10:53')
+    expect(td0735.stops[0].departureTimeMinutes).to.equal(10*60 + 53)
+    expect(td0735.stops[0].scheduledDepartureTime.toISOString()).to.equal('2025-06-14T00:53:00.000Z')
+    expect(td0735.stops[0].estimatedDepartureTime).to.not.exist
 
-    expect(trip.stops[5].stopGTFSID).to.equal('vic:rail:FSS')
-    expect(trip.stops[5].departureTime).to.equal('11:25')
-    expect(trip.stops[5].departureTimeMinutes).to.equal(11*60 + 25)
-    expect(trip.stops[5].scheduledDepartureTime.toISOString()).to.equal('2025-06-14T01:25:00.000Z')
-    expect(trip.stops[5].estimatedDepartureTime).to.not.exist
+    expect(td0735.stops[5].stopGTFSID).to.equal('vic:rail:FSS')
+    expect(td0735.stops[5].departureTime).to.equal('11:05')
+    expect(td0735.stops[5].departureTimeMinutes).to.equal(11*60 + 5)
+    expect(td0735.stops[5].scheduledDepartureTime.toISOString()).to.equal('2025-06-14T01:05:00.000Z')
+    expect(td0735.stops[5].estimatedDepartureTime).to.not.exist
+
+    let td0737 = await updateTrip(database, tripData[1])
+
+    expect(td0737.stops[0].stopGTFSID).to.equal('vic:rail:FSS')
+    expect(td0737.stops[0].departureTime).to.equal('11:13')
+    expect(td0737.stops[0].departureTimeMinutes).to.equal(11*60 + 13)
+    expect(td0737.stops[0].scheduledDepartureTime.toISOString()).to.equal('2025-06-14T01:13:00.000Z')
+    expect(td0737.stops[0].estimatedDepartureTime.toISOString()).to.equal('2025-06-14T01:14:00.000Z')
+
+    expect(td0737.stops[5].stopGTFSID).to.equal('vic:rail:FSS')
+    expect(td0737.stops[5].departureTime).to.equal('11:25')
+    expect(td0737.stops[5].departureTimeMinutes).to.equal(11*60 + 25)
+    expect(td0737.stops[5].scheduledDepartureTime.toISOString()).to.equal('2025-06-14T01:25:00.000Z')
+    expect(td0737.stops[5].estimatedDepartureTime).to.not.exist
   })
 })
