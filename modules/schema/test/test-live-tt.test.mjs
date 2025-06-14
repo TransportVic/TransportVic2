@@ -238,6 +238,28 @@ describe('The LiveTimetable schema', () => {
     })
   })
 
+  it('Should not create change log entries if the fleet does not change', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    expect(timetable.vehicle).to.be.null
+    timetable.consist = ['189M', '1395T', '190M', '875M', '1638T', '876M']
+    let expectedVehicle = {
+      size: 6,
+      type: 'Xtrapolis',
+      consist: ['189M', '1395T', '190M', '875M', '1638T', '876M']
+    }
+
+    expect(timetable.vehicle).to.deep.equal(expectedVehicle)
+    expect(timetable.toDatabase().vehicle).to.deep.equal(expectedVehicle)
+    expect(timetable.changes[0]).excluding('timestamp').excluding('source').to.deep.equal({
+      type: 'veh-change',
+      oldVal: null,
+      newVal: expectedVehicle
+    })
+
+    timetable.consist = ['189M', '1395T', '190M', '875M', '1638T', '876M']
+    expect(timetable.changes.length).to.equal(1)
+  })
+
   it('Should not allow downgrading from 6 cars to 3 cars if the consist is the same', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     let expectedVehicle = {

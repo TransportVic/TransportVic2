@@ -191,7 +191,7 @@ module.exports = class LiveTimetable {
 
         this.#vehicle = newVal
         return
-      }
+      } else if (consist.join('-') === this.#vehicle.consist.join('-')) return
     }
 
     let newVal = { size: consist.length, type: typeDescriptor, consist }
