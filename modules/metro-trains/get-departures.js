@@ -10,24 +10,30 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
     let par = trip.stopTimings.find(stop => stop.stopName === 'Parliament Railway Station')
     let hasALT = trip.stopTimings.some(stop => stop.stopName === 'Altona Railway Station')
 
-    let origin = trip.stopTimings.find(stop => !stop.cancelled).stopName.slice(0, -16)
-    let destination = trip.stopTimings.findLast(stop => !stop.cancelled).stopName.slice(0, -16)
+    let origin, trueOrigin, destination, trueDestination
 
-    if (destination === 'Flinders Street' && trip.direction === 'Up' && !!par && !par.cancelled) {
-      destination = 'City Loop'
-    }
+    trueOrigin = trip.stopTimings.find(stop => !stop.additional).stopName.slice(0, -16)
+    trueDestination = trip.stopTimings.findLast(stop => !stop.additional).stopName.slice(0, -16)
+    if (trueDestination === 'Flinders Street' && trip.direction === 'Up' && !!par) trueDestination = 'City Loop'
 
-    let trueOrigin = trip.stopTimings.find(stop => !stop.additional).stopName.slice(0, -16)
-    let trueDestination = trip.stopTimings.findLast(stop => !stop.additional).stopName.slice(0, -16)
+    let updatedOrigin = trip.stopTimings.find(stop => !stop.cancelled).stopName.slice(0, -16)
+    let destinationStop = trip.stopTimings.findLast(stop => !stop.cancelled)
+    let updatedDestination = destinationStop.stopName.slice(0, -16)
 
+    if (updatedDestination === 'Flinders Street' && trip.direction === 'Up' && !!par && !par.cancelled) updatedDestination = 'City Loop'
+    if (destinationStop === currentStop) departure.cancelled = (currentStop.cancelled = true) // Rest of the trip is cancelled so this stop is also cancelled
+
+    // If current stop is cancelled but the trip is still running, show the original details
     if (currentStop.cancelled && !trip.cancelled) {
-      origin = trueOrigin
-      destination = trueDestination
+      updatedOrigin = trueOrigin
+      updatedDestination = trueDestination
     }
 
-    if (trueDestination === 'Flinders Street' && trip.direction === 'Up' && !!par) {
-      trueDestination = 'City Loop'
-    }
+    if (updatedOrigin !== trueOrigin) origin = updatedOrigin
+    else origin = trueOrigin
+
+    if (updatedDestination !== trueDestination) destination = updatedDestination
+    else destination = trueDestination
 
     return {
       ...departure,
