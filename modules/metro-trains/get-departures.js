@@ -83,7 +83,7 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
       else if (isMetroTunnelTrip && formingTrip && !upTripInCityLoop) shouldShowForming =
         (METRO_TUNNEL_GROUP_EAST.includes(trip.routeName) && METRO_TUNNEL_GROUP_WEST.includes(formingTrip.routeName))
         || (METRO_TUNNEL_GROUP_WEST.includes(trip.routeName) && METRO_TUNNEL_GROUP_EAST.includes(formingTrip.routeName))
-    
+
       if (formingTrip && shouldShowForming) {
         formingDestination = formingTrip.destination.slice(0, -16)
         formingRunID = formingTrip.runID
