@@ -90,7 +90,7 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
         futureFormingStops = futureStops.concat(
           formingTrip.stopTimings.slice(1).map(stop => stop.stopName.slice(0, -16))
         )
-      }
+      } else formingTrip = null
     }
 
     outputDepartures.push({
