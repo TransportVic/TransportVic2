@@ -1,8 +1,11 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../config.json' with { type: 'json' }
 
-let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
-await mongoDB.connect()
+let loaderDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
+await loaderDB.connect()
+
+let mainDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+await mainDB.connect()
 
 async function createStopIndex(mongoStops) {
   await mongoStops.createIndex({
@@ -303,19 +306,24 @@ async function createLiveTimetableIndex(liveTimetables) {
   }, {name: 'active trip index'})
 }
 
-await createStopIndex(await mongoDB.getCollection('stops'))
-await createRouteIndex(await mongoDB.getCollection('routes'))
-await createTimetableIndex(await mongoDB.getCollection('gtfs timetables'))
-await createTimetableIndex(await mongoDB.getCollection('live timetables'))
-await createLiveTimetableIndex(await mongoDB.getCollection('live timetables'))
-await createMetroTripIndex(await mongoDB.getCollection('metro trips'))
-await createVLineTripIndex(await mongoDB.getCollection('vline trips'))
-await createTramTripIndex(await mongoDB.getCollection('tram trips'))
-await createBusTripIndex(await mongoDB.getCollection('bus trips'))
-await createSmartrakIndex(await mongoDB.getCollection('smartrak ids'))
-await createMetroNotifyIndex(await mongoDB.getCollection('metro notify'))
-await createMetroLocationsIndex(await mongoDB.getCollection('metro locations'))
-await createCSRFIndex(await mongoDB.getCollection('csrf tokens'))
+await createStopIndex(await loaderDB.getCollection('stops'))
+await createRouteIndex(await loaderDB.getCollection('routes'))
+await createTimetableIndex(await loaderDB.getCollection('gtfs timetables'))
+
+await createStopIndex(await mainDB.getCollection('stops'))
+await createRouteIndex(await mainDB.getCollection('routes'))
+await createTimetableIndex(await mainDB.getCollection('gtfs timetables'))
+
+await createTimetableIndex(await mainDB.getCollection('live timetables'))
+await createLiveTimetableIndex(await mainDB.getCollection('live timetables'))
+await createMetroTripIndex(await mainDB.getCollection('metro trips'))
+await createVLineTripIndex(await mainDB.getCollection('vline trips'))
+await createTramTripIndex(await mainDB.getCollection('tram trips'))
+await createBusTripIndex(await mainDB.getCollection('bus trips'))
+await createSmartrakIndex(await mainDB.getCollection('smartrak ids'))
+await createMetroNotifyIndex(await mainDB.getCollection('metro notify'))
+await createMetroLocationsIndex(await mainDB.getCollection('metro locations'))
+await createCSRFIndex(await mainDB.getCollection('csrf tokens'))
 
 console.log('Created indexes')
 

@@ -99,7 +99,7 @@ function spawnProcess(cmd, args, finish) {
 }
 
 async function updateTimetables() {
-  let database = new DatabaseConnection(config.databaseURL, config.databaseName)
+  let database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
   return new Promise(resolve => {
     database.connect(async err => {
       let collections = ['stops', 'routes', 'gtfs timetables', 'timetables']
