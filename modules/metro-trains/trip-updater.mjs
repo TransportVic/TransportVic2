@@ -132,7 +132,7 @@ export async function updateTrip(db, trip, { skipWrite = false, skipStopCancella
 
   let stopVisits = {}
 
-  if (timetable.direction === 'Up') {
+  if (timetable.direction === 'Up' && trip.stops) {
     let updateLastStop = trip.stops[trip.stops.length - 1]
     let isFSS = timetable.destination === 'Flinders Street Railway Station'
     if (isFSS && updateLastStop.stopName === timetable.destination) {
@@ -141,40 +141,42 @@ export async function updateTrip(db, trip, { skipWrite = false, skipStopCancella
   }
   
   let isCCL = trip.routeGTFSID === '2-CCL'
-  for (let stop of trip.stops) {
-    let { stopData, updatedData } = await getBaseStopUpdateData(db, stop)
-    if (!stopData) {
-      console.log('Failed to update stop ' + JSON.stringify(trip), stop)
-      continue
+  if (trip.stops) {
+    for (let stop of trip.stops) {
+      let { stopData, updatedData } = await getBaseStopUpdateData(db, stop)
+      if (!stopData) {
+        console.log('Failed to update stop ' + JSON.stringify(trip), stop)
+        continue
+      }
+
+      if (!stopVisits[stop.stopName]) stopVisits[stop.stopName] = 0
+      stopVisits[stop.stopName]++
+
+      if (!existingStops.includes(stop.stopName)) updatedData.additional = true
+      if (stop.platform) updatedData.platform = stop.platform
+      if (typeof stop.cancelled !== 'undefined') updatedData.cancelled = stop.cancelled
+      else if (!skipStopCancellation) updatedData.cancelled = false
+
+      if (stop.scheduledDepartureTime) updatedData.scheduledDepartureTime = stop.scheduledDepartureTime.toISOString()
+      if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
+      if (stop.estimatedArrivalTime) updatedData.estimatedArrivalTime = stop.estimatedArrivalTime.toISOString()
+
+      let matchingCriteria = isCCL ? { prefSchTime: stop.scheduledDepartureTime.toISOString() } : { visitNum: stopVisits[stop.stopName] }
+      timetable.updateStopByName(stopData.stopName, updatedData, matchingCriteria)
     }
 
-    if (!stopVisits[stop.stopName]) stopVisits[stop.stopName] = 0
-    stopVisits[stop.stopName]++
-
-    if (!existingStops.includes(stop.stopName)) updatedData.additional = true
-    if (stop.platform) updatedData.platform = stop.platform
-    if (typeof stop.cancelled !== 'undefined') updatedData.cancelled = stop.cancelled
-    else if (!skipStopCancellation) updatedData.cancelled = false
-
-    if (stop.scheduledDepartureTime) updatedData.scheduledDepartureTime = stop.scheduledDepartureTime.toISOString()
-    if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
-    if (stop.estimatedArrivalTime) updatedData.estimatedArrivalTime = stop.estimatedArrivalTime.toISOString()
-
-    let matchingCriteria = isCCL ? { prefSchTime: stop.scheduledDepartureTime.toISOString() } : { visitNum: stopVisits[stop.stopName] }
-    timetable.updateStopByName(stopData.stopName, updatedData, matchingCriteria)
-  }
-
-  if (!skipStopCancellation) {
-    for (let stop of existingStops) {
-      if (!stopVisits[stop]) {
-        timetable.updateStopByName(stop, {
-          cancelled: true
-        })
+    if (!skipStopCancellation) {
+      for (let stop of existingStops) {
+        if (!stopVisits[stop]) {
+          timetable.updateStopByName(stop, {
+            cancelled: true
+          })
+        }
       }
     }
-  }
 
-  timetable.sortStops()
+    timetable.sortStops()
+  }
 
   if (!skipWrite) await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase())
   updateTrackerData(db, timetable)

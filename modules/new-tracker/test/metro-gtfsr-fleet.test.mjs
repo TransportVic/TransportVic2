@@ -1,12 +1,10 @@
 import { expect } from 'chai'
-import { LokiDatabaseConnection } from '@transportme/database'
 import gtfsrFleet from './sample-data/gtfsr-fleet.json' with { type: 'json' }
 import { getFleetData } from '../metro/metro-gtfsr-fleet.mjs'
 
 describe('The GTFSR Fleet Tracker module', () => {
   it('Should return the GTFSR data with just the consist numbers', async () => {
-    let database = new LokiDatabaseConnection('test-db')
-    let tripData = await getFleetData(database, () => gtfsrFleet)
+    let tripData = await getFleetData(() => gtfsrFleet)
     expect(tripData[0].operationDays).to.equal('20250614')
     expect(tripData[0].runID).to.equal('3312')
     expect(tripData[0].routeGTFSID).to.equal('2-LIL')
