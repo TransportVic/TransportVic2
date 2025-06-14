@@ -36,6 +36,14 @@ async function loadDepartures(req, res) {
 
     let stopGTFSID = metroPlatform.parentStopGTFSID
 
+    if (departure.formingTrip) {
+      let formingTrip = departure.formingTrip
+      origin = formingTrip.origin.slice(0, -16)
+      originDepartureTime = formingTrip.departureTime
+      destination = formingTrip.destination.slice(0, -16)
+      destinationArrivalTime = formingTrip.destinationArrivalTime
+    }
+
     departure.tripURL = `${utils.encodeName(origin)}/${originDepartureTime}/`
       + `${utils.encodeName(destination)}/${destinationArrivalTime}/`
       + `${departure.departureDay}/${stopGTFSID ? `#stop-${stopGTFSID}` : ''}`
