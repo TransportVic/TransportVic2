@@ -6,6 +6,14 @@ const CITY_LOOP = [
   'Flagstaff',
   'Southern Cross'
 ]
+const CROSS_CITY_GROUP_EAST = [
+  'Frankston',
+  'Sandringham'
+]
+const CROSS_CITY_GROUP_WEST = [
+  'Werribee',
+  'Williamstown'
+]
 
 async function getMetroDepartures(station, db, filter, backwards, departureTime) {
   let departures = await getDepartures(station, 'metro train', db, { departureTime })
@@ -49,7 +57,10 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
     let formingDestination = null, formingRunID = null, futureFormingStops = null
     let formingTrip
 
-    let shouldShowForming = isWithinCityLoop && trip.direction === 'Up'
+    let isCrossCityTrip = CROSS_CITY_GROUP_EAST.includes(trip.routeName) || CROSS_CITY_GROUP_WEST.includes(trip.routeName)
+    let shouldShowForming = 
+      (isWithinCityLoop && trip.direction === 'Up')
+      || isCrossCityTrip
   
     if (shouldShowForming) {
       formingTrip = trip.forming ? await liveTimetables.findDocument({
@@ -57,8 +68,12 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
         operationDays: trip.operationDays,
         runID: trip.forming
       }) : null
+
+      if (isCrossCityTrip && formingTrip) shouldShowForming = 
+        (CROSS_CITY_GROUP_EAST.includes(trip.routeName) && CROSS_CITY_GROUP_WEST.includes(formingTrip.routeName))
+        || (CROSS_CITY_GROUP_WEST.includes(trip.routeName) && CROSS_CITY_GROUP_EAST.includes(formingTrip.routeName))
     
-      if (formingTrip) {
+      if (formingTrip && shouldShowForming) {
         formingDestination = formingTrip.destination.slice(0, -16)
         formingRunID = formingTrip.runID
         futureFormingStops = futureStops.concat(

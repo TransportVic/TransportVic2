@@ -289,7 +289,7 @@ describe('The metro departures class', () => {
 
     expect(departures[0].formingDestination).to.equal('Williamstown')
     expect(departures[0].formingRunID).to.equal('6385')
-    expect(departures[0].futureFormingStops).to.equal([
+    expect(departures[0].futureFormingStops).to.deep.equal([
       'Richmond',
       'Flinders Street',
       'Southern Cross',
