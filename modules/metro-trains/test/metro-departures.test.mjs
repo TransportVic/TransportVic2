@@ -4,6 +4,9 @@ import sampleLiveTrips from '../../departures/test/sample-data/sample-live-trips
 import sampleSchTrips from '../../departures/test/sample-data/sample-sch-trips.json' with { type: 'json' }
 import alamein from '../../departures/test/sample-data/alamein.json' with { type: 'json' }
 import riversdale from '../../departures/test/sample-data/riversdale.json' with { type: 'json' }
+
+import ephTrips from '../../departures/test/sample-data/eph-clp-forming.json' with { type: 'json' }
+import pkmStops from '../../new-tracker/test/sample-data/pkm-stops-db.json' with { type: 'json' }
 import getDepartures from '../get-departures.js'
 
 let clone = o => JSON.parse(JSON.stringify(o))
@@ -196,5 +199,33 @@ describe('The metro departures class', () => {
     expect(departures[0].cancelled).to.be.true
     expect(departures[0].destination).to.equal('City Loop')
     expect(departures[0].trueDestination).to.equal('City Loop')
+  })
+
+  it('Should return the next trip\'s data within the City Loop', async () => {
+    let db = new LokiDatabaseConnection()
+    db.connect()
+
+    let stops = await db.createCollection('stops')
+    await stops.createDocuments(clone(pkmStops))
+    await (await db.createCollection('live timetables')).createDocuments(clone(ephTrips))
+
+    let par = await stops.findDocument({ stopName: "Parliament Railway Station" })
+    let departures = await getDepartures(par, db, null, null, new Date('2025-06-10T19:17:00.000Z'))
+
+    expect(departures[0].runID).to.equal('C000')
+    expect(departures[0].platform).to.equal('2')
+    expect(departures[0].destination).to.equal('City Loop')
+    expect(departures[0].trueDestination).to.equal('City Loop')
+
+    expect(departures[0].formingDestination).to.equal('East Pakenham')
+    expect(departures[0].formingRunID).to.equal('C005')
+    expect(departures[0].futureFormingStops).to.deep.equal([
+      'Melbourne Central',
+      'Flagstaff',
+      'Southern Cross',
+      'Flinders Street',
+      'Richmond',
+      'East Pakenham'
+    ])
   })
 })
