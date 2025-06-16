@@ -13,7 +13,7 @@ export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
 
   for (let trip of tripData.entity) {
     let gtfsrTripData = MetroGTFSRTrip.parse(trip.trip_update.trip)
-    if (!gtfsrTripData.getRouteID().includes(routeFilter)) continue
+    if (!gtfsrTripData.getRouteID().includes(routeFilter) && gtfsrTripData.getScheduleRelationship() !== MetroGTFSRTrip.SR_CANCELLED) continue
 
     let tripData = {
       operationDays: gtfsrTripData.getOperationDay(),
