@@ -108,7 +108,6 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime)
       isSkippingLoop: par ? par.cancelled : null,
       viaAltonaLoop: trip.routeName === 'Werribee' ? hasALT : null,
       isRailReplacementBus: trip.isRailReplacementBus,
-      departureDay: trip.operationDays,
       allStops: departure.allStops.map(stop => stop.slice(0, -16)),
       futureStops: futureStops,
       cityLoopRunning: [],

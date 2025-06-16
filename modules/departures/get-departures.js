@@ -145,6 +145,7 @@ async function getDepartures(station, mode, db, { departureTime = null, timefram
         trip,
         destination: trip.destination,
         departureDay: trip.operationDays,
+        departureDayMoment: utils.parseDate(trip.operationDays),
         allStops: trip.stopTimings.map(stop => stop.stopName),
         futureStops: trip.stopTimings.slice(currentStopIndex + 1).map(stop => stop.stopName)
       })

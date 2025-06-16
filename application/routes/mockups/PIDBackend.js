@@ -99,14 +99,26 @@ async function getAllDeparturesFromStation(station, db) {
           if (metroPlatform) {
             let rawMetroDepartures = await getMetroDepartures(station, db)
             metroDepartures = await async.map(rawMetroDepartures, async departure => {
-              let destination = departure.destination
-              if (departure.routeName === 'City Circle') {
+              let futureStops = departure.futureStops.slice(0)
+              let allStops = departure.allStops.slice(0)
+              let { destination, routeName } = departure
+              let direction = departure.trip.direction
+
+              if (departure.formingTrip) {
+                destination = departure.formingDestination
+                routeName = departure.formingTrip.routeName
+                futureStops = futureStops.concat(departure.futureFormingStops.slice(1))
+                allStops = allStops.concat(departure.futureFormingStops.slice(1))
+                direction = departure.formingTrip.direction
+              }
+
+              if (routeName === 'City Circle') {
                 if (stationName === 'Flinders Street') destination = 'City Loop'
                 else destination = 'Flinders Street'
               }
 
               let { runID } = departure
-              let today = await getDayOfWeek(departure.originDepartureTime)
+              let today = await getDayOfWeek(departure.departureDayMoment)
               let scheduledTrip = await timetables.findDocument({
                 runID, operationDays: today
               })
@@ -133,16 +145,16 @@ async function getAllDeparturesFromStation(station, db) {
               }
 
               return {
-                operationDay: departure.trip.operationDays,
-                routeName: departure.routeName,
-                origin: departure.trip.trueOrigin.slice(0, -16),
+                operationDay: departure.departureDay,
+                routeName,
+                origin: departure.origin,
                 destination,
                 scheduledDepartureTime: departure.scheduledDepartureTime,
                 estimatedDepartureTime: departure.estimatedDepartureTime,
                 actualDepartureTime: departure.actualDepartureTime,
-                futureStops: [stationName, ...departure.futureStops],
-                allStops: departure.allStops,
-                direction: departure.trip.direction,
+                futureStops: [stationName, ...futureStops],
+                allStops: allStops,
+                direction: direction,
                 isRailReplacementBus: departure.isRailReplacementBus,
                 platform: departure.platform ? departure.platform.replace(/[?A-Z]/g, '') : '',
                 type: 'metro',
