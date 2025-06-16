@@ -6,6 +6,7 @@ import { updateTrip } from '../../metro-trains/trip-updater.mjs'
 import getMetroDepartures from '../../metro-trains/get-departures.js'
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import getTripUpdateData from '../../metro-trains/get-stopping-pattern.js'
+import utils from '../../../utils.js'
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -17,11 +18,14 @@ function shuffleArray(array) {
 export async function getTrips(db, ptvAPI, station) {
   let departures = await getMetroDepartures(station, db)
 
+  let departureDay = utils.now().startOf('day')
+  if (utils.now().get('hour') < 3) departureDay.add(-1, 'day')
+
   let trains = departures.filter(departure => !departure.isRailReplacementBus)
   let updates = []
   let successfulDepartures = 0
   for (let departure of trains) {
-    let tripUpdate = await getTripUpdateData(departure.runID, ptvAPI)
+    let tripUpdate = await getTripUpdateData(departure.runID, ptvAPI, { date: new Date(departureDay.toISOString()) })
     if (tripUpdate) {
       updates.push(tripUpdate)
       if (++successfulDepartures === 5) break
