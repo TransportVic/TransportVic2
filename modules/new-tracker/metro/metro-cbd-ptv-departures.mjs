@@ -10,6 +10,10 @@ export async function fetchCBDTrips(db, ptvAPI) {
   tdnsSeen.push(...await fetchTrips(db, ptvAPI, { stationName: 'Richmond Railway Station', skipTDN: tdnsSeen, maxResults: 10 }))
   tdnsSeen.push(...await fetchTrips(db, ptvAPI, { stationName: 'Jolimont Railway Station', skipTDN: tdnsSeen, maxResults: 10 }))
   tdnsSeen.push(...await fetchTrips(db, ptvAPI, { stationName: 'North Melbourne Railway Station', skipTDN: tdnsSeen, maxResults: 10 }))
+
+  tdnsSeen.push(...await fetchTrips(db, ptvAPI, { stationName: 'Richmond Railway Station', skipTDN: tdnsSeen, maxResults: 5, backwards: true }))
+  tdnsSeen.push(...await fetchTrips(db, ptvAPI, { stationName: 'Jolimont Railway Station', skipTDN: tdnsSeen, maxResults: 5, backwards: true }))
+  tdnsSeen.push(...await fetchTrips(db, ptvAPI, { stationName: 'North Melbourne Railway Station', skipTDN: tdnsSeen, maxResults: 5, backwards: true }))
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
