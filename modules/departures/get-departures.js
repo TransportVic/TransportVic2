@@ -55,7 +55,7 @@ async function fetchScheduledTrips(station, mode, db, departureTime, timeframe=1
     let minutesOffset = i * 1440 // Note - fix as 1440 first and have a think if it needs to be dynamic
     let operationDay = departureDay.clone().add(-i, 'days')
 
-    let departureTimeMinutes = {
+    let allowableTimes = {
       $gte: rawDepartureTimeMinutes - 1 + minutesOffset,
       $lte: rawDepartureTimeMinutes + timeframe + minutesOffset
     }
@@ -68,7 +68,11 @@ async function fetchScheduledTrips(station, mode, db, departureTime, timeframe=1
           stopGTFSID: {
             $in: stopGTFSIDs
           },
-          departureTimeMinutes
+          $or: [{
+            departureTimeMinutes: allowableTimes
+          }, {
+            arrivalTimeMinutes: allowableTimes
+          }]
         }
       },
     }).toArray()
