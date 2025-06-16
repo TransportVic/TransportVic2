@@ -41,6 +41,12 @@ describe('The fetchLiveTrips function', () => {
     let trips = await fetchLiveTrips(alamein, 'metro train', db, new Date('2025-03-28T21:00:00.000Z'))
     expect(trips.length).to.equal(3)
   })
+
+  it('Should return a trip at its last stop', async () => {
+    let trips = await fetchLiveTrips(alamein, 'metro train', db, new Date('2025-06-16T00:26:00.000Z'))
+    expect(trips.length).to.equal(1)
+    expect(trips[0].tripID).to.equal('02-ALM--2-T5-2315')
+  })
 })
 
 describe('The fetchScheduledTrips function', () => {
@@ -67,6 +73,12 @@ describe('The fetchScheduledTrips function', () => {
 
     expect(trips[0].stopTimings[0].scheduledDepartureTime).to.equal('2025-03-29T15:16:00.000Z') // 02:16 NEXT DAY
     expect(trips[1].stopTimings[0].scheduledDepartureTime).to.equal('2025-03-29T16:18:00.000Z') // 03:16 NEXT PT DAY
+  })
+
+  it('Should return a trip at its last stop', async () => {
+    let trips = await fetchScheduledTrips(alamein, 'metro train', db, new Date('2025-06-16T00:26:00.000Z'))
+    expect(trips.length).to.equal(1)
+    expect(trips[0].tripID).to.equal('02-ALM--2-T5-2315')
   })
 })
 
@@ -189,6 +201,12 @@ describe('The getDepartures function', () => {
     expect(departures[3].scheduledDepartureTime.toISOString()).to.equal('2025-03-28T21:48:00.000Z')
     expect(departures[3].estimatedDepartureTime).to.be.null
     expect(departures[3].actualDepartureTime).to.equal(departures[3].scheduledDepartureTime)
+  })
+
+  it('Should not return a trip at its last stop', async () => {
+    let departures = await getDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-06-16T00:26:00.000Z'), timeframe: 120 })
+
+    expect(departures.length).to.equal(0)
   })
 
   it('Should duplicate a departure to show it servicing a stop more than once', async () => {

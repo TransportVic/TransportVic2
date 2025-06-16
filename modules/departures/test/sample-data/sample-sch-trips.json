@@ -549,4 +549,145 @@
   "trueDestination": "Camberwell Railway Station",
   "trueDepartureTime": "08:48",
   "trueDestinationArrivalTime": "08:59"
+},
+{
+  "mode": "metro train",
+  "routeGTFSID": "2-ALM",
+  "operationDays": [
+    "20250616",
+    "20250617",
+    "20250618",
+    "20250619"
+  ],
+  "tripID": "02-ALM--2-T5-2315",
+  "shapeID": "2-ALM-vpt-2.4.H",
+  "block": null,
+  "gtfsDirection": 0,
+  "runID": "2315",
+  "isRailReplacementBus": false,
+  "direction": "Down",
+  "routeName": "Alamein",
+  "routeNumber": null,
+  "stopTimings": [
+    {
+      "stopName": "Camberwell Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "vic:rail:CAM",
+      "arrivalTime": null,
+      "arrivalTimeMinutes": null,
+      "departureTime": "10:17",
+      "departureTimeMinutes": 617,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      },
+      "stopDistance": "0.00",
+      "platform": "3"
+    },
+    {
+      "stopName": "Riversdale Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "vic:rail:RIV",
+      "arrivalTime": "10:20",
+      "arrivalTimeMinutes": 620,
+      "departureTime": "10:20",
+      "departureTimeMinutes": 620,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "1482.72",
+      "platform": "2"
+    },
+    {
+      "stopName": "Willison Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "vic:rail:WSN",
+      "arrivalTime": "10:21",
+      "arrivalTimeMinutes": 621,
+      "departureTime": "10:21",
+      "departureTimeMinutes": 621,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "2005.03",
+      "platform": "2"
+    },
+    {
+      "stopName": "Hartwell Railway Station",
+      "stopNumber": null,
+      "suburb": "Camberwell",
+      "stopGTFSID": "vic:rail:HWL",
+      "arrivalTime": "10:23",
+      "arrivalTimeMinutes": 623,
+      "departureTime": "10:23",
+      "departureTimeMinutes": 623,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "3019.36",
+      "platform": "2"
+    },
+    {
+      "stopName": "Burwood Railway Station",
+      "stopNumber": null,
+      "suburb": "Glen Iris",
+      "stopGTFSID": "vic:rail:BWD",
+      "arrivalTime": "10:24",
+      "arrivalTimeMinutes": 624,
+      "departureTime": "10:24",
+      "departureTimeMinutes": 624,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "3994.07",
+      "platform": "2"
+    },
+    {
+      "stopName": "Ashburton Railway Station",
+      "stopNumber": null,
+      "suburb": "Ashburton",
+      "stopGTFSID": "vic:rail:ASH",
+      "arrivalTime": "10:26",
+      "arrivalTimeMinutes": 626,
+      "departureTime": "10:26",
+      "departureTimeMinutes": 626,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "5211.13",
+      "platform": "1"
+    },
+    {
+      "stopName": "Alamein Railway Station",
+      "stopNumber": null,
+      "suburb": "Ashburton",
+      "stopGTFSID": "vic:rail:ALM",
+      "arrivalTime": "10:28",
+      "arrivalTimeMinutes": 628,
+      "departureTime": null,
+      "departureTimeMinutes": null,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "5927.19",
+      "platform": "1"
+    }
+  ],
+  "origin": "Camberwell Railway Station",
+  "departureTime": "10:17",
+  "destination": "Alamein Railway Station",
+  "destinationArrivalTime": "10:28",
+  "trueOrigin": "Camberwell Railway Station",
+  "trueDestination": "Alamein Railway Station",
+  "trueDepartureTime": "10:17",
+  "trueDestinationArrivalTime": "10:28"
 }]
