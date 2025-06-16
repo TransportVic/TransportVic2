@@ -110,7 +110,7 @@ async function getCombinedDepartures(station, mode, db, { departureTime = null, 
   return departures
 }
 
-async function getDepartures(station, mode, db, { departureTime = null, timeframe = 120 } = {}) {
+async function getDepartures(station, mode, db, { departureTime = null, timeframe = 120, returnArrivals = false } = {}) {
   let stopGTFSIDs = station.bays.map(stop => stop.stopGTFSID)
   departureTime = departureTime ? utils.parseTime(departureTime) : utils.now()
 
@@ -119,7 +119,7 @@ async function getDepartures(station, mode, db, { departureTime = null, timefram
 
   for (let trip of combinedDepartures) {
     let stopIndices = trip.stopTimings
-      .slice(0, -1) // Exclude the last stop
+      .slice(0, returnArrivals ? trip.stopTimings.length : -1) // Exclude the last stop
       .map((stop, i) => ({ m: stopGTFSIDs.includes(stop.stopGTFSID), i }))
       .filter(e => e.m)
       .map(e => e.i)
@@ -151,7 +151,8 @@ async function getDepartures(station, mode, db, { departureTime = null, timefram
         departureDay: trip.operationDays,
         departureDayMoment: utils.parseDate(trip.operationDays),
         allStops: trip.stopTimings.map(stop => stop.stopName),
-        futureStops: trip.stopTimings.slice(currentStopIndex + 1).map(stop => stop.stopName)
+        futureStops: trip.stopTimings.slice(currentStopIndex + 1).map(stop => stop.stopName),
+        isArrival: currentStopIndex === trip.stopTimings.length - 1
       })
     }
   }

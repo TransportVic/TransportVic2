@@ -209,6 +209,13 @@ describe('The getDepartures function', () => {
     expect(departures.length).to.equal(0)
   })
 
+  it('Should return a trip at its last stop if told to', async () => {
+    let departures = await getDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-06-16T00:26:00.000Z'), timeframe: 120, returnArrivals: true })
+
+    expect(departures.length).to.equal(1)
+    expect(departures[0].isArrival).to.be.true
+  })
+
   it('Should duplicate a departure to show it servicing a stop more than once', async () => {
     let departures = await getDepartures(studPark, 'bus', studDB, { departureTime: new Date('2025-03-30T05:05:00.000Z'), timeframe: 120 })
 
