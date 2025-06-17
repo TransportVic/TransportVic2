@@ -322,4 +322,14 @@ describe('The metro departures class', () => {
       'Footscray', 'Middle Footscray', 'West Footscray'
     ])
   })
+
+  it('Should should not mark an arrival as cancelled', async () => {
+    let departures = await getDepartures(alamein, db, null, null, new Date('2025-06-16T00:28:00.000Z'), { returnArrivals: true })
+
+    expect(departures[0].runID).to.equal('2315')
+    expect(departures[0].platform).to.equal('1')
+    expect(departures[0].destination).to.equal('Alamein')
+    expect(departures[0].isArrival).to.be.true
+    expect(departures[0].cancelled).to.be.false
+  })
 })
