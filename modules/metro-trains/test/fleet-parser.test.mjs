@@ -3,7 +3,8 @@ import { getLeadingVehicles, getMotorVehicles, parseConsist, parseConsistFromMot
 
 let fleet = [
   ['1M','1301T','2M'],['3M','1302T','4M'],['5M','1303T','6M'],['7M','1304T','8M'],
-  ['9001','9101','9201','9301','9701','9801','9901'],['9002','9102','9202','9302','9702','9802','9902'],['9003','9103','9203','9303','9703','9803','9903']
+  ['9001','9101','9201','9301','9701','9801','9901'],['9002','9102','9202','9302','9702','9802','9902'],['9003','9103','9203','9303','9703','9803','9903'],
+  ['581M', '1141T', '584M'], ['569M', '1156T', '612M']
 ]
 
 describe('The fleet parser functions', () => {
@@ -60,6 +61,13 @@ describe('The fleet parser functions', () => {
 
     it('Should return null for an empty consist', () => {
       expect(parseConsistFromMotors([], fleet)).to.be.null
+    })
+
+    it('Should not duplicate consists', () => {
+      expect(parseConsistFromMotors(['581M', '584M', '569M', '612M'], fleet)).to.deep.equal([
+        ['581M', '1141T', '584M'],
+        ['569M', '1156T', '612M']
+      ])
     })
   })
 })

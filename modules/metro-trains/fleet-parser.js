@@ -5,7 +5,7 @@ module.exports.parseConsist = function parseConsist(consist, metroConsists) {
 module.exports.parseConsistFromMotors = function parseConsist(motorVehicles, metroConsists) {
   if (!motorVehicles.length) return null
   let leadingVehicles = module.exports.getLeadingVehicles(motorVehicles)
-  return leadingVehicles.map(vehicle => metroConsists.find(consist => consist[0] === vehicle))
+  return leadingVehicles.map(vehicle => metroConsists.find(consist => consist[0] === vehicle)).filter(Boolean)
 }
 
 module.exports.getMotorVehicles = function getMotorVehicles(consist) {
