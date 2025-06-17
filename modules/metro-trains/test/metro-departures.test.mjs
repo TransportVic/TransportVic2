@@ -332,4 +332,30 @@ describe('The metro departures class', () => {
     expect(departures[0].isArrival).to.be.true
     expect(departures[0].cancelled).to.be.false
   })
+
+  it('Should should mark an arrival as cancelled if the trip was cancelled', async () => {
+    let db = new LokiDatabaseConnection()
+    db.connect()
+    let trip = clone(sampleLiveTrips[5])
+    trip.cancelled = true
+    await (await db.createCollection('live timetables')).createDocument(trip)
+
+    let departures = await getDepartures(alamein, db, null, null, new Date('2025-06-16T00:28:00.000Z'), { returnArrivals: true })
+
+    expect(departures[0].runID).to.equal('2315')
+    expect(departures[0].cancelled).to.be.true
+  })
+
+  it('Should should mark an arrival as cancelled if the stop was cancelled', async () => {
+    let db = new LokiDatabaseConnection()
+    db.connect()
+    let trip = clone(sampleLiveTrips[5])
+    trip.stopTimings[trip.stopTimings.length - 1].cancelled = true
+    await (await db.createCollection('live timetables')).createDocument(trip)
+
+    let departures = await getDepartures(alamein, db, null, null, new Date('2025-06-16T00:28:00.000Z'), { returnArrivals: true })
+
+    expect(departures[0].runID).to.equal('2315')
+    expect(departures[0].cancelled).to.be.true
+  })
 })
