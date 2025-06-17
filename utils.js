@@ -306,6 +306,17 @@ module.exports = {
   formatHHMM: time => { // TODO: Rename getHHMM
     return time.format('HH:mm')
   },
+  formatPTHHMM: time => { // TODO: Rename getHHMM
+    let hours = time.get('hours')
+    let hour = time.format('HH')
+    if (hours < 3) {
+      let startOfPTDay = time.clone().startOf('day').add(-1, 'day')
+      hour = time.diff(startOfPTDay, 'hours')
+      return `${hour}:${time.format('mm')}`
+    }
+
+    return time.format('HH:mm')
+  },
   getYYYYMMDD: time => {
     // let cloned = time.clone()
     // if (cloned.get('hours') < 3) // 3am PT day :((((

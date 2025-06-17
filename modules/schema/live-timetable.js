@@ -67,8 +67,10 @@ class TimetableStop {
   set additional(additional) { this.#additional = additional }
 
   get arrivalTime() { return utils.formatHHMM(this.#schDepartureTime) }
+  get ptArrivalTime() { return utils.formatPTHHMM(this.#schDepartureTime) }
   get arrivalTimeMinutes() { return this.#schDepartureTime.diff(this.#operationDay, 'minutes') }
   get departureTime() { return utils.formatHHMM(this.#schDepartureTime) }
+  get ptDepartureTime() { return utils.formatPTHHMM(this.#schDepartureTime) }
   get departureTimeMinutes() { return this.#schDepartureTime.diff(this.#operationDay, 'minutes') }
 
   get allowDropoff() { return this.#allowDropoff }
@@ -257,8 +259,8 @@ module.exports = class LiveTimetable {
   get origin() { return this.#stops[0].stopName }
   get destination() { return this.#stops[this.#stops.length - 1].stopName }
   
-  get departureTime() { return this.#stops[0].departureTime }
-  get destinationArrivalTime() { return this.#stops[this.#stops.length - 1].arrivalTime }
+  get departureTime() { return this.#stops[0].ptDepartureTime }
+  get destinationArrivalTime() { return this.#stops[this.#stops.length - 1].ptArrivalTime }
 
   get formedBy() { return this.#formedBy }
   get forming() { return this.#forming }

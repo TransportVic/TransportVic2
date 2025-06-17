@@ -1,6 +1,7 @@
 import { expect, use } from 'chai'
 import mdd1000 from './sample-data/mdd-1000.json' with { type: 'json' }
 import ccl0735 from './sample-data/ccl-0735.json' with { type: 'json' }
+import pkmC143 from './sample-data/pkm-C143.json' with { type: 'json' }
 import LiveTimetable from '../live-timetable.js'
 import chaiExclude from 'chai-exclude'
 use(chaiExclude)
@@ -104,6 +105,19 @@ describe('The LiveTimetable schema', () => {
     expect(dbObj.stopTimings[0].stopConditions).to.deep.equal({
       pickup: 0, dropoff: 1
     })
+  })
+
+  it('Should use PT times on the trip departure and arrival times', () => {
+    let timetable = LiveTimetable.fromDatabase(pkmC143)
+    expect(timetable.departureTime).to.equal('23:48')
+    expect(timetable.destinationArrivalTime).to.equal('25:00')
+    
+    let dbObj = timetable.toDatabase()
+    expect(dbObj.departureTime).to.equal('23:48')
+    expect(dbObj.destinationArrivalTime).to.equal('25:00')
+    
+    expect(dbObj.stopTimings[0].departureTime).to.equal('23:48')
+    expect(dbObj.stopTimings[dbObj.stopTimings.length - 1].arrivalTime).to.equal('01:00')
   })
 
   it('Should allow creation of a new trip', () => {
