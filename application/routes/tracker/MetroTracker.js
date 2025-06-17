@@ -37,20 +37,11 @@ router.get('/', (req, res) => {
 
 function adjustTrip(trip, date, today, minutesPastMidnightNow) {
   let e = utils.encodeName
-  let {departureTime, destinationArrivalTime} = trip
+  let { departureTime, destinationArrivalTime } = trip
   let departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(departureTime),
       destinationArrivalTimeMinutes = utils.getMinutesPastMidnightFromHHMM(destinationArrivalTime)
 
-  let tripDate = trip.date
-
-  if (departureTimeMinutes < 180) {
-    departureTimeMinutes += 1440
-    tripDate = utils.getYYYYMMDD(utils.parseDate(tripDate).add(1, 'day'))
-  }
-
-  if (destinationArrivalTimeMinutes < departureTimeMinutes) destinationArrivalTimeMinutes += 1440
-
-  trip.url = `/metro/run/${e(trip.origin)}/${trip.departureTime}/${e(trip.destination)}/${trip.destinationArrivalTime}/${tripDate}`
+  trip.url = `/metro/run/${e(trip.origin)}/${trip.departureTime}/${e(trip.destination)}/${trip.destinationArrivalTime}/${trip.date}`
 
   trip.departureTimeMinutes = departureTimeMinutes
   trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
