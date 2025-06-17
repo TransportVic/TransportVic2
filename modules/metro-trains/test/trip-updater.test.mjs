@@ -974,4 +974,36 @@ describe('The trip updater module', () => {
     expect(td0737.stops[5].scheduledDepartureTime.toISOString()).to.equal('2025-06-14T01:25:00.000Z')
     expect(td0737.stops[5].estimatedDepartureTime).to.not.exist
   })
+
+  it('Should not update the trip if the provided scheduled start time does not match', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let routes = await database.createCollection('routes')
+    let stops = await database.createCollection('stops')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(pkmStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "pakenham"
+    })
+
+    await liveTimetables.createDocument(clone(pkmSchTrip))
+    let gtfsrUpdate = clone(gtfsr_EPH)
+    gtfsrUpdate.entity[0].trip_update.trip.start_time = '15:55:00'
+
+    let gtfsrTrips = await getUpcomingTrips(database, () => gtfsrUpdate)
+    let tripData = await updateTrip(database, gtfsrTrips[0])
+    
+    expect(tripData.stops[0].stopName).to.equal('East Pakenham Railway Station')
+    expect(tripData.stops[0].stopGTFSID).to.equal('vic:rail:EPH')
+    expect(tripData.stops[0].departureTime).to.equal('07:43')
+    expect(tripData.stops[0].estimatedDepartureTime).to.not.exist
+  })
 })
