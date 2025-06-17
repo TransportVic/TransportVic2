@@ -63,34 +63,39 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
 
     let futureStops = departure.futureStops.map(stop => stop.slice(0, -16))
     let formingDestination = null, formingRunID = null, futureFormingStops = null
-    let formingTrip
+    let returnedFormingTrip
 
     let isCrossCityTrip = CROSS_CITY_GROUP_EAST.includes(trip.routeName) || CROSS_CITY_GROUP_WEST.includes(trip.routeName)
     let isMetroTunnelTrip = METRO_TUNNEL_GROUP_EAST.includes(trip.routeName) || METRO_TUNNEL_GROUP_WEST.includes(trip.routeName)
     let upTripInCityLoop = (isWithinCityLoop && trip.direction === 'Up')
     let shouldShowForming = upTripInCityLoop || isCrossCityTrip || isMetroTunnelTrip
   
+    let formingTrip = trip.forming ? await liveTimetables.findDocument({
+      mode: 'metro train',
+      operationDays: trip.operationDays,
+      runID: trip.forming
+    }) : null
+
     if (shouldShowForming) {
-      formingTrip = trip.forming ? await liveTimetables.findDocument({
-        mode: 'metro train',
-        operationDays: trip.operationDays,
-        runID: trip.forming
-      }) : null
+      returnedFormingTrip = formingTrip
 
-      if (isCrossCityTrip && formingTrip) shouldShowForming = 
-        (CROSS_CITY_GROUP_EAST.includes(trip.routeName) && CROSS_CITY_GROUP_WEST.includes(formingTrip.routeName))
-        || (CROSS_CITY_GROUP_WEST.includes(trip.routeName) && CROSS_CITY_GROUP_EAST.includes(formingTrip.routeName))
-      else if (isMetroTunnelTrip && formingTrip && !upTripInCityLoop) shouldShowForming =
-        (METRO_TUNNEL_GROUP_EAST.includes(trip.routeName) && METRO_TUNNEL_GROUP_WEST.includes(formingTrip.routeName))
-        || (METRO_TUNNEL_GROUP_WEST.includes(trip.routeName) && METRO_TUNNEL_GROUP_EAST.includes(formingTrip.routeName))
+      if (isCrossCityTrip && returnedFormingTrip) shouldShowForming = 
+        (CROSS_CITY_GROUP_EAST.includes(trip.routeName) && CROSS_CITY_GROUP_WEST.includes(returnedFormingTrip.routeName))
+        || (CROSS_CITY_GROUP_WEST.includes(trip.routeName) && CROSS_CITY_GROUP_EAST.includes(returnedFormingTrip.routeName))
+      else if (isMetroTunnelTrip && returnedFormingTrip && !upTripInCityLoop) shouldShowForming =
+        (METRO_TUNNEL_GROUP_EAST.includes(trip.routeName) && METRO_TUNNEL_GROUP_WEST.includes(returnedFormingTrip.routeName))
+        || (METRO_TUNNEL_GROUP_WEST.includes(trip.routeName) && METRO_TUNNEL_GROUP_EAST.includes(returnedFormingTrip.routeName))
 
-      if (formingTrip && shouldShowForming) {
-        formingDestination = formingTrip.destination.slice(0, -16)
-        formingRunID = formingTrip.runID
+      if (returnedFormingTrip && shouldShowForming) {
+        formingDestination = returnedFormingTrip.destination.slice(0, -16)
+        formingRunID = returnedFormingTrip.runID
         futureFormingStops = futureStops.concat(
-          formingTrip.stopTimings.slice(1).map(stop => stop.stopName.slice(0, -16))
+          returnedFormingTrip.stopTimings.slice(1).map(stop => stop.stopName.slice(0, -16))
         )
-      } else formingTrip = null
+      } else returnedFormingTrip = null
+    } else if (departure.isArrival) {
+      returnedFormingTrip = formingTrip
+      formingRunID = trip.forming
     }
 
     outputDepartures.push({
@@ -111,7 +116,7 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
       allStops: departure.allStops.map(stop => stop.slice(0, -16)),
       futureStops: futureStops,
       cityLoopRunning: [],
-      formingDestination, formingRunID, futureFormingStops, formingTrip
+      formingDestination, formingRunID, futureFormingStops, formingTrip: returnedFormingTrip
     })
   }
 

@@ -333,6 +333,15 @@ describe('The metro departures class', () => {
     expect(departures[0].cancelled).to.be.false
   })
 
+  it('Should still return an arrival\'s forming TDN even if the trip is unavailable', async () => {
+    let departures = await getDepartures(alamein, db, null, null, new Date('2025-06-16T00:28:00.000Z'), { returnArrivals: true })
+
+    expect(departures[0].runID).to.equal('2315')
+    expect(departures[0].isArrival).to.be.true
+    expect(departures[0].formingRunID).to.equal('2316')
+    expect(departures[0].formingTrip).to.not.exist
+  })
+
   it('Should should mark an arrival as cancelled if the trip was cancelled', async () => {
     let db = new LokiDatabaseConnection()
     db.connect()
