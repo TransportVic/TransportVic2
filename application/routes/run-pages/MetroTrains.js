@@ -22,16 +22,7 @@ function tripCloseness(trip, originStop, destinationStop, departureTimeMinutes, 
 }
 
 async function pickBestTrip(data, db) {
-  let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
   let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
-  let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
-  let tripEndTime = utils.parseTime(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm')
-  let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
-
-  if (tripStartMinutes < 180) tripStartMinutes += 1440
-  if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
-  // if (tripStartMinutes >= 1440) tripDay.add(-1, 'day')
-  // if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
 
   let originStop = await db.getCollection('stops').findDocument({
     codedName: data.origin + '-railway-station',
@@ -44,73 +35,28 @@ async function pickBestTrip(data, db) {
 
   if (!originStop || !destinationStop) return null
 
-  let departureTime = tripStartMinutes
-  let destinationArrivalTime = tripEndMinutes
-
-  if (data.destination === 'flinders-street') {
-    destinationArrivalTime = {
-      $gte: tripEndMinutes - 3,
-      $lte: tripEndMinutes + 3
-    }
-  }
-
-  if (data.origin === 'flinders-street') {
-    departureTime = {
-      $gte: tripStartMinutes - 3,
-      $lte: tripStartMinutes + 3
-    }
-  }
-
-  let operationDays = utils.getYYYYMMDD(tripDay)
-
   let gtfsQuery = {
-    $and: [{
-      mode: 'metro train',
-      operationDays
-    }, {
-      stopTimings: {
-        $elemMatch: {
-          stopName: originStop.stopName,
-          departureTimeMinutes: departureTime
-        }
-      }
-    }, {
-      stopTimings: {
-        $elemMatch: {
-          stopName: destinationStop.stopName,
-          arrivalTimeMinutes: destinationArrivalTime
-        }
-      }
-    }]
-  }
-
-  if (originStop.stopName === 'Flinders Street Railway Station') {
-    gtfsQuery.$and[0].direction = 'Down'
+    mode: 'metro train',
+    operationDays: data.operationDays,
+    origin: originStop.stopName,
+    departureTime: data.departureTime,
+    destination: destinationStop.stopName,
+    destinationArrivalTime: data.destinationArrivalTime
   }
 
   // NME, RMD shorts are always loaded live
-  let liveTrips = await db.getCollection('live timetables').findDocuments(gtfsQuery).toArray()
-  let gtfsTrips = await db.getCollection('gtfs timetables').findDocuments(gtfsQuery).toArray()
-
-  let gtfsTrip, liveTrip
-  let tripClosenessBound = trip => tripCloseness(trip, originStop, destinationStop, tripStartMinutes, tripEndMinutes)
-
-  if (liveTrips.length > 1) {
-    liveTrip = liveTrips.sort((a, b) => tripClosenessBound(a) - tripClosenessBound(b))[0]
-  } else liveTrip = liveTrips[0]
-
-  if (gtfsTrips.length > 1) {
-    gtfsTrip = gtfsTrips.sort((a, b) => tripClosenessBound(a) - tripClosenessBound(b))[0]
-  } else gtfsTrip = gtfsTrips[0]
+  let liveTrip = await db.getCollection('live timetables').findDocument(gtfsQuery)
+  let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(gtfsQuery)
 
   let referenceTrip = liveTrip || gtfsTrip
+
   let needsRedirect = referenceTrip ? (referenceTrip.origin !== originStop.stopName
     || referenceTrip.destination !== destinationStop.stopName
     || referenceTrip.departureTime !== data.departureTime
     || referenceTrip.destinationArrivalTime !== data.destinationArrivalTime) : false
 
   if (liveTrip) return { trip: liveTrip, tripStartTime, isLive: true, needsRedirect }
-  else return { trip: gtfsTrip, tripStartTime, isLive: false, needsRedirect }
+  else return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false, needsRedirect } : null
 }
 
 router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {

@@ -18,7 +18,7 @@ async function loadDepartures(req, res) {
 
   let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, station)
 
-  let departures = await getDepartures(station, res.db)
+  let departures = await getDepartures(station, res.db, false, false)
 
   departures = departures.map(departure => {
     departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
