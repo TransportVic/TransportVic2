@@ -76,7 +76,10 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
       runID: trip.forming
     }) : null
 
-    if (shouldShowForming) {
+    if (departure.isArrival) {
+      returnedFormingTrip = formingTrip
+      formingRunID = trip.forming
+    } else if (shouldShowForming) {
       returnedFormingTrip = formingTrip
 
       if (isCrossCityTrip && returnedFormingTrip) shouldShowForming = 
@@ -93,9 +96,6 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
           returnedFormingTrip.stopTimings.slice(1).map(stop => stop.stopName.slice(0, -16))
         )
       } else returnedFormingTrip = null
-    } else if (departure.isArrival) {
-      returnedFormingTrip = formingTrip
-      formingRunID = trip.forming
     }
 
     outputDepartures.push({
