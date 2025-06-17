@@ -32,27 +32,6 @@ if (modules.tracker && modules.tracker['vline-r'])
 if (modules.tracker && modules.tracker.xpt)
   require('../modules/xpt/xpt-updater')
 
-if (modules.tracker && modules.tracker.metro)
-  require('../modules/trackers/metro')
-
-if (modules.tracker && modules.tracker.metroTrips)
-  require('../modules/trackers/metro-trips')
-
-if (modules.tracker && modules.tracker.metroRaceTrains)
-  require('../modules/trackers/metro-race-trains')
-
-if (modules.tracker && modules.tracker.metroNotify)
-  require('../modules/trackers/metro-notify')
-
-if (modules.tracker && modules.tracker.metroShunts)
-  require('../modules/trackers/metro-shunts')
-
-if (modules.preloadCCL)
-  require('../modules/preload-ccl')
-
-if (modules.gtfsr && modules.gtfsr.metro)
-  require('../modules/gtfsr/metro')
-
 let serverStarted = false
 
 let trackerAuth = config.metroLogins.map(login => 'Basic ' + Buffer.from(login).toString('base64'))
