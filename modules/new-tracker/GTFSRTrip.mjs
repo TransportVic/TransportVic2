@@ -12,7 +12,7 @@ export class MetroGTFSRTrip {
 
   constructor(trip) {
     this.#operationDay = trip.start_date
-    this.#startTime = trip.start_time
+    this.#startTime = trip.start_time.slice(0, -3)
     this.#scheduleRelationship = trip.schedule_relationship
     this.#routeID = trip.route_id.slice(-6, -1)
   }

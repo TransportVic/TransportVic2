@@ -20,7 +20,9 @@ export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
       runID: gtfsrTripData.getTDN(),
       routeGTFSID: gtfsrTripData.getRouteID(),
       stops: [],
-      cancelled: gtfsrTripData.getScheduleRelationship() === MetroGTFSRTrip.SR_CANCELLED
+      cancelled: gtfsrTripData.getScheduleRelationship() === MetroGTFSRTrip.SR_CANCELLED,
+      additional: gtfsrTripData.getScheduleRelationship() === MetroGTFSRTrip.SR_ADDED,
+      scheduledStartTime: gtfsrTripData.getStartTime()
     }
 
     for (let stop of trip.trip_update.stop_time_update) {

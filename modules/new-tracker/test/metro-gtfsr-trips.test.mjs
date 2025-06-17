@@ -267,4 +267,15 @@ describe('The GTFSRTrip class', () => {
       schedule_relationship: 0
     }).getRouteID()).to.equal('2-STY')
   })
+
+  it('Should provide the start time', () => {
+    expect(MetroGTFSRTrip.parse({
+      trip_id: '02-STY--52-T5-8514',
+      route_id: 'aus:vic:vic-02-STY:',
+      direction_id: 0,
+      start_time: '15:29:00',
+      start_date: '20250603',
+      schedule_relationship: 0
+    }).getStartTime()).to.equal('15:29')
+  })
 })
