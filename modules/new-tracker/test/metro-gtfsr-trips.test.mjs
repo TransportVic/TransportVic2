@@ -277,5 +277,23 @@ describe('The GTFSRTrip class', () => {
       start_date: '20250603',
       schedule_relationship: 0
     }).getStartTime()).to.equal('15:29')
+
+    expect(MetroGTFSRTrip.parse({
+      trip_id: '02-STY--52-T5-8514',
+      route_id: 'aus:vic:vic-02-STY:',
+      direction_id: 0,
+      start_time: '25:29:00',
+      start_date: '20250603',
+      schedule_relationship: 0
+    }).getStartTime()).to.equal('01:29')
+
+    expect(MetroGTFSRTrip.parse({
+      trip_id: '02-STY--52-T5-8514',
+      route_id: 'aus:vic:vic-02-STY:',
+      direction_id: 0,
+      start_time: '05:29:00',
+      start_date: '20250603',
+      schedule_relationship: 0
+    }).getStartTime()).to.equal('05:29')
   })
 })

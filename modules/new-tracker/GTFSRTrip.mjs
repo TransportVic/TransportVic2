@@ -12,9 +12,12 @@ export class MetroGTFSRTrip {
 
   constructor(trip) {
     this.#operationDay = trip.start_date
-    this.#startTime = trip.start_time.slice(0, -3)
     this.#scheduleRelationship = trip.schedule_relationship
     this.#routeID = trip.route_id.slice(-6, -1)
+
+    let [_, startHour, startMinute] = trip.start_time.match(/^(\d\d):(\d\d)/)
+    let finalStartHour = parseInt(startHour)
+    this.#startTime = `${finalStartHour > 23 ? '0' + (finalStartHour - 24) : startHour}:${startMinute}`
   }
 
   getTDN() {}

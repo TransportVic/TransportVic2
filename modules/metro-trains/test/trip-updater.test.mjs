@@ -1003,4 +1003,46 @@ describe('The trip updater module', () => {
 
     expect(tripData).to.be.null
   })
+
+  it('Should match a scheduled start time past midnight', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let routes = await database.createCollection('routes')
+    let stops = await database.createCollection('stops')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(pkmStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "pakenham"
+    })
+
+    let trip = clone(pkmSchTrip)
+    trip.departureTime = '00:29'
+    trip.stopTimings[0] = {
+      ...trip.stopTimings[0],
+			arrivalTime: "00:29",
+			arrivalTimeMinutes: 1469,
+			departureTime: "00:29",
+			departureTimeMinutes: 1469,
+			estimatedDepartureTime: null,
+			scheduledDepartureTime: "2025-06-16T14:29:00.000Z",
+			actualDepartureTimeMS: 1750084140000,
+    }
+
+    await liveTimetables.createDocument(trip)
+    let gtfsrUpdate = clone(gtfsr_EPH)
+    gtfsrUpdate.entity[0].trip_update.trip.start_time = '24:29:00'
+
+    let gtfsrTrips = await getUpcomingTrips(database, () => gtfsrUpdate)
+    let tripData = await updateTrip(database, gtfsrTrips[0])
+
+    expect(tripData).to.exist
+  })
 })
