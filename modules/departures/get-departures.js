@@ -101,7 +101,7 @@ async function getCombinedDepartures(station, mode, db, { departureTime = null, 
   if (!useLive && liveTrips.length) {
     for (let liveTrip of liveTrips) {
       let matchingScheduled = departures.findIndex(scheduled => {
-        if (typeof liveTrip.tripID !== 'undefined' && liveTrip.runID === scheduled.runID) return true
+        if (typeof liveTrip.runID !== 'undefined' && liveTrip.runID === scheduled.runID) return true
         if (typeof liveTrip.tripID !== 'undefined' && liveTrip.tripID === scheduled.tripID) return true
         if (
           liveTrip.origin === scheduled.origin && liveTrip.destination === scheduled.destination
