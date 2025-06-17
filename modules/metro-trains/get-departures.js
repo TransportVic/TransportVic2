@@ -47,7 +47,7 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
     let updatedDestination = destinationStop.stopName.slice(0, -16)
 
     if (!isWithinCityLoop && updatedDestination === 'Flinders Street' && trip.direction === 'Up' && !!par && !par.cancelled) updatedDestination = 'City Loop'
-    if (destinationStop === currentStop) departure.cancelled = (currentStop.cancelled = true) // Rest of the trip is cancelled so this stop is also cancelled
+    if (!departure.isArrival && destinationStop === currentStop) departure.cancelled = (currentStop.cancelled = true) // Rest of the trip is cancelled so this stop is also cancelled
 
     // If current stop is cancelled but the trip is still running, show the original details
     if (currentStop.cancelled && !trip.cancelled) {
