@@ -1000,10 +1000,7 @@ describe('The trip updater module', () => {
 
     let gtfsrTrips = await getUpcomingTrips(database, () => gtfsrUpdate)
     let tripData = await updateTrip(database, gtfsrTrips[0])
-    
-    expect(tripData.stops[0].stopName).to.equal('East Pakenham Railway Station')
-    expect(tripData.stops[0].stopGTFSID).to.equal('vic:rail:EPH')
-    expect(tripData.stops[0].departureTime).to.equal('07:43')
-    expect(tripData.stops[0].estimatedDepartureTime).to.not.exist
+
+    expect(tripData).to.be.null
   })
 })

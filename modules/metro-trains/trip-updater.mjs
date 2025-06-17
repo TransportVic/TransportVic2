@@ -117,6 +117,9 @@ export async function updateTrip(db, trip, { skipWrite = false, skipStopCancella
 
   timetable.setModificationSource(dataSource)
 
+  let firstStop = timetable.stops.find(stop => !stop.cancelled)
+  if (trip.scheduledStartTime && firstStop.departureTime !== trip.scheduledStartTime) return null
+
   timetable.cancelled = trip.cancelled
   if (trip.cancelled) {
     if (!skipWrite) await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase())
