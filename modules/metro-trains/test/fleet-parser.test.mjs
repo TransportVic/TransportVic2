@@ -16,6 +16,10 @@ describe('The fleet parser functions', () => {
       expect(getLeadingVehicles(getMotorVehicles('1163T-1171T-625M-626M-642M-673M'))).to.have.members(['625M', '642M'])
     })
 
+    it('Should return all motor car numbers if unable to match anything', () => {
+      expect(getLeadingVehicles(getMotorVehicles('581M-1141T-584M-569M-1156T-612M'))).to.have.members(['581M', '584M', '569M', '612M'])
+    })
+
     it('Should take a POTS consist and extact the lower motor cars an HCMT', () => {
       expect(getLeadingVehicles(getMotorVehicles('9002M-9902M'))).to.have.members(['9002'])
     })

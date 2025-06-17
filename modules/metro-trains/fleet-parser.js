@@ -38,6 +38,8 @@ module.exports.getLeadingVehicles = function getLeadingVehicles(motorVehicles) {
   }
 
   let unmatched = mCars.filter(car => !car.matched)
-  if (unmatched.length == 2) leadingVehicles.push(unmatched[0].carriage)
+  if (unmatched.length === 2) leadingVehicles.push(unmatched[0].carriage)
+  else if (unmatched.length === 4) leadingVehicles = motorVehicles
+
   return leadingVehicles
 }
