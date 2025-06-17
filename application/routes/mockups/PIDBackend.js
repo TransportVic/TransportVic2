@@ -215,6 +215,8 @@ async function getStationArrivals(station, db) {
         takingPassengers: false,
         stopTimings: [],
         connections: [],
+        operationDay: shunt.trip.operationDays,
+        formedBy: shunt.runID,
         tdn: shunt.formingRunID,
       }
     })
