@@ -486,6 +486,8 @@ describe('The LiveTimetable schema', () => {
     timetable.consist = ['189M', '1395T', '190M']
     expect(timetable.toTrackerDatabase()).to.deep.equal({
       date: '20250405',
+      routeGTFSID: '2-CCL',
+      routeName: 'City Circle',
       runID: '0735',
       origin: 'Flinders Street',
       departureTime: '10:53',
@@ -518,6 +520,8 @@ describe('The LiveTimetable schema', () => {
 
     expect(timetable.toTrackerDatabase()).to.deep.equal({
       date: '20250405',
+      routeGTFSID: '2-CCL',
+      routeName: 'City Circle',
       runID: '0735',
       origin: 'Flinders Street',
       departureTime: '10:53',

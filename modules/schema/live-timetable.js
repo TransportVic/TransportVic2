@@ -394,6 +394,8 @@ module.exports = class LiveTimetable {
     if (!this.#vehicle) return null
     let returnData = {
       date: this.operationDay,
+      routeGTFSID: this.routeGTFSID,
+      routeName: this.routeName,
       runID: this.#runID,
       origin: this.origin.slice(0, -16),
       destination: this.destination.slice(0, -16),
