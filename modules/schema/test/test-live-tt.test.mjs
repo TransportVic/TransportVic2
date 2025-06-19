@@ -165,6 +165,13 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.destinationArrivalTime).to.equal('04:56')
   })
 
+  it('Should handle some trip stops not having stop conditions', () => {
+    let trip = clone(mdd1000)
+    trip.stopTimings.forEach(stop => delete stop.stopConditions)
+    let timetable = LiveTimetable.fromDatabase(trip)
+    expect(timetable).to.exist
+  })
+
   it('Should allow updating an existing trip', () => {
     let timetable = LiveTimetable.fromDatabase(mdd1000)
 

@@ -330,8 +330,8 @@ module.exports = class LiveTimetable {
           platform: stopData.platform,
           cancelled: stopData.cancelled,
           additional: stopData.additional,
-          allowPickup: stopData.stopConditions.pickup === 0,
-          allowDropoff: stopData.stopConditions.dropoff === 0
+          allowPickup: stopData.stopConditions ? stopData.stopConditions.pickup === 0 : true,
+          allowDropoff: stopData.stopConditions ? stopData.stopConditions.dropoff === 0 : true
         }
       )
 
