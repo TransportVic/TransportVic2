@@ -44,7 +44,13 @@ async function loadOperationalTT(operationDay) {
     }
   }
 
-  let bulkUpdate = Object.values(trips).map(trip => ({
+  let circularTDNs = await liveTimetables.distinct('runID', {
+    mode: 'metro train',
+    operationDays: opDayFormat,
+    circular: { $exists: true }
+  })
+
+  let bulkUpdate = Object.values(trips).filter(trip => !circularTDNs.includes(trip.runID)).map(trip => ({
     replaceOne: {
       filter: { mode: 'metro train', operationDays: trip.operationDays, runID: trip.runID },
       replacement: trip,
