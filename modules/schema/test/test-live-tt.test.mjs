@@ -2,6 +2,7 @@ import { expect, use } from 'chai'
 import mdd1000 from './sample-data/mdd-1000.json' with { type: 'json' }
 import ccl0735 from './sample-data/ccl-0735.json' with { type: 'json' }
 import pkmC143 from './sample-data/pkm-C143.json' with { type: 'json' }
+import cbe4201 from './sample-data/cbe-4201.json' with { type: 'json' }
 import LiveTimetable from '../live-timetable.js'
 import chaiExclude from 'chai-exclude'
 use(chaiExclude)
@@ -544,5 +545,27 @@ describe('The LiveTimetable schema', () => {
       date: '20250405',
       runID: '0735'
     })
+  })
+
+  it('Should maintain extra attributes kept in special trips', () => {
+    let timetable = LiveTimetable.fromDatabase(cbe4201)
+    let dbObj = timetable.toDatabase()
+    expect(dbObj.circular).to.equal("TEST")
+    expect(dbObj.stopTimings[0].stopGTFSID).to.equal('vic:rail:DNG')
+    expect(dbObj.stopTimings[0].track).to.equal('C')
+    expect(dbObj.stopTimings[0].express).to.be.false
+
+    expect(dbObj.stopTimings[1].stopGTFSID).to.equal('vic:rail:LBK')
+    expect(dbObj.stopTimings[1].track).to.be.null
+    expect(dbObj.stopTimings[1].express).to.be.true
+  })
+
+  it('Should not maintain extra attributes not in normal trips', () => {
+    let timetable = LiveTimetable.fromDatabase(mdd1000)
+    let dbObj = timetable.toDatabase()
+    expect(dbObj.circular).to.not.exist
+    expect(dbObj.stopTimings[0].stopGTFSID).to.equal('26517')
+    expect(dbObj.stopTimings[0].track).to.not.exist
+    expect(dbObj.stopTimings[0].express).to.not.exist
   })
 })
