@@ -11,7 +11,7 @@
   "dependencies": {
     "@transportme/database": "^1.0.25",
     "@transportme/load-ptv-gtfs": "^1.3.3",
-    "@transportme/ptv-api": "^1.0.15",
+    "@transportme/ptv-api": "^1.0.20",
     "@turf/turf": "^5.1.6",
     "adm-zip": "^0.5.14",
     "async": "^3.2.3",
@@ -23,7 +23,6 @@
     "express-rate-limit": "^5.5.1",
     "fastest-levenshtein": "^1.0.12",
     "geojson-polyline": "^1.0.3",
-    "line-reader": "^0.4.0",
     "moment": "^2.29.2",
     "moment-timezone": "^0.5.34",
     "mongodb": "^3.7.3",
