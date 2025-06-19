@@ -21,7 +21,10 @@ class TimetableStop {
   #allowPickup = true
   #allowDropoff = true
 
-  constructor(operationDayMoment, stopName, suburb, stopNumber, stopGTFSID, scheduledDepartureTime, estimatedDepartureTime, { platform, cancelled, additional, allowPickup, allowDropoff }) {
+  #track
+  #express
+
+  constructor(operationDayMoment, stopName, suburb, stopNumber, stopGTFSID, scheduledDepartureTime, estimatedDepartureTime, { platform, cancelled, additional, allowPickup, allowDropoff, track, express }) {
     this.#operationDay = operationDayMoment
     this.#stopName = stopName
     this.#suburb = suburb
@@ -35,6 +38,9 @@ class TimetableStop {
     if (additional) this.#additional = additional
     if (typeof allowPickup !== 'undefined') this.#allowPickup = allowPickup
     if (typeof allowDropoff !== 'undefined') this.#allowDropoff = allowDropoff
+
+    if (typeof track !== 'undefined') this.#track = track
+    if (typeof express !== 'undefined') this.#express = express
   }
 
   get stopName() { return this.#stopName }
@@ -45,6 +51,9 @@ class TimetableStop {
   get platform() { return this.#platform }
   get cancelled() { return this.#cancelled }
   get additional() { return this.#additional }
+
+  get track() { return this.#track || null }
+  get express() { return this.#express || false }
 
   get scheduledDepartureTime() { return this.#schDepartureTime.clone() }
   get estimatedDepartureTime() { return this.#estDepartureTime ? this.#estDepartureTime.clone() : null }
@@ -80,7 +89,7 @@ class TimetableStop {
   set allowPickup(pickup) { this.#allowPickup = pickup }
 
   toDatabase() {
-    return {
+    let returnData = {
       stopName: this.#stopName,
       stopNumber: this.#stopNumber,
       suburb: this.#suburb,
@@ -100,6 +109,11 @@ class TimetableStop {
         dropoff: this.allowDropoff ? 0 : 1
       }
     }
+
+    if (typeof this.#track !== 'undefined') returnData.track = this.#track
+    if (typeof this.#express !== 'undefined') returnData.express = this.#express
+
+    return returnData
   }
 
 }
@@ -134,6 +148,7 @@ module.exports = class LiveTimetable {
   #additional = false
 
   #dataSource
+  #circular
 
   constructor(mode, operationDays, routeName, routeNumber, routeGTFSID, tripID, block) {
     this.#mode = mode
@@ -156,6 +171,7 @@ module.exports = class LiveTimetable {
   get block() { return this.#block }
   get direction() { return this.#direction }
   get runID() { return this.#runID }
+  get circular() { return this.#circular }
 
   get vehicle() {
     if (this.#vehicle) {
@@ -253,6 +269,7 @@ module.exports = class LiveTimetable {
     this.#cancelled = cancelled
   }
   set additional(additional) { this.#additional = additional }
+  set circular(circular) { this.#circular = circular }
 
   get stops() { return this.#stops }
 
@@ -312,6 +329,7 @@ module.exports = class LiveTimetable {
     if (timetable.runID) timetableInstance.#runID = timetable.runID
     if (timetable.cancelled) timetableInstance.#cancelled = timetable.cancelled
     if (timetable.additional) timetableInstance.#additional = timetable.additional
+    if (timetable.circular) timetableInstance.#circular = timetable.circular
     if (timetable.vehicle) {
       timetableInstance.#vehicle = timetable.vehicle
       timetableInstance.#vehicleForced = timetable.vehicle.forced || false
@@ -331,7 +349,9 @@ module.exports = class LiveTimetable {
           cancelled: stopData.cancelled,
           additional: stopData.additional,
           allowPickup: stopData.stopConditions ? stopData.stopConditions.pickup === 0 : true,
-          allowDropoff: stopData.stopConditions ? stopData.stopConditions.dropoff === 0 : true
+          allowDropoff: stopData.stopConditions ? stopData.stopConditions.dropoff === 0 : true,
+          track: stopData.track,
+          express: stopData.express
         }
       )
 
@@ -355,7 +375,7 @@ module.exports = class LiveTimetable {
   }
 
   toDatabase() {
-    return {
+    let returnData = {
       mode: this.#mode,
       routeGTFSID: this.#routeGTFSID,
       operationDays: this.operationDay,
@@ -380,6 +400,10 @@ module.exports = class LiveTimetable {
       cancelled: this.#cancelled,
       additional: this.#additional
     }
+
+    if (typeof this.#circular !== 'undefined') returnData.circular = this.#circular
+    
+    return returnData
   }
 
   getTrackerDatabaseKey() {
