@@ -164,4 +164,9 @@ fetch(urls.gtfsFeed, {
     await discordUpdate('[Updater]: Timetables up to date, not updating')
     process.exit(0)
   }
+}).catch(e => {
+  console.error('Failed to update timetables', e)
+  process.exit(1)
 })
+
+setTimeout(() => process.exit(1), 1000 * 60 * 60 * 1.5) // Hard fail after 90 minutes

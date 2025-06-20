@@ -95,8 +95,8 @@ for (let i of selectedModes) {
 
     console.log('Loaded routes for', GTFS_MODES[i])
   } catch (e) {
+    console.log('ERROR: Failed to load stops and routes for', GTFS_MODES[i])
     console.log(e)
-    console.log('Failed to load stops and routes for', GTFS_MODES[i])
   }
 }
 console.log('Stop overrides', nameOverridesCounter)

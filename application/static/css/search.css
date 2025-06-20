@@ -66,10 +66,12 @@
 
 .route .leftContainer {
   background-color: #d7832c;
+  background-color: var(--operator-odd);
 }
 
 .route:nth-child(even) .leftContainer {
   background-color: #c47625;
+  background-color: var(--operator-even);
 }
 
 .leftContainer.miniIcon img {

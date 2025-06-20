@@ -115,10 +115,16 @@ div.departure:nth-child(even) a.departureInfo.reservationsOnly {
   flex-direction: column;
 
   color: #f9f9f9;
+  background-color: var(--operator-odd);
+}
+
+:nth-child(even) > .leftContainer {
+  background-color: var(--operator-even);
 }
 
 .leftContainer:visited {
   color: #f9f9f9;
+  background-color: var(--operator-odd);
 }
 
 .leftContainer span {

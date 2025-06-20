@@ -25,7 +25,9 @@ ptvAPI.getPTVKey(undefined, 12000).then(async key => {
       stopName = stopName.replace(stopNumberParts[0], '')
     }
 
-    stopName = stopNumber + '-' + stopName
+    stopName = stopName.replace(/\/\d+ /, '/')
+
+    stopName = stopName + ' #' + stopNumber
 
     return {
       stopName, stopNumber, stopID: stop.id

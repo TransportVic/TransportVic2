@@ -26,8 +26,6 @@ await runNode('metro/load-extra-data.mjs')
 await runNode('metro/download-metro-timetables.js')
 await runNode('metro/load-metro-timetables.js')
 
-await runNode('tram/load-stops.js')
-await runNode('tram/load-tramtracker-ids.js')
 
 await runNode('bus/load-788-stop-numbers.js')
 
@@ -37,7 +35,9 @@ await runNode('vline/api-integration/load-vnet-station-names.js')
 
 await runNode('load-all-post.mjs')
 
-await runNode('metro/load-metro-directions.js')
+await runNode('tram/load-stops.js')
+await runNode('tram/load-tramtracker-ids.js')
+
 await runNode('extra/load-route-suburbs.js')
 await runNode('extra/load-search-query.js')
 

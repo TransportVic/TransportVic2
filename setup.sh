@@ -5,8 +5,9 @@ LC_ALL=en_US.utf-8" | sudo tee /etc/environment
 
 sudo ln -sf /usr/share/zoneinfo/Australia/Melbourne /etc/localtime
 
-sudo dnf install -y git python3 augeas-libs python-pip
-sudo dnf remove -y httpd postfix
+sudo dnf remove httpd -y
+sudo dnf remove postfix -y
+sudo dnf install atk at-spi2-atk gtk3 libXt
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 source ~/.bashrc
