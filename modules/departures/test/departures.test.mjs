@@ -206,12 +206,45 @@ describe('The getCombinedDepartures function', () => {
       originalNow = utils.now
       utils.now = () => utils.parseTime('2025-03-25T20:45:00.000Z') // current time is 24 march
     })
-    it('test', async () => {
+    it('should replace trips with matching IDs', async () => {
+      const testDB = new LokiDatabaseConnection()
+      testDB.connect()
+      await (await testDB.createCollection('gtfs timetables')).createDocuments(clone(sampleSchTrips))
+      // Only insert 2316
+      await (await testDB.createCollection('live timetables')).createDocuments(clone(sampleLiveTrips).slice(0, 1))
+
       // fetch for 29 march
-      let departures = await getCombinedDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 10 })
-      expect(departures.length).to.equal(1)
-      expect(departures[0].departureTime).to.equal('07:48')
-      expect(departures[0]._live).to.exist
+      let departures = await getCombinedDepartures(alamein, 'metro train', testDB, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 120 })
+      expect(departures.length).to.equal(4)
+
+      let dep0748 = departures.find(dep => dep.departureTime === '07:48')
+      expect(dep0748).to.exist
+      expect(dep0748._live).to.exist
+
+      let dep0808 = departures.find(dep => dep.departureTime === '08:08')
+      expect(dep0808).to.exist
+      expect(dep0808._live).to.not.exist
+    })
+
+    it('should insert new trips with matching IDs', async () => {
+      const testDB = new LokiDatabaseConnection()
+      testDB.connect()
+      // Skip 2316 and insert 2318 onwards
+      await (await testDB.createCollection('gtfs timetables')).createDocuments(clone(sampleSchTrips).slice(1))
+      // Only insert 2316
+      await (await testDB.createCollection('live timetables')).createDocuments(clone(sampleLiveTrips).slice(0, 1))
+
+      // fetch for 29 march
+      let departures = await getCombinedDepartures(alamein, 'metro train', testDB, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 120 })
+      expect(departures.length).to.equal(4)
+
+      let dep0748 = departures.find(dep => dep.departureTime === '07:48')
+      expect(dep0748).to.exist
+      expect(dep0748._live).to.exist
+
+      let dep0808 = departures.find(dep => dep.departureTime === '08:08')
+      expect(dep0808).to.exist
+      expect(dep0808._live).to.not.exist
     })
     after(() => {
       utils.now = originalNow

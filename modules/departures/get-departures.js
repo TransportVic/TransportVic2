@@ -93,8 +93,29 @@ async function getCombinedDepartures(station, mode, db, { departureTime = null, 
   departureTime = departureTime ? utils.parseTime(departureTime) : utils.now()
 
   let departures, useLive = shouldUseLiveDepartures(departureTime)
-  if (useLive) departures = await fetchLiveTrips(station, mode, db, departureTime, timeframe)
+  let liveTrips = await fetchLiveTrips(station, mode, db, departureTime, timeframe)
+
+  if (useLive) departures = liveTrips
   else departures = await fetchScheduledTrips(station, mode, db, departureTime, timeframe)
+
+  if (!useLive && liveTrips.length) {
+    for (let liveTrip of liveTrips) {
+      let matchingScheduled = departures.findIndex(scheduled => {
+        if (typeof liveTrip.tripID !== 'undefined' && liveTrip.runID === scheduled.runID) return true
+        if (typeof liveTrip.tripID !== 'undefined' && liveTrip.tripID === scheduled.tripID) return true
+        if (
+          liveTrip.origin === scheduled.origin && liveTrip.destination === scheduled.destination
+          && liveTrip.departureTime === scheduled.departureTime
+          && liveTrip.destinationArrivalTime === scheduled.destinationArrivalTime
+        ) return true
+      })
+      if (matchingScheduled === -1) { // Extra trip, insert it in
+        departures.push(liveTrip)
+      } else {
+        departures[matchingScheduled] = liveTrip
+      }
+    }
+  }
 
   let departureEndTime = departureTime.clone().add(timeframe, 'minutes')
 
