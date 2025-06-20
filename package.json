@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha modules/**/*.test.mjs"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@transportme/database": "^1.0.10",
-    "@transportme/load-ptv-gtfs": "^1.3.1",
+    "@transportme/database": "^1.0.25",
+    "@transportme/load-ptv-gtfs": "^1.3.3",
+    "@transportme/ptv-api": "^1.0.20",
     "@turf/turf": "^5.1.6",
     "adm-zip": "^0.5.14",
     "async": "^3.2.3",
@@ -22,7 +23,6 @@
     "express-rate-limit": "^5.5.1",
     "fastest-levenshtein": "^1.0.12",
     "geojson-polyline": "^1.0.3",
-    "line-reader": "^0.4.0",
     "moment": "^2.29.2",
     "moment-timezone": "^0.5.34",
     "mongodb": "^3.7.3",
@@ -39,5 +39,11 @@
     "uglify-js": "^3.19.3",
     "url": "^0.11.0",
     "ws": "^7.5.7"
+  },
+  "devDependencies": {
+    "chai": "^5.1.0",
+    "chai-exclude": "^3.0.1",
+    "mocha": "^10.3.0",
+    "nock": "^14.0.0-beta.5"
   }
 }

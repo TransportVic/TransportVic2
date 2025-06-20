@@ -99,14 +99,26 @@ async function getAllDeparturesFromStation(station, db) {
           if (metroPlatform) {
             let rawMetroDepartures = await getMetroDepartures(station, db)
             metroDepartures = await async.map(rawMetroDepartures, async departure => {
-              let destination = departure.destination
-              if (departure.routeName === 'City Circle') {
+              let futureStops = departure.futureStops.slice(0)
+              let allStops = departure.allStops.slice(0)
+              let { destination, routeName } = departure
+              let direction = departure.trip.direction
+
+              if (departure.formingTrip) {
+                destination = departure.formingDestination
+                routeName = departure.formingTrip.routeName
+                futureStops = futureStops.concat(departure.futureFormingStops.slice(1))
+                allStops = allStops.concat(departure.futureFormingStops.slice(1))
+                direction = departure.formingTrip.direction
+              }
+
+              if (routeName === 'City Circle') {
                 if (stationName === 'Flinders Street') destination = 'City Loop'
                 else destination = 'Flinders Street'
               }
 
               let { runID } = departure
-              let today = await getDayOfWeek(departure.originDepartureTime)
+              let today = await getDayOfWeek(departure.departureDayMoment)
               let scheduledTrip = await timetables.findDocument({
                 runID, operationDays: today
               })
@@ -133,16 +145,16 @@ async function getAllDeparturesFromStation(station, db) {
               }
 
               return {
-                operationDay: departure.trip.operationDays,
-                routeName: departure.routeName,
-                origin: departure.trip.trueOrigin.slice(0, -16),
+                operationDay: departure.departureDay,
+                routeName,
+                origin: departure.origin,
                 destination,
                 scheduledDepartureTime: departure.scheduledDepartureTime,
                 estimatedDepartureTime: departure.estimatedDepartureTime,
                 actualDepartureTime: departure.actualDepartureTime,
-                futureStops: [stationName, ...departure.futureStops],
-                allStops: departure.allStops,
-                direction: departure.trip.direction,
+                futureStops: [stationName, ...futureStops],
+                allStops: allStops,
+                direction: direction,
                 isRailReplacementBus: departure.isRailReplacementBus,
                 platform: departure.platform ? departure.platform.replace(/[?A-Z]/g, '') : '',
                 type: 'metro',
@@ -178,68 +190,34 @@ async function getStationArrivals(station, db) {
   if (!station) return []
 
   let arrivals = await utils.getData('pid-arrivals', station.stopName, async () => {
-    let stationName = station.stopName.slice(0, -16)
-    let metroShunts = db.getCollection('metro shunts')
-    let liveTimetables = db.getCollection('live timetables')
+    let allServices = await getMetroDepartures(station, db, false, false, null, { returnArrivals: true })
+    let arrivals = allServices.filter(departure => departure.isArrival)
 
-    let now = utils.now()
-    let startOfDay = now.clone().startOf('day')
+    // No forming trip means its ETY
+    let shunts = arrivals.filter(arrival => !arrival.formingTrip)
 
-    let minutesPastMidnight = utils.getMinutesPastMidnight(now)
-    if (minutesPastMidnight < 180) {
-      now.add(-3.5, 'hours')
-      minutesPastMidnight += 1440
-    }
-
-    let date = utils.getYYYYMMDD(now)
-
-    let shunts = await metroShunts.findDocuments({
-      date,
-      stationName,
-      arrivalTimeMinutes: {
-        $gte: minutesPastMidnight - 60,
-        $lte: minutesPastMidnight + 120
-      }
-    }).toArray()
-
-    return async.map(shunts, async shunt => {
-      let clearTime = 5
-      if (shunt.notifyAlert) clearTime = 2
-
-      let departureTime = startOfDay.clone().add(shunt.arrivalTimeMinutes + clearTime, 'minutes')
-      let liveTimetable = await liveTimetables.findDocument({
-        operationDays: date,
-        mode: 'metro train',
-        runID: shunt.runID
-      })
-
-      let estimatedDepartureTime = null
-      if (liveTimetable) {
-        let lastStop = liveTimetable.stopTimings[liveTimetable.stopTimings.length - 1]
-        if (lastStop.estimatedDepartureTime) {
-          let stopEstimated = utils.parseTime(lastStop.estimatedDepartureTime)
-          let stopScheduled = utils.parseTime(lastStop.scheduledDepartureTime)
-
-          let difference = Math.max(0, stopEstimated.diff(stopScheduled, 'minutes'))
-          estimatedDepartureTime = departureTime.clone().add(difference, 'minutes')
-        }
-      }
+    return shunts.map(shunt => {
+      let scheduledDepartureTime = shunt.scheduledDepartureTime.clone().add(5, 'minutes')
+      let estimatedDepartureTime = shunt.estimatedDepartureTime ? shunt.estimatedDepartureTime.clone().add(5, 'minutes') : null
 
       return {
         routeName: shunt.routeName,
         destination: 'Arrival',
-        scheduledDepartureTime: departureTime,
+        scheduledDepartureTime,
         estimatedDepartureTime,
-        actualDepartureTime: estimatedDepartureTime || departureTime,
+        actualDepartureTime: estimatedDepartureTime || scheduledDepartureTime,
         futureStops: [],
         allStops: [],
-        direction: 'Down',
+        direction: shunt.formingRunID ? (parseInt(shunt.formingRunID[3]) % 2 === 0 ? 'Up' : 'Down') : 'Down',
         isRailReplacementBus: false,
         platform: shunt.platform,
         type: 'metro',
         takingPassengers: false,
         stopTimings: [],
-        connections: []
+        connections: [],
+        operationDay: shunt.trip.operationDays,
+        formedBy: shunt.runID,
+        tdn: shunt.formingRunID,
       }
     })
   }, 1000 * 30)

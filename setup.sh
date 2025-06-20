@@ -37,7 +37,7 @@ sudo chmod a+rw -R /var/log/mongodb
 sudo setcap 'cap_net_bind_service=+ep' "$(readlink -f `command -v node`)"
 
 sudo groupadd certbot
-sudo usermod -a -G certbot ec2-user
+sudo usermod -a -G certbot onboard
 sudo usermod -a -G certbot root
 
 sudo mkdir /etc/letsencrypt /var/log/letsencrypt /var/lib/letsencrypt

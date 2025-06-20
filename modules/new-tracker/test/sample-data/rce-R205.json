@@ -1,0 +1,81 @@
+{
+    "mode": "metro train",
+    "routeName": "Flemington Racecourse",
+    "routeGTFSID": "2-RCE",
+    "routeNumber": null,
+    "routeDetails": null,
+    "runID": "R205",
+    "operationDays": "20240224",
+    "vehicle": null,
+    "stopTimings": [
+        {
+            "stopName": "Southern Cross Railway Station",
+            "stopNumber": null,
+            "suburb": "Melbourne City",
+            "stopGTFSID": "22190",
+            "arrivalTime": "09:49",
+            "arrivalTimeMinutes": 589,
+            "departureTime": "09:49",
+            "departureTimeMinutes": 589,
+            "estimatedDepartureTime": "2024-02-23T23:02:40.000Z",
+            "actualDepartureTimeMS": 1708729360000,
+            "scheduledDepartureTime": "2024-02-23T22:49:00.000Z",
+            "platform": "11",
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 1
+            },
+            "cancelled": false
+        },
+        {
+            "stopName": "North Melbourne Railway Station",
+            "stopNumber": null,
+            "suburb": "West Melbourne",
+            "stopGTFSID": "14325",
+            "arrivalTime": "09:52",
+            "arrivalTimeMinutes": 592,
+            "departureTime": "09:52",
+            "departureTimeMinutes": 592,
+            "estimatedDepartureTime": "2024-02-23T23:07:00.000Z",
+            "actualDepartureTimeMS": 1708729620000,
+            "scheduledDepartureTime": "2024-02-23T22:52:00.000Z",
+            "platform": "2",
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "cancelled": false
+        },
+        {
+            "stopName": "Showgrounds Railway Station",
+            "stopNumber": null,
+            "suburb": "Flemington",
+            "stopGTFSID": "15526",
+            "arrivalTime": "10:01",
+            "arrivalTimeMinutes": 601,
+            "departureTime": "10:01",
+            "departureTimeMinutes": 601,
+            "estimatedDepartureTime": "2024-02-23T23:01:00.000Z",
+            "actualDepartureTimeMS": 1708729260000,
+            "scheduledDepartureTime": "2024-02-23T23:01:00.000Z",
+            "platform": "1",
+            "stopConditions": {
+                "pickup": 1,
+                "dropoff": 0
+            },
+            "cancelled": true
+        }
+    ],
+    "origin": "Southern Cross Railway Station",
+    "departureTime": "09:49",
+    "destination": "Showgrounds Railway Station",
+    "destinationArrivalTime": "10:01",
+    "type": "timings",
+    "gtfsDirection": "0",
+    "direction": "Down",
+    "cancelled": false,
+    "suspensions": null,
+    "isRailReplacementBus": false,
+    "formedBy": "R202",
+    "forming": "R206"
+}

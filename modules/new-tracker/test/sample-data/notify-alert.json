@@ -1,0 +1,250 @@
+{
+    "82": {
+        "extra_services": "There are no scheduled Extra Services at this time",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "alerts": "Good service - trains are running on time"
+    },
+    "84": {
+        "extra_services": "There are no scheduled Extra Services at this time",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "alerts": "Good service - trains are running on time"
+    },
+    "85": {
+        "line_name": "Craigieburn",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "extra_services": "There are no scheduled Extra Services at this time",
+        "alerts": "Good service - trains are running on time"
+    },
+    "86": {
+        "line_name": "Cranbourne",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "extra_services": "There are no scheduled Extra Services at this time",
+        "alerts": "Good service - trains are running on time"
+    },
+    "87": {
+        "alerts": [{
+            "alert_id": "647069",
+            "line_id": "87",
+            "from_date": "1749596940",
+            "to_date": "1749598800",
+            "alert_type": "service",
+            "modified": "1749561044",
+            "additional_travel_time": "",
+            "disruption_due_to": "",
+            "altered_services_text": "<div class='extra'><p class='cancellation-note'>Please check the table below for the next two departures after this cancelled service for your relevant station.</p><table class='cancelled'><tr><td>Flinders Street</td><td class='current'>8:46 AM</td><td >8:52 AM</td><td >8:56 AM</td></tr><tr><td>Southern Cross</td><td class='current'>8:49 AM</td><td >8:55 AM</td><td >8:59 AM</td></tr><tr><td>Flagstaff</td><td class='current'>8:51 AM</td><td >8:57 AM</td><td >9:01 AM</td></tr><tr><td>Melbourne Central</td><td class='current'>8:53 AM</td><td >8:59 AM</td><td >9:03 AM</td></tr><tr><td>Parliament</td><td class='current'>8:55 AM</td><td >9:01 AM</td><td >9:05 AM</td></tr><tr><td>Jolimont</td><td class='current'>8:58 AM</td><td >9:04 AM</td><td >9:08 AM</td></tr><tr><td>West Richmond</td><td class='current'>8:59 AM</td><td >9:05 AM</td><td >9:09 AM</td></tr><tr><td>North Richmond</td><td class='current'>9:01 AM</td><td >9:07 AM</td><td >9:11 AM</td></tr><tr><td>Collingwood</td><td class='current'>9:02 AM</td><td >9:08 AM</td><td >9:12 AM</td></tr><tr><td>Victoria Park</td><td class='current'>9:04 AM</td><td >9:10 AM</td><td >9:14 AM</td></tr><tr><td>Clifton Hill</td><td class='current'>9:08 AM</td><td >9:13 AM</td><td >9:17 AM</td></tr><tr><td>Preston</td><td class='current'>9:14 AM</td><td >9:25 AM</td><td >9:28 AM</td></tr><tr><td>Reservoir</td><td class='current'>9:17 AM</td><td >9:29 AM</td><td >&#8226;</td></tr><tr><td>Thomastown</td><td class='current'>9:24 AM</td><td >9:36 AM</td><td >&#8226;</td></tr><tr><td>Epping</td><td class='current'>9:29 AM</td><td >9:41 AM</td><td >&#8226;</td></tr></table></div>",
+            "alert_text": "<p>The 8:46am Flinders Street to Epping service is currently running up to 10 minutes late.</p>\n",
+            "trip_id": "1653",
+            "direction": "0",
+            "affected_stations": [
+            "Parliament",
+            "Melbourne Central",
+            "Flagstaff",
+            "Southern Cross",
+            "Flinders Street",
+            "Jolimont",
+            "West Richmond",
+            "North Richmond",
+            "Collingwood",
+            "Victoria Park",
+            "Clifton Hill",
+            "Preston",
+            "Reservoir",
+            "Thomastown",
+            "Epping"
+            ]
+        }],
+        "line_name": "Mernda",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "extra_services": "There are no scheduled Extra Services at this time"
+    },
+    "88": {
+        "line_name": "Frankston",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "extra_services": "There are no scheduled Extra Services at this time",
+        "alerts": "Good service - trains are running on time"
+    },
+    "89": {
+        "extra_services": "There are no scheduled Extra Services at this time",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "alerts": "Good service - trains are running on time"
+    },
+    "90": {
+        "alerts": "Good service - trains are running on time",
+        "line_name": "Hurstbridge",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "extra_services": "There are no scheduled Extra Services at this time"
+    },
+    "91": {
+        "extra_services": "There are no scheduled Extra Services at this time",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "alerts": "Good service - trains are running on time"
+    },
+    "92": {
+        "line_name": "Pakenham",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "extra_services": "There are no scheduled Extra Services at this time",
+        "alerts": "Good service - trains are running on time"
+    },
+    "93": {
+        "line_name": "Sandringham",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "extra_services": "There are no scheduled Extra Services at this time",
+        "alerts": "Good service - trains are running on time"
+    },
+    "94": {
+        "line_name": "Stony Point",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "extra_services": "There are no scheduled Extra Services at this time",
+        "alerts": "Good service - trains are running on time"
+    },
+    "95": {
+        "line_name": "Sunbury",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "extra_services": "There are no scheduled Extra Services at this time",
+        "alerts": "Good service - trains are running on time"
+    },
+    "96": {
+        "line_name": "Upfield",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "extra_services": "There are no scheduled Extra Services at this time",
+        "alerts": "Good service - trains are running on time"
+    },
+    "97": {
+        "alerts": "Good service - trains are running on time",
+        "line_name": "Werribee",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "extra_services": "There are no scheduled Extra Services at this time"
+    },
+    "98": {
+        "alerts": "Good service - trains are running on time",
+        "line_name": "Williamstown",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "extra_services": "There are no scheduled Extra Services at this time"
+    },
+    "168307": {
+        "alerts": "Good service - trains are running on time",
+        "line_name": "Flemington",
+        "planned_works": "There are no scheduled Planned Works at this time",
+        "extra_services": "There are no scheduled Extra Services at this time"
+    },
+    "metadata": {
+        "alert_categories": {
+            "service": {
+                "label": "Service Change",
+                "colour": "#D3ECF4",
+                "border_colour": "#bdd7e0"
+            },
+            "minor": {
+                "label": "Minor Delays",
+                "colour": "#E87800",
+                "border_colour": "#ae6619"
+            },
+            "major": {
+                "label": "Major Delays",
+                "colour": "#EF4135",
+                "border_colour": "#b50c00"
+            },
+            "suspended": {
+                "label": "Suspended",
+                "colour": "#3D3D3D",
+                "border_colour": "#000000"
+            },
+            "works": {
+                "label": "Works Alert",
+                "colour": "#FFD500",
+                "border_colour": "#dfba01"
+            },
+            "travel": {
+                "label": "Travel Alert",
+                "colour": "#3199BA",
+                "border_colour": "#3199BA"
+            },
+            "cancellation": {
+                "label": "Cancellation",
+                "colour": "#7e547d",
+                "border_colour": "#7e547d"
+            },
+            "good-service": {
+                "label": "Good Service",
+                "colour": null,
+                "border_colour": null
+            }
+        },
+        "period_values": {
+            "1": "Weekday Peak:(6am-9am, 4pm-7pm)",
+            "2": "Weekday All Day",
+            "3": "Weekend"
+        },
+        "info_url": "https:\/\/www.metrotrains.com.au\/appinfo",
+        "info_url_wp8": "https:\/\/www.metrotrains.com.au\/appinfowp8",
+        "empty_alert_strings": {
+            "good_service": "Good service - trains are running on time",
+            "extra_services": "There are no scheduled Extra Services at this time",
+            "planned_works": "There are no scheduled Planned Works at this time"
+        },
+        "all_lines_tag": "all_lines",
+        "alert_neutral_colour": "#dddddd",
+        "alert_neutral_border_colour": "#c5c5c5",
+        "morning_times_description": "This is a description of morning times",
+        "active_timetable_num": "20233",
+        "max_timetable_num": "20233",
+        "public_holidays": [
+            {
+                "date": "20230407",
+                "timetable_day": "2"
+            },
+            {
+                "date": "20230410",
+                "timetable_day": "1"
+            },
+            {
+                "date": "20230425",
+                "timetable_day": "1"
+            },
+            {
+                "date": "20230612",
+                "timetable_day": "1"
+            },
+            {
+                "date": "20230929",
+                "timetable_day": "1"
+            },
+            {
+                "date": "20231107",
+                "timetable_day": "1"
+            },
+            {
+                "date": "20231225",
+                "timetable_day": "2"
+            },
+            {
+                "date": "20231226",
+                "timetable_day": "1"
+            },
+            {
+                "date": "20240329",
+                "timetable_day": "2"
+            },
+            {
+                "date": "20240401",
+                "timetable_day": "1"
+            }
+        ]
+    },
+    "disruptions": [],
+    "lift_escalator_outages": [
+        {
+            "station": "Southern Cross",
+            "outages": [
+                {
+                    "type": "lift",
+                    "name": "Southern Cross Platforms 13\/14",
+                    "title": "No lift access between Bourke Street concourse and platforms 13\/14",
+                    "description": "<p>There is currently no lift access between Bourke Street concourse and Platforms 13\/14.<\/p>\n<p>Lift access is still available between the Collins Street concourse and Platforms 13\/14.<\/p>\n<p>Passengers requiring additional assistance can contact Travellers Aid at Southern Cross station on 9670 2072 between 6:30am and 9:30pm, 7 days a week.<\/p>\n",
+                    "start_date_time": "02\/02\/2025 00:00",
+                    "end_date_time": ""
+                }
+            ]
+        }
+    ]
+}

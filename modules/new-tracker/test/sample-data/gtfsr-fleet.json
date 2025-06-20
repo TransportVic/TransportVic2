@@ -1,0 +1,40 @@
+{
+  "header": {
+    "gtfs_realtime_version": "2.0",
+    "incrementality": 0,
+    "timestamp": 1749891537
+  },
+  "entity": [{
+    "id": "02-LIL--2-T2-3312",
+    "is_deleted": false,
+    "trip_update": null,
+    "vehicle": {
+      "trip": {
+        "trip_id": "02-LIL--2-T2-3312",
+        "route_id": "aus:vic:vic-02-LIL:",
+        "direction_id": 0,
+        "start_time": "18:57:00",
+        "start_date": "20250614",
+        "schedule_relationship": 0
+      },
+      "vehicle": {
+        "id": "107M-108M-1354T-1424T-247M-248M",
+        "label": "",
+        "license_plate": ""
+      },
+      "position": {
+        "latitude": -37.765037536621094,
+        "longitude": 145.33717346191406,
+        "bearing": 210.27496337890625,
+        "odometer": 0,
+        "speed": 0
+      },
+      "current_stop_sequence": 0,
+      "stop_id": "",
+      "current_status": 2,
+      "timestamp": 1749891537,
+      "congestion_level": 0,
+      "occupancy_status": 0
+    }
+  }]
+}

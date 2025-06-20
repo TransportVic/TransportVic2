@@ -1,0 +1,544 @@
+{
+    "mode": "metro train",
+    "routeGTFSID": "2-LIL",
+    "operationDays": "20250610",
+    "tripID": "02-LIL--53-T5-3826",
+    "shapeID": "2-LIL-vpt-53.110.R",
+    "block": null,
+    "gtfsDirection": 1,
+    "runID": "3826",
+    "isRailReplacementBus": false,
+    "direction": "Up",
+    "routeName": "Lilydale",
+    "routeNumber": null,
+    "stopTimings": [
+        {
+            "stopName": "Lilydale Railway Station",
+            "stopNumber": null,
+            "suburb": "Lilydale",
+            "stopGTFSID": "vic:rail:LIL",
+            "arrivalTime": null,
+            "arrivalTimeMinutes": null,
+            "departureTime": "07:50",
+            "departureTimeMinutes": 470,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 1
+            },
+            "stopDistance": "0.00",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T21:50:00.000Z",
+            "actualDepartureTimeMS": 1749505800000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Mooroolbark Railway Station",
+            "stopNumber": null,
+            "suburb": "Mooroolbark",
+            "stopGTFSID": "vic:rail:MLK",
+            "arrivalTime": "07:55",
+            "arrivalTimeMinutes": 475,
+            "departureTime": "07:55",
+            "departureTimeMinutes": 475,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "4645.67",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T21:55:00.000Z",
+            "actualDepartureTimeMS": 1749506100000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Croydon Railway Station",
+            "stopNumber": null,
+            "suburb": "Croydon",
+            "stopGTFSID": "vic:rail:CDN",
+            "arrivalTime": "07:59",
+            "arrivalTimeMinutes": 479,
+            "departureTime": "07:59",
+            "departureTimeMinutes": 479,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "8056.17",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T21:59:00.000Z",
+            "actualDepartureTimeMS": 1749506340000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Ringwood East Railway Station",
+            "stopNumber": null,
+            "suburb": "Ringwood East",
+            "stopGTFSID": "vic:rail:RWE",
+            "arrivalTime": "08:03",
+            "arrivalTimeMinutes": 483,
+            "departureTime": "08:03",
+            "departureTimeMinutes": 483,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "11350.21",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T22:03:00.000Z",
+            "actualDepartureTimeMS": 1749506580000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Ringwood Railway Station",
+            "stopNumber": null,
+            "suburb": "Ringwood",
+            "stopGTFSID": "vic:rail:RWD",
+            "arrivalTime": "08:07",
+            "arrivalTimeMinutes": 487,
+            "departureTime": "08:07",
+            "departureTimeMinutes": 487,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "13372.92",
+            "platform": "2",
+            "scheduledDepartureTime": "2025-06-09T22:07:00.000Z",
+            "actualDepartureTimeMS": 1749506820000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Heatherdale Railway Station",
+            "stopNumber": null,
+            "suburb": "Ringwood",
+            "stopGTFSID": "vic:rail:HTD",
+            "arrivalTime": "08:09",
+            "arrivalTimeMinutes": 489,
+            "departureTime": "08:09",
+            "departureTimeMinutes": 489,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "14706.52",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T22:09:00.000Z",
+            "actualDepartureTimeMS": 1749506940000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Mitcham Railway Station",
+            "stopNumber": null,
+            "suburb": "Mitcham",
+            "stopGTFSID": "vic:rail:MCH",
+            "arrivalTime": "08:11",
+            "arrivalTimeMinutes": 491,
+            "departureTime": "08:11",
+            "departureTimeMinutes": 491,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "16636.90",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T22:11:00.000Z",
+            "actualDepartureTimeMS": 1749507060000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Nunawading Railway Station",
+            "stopNumber": null,
+            "suburb": "Nunawading",
+            "stopGTFSID": "vic:rail:NWG",
+            "arrivalTime": "08:14",
+            "arrivalTimeMinutes": 494,
+            "departureTime": "08:14",
+            "departureTimeMinutes": 494,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "18302.76",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T22:14:00.000Z",
+            "actualDepartureTimeMS": 1749507240000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Blackburn Railway Station",
+            "stopNumber": null,
+            "suburb": "Blackburn",
+            "stopGTFSID": "vic:rail:BBN",
+            "arrivalTime": "08:17",
+            "arrivalTimeMinutes": 497,
+            "departureTime": "08:17",
+            "departureTimeMinutes": 497,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "20437.30",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T22:17:00.000Z",
+            "actualDepartureTimeMS": 1749507420000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Laburnum Railway Station",
+            "stopNumber": null,
+            "suburb": "Blackburn",
+            "stopGTFSID": "vic:rail:LAB",
+            "arrivalTime": "08:19",
+            "arrivalTimeMinutes": 499,
+            "departureTime": "08:19",
+            "departureTimeMinutes": 499,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "21272.72",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T22:19:00.000Z",
+            "actualDepartureTimeMS": 1749507540000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Box Hill Railway Station",
+            "stopNumber": null,
+            "suburb": "Box Hill",
+            "stopGTFSID": "vic:rail:BOX",
+            "arrivalTime": "08:22",
+            "arrivalTimeMinutes": 502,
+            "departureTime": "08:22",
+            "departureTimeMinutes": 502,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "22993.09",
+            "platform": "2",
+            "scheduledDepartureTime": "2025-06-09T22:22:00.000Z",
+            "actualDepartureTimeMS": 1749507720000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Union Railway Station",
+            "stopNumber": null,
+            "suburb": "Mont Albert",
+            "stopGTFSID": "vic:rail:UNN",
+            "arrivalTime": "08:25",
+            "arrivalTimeMinutes": 505,
+            "departureTime": "08:25",
+            "departureTimeMinutes": 505,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "24962.18",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T22:25:00.000Z",
+            "actualDepartureTimeMS": 1749507900000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Chatham Railway Station",
+            "stopNumber": null,
+            "suburb": "Surrey Hills",
+            "stopGTFSID": "vic:rail:CHM",
+            "arrivalTime": "08:27",
+            "arrivalTimeMinutes": 507,
+            "departureTime": "08:27",
+            "departureTimeMinutes": 507,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "29397.93",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T22:27:00.000Z",
+            "actualDepartureTimeMS": 1749508020000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Canterbury Railway Station",
+            "stopNumber": null,
+            "suburb": "Canterbury",
+            "stopGTFSID": "vic:rail:CBY",
+            "arrivalTime": "08:29",
+            "arrivalTimeMinutes": 509,
+            "departureTime": "08:29",
+            "departureTimeMinutes": 509,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "30117.60",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T22:29:00.000Z",
+            "actualDepartureTimeMS": 1749508140000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "East Camberwell Railway Station",
+            "stopNumber": null,
+            "suburb": "Camberwell",
+            "stopGTFSID": "vic:rail:ECM",
+            "arrivalTime": "08:31",
+            "arrivalTimeMinutes": 511,
+            "departureTime": "08:31",
+            "departureTimeMinutes": 511,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "31258.48",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T22:31:00.000Z",
+            "actualDepartureTimeMS": 1749508260000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Camberwell Railway Station",
+            "stopNumber": null,
+            "suburb": "Camberwell",
+            "stopGTFSID": "vic:rail:CAM",
+            "arrivalTime": "08:33",
+            "arrivalTimeMinutes": 513,
+            "departureTime": "08:33",
+            "departureTimeMinutes": 513,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "32137.34",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T22:33:00.000Z",
+            "actualDepartureTimeMS": 1749508380000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Auburn Railway Station",
+            "stopNumber": null,
+            "suburb": "Hawthorn East",
+            "stopGTFSID": "vic:rail:AUB",
+            "arrivalTime": "08:35",
+            "arrivalTimeMinutes": 515,
+            "departureTime": "08:35",
+            "departureTimeMinutes": 515,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "33355.61",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T22:35:00.000Z",
+            "actualDepartureTimeMS": 1749508500000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Glenferrie Railway Station",
+            "stopNumber": null,
+            "suburb": "Hawthorn",
+            "stopGTFSID": "vic:rail:GFE",
+            "arrivalTime": "08:37",
+            "arrivalTimeMinutes": 517,
+            "departureTime": "08:37",
+            "departureTimeMinutes": 517,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "34198.66",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T22:37:00.000Z",
+            "actualDepartureTimeMS": 1749508620000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Hawthorn Railway Station",
+            "stopNumber": null,
+            "suburb": "Hawthorn",
+            "stopGTFSID": "vic:rail:HAW",
+            "arrivalTime": "08:39",
+            "arrivalTimeMinutes": 519,
+            "departureTime": "08:39",
+            "departureTimeMinutes": 519,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "35443.84",
+            "platform": "1",
+            "scheduledDepartureTime": "2025-06-09T22:39:00.000Z",
+            "actualDepartureTimeMS": 1749508740000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Burnley Railway Station",
+            "stopNumber": null,
+            "suburb": "Burnley",
+            "stopGTFSID": "vic:rail:BLY",
+            "arrivalTime": "08:41",
+            "arrivalTimeMinutes": 521,
+            "departureTime": "08:41",
+            "departureTimeMinutes": 521,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "37001.76",
+            "platform": "2",
+            "scheduledDepartureTime": "2025-06-09T22:41:00.000Z",
+            "actualDepartureTimeMS": 1749508860000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Richmond Railway Station",
+            "stopNumber": null,
+            "suburb": "Richmond",
+            "stopGTFSID": "vic:rail:RMD",
+            "arrivalTime": "08:44",
+            "arrivalTimeMinutes": 524,
+            "departureTime": "08:44",
+            "departureTimeMinutes": 524,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "38713.66",
+            "platform": "8",
+            "scheduledDepartureTime": "2025-06-09T22:44:00.000Z",
+            "actualDepartureTimeMS": 1749509040000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Parliament Railway Station",
+            "stopNumber": null,
+            "suburb": "East Melbourne",
+            "stopGTFSID": "vic:rail:PAR",
+            "arrivalTime": "08:47",
+            "arrivalTimeMinutes": 527,
+            "departureTime": "08:47",
+            "departureTimeMinutes": 527,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "40832.88",
+            "platform": "4",
+            "scheduledDepartureTime": "2025-06-09T22:47:00.000Z",
+            "actualDepartureTimeMS": 1749509220000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Melbourne Central Railway Station",
+            "stopNumber": null,
+            "suburb": "Melbourne",
+            "stopGTFSID": "vic:rail:MCE",
+            "arrivalTime": "08:49",
+            "arrivalTimeMinutes": 529,
+            "departureTime": "08:49",
+            "departureTimeMinutes": 529,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "41966.85",
+            "platform": "4",
+            "scheduledDepartureTime": "2025-06-09T22:49:00.000Z",
+            "actualDepartureTimeMS": 1749509340000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Flagstaff Railway Station",
+            "stopNumber": null,
+            "suburb": "West Melbourne",
+            "stopGTFSID": "vic:rail:FGS",
+            "arrivalTime": "08:51",
+            "arrivalTimeMinutes": 531,
+            "departureTime": "08:51",
+            "departureTimeMinutes": 531,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "42573.54",
+            "platform": "4",
+            "scheduledDepartureTime": "2025-06-09T22:51:00.000Z",
+            "actualDepartureTimeMS": 1749509460000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Southern Cross Railway Station",
+            "stopNumber": null,
+            "suburb": "Docklands",
+            "stopGTFSID": "vic:rail:SSS",
+            "arrivalTime": "08:53",
+            "arrivalTimeMinutes": 533,
+            "departureTime": "08:53",
+            "departureTimeMinutes": 533,
+            "stopConditions": {
+                "pickup": 0,
+                "dropoff": 0
+            },
+            "stopDistance": "43707.33",
+            "platform": "10",
+            "scheduledDepartureTime": "2025-06-09T22:53:00.000Z",
+            "actualDepartureTimeMS": 1749509580000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        },
+        {
+            "stopName": "Flinders Street Railway Station",
+            "stopNumber": null,
+            "suburb": "Melbourne",
+            "stopGTFSID": "vic:rail:FSS",
+            "arrivalTime": "08:58",
+            "arrivalTimeMinutes": 538,
+            "departureTime": null,
+            "departureTimeMinutes": null,
+            "stopConditions": {
+                "pickup": 1,
+                "dropoff": 0
+            },
+            "stopDistance": "45144.79",
+            "platform": "2",
+            "scheduledDepartureTime": "2025-06-09T22:58:00.000Z",
+            "actualDepartureTimeMS": 1749509880000,
+            "estimatedDepartureTime": null,
+            "cancelled": false
+        }
+    ],
+    "origin": "Lilydale Railway Station",
+    "departureTime": "07:50",
+    "destination": "Flinders Street Railway Station",
+    "destinationArrivalTime": "08:58",
+    "trueOrigin": "Lilydale Railway Station",
+    "trueDestination": "Flinders Street Railway Station",
+    "trueDepartureTime": "07:50",
+    "trueDestinationArrivalTime": "08:58"
+}

@@ -1,0 +1,250 @@
+[{
+  "mode": "metro train",
+  "routeGTFSID": "2-PKM",
+  "operationDays": "20250611",
+  "tripID": "02-PKM--53-T5-C000",
+  "shapeID": "2-PKM-vpt-53.8.R",
+  "block": "9278",
+  "gtfsDirection": 1,
+  "runID": "C000",
+  "isRailReplacementBus": false,
+  "direction": "Up",
+  "routeName": "Pakenham",
+  "routeNumber": null,
+  "stopTimings": [
+    {
+      "stopName": "East Pakenham Railway Station",
+      "stopNumber": null,
+      "suburb": "Pakenham",
+      "stopGTFSID": "vic:rail:EPH",
+      "arrivalTime": null,
+      "arrivalTimeMinutes": null,
+      "departureTime": "04:05",
+      "departureTimeMinutes": 245,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      },
+      "stopDistance": "0.00",
+      "platform": "1",
+      "scheduledDepartureTime": "2025-06-10T18:05:00.000Z",
+      "actualDepartureTimeMS": 1749578700000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Richmond Railway Station",
+      "stopNumber": null,
+      "suburb": "Richmond",
+      "stopGTFSID": "vic:rail:RMD",
+      "arrivalTime": "05:14",
+      "arrivalTimeMinutes": 314,
+      "departureTime": "05:14",
+      "departureTimeMinutes": 314,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "59058.26",
+      "platform": "5",
+      "scheduledDepartureTime": "2025-06-10T19:14:00.000Z",
+      "actualDepartureTimeMS": 1749582840000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Parliament Railway Station",
+      "stopNumber": null,
+      "suburb": "East Melbourne",
+      "stopGTFSID": "vic:rail:PAR",
+      "arrivalTime": "05:17",
+      "arrivalTimeMinutes": 317,
+      "departureTime": "05:17",
+      "departureTimeMinutes": 317,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "61181.38",
+      "platform": "2",
+      "scheduledDepartureTime": "2025-06-10T19:17:00.000Z",
+      "actualDepartureTimeMS": 1749583020000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Melbourne Central Railway Station",
+      "stopNumber": null,
+      "suburb": "Melbourne",
+      "stopGTFSID": "vic:rail:MCE",
+      "arrivalTime": "05:19",
+      "arrivalTimeMinutes": 319,
+      "departureTime": "05:19",
+      "departureTimeMinutes": 319,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "62314.74",
+      "platform": "2",
+      "scheduledDepartureTime": "2025-06-10T19:19:00.000Z",
+      "actualDepartureTimeMS": 1749583140000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Flagstaff Railway Station",
+      "stopNumber": null,
+      "suburb": "West Melbourne",
+      "stopGTFSID": "vic:rail:FGS",
+      "arrivalTime": "05:21",
+      "arrivalTimeMinutes": 321,
+      "departureTime": "05:21",
+      "departureTimeMinutes": 321,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "62926.96",
+      "platform": "2",
+      "scheduledDepartureTime": "2025-06-10T19:21:00.000Z",
+      "actualDepartureTimeMS": 1749583260000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Southern Cross Railway Station",
+      "stopNumber": null,
+      "suburb": "Docklands",
+      "stopGTFSID": "vic:rail:SSS",
+      "arrivalTime": "05:23",
+      "arrivalTimeMinutes": 323,
+      "departureTime": "05:23",
+      "departureTimeMinutes": 323,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "64076.82",
+      "platform": "12",
+      "scheduledDepartureTime": "2025-06-10T19:23:00.000Z",
+      "actualDepartureTimeMS": 1749583380000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Flinders Street Railway Station",
+      "stopNumber": null,
+      "suburb": "Melbourne",
+      "stopGTFSID": "vic:rail:FSS",
+      "arrivalTime": "05:27",
+      "arrivalTimeMinutes": 327,
+      "departureTime": null,
+      "departureTimeMinutes": null,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "65597.59",
+      "platform": "7",
+      "scheduledDepartureTime": "2025-06-10T19:27:00.000Z",
+      "actualDepartureTimeMS": 1749583620000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    }
+  ],
+  "origin": "East Pakenham Railway Station",
+  "departureTime": "04:05",
+  "destination": "Flinders Street Railway Station",
+  "destinationArrivalTime": "05:27",
+  "trueOrigin": "East Pakenham Railway Station",
+  "trueDestination": "Flinders Street Railway Station",
+  "trueDepartureTime": "04:05",
+  "trueDestinationArrivalTime": "05:27",
+  "forming": "C005"
+},
+{
+  "mode": "metro train",
+  "routeGTFSID": "2-PKM",
+  "operationDays": "20250611",
+  "tripID": "02-PKM--53-T5-C005",
+  "shapeID": "2-PKM-vpt-53.9.H",
+  "block": "9278",
+  "gtfsDirection": 0,
+  "runID": "C005",
+  "isRailReplacementBus": false,
+  "direction": "Down",
+  "routeName": "Pakenham",
+  "routeNumber": null,
+  "stopTimings": [
+    {
+      "stopName": "Flinders Street Railway Station",
+      "stopNumber": null,
+      "suburb": "Melbourne",
+      "stopGTFSID": "vic:rail:FSS",
+      "arrivalTime": null,
+      "arrivalTimeMinutes": null,
+      "departureTime": "05:36",
+      "departureTimeMinutes": 336,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      },
+      "stopDistance": "0.00",
+      "platform": "7",
+      "scheduledDepartureTime": "2025-06-10T19:36:00.000Z",
+      "actualDepartureTimeMS": 1749584160000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Richmond Railway Station",
+      "stopNumber": null,
+      "suburb": "Richmond",
+      "stopGTFSID": "vic:rail:RMD",
+      "arrivalTime": "05:39",
+      "arrivalTimeMinutes": 339,
+      "departureTime": "05:39",
+      "departureTimeMinutes": 339,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "2223.93",
+      "platform": "6",
+      "scheduledDepartureTime": "2025-06-10T19:39:00.000Z",
+      "actualDepartureTimeMS": 1749584340000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "East Pakenham Railway Station",
+      "stopNumber": null,
+      "suburb": "Pakenham",
+      "stopGTFSID": "vic:rail:EPH",
+      "arrivalTime": "06:49",
+      "arrivalTimeMinutes": 409,
+      "departureTime": null,
+      "departureTimeMinutes": null,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "58552.30",
+      "platform": "2",
+      "scheduledDepartureTime": "2025-06-10T20:49:00.000Z",
+      "actualDepartureTimeMS": 1749588540000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    }
+  ],
+  "origin": "Flinders Street Railway Station",
+  "departureTime": "05:36",
+  "destination": "East Pakenham Railway Station",
+  "destinationArrivalTime": "06:49",
+  "trueOrigin": "Flinders Street Railway Station",
+  "trueDestination": "East Pakenham Railway Station",
+  "trueDepartureTime": "05:36",
+  "trueDestinationArrivalTime": "06:49",
+  "formedBy": "C000"
+}]

@@ -5,7 +5,7 @@ const cheerio = require('cheerio')
 const DatabaseConnection = require('../../../database/DatabaseConnection')
 const config = require('../../../config')
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
 let stops = null
 
 let data = fs.readFileSync(path.join(__dirname, 'all-vline-stations.xml')).toString().replace(/a:/g, '')

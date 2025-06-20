@@ -3,7 +3,7 @@ const config = require('../../config')
 const utils = require('../../utils')
 const async = require('async')
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
 
 let start = new Date()
 

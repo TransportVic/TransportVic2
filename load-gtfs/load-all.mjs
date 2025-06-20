@@ -30,7 +30,7 @@ await runNode('metro/load-metro-timetables.js')
 await runNode('bus/load-788-stop-numbers.js')
 
 await runNode('vline/api-integration/load-vnet-station-names.js')
-await runNode('vline/timetables/download-vline-timetables.js')
+// await runNode('vline/timetables/download-vline-timetables.js')
 // await runNode('vline/timetables/load-vline-timetables.js')
 
 await runNode('load-all-post.mjs')
@@ -43,3 +43,5 @@ await runNode('extra/load-search-query.js')
 
 await runNode('../additional-data/bus-data/geospatial/generate-bus-groupings.js')
 await runNode('bus/load-regional-bus-operators.js')
+
+await runNode('move-database.mjs')

@@ -1,0 +1,334 @@
+[
+  {
+    "directionName" : "Pakenham",
+    "gtfsDirection" : 0,
+    "stops" : [
+      {
+        "stopName" : "Flinders Street Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Melbourne",
+        "stopGTFSID" : "vic:rail:FSS"
+      },
+      {
+        "stopName" : "Richmond Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Richmond",
+        "stopGTFSID" : "vic:rail:RMD"
+      },
+      {
+        "stopName" : "South Yarra Railway Station",
+        "stopNumber" : null,
+        "suburb" : "South Yarra",
+        "stopGTFSID" : "vic:rail:SYR"
+      },
+      {
+        "stopName" : "Malvern Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Malvern",
+        "stopGTFSID" : "vic:rail:MAL"
+      },
+      {
+        "stopName" : "Caulfield Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Caulfield East",
+        "stopGTFSID" : "vic:rail:CFD"
+      },
+      {
+        "stopName" : "Carnegie Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Carnegie",
+        "stopGTFSID" : "vic:rail:CNE"
+      },
+      {
+        "stopName" : "Murrumbeena Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Murrumbeena",
+        "stopGTFSID" : "vic:rail:MRB"
+      },
+      {
+        "stopName" : "Hughesdale Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Murrumbeena",
+        "stopGTFSID" : "vic:rail:HUG"
+      },
+      {
+        "stopName" : "Oakleigh Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Oakleigh",
+        "stopGTFSID" : "vic:rail:OAK"
+      },
+      {
+        "stopName" : "Huntingdale Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Oakleigh",
+        "stopGTFSID" : "vic:rail:HUN"
+      },
+      {
+        "stopName" : "Clayton Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Clayton",
+        "stopGTFSID" : "vic:rail:CLA"
+      },
+      {
+        "stopName" : "Westall Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Clayton South",
+        "stopGTFSID" : "vic:rail:WTL"
+      },
+      {
+        "stopName" : "Springvale Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Springvale",
+        "stopGTFSID" : "vic:rail:SPG"
+      },
+      {
+        "stopName" : "Sandown Park Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Springvale",
+        "stopGTFSID" : "vic:rail:SNP"
+      },
+      {
+        "stopName" : "Noble Park Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Noble Park",
+        "stopGTFSID" : "vic:rail:NPK"
+      },
+      {
+        "stopName" : "Yarraman Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Noble Park",
+        "stopGTFSID" : "vic:rail:YMN"
+      },
+      {
+        "stopName" : "Dandenong Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Dandenong",
+        "stopGTFSID" : "vic:rail:DNG"
+      },
+      {
+        "stopName" : "Hallam Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Hallam",
+        "stopGTFSID" : "vic:rail:HLM"
+      },
+      {
+        "stopName" : "Narre Warren Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Narre Warren",
+        "stopGTFSID" : "vic:rail:NWA"
+      },
+      {
+        "stopName" : "Berwick Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Berwick",
+        "stopGTFSID" : "vic:rail:BEW"
+      },
+      {
+        "stopName" : "Beaconsfield Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Beaconsfield",
+        "stopGTFSID" : "vic:rail:BFD"
+      },
+      {
+        "stopName" : "Officer Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Officer",
+        "stopGTFSID" : "vic:rail:OFC"
+      },
+      {
+        "stopName" : "Cardinia Road Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Pakenham",
+        "stopGTFSID" : "vic:rail:CDA"
+      },
+      {
+        "stopName" : "Pakenham Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Pakenham",
+        "stopGTFSID" : "vic:rail:PKM"
+      },
+      {
+        "stopName" : "East Pakenham Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Pakenham",
+        "stopGTFSID" : "vic:rail:EPH"
+      }
+    ],
+    "trainDirection" : "Down"
+  },
+  {
+    "directionName" : "City",
+    "gtfsDirection" : 1,
+    "stops" : [
+      {
+        "stopName" : "East Pakenham Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Pakenham",
+        "stopGTFSID" : "vic:rail:EPH"
+      },
+      {
+        "stopName" : "Pakenham Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Pakenham",
+        "stopGTFSID" : "vic:rail:PKM"
+      },
+      {
+        "stopName" : "Cardinia Road Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Pakenham",
+        "stopGTFSID" : "vic:rail:CDA"
+      },
+      {
+        "stopName" : "Officer Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Officer",
+        "stopGTFSID" : "vic:rail:OFC"
+      },
+      {
+        "stopName" : "Beaconsfield Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Beaconsfield",
+        "stopGTFSID" : "vic:rail:BFD"
+      },
+      {
+        "stopName" : "Berwick Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Berwick",
+        "stopGTFSID" : "vic:rail:BEW"
+      },
+      {
+        "stopName" : "Narre Warren Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Narre Warren",
+        "stopGTFSID" : "vic:rail:NWA"
+      },
+      {
+        "stopName" : "Hallam Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Hallam",
+        "stopGTFSID" : "vic:rail:HLM"
+      },
+      {
+        "stopName" : "Dandenong Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Dandenong",
+        "stopGTFSID" : "vic:rail:DNG"
+      },
+      {
+        "stopName" : "Yarraman Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Noble Park",
+        "stopGTFSID" : "vic:rail:YMN"
+      },
+      {
+        "stopName" : "Noble Park Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Noble Park",
+        "stopGTFSID" : "vic:rail:NPK"
+      },
+      {
+        "stopName" : "Sandown Park Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Springvale",
+        "stopGTFSID" : "vic:rail:SNP"
+      },
+      {
+        "stopName" : "Springvale Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Springvale",
+        "stopGTFSID" : "vic:rail:SPG"
+      },
+      {
+        "stopName" : "Westall Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Clayton South",
+        "stopGTFSID" : "vic:rail:WTL"
+      },
+      {
+        "stopName" : "Clayton Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Clayton",
+        "stopGTFSID" : "vic:rail:CLA"
+      },
+      {
+        "stopName" : "Huntingdale Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Oakleigh",
+        "stopGTFSID" : "vic:rail:HUN"
+      },
+      {
+        "stopName" : "Oakleigh Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Oakleigh",
+        "stopGTFSID" : "vic:rail:OAK"
+      },
+      {
+        "stopName" : "Hughesdale Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Murrumbeena",
+        "stopGTFSID" : "vic:rail:HUG"
+      },
+      {
+        "stopName" : "Murrumbeena Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Murrumbeena",
+        "stopGTFSID" : "vic:rail:MRB"
+      },
+      {
+        "stopName" : "Carnegie Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Carnegie",
+        "stopGTFSID" : "vic:rail:CNE"
+      },
+      {
+        "stopName" : "Caulfield Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Caulfield East",
+        "stopGTFSID" : "vic:rail:CFD"
+      },
+      {
+        "stopName" : "South Yarra Railway Station",
+        "stopNumber" : null,
+        "suburb" : "South Yarra",
+        "stopGTFSID" : "vic:rail:SYR"
+      },
+      {
+        "stopName" : "Richmond Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Richmond",
+        "stopGTFSID" : "vic:rail:RMD"
+      },
+      {
+        "stopName" : "Parliament Railway Station",
+        "stopNumber" : null,
+        "suburb" : "East Melbourne",
+        "stopGTFSID" : "vic:rail:PAR"
+      },
+      {
+        "stopName" : "Melbourne Central Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Melbourne",
+        "stopGTFSID" : "vic:rail:MCE"
+      },
+      {
+        "stopName" : "Flagstaff Railway Station",
+        "stopNumber" : null,
+        "suburb" : "West Melbourne",
+        "stopGTFSID" : "vic:rail:FGS"
+      },
+      {
+        "stopName" : "Southern Cross Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Docklands",
+        "stopGTFSID" : "vic:rail:SSS"
+      },
+      {
+        "stopName" : "Flinders Street Railway Station",
+        "stopNumber" : null,
+        "suburb" : "Melbourne",
+        "stopGTFSID" : "vic:rail:FSS"
+      }
+    ],
+    "trainDirection" : "Up"
+  }
+]

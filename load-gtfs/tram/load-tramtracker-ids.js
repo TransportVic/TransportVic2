@@ -7,7 +7,7 @@ const async = require('async')
 const cheerio = require('cheerio')
 const ptvOverrides = require('./ptv-overrides')
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
 
 function sleep() {
   return new Promise(resolve => {

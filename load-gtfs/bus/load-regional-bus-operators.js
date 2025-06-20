@@ -7,7 +7,7 @@ const async = require('async')
 const fs = require('fs')
 const path = require('path')
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
 const regional = require('../../additional-data/bus-data/regional-with-track.json')
 const operators = require('../../transportvic-data/excel/bus/operators/regional-inter-town-operators.json')
 

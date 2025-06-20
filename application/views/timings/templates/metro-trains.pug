@@ -3,8 +3,11 @@
 if departures.length
   for departure in departures
     div.departure
-      - let { routeName } = departure
-      input(type='hidden' name='stops-at' value=departure.futureStops.join(','))
+      -
+        let { routeName } = departure
+        if (departure.formingTrip) routeName = departure.formingTrip.routeName
+        let futureStops = departure.futureFormingStops || departure.futureStops
+      input(type='hidden' name='stops-at' value=futureStops.join(','))
       input(type='hidden' name='platform' value=departure.platform || '')
       input(type='hidden' name='run' value=departure.runID)
       input(type='hidden' name='line' value=routeName)
@@ -25,7 +28,7 @@ if departures.length
           let prettyLineName = `${routeName} Line`
           if (routeName === 'City Circle') prettyLineName = routeName
         span.towards #{prettyLineName} towards
-        span.destination #{departure.destination}
+        span.destination #{departure.formingDestination || departure.destination}
         
         - let currentSuspension = departure.suspension
         if currentSuspension && currentSuspension.disruptionStatus !== 'passed' && !departure.cancelled
@@ -33,7 +36,7 @@ if departures.length
         else if departure.cancelled
           span.broadDepartureInfo.important CANCELLED
         else if departure.isRailReplacementBus
-          span.broadDepartureInfo.important.clampLine.clamp2 Rail Replacement Bus - Stops #{departure.futureStops.join(', ')}
+          span.broadDepartureInfo.important.clampLine.clamp2 Rail Replacement Bus - Stops #{futureStops.join(', ')}
         else
           
           -

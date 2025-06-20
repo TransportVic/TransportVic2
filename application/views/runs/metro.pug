@@ -2,8 +2,8 @@ extends ../layout
     
 block head
   -
-    let tripName = `${trip.trueDepartureTime} ${trip.trueOrigin.slice(0, -16)} to ${trip.trueDestination.slice(0, -16)}`
-    if (trip.routeGTFSID === '2-CCL') tripName = `${trip.trueDepartureTime} City Circle`
+    let tripName = `${trip.departureTime} ${trip.origin.slice(0, -16)} to ${trip.destination.slice(0, -16)}`
+    if (trip.routeGTFSID === '2-CCL') tripName = `${trip.departureTime} City Circle`
     title = `TransportVic - ${tripName}`
     description = `Viewing the ${tripName}`
     themeColour = '#0570c3'
@@ -42,14 +42,14 @@ block content
         img(src=`${staticBase}/static/images/clear-icons/bus.svg`)
       a.departureInfo
         span.towards #{trip.routeName} Towards
-        span.destination #{trip.trueDestination.slice(0, -16)}
+        span.destination #{trip.destination.slice(0, -16)}
         span.broadDepartureInfo.important Rail Replacement Bus
     div.infoRow
       span Replacement Bus Stop
   div.timing-list
     for stop in trip.stopTimings
       div.timingRow(id='stop-' + stop.stopGTFSID)
-        a.departureInfo
+        a.departureInfo(href=`/metro/timings/${stop.stopName.toLowerCase().replace(/ /g, '-').slice(0, -16)}`)
           span.stopName=stop.stopName
           if trip.cancelled || stop.cancelled
             span.info.cancelled CANCELLED

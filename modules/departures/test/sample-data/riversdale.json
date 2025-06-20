@@ -1,0 +1,99 @@
+{
+    "stopName": "Riversdale Railway Station",
+    "suburb": [
+        "Camberwell"
+    ],
+    "cleanSuburbs": [
+        "camberwell"
+    ],
+    "bays": [
+        {
+            "originalName": "Riversdale Railway Station",
+            "fullStopName": "Riversdale Railway Station",
+            "stopGTFSID": "vic:rail:RIV",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    145.06964598,
+                    -37.83150543
+                ]
+            },
+            "stopNumber": null,
+            "mode": "metro train",
+            "suburb": "Camberwell",
+            "services": [
+                {
+                    "routeGTFSID": "2-ALM",
+                    "gtfsDirection": 0,
+                    "routeNumber": null
+                },
+                {
+                    "routeGTFSID": "2-ALM",
+                    "gtfsDirection": 1,
+                    "routeNumber": null
+                }
+            ],
+            "screenServices": [
+                {
+                    "routeGTFSID": "2-ALM",
+                    "gtfsDirection": 0,
+                    "routeNumber": null
+                },
+                {
+                    "routeGTFSID": "2-ALM",
+                    "gtfsDirection": 1,
+                    "routeNumber": null
+                }
+            ],
+            "stopType": "station",
+            "parentStopGTFSID": null
+        },
+        {
+            "originalName": "Riversdale Station",
+            "fullStopName": "Riversdale Railway Station",
+            "stopGTFSID": "11205",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    145.06961731,
+                    -37.83129769
+                ]
+            },
+            "stopNumber": null,
+            "mode": "metro train",
+            "suburb": "Camberwell",
+            "services": [],
+            "screenServices": [],
+            "stopType": "stop",
+            "parentStopGTFSID": "vic:rail:RIV",
+            "platform": "1"
+        },
+        {
+            "originalName": "Riversdale Station",
+            "fullStopName": "Riversdale Railway Station",
+            "stopGTFSID": "11206",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    145.06976848,
+                    -37.83116499
+                ]
+            },
+            "stopNumber": null,
+            "mode": "metro train",
+            "suburb": "Camberwell",
+            "services": [],
+            "screenServices": [],
+            "stopType": "stop",
+            "parentStopGTFSID": "vic:rail:RIV",
+            "platform": "2"
+        }
+    ],
+    "mergeName": "Riversdale Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "riversdale-railway-station",
+    "cleanNames": [
+        "riversdale-railway-station"
+    ]
+}

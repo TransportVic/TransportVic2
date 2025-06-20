@@ -3,7 +3,7 @@ const async = require('async')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config')
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
 
 const stopNumbers = require('./788-stop-numbers')
 

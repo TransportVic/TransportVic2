@@ -1,0 +1,575 @@
+{
+    "header": {
+        "gtfs_realtime_version": "2.0",
+        "incrementality": 0,
+        "timestamp": 1749165051
+    },
+    "entity": [
+        {
+            "id": "02-LIL--53-T5-3920",
+            "is_deleted": false,
+            "trip_update": {
+                "trip": {
+                    "trip_id": "02-LIL--53-T5-3920",
+                    "route_id": "aus:vic:vic-02-LIL:",
+                    "direction_id": 0,
+                    "start_time": "09:45:00",
+                    "start_date": "20250611",
+                    "schedule_relationship": 0
+                },
+                "vehicle": null,
+                "stop_time_update": [
+                    {
+                        "stop_sequence": 1,
+                        "stop_id": "12227",
+                        "arrival": null,
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749599100,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 1
+                    },
+                    {
+                        "stop_sequence": 2,
+                        "stop_id": "12225",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749599220,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749599220,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 1
+                    },
+                    {
+                        "stop_sequence": 3,
+                        "stop_id": "12221",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749599340,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749599400,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 4,
+                        "stop_id": "26535",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749599520,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749599580,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 5,
+                        "stop_id": "12212",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749599640,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749599700,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 6,
+                        "stop_id": "12210",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749599760,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749599820,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 7,
+                        "stop_id": "12206",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749599880,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749599940,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 8,
+                        "stop_id": "11207",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749600000,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749600060,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 9,
+                        "stop_id": "12238",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749600120,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749600180,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 10,
+                        "stop_id": "12241",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749600240,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749600300,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 11,
+                        "stop_id": "12244",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749600360,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749600420,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 12,
+                        "stop_id": "12248",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749600480,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749600540,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 13,
+                        "stop_id": "12260",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749600660,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749600720,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 14,
+                        "stop_id": "12200",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749600840,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749600900,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 15,
+                        "stop_id": "12198",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749600960,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749601020,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 16,
+                        "stop_id": "12196",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749601320,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749601260,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 17,
+                        "stop_id": "22189",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749601440,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749601440,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 18,
+                        "stop_id": "11213",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749601680,
+                            "uncertainty": 0
+                        },
+                        "departure": null,
+                        "schedule_relationship": 0
+                    }
+                ],
+                "timestamp": 0,
+                "delay": 0
+            },
+            "vehicle": null,
+            "alert": null
+        },
+        {
+            "id": "vic:02BEG:_:R:vpt._Belgrave_3920_20250611",
+            "is_deleted": false,
+            "trip_update": {
+                "trip": {
+                    "trip_id": "vic:02BEG:_:R:vpt._Belgrave_3920_20250611",
+                    "route_id": "aus:vic:vic-02-BEG:",
+                    "direction_id": 0,
+                    "start_time": "09:45:00",
+                    "start_date": "20250611",
+                    "schedule_relationship": 1
+                },
+                "vehicle": null,
+                "stop_time_update": [
+                    {
+                        "stop_sequence": 1,
+                        "stop_id": "12226",
+                        "arrival": null,
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749599160,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 2,
+                        "stop_id": "12225",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749599220,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749599280,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 3,
+                        "stop_id": "12221",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749599400,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749599460,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 4,
+                        "stop_id": "26535",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749599580,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749599640,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 5,
+                        "stop_id": "12212",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749599700,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749599760,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 6,
+                        "stop_id": "12210",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749599820,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749599880,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 7,
+                        "stop_id": "12206",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749599940,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749600000,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 8,
+                        "stop_id": "11207",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749600060,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749600120,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 9,
+                        "stop_id": "12238",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749600180,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749600240,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 10,
+                        "stop_id": "12241",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749600300,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749600360,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 11,
+                        "stop_id": "12244",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749600420,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749600480,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 12,
+                        "stop_id": "12248",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749600540,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749600600,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 13,
+                        "stop_id": "12260",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749600720,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749600780,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 14,
+                        "stop_id": "12200",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749600900,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749600960,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 15,
+                        "stop_id": "12198",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749601020,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749601080,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 16,
+                        "stop_id": "12196",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749601080,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749601140,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 17,
+                        "stop_id": "22189",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749601200,
+                            "uncertainty": 0
+                        },
+                        "departure": {
+                            "delay": 0,
+                            "time": 1749601260,
+                            "uncertainty": 0
+                        },
+                        "schedule_relationship": 0
+                    },
+                    {
+                        "stop_sequence": 18,
+                        "stop_id": "11213",
+                        "arrival": {
+                            "delay": 0,
+                            "time": 1749601740,
+                            "uncertainty": 0
+                        },
+                        "departure": null,
+                        "schedule_relationship": 0
+                    }
+                ],
+                "timestamp": 0,
+                "delay": 0
+            },
+            "vehicle": null,
+            "alert": null
+        }
+    ]
+}
