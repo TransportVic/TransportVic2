@@ -5,8 +5,6 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const config = require('../../config')
 const utils = require('../../utils')
 
-const fixTripDestinations = require('../../modules/metro-trains/fix-trip-destinations.js')
-
 let stops, timetables
 let stationCache = {}
 
@@ -115,7 +113,7 @@ function readFileData(filename, routeName, callback) {
         stationCache[stationName] = station
       }
 
-      let stationPlatform = station.bays.find(bay => bay.mode === 'metro train')
+      let stationPlatform = station.bays.find(bay => bay.mode === 'metro train' && !bay.parentStopGTFSID)
 
       let properTiming = utils.getHHMMFromMinutesPastMidnight(minutesPastMidnight)
 
@@ -171,8 +169,6 @@ function readFileData(filename, routeName, callback) {
 
       let upService = !(trip.runID[3] % 2)
       trip.direction = upService ? 'Up' : 'Down'
-
-      trip = fixTripDestinations(trip)
 
       await timetables.createDocument(trip)
     })
