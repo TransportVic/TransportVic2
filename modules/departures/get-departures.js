@@ -16,6 +16,8 @@ async function fetchLiveTrips(station, mode, db, departureTime, timeframe=120) {
     .filter(bay => bay.mode === mode)
     .map(bay => bay.stopGTFSID)
 
+  if (!stopGTFSIDs.length) stopGTFSIDs = station.bays.map(bay => bay.stopGTFSID)
+
   let timeMS = +departureTime
   let timeoutMS = timeframe * 60 * 1000
 
