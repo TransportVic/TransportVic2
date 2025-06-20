@@ -103,7 +103,7 @@ export async function updateTrackerData(db, timetable) {
   })
 }
 
-export async function updateTrip(db, trip, { skipWrite = false, skipStopCancellation = false, dataSource = 'unknown' } = {}) {
+export async function updateTrip(db, trip, { skipWrite = false, skipStopCancellation = false, dataSource = 'unknown', ignoreMissingStops = [] } = {}) {
   let dbTrip = await getTrip(db, trip.runID, trip.operationDays)
   let liveTimetables = db.getCollection('live timetables')
 
@@ -170,7 +170,7 @@ export async function updateTrip(db, trip, { skipWrite = false, skipStopCancella
 
     if (!skipStopCancellation) {
       for (let stop of existingStops) {
-        if (!stopVisits[stop]) {
+        if (!stopVisits[stop] && !ignoreMissingStops.includes(stop)) {
           timetable.updateStopByName(stop, {
             cancelled: true
           })
