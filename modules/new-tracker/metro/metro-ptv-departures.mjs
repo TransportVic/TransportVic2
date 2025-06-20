@@ -6,6 +6,10 @@ import { updateTrip } from '../../metro-trains/trip-updater.mjs'
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import getTripUpdateData from '../../metro-trains/get-ptv-departures.js'
 
+const MTP_STOPS = [
+  'Anzac', 'Town Hall', 'State Library', 'Parkville', 'Arden'
+].map(stop => stop + ' Railway Station')
+
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -28,7 +32,7 @@ export async function fetchTrips(db, ptvAPI, { stationName = null, skipTDN = [],
 
   for (let tripData of relevantTrips) {
     let { type, data } = tripData
-    await updateTrip(db, data, { skipStopCancellation: type === 'stop', dataSource: 'ptv-departure' })
+    await updateTrip(db, data, { skipStopCancellation: type === 'stop', dataSource: 'ptv-departure', ignoreMissingStops: MTP_STOPS })
   }
   return updatedTDNs
 }
