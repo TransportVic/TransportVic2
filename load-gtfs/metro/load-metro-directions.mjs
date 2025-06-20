@@ -1,5 +1,4 @@
 import { MongoDatabaseConnection } from '@transportme/database'
-import { setStopServices, setRouteStops } from '@transportme/load-ptv-gtfs'
 import config from '../../config.json' with { type: 'json' }
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 
