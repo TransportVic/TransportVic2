@@ -199,6 +199,24 @@ describe('The getCombinedDepartures function', () => {
       utils.now = originalNow
     })
   })
+
+  describe('Returning extra live departures', () => {
+    let originalNow
+    before(() => {
+      originalNow = utils.now
+      utils.now = () => utils.parseTime('2025-03-25T20:45:00.000Z') // current time is 24 march
+    })
+    it('test', async () => {
+      // fetch for 29 march
+      let departures = await getCombinedDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 10 })
+      expect(departures.length).to.equal(1)
+      expect(departures[0].departureTime).to.equal('07:48')
+      expect(departures[0]._live).to.exist
+    })
+    after(() => {
+      utils.now = originalNow
+    })
+  })
 })
 
 describe('The getDepartures function', () => {
