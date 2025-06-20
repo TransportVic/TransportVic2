@@ -142,7 +142,7 @@ export async function updateTrip(db, trip, { skipWrite = false, skipStopCancella
       trip.stops[trip.stops.length - 1].scheduledDepartureTime = null
     }
   }
-  
+
   let isCCL = trip.routeGTFSID === '2-CCL'
   if (trip.stops) {
     for (let stop of trip.stops) {

@@ -331,6 +331,60 @@ describe('The trip updater module', () => {
     expect(cdaChange).to.not.exist
   })
 
+ it('Should exclude a list of given stops from the cancellation detection', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(pkmStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "pakenham"
+    })
+    await liveTimetables.createDocument(clone(pkmSchTrip))
+
+    expect(await liveTimetables.countDocuments({})).to.equal(1)
+    let updateData = {
+      operationDays: '20250606',
+      runID: 'C036',
+      routeGTFSID: '2-PKM',
+      stops: [
+        {
+          stopName: 'East Pakenham Railway Station',
+          platform: '1',
+          scheduledDepartureTime: null,
+          cancelled: false,
+          estimatedDepartureTime: new Date('2025-06-05T21:44:00.000Z')
+        },
+        {
+          stopName: 'Pakenham Railway Station',
+          platform: null,
+          scheduledDepartureTime: null,
+          cancelled: false,
+          estimatedArrivalTime: new Date('2025-06-05T21:45:00.000Z'),
+          estimatedDepartureTime: new Date('2025-06-05T21:46:00.000Z'),
+        }
+      ]
+    }
+
+    let ignoreMissingStops = [
+      'Cardinia Road Railway Station',
+      'Officer Railway Station'
+    ]
+    let tripData = await updateTrip(database, updateData, { ignoreMissingStops })
+
+    for (let stop of tripData.stops.slice(0, 4)) expect(stop.cancelled, `Expected ${stop.stopName} to not be cancelled`).to.be.false
+    for (let stop of tripData.stops.slice(4)) expect(stop.cancelled).to.be.true
+  })
+
   it('Should un-cancel stops that re appear', async () => {
     let database = new LokiDatabaseConnection('test-db')
     let stops = await database.createCollection('stops')
