@@ -46,7 +46,6 @@ let tripsStart = new Date()
 let shapeIDMap = {}
 let directionIDMap = {}
 let tripProcessors = await createTripProcessor(mongoDB)
-let stopServicesMap = {}
 
 tripProcessors[2] = trip => {
   trip.trueOrigin = trip.origin
@@ -57,21 +56,24 @@ tripProcessors[2] = trip => {
   return trip
 }
 
+let totalStopServiceTime = 0
+
 for (let i of selectedModes) {
+  let mode = GTFS_MODES[i]
   try {
-    console.log('Loading trips for', GTFS_MODES[i])
+    console.log('Loading trips for', mode)
     let tripLoader = new TripLoader({
       tripsFile: tripsFile.replace('{0}', i),
       stopTimesFile: stopTimesFile.replace('{0}', i),
       calendarFile: calendarFile.replace('{0}', i),
       calendarDatesFile: calendarDatesFile.replace('{0}', i)
-    }, GTFS_MODES[i], mongoDB)
+    }, mode, mongoDB)
 
     await tripLoader.loadTrips({
       routeIDMap,
       processTrip: tripProcessors[i]
     })
-    console.log('Loaded trips for', GTFS_MODES[i])
+    console.log('Loaded trips for', mode)
 
     shapeIDMap = {
       ...shapeIDMap,
@@ -83,15 +85,25 @@ for (let i of selectedModes) {
       ...tripLoader.getDirectionIDMap()
     }
     
-    let modeServiceMap = tripLoader.getStopServicesMap()
-    for (let stopGTFSID of Object.keys(modeServiceMap)) {
-      let stopData = modeServiceMap[stopGTFSID]
-      if (!stopServicesMap[stopGTFSID]) stopServicesMap[stopGTFSID] = { services: [], screenServices: [] }
-      stopServicesMap[stopGTFSID].services.push(stopData.services)
-      stopServicesMap[stopGTFSID].screenServices.push(stopData.screenServices)
+    let stopServiceStart = new Date()
+    let stopServicesMap = tripLoader.getStopServicesMap()
+    for (let stopGTFSID of Object.keys(stopServicesMap)) {
+      await mongoStops.updateDocument({
+        bays: {
+          $elemMatch: { stopGTFSID, mode }
+        }
+      }, {
+        $push: {
+          'bays.$.services': { $each: stopServicesMap[stopGTFSID].services },
+          'bays.$.screenServices': { $each: stopServicesMap[stopGTFSID].screenServices },
+        }
+      })
     }
+    totalStopServiceTime += (new Date() - stopServiceStart)
+
+    console.log('Loaded stop services for', mode)
   } catch (e) {
-    console.log('Failed to load trips for', GTFS_MODES[i])
+    console.log('Failed to load trips for', mode)
   }
 }
 
@@ -112,23 +124,7 @@ for (let i of selectedModes) {
 }
 
 console.log('Loading shapes took', (new Date() - shapeStart) / 1000, 'seconds')
-
-let stopServiceStart = new Date()
-console.log('Loading stop services')
-for (let stopGTFSID of Object.keys(stopServicesMap)) {
-  await mongoStops.updateDocument({
-    bays: {
-      $elemMatch: { stopGTFSID }
-    }
-  }, {
-    $set: {
-      'bays.$.services': stopServicesMap[stopGTFSID].services,
-      'bays.$.screenServices': stopServicesMap[stopGTFSID].screenServices,
-    }
-  })
-}
-
-console.log('Done loading stop services, took', (new Date() - stopServiceStart) / 1000, 'seconds')
+console.log('Loading stop services took', totalStopServiceTime / 1000, 'seconds')
 
 console.log('\nLoading both trips and shapes took', (new Date() - start) / 1000, 'seconds overall')
 
