@@ -19,7 +19,15 @@ if (!selectedModes.length) selectedModes = allModes
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const suburbs = JSON.parse(await fs.readFile(path.join(__dirname, '../transportvic-data/geospatial/suburb-boundaries/data.geojson')))
+const suburbsVIC = JSON.parse(await fs.readFile(path.join(__dirname, '../transportvic-data/geospatial/suburb-boundaries/vic.geojson')))
+const suburbsNSW = JSON.parse(await fs.readFile(path.join(__dirname, '../transportvic-data/geospatial/suburb-boundaries/nsw.geojson')))
+const suburbsACT = JSON.parse(await fs.readFile(path.join(__dirname, '../transportvic-data/geospatial/suburb-boundaries/act.geojson')))
+const suburbsSA = JSON.parse(await fs.readFile(path.join(__dirname, '../transportvic-data/geospatial/suburb-boundaries/sa.geojson')))
+
+const suburbs = {
+   type: 'FeatureCollection',
+   features: [ ...suburbsVIC.features, ...suburbsNSW.features, ...suburbsACT.features, ...suburbsSA.features ]
+}
 
 const gtfsPath = path.join(__dirname, '..', 'gtfs', '{0}')
 

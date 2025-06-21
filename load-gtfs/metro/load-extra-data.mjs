@@ -17,7 +17,7 @@ const { TRANSIT_MODES } = GTFS_CONSTANTS
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const suburbs = JSON.parse(await fs.readFile(path.join(__dirname, '../../transportvic-data/geospatial/suburb-boundaries/data.geojson')))
+const suburbs = JSON.parse(await fs.readFile(path.join(__dirname, '../../transportvic-data/geospatial/suburb-boundaries/vic.geojson')))
 
 let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
 await mongoDB.connect()
