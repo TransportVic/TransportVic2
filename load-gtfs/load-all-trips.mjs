@@ -30,6 +30,7 @@ const shapeFile = path.join(gtfsPath, 'shapes.txt')
 let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
 await mongoDB.connect()
 
+let mongoStops = await mongoDB.getCollection('stops')
 let mongoRoutes = await mongoDB.getCollection('routes')
 let mongoTimetables = await mongoDB.getCollection('gtfs timetables')
 
@@ -45,6 +46,7 @@ let tripsStart = new Date()
 let shapeIDMap = {}
 let directionIDMap = {}
 let tripProcessors = await createTripProcessor(mongoDB)
+let stopServicesMap = {}
 
 tripProcessors[2] = trip => {
   trip.trueOrigin = trip.origin
@@ -80,6 +82,14 @@ for (let i of selectedModes) {
       ...directionIDMap,
       ...tripLoader.getDirectionIDMap()
     }
+    
+    let modeServiceMap = tripLoader.getStopServicesMap()
+    for (let stopGTFSID of Object.keys(modeServiceMap)) {
+      let stopData = modeServiceMap[stopGTFSID]
+      if (!stopServicesMap[stopGTFSID]) stopServicesMap[stopGTFSID] = { services: [], screenServices: [] }
+      stopServicesMap[stopGTFSID].services.push(stopData.services)
+      stopServicesMap[stopGTFSID].screenServices.push(stopData.screenServices)
+    }
   } catch (e) {
     console.log('Failed to load trips for', GTFS_MODES[i])
   }
@@ -102,6 +112,24 @@ for (let i of selectedModes) {
 }
 
 console.log('Loading shapes took', (new Date() - shapeStart) / 1000, 'seconds')
+
+let stopServiceStart = new Date()
+console.log('Loading stop services')
+for (let stopGTFSID of Object.keys(stopServicesMap)) {
+  await mongoStops.updateDocument({
+    bays: {
+      $elemMatch: { stopGTFSID }
+    }
+  }, {
+    $set: {
+      'bays.$.services': stopServicesMap[stopGTFSID].services,
+      'bays.$.screenServices': stopServicesMap[stopGTFSID].screenServices,
+    }
+  })
+}
+
+console.log('Done loading stop services, took', (new Date() - stopServiceStart) / 1000, 'seconds')
+
 console.log('\nLoading both trips and shapes took', (new Date() - start) / 1000, 'seconds overall')
 
 process.exit(0)
