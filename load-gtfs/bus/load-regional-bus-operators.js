@@ -20,46 +20,52 @@ database.connect(async () => {
     }, {
       routeGTFSID: {
         $not: {
-          $in: Object.values(regional).map(r => r.map(z => z.routeGTFSID)).reduce((a, e) => a.concat(e), [])}
+          $in: Object.values(regional).map(r => r.map(z => z.routeGTFSID)).reduce((a, e) => a.concat(e), [])
         }
-      }]
-    }).toArray()
+      }
+    }]
+  }).toArray()
 
   busRoutes = busRoutes.map(route => {
     let stops = route.directions[0].stops
     let originStop = stops[0]
     let destinationStop = stops[stops.length - 1]
 
-    let origin = originStop.suburb.replace(/, .+/, '')
-    let destination = destinationStop.suburb.replace(/, .+/, '')
+    let origin = originStop.suburb.replace(/, .+/, '').replace(/ \([A-Z]+\)$/, '')
+    let destination = destinationStop.suburb.replace(/, .+/, '').replace(/ \([A-Z]+\)$/, '')
 
     if (origin === 'Wodonga') origin = 'Albury'
     if (destination === 'Wodonga') destination = 'Albury'
+
+    if (origin === 'Tawonga South') origin = 'Mount Beauty'
+    if (destination === 'Tawonga South') destination = 'Mount Beauty'
 
     if (origin === destination) {
       let otherSuburbStops = stops.filter(stop => stop.suburb !== originStop.suburb)
       let centreStop = otherSuburbStops[Math.floor(otherSuburbStops.length / 2)]
       if (centreStop) {
-        destination = centreStop.suburb.replace(/, .+/, '')
+        destination = centreStop.suburb.replace(/, .+/, '').replace(/ \([A-Z]+\)$/, '')
       }
     }
 
-    route.routeName = route.routeName.replace('Koo - Wee - Rup', 'Koo Wee Rup').split(' - ').sort((a, b) => a.localeCompare(b)).join(' - ')
+    if (origin === 'South Dudley') origin = 'Dudley'
+    if (destination === 'South Dudley') destination = 'Dudley'
 
+    route.routeName = route.routeName.replace('Koo - Wee - Rup', 'Koo Wee Rup').split(' - ').sort((a, b) => a.localeCompare(b)).join(' - ')
     route.routeNameTest = [origin, destination].sort((a, b) => a.localeCompare(b)).join(' - ')
-    
+
     if (origin === destination) {
       if ([originStop.stopName, destinationStop.stopName].includes('Hopkins Correctional Centre/Warrak Road')) {
         route.routeNameTest = 'Ararat - Ararat Prison'
       } else if (originStop.suburb === 'Wonthaggi') {
-        route.routeNameTest = `Wonthaggi - Wonthaggi ${route.routeNumber}`
+        let direction = route.routeName.includes('North') ? 'North' : 'South'
+        route.routeNameTest = `Wonthaggi - Wonthaggi ${direction}`
       } else {
         route.routeNameTest = origin + ' Town Service'
       }
     }
 
     if (route.routeGTFSID === '6-WGT') route.routeNameTest = 'West Gippsland Transit'
-    if (route.routeNumber === 'Dudley') route.routeNameTest = 'Wonthaggi - Dudley'
     if (route.routeNumber === 'South - Schools AM') route.routeNameTest = 'Swan Hill Schools - AM'
     if (route.routeNumber === 'South - Schools PM') route.routeNameTest = 'Swan Hill Schools - PM'
 
@@ -96,7 +102,7 @@ database.connect(async () => {
       let centreStop = otherSuburbStops[Math.floor(otherSuburbStops.length / 2)]
 
       if (centreStop) {
-        let via = ` via ${centreStop.suburb.replace(/, .+/, '')}`
+        let via = ` via ${centreStop.suburb.replace(/, .+/, '').replace(/ \([A-Z]+\)$/, '')}`
         // console.log(route.routeGTFSID, name, centreStop)
         route.routeNameTest += via
       } else {
@@ -107,7 +113,10 @@ database.connect(async () => {
 
   for (let route of busRoutes) {
     let operator = operators[route.routeNameTest]
-    if (!operator) console.log('Failed to map operator', route.routeNameTest, ' -- ', route.routeName)
+    if (!operator) {
+      console.log('Failed to map operator', route.routeNameTest, ' -- ', route.routeName, route.routeGTFSID)
+      operator = 'Unknown'
+    }
 
     await routes.updateDocument({ routeGTFSID: route.routeGTFSID }, {
       $set: {

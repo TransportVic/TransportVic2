@@ -7,7 +7,7 @@ const operators = require('../../../transportvic-data/excel/bus/operators/region
 
 const network = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../transportvic-data/geospatial/regional-bus-networks/bus-network-regions.geojson')))
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
 
 database.connect(async () => {
   let routes = database.getCollection('routes')
@@ -24,12 +24,6 @@ database.connect(async () => {
       //   $ne: null
       // },
       $and: [{
-        routeNumber: {
-          $not: {
-            $eq: "Goldrush"
-          }
-        },
-      }, {
         routeNumber: {
           $not: /Schools/
         }
