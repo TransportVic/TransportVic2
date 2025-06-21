@@ -10,6 +10,8 @@ import nameOverrides from '../transportvic-data/excel/stops/name-overrides.json'
 import { createRouteProcessor } from '../transportvic-data/gtfs/process.mjs'
 import config from '../config.json' with { type: 'json' }
 
+import suburbsList from '../transportvic-data/gtfs/stop-suburbs.json' with { type: 'json' }
+
 const { GTFS_MODES } = GTFS_CONSTANTS
 
 let allModes = Object.keys(GTFS_MODES)
@@ -70,7 +72,7 @@ for (let i of selectedModes) {
     if (['2', '3', '4'].includes(i)) suburbFile = suburbsVIC
     else suburbFile = suburbs
 
-    let stopLoader = new StopsLoader(stopsFile.replace('{0}', i), suburbFile, mode, database)
+    let stopLoader = new StopsLoader(stopsFile.replace('{0}', i), suburbFile, mode, database, stop => suburbsList[stop.stopGTFSID])
     await stopLoader.loadStops({
       getMergeName: stop => {
         if (uniqueStops.includes(stop.fullStopName)) {
