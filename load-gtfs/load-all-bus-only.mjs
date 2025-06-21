@@ -19,9 +19,9 @@ function runNode(file, args = []) {
 }
 
 await runNode('create-indexes.mjs')
-await runNode('load-all-stops-routes.mjs', ['4', '6', '10'])
+await runNode('load-all-stops-routes.mjs', ['4', '6', '11'])
 await runNode('bus/load-788-stop-numbers.js')
-await runNode('load-all-trips.mjs', ['4', '6', '10'])
+await runNode('load-all-trips.mjs', ['4', '6', '11'])
 
 await runNode('load-all-post.mjs')
 

@@ -66,7 +66,11 @@ for (let i of selectedModes) {
   let mode = GTFS_MODES[i]
 
   try {
-    let stopLoader = new StopsLoader(stopsFile.replace('{0}', i), suburbs, mode, database)
+    let suburbFile
+    if (['2', '3', '4'].includes(i)) suburbFile = suburbsVIC
+    else suburbFile = suburbs
+
+    let stopLoader = new StopsLoader(stopsFile.replace('{0}', i), suburbFile, mode, database)
     await stopLoader.loadStops({
       getMergeName: stop => {
         if (uniqueStops.includes(stop.fullStopName)) {

@@ -59,7 +59,7 @@ database.connect(async () => {
         route.routeNameTest = 'Ararat - Ararat Prison'
       } else if (originStop.suburb === 'Wonthaggi') {
         let direction = route.routeName.includes('North') ? 'North' : 'South'
-        route.routeNameTest = `Wonthaggi - Wonthaggi ${direction}`
+        route.routeNameTest = `${direction} Wonthaggi - Wonthaggi`
       } else {
         route.routeNameTest = origin + ' Town Service'
       }
