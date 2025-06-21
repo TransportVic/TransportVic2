@@ -682,12 +682,23 @@
  ],
  "Alpine Ranges": [
   {
+   "routeGTFSID": "6-a18",
+   "routeNumber": "12",
+   "liveTrack": false
+  },
+  {
    "routeGTFSID": "6-14",
    "routeNumber": "14",
    "liveTrack": false
   }
  ],
- "Eildon": [],
+ "Eildon": [
+  {
+   "routeGTFSID": "6-V63",
+   "routeNumber": "V63",
+   "liveTrack": false
+  }
+ ],
  "Castlemaine": [
   {
    "routeGTFSID": "6-r89",
@@ -1100,7 +1111,13 @@
    "liveTrack": false
   }
  ],
- "Glenrowan": [],
+ "Glenrowan": [
+  {
+   "routeGTFSID": "6-H46",
+   "routeNumber": "H46",
+   "liveTrack": false
+  }
+ ],
  "Colac": [
   {
    "routeGTFSID": "6-CL1",
