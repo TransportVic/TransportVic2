@@ -7,7 +7,7 @@ import async from 'async'
 import { load as loadHTML } from 'cheerio'
 import ptvOverrides from './ptv-overrides.mjs'
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
 
 await database.connect({})
 

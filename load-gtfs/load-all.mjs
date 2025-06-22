@@ -38,7 +38,7 @@ await runNode('tram/load-tramtracker-ids.mjs')
 
 await runNode('metro/load-metro-directions.mjs')
 await runNode('extra/load-search-query.js')
-await runNode('extra/load-route-suburbs.js')
+await runNode('extra/load-route-suburbs.mjs')
 
 await runNode('../additional-data/bus-data/geospatial/generate-bus-groupings.js')
 await runNode('bus/load-regional-bus-operators.js')
