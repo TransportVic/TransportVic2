@@ -40,7 +40,7 @@ await runNode('metro/load-metro-directions.mjs')
 await runNode('extra/load-search-query.mjs')
 await runNode('extra/load-route-suburbs.mjs')
 
-await runNode('../additional-data/bus-data/geospatial/generate-bus-groupings.js')
+await runNode('bus/generate-regional-bus-groupings.mjs')
 await runNode('bus/load-regional-bus-operators.js')
 
 await runNode('move-database.mjs')
