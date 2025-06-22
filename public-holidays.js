@@ -11,7 +11,7 @@ database.connect(async err => {
   gtfsTimetables = database.getCollection('gtfs timetables')
 })
 
-let rawEvents = ical.sync.parseFile(path.join(__dirname, 'additional-data/vic-holidays.ics'))
+let rawEvents = ical.sync.parseFile(path.join(__dirname, 'transportvic-data/calendar/vic-public-holidays/vic-holidays.ics'))
 let events = Object.values(rawEvents).slice(1)
 
 let eventCache = {}
