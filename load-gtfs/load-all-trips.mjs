@@ -87,18 +87,19 @@ for (let i of selectedModes) {
     
     let stopServiceStart = new Date()
     let stopServicesMap = tripLoader.getStopServicesMap()
-    for (let stopGTFSID of Object.keys(stopServicesMap)) {
-      await mongoStops.updateDocument({
-        bays: {
-          $elemMatch: { stopGTFSID, mode }
+    let bulkUpdate = Object.keys(stopServicesMap).map(stopGTFSID => ({
+      updateOne: {
+        filter: { bays: { $elemMatch: { stopGTFSID, mode } } },
+        update: {
+          $push: {
+            'bays.$.services': { $each: stopServicesMap[stopGTFSID].services },
+            'bays.$.screenServices': { $each: stopServicesMap[stopGTFSID].screenServices },
+          }
         }
-      }, {
-        $push: {
-          'bays.$.services': { $each: stopServicesMap[stopGTFSID].services },
-          'bays.$.screenServices': { $each: stopServicesMap[stopGTFSID].screenServices },
-        }
-      })
-    }
+      }
+    }))
+
+    await mongoStops.bulkWrite(bulkUpdate)
     totalStopServiceTime += (new Date() - stopServiceStart)
 
     console.log('Loaded stop services for', mode)
