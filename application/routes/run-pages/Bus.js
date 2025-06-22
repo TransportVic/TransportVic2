@@ -193,7 +193,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   let routes = res.db.getCollection('routes')
   let tripRoute = await routes.findDocument({ routeGTFSID: trip.routeGTFSID }, { routePath: 0 })
   if (!tripRoute) tripRoute = { operators: [] }
-  let operator = (tripRoute.operators.sort((a, b) => a.length - b.length)[0] || '').replace(/ \(.+/, '')
+  let operator = (tripRoute.operators.sort((a, b) => a.length - b.length)[0] || '')
 
   let {destination, origin} = trip
   let fullDestination = destination

@@ -220,7 +220,7 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
         routeNumber,
         sortNumber,
         operator,
-        codedOperator: utils.encodeName(operator.replace(/ \(.+/, '')),
+        codedOperator: utils.encodeName(operator),
         loopDirection,
         routeDetails: trip.routeDetails,
         isLiveTrip: busDeparture.run_ref.includes('-'),
