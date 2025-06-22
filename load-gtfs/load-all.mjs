@@ -33,8 +33,8 @@ await runNode('vline/api-integration/load-vnet-station-names.js')
 
 await runNode('load-all-post.mjs')
 
-await runNode('tram/load-stops.js')
-await runNode('tram/load-tramtracker-ids.js')
+await runNode('tram/load-stops.mjs')
+await runNode('tram/load-tramtracker-ids.mjs')
 
 await runNode('metro/load-metro-directions.mjs')
 await runNode('extra/load-search-query.js')

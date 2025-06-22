@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   "1.0": "0", // East Coburg
   "1.1": "1", // Sth Melb
 
