@@ -54,7 +54,10 @@ export async function checkStops(db) {
 }
 
 export async function checkRoute(routes, query) {
-  
+  let routeData = await routes.findDocument({ ...query })
+  if (!routeData) return { query, reason: 'missing' }
+  if (!routeData.routePath.length) return { query, reason: 'missing-route-path', mode: routeData.mode }
+  if (!routeData.directions.length) return { query, reason: 'missing-route-stops', mode: routeData.mode }
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
