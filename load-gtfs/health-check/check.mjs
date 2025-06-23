@@ -5,9 +5,10 @@ import config from '../../config.json' with { type: 'json' }
 export async function checkStop(stops, stopName, mode) {
  let dbStop = await stops.findDocument({ stopName })
   if (!dbStop) return { stop: stopName, reason: 'missing', mode }
+  if (!dbStop.textQuery || !dbStop.textQuery.length)  return { stop: stopName, reason: 'missing-text-query', mode }
   if (!dbStop.bays.find(bay => bay.mode === mode)) return { stop: stopName, reason: 'missing-bay', mode }
   if (!dbStop.bays.find(bay => bay.mode === mode && bay.services.length && bay.screenServices.length)) return { stop: stopName, reason: 'missing-bay-services', mode }
-  
+
   if (mode === 'tram') {
     if (!dbStop.bays.find(bay => bay.mode === mode && bay.tramTrackerID)) return { stop: stopName, reason: 'missing-tramtracker-id', mode }
   }

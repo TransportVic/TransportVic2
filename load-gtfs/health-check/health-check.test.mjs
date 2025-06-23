@@ -2,7 +2,9 @@ import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
 import sampleSchTrips from '../../modules/departures/test/sample-data/sample-sch-trips.json' with { type: 'json' }
 import expectedStops from './sample-data/expected-stops.json' with { type: 'json' }
-import { checkStop, checkStopNumbers, checkStops } from './check.mjs'
+import { checkStop, checkStopNumbers } from './check.mjs'
+
+expectedStops.forEach(stop => stop.textQuery = ['A', 'B'])
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -122,6 +124,26 @@ describe('The GTFS health check module', () => {
       expect(await checkStop(stops, 'Flinders Street Railway Station', 'regional train')).to.deep.equal({
         stop: 'Flinders Street Railway Station',
         reason: 'missing-vnet-name',
+        mode: 'regional train'
+      })
+    })
+
+    it('Should fail if a stop does not have text query data', async () => {
+      const testDB = new LokiDatabaseConnection()
+      testDB.connect()
+      const stops = await testDB.createCollection('stops')
+      let testStops = []
+      for (let stop of clone(expectedStops)) {
+        delete stop.textQuery
+        testStops.push(stop)
+      }
+
+      await stops.createDocuments(testStops)
+
+      expect(await checkStop(validStops, 'Flinders Street Railway Station', 'regional train')).to.not.exist
+      expect(await checkStop(stops, 'Flinders Street Railway Station', 'regional train')).to.deep.equal({
+        stop: 'Flinders Street Railway Station',
+        reason: 'missing-text-query',
         mode: 'regional train'
       })
     })
