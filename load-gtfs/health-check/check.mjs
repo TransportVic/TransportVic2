@@ -61,7 +61,17 @@ export async function checkRoute(routes, query) {
 }
 
 export async function checkRouteOperators(routes) {
+  let missingOperatorRoutes = await routes.findDocuments({
+    $or: [{
+      operators: 'Unknown'
+    }, {
+      operators: []
+    }]
+  }).toArray()
 
+  return missingOperatorRoutes.map(route => ({
+    mode: route.mode, routeGTFSID: route.routeGTFSID, routeNumber: route.routeNumber
+  })).sort((a, b) => a.routeGTFSID.localeCompare(b.routeGTFSID))
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

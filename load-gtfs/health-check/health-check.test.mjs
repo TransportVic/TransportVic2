@@ -215,21 +215,25 @@ describe('The GTFS health check module', () => {
       const testDB = new LokiDatabaseConnection()
       testDB.connect()
       const routes = await testDB.createCollection('routes')
+      let testRoute = clone(expectedRoute)
+
       let testRoute1 = clone(expectedRoute)
       testRoute1.operators = []
+      testRoute1.routeGTFSID = '4-900'
+      testRoute1.routeNumber = '900'
 
       let testRoute2 = clone(expectedRoute)
       testRoute2.operators = ['Unknown']
       testRoute2.routeGTFSID = '4-630'
       testRoute2.routeNumber = '630'
 
-      await routes.createDocuments([ testRoute1, testRoute2 ])
+      await routes.createDocuments([ testRoute, testRoute1, testRoute2 ])
 
-      expect(await checkRouteOperators(validRoutes)).to.not.exist
+      expect(await checkRouteOperators(validRoutes)).to.deep.equal([])
       expect(await checkRouteOperators(routes)).to.deep.equal([{
-        routeGTFSID: '4-601', routeNumber: '601', mode: 'bus'
-      }, {
         routeGTFSID: '4-630', routeNumber: '630', mode: 'bus'
+      }, {
+        routeGTFSID: '4-900', routeNumber: '900', mode: 'bus'
       }])
     })
   })
