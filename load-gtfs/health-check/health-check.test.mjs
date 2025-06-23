@@ -153,6 +153,15 @@ describe('The GTFS health check module', () => {
   })
 
   describe('The checkStopNumbers function', () => {
+    it('Should not fail if the stop is missing as it would already be picked up elsewhere', async () => {
+      const testDB = new LokiDatabaseConnection()
+      testDB.connect()
+      const stops = await testDB.createCollection('stops')
+
+      expect(await checkStopNumbers(validStops, 'Flinders Street Railway Station', 'tram')).to.not.exist
+      expect(await checkStopNumbers(stops, 'Flinders Street Railway Station', 'tram')).to.not.exist
+    })
+
     it('Should fail if a bay in the test stop data is missing its stop number', async () => {
       const testDB = new LokiDatabaseConnection()
       testDB.connect()

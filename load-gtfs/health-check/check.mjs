@@ -35,6 +35,7 @@ export async function checkStop(stops, stopName, mode) {
 
 export async function checkStopNumbers(stops, stopName, mode) {
   let dbStop = await stops.findDocument({ stopName })
+  if (!dbStop) return
   if (!dbStop.bays.find(bay => bay.mode === mode && bay.stopNumber)) return { stop: stopName, reason: 'missing-stop-number', mode }
 }
 
@@ -119,7 +120,7 @@ async function checkRoutes(db) {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
   await mongoDB.connect()
 
   let output = []
