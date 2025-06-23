@@ -28,7 +28,7 @@ describe('The GTFS health check module', () => {
       expect(await checkStop(validStops, 'Flinders Street Railway Station', 'regional train')).to.not.exist
       expect(await checkStop(stops1, 'Flinders Street Railway Station', 'metro train')).to.deep.equal({
         stop: 'Flinders Street Railway Station',
-        reason: 'missing',
+        reason: 'missing-stop',
         mode: 'metro train'
       })
 
@@ -40,7 +40,7 @@ describe('The GTFS health check module', () => {
       expect(await checkStop(validStops, 'Bendigo Railway Station', 'regional train')).to.not.exist
       expect(await checkStop(stops2, 'Bendigo Railway Station', 'regional train')).to.deep.equal({
         stop: 'Bendigo Railway Station',
-        reason: 'missing',
+        reason: 'missing-stop',
         mode: 'regional train'
       })
     })
@@ -175,6 +175,18 @@ describe('The GTFS health check module', () => {
   })
 
   describe('The checkRoute function', () => {
+    it('Should fail if a route is missing', async () => {
+      const testDB = new LokiDatabaseConnection()
+      testDB.connect()
+      const routes = await testDB.createCollection('routes')
+
+      expect(await checkRoute(validRoutes, { routeGTFSID: '4-601' })).to.not.exist
+      expect(await checkRoute(routes, { routeGTFSID: '4-601' })).to.deep.equal({
+        query: { routeGTFSID: '4-601' },
+        reason: 'missing-route'
+      })
+    })
+
     it('Should fail if a route is missing a route path', async () => {
       const testDB = new LokiDatabaseConnection()
       testDB.connect()

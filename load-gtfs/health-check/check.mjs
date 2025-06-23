@@ -3,9 +3,23 @@ import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
 import utils from '../../utils.js'
 
+const FAILURE_TEXTS = {
+  'missing-stop': 'Missing Stop',
+  'missing-text-query': 'Missing Text Query (Searching)',
+  'missing-bay': 'Missing Stop Bay',
+  'missing-bay-services': 'Missing Stop Bay Services',
+  'missing-tramtracker-id': 'Missing TramTracker Data',
+  'missing-vnet-data': 'Missing VNet Data',
+  'missing-stop-number': 'Missing Stop Number',
+
+  'missing-route': 'Missing Route',
+  'missing-route-path': 'Missing Route Path',
+  'missing-route-stops': 'Missing Route Stops',
+}
+
 export async function checkStop(stops, stopName, mode) {
  let dbStop = await stops.findDocument({ stopName })
-  if (!dbStop) return { stop: stopName, reason: 'missing', mode }
+  if (!dbStop) return { stop: stopName, reason: 'missing-stop', mode }
   if (!dbStop.textQuery || !dbStop.textQuery.length)  return { stop: stopName, reason: 'missing-text-query', mode }
   if (!dbStop.bays.find(bay => bay.mode === mode)) return { stop: stopName, reason: 'missing-bay', mode }
   if (!dbStop.bays.find(bay => bay.mode === mode && bay.services.length && bay.screenServices.length)) return { stop: stopName, reason: 'missing-bay-services', mode }
@@ -56,7 +70,7 @@ export async function checkStops(db) {
 
 export async function checkRoute(routes, query) {
   let routeData = await routes.findDocument({ ...query })
-  if (!routeData) return { query, reason: 'missing' }
+  if (!routeData) return { query, reason: 'missing-route' }
   if (!routeData.routePath.length) return { query, reason: 'missing-route-path', mode: routeData.mode }
   if (!routeData.directions.length) return { query, reason: 'missing-route-stops', mode: routeData.mode }
 }
@@ -81,7 +95,7 @@ async function checkRoutes(db) {
   let testFailures = []
 
   let targetRoutes = [
-    { routeGTFSID: '1-GEL', routeGTFSID: '2-PKM' }, { routeGTFSID: '3-67' }, { routeGTFSID: '4-630' }, { routeGTFSID: '5-BGO' },
+    { routeGTFSID: '1-GEL' }, { routeGTFSID: '2-PKM' }, { routeGTFSID: '3-67' }, { routeGTFSID: '4-630' }, { routeGTFSID: '5-BGO' },
     { routeGTFSID: '10-GSR' }, { routeGTFSID: '11-SKY' },
     { mode: 'bus', routeNumber: '1', region: 'Bairnsdale' },
     { mode: 'bus', routeNumber: '3', region: 'Lakes Entrance' },
@@ -108,8 +122,28 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
-  console.log(await checkStops(mongoDB))
-  utils.inspect(await checkRoutes(mongoDB))
+  let output = []
+
+  let stopCheck = await checkStops(mongoDB)
+  let routeCheck = await checkRoutes(mongoDB)
+
+  if (stopCheck.status === 'ok') output.push('Stop Data: OK ✅')
+  else {
+    output.push('Stop Data: Fail ❌')
+    output.push('Failing Stops:')
+    output.push(stopCheck.failures.map(failure => `${failure.stop} (${failure.mode}): ${FAILURE_TEXTS[failure.reason]}`))
+  }
+  
+  output.push('')
+  
+  if (routeCheck.status === 'ok') output.push('Route Data: OK ✅')
+  else {
+    output.push('Route Data: Fail ❌')
+    output.push('Failing Routes:')
+    output.push(routeCheck.failures.map(failure => `${failure.query}${failure.mode ? ` (${failure.mode})` : ''}: ${FAILURE_TEXTS[failure.reason]}`))
+  }
+
+  console.log(output.join('\n'))
 
   process.exit(0)
 }
