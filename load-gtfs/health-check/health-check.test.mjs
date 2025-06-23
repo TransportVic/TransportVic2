@@ -83,7 +83,50 @@ describe('The GTFS health check module', () => {
         mode: 'metro train'
       })
     })
+
+    it('Should fail if a tram stop in the test stop data is missing its TramTracker data', async () => {
+      const testDB = new LokiDatabaseConnection()
+      testDB.connect()
+      const stops = await testDB.createCollection('stops')
+      let testStops = []
+      for (let stop of clone(expectedStops)) {
+        stop.bays.forEach(bay => delete bay.tramTrackerID)
+        testStops.push(stop)
+      }
+
+      await stops.createDocuments(testStops)
+
+      expect(await checkStop(validStops, 'Flinders Street Railway Station', 'tram')).to.not.exist
+      expect(await checkStop(stops, 'Flinders Street Railway Station', 'metro train')).to.not.exist // Metro data should not be affected
+      expect(await checkStop(stops, 'Flinders Street Railway Station', 'tram')).to.deep.equal({
+        stop: 'Flinders Street Railway Station',
+        reason: 'missing-tramtracker-id',
+        mode: 'tram'
+      })
+    })
+
+    it('Should fail if a V/Line station in the test stop data is missing its VNet data', async () => {
+      const testDB = new LokiDatabaseConnection()
+      testDB.connect()
+      const stops = await testDB.createCollection('stops')
+      let testStops = []
+      for (let stop of clone(expectedStops)) {
+        stop.bays.forEach(bay => delete bay.vnetStationName)
+        testStops.push(stop)
+      }
+
+      await stops.createDocuments(testStops)
+
+      expect(await checkStop(validStops, 'Flinders Street Railway Station', 'regional train')).to.not.exist
+      expect(await checkStop(stops, 'Flinders Street Railway Station', 'metro train')).to.not.exist // Metro data should not be affected
+      expect(await checkStop(stops, 'Flinders Street Railway Station', 'regional train')).to.deep.equal({
+        stop: 'Flinders Street Railway Station',
+        reason: 'missing-vnet-name',
+        mode: 'regional train'
+      })
+    })
   })
+
   describe('The checkStopNumbers function', () => {
     it('Should fail if a bay in the test stop data is missing its stop number', async () => {
       const testDB = new LokiDatabaseConnection()

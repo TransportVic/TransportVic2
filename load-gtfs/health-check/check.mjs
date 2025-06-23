@@ -29,9 +29,11 @@ export async function checkStops(db) {
   for (let stopName of ['Monash University Bus Loop', 'Clifton Hill Interchange/Queens Parade', 'Horsham Town Centre/Roberts Avenue', 'Bairnsdale Hospital/Princes Highway', 'Melbourne Airport T1 Skybus/Arrival Drive']) {
     testFailures.push(await checkStop(stops, stopName, 'bus'))
   }
+  testFailures.push(await checkStopNumbers(stops, 'Frankston Railway Station', 'bus'))
 
   for (let stopName of ['Melbourne University/Swanston Street', 'Clifton Hill Interchange/Queens Parade', 'Elsternwick Railway Station', 'Footscray Railway Station', 'Bourke Street Mall']) {
     testFailures.push(await checkStop(stops, stopName, 'tram'))
+    testFailures.push(await checkStopNumbers(stops, stopName, 'tram'))
   }
 
   let failures = testFailures.filter(Boolean)
