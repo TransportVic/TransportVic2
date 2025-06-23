@@ -2,8 +2,17 @@ export async function checkStops(db) {
   let stops = db.getCollection('stops')
   let failures = []
 
-  let metroStops = ['Flinders Street', 'Ringwood', 'Sunshine']
-  for (let stopName of metroStops) {
+  let metroStations = ['Flinders Street', 'Ringwood', 'Sunshine']
+  for (let stopName of metroStations) {
+    let dbStop = await stops.findDocument({ stopName: stopName + ' Railway Station' })
+    if (!dbStop) {
+      failures.push({ stop: stopName, reason: 'missing' })
+      continue
+    }
+  }
+
+  let vlineStations = ['Bendigo', 'Southern Cross']
+  for (let stopName of vlineStations) {
     let dbStop = await stops.findDocument({ stopName: stopName + ' Railway Station' })
     if (!dbStop) {
       failures.push({ stop: stopName, reason: 'missing' })

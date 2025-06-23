@@ -20,13 +20,31 @@ describe('The GTFS health check module', () => {
     })
 
     it('Should fail if a stop is missing', async () => {
-      const db = new LokiDatabaseConnection()
-      db.connect()
-      const stops = await db.createCollection('stops')
+      const testDB1 = new LokiDatabaseConnection()
+      testDB1.connect()
+      const stops1 = await testDB1.createCollection('stops')
+      await stops1.createDocuments(clone(expectedStops.filter(stop => !stop.stopName.startsWith('Flinders Street'))))
 
-      let outcome = await checkStops(db)
-      expect(outcome.status).to.equal('fail')
-      expect(outcome.failures.some(failure => failure.stop === 'Flinders Street' && failure.reason === 'missing')).to.be.true
+      expect(await checkStops(testDB1)).to.deep.equal({
+        status: 'fail',
+        failures: [{
+          stop: 'Flinders Street',
+          reason: 'missing'
+        }]
+      })
+
+      const testDB2 = new LokiDatabaseConnection()
+      testDB2.connect()
+      const stops2 = await testDB2.createCollection('stops')
+      await stops2.createDocuments(clone(expectedStops.filter(stop => !stop.stopName.startsWith('Bendigo'))))
+
+      expect(await checkStops(testDB2)).to.deep.equal({
+        status: 'fail',
+        failures: [{
+          stop: 'Bendigo',
+          reason: 'missing'
+        }]
+      })
     })
   })
 })
