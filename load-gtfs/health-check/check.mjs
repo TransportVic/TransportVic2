@@ -7,6 +7,14 @@ export async function checkStop(stops, stopName, mode) {
   if (!dbStop) return { stop: stopName, reason: 'missing', mode }
   if (!dbStop.bays.find(bay => bay.mode === mode)) return { stop: stopName, reason: 'missing-bay', mode }
   if (!dbStop.bays.find(bay => bay.mode === mode && bay.services.length && bay.screenServices.length)) return { stop: stopName, reason: 'missing-bay-services', mode }
+  
+  if (mode === 'tram') {
+    if (!dbStop.bays.find(bay => bay.mode === mode && bay.tramTrackerID)) return { stop: stopName, reason: 'missing-tramtracker-id', mode }
+  }
+
+  if (mode === 'regional train') {
+    if (!dbStop.bays.find(bay => bay.mode === mode && bay.vnetStationName)) return { stop: stopName, reason: 'missing-vnet-name', mode }
+  }
 }
 
 export async function checkStopNumbers(stops, stopName, mode) {
