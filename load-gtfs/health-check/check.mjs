@@ -9,6 +9,9 @@ export async function checkStops(db) {
       failures.push({ stop: stopName, reason: 'missing' })
       continue
     }
+    if (!dbStop.bays.find(bay => bay.mode === 'metro train')) {
+      failures.push({ stop: stopName, reason: 'missing-bay' })
+    }
   }
 
   let vlineStations = ['Bendigo', 'Southern Cross']

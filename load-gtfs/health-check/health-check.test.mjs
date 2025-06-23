@@ -53,6 +53,7 @@ describe('The GTFS health check module', () => {
       const stops = await testDB.createCollection('stops')
       let testStops = []
       for (let stop of clone(expectedStops)) {
+        // Assume FSS somehow didn't load in metro stops but the stop still exists due to tram data
         if (stop.stopName.startsWith('Flinders Street')) stop.bays = stop.bays.filter(bay => bay.mode === 'tram')
         testStops.push(stop)
       }
@@ -63,7 +64,7 @@ describe('The GTFS health check module', () => {
         status: 'fail',
         failures: [{
           stop: 'Flinders Street',
-          reason: 'missing-bays'
+          reason: 'missing-bay'
         }]
       })
     })
