@@ -60,6 +60,10 @@ export async function checkRoute(routes, query) {
   if (!routeData.directions.length) return { query, reason: 'missing-route-stops', mode: routeData.mode }
 }
 
+export async function checkRouteOperators(routes) {
+
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()

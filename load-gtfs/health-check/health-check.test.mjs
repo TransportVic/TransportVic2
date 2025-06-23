@@ -3,7 +3,7 @@ import { LokiDatabaseConnection } from '@transportme/database'
 import sampleSchTrips from '../../modules/departures/test/sample-data/sample-sch-trips.json' with { type: 'json' }
 import expectedStops from './sample-data/expected-stops.json' with { type: 'json' }
 import expectedRoute from './sample-data/expected-routes.json' with { type: 'json' }
-import { checkRoute, checkStop, checkStopNumbers } from './check.mjs'
+import { checkRoute, checkRouteOperators, checkStop, checkStopNumbers } from './check.mjs'
 
 expectedStops.forEach(stop => stop.textQuery = ['A', 'B'])
 
@@ -207,6 +207,30 @@ describe('The GTFS health check module', () => {
         reason: 'missing-route-stops',
         mode: 'bus'
       })
+    })
+  })
+
+  describe('The checkRouteOperators function', () => {
+    it('Should identify any route with an unknown/default operator', async () => {
+      const testDB = new LokiDatabaseConnection()
+      testDB.connect()
+      const routes = await testDB.createCollection('routes')
+      let testRoute1 = clone(expectedRoute)
+      testRoute1.operators = []
+
+      let testRoute2 = clone(expectedRoute)
+      testRoute2.operators = ['Unknown']
+      testRoute2.routeGTFSID = '4-630'
+      testRoute2.routeNumber = '630'
+
+      await routes.createDocuments([ testRoute1, testRoute2 ])
+
+      expect(await checkRouteOperators(validRoutes)).to.not.exist
+      expect(await checkRouteOperators(routes)).to.deep.equal([{
+        routeGTFSID: '4-601', routeNumber: '601', mode: 'bus'
+      }, {
+        routeGTFSID: '4-630', routeNumber: '630', mode: 'bus'
+      }])
     })
   })
 })
