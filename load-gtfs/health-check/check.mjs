@@ -2,6 +2,7 @@ export async function checkStop(stops, stopName, mode) {
  let dbStop = await stops.findDocument({ stopName })
   if (!dbStop) return { stop: stopName, reason: 'missing' }
   if (!dbStop.bays.find(bay => bay.mode === mode)) return { stop: stopName, reason: 'missing-bay' }
+  if (!dbStop.bays.find(bay => bay.mode === mode && bay.services.length && bay.screenServices.length)) return { stop: stopName, reason: 'missing-bay-services' }
 }
 
 export async function checkStops(db) {
