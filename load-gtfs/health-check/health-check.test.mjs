@@ -2,14 +2,15 @@ import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
 import sampleSchTrips from '../../modules/departures/test/sample-data/sample-sch-trips.json' with { type: 'json' }
 import expectedStops from './sample-data/expected-stops.json' with { type: 'json' }
-import { checkStop, checkStops } from './check.mjs'
+import { checkStop, checkStopNumbers, checkStops } from './check.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
 const validDB = new LokiDatabaseConnection()
 validDB.connect()
 await (await validDB.createCollection('gtfs timetables')).createDocuments(clone(sampleSchTrips))
-await (await validDB.createCollection('stops')).createDocuments(clone(expectedStops))
+const validStops = await validDB.createCollection('stops')
+await validStops.createDocuments(clone(expectedStops))
 
 describe('The GTFS health check module', () => {
   describe ('The checkStop function', () => {
@@ -21,7 +22,8 @@ describe('The GTFS health check module', () => {
 
       expect(await checkStop(stops1, 'Flinders Street Railway Station', 'metro train')).to.deep.equal({
         stop: 'Flinders Street Railway Station',
-        reason: 'missing'
+        reason: 'missing',
+        mode: 'metro train'
       })
 
       const testDB2 = new LokiDatabaseConnection()
@@ -31,7 +33,8 @@ describe('The GTFS health check module', () => {
 
       expect(await checkStop(stops2, 'Bendigo Railway Station', 'regional train')).to.deep.equal({
         stop: 'Bendigo Railway Station',
-        reason: 'missing'
+        reason: 'missing',
+        mode: 'regional train'
       })
     })
 
@@ -50,7 +53,8 @@ describe('The GTFS health check module', () => {
 
       expect(await checkStop(stops, 'Flinders Street Railway Station', 'metro train')).to.deep.equal({
         stop: 'Flinders Street Railway Station',
-        reason: 'missing-bay'
+        reason: 'missing-bay',
+        mode: 'metro train'
       })
     })
 
@@ -71,7 +75,29 @@ describe('The GTFS health check module', () => {
 
       expect(await checkStop(stops, 'Flinders Street Railway Station', 'metro train')).to.deep.equal({
         stop: 'Flinders Street Railway Station',
-        reason: 'missing-bay-services'
+        reason: 'missing-bay-services',
+        mode: 'metro train'
+      })
+    })
+  })
+  describe('The checkStopNumbers function', () => {
+    it('Should fail if a bay in the test stop data is missing its stop number', async () => {
+      const testDB = new LokiDatabaseConnection()
+      testDB.connect()
+      const stops = await testDB.createCollection('stops')
+      let testStops = []
+      for (let stop of clone(expectedStops)) {
+        stop.bays.forEach(bay => bay.stopNumber = null)
+        testStops.push(stop)
+      }
+
+      await stops.createDocuments(testStops)
+
+      expect(await checkStopNumbers(validStops, 'Flinders Street Railway Station', 'tram')).to.not.exist
+      expect(await checkStopNumbers(stops, 'Flinders Street Railway Station', 'tram')).to.deep.equal({
+        stop: 'Flinders Street Railway Station',
+        reason: 'missing-stop-number',
+        mode: 'tram'
       })
     })
   })
