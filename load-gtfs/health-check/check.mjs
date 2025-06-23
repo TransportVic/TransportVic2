@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'url'
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
+import utils from '../../utils.js'
 
 export async function checkStop(stops, stopName, mode) {
  let dbStop = await stops.findDocument({ stopName })
@@ -82,7 +83,13 @@ async function checkRoutes(db) {
   let targetRoutes = [
     { routeGTFSID: '1-GEL', routeGTFSID: '2-PKM' }, { routeGTFSID: '3-67' }, { routeGTFSID: '4-630' }, { routeGTFSID: '5-BGO' },
     { routeGTFSID: '10-GSR' }, { routeGTFSID: '11-SKY' },
-    { routeGTFSID: 'bus', routeNumber: '1', suburb: 'East Bairnsdale' } // TODO: Implement network region
+    { mode: 'bus', routeNumber: '1', region: 'Bairnsdale' },
+    { mode: 'bus', routeNumber: '3', region: 'Lakes Entrance' },
+    { mode: 'bus', routeNumber: '83', region: 'Warragul' },
+    { mode: 'bus', routeNumber: '433', region: 'Bacchus Marsh' },
+    { mode: 'bus', routeNumber: '401', region: 'Wangaratta' },
+    { mode: 'bus', routeNumber: '1', region: 'Castlemaine' },
+    { mode: 'bus', routeNumber: '5', region: 'Horsham' }
   ]
 
   for (let route of targetRoutes) testFailures.push(await checkRoute(routes, route))
@@ -102,7 +109,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   await mongoDB.connect()
 
   console.log(await checkStops(mongoDB))
-  console.log(await checkRoutes(mongoDB))
+  utils.inspect(await checkRoutes(mongoDB))
 
   process.exit(0)
 }

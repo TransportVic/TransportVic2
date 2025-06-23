@@ -68,7 +68,8 @@ let routeData = await async.reduce(network.features, {}, async (acc, region) => 
     }
     await routes.updateDocument({ routeGTFSID: route.routeGTFSID }, {
       $set: {
-        operators: [ regionOperators[route.routeNumber] ]
+        operators: [ regionOperators[route.routeNumber] ],
+        region: regionName
       }
     })
   }
