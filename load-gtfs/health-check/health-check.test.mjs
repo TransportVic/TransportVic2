@@ -67,5 +67,26 @@ describe('The GTFS health check module', () => {
         reason: 'missing-bay'
       })
     })
+
+    it('Should fail if a bay in the test stop data is missing service data', async () => {
+      const testDB = new LokiDatabaseConnection()
+      testDB.connect()
+      const stops = await testDB.createCollection('stops')
+      let testStops = []
+      for (let stop of clone(expectedStops)) {
+        stop.bays.forEach(bay => {
+          bay.services = []
+          bay.screenServices = []
+        })
+        testStops.push(stop)
+      }
+
+      await stops.createDocuments(testStops)
+
+      expect(await checkStop(stops, 'Flinders Street Railway Station', 'metro train')).to.deep.equal({
+        stop: 'Flinders Street Railway Station',
+        reason: 'missing-bay-services'
+      })
+    })
   })
 })
