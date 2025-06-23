@@ -2,7 +2,8 @@ import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
 import sampleSchTrips from '../../modules/departures/test/sample-data/sample-sch-trips.json' with { type: 'json' }
 import expectedStops from './sample-data/expected-stops.json' with { type: 'json' }
-import { checkStop, checkStopNumbers } from './check.mjs'
+import expectedRoute from './sample-data/expected-routes.json' with { type: 'json' }
+import { checkRoute, checkStop, checkStopNumbers } from './check.mjs'
 
 expectedStops.forEach(stop => stop.textQuery = ['A', 'B'])
 
@@ -11,7 +12,9 @@ let clone = o => JSON.parse(JSON.stringify(o))
 const validDB = new LokiDatabaseConnection()
 validDB.connect()
 await (await validDB.createCollection('gtfs timetables')).createDocuments(clone(sampleSchTrips))
+const validRoutes = await validDB.createCollection('routes')
 const validStops = await validDB.createCollection('stops')
+await validRoutes.createDocument(clone(expectedRoute))
 await validStops.createDocuments(clone(expectedStops))
 
 describe('The GTFS health check module', () => {
@@ -167,6 +170,42 @@ describe('The GTFS health check module', () => {
         stop: 'Flinders Street Railway Station',
         reason: 'missing-stop-number',
         mode: 'tram'
+      })
+    })
+  })
+
+  describe('The checkRoute function', () => {
+    it('Should fail if a route is missing a route path', async () => {
+      const testDB = new LokiDatabaseConnection()
+      testDB.connect()
+      const routes = await testDB.createCollection('routes')
+      let testRoute = clone(expectedRoute)
+      testRoute.routePath = []
+
+      await routes.createDocument(testRoute)
+
+      expect(await checkRoute(validRoutes, { routeGTFSID: '4-601' })).to.not.exist
+      expect(await checkRoute(routes, { routeGTFSID: '4-601' })).to.deep.equal({
+        query: { routeGTFSID: '4-601' },
+        reason: 'missing-route-path',
+        mode: 'bus'
+      })
+    })
+
+    it('Should fail if a route is missing its route stops', async () => {
+      const testDB = new LokiDatabaseConnection()
+      testDB.connect()
+      const routes = await testDB.createCollection('routes')
+      let testRoute = clone(expectedRoute)
+      testRoute.directions = []
+
+      await routes.createDocument(testRoute)
+
+      expect(await checkRoute(validRoutes, { routeGTFSID: '4-601' })).to.not.exist
+      expect(await checkRoute(routes, { routeGTFSID: '4-601' })).to.deep.equal({
+        query: { routeGTFSID: '4-601' },
+        reason: 'missing-route-stops',
+        mode: 'bus'
       })
     })
   })

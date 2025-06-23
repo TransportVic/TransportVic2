@@ -53,6 +53,10 @@ export async function checkStops(db) {
   }
 }
 
+export async function checkRoute(routes, query) {
+  
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
