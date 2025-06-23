@@ -16,30 +16,27 @@ export async function checkStopNumbers(stops, stopName, mode) {
 
 export async function checkStops(db) {
   let stops = db.getCollection('stops')
-  let failures = []
+  let testFailures = []
 
   for (let stopName of ['Flinders Street', 'Ringwood', 'Sunshine']) {
-    let fail
-    if (fail = await checkStop(stops, stopName + ' Railway Station', 'metro train')) failures.push(fail)
+    testFailures.push(await checkStop(stops, stopName + ' Railway Station', 'metro train'))
   }
 
   for (let stopName of ['Southern Cross', 'Bendigo']) {
-    let fail
-    if (fail = await checkStop(stops, stopName + ' Railway Station', 'regional train')) failures.push(fail)
+    testFailures.push(await checkStop(stops, stopName + ' Railway Station', 'regional train'))
   }
 
   for (let stopName of ['Monash University Bus Loop', 'Clifton Hill Interchange/Queens Parade', 'Horsham Town Centre/Roberts Avenue', 'Bairnsdale Hospital/Princes Highway', 'Melbourne Airport T1 Skybus/Arrival Drive']) {
-    let fail
-    if (fail = await checkStop(stops, stopName, 'bus')) failures.push(fail)
+    testFailures.push(await checkStop(stops, stopName, 'bus'))
   }
 
   for (let stopName of ['Melbourne University/Swanston Street', 'Clifton Hill Interchange/Queens Parade', 'Elsternwick Railway Station', 'Footscray Railway Station', 'Bourke Street Mall']) {
-    let fail
-    if (fail = await checkStop(stops, stopName, 'tram')) failures.push(fail)
+    testFailures.push(await checkStop(stops, stopName, 'tram'))
   }
 
+  let failures = testFailures.filter(Boolean)
   if (failures.length) {
-    return { status: 'fail', failures }
+    return { status: 'fail', failures: failures }
   } else {
     return { status: 'ok' }
   }
