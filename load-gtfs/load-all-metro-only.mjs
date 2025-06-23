@@ -18,6 +18,9 @@ function runNode(file, args = []) {
   return promise
 }
 
+let start = new Date()
+console.log('Starting full GTFS loader', start)
+
 await runNode('create-indexes.mjs')
 await runNode('load-all-stops-routes.mjs', ['2'])
 await runNode('load-all-trips.mjs', ['2'])
@@ -32,3 +35,5 @@ await runNode('metro/load-metro-directions.mjs')
 await runNode('extra/load-search-query.js')
 
 await runNode('move-database.mjs')
+
+console.log('\nLoading GTFS took', (new Date() - start) / 1000 / 60, 'minutes overall')

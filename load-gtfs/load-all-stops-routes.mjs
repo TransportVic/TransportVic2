@@ -48,7 +48,7 @@ let stops = await database.createCollection('stops')
 let routes = await database.createCollection('routes')
 
 let start = new Date()
-console.log('Start', start)
+console.log('Start loading stops and routes', start)
 
 let routeIDMap = {}
 
