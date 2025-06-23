@@ -22,9 +22,19 @@ for (let stop of pkmStops.concat(bbnStops)) {
 describe('The GTFS health check module', () => {
   describe('The checkStops function', () => {
     it('Should verify that certain key stops are present', async () => {
-      expect(checkStops(validDB)).to.deep.equal({
+      expect(await checkStops(validDB)).to.deep.equal({
         status: 'ok'
       })
+    })
+
+    it('Should fail if a stop is missing', async () => {
+      const db = new LokiDatabaseConnection()
+      db.connect()
+      const stops = await db.createCollection('stops')
+
+      let outcome = await checkStops(db)
+      expect(outcome.status).to.equal('fail')
+      expect(outcome.failures.some(failure => failure.stop === 'Flinders Street' && failure.reason === 'missing')).to.be.true
     })
   })
 })
