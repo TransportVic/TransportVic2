@@ -662,7 +662,28 @@ module.exports = {
   findLastIndex: (arr, func) => {
     return arr.reduce((prev, curr, index) => func(curr) ? index : prev, -1);
   },
-  inspect: e => console.log(util.inspect(e, { depth: null, colors: true, maxArrayLength: null }))
+  inspect: e => console.log(util.inspect(e, { depth: null, colors: true, maxArrayLength: null })),
+  chunkText: (text, maxChunkSize) => {
+    if (text.length <= maxChunkSize) return [[ text ]]
+    let chunks = []
+
+    let lines = text.split('\n')
+    let currentChunk = []
+    let currentLength = 0
+    for (let i = 0; i < lines.length; i ++) {
+      let currentLine = lines[i]
+      if (currentLength + currentLine.length <= maxChunkSize) {
+        currentChunk.push(currentLine)
+        currentLength += currentLine.length + 1
+      } else {
+        chunks.push(currentChunk)
+        currentChunk = [currentLine]
+        currentLength = currentLine.length
+      }
+    }
+    if (currentChunk) chunks.push(currentChunk)
+    return chunks
+  }
 }
 
 require('./init-loggers')

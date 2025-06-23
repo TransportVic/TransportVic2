@@ -2,6 +2,7 @@ import { fileURLToPath } from 'url'
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
 import utils from '../../utils.js'
+import discordIntegration from '../../modules/discord-integration.js'
 
 const FAILURE_TEXTS = {
   'missing-stop': 'Missing Stop',
@@ -155,7 +156,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     }
   }
 
-  console.log(output.join('\n'))
+  let outputText = output.join('\n')
+  console.log(outputText)
+  await discordIntegration('gtfsHealthCheck', outputText)
 
   process.exit(0)
 }

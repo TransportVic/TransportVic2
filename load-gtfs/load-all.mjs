@@ -41,7 +41,7 @@ await runNode('tram/load-tramtracker-ids.mjs')
 
 await runNode('metro/load-metro-directions.mjs')
 await runNode('extra/load-search-query.mjs')
-await runNode('extra/load-route-suburbs.mjs')
+await runNode('extra/load-route-suburbs.mjs') // TODO: Move to network regions
 
 await runNode('bus/generate-regional-bus-groupings.mjs')
 await runNode('bus/load-regional-bus-operators.js')
