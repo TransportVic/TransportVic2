@@ -120,7 +120,7 @@ async function checkRoutes(db) {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
+  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
   let output = []
@@ -132,7 +132,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   else {
     output.push('Stop Data: Fail ❌')
     output.push('Failing Stops:')
-    output.push(stopCheck.failures.map(failure => `${failure.stop} (${failure.mode}): ${FAILURE_TEXTS[failure.reason]}`))
+    output.push(...stopCheck.failures.map(failure => `${failure.stop} (${failure.mode}): ${FAILURE_TEXTS[failure.reason]}`))
   }
   
   output.push('')
@@ -141,7 +141,18 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   else {
     output.push('Route Data: Fail ❌')
     output.push('Failing Routes:')
-    output.push(routeCheck.failures.map(failure => `${failure.query}${failure.mode ? ` (${failure.mode})` : ''}: ${FAILURE_TEXTS[failure.reason]}`))
+    output.push(...routeCheck.failures.map(failure => {
+      let prettyQuery = Object.keys(failure.query).map(key => `${key}: '${failure.query[key]}'`).join(', ')
+      return `{ ${prettyQuery} }${failure.mode ? ` (${failure.mode})` : ''}: ${FAILURE_TEXTS[failure.reason]}`
+    }))
+
+    if (routeCheck.missingOperatorRoutes.length > 20) {
+      output.push('More than 20 routes missing operator data, further investigation needed')
+    } else {
+      output.push(...routeCheck.missingOperatorRoutes.map(failure => {
+        return `(${failure.routeGTFSID} ${failure.mode}): ${failure.routeName} ${failure.routeNumber || ''}`
+      }))
+    }
   }
 
   console.log(output.join('\n'))
