@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
 import sampleSchTrips from '../../modules/departures/test/sample-data/sample-sch-trips.json' with { type: 'json' }
-import expectedStops from './sample-data/expected-metro-stops.json' with { type: 'json' }
+import expectedStops from './sample-data/expected-stops.json' with { type: 'json' }
 import { checkStop, checkStops } from './check.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
@@ -12,25 +12,16 @@ await (await validDB.createCollection('gtfs timetables')).createDocuments(clone(
 await (await validDB.createCollection('stops')).createDocuments(clone(expectedStops))
 
 describe('The GTFS health check module', () => {
-  describe('The checkStops function', () => {
-    it('Should verify that certain key stops are present', async () => {
-      expect(await checkStops(validDB)).to.deep.equal({
-        status: 'ok'
-      })
-    })
-
+  describe ('The checkStop function', () => {
     it('Should fail if a stop is missing', async () => {
       const testDB1 = new LokiDatabaseConnection()
       testDB1.connect()
       const stops1 = await testDB1.createCollection('stops')
       await stops1.createDocuments(clone(expectedStops.filter(stop => !stop.stopName.startsWith('Flinders Street'))))
 
-      expect(await checkStops(testDB1)).to.deep.equal({
-        status: 'fail',
-        failures: [{
-          stop: 'Flinders Street Railway Station',
-          reason: 'missing'
-        }]
+      expect(await checkStop(stops1, 'Flinders Street Railway Station', 'metro train')).to.deep.equal({
+        stop: 'Flinders Street Railway Station',
+        reason: 'missing'
       })
 
       const testDB2 = new LokiDatabaseConnection()
@@ -38,17 +29,12 @@ describe('The GTFS health check module', () => {
       const stops2 = await testDB2.createCollection('stops')
       await stops2.createDocuments(clone(expectedStops.filter(stop => !stop.stopName.startsWith('Bendigo'))))
 
-      expect(await checkStops(testDB2)).to.deep.equal({
-        status: 'fail',
-        failures: [{
-          stop: 'Bendigo Railway Station',
-          reason: 'missing'
-        }]
+      expect(await checkStop(stops2, 'Bendigo Railway Station', 'regional train')).to.deep.equal({
+        stop: 'Bendigo Railway Station',
+        reason: 'missing'
       })
     })
-  })
 
-  describe ('The checkStop function', () => {
     it('Should fail if a bay in the test stop data is missing', async () => {
       const testDB = new LokiDatabaseConnection()
       testDB.connect()

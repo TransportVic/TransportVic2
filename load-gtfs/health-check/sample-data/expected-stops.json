@@ -1517,6 +1517,589 @@
     ]
   },
   {
+    "stopName": "Frankston Railway Station",
+    "suburb": [
+      "Frankston"
+    ],
+    "cleanSuburbs": [
+      "frankston"
+    ],
+    "bays": [
+      {
+        "originalName": "Frankston Railway Station",
+        "fullStopName": "Frankston Railway Station",
+        "stopGTFSID": "vic:rail:FKN",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12616228,
+            -38.14299007
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "2-FKN",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-FKN",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-STY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-STY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "2-FKN",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-STY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Station",
+        "fullStopName": "Frankston Railway Station",
+        "stopGTFSID": "11220",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12604465,
+            -38.1426818
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FKN",
+        "platform": "1"
+      },
+      {
+        "originalName": "Frankston Station",
+        "fullStopName": "Frankston Railway Station",
+        "stopGTFSID": "11221",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12619247,
+            -38.14270218
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FKN",
+        "platform": "2"
+      },
+      {
+        "originalName": "Frankston Railway Station",
+        "fullStopName": "Frankston Railway Station",
+        "stopGTFSID": "26172",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12665884,
+            -38.14320526
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FKN",
+        "platform": "RRB"
+      },
+      {
+        "originalName": "Frankston Station",
+        "fullStopName": "Frankston Railway Station",
+        "stopGTFSID": "26510",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12621712,
+            -38.14263048
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FKN",
+        "platform": "3"
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21212",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12594592,
+            -38.14252703
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-772",
+            "gtfsDirection": 1,
+            "routeNumber": "772"
+          },
+          {
+            "routeGTFSID": "4-772",
+            "gtfsDirection": 0,
+            "routeNumber": "772"
+          },
+          {
+            "routeGTFSID": "4-774",
+            "gtfsDirection": 1,
+            "routeNumber": "774"
+          },
+          {
+            "routeGTFSID": "4-774",
+            "gtfsDirection": 0,
+            "routeNumber": "774"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-772",
+            "gtfsDirection": 0,
+            "routeNumber": "772"
+          },
+          {
+            "routeGTFSID": "4-774",
+            "gtfsDirection": 0,
+            "routeNumber": "774"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21213",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12584983,
+            -38.14271473
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-775",
+            "gtfsDirection": 0,
+            "routeNumber": "775"
+          },
+          {
+            "routeGTFSID": "4-775",
+            "gtfsDirection": 1,
+            "routeNumber": "775"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-775",
+            "gtfsDirection": 0,
+            "routeNumber": "775"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21214",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.1261495,
+            -38.14215179
+          ]
+        },
+        "stopNumber": "125",
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-788",
+            "gtfsDirection": 1,
+            "routeNumber": "788"
+          },
+          {
+            "routeGTFSID": "4-788",
+            "gtfsDirection": 0,
+            "routeNumber": "788"
+          },
+          {
+            "routeGTFSID": "4-887",
+            "gtfsDirection": 1,
+            "routeNumber": "887"
+          },
+          {
+            "routeGTFSID": "4-887",
+            "gtfsDirection": 0,
+            "routeNumber": "887"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-788",
+            "gtfsDirection": 0,
+            "routeNumber": "788"
+          },
+          {
+            "routeGTFSID": "4-887",
+            "gtfsDirection": 0,
+            "routeNumber": "887"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Fletcher Rd",
+        "fullStopName": "Frankston Railway Station/Fletcher Road",
+        "stopGTFSID": "21215",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12622472,
+            -38.1441175
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-789",
+            "gtfsDirection": 1,
+            "routeNumber": "789"
+          },
+          {
+            "routeGTFSID": "4-789",
+            "gtfsDirection": 0,
+            "routeNumber": "789"
+          },
+          {
+            "routeGTFSID": "4-790",
+            "gtfsDirection": 0,
+            "routeNumber": "790"
+          },
+          {
+            "routeGTFSID": "4-790",
+            "gtfsDirection": 1,
+            "routeNumber": "790"
+          },
+          {
+            "routeGTFSID": "4-791",
+            "gtfsDirection": 0,
+            "routeNumber": "791"
+          },
+          {
+            "routeGTFSID": "4-791",
+            "gtfsDirection": 1,
+            "routeNumber": "791"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-789",
+            "gtfsDirection": 0,
+            "routeNumber": "789"
+          },
+          {
+            "routeGTFSID": "4-790",
+            "gtfsDirection": 1,
+            "routeNumber": "790"
+          },
+          {
+            "routeGTFSID": "4-791",
+            "gtfsDirection": 0,
+            "routeNumber": "791"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21216",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12572805,
+            -38.14256861
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-832",
+            "gtfsDirection": 0,
+            "routeNumber": "832"
+          },
+          {
+            "routeGTFSID": "4-832",
+            "gtfsDirection": 1,
+            "routeNumber": "832"
+          },
+          {
+            "routeGTFSID": "4-833",
+            "gtfsDirection": 1,
+            "routeNumber": "833"
+          },
+          {
+            "routeGTFSID": "4-833",
+            "gtfsDirection": 0,
+            "routeNumber": "833"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-832",
+            "gtfsDirection": 0,
+            "routeNumber": "832"
+          },
+          {
+            "routeGTFSID": "4-833",
+            "gtfsDirection": 0,
+            "routeNumber": "833"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21217",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12442553,
+            -38.14486377
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-779",
+            "gtfsDirection": 1,
+            "routeNumber": "779"
+          },
+          {
+            "routeGTFSID": "4-779",
+            "gtfsDirection": 0,
+            "routeNumber": "779"
+          },
+          {
+            "routeGTFSID": "4-780",
+            "gtfsDirection": 1,
+            "routeNumber": "780"
+          },
+          {
+            "routeGTFSID": "4-780",
+            "gtfsDirection": 0,
+            "routeNumber": "780"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-779",
+            "gtfsDirection": 0,
+            "routeNumber": "779"
+          },
+          {
+            "routeGTFSID": "4-780",
+            "gtfsDirection": 0,
+            "routeNumber": "780"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21218",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12591977,
+            -38.14221121
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-770",
+            "gtfsDirection": 0,
+            "routeNumber": "770"
+          },
+          {
+            "routeGTFSID": "4-770",
+            "gtfsDirection": 1,
+            "routeNumber": "770"
+          },
+          {
+            "routeGTFSID": "4-771",
+            "gtfsDirection": 0,
+            "routeNumber": "771"
+          },
+          {
+            "routeGTFSID": "4-771",
+            "gtfsDirection": 1,
+            "routeNumber": "771"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-770",
+            "gtfsDirection": 0,
+            "routeNumber": "770"
+          },
+          {
+            "routeGTFSID": "4-771",
+            "gtfsDirection": 0,
+            "routeNumber": "771"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "40396",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12534242,
+            -38.14381505
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-901",
+            "gtfsDirection": 1,
+            "routeNumber": "901"
+          },
+          {
+            "routeGTFSID": "4-901",
+            "gtfsDirection": 0,
+            "routeNumber": "901"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-901",
+            "gtfsDirection": 1,
+            "routeNumber": "901"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Fletcher Rd",
+        "fullStopName": "Frankston Railway Station/Fletcher Road",
+        "stopGTFSID": "21220",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12623613,
+            -38.14411769
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "11-SK4",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "11-SK4",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "11-SK4",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Frankston Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "frankston-railway-station",
+    "cleanNames": [
+      "frankston-railway-station",
+      "frankston-railway-station-young-street",
+      "frankston-railway-station-fletcher-road"
+    ],
+    "codedSuburbs": [
+      "frankston"
+    ]
+  },
+  {
     "stopName": "Ringwood Railway Station",
     "suburb": [
       "Ringwood"
