@@ -20,6 +20,7 @@ describe('The GTFS health check module', () => {
       const stops1 = await testDB1.createCollection('stops')
       await stops1.createDocuments(clone(expectedStops.filter(stop => !stop.stopName.startsWith('Flinders Street'))))
 
+      expect(await checkStop(validStops, 'Flinders Street Railway Station', 'regional train')).to.not.exist
       expect(await checkStop(stops1, 'Flinders Street Railway Station', 'metro train')).to.deep.equal({
         stop: 'Flinders Street Railway Station',
         reason: 'missing',
@@ -31,6 +32,7 @@ describe('The GTFS health check module', () => {
       const stops2 = await testDB2.createCollection('stops')
       await stops2.createDocuments(clone(expectedStops.filter(stop => !stop.stopName.startsWith('Bendigo'))))
 
+      expect(await checkStop(validStops, 'Bendigo Railway Station', 'regional train')).to.not.exist
       expect(await checkStop(stops2, 'Bendigo Railway Station', 'regional train')).to.deep.equal({
         stop: 'Bendigo Railway Station',
         reason: 'missing',
@@ -51,6 +53,7 @@ describe('The GTFS health check module', () => {
 
       await stops.createDocuments(testStops)
 
+      expect(await checkStop(validStops, 'Flinders Street Railway Station', 'metro train')).to.not.exist
       expect(await checkStop(stops, 'Flinders Street Railway Station', 'metro train')).to.deep.equal({
         stop: 'Flinders Street Railway Station',
         reason: 'missing-bay',
@@ -73,6 +76,7 @@ describe('The GTFS health check module', () => {
 
       await stops.createDocuments(testStops)
 
+      expect(await checkStop(validStops, 'Flinders Street Railway Station', 'metro train')).to.not.exist
       expect(await checkStop(stops, 'Flinders Street Railway Station', 'metro train')).to.deep.equal({
         stop: 'Flinders Street Railway Station',
         reason: 'missing-bay-services',
