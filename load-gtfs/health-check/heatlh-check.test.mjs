@@ -1,0 +1,30 @@
+import { expect } from 'chai'
+import { LokiDatabaseConnection } from '@transportme/database'
+import sampleSchTrips from '../../modules/departures/test/sample-data/sample-sch-trips.json' with { type: 'json' }
+import pkmStops from '../../modules/new-tracker/test/sample-data/pkm-stops-db.json' with { type: 'json' }
+import bbnStops from '../../modules/new-tracker/test/sample-data/bbn-stops-db.json' with { type: 'json' }
+import { checkStops } from './check.mjs'
+
+let clone = o => JSON.parse(JSON.stringify(o))
+
+const validDB = new LokiDatabaseConnection()
+validDB.connect()
+await (await validDB.createCollection('gtfs timetables')).createDocuments(clone(sampleSchTrips))
+const stops = await validDB.createCollection('stops')
+
+let stopsSeen = {}
+for (let stop of pkmStops.concat(bbnStops)) {
+  if (stopsSeen[stop.stopName]) continue
+  stopsSeen[stop.stopName] = 1
+  await stops.createDocument(clone(stop))
+}
+
+describe('The GTFS health check module', () => {
+  describe('The checkStops function', () => {
+    it('Should verify that certain key stops are present', async () => {
+      expect(checkStops(validDB)).to.deep.equal({
+        status: 'ok'
+      })
+    })
+  })
+})
