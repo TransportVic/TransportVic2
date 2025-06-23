@@ -1,26 +1,21 @@
+export async function checkStop(stops, stopName, mode) {
+ let dbStop = await stops.findDocument({ stopName })
+  if (!dbStop) return { stop: stopName, reason: 'missing' }
+  if (!dbStop.bays.find(bay => bay.mode === mode)) return { stop: stopName, reason: 'missing-bay' }
+}
+
 export async function checkStops(db) {
   let stops = db.getCollection('stops')
   let failures = []
 
-  let metroStations = ['Flinders Street', 'Ringwood', 'Sunshine']
-  for (let stopName of metroStations) {
-    let dbStop = await stops.findDocument({ stopName: stopName + ' Railway Station' })
-    if (!dbStop) {
-      failures.push({ stop: stopName, reason: 'missing' })
-      continue
-    }
-    if (!dbStop.bays.find(bay => bay.mode === 'metro train')) {
-      failures.push({ stop: stopName, reason: 'missing-bay' })
-    }
+  for (let stopName of ['Flinders Street', 'Ringwood', 'Sunshine']) {
+    let fail
+    if (fail = await checkStop(stops, stopName + ' Railway Station', 'metro train')) failures.push(fail)
   }
 
-  let vlineStations = ['Bendigo', 'Southern Cross']
-  for (let stopName of vlineStations) {
-    let dbStop = await stops.findDocument({ stopName: stopName + ' Railway Station' })
-    if (!dbStop) {
-      failures.push({ stop: stopName, reason: 'missing' })
-      continue
-    }
+  for (let stopName of ['Southern Cross', 'Bendigo']) {
+    let fail
+    if (fail = await checkStop(stops, stopName + ' Railway Station', 'regional train')) failures.push(fail)
   }
 
   if (failures.length) {
