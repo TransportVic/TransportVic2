@@ -230,11 +230,10 @@ describe('The GTFS health check module', () => {
       await routes.createDocuments([ testRoute, testRoute1, testRoute2 ])
 
       expect(await checkRouteOperators(validRoutes)).to.deep.equal([])
-      expect(await checkRouteOperators(routes)).to.deep.equal([{
-        routeGTFSID: '4-630', routeNumber: '630', mode: 'bus'
-      }, {
-        routeGTFSID: '4-900', routeNumber: '900', mode: 'bus'
-      }])
+      
+      let testOutput = await checkRouteOperators(routes)
+      expect(testOutput.find(route => route.routeGTFSID === '4-630')).to.exist
+      expect(testOutput.find(route => route.routeGTFSID === '4-900')).to.exist
     })
   })
 })

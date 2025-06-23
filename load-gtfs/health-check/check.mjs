@@ -70,8 +70,31 @@ export async function checkRouteOperators(routes) {
   }).toArray()
 
   return missingOperatorRoutes.map(route => ({
-    mode: route.mode, routeGTFSID: route.routeGTFSID, routeNumber: route.routeNumber
+    mode: route.mode, routeGTFSID: route.routeGTFSID,
+    routeNumber: route.routeNumber, routeName: route.routeName
   })).sort((a, b) => a.routeGTFSID.localeCompare(b.routeGTFSID))
+}
+
+async function checkRoutes(db) {
+  let routes = db.getCollection('routes')
+  let testFailures = []
+
+  let targetRoutes = [
+    { routeGTFSID: '1-GEL', routeGTFSID: '2-PKM' }, { routeGTFSID: '3-67' }, { routeGTFSID: '4-630' }, { routeGTFSID: '5-BGO' },
+    { routeGTFSID: '10-GSR' }, { routeGTFSID: '11-SKY' },
+    { routeGTFSID: 'bus', routeNumber: '1', suburb: 'East Bairnsdale' } // TODO: Implement network region
+  ]
+
+  for (let route of targetRoutes) testFailures.push(await checkRoute(routes, route))
+
+  let missingOperatorRoutes = await checkRouteOperators(routes)
+
+  let failures = testFailures.filter(Boolean)
+  if (failures.length || missingOperatorRoutes.length) {
+    return { status: 'fail', failures: failures, missingOperatorRoutes }
+  } else {
+    return { status: 'ok' }
+  }
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
@@ -79,6 +102,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   await mongoDB.connect()
 
   console.log(await checkStops(mongoDB))
+  console.log(await checkRoutes(mongoDB))
 
   process.exit(0)
 }
