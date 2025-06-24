@@ -1,13 +1,15 @@
 const moment = require('moment-timezone')
 moment.tz.setDefault('Australia/Melbourne')
-const fetch = require('node-fetch')
 const stopNameModifier = require('./additional-data/stop-name-modifier')
 const TimedCache = require('./TimedCache')
 const EventEmitter = require('events')
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path')
+
 const { spawn } = require('child_process')
+const util = require('util')
+const fetch = require('node-fetch')
 
 const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
 const locks = {}, caches = {}
@@ -201,19 +203,21 @@ module.exports = {
     .replace(/Pkwy(\b)/g, 'Parkway$1')
     .replace(/Devn(\b)/g, 'Deviation$1')
     .replace(/Sec Col(\b)/g, 'Secondary College$1')
+    .replace(/Sec College(\b)/g, 'Secondary College$1')
     .replace(/Rec Res(\b)/g, 'Rec Reserve$1')
     .replace(/SC Senior Campus(\b)/g, 'Secondary College Senior Campus$1')
     .replace(/([\w ]*?) ?- ?([\w ]*?) Road/g, '$1-$2 Road')
     .replace(/St(\b)/, 'St.$1')
     .replace('St..', 'St. ')
     .replace('Ret Village', 'Retirement Village')
-    .replace(' SC', ' Shopping Centre')
+    .replace(/ SC(\b)/, ' Shopping Centre$1')
+    .replace(/ RS(\b)/, ' Railway Station$1')
     .replace(/Cresent/g, 'Crescent')
 
     return name.replace(/  +/g, ' ')
   },
   shorternStopName: name => {
-    name = name.replace('Railway Station', 'RS')
+    name = name.replace('Railway Station', 'RS') 
       .replace('Shopping Centre', 'SC')
       .replace('University', 'Uni')
       .replace('Road', 'Rd')
@@ -298,6 +302,17 @@ module.exports = {
   formatHHMM: time => { // TODO: Rename getHHMM
     return time.format('HH:mm')
   },
+  formatPTHHMM: time => { // TODO: Rename getHHMM
+    let hours = time.get('hours')
+    let hour = time.format('HH')
+    if (hours < 3) {
+      let startOfPTDay = time.clone().startOf('day').add(-1, 'day')
+      hour = time.diff(startOfPTDay, 'hours')
+      return `${hour}:${time.format('mm')}`
+    }
+
+    return time.format('HH:mm')
+  },
   getYYYYMMDD: time => {
     // let cloned = time.clone()
     // if (cloned.get('hours') < 3) // 3am PT day :((((
@@ -345,15 +360,19 @@ module.exports = {
       }
     }
 
+    let diff = (+new Date()) - start
+    let logMessage = `${diff}ms ${url}`
+
     if (!body && error) {
       if (error.message && error.message.toLowerCase().includes('network timeout')) {
         let totalTime = fullOptions.timeout * maxRetries
-        let logMessage = `${totalTime}ms ${url}`
-        if (global.loggers) global.loggers.fetch.log(logMessage)
-        else console.log(logMessage)
-
+        logMessage = `${totalTime}ms ${url}`
         error.timeoutDuration = totalTime
       }
+
+      if (global.loggers) global.loggers.fetch.log(logMessage)
+      else console.log(logMessage)
+
       throw error
     }
 
@@ -361,15 +380,13 @@ module.exports = {
       let err = new Error('Bad Request Status')
       err.status = body.status
       err.response = await (options.raw ? body.buffer() : body.text())
+      if (global.loggers) global.loggers.fetch.log(logMessage)
+      else console.log(logMessage)
       throw err
     }
 
     let size = body.headers.get('content-length')
     if (options.stream) {
-      let end = +new Date()
-      let diff = end - start
-
-      let logMessage = `${diff}ms ${url}`
       if (global.loggers) global.loggers.fetch.log(logMessage)
       else console.log(logMessage)
 
@@ -378,10 +395,7 @@ module.exports = {
     let returnData = await (options.raw ? body.buffer() : body.text())
     if (!size) size = returnData.length
 
-    let end = +new Date()
-    let diff = end - start
-
-    let logMessage = `${diff}ms ${url} ${size}R`
+    logMessage = `${diff}ms ${url} ${size}R`
     if (global.loggers) global.loggers.fetch.log(logMessage)
     else console.log(logMessage)
 
@@ -440,6 +454,8 @@ module.exports = {
     return stopName
   },
   parseDate: date => {
+    if (date instanceof Date) return module.exports.parseTime(date)
+
     if (date.match(/^\d{1,2}\/\d{1,2}\/\d{1,4}$/)) return module.exports.parseTime(date, 'DD/MM/YYYY')
     else return module.exports.parseTime(date, 'YYYYMMDD')
   },
@@ -641,6 +657,28 @@ module.exports = {
   },
   findLastIndex: (arr, func) => {
     return arr.reduce((prev, curr, index) => func(curr) ? index : prev, -1);
+  },
+  inspect: e => console.log(util.inspect(e, { depth: null, colors: true, maxArrayLength: null })),
+  chunkText: (text, maxChunkSize) => {
+    if (text.length <= maxChunkSize) return [[ text ]]
+    let chunks = []
+
+    let lines = text.split('\n')
+    let currentChunk = []
+    let currentLength = 0
+    for (let i = 0; i < lines.length; i ++) {
+      let currentLine = lines[i]
+      if (currentLength + currentLine.length <= maxChunkSize) {
+        currentChunk.push(currentLine)
+        currentLength += currentLine.length + 1
+      } else {
+        chunks.push(currentChunk)
+        currentChunk = [currentLine]
+        currentLength = currentLine.length
+      }
+    }
+    if (currentChunk) chunks.push(currentChunk)
+    return chunks
   }
 }
 

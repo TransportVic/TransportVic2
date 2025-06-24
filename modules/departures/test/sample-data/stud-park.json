@@ -1,0 +1,87 @@
+{
+	"stopName" : "Stud Park Shopping Centre",
+	"suburb" : [
+		"Rowville"
+	],
+	"cleanSuburbs" : [
+		"rowville"
+	],
+	"bays" : [
+		{
+			"originalName" : "Stud Park SC/Stud Rd (Rowville)",
+			"fullStopName" : "Stud Park Shopping Centre/Stud Road",
+			"stopGTFSID" : "14177",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					145.23515188,
+					-37.91818486
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "bus",
+			"suburb" : "Rowville"
+		},
+		{
+			"originalName" : "Stud Park SC/Stud Rd (Rowville)",
+			"fullStopName" : "Stud Park Shopping Centre/Stud Road",
+			"stopGTFSID" : "15149",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					145.23495993,
+					-37.91717264
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "bus",
+			"suburb" : "Rowville"
+		},
+		{
+			"originalName" : "Stud Park SC (Rowville)",
+			"fullStopName" : "Stud Park Shopping Centre",
+			"stopGTFSID" : "21314",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					145.23692066,
+					-37.91938294
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "bus",
+			"suburb" : "Rowville"
+		},
+		{
+			"originalName" : "Stud Park SC (Rowville)",
+			"fullStopName" : "Stud Park Shopping Centre",
+			"stopGTFSID" : "21316",
+			"location" : {
+				"type" : "Point",
+				"coordinates" : [
+					145.23756715,
+					-37.91946472
+				]
+			},
+			"stopNumber" : null,
+			"mode" : "bus",
+			"suburb" : "Rowville"
+		}
+	],
+	"mergeName" : "Stud Park Shopping Centre",
+	"services" : [ ],
+	"screenServices" : [ ],
+	"cleanName" : "stud-park-shopping-centre",
+	"cleanNames" : [
+		"stud-park-shopping-centre-stud-road",
+		"stud-park-shopping-centre"
+	],
+	"codedSuburbs" : [
+		"rowville"
+	],
+	"codedName" : "stud-park-shopping-centre",
+	"codedNames" : [
+		"stud-park-shopping-centre-stud-road",
+		"stud-park-shopping-centre"
+	]
+}

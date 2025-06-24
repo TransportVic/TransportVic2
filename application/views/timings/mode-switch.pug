@@ -47,7 +47,7 @@ if stopModes.length > 1
       -
         let url = `/${urlMap[mode] || mode.replace(' ', '-')}/timings/`
         if (mode === 'bus' || mode === 'tram' || mode === 'regional coach') 
-          url += `${stopToUse.codedSuburb[0]}/`
+          url += `${stopToUse.cleanSuburbs[0]}/`
         url += stopToUse.codedName
         if (mode.includes('train'))
           url = url.slice(0, -16)
@@ -58,5 +58,5 @@ if stopModes.length > 1
           url = '/vline/timings/southern-cross'
         }
       a(href=url class=`modeSwitchType ${mode.replace(' ', '-')} ${mode === currentMode ? '' : 'inactive'}`)
-        img(src=`/static/images/clear-icons/${iconMap[mode] || mode}.svg` alt='')
+        img(src=`${staticBase}/static/images/clear-icons/${iconMap[mode] || mode}.svg` alt='')
         span=mode

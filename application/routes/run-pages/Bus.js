@@ -11,11 +11,13 @@ const busBays = require('../../../additional-data/bus-data/bus-bays')
 const getDepartures = require('../../../modules/bus/get-departures')
 const regionalRouteNumbers = require('../../../additional-data/bus-data/regional-with-track')
 
+const overrideStops = require('../../../modules/bus/override-stops')
+
 let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => {
   let regionRoutes = regionalRouteNumbers[region]
 
   regionRoutes.forEach(route => {
-    acc[route.routeGTFSID] = { region, routeNumber: route.routeNumber }
+    acc[route.routeGTFSID] = { region, routeNumber: route.routeNumber, liveTrack: route.liveTrack }
   })
 
   return acc
@@ -29,7 +31,7 @@ function determineStopType(stop) {
   if (screenServices.some(svc => svc.routeGTFSID.startsWith('4-'))) {
     stopType = 'metro'
   } else { // Regional/Skybus
-    if (screenServices.some(svc => regionalGTFSIDs[svc.routeGTFSID])) {
+    if (screenServices.some(svc => regionalGTFSIDs[svc.routeGTFSID] && regionalGTFSIDs[svc.routeGTFSID].liveTrack)) {
       stopType = 'regional-live'
     } else {
       stopType = 'regional'
@@ -130,12 +132,18 @@ async function pickBestTrip(data, db) {
       }
 
       let mockedStop = {
-        codedSuburb: originStop.codedSuburb,
+        cleanSuburbs: originStop.cleanSuburbs,
         stopName: `TRIP.${originStop.stopName}.${originBay.stopGTFSID}`,
         bays: trueOriginBay
       }
 
-      let originDepartures = await getDepartures(mockedStop, db, tripStartTime.clone().add(-5, 'minutes'), true)
+      let affectedStops = Object.values(overrideStops).map(stop => stop.stop_name)
+      let originStopToUse = mockedStop
+      if (affectedStops.some(affected => originStop.stopName.includes(affected) || affected.includes(originStop.stopName))) {
+        originStopToUse = originStop
+      }
+
+      let originDepartures = await getDepartures(originStopToUse, db, tripStartTime.clone().add(-5, 'minutes'), true)
 
       let matchingDeparture = originDepartures.find(departure => {
         let trip = departure.trip
@@ -154,11 +162,11 @@ async function pickBestTrip(data, db) {
       }
     } else if (referenceTrip && referenceTrip.runID) ptvRunID = referenceTrip.runID
 
-    if (ptvRunID === -1 && referenceTrip) {
+    if (!ptvRunID && referenceTrip) {
       let isLive = referenceTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
       return { trip: referenceTrip, tripStartTime, isLive } // Request must have failed, but we have a reference trip
     }
-    if (!ptvRunID) return null // Available options to get ptvRunID unsuccessful - trip does not exist
+    // if (!ptvRunID) return null // Available options to get ptvRunID unsuccessful - trip does not exist
 
     let trip = await getStoppingPattern({
       ptvRunID,
@@ -185,7 +193,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   let routes = res.db.getCollection('routes')
   let tripRoute = await routes.findDocument({ routeGTFSID: trip.routeGTFSID }, { routePath: 0 })
   if (!tripRoute) tripRoute = { operators: [] }
-  let operator = (tripRoute.operators.sort((a, b) => a.length - b.length)[0] || '').replace(/ \(.+/, '')
+  let operator = (tripRoute.operators.sort((a, b) => a.length - b.length)[0] || '')
 
   let {destination, origin} = trip
   let fullDestination = destination

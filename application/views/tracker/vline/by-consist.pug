@@ -5,13 +5,13 @@ block head
     title = 'TransportVic - Tracker/V/Line - By Consist'
     description = 'Tracking all V/Line trips by consist'
   title #{title}
-  link(rel='preload' as='style' href='/static/css/tracker/results.css')
+  link(rel='preload' as='style' href=`${staticBase}/static/css/tracker/results.css`)
   
 block title
   span V/Line Tracker - By Consist
 
 block style
-  link(rel='stylesheet' href='/static/css/tracker/results.css')
+  link(rel='stylesheet' href=`${staticBase}/static/css/tracker/results.css`)
 
 block content
   h1.title Tracking #{consist} Trips on #{date.format('dddd, MMMM Do YYYY')}

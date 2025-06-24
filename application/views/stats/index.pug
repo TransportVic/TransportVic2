@@ -7,11 +7,11 @@ block title
   span Site Statistics
 
 block scripts
-  script(src='/static/scripts/stats.js')
+  script(src=`${staticBase}/static/scripts/stats.js`)
   script(src='https://cdn.plot.ly/plotly-latest.min.js')
   
 //- block style
-//-   link(rel='stylesheet' href='/static/css/stats.css')
+//-   link(rel='stylesheet' href=`${staticBase}/static/css/stats.css`)
 
 block content
   div#timeSpent

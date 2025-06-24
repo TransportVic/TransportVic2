@@ -26,11 +26,11 @@ for stop in stops
       codedName = codedName.slice(0, -16)
     let url = `/${stopIcons[stop.mode]}/timings/`
     if (stop.mode === 'bus' || stop.mode === 'tram' || stop.mode === 'regional coach')
-      url += `${stop.codedSuburb}/`
+      url += `${stop.cleanSuburbs}/`
     url += `${codedName}`
   a(href=url class=`result ${stopCSSClasses[stop.mode]}`)
     div.leftContainer.miniIcon
-      img(src=`/static/images/clear-icons/${stopIcons[stop.mode]}.svg`)
+      img(src=`${staticBase}/static/images/clear-icons/${stopIcons[stop.mode]}.svg`)
       span.distance=stop.smallestDistance + ' metres'
     div.resultDetails
       span #{stop.type} in #{stop.suburb}

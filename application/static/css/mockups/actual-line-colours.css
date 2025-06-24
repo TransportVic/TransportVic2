@@ -25,7 +25,7 @@ div.sandringham {
   color: #000000;
 }
 
-div.showgrounds-flemington {
+div.flemington-racecourse {
   background-color: #CE0058;
 }
 
@@ -72,7 +72,7 @@ p.sandringham {
   color: #000000;
 }
 
-p.showgrounds-flemington {
+p.flemington-racecourse {
   background-color: #CE0058;
   color: #ffffff;
 }
@@ -116,7 +116,7 @@ p.city-circle {
   filter: invert(79%) sepia(39%) saturate(5792%) hue-rotate(296deg) brightness(105%) contrast(89%);
 }
 
-.stoppingPattern.showgrounds-flemington img {
+.stoppingPattern.flemington-racecourse img {
   filter: invert(14%) sepia(84%) saturate(4369%) hue-rotate(322deg) brightness(100%) contrast(117%)
 }
 
@@ -159,7 +159,7 @@ div.platform.sandringham {
   color: #000000;
 }
 
-div.platform.showgrounds-flemington {
+div.platform.flemington-racecourse {
   background-color: #CE0058;
   color: #ffffff;
 }

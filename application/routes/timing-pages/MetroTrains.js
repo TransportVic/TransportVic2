@@ -18,7 +18,7 @@ async function loadDepartures(req, res) {
 
   let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, station)
 
-  let departures = await getDepartures(station, res.db)
+  let departures = await getDepartures(station, res.db, false, false, null)
 
   departures = departures.map(departure => {
     departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
@@ -29,18 +29,29 @@ async function loadDepartures(req, res) {
 
     let {trip} = departure
 
-    let origin = trip.trueOrigin.slice(0, -16)
-    let originDepartureTime = trip.trueDepartureTime
-    let destination = trip.trueDestination.slice(0, -16)
-    let destinationArrivalTime = trip.trueDestinationArrivalTime
+    let origin = trip.origin.slice(0, -16)
+    let originDepartureTime = trip.departureTime
+    let destination = trip.destination.slice(0, -16)
+    let destinationArrivalTime = trip.destinationArrivalTime
 
-    let stopGTFSID = metroPlatform.stopGTFSID
+    let stopGTFSID = metroPlatform.parentStopGTFSID
+
+    if (departure.formingTrip) {
+      let formingTrip = departure.formingTrip
+      origin = formingTrip.origin.slice(0, -16)
+      originDepartureTime = formingTrip.departureTime
+      destination = formingTrip.destination.slice(0, -16)
+      destinationArrivalTime = formingTrip.destinationArrivalTime
+    }
 
     departure.tripURL = `${utils.encodeName(origin)}/${originDepartureTime}/`
       + `${utils.encodeName(destination)}/${destinationArrivalTime}/`
-      + `${departure.trueDepartureDay}/${stopGTFSID ? `#stop-${stopGTFSID}` : ''}`
+      + `${departure.departureDay}/${stopGTFSID ? `#stop-${stopGTFSID}` : ''}`
 
-    departure.destinationURL = `/metro/timings/${utils.encodeName(trip.trueDestination).slice(0, -16)}`
+    departure.destinationURL = `/metro/timings/${utils.encodeName(trip.destination).slice(0, -16)}`
+    if (departure.formingDestination) {
+      departure.destinationURL = `/metro/timings/${utils.encodeName(departure.formingDestination)}`
+    }
 
     return departure
   })

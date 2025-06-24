@@ -1,19 +1,19 @@
 html
   head
-    script(src='/static/scripts/util.js')
-    script(src='/static/scripts/mockups/metro-lcd/concourse-interchange.js' async)
-    script(src='/static/scripts/mockups/pids-utils.js') 
-    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
-    link(rel='stylesheet' href='/static/css/mockups/16-9-pids-base.css')
-    link(rel='stylesheet' href='/static/css/mockups/metro-lcd/concourse-interchange.css')
+    script(src=`${staticBase}/static/scripts/util.js`)
+    script(src=`${staticBase}/static/scripts/mockups/metro-lcd/concourse-interchange.js` async)
+    script(src=`${staticBase}/static/scripts/mockups/pids-utils.js`) 
+    link(rel='stylesheet' href=`${staticBase}/static/css/mockups/base-style.css`)
+    link(rel='stylesheet' href=`${staticBase}/static/css/mockups/16-9-pids-base.css`)
+    link(rel='stylesheet' href=`${staticBase}/static/css/mockups/metro-lcd/concourse-interchange.css`)
       
-    link(rel='preload' as='style' href='/static/css/mockups/16-9-pids-base.css')
-    link(rel='preload' as='style' href='/static/css/mockups/base-style.css')
-    link(rel='preload' as='image' href='/static/images/mockups/announcements.svg')
+    link(rel='preload' as='style' href=`${staticBase}/static/css/mockups/16-9-pids-base.css`)
+    link(rel='preload' as='style' href=`${staticBase}/static/css/mockups/base-style.css`)
+    link(rel='preload' as='image' href=`${staticBase}/static/images/mockups/announcements.svg`)
     input(type='hidden' name='csrf' value=csrf)
   body.rotated
     div(style='display: none;').fullMessage
-      img(src='/static/images/mockups/announcements.svg')
+      img(src=`${staticBase}/static/images/mockups/announcements.svg`)
       p Please Listen for Announcements
     div.content
       div.topLineBanner
@@ -27,7 +27,7 @@ html
               div.details
                 span.destinationName #{destination.name}
                 br
-                span.stoppingAt
+                span.stoppingAt #{destination.caption}
               div(class='nextDepartures departure-' + destination.count + '-' + destination.count)
                 for _, i in Array(destination.count)
                   if i !== 0

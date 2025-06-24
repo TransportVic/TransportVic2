@@ -6,6 +6,7 @@ const utils = require('../utils')
 const async = require('async')
 const fs = require('fs')
 const path = require('path')
+const readLastLines = require('read-last-lines')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
@@ -125,26 +126,46 @@ database.connect(async () => {
     let firstShunt = await metroShunts.findDocuments({})
       .sort({ date: 1 }).limit(1).next()
 
-    let shuntStart = utils.parseDate(firstShunt.date)
-    let shuntEnd = utils.now().add(-27, 'days')
+    let shuntsRemoved = { nRemoved: 0 }
+    if (firstShunt) {
+      let shuntStart = utils.parseDate(firstShunt.date)
+      let shuntEnd = utils.now().add(-27, 'days')
 
-    let shuntDays = utils.allDaysBetweenDates(shuntStart, shuntEnd).map(date => utils.getYYYYMMDD(date))
+      let shuntDays = utils.allDaysBetweenDates(shuntStart, shuntEnd).map(date => utils.getYYYYMMDD(date))
 
-    let shuntsRemoved = await metroShunts.deleteDocuments({
-      date: {
-        $in: shuntDays
-      }
-    })
+      shuntsRemoved = await metroShunts.deleteDocuments({
+        date: {
+          $in: shuntDays
+        }
+      })
+    }
 
     console.log('Cleaned up', shuntsRemoved.nRemoved, 'metro shunts')
   } catch (e) {
+    console.log(e)
     console.log('Failed to clean up metro shunts')
   }
 
+  let waitingForCombined = false
   try {
     console.log('Removed', trimLog(config.combinedLog, true), 'lines from combined log')
   } catch (e) {
-    console.log('Failed to clean up combined log')
+    if (e.toString().includes('FILE_TOO_LARGE')) {
+      console.log('Combined log too large to clean, using only last 5000 lines')
+      waitingForCombined = true
+      readLastLines.read(config.combinedLog, 5000).then(lines => {
+        fs.writeFileSync(config.combinedLog, lines + '\n')
+        process.exit(0)
+      })
+
+      setTimeout(() => {
+        console.log('Combined log way too large to handle, deleting')
+        fs.unlinkSync(config.combinedLog)
+        process.exit(0)
+      }, 60 * 1000 * 2) // After 2 min just delete the whole file
+    } else {
+      console.log('Failed to clean up combined log')
+    }
   }
 
   walk(path.join(__dirname, '../logs'), (err, results) => {
@@ -156,6 +177,7 @@ database.connect(async () => {
         console.log('Failed to clean up logfile', logName)
       }
     })
-    process.exit()
+    
+    if (!waitingForCombined) process.exit()
   })
 })

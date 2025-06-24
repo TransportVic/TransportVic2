@@ -11,11 +11,11 @@ block title
   span TransportVic: Telebuses
 
 block style
-  link(rel='stylesheet' href='/static/css/about.css')
+  link(rel='stylesheet' href=`${staticBase}/static/css/about.css`)
 
 block content
   h1 Telebuses &amp; On-Demand Bus Services
-  img(src='/static/images/home/telebus.svg')
+  img(src=`${staticBase}/static/images/home/telebus.svg`)
   p Telebuses are demand-responsive bus services that operate within the eastern suburbs of Melbourne. 
     | These services have a fixed start and end stop, along with several intermediate stops.
     | Unlike regular fixed-route services, Telebuses are permitted to stop anywhere within their operating area. 

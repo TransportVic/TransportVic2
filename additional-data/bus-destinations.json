@@ -250,8 +250,8 @@
       "Angliss Reserve": "Kingsville"
     },
     "433": {
-      "Darcy Street/Tilley Drive": "Hillview Estate",
-      "Tesselaar Street/Griffith Street": "Bacchus Marsh"
+      "Harry Vallence Drive/Griffith Street": "Maddingley",
+      "Manning Boulevard/Links Road": "Darley"
     },
     "434": {
       "Civic & Community Hub": "Telford Park"
@@ -264,6 +264,10 @@
     },
     "441": {
       "Riparian Street/Newmarket Road": "Riverwalk Estate"
+    },
+    "452": {
+      "Exford Road/Staughton Street": "Melton",
+      "Toorongo Road/Walhalla Drive": "Eynesbury"
     },
     "455": {
       "Sugar Berry Rise": "Micasa Rise"
@@ -928,7 +932,10 @@
     "Corryong Newsagency": "Corryong",
     "Wodonga Post Office": "Wodonga",
     "Point Nepean National Park Entrance": "Portsea",
-    "Melbourne University Pelham Street Stop/Pelham Street": "Melbourne University",
-    "Melbourne University Royal Parade Stop/Royal Parade": "Melbourne University"
+    "Melbourne University/Pelham Street": "Melbourne University",
+    "Melbourne University/Royal Parade": "Melbourne University",
+    "Snake Valley-Chepstowe Road/Linton-Carngham Road": "Smythesdale",
+    "Darling Street/High Street": "Echuca",
+    "Coach Terminal/24 Roberts Street": "Horsham"
   }
 }

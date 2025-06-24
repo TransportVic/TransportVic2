@@ -6,59 +6,59 @@ block head
     title = 'TransportVic - All Links'
     description = 'All links within TransportVic'
 
-  link(rel='preload' as='image' href='/static/images/icons/gemilang.svg')
-  link(rel='preload' as='image' href='/static/images/icons/d.svg')
-  link(rel='preload' as='image' href='/static/images/icons/sprinter.svg')
-  link(rel='preload' as='image' href='/static/images/icons/hcmt.svg')
-  link(rel='preload' as='image' href='/static/images/icons/hitachi.svg')
-  link(rel='preload' as='image' href='/static/images/icons/designline.svg')
-  link(rel='preload' as='style' href='/static/css/links.css')
+  link(rel='preload' as='image' href=`${staticBase}/static/images/icons/gemilang.svg`)
+  link(rel='preload' as='image' href=`${staticBase}/static/images/icons/d.svg`)
+  link(rel='preload' as='image' href=`${staticBase}/static/images/icons/sprinter.svg`)
+  link(rel='preload' as='image' href=`${staticBase}/static/images/icons/hcmt.svg`)
+  link(rel='preload' as='image' href=`${staticBase}/static/images/icons/hitachi.svg`)
+  link(rel='preload' as='image' href=`${staticBase}/static/images/icons/designline.svg`)
+  link(rel='preload' as='style' href=`${staticBase}/static/css/links.css`)
 
 block title
   span TransportVic - All Links
   
 block style
-  link(rel='stylesheet' href='/static/css/links.css')
+  link(rel='stylesheet' href=`${staticBase}/static/css/links.css`)
 
 block content
   a(href='/bus/tracker').row.result
     div.leftContainer.bus
-      img(src='/static/images/icons/gemilang.svg' alt='Bus Tracker')
+      img(src=`${staticBase}/static/images/icons/gemilang.svg` alt='Bus Tracker')
     div.linkDetails
       span Bus Tracker
 
   a(href='/tram/tracker').row.result
     div.leftContainer.tram
-      img(src='/static/images/icons/d.svg' alt='Tram Tracker')
+      img(src=`${staticBase}/static/images/icons/d.svg` alt='Tram Tracker')
     div.linkDetails
       span Tram Tracker
 
   a(href='/metro/tracker').row.result
     div.leftContainer.metro
-      img(src='/static/images/icons/comeng.svg' alt='Metro Tracker')
+      img(src=`${staticBase}/static/images/icons/comeng.svg` alt='Metro Tracker')
     div.linkDetails
       span Metro Tracker
 
   a(href='/vline/tracker').row.result
     div.leftContainer.vline
-      img(src='/static/images/icons/sprinter.svg' alt='V/Line Tracker')
+      img(src=`${staticBase}/static/images/icons/sprinter.svg` alt='V/Line Tracker')
     div.linkDetails
       span V/Line Tracker
 
   a(href='/mockups').row.result
     div.leftContainer.metro
-      img(src='/static/images/icons/hcmt.svg' alt='Station PID Mockup')
+      img(src=`${staticBase}/static/images/icons/hcmt.svg` alt='Station PID Mockup')
     div.linkDetails
       span Station PID Mockup
 
   a(href='/railmap').row.result
     div.leftContainer.railMap
-      img(src='/static/images/icons/hitachi.svg' alt='Interactive Rail Map')
+      img(src=`${staticBase}/static/images/icons/hitachi.svg` alt='Interactive Rail Map')
     div.linkDetails
       span Interactive Rail Map
 
   a(href='/about').row.result
     div.leftContainer.rainbow
-      img(src='/static/images/icons/designline.svg' alt='About This Site')
+      img(src=`${staticBase}/static/images/icons/designline.svg` alt='About This Site')
     div.linkDetails
       span About This Site

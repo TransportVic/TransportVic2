@@ -1,4 +1,11 @@
 @font-face {
+  font-family: "NetworkSansLight";
+  font-display: fallback;
+  font-style: normal;
+  src: local('Network Sans K'), local('NetworkSans-K-Light'), local('Network Sans 2018 Light'), local('Network Sans Light'), local('Network Sans 2019 Light'), url(/static/fonts/NetworkSans-2018-Light.ttf);
+}
+
+@font-face {
   font-family: "NetworkSansRegular";
   font-display: fallback;
   font-style: normal;

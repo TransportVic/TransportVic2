@@ -1,21 +1,22 @@
 html
   head
-    script(src='/static/scripts/util.js')
-    script(src='/static/scripts/mockups/pids-utils.js' async)
-    script(src='/static/scripts/mockups/metro-lcd/platform.js' async)
-    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
-    link(rel='stylesheet' href='/static/css/mockups/16-9-pids-base.css')
-    link(rel='stylesheet' href='/static/css/mockups/metro-lcd/platform.css')
+    script(src=`${staticBase}/static/scripts/util.js`)
+    script(src=`${staticBase}/static/scripts/mockups/pids-utils.js` async)
+    script(src=`${staticBase}/static/scripts/mockups/metro-lcd/platform.js` async)
+    link(rel='stylesheet' href=`${staticBase}/static/css/mockups/base-style.css`)
+    link(rel='stylesheet' href=`${staticBase}/static/css/mockups/16-9-pids-base.css`)
+    link(rel='stylesheet' href=`${staticBase}/static/css/mockups/metro-lcd/platform.css`)
       
-    link(rel='preload' as='style' href='/static/css/mockups/base-style.css')
-    link(rel='preload' as='style' href='/static/css/mockups/16-9-pids-base.css')
-    link(rel='preload' as='image' href='/static/images/mockups/announcements.svg')
-    link(rel='preload' as='image' href='/static/images/mockups/no-boarding-train.svg')
+    link(rel='preload' as='style' href=`${staticBase}/static/css/mockups/base-style.css`)
+    link(rel='preload' as='style' href=`${staticBase}/static/css/mockups/16-9-pids-base.css`)
+    link(rel='preload' as='image' href=`${staticBase}/static/images/mockups/announcements.svg`)
+    link(rel='preload' as='image' href=`${staticBase}/static/images/mockups/no-boarding-train.svg`)
     input(type='hidden' name='csrf' value=csrf)
+    input(type='hidden' name='platform' value=platform)
   body
     div.content
       div(style='display: none;').fullMessage
-        img(src='/static/images/mockups/announcements.svg')
+        img(src=`${staticBase}/static/images/mockups/announcements.svg`)
         p Please Listen
         p for Announcements
       div(style='display: flex;').message
@@ -43,10 +44,8 @@ html
           span.destination --
           span.stoppingType
           span.actual --
-          span.min min 
         div.followingDeparture
           span.scheduled --
           span.destination --
           span.stoppingType
           span.actual --
-          span.min min

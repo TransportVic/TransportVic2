@@ -5,9 +5,10 @@ const url = require('url')
 const path = require('path')
 const minify = require('express-minify')
 const fs = require('fs')
-const uglifyEs = require('uglify-es')
+const uglifyJS = require('uglify-js')
 const utils = require('../utils')
 const ptvAPI = require('../ptv-api')
+const rateLimit = require('express-rate-limit')
 
 const DatabaseConnection = require('../database/DatabaseConnection')
 
@@ -31,27 +32,6 @@ if (modules.tracker && modules.tracker['vline-r'])
 
 if (modules.tracker && modules.tracker.xpt)
   require('../modules/xpt/xpt-updater')
-
-if (modules.tracker && modules.tracker.metro)
-  require('../modules/trackers/metro')
-
-if (modules.tracker && modules.tracker.metroTrips)
-  require('../modules/trackers/metro-trips')
-
-if (modules.tracker && modules.tracker.metroRaceTrains)
-  require('../modules/trackers/metro-race-trains')
-
-if (modules.tracker && modules.tracker.metroNotify)
-  require('../modules/trackers/metro-notify')
-
-if (modules.tracker && modules.tracker.metroShunts)
-  require('../modules/trackers/metro-shunts')
-
-if (modules.preloadCCL)
-  require('../modules/preload-ccl')
-
-if (modules.gtfsr && modules.gtfsr.metro)
-  require('../modules/gtfsr/metro')
 
 let serverStarted = false
 
@@ -95,7 +75,8 @@ module.exports = class MainServer {
         let diff = end - start
 
         if (!reqURL.startsWith('/static/')) {
-          global.loggers.http.info(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff}`)
+          let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+          global.loggers.http.info(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff} ${ip}`)
         }
       }
 
@@ -108,18 +89,18 @@ module.exports = class MainServer {
     }))
 
     if (process.env['NODE_ENV'] === 'prod') app.use(minify({
-      uglifyJsModule: uglifyEs,
+      uglifyJsModule: uglifyJS,
       errorHandler: console.log
     }))
 
     function filter(prefix, req, next) {
       let host = req.headers.host || ''
-      if (host.includes(prefix)) return true
+      if (host.startsWith(prefix)) return true
       else return void next()
     }
 
-    app.get('/', (req, res, next) => {
-      if (filter('seized.', req, next)) res.render('seized')
+    app.use((req, res, next) => {
+      if (filter('vic.', req, next)) res.redirect(301, `https://transportvic.me${req.url}`)
     })
 
     app.use('/static', express.static(path.join(__dirname, '../application/static'), {
@@ -130,7 +111,15 @@ module.exports = class MainServer {
     app.use(bodyParser.json())
     app.use(bodyParser.text())
 
+    let staticBase = config.staticBase || ''
+    app.get('/static-server', (req, res) => {
+      res.setHeader('Cache-Control', 'max-age=604800')
+      res.end(staticBase)
+    })
+
     app.use((req, res, next) => {
+      res.locals.staticBase = staticBase
+
       res.setHeader('Strict-Transport-Security', 'max-age=31536000')
 
       res.setHeader('X-Xss-Protection', '1; mode=block')
@@ -280,12 +269,13 @@ module.exports = class MainServer {
       },
 
       RoutePaths: '/route-paths',
-      MetroMap: '/metro/map',
-      ChatbotTest: {
-        path: '/lxra-map',
-        enable: modules.lxraMap
-      }
+      MetroMap: '/metro/map'
     }
+
+    app.post('/mockups', rateLimit({
+      windowMs: 1 * 60 * 1000,
+      max: 10
+    }))
 
     Object.keys(routers).forEach(routerName => {
       try {

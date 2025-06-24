@@ -1,5 +1,6 @@
 const async = require('async')
 const utils = require('../../utils')
+const overrideStops = require('../bus/override-stops.json')
 
 /*
 
@@ -64,14 +65,14 @@ async function getStop(stopData, stopsCollection) {
   }).limit(2).toArray()
 
   if (closeStop.length !== 0) {
-    global.loggers.general.err('PTV Name Mismatch', stopData, closeStop[0].stopName)
+    if (!overrideStops[stopData.stop_id]) global.loggers.general.err('PTV Name Mismatch', stopData, closeStop[0].stopName)
     return closeStop[0]
   } else {
     return null
   }
 }
 
-async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, routeGTFSID, excludedTripIDs, variance=0, routeNumber, silent) {
+async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, routeGTFSID, excludedTripIDs, variance=0, routeNumber, silent, tripID) {
   let trip
   let query
 
@@ -101,7 +102,7 @@ async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, r
       },
       destination: utils.adjustRawStopName(utils.adjustStopName(destination))
     }
-
+  
     if (excludedTripIDs) {
       query.tripID = {
         $not: {
@@ -114,6 +115,21 @@ async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, r
       query.routeGTFSID = routeGTFSID
     } else if (routeNumber) {
       query.routeNumber = routeNumber
+    }
+
+    if (tripID && !tripID.match(/^\d+$/)) {
+      let tripIDQuery = {
+        operationDays: utils.getYYYYMMDD(tripDay),
+        mode,
+        tripID
+      }
+
+      let timetable = await db.getCollection('live timetables').findDocument(tripIDQuery)
+      || await db.getCollection('gtfs timetables').findDocument(tripIDQuery)
+      if (timetable) {
+        trip = timetable
+        break
+      }
     }
 
     // for the coaches

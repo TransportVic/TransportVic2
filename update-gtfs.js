@@ -34,7 +34,7 @@ async function downloadGTFS(done) {
     let zip = new AdmZip(gtfsFilePath)
     zip.extractAllTo(path.join(__dirname, 'gtfs'), true)
     for (let i = 1; i <= 11; i++) {
-      if (i !== 9) {
+      if (![7, 8, 9].includes(i)) {
         try {
           let unzipPath = path.join(__dirname, 'gtfs', i.toString())
           let zip = new AdmZip(path.join(unzipPath, 'google_transit.zip'))

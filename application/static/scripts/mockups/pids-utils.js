@@ -58,53 +58,34 @@ window.splitStops = function splitStops(stops, hasConnections, options) {
     start = end
   }
 }
-
-window.formatTimeA = function(time, includeSeconds=false, space=false) {
-  let hours = time.getHours()
-  let minutes = time.getMinutes()
-  let seconds = time.getSeconds()
-  let mainTime = ''
-
-  mainTime += (hours % 12) || 12
-  mainTime += ':'
-
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
-
-  if (includeSeconds) {
-    mainTime += ':'
-
-    if (seconds < 10) mainTime += '0'
-    mainTime += seconds
+window.formatTime = function(time, options={}) {
+  let fullOptions = {
+    includeSeconds: false,
+    use24: false,
+    showAMPM: false,
+    spaceBeforeAMPM: false,
+    padZero: false,
+    ...options
   }
 
-  if (space) mainTime += ' '
-
-  if (time.getHours() >= 12)
-    mainTime += 'pm'
-  else
-    mainTime += 'am'
-
-  return mainTime
-}
-
-window.formatTimeB = function(time, includeSeconds=false) {
   let hours = time.getHours()
   let minutes = time.getMinutes()
   let seconds = time.getSeconds()
   let mainTime = ''
 
-  mainTime += (hours % 12) || 12
-  mainTime += ':'
+  if (options.use24) {
+    mainTime += options.padZero ? `${hours < 10 ? '0' : ''}${hours}` : hours
+  } else {
+    let h12 = (hours % 12) || 12
+    mainTime += options.padZero ? `${h12 < 10 ? '0' : ''}${h12}` : h12
+  }
 
-  if (minutes < 10) mainTime += '0'
-  mainTime += minutes
+  mainTime += `:${minutes < 10 ? '0' : ''}${minutes}`
+  if (options.includeSeconds) mainTime += `:${seconds < 10 ? '0' : ''}${seconds}`
 
-  if (includeSeconds) {
-    mainTime += ':'
-
-    if (seconds < 10) mainTime += '0'
-    mainTime += seconds
+  if (options.showAMPM && !options.use24) {
+    if (options.spaceBeforeAMPM) mainTime += ' '
+    mainTime += (hours >= 12) ? 'pm' : 'am'
   }
 
   return mainTime

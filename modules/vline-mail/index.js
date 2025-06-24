@@ -1,4 +1,4 @@
-const nodeMailin = require('node-mailin')
+const NodeMailin = require('node-mailin')
 const cheerio = require('cheerio')
 
 const os = require('os')
@@ -18,8 +18,9 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 async function inboundMessage(connection, data) {
   let {subject, html} = data
-  let $ = cheerio.load(html)
-  let textContent = $('center').text()
+  let $ = cheerio.load(`<vline-message>${html}</vline-message>`)
+  global.loggers.mail.log(`Received message: ${html}`)
+  let textContent = $('vline-message').text()
 
   handleMessage(subject || '', textContent)
 }
@@ -41,7 +42,7 @@ async function handleMessage(subject, rawText) {
   // Tracker makes this kinda useless now
   if (subject.includes('Service reduction') || text.includes('reduced capacity')) return
 
-  if ((subject.includes('Service cancellation') || text.includes('not run') || (text.includes('no longer run') && !text.includes('no longer run to ') && !text.includes('no longer run between') && !text.includes('no longer run from')) || text.includes('has been cancelled')) && !(text.includes('terminate') || text.includes('end') || text.includes('early'))) {
+  if ((subject.includes('Service cancellation') || text.includes('not run') || (text.includes('no longer run') && !text.includes('no longer run to ') && !text.includes('no longer run between') && !text.includes('no longer run from')) || text.includes('has been cancelled')) && !(text.includes('terminate') || text.includes(' end') || text.includes('early'))) {
     await handleCancellation(database, text)
   } else if (text.includes('been reinstated') || text.includes('running as scheduled') || text.includes('will now run as scheduled') || text.includes('operate as scheduled')|| text.includes('resume running')) {
     await handleReinstatement(database, text)
@@ -57,6 +58,8 @@ async function handleMessage(subject, rawText) {
 module.exports = () => {
   database.connect(async err => {
     let genLog = (logger, level) => ((json, text, ...others) => logger[level](json, util.format(text, ...others)))
+
+    let nodeMailin = new NodeMailin()
 
     nodeMailin.start({
       port: 25,

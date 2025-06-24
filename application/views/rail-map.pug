@@ -2,8 +2,8 @@ doctype html
 html(lang='en-GB')
   head
     meta(charset='UTF-8')
-    link(rel='preload' as='style' href='/static/css/rail-map.css')
-    link(rel='stylesheet' href='/static/css/rail-map.css')
+    link(rel='preload' as='style' href=`${staticBase}/static/css/rail-map.css`)
+    link(rel='stylesheet' href=`${staticBase}/static/css/rail-map.css`)
     
     -
       let description = 'Viewing the interactive rail map'
@@ -17,13 +17,13 @@ html(lang='en-GB')
     meta(name='twitter:card' content='summary')
     meta(name='twitter:url' content='https://transportvic.me')
     meta(name='twitter:image' content='https://transportvic.me/static/images/favicon/favicon192.png')
-      
+
     meta(property='og:title' content=title)
     meta(name='twitter:title' content=title)
     meta(property='og:description' content=description)
     meta(name='twitter:description' content=description)
     meta(name='description' content=description)
-      
+
     meta(name='keywords' content='tram,vline,train,next 5,public transport,bus,metro,transport,victora,ferry,train times,bus times,coach,coach times,ptv')
     meta(name='author' content='Unikitty Pte. Ltd.')
     meta(name='application-name' content='TransportVic')
@@ -33,12 +33,12 @@ html(lang='en-GB')
     meta(name='mobile-web-app-capable' content='yes')
     meta(name='apple-mobile-web-app-status-bar-style' content='black-translucent')
       
-    link(rel='icon' type='image/png' href='/static/images/favicon/favicon192.png')
-    link(rel='shortcut icon' type='image/png' href='/static/images/favicon/favicon192.png')
-    link(rel='apple-touch-icon' type='image/png' href='/static/images/favicon/favicon192.png')
+    link(rel='icon' type='image/png' href=`${staticBase}/static/images/favicon/favicon192.png`)
+    link(rel='shortcut icon' type='image/png' href=`${staticBase}/static/images/favicon/favicon192.png`)
+    link(rel='apple-touch-icon' type='image/png' href=`${staticBase}/static/images/favicon/favicon192.png`)
       
-    link(rel='manifest' href='/static/app-content/manifest.json')
+    link(rel='manifest' href=`${staticBase}/static/app-content/manifest.json`)
     meta(name='theme-color' content='#171717')
   body(style='height: 1696px')
     | !{mapSVG}
-    script(src='/static/scripts/sw-load.js')
+    script(src=`${staticBase}/static/scripts/sw-load.js`)

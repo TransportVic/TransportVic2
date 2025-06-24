@@ -10,12 +10,12 @@ block title
   span Bookmarks
 
 block scripts
-  script(src='/static/scripts/bookmarks.js')
+  script(src=`${staticBase}/static/scripts/bookmarks.js`)
   
 block style
-  link(rel='stylesheet' href='/static/css/content-error.css')
-  link(rel='stylesheet' href='/static/css/timings/base-style.css')
-  link(rel='stylesheet' href='/static/css/search.css')
+  link(rel='stylesheet' href=`${staticBase}/static/css/content-error.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/timings/base-style.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/search.css`)
 
 block content
   div#results

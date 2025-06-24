@@ -1,20 +1,28 @@
 html
   head
-    script(src='/static/scripts/util.js')
-    script(src='/static/scripts/mockups/reload-bus-int-pids.js' async) 
-    script(src='/static/scripts/mockups/pids-utils.js' async)
-    link(rel='stylesheet' href='/static/css/mockups/base-style.css')
-    link(rel='stylesheet' href='/static/css/mockups/bus-int-pids/bus-int-pids.css')
-    link(rel='stylesheet' href='/static/css/mockups/32-9-pids-base.css')
-      
-    link(rel='preload' as='style' href='/static/css/mockups/32-9-pids-base.css')
-    link(rel='preload' as='style' href='/static/css/mockups/base-style.css')
+    script(src=`${staticBase}/static/scripts/util.js`)
+    script(src=`${staticBase}/static/scripts/mockups/reload-bus-int-pids.js` async) 
+    script(src=`${staticBase}/static/scripts/mockups/pids-utils.js` async)
+    link(rel='stylesheet' href=`${staticBase}/static/css/mockups/base-style.css`)
+    link(rel='stylesheet' href=`${staticBase}/static/css/mockups/bus-int-pids/bus-int-pids.css`)
+
+    if full
+      link(rel='stylesheet' href=`${staticBase}/static/css/mockups/16-9-pids-base.css`)
+      link(rel='preload' as='style' href=`${staticBase}/static/css/mockups/16-9-pids-base.css`)
+    else
+      link(rel='stylesheet' href=`${staticBase}/static/css/mockups/32-9-pids-base.css`)
+      link(rel='preload' as='style' href=`${staticBase}/static/css/mockups/32-9-pids-base.css`)
+
+    link(rel='preload' as='style' href=`${staticBase}/static/css/mockups/base-style.css`)
+
+    meta(name='format-detection' content='telephone=no')
   body
-    div.content
+    - let busCount = full ? (trainDepartures ? 9 : 14) : (trainDepartures ? 4 : 7)
+    div(class=full ? 'content full' : 'content')
       div.message
         div
           div.info-circle
-            img(src='/static/images/mockups/information.svg').information
+            img(src=`${staticBase}/static/images/mockups/information.svg`).information
           div.text
             p For more information 
             p visit ptv.vic.gov.au
@@ -26,24 +34,23 @@ html
           span.scheduled Scheduled
           span.departing Departing
 
-        - for (let i = 0; i < (trainDepartures ? 4 : 7); i++)
+        - for (let i = 0; i < busCount; i++)
           div.row
         
         if trainDepartures
           div.row.train-header
             span Train Services
-          div.row
-          div.row
-            
+          - for (let i = 0; i < (full ? 4 : 2); i++)
+            div.row
         
       div.info
         div#hotline
           div.info-circle
-            img(src='/static/images/mockups/information.svg').information
-          div
-            p.call-hotline For more information 
-            p.call-hotline visit ptv.vic.gov.au
-            p.call-hotline or call 1800 800 007
+            img(src=`${staticBase}/static/images/mockups/information.svg`).information
+          div.call-hotline
+            p For more information 
+            p visit ptv.vic.gov.au
+            p or call 1800 800 007
         div.spacer
         div#timebox
           span#current-time #{time.format('h:mm')}

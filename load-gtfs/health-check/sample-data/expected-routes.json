@@ -1,0 +1,101 @@
+{
+  "mode": "bus",
+  "routeName": "Huntingdale Station - Monash University (Clayton)",
+  "cleanName": "huntingdale-station-monash-university-clayton",
+  "routeNumber": "601",
+  "routeGTFSID": "4-601",
+  "routePath": [
+    {
+      "fullGTFSIDs": [
+        "49-601-aus-1.2.R"
+      ],
+      "hash": "3018.43-145.10267152,-37.91088991-145.1318993,-37.91390887",
+      "length": 3018.43,
+      "path": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            145.10267152,
+            -37.91088991
+          ],
+          [
+            145.1318993,
+            -37.91390887
+          ]
+        ]
+      }
+    },
+    {
+      "fullGTFSIDs": [
+        "49-601-aus-1.3.H"
+      ],
+      "hash": "2811.24-145.1318993,-37.91390887-145.10267152,-37.91088991",
+      "length": 2811.24,
+      "path": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            145.1318993,
+            -37.91390887
+          ],
+          [
+            145.10267152,
+            -37.91088991
+          ]
+        ]
+      }
+    }
+  ],
+  "operators": [
+    "CDC Melbourne"
+  ],
+  "directions": [
+    {
+      "directionName": "Huntingdale Railway Station/Haughton Road",
+      "gtfsDirection": 0,
+      "stops": [
+        {
+          "stopName": "Monash University Bus Loop",
+          "stopNumber": null,
+          "suburb": "Clayton",
+          "stopGTFSID": "21611"
+        },
+        {
+          "stopName": "Milgate Street/North Road",
+          "stopNumber": null,
+          "suburb": "Oakleigh South",
+          "stopGTFSID": "7098"
+        },
+        {
+          "stopName": "Huntingdale Railway Station/Haughton Road",
+          "stopNumber": null,
+          "suburb": "Oakleigh",
+          "stopGTFSID": "51587"
+        }
+      ]
+    },
+    {
+      "directionName": "Monash University Bus Loop",
+      "gtfsDirection": 1,
+      "stops": [
+        {
+          "stopName": "Huntingdale Railway Station/Haughton Road",
+          "stopNumber": null,
+          "suburb": "Oakleigh",
+          "stopGTFSID": "51587"
+        },
+        {
+          "stopName": "Monash University Bus Loop",
+          "stopNumber": null,
+          "suburb": "Clayton",
+          "stopGTFSID": "21611"
+        }
+      ]
+    }
+  ],
+  "codedName": "huntingdale-station-monash-university-clayton",
+  "ptvDirections": {
+    "Huntingdale Station": 0,
+    "Monash University (Clayton)": 1
+  }
+}

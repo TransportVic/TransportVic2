@@ -7,12 +7,12 @@ block title
   span Under maintenance...
 
 append scripts
-  script(src='/static/scripts/updating.js')
+  script(src=`${staticBase}/static/scripts/updating.js`)
 
 append content
   div.errorPage
     h2 503: Undergoing automated maintenance :(
-    img(src='/static/images/home/website-down.svg')
+    img(src=`${staticBase}/static/images/home/website-down.svg`)
     div
       span Please wait 10 - 15 minutes before trying to load this page again. Thanks!
     span.small Scroll down for logs

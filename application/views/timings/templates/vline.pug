@@ -8,7 +8,7 @@ if departures.length
       a.leftContainer.vline
         if departure.isRailReplacementBus
           span.topText Coach Svc
-          img(src='/static/images/clear-icons/bus.svg')
+          img(src=`${staticBase}/static/images/clear-icons/bus.svg`)
         else
           span.topText Platform
           -

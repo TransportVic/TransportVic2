@@ -9,11 +9,11 @@ block title
   span Metro Map
 
 block scripts
-  script(src='/static/scripts/metro-map.js')
+  script(src=`${staticBase}/static/scripts/metro-map.js`)
   
 block style
-  link(rel='stylesheet' href='/static/css/metro-map.css')
-  link(rel='stylesheet' href='/static/css/mockups/actual-line-colours.css')
+  link(rel='stylesheet' href=`${staticBase}/static/css/metro-map.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/mockups/actual-line-colours.css`)
     
 block content
   div#map(style='height: calc(100vh - (4vw + 4vh))')

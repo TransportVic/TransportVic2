@@ -1,4 +1,7 @@
 module.exports = {
+  'City Circle': [
+    [700, 899]
+  ],
   'Mernda': [
     [1000, 1199],
     [1600, 1799],
@@ -51,14 +54,17 @@ module.exports = {
     [4690, 4699], // Flinders St-Westall
     [4700, 4719], // Flinders St-Dandenong
     [7500, 7539],
-    [7950, 7969]
+    [7950, 7969],
+    [0, 250, 'C'],
+    [800, 999, 'C'],
   ],
   'Cranbourne': [
     [4200, 4299],
     [4690, 4699], // Flinders St-Westall
     [4700, 4719], // Flinders St-Dandenong
     [4720, 4799],
-    [7540, 7575]
+    [7540, 7575],
+    [400, 715, 'C']
   ],
   'Frankston': [
     [4300, 4599],
@@ -67,12 +73,12 @@ module.exports = {
   ],
   'Upfield': [
     [5000, 5099],
-    [5600, 5699],
+    [5600, 5778],
     [7000, 7009]
   ],
   'Craigieburn': [
     [5200, 5399],
-    [5800, 5899],
+    [5800, 5902],
     [7010, 7039]
   ],
   'Sunbury': [
@@ -88,7 +94,7 @@ module.exports = {
   ],
   'Williamstown': [
     [6300, 6399],
-    [300, 349, 'X']
+    [300, 410, 'X']
   ],
   'Sandringham': [
     [0, 199, 'X'],
@@ -99,6 +105,9 @@ module.exports = {
     [700, 899]
   ],
   'Flemington Races': [
+    [0, 999, 'R']
+  ],
+  'Flemington Racecourse': [
     [0, 999, 'R']
   ]
 }

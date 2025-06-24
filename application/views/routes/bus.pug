@@ -26,14 +26,15 @@ block head
 
 block header-right
   a#mapLink(href=`/route-preview/${route.routeGTFSID}`)
-    img#mapIcon(src='/static/images/decals/map.svg' alt='map icon')
+    img#mapIcon(src=`${staticBase}/static/images/decals/map.svg` alt='map icon')
 
 block title
   span #{routeName}
 
 block style
-  link(rel='stylesheet' href='/static/css/routes/base-style.css')
-  link(rel='stylesheet' href='/static/css/combined-colours.css')
+  link(rel='stylesheet' href=`${staticBase}/static/css/routes/base-style.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/bus-operators.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/combined-colours.css`)
       
 block content
   div#routeSummary
@@ -41,7 +42,7 @@ block content
       let link
       if (route.routeNumber) {
         if (route.routeGTFSID.startsWith('6')) {
-          link = `/bus/route/regional/${route.codedSuburb}/${route.routeNumber}/${codedDirectionNames[1]}`
+          link = `/bus/route/regional/${route.cleanSuburbs}/${route.routeNumber}/${codedDirectionNames[1]}`
         } else {
           link = `/bus/route/${route.routeNumber}/${codedDirectionNames[1]}`
         }
@@ -57,7 +58,7 @@ block content
       if route.routeNumber
         span#routeText=route.routeNumber
       else
-        img#routeIcon(src='/static/images/clear-icons/bus.svg')
+        img#routeIcon(src=`${staticBase}/static/images/clear-icons/bus.svg`)
       if route.operationDate
         span#routeDetail=operationDate
     div#terminals

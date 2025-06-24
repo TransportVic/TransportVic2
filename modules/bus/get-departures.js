@@ -5,6 +5,7 @@ const getStoppingPattern = require('./get-stopping-pattern')
 const stopNameModifier = require('../../additional-data/stop-name-modifier')
 const busBays = require('../../additional-data/bus-data/bus-bays')
 const departureUtils = require('../utils/get-bus-timetables')
+const overrideStops = require('./override-stops')
 
 const regionalRouteNumbers = require('../../additional-data/bus-data/regional-with-track')
 
@@ -12,7 +13,7 @@ let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => 
   let regionRoutes = regionalRouteNumbers[region]
 
   regionRoutes.forEach(route => {
-    acc[route.routeGTFSID] = { region, routeNumber: route.routeNumber }
+    acc[route.routeGTFSID] = { region, routeNumber: route.routeNumber, liveTrack: route.liveTrack }
   })
 
   return acc
@@ -74,6 +75,13 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
   let uniqueStops = departureUtils.getUniqueGTFSIDs(stop, 'bus', true)
   let allGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', false)
 
+  let affectedStops = Object.values(overrideStops).map(stop => stop.stop_name)
+  if (affectedStops.some(affected => stop.stopName.includes(affected) || affected.includes(stop.stopName) )) {
+    uniqueStops = stop.bays.filter(b => b.mode === 'bus').map(b => b.stopGTFSID).filter(b => {
+      return !["19806", "19807","19808"].includes(b)
+    })
+  }
+
   let mappedDepartures = []
 
   let isCheckpointStop = utils.isCheckpointStop(stop.stopName)
@@ -91,7 +99,7 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
     if (screenServices.some(svc => svc.routeGTFSID.startsWith('4-'))) {
       bayType = 'metro'
     } else { // Regional/Skybus
-      if (screenServices.some(svc => regionalGTFSIDs[svc.routeGTFSID])) {
+      if (screenServices.some(svc => regionalGTFSIDs[svc.routeGTFSID] && regionalGTFSIDs[svc.routeGTFSID].liveTrack)) {
         bayType = 'regional-live'
       } else {
         bayType = 'regional'
@@ -125,11 +133,15 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
 
       if (actualDepartureTime.diff(time, 'minutes') > 90) return
 
-      let destination = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
+      if (!run.destination_name) {
+        run.destination_name = overrideStops[run.final_stop_id].stop_name
+      }
 
+      let destination = stopNameModifier(utils.adjustStopName(run.destination_name.trim()))
+      
       let trip, routeGTFSID, routeGTFSIDQuery
       let ptvRouteNumber = route.route_number
-
+        
       if (!ptvRouteNumber) return
 
       if (bayType === 'metro') {
@@ -151,8 +163,9 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
         }
       }
 
-      trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSID, [], 1, null, true)
+      trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSID, [], 1, null, true, run.run_ref)
       if (!trip && discardUnmatched) return
+      if (!trip && run.run_ref.match(/^\d+$/)) return
       if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, destination)
 
       let busRoute = (await getRoutes(db, `${trip.routeGTFSID}`, {
@@ -207,7 +220,7 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
         routeNumber,
         sortNumber,
         operator,
-        codedOperator: utils.encodeName(operator.replace(/ \(.+/, '')),
+        codedOperator: utils.encodeName(operator),
         loopDirection,
         routeDetails: trip.routeDetails,
         isLiveTrip: busDeparture.run_ref.includes('-'),
@@ -259,7 +272,7 @@ async function getScheduledDepartures(stop, db, time) {
 }
 
 async function getDepartures(stop, db, time, discardUnmatched) {
-  let cacheKey = stop.codedSuburb[0] + stop.stopName
+  let cacheKey = stop.cleanSuburbs[0] + stop.stopName
 
   try {
     return await utils.getData('bus-departures-' + (time ? time.toISOString() : 'current'), cacheKey, async () => {
@@ -288,7 +301,7 @@ async function getDepartures(stop, db, time, discardUnmatched) {
 
       let nonLiveDepartures = scheduledDepartures.filter(departure => {
         let { routeGTFSID } = departure.trip
-        return !(routeGTFSID.startsWith('4-') || regionalGTFSIDs[routeGTFSID])
+        return !(routeGTFSID.startsWith('4-') || (regionalGTFSIDs[routeGTFSID] && regionalGTFSIDs[routeGTFSID].liveTrack))
       })
 
       departures = [...ptvDepartures, ...nonLiveDepartures]
@@ -299,12 +312,24 @@ async function getDepartures(stop, db, time, discardUnmatched) {
         return a.actualDepartureTime - b.actualDepartureTime
       })
 
+      let tripIDsSeen = {}
+      departures = departures.filter(departure => {
+        let id = departure.trip.tripID || departure.trip.runID
+
+        if (tripIDsSeen[id]) {
+          return departure.scheduledDepartureTime.diff(tripIDsSeen[id], 'minutes') >= 5
+        } else {
+          tripIDsSeen[id] = departure.scheduledDepartureTime
+          return true
+        }
+      })
+
       let shouldShowRoad = stop.bays.filter(bay => {
         return bay.mode === 'bus'
       }).map(bay => {
         let {fullStopName} = bay
         if (fullStopName.includes('/')) {
-          return fullStopName.replace(/\/\d+[a-zA-z]? /, '/')
+          return fullStopName.replace(/\/\d+[a-zA-Z]? /, '/')
         } else return fullStopName
       }).filter((e, i, a) => a.indexOf(e) === i).length > 1
 
@@ -353,9 +378,15 @@ async function getDepartures(stop, db, time, discardUnmatched) {
           return hasSeenStop
         })
 
-        let departureBayID = upcomingStops[0].stopGTFSID
-        let bay = busBays[departureBayID]
-        let departureRoad = (upcomingStops[0].stopName.split('/').slice(-1)[0] || '').replace(/^\d+[a-zA-Z]? /, '')
+        let stopDepartures = upcomingStops.slice(0, -1).filter(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
+        let preferredStop = stopDepartures.sort((a, b) => {
+          let aBay = busBays[a.stopGTFSID], bBay = busBays[b.stopGTFSID]
+          if (aBay && !bBay) return -1
+          else return 1
+        })[0]
+
+        let bay = busBays[preferredStop.stopGTFSID]
+        let departureRoad = (preferredStop.stopName.split('/').slice(-1)[0] || '').replace(/^\d+[a-zA-Z]? /, '')
 
         departure.bay = bay
         departure.departureRoad = departureRoad

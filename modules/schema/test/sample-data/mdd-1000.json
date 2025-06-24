@@ -1,0 +1,510 @@
+{
+  "mode": "metro train",
+  "routeGTFSID": "2-MDD",
+  "operationDays": "20250410",
+  "tripID": "02-MDD--23-T5-1000",
+  "shapeID": "2-MDD-vpt-23.1.R",
+  "block": "11393",
+  "gtfsDirection": 1,
+  "runID": "1000",
+  "isRailReplacementBus": false,
+  "direction": "Up",
+  "routeName": "Mernda",
+  "routeNumber": null,
+  "stopTimings": [
+    {
+      "stopName": "Mernda Railway Station",
+      "stopNumber": null,
+      "suburb": "Mernda",
+      "stopGTFSID": "26517",
+      "arrivalTime": "04:04",
+      "arrivalTimeMinutes": 244,
+      "departureTime": "04:04",
+      "departureTimeMinutes": 244,
+      "estimatedDepartureTime": "2025-04-09T18:03:40.000Z",
+      "actualDepartureTimeMS": 1744221820000,
+      "scheduledDepartureTime": "2025-04-09T18:04:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Hawkstowe Railway Station",
+      "stopNumber": null,
+      "suburb": "South Morang",
+      "stopGTFSID": "26511",
+      "arrivalTime": "04:07",
+      "arrivalTimeMinutes": 247,
+      "departureTime": "04:07",
+      "departureTimeMinutes": 247,
+      "estimatedDepartureTime": "2025-04-09T18:10:00.000Z",
+      "actualDepartureTimeMS": 1744222200000,
+      "scheduledDepartureTime": "2025-04-09T18:07:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Middle Gorge Railway Station",
+      "stopNumber": null,
+      "suburb": "South Morang",
+      "stopGTFSID": "26519",
+      "arrivalTime": "04:10",
+      "arrivalTimeMinutes": 250,
+      "departureTime": "04:10",
+      "departureTimeMinutes": 250,
+      "estimatedDepartureTime": "2025-04-09T18:13:00.000Z",
+      "actualDepartureTimeMS": 1744222380000,
+      "scheduledDepartureTime": "2025-04-09T18:10:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "South Morang Railway Station",
+      "stopNumber": null,
+      "suburb": "South Morang",
+      "stopGTFSID": "26522",
+      "arrivalTime": "04:12",
+      "arrivalTimeMinutes": 252,
+      "departureTime": "04:12",
+      "departureTimeMinutes": 252,
+      "estimatedDepartureTime": "2025-04-09T18:16:00.000Z",
+      "actualDepartureTimeMS": 1744222560000,
+      "scheduledDepartureTime": "2025-04-09T18:12:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Epping Railway Station",
+      "stopNumber": null,
+      "suburb": "Epping",
+      "stopGTFSID": "15366",
+      "arrivalTime": "04:16",
+      "arrivalTimeMinutes": 256,
+      "departureTime": "04:16",
+      "departureTimeMinutes": 256,
+      "estimatedDepartureTime": "2025-04-09T18:19:00.000Z",
+      "actualDepartureTimeMS": 1744222740000,
+      "scheduledDepartureTime": "2025-04-09T18:16:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Lalor Railway Station",
+      "stopNumber": null,
+      "suburb": "Lalor",
+      "stopGTFSID": "15368",
+      "arrivalTime": "04:19",
+      "arrivalTimeMinutes": 259,
+      "departureTime": "04:19",
+      "departureTimeMinutes": 259,
+      "estimatedDepartureTime": "2025-04-09T18:22:00.000Z",
+      "actualDepartureTimeMS": 1744222920000,
+      "scheduledDepartureTime": "2025-04-09T18:19:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Thomastown Railway Station",
+      "stopNumber": null,
+      "suburb": "Thomastown",
+      "stopGTFSID": "15370",
+      "arrivalTime": "04:21",
+      "arrivalTimeMinutes": 261,
+      "departureTime": "04:21",
+      "departureTimeMinutes": 261,
+      "estimatedDepartureTime": "2025-04-09T18:24:00.000Z",
+      "actualDepartureTimeMS": 1744223040000,
+      "scheduledDepartureTime": "2025-04-09T18:21:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Keon Park Railway Station",
+      "stopNumber": null,
+      "suburb": "Reservoir",
+      "stopGTFSID": "15371",
+      "arrivalTime": "04:23",
+      "arrivalTimeMinutes": 263,
+      "departureTime": "04:23",
+      "departureTimeMinutes": 263,
+      "estimatedDepartureTime": "2025-04-09T18:26:00.000Z",
+      "actualDepartureTimeMS": 1744223160000,
+      "scheduledDepartureTime": "2025-04-09T18:23:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Ruthven Railway Station",
+      "stopNumber": null,
+      "suburb": "Reservoir",
+      "stopGTFSID": "15373",
+      "arrivalTime": "04:26",
+      "arrivalTimeMinutes": 266,
+      "departureTime": "04:26",
+      "departureTimeMinutes": 266,
+      "estimatedDepartureTime": "2025-04-09T18:28:00.000Z",
+      "actualDepartureTimeMS": 1744223280000,
+      "scheduledDepartureTime": "2025-04-09T18:26:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Reservoir Railway Station",
+      "stopNumber": null,
+      "suburb": "Reservoir",
+      "stopGTFSID": "15375",
+      "arrivalTime": "04:27",
+      "arrivalTimeMinutes": 267,
+      "departureTime": "04:27",
+      "departureTimeMinutes": 267,
+      "estimatedDepartureTime": "2025-04-09T18:29:00.000Z",
+      "actualDepartureTimeMS": 1744223340000,
+      "scheduledDepartureTime": "2025-04-09T18:27:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Regent Railway Station",
+      "stopNumber": null,
+      "suburb": "Reservoir",
+      "stopGTFSID": "15377",
+      "arrivalTime": "04:30",
+      "arrivalTimeMinutes": 270,
+      "departureTime": "04:30",
+      "departureTimeMinutes": 270,
+      "estimatedDepartureTime": "2025-04-09T18:31:00.000Z",
+      "actualDepartureTimeMS": 1744223460000,
+      "scheduledDepartureTime": "2025-04-09T18:30:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Preston Railway Station",
+      "stopNumber": null,
+      "suburb": "Preston",
+      "stopGTFSID": "15379",
+      "arrivalTime": "04:32",
+      "arrivalTimeMinutes": 272,
+      "departureTime": "04:32",
+      "departureTimeMinutes": 272,
+      "estimatedDepartureTime": "2025-04-09T18:33:00.000Z",
+      "actualDepartureTimeMS": 1744223580000,
+      "scheduledDepartureTime": "2025-04-09T18:32:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Bell Railway Station",
+      "stopNumber": null,
+      "suburb": "Preston",
+      "stopGTFSID": "15381",
+      "arrivalTime": "04:34",
+      "arrivalTimeMinutes": 274,
+      "departureTime": "04:34",
+      "departureTimeMinutes": 274,
+      "estimatedDepartureTime": "2025-04-09T18:34:00.000Z",
+      "actualDepartureTimeMS": 1744223640000,
+      "scheduledDepartureTime": "2025-04-09T18:34:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Thornbury Railway Station",
+      "stopNumber": null,
+      "suburb": "Thornbury",
+      "stopGTFSID": "15383",
+      "arrivalTime": "04:35",
+      "arrivalTimeMinutes": 275,
+      "departureTime": "04:35",
+      "departureTimeMinutes": 275,
+      "estimatedDepartureTime": "2025-04-09T18:37:00.000Z",
+      "actualDepartureTimeMS": 1744223820000,
+      "scheduledDepartureTime": "2025-04-09T18:35:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Croxton Railway Station",
+      "stopNumber": null,
+      "suburb": "Northcote",
+      "stopGTFSID": "15385",
+      "arrivalTime": "04:37",
+      "arrivalTimeMinutes": 277,
+      "departureTime": "04:37",
+      "departureTimeMinutes": 277,
+      "estimatedDepartureTime": "2025-04-09T18:38:00.000Z",
+      "actualDepartureTimeMS": 1744223880000,
+      "scheduledDepartureTime": "2025-04-09T18:37:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Northcote Railway Station",
+      "stopNumber": null,
+      "suburb": "Northcote",
+      "stopGTFSID": "15387",
+      "arrivalTime": "04:39",
+      "arrivalTimeMinutes": 279,
+      "departureTime": "04:39",
+      "departureTimeMinutes": 279,
+      "estimatedDepartureTime": "2025-04-09T18:39:00.000Z",
+      "actualDepartureTimeMS": 1744223940000,
+      "scheduledDepartureTime": "2025-04-09T18:39:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Merri Railway Station",
+      "stopNumber": null,
+      "suburb": "Northcote",
+      "stopGTFSID": "15389",
+      "arrivalTime": "04:41",
+      "arrivalTimeMinutes": 281,
+      "departureTime": "04:41",
+      "departureTimeMinutes": 281,
+      "estimatedDepartureTime": "2025-04-09T18:41:00.000Z",
+      "actualDepartureTimeMS": 1744224060000,
+      "scheduledDepartureTime": "2025-04-09T18:41:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Rushall Railway Station",
+      "stopNumber": null,
+      "suburb": "Fitzroy North",
+      "stopGTFSID": "15391",
+      "arrivalTime": "04:42",
+      "arrivalTimeMinutes": 282,
+      "departureTime": "04:42",
+      "departureTimeMinutes": 282,
+      "estimatedDepartureTime": "2025-04-09T18:43:00.000Z",
+      "actualDepartureTimeMS": 1744224180000,
+      "scheduledDepartureTime": "2025-04-09T18:42:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Clifton Hill Railway Station",
+      "stopNumber": null,
+      "suburb": "Clifton Hill",
+      "stopGTFSID": "14330",
+      "arrivalTime": "04:45",
+      "arrivalTimeMinutes": 285,
+      "departureTime": "04:45",
+      "departureTimeMinutes": 285,
+      "estimatedDepartureTime": "2025-04-09T18:45:00.000Z",
+      "actualDepartureTimeMS": 1744224300000,
+      "scheduledDepartureTime": "2025-04-09T18:45:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Victoria Park Railway Station",
+      "stopNumber": null,
+      "suburb": "Abbotsford",
+      "stopGTFSID": "14332",
+      "arrivalTime": "04:47",
+      "arrivalTimeMinutes": 287,
+      "departureTime": "04:47",
+      "departureTimeMinutes": 287,
+      "estimatedDepartureTime": "2025-04-09T18:47:00.000Z",
+      "actualDepartureTimeMS": 1744224420000,
+      "scheduledDepartureTime": "2025-04-09T18:47:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Collingwood Railway Station",
+      "stopNumber": null,
+      "suburb": "Abbotsford",
+      "stopGTFSID": "14334",
+      "arrivalTime": "04:48",
+      "arrivalTimeMinutes": 288,
+      "departureTime": "04:48",
+      "departureTimeMinutes": 288,
+      "estimatedDepartureTime": "2025-04-09T18:49:00.000Z",
+      "actualDepartureTimeMS": 1744224540000,
+      "scheduledDepartureTime": "2025-04-09T18:48:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "North Richmond Railway Station",
+      "stopNumber": null,
+      "suburb": "Richmond",
+      "stopGTFSID": "14336",
+      "arrivalTime": "04:50",
+      "arrivalTimeMinutes": 290,
+      "departureTime": "04:50",
+      "departureTimeMinutes": 290,
+      "estimatedDepartureTime": "2025-04-09T18:50:00.000Z",
+      "actualDepartureTimeMS": 1744224600000,
+      "scheduledDepartureTime": "2025-04-09T18:50:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "West Richmond Railway Station",
+      "stopNumber": null,
+      "suburb": "Richmond",
+      "stopGTFSID": "14338",
+      "arrivalTime": "04:51",
+      "arrivalTimeMinutes": 291,
+      "departureTime": "04:51",
+      "departureTimeMinutes": 291,
+      "estimatedDepartureTime": "2025-04-09T18:51:00.000Z",
+      "actualDepartureTimeMS": 1744224660000,
+      "scheduledDepartureTime": "2025-04-09T18:51:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Jolimont Railway Station",
+      "stopNumber": null,
+      "suburb": "East Melbourne",
+      "stopGTFSID": "14340",
+      "arrivalTime": "04:53",
+      "arrivalTimeMinutes": 293,
+      "departureTime": "04:53",
+      "departureTimeMinutes": 293,
+      "estimatedDepartureTime": "2025-04-09T18:53:00.000Z",
+      "actualDepartureTimeMS": 1744224780000,
+      "scheduledDepartureTime": "2025-04-09T18:53:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "cancelled": false
+    },
+    {
+      "stopName": "Flinders Street Railway Station",
+      "stopNumber": null,
+      "suburb": "Melbourne",
+      "stopGTFSID": "11212",
+      "arrivalTime": "04:56",
+      "arrivalTimeMinutes": 296,
+      "departureTime": "04:56",
+      "departureTimeMinutes": 296,
+      "estimatedDepartureTime": "2025-04-09T18:56:00.000Z",
+      "actualDepartureTimeMS": 1744224960000,
+      "scheduledDepartureTime": "2025-04-09T18:56:00.000Z",
+      "platform": "1",
+      "stopConditions": {
+        "pickup": "1",
+        "dropoff": 0
+      },
+      "cancelled": false
+    }
+  ],
+  "origin": "Mernda Railway Station",
+  "departureTime": "04:04",
+  "destination": "Flinders Street Railway Station",
+  "destinationArrivalTime": "04:56",
+  "trueOrigin": "Mernda Railway Station",
+  "trueDestination": "Flinders Street Railway Station",
+  "trueDepartureTime": "04:04",
+  "trueDestinationArrivalTime": "04:56",
+  "formedBy": "1999",
+  "forming": "1801",
+  "additional": true,
+  "vehicle" : {
+    "size": 6,
+    "type": "Xtrapolis",
+    "consist": [
+      "189M", "1395T", "190M",
+      "875M", "1638T", "876M"
+    ]
+  }
+}

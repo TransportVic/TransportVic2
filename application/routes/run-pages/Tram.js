@@ -110,8 +110,8 @@ async function pickBestTrip(data, db) {
         }
 
         if (!associatedTripStop) {
-          failed = true
-          break
+          // failed = true
+          continue
         }
         let estimatedTimeMS = parseInt(predictedStop.PredictedArrivalDateTime.slice(0, -1).match(/(\d+)\+/)[1])
         associatedTripStop.estimatedDepartureTime = utils.parseTime(estimatedTimeMS).toISOString()

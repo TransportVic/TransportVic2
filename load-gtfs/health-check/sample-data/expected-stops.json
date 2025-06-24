@@ -1,0 +1,4365 @@
+[
+  {
+    "stopName": "Bendigo Railway Station",
+    "suburb": [
+      "Bendigo",
+      "Quarry Hill"
+    ],
+    "cleanSuburbs": [
+      "quarry-hill",
+      "bendigo"
+    ],
+    "bays": [
+      {
+        "originalName": "Bendigo Railway Station",
+        "fullStopName": "Bendigo Railway Station",
+        "stopGTFSID": "vic:rail:BGO",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.28300893,
+            -36.76566973
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Quarry Hill",
+        "services": [
+          {
+            "routeGTFSID": "1-ECH",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-SWL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BGO",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BGO",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-SWL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-ECH",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "1-ECH",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-SWL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BGO",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-SWL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-ECH",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BGO",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Bendigo Station",
+        "fullStopName": "Bendigo Railway Station",
+        "stopGTFSID": "20296",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.28285447,
+            -36.76560312
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Bendigo",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:BGO",
+        "vnetStationName": "Bendigo Station, Railway Place"
+      },
+      {
+        "originalName": "Bendigo Station/Railway Pl",
+        "fullStopName": "Bendigo Railway Station/Railway Place",
+        "stopGTFSID": "16238",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.28210371,
+            -36.76592841
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Bendigo",
+        "services": [
+          {
+            "routeGTFSID": "5-V03",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V11",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V19",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V22",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V32",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V39",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V03",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V11",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V19",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V22",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V32",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V39",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "5-V03",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V11",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V19",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V22",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V32",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V39",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Bendigo Station/Railway Pl",
+        "fullStopName": "Bendigo Railway Station/Railway Place",
+        "stopGTFSID": "40714",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.28267984,
+            -36.76547296
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Bendigo",
+        "services": [
+          {
+            "routeGTFSID": "5-BGO",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-ECH",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-SWL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V35",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-BGO",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-SWL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-ECH",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V35",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "5-BGO",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-SWL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-ECH",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-V35",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-BGO",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Bendigo Station/Railway Pl",
+        "fullStopName": "Bendigo Railway Station/Railway Place",
+        "stopGTFSID": "16238",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.28210371,
+            -36.76592841
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Bendigo",
+        "services": [
+          {
+            "routeGTFSID": "6-BxW",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "6-BxW",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "6-BxW",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Bendigo Station/Railway Pl",
+        "fullStopName": "Bendigo Railway Station/Railway Place",
+        "stopGTFSID": "36924",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.2829564,
+            -36.76525398
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Bendigo",
+        "services": [
+          {
+            "routeGTFSID": "6-b29",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "6-B50",
+            "gtfsDirection": 0,
+            "routeNumber": "50"
+          },
+          {
+            "routeGTFSID": "6-B51",
+            "gtfsDirection": 0,
+            "routeNumber": "51"
+          },
+          {
+            "routeGTFSID": "6-B50",
+            "gtfsDirection": 1,
+            "routeNumber": "50"
+          },
+          {
+            "routeGTFSID": "6-B05",
+            "gtfsDirection": 1,
+            "routeNumber": "5"
+          },
+          {
+            "routeGTFSID": "6-B51",
+            "gtfsDirection": 1,
+            "routeNumber": "51"
+          },
+          {
+            "routeGTFSID": "6-b29",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "6-b29",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "6-B50",
+            "gtfsDirection": 0,
+            "routeNumber": "50"
+          },
+          {
+            "routeGTFSID": "6-B51",
+            "gtfsDirection": 0,
+            "routeNumber": "51"
+          },
+          {
+            "routeGTFSID": "6-B05",
+            "gtfsDirection": 1,
+            "routeNumber": "5"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Bendigo Station/Railway Pl",
+        "fullStopName": "Bendigo Railway Station/Railway Place",
+        "stopGTFSID": "40643",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.28295881,
+            -36.76455111
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Bendigo",
+        "services": [
+          {
+            "routeGTFSID": "6-B62",
+            "gtfsDirection": 0,
+            "routeNumber": "62"
+          },
+          {
+            "routeGTFSID": "6-B63",
+            "gtfsDirection": 0,
+            "routeNumber": "63"
+          },
+          {
+            "routeGTFSID": "6-B65",
+            "gtfsDirection": 0,
+            "routeNumber": "65"
+          },
+          {
+            "routeGTFSID": "6-Bor",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "6-B62",
+            "gtfsDirection": 1,
+            "routeNumber": "62"
+          },
+          {
+            "routeGTFSID": "6-B65",
+            "gtfsDirection": 1,
+            "routeNumber": "65"
+          },
+          {
+            "routeGTFSID": "6-Bor",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "6-B63",
+            "gtfsDirection": 1,
+            "routeNumber": "63"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "6-B62",
+            "gtfsDirection": 0,
+            "routeNumber": "62"
+          },
+          {
+            "routeGTFSID": "6-B63",
+            "gtfsDirection": 0,
+            "routeNumber": "63"
+          },
+          {
+            "routeGTFSID": "6-B65",
+            "gtfsDirection": 0,
+            "routeNumber": "65"
+          },
+          {
+            "routeGTFSID": "6-Bor",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "6-B63",
+            "gtfsDirection": 1,
+            "routeNumber": "63"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Bendigo Station/Railway Pl",
+        "fullStopName": "Bendigo Railway Station/Railway Place",
+        "stopGTFSID": "40644",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.28310946,
+            -36.76472578
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Bendigo",
+        "services": [
+          {
+            "routeGTFSID": "6-B52",
+            "gtfsDirection": 0,
+            "routeNumber": "52"
+          },
+          {
+            "routeGTFSID": "6-B53",
+            "gtfsDirection": 0,
+            "routeNumber": "53"
+          },
+          {
+            "routeGTFSID": "6-B54",
+            "gtfsDirection": 0,
+            "routeNumber": "54"
+          },
+          {
+            "routeGTFSID": "6-B52",
+            "gtfsDirection": 1,
+            "routeNumber": "52"
+          },
+          {
+            "routeGTFSID": "6-B53",
+            "gtfsDirection": 1,
+            "routeNumber": "53"
+          },
+          {
+            "routeGTFSID": "6-B54",
+            "gtfsDirection": 1,
+            "routeNumber": "54"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "6-B52",
+            "gtfsDirection": 0,
+            "routeNumber": "52"
+          },
+          {
+            "routeGTFSID": "6-B53",
+            "gtfsDirection": 0,
+            "routeNumber": "53"
+          },
+          {
+            "routeGTFSID": "6-B54",
+            "gtfsDirection": 0,
+            "routeNumber": "54"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Bendigo Station/Railway Pl",
+        "fullStopName": "Bendigo Railway Station/Railway Place",
+        "stopGTFSID": "40713",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.28251743,
+            -36.76563146
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Bendigo",
+        "services": [
+          {
+            "routeGTFSID": "6-SBO",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "6-SBO",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "6-SBO",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Bendigo Station/Railway Pl",
+        "fullStopName": "Bendigo Railway Station/Railway Place",
+        "stopGTFSID": "40715",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.28310984,
+            -36.76503219
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Bendigo",
+        "services": [
+          {
+            "routeGTFSID": "6-B05",
+            "gtfsDirection": 0,
+            "routeNumber": "5"
+          },
+          {
+            "routeGTFSID": "6-B55",
+            "gtfsDirection": 0,
+            "routeNumber": "55"
+          },
+          {
+            "routeGTFSID": "6-B64",
+            "gtfsDirection": 0,
+            "routeNumber": "64"
+          },
+          {
+            "routeGTFSID": "6-B64",
+            "gtfsDirection": 1,
+            "routeNumber": "64"
+          },
+          {
+            "routeGTFSID": "6-B55",
+            "gtfsDirection": 1,
+            "routeNumber": "55"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "6-B05",
+            "gtfsDirection": 0,
+            "routeNumber": "5"
+          },
+          {
+            "routeGTFSID": "6-B55",
+            "gtfsDirection": 0,
+            "routeNumber": "55"
+          },
+          {
+            "routeGTFSID": "6-B64",
+            "gtfsDirection": 0,
+            "routeNumber": "64"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Bendigo Station/Railway Pl",
+        "fullStopName": "Bendigo Railway Station/Railway Place",
+        "stopGTFSID": "40716",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.28313668,
+            -36.76490664
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Bendigo",
+        "services": [
+          {
+            "routeGTFSID": "6-B60",
+            "gtfsDirection": 0,
+            "routeNumber": "60"
+          },
+          {
+            "routeGTFSID": "6-B61",
+            "gtfsDirection": 0,
+            "routeNumber": "61"
+          },
+          {
+            "routeGTFSID": "6-B70",
+            "gtfsDirection": 0,
+            "routeNumber": "70"
+          },
+          {
+            "routeGTFSID": "6-B61",
+            "gtfsDirection": 1,
+            "routeNumber": "61"
+          },
+          {
+            "routeGTFSID": "6-B60",
+            "gtfsDirection": 1,
+            "routeNumber": "60"
+          },
+          {
+            "routeGTFSID": "6-B70",
+            "gtfsDirection": 1,
+            "routeNumber": "70"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "6-B60",
+            "gtfsDirection": 0,
+            "routeNumber": "60"
+          },
+          {
+            "routeGTFSID": "6-B61",
+            "gtfsDirection": 0,
+            "routeNumber": "61"
+          },
+          {
+            "routeGTFSID": "6-B70",
+            "gtfsDirection": 0,
+            "routeNumber": "70"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Bendigo Station/Railway Pl",
+        "fullStopName": "Bendigo Railway Station/Railway Place",
+        "stopGTFSID": "40717",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.2825814,
+            -36.76413695
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Bendigo",
+        "services": [
+          {
+            "routeGTFSID": "6-BGN",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "6-hea",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "6-hea",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "6-BGN",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "6-BGN",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "6-hea",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Bendigo Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "bendigo-railway-station",
+    "cleanNames": [
+      "bendigo-railway-station",
+      "bendigo-railway-station-railway-place"
+    ],
+    "codedSuburbs": [
+      "quarry-hill",
+      "bendigo"
+    ]
+  },
+  {
+    "stopName": "Flinders Street Railway Station",
+    "suburb": [
+      "Melbourne"
+    ],
+    "cleanSuburbs": [
+      "melbourne"
+    ],
+    "bays": [
+      {
+        "originalName": "Flinders Street Railway Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "vic:rail:FSS",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96696435,
+            -37.81830513
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Melbourne",
+        "services": [
+          {
+            "routeGTFSID": "1-BDE",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-TRN",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-TRN",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BDE",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "1-TRN",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BDE",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Flinders Street Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "22238",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96696435,
+            -37.81830513
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Melbourne",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FSS",
+        "vnetStationName": "Melbourne: Flinders Street"
+      },
+      {
+        "originalName": "Flinders Street Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "11212",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96483434,
+            -37.81851165
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Melbourne",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FSS",
+        "platform": "1"
+      },
+      {
+        "originalName": "Flinders Street Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "11213",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96601006,
+            -37.81830668
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Melbourne",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FSS",
+        "platform": "2"
+      },
+      {
+        "originalName": "Flinders Street Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "11214",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96646672,
+            -37.81822445
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Melbourne",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FSS",
+        "platform": "3"
+      },
+      {
+        "originalName": "Flinders Street Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "11215",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96655582,
+            -37.81828907
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Melbourne",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FSS",
+        "platform": "4"
+      },
+      {
+        "originalName": "Flinders Street Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "11216",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96660025,
+            -37.81832588
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Melbourne",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FSS",
+        "platform": "5"
+      },
+      {
+        "originalName": "Flinders Street Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "11217",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.9669283,
+            -37.81837661
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Melbourne",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FSS",
+        "platform": "6"
+      },
+      {
+        "originalName": "Flinders Street Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "11218",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96674342,
+            -37.81849057
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Melbourne",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FSS",
+        "platform": "7"
+      },
+      {
+        "originalName": "Flinders Street Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "12201",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96826668,
+            -37.81845378
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Melbourne",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FSS",
+        "platform": "13"
+      },
+      {
+        "originalName": "Flinders Street Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "12202",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96817708,
+            -37.81840717
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Melbourne",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FSS",
+        "platform": "12"
+      },
+      {
+        "originalName": "Flinders Street Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "12203",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96619788,
+            -37.81891371
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Melbourne",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FSS",
+        "platform": "10"
+      },
+      {
+        "originalName": "Flinders Street Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "12204",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96687671,
+            -37.81860101
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Melbourne",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FSS",
+        "platform": "9"
+      },
+      {
+        "originalName": "Flinders Street Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "12205",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.9668893,
+            -37.81855617
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Melbourne",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FSS",
+        "platform": "8"
+      },
+      {
+        "originalName": "Flinders Street Railway Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "26170",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96591676,
+            -37.81798064
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Melbourne",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FSS",
+        "platform": "RRB"
+      },
+      {
+        "originalName": "Flinders Street Railway Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "vic:rail:FSS",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96696435,
+            -37.81830513
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Melbourne",
+        "services": [
+          {
+            "routeGTFSID": "2-ALM",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-ALM",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-BEG",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-BEG",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CBE",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CBE",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CCL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CGB",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CGB",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-FKN",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-FKN",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-GWY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-GWY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-HBE",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-HBE",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-MDD",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-MDD",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-PKM",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-PKM",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-RCE",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-RCE",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-SHM",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-SHM",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-SUY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-SUY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-UFD",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-UFD",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-WER",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-WER",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-WIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-WIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "2-ALM",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-BEG",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CBE",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CCL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CGB",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-FKN",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-GWY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-HBE",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-MDD",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-PKM",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-RCE",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-SHM",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-SUY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-UFD",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-WER",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-WIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Flinders Street Railway Station/Elizabeth St #1",
+        "fullStopName": "Flinders Street Railway Station/Elizabeth Street",
+        "stopGTFSID": "17850",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96476527,
+            -37.81771743
+          ]
+        },
+        "stopNumber": "1",
+        "mode": "tram",
+        "suburb": "Melbourne",
+        "services": [
+          {
+            "routeGTFSID": "3-19",
+            "gtfsDirection": 0,
+            "routeNumber": "19"
+          },
+          {
+            "routeGTFSID": "3-57",
+            "gtfsDirection": 0,
+            "routeNumber": "57"
+          },
+          {
+            "routeGTFSID": "3-59",
+            "gtfsDirection": 0,
+            "routeNumber": "59"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "3-19",
+            "gtfsDirection": 0,
+            "routeNumber": "19"
+          },
+          {
+            "routeGTFSID": "3-57",
+            "gtfsDirection": 0,
+            "routeNumber": "57"
+          },
+          {
+            "routeGTFSID": "3-59",
+            "gtfsDirection": 0,
+            "routeNumber": "59"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "tramTrackerID": "3801",
+        "tramTrackerName": "Flinders Street Railway Station",
+        "levelAccess": false
+      },
+      {
+        "originalName": "Flinders Street Railway Station/Elizabeth St #1",
+        "fullStopName": "Flinders Street Railway Station/Elizabeth Street",
+        "stopGTFSID": "17877",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.9648398,
+            -37.81789895
+          ]
+        },
+        "stopNumber": "1",
+        "mode": "tram",
+        "suburb": "Melbourne",
+        "services": [
+          {
+            "routeGTFSID": "3-19",
+            "gtfsDirection": 1,
+            "routeNumber": "19"
+          },
+          {
+            "routeGTFSID": "3-57",
+            "gtfsDirection": 1,
+            "routeNumber": "57"
+          },
+          {
+            "routeGTFSID": "3-59",
+            "gtfsDirection": 1,
+            "routeNumber": "59"
+          }
+        ],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "tramTrackerID": "8007",
+        "tramTrackerName": "Flinders Street Railway Station",
+        "levelAccess": false
+      }
+    ],
+    "mergeName": "Flinders Street Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "flinders-street-railway-station",
+    "cleanNames": [
+      "flinders-street-railway-station",
+      "flinders-street-railway-station-elizabeth-street"
+    ],
+    "codedSuburbs": [
+      "melbourne"
+    ]
+  },
+  {
+    "stopName": "Frankston Railway Station",
+    "suburb": [
+      "Frankston"
+    ],
+    "cleanSuburbs": [
+      "frankston"
+    ],
+    "bays": [
+      {
+        "originalName": "Frankston Railway Station",
+        "fullStopName": "Frankston Railway Station",
+        "stopGTFSID": "vic:rail:FKN",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12616228,
+            -38.14299007
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "2-FKN",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-FKN",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-STY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-STY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "2-FKN",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-STY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Station",
+        "fullStopName": "Frankston Railway Station",
+        "stopGTFSID": "11220",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12604465,
+            -38.1426818
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FKN",
+        "platform": "1"
+      },
+      {
+        "originalName": "Frankston Station",
+        "fullStopName": "Frankston Railway Station",
+        "stopGTFSID": "11221",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12619247,
+            -38.14270218
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FKN",
+        "platform": "2"
+      },
+      {
+        "originalName": "Frankston Railway Station",
+        "fullStopName": "Frankston Railway Station",
+        "stopGTFSID": "26172",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12665884,
+            -38.14320526
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FKN",
+        "platform": "RRB"
+      },
+      {
+        "originalName": "Frankston Station",
+        "fullStopName": "Frankston Railway Station",
+        "stopGTFSID": "26510",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12621712,
+            -38.14263048
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FKN",
+        "platform": "3"
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21212",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12594592,
+            -38.14252703
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-772",
+            "gtfsDirection": 1,
+            "routeNumber": "772"
+          },
+          {
+            "routeGTFSID": "4-772",
+            "gtfsDirection": 0,
+            "routeNumber": "772"
+          },
+          {
+            "routeGTFSID": "4-774",
+            "gtfsDirection": 1,
+            "routeNumber": "774"
+          },
+          {
+            "routeGTFSID": "4-774",
+            "gtfsDirection": 0,
+            "routeNumber": "774"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-772",
+            "gtfsDirection": 0,
+            "routeNumber": "772"
+          },
+          {
+            "routeGTFSID": "4-774",
+            "gtfsDirection": 0,
+            "routeNumber": "774"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21213",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12584983,
+            -38.14271473
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-775",
+            "gtfsDirection": 0,
+            "routeNumber": "775"
+          },
+          {
+            "routeGTFSID": "4-775",
+            "gtfsDirection": 1,
+            "routeNumber": "775"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-775",
+            "gtfsDirection": 0,
+            "routeNumber": "775"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21214",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.1261495,
+            -38.14215179
+          ]
+        },
+        "stopNumber": "125",
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-788",
+            "gtfsDirection": 1,
+            "routeNumber": "788"
+          },
+          {
+            "routeGTFSID": "4-788",
+            "gtfsDirection": 0,
+            "routeNumber": "788"
+          },
+          {
+            "routeGTFSID": "4-887",
+            "gtfsDirection": 1,
+            "routeNumber": "887"
+          },
+          {
+            "routeGTFSID": "4-887",
+            "gtfsDirection": 0,
+            "routeNumber": "887"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-788",
+            "gtfsDirection": 0,
+            "routeNumber": "788"
+          },
+          {
+            "routeGTFSID": "4-887",
+            "gtfsDirection": 0,
+            "routeNumber": "887"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Fletcher Rd",
+        "fullStopName": "Frankston Railway Station/Fletcher Road",
+        "stopGTFSID": "21215",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12622472,
+            -38.1441175
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-789",
+            "gtfsDirection": 1,
+            "routeNumber": "789"
+          },
+          {
+            "routeGTFSID": "4-789",
+            "gtfsDirection": 0,
+            "routeNumber": "789"
+          },
+          {
+            "routeGTFSID": "4-790",
+            "gtfsDirection": 0,
+            "routeNumber": "790"
+          },
+          {
+            "routeGTFSID": "4-790",
+            "gtfsDirection": 1,
+            "routeNumber": "790"
+          },
+          {
+            "routeGTFSID": "4-791",
+            "gtfsDirection": 0,
+            "routeNumber": "791"
+          },
+          {
+            "routeGTFSID": "4-791",
+            "gtfsDirection": 1,
+            "routeNumber": "791"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-789",
+            "gtfsDirection": 0,
+            "routeNumber": "789"
+          },
+          {
+            "routeGTFSID": "4-790",
+            "gtfsDirection": 1,
+            "routeNumber": "790"
+          },
+          {
+            "routeGTFSID": "4-791",
+            "gtfsDirection": 0,
+            "routeNumber": "791"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21216",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12572805,
+            -38.14256861
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-832",
+            "gtfsDirection": 0,
+            "routeNumber": "832"
+          },
+          {
+            "routeGTFSID": "4-832",
+            "gtfsDirection": 1,
+            "routeNumber": "832"
+          },
+          {
+            "routeGTFSID": "4-833",
+            "gtfsDirection": 1,
+            "routeNumber": "833"
+          },
+          {
+            "routeGTFSID": "4-833",
+            "gtfsDirection": 0,
+            "routeNumber": "833"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-832",
+            "gtfsDirection": 0,
+            "routeNumber": "832"
+          },
+          {
+            "routeGTFSID": "4-833",
+            "gtfsDirection": 0,
+            "routeNumber": "833"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21217",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12442553,
+            -38.14486377
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-779",
+            "gtfsDirection": 1,
+            "routeNumber": "779"
+          },
+          {
+            "routeGTFSID": "4-779",
+            "gtfsDirection": 0,
+            "routeNumber": "779"
+          },
+          {
+            "routeGTFSID": "4-780",
+            "gtfsDirection": 1,
+            "routeNumber": "780"
+          },
+          {
+            "routeGTFSID": "4-780",
+            "gtfsDirection": 0,
+            "routeNumber": "780"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-779",
+            "gtfsDirection": 0,
+            "routeNumber": "779"
+          },
+          {
+            "routeGTFSID": "4-780",
+            "gtfsDirection": 0,
+            "routeNumber": "780"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21218",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12591977,
+            -38.14221121
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-770",
+            "gtfsDirection": 0,
+            "routeNumber": "770"
+          },
+          {
+            "routeGTFSID": "4-770",
+            "gtfsDirection": 1,
+            "routeNumber": "770"
+          },
+          {
+            "routeGTFSID": "4-771",
+            "gtfsDirection": 0,
+            "routeNumber": "771"
+          },
+          {
+            "routeGTFSID": "4-771",
+            "gtfsDirection": 1,
+            "routeNumber": "771"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-770",
+            "gtfsDirection": 0,
+            "routeNumber": "770"
+          },
+          {
+            "routeGTFSID": "4-771",
+            "gtfsDirection": 0,
+            "routeNumber": "771"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "40396",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12534242,
+            -38.14381505
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "4-901",
+            "gtfsDirection": 1,
+            "routeNumber": "901"
+          },
+          {
+            "routeGTFSID": "4-901",
+            "gtfsDirection": 0,
+            "routeNumber": "901"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-901",
+            "gtfsDirection": 1,
+            "routeNumber": "901"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Railway Station/Fletcher Rd",
+        "fullStopName": "Frankston Railway Station/Fletcher Road",
+        "stopGTFSID": "21220",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12623613,
+            -38.14411769
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "services": [
+          {
+            "routeGTFSID": "11-SK4",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "11-SK4",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "11-SK4",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Frankston Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "frankston-railway-station",
+    "cleanNames": [
+      "frankston-railway-station",
+      "frankston-railway-station-young-street",
+      "frankston-railway-station-fletcher-road"
+    ],
+    "codedSuburbs": [
+      "frankston"
+    ]
+  },
+  {
+    "stopName": "Ringwood Railway Station",
+    "suburb": [
+      "Ringwood"
+    ],
+    "cleanSuburbs": [
+      "ringwood"
+    ],
+    "bays": [
+      {
+        "originalName": "Ringwood Railway Station",
+        "fullStopName": "Ringwood Railway Station",
+        "stopGTFSID": "vic:rail:RWD",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.22896846,
+            -37.81588648
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Ringwood",
+        "services": [
+          {
+            "routeGTFSID": "2-BEG",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-BEG",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "2-BEG",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-BEG",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ringwood Station",
+        "fullStopName": "Ringwood Railway Station",
+        "stopGTFSID": "12235",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.22928003,
+            -37.81568389
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Ringwood",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:RWD",
+        "platform": "3"
+      },
+      {
+        "originalName": "Ringwood Station",
+        "fullStopName": "Ringwood Railway Station",
+        "stopGTFSID": "12236",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.22913751,
+            -37.8159431
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Ringwood",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:RWD",
+        "platform": "1"
+      },
+      {
+        "originalName": "Ringwood Station",
+        "fullStopName": "Ringwood Railway Station",
+        "stopGTFSID": "12237",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.2290698,
+            -37.81592405
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Ringwood",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:RWD",
+        "platform": "2"
+      },
+      {
+        "originalName": "Ringwood Station/Maroondah Hwy",
+        "fullStopName": "Ringwood Railway Station/Maroondah Highway",
+        "stopGTFSID": "21005",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.22988517,
+            -37.81508016
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ringwood",
+        "services": [
+          {
+            "routeGTFSID": "4-679",
+            "gtfsDirection": 0,
+            "routeNumber": "679"
+          },
+          {
+            "routeGTFSID": "4-679",
+            "gtfsDirection": 1,
+            "routeNumber": "679"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-679",
+            "gtfsDirection": 0,
+            "routeNumber": "679"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ringwood Station/Maroondah Hwy",
+        "fullStopName": "Ringwood Railway Station/Maroondah Highway",
+        "stopGTFSID": "21256",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.23023721,
+            -37.81508546
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ringwood",
+        "services": [
+          {
+            "routeGTFSID": "4-271",
+            "gtfsDirection": 1,
+            "routeNumber": "271"
+          },
+          {
+            "routeGTFSID": "4-271",
+            "gtfsDirection": 0,
+            "routeNumber": "271"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-271",
+            "gtfsDirection": 1,
+            "routeNumber": "271"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ringwood Station/Maroondah Hwy",
+        "fullStopName": "Ringwood Railway Station/Maroondah Highway",
+        "stopGTFSID": "21257",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.23005314,
+            -37.81518182
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ringwood",
+        "services": [
+          {
+            "routeGTFSID": "4-370",
+            "gtfsDirection": 1,
+            "routeNumber": "370"
+          },
+          {
+            "routeGTFSID": "4-370",
+            "gtfsDirection": 0,
+            "routeNumber": "370"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-370",
+            "gtfsDirection": 1,
+            "routeNumber": "370"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ringwood Station/Maroondah Hwy",
+        "fullStopName": "Ringwood Railway Station/Maroondah Highway",
+        "stopGTFSID": "21260",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.22968782,
+            -37.81525744
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ringwood",
+        "services": [
+          {
+            "routeGTFSID": "4-364",
+            "gtfsDirection": 1,
+            "routeNumber": "364"
+          },
+          {
+            "routeGTFSID": "4-364",
+            "gtfsDirection": 0,
+            "routeNumber": "364"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-364",
+            "gtfsDirection": 0,
+            "routeNumber": "364"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ringwood Station/Maroondah Hwy",
+        "fullStopName": "Ringwood Railway Station/Maroondah Highway",
+        "stopGTFSID": "21261",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.22966317,
+            -37.81533818
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ringwood",
+        "services": [
+          {
+            "routeGTFSID": "4-668",
+            "gtfsDirection": 1,
+            "routeNumber": "668"
+          },
+          {
+            "routeGTFSID": "4-669",
+            "gtfsDirection": 0,
+            "routeNumber": "669"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-669",
+            "gtfsDirection": 0,
+            "routeNumber": "669"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ringwood Station/Maroondah Hwy",
+        "fullStopName": "Ringwood Railway Station/Maroondah Highway",
+        "stopGTFSID": "21269",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.22943433,
+            -37.81540683
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ringwood",
+        "services": [
+          {
+            "routeGTFSID": "4-668",
+            "gtfsDirection": 0,
+            "routeNumber": "668"
+          },
+          {
+            "routeGTFSID": "4-669",
+            "gtfsDirection": 1,
+            "routeNumber": "669"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-668",
+            "gtfsDirection": 0,
+            "routeNumber": "668"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ringwood Station/Maroondah Hwy",
+        "fullStopName": "Ringwood Railway Station/Maroondah Highway",
+        "stopGTFSID": "21270",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.22925091,
+            -37.81547617
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ringwood",
+        "services": [
+          {
+            "routeGTFSID": "4-742",
+            "gtfsDirection": 1,
+            "routeNumber": "742"
+          },
+          {
+            "routeGTFSID": "4-742",
+            "gtfsDirection": 0,
+            "routeNumber": "742"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-742",
+            "gtfsDirection": 0,
+            "routeNumber": "742"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ringwood Station/Maroondah Hwy",
+        "fullStopName": "Ringwood Railway Station/Maroondah Highway",
+        "stopGTFSID": "21318",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.22955305,
+            -37.81519233
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ringwood",
+        "services": [
+          {
+            "routeGTFSID": "4-670",
+            "gtfsDirection": 0,
+            "routeNumber": "670"
+          },
+          {
+            "routeGTFSID": "4-670",
+            "gtfsDirection": 1,
+            "routeNumber": "670"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-670",
+            "gtfsDirection": 0,
+            "routeNumber": "670"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ringwood Station/Maroondah Hwy",
+        "fullStopName": "Ringwood Railway Station/Maroondah Highway",
+        "stopGTFSID": "47252",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.22908401,
+            -37.81532947
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ringwood",
+        "services": [
+          {
+            "routeGTFSID": "4-901",
+            "gtfsDirection": 1,
+            "routeNumber": "901"
+          },
+          {
+            "routeGTFSID": "4-901",
+            "gtfsDirection": 0,
+            "routeNumber": "901"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-901",
+            "gtfsDirection": 0,
+            "routeNumber": "901"
+          },
+          {
+            "routeGTFSID": "4-901",
+            "gtfsDirection": 1,
+            "routeNumber": "901"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ringwood Station/Maroondah Hwy",
+        "fullStopName": "Ringwood Railway Station/Maroondah Highway",
+        "stopGTFSID": "49468",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.22934692,
+            -37.81526133
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ringwood",
+        "services": [
+          {
+            "routeGTFSID": "4-684",
+            "gtfsDirection": 0,
+            "routeNumber": "684"
+          },
+          {
+            "routeGTFSID": "4-684",
+            "gtfsDirection": 1,
+            "routeNumber": "684"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-684",
+            "gtfsDirection": 1,
+            "routeNumber": "684"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Ringwood Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "ringwood-railway-station",
+    "cleanNames": [
+      "ringwood-railway-station",
+      "ringwood-railway-station-maroondah-highway"
+    ],
+    "codedSuburbs": [
+      "ringwood"
+    ]
+  },
+  {
+    "stopName": "Southern Cross Railway Station",
+    "suburb": [
+      "Docklands",
+      "Melbourne"
+    ],
+    "cleanSuburbs": [
+      "docklands",
+      "melbourne"
+    ],
+    "bays": [
+      {
+        "originalName": "Southern Cross Railway Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "vic:rail:SSS",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95277706,
+            -37.8186631
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Docklands",
+        "services": [
+          {
+            "routeGTFSID": "1-ABY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-ABY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-ART",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BAT",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BDE",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BGO",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-ECH",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-GEL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-SER",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-SNH",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-SWL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-WBL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-TRN",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-ART",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-SNH",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-WBL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-SER",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BGO",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-TRN",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-GEL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BAT",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-MBY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-SWL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-ECH",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BDE",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-MBY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "10-GSR",
+            "gtfsDirection": 0,
+            "routeNumber": "Overland"
+          },
+          {
+            "routeGTFSID": "10-GSR",
+            "gtfsDirection": 1,
+            "routeNumber": "Overland"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "1-ABY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-ART",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BAT",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-GEL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-SNH",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-WBL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-TRN",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-SER",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BGO",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-SWL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-ECH",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BDE",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-MBY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "10-GSR",
+            "gtfsDirection": 1,
+            "routeNumber": "Overland"
+          }
+        ],
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "20043",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95205759,
+            -37.81838925
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Docklands",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "vnetStationName": "Melbourne, Southern Cross"
+      },
+      {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "22187",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95179389,
+            -37.81765471
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "platform": "8"
+      },
+      {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "22188",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95200455,
+            -37.81825315
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "platform": "9"
+      },
+      {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "22189",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95214444,
+            -37.81853495
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "platform": "10"
+      },
+      {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "22190",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95191735,
+            -37.818531
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "platform": "11"
+      },
+      {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "22191",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95184872,
+            -37.81854783
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "platform": "12"
+      },
+      {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "22192",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.951766,
+            -37.81866354
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "platform": "13"
+      },
+      {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "22193",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95170848,
+            -37.81868957
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "platform": "14"
+      },
+      {
+        "originalName": "Southern Cross Railway Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "vic:rail:SSS",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95277706,
+            -37.8186631
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "services": [
+          {
+            "routeGTFSID": "2-ALM",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-ALM",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-BEG",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-BEG",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CBE",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CCL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CGB",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CGB",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-GWY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-GWY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-HBE",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-MDD",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-PKM",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-RCE",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-RCE",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-SUY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-SUY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-UFD",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-UFD",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-WER",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-WER",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-WIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-WIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "2-ALM",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-ALM",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-BEG",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-BEG",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CBE",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CCL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CGB",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-CGB",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-GWY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-GWY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-HBE",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-MDD",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-PKM",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-RCE",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-SUY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-SUY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-UFD",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-UFD",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-WER",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-WER",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-WIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-WIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Southern Cross Railway Station/Spencer St #122",
+        "fullStopName": "Southern Cross Railway Station/Spencer Street",
+        "stopGTFSID": "18187",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95378623,
+            -37.81832017
+          ]
+        },
+        "stopNumber": "122",
+        "mode": "tram",
+        "suburb": "Docklands",
+        "services": [
+          {
+            "routeGTFSID": "3-96",
+            "gtfsDirection": 0,
+            "routeNumber": "96"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "3-96",
+            "gtfsDirection": 0,
+            "routeNumber": "96"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "tramTrackerID": "3354",
+        "tramTrackerName": "Southern Cross Railway Station, Collins Street",
+        "levelAccess": true
+      },
+      {
+        "originalName": "Southern Cross Railway Station/Spencer St #122",
+        "fullStopName": "Southern Cross Railway Station/Spencer Street",
+        "stopGTFSID": "18194",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95403544,
+            -37.81875707
+          ]
+        },
+        "stopNumber": "122",
+        "mode": "tram",
+        "suburb": "Melbourne",
+        "services": [
+          {
+            "routeGTFSID": "3-96",
+            "gtfsDirection": 1,
+            "routeNumber": "96"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "3-96",
+            "gtfsDirection": 1,
+            "routeNumber": "96"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "tramTrackerID": "3254",
+        "tramTrackerName": "Southern Cross Railway Station, Collins Street",
+        "levelAccess": true
+      },
+      {
+        "originalName": "Southern Cross Station/Collins St #D14",
+        "fullStopName": "Southern Cross Railway Station/Collins Street",
+        "stopGTFSID": "43472",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95221502,
+            -37.81968066
+          ]
+        },
+        "stopNumber": "D14",
+        "mode": "tram",
+        "suburb": "Docklands",
+        "services": [
+          {
+            "routeGTFSID": "3-11",
+            "gtfsDirection": 1,
+            "routeNumber": "11"
+          },
+          {
+            "routeGTFSID": "3-48",
+            "gtfsDirection": 1,
+            "routeNumber": "48"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "3-11",
+            "gtfsDirection": 1,
+            "routeNumber": "11"
+          },
+          {
+            "routeGTFSID": "3-48",
+            "gtfsDirection": 1,
+            "routeNumber": "48"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "tramTrackerID": "3500",
+        "tramTrackerName": "Southern Cross Railway Station",
+        "levelAccess": true
+      },
+      {
+        "originalName": "Southern Cross Station/Collins St #D14",
+        "fullStopName": "Southern Cross Railway Station/Collins Street",
+        "stopGTFSID": "43477",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.9525957,
+            -37.819471
+          ]
+        },
+        "stopNumber": "D14",
+        "mode": "tram",
+        "suburb": "Docklands",
+        "services": [
+          {
+            "routeGTFSID": "3-11",
+            "gtfsDirection": 0,
+            "routeNumber": "11"
+          },
+          {
+            "routeGTFSID": "3-48",
+            "gtfsDirection": 0,
+            "routeNumber": "48"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "3-11",
+            "gtfsDirection": 0,
+            "routeNumber": "11"
+          },
+          {
+            "routeGTFSID": "3-48",
+            "gtfsDirection": 0,
+            "routeNumber": "48"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "tramTrackerID": "3400",
+        "tramTrackerName": "Southern Cross Railway Station",
+        "levelAccess": true
+      },
+      {
+        "originalName": "Southern Cross Station/Spencer St",
+        "fullStopName": "Southern Cross Railway Station/Spencer Street",
+        "stopGTFSID": "27744",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95427273,
+            -37.81962632
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Docklands",
+        "services": [
+          {
+            "routeGTFSID": "4-235",
+            "gtfsDirection": 1,
+            "routeNumber": "235"
+          },
+          {
+            "routeGTFSID": "4-237",
+            "gtfsDirection": 1,
+            "routeNumber": "237"
+          }
+        ],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Southern Cross Station/Collins St",
+        "fullStopName": "Southern Cross Railway Station/Collins Street",
+        "stopGTFSID": "45470",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95322121,
+            -37.81944583
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Docklands",
+        "services": [
+          {
+            "routeGTFSID": "4-235",
+            "gtfsDirection": 0,
+            "routeNumber": "235"
+          },
+          {
+            "routeGTFSID": "4-237",
+            "gtfsDirection": 0,
+            "routeNumber": "237"
+          },
+          {
+            "routeGTFSID": "4-232",
+            "gtfsDirection": 0,
+            "routeNumber": "232"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-235",
+            "gtfsDirection": 0,
+            "routeNumber": "235"
+          },
+          {
+            "routeGTFSID": "4-237",
+            "gtfsDirection": 0,
+            "routeNumber": "237"
+          },
+          {
+            "routeGTFSID": "4-232",
+            "gtfsDirection": 0,
+            "routeNumber": "232"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Southern Cross Station/Collins St",
+        "fullStopName": "Southern Cross Railway Station/Collins Street",
+        "stopGTFSID": "45471",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95341035,
+            -37.81917877
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Docklands",
+        "services": [
+          {
+            "routeGTFSID": "4-232",
+            "gtfsDirection": 1,
+            "routeNumber": "232"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-232",
+            "gtfsDirection": 1,
+            "routeNumber": "232"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Southern Cross Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "southern-cross-railway-station",
+    "cleanNames": [
+      "southern-cross-railway-station",
+      "southern-cross-railway-station-spencer-street",
+      "southern-cross-railway-station-collins-street"
+    ],
+    "codedSuburbs": [
+      "docklands",
+      "melbourne"
+    ]
+  },
+  {
+    "stopName": "Sunshine Railway Station",
+    "suburb": [
+      "Sunshine"
+    ],
+    "cleanSuburbs": [
+      "sunshine"
+    ],
+    "bays": [
+      {
+        "originalName": "Sunshine Railway Station",
+        "fullStopName": "Sunshine Railway Station",
+        "stopGTFSID": "vic:rail:SUN",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.8328782,
+            -37.78853633
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "1-ART",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BAT",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-GEL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-ART",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-GEL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BAT",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-MBY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-MBY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-WBL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "1-ART",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-BAT",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-GEL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-MBY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "1-ART",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Sunshine Station",
+        "fullStopName": "Sunshine Railway Station",
+        "stopGTFSID": "22241",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83246381,
+            -37.78833946
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Sunshine",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SUN",
+        "vnetStationName": "Sunshine Station"
+      },
+      {
+        "originalName": "Sunshine Railway Station",
+        "fullStopName": "Sunshine Railway Station",
+        "stopGTFSID": "26290",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83284051,
+            -37.7890493
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Sunshine",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SUN",
+        "platform": "RRB"
+      },
+      {
+        "originalName": "Sunshine Station",
+        "fullStopName": "Sunshine Railway Station",
+        "stopGTFSID": "26530",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83278606,
+            -37.7881922
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Sunshine",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SUN",
+        "platform": "1"
+      },
+      {
+        "originalName": "Sunshine Station",
+        "fullStopName": "Sunshine Railway Station",
+        "stopGTFSID": "26531",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83268208,
+            -37.78825336
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Sunshine",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SUN",
+        "platform": "2"
+      },
+      {
+        "originalName": "Sunshine Railway Station",
+        "fullStopName": "Sunshine Railway Station",
+        "stopGTFSID": "vic:rail:SUN",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.8328782,
+            -37.78853633
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "2-SUY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-SUY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "2-SUY",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-SUY",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Sunshine Station/Dickson St",
+        "fullStopName": "Sunshine Railway Station/Dickson Street",
+        "stopGTFSID": "18749",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83303594,
+            -37.78741278
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "4-408",
+            "gtfsDirection": 1,
+            "routeNumber": "408"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-408",
+            "gtfsDirection": 1,
+            "routeNumber": "408"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Sunshine Station/Dickson St",
+        "fullStopName": "Sunshine Railway Station/Dickson Street",
+        "stopGTFSID": "18750",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83260201,
+            -37.78710742
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "4-408",
+            "gtfsDirection": 0,
+            "routeNumber": "408"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-408",
+            "gtfsDirection": 0,
+            "routeNumber": "408"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Sunshine Station/Dickson St",
+        "fullStopName": "Sunshine Railway Station/Dickson Street",
+        "stopGTFSID": "18751",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83290396,
+            -37.78726617
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "4-410",
+            "gtfsDirection": 1,
+            "routeNumber": "410"
+          },
+          {
+            "routeGTFSID": "4-410",
+            "gtfsDirection": 0,
+            "routeNumber": "410"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-410",
+            "gtfsDirection": 1,
+            "routeNumber": "410"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Sunshine Station/Dickson St",
+        "fullStopName": "Sunshine Railway Station/Dickson Street",
+        "stopGTFSID": "18752",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83276037,
+            -37.78712835
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "4-220",
+            "gtfsDirection": 1,
+            "routeNumber": "220"
+          },
+          {
+            "routeGTFSID": "4-220",
+            "gtfsDirection": 0,
+            "routeNumber": "220"
+          },
+          {
+            "routeGTFSID": "4-941",
+            "gtfsDirection": 0,
+            "routeNumber": "941"
+          },
+          {
+            "routeGTFSID": "4-941",
+            "gtfsDirection": 1,
+            "routeNumber": "941"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-220",
+            "gtfsDirection": 1,
+            "routeNumber": "220"
+          },
+          {
+            "routeGTFSID": "4-941",
+            "gtfsDirection": 0,
+            "routeNumber": "941"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Sunshine Station/Dickson St",
+        "fullStopName": "Sunshine Railway Station/Dickson Street",
+        "stopGTFSID": "18761",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83277646,
+            -37.78696644
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "4-471",
+            "gtfsDirection": 0,
+            "routeNumber": "471"
+          },
+          {
+            "routeGTFSID": "4-471",
+            "gtfsDirection": 1,
+            "routeNumber": "471"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-471",
+            "gtfsDirection": 0,
+            "routeNumber": "471"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Sunshine Station/Dickson St",
+        "fullStopName": "Sunshine Railway Station/Dickson Street",
+        "stopGTFSID": "18762",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83301452,
+            -37.78697983
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "4-426",
+            "gtfsDirection": 1,
+            "routeNumber": "426"
+          },
+          {
+            "routeGTFSID": "4-426",
+            "gtfsDirection": 0,
+            "routeNumber": "426"
+          },
+          {
+            "routeGTFSID": "4-456",
+            "gtfsDirection": 0,
+            "routeNumber": "456"
+          },
+          {
+            "routeGTFSID": "4-456",
+            "gtfsDirection": 1,
+            "routeNumber": "456"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-426",
+            "gtfsDirection": 0,
+            "routeNumber": "426"
+          },
+          {
+            "routeGTFSID": "4-456",
+            "gtfsDirection": 1,
+            "routeNumber": "456"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Sunshine Station/Dickson St",
+        "fullStopName": "Sunshine Railway Station/Dickson Street",
+        "stopGTFSID": "18763",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83309637,
+            -37.78728773
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "4-420",
+            "gtfsDirection": 1,
+            "routeNumber": "420"
+          },
+          {
+            "routeGTFSID": "4-420",
+            "gtfsDirection": 0,
+            "routeNumber": "420"
+          },
+          {
+            "routeGTFSID": "4-422",
+            "gtfsDirection": 1,
+            "routeNumber": "422"
+          },
+          {
+            "routeGTFSID": "4-422",
+            "gtfsDirection": 0,
+            "routeNumber": "422"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-420",
+            "gtfsDirection": 0,
+            "routeNumber": "420"
+          },
+          {
+            "routeGTFSID": "4-422",
+            "gtfsDirection": 0,
+            "routeNumber": "422"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Sunshine Station/Dickson St",
+        "fullStopName": "Sunshine Railway Station/Dickson Street",
+        "stopGTFSID": "18764",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83317844,
+            -37.78719913
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "4-427",
+            "gtfsDirection": 0,
+            "routeNumber": "427"
+          },
+          {
+            "routeGTFSID": "4-427",
+            "gtfsDirection": 1,
+            "routeNumber": "427"
+          },
+          {
+            "routeGTFSID": "4-428",
+            "gtfsDirection": 1,
+            "routeNumber": "428"
+          },
+          {
+            "routeGTFSID": "4-428",
+            "gtfsDirection": 0,
+            "routeNumber": "428"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-427",
+            "gtfsDirection": 0,
+            "routeNumber": "427"
+          },
+          {
+            "routeGTFSID": "4-428",
+            "gtfsDirection": 0,
+            "routeNumber": "428"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Sunshine Station/Dickson St",
+        "fullStopName": "Sunshine Railway Station/Dickson Street",
+        "stopGTFSID": "18765",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83262813,
+            -37.78699075
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "4-216",
+            "gtfsDirection": 1,
+            "routeNumber": "216"
+          },
+          {
+            "routeGTFSID": "4-216",
+            "gtfsDirection": 0,
+            "routeNumber": "216"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-216",
+            "gtfsDirection": 1,
+            "routeNumber": "216"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Sunshine Station/Dickson St",
+        "fullStopName": "Sunshine Railway Station/Dickson Street",
+        "stopGTFSID": "18766",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83321726,
+            -37.78742513
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "4-429",
+            "gtfsDirection": 1,
+            "routeNumber": "429"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-429",
+            "gtfsDirection": 1,
+            "routeNumber": "429"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Sunshine Station/Dickson St",
+        "fullStopName": "Sunshine Railway Station/Dickson Street",
+        "stopGTFSID": "22342",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83328798,
+            -37.78733632
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "4-400",
+            "gtfsDirection": 0,
+            "routeNumber": "400"
+          },
+          {
+            "routeGTFSID": "4-400",
+            "gtfsDirection": 1,
+            "routeNumber": "400"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-400",
+            "gtfsDirection": 0,
+            "routeNumber": "400"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Sunshine Station/Dickson St",
+        "fullStopName": "Sunshine Railway Station/Dickson Street",
+        "stopGTFSID": "40946",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83282136,
+            -37.78737279
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "4-903",
+            "gtfsDirection": 1,
+            "routeNumber": "903"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-903",
+            "gtfsDirection": 1,
+            "routeNumber": "903"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Sunshine Station/Dickson St",
+        "fullStopName": "Sunshine Railway Station/Dickson Street",
+        "stopGTFSID": "40947",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83258593,
+            -37.78726933
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "4-903",
+            "gtfsDirection": 0,
+            "routeNumber": "903"
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "4-903",
+            "gtfsDirection": 0,
+            "routeNumber": "903"
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Sunshine Station/City Pl",
+        "fullStopName": "Sunshine Railway Station/City Place",
+        "stopGTFSID": "1",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83197021,
+            -37.78774462
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Sunshine",
+        "services": [
+          {
+            "routeGTFSID": "5-BAT",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-GEL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-BAT",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-GEL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-ART",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "5-BAT",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-GEL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-GEL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "5-ART",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Sunshine Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "sunshine-railway-station",
+    "cleanNames": [
+      "sunshine-railway-station",
+      "sunshine-railway-station-dickson-street",
+      "sunshine-railway-station-city-place"
+    ],
+    "codedSuburbs": [
+      "sunshine"
+    ]
+  }
+]

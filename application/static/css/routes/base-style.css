@@ -41,6 +41,7 @@
   color: #f9f9f9;
 
   background-color: #d7832c;
+  background-color: var(--operator-odd);
 }
 
 #routeNumber > span {

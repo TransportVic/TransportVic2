@@ -1,0 +1,106 @@
+{
+	"mode" : "metro train",
+	"routeGTFSID" : "2-LIL",
+	"operationDays" : [
+		"20250405"
+	],
+	"tripID" : "02-LIL--23-T2-3326",
+	"shapeID" : "2-LIL-vpt-23.9.R",
+	"block" : null,
+	"gtfsDirection" : 1,
+	"runID" : "3326",
+	"isRailReplacementBus" : false,
+	"direction" : "Up",
+	"routeName" : "Lilydale",
+	"routeNumber" : null,
+	"stopTimings" : [
+		{
+			"stopName" : "Lilydale Railway Station",
+			"stopNumber" : null,
+			"suburb" : "Lilydale",
+			"stopGTFSID" : "12164",
+			"arrivalTime" : null,
+			"arrivalTimeMinutes" : null,
+			"departureTime" : "02:48",
+			"departureTimeMinutes" : 1608,
+			"stopConditions" : {
+				"pickup" : 0,
+				"dropoff" : 1
+			},
+			"stopDistance" : "0.00",
+			"platform" : "1"
+		},
+		{
+			"stopName" : "Mooroolbark Railway Station",
+			"stopNumber" : null,
+			"suburb" : "Mooroolbark",
+			"stopGTFSID" : "12166",
+			"arrivalTime" : "02:53",
+			"arrivalTimeMinutes" : 1613,
+			"departureTime" : "02:53",
+			"departureTimeMinutes" : 1613,
+			"stopConditions" : {
+				"pickup" : 0,
+				"dropoff" : 0
+			},
+			"stopDistance" : "4645.67",
+			"platform" : "1"
+		},
+		{
+			"stopName" : "Croydon Railway Station",
+			"stopNumber" : null,
+			"suburb" : "Croydon",
+			"stopGTFSID" : "12168",
+			"arrivalTime" : "02:57",
+			"arrivalTimeMinutes" : 1617,
+			"departureTime" : "02:57",
+			"departureTimeMinutes" : 1617,
+			"stopConditions" : {
+				"pickup" : 0,
+				"dropoff" : 0
+			},
+			"stopDistance" : "8056.17",
+			"platform" : "1"
+		},
+		{
+			"stopName" : "Ringwood East Railway Station",
+			"stopNumber" : null,
+			"suburb" : "Ringwood East",
+			"stopGTFSID" : "12170",
+			"arrivalTime" : "03:01",
+			"arrivalTimeMinutes" : 1621,
+			"departureTime" : "03:01",
+			"departureTimeMinutes" : 1621,
+			"stopConditions" : {
+				"pickup" : 0,
+				"dropoff" : 0
+			},
+			"stopDistance" : "11350.21",
+			"platform" : "1"
+		},
+		{
+			"stopName" : "Ringwood Railway Station",
+			"stopNumber" : null,
+			"suburb" : "Ringwood",
+			"stopGTFSID" : "12236",
+			"arrivalTime" : "03:04",
+			"arrivalTimeMinutes" : 1624,
+			"departureTime" : null,
+			"departureTimeMinutes" : null,
+			"stopConditions" : {
+				"pickup" : 1,
+				"dropoff" : 0
+			},
+			"stopDistance" : "13370.09",
+			"platform" : "1"
+		}
+	],
+	"origin" : "Lilydale Railway Station",
+	"departureTime" : "26:48",
+	"destination" : "Ringwood Railway Station",
+	"destinationArrivalTime" : "27:04",
+	"trueOrigin" : "Lilydale Railway Station",
+	"trueDestination" : "Ringwood Railway Station",
+	"trueDepartureTime" : "26:48",
+	"trueDestinationArrivalTime" : "27:04"
+}

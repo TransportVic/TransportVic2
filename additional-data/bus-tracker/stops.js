@@ -1,4 +1,24 @@
 module.exports = [
+  'wantirna/knox-city-shopping-centre',
+  'chirnside-park/chirnside-park-shopping-centre-maroondah-highway',
+  'upper-ferntree-gully/upper-ferntree-gully-railway-station',
+  'croydon/croydon-railway-station',
+  'bayswater/bayswater-railway-station',
+  'mitcham/mitcham-railway-station',
+  'box-hill/box-hill-railway-station',
+  'nunawading/nunawading-railway-station',
+  'ringwood/ringwood-railway-station',
+  'glen-waverley/glen-waverley-railway-station',
+  'blackburn/blackburn-railway-station',
+  'boronia/boronia-railway-station',
+  'rowville/stud-park-shopping-centre',
+  'belgrave/belgrave-railway-station',
+  'lilydale/lilydale-railway-station',
+  'montrose/montrose-cfa-mount-dandenong-road',
+  'forest-hill/forest-hill-shopping-centre-canterbury-road'
+]
+
+let old = [
   'clayton/monash-university-bus-loop',
   'clayton/clayton-railway-station',
   'oakleigh/oakleigh-railway-station',

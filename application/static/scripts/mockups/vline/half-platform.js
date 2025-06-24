@@ -122,7 +122,7 @@ function updateBody() {
       setDepartureInfoVisible(true)
 
       $('.firstDestination').textContent = firstDeparture.dest
-      $('.scheduledDiv span:nth-child(2)').textContent = formatTimeB(new Date(firstDeparture.sch))
+      $('.scheduledDiv span:nth-child(2)').textContent = formatTime(new Date(firstDeparture.sch))
 
       $('.actualDiv span:nth-child(2)').textContent = minutesToDeparture(new Date(firstDeparture.est || firstDeparture.sch))
 
@@ -132,7 +132,7 @@ function updateBody() {
       nextDepartures.forEach((departure, i) => {
         let div = $(`div.followingDeparture:nth-child(${i + 2})`)
         if (departure) {
-          $('.scheduled', div).textContent = formatTimeB(new Date(departure.sch))
+          $('.scheduled', div).textContent = formatTime(new Date(departure.sch))
           $('.destination', div).textContent = departure.dest
           $('.actual', div).textContent = minutesToDeparture(new Date(departure.est || departure.sch))
           $('.stoppingType', div).textContent = departure.type
@@ -169,7 +169,7 @@ function setupClock() {
 }
 
 function setTime() {
-  $('.timeContainer span').textContent = formatTimeB(new Date(), true)
+  $('.timeContainer span').textContent = formatTime(new Date(), { includeSeconds: 1 })
 }
 
 $.ready(() => {

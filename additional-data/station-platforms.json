@@ -301,6 +301,10 @@
     "platforms": 3,
     "exclude": []
   },
+  "Union": {
+    "platforms": 3,
+    "exclude": []
+  },
   "Surrey Hills": {
     "platforms": 3,
     "exclude": []
@@ -591,7 +595,7 @@
     "platforms": 4,
     "exclude": []
   },
-  "Glenhuntly": {
+  "Glen Huntly": {
     "platforms": 3,
     "exclude": []
   },

@@ -1,0 +1,350 @@
+.benalla-bus-lines {
+  --operator-odd: #31467f;
+  --operator-even: #1d2e5e;
+  --operator-text: #F9F9F9;
+}
+.broadmeadows-bus-service {
+  --operator-odd: #305fb3;
+  --operator-even: #1f3e74;
+  --operator-text: #F9F9F9;
+}
+.busbiz-swan-hill {
+  --operator-odd: #2e2e8f;
+  --operator-even: #232370;
+  --operator-text: #F9F9F9;
+}
+.canns-bus-lines {
+  --operator-odd: #047172;
+  --operator-even: #055758;
+  --operator-text: #F9F9F9;
+}
+.cavanagh-s-bus-service {
+  --operator-odd: #d4c085;
+  --operator-even: #beab74;
+  --operator-text: #1E1E1E;
+}
+.cdc-ballarat {
+  --operator-odd: #ef9246;
+  --operator-even: #e7883b;
+  --operator-text: #1E1E1E;
+}
+.cdc-geelong {
+  --operator-odd: #ef9246;
+  --operator-even: #e7883b;
+  --operator-text: #1E1E1E;
+}
+.cdc-melbourne {
+  --operator-odd: #ef9246;
+  --operator-even: #e7883b;
+  --operator-text: #1E1E1E;
+}
+.cdc-mildura {
+  --operator-odd: #ef9246;
+  --operator-even: #e7883b;
+  --operator-text: #1E1E1E;
+}
+.christians-bus-company-ararat {
+  --operator-odd: #0559a6;
+  --operator-even: #0a4a85;
+  --operator-text: #F9F9F9;
+}
+.christians-bus-company-bacchus-marsh {
+  --operator-odd: #0559a6;
+  --operator-even: #0a4a85;
+  --operator-text: #F9F9F9;
+}
+.christians-bus-company-ballarat {
+  --operator-odd: #0559a6;
+  --operator-even: #0a4a85;
+  --operator-text: #F9F9F9;
+}
+.christians-bus-company-bendigo {
+  --operator-odd: #0559a6;
+  --operator-even: #0a4a85;
+  --operator-text: #F9F9F9;
+}
+.christians-bus-company-colac {
+  --operator-odd: #0559a6;
+  --operator-even: #0a4a85;
+  --operator-text: #F9F9F9;
+}
+.coles-coaches {
+  --operator-odd: #0c539b;
+  --operator-even: #0c4987;
+  --operator-text: #F9F9F9;
+}
+.corryong-bus-freight {
+  --operator-odd: #d7832c;
+  --operator-even: #c47625;
+  --operator-text: #1e1e1e;
+}
+.cranbourne-transit {
+  --operator-odd: #cea812;
+  --operator-even: #bc9a12;
+  --operator-text: #0B0B0B;
+}
+.dysons {
+  --operator-odd: #148215;
+  --operator-even: #0a730c;
+  --operator-text: #F9F9F9;
+}
+.dysons-bairnsdale {
+  --operator-odd: #148215;
+  --operator-even: #0a730c;
+  --operator-text: #F9F9F9;
+}
+.dysons-kyneton {
+  --operator-odd: #148215;
+  --operator-even: #0a730c;
+  --operator-text: #F9F9F9;
+}
+.dysons-moama {
+  --operator-odd: #148215;
+  --operator-even: #0a730c;
+  --operator-text: #F9F9F9;
+}
+.dysons-sale {
+  --operator-odd: #148215;
+  --operator-even: #0a730c;
+  --operator-text: #F9F9F9;
+}
+.dysons-shepparton {
+  --operator-odd: #148215;
+  --operator-even: #0a730c;
+  --operator-text: #F9F9F9;
+}
+.dysons-wangaratta {
+  --operator-odd: #148215;
+  --operator-even: #0a730c;
+  --operator-text: #F9F9F9;
+}
+.dysons-wodonga {
+  --operator-odd: #148215;
+  --operator-even: #0a730c;
+  --operator-text: #F9F9F9;
+}
+.fallons-bus-service-alexandra {
+  --operator-odd: #44478f;
+  --operator-even: #383a76;
+  --operator-text: #F9F9F9;
+}
+.fallons-bus-service-cobram {
+  --operator-odd: #44478f;
+  --operator-even: #383a76;
+  --operator-text: #F9F9F9;
+}
+.fallons-bus-service-mansfield {
+  --operator-odd: #44478f;
+  --operator-even: #383a76;
+  --operator-text: #F9F9F9;
+}
+.fallons-bus-service-wangaratta {
+  --operator-odd: #44478f;
+  --operator-even: #383a76;
+  --operator-text: #F9F9F9;
+}
+.falls-creek-coach-service {
+  --operator-odd: #44478f;
+  --operator-even: #383a76;
+  --operator-text: #F9F9F9;
+}
+.gillicks-bus-lines {
+  --operator-odd: #8d0d57;
+  --operator-even: #6b0841;
+  --operator-text: #F9F9F9;
+}
+.gisborne-transit {
+  --operator-odd: #b50303;
+  --operator-even: #9b0909;
+  --operator-text: #F9F9F9;
+}
+.harley-s-bus-lines {
+  --operator-odd: #12377c;
+  --operator-even: #0f2c61;
+  --operator-text: #F9F9F9;
+}
+.henty-highway-coach {
+  --operator-odd: #3a6c94;
+  --operator-even: #30628b;
+  --operator-text: #F9F9F9;
+}
+.hutchinson-buslines {
+  --operator-odd: #08426a;
+  --operator-even: #022a44;
+  --operator-text: #F9F9F9;
+}
+.jacobson-coach-tours {
+  --operator-odd: #003366;
+  --operator-even: #032242;
+  --operator-text: #F9F9F9;
+}
+.kastoria-bus-lines {
+  --operator-odd: #205878;
+  --operator-even: #153b50;
+  --operator-text: #F9F9F9;
+}
+.kinetic {
+  --operator-odd: #1163a4;
+  --operator-even: #085594;
+  --operator-text: #F9F9F9;
+}
+.latrobe-valley-bus-lines {
+  --operator-odd: #b40e3a;
+  --operator-even: #8c1131;
+  --operator-text: #F9F9F9;
+}
+.little-s-gippsland-coaches {
+  --operator-odd: #272b69;
+  --operator-even: #181d55;
+  --operator-text: #F9F9F9;
+}
+.littles-coaches-ballarat {
+  --operator-odd: #711c2b;
+  --operator-even: #5e1824;
+  --operator-text: #F9F9F9;
+}
+.littles-coaches-daylesford {
+  --operator-odd: #711c2b;
+  --operator-even: #5e1824;
+  --operator-text: #F9F9F9;
+}
+.mallacoota-explorer-tours {
+  --operator-odd: #d7832c;
+  --operator-even: #c47625;
+  --operator-text: #1e1e1e;
+}
+.martin-s-albury {
+  --operator-odd: #86733a;
+  --operator-even: #7a6831;
+  --operator-text: #FDFDFD;
+}
+.martyrs-bus-service {
+  --operator-odd: #69ccf6;
+  --operator-even: #56afd6;
+  --operator-text: #1E1E1E;
+}
+.mcharrys-bus-lines {
+  --operator-odd: #d50d0d;
+  --operator-even: #b51010;
+  --operator-text: #F9F9F9;
+}
+.mckenzies-tourist-service {
+  --operator-odd: #274523;
+  --operator-even: #192d17;
+  --operator-text: #F9F9F9;
+}
+.newton-s-bus-service {
+  --operator-odd: #febf11;
+  --operator-even: #e4ab0b;
+  --operator-text: #1e1e1e;
+}
+.organ-s-coaches {
+  --operator-odd: #2e7e61;
+  --operator-even: #257457;
+  --operator-text: #F9F9F9;
+}
+.panorama-coaches {
+  --operator-odd: #ba0368;
+  --operator-even: #a8055e;
+  --operator-text: #F9F9F9;
+}
+.popes-bus-lines {
+  --operator-odd: #381f56;
+  --operator-even: #281243;
+  --operator-text: #F9F9F9;
+}
+.portland-bus-lines {
+  --operator-odd: #d51d2f;
+  --operator-even: #bc1726;
+  --operator-text: #F9F9F9;
+}
+.ryan-bros-bus-service {
+  --operator-odd: #1080a3;
+  --operator-even: #0f6d89;
+  --operator-text: #FFFFFF;
+}
+.sandlant-buses {
+  --operator-odd: #3e3e3e;
+  --operator-even: #383838;
+  --operator-text: #F9F9F9;
+}
+.seymour-coaches {
+  --operator-odd: #2c4269;
+  --operator-even: #233960;
+  --operator-text: #F9F9F9;
+}
+.south-coast-bus {
+  --operator-odd: #f99d31;
+  --operator-even: #d2872f;
+  --operator-text: #1E1E1E;
+}
+.sunbury-bus-service {
+  --operator-odd: #b50303;
+  --operator-even: #9b0909;
+  --operator-text: #F9F9F9;
+}
+.transit-systems {
+  --operator-odd: #166532;
+  --operator-even: #0f5728;
+  --operator-text: #F9F9F9;
+}
+.trotters-coaches {
+  --operator-odd: #28ab0e;
+  --operator-even: #23910d;
+  --operator-text: #020202;
+}
+.ouyen-district-freight {
+  --operator-odd: #d7832c;
+  --operator-even: #c47625;
+  --operator-text: #1e1e1e;
+}
+.ventura-bus-lines {
+  --operator-odd: #14315b;
+  --operator-even: #0c1d36;
+  --operator-text: #F9F9F9;
+}
+.warragul-bus-lines {
+  --operator-odd: #4263cd;
+  --operator-even: #3856b7;
+  --operator-text: #F9F9F9;
+}
+.warrnambool-bus-lines {
+  --operator-odd: #d51d2f;
+  --operator-even: #bc1726;
+  --operator-text: #F9F9F9;
+}
+.westernport-roadlines {
+  --operator-odd: #00027f;
+  --operator-even: #070966;
+  --operator-text: #F9F9F9;
+}
+.whitmore-bus-lines-castlemaine {
+  --operator-odd: #06345f;
+  --operator-even: #052747;
+  --operator-text: #F9F9F9;
+}
+.whitmore-bus-lines-maryborough {
+  --operator-odd: #06345f;
+  --operator-even: #052747;
+  --operator-text: #F9F9F9;
+}
+.whitmore-bus-lines-strathfieldsaye {
+  --operator-odd: #06345f;
+  --operator-even: #052747;
+  --operator-text: #F9F9F9;
+}
+.wimmera-roadways {
+  --operator-odd: #09633e;
+  --operator-even: #03452a;
+  --operator-text: #F9F9F9;
+}
+.yarrawonga-mulwala-taxis {
+  --operator-odd: #d7832c;
+  --operator-even: #c47625;
+  --operator-text: #1e1e1e;
+}
+.zaffina-bus-lines {
+  --operator-odd: #07b50f;
+  --operator-even: #07960e;
+  --operator-text: #020202;
+}

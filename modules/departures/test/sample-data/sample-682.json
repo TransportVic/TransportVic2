@@ -1,0 +1,129 @@
+[{
+  "mode" : "bus",
+  "routeName" : "Knox City SC (Anti-Clockwise)",
+  "routeGTFSID" : "4-682",
+  "routeNumber" : "682",
+  "routeDetails" : null,
+  "runID" : "21-682--1-Sun15-12",
+  "operationDays" : "20250330",
+  "vehicle" : null,
+  "stopTimings" : [
+    {
+      "stopName" : "Knox City Shopping Centre/Burwood Highway",
+      "stopNumber" : null,
+      "suburb" : "Wantirna South",
+      "stopGTFSID" : "19629",
+      "arrivalTime" : null,
+      "arrivalTimeMinutes" : null,
+      "departureTime" : "16:05",
+      "departureTimeMinutes" : 965,
+      "estimatedDepartureTime" : null,
+      "actualDepartureTimeMS" : 1743311100000,
+      "scheduledDepartureTime" : "2025-03-30T05:05:00.000Z",
+      "platform" : null,
+      "stopConditions" : {
+        "pickup" : 0,
+        "dropoff" : 0
+      }
+    },
+    {
+      "stopName" : "Stud Park Shopping Centre",
+      "stopNumber" : null,
+      "suburb" : "Rowville",
+      "stopGTFSID" : "21314",
+      "arrivalTime" : "16:18",
+      "arrivalTimeMinutes" : 978,
+      "departureTime" : "16:18",
+      "departureTimeMinutes" : 978,
+      "estimatedDepartureTime" : null,
+      "actualDepartureTimeMS" : 1743311880000,
+      "scheduledDepartureTime" : "2025-03-30T05:18:00.000Z",
+      "platform" : null,
+      "stopConditions" : {
+        "pickup" : 0,
+        "dropoff" : 0
+      }
+    },
+    {
+      "stopName" : "Rowville Community Centre/Fulham Road",
+      "stopNumber" : null,
+      "suburb" : "Rowville",
+      "stopGTFSID" : "13339",
+      "arrivalTime" : "16:19",
+      "arrivalTimeMinutes" : 979,
+      "departureTime" : "16:19",
+      "departureTimeMinutes" : 979,
+      "estimatedDepartureTime" : null,
+      "actualDepartureTimeMS" : 1743311940000,
+      "scheduledDepartureTime" : "2025-03-30T05:19:00.000Z",
+      "platform" : null,
+      "stopConditions" : {
+        "pickup" : 0,
+        "dropoff" : 0
+      }
+    },
+    {
+      "stopName" : "Stud Park Shopping Centre",
+      "stopNumber" : null,
+      "suburb" : "Rowville",
+      "stopGTFSID" : "21314",
+      "arrivalTime" : "17:07",
+      "arrivalTimeMinutes" : 1027,
+      "departureTime" : "17:07",
+      "departureTimeMinutes" : 1027,
+      "estimatedDepartureTime" : null,
+      "actualDepartureTimeMS" : 1743314820000,
+      "scheduledDepartureTime" : "2025-03-30T06:07:00.000Z",
+      "platform" : null,
+      "stopConditions" : {
+        "pickup" : 0,
+        "dropoff" : 0
+      }
+    },
+    {
+      "stopName" : "Stud Park Shopping Centre/Stud Road",
+      "stopNumber" : null,
+      "suburb" : "Rowville",
+      "stopGTFSID" : "14177",
+      "arrivalTime" : "17:07",
+      "arrivalTimeMinutes" : 1027,
+      "departureTime" : "17:07",
+      "departureTimeMinutes" : 1027,
+      "estimatedDepartureTime" : null,
+      "actualDepartureTimeMS" : 1743314820000,
+      "scheduledDepartureTime" : "2025-03-30T06:07:00.000Z",
+      "platform" : null,
+      "stopConditions" : {
+        "pickup" : 0,
+        "dropoff" : 0
+      }
+    },
+    {
+      "stopName" : "Knox City Shopping Centre/Burwood Highway",
+      "stopNumber" : null,
+      "suburb" : "Wantirna South",
+      "stopGTFSID" : "19629",
+      "arrivalTime" : "17:20",
+      "arrivalTimeMinutes" : 1040,
+      "departureTime" : null,
+      "departureTimeMinutes" : null,
+      "estimatedDepartureTime" : null,
+      "actualDepartureTimeMS" : 1743315600000,
+      "scheduledDepartureTime" : "2025-03-30T06:20:00.000Z",
+      "platform" : null,
+      "stopConditions" : {
+        "pickup" : 0,
+        "dropoff" : 0
+      }
+    }
+  ],
+  "destination" : "Knox City Shopping Centre/Burwood Highway",
+  "destinationArrivalTime" : "17:20",
+  "departureTime" : "16:05",
+  "origin" : "Knox City Shopping Centre/Burwood Highway",
+  "type" : "timings",
+  "gtfsDirection" : 0,
+  "direction" : null,
+  "cancelled" : null,
+  "suspensions" : null
+}]

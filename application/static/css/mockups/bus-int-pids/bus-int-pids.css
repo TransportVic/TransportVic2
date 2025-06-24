@@ -1,5 +1,16 @@
+div.content {
+  background-color: #222222 !important;
+  color: white !important;
+}
+
+div.content.full {
+  flex-direction: row !important;
+  --font-scale: 0.6666667;
+  justify-content: center;
+}
+
 div.message {
-  width: 100vw;
+  width: var(--width);
   height: 100%;
   display: none;
   justify-content: center;
@@ -34,8 +45,8 @@ div.content.messages div.timings, div.content.messages div.info {
 }
 
 div.timings {
-  width: 75vw;
-  margin-right: 2vw;
+  width: calc(var(--width) * 0.75);
+  margin-right: calc(var(--width) * 0.02);
 }
 
 div.row.header span {
@@ -52,24 +63,24 @@ div.row.train-header {
 div.row.train-header span {
   font-family: NetworkSansRegular;
 
-  margin-left: 0.8vw;
+  margin-left: calc(var(--width) * 0.008);
   margin-top: calc(var(--height) * .01 * var(--font-scale));
   font-size: calc(var(--height) * 0.055 * var(--font-scale)) !important;
 }
 
 div.row.header span.route {
-  margin-left: 0.8vw;
-  width: 7vw;
+  margin-left: calc(var(--width) * 0.008);
+  width: calc(var(--width) * 0.07);
 }
 
 div.row.header span.dest {
-  margin-left: 1.7vw;
-  width: 43vw;
+  margin-left: calc(var(--width) * 0.017);
+  width: calc(var(--width) * 0.43);
 }
 
 div.row {
-  height: 3.3vw;
-  border-bottom: 0.1vw solid #ffffff;
+  height: calc(var(--width) * 0.033);
+  border-bottom: calc(var(--width) * 0.001) solid #ffffff;
   font-size: calc(var(--height) * 0.07 * var(--font-scale));
 
   display: flex;
@@ -82,42 +93,42 @@ div.row span {
 
 div.row > div.route-number {
   display: inline-flex;
-  margin-left: 0.8vw;
-  width: 7vw;
+  margin-left: calc(var(--width) * 0.008);
+  width: calc(var(--width) * 0.07);
 }
 
 div.row > div.destination {
-  margin-left: 1.7vw;
-  width: 43vw;
+  margin-left: calc(var(--width) * 0.017);
+  width: calc(var(--width) * 0.43);
 }
 
 div.row > div.destination > span.platform {
   font-family: NetworkSansRegular;
-  margin-left: 1vw;
+  margin-left: calc(var(--width) * 0.01);
   font-size: calc(var(--height) * 0.05 * var(--font-scale));
 }
 
 div.row > span.scheduled {
   display: inline-block;
-  width: 11vw;
+  width: calc(var(--width) * 0.11);
   text-align: right;
   font-size: calc(var(--height) * 0.06 * var(--font-scale));
-  margin-top: 0.3vw;
+  margin-top: calc(var(--width) * 0.003);
 }
 
 div.row > span.departing {
   display: inline-block;
-  margin-left: 1.5vw;
-  width: 10vw;
+  margin-left: calc(var(--width) * 0.015);
+  width: calc(var(--width) * 0.1);
   text-align: right;
 }
 
 div.type {
   display: inline-block;
-  margin-top: 0.2vw;
-  margin-right: 0.35vw;
-  height: 2.9vw;
-  width: 0.7vw;
+  margin-top: calc(var(--width) * 0.002);
+  margin-right: calc(var(--width) * 0.0035);
+  height: calc(var(--width) * 0.029);
+  width: calc(var(--width) * 0.007);
 }
 
 div.type-bus {
@@ -129,12 +140,12 @@ div.type-metro-train {
 }
 
 img.train-icon {
-  margin-top: 0.4vw;
-  height: 2.5vw;
+  margin-top: calc(var(--width) * 0.004);
+  height: calc(var(--width) * 0.025);
 }
 
 div.info {
-  width: calc(20vw);
+  width: calc(var(--width) * 0.2);
 
   display: flex;
   flex-direction: column;
@@ -143,7 +154,7 @@ div.info {
 }
 
 #hotline {
-  width: 20vw;
+  width: calc(var(--width) * 0.2);
   height: calc(.55 * var(--height));
   text-align: center;
   background-color: #1e1e1e;
@@ -151,7 +162,7 @@ div.info {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  /* justify-content: space-around; */
 }
 
 div.info-circle {
@@ -160,28 +171,25 @@ div.info-circle {
   align-items: center;
   justify-content: space-around;
 
-  width: 0.5vw;
-  height: 0.5vw;
+  width: calc(var(--width) * 0.005);
+  height: calc(var(--width) * 0.005);
 
   background: #ffffff;
   color: #000000;
-  border-radius: 10vw;
-  border: 1vw solid #ffffff;
+  border-radius: calc(var(--width) * 0.1);
+  border: calc(var(--width) * 0.01) solid #ffffff;
+  margin-top: calc(var(--height) * 0.05);
 }
 
 img.information {
   display: block;
-  width: calc(var(--height) * 0.1);
-  /* font-size: calc(var(--height) * 0.035 * var(--font-scale));
-  transform: rotateY(180deg) skewX(10deg);
-  margin-top: -0.4vw;
-  font-family: NetworkSansBold;
-  margin-left: 0.09vw */
+  width: calc(var(--width) * 0.035);
 }
 
 .call-hotline {
   font-family: NetworkSansRegular;
   font-size: calc(var(--height) * 0.05 * var(--font-scale));
+  margin-top: calc(var(--height) * 0.12);
 }
 
 .info .spacer {
@@ -190,7 +198,7 @@ img.information {
 }
 
 #timebox {
-  width: 20vw;
+  width: calc(var(--width) * 0.2);
   height: calc(var(--height) * 0.20);
   background-color: #1e1e1e;
   text-align: center;
@@ -201,7 +209,5 @@ img.information {
 
 #current-time {
   font-size: calc(var(--height) * 0.15 * var(--font-scale));
-  height: calc(100% / var(--font-scale));
-  transform: translateY(-32.5%);
   font-family: NetworkSansBold;
 }

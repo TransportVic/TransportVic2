@@ -38,6 +38,8 @@ router.get('/summary/:station', (req, res) => {
   let query = querystring.parse(url.parse(req.url).query)
   let {station} = req.params
 
+  if (station === 'southern-cross') return res.redirect('/mockups/sss-new')
+
   let stationPlatformData = stationPlatforms[station]
   let stationPID = stationPIDs[station]
   let stationCode = stationNames[station]
@@ -46,7 +48,7 @@ router.get('/summary/:station', (req, res) => {
   }
   preloadData(res.db, station, '*')
 
-  if (stationPID.length) {
+  if (stationPID.length && !query.type) {
     res.render('mockups/summary-known', {stationPID, station, stationCode, getURL: PIDBackend.getURL})
   } else {
     res.render('mockups/summary', {query, stationPlatformData, station, stationCode, getURL: PIDBackend.getURL})
@@ -90,7 +92,7 @@ router.get('/get', async (req, res) => {
     if (m) {
       m = m[1]
       bay = bay || '*'
-      return res.redirect('/mockups/bus-int-pids' + m + '/' + bay)
+      return res.redirect('/mockups/bus-int-pids/half' + m + '/' + bay)
     } else {
       errorMessage = `${value} is an invalid bus stop`
     }

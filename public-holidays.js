@@ -11,7 +11,7 @@ database.connect(async err => {
   gtfsTimetables = database.getCollection('gtfs timetables')
 })
 
-let rawEvents = ical.sync.parseFile(path.join(__dirname, 'additional-data/vic-holidays.ics'))
+let rawEvents = ical.sync.parseFile(path.join(__dirname, 'transportvic-data/calendar/vic-public-holidays/vic-holidays.ics'))
 let events = Object.values(rawEvents).slice(1)
 
 let eventCache = {}
@@ -25,7 +25,7 @@ function editName(name) {
   return name
 }
 
-events.forEach(event => {
+events.filter(e => e.type === 'VEVENT').forEach(event => {
   try {
     let start = event.start.toISOString()
     let day = utils.parseTime(start)
@@ -41,7 +41,16 @@ function getPublicHolidayName(time) {
   return eventCache[utils.getYYYYMMDD(time)]
 }
 
+async function waitForDB() {
+  for (let i = 0; i < 4; i++) {
+    if (!gtfsTimetables) await utils.sleep(500)
+    if (gtfsTimetables) break
+  }
+}
+
 async function getPHDayOfWeek(time) {
+  await waitForDB()
+
   let day = utils.getYYYYMMDD(time)
   if (eventCache[day]) {
     if (dayCache[day]) {
@@ -87,6 +96,8 @@ async function getDayOfWeek(time) {
 }
 
 async function isNightNetworkRunning(time) {
+  await waitForDB()
+
   let day = utils.getYYYYMMDD(time)
   if (nightNetworkRunning[day]) return nightNetworkRunning[day]
 

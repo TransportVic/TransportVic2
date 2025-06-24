@@ -26,6 +26,7 @@ let lines = {
     'Officer',
     'Cardinia Road',
     'Pakenham',
+    'East Pakenham',
     'Nar Nar Goon',
     'Tynong',
     'Garfield',
@@ -91,7 +92,7 @@ let lines = {
     'Armadale',
     'Malvern',
     'Caulfield',
-    'Glenhuntly',
+    'Glen Huntly',
     'Ormond',
     'McKinnon',
     'Bentleigh',
@@ -248,8 +249,7 @@ let lines = {
     'East Camberwell',
     'Canterbury',
     'Chatham',
-    'Surrey Hills',
-    'Mont Albert',
+    'Union',
     'Box Hill',
     'Laburnum',
     'Blackburn',
@@ -277,8 +277,7 @@ let lines = {
     'East Camberwell',
     'Canterbury',
     'Chatham',
-    'Surrey Hills',
-    'Mont Albert',
+    'Union',
     'Box Hill',
     'Laburnum',
     'Blackburn',
@@ -597,7 +596,7 @@ function getLineStops(lineName, destination) {
   if (lineName === 'Hurstbridge') return lines.Hurstbridge
   if (lineName === 'City Circle') return lines['City Circle']
   if (lineName === 'Sydney - Melbourne') return lines.Sydney
-  if (lineName === 'Showgrounds/Flemington') return lines['Flemington Racecourse']
+  if (lineName === 'Flemington Racecourse') return lines['Flemington Racecourse']
   if (lineName === 'The Overland') return lines.Overland
 }
 

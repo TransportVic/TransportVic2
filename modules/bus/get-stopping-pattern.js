@@ -5,12 +5,13 @@ const nameModifier = require('../../additional-data/stop-name-modifier')
 const determineBusRouteNumber = require('../../additional-data/determine-bus-route-number')
 const regionalRouteNumbers = require('../../additional-data/bus-data/regional-with-track')
 const { getStop } = require('../utils/get-bus-timetables')
+const overrideStops = require('./override-stops')
 
 let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => {
   let regionRoutes = regionalRouteNumbers[region]
 
   regionRoutes.forEach(route => {
-    acc[route.routeGTFSID] = { region, routeNumber: route.routeNumber }
+    acc[route.routeGTFSID] = { region, routeNumber: route.routeNumber, liveTrack: route.liveTrack }
   })
 
   return acc
@@ -24,7 +25,7 @@ function determineStopType(stop) {
   if (screenServices.some(svc => svc.routeGTFSID.startsWith('4-'))) {
     stopType = 'metro'
   } else { // Regional/Skybus
-    if (screenServices.some(svc => regionalGTFSIDs[svc.routeGTFSID])) {
+    if (screenServices.some(svc => regionalGTFSIDs[svc.routeGTFSID] && regionalGTFSIDs[svc.routeGTFSID].liveTrack)) {
       stopType = 'regional-live'
     } else {
       stopType = 'regional'
@@ -53,6 +54,18 @@ module.exports = async function (data, db) {
   if (time) url += `&date_utc=${time}`
 
   let {departures, stops, runs, routes, directions} = await ptvAPI(url)
+  
+  departures = departures.filter((stop, i) => {
+    let stopID = stop.stop_id
+
+    return i === 0 || departures[i - 1].stop_id !== stopID
+  })
+
+  stops = {
+    ...stops,
+    ...overrideStops
+  }
+
   let run = Object.values(runs)[0]
   let ptvDirection = Object.values(directions)[0]
   let routeData = Object.values(routes)[0]
@@ -112,7 +125,7 @@ module.exports = async function (data, db) {
   let routeGTFSID = route.routeGTFSID
 
   let directionName = ptvDirection.direction_name
-  let gtfsDirection = route.ptvDirections[directionName]
+  let gtfsDirection = referenceTrip ? referenceTrip.gtfsDirection : route.ptvDirections[directionName] || 0
 
   await async.forEach(Object.values(stops), async stop => {
     let dbStop = await getStop(stop, stopsCollection)
@@ -132,11 +145,13 @@ module.exports = async function (data, db) {
     if (!ptvStop) return null // Stop likely deactivated or does not exist but returned by operational timetable - skip it
 
     let stopName = utils.getProperStopName(ptvStop.stop_name)
-
+    if (!dbStops[departure.stop_id]) console.log(departure)
     let stopBay = dbStops[departure.stop_id].bays.find(bay => {
       let matchingService = bay.services.some(s => s.routeGTFSID === routeGTFSID && s.gtfsDirection === gtfsDirection)
 
       return bay.mode === 'bus' && bay.fullStopName === stopName && matchingService
+    }) || dbStops[departure.stop_id].bays.find(bay => { // Relax the rules slightly to match just based on full stop name
+      return bay.mode === 'bus' && bay.fullStopName === stopName
     }) || dbStops[departure.stop_id].bays.find(bay => bay.mode === 'bus')
 
     let departureTimeMinutes = utils.getMinutesPastMidnight(scheduledDepartureTime)

@@ -13,8 +13,8 @@ block title
   span #{tripName}
 
 block style
-  link(rel='stylesheet' href='/static/css/site-colours.css')
-  link(rel='stylesheet' href='/static/css/runs/base-style.css')
+  link(rel='stylesheet' href=`${staticBase}/static/css/site-colours.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/runs/base-style.css`)
 
 block content
   if trip.runID
