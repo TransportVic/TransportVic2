@@ -51,6 +51,7 @@ async function getAllDeparturesFromStation(station, db) {
 
     await Promise.all([
       new Promise(async resolve => {
+        return resolve()
         try {
           let vlinePlatform = station.bays.find(bay => bay.mode === 'regional train')
           if (vlinePlatform) {

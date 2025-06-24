@@ -8,6 +8,7 @@ const fs = require('fs')
 const uglifyJS = require('uglify-js')
 const utils = require('../utils')
 const ptvAPI = require('../ptv-api')
+const rateLimit = require('express-rate-limit')
 
 const DatabaseConnection = require('../database/DatabaseConnection')
 
@@ -270,6 +271,11 @@ module.exports = class MainServer {
       RoutePaths: '/route-paths',
       MetroMap: '/metro/map'
     }
+
+    app.post('/mockups', rateLimit({
+      windowMs: 1 * 60 * 1000,
+      max: 10
+    }))
 
     Object.keys(routers).forEach(routerName => {
       try {
