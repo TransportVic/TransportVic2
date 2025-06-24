@@ -26,6 +26,8 @@ await runNode('load-all-stops-routes.mjs')
 await runNode('bus/load-788-stop-numbers.js')
 await runNode('load-all-trips.mjs')
 
+await runNode('bus/load-flexiride-data.mjs')
+
 await runNode('metro/load-extra-data.mjs')
 await runNode('metro/download-metro-timetables.js')
 await runNode('metro/load-metro-timetables.js')
