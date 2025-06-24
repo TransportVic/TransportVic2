@@ -6,6 +6,12 @@ const busDestinations = require('../../../additional-data/bus-destinations')
 const moment = require('moment')
 const async = require('async')
 const utils = require('../../../utils')
+const rateLimit = require('express-rate-limit')
+
+router.use(rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 15
+}))
 
 async function getData(req, res, full) {
   let stops = res.db.getCollection('stops')
