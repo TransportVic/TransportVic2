@@ -7,10 +7,6 @@ const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path')
 
-const rootCas = require('ssl-root-cas').create()
-rootCas.addFile(path.resolve(__dirname, 'tt-intermediate.pem'))
-require('https').globalAgent.options.ca = rootCas
-
 const { spawn } = require('child_process')
 const util = require('util')
 const fetch = require('node-fetch')
