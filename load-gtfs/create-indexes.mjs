@@ -320,10 +320,12 @@ async function createLiveTimetableIndex(liveTimetables) {
 await createStopIndex(await loaderDB.getCollection('stops'))
 await createRouteIndex(await loaderDB.getCollection('routes'))
 await createTimetableIndex(await loaderDB.getCollection('gtfs timetables'))
+await createTimetableIndex(await loaderDB.getCollection('timetables'))
 
 await createStopIndex(await mainDB.getCollection('stops'))
 await createRouteIndex(await mainDB.getCollection('routes'))
 await createTimetableIndex(await mainDB.getCollection('gtfs timetables'))
+await createTimetableIndex(await mainDB.getCollection('timetables'))
 
 await createTimetableIndex(await mainDB.getCollection('live timetables'))
 await createLiveTimetableIndex(await mainDB.getCollection('live timetables'))
