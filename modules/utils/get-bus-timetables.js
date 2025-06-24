@@ -117,14 +117,20 @@ async function getDeparture(db, stopGTFSIDs, departureTime, destination, mode, r
       query.routeNumber = routeNumber
     }
 
-    if (tripID && !tripID.match(/^\d+$/)) query = {
-      $or: [ query, {
+    if (tripID && !tripID.match(/^\d+$/)) {
+      let tripIDQuery = {
         operationDays: utils.getYYYYMMDD(tripDay),
         mode,
         tripID
-      }]
-    }
+      }
 
+      let timetable = await db.getCollection('live timetables').findDocument(tripIDQuery)
+      || await db.getCollection('gtfs timetables').findDocument(tripIDQuery)
+      if (timetable) {
+        trip = timetable
+        break
+      }
+    }
 
     // for the coaches
     let timetable = await db.getCollection('live timetables').findDocument(query)
