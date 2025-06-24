@@ -18,6 +18,10 @@ async function createStopIndex(mongoStops) {
   }, {name: 'stops id index'})
 
   await mongoStops.createIndex({
+    'bays.mode': 1
+  }, {name: 'stops bay mode index'})
+
+  await mongoStops.createIndex({
     stopName: 1
   }, {name: 'stops name index'})
 

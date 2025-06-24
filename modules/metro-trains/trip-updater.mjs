@@ -109,7 +109,7 @@ export async function updateTrip(db, trip, { skipWrite = false, skipStopCancella
 
   if (!dbTrip) {
     let timetable = await createTrip(db, trip)
-    updateTrackerData(db, timetable)
+    if (timetable) updateTrackerData(db, timetable)
     return timetable
   }
 
@@ -210,6 +210,8 @@ async function createTrip(db, trip) {
   timetable.formedBy = trip.formedBy
   if (trip.consist) timetable.consist = trip.consist.reduce((acc, e) => acc.concat(e), [])
   else if (trip.forcedVehicle) timetable.forcedVehicle = trip.forcedVehicle
+
+  if (!trip.stops) return null
 
   let isCCL = trip.routeGTFSID === '2-CCL'
   let stopVisits = {}
