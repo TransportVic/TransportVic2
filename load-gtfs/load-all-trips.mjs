@@ -105,6 +105,7 @@ for (let i of selectedModes) {
     console.log('Loaded stop services for', mode)
   } catch (e) {
     console.log('Failed to load trips for', mode)
+    console.log(e)
   }
 }
 

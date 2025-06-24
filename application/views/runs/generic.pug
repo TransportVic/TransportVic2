@@ -61,6 +61,9 @@ block content
           if (trip.mode === 'tram') icon = vehicleIcons[trip.vehicleData.model] || 'optimus'
           else if (trip.mode === 'bus') icon = 'optimus'
         img(src=`/static/images/icons/${icon}.svg`)
+  else if trip.runID
+    div.infoRow
+      span Run #{trip.runID}
   - let hasNumber = !!routeNumber
   div(class=`departure noTiming${hasNumber ? '' : ' noNumber'}`)
     if hasNumber
