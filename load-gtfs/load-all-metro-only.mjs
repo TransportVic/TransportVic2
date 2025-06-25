@@ -31,7 +31,6 @@ await runNode('metro/load-metro-timetables.js')
 
 await runNode('load-all-post.mjs')
 
-await runNode('metro/load-metro-directions.mjs')
 await runNode('extra/load-search-query.js')
 
 await runNode('move-database.mjs')

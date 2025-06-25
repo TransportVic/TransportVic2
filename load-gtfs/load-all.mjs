@@ -41,7 +41,6 @@ await runNode('load-all-post.mjs')
 await runNode('tram/load-stops.mjs')
 await runNode('tram/load-tramtracker-ids.mjs')
 
-await runNode('metro/load-metro-directions.mjs')
 await runNode('extra/load-search-query.mjs')
 await runNode('extra/load-route-suburbs.mjs') // TODO: Move to network regions
 
