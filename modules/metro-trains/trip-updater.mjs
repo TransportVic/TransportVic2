@@ -211,7 +211,7 @@ async function createTrip(db, trip) {
   if (trip.consist) timetable.consist = trip.consist.reduce((acc, e) => acc.concat(e), [])
   else if (trip.forcedVehicle) timetable.forcedVehicle = trip.forcedVehicle
 
-  if (!trip.stops) return null
+  if (!trip.stops.length) return null
 
   let isCCL = trip.routeGTFSID === '2-CCL'
   let stopVisits = {}
