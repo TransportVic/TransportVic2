@@ -37,15 +37,15 @@ const stopsFile = path.join(gtfsPath, 'stops.txt')
 const routesFile = path.join(gtfsPath, 'routes.txt')
 const agencyFile = path.join(gtfsPath, 'agency.txt')
 
-let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
+let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
 
-let mongoStops = await mongoDB.getCollection('stops')
-let mongoRoutes = await mongoDB.getCollection('routes')
+let mongoStops = await mongoDB.getCollection('gtfs-stops')
+let mongoRoutes = await mongoDB.getCollection('gtfs-routes')
 
 let database = new LokiDatabaseConnection('transportvic')
-let stops = await database.createCollection('stops')
-let routes = await database.createCollection('routes')
+let stops = await database.createCollection('gtfs-stops')
+let routes = await database.createCollection('gtfs-routes')
 
 let start = new Date()
 console.log('Start loading stops and routes', start)

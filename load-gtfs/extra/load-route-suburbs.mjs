@@ -3,10 +3,10 @@ import config from '../../config.json' with { type: 'json' }
 import utils from '../../utils.js'
 import async from 'async'
 
-const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 await database.connect({})
-let routes = database.getCollection('routes')
+let routes = database.getCollection('gtfs-routes')
 
 let regionalBusRoutes = await routes.findDocuments({
   routeGTFSID: /6-/

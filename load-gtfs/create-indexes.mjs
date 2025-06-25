@@ -1,9 +1,6 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../config.json' with { type: 'json' }
 
-let loaderDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
-await loaderDB.connect()
-
 let mainDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mainDB.connect()
 
@@ -317,10 +314,10 @@ async function createLiveTimetableIndex(liveTimetables) {
   }, {name: 'metro live trip index', sparse: true})
 }
 
-await createStopIndex(await loaderDB.getCollection('stops'))
-await createRouteIndex(await loaderDB.getCollection('routes'))
-await createTimetableIndex(await loaderDB.getCollection('gtfs timetables'))
-await createTimetableIndex(await loaderDB.getCollection('timetables'))
+await createStopIndex(await mainDB.getCollection('gtfs-stops'))
+await createRouteIndex(await mainDB.getCollection('gtfs-routes'))
+await createTimetableIndex(await mainDB.getCollection('gtfs-gtfs timetables'))
+await createTimetableIndex(await mainDB.getCollection('gtfs-timetables'))
 
 await createStopIndex(await mainDB.getCollection('stops'))
 await createRouteIndex(await mainDB.getCollection('routes'))

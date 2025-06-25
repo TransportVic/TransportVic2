@@ -2,11 +2,11 @@ import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 
-let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
+let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
 
-let routes = mongoDB.getCollection('routes')
-let gtfsTimetables = mongoDB.getCollection('gtfs timetables')
+let routes = mongoDB.getCollection('gtfs-routes')
+let gtfsTimetables = mongoDB.getCollection('gtfs-gtfs timetables')
 
 let metroRoutes = await routes.findDocuments({
   mode: GTFS_CONSTANTS.TRANSIT_MODES.metroTrain

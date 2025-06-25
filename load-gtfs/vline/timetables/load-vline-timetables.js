@@ -331,13 +331,13 @@ function readFileData(filename, allTrips, callback) {
   })
 }
 
-const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 database.connect({
   poolSize: 100
 }, async err => {
-  stops = database.getCollection('stops')
-  timetables = database.getCollection('timetables')
+  stops = database.getCollection('gtfs-stops')
+  timetables = database.getCollection('gtfs-timetables')
 
   metroStops = await stops.distinct('stopName', {
     'bays.mode': 'metro train',

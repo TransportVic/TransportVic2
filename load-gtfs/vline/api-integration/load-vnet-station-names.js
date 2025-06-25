@@ -5,7 +5,7 @@ const cheerio = require('cheerio')
 const DatabaseConnection = require('../../../database/DatabaseConnection')
 const config = require('../../../config')
 
-const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let stops = null
 
 let data = fs.readFileSync(path.join(__dirname, 'all-vline-stations.xml')).toString().replace(/a:/g, '')
@@ -43,7 +43,7 @@ const stations = Array.from($('Location')).filter(location => {
 database.connect({
   poolSize: 100
 }, async err => {
-  stops = database.getCollection('stops')
+  stops = database.getCollection('gtfs-stops')
 
   await async.forEach(stations, async stop => {
     let stopData = await stops.findDocument({ stopName: stop.name })

@@ -5,7 +5,7 @@ const utils = require('../../utils')
 
 let timetables
 
-const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 async function findConnections(changeoverPoint) {
   let shorts = await timetables.findDocuments({

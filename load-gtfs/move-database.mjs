@@ -1,7 +1,7 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../config.json' with { type: 'json' }
 
-const collections = ['stops', 'routes', 'gtfs timetables']
+const collections = ['stops', 'routes', 'gtfs timetables', 'timetables']
 
 let start = new Date()
 
@@ -11,7 +11,7 @@ await adminConnection.connect()
 async function moveCollection(name) {
   console.log('Moving', name)
   await adminConnection.runCommand({
-    renameCollection: `${config.gtfsDatabaseName}.${name}`,
+    renameCollection: `${config.databaseName}.gtfs-${name}`,
     to: `${config.databaseName}.${name}`,
     dropTarget: true
   })

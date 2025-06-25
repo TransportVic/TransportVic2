@@ -3,12 +3,12 @@ import config from '../../config.json' with { type: 'json' }
 import utils from '../../utils.js'
 import async from 'async'
 
-const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 let start = new Date()
 
 await database.connect({})
-let stops = database.getCollection('stops')
+let stops = database.getCollection('gtfs-stops')
 
 let stopIDs = await stops.distinct('_id')
 let stopCount = stopIDs.length

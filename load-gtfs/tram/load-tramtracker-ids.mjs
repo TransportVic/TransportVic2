@@ -7,13 +7,13 @@ import async from 'async'
 import { load as loadHTML } from 'cheerio'
 import ptvOverrides from './ptv-overrides.mjs'
 
-const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 await database.connect({})
 
-let stops = database.getCollection('stops')
-let routes = database.getCollection('routes')
-let gtfsTimetables = database.getCollection('gtfs timetables')
+let stops = database.getCollection('gtfs-stops')
+let routes = database.getCollection('gtfs-routes')
+let gtfsTimetables = database.getCollection('gtfs-gtfs timetables')
 
 let tramServices = await routes.distinct('routeNumber', { mode: 'tram' })
 let count = 0

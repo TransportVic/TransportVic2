@@ -27,12 +27,12 @@ const tripsFile = path.join(gtfsPath, 'trips.txt')
 const stopTimesFile = path.join(gtfsPath, 'stop_times.txt')
 const shapeFile = path.join(gtfsPath, 'shapes.txt')
 
-let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
+let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
 
-let mongoStops = await mongoDB.getCollection('stops')
-let mongoRoutes = await mongoDB.getCollection('routes')
-let mongoTimetables = await mongoDB.getCollection('gtfs timetables')
+let mongoStops = await mongoDB.getCollection('gtfs-stops')
+let mongoRoutes = await mongoDB.getCollection('gtfs-routes')
+let mongoTimetables = await mongoDB.getCollection('gtfs-gtfs timetables')
 
 let start = new Date()
 console.log('Start', start)

@@ -7,12 +7,12 @@ const async = require('async')
 const fs = require('fs')
 const path = require('path')
 
-const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const regional = require('../../additional-data/bus-data/regional-with-track.json')
 const operators = require('../../transportvic-data/excel/bus/operators/regional-inter-town-operators.json')
 
 database.connect(async () => {
-  let routes = database.getCollection('routes')
+  let routes = database.getCollection('gtfs-routes')
   let busRoutes = await routes.findDocuments({
     mode: 'bus',
     $and: [{

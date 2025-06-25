@@ -19,11 +19,11 @@ const __dirname = path.dirname(__filename)
 
 const suburbs = JSON.parse(await fs.readFile(path.join(__dirname, '../../transportvic-data/geospatial/suburb-boundaries/vic.geojson')))
 
-let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
+let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
 
-let mongoStops = await mongoDB.getCollection('stops')
-let mongoRoutes = await mongoDB.getCollection('routes')
+let mongoStops = await mongoDB.getCollection('gtfs-stops')
+let mongoRoutes = await mongoDB.getCollection('gtfs-routes')
 
 let stopLoader = new StopsLoader('', suburbs, TRANSIT_MODES.metroTrain, mongoDB)
 let reader = new GTFSStopsReader('', suburbs)

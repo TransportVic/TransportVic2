@@ -20,7 +20,7 @@ const WoodendStops = JSON.parse(await fs.readFile(path.join(__dirname, '../../tr
 const YarrawongaStops = JSON.parse(await fs.readFile(path.join(__dirname, '../../transportvic-data/geospatial/flexiride/yarrawonga/stops.geojson')))
 const suburbs = JSON.parse(await fs.readFile(path.join(__dirname, '../../transportvic-data/geospatial/suburb-boundaries/vic.geojson')))
 
-let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
+let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
 
 let stopLoader = new StopsLoader('', suburbs, TRANSIT_MODES.bus, mongoDB)

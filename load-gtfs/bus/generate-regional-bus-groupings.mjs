@@ -11,10 +11,10 @@ const __dirname = path.dirname(__filename)
 
 const network = JSON.parse(await fs.readFile(path.join(__dirname, '../../transportvic-data/geospatial/regional-bus-networks/bus-network-regions.geojson')))
 
-const database = new DatabaseConnection(config.databaseURL, config.gtfsDatabaseName)
+const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 
 await database.connect({})
-let routes = database.getCollection('routes')
+let routes = database.getCollection('gtfs-routes')
 
 let routeData = await async.reduce(network.features, {}, async (acc, region) => {
   let matchingRoutes = await routes.findDocuments({
