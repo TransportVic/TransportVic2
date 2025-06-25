@@ -199,12 +199,10 @@ module.exports = class LiveTimetable {
         if (consist[0] === this.#vehicle.consist[0]) return
         let oldVal = { ...this.#vehicle, consist: this.#vehicle.consist.slice(0) }
         let newVal = { ...this.#vehicle, size: 6, consist: this.#vehicle.consist.concat(consist) }
-        this.changes.push({
+        this.addChange({
           type: 'veh-change',
           oldVal,
-          newVal,
-          timestamp: new Date().toISOString(),
-          source: this.#dataSource
+          newVal
         })
 
         this.#vehicle = newVal
@@ -214,12 +212,10 @@ module.exports = class LiveTimetable {
 
     let newVal = { size: consist.length, type: typeDescriptor, consist }
 
-    this.changes.push({
+    this.addChange({
       type: 'veh-change',
       oldVal: this.#vehicle || null,
-      newVal,
-      timestamp: new Date().toISOString(),
-      source: this.#dataSource
+      newVal
     })
 
     this.#vehicle = newVal
@@ -243,12 +239,10 @@ module.exports = class LiveTimetable {
     if (vehicle.icon) this.#vehicle.icon = vehicle.icon
 
     let newVal = { ...this.#vehicle, consist: this.#vehicle.consist.slice(0) }
-    this.changes.push({
+    this.addChange({
       type: 'veh-change',
       oldVal,
-      newVal,
-      timestamp: new Date().toISOString(),
-      source: this.#dataSource
+      newVal
     })
   }
 
@@ -258,12 +252,10 @@ module.exports = class LiveTimetable {
   set cancelled(cancelled) {
     if (typeof cancelled === 'undefined') return
     if (cancelled !== this.#cancelled && this.logChanges) {
-      this.changes.push({
+      this.addChange({
         type: 'trip-cancelled',
         oldVal: this.cancelled,
-        newVal: cancelled,
-        timestamp: new Date().toISOString(),
-        source: this.#dataSource
+        newVal: cancelled
       })
     }
     this.#cancelled = cancelled
@@ -286,24 +278,20 @@ module.exports = class LiveTimetable {
 
   set formedBy(formedBy) {
     if (formedBy !== this.#formedBy && this.logChanges) {
-      this.changes.push({
+      this.addChange({
         type: 'formedby-change',
         oldVal: this.#formedBy,
-        newVal: formedBy,
-        timestamp: new Date().toISOString(),
-        source: this.#dataSource
+        newVal: formedBy
       })
     }
     this.#formedBy = formedBy
   }
   set forming(forming) {
     if (forming !== this.#forming && this.logChanges) {
-      this.changes.push({
+      this.addChange({
         type: 'forming-change',
         oldVal: this.#forming,
-        newVal: forming,
-        timestamp: new Date().toISOString(),
-        source: this.#dataSource
+        newVal: forming
       })
     }
     this.#forming = forming
@@ -444,6 +432,14 @@ module.exports = class LiveTimetable {
     return this.#stops.map(stop => stop.stopName)
   }
 
+  addChange(data) {
+    this.changes.push({
+      ...data,
+      timestamp: new Date(),
+      source: this.#dataSource
+    })
+  }
+
   updateStopByName(stopName, stopData, { prefSchTime, visitNum } = {}) {
     let matchingStops = this.#stops.filter(stop => {
       if (prefSchTime) {
@@ -463,25 +459,21 @@ module.exports = class LiveTimetable {
       if (stopData.estimatedDepartureTime) matchingStop.estimatedDepartureTime = stopData.estimatedDepartureTime
       if (stopData.platform) {
         let newPlatform = stopData.platform.toString()
-        if (matchingStop.platform !== newPlatform && this.logChanges) this.changes.push({
+        if (matchingStop.platform !== newPlatform && this.logChanges) this.addChange({
           type: 'platform-change',
           stopGTFSID: matchingStop.stopGTFSID,
           oldVal: matchingStop.platform,
-          newVal: newPlatform,
-          timestamp: new Date().toISOString(),
-          source: this.#dataSource
+          newVal: newPlatform
         })
         matchingStop.platform = newPlatform
       }
 
       if (typeof stopData.cancelled !== 'undefined') {
-        if (matchingStop.cancelled !== stopData.cancelled && this.logChanges) this.changes.push({
+        if (matchingStop.cancelled !== stopData.cancelled && this.logChanges) this.addChange({
           type: 'stop-cancelled',
           stopGTFSID: matchingStop.stopGTFSID,
           oldVal: matchingStop.cancelled,
-          newVal: stopData.cancelled,
-          timestamp: new Date().toISOString(),
-          source: this.#dataSource
+          newVal: stopData.cancelled
         })
         matchingStop.cancelled = stopData.cancelled
       }
@@ -504,11 +496,9 @@ module.exports = class LiveTimetable {
         }
       )
 
-      if (this.logChanges) this.changes.push({
+      if (this.logChanges) this.addChange({
         type: 'add-stop',
-        stopGTFSID: stopData.stopGTFSID,
-        timestamp: new Date().toISOString(),
-        source: this.#dataSource
+        stopGTFSID: stopData.stopGTFSID
       })
       this.#stops.push(stop)
     }
