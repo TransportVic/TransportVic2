@@ -32,7 +32,7 @@ await runNode('metro/load-extra-data.mjs')
 await runNode('metro/download-metro-timetables.js')
 await runNode('metro/load-metro-timetables.js')
 
-await runNode('vline/api-integration/load-vnet-station-names.js')
+await runNode('vline/api-integration/load-vnet-station-names.mjs')
 await runNode('vline/timetables/download-vline-timetables.mjs')
 await runNode('vline/timetables/load-vline-timetables.mjs')
 
