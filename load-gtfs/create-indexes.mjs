@@ -312,6 +312,13 @@ async function createLiveTimetableIndex(liveTimetables) {
     'stopTimings.scheduledDepartureTime': 1,
     'stopTimings.stopGTFSID': 1,
   }, {name: 'metro live trip index', sparse: true})
+
+  await liveTimetables.createIndex({
+    operationDays: 1,
+    mode: 1,
+    'changes.timestamp': 1,
+    'changes.type': 1,
+  }, {name: 'metro live change index', sparse: true})
 }
 
 await createStopIndex(await mainDB.getCollection('gtfs-stops'))
