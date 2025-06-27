@@ -320,6 +320,7 @@ async function createLiveTimetableIndex(liveTimetables) {
 
   await liveTimetables.createIndex({
     mode: 1,
+    operationDays: 1,
     runID: 1
   }, {name: 'metro live trip index (TDN index)', unique: true, sparse: true})
 
