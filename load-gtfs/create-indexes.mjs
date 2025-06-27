@@ -149,6 +149,11 @@ async function createMetroTripIndex(metroTrips) {
   }, {name: 'metro trips index', unique: true})
 
   await metroTrips.createIndex({
+    date: 1,
+    runID: 1
+  }, {name: 'metro trips index (runID only)', unique: true})
+
+  await metroTrips.createIndex({
     consist: 1,
     date: 1
   }, {name: 'consist index'})
@@ -312,6 +317,11 @@ async function createLiveTimetableIndex(liveTimetables) {
     'stopTimings.scheduledDepartureTime': 1,
     'stopTimings.stopGTFSID': 1,
   }, {name: 'metro live trip index', sparse: true})
+
+  await liveTimetables.createIndex({
+    mode: 1,
+    runID: 1
+  }, {name: 'metro live trip index (TDN index)', unique: true, sparse: true})
 
   await liveTimetables.createIndex({
     operationDays: 1,
