@@ -44,10 +44,10 @@ for (let location of locations) {
     continue
   }
 
-  vlinePlatform.vnetStationName = location.vnetStationName
+  vlinePlatform.vnetStationName = location.name
   updated++
 
-  await stops.updateDocument({ stopName: location.name }, {
+  await stops.updateDocument({ _id: stopData._id }, {
     $set: stopData
   })
 }
