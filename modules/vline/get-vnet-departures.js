@@ -110,8 +110,8 @@ async function getVNETDepartures(stationName, direction, db, time, useArrivalIns
 
     if (!originStation || !destinationStation) return // Just in case we don't know the station
 
-    let originVLinePlatform = originStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
-    let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)
+    let originVLinePlatform = originStation.bays.find(bay => bay.mode === 'regional train' && bay.vnetStationName)
+    let destinationVLinePlatform = destinationStation.bays.find(bay => bay.mode === 'regional train' && bay.vnetStationName)
 
     let dayOfWeek = await getDayOfWeek(originDepartureTime)
     let isWeekday = utils.isWeekday(dayOfWeek)
