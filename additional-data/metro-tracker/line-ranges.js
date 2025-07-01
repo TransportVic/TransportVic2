@@ -28,7 +28,7 @@ module.exports = {
   'Belgrave': [
     [3000, 3199], // Belgrave?
     [3400, 3499], // Blackburn
-    [3550, 3599], // Ringwood
+    [3500, 3599], // Ringwood
     [3600, 3699], // Belgrave
     [3700, 3749], // Ringwod-Belgrave short
     [3770, 3799], // Ringwood short
@@ -40,7 +40,7 @@ module.exports = {
   'Lilydale': [
     [3200, 3399], // Lilydale
     [3400, 3499], // Blackburn
-    [3550, 3599], // Ringwood
+    [3500, 3599], // Ringwood
     [3770, 3799], // Ringwood short
     [3800, 3899], // Lilydale
     [3900, 3949], // Blackburn
@@ -109,5 +109,8 @@ module.exports = {
   ],
   'Flemington Racecourse': [
     [0, 999, 'R']
+  ],
+  'Stony Point': [
+    [8500, 8535]
   ]
 }

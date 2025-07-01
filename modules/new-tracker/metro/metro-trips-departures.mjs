@@ -31,7 +31,10 @@ export async function getDepartures(db, ptvAPI) {
   let output = []
   for (let trip of trips) {
     let routeName = tdnToLine[trip.tdn]
-    if (!routeName) continue
+    if (!routeName) {
+      console.warn('Could not determine route for TD' + trip.tdn)
+      continue
+    }
 
     let routeData = await getRouteByName(db, routeName)
 
