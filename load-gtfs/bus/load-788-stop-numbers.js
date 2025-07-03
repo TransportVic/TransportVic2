@@ -14,6 +14,7 @@ database.connect({
 
   await async.forEachLimit(Object.keys(stopNumbers), 20, async stopGTFSID => {
     let stopData = await stops.findDocument({ 'bays.stopGTFSID': stopGTFSID })
+    if (!stopData) return console.warn('Could not set stop number for', stopGTFSID, '#' + stopNumbers[stopGTFSID])
     let bay = stopData.bays.find(bay => bay.mode === 'bus' && bay.stopGTFSID === stopGTFSID)
     bay.stopNumber = stopNumbers[stopGTFSID]
 
