@@ -43,6 +43,13 @@ describe('The fleet parser functions', () => {
     it('Should return just the number for HCMTs', () => {
       expect(getMotorVehicles('9001M-9901M')).to.have.members(['9001', '9901'])
     })
+    it('Should return just the number for HCMTs', () => {
+      expect(getMotorVehicles('9001M-9901M')).to.have.members(['9001', '9901'])
+    })
+    it('Should handle junk being put through the API', () => {
+      // 3 Jul 2025 TD6627 - consist showing up as M
+      expect(getMotorVehicles('M')).to.have.members([])
+    })
   })
 
   describe('The parseConsist function', () => {
@@ -73,6 +80,11 @@ describe('The fleet parser functions', () => {
         ['581M', '1141T', '584M'],
         ['569M', '1156T', '612M']
       ])
+    })
+
+    it('Should handle junk being put through the API', () => {
+      // 3 Jul 2025 TD6627 - consist showing up as M
+      expect(parseConsist('M', fleet)).to.be.null
     })
   })
 })

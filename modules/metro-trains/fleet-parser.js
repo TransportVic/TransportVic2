@@ -13,14 +13,15 @@ module.exports.getMotorVehicles = function getMotorVehicles(consist) {
   if (carriages[0].match(/^\d{4}M$/)) { // New format consists
     return carriages.map(carriages => carriages.slice(0, -1))
   } 
-  return carriages.filter(carriage => carriage.endsWith('M'))
+  return carriages.filter(carriage => carriage.match(/^\d+M$/))
 }
 
 module.exports.getLeadingVehicles = function getLeadingVehicles(motorVehicles) {
+  if (!motorVehicles.length) return []
   if (motorVehicles[0].match(/^\d{4}$/)) return [ motorVehicles[0] ]
   if (motorVehicles[0].match(/^\d{4}M$/)) return [ motorVehicles[0].slice(0, -1) ]
 
-  let mCars = motorVehicles.map(carriage => ({
+  let mCars = motorVehicles.filter(carriage => carriage.match(/(\d+)/)).map(carriage => ({
     number: parseInt(carriage.match(/(\d+)/)[1]),
     carriage,
     matched: false
