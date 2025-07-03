@@ -28,6 +28,11 @@ describe('The fleet parser functions', () => {
     it('Should handle XT2 in the format 8001M-8601M', () => {
       expect(getLeadingVehicles(getMotorVehicles('8001M-8601M'))).to.have.members(['8001'])
     })
+
+    it('Should handle junk being put through the API', () => {
+      // 3 Jul 2025 TD6627 - consist showing up as M
+      expect(getLeadingVehicles(getMotorVehicles('M'))).to.have.members([])
+    })
   })
 
   describe('The getMotorVehicles function', () => {
