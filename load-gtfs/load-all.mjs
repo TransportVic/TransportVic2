@@ -49,4 +49,6 @@ await runNode('bus/load-regional-bus-operators.js')
 
 await runNode('move-database.mjs')
 
+await runNode('health-check/check.mjs')
+
 console.log('\nLoading GTFS took', (new Date() - start) / 1000 / 60, 'minutes overall')

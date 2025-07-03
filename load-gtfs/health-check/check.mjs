@@ -1,7 +1,6 @@
 import { fileURLToPath } from 'url'
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
-import utils from '../../utils.js'
 import discordIntegration from '../../modules/discord-integration.js'
 
 const FAILURE_TEXTS = {
@@ -30,7 +29,7 @@ export async function checkStop(stops, stopName, mode) {
   }
 
   if (mode === 'regional train') {
-    if (!dbStop.bays.find(bay => bay.mode === mode && bay.vnetStationName)) return { stop: stopName, reason: 'missing-vnet-name', mode }
+    if (!dbStop.bays.find(bay => bay.mode === mode && bay.vnetStationName)) return { stop: stopName, reason: 'missing-vnet-data', mode }
   }
 }
 
@@ -48,7 +47,7 @@ export async function checkStops(db) {
     testFailures.push(await checkStop(stops, stopName + ' Railway Station', 'metro train'))
   }
 
-  for (let stopName of ['Southern Cross', 'Bendigo']) {
+  for (let stopName of ['Southern Cross', 'Bendigo', 'Geelong', 'Ballan']) {
     testFailures.push(await checkStop(stops, stopName + ' Railway Station', 'regional train'))
   }
 
