@@ -312,7 +312,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     loopDirection,
     viaText,
     routeNumber,
-    depot: depots[(trip.runID || trip.tripID || '').slice(0, 2)]
+    depot: (trip.tripID && !trip.tripID.includes('-mjp-')) ? depots[(trip.tripID || '').slice(0, 2)] : null
   })
 })
 
