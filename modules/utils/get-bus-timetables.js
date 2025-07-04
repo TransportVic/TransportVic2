@@ -52,6 +52,20 @@ async function getStop(stopData, stopsCollection) {
   })
   if (matchedStop) return matchedStop
 
+  let matchedOnName = await stopsCollection.findDocuments({
+    $or: [{
+      'bays.fullStopName': stopName
+    }, {
+      stopName,
+    }],
+    'bays.mode': 'bus'
+  }).toArray()
+
+  if (matchedOnName.length === 1) {
+    global.loggers.general.err('PTV Stop Position Mismatch', stopData, matchedOnName[0].location)
+    return matchedOnName[0]
+  }
+
   let closeStop = await stopsCollection.findDocuments({
     location: {
       $nearSphere: {
