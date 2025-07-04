@@ -197,7 +197,6 @@ module.exports = async function (data, db) {
     routeGTFSID,
     routeNumber: referenceTrip ? referenceTrip.routeNumber : route.routeNumber,
     routeDetails: referenceTrip ? referenceTrip.routeDetails : null,
-    runID: null,
     operationDays: departureDay,
     vehicle: null,
     stopTimings: stopTimings,
@@ -211,7 +210,8 @@ module.exports = async function (data, db) {
     direction: null,
     cancelled: null,
     suspensions: null,
-    runID: ptvRunID.includes('-') ? ptvRunID : null
+    runID: ptvRunID.includes('-') ? ptvRunID : referenceTrip.tripID,
+    tripID: ptvRunID.includes('-') ? ptvRunID : referenceTrip.tripID
   }
 
   timetable.routeNumber = determineBusRouteNumber(timetable)
