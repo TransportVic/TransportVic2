@@ -12,6 +12,7 @@ const getDepartures = require('../../../modules/bus/get-departures')
 const regionalRouteNumbers = require('../../../additional-data/bus-data/regional-with-track')
 
 const overrideStops = require('../../../modules/bus/override-stops')
+const depots = require('../../../transportvic-data/excel/bus/depots/bus-depots.json')
 
 let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => {
   let regionRoutes = regionalRouteNumbers[region]
@@ -310,7 +311,8 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     routeNumberClass,
     loopDirection,
     viaText,
-    routeNumber
+    routeNumber,
+    depot: depots[(trip.runID || trip.tripID || '').slice(0, 2)]
   })
 })
 

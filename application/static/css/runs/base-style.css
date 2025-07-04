@@ -19,6 +19,21 @@ div.infoRow > span {
   margin-left: calc(1vw + 1vh);
 }
 
+div.infoRow.depot {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  height: calc(5vh + 5vw);
+}
+
+div.infoRow.depot > span.depot {
+  font-size: calc(1.4vw + 1.7vh);
+}
+
+div.infoRow.depot > span.tripID {
+  font-size: calc(1.3vw + 1.3vh);
+}
+
 div.vehicle {
   display: flex;
   flex-direction: row;

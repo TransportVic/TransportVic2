@@ -61,6 +61,10 @@ block content
           if (trip.mode === 'tram') icon = vehicleIcons[trip.vehicleData.model] || 'optimus'
           else if (trip.mode === 'bus') icon = 'optimus'
         img(src=`/static/images/icons/${icon}.svg`)
+  else if depot
+    div.infoRow.depot
+      span.depot Depot: #{depot}
+      span.tripID Run #{trip.runID || trip.tripID}
   else if trip.runID
     div.infoRow
       span Run #{trip.runID}
