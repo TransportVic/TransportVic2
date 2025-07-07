@@ -32,9 +32,8 @@ async function loadOperationalTT(operationDay) {
       operationDays: opDayFormat,
       isRailReplacementBus: true
     })
+    await liveTimetables.createDocuments(activeTrips)
   }
-
-  await liveTimetables.createDocuments(activeTrips)
 }
 
 await loadOperationalTT(utils.now())
