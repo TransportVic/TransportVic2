@@ -13,7 +13,10 @@ async function loadOperationalTT(operationDay) {
   let opDayFormat = utils.getYYYYMMDD(operationDay)
   let rawActiveTrips = await gtfsTimetables.findDocuments({
     mode: 'metro train',
-    operationDays: opDayFormat
+    operationDays: opDayFormat,
+    routeGTFSID: {
+      $ne: '2-RRB'
+    }
   }).sort({ departureTime: 1 }).toArray()
 
   let activeTrips = rawActiveTrips.map(trip => convertToLive(trip, operationDay))
