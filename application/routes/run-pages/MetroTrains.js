@@ -44,7 +44,6 @@ async function pickBestTrip(data, db) {
     destinationArrivalTime: data.destinationArrivalTime
   }
 
-  // NME, RMD shorts are always loaded live
   let liveTrip = await db.getCollection('live timetables').findDocument(gtfsQuery)
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(gtfsQuery)
 

@@ -15,7 +15,7 @@ async function loadOperationalTT(operationDay) {
     mode: 'metro train',
     operationDays: opDayFormat,
     routeGTFSID: '2-RRB'
-  }).sort({ departureTime: 1 }).toArray()
+  }).toArray()
 
   let activeTrips = rawActiveTrips.map(trip => convertToLive(trip, operationDay))
 
@@ -24,14 +24,20 @@ async function loadOperationalTT(operationDay) {
     delete trip._id
   }
 
-  await liveTimetables.deleteDocuments({
-    routeGTFSID: '2-RRB'
-  })
+  // Delete all RRB data and use this only if there is actually data
+  // Also means that if MTM data drops out but PTV data is still there we don't accidentally delete it
+  if (activeTrips.length) {
+    await liveTimetables.deleteDocuments({
+      mode: 'metro train',
+      operationDays: opDayFormat,
+      isRailReplacementBus: true
+    })
+  }
+
   await liveTimetables.createDocuments(activeTrips)
 }
 
 await loadOperationalTT(utils.now())
 await loadOperationalTT(utils.now().add(1, 'day'))
-await loadOperationalTT(utils.now().add(-1, 'day'))
 
 await mongoDB.close()
