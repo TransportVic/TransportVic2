@@ -55,6 +55,10 @@ for (let operator of operators) {
 
     await tripLoader.loadTrips({
       routeIDMap,
+      processTrip: (trip, rawTrip) => {
+        if (rawTrip.getCalendarName().match(/unplanned/i)) return null
+        return trip
+      }
     })
 
     console.log('Loaded trips for', operator)
