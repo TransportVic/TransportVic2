@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@transportme/database": "^1.0.25",
-    "@transportme/load-ptv-gtfs": "^1.3.3",
+    "@transportme/load-ptv-gtfs": "^1.4.3",
     "@transportme/ptv-api": "^1.0.20",
     "@transportme/transportvic-utils": "^1.0.4",
     "@transportme/vline-nsp-reader": "^1.0.0",

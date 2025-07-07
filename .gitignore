@@ -22,6 +22,8 @@ tt-intermediate.pem
 
 /additional-data/myki-zone-test
 
+/load-gtfs/*/routes.json
+/load-gtfs/*/directions.json
 /load-gtfs/routes.json
 /load-gtfs/directions.json
 /load-gtfs/vline/timetables/timetables
