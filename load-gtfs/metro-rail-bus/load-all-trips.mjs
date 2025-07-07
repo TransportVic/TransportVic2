@@ -18,14 +18,13 @@ const gtfsFolder = path.join(__dirname, '..', '..', 'gtfs', 'mtm-rail')
 let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
 
-let mongoStops = await mongoDB.getCollection('gtfs-stops')
-let mongoRoutes = await mongoDB.getCollection('gtfs-routes')
-let mongoTimetables = await mongoDB.getCollection('gtfs-gtfs timetables')
+let mongoStops = await mongoDB.getCollection('stops')
+let mongoTimetables = await mongoDB.getCollection('gtfs timetables')
 
 let start = new Date()
 console.log('Start', start)
 
-await mongoTimetables.deleteDocuments({})
+await mongoTimetables.deleteDocuments({ routeGTFSID: '2-RRB' })
 
 console.log('Loading timetables now\n')
 
@@ -48,7 +47,11 @@ for (let operator of operators) {
       stopTimesFile: stopTimesFile,
       calendarFile: calendarFile,
       calendarDatesFile: null
-    }, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, mongoDB)
+    }, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, mongoDB, {
+      routeColl: 'routes',
+      stopColl: 'stops',
+      timetableColl: 'gtfs timetables'
+    })
 
     await tripLoader.loadTrips({
       routeIDMap,
@@ -100,7 +103,7 @@ for (let operator of operators) {
   const shapeFile = path.join(operatorFolder, 'shapes.txt')
 
   console.log('Loading shapes for', operator)
-  let shapeLoader = new ShapeLoader(shapeFile, mongoDB)
+  let shapeLoader = new ShapeLoader(shapeFile, mongoDB, 'routes')
 
   await shapeLoader.loadShapes({ shapeIDMap })
 }

@@ -17,9 +17,12 @@ const gtfsFolder = path.join(__dirname, '..', '..', 'gtfs', 'mtm-rail')
 
 let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
+let mongoRoutes = await mongoDB.getCollection('routes')
 
 let start = new Date()
 console.log('Start loading stops and routes', start)
+
+await mongoRoutes.deleteDocument({ routeGTFSID: '2-RRB' })
 
 let routeIDMap = {}
 
@@ -30,7 +33,7 @@ for (let operator of operators) {
   const agencyFile = path.join(operatorFolder, 'agency.txt')
 
   try {
-    let stopLoader = new StopsLoader(stopsFile, suburbsVIC, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, mongoDB)
+    let stopLoader = new StopsLoader(stopsFile, suburbsVIC, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, mongoDB, null, 'stops')
     await stopLoader.loadStops({
       processStop: stop => {
         let parts
@@ -49,7 +52,7 @@ for (let operator of operators) {
 
     console.log('Loaded stops for', operator)
 
-    let routeLoader = new RouteLoader(routesFile, agencyFile, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, mongoDB)
+    let routeLoader = new RouteLoader(routesFile, agencyFile, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, mongoDB, 'routes')
     await routeLoader.loadRoutes()
 
     routeIDMap = {
