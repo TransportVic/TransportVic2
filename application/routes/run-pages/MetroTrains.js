@@ -87,6 +87,8 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     if (trackerData) trip.consist = trackerData.consist
   }
 
+  let hasLiveTimings = trip.stopTimings.some(stop => stop.estimatedDepartureTime)
+
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.pretyTimeToDeparture = ''
 
@@ -98,17 +100,17 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
       stop.headwayDevianceClass = 'unknown'
     }
 
-    if (!isLive || (isLive && stop.estimatedDepartureTime)) {
-      let scheduledDepartureTime = tripStartTime.clone().add((stop.departureTimeMinutes || stop.arrivalTimeMinutes) - firstDepartureTime, 'minutes')
-      let estimatedDepartureTime = stop.estimatedDepartureTime
+    if (!hasLiveTimings || (isLive && stop.estimatedDepartureTime)) {
+      let scheduledDepartureTime = utils.parseTime(stop.scheduledDepartureTime)
+      let estimatedDepartureTime = utils.parseTime(stop.actualDepartureTimeMS)
+
+      stop.pretyTimeToDeparture = utils.prettyTime(estimatedDepartureTime || scheduledDepartureTime, true, true)
+      if (!hasLiveTimings) return stop
 
       stop.headwayDevianceClass = utils.findHeadwayDeviance(scheduledDepartureTime, estimatedDepartureTime, {
         early: 0.5,
         late: 5
       })
-
-      if (isLive && !estimatedDepartureTime) return stop
-      stop.pretyTimeToDeparture = utils.prettyTime(estimatedDepartureTime || scheduledDepartureTime, true, true)
     }
     return stop
   })
