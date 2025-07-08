@@ -27,12 +27,33 @@ async function loadOperationalTT(operationDay) {
   // Delete all RRB data and use this only if there is actually data
   // Also means that if MTM data drops out but PTV data is still there we don't accidentally delete it
   if (activeTrips.length) {
-    await liveTimetables.deleteDocuments({
+    let hasRealtimeData = await liveTimetables.distinct('tripID', {
       mode: 'metro train',
       operationDays: opDayFormat,
-      isRailReplacementBus: true
+      isRailReplacementBus: true,
+      stopTimings: {
+        $elemMatch: {
+          estimatedDepartureTime: {
+            $ne: null
+          }
+        }
+      }
     })
-    await liveTimetables.createDocuments(activeTrips)
+
+    let replacementTrips = activeTrips.filter(trip => !hasRealtimeData.includes(trip.tripID))
+    let bulkWrite = replacementTrips.map(trip => ({
+      replaceOne: {
+        filter: {
+          mode: 'metro train',
+          operationDays: opDayFormat,
+          tripID: trip.tripID
+        },
+        replacement: trip,
+        upsert: true
+      }
+    }))
+
+    await liveTimetables.bulkWrite(bulkWrite)
   }
 }
 
