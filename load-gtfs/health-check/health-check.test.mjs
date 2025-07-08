@@ -126,7 +126,7 @@ describe('The GTFS health check module', () => {
       expect(await checkStop(stops, 'Flinders Street Railway Station', 'metro train')).to.not.exist // Metro data should not be affected
       expect(await checkStop(stops, 'Flinders Street Railway Station', 'regional train')).to.deep.equal({
         stop: 'Flinders Street Railway Station',
-        reason: 'missing-vnet-name',
+        reason: 'missing-vnet-data',
         mode: 'regional train'
       })
     })
