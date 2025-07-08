@@ -29,7 +29,7 @@ export class MTMRailRouteReader extends GTFSReaders.GTFSRouteReader {
       routeName: data.route_long_name
     }
 
-    return MTMRailRoute(routeData, this.getMode())
+    return new MTMRailRoute(routeData, this.getMode())
   }
 
 }
@@ -38,6 +38,10 @@ export default class MTMRailRouteLoader extends RouteLoader {
 
   constructor(routesFile, agencyFile, database) {
     super(routesFile, agencyFile, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, database)
+  }
+
+  createRouteReader(routesFile, agencyFile) {
+    return new MTMRailRouteReader(routesFile, agencyFile)
   }
 
   getRoutesDB(db) {
