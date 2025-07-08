@@ -19,7 +19,10 @@ if departures.length
       a(class=`leftContainer ${cssClass}`)
         if departure.isRailReplacementBus
           span.topText Rail Bus
-          img(src=`${staticBase}/static/images/clear-icons/bus.svg`)
+          if departure.trip.headsign
+            span.bigNumber #{departure.trip.headsign}
+          else
+            img(src=`${staticBase}/static/images/clear-icons/bus.svg`)
         else
           span.topText Platform
           span.bigNumber #{departure.platform || '?'}
