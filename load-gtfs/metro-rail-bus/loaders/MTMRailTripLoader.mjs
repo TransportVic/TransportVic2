@@ -1,5 +1,6 @@
 import { GTFSReaders, GTFSTypes, TripLoader } from '@transportme/load-ptv-gtfs'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
+import getTripID from '../../../modules/new-tracker/metro-rail-bus/get-trip-id.mjs'
 
 export class MTMRailTrip extends GTFSTypes.GTFSTrip {
 
@@ -90,6 +91,7 @@ export default class MTMRailTripLoader extends TripLoader {
       routeIDMap,
       processTrip: (trip, rawTrip) => {
         if (rawTrip.getCalendarName().match(/unplanned/i)) return null
+        trip.runID = getTripID(trip.tripID)
         return trip
       }
     })

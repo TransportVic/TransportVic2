@@ -1,7 +1,12 @@
-import { PTVAPI } from '@transportme/ptv-api'
-import utils from '../../../utils.js'
+import { MongoDatabaseConnection } from '@transportme/database'
+import { MetroSiteAPIInterface, PTVAPI } from '@transportme/ptv-api'
 import { fileURLToPath } from 'url'
+
 import { getStop, updateTrip } from '../../metro-trains/trip-updater.mjs'
+import getTripID from './get-trip-id.mjs'
+import utils from '../../../utils.js'
+
+import config from '../../../config.json' with { type: 'json' }
 
 export async function getRailBusUpdates(db, ptvAPI) {
   let tripUpdates = await ptvAPI.metroSite.getRailBusUpdates()
@@ -10,7 +15,7 @@ export async function getRailBusUpdates(db, ptvAPI) {
   for (let trip of tripUpdates) {
     let tripData = {
       operationDays: utils.getYYYYMMDDNow(),
-      tripID: trip.tripID,
+      runID: getTripID(trip.tripID),
       routeGTFSID: '2-RRB',
       stops: []
     }
@@ -19,8 +24,8 @@ export async function getRailBusUpdates(db, ptvAPI) {
       let stopData = await getStop(db, stop.stopGTFSID)
       tripData.stops.push({
         stopName: stopData.fullStopName,
-        estimatedDepartureTime: stop.estimatedDepartureTime.toUTC().toISO(),
-        estimatedArrivalTime: stop.estimatedDepartureTime.toUTC().toISO()
+        estimatedDepartureTime: new Date(stop.estimatedDepartureTime.toUTC().toISO()),
+        estimatedArrivalTime: new Date(stop.estimatedDepartureTime.toUTC().toISO())
       })
     }
 
@@ -43,7 +48,10 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
-  await fetchTrips(new PTVAPI())
+  let ptvAPI = new PTVAPI()
+  ptvAPI.addMetroSite(new MetroSiteAPIInterface())
+
+  await fetchTrips(mongoDB, ptvAPI)
 
   process.exit(0)
 }
