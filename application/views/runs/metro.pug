@@ -22,7 +22,7 @@ block style
 block content
   if trip.runID
     div.infoRow
-      if trip.isRailReplacementBus && trip.block && trip.block.match(/^\w{3}\d+/)
+      if trip.isRailReplacementBus && trip.block && trip.block.match(/^[A-Z]{2,3}\d{3,}/)
         span Run #{trip.runID} (Shift #{trip.block})
       else
         span Run #{trip.runID}

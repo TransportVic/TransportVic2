@@ -15,7 +15,7 @@ for (let route of Object.keys(routeStops)) {
 export class MTMRailTrip extends GTFSTypes.GTFSTrip {
 
   constructor(data) {
-    if (data.headsign && data.headsign.match(/^[A-Z]{3}\d{3,}/)) {
+    if (data.headsign && data.headsign.match(/^[A-Z]{2,3}\d{3,}/)) {
       data.block = data.headsign
     }
 
