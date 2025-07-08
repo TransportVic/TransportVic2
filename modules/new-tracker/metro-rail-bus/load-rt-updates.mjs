@@ -2,7 +2,7 @@ import { MongoDatabaseConnection } from '@transportme/database'
 import { MetroSiteAPIInterface, PTVAPI } from '@transportme/ptv-api'
 import { fileURLToPath } from 'url'
 
-import { getStop, updateTrip } from '../../metro-trains/trip-updater.mjs'
+import { getStop, getTrip, updateTrip } from '../../metro-trains/trip-updater.mjs'
 import getTripID from './get-trip-id.mjs'
 import utils from '../../../utils.js'
 
@@ -13,15 +13,24 @@ export async function getRailBusUpdates(db, ptvAPI) {
 
   let output = []
   for (let trip of tripUpdates) {
+    let runID = getTripID(trip.tripID)
+    let operationDays = utils.getYYYYMMDDNow()
+    let dbTrip = await getTrip(db, runID, operationDays)
+    if (!dbTrip) continue
+
     let tripData = {
-      operationDays: utils.getYYYYMMDDNow(),
-      runID: getTripID(trip.tripID),
+      operationDays,
+      runID,
       routeGTFSID: '2-RRB',
       stops: []
     }
 
     for (let stop of trip.stopTimings) {
       let stopData = await getStop(db, stop.stopGTFSID)
+      if (!stopData) {
+        tripData = null
+        break
+      }
       tripData.stops.push({
         stopName: stopData.fullStopName,
         estimatedDepartureTime: new Date(stop.estimatedDepartureTime.toUTC().toISO()),
@@ -29,7 +38,7 @@ export async function getRailBusUpdates(db, ptvAPI) {
       })
     }
 
-    output.push(tripData)
+    if (tripData) output.push(tripData)
   }
 
   return output

@@ -23,6 +23,8 @@ export async function getStop(db, stopID) {
     'bays.stopGTFSID': stopID
   })
 
+  if (!stop) return null
+
   stopCache[stop.stopName] = stop
   stopIDCache[stopID] = stop.stopName
 
@@ -37,6 +39,8 @@ export async function getStopByName(db, stopName) {
     stopName
   })
 
+  if (!stop) return null
+
   stopCache[stopName] = stop
   return stop
 }
@@ -49,6 +53,8 @@ export async function getRoute(db, routeGTFSID) {
     mode: 'metro train',
     routeGTFSID
   })
+
+  if (!route) return null
 
   routeNameCache[routeGTFSID] = route
   routeIDCache[route.routeGTFSID] = route
@@ -64,6 +70,8 @@ export async function getRouteByName(db, routeName) {
     mode: 'metro train',
     routeName
   })
+
+  if (!route) return null
 
   routeNameCache[routeName] = route
   routeIDCache[route.routeGTFSID] = route
