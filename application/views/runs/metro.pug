@@ -22,7 +22,10 @@ block style
 block content
   if trip.runID
     div.infoRow
-      span=`Run ${trip.runID}`
+      if trip.isRailReplacementBus && trip.block && trip.block.match(/^\w{3}\d+/)
+        span Run #{trip.runID} (Shift #{trip.block})
+      else
+        span Run #{trip.runID}
       if trip.vehicle
         - let { size, type } = trip.vehicle
           div.vehicle
