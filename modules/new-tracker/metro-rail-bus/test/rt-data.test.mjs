@@ -1,11 +1,9 @@
 import { LokiDatabaseConnection } from '@transportme/database'
-import dbStops from './sample-data/stops.json' with { type: 'json' }
-import dbTrips from './sample-data/trips.json' with { type: 'json' }
+import dbStops from '../../metro/test/sample-data/pkm-stops-db.json' with { type: 'json' }
 import updates from './sample-data/rt-updates.json' with { type: 'json' }
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
 import { getRailBusUpdates } from '../load-rt-updates.mjs'
 import { expect } from 'chai'
-import { updateTrip } from '../../../metro-trains/trip-updater.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
