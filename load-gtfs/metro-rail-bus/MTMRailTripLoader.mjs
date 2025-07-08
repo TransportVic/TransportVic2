@@ -1,4 +1,5 @@
 import { GTFSReaders, GTFSTypes, TripLoader } from '@transportme/load-ptv-gtfs'
+import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 
 export class MTMRailStopTimesReader extends GTFSReaders.GTFSStopTimesReader {
 
@@ -20,6 +21,10 @@ export class MTMRailStopTimesReader extends GTFSReaders.GTFSStopTimesReader {
 
 export default class MTMRailTripLoader extends TripLoader {
 
+  constructor(paths, database) {
+    super(paths, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, database)
+  }
+
   getRoutesDB(db) {
     return db.getCollection('routes')
   }
@@ -32,8 +37,18 @@ export default class MTMRailTripLoader extends TripLoader {
     return db.getCollection('gtfs timetables')
   }
 
-  createStopTimesReader() {
+  createStopTimesReader(stopTimesFile, mode) {
     return new MTMRailStopTimesReader(stopTimesFile, mode)
+  }
+
+  async loadTrips(routeIDMap) {
+    await super.loadTrips({
+      routeIDMap,
+      processTrip: (trip, rawTrip) => {
+        if (rawTrip.getCalendarName().match(/unplanned/i)) return null
+        return trip
+      }
+    })
   }
 
 }

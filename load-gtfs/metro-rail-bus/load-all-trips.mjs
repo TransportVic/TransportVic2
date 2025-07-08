@@ -1,7 +1,6 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import path from 'path'
 import url from 'url'
-import { TripLoader, ShapeLoader } from '@transportme/load-ptv-gtfs'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 
 import routeIDMap from './routes.json' with { type: 'json' }
@@ -10,6 +9,7 @@ import operators from './operators.mjs'
 
 import fs from 'fs/promises'
 import MTMRailTripLoader from './MTMRailTripLoader.mjs'
+import MTMRailShapeLoader from './MTMRailShapeLoader.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -46,20 +46,9 @@ for (let operator of operators) {
       tripsFile: tripsFile,
       stopTimesFile: stopTimesFile,
       calendarFile: calendarFile,
-      calendarDatesFile: null
-    }, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, mongoDB, {
-      routeColl: 'routes',
-      stopColl: 'stops',
-      timetableColl: 'gtfs timetables'
-    })
+    }, mongoDB)
 
-    await tripLoader.loadTrips({
-      routeIDMap,
-      processTrip: (trip, rawTrip) => {
-        if (rawTrip.getCalendarName().match(/unplanned/i)) return null
-        return trip
-      }
-    })
+    await tripLoader.loadTrips(routeIDMap)
 
     console.log('Loaded trips for', operator)
 
@@ -72,7 +61,7 @@ for (let operator of operators) {
       ...directionIDMap,
       ...tripLoader.getDirectionIDMap()
     }
-    
+
     let stopServicesMap = tripLoader.getStopServicesMap()
     let bulkUpdate = Object.keys(stopServicesMap).map(stopGTFSID => ({
       updateOne: {
@@ -107,7 +96,7 @@ for (let operator of operators) {
   const shapeFile = path.join(operatorFolder, 'shapes.txt')
 
   console.log('Loading shapes for', operator)
-  let shapeLoader = new ShapeLoader(shapeFile, mongoDB, 'routes')
+  let shapeLoader = new MTMRailShapeLoader(shapeFile, mongoDB)
 
   await shapeLoader.loadShapes({ shapeIDMap })
 }
