@@ -9,6 +9,7 @@ import config from '../../config.json' with { type: 'json' }
 import operators from './operators.mjs'
 
 import fs from 'fs/promises'
+import MTMRailTripLoader from './MTMRailTripLoader.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -38,11 +39,10 @@ for (let operator of operators) {
   const calendarFile = path.join(operatorFolder, 'calendar.txt')
   const tripsFile = path.join(operatorFolder, 'trips.txt')
   const stopTimesFile = path.join(operatorFolder, 'stop_times.txt')
-  const shapeFile = path.join(operatorFolder, 'shapes.txt')
 
   try {
     console.log('Loading trips for', operator)
-    let tripLoader = new TripLoader({
+    let tripLoader = new MTMRailTripLoader({
       tripsFile: tripsFile,
       stopTimesFile: stopTimesFile,
       calendarFile: calendarFile,

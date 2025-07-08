@@ -1,6 +1,17 @@
 import { GTFSReaders, GTFSTypes, StopsLoader } from '@transportme/load-ptv-gtfs'
+import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
+
 import { closest, distance } from 'fastest-levenshtein'
+import path from 'path'
+import url from 'url'
+import fs from 'fs/promises'
+
 import routeStops from '../../additional-data/metro-data/metro-routes.json' with { type: 'json' }
+
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+const suburbsVIC = JSON.parse(await fs.readFile(path.join(__dirname, '../../transportvic-data/geospatial/suburb-boundaries/vic.geojson')))
 
 const allStops = Object.values(routeStops).reduce((a,e) => a.concat(e), [])
 
@@ -55,6 +66,14 @@ export class MTMRailStopsReader extends GTFSReaders.GTFSStopsReader {
 }
 
 export default class MTMRailStopLoader extends StopsLoader {
+
+  constructor(stopsFile, database) {
+    super(stopsFile, suburbsVIC, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, database)
+  }
+
+  getStopsDB(db) {
+    return db.getCollection('stops')
+  }
 
   createStopReader(stopsFile, suburbs, suburbHook) {
     return new MTMRailStopsReader(stopsFile, suburbs, suburbHook)
