@@ -8,8 +8,8 @@ import config from '../../config.json' with { type: 'json' }
 import operators from './operators.mjs'
 
 import fs from 'fs/promises'
-import MTMRailTripLoader from './MTMRailTripLoader.mjs'
-import MTMRailShapeLoader from './MTMRailShapeLoader.mjs'
+import MTMRailTripLoader from './loaders/MTMRailTripLoader.mjs'
+import MTMRailShapeLoader from './loaders/MTMRailShapeLoader.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)

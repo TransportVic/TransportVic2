@@ -6,12 +6,12 @@ import path from 'path'
 import url from 'url'
 import fs from 'fs/promises'
 
-import routeStops from '../../additional-data/metro-data/metro-routes.json' with { type: 'json' }
+import routeStops from '../../../additional-data/metro-data/metro-routes.json' with { type: 'json' }
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const suburbsVIC = JSON.parse(await fs.readFile(path.join(__dirname, '../../transportvic-data/geospatial/suburb-boundaries/vic.geojson')))
+const suburbsVIC = JSON.parse(await fs.readFile(path.join(__dirname, '../../../transportvic-data/geospatial/suburb-boundaries/vic.geojson')))
 
 const allStops = Object.values(routeStops).reduce((a,e) => a.concat(e), [])
 

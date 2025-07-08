@@ -5,8 +5,8 @@ import fs from 'fs/promises'
 
 import config from '../../config.json' with { type: 'json' }
 import operators from './operators.mjs'
-import MTMRailStopLoader from './MTMRailStopLoader.mjs'
-import MTMRailRouteLoader from './MTMRailRouteLoader.mjs'
+import MTMRailStopLoader from './loaders/MTMRailStopLoader.mjs'
+import MTMRailRouteLoader from './loaders/MTMRailRouteLoader.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
