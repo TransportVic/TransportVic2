@@ -1,0 +1,13 @@
+route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color,continuous_pickup,continuous_drop_off,route_sort_order
+U-ALM-sas-CAM,MTM Rail,U-CAM-sas-ALM,,,3,,e6c8e6,,,,DONRIC
+U-BAY-exp-RWD,MTM Rail,U-RWD-exp-BAY,,,3,,e6c8e6,,,,
+U-BAY-sas-RWD,MTM Rail,U-RWD-sas-BAY,,,3,,e6c8e6,,,,
+EXP Caulfield to Moorabbin SAS Mordialloc,MTM Rail,059LTD,,,3,,FFAB53,,,,
+EXP Caulfield to Mordialloc,MTM Rail,059EXP,,,3,,4CD975,,,,
+SAS Caulfield to Moorabbin,MTM Rail,059SAS,,,3,,F04163,,,,
+SAS Caulfield to Mordialloc,MTM Rail,059SAS1,,,3,,F04163,,,,
+32077,1,"L1-NPT-WER","L1-NPT-WER",,3,,,DYSONS
+32182,1,"L1-WER-NPT","L1-WER-NPT",,3,,,
+34549,1,"S-WER-NPT","S1-WER-NPT",,3,,,
+36218,1,"S2_NPTWER","SAS-Newport to Werrobee",,3,,,
+39551,1,"SBY","Standby",,3,,,

@@ -1,0 +1,3 @@
+agency_id,agency_name,agency_url,agency_timezone,agency_lang,agency_phone
+MTM Rail,MTM Rail,MTM Rail,Australia/Melbourne,,,,
+1,"A",,Australia/Melbourne,en,,,

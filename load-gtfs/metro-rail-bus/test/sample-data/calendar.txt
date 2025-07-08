@@ -1,0 +1,14 @@
+service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date
+Unplanned / Belgrave_Lilydale_Alamein-1747362309938,1,1,1,1,1,1,1,20250616,20250619
+Unplanned / Werribee and Williamstown Line-1747366122036,1,1,1,1,1,1,1,20250616,20250619
+Unplanned / Hurstbridge Line-1747364778959,1,1,1,1,1,1,1,20250616,20250619
+Unplanned / Frankston - Stony Point Line-1747363783806,1,1,1,1,1,1,1,20250616,20250619
+Unplanned / Glen Waverely Line-1747363995100,1,1,1,1,1,1,1,20250616,20250619
+Unplanned / Sunbury Line-1747365774827,1,1,1,1,1,1,1,20250616,20250619
+Unplanned / Upfield Line-1747365503275,1,1,1,1,1,1,1,20250616,20250619
+Unplanned / Sandringham Line-1747362605015,1,1,1,1,1,1,1,20250616,20250619
+Unplanned / Mernda line-1747364567505,1,1,1,1,1,1,1,20250616,20250619
+Mon - Wed / Untitled-1750036135377,1,1,1,0,0,0,0,20250616,20250619
+Unplanned / Cranbourne and Pakenham -1747807747797,1,1,1,1,1,1,1,20250616,20250619
+Unplanned / Craigieburn Line-1747362473229,1,1,1,1,1,1,1,20250616,20250619
+1,1,1,1,1,0,0,0,20250616,20250619
