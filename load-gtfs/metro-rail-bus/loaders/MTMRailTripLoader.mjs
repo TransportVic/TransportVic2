@@ -15,15 +15,11 @@ for (let route of Object.keys(routeStops)) {
 export class MTMRailTrip extends GTFSTypes.GTFSTrip {
 
   constructor(data) {
-    if (data.headsign && data.headsign.length === 6 && data.headsign.match(/[A-Z]{3}\d{3}/)) {
+    if (data.headsign && data.headsign.match(/^[A-Z]{3}\d{3,}/)) {
       data.block = data.headsign
     }
 
     super(data)
-  }
-
-  static canProcess(data, mode) {
-    return mode === TRANSIT_MODES.metroTrain && data.routeGTFSID === '2-RRB'
   }
 
   getTripData() {
@@ -124,7 +120,7 @@ export default class MTMRailTripLoader extends TripLoader {
             }
 
           }
-          
+
           this.#patternCache[patternID] = best
         }
         trip.routeName = this.#patternCache[patternID]
