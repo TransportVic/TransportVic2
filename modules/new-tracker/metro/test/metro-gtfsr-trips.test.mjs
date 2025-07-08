@@ -1,6 +1,6 @@
 import { expect } from 'chai'
-import { MetroGTFSRTrip, ScheduledMetroGTFSRTrip, UnscheduledMetroGTFSRTrip } from '../GTFSRTrip.mjs'
-import { getUpcomingTrips } from '../metro/metro-gtfsr-trips.mjs'
+import { MetroGTFSRTrip, ScheduledMetroGTFSRTrip, UnscheduledMetroGTFSRTrip } from '../../GTFSRTrip.mjs'
+import { getUpcomingTrips } from '../metro-gtfsr-trips.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import pkmStops from './sample-data/pkm-stops-db.json' with { type: 'json' }
 import bbnStops from './sample-data/bbn-stops-db.json' with { type: 'json' }

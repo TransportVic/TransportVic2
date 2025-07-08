@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import ptvAPIC406 from '../../new-tracker/test/sample-data/ptv-api-C406.json' with { type: 'json' }
+import ptvAPIC406 from '../../new-tracker/metro/test/sample-data/ptv-api-C406.json' with { type: 'json' }
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
 import getTripUpdateData from '../get-stopping-pattern.js'
 

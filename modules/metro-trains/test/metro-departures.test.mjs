@@ -8,7 +8,7 @@ import riversdale from '../../departures/test/sample-data/riversdale.json' with 
 import mtpTrips from '../../departures/test/sample-data/mtp-through-running.json' with { type: 'json' }
 import ccyTrips from '../../departures/test/sample-data/fkn-wer-wil-through-running.json' with { type: 'json' }
 import ephTrips from '../../departures/test/sample-data/eph-clp-forming.json' with { type: 'json' }
-import pkmStops from '../../new-tracker/test/sample-data/pkm-stops-db.json' with { type: 'json' }
+import pkmStops from '../../new-tracker/metro/test/sample-data/pkm-stops-db.json' with { type: 'json' }
 import getDepartures from '../get-departures.js'
 
 let clone = o => JSON.parse(JSON.stringify(o))

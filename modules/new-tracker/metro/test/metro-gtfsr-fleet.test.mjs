@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import gtfsrFleet from './sample-data/gtfsr-fleet.json' with { type: 'json' }
-import { getFleetData } from '../metro/metro-gtfsr-fleet.mjs'
+import { getFleetData } from '../metro-gtfsr-fleet.mjs'
 
 describe('The GTFSR Fleet Tracker module', () => {
   it('Should return the GTFSR data with just the consist numbers', async () => {

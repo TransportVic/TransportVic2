@@ -1,17 +1,17 @@
 import { expect } from 'chai'
 import { getUpcomingTrips } from '../../new-tracker/metro/metro-gtfsr-trips.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
-import pkmStops from '../../new-tracker/test/sample-data/pkm-stops-db.json' with { type: 'json' }
-import gtfsr_EPH from '../../new-tracker/test/sample-data/gtfsr-eph.json' with { type: 'json' }
-import pkmSchTrip from '../../new-tracker/test/sample-data/eph-sch.json' with { type: 'json' }
+import pkmStops from '../../new-tracker/metro/test/sample-data/pkm-stops-db.json' with { type: 'json' }
+import gtfsr_EPH from '../../new-tracker/metro/test/sample-data/gtfsr-eph.json' with { type: 'json' }
+import pkmSchTrip from '../../new-tracker/metro/test/sample-data/eph-sch.json' with { type: 'json' }
 
-import rceStops from '../../new-tracker/test/sample-data/rce-stops-db.json' with { type: 'json' }
-import tdR202 from '../../new-tracker/test/sample-data/rce-R202.json' with { type: 'json' }
-import tdR205 from '../../new-tracker/test/sample-data/rce-R205.json' with { type: 'json' }
+import rceStops from '../../new-tracker/metro/test/sample-data/rce-stops-db.json' with { type: 'json' }
+import tdR202 from '../../new-tracker/metro/test/sample-data/rce-R202.json' with { type: 'json' }
+import tdR205 from '../../new-tracker/metro/test/sample-data/rce-R205.json' with { type: 'json' }
 
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
-import td0735_0737 from '../../new-tracker/test/sample-data/ccl-0735-0737-sch.json' with { type: 'json' }
-import cclDepartures from '../../new-tracker/test/sample-data/ccl-departures.json' with { type: 'json' }
+import td0735_0737 from '../../new-tracker/metro/test/sample-data/ccl-0735-0737-sch.json' with { type: 'json' }
+import cclDepartures from '../../new-tracker/metro/test/sample-data/ccl-departures.json' with { type: 'json' }
 import { getDepartures } from '../../new-tracker/metro/metro-trips-departures.mjs'
 
 import { updateTrip } from '../trip-updater.mjs'

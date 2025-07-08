@@ -1,8 +1,6 @@
 import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
-import { PTVAPI, StubAPI } from '@transportme/ptv-api'
-import { fetchTrips } from '../metro/metro-notify-trips.mjs'
-import { getActiveSuspensions, getStationsOnRoute } from '../metro/metro-notify-suspensions.mjs'
+import { getActiveSuspensions, getStationsOnRoute } from '../metro-notify-suspensions.mjs'
 import pkmRouteStops from './sample-data/pkm-route-stops.json' with { type: 'json' }
 import pkmStopsDB from './sample-data/pkm-stops-db.json' with { type: 'json' }
 

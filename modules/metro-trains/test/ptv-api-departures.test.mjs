@@ -1,9 +1,9 @@
 import { expect } from 'chai'
-import ptvRWD from '../../new-tracker/test/sample-data/rwd-ptv-departures.json' with { type: 'json' }
-import rwdStop from '../../new-tracker/test/sample-data/rwd-stop-db.json' with { type: 'json' }
-import TD3826DBTrip from '../../new-tracker/test/sample-data/lil-3826.json' with { type: 'json' }
-import ptvAPITD3213 from '../../new-tracker/test/sample-data/ptv-api-3213.json' with { type: 'json' }
-import ptvAPITD3826 from '../../new-tracker/test/sample-data/ptv-api-3826.json' with { type: 'json' }
+import ptvRWD from '../../new-tracker/metro/test/sample-data/rwd-ptv-departures.json' with { type: 'json' }
+import rwdStop from '../../new-tracker/metro/test/sample-data/rwd-stop-db.json' with { type: 'json' }
+import TD3826DBTrip from '../../new-tracker/metro/test/sample-data/lil-3826.json' with { type: 'json' }
+import ptvAPITD3213 from '../../new-tracker/metro/test/sample-data/ptv-api-3213.json' with { type: 'json' }
+import ptvAPITD3826 from '../../new-tracker/metro/test/sample-data/ptv-api-3826.json' with { type: 'json' }
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
 import getTripUpdateData from '../get-ptv-departures.js'
 import { LokiDatabaseConnection } from '@transportme/database'
