@@ -8,6 +8,7 @@ import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import config from '../../config.json' with { type: 'json' }
 import operators from './operators.mjs'
 import { closest, distance } from 'fastest-levenshtein'
+import MTMRailStopLoader from './MTMRailStopLoader.mjs'
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -25,7 +26,6 @@ console.log('Start loading stops and routes', start)
 await mongoRoutes.deleteDocument({ routeGTFSID: '2-RRB' })
 
 let routeIDMap = {}
-const allStops = Object.values(JSON.parse(await fs.readFile(path.join(__dirname, '../../additional-data/metro-data/metro-routes.json')))).reduce((a,e)=>a.concat(e),[])
 
 for (let operator of operators) {
   const operatorFolder = path.join(gtfsFolder, operator)
@@ -34,29 +34,8 @@ for (let operator of operators) {
   const agencyFile = path.join(operatorFolder, 'agency.txt')
 
   try {
-    let stopLoader = new StopsLoader(stopsFile, suburbsVIC, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, mongoDB, null, 'stops')
-    await stopLoader.loadStops({
-      processStop: stop => {
-        let parts
-        let stopName
-        if ((parts = stop.fullStopName.match(/^([\w \.]*?)_?(Up|Down)$/i)) || (parts = stop.originalName.match(/^([\w \.]*?)(Up|Down)?[ _]?\(([\w ]+)\)/i))) {
-          stopName = parts[1]
-        } else {
-          stopName = stop.originalName.replace(' Station', '').trim()
-        }
-
-        let bestMatch = closest(stopName, allStops)
-
-        if (bestMatch !== stopName) {
-          let textDistance = distance(stopName, bestMatch)
-          if (textDistance > 4) return console.log('Discarded', stop)
-          stopName = bestMatch
-        }
-
-        stop.fullStopName = `${stopName} Railway Station`
-        return stop
-      }
-    })
+    let stopLoader = new MTMRailStopLoader(stopsFile, suburbsVIC, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, mongoDB, null, 'stops')
+    await stopLoader.loadStops()
 
     console.log('Loaded stops for', operator)
 
