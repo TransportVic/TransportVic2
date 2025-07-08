@@ -39,8 +39,8 @@ export class MTMRailStop extends GTFSTypes.GTFSStop {
 
     if (bestMatch !== stopName) {
       let textDistance = distance(stopName, bestMatch)
-      if (textDistance > 4) return 'DISCARD'
-      stopName = bestMatch
+      // if (textDistance > 4) return 'DISCARD'
+      if (textDistance <= 4) stopName = bestMatch
     }
 
     return `${stopName} Railway Station`
