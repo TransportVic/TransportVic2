@@ -39,7 +39,11 @@ block content
         let cssClass = `${codedLineName}-line`
         if (trip.routeName === 'City Circle') cssClass = 'city-circle' // Unlikely to happen but just in case
       a(class=`leftContainer ${cssClass}`)
-        img(src=`${staticBase}/static/images/clear-icons/bus.svg`)
+        span.topText Rail Bus
+        if trip.headsign
+          span.bigNumber #{trip.headsign}
+        else
+          img(src=`${staticBase}/static/images/clear-icons/bus.svg`)
       a.departureInfo
         span.towards #{trip.routeName} Towards
         span.destination #{trip.destination.slice(0, -16)}
