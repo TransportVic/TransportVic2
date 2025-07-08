@@ -11,15 +11,40 @@ import config from '../../../config.json' with { type: 'json' }
 export async function getRailBusUpdates(db, ptvAPI) {
   let tripUpdates = await ptvAPI.metroSite.getRailBusUpdates()
 
+  let now = utils.now()
+  let operationDay = utils.now().startOf('day')
+  let hours = utils.now().get('hour')
+  if (hours < 3) operationDay.add(-1, 'day')
+
+  let nextDay = operationDay.clone().add(1, 'day')
+  let previousDay = operationDay.clone().add(-1, 'day')
+
+  let dayEnding = 2 <= hours && hours < 3
+  let dayJustStarted = 3 <= hours && hours <= 4
+
   let output = []
   for (let trip of tripUpdates) {
     let runID = getTripID(trip.tripID)
-    let operationDays = utils.getYYYYMMDDNow()
-    let dbTrip = await getTrip(db, runID, operationDays)
-    if (!dbTrip) continue
+    let tripOperationDay = utils.getYYYYMMDD(operationDay)
+    let dbTrip = await getTrip(db, runID, tripOperationDay)
+
+    if (!dbTrip) {
+      if (dayJustStarted) {
+        tripOperationDay = utils.getYYYYMMDD(previousDay)
+        dbTrip = await getTrip(db, runID, tripOperationDay)
+      } else if (dayEnding) {
+        tripOperationDay = utils.getYYYYMMDD(nextDay)
+        dbTrip = await getTrip(db, runID, tripOperationDay)
+      }
+
+      if (!dbTrip) continue // Still couldn't match, skip
+
+      let tripStartTime = utils.parseTime(dbTrip.stopTimings[0].scheduledDepartureTime)
+      if (Math.abs(tripStartTime.diff(now, 'hours')) > 3) continue // Seem to have matched a bad trip, skip it
+    }
 
     let tripData = {
-      operationDays,
+      operationDays: tripOperationDay,
       runID,
       routeGTFSID: '2-RRB',
       stops: []
