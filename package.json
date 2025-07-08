@@ -9,9 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@transportme/database": "^1.0.25",
+    "@transportme/database": "^1.0.36",
     "@transportme/load-ptv-gtfs": "^1.4.11",
-    "@transportme/ptv-api": "^1.0.25",
+    "@transportme/ptv-api": "^1.0.26",
     "@transportme/transportvic-utils": "^1.0.4",
     "@transportme/vline-nsp-reader": "^1.0.0",
     "@turf/turf": "^5.1.6",
