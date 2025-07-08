@@ -5,4 +5,5 @@ DIRNAME=$(dirname "$0")
 node $DIRNAME/download-data.mjs
 node $DIRNAME/load-all-stops-routes.mjs
 node $DIRNAME/load-all-trips.mjs
+node $DIRNAME/load-headsigns.mjs
 node $DIRNAME/load-op-timetable.mjs
