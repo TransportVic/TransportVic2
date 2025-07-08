@@ -1,8 +1,9 @@
 import { PTVAPI } from '@transportme/ptv-api'
 import utils from '../../../utils.js'
 import { fileURLToPath } from 'url'
+import { getStop, updateTrip } from '../../metro-trains/trip-updater.mjs'
 
-export async function getRailBusUpdates(ptvAPI) {
+export async function getRailBusUpdates(db, ptvAPI) {
   let tripUpdates = await ptvAPI.metroSite.getRailBusUpdates()
 
   let output = []
@@ -11,11 +12,16 @@ export async function getRailBusUpdates(ptvAPI) {
       operationDays: utils.getYYYYMMDDNow(),
       tripID: trip.tripID,
       routeGTFSID: '2-RRB',
-      stops: trip.stopTimings.map(stop => ({
-        stopGTFSID: stop.stopGTFSID,
+      stops: []
+    }
+
+    for (let stop of trip.stopTimings) {
+      let stopData = await getStop(db, stop.stopGTFSID)
+      tripData.stops.push({
+        stopName: stopData.fullStopName,
         estimatedDepartureTime: stop.estimatedDepartureTime.toUTC().toISO(),
         estimatedArrivalTime: stop.estimatedDepartureTime.toUTC().toISO()
-      }))
+      })
     }
 
     output.push(tripData)
@@ -25,7 +31,7 @@ export async function getRailBusUpdates(ptvAPI) {
 }
 
 export async function fetchTrips(db, ptvAPI) {
-  let relevantTrips = await getRailBusUpdates(ptvAPI)
+  let relevantTrips = await getRailBusUpdates(db, ptvAPI)
   console.log('MTM Rail Bus: Fetched', relevantTrips.length, 'trips')
 
   for (let tripData of relevantTrips) {
