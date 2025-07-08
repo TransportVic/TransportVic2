@@ -29,7 +29,11 @@ export class MTMRailStop extends GTFSTypes.GTFSStop {
   getFullStopName() {
     let parts
     let stopName
-    if ((parts = this.rawStopName.match(/^([\w \.]*?)_?(Up|Down)$/i)) || (parts = this.rawStopName.match(/^([\w \.]*?)(Up|Down)?[ _]?\(([\w ]+)\)/i))) {
+    if (parts = this.rawStopName.match(/^([\w \.]*?)_?(Up|Down)$/i)) {
+      stopName = parts[1]
+    } else if (parts = this.rawStopName.match(/^([\w \.]*?)(Up|Down)?[ _]?\(([\w ]+)\)/i)) {
+      stopName = parts[1]
+    } else if (parts = this.rawStopName.match(/^([\w ]+)- .+/)) {
       stopName = parts[1]
     } else {
       stopName = this.rawStopName.replace(' Station', '').trim()
