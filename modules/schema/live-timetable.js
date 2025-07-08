@@ -149,6 +149,7 @@ module.exports = class LiveTimetable {
 
   #dataSource
   #circular
+  #headsign
 
   constructor(mode, operationDays, routeName, routeNumber, routeGTFSID, tripID, block) {
     this.#mode = mode
@@ -172,6 +173,7 @@ module.exports = class LiveTimetable {
   get direction() { return this.#direction }
   get runID() { return this.#runID }
   get circular() { return this.#circular }
+  get headsign() { return this.#headsign }
 
   get vehicle() {
     if (this.#vehicle) {
@@ -262,6 +264,7 @@ module.exports = class LiveTimetable {
   }
   set additional(additional) { this.#additional = additional }
   set circular(circular) { this.#circular = circular }
+  set headsign(headsign) { this.#headsign = headsign }
 
   get stops() { return this.#stops }
 
@@ -318,6 +321,7 @@ module.exports = class LiveTimetable {
     if (timetable.cancelled) timetableInstance.#cancelled = timetable.cancelled
     if (timetable.additional) timetableInstance.#additional = timetable.additional
     if (timetable.circular) timetableInstance.#circular = timetable.circular
+    if (timetable.headsign) timetableInstance.#headsign = timetable.headsign
     if (timetable.vehicle) {
       timetableInstance.#vehicle = timetable.vehicle
       timetableInstance.#vehicleForced = timetable.vehicle.forced || false
@@ -390,7 +394,8 @@ module.exports = class LiveTimetable {
     }
 
     if (typeof this.#circular !== 'undefined') returnData.circular = this.#circular
-    
+    if (typeof this.#headsign !== 'undefined') returnData.headsign = this.#headsign
+
     return returnData
   }
 
