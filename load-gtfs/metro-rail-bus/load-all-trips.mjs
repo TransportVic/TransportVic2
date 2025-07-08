@@ -8,7 +8,7 @@ import config from '../../config.json' with { type: 'json' }
 import operators from './operators.mjs'
 
 import fs from 'fs/promises'
-import MTMRailTripLoader from './loaders/MTMRailTripLoader.mjs'
+import MTMRailTripLoader, { MTMTripReader } from './loaders/MTMRailTripLoader.mjs'
 import MTMRailShapeLoader from './loaders/MTMRailShapeLoader.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
@@ -24,8 +24,6 @@ let mongoTimetables = await mongoDB.getCollection('gtfs timetables')
 
 let start = new Date()
 console.log('Start', start)
-
-await mongoTimetables.deleteDocuments({ routeGTFSID: '2-RRB' })
 
 console.log('Loading timetables now\n')
 

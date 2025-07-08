@@ -23,14 +23,21 @@ export class MTMRailTrip extends GTFSTypes.GTFSTrip {
   }
 
   getTripData() {
+    let tripData = super.getTripData()
+
     return {
-      ...super.getTripData(),
+      ...tripData,
+      runID: getTripID(tripData.tripID),
       isRailReplacementBus: true
     }
   }
 }
 
 export class MTMTripReader extends GTFSReaders.GTFSTripReader {
+
+  constructor(tripsFile, calendarFile, routeIDMap) {
+    super(tripsFile, calendarFile, routeIDMap, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain)
+  }
 
   processEntity(data) {
     let tripData = {
@@ -49,6 +56,10 @@ export class MTMTripReader extends GTFSReaders.GTFSTripReader {
 }
 
 export class MTMRailStopTimesReader extends GTFSReaders.GTFSStopTimesReader {
+
+  constructor(stopTimesFile) {
+    super(stopTimesFile, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain)
+  }
 
   processEntity(data) {
     let stopData = {
@@ -86,12 +97,12 @@ export default class MTMRailTripLoader extends TripLoader {
     return db.getCollection('gtfs timetables')
   }
 
-  createStopTimesReader(stopTimesFile, mode) {
-    return new MTMRailStopTimesReader(stopTimesFile, mode)
+  createStopTimesReader(stopTimesFile) {
+    return new MTMRailStopTimesReader(stopTimesFile)
   }
 
-  createTripReader(tripsFile, calendars, routeMappings, mode) {
-    return new MTMTripReader(tripsFile, calendars, routeMappings, mode)
+  createTripReader(tripsFile, calendars, routeMappings) {
+    return new MTMTripReader(tripsFile, calendars, routeMappings)
   }
 
   async loadTrips(routeIDMap) {
@@ -99,9 +110,8 @@ export default class MTMRailTripLoader extends TripLoader {
       routeIDMap,
       processTrip: (trip, rawTrip) => {
         if (rawTrip.getCalendarName().match(/unplanned/i)) return null
-        trip.runID = getTripID(trip.tripID)
-
         let patternID = trip.stopTimings.map(stop => stop.stopName).join('-')
+
         if (!this.#patternCache[patternID]) {
           let linesVisited = {}
           for (let stop of trip.stopTimings) {
@@ -128,6 +138,30 @@ export default class MTMRailTripLoader extends TripLoader {
         return trip
       }
     })
+  }
+
+  async writeTrips() {
+    if (this.getTripsToLoad().length) {
+      let tripsToLoad = this.getTripsToLoad()
+
+      let bulkWrite = tripsToLoad.map(trip => ({
+        replaceOne: {
+          filter: {
+            mode: GTFS_CONSTANTS.TRANSIT_MODES.metroTrain,
+            routeGTFSID: '2-RRB',
+            tripID: trip.tripID
+          },
+          replacement: trip,
+          upsert: true
+        }
+      }))
+
+      if (bulkWrite.length) {
+        await this.trips.bulkWrite(bulkWrite)
+      }
+
+      this.clearTripsToLoad()
+    }
   }
 
 }
