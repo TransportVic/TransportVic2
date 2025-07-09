@@ -53,6 +53,14 @@ async function loadOperationalTT(operationDay) {
       }
     }))
 
+    await liveTimetables.deleteDocuments({
+      mode: 'metro train',
+      operationDays: opDayFormat,
+      isRailReplacementBus: true,
+      routeGTFSID: {
+        $ne: '2-RRB'
+      }
+    })
     await liveTimetables.bulkWrite(bulkWrite)
   }
 }
