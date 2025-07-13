@@ -34,8 +34,10 @@ export async function getOutdatedTrips(database) {
 
 async function fetchTrips(database, ptvAPI) {
   let outdatedTDNs = await getOutdatedTrips(database)
+  let updatedTrips = []
+
   for (let outdatedTDN of outdatedTDNs) {
-    await updateTDNFromPTV(database, outdatedTDN, ptvAPI, {}, 'outdated-trip-from-ptv')
+    updatedTrips.push(await updateTDNFromPTV(database, outdatedTDN, ptvAPI, {}, 'outdated-trip-from-ptv'))
   }
 
   return outdatedTDNs

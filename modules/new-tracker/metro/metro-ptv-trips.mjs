@@ -59,8 +59,8 @@ export async function fetchTrips(db, ptvAPI) {
   
   console.log('Loading next 5 trips from', station.stopName)
 
-  let relevantTrips = await getTrips(db, ptvAPI, station)
-  console.log('> Updating TDNs: ' + relevantTrips.map(trip => trip.runID).join(', '))
+  let updatedTrips = await getTrips(db, ptvAPI, station)
+  console.log('> Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
