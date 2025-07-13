@@ -8,8 +8,9 @@ import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import getTripUpdateData from '../../metro-trains/get-stopping-pattern.js'
 import utils from '../../../utils.js'
 
-const MTP_STOPS = [
-  'Anzac', 'Town Hall', 'State Library', 'Parkville', 'Arden'
+const PTV_BAD_STOPS = [
+  'Anzac', 'Town Hall', 'State Library', 'Parkville', 'Arden',
+  'Showgrounds', 'Flemington Racecourse'
 ].map(stop => stop + ' Railway Station')
 
 function shuffleArray(array) {
@@ -54,7 +55,7 @@ export async function fetchTrips(db, ptvAPI) {
   console.log('> Updating TDNs: ' + relevantTrips.map(trip => trip.runID).join(', '))
 
   for (let tripData of relevantTrips) {
-    await updateTrip(db, tripData, { dataSource: 'ptv-pattern', ignoreMissingStops: MTP_STOPS })
+    await updateTrip(db, tripData, { dataSource: 'ptv-pattern', ignoreMissingStops: PTV_BAD_STOPS, updateTime: new Date() })
   }
 }
 

@@ -74,7 +74,7 @@ export async function fetchTrips(db, ptvAPI) {
   console.log('MTM Rail Bus: Fetched', relevantTrips.length, 'trips')
 
   for (let tripData of relevantTrips) {
-    await updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'mtm-website-rail' })
+    await updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'mtm-website-rail', updateTime: new Date() })
   }
 }
 
