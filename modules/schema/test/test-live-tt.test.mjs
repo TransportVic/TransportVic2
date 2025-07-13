@@ -43,6 +43,8 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.formedBy).to.equal('1999')
     expect(timetable.forming).to.equal('1801')
 
+    expect(timetable.lastUpdated.toISOString()).to.equal('2025-04-09T18:37:00.000Z')
+
     expect(timetable.stops[0].stopName).to.equal('Mernda Railway Station')
     expect(timetable.stops[0].stopGTFSID).to.equal('26517')
     expect(timetable.stops[0].departureTime).to.equal('04:04')
@@ -91,6 +93,8 @@ describe('The LiveTimetable schema', () => {
     expect(dbObj.departureTime).to.equal('04:04')
     expect(dbObj.destination).to.equal('Flinders Street Railway Station')
     expect(dbObj.destinationArrivalTime).to.equal('04:56')
+
+    expect(timetable.lastUpdated).to.equal(+new Date('2025-04-09T18:37:00.000Z'))
 
     expect(dbObj.stopTimings[0].stopName).to.equal('Mernda Railway Station')
     expect(dbObj.stopTimings[0].arrivalTime).to.equal('04:04')
