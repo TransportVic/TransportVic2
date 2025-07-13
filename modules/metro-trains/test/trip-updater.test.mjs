@@ -1099,4 +1099,67 @@ describe('The trip updater module', () => {
 
     expect(tripData).to.exist
   })
+
+  it('Should set the last updated time if told to do so', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let routes = await database.createCollection('routes')
+    let stops = await database.createCollection('stops')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(pkmStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "pakenham"
+    })
+
+    await liveTimetables.createDocument(clone(pkmSchTrip))
+    let gtfsrUpdate = clone(gtfsr_EPH)
+
+    let updateTime = new Date('2025-04-09T18:37:00.000Z')
+    let gtfsrTrips = await getUpcomingTrips(database, () => gtfsrUpdate)
+    let tripData = await updateTrip(database, gtfsrTrips[0], { updateTime })
+
+    expect(tripData).to.exist
+    expect(tripData.lastUpdated.toISOString()).to.equal(updateTime.toISOString())
+  })
+
+  it('Should not set the last updated time if not told to do so', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let routes = await database.createCollection('routes')
+    let stops = await database.createCollection('stops')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(pkmStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ],
+      "codedName" : "pakenham"
+    })
+    
+    let updateTime = new Date('2025-04-10T18:37:00.000Z')
+    let trip = clone(pkmSchTrip)
+    trip.lastUpdated = +updateTime
+
+    await liveTimetables.createDocument(trip)
+    let gtfsrUpdate = clone(gtfsr_EPH)
+    
+    let gtfsrTrips = await getUpcomingTrips(database, () => gtfsrUpdate)
+    let tripData = await updateTrip(database, gtfsrTrips[0])
+
+    expect(tripData).to.exist
+    expect(tripData.lastUpdated.toISOString()).to.equal(updateTime.toISOString())
+  })
 })
