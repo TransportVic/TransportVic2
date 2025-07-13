@@ -143,6 +143,7 @@ module.exports = class LiveTimetable {
 
   logChanges = true
   changes = []
+  newChanges = []
 
   #cancelled = false
   #additional = false
@@ -444,11 +445,16 @@ module.exports = class LiveTimetable {
   }
 
   addChange(data) {
-    if (this.logChanges) this.changes.push({
-      ...data,
-      timestamp: new Date(),
-      source: this.#dataSource
-    })
+    if (this.logChanges) {
+      let change = {
+        ...data,
+        timestamp: new Date(),
+        source: this.#dataSource
+      }
+
+      this.changes.push(change)
+      this.newChanges.push(change)
+    }
   }
 
   updateStopByName(stopName, stopData, { prefSchTime, visitNum } = {}) {
