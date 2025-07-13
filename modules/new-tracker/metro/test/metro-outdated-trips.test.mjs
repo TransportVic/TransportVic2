@@ -4,6 +4,7 @@ import { getUpcomingTrips } from '../metro-gtfsr-trips.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import lil3826 from './sample-data/lil-3826.json' with { type: 'json' }
 import cbeC406 from './sample-data/cbe-C406.json' with { type: 'json' }
+import sty8500 from './sample-data/sty-trips.json' with { type: 'json' }
 import utils from '../../../../utils.js'
 import { getOutdatedTrips } from '../metro-outdated-trips.mjs'
 
@@ -44,6 +45,19 @@ describe('The Outdated trips tracker', () => {
     let trip = clone(lil3826)
     trip.lastUpdated = utils.now() - 1000 * 60 * 7 // Last updated 7 min ago
     trip.stopTimings.forEach(stop => stop.actualDepartureTimeMS += 1000 * 60 * 60 * 2) // trip is 2 hours away
+    await liveTimetables.createDocument(trip)
+
+    let outdatedTDNs = await getOutdatedTrips(database)
+    expect(outdatedTDNs).to.have.members([])
+  })
+
+  it('Should not pick Stony Point trips as PTV wouldn\'t have them', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let liveTimetables = await database.getCollection('live timetables')
+
+    let trip = clone(sty8500[0])
+    trip.lastUpdated = utils.now() - 1000 * 60 * 7 // Last updated 7 min ago
+    trip.stopTimings.forEach(stop => stop.actualDepartureTimeMS = +utils.now()) // set departure time to now, just for testing
     await liveTimetables.createDocument(trip)
 
     let outdatedTDNs = await getOutdatedTrips(database)

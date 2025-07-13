@@ -8,7 +8,7 @@ import utils from '../../../utils.js'
 
 export async function getOutdatedTrips(database) {
   let liveTimetables = await database.getCollection('live timetables')
-  return await liveTimetables.distinct('runID', {
+  return (await liveTimetables.distinct('runID', {
     $and: [{
       stopTimings: {
         $elemMatch: {
@@ -29,7 +29,7 @@ export async function getOutdatedTrips(database) {
     lastUpdated: {
       $lte: +utils.now().add(-5, 'minutes')
     }
-  })
+  })).filter(tdn => tdn[0] !== '8')
 }
 
 async function fetchTrips(database, ptvAPI) {
