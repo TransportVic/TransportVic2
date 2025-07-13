@@ -1,6 +1,5 @@
 const TimedCache = require('../../../../TimedCache')
 const utils = require('../../../../utils')
-const getStoppingPattern = require('../../../../modules/metro-trains/get-stopping-pattern')
 const getLineStops = require('../../../../additional-data/route-stops')
 const express = require('express')
 const router = new express.Router()
@@ -42,15 +41,6 @@ let caulfieldGroup = [
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
-function getPTVRunID(runID) {
-  if (parseInt(runID)) {
-    return parseInt(runID) + 948000
-  } else {
-    if (runID[0] === 'X') return parseInt(runID.slice(1)) + 988000
-    if (runID[0] === 'R') return parseInt(runID.slice(1)) + 982000
-  }
-}
-
 router.get('/comeng/:runID', async (req, res) => {
   res.render('mockups/train-pids/comeng')
 })
@@ -66,17 +56,14 @@ router.post('/:type/:runID', async (req, res) => {
 
   let runID = req.params.runID
 
-  if (dayCache.get(runID)) {
-    trip = await liveTimetables.findDocument({ operationDays: dayCache.get(runID), runID })
-    if (new Date() - trip.updateTime > 2 * 60 * 1000) trip = null // If its older than 2min get a new copy
-  }
+  // if (dayCache.get(runID)) {
+  trip = await liveTimetables.findDocument({ operationDays: utils.getYYYYMMDDNow(), runID })
+  //   if (new Date() - trip.updateTime > 2 * 60 * 1000) trip = null // If its older than 2min get a new copy
+  // }
 
-  if (!trip) {
-    trip = await getStoppingPattern(res.db, getPTVRunID(runID), 'metro train')
-    if (trip) {
-      dayCache.put(runID, trip.operationDays)
-    }
-  }
+  // if (!trip) {
+  //   console.log({ operationDays: dayCache.get(runID), runID })
+  // }
 
   if (!trip) return res.json(null)
 
@@ -87,8 +74,8 @@ router.post('/:type/:runID', async (req, res) => {
   let lineStops = getLineStops(routeName)
   if (isUp) lineStops = lineStops.slice(0).reverse()
 
-  let tripStartIndex = tripStopNames.indexOf(trip.trueOrigin.slice(0, -16))
-  let tripEndIndex = tripStopNames.indexOf(trip.trueDestination.slice(0, -16))
+  let tripStartIndex = tripStopNames.indexOf(trip.origin.slice(0, -16))
+  let tripEndIndex = tripStopNames.indexOf(trip.destination.slice(0, -16))
 
   let viaCityLoop = tripStopNames.includes('Flagstaff') || tripStopNames.includes('Parliament')
 
@@ -116,20 +103,20 @@ router.post('/:type/:runID', async (req, res) => {
       } else {
         fixedLineStops = ['Flinders Street', 'Southern Cross', ...nonCityLoopLineStops]
       }
-    } else if (routeName === 'Frankston') {
+    } else {
       if (isUp) {
-        fixedLineStops = [...nonCityLoopLineStops, 'Flinders Street', 'Southern Cross']
+        fixedLineStops = [...nonCityLoopLineStops, 'Flinders Street']
       } else {
-        fixedLineStops = ['Southern Cross', 'Flinders Street', ...nonCityLoopLineStops]
+        fixedLineStops = ['Flinders Street', ...nonCityLoopLineStops]
       }
     }
   }
 
-  let lineStartIndex = fixedLineStops.indexOf(trip.trueOrigin.slice(0, -16))
-  let lineEndIndex = fixedLineStops.indexOf(trip.trueDestination.slice(0, -16))
+  let lineStartIndex = fixedLineStops.indexOf(trip.origin.slice(0, -16))
+  let lineEndIndex = fixedLineStops.indexOf(trip.destination.slice(0, -16))
   let relevantLineStops = fixedLineStops.slice(lineStartIndex, lineEndIndex + 1)
 
-  let relevantTripStops = trip.stopTimings.slice(tripStartIndex, tripEndIndex + 1)
+  let relevantTripStops = trip.stopTimings
 
   let now = +new Date()
 
