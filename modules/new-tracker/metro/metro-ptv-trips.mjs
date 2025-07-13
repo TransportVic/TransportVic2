@@ -20,11 +20,11 @@ function shuffleArray(array) {
   }
 }
 
-export async function updateTDNFromPTV(runID, ptvAPI, ptvAPIOptions, dataSource) {
+export async function updateTDNFromPTV(db, runID, ptvAPI, ptvAPIOptions, dataSource) {
   let tripUpdate = await getTripUpdateData(runID, ptvAPI, ptvAPIOptions)
   if (!tripUpdate) return null
 
-  await updateTrip(db, tripData, { dataSource, ignoreMissingStops: PTV_BAD_STOPS, updateTime: new Date() })
+  await updateTrip(db, tripUpdate, { dataSource, ignoreMissingStops: PTV_BAD_STOPS, updateTime: new Date() })
   return tripUpdate
 }
 
@@ -38,7 +38,7 @@ export async function getTrips(db, ptvAPI, station) {
   let updates = []
   let successfulDepartures = 0
   for (let departure of trains) {
-    let tripUpdate = await updateTDNFromPTV(departure.runID, ptvAPI, { date: new Date(departureDay.toISOString()) }, 'ptv-pattern')
+    let tripUpdate = await updateTDNFromPTV(db, departure.runID, ptvAPI, { date: new Date(departureDay.toISOString()) }, 'ptv-pattern')
     if (tripUpdate) {
       updates.push(tripUpdate)
       if (++successfulDepartures === 5) break

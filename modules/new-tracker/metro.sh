@@ -10,3 +10,4 @@ node $DIRNAME/metro/metro-notify.mjs
 node $DIRNAME/metro/metro-notify-trips.mjs
 node $DIRNAME/metro/metro-cbd-ptv-departures.mjs
 node $DIRNAME/metro/metro-notify-suspensions.mjs
+node $DIRNAME/metro/metro-outdated-trips.mjs

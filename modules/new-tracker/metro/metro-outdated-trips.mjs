@@ -2,9 +2,8 @@ import { fileURLToPath } from 'url'
 
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
-import { updateTrip } from '../../metro-trains/trip-updater.mjs'
-import getMetroDepartures from '../../metro-trains/get-departures.js'
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
+import { updateTDNFromPTV } from './metro-ptv-trips.mjs'
 import utils from '../../../utils.js'
 
 export async function getOutdatedTrips(database) {
@@ -24,7 +23,12 @@ export async function getOutdatedTrips(database) {
 }
 
 async function fetchTrips(database, ptvAPI) {
+  let outdatedTDNs = await getOutdatedTrips(database)
+  for (let outdatedTDN of outdatedTDNs) {
+    await updateTDNFromPTV(database, outdatedTDN, ptvAPI, {}, 'outdated-trip-from-ptv')
+  }
 
+  return outdatedTDNs
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

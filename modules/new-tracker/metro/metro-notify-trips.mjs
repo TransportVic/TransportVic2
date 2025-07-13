@@ -17,7 +17,7 @@ export async function getUpdatedTDNs(db) {
 export async function fetchTrips(db, ptvAPI) {
   let updatedTDNs = await getUpdatedTDNs(db)
   for (let updatedTDN of updatedTDNs) {
-    await updateTDNFromPTV(updatedTDN, ptvAPI, {}, 'notify-trip-from-ptv')
+    await updateTDNFromPTV(db, updatedTDN, ptvAPI, {}, 'notify-trip-from-ptv')
   }
 
   return updatedTDNs
