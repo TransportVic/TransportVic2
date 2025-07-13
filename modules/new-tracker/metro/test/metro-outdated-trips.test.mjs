@@ -1,10 +1,7 @@
 import { expect } from 'chai'
-import { MetroGTFSRTrip, ScheduledMetroGTFSRTrip, UnscheduledMetroGTFSRTrip } from '../../GTFSRTrip.mjs'
-import { getUpcomingTrips } from '../metro-gtfsr-trips.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import lil3826 from './sample-data/lil-3826.json' with { type: 'json' }
 import cbeC406 from './sample-data/cbe-C406.json' with { type: 'json' }
-import sty8500 from './sample-data/sty-trips.json' with { type: 'json' }
 import utils from '../../../../utils.js'
 import { getOutdatedTrips } from '../metro-outdated-trips.mjs'
 
@@ -55,13 +52,17 @@ describe('The Outdated trips tracker', () => {
     let database = new LokiDatabaseConnection('test-db')
     let liveTimetables = await database.getCollection('live timetables')
 
-    let trip = clone(sty8500[0])
+    let trip = clone(lil3826)
+    trip.runID = '8500'
     trip.lastUpdated = utils.now() - 1000 * 60 * 7 // Last updated 7 min ago
-    trip.stopTimings.forEach(stop => stop.actualDepartureTimeMS = +utils.now()) // set departure time to now, just for testing
     await liveTimetables.createDocument(trip)
 
+    let trip1 = clone(lil3826)
+    trip1.lastUpdated = utils.now() - 1000 * 60 * 7 // Last updated 7 min ago
+    await liveTimetables.createDocument(trip1)
+
     let outdatedTDNs = await getOutdatedTrips(database)
-    expect(outdatedTDNs).to.have.members([])
+    expect(outdatedTDNs).to.have.members([ '3826' ])
   })
 
   after(() => {
