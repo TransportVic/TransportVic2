@@ -37,6 +37,19 @@ describe('The Outdated trips tracker', () => {
     expect(outdatedTDNs).to.have.members(['3826'])
   })
 
+  it('Should not pick future trips that have not started yet', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let liveTimetables = await database.getCollection('live timetables')
+
+    let trip = clone(lil3826)
+    trip.lastUpdated = utils.now() - 1000 * 60 * 7 // Last updated 7 min ago
+    trip.stopTimings.forEach(stop => stop.actualDepartureTimeMS += 1000 * 60 * 60 * 2) // trip is 2 hours away
+    await liveTimetables.createDocument(trip)
+
+    let outdatedTDNs = await getOutdatedTrips(database)
+    expect(outdatedTDNs).to.have.members([])
+  })
+
   after(() => {
     utils.now = originalNow
   })

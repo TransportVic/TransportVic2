@@ -9,13 +9,23 @@ import utils from '../../../utils.js'
 export async function getOutdatedTrips(database) {
   let liveTimetables = await database.getCollection('live timetables')
   return await liveTimetables.distinct('runID', {
-    stopTimings: {
-      $elemMatch: {
-        actualDepartureTimeMS: {
-          $gte: +utils.now().add(-15, 'minutes')
+    $and: [{
+      stopTimings: {
+        $elemMatch: {
+          actualDepartureTimeMS: { // Trip ended at most 15min ago
+            $gte: +utils.now().add(-15, 'minutes')
+          }
         }
-      }
-    },
+      },
+    }, {
+      stopTimings: {
+        $elemMatch: {
+          actualDepartureTimeMS: { // Trip starts in 15min time
+            $lte: +utils.now().add(15, 'minutes')
+          }
+        }
+      },
+    }],
     lastUpdated: {
       $lte: +utils.now().add(-5, 'minutes')
     }
