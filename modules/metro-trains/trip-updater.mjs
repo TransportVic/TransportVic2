@@ -111,17 +111,24 @@ export async function updateTrackerData(db, timetable) {
   })
 }
 
-export async function updateTrip(db, trip, { skipWrite = false, skipStopCancellation = false, dataSource = 'unknown', ignoreMissingStops = [] } = {}) {
+export async function updateTrip(db, trip, {
+  skipWrite = false,
+  skipStopCancellation = false,
+  dataSource = 'unknown',
+  ignoreMissingStops = [],
+  updateTime = null
+} = {}) {
   let dbTrip = await getTrip(db, trip.runID, trip.operationDays)
   let liveTimetables = db.getCollection('live timetables')
 
   if (!dbTrip) {
-    let timetable = await createTrip(db, trip)
+    let timetable = await createTrip(db, trip, updateTime)
     if (timetable) updateTrackerData(db, timetable)
     return timetable
   }
 
   let timetable = LiveTimetable.fromDatabase(dbTrip)
+  if (updateTime) timetable.lastUpdated = updateTime
 
   timetable.setModificationSource(dataSource)
 
@@ -195,7 +202,7 @@ export async function updateTrip(db, trip, { skipWrite = false, skipStopCancella
   return timetable
 }
 
-async function createTrip(db, trip) {
+async function createTrip(db, trip, updateTime) {
   let routeData = await getRoute(db, trip.routeGTFSID)
 
   let timetable = new LiveTimetable(
@@ -205,7 +212,8 @@ async function createTrip(db, trip) {
     routeData.routeNumber,
     routeData.routeGTFSID,
     null,
-    null
+    null,
+    updateTime
   )
 
   timetable.logChanges = false
