@@ -2,9 +2,8 @@ import { fileURLToPath } from 'url'
 
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
-import { updateTrip } from '../../metro-trains/trip-updater.mjs'
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
-import getTripUpdateData from '../../metro-trains/get-stopping-pattern.js'
+import { updateTDNFromPTV } from './metro-ptv-trips.mjs'
 
 export async function getUpdatedTDNs(db) {
   return (await db.getCollection('metro notify').findDocuments({
@@ -18,9 +17,9 @@ export async function getUpdatedTDNs(db) {
 export async function fetchTrips(db, ptvAPI) {
   let updatedTDNs = await getUpdatedTDNs(db)
   for (let updatedTDN of updatedTDNs) {
-    let tripData = await getTripUpdateData(updatedTDN, ptvAPI)
-    await updateTrip(db, tripData, { dataSource: 'notify-trip-from-ptv', updateTime: new Date() })
+    await updateTDNFromPTV(updatedTDN, ptvAPI, {}, 'notify-trip-from-ptv')
   }
+
   return updatedTDNs
 }
 
