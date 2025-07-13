@@ -3,6 +3,7 @@ import { MetroGTFSRTrip, ScheduledMetroGTFSRTrip, UnscheduledMetroGTFSRTrip } fr
 import { getUpcomingTrips } from '../metro-gtfsr-trips.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import lil3826 from './sample-data/lil-3826.json' with { type: 'json' }
+import cbeC406 from './sample-data/cbe-C406.json' with { type: 'json' }
 import utils from '../../../../utils.js'
 import { getOutdatedTrips } from '../metro-outdated-trips.mjs'
 
@@ -27,6 +28,10 @@ describe('The Outdated trips tracker', () => {
     trip2.runID = '3828'
     trip2.lastUpdated = utils.now() - 1000 * 60 * 3 // Last updated 3 min ago
     await liveTimetables.createDocument(trip2)
+
+    let trip3 = clone(cbeC406)
+    trip3.lastUpdated = 1749420960000 // 2025-06-08T22:15:00.000Z, a whole day before
+    await liveTimetables.createDocument(trip3)
 
     let outdatedTDNs = await getOutdatedTrips(database)
     expect(outdatedTDNs).to.have.members(['3826'])
