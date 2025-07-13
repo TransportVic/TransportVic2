@@ -150,8 +150,9 @@ module.exports = class LiveTimetable {
   #dataSource
   #circular
   #headsign
+  #lastUpdated
 
-  constructor(mode, operationDays, routeName, routeNumber, routeGTFSID, tripID, block) {
+  constructor(mode, operationDays, routeName, routeNumber, routeGTFSID, tripID, block, lastUpdated) {
     this.#mode = mode
     this.#operationDay = utils.parseDate(operationDays).startOf('day')
     this.#routeName = routeName
@@ -159,6 +160,7 @@ module.exports = class LiveTimetable {
     this.#routeGTFSID = routeGTFSID
     this.#tripID = tripID
     this.#block = block
+    this.#lastUpdated = lastUpdated || +new Date()
   }
 
   get mode() { return this.#mode }
@@ -174,6 +176,7 @@ module.exports = class LiveTimetable {
   get runID() { return this.#runID }
   get circular() { return this.#circular }
   get headsign() { return this.#headsign }
+  get lastUpdated() { return new Date(this.#lastUpdated) }
 
   get vehicle() {
     if (this.#vehicle) {
@@ -265,6 +268,7 @@ module.exports = class LiveTimetable {
   set additional(additional) { this.#additional = additional }
   set circular(circular) { this.#circular = circular }
   set headsign(headsign) { this.#headsign = headsign }
+  set lastUpdated(lastUpdated) { this.#lastUpdated = +lastUpdated }
 
   get stops() { return this.#stops }
 
@@ -312,7 +316,8 @@ module.exports = class LiveTimetable {
       timetable.routeNumber,
       timetable.routeGTFSID,
       timetable.tripID,
-      timetable.block
+      timetable.block,
+      timetable.lastUpdated
     )
 
     if (timetable.shapeID) timetableInstance.#shapeID = timetable.shapeID
@@ -390,7 +395,8 @@ module.exports = class LiveTimetable {
       forming: this.#forming,
       changes: this.changes,
       cancelled: this.#cancelled,
-      additional: this.#additional
+      additional: this.#additional,
+      lastUpdated: this.#lastUpdated
     }
 
     if (typeof this.#circular !== 'undefined') returnData.circular = this.#circular

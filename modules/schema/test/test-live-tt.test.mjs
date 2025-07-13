@@ -94,7 +94,7 @@ describe('The LiveTimetable schema', () => {
     expect(dbObj.destination).to.equal('Flinders Street Railway Station')
     expect(dbObj.destinationArrivalTime).to.equal('04:56')
 
-    expect(timetable.lastUpdated).to.equal(+new Date('2025-04-09T18:37:00.000Z'))
+    expect(dbObj.lastUpdated).to.equal(+new Date('2025-04-09T18:37:00.000Z'))
 
     expect(dbObj.stopTimings[0].stopName).to.equal('Mernda Railway Station')
     expect(dbObj.stopTimings[0].arrivalTime).to.equal('04:04')
@@ -132,6 +132,7 @@ describe('The LiveTimetable schema', () => {
       'Mernda',
       null,
       '2-MDD',
+      null,
       null,
       null
     )
