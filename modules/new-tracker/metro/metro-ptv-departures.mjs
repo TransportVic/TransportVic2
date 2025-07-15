@@ -30,10 +30,16 @@ export async function fetchTrips(db, ptvAPI, { stationName = null, skipTDN = [],
   let updatedTDNs = relevantTrips.map(trip => trip.data.runID)
   console.log('> Updating TDNs: ' + updatedTDNs.join(', '))
   let updatedTrips = []
-  
+
   for (let tripData of relevantTrips) {
     let { type, data } = tripData
-    updatedTrips.push(await updateTrip(db, data, { skipStopCancellation: type === 'stop', dataSource: 'ptv-departure', ignoreMissingStops: MTP_STOPS }))
+    let options = {
+      skipStopCancellation: type === 'stop',
+      updatedTime: type === 'trip' ? new Date() : null,
+      dataSource: 'ptv-departure',
+      ignoreMissingStops: MTP_STOPS,
+    }
+    updatedTrips.push(await updateTrip(db, data, options))
   }
 
   return updatedTDNs
