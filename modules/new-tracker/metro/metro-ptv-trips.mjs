@@ -7,6 +7,7 @@ import getMetroDepartures from '../../metro-trains/get-departures.js'
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import getTripUpdateData from '../../metro-trains/get-stopping-pattern.js'
 import utils from '../../../utils.js'
+import { updateRelatedTrips } from './check-new-updates.mjs'
 
 const PTV_BAD_STOPS = [
   'Anzac', 'Town Hall', 'State Library', 'Parkville', 'Arden',
@@ -20,12 +21,11 @@ function shuffleArray(array) {
   }
 }
 
-export async function updateTDNFromPTV(db, runID, ptvAPI, ptvAPIOptions, dataSource) {
+export async function updateTDNFromPTV(db, runID, ptvAPI, ptvAPIOptions, dataSource, skipWrite = false) {
   let tripUpdate = await getTripUpdateData(runID, ptvAPI, ptvAPIOptions)
   if (!tripUpdate) return null
 
-  await updateTrip(db, tripUpdate, { dataSource, ignoreMissingStops: PTV_BAD_STOPS, updateTime: new Date() })
-  return tripUpdate
+  return await updateTrip(db, tripUpdate, { dataSource, ignoreMissingStops: PTV_BAD_STOPS, updateTime: new Date(), skipWrite })
 }
 
 export async function getTrips(db, ptvAPI, station, skipTDN = []) {
@@ -63,6 +63,8 @@ export async function fetchTrips(db, ptvAPI) {
 
   let updatedTrips = await getTrips(db, ptvAPI, station)
   console.log('> Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
+
+  await updateRelatedTrips(db, updatedTrips, ptvAPI)
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

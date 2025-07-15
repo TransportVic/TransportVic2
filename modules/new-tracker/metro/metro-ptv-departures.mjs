@@ -5,6 +5,7 @@ import config from '../../../config.json' with { type: 'json' }
 import { updateTrip } from '../../metro-trains/trip-updater.mjs'
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import getTripUpdateData from '../../metro-trains/get-ptv-departures.js'
+import { updateRelatedTrips } from './check-new-updates.mjs'
 
 const MTP_STOPS = [
   'Anzac', 'Town Hall', 'State Library', 'Parkville', 'Arden'
@@ -27,8 +28,6 @@ export async function fetchTrips(db, ptvAPI, { stationName = null, skipTDN = [],
   console.log(`Loading next ${maxResults} departures from`, station.stopName)
 
   let relevantTrips = await getTripUpdateData(db, station, ptvAPI, { skipTDN, maxResults, backwards })
-  let updatedTDNs = relevantTrips.map(trip => trip.data.runID)
-  console.log('> Updating TDNs: ' + updatedTDNs.join(', '))
   let updatedTrips = []
 
   for (let tripData of relevantTrips) {
@@ -42,7 +41,7 @@ export async function fetchTrips(db, ptvAPI, { stationName = null, skipTDN = [],
     updatedTrips.push(await updateTrip(db, data, options))
   }
 
-  return updatedTDNs
+  return updatedTrips
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
@@ -51,7 +50,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
 
-  await fetchTrips(mongoDB, ptvAPI)
+  let updatedTrips = (await fetchTrips(mongoDB, ptvAPI))
+  console.log('> Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
+  await updateRelatedTrips(mongoDB, updatedTrips, ptvAPI)
 
   process.exit(0)
 }

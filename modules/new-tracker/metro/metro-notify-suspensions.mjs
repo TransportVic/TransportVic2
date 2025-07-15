@@ -7,6 +7,13 @@ import { fetchTrips } from './metro-ptv-departures.mjs'
 import getMetroDepartures from '../../metro-trains/get-departures.js'
 import { getTrips, updateTDNFromPTV } from './metro-ptv-trips.mjs'
 
+async function fetchStop(name, db, ptvAPI, maxResults, backwards, tdnsSeen) {
+  let updatedTrips = await fetchTrips(db, ptvAPI, { stationName: name, skipTDN: tdnsSeen, maxResults, backwards })
+  let newTDNs = updatedTrips.map(trip => trip.runID)
+  tdnsSeen.push(...newTDNs)
+  return newTDNs
+}
+
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -62,8 +69,10 @@ export async function fetchTripsFromAffectedStops(db, ptvAPI) {
 
   let tdnsSeen = []
   for (let stop of stopsToUse) {
-    tdnsSeen.push(...await fetchTrips(db, ptvAPI, { stationName: stop, skipTDN: tdnsSeen, maxResults: 5 }))
-    tdnsSeen.push(...await fetchTrips(db, ptvAPI, { stationName: stop, skipTDN: tdnsSeen, maxResults: 5, backwards: true }))
+    let newTDNs = []
+    newTDNs.push(...await fetchStop(stop, db, ptvAPI, 5, false, tdnsSeen))
+    newTDNs.push(...await fetchStop(stop, db, ptvAPI, 5, true, tdnsSeen))
+    console.log('> Updating TDNs: ' + newTDNs.join(', '))
 
     let station = await db.getCollection('stops').findDocument({
       stopName: stop
