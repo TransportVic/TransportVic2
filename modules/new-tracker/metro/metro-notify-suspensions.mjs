@@ -68,7 +68,9 @@ export async function fetchTripsFromAffectedStops(db, ptvAPI) {
     let station = await db.getCollection('stops').findDocument({
       stopName: stop
     })
-    tdnsSeen.push(...(await getTrips(db, ptvAPI, station, tdnsSeen)).map(update => update.runID))
+    let missingTDNs = (await getTrips(db, ptvAPI, station, tdnsSeen)).map(update => update.runID)
+    tdnsSeen.push(...missingTDNs)
+    console.log('> Updating Missing TDNs: ' + missingTDNs.join(', '))
   }
 }
 
