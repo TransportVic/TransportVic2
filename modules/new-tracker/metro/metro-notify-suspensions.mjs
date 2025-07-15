@@ -5,10 +5,12 @@ import config from '../../../config.json' with { type: 'json' }
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import { fetchTrips } from './metro-ptv-departures.mjs'
 import { getTrips } from './metro-ptv-trips.mjs'
+import { updateRelatedTrips } from './check-new-updates.mjs'
 
-async function fetchStop(name, db, ptvAPI, maxResults, backwards, tdnsSeen) {
+async function fetchStop(name, db, ptvAPI, maxResults, backwards, tdnsSeen, newlyUpdatedTrips) {
   let updatedTrips = await fetchTrips(db, ptvAPI, { stationName: name, skipTDN: tdnsSeen, maxResults, backwards })
   let newTDNs = updatedTrips.map(trip => trip.runID)
+  newlyUpdatedTrips.push(...updatedTrips)
   tdnsSeen.push(...newTDNs)
   return newTDNs
 }
@@ -66,11 +68,12 @@ export async function fetchTripsFromAffectedStops(db, ptvAPI) {
     }
   }
 
+  let updatedTrips = []
   let tdnsSeen = []
   for (let stop of stopsToUse) {
     let newTDNs = []
-    newTDNs.push(...await fetchStop(stop, db, ptvAPI, 5, false, tdnsSeen))
-    newTDNs.push(...await fetchStop(stop, db, ptvAPI, 5, true, tdnsSeen))
+    newTDNs.push(...await fetchStop(stop, db, ptvAPI, 5, false, tdnsSeen, updatedTrips))
+    newTDNs.push(...await fetchStop(stop, db, ptvAPI, 5, true, tdnsSeen, updatedTrips))
     console.log('> Notify Suspensions: Updating TDNs: ' + newTDNs.join(', '))
 
     let station = await db.getCollection('stops').findDocument({
@@ -80,6 +83,8 @@ export async function fetchTripsFromAffectedStops(db, ptvAPI) {
     tdnsSeen.push(...missingTDNs)
     console.log('> Notify Suspensions: Updating Missing TDNs: ' + missingTDNs.join(', '))
   }
+
+  await updateRelatedTrips(db, updatedTrips, ptvAPI)
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
