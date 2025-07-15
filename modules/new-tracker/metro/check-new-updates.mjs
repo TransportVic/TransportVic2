@@ -42,7 +42,14 @@ export async function getTripsRequiringUpdates(liveTimetables, updatedTrips, exc
     }
   }
 
-  return updates.filter(trip => !excludeTrips.includes(trip.runID))
+  let tdnsSeen = new Set()
+  return updates.filter(trip => {
+    if (excludeTrips.includes(trip.runID)) return false
+    if (tdnsSeen.has(trip.runID)) return false
+
+    tdnsSeen.add(trip.runID)
+    return true
+  })
 }
 
 export async function updateRelatedTrips(db, updatedTrips, ptvAPI) {
