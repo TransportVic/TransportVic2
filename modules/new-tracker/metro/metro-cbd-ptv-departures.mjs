@@ -6,7 +6,9 @@ import { fetchTrips } from './metro-ptv-departures.mjs'
 
 async function fetchStop(name, db, ptvAPI, maxResults, backwards, tdnsSeen) {
   let updatedTrips = await fetchTrips(db, ptvAPI, { stationName: name, skipTDN: tdnsSeen, maxResults, backwards })
-  tdnsSeen.push(...updatedTrips.map(trip => trip.runID))
+  let newTDNs = updatedTrips.map(trip => trip.runID)
+  tdnsSeen.push(...newTDNs)
+  console.log('> CBD Departures: Updating TDNs: ' + newTDNs.join(', '))
 }
 
 export async function fetchCBDTrips(db, ptvAPI) {
@@ -19,8 +21,6 @@ export async function fetchCBDTrips(db, ptvAPI) {
   await fetchStop('Richmond Railway Station', db, ptvAPI, 5, true, tdnsSeen)
   await fetchStop('Jolimont Railway Station', db, ptvAPI, 5, true, tdnsSeen)
   await fetchStop('North Melbourne Railway Station', db, ptvAPI, 5, true, tdnsSeen)
-  
-  console.log('> Updating TDNs: ' + tdnsSeen.join(', '))
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

@@ -62,7 +62,7 @@ export async function fetchTrips(db, ptvAPI) {
   console.log('Loading next 5 trips from', station.stopName)
 
   let updatedTrips = await getTrips(db, ptvAPI, station)
-  console.log('> Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
+  console.log('> PTV Trips: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
 
   await updateRelatedTrips(db, updatedTrips, ptvAPI)
 }

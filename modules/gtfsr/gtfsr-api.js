@@ -9,7 +9,6 @@ let { gtfsrKey } = config
 let urlBase = 'https://data-exchange-api.vicroads.vic.gov.au/opendata/v1/gtfsr/'
 
 async function makeRequest(url, options={}) {
-console.log(urlBase+url)
   let data = await utils.request(urlBase + url, {
     headers: {
       'Ocp-Apim-Subscription-Key': gtfsrKey
