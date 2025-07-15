@@ -20,10 +20,10 @@ async function checkFormingChange(trip, change, liveTimetables, trips, updates) 
   }
 
   if (change.type === 'forming-change') {
-    if (oldTrip && oldTrip.formedBy === trip.runID) updates.push({ operationDays: oldTrip.operationDays, runID: oldTrip.runID, setNull: 'formedBy' })
+    if (oldTrip && oldTrip.formedBy === trip.runID) updates.push({ operationDays: oldTrip.operationDays, runID: oldTrip.runID, setNull: 'formedBy', badVal: trip.runID })
     if (newTrip && newTrip.formedBy !== trip.runID) updates.push({ operationDays: newTrip.operationDays, runID: newTrip.runID})
   } else if (change.type === 'formedby-change') {
-    if (oldTrip && oldTrip.forming === trip.runID) updates.push({ operationDays: oldTrip.operationDays, runID: oldTrip.runID, setNull: 'forming'  })
+    if (oldTrip && oldTrip.forming === trip.runID) updates.push({ operationDays: oldTrip.operationDays, runID: oldTrip.runID, setNull: 'forming', badVal: trip.runID  })
     if (newTrip && newTrip.forming !== trip.runID) updates.push({ operationDays: newTrip.operationDays, runID: newTrip.runID })
   }
 }
@@ -48,14 +48,23 @@ export async function getTripsRequiringUpdates(liveTimetables, updatedTrips, exc
 export async function updateRelatedTrips(db, updatedTrips, ptvAPI) {
   let liveTimetables = await db.getCollection('live timetables')
   let tripsNeedingUpdate = []
+  let tdnsSeen = updatedTrips.map(trip => trip.runID)
 
-  tripsNeedingUpdate = await getTripsRequiringUpdates(liveTimetables, updatedTrips)
-  let newlyUpdatedTrips = []
-  for (let trip of tripsNeedingUpdate) {
-    let updatedData = await updateTDNFromPTV(db, trip.runID, ptvAPI, {}, 'ptv-pattern-transposal', true)
-    if (trip.setNull && updatedData[trip.setNull] !== null) updatedData[trip.setNull] = null
-    await liveTimetables.replaceDocument(updatedData.getDBKey(), updatedData.toDatabase())
-    newlyUpdatedTrips.push(updatedData)
+  for (let i = 0; i < 4 && updatedTrips.length; i++) {
+    tripsNeedingUpdate = await getTripsRequiringUpdates(liveTimetables, updatedTrips, tdnsSeen)
+    let newlyUpdatedTrips = []
+    for (let trip of tripsNeedingUpdate) {
+      let updatedData = await updateTDNFromPTV(db, trip.runID, ptvAPI, {}, 'ptv-pattern-transposal', true)
+      if (trip.setNull && updatedData[trip.setNull] === trip.badVal) updatedData[trip.setNull] = null
+      await liveTimetables.replaceDocument(updatedData.getDBKey(), updatedData.toDatabase())
+      newlyUpdatedTrips.push(updatedData)
+    }
+
+    if (newlyUpdatedTrips.length) {
+      let updatedTDNs = newlyUpdatedTrips.map(trip => trip.runID)
+      console.log('> Updated Related TDNs: ' + updatedTDNs.join(', '))
+      tdnsSeen.push(...updatedTDNs)
+    }
+    updatedTrips = newlyUpdatedTrips
   }
-  if (newlyUpdatedTrips.length) console.log('> Updated Related TDNs: ' + newlyUpdatedTrips.map(trip => trip.runID))
 }
