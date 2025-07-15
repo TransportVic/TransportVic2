@@ -47,7 +47,7 @@ describe('The changelog tracker', () => {
     ])
   })
 
-  it.only('Does not require an update if the values are already correct', async () => {
+  it('Does not require an update if the values are already correct', async () => {
     let db = new LokiDatabaseConnection('test-db')
     let timetables = await db.createCollection('live timetables')
     await timetables.createDocuments(clone(shmTransposals))
@@ -80,5 +80,27 @@ describe('The changelog tracker', () => {
     let updatedTrips = [await updateTrip(db, changes[0])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips, ['X100', 'X102'])
     expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.members([])
+  })
+
+  it('Deduplicates trips if both its formedBy/forming have updates', async () => {
+    let db = new LokiDatabaseConnection('test-db')
+    let timetables = await db.createCollection('live timetables')
+    await timetables.createDocuments(clone(shmTransposals))
+    await timetables.updateDocument({ runID: "X101" }, { $set: { formedBy: 'X100', forming: 'X102' } })
+    await timetables.updateDocument({ runID: "X102" }, { $set: { formedBy: 'X101' } })
+
+    let changes = [{
+      operationDays: "20250713",
+      runID: "X100",
+      forming: "X999"
+    }, {
+      operationDays: "20250713",
+      runID: "X102",
+      formedBy: "X999"
+    }]
+
+    let updatedTrips = [await updateTrip(db, changes[0]), await updateTrip(db, changes[1])]
+    let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
+    expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.deep.equal(['X101'])
   })
 })
