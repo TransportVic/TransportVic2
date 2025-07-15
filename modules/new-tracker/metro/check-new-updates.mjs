@@ -57,7 +57,7 @@ export async function updateRelatedTrips(db, updatedTrips, ptvAPI) {
   let tripsNeedingUpdate = []
   let tdnsSeen = updatedTrips.map(trip => trip.runID)
 
-  for (let i = 0; i < 4 && updatedTrips.length; i++) {
+  for (let i = 0; i < 7 && updatedTrips.length; i++) {
     tripsNeedingUpdate = await getTripsRequiringUpdates(liveTimetables, updatedTrips, tdnsSeen)
     let newlyUpdatedTrips = []
     for (let trip of tripsNeedingUpdate) {
