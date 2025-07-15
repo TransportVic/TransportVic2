@@ -136,9 +136,11 @@ export async function updateTrip(db, trip, {
   if (trip.scheduledStartTime && firstStop.departureTime !== trip.scheduledStartTime) return null
 
   timetable.cancelled = trip.cancelled
-  if (trip.cancelled) {
-    if (!skipWrite) await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase())
-    return timetable
+  if (trip.cancelled && trip.stops) {
+    trip.stops.forEach(stop => {
+      stop.estimatedDepartureTime = null
+      stop.estimatedArrivalTime = null
+    })
   }
 
   if (trip.forming) timetable.forming = trip.forming
