@@ -136,11 +136,13 @@ export async function updateTrip(db, trip, {
   if (trip.scheduledStartTime && firstStop.departureTime !== trip.scheduledStartTime) return null
 
   timetable.cancelled = trip.cancelled
-  if (trip.cancelled && trip.stops) {
-    trip.stops.forEach(stop => {
-      stop.estimatedDepartureTime = null
-      stop.estimatedArrivalTime = null
-    })
+  if (trip.cancelled) {
+    if (trip.stops && trip.stops.length) {
+      trip.stops.forEach(stop => {
+        stop.estimatedDepartureTime = null
+        stop.estimatedArrivalTime = null
+      })
+    } else trip.stops = null
   }
 
   if (trip.forming) timetable.forming = trip.forming
