@@ -7,7 +7,7 @@ import { getTripsRequiringUpdates } from '../check-new-updates.mjs'
 let clone = o => JSON.parse(JSON.stringify(o))
 
 describe('The changelog tracker', () => {
-  it.only('Ensures updates to forming data also updates the respective formedBy data', async () => {
+  it('Ensures updates to forming data also updates the respective formedBy data', async () => {
     let db = new LokiDatabaseConnection('test-db')
     let timetables = await db.createCollection('live timetables')
     await timetables.createDocuments(clone(shmTransposals))
@@ -27,7 +27,7 @@ describe('The changelog tracker', () => {
     ])
   })
 
-  it.only('Ensures updates to formedBy data also updates the respective forming data', async () => {
+  it('Ensures updates to formedBy data also updates the respective forming data', async () => {
     let db = new LokiDatabaseConnection('test-db')
     let timetables = await db.createCollection('live timetables')
     await timetables.createDocuments(clone(shmTransposals))
@@ -64,6 +64,21 @@ describe('The changelog tracker', () => {
 
     let updatedTrips = [await updateTrip(db, changes[0])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
+    expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.members([])
+  })
+
+  it('Excludes specified trips', async () => {
+    let db = new LokiDatabaseConnection('test-db')
+    let timetables = await db.createCollection('live timetables')
+    await timetables.createDocuments(clone(shmTransposals))
+    let changes = [{
+      operationDays: "20250713",
+      runID: "X103",
+      formedBy: "X100"
+    }]
+
+    let updatedTrips = [await updateTrip(db, changes[0])]
+    let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips, ['X100', 'X102'])
     expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.members([])
   })
 })
