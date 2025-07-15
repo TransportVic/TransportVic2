@@ -10,7 +10,8 @@ module.exports = async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = 
     gtfs: true,
     maxResults,
     expand: ['VehicleDescriptor', 'VehiclePosition'],
-    backwards
+    backwards,
+    includeCancelled: true
   })
 
   if (!departures) return null
