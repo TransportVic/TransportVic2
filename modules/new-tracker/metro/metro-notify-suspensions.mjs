@@ -4,6 +4,8 @@ import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import { fetchTrips } from './metro-ptv-departures.mjs'
+import getMetroDepartures from '../../metro-trains/get-departures.js'
+import { getTrips, updateTDNFromPTV } from './metro-ptv-trips.mjs'
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -62,6 +64,11 @@ export async function fetchTripsFromAffectedStops(db, ptvAPI) {
   for (let stop of stopsToUse) {
     tdnsSeen.push(...await fetchTrips(db, ptvAPI, { stationName: stop, skipTDN: tdnsSeen, maxResults: 5 }))
     tdnsSeen.push(...await fetchTrips(db, ptvAPI, { stationName: stop, skipTDN: tdnsSeen, maxResults: 5, backwards: true }))
+
+    let station = await db.getCollection('stops').findDocument({
+      stopName: stop
+    })
+    tdnsSeen.push(...(await getTrips(db, ptvAPI, station, tdnsSeen)).map(update => update.runID))
   }
 }
 

@@ -28,7 +28,7 @@ export async function updateTDNFromPTV(db, runID, ptvAPI, ptvAPIOptions, dataSou
   return tripUpdate
 }
 
-export async function getTrips(db, ptvAPI, station) {
+export async function getTrips(db, ptvAPI, station, skipTDN = []) {
   let departures = await getMetroDepartures(station, db)
 
   let departureDay = utils.now().startOf('day')
@@ -38,6 +38,8 @@ export async function getTrips(db, ptvAPI, station) {
   let updates = []
   let successfulDepartures = 0
   for (let departure of trains) {
+    if (skipTDN.includes(departure.runID)) continue
+
     let tripUpdate = await updateTDNFromPTV(db, departure.runID, ptvAPI, { date: new Date(departureDay.toISOString()) }, 'ptv-pattern')
     if (tripUpdate) {
       updates.push(tripUpdate)
