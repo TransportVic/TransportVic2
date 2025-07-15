@@ -23,8 +23,8 @@ const METRO_TUNNEL_GROUP_WEST = [
   'Sunbury'
 ]
 
-async function getMetroDepartures(station, db, filter, backwards, departureTime, { mode = 'metro train', returnArrivals = false } = {}) {
-  let departures = await getDepartures(station, mode, db, { departureTime, returnArrivals })
+async function getMetroDepartures(station, db, filter, backwards, departureTime, { mode = 'metro train', returnArrivals = false, timeframe = 120 } = {}) {
+  let departures = await getDepartures(station, mode, db, { departureTime, returnArrivals, timeframe })
   let liveTimetables = db.getCollection('live timetables')
 
   let isWithinCityLoop = CITY_LOOP.includes(station.stopName.slice(0, -16))
