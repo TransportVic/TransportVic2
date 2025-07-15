@@ -24,7 +24,7 @@ export async function fetchTrips(db, ptvAPI, { stationName = null, skipTDN = [],
   let allStations = await db.getCollection('stops').findDocuments(query).toArray()
   shuffleArray(allStations)
   let station = allStations[0]
-  
+
   console.log(`Loading next ${maxResults} departures from`, station.stopName)
 
   let relevantTrips = await getTripUpdateData(db, station, ptvAPI, { skipTDN, maxResults, backwards })
