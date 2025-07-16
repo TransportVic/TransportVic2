@@ -8,6 +8,7 @@ const utils = require('../../../utils')
 const coachDestinations = require('../../../additional-data/coach-stops')
 
 const busBays = require('../../../additional-data/bus-data/bus-bays')
+const checkRRB = require('../../../modules/regional-coach/rrb-check.js')
 
 async function pickBestTrip(data, db) {
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
@@ -94,6 +95,9 @@ async function getTripData(req, res) {
 
     let originShortName = utils.getStopName(origin)
     if (!utils.isStreet(originShortName)) origin = originShortName
+
+    await checkRRB(trip, tripStartTime, res.db)
+    if (trip.isRailReplacementBus) trip.routeName = trip.shortRouteName
   }
 
   let firstDepartureTime = trip.stopTimings[0].departureTimeMinutes

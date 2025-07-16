@@ -212,9 +212,9 @@ a.departureInfo span.broadDepartureInfo {
 }
 
 a.departureInfo span.important {
-  font-size: calc(1.1vw + 1.1vh);
-  line-height: calc(1.2vw + 1.2vh);
-  color: #e03549;
+  font-size: calc(1.1vw + 1.1vh) !important;
+  line-height: calc(1.2vw + 1.2vh) !important;
+  color: #e03549 !important;
 }
 
 a.departureInfo.reservationsOnly span.important {

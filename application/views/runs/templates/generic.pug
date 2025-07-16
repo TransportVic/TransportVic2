@@ -41,13 +41,18 @@ div(class=`departure noTiming${hasNumber ? '' : ' noNumber'}`)
       span(class=className)=routeNumber
   a.departureInfo
     if !hasNumber
-      span.routeName=trip.routeName
+      if trip.isRailReplacementBus
+        span.routeName V/Line #{trip.routeName} Line Rail Replacement
+      else
+        span.routeName #{trip.routeName}
     span.towards Towards
     span.destination=destination
     if viaText && hasNumber
       span.broadDepartureInfo.clampLine=viaText
     if trip.cancelled
       span.broadDepartureInfo.important CANCELLED
+    else if trip.isRailReplacementBus
+      span.broadDepartureInfo.important Train Replacement Coach
 div.infoRow
   -
     let stopType = ({
