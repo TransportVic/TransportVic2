@@ -9,7 +9,7 @@ const timingUtils = require('./timing-utils')
 async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
   let stop = await stops.findDocument({
-    cleanName: req.params.stopName,
+    cleanNames: req.params.stopName,
     cleanSuburbs: req.params.suburb
   })
 

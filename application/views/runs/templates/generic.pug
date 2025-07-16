@@ -60,9 +60,14 @@ div.infoRow
   
   span #{stopType}
 div.timing-list
+  -
+      let trueMode = trip.mode
+      if (trueMode === 'regional coach') trueMode = 'coach'
+      if (trueMode === 'heritage train') trueMode = 'heritage'
+
   for stop in trip.stopTimings
     div.timingRow(id='stop-' + stop.stopGTFSID)
-      a.departureInfo(href=`/${trip.mode}/timings/${stop.suburb.toLowerCase().replace(/[^\w]/g, '-').replace(/--+/g, '-')}/${stop.stopName.toLowerCase().replace(/[^\w]/g, '-').replace(/--+/g, '-')}`)
+      a.departureInfo(href=`/${trueMode}/timings/${stop.suburb.toLowerCase().replace(/[^\w]/g, '-').replace(/--+/g, '-')}/${stop.stopName.toLowerCase().replace(/[^\w]/g, '-').replace(/--+/g, '-')}`)
         -
           let stopParts = stop.stopName.split('/')
           let stopRoad, stopName
