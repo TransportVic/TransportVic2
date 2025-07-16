@@ -94,6 +94,9 @@ module.exports = async function checkRRB(trip, tripStart, db) {
   if (!nspDeparture && railwayStationCount / trip.stopTimings.length > 0.8 && trip.stopTimings.length > 2) {
     let secondStop = trip.stopTimings[1].stopName.split('/')[0]
 
+    let varianceAllowed = 14
+    if (longDistanceCountryStops.includes(origin) || longDistanceCountryStops.includes(destination)) varianceAllowed = 20
+
     nspDeparture = await timetables.findDocument({
       mode: 'regional train',
       operationDays: operationDay,
@@ -102,8 +105,8 @@ module.exports = async function checkRRB(trip, tripStart, db) {
           $elemMatch: {
             stopName: originStopName,
             departureTimeMinutes: {
-              $gte: originDepartureMinutes - 12,
-              $lte: originDepartureMinutes + 10
+              $gte: originDepartureMinutes - varianceAllowed,
+              $lte: originDepartureMinutes + varianceAllowed
             }
           }
         },
@@ -112,7 +115,7 @@ module.exports = async function checkRRB(trip, tripStart, db) {
           $elemMatch: {
             stopName: secondStop,
             departureTimeMinutes: {
-              $gte: originDepartureMinutes + 10
+              $gte: originDepartureMinutes - varianceAllowed
             }
           }
         },
