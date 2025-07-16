@@ -44,9 +44,21 @@ function determineStopType(stop) {
 
 async function pickBestTrip(data, db) {
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
-  let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
+  let departureTimeParts = data.departureTime.split(':')
+  if (parseInt(departureTimeParts[0]) > 23) {
+    let rawHours = parseInt(departureTimeParts[0]) - 24
+    departureTimeParts[0] = `0${rawHours}`
+  }
+  
+  let arrivalTimeParts = data.destinationArrivalTime.split(':')
+  if (parseInt(arrivalTimeParts[0]) > 23) {
+    let rawHours = parseInt(arrivalTimeParts[0]) - 24
+    arrivalTimeParts[0] = `0${rawHours}`
+  }
+  
+  let tripStartTime = utils.parseTime(`${data.operationDays} ${departureTimeParts.join(':')}`, 'YYYYMMDD HH:mm')
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
-  let tripEndTime = utils.parseTime(`${data.operationDays} ${data.destinationArrivalTime}`, 'YYYYMMDD HH:mm')
+  let tripEndTime = utils.parseTime(`${data.operationDays} ${arrivalTimeParts.join(':')}`, 'YYYYMMDD HH:mm')
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
 
   if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
@@ -107,7 +119,7 @@ async function pickBestTrip(data, db) {
 
   // Necessary to make distinction between false and null
   // null - unknown, false - confirmed to be false
-  if (!useLive || (isLiveRoute === false)) return { trip: referenceTrip, tripStartTime, isLive: false }
+  if (!useLive || (isLiveRoute === false)) return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive: false } : null
 
   if (!isLiveRoute) { // Reference trip does not exist
     let originStopType = determineStopType(originStop)
@@ -157,9 +169,8 @@ async function pickBestTrip(data, db) {
         return true
       })
 
-      if (matchingDeparture) {
-        if (matchingDeparture.runID) ptvRunID = matchingDeparture.runID
-        else ptvRunID = -1
+      if (matchingDeparture && matchingDeparture.runID) {
+        ptvRunID = matchingDeparture.runID
       }
     } else if (referenceTrip && referenceTrip.runID) ptvRunID = referenceTrip.runID
 
@@ -167,7 +178,7 @@ async function pickBestTrip(data, db) {
       let isLive = referenceTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
       return { trip: referenceTrip, tripStartTime, isLive } // Request must have failed, but we have a reference trip
     }
-    // if (!ptvRunID) return null // Available options to get ptvRunID unsuccessful - trip does not exist
+    if (!ptvRunID) return null // Available options to get ptvRunID unsuccessful - trip does not exist
 
     let trip = await getStoppingPattern({
       ptvRunID,
