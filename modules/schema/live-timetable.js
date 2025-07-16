@@ -195,6 +195,9 @@ module.exports = class LiveTimetable {
 
   set consist(consist) {
     if (!consist || !consist.length || this.#vehicleForced) return
+    let hasFormingChange = this.changes.find(change => change.type === 'forming-change')
+    if (hasFormingChange) return
+
     let type = metroTypes.find(type => consist[0] == type.leadingCar)
     let typeDescriptor = type ? type.type : 'Unknown'
 
