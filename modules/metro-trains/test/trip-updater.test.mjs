@@ -1191,4 +1191,39 @@ describe('The trip updater module', () => {
     expect(tripData).to.exist
     expect(tripData.lastUpdated.toISOString()).to.equal(updateTime.toISOString())
   })
+
+  it('Should copy the delay data from the second last stop to the last stop', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(pkmStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ],
+      "cleanName" : "pakenham"
+    })
+    await liveTimetables.createDocument(clone(pkmSchTrip))
+
+    let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
+    gtfsrTrips[0].stops.splice(-1, 1) // Note that train is 1min late out of SSS
+    let tripData = await updateTrip(database, gtfsrTrips[0])
+
+    let fss = tripData.stops[tripData.stops.length - 1]
+    expect(fss.stopName).to.equal('Flinders Street Railway Station')
+    expect(fss.stopGTFSID).to.equal('vic:rail:FSS')
+    expect(fss.departureTime).to.equal('09:10')
+    expect(fss.departureTimeMinutes).to.equal(9*60 + 10)
+    expect(fss.platform).to.equal('6')
+    expect(fss.scheduledDepartureTime.toISOString()).to.equal('2025-06-05T23:10:00.000Z')
+    expect(fss.estimatedDepartureTime.toISOString()).to.equal('2025-06-05T23:11:00.000Z') // Delay of 1min should be carried over
+    expect(fss.actualDepartureTime.toISOString()).to.equal('2025-06-05T23:11:00.000Z')
+  })
 })
