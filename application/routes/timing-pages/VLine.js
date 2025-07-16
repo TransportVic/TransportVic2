@@ -7,7 +7,7 @@ const timingUtils = require('./timing-utils')
 
 async function loadDepartures(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
-    codedName: req.params.stationName + '-railway-station'
+    cleanName: req.params.stationName + '-railway-station'
   })
 
   if (!station || !station.bays.find(bay => bay.mode === 'regional train')) { // Not filtering xpt as we just want to check it exists

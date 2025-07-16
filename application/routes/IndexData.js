@@ -62,24 +62,24 @@ router.get('/stop-data', async (req, res) => {
 
   if (['metro train', 'regional train', 'heritage train'].includes(mode)) {
     stop = await stops.findDocument({
-      codedName: name + '-railway-station',
+      cleanName: name + '-railway-station',
     })
   } else if (['ferry'].includes(mode)) {
     stop = await stops.findDocument({
-      codedName: name,
+      cleanName: name,
       'bays.mode': mode
     })
   } else {
     stop = await stops.findDocument({
       cleanSuburbs: suburb,
-      codedName: name
+      cleanName: name
     })
   }
 
   if (!stop) return res.json(null)
 
   let stopData = {
-    codedName: stop.codedName,
+    cleanName: stop.cleanName,
     cleanSuburbs: stop.cleanSuburbs[0],
     suburb: stop.suburb[0],
     stopName: stop.stopName,

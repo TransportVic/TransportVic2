@@ -604,7 +604,7 @@ async function getPIDData(station, platform, options, db) {
 async function getStation(stationName, db) {
   return await utils.getData('pid-station', stationName, async () => {
     return await db.getCollection('stops').findDocument({
-      codedName: stationName + '-railway-station'
+      cleanName: stationName + '-railway-station'
     })
   }, 1000 * 60 * 60)
 }

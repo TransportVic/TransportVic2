@@ -35,7 +35,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
 
     expect(await liveTimetables.countDocuments({})).to.equal(0)
@@ -92,7 +92,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
     await liveTimetables.createDocument(clone(pkmSchTrip))
 
@@ -157,7 +157,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
     await liveTimetables.createDocument(clone(pkmSchTrip))
 
@@ -200,7 +200,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
     await liveTimetables.createDocument(clone(pkmSchTrip))
 
@@ -233,7 +233,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
     await liveTimetables.createDocument(clone(pkmSchTrip))
 
@@ -292,7 +292,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
     await liveTimetables.createDocument(clone(pkmSchTrip))
 
@@ -347,7 +347,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
     await liveTimetables.createDocument(clone(pkmSchTrip))
 
@@ -401,7 +401,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
     await liveTimetables.createDocument(clone(pkmSchTrip))
 
@@ -474,7 +474,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
     await liveTimetables.createDocument(clone(pkmSchTrip))
 
@@ -549,7 +549,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
     await liveTimetables.createDocument(clone(pkmSchTrip))
 
@@ -588,7 +588,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
     await liveTimetables.createDocument(clone(pkmSchTrip))
 
@@ -638,7 +638,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "flemington-racecourse"
+      "cleanName" : "flemington-racecourse"
     })
     await liveTimetables.createDocument(clone(tdR202))
 
@@ -725,7 +725,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "flemington-racecourse"
+      "cleanName" : "flemington-racecourse"
     })
     await liveTimetables.createDocument(clone(tdR205))
 
@@ -800,7 +800,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "flemington-racecourse"
+      "cleanName" : "flemington-racecourse"
     })
     await liveTimetables.createDocument(clone(tdR205))
 
@@ -841,7 +841,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
     await liveTimetables.createDocument(clone(pkmSchTrip))
 
@@ -891,7 +891,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "flemington-racecourse"
+      "cleanName" : "flemington-racecourse"
     })
     let dbTrip = clone(tdR202)
     dbTrip.stopTimings[1].stopName = 'Flinders Street Railway Station'
@@ -947,7 +947,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "flemington-racecourse"
+      "cleanName" : "flemington-racecourse"
     })
     await liveTimetables.createDocument(clone(tdR205))
     let tripUdate = {
@@ -989,7 +989,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "city-circle"
+      "cleanName" : "city-circle"
     })
 
     let stubAPI = new StubAPI()
@@ -1045,7 +1045,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
 
     await liveTimetables.createDocument(clone(pkmSchTrip))
@@ -1074,7 +1074,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
 
     let trip = clone(pkmSchTrip)
@@ -1116,7 +1116,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
 
     await liveTimetables.createDocument(clone(pkmSchTrip))
@@ -1146,7 +1146,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
 
     let gtfsrUpdate = clone(gtfsr_EPH)
@@ -1175,7 +1175,7 @@ describe('The trip updater module', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "pakenham"
+      "cleanName" : "pakenham"
     })
     
     let updateTime = new Date('2025-04-10T18:37:00.000Z')

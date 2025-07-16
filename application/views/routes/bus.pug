@@ -47,7 +47,7 @@ block content
           link = `/bus/route/${route.routeNumber}/${codedDirectionNames[1]}`
         }
       } else {
-        link = `/bus/route/named/${route.codedName}/${codedDirectionNames[1]}`
+        link = `/bus/route/named/${route.cleanName}/${codedDirectionNames[1]}`
       }
       
       if (route.operationDate) {

@@ -7,7 +7,7 @@ const timingUtils = require('./timing-utils')
 
 async function loadDepartures(req, res) {
   let station = await res.db.getCollection('stops').findDocument({
-    codedName: req.params.stationName + '-railway-station'
+    cleanName: req.params.stationName + '-railway-station'
   })
 
   let metroPlatform = station ? station.bays.find(bay => bay.mode === 'metro train') : null

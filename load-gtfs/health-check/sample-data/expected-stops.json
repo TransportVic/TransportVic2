@@ -794,10 +794,6 @@
     "cleanNames": [
       "bendigo-railway-station",
       "bendigo-railway-station-railway-place"
-    ],
-    "codedSuburbs": [
-      "quarry-hill",
-      "bendigo"
     ]
   },
   {
@@ -1511,9 +1507,6 @@
     "cleanNames": [
       "flinders-street-railway-station",
       "flinders-street-railway-station-elizabeth-street"
-    ],
-    "codedSuburbs": [
-      "melbourne"
     ]
   },
   {
@@ -2094,9 +2087,6 @@
       "frankston-railway-station",
       "frankston-railway-station-young-street",
       "frankston-railway-station-fletcher-road"
-    ],
-    "codedSuburbs": [
-      "frankston"
     ]
   },
   {
@@ -2602,9 +2592,6 @@
     "cleanNames": [
       "ringwood-railway-station",
       "ringwood-railway-station-maroondah-highway"
-    ],
-    "codedSuburbs": [
-      "ringwood"
     ]
   },
   {
@@ -2612,10 +2599,6 @@
     "suburb": [
       "Docklands",
       "Melbourne"
-    ],
-    "cleanSuburbs": [
-      "docklands",
-      "melbourne"
     ],
     "bays": [
       {
@@ -3552,10 +3535,6 @@
       "southern-cross-railway-station",
       "southern-cross-railway-station-spencer-street",
       "southern-cross-railway-station-collins-street"
-    ],
-    "codedSuburbs": [
-      "docklands",
-      "melbourne"
     ]
   },
   {
@@ -4357,9 +4336,6 @@
       "sunshine-railway-station",
       "sunshine-railway-station-dickson-street",
       "sunshine-railway-station-city-place"
-    ],
-    "codedSuburbs": [
-      "sunshine"
     ]
   }
 ]

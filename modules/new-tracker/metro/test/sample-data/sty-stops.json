@@ -52,11 +52,11 @@
 			"baxter-railway-station",
 			"baxter-railway-station-baxter-tooradin-road"
 		],
-		"codedSuburbs" : [
+		"cleanSuburbs" : [
 			"baxter"
 		],
-		"codedName" : "baxter-railway-station",
-		"codedNames" : [
+		"cleanName" : "baxter-railway-station",
+		"cleanNames" : [
 			"baxter-railway-station",
 			"baxter-railway-station-baxter-tooradin-road"
 		]
@@ -114,11 +114,11 @@
 			"bittern-railway-station",
 			"bittern-railway-station-frankston-flinders-road"
 		],
-		"codedSuburbs" : [
+		"cleanSuburbs" : [
 			"bittern"
 		],
-		"codedName" : "bittern-railway-station",
-		"codedNames" : [
+		"cleanName" : "bittern-railway-station",
+		"cleanNames" : [
 			"bittern-railway-station",
 			"bittern-railway-station-frankston-flinders-road"
 		]
@@ -176,11 +176,11 @@
 			"crib-point-railway-station",
 			"crib-point-railway-station-stony-point-road"
 		],
-		"codedSuburbs" : [
+		"cleanSuburbs" : [
 			"crib-point"
 		],
-		"codedName" : "crib-point-railway-station",
-		"codedNames" : [
+		"cleanName" : "crib-point-railway-station",
+		"cleanNames" : [
 			"crib-point-railway-station",
 			"crib-point-railway-station-stony-point-road"
 		]
@@ -275,11 +275,11 @@
 			"frankston-railway-station-young-street",
 			"frankston-railway-station-fletcher-road"
 		],
-		"codedSuburbs" : [
+		"cleanSuburbs" : [
 			"frankston"
 		],
-		"codedName" : "frankston-railway-station",
-		"codedNames" : [
+		"cleanName" : "frankston-railway-station",
+		"cleanNames" : [
 			"frankston-railway-station",
 			"frankston-railway-station-young-street",
 			"frankston-railway-station-fletcher-road"
@@ -338,11 +338,11 @@
 			"hastings-railway-station",
 			"hastings-railway-station-high-street"
 		],
-		"codedSuburbs" : [
+		"cleanSuburbs" : [
 			"hastings"
 		],
-		"codedName" : "hastings-railway-station",
-		"codedNames" : [
+		"cleanName" : "hastings-railway-station",
+		"cleanNames" : [
 			"hastings-railway-station",
 			"hastings-railway-station-high-street"
 		]
@@ -399,11 +399,11 @@
 		"cleanNames" : [
 			"leawarra-railway-station"
 		],
-		"codedSuburbs" : [
+		"cleanSuburbs" : [
 			"frankston"
 		],
-		"codedName" : "leawarra-railway-station",
-		"codedNames" : [
+		"cleanName" : "leawarra-railway-station",
+		"cleanNames" : [
 			"leawarra-railway-station"
 		]
 	},
@@ -460,11 +460,11 @@
 			"morradoo-railway-station",
 			"morradoo-railway-station-disney-street"
 		],
-		"codedSuburbs" : [
+		"cleanSuburbs" : [
 			"crib-point"
 		],
-		"codedName" : "morradoo-railway-station",
-		"codedNames" : [
+		"cleanName" : "morradoo-railway-station",
+		"cleanNames" : [
 			"morradoo-railway-station",
 			"morradoo-railway-station-disney-street"
 		]
@@ -522,11 +522,11 @@
 			"somerville-railway-station",
 			"somerville-railway-station-frankston-flinders-road"
 		],
-		"codedSuburbs" : [
+		"cleanSuburbs" : [
 			"somerville"
 		],
-		"codedName" : "somerville-railway-station",
-		"codedNames" : [
+		"cleanName" : "somerville-railway-station",
+		"cleanNames" : [
 			"somerville-railway-station",
 			"somerville-railway-station-frankston-flinders-road"
 		]
@@ -583,11 +583,11 @@
 		"cleanNames" : [
 			"stony-point-railway-station"
 		],
-		"codedSuburbs" : [
+		"cleanSuburbs" : [
 			"crib-point"
 		],
-		"codedName" : "stony-point-railway-station",
-		"codedNames" : [
+		"cleanName" : "stony-point-railway-station",
+		"cleanNames" : [
 			"stony-point-railway-station"
 		]
 	},
@@ -643,11 +643,11 @@
 		"cleanNames" : [
 			"tyabb-railway-station"
 		],
-		"codedSuburbs" : [
+		"cleanSuburbs" : [
 			"tyabb"
 		],
-		"codedName" : "tyabb-railway-station",
-		"codedNames" : [
+		"cleanName" : "tyabb-railway-station",
+		"cleanNames" : [
 			"tyabb-railway-station"
 		]
 	}

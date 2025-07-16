@@ -28,7 +28,7 @@ describe('The getTripUpdateData function', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "lilydale"
+      "cleanName" : "lilydale"
     }, {
       "mode" : "metro train",
       "routeName" : "Belgrave",
@@ -38,7 +38,7 @@ describe('The getTripUpdateData function', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "belgrave"
+      "cleanName" : "belgrave"
     }])
 
     let stubAPI = new StubAPI()
@@ -87,7 +87,7 @@ describe('The getTripUpdateData function', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "lilydale"
+      "cleanName" : "lilydale"
     }, {
       "mode" : "metro train",
       "routeName" : "Belgrave",
@@ -97,7 +97,7 @@ describe('The getTripUpdateData function', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "belgrave"
+      "cleanName" : "belgrave"
     }])
 
     let stubAPI = new StubAPI()
@@ -159,7 +159,7 @@ describe('The getTripUpdateData function', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "lilydale"
+      "cleanName" : "lilydale"
     }, {
       "mode" : "metro train",
       "routeName" : "Belgrave",
@@ -169,7 +169,7 @@ describe('The getTripUpdateData function', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "belgrave"
+      "cleanName" : "belgrave"
     }])
 
     let stubAPI = new StubAPI()

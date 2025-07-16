@@ -56,7 +56,7 @@ describe('The MetroNotify trip tracker', () => {
         "Metro"
       ],
       "directions": pkmRouteStops,
-      "codedName": "pakenham"
+      "cleanName": "pakenham"
     })
 
     let pkmStops = await getStationsOnRoute(database, 'Pakenham')

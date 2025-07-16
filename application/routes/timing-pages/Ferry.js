@@ -9,7 +9,7 @@ const timingUtils = require('./timing-utils')
 async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
   let stop = await stops.findDocument({
-    codedName: req.params.stopName
+    cleanName: req.params.stopName
   })
 
   if (!stop || !stop.bays.find(bay => bay.mode === 'ferry')) {

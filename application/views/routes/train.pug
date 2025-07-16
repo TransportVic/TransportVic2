@@ -21,7 +21,7 @@ block style
       
 block content
   div#routeSummary
-    a(class=cssName href=`/${niceMode}/line/${route.codedName}/${codedDirectionNames[1]}`)#routeNumber
+    a(class=cssName href=`/${niceMode}/line/${route.cleanName}/${codedDirectionNames[1]}`)#routeNumber
       span#routeType=route.routeGTFSID === '14-XPT' ? 'NSW TrainLink' : route.mode === 'regional train' ? 'V/Line Train' : 'Metro Train'
       span#routeText #{lineCode}
     div#terminals

@@ -9,7 +9,7 @@ const timingUtils = require('./timing-utils')
 async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
   let station = await stops.findDocument({
-    codedName: req.params.stopName + '-railway-station'
+    cleanName: req.params.stopName + '-railway-station'
   })
 
   let heritageStop = station.bays.find(bay => bay.mode === 'heritage train')

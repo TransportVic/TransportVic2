@@ -12,7 +12,7 @@ async function getData(req, res, full) {
   let bay = req.params.bay.toUpperCase()
 
   let stop = await stops.findDocument({
-    codedName: req.params.stopName,
+    cleanName: req.params.stopName,
     cleanSuburbs: req.params.suburb
   })
 

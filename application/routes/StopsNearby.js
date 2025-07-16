@@ -35,7 +35,7 @@ function expandStop(stop) {
         cleanSuburbs: stop.cleanSuburbs[0],
         type: typeMap[bay.mode],
         location: stop.location,
-        codedName: stop.codedName
+        cleanName: stop.cleanName
       }
     }
   })

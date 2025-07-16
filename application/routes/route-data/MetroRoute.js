@@ -10,15 +10,15 @@ router.get('/:routeName', async (req, res, next) => {
 
   let matchingRoute = await routes.findDocument({
     mode: 'metro train',
-    codedName: routeName
+    cleanName: routeName
   })
 
   if (!matchingRoute) return res.status(404).render('errors/no-route')
 
   let bestDirection = matchingRoute.directions.find(direction => direction.trainDirection === 'Down')
-  let codedName = utils.encodeName(bestDirection.directionName)
+  let cleanName = utils.encodeName(bestDirection.directionName)
 
-  res.redirect('/metro/line/' + routeName + '/' + codedName)
+  res.redirect('/metro/line/' + routeName + '/' + cleanName)
 })
 
 router.get('/:routeName/:directionName', async (req, res, next) => {
@@ -30,7 +30,7 @@ router.get('/:routeName/:directionName', async (req, res, next) => {
 
   let matchingRoute = await routes.findDocument({
     mode: 'metro train',
-    codedName: routeName
+    cleanName: routeName
   })
 
   if (!matchingRoute) return res.status(404).render('errors/no-route')

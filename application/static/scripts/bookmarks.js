@@ -63,9 +63,9 @@ $.ready(() => {
         link += `/${stopData.cleanSuburbs}`
       }
       if (['metro train', 'regional train', 'heritage train'].includes(mode))
-        link += `/${stopData.codedName.slice(0, -16)}`
+        link += `/${stopData.cleanName.slice(0, -16)}`
       else
-        link += `/${stopData.codedName}`
+        link += `/${stopData.cleanName}`
 
       html += `
 <a class="${cssNames[mode]} result" href="${link}">

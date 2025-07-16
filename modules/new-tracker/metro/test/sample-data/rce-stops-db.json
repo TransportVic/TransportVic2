@@ -327,7 +327,7 @@
             "flagstaff-railway-station-la-trobe-street",
             "flagstaff-railway-station-william-street"
         ],
-        "codedSuburbs": [
+        "cleanSuburbs": [
             "melbourne",
             "west-melbourne"
         ]
@@ -1339,7 +1339,7 @@
             "flinders-street-railway-station",
             "flinders-street-railway-station-elizabeth-street"
         ],
-        "codedSuburbs": [
+        "cleanSuburbs": [
             "melbourne"
         ]
     },
@@ -1670,7 +1670,7 @@
             "melbourne-central-railway-station-la-trobe-street",
             "melbourne-central-railway-station-swanston-street"
         ],
-        "codedSuburbs": [
+        "cleanSuburbs": [
             "melbourne"
         ]
     },
@@ -2001,7 +2001,7 @@
             "parliament-railway-station",
             "parliament-railway-station-macarthur-street"
         ],
-        "codedSuburbs": [
+        "cleanSuburbs": [
             "east-melbourne",
             "melbourne"
         ]
@@ -2671,7 +2671,7 @@
             "southern-cross-railway-station-spencer-street",
             "southern-cross-railway-station-collins-street"
         ],
-        "codedSuburbs": [
+        "cleanSuburbs": [
             "docklands",
             "melbourne"
         ]

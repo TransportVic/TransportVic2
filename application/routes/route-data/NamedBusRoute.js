@@ -3,14 +3,14 @@ const utils = require('../../../utils')
 const render = require('./utils/render-bus')
 const router = new express.Router()
 
-router.get('/:codedName', async (req, res, next) => {
+router.get('/:cleanName', async (req, res, next) => {
   let {db} = res
   let routes = db.getCollection('routes')
-  let {codedName} = req.params
+  let {cleanName} = req.params
 
   let matchingRoute = await routes.findDocument({
     mode: 'bus',
-    codedName,
+    cleanName,
     routeGTFSID: /(4|6|7|8|11|12)-/
   })
 
@@ -19,19 +19,19 @@ router.get('/:codedName', async (req, res, next) => {
   let bestDirection = matchingRoute.directions.sort((a, b) => a.directionName.localeCompare(b.directionName))[0]
   let codedDirection = utils.encodeName(bestDirection.directionName)
 
-  res.redirect('/bus/route/named/' + codedName + '/' + codedDirection)
+  res.redirect('/bus/route/named/' + cleanName + '/' + codedDirection)
 })
 
-router.get('/:codedName/:directionName/:operationDateType?', async (req, res, next) => {
+router.get('/:cleanName/:directionName/:operationDateType?', async (req, res, next) => {
   let {db} = res
   let routes = db.getCollection('routes')
   let gtfsTimetables = db.getCollection('gtfs timetables')
 
-  let {codedName, directionName, operationDateType} = req.params
+  let {cleanName, directionName, operationDateType} = req.params
 
   let matchingRoute = await routes.findDocument({
     mode: 'bus',
-    codedName,
+    cleanName,
     routeGTFSID: /(4|6|7|8|11|12)-/,
     'operationDate.type': operationDateType ? operationDateType : undefined
   })

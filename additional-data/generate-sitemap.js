@@ -28,16 +28,16 @@ database.connect(async () => {
     }
   }).toArray()
 
-  let metroContent = metroStations.sort((a, b) => a.codedName.localeCompare(b.codedName)).map(station => {
-    return `<url><loc>https://transportvic.me/metro/timings/${station.codedName.slice(0, -16)}</loc></url>`
+  let metroContent = metroStations.sort((a, b) => a.cleanName.localeCompare(b.cleanName)).map(station => {
+    return `<url><loc>https://transportvic.me/metro/timings/${station.cleanName.slice(0, -16)}</loc></url>`
   }).join('')
 
-  let vlineContent = vlineStations.sort((a, b) => a.codedName.localeCompare(b.codedName)).map(station => {
-    return `<url><loc>https://transportvic.me/vline/timings/${station.codedName.slice(0, -16)}</loc></url>`
+  let vlineContent = vlineStations.sort((a, b) => a.cleanName.localeCompare(b.cleanName)).map(station => {
+    return `<url><loc>https://transportvic.me/vline/timings/${station.cleanName.slice(0, -16)}</loc></url>`
   }).join('')
 
-  let busContent = bigBusStops.sort((a, b) => a.codedName.localeCompare(b.codedName)).map(station => {
-    return `<url><loc>https://transportvic.me/bus/timings/${station.cleanSuburbs[0]}/${station.codedName}</loc></url>`
+  let busContent = bigBusStops.sort((a, b) => a.cleanName.localeCompare(b.cleanName)).map(station => {
+    return `<url><loc>https://transportvic.me/bus/timings/${station.cleanSuburbs[0]}/${station.cleanName}</loc></url>`
   }).join('')
 
   let otherURLs = [

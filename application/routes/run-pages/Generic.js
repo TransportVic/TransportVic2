@@ -27,12 +27,12 @@ async function pickBestTrip(data, db) {
   if (trueMode === 'heritage') trueMode = 'heritage train'
 
   let possibleOriginStops = await dbStops.findDocuments({
-    codedNames: data.origin,
+    cleanNames: data.origin,
     'bays.mode': trueMode
   }).toArray()
 
   let possibleDestinationStops = await dbStops.findDocuments({
-    codedNames: data.destination,
+    cleanNames: data.destination,
     'bays.mode': trueMode
   }).toArray()
 

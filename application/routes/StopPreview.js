@@ -11,7 +11,7 @@ const turf = require('@turf/turf')
 router.post('/:suburb/:stopName', async (req, res) => {
   let stops = res.db.getCollection('stops')
   let stop = await stops.findDocument({
-    codedName: req.params.stopName,
+    cleanName: req.params.stopName,
     cleanSuburbs: req.params.suburb
   })
 

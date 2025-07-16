@@ -19,7 +19,7 @@ async function render(params, res, matchingRoute) {
   })
 
   if (!direction) {
-    return res.redirect(`/${niceMode}/line/${matchingRoute.codedName}`)
+    return res.redirect(`/${niceMode}/line/${matchingRoute.cleanName}`)
   }
 
   let {gtfsDirection} = direction
@@ -41,7 +41,7 @@ async function render(params, res, matchingRoute) {
     return name.replace(' Railway Station', '')
   })
 
-  let cssName = niceMode === 'vline' ? 'vline' : `${matchingRoute.codedName}-line`
+  let cssName = niceMode === 'vline' ? 'vline' : `${matchingRoute.cleanName}-line`
 
   let query = {
     mode,

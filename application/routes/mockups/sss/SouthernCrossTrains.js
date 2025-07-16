@@ -536,7 +536,7 @@ async function appendArrivalData(arrival, timetables) {
 module.exports = async (platforms, db) => {
   let rawData = await utils.getData('sss-trains', 'sss', async () => {
     let sss = await db.getCollection('stops').findDocument({
-      codedName: 'southern-cross-railway-station'
+      cleanName: 'southern-cross-railway-station'
     })
 
     let vlinePlatform = sss.bays.find(bay => bay.mode === 'regional train' && bay.stopGTFSID < 140000000)

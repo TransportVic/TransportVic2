@@ -1,7 +1,6 @@
 {
   "mode": "bus",
   "routeName": "Huntingdale Station - Monash University (Clayton)",
-  "cleanName": "huntingdale-station-monash-university-clayton",
   "routeNumber": "601",
   "routeGTFSID": "4-601",
   "routePath": [
@@ -93,7 +92,7 @@
       ]
     }
   ],
-  "codedName": "huntingdale-station-monash-university-clayton",
+  "cleanName": "huntingdale-station-monash-university-clayton",
   "ptvDirections": {
     "Huntingdale Station": 0,
     "Monash University (Clayton)": 1

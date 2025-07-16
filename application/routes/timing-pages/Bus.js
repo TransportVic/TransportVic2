@@ -2,7 +2,6 @@ const express = require('express')
 const router = new express.Router()
 const getDepartures = require('../../../modules/bus/get-departures')
 const busDestinations = require('../../../additional-data/bus-destinations')
-const moment = require('moment')
 const utils = require('../../../utils')
 const async = require('async')
 const timingUtils = require('./timing-utils')
@@ -10,7 +9,7 @@ const timingUtils = require('./timing-utils')
 async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
   let stop = await stops.findDocument({
-    codedName: req.params.stopName,
+    cleanNames: req.params.stopName,
     cleanSuburbs: req.params.suburb
   })
 
@@ -54,7 +53,7 @@ async function loadDepartures(req, res) {
       'bays.stopGTFSID': destinationStopTiming.stopGTFSID
     })
 
-    departure.destinationURL = `/bus/timings/${destinationStop.cleanSuburbs[0]}/${destinationStop.codedName}`
+    departure.destinationURL = `/bus/timings/${destinationStop.cleanSuburbs[0]}/${destinationStop.cleanName}`
 
     return departure
   })

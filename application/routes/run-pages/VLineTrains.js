@@ -32,11 +32,11 @@ async function pickBestTrip(data, db) {
   let stops = db.getCollection('stops')
 
   let originStop = await stops.findDocument({
-    codedName: data.origin,
+    cleanName: data.origin,
     'bays.mode': 'regional train'
   })
   let destinationStop = await stops.findDocument({
-    codedName: data.destination,
+    cleanName: data.destination,
     'bays.mode': 'regional train'
   })
   if (!originStop || !destinationStop) return null

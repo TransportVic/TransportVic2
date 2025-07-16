@@ -6,11 +6,11 @@ async function pickBestTrip(data, db) {
   let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
 
   let originStop = await db.getCollection('stops').findDocument({
-    codedName: data.origin + '-railway-station',
+    cleanName: data.origin + '-railway-station',
     'bays.mode': 'metro train'
   })
   let destinationStop = await db.getCollection('stops').findDocument({
-    codedName: data.destination + '-railway-station',
+    cleanName: data.destination + '-railway-station',
     'bays.mode': 'metro train'
   })
 

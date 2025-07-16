@@ -10,7 +10,7 @@ router.get('/:routeName', async (req, res, next) => {
 
   let matchingRoute = await routes.findDocument({
     mode: 'regional train',
-    codedName: routeName
+    cleanName: routeName
   })
 
   if (!matchingRoute) return res.status(404).render('errors/no-route')
@@ -18,9 +18,9 @@ router.get('/:routeName', async (req, res, next) => {
   let bestDirection = matchingRoute.directions.find(direction => direction.directionName.includes(matchingRoute.routeName))
   if (!bestDirection) bestDirection = matchingRoute.directions[0]
 
-  let codedName = utils.encodeName(bestDirection.directionName)
+  let cleanName = utils.encodeName(bestDirection.directionName)
 
-  res.redirect('/vline/line/' + routeName + '/' + codedName)
+  res.redirect('/vline/line/' + routeName + '/' + cleanName)
 })
 
 router.get('/:routeName/:directionName', async (req, res, next) => {
@@ -32,7 +32,7 @@ router.get('/:routeName/:directionName', async (req, res, next) => {
 
   let matchingRoute = await routes.findDocument({
     mode: 'regional train',
-    codedName: routeName
+    cleanName: routeName
   })
 
   if (!matchingRoute) return res.status(404).render('errors/no-route')

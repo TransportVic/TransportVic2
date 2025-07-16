@@ -289,14 +289,5 @@
 	"cleanNames" : [
 		"flinders-street-railway-station",
 		"flinders-street-railway-station-elizabeth-street"
-	],
-	"codedSuburbs" : [
-		"melbourne-city",
-		"melbourne"
-	],
-	"codedName" : "flinders-street-railway-station",
-	"codedNames" : [
-		"flinders-street-railway-station",
-		"flinders-street-railway-station-elizabeth-street"
 	]
 }

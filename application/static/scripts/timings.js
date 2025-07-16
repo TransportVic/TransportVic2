@@ -14,7 +14,7 @@ function setBookmarked(mode, suburb, stopName, state, callback) {
   getStopData(mode, suburb, stopName, stopData => {
     let bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]')
 
-    let id = stopData.cleanSuburbs + '/' + stopData.codedName
+    let id = stopData.cleanSuburbs + '/' + stopData.cleanName
     let existingStop = bookmarks.find(stop => stop.id === id)
     if (existingStop) {
       if (state) {
@@ -48,7 +48,7 @@ function isBookmarked(mode, suburb, stopName, callback) {
   getStopData(mode, suburb, stopName, stopData => {
     let bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]')
 
-    let id = stopData.cleanSuburbs + '/' + stopData.codedName
+    let id = stopData.cleanSuburbs + '/' + stopData.cleanName
     let existingStop = bookmarks.find(stop => stop.id === id)
     if (existingStop) {
       callback(existingStop.modes.includes(mode))

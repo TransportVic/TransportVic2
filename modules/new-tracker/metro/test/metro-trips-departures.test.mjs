@@ -31,7 +31,7 @@ describe('The getDepartures function', () => {
       "operators" : [
         "Metro"
       ],
-      "codedName" : "mernda"
+      "cleanName" : "mernda"
     })
 
     let ptvAPI = createAPI()

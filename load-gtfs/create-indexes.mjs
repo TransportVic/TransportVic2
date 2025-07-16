@@ -28,16 +28,16 @@ async function createStopIndex(mongoStops) {
 
   await mongoStops.createIndex({
     cleanSuburbs: 1,
-    codedName: 1
-  }, {name: 'coded stops name index'})
+    cleanName: 1
+  }, {name: 'clean stops name index'})
 
   await mongoStops.createIndex({
-    codedName: 1
-  }, {name: 'coded name index'})
+    cleanName: 1
+  }, {name: 'clean name index'})
 
   await mongoStops.createIndex({
-    codedNames: 1
-  }, {name: 'coded names index'})
+    cleanNames: 1
+  }, {name: 'clean names index'})
 
   await mongoStops.createIndex({
     'bays.tramTrackerID': 1

@@ -17,9 +17,9 @@ router.get('/:routeNumber', async (req, res, next) => {
   if (!matchingRoute) return res.status(404).render('errors/no-route')
 
   let bestDirection = matchingRoute.directions.sort((a, b) => a.directionName.localeCompare(b.directionName))[0]
-  let codedName = utils.encodeName(bestDirection.directionName)
+  let cleanName = utils.encodeName(bestDirection.directionName)
 
-  res.redirect('/bus/route/' + routeNumber + '/' + codedName)
+  res.redirect('/bus/route/' + routeNumber + '/' + cleanName)
 })
 
 router.get('/:routeNumber/:directionName/:operationDateType?', async (req, res, next) => {

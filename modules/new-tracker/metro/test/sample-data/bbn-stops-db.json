@@ -126,11 +126,11 @@
 			"belgrave-railway-station",
 			"belgrave-railway-station-belgrave-gembrook-road"
 		],
-		"codedSuburbs": [
+		"cleanSuburbs": [
 			"belgrave"
 		],
-		"codedName": "belgrave-railway-station",
-		"codedNames": [
+		"cleanName": "belgrave-railway-station",
+		"cleanNames": [
 			"belgrave-railway-station",
 			"belgrave-railway-station-belgrave-gembrook-road"
 		]

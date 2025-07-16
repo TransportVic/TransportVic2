@@ -9,7 +9,7 @@ const timingUtils = require('./timing-utils')
 async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
   let stop = await stops.findDocument({
-    codedName: req.params.stopName,
+    cleanName: req.params.stopName,
     cleanSuburbs: req.params.suburb
   })
 
@@ -46,7 +46,7 @@ async function loadDepartures(req, res) {
       'bays.stopGTFSID': destinationStopTiming.stopGTFSID
     })
 
-    departure.destinationURL = `/coach/timings/${destinationStop.cleanSuburbs[0]}/${destinationStop.codedName}`
+    departure.destinationURL = `/coach/timings/${destinationStop.cleanSuburbs[0]}/${destinationStop.cleanName}`
 
     return departure
   })).filter(Boolean)
