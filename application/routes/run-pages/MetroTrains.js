@@ -1,25 +1,6 @@
 const express = require('express')
-const moment = require('moment')
 const router = new express.Router()
-const utils = require('../../../utils')
-
-function tripCloseness(trip, originStop, destinationStop, departureTimeMinutes, arrivalTimeMinutes) {
-  let tripOrigin = trip.stopTimings.find(stop => stop.stopName === originStop.stopName)
-  let tripDestination = trip.stopTimings.find(stop => stop.stopName === destinationStop.stopName)
-
-  let originMinutes = tripOrigin.departureTimeMinutes % 1440
-  let originDiff = Math.abs(originMinutes - departureTimeMinutes % 1440)
-
-  let destMinutes = tripDestination.arrivalTimeMinutes % 1440
-  let destDiff = Math.abs(destMinutes - arrivalTimeMinutes % 1440)
-
-  let terminalsDiff = 0
-
-  if (trip.trueOrigin === originStop.stopName) terminalsDiff++
-  if (trip.trueDestination === destinationStop.stopName) terminalsDiff++
-
-  return originDiff + destDiff - terminalsDiff
-}
+const utils = require('../../../utils.js')
 
 async function pickBestTrip(data, db) {
   let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
@@ -58,33 +39,15 @@ async function pickBestTrip(data, db) {
   else return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false, needsRedirect } : null
 }
 
-router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
+async function getTripData(req, res) {
   let tripData = await pickBestTrip(req.params, res.db)
-  if (!tripData) {
-    global.loggers.general.err('Could not locate metro trip', req.url)
-    return res.status(404).render('errors/no-trip')
-  }
+  if (!tripData) return null
 
   let { trip, tripStartTime, isLive, needsRedirect } = tripData
 
   if (needsRedirect) {
     let operationDay = utils.getYYYYMMDD(tripStartTime)
     return res.redirect(`/metro/run/${utils.encodeName(trip.origin.slice(0, -16))}/${trip.departureTime}/${utils.encodeName(trip.destination.slice(0, -16))}/${trip.destinationArrivalTime}/${operationDay}`)
-  }
-
-  let trueOrigin = trip.stopTimings[0]
-  let firstDepartureTime = trueOrigin.departureTimeMinutes
-
-  let trackerData
-  if (trip.runID) {
-    let metroTrips = res.db.getCollection('metro trips')
-
-    trackerData = await metroTrips.findDocument({
-      date: utils.getYYYYMMDD(tripStartTime),
-      runID: trip.runID
-    })
-
-    if (trackerData) trip.consist = trackerData.consist
   }
 
   let hasLiveTimings = trip.stopTimings.some(stop => stop.estimatedDepartureTime)
@@ -115,7 +78,24 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     return stop
   })
 
+  return trip
+}
+
+router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
+  let trip = await getTripData(req, res)
+  if (!trip) return res.status(404).render('errors/no-trip')
+
   res.render('runs/metro', {
+    trip,
+    codedLineName: utils.encodeName(trip.routeName)
+  })
+})
+
+router.post('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
+  let trip = await getTripData(req, res)
+  if (!trip) return res.status(404).render('errors/no-trip')
+
+  res.render('runs/template/metro', {
     trip,
     codedLineName: utils.encodeName(trip.routeName)
   })
