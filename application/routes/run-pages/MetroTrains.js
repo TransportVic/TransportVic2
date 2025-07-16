@@ -124,8 +124,8 @@ async function getTripData(req, res) {
   }
 
   if (!showFormedBy && !showForming) {
-    if (trip.direction === 'Up' && tripCrossesCity(trip, forming)) showForming = forming
-    else if (trip.direction === 'Down' && tripCrossesCity(trip, formedBy)) showFormedBy = formedBy
+    if (trip.direction === 'Up' && forming && tripCrossesCity(trip, forming)) showForming = forming
+    else if (trip.direction === 'Down' && formedBy && tripCrossesCity(trip, formedBy)) showFormedBy = formedBy
   }
 
   if (showFormedBy) {
