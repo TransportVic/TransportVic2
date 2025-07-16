@@ -17,6 +17,7 @@ async function loadDepartures(req, res) {
   let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, station)
 
   let departures = await getDepartures(station, res.db)
+  let stopGTFSIDs = station.bays.map(bay => bay.stopGTFSID)
 
   departures = departures.map(departure => {
     departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
@@ -29,8 +30,8 @@ async function loadDepartures(req, res) {
     if (stationName === 'Southern Cross Railway Station' && departure.isRailReplacementBus)
       stationName = 'Southern Cross Coach Terminal/Spencer Street'
 
-    let currentStation = departure.trip.stopTimings.find(tripStop => tripStop.stopName === stationName)
-    let {stopGTFSID} = currentStation
+    let currentStation = departure.trip.stopTimings.find(tripStop => tripStop.stopName === stationName || stopGTFSIDs.includes(tripStop.stopGTFSID))
+    let { stopGTFSID } = currentStation
     let minutesDiff = currentStation.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
 
     let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')

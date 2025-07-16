@@ -403,8 +403,9 @@ async function getDepartures(station, db) {
             coach.shortRouteName = coach.shortRouteName || getShortRouteName(coach.trip)
 
             if (coach.trip.destination !== 'Southern Cross Coach Terminal/Spencer Street') {
-              if (coach.trip.destination.includes('Railway Station'))
-                coach.destination = coach.trip.destination.slice(0, -16)
+              if (coach.trip.destination.includes('Railway Station')) {
+                coach.destination = coach.trip.destination.split('/')[0].slice(0, -16)
+              }
             } else coach.destination = 'Southern Cross'
             return coach
           })
