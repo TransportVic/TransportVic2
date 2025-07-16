@@ -93,6 +93,21 @@ a.departureInfo {
   width: calc(100vw - (6vw + 6.3vh));
 }
 
+div.tripInfoRow span {
+  font-size: calc(1.6vw + 1.6vh);
+  margin-left: calc(1vw + 1vh);
+}
+
+div.tripInfoRow {
+  width: 100vw;
+  height: calc(4vh + 4vw);
+  background-color: #121212;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
 div.timingRow a.departureInfo span {
   margin-left: calc(1vw + 1vh);
 }

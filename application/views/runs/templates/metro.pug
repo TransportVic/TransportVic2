@@ -1,3 +1,7 @@
+mixin infoTextRow(text)
+  div.tripInfoRow
+    span #{text}
+
 mixin stopRow(stop)
   div.timingRow(id='stop-' + stop.stopGTFSID)
     a.departureInfo(href=`/metro/timings/${stop.stopName.toLowerCase().replace(/ /g, '-').slice(0, -16)}`)
@@ -45,10 +49,16 @@ if trip.isRailReplacementBus
     span Replacement Bus Stop
 div.timing-list
   if trip.formedByTrip
+    if trip.formedByTrip.origin !== trip.formedByTrip.stopTimings[0].stopName
+      +infoTextRow(`Originates from ${trip.formedByTrip.origin.slice(0, -16)}`)
     for stop in trip.formedByTrip.stopTimings
       +stopRow(stop)
+    +infoTextRow(`Dwells at ${trip.stopTimings[0].stopName.slice(0, -16)} for ${Math.max(0, trip.stopTimings[0].departureTimeMinutes - trip.formedByTrip.stopTimings[trip.formedByTrip.stopTimings.length - 1].arrivalTimeMinutes)} min`)
   for stop in trip.stopTimings
     +stopRow(stop)
   if trip.formingTrip
+    +infoTextRow(`Dwells at ${trip.formingTrip.stopTimings[0].stopName.slice(0, -16)} for ${Math.max(0, trip.formingTrip.stopTimings[0].departureTimeMinutes - trip.stopTimings[trip.stopTimings.length - 1].arrivalTimeMinutes)} min`)
     for stop in trip.formingTrip.stopTimings
       +stopRow(stop)
+    if trip.formingTrip.destination !== trip.formingTrip.stopTimings[trip.formingTrip.stopTimings.length - 1].stopName
+      +infoTextRow(`Then continues on to ${trip.formingTrip.destination.slice(0, -16)}`)
