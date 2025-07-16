@@ -32,7 +32,7 @@ if trip.runID
 div.timing-list
   for stop in trip.stopTimings
     div.timingRow(id='stop-' + stop.stopGTFSID)
-      a.departureInfo
+      a.departureInfo(href=`/vline/timings/${stop.stopName.toLowerCase().replace(/ /g, '-').slice(0, -16)}`)
         span.stopName=stop.stopName
         if stop.cancelled || trip.cancelled
           span.info.cancelled CANCELLED

@@ -62,7 +62,7 @@ div.infoRow
 div.timing-list
   for stop in trip.stopTimings
     div.timingRow(id='stop-' + stop.stopGTFSID)
-      a.departureInfo
+      a.departureInfo(href=`/${trip.mode}/timings/${stop.suburb.toLowerCase().replace(/[^\w]/g, '-').replace(/--+/g, '-')}/${stop.stopName.toLowerCase().replace(/[^\w]/g, '-').replace(/--+/g, '-')}`)
         -
           let stopParts = stop.stopName.split('/')
           let stopRoad, stopName
