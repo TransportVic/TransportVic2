@@ -197,7 +197,11 @@ module.exports = class LiveTimetable {
     if (!forceUpdate) {
       if (!consist || !consist.length || this.#vehicleForced) return
       let hasFormingChange = this.changes.find(change => change.type === 'forming-change')
-      if (hasFormingChange && this.vehicle && this.vehicle.consist) return
+      if (hasFormingChange && this.vehicle && this.vehicle.consist) {
+        let lastStop = this.stops[this.stops.length - 1]
+        // Block changes in the last 10min of the trip
+        if (lastStop && lastStop.scheduledDepartureTime.diff(utils.now(), 'minutes') < 10) return
+      }
     }
 
     let type = metroTypes.find(type => consist[0] == type.leadingCar)
