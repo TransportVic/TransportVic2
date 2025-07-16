@@ -589,5 +589,20 @@ describe('The LiveTimetable schema', () => {
         ]
       })
     })
+
+    it('Does not block forced vehicle assignments if the trip is transposed', () => {
+      let timetable = LiveTimetable.fromDatabase(mdd1000)
+      timetable.forming = '9999'
+      timetable.forcedVehicle = {
+        consist: ['703M', '2502T', '704M']
+      }
+
+      expect(timetable.vehicle).to.deep.equal({
+        size: 3,
+        type: 'Siemens',
+        forced: true,
+        consist: [ '703M', '2502T', '704M' ]
+      })
+    })
   })
 })
