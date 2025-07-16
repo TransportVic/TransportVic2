@@ -5,6 +5,7 @@ import pkmC143 from './sample-data/pkm-C143.json' with { type: 'json' }
 import cbe4201 from './sample-data/cbe-4201.json' with { type: 'json' }
 import LiveTimetable from '../live-timetable.js'
 import chaiExclude from 'chai-exclude'
+import utils from '../../../utils.js'
 use(chaiExclude)
 
 let clone = o => JSON.parse(JSON.stringify(o))
@@ -575,7 +576,14 @@ describe('The LiveTimetable schema', () => {
   })
 
   describe('Transposal handling', () => {
-    it('Blocks vehicle assignments if the trip is transposed', () => {
+    let originalNow
+    before(() => {
+      originalNow = utils.now
+    })
+
+    it('Blocks vehicle assignments in the last 10min (scheduled) of the trip if the trip is transposed', () => {
+      utils.now = () => utils.parseTime('2025-04-09T18:51:00.000Z') // time now is :51, arrives into FSS at :56
+
       let timetable = LiveTimetable.fromDatabase(mdd1000)
       timetable.forming = '9999'
       timetable.consist = ['703M', '2502T', '704M']
@@ -587,6 +595,20 @@ describe('The LiveTimetable schema', () => {
           '189M', '1395T', '190M',
           '875M', '1638T', '876M'
         ]
+      })
+    })
+
+    it('Does not block vehicle assignments before the last 10min (scheduled) of the trip if the trip is transposed', () => {
+      utils.now = () => utils.parseTime('2025-04-09T18:30:00.000Z') // time now is :51, arrives into FSS at :56
+
+      let timetable = LiveTimetable.fromDatabase(mdd1000)
+      timetable.forming = '9999'
+      timetable.consist = ['703M', '2502T', '704M']
+
+      expect(timetable.vehicle).to.deep.equal({
+        size: 3,
+        type: 'Siemens',
+        consist: [ '703M', '2502T', '704M' ]
       })
     })
 
@@ -618,6 +640,10 @@ describe('The LiveTimetable schema', () => {
         forced: true,
         consist: [ '703M', '2502T', '704M' ]
       })
+    })
+
+     after(() => {
+      utils.now = originalNow
     })
   })
 })
