@@ -3,6 +3,12 @@ const router = new express.Router()
 const utils = require('../../../utils.js')
 const { tripCrossesCity } = require('../../../modules/metro-trains/get-forming-trip.js')
 
+const MURL = [
+  'Parliament',
+  'Melbourne Central',
+  'Flagstaff',
+].map(stop => stop + ' Railway Station')
+
 const CITY_LOOP = [
   'Parliament',
   'Melbourne Central',
@@ -48,7 +54,7 @@ async function pickBestTrip(data, db) {
 }
 
 function tripViaCityLoop(trip) {
-  return trip.stopTimings.some(stop => CITY_LOOP.includes(stop.stopName))
+  return trip.stopTimings.some(stop => MURL.includes(stop.stopName))
 }
 
 function addStopTimingData(isLive, trip) {
