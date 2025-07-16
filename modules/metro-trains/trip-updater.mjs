@@ -198,6 +198,16 @@ export async function updateTrip(db, trip, {
     }
 
     timetable.sortStops()
+
+    let secondLastStop = timetable.stops[timetable.stops.length - 2]
+    let lastStop = timetable.stops[timetable.stops.length - 1]
+
+    if (secondLastStop && stopVisits[secondLastStop.stopName] && !stopVisits[lastStop.stopName] && secondLastStop.estimatedDepartureTime) {
+      let secondLastDelay = secondLastStop.estimatedDepartureTime.diff(secondLastStop.scheduledDepartureTime, 'minutes')
+      let lastStopEstArr = lastStop.scheduledDepartureTime.clone().add(secondLastDelay, 'minutes')
+      lastStop.estimatedArrivalTime = lastStopEstArr
+      lastStop.estimatedDepartureTime = lastStopEstArr
+    }
   }
 
   if (!skipWrite) await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase())
