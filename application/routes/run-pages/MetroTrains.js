@@ -95,7 +95,7 @@ router.post('/:origin/:departureTime/:destination/:destinationArrivalTime/:opera
   let trip = await getTripData(req, res)
   if (!trip) return res.status(404).render('errors/no-trip')
 
-  res.render('runs/template/metro', {
+  res.render('runs/templates/metro', {
     trip,
     codedLineName: utils.encodeName(trip.routeName)
   })
