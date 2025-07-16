@@ -573,4 +573,21 @@ describe('The LiveTimetable schema', () => {
     expect(dbObj.stopTimings[0].track).to.not.exist
     expect(dbObj.stopTimings[0].express).to.not.exist
   })
+
+  describe('Transposal handling', () => {
+    it('Blocks vehicle assignments if the trip is transposed', () => {
+      let timetable = LiveTimetable.fromDatabase(mdd1000)
+      timetable.forming = '9999'
+      timetable.consist = ['703M', '2502T', '704M']
+
+      expect(timetable.vehicle).to.deep.equal({
+        size: 6,
+        type: 'Xtrapolis',
+        consist: [
+          '189M', '1395T', '190M',
+          '875M', '1638T', '876M'
+        ]
+      })
+    })
+  })
 })
