@@ -140,9 +140,12 @@ describe('The changelog tracker', () => {
 
     let updatedTrips = [await updateTrip(db, changes[0]), await updateTrip(db, changes[1]), await updateTrip(db, changes[2])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
-    expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.members([
-      '3638'
-    ])
+    expect(tripsNeedingUpdate).to.deep.equal([{
+      operationDays: '20250716',
+      runID: '3638',
+      setNull: 'forming',
+      badVal: '3437'
+    }])
 
     await updateRelatedTrips(db, updatedTrips, ptvAPI)
     let new3638 = await timetables.findDocument({ runID: "3638" })
