@@ -295,6 +295,41 @@ async function getDepartures(stop, db) {
             }]
           })
 
+          let railwayStationCount = 0
+          for (let stop of departure.trip.stopTimings) {
+            if (stop.stopName.includes('Railway Station')) railwayStationCount++
+          }
+
+          // A majority of stops are railway stations but no NSP departure matched
+          if (!nspDeparture && railwayStationCount / departure.trip.stopTimings.length > 0.8 && departure.trip.stopTimings.length > 2) {
+            let secondStop = departure.trip.stopTimings[1].stopName.split('/')[0]
+
+            nspDeparture = await timetables.findDocument({
+              mode: 'regional train',
+              operationDays: operationDay,
+              $and: [{
+                stopTimings: {
+                  $elemMatch: {
+                    stopName: originStopName,
+                    departureTimeMinutes: {
+                      $gte: originDepartureMinutes - 12,
+                      $lte: originDepartureMinutes + 10
+                    }
+                  }
+                },
+              }, {
+                stopTimings: {
+                  $elemMatch: {
+                    stopName: secondStop,
+                    departureTimeMinutes: {
+                      $gte: originDepartureMinutes + 10
+                    }
+                  }
+                },
+              }]
+            })
+          }
+
           departure.isRailReplacementBus = !!nspDeparture
           if (nspDeparture) {
             departure.shortRouteName = nspDeparture.routeName
