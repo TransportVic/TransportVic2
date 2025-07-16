@@ -69,7 +69,7 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
     let isMetroTunnelTrip = METRO_TUNNEL_GROUP_EAST.includes(trip.routeName) || METRO_TUNNEL_GROUP_WEST.includes(trip.routeName)
     let upTripInCityLoop = (isWithinCityLoop && trip.direction === 'Up')
     let shouldShowForming = upTripInCityLoop || isCrossCityTrip || isMetroTunnelTrip
-  
+
     let formingTrip = trip.forming ? await liveTimetables.findDocument({
       mode: mode,
       operationDays: trip.operationDays,
@@ -98,6 +98,9 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
       } else returnedFormingTrip = null
     }
 
+    let formingType = null
+    if (returnedFormingTrip) formingType = upTripInCityLoop ? 'CITY_LOOP' : 'CROSS_CITY'
+
     outputDepartures.push({
       ...departure,
       fleetNumber: trip.vehicle ? trip.vehicle.consist : null,
@@ -116,7 +119,8 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
       allStops: departure.allStops.map(stop => stop.slice(0, -16)),
       futureStops: futureStops,
       cityLoopRunning: [],
-      formingDestination, formingRunID, futureFormingStops, formingTrip: returnedFormingTrip
+      formingDestination, formingRunID, futureFormingStops,
+      formingTrip: returnedFormingTrip, formingType
     })
   }
 
