@@ -589,6 +589,20 @@ describe('The LiveTimetable schema', () => {
         ]
       })
     })
+    it('Does not block vehicle assignments if the trip is transposed but not previous consist data was available', () => {
+      let trip = clone(mdd1000)
+      trip.vehicle = null
+
+      let timetable = LiveTimetable.fromDatabase(trip)
+      timetable.forming = '9999'
+      timetable.consist = ['703M', '2502T', '704M']
+
+      expect(timetable.vehicle).to.deep.equal({
+        size: 3,
+        type: 'Siemens',
+        consist: [ '703M', '2502T', '704M' ]
+      })
+    })
 
     it('Does not block forced vehicle assignments if the trip is transposed', () => {
       let timetable = LiveTimetable.fromDatabase(mdd1000)
