@@ -1,0 +1,43 @@
+if trip.runID
+  div.infoRow
+    span=`Run ${trip.runID}`
+    -
+      let {vehicle, consist} = trip
+      let parts
+      if (vehicle) {
+        if (vehicle.startsWith('N')) {
+          parts = [null, 'N']
+        } else if (vehicle.startsWith('A')) {
+          parts = [null, 'A']
+        } else if (vehicle.includes('VL')) {
+          let count = (vehicle.match(/^(\d)x/) || [0, 1])[1]
+          parts = [count, 'vlocity']
+        } else {
+          parts = vehicle.match(/(\d)x ([A-Za-z]+)/).slice(1, 3)
+          if (parts[1] === 'SP') parts[1] = 'sprinter'
+          else if (parts[1] === 'XPT') parts[1] = 'xpt'
+        }
+      }
+    if vehicle
+      div.vehicle
+        if parts[0]
+          span=parts[0] + 'x'
+        else
+          span
+        img(src=`/static/images/icons/${parts[1].toLowerCase()}.svg`)
+  if consist && consist.length
+    div.liveConsist
+      span.header Live Tracking
+      span.consist=consist.join('-')
+div.timing-list
+  for stop in trip.stopTimings
+    div.timingRow(id='stop-' + stop.stopGTFSID)
+      a.departureInfo
+        span.stopName=stop.stopName
+        if stop.cancelled || trip.cancelled
+          span.info.cancelled CANCELLED
+        else if stop.platform
+          span.platform=`Platform ${stop.platform}`
+      div(class=`timing ${stop.headwayDevianceClass}`)
+        span=stop.pretyTimeToDeparture
+        span=stop.departureTime || stop.arrivalTime

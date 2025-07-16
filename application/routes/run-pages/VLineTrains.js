@@ -184,10 +184,7 @@ async function pickBestTrip(data, db) {
   }
 }
 
-router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
-  let tripData = await pickBestTrip(req.params, res.db)
-  if (!tripData) return res.status(404).render('errors/no-trip')
-
+function addTripData(tripData) {
   let { trip, tripStartTime, isLive, originStop } = tripData
 
   let firstDepartureTime = trip.stopTimings.find(stop => stop.stopName === originStop.stopName).departureTimeMinutes
@@ -216,7 +213,22 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     }
     return stop
   })
-  res.render('runs/vline', {trip})
+}
+
+router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
+  let tripData = await pickBestTrip(req.params, res.db)
+  if (!tripData) return res.status(404).render('errors/no-trip')
+
+  addTripData(tripData)
+  res.render('runs/vline', { trip: tripData.trip })
+})
+
+router.post('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
+  let tripData = await pickBestTrip(req.params, res.db)
+  if (!tripData) return res.status(404).render('errors/no-trip')
+
+  addTripData(tripData)
+  res.render('runs/templates/vline', { trip: tripData.trip })
 })
 
 module.exports = router
