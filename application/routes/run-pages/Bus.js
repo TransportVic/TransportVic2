@@ -185,9 +185,9 @@ async function pickBestTrip(data, db) {
   }
 }
 
-router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res, next) => {
+async function getTripData(req, res) {
   let tripData = await pickBestTrip(req.params, res.db)
-  if (!tripData) return res.status(404).render('errors/no-trip')
+  if (!tripData) return null
 
   let { trip, tripStartTime, isLive } = tripData
 
@@ -255,7 +255,6 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     return stop
   })
 
-
   let routeNumber = trip.routeNumber
   let routeNumberClass = utils.encodeName(operator)
   let trackerData
@@ -303,9 +302,8 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     }
   }
 
-  res.render('runs/generic', {
+  return {
     trip,
-    shorternStopName: utils.shorternStopName,
     origin,
     destination,
     routeNumberClass,
@@ -313,6 +311,16 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
     viaText,
     routeNumber,
     depot: (trip.tripID && !trip.tripID.includes('-mjp-')) ? depots[(trip.tripID || '').slice(0, 2)] : null
+  }
+}
+
+router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
+  let tripData = await getTripData(req, res)
+  if (!tripData) return res.status(404).render('errors/no-trip')
+
+  res.render('runs/generic', {
+    ...tripData,
+    shorternStopName: utils.shorternStopName
   })
 })
 
