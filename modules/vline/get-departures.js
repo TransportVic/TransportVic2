@@ -149,7 +149,7 @@ let tripDivideTypes = {
 
 function checkDivide(departure, currentStation, nspTrip, consist) {
   let vehicle = consist
-  if (nspTrip && nspTrip.flags.tripDivides && (vehicle[1] || '').startsWith('VL')) { // Ensure that there is actually something to split
+  if (nspTrip && nspTrip.flags && nspTrip.flags.tripDivides && (vehicle[1] || '').startsWith('VL')) { // Ensure that there is actually something to split
     let type = tripDivideTypes[nspTrip.flags.tripDividePoint]
     let tripStops = nspTrip.stopTimings.map(stop => stop.stopName.slice(0, -16))
     let remainingStops = tripStops.slice(tripStops.indexOf(nspTrip.flags.tripDividePoint))
@@ -350,11 +350,11 @@ async function getDepartures(station, db) {
       let vnetDepartures = []
       await Promise.all([new Promise(async resolve => {
         try {
-          let vicVlinePlatform = vlinePlatforms.find(bay => bay.stopGTFSID < 140000000)
+          let vicVlinePlatform = vlinePlatforms.find(bay => bay.stopType === 'stop')
           if (!vicVlinePlatform) return resolve()
 
           let time = utils.now().add(-6, 'minutes').startOf('minute').toISOString()
-          ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vicVlinePlatform.stopGTFSID}?gtfs=true&max_results=15&expand=run&expand=route&date_utc=${time}`)
+          ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vicVlinePlatform.stopGTFSID}?gtfs=true&max_results=10&expand=run&expand=route&date_utc=${time}`)
         } catch (e) { global.loggers.general.err('Failed to get V/Line PTV departures', e) } finally { resolve() }
       }), new Promise(async resolve => {
         try {
@@ -365,7 +365,7 @@ async function getDepartures(station, db) {
       }), new Promise(async resolve => {
         try {
           if (station.stopName === 'Southern Cross Railway Station') {
-            let vicVlinePlatform = vlinePlatforms.find(bay => bay.stopGTFSID < 140000000)
+            let vicVlinePlatform = vlinePlatforms.find(bay => bay.stopType === 'station')
             vnetDepartures = await getDeparturesFromVNET(vicVlinePlatform, db)
           }
         } catch (e) { global.loggers.general.err('Failed to get V/Line VNET departures', e) } finally { resolve() }
