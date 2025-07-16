@@ -64,11 +64,9 @@ async function pickBestTrip(data, db) {
   return referenceTrip ? { tripStartTime, trip: referenceTrip } : null
 }
 
-router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res, next) => {
-  if (!['coach', 'ferry', 'heritage'].includes(req.params.mode)) return next()
-
+async function getTripData(req, res) {
   let tripData = await pickBestTrip(req.params, res.db)
-  if (!tripData) return res.status(404).render('errors/no-trip')
+  if (!tripData) return null
 
   let { trip, tripStartTime } = tripData
 
@@ -112,11 +110,34 @@ router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTi
     return stop
   })
 
-  res.render('runs/generic', {
+  return {
     trip,
-    shorternStopName: utils.shorternStopName,
     origin,
     destination
+  }
+}
+
+router.get('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res, next) => {
+  if (!['coach', 'ferry', 'heritage'].includes(req.params.mode)) return next()
+
+  let trip = await getTripData(req, res)
+  if (!trip) return res.status(404).render('errors/no-trip')
+
+  res.render('runs/generic', {
+    ...trip,
+    shorternStopName: utils.shorternStopName
+  })
+})
+
+router.post('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res, next) => {
+  if (!['coach', 'ferry', 'heritage'].includes(req.params.mode)) return next()
+
+  let trip = await getTripData(req, res)
+  if (!trip) return res.status(404).render('errors/no-trip')
+
+  res.render('runs/templates/generic', {
+    ...trip,
+    shorternStopName: utils.shorternStopName
   })
 })
 

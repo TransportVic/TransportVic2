@@ -51,9 +51,9 @@ if stopModes.length > 1
         url += stopToUse.codedName
         if (mode.includes('train'))
           url = url.slice(0, -16)
-          
+
         if (mode === 'regional coach' && stopToUse.stopName === 'Southern Cross Railway Station') {
-          url = '/coach/timings/melbourne-city/southern-cross-coach-terminal-spencer-street'
+          url = '/coach/timings/docklands/southern-cross-coach-terminal-spencer-street'
         } else if (mode === 'regional train' && stopToUse.stopName === 'Southern Cross Coach Terminal/Spencer Street') {
           url = '/vline/timings/southern-cross'
         }
