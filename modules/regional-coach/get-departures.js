@@ -267,6 +267,7 @@ async function getDepartures(stop, db) {
           let varianceAllowed = 3
           if (longDistanceCountryStops.includes(origin) || longDistanceCountryStops.includes(destination)) varianceAllowed = 20
 
+          let destinationStopName = destination.split('/')[0]
           let nspDeparture = await timetables.findDocument({
             mode: 'regional train',
             operationDays: operationDay,
@@ -279,7 +280,7 @@ async function getDepartures(stop, db) {
                 }
               }
             },
-            'stopTimings.stopName': destination,
+            'stopTimings.stopName': destinationStopName,
           })
 
           departure.isRailReplacementBus = !!nspDeparture
