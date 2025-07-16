@@ -75,27 +75,25 @@ function filterRuns(query) {
   })
 }
 
-let isFocused = true
 let lostFocusTime
 
 function checkFocus() {
-  let isNowFocused = document.hasFocus()
-  if (!isNowFocused) {
+  console.log(document.hidden, new Date())
+  if (document.hidden) {
     lostFocusTime = new Date()
   } else {
     let timeDiff = new Date() - lostFocusTime
-    if (timeDiff > 5 * 60 * 1000 && !isFocused) {
+    if (timeDiff > 2 * 60 * 1000) {
       updateBody() // If user wasn't focused - update the timings as soon as they come back
     }
   }
-
-  isFocused = isNowFocused
 }
 
+
 function updateBody() {
-  if (!isFocused) {
+  if (document.hidden) {
     let timeDiff = new Date() - lostFocusTime
-    if (timeDiff > 5 * 60 * 1000) return
+    if (timeDiff > 2 * 60 * 1000) return
   }
 
   $.ajax({ method: 'POST' }, (err, status, body) => {
@@ -108,8 +106,7 @@ function updateBody() {
   })
 }
 
-window.on("focus", checkFocus)
-window.on("blur", checkFocus)
+document.on('visibilitychange', checkFocus)
 
 $.ready(() => {
   if ($('#textbar')) {

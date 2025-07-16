@@ -6,7 +6,7 @@ function checkFocus() {
     lostFocusTime = new Date()
   } else {
     let timeDiff = new Date() - lostFocusTime
-    if (timeDiff > .5 * 60 * 1000) {
+    if (timeDiff > 2 * 60 * 1000) {
       updateBody() // If user wasn't focused - update the timings as soon as they come back
     }
   }
@@ -15,7 +15,7 @@ function checkFocus() {
 function updateBody() {
   if (document.hidden) {
     let timeDiff = new Date() - lostFocusTime
-    if (timeDiff > .5 * 60 * 1000) return
+    if (timeDiff > 2 * 60 * 1000) return
   }
 
   $.ajax({ method: 'POST' }, (err, status, body) => {
