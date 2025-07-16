@@ -1,6 +1,14 @@
 const express = require('express')
 const router = new express.Router()
 const utils = require('../../../utils.js')
+const { tripCrossesCity } = require('../../../modules/metro-trains/get-forming-trip.js')
+
+const CITY_LOOP = [
+  'Parliament',
+  'Melbourne Central',
+  'Flagstaff',
+  'Southern Cross'
+].map(stop => stop + ' Railway Station')
 
 async function pickBestTrip(data, db) {
   let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
@@ -39,19 +47,12 @@ async function pickBestTrip(data, db) {
   else return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false, needsRedirect } : null
 }
 
-async function getTripData(req, res) {
-  let tripData = await pickBestTrip(req.params, res.db)
-  if (!tripData) return null
+function tripViaCityLoop(trip) {
+  return trip.stopTimings.some(stop => CITY_LOOP.includes(stop.stopName))
+}
 
-  let { trip, tripStartTime, isLive, needsRedirect } = tripData
-
-  if (needsRedirect) {
-    let operationDay = utils.getYYYYMMDD(tripStartTime)
-    return res.redirect(`/metro/run/${utils.encodeName(trip.origin.slice(0, -16))}/${trip.departureTime}/${utils.encodeName(trip.destination.slice(0, -16))}/${trip.destinationArrivalTime}/${operationDay}`)
-  }
-
+function addStopTimingData(isLive, trip) {
   let hasLiveTimings = trip.stopTimings.some(stop => stop.estimatedDepartureTime)
-
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.pretyTimeToDeparture = ''
 
@@ -77,6 +78,65 @@ async function getTripData(req, res) {
     }
     return stop
   })
+}
+
+async function getTripData(req, res) {
+  let liveTimetables = res.db.getCollection('live timetables')
+
+  let tripData = await pickBestTrip(req.params, res.db)
+  if (!tripData) return null
+
+  let { trip, tripStartTime, isLive, needsRedirect } = tripData
+
+  if (needsRedirect) {
+    let operationDay = utils.getYYYYMMDD(tripStartTime)
+    return res.redirect(`/metro/run/${utils.encodeName(trip.origin.slice(0, -16))}/${trip.departureTime}/${utils.encodeName(trip.destination.slice(0, -16))}/${trip.destinationArrivalTime}/${operationDay}`)
+  }
+
+  addStopTimingData(isLive, trip)
+
+  let formedBy = await liveTimetables.findDocument({
+    mode: trip.mode,
+    operationDays: trip.operationDays,
+    runID: trip.formedBy
+  })
+
+  let forming = await liveTimetables.findDocument({
+    mode: trip.mode,
+    operationDays: trip.operationDays,
+    runID: trip.forming
+  })
+
+  let showFormedBy, showForming
+
+  if (!tripViaCityLoop(trip)) {
+    if (trip.direction === 'Up') {
+      if (forming && tripViaCityLoop(forming)) {
+        showForming = forming
+        showForming.stopTimings = showForming.stopTimings.filter(stop => CITY_LOOP.includes(stop.stopName) || stop.stopName === 'Flinders Street Railway Station')
+      }
+    } else if (trip.direction === 'Down') {
+      if (formedBy && tripViaCityLoop(formedBy)) {
+        showFormedBy = formedBy
+        showFormedBy.stopTimings = showFormedBy.stopTimings.filter(stop => CITY_LOOP.includes(stop.stopName) || stop.stopName === 'Flinders Street Railway Station')
+      }
+    }
+  }
+
+  if (!showFormedBy && !showForming) {
+    if (trip.direction === 'Up' && tripCrossesCity(trip, forming)) showForming = forming
+    else if (trip.direction === 'Down' && tripCrossesCity(trip, formedBy)) showFormedBy = formedBy
+  }
+
+  if (showFormedBy) {
+    trip.formedByTrip = showFormedBy
+    addStopTimingData(true, showFormedBy)
+  }
+
+  if (showForming) {
+    trip.formingTrip = showForming
+    addStopTimingData(true, showForming)
+  }
 
   return trip
 }

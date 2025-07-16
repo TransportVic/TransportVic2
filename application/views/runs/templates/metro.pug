@@ -1,3 +1,15 @@
+mixin stopRow(stop)
+  div.timingRow(id='stop-' + stop.stopGTFSID)
+    a.departureInfo(href=`/metro/timings/${stop.stopName.toLowerCase().replace(/ /g, '-').slice(0, -16)}`)
+      span.stopName=stop.stopName.slice(0, -16)
+      if trip.cancelled || stop.cancelled
+        span.info.cancelled CANCELLED
+      else if stop.platform
+        span.platform=`Platform ${stop.platform}`
+    div(class=`timing ${stop.headwayDevianceClass}`)
+      span=stop.pretyTimeToDeparture
+      span=stop.departureTime || stop.arrivalTime
+
 if trip.runID
   div.infoRow
     if trip.isRailReplacementBus && trip.block && trip.block.match(/^[A-Z]{2,3}\d{3,}/)
@@ -32,14 +44,11 @@ if trip.isRailReplacementBus
   div.infoRow
     span Replacement Bus Stop
 div.timing-list
+  if trip.formedByTrip
+    for stop in trip.formedByTrip.stopTimings
+      +stopRow(stop)
   for stop in trip.stopTimings
-    div.timingRow(id='stop-' + stop.stopGTFSID)
-      a.departureInfo(href=`/metro/timings/${stop.stopName.toLowerCase().replace(/ /g, '-').slice(0, -16)}`)
-        span.stopName=stop.stopName.slice(0, -16)
-        if trip.cancelled || stop.cancelled
-          span.info.cancelled CANCELLED
-        else if stop.platform
-          span.platform=`Platform ${stop.platform}`
-      div(class=`timing ${stop.headwayDevianceClass}`)
-        span=stop.pretyTimeToDeparture
-        span=stop.departureTime || stop.arrivalTime
+    +stopRow(stop)
+  if trip.formingTrip
+    for stop in trip.formingTrip.stopTimings
+      +stopRow(stop)
