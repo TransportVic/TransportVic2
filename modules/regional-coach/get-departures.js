@@ -6,47 +6,7 @@ const destinationOverrides = require('../../additional-data/coach-stops')
 const busBays = require('../../additional-data/bus-data/bus-bays')
 const southernCrossBays = require('../../additional-data/southern-cross-bays')
 const { getDayOfWeek } = require('../../public-holidays')
-
-let longDistanceCountryStops = [
-  "Albury",
-  "Ararat",
-  "Avenel",
-  "Bairnsdale",
-  "Beaufort",
-  "Benalla",
-  "Birregurra",
-  "Broadford",
-  "Camperdown",
-  "Chiltern",
-  "Colac",
-  "Dingee",
-  "Echuca",
-  "Euroa",
-  "Kerang",
-  "Mooroopna",
-  "Murchison East",
-  "Nagambie",
-  "Pyramid",
-  "Rochester",
-  "Rosedale",
-  "Sale",
-  "Shepparton",
-  "Springhurst",
-  "Stratford",
-  "Swan Hill",
-  "Terang",
-  "Violet Town",
-  "Wangaratta",
-  "Warrnambool",
-  "Winchelsea",
-  "Wodonga",
-  "Sherwood Park",
-  "Creswick",
-  "Clunes",
-  "Maryborough",
-  "Talbot",
-  "Epsom"
-].map(x => x + ' Railway Station')
+const checkRRB = require('./rrb-check.js')
 
 function getAllStopGTFSIDs(stop) {
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional coach', false)
@@ -57,7 +17,6 @@ function getAllStopGTFSIDs(stop) {
 async function getDeparturesFromPTV(stop, db) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
-  let timetables = db.getCollection('timetables')
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional coach', true)
   let coachGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional train', true)
   gtfsIDs = gtfsIDs.concat(coachGTFSIDs).filter((e, i, a) => a.indexOf(e) == i)
@@ -216,7 +175,6 @@ async function getDepartures(stop, db) {
       departures = departures
         .sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime || a.destination.length - b.destination.length)
 
-      let timetables = db.getCollection('timetables')
       let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
       departures = await async.map(departures, async departure => {
@@ -247,94 +205,19 @@ async function getDepartures(stop, db) {
         }
 
         if (departure.isRailReplacementBus === null) {
-          let { origin, destination, routeName } = departure.trip
-
           let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
           let originDepartureMinutes = departure.trip.stopTimings[0].departureTimeMinutes
           let minutesDiff = currentStop.departureTimeMinutes - originDepartureMinutes
 
           let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
           if (utils.getMinutesPastMidnight(tripStart) < 180) tripStart.add(-1, 'day')
-          let operationDay = await getDayOfWeek(tripStart)
-
-          if (origin === 'Southern Cross Coach Terminal/Spencer Street') {
-            origin = 'Southern Cross Railway Station'
-          }
-          if (destination === 'Southern Cross Coach Terminal/Spencer Street') {
-            destination = 'Southern Cross Railway Station'
-          }
-
-          let varianceAllowed = 3
-          if (longDistanceCountryStops.includes(origin) || longDistanceCountryStops.includes(destination)) varianceAllowed = 20
-
-          let destinationStopName = destination.split('/')[0]
-          let originStopName = origin.split('/')[0]
-
-          let nspDeparture = await timetables.findDocument({
-            mode: 'regional train',
-            operationDays: operationDay,
-            $and: [{
-              stopTimings: {
-                $elemMatch: {
-                  stopName: originStopName,
-                  departureTimeMinutes: {
-                    $gte: originDepartureMinutes - varianceAllowed,
-                    $lte: originDepartureMinutes + 3
-                  }
-                }
-              },
-            }, {
-              stopTimings: {
-                $elemMatch: {
-                  stopName: destinationStopName,
-                  departureTimeMinutes: {
-                    $gte: originDepartureMinutes + 3
-                  }
-                }
-              },
-            }]
-          })
-
-          let railwayStationCount = 0
-          for (let stop of departure.trip.stopTimings) {
-            if (stop.stopName.includes('Railway Station')) railwayStationCount++
-          }
-
-          // A majority of stops are railway stations but no NSP departure matched
-          if (!nspDeparture && railwayStationCount / departure.trip.stopTimings.length > 0.8 && departure.trip.stopTimings.length > 2) {
-            let secondStop = departure.trip.stopTimings[1].stopName.split('/')[0]
-
-            nspDeparture = await timetables.findDocument({
-              mode: 'regional train',
-              operationDays: operationDay,
-              $and: [{
-                stopTimings: {
-                  $elemMatch: {
-                    stopName: originStopName,
-                    departureTimeMinutes: {
-                      $gte: originDepartureMinutes - 12,
-                      $lte: originDepartureMinutes + 10
-                    }
-                  }
-                },
-              }, {
-                stopTimings: {
-                  $elemMatch: {
-                    stopName: secondStop,
-                    departureTimeMinutes: {
-                      $gte: originDepartureMinutes + 10
-                    }
-                  }
-                },
-              }]
-            })
-          }
-
-          departure.isRailReplacementBus = !!nspDeparture
-          if (nspDeparture) {
-            departure.shortRouteName = nspDeparture.routeName
+          await checkRRB(departure.trip, tripStart, db)
+          if (departure.trip.isRailReplacementBus) {
+            departure.isRailReplacementBus = true
+            departure.shortRouteName = departure.trip.shortRouteName
           }
         }
+
         return departure
       })
 
