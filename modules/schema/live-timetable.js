@@ -193,10 +193,12 @@ module.exports = class LiveTimetable {
     return null
   }
 
-  set consist(consist) {
-    if (!consist || !consist.length || this.#vehicleForced) return
-    let hasFormingChange = this.changes.find(change => change.type === 'forming-change')
-    if (hasFormingChange) return
+  #setConsist(consist, forceUpdate) {
+    if (!forceUpdate) {
+      if (!consist || !consist.length || this.#vehicleForced) return
+      let hasFormingChange = this.changes.find(change => change.type === 'forming-change')
+      if (hasFormingChange) return
+    }
 
     let type = metroTypes.find(type => consist[0] == type.leadingCar)
     let typeDescriptor = type ? type.type : 'Unknown'
@@ -230,10 +232,14 @@ module.exports = class LiveTimetable {
     this.#vehicle = newVal
   }
 
+  set consist(consist) {
+    this.#setConsist(consist, false)
+  }
+
   set forcedVehicle(vehicle) {
     let oldVal = this.#vehicle ? { ...this.#vehicle, consist: this.#vehicle.consist.slice(0) } : null
     if (vehicle.consist && !vehicle.type && !vehicle.size) {
-      this.consist = vehicle.consist
+      this.#setConsist(vehicle.consist, true)
       this.#vehicle.forced = true
     } else {
       this.#vehicle = {
