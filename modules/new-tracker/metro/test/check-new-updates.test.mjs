@@ -1,8 +1,11 @@
 import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
 import shmTransposals from './sample-data/shm-transposals.json' with { type: 'json' }
+import blyTransposals from './sample-data/bly-transposals.json' with { type: 'json' }
+import blyStops from './sample-data/bbn-stops-db.json' with { type: 'json' }
 import { updateTrip } from '../../../metro-trains/trip-updater.mjs'
-import { getTripsRequiringUpdates } from '../check-new-updates.mjs'
+import { getTripsRequiringUpdates, updateRelatedTrips } from '../check-new-updates.mjs'
+import { PTVAPI, StubAPI } from '@transportme/ptv-api'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -102,5 +105,47 @@ describe('The changelog tracker', () => {
     let updatedTrips = [await updateTrip(db, changes[0]), await updateTrip(db, changes[1])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
     expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.deep.equal(['X101'])
+  })
+
+  it('Sets the forming to null in a transposal involving an empty cars run', async () => {
+    let db = new LokiDatabaseConnection('test-db')
+    let stops = await db.createCollection('stops')
+    let timetables = await db.createCollection('live timetables')
+    await timetables.createDocuments(clone(blyTransposals.dbTrips))
+    await stops.createDocuments(clone(blyStops))
+
+    let stubAPI = new StubAPI()
+    stubAPI.setResponses([ clone(blyTransposals.ptvAPI) ])
+    stubAPI.skipErrors()
+    let ptvAPI = new PTVAPI(stubAPI)
+
+    // 2054 transposed to form 3437
+    // 3638 transposed to form the ETY move (not reflected so should be forming null)
+    let changes = [{
+      operationDays: "20250716",
+      runID: "2054",
+      forming: "3437"
+    }, {
+      operationDays: "20250716",
+      runID: "3437",
+      formedBy: "2054"
+    }, {
+      operationDays: "20250716",
+      runID: "3638",
+      stops: [{
+        stopName: "Flinders Street Railway Station",
+        platform: '4'
+      }]
+    }]
+
+    let updatedTrips = [await updateTrip(db, changes[0]), await updateTrip(db, changes[1]), await updateTrip(db, changes[2])]
+    let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
+    expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.members([
+      '3638'
+    ])
+
+    await updateRelatedTrips(db, updatedTrips, ptvAPI)
+    let new3638 = await timetables.findDocument({ runID: "3638" })
+    expect(new3638.forming).to.be.null
   })
 })

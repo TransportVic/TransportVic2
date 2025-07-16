@@ -1,0 +1,334 @@
+{
+  "dbTrips": [
+    {
+      "_id": "6875afeebfb9b3534d5f5105",
+      "mode": "metro train",
+      "routeGTFSID": "2-GWY",
+      "operationDays": "20250716",
+      "tripID": "02-GWY--6-T5-2054",
+      "shapeID": "2-GWY-vpt-6.6.R",
+      "block": null,
+      "gtfsDirection": 1,
+      "runID": "2054",
+      "forming": "5143",
+      "isRailReplacementBus": false,
+      "direction": "Up",
+      "routeName": "Glen Waverley",
+      "routeNumber": null,
+      "stopTimings": [
+        {
+          "stopName": "Glen Waverley Railway Station",
+          "stopNumber": null,
+          "suburb": "Glen Waverley",
+          "stopGTFSID": "vic:rail:GWY",
+          "arrivalTime": null,
+          "arrivalTimeMinutes": null,
+          "departureTime": "10:17",
+          "departureTimeMinutes": 617,
+          "stopConditions": {
+            "pickup": 0,
+            "dropoff": 1
+          },
+          "stopDistance": "0.00",
+          "platform": "2",
+          "scheduledDepartureTime": "2025-07-16T00:17:00.000Z",
+          "actualDepartureTimeMS": 1752625020000,
+          "estimatedDepartureTime": null,
+          "cancelled": false
+        },
+        {
+          "stopName": "Flinders Street Railway Station",
+          "stopNumber": null,
+          "suburb": "Melbourne",
+          "stopGTFSID": "vic:rail:FSS",
+          "arrivalTime": "10:52",
+          "arrivalTimeMinutes": 652,
+          "departureTime": null,
+          "departureTimeMinutes": null,
+          "stopConditions": {
+            "pickup": 1,
+            "dropoff": 0
+          },
+          "stopDistance": "20716.77",
+          "platform": "4",
+          "scheduledDepartureTime": "2025-07-16T00:52:00.000Z",
+          "actualDepartureTimeMS": 1752627120000,
+          "estimatedDepartureTime": null,
+          "cancelled": false
+        }
+      ],
+      "origin": "Glen Waverley Railway Station",
+      "departureTime": "10:17",
+      "destination": "Flinders Street Railway Station",
+      "destinationArrivalTime": "10:52",
+      "trueOrigin": "Glen Waverley Railway Station",
+      "trueDestination": "Flinders Street Railway Station",
+      "trueDepartureTime": "10:17",
+      "trueDestinationArrivalTime": "10:52"
+    },
+    {
+      "_id": "6875afeebfb9b3534d5f526c",
+      "mode": "metro train",
+      "routeGTFSID": "2-LIL",
+      "operationDays": "20250716",
+      "tripID": "02-LIL--6-T5-3437",
+      "shapeID": "2-LIL-vpt-6.63.H",
+      "block": "491",
+      "gtfsDirection": 0,
+      "runID": "3437",
+      "isRailReplacementBus": false,
+      "direction": "Down",
+      "routeName": "Lilydale",
+      "routeNumber": null,
+      "stopTimings": [
+        {
+          "stopName": "Flinders Street Railway Station",
+          "stopNumber": null,
+          "suburb": "Melbourne",
+          "stopGTFSID": "vic:rail:FSS",
+          "arrivalTime": null,
+          "arrivalTimeMinutes": null,
+          "departureTime": "10:58",
+          "departureTimeMinutes": 658,
+          "stopConditions": {
+            "pickup": 0,
+            "dropoff": 1
+          },
+          "stopDistance": "0.00",
+          "platform": "3",
+          "scheduledDepartureTime": "2025-07-16T00:58:00.000Z",
+          "actualDepartureTimeMS": 1752627480000,
+          "estimatedDepartureTime": null,
+          "cancelled": false
+        },
+        {
+          "stopName": "Blackburn Railway Station",
+          "stopNumber": null,
+          "suburb": "Blackburn",
+          "stopGTFSID": "vic:rail:BBN",
+          "arrivalTime": "11:29",
+          "arrivalTimeMinutes": 689,
+          "departureTime": null,
+          "departureTimeMinutes": null,
+          "stopConditions": {
+            "pickup": 1,
+            "dropoff": 0
+          },
+          "stopDistance": "17293.31",
+          "platform": "2",
+          "scheduledDepartureTime": "2025-07-16T01:29:00.000Z",
+          "actualDepartureTimeMS": 1752629340000,
+          "estimatedDepartureTime": null,
+          "cancelled": false
+        }
+      ],
+      "origin": "Flinders Street Railway Station",
+      "departureTime": "10:58",
+      "destination": "Blackburn Railway Station",
+      "destinationArrivalTime": "11:29",
+      "trueOrigin": "Flinders Street Railway Station",
+      "trueDestination": "Blackburn Railway Station",
+      "trueDepartureTime": "10:58",
+      "trueDestinationArrivalTime": "11:29",
+      "formedBy": "3638"
+    },
+    {
+      "_id": "6875afefbfb9b3534d5f52a9",
+      "mode": "metro train",
+      "routeGTFSID": "2-BEG",
+      "operationDays": "20250716",
+      "tripID": "02-BEG--6-T5-3638",
+      "shapeID": "2-BEG-vpt-6.81.R",
+      "block": "491",
+      "gtfsDirection": 1,
+      "runID": "3638",
+      "isRailReplacementBus": false,
+      "direction": "Up",
+      "routeName": "Belgrave",
+      "routeNumber": null,
+      "stopTimings": [
+        {
+          "stopName": "Belgrave Railway Station",
+          "stopNumber": null,
+          "suburb": "Belgrave",
+          "stopGTFSID": "vic:rail:BEG",
+          "arrivalTime": null,
+          "arrivalTimeMinutes": null,
+          "departureTime": "09:47",
+          "departureTimeMinutes": 587,
+          "stopConditions": {
+            "pickup": 0,
+            "dropoff": 1
+          },
+          "stopDistance": "0.00",
+          "platform": "2",
+          "scheduledDepartureTime": "2025-07-15T23:47:00.000Z",
+          "actualDepartureTimeMS": 1752623220000,
+          "estimatedDepartureTime": null,
+          "cancelled": false
+        },
+        {
+          "stopName": "Flinders Street Railway Station",
+          "stopNumber": null,
+          "suburb": "Melbourne",
+          "stopGTFSID": "vic:rail:FSS",
+          "arrivalTime": "10:51",
+          "arrivalTimeMinutes": 651,
+          "departureTime": null,
+          "departureTimeMinutes": null,
+          "stopConditions": {
+            "pickup": 1,
+            "dropoff": 0
+          },
+          "stopDistance": "45326.06",
+          "platform": "3",
+          "scheduledDepartureTime": "2025-07-16T00:51:00.000Z",
+          "actualDepartureTimeMS": 1752627060000,
+          "estimatedDepartureTime": null,
+          "cancelled": false
+        }
+      ],
+      "origin": "Belgrave Railway Station",
+      "departureTime": "09:47",
+      "destination": "Flinders Street Railway Station",
+      "destinationArrivalTime": "10:51",
+      "trueOrigin": "Belgrave Railway Station",
+      "trueDestination": "Flinders Street Railway Station",
+      "trueDepartureTime": "09:47",
+      "trueDestinationArrivalTime": "10:51",
+      "forming": "3437"
+    }
+  ],
+  "ptvAPI": {
+    "disruptions": [],
+    "departures": [
+      {
+        "skipped_stops": [],
+        "stop_id": 1018,
+        "route_id": 2,
+        "run_id": 951638,
+        "run_ref": "951638",
+        "direction_id": 1,
+        "disruption_ids": [
+          337052,
+          323905
+        ],
+        "scheduled_departure_utc": "2025-07-15T23:47:00Z",
+        "estimated_departure_utc": "2025-07-15T23:46:40Z",
+        "at_platform": false,
+        "platform_number": "2",
+        "flags": "",
+        "departure_sequence": 1,
+        "departure_note": ""
+      },
+      {
+        "skipped_stops": [],
+        "stop_id": 1071,
+        "route_id": 2,
+        "run_id": 951638,
+        "run_ref": "951638",
+        "direction_id": 1,
+        "disruption_ids": [
+          337052,
+          323905,
+          261006
+        ],
+        "scheduled_departure_utc": "2025-07-16T00:51:00Z",
+        "estimated_departure_utc": null,
+        "at_platform": false,
+        "platform_number": "4",
+        "flags": "E",
+        "departure_sequence": 22,
+        "departure_note": ""
+      }
+    ],
+    "stops": {
+      "1018": {
+        "stop_ticket": {
+          "ticket_type": "",
+          "zone": "Zone 2",
+          "is_free_fare_zone": false,
+          "ticket_machine": true,
+          "ticket_checks": true,
+          "vline_reservation": false,
+          "ticket_zones": [
+            2
+          ]
+        },
+        "stop_distance": 0.0,
+        "stop_suburb": "Belgrave",
+        "stop_name": "Belgrave",
+        "stop_id": 1018,
+        "route_type": 0,
+        "stop_latitude": -37.9091,
+        "stop_longitude": 145.355286,
+        "stop_landmark": "",
+        "stop_sequence": 0
+      },
+      "1071": {
+        "stop_ticket": {
+          "ticket_type": "",
+          "zone": "Zone 1",
+          "is_free_fare_zone": false,
+          "ticket_machine": true,
+          "ticket_checks": true,
+          "vline_reservation": false,
+          "ticket_zones": [
+            1
+          ]
+        },
+        "stop_distance": 0.0,
+        "stop_suburb": "Melbourne City",
+        "stop_name": "Flinders Street",
+        "stop_id": 1071,
+        "route_type": 0,
+        "stop_latitude": -37.81831,
+        "stop_longitude": 144.966965,
+        "stop_landmark": "",
+        "stop_sequence": 0
+      }
+    },
+    "routes": {
+      "2": {
+        "route_type": 0,
+        "route_id": 2,
+        "route_name": "Belgrave",
+        "route_number": "",
+        "route_gtfs_id": "2-BEG",
+        "geopath": []
+      }
+    },
+    "runs": {
+      "951638": {
+        "run_id": 951638,
+        "run_ref": "951638",
+        "route_id": 2,
+        "route_type": 0,
+        "final_stop_id": 1071,
+        "destination_name": "Flinders Street",
+        "status": "updated",
+        "direction_id": 1,
+        "run_sequence": 0,
+        "express_stop_count": 9,
+        "vehicle_position": null,
+        "vehicle_descriptor": null,
+        "geopath": [],
+        "interchange": null,
+        "run_note": "",
+        "externalService": null
+      }
+    },
+    "directions": {
+      "1": {
+        "direction_id": 1,
+        "direction_name": "City",
+        "route_id": 2,
+        "route_type": 0
+      }
+    },
+    "status": {
+      "version": "3.0",
+      "health": 1
+    }
+  }
+}

@@ -1,5 +1,141 @@
 [
 	{
+		"stopName": "Belgrave Railway Station",
+		"suburb": [
+			"Belgrave"
+		],
+		"cleanSuburbs": [
+			"belgrave"
+		],
+		"bays": [
+			{
+				"originalName": "Belgrave Railway Station",
+				"fullStopName": "Belgrave Railway Station",
+				"stopGTFSID": "vic:rail:BEG",
+				"location": {
+					"type": "Point",
+					"coordinates": [
+						145.35529128,
+						-37.9091021
+					]
+				},
+				"stopNumber": null,
+				"mode": "metro train",
+				"suburb": "Belgrave",
+				"services": [
+					{
+						"routeGTFSID": "2-BEG",
+						"gtfsDirection": 1,
+						"routeNumber": null
+					},
+					{
+						"routeGTFSID": "2-BEG",
+						"gtfsDirection": 0,
+						"routeNumber": null
+					}
+				],
+				"screenServices": [
+					{
+						"routeGTFSID": "2-BEG",
+						"gtfsDirection": 1,
+						"routeNumber": null
+					}
+				],
+				"stopType": "station",
+				"parentStopGTFSID": null
+			},
+			{
+				"originalName": "Belgrave Station",
+				"fullStopName": "Belgrave Railway Station",
+				"stopGTFSID": "11119",
+				"location": {
+					"type": "Point",
+					"coordinates": [
+						145.35518814,
+						-37.9091367
+					]
+				},
+				"stopNumber": null,
+				"mode": "metro train",
+				"suburb": "Belgrave",
+				"services": [],
+				"screenServices": [],
+				"stopType": "stop",
+				"parentStopGTFSID": "vic:rail:BEG",
+				"platform": "1"
+			},
+			{
+				"originalName": "Belgrave Station",
+				"fullStopName": "Belgrave Railway Station",
+				"stopGTFSID": "11120",
+				"location": {
+					"type": "Point",
+					"coordinates": [
+						145.35513209,
+						-37.90909987
+					]
+				},
+				"stopNumber": null,
+				"mode": "metro train",
+				"suburb": "Belgrave",
+				"services": [],
+				"screenServices": [],
+				"stopType": "stop",
+				"parentStopGTFSID": "vic:rail:BEG",
+				"platform": "2"
+			}
+		],
+		"location": {
+			"type": "MultiPoint",
+			"coordinates": [
+				[
+					145.35529128,
+					-37.9091021
+				],
+				[
+					145.35518814,
+					-37.9091367
+				],
+				[
+					145.35513209,
+					-37.90909987
+				],
+				[
+					145.35485751,
+					-37.90968182
+				],
+				[
+					145.35499637,
+					-37.90957562
+				],
+				[
+					145.35532138,
+					-37.90928276
+				],
+				[
+					145.35531021,
+					-37.90927359
+				]
+			]
+		},
+		"mergeName": "Belgrave Railway Station",
+		"services": [],
+		"screenServices": [],
+		"cleanName": "belgrave-railway-station",
+		"cleanNames": [
+			"belgrave-railway-station",
+			"belgrave-railway-station-belgrave-gembrook-road"
+		],
+		"codedSuburbs": [
+			"belgrave"
+		],
+		"codedName": "belgrave-railway-station",
+		"codedNames": [
+			"belgrave-railway-station",
+			"belgrave-railway-station-belgrave-gembrook-road"
+		]
+	},
+	{
 		"stopName" : "Camberwell Railway Station",
 		"suburb" : [
 			"Camberwell"
