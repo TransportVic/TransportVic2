@@ -1,27 +1,11 @@
 const { getDepartures } = require('../departures/get-departures')
-const getFormingTrip = require('./get-forming-trip')
+const { getFormingTrip } = require('./get-forming-trip')
 
 const CITY_LOOP = [
   'Parliament',
   'Melbourne Central',
   'Flagstaff',
   'Southern Cross'
-]
-const CROSS_CITY_GROUP_EAST = [
-  'Frankston',
-  'Sandringham'
-]
-const CROSS_CITY_GROUP_WEST = [
-  'Werribee',
-  'Williamstown'
-]
-
-const METRO_TUNNEL_GROUP_EAST = [
-  'Pakenham',
-  'Cranbourne'
-]
-const METRO_TUNNEL_GROUP_WEST = [
-  'Sunbury'
 ]
 
 async function getMetroDepartures(station, db, filter, backwards, departureTime, { mode = 'metro train', returnArrivals = false, timeframe = 120 } = {}) {

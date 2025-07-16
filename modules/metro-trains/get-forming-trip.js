@@ -1,10 +1,3 @@
-
-const CITY_LOOP = [
-  'Parliament',
-  'Melbourne Central',
-  'Flagstaff',
-  'Southern Cross'
-]
 const CROSS_CITY_GROUP_EAST = [
   'Frankston',
   'Sandringham'
@@ -22,8 +15,15 @@ const METRO_TUNNEL_GROUP_WEST = [
   'Sunbury'
 ]
 
-module.exports = async function getFormingTrip(trip, isArrival, isWithinCityLoop, liveTimetables) {
-  let formingDestination = null, formingRunID = null, futureFormingStops = null
+function tripCrossesCity(prevTrip, nextTrip) {
+  return (CROSS_CITY_GROUP_EAST.includes(prevTrip.routeName) && CROSS_CITY_GROUP_WEST.includes(nextTrip.routeName))
+    || (CROSS_CITY_GROUP_WEST.includes(prevTrip.routeName) && CROSS_CITY_GROUP_EAST.includes(nextTrip.routeName))
+    || (METRO_TUNNEL_GROUP_EAST.includes(prevTrip.routeName) && METRO_TUNNEL_GROUP_WEST.includes(nextTrip.routeName))
+    || (METRO_TUNNEL_GROUP_WEST.includes(prevTrip.routeName) && METRO_TUNNEL_GROUP_EAST.includes(nextTrip.routeName))
+}
+
+async function getFormingTrip(trip, isArrival, isWithinCityLoop, liveTimetables) {
+  let formingDestination = null, formingRunID = null
   let returnedFormingTrip
 
   let isCrossCityTrip = CROSS_CITY_GROUP_EAST.includes(trip.routeName) || CROSS_CITY_GROUP_WEST.includes(trip.routeName)
@@ -43,13 +43,7 @@ module.exports = async function getFormingTrip(trip, isArrival, isWithinCityLoop
   } else if (shouldShowForming) {
     returnedFormingTrip = formingTrip
 
-    if (isCrossCityTrip && returnedFormingTrip) shouldShowForming = 
-      (CROSS_CITY_GROUP_EAST.includes(trip.routeName) && CROSS_CITY_GROUP_WEST.includes(returnedFormingTrip.routeName))
-      || (CROSS_CITY_GROUP_WEST.includes(trip.routeName) && CROSS_CITY_GROUP_EAST.includes(returnedFormingTrip.routeName))
-    else if (isMetroTunnelTrip && returnedFormingTrip && !upTripInCityLoop) shouldShowForming =
-      (METRO_TUNNEL_GROUP_EAST.includes(trip.routeName) && METRO_TUNNEL_GROUP_WEST.includes(returnedFormingTrip.routeName))
-      || (METRO_TUNNEL_GROUP_WEST.includes(trip.routeName) && METRO_TUNNEL_GROUP_EAST.includes(returnedFormingTrip.routeName))
-
+    if ((isCrossCityTrip || (isMetroTunnelTrip && !upTripInCityLoop)) && returnedFormingTrip) shouldShowForming = tripCrossesCity(trip, returnedFormingTrip)
     if (returnedFormingTrip && shouldShowForming) {
       formingDestination = returnedFormingTrip.destination.slice(0, -16)
       formingRunID = returnedFormingTrip.runID
@@ -63,4 +57,9 @@ module.exports = async function getFormingTrip(trip, isArrival, isWithinCityLoop
     shouldShowForming, formingDestination, formingRunID,
     formingTrip: returnedFormingTrip, formingType
   }
+}
+
+module.exports = {
+  tripCrossesCity,
+  getFormingTrip
 }
