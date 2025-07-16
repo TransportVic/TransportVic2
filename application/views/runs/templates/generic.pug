@@ -1,0 +1,94 @@
+if trip.vehicleData
+  -
+    let vehicleIcons = {
+      'A1': 'a-b',
+      'A2': 'a-b',
+      'B2': 'a-b',
+      'Z3': 'z3',
+      'C': 'c1',
+      'D1': 'd',
+      'D2': 'd',
+      'E1': 'e',
+      'E2': 'e'
+    }
+  div.infoRow
+    span=trip.vehicleData.name
+    div.vehicle
+      span
+      -
+        let icon
+        if (trip.mode === 'tram') icon = vehicleIcons[trip.vehicleData.model] || 'optimus'
+        else if (trip.mode === 'bus') icon = 'optimus'
+      img(src=`/static/images/icons/${icon}.svg`)
+else if depot
+  div.infoRow.depot
+    span.depot Depot: #{depot}
+    span.tripID Run #{trip.runID || trip.tripID}
+else if trip.runID
+  div.infoRow
+    span Run #{trip.runID}
+- let hasNumber = !!routeNumber
+div(class=`departure noTiming${hasNumber ? '' : ' noNumber'}`)
+  if hasNumber
+    a(class=`leftContainer ${routeNumberClass}`)
+      if loopDirection
+        span.topText=loopDirection
+      else if trip.routeDetails
+        span.topText=trip.routeDetails
+      -
+        let className = 'bigNumber'
+        if (routeNumber.length > 3) className += ' smaller'
+      span(class=className)=routeNumber
+  a.departureInfo
+    if !hasNumber
+      span.routeName=trip.routeName
+    span.towards Towards
+    span.destination=destination
+    if viaText && hasNumber
+      span.broadDepartureInfo.clampLine=viaText
+    if trip.cancelled
+      span.broadDepartureInfo.important CANCELLED
+div.infoRow
+  -
+    let stopType = ({
+      bus: 'Bus Stop',
+      tram: 'Tram Stop',
+      'regional coach': 'Coach Stop',
+      'heritage train': 'Train Station',
+      ferry: 'Ferry Stop'
+    })[trip.mode]
+  
+  span #{stopType}
+div.timing-list
+  for stop in trip.stopTimings
+    div.timingRow(id='stop-' + stop.stopGTFSID)
+      a.departureInfo
+        -
+          let stopParts = stop.stopName.split('/')
+          let stopRoad, stopName
+          if (stopParts.length >= 2) {
+            stopName = stopParts.slice(0, -1).join('/')
+            stopRoad = stopParts.slice(-1)[0]
+          } else {
+            if (stopParts = stop.stopName.match(/^(\d+) (.+)$/)) {
+              stopRoad = stopParts[2]
+              stopName = stopParts[1] + ' ' + stopRoad
+            } else {
+              stopName = stop.stopName
+              stopRoad = ''
+            }
+          }
+        span.stopRoad=stopRoad
+        -
+          let displayName = stopName
+          let genericNames = ['General Store', 'Post Office', 'Police Station']
+          if (genericNames.includes(displayName)) displayName = `${stop.suburb} ${displayName}`
+          if (stop.stopNumber)
+            displayName += ` #${stop.stopNumber}`
+            
+          if (stop.bay)
+            displayName += ` (${stop.bay})`
+        span.stopName=displayName
+      div(class=`timing ${stop.headwayDevianceClass}`)
+        span=stop.pretyTimeToDeparture
+        span=stop.departureTime || stop.arrivalTime

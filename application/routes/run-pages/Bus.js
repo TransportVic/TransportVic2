@@ -324,4 +324,14 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
   })
 })
 
+router.post('/:origin/:departureTime/:destination/:destinationArrivalTime/:operationDays', async (req, res) => {
+  let tripData = await getTripData(req, res)
+  if (!tripData) return res.status(404).render('errors/no-trip')
+
+  res.render('runs/templates/generic', {
+    ...tripData,
+    shorternStopName: utils.shorternStopName
+  })
+})
+
 module.exports = router

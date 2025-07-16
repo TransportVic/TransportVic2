@@ -1,7 +1,6 @@
 let lostFocusTime
 
 function checkFocus() {
-  console.log(document.hidden, new Date())
   if (document.hidden) {
     lostFocusTime = new Date()
   } else {
