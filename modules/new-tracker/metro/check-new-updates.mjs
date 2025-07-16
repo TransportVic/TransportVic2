@@ -55,7 +55,11 @@ export async function getTripsRequiringUpdates(liveTimetables, updatedTrips, exc
 export async function updateRelatedTrips(db, updatedTrips, ptvAPI) {
   let liveTimetables = await db.getCollection('live timetables')
   let tripsNeedingUpdate = []
-  let tdnsSeen = updatedTrips.map(trip => trip.runID)
+
+  // Only consider trips that have a transposal as "seen" to avoid accepting a platform change as proof the transposal is final
+  let tdnsSeen = updatedTrips.filter(trip => {
+    return trip.newChanges.some(change => change.type === 'forming-change' || change.type === 'formedby-change')
+  }).map(trip => trip.runID)
 
   for (let i = 0; i < 7 && updatedTrips.length; i++) {
     tripsNeedingUpdate = await getTripsRequiringUpdates(liveTimetables, updatedTrips, tdnsSeen)
