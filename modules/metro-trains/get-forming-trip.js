@@ -26,10 +26,11 @@ async function getFormingTrip(trip, isArrival, isWithinCityLoop, liveTimetables)
   let formingDestination = null, formingRunID = null
   let returnedFormingTrip
 
+  let isCityCircle = trip.routeName === 'City Circle' || (trip.runID && trip.runID.match(/^0[78]\d\d$/))
   let isCrossCityTrip = CROSS_CITY_GROUP_EAST.includes(trip.routeName) || CROSS_CITY_GROUP_WEST.includes(trip.routeName)
   let isMetroTunnelTrip = METRO_TUNNEL_GROUP_EAST.includes(trip.routeName) || METRO_TUNNEL_GROUP_WEST.includes(trip.routeName)
   let upTripInCityLoop = (isWithinCityLoop && trip.direction === 'Up')
-  let shouldShowForming = upTripInCityLoop || isCrossCityTrip || isMetroTunnelTrip
+  let shouldShowForming = (upTripInCityLoop || isCrossCityTrip || isMetroTunnelTrip) && !isCityCircle
 
   let formingTrip = trip.forming ? await liveTimetables.findDocument({
     mode: trip.mode,
