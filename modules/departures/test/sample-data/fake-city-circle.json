@@ -472,5 +472,72 @@
     "cancelled": false,
     "additional": false,
     "lastUpdated": 1752714036643
+  }, {
+    "_id": "687854e71dcc105d62ca93e0",
+    "mode": "metro train",
+    "routeGTFSID": "2-MDD",
+    "operationDays": "20250717",
+    "tripID": null,
+    "shapeID": null,
+    "block": null,
+    "gtfsDirection": null,
+    "runID": "0822",
+    "isRailReplacementBus": false,
+    "vehicle": null,
+    "direction": "Up",
+    "routeName": "Mernda",
+    "routeNumber": null,
+    "origin": "Parliament Railway Station",
+    "destination": "Flinders Street Railway Station",
+    "departureTime": "13:28",
+    "destinationArrivalTime": "13:39",
+    "stopTimings": [
+      {
+        "stopName": "Parliament Railway Station",
+        "stopNumber": null,
+        "suburb": "East Melbourne",
+        "stopGTFSID": "vic:rail:PAR",
+        "arrivalTime": "13:28",
+        "arrivalTimeMinutes": 808,
+        "departureTime": "13:28",
+        "departureTimeMinutes": 808,
+        "estimatedDepartureTime": null,
+        "scheduledDepartureTime": "2025-07-17T03:28:00.000Z",
+        "actualDepartureTimeMS": 1752722880000,
+        "platform": "1",
+        "cancelled": false,
+        "additional": false,
+        "stopConditions": {
+          "pickup": 0,
+          "dropoff": 1
+        }
+      },
+      {
+        "stopName": "Flinders Street Railway Station",
+        "stopNumber": null,
+        "suburb": "Melbourne",
+        "stopGTFSID": "vic:rail:FSS",
+        "arrivalTime": "13:39",
+        "arrivalTimeMinutes": 819,
+        "departureTime": "13:39",
+        "departureTimeMinutes": 819,
+        "estimatedDepartureTime": null,
+        "scheduledDepartureTime": "2025-07-17T03:39:00.000Z",
+        "actualDepartureTimeMS": 1752723540000,
+        "platform": "1",
+        "cancelled": false,
+        "additional": false,
+        "stopConditions": {
+          "pickup": 1,
+          "dropoff": 0
+        }
+      }
+    ],
+    "formedBy": "1881",
+    "forming": "1883",
+    "changes": [],
+    "cancelled": false,
+    "additional": false,
+    "lastUpdated": "2025-07-17T01:41:59.253Z"
   }
 ]

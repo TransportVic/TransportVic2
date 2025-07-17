@@ -15,6 +15,11 @@ const METRO_TUNNEL_GROUP_WEST = [
   'Sunbury'
 ]
 
+const CLIFTON_HILL_GROUP = [
+  'Hurstbridge',
+  'Mernda'
+]
+
 function tripCrossesCity(prevTrip, nextTrip) {
   return (CROSS_CITY_GROUP_EAST.includes(prevTrip.routeName) && CROSS_CITY_GROUP_WEST.includes(nextTrip.routeName))
     || (CROSS_CITY_GROUP_WEST.includes(prevTrip.routeName) && CROSS_CITY_GROUP_EAST.includes(nextTrip.routeName))
@@ -26,7 +31,7 @@ async function getFormingTrip(trip, isArrival, isWithinCityLoop, liveTimetables)
   let formingDestination = null, formingRunID = null
   let returnedFormingTrip
 
-  let isCityCircle = trip.routeName === 'City Circle' || (trip.runID && trip.runID.match(/^0[78]\d\d$/))
+  let isCityCircle = trip.routeName === 'City Circle' || !!(trip.runID && trip.runID.match(/^0[78]\d\d$/))
   let isCrossCityTrip = CROSS_CITY_GROUP_EAST.includes(trip.routeName) || CROSS_CITY_GROUP_WEST.includes(trip.routeName)
   let isMetroTunnelTrip = METRO_TUNNEL_GROUP_EAST.includes(trip.routeName) || METRO_TUNNEL_GROUP_WEST.includes(trip.routeName)
   let upTripInCityLoop = (isWithinCityLoop && trip.direction === 'Up')
@@ -37,6 +42,13 @@ async function getFormingTrip(trip, isArrival, isWithinCityLoop, liveTimetables)
     operationDays: trip.operationDays,
     runID: trip.forming
   }) : null
+
+  if (!shouldShowForming && CLIFTON_HILL_GROUP.includes(trip.routeName) && trip.direction === 'Down' && formingTrip) {
+    let lastNonAMEX = trip.stopTimings.findLast(stop => !stop.cancelled)
+    let isTerminatingPAR = lastNonAMEX && lastNonAMEX.stopName === 'Parliament Railway Station' && lastNonAMEX.stopName !== trip.destination
+    let formingTripsIsCCL = formingTrip.routeName === 'City Circle' || !!(formingTrip.runID && formingTrip.runID.match(/^0[78]\d\d$/))
+    shouldShowForming = isTerminatingPAR && formingTripsIsCCL && formingTrip.origin === lastNonAMEX.stopName
+  }
 
   if (isArrival) {
     returnedFormingTrip = formingTrip

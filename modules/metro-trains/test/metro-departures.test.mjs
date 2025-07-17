@@ -390,13 +390,13 @@ describe('The metro departures class', () => {
     await (await db.createCollection('live timetables')).createDocuments(clone(fakeCityCircle))
     await (await db.createCollection('stops')).createDocuments(clone(pkmStops))
 
-    let par = (await db.createCollection('stops')).findDocument({ stopName: /Parliament/ })
+    let mce = (await db.createCollection('stops')).findDocument({ stopName: /Melbourne Central/ })
 
-    let departures = await getDepartures(par, db, null, null, new Date('2025-07-17T03:07:00.000Z'))
+    let departures = await getDepartures(mce, db, null, null, new Date('2025-07-17T03:05:00.000Z'))
 
-    expect(departures[1].runID).to.equal('1881')
-    expect(departures[1].cancelled).to.be.true
-    expect(departures[1].formingTrip).to.exist
-    expect(departures[1].formingTrip.runID).to.equal('0822')
+    expect(departures[0].runID).to.equal('1881')
+    expect(departures[0].cancelled).to.be.false
+    expect(departures[0].formingTrip).to.exist
+    expect(departures[0].formingTrip.runID).to.equal('0822')
   })
 })
