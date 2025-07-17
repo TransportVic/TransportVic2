@@ -15,7 +15,7 @@ const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const GTFS_COLLECTIONS = ['gtfs-stops', 'gtfs-routes', 'gtfs-gtfs timetables', 'gtfs-timetables']
-const LAST_MODIFIED_FILE = path.join(__dirname, 'last-modified')
+const LAST_MODIFIED_FILE = path.join(__dirname, '..', 'gtfs', 'last-modified')
 const LOGGER = await createLogger('gtfs-updater', 'GTFS-UPDATE')
 
 async function discordUpdate(text) {
@@ -26,7 +26,7 @@ async function discordUpdate(text) {
 
 let lastLastModified
 try {
-  lastLastModified = await fs.readFile(LAST_MODIFIED_FILE).toString()
+  lastLastModified = (await fs.readFile(LAST_MODIFIED_FILE)).toString()
 } catch (e) {
   LOGGER.log('No lastModified, downloading data')
 }
@@ -80,13 +80,14 @@ setTimeout(() => process.exit(1), 1000 * 60 * 60 * 1.5) // Hard fail after 90 mi
 
 let gtfs = new PTVGTFS(urls.gtfsFeed)
 let lastModified = await gtfs.getPublishedDate()
-if (lastModified !== lastLastModified) {
+
+if (lastModified.toISOString() !== lastLastModified) {
   LOGGER.log('Outdated timetables: updating to revision', lastModified)
   await discordUpdate('[Updater]: Updating timetables to revision ' + lastModified)
 
   let gtfsFolder = path.join(__dirname, '..', 'gtfs')
-  try { await fs.rm(gtfsFolder, { recursive: true }) } catch (e) {}
-  try { await fs.mkdir(gtfsFolder) } catch (e) {}
+  // try { await fs.rm(gtfsFolder, { recursive: true }) } catch (e) {}
+  // try { await fs.mkdir(gtfsFolder) } catch (e) {}
   try {
     await gtfs.download(gtfsFolder)
     LOGGER.log('Finished downloading, unzipping')
