@@ -1,6 +1,10 @@
 import { expect } from 'chai'
 import { getUpcomingTrips } from '../../new-tracker/metro/metro-gtfsr-trips.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
+import { PTVAPI, StubAPI } from '@transportme/ptv-api'
+import { getDepartures } from '../../new-tracker/metro/metro-trips-departures.mjs'
+import { updateTrip } from '../trip-updater.mjs'
+
 import pkmStops from '../../new-tracker/metro/test/sample-data/pkm-stops-db.json' with { type: 'json' }
 import gtfsr_EPH from '../../new-tracker/metro/test/sample-data/gtfsr-eph.json' with { type: 'json' }
 import pkmSchTrip from '../../new-tracker/metro/test/sample-data/eph-sch.json' with { type: 'json' }
@@ -9,12 +13,10 @@ import rceStops from '../../new-tracker/metro/test/sample-data/rce-stops-db.json
 import tdR202 from '../../new-tracker/metro/test/sample-data/rce-R202.json' with { type: 'json' }
 import tdR205 from '../../new-tracker/metro/test/sample-data/rce-R205.json' with { type: 'json' }
 
-import { PTVAPI, StubAPI } from '@transportme/ptv-api'
 import td0735_0737 from '../../new-tracker/metro/test/sample-data/ccl-0735-0737-sch.json' with { type: 'json' }
 import cclDepartures from '../../new-tracker/metro/test/sample-data/ccl-departures.json' with { type: 'json' }
-import { getDepartures } from '../../new-tracker/metro/metro-trips-departures.mjs'
 
-import { updateTrip } from '../trip-updater.mjs'
+import td7509 from './sample-data/tdn-7509-math.json' with { type: 'json' }
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -1312,5 +1314,61 @@ describe('The trip updater module', () => {
     // Approx 10min saved
     expect(fss.estimatedDepartureTime.toISOString()).to.equal('2025-06-05T23:07:00.000Z')
     expect(fss.actualDepartureTime.toISOString()).to.equal('2025-06-05T23:07:00.000Z')
+  })
+
+  it.only('Sorts the stops by route stops instead of departure time to account for multiple stops having the same time or the wrong time', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(pkmStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ],
+      "cleanName" : "pakenham"
+    })
+
+    await liveTimetables.createDocument(clone(td7509))
+    let tripUpdate = {
+      operationDays: '20250712',
+      routeGTFSID: '2-PKM',
+      runID: '7509',
+      stops: [{
+        stopName: 'South Yarra Railway Station',
+        scheduledDepartureTime: new Date('2025-07-12T12:26:00.000Z')
+      }, {
+        stopName: 'Hawksburn Railway Station',
+        scheduledDepartureTime: new Date('2025-07-12T12:49:00.000Z')
+      }, {
+        stopName: 'Toorak Railway Station',
+        scheduledDepartureTime: new Date('2025-07-12T12:51:00.000Z')
+      }, {
+        stopName: 'Armadale Railway Station',
+        scheduledDepartureTime: new Date('2025-07-12T12:52:00.000Z')
+      }, {
+        stopName: 'Malvern Railway Station',
+        scheduledDepartureTime: new Date('2025-07-12T12:55:00.000Z')
+      }, {
+        stopName: 'Caulfield Railway Station',
+        scheduledDepartureTime: new Date('2025-07-12T12:33:00.000Z')
+      }]
+    }
+
+    let tripData = await updateTrip(database, tripUpdate, { skipStopCancellation: true })
+    let syrIndex = tripData.stops.findIndex(stop => stop.stopName === 'South Yarra Railway Station')
+
+    expect(syrIndex).to.not.equal(-1)
+    expect(tripData.stops[syrIndex + 1].stopName).to.equal('Hawksburn Railway Station')
+    expect(tripData.stops[syrIndex + 2].stopName).to.equal('Toorak Railway Station')
+    expect(tripData.stops[syrIndex + 3].stopName).to.equal('Armadale Railway Station')
+    expect(tripData.stops[syrIndex + 4].stopName).to.equal('Malvern Railway Station')
+    expect(tripData.stops[syrIndex + 5].stopName).to.equal('Caulfield Railway Station')
   })
 })
