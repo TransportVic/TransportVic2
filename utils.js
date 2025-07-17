@@ -20,8 +20,8 @@ let interval = setInterval(() => {
     forceLongRequest = false
     clearInterval(interval)
 
-    if (global.loggers) global.loggers.fetch.log('Stopping long request timeout')
-    else console.log('Stopping long request timeout')
+    // if (global.loggers) global.loggers.fetch.log('Stopping long request timeout')
+    // else console.log('Stopping long request timeout')
   }
 }, 3000)
 interval.unref()

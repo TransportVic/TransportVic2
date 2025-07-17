@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename)
 
 let isProd = process.env['NODE_ENV'] === 'prod'
 
-async function createLogger(logPath, name) {
+export async function createLogger(logPath, name) {
   let currentDay = utils.getYYYYMMDDNow()
   let fullPath = path.join(__dirname, 'logs', currentDay, logPath)
 
@@ -50,5 +50,3 @@ setTimeout(() => {
   createLoggers()
   setInterval(createLogger, 1000 * 60 * 60 * 24)
 }, msToMidnight)
-
-export default 0

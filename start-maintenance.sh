@@ -1,7 +1,10 @@
 #!/bin/bash
 DIRNAME=$(dirname "$0")
 
+cd $DIRNAME
+. $DIRNAME/.env
+
 sudo systemctl restart mongod
-node "$DIRNAME/timetable-updating-server/index.js" 2>&1 | tee "$DIRNAME/updater-log.txt"
+node timetable-updating-server/index.mjs
 sudo systemctl restart mongod
 sudo systemctl restart transportvic
