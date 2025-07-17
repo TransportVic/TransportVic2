@@ -13,19 +13,7 @@ async function getData(req, res, options={}) {
   return await PIDBackend.getPIDData(station, req.params.platform, options, res.db)
 }
 
-router.get('/:type/:platform/:station?', csrf, async (req, res, next) => {
-  let pidType = req.params.type
-  if (!validPIDTypes.includes(pidType)) return next()
-  getData(req, res)
-
-  res.render('mockups/fss/' + pidType, {
-    platform: req.params.platform,
-    now: utils.now(),
-    csrf: await req.csrfToken()
-  })
-})
-
-router.post('/:type/:platform/:station?', csrf, async (req, res) => {
+router.post('/:type/:platform/{:station}', csrf, async (req, res) => {
   res.json(await getData(req, res))
 })
 

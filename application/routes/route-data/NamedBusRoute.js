@@ -22,7 +22,7 @@ router.get('/:cleanName', async (req, res, next) => {
   res.redirect('/bus/route/named/' + cleanName + '/' + codedDirection)
 })
 
-router.get('/:cleanName/:directionName/:operationDateType?', async (req, res, next) => {
+router.get('/:cleanName/:directionName/{:operationDateType}', async (req, res, next) => {
   let {db} = res
   let routes = db.getCollection('routes')
   let gtfsTimetables = db.getCollection('gtfs timetables')

@@ -23,7 +23,7 @@ router.get('/:suburb/:routeNumber', async (req, res, next) => {
   res.redirect(`/bus/route/regional/${suburb}/${routeNumber}/${cleanName}`)
 })
 
-router.get('/:suburb/:routeNumber/:directionName/:operationDateType?', async (req, res, next) => {
+router.get('/:suburb/:routeNumber/:directionName/{:operationDateType}', async (req, res, next) => {
   let {db} = res
   let routes = db.getCollection('routes')
   let gtfsTimetables = db.getCollection('gtfs timetables')
