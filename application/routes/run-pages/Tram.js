@@ -6,7 +6,7 @@ const utils = require('../../../utils')
 const tramDestinations = require('../../../additional-data/tram-destinations')
 
 const determineTramRouteNumber = require('../../../modules/tram/determine-tram-route-number')
-const tramFleet = require('../../../tram-fleet')
+const tramFleet = require('../../../additional-data/tram-tracker/tram-fleet')
 const urls = require('../../../urls')
 
 async function pickBestTrip(data, db) {
