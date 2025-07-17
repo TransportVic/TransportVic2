@@ -104,7 +104,10 @@ describe('The changelog tracker', () => {
 
     let updatedTrips = [await updateTrip(db, changes[0]), await updateTrip(db, changes[1])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
-    expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.deep.equal(['X101'])
+    expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.deep.equal([
+      'X101',
+      'X999' // Note: It detects a new trip not in the DB so it forces this to be loaded in
+    ])
   })
 
   it('Sets the forming to null in a transposal involving an empty cars run', async () => {

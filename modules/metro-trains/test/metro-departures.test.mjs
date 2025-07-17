@@ -4,6 +4,7 @@ import sampleLiveTrips from '../../departures/test/sample-data/sample-live-trips
 import sampleSchTrips from '../../departures/test/sample-data/sample-sch-trips.json' with { type: 'json' }
 import alamein from '../../departures/test/sample-data/alamein.json' with { type: 'json' }
 import riversdale from '../../departures/test/sample-data/riversdale.json' with { type: 'json' }
+import fakeCityCircle from '../../departures/test/sample-data/fake-city-circle.json' with { type: 'json' }
 
 import mtpTrips from '../../departures/test/sample-data/mtp-through-running.json' with { type: 'json' }
 import ccyTrips from '../../departures/test/sample-data/fkn-wer-wil-through-running.json' with { type: 'json' }
