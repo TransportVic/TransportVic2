@@ -516,6 +516,32 @@ describe('The LiveTimetable schema', () => {
     })
   })
 
+  it('Updates the origin/destination in the tracker data if the trip is altered', () => {
+    let timetable = LiveTimetable.fromDatabase(mdd1000)
+    // Cancel MDD-SMH, originates EPP now
+    for (let i = 0; i < 4; i++) timetable.stops[i].cancelled = true
+    // Cancel CWD-FSS, terminates VPK now
+    for (let i = timetable.stops.length - 5; i < timetable.stops.length; i++) timetable.stops[i].cancelled = true
+    timetable.consist = ['189M', '1395T', '190M']
+
+    expect(timetable.toTrackerDatabase()).to.deep.equal({
+      date: '20250410',
+      routeGTFSID: '2-MDD',
+      routeName: 'Mernda',
+      runID: '1000',
+      origin: 'Epping',
+      departureTime: '04:16',
+      destination: 'Victoria Park',
+      destinationArrivalTime: '04:47',
+      consist: ['189M', '1395T', '190M']
+    })
+
+    expect(timetable.getTrackerDatabaseKey()).to.deep.equal({
+      date: '20250410',
+      runID: '1000'
+    })
+  })
+
   it('Should not return a tracker database entry if no consist data is available', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
 
