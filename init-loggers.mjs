@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename)
 
 let isProd = process.env['NODE_ENV'] === 'prod'
 
-export async function createLogger(logPath, name) {
+export default async function createLogger(logPath, name) {
   let currentDay = utils.getYYYYMMDDNow()
   let fullPath = path.join(__dirname, 'logs', currentDay, logPath)
 

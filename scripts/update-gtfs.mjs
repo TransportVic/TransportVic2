@@ -9,7 +9,7 @@ import utils from '../utils.js'
 import config from '../config.json' with { type: 'json' }
 import urls from '../urls.json' with { type: 'json' }
 import postDiscordUpdate from '../modules/discord-integration.js'
-import { createLogger } from '../init-loggers.mjs'
+import createLogger from '../init-loggers.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
