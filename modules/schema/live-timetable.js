@@ -429,15 +429,33 @@ module.exports = class LiveTimetable {
 
   toTrackerDatabase() {
     if (!this.#vehicle) return null
+
+    let origin = this.stops.find(stop => !stop.cancelled)
+    let destination = this.stops.findLast(stop => !stop.cancelled)
+
+    let originStop, departureTime, destinationStop, arrivalTime
+
+    if (!origin || !destination || (origin === destination)) {
+      originStop = this.origin
+      departureTime = this.departureTime
+      destinationStop = this.destination
+      arrivalTime = this.destinationArrivalTime
+    } else {
+      originStop = origin.stopName
+      departureTime = origin.departureTime
+      destinationStop = destination.stopName
+      arrivalTime = destination.arrivalTime
+    }
+
     let returnData = {
       date: this.operationDay,
       routeGTFSID: this.routeGTFSID,
       routeName: this.routeName,
       runID: this.#runID,
-      origin: this.origin.slice(0, -16),
-      destination: this.destination.slice(0, -16),
-      departureTime: this.departureTime,
-      destinationArrivalTime: this.destinationArrivalTime,
+      origin: originStop.slice(0, -16),
+      destination: destinationStop.slice(0, -16),
+      departureTime: departureTime,
+      destinationArrivalTime: arrivalTime,
       consist: this.#vehicle.consist
     }
 

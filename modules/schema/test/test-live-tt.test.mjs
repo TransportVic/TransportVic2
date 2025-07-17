@@ -522,7 +522,7 @@ describe('The LiveTimetable schema', () => {
     for (let i = 0; i < 4; i++) timetable.stops[i].cancelled = true
     // Cancel CWD-FSS, terminates VPK now
     for (let i = timetable.stops.length - 5; i < timetable.stops.length; i++) timetable.stops[i].cancelled = true
-    timetable.consist = ['189M', '1395T', '190M']
+    timetable.consist = ['189M', '1395T', '190M', '857M', '1638T', '876M']
 
     expect(timetable.toTrackerDatabase()).to.deep.equal({
       date: '20250410',
@@ -533,7 +533,7 @@ describe('The LiveTimetable schema', () => {
       departureTime: '04:16',
       destination: 'Victoria Park',
       destinationArrivalTime: '04:47',
-      consist: ['189M', '1395T', '190M']
+      consist: ['189M', '1395T', '190M', '857M', '1638T', '876M']
     })
 
     expect(timetable.getTrackerDatabaseKey()).to.deep.equal({
