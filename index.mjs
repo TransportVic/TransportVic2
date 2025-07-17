@@ -10,7 +10,7 @@ let mainServer = new MainServer()
 await mainServer.connectToDatabase()
 
 mainServer.configMiddleware()
-mainServer.configRoutes()
+await mainServer.configRoutes()
 
 mainServer.app.listen(config.httpPort)
 
