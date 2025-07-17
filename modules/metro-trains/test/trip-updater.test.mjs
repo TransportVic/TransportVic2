@@ -1316,7 +1316,7 @@ describe('The trip updater module', () => {
     expect(fss.actualDepartureTime.toISOString()).to.equal('2025-06-05T23:07:00.000Z')
   })
 
-  it.only('Sorts the stops by route stops instead of departure time to account for multiple stops having the same time or the wrong time', async () => {
+  it('Sorts the stops by route stops instead of departure time to account for multiple stops having the same time or the wrong time', async () => {
     let database = new LokiDatabaseConnection('test-db')
     let stops = await database.createCollection('stops')
     let routes = await database.createCollection('routes')

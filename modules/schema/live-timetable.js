@@ -1,4 +1,5 @@
 const utils = require('../../utils')
+const allRouteStops = require('../../additional-data/metro-data/metro-routes.json')
 const metroTypes = require('../../additional-data/metro-tracker/metro-types.json')
 
 class TimetableStop {
@@ -467,8 +468,34 @@ module.exports = class LiveTimetable {
     return returnData
   }
 
+  #sortStopsByTimetable() {
+    return this.#stops = this.#stops.sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+  }
+
   sortStops() {
-    this.#stops = this.#stops.sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+    let routeStops = allRouteStops[this.#routeName]
+    if (!routeStops) return this.#sortStopsByTimetable()
+
+    let hasMissingStop = false
+    let stopIndexes = this.#stops.reduce((acc, stop) => {
+      let index = routeStops.indexOf(stop.stopName.slice(0, -16))
+      if (index === -1) hasMissingStop = true
+      acc[stop.stopName] = index
+      return acc
+    }, {})
+
+    if (hasMissingStop) return this.#sortStopsByTimetable()
+
+    let isUp = this.#direction === 'Up'
+    if (isUp) {
+      this.#stops.sort((prev, next) => {
+        return stopIndexes[prev.stopName] - stopIndexes[next.stopName]
+      })
+    } else {
+      this.#stops.sort((prev, next) => {
+        return stopIndexes[next.stopName] - stopIndexes[prev.stopName]
+      })
+    }
   }
 
   getStopNames() {
