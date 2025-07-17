@@ -1,6 +1,6 @@
 DIRNAME=$(dirname "$0")
 
-cd $DIRNAME
+cd $DIRNAME/..
 
 rm -rf public
 mkdir public
@@ -14,4 +14,4 @@ cp -R application/static/images public/static/
 cp -R application/static/seized public/static/
 
 npm i uglify-js
-node minify-static-js.mjs
+node scripts/minify-static-js.mjs

@@ -26,9 +26,9 @@ async function walkDir(dir) {
   return await walk(dir)
 }
 
-let originalPath = path.join(__dirname, 'application', 'static', 'scripts')
+let originalPath = path.join(__dirname, '..', 'application', 'static', 'scripts')
 const allJSFiles = await walkDir(originalPath)
-const publicPath = path.join(__dirname, 'public', 'static', 'scripts')
+const publicPath = path.join(__dirname, '..', 'public', 'static', 'scripts')
 await fs.mkdir(publicPath)
 
 for (let folder of allJSFiles.filter(f => !f.file)) {
