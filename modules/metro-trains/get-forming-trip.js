@@ -27,6 +27,17 @@ function tripCrossesCity(prevTrip, nextTrip) {
     || (METRO_TUNNEL_GROUP_WEST.includes(prevTrip.routeName) && METRO_TUNNEL_GROUP_EAST.includes(nextTrip.routeName))
 }
 
+function isCHLFormingCCLSpecialCase(trip, formingTrip) {
+  if (CLIFTON_HILL_GROUP.includes(trip.routeName) && trip.direction === 'Down' && formingTrip) {
+    let lastNonAMEX = trip.stopTimings.findLast(stop => !stop.cancelled)
+    let isTerminatingPAR = lastNonAMEX && lastNonAMEX.stopName === 'Parliament Railway Station' && lastNonAMEX.stopName !== trip.destination
+    let formingTripsIsCCL = formingTrip.routeName === 'City Circle' || !!(formingTrip.runID && formingTrip.runID.match(/^0[78]\d\d$/))
+    return isTerminatingPAR && formingTripsIsCCL && formingTrip.origin === lastNonAMEX.stopName
+  }
+
+  return false
+}
+
 async function getFormingTrip(trip, isArrival, isWithinCityLoop, liveTimetables) {
   let formingDestination = null, formingRunID = null
   let returnedFormingTrip
@@ -43,11 +54,8 @@ async function getFormingTrip(trip, isArrival, isWithinCityLoop, liveTimetables)
     runID: trip.forming
   }) : null
 
-  if (!shouldShowForming && CLIFTON_HILL_GROUP.includes(trip.routeName) && trip.direction === 'Down' && formingTrip) {
-    let lastNonAMEX = trip.stopTimings.findLast(stop => !stop.cancelled)
-    let isTerminatingPAR = lastNonAMEX && lastNonAMEX.stopName === 'Parliament Railway Station' && lastNonAMEX.stopName !== trip.destination
-    let formingTripsIsCCL = formingTrip.routeName === 'City Circle' || !!(formingTrip.runID && formingTrip.runID.match(/^0[78]\d\d$/))
-    shouldShowForming = isTerminatingPAR && formingTripsIsCCL && formingTrip.origin === lastNonAMEX.stopName
+  if (!shouldShowForming) {
+    shouldShowForming = isCHLFormingCCLSpecialCase(trip, formingTrip)
   }
 
   if (isArrival) {
@@ -74,5 +82,6 @@ async function getFormingTrip(trip, isArrival, isWithinCityLoop, liveTimetables)
 
 module.exports = {
   tripCrossesCity,
-  getFormingTrip
+  getFormingTrip,
+  isCHLFormingCCLSpecialCase
 }
