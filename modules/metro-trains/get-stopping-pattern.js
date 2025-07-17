@@ -36,5 +36,11 @@ module.exports = async function getTripUpdateData(runID, ptvAPI, { date = new Da
     tripData.consist = parseConsistFromMotors(trip.runData.vehicle.motorCars, metroConsists)
   }
 
+  let lastStop = tripData.stops[tripData.stops.length - 1]
+  if (lastStop.stopName === 'Flinders Street Railway Station' && trip.formingStops.length) {
+    lastStop.estimatedDepartureTime = null
+    // lastStop.scheduledDepartureTime = null
+  }
+
   return tripData
 }
