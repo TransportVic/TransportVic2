@@ -1214,7 +1214,7 @@ describe('The trip updater module', () => {
 
     let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
     gtfsrTrips[0].stops.splice(-1, 1) // Note that train is 1min late out of SSS
-    let tripData = await updateTrip(database, gtfsrTrips[0])
+    let tripData = await updateTrip(database, gtfsrTrips[0], { skipStopCancellation: true })
 
     let fss = tripData.stops[tripData.stops.length - 1]
     expect(fss.stopName).to.equal('Flinders Street Railway Station')

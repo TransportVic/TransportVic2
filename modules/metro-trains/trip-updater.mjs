@@ -211,10 +211,10 @@ export async function updateTrip(db, trip, {
     if (secondLastStop && stopVisits[secondLastStop.stopName] && !stopVisits[lastStop.stopName] && secondLastStop.estimatedDepartureTime) {
       let secondLastDelay = secondLastStop.estimatedDepartureTime.diff(secondLastStop.scheduledDepartureTime, 'minutes')
       lastStopDelay = secondLastDelay
-    } else if (secondLastStop.cancelled && !lastStop.cancelled && lastStop.stopName === 'Flinders Street Railway Station') {
-      let secondLastStop = timetable.stops.findLast((stop, i) => !stop.cancelled && i < lastNonAMEXStop)
-      if (secondLastStop.stopName === 'Richmond Railway Station') {
-        let rmdDelay = secondLastStop.estimatedDepartureTime.diff(secondLastStop.scheduledDepartureTime, 'minutes')
+    } else if (secondLastStop && secondLastStop.cancelled && !lastStop.cancelled && lastStop.stopName === 'Flinders Street Railway Station') {
+      let secondLastStopNonAMEX = timetable.stops.findLast((stop, i) => !stop.cancelled && i < lastNonAMEXStop)
+      if (secondLastStopNonAMEX && secondLastStopNonAMEX.stopName === 'Richmond Railway Station') {
+        let rmdDelay = secondLastStopNonAMEX.estimatedDepartureTime.diff(secondLastStopNonAMEX.scheduledDepartureTime, 'minutes')
         lastStopDelay = rmdDelay - 4
       }
     }
