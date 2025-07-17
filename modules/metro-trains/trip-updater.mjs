@@ -286,6 +286,8 @@ async function createTrip(db, trip, updateTime) {
     timetable.updateStopByName(stopData.stopName, updatedData, matchingCriteria)
   }
 
+  timetable.sortStops()
+
   timetable.stops[0].allowDropoff = false
   timetable.stops[trip.stops.length - 1].allowPickup = false
 

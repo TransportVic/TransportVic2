@@ -1372,7 +1372,7 @@ describe('The trip updater module', () => {
       await updateTrip(database, tripUpdate, { skipStopCancellation: true }),
       await updateTrip(database, tripUpdate2, { skipStopCancellation: true })
     ]
-    
+
     for (let tripData of updatedTrips) {
       let syrIndex = tripData.stops.findIndex(stop => stop.stopName === 'South Yarra Railway Station')
 
