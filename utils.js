@@ -681,5 +681,3 @@ module.exports = {
     return chunks
   }
 }
-
-require('./init-loggers.mjs')
