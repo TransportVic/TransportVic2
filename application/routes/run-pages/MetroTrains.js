@@ -1,7 +1,7 @@
 const express = require('express')
 const router = new express.Router()
 const utils = require('../../../utils.js')
-const { tripCrossesCity } = require('../../../modules/metro-trains/get-forming-trip.js')
+const { tripCrossesCity, isCHLFormingCCLSpecialCase } = require('../../../modules/metro-trains/get-forming-trip.js')
 
 const MURL = [
   'Parliament',
@@ -127,6 +127,8 @@ async function getTripData(req, res) {
         showFormedBy.stopTimings = showFormedBy.stopTimings.filter(stop => CITY_LOOP.includes(stop.stopName) || stop.stopName === 'Flinders Street Railway Station')
       }
     }
+  } else {
+    if (isCHLFormingCCLSpecialCase(trip, forming)) showForming = forming
   }
 
   if (!showFormedBy && !showForming) {
