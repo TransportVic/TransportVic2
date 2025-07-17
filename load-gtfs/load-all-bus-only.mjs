@@ -30,10 +30,10 @@ await runNode('bus/load-flexiride-data.mjs')
 
 await runNode('load-all-post.mjs')
 
-await runNode('extra/load-search-query.js')
-await runNode('extra/load-route-suburbs.js')
+await runNode('extra/load-search-query.mjs')
+await runNode('extra/load-route-suburbs.mjs')
 
-await runNode('../additional-data/bus-data/geospatial/generate-bus-groupings.js')
+await runNode('bus/generate-regional-bus-groupings.mjs')
 await runNode('bus/load-regional-bus-operators.js')
 
 await runNode('move-database.mjs')
