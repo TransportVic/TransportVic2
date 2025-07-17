@@ -215,7 +215,7 @@ export async function updateTrip(db, trip, {
       let secondLastStopNonAMEX = timetable.stops.findLast((stop, i) => !stop.cancelled && i < lastNonAMEXStop)
       if (secondLastStopNonAMEX && secondLastStopNonAMEX.stopName === 'Richmond Railway Station') {
         let rmdDelay = secondLastStopNonAMEX.estimatedDepartureTime.diff(secondLastStopNonAMEX.scheduledDepartureTime, 'minutes')
-        lastStopDelay = rmdDelay - 4
+        lastStopDelay = rmdDelay - 10
       }
     }
 

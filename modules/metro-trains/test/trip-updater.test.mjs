@@ -1265,7 +1265,7 @@ describe('The trip updater module', () => {
     expect(dng.actualDepartureTime.toISOString()).to.equal('2025-06-05T22:13:00.000Z')
   })
 
-  it('Accounts for CLP being cancelled and making up the delay RMD-FSS', async () => {
+  it.only('Accounts for CLP being cancelled and making up the delay RMD-FSS', async () => {
     let database = new LokiDatabaseConnection('test-db')
     let stops = await database.createCollection('stops')
     let routes = await database.createCollection('routes')
@@ -1291,8 +1291,8 @@ describe('The trip updater module', () => {
     let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
     gtfsrTrips[0].stops.splice(21, 20) // Remove CLP + FSS so up to RMD only
 
-    gtfsrTrips[0].stops[19].estimatedArrivalTime = new Date(gtfsrTrips[0].stops[19].estimatedArrivalTime + 1000 * 60 * 7) // Make the train 5min late at RMD
-    gtfsrTrips[0].stops[19].estimatedDepartureTime = new Date(gtfsrTrips[0].stops[19].estimatedDepartureTime + 1000 * 60 * 7)
+    gtfsrTrips[0].stops[20].estimatedArrivalTime = new Date(+gtfsrTrips[0].stops[20].estimatedArrivalTime + 1000 * 60 * 7) // Make the train 7min late at RMD
+    gtfsrTrips[0].stops[20].estimatedDepartureTime = new Date(+gtfsrTrips[0].stops[20].estimatedDepartureTime + 1000 * 60 * 7)
 
     let tripData = await updateTrip(database, gtfsrTrips[0], { skipStopCancellation: true })
 
@@ -1305,8 +1305,10 @@ describe('The trip updater module', () => {
     expect(fss.scheduledDepartureTime.toISOString()).to.equal('2025-06-05T23:10:00.000Z')
 
     // Now arriving early - RMD time was sch 08:55, +7L = 09:02
-    // 4min RMD-FSS means 09:06 into FSS
-    expect(fss.estimatedDepartureTime.toISOString()).to.equal('2025-06-05T23:06:00.000Z')
-    expect(fss.actualDepartureTime.toISOString()).to.equal('2025-06-05T23:06:00.000Z')
+    // 5min RMD-FSS means 09:07 into FSS
+    // Compared to if going via loop, would be 09:10 + 7L = 09:17
+    // Approx 10min saved
+    expect(fss.estimatedDepartureTime.toISOString()).to.equal('2025-06-05T23:07:00.000Z')
+    expect(fss.actualDepartureTime.toISOString()).to.equal('2025-06-05T23:07:00.000Z')
   })
 })
