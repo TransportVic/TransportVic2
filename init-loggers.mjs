@@ -1,36 +1,54 @@
 import { FileLogger, ConsoleLogger } from '@transportme/logger'
 import path from 'path'
 import url from 'url'
+import utils from './utils.js'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 let isProd = process.env['NODE_ENV'] === 'prod'
-async function createLogger(path, name) {
+
+async function createLogger(logPath, name) {
+  let currentDay = utils.getYYYYMMDDNow()
+  let fullPath = path.join(__dirname, 'logs', currentDay, logPath)
+
   if (isProd) {
-    let logger = new FileLogger(path, name)
+    let logger = new FileLogger(fullPath, name)
     await logger.init()
     return logger
   }
   else return new ConsoleLogger(name)
 }
 
-export default global.loggers = {
-  http: await createLogger(path.join(__dirname, 'logs', 'http'), 'HTTP'),
-  mail: await createLogger(path.join(__dirname, 'logs', 'mail'), 'MAIL'),
-  spamMail: await createLogger(path.join(__dirname, 'logs', 'spam-mail'), 'SPAM-MAIL'),
-  fetch: await createLogger(path.join(__dirname, 'logs', 'fetch'), 'FETCH'),
-  trackers: {
-    bus: await createLogger(path.join(__dirname, 'logs', 'trackers', 'bus'), 'BUS'),
-    tram: await createLogger(path.join(__dirname, 'logs', 'trackers', 'tram'), 'TRAM'),
-    vline: await createLogger(path.join(__dirname, 'logs', 'trackers', 'vline'), 'VLINE'),
-    vlineR: await createLogger(path.join(__dirname, 'logs', 'trackers', 'vline-realtime'), 'VLINE-R'),
-    metro: await createLogger(path.join(__dirname, 'logs', 'trackers', 'metro'), 'METRO'),
-    metroNotify: await createLogger(path.join(__dirname, 'logs', 'trackers', 'metro'), 'METRO-NOTIFY'),
-    xpt: await createLogger(path.join(__dirname, 'logs', 'trackers', 'xpt'), 'XPT'),
-    ccl: await createLogger(path.join(__dirname, 'logs', 'trackers', 'ccl'), 'CCL')
-  },
-  mockups: await createLogger(path.join(__dirname, 'logs', 'mockups'), 'MOCKUPS'),
-  error: await createLogger(path.join(__dirname, 'logs', 'errors'), 'ERROR'),
-  general: await createLogger(path.join(__dirname, 'logs', 'general'), 'GENERAL')
+async function createLoggers() {
+  global.loggers = {
+    http: await createLogger('http', 'HTTP'),
+    mail: await createLogger('mail', 'MAIL'),
+    spamMail: await createLogger('spam-mail', 'SPAM-MAIL'),
+    fetch: await createLogger('fetch', 'FETCH'),
+    trackers: {
+      bus: await createLogger('trackers/bus', 'BUS'),
+      tram: await createLogger('trackers/tram', 'TRAM'),
+      vline: await createLogger('trackers/vline', 'VLINE'),
+      vlineR: await createLogger('trackers/vline-realtime', 'VLINE-R'),
+      metro: await createLogger('trackers/metro', 'METRO'),
+      metroNotify: await createLogger('trackers/metro', 'METRO-NOTIFY'),
+      xpt: await createLogger('trackers/xpt', 'XPT'),
+      ccl: await createLogger('trackers/ccl', 'CCL')
+    },
+    mockups: await createLogger('mockups', 'MOCKUPS'),
+    error: await createLogger('errors', 'ERROR'),
+    general: await createLogger('general', 'GENERAL')
+  }
 }
+
+await createLoggers()
+
+let midnight = utils.now().endOf('day')
+let msToMidnight = midnight.diff(utils.now())
+setTimeout(() => {
+  createLoggers()
+  setInterval(createLogger, 1000 * 60 * 60 * 24)
+}, msToMidnight)
+
+export default 0
