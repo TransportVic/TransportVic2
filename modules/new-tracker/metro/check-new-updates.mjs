@@ -21,10 +21,10 @@ async function checkFormingChange(trip, change, liveTimetables, trips, updates) 
 
   if (change.type === 'forming-change') {
     if (oldTrip && oldTrip.formedBy === trip.runID) updates.push({ operationDays: oldTrip.operationDays, runID: oldTrip.runID, setNull: 'formedBy', badVal: trip.runID })
-    if (!newTrip || (newTrip && newTrip.formedBy !== trip.runID)) updates.push({ operationDays: trip.operationDay, runID: change.newVal})
+    if ((!newTrip && change.newVal) || (newTrip && newTrip.formedBy !== trip.runID)) updates.push({ operationDays: trip.operationDay, runID: change.newVal})
   } else if (change.type === 'formedby-change') {
     if (oldTrip && oldTrip.forming === trip.runID) updates.push({ operationDays: oldTrip.operationDays, runID: oldTrip.runID, setNull: 'forming', badVal: trip.runID  })
-    if (!newTrip || (newTrip && newTrip.forming !== trip.runID)) updates.push({ operationDays: trip.operationDay, runID: change.newVal })
+    if ((!newTrip && change.newVal) || (newTrip && newTrip.forming !== trip.runID)) updates.push({ operationDays: trip.operationDay, runID: change.newVal })
   }
 }
 
