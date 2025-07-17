@@ -1,6 +1,7 @@
 const getStoppingPatternData = require('./get-stopping-pattern.js')
 const metroConsists = require('../../additional-data/metro-tracker/metro-consists.json')
 const { parseConsistFromMotors } = require('./fleet-parser.js')
+const async = require('async')
 
 module.exports = async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = [], maxResults = 5, backwards = false } = {}) {
   let liveTimetables = await db.getCollection('live timetables')
@@ -22,14 +23,15 @@ module.exports = async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = 
   let updatedTrips = trains.filter(dep => dep.runData.updated)
   let regularTrips = trains.filter(dep => !dep.runData.updated)
 
-  for (let departure of updatedTrips) {
-    if (skipTDN.includes(departure.runData.tdn)) continue
+  await async.forEachLimit(updatedTrips, 7, async departure => {
+    if (skipTDN.includes(departure.runData.tdn)) return
     tripUpdates[departure.runData.tdn] = {
       type: 'pattern',
       data: await getStoppingPatternData(departure.runData.tdn, ptvAPI)
     }
-  }
-  for (let departure of regularTrips) {
+  })
+
+  await async.forEachLimit(regularTrips, 7, async departure => {
     let timetable = await liveTimetables.findDocument({
       mode: 'metro train',
       runID: departure.runData.tdn,
@@ -71,7 +73,7 @@ module.exports = async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = 
         data: await getStoppingPatternData(departure.runData.tdn, ptvAPI)
       }
     }
-  }
+  })
 
   return Object.values(tripUpdates)
 }
