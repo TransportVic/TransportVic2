@@ -207,8 +207,10 @@ export async function updateTrip(db, trip, {
     }
 
     let lastStopDelay = null
+    let lastStopHasETA = trip.stops && trip.stops.length > 1
+      && trip.stops[trip.stops.length - 1].stopName === lastNonAMEXStop.stopName
+      && (trip.stops[trip.stops.length - 1].estimatedArrivalTime || trip.stops[trip.stops.length - 1].estimatedDepartureTime)
 
-    let lastStopHasETA = trip.stops && (trip.stops[trip.stops.length - 1].estimatedArrivalTime || trip.stops[trip.stops.length - 1].estimatedDepartureTime)
     if (secondLastStop && stopVisits[secondLastStop.stopName] && !lastStopHasETA && secondLastStop.estimatedDepartureTime) {
       let secondLastDelay = secondLastStop.estimatedDepartureTime.diff(secondLastStop.scheduledDepartureTime, 'minutes')
       lastStopDelay = secondLastDelay
@@ -218,8 +220,8 @@ export async function updateTrip(db, trip, {
         let rmdDelay = secondLastStopNonAMEX.estimatedDepartureTime.diff(secondLastStopNonAMEX.scheduledDepartureTime, 'minutes')
         lastStopDelay = rmdDelay - 10
       } else if (secondLastStopNonAMEX && secondLastStopNonAMEX.stopName === 'North Melbourne Railway Station') {
-        let rmdDelay = secondLastStopNonAMEX.estimatedDepartureTime.diff(secondLastStopNonAMEX.scheduledDepartureTime, 'minutes')
-        lastStopDelay = rmdDelay - 3
+        let nmeDelay = secondLastStopNonAMEX.estimatedDepartureTime.diff(secondLastStopNonAMEX.scheduledDepartureTime, 'minutes')
+        lastStopDelay = nmeDelay - 3
       }
     }
 

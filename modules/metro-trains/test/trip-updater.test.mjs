@@ -1012,7 +1012,8 @@ describe('The trip updater module', () => {
     expect(td0735.stops[5].departureTime).to.equal('11:05')
     expect(td0735.stops[5].departureTimeMinutes).to.equal(11*60 + 5)
     expect(td0735.stops[5].scheduledDepartureTime.toISOString()).to.equal('2025-06-14T01:05:00.000Z')
-    expect(td0735.stops[5].estimatedDepartureTime).to.not.exist
+    // Note that estimated departure for last stop has delay -2L copied from second last stop (PAR)
+    expect(td0735.stops[5].estimatedDepartureTime.toISOString()).to.equal('2025-06-14T01:07:00.000Z')
 
     let td0737 = await updateTrip(database, tripData[1])
 
@@ -1026,7 +1027,8 @@ describe('The trip updater module', () => {
     expect(td0737.stops[5].departureTime).to.equal('11:25')
     expect(td0737.stops[5].departureTimeMinutes).to.equal(11*60 + 25)
     expect(td0737.stops[5].scheduledDepartureTime.toISOString()).to.equal('2025-06-14T01:25:00.000Z')
-    expect(td0737.stops[5].estimatedDepartureTime).to.not.exist
+    // Note that estimated departure for last stop has delay -2L copied from second last stop (PAR)
+    expect(td0737.stops[5].estimatedDepartureTime.toISOString()).to.equal('2025-06-14T01:27:00.000Z')
   })
 
   it('Should not update the trip if the provided scheduled start time does not match', async () => {
