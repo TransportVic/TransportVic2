@@ -57,7 +57,7 @@ div.timing-list
 
   -
     let lastNonAMEX = trip.stopTimings.findLastIndex(stop => !stop.cancelled)
-    let tripEarlyTermination = lastNonAMEX >= 0 && trip.stopTimings.every((stop, i) => i <= lastNonAMEX || stop.cancelled)
+    let tripEarlyTermination = lastNonAMEX >= 0 && lastNonAMEX !== trip.stopTimings.length - 1 && trip.stopTimings.every((stop, i) => i <= lastNonAMEX || stop.cancelled)
 
   if tripEarlyTermination && trip.formingTrip
     for stop in trip.stopTimings.slice(0, lastNonAMEX + 1)
