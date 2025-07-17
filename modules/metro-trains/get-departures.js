@@ -38,6 +38,8 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
     if (currentStop.cancelled && !trip.cancelled) {
       updatedOrigin = trueOrigin
       updatedDestination = trueDestination
+    } else if (trip.cancelled) {
+      updatedDestination = trueDestination
     }
 
     if (updatedOrigin !== trueOrigin) origin = updatedOrigin

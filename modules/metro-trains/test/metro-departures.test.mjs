@@ -112,7 +112,7 @@ describe('The metro departures class', () => {
     expect(departures[0].trueDestination).to.equal('Riversdale')
   })
 
-  it.only('???', async () => {
+  it('Returns the original destination if the entire trip was cancelled', async () => {
     let db = new LokiDatabaseConnection()
     db.connect()
 
