@@ -1,4 +1,5 @@
 import express from 'express'
+import createServer from '@transportme/server-template'
 import bodyParser from 'body-parser'
 import compression from 'compression'
 import url from 'url'
@@ -14,6 +15,7 @@ import DatabaseConnection from '../database/DatabaseConnection.js'
 
 import config from '../config.json' with { type: 'json' }
 import modules from '../modules.json' with { type: 'json' }
+import MongoDatabaseConnection from '../database/mongo/MongoDatabaseConnection.js'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -34,107 +36,47 @@ let serverStarted = false
 
 export default class MainServer {
   constructor () {
-    this.app = express()
-    this.app.use((req, res, next) => {
-      if (serverStarted) return next()
-      else res.type('text').end('Server starting, please wait...')
-    })
-    this.initDatabaseConnection(this.app, () => {
-      serverStarted = true
-      this.configMiddleware(this.app)
-      this.configRoutes(this.app)
-    })
-  }
-
-  initDatabaseConnection (app, callback) {
-    this.database = new DatabaseConnection(config.databaseURL, config.databaseName)
-    this.database.connect(async err => {
-      app.use((req, res, next) => {
-        res.db = this.database
-        next()
-      })
-
-      callback()
-    })
-  }
-
-  configMiddleware (app) {
-    app.use((req, res, next) => {
-      let reqURL = req.url + ''
-      let start = +new Date()
-
-      let endResponse = res.end
-      res.end = (x, y, z) => {
-        endResponse.bind(res, x, y, z)()
-        let end = +new Date()
-        let diff = end - start
-
-        if (!reqURL.startsWith('/static/')) {
-          let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
-          global.loggers.http.info(`${req.method} ${reqURL}${res.loggingData ? ` ${res.loggingData}` : ''} ${diff} ${ip}`)
-        }
+    this.app = createServer(path.join(__dirname, '..', 'application'), {
+      appName: 'TransportVic',
+      requestEndCallback: (req, res, { time }) => {
+        let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+        global.loggers.http.info(`${req.method} ${req.urlData.pathname}${res.loggingData ? ` ${res.loggingData}` : ''} ${time} ${ip}`)
       }
+    })
+  }
 
+  async connectToDatabase() {
+    this.database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+    await this.database.connect({})
+    this.app.use((req, res, next) => {
+      res.db = this.database
       next()
     })
+  }
 
-    app.use(compression({
-      level: 9,
-      threshold: 512
-    }))
-
-    if (process.env['NODE_ENV'] === 'prod') app.use(minify({
-      uglifyJsModule: uglifyJS,
-      errorHandler: console.log
-    }))
+  configMiddleware() {
+    let app = this.app
 
     function filter(prefix, req, next) {
       let host = req.headers.host || ''
       if (host.startsWith(prefix)) return true
       else return void next()
     }
-
+    
+    let staticBase = config.staticBase || ''
     app.use((req, res, next) => {
+      res.locals.staticBase = staticBase
       if (filter('vic.', req, next)) res.redirect(301, `https://transportvic.me${req.url}`)
     })
 
-    app.use('/static', express.static(path.join(__dirname, '../application/static'), {
-      maxAge: 1000 * 60 * 60 * 24
-    }))
-
-    app.use(bodyParser.urlencoded({ extended: true }))
-    app.use(bodyParser.json())
-    app.use(bodyParser.text())
-
-    let staticBase = config.staticBase || ''
     app.get('/static-server', (req, res) => {
       res.setHeader('Cache-Control', 'max-age=604800')
       res.end(staticBase)
     })
-
-    app.use((req, res, next) => {
-      res.locals.staticBase = staticBase
-
-      res.setHeader('Strict-Transport-Security', 'max-age=31536000')
-
-      res.setHeader('X-Xss-Protection', '1; mode=block')
-      res.setHeader('X-Content-Type-Options', 'nosniff')
-      res.setHeader('X-Download-Options', 'noopen')
-
-      res.setHeader('Referrer-Policy', 'no-referrer')
-      res.setHeader('Feature-Policy', "geolocation 'self'; document-write 'none'; microphone 'none'; camera 'none';")
-
-      next()
-    })
-
-    app.set('views', path.join(__dirname, '../application/views'))
-    app.set('view engine', 'pug')
-    if (process.NODE_ENV === 'prod') app.set('view cache', true)
-    app.set('x-powered-by', false)
-    app.set('strict routing', false)
   }
 
-  async configRoutes (app) {
+  async configRoutes () {
+    let app = this.app
     // app.use('/metro/tracker', (req, res, next) => {
     //   if (req.headers.authorization) {
     //     res.loggingData = `${Buffer.from((req.headers.authorization || '').slice(6), 'base64').toString('utf-8')} ${req.headers['user-agent']}`
@@ -276,7 +218,8 @@ export default class MainServer {
       try {
         let routerData = routers[routerName]
         if (routerData.path && !routerData.enable) {
-          return global.loggers.general.info('Module', routerName, 'has been disabled')
+          global.loggers.general.info('Module', routerName, 'has been disabled')
+          continue
         }
 
         let routerPath = routerData.path || routerData

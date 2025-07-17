@@ -5,8 +5,13 @@ import config from './config.json' with { type: 'json' }
 import MainServer from './server/MainServer.mjs'
 import vlineMail from './modules/vline-mail/index.js'
 
-setTimeout(() => {
+setTimeout(async () => {
   let mainServer = new MainServer()
+  await mainServer.connectToDatabase()
+
+  mainServer.configMiddleware(mainServer)
+  mainServer.configRoutes(mainServer)
+
   mainServer.app.listen(config.httpPort)
 
   global.loggers.general.info('Server Started')
