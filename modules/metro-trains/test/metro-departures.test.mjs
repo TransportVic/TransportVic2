@@ -368,4 +368,21 @@ describe('The metro departures class', () => {
     expect(departures[0].runID).to.equal('2315')
     expect(departures[0].cancelled).to.be.true
   })
+
+  it('Does not show the forming trip on a City Circle (or similar) service', async () => {
+    let db = new LokiDatabaseConnection()
+    await (await db.createCollection('live timetables')).createDocuments(clone(fakeCityCircle))
+    await (await db.createCollection('stops')).createDocuments(clone(pkmStops))
+
+    let par = (await db.createCollection('stops')).findDocument({ stopName: /Parliament/ })
+
+    let departures = await getDepartures(par, db, null, null, new Date('2025-07-17T03:07:00.000Z'))
+
+    expect(departures[0].runID).to.equal('0820')
+    expect(departures[0].formingTrip).to.not.exist
+
+    expect(departures[1].runID).to.equal('1881')
+    expect(departures[1].cancelled).to.be.true
+    expect(departures[1].formingTrip).to.not.exist
+  })
 })
