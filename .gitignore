@@ -29,3 +29,5 @@ tt-intermediate.pem
 /load-gtfs/vline/timetables/timetables
 /load-gtfs/metro/timetables
 /updater-log.txt
+
+/.env

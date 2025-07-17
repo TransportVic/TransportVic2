@@ -2,7 +2,7 @@ global.startTime = +new Date()
 
 import utils from './utils.js'
 import config from './config.json' with { type: 'json' }
-import MainServer from './server/MainServer.js'
+import MainServer from './server/MainServer.mjs'
 import vlineMail from './modules/vline-mail/index.js'
 
 setTimeout(() => {

@@ -1,43 +1,38 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const compression = require('compression')
-const url = require('url')
-const path = require('path')
-const minify = require('express-minify')
-const fs = require('fs')
-const uglifyJS = require('uglify-js')
-const utils = require('../utils')
-const ptvAPI = require('../ptv-api')
-const rateLimit = require('express-rate-limit')
+import express from 'express'
+import bodyParser from 'body-parser'
+import compression from 'compression'
+import url from 'url'
+import path from 'path'
+import minify from 'express-minify'
+import fs from 'fs'
+import uglifyJS from 'uglify-js'
+import utils from '../utils.js'
+import ptvAPI from '../ptv-api.js'
+import rateLimit from 'express-rate-limit'
 
-const DatabaseConnection = require('../database/DatabaseConnection')
+import DatabaseConnection from '../database/DatabaseConnection.js'
 
-const config = require('../config')
-const modules = require('../modules')
+import config from '../config.json' with { type: 'json' }
+import modules from '../modules.json' with { type: 'json' }
 
-if (modules.tracker && modules.tracker.bus)
-  require('../modules/trackers/bus')
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
-if (modules.tracker && modules.tracker.busMinder)
-  require('../modules/trackers/busminder')
+if (modules.tracker && modules.tracker.bus) await import('../modules/trackers/bus.js')
 
-if (modules.tracker && modules.tracker.tram)
-  require('../modules/trackers/tram')
+if (modules.tracker && modules.tracker.busMinder) await import('../modules/trackers/busminder.js')
 
-if (modules.tracker && modules.tracker.vline)
-  require('../modules/trackers/vline')
+if (modules.tracker && modules.tracker.tram) await import('../modules/trackers/tram.js')
 
-if (modules.tracker && modules.tracker['vline-r'])
-  require('../modules/trackers/vline-realtime')
+if (modules.tracker && modules.tracker.vline) await import('../modules/trackers/vline.js')
 
-if (modules.tracker && modules.tracker.xpt)
-  require('../modules/xpt/xpt-updater')
+if (modules.tracker && modules.tracker['vline-r']) await import('../modules/trackers/vline-realtime.js')
+
+if (modules.tracker && modules.tracker.xpt) await import('../modules/xpt/xpt-updater.js')
 
 let serverStarted = false
 
-let trackerAuth = config.metroLogins.map(login => 'Basic ' + Buffer.from(login).toString('base64'))
-
-module.exports = class MainServer {
+export default class MainServer {
   constructor () {
     this.app = express()
     this.app.use((req, res, next) => {
@@ -277,7 +272,7 @@ module.exports = class MainServer {
       max: 10
     }))
 
-    Object.keys(routers).forEach(routerName => {
+    for (let routerName of Object.keys(routers)) {
       try {
         let routerData = routers[routerName]
         if (routerData.path && !routerData.enable) {
@@ -286,13 +281,13 @@ module.exports = class MainServer {
 
         let routerPath = routerData.path || routerData
 
-        let router = require(`../application/routes/${routerName}`)
-        app.use(routerPath, router)
+        let router = await import(`../application/routes/${routerName}.js`)
+        app.use(routerPath, router.default)
         if (router.initDB) router.initDB(this.database)
       } catch (e) {
         global.loggers.error.err('Error registering', routerName, e)
       }
-    })
+    }
 
     app.get('/response-stats', (req, res) => {
       res.json({
