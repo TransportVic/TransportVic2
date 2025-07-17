@@ -9,8 +9,8 @@ setTimeout(async () => {
   let mainServer = new MainServer()
   await mainServer.connectToDatabase()
 
-  mainServer.configMiddleware(mainServer)
-  mainServer.configRoutes(mainServer)
+  mainServer.configMiddleware()
+  mainServer.configRoutes()
 
   mainServer.app.listen(config.httpPort)
 
