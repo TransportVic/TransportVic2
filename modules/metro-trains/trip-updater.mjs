@@ -206,9 +206,21 @@ export async function updateTrip(db, trip, {
       lastStop = timetable.stops[lastNonAMEXStop]
     }
 
+    let lastStopDelay = null
+
     if (secondLastStop && stopVisits[secondLastStop.stopName] && !stopVisits[lastStop.stopName] && secondLastStop.estimatedDepartureTime) {
       let secondLastDelay = secondLastStop.estimatedDepartureTime.diff(secondLastStop.scheduledDepartureTime, 'minutes')
-      let lastStopEstArr = lastStop.scheduledDepartureTime.clone().add(secondLastDelay, 'minutes')
+      lastStopDelay = secondLastDelay
+    } else if (secondLastStop.cancelled && !lastStop.cancelled && lastStop.stopName === 'Flinders Street Railway Station') {
+      let secondLastStop = timetable.stops.findLast((stop, i) => !stop.cancelled && i < lastNonAMEXStop)
+      if (secondLastStop.stopName === 'Richmond Railway Station') {
+        let rmdDelay = secondLastStop.estimatedDepartureTime.diff(secondLastStop.scheduledDepartureTime, 'minutes')
+        lastStopDelay = rmdDelay - 4
+      }
+    }
+
+    if (lastStopDelay !== null) {
+      let lastStopEstArr = lastStop.scheduledDepartureTime.clone().add(lastStopDelay, 'minutes')
       lastStop.estimatedArrivalTime = lastStopEstArr
       lastStop.estimatedDepartureTime = lastStopEstArr
     }
