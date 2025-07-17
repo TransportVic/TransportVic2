@@ -1,10 +1,9 @@
 global.startTime = +new Date()
-require('./utils')
 
-const config = require('./config')
-const MainServer = require('./server/MainServer')
-
-require('./modules/vline-mail')
+import utils from './utils.js'
+import config from './config.json' with { type: 'json' }
+import MainServer from './server/MainServer.js'
+import vlineMail from './modules/vline-mail/index.js'
 
 let mainServer = new MainServer()
 mainServer.app.listen(config.httpPort)

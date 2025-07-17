@@ -47,7 +47,6 @@ class TimetableStop {
   get stopName() { return this.#stopName }
   get suburb() { return this.#suburb }
   get stopNumber() { return this.#stopNumber }
-  get stopName() { return this.#stopName }
   get stopGTFSID() { return this.#stopGTFSID }
   get platform() { return this.#platform }
   get cancelled() { return this.#cancelled }

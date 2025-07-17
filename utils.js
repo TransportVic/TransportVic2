@@ -682,4 +682,4 @@ module.exports = {
   }
 }
 
-require('./init-loggers')
+require('./init-loggers.mjs')
