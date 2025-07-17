@@ -5,6 +5,7 @@ import sampleSchTrips from '../../departures/test/sample-data/sample-sch-trips.j
 import alamein from '../../departures/test/sample-data/alamein.json' with { type: 'json' }
 import riversdale from '../../departures/test/sample-data/riversdale.json' with { type: 'json' }
 import fakeCityCircle from '../../departures/test/sample-data/fake-city-circle.json' with { type: 'json' }
+import heidelbergADNL_AMEX from '../../departures/test/sample-data/heidelberg-adnl-amex.json' with { type: 'json' }
 
 import mtpTrips from '../../departures/test/sample-data/mtp-through-running.json' with { type: 'json' }
 import ccyTrips from '../../departures/test/sample-data/fkn-wer-wil-through-running.json' with { type: 'json' }
@@ -109,6 +110,25 @@ describe('The metro departures class', () => {
 
     expect(departures[0].trueOrigin).to.equal('Ashburton')
     expect(departures[0].trueDestination).to.equal('Riversdale')
+  })
+
+  it.only('???', async () => {
+    let db = new LokiDatabaseConnection()
+    db.connect()
+
+    await (await db.createCollection('live timetables')).createDocument(clone(heidelbergADNL_AMEX))
+    await (await db.createCollection('stops')).createDocuments(clone(pkmStops))
+
+    let mce = (await db.createCollection('stops')).findDocument({ stopName: /Melbourne Central/ })
+
+    let departures = await getDepartures(mce, db, null, null, new Date('2025-07-17T04:24:00.000Z'))
+
+    expect(departures[0].runID).to.equal('7757')
+    expect(departures[0].cancelled).to.be.true
+    expect(departures[0].origin).to.equal('Flinders Street')
+    expect(departures[0].destination).to.equal('Heidelberg')
+    expect(departures[0].trueOrigin).to.equal('Flinders Street')
+    expect(departures[0].trueDestination).to.equal('Heidelberg')
   })
 
   it('Should return the original destination if viewing the trip from a cancelled stop', async () => {

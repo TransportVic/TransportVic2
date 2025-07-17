@@ -1265,7 +1265,7 @@ describe('The trip updater module', () => {
     expect(dng.actualDepartureTime.toISOString()).to.equal('2025-06-05T22:13:00.000Z')
   })
 
-  it.only('Accounts for CLP being cancelled and making up the delay RMD-FSS', async () => {
+  it('Accounts for CLP being cancelled and making up the delay RMD-FSS', async () => {
     let database = new LokiDatabaseConnection('test-db')
     let stops = await database.createCollection('stops')
     let routes = await database.createCollection('routes')
