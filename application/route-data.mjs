@@ -1,122 +1,60 @@
 import modules from '../modules.json' with { type: 'json' }
 
-export default {
-  'mockups/PIDSView': {
-    path: '/',
-    enable: modules.mockups && modules.mockups.pidsview
-  },
+export default [
+  { path: '/', router: 'mockups/PIDSView.js', enable: modules.mockups && modules.mockups.pidsview },
+  { path: '/', router: 'Index.js' },
+  { path: '/', router: 'IndexData.js' },
+  { path: '/links', router: 'AdditionalLinks.js' },
+  { path: '/search', router: 'Search.js' },
+  { path: '/nearby', router: 'StopsNearby.js' },
+  { path: '/public-holiday', router: 'PublicHolidayInfo.js' },
 
-  Index: '/',
-  IndexData: '/',
-  AdditionalLinks: '/links',
-  Search: '/search',
-  StopsNearby: '/nearby',
+  { path: '/vline/timings', router: 'timing-pages/VLine.js', enable: modules.Next4 && modules.Next4.vline },
+  { path: '/metro/timings', router: 'timing-pages/MetroTrains.js', enable: modules.Next4 && modules.Next4.metro },
+  { path: '/coach/timings', router: 'timing-pages/RegionalCoach.js', enable: modules.Next4 && modules.Next4.coach },
+  { path: '/bus/timings', router: 'timing-pages/Bus.js', enable: modules.Next4 && modules.Next4.bus },
+  { path: '/tram/timings', router: 'timing-pages/Tram.js', enable: modules.Next4 && modules.Next4.tram },
+  { path: '/ferry/timings', router: 'timing-pages/Ferry.js', enable: modules.Next4 && modules.Next4.ferry },
+  { path: '/heritage/timings', router: 'timing-pages/HeritageTrain.js', enable: modules.Next4 && modules.Next4.heritage },
 
-  PublicHolidayInfo: '/public-holiday',
+  { path: '/metro/run', router: 'run-pages/MetroTrains.js' },
+  { path: '/vline/run', router: 'run-pages/VLineTrains.js' },
+  { path: '/tram/run', router: 'run-pages/Tram.js' },
+  { path: '/bus/run', router: 'run-pages/Bus.js' },
+  { path: '/', router: 'run-pages/Generic.js' },
 
-  'timing-pages/VLine': {
-    path: '/vline/timings',
-    enable: modules.Next4 && modules.Next4.vline
-  },
-  'timing-pages/MetroTrains': {
-    path: '/metro/timings',
-    enable: modules.Next4 && modules.Next4.metro
-  },
-  'timing-pages/RegionalCoach': {
-    path: '/coach/timings',
-    enable: modules.Next4 && modules.Next4.coach
-  },
-  'timing-pages/Bus': {
-    path: '/bus/timings',
-    enable: modules.Next4 && modules.Next4.bus
-  },
-  'timing-pages/Tram': {
-    path: '/tram/timings',
-    enable: modules.Next4 && modules.Next4.tram
-  },
-  'timing-pages/Ferry': {
-    path: '/ferry/timings',
-    enable: modules.Next4 && modules.Next4.ferry
-  },
-  'timing-pages/HeritageTrain': {
-    path: '/heritage/timings',
-    enable: modules.Next4 && modules.Next4.heritage
-  },
+  { path: '/stats', router: 'Statistics.js' },
+  { path: '/mockups', router: 'mockups/Index.js' },
+  { path: '/mockups/fss', router: 'mockups/fss/FlindersStreet.js' },
+  { path: '/mockups/metro-lcd/concourse', router: 'mockups/metro-lcd/Concourse-PIDS.js' },
+  { path: '/mockups/metro-lcd', router: 'mockups/metro-lcd/Metro-LCD-PIDS.js' },
+  { path: '/mockups/bus-int-pids', router: 'mockups/BusInt-PIDS.js' },
+  { path: '/mockups/metro-led-pids', router: 'mockups/Metro-LED-PIDS.js' },
+  { path: '/mockups/metro-crt', router: 'mockups/Metro-CRT-PIDS.js' },
+  { path: '/mockups/vline', router: 'mockups/VLine-PIDS.js' },
+  // { path: '/mockups/sss', router: 'mockups/sss/SouthernCross.js' },
+  { path: '/mockups/train', router: 'mockups/train/TrainPID.js' },
+  { path: '/mockups/sss-new', router: 'mockups/sss-new/SSSNew.js' },
+  { path: '/mockups/sss-new/platform', router: 'mockups/sss-new/SSSPlatform.js' },
+  { path: '/mockups/sss-new/coach', router: 'mockups/sss-new/SSSCoachBay.js' },
+  { path: '/jmss-screens/big-screen', router: 'jmss-screens/BigScreen.js', enable: modules.jmssScreen },
 
-  'run-pages/MetroTrains': '/metro/run',
-  'run-pages/VLineTrains': '/vline/run',
-  'run-pages/Tram': '/tram/run',
-  'run-pages/Bus': '/bus/run',
-  'run-pages/Generic': '/',
+  { path: '/smartrak', router: 'SmartrakIDs.js' },
+  { path: '/bus/tracker', router: 'tracker/BusTracker.js' },
+  { path: '/tram/tracker', router: 'tracker/TramTracker.js' },
+  { path: '/vline/tracker', router: 'tracker/VLineTracker.js' },
+  { path: '/metro/tracker', router: 'tracker/MetroTracker.js' },
 
-  Statistics: '/stats',
+  { path: '/bus/route/regional', router: 'route-data/RegionalBusRoute.js', enable: modules.routes && modules.routes.bus },
+  { path: '/bus/route/named', router: 'route-data/NamedBusRoute.js', enable: modules.routes && modules.routes.bus },
+  { path: '/bus/route', router: 'route-data/MetroBusRoute.js', enable: modules.routes && modules.routes.bus },
+  { path: '/tram/route', router: 'route-data/TramRoute.js', enable: modules.routes && modules.routes.tram },
+  { path: '/metro/route', router: 'route-data/MetroRoute.js', enable: modules.routes && modules.routes.metro },
+  { path: '/vline/route', router: 'route-data/VLineRoute.js', enable: modules.routes && modules.routes.vline },
 
-  'mockups/Index': '/mockups',
-  'mockups/fss/FlindersStreet': '/mockups/fss',
-  'mockups/metro-lcd/Concourse-PIDS': '/mockups/metro-lcd/concourse',
-  'mockups/metro-lcd/Metro-LCD-PIDS': '/mockups/metro-lcd',
-  'mockups/BusInt-PIDS': '/mockups/bus-int-pids',
-  'mockups/Metro-LED-PIDS': '/mockups/metro-led-pids',
-  'mockups/Metro-CRT-PIDS': '/mockups/metro-crt',
-  'mockups/VLine-PIDS': '/mockups/vline',
-  // 'mockups/sss/SouthernCross': '/mockups/sss',
-  'mockups/train/TrainPID': '/mockups/train',
+  { path: '/stop-preview', router: 'StopPreview.js', enable: modules.stopPreview },
+  { path: '/route-preview', router: 'RoutePreview.js', enable: modules.routePreview },
+  { path: '/route-paths', router: 'RoutePaths.js' },
+  { path: '/metro/map', router: 'MetroMap.js' }
 
-  'mockups/sss-new/SSSNew': '/mockups/sss-new',
-  'mockups/sss-new/SSSPlatform': '/mockups/sss-new/platform',
-  'mockups/sss-new/SSSCoachBay': '/mockups/sss-new/coach',
-
-  'jmss-screens/BigScreen': {
-    path: '/jmss-screens/big-screen',
-    enable: modules.jmssScreen
-  },
-
-  SmartrakIDs: '/smartrak',
-
-  'tracker/BusTracker': '/bus/tracker',
-  'tracker/BusMinderTracker': '/bus/tracker/busminder',
-  'tracker/TramTracker': '/tram/tracker',
-  'tracker/VLineTracker': '/vline/tracker',
-  'tracker/MetroTracker': '/metro/tracker',
-
-  'route-data/RegionalBusRoute': {
-    path: '/bus/route/regional',
-    enable: modules.routes && modules.routes.bus
-  },
-  'route-data/NamedBusRoute': {
-    path: '/bus/route/named',
-    enable: modules.routes && modules.routes.bus
-  },
-  'route-data/MetroBusRoute': {
-    path: '/bus/route',
-    enable: modules.routes && modules.routes.bus
-  },
-
-  'route-data/TramRoute': {
-    path: '/tram/route',
-    enable: modules.routes && modules.routes.tram
-  },
-
-  'route-data/MetroRoute': {
-    path: '/metro/line',
-    enable: modules.routes && modules.routes.metro
-  },
-
-  'route-data/VLineRoute': {
-    path: '/vline/line',
-    enable: modules.routes && modules.routes.vline
-  },
-
-  StopPreview: {
-    path: '/stop-preview',
-    enable: modules.stopPreview
-  },
-
-  RoutePreview: {
-    path: '/route-preview',
-    enable: modules.routePreview
-  },
-
-  RoutePaths: '/route-paths',
-  MetroMap: '/metro/map'
-}
+]

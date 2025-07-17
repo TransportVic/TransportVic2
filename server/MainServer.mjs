@@ -4,7 +4,7 @@ import path from 'path'
 import utils from '../utils.js'
 import ptvAPI from '../ptv-api.js'
 import rateLimit from 'express-rate-limit'
-import routers from '../application/route-data.mjs'
+import routes from '../application/route-data.mjs'
 
 import config from '../config.json' with { type: 'json' }
 import modules from '../modules.json' with { type: 'json' }
@@ -30,8 +30,7 @@ export default class MainServer {
     this.app = createServer(path.join(__dirname, '..', 'application'), {
       appName: 'TransportVic',
       requestEndCallback: (req, res, { time }) => {
-        let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
-        global.loggers.http.info(`${req.method} ${req.urlData.pathname}${res.loggingData ? ` ${res.loggingData}` : ''} ${time} ${ip}`)
+        global.loggers.http.info(`${req.method} ${req.urlData.pathname}${res.loggingData ? ` ${res.loggingData}` : ''} ${time} ${req.ip}`)
       }
     })
   }
@@ -53,7 +52,7 @@ export default class MainServer {
       if (host.startsWith(prefix)) return true
       else return void next()
     }
-    
+
     let staticBase = config.staticBase || ''
     app.use((req, res, next) => {
       res.locals.staticBase = staticBase
@@ -74,22 +73,27 @@ export default class MainServer {
       max: 10
     }))
 
-    for (let routerName of Object.keys(routers)) {
-      try {
-        let routerData = routers[routerName]
-        if (routerData.path && !routerData.enable) {
-          global.loggers.general.info('Module', routerName, 'has been disabled')
-          continue
-        }
-
-        let routerPath = routerData.path || routerData
-
-        let router = await import(`../application/routes/${routerName}.js`)
-        app.use(routerPath, router.default)
-        if (router.initDB) router.initDB(this.database)
-      } catch (e) {
-        global.loggers.error.err('Error registering', routerName, e)
+    let routePromises = []
+    for (let routeData of routes) {
+      if (routeData.enable === false) {
+        global.loggers.general.info(`${routeData.router} has been disabled`)
+        continue
       }
+
+      routePromises.push(new Promise(async resolve => {
+        try {
+          let router = (await import(path.join(__dirname, '..', 'application', 'routes', routeData.router))).default
+          resolve({ ...routeData, router })
+        } catch (e) {
+          console.error('Encountered an error loading', routeData, e)
+          resolve(null)
+        }
+      }))
+    }
+
+    let routers = await Promise.all(routePromises)
+    for (let router of routers) {
+      app.use(router.path, router.router)
     }
 
     app.get('/response-stats', (req, res) => {
