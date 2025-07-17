@@ -3,6 +3,7 @@ import ptvAPIC406 from '../../new-tracker/metro/test/sample-data/ptv-api-C406.js
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
 import getTripUpdateData from '../get-stopping-pattern.js'
 import tdn3000 from './sample-data/tdn-3000-fss-arrival.json' with { type: 'json' }
+import tdn0806 from './sample-data/parliament-only.json' with { type: 'json' }
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -82,6 +83,17 @@ describe('The getTripUpdateData function', () => {
     let fss = tripData.stops[tripData.stops.length - 1]
     expect(fss.stopName).to.equal('Flinders Street Railway Station')
     expect(fss.estimatedDepartureTime).to.not.exist
-    // expect(fss.scheduledDepartureTime).to.not.exist
+  })
+
+  it('Should replace the FSS arrival time with something sensible if it is taking too long', async () => {
+    let stubAPI = new StubAPI()
+    stubAPI.setResponses([ clone(tdn0806) ])
+    let ptvAPI = new PTVAPI(stubAPI)
+
+    let tripData = await getTripUpdateData('0806', ptvAPI)
+    let fss = tripData.stops[tripData.stops.length - 1]
+    expect(fss.stopName).to.equal('Flinders Street Railway Station')
+    expect(fss.scheduledDepartureTime.toISOString()).to.not.equal('2025-07-17T01:19:00Z')
+    expect(+fss.scheduledDepartureTime).to.be.lessThan(+new Date('2025-07-17T01:19:00Z'))
   })
 })

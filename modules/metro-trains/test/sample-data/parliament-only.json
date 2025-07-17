@@ -1,0 +1,285 @@
+{
+  "disruptions": [],
+  "departures": [
+    {
+      "skipped_stops": [],
+      "stop_id": 1155,
+      "route_id": 5,
+      "run_id": 948806,
+      "run_ref": "948806",
+      "direction_id": 1,
+      "disruption_ids": [
+        339299
+      ],
+      "scheduled_departure_utc": "2025-07-17T01:08:00Z",
+      "estimated_departure_utc": null,
+      "at_platform": false,
+      "platform_number": "1",
+      "flags": "",
+      "departure_sequence": 1,
+      "departure_note": ""
+    },
+    {
+      "skipped_stops": [],
+      "stop_id": 1071,
+      "route_id": 5,
+      "run_id": 948806,
+      "run_ref": "948806",
+      "direction_id": 1,
+      "disruption_ids": [
+        339299,
+        261006
+      ],
+      "scheduled_departure_utc": "2025-07-17T01:19:00Z",
+      "estimated_departure_utc": null,
+      "at_platform": false,
+      "platform_number": "1",
+      "flags": "",
+      "departure_sequence": 2,
+      "departure_note": ""
+    },
+    {
+      "skipped_stops": [],
+      "stop_id": 1181,
+      "route_id": 5,
+      "run_id": 948806,
+      "run_ref": "948806",
+      "direction_id": 1,
+      "disruption_ids": [
+        339299
+      ],
+      "scheduled_departure_utc": "2025-07-17T01:22:00Z",
+      "estimated_departure_utc": null,
+      "at_platform": false,
+      "platform_number": "9",
+      "flags": "",
+      "departure_sequence": 3,
+      "departure_note": null
+    },
+    {
+      "skipped_stops": [],
+      "stop_id": 1068,
+      "route_id": 5,
+      "run_id": 948806,
+      "run_ref": "948806",
+      "direction_id": 1,
+      "disruption_ids": [
+        339299
+      ],
+      "scheduled_departure_utc": "2025-07-17T01:24:00Z",
+      "estimated_departure_utc": null,
+      "at_platform": false,
+      "platform_number": "1",
+      "flags": "",
+      "departure_sequence": 4,
+      "departure_note": null
+    },
+    {
+      "skipped_stops": [],
+      "stop_id": 1120,
+      "route_id": 5,
+      "run_id": 948806,
+      "run_ref": "948806",
+      "direction_id": 1,
+      "disruption_ids": [
+        339299
+      ],
+      "scheduled_departure_utc": "2025-07-17T01:26:00Z",
+      "estimated_departure_utc": null,
+      "at_platform": false,
+      "platform_number": "1",
+      "flags": "",
+      "departure_sequence": 5,
+      "departure_note": null
+    },
+    {
+      "skipped_stops": [],
+      "stop_id": 1155,
+      "route_id": 5,
+      "run_id": 948806,
+      "run_ref": "948806",
+      "direction_id": 1,
+      "disruption_ids": [
+        339299
+      ],
+      "scheduled_departure_utc": "2025-07-17T01:27:00Z",
+      "estimated_departure_utc": null,
+      "at_platform": false,
+      "platform_number": "1",
+      "flags": "E",
+      "departure_sequence": 6,
+      "departure_note": null
+    }
+  ],
+  "stops": {
+    "1068": {
+      "stop_ticket": {
+        "ticket_type": "",
+        "zone": "Zone 1",
+        "is_free_fare_zone": false,
+        "ticket_machine": true,
+        "ticket_checks": true,
+        "vline_reservation": false,
+        "ticket_zones": [
+          1
+        ]
+      },
+      "stop_distance": 0.0,
+      "stop_suburb": "Melbourne City",
+      "stop_name": "Flagstaff",
+      "stop_id": 1068,
+      "route_type": 0,
+      "stop_latitude": -37.8119774,
+      "stop_longitude": 144.955658,
+      "stop_landmark": "",
+      "stop_sequence": 0
+    },
+    "1071": {
+      "stop_ticket": {
+        "ticket_type": "",
+        "zone": "Zone 1",
+        "is_free_fare_zone": false,
+        "ticket_machine": true,
+        "ticket_checks": true,
+        "vline_reservation": false,
+        "ticket_zones": [
+          1
+        ]
+      },
+      "stop_distance": 0.0,
+      "stop_suburb": "Melbourne City",
+      "stop_name": "Flinders Street",
+      "stop_id": 1071,
+      "route_type": 0,
+      "stop_latitude": -37.81831,
+      "stop_longitude": 144.966965,
+      "stop_landmark": "",
+      "stop_sequence": 0
+    },
+    "1120": {
+      "stop_ticket": {
+        "ticket_type": "",
+        "zone": "Zone 1",
+        "is_free_fare_zone": false,
+        "ticket_machine": true,
+        "ticket_checks": true,
+        "vline_reservation": false,
+        "ticket_zones": [
+          1
+        ]
+      },
+      "stop_distance": 0.0,
+      "stop_suburb": "Melbourne City",
+      "stop_name": "Melbourne Central",
+      "stop_id": 1120,
+      "route_type": 0,
+      "stop_latitude": -37.8099365,
+      "stop_longitude": 144.9626,
+      "stop_landmark": "",
+      "stop_sequence": 0
+    },
+    "1155": {
+      "stop_ticket": {
+        "ticket_type": "",
+        "zone": "Zone 1",
+        "is_free_fare_zone": false,
+        "ticket_machine": true,
+        "ticket_checks": false,
+        "vline_reservation": false,
+        "ticket_zones": [
+          1
+        ]
+      },
+      "stop_distance": 0.0,
+      "stop_suburb": "Melbourne City",
+      "stop_name": "Parliament",
+      "stop_id": 1155,
+      "route_type": 0,
+      "stop_latitude": -37.8110542,
+      "stop_longitude": 144.9729,
+      "stop_landmark": "",
+      "stop_sequence": 0
+    },
+    "1181": {
+      "stop_ticket": {
+        "ticket_type": "",
+        "zone": "Zone 1",
+        "is_free_fare_zone": false,
+        "ticket_machine": true,
+        "ticket_checks": true,
+        "vline_reservation": true,
+        "ticket_zones": [
+          1
+        ]
+      },
+      "stop_distance": 0.0,
+      "stop_suburb": "Melbourne City",
+      "stop_name": "Southern Cross",
+      "stop_id": 1181,
+      "route_type": 0,
+      "stop_latitude": -37.8179321,
+      "stop_longitude": 144.951416,
+      "stop_landmark": "",
+      "stop_sequence": 0
+    }
+  },
+  "routes": {
+    "5": {
+      "route_type": 0,
+      "route_id": 5,
+      "route_name": "Mernda",
+      "route_number": "",
+      "route_gtfs_id": "2-MDD",
+      "geopath": []
+    }
+  },
+  "runs": {
+    "948806": {
+      "run_id": 948806,
+      "run_ref": "948806",
+      "route_id": 5,
+      "route_type": 0,
+      "final_stop_id": 1155,
+      "destination_name": "Parliament",
+      "status": "added",
+      "direction_id": 1,
+      "run_sequence": 0,
+      "express_stop_count": 0,
+      "vehicle_position": null,
+      "vehicle_descriptor": null,
+      "geopath": [],
+      "interchange": {
+        "feeder": {
+          "run_ref": "949867",
+          "route_id": 8,
+          "stop_id": 1155,
+          "advertised": false,
+          "direction_id": 7,
+          "destination_name": "Parliament"
+        },
+        "distributor": {
+          "run_ref": "949869",
+          "route_id": 8,
+          "stop_id": 1155,
+          "advertised": false,
+          "direction_id": 7,
+          "destination_name": "Parliament"
+        }
+      },
+      "run_note": "",
+      "externalService": null
+    }
+  },
+  "directions": {
+    "1": {
+      "direction_id": 1,
+      "direction_name": "City",
+      "route_id": 5,
+      "route_type": 0
+    }
+  },
+  "status": {
+    "version": "3.0",
+    "health": 1
+  }
+}
