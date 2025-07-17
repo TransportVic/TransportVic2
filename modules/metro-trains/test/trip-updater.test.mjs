@@ -1361,14 +1361,27 @@ describe('The trip updater module', () => {
       }]
     }
 
-    let tripData = await updateTrip(database, tripUpdate, { skipStopCancellation: true })
-    let syrIndex = tripData.stops.findIndex(stop => stop.stopName === 'South Yarra Railway Station')
+    let tripUpdate2 = {
+      operationDays: '20250712',
+      routeGTFSID: '2-PKM',
+      runID: '7511',
+      stops: tripUpdate.stops.toSorted((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
+    }
 
-    expect(syrIndex).to.not.equal(-1)
-    expect(tripData.stops[syrIndex + 1].stopName).to.equal('Hawksburn Railway Station')
-    expect(tripData.stops[syrIndex + 2].stopName).to.equal('Toorak Railway Station')
-    expect(tripData.stops[syrIndex + 3].stopName).to.equal('Armadale Railway Station')
-    expect(tripData.stops[syrIndex + 4].stopName).to.equal('Malvern Railway Station')
-    expect(tripData.stops[syrIndex + 5].stopName).to.equal('Caulfield Railway Station')
+    let updatedTrips = [
+      await updateTrip(database, tripUpdate, { skipStopCancellation: true }),
+      await updateTrip(database, tripUpdate2, { skipStopCancellation: true })
+    ]
+    
+    for (let tripData of updatedTrips) {
+      let syrIndex = tripData.stops.findIndex(stop => stop.stopName === 'South Yarra Railway Station')
+
+      expect(syrIndex).to.not.equal(-1)
+      expect(tripData.stops[syrIndex + 1].stopName).to.equal('Hawksburn Railway Station')
+      expect(tripData.stops[syrIndex + 2].stopName).to.equal('Toorak Railway Station')
+      expect(tripData.stops[syrIndex + 3].stopName).to.equal('Armadale Railway Station')
+      expect(tripData.stops[syrIndex + 4].stopName).to.equal('Malvern Railway Station')
+      expect(tripData.stops[syrIndex + 5].stopName).to.equal('Caulfield Railway Station')
+    }
   })
 })
