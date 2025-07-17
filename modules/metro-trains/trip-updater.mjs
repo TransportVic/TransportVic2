@@ -208,7 +208,8 @@ export async function updateTrip(db, trip, {
 
     let lastStopDelay = null
 
-    if (secondLastStop && stopVisits[secondLastStop.stopName] && !stopVisits[lastStop.stopName] && secondLastStop.estimatedDepartureTime) {
+    let lastStopHasETA = trip.stops && (trip.stops[trip.stops.length - 1].estimatedArrivalTime || trip.stops[trip.stops.length - 1].estimatedDepartureTime)
+    if (secondLastStop && stopVisits[secondLastStop.stopName] && !lastStopHasETA && secondLastStop.estimatedDepartureTime) {
       let secondLastDelay = secondLastStop.estimatedDepartureTime.diff(secondLastStop.scheduledDepartureTime, 'minutes')
       lastStopDelay = secondLastDelay
     } else if (secondLastStop && secondLastStop.cancelled && !lastStop.cancelled && lastStop.stopName === 'Flinders Street Railway Station') {
