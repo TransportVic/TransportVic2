@@ -20,10 +20,7 @@
     "adm-zip": "^0.5.14",
     "async": "^3.2.3",
     "cheerio": "^1.0.0-rc.3",
-    "compression": "^1.7.4",
     "escape-regex-string": "^1.0.6",
-    "express": "^4.18.2",
-    "express-minify": "^1.0.0",
     "express-rate-limit": "^5.5.1",
     "fastest-levenshtein": "^1.0.12",
     "geojson-polyline": "^1.0.3",
@@ -46,7 +43,6 @@
   "devDependencies": {
     "chai": "^5.1.0",
     "chai-exclude": "^3.0.1",
-    "mocha": "^10.3.0",
-    "nock": "^14.0.0-beta.5"
+    "mocha": "^10.3.0"
   }
 }
