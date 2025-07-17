@@ -5,13 +5,15 @@ import config from './config.json' with { type: 'json' }
 import MainServer from './server/MainServer.js'
 import vlineMail from './modules/vline-mail/index.js'
 
-let mainServer = new MainServer()
-mainServer.app.listen(config.httpPort)
+setTimeout(() => {
+  let mainServer = new MainServer()
+  mainServer.app.listen(config.httpPort)
 
-global.loggers.general.info('Server Started')
+  global.loggers.general.info('Server Started')
 
-process.on('uncaughtException', err => {
-  global.loggers.error.err(err)
-})
+  process.on('uncaughtException', err => {
+    global.loggers.error.err(err)
+  })
 
-console.err = console.error
+  console.err = console.error
+}, 100)

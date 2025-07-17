@@ -7,7 +7,11 @@ const __dirname = path.dirname(__filename)
 
 let isProd = process.env['NODE_ENV'] === 'prod'
 function createLogger(path, name) {
-  if (isProd) return new FileLogger(path, name)
+  if (isProd) {
+    let logger = new FileLogger(path, name)
+    logger.init()
+    return logger
+  }
   else return new ConsoleLogger(name)
 }
 

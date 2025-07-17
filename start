@@ -1,5 +1,8 @@
 #!/bin/bash
 DIRNAME=$(dirname "$0")
 
+cd $DIRNAME
+. $DIRNAME/.env
+
 # Note: we do not want sudo or we cannot kill the process
-NODE_ENV=prod node --max-old-space-size=4096 $DIRNAME/index.js >> $DIRNAME/../log 2>> $DIRNAME/../err
+node --max-old-space-size=4096 $DIRNAME
