@@ -2,6 +2,7 @@ import { expect } from 'chai'
 import ptvAPIC406 from '../../new-tracker/metro/test/sample-data/ptv-api-C406.json' with { type: 'json' }
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
 import getTripUpdateData from '../get-stopping-pattern.js'
+import tdn3000 from './sample-data/tdn-3000-fss-arrival.json' with { type: 'json' }
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -69,5 +70,18 @@ describe('The getTripUpdateData function', () => {
     expect(tripData.routeGTFSID).to.equal('2-CBE')
     expect(tripData.cancelled).to.be.false
     expect(tripData.additional).to.be.true
+  })
+
+  it('Should discard the FSS "departure" time if it is from the next trip', async () => {
+    let stubAPI = new StubAPI()
+    let response = clone(tdn3000)
+    stubAPI.setResponses([ response ])
+    let ptvAPI = new PTVAPI(stubAPI)
+
+    let tripData = await getTripUpdateData('3000', ptvAPI)
+    let fss = tripData.stops[tripData.stops.length - 1]
+    expect(fss.stopName).to.equal('Flinders Street Railway Station')
+    expect(fss.scheduledDepartureTime).to.not.exist
+    expect(fss.estimatedDepartureTime).to.not.exist
   })
 })
