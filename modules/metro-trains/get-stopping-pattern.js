@@ -37,9 +37,19 @@ module.exports = async function getTripUpdateData(runID, ptvAPI, { date = new Da
   }
 
   let lastStop = tripData.stops[tripData.stops.length - 1]
+  let secondLastStop = tripData.stops[tripData.stops.length - 2]
   if (lastStop.stopName === 'Flinders Street Railway Station' && trip.formingStops.length) {
     lastStop.estimatedDepartureTime = null
-    // lastStop.scheduledDepartureTime = null
+
+    if (secondLastStop && secondLastStop.stopName === 'Parliament Railway Station') { // 3 min PAR-FSS
+      lastStop.scheduledDepartureTime = new Date(+secondLastStop.scheduledDepartureTime + 1000 * 60 * 3)
+    } else if (secondLastStop && secondLastStop.stopName === 'Richmond Railway Station') { // 5 min RMD-FSS
+      lastStop.scheduledDepartureTime = new Date(+secondLastStop.scheduledDepartureTime + 1000 * 60 * 5)
+    } else if (secondLastStop && secondLastStop.stopName === 'Southern Cross Railway Station') { // 3 min SSS-FSS
+      lastStop.scheduledDepartureTime = new Date(+secondLastStop.scheduledDepartureTime + 1000 * 60 * 3)
+    } else if (secondLastStop && secondLastStop.stopName === 'Jolimont Railway Station') { // 3 min SSS-FSS
+      lastStop.scheduledDepartureTime = new Date(+secondLastStop.scheduledDepartureTime + 1000 * 60 * 3)
+    }
   }
 
   return tripData
