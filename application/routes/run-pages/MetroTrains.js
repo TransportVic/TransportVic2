@@ -116,12 +116,12 @@ async function getTripData(req, res) {
   let showFormedBy, showForming
 
   if (!tripViaCityLoop(trip)) {
-    if (trip.direction === 'Up') {
+    if (trip.direction === 'Up' && !trip.stopTimings[trip.stopTimings.length - 1].cancelled) {
       if (forming && tripViaCityLoop(forming)) {
         showForming = forming
         showForming.stopTimings = showForming.stopTimings.filter(stop => CITY_LOOP.includes(stop.stopName) || stop.stopName === 'Flinders Street Railway Station')
       }
-    } else if (trip.direction === 'Down') {
+    } else if (trip.direction === 'Down' && !trip.stopTimings[0].cancelled) {
       if (formedBy && tripViaCityLoop(formedBy)) {
         showFormedBy = formedBy
         showFormedBy.stopTimings = showFormedBy.stopTimings.filter(stop => CITY_LOOP.includes(stop.stopName) || stop.stopName === 'Flinders Street Railway Station')

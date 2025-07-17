@@ -57,18 +57,28 @@ div.timing-list
 
   -
     let lastNonAMEX = trip.stopTimings.findLastIndex(stop => !stop.cancelled)
-    let tripEarlyTermination = lastNonAMEX >= 0 && lastNonAMEX !== trip.stopTimings.length - 1 && trip.stopTimings.every((stop, i) => i <= lastNonAMEX || stop.cancelled)
+    let firstNonAMEX = trip.stopTimings.findIndex(stop => !stop.cancelled)
 
-  if tripEarlyTermination && trip.formingTrip
-    for stop in trip.stopTimings.slice(0, lastNonAMEX + 1)
-      +stopRow(stop)
-    if trip.formingTrip
-      +infoTextRow(`Diverted to ${trip.formingTrip.destination.slice(0, -16)}`)
-      for stop in trip.formingTrip.stopTimings
+    let tripEarlyTermination = lastNonAMEX >= 0 && lastNonAMEX !== trip.stopTimings.length - 1 && trip.stopTimings.every((stop, i) => i <= lastNonAMEX || stop.cancelled)
+    let tripLateStart = firstNonAMEX >= 0 && firstNonAMEX !== 0 && trip.stopTimings.every((stop, i) => i >= firstNonAMEX || stop.cancelled)
+
+  if tripLateStart || tripEarlyTermination
+    if tripLateStart
+      for stop in trip.stopTimings.slice(0, firstNonAMEX)
         +stopRow(stop)
-      +infoTextRow(`Remaining stops to ${trip.destination.slice(0, -16)} cancelled`)
-    for stop in trip.stopTimings.slice(lastNonAMEX + 1)
+      +infoTextRow(`Prior stops from ${trip.destination.slice(0, -16)} cancelled`)
+
+    for stop in trip.stopTimings.slice(firstNonAMEX, lastNonAMEX + 1)
       +stopRow(stop)
+
+    if tripEarlyTermination
+      if trip.formingTrip
+        +infoTextRow(`Diverted to ${trip.formingTrip.destination.slice(0, -16)}`)
+        for stop in trip.formingTrip.stopTimings
+          +stopRow(stop)
+      +infoTextRow(`Remaining stops to ${trip.destination.slice(0, -16)} cancelled`)
+      for stop in trip.stopTimings.slice(lastNonAMEX + 1)
+        +stopRow(stop)
 
   else
     for stop in trip.stopTimings
