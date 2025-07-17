@@ -1227,7 +1227,7 @@ describe('The trip updater module', () => {
     expect(fss.actualDepartureTime.toISOString()).to.equal('2025-06-05T23:11:00.000Z')
   })
 
-  it.only('The second last stop should updated to account for shorted trips', async () => {
+  it('The second last stop should updated to account for shorted trips', async () => {
     let database = new LokiDatabaseConnection('test-db')
     let stops = await database.createCollection('stops')
     let routes = await database.createCollection('routes')
@@ -1247,12 +1247,12 @@ describe('The trip updater module', () => {
     })
 
     let trip = clone(pkmSchTrip)
-    trip.stopTimings.slice(9).forEach(stop => stop.cancelled)
+    trip.stopTimings.slice(9).forEach(stop => stop.cancelled = true)
     await liveTimetables.createDocument(trip)
 
     let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
     gtfsrTrips[0].stops.splice(8, 20) // Cut up to HLM, DNG has no data
-    let tripData = await updateTrip(database, gtfsrTrips[0])
+    let tripData = await updateTrip(database, gtfsrTrips[0], { skipStopCancellation: true })
 
     let dng = tripData.stops[8]
     expect(dng.stopName).to.equal('Dandenong Railway Station')
@@ -1262,6 +1262,6 @@ describe('The trip updater module', () => {
     expect(dng.platform).to.equal('2')
     expect(dng.scheduledDepartureTime.toISOString()).to.equal('2025-06-05T22:13:00.000Z')
     expect(dng.estimatedDepartureTime.toISOString()).to.equal('2025-06-05T22:13:00.000Z') // On time should be carried over
-    expect(dng.actualDepartureTime.toISOString()).to.equal('2025-06-05T23:13:00.000Z')
+    expect(dng.actualDepartureTime.toISOString()).to.equal('2025-06-05T22:13:00.000Z')
   })
 })

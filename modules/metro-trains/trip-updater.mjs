@@ -199,8 +199,12 @@ export async function updateTrip(db, trip, {
 
     timetable.sortStops()
 
-    let secondLastStop = timetable.stops[timetable.stops.length - 2]
-    let lastStop = timetable.stops[timetable.stops.length - 1]
+    let lastNonAMEXStop = timetable.stops.findLastIndex(stop => !stop.cancelled)
+    let secondLastStop, lastStop
+    if (lastNonAMEXStop > 0) {
+      secondLastStop = timetable.stops[lastNonAMEXStop - 1]
+      lastStop = timetable.stops[lastNonAMEXStop]
+    }
 
     if (secondLastStop && stopVisits[secondLastStop.stopName] && !stopVisits[lastStop.stopName] && secondLastStop.estimatedDepartureTime) {
       let secondLastDelay = secondLastStop.estimatedDepartureTime.diff(secondLastStop.scheduledDepartureTime, 'minutes')
