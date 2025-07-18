@@ -1,0 +1,231 @@
+{
+  "_id": "6879c4210081342b1abe9229",
+  "mode": "regional train",
+  "routeGTFSID": "1-WBL",
+  "operationDays": "20250718",
+  "tripID": "10.T0.1-WBL-mjp-8.5.R",
+  "shapeID": "1-WBL-mjp-8.5.R",
+  "block": null,
+  "gtfsDirection": 1,
+  "routeName": "Warrnambool",
+  "routeNumber": "Warrnambool",
+  "stopTimings": [
+    {
+      "stopName": "Warrnambool Railway Station",
+      "stopNumber": null,
+      "suburb": "Warrnambool",
+      "stopGTFSID": "vic:rail:WBL",
+      "arrivalTime": null,
+      "arrivalTimeMinutes": null,
+      "departureTime": "15:10",
+      "departureTimeMinutes": 910,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      },
+      "stopDistance": "0.00",
+      "scheduledDepartureTime": "2025-07-18T05:10:00.000Z",
+      "actualDepartureTimeMS": 1752815400000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Sherwood Park Railway Station",
+      "stopNumber": null,
+      "suburb": "Warrnambool",
+      "stopGTFSID": "vic:rail:SDP",
+      "arrivalTime": "15:16",
+      "arrivalTimeMinutes": 916,
+      "departureTime": "15:16",
+      "departureTimeMinutes": 916,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "5867.76",
+      "scheduledDepartureTime": "2025-07-18T05:16:00.000Z",
+      "actualDepartureTimeMS": 1752815760000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Terang Railway Station",
+      "stopNumber": null,
+      "suburb": "Terang",
+      "stopGTFSID": "vic:rail:TER",
+      "arrivalTime": "15:44",
+      "arrivalTimeMinutes": 944,
+      "departureTime": "15:44",
+      "departureTimeMinutes": 944,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "46512.03",
+      "scheduledDepartureTime": "2025-07-18T05:44:00.000Z",
+      "actualDepartureTimeMS": 1752817440000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Camperdown Railway Station",
+      "stopNumber": null,
+      "suburb": "Camperdown",
+      "stopGTFSID": "vic:rail:CPD",
+      "arrivalTime": "16:02",
+      "arrivalTimeMinutes": 962,
+      "departureTime": "16:02",
+      "departureTimeMinutes": 962,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "68741.27",
+      "scheduledDepartureTime": "2025-07-18T06:02:00.000Z",
+      "actualDepartureTimeMS": 1752818520000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Colac Railway Station",
+      "stopNumber": null,
+      "suburb": "Colac",
+      "stopGTFSID": "vic:rail:COL",
+      "arrivalTime": "16:30",
+      "arrivalTimeMinutes": 990,
+      "departureTime": "16:30",
+      "departureTimeMinutes": 990,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "113749.76",
+      "scheduledDepartureTime": "2025-07-18T06:30:00.000Z",
+      "actualDepartureTimeMS": 1752820200000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Birregurra Railway Station",
+      "stopNumber": null,
+      "suburb": "Birregurra",
+      "stopGTFSID": "vic:rail:BGE",
+      "arrivalTime": "16:44",
+      "arrivalTimeMinutes": 1004,
+      "departureTime": "16:44",
+      "departureTimeMinutes": 1004,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "132893.89",
+      "scheduledDepartureTime": "2025-07-18T06:44:00.000Z",
+      "actualDepartureTimeMS": 1752821040000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Winchelsea Railway Station",
+      "stopNumber": null,
+      "suburb": "Winchelsea",
+      "stopGTFSID": "vic:rail:WIA",
+      "arrivalTime": "16:58",
+      "arrivalTimeMinutes": 1018,
+      "departureTime": "16:58",
+      "departureTimeMinutes": 1018,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "153442.05",
+      "scheduledDepartureTime": "2025-07-18T06:58:00.000Z",
+      "actualDepartureTimeMS": 1752821880000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Waurn Ponds Railway Station",
+      "stopNumber": null,
+      "suburb": "Mount Duneed",
+      "stopGTFSID": "vic:rail:WPP",
+      "arrivalTime": "17:21",
+      "arrivalTimeMinutes": 1041,
+      "departureTime": "17:23",
+      "departureTimeMinutes": 1043,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "182460.86",
+      "scheduledDepartureTime": "2025-07-18T07:23:00.000Z",
+      "actualDepartureTimeMS": 1752823380000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Geelong Railway Station",
+      "stopNumber": null,
+      "suburb": "Geelong",
+      "stopGTFSID": "vic:rail:GEL",
+      "arrivalTime": "17:39",
+      "arrivalTimeMinutes": 1059,
+      "departureTime": "17:41",
+      "departureTimeMinutes": 1061,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "194582.07",
+      "scheduledDepartureTime": "2025-07-18T07:41:00.000Z",
+      "actualDepartureTimeMS": 1752824460000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Footscray Railway Station",
+      "stopNumber": null,
+      "suburb": "Footscray",
+      "stopGTFSID": "vic:rail:FSY",
+      "arrivalTime": "18:28",
+      "arrivalTimeMinutes": 1108,
+      "departureTime": "18:28",
+      "departureTimeMinutes": 1108,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "269671.46",
+      "scheduledDepartureTime": "2025-07-18T08:28:00.000Z",
+      "actualDepartureTimeMS": 1752827280000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Southern Cross Railway Station",
+      "stopNumber": null,
+      "suburb": "Docklands",
+      "stopGTFSID": "vic:rail:SSS",
+      "arrivalTime": "18:38",
+      "arrivalTimeMinutes": 1118,
+      "departureTime": null,
+      "departureTimeMinutes": null,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "275117.98",
+      "scheduledDepartureTime": "2025-07-18T08:38:00.000Z",
+      "actualDepartureTimeMS": 1752827880000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    }
+  ],
+  "origin": "Warrnambool Railway Station",
+  "departureTime": "15:10",
+  "destination": "Southern Cross Railway Station",
+  "destinationArrivalTime": "18:38",
+  "runID": "8866",
+  "direction": "Up",
+  "formedBy": "8863",
+  "forming": "8799"
+}
