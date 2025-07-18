@@ -18,7 +18,7 @@ export default [
   { path: '/heritage/timings', router: 'timing-pages/HeritageTrain.js', enable: modules.Next4 && modules.Next4.heritage },
 
   { path: '/metro/run', router: 'run-pages/MetroTrains.js' },
-  { path: '/vline/run', router: 'run-pages/VLineTrains.js' },
+  { path: '/vline/run', router: 'run-pages/VLineTrains.mjs' },
   { path: '/tram/run', router: 'run-pages/Tram.js' },
   { path: '/bus/run', router: 'run-pages/Bus.js' },
   { path: '/', router: 'run-pages/Generic.js' },

@@ -6,6 +6,7 @@ import config from '../../config.json' with { type: 'json' }
 import { GetPlatformServicesAPI, PTVAPI, PTVAPIInterface, VLineAPIInterface } from '@transportme/ptv-api'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import LiveTimetable from '../schema/live-timetable.js'
+import VLineUtils from '../vline/vline-utils.mjs'
 
 let existingVNetStops = {}
 
@@ -42,15 +43,6 @@ export async function matchTrip(operationDay, vlineTrip, db) {
         utils.formatPTHHMM(arrivalTime.clone().add(1, 'minute')),
       ]
     }
-  })
-}
-
-export async function getNSPTrip(dayofWeek, runID, db) {
-  let timetables = await db.getCollection('timetables')
-  return await timetables.findDocument({
-    mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
-    operationDays: dayofWeek,
-    runID
   })
 }
 
@@ -153,7 +145,7 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
   let departures = await ptvAPI.vline.getDepartures('', GetPlatformServicesAPI.BOTH, 1440)
   for (let departure of departures) {
     let matchingTrip = await matchTrip(opDayFormat, departure, db)
-    let nspTrip = await getNSPTrip(dayOfWeek, departure.tdn, db)
+    let nspTrip = await VLineUtils.getNSPTrip(dayOfWeek, departure.tdn, db)
 
     if (matchingTrip) {
       let liveTrip = convertToLive(matchingTrip, operationDay)
