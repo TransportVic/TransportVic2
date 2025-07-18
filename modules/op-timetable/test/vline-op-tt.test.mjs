@@ -4,7 +4,7 @@ import path from 'path'
 import url from 'url'
 import { StubVLineAPI, PTVAPI } from '@transportme/ptv-api'
 import { GetPlatformServicesAPI, VLinePlatformService, VLinePlatformServices } from '@transportme/ptv-api/lib/vline/get-platform-services.mjs'
-import { matchTrip } from '../load-vline-op-tt.mjs'
+import { downloadTripPattern, matchTrip } from '../load-vline-op-tt.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import td8741GTFS from './sample-data/td8741-gtfs.json' with { type: 'json' }
 import allStops from './sample-data/stops.json' with { type: 'json' }
@@ -58,13 +58,18 @@ describe('The matchTrip function', () => {
       let departures = await ptvAPI.vline.getDepartures('', GetPlatformServicesAPI.BOTH, 30)
 
       expect(departures[0]).to.be.instanceOf(VLinePlatformService)
-      expect(departures[0].origin).to.equal('Melbourne, Southern Cross')
-      expect(departures[0].destination).to.equal('Waurn Ponds Station')
       expect(departures[0].tdn).to.equal('8741')
-      expect(departures[0].departureTime.toUTC().toISO()).to.equal('2025-07-18T01:30:00.000Z')
-      expect(departures[0].arrivalTime.toUTC().toISO()).to.equal('2025-07-18T02:48:00.000Z')
 
       let matchingTrip = await matchTrip('20250718', departures[0], database)
       expect(matchingTrip).to.not.exist
+
+      let pattern = await downloadTripPattern(departures[0], database)
+      let trip = pattern.toDatabase()
+      expect(trip.runID).to.equal('8741')
+      expect(trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
+      expect(trip.stopTimings[0].departureTime).to.equal('11:30')
+
+      expect(trip.stopTimings[1].stopName).to.equal('Footscray Railway Station')
+      expect(trip.stopTimings[1].departureTime).to.equal('11:38')
   })
 })
