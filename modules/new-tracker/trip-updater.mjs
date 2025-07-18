@@ -119,6 +119,38 @@ export default class TripUpdater {
     })
   }
 
+  static _setUpTimetable(timetable, trip, dataSource) {
+    timetable.setModificationSource(dataSource)
+
+    let firstStop = timetable.stops.find(stop => !stop.cancelled)
+    if (trip.scheduledStartTime && firstStop.departureTime !== trip.scheduledStartTime) return false
+
+    timetable.cancelled = trip.cancelled
+    if (trip.cancelled) {
+      if (trip.stops && trip.stops.length) {
+        trip.stops.forEach(stop => {
+          stop.estimatedDepartureTime = null
+          stop.estimatedArrivalTime = null
+        })
+      } else trip.stops = null
+    }
+
+    if (trip.forming) timetable.forming = trip.forming
+    if (trip.formedBy) timetable.formedBy = trip.formedBy
+    if (trip.consist) timetable.consist = trip.consist.reduce((acc, e) => acc.concat(e), [])
+    else if (trip.forcedVehicle) timetable.forcedVehicle = trip.forcedVehicle
+
+    if (timetable.direction === 'Up' && trip.stops && trip.stops.length) {
+      let updateLastStop = trip.stops[trip.stops.length - 1]
+      let isFSS = timetable.destination === 'Flinders Street Railway Station'
+      if (isFSS && updateLastStop.stopName === timetable.destination) {
+        trip.stops[trip.stops.length - 1].scheduledDepartureTime = null
+      }
+    }
+
+    return true
+  }
+
   static async updateTrip(db, trip, {
     skipWrite = false,
     skipStopCancellation = false,
@@ -138,37 +170,10 @@ export default class TripUpdater {
     let timetable = LiveTimetable.fromDatabase(dbTrip)
     if (updateTime) timetable.lastUpdated = updateTime
 
-    timetable.setModificationSource(dataSource)
-
-    let firstStop = timetable.stops.find(stop => !stop.cancelled)
-    if (trip.scheduledStartTime && firstStop.departureTime !== trip.scheduledStartTime) return null
-
-    timetable.cancelled = trip.cancelled
-    if (trip.cancelled) {
-      if (trip.stops && trip.stops.length) {
-        trip.stops.forEach(stop => {
-          stop.estimatedDepartureTime = null
-          stop.estimatedArrivalTime = null
-        })
-      } else trip.stops = null
-    }
-
-    if (trip.forming) timetable.forming = trip.forming
-    if (trip.formedBy) timetable.formedBy = trip.formedBy
-    if (trip.consist) timetable.consist = trip.consist.reduce((acc, e) => acc.concat(e), [])
-    else if (trip.forcedVehicle) timetable.forcedVehicle = trip.forcedVehicle
+    if (!this._setUpTimetable(timetable, trip, dataSource)) return null
 
     let existingStops = timetable.getStopNames()
-
     let stopVisits = {}
-
-    if (timetable.direction === 'Up' && trip.stops && trip.stops.length) {
-      let updateLastStop = trip.stops[trip.stops.length - 1]
-      let isFSS = timetable.destination === 'Flinders Street Railway Station'
-      if (isFSS && updateLastStop.stopName === timetable.destination) {
-        trip.stops[trip.stops.length - 1].scheduledDepartureTime = null
-      }
-    }
 
     let isCCL = trip.routeGTFSID === '2-CCL'
     if (trip.stops) {
