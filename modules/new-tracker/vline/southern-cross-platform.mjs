@@ -1,4 +1,8 @@
-import { GetPlatformServicesAPI } from '@transportme/ptv-api'
+import { MongoDatabaseConnection } from '@transportme/database'
+import { fileURLToPath } from 'url'
+import utils from '../../../utils.js'
+import config from '../../../config.json' with { type: 'json' }
+import { GetPlatformServicesAPI, PTVAPI, PTVAPIInterface, VLineAPIInterface } from '@transportme/ptv-api'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import VLineTripUpdater from '../../vline/trip-updater.mjs'
 
@@ -39,4 +43,20 @@ export async function fetchTrips(operationDay, database, ptvAPI) {
       dataSource: 'vline-platform-arrivals-sss'
     })
   }
+
+  return tripUpdates
+}
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await mongoDB.connect()
+
+  let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
+  let vlineAPIInterface = new VLineAPIInterface(config.vlineCallerID, config.vlineSignature)
+  ptvAPI.addVLine(vlineAPIInterface)
+
+  let updatedTrips = await fetchTrips(utils.getYYYYMMDD(utils.now()), mongoDB, ptvAPI)
+  console.log('> SSS Platforms: Updated TDNs:', updatedTrips.map(trip => trip.runID).join(', '))
+
+  await mongoDB.close()
 }
