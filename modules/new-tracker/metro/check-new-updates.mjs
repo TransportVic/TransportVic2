@@ -21,10 +21,10 @@ async function checkFormingChange(trip, change, liveTimetables, trips, updates) 
 
   if (change.type === 'forming-change') {
     if (oldTrip && oldTrip.formedBy === trip.runID) updates.push({ operationDays: oldTrip.operationDays, runID: oldTrip.runID, setNull: 'formedBy', badVal: trip.runID })
-    if ((!newTrip && change.newVal) || (newTrip && newTrip.formedBy !== trip.runID)) updates.push({ operationDays: trip.operationDay, runID: change.newVal})
+    if ((!newTrip && change.newVal) || (newTrip && newTrip.formedBy !== trip.runID)) updates.push({ operationDays: trip.operationDay, runID: change.newVal, enforceField: 'formedBy', enforceValue: trip.runID })
   } else if (change.type === 'formedby-change') {
     if (oldTrip && oldTrip.forming === trip.runID) updates.push({ operationDays: oldTrip.operationDays, runID: oldTrip.runID, setNull: 'forming', badVal: trip.runID  })
-    if ((!newTrip && change.newVal) || (newTrip && newTrip.forming !== trip.runID)) updates.push({ operationDays: trip.operationDay, runID: change.newVal })
+    if ((!newTrip && change.newVal) || (newTrip && newTrip.forming !== trip.runID)) updates.push({ operationDays: trip.operationDay, runID: change.newVal, enforceField: 'forming', enforceValue: trip.runID })
   }
 }
 
@@ -67,6 +67,8 @@ export async function updateRelatedTrips(db, updatedTrips, ptvAPI) {
     for (let trip of tripsNeedingUpdate) {
       let updatedData = await updateTDNFromPTV(db, trip.runID, ptvAPI, {}, 'ptv-pattern-transposal', true)
       if (trip.setNull && updatedData[trip.setNull] === trip.badVal) updatedData[trip.setNull] = null
+      else if (trip.enforceField) updatedData[trip.enforceField] = trip.enforceValue
+
       await liveTimetables.replaceDocument(updatedData.getDBKey(), updatedData.toDatabase())
       newlyUpdatedTrips.push(updatedData)
     }

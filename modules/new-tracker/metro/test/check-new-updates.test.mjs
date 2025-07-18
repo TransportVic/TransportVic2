@@ -181,7 +181,9 @@ describe('The changelog tracker', () => {
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
     expect(tripsNeedingUpdate).to.deep.equal([{
       operationDays: '20250718',
-      runID: '1951'
+      runID: '1951',
+      enforceField: 'forming',
+      enforceValue: '7138'
     }])
 
     await updateRelatedTrips(db, updatedTrips, ptvAPI)
