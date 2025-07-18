@@ -38,6 +38,7 @@ async function modifyTrip(db, trip, operationDay) {
     destinationArrivalTime: trip.destinationArrivalTime
   }
 
+  trip.runID = Math.random()
   await db.getCollection('live timetables').replaceDocument(key, trip, {
     upsert: true
   })

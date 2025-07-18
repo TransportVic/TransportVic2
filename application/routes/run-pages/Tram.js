@@ -150,6 +150,7 @@ async function pickBestTrip(data, db) {
     referenceTrip.type = 'timings'
     referenceTrip.updateTime = new Date()
     delete referenceTrip._id
+    referenceTrip.runID = Math.random()
 
     await liveTimetables.replaceDocument(key, referenceTrip, {
       upsert: true
