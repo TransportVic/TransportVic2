@@ -29,3 +29,14 @@ export async function getPlatformUpdates(operationDay, database, ptvAPI) {
 
   return output
 }
+
+export async function fetchTrips(operationDay, database, ptvAPI) {
+  let tripUpdates = await getPlatformUpdates(operationDay, database, ptvAPI)
+
+  for (let update of tripUpdates) {
+    await VLineTripUpdater.updateTrip(database, update, {
+      skipStopCancellation: true,
+      dataSource: 'vline-platform-arrivals-sss'
+    })
+  }
+}

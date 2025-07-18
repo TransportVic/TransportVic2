@@ -2081,600 +2081,364 @@
         ]
     },
     {
-        "stopName": "Southern Cross Railway Station",
-        "suburb": [
-            "Docklands",
-            "Melbourne"
-        ],
-        "cleanSuburbs": [
-            "docklands",
-            "melbourne"
-        ],
-        "bays": [
-            {
-                "originalName": "Southern Cross Station",
-                "fullStopName": "Southern Cross Railway Station",
-                "stopGTFSID": "22187",
-                "location": {
-                    "type": "Point",
-                    "coordinates": [
-                        144.95179389,
-                        -37.81765471
-                    ]
-                },
-                "stopNumber": null,
-                "mode": "metro train",
-                "suburb": "Docklands",
-                "services": [
-                    {
-                        "routeGTFSID": "2-RCE",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-RCE",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    }
-                ],
-                "screenServices": [
-                    {
-                        "routeGTFSID": "2-RCE",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    }
-                ],
-                "stopType": "stop",
-                "parentStopGTFSID": "vic:rail:SSS",
-                "platform": "8"
-            },
-            {
-                "originalName": "Southern Cross Station",
-                "fullStopName": "Southern Cross Railway Station",
-                "stopGTFSID": "22188",
-                "location": {
-                    "type": "Point",
-                    "coordinates": [
-                        144.95200455,
-                        -37.81825315
-                    ]
-                },
-                "stopNumber": null,
-                "mode": "metro train",
-                "suburb": "Docklands",
-                "services": [
-                    {
-                        "routeGTFSID": "2-CCL",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-HBE",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-MDD",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    }
-                ],
-                "screenServices": [
-                    {
-                        "routeGTFSID": "2-CCL",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-HBE",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-MDD",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    }
-                ],
-                "stopType": "stop",
-                "parentStopGTFSID": "vic:rail:SSS",
-                "platform": "9"
-            },
-            {
-                "originalName": "Southern Cross Station",
-                "fullStopName": "Southern Cross Railway Station",
-                "stopGTFSID": "22189",
-                "location": {
-                    "type": "Point",
-                    "coordinates": [
-                        144.95214444,
-                        -37.81853495
-                    ]
-                },
-                "stopNumber": null,
-                "mode": "metro train",
-                "suburb": "Docklands",
-                "services": [
-                    {
-                        "routeGTFSID": "2-ALM",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-ALM",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-BEG",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-BEG",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-CGB",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-GWY",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-GWY",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-LIL",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-LIL",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-UFD",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    }
-                ],
-                "screenServices": [
-                    {
-                        "routeGTFSID": "2-ALM",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-ALM",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-BEG",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-BEG",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-CGB",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-GWY",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-GWY",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-LIL",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-LIL",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-UFD",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    }
-                ],
-                "stopType": "stop",
-                "parentStopGTFSID": "vic:rail:SSS",
-                "platform": "10"
-            },
-            {
-                "originalName": "Southern Cross Station",
-                "fullStopName": "Southern Cross Railway Station",
-                "stopGTFSID": "22190",
-                "location": {
-                    "type": "Point",
-                    "coordinates": [
-                        144.95191735,
-                        -37.818531
-                    ]
-                },
-                "stopNumber": null,
-                "mode": "metro train",
-                "suburb": "Docklands",
-                "services": [
-                    {
-                        "routeGTFSID": "2-CGB",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-CGB",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-UFD",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-UFD",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    }
-                ],
-                "screenServices": [
-                    {
-                        "routeGTFSID": "2-CGB",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-CGB",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-UFD",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-UFD",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    }
-                ],
-                "stopType": "stop",
-                "parentStopGTFSID": "vic:rail:SSS",
-                "platform": "11"
-            },
-            {
-                "originalName": "Southern Cross Station",
-                "fullStopName": "Southern Cross Railway Station",
-                "stopGTFSID": "22191",
-                "location": {
-                    "type": "Point",
-                    "coordinates": [
-                        144.95184872,
-                        -37.81854783
-                    ]
-                },
-                "stopNumber": null,
-                "mode": "metro train",
-                "suburb": "Docklands",
-                "services": [
-                    {
-                        "routeGTFSID": "2-CBE",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-CGB",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-PKM",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-UFD",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-UFD",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    }
-                ],
-                "screenServices": [
-                    {
-                        "routeGTFSID": "2-CBE",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-CGB",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-PKM",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-UFD",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-UFD",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    }
-                ],
-                "stopType": "stop",
-                "parentStopGTFSID": "vic:rail:SSS",
-                "platform": "12"
-            },
-            {
-                "originalName": "Southern Cross Station",
-                "fullStopName": "Southern Cross Railway Station",
-                "stopGTFSID": "22192",
-                "location": {
-                    "type": "Point",
-                    "coordinates": [
-                        144.951766,
-                        -37.81866354
-                    ]
-                },
-                "stopNumber": null,
-                "mode": "metro train",
-                "suburb": "Docklands",
-                "services": [
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-WER",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-WIL",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    }
-                ],
-                "screenServices": [
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-WER",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-WIL",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    }
-                ],
-                "stopType": "stop",
-                "parentStopGTFSID": "vic:rail:SSS",
-                "platform": "13"
-            },
-            {
-                "originalName": "Southern Cross Station",
-                "fullStopName": "Southern Cross Railway Station",
-                "stopGTFSID": "22193",
-                "location": {
-                    "type": "Point",
-                    "coordinates": [
-                        144.95170848,
-                        -37.81868957
-                    ]
-                },
-                "stopNumber": null,
-                "mode": "metro train",
-                "suburb": "Docklands",
-                "services": [
-                    {
-                        "routeGTFSID": "2-CGB",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-WER",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-WIL",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    }
-                ],
-                "screenServices": [
-                    {
-                        "routeGTFSID": "2-CGB",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-SUY",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-WER",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    },
-                    {
-                        "routeGTFSID": "2-WIL",
-                        "gtfsDirection": 0,
-                        "routeNumber": null
-                    }
-                ],
-                "stopType": "stop",
-                "parentStopGTFSID": "vic:rail:SSS",
-                "platform": "14"
-            },
-            {
-                "originalName": "Southern Cross Railway Station",
-                "fullStopName": "Southern Cross Railway Station",
-                "stopGTFSID": "26282",
-                "location": {
-                    "type": "Point",
-                    "coordinates": [
-                        144.95326534,
-                        -37.81743698
-                    ]
-                },
-                "stopNumber": null,
-                "mode": "metro train",
-                "suburb": "Docklands",
-                "services": [
-                    {
-                        "routeGTFSID": "2-WER",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    }
-                ],
-                "screenServices": [
-                    {
-                        "routeGTFSID": "2-WER",
-                        "gtfsDirection": 1,
-                        "routeNumber": null
-                    }
-                ],
-                "stopType": "stop",
-                "parentStopGTFSID": "vic:rail:SSS",
-                "platform": "RRB"
-            },
-            {
-                "originalName": "Southern Cross Railway Station",
-                "fullStopName": "Southern Cross Railway Station",
-                "stopGTFSID": "vic:rail:SSS",
-                "location": {
-                    "type": "Point",
-                    "coordinates": [
-                        144.95277706,
-                        -37.8186631
-                    ]
-                },
-                "stopNumber": null,
-                "mode": "metro train",
-                "suburb": "Docklands",
-                "services": [],
-                "screenServices": [],
-                "stopType": "station",
-                "parentStopGTFSID": null
-            }
-        ],
-        "mergeName": "Southern Cross Railway Station",
-        "services": [],
-        "screenServices": [],
-        "cleanName": "southern-cross-railway-station",
-        "cleanNames": [
-            "southern-cross-railway-station",
-            "southern-cross-railway-station-spencer-street",
-            "southern-cross-railway-station-collins-street"
-        ],
-        "cleanSuburbs": [
-            "docklands",
-            "melbourne"
-        ]
+    "_id": "7e776a863065aaf69810550f67abc031",
+    "stopName": "Southern Cross Railway Station",
+    "suburb": [
+        "Docklands",
+        "Melbourne"
+    ],
+    "cleanSuburbs": [
+        "docklands",
+        "melbourne"
+    ],
+    "bays": [
+        {
+        "originalName": "Southern Cross Railway Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "vic:rail:SSS",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95277706,
+            -37.8186631
+            ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Docklands",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Melbourne, Southern Cross"
+        },
+        {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "20043",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95205759,
+            -37.81838925
+            ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS"
+        },
+        {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "22187",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95179389,
+            -37.81765471
+            ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "platform": "8"
+        },
+        {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "22188",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95200455,
+            -37.81825315
+            ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "platform": "9"
+        },
+        {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "22189",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95214444,
+            -37.81853495
+            ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "platform": "10"
+        },
+        {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "22190",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95191735,
+            -37.818531
+            ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "platform": "11"
+        },
+        {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "22191",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95184872,
+            -37.81854783
+            ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "platform": "12"
+        },
+        {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "22192",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.951766,
+            -37.81866354
+            ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "platform": "13"
+        },
+        {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "22193",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95170848,
+            -37.81868957
+            ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "platform": "14"
+        },
+        {
+        "originalName": "Southern Cross Railway Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "26282",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95326534,
+            -37.81743698
+            ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS",
+        "platform": "RRB"
+        },
+        {
+        "originalName": "Southern Cross Railway Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "vic:rail:SSS",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95277706,
+            -37.8186631
+            ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Docklands",
+        "stopType": "station",
+        "parentStopGTFSID": null
+        },
+        {
+        "originalName": "Southern Cross Railway Station/Spencer St #122",
+        "fullStopName": "Southern Cross Railway Station/Spencer Street",
+        "stopGTFSID": "18187",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95378623,
+            -37.81832017
+            ]
+        },
+        "stopNumber": "122",
+        "mode": "tram",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "tramTrackerID": "3354",
+        "tramTrackerName": "Southern Cross Railway Station, Collins Street",
+        "levelAccess": true
+        },
+        {
+        "originalName": "Southern Cross Railway Station/Spencer St #122",
+        "fullStopName": "Southern Cross Railway Station/Spencer Street",
+        "stopGTFSID": "18194",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95403544,
+            -37.81875707
+            ]
+        },
+        "stopNumber": "122",
+        "mode": "tram",
+        "suburb": "Melbourne",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "tramTrackerID": "3254",
+        "tramTrackerName": "Southern Cross Railway Station, Collins Street",
+        "levelAccess": true
+        },
+        {
+        "originalName": "Southern Cross Station/Collins St #D14",
+        "fullStopName": "Southern Cross Railway Station/Collins Street",
+        "stopGTFSID": "43472",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95221502,
+            -37.81968066
+            ]
+        },
+        "stopNumber": "D14",
+        "mode": "tram",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "tramTrackerID": "3500",
+        "tramTrackerName": "Southern Cross Railway Station",
+        "levelAccess": true
+        },
+        {
+        "originalName": "Southern Cross Station/Collins St #D14",
+        "fullStopName": "Southern Cross Railway Station/Collins Street",
+        "stopGTFSID": "43477",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.9525957,
+            -37.819471
+            ]
+        },
+        "stopNumber": "D14",
+        "mode": "tram",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "tramTrackerID": "3400",
+        "tramTrackerName": "Southern Cross Railway Station",
+        "levelAccess": true
+        },
+        {
+        "originalName": "Southern Cross Station/Spencer St",
+        "fullStopName": "Southern Cross Railway Station/Spencer Street",
+        "stopGTFSID": "27744",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95427273,
+            -37.81962632
+            ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+        },
+        {
+        "originalName": "Southern Cross Station/Collins St",
+        "fullStopName": "Southern Cross Railway Station/Collins Street",
+        "stopGTFSID": "45470",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95322121,
+            -37.81944583
+            ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+        },
+        {
+        "originalName": "Southern Cross Station/Collins St",
+        "fullStopName": "Southern Cross Railway Station/Collins Street",
+        "stopGTFSID": "45471",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+            144.95341035,
+            -37.81917877
+            ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+        }
+    ],
+    "mergeName": "Southern Cross Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "southern-cross-railway-station",
+    "cleanNames": [
+        "southern-cross-railway-station",
+        "southern-cross-railway-station-spencer-street",
+        "southern-cross-railway-station-collins-street"
+    ],
+    "codedSuburbs": [
+        "docklands",
+        "melbourne"
+    ],
+    "codedName": "southern-cross-railway-station",
+    "codedNames": [
+        "southern-cross-railway-station",
+        "southern-cross-railway-station-spencer-street",
+        "southern-cross-railway-station-collins-street"
+    ]
     },
     {
         "stopName": "Flemington Racecourse Railway Station",

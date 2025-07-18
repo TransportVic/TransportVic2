@@ -7,7 +7,7 @@ import { LokiDatabaseConnection } from '@transportme/database'
 import allStops from '../../../op-timetable/test/sample-data/stops.json' with { type: 'json' }
 import allRoutes from '../../../op-timetable/test/sample-data/routes.json' with { type: 'json' }
 import td8866 from './sample-data/td8866.json' with { type: 'json' }
-import { getPlatformUpdates } from '../southern-cross-platform.mjs'
+import { fetchTrips, getPlatformUpdates } from '../southern-cross-platform.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -40,5 +40,29 @@ describe('The SSS Platform updater', () => {
         platform: '8'
       }]
     })
+  })
+
+  it('Updates the trip objects', async () => {
+    let database = new LokiDatabaseConnection()
+    let liveTimetables = database.getCollection('live timetables')
+    let stops = database.getCollection('stops')
+
+    await liveTimetables.createDocument(clone(td8866))
+    await stops.createDocument(clone(allStops))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ sssPlatforms ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await fetchTrips('20250718', database, ptvAPI)
+
+    let trip = await liveTimetables.findDocument({ runID: '8866' })
+    expect(trip.stopTimings[0].cancelled).to.be.false
+    expect(trip.stopTimings[0].stopName).to.equal('Warrnambool Railway Station')
+
+    expect(trip.stopTimings[trip.stopTimings.length - 1].stopName).to.equal('Southern Cross Railway Station')
+    expect(trip.stopTimings[trip.stopTimings.length - 1].cancelled).to.be.false
+    expect(trip.stopTimings[trip.stopTimings.length - 1].platform).to.equal('8')
   })
 })
