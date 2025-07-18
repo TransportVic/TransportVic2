@@ -7,6 +7,7 @@ import { GetPlatformServicesAPI, VLinePlatformService, VLinePlatformServices } f
 import { downloadTripPattern, matchTrip } from '../load-vline-op-tt.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import td8741GTFS from './sample-data/td8741-gtfs.json' with { type: 'json' }
+import td8007NSP from './sample-data/td8007-nsp.json' with { type: 'json' }
 import allStops from './sample-data/stops.json' with { type: 'json' }
 import allRoutes from './sample-data/routes.json' with { type: 'json' }
 
@@ -85,9 +86,11 @@ describe('The matchTrip function', () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let routes = database.getCollection('routes')
+    let timetables = database.getCollection('timetables')
 
     await stops.createDocuments(clone(allStops))
     await routes.createDocuments(clone(allRoutes))
+    await timetables.createDocument(clone(td8007NSP))
 
     let stubAPI = new StubVLineAPI()
       stubAPI.setResponses([ vlineTrips, td8007Late ])
@@ -119,9 +122,11 @@ describe('The matchTrip function', () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let routes = database.getCollection('routes')
+    let timetables = database.getCollection('timetables')
 
     await stops.createDocuments(clone(allStops))
     await routes.createDocuments(clone(allRoutes))
+    await timetables.createDocument(clone(td8007NSP))
 
     let stubAPI = new StubVLineAPI()
       stubAPI.setResponses([ vlineTrips, td8007Early ])
