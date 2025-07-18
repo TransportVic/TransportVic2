@@ -162,7 +162,45 @@ export default class TripUpdater {
     return { lastStopDelay: null, lastStop, secondLastStop, lastNonAMEXStop }
   }
 
-  static updateTripDetails() {
+  static async updateTripDetails(db, timetable, trip, skipStopCancellation, ignoreMissingStops) {
+    let existingStops = timetable.getStopNames()
+    let stopVisits = {}
+
+    let isCCL = trip.routeGTFSID === '2-CCL'
+    for (let stop of trip.stops) {
+      let { stopData, updatedData } = await this.getBaseStopUpdateData(db, stop)
+      if (!stopData) {
+        console.log('Failed to update stop ' + JSON.stringify(trip), stop)
+        continue
+      }
+
+      if (!stopVisits[stop.stopName]) stopVisits[stop.stopName] = 0
+      stopVisits[stop.stopName]++
+
+      if (!existingStops.includes(stop.stopName)) updatedData.additional = true
+      if (stop.platform) updatedData.platform = stop.platform
+      if (typeof stop.cancelled !== 'undefined') updatedData.cancelled = stop.cancelled
+      else if (!skipStopCancellation) updatedData.cancelled = false
+
+      if (stop.scheduledDepartureTime) updatedData.scheduledDepartureTime = stop.scheduledDepartureTime.toISOString()
+      if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
+      if (stop.estimatedArrivalTime) updatedData.estimatedArrivalTime = stop.estimatedArrivalTime.toISOString()
+
+      let matchingCriteria = isCCL ? { prefSchTime: stop.scheduledDepartureTime.toISOString() } : { visitNum: stopVisits[stop.stopName] }
+      timetable.updateStopByName(stopData.stopName, updatedData, matchingCriteria)
+    }
+
+    if (!skipStopCancellation) {
+      for (let stop of existingStops) {
+        if (!stopVisits[stop] && !ignoreMissingStops.includes(stop)) {
+          timetable.updateStopByName(stop, {
+            cancelled: true
+          })
+        }
+      }
+    }
+
+    return stopVisits
   }
 
   static async updateTrip(db, trip, {
@@ -191,43 +229,8 @@ export default class TripUpdater {
     this.setUpTimetable(timetable, trip)
     this.adjustTripInput(timetable, trip)
 
-    let existingStops = timetable.getStopNames()
-    let stopVisits = {}
-
-    let isCCL = trip.routeGTFSID === '2-CCL'
     if (trip.stops) {
-      for (let stop of trip.stops) {
-        let { stopData, updatedData } = await this.getBaseStopUpdateData(db, stop)
-        if (!stopData) {
-          console.log('Failed to update stop ' + JSON.stringify(trip), stop)
-          continue
-        }
-
-        if (!stopVisits[stop.stopName]) stopVisits[stop.stopName] = 0
-        stopVisits[stop.stopName]++
-
-        if (!existingStops.includes(stop.stopName)) updatedData.additional = true
-        if (stop.platform) updatedData.platform = stop.platform
-        if (typeof stop.cancelled !== 'undefined') updatedData.cancelled = stop.cancelled
-        else if (!skipStopCancellation) updatedData.cancelled = false
-
-        if (stop.scheduledDepartureTime) updatedData.scheduledDepartureTime = stop.scheduledDepartureTime.toISOString()
-        if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
-        if (stop.estimatedArrivalTime) updatedData.estimatedArrivalTime = stop.estimatedArrivalTime.toISOString()
-
-        let matchingCriteria = isCCL ? { prefSchTime: stop.scheduledDepartureTime.toISOString() } : { visitNum: stopVisits[stop.stopName] }
-        timetable.updateStopByName(stopData.stopName, updatedData, matchingCriteria)
-      }
-
-      if (!skipStopCancellation) {
-        for (let stop of existingStops) {
-          if (!stopVisits[stop] && !ignoreMissingStops.includes(stop)) {
-            timetable.updateStopByName(stop, {
-              cancelled: true
-            })
-          }
-        }
-      }
+      let stopVisits = await this.updateTripDetails(db, timetable, trip, skipStopCancellation, ignoreMissingStops)
 
       timetable.sortStops()
 
