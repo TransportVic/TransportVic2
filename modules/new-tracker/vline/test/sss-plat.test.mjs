@@ -18,6 +18,8 @@ const sssPlatformsArr = (await fs.readFile(path.join(__dirname, 'sample-data', '
 const sssPlatformsDep = (await fs.readFile(path.join(__dirname, 'sample-data', 'sss-plat-8741-dep.xml'))).toString()
 
 const clone = o => JSON.parse(JSON.stringify(o))
+const td8741 = convertToLive(clone(td8741GTFS), '20250718')
+td8741.runID = '8741'
 
 describe('The SSS Platform updater', () => {
   it('Fetches the list of arrivals into SSS and produces trip update objects', async () => {
@@ -25,8 +27,8 @@ describe('The SSS Platform updater', () => {
     let liveTimetables = database.getCollection('live timetables')
     let stops = database.getCollection('stops')
 
-    await liveTimetables.createDocuments([ clone(td8866), convertToLive(clone(td8741GTFS)) ])
-    await stops.createDocument(clone(allStops))
+    await liveTimetables.createDocuments([ clone(td8866), clone(td8741) ])
+    await stops.createDocuments(clone(allStops))
 
     let stubAPI = new StubVLineAPI()
     stubAPI.setResponses([ sssPlatformsArr, sssPlatformsDep ])
@@ -59,8 +61,8 @@ describe('The SSS Platform updater', () => {
     let liveTimetables = database.getCollection('live timetables')
     let stops = database.getCollection('stops')
 
-    await liveTimetables.createDocuments([ clone(td8866), convertToLive(clone(td8741GTFS)) ])
-    await stops.createDocument(clone(allStops))
+    await liveTimetables.createDocuments([ clone(td8866), clone(td8741) ])
+    await stops.createDocuments(clone(allStops))
 
     let stubAPI = new StubVLineAPI()
     stubAPI.setResponses([ sssPlatformsArr, sssPlatformsDep ])

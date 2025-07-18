@@ -10,25 +10,30 @@ export async function getPlatformUpdates(operationDay, database, ptvAPI) {
   let stops = await database.getCollection('stops')
   let sss = await stops.findDocument({ stopName: 'Southern Cross Railway Station' })
   let vlineBay = sss.bays.find(bay => bay.mode === GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain && bay.stopType === 'station')
-  let departures = await ptvAPI.vline.getArrivals(vlineBay.vnetStationName, GetPlatformServicesAPI.UP, 30)
+  let arrivals = await ptvAPI.vline.getArrivals(vlineBay.vnetStationName, GetPlatformServicesAPI.UP, 30)
+  let departures = await ptvAPI.vline.getDepartures(vlineBay.vnetStationName, GetPlatformServicesAPI.DOWN, 1440)
+
+  let allTrips = [...arrivals, ...departures]
 
   let output = []
-  for (let departure of departures) {
-    let tripData = await VLineTripUpdater.getTrip(database, departure.tdn, operationDay)
+  for (let trip of allTrips) {
+    let tripData = await VLineTripUpdater.getTrip(database, trip.tdn, operationDay)
     if (!tripData) {
-      console.log('Skipped unknown trip', departure)
+      console.log('Skipped unknown trip', trip)
       continue
     }
 
-    output.push({
+    let updateData = {
       operationDays: operationDay,
-      runID: departure.tdn,
+      runID: trip.tdn,
       stops: [{
         stopName: sss.stopName,
-        estimatedArrivalTime: new Date(departure.estArrivalTime),
-        platform: departure.platform
+        platform: trip.platform
       }]
-    })
+    }
+
+    if (trip.estArrivalTime) updateData.stops[0].estimatedArrivalTime = new Date(trip.estArrivalTime)
+    output.push(updateData)
   }
 
   return output
