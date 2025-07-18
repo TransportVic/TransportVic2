@@ -17,7 +17,7 @@ const td8007 = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8741-pa
 const td8741 = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8007-pattern.xml'))).toString()
 
 describe('The matchTrip function', () => {
-  it.only('Matches a V/Line API trip to a GTFS trip', async () => {
+  it('Matches a V/Line API trip to a GTFS trip', async () => {
     let database = new LokiDatabaseConnection()
     let gtfsTimetables = database.getCollection('gtfs timetables')
     let stops = database.getCollection('stops')
@@ -42,5 +42,29 @@ describe('The matchTrip function', () => {
       let matchingTrip = await matchTrip('20250718', departures[0], database)
       expect(matchingTrip).to.exist
       expect(matchingTrip.tripID).to.equal('48.T0.1-GEL-mjp-8.11.H')
+  })
+
+  it.only('Fetches trip details from the V/Line API if the trip is unknown', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+
+    await stops.createDocument(allStops)
+
+    let stubAPI = new StubVLineAPI()
+      stubAPI.setResponses([ vlineTrips, td8741 ])
+      let ptvAPI = new PTVAPI(stubAPI)
+      ptvAPI.addVLine(stubAPI)
+
+      let departures = await ptvAPI.vline.getDepartures('', GetPlatformServicesAPI.BOTH, 30)
+
+      expect(departures[0]).to.be.instanceOf(VLinePlatformService)
+      expect(departures[0].origin).to.equal('Melbourne, Southern Cross')
+      expect(departures[0].destination).to.equal('Waurn Ponds Station')
+      expect(departures[0].tdn).to.equal('8741')
+      expect(departures[0].departureTime.toUTC().toISO()).to.equal('2025-07-18T01:30:00.000Z')
+      expect(departures[0].arrivalTime.toUTC().toISO()).to.equal('2025-07-18T02:48:00.000Z')
+
+      let matchingTrip = await matchTrip('20250718', departures[0], database)
+      expect(matchingTrip).to.not.exist
   })
 })
