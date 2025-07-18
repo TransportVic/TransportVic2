@@ -39,7 +39,7 @@ describe('The matchTrip function', () => {
       expect(departures[0].departureTime.toUTC().toISO()).to.equal('2025-07-18T01:30:00.000Z')
       expect(departures[0].arrivalTime.toUTC().toISO()).to.equal('2025-07-18T02:48:00.000Z')
 
-      let matchingTrip = matchTrip('20250718', departures[0], database)
+      let matchingTrip = await matchTrip('20250718', departures[0], database)
       expect(matchingTrip).to.exist
       expect(matchingTrip.tripID).to.equal('48.T0.1-GEL-mjp-8.11.H')
   })
