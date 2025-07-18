@@ -1,0 +1,29 @@
+<GetPlatformArrivalsResponse xmlns="http://tempuri.org/">
+<GetPlatformArrivalsResult xmlns:a="http://schemas.datacontract.org/2004/07/VLine.JourneyPlanner.Entities" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+<a:PlatformService>
+<a:ActualArrivalTime>2025-07-18T18:41:00</a:ActualArrivalTime>
+<a:ActualDestinationArrivalTime>2025-07-18T18:41:00</a:ActualDestinationArrivalTime>
+<a:Consist i:nil="true"/>
+<a:ConsistCount>1</a:ConsistCount>
+<a:ConsistDescription>VLocity trains are equipped with six accessible spaces, an accessible toilet, luggage racks and often designated bike storage.</a:ConsistDescription>
+<a:ConsistSubType>VLocity</a:ConsistSubType>
+<a:ConsistType>VLocity</a:ConsistType>
+<a:ConsistUrl>https://www.vline.com.au/Fares-general-info/On-board?accordianitem=vlocity</a:ConsistUrl>
+<a:ConsistVehicles i:nil="true"/>
+<a:DesignatedAccessibilitySpaceCount>6</a:DesignatedAccessibilitySpaceCount>
+<a:DesignatedBikeSpaceCount>6</a:DesignatedBikeSpaceCount>
+<a:Destination>Melbourne, Southern Cross</a:Destination>
+<a:Direction>U</a:Direction>
+<a:IsAccessibleAvailable>true</a:IsAccessibleAvailable>
+<a:IsBikeAvailable>true</a:IsBikeAvailable>
+<a:IsBuffetAvailable>false</a:IsBuffetAvailable>
+<a:IsLiveConsistInfo>true</a:IsLiveConsistInfo>
+<a:LocationName>Melbourne, Southern Cross</a:LocationName>
+<a:Origin>Warrnambool Station</a:Origin>
+<a:Platform>8</a:Platform>
+<a:ScheduledDepartureTime>2025-07-18T15:10:00</a:ScheduledDepartureTime>
+<a:ScheduledDestinationArrivalTime>2025-07-18T18:38:00</a:ScheduledDestinationArrivalTime>
+<a:ServiceIdentifier>8866</a:ServiceIdentifier>
+<a:ServiceStatus>Running</a:ServiceStatus>
+</a:PlatformService>
+</GetPlatformArrivalsResponse>
