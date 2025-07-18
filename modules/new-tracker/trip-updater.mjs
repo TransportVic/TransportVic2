@@ -119,7 +119,7 @@ export default class TripUpdater {
     })
   }
 
-  static _setUpTimetable(timetable, trip, dataSource) {
+  static setUpTimetable(timetable, trip, dataSource) {
     timetable.setModificationSource(dataSource)
 
     let firstStop = timetable.stops.find(stop => !stop.cancelled)
@@ -140,15 +140,10 @@ export default class TripUpdater {
     if (trip.consist) timetable.consist = trip.consist.reduce((acc, e) => acc.concat(e), [])
     else if (trip.forcedVehicle) timetable.forcedVehicle = trip.forcedVehicle
 
-    if (timetable.direction === 'Up' && trip.stops && trip.stops.length) {
-      let updateLastStop = trip.stops[trip.stops.length - 1]
-      let isFSS = timetable.destination === 'Flinders Street Railway Station'
-      if (isFSS && updateLastStop.stopName === timetable.destination) {
-        trip.stops[trip.stops.length - 1].scheduledDepartureTime = null
-      }
-    }
-
     return true
+  }
+
+  static adjustTripInput(timetable, trip) {
   }
 
   static getLastStopDelay(timetable, trip, stopVisits) {
@@ -165,19 +160,10 @@ export default class TripUpdater {
 
     if (secondLastStop && stopVisits[secondLastStop.stopName] && !lastStopHasETA && secondLastStop.estimatedDepartureTime) {
       let secondLastDelay = secondLastStop.estimatedDepartureTime.diff(secondLastStop.scheduledDepartureTime, 'minutes')
-      return { lastStopDelay: secondLastDelay, lastStop }
-    } else if (secondLastStop && secondLastStop.cancelled && !lastStop.cancelled && lastStop.stopName === 'Flinders Street Railway Station') {
-      let secondLastStopNonAMEX = timetable.stops.findLast((stop, i) => !stop.cancelled && i < lastNonAMEXStop)
-      if (secondLastStopNonAMEX && secondLastStopNonAMEX.stopName === 'Richmond Railway Station') {
-        let rmdDelay = secondLastStopNonAMEX.estimatedDepartureTime.diff(secondLastStopNonAMEX.scheduledDepartureTime, 'minutes')
-        return { lastStopDelay: rmdDelay - 10, lastStop }
-      } else if (secondLastStopNonAMEX && secondLastStopNonAMEX.stopName === 'North Melbourne Railway Station') {
-        let nmeDelay = secondLastStopNonAMEX.estimatedDepartureTime.diff(secondLastStopNonAMEX.scheduledDepartureTime, 'minutes')
-        return { lastStopDelay: nmeDelay - 3, lastStop }
-      }
+      return { lastStopDelay: secondLastDelay, lastStop, secondLastStop }
     }
 
-    return null
+    return { lastStopDelay: null, lastStop, secondLastStop, lastNonAMEXStop }
   }
 
   static async updateTrip(db, trip, {
@@ -199,7 +185,8 @@ export default class TripUpdater {
     let timetable = LiveTimetable.fromDatabase(dbTrip)
     if (updateTime) timetable.lastUpdated = updateTime
 
-    if (!this._setUpTimetable(timetable, trip, dataSource)) return null
+    if (!this.setUpTimetable(timetable, trip, dataSource)) return null
+    this.adjustTripInput(timetable, trip)
 
     let existingStops = timetable.getStopNames()
     let stopVisits = {}
@@ -241,10 +228,8 @@ export default class TripUpdater {
 
       timetable.sortStops()
 
-      let lastStopDelayData = this.getLastStopDelay(timetable, trip, stopVisits)
-      if (lastStopDelayData !== null) {
-        let { lastStopDelay, lastStop } = lastStopDelayData
-
+      let { lastStopDelay, lastStop } = this.getLastStopDelay(timetable, trip, stopVisits)
+      if (lastStopDelay !== null) {
         let lastStopEstArr = lastStop.scheduledDepartureTime.clone().add(lastStopDelay, 'minutes')
         lastStop.estimatedArrivalTime = lastStopEstArr
         lastStop.estimatedDepartureTime = lastStopEstArr
