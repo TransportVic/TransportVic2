@@ -7,12 +7,15 @@ import { LokiDatabaseConnection } from '@transportme/database'
 import allStops from '../../../op-timetable/test/sample-data/stops.json' with { type: 'json' }
 import allRoutes from '../../../op-timetable/test/sample-data/routes.json' with { type: 'json' }
 import td8866 from './sample-data/td8866.json' with { type: 'json' }
+import td8741GTFS from '../../../op-timetable/test/sample-data/td8741-gtfs.json' with { type: 'json' }
 import { fetchTrips, getPlatformUpdates } from '../southern-cross-platform.mjs'
+import { convertToLive } from '../../../departures/sch-to-live.js'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const sssPlatforms = (await fs.readFile(path.join(__dirname, 'sample-data', 'sss-plat-8866.xml'))).toString()
+const sssPlatformsArr = (await fs.readFile(path.join(__dirname, 'sample-data', 'sss-plat-8866-arr.xml'))).toString()
+const sssPlatformsDep = (await fs.readFile(path.join(__dirname, 'sample-data', 'sss-plat-8741-dep.xml'))).toString()
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
@@ -22,11 +25,11 @@ describe('The SSS Platform updater', () => {
     let liveTimetables = database.getCollection('live timetables')
     let stops = database.getCollection('stops')
 
-    await liveTimetables.createDocument(clone(td8866))
+    await liveTimetables.createDocuments([ clone(td8866), convertToLive(clone(td8741GTFS)) ])
     await stops.createDocument(clone(allStops))
 
     let stubAPI = new StubVLineAPI()
-    stubAPI.setResponses([ sssPlatforms ])
+    stubAPI.setResponses([ sssPlatformsArr, sssPlatformsDep ])
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
@@ -40,6 +43,15 @@ describe('The SSS Platform updater', () => {
         platform: '8'
       }]
     })
+
+    expect(tripUpdates[1]).to.deep.equal({
+      operationDays: '20250718',
+      runID: '8741',
+      stops: [{
+        stopName: 'Southern Cross Railway Station',
+        platform: '1'
+      }]
+    })
   })
 
   it('Updates the trip objects', async () => {
@@ -47,22 +59,31 @@ describe('The SSS Platform updater', () => {
     let liveTimetables = database.getCollection('live timetables')
     let stops = database.getCollection('stops')
 
-    await liveTimetables.createDocument(clone(td8866))
+    await liveTimetables.createDocuments([ clone(td8866), convertToLive(clone(td8741GTFS)) ])
     await stops.createDocument(clone(allStops))
 
     let stubAPI = new StubVLineAPI()
-    stubAPI.setResponses([ sssPlatforms ])
+    stubAPI.setResponses([ sssPlatformsArr, sssPlatformsDep ])
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
     await fetchTrips('20250718', database, ptvAPI)
 
-    let trip = await liveTimetables.findDocument({ runID: '8866' })
-    expect(trip.stopTimings[0].cancelled).to.be.false
-    expect(trip.stopTimings[0].stopName).to.equal('Warrnambool Railway Station')
+    let td8866Trip = await liveTimetables.findDocument({ runID: '8866' })
+    expect(td8866Trip.stopTimings[0].cancelled).to.be.false
+    expect(td8866Trip.stopTimings[0].stopName).to.equal('Warrnambool Railway Station')
 
-    expect(trip.stopTimings[trip.stopTimings.length - 1].stopName).to.equal('Southern Cross Railway Station')
-    expect(trip.stopTimings[trip.stopTimings.length - 1].cancelled).to.be.false
-    expect(trip.stopTimings[trip.stopTimings.length - 1].platform).to.equal('8')
+    expect(td8866Trip.stopTimings[td8866Trip.stopTimings.length - 1].stopName).to.equal('Southern Cross Railway Station')
+    expect(td8866Trip.stopTimings[td8866Trip.stopTimings.length - 1].cancelled).to.be.false
+    expect(td8866Trip.stopTimings[td8866Trip.stopTimings.length - 1].platform).to.equal('8')
+
+    let td8741Trip = await liveTimetables.findDocument({ runID: '8741' })
+    expect(td8741Trip.stopTimings[0].cancelled).to.be.false
+    expect(td8741Trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
+    expect(td8741Trip.stopTimings[0].platform).to.equal('1')
+
+    expect(td8741Trip.stopTimings[td8741Trip.stopTimings.length - 1].stopName).to.equal('Waurn Ponds Railway Station')
+    expect(td8741Trip.stopTimings[td8741Trip.stopTimings.length - 1].cancelled).to.be.false
+    expect(td8741Trip.stopTimings[td8741Trip.stopTimings.length - 1].platform).to.not.exist
   })
 })
