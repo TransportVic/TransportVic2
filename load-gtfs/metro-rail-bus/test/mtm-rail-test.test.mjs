@@ -20,6 +20,23 @@ const tripsFile = path.join(__dirname, 'sample-data', 'trips.txt')
 const stopsFile = path.join(__dirname, 'sample-data', 'stops.txt')
 
 describe('The GTFS Loaders with the MTM Website Rail data', () => {
+  describe('The stop loader', () => {
+    it('Changes "Fed Square" to Flinders Street', async () => {
+      let database = new LokiDatabaseConnection('test-db')
+      let stops = await database.createCollection('stops')
+
+      let stopLoader = new MTMRailStopLoader(stopsFile, database)
+      await stopLoader.loadStops()
+
+      let fss = await stops.findDocument({ 
+        'bays.stopGTFSID': 'RAIL_FSS_Up'
+      })
+
+      expect(fss).to.exist
+      expect(fss.stopName).to.equal('Flinders Street Railway Station')
+    })
+  })
+
   describe('The route loader', () => {
     it('Should convert all route IDs into one 2-RRB route', async () => {
       let database = new LokiDatabaseConnection('test-db')
