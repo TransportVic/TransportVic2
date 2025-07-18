@@ -33,4 +33,8 @@ export default class MetroTripUpdater extends TripUpdater {
 
     return lastStopData
   }
+
+  static requireStrictTimingMatch(trip) {
+    return trip.routeGTFSID === '2-CCL'
+  }
 }

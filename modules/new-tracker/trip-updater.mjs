@@ -162,10 +162,13 @@ export default class TripUpdater {
     return { lastStopDelay: null, lastStop, secondLastStop, lastNonAMEXStop }
   }
 
+  static requireStrictTimingMatch(trip) {
+    return false
+  }
+
   static async updateTripDetails(db, timetable, trip, skipStopCancellation, ignoreMissingStops, stopVisits) {
     let existingStops = timetable.getStopNames()
 
-    let isCCL = trip.routeGTFSID === '2-CCL'
     for (let stop of trip.stops) {
       let { stopData, updatedData } = await this.getBaseStopUpdateData(db, stop)
       if (!stopData) {
@@ -185,7 +188,7 @@ export default class TripUpdater {
       if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
       if (stop.estimatedArrivalTime) updatedData.estimatedArrivalTime = stop.estimatedArrivalTime.toISOString()
 
-      let matchingCriteria = isCCL ? { prefSchTime: stop.scheduledDepartureTime.toISOString() } : { visitNum: stopVisits[stop.stopName] }
+      let matchingCriteria = this.requireStrictTimingMatch(trip) ? { prefSchTime: stop.scheduledDepartureTime.toISOString() } : { visitNum: stopVisits[stop.stopName] }
       timetable.updateStopByName(stopData.stopName, updatedData, matchingCriteria)
     }
 
@@ -272,7 +275,6 @@ export default class TripUpdater {
     this.setUpTimetable(timetable, trip)
     if (!trip.stops || !trip.stops.length) return null
 
-    let isCCL = trip.routeGTFSID === '2-CCL'
     let stopVisits = {}
     for (let stop of trip.stops) {
       let { stopData, updatedData } = await this.getBaseStopUpdateData(db, stop)
@@ -289,7 +291,7 @@ export default class TripUpdater {
 
       if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
 
-      let matchingCriteria = isCCL ? { prefSchTime: stop.scheduledDepartureTime.toISOString() } : { visitNum: stopVisits[stop.stopName] }
+      let matchingCriteria = this.requireStrictTimingMatch(trip) ? { prefSchTime: stop.scheduledDepartureTime.toISOString() } : { visitNum: stopVisits[stop.stopName] }
       timetable.updateStopByName(stopData.stopName, updatedData, matchingCriteria)
     }
 
