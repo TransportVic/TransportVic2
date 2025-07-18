@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url'
 import utils from '../../utils.js'
 import { convertToLive } from '../departures/sch-to-live.js'
 import config from '../../config.json' with { type: 'json' }
-import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
+import { GetPlatformServicesAPI, PTVAPI, PTVAPIInterface, VLineAPIInterface } from '@transportme/ptv-api'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import LiveTimetable from '../schema/live-timetable.js'
 
@@ -28,13 +28,20 @@ export async function matchTrip(operationDay, vlineTrip, db) {
 
   if (!originStop || !destinationStop) return null
 
+  let arrivalTime = utils.parseTime(vlineTrip.arrivalTime.toUTC().toISO())
   return await gtfsTimetables.findDocument({
     mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
     operationDays: operationDay,
     origin: originStop.stopName,
     destination: destinationStop.stopName,
     departureTime: utils.formatPTHHMM(utils.parseTime(vlineTrip.departureTime.toUTC().toISO())),
-    destinationArrivalTime: utils.formatPTHHMM(utils.parseTime(vlineTrip.arrivalTime.toUTC().toISO())),
+    destinationArrivalTime: {
+      $in: [
+        utils.formatPTHHMM(arrivalTime.clone().add(-1, 'minute')),
+        utils.formatPTHHMM(arrivalTime),
+        utils.formatPTHHMM(arrivalTime.clone().add(1, 'minute')),
+      ]
+    }
   })
 }
 
@@ -138,8 +145,36 @@ export async function downloadTripPattern(dayofWeek, operationDay, vlineTrip, db
 
 export default async function loadOperationalTT(db, operationDay, ptvAPI) {
   let opDayFormat = utils.getYYYYMMDD(operationDay)
-  let gtfsTimetables = db.getCollection('gtfs timetables')
+  let dayofWeek = utils.getDayOfWeek(operationDay) // Technically should use public holiday thing
   let liveTimetables = db.getCollection('live timetables')
+
+  let outputTrips = []
+
+  let departures = await ptvAPI.vline.getDepartures('', GetPlatformServicesAPI.BOTH, 1440)
+  for (let departure of departures) {
+    let matchingTrip = await matchTrip(opDayFormat, departure, db)
+    if (matchingTrip) {
+      outputTrips.push({
+        replaceOne: {
+          filter: { mode: 'metro train', operationDays: opDayFormat, runID: departure.tdn },
+          replacement: convertToLive(matchingTrip, operationDay),
+          upsert: true
+        }
+      })
+      continue
+    }
+    console.log('Could not match', departure)
+    let pattern = await downloadTripPattern(dayofWeek, opDayFormat, departure, db)
+    outputTrips.push({
+      replaceOne: {
+        filter: pattern.toDBKey(),
+        replacement: pattern.toDatabase(),
+        upsert: true
+      }
+    })
+  }
+
+  await liveTimetables.bulkWrite(outputTrips)
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
@@ -147,8 +182,10 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   await mongoDB.connect()
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
+  let vlineAPIInterface = new VLineAPIInterface(config.vlineCallerID, config.vlineSignature)
+  ptvAPI.addVLine(vlineAPIInterface)
 
   await loadOperationalTT(mongoDB, utils.now(), ptvAPI)
 
-await mongoDB.close()
+  await mongoDB.close()
 }

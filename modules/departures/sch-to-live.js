@@ -33,6 +33,8 @@ function convertToLive(trip, departureDay) {
     stop.cancelled = false
   }
 
+  delete trip._id
+
   return trip
 }
 
