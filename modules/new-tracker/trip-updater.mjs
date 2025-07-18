@@ -162,9 +162,8 @@ export default class TripUpdater {
     return { lastStopDelay: null, lastStop, secondLastStop, lastNonAMEXStop }
   }
 
-  static async updateTripDetails(db, timetable, trip, skipStopCancellation, ignoreMissingStops) {
+  static async updateTripDetails(db, timetable, trip, skipStopCancellation, ignoreMissingStops, stopVisits) {
     let existingStops = timetable.getStopNames()
-    let stopVisits = {}
 
     let isCCL = trip.routeGTFSID === '2-CCL'
     for (let stop of trip.stops) {
@@ -199,8 +198,6 @@ export default class TripUpdater {
         }
       }
     }
-
-    return stopVisits
   }
 
   static async updateTrip(db, trip, {
@@ -214,6 +211,8 @@ export default class TripUpdater {
     let liveTimetables = db.getCollection('live timetables')
 
     let timetable
+    let stopVisits = {}
+
     if (dbTrip) {
       timetable = LiveTimetable.fromDatabase(dbTrip)
       if (updateTime) timetable.lastUpdated = updateTime
@@ -226,20 +225,23 @@ export default class TripUpdater {
       this.adjustTripInput(timetable, trip)
 
       if (trip.stops) {
-        let stopVisits = await this.updateTripDetails(db, timetable, trip, skipStopCancellation, ignoreMissingStops)
-
-        timetable.sortStops()
-
-        let { lastStopDelay, lastStop } = this.getLastStopDelay(timetable, trip, stopVisits)
-        if (lastStopDelay !== null) {
-          let lastStopEstArr = lastStop.scheduledDepartureTime.clone().add(lastStopDelay, 'minutes')
-          lastStop.estimatedArrivalTime = lastStopEstArr
-          lastStop.estimatedDepartureTime = lastStopEstArr
-        }
+        await this.updateTripDetails(db, timetable, trip, skipStopCancellation, ignoreMissingStops, stopVisits)
       }
     } else {
-      timetable = await this.createTrip(db, trip, updateTime)
+      timetable = await this.createTrip(db, trip, updateTime, stopVisits)
     }
+
+    timetable.sortStops()
+
+    let { lastStopDelay, lastStop } = this.getLastStopDelay(timetable, trip, stopVisits)
+    if (lastStopDelay !== null) {
+      let lastStopEstArr = lastStop.scheduledDepartureTime.clone().add(lastStopDelay, 'minutes')
+      lastStop.estimatedArrivalTime = lastStopEstArr
+      lastStop.estimatedDepartureTime = lastStopEstArr
+    }
+
+    timetable.stops[0].allowDropoff = false
+    timetable.stops[timetable.stops.length - 1].allowPickup = false
 
     if (!skipWrite) await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase(), {
       upsert: true
@@ -290,11 +292,6 @@ export default class TripUpdater {
       let matchingCriteria = isCCL ? { prefSchTime: stop.scheduledDepartureTime.toISOString() } : { visitNum: stopVisits[stop.stopName] }
       timetable.updateStopByName(stopData.stopName, updatedData, matchingCriteria)
     }
-
-    timetable.sortStops()
-
-    timetable.stops[0].allowDropoff = false
-    timetable.stops[trip.stops.length - 1].allowPickup = false
 
     return timetable
   }
