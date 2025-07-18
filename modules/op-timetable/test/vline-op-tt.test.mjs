@@ -3,8 +3,8 @@ import fs from 'fs/promises'
 import path from 'path'
 import url from 'url'
 import { StubVLineAPI, PTVAPI } from '@transportme/ptv-api'
-import { GetPlatformServicesAPI, VLinePlatformService, VLinePlatformServices } from '@transportme/ptv-api/lib/vline/get-platform-services.mjs'
-import { downloadTripPattern, matchTrip } from '../load-vline-op-tt.mjs'
+import { GetPlatformServicesAPI, VLinePlatformService } from '@transportme/ptv-api/lib/vline/get-platform-services.mjs'
+import { downloadTripPattern, getNSPTrip, matchTrip } from '../load-vline-op-tt.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import td8741GTFS from './sample-data/td8741-gtfs.json' with { type: 'json' }
 import td8007NSP from './sample-data/td8007-nsp.json' with { type: 'json' }
@@ -70,7 +70,7 @@ describe('The matchTrip function', () => {
       let matchingTrip = await matchTrip('20250718', departures[0], database)
       expect(matchingTrip).to.not.exist
 
-      let pattern = await downloadTripPattern('Fri', '20250718', departures[0], database)
+      let pattern = await downloadTripPattern('20250718', departures[0], null, database)
       let trip = pattern.toDatabase()
       expect(trip.runID).to.equal('8741')
       expect(trip.direction).to.equal('Down')
@@ -105,7 +105,8 @@ describe('The matchTrip function', () => {
       let matchingTrip = await matchTrip('20250726', departures[1], database)
       expect(matchingTrip).to.not.exist
 
-      let pattern = await downloadTripPattern('Sat', '20250726', departures[1], database)
+      let nspTrip = await getNSPTrip('Sat', departures[2].tdn, database)
+      let pattern = await downloadTripPattern('20250726', departures[2], nspTrip, database)
       let trip = pattern.toDatabase()
       expect(trip.runID).to.equal('8007')
       expect(trip.direction).to.equal('Down')
@@ -141,7 +142,8 @@ describe('The matchTrip function', () => {
       let matchingTrip = await matchTrip('20250726', departures[2], database)
       expect(matchingTrip).to.not.exist
 
-      let pattern = await downloadTripPattern('Sat', '20250726', departures[2], database)
+      let nspTrip = await getNSPTrip('Sat', departures[2].tdn, database)
+      let pattern = await downloadTripPattern('20250726', departures[2], nspTrip, database)
       let trip = pattern.toDatabase()
       expect(trip.runID).to.equal('8007')
       expect(trip.direction).to.equal('Down')

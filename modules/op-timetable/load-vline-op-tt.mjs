@@ -45,8 +45,16 @@ export async function matchTrip(operationDay, vlineTrip, db) {
   })
 }
 
-async function deduplicateStops(dayofWeek, db, vlineTrip, tripPattern) {
+export async function getNSPTrip(dayofWeek, runID, db) {
   let timetables = await db.getCollection('timetables')
+  return await timetables.findDocument({
+    mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
+    operationDays: dayofWeek,
+    runID
+  })
+}
+
+async function deduplicateStops(tripPattern, nspTrip, db) {
   let stops = await db.getCollection('stops')
 
   let previousStop = tripPattern[0].location, hasDuplicates = false
@@ -57,15 +65,7 @@ async function deduplicateStops(dayofWeek, db, vlineTrip, tripPattern) {
     }
   }
 
-  if (!hasDuplicates) return tripPattern
-
-  let nspTrip = await timetables.findDocument({
-    mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
-    operationDays: dayofWeek,
-    runID: vlineTrip.tdn
-  })
-
-  if (!nspTrip) return tripPattern
+  if (!hasDuplicates || !nspTrip) return tripPattern
 
   let nspTimes = {}
   for (let stop of nspTrip.stopTimings) {
@@ -85,7 +85,7 @@ async function deduplicateStops(dayofWeek, db, vlineTrip, tripPattern) {
   return outputTrip
 }
 
-export async function downloadTripPattern(dayofWeek, operationDay, vlineTrip, db) {
+export async function downloadTripPattern(operationDay, vlineTrip, nspTrip, db) {
   let tripPattern = await vlineTrip.getStoppingPattern()
   let stops = await db.getCollection('stops')
   let routes = await db.getCollection('routes')
@@ -128,7 +128,7 @@ export async function downloadTripPattern(dayofWeek, operationDay, vlineTrip, db
   timetable.runID = vlineTrip.tdn
   timetable.direction = vlineTrip.direction
 
-  let updatedTrip = await deduplicateStops(dayofWeek, db, vlineTrip, tripPattern)
+  let updatedTrip = await deduplicateStops(tripPattern, nspTrip, db)
 
   for (let stop of updatedTrip) {
     let stopData = await getStopFromVNetName(stops, stop.location)
@@ -145,7 +145,7 @@ export async function downloadTripPattern(dayofWeek, operationDay, vlineTrip, db
 
 export default async function loadOperationalTT(db, operationDay, ptvAPI) {
   let opDayFormat = utils.getYYYYMMDD(operationDay)
-  let dayofWeek = utils.getDayOfWeek(operationDay) // Technically should use public holiday thing
+  let dayOfWeek = utils.getDayOfWeek(operationDay) // Technically should use public holiday thing
   let liveTimetables = db.getCollection('live timetables')
 
   let outputTrips = []
@@ -153,18 +153,24 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
   let departures = await ptvAPI.vline.getDepartures('', GetPlatformServicesAPI.BOTH, 1440)
   for (let departure of departures) {
     let matchingTrip = await matchTrip(opDayFormat, departure, db)
+    let nspTrip = await getNSPTrip(dayOfWeek, departure.tdn, db)
+
     if (matchingTrip) {
+      let liveTrip = convertToLive(matchingTrip, operationDay)
+      liveTrip.runID = departure.tdn
+      liveTrip.direction = departure.direction
+
       outputTrips.push({
         replaceOne: {
-          filter: { mode: 'metro train', operationDays: opDayFormat, runID: departure.tdn },
-          replacement: convertToLive(matchingTrip, operationDay),
+          filter: { mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain, operationDays: opDayFormat, runID: liveTrip.runID },
+          replacement: liveTrip,
           upsert: true
         }
       })
       continue
     }
 
-    let pattern = await downloadTripPattern(dayofWeek, opDayFormat, departure, db)
+    let pattern = await downloadTripPattern(opDayFormat, departure, nspTrip, db)
     outputTrips.push({
       replaceOne: {
         filter: pattern.toDBKey(),
