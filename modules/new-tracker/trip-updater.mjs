@@ -8,10 +8,14 @@ let routeNameCache = {}
 
 export default class TripUpdater {
 
+  static getMode() {
+    throw new Error('TripUpdater mode not defined')
+  }
+
   static async getTrip(db, runID, date) {
     let liveTimetables = db.getCollection('live timetables')
     return await liveTimetables.findDocument({
-      mode: 'metro train',
+      mode: this.getMode(),
       runID,
       operationDays: date
     })
@@ -52,7 +56,7 @@ export default class TripUpdater {
 
     let routes = db.getCollection('routes')
     let route = await routes.findDocument({
-      mode: 'metro train',
+      mode: this.getMode(),
       routeGTFSID
     })
 
@@ -69,7 +73,7 @@ export default class TripUpdater {
 
     let routes = db.getCollection('routes')
     let route = await routes.findDocument({
-      mode: 'metro train',
+      mode: this.getMode(),
       routeName
     })
 
@@ -84,12 +88,14 @@ export default class TripUpdater {
   static async getBaseStopUpdateData(db, stop) {
     let stopData = await this.getStopByName(db, stop.stopName)
     let platformBay
+    let mode = this.getMode()
+
     if (stop.platform) {
-      platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.platform === stop.platform)
+      platformBay = stopData.bays.find(bay => bay.mode === mode && bay.platform === stop.platform)
     }
 
     if (!platformBay) {
-      platformBay = stopData.bays.find(bay => bay.mode === 'metro train' && bay.stopType == 'station')
+      platformBay = stopData.bays.find(bay => bay.mode === mode && bay.stopType == 'station')
     }
 
     if (!platformBay) return {}
@@ -244,7 +250,7 @@ export default class TripUpdater {
     let routeData = await this.getRoute(db, trip.routeGTFSID)
 
     let timetable = new LiveTimetable(
-      'metro train',
+      this.getMode(),
       trip.operationDays,
       routeData.routeName,
       routeData.routeNumber,
