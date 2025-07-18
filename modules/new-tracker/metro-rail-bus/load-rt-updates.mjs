@@ -2,7 +2,7 @@ import { MongoDatabaseConnection } from '@transportme/database'
 import { MetroSiteAPIInterface, PTVAPI } from '@transportme/ptv-api'
 import { fileURLToPath } from 'url'
 
-import { getStop, getTrip, updateTrip } from '../../metro-trains/trip-updater.mjs'
+import TripUpdater from '../../metro-trains/trip-updater.mjs'
 import getTripID from './get-trip-id.mjs'
 import utils from '../../../utils.js'
 
@@ -26,15 +26,15 @@ export async function getRailBusUpdates(db, ptvAPI) {
   for (let trip of tripUpdates) {
     let runID = getTripID(trip.tripID)
     let tripOperationDay = utils.getYYYYMMDD(operationDay)
-    let dbTrip = await getTrip(db, runID, tripOperationDay)
+    let dbTrip = await TripUpdater.getTrip(db, runID, tripOperationDay)
 
     if (!dbTrip) {
       if (dayJustStarted) {
         tripOperationDay = utils.getYYYYMMDD(previousDay)
-        dbTrip = await getTrip(db, runID, tripOperationDay)
+        dbTrip = await TripUpdater.getTrip(db, runID, tripOperationDay)
       } else if (dayEnding) {
         tripOperationDay = utils.getYYYYMMDD(nextDay)
-        dbTrip = await getTrip(db, runID, tripOperationDay)
+        dbTrip = await TripUpdater.getTrip(db, runID, tripOperationDay)
       }
 
       if (!dbTrip) continue // Still couldn't match, skip
@@ -51,7 +51,7 @@ export async function getRailBusUpdates(db, ptvAPI) {
     }
 
     for (let stop of trip.stopTimings) {
-      let stopData = await getStop(db, stop.stopGTFSID)
+      let stopData = await TripUpdater.getStop(db, stop.stopGTFSID)
       if (!stopData) {
         tripData = null
         break
@@ -74,7 +74,7 @@ export async function fetchTrips(db, ptvAPI) {
   console.log('MTM Rail Bus: Fetched', relevantTrips.length, 'trips')
 
   for (let tripData of relevantTrips) {
-    await updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'mtm-website-rail', updateTime: new Date() })
+    await TripUpdater.updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'mtm-website-rail', updateTime: new Date() })
   }
 }
 

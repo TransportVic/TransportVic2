@@ -3,7 +3,7 @@ import { LokiDatabaseConnection } from '@transportme/database'
 import shmTransposals from './sample-data/shm-transposals.json' with { type: 'json' }
 import blyTransposals from './sample-data/bly-transposals.json' with { type: 'json' }
 import blyStops from './sample-data/bbn-stops-db.json' with { type: 'json' }
-import { updateTrip } from '../../../metro-trains/trip-updater.mjs'
+import TripUpdater from '../../../metro-trains/trip-updater.mjs'
 import { getTripsRequiringUpdates, updateRelatedTrips } from '../check-new-updates.mjs'
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
 
@@ -23,7 +23,7 @@ describe('The changelog tracker', () => {
       forming: "X103"
     }]
 
-    let updatedTrips = [await updateTrip(db, changes[0])]
+    let updatedTrips = [await TripUpdater.updateTrip(db, changes[0])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
     expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.members([
       'X101', 'X103'
@@ -43,7 +43,7 @@ describe('The changelog tracker', () => {
       formedBy: "X100"
     }]
 
-    let updatedTrips = [await updateTrip(db, changes[0])]
+    let updatedTrips = [await TripUpdater.updateTrip(db, changes[0])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
     expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.members([
       'X100', 'X102'
@@ -65,7 +65,7 @@ describe('The changelog tracker', () => {
       forming: "X103"
     }]
 
-    let updatedTrips = [await updateTrip(db, changes[0])]
+    let updatedTrips = [await TripUpdater.updateTrip(db, changes[0])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
     expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.members([])
   })
@@ -80,7 +80,7 @@ describe('The changelog tracker', () => {
       formedBy: "X100"
     }]
 
-    let updatedTrips = [await updateTrip(db, changes[0])]
+    let updatedTrips = [await TripUpdater.updateTrip(db, changes[0])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips, ['X100', 'X102'])
     expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.members([])
   })
@@ -102,7 +102,7 @@ describe('The changelog tracker', () => {
       formedBy: "X999"
     }]
 
-    let updatedTrips = [await updateTrip(db, changes[0]), await updateTrip(db, changes[1])]
+    let updatedTrips = [await TripUpdater.updateTrip(db, changes[0]), await TripUpdater.updateTrip(db, changes[1])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
     expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.deep.equal([
       'X101',
@@ -141,7 +141,7 @@ describe('The changelog tracker', () => {
       }]
     }]
 
-    let updatedTrips = [await updateTrip(db, changes[0]), await updateTrip(db, changes[1]), await updateTrip(db, changes[2])]
+    let updatedTrips = [await TripUpdater.updateTrip(db, changes[0]), await TripUpdater.updateTrip(db, changes[1]), await TripUpdater.updateTrip(db, changes[2])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
     expect(tripsNeedingUpdate).to.deep.equal([{
       operationDays: '20250716',

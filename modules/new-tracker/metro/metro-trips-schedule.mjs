@@ -5,7 +5,7 @@ import LiveTimetable from '../../schema/live-timetable.js'
 
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
-import { getRouteByName, getTrip, updateTrip } from '../../metro-trains/trip-updater.mjs'
+import TripUpdater from '../../metro-trains/trip-updater.mjs'
 
 export async function getUpcomingTrips(ptvAPI, lines) {
   let trips = await ptvAPI.metroSite.getOperationalTimetable(lines)
@@ -27,7 +27,7 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
   for (let dayTrips of Object.values(tripsByDay)) {
     let tripObjects = {}
     for (let trip of dayTrips) {
-      let routeData = await getRouteByName(db, trip.routeName)
+      let routeData = await TripUpdater.getRouteByName(db, trip.routeName)
       let tripData = {
         operationDays: trip.operationalDate,
         runID: trip.tdn,
@@ -45,7 +45,7 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
         tripData.stops.push(tripStop)
       }
 
-      tripObjects[trip.tdn] = await updateTrip(db, tripData, { skipWrite: true, skipStopCancellation: true, dataSource: 'mtm-op-timetable' })
+      tripObjects[trip.tdn] = await TripUpdater.updateTrip(db, tripData, { skipWrite: true, skipStopCancellation: true, dataSource: 'mtm-op-timetable' })
     }
 
     let forming = {}
@@ -59,7 +59,7 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
 
         let formedByTripData = tripObjects[formedByTDN]
         if (!formedByTripData) {
-          formedByTripData = await getTrip(db, formedByTDN, trip.operationalDate)
+          formedByTripData = await TripUpdater.getTrip(db, formedByTDN, trip.operationalDate)
           if (formedByTripData) {
             formedByTripData = LiveTimetable.fromDatabase(formedByTripData)
             tripObjects[formedByTDN] = formedByTripData
@@ -69,7 +69,7 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
         if (formedByTripData) {
           let originalForming = formedByTripData.forming
           if (originalForming) {
-            let originalFormingData = await getTrip(db, originalForming, trip.operationalDate)
+            let originalFormingData = await TripUpdater.getTrip(db, originalForming, trip.operationalDate)
             if (originalFormingData) {
               tripObjects[originalForming] = LiveTimetable.fromDatabase(originalFormingData)
               if (!formedBy[originalForming]) formedBy[originalForming] = null
@@ -85,7 +85,7 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
 
         let formingTripData = tripObjects[formingTDN]
         if (!formingTripData) {
-          formingTripData = await getTrip(db, formingTDN, trip.operationalDate)
+          formingTripData = await TripUpdater.getTrip(db, formingTDN, trip.operationalDate)
           if (formingTripData) {
             formingTripData = LiveTimetable.fromDatabase(formingTripData)
             tripObjects[formingTDN] = formingTripData
@@ -95,7 +95,7 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
         if (formingTripData) {
           let originalFormedBy = formingTripData.formedBy
           if (originalFormedBy) {
-            let originalFormedByData = await getTrip(db, originalFormedBy, trip.operationalDate)
+            let originalFormedByData = await TripUpdater.getTrip(db, originalFormedBy, trip.operationalDate)
             if (originalFormedByData) {
               tripObjects[originalFormedBy] = LiveTimetable.fromDatabase(originalFormedByData)
               if (!forming[originalFormedBy]) forming[originalFormedBy] = null
