@@ -87,6 +87,7 @@ export default class MTMRailStopLoader extends StopsLoader {
     await super.loadStops({
       processStop: stop => {
         if (stop.fullStopName === 'DISCARD') return null
+        if (stop.fullStopName.match(/fed *sq/i)) stop.fullStopName = 'Flinders Street Railway Station'
         return stop
       }
     })
