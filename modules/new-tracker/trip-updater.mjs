@@ -250,7 +250,7 @@ export default class TripUpdater {
       upsert: true
     })
 
-    this.updateTrackerData(db, timetable)
+    await this.updateTrackerData(db, timetable)
 
     return timetable
   }
