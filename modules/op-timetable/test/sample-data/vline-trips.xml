@@ -26,6 +26,7 @@
 <a:ServiceIdentifier>8741</a:ServiceIdentifier>
 <a:ServiceStatus>Planned</a:ServiceStatus>
 </a:PlatformService>
+
 <a:PlatformService>
 <a:ActualArrivalTime i:nil="true"/>
 <a:ActualDestinationArrivalTime i:nil="true"/>
@@ -39,19 +40,20 @@
 <a:DesignatedAccessibilitySpaceCount>6</a:DesignatedAccessibilitySpaceCount>
 <a:DesignatedBikeSpaceCount>6</a:DesignatedBikeSpaceCount>
 <a:Destination>Melbourne, Southern Cross</a:Destination>
-<a:Direction>U</a:Direction>
+<a:Direction>D</a:Direction>
 <a:IsAccessibleAvailable>true</a:IsAccessibleAvailable>
 <a:IsBikeAvailable>true</a:IsBikeAvailable>
 <a:IsBuffetAvailable>false</a:IsBuffetAvailable>
 <a:IsLiveConsistInfo>true</a:IsLiveConsistInfo>
 <a:LocationName/>
-<a:Origin>South Geelong Station</a:Origin>
+<a:Origin>Gisborne Station</a:Origin>
 <a:Platform i:nil="true"/>
-<a:ScheduledDepartureTime>2025-07-18T11:30:00</a:ScheduledDepartureTime>
-<a:ScheduledDestinationArrivalTime>2025-07-18T12:40:00</a:ScheduledDestinationArrivalTime>
-<a:ServiceIdentifier>8758</a:ServiceIdentifier>
+<a:ScheduledDepartureTime>2025-07-26T08:13:00</a:ScheduledDepartureTime>
+<a:ScheduledDestinationArrivalTime>2025-07-26T09:18:00</a:ScheduledDestinationArrivalTime>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
 <a:ServiceStatus>Planned</a:ServiceStatus>
 </a:PlatformService>
+
 <a:PlatformService>
 <a:ActualArrivalTime i:nil="true"/>
 <a:ActualDestinationArrivalTime i:nil="true"/>

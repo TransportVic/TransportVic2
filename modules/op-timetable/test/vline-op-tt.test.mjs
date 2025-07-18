@@ -14,7 +14,7 @@ const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const vlineTrips = (await fs.readFile(path.join(__dirname, 'sample-data', 'vline-trips.xml'))).toString()
-const td8007 = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8007-pattern.xml'))).toString()
+const td8007Late = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8007-late-pattern.xml'))).toString()
 const td8741 = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8741-pattern.xml'))).toString()
 
 describe('The matchTrip function', () => {
@@ -45,7 +45,7 @@ describe('The matchTrip function', () => {
       expect(matchingTrip.tripID).to.equal('48.T0.1-GEL-mjp-8.11.H')
   })
 
-  it.only('Fetches trip details from the V/Line API if the trip is unknown', async () => {
+  it('Fetches trip details from the V/Line API if the trip is unknown', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let routes = database.getCollection('routes')
@@ -76,5 +76,39 @@ describe('The matchTrip function', () => {
 
       expect(trip.stopTimings[1].stopName).to.equal('Footscray Railway Station')
       expect(trip.stopTimings[1].departureTime).to.equal('11:38')
+  })
+
+  it.only('Cross references the NSP to handle trips with duplicated stops (late trip)', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+
+    await stops.createDocuments(allStops)
+    await routes.createDocuments(allRoutes)
+
+    let stubAPI = new StubVLineAPI()
+      stubAPI.setResponses([ vlineTrips, td8007Late ])
+      let ptvAPI = new PTVAPI(stubAPI)
+      ptvAPI.addVLine(stubAPI)
+
+      let departures = await ptvAPI.vline.getDepartures('', GetPlatformServicesAPI.BOTH, 30)
+
+      expect(departures[1]).to.be.instanceOf(VLinePlatformService)
+      expect(departures[1].tdn).to.equal('8007')
+
+      let matchingTrip = await matchTrip('20250726', departures[0], database)
+      expect(matchingTrip).to.not.exist
+
+      let pattern = await downloadTripPattern('20250726', departures[0], database)
+      let trip = pattern.toDatabase()
+      expect(trip.runID).to.equal('8741')
+      expect(trip.direction).to.equal('Down')
+
+      expect(trip.stopTimings[0].stopName).to.equal('Gisborne Railway Station')
+      expect(trip.stopTimings[0].departureTime).to.equal('08:13')
+
+      expect(trip.stopTimings[1].stopName).to.equal('Macedon Railway Station')
+      expect(trip.stopTimings[1].arrivalTime).to.equal('08:17')
+      expect(trip.stopTimings[1].departureTime).to.equal('08:17')
   })
 })
