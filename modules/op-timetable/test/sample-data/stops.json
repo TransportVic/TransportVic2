@@ -1,0 +1,208 @@
+[
+  {
+    "_id": "1ad8057f5fa12947efac7c4e802bedf3",
+    "stopName": "Bendigo Railway Station",
+    "suburb": [
+      "Bendigo",
+      "Quarry Hill"
+    ],
+    "cleanSuburbs": [
+      "quarry-hill",
+      "bendigo"
+    ],
+    "bays": [
+      {
+        "originalName": "Bendigo Railway Station",
+        "fullStopName": "Bendigo Railway Station",
+        "stopGTFSID": "vic:rail:BGO",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.28300893,
+            -36.76566973
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Quarry Hill",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Bendigo Station, Railway Place"
+      },
+      {
+        "originalName": "Bendigo Station",
+        "fullStopName": "Bendigo Railway Station",
+        "stopGTFSID": "20296",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.28285447,
+            -36.76560312
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Bendigo",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:BGO"
+      }
+    ],
+    "services": [],
+    "screenServices": [],
+    "cleanName": "bendigo-railway-station"
+  },
+  {
+    "_id": "77f1590a724c567b24b415958c6d77e3",
+    "stopName": "Gisborne Railway Station",
+    "suburb": [
+      "New Gisborne"
+    ],
+    "cleanSuburbs": [
+      "new-gisborne"
+    ],
+    "bays": [
+      {
+        "originalName": "Gisborne Railway Station",
+        "fullStopName": "Gisborne Railway Station",
+        "stopGTFSID": "vic:rail:GIS",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.59872157,
+            -37.4588255
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "New Gisborne",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Gisborne Station"
+      },
+      {
+        "originalName": "Gisborne Station",
+        "fullStopName": "Gisborne Railway Station",
+        "stopGTFSID": "20315",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.59898723,
+            -37.45900212
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "New Gisborne",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:GIS"
+      }
+    ],
+    "services": [],
+    "screenServices": [],
+    "cleanName": "gisborne-railway-station"
+  },
+  {
+    "_id": "7e776a863065aaf69810550f67abc031",
+    "stopName": "Southern Cross Railway Station",
+    "suburb": [
+      "Docklands",
+      "Melbourne"
+    ],
+    "cleanSuburbs": [
+      "docklands",
+      "melbourne"
+    ],
+    "bays": [
+      {
+        "originalName": "Southern Cross Railway Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "vic:rail:SSS",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95277706,
+            -37.8186631
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Docklands",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Melbourne, Southern Cross"
+      },
+      {
+        "originalName": "Southern Cross Station",
+        "fullStopName": "Southern Cross Railway Station",
+        "stopGTFSID": "20043",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.95205759,
+            -37.81838925
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Docklands",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SSS"
+      }
+    ],
+    "services": [],
+    "screenServices": [],
+    "cleanName": "southern-cross-railway-station"
+  },
+  {
+    "_id": "34ca8b9dc00a3d4ab6b4a43efa37a152",
+    "stopName": "Waurn Ponds Railway Station",
+    "suburb": [
+      "Mount Duneed",
+      "Waurn Ponds"
+    ],
+    "cleanSuburbs": [
+      "waurn-ponds",
+      "mount-duneed"
+    ],
+    "bays": [
+      {
+        "originalName": "Waurn Ponds Railway Station",
+        "fullStopName": "Waurn Ponds Railway Station",
+        "stopGTFSID": "vic:rail:WPP",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.30683114,
+            -38.21580573
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Waurn Ponds",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Waurn Ponds Station"
+      },
+      {
+        "originalName": "Waurn Ponds Station",
+        "fullStopName": "Waurn Ponds Railway Station",
+        "stopGTFSID": "47641",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.3064372,
+            -38.21595887
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Mount Duneed",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:WPP"
+      }
+    ],
+    "services": [],
+    "screenServices": [],
+    "cleanName": "waurn-ponds-railway-station"
+  }
+]
