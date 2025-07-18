@@ -5,6 +5,7 @@ import { convertToLive } from '../departures/sch-to-live.js'
 import config from '../../config.json' with { type: 'json' }
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
+import LiveTimetable from '../schema/live-timetable.js'
 
 async function getStopFromVNetName(stops, vnetName) {
   return await stops.findDocument({
@@ -28,6 +29,36 @@ export async function matchTrip(operationDay, vlineTrip, db) {
     destination: destinationStop.stopName,
     departureTime: utils.formatPTHHMM(utils.parseTime(vlineTrip.departureTime.toUTC().toISO())),
     destinationArrivalTime: utils.formatPTHHMM(utils.parseTime(vlineTrip.arrivalTime.toUTC().toISO())),
+  })
+}
+
+export async function downloadTripPattern(operationDay, vlineTrip, db) {
+  let tripPattern = await vlineTrip.getStoppingPattern()
+  let gtfsTimetables = await db.getCollection('gtfs timetables')
+  let stops = await db.getCollection('stops')
+  let routes = await db.getCollection('routes')
+
+  let bestOrigin = null, bestDestination = null
+  for (let i = 0; i < tripPattern.length; i++) {
+    bestOrigin = await getStopFromVNetName(stops, tripPattern[i].location)
+    if (bestOrigin) break
+  }
+
+  for (let i = tripPattern.length - 1; i >= 0; i++) {
+    bestDestination = await getStopFromVNetName(stops, tripPattern[i].location)
+    if (bestDestination) break
+  }
+
+  // None of the stops matched, the trip is either garbage or the database broke
+  if (!bestOrigin || !bestDestination) return null 
+
+  let matchingRoute = await routes.findDocument({
+    mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
+    $and: [{
+      'directions.stops.stopName': bestOrigin.stopName
+    }, {
+      'directions.stops.stopName': bestDestination.stopName
+    }]
   })
 }
 

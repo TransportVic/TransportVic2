@@ -8,13 +8,14 @@ import { downloadTripPattern, matchTrip } from '../load-vline-op-tt.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import td8741GTFS from './sample-data/td8741-gtfs.json' with { type: 'json' }
 import allStops from './sample-data/stops.json' with { type: 'json' }
+import allRoutes from './sample-data/routes.json' with { type: 'json' }
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const vlineTrips = (await fs.readFile(path.join(__dirname, 'sample-data', 'vline-trips.xml'))).toString()
-const td8007 = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8741-pattern.xml'))).toString()
-const td8741 = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8007-pattern.xml'))).toString()
+const td8007 = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8007-pattern.xml'))).toString()
+const td8741 = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8741-pattern.xml'))).toString()
 
 describe('The matchTrip function', () => {
   it('Matches a V/Line API trip to a GTFS trip', async () => {
@@ -47,8 +48,10 @@ describe('The matchTrip function', () => {
   it.only('Fetches trip details from the V/Line API if the trip is unknown', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
 
-    await stops.createDocument(allStops)
+    await stops.createDocuments(allStops)
+    await routes.createDocuments(allRoutes)
 
     let stubAPI = new StubVLineAPI()
       stubAPI.setResponses([ vlineTrips, td8741 ])
@@ -63,7 +66,7 @@ describe('The matchTrip function', () => {
       let matchingTrip = await matchTrip('20250718', departures[0], database)
       expect(matchingTrip).to.not.exist
 
-      let pattern = await downloadTripPattern(departures[0], database)
+      let pattern = await downloadTripPattern('20250718', departures[0], database)
       let trip = pattern.toDatabase()
       expect(trip.runID).to.equal('8741')
       expect(trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')

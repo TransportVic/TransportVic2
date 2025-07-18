@@ -1,0 +1,422 @@
+[
+  {
+    "_id": "9d7c106269f8d0dead10969f9357c411",
+    "mode": "regional train",
+    "routeName": "Bendigo",
+    "cleanName": "bendigo-melbourne-via-sunbury",
+    "routeNumber": "Bendigo",
+    "routeGTFSID": "1-BGO",
+    "operators": [
+      "V/Line"
+    ],
+    "directions": [
+      {
+        "directionName": "Eaglehawk Railway Station",
+        "gtfsDirection": 0,
+        "stops": [
+          {
+            "stopName": "Southern Cross Railway Station",
+            "stopNumber": null,
+            "suburb": "Docklands",
+            "stopGTFSID": "vic:rail:SSS"
+          },
+          {
+            "stopName": "Footscray Railway Station",
+            "stopNumber": null,
+            "suburb": "Footscray",
+            "stopGTFSID": "vic:rail:FSY"
+          },
+          {
+            "stopName": "Sunbury Railway Station",
+            "stopNumber": null,
+            "suburb": "Sunbury",
+            "stopGTFSID": "vic:rail:SUY"
+          },
+          {
+            "stopName": "Clarkefield Railway Station",
+            "stopNumber": null,
+            "suburb": "Clarkefield",
+            "stopGTFSID": "vic:rail:CKF"
+          },
+          {
+            "stopName": "Riddells Creek Railway Station",
+            "stopNumber": null,
+            "suburb": "Riddells Creek",
+            "stopGTFSID": "vic:rail:RIK"
+          },
+          {
+            "stopName": "Gisborne Railway Station",
+            "stopNumber": null,
+            "suburb": "New Gisborne",
+            "stopGTFSID": "vic:rail:GIS"
+          },
+          {
+            "stopName": "Macedon Railway Station",
+            "stopNumber": null,
+            "suburb": "Macedon",
+            "stopGTFSID": "vic:rail:MDN"
+          },
+          {
+            "stopName": "Woodend Railway Station",
+            "stopNumber": null,
+            "suburb": "Woodend",
+            "stopGTFSID": "vic:rail:WNO"
+          },
+          {
+            "stopName": "Kyneton Railway Station",
+            "stopNumber": null,
+            "suburb": "Kyneton",
+            "stopGTFSID": "vic:rail:KYN"
+          },
+          {
+            "stopName": "Malmsbury Railway Station",
+            "stopNumber": null,
+            "suburb": "Malmsbury",
+            "stopGTFSID": "vic:rail:MMY-V"
+          },
+          {
+            "stopName": "Castlemaine Railway Station",
+            "stopNumber": null,
+            "suburb": "Castlemaine",
+            "stopGTFSID": "vic:rail:CME"
+          },
+          {
+            "stopName": "Kangaroo Flat Railway Station",
+            "stopNumber": null,
+            "suburb": "Kangaroo Flat",
+            "stopGTFSID": "vic:rail:KFT"
+          },
+          {
+            "stopName": "Bendigo Railway Station",
+            "stopNumber": null,
+            "suburb": "Bendigo",
+            "stopGTFSID": "vic:rail:BGO"
+          },
+          {
+            "stopName": "Epsom Railway Station",
+            "stopNumber": null,
+            "suburb": "Epsom",
+            "stopGTFSID": "vic:rail:EPM"
+          },
+          {
+            "stopName": "Eaglehawk Railway Station",
+            "stopNumber": null,
+            "suburb": "Eaglehawk",
+            "stopGTFSID": "vic:rail:EAG-V"
+          }
+        ]
+      },
+      {
+        "directionName": "Southern Cross Railway Station",
+        "gtfsDirection": 1,
+        "stops": [
+          {
+            "stopName": "Epsom Railway Station",
+            "stopNumber": null,
+            "suburb": "Epsom",
+            "stopGTFSID": "vic:rail:EPM"
+          },
+          {
+            "stopName": "Eaglehawk Railway Station",
+            "stopNumber": null,
+            "suburb": "Eaglehawk",
+            "stopGTFSID": "vic:rail:EAG-V"
+          },
+          {
+            "stopName": "Bendigo Railway Station",
+            "stopNumber": null,
+            "suburb": "Bendigo",
+            "stopGTFSID": "vic:rail:BGO"
+          },
+          {
+            "stopName": "Kangaroo Flat Railway Station",
+            "stopNumber": null,
+            "suburb": "Kangaroo Flat",
+            "stopGTFSID": "vic:rail:KFT"
+          },
+          {
+            "stopName": "Castlemaine Railway Station",
+            "stopNumber": null,
+            "suburb": "Castlemaine",
+            "stopGTFSID": "vic:rail:CME"
+          },
+          {
+            "stopName": "Malmsbury Railway Station",
+            "stopNumber": null,
+            "suburb": "Malmsbury",
+            "stopGTFSID": "vic:rail:MMY-V"
+          },
+          {
+            "stopName": "Kyneton Railway Station",
+            "stopNumber": null,
+            "suburb": "Kyneton",
+            "stopGTFSID": "vic:rail:KYN"
+          },
+          {
+            "stopName": "Woodend Railway Station",
+            "stopNumber": null,
+            "suburb": "Woodend",
+            "stopGTFSID": "vic:rail:WNO"
+          },
+          {
+            "stopName": "Macedon Railway Station",
+            "stopNumber": null,
+            "suburb": "Macedon",
+            "stopGTFSID": "vic:rail:MDN"
+          },
+          {
+            "stopName": "Gisborne Railway Station",
+            "stopNumber": null,
+            "suburb": "New Gisborne",
+            "stopGTFSID": "vic:rail:GIS"
+          },
+          {
+            "stopName": "Riddells Creek Railway Station",
+            "stopNumber": null,
+            "suburb": "Riddells Creek",
+            "stopGTFSID": "vic:rail:RIK"
+          },
+          {
+            "stopName": "Clarkefield Railway Station",
+            "stopNumber": null,
+            "suburb": "Clarkefield",
+            "stopGTFSID": "vic:rail:CKF"
+          },
+          {
+            "stopName": "Sunbury Railway Station",
+            "stopNumber": null,
+            "suburb": "Sunbury",
+            "stopGTFSID": "vic:rail:SUY"
+          },
+          {
+            "stopName": "Footscray Railway Station",
+            "stopNumber": null,
+            "suburb": "Footscray",
+            "stopGTFSID": "vic:rail:FSY"
+          },
+          {
+            "stopName": "Southern Cross Railway Station",
+            "stopNumber": null,
+            "suburb": "Docklands",
+            "stopGTFSID": "vic:rail:SSS"
+          }
+        ]
+      }
+    ],
+    "codedName": "bendigo-melbourne-via-sunbury",
+    "ptvDirections": {
+      "Bendigo": 0,
+      "Melbourne": 1
+    }
+  },
+  {
+    "_id": "0f55e73fa1683317c254906a3320fb4b",
+    "mode": "regional train",
+    "routeName": "Geelong",
+    "cleanName": "geelong-melbourne-via-geelong",
+    "routeNumber": "Geelong",
+    "routeGTFSID": "1-GEL",
+    "operators": [
+      "V/Line"
+    ],
+    "directions": [
+      {
+        "directionName": "Waurn Ponds Railway Station",
+        "gtfsDirection": 0,
+        "stops": [
+          {
+            "stopName": "Southern Cross Railway Station",
+            "stopNumber": null,
+            "suburb": "Docklands",
+            "stopGTFSID": "vic:rail:SSS"
+          },
+          {
+            "stopName": "Footscray Railway Station",
+            "stopNumber": null,
+            "suburb": "Footscray",
+            "stopGTFSID": "vic:rail:FSY"
+          },
+          {
+            "stopName": "Sunshine Railway Station",
+            "stopNumber": null,
+            "suburb": "Sunshine",
+            "stopGTFSID": "vic:rail:SUN"
+          },
+          {
+            "stopName": "Deer Park Railway Station",
+            "stopNumber": null,
+            "suburb": "Deer Park",
+            "stopGTFSID": "vic:rail:DEK"
+          },
+          {
+            "stopName": "Tarneit Railway Station",
+            "stopNumber": null,
+            "suburb": "Tarneit",
+            "stopGTFSID": "vic:rail:TNT"
+          },
+          {
+            "stopName": "Wyndham Vale Railway Station",
+            "stopNumber": null,
+            "suburb": "Manor Lakes",
+            "stopGTFSID": "vic:rail:WVL"
+          },
+          {
+            "stopName": "Little River Railway Station",
+            "stopNumber": null,
+            "suburb": "Little River",
+            "stopGTFSID": "vic:rail:LRR"
+          },
+          {
+            "stopName": "Lara Railway Station",
+            "stopNumber": null,
+            "suburb": "Lara",
+            "stopGTFSID": "vic:rail:LRA"
+          },
+          {
+            "stopName": "Corio Railway Station",
+            "stopNumber": null,
+            "suburb": "Corio",
+            "stopGTFSID": "vic:rail:COR"
+          },
+          {
+            "stopName": "North Shore Railway Station",
+            "stopNumber": null,
+            "suburb": "North Shore",
+            "stopGTFSID": "vic:rail:NSH"
+          },
+          {
+            "stopName": "North Geelong Railway Station",
+            "stopNumber": null,
+            "suburb": "North Geelong",
+            "stopGTFSID": "vic:rail:NGL"
+          },
+          {
+            "stopName": "Geelong Railway Station",
+            "stopNumber": null,
+            "suburb": "Geelong",
+            "stopGTFSID": "vic:rail:GEL"
+          },
+          {
+            "stopName": "South Geelong Railway Station",
+            "stopNumber": null,
+            "suburb": "South Geelong",
+            "stopGTFSID": "vic:rail:SOG"
+          },
+          {
+            "stopName": "Marshall Railway Station",
+            "stopNumber": null,
+            "suburb": "Marshall",
+            "stopGTFSID": "vic:rail:MAS"
+          },
+          {
+            "stopName": "Waurn Ponds Railway Station",
+            "stopNumber": null,
+            "suburb": "Mount Duneed",
+            "stopGTFSID": "vic:rail:WPP"
+          }
+        ]
+      },
+      {
+        "directionName": "Southern Cross Railway Station",
+        "gtfsDirection": 1,
+        "stops": [
+          {
+            "stopName": "Waurn Ponds Railway Station",
+            "stopNumber": null,
+            "suburb": "Mount Duneed",
+            "stopGTFSID": "vic:rail:WPP"
+          },
+          {
+            "stopName": "Marshall Railway Station",
+            "stopNumber": null,
+            "suburb": "Marshall",
+            "stopGTFSID": "vic:rail:MAS"
+          },
+          {
+            "stopName": "South Geelong Railway Station",
+            "stopNumber": null,
+            "suburb": "South Geelong",
+            "stopGTFSID": "vic:rail:SOG"
+          },
+          {
+            "stopName": "Geelong Railway Station",
+            "stopNumber": null,
+            "suburb": "Geelong",
+            "stopGTFSID": "vic:rail:GEL"
+          },
+          {
+            "stopName": "North Geelong Railway Station",
+            "stopNumber": null,
+            "suburb": "North Geelong",
+            "stopGTFSID": "vic:rail:NGL"
+          },
+          {
+            "stopName": "North Shore Railway Station",
+            "stopNumber": null,
+            "suburb": "North Shore",
+            "stopGTFSID": "vic:rail:NSH"
+          },
+          {
+            "stopName": "Corio Railway Station",
+            "stopNumber": null,
+            "suburb": "Corio",
+            "stopGTFSID": "vic:rail:COR"
+          },
+          {
+            "stopName": "Lara Railway Station",
+            "stopNumber": null,
+            "suburb": "Lara",
+            "stopGTFSID": "vic:rail:LRA"
+          },
+          {
+            "stopName": "Little River Railway Station",
+            "stopNumber": null,
+            "suburb": "Little River",
+            "stopGTFSID": "vic:rail:LRR"
+          },
+          {
+            "stopName": "Wyndham Vale Railway Station",
+            "stopNumber": null,
+            "suburb": "Manor Lakes",
+            "stopGTFSID": "vic:rail:WVL"
+          },
+          {
+            "stopName": "Tarneit Railway Station",
+            "stopNumber": null,
+            "suburb": "Tarneit",
+            "stopGTFSID": "vic:rail:TNT"
+          },
+          {
+            "stopName": "Deer Park Railway Station",
+            "stopNumber": null,
+            "suburb": "Deer Park",
+            "stopGTFSID": "vic:rail:DEK"
+          },
+          {
+            "stopName": "Sunshine Railway Station",
+            "stopNumber": null,
+            "suburb": "Sunshine",
+            "stopGTFSID": "vic:rail:SUN"
+          },
+          {
+            "stopName": "Footscray Railway Station",
+            "stopNumber": null,
+            "suburb": "Footscray",
+            "stopGTFSID": "vic:rail:FSY"
+          },
+          {
+            "stopName": "Southern Cross Railway Station",
+            "stopNumber": null,
+            "suburb": "Docklands",
+            "stopGTFSID": "vic:rail:SSS"
+          }
+        ]
+      }
+    ],
+    "codedName": "geelong-melbourne-via-geelong",
+    "ptvDirections": {
+      "Geelong": 0,
+      "Melbourne": 1
+    }
+  }
+]
