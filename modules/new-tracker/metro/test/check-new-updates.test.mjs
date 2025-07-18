@@ -2,6 +2,9 @@ import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
 import shmTransposals from './sample-data/shm-transposals.json' with { type: 'json' }
 import blyTransposals from './sample-data/bly-transposals.json' with { type: 'json' }
+import ccl1951_7138 from './sample-data/ccl-1951-7138.json' with { type: 'json' }
+import ptvAPI1951 from './sample-data/ptv-api-1951.json' with { type: 'json' }
+import pkmStopsDB from './sample-data/pkm-stops-db.json' with { type: 'json' }
 import blyStops from './sample-data/bbn-stops-db.json' with { type: 'json' }
 import MetroTripUpdater from '../../../metro-trains/trip-updater.mjs'
 import { getTripsRequiringUpdates, updateRelatedTrips } from '../check-new-updates.mjs'
@@ -153,5 +156,36 @@ describe('The changelog tracker', () => {
     await updateRelatedTrips(db, updatedTrips, ptvAPI)
     let new3638 = await timetables.findDocument({ runID: "3638" })
     expect(new3638.forming).to.be.null
+  })
+
+  it('Ensures the forming data is set even when the PTV API returns null on one half of the trip', async () => {
+    let db = new LokiDatabaseConnection('test-db')
+    let stops = await db.createCollection('stops')
+    let timetables = await db.createCollection('live timetables')
+    await timetables.createDocuments(clone(ccl1951_7138))
+    await stops.createDocuments(clone(pkmStopsDB))
+
+    let stubAPI = new StubAPI()
+    stubAPI.setResponses([ clone(ptvAPI1951) ])
+    stubAPI.skipErrors()
+    let ptvAPI = new PTVAPI(stubAPI)
+
+    // 7138 updated to be formed by 1951
+    let changes = [{
+      operationDays: "20250718",
+      runID: "7138",
+      formedBy: "1951"
+    }]
+
+    let updatedTrips = [await MetroTripUpdater.updateTrip(db, changes[0])]
+    let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
+    expect(tripsNeedingUpdate).to.deep.equal([{
+      operationDays: '20250718',
+      runID: '1951'
+    }])
+
+    await updateRelatedTrips(db, updatedTrips, ptvAPI)
+    let new1951 = await timetables.findDocument({ runID: "1951" })
+    expect(new1951.forming).to.equal('7138')
   })
 })

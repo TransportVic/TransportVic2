@@ -1,0 +1,492 @@
+[{
+  "_id": "6877b0a4e67f5b0d5a65e5d8",
+  "mode": "metro train",
+  "routeGTFSID": "2-HBE",
+  "operationDays": "20250718",
+  "tripID": "02-HBE--7-T6-1951",
+  "shapeID": "2-HBE-vpt-7.4.H",
+  "block": "6924",
+  "gtfsDirection": null,
+  "runID": "1951",
+  "isRailReplacementBus": false,
+  "vehicle": {
+    "size": 6,
+    "type": "Xtrapolis",
+    "consist": [
+      "209M",
+      "1405T",
+      "210M",
+      "879M",
+      "1640T",
+      "880M"
+    ]
+  },
+  "direction": "Down",
+  "routeName": "Hurstbridge",
+  "routeNumber": null,
+  "origin": "Flinders Street Railway Station",
+  "destination": "Heidelberg Railway Station",
+  "departureTime": "20:42",
+  "destinationArrivalTime": "21:16",
+  "stopTimings": [
+    {
+      "stopName": "Flinders Street Railway Station",
+      "stopNumber": null,
+      "suburb": "Melbourne",
+      "stopGTFSID": "vic:rail:FSS",
+      "arrivalTime": "20:42",
+      "arrivalTimeMinutes": 1242,
+      "departureTime": "20:42",
+      "departureTimeMinutes": 1242,
+      "estimatedDepartureTime": "2025-07-18T10:41:40.000Z",
+      "scheduledDepartureTime": "2025-07-18T10:42:00.000Z",
+      "actualDepartureTimeMS": 1752835300000,
+      "platform": "1",
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      }
+    },
+    {
+      "stopName": "Southern Cross Railway Station",
+      "stopNumber": null,
+      "suburb": "Docklands",
+      "stopGTFSID": "vic:rail:SSS",
+      "arrivalTime": "20:45",
+      "arrivalTimeMinutes": 1245,
+      "departureTime": "20:45",
+      "departureTimeMinutes": 1245,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T10:45:00.000Z",
+      "actualDepartureTimeMS": 1752835500000,
+      "platform": "9",
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Flagstaff Railway Station",
+      "stopNumber": null,
+      "suburb": "Melbourne",
+      "stopGTFSID": "vic:rail:FGS",
+      "arrivalTime": "20:47",
+      "arrivalTimeMinutes": 1247,
+      "departureTime": "20:47",
+      "departureTimeMinutes": 1247,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T10:47:00.000Z",
+      "actualDepartureTimeMS": 1752835620000,
+      "platform": "1",
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Melbourne Central Railway Station",
+      "stopNumber": null,
+      "suburb": "Melbourne",
+      "stopGTFSID": "vic:rail:MCE",
+      "arrivalTime": "20:49",
+      "arrivalTimeMinutes": 1249,
+      "departureTime": "20:49",
+      "departureTimeMinutes": 1249,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T10:49:00.000Z",
+      "actualDepartureTimeMS": 1752835740000,
+      "platform": "1",
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Parliament Railway Station",
+      "stopNumber": null,
+      "suburb": "East Melbourne",
+      "stopGTFSID": "vic:rail:PAR",
+      "arrivalTime": "20:50",
+      "arrivalTimeMinutes": 1250,
+      "departureTime": "20:50",
+      "departureTimeMinutes": 1250,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T10:50:00.000Z",
+      "actualDepartureTimeMS": 1752835800000,
+      "platform": "1",
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Jolimont Railway Station",
+      "stopNumber": null,
+      "suburb": "East Melbourne",
+      "stopGTFSID": "vic:rail:JLI",
+      "arrivalTime": "20:54",
+      "arrivalTimeMinutes": 1254,
+      "departureTime": "20:54",
+      "departureTimeMinutes": 1254,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T10:54:00.000Z",
+      "actualDepartureTimeMS": 1752836040000,
+      "platform": "2",
+      "cancelled": true,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "West Richmond Railway Station",
+      "stopNumber": null,
+      "suburb": "Richmond",
+      "stopGTFSID": "vic:rail:WRM",
+      "arrivalTime": "20:55",
+      "arrivalTimeMinutes": 1255,
+      "departureTime": "20:55",
+      "departureTimeMinutes": 1255,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T10:55:00.000Z",
+      "actualDepartureTimeMS": 1752836100000,
+      "platform": "2",
+      "cancelled": true,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "North Richmond Railway Station",
+      "stopNumber": null,
+      "suburb": "Richmond",
+      "stopGTFSID": "vic:rail:NRM",
+      "arrivalTime": "20:57",
+      "arrivalTimeMinutes": 1257,
+      "departureTime": "20:57",
+      "departureTimeMinutes": 1257,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T10:57:00.000Z",
+      "actualDepartureTimeMS": 1752836220000,
+      "platform": "2",
+      "cancelled": true,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Collingwood Railway Station",
+      "stopNumber": null,
+      "suburb": "Abbotsford",
+      "stopGTFSID": "vic:rail:CWD",
+      "arrivalTime": "20:58",
+      "arrivalTimeMinutes": 1258,
+      "departureTime": "20:58",
+      "departureTimeMinutes": 1258,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T10:58:00.000Z",
+      "actualDepartureTimeMS": 1752836280000,
+      "platform": "2",
+      "cancelled": true,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Victoria Park Railway Station",
+      "stopNumber": null,
+      "suburb": "Abbotsford",
+      "stopGTFSID": "vic:rail:VPK",
+      "arrivalTime": "21:00",
+      "arrivalTimeMinutes": 1260,
+      "departureTime": "21:00",
+      "departureTimeMinutes": 1260,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T11:00:00.000Z",
+      "actualDepartureTimeMS": 1752836400000,
+      "platform": "2",
+      "cancelled": true,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Clifton Hill Railway Station",
+      "stopNumber": null,
+      "suburb": "Clifton Hill",
+      "stopGTFSID": "vic:rail:CHL",
+      "arrivalTime": "21:02",
+      "arrivalTimeMinutes": 1262,
+      "departureTime": "21:02",
+      "departureTimeMinutes": 1262,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T11:02:00.000Z",
+      "actualDepartureTimeMS": 1752836520000,
+      "platform": "2",
+      "cancelled": true,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Westgarth Railway Station",
+      "stopNumber": null,
+      "suburb": "Northcote",
+      "stopGTFSID": "vic:rail:WTG",
+      "arrivalTime": "21:04",
+      "arrivalTimeMinutes": 1264,
+      "departureTime": "21:04",
+      "departureTimeMinutes": 1264,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T11:04:00.000Z",
+      "actualDepartureTimeMS": 1752836640000,
+      "platform": "2",
+      "cancelled": true,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Dennis Railway Station",
+      "stopNumber": null,
+      "suburb": "Northcote",
+      "stopGTFSID": "vic:rail:DEN",
+      "arrivalTime": "21:06",
+      "arrivalTimeMinutes": 1266,
+      "departureTime": "21:06",
+      "departureTimeMinutes": 1266,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T11:06:00.000Z",
+      "actualDepartureTimeMS": 1752836760000,
+      "platform": "2",
+      "cancelled": true,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Fairfield Railway Station",
+      "stopNumber": null,
+      "suburb": "Fairfield",
+      "stopGTFSID": "vic:rail:FFD",
+      "arrivalTime": "21:08",
+      "arrivalTimeMinutes": 1268,
+      "departureTime": "21:08",
+      "departureTimeMinutes": 1268,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T11:08:00.000Z",
+      "actualDepartureTimeMS": 1752836880000,
+      "platform": "2",
+      "cancelled": true,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Alphington Railway Station",
+      "stopNumber": null,
+      "suburb": "Alphington",
+      "stopGTFSID": "vic:rail:ALP",
+      "arrivalTime": "21:10",
+      "arrivalTimeMinutes": 1270,
+      "departureTime": "21:10",
+      "departureTimeMinutes": 1270,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T11:10:00.000Z",
+      "actualDepartureTimeMS": 1752837000000,
+      "platform": "2",
+      "cancelled": true,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Darebin Railway Station",
+      "stopNumber": null,
+      "suburb": "Ivanhoe",
+      "stopGTFSID": "vic:rail:DBN",
+      "arrivalTime": "21:11",
+      "arrivalTimeMinutes": 1271,
+      "departureTime": "21:11",
+      "departureTimeMinutes": 1271,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T11:11:00.000Z",
+      "actualDepartureTimeMS": 1752837060000,
+      "platform": "2",
+      "cancelled": true,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Ivanhoe Railway Station",
+      "stopNumber": null,
+      "suburb": "Ivanhoe",
+      "stopGTFSID": "vic:rail:IVA",
+      "arrivalTime": "21:12",
+      "arrivalTimeMinutes": 1272,
+      "departureTime": "21:12",
+      "departureTimeMinutes": 1272,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T11:12:00.000Z",
+      "actualDepartureTimeMS": 1752837120000,
+      "platform": "2",
+      "cancelled": true,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Eaglemont Railway Station",
+      "stopNumber": null,
+      "suburb": "Eaglemont",
+      "stopGTFSID": "vic:rail:EAG",
+      "arrivalTime": "21:14",
+      "arrivalTimeMinutes": 1274,
+      "departureTime": "21:14",
+      "departureTimeMinutes": 1274,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T11:14:00.000Z",
+      "actualDepartureTimeMS": 1752837240000,
+      "platform": "2",
+      "cancelled": true,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Heidelberg Railway Station",
+      "stopNumber": null,
+      "suburb": "Heidelberg",
+      "stopGTFSID": "vic:rail:HDB",
+      "arrivalTime": "21:16",
+      "arrivalTimeMinutes": 1276,
+      "departureTime": "21:16",
+      "departureTimeMinutes": 1276,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T11:16:00.000Z",
+      "actualDepartureTimeMS": 1752837360000,
+      "platform": "2",
+      "cancelled": true,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      }
+    }
+  ],
+  "formedBy": "2148",
+  "forming": "1358",
+  "cancelled": false,
+  "additional": false,
+  "lastUpdated": 1752838216382
+}, {
+  "_id": "687a0d9e5d36f507faa3ec5e",
+  "mode": "metro train",
+  "routeGTFSID": "2-MDD",
+  "operationDays": "20250718",
+  "tripID": null,
+  "shapeID": null,
+  "block": null,
+  "gtfsDirection": null,
+  "runID": "7138",
+  "isRailReplacementBus": false,
+  "vehicle": {
+    "size": 3,
+    "type": "Xtrapolis",
+    "consist": [
+      "209M",
+      "1405T",
+      "210M"
+    ]
+  },
+  "direction": "Up",
+  "routeName": "Mernda",
+  "routeNumber": null,
+  "origin": "Parliament Railway Station",
+  "destination": "Flinders Street Railway Station",
+  "departureTime": "20:50",
+  "destinationArrivalTime": "20:53",
+  "stopTimings": [
+    {
+      "stopName": "Parliament Railway Station",
+      "stopNumber": null,
+      "suburb": "East Melbourne",
+      "stopGTFSID": "vic:rail:PAR",
+      "arrivalTime": "20:50",
+      "arrivalTimeMinutes": 1250,
+      "departureTime": "20:50",
+      "departureTimeMinutes": 1250,
+      "estimatedDepartureTime": "2025-07-18T10:52:40.000Z",
+      "scheduledDepartureTime": "2025-07-18T10:50:00.000Z",
+      "actualDepartureTimeMS": 1752835960000,
+      "platform": "1",
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      }
+    },
+    {
+      "stopName": "Flinders Street Railway Station",
+      "stopNumber": null,
+      "suburb": "Melbourne",
+      "stopGTFSID": "vic:rail:FSS",
+      "arrivalTime": "20:53",
+      "arrivalTimeMinutes": 1253,
+      "departureTime": "20:53",
+      "departureTimeMinutes": 1253,
+      "estimatedDepartureTime": "2025-07-18T10:55:00.000Z",
+      "scheduledDepartureTime": "2025-07-18T10:53:00.000Z",
+      "actualDepartureTimeMS": 1752836100000,
+      "platform": "1",
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      }
+    }
+  ],
+  "formedBy": null,
+  "forming": "1953",
+  "cancelled": false,
+  "additional": false,
+  "lastUpdated": 1752838390307
+}]

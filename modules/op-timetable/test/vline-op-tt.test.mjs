@@ -4,12 +4,13 @@ import path from 'path'
 import url from 'url'
 import { StubVLineAPI, PTVAPI } from '@transportme/ptv-api'
 import { GetPlatformServicesAPI, VLinePlatformService } from '@transportme/ptv-api/lib/vline/get-platform-services.mjs'
-import { downloadTripPattern, getNSPTrip, matchTrip } from '../load-vline-op-tt.mjs'
+import { downloadTripPattern, matchTrip } from '../load-vline-op-tt.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import td8741GTFS from './sample-data/td8741-gtfs.json' with { type: 'json' }
 import td8007NSP from './sample-data/td8007-nsp.json' with { type: 'json' }
 import allStops from './sample-data/stops.json' with { type: 'json' }
 import allRoutes from './sample-data/routes.json' with { type: 'json' }
+import VLineUtils from '../../vline/vline-utils.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -105,7 +106,7 @@ describe('The matchTrip function', () => {
     let matchingTrip = await matchTrip('20250726', departures[1], database)
     expect(matchingTrip).to.not.exist
 
-    let nspTrip = await getNSPTrip('Sat', departures[2].tdn, database)
+    let nspTrip = await VLineUtils.getNSPTrip('Sat', departures[2].tdn, database)
     let pattern = await downloadTripPattern('20250726', departures[2], nspTrip, database)
     let trip = pattern.toDatabase()
     expect(trip.runID).to.equal('8007')
@@ -142,7 +143,7 @@ describe('The matchTrip function', () => {
     let matchingTrip = await matchTrip('20250726', departures[2], database)
     expect(matchingTrip).to.not.exist
 
-    let nspTrip = await getNSPTrip('Sat', departures[2].tdn, database)
+    let nspTrip = await VLineUtils.getNSPTrip('Sat', departures[2].tdn, database)
     let pattern = await downloadTripPattern('20250726', departures[2], nspTrip, database)
     let trip = pattern.toDatabase()
     expect(trip.runID).to.equal('8007')
