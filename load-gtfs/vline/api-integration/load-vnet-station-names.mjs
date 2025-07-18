@@ -23,7 +23,7 @@ const coachOverrides = [
 
 let locations = await ptvAPI.vline.getAllLocations()
 
-let updated = 0
+let fixedLocations = {}
 for (let location of locations) {
   if (coachOverrides.includes(location.name)) location.type = 'Station'
   if (location.stopType !== 'Station') continue
@@ -31,16 +31,29 @@ for (let location of locations) {
   let stationName = location.name.replace(/^Melbourne[^\w]+/, '').replace(/\(.+\)/g, '')
     .replace(/: .+/, '').replace(/Station.*/, '').replace(/Railway.*/, '')
     .replace(/  +/, ' ').trim() + ' Railway Station'
+  location.stationName = stationName
+
+  if (!fixedLocations[stationName]) {
+    fixedLocations[stationName] = location
+  } else if (fixedLocations[stationName].position && !location.position) continue
+  else if (fixedLocations[stationName].name.length > location.name.length) {
+    fixedLocations[stationName] = location
+  }
+}
+
+let updated = 0
+for (let location of Object.values(fixedLocations)) {
+  let stationName = location.stationName
 
   let stopData = await stops.findDocument({ stopName: stationName })
   if (!stopData) {
-    console.log(`Load VNet Names: Skipping ${location.name}`)
+    console.log(`Load VNet Names: Skipping ${location.name} - no matching stop`)
     continue
   }
 
-  let vlinePlatform = stopData.bays.find(bay => bay.mode === 'regional train' && !bay.parentStopGTFSID)
+  let vlinePlatform = stopData.bays.find(bay => bay.mode === 'regional train' && bay.stopType === 'station')
   if (!vlinePlatform) {
-    console.log(`Load VNet Names: Skipping ${location.name}`)
+    console.log(`Load VNet Names: Skipping ${location.name} - no matching bay`)
     continue
   }
 

@@ -163,7 +163,7 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
       })
       continue
     }
-    console.log('Could not match', departure)
+
     let pattern = await downloadTripPattern(dayofWeek, opDayFormat, departure, db)
     outputTrips.push({
       replaceOne: {
