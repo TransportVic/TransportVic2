@@ -1,0 +1,144 @@
+<GetJourneyStopsResponse xmlns="http://tempuri.org/">
+<GetJourneyStopsResult xmlns:a="http://schemas.datacontract.org/2004/07/VLine.JourneyPlanner.Entities" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-18T11:30:00</a:DepartureTime>
+<a:LocationID>2258</a:LocationID>
+<a:LocationName>Melbourne, Southern Cross</a:LocationName>
+<a:ServiceIdentifier>8741</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly>u</a:SetDownPickupOnly>
+<a:StopSequence>1</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-18T11:38:00</a:DepartureTime>
+<a:LocationID>231</a:LocationID>
+<a:LocationName>Footscray Station</a:LocationName>
+<a:ServiceIdentifier>8741</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly>u</a:SetDownPickupOnly>
+<a:StopSequence>7</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-18T11:43:00</a:DepartureTime>
+<a:LocationID>607</a:LocationID>
+<a:LocationName>Sunshine Station</a:LocationName>
+<a:ServiceIdentifier>8741</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly>u</a:SetDownPickupOnly>
+<a:StopSequence>8</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-18T11:48:00</a:DepartureTime>
+<a:LocationID>175</a:LocationID>
+<a:LocationName>Deer Park Station</a:LocationName>
+<a:ServiceIdentifier>8741</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>10</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-18T11:57:00</a:DepartureTime>
+<a:LocationID>3327</a:LocationID>
+<a:LocationName>Tarneit Station</a:LocationName>
+<a:ServiceIdentifier>8741</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>12</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-18T12:04:00</a:DepartureTime>
+<a:LocationID>3201</a:LocationID>
+<a:LocationName>Wyndham Vale Station</a:LocationName>
+<a:ServiceIdentifier>8741</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>14</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-18T12:16:00</a:DepartureTime>
+<a:LocationID>361</a:LocationID>
+<a:LocationName>Lara Station</a:LocationName>
+<a:ServiceIdentifier>8741</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>18</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-18T12:20:00</a:DepartureTime>
+<a:LocationID>142</a:LocationID>
+<a:LocationName>Corio Station</a:LocationName>
+<a:ServiceIdentifier>8741</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly>d</a:SetDownPickupOnly>
+<a:StopSequence>19</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-18T12:24:00</a:DepartureTime>
+<a:LocationID>2154</a:LocationID>
+<a:LocationName>North Shore Station</a:LocationName>
+<a:ServiceIdentifier>8741</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>20</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-18T12:27:00</a:DepartureTime>
+<a:LocationID>2256</a:LocationID>
+<a:LocationName>North Geelong Station</a:LocationName>
+<a:ServiceIdentifier>8741</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>22</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-18T12:34:00</a:DepartureTime>
+<a:LocationID>242</a:LocationID>
+<a:LocationName>Geelong Station: Railway Terrace</a:LocationName>
+<a:ServiceIdentifier>8741</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>24</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-18T12:37:00</a:DepartureTime>
+<a:LocationID>582</a:LocationID>
+<a:LocationName>South Geelong Station</a:LocationName>
+<a:ServiceIdentifier>8741</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>25</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-18T12:42:00</a:DepartureTime>
+<a:LocationID>2566</a:LocationID>
+<a:LocationName>Marshall Station</a:LocationName>
+<a:ServiceIdentifier>8741</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>26</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>2025-07-18T12:48:00</a:ArrivalTime>
+<a:DepartureTime>0001-01-01T00:00:00</a:DepartureTime>
+<a:LocationID>3324</a:LocationID>
+<a:LocationName>Waurn Ponds Station</a:LocationName>
+<a:ServiceIdentifier>8741</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly>d</a:SetDownPickupOnly>
+<a:StopSequence>27</a:StopSequence>
+</a:Stop>
+</GetJourneyStopsResult>
+</GetJourneyStopsResponse>

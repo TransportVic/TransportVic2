@@ -5,7 +5,11 @@ import { convertToLive } from '../departures/sch-to-live.js'
 import config from '../../config.json' with { type: 'json' }
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 
-async function loadOperationalTT(db, operationDay, ptvAPI) {
+export async function matchTrip(vlineTrip, gtfsTimetables) {
+
+}
+
+export default async function loadOperationalTT(db, operationDay, ptvAPI) {
   let opDayFormat = utils.getYYYYMMDD(operationDay)
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
