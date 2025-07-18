@@ -159,6 +159,10 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
       let liveTrip = convertToLive(matchingTrip, operationDay)
       liveTrip.runID = departure.tdn
       liveTrip.direction = departure.direction
+      if (nspTrip) {
+        liveTrip.formedBy = nspTrip.formedBy
+        liveTrip.forming = nspTrip.forming
+      }
 
       outputTrips.push({
         replaceOne: {
