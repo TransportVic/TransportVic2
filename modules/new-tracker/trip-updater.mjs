@@ -151,6 +151,35 @@ export default class TripUpdater {
     return true
   }
 
+  static getLastStopDelay(timetable, trip, stopVisits) {
+    let lastNonAMEXStop = timetable.stops.findLastIndex(stop => !stop.cancelled)
+    let secondLastStop, lastStop
+    if (lastNonAMEXStop > 0) {
+      secondLastStop = timetable.stops[lastNonAMEXStop - 1]
+      lastStop = timetable.stops[lastNonAMEXStop]
+    }
+
+    let lastStopHasETA = trip.stops && trip.stops.length > 1
+      && trip.stops[trip.stops.length - 1].stopName === lastNonAMEXStop.stopName
+      && (trip.stops[trip.stops.length - 1].estimatedArrivalTime || trip.stops[trip.stops.length - 1].estimatedDepartureTime)
+
+    if (secondLastStop && stopVisits[secondLastStop.stopName] && !lastStopHasETA && secondLastStop.estimatedDepartureTime) {
+      let secondLastDelay = secondLastStop.estimatedDepartureTime.diff(secondLastStop.scheduledDepartureTime, 'minutes')
+      return { lastStopDelay: secondLastDelay, lastStop }
+    } else if (secondLastStop && secondLastStop.cancelled && !lastStop.cancelled && lastStop.stopName === 'Flinders Street Railway Station') {
+      let secondLastStopNonAMEX = timetable.stops.findLast((stop, i) => !stop.cancelled && i < lastNonAMEXStop)
+      if (secondLastStopNonAMEX && secondLastStopNonAMEX.stopName === 'Richmond Railway Station') {
+        let rmdDelay = secondLastStopNonAMEX.estimatedDepartureTime.diff(secondLastStopNonAMEX.scheduledDepartureTime, 'minutes')
+        return { lastStopDelay: rmdDelay - 10, lastStop }
+      } else if (secondLastStopNonAMEX && secondLastStopNonAMEX.stopName === 'North Melbourne Railway Station') {
+        let nmeDelay = secondLastStopNonAMEX.estimatedDepartureTime.diff(secondLastStopNonAMEX.scheduledDepartureTime, 'minutes')
+        return { lastStopDelay: nmeDelay - 3, lastStop }
+      }
+    }
+
+    return null
+  }
+
   static async updateTrip(db, trip, {
     skipWrite = false,
     skipStopCancellation = false,
@@ -212,33 +241,10 @@ export default class TripUpdater {
 
       timetable.sortStops()
 
-      let lastNonAMEXStop = timetable.stops.findLastIndex(stop => !stop.cancelled)
-      let secondLastStop, lastStop
-      if (lastNonAMEXStop > 0) {
-        secondLastStop = timetable.stops[lastNonAMEXStop - 1]
-        lastStop = timetable.stops[lastNonAMEXStop]
-      }
+      let lastStopDelayData = this.getLastStopDelay(timetable, trip, stopVisits)
+      if (lastStopDelayData !== null) {
+        let { lastStopDelay, lastStop } = lastStopDelayData
 
-      let lastStopDelay = null
-      let lastStopHasETA = trip.stops && trip.stops.length > 1
-        && trip.stops[trip.stops.length - 1].stopName === lastNonAMEXStop.stopName
-        && (trip.stops[trip.stops.length - 1].estimatedArrivalTime || trip.stops[trip.stops.length - 1].estimatedDepartureTime)
-
-      if (secondLastStop && stopVisits[secondLastStop.stopName] && !lastStopHasETA && secondLastStop.estimatedDepartureTime) {
-        let secondLastDelay = secondLastStop.estimatedDepartureTime.diff(secondLastStop.scheduledDepartureTime, 'minutes')
-        lastStopDelay = secondLastDelay
-      } else if (secondLastStop && secondLastStop.cancelled && !lastStop.cancelled && lastStop.stopName === 'Flinders Street Railway Station') {
-        let secondLastStopNonAMEX = timetable.stops.findLast((stop, i) => !stop.cancelled && i < lastNonAMEXStop)
-        if (secondLastStopNonAMEX && secondLastStopNonAMEX.stopName === 'Richmond Railway Station') {
-          let rmdDelay = secondLastStopNonAMEX.estimatedDepartureTime.diff(secondLastStopNonAMEX.scheduledDepartureTime, 'minutes')
-          lastStopDelay = rmdDelay - 10
-        } else if (secondLastStopNonAMEX && secondLastStopNonAMEX.stopName === 'North Melbourne Railway Station') {
-          let nmeDelay = secondLastStopNonAMEX.estimatedDepartureTime.diff(secondLastStopNonAMEX.scheduledDepartureTime, 'minutes')
-          lastStopDelay = nmeDelay - 3
-        }
-      }
-
-      if (lastStopDelay !== null) {
         let lastStopEstArr = lastStop.scheduledDepartureTime.clone().add(lastStopDelay, 'minutes')
         lastStop.estimatedArrivalTime = lastStopEstArr
         lastStop.estimatedDepartureTime = lastStopEstArr
