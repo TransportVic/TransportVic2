@@ -22,12 +22,16 @@ let start = new Date()
 console.log('Starting full GTFS loader', start)
 
 await runNode('create-indexes.mjs')
-await runNode('load-all-stops-routes.mjs', ['2'])
-await runNode('load-all-trips.mjs', ['2'])
+await runNode('load-all-stops-routes.mjs', ['1', '2'])
+await runNode('load-all-trips.mjs', ['1', '2'])
 
 await runNode('metro/load-extra-data.mjs')
 await runNode('metro/download-metro-timetables.js')
 await runNode('metro/load-metro-timetables.js')
+
+await runNode('vline/api-integration/load-vnet-station-names.mjs')
+await runNode('vline/timetables/download-vline-timetables.mjs')
+await runNode('vline/timetables/load-vline-timetables.mjs')
 
 await runNode('load-all-post.mjs')
 

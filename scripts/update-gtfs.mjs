@@ -66,7 +66,7 @@ async function updateTimetables() {
   await discordUpdate('[Updater]: Dropped stops, routes and gtfs timetables, loading data now.')
 
   let fileName = 'load-all'
-  if (config.metroOnly) fileName += '-metro-only'
+  if (config.railOnly) fileName += '-rail-only'
   await spawnProcess('node', [ path.join(__dirname, `../load-gtfs/${fileName}.mjs`) ])
 
   await discordUpdate(`[Updater]: GTFS Timetables finished loading, took ${Math.round(utils.uptime() / 1000 / 60)}min`)
@@ -86,8 +86,8 @@ if (lastModified.toISOString() !== lastLastModified) {
   await discordUpdate('[Updater]: Updating timetables to revision ' + lastModified)
 
   let gtfsFolder = path.join(__dirname, '..', 'gtfs')
-  // try { await fs.rm(gtfsFolder, { recursive: true }) } catch (e) {}
-  // try { await fs.mkdir(gtfsFolder) } catch (e) {}
+  try { await fs.rm(gtfsFolder, { recursive: true }) } catch (e) {}
+  try { await fs.mkdir(gtfsFolder) } catch (e) {}
   try {
     await gtfs.download(gtfsFolder)
     LOGGER.log('Finished downloading, unzipping')
