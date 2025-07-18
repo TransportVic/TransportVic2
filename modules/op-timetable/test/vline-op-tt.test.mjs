@@ -70,7 +70,7 @@ describe('The matchTrip function', () => {
       let matchingTrip = await matchTrip('20250718', departures[0], database)
       expect(matchingTrip).to.not.exist
 
-      let pattern = await downloadTripPattern('20250718', departures[0], database)
+      let pattern = await downloadTripPattern('Fri', '20250718', departures[0], database)
       let trip = pattern.toDatabase()
       expect(trip.runID).to.equal('8741')
       expect(trip.direction).to.equal('Down')
@@ -105,7 +105,7 @@ describe('The matchTrip function', () => {
       let matchingTrip = await matchTrip('20250726', departures[1], database)
       expect(matchingTrip).to.not.exist
 
-      let pattern = await downloadTripPattern('20250726', departures[1], database)
+      let pattern = await downloadTripPattern('Sat', '20250726', departures[1], database)
       let trip = pattern.toDatabase()
       expect(trip.runID).to.equal('8007')
       expect(trip.direction).to.equal('Down')
@@ -118,7 +118,7 @@ describe('The matchTrip function', () => {
       expect(trip.stopTimings[1].departureTime).to.equal('08:17')
   })
 
-  it.only('Cross references the NSP to handle trips with duplicated stops (early trip)', async () => {
+  it('Cross references the NSP to handle trips with duplicated stops (early trip)', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let routes = database.getCollection('routes')
@@ -141,7 +141,7 @@ describe('The matchTrip function', () => {
       let matchingTrip = await matchTrip('20250726', departures[2], database)
       expect(matchingTrip).to.not.exist
 
-      let pattern = await downloadTripPattern('20250726', departures[2], database)
+      let pattern = await downloadTripPattern('Sat', '20250726', departures[2], database)
       let trip = pattern.toDatabase()
       expect(trip.runID).to.equal('8007')
       expect(trip.direction).to.equal('Down')
