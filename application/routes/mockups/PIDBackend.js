@@ -1,6 +1,6 @@
 const getRouteStops = require('../../../additional-data/route-stops')
 const getMetroDepartures = require('../../../modules/metro-trains/get-departures')
-const getVLineDepartures = require('../../../modules/vline/get-departures')
+const getVLineDepartures = require('../../../modules/vline-old/get-departures')
 const destinationOverrides = require('../../../additional-data/coach-stops')
 const utils = require('../../../utils')
 const async = require('async')

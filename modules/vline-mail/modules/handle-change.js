@@ -3,7 +3,7 @@ const cancellation = require('./handle-cancellation')
 const async = require('async')
 const postDiscordUpdate = require('../../discord-integration')
 const bestStop = require('./find-best-stop')
-const handleTripShorted = require('../../vline/handle-trip-shorted')
+const handleTripShorted = require('../../vline-old/handle-trip-shorted')
 const matchTrip = require('./match-trip')
 
 async function discordUpdate(text) {

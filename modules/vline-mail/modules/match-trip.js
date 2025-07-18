@@ -1,7 +1,7 @@
 const utils = require('../../../utils')
-const findTrip = require('../../vline/find-trip')
+const findTrip = require('../../vline-old/find-trip')
 const { getDayOfWeek } = require('../../../public-holidays')
-const vlineLock = require('../../vline/vline-lock-wrap')
+const vlineLock = require('../../vline-old/vline-lock-wrap')
 
 module.exports = async function (db, departureTime, origin, destination, keepID=false) {
   await vlineLock.awaitLock()

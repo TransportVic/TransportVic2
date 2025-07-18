@@ -3,7 +3,7 @@ const router = new express.Router()
 const ptvAPI = require('../../../ptv-api')
 const utils = require('../../../utils')
 const getMetroDepartures = require('../../../modules/metro-trains/get-departures')
-const getVLineDepartures = require('../../../modules/vline/get-departures')
+const getVLineDepartures = require('../../../modules/vline-old/get-departures')
 const getBusDepartures = require('../../../modules/bus/get-departures')
 const busDestinations = require('../../../additional-data/bus-destinations')
 

@@ -3,8 +3,8 @@ const moment = require('moment')
 const async = require('async')
 const router = new express.Router()
 const utils = require('../../../utils')
-const guessPlatform = require('../../../modules/vline/guess-scheduled-platforms')
-const findTrip = require('../../../modules/vline/find-trip')
+const guessPlatform = require('../../../modules/vline-old/guess-scheduled-platforms')
+const findTrip = require('../../../modules/vline-old/find-trip')
 const { getDayOfWeek } = require('../../../public-holidays')
 
 function giveVariance(time) {

@@ -1,6 +1,6 @@
 const express = require('express')
 const router = new express.Router()
-const getDepartures = require('../../../modules/vline/get-departures')
+const getDepartures = require('../../../modules/vline-old/get-departures')
 const utils = require('../../../utils')
 const moment = require('moment')
 const timingUtils = require('./timing-utils')
