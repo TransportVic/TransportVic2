@@ -313,11 +313,13 @@ module.exports = {
 
     return time.format('HH:mm')
   },
+  getPTYYYYMMDD: time => {
+    let cloned = time.clone()
+    if (cloned.get('hours') < 3) // 3am PT day :((((
+      cloned.add(-1, 'days')
+    return cloned.format('YYYYMMDD')
+  },
   getYYYYMMDD: time => {
-    // let cloned = time.clone()
-    // if (cloned.get('hours') < 3) // 3am PT day :((((
-    //   cloned.add(-1, 'days')
-    // return cloned.format('YYYYMMDD')
     return time.format('YYYYMMDD')
   },
   getYYYYMMDDNow: () => module.exports.getYYYYMMDD(module.exports.now()),

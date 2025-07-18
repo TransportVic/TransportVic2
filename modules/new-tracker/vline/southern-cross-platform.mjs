@@ -60,7 +60,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let vlineAPIInterface = new VLineAPIInterface(config.vlineCallerID, config.vlineSignature)
   ptvAPI.addVLine(vlineAPIInterface)
 
-  let updatedTrips = await fetchTrips(utils.getYYYYMMDD(utils.now()), mongoDB, ptvAPI)
+  let updatedTrips = await fetchTrips(utils.getPTYYYYMMDD(utils.now()), mongoDB, ptvAPI)
   console.log('> SSS Platforms: Updated TDNs:', updatedTrips.map(trip => trip.runID).join(', '))
 
   await mongoDB.close()
