@@ -1,0 +1,164 @@
+<GetJourneyStopsResponse xmlns="http://tempuri.org/">
+<GetJourneyStopsResult xmlns:a="http://schemas.datacontract.org/2004/07/VLine.JourneyPlanner.Entities" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+<a:Stop>
+<a:ArrivalTime>2025-07-26T07:45:00</a:ArrivalTime>
+<a:DepartureTime>0001-01-01T00:00:00</a:DepartureTime>
+<a:LocationID>249</a:LocationID>
+<a:LocationName>Gisborne Station</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>22</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-26T07:50:00</a:DepartureTime>
+<a:LocationID>249</a:LocationID>
+<a:LocationName>Gisborne Station</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>22</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>2025-07-26T07:50:00</a:ArrivalTime>
+<a:DepartureTime>0001-01-01T00:00:00</a:DepartureTime>
+<a:LocationID>382</a:LocationID>
+<a:LocationName>Macedon Station</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>23</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-26T07:55:00</a:DepartureTime>
+<a:LocationID>382</a:LocationID>
+<a:LocationName>Macedon Station</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>23</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>2025-07-26T07:57:00</a:ArrivalTime>
+<a:DepartureTime>0001-01-01T00:00:00</a:DepartureTime>
+<a:LocationID>713</a:LocationID>
+<a:LocationName>Woodend Station</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>24</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-26T08:02:00</a:DepartureTime>
+<a:LocationID>713</a:LocationID>
+<a:LocationName>Woodend Station</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>24</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>2025-07-26T08:11:00</a:ArrivalTime>
+<a:DepartureTime>0001-01-01T00:00:00</a:DepartureTime>
+<a:LocationID>334</a:LocationID>
+<a:LocationName>Kyneton Station</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>25</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-26T08:31:00</a:DepartureTime>
+<a:LocationID>334</a:LocationID>
+<a:LocationName>Kyneton Station</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>25</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>2025-07-26T08:17:00</a:ArrivalTime>
+<a:DepartureTime>0001-01-01T00:00:00</a:DepartureTime>
+<a:LocationID>406</a:LocationID>
+<a:LocationName>Malmsbury Station</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>26</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-26T08:37:00</a:DepartureTime>
+<a:LocationID>406</a:LocationID>
+<a:LocationName>Malmsbury Station</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>26</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>2025-07-26T08:30:00</a:ArrivalTime>
+<a:DepartureTime>0001-01-01T00:00:00</a:DepartureTime>
+<a:LocationID>130</a:LocationID>
+<a:LocationName>Castlemaine Station</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>30</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-26T08:51:00</a:DepartureTime>
+<a:LocationID>130</a:LocationID>
+<a:LocationName>Castlemaine Station</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>30</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>2025-07-26T08:49:00</a:ArrivalTime>
+<a:DepartureTime>0001-01-01T00:00:00</a:DepartureTime>
+<a:LocationID>2100</a:LocationID>
+<a:LocationName>Kangaroo Flat Station</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>33</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-07-26T09:10:00</a:DepartureTime>
+<a:LocationID>2100</a:LocationID>
+<a:LocationName>Kangaroo Flat Station</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>33</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>2025-07-26T08:56:00</a:ArrivalTime>
+<a:DepartureTime>0001-01-01T00:00:00</a:DepartureTime>
+<a:LocationID>59</a:LocationID>
+<a:LocationName>Bendigo Station, Railway Place</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly>d</a:SetDownPickupOnly>
+<a:StopSequence>35</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>2025-07-26T09:18:00</a:ArrivalTime>
+<a:DepartureTime>0001-01-01T00:00:00</a:DepartureTime>
+<a:LocationID>59</a:LocationID>
+<a:LocationName>Bendigo Station, Railway Place</a:LocationName>
+<a:ServiceIdentifier>8007</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly>d</a:SetDownPickupOnly>
+<a:StopSequence>35</a:StopSequence>
+</a:Stop>
+</GetJourneyStopsResult>
+</GetJourneyStopsResponse>
