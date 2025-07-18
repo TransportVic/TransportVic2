@@ -71,8 +71,6 @@ async function updateTimetables() {
 
   await discordUpdate(`[Updater]: GTFS Timetables finished loading, took ${Math.round(utils.uptime() / 1000 / 60)}min`)
   LOGGER.log('Done!')
-
-  process.exit()
 }
 
 LOGGER.log('Checking for updates...')
