@@ -48,6 +48,7 @@ async function pickBestTrip(data, db) {
 async function addTripData(db, tripData) {
   let { trip, tripStartTime, isLive, originStop } = tripData
   let nspTrip = trip.runID ? await VLineUtils.getNSPTrip(await getDayOfWeek(tripStartTime), trip.runID, db) : null
+  if (nspTrip) trip.vehicle = nspTrip.vehicle
 
   let firstDepartureTime = trip.stopTimings.find(stop => stop.stopName === originStop.stopName).departureTimeMinutes
   trip.stopTimings = trip.stopTimings.map(stop => {
