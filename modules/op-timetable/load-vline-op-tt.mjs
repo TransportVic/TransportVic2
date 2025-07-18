@@ -7,10 +7,16 @@ import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import LiveTimetable from '../schema/live-timetable.js'
 
+let existingVNetStops = {}
+
 async function getStopFromVNetName(stops, vnetName) {
-  return await stops.findDocument({
+  if (existingVNetStops[vnetName]) return existingVNetStops[vnetName]
+
+  let stop = await stops.findDocument({
     'bays.vnetStationName': vnetName
   })
+  existingVNetStops[vnetName] = stop
+  return stop
 }
 
 export async function matchTrip(operationDay, vlineTrip, db) {
