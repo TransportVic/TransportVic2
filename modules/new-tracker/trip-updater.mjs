@@ -234,6 +234,8 @@ export default class TripUpdater {
       timetable = await this.createTrip(db, trip, updateTime, stopVisits)
     }
 
+    if (!timetable) return null
+
     timetable.sortStops()
 
     let { lastStopDelay, lastStop } = this.getLastStopDelay(timetable, trip, stopVisits)

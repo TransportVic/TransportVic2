@@ -1,5 +1,6 @@
-const { getDepartures } = require('../departures/get-departures')
-const { getFormingTrip } = require('./get-forming-trip')
+const utils = require('../../utils.js')
+const { getDepartures } = require('../departures/get-departures.js')
+const { getFormingTrip } = require('./get-forming-trip.js')
 
 const CITY_LOOP = [
   'Parliament',
@@ -64,8 +65,11 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
       )
     }
 
+    let routeName = formingTrip ? formingTrip.routeName : trip.routeName
+
     outputDepartures.push({
       ...departure,
+      codedRouteName: utils.encodeName(routeName),
       fleetNumber: trip.vehicle ? trip.vehicle.consist : null,
       vehicle: trip.vehicle,
       runID: trip.runID,
