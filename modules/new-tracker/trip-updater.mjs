@@ -119,12 +119,7 @@ export default class TripUpdater {
     })
   }
 
-  static setUpTimetable(timetable, trip, dataSource) {
-    timetable.setModificationSource(dataSource)
-
-    let firstStop = timetable.stops.find(stop => !stop.cancelled)
-    if (trip.scheduledStartTime && firstStop.departureTime !== trip.scheduledStartTime) return false
-
+  static setUpTimetable(timetable, trip) {
     timetable.cancelled = trip.cancelled
     if (trip.cancelled) {
       if (trip.stops && trip.stops.length) {
@@ -140,7 +135,8 @@ export default class TripUpdater {
     if (trip.consist) timetable.consist = trip.consist.reduce((acc, e) => acc.concat(e), [])
     else if (trip.forcedVehicle) timetable.forcedVehicle = trip.forcedVehicle
 
-    return true
+    timetable.runID = trip.runID
+    timetable.direction = trip.runID[3] % 2 === 0 ? 'Up' : 'Down'
   }
 
   static adjustTripInput(timetable, trip) {
@@ -166,6 +162,9 @@ export default class TripUpdater {
     return { lastStopDelay: null, lastStop, secondLastStop, lastNonAMEXStop }
   }
 
+  static updateTripDetails() {
+  }
+
   static async updateTrip(db, trip, {
     skipWrite = false,
     skipStopCancellation = false,
@@ -185,7 +184,11 @@ export default class TripUpdater {
     let timetable = LiveTimetable.fromDatabase(dbTrip)
     if (updateTime) timetable.lastUpdated = updateTime
 
-    if (!this.setUpTimetable(timetable, trip, dataSource)) return null
+    timetable.setModificationSource(dataSource)
+    let firstStop = timetable.stops.find(stop => !stop.cancelled)
+    if (trip.scheduledStartTime && firstStop.departureTime !== trip.scheduledStartTime) return null
+
+    this.setUpTimetable(timetable, trip)
     this.adjustTripInput(timetable, trip)
 
     let existingStops = timetable.getStopNames()
@@ -257,16 +260,9 @@ export default class TripUpdater {
     )
 
     timetable.logChanges = false
-
     timetable.isRRB = false
-    timetable.runID = trip.runID
-    timetable.direction = trip.runID[3] % 2 === 0 ? 'Up' : 'Down'
 
-    timetable.forming = trip.forming
-    timetable.formedBy = trip.formedBy
-    if (trip.consist) timetable.consist = trip.consist.reduce((acc, e) => acc.concat(e), [])
-    else if (trip.forcedVehicle) timetable.forcedVehicle = trip.forcedVehicle
-
+    this.setUpTimetable(timetable, trip)
     if (!trip.stops || !trip.stops.length) return null
 
     let isCCL = trip.routeGTFSID === '2-CCL'
