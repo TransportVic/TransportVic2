@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url'
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
 import { MetroGTFSRTrip } from '../GTFSRTrip.mjs'
-import TripUpdater from '../../metro-trains/trip-updater.mjs'
+import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import { parseConsist } from '../../metro-trains/fleet-parser.js'
 import metroConsists from '../../../additional-data/metro-tracker/metro-consists.json' with { type: 'json' }
 
@@ -34,7 +34,7 @@ export async function fetchTrips(db) {
   console.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
   for (let tripData of relevantTrips) {
-    await TripUpdater.updateTrip(db, tripData, { dataSource: 'gtfsr-vehicle-update' })
+    await MetroTripUpdater.updateTrip(db, tripData, { dataSource: 'gtfsr-vehicle-update' })
   }
 }
 

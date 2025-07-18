@@ -2,7 +2,7 @@ import { fileURLToPath } from 'url'
 
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
-import TripUpdater from '../../metro-trains/trip-updater.mjs'
+import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import getTripUpdateData from '../../metro-trains/get-ptv-departures.js'
 import { updateRelatedTrips } from './check-new-updates.mjs'
@@ -38,7 +38,7 @@ export async function fetchTrips(db, ptvAPI, { stationName = null, skipTDN = [],
       dataSource: 'ptv-departure',
       ignoreMissingStops: MTP_STOPS,
     }
-    updatedTrips.push(await TripUpdater.updateTrip(db, data, options))
+    updatedTrips.push(await MetroTripUpdater.updateTrip(db, data, options))
   }
 
   return updatedTrips

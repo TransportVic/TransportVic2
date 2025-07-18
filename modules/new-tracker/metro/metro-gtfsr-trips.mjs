@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url'
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
 import { MetroGTFSRTrip, UnscheduledMetroGTFSRTrip } from '../GTFSRTrip.mjs'
-import TripUpdater from '../../metro-trains/trip-updater.mjs'
+import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 
 export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
   let tripData = await gtfsrAPI('metrotrain-tripupdates')
@@ -26,7 +26,7 @@ export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
     }
 
     for (let stop of trip.trip_update.stop_time_update) {
-      let stopData = await TripUpdater.getStop(db, stop.stop_id)
+      let stopData = await MetroTripUpdater.getStop(db, stop.stop_id)
       let tripStop = {
         stopName: stopData.fullStopName,
         platform: stopData.platform || null,
@@ -62,7 +62,7 @@ export async function fetchTrips(db, routeFilter = '') {
     // GTFSR data currently does not support platform changes
     tripData.stops.forEach(stop => { delete stop.platform })
 
-    await TripUpdater.updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'gtfsr-trip-update' })
+    await MetroTripUpdater.updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'gtfsr-trip-update' })
   }
 }
 
