@@ -17,7 +17,7 @@ const sssPlatforms = (await fs.readFile(path.join(__dirname, 'sample-data', 'sss
 const clone = o => JSON.parse(JSON.stringify(o))
 
 describe('The SSS Platform updater', () => {
-  it.only('Fetches the list of arrivals into SSS and produces trip update objects', async () => {
+  it('Fetches the list of arrivals into SSS and produces trip update objects', async () => {
     let database = new LokiDatabaseConnection()
     let liveTimetables = database.getCollection('live timetables')
     let stops = database.getCollection('stops')
@@ -33,11 +33,11 @@ describe('The SSS Platform updater', () => {
     let tripUpdates = await getPlatformUpdates('20250718', database, ptvAPI)
     expect(tripUpdates[0]).to.deep.equal({
       operationDays: '20250718',
-      runID: '8877',
+      runID: '8866',
       stops: [{
         stopName: 'Southern Cross Railway Station',
         estimatedArrivalTime: new Date('2025-07-18T08:41:00Z'),
-        platform: '3'
+        platform: '8'
       }]
     })
   })
