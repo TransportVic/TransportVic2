@@ -69,6 +69,8 @@ describe('The matchTrip function', () => {
       let pattern = await downloadTripPattern('20250718', departures[0], database)
       let trip = pattern.toDatabase()
       expect(trip.runID).to.equal('8741')
+      expect(trip.direction).to.equal('Down')
+
       expect(trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
       expect(trip.stopTimings[0].departureTime).to.equal('11:30')
 
