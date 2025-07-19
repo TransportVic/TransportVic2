@@ -502,16 +502,13 @@ module.exports = class LiveTimetable {
   }
 
   addChange(data) {
-    if (this.logChanges) {
-      let change = {
-        ...data,
-        timestamp: new Date(),
-        source: this.#dataSource
-      }
-
-      this.changes.push(change)
-      this.newChanges.push(change)
+    let change = {
+      ...data,
+      timestamp: new Date(),
+      source: this.#dataSource
     }
+    if (this.logChanges) this.changes.push(change)
+    this.newChanges.push(change)
   }
 
   updateStopByName(stopName, stopData, { prefSchTime, visitNum } = {}) {

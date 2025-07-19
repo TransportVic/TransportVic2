@@ -234,6 +234,28 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.changes[1].timestamp).to.exist
   })
 
+  it('Does not produce a change entry if logging is disabled, but should still log under newChanges', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    timetable.logChanges = false
+    timetable.forming = '3800'
+
+    expect(timetable.changes.length).to.equal(0)
+    expect(timetable.newChanges.length).to.equal(1)
+    expect(timetable.newChanges[0].type).to.equal('forming-change')
+    expect(timetable.newChanges[0].oldVal).to.equal('0737')
+    expect(timetable.newChanges[0].newVal).to.equal('3800')
+    expect(timetable.newChanges[0].timestamp).to.exist
+
+    timetable.formedBy = '0400'
+
+    expect(timetable.changes.length).to.equal(0)
+    expect(timetable.newChanges.length).to.equal(2)
+    expect(timetable.newChanges[1].type).to.equal('formedby-change')
+    expect(timetable.newChanges[1].oldVal).to.equal('0733')
+    expect(timetable.newChanges[1].newVal).to.equal('0400')
+    expect(timetable.newChanges[1].timestamp).to.exist
+  })
+
   it('Should disallow invalid cancellation values', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     expect(timetable.cancelled).to.be.false
