@@ -3,7 +3,6 @@ import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import getTripID from '../../../modules/new-tracker/metro-rail-bus/get-trip-id.mjs'
 
 import allRouteStops from '../../../additional-data/metro-data/metro-routes.json' with { type: 'json' }
-import { MTMRailRoute } from './MTMRailRouteLoader.mjs'
 
 let routesAtStops = {}
 
@@ -55,13 +54,43 @@ export class MTMRailTrip extends GTFSTypes.GTFSTrip {
     }
   }
 
+  getDirection(routeName, patternID) {
+    if (directionCache[patternID]) return directionCache[patternID]
+    let routeStops = allRouteStops[routeName]
+    if (!routeStops) return null
+
+    let stopTimings = this.getStopData()
+    let stopIndexes = stopTimings.reduce((acc, stop) => {
+      let index = routeStops.indexOf(stop.stopName.slice(0, -16))
+      if (index === -1) return acc
+      acc[stop.stopName] = index
+      return acc
+    }, {})
+
+    let indexIncreasing = 0, indexDecreasing = 0
+    for (let i = 1; i < stopTimings.length; i++) {
+      let stop = stopTimings[i].stopName, prev = stopTimings[i - 1].stopName
+      if (stopIndexes[prev] < stopIndexes[stop]) indexIncreasing++
+      else indexDecreasing++
+    }
+
+    let direction
+    if (indexIncreasing > indexDecreasing) direction = 'Up'
+    else direction = 'Down'
+
+    directionCache[patternID] = direction
+    return direction
+  }
+
   getTripData() {
     let tripData = super.getTripData()
     let patternID = this.getPatternID()
+    let routeName = this.getRouteName(patternID)
 
     return {
       ...tripData,
-      routeName: this.getRouteName(patternID),
+      routeName,
+      direction: this.getDirection(routeName, patternID),
       runID: getTripID(tripData.tripID),
       isRailReplacementBus: true
     }
@@ -146,32 +175,6 @@ export default class MTMRailTripLoader extends TripLoader {
       routeIDMap,
       processTrip: (trip, rawTrip) => {
         if (rawTrip.getCalendarName().match(/unplanned/i)) return null
-        let patternID = rawTrip.getPatternID()
-
-        if (this.#directionCache[patternID]) {
-          trip.direction = this.#directionCache[patternID]
-        } else {
-          let routeStops = allRouteStops[trip.routeName]
-
-          let stopIndexes = trip.stopTimings.reduce((acc, stop) => {
-            let index = routeStops.indexOf(stop.stopName.slice(0, -16))
-            if (index === -1) return acc
-            acc[stop.stopName] = index
-            return acc
-          }, {})
-
-          let indexIncreasing = 0, indexDecreasing = 0
-          for (let i = 1; i < trip.stopTimings.length; i++) {
-            let stop = trip.stopTimings[i].stopName, prev = trip.stopTimings[i - 1].stopName
-            if (stopIndexes[prev] < stopIndexes[stop]) indexIncreasing++
-            else indexDecreasing++
-          }
-
-          if (indexIncreasing > indexDecreasing) trip.direction = 'Up'
-          else trip.direction = 'Down'
-          this.#directionCache[patternID] = trip.direction
-        }
-
         return trip
       }
     })
