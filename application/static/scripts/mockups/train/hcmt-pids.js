@@ -162,10 +162,10 @@ function displayPIDData() {
     frontDestoFrames = 2
   } else setVia('')
 
-  let codedRouteName = encodeName(pidData.routeName)
+  let cleanRouteName = encodeName(pidData.routeName)
 
-  setLine(codedRouteName)
-  let { expressCount, nextStop, stationSize, studSize } = setStoppingPattern(pidData.lineStops, pidData.tripStops, codedRouteName)
+  setLine(cleanRouteName)
+  let { expressCount, nextStop, stationSize, studSize } = setStoppingPattern(pidData.lineStops, pidData.tripStops, cleanRouteName)
 
   let previousStopIndex = Math.max(pidData.tripStops.indexOf(nextStop) - 1, 0)
   let previousStop = pidData.tripStops[previousStopIndex]

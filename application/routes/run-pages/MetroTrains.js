@@ -155,7 +155,7 @@ router.get('/:origin/:departureTime/:destination/:destinationArrivalTime/:operat
 
   res.render('runs/metro', {
     trip,
-    codedLineName: utils.encodeName(trip.routeName)
+    cleanRouteName: utils.encodeName(trip.routeName)
   })
 })
 
@@ -165,7 +165,7 @@ router.post('/:origin/:departureTime/:destination/:destinationArrivalTime/:opera
 
   res.render('runs/templates/metro', {
     trip,
-    codedLineName: utils.encodeName(trip.routeName)
+    cleanRouteName: utils.encodeName(trip.routeName)
   })
 })
 

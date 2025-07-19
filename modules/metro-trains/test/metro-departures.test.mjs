@@ -255,6 +255,8 @@ describe('The metro departures class', () => {
     expect(departures[0].runID).to.equal('C000')
     expect(departures[0].platform).to.equal('2')
 
+    expect(departures[0].routeName).to.equal('Pakenham')
+    expect(departures[0].cleanRouteName).to.equal('pakenham')
     expect(departures[0].formingDestination).to.equal('East Pakenham')
     expect(departures[0].formingRunID).to.equal('C005')
     expect(departures[0].futureFormingStops).to.deep.equal([
@@ -309,6 +311,8 @@ describe('The metro departures class', () => {
     expect(departures[0].destination).to.equal('Flinders Street')
     expect(departures[0].trueDestination).to.equal('Flinders Street')
 
+    expect(departures[0].routeName).to.equal('Frankston')
+    expect(departures[0].cleanRouteName).to.equal('frankston')
     expect(departures[0].formingDestination).to.equal('Williamstown')
     expect(departures[0].formingRunID).to.equal('6385')
     expect(departures[0].futureFormingStops).to.deep.equal([
@@ -335,6 +339,8 @@ describe('The metro departures class', () => {
     expect(departures[0].destination).to.equal('Town Hall')
     expect(departures[0].trueDestination).to.equal('Town Hall')
 
+    expect(departures[0].routeName).to.equal('Pakenham')
+    expect(departures[0].cleanRouteName).to.equal('pakenham')
     expect(departures[0].formingDestination).to.equal('West Footscray')
     expect(departures[0].formingRunID).to.equal('Z101')
     expect(departures[0].futureFormingStops).to.deep.equal([
@@ -418,5 +424,7 @@ describe('The metro departures class', () => {
     expect(departures[0].cancelled).to.be.false
     expect(departures[0].formingTrip).to.exist
     expect(departures[0].formingTrip.runID).to.equal('0822')
+    expect(departures[0].routeName).to.equal('Mernda')
+    expect(departures[0].cleanRouteName).to.equal('mernda')
   })
 })

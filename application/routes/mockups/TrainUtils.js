@@ -116,7 +116,7 @@ module.exports = {
           runID: arrival.runID,
           stoppingPattern: 'Not Taking Passengers',
           stoppingType: 'Not Taking Passengers',
-          codedLineName: utils.encodeName(arrival.routeName),
+          cleanRouteName: utils.encodeName(arrival.routeName),
           additionalInfo: {
             screenStops: [],
             expressCount: 0,
@@ -354,7 +354,7 @@ module.exports = {
   },
   appendScreenDataToDeparture: (departure, destination, station, routeName) => {
     departure = module.exports.addTimeToDeparture(departure)
-    departure.codedLineName = utils.encodeName(departure.trip.routeName)
+    departure.cleanRouteName = utils.encodeName(departure.trip.routeName)
 
     let trip = departure.trip
 
@@ -565,7 +565,7 @@ module.exports = {
         minutesToDeparture: departure.minutesToDeparture,
         prettyTimeToDeparture: departure.prettyTimeToDeparture,
         routeName: departure.trip.routeName,
-        codedLineName: departure.codedLineName,
+        cleanRouteName: departure.cleanRouteName,
         additionalInfo: departure.additionalInfo,
         direction: departure.trip.direction
       }

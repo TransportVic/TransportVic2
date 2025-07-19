@@ -27,7 +27,7 @@ function tripCrossesCity(prevTrip, nextTrip) {
     || (METRO_TUNNEL_GROUP_WEST.includes(prevTrip.routeName) && METRO_TUNNEL_GROUP_EAST.includes(nextTrip.routeName))
 }
 
-function isCHLFormingCCLSpecialCase(trip, formingTrip) {
+function checkIsCHLFormingCCLSpecialCase(trip, formingTrip) {
   if (CLIFTON_HILL_GROUP.includes(trip.routeName) && trip.direction === 'Down' && formingTrip) {
     let lastNonAMEX = trip.stopTimings.findLast(stop => !stop.cancelled)
     let isTerminatingPAR = lastNonAMEX && lastNonAMEX.stopName === 'Parliament Railway Station' && lastNonAMEX.stopName !== trip.destination
@@ -47,6 +47,7 @@ async function getFormingTrip(trip, isArrival, isWithinCityLoop, liveTimetables)
   let isMetroTunnelTrip = METRO_TUNNEL_GROUP_EAST.includes(trip.routeName) || METRO_TUNNEL_GROUP_WEST.includes(trip.routeName)
   let upTripInCityLoop = (isWithinCityLoop && trip.direction === 'Up')
   let shouldShowForming = (upTripInCityLoop || isCrossCityTrip || isMetroTunnelTrip) && !isCityCircle
+  let isCHLFormingCCLSpecialCase
 
   let formingTrip = trip.forming ? await liveTimetables.findDocument({
     mode: trip.mode,
@@ -55,7 +56,8 @@ async function getFormingTrip(trip, isArrival, isWithinCityLoop, liveTimetables)
   }) : null
 
   if (!shouldShowForming) {
-    shouldShowForming = isCHLFormingCCLSpecialCase(trip, formingTrip)
+    isCHLFormingCCLSpecialCase = checkIsCHLFormingCCLSpecialCase(trip, formingTrip)
+    shouldShowForming = isCHLFormingCCLSpecialCase
   }
 
   if (isArrival) {
@@ -72,7 +74,7 @@ async function getFormingTrip(trip, isArrival, isWithinCityLoop, liveTimetables)
   }
 
   let formingType = null
-  if (returnedFormingTrip) formingType = upTripInCityLoop ? 'CITY_LOOP' : 'CROSS_CITY'
+  if (returnedFormingTrip) formingType = (upTripInCityLoop || isCHLFormingCCLSpecialCase) ? 'CITY_LOOP' : 'CROSS_CITY'
 
   return {
     shouldShowForming, formingDestination, formingRunID,
@@ -83,5 +85,5 @@ async function getFormingTrip(trip, isArrival, isWithinCityLoop, liveTimetables)
 module.exports = {
   tripCrossesCity,
   getFormingTrip,
-  isCHLFormingCCLSpecialCase
+  checkIsCHLFormingCCLSpecialCase
 }

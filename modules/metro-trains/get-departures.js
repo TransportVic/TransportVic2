@@ -65,11 +65,12 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
       )
     }
 
-    let routeName = formingTrip ? formingTrip.routeName : trip.routeName
+    let routeName = (formingTrip && formingType === 'CITY_LOOP') ? formingTrip.routeName : trip.routeName
 
     outputDepartures.push({
       ...departure,
-      codedRouteName: utils.encodeName(routeName),
+      routeName,
+      cleanRouteName: utils.encodeName(routeName),
       fleetNumber: trip.vehicle ? trip.vehicle.consist : null,
       vehicle: trip.vehicle,
       runID: trip.runID,

@@ -14,7 +14,7 @@ if departures.length
       if departure.cancelled
         input(type='hidden' name='cancelled')
       -
-        let cssClass = `${departure.codedRouteName}-line`
+        let cssClass = `${departure.cleanRouteName}-line`
         if (routeName === 'City Circle') cssClass = 'city-circle'
       a(class=`leftContainer ${cssClass}`)
         if departure.isRailReplacementBus

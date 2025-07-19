@@ -29,7 +29,7 @@ async function loadDepartures(req, res) {
       late: 5
     })
 
-    departure.codedLineName = utils.encodeName(departure.trip.routeName)
+    departure.cleanRouteName = utils.encodeName(departure.trip.routeName)
 
     let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
     let {stopGTFSID} = currentStop

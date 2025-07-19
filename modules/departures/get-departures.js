@@ -168,7 +168,7 @@ async function getDepartures(station, mode, db, { departureTime = null, timefram
         currentStop,
         cancelled: trip.cancelled || currentStop.cancelled,
         routeName: trip.routeName,
-        codedRouteName: utils.encodeName(trip.routeName),
+        cleanRouteName: utils.encodeName(trip.routeName),
         trip,
         destination: trip.destination,
         departureDay: trip.operationDays,

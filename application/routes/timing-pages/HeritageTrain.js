@@ -34,7 +34,7 @@ async function loadDepartures(req, res) {
     departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
 
     departure.headwayDevianceClass = 'unknown'
-    departure.codedLineName = 'heritage-train'
+    departure.cleanRouteName = 'heritage-train'
 
     let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
     let {stopGTFSID} = currentStop
