@@ -167,9 +167,11 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
     }
 
     let pattern = await downloadTripPattern(opDayFormat, departure, nspTrip, db)
+    if (!pattern) continue
+
     outputTrips.push({
       replaceOne: {
-        filter: pattern.toDBKey(),
+        filter: pattern.getDBKey(),
         replacement: pattern.toDatabase(),
         upsert: true
       }
