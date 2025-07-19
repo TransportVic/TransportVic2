@@ -101,9 +101,9 @@ describe('The GTFS Loaders with the MTM Website Rail data', () => {
       expect(donricTrip.direction).to.equal('Up')
 
       let WTL_BEW = await trips.findDocument({
-        operationDays: '20250616',
-        origin: 'Moorabbin Railway Station',
-        departureTime: '24:13'
+        operationDays: '20250719',
+        origin: 'Westall Railway Station',
+        departureTime: '06:40'
       })
 
       expect(WTL_BEW).to.not.be.null
