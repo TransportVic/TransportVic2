@@ -80,6 +80,7 @@ export class MTMRailStopTimesReader extends GTFSReaders.GTFSStopTimesReader {
 export default class MTMRailTripLoader extends TripLoader {
 
   #patternCache = {}
+  #directionCache = {}
 
   constructor(paths, database) {
     super(paths, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, database)
@@ -135,24 +136,30 @@ export default class MTMRailTripLoader extends TripLoader {
         }
 
         trip.routeName = this.#patternCache[patternID]
-        let routeStops = allRouteStops[trip.routeName]
 
-        let stopIndexes = trip.stopTimings.reduce((acc, stop) => {
-          let index = routeStops.indexOf(stop.stopName.slice(0, -16))
-          if (index === -1) return acc
-          acc[stop.stopName] = index
-          return acc
-        }, {})
+        if (this.#directionCache[patternID]) {
+          trip.direction = this.#directionCache[patternID]
+        } else {
+          let routeStops = allRouteStops[trip.routeName]
 
-        let indexIncreasing = 0, indexDecreasing = 0
-        for (let i = 1; i < trip.stopTimings.length; i++) {
-          let stop = trip.stopTimings[i].stopName, prev = trip.stopTimings[i - 1].stopName
-          if (stopIndexes[prev] < stopIndexes[stop]) indexIncreasing++
-          else indexDecreasing++
+          let stopIndexes = trip.stopTimings.reduce((acc, stop) => {
+            let index = routeStops.indexOf(stop.stopName.slice(0, -16))
+            if (index === -1) return acc
+            acc[stop.stopName] = index
+            return acc
+          }, {})
+
+          let indexIncreasing = 0, indexDecreasing = 0
+          for (let i = 1; i < trip.stopTimings.length; i++) {
+            let stop = trip.stopTimings[i].stopName, prev = trip.stopTimings[i - 1].stopName
+            if (stopIndexes[prev] < stopIndexes[stop]) indexIncreasing++
+            else indexDecreasing++
+          }
+
+          if (indexIncreasing > indexDecreasing) trip.direction = 'Up'
+          else trip.direction = 'Down'
+          this.#directionCache[patternID] = trip.direction
         }
-
-        if (indexIncreasing > indexDecreasing) trip.direction = 'Up'
-        else trip.direction = 'Down'
 
         return trip
       }
