@@ -69,7 +69,9 @@ export async function updateRelatedTrips(db, updatedTrips, ptvAPI) {
       if (trip.setNull && updatedData[trip.setNull] === trip.badVal) updatedData[trip.setNull] = null
       else if (trip.enforceField) updatedData[trip.enforceField] = trip.enforceValue
 
-      await liveTimetables.replaceDocument(updatedData.getDBKey(), updatedData.toDatabase())
+      await liveTimetables.replaceDocument(updatedData.getDBKey(), updatedData.toDatabase(), {
+        upsert: true
+      })
       newlyUpdatedTrips.push(updatedData)
     }
 
