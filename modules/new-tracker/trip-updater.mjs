@@ -231,7 +231,7 @@ export default class TripUpdater {
         await this.updateTripDetails(db, timetable, trip, skipStopCancellation, ignoreMissingStops, stopVisits)
       }
     } else {
-      timetable = await this.createTrip(db, trip, updateTime, stopVisits)
+      timetable = await this.createTrip(db, trip, updateTime, stopVisits, dataSource)
     }
 
     if (!timetable) return null
@@ -257,7 +257,7 @@ export default class TripUpdater {
     return timetable
   }
 
-  static async createTrip(db, trip, updateTime) {
+  static async createTrip(db, trip, updateTime, stopVisits, dataSource) {
     let routeData = await this.getRoute(db, trip.routeGTFSID)
 
     let timetable = new LiveTimetable(
@@ -271,13 +271,13 @@ export default class TripUpdater {
       updateTime
     )
 
+    timetable.setModificationSource(dataSource)
     timetable.logChanges = false
     timetable.isRRB = false
 
     this.setUpTimetable(timetable, trip)
     if (!trip.stops || !trip.stops.length) return null
 
-    let stopVisits = {}
     for (let stop of trip.stops) {
       let { stopData, updatedData } = await this.getBaseStopUpdateData(db, stop)
 
