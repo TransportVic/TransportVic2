@@ -1,7 +1,7 @@
 #!/bin/bash
 DIRNAME=$(dirname "$0")
 
-node $DIRNAME/metro/metro-gtfsr-trips.mjs
+# node $DIRNAME/metro/metro-gtfsr-trips.mjs
 node $DIRNAME/metro/metro-gtfsr-fleet.mjs
 node $DIRNAME/metro/metro-ptv-departures.mjs
 node $DIRNAME/metro/metro-ptv-trips.mjs
