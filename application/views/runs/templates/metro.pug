@@ -42,7 +42,7 @@ if trip.isRailReplacementBus
       else
         img(src=`${staticBase}/static/images/clear-icons/bus.svg`)
     a.departureInfo
-      span.towards #{trip.routeName} Towards
+      span.towards #{trip.routeName} Line Towards
       span.destination #{trip.destination.slice(0, -16)}
       span.broadDepartureInfo.important Rail Replacement Bus
   div.infoRow
