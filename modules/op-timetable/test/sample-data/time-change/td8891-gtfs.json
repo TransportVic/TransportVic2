@@ -1,0 +1,170 @@
+{
+  "_id": "6878c968be2dc058c8a11532",
+  "mode": "regional train",
+  "routeGTFSID": "1-GEL",
+  "operationDays": [
+    "20250719"
+  ],
+  "tripID": "1.T2.1-GEL-mjp-9.1.H",
+  "shapeID": "1-GEL-mjp-9.1.H",
+  "block": null,
+  "gtfsDirection": 0,
+  "routeName": "Geelong",
+  "routeNumber": "Geelong",
+  "stopTimings": [
+    {
+      "stopName": "Southern Cross Railway Station",
+      "stopNumber": null,
+      "suburb": "Docklands",
+      "stopGTFSID": "vic:rail:SSS",
+      "arrivalTime": null,
+      "arrivalTimeMinutes": null,
+      "departureTime": "22:35",
+      "departureTimeMinutes": 1355,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      },
+      "stopDistance": "0.00"
+    },
+    {
+      "stopName": "Tarneit Railway Station",
+      "stopNumber": null,
+      "suburb": "Tarneit",
+      "stopGTFSID": "vic:rail:TNT",
+      "arrivalTime": "22:58",
+      "arrivalTimeMinutes": 1378,
+      "departureTime": "22:58",
+      "departureTimeMinutes": 1378,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "29099.16"
+    },
+    {
+      "stopName": "Wyndham Vale Railway Station",
+      "stopNumber": null,
+      "suburb": "Manor Lakes",
+      "stopGTFSID": "vic:rail:WVL",
+      "arrivalTime": "23:05",
+      "arrivalTimeMinutes": 1385,
+      "departureTime": "23:05",
+      "departureTimeMinutes": 1385,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "40244.37"
+    },
+    {
+      "stopName": "Little River Railway Station",
+      "stopNumber": null,
+      "suburb": "Little River",
+      "stopGTFSID": "vic:rail:LRR",
+      "arrivalTime": "23:13",
+      "arrivalTimeMinutes": 1393,
+      "departureTime": "23:13",
+      "departureTimeMinutes": 1393,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "55705.62"
+    },
+    {
+      "stopName": "Lara Railway Station",
+      "stopNumber": null,
+      "suburb": "Lara",
+      "stopGTFSID": "vic:rail:LRA",
+      "arrivalTime": "23:19",
+      "arrivalTimeMinutes": 1399,
+      "departureTime": "23:19",
+      "departureTimeMinutes": 1399,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "65746.73"
+    },
+    {
+      "stopName": "Corio Railway Station",
+      "stopNumber": null,
+      "suburb": "Corio",
+      "stopGTFSID": "vic:rail:COR",
+      "arrivalTime": "23:24",
+      "arrivalTimeMinutes": 1404,
+      "departureTime": "23:24",
+      "departureTimeMinutes": 1404,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "72153.68"
+    },
+    {
+      "stopName": "North Shore Railway Station",
+      "stopNumber": null,
+      "suburb": "North Shore",
+      "stopGTFSID": "vic:rail:NSH",
+      "arrivalTime": "23:27",
+      "arrivalTimeMinutes": 1407,
+      "departureTime": "23:27",
+      "departureTimeMinutes": 1407,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "75271.23"
+    },
+    {
+      "stopName": "North Geelong Railway Station",
+      "stopNumber": null,
+      "suburb": "North Geelong",
+      "stopGTFSID": "vic:rail:NGL",
+      "arrivalTime": "23:30",
+      "arrivalTimeMinutes": 1410,
+      "departureTime": "23:30",
+      "departureTimeMinutes": 1410,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "78311.66"
+    },
+    {
+      "stopName": "Geelong Railway Station",
+      "stopNumber": null,
+      "suburb": "Geelong",
+      "stopGTFSID": "vic:rail:GEL",
+      "arrivalTime": "23:35",
+      "arrivalTimeMinutes": 1415,
+      "departureTime": "23:36",
+      "departureTimeMinutes": 1416,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "80783.15"
+    },
+    {
+      "stopName": "South Geelong Railway Station",
+      "stopNumber": null,
+      "suburb": "South Geelong",
+      "stopGTFSID": "vic:rail:SOG",
+      "arrivalTime": "23:40",
+      "arrivalTimeMinutes": 1420,
+      "departureTime": null,
+      "departureTimeMinutes": null,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "82621.71"
+    }
+  ],
+  "origin": "Southern Cross Railway Station",
+  "departureTime": "22:35",
+  "destination": "South Geelong Railway Station",
+  "destinationArrivalTime": "23:40"
+}
