@@ -3,9 +3,11 @@ import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 
 export class MTMRailRoute extends GTFSTypes.GTFSRoute {
 
+  static ROUTE_NAME = 'Rail Replacement Bus'
+
   constructor(data) {
     super(data)
-    this.routeName = 'Rail Replacement Bus'
+    this.routeName = this.constructor.ROUTE_NAME
     this.routeNumber = null
   }
 

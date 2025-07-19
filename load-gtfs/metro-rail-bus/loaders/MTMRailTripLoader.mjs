@@ -3,6 +3,8 @@ import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import getTripID from '../../../modules/new-tracker/metro-rail-bus/get-trip-id.mjs'
 
 import allRouteStops from '../../../additional-data/metro-data/metro-routes.json' with { type: 'json' }
+import { MTMRailRoute } from './MTMRailRouteLoader.mjs'
+
 let routesAtStops = {}
 
 for (let route of Object.keys(allRouteStops)) {
@@ -11,6 +13,9 @@ for (let route of Object.keys(allRouteStops)) {
     routesAtStops[stop].push(route)
   }
 }
+
+let patternCache = {}
+let directionCache = {}
 
 export class MTMRailTrip extends GTFSTypes.GTFSTrip {
 
@@ -22,11 +27,41 @@ export class MTMRailTrip extends GTFSTypes.GTFSTrip {
     super(data)
   }
 
+  getPatternID() {
+    return this.getStopData().map(stop => stop.stopName).join('-')
+  }
+
+  getRouteName(patternID) {
+    if (!patternCache[patternID]) {
+      let linesVisited = {}
+      for (let stop of this.getStopData()) {
+        let routes = routesAtStops[stop.stopName.slice(0, -16)]
+        for (let route of routes) {
+          if (!linesVisited[route]) linesVisited[route] = 0
+          linesVisited[route]++
+        }
+      }
+
+      let best = null, bestCount = 0
+      for (let route of Object.keys(linesVisited)) {
+        if (linesVisited[route] > bestCount) {
+          bestCount = linesVisited[route]
+          best = route
+        }
+      }
+
+      patternCache[patternID] = best
+      return best
+    }
+  }
+
   getTripData() {
     let tripData = super.getTripData()
+    let patternID = this.getPatternID()
 
     return {
       ...tripData,
+      routeName: this.getRouteName(patternID),
       runID: getTripID(tripData.tripID),
       isRailReplacementBus: true
     }
@@ -111,31 +146,7 @@ export default class MTMRailTripLoader extends TripLoader {
       routeIDMap,
       processTrip: (trip, rawTrip) => {
         if (rawTrip.getCalendarName().match(/unplanned/i)) return null
-        let patternID = trip.stopTimings.map(stop => stop.stopName).join('-')
-
-        if (!this.#patternCache[patternID]) {
-          let linesVisited = {}
-          for (let stop of trip.stopTimings) {
-            let routes = routesAtStops[stop.stopName.slice(0, -16)]
-            for (let route of routes) {
-              if (!linesVisited[route]) linesVisited[route] = 0
-              linesVisited[route]++
-            }
-          }
-
-          let best = null, bestCount = 0
-          for (let route of Object.keys(linesVisited)) {
-            if (linesVisited[route] > bestCount) {
-              bestCount = linesVisited[route]
-              best = route
-            }
-
-          }
-
-          this.#patternCache[patternID] = best
-        }
-
-        trip.routeName = this.#patternCache[patternID]
+        let patternID = rawTrip.getPatternID()
 
         if (this.#directionCache[patternID]) {
           trip.direction = this.#directionCache[patternID]
