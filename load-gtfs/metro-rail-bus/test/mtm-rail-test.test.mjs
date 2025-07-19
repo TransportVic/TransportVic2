@@ -85,6 +85,7 @@ describe('The GTFS Loaders with the MTM Website Rail data', () => {
       expect(donricTrip.isRailReplacementBus).to.be.true
 
       expect(donricTrip.stopTimings[0].stopConditions.pickup).to.equal(0)
+      expect(donricTrip.direction).to.equal('Up')
 
       let dysonsTrip = await trips.findDocument({
         operationDays: '20250616',
@@ -97,6 +98,20 @@ describe('The GTFS Loaders with the MTM Website Rail data', () => {
       expect(dysonsTrip.routeGTFSID).to.equal('2-RRB')
       expect(dysonsTrip.block).to.equal('51')
       expect(dysonsTrip.isRailReplacementBus).to.be.true
+      expect(donricTrip.direction).to.equal('Up')
+
+      let WTL_BEW = await trips.findDocument({
+        operationDays: '20250616',
+        origin: 'Moorabbin Railway Station',
+        departureTime: '24:13'
+      })
+
+      expect(WTL_BEW).to.not.be.null
+      expect(WTL_BEW.tripID).to.equal('Sat_ugie8q4')
+      expect(WTL_BEW.routeGTFSID).to.equal('2-RRB')
+      expect(WTL_BEW.block).to.equal('WIL501')
+      expect(WTL_BEW.isRailReplacementBus).to.be.true
+      expect(WTL_BEW.direction).to.equal('Down')
     })
   })
 })
