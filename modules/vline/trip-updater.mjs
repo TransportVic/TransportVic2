@@ -13,7 +13,20 @@ export default class VLineTripUpdater extends TripUpdater {
     })
   }
 
-  static #getCancelledFromTermination(trip, tripStops, newDestination) {
+  static #getCancelledFromLateOrigination(trip, tripStops, newOrigin) {
+    let currentOriginIndex = trip.stopTimings.findIndex(stop => !stop.cancelled)
+    let newOriginIndex = tripStops.indexOf(newOrigin)
+
+    let uncancelledStops = []
+    let cancelledStops = tripStops.slice(0, newOriginIndex)
+    if (newOriginIndex < currentOriginIndex) { // Trip getting extended
+      uncancelledStops = tripStops.slice(newOriginIndex, currentOriginIndex + 1)
+    }
+
+    return { cancelledStops, uncancelledStops }
+  }
+
+  static #getCancelledFromEarlyTermination(trip, tripStops, newDestination) {
     let currentDestinationIndex = trip.stopTimings.findLastIndex(stop => !stop.cancelled)
     let newDestinationIndex = tripStops.indexOf(newDestination)
 
@@ -32,17 +45,19 @@ export default class VLineTripUpdater extends TripUpdater {
     if (!trip) return null
 
     let tripStops = trip.stopTimings.map(stop => stop.stopName)
-    let { cancelledStops: destCancelledStops, uncancelledStops: destUncancelledStops } = this.#getCancelledFromTermination(trip, tripStops, newDestination)
+
+    let { cancelledStops: originCancelledStops, uncancelledStops: originUncancelledStops } = this.#getCancelledFromLateOrigination(trip, tripStops, newOrigin)
+    let { cancelledStops: destCancelledStops, uncancelledStops: destUncancelledStops } = this.#getCancelledFromEarlyTermination(trip, tripStops, newDestination)
 
     return await this.updateTrip(db, {
       operationDays: operationDay,
       runID,
       stops: [
-        ...destUncancelledStops.map(stopName => ({
+        ...originUncancelledStops.concat(destUncancelledStops).map(stopName => ({
           stopName,
           cancelled: false,
         })),
-        ...destCancelledStops.map(stopName => ({
+        ...originCancelledStops.concat(destCancelledStops).map(stopName => ({
           stopName,
           cancelled: true,
         }))

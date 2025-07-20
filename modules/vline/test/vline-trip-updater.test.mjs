@@ -78,8 +78,8 @@ describe('The V/Line Trip Updater', () => {
       let trip = await VLineTripUpdater.updateTripOriginDestination(database, '20250718', '8741', 'Wyndham Vale Railway Station', 'Waurn Ponds Railway Station')
       expect(trip.runID).to.equal('8741')
 
-      for (let i = 0; i <= 5; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to be cancelled`).to.be.true
-      for (let i = 6; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
+      for (let i = 0; i <= 4; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to be cancelled`).to.be.true
+      for (let i = 5; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
     })
 
     it.only('Can revert a late origination', async () => {
@@ -95,8 +95,8 @@ describe('The V/Line Trip Updater', () => {
       let trip = await VLineTripUpdater.updateTripOriginDestination(database, '20250718', '8741', 'Wyndham Vale Railway Station', 'Waurn Ponds Railway Station')
       expect(trip.runID).to.equal('8741')
 
-      for (let i = 0; i <= 5; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to be cancelled`).to.be.true
-      for (let i = 6; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
+      for (let i = 0; i <= 4; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to be cancelled`).to.be.true
+      for (let i = 5; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
 
       trip = await VLineTripUpdater.updateTripOriginDestination(database, '20250718', '8741', 'Southern Cross Railway Station', 'Waurn Ponds Railway Station')
       expect(trip.runID).to.equal('8741')
