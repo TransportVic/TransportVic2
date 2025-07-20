@@ -8,7 +8,7 @@ import VLineTripUpdater from '../trip-updater.mjs'
 const clone = o => JSON.parse(JSON.stringify(o))
 
 describe('The V/Line Trip Updater', () => {
-  describe('The updateTripDestination function', () => {
+  describe('The updateTripOriginDestination function', () => {
     it.only('Does nothing if the destination is unchanged', async () => {
       let database = new LokiDatabaseConnection()
       let stops = database.getCollection('stops')
@@ -63,6 +63,45 @@ describe('The V/Line Trip Updater', () => {
 
       for (let i = 0; i <= 11; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
       for (let i = 12; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to be cancelled`).to.be.true
+    })
+
+    it.only('Can update a trip to have late origination', async () => {
+      let database = new LokiDatabaseConnection()
+      let stops = database.getCollection('stops')
+      let routes = database.getCollection('routes')
+      let timetables = database.getCollection('live timetables')
+
+      await stops.createDocuments(clone(allStops))
+      await routes.createDocuments(clone(allRoutes))
+      await timetables.createDocument(clone(td8741))
+
+      let trip = await VLineTripUpdater.updateTripOriginDestination(database, '20250718', '8741', 'Wyndham Vale Railway Station', 'Waurn Ponds Railway Station')
+      expect(trip.runID).to.equal('8741')
+
+      for (let i = 0; i <= 5; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to be cancelled`).to.be.true
+      for (let i = 6; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
+    })
+
+    it.only('Can revert a late origination', async () => {
+      let database = new LokiDatabaseConnection()
+      let stops = database.getCollection('stops')
+      let routes = database.getCollection('routes')
+      let timetables = database.getCollection('live timetables')
+
+      await stops.createDocuments(clone(allStops))
+      await routes.createDocuments(clone(allRoutes))
+      await timetables.createDocument(clone(td8741))
+
+      let trip = await VLineTripUpdater.updateTripOriginDestination(database, '20250718', '8741', 'Wyndham Vale Railway Station', 'Waurn Ponds Railway Station')
+      expect(trip.runID).to.equal('8741')
+
+      for (let i = 0; i <= 5; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to be cancelled`).to.be.true
+      for (let i = 6; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
+
+      trip = await VLineTripUpdater.updateTripOriginDestination(database, '20250718', '8741', 'Southern Cross Railway Station', 'Waurn Ponds Railway Station')
+      expect(trip.runID).to.equal('8741')
+
+      for (let i = 0; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
     })
   })
 })
