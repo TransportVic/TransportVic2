@@ -141,6 +141,7 @@ div.departure:nth-child(even) a.departureInfo.reservationsOnly {
   height: calc(4.5vw + 3.2vh);
   line-height: calc(4.5vw + 3.6vh);
   letter-spacing: calc(-0.15vw - 0.15vh);
+  margin-right: calc(0.2vw + 0.2vh);
 }
 
 .leftContainer span.bigNumber.smaller {
