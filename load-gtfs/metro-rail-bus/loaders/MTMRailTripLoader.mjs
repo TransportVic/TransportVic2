@@ -35,6 +35,7 @@ export class MTMRailTrip extends GTFSTypes.GTFSTrip {
       let linesVisited = {}
       for (let stop of this.getStopData()) {
         let routes = routesAtStops[stop.stopName.slice(0, -16)]
+        if (!routes) continue
         for (let route of routes) {
           if (!linesVisited[route]) linesVisited[route] = 0
           linesVisited[route]++

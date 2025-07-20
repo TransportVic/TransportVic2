@@ -31,6 +31,7 @@ let tripsStart = new Date()
 
 let shapeIDMap = {}
 let directionIDMap = {}
+let errored = false
 
 for (let operator of operators) {
   const operatorFolder = path.join(gtfsFolder, operator)
@@ -77,6 +78,7 @@ for (let operator of operators) {
 
     console.log('Loaded stop services for', operator)
   } catch (e) {
+    errored = true
     console.log('Failed to load trips for', operator)
     console.log(e)
   }
@@ -103,4 +105,4 @@ console.log('Loading shapes took', (new Date() - shapeStart) / 1000, 'seconds')
 
 console.log('\nLoading both trips and shapes took', (new Date() - start) / 1000, 'seconds overall')
 
-process.exit(0)
+process.exit(errored ? 1 : 0)

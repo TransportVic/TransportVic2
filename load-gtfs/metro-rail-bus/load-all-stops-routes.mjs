@@ -23,6 +23,7 @@ console.log('Start loading stops and routes', start)
 await mongoRoutes.deleteDocument({ routeGTFSID: '2-RRB' })
 
 let routeIDMap = {}
+let errored = false
 
 for (let operator of operators) {
   const operatorFolder = path.join(gtfsFolder, operator)
@@ -46,6 +47,7 @@ for (let operator of operators) {
 
     console.log('Loaded routes for', operator)
   } catch (e) {
+    errored = true
     console.log('ERROR: Failed to load stops and routes for', operator)
     console.log(e)
   }
@@ -53,4 +55,4 @@ for (let operator of operators) {
 
 await fs.writeFile(path.join(__dirname, 'routes.json'), JSON.stringify(routeIDMap))
 
-process.exit(0)
+process.exit(errored ? 1 : 0)
