@@ -1,7 +1,7 @@
 const express = require('express')
 const router = new express.Router()
 const utils = require('../../../utils.js')
-const { tripCrossesCity, isCHLFormingCCLSpecialCase } = require('../../../modules/metro-trains/get-forming-trip.js')
+const { tripCrossesCity, checkIsCHLFormingCCLSpecialCase } = require('../../../modules/metro-trains/get-forming-trip.js')
 
 const MURL = [
   'Parliament',
@@ -128,7 +128,7 @@ async function getTripData(req, res) {
       }
     }
   } else {
-    if (isCHLFormingCCLSpecialCase(trip, forming)) showForming = forming
+    if (checkIsCHLFormingCCLSpecialCase(trip, forming)) showForming = forming
   }
 
   if (!showFormedBy && !showForming) {
