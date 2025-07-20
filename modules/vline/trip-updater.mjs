@@ -5,4 +5,7 @@ export default class VLineTripUpdater extends TripUpdater {
   
   static getMode() { return GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain }
 
+  static terminateTripEarly(db, operationDay, runID, newDestination) {
+  }
+
 }

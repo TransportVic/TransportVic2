@@ -1,0 +1,271 @@
+{
+  "mode": "regional train",
+  "routeGTFSID": "1-GEL",
+  "operationDays": "20250718",
+  "runID": "8741",
+  "direction": "Down",
+  "routeName": "Geelong",
+  "routeNumber": null,
+  "origin": "Southern Cross Railway Station",
+  "destination": "Waurn Ponds Railway Station",
+  "departureTime": "11:30",
+  "destinationArrivalTime": "12:48",
+  "stopTimings": [
+    {
+      "stopName": "Southern Cross Railway Station",
+      "suburb": "Docklands",
+      "stopGTFSID": "vic:rail:SSS",
+      "arrivalTime": "11:30",
+      "arrivalTimeMinutes": 690,
+      "departureTime": "11:30",
+      "departureTimeMinutes": 690,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T01:30:00.000Z",
+      "actualDepartureTimeMS": 1752802200000,
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Footscray Railway Station",
+      "suburb": "Footscray",
+      "stopGTFSID": "vic:rail:FSY",
+      "arrivalTime": "11:38",
+      "arrivalTimeMinutes": 698,
+      "departureTime": "11:38",
+      "departureTimeMinutes": 698,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T01:38:00.000Z",
+      "actualDepartureTimeMS": 1752802680000,
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Sunshine Railway Station",
+      "suburb": "Sunshine",
+      "stopGTFSID": "vic:rail:SUN",
+      "arrivalTime": "11:43",
+      "arrivalTimeMinutes": 703,
+      "departureTime": "11:43",
+      "departureTimeMinutes": 703,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T01:43:00.000Z",
+      "actualDepartureTimeMS": 1752802980000,
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Deer Park Railway Station",
+      "suburb": "Deer Park",
+      "stopGTFSID": "vic:rail:DEK",
+      "arrivalTime": "11:48",
+      "arrivalTimeMinutes": 708,
+      "departureTime": "11:48",
+      "departureTimeMinutes": 708,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T01:48:00.000Z",
+      "actualDepartureTimeMS": 1752803280000,
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Tarneit Railway Station",
+      "suburb": "Tarneit",
+      "stopGTFSID": "vic:rail:TNT",
+      "arrivalTime": "11:57",
+      "arrivalTimeMinutes": 717,
+      "departureTime": "11:57",
+      "departureTimeMinutes": 717,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T01:57:00.000Z",
+      "actualDepartureTimeMS": 1752803820000,
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Wyndham Vale Railway Station",
+      "suburb": "Manor Lakes",
+      "stopGTFSID": "vic:rail:WVL",
+      "arrivalTime": "12:04",
+      "arrivalTimeMinutes": 724,
+      "departureTime": "12:04",
+      "departureTimeMinutes": 724,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T02:04:00.000Z",
+      "actualDepartureTimeMS": 1752804240000,
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Lara Railway Station",
+      "suburb": "Lara",
+      "stopGTFSID": "vic:rail:LRA",
+      "arrivalTime": "12:16",
+      "arrivalTimeMinutes": 736,
+      "departureTime": "12:16",
+      "departureTimeMinutes": 736,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T02:16:00.000Z",
+      "actualDepartureTimeMS": 1752804960000,
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Corio Railway Station",
+      "suburb": "Corio",
+      "stopGTFSID": "vic:rail:COR",
+      "arrivalTime": "12:20",
+      "arrivalTimeMinutes": 740,
+      "departureTime": "12:20",
+      "departureTimeMinutes": 740,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T02:20:00.000Z",
+      "actualDepartureTimeMS": 1752805200000,
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "North Shore Railway Station",
+      "suburb": "North Shore",
+      "stopGTFSID": "vic:rail:NSH",
+      "arrivalTime": "12:24",
+      "arrivalTimeMinutes": 744,
+      "departureTime": "12:24",
+      "departureTimeMinutes": 744,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T02:24:00.000Z",
+      "actualDepartureTimeMS": 1752805440000,
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "North Geelong Railway Station",
+      "suburb": "North Geelong",
+      "stopGTFSID": "vic:rail:NGL",
+      "arrivalTime": "12:27",
+      "arrivalTimeMinutes": 747,
+      "departureTime": "12:27",
+      "departureTimeMinutes": 747,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T02:27:00.000Z",
+      "actualDepartureTimeMS": 1752805620000,
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Geelong Railway Station",
+      "suburb": "Geelong",
+      "stopGTFSID": "vic:rail:GEL",
+      "arrivalTime": "12:34",
+      "arrivalTimeMinutes": 754,
+      "departureTime": "12:34",
+      "departureTimeMinutes": 754,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T02:34:00.000Z",
+      "actualDepartureTimeMS": 1752806040000,
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "South Geelong Railway Station",
+      "suburb": "South Geelong",
+      "stopGTFSID": "vic:rail:SOG",
+      "arrivalTime": "12:37",
+      "arrivalTimeMinutes": 757,
+      "departureTime": "12:37",
+      "departureTimeMinutes": 757,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T02:37:00.000Z",
+      "actualDepartureTimeMS": 1752806220000,
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Marshall Railway Station",
+      "suburb": "Marshall",
+      "stopGTFSID": "vic:rail:MAS",
+      "arrivalTime": "12:42",
+      "arrivalTimeMinutes": 762,
+      "departureTime": "12:42",
+      "departureTimeMinutes": 762,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T02:42:00.000Z",
+      "actualDepartureTimeMS": 1752806520000,
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    },
+    {
+      "stopName": "Waurn Ponds Railway Station",
+      "suburb": "Waurn Ponds",
+      "stopGTFSID": "vic:rail:WPP",
+      "arrivalTime": "12:48",
+      "arrivalTimeMinutes": 768,
+      "departureTime": "12:48",
+      "departureTimeMinutes": 768,
+      "estimatedDepartureTime": null,
+      "scheduledDepartureTime": "2025-07-18T02:48:00.000Z",
+      "actualDepartureTimeMS": 1752806880000,
+      "cancelled": false,
+      "additional": false,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      }
+    }
+  ],
+  "changes": [],
+  "cancelled": false,
+  "additional": false,
+  "lastUpdated": 1753001669931
+}
