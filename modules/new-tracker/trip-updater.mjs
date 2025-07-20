@@ -136,7 +136,6 @@ export default class TripUpdater {
     else if (trip.forcedVehicle) timetable.forcedVehicle = trip.forcedVehicle
 
     timetable.runID = trip.runID
-    timetable.direction = trip.runID[3] % 2 === 0 ? 'Up' : 'Down'
   }
 
   static adjustTripInput(timetable, trip) {
@@ -274,6 +273,7 @@ export default class TripUpdater {
     timetable.setModificationSource(dataSource)
     timetable.logChanges = false
     timetable.isRRB = false
+    timetable.direction = trip.runID[3] % 2 === 0 ? 'Up' : 'Down'
 
     this.setUpTimetable(timetable, trip)
     if (!trip.stops || !trip.stops.length) return null

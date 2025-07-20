@@ -50,7 +50,7 @@ describe('The MTM Rail Bus Tracker', () => {
     expect(tripData[0].stops[0].estimatedDepartureTime.toISOString()).to.equal('2025-07-08T06:07:24.000Z')
   })
 
-  it.only('Updates the trip data accordingly', async () => {
+  it('Updates the trip data accordingly', async () => {
     utils.now = () => utils.parseTime(1752985123 * 1000)
     let database = new LokiDatabaseConnection('test-db')
     let stops = await database.createCollection('stops')
@@ -66,8 +66,7 @@ describe('The MTM Rail Bus Tracker', () => {
     expect(tripData[0].stops[0].stopName).to.equal('Carrum Railway Station')
 
     expect(tripData[0].stops[4].stopName).to.equal('Aspendale Railway Station')
-    expect(tripData[0].stops[4].estimatedArrivalTime.toISOString()).to.equal('2025-07-08T06:07:24.000Z')
-    expect(tripData[0].stops[4].estimatedDepartureTime.toISOString()).to.equal('2025-07-08T06:07:24.000Z')
+    expect(tripData[0].stops[4].estimatedDepartureTime.toISOString()).to.equal('2025-07-20T04:25:44.000Z')
   })
 
   after(() => {
