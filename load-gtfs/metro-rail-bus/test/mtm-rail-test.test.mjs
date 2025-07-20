@@ -115,6 +115,20 @@ describe('The GTFS Loaders with the MTM Website Rail data', () => {
       expect(WTL_BEW.isRailReplacementBus).to.be.true
       expect(WTL_BEW.direction).to.equal('Down')
       expect(['Cranbourne', 'Pakenham']).to.include(WTL_BEW.routeName)
+
+      let CAR_CTM = await trips.findDocument({
+        operationDays: '20250720',
+        origin: 'Carrum Railway Station',
+        departureTime: '13:42'
+      })
+
+      expect(CAR_CTM).to.not.be.null
+      expect(CAR_CTM.tripID).to.equal('Sun_bxw7eh2')
+      expect(CAR_CTM.routeGTFSID).to.equal('2-RRB')
+      expect(CAR_CTM.block).to.equal('NUL9116')
+      expect(CAR_CTM.isRailReplacementBus).to.be.true
+      expect(CAR_CTM.direction).to.equal('Up')
+      expect(CAR_CTM.routeName).to.equal('Frankston')
     })
   })
 })

@@ -10,6 +10,7 @@
   "isRailReplacementBus": true,
   "routeName": "Cranbourne",
   "routeNumber": null,
+  "direction": "Down",
   "stopTimings": [
     {
       "stopName": "Caulfield Railway Station",

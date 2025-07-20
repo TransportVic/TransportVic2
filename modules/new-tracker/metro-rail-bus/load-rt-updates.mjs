@@ -71,11 +71,13 @@ export async function getRailBusUpdates(db, ptvAPI) {
 
 export async function fetchTrips(db, ptvAPI) {
   let relevantTrips = await getRailBusUpdates(db, ptvAPI)
-  console.log('MTM Rail Bus: Fetched', relevantTrips.length, 'trips')
 
+  let updatedTrips = []
   for (let tripData of relevantTrips) {
-    await MetroTripUpdater.updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'mtm-website-rail', updateTime: new Date() })
+    updatedTrips.push(await MetroTripUpdater.updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'mtm-website-rail', updateTime: new Date() }))
   }
+
+  return updatedTrips
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
@@ -85,7 +87,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let ptvAPI = new PTVAPI()
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
-  await fetchTrips(mongoDB, ptvAPI)
+  let updatedTrips = await fetchTrips(mongoDB, ptvAPI)
+  console.log('MTM Rail Bus: Fetched', updatedTrips.length, 'trips')
 
   process.exit(0)
 }

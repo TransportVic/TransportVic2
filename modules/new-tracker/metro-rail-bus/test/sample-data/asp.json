@@ -1,0 +1,193 @@
+{
+  "_id": "4f6cbfdfc7f96d8cdd0cf1767ec9ef77",
+  "stopName": "Aspendale Railway Station",
+  "suburb": [
+    "Aspendale"
+  ],
+  "cleanSuburbs": [
+    "aspendale"
+  ],
+  "bays": [
+    {
+      "originalName": "Aspendale Railway Station",
+      "fullStopName": "Aspendale Railway Station",
+      "stopGTFSID": "vic:rail:ASP",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          145.10214962,
+          -38.02722019
+        ]
+      },
+      "stopNumber": null,
+      "mode": "metro train",
+      "suburb": "Aspendale",
+      "stopType": "station",
+      "parentStopGTFSID": null
+    },
+    {
+      "originalName": "Aspendale Station",
+      "fullStopName": "Aspendale Railway Station",
+      "stopGTFSID": "11234",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          145.10181775,
+          -38.02683635
+        ]
+      },
+      "stopNumber": null,
+      "mode": "metro train",
+      "suburb": "Aspendale",
+      "stopType": "stop",
+      "parentStopGTFSID": "vic:rail:ASP",
+      "platform": "1"
+    },
+    {
+      "originalName": "Aspendale Station",
+      "fullStopName": "Aspendale Railway Station",
+      "stopGTFSID": "11235",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          145.10192163,
+          -38.02678395
+        ]
+      },
+      "stopNumber": null,
+      "mode": "metro train",
+      "suburb": "Aspendale",
+      "stopType": "stop",
+      "parentStopGTFSID": "vic:rail:ASP",
+      "platform": "2"
+    },
+    {
+      "originalName": "Aspendale Railway Station",
+      "fullStopName": "Aspendale Railway Station",
+      "stopGTFSID": "26109",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          145.10205782,
+          -38.02680418
+        ]
+      },
+      "stopNumber": null,
+      "mode": "metro train",
+      "suburb": "Aspendale",
+      "stopType": "stop",
+      "parentStopGTFSID": "vic:rail:ASP",
+      "platform": "RRB"
+    },
+    {
+      "originalName": "Aspendale Station/Station St",
+      "fullStopName": "Aspendale Railway Station/Station Street",
+      "stopGTFSID": "22383",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          145.10187725,
+          -38.02629661
+        ]
+      },
+      "stopNumber": null,
+      "mode": "bus",
+      "suburb": "Aspendale",
+      "stopType": "stop",
+      "parentStopGTFSID": null
+    },
+    {
+      "originalName": "Aspendale Station/Station St",
+      "fullStopName": "Aspendale Railway Station/Station Street",
+      "stopGTFSID": "22384",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          145.10241038,
+          -38.02682789
+        ]
+      },
+      "stopNumber": null,
+      "mode": "bus",
+      "suburb": "Aspendale",
+      "stopType": "stop",
+      "parentStopGTFSID": null
+    },
+    {
+      "originalName": "AspendaleUP (Nepean Hwy)",
+      "fullStopName": "Aspendale Railway Station",
+      "stopGTFSID": "RAIL_ASP_Up",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          145.1017254660227,
+          -38.02718586977174
+        ]
+      },
+      "stopNumber": null,
+      "mode": "metro train",
+      "suburb": "Aspendale",
+      "stopType": "stop",
+      "parentStopGTFSID": null
+    },
+    {
+      "originalName": "Aspendale",
+      "fullStopName": "Aspendale Railway Station",
+      "stopGTFSID": "RAIL_ASP_Down",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          145.1029887910403,
+          -38.028228542065314
+        ]
+      },
+      "stopNumber": null,
+      "mode": "metro train",
+      "suburb": "Aspendale",
+      "stopType": "stop",
+      "parentStopGTFSID": null
+    },
+    {
+      "originalName": "Aspendale_Up",
+      "fullStopName": "Aspendale Railway Station",
+      "stopGTFSID": "RAIL_77950",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          145.10172412631988,
+          -38.02720066359093
+        ]
+      },
+      "stopNumber": null,
+      "mode": "metro train",
+      "suburb": "Aspendale",
+      "stopType": "stop",
+      "parentStopGTFSID": null
+    },
+    {
+      "originalName": "Aspendale_Down",
+      "fullStopName": "Aspendale Railway Station",
+      "stopGTFSID": "RAIL_77707",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          145.10303844313052,
+          -38.02825537704757
+        ]
+      },
+      "stopNumber": null,
+      "mode": "metro train",
+      "suburb": "Aspendale",
+      "stopType": "stop",
+      "parentStopGTFSID": null
+    }
+  ],
+  "mergeName": "Aspendale Railway Station",
+  "services": [],
+  "screenServices": [],
+  "cleanName": "aspendale-railway-station",
+  "cleanNames": [
+    "aspendale-railway-station",
+    "aspendale-railway-station-station-street"
+  ]
+}

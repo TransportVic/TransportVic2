@@ -1,0 +1,15 @@
+[{
+  "stop_id": "ASP_Up",
+  "route_id": 9182,
+  "trip_id": "Sun_kgmfdtw",
+  "generation_date": 1752985120,
+  "latitude": "-38.05199000000000",
+  "longitude": "145.11619999999999",
+  "passengers_on_board": null,
+  "has_arrival": true,
+  "time_until_arrival": 421,
+  "time_until_departure": null,
+  "prediction_type": 0,
+  "modified": 1752985123,
+  "created": 1752985065
+}]

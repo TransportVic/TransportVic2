@@ -1,0 +1,193 @@
+{
+  "_id": "687c6e3a9ce9d95ccf003d0b",
+  "mode": "metro train",
+  "routeName": "Frankston",
+  "routeNumber": null,
+  "routeGTFSID": "2-RRB",
+  "operationDays": "20250720",
+  "tripID": "Sun_kgmfdtw",
+  "shapeID": "1",
+  "block": "NUL9114",
+  "gtfsDirection": 1,
+  "direction": "Up",
+  "runID": "RRB-AE21DC",
+  "isRailReplacementBus": true,
+  "stopTimings": [
+    {
+      "stopName": "Carrum Railway Station",
+      "stopNumber": null,
+      "suburb": "Carrum",
+      "stopGTFSID": "RAIL_CAR_Up",
+      "arrivalTime": null,
+      "arrivalTimeMinutes": null,
+      "departureTime": "14:12",
+      "departureTimeMinutes": 852,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      },
+      "stopDistance": "0",
+      "scheduledDepartureTime": "2025-07-20T04:12:00.000Z",
+      "actualDepartureTimeMS": 1752984720000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Bonbeach Railway Station",
+      "stopNumber": null,
+      "suburb": "Bonbeach",
+      "stopGTFSID": "RAIL_BON_Up",
+      "arrivalTime": "14:15",
+      "arrivalTimeMinutes": 855,
+      "departureTime": "14:15",
+      "departureTimeMinutes": 855,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "1.1966",
+      "scheduledDepartureTime": "2025-07-20T04:15:00.000Z",
+      "actualDepartureTimeMS": 1752984900000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Chelsea Railway Station",
+      "stopNumber": null,
+      "suburb": "Chelsea",
+      "stopGTFSID": "RAIL_CSA_Up",
+      "arrivalTime": "14:18",
+      "arrivalTimeMinutes": 858,
+      "departureTime": "14:18",
+      "departureTimeMinutes": 858,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "2.9101",
+      "scheduledDepartureTime": "2025-07-20T04:18:00.000Z",
+      "actualDepartureTimeMS": 1752985080000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Edithvale Railway Station",
+      "stopNumber": null,
+      "suburb": "Edithvale",
+      "stopGTFSID": "RAIL_EDI_Up",
+      "arrivalTime": "14:22",
+      "arrivalTimeMinutes": 862,
+      "departureTime": "14:22",
+      "departureTimeMinutes": 862,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "5.0153",
+      "scheduledDepartureTime": "2025-07-20T04:22:00.000Z",
+      "actualDepartureTimeMS": 1752985320000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Aspendale Railway Station",
+      "stopNumber": null,
+      "suburb": "Aspendale",
+      "stopGTFSID": "RAIL_ASP_Up",
+      "arrivalTime": "14:25",
+      "arrivalTimeMinutes": 865,
+      "departureTime": "14:25",
+      "departureTimeMinutes": 865,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "6.0189",
+      "scheduledDepartureTime": "2025-07-20T04:25:00.000Z",
+      "actualDepartureTimeMS": 1752985500000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Mordialloc Railway Station",
+      "stopNumber": null,
+      "suburb": "Mordialloc",
+      "stopGTFSID": "RAIL_MOR_Up",
+      "arrivalTime": "14:35",
+      "arrivalTimeMinutes": 875,
+      "departureTime": "14:35",
+      "departureTimeMinutes": 875,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "9.0618",
+      "scheduledDepartureTime": "2025-07-20T04:35:00.000Z",
+      "actualDepartureTimeMS": 1752986100000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Parkdale Railway Station",
+      "stopNumber": null,
+      "suburb": "Parkdale",
+      "stopGTFSID": "RAIL_PKD_Up",
+      "arrivalTime": "14:40",
+      "arrivalTimeMinutes": 880,
+      "departureTime": "14:40",
+      "departureTimeMinutes": 880,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "11.3835",
+      "scheduledDepartureTime": "2025-07-20T04:40:00.000Z",
+      "actualDepartureTimeMS": 1752986400000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Mentone Railway Station",
+      "stopNumber": null,
+      "suburb": "Mentone",
+      "stopGTFSID": "RAIL_MEN_Up",
+      "arrivalTime": "14:44",
+      "arrivalTimeMinutes": 884,
+      "departureTime": "14:44",
+      "departureTimeMinutes": 884,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "12.8599",
+      "scheduledDepartureTime": "2025-07-20T04:44:00.000Z",
+      "actualDepartureTimeMS": 1752986640000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    },
+    {
+      "stopName": "Cheltenham Railway Station",
+      "stopNumber": null,
+      "suburb": "Cheltenham",
+      "stopGTFSID": "RAIL_CTM_Up3",
+      "arrivalTime": "14:55",
+      "arrivalTimeMinutes": 895,
+      "departureTime": null,
+      "departureTimeMinutes": null,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "15.5061",
+      "scheduledDepartureTime": "2025-07-20T04:55:00.000Z",
+      "actualDepartureTimeMS": 1752987300000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
+    }
+  ],
+  "origin": "Carrum Railway Station",
+  "departureTime": "14:12",
+  "destination": "Cheltenham Railway Station",
+  "destinationArrivalTime": "14:55",
+  "headsign": "S1"
+}
