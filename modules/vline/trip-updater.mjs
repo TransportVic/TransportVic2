@@ -13,7 +13,7 @@ export default class VLineTripUpdater extends TripUpdater {
     })
   }
 
-  static async updateTripDestination(db, operationDay, runID, newDestination) {
+  static async updateTripOriginDestination(db, operationDay, runID, newOrigin, newDestination) {
     let timetables = db.getCollection('live timetables')
     let trip = await this.getTripByTDN(timetables, runID, operationDay)
     if (!trip) return null
