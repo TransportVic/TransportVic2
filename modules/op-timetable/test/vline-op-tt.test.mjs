@@ -4,18 +4,20 @@ import path from 'path'
 import url from 'url'
 import { StubVLineAPI, PTVAPI } from '@transportme/ptv-api'
 import { GetPlatformServicesAPI, VLinePlatformService } from '@transportme/ptv-api/lib/vline/get-platform-services.mjs'
-import { downloadTripPattern, matchTrip } from '../load-vline-op-tt.mjs'
+import loadOperationalTT, { downloadTripPattern, matchTrip } from '../load-vline-op-tt.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import td8741GTFS from './sample-data/td8741-gtfs.json' with { type: 'json' }
 import td8007NSP from './sample-data/td8007-nsp.json' with { type: 'json' }
 import allStops from './sample-data/stops.json' with { type: 'json' }
 import allRoutes from './sample-data/routes.json' with { type: 'json' }
 import VLineUtils from '../../vline/vline-utils.mjs'
+import utils from '../../../utils.js'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const vlineTrips = (await fs.readFile(path.join(__dirname, 'sample-data', 'vline-trips.xml'))).toString()
+const vlineTripsTD8741 = (await fs.readFile(path.join(__dirname, 'sample-data', 'vline-trips-td8741.xml'))).toString()
 const td8007Early = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8007-early-pattern.xml'))).toString()
 const td8007Late = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8007-late-pattern.xml'))).toString()
 const td8741 = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8741-pattern.xml'))).toString()
@@ -155,5 +157,31 @@ describe('The matchTrip function', () => {
     expect(trip.stopTimings[1].stopName).to.equal('Macedon Railway Station')
     expect(trip.stopTimings[1].arrivalTime).to.equal('07:50')
     expect(trip.stopTimings[1].departureTime).to.equal('07:50')
+  })
+})
+
+describe('The loadOperationalTT function', () => {
+  it('Loads the operational timetable in', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let timetables = database.getCollection('live timetables')
+
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ vlineTripsTD8741, td8741 ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await loadOperationalTT(database, utils.parseDate('20250718'), ptvAPI)
+    let trip = await timetables.findDocument({})
+
+    expect(trip.runID).to.equal('8741')
+    expect(trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
+    expect(trip.stopTimings[0].departureTime).to.equal('11:30')
+    expect(trip.stopTimings[1].stopName).to.equal('Footscray Railway Station')
+    expect(trip.stopTimings[1].departureTime).to.equal('11:38')
   })
 })
