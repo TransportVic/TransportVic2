@@ -19,16 +19,29 @@ export default class VLineTripUpdater extends TripUpdater {
     if (!trip) return null
 
     let tripStops = trip.stopTimings.map(stop => stop.stopName)
+
+    let currentDestinationIndex = trip.stopTimings.findLastIndex(stop => !stop.cancelled)
     let newDestinationIndex = tripStops.indexOf(newDestination)
+
+    let uncancelledStops = []
     let cancelledStops = tripStops.slice(newDestinationIndex + 1)
+    if (currentDestinationIndex < newDestinationIndex) { // Trip getting extended
+      uncancelledStops = tripStops.slice(currentDestinationIndex + 1, newDestinationIndex + 1)
+    }
 
     return await this.updateTrip(db, {
       operationDays: operationDay,
       runID,
-      stops: cancelledStops.map(stopName => ({
-        stopName,
-        cancelled: true,
-      }))
+      stops: [
+        ...uncancelledStops.map(stopName => ({
+          stopName,
+          cancelled: false,
+        })),
+        ...cancelledStops.map(stopName => ({
+          stopName,
+          cancelled: true,
+        }))
+      ]
     }, {
       skipStopCancellation: true
     })
