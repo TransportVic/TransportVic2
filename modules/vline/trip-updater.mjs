@@ -13,13 +13,7 @@ export default class VLineTripUpdater extends TripUpdater {
     })
   }
 
-  static async updateTripOriginDestination(db, operationDay, runID, newOrigin, newDestination) {
-    let timetables = db.getCollection('live timetables')
-    let trip = await this.getTripByTDN(timetables, runID, operationDay)
-    if (!trip) return null
-
-    let tripStops = trip.stopTimings.map(stop => stop.stopName)
-
+  static #getCancelledFromTermination(trip, tripStops, newDestination) {
     let currentDestinationIndex = trip.stopTimings.findLastIndex(stop => !stop.cancelled)
     let newDestinationIndex = tripStops.indexOf(newDestination)
 
@@ -29,15 +23,26 @@ export default class VLineTripUpdater extends TripUpdater {
       uncancelledStops = tripStops.slice(currentDestinationIndex + 1, newDestinationIndex + 1)
     }
 
+    return { cancelledStops, uncancelledStops }
+  }
+
+  static async updateTripOriginDestination(db, operationDay, runID, newOrigin, newDestination) {
+    let timetables = db.getCollection('live timetables')
+    let trip = await this.getTripByTDN(timetables, runID, operationDay)
+    if (!trip) return null
+
+    let tripStops = trip.stopTimings.map(stop => stop.stopName)
+    let { cancelledStops: destCancelledStops, uncancelledStops: destUncancelledStops } = this.#getCancelledFromTermination(trip, tripStops, newDestination)
+
     return await this.updateTrip(db, {
       operationDays: operationDay,
       runID,
       stops: [
-        ...uncancelledStops.map(stopName => ({
+        ...destUncancelledStops.map(stopName => ({
           stopName,
           cancelled: false,
         })),
-        ...cancelledStops.map(stopName => ({
+        ...destCancelledStops.map(stopName => ({
           stopName,
           cancelled: true,
         }))
