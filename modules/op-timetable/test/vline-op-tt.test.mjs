@@ -16,8 +16,10 @@ import utils from '../../../utils.js'
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const vlineTrips = (await fs.readFile(path.join(__dirname, 'sample-data', 'vline-trips.xml'))).toString()
 const vlineTripsTD8741_Normal = (await fs.readFile(path.join(__dirname, 'sample-data', 'alterations', 'td8741-normal.xml'))).toString()
+const vlineTripsTD8741_Geelong = (await fs.readFile(path.join(__dirname, 'sample-data', 'alterations', 'td8741-terminate-geelong.xml'))).toString()
+
+const vlineTrips = (await fs.readFile(path.join(__dirname, 'sample-data', 'vline-trips.xml'))).toString()
 const td8007Early = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8007-early-pattern.xml'))).toString()
 const td8007Late = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8007-late-pattern.xml'))).toString()
 const td8741 = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8741-pattern.xml'))).toString()
@@ -209,5 +211,37 @@ describe('The loadOperationalTT function', () => {
     expect(trip.stopTimings[0].departureTime).to.equal('11:30')
     expect(trip.stopTimings[1].stopName).to.equal('Footscray Railway Station')
     expect(trip.stopTimings[1].departureTime).to.equal('11:38')
+  })
+
+  it('Shorts a trip when altered', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let timetables = database.getCollection('live timetables')
+
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ vlineTripsTD8741_Normal, td8741, vlineTripsTD8741_Geelong ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await loadOperationalTT(database, utils.parseDate('20250718'), ptvAPI)
+    await loadOperationalTT(database, utils.parseDate('20250718'), ptvAPI)
+    let trip = await timetables.findDocument({})
+
+    expect(trip.runID).to.equal('8741')
+    expect(trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
+    expect(trip.stopTimings[0].departureTime).to.equal('11:30')
+    expect(trip.stopTimings[0].cancelled).to.be.false
+
+    expect(trip.stopTimings[1].stopName).to.equal('Footscray Railway Station')
+    expect(trip.stopTimings[1].departureTime).to.equal('11:38')
+    expect(trip.stopTimings[1].cancelled).to.be.false
+
+    expect(trip.stopTimings[11].stopName).to.equal('South Geelong Railway Station')
+    expect(trip.stopTimings[11].departureTime).to.equal('12:37')
+    expect(trip.stopTimings[11].cancelled).to.be.true
   })
 })
