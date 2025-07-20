@@ -19,7 +19,7 @@ let directionCache = {}
 export class MTMRailTrip extends GTFSTypes.GTFSTrip {
 
   constructor(data) {
-    if (data.headsign && data.headsign.match(/^[A-Z]{2,3}\d{3,}/)) {
+    if (data.headsign && data.headsign.match(/^[A-Z]{2,3}\d{2,}/)) {
       data.block = data.headsign
     }
 
