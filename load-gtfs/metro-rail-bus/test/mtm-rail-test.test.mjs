@@ -83,6 +83,7 @@ describe('The GTFS Loaders with the MTM Website Rail data', () => {
       expect(donricTrip.routeGTFSID).to.equal('2-RRB')
       expect(donricTrip.block).to.equal('DON604')
       expect(donricTrip.isRailReplacementBus).to.be.true
+      expect(donricTrip.routeName).to.equal('Frankston')
 
       expect(donricTrip.stopTimings[0].stopConditions.pickup).to.equal(0)
       expect(donricTrip.direction).to.equal('Up')
@@ -98,7 +99,8 @@ describe('The GTFS Loaders with the MTM Website Rail data', () => {
       expect(dysonsTrip.routeGTFSID).to.equal('2-RRB')
       expect(dysonsTrip.block).to.equal('51')
       expect(dysonsTrip.isRailReplacementBus).to.be.true
-      expect(donricTrip.direction).to.equal('Up')
+      expect(dysonsTrip.direction).to.equal('Up')
+      expect(dysonsTrip.routeName).to.equal('Werribee')
 
       let WTL_BEW = await trips.findDocument({
         operationDays: '20250719',
@@ -112,6 +114,7 @@ describe('The GTFS Loaders with the MTM Website Rail data', () => {
       expect(WTL_BEW.block).to.equal('WIL501')
       expect(WTL_BEW.isRailReplacementBus).to.be.true
       expect(WTL_BEW.direction).to.equal('Down')
+      expect(['Cranbourne', 'Pakenham']).to.include(WTL_BEW.routeName)
     })
   })
 })

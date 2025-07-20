@@ -31,28 +31,28 @@ export class MTMRailTrip extends GTFSTypes.GTFSTrip {
   }
 
   getRouteName(patternID) {
-    if (!patternCache[patternID]) {
-      let linesVisited = {}
-      for (let stop of this.getStopData()) {
-        let routes = routesAtStops[stop.stopName.slice(0, -16)]
-        if (!routes) continue
-        for (let route of routes) {
-          if (!linesVisited[route]) linesVisited[route] = 0
-          linesVisited[route]++
-        }
-      }
+    if (patternCache[patternID]) return patternCache[patternID]
 
-      let best = null, bestCount = 0
-      for (let route of Object.keys(linesVisited)) {
-        if (linesVisited[route] > bestCount) {
-          bestCount = linesVisited[route]
-          best = route
-        }
+    let linesVisited = {}
+    for (let stop of this.getStopData()) {
+      let routes = routesAtStops[stop.stopName.slice(0, -16)]
+      if (!routes) continue
+      for (let route of routes) {
+        if (!linesVisited[route]) linesVisited[route] = 0
+        linesVisited[route]++
       }
-
-      patternCache[patternID] = best
-      return best
     }
+
+    let best = null, bestCount = 0
+    for (let route of Object.keys(linesVisited)) {
+      if (linesVisited[route] > bestCount) {
+        bestCount = linesVisited[route]
+        best = route
+      }
+    }
+
+    patternCache[patternID] = best
+    return best
   }
 
   getDirection(routeName, patternID) {
