@@ -157,20 +157,22 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
   let outputTrips = []
 
   let departures = await ptvAPI.vline.getDepartures('', GetPlatformServicesAPI.BOTH, 1440)
-  for (let departure of departures) {
-    let existingTrip = await VLineTripUpdater.getTripByTDN(liveTimetables, departure.tdn, opDayFormat)
+  let arrivals = await ptvAPI.vline.getArrivals('', GetPlatformServicesAPI.BOTH, 1440)
+
+  for (let vlineTrip of departures.concat(arrivals)) {
+    let existingTrip = await VLineTripUpdater.getTripByTDN(liveTimetables, vlineTrip.tdn, opDayFormat)
     if (existingTrip) {
-      await updateExistingTrip(db, existingTrip, departure)
+      await updateExistingTrip(db, existingTrip, vlineTrip)
       continue
     }
 
-    let matchingTrip = await matchTrip(opDayFormat, departure, db)
-    let nspTrip = await VLineUtils.getNSPTrip(dayOfWeek, departure.tdn, db)
+    let matchingTrip = await matchTrip(opDayFormat, vlineTrip, db)
+    let nspTrip = await VLineUtils.getNSPTrip(dayOfWeek, vlineTrip.tdn, db)
 
     if (matchingTrip) {
       let liveTrip = convertToLive(matchingTrip, operationDay)
-      liveTrip.runID = departure.tdn
-      liveTrip.direction = departure.direction
+      liveTrip.runID = vlineTrip.tdn
+      liveTrip.direction = vlineTrip.direction
       if (nspTrip) {
         liveTrip.formedBy = nspTrip.formedBy
         liveTrip.forming = nspTrip.forming
@@ -186,7 +188,7 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
       continue
     }
 
-    let pattern = await downloadTripPattern(opDayFormat, departure, nspTrip, db)
+    let pattern = await downloadTripPattern(opDayFormat, vlineTrip, nspTrip, db)
     if (!pattern) continue
 
     outputTrips.push({

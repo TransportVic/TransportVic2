@@ -19,6 +19,8 @@ const __dirname = path.dirname(__filename)
 const vlineTripsTD8741_Normal = (await fs.readFile(path.join(__dirname, 'sample-data', 'alterations', 'td8741-normal.xml'))).toString()
 const vlineTripsTD8741_Geelong = (await fs.readFile(path.join(__dirname, 'sample-data', 'alterations', 'td8741-terminate-geelong.xml'))).toString()
 
+const vlineTripsEmpty = (await fs.readFile(path.join(__dirname, 'sample-data', 'vline-trips-empty.xml'))).toString()
+
 const vlineTrips = (await fs.readFile(path.join(__dirname, 'sample-data', 'vline-trips.xml'))).toString()
 const td8007Early = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8007-early-pattern.xml'))).toString()
 const td8007Late = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8007-late-pattern.xml'))).toString()
@@ -36,7 +38,7 @@ describe('The matchTrip function', () => {
     await stops.createDocument(clone(allStops))
 
     let stubAPI = new StubVLineAPI()
-    stubAPI.setResponses([ vlineTrips ])
+    stubAPI.setResponses([ vlineTrips, vlineTripsEmpty ])
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
@@ -173,7 +175,7 @@ describe('The loadOperationalTT function', () => {
     await routes.createDocuments(clone(allRoutes))
 
     let stubAPI = new StubVLineAPI()
-    stubAPI.setResponses([ vlineTripsTD8741_Normal, td8741 ])
+    stubAPI.setResponses([ vlineTripsTD8741_Normal, vlineTripsEmpty, td8741 ])
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
@@ -197,7 +199,7 @@ describe('The loadOperationalTT function', () => {
     await routes.createDocuments(clone(allRoutes))
 
     let stubAPI = new StubVLineAPI()
-    stubAPI.setResponses([ vlineTripsTD8741_Normal, td8741, vlineTripsTD8741_Normal ])
+    stubAPI.setResponses([ vlineTripsTD8741_Normal, vlineTripsEmpty, td8741, vlineTripsTD8741_Normal, vlineTripsEmpty ])
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
@@ -223,7 +225,7 @@ describe('The loadOperationalTT function', () => {
     await routes.createDocuments(clone(allRoutes))
 
     let stubAPI = new StubVLineAPI()
-    stubAPI.setResponses([ vlineTripsTD8741_Normal, td8741, vlineTripsTD8741_Geelong ])
+    stubAPI.setResponses([ vlineTripsTD8741_Normal, vlineTripsEmpty, td8741, vlineTripsTD8741_Geelong, vlineTripsEmpty ])
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
