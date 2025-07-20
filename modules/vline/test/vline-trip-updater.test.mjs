@@ -8,20 +8,38 @@ import VLineTripUpdater from '../trip-updater.mjs'
 const clone = o => JSON.parse(JSON.stringify(o))
 
 describe('The V/Line Trip Updater', () => {
-  it('Can terminate a trip early at a specified station', async () => {
-    let database = new LokiDatabaseConnection()
-    let stops = database.getCollection('stops')
-    let routes = database.getCollection('routes')
-    let timetables = database.getCollection('live timetables')
+  describe('The updateTripDestination function', () => {
+    it('Does nothing if the destination is unchanged', async () => {
+      let database = new LokiDatabaseConnection()
+      let stops = database.getCollection('stops')
+      let routes = database.getCollection('routes')
+      let timetables = database.getCollection('live timetables')
 
-    await stops.createDocuments(clone(allStops))
-    await routes.createDocuments(clone(allRoutes))
-    await timetables.createDocument(clone(td8741))
+      await stops.createDocuments(clone(allStops))
+      await routes.createDocuments(clone(allRoutes))
+      await timetables.createDocument(clone(td8741))
 
-    let trip = await VLineTripUpdater.terminateTripEarly(database, '20250718', '8741', 'Tarneit Railway Station')
+      let trip = await VLineTripUpdater.updateTripDestination(database, '20250718', '8741', 'Waurn Ponds Railway Station')
+      expect(trip.runID).to.equal('8741')
 
-    expect(trip.runID).to.equal('8741')
-    for (let i = 0; i <= 4; i++) expect(trip.stops[i].cancelled).to.be.false
-    for (let i = 5; i < trip.stops.length; i++) expect(trip.stops[i].cancelled).to.be.true
+      for (let i = 0; i < trip.stops.length; i++) expect(trip.stops[i].cancelled).to.be.false
+    })
+
+    it('Can terminate a trip early at a specified station', async () => {
+      let database = new LokiDatabaseConnection()
+      let stops = database.getCollection('stops')
+      let routes = database.getCollection('routes')
+      let timetables = database.getCollection('live timetables')
+
+      await stops.createDocuments(clone(allStops))
+      await routes.createDocuments(clone(allRoutes))
+      await timetables.createDocument(clone(td8741))
+
+      let trip = await VLineTripUpdater.updateTripDestination(database, '20250718', '8741', 'Tarneit Railway Station')
+      expect(trip.runID).to.equal('8741')
+
+      for (let i = 0; i <= 4; i++) expect(trip.stops[i].cancelled).to.be.false
+      for (let i = 5; i < trip.stops.length; i++) expect(trip.stops[i].cancelled).to.be.true
+    })
   })
 })
