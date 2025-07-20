@@ -41,5 +41,28 @@ describe('The V/Line Trip Updater', () => {
       for (let i = 0; i <= 4; i++) expect(trip.stops[i].cancelled).to.be.false
       for (let i = 5; i < trip.stops.length; i++) expect(trip.stops[i].cancelled).to.be.true
     })
+
+    it('Can re extend a trip back after it was terminated', async () => {
+      let database = new LokiDatabaseConnection()
+      let stops = database.getCollection('stops')
+      let routes = database.getCollection('routes')
+      let timetables = database.getCollection('live timetables')
+
+      await stops.createDocuments(clone(allStops))
+      await routes.createDocuments(clone(allRoutes))
+      await timetables.createDocument(clone(td8741))
+
+      let trip = await VLineTripUpdater.updateTripDestination(database, '20250718', '8741', 'Tarneit Railway Station')
+      expect(trip.runID).to.equal('8741')
+
+      for (let i = 0; i <= 4; i++) expect(trip.stops[i].cancelled).to.be.false
+      for (let i = 5; i < trip.stops.length; i++) expect(trip.stops[i].cancelled).to.be.true
+
+      trip = await VLineTripUpdater.updateTripDestination(database, '20250718', '8741', 'South Geelong Railway Station')
+      expect(trip.runID).to.equal('8741')
+
+      for (let i = 0; i <= 11; i++) expect(trip.stops[i].cancelled).to.be.false
+      for (let i = 12; i < trip.stops.length; i++) expect(trip.stops[i].cancelled).to.be.true
+    })
   })
 })
