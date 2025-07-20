@@ -136,8 +136,17 @@ export async function downloadTripPattern(operationDay, vlineTrip, nspTrip, db) 
   return timetable
 }
 
-async function updateExistingTrip(existingTrip, departure, opDayFormat) {
+async function updateExistingTrip(db, existingTrip, vlineTrip) {
+  let stops = db.getCollection('stops')
+  let originStop = await getStopFromVNetName(stops, vlineTrip.origin)
+  let destinationStop = await getStopFromVNetName(stops, vlineTrip.destination)
 
+  if (!originStop || !destinationStop) return null
+
+  await VLineTripUpdater.updateTripOriginDestination(
+    db, existingTrip.operationDays, existingTrip.runID,
+    originStop.stopName, destinationStop.stopName
+  )
 }
 
 export default async function loadOperationalTT(db, operationDay, ptvAPI) {
@@ -151,7 +160,7 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
   for (let departure of departures) {
     let existingTrip = await VLineTripUpdater.getTripByTDN(liveTimetables, departure.tdn, opDayFormat)
     if (existingTrip) {
-      await updateExistingTrip(existingTrip, departure, opDayFormat)
+      await updateExistingTrip(db, existingTrip, departure)
       continue
     }
 

@@ -9,7 +9,7 @@ const clone = o => JSON.parse(JSON.stringify(o))
 
 describe('The V/Line Trip Updater', () => {
   describe('The updateTripOriginDestination function', () => {
-    it.only('Does nothing if the destination is unchanged', async () => {
+    it('Does nothing if the destination is unchanged', async () => {
       let database = new LokiDatabaseConnection()
       let stops = database.getCollection('stops')
       let routes = database.getCollection('routes')
@@ -25,7 +25,7 @@ describe('The V/Line Trip Updater', () => {
       for (let i = 0; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
     })
 
-    it.only('Can terminate a trip early at a specified station', async () => {
+    it('Can terminate a trip early at a specified station', async () => {
       let database = new LokiDatabaseConnection()
       let stops = database.getCollection('stops')
       let routes = database.getCollection('routes')
@@ -42,7 +42,7 @@ describe('The V/Line Trip Updater', () => {
       for (let i = 5; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to be cancelled`).to.be.true
     })
 
-    it.only('Can re extend a trip back after it was terminated', async () => {
+    it('Can re extend a trip back after it was terminated', async () => {
       let database = new LokiDatabaseConnection()
       let stops = database.getCollection('stops')
       let routes = database.getCollection('routes')
@@ -65,7 +65,7 @@ describe('The V/Line Trip Updater', () => {
       for (let i = 12; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to be cancelled`).to.be.true
     })
 
-    it.only('Can update a trip to have late origination', async () => {
+    it('Can update a trip to have late origination', async () => {
       let database = new LokiDatabaseConnection()
       let stops = database.getCollection('stops')
       let routes = database.getCollection('routes')
@@ -82,7 +82,7 @@ describe('The V/Line Trip Updater', () => {
       for (let i = 5; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
     })
 
-    it.only('Can revert a late origination', async () => {
+    it('Can revert a late origination', async () => {
       let database = new LokiDatabaseConnection()
       let stops = database.getCollection('stops')
       let routes = database.getCollection('routes')
@@ -104,7 +104,7 @@ describe('The V/Line Trip Updater', () => {
       for (let i = 0; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
     })
 
-    it.only('Handles both the origin and destination changing', async () => {
+    it('Handles both the origin and destination changing', async () => {
       let database = new LokiDatabaseConnection()
       let stops = database.getCollection('stops')
       let routes = database.getCollection('routes')
