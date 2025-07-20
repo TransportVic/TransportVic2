@@ -10,6 +10,14 @@ import VLineUtils from '../vline/vline-utils.mjs'
 
 let existingVNetStops = {}
 
+async function getTripByTDN(liveTimetables, runID, operationDay) {
+  return await liveTimetables.findDocument({
+    mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
+    operationDays: operationDay,
+    runID
+  })
+}
+
 async function getStopFromVNetName(stops, vnetName) {
   if (existingVNetStops[vnetName]) return existingVNetStops[vnetName]
 
@@ -135,6 +143,10 @@ export async function downloadTripPattern(operationDay, vlineTrip, nspTrip, db) 
   return timetable
 }
 
+async function updateExistingTrip(existingTrip, departure, opDayFormat) {
+  
+}
+
 export default async function loadOperationalTT(db, operationDay, ptvAPI) {
   let opDayFormat = utils.getYYYYMMDD(operationDay)
   let dayOfWeek = utils.getDayOfWeek(operationDay) // Technically should use public holiday thing
@@ -144,6 +156,12 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
 
   let departures = await ptvAPI.vline.getDepartures('', GetPlatformServicesAPI.BOTH, 1440)
   for (let departure of departures) {
+    let existingTrip = await getTripByTDN(liveTimetables, departure.tdn, opDayFormat)
+    if (existingTrip) {
+      await updateExistingTrip(existingTrip, departure, opDayFormat)
+      continue
+    }
+
     let matchingTrip = await matchTrip(opDayFormat, departure, db)
     let nspTrip = await VLineUtils.getNSPTrip(dayOfWeek, departure.tdn, db)
 
