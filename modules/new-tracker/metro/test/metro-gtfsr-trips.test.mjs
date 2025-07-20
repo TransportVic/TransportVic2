@@ -250,6 +250,15 @@ describe('The GTFSRTrip class', () => {
     }).getTDN()).to.equal('6112')
 
     expect(MetroGTFSRTrip.parse({
+      trip_id: 'vic:02GWY:_:H:vpt._Glen Waverley_2083_20250719',
+      route_id: 'aus:vic:vic-02-GWY:',
+      direction_id: 0,
+      start_time: '15:37:00',
+      start_date: '20250603',
+      schedule_relationship: 1
+    }).getTDN()).to.equal('2083')
+
+    expect(MetroGTFSRTrip.parse({
       trip_id: '02-STY--52-T5-8514',
       route_id: 'aus:vic:vic-02-STY:',
       direction_id: 0,
