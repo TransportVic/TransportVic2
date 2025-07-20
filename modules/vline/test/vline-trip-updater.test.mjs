@@ -18,12 +18,10 @@ describe('The V/Line Trip Updater', () => {
     await routes.createDocuments(clone(allRoutes))
     await timetables.createDocument(clone(td8741))
 
-    VLineTripUpdater.terminateTripEarly(database, '20250718', '8741', 'Tarneit Railway Station')
+    let trip = await VLineTripUpdater.terminateTripEarly(database, '20250718', '8741', 'Tarneit Railway Station')
 
-    let trip = await timetables.findDocument({})
     expect(trip.runID).to.equal('8741')
-
-    for (let i = 0; i <= 4; i++) expect(trip.stopTimings[i].cancelled).to.be.false
-    for (let i = 5; i < trip.stopTimings.length; i++) expect(trip.stopTimings[i].cancelled).to.be.true
+    for (let i = 0; i <= 4; i++) expect(trip.stops[i].cancelled).to.be.false
+    for (let i = 5; i < trip.stops.length; i++) expect(trip.stops[i].cancelled).to.be.true
   })
 })

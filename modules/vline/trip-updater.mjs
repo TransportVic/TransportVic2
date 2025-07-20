@@ -5,7 +5,33 @@ export default class VLineTripUpdater extends TripUpdater {
   
   static getMode() { return GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain }
 
-  static terminateTripEarly(db, operationDay, runID, newDestination) {
+  static async getTripByTDN(liveTimetables, runID, operationDay) {
+    return await liveTimetables.findDocument({
+      mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
+      operationDays: operationDay,
+      runID
+    })
+  }
+
+  static async terminateTripEarly(db, operationDay, runID, newDestination) {
+    let timetables = db.getCollection('live timetables')
+    let trip = await this.getTripByTDN(timetables, runID, operationDay)
+    if (!trip) return null
+
+    let tripStops = trip.stopTimings.map(stop => stop.stopName)
+    let newDestinationIndex = tripStops.indexOf(newDestination)
+    let cancelledStops = tripStops.slice(newDestinationIndex + 1)
+
+    return await this.updateTrip(db, {
+      operationDays: operationDay,
+      runID,
+      stops: cancelledStops.map(stopName => ({
+        stopName,
+        cancelled: true,
+      }))
+    }, {
+      skipStopCancellation: true
+    })
   }
 
 }

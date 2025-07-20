@@ -7,16 +7,9 @@ import { GetPlatformServicesAPI, PTVAPI, PTVAPIInterface, VLineAPIInterface } fr
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import LiveTimetable from '../schema/live-timetable.js'
 import VLineUtils from '../vline/vline-utils.mjs'
+import VLineTripUpdater from '../vline/trip-updater.mjs'
 
 let existingVNetStops = {}
-
-async function getTripByTDN(liveTimetables, runID, operationDay) {
-  return await liveTimetables.findDocument({
-    mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
-    operationDays: operationDay,
-    runID
-  })
-}
 
 async function getStopFromVNetName(stops, vnetName) {
   if (existingVNetStops[vnetName]) return existingVNetStops[vnetName]
@@ -144,7 +137,7 @@ export async function downloadTripPattern(operationDay, vlineTrip, nspTrip, db) 
 }
 
 async function updateExistingTrip(existingTrip, departure, opDayFormat) {
-  
+
 }
 
 export default async function loadOperationalTT(db, operationDay, ptvAPI) {
@@ -156,7 +149,7 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
 
   let departures = await ptvAPI.vline.getDepartures('', GetPlatformServicesAPI.BOTH, 1440)
   for (let departure of departures) {
-    let existingTrip = await getTripByTDN(liveTimetables, departure.tdn, opDayFormat)
+    let existingTrip = await VLineTripUpdater.getTripByTDN(liveTimetables, departure.tdn, opDayFormat)
     if (existingTrip) {
       await updateExistingTrip(existingTrip, departure, opDayFormat)
       continue
