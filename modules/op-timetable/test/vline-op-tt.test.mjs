@@ -184,4 +184,30 @@ describe('The loadOperationalTT function', () => {
     expect(trip.stopTimings[1].stopName).to.equal('Footscray Railway Station')
     expect(trip.stopTimings[1].departureTime).to.equal('11:38')
   })
+
+  it('Reuses trips where available', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let timetables = database.getCollection('live timetables')
+
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ vlineTripsTD8741, td8741, vlineTripsTD8741 ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    // Call twice, should only fetch from API once
+    await loadOperationalTT(database, utils.parseDate('20250718'), ptvAPI)
+    await loadOperationalTT(database, utils.parseDate('20250718'), ptvAPI)
+    let trip = await timetables.findDocument({})
+
+    expect(trip.runID).to.equal('8741')
+    expect(trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
+    expect(trip.stopTimings[0].departureTime).to.equal('11:30')
+    expect(trip.stopTimings[1].stopName).to.equal('Footscray Railway Station')
+    expect(trip.stopTimings[1].departureTime).to.equal('11:38')
+  })
 })
