@@ -98,7 +98,7 @@ if (lastModified.toISOString() !== lastLastModified) {
   }
 
   await updateTimetables()
-  await fs.writeFile(LAST_MODIFIED_FILE, lastModified.toString())
+  await fs.writeFile(LAST_MODIFIED_FILE, lastModified.toISOString())
 } else {
   LOGGER.log('Timetables all good')
   await discordUpdate('[Updater]: Timetables up to date, not updating')
