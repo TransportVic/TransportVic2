@@ -79,7 +79,7 @@ for (let i of selectedModes) {
       ...directionIDMap,
       ...tripLoader.getDirectionIDMap()
     }
-    
+
     let stopServiceStart = new Date()
     let stopServicesMap = tripLoader.getStopServicesMap()
     let bulkUpdate = Object.keys(stopServicesMap).map(stopGTFSID => ({
