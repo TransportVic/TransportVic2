@@ -80,7 +80,7 @@ let gtfs = new PTVGTFS(urls.gtfsFeed)
 let lastModified = await gtfs.getPublishedDate()
 
 if (lastModified.toISOString() !== lastLastModified) {
-  LOGGER.log('Outdated timetables: updating to revision', lastModified)
+  LOGGER.log('Outdated timetables: updating to revision', lastModified.toLocaleString())
   await discordUpdate('[Updater]: Updating timetables to revision ' + lastModified)
 
   let gtfsFolder = path.join(__dirname, '..', 'gtfs')

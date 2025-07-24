@@ -43,7 +43,6 @@ console.log('Loading timetables now\n')
 
 let tripsStart = new Date()
 
-let shapeIDMap = {}
 let directionIDMap = {}
 let tripProcessors = await createTripProcessor(mongoDB)
 
@@ -57,6 +56,7 @@ tripProcessors[2] = trip => {
 }
 
 let totalStopServiceTime = 0
+let totalShapeTime = 0
 
 for (let i of selectedModes) {
   let mode = GTFS_MODES[i]
@@ -74,11 +74,6 @@ for (let i of selectedModes) {
       processTrip: tripProcessors[i]
     })
     console.log('Loaded trips for', mode)
-
-    shapeIDMap = {
-      ...shapeIDMap,
-      ...tripLoader.getShapeIDMap()
-    }
 
     directionIDMap = {
       ...directionIDMap,
@@ -103,6 +98,15 @@ for (let i of selectedModes) {
     totalStopServiceTime += (new Date() - stopServiceStart)
 
     console.log('Loaded stop services for', mode)
+
+    let shapeStart = new Date()
+    console.log('Loading shapes for', GTFS_MODES[i])
+
+    let shapeLoader = new ShapeLoader(shapeFile.replace('{0}', i), mongoDB)
+    await shapeLoader.loadShapes({ shapeIDMap: tripLoader.getShapeIDMap() })
+
+    console.log('Loaded shapes for', GTFS_MODES[i])
+    totalShapeTime += (new Date() - shapeStart)
   } catch (e) {
     console.log('Failed to load trips for', mode)
     console.log(e)
@@ -112,22 +116,8 @@ for (let i of selectedModes) {
 await fs.writeFile(path.join(__dirname, 'directions.json'), JSON.stringify(directionIDMap))
 
 console.log('Trip exclusion stats', getVLineRuleStats())
-
 console.log('Loading trips done, took', (new Date() - tripsStart) / 1000, 'seconds')
-
-let shapeStart = new Date()
-console.log('Loading shapes')
-
-for (let i of selectedModes) {
-  console.log('Loading shapes for', GTFS_MODES[i])
-  let shapeLoader = new ShapeLoader(shapeFile.replace('{0}', i), mongoDB)
-
-  await shapeLoader.loadShapes({ shapeIDMap })
-}
-
-console.log('Loading shapes took', (new Date() - shapeStart) / 1000, 'seconds')
 console.log('Loading stop services took', totalStopServiceTime / 1000, 'seconds')
-
 console.log('\nLoading both trips and shapes took', (new Date() - start) / 1000, 'seconds overall')
 
 process.exit(0)
