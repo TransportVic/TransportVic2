@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.mjs",
   "scripts": {
-    "test": "mocha './{,!(node_modules)/**}/*.test.mjs'"
+    "test": "mocha './{,!(node_modules)/**}/*.test.mjs'",
+    "test-report": "mocha './{,!(node_modules)/**}/*.test.mjs' --reporter mochawesome --reporter-options output=test-report.html"
   },
   "author": "",
   "license": "ISC",
@@ -43,6 +44,7 @@
   "devDependencies": {
     "chai": "^5.1.0",
     "chai-exclude": "^3.0.1",
-    "mocha": "^10.3.0"
+    "mocha": "^10.3.0",
+    "mochawesome": "^7.1.3"
   }
 }

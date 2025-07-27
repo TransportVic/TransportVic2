@@ -31,3 +31,5 @@ tt-intermediate.pem
 /updater-log.txt
 
 /.env
+/mochawesome-report
+/load-gtfs/tram/tram-stops.json 

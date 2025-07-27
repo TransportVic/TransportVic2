@@ -71,7 +71,8 @@ for (let i of selectedModes) {
 
     await tripLoader.loadTrips({
       routeIDMap,
-      processTrip: tripProcessors[i]
+      processTrip: tripProcessors[i],
+      onWrite: count => console.log(`Loaded ${count} trips for`, mode)
     })
     console.log('Loaded trips for', mode)
 
