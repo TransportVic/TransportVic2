@@ -7,3 +7,5 @@ if [ ! -f modules.json ]; then
 fi
 
 npm run test-report
+
+mv mochawesome-report/mochawesome.html mochawesome-report/index.html
