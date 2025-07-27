@@ -471,13 +471,7 @@
    "liveTrack": true
   }
  ],
- "Melton": [
-  {
-   "routeGTFSID": "6-452",
-   "routeNumber": "452",
-   "liveTrack": true
-  }
- ],
+ "Melton": [],
  "Bacchus Marsh": [
   {
    "routeGTFSID": "6-BM3",
@@ -1147,48 +1141,7 @@
    "liveTrack": false
   }
  ],
- "Warrnambool": [
-  {
-   "routeGTFSID": "6-wr1",
-   "routeNumber": "1",
-   "liveTrack": false
-  },
-  {
-   "routeGTFSID": "6-wr2",
-   "routeNumber": "2",
-   "liveTrack": false
-  },
-  {
-   "routeGTFSID": "6-wr3",
-   "routeNumber": "3",
-   "liveTrack": false
-  },
-  {
-   "routeGTFSID": "6-wr4",
-   "routeNumber": "4",
-   "liveTrack": false
-  },
-  {
-   "routeGTFSID": "6-wr5",
-   "routeNumber": "5",
-   "liveTrack": false
-  },
-  {
-   "routeGTFSID": "6-wr6",
-   "routeNumber": "6",
-   "liveTrack": false
-  },
-  {
-   "routeGTFSID": "6-wr8",
-   "routeNumber": "8",
-   "liveTrack": false
-  },
-  {
-   "routeGTFSID": "6-wr9",
-   "routeNumber": "9",
-   "liveTrack": false
-  }
- ],
+ "Warrnambool": [],
  "Korumburra": [
   {
    "routeGTFSID": "6-935",

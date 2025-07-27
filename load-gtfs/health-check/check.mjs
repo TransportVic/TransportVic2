@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'url'
 import { MongoDatabaseConnection } from '@transportme/database'
-import config from '../../config.json' with { type: 'json' }
+import fs from 'fs/promises'
+import path from 'path'
 import discordIntegration from '../../modules/discord-integration.js'
 
 const FAILURE_TEXTS = {
@@ -120,6 +121,7 @@ async function checkRoutes(db) {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const config = JSON.parse(await fs.readFile(path.join(fileURLToPath(import.meta.url), '../../../config.json')))
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
