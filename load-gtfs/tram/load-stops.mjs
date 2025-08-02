@@ -21,8 +21,7 @@ let stopData = data.stops.filter(stop => {
   return false
 }).map(stop => {
   let stopNumberParts = stop.title.match(/^(D?\d+[a-zA-Z]?)-/)
-  let stopName = stop.title.split(' #')[0]
-  let stopNumber = stop.title.split(' #')[1]
+  let [stopName, stopNumber] = stop.title.trim().split(' #')
 
   if (stopNumberParts) {
     stopNumber = stopNumberParts[1]

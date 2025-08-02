@@ -21,7 +21,7 @@ let count = 0
 let closedStops = []
 
 let tramTrackerIDs = {
-  '3813': '2013'
+  '3813': 2013
 }
 
 let stopDirections = {
@@ -69,7 +69,7 @@ for (let service of tramServices) {
         if (ptvOverrides[tramTrackerID]) stopID = ptvOverrides[tramTrackerID]
         if (!stopID) return
 
-        tramTrackerIDs[tramTrackerID] = stopID
+        tramTrackerIDs[tramTrackerID] = parseInt(stopID)
         stopNames[tramTrackerID] = tramTrackerName
         stopNumbers[tramTrackerID] = stopNumber
         levelAccess[tramTrackerID] = isLevelAccess
@@ -97,11 +97,10 @@ for (let tramTrackerID of Object.keys(tramTrackerIDs)) {
 
   if (ptvStop) {
     dbStop = await stops.findDocument({
-      'bays.originalName': new RegExp('^' + ptvStop.stopName),
+      'bays.originalName': new RegExp('^' + ptvStop.stopName.trim()),
       'bays.stopNumber': ptvStop.stopNumber.toUpperCase()
     })
   }
-
   if (!dbStop) {
     dbStop = await stops.findDocument({
       'bays.originalName': new RegExp(utils.adjustStopName(stopNames[tramTrackerID].split(/ ?[&\-,] ?/)[0].trim()), 'i'),
