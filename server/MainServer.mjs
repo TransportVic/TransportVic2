@@ -8,7 +8,7 @@ import routes from '../application/route-data.mjs'
 
 import config from '../config.json' with { type: 'json' }
 import modules from '../modules.json' with { type: 'json' }
-import MongoDatabaseConnection from '../database/mongo/MongoDatabaseConnection.js'
+import { MongoDatabaseConnection } from '@transportme/database'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)

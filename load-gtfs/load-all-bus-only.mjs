@@ -23,7 +23,7 @@ console.log('Starting full GTFS loader', start)
 
 await runNode('create-indexes.mjs')
 await runNode('load-all-stops-routes.mjs', ['4', '6', '11'])
-await runNode('bus/load-788-stop-numbers.js')
+await runNode('bus/load-788-stop-numbers.mjs')
 await runNode('load-all-trips.mjs', ['4', '6', '11'])
 
 await runNode('bus/load-flexiride-data.mjs')
@@ -34,7 +34,7 @@ await runNode('extra/load-search-query.mjs')
 await runNode('extra/load-route-suburbs.mjs')
 
 await runNode('bus/generate-regional-bus-groupings.mjs')
-await runNode('bus/load-regional-bus-operators.js')
+await runNode('bus/load-regional-bus-operators.mjs')
 
 await runNode('move-database.mjs')
 

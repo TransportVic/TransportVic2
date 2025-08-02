@@ -26,8 +26,8 @@ await runNode('load-all-stops-routes.mjs', ['1', '2'])
 await runNode('load-all-trips.mjs', ['1', '2'])
 
 await runNode('metro/load-extra-data.mjs')
-await runNode('metro/download-metro-timetables.js')
-await runNode('metro/load-metro-timetables.js')
+await runNode('metro/download-metro-timetables.mjs')
+await runNode('metro/load-metro-timetables.mjs')
 
 await runNode('vline/api-integration/load-vnet-station-names.mjs')
 await runNode('vline/timetables/download-vline-timetables.mjs')

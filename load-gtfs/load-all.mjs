@@ -23,14 +23,14 @@ console.log('Starting full GTFS loader', start)
 
 await runNode('create-indexes.mjs')
 await runNode('load-all-stops-routes.mjs')
-await runNode('bus/load-788-stop-numbers.js')
+await runNode('bus/load-788-stop-numbers.mjs')
 await runNode('load-all-trips.mjs')
 
 await runNode('bus/load-flexiride-data.mjs')
 
 await runNode('metro/load-extra-data.mjs')
-await runNode('metro/download-metro-timetables.js')
-await runNode('metro/load-metro-timetables.js')
+await runNode('metro/download-metro-timetables.mjs')
+await runNode('metro/load-metro-timetables.mjs')
 
 await runNode('vline/api-integration/load-vnet-station-names.mjs')
 await runNode('vline/timetables/download-vline-timetables.mjs')
@@ -45,7 +45,7 @@ await runNode('extra/load-search-query.mjs')
 await runNode('extra/load-route-suburbs.mjs') // TODO: Move to network regions
 
 await runNode('bus/generate-regional-bus-groupings.mjs')
-await runNode('bus/load-regional-bus-operators.js')
+await runNode('bus/load-regional-bus-operators.mjs')
 
 await runNode('move-database.mjs')
 

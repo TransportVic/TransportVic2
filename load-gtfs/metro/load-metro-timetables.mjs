@@ -1,30 +1,34 @@
-const fs = require('fs')
-const async = require('async')
-const path = require('path')
-const DatabaseConnection = require('../../database/DatabaseConnection')
-const config = require('../../config')
-const utils = require('../../utils')
+import fs from 'fs'
+import async from 'async'
+import path from 'path'
+import url from 'url'
+import config from '../../config.json' with { type: 'json' }
+import utils from '../../utils.js'
+import { MongoDatabaseConnection } from '@transportme/database'
+
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 let stops, timetables
 let stationCache = {}
 
 let lineGTFSIDs = {
   'Alamein': 'ALM',
-  'Belgrave': 'BEL',
-  'Craigieburn': 'B31',
-  'Cranbourne': 'CRB',
+  'Belgrave': 'BEG',
+  'Craigieburn': 'CGB',
+  'Cranbourne': 'CBE',
   'Frankston': 'FKN',
-  'Glen Waverley': 'GLW',
-  'Hurstbridge': 'HBG',
+  'Glen Waverley': 'GWY',
+  'Hurstbridge': 'HBE',
   'Lilydale': 'LIL',
-  'Mernda': 'MER',
+  'Mernda': 'MDD',
   'Pakenham': 'PKM',
-  'Sandringham': 'SDM',
-  'Stony Point': 'SPT',
-  'Sunbury': 'SYM',
+  'Sandringham': 'SHM',
+  'Stony Point': 'STY',
+  'Sunbury': 'SUY',
   'Upfield': 'UFD',
-  'Werribee': 'WBE',
-  'Williamstown': 'WMN'
+  'Werribee': 'WER',
+  'Williamstown': 'WIL'
 }
 
 let lineNames = Object.keys(lineGTFSIDs)
@@ -177,30 +181,27 @@ function readFileData(filename, routeName, callback) {
   })
 }
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 
-database.connect({
-  poolSize: 100
-}, async err => {
-  stops = database.getCollection('gtfs-stops')
-  timetables = database.getCollection('gtfs-timetables')
+await database.connect({})
+stops = database.getCollection('gtfs-stops')
+timetables = database.getCollection('gtfs-timetables')
 
-  await timetables.deleteDocuments({ mode: 'metro train' })
+await timetables.deleteDocuments({ mode: 'metro train' })
 
-  let files = fs.readdirSync(path.join(__dirname, 'timetables'))
+let files = fs.readdirSync(path.join(__dirname, 'timetables'))
 
-  let totalCount = 0
+let totalCount = 0
 
-  await async.forEachOf(files, async (filename, i) => {
-    let lineName = lineNames[i]
-    return new Promise(resolve => {
-      readFileData(filename, lineName, count => {
-        totalCount += count
-        resolve()
-      })
+await async.forEachOf(files, async (filename, i) => {
+  let lineName = lineNames[i]
+  return new Promise(resolve => {
+    readFileData(filename, lineName, count => {
+      totalCount += count
+      resolve()
     })
   })
-
-  console.log('Completed loading in ' + totalCount + ' MTM WTT trips')
-  process.exit()
 })
+
+console.log('Completed loading in ' + totalCount + ' MTM WTT trips')
+process.exit()
