@@ -13,8 +13,8 @@ let data = JSON.parse(await utils.request('https://www.ptv.vic.gov.au/lithe/stor
 }))
 
 let stopData = data.stops.filter(stop => {
-  if (stop.primaryChronosMode === '1') return true
-  if (stop.primaryChronosMode === '2') { // Bus using tram stop
+  if (stop.primaryChronosMode === 1) return true
+  if (stop.primaryChronosMode === 2) { // Bus using tram stop
     return stop.title.includes('#') || stop.title.match(/^(D?\d+[a-zA-Z]?)-/)
   }
 
