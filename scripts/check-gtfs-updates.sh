@@ -1,7 +1,7 @@
 #!/bin/bash
 DIRNAME=$(dirname "$0")
 
-cd $DIRNAME
+cd $DIRNAME/..
 . $DIRNAME/.env
 
 sudo systemctl restart mongod

@@ -1,0 +1,44 @@
+# For details see man 4 crontabs
+
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |     .------------- hour (0 - 23)
+# |     |     .---------- day of month (1 - 31)
+# |     |     |     .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |     |     |     |     .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |     |     |     |     |
+# *     *     *     *     *     command to be executed
+
+  # Operational Timetable loaders
+  1     0     *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-metro-op-tt.mjs
+  1     3     *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-vline-op-tt.mjs
+  1     3     *     *     *     node /home/transportvic/TransportVic/modules/new-tracker/metro/metro-trips-schedule.mjs
+
+  # Metro Tracker
+  # Regular trips everyday 0400 - 2359
+  *     4-23  *     *     *     /home/transportvic/TransportVic/modules/new-tracker/metro.sh
+  # Regular weeknights until 2530 (1.30am). This is effectively Tuesday 12-1.30am - Friday 12-1.30am
+  *     0     *     *     2-5   /home/transportvic/TransportVic/modules/new-tracker/metro-night.sh
+  0-30  1     *     *     2-5   /home/transportvic/TransportVic/modules/new-tracker/metro-night.sh
+  # Fri and Sat all night, noting that it is on the next day so Saturday and Sunday 12am - 4am
+  *     0-2   *     *     6-7   /home/transportvic/TransportVic/modules/new-tracker/metro-night.sh
+  *     3     *     *     6-7   /home/transportvic/TransportVic/modules/new-tracker/metro.sh
+  # Sun up to 2am (Monday 12am-2am)
+  *     0-2   *     *     1     /home/transportvic/TransportVic/modules/new-tracker/metro-night.sh
+
+  # Metro RRB Tracker
+  # Daily from 4am to 10pm. Offset by 1min to allow data to load in on MTM's end. Runs hourly
+  1     4-22  *     *     *     /home/transportvic/TransportVic/load-gtfs/metro-rail-bus/load.sh
+  # Daily from 4am to 2am. Runs every minute
+  *     4-23  *     *     *     node /home/transportvic/TransportVic/modules/new-tracker/metro-rail-bus/load-rt-updates.mjs
+  *     0-1   *     *     *     node /home/transportvic/TransportVic/modules/new-tracker/metro-rail-bus/load-rt-updates.mjs
+  # Runs 2-4am as well on Saturday and Sunday mornings (from Friday and Saturday's PT day)
+  *     2-3   *     *     6-7   node /home/transportvic/TransportVic/modules/new-tracker/metro-rail-bus/load-rt-updates.mjs
+
+  # Other maintenance scripts
+  0     2     *     *     *     /home/transportvic/TransportVic/start-maintenance.sh
+  0     4     *     *     *     node /home/transportvic/TransportVic/update-consists.js
+  55    2     *     *     *     node /home/transportvic/TransportVic/modules/cleanup.js
+  0     0     *     *     *     node /home/transportvic/TransportVic/modules/rotate-logs.js
+  50    3     *     *     *     node /home/transportvic/TransportVic/load-gtfs/xpt/load-all.js
+  0     3     */2   *     *     /home/transportvic/transportvic-backups/backup.sh
