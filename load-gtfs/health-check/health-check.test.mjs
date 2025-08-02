@@ -3,7 +3,7 @@ import { LokiDatabaseConnection } from '@transportme/database'
 import sampleSchTrips from '../../modules/departures/test/sample-data/sample-sch-trips.json' with { type: 'json' }
 import expectedStops from './sample-data/expected-stops.json' with { type: 'json' }
 import expectedRoute from './sample-data/expected-routes.json' with { type: 'json' }
-import { checkRoute, checkRouteOperators, checkStop, checkStopNumbers } from './check.mjs'
+import { checkBusRegions, checkRoute, checkRouteOperators, checkStop, checkStopNumbers } from './check.mjs'
 
 expectedStops.forEach(stop => stop.textQuery = ['A', 'B'])
 
@@ -255,6 +255,41 @@ describe('The GTFS health check module', () => {
       let testOutput = await checkRouteOperators(routes)
       expect(testOutput.find(route => route.routeGTFSID === '4-630')).to.exist
       expect(testOutput.find(route => route.routeGTFSID === '4-900')).to.exist
+    })
+  })
+
+  describe('The checkBusRegions function', () => {
+    it('Returns OK when all regions have routes assigned', () => {
+      expect(checkBusRegions({
+        "Melton": [{
+          "routeGTFSID": "6-452",
+          "routeNumber": "452",
+          "liveTrack": true
+        }],
+        "Bacchus Marsh": [{
+          "routeGTFSID": "6-BM3",
+          "routeNumber": "433",
+          "liveTrack": true
+        }, {
+          "routeGTFSID": "6-BM4",
+          "routeNumber": "434",
+          "liveTrack": true
+        }],
+      })).to.deep.equal({ status: 'ok' })
+    })
+
+    it('Should identify any regional networks with no routes assigned', () => {
+      expect(checkBusRegions({
+        "Melton": [{
+          "routeGTFSID": "6-452",
+          "routeNumber": "452",
+          "liveTrack": true
+        }],
+        "Bacchus Marsh": [],
+      })).to.deep.equal({
+        status: 'fail',
+        failures: ['Bacchus Marsh']
+      })
     })
   })
 })

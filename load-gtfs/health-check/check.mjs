@@ -120,6 +120,10 @@ async function checkRoutes(db) {
   }
 }
 
+export function checkBusRegions() {
+
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const config = JSON.parse(await fs.readFile(path.join(fileURLToPath(import.meta.url), '../../../config.json')))
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
