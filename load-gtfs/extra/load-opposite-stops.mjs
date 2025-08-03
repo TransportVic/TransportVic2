@@ -107,7 +107,9 @@ if (process.argv[1] === __filename) {
   const config = JSON.parse(await fs.readFile(path.join(__dirname, '../../config.json')))
   const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await database.connect({})
-
+  
+  console.log('Merging opposite stops')
   await matchOppositeStops(database)
+  console.log('Done merging opposite stops')
   process.exit(0)
 }

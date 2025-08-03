@@ -37,5 +37,5 @@ await async.forEach(Object.keys(lineIDs), async lineName => {
 
   let filePath = path.join(__dirname, 'timetables', `${lineName}.json`)
 
-  await new Promise(resolve => fs.writeFile(filePath, body, resolve))
+  await fs.writeFile(filePath, body)
 })

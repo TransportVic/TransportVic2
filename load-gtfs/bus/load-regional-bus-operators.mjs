@@ -42,8 +42,13 @@ busRoutes = busRoutes.map(route => {
     }
   }
 
-  if (origin === 'South Dudley') origin = 'Dudley'
-  if (destination === 'South Dudley') destination = 'Dudley'
+  if ([origin, destination].includes('North Wonthaggi')) {
+    let hasDudley = route.directions[0].stops.some(stop => stop.suburb.includes('Dudley'))
+    if (hasDudley) {
+      origin = 'Wonthaggi'
+      destination = 'Dudley'
+    }
+  }
 
   route.routeName = route.routeName.replace('Koo - Wee - Rup', 'Koo Wee Rup').split(' - ').sort((a, b) => a.localeCompare(b)).join(' - ')
   route.routeNameTest = [origin, destination].sort((a, b) => a.localeCompare(b)).join(' - ')
