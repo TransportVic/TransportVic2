@@ -4,7 +4,7 @@ import url from 'url'
 import { expect } from 'chai'
 import dbStops from './sample-data/stops.mjs'
 import route670 from './sample-data/route-670.mjs'
-import { matchOppositeStops } from '../load-opposite-stops.mjs'
+import { getFirstMatchingStop, matchOppositeStops } from '../load-opposite-stops.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -20,6 +20,16 @@ describe('The opposite stops loader', () => {
     await routes.createDocument(clone(route670))
 
     this.database = database
+  })
+
+  describe('The getFirstMatchingStop function', () => {
+    it('Matches the first stop in both directions that share the same name', () => {
+      let firstStop = getFirstMatchingStop(
+        route670.directions[0].stops.map(stop => stop.stopName),
+        route670.directions[1].stops.map(stop => stop.stopName).reverse(),
+      )
+      expect(firstStop).to.equal('Chirnside Park Shopping Centre/Maroondah Highway')
+    })
   })
 
   it.only('Matches stops with different names on opposite sides of the road', async function() {
