@@ -7,7 +7,7 @@ const busBays = require('../../additional-data/bus-data/bus-bays')
 const departureUtils = require('../utils/get-bus-timetables')
 const overrideStops = require('./override-stops')
 
-const regionalRouteNumbers = require('../../additional-data/bus-data/regional-with-track')
+const regionalRouteNumbers = require('../../additional-data/bus-data/bus-network-regions')
 
 let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => {
   let regionRoutes = regionalRouteNumbers[region]

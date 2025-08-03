@@ -9,7 +9,7 @@ const busDestinations = require('../../../additional-data/bus-destinations')
 const busBays = require('../../../additional-data/bus-data/bus-bays')
 
 const getDepartures = require('../../../modules/bus/get-departures')
-const regionalRouteNumbers = require('../../../additional-data/bus-data/regional-with-track')
+const regionalRouteNumbers = require('../../../additional-data/bus-data/bus-network-regions')
 
 const overrideStops = require('../../../modules/bus/override-stops')
 const depots = require('../../../transportvic-data/excel/bus/depots/bus-depots.json')

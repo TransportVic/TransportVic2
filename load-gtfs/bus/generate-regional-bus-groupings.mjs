@@ -77,5 +77,5 @@ let routeData = await async.reduce(network.features, {}, async (acc, region) => 
   return acc
 })
 
-await fs.writeFile(path.join(__dirname, '../../additional-data/bus-data/regional-with-track.json'), JSON.stringify(routeData, null, 1))
+await fs.writeFile(path.join(__dirname, '../../additional-data/bus-data/bus-network-regions.json'), JSON.stringify(routeData, null, 1))
 process.exit()

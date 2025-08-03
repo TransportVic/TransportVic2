@@ -1,8 +1,11 @@
-import { fileURLToPath } from 'url'
+import url, { fileURLToPath } from 'url'
 import { MongoDatabaseConnection } from '@transportme/database'
 import fs from 'fs/promises'
 import path from 'path'
 import discordIntegration from '../../modules/discord-integration.js'
+
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const FAILURE_TEXTS = {
   'missing-stop': 'Missing Stop',
@@ -120,12 +123,16 @@ async function checkRoutes(db) {
   }
 }
 
-export function checkBusRegions() {
-
+export function checkBusRegions(regions) {
+  let failingRegions = Object.keys(regions).filter(regionName => regions[regionName].length === 0)
+  if (failingRegions.length) return { status: 'fail', failures: failingRegions}
+  return { status: 'ok' }
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const config = JSON.parse(await fs.readFile(path.join(fileURLToPath(import.meta.url), '../../../config.json')))
+  const config = JSON.parse(await fs.readFile(path.join(__dirname, '../../config.json')))
+  const busRegions = JSON.parse(await fs.readFile(path.join(__dirname, '../../additional-data/bus-data/bus-network-regions.json')))
+
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
@@ -133,6 +140,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
 
   let stopCheck = await checkStops(mongoDB)
   let routeCheck = await checkRoutes(mongoDB)
+  let busRegionCheck = checkBusRegions(busRegions)
 
   if (stopCheck.status === 'ok') output.push('Stop Data: OK ✅')
   else {
@@ -142,23 +150,34 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   }
   
   output.push('')
-  
+
   if (routeCheck.status === 'ok') output.push('Route Data: OK ✅')
   else {
     output.push('Route Data: Fail ❌')
-    output.push('Failing Routes:')
-    output.push(...routeCheck.failures.map(failure => {
-      let prettyQuery = Object.keys(failure.query).map(key => `${key}: '${failure.query[key]}'`).join(', ')
-      return `{ ${prettyQuery} }${failure.mode ? ` (${failure.mode})` : ''}: ${FAILURE_TEXTS[failure.reason]}`
-    }))
+    if (routeCheck.failures.lengthh) {
+      output.push('Failing Routes:')
+      output.push(...routeCheck.failures.map(failure => {
+        let prettyQuery = Object.keys(failure.query).map(key => `${key}: '${failure.query[key]}'`).join(', ')
+        return `{ ${prettyQuery} }${failure.mode ? ` (${failure.mode})` : ''}: ${FAILURE_TEXTS[failure.reason]}`
+      }))
+    }
 
     if (routeCheck.missingOperatorRoutes.length > 20) {
       output.push('More than 20 routes missing operator data, further investigation needed')
-    } else {
+    } else if (routeCheck.missingOperatorRoutes.length > 0) {
+      output.push('Routes missing operators:')
       output.push(...routeCheck.missingOperatorRoutes.map(failure => {
         return `(${failure.routeGTFSID} ${failure.mode}): ${failure.routeName} ${failure.routeNumber || ''}`
       }))
     }
+  }
+
+  output.push('')
+
+  if (busRegionCheck.status === 'ok') output.push('Bus Regions: OK ✅')
+  else {
+    output.push('Bus Regions: Fail ❌')
+    output.push(`Failing Regions: ${busRegionCheck.failures.join(', ')}`)
   }
 
   let outputText = output.join('\n')

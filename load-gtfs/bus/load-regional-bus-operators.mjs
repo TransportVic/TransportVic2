@@ -1,6 +1,6 @@
 import config from '../../config.json' with { type: 'json' }
 import { MongoDatabaseConnection } from '@transportme/database'
-import regional from '../../additional-data/bus-data/regional-with-track.json' with { type: 'json' }
+import regional from '../../additional-data/bus-data/bus-network-regions.json' with { type: 'json' }
 import operators from '../../transportvic-data/excel/bus/operators/regional-inter-town-operators.json' with { type: 'json' }
 
 const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)

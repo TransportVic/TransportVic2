@@ -33,3 +33,4 @@ tt-intermediate.pem
 /.env
 /mochawesome-report
 /load-gtfs/tram/tram-stops.json 
+/additional-data/bus-data/bus-network-regions.json
