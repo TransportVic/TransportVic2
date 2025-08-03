@@ -32,6 +32,7 @@ await runNode('load-all-post.mjs')
 
 await runNode('extra/load-search-query.mjs')
 await runNode('extra/load-route-suburbs.mjs')
+await runNode('extra/load-opposite-stops.mjs')
 
 await runNode('bus/generate-regional-bus-groupings.mjs')
 await runNode('bus/load-regional-bus-operators.mjs')

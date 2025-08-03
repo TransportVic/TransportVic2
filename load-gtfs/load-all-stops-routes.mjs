@@ -126,7 +126,7 @@ await mongoRoutes.deleteDocuments({})
 
 console.log('Deleted existing data, loading', new Date())
 
-function cleanStop(stop) {
+function cleanLokiAttributes(stop) {
   delete stop.meta
   delete stop.$loki
   delete stop._id
@@ -134,10 +134,10 @@ function cleanStop(stop) {
   return stop
 }
 
-let allStops = (await stops.findDocuments({}).toArray()).map(cleanStop)
+let allStops = (await stops.findDocuments({}).toArray()).map(cleanLokiAttributes)
 await mongoStops.createDocuments(allStops)
 
-let allRoutes = (await routes.findDocuments({}).toArray()).map(cleanStop)
+let allRoutes = (await routes.findDocuments({}).toArray()).map(cleanLokiAttributes)
 await mongoRoutes.createDocuments(allRoutes)
 
 await stops.deleteDocuments({})
