@@ -26,10 +26,14 @@ export async function matchDirectionStops(stops, dir0, dir1) {
     let stopToMatch = dir0[i]
     let dir0StopData = await stops.findDocument({
       'bays.stopGTFSID': stopToMatch.stopGTFSID
-    })
+    }, { textQuery: 0 })
 
-    // Match at most 3 stops into the future
-    for (let j = lastMatch + 1; j < Math.min(lastMatch + 4, dir1.length); j++) {
+    let smallestDistance = Infinity
+    let bestMatch = null
+
+    let matchIndex = -1
+    // Match at most 20 stops into the future, and at most 4 more stops once a match has been found
+    for (let j = lastMatch + 1; j < Math.min(lastMatch + 21, dir1.length) && (matchIndex === -1 || j < matchIndex + 4); j++) {
       let dir1Stop = dir1[j]
       if (dir1Stop.stopName === stopToMatch.stopName) {
         lastMatch = j
@@ -38,19 +42,22 @@ export async function matchDirectionStops(stops, dir0, dir1) {
 
       let dir1StopData = await stops.findDocument({
         'bays.stopGTFSID': dir1Stop.stopGTFSID
-      })
+      }, { textQuery: 0 })
 
       let stopDistance = turf.distance(
         turf.center(dir0StopData.location),
         turf.center(dir1StopData.location)
       ) * 1000
 
-      if (stopDistance < 200) {
-        lastMatch = j
-        oppositeStops[dir0StopData._id] = dir1StopData._id
-        oppositeStops[dir1StopData._id] = dir0StopData._id
-        break
+      if (stopDistance < 200 && stopDistance < smallestDistance) {
+        lastMatch = (matchIndex = j)
+        bestMatch = dir1StopData
       }
+    }
+
+    if (bestMatch) {
+      oppositeStops[dir0StopData._id] = bestMatch._id
+      oppositeStops[bestMatch._id] = dir0StopData._id
     }
   }
 
