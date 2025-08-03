@@ -25,7 +25,7 @@ describe('The GTFS Loaders with the MTM Website Rail data', () => {
       let database = new LokiDatabaseConnection('test-db')
       let stops = await database.createCollection('stops')
 
-      let stopLoader = new MTMRailStopLoader(stopsFile, database)
+      let stopLoader = new MTMRailStopLoader(stopsFile, database, () => 'Suburb')
       await stopLoader.loadStops()
 
       let fss = await stops.findDocument({ 
@@ -59,7 +59,7 @@ describe('The GTFS Loaders with the MTM Website Rail data', () => {
       let routes = await database.createCollection('routes')
       let trips = await database.createCollection('gtfs timetables')
 
-      let stopLoader = new MTMRailStopLoader(stopsFile, database)
+      let stopLoader = new MTMRailStopLoader(stopsFile, database, () => 'Suburb')
       await stopLoader.loadStops()
 
       let routeLoader = new MTMRailRouteLoader(routesFile, agencyFile, database)

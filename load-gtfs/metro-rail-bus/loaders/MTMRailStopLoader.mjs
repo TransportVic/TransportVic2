@@ -14,6 +14,10 @@ const __dirname = path.dirname(__filename)
 const suburbsVIC = JSON.parse(await fs.readFile(path.join(__dirname, '../../../transportvic-data/geospatial/suburb-boundaries/vic.geojson')))
 
 const allStops = Object.values(routeStops).reduce((a,e) => a.concat(e), [])
+let allStopNames = allStops.reduce((acc, stopName) => {
+  acc[stopName] = stopName
+  return acc
+}, {})
 
 export class MTMRailStop extends GTFSTypes.GTFSStop {
 
@@ -39,12 +43,17 @@ export class MTMRailStop extends GTFSTypes.GTFSStop {
       stopName = this.rawStopName.replace(' Station', '').trim()
     }
 
-    let bestMatch = closest(stopName, allStops)
+    if (stopName.match(/fed[ _]*sq/i)) stopName = 'Flinders Street'
+    if (stopName === 'Glenhuntly') stopName = 'Glen Huntly'
 
-    if (bestMatch !== stopName) {
-      let textDistance = distance(stopName, bestMatch)
-      // if (textDistance > 4) return 'DISCARD'
-      if (textDistance <= 4) stopName = bestMatch
+    if (!allStopNames[stopName]) {
+      let bestMatch = closest(stopName, allStops)
+
+      if (bestMatch !== stopName) {
+        let textDistance = distance(stopName, bestMatch)
+        // if (textDistance > 4) return 'DISCARD'
+        if (textDistance <= 4) stopName = bestMatch
+      }
     }
 
     return `${stopName} Railway Station`
@@ -71,8 +80,8 @@ export class MTMRailStopsReader extends GTFSReaders.GTFSStopsReader {
 
 export default class MTMRailStopLoader extends StopsLoader {
 
-  constructor(stopsFile, database) {
-    super(stopsFile, suburbsVIC, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, database)
+  constructor(stopsFile, database, suburbHook = null) {
+    super(stopsFile, suburbsVIC, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, database, suburbHook)
   }
 
   getStopsDB(db) {
@@ -87,7 +96,6 @@ export default class MTMRailStopLoader extends StopsLoader {
     await super.loadStops({
       processStop: stop => {
         if (stop.fullStopName === 'DISCARD') return null
-        if (stop.fullStopName.match(/fed[ _]*sq/i)) stop.fullStopName = 'Flinders Street Railway Station'
         return stop
       }
     })
