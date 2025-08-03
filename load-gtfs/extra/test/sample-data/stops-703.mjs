@@ -1013,6 +1013,160 @@ export default [
     codedSuburbs: [ 'brighton' ]
   },
   {
+    _id: '2414745e7a8da13455dc4cb1a4df1fd3',
+    stopName: 'Bentleigh Railway Station',
+    suburb: [ 'Bentleigh' ],
+    cleanSuburbs: [ 'bentleigh' ],
+    bays: [
+      {
+        originalName: 'Bentleigh Railway Station',
+        fullStopName: 'Bentleigh Railway Station',
+        stopGTFSID: 'vic:rail:BEN',
+        location: { type: 'Point', coordinates: [ 145.03699513, -37.91742457 ] },
+        stopNumber: null,
+        mode: 'metro train',
+        suburb: 'Bentleigh',
+        services: [
+          { routeGTFSID: '2-FKN', gtfsDirection: 1, routeNumber: null },
+          { routeGTFSID: '2-FKN', gtfsDirection: 0, routeNumber: null }
+        ],
+        screenServices: [
+          { routeGTFSID: '2-FKN', gtfsDirection: 1, routeNumber: null },
+          { routeGTFSID: '2-FKN', gtfsDirection: 0, routeNumber: null }
+        ],
+        stopType: 'station',
+        parentStopGTFSID: null
+      },
+      {
+        originalName: 'Bentleigh Station',
+        fullStopName: 'Bentleigh Railway Station',
+        stopGTFSID: '14239',
+        location: { type: 'Point', coordinates: [ 145.03698125, -37.91709091 ] },
+        stopNumber: null,
+        mode: 'metro train',
+        suburb: 'Bentleigh',
+        services: [],
+        screenServices: [],
+        stopType: 'stop',
+        parentStopGTFSID: 'vic:rail:BEN',
+        platform: '1'
+      },
+      {
+        originalName: 'Bentleigh Station',
+        fullStopName: 'Bentleigh Railway Station',
+        stopGTFSID: '14240',
+        location: { type: 'Point', coordinates: [ 145.03703787, -37.91710086 ] },
+        stopNumber: null,
+        mode: 'metro train',
+        suburb: 'Bentleigh',
+        services: [],
+        screenServices: [],
+        stopType: 'stop',
+        parentStopGTFSID: 'vic:rail:BEN',
+        platform: '2'
+      },
+      {
+        originalName: 'Bentleigh Station',
+        fullStopName: 'Bentleigh Railway Station',
+        stopGTFSID: '14241',
+        location: { type: 'Point', coordinates: [ 145.03717431, -37.91710314 ] },
+        stopNumber: null,
+        mode: 'metro train',
+        suburb: 'Bentleigh',
+        services: [],
+        screenServices: [],
+        stopType: 'stop',
+        parentStopGTFSID: 'vic:rail:BEN',
+        platform: '3'
+      },
+      {
+        originalName: 'Bentleigh Railway Station',
+        fullStopName: 'Bentleigh Railway Station',
+        stopGTFSID: '26118',
+        location: { type: 'Point', coordinates: [ 145.03713157, -37.91828296 ] },
+        stopNumber: null,
+        mode: 'metro train',
+        suburb: 'Bentleigh',
+        services: [],
+        screenServices: [],
+        stopType: 'stop',
+        parentStopGTFSID: 'vic:rail:BEN',
+        platform: 'RRB'
+      },
+      {
+        originalName: 'Bentleigh Station/Centre Rd',
+        fullStopName: 'Bentleigh Railway Station/Centre Road',
+        stopGTFSID: '20574',
+        location: { type: 'Point', coordinates: [ 145.03732702, -37.91820512 ] },
+        stopNumber: null,
+        mode: 'bus',
+        suburb: 'Bentleigh',
+        services: [
+          {
+            routeGTFSID: '4-703',
+            gtfsDirection: 0,
+            routeNumber: '703'
+          }
+        ],
+        screenServices: [
+          {
+            routeGTFSID: '4-703',
+            gtfsDirection: 0,
+            routeNumber: '703'
+          }
+        ],
+        stopType: 'stop',
+        parentStopGTFSID: null
+      },
+      {
+        originalName: 'Bentleigh Station/Centre Rd',
+        fullStopName: 'Bentleigh Railway Station/Centre Road',
+        stopGTFSID: '22302',
+        location: { type: 'Point', coordinates: [ 145.03710883, -37.91828258 ] },
+        stopNumber: null,
+        mode: 'bus',
+        suburb: 'Bentleigh',
+        services: [
+          {
+            routeGTFSID: '4-703',
+            gtfsDirection: 1,
+            routeNumber: '703'
+          }
+        ],
+        screenServices: [
+          {
+            routeGTFSID: '4-703',
+            gtfsDirection: 1,
+            routeNumber: '703'
+          }
+        ],
+        stopType: 'stop',
+        parentStopGTFSID: null
+      }
+    ],
+    location: {
+      type: 'MultiPoint',
+      coordinates: [
+        [ 145.03699513, -37.91742457 ],
+        [ 145.03698125, -37.91709091 ],
+        [ 145.03703787, -37.91710086 ],
+        [ 145.03717431, -37.91710314 ],
+        [ 145.03713157, -37.91828296 ],
+        [ 145.03732702, -37.91820512 ],
+        [ 145.03710883, -37.91828258 ]
+      ]
+    },
+    mergeName: 'Bentleigh Railway Station',
+    services: [],
+    screenServices: [],
+    cleanName: 'bentleigh-railway-station',
+    cleanNames: [
+      'bentleigh-railway-station',
+      'bentleigh-railway-station-centre-road'
+    ],
+    codedSuburbs: [ 'bentleigh' ]
+  },
+  {
     _id: '7d5e0c6d62c5e129a8697a4497cd2008',
     stopName: 'Boxshall Street/St. Andrews Street',
     suburb: [ 'Brighton' ],

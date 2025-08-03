@@ -78,13 +78,34 @@ describe('The opposite stops loader', () => {
     })).oppositeStopID).to.not.exist
   })
 
-  it('Matches the stop with the closest distance, not the first one it finds', async function() {
+  it('Matches the stop with the closest distance, not the first one it finds (dir 0)', async function() {
     await this.stops.createDocuments(clone(stops703))
     await this.routes.createDocument(clone(route703))
 
     await matchOppositeStops(this.database)
     let stops = await this.database.getCollection('gtfs-stops')
 
+    expect((await stops.findDocument({
+      stopName: 'Davies Street/Centre Road'
+    })).oppositeStopID).to.equal((await stops.findDocument({
+      stopName: 'Hampton Street/Centre Road'
+    }))._id)
+
+    expect((await stops.findDocument({
+      stopName: 'Hampton Street/Centre Road'
+    })).oppositeStopID).to.equal((await stops.findDocument({
+      stopName: 'Davies Street/Centre Road'
+    }))._id)
+  })
+
+  it('Matches the stop with the closest distance, not the first one it finds (dir 1)', async function() {
+    await this.stops.createDocuments(clone(stops703))
+    let route = clone(route703)
+    route.directions.reverse()
+    await this.routes.createDocument(route)
+
+    await matchOppositeStops(this.database)
+    let stops = await this.database.getCollection('gtfs-stops')
     expect((await stops.findDocument({
       stopName: 'Davies Street/Centre Road'
     })).oppositeStopID).to.equal((await stops.findDocument({

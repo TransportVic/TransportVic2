@@ -46,6 +46,12 @@ export default {
           stopNumber: null,
           suburb: 'Brighton East',
           stopGTFSID: '17637'
+        },
+        {
+          stopName: 'Bentleigh Railway Station/Centre Road',
+          stopNumber: null,
+          suburb: 'Bentleigh',
+          stopGTFSID: '20574'
         }
       ]
     },
@@ -53,6 +59,12 @@ export default {
       directionName: 'Middle Brighton Railway Station/Male Street',
       gtfsDirection: 1,
       stops: [
+        {
+          stopName: 'Bentleigh Railway Station/Centre Road',
+          stopNumber: null,
+          suburb: 'Bentleigh',
+          stopGTFSID: '20574'
+        },
         {
           stopName: 'Summerhill Road/Centre Road',
           stopNumber: null,
