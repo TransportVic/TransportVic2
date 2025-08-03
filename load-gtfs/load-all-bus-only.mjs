@@ -22,6 +22,7 @@ let start = new Date()
 console.log('Starting full GTFS loader', start)
 
 await runNode('create-indexes.mjs')
+await runNode('load-ptv-stops.mjs')
 await runNode('load-all-stops-routes.mjs', ['4', '6', '11'])
 await runNode('bus/load-788-stop-numbers.mjs')
 await runNode('load-all-trips.mjs', ['4', '6', '11'])

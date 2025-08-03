@@ -17,8 +17,10 @@ function getUniqueGTFSIDs(station, mode, isOnline) {
     bays.forEach(bay => {
       if (bay.screenServices.length === 0) return // Save bandwidth by not requesting dropoff only stops
 
-      if (!stopNamesSeen.includes(bay.originalName) && bay.stopGTFSID < 100000) { // filter out offline override stops
-        stopNamesSeen.push(bay.originalName)
+      let bayName = `${bay.originalName} (${bay.suburb})`
+      console.log(bayName)
+      if (!stopNamesSeen.includes(bayName)) { // filter out offline override stops
+        stopNamesSeen.push(bayName)
         gtfsIDs.push(bay.stopGTFSID)
       }
     })

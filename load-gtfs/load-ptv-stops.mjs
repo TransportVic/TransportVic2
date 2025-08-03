@@ -1,5 +1,5 @@
-import utils from '../../utils.js'
-import ptvAPI from '../../ptv-api.js'
+import utils from '../utils.js'
+import ptvAPI from '../ptv-api.js'
 import { writeFile } from 'fs/promises'
 import path from 'path'
 import url from 'url'
@@ -12,7 +12,7 @@ let data = JSON.parse(await utils.request('https://www.ptv.vic.gov.au/lithe/stor
   timeout: 12000
 }))
 
-let stopData = data.stops.filter(stop => {
+let tramStops = data.stops.filter(stop => {
   if (stop.primaryChronosMode === 1) return true
   if (stop.primaryChronosMode === 2) { // Bus using tram stop
     return stop.title.includes('#') || stop.title.match(/^(D?\d+[a-zA-Z]?)-/)
@@ -28,15 +28,29 @@ let stopData = data.stops.filter(stop => {
     stopName = stopName.replace(stopNumberParts[0], '')
   }
 
-  stopName = stopName.replace(/\/\d+ /, '/')
-
-  stopName = stopName + ' #' + stopNumber
-
   return {
-    stopName, stopNumber, stopID: stop.id
+    stopName: stopName.replace(/\/\d+ /, '/') + ' #' + stopNumber,
+    stopNumber,
+    stopID: stop.id
   }
 })
 
-await writeFile(path.join(__dirname, 'tram-stops.json'), JSON.stringify(stopData))
+let busStops = data.stops.reduce((acc, stop) => {
+  let stopName = stop.title.trim()
+  if (!acc[stopName]) acc[stopName] = []
+  acc[stopName].push({
+    location: {
+      type: 'Point',
+      coordinates: [
+        stop.location.lon, stop.location.lat
+      ]
+    },
+    suburb: stop.suburb
+  })
+  return acc
+}, {})
+
+await writeFile(path.join(__dirname, 'tram', 'tram-stops.json'), JSON.stringify(tramStops))
+await writeFile(path.join(__dirname, 'ptv-stops.json'), JSON.stringify(busStops))
 
 process.exit()

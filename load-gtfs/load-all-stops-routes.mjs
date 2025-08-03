@@ -9,6 +9,8 @@ import uniqueStops from '../transportvic-data/excel/stops/unique-stops.json' wit
 import nameOverrides from '../transportvic-data/excel/stops/name-overrides.json' with { type: 'json' }
 import { createRouteProcessor } from '../transportvic-data/gtfs/process.mjs'
 import config from '../config.json' with { type: 'json' }
+import ptvStops from './ptv-stops.json' with { type: 'json' }
+import turf from '@turf/turf'
 
 import suburbsList from '../transportvic-data/gtfs/stop-suburbs.json' with { type: 'json' }
 
@@ -72,7 +74,24 @@ for (let i of selectedModes) {
     if (['2', '3', '4'].includes(i)) suburbFile = suburbsVIC
     else suburbFile = suburbs
 
-    let stopLoader = new StopsLoader(stopsFile.replace('{0}', i), suburbFile, mode, database, stop => suburbsList[stop.stopGTFSID])
+    let stopLoader = new StopsLoader(stopsFile.replace('{0}', i), suburbFile, mode, database, stop => {
+      let ptvStop = ptvStops[stop.originalName]
+      if (ptvStop && ptvStop.length === 1) {
+        if (ptvStop[0].suburb.includes('(')) return ptvStop[0].suburb
+      } else if (ptvStop) {
+        let distances = ptvStop.map(ptvStop => ({
+          ...ptvStop,
+          distance: turf.distance(ptvStop.location, stop.location) * 1000
+        }))
+        let best = distances.sort((a, b) => a.distance - b.distance)[0]
+        if (best.distance < 2) {
+          return best.suburb
+        }
+      }
+
+      return suburbsList[stop.stopGTFSID]
+    })
+
     await stopLoader.loadStops({
       getMergeName: stop => {
         if (uniqueStops.includes(stop.fullStopName)) {
