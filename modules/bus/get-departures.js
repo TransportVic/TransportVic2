@@ -324,6 +324,7 @@ async function getDepartures(stop, db, time, discardUnmatched) {
         }
       })
 
+      let shouldShowFullName = stop.oppositeStopID
       let shouldShowRoad = stop.bays.filter(bay => {
         return bay.mode === 'bus'
       }).map(bay => {
@@ -401,11 +402,15 @@ async function getDepartures(stop, db, time, discardUnmatched) {
           departure.viaText = `Via ${importantStops.slice(0, -1).join(', ')}${(importantStops.length > 1 ? ' & ' : '') + importantStops.slice(-1)[0]}`
 
         if (departure.bay && !departure.routeNumber) {
-          if (shouldShowRoad && departure.departureRoad) {
+          if (shouldShowFullName) {
+            departure.guidanceText = `Departing ${preferredStop.stopName}`
+          } else if (shouldShowRoad && departure.departureRoad) {
             departure.guidanceText = `Departing ${departure.departureRoad}, ${departure.bay}`
           } else {
             departure.guidanceText = `Departing ${departure.bay}`
           }
+        } else if (shouldShowFullName) {
+          departure.guidanceText = `Departing ${preferredStop.stopName}`
         } else if (shouldShowRoad && departure.departureRoad) {
           departure.guidanceText = `Departing ${departure.departureRoad}`
         }

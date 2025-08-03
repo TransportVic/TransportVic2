@@ -19,6 +19,14 @@ async function loadDepartures(req, res) {
 
   let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, stop)
 
+  let oppositeStop = stop.oppositeStopID ? await stops.findDocument({
+    _id: stop.oppositeStopID
+  }) : null
+
+  if (oppositeStop) {
+    stop.bays.push(...oppositeStop.bays)
+  }
+
   let departures = await getDepartures(stop, res.db)
   let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
