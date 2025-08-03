@@ -32,9 +32,10 @@ describe('The opposite stops loader', () => {
     })
   })
 
-  it.only('Matches stops with different names on opposite sides of the road', async function() {
+  it('Matches stops with different names on opposite sides of the road', async function() {
     await matchOppositeStops(this.database)
     let stops = await this.database.getCollection('gtfs-stops')
+
     expect((await stops.findDocument({
       stopName: 'Albert Hill Road/Maroondah Highway'
     })).oppositeStopID).to.equal((await stops.findDocument({
@@ -46,5 +47,30 @@ describe('The opposite stops loader', () => {
     })).oppositeStopID).to.equal((await stops.findDocument({
       stopName: 'Albert Hill Road/Maroondah Highway'
     }))._id)
+
+    expect((await stops.findDocument({
+      stopName: 'Sheppards Lane/Maroondah Highway'
+    })).oppositeStopID).to.equal((await stops.findDocument({
+      stopName: 'Dress Circle Lane/Maroondah Highway'
+    }))._id)
+
+    expect((await stops.findDocument({
+      stopName: 'Dress Circle Lane/Maroondah Highway'
+    })).oppositeStopID).to.equal((await stops.findDocument({
+      stopName: 'Sheppards Lane/Maroondah Highway'
+    }))._id)
+  })
+
+  it('Does not set an opposite stop where not needed', async function() {
+    await matchOppositeStops(this.database)
+    let stops = await this.database.getCollection('gtfs-stops')
+
+    expect((await stops.findDocument({
+      stopName: 'Lilydale Railway Station'
+    })).oppositeStopID).not.exist
+
+    expect((await stops.findDocument({
+      stopName: 'Chirnside Park Shopping Centre/Maroondah Highway'
+    })).oppositeStopID).to.not.exist
   })
 })
