@@ -20,6 +20,7 @@ export async function matchDirectionStops(stops, dir0, dir1) {
   let dir1Index = dir1.findIndex(stop => stop.stopName === firstMatchingStop)
 
   let oppositeStops = {}
+  let stopDistances = {}
 
   let lastMatch = dir1Index
   for (let i = dir0Index + 1; i < dir0.length; i++) {
@@ -56,8 +57,16 @@ export async function matchDirectionStops(stops, dir0, dir1) {
     }
 
     if (bestMatch) {
-      oppositeStops[dir0StopData._id] = bestMatch._id
-      oppositeStops[bestMatch._id] = dir0StopData._id
+      let existingDistance = stopDistances[dir0StopData._id] || stopDistances[bestMatch._id] || Infinity
+
+      // Found a better match
+      if (smallestDistance < existingDistance || existingDistance === Infinity) {
+        if (oppositeStops[dir0StopData._id]) oppositeStops[oppositeStops[dir0StopData._id]] = null
+        if (oppositeStops[bestMatch._id]) oppositeStops[oppositeStops[bestMatch._id]] = null
+
+        oppositeStops[dir0StopData._id] = bestMatch._id
+        oppositeStops[bestMatch._id] = dir0StopData._id
+      }
     }
   }
 

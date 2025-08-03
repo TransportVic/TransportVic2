@@ -197,8 +197,7 @@ export default [
       'middle-brighton-railway-station-male-street',
       'middle-brighton-railway-station-church-street'
     ],
-    codedSuburbs: [ 'brighton' ],
-    oppositeStopID: '3fc14345f191f19a12f5163257c4e73b'
+    codedSuburbs: [ 'brighton' ]
   },
   {
     _id: '0e0b8ad4eadaf05c930a1707f2b74b8f',
@@ -516,8 +515,7 @@ export default [
     screenServices: [],
     cleanName: 'halifax-street-hampton-street',
     cleanNames: [ 'halifax-street-hampton-street' ],
-    codedSuburbs: [ 'brighton' ],
-    oppositeStopID: '4e3c80e1cf35ec13f545189e4f13f081'
+    codedSuburbs: [ 'brighton' ]
   },
   {
     _id: '4e3c80e1cf35ec13f545189e4f13f081',
@@ -595,8 +593,7 @@ export default [
     screenServices: [],
     cleanName: 'centre-road-hampton-street',
     cleanNames: [ 'centre-road-hampton-street' ],
-    codedSuburbs: [ 'brighton' ],
-    oppositeStopID: '028476d09be32fdd4934af9d34a0ab93'
+    codedSuburbs: [ 'brighton' ]
   },
   {
     _id: '2e2e5992064375fe57c64aa22b1fc724',
@@ -639,8 +636,7 @@ export default [
     screenServices: [],
     cleanName: 'summerhill-road-centre-road',
     cleanNames: [ 'summerhill-road-centre-road' ],
-    codedSuburbs: [ 'brighton-east' ],
-    oppositeStopID: 'aa1709acce38b40eef5d763139827695'
+    codedSuburbs: [ 'brighton-east' ]
   },
   {
     _id: 'fbbf58660d280a79b7abf1e059b74717',
@@ -683,8 +679,7 @@ export default [
     screenServices: [],
     cleanName: 'hampton-street-centre-road',
     cleanNames: [ 'hampton-street-centre-road' ],
-    codedSuburbs: [ 'brighton-east' ],
-    oppositeStopID: '028476d09be32fdd4934af9d34a0ab93'
+    codedSuburbs: [ 'brighton-east' ]
   },
   {
     _id: '9a3c4af799ea216a96de6f21bc364754',
@@ -737,8 +732,7 @@ export default [
     screenServices: [],
     cleanName: 'grant-street-hampton-street',
     cleanNames: [ 'grant-street-hampton-street' ],
-    codedSuburbs: [ 'brighton' ],
-    oppositeStopID: 'a7bbfbf06aa30a83b4c5096bf35e42aa'
+    codedSuburbs: [ 'brighton' ]
   },
   {
     _id: '4449dad55294b74e7576eb0aae285261',
@@ -887,8 +881,7 @@ export default [
     screenServices: [],
     cleanName: 'primrose-crescent-centre-road',
     cleanNames: [ 'primrose-crescent-centre-road' ],
-    codedSuburbs: [ 'brighton-east' ],
-    oppositeStopID: '2e2e5992064375fe57c64aa22b1fc724'
+    codedSuburbs: [ 'brighton-east' ]
   },
   {
     _id: '028476d09be32fdd4934af9d34a0ab93',
@@ -931,8 +924,7 @@ export default [
     screenServices: [],
     cleanName: 'davies-street-centre-road',
     cleanNames: [ 'davies-street-centre-road' ],
-    codedSuburbs: [ 'brighton-east' ],
-    oppositeStopID: 'fbbf58660d280a79b7abf1e059b74717'
+    codedSuburbs: [ 'brighton-east' ]
   },
   {
     _id: 'c13a6f6245258ad0c522332880bc2a95',
@@ -1091,8 +1083,7 @@ export default [
     screenServices: [],
     cleanName: 'boxshall-street-st-andrews-street',
     cleanNames: [ 'boxshall-street-st-andrews-street' ],
-    codedSuburbs: [ 'brighton' ],
-    oppositeStopID: 'a40df5ebada1335f23a203d502e8100d'
+    codedSuburbs: [ 'brighton' ]
   },
   {
     _id: '00cf801dd2f08ad070a1bc83cb01f961',
@@ -1228,8 +1219,7 @@ export default [
     screenServices: [],
     cleanName: 'hillcrest-avenue-bay-street',
     cleanNames: [ 'hillcrest-avenue-bay-street' ],
-    codedSuburbs: [ 'brighton' ],
-    oppositeStopID: 'b8853045b7683d8b98b1c16b726966e9'
+    codedSuburbs: [ 'brighton' ]
   },
   {
     _id: '18c094f2e7a2708bb65d019c2a4d81ab',
@@ -1445,7 +1435,6 @@ export default [
       'north-brighton-railway-station-st-andrews-street',
       'north-brighton-railway-station-bay-street'
     ],
-    codedSuburbs: [ 'brighton' ],
-    oppositeStopID: '547325fb58e052c5d67c498c066e74be'
+    codedSuburbs: [ 'brighton' ]
   }
 ]
