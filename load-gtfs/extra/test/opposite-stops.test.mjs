@@ -98,9 +98,23 @@ describe('The opposite stops loader', () => {
     }))._id)
   })
 
-  it('Should not end up 3-way stop at branches', async function() {
+  it('Should not end up 3-way stop at branches (dir 0)', async function() {
     await this.stops.createDocuments(clone(stops703))
     await this.routes.createDocument(clone(route703))
+
+    await matchOppositeStops(this.database)
+    let stops = await this.database.getCollection('gtfs-stops')
+
+    expect((await stops.findDocument({
+      stopName: 'Centre Road/Hampton Street'
+    })).oppositeStopID).to.not.exist
+  })
+
+  it('Should not end up 3-way stop at branches (dir 1)', async function() {
+    await this.stops.createDocuments(clone(stops703))
+    let route = clone(route703)
+    route.directions.reverse()
+    await this.routes.createDocument(route)
 
     await matchOppositeStops(this.database)
     let stops = await this.database.getCollection('gtfs-stops')
