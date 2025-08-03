@@ -129,6 +129,7 @@ console.log('Deleted existing data, loading', new Date())
 function cleanStop(stop) {
   delete stop.meta
   delete stop.$loki
+  delete stop._id
 
   return stop
 }

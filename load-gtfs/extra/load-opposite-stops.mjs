@@ -1,4 +1,11 @@
 import turf from '@turf/turf'
+import { MongoDatabaseConnection } from '@transportme/database'
+import path from 'path'
+import url from 'url'
+import fs from 'fs/promises'
+
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export function getFirstMatchingStop(dir0, dir1) {
   return dir0.find(dir0Stop => {
@@ -22,7 +29,7 @@ export async function matchDirectionStops(stops, dir0, dir1) {
     })
 
     // Match at most 3 stops into the future
-    for (let j = lastMatch + 1; j < lastMatch + 4; j++) {
+    for (let j = lastMatch + 1; j < Math.min(lastMatch + 4, dir1.length); j++) {
       let dir1Stop = dir1[j]
       if (dir1Stop.stopName === stopToMatch.stopName) {
         lastMatch = j
@@ -47,7 +54,7 @@ export async function matchDirectionStops(stops, dir0, dir1) {
     }
   }
 
-  await stops.bulkWrite(Object.keys(oppositeStops).map(stopID => ({
+  let bulkWrite = Object.keys(oppositeStops).map(stopID => ({
     updateOne: {
       filter: { _id: stops.createObjectID(stopID) },
       update: {
@@ -56,14 +63,19 @@ export async function matchDirectionStops(stops, dir0, dir1) {
         }
       }
     }
-  })))
+  }))
+
+  if (bulkWrite.length) await stops.bulkWrite(bulkWrite)
 }
 
 export async function matchOppositeStops(database) {
   let stops = await database.getCollection('gtfs-stops')
   let routes = await database.getCollection('gtfs-routes')
 
-  let allRoutes = await routes.distinct('routeGTFSID')
+  let allRoutes = await routes.distinct('routeGTFSID', {
+    routeGTFSID: /^([3456]|11)-/
+  })
+
   for (let routeGTFSID of allRoutes) {
     let routeData = await routes.findDocument({ routeGTFSID })
     if (routeData.directions.length !== 2) continue
@@ -73,4 +85,13 @@ export async function matchOppositeStops(database) {
 
     await matchDirectionStops(stops, dir0, dir1)
   }
+}
+
+if (process.argv[1] === __filename) {
+  const config = JSON.parse(await fs.readFile(path.join(__dirname, '../../config.json')))
+  const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect({})
+
+  await matchOppositeStops(database)
+  process.exit(0)
 }

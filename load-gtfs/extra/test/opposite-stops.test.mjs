@@ -1,13 +1,8 @@
 import { LokiDatabaseConnection } from '@transportme/database'
-import path from 'path'
-import url from 'url'
 import { expect } from 'chai'
 import dbStops from './sample-data/stops.mjs'
 import route670 from './sample-data/route-670.mjs'
 import { getFirstMatchingStop, matchOppositeStops } from '../load-opposite-stops.mjs'
-
-const __filename = url.fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
