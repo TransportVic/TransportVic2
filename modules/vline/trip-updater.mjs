@@ -67,4 +67,21 @@ export default class VLineTripUpdater extends TripUpdater {
     })
   }
 
+  static async setTripTimeOffset(db, operationDay, runID, timeOffset) {
+    let timetables = db.getCollection('live timetables')
+    let trip = await this.getTripByTDN(timetables, runID, operationDay)
+    if (!trip) return null
+
+    return await this.updateTrip(db, {
+      operationDays: operationDay,
+      runID,
+      stops: trip.stopTimings.map(stop => ({
+        stopName: stop.stopName,
+        scheduledDepartureTime: new Date(+new Date(stop.scheduledDepartureTime) + timeOffset)
+      }))
+    }, {
+      skipStopCancellation: true
+    })
+  }
+
 }

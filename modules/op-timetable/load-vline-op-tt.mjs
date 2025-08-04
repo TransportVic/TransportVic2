@@ -147,6 +147,15 @@ async function updateExistingTrip(db, existingTrip, vlineTrip) {
     db, existingTrip.operationDays, existingTrip.runID,
     originStop.stopName, destinationStop.stopName
   )
+
+  let originOffset = vlineTrip.departureTime - new Date(existingTrip.stopTimings[0].scheduledDepartureTime)
+  let destinationOffset = vlineTrip.arrivalTime - new Date(existingTrip.stopTimings[existingTrip.stopTimings.length - 1].scheduledDepartureTime)
+  if (originOffset !== 0 && originOffset === destinationOffset) {
+    await VLineTripUpdater.setTripTimeOffset(
+      db, existingTrip.operationDays, existingTrip.runID,
+      originOffset
+    )
+  }
 }
 
 export default async function loadOperationalTT(db, operationDay, ptvAPI) {
