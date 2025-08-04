@@ -2,8 +2,24 @@ const utils = require('../utils')
 const config = require('../config')
 const modules = require('../modules')
 const async = require('async')
+const FormData = require('form-data')
+const fs = require('fs')
 
-module.exports = async (type, text) => {
+async function postFirst(type, text, file) {
+  let formData = new FormData()
+  formData.append('content', text)
+  if (file) {
+    formData.append('file', fs.createReadStream(file))
+  }
+
+  await utils.request(config.discordURLs[type], {
+    method: 'POST',
+    body: formData,
+    timeout: 60000
+  })
+}
+
+module.exports = async (type, text, file) => {
   if (modules.discordIntegration && modules.discordIntegration[type]) {
     let chunks = [[text]]
 
@@ -27,7 +43,8 @@ module.exports = async (type, text) => {
       if (currentChunk) chunks.push(currentChunk)
     }
 
-    await async.forEachSeries(chunks, async chunk => {
+    await postFirst(type, chunks[0].join('\n'), file)
+    await async.forEachSeries(chunks.slice(1), async chunk => {
       await utils.request(config.discordURLs[type], {
         method: 'POST',
         headers: {
