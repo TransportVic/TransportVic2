@@ -7,17 +7,22 @@ import { GetPlatformServicesAPI, VLinePlatformService } from '@transportme/ptv-a
 import loadOperationalTT, { downloadTripPattern, matchTrip } from '../load-vline-op-tt.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import td8741GTFS from './sample-data/td8741-gtfs.json' with { type: 'json' }
+import td8891Live from './sample-data/time-change/td8891-live.json' with { type: 'json' }
 import td8007NSP from './sample-data/td8007-nsp.json' with { type: 'json' }
 import allStops from './sample-data/stops.json' with { type: 'json' }
 import allRoutes from './sample-data/routes.json' with { type: 'json' }
 import VLineUtils from '../../vline/vline-utils.mjs'
 import utils from '../../../utils.js'
+import { convertToLive } from '../../departures/sch-to-live.js'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const vlineTripsTD8741_Normal = (await fs.readFile(path.join(__dirname, 'sample-data', 'alterations', 'td8741-normal.xml'))).toString()
 const vlineTripsTD8741_Geelong = (await fs.readFile(path.join(__dirname, 'sample-data', 'alterations', 'td8741-terminate-geelong.xml'))).toString()
+
+const vlineTripsTD8891_Normal = (await fs.readFile(path.join(__dirname, 'sample-data', 'time-change', 'td8891-2235.xml'))).toString()
+const vlineTripsTD8891_Late = (await fs.readFile(path.join(__dirname, 'sample-data', 'time-change', 'td8891-2250.xml'))).toString()
 
 const vlineTripsEmpty = (await fs.readFile(path.join(__dirname, 'sample-data', 'vline-trips-empty.xml'))).toString()
 
@@ -245,5 +250,43 @@ describe('The loadOperationalTT function', () => {
     expect(trip.stopTimings[11].stopName).to.equal('South Geelong Railway Station')
     expect(trip.stopTimings[11].departureTime).to.equal('12:37')
     expect(trip.stopTimings[11].cancelled).to.be.true
+  })
+
+  it.only('Updates the trip timing when an existing TDN matches but the times have been shifted', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let timetables = database.getCollection('live timetables')
+
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+    await timetables.createDocument(clone(td8891Live))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ vlineTripsTD8891_Normal, vlineTripsEmpty, vlineTripsTD8891_Late, vlineTripsEmpty])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await loadOperationalTT(database, utils.parseDate('20250719'), ptvAPI)
+    let trip = await timetables.findDocument({})
+
+    expect(trip.runID).to.equal('8891')
+    expect(trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
+    expect(trip.stopTimings[0].departureTime).to.equal('22:35')
+    expect(trip.stopTimings[1].stopName).to.equal('Tarneit Railway Station')
+    expect(trip.stopTimings[1].departureTime).to.equal('22:58')
+    expect(trip.stopTimings[9].stopName).to.equal('South Geelong Railway Station')
+    expect(trip.stopTimings[9].departureTime).to.equal('23:40')
+
+    await loadOperationalTT(database, utils.parseDate('20250719'), ptvAPI)
+    let updatedTrip = await timetables.findDocument({})
+
+    expect(updatedTrip.runID).to.equal('8891')
+    expect(updatedTrip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
+    expect(updatedTrip.stopTimings[0].departureTime).to.equal('22:50')
+    expect(updatedTrip.stopTimings[1].stopName).to.equal('Tarneit Railway Station')
+    expect(updatedTrip.stopTimings[1].departureTime).to.equal('23:13')
+    expect(updatedTrip.stopTimings[9].stopName).to.equal('South Geelong Railway Station')
+    expect(updatedTrip.stopTimings[9].departureTime).to.equal('23:55')
   })
 })

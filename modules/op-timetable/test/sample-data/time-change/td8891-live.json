@@ -1,16 +1,15 @@
 {
-  "_id": "6878c968be2dc058c8a11532",
   "mode": "regional train",
   "routeGTFSID": "1-GEL",
-  "operationDays": [
-    "20250719"
-  ],
+  "operationDays": "20250719",
   "tripID": "1.T2.1-GEL-mjp-9.1.H",
   "shapeID": "1-GEL-mjp-9.1.H",
   "block": null,
   "gtfsDirection": 0,
   "routeName": "Geelong",
   "routeNumber": "Geelong",
+  "runID": "8891",
+  "direction": "Down",
   "stopTimings": [
     {
       "stopName": "Southern Cross Railway Station",
@@ -25,7 +24,11 @@
         "pickup": 0,
         "dropoff": 1
       },
-      "stopDistance": "0.00"
+      "stopDistance": "0.00",
+      "scheduledDepartureTime": "2025-07-19T12:35:00.000Z",
+      "actualDepartureTimeMS": 1752928500000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
     },
     {
       "stopName": "Tarneit Railway Station",
@@ -40,7 +43,11 @@
         "pickup": 1,
         "dropoff": 0
       },
-      "stopDistance": "29099.16"
+      "stopDistance": "29099.16",
+      "scheduledDepartureTime": "2025-07-19T12:58:00.000Z",
+      "actualDepartureTimeMS": 1752929880000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
     },
     {
       "stopName": "Wyndham Vale Railway Station",
@@ -55,7 +62,11 @@
         "pickup": 1,
         "dropoff": 0
       },
-      "stopDistance": "40244.37"
+      "stopDistance": "40244.37",
+      "scheduledDepartureTime": "2025-07-19T13:05:00.000Z",
+      "actualDepartureTimeMS": 1752930300000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
     },
     {
       "stopName": "Little River Railway Station",
@@ -70,7 +81,11 @@
         "pickup": 1,
         "dropoff": 0
       },
-      "stopDistance": "55705.62"
+      "stopDistance": "55705.62",
+      "scheduledDepartureTime": "2025-07-19T13:13:00.000Z",
+      "actualDepartureTimeMS": 1752930780000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
     },
     {
       "stopName": "Lara Railway Station",
@@ -85,7 +100,11 @@
         "pickup": 1,
         "dropoff": 0
       },
-      "stopDistance": "65746.73"
+      "stopDistance": "65746.73",
+      "scheduledDepartureTime": "2025-07-19T13:19:00.000Z",
+      "actualDepartureTimeMS": 1752931140000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
     },
     {
       "stopName": "Corio Railway Station",
@@ -100,7 +119,11 @@
         "pickup": 1,
         "dropoff": 0
       },
-      "stopDistance": "72153.68"
+      "stopDistance": "72153.68",
+      "scheduledDepartureTime": "2025-07-19T13:24:00.000Z",
+      "actualDepartureTimeMS": 1752931440000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
     },
     {
       "stopName": "North Shore Railway Station",
@@ -115,7 +138,11 @@
         "pickup": 1,
         "dropoff": 0
       },
-      "stopDistance": "75271.23"
+      "stopDistance": "75271.23",
+      "scheduledDepartureTime": "2025-07-19T13:27:00.000Z",
+      "actualDepartureTimeMS": 1752931620000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
     },
     {
       "stopName": "North Geelong Railway Station",
@@ -130,7 +157,11 @@
         "pickup": 1,
         "dropoff": 0
       },
-      "stopDistance": "78311.66"
+      "stopDistance": "78311.66",
+      "scheduledDepartureTime": "2025-07-19T13:30:00.000Z",
+      "actualDepartureTimeMS": 1752931800000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
     },
     {
       "stopName": "Geelong Railway Station",
@@ -145,7 +176,11 @@
         "pickup": 1,
         "dropoff": 0
       },
-      "stopDistance": "80783.15"
+      "stopDistance": "80783.15",
+      "scheduledDepartureTime": "2025-07-19T13:36:00.000Z",
+      "actualDepartureTimeMS": 1752932160000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
     },
     {
       "stopName": "South Geelong Railway Station",
@@ -160,7 +195,11 @@
         "pickup": 1,
         "dropoff": 0
       },
-      "stopDistance": "82621.71"
+      "stopDistance": "82621.71",
+      "scheduledDepartureTime": "2025-07-19T13:40:00.000Z",
+      "actualDepartureTimeMS": 1752932400000,
+      "estimatedDepartureTime": null,
+      "cancelled": false
     }
   ],
   "origin": "Southern Cross Railway Station",
