@@ -122,4 +122,16 @@ describe('The V/Line Trip Updater', () => {
       for (let i = 11; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to be cancelled`).to.be.true
     })
   })
+
+  describe('The getStop function', () => {
+    it('Handles Gdddd-Pd PTV API stop IDs', async () => {
+      let database = new LokiDatabaseConnection()
+      let stops = database.getCollection('stops')
+      await stops.createDocuments(clone(allStops))
+
+      let stopData = await VLineTripUpdater.getStop(database, 'G1811-P8S')
+      expect(stopData.fullStopName).to.equal('Southern Cross Railway Station')
+      expect(stopData.platform).to.equal('8S')
+    })
+  })
 })
