@@ -1,4 +1,4 @@
-import { makePBRequest } from '../../gtfsr/gtfsr-api.js'
+import { makePBRequest } from '../../gtfsr/gtfsr-api.mjs'
 import { fileURLToPath } from 'url'
 
 import { MongoDatabaseConnection } from '@transportme/database'
@@ -9,7 +9,7 @@ import { parseConsist } from '../../metro-trains/fleet-parser.js'
 import metroConsists from '../../../additional-data/metro-tracker/metro-consists.json' with { type: 'json' }
 
 export async function getFleetData(gtfsrAPI) {
-  let tripData = await gtfsrAPI('metrotrain-vehicleposition-updates')
+  let tripData = await gtfsrAPI('metro/vehicle-positions')
 
   let trips = {}
 

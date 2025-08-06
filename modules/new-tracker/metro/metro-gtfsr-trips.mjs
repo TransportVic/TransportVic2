@@ -1,4 +1,4 @@
-import { makePBRequest } from '../../gtfsr/gtfsr-api.js'
+import { makePBRequest } from '../../gtfsr/gtfsr-api.mjs'
 import { fileURLToPath } from 'url'
 
 import { MongoDatabaseConnection } from '@transportme/database'
@@ -7,7 +7,7 @@ import { MetroGTFSRTrip, UnscheduledMetroGTFSRTrip } from '../GTFSRTrip.mjs'
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 
 export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
-  let tripData = await gtfsrAPI('metrotrain-tripupdates')
+  let tripData = await gtfsrAPI('metro/trip-updates')
 
   let trips = {}
 
