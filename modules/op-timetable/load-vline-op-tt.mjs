@@ -209,7 +209,9 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
     })
   }
 
-  await liveTimetables.bulkWrite(outputTrips)
+  if (outputTrips.length) {
+    await liveTimetables.bulkWrite(outputTrips)
+  }
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

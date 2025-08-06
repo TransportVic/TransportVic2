@@ -55,7 +55,6 @@ export async function fetchTrips(db) {
   console.log('V/Line GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
   for (let tripData of relevantTrips) {
-    console.log(tripData)
     await VLineTripUpdater.updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'gtfsr-trip-update' })
   }
 }
