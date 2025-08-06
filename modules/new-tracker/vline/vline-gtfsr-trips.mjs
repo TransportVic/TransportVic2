@@ -52,11 +52,12 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
 
 export async function fetchTrips(db) {
   let relevantTrips = await getUpcomingTrips(db, makePBRequest)
-  console.log('V/Line GTFSR Updater: Fetched', relevantTrips.length, 'trips')
-
+  
   for (let tripData of relevantTrips) {
     await VLineTripUpdater.updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'gtfsr-trip-update' })
   }
+
+  console.log('V/Line GTFSR Updater: Updated TDNs:', relevantTrips.map(trip => trip.runID).join(', '))
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

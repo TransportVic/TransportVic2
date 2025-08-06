@@ -35,6 +35,12 @@
   # Runs 2-4am as well on Saturday and Sunday mornings (from Friday and Saturday's PT day)
   *     2-3   *     *     6-7   node /home/transportvic/TransportVic/modules/new-tracker/metro-rail-bus/load-rt-updates.mjs
 
+  # V/Line Tracker
+  # Regular trips everyday 0400 - 2359
+  *    4-23/3 *     *     *     /home/transportvic/TransportVic/modules/new-tracker/vline.sh
+  # And then 0000-0200
+  *     0-1/3 *     *     *     /home/transportvic/TransportVic/modules/new-tracker/vline.sh
+
   # Other maintenance scripts
   0     2     *     *     *     /home/transportvic/TransportVic/start-maintenance.sh
   0     4     *     *     *     node /home/transportvic/TransportVic/update-consists.js
