@@ -175,5 +175,6 @@ describe('The GTFSRTrip class', () => {
 
     expect(data.getTDN()).to.not.exist
     expect(data.getStartTime()).to.equal('17:09')
+    expect(data.getRouteID()).to.equal('1-WBL')
   })
 })

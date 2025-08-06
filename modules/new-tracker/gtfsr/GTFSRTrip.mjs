@@ -26,10 +26,10 @@ export class RailGTFSRTrip {
   getScheduleRelationship() { return this.#scheduleRelationship }
   getRouteID() { return this.#routeID }
 
-  static canProcess() { return true }
+  static canProcess() { return false }
 
   static parse(trip) {
-    let parsers = [ ScheduledRailGTFSRTrip, UnscheduledRailGTFSRTrip, RailGTFSRTrip ]
+    let parsers = [ ScheduledRailGTFSRTrip, UnscheduledRailGTFSRTrip, GenericRailGTFSRTrip ]
     for (let parser of parsers) if (parser.canProcess(trip)) return new parser(trip)
   }
 
@@ -66,5 +66,20 @@ export class UnscheduledRailGTFSRTrip extends RailGTFSRTrip {
   }
 
   getTDN() { return this.#tdn }
+
+}
+
+export class GenericRailGTFSRTrip extends RailGTFSRTrip {
+
+  #routeID
+
+  constructor(trip) {
+    super(trip)
+    this.#routeID = trip.route_id.slice(0, 5)
+  }
+
+  static canProcess() { return true }
+
+  getRouteID() { return this.#routeID }
 
 }
