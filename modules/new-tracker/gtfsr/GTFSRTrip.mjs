@@ -26,10 +26,10 @@ export class RailGTFSRTrip {
   getScheduleRelationship() { return this.#scheduleRelationship }
   getRouteID() { return this.#routeID }
 
-  static canProcess() { return false }
+  static canProcess() { return true }
 
   static parse(trip) {
-    let parsers = [ ScheduledRailGTFSRTrip, UnscheduledRailGTFSRTrip ]
+    let parsers = [ ScheduledRailGTFSRTrip, UnscheduledRailGTFSRTrip, RailGTFSRTrip ]
     for (let parser of parsers) if (parser.canProcess(trip)) return new parser(trip)
   }
 

@@ -162,4 +162,18 @@ describe('The GTFSRTrip class', () => {
       schedule_relationship: 0
     }).getStartTime()).to.equal('05:29')
   })
+
+  it('Extracts just the basic data for unknown trips', () => {
+    let data = RailGTFSRTrip.parse({
+      trip_id: '1.T0.1-WBL-mjp-7.1.H',
+      route_id: '1-WBL-mjp-7',
+      direction_id: 0,
+      start_time: '17:09:00',
+      start_date: '20250806',
+      schedule_relationship: 5
+    })
+
+    expect(data.getTDN()).to.not.exist
+    expect(data.getStartTime()).to.equal('17:09')
+  })
 })
