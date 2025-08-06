@@ -1,4 +1,4 @@
-export class MetroGTFSRTrip {
+export class RailGTFSRTrip {
 
   #operationDay
   #startTime
@@ -29,13 +29,13 @@ export class MetroGTFSRTrip {
   static canProcess() { return false }
 
   static parse(trip) {
-    let parsers = [ ScheduledMetroGTFSRTrip, UnscheduledMetroGTFSRTrip ]
+    let parsers = [ ScheduledRailGTFSRTrip, UnscheduledRailGTFSRTrip ]
     for (let parser of parsers) if (parser.canProcess(trip)) return new parser(trip)
   }
 
 }
 
-export class ScheduledMetroGTFSRTrip extends MetroGTFSRTrip {
+export class ScheduledRailGTFSRTrip extends RailGTFSRTrip {
 
   #tdn
 
@@ -45,14 +45,14 @@ export class ScheduledMetroGTFSRTrip extends MetroGTFSRTrip {
   }
 
   static canProcess(trip) {
-    return !!trip.trip_id.match(/^02-[A-Z]{3}/)
+    return !!trip.trip_id.match(/^0[12]-[A-Z]{3}/)
   }
 
   getTDN() { return this.#tdn }
 
 }
 
-export class UnscheduledMetroGTFSRTrip extends MetroGTFSRTrip {
+export class UnscheduledRailGTFSRTrip extends RailGTFSRTrip {
 
   #tdn
 

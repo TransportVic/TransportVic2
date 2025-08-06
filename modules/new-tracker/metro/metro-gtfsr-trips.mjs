@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url'
 
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
-import { MetroGTFSRTrip, UnscheduledMetroGTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
+import { RailGTFSRTrip, UnscheduledRailGTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 
 export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
@@ -12,16 +12,16 @@ export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
   let trips = {}
 
   for (let trip of tripData.entity) {
-    let gtfsrTripData = MetroGTFSRTrip.parse(trip.trip_update.trip)
-    if (!gtfsrTripData.getRouteID().includes(routeFilter) && gtfsrTripData.getScheduleRelationship() !== MetroGTFSRTrip.SR_CANCELLED) continue
+    let gtfsrTripData = RailGTFSRTrip.parse(trip.trip_update.trip)
+    if (!gtfsrTripData.getRouteID().includes(routeFilter) && gtfsrTripData.getScheduleRelationship() !== RailGTFSRTrip.SR_CANCELLED) continue
 
     let tripData = {
       operationDays: gtfsrTripData.getOperationDay(),
       runID: gtfsrTripData.getTDN(),
       routeGTFSID: gtfsrTripData.getRouteID(),
       stops: [],
-      cancelled: gtfsrTripData.getScheduleRelationship() === MetroGTFSRTrip.SR_CANCELLED,
-      additional: gtfsrTripData.getScheduleRelationship() === MetroGTFSRTrip.SR_ADDED,
+      cancelled: gtfsrTripData.getScheduleRelationship() === RailGTFSRTrip.SR_CANCELLED,
+      additional: gtfsrTripData.getScheduleRelationship() === RailGTFSRTrip.SR_ADDED,
       scheduledStartTime: gtfsrTripData.getStartTime()
     }
 
@@ -42,7 +42,7 @@ export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
     }
 
     if (!trips[tripData.runID]) trips[tripData.runID] = tripData
-    if (trips[tripData.runID] && trips[tripData.runID] instanceof UnscheduledMetroGTFSRTrip && trips[tripData.runID].cancelled && !tripData) {
+    if (trips[tripData.runID] && trips[tripData.runID] instanceof UnscheduledRailGTFSRTrip && trips[tripData.runID].cancelled && !tripData) {
       trips[tripData.runID] = tripData
     }
   }

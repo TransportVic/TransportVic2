@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url'
 
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
-import { MetroGTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
+import { RailGTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import { parseConsist } from '../../metro-trains/fleet-parser.js'
 import metroConsists from '../../../additional-data/metro-tracker/metro-consists.json' with { type: 'json' }
@@ -14,7 +14,7 @@ export async function getFleetData(gtfsrAPI) {
   let trips = {}
 
   for (let trip of tripData.entity) {
-    let gtfsrTripData = MetroGTFSRTrip.parse(trip.vehicle.trip)
+    let gtfsrTripData = RailGTFSRTrip.parse(trip.vehicle.trip)
 
     let tripData = {
       operationDays: gtfsrTripData.getOperationDay(),
