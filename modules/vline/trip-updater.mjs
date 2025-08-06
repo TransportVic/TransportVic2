@@ -1,9 +1,25 @@
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import TripUpdater from '../new-tracker/trip-updater.mjs'
+import ptvAPIStopIDs from '../../transportvic-data/rail/vline-stops.json' with { type: 'json' }
 
 export default class VLineTripUpdater extends TripUpdater {
   
   static getMode() { return GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain }
+
+  static async getStop(db, stopID) {
+    if (stopID[0] === 'G') {
+      let [ ptvStopID, platform ] = stopID.split('-')
+      let stopName = ptvAPIStopIDs[ptvStopID.slice(1)]
+
+      let stopData = await this.getStopByName(db, stopName)
+      let stationBay = stopData.bays.find(bay => bay.stopType === 'station')
+      return {
+        ...stationBay,
+        platform: platform.slice(1)
+      }
+    }
+    return super.getStop(db, stopID)
+  }
 
   static async getTripByTDN(liveTimetables, runID, operationDay) {
     return await liveTimetables.findDocument({

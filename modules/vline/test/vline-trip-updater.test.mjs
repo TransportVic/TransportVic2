@@ -129,7 +129,7 @@ describe('The V/Line Trip Updater', () => {
       let stops = database.getCollection('stops')
       await stops.createDocuments(clone(allStops))
 
-      let stopData = await VLineTripUpdater.getStop(database, 'G1811-P8S')
+      let stopData = await VLineTripUpdater.getStop(database, 'G1181-P8S')
       expect(stopData.fullStopName).to.equal('Southern Cross Railway Station')
       expect(stopData.platform).to.equal('8S')
     })
