@@ -11,7 +11,7 @@ const checkRRB = require('./rrb-check.js')
 function getAllStopGTFSIDs(stop) {
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional coach', false)
   let coachGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional train', false)
-  return gtfsIDs.concat(coachGTFSIDs).filter((e, i, a) => a.indexOf(e) == i)
+  return gtfsIDs.concat(coachGTFSIDs).filter((e, i, a) => a.indexOf(e) == i).filter(i => !i.startsWith('vic:'))
 }
 
 async function getDeparturesFromPTV(stop, db) {
@@ -19,7 +19,7 @@ async function getDeparturesFromPTV(stop, db) {
   let liveTimetables = db.getCollection('live timetables')
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional coach', true)
   let coachGTFSIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional train', true)
-  gtfsIDs = gtfsIDs.concat(coachGTFSIDs).filter((e, i, a) => a.indexOf(e) == i)
+  gtfsIDs = gtfsIDs.concat(coachGTFSIDs).filter((e, i, a) => a.indexOf(e) == i).filter(i => !i.startsWith('vic:'))
 
   let mappedDepartures = []
   let now = utils.now()

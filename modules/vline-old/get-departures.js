@@ -354,7 +354,7 @@ async function getDepartures(station, db) {
           if (!vicVlinePlatform) return resolve()
 
           let time = utils.now().add(-6, 'minutes').startOf('minute').toISOString()
-          ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vicVlinePlatform.stopGTFSID}?gtfs=true&max_results=10&expand=run&expand=route&date_utc=${time}`)
+          // ptvDepartures = await ptvAPI(`/v3/departures/route_type/3/stop/${vicVlinePlatform.stopGTFSID}?gtfs=true&max_results=10&expand=run&expand=route&date_utc=${time}`)
         } catch (e) { global.loggers.general.err('Failed to get V/Line PTV departures', e) } finally { resolve() }
       }), new Promise(async resolve => {
         try {

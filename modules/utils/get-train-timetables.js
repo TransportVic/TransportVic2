@@ -146,8 +146,8 @@ async function getScheduledDepartures(station, db, mode, timeout) {
 
   function getID(trip) {
     let stop = trip.stopTimings.find(s => stopGTFSIDs.includes(s.stopGTFSID))
-    let id = `${stop.departureTimeMinutes}-${trip.direction || trip.gtfsDirection}-${trip.routeGTFSID}`
-    if (trip.mode === 'metro train') id += trip.trueDestination + trip.trueOrigin
+    let id = `${stop.departureTimeMinutes}-${trip.stopTimings[0].stopGTFSID}-${trip.stopTimings[trip.stopTimings.length - 1].stopGTFSID}-${trip.routeGTFSID}`
+
     return id
   }
 
