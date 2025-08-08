@@ -9,11 +9,11 @@ if trip.runID
           parts = [null, 'N']
         } else if (vehicle.startsWith('A')) {
           parts = [null, 'A']
-        } else if (vehicle.includes('VL')) {
+        } else if (vehicle.includes('VL') || vehicle.includes('VS')) {
           let count = (vehicle.match(/^(\d)x/) || [0, 1])[1]
           parts = [count, 'vlocity']
         } else {
-          parts = vehicle.match(/(\d)x ([A-Za-z]+)/).slice(1, 3)
+          parts = (vehicle.match(/(\d)x ([A-Za-z]+)/) || []).slice(1, 3)
           if (parts[1] === 'SP') parts[1] = 'sprinter'
           else if (parts[1] === 'XPT') parts[1] = 'xpt'
         }
