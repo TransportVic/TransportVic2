@@ -2,7 +2,7 @@
 DIRNAME=$(dirname "$0")
 
 cd $DIRNAME/..
-. $DIRNAME/.env
+. ./.env
 
 sudo systemctl restart mongod
 node scripts/update-gtfs.mjs
