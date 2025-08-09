@@ -50,7 +50,7 @@ export async function checkStopNumbers(stops, stopName, mode) {
   if (!dbStop.bays.find(bay => bay.mode === mode && bay.stopNumber)) return { stop: stopName, reason: 'missing-stop-number', mode }
 }
 
-export async function checkStops(db) {
+export async function checkStops(db, isRailOnly) {
   let stops = db.getCollection(STOP_COLL)
   let testFailures = []
 
@@ -62,14 +62,16 @@ export async function checkStops(db) {
     testFailures.push(await checkStop(stops, stopName + ' Railway Station', 'regional train'))
   }
 
-  for (let stopName of ['Monash University Bus Loop', 'Clifton Hill Interchange/Queens Parade', 'Horsham Town Centre/Roberts Avenue', 'Bairnsdale Hospital/Princes Highway', 'Melbourne Airport T1 Skybus/Arrival Drive']) {
-    testFailures.push(await checkStop(stops, stopName, 'bus'))
-  }
-  testFailures.push(await checkStopNumbers(stops, 'Frankston Railway Station', 'bus'))
+  if (!isRailOnly) {
+    for (let stopName of ['Monash University Bus Loop', 'Clifton Hill Interchange/Queens Parade', 'Horsham Town Centre/Roberts Avenue', 'Bairnsdale Hospital/Princes Highway', 'Melbourne Airport T1 Skybus/Arrival Drive']) {
+      testFailures.push(await checkStop(stops, stopName, 'bus'))
+    }
+    testFailures.push(await checkStopNumbers(stops, 'Frankston Railway Station', 'bus'))
 
-  for (let stopName of ['Melbourne University/Swanston Street', 'Clifton Hill Interchange/Queens Parade', 'Elsternwick Railway Station', 'Footscray Railway Station', 'Bourke Street Mall']) {
-    testFailures.push(await checkStop(stops, stopName, 'tram'))
-    testFailures.push(await checkStopNumbers(stops, stopName, 'tram'))
+    for (let stopName of ['Melbourne University/Swanston Street', 'Clifton Hill Interchange/Queens Parade', 'Elsternwick Railway Station', 'Footscray Railway Station', 'Bourke Street Mall']) {
+      testFailures.push(await checkStop(stops, stopName, 'tram'))
+      testFailures.push(await checkStopNumbers(stops, stopName, 'tram'))
+    }
   }
 
   let failures = testFailures.filter(Boolean)
@@ -102,21 +104,27 @@ export async function checkRouteOperators(routes) {
   })).sort((a, b) => a.routeGTFSID.localeCompare(b.routeGTFSID))
 }
 
-async function checkRoutes(db) {
+async function checkRoutes(db, isRailOnly) {
   let routes = db.getCollection(ROUTE_COLL)
   let testFailures = []
 
   let targetRoutes = [
-    { routeGTFSID: '1-GEL' }, { routeGTFSID: '2-PKM' }, { routeGTFSID: '3-67' }, { routeGTFSID: '4-630' }, { routeGTFSID: '5-BGO' },
-    { routeGTFSID: '10-GSR' }, { routeGTFSID: '11-SKY' },
-    { mode: 'bus', routeNumber: '1', region: 'Bairnsdale' },
-    { mode: 'bus', routeNumber: '3', region: 'Lakes Entrance' },
-    { mode: 'bus', routeNumber: '83', region: 'Warragul' },
-    { mode: 'bus', routeNumber: '433', region: 'Bacchus Marsh' },
-    { mode: 'bus', routeNumber: '401', region: 'Wangaratta' },
-    { mode: 'bus', routeNumber: '1', region: 'Castlemaine' },
-    { mode: 'bus', routeNumber: '5', region: 'Horsham' }
+    { routeGTFSID: '1-GEL' }, { routeGTFSID: '2-PKM' }, { routeGTFSID: '10-GSR' }
   ]
+
+  if (!isRailOnly) {
+    targetRoutes.push(
+      { routeGTFSID: '3-67' }, { routeGTFSID: '4-630' }, { routeGTFSID: '5-BGO' },
+      { routeGTFSID: '11-SKY' },
+      { mode: 'bus', routeNumber: '1', region: 'Bairnsdale' },
+      { mode: 'bus', routeNumber: '3', region: 'Lakes Entrance' },
+      { mode: 'bus', routeNumber: '83', region: 'Warragul' },
+      { mode: 'bus', routeNumber: '433', region: 'Bacchus Marsh' },
+      { mode: 'bus', routeNumber: '401', region: 'Wangaratta' },
+      { mode: 'bus', routeNumber: '1', region: 'Castlemaine' },
+      { mode: 'bus', routeNumber: '5', region: 'Horsham' }
+    )
+  }
 
   for (let route of targetRoutes) testFailures.push(await checkRoute(routes, route))
 
@@ -149,8 +157,8 @@ export async function runHealthCheck() {
 
   let output = []
 
-  let stopCheck = await checkStops(mongoDB)
-  let routeCheck = await checkRoutes(mongoDB)
+  let stopCheck = await checkStops(mongoDB, config.railOnly)
+  let routeCheck = await checkRoutes(mongoDB, config.railOnly)
   let busRegionCheck = checkBusRegions(busRegions)
   let allFailures = []
 
@@ -167,7 +175,7 @@ export async function runHealthCheck() {
   if (routeCheck.status === 'ok') output.push('Route Data: OK ✅')
   else {
     output.push('Route Data: Fail ❌')
-    if (routeCheck.failures.lengthh) {
+    if (routeCheck.failures.length) {
       output.push('Failing Routes:')
       output.push(...routeCheck.failures.map(failure => {
         let prettyQuery = Object.keys(failure.query).map(key => `${key}: '${failure.query[key]}'`).join(', ')
