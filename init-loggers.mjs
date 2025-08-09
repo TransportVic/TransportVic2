@@ -54,5 +54,5 @@ let midnight = utils.now().endOf('day')
 let msToMidnight = midnight.diff(utils.now())
 setTimeout(() => {
   createLoggers()
-  setInterval(createLogger, 1000 * 60 * 60 * 24)
-}, msToMidnight)
+  setInterval(createLogger, 1000 * 60 * 60 * 24).unref()
+}, msToMidnight).unref()
