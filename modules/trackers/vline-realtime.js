@@ -279,14 +279,14 @@ async function requestTimings() {
 
   try {
     if (cycleCount === 1) {
-      global.loggers.trackers.vlineR.info('requesting vline realtime data')
+      global.loggers.oldTrackers.vlineR.info('requesting vline realtime data')
       await fetchData()
     }
 
-    global.loggers.trackers.vlineR.info('requesting vline platform data')
+    global.loggers.oldTrackers.vlineR.info('requesting vline platform data')
     await fetchPlatforms(database)
   } catch (e) {
-    global.loggers.trackers.vlineR.err('Error getting vline realtime data, skipping this round', e)
+    global.loggers.oldTrackers.vlineR.err('Error getting vline realtime data, skipping this round', e)
   }
 
   if (cycleCount === 5) cycleCount = 0
@@ -296,5 +296,5 @@ database.connect(async () => {
   schedule([
     [0, 120, 3],
     [330, 1440, 2]
-  ], requestTimings, 'vline-r tracker', global.loggers.trackers.vlineR)
+  ], requestTimings, 'vline-r tracker', global.loggers.oldTrackers.vlineR)
 })

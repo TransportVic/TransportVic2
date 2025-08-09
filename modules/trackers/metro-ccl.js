@@ -119,16 +119,16 @@ async function loadTrips(updateTripData) {
   }
 
   await liveTimetables.bulkWrite(bulkOperations)
-  global.loggers.trackers.metro.log(`Successfully updated ${bulkOperations.length} metro trips`)
+  global.loggers.oldTrackers.metro.log(`Successfully updated ${bulkOperations.length} metro trips`)
 }
 
 async function requestTimings() {
-  global.loggers.trackers.metro.info('Logging Metro CCL trips')
+  global.loggers.oldTrackers.metro.info('Logging Metro CCL trips')
 
   try {
     await loadTrips()
   } catch (e) {
-    global.loggers.trackers.metro.err('Failed to find metro CCL trips, skipping', e)
+    global.loggers.oldTrackers.metro.err('Failed to find metro CCL trips, skipping', e)
   }
 }
 
@@ -141,5 +141,5 @@ database.connect(async () => {
     [360, 1199, 3],
     [1200, 1380, 2],
     [1380, 1439, 3]
-  ], requestTimings, 'metro ccl', global.loggers.trackers.metro)
+  ], requestTimings, 'metro ccl', global.loggers.oldTrackers.metro)
 })

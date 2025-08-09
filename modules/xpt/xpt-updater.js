@@ -9,7 +9,7 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let gtfsTimetables, liveTimetables, stops
 
 async function fetchAndUpdate() {
-  global.loggers.trackers.xpt.log('requesting xpt data')
+  global.loggers.oldTrackers.xpt.log('requesting xpt data')
   let dataNSWTrains = await tfnswAPI.makePBRequest('/v1/gtfs/realtime/nswtrains')
   let nswTripDescriptors = dataNSWTrains.entity
 

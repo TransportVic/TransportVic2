@@ -55,5 +55,5 @@ database.connect(async () => {
     [60, 299, 1.5],
     [300, 1260, 1],
     [1261, 1440, 1.5]
-  ], requestData, 'busminder tracker', global.loggers.trackers.bus)
+  ], requestData, 'busminder tracker', global.loggers.oldTrackers.bus)
 })

@@ -32,7 +32,7 @@ async function createLoggers() {
       metroRRB: await createLogger('trackers/metro-rail-bus', 'METRO-RRB'),
       vline: await createLogger('trackers/metro', 'VLINE'),
     },
-    trackers: {
+    oldTrackers: {
       bus: await createLogger('old-trackers/bus', 'BUS'),
       tram: await createLogger('old-trackers/tram', 'TRAM'),
       vline: await createLogger('old-trackers/vline', 'VLINE'),

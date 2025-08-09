@@ -75,10 +75,10 @@ async function getDeparturesFromVNET(db) {
       try {
         await handleTripShorted(trip, departure, nspTrip, liveTimetables, departureDay)
       } catch (e) {
-        global.loggers.trackers.vline.err('Error cutting trip back', e, trip)
+        global.loggers.oldTrackers.vline.err('Error cutting trip back', e, trip)
       }
     } else {
-      global.loggers.trackers.vline.err('Could not match trip', tripData)
+      global.loggers.oldTrackers.vline.err('Could not match trip', tripData)
     }
 
     if (trip && nspMatchedMethod === 'runID') {
@@ -97,7 +97,7 @@ async function getDeparturesFromVNET(db) {
           upsert: true
         })
       } catch (e) {
-        global.loggers.trackers.vline.err('Failed to update runid', e, departure.runID, trip)
+        global.loggers.oldTrackers.vline.err('Failed to update runid', e, departure.runID, trip)
       }
     }
 
@@ -149,11 +149,11 @@ async function getDeparturesFromVNET(db) {
 }
 
 async function requestTimings() {
-  global.loggers.trackers.vline.info('requesting vline trips')
+  global.loggers.oldTrackers.vline.info('requesting vline trips')
   try {
     await getDeparturesFromVNET(database)
   } catch (e) {
-    global.loggers.trackers.vline.err('Error getting vline trips, skipping this round', e)
+    global.loggers.oldTrackers.vline.err('Error getting vline trips, skipping this round', e)
   }
 }
 
@@ -162,5 +162,5 @@ database.connect(async () => {
     [200, 240, 15], // Run it from 3am - 4am, taking into account website updating till ~3.30am
     [240, 1350, 20],
     [1350, 1440, 40]
-  ], requestTimings, 'vline tracker', global.loggers.trackers.vline)
+  ], requestTimings, 'vline tracker', global.loggers.oldTrackers.vline)
 })
