@@ -11,7 +11,8 @@
 
   # Operational Timetable loaders
   1     0     *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-metro-op-tt.mjs
-  1     3     *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-vline-op-tt.mjs
+  */10  3-23  *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-vline-op-tt.mjs
+  */15  0-1   *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-vline-op-tt.mjs
   1     3     *     *     *     node /home/transportvic/TransportVic/modules/new-tracker/metro/metro-trips-schedule.mjs
 
   # Metro Tracker

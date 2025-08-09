@@ -1,6 +1,8 @@
 #!/bin/bash
 DIRNAME=$(dirname "$0")
 
+. $DIRNAME/../../.env
+
 # node $DIRNAME/metro/metro-gtfsr-trips.mjs
 node $DIRNAME/metro/metro-gtfsr-fleet.mjs
 node $DIRNAME/metro/metro-ptv-departures.mjs
