@@ -278,6 +278,12 @@ describe('The GTFS health check module', () => {
       })).to.deep.equal({ status: 'ok' })
     })
 
+    it('Returns OK for an empty input', () => {
+      expect(checkBusRegions({})).to.deep.equal({ status: 'ok' })
+      expect(checkBusRegions()).to.deep.equal({ status: 'ok' })
+      expect(checkBusRegions(null)).to.deep.equal({ status: 'ok' })
+    })
+
     it('Should identify any regional networks with no routes assigned', () => {
       expect(checkBusRegions({
         "Melton": [{

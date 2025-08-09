@@ -131,6 +131,7 @@ async function checkRoutes(db) {
 }
 
 export function checkBusRegions(regions) {
+  if (!regions) return { status: 'ok' }
   let failingRegions = Object.keys(regions).filter(regionName => regions[regionName].length === 0)
   if (failingRegions.length) return { status: 'fail', failures: failingRegions}
   return { status: 'ok' }
