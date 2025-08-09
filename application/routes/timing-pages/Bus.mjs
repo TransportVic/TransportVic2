@@ -1,17 +1,11 @@
-const express = require('express')
-const router = new express.Router()
-const getDepartures = require('../../../modules/tram/get-departures')
-const moment = require('moment')
-const utils = require('../../../utils')
-const tramDestinations = require('../../../additional-data/tram-destinations')
-const async = require('async')
-const timingUtils = require('./timing-utils')
+import express from 'express'
+import getDepartures from '../../../modules/bus/get-departures.js'
+import busDestinations from '../../../additional-data/bus-destinations.json' with { type: 'json' }
+import utils from '../../../utils.js'
+import async from 'async'
+import timingUtils from './timing-utils.js'
 
-let cityCircleOverride = [
-  20981,
-  18183,
-  18037
-]
+const router = new express.Router()
 
 async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
@@ -20,15 +14,21 @@ async function loadDepartures(req, res) {
     cleanSuburbs: req.params.suburb
   })
 
-  if (!stop || !stop.bays.find(bay => bay.mode === 'tram')) {
+  if (!stop || !stop.bays.find(bay => bay.mode === 'bus')) {
     return res.status(404).render('errors/no-stop')
   }
 
   let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, stop)
 
+  let oppositeStop = stop.oppositeStopID ? await stops.findDocument({
+    _id: stop.oppositeStopID
+  }) : null
+
+  if (oppositeStop) {
+    stop.bays.push(...oppositeStop.bays)
+  }
 
   let departures = await getDepartures(stop, res.db)
-
   let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
   departures = await async.map(departures, async departure => {
@@ -38,37 +38,31 @@ async function loadDepartures(req, res) {
       late: 5
     })
 
+    departure.cleanRouteName = utils.encodeName(departure.trip.routeName)
+
     let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
     let {stopGTFSID} = currentStop
-    let firstStop = departure.trip.stopTimings[0]
-
-    let minutesDiff = currentStop.departureTimeMinutes - firstStop.departureTimeMinutes
+    let minutesDiff = currentStop.departureTimeMinutes - departure.trip.stopTimings[0].departureTimeMinutes
 
     let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
-
     let operationDate = utils.getYYYYMMDD(tripStart)
 
-    departure.tripURL = `/tram/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
+    departure.tripURL = `/bus/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + `${operationDate}/#stop-${stopGTFSID}`
+      + `${operationDate}#stop-${stopGTFSID}`
 
     let destination = utils.getDestinationName(departure.trip.destination)
-    departure.destination = tramDestinations[destination] || destination
 
-    if (departure.trip.routeGTFSID === '3-35') {
-      if (cityCircleOverride.includes(stopGTFSID)) {
-        departure.loopDirection = null
-      } else {
-        departure.destination = 'City Circle'
-      }
-    }
+    let serviceData = busDestinations.service[departure.trip.routeGTFSID] || busDestinations.service[departure.sortNumber] || {}
+    departure.destination = serviceData[destination]
+      || busDestinations.generic[destination] || destination
 
     let destinationStopTiming = departure.trip.stopTimings.slice(-1)[0]
     let destinationStop = await stops.findDocument({
       'bays.stopGTFSID': destinationStopTiming.stopGTFSID
     })
 
-    departure.destinationURL = `/tram/timings/${destinationStop.cleanSuburbs[0]}/${destinationStop.cleanName}`
+    departure.destinationURL = `/bus/timings/${destinationStop.cleanSuburbs[0]}/${destinationStop.cleanName}`
 
     return departure
   })
@@ -78,9 +72,9 @@ async function loadDepartures(req, res) {
   return {
     ...groupedDepartures,
     stop,
-    classGen: departure => `tram-${departure.sortNumber}`,
-    currentMode: 'tram',
-    maxDepartures: 3,
+    classGen: departure => departure.codedOperator,
+    currentMode: 'bus',
+    maxDepartures: 4,
     stopHeritageUseDates
   }
 }
@@ -94,4 +88,4 @@ router.post('/:suburb/:stopName', async (req, res) => {
   res.render('timings/templates/grouped', await loadDepartures(req, res))
 })
 
-module.exports = router
+export default router

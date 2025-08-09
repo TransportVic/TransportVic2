@@ -1,9 +1,9 @@
-const express = require('express')
+import express from 'express'
+import getDepartures from '../../../modules/metro-trains/get-departures.js'
+import utils from '../../../utils.js'
+import timingUtils from './timing-utils.js'
+
 const router = new express.Router()
-const getDepartures = require('../../../modules/metro-trains/get-departures')
-const moment = require('moment')
-const utils = require('../../../utils')
-const timingUtils = require('./timing-utils')
 
 async function loadDepartures(req, res) {
   let station = await res.db.getCollection('stops').findDocument({
@@ -73,4 +73,4 @@ router.post('/:stationName', async (req, res) => {
   res.render('timings/templates/metro-trains', await loadDepartures(req, res))
 })
 
-module.exports = router
+export default router

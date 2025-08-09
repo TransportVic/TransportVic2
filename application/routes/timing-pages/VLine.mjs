@@ -1,9 +1,9 @@
-const express = require('express')
+import express from 'express'
+import getDepartures from '../../../modules/vline-old/get-departures.js'
+import utils from '../../../utils.js'
+import timingUtils from './timing-utils.js'
+
 const router = new express.Router()
-const getDepartures = require('../../../modules/vline-old/get-departures')
-const utils = require('../../../utils')
-const moment = require('moment')
-const timingUtils = require('./timing-utils')
 
 async function loadDepartures(req, res) {
   const station = await res.db.getCollection('stops').findDocument({
@@ -61,4 +61,4 @@ router.post('/:stationName', async (req, res) => {
   res.render('timings/templates/vline', await loadDepartures(req, res))
 })
 
-module.exports = router
+export default router
