@@ -526,7 +526,16 @@ module.exports = class LiveTimetable {
     let matchingStop = matchingStops[visitNum - 1]
 
     if (matchingStop) {
-      if (stopData.scheduledDepartureTime) matchingStop.scheduledDepartureTime = stopData.scheduledDepartureTime
+      let existingSchTime = matchingStop.scheduledDepartureTime.toISOString()
+      if (stopData.scheduledDepartureTime && (existingSchTime !== stopData.scheduledDepartureTime)) {
+        matchingStop.scheduledDepartureTime = stopData.scheduledDepartureTime
+        this.addChange({
+          type: 'stop-time-change',
+          oldVal: existingSchTime,
+          newVal: stopData.scheduledDepartureTime
+        })
+      }
+
       if (stopData.estimatedDepartureTime) matchingStop.estimatedDepartureTime = stopData.estimatedDepartureTime
       if (stopData.platform) {
         let newPlatform = stopData.platform.toString()

@@ -694,4 +694,17 @@ describe('The LiveTimetable schema', () => {
       utils.now = originalNow
     })
   })
+
+  it('Should track a change in the departure time from a stop', () => {
+    let timetable = LiveTimetable.fromDatabase(mdd1000)
+    timetable.updateStopByName('Mernda Railway Station', {
+      scheduledDepartureTime: '2025-08-08T12:57:00.000Z'
+    })
+
+    expect(timetable.changes.length).to.equal(1)
+    expect(timetable.changes[0].type).to.equal('stop-time-change')
+    expect(timetable.changes[0].oldVal).to.equal('2025-04-09T18:04:00.000Z')
+    expect(timetable.changes[0].newVal).to.equal('2025-08-08T12:57:00.000Z')
+    expect(timetable.changes[0].timestamp).to.exist
+  })
 })
