@@ -4,7 +4,7 @@ if departures.length
       input(type='hidden' name='stops-at' value=departure.futureStops.join(','))
       input(type='hidden' name='platform' value=departure.platform || '')
       input(type='hidden' name='run' value=departure.runID)
-      input(type='hidden' name='line' value=departure.shortRouteName)
+      input(type='hidden' name='line' value=departure.routeName)
       a.leftContainer.vline
         if departure.isRailReplacementBus
           span.topText Coach Svc
@@ -13,9 +13,8 @@ if departures.length
           span.topText Platform
           -
             let platform = departure.platform
-            if (!(departure.trip.routeGTFSID === '14-XPT' && departure.trip.updateTime)) {
-              if (station.stopName !== 'Southern Cross Railway Station' && platform !== '??') platform += '?'
-              if (departure.cancelled) platform = '-'
+            if (!(departure.trip.routeGTFSID === '14-XPT' && departure.trip.updateTime) && departure.cancelled) {
+              platform = '-'
             }
           span.bigNumber #{platform}
       -
@@ -24,7 +23,7 @@ if departures.length
           departureClass += ' reservationsOnly'
       a(class=departureClass href=`/vline/timings/${departure.destination.toLowerCase().replace(/ /g, '-')}`)
         -
-          let lineName = `${departure.shortRouteName} Line towards`
+          let lineName = `${departure.routeName} Line towards`
           if (departure.trip.routeGTFSID === '14-XPT') lineName = 'Melbourne-Sydney XPT towards'
           if (departure.trip.routeGTFSID === '10-GSR') lineName = 'The Overland towards'
           

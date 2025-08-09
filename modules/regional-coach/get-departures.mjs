@@ -15,7 +15,7 @@ export default async function getCoachDepartures(stop, db, departureTime, { time
 
     if (departure.trip.isRailReplacementBus) {
       departure.isRailReplacementBus = true
-      departure.shortRouteName = departure.trip.shortRouteName
+      departure.routeName = departure.trip.shortRouteName
     }
 
     let destination = destinationOverrides(departure.trip.stopTimings.slice(-1)[0])

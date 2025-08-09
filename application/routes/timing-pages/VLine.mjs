@@ -1,5 +1,5 @@
 import express from 'express'
-import getDepartures from '../../../modules/vline-old/get-departures.js'
+import getDepartures from '../../../modules/vline/get-departures.mjs'
 import utils from '../../../utils.js'
 import timingUtils from './timing-utils.js'
 

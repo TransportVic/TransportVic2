@@ -5,7 +5,7 @@ if departures.length
         -
           let routeName = departure.trip.routeName
           if (departure.isRailReplacementBus) {
-            routeName = `V/Line ${departure.shortRouteName} Line Rail Replacement`
+            routeName = `V/Line ${departure.routeName} Line Rail Replacement`
           }
         span.routeName.clampLine #{routeName}
         span.towards Towards
