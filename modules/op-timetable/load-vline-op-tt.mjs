@@ -222,7 +222,10 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let vlineAPIInterface = new VLineAPIInterface(config.vlineCallerID, config.vlineSignature)
   ptvAPI.addVLine(vlineAPIInterface)
 
-  await loadOperationalTT(mongoDB, utils.now(), ptvAPI)
+  let opDay = utils.now()
+  if (opDay.get('hours') < 3) opDay.add(-1, 'day')
+
+  await loadOperationalTT(mongoDB, opDay, ptvAPI)
 
   await mongoDB.close()
 }
