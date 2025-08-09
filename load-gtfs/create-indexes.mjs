@@ -303,6 +303,10 @@ async function createLiveTimetableIndex(liveTimetables) {
   }, {name: 'active trip index'})
 
   await liveTimetables.createIndex({
+    operationDays: 1
+  })
+
+  await liveTimetables.createIndex({
     mode: 1,
     runID: 1,
     'stopTimings.scheduledDepartureTime': 1,

@@ -36,7 +36,7 @@ try {
   let tripsEnd = utils.now().add(-RETENTION_PERIODS.timetables, 'days')
 
   if (tripsEnd > tripsStart) {
-    console.log('Cleaning up timetables from', tripsStart, 'to',tripsEnd)
+    console.log('Cleaning up timetables from', tripsStart, 'to', tripsEnd)
 
     let tripsDay = utils.allDaysBetweenDates(tripsStart, tripsEnd).map(date => utils.getYYYYMMDD(date))
 
