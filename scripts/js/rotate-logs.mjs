@@ -1,9 +1,9 @@
-import config from '../config.json' with { type: 'json' }
+import config from '../../config.json' with { type: 'json' }
 import { MongoDatabaseConnection } from '@transportme/database'
 import fs from 'fs/promises'
 import path from 'path'
 import url from 'url'
-import utils from '../utils.js'
+import utils from '../../utils.js'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -23,12 +23,12 @@ if (config.databaseLog) {
     let time = utils.parseTime(date)
 
     if (!time || now.diff(time, 'days') > 14) {
-      await fs.unlink(path.join(dir, file))
+      await fs.unlink(path.join(config.databaseLog, file))
     }
   }
 }
 
-const logDir = path.join(__dirname, '..', 'logs')
+const logDir = path.join(__dirname, '..', '..', 'logs')
 const logFiles = await fs.readdir(logDir)
 
 for (const log of logFiles) {
