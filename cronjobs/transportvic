@@ -43,9 +43,9 @@
   *     0-1/2 *     *     *     /home/transportvic/TransportVic/modules/new-tracker/vline.sh
 
   # Other maintenance scripts
-  0     2     *     *     *     /home/transportvic/TransportVic/start-maintenance.sh
+  0     2     *     *     *     /home/transportvic/TransportVic/scripts/check-gtfs-updates.sh
   0     4     *     *     *     node /home/transportvic/TransportVic/update-consists.js
-  55    2     *     *     *     node /home/transportvic/TransportVic/modules/cleanup.js
+  0     0     *     *     *     node /home/transportvic/TransportVic/scripts/cleanup.mjs
   0     0     *     *     *     node /home/transportvic/TransportVic/scripts/rotate-logs.sh
   50    3     *     *     *     node /home/transportvic/TransportVic/load-gtfs/xpt/load-all.js
   0     3     */2   *     *     /home/transportvic/transportvic-backups/backup.sh

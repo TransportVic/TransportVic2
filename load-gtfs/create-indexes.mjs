@@ -289,15 +289,6 @@ async function createMetroLocationsIndex(metroLocations) {
   }, { name: 'metro locations index', unique: 1 })
 }
 
-async function createCSRFIndex(csrfTokens) {
-  await csrfTokens.createIndex({
-    created: 1,
-    ip: 1,
-    uses: 1,
-    _id: 1
-  }, { name: 'csrf index', unique: 1 })
-}
-
 async function createLiveTimetableIndex(liveTimetables) {
   await liveTimetables.createIndex({
     'stopTimings.stopGTFSID': 1,
@@ -356,7 +347,6 @@ await createBusTripIndex(await mainDB.getCollection('bus trips'))
 await createSmartrakIndex(await mainDB.getCollection('smartrak ids'))
 await createMetroNotifyIndex(await mainDB.getCollection('metro notify'))
 await createMetroLocationsIndex(await mainDB.getCollection('metro locations'))
-await createCSRFIndex(await mainDB.getCollection('csrf tokens'))
 
 console.log('Created indexes')
 
