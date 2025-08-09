@@ -138,7 +138,10 @@ export function checkBusRegions(regions) {
 
 export async function runHealthCheck() {
   const config = JSON.parse(await fs.readFile(path.join(__dirname, '../../config.json')))
-  const busRegions = JSON.parse(await fs.readFile(path.join(__dirname, '../../additional-data/bus-data/bus-network-regions.json')))
+  let busRegions
+  try {
+    busRegions = JSON.parse(await fs.readFile(path.join(__dirname, '../../additional-data/bus-data/bus-network-regions.json')))
+  } catch (e) {}
 
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()

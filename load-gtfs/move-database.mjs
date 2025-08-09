@@ -29,6 +29,8 @@ async function moveCollection(name) {
 
 const { outputText, hasCriticalFailure } = await runHealthCheck()
 if (hasCriticalFailure) {
+  console.log('Not moving database', outputText)
+
   let currentDay = utils.getYYYYMMDDNow()
   let logPath = path.join(__dirname, '..', 'logs', currentDay, 'gtfs-updater')
   let txtLogPath = path.join(__dirname, '..', 'logs', currentDay, 'gtfs-updater.txt')
