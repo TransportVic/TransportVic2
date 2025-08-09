@@ -12,10 +12,17 @@ const database = new MongoDatabaseConnection(config.databaseURL, config.database
 await database.connect({})
 await database.adminCommand({ logRotate: 'server' })
 
-for (let dir of config.databaseLog) {
-  const files = await fs.readdir(dir)
+const now = utils.now()
+
+if (config.databaseLog) {
+  const files = await fs.readdir(config.databaseLog)
   for (let file of files) {
-    if (!file.endsWith('.log')) {
+    if (file.endsWith('.log')) continue
+    let timeData = file.slice(-19)
+    let date = `${timeData.slice(0, 10)}T${timeData.slice(11).replace(/-/g, ':')}Z`
+    let time = utils.parseTime(date)
+
+    if (!time || now.diff(time, 'days') > 14) {
       await fs.unlink(path.join(dir, file))
     }
   }
@@ -24,9 +31,8 @@ for (let dir of config.databaseLog) {
 const logDir = path.join(__dirname, '..', 'logs')
 const logFiles = await fs.readdir(logDir)
 
-let now = utils.now()
-for (let log of logFiles) {
-  let date = utils.parseDate(log)
+for (const log of logFiles) {
+  const date = utils.parseDate(log)
   if (!date || now.diff(date, 'days') > 14) {
     await fs.rm(path.join(logDir, log), { recursive: true })
   }
