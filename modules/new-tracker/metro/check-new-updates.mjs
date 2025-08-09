@@ -1,4 +1,5 @@
 import { updateTDNFromPTV } from './metro-ptv-trips.mjs'
+import _ from '../../../init-loggers.mjs'
 
 async function checkFormingChange(trip, change, liveTimetables, trips, updates) {
   let oldTrip, newTrip
@@ -77,7 +78,7 @@ export async function updateRelatedTrips(db, updatedTrips, ptvAPI) {
 
     if (newlyUpdatedTrips.length) {
       let updatedTDNs = newlyUpdatedTrips.map(trip => trip.runID)
-      console.log('> Updated Related TDNs: ' + updatedTDNs.join(', '))
+      global.loggers.trackers.metro.log('> Updated Related TDNs: ' + updatedTDNs.join(', '))
       tdnsSeen.push(...updatedTDNs)
     }
     updatedTrips = newlyUpdatedTrips

@@ -5,6 +5,7 @@ import config from '../../../config.json' with { type: 'json' }
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import { updateTDNFromPTV } from './metro-ptv-trips.mjs'
 import utils from '../../../utils.js'
+import _ from '../../../init-loggers.mjs'
 
 export async function getOutdatedTrips(database) {
   let liveTimetables = await database.getCollection('live timetables')

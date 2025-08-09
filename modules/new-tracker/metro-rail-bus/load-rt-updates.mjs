@@ -7,6 +7,7 @@ import getTripID from './get-trip-id.mjs'
 import utils from '../../../utils.js'
 
 import config from '../../../config.json' with { type: 'json' }
+import _ from '../../../init-loggers.mjs'
 
 export async function getRailBusUpdates(db, ptvAPI) {
   let tripUpdates = await ptvAPI.metroSite.getRailBusUpdates()
@@ -88,7 +89,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
   let updatedTrips = await fetchTrips(mongoDB, ptvAPI)
-  console.log('MTM Rail Bus: Fetched', updatedTrips.length, 'trips')
+  global.loggers.trackers.metroRRB.log('MTM Rail Bus: Fetched', updatedTrips.length, 'trips')
 
   process.exit(0)
 }

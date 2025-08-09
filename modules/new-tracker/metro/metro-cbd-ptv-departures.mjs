@@ -4,6 +4,7 @@ import config from '../../../config.json' with { type: 'json' }
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import { fetchTrips } from './metro-ptv-departures.mjs'
 import { updateRelatedTrips } from './check-new-updates.mjs'
+import _ from '../../../init-loggers.mjs'
 
 async function fetchStop(name, db, ptvAPI, maxResults, backwards, tdnsSeen, updatedTrips) {
   let newlyUpdatedTrips = await fetchTrips(db, ptvAPI, { stationName: name, skipTDN: tdnsSeen, maxResults, backwards })
@@ -11,7 +12,7 @@ async function fetchStop(name, db, ptvAPI, maxResults, backwards, tdnsSeen, upda
   tdnsSeen.push(...newTDNs)
 
   for (let trip of newlyUpdatedTrips) updatedTrips[trip.runID] = trip
-  console.log('> CBD Departures: Updating TDNs: ' + newTDNs.join(', '))
+  global.loggers.trackers.metro.log('> CBD Departures: Updating TDNs: ' + newTDNs.join(', '))
 }
 
 export async function fetchCBDTrips(db, ptvAPI) {

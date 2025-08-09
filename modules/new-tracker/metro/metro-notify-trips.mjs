@@ -5,6 +5,7 @@ import config from '../../../config.json' with { type: 'json' }
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import { updateTDNFromPTV } from './metro-ptv-trips.mjs'
 import { updateRelatedTrips } from './check-new-updates.mjs'
+import _ from '../../../init-loggers.mjs'
 
 export async function getUpdatedTDNs(db) {
   return (await db.getCollection('metro notify').findDocuments({
@@ -33,7 +34,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
 
   let updatedTrips = await fetchTrips(mongoDB, ptvAPI)
-  if (updatedTrips.length) console.log('> Notify Trips: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
+  if (updatedTrips.length) global.loggers.trackers.metro.log('> Notify Trips: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
   await updateRelatedTrips(mongoDB, updatedTrips, ptvAPI)
 
   process.exit(0)

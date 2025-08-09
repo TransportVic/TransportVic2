@@ -24,7 +24,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
 
   let updatedTrips = await fetchTrips(mongoDB, ptvAPI)
-  if (updatedTrips.length) console.log('> Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
+  if (updatedTrips.length) global.loggers.trackers.metro.log('> Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
   await updateRelatedTrips(mongoDB, updatedTrips, ptvAPI)
 
   process.exit(0)

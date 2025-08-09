@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url'
 
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
+import _ from '../../../init-loggers.mjs'
 
 export async function fetchNotifyAlerts(ptvAPI, db) {
   let metroNotify = await db.getCollection('metro notify')

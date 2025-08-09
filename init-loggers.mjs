@@ -27,14 +27,20 @@ async function createLoggers() {
     spamMail: await createLogger('spam-mail', 'SPAM-MAIL'),
     fetch: await createLogger('fetch', 'FETCH'),
     trackers: {
-      bus: await createLogger('trackers/bus', 'BUS'),
-      tram: await createLogger('trackers/tram', 'TRAM'),
-      vline: await createLogger('trackers/vline', 'VLINE'),
-      vlineR: await createLogger('trackers/vline-realtime', 'VLINE-R'),
+      generic: await createLogger('trackers/generic', 'GENERIC'),
       metro: await createLogger('trackers/metro', 'METRO'),
-      metroNotify: await createLogger('trackers/metro', 'METRO-NOTIFY'),
-      xpt: await createLogger('trackers/xpt', 'XPT'),
-      ccl: await createLogger('trackers/ccl', 'CCL')
+      metroRRB: await createLogger('trackers/metro-rail-bus', 'METRO-RRB'),
+      vline: await createLogger('trackers/metro', 'VLINE'),
+    },
+    trackers: {
+      bus: await createLogger('old-trackers/bus', 'BUS'),
+      tram: await createLogger('old-trackers/tram', 'TRAM'),
+      vline: await createLogger('old-trackers/vline', 'VLINE'),
+      vlineR: await createLogger('old-trackers/vline-realtime', 'VLINE-R'),
+      metro: await createLogger('old-trackers/metro', 'METRO'),
+      metroNotify: await createLogger('old-trackers/metro', 'METRO-NOTIFY'),
+      xpt: await createLogger('old-trackers/xpt', 'XPT'),
+      ccl: await createLogger('old-trackers/ccl', 'CCL')
     },
     mockups: await createLogger('mockups', 'MOCKUPS'),
     error: await createLogger('errors', 'ERROR'),

@@ -7,6 +7,7 @@ import { RailGTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import { parseConsist } from '../../metro-trains/fleet-parser.js'
 import metroConsists from '../../../additional-data/metro-tracker/metro-consists.json' with { type: 'json' }
+import _ from '../../../init-loggers.mjs'
 
 export async function getFleetData(gtfsrAPI) {
   let tripData = await gtfsrAPI('metro/vehicle-positions')
@@ -31,7 +32,7 @@ export async function getFleetData(gtfsrAPI) {
 
 export async function fetchTrips(db) {
   let relevantTrips = await getFleetData(makePBRequest)
-  console.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
+  global.loggers.trackers.metro.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
   for (let tripData of relevantTrips) {
     await MetroTripUpdater.updateTrip(db, tripData, { dataSource: 'gtfsr-vehicle-update' })

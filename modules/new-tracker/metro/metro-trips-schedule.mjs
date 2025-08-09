@@ -6,6 +6,7 @@ import LiveTimetable from '../../schema/live-timetable.js'
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
+import _ from '../../../init-loggers.mjs'
 
 export async function getUpcomingTrips(ptvAPI, lines) {
   let trips = await ptvAPI.metroSite.getOperationalTimetable(lines)
@@ -132,7 +133,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
   let tripCount = await fetchTrips(ptvAPI, mongoDB)
-  console.log('Metro Trips: Updated forming data of', tripCount, 'trips')
+  global.loggers.trackers.metro.log('Metro Trips: Updated forming data of', tripCount, 'trips')
 
   process.exit(0)
 }

@@ -5,6 +5,7 @@ import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
 import { RailGTFSRTrip, UnscheduledRailGTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
+import _ from '../../../init-loggers.mjs'
 
 export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
   let tripData = await gtfsrAPI('metro/trip-updates')
@@ -52,7 +53,7 @@ export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
 
 export async function fetchTrips(db, routeFilter = '') {
   let relevantTrips = await getUpcomingTrips(db, makePBRequest, routeFilter)
-  console.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
+  global.loggers.trackers.metro.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
   for (let tripData of relevantTrips) {
     // TODO: Implement separate arrival/departure times

@@ -6,8 +6,8 @@ console.log('Starting Rail GTFS loader', start)
 let commands = [
   ['create-indexes.mjs'],
   ['load-ptv-stops.mjs'],
-  ['load-all-stops-routes.mjs', '1', '2'],
-  ['load-all-trips.mjs', '1', '2'],
+  ['load-all-stops-routes.mjs', '1', '2', '10'],
+  ['load-all-trips.mjs', '1', '2', '10'],
 
   ['metro/load-extra-data.mjs'],
   ['metro/download-metro-timetables.mjs'],

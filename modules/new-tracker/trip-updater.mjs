@@ -1,5 +1,7 @@
 import LiveTimetable from '../schema/live-timetable.js'
 
+const err = global.loggers ? global.loggers.trackers.generic.err : console.error
+
 let stopIDCache = {}
 let stopCache = {}
 
@@ -171,7 +173,7 @@ export default class TripUpdater {
     for (let stop of trip.stops) {
       let { stopData, updatedData } = await this.getBaseStopUpdateData(db, stop)
       if (!stopData) {
-        console.log('Failed to update stop ' + JSON.stringify(trip), stop)
+        err('Failed to update stop ' + JSON.stringify(trip), stop)
         continue
       }
 

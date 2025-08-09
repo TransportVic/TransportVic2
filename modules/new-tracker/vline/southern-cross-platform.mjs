@@ -5,6 +5,7 @@ import config from '../../../config.json' with { type: 'json' }
 import { GetPlatformServicesAPI, PTVAPI, PTVAPIInterface, VLineAPIInterface } from '@transportme/ptv-api'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import VLineTripUpdater from '../../vline/trip-updater.mjs'
+import _ from '../../../init-loggers.mjs'
 
 export async function getPlatformUpdates(operationDay, database, ptvAPI) {
   let stops = await database.getCollection('stops')
@@ -19,7 +20,7 @@ export async function getPlatformUpdates(operationDay, database, ptvAPI) {
   for (let trip of allTrips) {
     let tripData = await VLineTripUpdater.getTrip(database, trip.tdn, operationDay)
     if (!tripData) {
-      console.log('Skipped unknown trip', trip)
+      global.loggers.trackers.vline.log('Skipped unknown trip', trip)
       continue
     }
 
@@ -61,7 +62,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   ptvAPI.addVLine(vlineAPIInterface)
 
   let updatedTrips = await fetchTrips(utils.getPTYYYYMMDD(utils.now()), mongoDB, ptvAPI)
-  console.log('> SSS Platforms: Updated TDNs:', updatedTrips.map(trip => trip.runID).join(', '))
+  global.loggers.trackers.vline.log('> SSS Platforms: Updated TDNs:', updatedTrips.map(trip => trip.runID).join(', '))
 
   await mongoDB.close()
+  process.exit(0)
 }

@@ -18,7 +18,6 @@ function getUniqueGTFSIDs(station, mode, isOnline) {
       if (bay.screenServices.length === 0) return // Save bandwidth by not requesting dropoff only stops
 
       let bayName = `${bay.originalName} (${bay.suburb})`
-      console.log(bayName)
       if (!stopNamesSeen.includes(bayName)) { // filter out offline override stops
         stopNamesSeen.push(bayName)
         gtfsIDs.push(bay.stopGTFSID)

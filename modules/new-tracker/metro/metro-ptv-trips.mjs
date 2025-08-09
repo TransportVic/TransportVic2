@@ -8,6 +8,7 @@ import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import getTripUpdateData from '../../metro-trains/get-stopping-pattern.js'
 import utils from '../../../utils.js'
 import { updateRelatedTrips } from './check-new-updates.mjs'
+import _ from '../../../init-loggers.mjs'
 
 const PTV_BAD_STOPS = [
   'Anzac', 'Town Hall', 'State Library', 'Parkville', 'Arden',
@@ -45,7 +46,7 @@ export async function getTrips(db, ptvAPI, station, skipTDN = []) {
       updates.push(tripUpdate)
       if (++successfulDepartures === 5) break
     } else {
-      console.log('Failed to get trip data for TDN', departure.runID)
+      global.loggers.trackers.metro.log('Failed to get trip data for TDN', departure.runID)
     }
   }
 
@@ -59,10 +60,10 @@ export async function fetchTrips(db, ptvAPI) {
   shuffleArray(allStations)
   let station = allStations[0]
   
-  console.log('Loading next 5 trips from', station.stopName)
+  global.loggers.trackers.metro.log('Loading next 5 trips from', station.stopName)
 
   let updatedTrips = await getTrips(db, ptvAPI, station)
-  console.log('> PTV Trips: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
+  global.loggers.trackers.metro.log('> PTV Trips: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
 
   await updateRelatedTrips(db, updatedTrips, ptvAPI)
 }

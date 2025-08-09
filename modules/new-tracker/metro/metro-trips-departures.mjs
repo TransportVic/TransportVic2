@@ -7,6 +7,7 @@ import config from '../../../config.json' with { type: 'json' }
 import rawLineRanges from '../../../additional-data/metro-tracker/line-ranges.js'
 import utils from '../../../utils.js'
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
+import _ from '../../../init-loggers.mjs'
 
 const tdnToLine = {}
 Object.keys(rawLineRanges).forEach(line => {
@@ -32,7 +33,7 @@ export async function getDepartures(db, ptvAPI) {
   for (let trip of trips) {
     let routeName = tdnToLine[trip.tdn]
     if (!routeName) {
-      console.warn('Could not determine route for TD' + trip.tdn)
+      global.loggers.trackers.metro.warn('Could not determine route for TD' + trip.tdn)
       continue
     }
 
@@ -61,7 +62,7 @@ export async function getDepartures(db, ptvAPI) {
 
 export async function fetchTrips(ptvAPI, db) {
   let trips = await getDepartures(db, ptvAPI)
-  console.log('MTM Departures: Fetched', trips.length, 'trips')
+  global.loggers.trackers.metro.log('MTM Departures: Fetched', trips.length, 'trips')
 
   for (let tripData of trips) {
     await MetroTripUpdater.updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'mtm-departures', updateTime: new Date() })
