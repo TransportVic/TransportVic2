@@ -3,6 +3,7 @@ import getDepartures from '../../../modules/tram/get-departures.js'
 import tramDestinations from '../../../additional-data/tram-destinations.json' with { type: 'json' }
 import utils from '../../../utils.js'
 import timingUtils from './timing-utils.js'
+import async from 'async'
 
 const router = new express.Router()
 
