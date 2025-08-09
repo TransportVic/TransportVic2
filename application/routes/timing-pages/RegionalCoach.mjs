@@ -1,10 +1,10 @@
-const express = require('express')
+import express from 'express'
+import getDepartures from '../../../modules/regional-coach/get-departures.mjs'
+import utils from '../../../utils.js'
+import async from 'async'
+import timingUtils from './timing-utils.js'
+
 const router = new express.Router()
-const getDepartures = require('../../../modules/regional-coach/get-departures')
-const moment = require('moment')
-const utils = require('../../../utils')
-const async = require('async')
-const timingUtils = require('./timing-utils')
 
 async function loadDepartures(req, res) {
   let stops = res.db.getCollection('stops')
@@ -63,4 +63,4 @@ router.post('/:suburb/:stopName', async (req, res) => {
   res.render('timings/templates/regional-coach', await loadDepartures(req, res))
 })
 
-module.exports = router
+export default router

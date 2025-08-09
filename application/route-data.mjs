@@ -11,7 +11,7 @@ export default [
 
   { path: '/vline/timings', router: 'timing-pages/VLine.js', enable: modules.Next4 && modules.Next4.vline },
   { path: '/metro/timings', router: 'timing-pages/MetroTrains.js', enable: modules.Next4 && modules.Next4.metro },
-  { path: '/coach/timings', router: 'timing-pages/RegionalCoach.js', enable: modules.Next4 && modules.Next4.coach },
+  { path: '/coach/timings', router: 'timing-pages/RegionalCoach.mjs', enable: modules.Next4 && modules.Next4.coach },
   { path: '/bus/timings', router: 'timing-pages/Bus.js', enable: modules.Next4 && modules.Next4.bus },
   { path: '/tram/timings', router: 'timing-pages/Tram.js', enable: modules.Next4 && modules.Next4.tram },
   { path: '/ferry/timings', router: 'timing-pages/Ferry.js', enable: modules.Next4 && modules.Next4.ferry },

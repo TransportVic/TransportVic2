@@ -1,6 +1,6 @@
 const express = require('express')
 const router = new express.Router()
-const getCoachDepartures = require('../../../../modules/regional-coach/get-departures')
+const getCoachDepartures = require('../../../../modules/regional-coach/get-departures-old.js')
 const destinationOverrides = require('../../../../additional-data/coach-stops')
 const termini = require('../../../../additional-data/termini-to-lines')
 const utils = require('../../../../utils')

@@ -1,11 +1,11 @@
-const departureUtils = require('../utils/get-bus-timetables')
+const departureUtils = require('../utils/get-bus-timetables.js')
 const async = require('async')
-const utils = require('../../utils')
-const ptvAPI = require('../../ptv-api')
-const destinationOverrides = require('../../additional-data/coach-stops')
-const busBays = require('../../additional-data/bus-data/bus-bays')
-const southernCrossBays = require('../../additional-data/southern-cross-bays')
-const { getDayOfWeek } = require('../../public-holidays')
+const utils = require('../../utils.js')
+const ptvAPI = require('../../ptv-api.js')
+const destinationOverrides = require('../../additional-data/coach-stops.js')
+const busBays = require('../../additional-data/bus-data/bus-bays.js')
+const southernCrossBays = require('../../additional-data/southern-cross-bays.js')
+const { getDayOfWeek } = require('../../public-holidays.js')
 const checkRRB = require('./rrb-check.js')
 
 function getAllStopGTFSIDs(stop) {
