@@ -38,18 +38,11 @@ async function loadDepartures(req, res) {
     })
 
     let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
-    let {stopGTFSID} = currentStop
-    let firstStop = departure.trip.stopTimings[0]
-
-    let minutesDiff = currentStop.departureTimeMinutes - firstStop.departureTimeMinutes
-
-    let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
-
-    let operationDate = utils.getYYYYMMDD(tripStart)
+    let { stopGTFSID } = currentStop
 
     departure.tripURL = `/tram/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + `${operationDate}/#stop-${stopGTFSID}`
+      + `${departure.departureDay}/#stop-${stopGTFSID}`
 
     let destination = utils.getDestinationName(departure.trip.destination)
     departure.destination = tramDestinations[destination] || destination
