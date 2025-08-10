@@ -6,7 +6,6 @@ const destinationOverrides = require('../../additional-data/coach-stops.js')
 const busBays = require('../../additional-data/bus-data/bus-bays.js')
 const southernCrossBays = require('../../additional-data/southern-cross-bays.js')
 const { getDayOfWeek } = require('../../public-holidays.js')
-const checkRRB = require('./rrb-check.js')
 
 function getAllStopGTFSIDs(stop) {
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'regional coach', false)
@@ -211,11 +210,6 @@ async function getDepartures(stop, db) {
 
           let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
           if (utils.getMinutesPastMidnight(tripStart) < 180) tripStart.add(-1, 'day')
-          await checkRRB(departure.trip, tripStart, db.getCollection('timetables'))
-          if (departure.trip.isRailReplacementBus) {
-            departure.isRailReplacementBus = true
-            departure.shortRouteName = departure.trip.shortRouteName
-          }
         }
 
         return departure

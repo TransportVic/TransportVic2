@@ -1,6 +1,5 @@
 import { getDepartures } from '../departures/get-departures.js'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
-import rrbCheck from './rrb-check.js'
 import destinationOverrides from '../../additional-data/coach-stops.js'
 import utils from '../../utils.js'
 
@@ -10,18 +9,7 @@ export default async function getCoachDepartures(stop, db, departureTime, { time
   let departures = await getDepartures(stop, TRANSIT_MODES.regionalCoach, db, { departureTime, timeframe })
   
   for (let departure of departures) {
-    let tripStart = departure.departureDayMoment
-
-    let rrbNSPTrip = await rrbCheck(departure.trip, tripStart, db.getCollection('timetables'))
-    if (rrbNSPTrip) {
-      departure.isRailReplacementBus = true
-      departure.trip.routeName = rrbNSPTrip.routeName
-    }
-
-    if (departure.trip.isRailReplacementBus) {
-      departure.isRailReplacementBus = true
-      departure.routeName = departure.trip.shortRouteName
-    }
+    departure.isRailReplacementBus = departure.trip.isRailReplacementBus || false
 
     let destination = destinationOverrides(departure.trip.stopTimings.slice(-1)[0])
     if (departure.trip.destination.includes(' Railway Station')) {

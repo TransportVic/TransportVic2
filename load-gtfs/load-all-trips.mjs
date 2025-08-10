@@ -1,14 +1,15 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import path from 'path'
 import url from 'url'
+import fs from 'fs/promises'
+
 import { TripLoader, ShapeLoader } from '@transportme/load-ptv-gtfs'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
+import checkRRB from '../modules/regional-coach/rrb-check.js'
 
 import routeIDMap from './routes.json' with { type: 'json' }
 import { createTripProcessor, getVLineRuleStats } from '../transportvic-data/gtfs/process.mjs'
 import config from '../config.json' with { type: 'json' }
-
-import fs from 'fs/promises'
 
 const { GTFS_MODES } = GTFS_CONSTANTS
 
@@ -44,7 +45,9 @@ console.log('Loading timetables now\n')
 let tripsStart = new Date()
 
 let directionIDMap = {}
-let tripProcessors = await createTripProcessor(mongoDB)
+let tripProcessors = await createTripProcessor(mongoDB, {
+  checkRRB
+})
 
 tripProcessors[2] = trip => {
   trip.trueOrigin = trip.origin

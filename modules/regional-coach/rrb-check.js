@@ -1,3 +1,4 @@
+const utils = require('../../utils.js')
 const { getDayOfWeek } = require('../../utils.js')
 
 let longDistanceCountryStops = [
@@ -47,9 +48,9 @@ let outstationOriginStops = [
   'Sunbury'
 ].map(x => x + ' Railway Station')
 
-module.exports = async function checkRRB(trip, tripStart, timetables) {
+module.exports = async function checkRRB(trip, tripOperationDay, timetables) {
   let { origin, destination, routeName } = trip
-  let operationDay = await getDayOfWeek(tripStart)
+  let operationDay = await getDayOfWeek(utils.parseDate(tripOperationDay))
   let originDepartureMinutes = trip.stopTimings[0].departureTimeMinutes
 
   if (origin === 'Southern Cross Coach Terminal/Spencer Street') {
