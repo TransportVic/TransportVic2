@@ -7,6 +7,11 @@ let commands = [
   ['create-indexes.mjs'],
   ['load-ptv-stops.mjs'],
   ['load-all-stops-routes.mjs'],
+
+  ['vline/api-integration/load-vnet-station-names.mjs'],
+  ['vline/timetables/download-vline-timetables.mjs'],
+  ['vline/timetables/load-vline-timetables.mjs'],
+
   ['bus/load-788-stop-numbers.mjs'],
   ['load-all-trips.mjs'],
 
@@ -15,10 +20,6 @@ let commands = [
   ['metro/load-extra-data.mjs'],
   ['metro/download-metro-timetables.mjs'],
   ['metro/load-metro-timetables.mjs'],
-
-  ['vline/api-integration/load-vnet-station-names.mjs'],
-  ['vline/timetables/download-vline-timetables.mjs'],
-  ['vline/timetables/load-vline-timetables.mjs'],
 
   ['load-all-post.mjs'],
 

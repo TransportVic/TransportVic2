@@ -47,8 +47,7 @@ let outstationOriginStops = [
   'Sunbury'
 ].map(x => x + ' Railway Station')
 
-module.exports = async function checkRRB(trip, tripStart, db) {
-  let timetables = db.getCollection('timetables')
+module.exports = async function checkRRB(trip, tripStart, timetables) {
   let { origin, destination, routeName } = trip
   let operationDay = await getDayOfWeek(tripStart)
   let originDepartureMinutes = trip.stopTimings[0].departureTimeMinutes

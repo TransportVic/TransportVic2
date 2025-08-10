@@ -211,7 +211,7 @@ async function getDepartures(stop, db) {
 
           let tripStart = departure.scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
           if (utils.getMinutesPastMidnight(tripStart) < 180) tripStart.add(-1, 'day')
-          await checkRRB(departure.trip, tripStart, db)
+          await checkRRB(departure.trip, tripStart, db.getCollection('timetables'))
           if (departure.trip.isRailReplacementBus) {
             departure.isRailReplacementBus = true
             departure.shortRouteName = departure.trip.shortRouteName
