@@ -1,0 +1,292 @@
+{
+  "_id": "6896c2019655fb9b50963059",
+  "mode": "regional coach",
+  "routeName": "Bairnsdale Via Traralgon & Sale",
+  "routeNumber": null,
+  "routeGTFSID": "5-BDE",
+  "operationDays": [
+    "20250810"
+  ],
+  "tripID": "2.T3.5-BDE-mjp-4.2.H",
+  "shapeID": "5-BDE-mjp-4.2.H",
+  "block": null,
+  "gtfsDirection": 0,
+  "stopTimings": [
+    {
+      "stopName": "Pakenham Railway Station/Railway Avenue",
+      "stopNumber": null,
+      "suburb": "Pakenham",
+      "stopGTFSID": "3427",
+      "arrivalTime": null,
+      "arrivalTimeMinutes": null,
+      "departureTime": "09:25",
+      "departureTimeMinutes": 565,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      },
+      "stopDistance": "0.00",
+      "vnetName": "Pakenham Station"
+    },
+    {
+      "stopName": "Nar Nar Goon Railway Station/Carney Street",
+      "stopNumber": null,
+      "suburb": "Nar Nar Goon",
+      "stopGTFSID": "22364",
+      "arrivalTime": "09:37",
+      "arrivalTimeMinutes": 577,
+      "departureTime": "09:37",
+      "departureTimeMinutes": 577,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "15610.56",
+      "vnetName": "Nar Nar Goon Station"
+    },
+    {
+      "stopName": "Tynong Railway Station/Nar Nar Goon-Longwarry Road",
+      "stopNumber": null,
+      "suburb": "Tynong",
+      "stopGTFSID": "22365",
+      "arrivalTime": "09:41",
+      "arrivalTimeMinutes": 581,
+      "departureTime": "09:41",
+      "departureTimeMinutes": 581,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "20848.96",
+      "vnetName": "Tynong Station"
+    },
+    {
+      "stopName": "Garfield Railway Station/Nar Nar Goon-Longwarry Road",
+      "stopNumber": null,
+      "suburb": "Garfield",
+      "stopGTFSID": "21466",
+      "arrivalTime": "09:48",
+      "arrivalTimeMinutes": 588,
+      "departureTime": "09:48",
+      "departureTimeMinutes": 588,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "24944.64",
+      "vnetName": "Garfield Station: Railway Terrace"
+    },
+    {
+      "stopName": "Bunyip Railway Station/Nar Nar Goon-Longwarry Road",
+      "stopNumber": null,
+      "suburb": "Bunyip",
+      "stopGTFSID": "45071",
+      "arrivalTime": "09:55",
+      "arrivalTimeMinutes": 595,
+      "departureTime": "09:55",
+      "departureTimeMinutes": 595,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "29101.36",
+      "vnetName": "Bunyip Station"
+    },
+    {
+      "stopName": "Longwarry Railway Station/Nar Nar Goon-Longwarry Road",
+      "stopNumber": null,
+      "suburb": "Longwarry",
+      "stopGTFSID": "21464",
+      "arrivalTime": "10:01",
+      "arrivalTimeMinutes": 601,
+      "departureTime": "10:01",
+      "departureTimeMinutes": 601,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "33403.42",
+      "vnetName": "Longwarry Station"
+    },
+    {
+      "stopName": "Drouin Railway Station/Princes Way",
+      "stopNumber": null,
+      "suburb": "Drouin",
+      "stopGTFSID": "21706",
+      "arrivalTime": "10:13",
+      "arrivalTimeMinutes": 613,
+      "departureTime": "10:13",
+      "departureTimeMinutes": 613,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "42884.32",
+      "vnetName": "Drouin Station"
+    },
+    {
+      "stopName": "Warragul Railway Station/Alfred Street",
+      "stopNumber": null,
+      "suburb": "Warragul",
+      "stopGTFSID": "47670",
+      "arrivalTime": "10:25",
+      "arrivalTimeMinutes": 625,
+      "departureTime": "10:25",
+      "departureTimeMinutes": 625,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "52547.56",
+      "vnetName": "Warragul Station"
+    },
+    {
+      "stopName": "Yarragon Railway Station/Princes Highway",
+      "stopNumber": null,
+      "suburb": "Yarragon",
+      "stopGTFSID": "16096",
+      "arrivalTime": "10:38",
+      "arrivalTimeMinutes": 638,
+      "departureTime": "10:38",
+      "departureTimeMinutes": 638,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "65508.74",
+      "vnetName": "Yarragon Station"
+    },
+    {
+      "stopName": "Trafalgar Railway Station/Princes Highway",
+      "stopNumber": null,
+      "suburb": "Trafalgar",
+      "stopGTFSID": "21463",
+      "arrivalTime": "10:48",
+      "arrivalTimeMinutes": 648,
+      "departureTime": "10:48",
+      "departureTimeMinutes": 648,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "73626.80",
+      "vnetName": "Trafalgar Station"
+    },
+    {
+      "stopName": "Moe Railway Station/Lloyd Street",
+      "stopNumber": null,
+      "suburb": "Moe",
+      "stopGTFSID": "21462",
+      "arrivalTime": "10:59",
+      "arrivalTimeMinutes": 659,
+      "departureTime": "10:59",
+      "departureTimeMinutes": 659,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "83633.93",
+      "vnetName": "Moe Station"
+    },
+    {
+      "stopName": "Morwell Railway Station/Princes Drive",
+      "stopNumber": null,
+      "suburb": "Morwell",
+      "stopGTFSID": "16287",
+      "arrivalTime": "11:15",
+      "arrivalTimeMinutes": 675,
+      "departureTime": "11:15",
+      "departureTimeMinutes": 675,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "98626.39",
+      "vnetName": "Morwell Station"
+    },
+    {
+      "stopName": "Traralgon Railway Station/Princes Street",
+      "stopNumber": null,
+      "suburb": "Traralgon",
+      "stopGTFSID": "16295",
+      "arrivalTime": "11:33",
+      "arrivalTimeMinutes": 693,
+      "departureTime": "11:33",
+      "departureTimeMinutes": 693,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "112661.42",
+      "vnetName": "Traralgon Station: Princes Hwy"
+    },
+    {
+      "stopName": "Rosedale Railway Station/Hood Street",
+      "stopNumber": null,
+      "suburb": "Rosedale",
+      "stopGTFSID": "52559",
+      "arrivalTime": "11:53",
+      "arrivalTimeMinutes": 713,
+      "departureTime": "11:53",
+      "departureTimeMinutes": 713,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "136273.47",
+      "vnetName": null
+    },
+    {
+      "stopName": "Sale Railway Station/Pettit Drive",
+      "stopNumber": null,
+      "suburb": "Sale",
+      "stopGTFSID": "16302",
+      "arrivalTime": "12:13",
+      "arrivalTimeMinutes": 733,
+      "departureTime": "12:13",
+      "departureTimeMinutes": 733,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "164519.66",
+      "vnetName": "Sale Station: Pettit Street"
+    },
+    {
+      "stopName": "Stratford Railway Station/Dixon Street",
+      "stopNumber": null,
+      "suburb": "Stratford",
+      "stopGTFSID": "52562",
+      "arrivalTime": "12:33",
+      "arrivalTimeMinutes": 753,
+      "departureTime": "12:33",
+      "departureTimeMinutes": 753,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "182129.76",
+      "vnetName": null
+    },
+    {
+      "stopName": "Bairnsdale Railway Station/Macleod Street",
+      "stopNumber": null,
+      "suburb": "Bairnsdale",
+      "stopGTFSID": "16309",
+      "arrivalTime": "13:13",
+      "arrivalTimeMinutes": 793,
+      "departureTime": null,
+      "departureTimeMinutes": null,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "234009.52",
+      "vnetName": "Bairnsdale Station"
+    }
+  ],
+  "origin": "Pakenham Railway Station/Railway Avenue",
+  "departureTime": "09:25",
+  "destination": "Bairnsdale Railway Station/Macleod Street",
+  "destinationArrivalTime": "13:13"
+}

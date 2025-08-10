@@ -41,6 +41,12 @@ let longDistanceCountryStops = [
   "Epsom"
 ].map(x => x + ' Railway Station')
 
+let outstationOriginStops = [
+  'Pakenham',
+  'Craigieburn',
+  'Sunbury'
+].map(x => x + ' Railway Station')
+
 module.exports = async function checkRRB(trip, tripStart, db) {
   let timetables = db.getCollection('timetables')
   let { origin, destination, routeName } = trip
@@ -54,11 +60,12 @@ module.exports = async function checkRRB(trip, tripStart, db) {
     destination = 'Southern Cross Railway Station'
   }
 
-  let varianceAllowed = 3
-  if (longDistanceCountryStops.includes(origin) || longDistanceCountryStops.includes(destination)) varianceAllowed = 20
+  let toleranceAllowed = 3
+  if (longDistanceCountryStops.includes(origin) || longDistanceCountryStops.includes(destination)) toleranceAllowed = 20
 
   let destinationStopName = destination.split('/')[0]
   let originStopName = origin.split('/')[0]
+  let isLongDistanceCoach = longDistanceCountryStops.includes(originStopName) || longDistanceCountryStops.includes(destinationStopName)
 
   let nspDeparture = await timetables.findDocument({
     mode: 'regional train',
@@ -68,7 +75,7 @@ module.exports = async function checkRRB(trip, tripStart, db) {
         $elemMatch: {
           stopName: originStopName,
           departureTimeMinutes: {
-            $gte: originDepartureMinutes - varianceAllowed,
+            $gte: originDepartureMinutes - toleranceAllowed,
             $lte: originDepartureMinutes + 3
           }
         }
@@ -97,9 +104,14 @@ module.exports = async function checkRRB(trip, tripStart, db) {
   if (!(railwayStationCount / trip.stopTimings.length > 0.8 && trip.stopTimings.length > 2)) return
 
   let secondStop = trip.stopTimings[1].stopName.split('/')[0]
+  toleranceAllowed = isLongDistanceCoach ? 20 : 14
 
-  varianceAllowed = 14
-  if (longDistanceCountryStops.includes(originStopName) || longDistanceCountryStops.includes(destinationStopName)) varianceAllowed = 20
+  let earlyTolerance = toleranceAllowed
+  let lateTolerance = toleranceAllowed
+
+  if (outstationOriginStops.includes(originStopName) && isLongDistanceCoach) {
+    lateTolerance = 35
+  }
 
   nspDeparture = await timetables.findDocument({
     mode: 'regional train',
@@ -109,8 +121,8 @@ module.exports = async function checkRRB(trip, tripStart, db) {
         $elemMatch: {
           stopName: originStopName,
           departureTimeMinutes: {
-            $gte: originDepartureMinutes - varianceAllowed,
-            $lte: originDepartureMinutes + varianceAllowed
+            $gte: originDepartureMinutes - lateTolerance,
+            $lte: originDepartureMinutes + earlyTolerance
           }
         }
       },
@@ -119,7 +131,7 @@ module.exports = async function checkRRB(trip, tripStart, db) {
         $elemMatch: {
           stopName: secondStop,
           departureTimeMinutes: {
-            $gte: originDepartureMinutes - varianceAllowed
+            $gte: originDepartureMinutes - lateTolerance
           }
         }
       },
