@@ -15,12 +15,8 @@ let liveTimetables = mongoDB.getCollection('live timetables')
 async function loadOperationalTT(operationDay) {
   let opDayFormat = utils.getYYYYMMDD(operationDay)
   let rawActiveTrips = await gtfsTimetables.findDocuments({
-    $or: [{
-      mode: TRANSIT_MODES.bus,
-      routeGTFSID: /^4-/
-    }, {
-      mode: TRANSIT_MODES.regionalCoach
-    }],
+    mode: TRANSIT_MODES.bus,
+    routeGTFSID: /^4-/,
     operationDays: opDayFormat
   }).toArray()
 
