@@ -123,6 +123,5 @@ module.exports = async function checkRRB(trip, tripStart, db) {
     })
   }
 
-  trip.isRailReplacementBus = !!nspDeparture
-  if (nspDeparture) trip.shortRouteName = nspDeparture.routeName
+  return nspDeparture
 }
