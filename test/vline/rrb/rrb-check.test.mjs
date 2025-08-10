@@ -3,6 +3,7 @@ import { LokiDatabaseConnection } from '@transportme/database'
 import nsp from './sample-data/nsp.json' with { type: 'json' }
 import rrbSameOrigin from './sample-data/rrb-same-origin.json' with { type: 'json' }
 import rrbSecondStop from './sample-data/rrb-second-stop.json' with { type: 'json' }
+import rrbSecondStopEarly from './sample-data/rrb-second-stop-early.json' with { type: 'json' }
 import rrbCheck from '../../../modules/regional-coach/rrb-check.js'
 import utils from '../../../utils.js'
 
@@ -20,10 +21,17 @@ describe('The V/Line RRB check function', () => {
     expect(nspTrip.runID).to.equal('8461')
   })
 
-  it('Matches coach departures with an identical NSP rail service', async () => {
+  it('Matches coach departures departing from the second stop', async () => {
     const nspTrip = await rrbCheck(rrbSecondStop, utils.parseDate('20250810'), database)
 
     expect(nspTrip).to.exist
     expect(nspTrip.runID).to.equal('8463')
+  })
+
+  it('Matches coach departures departing from the second stop, allowing up to 20min for a long distance coach', async () => {
+    const nspTrip = await rrbCheck(rrbSecondStopEarly, utils.parseDate('20250810'), database)
+
+    expect(nspTrip).to.exist
+    expect(nspTrip.runID).to.equal('8461')
   })
 })

@@ -11,7 +11,12 @@ export default async function getCoachDepartures(stop, db, departureTime, { time
   
   for (let departure of departures) {
     let tripStart = departure.departureDayMoment
-    await rrbCheck(departure.trip, tripStart, db)
+
+    let rrbNSPTrip = await rrbCheck(departure.trip, tripStart, db)
+    if (rrbNSPTrip) {
+      departure.isRailReplacementBus = true
+      departure.trip.routeName = rrbNSPTrip.routeName
+    }
 
     if (departure.trip.isRailReplacementBus) {
       departure.isRailReplacementBus = true

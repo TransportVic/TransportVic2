@@ -96,8 +96,11 @@ async function getTripData(req, res) {
     let originShortName = utils.getStopName(origin)
     if (!utils.isStreet(originShortName)) origin = originShortName
 
-    await checkRRB(trip, tripStartTime, res.db)
-    if (trip.isRailReplacementBus) trip.routeName = trip.shortRouteName
+    let rrbNSPTrip = await checkRRB(trip, tripStartTime, res.db)
+    if (rrbNSPTrip) {
+      trip.isRailReplacementBus = true
+      trip.routeName = rrbNSPTrip.routeName
+    }
   }
 
   let firstDepartureTime = trip.stopTimings[0].departureTimeMinutes

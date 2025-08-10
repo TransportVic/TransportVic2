@@ -85,43 +85,46 @@ module.exports = async function checkRRB(trip, tripStart, db) {
     }]
   })
 
+  if (nspDeparture) return nspDeparture
+
   let railwayStationCount = 0
   for (let stop of trip.stopTimings) {
     if (stop.stopName.includes('Railway Station')) railwayStationCount++
   }
 
   // A majority of stops are railway stations but no NSP departure matched
-  if (!nspDeparture && railwayStationCount / trip.stopTimings.length > 0.8 && trip.stopTimings.length > 2) {
-    let secondStop = trip.stopTimings[1].stopName.split('/')[0]
+  // Check the inverse - discard a trip that does not match this rule
+  if (!(railwayStationCount / trip.stopTimings.length > 0.8 && trip.stopTimings.length > 2)) return
 
-    let varianceAllowed = 14
-    if (longDistanceCountryStops.includes(origin) || longDistanceCountryStops.includes(destination)) varianceAllowed = 20
+  let secondStop = trip.stopTimings[1].stopName.split('/')[0]
 
-    nspDeparture = await timetables.findDocument({
-      mode: 'regional train',
-      operationDays: operationDay,
-      $and: [{
-        stopTimings: {
-          $elemMatch: {
-            stopName: originStopName,
-            departureTimeMinutes: {
-              $gte: originDepartureMinutes - varianceAllowed,
-              $lte: originDepartureMinutes + varianceAllowed
-            }
+  varianceAllowed = 14
+  if (longDistanceCountryStops.includes(originStopName) || longDistanceCountryStops.includes(destinationStopName)) varianceAllowed = 20
+
+  nspDeparture = await timetables.findDocument({
+    mode: 'regional train',
+    operationDays: operationDay,
+    $and: [{
+      stopTimings: {
+        $elemMatch: {
+          stopName: originStopName,
+          departureTimeMinutes: {
+            $gte: originDepartureMinutes - varianceAllowed,
+            $lte: originDepartureMinutes + varianceAllowed
           }
-        },
-      }, {
-        stopTimings: {
-          $elemMatch: {
-            stopName: secondStop,
-            departureTimeMinutes: {
-              $gte: originDepartureMinutes - varianceAllowed
-            }
+        }
+      },
+    }, {
+      stopTimings: {
+        $elemMatch: {
+          stopName: secondStop,
+          departureTimeMinutes: {
+            $gte: originDepartureMinutes - varianceAllowed
           }
-        },
-      }]
-    })
-  }
+        }
+      },
+    }]
+  })
 
-  return nspDeparture
+  if (nspDeparture) return nspDeparture
 }
