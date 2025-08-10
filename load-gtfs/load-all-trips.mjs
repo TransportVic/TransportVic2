@@ -8,7 +8,7 @@ import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import checkRRB from '../modules/regional-coach/rrb-check.js'
 
 import routeIDMap from './routes.json' with { type: 'json' }
-import { createTripProcessor, getVLineRuleStats } from '../transportvic-data/gtfs/process.mjs'
+import { createTripProcessor, getVLineCoachStats, getVLineRuleStats } from '../transportvic-data/gtfs/process.mjs'
 import config from '../config.json' with { type: 'json' }
 
 const { GTFS_MODES } = GTFS_CONSTANTS
@@ -120,6 +120,8 @@ for (let i of selectedModes) {
 await fs.writeFile(path.join(__dirname, 'directions.json'), JSON.stringify(directionIDMap))
 
 console.log('Trip exclusion stats', getVLineRuleStats())
+console.log('Unmatched V/Line Coach trips', getVLineCoachStats().filter(trip => trip.timesUsed === 0))
+
 console.log('Loading trips done, took', (new Date() - tripsStart) / 1000, 'seconds')
 console.log('Loading stop services took', totalStopServiceTime / 1000, 'seconds')
 console.log('\nLoading both trips and shapes took', (new Date() - start) / 1000, 'seconds overall')
