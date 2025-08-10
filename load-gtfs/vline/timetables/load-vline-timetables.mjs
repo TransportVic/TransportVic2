@@ -100,6 +100,10 @@ for (let run of Object.values(allRuns)) {
     direction: !(run.tdn[3] % 2) ? 'Up' : 'Down'
   }
 
+  if (timetable.stopTimings[0].departureTimeMinutes < 3 * 60) {
+    timetable.stopTimings[0].departureTimeMinutes += 1440
+  }
+
   for (let i = 1; i < timetable.stopTimings.length; i++) {
     let prev = timetable.stopTimings[i - 1], stop = timetable.stopTimings[i]
     if (stop.arrivalTimeMinutes < prev.departureTimeMinutes) {

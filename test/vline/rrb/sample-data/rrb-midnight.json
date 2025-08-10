@@ -1,0 +1,260 @@
+{
+  "_id": "689888ed0317457b710646c8",
+  "mode": "regional coach",
+  "routeName": "Geelong - Melbourne Via Geelong",
+  "routeNumber": null,
+  "routeGTFSID": "5-GEL",
+  "operationDays": [
+    "20250810"
+  ],
+  "tripID": "6.T3.5-GEL-mjp-2.3.H",
+  "shapeID": "5-GEL-mjp-2.3.H",
+  "block": null,
+  "gtfsDirection": 0,
+  "stopTimings": [
+    {
+      "stopName": "Southern Cross Coach Terminal/Spencer Street",
+      "stopNumber": null,
+      "suburb": "Docklands",
+      "stopGTFSID": "20836",
+      "arrivalTime": null,
+      "arrivalTimeMinutes": null,
+      "departureTime": "00:10",
+      "departureTimeMinutes": 1450,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      },
+      "stopDistance": "0.00",
+      "vnetName": "Melbourne, Southern Cross"
+    },
+    {
+      "stopName": "Footscray Railway Station/Irving Street",
+      "stopNumber": null,
+      "suburb": "Footscray",
+      "stopGTFSID": "52545",
+      "arrivalTime": "00:18",
+      "arrivalTimeMinutes": 1458,
+      "departureTime": "00:18",
+      "departureTimeMinutes": 1458,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      },
+      "stopDistance": "5886.29",
+      "vnetName": null
+    },
+    {
+      "stopName": "Sunshine Railway Station/City Place",
+      "stopNumber": null,
+      "suburb": "Sunshine",
+      "stopGTFSID": "1",
+      "arrivalTime": "00:23",
+      "arrivalTimeMinutes": 1463,
+      "departureTime": "00:23",
+      "departureTimeMinutes": 1463,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      },
+      "stopDistance": "13327.64",
+      "vnetName": null
+    },
+    {
+      "stopName": "Deer Park Railway Station/Railway Parade",
+      "stopNumber": null,
+      "suburb": "Deer Park",
+      "stopGTFSID": "27537",
+      "arrivalTime": "00:28",
+      "arrivalTimeMinutes": 1468,
+      "departureTime": "00:28",
+      "departureTimeMinutes": 1468,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "19587.44",
+      "vnetName": null
+    },
+    {
+      "stopName": "Tarneit Railway Station",
+      "stopNumber": null,
+      "suburb": "Tarneit",
+      "stopGTFSID": "52041",
+      "arrivalTime": "00:37",
+      "arrivalTimeMinutes": 1477,
+      "departureTime": "00:37",
+      "departureTimeMinutes": 1477,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "33542.12",
+      "vnetName": "Tarneit Station"
+    },
+    {
+      "stopName": "Wyndham Vale Railway Station/Armstrong Road",
+      "stopNumber": null,
+      "suburb": "Manor Lakes",
+      "stopGTFSID": "50263",
+      "arrivalTime": "00:43",
+      "arrivalTimeMinutes": 1483,
+      "departureTime": "00:43",
+      "departureTimeMinutes": 1483,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "47135.40",
+      "vnetName": "Wyndham Vale Station"
+    },
+    {
+      "stopName": "Little River Railway Station",
+      "stopNumber": null,
+      "suburb": "Little River",
+      "stopGTFSID": "52040",
+      "arrivalTime": "00:51",
+      "arrivalTimeMinutes": 1491,
+      "departureTime": "00:51",
+      "departureTimeMinutes": 1491,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "71182.72",
+      "vnetName": "Little River Station"
+    },
+    {
+      "stopName": "Lara Railway Station/Hicks Street",
+      "stopNumber": null,
+      "suburb": "Lara",
+      "stopGTFSID": "52549",
+      "arrivalTime": "00:57",
+      "arrivalTimeMinutes": 1497,
+      "departureTime": "00:57",
+      "departureTimeMinutes": 1497,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "84117.46",
+      "vnetName": "Lara Station"
+    },
+    {
+      "stopName": "Corio Railway Station",
+      "stopNumber": null,
+      "suburb": "Corio",
+      "stopGTFSID": "52039",
+      "arrivalTime": "01:02",
+      "arrivalTimeMinutes": 1502,
+      "departureTime": "01:02",
+      "departureTimeMinutes": 1502,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "92094.99",
+      "vnetName": "Corio Station"
+    },
+    {
+      "stopName": "North Shore Railway Station/Station Street",
+      "stopNumber": null,
+      "suburb": "Norlane",
+      "stopGTFSID": "52553",
+      "arrivalTime": "01:05",
+      "arrivalTimeMinutes": 1505,
+      "departureTime": "01:05",
+      "departureTimeMinutes": 1505,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "96806.18",
+      "vnetName": "North Shore Station"
+    },
+    {
+      "stopName": "North Geelong Railway Station/Princess Highway Service Road",
+      "stopNumber": null,
+      "suburb": "Rippleside",
+      "stopGTFSID": "52042",
+      "arrivalTime": "01:09",
+      "arrivalTimeMinutes": 1509,
+      "departureTime": "01:09",
+      "departureTimeMinutes": 1509,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "100039.17",
+      "vnetName": "North Geelong Station"
+    },
+    {
+      "stopName": "Geelong Railway Station/Railway Terrace",
+      "stopNumber": null,
+      "suburb": "Geelong",
+      "stopGTFSID": "30387",
+      "arrivalTime": "01:13",
+      "arrivalTimeMinutes": 1513,
+      "departureTime": "01:15",
+      "departureTimeMinutes": 1515,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "102967.30",
+      "vnetName": "Geelong Station: Railway Terrace"
+    },
+    {
+      "stopName": "South Geelong Railway Station/Yarra Street",
+      "stopNumber": null,
+      "suburb": "South Geelong",
+      "stopGTFSID": "52560",
+      "arrivalTime": "01:18",
+      "arrivalTimeMinutes": 1518,
+      "departureTime": "01:18",
+      "departureTimeMinutes": 1518,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "105309.94",
+      "vnetName": "South Geelong Station"
+    },
+    {
+      "stopName": "Marshall Railway Station/Marshalltown Road",
+      "stopNumber": null,
+      "suburb": "Marshall",
+      "stopGTFSID": "30837",
+      "arrivalTime": "01:23",
+      "arrivalTimeMinutes": 1523,
+      "departureTime": "01:23",
+      "departureTimeMinutes": 1523,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "110708.65",
+      "vnetName": "Marshall Station"
+    },
+    {
+      "stopName": "Waurn Ponds Railway Station/Sugargum Drive",
+      "stopNumber": null,
+      "suburb": "Waurn Ponds",
+      "stopGTFSID": "52038",
+      "arrivalTime": "01:29",
+      "arrivalTimeMinutes": 1529,
+      "departureTime": null,
+      "departureTimeMinutes": null,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "117074.48",
+      "vnetName": "Waurn Ponds Station"
+    }
+  ],
+  "origin": "Southern Cross Coach Terminal/Spencer Street",
+  "departureTime": "24:10",
+  "destination": "Waurn Ponds Railway Station/Sugargum Drive",
+  "destinationArrivalTime": "25:29"
+}

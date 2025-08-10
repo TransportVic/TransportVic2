@@ -5,8 +5,8 @@ import rrbSameOrigin from './sample-data/rrb-same-origin.json' with { type: 'jso
 import rrbSecondStop from './sample-data/rrb-second-stop.json' with { type: 'json' }
 import rrbSecondStopEarly from './sample-data/rrb-second-stop-early.json' with { type: 'json' }
 import rrbPKM35L from './sample-data/rrb-pkm-35L.json' with { type: 'json' }
+import rrbMidnight from './sample-data/rrb-midnight.json' with { type: 'json' }
 import rrbCheck from '../../../modules/regional-coach/rrb-check.js'
-import utils from '../../../utils.js'
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
@@ -41,5 +41,12 @@ describe('The V/Line RRB check function', () => {
 
     expect(nspTrip).to.exist
     expect(nspTrip.runID).to.equal('8461')
+  })
+
+  it('Matches coach departures after midnight', async () => {
+    const nspTrip = await rrbCheck(rrbMidnight, '20250810', timetables)
+
+    expect(nspTrip).to.exist
+    expect(nspTrip.runID).to.equal('8819')
   })
 })
