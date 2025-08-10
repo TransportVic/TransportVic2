@@ -18,6 +18,7 @@
 
   1     0     *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-coach-op-tt.mjs
   2     0     *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-bus-op-tt.mjs
+  1     0     *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-overland-op-tt.mjs
 
   # Metro Tracker
   # Regular trips everyday 0400 - 2359

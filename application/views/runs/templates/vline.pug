@@ -18,7 +18,7 @@ if trip.runID
           else if (parts[1] === 'XPT') parts[1] = 'xpt'
         }
       }
-    if vehicle
+    if vehicle && parts && parts[1]
       div.vehicle
         if parts[0]
           span=parts[0] + 'x'
