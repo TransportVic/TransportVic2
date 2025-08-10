@@ -1,0 +1,180 @@
+{
+  "_id": "6896c2019655fb9b50962ba9",
+  "mode": "regional coach",
+  "routeName": "Bairnsdale Via Traralgon & Sale",
+  "routeNumber": null,
+  "routeGTFSID": "5-BDE",
+  "operationDays": [
+    "20250810"
+  ],
+  "tripID": "11.T3.5-BDE-mjp-4.10.H",
+  "shapeID": "5-BDE-mjp-4.10.H",
+  "block": null,
+  "gtfsDirection": 0,
+  "stopTimings": [
+    {
+      "stopName": "Southern Cross Coach Terminal/Spencer Street",
+      "stopNumber": null,
+      "suburb": "Docklands",
+      "stopGTFSID": "20836",
+      "arrivalTime": null,
+      "arrivalTimeMinutes": null,
+      "departureTime": "07:54",
+      "departureTimeMinutes": 474,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      },
+      "stopDistance": "0.00",
+      "vnetName": "Melbourne, Southern Cross"
+    },
+    {
+      "stopName": "Nar Nar Goon Railway Station/Carney Street",
+      "stopNumber": null,
+      "suburb": "Nar Nar Goon",
+      "stopGTFSID": "22364",
+      "arrivalTime": "09:01",
+      "arrivalTimeMinutes": 541,
+      "departureTime": "09:01",
+      "departureTimeMinutes": 541,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "82514.29",
+      "vnetName": "Nar Nar Goon Station"
+    },
+    {
+      "stopName": "Tynong Railway Station/Nar Nar Goon-Longwarry Road",
+      "stopNumber": null,
+      "suburb": "Tynong",
+      "stopGTFSID": "22365",
+      "arrivalTime": "09:05",
+      "arrivalTimeMinutes": 545,
+      "departureTime": "09:05",
+      "departureTimeMinutes": 545,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "87752.69",
+      "vnetName": "Tynong Station"
+    },
+    {
+      "stopName": "Garfield Railway Station/Nar Nar Goon-Longwarry Road",
+      "stopNumber": null,
+      "suburb": "Garfield",
+      "stopGTFSID": "21466",
+      "arrivalTime": "09:10",
+      "arrivalTimeMinutes": 550,
+      "departureTime": "09:10",
+      "departureTimeMinutes": 550,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "91848.36",
+      "vnetName": "Garfield Station: Railway Terrace"
+    },
+    {
+      "stopName": "Bunyip Railway Station/Nar Nar Goon-Longwarry Road",
+      "stopNumber": null,
+      "suburb": "Bunyip",
+      "stopGTFSID": "45071",
+      "arrivalTime": "09:17",
+      "arrivalTimeMinutes": 557,
+      "departureTime": "09:17",
+      "departureTimeMinutes": 557,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "96005.09",
+      "vnetName": "Bunyip Station"
+    },
+    {
+      "stopName": "Longwarry Railway Station/Nar Nar Goon-Longwarry Road",
+      "stopNumber": null,
+      "suburb": "Longwarry",
+      "stopGTFSID": "21464",
+      "arrivalTime": "09:23",
+      "arrivalTimeMinutes": 563,
+      "departureTime": "09:23",
+      "departureTimeMinutes": 563,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "100307.15",
+      "vnetName": "Longwarry Station"
+    },
+    {
+      "stopName": "Yarragon Railway Station/Princes Highway",
+      "stopNumber": null,
+      "suburb": "Yarragon",
+      "stopGTFSID": "16096",
+      "arrivalTime": "09:50",
+      "arrivalTimeMinutes": 590,
+      "departureTime": "09:50",
+      "departureTimeMinutes": 590,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "132412.47",
+      "vnetName": "Yarragon Station"
+    },
+    {
+      "stopName": "Trafalgar Railway Station/Princes Highway",
+      "stopNumber": null,
+      "suburb": "Trafalgar",
+      "stopGTFSID": "21463",
+      "arrivalTime": "10:00",
+      "arrivalTimeMinutes": 600,
+      "departureTime": "10:00",
+      "departureTimeMinutes": 600,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "140530.53",
+      "vnetName": "Trafalgar Station"
+    },
+    {
+      "stopName": "Stratford Railway Station/Dixon Street",
+      "stopNumber": null,
+      "suburb": "Stratford",
+      "stopGTFSID": "52562",
+      "arrivalTime": "11:32",
+      "arrivalTimeMinutes": 692,
+      "departureTime": "11:32",
+      "departureTimeMinutes": 692,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "249033.48",
+      "vnetName": null
+    },
+    {
+      "stopName": "Bairnsdale Railway Station/Macleod Street",
+      "stopNumber": null,
+      "suburb": "Bairnsdale",
+      "stopGTFSID": "16309",
+      "arrivalTime": "12:12",
+      "arrivalTimeMinutes": 732,
+      "departureTime": null,
+      "departureTimeMinutes": null,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "300913.24",
+      "vnetName": "Bairnsdale Station"
+    }
+  ],
+  "origin": "Southern Cross Coach Terminal/Spencer Street",
+  "departureTime": "07:54",
+  "destination": "Bairnsdale Railway Station/Macleod Street",
+  "destinationArrivalTime": "12:12"
+}

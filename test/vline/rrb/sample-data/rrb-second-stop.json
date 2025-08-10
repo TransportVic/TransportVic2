@@ -1,0 +1,116 @@
+{
+  "_id": "6896c2019655fb9b50963679",
+  "mode": "regional coach",
+  "routeName": "Bairnsdale Via Traralgon & Sale",
+  "routeNumber": null,
+  "routeGTFSID": "5-BDE",
+  "operationDays": [
+    "20250810"
+  ],
+  "tripID": "4.T3.5-BDE-mjp-4.3.H",
+  "shapeID": "5-BDE-mjp-4.3.H",
+  "block": null,
+  "gtfsDirection": 0,
+  "stopTimings": [
+    {
+      "stopName": "Caulfield Railway Station/Sir John Monash Drive",
+      "stopNumber": null,
+      "suburb": "Caulfield East",
+      "stopGTFSID": "52537",
+      "arrivalTime": null,
+      "arrivalTimeMinutes": null,
+      "departureTime": "10:31",
+      "departureTimeMinutes": 631,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      },
+      "stopDistance": "0.00",
+      "vnetName": null
+    },
+    {
+      "stopName": "Dandenong Railway Station/Foster Street",
+      "stopNumber": null,
+      "suburb": "Dandenong",
+      "stopGTFSID": "20018",
+      "arrivalTime": "11:04",
+      "arrivalTimeMinutes": 664,
+      "departureTime": "11:04",
+      "departureTimeMinutes": 664,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 1
+      },
+      "stopDistance": "21766.75",
+      "vnetName": "Dandenong Station"
+    },
+    {
+      "stopName": "Pakenham Railway Station/Railway Avenue",
+      "stopNumber": null,
+      "suburb": "Pakenham",
+      "stopGTFSID": "3427",
+      "arrivalTime": "11:40",
+      "arrivalTimeMinutes": 700,
+      "departureTime": "11:40",
+      "departureTimeMinutes": 700,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "54083.06",
+      "vnetName": "Pakenham Station"
+    },
+    {
+      "stopName": "Drouin Railway Station/Princes Way",
+      "stopNumber": null,
+      "suburb": "Drouin",
+      "stopGTFSID": "21706",
+      "arrivalTime": "12:12",
+      "arrivalTimeMinutes": 732,
+      "departureTime": "12:12",
+      "departureTimeMinutes": 732,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "96967.37",
+      "vnetName": "Drouin Station"
+    },
+    {
+      "stopName": "Warragul Railway Station/Alfred Street",
+      "stopNumber": null,
+      "suburb": "Warragul",
+      "stopGTFSID": "47670",
+      "arrivalTime": "12:24",
+      "arrivalTimeMinutes": 744,
+      "departureTime": "12:24",
+      "departureTimeMinutes": 744,
+      "stopConditions": {
+        "pickup": 0,
+        "dropoff": 0
+      },
+      "stopDistance": "106630.62",
+      "vnetName": "Warragul Station"
+    },
+    {
+      "stopName": "Sale Railway Station/Pettit Drive",
+      "stopNumber": null,
+      "suburb": "Sale",
+      "stopGTFSID": "16302",
+      "arrivalTime": "13:56",
+      "arrivalTimeMinutes": 836,
+      "departureTime": null,
+      "departureTimeMinutes": null,
+      "stopConditions": {
+        "pickup": 1,
+        "dropoff": 0
+      },
+      "stopDistance": "218602.72",
+      "vnetName": "Sale Station: Pettit Street"
+    }
+  ],
+  "origin": "Caulfield Railway Station/Sir John Monash Drive",
+  "departureTime": "10:31",
+  "destination": "Sale Railway Station/Pettit Drive",
+  "destinationArrivalTime": "13:56"
+}
