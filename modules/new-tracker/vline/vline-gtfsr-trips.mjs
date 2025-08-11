@@ -56,8 +56,10 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
     let firstStopEPH = firstStop.stopName === EPH
     let lastStopEPH = lastStop.stopName === EPH
 
-    if (firstStop.cancelled && firstStopEPH) firstStop.cancelled = false
-    else if (lastStop.cancelled && lastStopEPH) lastStop.cancelled = false
+    if (firstStop.cancelled && firstStopEPH) {
+      firstStop.cancelled = false
+      tripData.scheduledStartTime = null
+    } else if (lastStop.cancelled && lastStopEPH) lastStop.cancelled = false
 
     let ephStop = (firstStopEPH && !firstStop.platform) ? firstStop : ((lastStopEPH && !lastStop.platform) ? lastStop : null)
     let dbTrip

@@ -61,6 +61,7 @@ describe('The V/Line GTFS-R updater', () => {
 
     expect(tripUpdates[0].stops[0].stopName).to.equal('East Pakenham Railway Station')
     expect(tripUpdates[0].stops[0].cancelled).to.be.false
+    expect(tripUpdates[0].scheduledStartTime).to.not.exist
   })
 
   it('Checks for EPH platform availability', async () => {
