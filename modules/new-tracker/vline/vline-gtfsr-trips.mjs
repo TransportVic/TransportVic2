@@ -45,6 +45,12 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
       tripData.stops.push(tripStop)
     }
 
+    let firstStop = tripData.stops[0]
+    let lastStop = tripData.stops[tripData.stops.length - 1]
+
+    if (firstStop.cancelled && firstStop.stopName === 'East Pakenham Railway Station') firstStop.cancelled = false
+    else if (lastStop.cancelled && lastStop.stopName === 'East Pakenham Railway Station') lastStop.cancelled = false
+
     if (tripData.stops[0].cancelled) tripData.scheduledStartTime = null // Remove start time check since first stop wouldn't match
     if (!trips[tripData.runID]) trips[tripData.runID] = tripData
   }

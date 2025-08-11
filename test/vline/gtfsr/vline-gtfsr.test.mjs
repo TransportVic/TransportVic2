@@ -49,7 +49,7 @@ describe('The V/Line GTFS-R updater', () => {
     expect(trip.stopTimings[1].platform).to.equal('2')
   })
 
-  it.only('Ensures EPH does not get cancelled on altered working trains', async () => {
+  it('Ensures EPH does not get cancelled on altered working trains', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     await stops.createDocument(clone(pkmStopsDB))
