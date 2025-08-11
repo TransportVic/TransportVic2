@@ -13,7 +13,8 @@ export async function getPlatformUsage(db, station, time) {
   let arrivalPlatformUsage = arrivals.map(trip => ({
     runID: trip.runID,
     start: trip.scheduledDepartureTime,
-    end: trip.formingTrip && allTrips[trip.formingRunID] ? allTrips[trip.formingRunID].scheduledDepartureTime : trip.scheduledDepartureTime.clone().add(2, 'minutes')
+    end: trip.formingTrip && allTrips[trip.formingRunID] ? allTrips[trip.formingRunID].scheduledDepartureTime : trip.scheduledDepartureTime.clone().add(2, 'minutes'),
+    platform: trip.platform
   }))
 
   return arrivalPlatformUsage

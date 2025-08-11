@@ -7,7 +7,7 @@ import ephTrips from './sample-data/eph-trips.mjs'
 const clone = o => JSON.parse(JSON.stringify(o))
 
 describe('The platform usage function', () => {
-  it.only('Returns a list of times that trains sit on the platforms for', async () => {
+  it('Returns a list of times that trains sit on the platforms for', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let timetables = database.getCollection('live timetables')
@@ -23,8 +23,10 @@ describe('The platform usage function', () => {
 
     expect(dwell_4043_4070.start.toISOString()).to.equal('2025-08-11T01:27:00.000Z') // 11:27
     expect(dwell_4043_4070.end.toISOString()).to.equal('2025-08-11T01:43:00.000Z') // 11:43
+    expect(dwell_4043_4070.platform).to.equal('2')
 
     expect(dwell_4045_4072.start.toISOString()).to.equal('2025-08-11T01:47:00.000Z') // 11:27
     expect(dwell_4045_4072.end.toISOString()).to.equal('2025-08-11T02:03:00.000Z') // 11:43
+    expect(dwell_4045_4072.platform).to.equal('2')
   })
 })

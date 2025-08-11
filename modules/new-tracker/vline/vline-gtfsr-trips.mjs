@@ -6,8 +6,13 @@ import config from '../../../config.json' with { type: 'json' }
 import { RailGTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
 import VLineTripUpdater from '../../vline/trip-updater.mjs'
 import _ from '../../../init-loggers.mjs'
+import { getPlatformUsage } from '../../metro-trains/platform-usage.mjs'
+import utils from '../../../utils.js'
+
+let EPH = 'East Pakenham Railway Station'
 
 export async function getUpcomingTrips(db, gtfsrAPI) {
+  let EPHStop = await db.getCollection('stops').findDocument({ stopName: EPH })
   let tripData = await gtfsrAPI('vline/trip-updates')
 
   let trips = {}
@@ -48,8 +53,30 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
     let firstStop = tripData.stops[0]
     let lastStop = tripData.stops[tripData.stops.length - 1]
 
-    if (firstStop.cancelled && firstStop.stopName === 'East Pakenham Railway Station') firstStop.cancelled = false
-    else if (lastStop.cancelled && lastStop.stopName === 'East Pakenham Railway Station') lastStop.cancelled = false
+    let firstStopEPH = firstStop.stopName === EPH
+    let lastStopEPH = lastStop.stopName === EPH
+
+    if (firstStop.cancelled && firstStopEPH) firstStop.cancelled = false
+    else if (lastStop.cancelled && lastStopEPH) lastStop.cancelled = false
+
+    let ephStop = (firstStopEPH && !firstStop.platform) ? firstStop : ((lastStopEPH && !lastStop.platform) ? lastStop : null)
+    let dbTrip
+
+    if (ephStop && (dbTrip = await VLineTripUpdater.getTrip(db, tripData.runID, tripData.operationDays))) {
+      let tripEPH = firstStopEPH ? dbTrip.stopTimings[0] : dbTrip.stopTimings[dbTrip.stopTimings.length - 1]
+      let ephSchTime = utils.parseTime(tripEPH.scheduledDepartureTime)
+      let ephSchLower = ephSchTime.clone().add(-5, 'minutes')
+      let ephSchUpper = ephSchTime.clone().add(5, 'minutes')
+
+      let platformUsage = await getPlatformUsage(db, EPHStop, ephSchTime)
+
+      let platformsUsed = Object.keys(platformUsage.filter(dwell => ephSchLower < dwell.end || ephSchUpper > dwell.start || (dwell.start <= ephSchTime && ephSchTime <= dwell.end)).reduce((acc, dwell) => {
+        acc[dwell.platform] = 1
+        return acc
+      }, {}))
+
+      if (platformsUsed.length === 1) ephStop.platform = platformsUsed[0].platform === '1' ? '2' : '1'
+    }
 
     if (tripData.stops[0].cancelled) tripData.scheduledStartTime = null // Remove start time check since first stop wouldn't match
     if (!trips[tripData.runID]) trips[tripData.runID] = tripData

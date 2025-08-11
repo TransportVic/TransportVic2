@@ -5,6 +5,8 @@ import td8403GTFSR from './sample-data/td8403-gtfsr.mjs'
 import pkmStopsDB from '../../metro/tracker/sample-data/pkm-stops-db.json' with { type: 'json' }
 import { expect } from 'chai'
 import td8403Live from './sample-data/td8403-live.mjs'
+import ephTrips from '../../metro/utils/sample-data/eph-trips.mjs'
+import td8409GTFSR from './sample-data/td8409-gtfsr.mjs'
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
@@ -59,5 +61,19 @@ describe('The V/Line GTFS-R updater', () => {
 
     expect(tripUpdates[0].stops[0].stopName).to.equal('East Pakenham Railway Station')
     expect(tripUpdates[0].stops[0].cancelled).to.be.false
+  })
+
+  it('Checks for EPH platform availability', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let timetables = database.getCollection('live timetables')
+    await stops.createDocument(clone(pkmStopsDB))
+    await stops.createDocument(clone(trnStops))
+    await timetables.createDocument(clone(ephTrips))
+
+    let tripUpdates = await getUpcomingTrips(database, () => td8409GTFSR)
+
+    expect(tripUpdates[0].stops[0].stopName).to.equal('East Pakenham Railway Station')
+    expect(tripUpdates[0].stops[0].platform).to.equal('1')
   })
 })
