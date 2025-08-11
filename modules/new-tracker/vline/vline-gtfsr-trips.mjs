@@ -53,13 +53,13 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
     let firstStop = tripData.stops[0]
     let lastStop = tripData.stops[tripData.stops.length - 1]
 
-    let firstStopEPH = firstStop.stopName === EPH
-    let lastStopEPH = lastStop.stopName === EPH
+    let firstStopEPH = firstStop && firstStop.stopName === EPH
+    let lastStopEPH = lastStop && lastStop.stopName === EPH
 
-    if (firstStop.cancelled && firstStopEPH) {
+    if (firstStopEPH && firstStop.cancelled) {
       firstStop.cancelled = false
       tripData.scheduledStartTime = null
-    } else if (lastStop.cancelled && lastStopEPH) lastStop.cancelled = false
+    } else if (lastStopEPH && lastStop.cancelled) lastStop.cancelled = false
 
     let ephStop = (firstStopEPH && !firstStop.platform) ? firstStop : ((lastStopEPH && !lastStop.platform) ? lastStop : null)
     let dbTrip
@@ -80,7 +80,7 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
       if (platformsUsed.length === 1) ephStop.platform = platformsUsed[0].platform === '1' ? '2' : '1'
     }
 
-    if (tripData.stops[0].cancelled) tripData.scheduledStartTime = null // Remove start time check since first stop wouldn't match
+    if (tripData.stops[0] && tripData.stops[0].cancelled) tripData.scheduledStartTime = null // Remove start time check since first stop wouldn't match
     if (!trips[tripData.runID]) trips[tripData.runID] = tripData
   }
 
