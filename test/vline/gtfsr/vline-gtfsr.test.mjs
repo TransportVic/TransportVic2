@@ -8,6 +8,17 @@ import td8403Live from './sample-data/td8403-live.mjs'
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
+const td8403GTFSR_NNG_TYN = clone(td8403GTFSR)
+td8403GTFSR_NNG_TYN.entity[0].trip_update.stop_time_update[0].stop_id = 'G1545-P2'
+td8403GTFSR_NNG_TYN.entity[0].trip_update.stop_time_update.splice(1, 1)
+
+const td8403Live_NNG_TYN = {
+  ...clone(td8403Live),
+  stopTimings: clone(td8403Live.stopTimings.slice(1)),
+  origin: 'Nar Nar Goon Railway Station',
+  departureTime: '09:18',
+}
+
 describe('The V/Line GTFS-R updater', () => {
   it('Handles the first stop being cancelled', async () => {
     let database = new LokiDatabaseConnection()
@@ -15,8 +26,8 @@ describe('The V/Line GTFS-R updater', () => {
     await stops.createDocument(clone(pkmStopsDB))
     await stops.createDocument(clone(trnStops))
 
-    let tripUpdates = await getUpcomingTrips(database, () => td8403GTFSR)
-    expect(tripUpdates[0].stops[0].stopName).to.equal('East Pakenham Railway Station')
+    let tripUpdates = await getUpcomingTrips(database, () => td8403GTFSR_NNG_TYN)
+    expect(tripUpdates[0].stops[0].stopName).to.equal('Nar Nar Goon Railway Station')
     expect(tripUpdates[0].scheduledStartTime).to.not.exist
   })
 
@@ -26,15 +37,15 @@ describe('The V/Line GTFS-R updater', () => {
     let stops = database.getCollection('stops')
     await stops.createDocument(clone(pkmStopsDB))
     await stops.createDocument(clone(trnStops))
-    await timetables.createDocument(clone(td8403Live))
+    await timetables.createDocument(clone(td8403Live_NNG_TYN))
 
-    await fetchTrips(database, () => td8403GTFSR)
+    await fetchTrips(database, () => td8403GTFSR_NNG_TYN)
 
     let trip = await timetables.findDocument({})
-    expect(trip.stopTimings[0].stopName).to.equal('East Pakenham Railway Station')
+    expect(trip.stopTimings[0].stopName).to.equal('Nar Nar Goon Railway Station')
     expect(trip.stopTimings[0].cancelled).to.be.true
 
-    expect(trip.stopTimings[1].stopName).to.equal('Nar Nar Goon Railway Station')
+    expect(trip.stopTimings[1].stopName).to.equal('Tynong Railway Station')
     expect(trip.stopTimings[1].platform).to.equal('2')
   })
 })
