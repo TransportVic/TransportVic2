@@ -80,7 +80,7 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
       if (platformsUsed.length === 1) ephStop.platform = platformsUsed[0].platform === '1' ? '2' : '1'
     }
 
-    if (trip.cancelled || (tripData.stops[0] && tripData.stops[0].cancelled)) tripData.scheduledStartTime = null // Remove start time check since first stop wouldn't match
+    if (tripData.cancelled || (tripData.stops[0] && tripData.stops[0].cancelled)) tripData.scheduledStartTime = null // Remove start time check since first stop wouldn't match
     if (!trips[tripData.runID]) trips[tripData.runID] = tripData
   }
 
