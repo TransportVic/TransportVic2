@@ -9,7 +9,7 @@ import td8403Live from './sample-data/td8403-live.mjs'
 const clone = o => JSON.parse(JSON.stringify(o))
 
 describe('The V/Line GTFS-R updater', () => {
-  it.only('Handles the first stop being cancelled', async () => {
+  it('Handles the first stop being cancelled', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     await stops.createDocument(clone(pkmStopsDB))
@@ -17,9 +17,10 @@ describe('The V/Line GTFS-R updater', () => {
 
     let tripUpdates = await getUpcomingTrips(database, () => td8403GTFSR)
     expect(tripUpdates[0].stops[0].stopName).to.equal('East Pakenham Railway Station')
+    expect(tripUpdates[0].scheduledStartTime).to.not.exist
   })
 
-  it.only('Handles the cancellation correctly', async () => {
+  it('Handles the cancellation correctly', async () => {
     let database = new LokiDatabaseConnection()
     let timetables = database.getCollection('live timetables')
     let stops = database.getCollection('stops')

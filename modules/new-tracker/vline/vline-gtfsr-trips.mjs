@@ -45,6 +45,7 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
       tripData.stops.push(tripStop)
     }
 
+    if (tripData.stops[0].cancelled) tripData.scheduledStartTime = null // Remove start time check since first stop wouldn't match
     if (!trips[tripData.runID]) trips[tripData.runID] = tripData
   }
 
