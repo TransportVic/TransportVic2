@@ -48,4 +48,16 @@ describe('The V/Line GTFS-R updater', () => {
     expect(trip.stopTimings[1].stopName).to.equal('Tynong Railway Station')
     expect(trip.stopTimings[1].platform).to.equal('2')
   })
+
+  it.only('Ensures EPH does not get cancelled on altered working trains', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    await stops.createDocument(clone(pkmStopsDB))
+    await stops.createDocument(clone(trnStops))
+
+    let tripUpdates = await getUpcomingTrips(database, () => td8403GTFSR)
+
+    expect(tripUpdates[0].stops[0].stopName).to.equal('East Pakenham Railway Station')
+    expect(tripUpdates[0].stops[0].cancelled).to.be.false
+  })
 })
