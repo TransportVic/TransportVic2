@@ -51,10 +51,9 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
   return Object.values(trips)
 }
 
-export async function fetchTrips(db) {
-  global.loggers.trackers.vline.log('V/Line GTFSR Updater: Loading trips')
-  let relevantTrips = await getUpcomingTrips(db, makePBRequest)
-  
+export async function fetchTrips(db, gtfsrAPI) {
+  let relevantTrips = await getUpcomingTrips(db, gtfsrAPI)
+
   for (let tripData of relevantTrips) {
     try {
       await VLineTripUpdater.updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'gtfsr-trip-update' })
@@ -64,14 +63,16 @@ export async function fetchTrips(db) {
     }
   }
 
-  global.loggers.trackers.vline.log('V/Line GTFSR Updater: Updated TDNs:', relevantTrips.map(trip => trip.runID).join(', '))
+  return relevantTrips
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
-
-  await fetchTrips(mongoDB)
+  
+  global.loggers.trackers.vline.log('V/Line GTFSR Updater: Loading trips')
+  let relevantTrips = await fetchTrips(mongoDB, makePBRequest)
+  global.loggers.trackers.vline.log('V/Line GTFSR Updater: Updated TDNs:', relevantTrips.map(trip => trip.runID).join(', '))
 
   process.exit(0)
 }
