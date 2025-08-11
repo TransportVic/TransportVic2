@@ -224,7 +224,7 @@ export default class TripUpdater {
       timetable.setModificationSource(dataSource)
       let firstNonAMEXStop = timetable.stops.find(stop => !stop.cancelled)
       let firstStop = timetable.stops[0]
-      if (trip.scheduledStartTime && ![firstStop.departureTime, firstNonAMEXStop.departureTime].includes(trip.scheduledStartTime)) return null
+      if (trip.scheduledStartTime && ![firstStop.departureTime, firstNonAMEXStop?.departureTime].includes(trip.scheduledStartTime)) return null
 
       this.setUpTimetable(timetable, trip)
       this.adjustTripInput(timetable, trip)
