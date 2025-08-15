@@ -1,5 +1,5 @@
 import utils from '../utils.js'
-import ptvAPI from '../ptv-api.js'
+import { getPTVKey } from '../ptv-api.js'
 import { writeFile } from 'fs/promises'
 import path from 'path'
 import url from 'url'
@@ -7,8 +7,10 @@ import url from 'url'
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-let key = await ptvAPI.getPTVKey(undefined, 12000)
-let data = JSON.parse(await utils.request('https://www.ptv.vic.gov.au/lithe/stored-stops-all?__tok=' + key, {
+let data = JSON.parse(await utils.request('https://www.ptv.vic.gov.au/lithe/stored-stops-all', {
+  headers: {
+    'x-ptv-token': getPTVKey()
+  },
   timeout: 12000
 }))
 

@@ -78,17 +78,8 @@ async function makeRequest(url, maxRetries=2, timeout=2400) {
   }
 }
 
-async function getPTVKey(baseURL='https://ptv.vic.gov.au', timeout=6000) {
-  return await utils.getData('ptv-key', baseURL, async () => {
-    let ptvData = await utils.request(baseURL, {
-      timeout
-    })
-
-    let $ = cheerio.load(ptvData)
-    let key = $('#fetch-key').val()
-
-    return key
-  }, 1000 * 60 * 60)
+function getPTVKey(baseURL='https://ptv.vic.gov.au', timeout=6000) {
+  return 'eyJpYXQiOjE3NTM4NjQ4MDgsIm5iZiI6MTc1Mzg2NDgwOCwiZXhwIjo0OTA3NDY0ODA4LCJ1c3IiOiJ0cmFuc3BvcnR2aWN0b3JpYSIsImRvbWFpbnMiOiIqcHR2LnZpYy5nb3YuYXUsKnRyYW5zcG9ydC52aWMuZ292LmF1In0'
 }
 
 
