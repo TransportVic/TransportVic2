@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@transportme/database": "^1.0.39",
-    "@transportme/load-ptv-gtfs": "^1.4.20",
+    "@transportme/load-ptv-gtfs": "^1.4.22",
     "@transportme/logger": "^1.0.1",
     "@transportme/ptv-api": "^1.0.30",
     "@transportme/server-template": "^1.0.6",

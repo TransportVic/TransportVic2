@@ -5,10 +5,9 @@ import fs from 'fs/promises'
 
 import { TripLoader, ShapeLoader } from '@transportme/load-ptv-gtfs'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
-import checkRRB from '../modules/regional-coach/rrb-check.js'
 
 import routeIDMap from './routes.json' with { type: 'json' }
-import { createTripProcessor, getVLineCoachStats, getVLineRuleStats } from '../transportvic-data/gtfs/process.mjs'
+import { createTripProcessor, getVLineRuleStats } from '../transportvic-data/gtfs/process.mjs'
 import config from '../config.json' with { type: 'json' }
 
 const { GTFS_MODES } = GTFS_CONSTANTS
@@ -45,9 +44,7 @@ console.log('Loading timetables now\n')
 let tripsStart = new Date()
 
 let directionIDMap = {}
-let tripProcessors = await createTripProcessor(mongoDB, {
-  checkRRB
-})
+let tripProcessors = await createTripProcessor(mongoDB)
 
 tripProcessors[2] = trip => {
   trip.trueOrigin = trip.origin
@@ -120,7 +117,6 @@ for (let i of selectedModes) {
 await fs.writeFile(path.join(__dirname, 'directions.json'), JSON.stringify(directionIDMap))
 
 console.log('Trip exclusion stats', getVLineRuleStats())
-console.log('Unmatched V/Line Coach trips', getVLineCoachStats().filter(trip => trip.timesUsed === 0))
 
 console.log('Loading trips done, took', (new Date() - tripsStart) / 1000, 'seconds')
 console.log('Loading stop services took', totalStopServiceTime / 1000, 'seconds')
