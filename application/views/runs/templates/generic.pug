@@ -88,8 +88,7 @@ div.timing-list
               stopRoad = ''
             }
           }
-        span.stopRoad=stopRoad
-        -
+
           let displayName = stopName
           let genericNames = ['General Store', 'Post Office', 'Police Station']
           if (genericNames.includes(displayName)) displayName = `${stop.suburb} ${displayName}`
@@ -98,6 +97,13 @@ div.timing-list
             
           if (stop.bay)
             displayName += ` (${stop.bay})`
+          
+          let melbSuburbs = ['Docklands', 'Melbourne City']
+          if (trip.mode === 'regional coach' && !trip.isRailReplacementBus && !melbSuburbs.includes(stop.suburb) && !stop.stopName.includes('Railway Station')) {
+            stopRoad = stop.stopName
+            displayName = stop.suburb
+          }
+        span.stopRoad=stopRoad
         span.stopName=displayName
       div(class=`timing ${stop.headwayDevianceClass}`)
         span=stop.pretyTimeToDeparture
