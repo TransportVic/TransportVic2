@@ -22,11 +22,11 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
 
     const tripTDN = gtfsrTripData.getTDN()
     const reportedTDN = trip.trip_update.vehicle.id
-    if (tripTDN && reportedTDN && tripTDN !== reportedTDN) continue
+    // if (tripTDN && reportedTDN && tripTDN !== reportedTDN) continue
     
     let tripData = {
       operationDays: gtfsrTripData.getOperationDay(),
-      runID: gtfsrTripData.getTDN() || trip.trip_update.vehicle.id,
+      runID: reportedTDN,
       routeGTFSID: gtfsrTripData.getRouteID(),
       stops: [],
       cancelled: gtfsrTripData.getScheduleRelationship() === RailGTFSRTrip.SR_CANCELLED,

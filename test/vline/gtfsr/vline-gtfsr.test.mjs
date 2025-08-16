@@ -86,6 +86,6 @@ describe('The V/Line GTFS-R updater', () => {
     await stops.createDocument(clone(trnStops))
 
     let tripUpdates = await getUpcomingTrips(database, () => tdMismatch)
-    expect(tripUpdates.length).to.equal(0)
+    expect(tripUpdates[0].runID).to.equal('8417')
   })
 })
