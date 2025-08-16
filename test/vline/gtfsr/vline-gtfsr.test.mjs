@@ -7,6 +7,7 @@ import { expect } from 'chai'
 import td8403Live from './sample-data/td8403-live.mjs'
 import ephTrips from '../../metro/utils/sample-data/eph-trips.mjs'
 import td8409GTFSR from './sample-data/td8409-gtfsr.mjs'
+import tdMismatch from './sample-data/td-mismatch.mjs'
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
@@ -76,5 +77,15 @@ describe('The V/Line GTFS-R updater', () => {
 
     expect(tripUpdates[0].stops[0].stopName).to.equal('East Pakenham Railway Station')
     expect(tripUpdates[0].stops[0].platform).to.equal('1')
+  })
+
+  it('Filters trips with a TDN mismatch', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    await stops.createDocument(clone(pkmStopsDB))
+    await stops.createDocument(clone(trnStops))
+
+    let tripUpdates = await getUpcomingTrips(database, () => tdMismatch)
+    expect(tripUpdates.length).to.equal(0)
   })
 })
