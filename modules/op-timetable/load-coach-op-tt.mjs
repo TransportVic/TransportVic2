@@ -12,8 +12,6 @@ await mongoDB.connect()
 let gtfsTimetables = mongoDB.getCollection('gtfs timetables')
 let liveTimetables = mongoDB.getCollection('live timetables')
 
-let A_CHAR = 'A'.charCodeAt(0)
-
 async function loadOperationalTT(operationDay) {
   let opDayFormat = utils.getYYYYMMDD(operationDay)
   let rawActiveTrips = await gtfsTimetables.findDocuments({
@@ -23,26 +21,7 @@ async function loadOperationalTT(operationDay) {
 
   console.log('Fetched', rawActiveTrips.length, 'trips to process')
 
-  let rrbTrips = rawActiveTrips.filter(trip => trip.isRailReplacementBus)
-  let schTrips = rawActiveTrips.filter(trip => !trip.isRailReplacementBus)
-
-  let rrbGroupings = rrbTrips.reduce((acc, trip) => {
-    if (!acc[trip.railRunID]) acc[trip.railRunID] = []
-    acc[trip.railRunID].push(trip)
-    return acc
-  }, {})
-
-  for (let railRunID of Object.keys(rrbGroupings)) {
-    if (rrbGroupings[railRunID].length === 1) {
-      rrbGroupings[railRunID][0].runID = `${railRunID}C`
-    } else {
-      for (let i = 0; i < rrbGroupings[railRunID].length; i++) {
-        rrbGroupings[railRunID][i].runID = `${railRunID}${String.fromCharCode(A_CHAR + i)}`
-      }
-    }
-  }
-
-  schTrips.forEach(trip => trip.runID = trip.runID ? `V${trip.runID}` : trip.tripID)
+  rawActiveTrips.filter(trip => !trip.isRailReplacementBus).forEach(trip => trip.runID = trip.runID ? `V${trip.runID}` : trip.tripID)
 
   let bulkUpdate = Object.values(rawActiveTrips.reduce((acc, trip) => {
     acc[trip.runID] = trip
