@@ -31,18 +31,20 @@ export async function matchTrip(operationDay, vlineTrip, db) {
   if (!originStop || !destinationStop) return null
 
   let arrivalTime = utils.parseTime(vlineTrip.arrivalTime.toUTC().toISO())
+  let departureTime = utils.parseTime(vlineTrip.departureTime.toUTC().toISO())
+
+  const genTimes = time => [-3, -2, -1, 0, 1, 2, 3].map(t => utils.formatPTHHMM(time.clone().add(t, 'minute')))
+
   return await gtfsTimetables.findDocument({
     mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
     operationDays: operationDay,
     origin: originStop.stopName,
     destination: destinationStop.stopName,
-    departureTime: utils.formatPTHHMM(utils.parseTime(vlineTrip.departureTime.toUTC().toISO())),
+    departureTime: {
+      $in: genTimes(departureTime)
+    },
     destinationArrivalTime: {
-      $in: [
-        utils.formatPTHHMM(arrivalTime.clone().add(-1, 'minute')),
-        utils.formatPTHHMM(arrivalTime),
-        utils.formatPTHHMM(arrivalTime.clone().add(1, 'minute')),
-      ]
+      $in: genTimes(arrivalTime)
     }
   })
 }
