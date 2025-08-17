@@ -4,6 +4,7 @@ import lil3826 from './sample-data/lil-3826.json' with { type: 'json' }
 import cbeC406 from './sample-data/cbe-C406.json' with { type: 'json' }
 import utils from '../../../utils.js'
 import { getOutdatedTrips } from '../../../modules/new-tracker/metro/metro-outdated-trips.mjs'
+import steamTD8543 from './sample-data/steam-td8543.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -63,6 +64,18 @@ describe('The Outdated trips tracker', () => {
 
     let outdatedTDNs = await getOutdatedTrips(database)
     expect(outdatedTDNs).to.have.members([ '3826' ])
+  })
+
+  it.only('steam train test', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let liveTimetables = await database.getCollection('live timetables')
+    utils.now = () => utils.parseTime(1755391581688) // 10.46am
+
+    let trip = clone(steamTD8543) // Trip last updated at 10.32am
+    await liveTimetables.createDocument(trip)
+
+    let outdatedTDNs = await getOutdatedTrips(database)
+    expect(outdatedTDNs).to.have.members(['8543'])
   })
 
   after(() => {
