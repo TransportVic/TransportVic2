@@ -49,7 +49,7 @@ async function fetchTrips(database, ptvAPI) {
     updatedTrips.push(await updateTDNFromPTV(database, outdatedTDN, ptvAPI, {}, 'outdated-trip-from-ptv'))
   }
 
-  return updatedTrips
+  return updatedTrips.filter(Boolean)
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
