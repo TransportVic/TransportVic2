@@ -30,7 +30,8 @@ export async function getOutdatedTrips(database) {
     }],
     lastUpdated: {
       $lte: +utils.now().add(-5, 'minutes')
-    }
+    },
+    isRailReplacementBus: false
   }).toArray()).filter(trip => {
     let { runID, routeName, circular } = trip
     if (runID[0] === '8') {
