@@ -6,6 +6,7 @@ import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import { updateTDNFromPTV } from './metro-ptv-trips.mjs'
 import utils from '../../../utils.js'
 import _ from '../../../init-loggers.mjs'
+import { updateRelatedTrips } from './check-new-updates.mjs'
 
 export async function getOutdatedTrips(database) {
   let liveTimetables = await database.getCollection('live timetables')
@@ -48,7 +49,7 @@ async function fetchTrips(database, ptvAPI) {
     updatedTrips.push(await updateTDNFromPTV(database, outdatedTDN, ptvAPI, {}, 'outdated-trip-from-ptv'))
   }
 
-  return outdatedTDNs
+  return updatedTrips
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
@@ -57,7 +58,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
 
-  await fetchTrips(mongoDB, ptvAPI)
+  let updatedTrips = await fetchTrips(mongoDB, ptvAPI)
+  if (updatedTrips.length) global.loggers.trackers.metro.log('> Outdated Trips: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
+  await updateRelatedTrips(mongoDB, updatedTrips, ptvAPI)
 
   process.exit(0)
 }
