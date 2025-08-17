@@ -9,7 +9,7 @@ import _ from '../../../init-loggers.mjs'
 
 export async function getOutdatedTrips(database) {
   let liveTimetables = await database.getCollection('live timetables')
-  return (await liveTimetables.distinct('runID', {
+  return (await liveTimetables.findDocuments({
     $and: [{
       stopTimings: {
         $elemMatch: {
@@ -30,7 +30,14 @@ export async function getOutdatedTrips(database) {
     lastUpdated: {
       $lte: +utils.now().add(-5, 'minutes')
     }
-  })).filter(tdn => tdn[0] !== '8')
+  }).toArray()).filter(trip => {
+    let { runID, routeName, circular } = trip
+    if (runID[0] === '8') {
+      if (runID[1] !== '5') return false
+      return routeName !== 'Stony Point' && !circular
+    }
+    return true
+  }).map(trip => trip.runID)
 }
 
 async function fetchTrips(database, ptvAPI) {

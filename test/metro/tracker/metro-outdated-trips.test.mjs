@@ -54,6 +54,8 @@ describe('The Outdated trips tracker', () => {
     let liveTimetables = await database.getCollection('live timetables')
 
     let trip = clone(lil3826)
+    trip.routeGTFSID = '2-STY'
+    trip.routeName = 'Stony Point'
     trip.runID = '8500'
     trip.lastUpdated = utils.now() - 1000 * 60 * 7 // Last updated 7 min ago
     await liveTimetables.createDocument(trip)
@@ -66,7 +68,7 @@ describe('The Outdated trips tracker', () => {
     expect(outdatedTDNs).to.have.members([ '3826' ])
   })
 
-  it.only('steam train test', async () => {
+  it('Picks up non STY 8XXX TDNs that are not manually loaded', async () => {
     let database = new LokiDatabaseConnection('test-db')
     let liveTimetables = await database.getCollection('live timetables')
     utils.now = () => utils.parseTime(1755391581688) // 10.46am
