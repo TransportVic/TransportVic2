@@ -71,7 +71,7 @@ let patternCodes = {}
 for (let stop of lookupStops) {
   let stopData = JSON.parse(await utils.request(urls.metroRRBStopData.format(stop)))
   
-  for (let pattern of stopData) {
+  for (let pattern of stopData.filter(pattern => !!pattern.route_code)) {
     let code = pattern.route_code
     let parts
     if (parts = code.match(/^\d*([A-Z]+\d*)[A-Z]?/)) code = parts[1]
