@@ -2,7 +2,9 @@ extends ../layout
     
 block head
   -
-    let tripName = `${trip.departureTime} ${origin} to ${destination}`
+    let correctedOrigin = origin === 'Southern Cross Coach Terminal' ? 'Melbourne' : origin
+    let correctedDestination = destination === 'Southern Cross Coach Terminal' ? 'Melbourne' : destination
+    let tripName = `${trip.departureTime} ${correctedOrigin} to ${correctedDestination}`
     if (routeNumber) {
       tripName = `${trip.departureTime} ${routeNumber} to ${destination}`
     }

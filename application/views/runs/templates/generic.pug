@@ -103,8 +103,8 @@ div.timing-list
             stopRoad = stop.stopName
             displayName = stop.suburb
           }
-        span.stopRoad=stopRoad
         span.stopName=displayName
+        span.stopRoad=stopRoad
       div(class=`timing ${stop.headwayDevianceClass}`)
         span=stop.pretyTimeToDeparture
         span=stop.departureTime || stop.arrivalTime
