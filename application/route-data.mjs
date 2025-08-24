@@ -49,8 +49,8 @@ export default [
   { path: '/bus/route/named', router: 'route-data/NamedBusRoute.js', enable: modules.routes && modules.routes.bus },
   { path: '/bus/route', router: 'route-data/MetroBusRoute.js', enable: modules.routes && modules.routes.bus },
   { path: '/tram/route', router: 'route-data/TramRoute.js', enable: modules.routes && modules.routes.tram },
-  { path: '/metro/route', router: 'route-data/MetroRoute.js', enable: modules.routes && modules.routes.metro },
-  { path: '/vline/route', router: 'route-data/VLineRoute.js', enable: modules.routes && modules.routes.vline },
+  { path: '/metro/line', router: 'route-data/MetroRoute.js', enable: modules.routes && modules.routes.metro },
+  { path: '/vline/line', router: 'route-data/VLineRoute.js', enable: modules.routes && modules.routes.vline },
 
   { path: '/stop-preview', router: 'StopPreview.js', enable: modules.stopPreview },
   { path: '/route-preview', router: 'RoutePreview.js', enable: modules.routePreview },
