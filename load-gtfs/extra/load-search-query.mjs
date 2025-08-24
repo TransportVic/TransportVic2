@@ -20,7 +20,11 @@ await async.forEachOfLimit(stopIDs, 3000, async (id, i) => {
   let originalNames = stop.bays.map(bay => bay.originalName)
   let tramTrackerNames = stop.bays.map(bay => bay.tramTrackerName).filter(Boolean)
 
-  let namesForTokenisation = bayNames.concat(originalNames).concat(tramTrackerNames).filter((e, i, a) => a.indexOf(e) === i)
+  let namesForTokenisation = bayNames
+    .concat(originalNames)
+    .concat(tramTrackerNames)
+    .concat(stop.suburb)
+    .filter((e, i, a) => a.indexOf(e) === i)
 
   let textQuery = namesForTokenisation
     .map(name => utils.tokeniseAndSubstring(name))
