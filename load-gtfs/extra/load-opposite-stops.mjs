@@ -13,7 +13,7 @@ export function getFirstMatchingStop(dir0, dir1) {
   })
 }
 
-export async function matchDirectionStops(stops, dir0, dir1) {
+export async function matchDirectionStops(mode, stops, dir0, dir1) {
   let firstMatchingStop = getFirstMatchingStop(dir0.map(stop => stop.stopName), dir1.map(stop => stop.stopName))
   if (!firstMatchingStop) return
   let dir0Index = dir0.findIndex(stop => stop.stopName === firstMatchingStop)
@@ -42,7 +42,12 @@ export async function matchDirectionStops(stops, dir0, dir1) {
       }
 
       let dir1StopData = await stops.findDocument({
-        'bays.stopGTFSID': dir1Stop.stopGTFSID
+        bays: {
+          $elemMatch: {
+            stopGTFSID: dir1Stop.stopGTFSID,
+            mode
+          }
+        }
       }, { textQuery: 0 })
 
       let stopDistance = turf.distance(
@@ -99,7 +104,7 @@ export async function matchOppositeStops(database) {
     let dir1 = routeData.directions[1].stops.slice(0)
     dir1.reverse()
 
-    await matchDirectionStops(stops, dir0, dir1)
+    await matchDirectionStops(routeData.mode, stops, dir0, dir1)
   }
 }
 
