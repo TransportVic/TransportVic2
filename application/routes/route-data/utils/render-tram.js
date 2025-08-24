@@ -32,7 +32,7 @@ async function render(params, res, matchingRoute) {
   let query = {
     mode: 'tram',
     routeGTFSID: matchingRoute.routeGTFSID,
-    gtfsDirection: gtfsDirection.toString()
+    gtfsDirection
   }
 
   let firstLastTramMap = await routeUtils.generateFirstLastTripMap(gtfsTimetables, query)

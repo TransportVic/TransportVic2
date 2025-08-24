@@ -41,7 +41,7 @@ async function render(params, res, matchingRoute) {
   let query = {
     mode: 'bus',
     routeGTFSID: matchingRoute.routeGTFSID,
-    gtfsDirection: gtfsDirection.toString()
+    gtfsDirection
   }
 
   let firstLastBusMap = await routeUtils.generateFirstLastTripMap(gtfsTimetables, query)
