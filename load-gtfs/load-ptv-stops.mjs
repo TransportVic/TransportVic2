@@ -9,6 +9,10 @@ const __dirname = path.dirname(__filename)
 
 let data = JSON.parse(await utils.request('https://www.ptv.vic.gov.au/lithe/stored-stops-all', {
   headers: {
+    'content-type': 'application/json',
+    'origin': 'https://transport.vic.gov.au/',
+    'referer': 'https://transport.vic.gov.au/',
+    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
     'x-ptv-token': getPTVKey()
   },
   timeout: 12000

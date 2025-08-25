@@ -79,7 +79,7 @@ async function makeRequest(url, maxRetries=2, timeout=2400) {
 }
 
 function getPTVKey(baseURL='https://ptv.vic.gov.au', timeout=6000) {
-  return 'eyJpYXQiOjE3NTM4NjQ4MDgsIm5iZiI6MTc1Mzg2NDgwOCwiZXhwIjo0OTA3NDY0ODA4LCJ1c3IiOiJ0cmFuc3BvcnR2aWN0b3JpYSIsImRvbWFpbnMiOiIqcHR2LnZpYy5nb3YuYXUsKnRyYW5zcG9ydC52aWMuZ292LmF1In0'
+  return 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3NTM4NjQ4MDgsIm5iZiI6MTc1Mzg2NDgwOCwiZXhwIjo0OTA3NDY0ODA4LCJ1c3IiOiJ0cmFuc3BvcnR2aWN0b3JpYSIsImRvbWFpbnMiOiIqcHR2LnZpYy5nb3YuYXUsKnRyYW5zcG9ydC52aWMuZ292LmF1In0.LkqiufBLCq000ecdzrQYjFug2mGRJb7GP15xDSIRxNPYI6GoovzDzF3TxL4diKVJ6ZkuKGCvo7OrY6u3-gOEFw'
 }
 
 
