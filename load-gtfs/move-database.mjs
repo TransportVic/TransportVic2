@@ -27,8 +27,9 @@ async function moveCollection(name) {
   console.log('Done moving', name)
 }
 
+const isSubset = config.railOnly || config.busOnly
 const { outputText, hasCriticalFailure } = await runHealthCheck()
-if (hasCriticalFailure) {
+if (hasCriticalFailure && !isSubset) {
   console.log('Not moving database', outputText)
 
   let currentDay = utils.getYYYYMMDDNow()
