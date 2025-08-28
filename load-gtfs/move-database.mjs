@@ -3,7 +3,7 @@ import config from '../config.json' with { type: 'json' }
 import { runHealthCheck } from './health-check/check.mjs'
 import discordIntegration from '../modules/discord-integration.js'
 import utils from '../utils.js'
-import url, { fileURLToPath } from 'url'
+import url from 'url'
 import fs from 'fs/promises'
 import path from 'path'
 
@@ -27,9 +27,8 @@ async function moveCollection(name) {
   console.log('Done moving', name)
 }
 
-const isSubset = config.railOnly || config.busOnly
 const { outputText, hasCriticalFailure } = await runHealthCheck()
-if (hasCriticalFailure && !isSubset) {
+if (hasCriticalFailure) {
   console.log('Not moving database', outputText)
 
   let currentDay = utils.getYYYYMMDDNow()
