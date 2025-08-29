@@ -194,6 +194,11 @@ module.exports = class LiveTimetable {
     return null
   }
 
+  #getVariant(rawVariants) {
+    let variants = Array.from(new Set(rawVariants.filter(Boolean)).values())
+    return variants.length === 1 ? variants[0] : variants.length > 1 ? 'Mixed' : undefined
+  }
+
   #setConsist(consist, forceUpdate) {
     if (!forceUpdate) {
       if (!consist || !consist.length || this.#vehicleForced) return
@@ -206,7 +211,12 @@ module.exports = class LiveTimetable {
     }
 
     let type = metroTypes.find(type => consist[0] == type.leadingCar)
+    let rearType = consist[3] && metroTypes.find(type => consist[3] == type.leadingCar)
     let typeDescriptor = type ? type.type : 'Unknown'
+
+    let variant = this.#getVariant([ type?.variant, rearType?.variant ])
+    let newVal = { size: consist.length, type: typeDescriptor, consist }
+    if (variant) newVal.variant = variant
 
     if (this.#vehicle) {
       if (consist.length === 3 && this.#vehicle.size === 6) {
@@ -215,6 +225,10 @@ module.exports = class LiveTimetable {
         if (consist[0] === this.#vehicle.consist[0]) return
         let oldVal = { ...this.#vehicle, consist: this.#vehicle.consist.slice(0) }
         let newVal = { ...this.#vehicle, size: 6, consist: this.#vehicle.consist.concat(consist) }
+
+        let variant = this.#getVariant([ oldVal?.variant, type?.variant ])
+        if (variant) newVal.variant = variant
+
         this.addChange({
           type: 'veh-change',
           oldVal,
@@ -225,9 +239,6 @@ module.exports = class LiveTimetable {
         return
       } else if (consist.join('-') === this.#vehicle.consist.join('-')) return
     }
-
-    let newVal = { size: consist.length, type: typeDescriptor, consist }
-    if (type && type.variant) newVal.variant = type.variant
 
     this.addChange({
       type: 'veh-change',

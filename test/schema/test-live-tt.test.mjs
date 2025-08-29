@@ -746,4 +746,46 @@ describe('The LiveTimetable schema', () => {
       variant: 'Mixed'
     })
   })
+
+  it('Uses changes from single to mixed variant on trips after partial matching', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    expect(timetable.vehicle).to.be.null
+
+    timetable.consist = ['665M', '1182T', '666M']
+    expect(timetable.vehicle).to.deep.equal({
+      size: 3,
+      type: 'Comeng',
+      consist: ['665M', '1182T', '666M'],
+      variant: 'NS'
+    })
+
+    timetable.consist = ['665M', '1182T', '666M', '328M', '1014T', '464M']
+    expect(timetable.vehicle).to.deep.equal({
+      size: 6,
+      type: 'Comeng',
+      consist: ['665M', '1182T', '666M', '328M', '1014T', '464M'],
+      variant: 'Mixed'
+    })
+  })
+
+  it('Updates variant type when merging 3 car trips', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    expect(timetable.vehicle).to.be.null
+
+    timetable.consist = ['665M', '1182T', '666M']
+    expect(timetable.vehicle).to.deep.equal({
+      size: 3,
+      type: 'Comeng',
+      consist: ['665M', '1182T', '666M'],
+      variant: 'NS'
+    })
+
+    timetable.consist = ['328M', '1014T', '464M']
+    expect(timetable.vehicle).to.deep.equal({
+      size: 6,
+      type: 'Comeng',
+      consist: ['665M', '1182T', '666M', '328M', '1014T', '464M'],
+      variant: 'Mixed'
+    })
+  })
 })
