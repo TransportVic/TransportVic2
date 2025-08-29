@@ -188,6 +188,7 @@ module.exports = class LiveTimetable {
       }
       if (this.#vehicle.icon) returnData.icon = this.#vehicle.icon
       if (this.#vehicle.forced) returnData.forced = this.#vehicle.forced
+      if (this.#vehicle.variant) returnData.variant = this.#vehicle.variant
       return returnData
     }
     return null
@@ -226,6 +227,7 @@ module.exports = class LiveTimetable {
     }
 
     let newVal = { size: consist.length, type: typeDescriptor, consist }
+    if (type && type.variant) newVal.variant = type.variant
 
     this.addChange({
       type: 'veh-change',
