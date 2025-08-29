@@ -707,4 +707,43 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.changes[0].newVal).to.equal('2025-08-08T12:57:00.000Z')
     expect(timetable.changes[0].timestamp).to.exist
   })
+
+  it('Sets the comeng variant on a 3 car train', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    expect(timetable.vehicle).to.be.null
+
+    timetable.consist = ['665M', '1182T', '666M']
+    expect(timetable.vehicle).to.deep.equal({
+      size: 3,
+      type: 'Comeng',
+      consist: ['665M', '1182T', '666M'],
+      variant: 'NS'
+    })
+  })
+
+  it('Sets the comeng variant on a 6 car train', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    expect(timetable.vehicle).to.be.null
+
+    timetable.consist = ['329M', '1015T', '366M', '328M', '1014T', '464M']
+    expect(timetable.vehicle).to.deep.equal({
+      size: 6,
+      type: 'Comeng',
+      consist: ['329M', '1015T', '366M', '328M', '1014T', '464M'],
+      variant: 'SS'
+    })
+  })
+
+  it('Uses a mixed variant on trips with both NS and SS sets', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+    expect(timetable.vehicle).to.be.null
+
+    timetable.consist = ['665M', '1182T', '666M', '328M', '1014T', '464M']
+    expect(timetable.vehicle).to.deep.equal({
+      size: 6,
+      type: 'Comeng',
+      consist: ['665M', '1182T', '666M', '328M', '1014T', '464M'],
+      variant: 'Mixed'
+    })
+  })
 })
