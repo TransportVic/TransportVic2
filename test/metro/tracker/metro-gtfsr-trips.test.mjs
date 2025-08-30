@@ -127,7 +127,7 @@ describe('The GTFSR Tracker module', () => {
   it('When a trip is duplicated, take the original', async () => {
     let database = new LokiDatabaseConnection('test-db')
     let stops = await database.createCollection('stops')
-    await stops.createDocument(clone(bbnStops))
+    await stops.createDocuments(clone(bbnStops))
 
     let tripData = await getUpcomingTrips(database, () => gtfsr_BBN)
     expect(tripData.length).to.equal(1)

@@ -11,8 +11,8 @@ describe('The platform usage function', () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let timetables = database.getCollection('live timetables')
-    await stops.createDocument(clone(pkmStopsDB))
-    await timetables.createDocument(clone(ephTrips))
+    await stops.createDocuments(clone(pkmStopsDB))
+    await timetables.createDocuments(clone(ephTrips))
 
     let eph = await stops.findDocument({ stopName: "East Pakenham Railway Station" })
 

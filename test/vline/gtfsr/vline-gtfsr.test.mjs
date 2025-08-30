@@ -26,8 +26,8 @@ describe('The V/Line GTFS-R updater', () => {
   it('Handles the first stop being cancelled', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
-    await stops.createDocument(clone(pkmStopsDB))
-    await stops.createDocument(clone(trnStops))
+    await stops.createDocuments(clone(pkmStopsDB))
+    await stops.createDocuments(clone(trnStops))
 
     let tripUpdates = await getUpcomingTrips(database, () => td8403GTFSR_NNG_TYN)
     expect(tripUpdates[0].stops[0].stopName).to.equal('Nar Nar Goon Railway Station')
@@ -38,8 +38,8 @@ describe('The V/Line GTFS-R updater', () => {
     let database = new LokiDatabaseConnection()
     let timetables = database.getCollection('live timetables')
     let stops = database.getCollection('stops')
-    await stops.createDocument(clone(pkmStopsDB))
-    await stops.createDocument(clone(trnStops))
+    await stops.createDocuments(clone(pkmStopsDB))
+    await stops.createDocuments(clone(trnStops))
     await timetables.createDocument(clone(td8403Live_NNG_TYN))
 
     await fetchTrips(database, () => td8403GTFSR_NNG_TYN)
@@ -55,8 +55,8 @@ describe('The V/Line GTFS-R updater', () => {
   it('Ensures EPH does not get cancelled on altered working trains', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
-    await stops.createDocument(clone(pkmStopsDB))
-    await stops.createDocument(clone(trnStops))
+    await stops.createDocuments(clone(pkmStopsDB))
+    await stops.createDocuments(clone(trnStops))
 
     let tripUpdates = await getUpcomingTrips(database, () => td8403GTFSR)
 
@@ -69,9 +69,9 @@ describe('The V/Line GTFS-R updater', () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let timetables = database.getCollection('live timetables')
-    await stops.createDocument(clone(pkmStopsDB))
-    await stops.createDocument(clone(trnStops))
-    await timetables.createDocument(clone(ephTrips))
+    await stops.createDocuments(clone(pkmStopsDB))
+    await stops.createDocuments(clone(trnStops))
+    await timetables.createDocuments(clone(ephTrips))
 
     let tripUpdates = await getUpcomingTrips(database, () => td8409GTFSR)
 
@@ -82,8 +82,8 @@ describe('The V/Line GTFS-R updater', () => {
   it('Filters trips with a TDN mismatch', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
-    await stops.createDocument(clone(pkmStopsDB))
-    await stops.createDocument(clone(trnStops))
+    await stops.createDocuments(clone(pkmStopsDB))
+    await stops.createDocuments(clone(trnStops))
 
     let tripUpdates = await getUpcomingTrips(database, () => tdMismatch)
     expect(tripUpdates[0].runID).to.equal('8417')

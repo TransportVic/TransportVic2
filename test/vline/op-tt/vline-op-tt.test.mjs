@@ -40,7 +40,7 @@ describe('The matchTrip function', () => {
     let stops = database.getCollection('stops')
 
     await gtfsTimetables.createDocument(clone(td8741GTFS))
-    await stops.createDocument(clone(allStops))
+    await stops.createDocuments(clone(allStops))
 
     let stubAPI = new StubVLineAPI()
     stubAPI.setResponses([ vlineTrips, vlineTripsEmpty ])
