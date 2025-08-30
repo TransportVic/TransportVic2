@@ -5,7 +5,6 @@ import config from '../../config.json' with { type: 'json' }
 import _ from '../../init-loggers.mjs'
 import { fetchGTFSRFleet } from './metro/metro-gtfsr-fleet.mjs'
 import { fetchNotifyAlerts } from './metro/metro-notify.mjs'
-import { fetchMetroSiteDepartures } from './metro/metro-trips-departures.mjs'
 import { MetroSiteAPIInterface, PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import { fetchTrips as fetchPTVDepartures } from './metro/metro-ptv-departures.mjs'
 import { fetchTrips as fetchPTVTrips } from './metro/metro-ptv-trips.mjs'
@@ -26,7 +25,6 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   // await fetchGTFSRTrips(mongoDB)
   await fetchGTFSRFleet(mongoDB)
   await fetchNotifyAlerts(mongoDB, ptvAPI)
-  await fetchMetroSiteDepartures(mongoDB, ptvAPI)
 
   let updatedTrips = await fetchPTVDepartures(mongoDB, ptvAPI)
   global.loggers.trackers.metro.log('> PTV Departures: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))

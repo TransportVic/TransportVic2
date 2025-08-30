@@ -42,9 +42,6 @@ export async function fetchTrips(db, ptvAPI, { stationName = null, skipTDN = [],
     updatedTrips.push(await MetroTripUpdater.updateTrip(db, data, options))
   }
 
-  global.loggers.trackers.metro.log('> PTV Departures: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
-  await updateRelatedTrips(db, updatedTrips, ptvAPI)
-
   return updatedTrips
 }
 
