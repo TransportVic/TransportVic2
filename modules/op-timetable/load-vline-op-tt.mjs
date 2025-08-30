@@ -23,30 +23,35 @@ async function getStopFromVNetName(stops, vnetName) {
 
 export async function matchTrip(operationDay, vlineTrip, db) {
   let gtfsTimetables = await db.getCollection('gtfs timetables')
-  let stops = await db.getCollection('stops')
-
-  let originStop = await getStopFromVNetName(stops, vlineTrip.origin)
-  let destinationStop = await getStopFromVNetName(stops, vlineTrip.destination)
-
-  if (!originStop || !destinationStop) return null
-
-  let arrivalTime = utils.parseTime(vlineTrip.arrivalTime.toUTC().toISO())
-  let departureTime = utils.parseTime(vlineTrip.departureTime.toUTC().toISO())
-
-  const genTimes = time => [-3, -2, -1, 0, 1, 2, 3].map(t => utils.formatPTHHMM(time.clone().add(t, 'minute')))
-
   return await gtfsTimetables.findDocument({
     mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
     operationDays: operationDay,
-    origin: originStop.stopName,
-    destination: destinationStop.stopName,
-    departureTime: {
-      $in: genTimes(departureTime)
-    },
-    destinationArrivalTime: {
-      $in: genTimes(arrivalTime)
-    }
+    runID: vlineTrip.tdn
   })
+  
+  // let stops = await db.getCollection('stops')
+  // let originStop = await getStopFromVNetName(stops, vlineTrip.origin)
+  // let destinationStop = await getStopFromVNetName(stops, vlineTrip.destination)
+
+  // if (!originStop || !destinationStop) return null
+
+  // let arrivalTime = utils.parseTime(vlineTrip.arrivalTime.toUTC().toISO())
+  // let departureTime = utils.parseTime(vlineTrip.departureTime.toUTC().toISO())
+
+  // const genTimes = time => [-3, -2, -1, 0, 1, 2, 3].map(t => utils.formatPTHHMM(time.clone().add(t, 'minute')))
+
+  // return await gtfsTimetables.findDocument({
+  //   mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
+  //   operationDays: operationDay,
+  //   origin: originStop.stopName,
+  //   destination: destinationStop.stopName,
+  //   departureTime: {
+  //     $in: genTimes(departureTime)
+  //   },
+  //   destinationArrivalTime: {
+  //     $in: genTimes(arrivalTime)
+  //   }
+  // })
 }
 
 async function deduplicateStops(tripPattern, nspTrip, db) {
