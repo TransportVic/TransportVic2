@@ -5,6 +5,7 @@ import ptvAPIStopIDs from '../../transportvic-data/rail/vline-stops.json' with {
 export default class VLineTripUpdater extends TripUpdater {
   
   static getMode() { return GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain }
+  static getTrackerDB() { return 'vline trips' }
 
   static async getStop(db, stopID) {
     if (stopID[0] === 'G') {

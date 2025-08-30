@@ -4,6 +4,7 @@ import TripUpdater from '../new-tracker/trip-updater.mjs'
 export default class MetroTripUpdater extends TripUpdater {
   
   static getMode() { return GTFS_CONSTANTS.TRANSIT_MODES.metroTrain }
+  static getTrackerDB() { return 'metro trips' }
 
   static adjustTripInput(timetable, trip) {
     if (timetable.direction === 'Up' && trip.stops && trip.stops.length) {
