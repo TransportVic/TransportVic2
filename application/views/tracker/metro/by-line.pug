@@ -17,4 +17,4 @@ block content
   h1.title Tracking Trips on #{line} Line on #{date.format('dddd, MMMM Do YYYY')}
   for trip in trips
     div(class=`trip ${trip.active ? '' : 'inactive'}`)
-      a(href=trip.url) ##{trip.runID}: #{trip.departureTime} #{trip.origin} - #{trip.destination}: #{trip.consist.join('-')}
+      a(href=trip.url) ##{trip.runID}: #{trip.departureTime} #{trip.origin} - #{trip.destination}: #{(trip.consist || []).join('-')}
