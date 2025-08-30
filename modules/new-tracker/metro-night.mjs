@@ -16,8 +16,6 @@ import { fetchGTFSRTrips } from './metro/metro-gtfsr-trips.mjs'
 import { updateRelatedTrips } from './metro/check-new-updates.mjs'
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  await utils.setEnv()
-
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 

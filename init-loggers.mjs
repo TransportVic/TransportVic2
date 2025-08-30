@@ -6,6 +6,7 @@ import utils from './utils.js'
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+if (!process.env.NODE_ENV) await utils.setEnv()
 let isProd = process.env['NODE_ENV'] === 'prod'
 
 export default async function createLogger(logPath, name) {

@@ -687,7 +687,7 @@ module.exports = {
     try {
       const env = (await fsp.readFile(path.join(__dirname, '.env'))).toString()
       const nodeEnv = env.match(/NODE_ENV=(.+)/)
-      if (nodeEnv) process.env.NODE_ENV = nodeEnv[1]
+      if (nodeEnv) process.env.NODE_ENV = nodeEnv[1].trim()
     } catch (e) {
     }
   }

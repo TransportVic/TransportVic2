@@ -24,7 +24,7 @@ describe('The MetroNotify tracker', () => {
     let api = createAPI()
 
     expect(await metroNotify.countDocuments({})).to.equal(0)
-    await fetchNotifyAlerts(api, database)
+    await fetchNotifyAlerts(database, api)
     expect(await metroNotify.countDocuments({})).to.equal(1)
     let alert = await metroNotify.findDocument({})
 
@@ -49,14 +49,14 @@ describe('The MetroNotify tracker', () => {
     let api = createAPI([ notifyAlerts, normalResponse ])
 
     expect(await metroNotify.countDocuments({})).to.equal(0)
-    await fetchNotifyAlerts(api, database)
+    await fetchNotifyAlerts(database, api)
     expect(await metroNotify.countDocuments({})).to.equal(1)
     let alert = await metroNotify.findDocument({})
 
     expect(alert.rawAlertID).to.equal('647069')
     expect(alert.active).to.be.true
 
-    await fetchNotifyAlerts(api, database)
+    await fetchNotifyAlerts(database, api)
     expect(await metroNotify.countDocuments({})).to.equal(1)
     alert = await metroNotify.findDocument({})
 
@@ -74,14 +74,14 @@ describe('The MetroNotify tracker', () => {
     let api = createAPI([ notifyAlerts, secondResponse ])
 
     expect(await metroNotify.countDocuments({})).to.equal(0)
-    await fetchNotifyAlerts(api, database)
+    await fetchNotifyAlerts(database, api)
     expect(await metroNotify.countDocuments({})).to.equal(1)
     let alert = await metroNotify.findDocument({ active: true })
 
     expect(alert.rawAlertID).to.equal('647069')
     expect(alert.active).to.be.true
 
-    await fetchNotifyAlerts(api, database)
+    await fetchNotifyAlerts(database, api)
     expect(await metroNotify.countDocuments({})).to.equal(2)
     let oldAlert = await metroNotify.findDocument({ active: false })
     let newAlert = await metroNotify.findDocument({ active: true })
