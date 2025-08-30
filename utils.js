@@ -5,6 +5,7 @@ const TimedCache = require('./TimedCache')
 const EventEmitter = require('events')
 const crypto = require('crypto')
 const fs = require('fs')
+const fsp = require('fs/promises')
 const path = require('path')
 
 const { spawn } = require('child_process')
@@ -681,5 +682,13 @@ module.exports = {
     }
     if (currentChunk) chunks.push(currentChunk)
     return chunks
+  },
+  setEnv: async () => {
+    try {
+      const env = (await fsp.readFile(path.join(__dirname, '.env'))).toString()
+      const nodeEnv = env.match(/NODE_ENV=(.+)/)
+      if (nodeEnv) process.env.NODE_ENV = nodeEnv[1]
+    } catch (e) {
+    }
   }
 }
