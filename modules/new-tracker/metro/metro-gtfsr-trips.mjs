@@ -51,7 +51,7 @@ export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
   return Object.values(trips)
 }
 
-export async function fetchTrips(db, routeFilter = '') {
+export async function fetchGTFSRTrips(db, routeFilter = '') {
   let relevantTrips = await getUpcomingTrips(db, makePBRequest, routeFilter)
   global.loggers.trackers.metro.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
@@ -71,7 +71,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
-  await fetchTrips(mongoDB, process.argv[2] || '')
+  await fetchGTFSRTrips(mongoDB, process.argv[2] || '')
 
   process.exit(0)
 }

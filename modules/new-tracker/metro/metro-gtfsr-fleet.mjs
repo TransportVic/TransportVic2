@@ -30,7 +30,7 @@ export async function getFleetData(gtfsrAPI) {
   return Object.values(trips)
 }
 
-export async function fetchTrips(db) {
+export async function fetchGTFSRFleet(db) {
   let relevantTrips = await getFleetData(makePBRequest)
   global.loggers.trackers.metro.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
@@ -43,7 +43,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
-  await fetchTrips(mongoDB)
+  await fetchGTFSRFleet(mongoDB)
 
   process.exit(0)
 }

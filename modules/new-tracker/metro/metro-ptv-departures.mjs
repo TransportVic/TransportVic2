@@ -42,6 +42,9 @@ export async function fetchTrips(db, ptvAPI, { stationName = null, skipTDN = [],
     updatedTrips.push(await MetroTripUpdater.updateTrip(db, data, options))
   }
 
+  global.loggers.trackers.metro.log('> PTV Departures: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
+  await updateRelatedTrips(db, updatedTrips, ptvAPI)
+
   return updatedTrips
 }
 
@@ -51,9 +54,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
 
-  let updatedTrips = (await fetchTrips(mongoDB, ptvAPI))
-  global.loggers.trackers.metro.log('> PTV Departures: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
-  await updateRelatedTrips(mongoDB, updatedTrips, ptvAPI)
+  await fetchTrips(mongoDB, ptvAPI)
 
   process.exit(0)
 }

@@ -5,7 +5,7 @@ import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
 import _ from '../../../init-loggers.mjs'
 
-export async function fetchNotifyAlerts(ptvAPI, db) {
+export async function fetchNotifyAlerts(db, ptvAPI) {
   let metroNotify = await db.getCollection('metro notify')
   let alerts = await ptvAPI.metroSite.getNotifyData()
 
@@ -52,7 +52,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let ptvAPI = new PTVAPI()
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
-  await fetchNotifyAlerts(ptvAPI, mongoDB)
+  await fetchNotifyAlerts(mongoDB, ptvAPI)
 
   process.exit(0)
 }

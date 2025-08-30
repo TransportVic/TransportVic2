@@ -42,15 +42,18 @@ export async function getOutdatedTrips(database) {
   }).map(trip => trip.runID)
 }
 
-async function fetchTrips(database, ptvAPI) {
-  let outdatedTDNs = await getOutdatedTrips(database)
+export async function fetchOutdatedTrips(db, ptvAPI) {
+  let outdatedTDNs = await getOutdatedTrips(db)
   let updatedTrips = []
 
   for (let outdatedTDN of outdatedTDNs) {
-    updatedTrips.push(await updateTDNFromPTV(database, outdatedTDN, ptvAPI, {}, 'outdated-trip-from-ptv'))
+    let tripData = await updateTDNFromPTV(db, outdatedTDN, ptvAPI, {}, 'outdated-trip-from-ptv')
+    if (tripData) updatedTrips.push(tripData)
   }
 
-  return updatedTrips.filter(Boolean)
+  if (updatedTrips.length) global.loggers.trackers.metro.log('> Outdated Trips: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
+  await updateRelatedTrips(db, updatedTrips, ptvAPI)
+  return updatedTrips
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
@@ -59,9 +62,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
 
-  let updatedTrips = await fetchTrips(mongoDB, ptvAPI)
-  if (updatedTrips.length) global.loggers.trackers.metro.log('> Outdated Trips: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
-  await updateRelatedTrips(mongoDB, updatedTrips, ptvAPI)
+  await fetchOutdatedTrips(mongoDB, ptvAPI)
 
   process.exit(0)
 }

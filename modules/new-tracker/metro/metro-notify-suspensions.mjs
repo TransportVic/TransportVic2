@@ -50,7 +50,7 @@ export async function getStationsOnRoute(db, routeName) {
   })).directions[0].stops.map(stop => stop.stopName).filter(stop => !CBD_EXCLUDE.includes(stop))
 }
 
-export async function fetchTripsFromAffectedStops(db, ptvAPI) {
+export async function fetchNotifySuspensions(db, ptvAPI) {
   let affectedLines = await getActiveSuspensions(db)
   let stopsToUse = []
 
@@ -94,7 +94,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
 
-  await fetchTripsFromAffectedStops(mongoDB, ptvAPI)
+  await fetchNotifySuspensions(mongoDB, ptvAPI)
 
   process.exit(0)
 }

@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
-import { fetchTrips, getUpdatedTDNs } from '../../../modules/new-tracker/metro/metro-notify-trips.mjs'
+import { fetchNotifyTrips, getUpdatedTDNs } from '../../../modules/new-tracker/metro/metro-notify-trips.mjs'
 
 describe('The MetroNotify trip tracker', () => {
   it('Should get TDNs for trips with an alert issued in the last 5 minutes', async () => {
@@ -67,7 +67,7 @@ describe('The MetroNotify trip tracker', () => {
     })
 
     try {
-      await fetchTrips(database, ptvAPI)
+      await fetchNotifyTrips(database, ptvAPI)
     } catch (e) {}
 
     expect(stubAPI.getCalls()[0]).to.exist

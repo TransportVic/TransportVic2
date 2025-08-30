@@ -60,7 +60,7 @@ export async function getDepartures(db, ptvAPI) {
   return output
 }
 
-export async function fetchTrips(ptvAPI, db) {
+export async function fetchMetroSiteDepartures(db, ptvAPI) {
   let trips = await getDepartures(db, ptvAPI)
   global.loggers.trackers.metro.log('MTM Departures: Fetched', trips.length, 'trips')
 
@@ -76,7 +76,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let ptvAPI = new PTVAPI()
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
-  await fetchTrips(ptvAPI, mongoDB)
+  await fetchMetroSiteDepartures(mongoDB, ptvAPI)
 
   process.exit(0)
 }
