@@ -210,8 +210,8 @@ module.exports = class LiveTimetable {
       }
     }
 
-    let type = metroTypes.find(type => consist[0] == type.leadingCar)
-    let rearType = consist[3] && metroTypes.find(type => consist[3] == type.leadingCar)
+    let type = metroTypes[consist[0]]
+    let rearType = consist[3] && metroTypes[consist[3]]
     let typeDescriptor = type ? type.type : 'Unknown'
 
     let variant = this.#getVariant([ type?.variant, rearType?.variant ])
