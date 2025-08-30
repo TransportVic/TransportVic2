@@ -179,7 +179,7 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
 
   let departures = await ptvAPI.vline.getDepartures('', GetPlatformServicesAPI.BOTH, 1440)
   let arrivals = await ptvAPI.vline.getArrivals('', GetPlatformServicesAPI.BOTH, 1440)
-  let tripUpdates = []
+  let newTrips = []
     
   for (let vlineTrip of departures.concat(arrivals)) {
     let existingTrip = await VLineTripUpdater.getTripByTDN(liveTimetables, vlineTrip.tdn, opDayFormat)
@@ -199,6 +199,8 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
         liveTrip.formedBy = nspTrip.formedBy
         liveTrip.forming = nspTrip.forming
       }
+
+      newTrips.push({ liveTrip, vlineTrip })
 
       outputTrips.push({
         replaceOne: {
@@ -222,9 +224,8 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
     })
   }
 
-  if (outputTrips.length) {
-    await liveTimetables.bulkWrite(outputTrips)
-  }
+  if (outputTrips.length) await liveTimetables.bulkWrite(outputTrips)
+  await Promise.all(newTrips.map(({ liveTrip, vlineTrip }) => updateExistingTrip(db, liveTrip, vlineTrip)))
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
