@@ -179,7 +179,8 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
 
   let departures = await ptvAPI.vline.getDepartures('', GetPlatformServicesAPI.BOTH, 1440)
   let arrivals = await ptvAPI.vline.getArrivals('', GetPlatformServicesAPI.BOTH, 1440)
-
+  let tripUpdates = []
+    
   for (let vlineTrip of departures.concat(arrivals)) {
     let existingTrip = await VLineTripUpdater.getTripByTDN(liveTimetables, vlineTrip.tdn, opDayFormat)
     if (existingTrip) {

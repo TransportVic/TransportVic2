@@ -301,4 +301,37 @@ describe('The loadOperationalTT function', () => {
     expect(update2Trip.stopTimings[8].stopName).to.equal('South Geelong Railway Station')
     expect(update2Trip.stopTimings[8].departureTime).to.equal('23:55')
   })
+
+  it('Matches a shorted trip not entered into the GTFS data', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let timetables = database.getCollection('live timetables')
+    let gtfsTimetables = database.getCollection('gtfs timetables')
+
+    await gtfsTimetables.createDocument(clone(td8741GTFS))
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ vlineTripsTD8741_Geelong, vlineTripsEmpty ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await loadOperationalTT(database, utils.parseDate('20250718'), ptvAPI)
+    let trip = await timetables.findDocument({})
+
+    expect(trip.runID).to.equal('8741')
+    expect(trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
+    expect(trip.stopTimings[0].departureTime).to.equal('11:30')
+    expect(trip.stopTimings[0].cancelled).to.be.false
+
+    expect(trip.stopTimings[1].stopName).to.equal('Footscray Railway Station')
+    expect(trip.stopTimings[1].departureTime).to.equal('11:38')
+    expect(trip.stopTimings[1].cancelled).to.be.false
+
+    expect(trip.stopTimings[11].stopName).to.equal('South Geelong Railway Station')
+    expect(trip.stopTimings[11].departureTime).to.equal('12:37')
+    expect(trip.stopTimings[11].cancelled).to.be.true
+  })
 })
