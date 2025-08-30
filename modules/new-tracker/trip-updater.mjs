@@ -115,8 +115,8 @@ export default class TripUpdater {
 
   static async updateTrackerData(db, timetable) {
     let key = timetable.getTrackerDatabaseKey()
-    let metroTrips = db.getCollection('metro trips')
-    if (key) await metroTrips.replaceDocument(key, timetable.toTrackerDatabase(), {
+    let tripsDB = db.getCollection(`${this.getMode()} trips`)
+    if (key) await tripsDB.replaceDocument(key, timetable.toTrackerDatabase(), {
       upsert: true
     })
   }
