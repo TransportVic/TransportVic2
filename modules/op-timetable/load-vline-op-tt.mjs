@@ -39,23 +39,25 @@ export async function matchTrip(operationDay, vlineTrip, db) {
     mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
     operationDays: operationDay,
     runID: vlineTrip.tdn,
-    stopTimings: {
-      $and: [{
+    $and: [{
+      stopTimings: {
         $elemMatch: {
           stopName: originStop.stopName,
           departureTime: {
             $in: genTimes(departureTime)
           },
         }
-      }, {
+      }
+    }, {
+      stopTimings: {
         $elemMatch: {
           stopName: destinationStop.stopName,
           arrivalTime: {
             $in: genTimes(arrivalTime)
           },
         }
-      }]
-    }
+      }
+    }]
   })
 }
 
