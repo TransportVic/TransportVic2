@@ -8,7 +8,7 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let start = new Date()
 
 await database.connect({})
-let stops = database.getCollection('gtfs-stops')
+let stops = database.getCollection('stops')
 
 let stopIDs = await stops.distinct('_id')
 let stopCount = stopIDs.length
@@ -27,8 +27,8 @@ await async.forEachOfLimit(stopIDs, 3000, async (id, i) => {
     .filter((e, i, a) => a.indexOf(e) === i)
 
   let textQuery = namesForTokenisation
-    .map(name => utils.tokeniseAndSubstring(name))
-    .reduce((a, e) => a.concat(e), [])
+    .flatMap(name => utils.tokeniseAndSubstring(name))
+    .map(l => l.toLowerCase())
 
   await stops.updateDocument({ _id: id }, {
     $set: {

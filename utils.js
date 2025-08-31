@@ -536,7 +536,7 @@ module.exports = {
     return result
   },
   tokeniseAndSubstring: text => {
-    let words = text.split(' ')
+    let words = text.split(/[^\w]/)
     return words.map(w => module.exports.findSubstrings(w, 4)).reduce((a, e) => a.concat(e), [])
   },
   shuffle: a => {

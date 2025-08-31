@@ -24,12 +24,16 @@ async function prioritySearch(db, query) {
   let fullQuery = possibleStopNames.join(' ')
 
   let priorityStopsByName = (await stops.findDocuments({
-    $and: [{
-      $text: {
-        $search: fullQuery
-      }
-    }, {
-      $or: possibleStopNames.map(name => ({mergeName: new RegExp(name, 'i')}))
+    $and: [
+      ...(fullQuery.split(' ').map(name => ({ textQuery: name }))),
+      // {
+      //   textQuery: fullQuery
+      //   $text: {
+      //     $search: fullQuery
+      //   }
+      // }, {
+    {
+      $or: possibleStopNames.map(name => ({ mergeName: name }))
     }, {
       $or: [{
         mergeName: /Shopping Centre/
@@ -77,11 +81,14 @@ async function findStops(db, query) {
         $in: excludedIDs
       }
     },
-    $and: [{
-      $text: {
-        $search: queryString + ' ' + search
-      }
-    }, {
+    $and: [
+      ...((queryString + ' ' + search).split(' ').map(name => ({ textQuery: name }))),
+      // {
+      //   $text: {
+      //     $search: queryString + ' ' + search
+      //   }
+      // }, 
+    {
       $or: [{
         suburb: queryRegex
       }, {
@@ -100,11 +107,14 @@ async function findStops(db, query) {
         $in: excludedIDs.concat(remainingResults.map(stop => stop._id))
       }
     },
-    $and: [{
-      $text: {
-        $search: queryString + ' ' + search
-      }
-    }, {
+    $and: [
+      ...((queryString + ' ' + search).split(' ').map(name => ({ textQuery: name }))),
+      // {
+      //   $text: {
+      //     $search: queryString + ' ' + search
+      //   }
+      // },
+    {
       $or: [{
         'bays.fullStopName': queryRegex
       }, {

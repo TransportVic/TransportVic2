@@ -9,6 +9,7 @@ import routes from '../application/route-data.mjs'
 import config from '../config.json' with { type: 'json' }
 import modules from '../modules.json' with { type: 'json' }
 import { MongoDatabaseConnection } from '@transportme/database'
+import utils from '../utils.js'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -37,6 +38,9 @@ export default class MainServer {
 
   async connectToDatabase() {
     this.database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+    this.database.enableDebugging(o => console.log(o))
+    // this.database.enableDebugging((o, _, s) => !utils.inspect(o) && console.log(s))
+
     await this.database.connect({})
     this.app.use((req, res, next) => {
       res.db = this.database
