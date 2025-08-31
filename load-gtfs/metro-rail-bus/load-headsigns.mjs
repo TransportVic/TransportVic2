@@ -84,64 +84,64 @@ for (let stop of lookupStops) {
   }
 }
 
-let today = utils.now().format('YYYY-MM-DD')
-let todayGTFS = utils.getYYYYMMDD(utils.now())
-let tripsToday = allTripsGroups.filter(group => group.timetable === today)
-let tripUpdates = Object.values(tripsToday.flatMap(group => group.trips.map((tripID, i) => ({
-  stopGTFSID: `vic:rail:${group.stopCode}`,
-  departureTimeMinutes: group.times[i] / 60,
-  tripID,
-}))).reduce((acc, e) => {
-  acc[e.tripID] = e
-  return acc
-}, {}))
+// let today = utils.now().format('YYYY-MM-DD')
+// let todayGTFS = utils.getYYYYMMDD(utils.now())
+// let tripsToday = allTripsGroups.filter(group => group.timetable === today)
+// let tripUpdates = Object.values(tripsToday.flatMap(group => group.trips.map((tripID, i) => ({
+//   stopGTFSID: `vic:rail:${group.stopCode}`,
+//   departureTimeMinutes: group.times[i] / 60,
+//   tripID,
+// }))).reduce((acc, e) => {
+//   acc[e.tripID] = e
+//   return acc
+// }, {}))
 
-let allTripIDs = Object.keys(patternCodes).flatMap(code => patternCodes[code])
-let matchedTripIDs = await timetables.distinct('tripID', {
-  mode: GTFS_CONSTANTS.TRANSIT_MODES.metroTrain,
-  routeGTFSID: '2-RRB',
-  tripID: { $in: allTripIDs }
-})
-let matchedTripIDsSet = new Set(matchedTripIDs)
-let tripsNeedingUpdate = tripUpdates.filter(trip => !matchedTripIDsSet.has(trip.tripID))
+// let allTripIDs = Object.keys(patternCodes).flatMap(code => patternCodes[code])
+// let matchedTripIDs = await timetables.distinct('tripID', {
+//   mode: GTFS_CONSTANTS.TRANSIT_MODES.metroTrain,
+//   routeGTFSID: '2-RRB',
+//   tripID: { $in: allTripIDs }
+// })
+// let matchedTripIDsSet = new Set(matchedTripIDs)
+// let tripsNeedingUpdate = tripUpdates.filter(trip => !matchedTripIDsSet.has(trip.tripID))
 
-if (tripsNeedingUpdate.length) {
-  let promises = tripsNeedingUpdate.map(async trip => {
-    let matchedTrips = await timetables.findDocuments({
-      operationDays: todayGTFS,
-      mode: GTFS_CONSTANTS.TRANSIT_MODES.metroTrain,
-      routeGTFSID: { $ne: '2-RRB' },
-      isRailReplacementBus: true,
-      stopTimings: {
-        $elemMatch: {
-          stopGTFSID: trip.stopGTFSID,
-          departureTimeMinutes: {
-            $gte: trip.departureTimeMinutes - 1,
-            $lte: trip.departureTimeMinutes + 1
-          }
-        }
-      }
-    }).toArray()
+// if (tripsNeedingUpdate.length) {
+//   let promises = tripsNeedingUpdate.map(async trip => {
+//     let matchedTrips = await timetables.findDocuments({
+//       operationDays: todayGTFS,
+//       mode: GTFS_CONSTANTS.TRANSIT_MODES.metroTrain,
+//       routeGTFSID: { $ne: '2-RRB' },
+//       isRailReplacementBus: true,
+//       stopTimings: {
+//         $elemMatch: {
+//           stopGTFSID: trip.stopGTFSID,
+//           departureTimeMinutes: {
+//             $gte: trip.departureTimeMinutes - 1,
+//             $lte: trip.departureTimeMinutes + 1
+//           }
+//         }
+//       }
+//     }).toArray()
 
-    if (matchedTrips.length === 1) {
-      let timetable = matchedTrips[0]
-      delete timetable._id
-      timetable.routeGTFSID = '2-RRB'
-      timetable.runID = getTripID(trip.tripID)
-      await timetables.createDocument(timetable)
-    } else if (matchedTrips.length > 1) {
-      for (let i = 0; i < matchedTrips.length; i++) {
-        let timetable = matchedTrips[i]
-        delete timetable._id
-        timetable.routeGTFSID = '2-RRB'
-        timetable.runID = getTripID(`${trip.tripID}-${i}`)
-        await timetables.createDocument(timetable)
-      }
-    }
-  })
+//     if (matchedTrips.length === 1) {
+//       let timetable = matchedTrips[0]
+//       delete timetable._id
+//       timetable.routeGTFSID = '2-RRB'
+//       timetable.runID = getTripID(trip.tripID)
+//       await timetables.createDocument(timetable)
+//     } else if (matchedTrips.length > 1) {
+//       for (let i = 0; i < matchedTrips.length; i++) {
+//         let timetable = matchedTrips[i]
+//         delete timetable._id
+//         timetable.routeGTFSID = '2-RRB'
+//         timetable.runID = getTripID(`${trip.tripID}-${i}`)
+//         await timetables.createDocument(timetable)
+//       }
+//     }
+//   })
 
-  await Promise.all(promises)
-}
+//   await Promise.all(promises)
+// }
 
 let bulkWrite = Object.keys(patternCodes).map(code => ({
   updateMany: {
