@@ -18,7 +18,9 @@ async function prioritySearch(db, query) {
   ].map(name => name.toLowerCase()).filter((e, i, a) => a.indexOf(e) === i)
 
   if (stationCodes[query.toUpperCase()]) {
-    possibleStopNames.push(stationCodes[query.toUpperCase()] + ' Railway Station')
+    return await stops.findDocuments({
+      stopName: stationCodes[query.toUpperCase()] + ' Railway Station'
+    }).toArray()
   }
 
   let fullQuery = possibleStopNames.join(' ')
