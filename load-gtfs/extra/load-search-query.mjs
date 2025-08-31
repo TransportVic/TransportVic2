@@ -8,7 +8,7 @@ const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 let start = new Date()
 
 await database.connect({})
-let stops = database.getCollection('stops')
+let stops = database.getCollection('gtfs-stops')
 
 let stopIDs = await stops.distinct('_id')
 let stopCount = stopIDs.length

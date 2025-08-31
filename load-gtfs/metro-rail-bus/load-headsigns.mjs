@@ -5,6 +5,7 @@ import utils from '../../utils.js'
 import urls from '../../urls.json' with { type: 'json' }
 import config from '../../config.json' with { type: 'json' }
 import stationCodes from '../../additional-data/station-codes.json' with { type: 'json' }
+import getTripID from '../../modules/new-tracker/metro-rail-bus/get-trip-id.mjs'
 
 let stationCodeLookup = {}
 
@@ -67,10 +68,12 @@ for (let pattern of stoppingPatterns) {
 }
 
 let patternCodes = {}
+let allTripsGroups = []
 
 for (let stop of lookupStops) {
   let stopData = JSON.parse(await utils.request(urls.metroRRBStopData.format(stop)))
-  
+  allTripsGroups.push(...stopData.map(stopData => ({ stopCode: stop, ...stopData })))
+
   for (let pattern of stopData.filter(pattern => !!pattern.route_code)) {
     let code = pattern.route_code
     let parts
@@ -79,6 +82,50 @@ for (let stop of lookupStops) {
     if (!patternCodes[code]) patternCodes[code] = []
     patternCodes[code].push(...pattern.trips)
   }
+}
+
+let today = utils.now().format('YYYY-MM-DD')
+let tripsToday = allTripsGroups.filter(group => group.timetable === today)
+let tripUpdates = Object.values(tripsToday.flatMap(group => group.trips.map((tripID, i) => ({
+  stopGTFSID: `vic:rail:${group.stopCode}`,
+  departureTimeMinutes: group.times[i] / 60,
+  tripID,
+}))).reduce((acc, e) => {
+  acc[e.tripID] = e
+  return acc
+}, {}))
+
+let allTripIDs = Object.keys(patternCodes).flatMap(code => patternCodes[code])
+let matchedTripIDs = await timetables.distinct('tripID', {
+  mode: GTFS_CONSTANTS.TRANSIT_MODES.metroTrain,
+  routeGTFSID: '2-RRB',
+  tripID: { $in: allTripIDs }
+})
+let matchedTripIDsSet = new Set(matchedTripIDs)
+let tripsNeedingUpdate = tripUpdates.filter(trip => !matchedTripIDsSet.has(trip.tripID))
+
+if (tripsNeedingUpdate.length) {
+  await timetables.bulkWrite(tripsNeedingUpdate.map(trip => ({
+    updateOne: {
+      filter: {
+        mode: GTFS_CONSTANTS.TRANSIT_MODES.metroTrain,
+        routeGTFSID: { $ne: '2-RRB' },
+        isRailReplacementBus: true,
+        stopTimings: {
+          $elemMatch: {
+            stopGTFSID: trip.stopGTFSID,
+            departureTimeMinutes: trip.departureTimeMinutes
+          }
+        }
+      },
+      update: {
+        $set: {
+          routeGTFSID: '2-RRB',
+          runID: getTripID(trip.tripID)
+        }
+      }
+    }
+  })))
 }
 
 let bulkWrite = Object.keys(patternCodes).map(code => ({
