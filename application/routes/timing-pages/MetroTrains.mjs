@@ -25,7 +25,7 @@ async function loadDepartures(req, res) {
     departure.headwayDevianceClass = utils.findHeadwayDeviance(departure.scheduledDepartureTime, departure.estimatedDepartureTime, {
       early: 0.5,
       late: 5
-    })
+    }, departure.cancelled)
 
     let {trip} = departure
 

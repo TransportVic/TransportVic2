@@ -189,6 +189,12 @@ a.departureInfo span.destination {
   color: #c5c5c5;
 }
 
+a.departureInfo span.destination span.strikethrough {
+  color: #777;
+  text-decoration: line-through;
+  margin-left: 0;
+}
+
 a.departureInfo span.broadDepartureInfo~span.broadDepartureInfo {
   -webkit-line-clamp: 1;
 }

@@ -484,8 +484,8 @@ module.exports = {
 
     return prettyTime.trim()
   },
-  findHeadwayDeviance: (scheduledDepartureTime, estimatedDepartureTime, thresholds) => {
-    if (!estimatedDepartureTime) return 'unknown'
+  findHeadwayDeviance: (scheduledDepartureTime, estimatedDepartureTime, thresholds, isCancelled = false) => {
+    if (!estimatedDepartureTime || isCancelled) return 'unknown'
     let headwayDeviance = scheduledDepartureTime.diff(estimatedDepartureTime, 'seconds') / 60
 
     if (headwayDeviance > thresholds.early) {
