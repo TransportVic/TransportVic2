@@ -38,7 +38,7 @@ export default class MainServer {
 
   async connectToDatabase() {
     this.database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-    this.database.enableDebugging(o => console.log(o))
+    // this.database.enableDebugging(o => console.log(o))
     // this.database.enableDebugging((o, _, s) => !utils.inspect(o) && console.log(s))
 
     await this.database.connect({})
