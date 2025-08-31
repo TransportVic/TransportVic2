@@ -33,7 +33,7 @@ async function loadDepartures(req, res) {
     let currentStation = departure.trip.stopTimings.find(tripStop => tripStop.stopName === stationName || stopGTFSIDs.includes(tripStop.stopGTFSID))
     let { stopGTFSID } = currentStation
 
-    departure.displayDestination = (departure.trip.stopTimings.findLast(stop => !stop.cancelled)?.stopName || departure.trip.destination).slice(0, -16)
+    departure.displayDestination = departure.isRailReplacementBus ? departure.destination : (departure.trip.stopTimings.findLast(stop => !stop.cancelled)?.stopName || departure.trip.destination).slice(0, -16)
 
     departure.tripURL = `/${departure.isRailReplacementBus ? 'coach' : 'vline'}/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
