@@ -25,7 +25,7 @@ async function prioritySearch(db, query) {
 
   let priorityStopsByName = (await stops.findDocuments({
     $and: [
-      ...(fullQuery.split(' ').map(name => ({ textQuery: name }))),
+      ...(fullQuery.split(/[^\w]/).map(name => ({ textQuery: name }))),
       // {
       //   textQuery: fullQuery
       //   $text: {
@@ -82,7 +82,7 @@ async function findStops(db, query) {
       }
     },
     $and: [
-      ...((queryString + ' ' + search).split(' ').map(name => ({ textQuery: name }))),
+      ...((queryString + ' ' + search).split(/[^\w]/).map(name => ({ textQuery: name }))),
       // {
       //   $text: {
       //     $search: queryString + ' ' + search
@@ -108,7 +108,7 @@ async function findStops(db, query) {
       }
     },
     $and: [
-      ...((queryString + ' ' + search).split(' ').map(name => ({ textQuery: name }))),
+      ...((queryString + ' ' + search).split(/[^\w]/).map(name => ({ textQuery: name }))),
       // {
       //   $text: {
       //     $search: queryString + ' ' + search
