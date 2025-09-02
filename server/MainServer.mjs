@@ -31,7 +31,7 @@ export default class MainServer {
     this.app = createServer(path.join(__dirname, '..', 'application'), {
       appName: 'TransportVic',
       requestEndCallback: (req, res, { time }) => {
-        global.loggers.http.info(`${req.method} ${req.urlData.pathname}${res.loggingData ? ` ${res.loggingData}` : ''} ${time} ${req.ips}`)
+        global.loggers.http.info(`${req.method} ${req.urlData.protocol}://${req.urlData.host}${req.urlData.pathname}${res.loggingData ? ` ${res.loggingData}` : ''} ${time} ${req.ip}`)
       }
     })
   }
@@ -60,7 +60,7 @@ export default class MainServer {
     let staticBase = config.staticBase || ''
     app.use((req, res, next) => {
       res.locals.staticBase = staticBase
-      if (req.url.includes('tracker') && req.ip.includes('::ffff:47.79')) return req.end('Blocked')
+      if (req.url.includes('tracker') && req.ip.includes('::ffff:47.79')) return req.status(400).end('Blocked')
       if (filter('vic.', req, next)) res.redirect(301, `https://transportvic.me${req.url}`)
     })
 
