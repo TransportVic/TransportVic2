@@ -134,7 +134,7 @@ async function getAllDeparturesFromStation(station, db) {
 
               let { fleetNumber } = departure
               if (fleetNumber) {
-                let matchingSet = metroTypes[set.leadingCar]
+                let matchingSet = metroTypes[fleetNumber[0]]
                 if (matchingSet) {
                   consist = {
                     size: fleetNumber.length,

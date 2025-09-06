@@ -1,7 +1,7 @@
-const express = require('express')
-const utils = require('../../utils')
+import express from 'express'
+import turf from '@turf/turf'
+
 const router = new express.Router()
-const turf = require('@turf/turf')
 
 router.post('/:routeGTFSID', async (req, res) => {
   let routes = res.db.getCollection('routes')
@@ -56,4 +56,4 @@ router.get('/:routeGTFSID', (req, res) => {
   res.render('route-preview')
 })
 
-module.exports = router
+export default router

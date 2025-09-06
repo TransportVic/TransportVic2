@@ -1,11 +1,12 @@
-const async = require('async')
-const express = require('express')
+import async from 'async'
+import express from 'express'
+import utils from '../../utils.js'
+import turf from '@turf/turf'
+import stationCodes from '../../additional-data/station-codes.json' with { type: 'json' }
+import platformGeometry from '../../additional-data/station-platform-geometry.json' with { type: 'json' }
+import metroTypes from '../../additional-data/metro-tracker/metro-types.json' with { type: 'json' }
+
 const router = new express.Router()
-const utils = require('../../utils')
-const turf = require('@turf/turf')
-const stationCodes = require('../../additional-data/station-codes')
-const platformGeometry = require('../../additional-data/station-platform-geometry')
-const metroTypes = require('../../additional-data/metro-tracker/metro-types')
 
 let platformCentrepoints = {}
 Object.keys(platformGeometry).forEach(station => {
@@ -71,7 +72,7 @@ router.post('/', async (req, res) => {
     }) : null
 
     if (tripData && trainLocation && (msNow - trainLocation.timestamp) < 1000 * 60 * 2) {
-      let vehicleType = metroTypes.find(car => tripData.consist[0] === car.leadingCar)
+      let vehicleType = metroTypes[tripData.consist[0]]
 
       vehicles.push({
         destinationCode: stationCodeLookup[trip.trueDestination.slice(0, -16)],
@@ -127,4 +128,4 @@ router.get('/', async (req, res) => {
   res.render('metro-map')
 })
 
-module.exports = router
+export default router

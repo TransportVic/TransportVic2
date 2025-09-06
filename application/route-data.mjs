@@ -38,7 +38,7 @@ export default [
   { path: '/mockups/sss-new/coach', router: 'mockups/sss-new/SSSCoachBay.js' },
   { path: '/jmss-screens/big-screen', router: 'jmss-screens/BigScreen.js', enable: modules.jmssScreen },
 
-  { path: '/smartrak', router: 'SmartrakIDs.js' },
+  { path: '/smartrak', router: 'SmartrakIDs.mjs' },
   { path: '/bus/tracker', router: 'tracker/BusTracker.js' },
   { path: '/tram/tracker', router: 'tracker/TramTracker.js' },
   { path: '/vline/tracker', router: 'tracker/VLineTracker.js' },
@@ -51,9 +51,9 @@ export default [
   { path: '/metro/line', router: 'route-data/MetroRoute.js', enable: modules.routes && modules.routes.metro },
   { path: '/vline/line', router: 'route-data/VLineRoute.js', enable: modules.routes && modules.routes.vline },
 
-  { path: '/stop-preview', router: 'StopPreview.js', enable: modules.stopPreview },
-  { path: '/route-preview', router: 'RoutePreview.js', enable: modules.routePreview },
-  { path: '/route-paths', router: 'RoutePaths.js' },
-  { path: '/metro/map', router: 'MetroMap.js' }
+  { path: '/stop-preview', router: 'StopPreview.mjs', enable: modules.stopPreview },
+  { path: '/route-preview', router: 'RoutePreview.mjs', enable: modules.routePreview },
+  { path: '/route-paths', router: 'RoutePaths.mjs' },
+  { path: '/metro/map', router: 'MetroMap.mjs' }
 
 ]

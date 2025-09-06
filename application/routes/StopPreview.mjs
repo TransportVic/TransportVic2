@@ -1,12 +1,12 @@
-const express = require('express')
-const utils = require('../../utils')
+import express from 'express'
+import bayData from '../../additional-data/bus-data/bus-bays.js'
+import trainReplacementBays from '../../additional-data/train-replacement-bays.json' with { type: 'json' }
+import platformGeometry from '../../additional-data/station-platform-geometry.json' with { type: 'json' }
+import stationBikes from '../../additional-data/metro-data/geospatial/station-bikes.json' with { type: 'json' }
+import stationCarparks from '../../additional-data/metro-data/geospatial/station-carparks.json' with { type: 'json' }
+import turf from '@turf/turf'
+
 const router = new express.Router()
-const bayData = require('../../additional-data/bus-data/bus-bays')
-const trainReplacementBays = require('../../additional-data/train-replacement-bays')
-const platformGeometry = require('../../additional-data/station-platform-geometry')
-const stationBikes = require('../../additional-data/metro-data/geospatial/station-bikes')
-const stationCarparks = require('../../additional-data/metro-data/geospatial/station-carparks')
-const turf = require('@turf/turf')
 
 router.post('/:suburb/:stopName', async (req, res) => {
   let stops = res.db.getCollection('stops')
@@ -66,4 +66,4 @@ router.get('/bays', (req, res) => {
   res.json(bayData)
 })
 
-module.exports = router
+export default router

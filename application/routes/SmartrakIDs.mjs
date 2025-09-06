@@ -1,6 +1,7 @@
-const express = require('express')
+import express from 'express'
+import async from 'async'
+
 const router = new express.Router()
-const async = require('async')
 
 router.get('/', (req, res) => {
   res.render('smartrak/index')
@@ -48,4 +49,4 @@ router.post('/load', async (req, res) => {
   else res.end(failedMessage + `Ok - ${count} Smartrak IDs in DB`)
 })
 
-module.exports = router
+export default router

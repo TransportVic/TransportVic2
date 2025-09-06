@@ -1,8 +1,9 @@
-const express = require('express')
+import express from 'express'
+import async from 'async'
+import EventEmitter from 'events'
+import { encode } from 'geojson-polyline'
+
 const router = new express.Router()
-const async = require('async')
-const EventEmitter = require('events')
-const encode = require('geojson-polyline').encode
 
 let dataCache
 let dataEmitter
@@ -54,4 +55,4 @@ router.post('/', async (req, res) => {
   res.json({ modePaths: await getData(res.db) })
 })
 
-module.exports = router
+export default router

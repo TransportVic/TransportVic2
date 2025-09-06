@@ -2,14 +2,11 @@ import createServer from '@transportme/server-template'
 import url from 'url'
 import path from 'path'
 import _loggers from '../init-loggers.mjs'
-import ptvAPI from '../ptv-api.js'
 import rateLimit from 'express-rate-limit'
 import routes from '../application/route-data.mjs'
-
 import config from '../config.json' with { type: 'json' }
 import modules from '../modules.json' with { type: 'json' }
 import { MongoDatabaseConnection } from '@transportme/database'
-import utils from '../utils.js'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -19,10 +16,6 @@ if (modules.tracker && modules.tracker.bus) await import('../modules/trackers/bu
 if (modules.tracker && modules.tracker.busMinder) await import('../modules/trackers/busminder.js')
 
 if (modules.tracker && modules.tracker.tram) await import('../modules/trackers/tram.js')
-
-if (modules.tracker && modules.tracker.vline) await import('../modules/trackers/vline.js')
-
-if (modules.tracker && modules.tracker['vline-r']) await import('../modules/trackers/vline-realtime.js')
 
 if (modules.tracker && modules.tracker.xpt) await import('../modules/xpt/xpt-updater.js')
 
@@ -100,14 +93,6 @@ export default class MainServer {
     for (let router of routers.filter(Boolean)) {
       app.use(router.path, router.router)
     }
-
-    app.get('/response-stats', (req, res) => {
-      res.json({
-        status: 'ok',
-        ptvMeanResponseTime: ptvAPI.getAverageResponseTime(),
-        ptvFaultRate: ptvAPI.getFaultRate()
-      })
-    })
 
     app.use('/500', (req, res) => { throw new Error('500') })
 
