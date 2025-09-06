@@ -14,9 +14,13 @@ import allRoutes from './sample-data/routes.json' with { type: 'json' }
 import VLineUtils from '../../../modules/vline/vline-utils.mjs'
 import utils from '../../../utils.js'
 import { convertToLive } from '../../../modules/departures/sch-to-live.js'
+import td8457GTFS from './sample-data/td8457-gtfs.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
+const vlineTripsTD8457 = (await fs.readFile(path.join(__dirname, 'sample-data', 'vline-trips-td8457.xml'))).toString()
+const td8457 = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8457-pattern.xml'))).toString()
 
 const vlineTripsTD8741_Normal = (await fs.readFile(path.join(__dirname, 'sample-data', 'alterations', 'td8741-normal.xml'))).toString()
 const vlineTripsTD8741_Geelong = (await fs.readFile(path.join(__dirname, 'sample-data', 'alterations', 'td8741-terminate-geelong.xml'))).toString()
@@ -333,5 +337,29 @@ describe('The loadOperationalTT function', () => {
     expect(trip.stopTimings[11].stopName).to.equal('South Geelong Railway Station')
     expect(trip.stopTimings[11].departureTime).to.equal('12:37')
     expect(trip.stopTimings[11].cancelled).to.be.true
+  })
+
+  it('Matches a shorted trip not entered into the GTFS dataa', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let timetables = database.getCollection('live timetables')
+    let gtfsTimetables = database.getCollection('gtfs timetables')
+
+    await gtfsTimetables.createDocument(clone(td8457GTFS))
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ vlineTripsTD8457, vlineTripsEmpty, td8457 ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await loadOperationalTT(database, utils.parseDate('20250905'), ptvAPI)
+    let trip = await timetables.findDocument({})
+
+    expect(trip.runID).to.equal('8457')
+    expect(trip.origin).to.equal('Southern Cross Railway Station')
+    expect(trip.departureTime).to.equal('22:59')
   })
 })

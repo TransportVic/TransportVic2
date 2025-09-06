@@ -418,5 +418,289 @@
       "Geelong": 0,
       "Melbourne": 1
     }
+  },
+  {
+    "_id": "68b1cf34a9a1bdfbb7bd1c22",
+    "mode": "regional train",
+    "routeName": "Traralgon",
+    "cleanName": "traralgon",
+    "routeNumber": null,
+    "routeGTFSID": "1-TRN",
+    "operators": [
+      "V/Line"
+    ],
+    "directions": [
+      {
+        "directionName": "Traralgon Railway Station",
+        "gtfsDirection": 0,
+        "stops": [
+          {
+            "stopName": "Southern Cross Railway Station",
+            "stopNumber": null,
+            "suburb": "Docklands",
+            "stopGTFSID": "vic:rail:SSS"
+          },
+          {
+            "stopName": "Flinders Street Railway Station",
+            "stopNumber": null,
+            "suburb": "Melbourne",
+            "stopGTFSID": "vic:rail:FSS"
+          },
+          {
+            "stopName": "Richmond Railway Station",
+            "stopNumber": null,
+            "suburb": "Richmond",
+            "stopGTFSID": "vic:rail:RMD"
+          },
+          {
+            "stopName": "Caulfield Railway Station",
+            "stopNumber": null,
+            "suburb": "Caulfield East",
+            "stopGTFSID": "vic:rail:CFD"
+          },
+          {
+            "stopName": "Clayton Railway Station",
+            "stopNumber": null,
+            "suburb": "Clayton",
+            "stopGTFSID": "vic:rail:CLA"
+          },
+          {
+            "stopName": "Dandenong Railway Station",
+            "stopNumber": null,
+            "suburb": "Dandenong",
+            "stopGTFSID": "vic:rail:DNG"
+          },
+          {
+            "stopName": "Berwick Railway Station",
+            "stopNumber": null,
+            "suburb": "Berwick",
+            "stopGTFSID": "vic:rail:BEW"
+          },
+          {
+            "stopName": "Pakenham Railway Station",
+            "stopNumber": null,
+            "suburb": "Pakenham",
+            "stopGTFSID": "vic:rail:PKM"
+          },
+          {
+            "stopName": "East Pakenham Railway Station",
+            "stopNumber": null,
+            "suburb": "Pakenham",
+            "stopGTFSID": "vic:rail:EPH"
+          },
+          {
+            "stopName": "Nar Nar Goon Railway Station",
+            "stopNumber": null,
+            "suburb": "Nar Nar Goon",
+            "stopGTFSID": "vic:rail:NNG"
+          },
+          {
+            "stopName": "Tynong Railway Station",
+            "stopNumber": null,
+            "suburb": "Tynong",
+            "stopGTFSID": "vic:rail:TYN"
+          },
+          {
+            "stopName": "Garfield Railway Station",
+            "stopNumber": null,
+            "suburb": "Garfield",
+            "stopGTFSID": "vic:rail:GAR-V"
+          },
+          {
+            "stopName": "Bunyip Railway Station",
+            "stopNumber": null,
+            "suburb": "Bunyip",
+            "stopGTFSID": "vic:rail:BYP"
+          },
+          {
+            "stopName": "Longwarry Railway Station",
+            "stopNumber": null,
+            "suburb": "Longwarry",
+            "stopGTFSID": "vic:rail:LWY"
+          },
+          {
+            "stopName": "Drouin Railway Station",
+            "stopNumber": null,
+            "suburb": "Drouin",
+            "stopGTFSID": "vic:rail:DRN"
+          },
+          {
+            "stopName": "Warragul Railway Station",
+            "stopNumber": null,
+            "suburb": "Warragul",
+            "stopGTFSID": "vic:rail:WGL"
+          },
+          {
+            "stopName": "Yarragon Railway Station",
+            "stopNumber": null,
+            "suburb": "Yarragon",
+            "stopGTFSID": "vic:rail:YON"
+          },
+          {
+            "stopName": "Trafalgar Railway Station",
+            "stopNumber": null,
+            "suburb": "Trafalgar",
+            "stopGTFSID": "vic:rail:TAR"
+          },
+          {
+            "stopName": "Moe Railway Station",
+            "stopNumber": null,
+            "suburb": "Moe",
+            "stopGTFSID": "vic:rail:MOE"
+          },
+          {
+            "stopName": "Morwell Railway Station",
+            "stopNumber": null,
+            "suburb": "Morwell",
+            "stopGTFSID": "vic:rail:MWL"
+          },
+          {
+            "stopName": "Traralgon Railway Station",
+            "stopNumber": null,
+            "suburb": "Traralgon",
+            "stopGTFSID": "vic:rail:TRN"
+          }
+        ]
+      },
+      {
+        "directionName": "Southern Cross Railway Station",
+        "gtfsDirection": 1,
+        "stops": [
+          {
+            "stopName": "Traralgon Railway Station",
+            "stopNumber": null,
+            "suburb": "Traralgon",
+            "stopGTFSID": "vic:rail:TRN"
+          },
+          {
+            "stopName": "Morwell Railway Station",
+            "stopNumber": null,
+            "suburb": "Morwell",
+            "stopGTFSID": "vic:rail:MWL"
+          },
+          {
+            "stopName": "Moe Railway Station",
+            "stopNumber": null,
+            "suburb": "Moe",
+            "stopGTFSID": "vic:rail:MOE"
+          },
+          {
+            "stopName": "Trafalgar Railway Station",
+            "stopNumber": null,
+            "suburb": "Trafalgar",
+            "stopGTFSID": "vic:rail:TAR"
+          },
+          {
+            "stopName": "Yarragon Railway Station",
+            "stopNumber": null,
+            "suburb": "Yarragon",
+            "stopGTFSID": "vic:rail:YON"
+          },
+          {
+            "stopName": "Warragul Railway Station",
+            "stopNumber": null,
+            "suburb": "Warragul",
+            "stopGTFSID": "vic:rail:WGL"
+          },
+          {
+            "stopName": "Drouin Railway Station",
+            "stopNumber": null,
+            "suburb": "Drouin",
+            "stopGTFSID": "vic:rail:DRN"
+          },
+          {
+            "stopName": "Longwarry Railway Station",
+            "stopNumber": null,
+            "suburb": "Longwarry",
+            "stopGTFSID": "vic:rail:LWY"
+          },
+          {
+            "stopName": "Bunyip Railway Station",
+            "stopNumber": null,
+            "suburb": "Bunyip",
+            "stopGTFSID": "vic:rail:BYP"
+          },
+          {
+            "stopName": "Garfield Railway Station",
+            "stopNumber": null,
+            "suburb": "Garfield",
+            "stopGTFSID": "vic:rail:GAR-V"
+          },
+          {
+            "stopName": "Tynong Railway Station",
+            "stopNumber": null,
+            "suburb": "Tynong",
+            "stopGTFSID": "vic:rail:TYN"
+          },
+          {
+            "stopName": "Nar Nar Goon Railway Station",
+            "stopNumber": null,
+            "suburb": "Nar Nar Goon",
+            "stopGTFSID": "vic:rail:NNG"
+          },
+          {
+            "stopName": "East Pakenham Railway Station",
+            "stopNumber": null,
+            "suburb": "Pakenham",
+            "stopGTFSID": "vic:rail:EPH"
+          },
+          {
+            "stopName": "Pakenham Railway Station",
+            "stopNumber": null,
+            "suburb": "Pakenham",
+            "stopGTFSID": "vic:rail:PKM"
+          },
+          {
+            "stopName": "Berwick Railway Station",
+            "stopNumber": null,
+            "suburb": "Berwick",
+            "stopGTFSID": "vic:rail:BEW"
+          },
+          {
+            "stopName": "Dandenong Railway Station",
+            "stopNumber": null,
+            "suburb": "Dandenong",
+            "stopGTFSID": "vic:rail:DNG"
+          },
+          {
+            "stopName": "Clayton Railway Station",
+            "stopNumber": null,
+            "suburb": "Clayton",
+            "stopGTFSID": "vic:rail:CLA"
+          },
+          {
+            "stopName": "Caulfield Railway Station",
+            "stopNumber": null,
+            "suburb": "Caulfield East",
+            "stopGTFSID": "vic:rail:CFD"
+          },
+          {
+            "stopName": "Richmond Railway Station",
+            "stopNumber": null,
+            "suburb": "Richmond",
+            "stopGTFSID": "vic:rail:RMD"
+          },
+          {
+            "stopName": "Flinders Street Railway Station",
+            "stopNumber": null,
+            "suburb": "Melbourne",
+            "stopGTFSID": "vic:rail:FSS"
+          },
+          {
+            "stopName": "Southern Cross Railway Station",
+            "stopNumber": null,
+            "suburb": "Docklands",
+            "stopGTFSID": "vic:rail:SSS"
+          }
+        ]
+      }
+    ],
+    "codedName": "traralgon",
+    "ptvDirections": {
+      "Southern Cross": 1,
+      "Traralgon": 0,
+      "Flinders Street": 1,
+      "East Pakenham": 1
+    }
   }
 ]

@@ -1,0 +1,194 @@
+<GetJourneyStopsResponse xmlns="http://tempuri.org/">
+<GetJourneyStopsResult xmlns:a="http://schemas.datacontract.org/2004/07/VLine.JourneyPlanner.Entities" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-05T22:59:00</a:DepartureTime>
+<a:LocationID>2258</a:LocationID>
+<a:LocationName>Melbourne, Southern Cross</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly>u</a:SetDownPickupOnly>
+<a:StopSequence>1</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-05T23:05:00</a:DepartureTime>
+<a:LocationID>230</a:LocationID>
+<a:LocationName>Melbourne: Flinders Street</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly>u</a:SetDownPickupOnly>
+<a:StopSequence>3</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-05T23:09:00</a:DepartureTime>
+<a:LocationID>2840</a:LocationID>
+<a:LocationName>Richmond Station</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly>u</a:SetDownPickupOnly>
+<a:StopSequence>5</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-05T23:18:00</a:DepartureTime>
+<a:LocationID>109</a:LocationID>
+<a:LocationName>Caulfield</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly>u</a:SetDownPickupOnly>
+<a:StopSequence>11</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-05T23:27:00</a:DepartureTime>
+<a:LocationID>160</a:LocationID>
+<a:LocationName>Clayton Station</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly>u</a:SetDownPickupOnly>
+<a:StopSequence>17</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-05T23:38:00</a:DepartureTime>
+<a:LocationID>186</a:LocationID>
+<a:LocationName>Dandenong Station</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly>u</a:SetDownPickupOnly>
+<a:StopSequence>23</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-06T00:01:00</a:DepartureTime>
+<a:LocationID>487</a:LocationID>
+<a:LocationName>Pakenham Station</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>31</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-06T00:06:00</a:DepartureTime>
+<a:LocationID>464</a:LocationID>
+<a:LocationName>Nar Nar Goon Station</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>34</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-06T00:10:00</a:DepartureTime>
+<a:LocationID>658</a:LocationID>
+<a:LocationName>Tynong Station</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>35</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-06T00:14:00</a:DepartureTime>
+<a:LocationID>236</a:LocationID>
+<a:LocationName>Garfield Station: Railway Terrace</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>36</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-06T00:18:00</a:DepartureTime>
+<a:LocationID>108</a:LocationID>
+<a:LocationName>Bunyip Station</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>37</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-06T00:22:00</a:DepartureTime>
+<a:LocationID>368</a:LocationID>
+<a:LocationName>Longwarry Station</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>38</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-06T00:28:00</a:DepartureTime>
+<a:LocationID>190</a:LocationID>
+<a:LocationName>Drouin Station</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>39</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-06T00:34:00</a:DepartureTime>
+<a:LocationID>2951</a:LocationID>
+<a:LocationName>Warragul Station</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>40</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-06T00:42:00</a:DepartureTime>
+<a:LocationID>740</a:LocationID>
+<a:LocationName>Yarragon Station</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>41</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-06T00:47:00</a:DepartureTime>
+<a:LocationID>620</a:LocationID>
+<a:LocationName>Trafalgar Station</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>42</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-06T00:53:00</a:DepartureTime>
+<a:LocationID>411</a:LocationID>
+<a:LocationName>Moe Station</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>44</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>0001-01-01T00:00:00</a:ArrivalTime>
+<a:DepartureTime>2025-09-06T01:03:00</a:DepartureTime>
+<a:LocationID>439</a:LocationID>
+<a:LocationName>Morwell Station</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly/>
+<a:StopSequence>47</a:StopSequence>
+</a:Stop>
+<a:Stop>
+<a:ArrivalTime>2025-09-06T01:15:00</a:ArrivalTime>
+<a:DepartureTime>0001-01-01T00:00:00</a:DepartureTime>
+<a:LocationID>646</a:LocationID>
+<a:LocationName>Traralgon Station: Princes Hwy</a:LocationName>
+<a:ServiceIdentifier>8457</a:ServiceIdentifier>
+<a:ServiceType>Train</a:ServiceType>
+<a:SetDownPickupOnly>d</a:SetDownPickupOnly>
+<a:StopSequence>49</a:StopSequence>
+</a:Stop>
+</GetJourneyStopsResult>
+</GetJourneyStopsResponse>

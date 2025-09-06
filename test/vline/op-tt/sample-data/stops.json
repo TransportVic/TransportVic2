@@ -1,6 +1,55 @@
 [
   {
-    "_id": "1ad8057f5fa12947efac7c4e802bedf3",
+    "stopName": "Berwick Railway Station",
+    "suburb": [
+      "Berwick"
+    ],
+    "cleanSuburbs": [
+      "berwick"
+    ],
+    "bays": [
+      {
+        "originalName": "Berwick Railway Station",
+        "fullStopName": "Berwick Railway Station",
+        "stopGTFSID": "vic:rail:BEW",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.34541666,
+            -38.03998037
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Berwick",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Berwick Station"
+      },
+      {
+        "originalName": "Berwick Station",
+        "fullStopName": "Berwick Railway Station",
+        "stopGTFSID": "22251",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.34495854,
+            -38.0395774
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Berwick",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:BEW"
+      }
+    ],
+    "mergeName": "Berwick Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "berwick-railway-station"
+  },
+  {
     "stopName": "Bendigo Railway Station",
     "suburb": [
       "Bendigo",
@@ -45,14 +94,320 @@
         "suburb": "Bendigo",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:BGO"
+      },
+      {
+        "originalName": "Bendigo Station/Railway Pl",
+        "fullStopName": "Bendigo Railway Station/Railway Place",
+        "stopGTFSID": "16238",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.28210371,
+            -36.76592841
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Bendigo",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 1"
+      },
+      {
+        "originalName": "Bendigo Station/Railway Pl",
+        "fullStopName": "Bendigo Railway Station/Railway Place",
+        "stopGTFSID": "40714",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.28267984,
+            -36.76547296
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Bendigo",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 5"
       }
     ],
+    "mergeName": "Bendigo Railway Station",
     "services": [],
     "screenServices": [],
     "cleanName": "bendigo-railway-station"
   },
   {
-    "_id": "3706c7a031d0b598dd5bf3b14313a614",
+    "stopName": "Bunyip Railway Station",
+    "suburb": [
+      "Bunyip"
+    ],
+    "cleanSuburbs": [
+      "bunyip"
+    ],
+    "bays": [
+      {
+        "originalName": "Bunyip Railway Station",
+        "fullStopName": "Bunyip Railway Station",
+        "stopGTFSID": "vic:rail:BYP",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.72075749,
+            -38.09910771
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Bunyip",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Bunyip Station"
+      },
+      {
+        "originalName": "Bunyip Station",
+        "fullStopName": "Bunyip Railway Station",
+        "stopGTFSID": "20299",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.72075749,
+            -38.09910771
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Bunyip",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:BYP"
+      },
+      {
+        "originalName": "Bunyip Station/Nar Nar Goon-Longwarry Rd",
+        "fullStopName": "Bunyip Railway Station/Nar Nar Goon-Longwarry Road",
+        "stopGTFSID": "45071",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.7215589,
+            -38.09958507
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Bunyip",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Bunyip Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "bunyip-railway-station"
+  },
+  {
+    "stopName": "Caulfield Railway Station",
+    "suburb": [
+      "Caulfield East"
+    ],
+    "cleanSuburbs": [
+      "caulfield-east"
+    ],
+    "bays": [
+      {
+        "originalName": "Caulfield Railway Station",
+        "fullStopName": "Caulfield Railway Station",
+        "stopGTFSID": "vic:rail:CFD",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.04252478,
+            -37.87745946
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Caulfield East",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Caulfield"
+      },
+      {
+        "originalName": "Caulfield Station",
+        "fullStopName": "Caulfield Railway Station",
+        "stopGTFSID": "22248",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.04251962,
+            -37.87722507
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Caulfield East",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:CFD"
+      },
+      {
+        "originalName": "Caulfield Station/Sir John Monash Dr",
+        "fullStopName": "Caulfield Railway Station/Sir John Monash Drive",
+        "stopGTFSID": "52537",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.04232245,
+            -37.87694242
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Caulfield East",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Caulfield Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "caulfield-railway-station",
+    "oppositeStopID": "68b1cf31a9a1bdfbb7bcd2bb"
+  },
+  {
+    "stopName": "Clarkefield Railway Station",
+    "suburb": [
+      "Clarkefield"
+    ],
+    "cleanSuburbs": [
+      "clarkefield"
+    ],
+    "bays": [
+      {
+        "originalName": "Clarkefield Railway Station",
+        "fullStopName": "Clarkefield Railway Station",
+        "stopGTFSID": "vic:rail:CKF",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.74537264,
+            -37.48349769
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Clarkefield",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Clarkefield Station"
+      },
+      {
+        "originalName": "Clarkefield Station",
+        "fullStopName": "Clarkefield Railway Station",
+        "stopGTFSID": "20303",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.74530293,
+            -37.48355944
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Clarkefield",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:CKF"
+      },
+      {
+        "originalName": "Clarkefield Station/Station St",
+        "fullStopName": "Clarkefield Railway Station/Station Street",
+        "stopGTFSID": "20832",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.74575936,
+            -37.48342397
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Clarkefield",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Clarkefield Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "clarkefield-railway-station"
+  },
+  {
+    "stopName": "Clayton Railway Station",
+    "suburb": [
+      "Clayton"
+    ],
+    "cleanSuburbs": [
+      "clayton"
+    ],
+    "bays": [
+      {
+        "originalName": "Clayton Railway Station",
+        "fullStopName": "Clayton Railway Station",
+        "stopGTFSID": "vic:rail:CLA",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12053436,
+            -37.92468255
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Clayton",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Clayton Station"
+      },
+      {
+        "originalName": "Clayton Station",
+        "fullStopName": "Clayton Railway Station",
+        "stopGTFSID": "22249",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12068518,
+            -37.92456781
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Clayton",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:CLA"
+      },
+      {
+        "originalName": "Clayton Station/Haughton Rd",
+        "fullStopName": "Clayton Railway Station/Haughton Road",
+        "stopGTFSID": "10480",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12068141,
+            -37.92516253
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Clayton",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Clayton Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "clayton-railway-station",
+    "oppositeStopID": "68b1cf31a9a1bdfbb7bd0072"
+  },
+  {
     "stopName": "Castlemaine Railway Station",
     "suburb": [
       "Castlemaine"
@@ -95,14 +450,31 @@
         "suburb": "Castlemaine",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:CME"
+      },
+      {
+        "originalName": "Castlemaine Station/Kennedy St",
+        "fullStopName": "Castlemaine Railway Station/Kennedy Street",
+        "stopGTFSID": "16231",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.21415854,
+            -37.0628459
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Castlemaine",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "Castlemaine Railway Station",
     "services": [],
     "screenServices": [],
     "cleanName": "castlemaine-railway-station"
   },
   {
-    "_id": "81b1a50f4b62d7509b20a0eade4e002e",
     "stopName": "Corio Railway Station",
     "suburb": [
       "Corio"
@@ -145,14 +517,31 @@
         "suburb": "Corio",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:COR"
+      },
+      {
+        "originalName": "Corio Railway Station",
+        "fullStopName": "Corio Railway Station",
+        "stopGTFSID": "52039",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.3799314,
+            -38.07273578
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Corio",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "Corio Railway Station",
     "services": [],
     "screenServices": [],
     "cleanName": "corio-railway-station"
   },
   {
-    "_id": "9f0cfc67ad7152a5ba67f69b42e3fa11",
     "stopName": "Deer Park Railway Station",
     "suburb": [
       "Deer Park"
@@ -195,14 +584,418 @@
         "suburb": "Deer Park",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:DEK"
+      },
+      {
+        "originalName": "Deer Park Station/Railway Pde",
+        "fullStopName": "Deer Park Railway Station/Railway Parade",
+        "stopGTFSID": "27537",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.77109111,
+            -37.77730825
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Deer Park",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "Deer Park Railway Station",
     "services": [],
     "screenServices": [],
     "cleanName": "deer-park-railway-station"
   },
   {
-    "_id": "85d361d0233902472f5dd0a83a21a27d",
+    "stopName": "Dandenong Railway Station",
+    "suburb": [
+      "Dandenong"
+    ],
+    "cleanSuburbs": [
+      "dandenong"
+    ],
+    "bays": [
+      {
+        "originalName": "Dandenong Railway Station",
+        "fullStopName": "Dandenong Railway Station",
+        "stopGTFSID": "vic:rail:DNG",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.20972537,
+            -37.98996792
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Dandenong",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Dandenong Station"
+      },
+      {
+        "originalName": "Dandenong Station",
+        "fullStopName": "Dandenong Railway Station",
+        "stopGTFSID": "22250",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.20972537,
+            -37.98996792
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Dandenong",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:DNG"
+      },
+      {
+        "originalName": "Dandenong Station/Foster St",
+        "fullStopName": "Dandenong Railway Station/Foster Street",
+        "stopGTFSID": "20018",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.2096052,
+            -37.98975881
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Dandenong",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 10/11"
+      }
+    ],
+    "mergeName": "Dandenong Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "dandenong-railway-station",
+    "oppositeStopID": "68b1cf31a9a1bdfbb7bcd5de"
+  },
+  {
+    "stopName": "Drouin Railway Station",
+    "suburb": [
+      "Drouin"
+    ],
+    "cleanSuburbs": [
+      "drouin"
+    ],
+    "bays": [
+      {
+        "originalName": "Drouin Railway Station",
+        "fullStopName": "Drouin Railway Station",
+        "stopGTFSID": "vic:rail:DRN",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.85594693,
+            -38.1364519
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Drouin",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Drouin Station"
+      },
+      {
+        "originalName": "Drouin Station",
+        "fullStopName": "Drouin Railway Station",
+        "stopGTFSID": "20308",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.85601665,
+            -38.13637147
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Drouin",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:DRN"
+      },
+      {
+        "originalName": "Drouin Station/Princes Way",
+        "fullStopName": "Drouin Railway Station/Princes Way",
+        "stopGTFSID": "21706",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.85505521,
+            -38.13583038
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Drouin",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Drouin Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "drouin-railway-station"
+  },
+  {
+    "stopName": "Eaglehawk Railway Station",
+    "suburb": [
+      "Eaglehawk"
+    ],
+    "cleanSuburbs": [
+      "eaglehawk"
+    ],
+    "bays": [
+      {
+        "originalName": "Eaglehawk Railway Station",
+        "fullStopName": "Eaglehawk Railway Station",
+        "stopGTFSID": "vic:rail:EAG-V",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.2483799,
+            -36.71852539
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Eaglehawk",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Eaglehawk Station"
+      },
+      {
+        "originalName": "Eaglehawk Station",
+        "fullStopName": "Eaglehawk Railway Station",
+        "stopGTFSID": "20309",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.2483799,
+            -36.71852539
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Eaglehawk",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:EAG-V"
+      },
+      {
+        "originalName": "Eaglehawk Station/Hall St",
+        "fullStopName": "Eaglehawk Railway Station/Hall Street",
+        "stopGTFSID": "52541",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.2483799,
+            -36.71852539
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Eaglehawk",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Eaglehawk Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "eaglehawk-railway-station"
+  },
+  {
+    "stopName": "East Pakenham Railway Station",
+    "suburb": [
+      "Pakenham"
+    ],
+    "cleanSuburbs": [
+      "pakenham"
+    ],
+    "bays": [
+      {
+        "originalName": "East Pakenham Railway Station",
+        "fullStopName": "East Pakenham Railway Station",
+        "stopGTFSID": "vic:rail:EPH",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.50635689,
+            -38.08441136
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Pakenham",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "East Pakenham"
+      },
+      {
+        "originalName": "East Pakenham Station",
+        "fullStopName": "East Pakenham Railway Station",
+        "stopGTFSID": "49848",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.50673581,
+            -38.08428099
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Pakenham",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:EPH"
+      },
+      {
+        "originalName": "East Pakenham Station/Sharnet Cct",
+        "fullStopName": "East Pakenham Railway Station/Sharnet Circuit",
+        "stopGTFSID": "52554",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.50673581,
+            -38.08428099
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Pakenham",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "East Pakenham Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "east-pakenham-railway-station"
+  },
+  {
+    "stopName": "Epsom Railway Station",
+    "suburb": [
+      "Epsom"
+    ],
+    "cleanSuburbs": [
+      "epsom"
+    ],
+    "bays": [
+      {
+        "originalName": "Epsom Railway Station",
+        "fullStopName": "Epsom Railway Station",
+        "stopGTFSID": "vic:rail:EPM",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.3210526,
+            -36.70628781
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Epsom",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Epsom Station"
+      },
+      {
+        "originalName": "Epsom Station",
+        "fullStopName": "Epsom Railway Station",
+        "stopGTFSID": "47642",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.3209245,
+            -36.70675355
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Epsom",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:EPM"
+      },
+      {
+        "originalName": "Epsom Station/Station St",
+        "fullStopName": "Epsom Railway Station/Station Street",
+        "stopGTFSID": "52543",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.32061604,
+            -36.70661142
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Epsom",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Epsom Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "epsom-railway-station"
+  },
+  {
+    "stopName": "Flinders Street Railway Station",
+    "suburb": [
+      "Melbourne"
+    ],
+    "cleanSuburbs": [
+      "melbourne"
+    ],
+    "bays": [
+      {
+        "originalName": "Flinders Street Railway Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "vic:rail:FSS",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96696435,
+            -37.81830513
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Melbourne",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Melbourne: Flinders Street"
+      },
+      {
+        "originalName": "Flinders Street Station",
+        "fullStopName": "Flinders Street Railway Station",
+        "stopGTFSID": "22238",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.96696435,
+            -37.81830513
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Melbourne",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FSS"
+      }
+    ],
+    "mergeName": "Flinders Street Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "flinders-street-railway-station"
+  },
+  {
     "stopName": "Footscray Railway Station",
     "suburb": [
       "Footscray"
@@ -245,14 +1038,99 @@
         "suburb": "Footscray",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:FSY"
+      },
+      {
+        "originalName": "Footscray Station/Irving St",
+        "fullStopName": "Footscray Railway Station/Irving Street",
+        "stopGTFSID": "52545",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.90119164,
+            -37.80138966
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Footscray",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "Footscray Railway Station",
     "services": [],
     "screenServices": [],
-    "cleanName": "footscray-railway-station"
+    "cleanName": "footscray-railway-station",
+    "oppositeStopID": "68b1cf31a9a1bdfbb7bce8f9"
   },
   {
-    "_id": "e5e24427a3d7e325a681deeb13174850",
+    "stopName": "Garfield Railway Station",
+    "suburb": [
+      "Garfield"
+    ],
+    "cleanSuburbs": [
+      "garfield"
+    ],
+    "bays": [
+      {
+        "originalName": "Garfield Railway Station",
+        "fullStopName": "Garfield Railway Station",
+        "stopGTFSID": "vic:rail:GAR-V",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.67422472,
+            -38.09103062
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Garfield",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Garfield Station: Railway Terrace"
+      },
+      {
+        "originalName": "Garfield Station",
+        "fullStopName": "Garfield Railway Station",
+        "stopGTFSID": "20313",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.67422472,
+            -38.09103062
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Garfield",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:GAR-V"
+      },
+      {
+        "originalName": "Garfield Station/Nar Nar Goon - Longwarry Rd",
+        "fullStopName": "Garfield Railway Station/Nar Nar Goon-Longwarry Road",
+        "stopGTFSID": "21466",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.6754448,
+            -38.09166622
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Garfield",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Garfield Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "garfield-railway-station"
+  },
+  {
     "stopName": "Geelong Railway Station",
     "suburb": [
       "Geelong"
@@ -295,14 +1173,50 @@
         "suburb": "Geelong",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:GEL"
+      },
+      {
+        "originalName": "Geelong Station/Railway Tce",
+        "fullStopName": "Geelong Railway Station/Railway Terrace",
+        "stopGTFSID": "30387",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.35524938,
+            -38.1446174
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Geelong",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 10"
+      },
+      {
+        "originalName": "Geelong Station/Railway Tce",
+        "fullStopName": "Geelong Railway Station/Railway Terrace",
+        "stopGTFSID": "3252",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.35512172,
+            -38.14499296
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Geelong",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 2"
       }
     ],
+    "mergeName": "Geelong Railway Station",
     "services": [],
     "screenServices": [],
     "cleanName": "geelong-railway-station"
   },
   {
-    "_id": "77f1590a724c567b24b415958c6d77e3",
     "stopName": "Gisborne Railway Station",
     "suburb": [
       "New Gisborne"
@@ -345,14 +1259,31 @@
         "suburb": "New Gisborne",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:GIS"
+      },
+      {
+        "originalName": "Gisborne Station/Early St",
+        "fullStopName": "Gisborne Railway Station/Early Street",
+        "stopGTFSID": "52564",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.598947,
+            -37.45919956
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "New Gisborne",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "Gisborne Railway Station",
     "services": [],
     "screenServices": [],
     "cleanName": "gisborne-railway-station"
   },
   {
-    "_id": "bf40dfd6af101fce52f9516d9abc0c74",
     "stopName": "Kangaroo Flat Railway Station",
     "suburb": [
       "Kangaroo Flat"
@@ -395,14 +1326,48 @@
         "suburb": "Kangaroo Flat",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:KFT"
+      },
+      {
+        "originalName": "Kangaroo Flat Station/High St",
+        "fullStopName": "Kangaroo Flat Railway Station/High Street",
+        "stopGTFSID": "16235",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.24421897,
+            -36.79508357
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Kangaroo Flat",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Kangaroo Flat Station/Short St",
+        "fullStopName": "Kangaroo Flat Railway Station/Short Street",
+        "stopGTFSID": "52547",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.24864494,
+            -36.79508699
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Kangaroo Flat",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "Kangaroo Flat Railway Station",
     "services": [],
     "screenServices": [],
     "cleanName": "kangaroo-flat-railway-station"
   },
   {
-    "_id": "e7e588bf58aa8126a3317536785d162b",
     "stopName": "Kyneton Railway Station",
     "suburb": [
       "Kyneton"
@@ -445,14 +1410,31 @@
         "suburb": "Kyneton",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:KYN"
+      },
+      {
+        "originalName": "Kyneton Station/Kyneton-Trentham Rd",
+        "fullStopName": "Kyneton Railway Station/Kyneton-Trentham Road",
+        "stopGTFSID": "20818",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.45080954,
+            -37.25813013
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Kyneton",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "Kyneton Railway Station",
     "services": [],
     "screenServices": [],
     "cleanName": "kyneton-railway-station"
   },
   {
-    "_id": "583cfc57873fe1feed9528af5f329027",
     "stopName": "Lara Railway Station",
     "suburb": [
       "Lara"
@@ -495,114 +1477,165 @@
         "suburb": "Lara",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:LRA"
+      },
+      {
+        "originalName": "Lara Station/Hicks St",
+        "fullStopName": "Lara Railway Station/Hicks Street",
+        "stopGTFSID": "52549",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.41440429,
+            -38.02242764
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Lara",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "Lara Railway Station",
     "services": [],
     "screenServices": [],
     "cleanName": "lara-railway-station"
   },
   {
-    "_id": "b25a2ec238441ede197c27deda23674d",
-    "stopName": "Macedon Railway Station",
+    "stopName": "Little River Railway Station",
     "suburb": [
-      "Macedon"
+      "Little River"
     ],
     "cleanSuburbs": [
-      "macedon"
+      "little-river"
     ],
     "bays": [
       {
-        "originalName": "Macedon Railway Station",
-        "fullStopName": "Macedon Railway Station",
-        "stopGTFSID": "vic:rail:MDN",
+        "originalName": "Little River Railway Station",
+        "fullStopName": "Little River Railway Station",
+        "stopGTFSID": "vic:rail:LRR",
         "location": {
           "type": "Point",
           "coordinates": [
-            144.56139685,
-            -37.42357331
+            144.49848487,
+            -37.96292909
           ]
         },
         "stopNumber": null,
         "mode": "regional train",
-        "suburb": "Macedon",
+        "suburb": "Little River",
         "stopType": "station",
         "parentStopGTFSID": null,
-        "vnetStationName": "Macedon Station"
+        "vnetStationName": "Little River Station"
       },
       {
-        "originalName": "Macedon Station",
-        "fullStopName": "Macedon Railway Station",
-        "stopGTFSID": "20325",
+        "originalName": "Little River Station",
+        "fullStopName": "Little River Railway Station",
+        "stopGTFSID": "20323",
         "location": {
           "type": "Point",
           "coordinates": [
-            144.56125843,
-            -37.42366057
+            144.49848487,
+            -37.96292909
           ]
         },
         "stopNumber": null,
         "mode": "regional train",
-        "suburb": "Macedon",
+        "suburb": "Little River",
         "stopType": "stop",
-        "parentStopGTFSID": "vic:rail:MDN"
+        "parentStopGTFSID": "vic:rail:LRR"
+      },
+      {
+        "originalName": "Little River Station",
+        "fullStopName": "Little River Railway Station",
+        "stopGTFSID": "52040",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.49912452,
+            -37.9628616
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Little River",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "Little River Railway Station",
     "services": [],
     "screenServices": [],
-    "cleanName": "macedon-railway-station"
+    "cleanName": "little-river-railway-station"
   },
   {
-    "_id": "c1d5136b0d765f8dd8d8a439ae8e2431",
-    "stopName": "Malmsbury Railway Station",
+    "stopName": "Longwarry Railway Station",
     "suburb": [
-      "Malmsbury"
+      "Longwarry"
     ],
     "cleanSuburbs": [
-      "malmsbury"
+      "longwarry"
     ],
     "bays": [
       {
-        "originalName": "Malmsbury Railway Station",
-        "fullStopName": "Malmsbury Railway Station",
-        "stopGTFSID": "vic:rail:MMY-V",
+        "originalName": "Longwarry Railway Station",
+        "fullStopName": "Longwarry Railway Station",
+        "stopGTFSID": "vic:rail:LWY",
         "location": {
           "type": "Point",
           "coordinates": [
-            144.37532317,
-            -37.18974032
+            145.76686029,
+            -38.11099211
           ]
         },
         "stopNumber": null,
         "mode": "regional train",
-        "suburb": "Malmsbury",
+        "suburb": "Longwarry",
         "stopType": "station",
         "parentStopGTFSID": null,
-        "vnetStationName": "Malmsbury Station"
+        "vnetStationName": "Longwarry Station"
       },
       {
-        "originalName": "Malmsbury Station",
-        "fullStopName": "Malmsbury Railway Station",
-        "stopGTFSID": "20326",
+        "originalName": "Longwarry Station",
+        "fullStopName": "Longwarry Railway Station",
+        "stopGTFSID": "20324",
         "location": {
           "type": "Point",
           "coordinates": [
-            144.37532192,
-            -37.18977634
+            145.76686029,
+            -38.11099211
           ]
         },
         "stopNumber": null,
         "mode": "regional train",
-        "suburb": "Malmsbury",
+        "suburb": "Longwarry",
         "stopType": "stop",
-        "parentStopGTFSID": "vic:rail:MMY-V"
+        "parentStopGTFSID": "vic:rail:LWY"
+      },
+      {
+        "originalName": "Longwarry Station/Nar Nar Goon-Longwarry Rd",
+        "fullStopName": "Longwarry Railway Station/Nar Nar Goon-Longwarry Road",
+        "stopGTFSID": "21464",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.76718435,
+            -38.11139205
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Longwarry",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "Longwarry Railway Station",
     "services": [],
     "screenServices": [],
-    "cleanName": "malmsbury-railway-station"
+    "cleanName": "longwarry-railway-station"
   },
   {
-    "_id": "5a322c9c3760380b25c1317fb2b55db5",
     "stopName": "Marshall Railway Station",
     "suburb": [
       "Marshall"
@@ -645,14 +1678,299 @@
         "suburb": "Marshall",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:MAS"
+      },
+      {
+        "originalName": "Marshall Station/Marshalltown Rd",
+        "fullStopName": "Marshall Railway Station/Marshalltown Road",
+        "stopGTFSID": "30837",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.35507888,
+            -38.19888289
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Marshall",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "Marshall Railway Station",
     "services": [],
     "screenServices": [],
     "cleanName": "marshall-railway-station"
   },
   {
-    "_id": "3f0c303d27bcf81fa900ee3b0d5dd168",
+    "stopName": "Macedon Railway Station",
+    "suburb": [
+      "Macedon"
+    ],
+    "cleanSuburbs": [
+      "macedon"
+    ],
+    "bays": [
+      {
+        "originalName": "Macedon Railway Station",
+        "fullStopName": "Macedon Railway Station",
+        "stopGTFSID": "vic:rail:MDN",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.56139685,
+            -37.42357331
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Macedon",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Macedon Station"
+      },
+      {
+        "originalName": "Macedon Station",
+        "fullStopName": "Macedon Railway Station",
+        "stopGTFSID": "20325",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.56125843,
+            -37.42366057
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Macedon",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:MDN"
+      },
+      {
+        "originalName": "Macedon Station/Victoria St",
+        "fullStopName": "Macedon Railway Station/Victoria Street",
+        "stopGTFSID": "20829",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.56163847,
+            -37.42309167
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Macedon",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Macedon Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "macedon-railway-station"
+  },
+  {
+    "stopName": "Malmsbury Railway Station",
+    "suburb": [
+      "Malmsbury"
+    ],
+    "cleanSuburbs": [
+      "malmsbury"
+    ],
+    "bays": [
+      {
+        "originalName": "Malmsbury Railway Station",
+        "fullStopName": "Malmsbury Railway Station",
+        "stopGTFSID": "vic:rail:MMY-V",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.37532317,
+            -37.18974032
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Malmsbury",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Malmsbury Station"
+      },
+      {
+        "originalName": "Malmsbury Station",
+        "fullStopName": "Malmsbury Railway Station",
+        "stopGTFSID": "20326",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.37532192,
+            -37.18977634
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Malmsbury",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:MMY-V"
+      },
+      {
+        "originalName": "Malmsbury Station/Campbell St",
+        "fullStopName": "Malmsbury Railway Station/Campbell Street",
+        "stopGTFSID": "20819",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.37623858,
+            -37.18965247
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Malmsbury",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Malmsbury Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "malmsbury-railway-station"
+  },
+  {
+    "stopName": "Moe Railway Station",
+    "suburb": [
+      "Moe"
+    ],
+    "cleanSuburbs": [
+      "moe"
+    ],
+    "bays": [
+      {
+        "originalName": "Moe Railway Station",
+        "fullStopName": "Moe Railway Station",
+        "stopGTFSID": "vic:rail:MOE",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            146.26054896,
+            -38.17689039
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Moe",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Moe Station"
+      },
+      {
+        "originalName": "Moe Station",
+        "fullStopName": "Moe Railway Station",
+        "stopGTFSID": "20328",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            146.26057161,
+            -38.17690856
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Moe",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:MOE"
+      },
+      {
+        "originalName": "Moe Station/Lloyd St",
+        "fullStopName": "Moe Railway Station/Lloyd Street",
+        "stopGTFSID": "21462",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            146.26102836,
+            -38.17690242
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Moe",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Moe Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "moe-railway-station"
+  },
+  {
+    "stopName": "Morwell Railway Station",
+    "suburb": [
+      "Morwell"
+    ],
+    "cleanSuburbs": [
+      "morwell"
+    ],
+    "bays": [
+      {
+        "originalName": "Morwell Railway Station",
+        "fullStopName": "Morwell Railway Station",
+        "stopGTFSID": "vic:rail:MWL",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            146.39677567,
+            -38.23674592
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Morwell",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Morwell Station"
+      },
+      {
+        "originalName": "Morwell Station",
+        "fullStopName": "Morwell Railway Station",
+        "stopGTFSID": "20330",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            146.39675305,
+            -38.23671876
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Morwell",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:MWL"
+      },
+      {
+        "originalName": "Morwell Station/Princes Dr",
+        "fullStopName": "Morwell Railway Station/Princes Drive",
+        "stopGTFSID": "16287",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            146.39773465,
+            -38.23684998
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Morwell",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Morwell Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "morwell-railway-station"
+  },
+  {
     "stopName": "North Geelong Railway Station",
     "suburb": [
       "North Geelong",
@@ -697,14 +2015,98 @@
         "suburb": "North Geelong",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:NGL"
+      },
+      {
+        "originalName": "North Geelong Station/Princess Highway Service Rd",
+        "fullStopName": "North Geelong Railway Station/Princess Highway Service Road",
+        "stopGTFSID": "52042",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.35318688,
+            -38.1224504
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Rippleside",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "North Geelong Railway Station",
     "services": [],
     "screenServices": [],
     "cleanName": "north-geelong-railway-station"
   },
   {
-    "_id": "bd454df7569455b4020a05ad881a9571",
+    "stopName": "Nar Nar Goon Railway Station",
+    "suburb": [
+      "Nar Nar Goon"
+    ],
+    "cleanSuburbs": [
+      "nar-nar-goon"
+    ],
+    "bays": [
+      {
+        "originalName": "Nar Nar Goon Railway Station",
+        "fullStopName": "Nar Nar Goon Railway Station",
+        "stopGTFSID": "vic:rail:NNG",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.57166573,
+            -38.08159155
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Nar Nar Goon",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Nar Nar Goon Station"
+      },
+      {
+        "originalName": "Nar Nar Goon Station",
+        "fullStopName": "Nar Nar Goon Railway Station",
+        "stopGTFSID": "20333",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.57175867,
+            -38.08150256
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Nar Nar Goon",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:NNG"
+      },
+      {
+        "originalName": "Nar Nar Goon Station/Carney St",
+        "fullStopName": "Nar Nar Goon Railway Station/Carney Street",
+        "stopGTFSID": "22364",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.57065437,
+            -38.08200282
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Nar Nar Goon",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Nar Nar Goon Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "nar-nar-goon-railway-station"
+  },
+  {
     "stopName": "North Shore Railway Station",
     "suburb": [
       "Norlane",
@@ -749,14 +2151,234 @@
         "suburb": "North Shore",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:NSH"
+      },
+      {
+        "originalName": "North Shore Station/Station St",
+        "fullStopName": "North Shore Railway Station/Station Street",
+        "stopGTFSID": "52553",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.36466231,
+            -38.09863266
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Norlane",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "North Shore Railway Station",
     "services": [],
     "screenServices": [],
     "cleanName": "north-shore-railway-station"
   },
   {
-    "_id": "7df4e816b11674401d75ea85320db08b",
+    "stopName": "Pakenham Railway Station",
+    "suburb": [
+      "Pakenham"
+    ],
+    "cleanSuburbs": [
+      "pakenham"
+    ],
+    "bays": [
+      {
+        "originalName": "Pakenham Railway Station",
+        "fullStopName": "Pakenham Railway Station",
+        "stopGTFSID": "vic:rail:PKM",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.48637907,
+            -38.08061397
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Pakenham",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Pakenham Station"
+      },
+      {
+        "originalName": "Pakenham Station",
+        "fullStopName": "Pakenham Railway Station",
+        "stopGTFSID": "22252",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.48636768,
+            -38.08061383
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Pakenham",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:PKM"
+      },
+      {
+        "originalName": "Pakenham Station/Railway Ave",
+        "fullStopName": "Pakenham Railway Station/Railway Avenue",
+        "stopGTFSID": "3427",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.48597691,
+            -38.08021226
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Pakenham",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Pakenham Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "pakenham-railway-station"
+  },
+  {
+    "stopName": "Riddells Creek Railway Station",
+    "suburb": [
+      "Riddells Creek"
+    ],
+    "cleanSuburbs": [
+      "riddells-creek"
+    ],
+    "bays": [
+      {
+        "originalName": "Riddells Creek Railway Station",
+        "fullStopName": "Riddells Creek Railway Station",
+        "stopGTFSID": "vic:rail:RIK",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.67983071,
+            -37.46512379
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Riddells Creek",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Riddells Creek Station"
+      },
+      {
+        "originalName": "Riddells Creek Station",
+        "fullStopName": "Riddells Creek Railway Station",
+        "stopGTFSID": "20337",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.67995066,
+            -37.46490085
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Riddells Creek",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:RIK"
+      },
+      {
+        "originalName": "Riddells Creek Station/Hamilton St",
+        "fullStopName": "Riddells Creek Railway Station/Hamilton Street",
+        "stopGTFSID": "20831",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.6793624,
+            -37.46454685
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Riddells Creek",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Riddells Creek Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "riddells-creek-railway-station"
+  },
+  {
+    "stopName": "Richmond Railway Station",
+    "suburb": [
+      "Cremorne",
+      "Richmond"
+    ],
+    "cleanSuburbs": [
+      "richmond",
+      "cremorne"
+    ],
+    "bays": [
+      {
+        "originalName": "Richmond Railway Station",
+        "fullStopName": "Richmond Railway Station",
+        "stopGTFSID": "vic:rail:RMD",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.99016426,
+            -37.82407446
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Richmond",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Richmond Station"
+      },
+      {
+        "originalName": "Richmond Station",
+        "fullStopName": "Richmond Railway Station",
+        "stopGTFSID": "22247",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.99016426,
+            -37.82407446
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Richmond",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:RMD"
+      },
+      {
+        "originalName": "Richmond Station/Punt Rd",
+        "fullStopName": "Richmond Railway Station/Punt Road",
+        "stopGTFSID": "52558",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.98900681,
+            -37.8244422
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Richmond",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Richmond Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "richmond-railway-station"
+  },
+  {
     "stopName": "South Geelong Railway Station",
     "suburb": [
       "South Geelong"
@@ -799,14 +2421,32 @@
         "suburb": "South Geelong",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:SOG"
+      },
+      {
+        "originalName": "South Geelong Station/Yarra St",
+        "fullStopName": "South Geelong Railway Station/Yarra Street",
+        "stopGTFSID": "52560",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.3585241,
+            -38.15852207
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "South Geelong",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "South Geelong Railway Station",
     "services": [],
     "screenServices": [],
-    "cleanName": "south-geelong-railway-station"
+    "cleanName": "south-geelong-railway-station",
+    "oppositeStopID": "68b1cf31a9a1bdfbb7bd160e"
   },
   {
-    "_id": "7e776a863065aaf69810550f67abc031",
     "stopName": "Southern Cross Railway Station",
     "suburb": [
       "Docklands",
@@ -842,8 +2482,8 @@
         "location": {
           "type": "Point",
           "coordinates": [
-            144.95205759,
-            -37.81838925
+            144.95216625,
+            -37.81815683
           ]
         },
         "stopNumber": null,
@@ -851,322 +2491,14 @@
         "suburb": "Docklands",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:SSS"
-      },
-      {
-        "originalName": "Southern Cross Station",
-        "fullStopName": "Southern Cross Railway Station",
-        "stopGTFSID": "22187",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.95179389,
-            -37.81765471
-          ]
-        },
-        "stopNumber": null,
-        "mode": "metro train",
-        "suburb": "Docklands",
-        "stopType": "stop",
-        "parentStopGTFSID": "vic:rail:SSS",
-        "platform": "8"
-      },
-      {
-        "originalName": "Southern Cross Station",
-        "fullStopName": "Southern Cross Railway Station",
-        "stopGTFSID": "22188",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.95200455,
-            -37.81825315
-          ]
-        },
-        "stopNumber": null,
-        "mode": "metro train",
-        "suburb": "Docklands",
-        "stopType": "stop",
-        "parentStopGTFSID": "vic:rail:SSS",
-        "platform": "9"
-      },
-      {
-        "originalName": "Southern Cross Station",
-        "fullStopName": "Southern Cross Railway Station",
-        "stopGTFSID": "22189",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.95214444,
-            -37.81853495
-          ]
-        },
-        "stopNumber": null,
-        "mode": "metro train",
-        "suburb": "Docklands",
-        "stopType": "stop",
-        "parentStopGTFSID": "vic:rail:SSS",
-        "platform": "10"
-      },
-      {
-        "originalName": "Southern Cross Station",
-        "fullStopName": "Southern Cross Railway Station",
-        "stopGTFSID": "22190",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.95191735,
-            -37.818531
-          ]
-        },
-        "stopNumber": null,
-        "mode": "metro train",
-        "suburb": "Docklands",
-        "stopType": "stop",
-        "parentStopGTFSID": "vic:rail:SSS",
-        "platform": "11"
-      },
-      {
-        "originalName": "Southern Cross Station",
-        "fullStopName": "Southern Cross Railway Station",
-        "stopGTFSID": "22191",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.95184872,
-            -37.81854783
-          ]
-        },
-        "stopNumber": null,
-        "mode": "metro train",
-        "suburb": "Docklands",
-        "stopType": "stop",
-        "parentStopGTFSID": "vic:rail:SSS",
-        "platform": "12"
-      },
-      {
-        "originalName": "Southern Cross Station",
-        "fullStopName": "Southern Cross Railway Station",
-        "stopGTFSID": "22192",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.951766,
-            -37.81866354
-          ]
-        },
-        "stopNumber": null,
-        "mode": "metro train",
-        "suburb": "Docklands",
-        "stopType": "stop",
-        "parentStopGTFSID": "vic:rail:SSS",
-        "platform": "13"
-      },
-      {
-        "originalName": "Southern Cross Station",
-        "fullStopName": "Southern Cross Railway Station",
-        "stopGTFSID": "22193",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.95170848,
-            -37.81868957
-          ]
-        },
-        "stopNumber": null,
-        "mode": "metro train",
-        "suburb": "Docklands",
-        "stopType": "stop",
-        "parentStopGTFSID": "vic:rail:SSS",
-        "platform": "14"
-      },
-      {
-        "originalName": "Southern Cross Railway Station",
-        "fullStopName": "Southern Cross Railway Station",
-        "stopGTFSID": "26282",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.95326534,
-            -37.81743698
-          ]
-        },
-        "stopNumber": null,
-        "mode": "metro train",
-        "suburb": "Docklands",
-        "stopType": "stop",
-        "parentStopGTFSID": "vic:rail:SSS",
-        "platform": "RRB"
-      },
-      {
-        "originalName": "Southern Cross Railway Station",
-        "fullStopName": "Southern Cross Railway Station",
-        "stopGTFSID": "vic:rail:SSS",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.95277706,
-            -37.8186631
-          ]
-        },
-        "stopNumber": null,
-        "mode": "metro train",
-        "suburb": "Docklands",
-        "stopType": "station",
-        "parentStopGTFSID": null
-      },
-      {
-        "originalName": "Southern Cross Railway Station/Spencer St #122",
-        "fullStopName": "Southern Cross Railway Station/Spencer Street",
-        "stopGTFSID": "18187",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.95378623,
-            -37.81832017
-          ]
-        },
-        "stopNumber": "122",
-        "mode": "tram",
-        "suburb": "Docklands",
-        "stopType": "stop",
-        "parentStopGTFSID": null,
-        "tramTrackerID": "3354",
-        "tramTrackerName": "Southern Cross Railway Station, Collins Street",
-        "levelAccess": true
-      },
-      {
-        "originalName": "Southern Cross Railway Station/Spencer St #122",
-        "fullStopName": "Southern Cross Railway Station/Spencer Street",
-        "stopGTFSID": "18194",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.95403544,
-            -37.81875707
-          ]
-        },
-        "stopNumber": "122",
-        "mode": "tram",
-        "suburb": "Melbourne",
-        "stopType": "stop",
-        "parentStopGTFSID": null,
-        "tramTrackerID": "3254",
-        "tramTrackerName": "Southern Cross Railway Station, Collins Street",
-        "levelAccess": true
-      },
-      {
-        "originalName": "Southern Cross Station/Collins St #D14",
-        "fullStopName": "Southern Cross Railway Station/Collins Street",
-        "stopGTFSID": "43472",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.95221502,
-            -37.81968066
-          ]
-        },
-        "stopNumber": "D14",
-        "mode": "tram",
-        "suburb": "Docklands",
-        "stopType": "stop",
-        "parentStopGTFSID": null,
-        "tramTrackerID": "3500",
-        "tramTrackerName": "Southern Cross Railway Station",
-        "levelAccess": true
-      },
-      {
-        "originalName": "Southern Cross Station/Collins St #D14",
-        "fullStopName": "Southern Cross Railway Station/Collins Street",
-        "stopGTFSID": "43477",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.9525957,
-            -37.819471
-          ]
-        },
-        "stopNumber": "D14",
-        "mode": "tram",
-        "suburb": "Docklands",
-        "stopType": "stop",
-        "parentStopGTFSID": null,
-        "tramTrackerID": "3400",
-        "tramTrackerName": "Southern Cross Railway Station",
-        "levelAccess": true
-      },
-      {
-        "originalName": "Southern Cross Station/Spencer St",
-        "fullStopName": "Southern Cross Railway Station/Spencer Street",
-        "stopGTFSID": "27744",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.95427273,
-            -37.81962632
-          ]
-        },
-        "stopNumber": null,
-        "mode": "bus",
-        "suburb": "Docklands",
-        "stopType": "stop",
-        "parentStopGTFSID": null
-      },
-      {
-        "originalName": "Southern Cross Station/Collins St",
-        "fullStopName": "Southern Cross Railway Station/Collins Street",
-        "stopGTFSID": "45470",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.95322121,
-            -37.81944583
-          ]
-        },
-        "stopNumber": null,
-        "mode": "bus",
-        "suburb": "Docklands",
-        "stopType": "stop",
-        "parentStopGTFSID": null
-      },
-      {
-        "originalName": "Southern Cross Station/Collins St",
-        "fullStopName": "Southern Cross Railway Station/Collins Street",
-        "stopGTFSID": "45471",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.95341035,
-            -37.81917877
-          ]
-        },
-        "stopNumber": null,
-        "mode": "bus",
-        "suburb": "Docklands",
-        "stopType": "stop",
-        "parentStopGTFSID": null
       }
     ],
     "mergeName": "Southern Cross Railway Station",
     "services": [],
     "screenServices": [],
-    "cleanName": "southern-cross-railway-station",
-    "cleanNames": [
-      "southern-cross-railway-station",
-      "southern-cross-railway-station-spencer-street",
-      "southern-cross-railway-station-collins-street"
-    ],
-    "codedSuburbs": [
-      "docklands",
-      "melbourne"
-    ],
-    "codedName": "southern-cross-railway-station",
-    "codedNames": [
-      "southern-cross-railway-station",
-      "southern-cross-railway-station-spencer-street",
-      "southern-cross-railway-station-collins-street"
-    ]
+    "cleanName": "southern-cross-railway-station"
   },
   {
-    "_id": "eda8b6ce6ff15c936f38cc692ba6ac2b",
     "stopName": "Sunshine Railway Station",
     "suburb": [
       "Sunshine"
@@ -1209,14 +2541,168 @@
         "suburb": "Sunshine",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:SUN"
+      },
+      {
+        "originalName": "Sunshine Station/City Pl",
+        "fullStopName": "Sunshine Railway Station/City Place",
+        "stopGTFSID": "1",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.83197021,
+            -37.78774462
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Sunshine",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "Sunshine Railway Station",
     "services": [],
     "screenServices": [],
-    "cleanName": "sunshine-railway-station"
+    "cleanName": "sunshine-railway-station",
+    "oppositeStopID": "68b1cf31a9a1bdfbb7bce4cc"
   },
   {
-    "_id": "52aadf89c9717c37fd8e47cc1fe5d12a",
+    "stopName": "Sunbury Railway Station",
+    "suburb": [
+      "Sunbury"
+    ],
+    "cleanSuburbs": [
+      "sunbury"
+    ],
+    "bays": [
+      {
+        "originalName": "Sunbury Railway Station",
+        "fullStopName": "Sunbury Railway Station",
+        "stopGTFSID": "vic:rail:SUY",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.72798098,
+            -37.57928396
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Sunbury",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Sunbury Station"
+      },
+      {
+        "originalName": "Sunbury Station",
+        "fullStopName": "Sunbury Railway Station",
+        "stopGTFSID": "19998",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.72803035,
+            -37.57914973
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Sunbury",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SUY"
+      },
+      {
+        "originalName": "Sunbury Station/Brook St",
+        "fullStopName": "Sunbury Railway Station/Brook Street",
+        "stopGTFSID": "20816",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.72855201,
+            -37.57912373
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Sunbury",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay A"
+      }
+    ],
+    "mergeName": "Sunbury Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "sunbury-railway-station"
+  },
+  {
+    "stopName": "Trafalgar Railway Station",
+    "suburb": [
+      "Trafalgar"
+    ],
+    "cleanSuburbs": [
+      "trafalgar"
+    ],
+    "bays": [
+      {
+        "originalName": "Trafalgar Railway Station",
+        "fullStopName": "Trafalgar Railway Station",
+        "stopGTFSID": "vic:rail:TAR",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            146.15477284,
+            -38.2072423
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Trafalgar",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Trafalgar Station"
+      },
+      {
+        "originalName": "Trafalgar Station",
+        "fullStopName": "Trafalgar Railway Station",
+        "stopGTFSID": "20350",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            146.15477284,
+            -38.2072423
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Trafalgar",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:TAR"
+      },
+      {
+        "originalName": "Trafalgar Station/Princes Hwy",
+        "fullStopName": "Trafalgar Railway Station/Princes Highway",
+        "stopGTFSID": "21463",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            146.15483782,
+            -38.20754918
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Trafalgar",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Trafalgar Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "trafalgar-railway-station",
+    "oppositeStopID": "68b1cf31a9a1bdfbb7bd1601"
+  },
+  {
     "stopName": "Tarneit Railway Station",
     "suburb": [
       "Tarneit"
@@ -1259,14 +2745,370 @@
         "suburb": "Tarneit",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:TNT"
+      },
+      {
+        "originalName": "Tarneit Station",
+        "fullStopName": "Tarneit Railway Station",
+        "stopGTFSID": "52041",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.69518288,
+            -37.83244764
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Tarneit",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "Tarneit Railway Station",
     "services": [],
     "screenServices": [],
     "cleanName": "tarneit-railway-station"
   },
   {
-    "_id": "34ca8b9dc00a3d4ab6b4a43efa37a152",
+    "stopName": "Traralgon Railway Station",
+    "suburb": [
+      "Traralgon"
+    ],
+    "cleanSuburbs": [
+      "traralgon"
+    ],
+    "bays": [
+      {
+        "originalName": "Traralgon Railway Station",
+        "fullStopName": "Traralgon Railway Station",
+        "stopGTFSID": "vic:rail:TRN",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            146.53788212,
+            -38.19888494
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Traralgon",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Traralgon Station: Princes Hwy"
+      },
+      {
+        "originalName": "Traralgon Station",
+        "fullStopName": "Traralgon Railway Station",
+        "stopGTFSID": "20351",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            146.53890069,
+            -38.19854647
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Traralgon",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:TRN"
+      },
+      {
+        "originalName": "Traralgon Station/Princes St",
+        "fullStopName": "Traralgon Railway Station/Princes Street",
+        "stopGTFSID": "16295",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            146.53869655,
+            -38.19832035
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Traralgon",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Traralgon Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "traralgon-railway-station"
+  },
+  {
+    "stopName": "Tynong Railway Station",
+    "suburb": [
+      "Tynong"
+    ],
+    "cleanSuburbs": [
+      "tynong"
+    ],
+    "bays": [
+      {
+        "originalName": "Tynong Railway Station",
+        "fullStopName": "Tynong Railway Station",
+        "stopGTFSID": "vic:rail:TYN",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.6282343,
+            -38.08499626
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Tynong",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Tynong Station"
+      },
+      {
+        "originalName": "Tynong Station",
+        "fullStopName": "Tynong Railway Station",
+        "stopGTFSID": "20352",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.62841889,
+            -38.08488125
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Tynong",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:TYN"
+      },
+      {
+        "originalName": "Tynong Station/Nar Nar Goon - Longwarry Rd",
+        "fullStopName": "Tynong Railway Station/Nar Nar Goon-Longwarry Road",
+        "stopGTFSID": "22365",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.62958364,
+            -38.08539952
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Tynong",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Tynong Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "tynong-railway-station"
+  },
+  {
+    "stopName": "Warragul Railway Station",
+    "suburb": [
+      "Warragul"
+    ],
+    "cleanSuburbs": [
+      "warragul"
+    ],
+    "bays": [
+      {
+        "originalName": "Warragul Railway Station",
+        "fullStopName": "Warragul Railway Station",
+        "stopGTFSID": "vic:rail:WGL",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.93308525,
+            -38.16522418
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Warragul",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Warragul Station"
+      },
+      {
+        "originalName": "Warragul Station",
+        "fullStopName": "Warragul Railway Station",
+        "stopGTFSID": "20357",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.93282904,
+            -38.16478926
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Warragul",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:WGL"
+      },
+      {
+        "originalName": "Warragul Station/Queen St",
+        "fullStopName": "Warragul Railway Station/Queen Street",
+        "stopGTFSID": "37766",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.93133549,
+            -38.16388346
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Warragul",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Warragul Station/Alfred St",
+        "fullStopName": "Warragul Railway Station/Alfred Street",
+        "stopGTFSID": "47670",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.93267463,
+            -38.16520242
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Warragul",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 3"
+      }
+    ],
+    "mergeName": "Warragul Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "warragul-railway-station",
+    "oppositeStopID": "68b1cf31a9a1bdfbb7bd184e"
+  },
+  {
+    "stopName": "Watergardens Railway Station",
+    "suburb": [
+      "Sydenham",
+      "Taylors Lakes"
+    ],
+    "cleanSuburbs": [
+      "taylors-lakes",
+      "sydenham"
+    ],
+    "bays": [
+      {
+        "originalName": "Watergardens Railway Station",
+        "fullStopName": "Watergardens Railway Station",
+        "stopGTFSID": "vic:rail:WGS",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.77418099,
+            -37.70111071
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Taylors Lakes",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Watergardens (Sydenham) Station"
+      },
+      {
+        "originalName": "Watergardens Station",
+        "fullStopName": "Watergardens Railway Station",
+        "stopGTFSID": "22244",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.77409435,
+            -37.70097389
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Taylors Lakes",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:WGS"
+      }
+    ],
+    "mergeName": "Watergardens Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "watergardens-railway-station"
+  },
+  {
+    "stopName": "Woodend Railway Station",
+    "suburb": [
+      "Woodend"
+    ],
+    "cleanSuburbs": [
+      "woodend"
+    ],
+    "bays": [
+      {
+        "originalName": "Woodend Railway Station",
+        "fullStopName": "Woodend Railway Station",
+        "stopGTFSID": "vic:rail:WNO",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.52589012,
+            -37.35879859
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Woodend",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Woodend Station"
+      },
+      {
+        "originalName": "Woodend Station",
+        "fullStopName": "Woodend Railway Station",
+        "stopGTFSID": "20361",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.52617876,
+            -37.35929126
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Woodend",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:WNO"
+      },
+      {
+        "originalName": "Woodend Station/Station St",
+        "fullStopName": "Woodend Railway Station/Station Street",
+        "stopGTFSID": "20817",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.52613004,
+            -37.35905594
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Woodend",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Woodend Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "woodend-railway-station"
+  },
+  {
     "stopName": "Waurn Ponds Railway Station",
     "suburb": [
       "Mount Duneed",
@@ -1311,64 +3153,31 @@
         "suburb": "Mount Duneed",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:WPP"
+      },
+      {
+        "originalName": "Waurn Ponds Station/Sugargum Dr",
+        "fullStopName": "Waurn Ponds Railway Station/Sugargum Drive",
+        "stopGTFSID": "52038",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.30598663,
+            -38.21547999
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Waurn Ponds",
+        "stopType": "stop",
+        "parentStopGTFSID": null
       }
     ],
+    "mergeName": "Waurn Ponds Railway Station",
     "services": [],
     "screenServices": [],
     "cleanName": "waurn-ponds-railway-station"
   },
   {
-    "_id": "1b5956fd5710c5cf4993a614bef7ebdc",
-    "stopName": "Woodend Railway Station",
-    "suburb": [
-      "Woodend"
-    ],
-    "cleanSuburbs": [
-      "woodend"
-    ],
-    "bays": [
-      {
-        "originalName": "Woodend Railway Station",
-        "fullStopName": "Woodend Railway Station",
-        "stopGTFSID": "vic:rail:WNO",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.52589012,
-            -37.35879859
-          ]
-        },
-        "stopNumber": null,
-        "mode": "regional train",
-        "suburb": "Woodend",
-        "stopType": "station",
-        "parentStopGTFSID": null,
-        "vnetStationName": "Woodend Station"
-      },
-      {
-        "originalName": "Woodend Station",
-        "fullStopName": "Woodend Railway Station",
-        "stopGTFSID": "20361",
-        "location": {
-          "type": "Point",
-          "coordinates": [
-            144.52617876,
-            -37.35929126
-          ]
-        },
-        "stopNumber": null,
-        "mode": "regional train",
-        "suburb": "Woodend",
-        "stopType": "stop",
-        "parentStopGTFSID": "vic:rail:WNO"
-      }
-    ],
-    "services": [],
-    "screenServices": [],
-    "cleanName": "woodend-railway-station"
-  },
-  {
-    "_id": "60fe6c6d8dfc7c1ff5bbfe375424ef5c",
     "stopName": "Wyndham Vale Railway Station",
     "suburb": [
       "Manor Lakes"
@@ -1411,10 +3220,96 @@
         "suburb": "Manor Lakes",
         "stopType": "stop",
         "parentStopGTFSID": "vic:rail:WVL"
+      },
+      {
+        "originalName": "Wyndham Vale Station/Armstrong Rd",
+        "fullStopName": "Wyndham Vale Railway Station/Armstrong Road",
+        "stopGTFSID": "50263",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.60860084,
+            -37.87412734
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Manor Lakes",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 3"
       }
     ],
+    "mergeName": "Wyndham Vale Railway Station",
     "services": [],
     "screenServices": [],
     "cleanName": "wyndham-vale-railway-station"
+  },
+  {
+    "stopName": "Yarragon Railway Station",
+    "suburb": [
+      "Yarragon"
+    ],
+    "cleanSuburbs": [
+      "yarragon"
+    ],
+    "bays": [
+      {
+        "originalName": "Yarragon Railway Station",
+        "fullStopName": "Yarragon Railway Station",
+        "stopGTFSID": "vic:rail:YON",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            146.0630628,
+            -38.20315754
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Yarragon",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Yarragon Station"
+      },
+      {
+        "originalName": "Yarragon Station",
+        "fullStopName": "Yarragon Railway Station",
+        "stopGTFSID": "20362",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            146.0630628,
+            -38.20315754
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Yarragon",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:YON"
+      },
+      {
+        "originalName": "Yarragon Station/Princes Hwy",
+        "fullStopName": "Yarragon Railway Station/Princes Highway",
+        "stopGTFSID": "16096",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            146.06286623,
+            -38.20334522
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Yarragon",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Yarragon Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "yarragon-railway-station"
   }
 ]
