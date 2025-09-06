@@ -12,6 +12,7 @@ import ccyTrips from '../../departures/sample-data/fkn-wer-wil-through-running.j
 import ephTrips from '../../departures/sample-data/eph-clp-forming.json' with { type: 'json' }
 import pkmStops from '../tracker/sample-data/pkm-stops-db.json' with { type: 'json' }
 import getDepartures from '../../../modules/metro-trains/get-departures.js'
+import sssTurnbackTrips from './sample-data/sss-turnback-trips.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -426,5 +427,22 @@ describe('The metro departures class', () => {
     expect(departures[0].formingTrip.runID).to.equal('0822')
     expect(departures[0].routeName).to.equal('Mernda')
     expect(departures[0].cleanRouteName).to.equal('mernda')
+  })
+
+  it('Does does not allow showing of a NOR -> SSS -> FSS -> SSS -> NOR trip', async () => {
+    const db = new LokiDatabaseConnection()
+    const liveTimetables = await db.createCollection('live timetables')
+    const stops = await db.createCollection('stops')
+    await stops.createDocuments(clone(pkmStops))
+    await liveTimetables.createDocuments(clone(sssTurnbackTrips))
+
+    const sss = stops.findDocument({ stopName: /Southern Cross/ })
+
+    const departures = await getDepartures(sss, db, null, null, new Date('2025-09-06T12:29:00.000Z'))
+
+    expect(departures[0].runID).to.equal('R376')
+    expect(departures[0].cancelled).to.be.false
+    expect(departures[0].formingTrip).to.not.exist
+    expect(departures[0].formingRunID).to.equal('R383')
   })
 })
