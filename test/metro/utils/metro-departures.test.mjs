@@ -443,6 +443,5 @@ describe('The metro departures class', () => {
     expect(departures[0].runID).to.equal('R376')
     expect(departures[0].cancelled).to.be.false
     expect(departures[0].formingTrip).to.not.exist
-    expect(departures[0].formingRunID).to.equal('R383')
   })
 })

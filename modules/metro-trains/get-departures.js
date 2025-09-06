@@ -2,6 +2,15 @@ const utils = require('../../utils.js')
 const { getDepartures } = require('../departures/get-departures.js')
 const { getFormingTrip } = require('./get-forming-trip.js')
 
+const NORTHERN_GROUP = [
+  'Werribee',
+  'Williamstown',
+  'Sunbury',
+  'Craigieburn',
+  'Upfield',
+  'Flemington Racecourse'
+]
+
 const CITY_LOOP = [
   'Parliament',
   'Melbourne Central',
@@ -13,7 +22,9 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
   let departures = await getDepartures(station, mode, db, { departureTime, returnArrivals, timeframe })
   let liveTimetables = db.getCollection('live timetables')
 
-  let isWithinCityLoop = CITY_LOOP.includes(station.stopName.slice(0, -16))
+  let stationName = station.stopName.slice(0, -16)
+  let isSSS = stationName === 'Southern Cross'
+  let isWithinCityLoop = CITY_LOOP.includes(stationName)
 
   let outputDepartures = []
   for (let departure of departures) {
@@ -50,13 +61,15 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
     else destination = trueDestination
 
     let futureStops = departure.futureStops.map(stop => stop.slice(0, -16))
+    let tripHasCityLoop = (NORTHERN_GROUP.includes(trip.routeName) ? !isSSS : isWithinCityLoop)
+
     let {
       shouldShowForming,
       formingDestination,
       formingRunID,
       formingTrip,
       formingType
-    } = await getFormingTrip(trip, departure.isArrival, isWithinCityLoop, liveTimetables)
+    } = await getFormingTrip(trip, departure.isArrival, tripHasCityLoop, liveTimetables)
 
     let futureFormingStops = null
     if (formingTrip && shouldShowForming) {
