@@ -8,6 +8,7 @@ import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import LiveTimetable from '../schema/live-timetable.js'
 import VLineUtils from '../vline/vline-utils.mjs'
 import VLineTripUpdater from '../vline/trip-updater.mjs'
+import discordIntegration from '../discord-integration.js'
 
 let existingVNetStops = {}
 
@@ -186,7 +187,10 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
   let departures = await ptvAPI.vline.getDepartures('', GetPlatformServicesAPI.BOTH, 1440)
   let arrivals = await ptvAPI.vline.getArrivals('', GetPlatformServicesAPI.BOTH, 1440)
   let newTrips = []
-    
+
+  let tripsNeedingFetch = []
+  let missingTrips = []
+
   for (let vlineTrip of departures.concat(arrivals)) {
     let existingTrip = await VLineTripUpdater.getTripByTDN(liveTimetables, vlineTrip.tdn, opDayFormat)
     if (existingTrip) {
@@ -217,21 +221,31 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
       })
       continue
     }
-
-    let pattern = await downloadTripPattern(opDayFormat, vlineTrip, nspTrip, db)
-    if (!pattern) continue
-
-    outputTrips.push({
-      replaceOne: {
-        filter: pattern.getDBKey(),
-        replacement: pattern.toDatabase(),
-        upsert: true
-      }
-    })
+    tripsNeedingFetch.push({ opDayFormat, vlineTrip, nspTrip })
   }
+
+  if (tripsNeedingFetch.length <= 15) {
+    for (let { opDayFormat, vlineTrip, nspTrip } of tripsNeedingFetch) {
+      let pattern = await downloadTripPattern(opDayFormat, vlineTrip, nspTrip, db)
+      if (!pattern) {
+        missingTrips.push(vlineTrip)
+        continue
+      }
+
+      outputTrips.push({
+        replaceOne: {
+          filter: pattern.getDBKey(),
+          replacement: pattern.toDatabase(),
+          upsert: true
+        }
+      })
+    }
+  } else missingTrips = tripsNeedingFetch
 
   if (outputTrips.length) await liveTimetables.bulkWrite(outputTrips)
   await Promise.all(newTrips.map(({ liveTrip, vlineTrip }) => updateExistingTrip(db, liveTrip, vlineTrip)))
+
+  return missingTrips
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
@@ -245,7 +259,15 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let opDay = utils.now()
   if (opDay.get('hours') < 3) opDay.add(-1, 'day')
 
-  await loadOperationalTT(mongoDB, opDay, ptvAPI)
+  const missingTrips = await loadOperationalTT(mongoDB, opDay, ptvAPI)
+  if (missingTrips.length) {
+    const tripData = `Missing V/Line trips (${missingTrips.length}):\n` + missingTrips.map(
+      ({ vlineTrip }) => `TD${vlineTrip.tdn}: ${vlineTrip.departureTime.toFormat('HH:mm')} ${vlineTrip.origin} - ${vlineTrip.destination}`
+    ).join('\n')
+    console.log(tripData)
+
+    await discordIntegration('vlineOpTT', tripData)
+  }
 
   await mongoDB.close()
 }
