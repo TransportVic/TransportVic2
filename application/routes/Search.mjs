@@ -12,22 +12,20 @@ router.get('/', (req, res) => {
 async function prioritySearch(db, query) {
   let stops = db.getCollection('stops')
 
-  let possibleStopNames = [
-    query,
-    utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre'))
-  ].map(name => name.toLowerCase()).filter((e, i, a) => a.indexOf(e) === i)
-
   if (stationCodes[query.toUpperCase()]) {
     return await stops.findDocuments({
       stopName: stationCodes[query.toUpperCase()] + ' Railway Station'
     }).toArray()
   }
 
-  let fullQuery = possibleStopNames.join(' ')
+  const fullQuery = utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre')).toLowerCase()
+  const queryWords = fullQuery.split(/[^\w]/)
+  const searchedWords = queryWords.filter(word => word.length >= 4)
+  const shortWords = queryWords.filter(word => word.length < 4)
 
   let priorityStopsByName = (await stops.findDocuments({
     $and: [
-      ...(fullQuery.split(/[^\w]/).map(name => ({ textQuery: name }))),
+      ...(searchedWords.map(name => ({ textQuery: name }))),
       // {
       //   textQuery: fullQuery
       //   $text: {
@@ -35,8 +33,8 @@ async function prioritySearch(db, query) {
       //   }
       // }, {
     {
-      $or: possibleStopNames.map(name => ({ mergeName: name }))
-    }, {
+    //   $or: possibleStopNames.map(name => ({ mergeName: name }))
+    // }, {
       $or: [{
         mergeName: /Shopping Centre/
       }, {
@@ -47,7 +45,7 @@ async function prioritySearch(db, query) {
         mergeName: /Town Centre/
       }]
     }]
-  }).limit(6).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
+  }).limit(6).toArray()).filter(stop => shortWords.every(word => stop.stopName.toLowerCase().includes(word))).sort((a, b) => a.stopName.length - b.stopName.length)
 
   let gtfsMatch = await stops.findDocuments({
     'bays.stopGTFSID': query
