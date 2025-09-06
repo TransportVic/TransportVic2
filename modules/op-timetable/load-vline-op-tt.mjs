@@ -33,12 +33,11 @@ export async function matchTrip(operationDay, vlineTrip, db) {
   let arrivalTime = utils.parseTime(vlineTrip.arrivalTime.toUTC().toISO())
   let departureTime = utils.parseTime(vlineTrip.departureTime.toUTC().toISO())
 
-  const genTimes = time => [-3, -2, -1, 0, 1, 2, 3].map(t => utils.formatPTHHMM(time.clone().add(t, 'minute')))
+  const genTimes = time => [-3, -2, -1, 0, 1, 2, 3].map(t => utils.formatHHMM(time.clone().add(t, 'minute')))
 
-  return await gtfsTimetables.findDocument({
+  const baseQuery = {
     mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
     operationDays: operationDay,
-    runID: vlineTrip.tdn,
     $and: [{
       stopTimings: {
         $elemMatch: {
@@ -58,7 +57,12 @@ export async function matchTrip(operationDay, vlineTrip, db) {
         }
       }
     }]
-  })
+  }
+
+  return await gtfsTimetables.findDocument({
+    ...baseQuery,
+    runID: vlineTrip.tdn
+  }) || await gtfsTimetables.findDocument(baseQuery)
 }
 
 async function deduplicateStops(tripPattern, nspTrip, db) {
