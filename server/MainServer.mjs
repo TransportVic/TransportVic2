@@ -97,7 +97,7 @@ export default class MainServer {
     }
 
     let routers = await Promise.all(routePromises)
-    for (let router of routers) {
+    for (let router of routers.filter(Boolean)) {
       app.use(router.path, router.router)
     }
 

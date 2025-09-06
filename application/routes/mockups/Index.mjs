@@ -1,12 +1,13 @@
-const express = require('express')
+import express from 'express'
+import utils from '../../../utils.js'
+import stationCodes from '../../../additional-data/station-codes.json' with { type: 'json' }
+import rawStationPlatforms from '../../../additional-data/station-platforms.json' with { type: 'json' }
+import rawStationPIDs from '../../../additional-data/station-pids.js'
+import url from 'url'
+import querystring from 'querystring'
+import PIDBackend from './PIDBackend.js'
+
 const router = new express.Router()
-const utils = require('../../../utils')
-const stationCodes = require('../../../additional-data/station-codes')
-const rawStationPlatforms = require('../../../additional-data/station-platforms')
-const rawStationPIDs = require('../../../additional-data/station-pids')
-const url = require('url')
-const querystring = require('querystring')
-const PIDBackend = require('./PIDBackend')
 
 async function preloadData(db, station, platform) {
   PIDBackend.getPIDData(await PIDBackend.getStation(station, db), platform, {}, db)
@@ -112,4 +113,4 @@ router.get('/get', async (req, res) => {
   })
 })
 
-module.exports = router
+export default router

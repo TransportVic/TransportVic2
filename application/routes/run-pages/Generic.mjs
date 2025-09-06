@@ -1,13 +1,11 @@
 // TODO: Move bus to its own page handler
 
-const express = require('express')
-const moment = require('moment')
+import express from 'express'
+import utils from '../../../utils.js'
+import coachDestinations from '../../../additional-data/coach-stops.js'
+import busBays from '../../../additional-data/bus-data/bus-bays.js'
+
 const router = new express.Router()
-const utils = require('../../../utils')
-
-const coachDestinations = require('../../../additional-data/coach-stops')
-
-const busBays = require('../../../additional-data/bus-data/bus-bays')
 
 async function pickBestTrip(data, db) {
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
@@ -141,4 +139,4 @@ router.post('/:mode/run/:origin/:departureTime/:destination/:destinationArrivalT
   })
 })
 
-module.exports = router
+export default router

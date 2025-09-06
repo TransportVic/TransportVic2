@@ -1,18 +1,14 @@
-const express = require('express')
-const moment = require('moment')
+import express from 'express'
+import utils from '../../../utils.js'
+import getStoppingPattern from '../../../modules/bus/get-stopping-pattern.js'
+import busDestinations from '../../../additional-data/bus-destinations.json' with { type: 'json' }
+import busBays from '../../../additional-data/bus-data/bus-bays.js'
+import getDepartures from '../../../modules/bus/get-departures.js'
+import regionalRouteNumbers from '../../../additional-data/bus-data/bus-network-regions.json' with { type: 'json' }
+import overrideStops from '../../../modules/bus/override-stops.json' with { type: 'json' }
+import depots from '../../../transportvic-data/excel/bus/depots/bus-depots.json' with { type: 'json' }
+
 const router = new express.Router()
-const utils = require('../../../utils')
-const getStoppingPattern = require('../../../modules/bus/get-stopping-pattern')
-
-const busDestinations = require('../../../additional-data/bus-destinations')
-
-const busBays = require('../../../additional-data/bus-data/bus-bays')
-
-const getDepartures = require('../../../modules/bus/get-departures')
-const regionalRouteNumbers = require('../../../additional-data/bus-data/bus-network-regions')
-
-const overrideStops = require('../../../modules/bus/override-stops')
-const depots = require('../../../transportvic-data/excel/bus/depots/bus-depots.json')
 
 let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => {
   let regionRoutes = regionalRouteNumbers[region]
@@ -345,4 +341,4 @@ router.post('/:origin/:departureTime/:destination/:destinationArrivalTime/:opera
   })
 })
 
-module.exports = router
+export default router

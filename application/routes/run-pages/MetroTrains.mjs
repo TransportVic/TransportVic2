@@ -1,7 +1,8 @@
-const express = require('express')
+import express from 'express'
+import utils from '../../../utils.js'
+import { tripCrossesCity, checkIsCHLFormingCCLSpecialCase } from '../../../modules/metro-trains/get-forming-trip.js'
+
 const router = new express.Router()
-const utils = require('../../../utils.js')
-const { tripCrossesCity, checkIsCHLFormingCCLSpecialCase } = require('../../../modules/metro-trains/get-forming-trip.js')
 
 const MURL = [
   'Parliament',
@@ -169,4 +170,4 @@ router.post('/:origin/:departureTime/:destination/:destinationArrivalTime/:opera
   })
 })
 
-module.exports = router
+export default router

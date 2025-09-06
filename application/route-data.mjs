@@ -2,12 +2,12 @@ import modules from '../modules.json' with { type: 'json' }
 
 export default [
   { path: '/', router: 'mockups/PIDSView.js', enable: modules.mockups && modules.mockups.pidsview },
-  { path: '/', router: 'Index.js' },
-  { path: '/', router: 'IndexData.js' },
-  { path: '/links', router: 'AdditionalLinks.js' },
-  { path: '/search', router: 'Search.js' },
-  { path: '/nearby', router: 'StopsNearby.js' },
-  { path: '/public-holiday', router: 'PublicHolidayInfo.js' },
+  { path: '/', router: 'Index.mjs' },
+  { path: '/', router: 'IndexData.mjs' },
+  { path: '/links', router: 'AdditionalLinks.mjs' },
+  { path: '/search', router: 'Search.mjs' },
+  { path: '/nearby', router: 'StopsNearby.mjs' },
+  { path: '/public-holiday', router: 'PublicHolidayInfo.mjs' },
 
   { path: '/vline/timings', router: 'timing-pages/VLine.mjs', enable: modules.Next4 && modules.Next4.vline },
   { path: '/metro/timings', router: 'timing-pages/MetroTrains.mjs', enable: modules.Next4 && modules.Next4.metro },
@@ -17,14 +17,13 @@ export default [
   { path: '/ferry/timings', router: 'timing-pages/Ferry.mjs', enable: modules.Next4 && modules.Next4.ferry },
   { path: '/heritage/timings', router: 'timing-pages/HeritageTrain.mjs', enable: modules.Next4 && modules.Next4.heritage },
 
-  { path: '/metro/run', router: 'run-pages/MetroTrains.js' },
+  { path: '/metro/run', router: 'run-pages/MetroTrains.mjs' },
   { path: '/vline/run', router: 'run-pages/VLineTrains.mjs' },
-  { path: '/tram/run', router: 'run-pages/Tram.js' },
-  { path: '/bus/run', router: 'run-pages/Bus.js' },
-  { path: '/', router: 'run-pages/Generic.js' },
+  { path: '/tram/run', router: 'run-pages/Tram.mjs' },
+  { path: '/bus/run', router: 'run-pages/Bus.mjs' },
+  { path: '/', router: 'run-pages/Generic.mjs' },
 
-  { path: '/stats', router: 'Statistics.js' },
-  { path: '/mockups', router: 'mockups/Index.js' },
+  { path: '/mockups', router: 'mockups/Index.mjs' },
   { path: '/mockups/fss', router: 'mockups/fss/FlindersStreet.js' },
   { path: '/mockups/metro-lcd/concourse', router: 'mockups/metro-lcd/Concourse-PIDS.js' },
   { path: '/mockups/metro-lcd', router: 'mockups/metro-lcd/Metro-LCD-PIDS.js' },

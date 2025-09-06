@@ -1,10 +1,8 @@
-const express = require('express')
-const utils = require('../../utils')
-const config = require('../../config')
-const fs = require('fs')
-const path = require('path')
-const async = require('async')
-const { getPHDayOfWeek, getPublicHolidayName, isNightNetworkRunning } = require('../../public-holidays')
+import express from 'express'
+import utils from '../../utils.js'
+import async from 'async'
+import { getPHDayOfWeek, getPublicHolidayName, isNightNetworkRunning } from '../../public-holidays.js'
+
 const router = new express.Router()
 
 router.use('/:rawDays', async (req, res) => {
@@ -41,4 +39,4 @@ router.use('/:rawDays', async (req, res) => {
   res.render('public-holiday', { holidays: data })
 })
 
-module.exports = router
+export default router

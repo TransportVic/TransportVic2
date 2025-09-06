@@ -6,7 +6,6 @@ const utils = require('../../../utils')
 const async = require('async')
 const { getDayOfWeek } = require('../../../public-holidays')
 const metroTypes = require('../../../additional-data/metro-tracker/metro-types')
-const { encodeTrainType } = require('../../../additional-data/consist-encoder')
 
 let undergroundLoopStations = ['Parliament', 'Flagstaff', 'Melbourne Central']
 let cityLoopStations = [...undergroundLoopStations, 'Southern Cross']
@@ -135,7 +134,7 @@ async function getAllDeparturesFromStation(station, db) {
 
               let { fleetNumber } = departure
               if (fleetNumber) {
-                let matchingSet = metroTypes.find(set => fleetNumber.includes(set.leadingCar))
+                let matchingSet = metroTypes[set.leadingCar]
                 if (matchingSet) {
                   consist = {
                     size: fleetNumber.length,

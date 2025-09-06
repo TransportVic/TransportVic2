@@ -1,11 +1,15 @@
-const express = require('express')
-const utils = require('../../utils')
-const config = require('../../config')
-const fs = require('fs')
-const path = require('path')
-const async = require('async')
-const { getPHDayOfWeek, getPublicHolidayName } = require('../../public-holidays')
-const { exec } = require('child_process')
+import express from 'express'
+import utils from '../../utils.js'
+import fs from 'fs'
+import async from 'async'
+import { getPHDayOfWeek, getPublicHolidayName } from '../../public-holidays.js'
+import { exec } from 'child_process'
+import path from 'path'
+import url from 'url'
+
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 const router = new express.Router()
 
 let robots = fs.readFileSync(path.join(__dirname, '../static/app-content/robots.txt'))
@@ -33,7 +37,7 @@ fs.readFile(path.join(__dirname, '../static/images/interactives/railmap.svg'), (
 
 let upcomingPH = []
 
-async function initDB(db) {
+export async function initDB(db) {
   setTimeout(async () => {
     let now = utils.now()
     let days = utils.allDaysBetweenDates(now, now.clone().add(7, 'days'))
@@ -157,5 +161,4 @@ router.get('/about', (req, res) => {
   res.render('about', { buildNumber, buildComment })
 })
 
-module.exports = router
-module.exports.initDB = initDB
+export default router

@@ -1,13 +1,11 @@
-const express = require('express')
-const moment = require('moment')
+import express from 'express'
+import utils from '../../../utils.js'
+import tramDestinations from '../../../additional-data/tram-destinations.json' with { type: 'json' }
+import determineTramRouteNumber from '../../../modules/tram/determine-tram-route-number.js'
+import tramFleet from '../../../additional-data/tram-tracker/tram-fleet.js'
+import urls from '../../../urls.json' with { type: 'json' }
+
 const router = new express.Router()
-const utils = require('../../../utils')
-
-const tramDestinations = require('../../../additional-data/tram-destinations')
-
-const determineTramRouteNumber = require('../../../modules/tram/determine-tram-route-number')
-const tramFleet = require('../../../additional-data/tram-tracker/tram-fleet')
-const urls = require('../../../urls')
 
 async function pickBestTrip(data, db) {
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
@@ -253,4 +251,4 @@ router.post('/:origin/:departureTime/:destination/:destinationArrivalTime/:opera
   })
 })
 
-module.exports = router
+export default router

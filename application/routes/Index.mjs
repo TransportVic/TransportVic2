@@ -1,5 +1,6 @@
-const express = require('express')
-const utils = require('../../utils')
+import express from 'express'
+import utils from '../../utils.js'
+
 const router = new express.Router()
 
 router.get('/', (req, res) => {
@@ -32,4 +33,4 @@ router.get('/colours', async (req, res) => {
   res.render('colours', {operators, tramRoutes, trainLines})
 })
 
-module.exports = router
+export default router

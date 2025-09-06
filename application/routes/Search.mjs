@@ -1,9 +1,9 @@
-const express = require('express')
+import express from 'express'
+import escapeRegex from 'escape-regex-string'
+import utils from '../../utils.js'
+import stationCodes from '../../additional-data/station-codes.json' with { type: 'json' }
+
 const router = new express.Router()
-const async = require('async')
-const escapeRegex = require('escape-regex-string')
-const utils = require('../../utils')
-const stationCodes = require('../../additional-data/station-codes')
 
 router.get('/', (req, res) => {
   res.render('search/index', { placeholder: 'Station, stop or route' })
@@ -168,4 +168,4 @@ router.post('/', async (req, res) => {
   res.render('search/results', {stops, routes, encodeName: utils.encodeName})
 })
 
-module.exports = router
+export default router

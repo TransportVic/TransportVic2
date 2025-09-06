@@ -1,15 +1,9 @@
-const express = require('express')
-const utils = require('../../utils')
+import express from 'express'
+import utils from '../../utils.js'
+
 const router = new express.Router()
 
-function getClosestDistance(userPosition, positions) {
-  let userLat = userPosition.latitude, userLong = userPosition.longitude
-  let distances = positions.map(position => utils.getDistanceFromLatLon(position[1], position[0], userLat, userLong))
-
-  return distances.sort((a, b) => a - b)[0]
-}
-
-let typeMap = {
+const typeMap = {
   'bus': 'Bus Stop',
   'metro train': 'Metro Train Station',
   'regional train': 'V/Line Train Station',
@@ -18,6 +12,14 @@ let typeMap = {
   'ferry': 'Ferry Terminal',
   'heritage train': 'Heritage Train Station'
 }
+
+function getClosestDistance(userPosition, positions) {
+  let userLat = userPosition.latitude, userLong = userPosition.longitude
+  let distances = positions.map(position => utils.getDistanceFromLatLon(position[1], position[0], userLat, userLong))
+
+  return distances.sort((a, b) => a - b)[0]
+}
+
 
 function expandStop(stop) {
   let modes = []
@@ -73,4 +75,4 @@ router.post('/', async (req, res) => {
   res.render('nearby/render', {stops})
 })
 
-module.exports = router
+export default router
