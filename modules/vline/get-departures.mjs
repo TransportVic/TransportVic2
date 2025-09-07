@@ -34,7 +34,8 @@ export default async function getVLineDepartures(station, db, departureTime, { t
     ...departures,
     ...coachDepartures.filter(departure => departure.isRailReplacementBus).map(coach => ({
       ...coach,
-      destination: coach.destination === 'Southern Cross Coach Terminal' ? 'Southern Cross' : coach.destination.slice(0, -16)
+      destination: coach.destination === 'Southern Cross Coach Terminal' ? 'Southern Cross' :
+        coach.destination === 'Adelaide City (SA)' ? coach.destination : coach.destination.slice(0, -16)
     }))
   ].sort((a, b) => a.scheduledDepartureTime - b.scheduledDepartureTime)
 }

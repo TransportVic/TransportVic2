@@ -42,7 +42,10 @@ div(class=`departure noTiming${hasNumber ? '' : ' noNumber'}`)
   a.departureInfo
     if !hasNumber
       if trip.isRailReplacementBus
-        span.routeName V/Line #{trip.routeName} Line Rail Replacement
+        if trip.routeGTFSID === '5-GSR'
+          span.routeName The Overland
+        else
+          span.routeName V/Line #{trip.routeName} Line Rail Replacement
       else
         span.routeName #{trip.routeName}
     span.towards Towards
