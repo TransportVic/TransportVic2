@@ -56,7 +56,7 @@ export default class VLineTripUpdater extends TripUpdater {
     return { cancelledStops, uncancelledStops }
   }
 
-  static async updateTripOriginDestination(db, operationDay, runID, newOrigin, newDestination) {
+  static async updateTripOriginDestination(db, operationDay, runID, newOrigin, newDestination, dataSource) {
     let timetables = db.getCollection('live timetables')
     let trip = await this.getTripByTDN(timetables, runID, operationDay)
     if (!trip) return null
@@ -80,11 +80,12 @@ export default class VLineTripUpdater extends TripUpdater {
         }))
       ]
     }, {
-      skipStopCancellation: true
+      skipStopCancellation: true,
+      dataSource
     })
   }
 
-  static async setTripTimeOffset(db, operationDay, runID, timeOffset) {
+  static async setTripTimeOffset(db, operationDay, runID, timeOffset, dataSource) {
     let timetables = db.getCollection('live timetables')
     let trip = await this.getTripByTDN(timetables, runID, operationDay)
     if (!trip) return null
@@ -97,7 +98,8 @@ export default class VLineTripUpdater extends TripUpdater {
         scheduledDepartureTime: new Date(+new Date(stop.scheduledDepartureTime) + timeOffset)
       }))
     }, {
-      skipStopCancellation: true
+      skipStopCancellation: true,
+      dataSource
     })
   }
 

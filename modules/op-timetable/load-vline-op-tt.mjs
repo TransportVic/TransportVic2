@@ -164,7 +164,7 @@ async function updateExistingTrip(db, existingTrip, vlineTrip) {
 
   await VLineTripUpdater.updateTripOriginDestination(
     db, existingTrip.operationDays, existingTrip.runID,
-    originStop.stopName, destinationStop.stopName
+    originStop.stopName, destinationStop.stopName, 'vline-op-tt'
   )
 
   let originOffset = vlineTrip.departureTime - new Date(existingTrip.stopTimings[0].scheduledDepartureTime)
@@ -172,7 +172,7 @@ async function updateExistingTrip(db, existingTrip, vlineTrip) {
   if (originOffset !== 0 && originOffset === destinationOffset) {
     await VLineTripUpdater.setTripTimeOffset(
       db, existingTrip.operationDays, existingTrip.runID,
-      originOffset
+      originOffset, 'vline-op-tt'
     )
   }
 }

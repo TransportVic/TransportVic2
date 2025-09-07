@@ -13,7 +13,6 @@ import allStops from './sample-data/stops.json' with { type: 'json' }
 import allRoutes from './sample-data/routes.json' with { type: 'json' }
 import VLineUtils from '../../../modules/vline/vline-utils.mjs'
 import utils from '../../../utils.js'
-import { convertToLive } from '../../../modules/departures/sch-to-live.js'
 import td8457GTFS from './sample-data/td8457-gtfs.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
@@ -339,7 +338,7 @@ describe('The loadOperationalTT function', () => {
     expect(trip.stopTimings[11].cancelled).to.be.true
   })
 
-  it('Matches a shorted trip not entered into the GTFS dataa', async () => {
+  it('Fetches a trip longer than is present in the GTFS data', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let routes = database.getCollection('routes')
