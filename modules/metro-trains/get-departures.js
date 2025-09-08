@@ -61,7 +61,7 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
     else destination = trueDestination
 
     let futureStops = departure.futureStops.map(stop => stop.slice(0, -16))
-    let tripHasCityLoop = (NORTHERN_GROUP.includes(trip.routeName) ? !isSSS : isWithinCityLoop)
+    let tripHasCityLoop = (NORTHERN_GROUP.includes(trip.routeName) ? isWithinCityLoop && !isSSS : isWithinCityLoop)
 
     let {
       shouldShowForming,
