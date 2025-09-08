@@ -75,7 +75,7 @@ for (let stop of lookupStops) {
   allTripsGroups.push(...stopData.map(stopData => ({ stopCode: stop, ...stopData })))
 
   for (let pattern of stopData.filter(pattern => !!pattern.route_code)) {
-    let code = pattern.route_code
+    let code = pattern.route_code.toUpperCase()
     let parts
     if (parts = code.match(/^\d*([A-Z]+\d*)[A-Z]?/)) code = parts[1]
 
