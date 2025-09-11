@@ -497,6 +497,87 @@ const trips = Object.keys(dates).map(targetDate => [targetDate, dates[targetDate
     }
 
     return station
+  }).map((station, i, arr) => {
+    if (i === 0) return station
+    if (station.arrivalTimeMinutes < arr[i - 1].departureTimeMinutes) return {
+      ...station,
+      departureTimeMinutes: station.departureTimeMinutes + 1440,
+      arrivalTimeMinutes: station.arrivalTimeMinutes + 1440
+    }
+
+    return station
+  }).map((station, i, arr) => {
+    if (i === 0) return station
+    if (station.arrivalTimeMinutes < arr[i - 1].departureTimeMinutes) return {
+      ...station,
+      departureTimeMinutes: station.departureTimeMinutes + 1440,
+      arrivalTimeMinutes: station.arrivalTimeMinutes + 1440
+    }
+
+    return station
+  }).map((station, i, arr) => {
+    if (i === 0) return station
+    if (station.arrivalTimeMinutes < arr[i - 1].departureTimeMinutes) return {
+      ...station,
+      departureTimeMinutes: station.departureTimeMinutes + 1440,
+      arrivalTimeMinutes: station.arrivalTimeMinutes + 1440
+    }
+
+    return station
+  }).map((station, i, arr) => {
+    if (i === 0) return station
+    if (station.arrivalTimeMinutes < arr[i - 1].departureTimeMinutes) return {
+      ...station,
+      departureTimeMinutes: station.departureTimeMinutes + 1440,
+      arrivalTimeMinutes: station.arrivalTimeMinutes + 1440
+    }
+
+    return station
+  }).map((station, i, arr) => {
+    if (i === 0) return station
+    if (station.arrivalTimeMinutes < arr[i - 1].departureTimeMinutes) return {
+      ...station,
+      departureTimeMinutes: station.departureTimeMinutes + 1440,
+      arrivalTimeMinutes: station.arrivalTimeMinutes + 1440
+    }
+
+    return station
+  }).map((station, i, arr) => {
+    if (i === 0) return station
+    if (station.arrivalTimeMinutes < arr[i - 1].departureTimeMinutes) return {
+      ...station,
+      departureTimeMinutes: station.departureTimeMinutes + 1440,
+      arrivalTimeMinutes: station.arrivalTimeMinutes + 1440
+    }
+
+    return station
+  }).map((station, i, arr) => {
+    if (i === 0) return station
+    if (station.arrivalTimeMinutes < arr[i - 1].departureTimeMinutes) return {
+      ...station,
+      departureTimeMinutes: station.departureTimeMinutes + 1440,
+      arrivalTimeMinutes: station.arrivalTimeMinutes + 1440
+    }
+
+    return station
+  }).map((station, i, arr) => {
+    if (i === 0) return station
+    if (station.arrivalTimeMinutes < arr[i - 1].departureTimeMinutes) return {
+      ...station,
+      departureTimeMinutes: station.departureTimeMinutes + 1440,
+      arrivalTimeMinutes: station.arrivalTimeMinutes + 1440
+    }
+
+    return station
+  }).map((station, i, arr) => {
+    if (i === 0) return station
+    if (station.arrivalTimeMinutes < arr[i - 1].departureTimeMinutes) return {
+      ...station,
+      departureTimeMinutes: station.departureTimeMinutes + 1440,
+      arrivalTimeMinutes: station.arrivalTimeMinutes + 1440
+    }
+
+    return station
   })).filter(stopTimings => stopTimings.length).map(stopTimings => ({
     stopTimings,
     route: vlineRoutes.find(route => route.directions[0].stops.some(s=>s.stopName === stopTimings[0].stopName) && route.directions[0].stops.some(s=>s.stopName === stopTimings[stopTimings.length - 1].stopName))
