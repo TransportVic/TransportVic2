@@ -414,7 +414,11 @@ BACCHUS MARSH	arr	15.35	16.56	16.15`,
 Talbot		15.22
 Clunes		15.35
 Creswick		15.48
-Ballarat		16.07`
+Ballarat		16.07`,
+`WENDOUREE 	dep	06.29		06.52						07.10
+Ballarat		06.33		06.56						07.14
+Ballan		06.53		07.17						07.35
+BACCHUS MARSH 	arr	07.12		07.34						07.54`
 ].map(z => z.replace(/\n\n+/g, '\n').trim())
 }
 
