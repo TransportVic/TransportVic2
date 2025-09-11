@@ -228,7 +228,7 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
     for (let { opDayFormat, vlineTrip, nspTrip } of tripsNeedingFetch) {
       let pattern = await downloadTripPattern(opDayFormat, vlineTrip, nspTrip, db)
       if (!pattern) {
-        missingTrips.push(vlineTrip)
+        missingTrips.push({ vlineTrip })
         continue
       }
 
