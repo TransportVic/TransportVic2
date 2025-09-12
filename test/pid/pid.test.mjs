@@ -2,7 +2,7 @@ import { expect, use } from 'chai'
 import chaiExclude from 'chai-exclude'
 import almTrips from '../departures/sample-data/sample-live-trips.json' with { type: 'json' }
 import alm from '../departures/sample-data/alamein.json' with { type: 'json' }
-import { getPIDDepartures, getScreenStopsAndExpress } from '../../modules/pid/pid.mjs'
+import { getPIDDepartures, getScreenStopsAndExpress, getStoppingText } from '../../modules/pid/pid.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 use(chaiExclude)
 
@@ -144,5 +144,36 @@ describe('The getScreenStopsAndExpress function', () => {
     expect(expressSections).to.deep.equal([ [
       'Riversdale'
     ] ])
+  })
+})
+
+/**
+ * {
+  stopsAll: 'Stops All Stations',
+  allExcept: 'All Except {0}',
+  expressAtoB: '{0} to {1}',
+  sasAtoB: 'Stops All Stations from {0} to {1}',
+  runsExpressAtoB: 'Runs Express from {0} to {1}',
+  runsExpressTo: 'Runs Express to {0}',
+  thenRunsExpressTo: 'then Runs Express to {0}',
+  thenRunsExpressAtoB: 'then Runs Express from {0} to {1}',
+  sasTo: 'Stops All Stations to {0}',
+  stopsAt: 'Stops At {0}',
+  thenSASTo: 'then Stops All Stations to {0}'
+}
+ */
+describe('The getStoppingText function', () => {
+  it('Works for a stops all stations train', () => {
+    const expressData = getScreenStopsAndExpress([
+      'Alamein',
+      'Ashburton',
+      'Burwood',
+      'Hartwell',
+      'Willison',
+      'Camberwell'
+    ], clone(almTrips[0]))
+
+    const stoppingText = getStoppingText(expressData)
+    expect(stoppingText).to.equal('Stops All Stations')
   })
 })

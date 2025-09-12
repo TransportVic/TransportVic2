@@ -39,5 +39,9 @@ export function getScreenStopsAndExpress(screenStops, trip) {
 
   if (currentExpressSection.length) expressSections.push(currentExpressSection)
 
-  return { stops: outputStops, expressSections }
+  return { stops: outputStops, expressSections, routeStops: relevantRouteStops }
+}
+
+export function getStoppingText({ expressSections, routeStops }) {
+
 }
