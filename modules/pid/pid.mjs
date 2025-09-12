@@ -6,7 +6,17 @@ export async function getPIDDepartures(stationName, db, { departureTime = new Da
   const stationData = await stops.findDocument({ stopName: `${stationName} Railway Station` })
   const metroDepartures = await getMetroDepartures(stationData, db, false, false, departureTime)
 
-  return metroDepartures
+  return metroDepartures.map(departure => {
+    const expressData = getScreenStopsAndExpress([
+      stationName,
+      ...departure.futureStops
+    ], departure.trip)
+
+    return {
+      ...departure,
+      stops: expressData.stops
+    }
+  })
 }
 
 export function getScreenStopsAndExpress(screenStops, trip) {
