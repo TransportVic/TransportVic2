@@ -9,7 +9,14 @@ use(chaiExclude)
 const clone = o => JSON.parse(JSON.stringify(o))
 
 const almDB = new LokiDatabaseConnection()
-await (await almDB.getCollection('live timetables')).createDocuments(clone(almTrips))
+await (await almDB.getCollection('live timetables')).createDocuments(clone(almTrips).map((trip, i) => {
+  if (i === 1) return {
+    ...trip,
+    stopTimings: [ trip.stopTimings[0], trip.stopTimings[trip.stopTimings.length - 1] ]
+  }
+
+  return trip
+}))
 await (await almDB.getCollection('stops')).createDocument(clone(alm))
 
 describe('The PID getPIDDepartures function', () => {
@@ -26,5 +33,24 @@ describe('The PID getPIDDepartures function', () => {
     expect(departures[0].routeName).to.equal('Alamein')
     expect(departures[0].destination).to.equal('Camberwell')
     expect(departures[0].direction).to.equal('Up')
+  })
+
+  it('Returns a list of stops to display on the screen', async () => {
+    const departures = await getPIDDepartures('Alamein', almDB, { departureTime: new Date('2025-03-28T20:48:00.000Z') })
+    const stops = departures[0].stops
+    expect(stops).to.exist
+    expect(stops[0]).to.deep.equal({ stopName: 'Alamein', express: false })
+    expect(stops[1]).to.deep.equal({ stopName: 'Ashburton', express: false })
+    expect(stops[6]).to.deep.equal({ stopName: 'Camberwell', express: false })
+  })
+
+  it('Returns express stops on the list of stops', async () => {
+    const departures = await getPIDDepartures('Alamein', almDB, { departureTime: new Date('2025-03-28T20:48:00.000Z') })
+    const stops = departures[1].stops
+    expect(stops).to.exist
+    expect(stops[0]).to.deep.equal({ stopName: 'Alamein', express: false })
+    expect(stops[1]).to.deep.equal({ stopName: 'Ashburton', express: true })
+    expect(stops[2]).to.deep.equal({ stopName: 'Burwood', express: true })
+    expect(stops[6]).to.deep.equal({ stopName: 'Camberwell', express: false })
   })
 })
