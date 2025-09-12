@@ -69,4 +69,59 @@ export function getScreenStopsAndExpress(screenStops, trip) {
 export function getStoppingText({ expressSections, routeStops }) {
   if (expressSections.length === 0) return stoppingText.stopsAll
   if (expressSections.length === 1 && expressSections[0].length === 1) return stoppingText.allExcept.format(expressSections[0][0])
+
+  let currentStation = routeStops[0]
+  let destination = routeStops[routeStops.length - 1]
+
+  let texts = []
+  let lastStop = null
+
+  expressSections.forEach((expressSection, i) => {
+    let firstExpressStop = expressSection[0]
+    let lastExpressStop = expressSection.slice(-1)[0]
+
+    let previousStopIndex = routeStops.indexOf(firstExpressStop) - 1
+    let nextStopIndex = routeStops.indexOf(lastExpressStop) + 1
+
+    let previousStop = routeStops[previousStopIndex]
+    let nextStop = routeStops[nextStopIndex]
+
+    if (lastStop) {
+      let lastStopIndex = routeStops.indexOf(lastStop)
+
+      if (i === expressSections.length - 1 && nextStop === destination) {
+        texts.push(stoppingText.thenRunsExpressAtoB.format(previousStop, nextStop))
+      } else if (lastStop === previousStop) {
+        texts.push(stoppingText.expressAtoB.format(previousStop, nextStop))
+      } else if (lastStopIndex + 1 === previousStopIndex) {
+        texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
+      } else {
+        texts.push(stoppingText.sasAtoB.format(lastStop, previousStop))
+        texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
+      }
+    } else {
+      if (currentStation === previousStop) {
+        texts.push(stoppingText.runsExpressTo.format(nextStop))
+      } else {
+        if (previousStopIndex - routeStops.indexOf(currentStation) === 1) {
+          texts.push(stoppingText.stopsAt.format(previousStop))
+        } else {
+          texts.push(stoppingText.sasTo.format(previousStop))
+        }
+        if (nextStop === destination) {
+          texts.push(stoppingText.thenRunsExpressTo.format(nextStop))
+        } else {
+          texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
+        }
+      }
+    }
+
+    lastStop = nextStop
+  })
+
+  if (routeStops[routeStops.indexOf(lastStop)] !== destination) {
+    texts.push(stoppingText.thenSASTo.format(destination))
+  }
+
+  return texts.join(', ')
 }
