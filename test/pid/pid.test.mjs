@@ -182,77 +182,143 @@ describe('The getStoppingText function', () => {
     const expressData = getScreenStopsAndExpress([
       'Alamein',
       'Ashburton',
-      // 'Burwood',
-      'Hartwell',
+      'Burwood',
+      // 'Hartwell',
       'Willison',
       'Riversdale',
-      'Camberwell'
+      'Camberwell',
+      'Auburn',
+      'Glenferrie',
+      'Hawthorn'
     ], clone(almTrips[0]))
 
     const stoppingText = getStoppingText(expressData)
-    expect(stoppingText).to.equal('All Except Burwood')
+    expect(stoppingText).to.equal('All Except Hartwell')
   })
 
   it('Skips two stations in a row', () => {
     const expressData = getScreenStopsAndExpress([
       'Alamein',
       'Ashburton',
-      // 'Burwood',
+      'Burwood',
       // 'Hartwell',
-      'Willison',
+      // 'Willison',
       'Riversdale',
-      'Camberwell'
+      'Camberwell',
+      'Auburn',
+      'Glenferrie',
+      'Hawthorn'
     ], clone(almTrips[0]))
 
     const stoppingText = getStoppingText(expressData)
-    expect(stoppingText).to.equal('Stops All Stations to Ashburton, Runs Express from Ashburton to Willison, then Stops All Stations to Camberwell')
+    expect(stoppingText).to.equal('Stops All Stations to Burwood, Runs Express from Burwood to Riversdale, then Stops All Stations to Hawthorn')
   })
 
   it('Two express blocks with a single stop in between', () => {
     const expressData = getScreenStopsAndExpress([
       'Alamein',
       'Ashburton',
-      // 'Burwood',
-      'Hartwell',
-      // 'Willison',
-      'Riversdale',
-      'Camberwell'
-    ], clone(almTrips[0]))
-
-    const stoppingText = getStoppingText(expressData)
-    expect(stoppingText).to.equal('Stops All Stations to Ashburton, Runs Express from Ashburton to Hartwell, Hartwell to Riversdale, then Stops All Stations to Camberwell')
-  })
-
-  it('Two express blocks with a two stops in between', () => {
-    const expressData = getScreenStopsAndExpress([
-      'Alamein',
-      'Ashburton',
-      // 'Burwood',
-      'Hartwell',
+      'Burwood',
+      // 'Hartwell',
       'Willison',
       // 'Riversdale',
       'Camberwell',
-      'Auburn' // Just to add the extra stop so its not express to the last stop
+      'Auburn',
+      'Glenferrie',
+      'Hawthorn'
     ], clone(almTrips[0]))
 
     const stoppingText = getStoppingText(expressData)
-    expect(stoppingText).to.equal('Stops All Stations to Ashburton, Runs Express from Ashburton to Hartwell, Runs Express from Willison to Riversdale, then Stops All Stations to Auburn')
+    expect(stoppingText).to.equal('Stops All Stations to Burwood, Runs Express from Burwood to Willison, Willison to Camberwell, then Stops All Stations to Hawthorn')
   })
 
-  it('Two express blocks with a two stops in between', () => {
+  it('Two express blocks with two stops in between', () => {
     const expressData = getScreenStopsAndExpress([
       'Alamein',
       'Ashburton',
-      // 'Burwood',
-      'Hartwell',
+      'Burwood',
+      // 'Hartwell',
       'Willison',
       'Riversdale',
       // 'Camberwell',
       'Auburn', // Just to add the extra stop so its not express to the last stop
-      'Glenferrie'
+      'Glenferrie',
+      'Hawthorn'
     ], clone(almTrips[0]))
 
     const stoppingText = getStoppingText(expressData)
-    expect(stoppingText).to.equal('Stops All Stations to Ashburton, Runs Express from Ashburton to Hartwell, Stops All Stations from Hartwell to Riversdale, Runs Express from Riversdale to Auburn, then Stops All Stations to Glenferrie')
+    expect(stoppingText).to.equal('Stops All Stations to Burwood, Runs Express from Burwood to Willison, Runs Express from Riversdale to Auburn, then Stops All Stations to Hawthorn')
+  })
+
+  it('Two express blocks with more than two stops in between', () => {
+    const expressData = getScreenStopsAndExpress([
+      'Alamein',
+      'Ashburton',
+      'Burwood',
+      // 'Hartwell',
+      'Willison',
+      'Riversdale',
+      'Camberwell',
+      // 'Auburn',
+      'Glenferrie',
+      'Hawthorn'
+    ], clone(almTrips[0]))
+
+    const stoppingText = getStoppingText(expressData)
+    expect(stoppingText).to.equal('Stops All Stations to Burwood, Runs Express from Burwood to Willison, Stops All Stations from Willison to Camberwell, Runs Express from Camberwell to Glenferrie, then Stops All Stations to Hawthorn')
+  })
+
+  it('Single stop before running express', () => {
+    const expressData = getScreenStopsAndExpress([
+      'Alamein',
+      'Ashburton',
+      // 'Burwood',
+      // 'Hartwell',
+      // 'Willison',
+      'Riversdale',
+      'Camberwell',
+      'Auburn',
+      'Glenferrie',
+      'Hawthorn'
+    ], clone(almTrips[0]))
+
+    const stoppingText = getStoppingText(expressData)
+    expect(stoppingText).to.equal('Stops At Ashburton, Runs Express from Ashburton to Riversdale, then Stops All Stations to Hawthorn')
+  })
+
+  it('Stops along the way, then express to the last stop', () => {
+    const expressData = getScreenStopsAndExpress([
+      'Alamein',
+      'Ashburton',
+      'Burwood',
+      // 'Hartwell',
+      // 'Willison',
+      // 'Riversdale',
+      // 'Camberwell',
+      // 'Auburn',
+      // 'Glenferrie',
+      'Hawthorn'
+    ], clone(almTrips[0]))
+
+    const stoppingText = getStoppingText(expressData)
+    expect(stoppingText).to.equal('Stops All Stations to Burwood, then Runs Express to Hawthorn')
+  })
+
+  it('Express all the way', () => {
+    const expressData = getScreenStopsAndExpress([
+      'Alamein',
+      // 'Ashburton',
+      // 'Burwood',
+      // 'Hartwell',
+      // 'Willison',
+      // 'Riversdale',
+      // 'Camberwell',
+      // 'Auburn',
+      // 'Glenferrie',
+      'Hawthorn'
+    ], clone(almTrips[0]))
+
+    const stoppingText = getStoppingText(expressData)
+    expect(stoppingText).to.equal('Runs Express to Hawthorn')
   })
 })
