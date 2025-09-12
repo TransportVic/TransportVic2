@@ -67,11 +67,7 @@ describe('The getScreenStops function', () => {
       'Riversdale',
       'Camberwell'
     ]
-    const stops = getScreenStops(futureStops, {
-      routeName: 'Alamein',
-      direction: 'Up',
-      trip: clone(almTrips[0])
-    })
+    const stops = getScreenStops(futureStops, clone(almTrips[0]))
 
     expect(stops.length).to.equal(futureStops.length)
     for (let i = 0; i < stops.length; i++) {
@@ -93,12 +89,7 @@ describe('The getScreenStops function', () => {
     const stops = getScreenStops([
       'Alamein',
       'Camberwell'
-    ], {
-      routeName: 'Alamein',
-      direction: 'Up',
-      trip: clone(almTrips[0])
-    })
-
+    ], clone(almTrips[0]))
     expect(stops.length).to.equal(futureStops.length)
     for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
     for (let i = 1; i < stops.length - 1; i++) expect(stops[i].express).to.be.true
