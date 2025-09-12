@@ -16,5 +16,18 @@ export function getScreenStops(screenStops, trip) {
   const endIndex = routeStops.indexOf(screenStops[screenStops.length - 1])
 
   const relevantRouteStops = routeStops.slice(startIndex, endIndex + 1)
-  return relevantRouteStops.map(stopName => ({ stopName, express: false }))
+
+  let outputStops = []
+  let tripIndex = 0;
+  for (let routeIndex = 0; routeIndex < relevantRouteStops.length; routeIndex++) {
+    const stopName = relevantRouteStops[routeIndex]
+    if (stopName === screenStops[tripIndex]) {
+      outputStops.push({ stopName, express: false })
+      tripIndex++
+    } else {
+      outputStops.push({ stopName, express: true })
+    }
+  }
+
+  return outputStops
 }
