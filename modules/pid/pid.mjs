@@ -78,7 +78,6 @@ export function getStoppingText({ expressSections, routeStops }) {
   }, {})
 
   let texts = []
-  let lastStop = null
 
   expressSections.forEach((expressSection, i) => {
     const firstExpressStop = expressSection[0]
@@ -90,9 +89,8 @@ export function getStoppingText({ expressSections, routeStops }) {
     const previousStop = routeStops[previousStopIndex]
     const nextStop = routeStops[nextStopIndex]
 
-    if (!lastStop) {
+    if (i === 0) {
       // This is the first express section
-      lastStop = nextStop
 
       // If immediately running express from the first stop onwards
       if (previousStopIndex === 0) return texts.push(stoppingText.runsExpressTo.format(nextStop))
@@ -109,7 +107,10 @@ export function getStoppingText({ expressSections, routeStops }) {
     }
 
     // Not the first express section
-    const lastStopIndex = routeStopIndexes[lastStop]
+    const prevExpressSection = expressSections[i - 1]
+    const prevExpressLastStop = prevExpressSection[prevExpressSection.length - 1]
+    const lastStopIndex = routeStopIndexes[prevExpressLastStop] + 1
+    const lastStop = routeStops[lastStopIndex]
 
     if (i === expressSections.length - 1 && nextStopIndex === destinationIndex) {
       // Last express section and running express to the last stop
@@ -125,11 +126,12 @@ export function getStoppingText({ expressSections, routeStops }) {
       texts.push(stoppingText.sasAtoB.format(lastStop, previousStop))
       texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
     }
-
-    lastStop = nextStop
   })
 
-  if (routeStopIndexes[lastStop] !== destinationIndex) texts.push(stoppingText.thenSASTo.format(destination))
+  const lastExpressSection = expressSections[expressSections.length - 1]
+  const lastExpressStop = lastExpressSection[lastExpressSection.length - 1]
+
+  if (routeStopIndexes[lastExpressStop] + 1 !== destinationIndex) texts.push(stoppingText.thenSASTo.format(destination))
 
   return texts.join(', ')
 }
