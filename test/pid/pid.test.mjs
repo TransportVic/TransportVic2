@@ -2,7 +2,7 @@ import { expect, use } from 'chai'
 import chaiExclude from 'chai-exclude'
 import almTrips from '../departures/sample-data/sample-live-trips.json' with { type: 'json' }
 import alm from '../departures/sample-data/alamein.json' with { type: 'json' }
-import { getPIDDepartures, getScreenStops } from '../../modules/pid/pid.mjs'
+import { getPIDDepartures, getScreenStopsAndExpress } from '../../modules/pid/pid.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 use(chaiExclude)
 
@@ -14,6 +14,11 @@ await (await almDB.getCollection('live timetables')).createDocuments(clone(almTr
   if (i === 1) return {
     ...trip,
     stopTimings: [ trip.stopTimings[0], trip.stopTimings[trip.stopTimings.length - 1] ]
+  }
+
+  if (i === 2) return {
+    ...trip,
+    stopTimings: [ trip.stopTimings[0], trip.stopTimings[3], trip.stopTimings[trip.stopTimings.length - 1] ]
   }
 
   return trip
@@ -56,7 +61,7 @@ describe('The PID getPIDDepartures function', () => {
   })
 })
 
-describe('The getScreenStops function', () => {
+describe('The getScreenStopsAndExpress function', () => {
   it('Returns a list of all stops passed by that departure', async () => {
     const futureStops = [
       'Alamein',
@@ -67,7 +72,7 @@ describe('The getScreenStops function', () => {
       'Riversdale',
       'Camberwell'
     ]
-    const stops = getScreenStops(futureStops, clone(almTrips[0]))
+    const { stops } = getScreenStopsAndExpress(futureStops, clone(almTrips[0]))
 
     expect(stops.length).to.equal(futureStops.length)
     for (let i = 0; i < stops.length; i++) {
@@ -86,12 +91,58 @@ describe('The getScreenStops function', () => {
       'Riversdale',
       'Camberwell'
     ]
-    const stops = getScreenStops([
+    const { stops } = getScreenStopsAndExpress([
       'Alamein',
       'Camberwell'
     ], clone(almTrips[0]))
     expect(stops.length).to.equal(futureStops.length)
     for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
     for (let i = 1; i < stops.length - 1; i++) expect(stops[i].express).to.be.true
+  })
+
+  it('Returns a list of express sections when there is a single section', () => {
+    const { expressSections } = getScreenStopsAndExpress([
+      'Alamein',
+      'Camberwell'
+    ], clone(almTrips[0]))
+
+    expect(expressSections).to.deep.equal([ [
+      'Ashburton',
+      'Burwood',
+      'Hartwell',
+      'Willison',
+      'Riversdale',
+    ] ])
+  })
+
+  it('Returns a list of express sections are multiple sections', () => {
+    const { expressSections } = getScreenStopsAndExpress([
+      'Alamein',
+      'Hartwell',
+      'Camberwell'
+    ], clone(almTrips[0]))
+
+    expect(expressSections).to.deep.equal([ [
+      'Ashburton',
+      'Burwood'
+    ], [
+      'Willison',
+      'Riversdale'
+    ] ])
+  })
+
+  it('Returns the second last stop as its own express section', () => {
+    const { expressSections } = getScreenStopsAndExpress([
+      'Alamein',
+      'Ashburton',
+      'Burwood',
+      'Hartwell',
+      'Willison',
+      'Camberwell'
+    ], clone(almTrips[0]))
+
+    expect(expressSections).to.deep.equal([ [
+      'Riversdale'
+    ] ])
   })
 })

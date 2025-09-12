@@ -9,7 +9,7 @@ export async function getPIDDepartures(stationName, db, { departureTime = new Da
   return metroDepartures
 }
 
-export function getScreenStops(screenStops, trip) {
+export function getScreenStopsAndExpress(screenStops, trip) {
   const rawRouteStops = getLineStops(trip.routeName)
   const routeStops = trip.direction === 'Down' ? rawRouteStops : rawRouteStops.toReversed()
   const startIndex = routeStops.indexOf(screenStops[0])
@@ -18,16 +18,26 @@ export function getScreenStops(screenStops, trip) {
   const relevantRouteStops = routeStops.slice(startIndex, endIndex + 1)
 
   let outputStops = []
+  let expressSections = []
+  let currentExpressSection = []
+
   let tripIndex = 0;
   for (let routeIndex = 0; routeIndex < relevantRouteStops.length; routeIndex++) {
     const stopName = relevantRouteStops[routeIndex]
     if (stopName === screenStops[tripIndex]) {
       outputStops.push({ stopName, express: false })
       tripIndex++
+      if (currentExpressSection.length) {
+        expressSections.push(currentExpressSection)
+        currentExpressSection = []
+      }
     } else {
       outputStops.push({ stopName, express: true })
+      currentExpressSection.push(stopName)
     }
   }
 
-  return outputStops
+  if (currentExpressSection.length) expressSections.push(currentExpressSection)
+
+  return { stops: outputStops, expressSections }
 }
