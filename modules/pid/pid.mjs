@@ -1,6 +1,20 @@
 import getLineStops from '../../additional-data/route-stops.js'
 import getMetroDepartures from '../metro-trains/get-departures.js'
 
+const stoppingText = {
+  stopsAll: 'Stops All Stations',
+  allExcept: 'All Except {0}',
+  expressAtoB: '{0} to {1}',
+  sasAtoB: 'Stops All Stations from {0} to {1}',
+  runsExpressAtoB: 'Runs Express from {0} to {1}',
+  runsExpressTo: 'Runs Express to {0}',
+  thenRunsExpressTo: 'then Runs Express to {0}',
+  thenRunsExpressAtoB: 'then Runs Express from {0} to {1}',
+  sasTo: 'Stops All Stations to {0}',
+  stopsAt: 'Stops At {0}',
+  thenSASTo: 'then Stops All Stations to {0}'
+}
+
 export async function getPIDDepartures(stationName, db, { departureTime = new Date() } = {}) {
   const stops = await db.getCollection('stops')
   const stationData = await stops.findDocument({ stopName: `${stationName} Railway Station` })
@@ -53,5 +67,6 @@ export function getScreenStopsAndExpress(screenStops, trip) {
 }
 
 export function getStoppingText({ expressSections, routeStops }) {
-
+  if (expressSections.length === 0) return stoppingText.stopsAll
+  if (expressSections.length === 1 && expressSections[0].length === 1) return stoppingText.allExcept.format(expressSections[0][0])
 }
