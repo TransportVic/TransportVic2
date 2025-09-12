@@ -321,4 +321,40 @@ describe('The getStoppingText function', () => {
     const stoppingText = getStoppingText(expressData)
     expect(stoppingText).to.equal('Runs Express to Hawthorn')
   })
+
+  it('Last express block is straight to the last stop', () => {
+    const expressData = getScreenStopsAndExpress([
+      'Alamein',
+      // 'Ashburton',
+      // 'Burwood',
+      // 'Hartwell',
+      'Willison',
+      // 'Riversdale',
+      // 'Camberwell',
+      // 'Auburn',
+      // 'Glenferrie',
+      'Hawthorn'
+    ], clone(almTrips[0]))
+
+    const stoppingText = getStoppingText(expressData)
+    expect(stoppingText).to.equal('Runs Express to Willison, then Runs Express from Willison to Hawthorn')
+  })
+
+  it('Stops some stops first, express, then last express block is straight to the last stop', () => {
+    const expressData = getScreenStopsAndExpress([
+      'Alamein',
+      'Ashburton',
+      'Burwood',
+      // 'Hartwell',
+      // 'Willison',
+      'Riversdale',
+      // 'Camberwell',
+      // 'Auburn',
+      // 'Glenferrie',
+      'Hawthorn'
+    ], clone(almTrips[0]))
+
+    const stoppingText = getStoppingText(expressData)
+    expect(stoppingText).to.equal('Stops All Stations to Burwood, Runs Express from Burwood to Riversdale, then Runs Express from Riversdale to Hawthorn')
+  })
 })

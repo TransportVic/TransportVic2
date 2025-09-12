@@ -96,8 +96,7 @@ export function getStoppingText({ expressSections, routeStops }) {
 
       if (i === expressSections.length - 1 && nextStopIndex === destinationIndex) {
         // Last express section and running express to the last stop
-        // NO TEST COVERAGE!!
-        // texts.push(stoppingText.thenRunsExpressAtoB.format(previousStop, nextStop))
+        texts.push(stoppingText.thenRunsExpressAtoB.format(previousStop, nextStop))
       } else if (lastStopIndex === previousStopIndex) {
         // Stopped at one stop from the previous express section, then ran express again
         texts.push(stoppingText.expressAtoB.format(previousStop, nextStop))
@@ -112,10 +111,9 @@ export function getStoppingText({ expressSections, routeStops }) {
 
       lastStop = nextStop
     } else { // This is the first express section
-      const startingStation = routeStops[0]
       lastStop = nextStop
 
-      if (startingStation === previousStop) {
+      if (previousStopIndex === 0) {
         // If immediately running express from the first stop onwards
         texts.push(stoppingText.runsExpressTo.format(nextStop))
       } else {
