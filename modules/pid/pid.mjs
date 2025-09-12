@@ -90,55 +90,46 @@ export function getStoppingText({ expressSections, routeStops }) {
     const previousStop = routeStops[previousStopIndex]
     const nextStop = routeStops[nextStopIndex]
 
-    // Not the first express section
-    if (lastStop) {
-      const lastStopIndex = routeStopIndexes[lastStop]
-
-      if (i === expressSections.length - 1 && nextStopIndex === destinationIndex) {
-        // Last express section and running express to the last stop
-        texts.push(stoppingText.thenRunsExpressAtoB.format(previousStop, nextStop))
-      } else if (lastStopIndex === previousStopIndex) {
-        // Stopped at one stop from the previous express section, then ran express again
-        texts.push(stoppingText.expressAtoB.format(previousStop, nextStop))
-      } else if (lastStopIndex + 1 === previousStopIndex) {
-        // Stopped at two stops in between express sections
-        texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
-      } else {
-        // 3 or more stations in betwee nexpress sections
-        texts.push(stoppingText.sasAtoB.format(lastStop, previousStop))
-        texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
-      }
-
-      lastStop = nextStop
-    } else { // This is the first express section
+    if (!lastStop) {
+      // This is the first express section
       lastStop = nextStop
 
-      if (previousStopIndex === 0) {
-        // If immediately running express from the first stop onwards
-        texts.push(stoppingText.runsExpressTo.format(nextStop))
-      } else {
-        if (previousStopIndex === 1) {
-          // Has one stop from the current before running express
-          texts.push(stoppingText.stopsAt.format(previousStop))
-        } else {
-          // Has more than one stop from the current before running express
-          texts.push(stoppingText.sasTo.format(previousStop))
-        }
+      // If immediately running express from the first stop onwards
+      if (previousStopIndex === 0) return texts.push(stoppingText.runsExpressTo.format(nextStop))
 
-        if (nextStopIndex === destinationIndex) {
-          // This express section runs straight to the destination
-          texts.push(stoppingText.thenRunsExpressTo.format(nextStop))
-        } else {
-          // More stops after this express section
-          texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
-        }
-      }
+      // Has one stop from the current before running express
+      // Otherwise has more than one stop from the current before running express
+      if (previousStopIndex === 1) texts.push(stoppingText.stopsAt.format(previousStop))
+      else texts.push(stoppingText.sasTo.format(previousStop))
+
+      // This express section runs straight to the destination
+      // Otherwise more stops after this express section
+      if (nextStopIndex === destinationIndex) return texts.push(stoppingText.thenRunsExpressTo.format(nextStop))
+      else return texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
     }
+
+    // Not the first express section
+    const lastStopIndex = routeStopIndexes[lastStop]
+
+    if (i === expressSections.length - 1 && nextStopIndex === destinationIndex) {
+      // Last express section and running express to the last stop
+      texts.push(stoppingText.thenRunsExpressAtoB.format(previousStop, nextStop))
+    } else if (lastStopIndex === previousStopIndex) {
+      // Stopped at one stop from the previous express section, then ran express again
+      texts.push(stoppingText.expressAtoB.format(previousStop, nextStop))
+    } else if (lastStopIndex + 1 === previousStopIndex) {
+      // Stopped at two stops in between express sections
+      texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
+    } else {
+      // 3 or more stations in betwee nexpress sections
+      texts.push(stoppingText.sasAtoB.format(lastStop, previousStop))
+      texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
+    }
+
+    lastStop = nextStop
   })
 
-  if (routeStopIndexes[lastStop] !== destinationIndex) {
-    texts.push(stoppingText.thenSASTo.format(destination))
-  }
+  if (routeStopIndexes[lastStop] !== destinationIndex) texts.push(stoppingText.thenSASTo.format(destination))
 
   return texts.join(', ')
 }
