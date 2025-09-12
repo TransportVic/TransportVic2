@@ -7,3 +7,7 @@ export async function getPIDDepartures(stationName, db, { departureTime = new Da
 
   return metroDepartures
 }
+
+export function getScreenStops(screenStops, metroDeparture) {
+
+}
