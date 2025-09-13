@@ -138,8 +138,8 @@ describe('The PID getPIDDepartures function', () => {
 
   it('Contains a stopping pattern and types on a cross city express train', async () => {
     const departures = await getPIDDepartures('Frankston', fknDB, { departureTime: new Date('2025-06-11T06:49:00.000Z') })
-    expect(departures[0].stoppingPattern).to.equal('Runs Express to South Yarra, Stops All Stations from South Yarra to Southern Cross, then Runs Express to Williamstown')
-    expect(departures[0].stoppingType).to.equal('Express')
-    expect(departures[0].extendedStoppingType).to.equal('Express to South Yarra')
+    expect(departures[0].stoppingPattern).to.equal('Runs Express to South Yarra, Stops All Stations from South Yarra to Southern Cross, then Runs Express from Southern Cross to Williamstown')
+    expect(departures[0].stoppingType).to.equal('Ltd Express')
+    expect(departures[0].extendedStoppingType).to.equal('Stopping at South Yarra')
   })
 })

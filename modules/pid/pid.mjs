@@ -184,8 +184,16 @@ export function getStoppingText({ expressSections, routeStops }) {
     const lastStop = routeStops[lastStopIndex]
 
     if (i === expressSections.length - 1 && nextStopIndex === destinationIndex) {
-      // Last express section and running express to the last stop
-      return [ stoppingText.thenRunsExpressAtoB.format(previousStop, nextStop) ]
+      if (lastStopIndex === previousStopIndex) {
+        // Last express section and running express to the last stop
+        return [ stoppingText.thenRunsExpressAtoB.format(previousStop, nextStop) ]
+      } else {
+        // Need to include the stopping text first
+        return [
+          stoppingText.sasAtoB.format(lastStop, previousStop),
+          stoppingText.thenRunsExpressAtoB.format(previousStop, nextStop)
+        ]
+      }
     } else if (lastStopIndex === previousStopIndex) {
       // Stopped at one stop from the previous express section, then ran express again
       return [ stoppingText.expressAtoB.format(previousStop, nextStop) ]
