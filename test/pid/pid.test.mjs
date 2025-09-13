@@ -5,7 +5,8 @@ import mtpThroughRunning from '../departures/sample-data/mtp-through-running.jso
 import alm from '../departures/sample-data/alamein.json' with { type: 'json' }
 import { getPIDDepartures } from '../../modules/pid/pid.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
-import fknWerWillSASThroughRunning from './sample-data/fkn-wer-will-sas-through-running.mjs'
+import fknWerWilSASThroughRunning from './sample-data/fkn-wer-wil-sas-through-running.mjs'
+import fknWerWilThroughRunning from '../departures/sample-data/fkn-wer-wil-through-running.json' with { type: 'json' }
 import fknStops from './sample-data/fkn-stops.mjs'
 use(chaiExclude)
 
@@ -30,11 +31,12 @@ await (await almDB.getCollection('stops')).createDocument(clone(alm))
 
 const fknDepartureTime = { departureTime: new Date('2025-09-13T07:56:00.000Z') }
 const fknDB = new LokiDatabaseConnection()
-await (await fknDB.getCollection('live timetables')).createDocuments(clone(fknWerWillSASThroughRunning))
+await (await fknDB.getCollection('live timetables')).createDocuments(clone(fknWerWilSASThroughRunning))
+await (await fknDB.getCollection('live timetables')).createDocuments(clone(fknWerWilThroughRunning))
 await (await fknDB.getCollection('stops')).createDocuments(clone(fknStops))
 
 const fknNoFormingDB = new LokiDatabaseConnection()
-await (await fknNoFormingDB.getCollection('live timetables')).createDocuments(clone(fknWerWillSASThroughRunning).map(trip => {
+await (await fknNoFormingDB.getCollection('live timetables')).createDocuments(clone(fknWerWilSASThroughRunning).map(trip => {
   return {
     ...trip,
     forming: null,
@@ -125,5 +127,19 @@ describe('The PID getPIDDepartures function', () => {
     expect(stops[7]).to.deep.equal({ stopName: 'State Library', express: false })
     expect(stops[10]).to.deep.equal({ stopName: 'Footscray', express: true })
     expect(stops[12]).to.deep.equal({ stopName: 'West Footscray', express: false })
+  })
+
+  it('Contains a stopping pattern and types on an SAS train', async () => {
+    const departures = await getPIDDepartures('Alamein', almDB, almDepartureTime)
+    expect(departures[0].stoppingPattern).to.equal('Stops All Stations')
+    expect(departures[0].stoppingType).to.equal('Stops All')
+    expect(departures[0].extendedStoppingType).to.equal('Stopping All Stations')
+  })
+
+  it('Contains a stopping pattern and types on a cross city express train', async () => {
+    const departures = await getPIDDepartures('Frankston', fknDB, { departureTime: new Date('2025-06-11T06:49:00.000Z') })
+    expect(departures[0].stoppingPattern).to.equal('Runs Express to South Yarra, Stops All Stations from South Yarra to Southern Cross, then Runs Express to Williamstown')
+    expect(departures[0].stoppingType).to.equal('Express')
+    expect(departures[0].extendedStoppingType).to.equal('Express to South Yarra')
   })
 })
