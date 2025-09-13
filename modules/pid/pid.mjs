@@ -15,6 +15,15 @@ const stoppingText = {
   thenSASTo: 'then Stops All Stations to {0}'
 }
 
+const stoppingType = {
+  noSuburban: 'No Suburban Passengers',
+  notTakingPax: 'Not Taking Passengers',
+  // vlinePostfix: ', Not Taking Suburban Passengers',
+  stopsAll: 'Stops All',
+  limitedExpress: 'Ltd Express',
+  express: 'Express'
+}
+
 export async function getPIDDepartures(stationName, db, { departureTime = new Date() } = {}) {
   const stops = await db.getCollection('stops')
   const stationData = await stops.findDocument({ stopName: `${stationName} Railway Station` })
@@ -136,4 +145,10 @@ export function getStoppingText({ expressSections, routeStops }) {
 }
 
 export function getStoppingType({ expressSections }) {
+  if (expressSections.length === 0) return stoppingType.stopsAll
+  if (expressSections.length === 1) {
+    if (expressSections[0].length < 3) return stoppingType.limitedExpress
+    return stoppingType.express
+  }
+  return stoppingType.limitedExpress
 }
