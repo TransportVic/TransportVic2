@@ -205,6 +205,30 @@ describe('The getScreenStopsAndExpress function', () => {
       expect(stops.length).to.equal(futureStops.length)
       for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
     })
+
+    it('Filters out MURL stops if running SSS NME', async () => {
+      const futureStops = [
+        'Southern Cross',
+        'North Melbourne',
+        'Kensington'
+      ]
+
+      const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Craigieburn', direction: 'Down' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+
+    it('Filters out MURL stops if running NME SSS', async () => {
+      const futureStops = [
+        'Kensington',
+        'North Melbourne',
+        'Southern Cross'
+      ]
+
+      const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Craigieburn', direction: 'Up' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
   })
 
   it('Returns a list of express sections when there is a single section', () => {
