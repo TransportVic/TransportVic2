@@ -58,7 +58,7 @@ export function getScreenStopsAndExpress(screenStops, trip) {
   const routeStops = trip.direction === 'Down' ? rawRouteStops : rawRouteStops.toReversed()
   const startIndex = routeStops.indexOf(screenStops[0])
   const endIndex = routeStops.indexOf(screenStops[screenStops.length - 1])
-  
+
   // Need to handle city loop
   const isCityTrip = screenStops[0] === 'Flinders Street' || screenStops[screenStops.length - 1] === 'Flinders Street'
   const relevantRawRouteStops = routeStops.slice(startIndex, endIndex + 1)
@@ -67,8 +67,9 @@ export function getScreenStopsAndExpress(screenStops, trip) {
   const isNorthern = NORTHERN_GROUP.includes(trip.routeName)
   if (isCityTrip) {
     const hasMURLStop = screenStops.some(stop => MURL.includes(stop))
+    const hasSSS = screenStops.includes('Southern Cross')
+
     if (isNorthern) {
-      const hasSSS = screenStops.includes('Southern Cross')
       const viaSSS = hasSSS || !hasMURLStop
 
       relevantRouteStops = relevantRawRouteStops.filter(stop => {
@@ -78,7 +79,7 @@ export function getScreenStopsAndExpress(screenStops, trip) {
 
         return true
       })
-    } else if (!hasMURLStop) {
+    } else if (!hasMURLStop && !hasSSS) {
       relevantRouteStops = relevantRawRouteStops.filter(stop => {
         return !CITY_LOOP.includes(stop)
       })

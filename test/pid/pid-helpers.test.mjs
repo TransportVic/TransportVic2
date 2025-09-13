@@ -171,7 +171,7 @@ describe('The getScreenStopsAndExpress function', () => {
       for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
     })
 
-    it('Keeps MURL stops if running FSS Loop (with express) NME', async () => {
+    it('Keeps MURL stops if running NME Loop (with express) FSS', async () => {
       const futureStops = [
         'North Melbourne',
         'Flagstaff',
@@ -184,13 +184,14 @@ describe('The getScreenStopsAndExpress function', () => {
         'North Melbourne',
         'Melbourne Central',
         'Flinders Street'
-      ], { routeName: 'Craigieburn', direction: 'Down' })
+      ], { routeName: 'Craigieburn', direction: 'Up' })
+
       expect(stops.length).to.equal(futureStops.length)
       for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
       expect(stops[1].express).to.be.true
       expect(stops[3].express).to.be.true
     })
- 
+
     it('Keeps MURL stops if running NME Loop FSS', async () => {
       const futureStops = [
         'North Melbourne',
