@@ -59,7 +59,10 @@ export async function getPIDDepartures(stationName, db, { departureTime = new Da
 
     return {
       ...departure,
-      stops: expressData.stops
+      stops: expressData.stops,
+      stoppingPattern: getStoppingText(expressData),
+      stoppingType: getStoppingType(expressData),
+      extendedStoppingType: getExtendedStoppingType(expressData)
     }
   })
 }
@@ -190,7 +193,7 @@ export function getStoppingText({ expressSections, routeStops }) {
       // Stopped at two stops in between express sections
       return [ stoppingText.runsExpressAtoB.format(previousStop, nextStop) ]
     } else {
-      // 3 or more stations in betwee nexpress sections
+      // 3 or more stations in between express sections
       return [
         stoppingText.sasAtoB.format(lastStop, previousStop),
         stoppingText.runsExpressAtoB.format(previousStop, nextStop)
