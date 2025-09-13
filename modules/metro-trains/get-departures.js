@@ -1,22 +1,7 @@
 const utils = require('../../utils.js')
 const { getDepartures } = require('../departures/get-departures.js')
 const { getFormingTrip } = require('./get-forming-trip.js')
-
-const NORTHERN_GROUP = [
-  'Werribee',
-  'Williamstown',
-  'Sunbury',
-  'Craigieburn',
-  'Upfield',
-  'Flemington Racecourse'
-]
-
-const CITY_LOOP = [
-  'Parliament',
-  'Melbourne Central',
-  'Flagstaff',
-  'Southern Cross'
-]
+const { NORTHERN_GROUP, CITY_LOOP } = require('./line-groups.mjs')
 
 async function getMetroDepartures(station, db, filter, backwards, departureTime, { mode = 'metro train', returnArrivals = false, timeframe = 120 } = {}) {
   let departures = await getDepartures(station, mode, db, { departureTime, returnArrivals, timeframe })

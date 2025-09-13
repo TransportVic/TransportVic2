@@ -1,4 +1,5 @@
 import getMetroDepartures from '../metro-trains/get-departures.js'
+import { CITY_LOOP, MURL, NORTHERN_GROUP } from '../metro-trains/line-groups.mjs'
 import getLineStops from './route-stops.mjs'
 
 const stoppingText = {
@@ -57,14 +58,38 @@ export function getScreenStopsAndExpress(screenStops, trip) {
   const routeStops = trip.direction === 'Down' ? rawRouteStops : rawRouteStops.toReversed()
   const startIndex = routeStops.indexOf(screenStops[0])
   const endIndex = routeStops.indexOf(screenStops[screenStops.length - 1])
+  
+  // Need to handle city loop
+  const isCityTrip = screenStops[0] === 'Flinders Street' || screenStops[screenStops.length - 1] === 'Flinders Street'
+  const relevantRawRouteStops = routeStops.slice(startIndex, endIndex + 1)
+  let relevantRouteStops = relevantRawRouteStops
 
-  const relevantRouteStops = routeStops.slice(startIndex, endIndex + 1)
+  const isNorthern = NORTHERN_GROUP.includes(trip.routeName)
+  if (isCityTrip) {
+    const hasMURLStop = screenStops.some(stop => MURL.includes(stop))
+    if (isNorthern) {
+      const hasSSS = screenStops.includes('Southern Cross')
+      const viaSSS = hasSSS || !hasMURLStop
+
+      relevantRouteStops = relevantRawRouteStops.filter(stop => {
+        if (!CITY_LOOP.includes(stop)) return true
+        if (viaSSS && MURL.includes(stop)) return false
+        else if (!viaSSS && stop === 'Southern Cross') return false
+
+        return true
+      })
+    } else if (!hasMURLStop) {
+      relevantRouteStops = relevantRawRouteStops.filter(stop => {
+        return !CITY_LOOP.includes(stop)
+      })
+    }
+  }
 
   let outputStops = []
   let expressSections = []
   let currentExpressSection = []
 
-  let tripIndex = 0;
+  let tripIndex = 0
   for (let routeIndex = 0; routeIndex < relevantRouteStops.length; routeIndex++) {
     const stopName = relevantRouteStops[routeIndex]
     if (stopName === screenStops[tripIndex]) {

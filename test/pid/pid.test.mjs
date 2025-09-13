@@ -84,7 +84,7 @@ describe('The PID getPIDDepartures function', () => {
     expect(stops).to.exist
     expect(stops[0]).to.deep.equal({ stopName: 'Caulfield', express: false })
     expect(stops[1]).to.deep.equal({ stopName: 'Malvern', express: false })
-    expect(stops[7]).to.deep.equal({ stopName: 'Richmond', express: false })
-    expect(stops[8]).to.deep.equal({ stopName: 'Flinders Street', express: false })
+    expect(stops[6]).to.deep.equal({ stopName: 'Richmond', express: false })
+    expect(stops[7]).to.deep.equal({ stopName: 'Flinders Street', express: false })
   })
 })
