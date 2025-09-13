@@ -1,5 +1,5 @@
-import getLineStops from '../../additional-data/route-stops.js'
 import getMetroDepartures from '../metro-trains/get-departures.js'
+import getLineStops from './route-stops.mjs'
 
 const stoppingText = {
   stopsAll: 'Stops All Stations',
