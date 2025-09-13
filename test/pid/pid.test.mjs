@@ -87,4 +87,17 @@ describe('The PID getPIDDepartures function', () => {
     expect(stops[6]).to.deep.equal({ stopName: 'Richmond', express: false })
     expect(stops[7]).to.deep.equal({ stopName: 'Flinders Street', express: false })
   })
+
+  it('Appends stops from the next trip onto the PID', async () => {
+    const departures = await getPIDDepartures('Caulfield', fknDB, fknDepartureTime)
+    const stops = departures[0].stops
+
+    expect(stops).to.exist
+    expect(stops[0]).to.deep.equal({ stopName: 'Caulfield', express: false })
+    expect(stops[1]).to.deep.equal({ stopName: 'Malvern', express: false })
+    expect(stops[6]).to.deep.equal({ stopName: 'Richmond', express: false })
+    expect(stops[7]).to.deep.equal({ stopName: 'Flinders Street', express: false })
+    expect(stops[8]).to.deep.equal({ stopName: 'Southern Cross', express: false })
+    expect(stops[9]).to.deep.equal({ stopName: 'North Melbourne', express: false })
+  })
 })
