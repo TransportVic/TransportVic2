@@ -24,6 +24,16 @@ const stoppingType = {
   express: 'Express'
 }
 
+const extendedStoppingType = {
+  notStoppingAt: 'Not Stopping At {0}',
+  stopsAll: 'Stopping All Stations',
+  limitedExpress: 'Ltd Express',
+  express: 'Express',
+  stopsAt: 'Stopping at {0}',
+  expressTo: 'Express to {0}',
+  expressAToB: 'Express {0} -- {1}'
+}
+
 export async function getPIDDepartures(stationName, db, { departureTime = new Date() } = {}) {
   const stops = await db.getCollection('stops')
   const stationData = await stops.findDocument({ stopName: `${stationName} Railway Station` })
@@ -154,5 +164,14 @@ export function getStoppingType({ expressSections }) {
 }
 
 export function getExtendedStoppingType({ routeStops, expressSections }) {
-
+  if (expressSections.length === 0) return extendedStoppingType.stopsAll
+  if (expressSections.length === 1) {
+    if (expressSections[0].length === 1) return extendedStoppingType.notStoppingAt.format(expressSections[0][0])
+    if (routeStops[1] === expressSections[0][0]) return extendedStoppingType.expressTo.format(routeStops[expressSections[0].length + 1])
+    const stopBeforeExpressIndex = routeStops.indexOf(expressSections[0][0])
+    return extendedStoppingType.expressAToB.format(routeStops[stopBeforeExpressIndex - 1], routeStops[stopBeforeExpressIndex + expressSections[0].length])
+  } else {
+    if (routeStops[1] === expressSections[0][0]) return extendedStoppingType.stopsAt.format(routeStops[expressSections[0].length + 1])
+  }
+  return extendedStoppingType.limitedExpress
 }
