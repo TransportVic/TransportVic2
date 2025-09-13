@@ -231,6 +231,83 @@ describe('The getScreenStopsAndExpress function', () => {
     })
   })
 
+
+  describe('Altona Loop permutations', () => {
+    it('Filters out altona loop stops if running direct NPT LAV', async () => {
+      const futureStops = [
+        'Newport',
+        'Laverton'
+      ]
+
+      const { stops } = getScreenStopsAndExpress([
+        'Newport',
+        'Paisley',
+        'Galvin',
+        'Laverton'
+      ], { routeName: 'Werribee', direction: 'Down' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      expect(stops[1].express).to.be.true
+      expect(stops[2].express).to.be.true
+    })
+
+    it('Filters out altona loop stops if running direct LAV NPT', async () => {
+      const futureStops = [
+        'Laverton',
+        'Newport'
+      ]
+
+      const { stops } = getScreenStopsAndExpress([
+        'Laverton',
+        'Galvin',
+        'Paisley',
+        'Newport'
+      ], { routeName: 'Werribee', direction: 'Up' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      expect(stops[1].express).to.be.true
+      expect(stops[2].express).to.be.true
+    })
+
+    it('Filters out mainline stops if running NPT ALT LAV', async () => {
+      const futureStops = [
+        'Newport',
+        'Seaholme',
+        'Altona',
+        'Westona',
+        'Laverton'
+      ]
+
+      const { stops } = getScreenStopsAndExpress([
+        'Newport',
+        'Seaholme',
+        'Altona',
+        'Westona',
+        'Laverton'
+      ], { routeName: 'Werribee', direction: 'Down' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+
+    it('Filters out mainline stops if running NPT ALT (with express) LAV', async () => {
+      const futureStops = [
+        'Newport',
+        'Seaholme',
+        'Altona',
+        'Westona',
+        'Laverton'
+      ]
+
+      const { stops } = getScreenStopsAndExpress([
+        'Newport',
+        'Altona',
+        'Laverton'
+      ], { routeName: 'Werribee', direction: 'Down' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+  })
+
   it('Returns a list of express sections when there is a single section', () => {
     const { expressSections } = getScreenStopsAndExpress([
       'Alamein',
