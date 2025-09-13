@@ -152,3 +152,7 @@ export function getStoppingType({ expressSections }) {
   }
   return stoppingType.limitedExpress
 }
+
+export function getExtendedStoppingType({ routeStops, expressSections }) {
+
+}

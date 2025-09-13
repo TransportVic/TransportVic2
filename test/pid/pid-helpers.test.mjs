@@ -1,7 +1,7 @@
 import { expect, use } from 'chai'
 import chaiExclude from 'chai-exclude'
 import almTrips from '../departures/sample-data/sample-live-trips.json' with { type: 'json' }
-import { getScreenStopsAndExpress, getStoppingText, getStoppingType } from '../../modules/pid/pid.mjs'
+import { getExtendedStoppingType, getScreenStopsAndExpress, getStoppingText, getStoppingType } from '../../modules/pid/pid.mjs'
 use(chaiExclude)
 
 const clone = o => JSON.parse(JSON.stringify(o))
@@ -366,5 +366,82 @@ describe('The getStoppingType function', () => {
       'Burnley',
       'East Richmond'
     ]] })).to.equal('Ltd Express')
+  })
+})
+
+describe('The getExtendedStoppingType function', () => {
+  const rwdStops = [
+    'Ringwood',
+    'Heatherdale',
+    'Mitcham',
+    'Nunawading',
+    'Blackburn',
+    'Laburnum',
+    'Box Hill'
+  ]
+
+  it('Checks for SAS trains', () => {
+    expect(getExtendedStoppingType({ routeStops: rwdStops, expressSections: [] })).to.equal('Stopping All Stations')
+  })
+
+  it('Trains skipping a single stop', () => {
+    expect(getExtendedStoppingType({ routeStops: rwdStops, expressSections: [['Nunawading']] })).to.equal('Not Stopping At Nunawading')
+  })
+
+  // TD3036 from RWD 010925
+  it('Express from the current stop with more express stops', () => {
+    expect(getExtendedStoppingType({
+      routeStops: rwdStops,
+      expressSections: [[
+        'Heatherdale',
+        'Mitcham',
+        'Nunawading'
+      ], [
+        'Laburnum'
+      ]] })).to.equal('Stopping at Blackburn')
+  })
+
+  // TD6101 from FSY 040725
+  it('Express from the current stop and SAS after', () => {
+    expect(getExtendedStoppingType({
+      routeStops: [
+        'Footscray',
+        'Middle Footscray',
+        'West Footscray',
+        'Tottenham',
+        'Sunshine',
+        'Albion'
+      ],
+      expressSections: [[
+        'Middle Footscray',
+        'West Footscray',
+        'Tottenham',
+      ]] })).to.equal('Express to Sunshine')
+  })
+
+  // TD3202 from UNN 091224
+  it('SAS from current stop and one express section after', () => {
+    expect(getExtendedStoppingType({
+      routeStops: [
+        'Union',
+        'Chatham',
+        'Canterbury',
+        'East Camberwell',
+        'Camberwell',
+        'Auburn',
+        'Glenferrie',
+        'Hawthorn',
+        'Burnley',
+        'East Richmond',
+        'Richmond',
+        'Flinders Street'
+      ],
+      expressSections: [[
+        'Auburn',
+        'Glenferrie',
+        'Hawthorn',
+        'Burnley',
+        'East Richmond',
+      ]] })).to.equal('Express Camberwell -- Richmond')
   })
 })
