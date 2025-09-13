@@ -236,13 +236,13 @@ describe('The getScreenStopsAndExpress function', () => {
     it('Filters out altona loop stops if running direct NPT LAV', async () => {
       const futureStops = [
         'Newport',
+        'Paisley',
+        'Galvin',
         'Laverton'
       ]
 
       const { stops } = getScreenStopsAndExpress([
         'Newport',
-        'Paisley',
-        'Galvin',
         'Laverton'
       ], { routeName: 'Werribee', direction: 'Down' })
       expect(stops.length).to.equal(futureStops.length)
@@ -254,13 +254,13 @@ describe('The getScreenStopsAndExpress function', () => {
     it('Filters out altona loop stops if running direct LAV NPT', async () => {
       const futureStops = [
         'Laverton',
+        'Galvin',
+        'Paisley',
         'Newport'
       ]
 
       const { stops } = getScreenStopsAndExpress([
         'Laverton',
-        'Galvin',
-        'Paisley',
         'Newport'
       ], { routeName: 'Werribee', direction: 'Up' })
       expect(stops.length).to.equal(futureStops.length)

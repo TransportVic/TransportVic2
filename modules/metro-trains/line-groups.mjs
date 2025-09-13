@@ -19,3 +19,6 @@ export const MURL = [
   'Melbourne Central',
   'Flagstaff'
 ]
+
+export const NPT_LAV_MAINLINE = ['Paisley', 'Galvin']
+export const ALTONA_LOOP = ['Seaholme', 'Altona', 'Westona']
