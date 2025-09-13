@@ -1,5 +1,5 @@
 import getMetroDepartures from '../metro-trains/get-departures.js'
-import { ALTONA_LOOP, CITY_LOOP, MURL, NORTHERN_GROUP, NPT_LAV_MAINLINE } from '../metro-trains/line-groups.mjs'
+import { ALTONA_LOOP, CITY_LOOP, METRO_TUNNEL_GROUP, MTP_STOPS, MURL, NON_MTP_STOPS, NORTHERN_GROUP, NPT_LAV_MAINLINE } from '../metro-trains/line-groups.mjs'
 import getLineStops from './route-stops.mjs'
 
 const stoppingText = {
@@ -93,6 +93,16 @@ export function getScreenStopsAndExpress(screenStops, trip) {
     } else if (!hasMURLStop && !hasSSS) {
       relevantRouteStops = relevantRawRouteStops.filter(stop => !CITY_LOOP.includes(stop))
     }
+  }
+
+  if (METRO_TUNNEL_GROUP.includes(trip.routeName)) {
+    const hasMTPStop = screenStops.some(stop => MTP_STOPS.includes(stop))
+    if (hasMTPStop) {
+      relevantRouteStops = relevantRouteStops.filter(stop => !NON_MTP_STOPS.includes(stop))
+    } else {
+      relevantRouteStops = relevantRouteStops.filter(stop => !MTP_STOPS.includes(stop))
+    }
+    console.log(hasMTPStop, relevantRouteStops)
   }
 
   if (trip.routeName === 'Werribee') {

@@ -1,10 +1,61 @@
 let lines = {
-  Gippsland: [
+  Pakenham: [
     'Flinders Street',
     'Southern Cross',
     'Flagstaff',
     'Melbourne Central',
     'Parliament',
+    'Richmond',
+    'South Yarra',
+
+    'Town Hall',
+    'Anzac',
+
+    'Hawksburn',
+    'Toorak',
+    'Armadale',
+    'Malvern',
+    'Caulfield',
+    'Carnegie',
+    'Murrumbeena',
+    'Hughesdale',
+    'Oakleigh',
+    'Huntingdale',
+    'Clayton',
+    'Westall',
+    'Springvale',
+    'Sandown Park',
+    'Noble Park',
+    'Yarraman',
+    'Dandenong',
+    'Hallam',
+    'Narre Warren',
+    'Berwick',
+    'Beaconsfield',
+    'Officer',
+    'Cardinia Road',
+    'Pakenham',
+    'East Pakenham',
+    'Nar Nar Goon',
+    'Tynong',
+    'Garfield',
+    'Bunyip',
+    'Longwarry',
+    'Drouin',
+    'Warragul',
+    'Yarragon',
+    'Trafalgar',
+    'Moe',
+    'Morwell',
+    'Traralgon',
+    'Rosedale',
+    'Sale',
+    'Stratford',
+    'Bairnsdale'
+  ],
+  Gippsland: [
+    'Southern Cross',
+    'Flinders Street',
     'Richmond',
     'South Yarra',
     'Hawksburn',
@@ -348,6 +399,12 @@ let lines = {
     'Southern Cross',
     'North Melbourne',
     'South Kensington',
+
+    'Town Hall',
+    'State Library',
+    'Parkville',
+    'Arden',
+
     'Footscray',
     'Middle Footscray',
     'West Footscray',
@@ -652,7 +709,8 @@ let lines = {
 }
 
 export default function getLineStops(lineName) {
-  if (['Pakenham', 'Traralgon', 'Bairnsdale'].includes(lineName)) return lines.Gippsland
+  if (lineName === 'Pakenham') return lines.Pakenham
+  if (['Traralgon', 'Bairnsdale'].includes(lineName)) return lines.Gippsland
   if (lineName === 'Cranbourne') return lines.Cranbourne
   if (lineName === 'Belgrave') return lines.Belgrave
   if (lineName === 'Lilydale') return lines.Lilydale
