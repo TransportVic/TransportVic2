@@ -77,9 +77,7 @@ export function getStoppingText({ expressSections, routeStops }) {
     return acc
   }, {})
 
-  let texts = []
-
-  expressSections.forEach((expressSection, i) => {
+  const texts = expressSections.flatMap((expressSection, i) => {
     const firstExpressStop = expressSection[0]
     const lastExpressStop = expressSection[expressSection.length - 1]
 
@@ -93,17 +91,16 @@ export function getStoppingText({ expressSections, routeStops }) {
       // This is the first express section
 
       // If immediately running express from the first stop onwards
-      if (previousStopIndex === 0) return texts.push(stoppingText.runsExpressTo.format(nextStop))
+      if (previousStopIndex === 0) return [ stoppingText.runsExpressTo.format(nextStop) ]
+      return [
+        // Has one stop from the current before running express
+        // Otherwise has more than one stop from the current before running express
+        previousStopIndex === 1 ? stoppingText.stopsAt.format(previousStop) : stoppingText.sasTo.format(previousStop),
 
-      // Has one stop from the current before running express
-      // Otherwise has more than one stop from the current before running express
-      if (previousStopIndex === 1) texts.push(stoppingText.stopsAt.format(previousStop))
-      else texts.push(stoppingText.sasTo.format(previousStop))
-
-      // This express section runs straight to the destination
-      // Otherwise more stops after this express section
-      if (nextStopIndex === destinationIndex) return texts.push(stoppingText.thenRunsExpressTo.format(nextStop))
-      else return texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
+        // This express section runs straight to the destination
+        // Otherwise more stops after this express section
+        nextStopIndex === destinationIndex ? stoppingText.thenRunsExpressTo.format(nextStop) : stoppingText.runsExpressAtoB.format(previousStop, nextStop),
+      ]
     }
 
     // Not the first express section
@@ -114,17 +111,19 @@ export function getStoppingText({ expressSections, routeStops }) {
 
     if (i === expressSections.length - 1 && nextStopIndex === destinationIndex) {
       // Last express section and running express to the last stop
-      texts.push(stoppingText.thenRunsExpressAtoB.format(previousStop, nextStop))
+      return [ stoppingText.thenRunsExpressAtoB.format(previousStop, nextStop) ]
     } else if (lastStopIndex === previousStopIndex) {
       // Stopped at one stop from the previous express section, then ran express again
-      texts.push(stoppingText.expressAtoB.format(previousStop, nextStop))
+      return [ stoppingText.expressAtoB.format(previousStop, nextStop) ]
     } else if (lastStopIndex + 1 === previousStopIndex) {
       // Stopped at two stops in between express sections
-      texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
+      return [ stoppingText.runsExpressAtoB.format(previousStop, nextStop) ]
     } else {
       // 3 or more stations in betwee nexpress sections
-      texts.push(stoppingText.sasAtoB.format(lastStop, previousStop))
-      texts.push(stoppingText.runsExpressAtoB.format(previousStop, nextStop))
+      return [
+        stoppingText.sasAtoB.format(lastStop, previousStop),
+        stoppingText.runsExpressAtoB.format(previousStop, nextStop)
+      ]
     }
   })
 
