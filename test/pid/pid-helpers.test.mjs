@@ -353,6 +353,136 @@ describe('The getScreenStopsAndExpress function', () => {
       'Riversdale'
     ] ])
   })
+
+  describe('DNG and SUY group cross city runs', () => {
+    it('Returns MTP stops if going via the tunnel CFD THL', async () => {
+      const futureStops = [
+        'Caulfield',
+        'Malvern',
+        'Armadale',
+        'Toorak',
+        'Hawksburn',
+        'Anzac',
+        'Town Hall'
+      ]
+
+      const { stops } = getScreenStopsAndExpress([
+        'Caulfield',
+        'Anzac',
+        'Town Hall'
+      ], { routeName: 'Pakenham', direction: 'Up' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+
+    it('Returns MTP stops if going via the tunnel THL WFY', async () => {
+      const futureStops = [
+        'Town Hall',
+        'State Library',
+        'Parkville',
+        'Arden',
+        'Footscray',
+        'Middle Footscray',
+        'West Footscray'
+      ]
+
+      const { stops } = getScreenStopsAndExpress([
+        'Town Hall',
+        'State Library',
+        'Parkville',
+        'Arden',
+        'West Footscray'
+      ], { routeName: 'Sunbury', direction: 'Down' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+
+    it('Returns CLP stops if going via the city loop', async () => {
+      const futureStops = [
+        'Caulfield',
+        'Malvern',
+        'Armadale',
+        'Toorak',
+        'Hawksburn',
+        'South Yarra',
+        'Richmond',
+        'Parliament',
+        'Melbourne Central',
+        'Flagstaff',
+        'Southern Cross',
+        'Flinders Street'
+      ]
+
+      const { stops } = getScreenStopsAndExpress([
+        'Caulfield',
+        'South Yarra',
+        'Richmond',
+        'Parliament',
+        'Melbourne Central',
+        'Flagstaff',
+        'Southern Cross',
+        'Flinders Street'
+      ], { routeName: 'Pakenham', direction: 'Up' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+
+    it('Filters both MTP and CLP stops if going direct RMD FSS', async () => {
+      const futureStops = [
+        'Caulfield',
+        'Malvern',
+        'Armadale',
+        'Toorak',
+        'Hawksburn',
+        'South Yarra',
+        'Richmond',
+        'Flinders Street'
+      ]
+
+      const { stops } = getScreenStopsAndExpress([
+        'Caulfield',
+        'South Yarra',
+        'Richmond',
+        'Flinders Street'
+      ], { routeName: 'Pakenham', direction: 'Up' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+
+    it('Filters both MTP and CLP stops if going direct NME FSS', async () => {
+      const futureStops = [
+        'North Melbourne',
+        'Southern Cross',
+        'Flinders Street'
+      ]
+
+      const { stops } = getScreenStopsAndExpress([
+        'North Melbourne',
+        'Southern Cross',
+        'Flinders Street'
+      ], { routeName: 'Sunbury', direction: 'Up' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+
+    it('Returns CLP stops if going NME MURL FSS', async () => {
+      const futureStops = [
+        'North Melbourne',
+        'Flagstaff',
+        'Melbourne Central',
+        'Parliament',
+        'Flinders Street'
+      ]
+
+      const { stops } = getScreenStopsAndExpress([
+        'North Melbourne',
+        'Flagstaff',
+        'Flinders Street'
+      ], { routeName: 'Sunbury', direction: 'Up' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+  })
 })
 
 /**
