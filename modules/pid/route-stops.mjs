@@ -129,6 +129,10 @@ let lines = {
     'Parliament',
     'Richmond',
     'South Yarra',
+
+    'Town Hall',
+    'Anzac',
+
     'Hawksburn',
     'Toorak',
     'Armadale',

@@ -482,6 +482,43 @@ describe('The getScreenStopsAndExpress function', () => {
       expect(stops.length).to.equal(futureStops.length)
       for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
     })
+
+    it('Filters MTP and CLP stops if going RMD CFD', async () => {
+      const futureStops = [
+        'Richmond',
+        'South Yarra',
+        'Hawksburn',
+        'Toorak',
+        'Armadale',
+        'Malvern',
+        'Caulfield'
+      ]
+
+      const { stops } = getScreenStopsAndExpress([
+        'Richmond',
+        'South Yarra',
+        'Caulfield'
+      ], { routeName: 'Cranbourne', direction: 'Down' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+
+    it('Filters MTP and CLP stops if going SSS NME FSY', async () => {
+      const futureStops = [
+        'Southern Cross',
+        'North Melbourne',
+        'South Kensington',
+        'Footscray'
+      ]
+
+      const { stops } = getScreenStopsAndExpress([
+        'Southern Cross',
+        'North Melbourne',
+        'Footscray'
+      ], { routeName: 'Sunbury', direction: 'Down' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
   })
 })
 
