@@ -398,7 +398,8 @@ describe('The getExtendedStoppingType function', () => {
         'Nunawading'
       ], [
         'Laburnum'
-      ]] })).to.equal('Stopping at Blackburn')
+      ]]
+    })).to.equal('Stopping at Blackburn')
   })
 
   // TD6101 from FSY 040725
@@ -416,7 +417,8 @@ describe('The getExtendedStoppingType function', () => {
         'Middle Footscray',
         'West Footscray',
         'Tottenham',
-      ]] })).to.equal('Express to Sunshine')
+      ]]
+    })).to.equal('Express to Sunshine')
   })
 
   // TD3202 from UNN 091224
@@ -442,6 +444,7 @@ describe('The getExtendedStoppingType function', () => {
         'Hawthorn',
         'Burnley',
         'East Richmond',
-      ]] })).to.equal('Express Camberwell -- Richmond')
+      ]]
+    })).to.equal('Express Camberwell -- Richmond')
   })
 })

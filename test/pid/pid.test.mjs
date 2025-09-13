@@ -4,6 +4,8 @@ import almTrips from '../departures/sample-data/sample-live-trips.json' with { t
 import alm from '../departures/sample-data/alamein.json' with { type: 'json' }
 import { getPIDDepartures } from '../../modules/pid/pid.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
+import fknWerWillSASThroughRunning from './sample-data/fkn-wer-will-sas-through-running.mjs'
+import fknStops from './sample-data/fkn-stops.mjs'
 use(chaiExclude)
 
 const clone = o => JSON.parse(JSON.stringify(o))
@@ -24,6 +26,21 @@ await (await almDB.getCollection('live timetables')).createDocuments(clone(almTr
   return trip
 }))
 await (await almDB.getCollection('stops')).createDocument(clone(alm))
+
+const fknDepartureTime = { departureTime: new Date('2025-09-13T07:56:00.000Z') }
+const fknDB = new LokiDatabaseConnection()
+await (await fknDB.getCollection('live timetables')).createDocuments(clone(fknWerWillSASThroughRunning))
+await (await fknDB.getCollection('stops')).createDocuments(clone(fknStops))
+
+const fknNoFormingDB = new LokiDatabaseConnection()
+await (await fknNoFormingDB.getCollection('live timetables')).createDocuments(clone(fknWerWillSASThroughRunning).map(trip => {
+  return {
+    ...trip,
+    forming: null,
+    formedBy: null
+  }
+}))
+await (await fknNoFormingDB.getCollection('stops')).createDocuments(clone(fknStops))
 
 describe('The PID getPIDDepartures function', () => {
   it('Returns a list of departures', async () => {
@@ -58,5 +75,16 @@ describe('The PID getPIDDepartures function', () => {
     expect(stops[1]).to.deep.equal({ stopName: 'Ashburton', express: true })
     expect(stops[2]).to.deep.equal({ stopName: 'Burwood', express: true })
     expect(stops[6]).to.deep.equal({ stopName: 'Camberwell', express: false })
+  })
+
+  it.only('Removes city loop stops if not needed', async () => {
+    const departures = await getPIDDepartures('Caulfield', fknNoFormingDB, fknDepartureTime)
+    const stops = departures[0].stops
+
+    expect(stops).to.exist
+    expect(stops[0]).to.deep.equal({ stopName: 'Caulfield', express: false })
+    expect(stops[1]).to.deep.equal({ stopName: 'Malvern', express: false })
+    expect(stops[7]).to.deep.equal({ stopName: 'Richmond', express: false })
+    expect(stops[8]).to.deep.equal({ stopName: 'Flinders Street', express: false })
   })
 })
