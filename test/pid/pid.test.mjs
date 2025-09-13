@@ -1,6 +1,7 @@
 import { expect, use } from 'chai'
 import chaiExclude from 'chai-exclude'
 import almTrips from '../departures/sample-data/sample-live-trips.json' with { type: 'json' }
+import mtpThroughRunning from '../departures/sample-data/mtp-through-running.json' with { type: 'json' }
 import alm from '../departures/sample-data/alamein.json' with { type: 'json' }
 import { getPIDDepartures } from '../../modules/pid/pid.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
@@ -41,6 +42,17 @@ await (await fknNoFormingDB.getCollection('live timetables')).createDocuments(cl
   }
 }))
 await (await fknNoFormingDB.getCollection('stops')).createDocuments(clone(fknStops))
+
+const cfdDepartureTime = { departureTime: new Date('2025-06-06T20:04:00.000Z') }
+const cfdDB = new LokiDatabaseConnection()
+await (await cfdDB.getCollection('live timetables')).createDocuments(clone(mtpThroughRunning).map((trip, i) => {
+  if (i === 1) return {
+    ...trip,
+    stopTimings: trip.stopTimings.slice(0, 3).concat(trip.stopTimings.slice(5))
+  }
+  return trip
+}))
+await (await cfdDB.getCollection('stops')).createDocuments(clone(fknStops))
 
 describe('The PID getPIDDepartures function', () => {
   it('Returns a list of departures', async () => {
@@ -99,5 +111,19 @@ describe('The PID getPIDDepartures function', () => {
     expect(stops[7]).to.deep.equal({ stopName: 'Flinders Street', express: false })
     expect(stops[8]).to.deep.equal({ stopName: 'Southern Cross', express: false })
     expect(stops[9]).to.deep.equal({ stopName: 'North Melbourne', express: false })
+  })
+
+  it('Checks express running on the forming trip', async () => {
+    const departures = await getPIDDepartures('Caulfield', cfdDB, cfdDepartureTime)
+    const stops = departures[0].stops
+
+    expect(stops).to.exist
+    expect(stops[0]).to.deep.equal({ stopName: 'Caulfield', express: false })
+    expect(stops[1]).to.deep.equal({ stopName: 'Malvern', express: true })
+    expect(stops[5]).to.deep.equal({ stopName: 'Anzac', express: false })
+    expect(stops[6]).to.deep.equal({ stopName: 'Town Hall', express: false })
+    expect(stops[7]).to.deep.equal({ stopName: 'State Library', express: false })
+    expect(stops[10]).to.deep.equal({ stopName: 'Footscray', express: true })
+    expect(stops[12]).to.deep.equal({ stopName: 'West Footscray', express: false })
   })
 })

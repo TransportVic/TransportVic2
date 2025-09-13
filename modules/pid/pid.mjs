@@ -102,7 +102,6 @@ export function getScreenStopsAndExpress(screenStops, trip) {
     } else {
       relevantRouteStops = relevantRouteStops.filter(stop => !MTP_STOPS.includes(stop))
     }
-    console.log(hasMTPStop, relevantRouteStops)
   }
 
   if (trip.routeName === 'Werribee') {
