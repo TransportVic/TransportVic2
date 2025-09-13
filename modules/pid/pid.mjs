@@ -134,3 +134,6 @@ export function getStoppingText({ expressSections, routeStops }) {
 
   return texts.join(', ')
 }
+
+export function getStoppingType({ expressSections }) {
+}

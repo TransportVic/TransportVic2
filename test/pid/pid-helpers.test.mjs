@@ -1,7 +1,7 @@
 import { expect, use } from 'chai'
 import chaiExclude from 'chai-exclude'
 import almTrips from '../departures/sample-data/sample-live-trips.json' with { type: 'json' }
-import { getScreenStopsAndExpress, getStoppingText } from '../../modules/pid/pid.mjs'
+import { getScreenStopsAndExpress, getStoppingText, getStoppingType } from '../../modules/pid/pid.mjs'
 use(chaiExclude)
 
 const clone = o => JSON.parse(JSON.stringify(o))
@@ -301,5 +301,70 @@ describe('The getStoppingText function', () => {
 
     const stoppingText = getStoppingText(expressData)
     expect(stoppingText).to.equal('Stops All Stations to Burwood, Runs Express from Burwood to Riversdale, then Runs Express from Riversdale to Hawthorn')
+  })
+})
+
+/**
+ * {
+  noSuburban: 'No Suburban Passengers',
+  notTakingPax: 'Not Taking Passengers',
+  // vlinePostfix: ', Not Taking Suburban Passengers',
+  stopsAll: 'Stops All',
+  limitedExpress: 'Ltd Express',
+  express: 'Express'
+}
+ */
+describe('The getStoppingType function', () => {
+  it('Checks for SAS trains', () => {
+    expect(getStoppingType({ expressSections: [] })).to.equal('Stops All')
+  })
+
+  it('Trains skipping a single stop', () => {
+    expect(getStoppingType({ expressSections: [['East Richmond']] })).to.equal('Ltd Express')
+  })
+
+  it('Trains skipping two stops in a row', () => {
+    expect(getStoppingType({ expressSections: [['East Richmond', 'Burnley']] })).to.equal('Ltd Express')
+  })
+
+  it('Trains skipping three stops in a row', () => {
+    expect(getStoppingType({ expressSections: [[
+      'Hawksburn', 'Toorak', 'Armadale'
+    ]] })).to.equal('Express')
+  })
+
+  it('Trains skipping four stops in a row', () => {
+    expect(getStoppingType({ expressSections: [[
+      'Hawksburn', 'Toorak',
+      'Armadale', 'Malvern'
+    ]] })).to.equal('Express')
+  })
+
+  it('Trains with multiple express sections', () => {
+    expect(getStoppingType({ expressSections: [[
+      'Hawksburn', 'Toorak',
+      'Armadale', 'Malvern'
+    ], [
+      'Westall'
+    ], [
+      'Yarraman'
+    ]] })).to.equal('Ltd Express')
+  })
+
+  it('Trains with multiple long express sections', () => {
+    expect(getStoppingType({ expressSections: [[
+      'Laburnum'
+    ], [
+      'Union',
+      'Chatham',
+      'Canterbury',
+      'East Camberwell'
+    ], [
+      'Auburn'
+    ], [
+      'Hawthorn',
+      'Burnley',
+      'East Richmond'
+    ]] })).to.equal('Ltd Express')
   })
 })
