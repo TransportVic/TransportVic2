@@ -46,6 +46,17 @@ export async function getPIDDepartures(stationName, db, { departureTime = new Da
       ...departure.futureStops
     ], departure.trip)
 
+    if (departure.formingTrip) {
+      const formingExpressData = getScreenStopsAndExpress(
+        departure.futureFormingStops.slice(departure.futureStops.length - 1),
+        departure.formingTrip
+      )
+
+      expressData.stops.push(...formingExpressData.stops.slice(1))
+      expressData.expressSections.push(...formingExpressData.expressSections)
+      expressData.routeStops.push(...formingExpressData.routeStops.slice(1))
+    }
+
     return {
       ...departure,
       stops: expressData.stops
