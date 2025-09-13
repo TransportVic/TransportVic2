@@ -77,7 +77,7 @@ describe('The PID getPIDDepartures function', () => {
     expect(stops[6]).to.deep.equal({ stopName: 'Camberwell', express: false })
   })
 
-  it.only('Removes city loop stops if not needed', async () => {
+  it('Removes city loop stops if not needed', async () => {
     const departures = await getPIDDepartures('Caulfield', fknNoFormingDB, fknDepartureTime)
     const stops = departures[0].stops
 

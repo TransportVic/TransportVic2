@@ -26,7 +26,7 @@ describe('The getScreenStopsAndExpress function', () => {
     }
   })
 
-  it('Includes a single expess block', async () => {
+  it('Includes a single express block', async () => {
     const futureStops = [
       'Alamein',
       'Ashburton',
@@ -43,6 +43,167 @@ describe('The getScreenStopsAndExpress function', () => {
     expect(stops.length).to.equal(futureStops.length)
     for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
     for (let i = 1; i < stops.length - 1; i++) expect(stops[i].express).to.be.true
+  })
+
+  describe('City loop permutations', () => {
+    it('Filters out city loop stops if running direct RMD FSS', async () => {
+      const futureStops = [
+        'Burnley',
+        'East Richmond',
+        'Richmond',
+        'Flinders Street'
+      ]
+      const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Alamein', direction: 'Up' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+
+    it('Keeps city loop stops if running RMD Loop FSS', async () => {
+      const futureStops = [
+        'Burnley',
+        'East Richmond',
+        'Richmond',
+        'Parliament',
+        'Melbourne Central',
+        'Flagstaff',
+        'Southern Cross',
+        'Flinders Street'
+      ]
+
+      const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Alamein', direction: 'Up' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+
+    it('Keeps city loop stops if running RMD Loop (with express) FSS', async () => {
+      const futureStops = [
+        'Richmond',
+        'Parliament',
+        'Melbourne Central',
+        'Flagstaff',
+        'Southern Cross',
+        'Flinders Street'
+      ]
+
+      const { stops } = getScreenStopsAndExpress([
+        'Richmond',
+        'Parliament',
+        'Southern Cross',
+        'Flinders Street'
+      ], { routeName: 'Alamein', direction: 'Up' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      expect(stops[2].express).to.be.true
+      expect(stops[3].express).to.be.true
+    })
+
+    it('Keeps city loop stops if running FSS Loop RMD', async () => {
+      const futureStops = [
+        'Flinders Street',
+        'Southern Cross',
+        'Flagstaff',
+        'Melbourne Central',
+        'Parliament',
+        'Richmond'
+      ]
+
+      const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Alamein', direction: 'Down' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+
+    it('Keeps city loop stops if running FSS Loop (with express) RMD', async () => {
+      const futureStops = [
+        'Flinders Street',
+        'Southern Cross',
+        'Flagstaff',
+        'Melbourne Central',
+        'Parliament',
+        'Richmond',
+        'East Richmond',
+        'Burnley'
+      ]
+
+      const { stops } = getScreenStopsAndExpress([
+        'Flinders Street',
+        'Southern Cross',
+        'Burnley'
+      ], { routeName: 'Alamein', direction: 'Down' })
+
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+
+    it('Filters out city loop stops if running FSS RMD', async () => {
+      const futureStops = [
+        'Flinders Street',
+        'Richmond'
+      ]
+
+      const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Alamein', direction: 'Down' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+
+    it('Filters out MURL stops if running FSS SSS NME', async () => {
+      const futureStops = [
+        'Flinders Street',
+        'Southern Cross',
+        'North Melbourne'
+      ]
+
+      const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Craigieburn', direction: 'Down' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+
+    it('Keeps MURL stops if running FSS Loop NME', async () => {
+      const futureStops = [
+        'Flinders Street',
+        'Parliament',
+        'Melbourne Central',
+        'Flagstaff',
+        'North Melbourne'
+      ]
+
+      const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Craigieburn', direction: 'Down' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
+
+    it('Keeps MURL stops if running FSS Loop (with express) NME', async () => {
+      const futureStops = [
+        'North Melbourne',
+        'Flagstaff',
+        'Melbourne Central',
+        'Parliament',
+        'Flinders Street'
+      ]
+
+      const { stops } = getScreenStopsAndExpress([
+        'North Melbourne',
+        'Melbourne Central',
+        'Flinders Street'
+      ], { routeName: 'Craigieburn', direction: 'Down' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      expect(stops[1].express).to.be.true
+      expect(stops[3].express).to.be.true
+    })
+ 
+    it('Keeps MURL stops if running NME Loop FSS', async () => {
+      const futureStops = [
+        'North Melbourne',
+        'Flagstaff',
+        'Melbourne Central',
+        'Parliament',
+        'Flinders Street'
+      ]
+
+      const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Craigieburn', direction: 'Up' })
+      expect(stops.length).to.equal(futureStops.length)
+      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+    })
   })
 
   it('Returns a list of express sections when there is a single section', () => {
