@@ -5,6 +5,7 @@ import utils from '../../utils.js'
 import td8507Live from './sample-data/td8507-live.mjs'
 import styRoute from './sample-data/sty-route.mjs'
 import styStops from '../metro/tracker/sample-data/sty-stops.json' with { type: 'json' }
+import TripUpdater from '../../modules/new-tracker/trip-updater.mjs'
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
@@ -94,9 +95,19 @@ describe('The GPS tracker', () => {
     let timetables = await database.createCollection('live timetables')
     let routes = await database.createCollection('routes')
     let stops = await database.createCollection('stops')
-    await timetables.createDocument(clone(td8507Live))
-    await routes.createDocument(clone(styRoute))
-    await stops.createDocuments(clone(styStops))
+
+    await timetables.createDocument({
+      ...clone(td8507Live),
+      mode: 'regional train'
+    })
+    await routes.createDocument({
+      ...clone(styRoute),
+      mode: 'regional train'
+    })
+    await stops.createDocuments(clone(styStops).map(stop => {
+      stop.bays.filter(bay => bay.mode === 'metro train').forEach(bay => bay.mode = 'regional train')
+      return stop
+    }))
 
     const positionData = {
       location: {
@@ -117,5 +128,7 @@ describe('The GPS tracker', () => {
     expect(td8507.stopTimings[4].stopName).to.equal('Tyabb Railway Station')
     expect(+new Date(td8507.stopTimings[4].estimatedDepartureTime)).to.be.greaterThanOrEqual(+new Date('2025-09-14T03:25:00.000Z'))
     expect(+new Date(td8507.stopTimings[4].estimatedDepartureTime)).to.be.lessThanOrEqual(+new Date('2025-09-14T03:25:20.000Z'))
+
+    TripUpdater.clearCaches()
   })
 })

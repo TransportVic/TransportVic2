@@ -10,6 +10,13 @@ let routeNameCache = {}
 
 export default class TripUpdater {
 
+  static clearCaches() {
+    stopIDCache = {}
+    stopCache = {}
+    routeIDCache = {}
+    routeNameCache = {}
+  }
+
   static getMode() {
     throw new Error('TripUpdater mode not defined')
   }
