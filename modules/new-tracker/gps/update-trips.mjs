@@ -27,7 +27,10 @@ export async function updateTrips(getPositions = () => [], keepOperators = () =>
           stopName: stop.stopName,
           estimatedDepartureTime: utils.parseTime(stop.scheduledDepartureTime).add(arrDelay, 'seconds')
         }
-      })
+      }),
+      forcedVehicle: {
+        consist: [ tripPos.vehicle ]
+      }
     }
 
     updatedTrips.push(await VLineTripUpdater.updateTrip(db, tripUpdate, { skipStopCancellation: true, dataSource: 'gps-tracking' }))
