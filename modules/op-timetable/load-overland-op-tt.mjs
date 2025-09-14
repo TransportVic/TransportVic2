@@ -22,7 +22,16 @@ async function loadOperationalTT(operationDay) {
 
   console.log('Fetched', rawActiveTrips.length, 'trips to process')
 
-  let bulkUpdate = rawActiveTrips.map(trip => convertToLive(trip, operationDay)).map(trip => ({
+  let bulkUpdate = rawActiveTrips.map(trip => convertToLive(trip, operationDay)).map(trip => {
+    const sss = trip.stopTimings.find(stop => stop.stopName === 'Southern Cross Railway Station')
+    const nsh = trip.stopTimings.find(stop => stop.stopName === 'North Shore Railway Station')
+    const art = trip.stopTimings.find(stop => stop.stopName === 'Ararat Railway Station')
+    if (sss) sss.platform = '2B'
+    if (nsh) nsh.platform = '3'
+    if (art) art.platform = '1'
+
+    return trip
+  }).map(trip => ({
     replaceOne: {
       filter: { mode: trip.mode, operationDays: trip.operationDays, runID: trip.runID },
       replacement: trip,
