@@ -39,4 +39,14 @@ await stopLoader.loadStop(reader.processEntity({
   "platform_code": ""
 }))
 
+await stopLoader.loadStop(reader.processEntity({
+  "stop_id": "20293",
+  "stop_name": "Ballarat Railway Station (Ballarat)",
+  "stop_lat": "-37.55883224553218",
+  "stop_lon": "143.8595041856118",
+  "parent_station": "vic:rail:BAT-V",
+  "location_type": "",
+  "platform_code": ""
+}))
+
 process.exit(0)
