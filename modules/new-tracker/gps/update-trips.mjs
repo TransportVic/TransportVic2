@@ -1,9 +1,24 @@
 import turf from '@turf/turf'
 import utils from '../../../utils.js'
+import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 
-export async function updateTrips(getPositions = () => [], keepOperators = () => []) {
+export async function updateTrips(getPositions = () => [], keepOperators = () => [], db) {
   const trips = await getRelevantTrips(getPositions, keepOperators)
-
+  for (let tripPos of trips) {
+    const tripData = await getTripData(tripPos, db)
+    const { arrDelay } = getEstimatedArrivalTime(tripPos, tripData)
+    const tripUpdate = {
+      operationDays: tripData.trip.operationDays,
+      runID: tripData.trip.runID,
+      stops: tripData.trip.stopTimings.slice(tripData.nextStopIndex).map(stop => {
+        return {
+          stopName: stop.stopName,
+          estimatedDepartureTime: utils.parseTime(stop.scheduledDepartureTime).add(arrDelay, 'seconds')
+        }
+      })
+    }
+    await MetroTripUpdater.updateTrip(db, tripUpdate, { skipStopCancellation: true, dataSource: 'gps-tracking' })
+  }
 }
 
 export async function getRelevantTrips(getPositions = () => [], keepOperators = () => []) {
@@ -33,7 +48,7 @@ export async function getTripData(position, db) {
   const prevStop = tripData.stopTimings[nextStopIndex - 1]
 
   return {
-    nextStop, prevStop, distance: parseFloat(nextStop.stopDistance) - pathDistance
+    nextStop, nextStopIndex, prevStop, distance: parseFloat(nextStop.stopDistance) - pathDistance, trip: tripData
   }
 }
 

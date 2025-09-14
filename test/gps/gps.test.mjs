@@ -4,6 +4,7 @@ import { getEstimatedArrivalTime, getRelevantTrips, getTripData, updateTrips } f
 import utils from '../../utils.js'
 import td8507Live from './sample-data/td8507-live.mjs'
 import styRoute from './sample-data/sty-route.mjs'
+import styStops from '../metro/tracker/sample-data/sty-stops.json' with { type: 'json' }
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
@@ -88,12 +89,14 @@ describe('The GPS tracker', () => {
     expect(arrDelay).to.be.lessThanOrEqual(90) // Seconds
   })
 
-  it.only('Updates the trip time estimates', async () => {
+  it('Updates the trip time estimates', async () => {
     let database = new LokiDatabaseConnection()
     let timetables = await database.createCollection('live timetables')
     let routes = await database.createCollection('routes')
+    let stops = await database.createCollection('stops')
     await timetables.createDocument(clone(td8507Live))
     await routes.createDocument(clone(styRoute))
+    await stops.createDocuments(clone(styStops))
 
     const positionData = {
       location: {
@@ -104,7 +107,7 @@ describe('The GPS tracker', () => {
       runID: '8507',
       operator: 'Metro Trains Melbourne'
     }
-    await updateTrips(() => [positionData], () => ['Metro Trains Melbourne'])
+    await updateTrips(() => [positionData], () => ['Metro Trains Melbourne'], database)
 
     const td8507 = await timetables.findDocument({ runID: '8507' })
     expect(td8507.stopTimings[3].stopName).to.equal('Somerville Railway Station')

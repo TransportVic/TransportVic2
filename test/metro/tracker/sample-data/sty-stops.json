@@ -1,654 +1,931 @@
 [
-	{
-		"stopName" : "Baxter Railway Station",
-		"suburb" : [
-			"Baxter"
-		],
-		"cleanSuburbs" : [
-			"baxter"
-		],
-		"bays" : [
-			{
-				"originalName" : "Baxter Station",
-				"fullStopName" : "Baxter Railway Station",
-				"stopGTFSID" : "5701",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.16052586,
-						-38.19405207
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Baxter",
-				"services" : [ ],
-				"screenServices" : [ ],
-				"platform" : "1"
-			},
-			{
-				"originalName" : "Baxter Railway Station",
-				"fullStopName" : "Baxter Railway Station",
-				"stopGTFSID" : "vic:rail:BXR",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.16052609,
-						-38.19404306
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Baxter",
-				"services" : [ ],
-				"screenServices" : [ ]
-			}
-		],
-		"mergeName" : "Baxter Railway Station",
-		"services" : [ ],
-		"screenServices" : [ ],
-		"cleanName" : "baxter-railway-station",
-		"cleanNames" : [
-			"baxter-railway-station",
-			"baxter-railway-station-baxter-tooradin-road"
-		],
-		"cleanSuburbs" : [
-			"baxter"
-		],
-		"cleanName" : "baxter-railway-station",
-		"cleanNames" : [
-			"baxter-railway-station",
-			"baxter-railway-station-baxter-tooradin-road"
-		]
-	},
-	{
-		"stopName" : "Bittern Railway Station",
-		"suburb" : [
-			"Bittern"
-		],
-		"cleanSuburbs" : [
-			"bittern"
-		],
-		"bays" : [
-			{
-				"originalName" : "Bittern Station",
-				"fullStopName" : "Bittern Railway Station",
-				"stopGTFSID" : "3236",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.17804406,
-						-38.33714729
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Bittern",
-				"services" : [ ],
-				"screenServices" : [ ],
-				"platform" : "1"
-			},
-			{
-				"originalName" : "Bittern Railway Station",
-				"fullStopName" : "Bittern Railway Station",
-				"stopGTFSID" : "vic:rail:BIT",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.17802653,
-						-38.33739032
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Bittern",
-				"services" : [ ],
-				"screenServices" : [ ]
-			}
-		],
-		"mergeName" : "Bittern Railway Station",
-		"services" : [ ],
-		"screenServices" : [ ],
-		"cleanName" : "bittern-railway-station",
-		"cleanNames" : [
-			"bittern-railway-station",
-			"bittern-railway-station-frankston-flinders-road"
-		],
-		"cleanSuburbs" : [
-			"bittern"
-		],
-		"cleanName" : "bittern-railway-station",
-		"cleanNames" : [
-			"bittern-railway-station",
-			"bittern-railway-station-frankston-flinders-road"
-		]
-	},
-	{
-		"stopName" : "Crib Point Railway Station",
-		"suburb" : [
-			"Crib Point"
-		],
-		"cleanSuburbs" : [
-			"crib-point"
-		],
-		"bays" : [
-			{
-				"originalName" : "Crib Point Station",
-				"fullStopName" : "Crib Point Railway Station",
-				"stopGTFSID" : "615",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.20368566,
-						-38.36577547
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Crib Point",
-				"services" : [ ],
-				"screenServices" : [ ],
-				"platform" : "1"
-			},
-			{
-				"originalName" : "Crib Point Railway Station",
-				"fullStopName" : "Crib Point Railway Station",
-				"stopGTFSID" : "vic:rail:CPT",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.20404332,
-						-38.36612338
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Crib Point",
-				"services" : [ ],
-				"screenServices" : [ ]
-			}
-		],
-		"mergeName" : "Crib Point Railway Station",
-		"services" : [ ],
-		"screenServices" : [ ],
-		"cleanName" : "crib-point-railway-station",
-		"cleanNames" : [
-			"crib-point-railway-station",
-			"crib-point-railway-station-stony-point-road"
-		],
-		"cleanSuburbs" : [
-			"crib-point"
-		],
-		"cleanName" : "crib-point-railway-station",
-		"cleanNames" : [
-			"crib-point-railway-station",
-			"crib-point-railway-station-stony-point-road"
-		]
-	},
-	{
-		"stopName" : "Frankston Railway Station",
-		"suburb" : [
-			"Frankston"
-		],
-		"cleanSuburbs" : [
-			"frankston"
-		],
-		"bays" : [
-			{
-				"originalName" : "Frankston Station",
-				"fullStopName" : "Frankston Railway Station",
-				"stopGTFSID" : "11220",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.12604465,
-						-38.1426818
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Frankston",
-				"services" : [ ],
-				"screenServices" : [ ],
-				"platform" : "1"
-			},
-			{
-				"originalName" : "Frankston Station",
-				"fullStopName" : "Frankston Railway Station",
-				"stopGTFSID" : "11221",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.12619247,
-						-38.14270218
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Frankston",
-				"services" : [ ],
-				"screenServices" : [ ],
-				"platform" : "2"
-			},
-			{
-				"originalName" : "Frankston Station",
-				"fullStopName" : "Frankston Railway Station",
-				"stopGTFSID" : "26510",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.12621712,
-						-38.14263048
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Frankston",
-				"services" : [ ],
-				"screenServices" : [ ],
-				"platform" : "3"
-			},
-			{
-				"originalName" : "Frankston Railway Station",
-				"fullStopName" : "Frankston Railway Station",
-				"stopGTFSID" : "vic:rail:FKN",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.12616228,
-						-38.14299007
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Frankston",
-				"services" : [ ],
-				"screenServices" : [ ]
-			}
-		],
-		"mergeName" : "Frankston Railway Station",
-		"services" : [ ],
-		"screenServices" : [ ],
-		"cleanName" : "frankston-railway-station",
-		"cleanNames" : [
-			"frankston-railway-station",
-			"frankston-railway-station-young-street",
-			"frankston-railway-station-fletcher-road"
-		],
-		"cleanSuburbs" : [
-			"frankston"
-		],
-		"cleanName" : "frankston-railway-station",
-		"cleanNames" : [
-			"frankston-railway-station",
-			"frankston-railway-station-young-street",
-			"frankston-railway-station-fletcher-road"
-		]
-	},
-	{
-		"stopName" : "Hastings Railway Station",
-		"suburb" : [
-			"Hastings"
-		],
-		"cleanSuburbs" : [
-			"hastings"
-		],
-		"bays" : [
-			{
-				"originalName" : "Hastings Station",
-				"fullStopName" : "Hastings Railway Station",
-				"stopGTFSID" : "3580",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.18598235,
-						-38.30555944
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Hastings",
-				"services" : [ ],
-				"screenServices" : [ ],
-				"platform" : "1"
-			},
-			{
-				"originalName" : "Hastings Railway Station",
-				"fullStopName" : "Hastings Railway Station",
-				"stopGTFSID" : "vic:rail:HST",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.18597988,
-						-38.30565853
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Hastings",
-				"services" : [ ],
-				"screenServices" : [ ]
-			}
-		],
-		"mergeName" : "Hastings Railway Station",
-		"services" : [ ],
-		"screenServices" : [ ],
-		"cleanName" : "hastings-railway-station",
-		"cleanNames" : [
-			"hastings-railway-station",
-			"hastings-railway-station-high-street"
-		],
-		"cleanSuburbs" : [
-			"hastings"
-		],
-		"cleanName" : "hastings-railway-station",
-		"cleanNames" : [
-			"hastings-railway-station",
-			"hastings-railway-station-high-street"
-		]
-	},
-	{
-		"stopName" : "Leawarra Railway Station",
-		"suburb" : [
-			"Frankston"
-		],
-		"cleanSuburbs" : [
-			"frankston"
-		],
-		"bays" : [
-			{
-				"originalName" : "Leawarra Station",
-				"fullStopName" : "Leawarra Railway Station",
-				"stopGTFSID" : "7878",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.13960172,
-						-38.15206211
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Frankston",
-				"services" : [ ],
-				"screenServices" : [ ],
-				"platform" : "1"
-			},
-			{
-				"originalName" : "Leawarra Railway Station",
-				"fullStopName" : "Leawarra Railway Station",
-				"stopGTFSID" : "vic:rail:LWA",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.13953396,
-						-38.152034
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Frankston",
-				"services" : [ ],
-				"screenServices" : [ ]
-			}
-		],
-		"mergeName" : "Leawarra Railway Station",
-		"services" : [ ],
-		"screenServices" : [ ],
-		"cleanName" : "leawarra-railway-station",
-		"cleanNames" : [
-			"leawarra-railway-station"
-		],
-		"cleanSuburbs" : [
-			"frankston"
-		],
-		"cleanName" : "leawarra-railway-station",
-		"cleanNames" : [
-			"leawarra-railway-station"
-		]
-	},
-	{
-		"stopName" : "Morradoo Railway Station",
-		"suburb" : [
-			"Crib Point"
-		],
-		"cleanSuburbs" : [
-			"crib-point"
-		],
-		"bays" : [
-			{
-				"originalName" : "Morradoo Station",
-				"fullStopName" : "Morradoo Railway Station",
-				"stopGTFSID" : "2155",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.18948092,
-						-38.35386024
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Crib Point",
-				"services" : [ ],
-				"screenServices" : [ ],
-				"platform" : "1"
-			},
-			{
-				"originalName" : "Morradoo Railway Station",
-				"fullStopName" : "Morradoo Railway Station",
-				"stopGTFSID" : "vic:rail:MRO",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.18960249,
-						-38.35403334
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Crib Point",
-				"services" : [ ],
-				"screenServices" : [ ]
-			}
-		],
-		"mergeName" : "Morradoo Railway Station",
-		"services" : [ ],
-		"screenServices" : [ ],
-		"cleanName" : "morradoo-railway-station",
-		"cleanNames" : [
-			"morradoo-railway-station",
-			"morradoo-railway-station-disney-street"
-		],
-		"cleanSuburbs" : [
-			"crib-point"
-		],
-		"cleanName" : "morradoo-railway-station",
-		"cleanNames" : [
-			"morradoo-railway-station",
-			"morradoo-railway-station-disney-street"
-		]
-	},
-	{
-		"stopName" : "Somerville Railway Station",
-		"suburb" : [
-			"Somerville"
-		],
-		"cleanSuburbs" : [
-			"somerville"
-		],
-		"bays" : [
-			{
-				"originalName" : "Somerville Station",
-				"fullStopName" : "Somerville Railway Station",
-				"stopGTFSID" : "5082",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.1763226,
-						-38.22543328
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Somerville",
-				"services" : [ ],
-				"screenServices" : [ ],
-				"platform" : "1"
-			},
-			{
-				"originalName" : "Somerville Railway Station",
-				"fullStopName" : "Somerville Railway Station",
-				"stopGTFSID" : "vic:rail:SVE",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.17624492,
-						-38.22534196
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Somerville",
-				"services" : [ ],
-				"screenServices" : [ ]
-			}
-		],
-		"mergeName" : "Somerville Railway Station",
-		"services" : [ ],
-		"screenServices" : [ ],
-		"cleanName" : "somerville-railway-station",
-		"cleanNames" : [
-			"somerville-railway-station",
-			"somerville-railway-station-frankston-flinders-road"
-		],
-		"cleanSuburbs" : [
-			"somerville"
-		],
-		"cleanName" : "somerville-railway-station",
-		"cleanNames" : [
-			"somerville-railway-station",
-			"somerville-railway-station-frankston-flinders-road"
-		]
-	},
-	{
-		"stopName" : "Stony Point Railway Station",
-		"suburb" : [
-			"Crib Point"
-		],
-		"cleanSuburbs" : [
-			"crib-point"
-		],
-		"bays" : [
-			{
-				"originalName" : "Stony Point Station",
-				"fullStopName" : "Stony Point Railway Station",
-				"stopGTFSID" : "88",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.22133817,
-						-38.37405575
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Crib Point",
-				"services" : [ ],
-				"screenServices" : [ ],
-				"platform" : "1"
-			},
-			{
-				"originalName" : "Stony Point Railway Station",
-				"fullStopName" : "Stony Point Railway Station",
-				"stopGTFSID" : "vic:rail:STY",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.22183746,
-						-38.37423454
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Crib Point",
-				"services" : [ ],
-				"screenServices" : [ ]
-			}
-		],
-		"mergeName" : "Stony Point Railway Station",
-		"services" : [ ],
-		"screenServices" : [ ],
-		"cleanName" : "stony-point-railway-station",
-		"cleanNames" : [
-			"stony-point-railway-station"
-		],
-		"cleanSuburbs" : [
-			"crib-point"
-		],
-		"cleanName" : "stony-point-railway-station",
-		"cleanNames" : [
-			"stony-point-railway-station"
-		]
-	},
-	{
-		"stopName" : "Tyabb Railway Station",
-		"suburb" : [
-			"Tyabb"
-		],
-		"cleanSuburbs" : [
-			"tyabb"
-		],
-		"bays" : [
-			{
-				"originalName" : "Tyabb Station",
-				"fullStopName" : "Tyabb Railway Station",
-				"stopGTFSID" : "4318",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.18623113,
-						-38.25974029
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Tyabb",
-				"services" : [ ],
-				"screenServices" : [ ],
-				"platform" : "1"
-			},
-			{
-				"originalName" : "Tyabb Railway Station",
-				"fullStopName" : "Tyabb Railway Station",
-				"stopGTFSID" : "vic:rail:TAB",
-				"location" : {
-					"type" : "Point",
-					"coordinates" : [
-						145.18640071,
-						-38.259815
-					]
-				},
-				"stopNumber" : null,
-				"mode" : "metro train",
-				"suburb" : "Tyabb",
-				"services" : [ ],
-				"screenServices" : [ ]
-			}
-		],
-		"mergeName" : "Tyabb Railway Station",
-		"services" : [ ],
-		"screenServices" : [ ],
-		"cleanName" : "tyabb-railway-station",
-		"cleanNames" : [
-			"tyabb-railway-station"
-		],
-		"cleanSuburbs" : [
-			"tyabb"
-		],
-		"cleanName" : "tyabb-railway-station",
-		"cleanNames" : [
-			"tyabb-railway-station"
-		]
-	}
+  {
+    "stopName": "Baxter Railway Station",
+    "suburb": [
+      "Baxter"
+    ],
+    "cleanSuburbs": [
+      "baxter"
+    ],
+    "bays": [
+      {
+        "originalName": "Baxter Railway Station",
+        "fullStopName": "Baxter Railway Station",
+        "stopGTFSID": "vic:rail:BXR",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.16052609,
+            -38.19404306
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Baxter",
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Baxter Station",
+        "fullStopName": "Baxter Railway Station",
+        "stopGTFSID": "5701",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.16052586,
+            -38.19405207
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Baxter",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:BXR",
+        "platform": "1"
+      },
+      {
+        "originalName": "Baxter Station/Baxter-Tooradin Rd",
+        "fullStopName": "Baxter Railway Station/Baxter-Tooradin Road",
+        "stopGTFSID": "11164",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.15752573,
+            -38.19529365
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Baxter",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Baxter Station/Baxter-Tooradin Rd",
+        "fullStopName": "Baxter Railway Station/Baxter-Tooradin Road",
+        "stopGTFSID": "12004",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.1576255,
+            -38.19541237
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Baxter",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Baxter Railway Station",
+    "services": [],
+    "screenServices": []
+  },
+  {
+    "stopName": "Bittern Railway Station",
+    "suburb": [
+      "Bittern"
+    ],
+    "cleanSuburbs": [
+      "bittern"
+    ],
+    "bays": [
+      {
+        "originalName": "Bittern Railway Station",
+        "fullStopName": "Bittern Railway Station",
+        "stopGTFSID": "vic:rail:BIT",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.17802653,
+            -38.33739032
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Bittern",
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Bittern Station",
+        "fullStopName": "Bittern Railway Station",
+        "stopGTFSID": "3236",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.17804406,
+            -38.33714729
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Bittern",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:BIT",
+        "platform": "1"
+      },
+      {
+        "originalName": "Bittern Station/Frankston-Flinders Rd",
+        "fullStopName": "Bittern Railway Station/Frankston-Flinders Road",
+        "stopGTFSID": "13158",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.17616901,
+            -38.3389204
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Bittern",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Bittern Station/Frankston-Flinders Rd",
+        "fullStopName": "Bittern Railway Station/Frankston-Flinders Road",
+        "stopGTFSID": "13260",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.17676819,
+            -38.33783935
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Bittern",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Bittern Railway Station",
+    "services": [],
+    "screenServices": []
+  },
+  {
+    "stopName": "Crib Point Railway Station",
+    "suburb": [
+      "Crib Point"
+    ],
+    "cleanSuburbs": [
+      "crib-point"
+    ],
+    "bays": [
+      {
+        "originalName": "Crib Point Railway Station",
+        "fullStopName": "Crib Point Railway Station",
+        "stopGTFSID": "vic:rail:CPT",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.20404332,
+            -38.36612338
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Crib Point",
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Crib Point Station",
+        "fullStopName": "Crib Point Railway Station",
+        "stopGTFSID": "615",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.20368566,
+            -38.36577547
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Crib Point",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:CPT",
+        "platform": "1"
+      },
+      {
+        "originalName": "Crib Point Station/Stony Point Rd",
+        "fullStopName": "Crib Point Railway Station/Stony Point Road",
+        "stopGTFSID": "40279",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.20139942,
+            -38.36427157
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Crib Point",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Crib Point Railway Station",
+    "services": [],
+    "screenServices": []
+  },
+  {
+    "stopName": "Frankston Railway Station",
+    "suburb": [
+      "Frankston"
+    ],
+    "cleanSuburbs": [
+      "frankston"
+    ],
+    "bays": [
+      {
+        "originalName": "Frankston Railway Station",
+        "fullStopName": "Frankston Railway Station",
+        "stopGTFSID": "vic:rail:FKN",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12616228,
+            -38.14299007
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Frankston Station",
+        "fullStopName": "Frankston Railway Station",
+        "stopGTFSID": "11220",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12604465,
+            -38.1426818
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FKN",
+        "platform": "1"
+      },
+      {
+        "originalName": "Frankston Station",
+        "fullStopName": "Frankston Railway Station",
+        "stopGTFSID": "11221",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12619247,
+            -38.14270218
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FKN",
+        "platform": "2"
+      },
+      {
+        "originalName": "Frankston Railway Station",
+        "fullStopName": "Frankston Railway Station",
+        "stopGTFSID": "26172",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12665884,
+            -38.14320526
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FKN",
+        "platform": "RRB"
+      },
+      {
+        "originalName": "Frankston Station",
+        "fullStopName": "Frankston Railway Station",
+        "stopGTFSID": "26510",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12621712,
+            -38.14263048
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:FKN",
+        "platform": "3"
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21208",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12551202,
+            -38.14343026
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay B"
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21209",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12575374,
+            -38.14290244
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay C"
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21210",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12582414,
+            -38.1423809
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay H"
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21212",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12594592,
+            -38.14252703
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay E"
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21213",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12584983,
+            -38.14271473
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay D"
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21214",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.1261495,
+            -38.14215179
+          ]
+        },
+        "stopNumber": "125",
+        "mode": "bus",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay F"
+      },
+      {
+        "originalName": "Frankston Railway Station/Fletcher Rd",
+        "fullStopName": "Frankston Railway Station/Fletcher Road",
+        "stopGTFSID": "21215",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12622472,
+            -38.1441175
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay J"
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21216",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12572805,
+            -38.14256861
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay G"
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21217",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12442553,
+            -38.14486377
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay K"
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "21218",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12591977,
+            -38.14221121
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay I"
+      },
+      {
+        "originalName": "Frankston Railway Station/Young St",
+        "fullStopName": "Frankston Railway Station/Young Street",
+        "stopGTFSID": "40396",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.12534242,
+            -38.14381505
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay A"
+      }
+    ],
+    "mergeName": "Frankston Railway Station",
+    "services": [],
+    "screenServices": []
+  },
+  {
+    "stopName": "Hastings Railway Station",
+    "suburb": [
+      "Hastings"
+    ],
+    "cleanSuburbs": [
+      "hastings"
+    ],
+    "bays": [
+      {
+        "originalName": "Hastings Railway Station",
+        "fullStopName": "Hastings Railway Station",
+        "stopGTFSID": "vic:rail:HST",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.18597988,
+            -38.30565853
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Hastings",
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Hastings Station",
+        "fullStopName": "Hastings Railway Station",
+        "stopGTFSID": "3580",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.18598235,
+            -38.30555944
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Hastings",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:HST",
+        "platform": "1"
+      },
+      {
+        "originalName": "Hastings Station/High St",
+        "fullStopName": "Hastings Railway Station/High Street",
+        "stopGTFSID": "13154",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.1869446,
+            -38.30779112
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Hastings",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Hastings Station/High St",
+        "fullStopName": "Hastings Railway Station/High Street",
+        "stopGTFSID": "13264",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.18684485,
+            -38.30766342
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Hastings",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Hastings Railway Station",
+    "services": [],
+    "screenServices": []
+  },
+  {
+    "stopName": "Leawarra Railway Station",
+    "suburb": [
+      "Frankston"
+    ],
+    "cleanSuburbs": [
+      "frankston"
+    ],
+    "bays": [
+      {
+        "originalName": "Leawarra Railway Station",
+        "fullStopName": "Leawarra Railway Station",
+        "stopGTFSID": "vic:rail:LWA",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.13953396,
+            -38.152034
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Leawarra Station",
+        "fullStopName": "Leawarra Railway Station",
+        "stopGTFSID": "7878",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.13960172,
+            -38.15206211
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Frankston",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:LWA",
+        "platform": "1"
+      }
+    ],
+    "mergeName": "Leawarra Railway Station",
+    "services": [],
+    "screenServices": []
+  },
+  {
+    "stopName": "Morradoo Railway Station",
+    "suburb": [
+      "Crib Point"
+    ],
+    "cleanSuburbs": [
+      "crib-point"
+    ],
+    "bays": [
+      {
+        "originalName": "Morradoo Railway Station",
+        "fullStopName": "Morradoo Railway Station",
+        "stopGTFSID": "vic:rail:MRO",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.18960249,
+            -38.35403334
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Crib Point",
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Morradoo Station",
+        "fullStopName": "Morradoo Railway Station",
+        "stopGTFSID": "2155",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.18948092,
+            -38.35386024
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Crib Point",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:MRO",
+        "platform": "1"
+      },
+      {
+        "originalName": "Morradoo Station/Disney St",
+        "fullStopName": "Morradoo Railway Station/Disney Street",
+        "stopGTFSID": "13163",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.19011704,
+            -38.35359072
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Crib Point",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Morradoo Station/Disney St",
+        "fullStopName": "Morradoo Railway Station/Disney Street",
+        "stopGTFSID": "13252",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.19029177,
+            -38.35346726
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Crib Point",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Morradoo Railway Station",
+    "services": [],
+    "screenServices": []
+  },
+  {
+    "stopName": "Somerville Railway Station",
+    "suburb": [
+      "Somerville"
+    ],
+    "cleanSuburbs": [
+      "somerville"
+    ],
+    "bays": [
+      {
+        "originalName": "Somerville Railway Station",
+        "fullStopName": "Somerville Railway Station",
+        "stopGTFSID": "vic:rail:SVE",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.17624492,
+            -38.22534196
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Somerville",
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Somerville Station",
+        "fullStopName": "Somerville Railway Station",
+        "stopGTFSID": "5082",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.1763226,
+            -38.22543328
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Somerville",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:SVE",
+        "platform": "1"
+      },
+      {
+        "originalName": "Somerville Station/Frankston-Flinders Rd",
+        "fullStopName": "Somerville Railway Station/Frankston-Flinders Road",
+        "stopGTFSID": "40274",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.17605962,
+            -38.22452805
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Somerville",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Somerville Station/Frankston-Flinders Rd",
+        "fullStopName": "Somerville Railway Station/Frankston-Flinders Road",
+        "stopGTFSID": "40282",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.17724755,
+            -38.22544765
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Somerville",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Somerville Railway Station",
+    "services": [],
+    "screenServices": []
+  },
+  {
+    "stopName": "Stony Point Railway Station",
+    "suburb": [
+      "Crib Point"
+    ],
+    "cleanSuburbs": [
+      "crib-point"
+    ],
+    "bays": [
+      {
+        "originalName": "Stony Point Railway Station",
+        "fullStopName": "Stony Point Railway Station",
+        "stopGTFSID": "vic:rail:STY",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.22183746,
+            -38.37423454
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Crib Point",
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Stony Point Station",
+        "fullStopName": "Stony Point Railway Station",
+        "stopGTFSID": "88",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.22133817,
+            -38.37405575
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Crib Point",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:STY",
+        "platform": "1"
+      }
+    ],
+    "mergeName": "Stony Point Railway Station",
+    "services": [],
+    "screenServices": []
+  },
+  {
+    "stopName": "Tyabb Railway Station",
+    "suburb": [
+      "Tyabb"
+    ],
+    "cleanSuburbs": [
+      "tyabb"
+    ],
+    "bays": [
+      {
+        "originalName": "Tyabb Railway Station",
+        "fullStopName": "Tyabb Railway Station",
+        "stopGTFSID": "vic:rail:TAB",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.18640071,
+            -38.259815
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Tyabb",
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Tyabb Station",
+        "fullStopName": "Tyabb Railway Station",
+        "stopGTFSID": "4318",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.18623113,
+            -38.25974029
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Tyabb",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:TAB",
+        "platform": "1"
+      }
+    ],
+    "mergeName": "Tyabb Railway Station",
+    "services": [],
+    "screenServices": []
+  }
 ]
