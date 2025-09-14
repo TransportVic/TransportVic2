@@ -8,6 +8,7 @@ import td8403Live from './sample-data/td8403-live.mjs'
 import ephTrips from '../../metro/utils/sample-data/eph-trips.mjs'
 import td8409GTFSR from './sample-data/td8409-gtfsr.mjs'
 import tdMismatch from './sample-data/td-mismatch.mjs'
+import badPlatforms from './sample-data/bad-platforms.mjs'
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
@@ -87,5 +88,27 @@ describe('The V/Line GTFS-R updater', () => {
 
     let tripUpdates = await getUpcomingTrips(database, () => tdMismatch)
     expect(tripUpdates[0].runID).to.equal('8417')
+  })
+
+  it('Handles bad platforms at Bunyip and Longwarry', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let timetables = database.getCollection('live timetables')
+    await stops.createDocuments(clone(pkmStopsDB))
+    await stops.createDocuments(clone(trnStops))
+    await timetables.createDocument(clone(td8403Live))
+
+    let tripUpdates = await getUpcomingTrips(database, () => badPlatforms)
+    expect(tripUpdates[0].stops[0].stopName).to.equal('Bunyip Railway Station')
+    expect(tripUpdates[0].stops[0].platform).to.equal('2')
+    expect(tripUpdates[0].stops[1].stopName).to.equal('Longwarry Railway Station')
+    expect(tripUpdates[0].stops[1].platform).to.equal('2')
+    expect(tripUpdates[0].stops[2].stopName).to.equal('Drouin Railway Station')
+
+    expect(tripUpdates[1].stops[0].stopName).to.equal('Drouin Railway Station')
+    expect(tripUpdates[1].stops[1].stopName).to.equal('Longwarry Railway Station')
+    expect(tripUpdates[1].stops[1].platform).to.equal('1')
+    expect(tripUpdates[1].stops[1].stopName).to.equal('Bunyip Railway Station')
+    expect(tripUpdates[1].stops[1].platform).to.equal('1')
   })
 })
