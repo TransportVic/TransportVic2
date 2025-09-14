@@ -87,4 +87,32 @@ describe('The GPS tracker', () => {
     expect(arrDelay).to.be.greaterThan(10) // Seconds
     expect(arrDelay).to.be.lessThanOrEqual(90) // Seconds
   })
+
+  it.only('Updates the trip time estimates', async () => {
+    let database = new LokiDatabaseConnection()
+    let timetables = await database.createCollection('live timetables')
+    let routes = await database.createCollection('routes')
+    await timetables.createDocument(clone(td8507Live))
+    await routes.createDocument(clone(styRoute))
+
+    const positionData = {
+      location: {
+        type: 'Point',
+        coordinates: [145.173440406409, -38.22145767839698]
+      },
+      updateTime: utils.parseTime('2025-09-14T03:20:45.000Z'), // Approx 1min late
+      runID: '8507',
+      operator: 'Metro Trains Melbourne'
+    }
+    await updateTrips(() => [positionData], () => ['Metro Trains Melbourne'])
+
+    const td8507 = await timetables.findDocument({ runID: '8507' })
+    expect(td8507.stopTimings[3].stopName).to.equal('Somerville Railway Station')
+    expect(+new Date(td8507.stopTimings[3].estimatedDepartureTime)).to.be.greaterThanOrEqual(+new Date('2025-09-14T03:21:00.000Z'))
+    expect(+new Date(td8507.stopTimings[3].estimatedDepartureTime)).to.be.lessThanOrEqual(+new Date('2025-09-14T03:21:20.000Z'))
+
+    expect(td8507.stopTimings[4].stopName).to.equal('Tyabb Railway Station')
+    expect(+new Date(td8507.stopTimings[4].estimatedDepartureTime)).to.be.greaterThanOrEqual(+new Date('2025-09-14T03:25:00.000Z'))
+    expect(+new Date(td8507.stopTimings[4].estimatedDepartureTime)).to.be.lessThanOrEqual(+new Date('2025-09-14T03:25:20.000Z'))
+  })
 })
