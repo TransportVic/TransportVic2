@@ -26,9 +26,11 @@ export async function getTripData(position, db) {
   const { dist: distanceToPath, location: pathDistance } = nearestPointOnPath.properties
   if (distanceToPath > 50) return null
 
-  const nextStop = tripData.stopTimings.find(stop => parseFloat(stop.stopDistance) > pathDistance)
+  const nextStopIndex = tripData.stopTimings.findIndex(stop => parseFloat(stop.stopDistance) > pathDistance)
+  const nextStop = tripData.stopTimings[nextStopIndex]
+  const prevStop = tripData.stopTimings[nextStopIndex - 1]
 
   return {
-    nextStop, distance: parseFloat(nextStop.stopDistance) - pathDistance
+    nextStop, prevStop, distance: parseFloat(nextStop.stopDistance) - pathDistance
   }
 }

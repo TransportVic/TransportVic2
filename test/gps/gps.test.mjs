@@ -43,7 +43,7 @@ describe('The GPS tracker', () => {
     await timetables.createDocument(clone(td8507Live))
     await routes.createDocument(clone(styRoute))
 
-    const { nextStop, distance } = await getTripData({
+    const { nextStop, prevStop, distance } = await getTripData({
       location: {
         type: 'Point',
         coordinates: [145.173440406409, -38.22145767839698]
@@ -53,6 +53,8 @@ describe('The GPS tracker', () => {
       operator: 'Metro Trains Melbourne'
     }, database)
 
+    expect(prevStop).to.exist
+    expect(prevStop.stopName).to.equal('Baxter Railway Station')
     expect(nextStop).to.exist
     expect(nextStop.stopName).to.equal('Somerville Railway Station')
 
