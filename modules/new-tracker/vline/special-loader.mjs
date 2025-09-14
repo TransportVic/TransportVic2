@@ -59,5 +59,8 @@ async function getStation(station, code) {
 }
 
 await getStation('Traralgon', 'TRN')
+await getStation('Ballarat', 'BAT')
+await getStation('Bacchus Marsh', 'BAH')
 
 mongoDB.close()
+process.exit(0)
