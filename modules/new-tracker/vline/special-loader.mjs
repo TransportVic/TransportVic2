@@ -1,0 +1,63 @@
+import { MongoDatabaseConnection } from '@transportme/database'
+import config from '../../../config.json' with { type: 'json' }
+import utils from '../../../utils.js'
+import urls from '../../../urls.json' with { type: 'json' }
+import VLineTripUpdater from '../../vline/trip-updater.mjs'
+
+let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+await mongoDB.connect()
+const tt = mongoDB.getCollection('live timetables')
+
+const tokP = await utils.request(urls.vlineToken)
+const tok = tokP.match(/jwtToken = '([^']+)'/)[1]
+
+async function getDeps(code, jt) {
+  const wsurl = urls.wsapi.format(code, jt)
+  const ws = new WebSocket(wsurl)
+  return await new Promise(resolve => {
+    ws.addEventListener('message', msg => {
+      const data = JSON.parse(msg.data.slice(0, -1))
+      if (data.type === 1) {
+        const depData = JSON.parse(data.arguments[0])
+        resolve(depData)
+        ws.close()
+      }
+    })
+    ws.addEventListener('open', () => {
+      ws.send('{"protocol":"json","version":1}')
+    })
+  })
+}
+
+async function getStation(station, code) {
+  const departures = await getDeps(code, tok)
+
+  for (let dep of departures.departureServices.filter(z=>z.platformLabel=='Platform')) {
+    const schDepTime = utils.now().startOf('day').add(utils.getMinutesPastMidnightFromHHMM(dep.departureTime), 'minutes')
+    const trip = await tt.findDocument({
+      mode: 'regional train',
+      stopTimings: {
+        $elemMatch: {
+          stopName: station + ' Railway Station',
+          scheduledDepartureTime: schDepTime.toISOString()
+        }
+      }
+    })
+    if (!trip) continue
+    const tripData = {
+      operationDays: trip.operationDays,
+      runID: trip.runID,
+      routeGTFSID: trip.routeGTFSID,
+      stops: [{
+        stopName: station + ' Railway Station',
+        platform: dep.platform || null,
+      }]
+    }
+
+    await VLineTripUpdater.updateTrip(mongoDB, tripData, { skipStopCancellation: true, dataSource: 'vline-secret-page' })
+  }
+}
+
+await getStation('Traralgon', 'TRN')
+
+mongoDB.close()
