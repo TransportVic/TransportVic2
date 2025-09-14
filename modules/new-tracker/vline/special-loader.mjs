@@ -36,22 +36,33 @@ async function getStation(station, code) {
     const schDepTime = utils.now().startOf('day').add(utils.getMinutesPastMidnightFromHHMM(dep.departureTime), 'minutes')
     const trip = await tt.findDocument({
       mode: 'regional train',
-      stopTimings: {
-        $elemMatch: {
-          stopName: station + ' Railway Station',
-          scheduledDepartureTime: {
-            $in: [
-              schDepTime.clone().toISOString(),
-              schDepTime.clone().add(1, 'minute').toISOString(),
-              schDepTime.clone().add(2, 'minute').toISOString(),
-              schDepTime.clone().add(3, 'minute').toISOString(),
-              schDepTime.clone().add(-1, 'minute').toISOString(),
-              schDepTime.clone().add(-2, 'minute').toISOString(),
-              schDepTime.clone().add(-3, 'minute').toISOString(),
-            ]
+      $and: [{
+        stopTimings: {
+          $elemMatch: {
+            stopName: station + ' Railway Station',
+            scheduledDepartureTime: {
+              $in: [
+                schDepTime.clone().toISOString(),
+                schDepTime.clone().add(1, 'minute').toISOString(),
+                schDepTime.clone().add(2, 'minute').toISOString(),
+                schDepTime.clone().add(3, 'minute').toISOString(),
+                schDepTime.clone().add(-1, 'minute').toISOString(),
+                schDepTime.clone().add(-2, 'minute').toISOString(),
+                schDepTime.clone().add(-3, 'minute').toISOString(),
+              ]
+            }
           }
         }
-      }
+      }, {
+        stopTimings: {
+          $elemMatch: {
+            stopName: dep.destination + ' Railway Station',
+            departureTimeMinutes: {
+              $gte: utils.getMinutesPastMidnightFromHHMM(dep.departureTime)
+            }
+          }
+        }
+      }]
     })
 
     if (!trip) continue
