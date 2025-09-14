@@ -5,6 +5,7 @@ import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
 import { getGPSPositions } from './get-positions.mjs'
 import VLineTripUpdater from '../../vline/trip-updater.mjs'
+import _ from '../../../init-loggers.mjs'
 
 export async function updateTrips(getPositions = () => [], keepOperators = () => [], db) {
   const trips = await getRelevantTrips(getPositions, keepOperators)
@@ -91,8 +92,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
 
   const { skippedTrips, updatedTrips } = await updateTrips(getGPSPositions, () => config.keepOperators, mongoDB)
   
-  console.log('> GPS Updater: Updated positions for', updatedTrips.map(trip => trip.runID))
-  console.log('> GPS Updater: Could not update positions for', skippedTrips.map(trip => trip.runID))
+  global.loggers.trackers.vline.log('> GPS Updater: Updated positions for', updatedTrips.map(trip => trip.runID))
+  global.loggers.trackers.vline.log('> GPS Updater: Could not update positions for', skippedTrips.map(trip => trip.runID))
 
   process.exit(0)
 }
