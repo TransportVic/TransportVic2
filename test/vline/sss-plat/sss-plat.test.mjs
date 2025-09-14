@@ -9,12 +9,17 @@ import td8866 from './sample-data/td8866.json' with { type: 'json' }
 import td8741GTFS from '../op-tt/sample-data/td8741-gtfs.json' with { type: 'json' }
 import { fetchTrips, getPlatformUpdates } from '../../../modules/new-tracker/vline/southern-cross-platform.mjs'
 import { convertToLive } from '../../../modules/departures/sch-to-live.js'
+import td8431Live from '../gtfsr/sample-data/td8431-live.mjs'
+import trnStops from '../gtfsr/sample-data/trn-stops.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const sssPlatformsArr = (await fs.readFile(path.join(__dirname, 'sample-data', 'sss-plat-8866-arr.xml'))).toString()
 const sssPlatformsDep = (await fs.readFile(path.join(__dirname, 'sample-data', 'sss-plat-8741-dep.xml'))).toString()
+
+const sssPlatform15 = (await fs.readFile(path.join(__dirname, 'sample-data', 'sss-plat-8431-15a.xml'))).toString()
+const emptyPlatform = (await fs.readFile(path.join(__dirname, '..', 'op-tt', 'sample-data', 'vline-trips-empty.xml'))).toString()
 
 const clone = o => JSON.parse(JSON.stringify(o))
 const td8741 = convertToLive(clone(td8741GTFS), '20250718')
@@ -86,5 +91,25 @@ describe('The SSS Platform updater', () => {
     expect(td8741Trip.stopTimings[td8741Trip.stopTimings.length - 1].stopName).to.equal('Waurn Ponds Railway Station')
     expect(td8741Trip.stopTimings[td8741Trip.stopTimings.length - 1].cancelled).to.be.false
     expect(td8741Trip.stopTimings[td8741Trip.stopTimings.length - 1].platform).to.not.exist
+  })
+
+  it.only('Does not unset platform 15/16A/B at SSS if a more specific platform is available', async () => {
+    let database = new LokiDatabaseConnection()
+    let liveTimetables = database.getCollection('live timetables')
+    let stops = database.getCollection('stops')
+    await liveTimetables.createDocument(clone(td8431Live))
+    await stops.createDocuments(clone(trnStops))
+    await stops.createDocuments(clone(allStops))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ sssPlatform15, emptyPlatform ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await fetchTrips('20250914', database, ptvAPI)
+
+    let td8431Trip = await liveTimetables.findDocument({ runID: '8431' })
+    expect(td8431Trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
+    expect(td8431Trip.stopTimings[0].platform).to.equal('15A')
   })
 })

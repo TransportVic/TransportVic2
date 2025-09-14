@@ -93,10 +93,8 @@ describe('The V/Line GTFS-R updater', () => {
   it('Handles bad platforms at Bunyip and Longwarry', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
-    let timetables = database.getCollection('live timetables')
     await stops.createDocuments(clone(pkmStopsDB))
     await stops.createDocuments(clone(trnStops))
-    await timetables.createDocument(clone(td8403Live))
 
     let tripUpdates = await getUpcomingTrips(database, () => badPlatforms)
     expect(tripUpdates[0].stops[0].stopName).to.equal('Bunyip Railway Station')
