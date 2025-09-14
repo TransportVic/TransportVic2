@@ -430,7 +430,14 @@ let vlineStops = (await mongoDB.getCollection('stops').findDocuments({
 }).toArray()).reduce((acc, e) => ({
   ...acc,
   [e.stopName.slice(0, -16)]: e.bays.find(b => b.mode === 'regional train' && b.stopType === 'station')
-}), {})
+}), {
+  'Ballarat': {
+    fullStopName: 'Ballarat Railway Station',
+    stopNumber: null,
+    suburb: 'Ballarat Central',
+    stopGTFSID: 'vic:rail:BAT-V'
+  }
+})
 
 const vlineRoutes = await mongoDB.getCollection('routes').findDocuments({
   mode: 'regional train'
@@ -444,6 +451,34 @@ vlineRoutes[1].directions[0].stops.splice(-3, 0, {
 })
 
 vlineRoutes[1].directions[1].stops.splice(3, 0, {
+  stopName: 'Ballarat Railway Station',
+  stopNumber: null,
+  suburb: 'Ballarat Central',
+  stopGTFSID: 'vic:rail:BAT-V'
+})
+
+vlineRoutes[2].directions[0].stops.splice(-1, 0, {
+  stopName: 'Ballarat Railway Station',
+  stopNumber: null,
+  suburb: 'Ballarat Central',
+  stopGTFSID: 'vic:rail:BAT-V'
+})
+
+vlineRoutes[2].directions[1].stops.splice(1, 0, {
+  stopName: 'Ballarat Railway Station',
+  stopNumber: null,
+  suburb: 'Ballarat Central',
+  stopGTFSID: 'vic:rail:BAT-V'
+})
+
+vlineRoutes[7].directions[0].stops.splice(-4, 0, {
+  stopName: 'Ballarat Railway Station',
+  stopNumber: null,
+  suburb: 'Ballarat Central',
+  stopGTFSID: 'vic:rail:BAT-V'
+})
+
+vlineRoutes[7].directions[1].stops.splice(4, 0, {
   stopName: 'Ballarat Railway Station',
   stopNumber: null,
   suburb: 'Ballarat Central',

@@ -39,10 +39,21 @@ async function getStation(station, code) {
       stopTimings: {
         $elemMatch: {
           stopName: station + ' Railway Station',
-          scheduledDepartureTime: schDepTime.toISOString()
+          scheduledDepartureTime: {
+            $in: [
+              schDepTime.clone().toISOString(),
+              schDepTime.clone().add(1, 'minute').toISOString(),
+              schDepTime.clone().add(2, 'minute').toISOString(),
+              schDepTime.clone().add(3, 'minute').toISOString(),
+              schDepTime.clone().add(-1, 'minute').toISOString(),
+              schDepTime.clone().add(-2, 'minute').toISOString(),
+              schDepTime.clone().add(-3, 'minute').toISOString(),
+            ]
+          }
         }
       }
     })
+
     if (!trip) continue
     const tripData = {
       operationDays: trip.operationDays,
@@ -58,9 +69,9 @@ async function getStation(station, code) {
   }
 }
 
-await getStation('Traralgon', 'TRN')
+// await getStation('Traralgon', 'TRN')
 await getStation('Ballarat', 'BAT')
-await getStation('Bacchus Marsh', 'BAH')
+// await getStation('Bacchus Marsh', 'BAH')
 
 mongoDB.close()
 process.exit(0)
