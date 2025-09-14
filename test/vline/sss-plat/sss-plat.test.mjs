@@ -93,7 +93,7 @@ describe('The SSS Platform updater', () => {
     expect(td8741Trip.stopTimings[td8741Trip.stopTimings.length - 1].platform).to.not.exist
   })
 
-  it.only('Does not unset platform 15/16A/B at SSS if a more specific platform is available', async () => {
+  it('Does not unset platform 15/16A/B at SSS if a more specific platform is available', async () => {
     let database = new LokiDatabaseConnection()
     let liveTimetables = database.getCollection('live timetables')
     let stops = database.getCollection('stops')

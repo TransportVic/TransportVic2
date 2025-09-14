@@ -33,6 +33,9 @@ export async function getPlatformUpdates(operationDay, database, ptvAPI) {
       }]
     }
 
+    let tripSSSStop = tripData.stopTimings.find(stop => stop.stopName === 'Southern Cross Railway Station')
+    if (tripSSSStop && tripSSSStop.platform && tripSSSStop.platform.match(/^1[56][AB]$/) && trip.platform.match(/^1[56]$/)) updateData.stops[0].platform = null
+
     if (trip.estArrivalTime) updateData.stops[0].estimatedArrivalTime = new Date(trip.estArrivalTime)
     output.push(updateData)
   }
