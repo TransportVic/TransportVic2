@@ -1,6 +1,6 @@
 import { LokiDatabaseConnection } from '@transportme/database'
 import { expect } from 'chai'
-import { getRelevantTrips, getTripData } from '../../modules/new-tracker/gps/update-trips.mjs'
+import { getEstimatedArrivalTime, getRelevantTrips, getTripData } from '../../modules/new-tracker/gps/update-trips.mjs'
 import utils from '../../utils.js'
 import td8507Live from './sample-data/td8507-live.mjs'
 import styRoute from './sample-data/sty-route.mjs'
@@ -61,5 +61,29 @@ describe('The GPS tracker', () => {
     // Should be around 500m, give or take a bit
     expect(distance).to.be.greaterThanOrEqual(490)
     expect(distance).to.be.lessThanOrEqual(510)
+  })
+
+  it('Gets the estimated arrival time and delay at the next stop', async () => {
+    let database = new LokiDatabaseConnection()
+    let timetables = await database.createCollection('live timetables')
+    let routes = await database.createCollection('routes')
+    await timetables.createDocument(clone(td8507Live))
+    await routes.createDocument(clone(styRoute))
+
+    const tripData = await getTripData({
+      location: {
+        type: 'Point',
+        coordinates: [145.173440406409, -38.22145767839698]
+      },
+      updateTime: utils.parseTime('2025-09-14T03:19:50.000Z'),
+      runID: '8507',
+      operator: 'Metro Trains Melbourne'
+    }, database)
+
+    // Has around 500m to travel, will be late
+    const { estimatedArrivalTime, arrDelay } = getEstimatedArrivalTime(tripData)
+    expect(estimatedArrivalTime).to.be.greaterThan('2025-09-14T03:20:00.000Z')
+    expect(arrDelay).to.be.greaterThan(10) // Seconds
+    expect(arrDelay).to.be.lessThanOrEqual(90) // Seconds
   })
 })

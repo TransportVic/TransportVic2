@@ -2,6 +2,8 @@ import turf from '@turf/turf'
 import utils from '../../../utils.js'
 
 export async function updateTrips(getPositions = () => [], keepOperators = () => []) {
+  const trips = await getRelevantTrips(getPositions, keepOperators)
+
 }
 
 export async function getRelevantTrips(getPositions = () => [], keepOperators = () => []) {
@@ -33,4 +35,8 @@ export async function getTripData(position, db) {
   return {
     nextStop, prevStop, distance: parseFloat(nextStop.stopDistance) - pathDistance
   }
+}
+
+export function getEstimatedArrivalTime({ nextStop, prevStop, distance }) {
+  
 }
