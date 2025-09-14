@@ -1,6 +1,7 @@
 import { LokiDatabaseConnection } from '@transportme/database'
 import { expect } from 'chai'
 import { getRelevantTrips } from '../../modules/new-tracker/gps/update-trips.mjs'
+import utils from '../../utils.js'
 
 describe('The GPS tracker', () => {
   it('Filters only relevant trips', async () => {
@@ -28,5 +29,6 @@ describe('The GPS tracker', () => {
     }], () => ['CDC Melbourne'])
 
     expect(trips.length).to.equal(1)
+    expect(trips[0].operator).to.equal('CDC Melbourne')
   })
 })
