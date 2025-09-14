@@ -124,6 +124,22 @@ export async function downloadTripPattern(operationDay, vlineTrip, nspTrip, db) 
       'directions.stops.stopName': bestDestination.stopName
     }]
   })
+  if ([bestOrigin.stopName, bestDestination.stopName].includes('Maryborough Railway Station')) matchingRoute = await routes.findDocument({
+    mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
+    routeGTFSID: '1-MBY'
+  })
+  if ([bestOrigin.stopName, bestDestination.stopName].includes('Ararat Railway Station')) matchingRoute = await routes.findDocument({
+    mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
+    routeGTFSID: '1-ART'
+  })
+  if ([bestOrigin.stopName, bestDestination.stopName].includes('Ballarat Railway Station')) matchingRoute = await routes.findDocument({
+    mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
+    routeGTFSID: '1-BAT'
+  })
+  if ([bestOrigin.stopName, bestDestination.stopName].includes('Wendouree Railway Station')) matchingRoute = await routes.findDocument({
+    mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
+    routeGTFSID: '1-BAT'
+  })
 
   // No route matched the trip
   if (!matchingRoute) return null
