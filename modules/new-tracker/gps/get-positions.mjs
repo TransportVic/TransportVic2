@@ -13,5 +13,3 @@ export async function getGPSPositions() {
     operator: svc.cmp
   }))
 }
-
-console.log(JSON.stringify(await getGPSPositions(), null, 2))
