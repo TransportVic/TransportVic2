@@ -788,4 +788,24 @@ describe('The LiveTimetable schema', () => {
       variant: 'Mixed'
     })
   })
+
+  it('Maintains stop distances as per the GTFS data', () => {
+    let timetable = LiveTimetable.fromDatabase(ccl0735)
+
+    expect(timetable.mode).to.equal('metro train')
+    expect(timetable.routeGTFSID).to.equal('2-CCL')
+
+    expect(timetable.stops[0].stopName).to.equal('Flinders Street Railway Station')
+    expect(timetable.stops[0].stopDistance).to.equal(0.00)
+
+    expect(timetable.stops[1].stopName).to.equal('Southern Cross Railway Station')
+    expect(timetable.stops[1].stopDistance).to.equal(1470.67)
+
+    let dbObj = timetable.toDatabase()
+    expect(dbObj.stopTimings[0].stopName).to.equal('Flinders Street Railway Station')
+    expect(dbObj.stopTimings[0].stopDistance).to.equal(0.00)
+
+    expect(dbObj.stopTimings[1].stopName).to.equal('Southern Cross Railway Station')
+    expect(dbObj.stopTimings[1].stopDistance).to.equal(1470.67)
+  })
 })

@@ -25,7 +25,9 @@ class TimetableStop {
   #track
   #express
 
-  constructor(operationDayMoment, stopName, suburb, stopNumber, stopGTFSID, scheduledDepartureTime, estimatedDepartureTime, { platform, cancelled, additional, allowPickup, allowDropoff, track, express }) {
+  #stopDistance
+
+  constructor(operationDayMoment, stopName, suburb, stopNumber, stopGTFSID, scheduledDepartureTime, estimatedDepartureTime, { platform, cancelled, additional, allowPickup, allowDropoff, track, express, stopDistance }) {
     this.#operationDay = operationDayMoment
     this.#stopName = stopName
     this.#suburb = suburb
@@ -34,6 +36,7 @@ class TimetableStop {
     this.scheduledDepartureTime = scheduledDepartureTime
     if (estimatedDepartureTime) this.estimatedDepartureTime = estimatedDepartureTime
 
+    if (typeof stopDistance !== 'undefined') this.#stopDistance = stopDistance
     if (platform) this.#platform = platform
     if (cancelled) this.#cancelled = cancelled
     if (additional) this.#additional = additional
@@ -51,6 +54,7 @@ class TimetableStop {
   get platform() { return this.#platform }
   get cancelled() { return this.#cancelled }
   get additional() { return this.#additional }
+  get stopDistance() { return this.#stopDistance }
 
   get track() { return this.#track || null }
   get express() { return this.#express || false }
@@ -107,11 +111,12 @@ class TimetableStop {
       stopConditions: {
         pickup: this.#allowPickup ? 0 : 1,
         dropoff: this.allowDropoff ? 0 : 1
-      }
+      },
     }
 
     if (typeof this.#track !== 'undefined') returnData.track = this.#track
     if (typeof this.#express !== 'undefined') returnData.express = this.#express
+    if (typeof this.#stopDistance !== 'undefined') returnData.stopDistance = this.#stopDistance
 
     return returnData
   }
@@ -375,7 +380,8 @@ module.exports = class LiveTimetable {
           allowPickup: stopData.stopConditions ? stopData.stopConditions.pickup === 0 : true,
           allowDropoff: stopData.stopConditions ? stopData.stopConditions.dropoff === 0 : true,
           track: stopData.track,
-          express: stopData.express
+          express: stopData.express,
+          stopDistance: typeof stopData.stopDistance !== 'undefined' ? parseFloat(stopData.stopDistance) : undefined
         }
       )
 
