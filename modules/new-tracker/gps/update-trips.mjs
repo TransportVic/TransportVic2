@@ -37,6 +37,16 @@ export async function getTripData(position, db) {
   }
 }
 
-export function getEstimatedArrivalTime({ nextStop, prevStop, distance }) {
-  
+export function getEstimatedArrivalTime(position, { nextStop, prevStop, distance }) {
+  const travelTime = nextStop.arrivalTimeMinutes - prevStop.departureTimeMinutes
+  const distanceTravelled = parseFloat(nextStop.stopDistance) - parseFloat(prevStop.stopDistance)
+  const minutesPerMetre = travelTime / distanceTravelled
+
+  const remainingTravelTime = distance * minutesPerMetre
+  const estimatedArrivalTime = position.updateTime.clone().add(remainingTravelTime, 'minutes')
+  const arrDelay = estimatedArrivalTime.diff(utils.parseTime(nextStop.scheduledDepartureTime), 'seconds')
+
+  return {
+    estimatedArrivalTime, arrDelay
+  }
 }
