@@ -6,3 +6,7 @@ export async function getRelevantTrips(getPositions = () => [], keepOperators = 
   const operators = keepOperators()
   return positions.filter(pos => operators.includes(pos.operator))
 }
+
+export async function getTripData(position, db) {
+  
+}
