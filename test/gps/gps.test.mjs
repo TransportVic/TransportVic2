@@ -51,9 +51,10 @@ describe('The GPS tracker', () => {
       updateTime: utils.parseTime('2025-09-14T03:19:00.000Z'),
       runID: '8507',
       operator: 'Metro Trains Melbourne'
-    })
+    }, database)
+
     expect(nextStop).to.exist
-    expect(nextStop.fullStopName).to.equal('Somerville Railway Station')
+    expect(nextStop.stopName).to.equal('Somerville Railway Station')
 
     // Should be around 500m, give or take a bit
     expect(distance).to.be.greaterThanOrEqual(490)
