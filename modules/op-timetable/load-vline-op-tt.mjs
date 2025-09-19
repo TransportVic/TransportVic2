@@ -205,7 +205,6 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
   let newTrips = []
 
   let tripsNeedingFetch = []
-  let missingTrips = []
 
   for (let vlineTrip of departures.concat(arrivals)) {
     let existingTrip = await VLineTripUpdater.getTripByTDN(liveTimetables, vlineTrip.tdn, opDayFormat)
@@ -240,23 +239,22 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
     tripsNeedingFetch.push({ opDayFormat, vlineTrip, nspTrip })
   }
 
-  if (tripsNeedingFetch.length <= 15) {
-    for (let { opDayFormat, vlineTrip, nspTrip } of tripsNeedingFetch) {
-      let pattern = await downloadTripPattern(opDayFormat, vlineTrip, nspTrip, db)
-      if (!pattern) {
-        missingTrips.push({ vlineTrip })
-        continue
-      }
-
-      outputTrips.push({
-        replaceOne: {
-          filter: pattern.getDBKey(),
-          replacement: pattern.toDatabase(),
-          upsert: true
-        }
-      })
+  let missingTrips = tripsNeedingFetch.slice(15)
+  for (let { opDayFormat, vlineTrip, nspTrip } of tripsNeedingFetch.slice(0, 15)) {
+    let pattern = await downloadTripPattern(opDayFormat, vlineTrip, nspTrip, db)
+    if (!pattern) {
+      missingTrips.push({ vlineTrip })
+      continue
     }
-  } else missingTrips = tripsNeedingFetch
+
+    outputTrips.push({
+      replaceOne: {
+        filter: pattern.getDBKey(),
+        replacement: pattern.toDatabase(),
+        upsert: true
+      }
+    })
+  }
 
   if (outputTrips.length) await liveTimetables.bulkWrite(outputTrips)
   await Promise.all(newTrips.map(({ liveTrip, vlineTrip }) => updateExistingTrip(db, liveTrip, vlineTrip)))
