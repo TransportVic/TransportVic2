@@ -1,0 +1,940 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head id="head"><title>
+	V/Line - Regional public transport for Victoria - Footy services
+</title><meta name="description" content="Leave the car behind and catch a V/Line service to get you to and from the game." /> 
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" /> 
+<meta http-equiv="pragma" content="no-cache" /> 
+<meta http-equiv="content-style-type" content="text/css" /> 
+<meta http-equiv="content-script-type" content="text/javascript" /> 
+<meta name="keywords" content="vline, v/line, regional, transport, rail, coach, victoriaAFL, footy, football, geelong cats, carlton, western bulldogs, sydney swans, st kilda, brisbane lions, greater western sydney, gold coast suns, collingwood, essendon, melbourne demons, fremantle, port adelaide, adelaide, Richmond, Hawthorn, North Melbourne, west coast eagles" /> 
+<script src="/CMSPages/GetResource.ashx?scriptfile=~/CMSScripts/Custom/VLine/jquery-3.5.1.min.js"></script>
+<script src="/CMSPages/GetResource.ashx?scriptfile=~/CMSScripts/Custom/VLine/jquery-migrate-3.4.1.min.js"></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MTL181WBBE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MTL181WBBE');
+</script>
+
+<!-- Hotjar Tracking Code for https://vline.com.au --> 
+<script>     
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:1943093,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv='); 
+</script><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+<meta name="google-site-verification" content="WP08Jklb23_k2xjgNixAJt1sF_nOuUjtGsLjcqGlbCY" />
+<meta name="msvalidate.01" content="8837237409E2B50BA2C278DC30304D54" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="V/Line - Regional public transport for Victoria" />
+<meta property="og:url" content="https://www.vline.com.au/Timetables/Footy-services" />
+<meta property="og:title" content="Catch V/Line to the footy" />
+<meta property="og:description" content="We’re running additional services on some lines throughout the 2024 AFL season to get you to and from games." />
+<meta property="og:image" content="https://www.vline.com.au/getattachment/Timetables/AFL-Additional-Services/Footy_FB-Share.jpg?lang=en-AU&width=1200&height=630&ext=.jpg" />
+
+<!-- Force Kentico to added style and javascript files…-->
+<link type="text/css" rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,700" />
+<link type="text/css" rel="stylesheet" href="/CMSPages/GetResource.ashx?stylesheetfile=~/App_Themes/V_LineStyle/css/bootstrap.min.css&t=20201215" />
+<link type="text/css" rel="stylesheet" href="/CMSPages/GetResource.ashx?stylesheetfile=~/App_Themes/V_LineStyle/css/bootstrap-theme.min.css&t=20201215" />
+<link type="text/css" rel="stylesheet" href="/CMSPages/GetResource.ashx?stylesheetfile=~/App_Themes/V_LineStyle/css/font-awesome.min.css" />
+<link type="text/css" rel="stylesheet" href="/CMSPages/GetResource.ashx?stylesheetfile=~/App_Themes/V_LineStyle/css/vline-glyphicons.css&t=20191121" />
+<link type="text/css" rel="stylesheet" href="/CMSPages/GetResource.ashx?stylesheetfile=~/App_Themes/V_LineStyle/css/vline.bootstrap.css&t=20240509" />
+<link type="text/css" rel="stylesheet" href="/CMSPages/GetResource.ashx?stylesheetfile=~/App_Themes/V_LineStyle/css/owl.carousel.css" />
+<link type="text/css" rel="stylesheet" href="/CMSPages/GetResource.ashx?stylesheetfile=~/App_Themes/V_LineStyle/css/owl.theme.css" />
+<link type="text/css" rel="stylesheet" href="/CMSPages/GetResource.ashx?stylesheetfile=~/App_Themes/V_LineStyle/css/vline-typography.css&t=20191112" />
+<link type="text/css" rel="stylesheet" href="/CMSPages/GetResource.ashx?stylesheetfile=~/App_Themes/V_LineStyle/css/vline-site-common.css&t=20220705" />
+<link type="text/css" rel="stylesheet" href="/CMSPages/GetResource.ashx?stylesheetfile=~/App_Themes/V_LineStyle/css/vline-site-customer.css" />
+<link type="text/css" rel="stylesheet" href="/CMSPages/GetResource.ashx?stylesheetfile=~/App_Themes/V_LineStyle/css/selectize.bootstrap3.css" />
+<link type="text/css" rel="stylesheet" href="/CMSPages/GetResource.ashx?stylesheetfile=~/App_Themes/V_LineStyle/css/selectize-plugin-clear.css" />
+<link type="text/css" rel="stylesheet" href="/CMSPages/GetResource.ashx?stylesheetfile=~/App_Themes/V_LineStyle/css/datepicker3.css" />
+<link type="text/css" rel="stylesheet" href="/CMSPages/GetResource.ashx?stylesheetfile=~/App_Themes/V_LineStyle/css/fixed-table-header-default-theme.css" />
+<script type="text/javascript" src="/CMSPages/GetResource.ashx?scriptfile=~/CMSScripts/Custom/VLine/text-sizer.js"></script>
+<script type="text/javascript" src="/CMSPages/GetResource.ashx?scriptfile=~/CMSScripts/Custom/VLine/jquery.cookie.js"></script>
+<script type="text/javascript" src="/CMSPages/GetResource.ashx?scriptfile=~/CMSScripts/Custom/VLine/vline-site-common.js&t=20231128"></script>
+<script type="text/javascript" src="/CMSPages/GetResource.ashx?scriptfile=~/CMSScripts/Custom/VLine/vline-site-customer.js"></script>
+<script type="text/javascript" src="/CMSPages/GetResource.ashx?scriptfile=~/CMSScripts/Custom/VLine/bootstrap.min.js&t=20201215"></script>
+<script type="text/javascript" src="/CMSPages/GetResource.ashx?scriptfile=~/CMSScripts/Custom/VLine/owl.carousel.min.js"></script>
+<script type="text/javascript" src="/CMSPages/GetResource.ashx?scriptfile=~/CMSScripts/Custom/VLine/selectize.min.js"></script>
+<script type="text/javascript" src="/CMSPages/GetResource.ashx?scriptfile=~/CMSScripts/Custom/VLine/selectize-plugin-clear.js"></script>
+<script type="text/javascript" src="/CMSPages/GetResource.ashx?scriptfile=~/CMSScripts/Custom/VLine/stickybits.min.js"></script>
+<script type="text/javascript" src="/CMSPages/GetResource.ashx?scriptfile=~/CMSScripts/Custom/VLine/bootstrap-datepicker.js"></script>
+
+<script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0080/8881.js" async="async"></script>
+
+<script type="text/javascript">var is_ie_lt9 = false;</script>
+
+<!-- HTML5 Shim, Respond.js and es5-shim for IE8 support of HTML5 elements, media queries and ECMAScript 5 -->
+<!--[if lt IE 9]>
+    <script type="text/javascript" src="/CMSPages/GetResource.ashx?scriptfile=~/CMSScripts/Custom/VLine/html5shiv.js"></script>
+    <script type="text/javascript" src="/CMSPages/GetResource.ashx?scriptfile=~/CMSScripts/Custom/VLine/respond.min.js"></script>
+    <script type="text/javascript" src="/CMSPages/GetResource.ashx?scriptfile=~/CMSScripts/Custom/VLine/es5-shim.min.js"></script>
+    <script type="text/javascript">is_ie_lt9 = true;</script>
+  <![endif]-->
+
+<style type="text/css">
+#page-sub-header { background-image: url('https://cdn.vline.com.au/medialibraries/vline/websiteheroimages/customersite/footy_large.jpg?ext=.jpg'); }  
+    
+  
+
+</style><style>
+.afl-item-title {
+	font-family: Open Sans;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: -0.08736123144626617px;
+    text-align: left;
+    font-weight: 700;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.afl-item-description {
+	font-family: Open Sans;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: -0.08736123144626617px;
+    text-align: left;
+    font-weight: 400;
+}
+
+.afl-item-modal-link {
+    cursor: pointer;
+}
+
+.spacer-8 {
+	padding-bottom: 8px;
+}
+
+.spacer-10 {
+	padding-bottom: 10px;
+}
+
+.afl-item-description-viewservices {
+    color: #7F3F98;
+}
+
+h2 {
+	padding-bottom: 10px;
+	border-bottom: 1px solid #DDD
+}
+
+.mt-3 {
+    margin-top: 1rem !important;
+}
+
+.mt-4 {
+    margin-top: 1.5rem !important;
+}
+  
+.mt-5 {
+    margin-top: 2rem !important;
+}
+</style> 
+<link href="/App_Themes/Default/Images/favicon.ico" type="image/x-icon" rel="shortcut icon"/>
+<link href="/App_Themes/Default/Images/favicon.ico" type="image/x-icon" rel="icon"/><style type="text/css">.purple-box {
+   font-size: 14px;
+   font-weight: 400;
+   line-height: 20px;
+   letter-spacing: -0.08736123144626617px;
+   text-align: left;
+}
+
+.airshow-description {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: -0.08736123144626617px;
+  text-align: left;
+}
+
+.airshow-heading {
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 34px;
+  letter-spacing: -0.800000011920929px;
+  text-align: left;
+}
+
+.hero-image-inline {
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: none;
+}
+
+
+#page-sub-header {
+    height:280px;
+}
+
+@media (min-width: 416px) and (max-width: 900px) {
+    #page-sub-header {
+        display: none !important;
+    }
+	.hero-image-inline {
+		height: calc(3.6 * 9vw);
+		display: block;		
+		background-image: url(https://cdn.vline.com.au/medialibraries/vline/websiteheroimages/customersite/footy_medium.jpg);
+	}
+}
+
+@media (max-width: 415px) {
+    #page-sub-header {
+        display: none !important;
+    }
+	.hero-image-inline {
+		height: calc(1.8 * 18.5vw);
+		display: block;	
+		background-image: url(https://cdn.vline.com.au/medialibraries/vline/websiteheroimages/customersite/smallerfooty_small.jpg);	
+	}
+}
+
+
+}
+</style><link href="/CMSPages/GetResource.ashx?_webparts=1640" type="text/css" rel="stylesheet"/>
+</head>
+<body class="LTR Unknown ENAU ContentBody" >
+    
+    <form method="post" action="/footy" id="form">
+<input type="hidden" name="__CMSCsrfToken" id="__CMSCsrfToken" value="DsuucJN4/KJLDE5hN/7oqjSAhk1FF37z33RXiFSgDI9gngzGh15Wmp5gbolB7eEPIszWgGECKR9vYSB0Px+h1cp7SXropsGagYFBsuegEFY=" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+
+<input type="hidden" name="lng" id="lng" value="en-AU" />
+<script type="text/javascript">
+	//<![CDATA[
+
+function PM_Postback(param) { if (window.top.HideScreenLockWarningAndSync) { window.top.HideScreenLockWarningAndSync(7080); } if(window.CMSContentManager) { CMSContentManager.allowSubmit = true; }; __doPostBack('m$am',param); }
+function PM_Callback(param, callback, ctx) { if (window.top.HideScreenLockWarningAndSync) { window.top.HideScreenLockWarningAndSync(7080); }if (window.CMSContentManager) { CMSContentManager.storeContentChangedStatus(); };WebForm_DoCallback('m$am',param,callback,ctx,null,true); }
+//]]>
+</script>
+<script src="/ScriptResource.axd?d=uHIkleVeDJf4xS50Krz-yPl8gwNfLEugHrNP1JDmwvH9viFqzEvncYrXNd23t0l7tySgHS0QekuPsPkFFkASO7KkzQMUCcMtPz1iXJ5KejinEMvunThdNtSJVJgb0YuuYIzSd2SKqkSOYnDzXgOjEX1KAWaeEafAOXVJgn7ECGw1&amp;t=2a9d95e3" type="text/javascript"></script>
+<script type="text/javascript">
+	//<![CDATA[
+
+var CMS = CMS || {};
+CMS.Application = {
+  "language": "en",
+  "imagesUrl": "/CMSPages/GetResource.ashx?image=%5bImages.zip%5d%2f",
+  "isDebuggingEnabled": false,
+  "applicationUrl": "/",
+  "isDialog": false,
+  "isRTL": "false"
+};
+
+//]]>
+</script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="A5343185" />
+    
+    <div id="ctxM">
+
+</div>
+    
+<!-- exclude-search-header-start -->
+<div id="skip-link"><a href="#nav-primary" tabindex="1" >Skip to main content</a></div>
+<!-- Facebook JS SDK -->
+<div id="fb-root"></div>
+<script type="text/javascript">(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+<!-- Search Modal -->
+<div id="search-modal">
+  <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group">
+            <input id="modal-search-textbox" name="modal-search-textbox" type="text" class="form-control" />
+            <span class="input-group-btn">
+              <button class="btn btn-primary" type="button" id="modal-search-button" name="modal-search-button">Search</button>
+            </span>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="browser-information">
+  
+
+ 
+<input type="hidden" name="p$lt$ctl00$CustomMessage$hndCustomMessageId" id="hndCustomMessageId" />
+
+<script type="text/javascript">
+
+    var bannerclosed = loadStoredData('bannerclosed'); //document.getElementById('hndCustomMessageId').value
+
+    function loadCaretakerMessage() {
+        if (bannerclosed !== document.getElementById('hndCustomMessageId').value) {
+            if ($("#messageModule").hasClass("hide")) {
+                $("#messageModule").removeClass("hide").addClass("fadeout");
+                setTimeout(function () {
+                    $("#messageModule").removeClass("fadeout").addClass("fadein");
+                }, 100);
+            }
+			if ($("#mobileMessageModule").hasClass("hide")) {
+                $("#mobileMessageModule").removeClass("hide").addClass("fadeout");
+                setTimeout(function () {
+                    $("#mobileMessageModule").removeClass("fadeout").addClass("fadein");
+                }, 300);
+            }
+        }
+    }
+
+    function storeData(type, obj) {
+        var data = obj;
+
+        try {
+
+            if (typeof sessionStorage !== undefined &&
+                sessionStorage !== null) {
+                sessionStorage[type] = data;
+                setCookie(type, data, 365);
+            }
+            else {
+                //jQuery.cookie(type, data, {expires: 1, path: '/'});
+                setCookie(type, data, 365);
+            }
+        }
+        catch (err) { ; }
+    }
+    function loadStoredData(type) {
+        var data;
+        if (typeof sessionStorage !== undefined &&
+            sessionStorage !== null) {
+            data = sessionStorage[type];
+        }
+        else {
+            data = getCookie(type);
+        }
+        if (data && data.length > 0) {
+            return data;
+        }
+        return false;
+    }
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = 'expires=' + d.toUTCString();
+        document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
+        console.log(cname);
+    }
+
+    function getCookie(cname) {
+        var name = cname + '=';
+        console.log(cname);
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return '';
+    }
+    $(document).ready(function () {
+        loadCaretakerMessage();
+    });
+    function On_click() {
+        if ($("#messageModule").hasClass("fadein"))
+            $("#messageModule").removeClass("fadein").addClass("hide");
+        storeData('bannerclosed', document.getElementById('hndCustomMessageId').value);
+    };
+
+    function On_Mobclick(){
+	 alert('has '+ $("#mobileMessageModule").hasClass("fadein"));
+        if ($("#mobileMessageModule").hasClass("fadein"))
+            $("#mobileMessageModule").removeClass("fadein").addClass("hide");
+        storeData('bannerclosed', document.getElementById('hndCustomMessageId').value);
+    };
+  </script>
+
+</div>
+
+<div id="critical-information">
+  
+</div>
+
+<div id="site-header">
+  
+
+ 
+<input type="hidden" name="p$lt$ctl02$CustomMessageMobile$hndCustomMessageId" id="hndCustomMessageId" />
+
+<script type="text/javascript">
+
+    var bannerclosed = loadStoredData('bannerclosed'); //document.getElementById('hndCustomMessageId').value
+
+    function loadCaretakerMessage() {
+        if (bannerclosed !== document.getElementById('hndCustomMessageId').value) {
+            if ($("#messageModule").hasClass("hide")) {
+                $("#messageModule").removeClass("hide").addClass("fadeout");
+                setTimeout(function () {
+                    $("#messageModule").removeClass("fadeout").addClass("fadein");
+                }, 100);
+            }
+			if ($("#mobileMessageModule").hasClass("hide")) {
+                $("#mobileMessageModule").removeClass("hide").addClass("fadeout");
+                setTimeout(function () {
+                    $("#mobileMessageModule").removeClass("fadeout").addClass("fadein");
+                }, 300);
+            }
+        }
+    }
+
+    function storeData(type, obj) {
+        var data = obj;
+
+        try {
+
+            if (typeof sessionStorage !== undefined &&
+                sessionStorage !== null) {
+                sessionStorage[type] = data;
+                setCookie(type, data, 365);
+            }
+            else {
+                //jQuery.cookie(type, data, {expires: 1, path: '/'});
+                setCookie(type, data, 365);
+            }
+        }
+        catch (err) { ; }
+    }
+    function loadStoredData(type) {
+        var data;
+        if (typeof sessionStorage !== undefined &&
+            sessionStorage !== null) {
+            data = sessionStorage[type];
+        }
+        else {
+            data = getCookie(type);
+        }
+        if (data && data.length > 0) {
+            return data;
+        }
+        return false;
+    }
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = 'expires=' + d.toUTCString();
+        document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
+        console.log(cname);
+    }
+
+    function getCookie(cname) {
+        var name = cname + '=';
+        console.log(cname);
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return '';
+    }
+    $(document).ready(function () {
+        loadCaretakerMessage();
+    });
+    function On_click() {
+        if ($("#messageModule").hasClass("fadein"))
+            $("#messageModule").removeClass("fadein").addClass("hide");
+        storeData('bannerclosed', document.getElementById('hndCustomMessageId').value);
+    };
+
+    function On_Mobclick(){
+	 alert('has '+ $("#mobileMessageModule").hasClass("fadein"));
+        if ($("#mobileMessageModule").hasClass("fadein"))
+            $("#mobileMessageModule").removeClass("fadein").addClass("hide");
+        storeData('bannerclosed', document.getElementById('hndCustomMessageId').value);
+    };
+  </script>
+<nav id="mobile-menu" class="navbar navbar-default visible-xs visible-sm" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/"><img src="/App_Themes/V_LineStyle/Images/Logos/vline-logo-white-180x89.png" width="90" height="45" alt="V/Line Logo" title="V/Line Home page" /></a>
+      <div class="journey-booking-heading hide">Purchase tickets</div> 
+    </div>
+
+	<!-- Collect the nav links, forms, and other content for toggling -->
+	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		<ul id="mobileMenu" role="menu" aria-hidden="true">
+			<li class="dropdown bottom-menu" role="menuitem"><a href="/">Home</a></li>
+            
+  <li class="dropdown bottom-menu" role="menuitem">
+        <a href="/Timetable/Service-changes" class='bottom-menu dropdown-toggle' data-toggle='dropdown' aria-haspopup='true'>
+     <img alt='' src='/getattachment/6042ee3e-4e92-41c0-bc11-8c87245ffa62/Service-changes-(1)' height='20px' width='20px'>Service changes
+    </a>  </li>
+  <li class="dropdown bottom-menu">
+    <a href="/Timetables" class='bottom-menu dropdown-toggle' data-toggle='dropdown' aria-haspopup='true'>
+     <img alt='' src='/getattachment/c70d76b2-5d8a-45b1-9c66-69ea79eaa503/Timetables' height='20px' width='20px'>Timetables
+    </a>
+    <ul class="dropdown-menu" role="menu">
+  <li class="sectionHeader" role="menuitem"><a href="/Timetables/Footy-services"><img alt='' src='/getattachment/2dbbf20f-cda3-465b-9816-2620e47a9ce6/AFL-Additional-Services' height='20px' width='20px'>Footy services</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Timetables/Train-coach-timetables"><img alt='' src='/getattachment/33c38b82-b692-4b86-9107-d71a3949ca1b/Train-coach-timetables' height='20px' width='20px'>Train & coach timetables</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Timetables/Plan-trip"><img alt='' src='/getattachment/e171e107-a318-4348-b206-a1d889bf3893/Plan-trip' height='20px' width='20px'>Plan a journey</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Timetables/heat"><img alt='' src='/getattachment/d0a18b03-a69f-4e3b-9f34-a03be02fb0d5/heat' height='20px' width='20px'>Extreme heat timetables</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Timetables/travel-updates"><img alt='' src='/getattachment/0d949da2-0c2a-43b7-ab92-16cf599f83ad/travel-updates' height='20px' width='20px'>Travel updates</a></li>    </ul>
+  </li>
+  <li class="dropdown bottom-menu">
+    <a href="/Fares-general-info" class='bottom-menu dropdown-toggle' data-toggle='dropdown' aria-haspopup='true'>
+     <img alt='' src='/getattachment/cb558563-305c-4bf8-b0b9-338cc3e980b9/Fares-general-info' height='20px' width='20px'>Fares & general info
+    </a>
+    <ul class="dropdown-menu" role="menu">
+  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/Buy-tickets"><img alt='' src='/getattachment/8073acf8-1841-45c2-98a5-d931bd03fca5/Buy-tickets' height='20px' width='20px'>Buy tickets</a></li>  <li class="sectionHeader" role="menuitem"><a href="/ticketing"><img alt='' src='/getattachment/2f6441e4-c0ed-4087-ad5b-85827d3d91bc/Ticketing-Fares' height='20px' width='20px'>Ticketing & fares</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/Group-Travel"><img alt='' src='/getattachment/7e40969d-e4a3-4132-be16-e55cd9e439a3/Group-Travel' height='20px' width='20px'>Group Travel</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/Bikes-Luggage-Animals"><img alt='' src='/getattachment/ea780d75-86eb-417e-9bf6-ffe2513685f0/Bikes-Luggage-Animals' height='20px' width='20px'>Bicycles, luggage & animals</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/On-board"><img alt='' src='/getattachment/30b0529d-ea19-4c56-86de-ed51015a81df/On-board' height='20px' width='20px'>On board</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/Accessibility"><img alt='' src='/getattachment/4690685f-8940-4a4e-9fc5-54916be94560/Accessibility' height='20px' width='20px'>Accessibility</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/First-time-users"><img alt='' src='/getattachment/4d864cfb-b8fe-4328-a5c0-20d787a530b6/First-time-users' height='20px' width='20px'>First-time users</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/Safety"><img alt='' src='/getattachment/3dc3982c-582b-4841-9090-758612953dba/Safety' height='20px' width='20px'>Safety</a></li>  <li class="sectionHeader" role="menuitem"><a href="/app"><img alt='' src='/getattachment/31c11607-60e2-4e9e-b66f-f711ea960ca3/The-V-Line-app' height='20px' width='20px'>The V/Line app</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/FAQ"><img alt='' src='/getattachment/f7ad9cd3-3fee-4214-833e-9ece04ca9ca7/FAQ' height='20px' width='20px'>FAQ</a></li>    </ul>
+  </li>
+  <li class="dropdown bottom-menu">
+    <a href="/Maps-stations-stops" class='bottom-menu dropdown-toggle' data-toggle='dropdown' aria-haspopup='true'>
+     <img alt='' src='/getattachment/f15e7738-b034-4966-8847-e2475924d74b/Maps-stations-stops' height='20px' width='20px'>Maps, stations & stops
+    </a>
+    <ul class="dropdown-menu" role="menu">
+  <li class="sectionHeader" role="menuitem"><a href="/Maps-stations-stops/Where-to-buy-tickets"><img alt='' src='/getattachment/5f233c31-9482-48c7-95ae-df5955ec5485/Where-to-buy-tickets' height='20px' width='20px'>Where to buy tickets</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Maps-stations-stops/Stations-stops"><img alt='' src='/getattachment/c6328a4d-dea3-41a7-9e47-a2c71fe68b7c/Stations-stops' height='20px' width='20px'>Stations & stops</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Maps-stations-stops/Virtual-Station-Tours"><img alt='' src='/getattachment/468f41ec-3d57-43ba-a9dc-fff716b6723b/Virtual-Station-Tours' height='20px' width='20px'>Virtual station tours</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Maps-stations-stops/Network-Maps"><img alt='' src='/getattachment/abf0f7b8-542a-4a5b-b2aa-a39cf95441f6/Network-Maps' height='20px' width='20px'>Network maps</a></li>    </ul>
+  </li>
+  <li class="dropdown bottom-menu">
+    <a href="/Escape-with-V-Line" class='bottom-menu dropdown-toggle' data-toggle='dropdown' aria-haspopup='true'>
+     <img alt='' src='/getattachment/58df6f58-d4c3-4c3b-a9f2-5691f9867fde/Escape-with-V-Line' height='20px' width='20px'>Escape with V/Line
+    </a>
+    <ul class="dropdown-menu" role="menu">
+  <li class="sectionHeader" role="menuitem"><a href="/Escape-with-V-Line/Escape"><img alt='' src='/getattachment/a8c0f6d1-a733-410d-92c0-8bf2ff10f6a1/Escape' height='20px' width='20px'>Escape</a></li>    </ul>
+  </li>
+  <li class="dropdown bottom-menu">
+    <a href="/About-V-Line" class='bottom-menu dropdown-toggle' data-toggle='dropdown' aria-haspopup='true'>
+     <img alt='' src='/getattachment/da326bb0-36da-4db3-9a25-d4dc751d00bd/About-V-Line' height='20px' width='20px'>About V/Line
+    </a>
+    <ul class="dropdown-menu" role="menu">
+  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Our-company"><img alt='' src='/getattachment/43506060-407a-45cf-af95-4e4efc40ef04/Our-company' height='20px' width='20px'>Our company</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Annual-reports-publications"><img alt='' src='/getattachment/52b7921e-e6f7-4790-96a1-6a5c65bac84e/Annual-reports-publications' height='20px' width='20px'>Annual reports & publications</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Contact-us"><img alt='' src='/getattachment/bc976579-6869-4377-8f95-117e3ec5d071/Contact-us' height='20px' width='20px'>Contact us & feedback</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Customer-charter"><img alt='' src='/getattachment/1619d749-b379-4596-85ee-c73729de7a6c/Customer-charter' height='20px' width='20px'>Customer Charter</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Voice-of-customer"><img alt='' src='/getattachment/fad97a2b-f7e4-4d9f-9746-79c00c19da89/Voice-of-customer' height='20px' width='20px'>Voice of Customer</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Community"><img alt='' src='/getattachment/b47dddb6-49b1-4bee-86eb-43f4fb8ac761/Community' height='20px' width='20px'>Community</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Our-company-(1)"><img alt='' src='/getattachment/9102735d-a2b6-44bf-a9fd-953cb02e87bc/Our-company-(1)' height='20px' width='20px'>Projects</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Performance"><img alt='' src='/getattachment/3cea7aea-147c-4ec6-a59b-66dd6767c252/Performance' height='20px' width='20px'>Performance</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Careers"><img alt='' src='/getattachment/88bd4789-5194-48a1-a4ae-3893a2c169b4/Careers' height='20px' width='20px'>Careers</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Media-centre"><img alt='' src='/getattachment/3cefece5-2d51-4c43-851a-67d827a96ee8/Media-centre' height='20px' width='20px'>Media centre</a></li>    </ul>
+  </li>
+
+
+			<li role="menuitem" aria-haspopup="true"><a class="search-button" href="#"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>Search</a></li>
+		</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+</div>
+<!-- exclude-search-header-end -->
+
+<div id="page-header">
+  
+<!-- exclude-search-top-navigation-start -->
+<div id="desktop-page-top-menu" class="hidden-xs hidden-sm">
+  <div class="container">
+    <div class="small">
+      <div id="top-menu-logo">
+        <a href="/"><img src="/App_Themes/V_LineStyle/Images/Logos/vline-logo-white-180x89.png" alt="V/Line Logo" width="90" height="44" title="V/Line Home page" /></a>
+      </div>
+      <div id="top-menu-links">
+        <ul role="menu">
+          <li role="menuitem"><a href="/Plan-trip-buy-tickets">Plan trip/Buy tickets</a></li>
+          <li role="menuitem"><a href="/?tab=live-service-updates">Live service updates</a></li>
+          <li role="menuitem"><a href="/?tab=next-5">Next 5</a></li>
+          
+        </ul>
+      </div>
+      <div id="top-menu-actions">
+        <ul role="menu">
+          <li role="menuitem" aria-haspopup="true">
+            <a href="#" class="search-button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>Search</a>
+          </li>
+          <li role="menuitem">
+            <span class="text-resize-icons"><a href="#" class="text-resize-option" data-size="Normal"><img class="selected" id="text-resize-icon-Normal" src="/App_Themes/V_LineStyle/Images/text-scale-regular-30px.png" alt="Normal text size" title="Set normal text size" /></a><a href="#" class="text-resize-option" data-size="Larger"><img id="text-resize-icon-Larger" src="/App_Themes/V_LineStyle/Images/text-scale-larger-30px.png" alt="Larger text size" title="Set larger text size" /></a><a href="#" class="text-resize-option" data-size="Largest"><img id="text-resize-icon-Largest" src="/App_Themes/V_LineStyle/Images/text-scale-largest-30px.png" alt="Largest text size" title="Set largest text size" /></a></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- exclude-search-top-navigation-end -->
+
+
+
+
+
+</div>
+
+<!-- exclude-search-navigation-start -->
+<div id="main-navigation" class="hidden-xs hidden-sm">
+  <div class="container">
+  <div id="main-menu">
+    <ul role="menu">
+      
+  <li class="dropdown bottom-menu" role="menuitem">
+        <a href="/Timetable/Service-changes" class='bottom-menu dropdown-toggle' data-toggle='dropdown' aria-haspopup='true'>
+     <img alt='' src='/getattachment/6042ee3e-4e92-41c0-bc11-8c87245ffa62/Service-changes-(1)' height='20px' width='20px'>Service changes
+    </a>  </li>
+  <li class="dropdown bottom-menu">
+    <a href="/Timetables" class='bottom-menu dropdown-toggle' data-toggle='dropdown' aria-haspopup='true'>
+     <img alt='' src='/getattachment/c70d76b2-5d8a-45b1-9c66-69ea79eaa503/Timetables' height='20px' width='20px'>Timetables
+    </a>
+    <ul class="dropdown-menu" role="menu">
+  <li class="sectionHeader" role="menuitem"><a href="/Timetables/Footy-services"><img alt='' src='/getattachment/2dbbf20f-cda3-465b-9816-2620e47a9ce6/AFL-Additional-Services' height='20px' width='20px'>Footy services</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Timetables/Train-coach-timetables"><img alt='' src='/getattachment/33c38b82-b692-4b86-9107-d71a3949ca1b/Train-coach-timetables' height='20px' width='20px'>Train & coach timetables</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Timetables/Plan-trip"><img alt='' src='/getattachment/e171e107-a318-4348-b206-a1d889bf3893/Plan-trip' height='20px' width='20px'>Plan a journey</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Timetables/heat"><img alt='' src='/getattachment/d0a18b03-a69f-4e3b-9f34-a03be02fb0d5/heat' height='20px' width='20px'>Extreme heat timetables</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Timetables/travel-updates"><img alt='' src='/getattachment/0d949da2-0c2a-43b7-ab92-16cf599f83ad/travel-updates' height='20px' width='20px'>Travel updates</a></li>    </ul>
+  </li>
+  <li class="dropdown bottom-menu">
+    <a href="/Fares-general-info" class='bottom-menu dropdown-toggle' data-toggle='dropdown' aria-haspopup='true'>
+     <img alt='' src='/getattachment/cb558563-305c-4bf8-b0b9-338cc3e980b9/Fares-general-info' height='20px' width='20px'>Fares & general info
+    </a>
+    <ul class="dropdown-menu" role="menu">
+  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/Buy-tickets"><img alt='' src='/getattachment/8073acf8-1841-45c2-98a5-d931bd03fca5/Buy-tickets' height='20px' width='20px'>Buy tickets</a></li>  <li class="sectionHeader" role="menuitem"><a href="/ticketing"><img alt='' src='/getattachment/2f6441e4-c0ed-4087-ad5b-85827d3d91bc/Ticketing-Fares' height='20px' width='20px'>Ticketing & fares</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/Group-Travel"><img alt='' src='/getattachment/7e40969d-e4a3-4132-be16-e55cd9e439a3/Group-Travel' height='20px' width='20px'>Group Travel</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/Bikes-Luggage-Animals"><img alt='' src='/getattachment/ea780d75-86eb-417e-9bf6-ffe2513685f0/Bikes-Luggage-Animals' height='20px' width='20px'>Bicycles, luggage & animals</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/On-board"><img alt='' src='/getattachment/30b0529d-ea19-4c56-86de-ed51015a81df/On-board' height='20px' width='20px'>On board</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/Accessibility"><img alt='' src='/getattachment/4690685f-8940-4a4e-9fc5-54916be94560/Accessibility' height='20px' width='20px'>Accessibility</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/First-time-users"><img alt='' src='/getattachment/4d864cfb-b8fe-4328-a5c0-20d787a530b6/First-time-users' height='20px' width='20px'>First-time users</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/Safety"><img alt='' src='/getattachment/3dc3982c-582b-4841-9090-758612953dba/Safety' height='20px' width='20px'>Safety</a></li>  <li class="sectionHeader" role="menuitem"><a href="/app"><img alt='' src='/getattachment/31c11607-60e2-4e9e-b66f-f711ea960ca3/The-V-Line-app' height='20px' width='20px'>The V/Line app</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Fares-general-info/FAQ"><img alt='' src='/getattachment/f7ad9cd3-3fee-4214-833e-9ece04ca9ca7/FAQ' height='20px' width='20px'>FAQ</a></li>    </ul>
+  </li>
+  <li class="dropdown bottom-menu">
+    <a href="/Maps-stations-stops" class='bottom-menu dropdown-toggle' data-toggle='dropdown' aria-haspopup='true'>
+     <img alt='' src='/getattachment/f15e7738-b034-4966-8847-e2475924d74b/Maps-stations-stops' height='20px' width='20px'>Maps, stations & stops
+    </a>
+    <ul class="dropdown-menu" role="menu">
+  <li class="sectionHeader" role="menuitem"><a href="/Maps-stations-stops/Where-to-buy-tickets"><img alt='' src='/getattachment/5f233c31-9482-48c7-95ae-df5955ec5485/Where-to-buy-tickets' height='20px' width='20px'>Where to buy tickets</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Maps-stations-stops/Stations-stops"><img alt='' src='/getattachment/c6328a4d-dea3-41a7-9e47-a2c71fe68b7c/Stations-stops' height='20px' width='20px'>Stations & stops</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Maps-stations-stops/Virtual-Station-Tours"><img alt='' src='/getattachment/468f41ec-3d57-43ba-a9dc-fff716b6723b/Virtual-Station-Tours' height='20px' width='20px'>Virtual station tours</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Maps-stations-stops/Network-Maps"><img alt='' src='/getattachment/abf0f7b8-542a-4a5b-b2aa-a39cf95441f6/Network-Maps' height='20px' width='20px'>Network maps</a></li>    </ul>
+  </li>
+  <li class="dropdown bottom-menu">
+    <a href="/Escape-with-V-Line" class='bottom-menu dropdown-toggle' data-toggle='dropdown' aria-haspopup='true'>
+     <img alt='' src='/getattachment/58df6f58-d4c3-4c3b-a9f2-5691f9867fde/Escape-with-V-Line' height='20px' width='20px'>Escape with V/Line
+    </a>
+    <ul class="dropdown-menu" role="menu">
+  <li class="sectionHeader" role="menuitem"><a href="/Escape-with-V-Line/Escape"><img alt='' src='/getattachment/a8c0f6d1-a733-410d-92c0-8bf2ff10f6a1/Escape' height='20px' width='20px'>Escape</a></li>    </ul>
+  </li>
+  <li class="dropdown bottom-menu">
+    <a href="/About-V-Line" class='bottom-menu dropdown-toggle' data-toggle='dropdown' aria-haspopup='true'>
+     <img alt='' src='/getattachment/da326bb0-36da-4db3-9a25-d4dc751d00bd/About-V-Line' height='20px' width='20px'>About V/Line
+    </a>
+    <ul class="dropdown-menu" role="menu">
+  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Our-company"><img alt='' src='/getattachment/43506060-407a-45cf-af95-4e4efc40ef04/Our-company' height='20px' width='20px'>Our company</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Annual-reports-publications"><img alt='' src='/getattachment/52b7921e-e6f7-4790-96a1-6a5c65bac84e/Annual-reports-publications' height='20px' width='20px'>Annual reports & publications</a></li>  <li class="sectionHeader" role="menuitem"><a href="/Contact-us"><img alt='' src='/getattachment/bc976579-6869-4377-8f95-117e3ec5d071/Contact-us' height='20px' width='20px'>Contact us & feedback</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Customer-charter"><img alt='' src='/getattachment/1619d749-b379-4596-85ee-c73729de7a6c/Customer-charter' height='20px' width='20px'>Customer Charter</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Voice-of-customer"><img alt='' src='/getattachment/fad97a2b-f7e4-4d9f-9746-79c00c19da89/Voice-of-customer' height='20px' width='20px'>Voice of Customer</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Community"><img alt='' src='/getattachment/b47dddb6-49b1-4bee-86eb-43f4fb8ac761/Community' height='20px' width='20px'>Community</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Our-company-(1)"><img alt='' src='/getattachment/9102735d-a2b6-44bf-a9fd-953cb02e87bc/Our-company-(1)' height='20px' width='20px'>Projects</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Performance"><img alt='' src='/getattachment/3cea7aea-147c-4ec6-a59b-66dd6767c252/Performance' height='20px' width='20px'>Performance</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Careers"><img alt='' src='/getattachment/88bd4789-5194-48a1-a4ae-3893a2c169b4/Careers' height='20px' width='20px'>Careers</a></li>  <li class="sectionHeader" role="menuitem"><a href="/About-V-Line/Media-centre"><img alt='' src='/getattachment/3cefece5-2d51-4c43-851a-67d827a96ee8/Media-centre' height='20px' width='20px'>Media centre</a></li>    </ul>
+  </li>
+
+
+    </ul>
+  </div>
+</div>  
+</div>
+<!-- exclude-search-navigation-end -->
+
+<div id="page-sub-header">
+  
+
+</div>
+
+  <!-- #main-navigation -->
+<nav id="nav-primary" role="navigation"></nav>
+<div id="page-content">
+    
+
+
+  <div id="content-zone">
+    <div class="container">  
+        <div class="main-content">
+  <div class="hero-image-inline">&nbsp;</div>
+
+<div style="height:10px;">&nbsp;</div>
+
+<div class="well purple-box"><meta charset="utf-8" /><meta charset="utf-8" />Get the advantage this season! Leave the car behind and catch a V/Line service&nbsp;to get you to and from the game.</div>
+
+<p class="airshow-description"><meta charset="utf-8" />We&rsquo;re running additional services throughout the 2025&nbsp;AFL season to get you to and from games in Melbourne, Geelong and Ballarat. Select the match you want to attend below to view the additional services being run, or plan your trip there and back again using our <a href="/Plan-trip-Buy-tickets">Journey Planner tool</a>, which is updated with the additional footy services when they become available. If there are no services listed on this page, check again a bit closer to the game.</p>
+
+<div class="airshow-heading">&nbsp;</div>
+
+
+
+
+
+</div><h2>FINALS 3 AFL Round 27 services</h2>
+
+<div class="row">
+
+  
+      <!--Index 0 <br />
+      Mod2 - 0<br />
+      Mod3 - 0<br />
+      Mod4 - 0-->
+<div class="col-xs-6 col-sm-6 col-md-3 mt-4">
+  <div class="afl-item-image">
+    <div class="afl-item-modal-link" data-toggle="modal" data-target="#310" href="#">
+      <img src="https://cdn.vline.com.au/medialibraries/afl-image-gallery/2025/round 6/geelong-hawthorn.jpg?ext=.jpg" class="img-responsive" style="width:100%" />
+      <div class="afl-item-title">Geelong v Hawthorn</div>
+      <div class="afl-item-description">Friday 19 September, 7.40pm, MCG </div>
+      <div><span class="afl-item-description-viewservices">View services</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+
+<div id="310" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-body">   
+        
+        <h2><img src="https://cdn.vline.com.au/medialibraries/afl-image-gallery/footy.png" style="display: inline;margin-top:-6px;" /> AFL Finals Week 3</h2>
+        <h4>Geelong v Hawthorn</h4>
+        <h3>19/09/2025 7:40:00 PM, MCG</h3>
+        <p><strong><u>Geelong</u></strong><br />
+<br />
+<strong>Before the game:</strong><br />
+The 3.30pm South Geelong to Southern Cross service is altered to originate from Waurn Ponds at 3.20pm.&nbsp;This train will stop at Marshall, South Geelong, Geelong, North Geelong, North Shore, Lara, Little River, Wyndham Vale, Tarneit, Deer Park, Sunshine, Footscray, arriving at Southern Cross at 4.40pm.<br />
+<br />
+Additional train departs Waurn Ponds at 3.50pm. This train will stop at Marshall, South Geelong, Geelong, North Geelong, North Shore, Corio, Lara, Little River, Wyndham Vale, Tarneit, Deer Park, Ardeer, Sunshine, Footscray, arriving at Southern Cross at 5.05pm.<br />
+<br />
+The 4.10pm South Geelong to Southern Cross service is altered to originate from Waurn Ponds at 4.00pm.&nbsp;This train will stop at Marshall, South Geelong, Geelong, North Geelong, North Shore, Lara Little River, Wyndham Vale, Tarneit, Deer Park, Sunshine, Footscray, arriving at Southern Cross at 5.20pm.<br />
+<br />
+Additional train departs Wyndham Vale at 5.20pm. This train will stop at Tarneit, arriving at Southern Cross at 5.48pm.<br />
+<br />
+Additional train departs Wyndham Vale at 5.46pm. This train will stop at Tarneit, arriving at Southern Cross at 6.23pm.<br />
+<br />
+<strong>After the game:</strong><br />
+Additional train departs Southern Cross at 11.12pm. This train will stop at Tarneit, Wyndham Vale, Little River, Lara, Corio, North Shore, North Geelong, Geelong, South Geelong, Marshall, arriving at Waurn Ponds at 12.33am.<br />
+<br />
+Additional train departs Southern Cross at 11.21pm. This train will stop at Tarneit, Wyndham Vale, Little River, Lara, Corio, North Shore, North Geelong, Geelong, South Geelong, Marshall, arriving at Waurn Ponds at 12.41am.<br />
+<br />
+Additional train departs Southern Cross at 11.45pm. This train will stop at Tarneit, Wyndham Vale, Little River, Lara, Corio, North Shore, North Geelong, Geelong, South Geelong, Marshall, arriving at Waurn Ponds at 1.02am.<br />
+<br />
+Additional train departs Southern Cross at 12.03am. This train will stop at Tarneit, Wyndham Vale, Little River, Lara, Corio, North Shore, North Geelong, Geelong, South Geelong, Marshall, arriving at Waurn Ponds at 1.24am.<br />
+<br />
+<strong><u>Ballarat</u></strong><br />
+<br />
+<strong>Before the game:</strong><br />
+Additional train departs Bacchus Marsh at 5.17pm. The train will stop at Melton, Cobblebank, Caroline Springs, Deer Park, arriving at Southern Cross at 6.06pm.<br />
+<br />
+<strong>After the game:</strong><br />
+Additional train departs Southern Cross at 11.18pm. This train will stop at Caroline Springs, Rockbank, Cobblebank, Melton, arriving at Bacchus Marsh at 11.59pm.<br />
+<br />
+Additional train departs Southern Cross at 11.27pm. This train will stop at Deer Park, Caroline Springs, Rockbank, Cobblebank, Melton, Bacchus Marsh, Ballan, Ballarat, arriving at Wendouree at 1.03am.<br />
+<br />
+<strong><u>Bendigo</u></strong><br />
+<br />
+<strong>Before the game:</strong><br />
+Train services as per usual timetable.<br />
+<br />
+<strong>After the game:</strong><br />
+The 10.57pm Southern Cross to Bendigo service is altered to depart at 11.15pm. This train will stop at Footscray, Sunbury, Clarkfield, Riddells Creek, Gisborne, Macedon, Woodend, Kyneton, Malmsbury, Castlemaine, Kangaroo Flat, arriving at Bendigo at 1.17am.<br />
+<br />
+<strong><u>Seymour</u></strong><br />
+<br />
+<strong>Before the game:</strong><br />
+Train services as per usual timetable.<br />
+<br />
+<strong>After the game:</strong><br />
+Special footy coach service departs Southern Cross at 11.15pm. Stopping as required, Donnybrook to Seymour stations.<br />
+&nbsp;</p>
+      </div>
+      <div class="modal-footer">
+        
+        <div class="row">
+          <div class="col-xs-12 col-sm-6 mb-3">
+            <a class="btn btn-default btn-block" href="/Plan-trip-Buy-tickets" role="button">Plan your journey</a>
+          </div>
+          <div class="col-xs-12 col-sm-6">
+            <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  
+      <!--Index 1 <br />
+      Mod2 - 1<br />
+      Mod3 - 1<br />
+      Mod4 - 1-->
+<div class="col-xs-6 col-sm-6 col-md-3 mt-4">
+  <div class="afl-item-image">
+    <div class="afl-item-modal-link" data-toggle="modal" data-target="#311" href="#">
+      <img src="https://cdn.vline.com.au/medialibraries/afl-image-gallery/2025/round 21/collingwood-brisbane.jpg?ext=.jpg" class="img-responsive" style="width:100%" />
+      <div class="afl-item-title">Collingwood v Brisbane</div>
+      <div class="afl-item-description">Saturday 20 September, 5.15pm, MCG </div>
+      <div><span class="afl-item-description-viewservices">View services</span></div>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+<!-- Modal -->
+
+<div id="311" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-body">   
+        
+        <h2><img src="https://cdn.vline.com.au/medialibraries/afl-image-gallery/footy.png" style="display: inline;margin-top:-6px;" /> AFL Finals Week 3</h2>
+        <h4>Collingwood v Brisbane</h4>
+        <h3>20/09/2025 5:15:00 PM, MCG</h3>
+        <p><strong><u>Geelong</u></strong><br />
+<br />
+<strong>Before the game:</strong><br />
+Additional train departs Waurn Ponds at 1.31pm. This train will stop at Marshall, South Geelong, Geelong, North Geelong, North Shore, Lara, Wyndham Vale, Tarneit, arriving at Southern Cross at 2.44pm.<br />
+<br />
+Additional train departs Waurn Ponds at 1.51pm. This train will stop at Marshall, South Geelong, Geelong, North Geelong, North Shore, Lara, Little River, Wyndham Vale, Tarneit, arriving at Southern Cross at 3.08pm.<br />
+&nbsp;<br />
+<strong>After the game:</strong><br />
+Additional train departs Southern Cross at 8.44pm. This train will stop at Tarneit, Wyndham Vale, Little River, Lara, North Shore, North Geelong, Geelong, South Geelong, Marshall, arriving at Waurn Ponds at 9.58pm.<br />
+<br />
+Additional train departs Southern Cross at 9.00pm. This train will stop at Tarneit, Wyndham Vale, Little River, Lara, North Shore, North Geelong, Geelong, South Geelong, Marshall, arriving at Waurn Ponds at 10.18pm.<br />
+<br />
+Additional train departs Southern Cross at 9.30pm. This train will stop at Tarneit, Wyndham Vale, Little River, Lara, North Shore, North Geelong, Geelong, South Geelong, Marshall, arriving at Waurn Ponds at 10.44pm.<br />
+<br />
+<strong><u>Ballarat</u></strong><br />
+<br />
+<strong>Before the game:</strong><br />
+Additional train departs Bacchus Marsh at 3.11pm. The train will stop at Melton, Cobblebank, Rockbank, Caroline Springs, Deer Park, arriving at Southern Cross at 4.04pm.<br />
+<br />
+<strong>After the game:</strong><br />
+Additional train departs Southern Cross at 8.47pm. This train will stop at Deer Park, Caroline Springs, Rockbank, Cobblebank, Melton, Bacchus Marsh, Ballan, Ballarat, arriving at Wendouree at 10.31pm.<br />
+<br />
+Additional train departs Southern Cross at 9.05pm. This train will stop at Deer Park, Caroline Springs, Rockbank, Cobblebank, Melton, Bacchus Marsh, Ballan, arriving at Ballarat at 10.34pm.<br />
+<br />
+Additional train departs 9.34pm. This train will stop at Ardeer, Deer Park, Caroline Springs, Rockbank, Melton, arriving at Bacchus Marsh at 10.18pm.<br />
+<br />
+<strong><u>Seymour</u></strong><br />
+<br />
+<strong>Before the game:</strong><br />
+Train services as per usual timetable.<br />
+<br />
+<strong>After the game:</strong><br />
+Special footy coach service departs Southern Cross at 10.50pm. Stopping as required, Donnybrook to Seymour stations.<br />
+&nbsp;</p>
+      </div>
+      <div class="modal-footer">
+        
+        <div class="row">
+          <div class="col-xs-12 col-sm-6 mb-3">
+            <a class="btn btn-default btn-block" href="/Plan-trip-Buy-tickets" role="button">Plan your journey</a>
+          </div>
+          <div class="col-xs-12 col-sm-6">
+            <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div class="clearfix visible-xs"></div>
+
+
+    </div>
+  </div>
+
+</div>
+
+<!-- exclude-search-footer-start -->
+<div id="site-footer-art"></div>
+<div id="site-footer">
+  <div class="container">
+    <div id="footer-menu">
+  <div id="footer-text" class="hidden-lg hidden-md hidden-sm" style="color:#b3b3b3;font-size: .9em;">
+V/Line acknowledges the Traditional Custodians of Country on which we operate our services. We pay our respect to Aboriginal and Torres Strait Islander cultures, and to Elders past and present.
+</div>
+
+<div id="footer-text" class="hidden-lg hidden-md hidden-sm" style="color:#b3b3b3;font-size: .9em;">
+V/Line is committed to providing accessible information for passengers, and work is continuing to make this website more accessible.   
+<br>
+We acknowledge that some sections of this website may not fully comply with the Web Content Accessibility Guidelines 2.2, Level AA standards, which we are working to improve. 
+<br>
+If you are unable to access any content on this website and need to request an accessible version, please email&nbsp;<a href="mailto:wcag.accessibility@vline.com.au?subject=WCAG%20accessible%20content%20request" style="color:white; font-size:.9em; font-weight:bold; text-decoration:underline;">wcag.accessibility@vline.com.au</a> or call&nbsp;1800 800 007.
+</div>
+
+<div class="clear:both"></div>
+	<ul id="menuElem">
+		<li>
+			<a href="/Contact-us">Contact us</a>
+		</li>
+		<li>
+			<a href="/Sitemap">Sitemap</a>
+		</li>
+		<li>
+			<a href="/Privacy-policy">Privacy policy</a>
+		</li>
+		<li>
+			<a href="/Terms-of-use">Terms of use</a>
+		</li>
+		<li>
+			<a href="https://corporate.vline.com.au">V/Line Corporate</a>
+		</li>
+
+	</ul>
+
+
+
+  <ul id="third-party-links">    
+    <li>
+      <a href="https://twitter.com/vline" target="_blank"><div id="link_twitter"></div></a>
+    </li>
+    <li>
+      <a href="https://www.facebook.com/VlineVictoria" target="_blank"><div id="link_facebook"></div></a>
+    </li>
+    <li>
+      <a href="https://www.instagram.com/vlinevictoria/" target="_blank"><div id="link_instagram"></div></a>
+    </li>  
+    <li>
+      <a href="http://www.vic.gov.au/" target="_blank"><img src="/App_Themes/V_LineStyle/Images/Logos/state-government-victoria-logo-88x50.png" alt="State Government of Victoria logo" title="State Government of Victoria website"></a>
+    </li>
+    <li>
+      <a href="http://www.ptv.vic.gov.au/" target="_blank"><img src="/App_Themes/V_LineStyle/Images/Logos/public-transport-victoria-logo-78x50.png" alt="Public Transport Victoria logo" title="Public Transport Victoria Victoria website"></a>
+    </li>
+  </ul>
+</div><style>
+.container #footer-text{
+    margin: auto;
+    width: 100%;
+    padding: 10px;
+    display: inline-block;
+ }
+</style>
+<div style="clear:both"></div>
+<div id="footer-text" class="hidden-xs legend" style="color:#b3b3b3;font-size: .9em; text-align:center;">V/Line acknowledges the Traditional Custodians of Country on which we operate our services. We pay our respect to Aboriginal and Torres Strait Islander cultures, and to Elders past and present.</div><style>
+.container #footer-text{
+    margin: auto;
+    width: 100%;
+    padding: 10px;
+    display: inline-block;
+ }
+</style>
+<div style="clear:both"></div>
+<div id="footer-text" class="hidden-xs legend" style="color:#b3b3b3;font-size: .9em; text-align:center;">V/Line is committed to providing accessible information for passengers, and work is continuing to make this website more accessible. &nbsp;&nbsp;<br />
+<br />
+We acknowledge that some sections of this website may not fully comply with the Web Content Accessibility Guidelines 2.2, Level AA standards, which we are working to improve.&nbsp;<br />
+<br />
+If you are unable to access any content on this website and need to request an accessible version, please email&nbsp;<a href="mailto:wcag.accessibility@vline.com.au?subject=WCAG%20accessible%20content%20request" style="color:white; font-size:.9em; font-weight:bold; text-decoration:underline;">wcag.accessibility@vline.com.au</a> or call&nbsp;1800 800 007.</div><!-- health-check: [RUNNING] -->
+  </div>
+</div>
+<!-- exclude-search-footer-end -->
+
+    
+    </form>
+</body>
+</html>
