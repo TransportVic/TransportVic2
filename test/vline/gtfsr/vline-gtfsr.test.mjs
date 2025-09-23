@@ -121,6 +121,6 @@ describe('The V/Line GTFS-R updater', () => {
     let drouin = tripUpdates[0].stops.filter(stop => stop.stopName === 'Drouin Railway Station')
 
     expect(drouin.length).to.equal(1)
-    expect(drouin.cancelled).to.be.false
+    expect(drouin[0].cancelled).to.be.false
   })
 })

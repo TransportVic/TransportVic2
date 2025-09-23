@@ -34,6 +34,8 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
       scheduledStartTime: gtfsrTripData.getStartTime()
     }
 
+    let previousStopData = null
+
     for (let stop of trip.trip_update.stop_time_update) {
       let stopData = await VLineTripUpdater.getStop(db, stop.stop_id)
       let tripStop = {
@@ -42,6 +44,7 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
         scheduledDepartureTime: null,
         cancelled: stop.schedule_relationship === 1
       }
+      if (tripStop.cancelled && previousStopData && previousStopData.stopName === tripStop.stopName) continue
 
       if (stop.arrival) tripStop.estimatedArrivalTime = new Date(stop.arrival.time * 1000)
       if (stop.departure) {
@@ -59,6 +62,7 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
       if (stop.stop_id === '20344' && stopData.fullStopName === 'South Geelong Railway Station' && !tripStop.platform) tripStop.platform = '2'
 
       tripData.stops.push(tripStop)
+      previousStopData = tripStop
     }
 
     let firstStop = tripData.stops[0]
