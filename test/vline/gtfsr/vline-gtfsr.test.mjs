@@ -9,6 +9,7 @@ import ephTrips from '../../metro/utils/sample-data/eph-trips.mjs'
 import td8409GTFSR from './sample-data/td8409-gtfsr.mjs'
 import tdMismatch from './sample-data/td-mismatch.mjs'
 import badPlatforms from './sample-data/bad-platforms.mjs'
+import td8431DuplicateStopGTFSR from './sample-data/td8431-duplicate-stop-gtfsr.mjs'
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
@@ -108,5 +109,18 @@ describe('The V/Line GTFS-R updater', () => {
     expect(tripUpdates[1].stops[1].platform).to.equal('1')
     expect(tripUpdates[1].stops[2].stopName).to.equal('Bunyip Railway Station')
     expect(tripUpdates[1].stops[2].platform).to.equal('1')
+  })
+
+  it('Does not mark a stop as cancelled', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    await stops.createDocuments(clone(pkmStopsDB))
+    await stops.createDocuments(clone(trnStops))
+
+    let tripUpdates = await getUpcomingTrips(database, () => td8431DuplicateStopGTFSR)
+    let drouin = tripUpdates[0].stops.filter(stop => stop.stopName === 'Drouin Railway Station')
+
+    expect(drouin.length).to.equal(1)
+    expect(drouin.cancelled).to.be.false
   })
 })
