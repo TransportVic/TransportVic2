@@ -16,9 +16,9 @@
   */10  3-23  *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-vline-op-tt.mjs
   */15  0-1   *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-vline-op-tt.mjs
 
-  1     0     *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-coach-op-tt.mjs
-  2     0     *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-bus-op-tt.mjs
-  1     0     *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-overland-op-tt.mjs
+  0     3     *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-coach-op-tt.mjs
+  2     3     *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-bus-op-tt.mjs
+  0     3     *     *     *     node /home/transportvic/TransportVic/modules/op-timetable/load-overland-op-tt.mjs
 
   # Metro Tracker
   # Regular trips everyday 0400 - 2359
@@ -48,7 +48,7 @@
   */2   0-1   *     *     *     /home/transportvic/TransportVic/modules/new-tracker/vline.sh
 
   # Other maintenance scripts
-  0     2     *     *     *     /home/transportvic/TransportVic/scripts/check-gtfs-updates.sh
+  5     0     *     *     *     /home/transportvic/TransportVic/scripts/check-gtfs-updates.sh
   0     4     *     *     *     node /home/transportvic/TransportVic/scripts/update-consists.mjs
   0     0     *     *     *     node /home/transportvic/TransportVic/scripts/cleanup.mjs
   0     0     *     *     *     node /home/transportvic/TransportVic/scripts/rotate-logs.sh
