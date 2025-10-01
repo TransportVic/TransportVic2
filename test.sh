@@ -6,6 +6,10 @@ if [ ! -f modules.json ]; then
   echo '{}' > modules.json
 fi
 
+if [ ! -f urls.json ]; then
+  echo '{}' > urls.json
+fi
+
 npm run test-report
 
 mv mochawesome-report/mochawesome.html mochawesome-report/index.html
