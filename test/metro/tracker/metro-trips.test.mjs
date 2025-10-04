@@ -125,7 +125,7 @@ describe('The getUpcomingTrips function', () => {
     utils.now = originalNow
   })
 
-  it.only('Accounts for the start of daylight saving (skipping 2am) on the Sunday', async () => {
+  it('Accounts for the start of daylight saving (skipping 2am) on the Sunday', async () => {
     let originalNow = utils.now
     utils.now = () => utils.parseDate('20251005')
 
