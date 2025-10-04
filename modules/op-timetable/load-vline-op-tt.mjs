@@ -9,7 +9,7 @@ import LiveTimetable from '../schema/live-timetable.js'
 import VLineUtils from '../vline/vline-utils.mjs'
 import VLineTripUpdater from '../vline/trip-updater.mjs'
 import discordIntegration from '../discord-integration.js'
-import { getDSTMinutesPastMidnight } from '../dst/dst.js'
+import { getDSTMinutesPastMidnight, getNonDSTMinutesPastMidnight, isDSTChange } from '../dst/dst.js'
 
 let existingVNetStops = {}
 
@@ -23,7 +23,7 @@ async function getStopFromVNetName(stops, vnetName) {
   return stop
 }
 
-export async function matchTrip(operationDay, vlineTrip, db) {
+export async function matchTrip(opDayFormat, operationDay, vlineTrip, db) {
   let gtfsTimetables = await db.getCollection('gtfs timetables')
 
   let stops = await db.getCollection('stops')
@@ -36,8 +36,9 @@ export async function matchTrip(operationDay, vlineTrip, db) {
   let departureTime = utils.parseTime(vlineTrip.departureTime.toUTC().toISO())
   
   // Really crappy DST aware + midnight handling code :D
-  let departureTimeMinutes = getDSTMinutesPastMidnight(departureTime)
-  let arrivalTimeMinutes = getDSTMinutesPastMidnight(arrivalTime)
+  let isBeforeDSTChangeDay = isDSTChange(operationDay.clone().add(1, 'day'))
+  let departureTimeMinutes = isBeforeDSTChangeDay ? getDSTMinutesPastMidnight(departureTime) : getNonDSTMinutesPastMidnight(departureTime)
+  let arrivalTimeMinutes = isBeforeDSTChangeDay ? getDSTMinutesPastMidnight(arrivalTime) : getNonDSTMinutesPastMidnight(arrivalTime)
 
   if (departureTime.get('hour') < 3) {
     departureTimeMinutes += 1440
@@ -48,7 +49,7 @@ export async function matchTrip(operationDay, vlineTrip, db) {
 
   const baseQuery = {
     mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
-    operationDays: operationDay,
+    operationDays: opDayFormat,
     $and: [{
       stopTimings: {
         $elemMatch: {
@@ -225,7 +226,7 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
       continue
     }
 
-    let matchingTrip = await matchTrip(opDayFormat, vlineTrip, db)
+    let matchingTrip = await matchTrip(opDayFormat, operationDay, vlineTrip, db)
     let nspTrip = await VLineUtils.getNSPTrip(dayOfWeek, vlineTrip.tdn, db)
 
     if (matchingTrip) {

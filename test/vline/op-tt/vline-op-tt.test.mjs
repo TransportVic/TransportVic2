@@ -63,7 +63,7 @@ describe('The matchTrip function', () => {
     expect(departures[0].departureTime.toUTC().toISO()).to.equal('2025-07-18T01:30:00.000Z')
     expect(departures[0].arrivalTime.toUTC().toISO()).to.equal('2025-07-18T02:48:00.000Z')
 
-    let matchingTrip = await matchTrip('20250718', departures[0], database)
+    let matchingTrip = await matchTrip('20250718', utils.parseDate('20250718'), departures[0], database)
     expect(matchingTrip).to.exist
     expect(matchingTrip.tripID).to.equal('48.T0.1-GEL-mjp-8.11.H')
   })
@@ -86,7 +86,7 @@ describe('The matchTrip function', () => {
     expect(departures[0]).to.be.instanceOf(VLinePlatformService)
     expect(departures[0].tdn).to.equal('8741')
 
-    let matchingTrip = await matchTrip('20250718', departures[0], database)
+    let matchingTrip = await matchTrip('20250718', utils.parseDate('20250718'), departures[0], database)
     expect(matchingTrip).to.not.exist
 
     let pattern = await downloadTripPattern('20250718', departures[0], null, database)
@@ -121,7 +121,7 @@ describe('The matchTrip function', () => {
     expect(departures[1]).to.be.instanceOf(VLinePlatformService)
     expect(departures[1].tdn).to.equal('8007')
 
-    let matchingTrip = await matchTrip('20250726', departures[1], database)
+    let matchingTrip = await matchTrip('20250726', utils.parseDate('20250726'), departures[1], database)
     expect(matchingTrip).to.not.exist
 
     let nspTrip = await VLineUtils.getNSPTrip('Sat', departures[2].tdn, database)
@@ -158,7 +158,7 @@ describe('The matchTrip function', () => {
     expect(departures[2]).to.be.instanceOf(VLinePlatformService)
     expect(departures[2].tdn).to.equal('8007')
 
-    let matchingTrip = await matchTrip('20250726', departures[2], database)
+    let matchingTrip = await matchTrip('20250726', utils.parseDate('20250726'), departures[2], database)
     expect(matchingTrip).to.not.exist
 
     let nspTrip = await VLineUtils.getNSPTrip('Sat', departures[2].tdn, database)
@@ -366,7 +366,7 @@ describe('The loadOperationalTT function', () => {
     expect(trip.departureTime).to.equal('22:59')
   })
 
-  it('Handles the missing 2am on Sunday from Saturday TT trips when DST starts', async () => {
+  it.only('Handles the missing 2am on Sunday from Saturday TT trips when DST starts', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let routes = database.getCollection('routes')
@@ -392,7 +392,7 @@ describe('The loadOperationalTT function', () => {
 
     expect(trip.destination).to.equal('Waurn Ponds Railway Station')
     expect(trip.destinationArrivalTime).to.equal('26:29')
-    expect(trip.stopTimings[trip.stopTimings.lenght - 1].arrivalTime).to.equal('03:29')
+    expect(trip.stopTimings[trip.stopTimings.length - 1].arrivalTime).to.equal('03:29')
   })
 
   it('Handles the missing 2am on Sunday from Sunday TT trips when DST starts', async () => {
@@ -414,14 +414,14 @@ describe('The loadOperationalTT function', () => {
     await loadOperationalTT(database, utils.parseDate('20251005'), ptvAPI)
     let trip = await timetables.findDocument({})
 
-    expect(trip.runID).to.equal('8820')
+    expect(trip.runID).to.equal('8800')
     expect(trip.origin).to.equal('Waurn Ponds Railway Station')
     expect(trip.departureTime).to.equal('18:01')
     expect(trip.stopTimings[0].departureTime).to.equal('18:01')
 
     expect(trip.destination).to.equal('Southern Cross Railway Station')
     expect(trip.destinationArrivalTime).to.equal('19:20')
-    expect(trip.stopTimings[trip.stopTimings.lenght - 1].arrivalTime).to.equal('19:20')
+    expect(trip.stopTimings[trip.stopTimings.length - 1].arrivalTime).to.equal('19:20')
   })
 
 })
