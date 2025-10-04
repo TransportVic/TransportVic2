@@ -9,6 +9,7 @@ import LiveTimetable from '../schema/live-timetable.js'
 import VLineUtils from '../vline/vline-utils.mjs'
 import VLineTripUpdater from '../vline/trip-updater.mjs'
 import discordIntegration from '../discord-integration.js'
+import { getDSTMinutesPastMidnight } from '../dst/dst.js'
 
 let existingVNetStops = {}
 
@@ -33,8 +34,17 @@ export async function matchTrip(operationDay, vlineTrip, db) {
 
   let arrivalTime = utils.parseTime(vlineTrip.arrivalTime.toUTC().toISO())
   let departureTime = utils.parseTime(vlineTrip.departureTime.toUTC().toISO())
+  
+  // Really crappy DST aware + midnight handling code :D
+  let departureTimeMinutes = getDSTMinutesPastMidnight(departureTime)
+  let arrivalTimeMinutes = getDSTMinutesPastMidnight(arrivalTime)
 
-  const genTimes = time => [-3, -2, -1, 0, 1, 2, 3].map(t => utils.formatHHMM(time.clone().add(t, 'minute')))
+  if (departureTime.get('hour') < 3) {
+    departureTimeMinutes += 1440
+    arrivalTimeMinutes += 1440
+  } else if (arrivalTime.get('hour') < 3) {
+    arrivalTimeMinutes += 1440
+  }
 
   const baseQuery = {
     mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
@@ -43,8 +53,9 @@ export async function matchTrip(operationDay, vlineTrip, db) {
       stopTimings: {
         $elemMatch: {
           stopName: originStop.stopName,
-          departureTime: {
-            $in: genTimes(departureTime)
+          departureTimeMinutes: {
+            $gte: departureTimeMinutes - 3,
+            $lte: departureTimeMinutes + 3,
           },
         }
       }
@@ -52,9 +63,10 @@ export async function matchTrip(operationDay, vlineTrip, db) {
       stopTimings: {
         $elemMatch: {
           stopName: destinationStop.stopName,
-          arrivalTime: {
-            $in: genTimes(arrivalTime)
-          },
+          arrivalTimeMinutes: {
+            $gte: arrivalTimeMinutes - 3,
+            $lte: arrivalTimeMinutes + 3
+          }
         }
       }
     }]
