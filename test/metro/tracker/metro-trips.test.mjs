@@ -10,9 +10,9 @@ import { fetchTrips, getUpcomingTrips } from '../../../modules/new-tracker/metro
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
-function createAPI() {
+function createAPI(stubTT) {
   let stubAPI = new StubAPI()
-  stubAPI.setResponses([ stubSTYOpData ])
+  stubAPI.setResponses([ stubTT ])
   stubAPI.skipErrors()
 
   let ptvAPI = new PTVAPI(stubAPI)
@@ -26,7 +26,7 @@ describe('The getUpcomingTrips function', () => {
     let originalNow = utils.now
     utils.now = () => utils.parseTime('2025-03-29T20:45:00.000Z') // current day is 30 march
 
-    let ptvAPI = createAPI()
+    let ptvAPI = createAPI(stubSTYOpData)
 
     let trips = await getUpcomingTrips(ptvAPI, ptvAPI.metroSite.lines.STONY_POINT)
 
@@ -39,7 +39,7 @@ describe('The getUpcomingTrips function', () => {
     let originalNow = utils.now
     utils.now = () => utils.parseTime('2025-04-03T20:45:00.000Z') // current day is in april
 
-    let ptvAPI = createAPI()
+    let ptvAPI = createAPI(stubSTYOpData)
 
     let trips = await getUpcomingTrips(ptvAPI, ptvAPI.metroSite.lines.STONY_POINT)
 
@@ -68,7 +68,7 @@ describe('The getUpcomingTrips function', () => {
     let routes = await db.createCollection('routes')
     await routes.createDocument(clone(styRoute))
 
-    let ptvAPI = createAPI()
+    let ptvAPI = createAPI(stubSTYOpData)
 
     await fetchTrips(ptvAPI, db, ptvAPI.metroSite.lines.STONY_POINT)
 
@@ -107,7 +107,7 @@ describe('The getUpcomingTrips function', () => {
     let routes = await db.createCollection('routes')
     await routes.createDocument(clone(styRoute))
 
-    let ptvAPI = createAPI()
+    let ptvAPI = createAPI(stubSTYOpData)
 
     await fetchTrips(ptvAPI, db, ptvAPI.metroSite.lines.STONY_POINT)
 
