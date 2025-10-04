@@ -1,4 +1,4 @@
-export default [[
+export default [
   {
     "timetable_num": "0",
     "day_type": "2",
@@ -134,4 +134,4 @@ export default [[
     "is_opr": true,
     "date": "2025-10-05"
   }
-]]
+]

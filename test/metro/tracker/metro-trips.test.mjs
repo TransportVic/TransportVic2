@@ -3,10 +3,13 @@ import { LokiDatabaseConnection } from '@transportme/database'
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
 import styLiveTrips from './sample-data/sty-trips.json' with { type: 'json' }
 import styStops from './sample-data/sty-stops.json' with { type: 'json' }
+import bbnStops from './sample-data/bbn-stops-db.json' with { type: 'json' }
 import styRoute from './sample-data/sty-route.json' with { type: 'json' }
 import stubSTYOpData from './sample-data/stony-point.json' with { type: 'json' }
 import utils from '../../../utils.js'
 import { fetchTrips, getUpcomingTrips } from '../../../modules/new-tracker/metro/metro-trips-schedule.mjs'
+import td3154DST from './sample-data/td3154-dst.mjs'
+import begRoute from './sample-data/beg-route.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -118,6 +121,32 @@ describe('The getUpcomingTrips function', () => {
     expect(td8506.destinationArrivalTime).to.equal('14:45')
 
     expect(td8506.stopTimings[0].estimatedDepartureTime).to.be.null
+
+    utils.now = originalNow
+  })
+
+  it.only('Accounts for the start of daylight saving (skipping 2am) on the Sunday', async () => {
+    let originalNow = utils.now
+    utils.now = () => utils.parseDate('20251005')
+
+    let db = new LokiDatabaseConnection()
+    let liveTimetables = await db.createCollection('live timetables')
+
+    let stops = await db.createCollection('stops')
+    await stops.createDocuments(clone(bbnStops))
+
+    let routes = await db.createCollection('routes')
+    await routes.createDocument(clone(begRoute))
+
+    let ptvAPI = createAPI(td3154DST)
+
+    await fetchTrips(ptvAPI, db, ptvAPI.metroSite.lines.BELGRAVE)
+
+    let td3154 = await liveTimetables.findDocument({ runID: '3154' })
+    expect(td3154.origin).to.equal('Belgrave Railway Station')
+    expect(td3154.departureTime).to.equal('03:40')
+    expect(td3154.destination).to.equal('Ringwood Railway Station')
+    expect(td3154.destinationArrivalTime).to.equal('04:04')
 
     utils.now = originalNow
   })
