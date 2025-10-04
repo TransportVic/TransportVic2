@@ -366,7 +366,7 @@ describe('The loadOperationalTT function', () => {
     expect(trip.departureTime).to.equal('22:59')
   })
 
-  it.only('Handles the missing 2am on Sunday from Saturday TT trips when DST starts', async () => {
+  it('Handles the missing 2am on Sunday from Saturday TT trips when DST starts', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let routes = database.getCollection('routes')

@@ -6,6 +6,7 @@ import cbe4201 from './sample-data/cbe-4201.json' with { type: 'json' }
 import LiveTimetable from '../../modules/schema/live-timetable.js'
 import chaiExclude from 'chai-exclude'
 import utils from '../../utils.js'
+import beg3152 from './sample-data/beg-3152.mjs'
 use(chaiExclude)
 
 let clone = o => JSON.parse(JSON.stringify(o))
@@ -807,5 +808,21 @@ describe('The LiveTimetable schema', () => {
 
     expect(dbObj.stopTimings[1].stopName).to.equal('Southern Cross Railway Station')
     expect(dbObj.stopTimings[1].stopDistance).to.equal(1470.67)
+  })
+
+  it('Sets the arrival time as beyond 24:00 on midnight trips on DST start Sundays (no 2am)', () => {
+    let timetable = LiveTimetable.fromDatabase(beg3152)
+
+    expect(timetable.mode).to.equal('metro train')
+    expect(timetable.routeGTFSID).to.equal('2-BEG')
+
+    let dbObj = timetable.toDatabase()
+    expect(dbObj.origin).to.equal('Belgrave Railway Station')
+    expect(dbObj.departureTime).to.equal('25:36')
+    expect(dbObj.stopTimings[0].departureTime).to.equal('01:36')
+    
+    expect(dbObj.destination).to.equal('Ringwood Railway Station')
+    expect(dbObj.destinationArrivalTime).to.equal('26:04')
+    expect(dbObj.stopTimings[dbObj.stopTimings.length - 1].departureTime).to.equal('03:04')
   })
 })
