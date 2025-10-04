@@ -14,6 +14,7 @@ import allRoutes from './sample-data/routes.json' with { type: 'json' }
 import VLineUtils from '../../../modules/vline/vline-utils.mjs'
 import utils from '../../../utils.js'
 import td8457GTFS from './sample-data/td8457-gtfs.mjs'
+import dstStartNo2amTripsGTFS from './sample-data/dst-start-no2am-trips.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -33,6 +34,9 @@ const vlineTrips = (await fs.readFile(path.join(__dirname, 'sample-data', 'vline
 const td8007Early = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8007-early-pattern.xml'))).toString()
 const td8007Late = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8007-late-pattern.xml'))).toString()
 const td8741 = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8741-pattern.xml'))).toString()
+
+const dstStartTripSat = (await fs.readFile(path.join(__dirname, 'sample-data', 'dst-start-no2am-sat.xml'))).toString()
+const dstStartTripSun = (await fs.readFile(path.join(__dirname, 'sample-data', 'dst-start-no2am-sun.xml'))).toString()
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
@@ -361,4 +365,63 @@ describe('The loadOperationalTT function', () => {
     expect(trip.origin).to.equal('Southern Cross Railway Station')
     expect(trip.departureTime).to.equal('22:59')
   })
+
+  it('Handles the missing 2am on Sunday from Saturday TT trips when DST starts', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let timetables = database.getCollection('live timetables')
+    let gtfsTimetables = database.getCollection('gtfs timetables')
+
+    await gtfsTimetables.createDocument(clone(dstStartNo2amTripsGTFS))
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ dstStartTripSat, vlineTripsEmpty ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await loadOperationalTT(database, utils.parseDate('20251004'), ptvAPI)
+    let trip = await timetables.findDocument({})
+
+    expect(trip.runID).to.equal('8821')
+    expect(trip.origin).to.equal('Southern Cross Railway Station')
+    expect(trip.departureTime).to.equal('25:10')
+    expect(trip.stopTimings[0].departureTime).to.equal('01:10')
+
+    expect(trip.destination).to.equal('Waurn Ponds Railway Station')
+    expect(trip.destinationArrivalTime).to.equal('26:29')
+    expect(trip.stopTimings[trip.stopTimings.lenght - 1].arrivalTime).to.equal('03:29')
+  })
+
+  it('Handles the missing 2am on Sunday from Sunday TT trips when DST starts', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let timetables = database.getCollection('live timetables')
+    let gtfsTimetables = database.getCollection('gtfs timetables')
+
+    await gtfsTimetables.createDocument(clone(dstStartNo2amTripsGTFS))
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ dstStartTripSun, vlineTripsEmpty ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await loadOperationalTT(database, utils.parseDate('20251005'), ptvAPI)
+    let trip = await timetables.findDocument({})
+
+    expect(trip.runID).to.equal('8820')
+    expect(trip.origin).to.equal('Waurn Ponds Railway Station')
+    expect(trip.departureTime).to.equal('18:01')
+    expect(trip.stopTimings[0].departureTime).to.equal('18:01')
+
+    expect(trip.destination).to.equal('Southern Cross Railway Station')
+    expect(trip.destinationArrivalTime).to.equal('19:20')
+    expect(trip.stopTimings[trip.stopTimings.lenght - 1].arrivalTime).to.equal('19:20')
+  })
+
 })
