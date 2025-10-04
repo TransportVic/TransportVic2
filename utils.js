@@ -314,6 +314,11 @@ module.exports = {
 
     return time.format('HH:mm')
   },
+  formatPTHHMMForOpDay: (time, operationDay) => {
+    if (time.clone().startOf('day') - operationDay.clone().startOf('day') === 0) return time.format('HH:mm')
+    hour = time.diff(operationDay, 'hours')
+    return `${hour}:${time.format('mm')}`
+  },
   getPTYYYYMMDD: time => {
     let cloned = time.clone()
     if (cloned.get('hours') < 3) // 3am PT day :((((

@@ -80,10 +80,11 @@ class TimetableStop {
   set additional(additional) { this.#additional = additional }
 
   get arrivalTime() { return utils.formatHHMM(this.#schDepartureTime) }
-  get ptArrivalTime() { return utils.formatPTHHMM(this.#schDepartureTime) }
+  get ptArrivalTime() { return utils.formatPTHHMMForOpDay(this.#schDepartureTime, this.#operationDay) }
   get arrivalTimeMinutes() { return this.#schDepartureTime.diff(this.#operationDay, 'minutes') }
+
   get departureTime() { return utils.formatHHMM(this.#schDepartureTime) }
-  get ptDepartureTime() { return utils.formatPTHHMM(this.#schDepartureTime) }
+  get ptDepartureTime() { return utils.formatPTHHMMForOpDay(this.#schDepartureTime, this.#operationDay) }
   get departureTimeMinutes() { return this.#schDepartureTime.diff(this.#operationDay, 'minutes') }
 
   get allowDropoff() { return this.#allowDropoff }
