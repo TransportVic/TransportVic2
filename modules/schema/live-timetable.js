@@ -551,6 +551,7 @@ module.exports = class LiveTimetable {
         matchingStop.scheduledDepartureTime = stopData.scheduledDepartureTime
         this.addChange({
           type: 'stop-time-change',
+          stopName: matchingStop.stopName,
           oldVal: existingSchTime,
           newVal: stopData.scheduledDepartureTime
         })
