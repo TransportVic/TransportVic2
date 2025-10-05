@@ -219,7 +219,7 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
 
   let tripsNeedingFetch = []
 
-  for (let vlineTrip of departures.concat(arrivals)) {
+  for (let vlineTrip of departures.concat(arrivals).filter(trip => trip.origin && trip.destination)) {
     let existingTrip = await VLineTripUpdater.getTripByTDN(liveTimetables, vlineTrip.tdn, opDayFormat)
     if (existingTrip) {
       await updateExistingTrip(db, existingTrip, vlineTrip)
