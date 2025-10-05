@@ -15,6 +15,7 @@ import VLineUtils from '../../../modules/vline/vline-utils.mjs'
 import utils from '../../../utils.js'
 import td8457GTFS from './sample-data/td8457-gtfs.mjs'
 import dstStartNo2amTripsGTFS from './sample-data/dst-start-no2am-trips.mjs'
+import td8469Live from './sample-data/td8469-live.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -37,6 +38,8 @@ const td8741 = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8741-pa
 
 const dstStartTripSat = (await fs.readFile(path.join(__dirname, 'sample-data', 'dst-start-no2am-sat.xml'))).toString()
 const dstStartTripSun = (await fs.readFile(path.join(__dirname, 'sample-data', 'dst-start-no2am-sun.xml'))).toString()
+
+const vlineTripsTD8469_WTL = (await fs.readFile(path.join(__dirname, 'sample-data', 'vline-trips-td8469-wtl.xml'))).toString()
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
@@ -424,4 +427,33 @@ describe('The loadOperationalTT function', () => {
     expect(trip.stopTimings[trip.stopTimings.length - 1].arrivalTime).to.equal('19:20')
   })
 
+  it('Ignores trips with a null origin or destination', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let timetables = database.getCollection('live timetables')
+    let liveTimetables = database.getCollection('live timetables')
+
+    await liveTimetables.createDocument(clone(td8469Live))
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ vlineTripsTD8469_WTL, vlineTripsEmpty ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await loadOperationalTT(database, utils.parseDate('20251005'), ptvAPI)
+    let trip = await timetables.findDocument({})
+
+    expect(trip.runID).to.equal('8469')
+    expect(trip.origin).to.equal('Southern Cross Railway Station')
+    expect(trip.departureTime).to.equal('18:23')
+
+    expect(trip.destination).to.equal('Traralgon Railway Station')
+    expect(trip.destinationArrivalTime).to.equal('20:50')
+
+    trip.stopTimings.slice(1, 5).forEach(stop => expect(stop.cancelled, `Expected ${stop.stopName} to be cancelled`).to.be.true)
+    trip.stopTimings.slice(5).forEach(stop => expect(stop.cancelled).to.be.false)
+  })
 })
