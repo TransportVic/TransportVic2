@@ -38,10 +38,10 @@ module.exports = async function (db, departureTime, origin, destination, keepID=
       mode: 'regional train'
     }) || await findTrip(gtfsTimetables, today, origin, destination, departureTime)
 
-    if (trip) {
-      trip.runID = nspTrip.runID
-      trip.vehicle = nspTrip.vehicle
-    }
+    // if (trip) {
+      // trip.runID = nspTrip.runID
+      // trip.vehicle = nspTrip.vehicle
+    // }
   } else {
     trip = await findTrip(liveTimetables, today, origin, destination, departureTime)
   }
