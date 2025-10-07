@@ -7,7 +7,7 @@ describe('The V/Line fleet parser', () => {
   })
 
   it('Handles V/Locity numbers >= 100', async () => {
-    expect(parseConsist('V2103')).to.equal('V103')
+    expect(parseConsist('V2103')).to.equal('VL103')
   })
 
   it('Handles Sprinters', async () => {
