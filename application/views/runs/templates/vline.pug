@@ -2,20 +2,19 @@ if trip.runID
   div.infoRow
     span=`Run ${trip.runID}`
     -
-      let {vehicle, consist} = trip
+      let {vehicle} = trip
       let parts
       if (vehicle) {
-        if (vehicle.startsWith('N')) {
+        let { consist } = vehicle
+
+        if (consist[0].startsWith('N')) {
           parts = [null, 'N']
-        } else if (vehicle.startsWith('A')) {
+        } else if (consist[0].startsWith('A')) {
           parts = [null, 'A']
-        } else if (vehicle.includes('VL') || vehicle.includes('VS')) {
-          let count = (vehicle.match(/^(\d)x/) || [0, 1])[1]
-          parts = [count, 'vlocity']
+        } else if (consist[0].includes('VL') || consist[0].includes('VS')) {
+          parts = ['3', 'vlocity']
         } else {
-          parts = (vehicle.match(/(\d)x ([A-Za-z]+)/) || []).slice(1, 3)
-          if (parts[1] === 'SP') parts[1] = 'sprinter'
-          else if (parts[1] === 'XPT') parts[1] = 'xpt'
+          parts = ['1', 'sprinter']
         }
       }
     if vehicle && parts && parts[1]
@@ -25,10 +24,10 @@ if trip.runID
         else
           span
         img(src=`/static/images/icons/${parts[1].toLowerCase()}.svg`)
-  if consist && consist.length
+  if vehicle && vehicle.consist && vehicle.consist.length
     div.liveConsist
       span.header Live Tracking
-      span.consist=consist.join('-')
+      span.consist #{vehicle.consist.join('-')} (Note: Only leading carriage shown)
 div.timing-list
   for stop in trip.stopTimings
     div.timingRow(id='stop-' + stop.stopGTFSID)
