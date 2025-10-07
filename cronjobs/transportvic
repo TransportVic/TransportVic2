@@ -43,9 +43,9 @@
 
   # V/Line Tracker
   # Regular trips everyday 0400 - 2359
-  */2   4-23  *     *     *     /home/transportvic/TransportVic/modules/new-tracker/vline.sh
+  *   4-23  *     *     *     /home/transportvic/TransportVic/modules/new-tracker/vline.sh
   # And then 0000-0200
-  */2   0-1   *     *     *     /home/transportvic/TransportVic/modules/new-tracker/vline.sh
+  *   0-1   *     *     *     /home/transportvic/TransportVic/modules/new-tracker/vline.sh
 
   # Other maintenance scripts
   5     0     *     *     *     /home/transportvic/TransportVic/scripts/check-gtfs-updates.sh
