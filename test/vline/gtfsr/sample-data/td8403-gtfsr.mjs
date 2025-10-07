@@ -7,11 +7,11 @@ export default {
   },
   entity: [
     {
-      id: 'RPIDS.TU.20250811.7.T0.1-TRN-mjp-5.1.H',
+      id: 'RPIDS.TU.20250811.01-TRN--7-T0-8403',
       is_deleted: false,
       trip_update: {
         trip: {
-          trip_id: '7.T0.1-TRN-mjp-5.1.H',
+          trip_id: '01-TRN--7-T0-8403',
           route_id: '1-TRN-mjp-5',
           direction_id: 0,
           start_time: '09:18:00',

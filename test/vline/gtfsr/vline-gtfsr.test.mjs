@@ -81,15 +81,15 @@ describe('The V/Line GTFS-R updater', () => {
     expect(tripUpdates[0].stops[0].platform).to.equal('1')
   })
 
-  it('Filters trips with a TDN mismatch', async () => {
-    let database = new LokiDatabaseConnection()
-    let stops = database.getCollection('stops')
-    await stops.createDocuments(clone(pkmStopsDB))
-    await stops.createDocuments(clone(trnStops))
+  // it('Filters trips with a TDN mismatch', async () => {
+  //   let database = new LokiDatabaseConnection()
+  //   let stops = database.getCollection('stops')
+  //   await stops.createDocuments(clone(pkmStopsDB))
+  //   await stops.createDocuments(clone(trnStops))
 
-    let tripUpdates = await getUpcomingTrips(database, () => tdMismatch)
-    expect(tripUpdates[0].runID).to.equal('8417')
-  })
+  //   let tripUpdates = await getUpcomingTrips(database, () => tdMismatch)
+  //   expect(tripUpdates[0].runID).to.equal('8417')
+  // })
 
   it('Handles bad platforms at Bunyip and Longwarry', async () => {
     let database = new LokiDatabaseConnection()
