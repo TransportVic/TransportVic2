@@ -20,13 +20,9 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
   for (let trip of tripData.entity) {
     let gtfsrTripData = RailGTFSRTrip.parse(trip.trip_update.trip)
 
-    const tripTDN = gtfsrTripData.getTDN()
-    const reportedTDN = trip.trip_update.vehicle.id
-    // if (tripTDN && reportedTDN && tripTDN !== reportedTDN) continue
-    
     let tripData = {
       operationDays: gtfsrTripData.getOperationDay(),
-      runID: reportedTDN,
+      runID: gtfsrTripData.getTDN(),
       routeGTFSID: gtfsrTripData.getRouteID(),
       stops: [],
       cancelled: gtfsrTripData.getScheduleRelationship() === RailGTFSRTrip.SR_CANCELLED,
