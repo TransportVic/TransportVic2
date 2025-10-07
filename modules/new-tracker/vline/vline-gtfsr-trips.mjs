@@ -50,13 +50,6 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
         }
       }
 
-      if (stop.stop_id === '20299' && stopData.fullStopName === 'Bunyip Railway Station' && !tripStop.platform) tripStop.platform = '2'
-      if (stop.stop_id === '20324' && stopData.fullStopName === 'Longwarry Railway Station' && !tripStop.platform) tripStop.platform = '2'
-      if (stop.stop_id === '20351' && stopData.fullStopName === 'Traralgon Railway Station' && !tripStop.platform) tripStop.platform = '2'
-      if (stop.stop_id === '20330' && stopData.fullStopName === 'Morwell Railway Station' && !tripStop.platform) tripStop.platform = '2'
-      if (stop.stop_id === '20327' && stopData.fullStopName === 'Marshall Railway Station' && !tripStop.platform) tripStop.platform = '2'
-      if (stop.stop_id === '20344' && stopData.fullStopName === 'South Geelong Railway Station' && !tripStop.platform) tripStop.platform = '2'
-
       tripData.stops.push(tripStop)
       previousStopData = tripStop
     }

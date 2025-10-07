@@ -91,25 +91,25 @@ describe('The V/Line GTFS-R updater', () => {
   //   expect(tripUpdates[0].runID).to.equal('8417')
   // })
 
-  it('Handles bad platforms at Bunyip and Longwarry', async () => {
-    let database = new LokiDatabaseConnection()
-    let stops = database.getCollection('stops')
-    await stops.createDocuments(clone(pkmStopsDB))
-    await stops.createDocuments(clone(trnStops))
+  // it('Handles bad platforms at Bunyip and Longwarry', async () => {
+  //   let database = new LokiDatabaseConnection()
+  //   let stops = database.getCollection('stops')
+  //   await stops.createDocuments(clone(pkmStopsDB))
+  //   await stops.createDocuments(clone(trnStops))
 
-    let tripUpdates = await getUpcomingTrips(database, () => badPlatforms)
-    expect(tripUpdates[0].stops[0].stopName).to.equal('Bunyip Railway Station')
-    expect(tripUpdates[0].stops[0].platform).to.equal('2')
-    expect(tripUpdates[0].stops[1].stopName).to.equal('Longwarry Railway Station')
-    expect(tripUpdates[0].stops[1].platform).to.equal('2')
-    expect(tripUpdates[0].stops[2].stopName).to.equal('Drouin Railway Station')
+  //   let tripUpdates = await getUpcomingTrips(database, () => badPlatforms)
+  //   expect(tripUpdates[0].stops[0].stopName).to.equal('Bunyip Railway Station')
+  //   expect(tripUpdates[0].stops[0].platform).to.equal('2')
+  //   expect(tripUpdates[0].stops[1].stopName).to.equal('Longwarry Railway Station')
+  //   expect(tripUpdates[0].stops[1].platform).to.equal('2')
+  //   expect(tripUpdates[0].stops[2].stopName).to.equal('Drouin Railway Station')
 
-    expect(tripUpdates[1].stops[0].stopName).to.equal('Drouin Railway Station')
-    expect(tripUpdates[1].stops[1].stopName).to.equal('Longwarry Railway Station')
-    expect(tripUpdates[1].stops[1].platform).to.equal('1')
-    expect(tripUpdates[1].stops[2].stopName).to.equal('Bunyip Railway Station')
-    expect(tripUpdates[1].stops[2].platform).to.equal('1')
-  })
+  //   expect(tripUpdates[1].stops[0].stopName).to.equal('Drouin Railway Station')
+  //   expect(tripUpdates[1].stops[1].stopName).to.equal('Longwarry Railway Station')
+  //   expect(tripUpdates[1].stops[1].platform).to.equal('1')
+  //   expect(tripUpdates[1].stops[2].stopName).to.equal('Bunyip Railway Station')
+  //   expect(tripUpdates[1].stops[2].platform).to.equal('1')
+  // })
 
   it('Does not mark a stop as cancelled', async () => {
     let database = new LokiDatabaseConnection()

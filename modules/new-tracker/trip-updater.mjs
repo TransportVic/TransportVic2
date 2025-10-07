@@ -35,7 +35,8 @@ export default class TripUpdater {
   }
 
   static async getStop(db, stopID) {
-    if (stopIDCache[stopID]) return stopCache[stopIDCache[stopID]].bays.find(bay => bay.stopGTFSID == stopID)
+    let mode = this.getMode()
+    if (stopIDCache[stopID]) return stopCache[stopIDCache[stopID]].bays.find(bay => bay.stopGTFSID == stopID && bay.mode === mode)
 
     let stops = db.getCollection('stops')
     let stop = await stops.findDocument({
@@ -47,7 +48,7 @@ export default class TripUpdater {
     stopCache[stop.stopName] = stop
     stopIDCache[stopID] = stop.stopName
 
-    return stop.bays.find(bay => bay.stopGTFSID == stopID)
+    return stop.bays.find(bay => bay.stopGTFSID === stopID && bay.mode === mode)
   }
 
   static async getStopByName(db, stopName) {
